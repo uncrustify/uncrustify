@@ -574,10 +574,6 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype,
               pc != nullptr && pc != paren_close;
               pc = chunk_get_next(pc, scope_e::PREPROC))
          {
-            if (pc == nullptr)
-            {
-               return(nullptr);
-            }
             chunk_flags_set(pc, flags);
             if (parent_all)
             {
