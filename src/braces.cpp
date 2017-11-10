@@ -559,8 +559,13 @@ static void examine_brace(chunk_t *bopen)
          {
             next = chunk_get_next_ncnl(next);
          }
-         LOG_FMT(LBRDEL, " next is '%s'\n", get_token_name(next->type));
+
+         if (next != nullptr)
+         {
+            LOG_FMT(LBRDEL, " next is '%s'\n", get_token_name(next->type));
+         }
          if (  if_count > 0
+            && next != nullptr
             && (next->type == CT_ELSE || next->type == CT_ELSEIF))
          {
             LOG_FMT(LBRDEL, " bailed on because 'else' is next and %zu ifs\n", if_count);

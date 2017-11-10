@@ -2607,7 +2607,7 @@ null_pc:
    for (size_t idx_temp = 1; idx_temp <= frm.pse_tos; idx_temp++)
    {
       LOG_FMT(LWARN, "%s:%zu Unmatched %s\n",
-              cpd.filename, frm.pse[idx_temp].open_line,
+              cpd.filename.c_str(), frm.pse[idx_temp].open_line,
               get_token_name(frm.pse[idx_temp].type));
       cpd.error_count++;
    }

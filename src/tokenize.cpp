@@ -1117,7 +1117,8 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
              * a tab char can't be replaced with \\t because escapes don't
              * work in here-strings. best we can do is warn.
              */
-            LOG_FMT(warnlevel, "%s:%zu Detected non-replaceable tab char in literal string\n", cpd.filename, pc.orig_line);
+            LOG_FMT(warnlevel, "%s:%zu Detected non-replaceable tab char in literal string\n",
+                    cpd.filename.c_str(), pc.orig_line);
             if (warnlevel < LWARN)
             {
                cpd.error_count++;
@@ -1921,7 +1922,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    pc.str.append(ctx.get());
 
    LOG_FMT(LWARN, "%s:%zu Garbage in col %d: %x\n",
-           cpd.filename, pc.orig_line, (int)ctx.c.col, pc.str[0]);
+           cpd.filename.c_str(), pc.orig_line, (int)ctx.c.col, pc.str[0]);
    cpd.error_count++;
    return(true);
 } // parse_next
@@ -1944,7 +1945,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       if (!parse_next(ctx, chunk))
       {
          LOG_FMT(LERR, "%s:%zu Bailed before the end?\n",
-                 cpd.filename, ctx.c.row);
+                 cpd.filename.c_str(), ctx.c.row);
          cpd.error_count++;
          break;
       }

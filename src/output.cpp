@@ -1614,7 +1614,7 @@ static void output_comment_multi(chunk_t *pc)
 static bool kw_fcn_filename(chunk_t *cmt, unc_text &out_txt)
 {
    UNUSED(cmt);
-   out_txt.append(path_basename(cpd.filename));
+   out_txt.append(path_basename(cpd.filename.c_str()));
    return(true);
 }
 
