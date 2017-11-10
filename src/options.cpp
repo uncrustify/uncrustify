@@ -2563,9 +2563,6 @@ string argtype_to_string(argtype_e argtype)
    case AT_NUM:
       return("number");
 
-   case AT_UNUM:
-      return("unsigned number");
-
    case AT_LINE:
       return("auto/lf/crlf/cr");
 
@@ -2574,6 +2571,9 @@ string argtype_to_string(argtype_e argtype)
 
    case AT_STRING:
       return("string");
+
+   case AT_UNUM:
+      return("unsigned number");
 
    case AT_TFI:
       return("false/true/ignore");
@@ -2599,9 +2599,6 @@ const char *get_argtype_name(argtype_e argtype)
    case AT_NUM:
       return("AT_NUM");
 
-   case AT_UNUM:
-      return("AT_UNUM");
-
    case AT_LINE:
       return("AT_LINE");
 
@@ -2610,6 +2607,9 @@ const char *get_argtype_name(argtype_e argtype)
 
    case AT_STRING:
       return("AT_STRING");
+
+   case AT_UNUM:
+      return("AT_UNUM");
 
    case AT_TFI:
       return("AT_TFI");
