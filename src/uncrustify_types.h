@@ -424,7 +424,7 @@ struct cp_data_t
    bool              if_changed;
 
    UINT32            error_count;   //! counts how many errors occurred so far
-   const char        *filename;
+   std::string       filename;
 
    file_mem          file_hdr;      // for cmt_insert_file_header
    file_mem          file_ftr;      // for cmt_insert_file_footer

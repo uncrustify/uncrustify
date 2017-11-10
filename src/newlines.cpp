@@ -2222,6 +2222,7 @@ static void newline_func_def_or_call(chunk_t *start)
          {
             tmp = start;
          }
+
          if (prev != nullptr && prev->type == CT_DC_MEMBER)
          {
             if (cpd.settings[UO_nl_func_scope_name].a != AV_IGNORE)
@@ -2230,7 +2231,8 @@ static void newline_func_def_or_call(chunk_t *start)
             }
          }
 
-         if (chunk_get_next_ncnl(prev)->type != CT_FUNC_CLASS_DEF)
+         const chunk_t *tmp_next = chunk_get_next_ncnl(prev);
+         if (tmp_next != nullptr && tmp_next->type != CT_FUNC_CLASS_DEF)
          {
             argval_t a = (tmp->parent_type == CT_FUNC_PROTO) ?
                          cpd.settings[UO_nl_func_proto_type_name].a :
@@ -2241,13 +2243,14 @@ static void newline_func_def_or_call(chunk_t *start)
                a = cpd.settings[UO_nl_func_type_name_class].a;
             }
 
-            if (a != AV_IGNORE)
+            if (a != AV_IGNORE && prev != nullptr)
             {
                LOG_FMT(LNFD, "%s(%d): prev %zu:%zu '%s' [%s/%s]\n",
                        __func__, __LINE__, prev->orig_line, prev->orig_col,
-                       prev->text(), get_token_name(prev->type), get_token_name(prev->parent_type));
+                       prev->text(), get_token_name(prev->type),
+                       get_token_name(prev->parent_type));
 
-               if (prev != nullptr && prev->type == CT_DESTRUCTOR)
+               if (prev->type == CT_DESTRUCTOR)
                {
                   prev = chunk_get_prev_ncnl(prev);
                }

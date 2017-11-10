@@ -574,10 +574,6 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype,
               pc != nullptr && pc != paren_close;
               pc = chunk_get_next(pc, scope_e::PREPROC))
          {
-            if (pc == nullptr)
-            {
-               return(nullptr);
-            }
             chunk_flags_set(pc, flags);
             if (parent_all)
             {
@@ -650,10 +646,6 @@ static void flag_asm(chunk_t *pc)
         tmp != nullptr && tmp != end;
         tmp = chunk_get_next_ncnl(tmp, scope_e::PREPROC))
    {
-      if (tmp == nullptr)
-      {
-         return;
-      }
       if (tmp->type == CT_COLON)
       {
          set_chunk_type(tmp, CT_ASM_COLON);
@@ -2699,11 +2691,6 @@ static void fix_enum_struct_union(chunk_t *pc)
       set_chunk_parent(next, pc->type);
 
       // next up is either a colon, open brace, or open parenthesis (pawn)
-      if (!next)
-      {
-         return;
-      }
-
       if ((cpd.lang_flags & LANG_PAWN) && next->type == CT_PAREN_OPEN)
       {
          next = set_paren_parent(next, CT_ENUM);
@@ -3260,7 +3247,7 @@ void combine_labels(void)
                else
                {
                   LOG_FMT(LWARN, "%s:%zu unexpected colon in col %zu n-parent=%s c-parent=%s l=%zu bl=%zu\n",
-                          cpd.filename, next->orig_line, next->orig_col,
+                          cpd.filename.c_str(), next->orig_line, next->orig_col,
                           get_token_name(next->parent_type),
                           get_token_name(cur->parent_type),
                           next->level, next->brace_level);
@@ -3760,10 +3747,6 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          {
             return(false);
          }
-         if (tmp2 == nullptr)
-         {
-            return(false);
-         }
          if (chunk_is_str(tmp1, "(", 1))
          {
             tmp3 = chunk_skip_to_match(tmp1, scope_e::PREPROC);
@@ -3813,7 +3796,8 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
               || (word_cnt == 1 && type_count == 1));
 
    LOG_FMT(LFPARAM, " <== [%s] %s!\n",
-           get_token_name(pc->type), ret ? "Yup" : "Unlikely");
+           (pc == nullptr ? "nullptr" : get_token_name(pc->type)),
+           ret ? "Yup" : "Unlikely");
    return(ret);
 } // can_be_full_param
 
@@ -3821,6 +3805,10 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
 static void mark_function(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
+   if (pc == nullptr)
+   {
+      return;
+   }
 
    LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
            __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
@@ -4584,7 +4572,7 @@ static void mark_cpp_constructor(chunk_t *pc)
    if (!chunk_is_str(paren_open, "(", 1))
    {
       LOG_FMT(LWARN, "%s:%zu Expected '(', got: [%s]\n",
-              cpd.filename, paren_open->orig_line,
+              cpd.filename.c_str(), paren_open->orig_line,
               paren_open->text());
       return;
    }
@@ -5235,10 +5223,10 @@ static void handle_d_template(chunk_t *pc)
          set_chunk_type(tmp, CT_TYPE);
       }
    }
-   if (tmp->type != CT_BRACE_CLOSE)
-   {
-      // TODO: log an error, expected '}'
-   }
+//   if (!chunk_is_token(tmp, CT_BRACE_CLOSE))
+//   {
+//      // TODO: log an error, expected '}'
+//   }
    set_chunk_parent(tmp, CT_TEMPLATE);
 } // handle_d_template
 
@@ -6169,7 +6157,7 @@ static void handle_oc_property_decl(chunk_t *os)
                   } while (  next
                           && next->type != CT_COMMA
                           && next->type != CT_PAREN_CLOSE);
-                  next = next->prev;
+                  next = chunk_get_prev(next);
                   if (next == nullptr)
                   {
                      break;

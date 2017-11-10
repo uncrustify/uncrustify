@@ -441,7 +441,7 @@ static_inline bool is_expected_string_and_level(const chunk_t *pc, const char *s
  *
  * @return nullptr or the matching paren/brace/square
  */
-static_inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e::ALL)
+static_inline chunk_t *chunk_skip_to_match(const chunk_t *cur, scope_e scope = scope_e::ALL)
 {
    if (  cur != nullptr
       && (  cur->type == CT_PAREN_OPEN
@@ -461,7 +461,7 @@ static_inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e
 }
 
 
-static_inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, scope_e scope = scope_e::ALL)
+static_inline chunk_t *chunk_skip_to_match_rev(const chunk_t *cur, scope_e scope = scope_e::ALL)
 {
    if (  cur != nullptr
       && (  cur->type == CT_PAREN_CLOSE

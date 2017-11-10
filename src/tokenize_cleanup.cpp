@@ -153,7 +153,7 @@ void tokenize_cleanup(void)
          && !chunk_get_next_ncnl(pc, scope_e::PREPROC))
       {
          LOG_FMT(LNOTE, "%s(%d): %s:%zu Detected a macro that ends with a semicolon. Possible failures if used.\n",
-                 __func__, __LINE__, cpd.filename, pc->orig_line);
+                 __func__, __LINE__, cpd.filename.c_str(), pc->orig_line);
       }
    }
 
@@ -184,7 +184,7 @@ void tokenize_cleanup(void)
             if (next->type != CT_ASSIGN)
             {
                LOG_FMT(LERR, "%s(%d): %s:%zu: version: Unexpected token %s\n",
-                       __func__, __LINE__, cpd.filename, pc->orig_line, get_token_name(next->type));
+                       __func__, __LINE__, cpd.filename.c_str(), pc->orig_line, get_token_name(next->type));
                cpd.error_count++;
             }
             set_chunk_type(pc, CT_WORD);

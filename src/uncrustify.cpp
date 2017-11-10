@@ -573,8 +573,8 @@ int main(int argc, char *argv[])
     */
    if (!cfg_file.empty())
    {
-      cpd.filename = cfg_file.c_str();
-      if (load_option_file(cpd.filename) < 0)
+      cpd.filename = cfg_file;
+      if (load_option_file(cpd.filename.c_str()) < 0)
       {
          usage_exit("Unable to load the config file", argv[0], EX_IOERR);
       }
@@ -1025,7 +1025,7 @@ static int load_mem_file_config(const char *filename, file_mem &fm)
    char buf[1024];
 
    snprintf(buf, sizeof(buf), "%.*s%s",
-            path_dirname_len(cpd.filename), cpd.filename, filename);
+            path_dirname_len(cpd.filename.c_str()), cpd.filename.c_str(), filename);
 
    retval = load_mem_file(buf, fm);
    if (retval < 0)
@@ -1186,8 +1186,8 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
       if (report_status)
       {
          fprintf(stderr, "FAIL: %s (File size changed from %u to %u)\n",
-                 cpd.filename,
-                 static_cast<int>(fm.raw.size()), static_cast<int>(cpd.bout->size()));
+                 cpd.filename.c_str(), static_cast<int>(fm.raw.size()),
+                 static_cast<int>(cpd.bout->size()));
          log_flush(true);
       }
       is_same = false;
@@ -1201,7 +1201,7 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
             if (report_status)
             {
                fprintf(stderr, "FAIL: %s (Difference at byte %u)\n",
-                       cpd.filename, idx);
+                       cpd.filename.c_str(), idx);
                log_flush(true);
             }
             is_same = false;
@@ -1211,7 +1211,8 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
    }
    if (is_same && report_status)
    {
-      fprintf(stdout, "PASS: %s (%u bytes)\n", cpd.filename, static_cast<int>(fm.raw.size()));
+      fprintf(stdout, "PASS: %s (%u bytes)\n",
+              cpd.filename.c_str(), static_cast<int>(fm.raw.size()));
    }
 
    return(is_same);
@@ -1723,7 +1724,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       if (data[idx] == 0)
       {
          LOG_FMT(LERR, "An embedded 0 was found in '%s' %zu:%zu.\n",
-                 cpd.filename, count_line, count_column);
+                 cpd.filename.c_str(), count_line, count_column);
          LOG_FMT(LERR, "The file may be encoded in an unsupported Unicode format.\n");
          LOG_FMT(LERR, "Aborting.\n");
          cpd.error_count++;

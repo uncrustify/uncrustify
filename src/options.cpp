@@ -1788,7 +1788,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       if (strcasecmp(val, "AUTO") != 0)
       {
          fprintf(stderr, "convert_value: %s:%d Expected 'Auto', 'LF', 'CRLF', or 'CR' for %s, got '%s'\n",
-                 cpd.filename, cpd.line_number, entry->name, val);
+                 cpd.filename.c_str(), cpd.line_number, entry->name, val);
          log_flush(true);
          cpd.error_count++;
       }
@@ -1837,7 +1837,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       {
          fprintf(stderr, "convert_value: %s:%d Expected 'Ignore', 'Join', 'Lead', 'Lead_Brake', "
                  "'Lead_Force', 'Trail', 'Trail_Break', 'Trail_Force' for %s, got '%s'\n",
-                 cpd.filename, cpd.line_number, entry->name, val);
+                 cpd.filename.c_str(), cpd.line_number, entry->name, val);
          log_flush(true);
          cpd.error_count++;
       }
@@ -1855,7 +1855,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          if (entry->type == AT_UNUM && (*val == '-'))
          {
             fprintf(stderr, "%s:%d\n  for the option '%s' is a negative value not possible: %s",
-                    cpd.filename, cpd.line_number, entry->name, val);
+                    cpd.filename.c_str(), cpd.line_number, entry->name, val);
             log_flush(true);
             exit(EX_CONFIG);
          }
@@ -1882,7 +1882,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       if (tmp == nullptr)
       {
          fprintf(stderr, "%s:%d\n  for the assignment: unknown option '%s':",
-                 cpd.filename, cpd.line_number, val);
+                 cpd.filename.c_str(), cpd.line_number, val);
          log_flush(true);
          exit(EX_CONFIG);
       }
@@ -1915,13 +1915,13 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
             return;
          }
          fprintf(stderr, "%s:%d\n  for the assignment: option '%s' could not have negative value %ld",
-                 cpd.filename, cpd.line_number, entry->name, tmp_val);
+                 cpd.filename.c_str(), cpd.line_number, entry->name, tmp_val);
          log_flush(true);
          exit(EX_CONFIG);
       }
 
       fprintf(stderr, "%s:%d\n  for the assignment: expected type for %s is %s, got %s\n",
-              cpd.filename, cpd.line_number,
+              cpd.filename.c_str(), cpd.line_number,
               entry->name, get_argtype_name(entry->type), get_argtype_name(tmp->type));
       log_flush(true);
       exit(EX_CONFIG);
@@ -1960,7 +1960,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       }
 
       fprintf(stderr, "convert_value: %s:%d Expected 'True' or 'False' for %s, got '%s'\n",
-              cpd.filename, cpd.line_number, entry->name, val);
+              cpd.filename.c_str(), cpd.line_number, entry->name, val);
       log_flush(true);
       cpd.error_count++;
       dest->b = false;
@@ -2000,7 +2000,8 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       }
 
       fprintf(stderr, "%s(%d): %s:%d Expected 'True' or 'False' or 'Ignore' for %s, got '%s'\n",
-              __func__, __LINE__, cpd.filename, cpd.line_number, entry->name, val);
+              __func__, __LINE__, cpd.filename.c_str(), cpd.line_number,
+              entry->name, val);
       log_flush(true);
       cpd.error_count++;
       dest->tfi = TFI_FALSE;
@@ -2035,7 +2036,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       return;
    }
    fprintf(stderr, "convert_value: %s:%d Expected 'Add', 'Remove', 'Force', or 'Ignore' for %s, got '%s'\n",
-           cpd.filename, cpd.line_number, entry->name, val);
+           cpd.filename.c_str(), cpd.line_number, entry->name, val);
    log_flush(true);
    cpd.error_count++;
    dest->a = AV_IGNORE;

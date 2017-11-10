@@ -265,7 +265,7 @@ static void push_fmr_pse(parse_frame_t *frm, chunk_t *pc,
    else
    {
       LOG_FMT(LWARN, "%s:%d Error: Frame stack overflow,  Unable to properly process this file.\n",
-              cpd.filename, cpd.line_number);
+              cpd.filename.c_str(), cpd.line_number);
       cpd.error_count++;
    }
 }
@@ -432,8 +432,8 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
             && (frm->pse[frm->pse_tos].type != CT_PP_DEFINE))
          {
             LOG_FMT(LWARN, "%s(%d): %s, orig_line is %zu, Error: Unexpected '%s' for '%s', which was on line %zu\n",
-                    __func__, __LINE__, cpd.filename, pc->orig_line, pc->text(),
-                    get_token_name(frm->pse[frm->pse_tos].pc->type),
+                    __func__, __LINE__, cpd.filename.c_str(), pc->orig_line,
+                    pc->text(), get_token_name(frm->pse[frm->pse_tos].pc->type),
                     frm->pse[frm->pse_tos].pc->orig_line);
             print_stack(LBCSPOP, "=Error  ", frm, pc);
             cpd.error_count++;
@@ -504,7 +504,8 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          else
          {
             LOG_FMT(LWARN, "%s: %s(%d): %zu: Error: Expected a semicolon for WHILE_OF_DO, but got '%s'\n",
-                    cpd.filename, __func__, __LINE__, pc->orig_line, get_token_name(pc->type));
+                    cpd.filename.c_str(), __func__, __LINE__, pc->orig_line,
+                    get_token_name(pc->type));
             cpd.error_count++;
          }
          handle_complex_close(frm, pc);
@@ -831,7 +832,8 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
       }
 
       LOG_FMT(LWARN, "%s(%d): %s, orig_line is %zu, Error: Expected 'while', got '%s'\n",
-              __func__, __LINE__, cpd.filename, pc->orig_line, pc->text());
+              __func__, __LINE__, cpd.filename.c_str(), pc->orig_line,
+              pc->text());
       frm->pse_tos--;
       print_stack(LBCSPOP, "-Error  ", frm, pc);
       cpd.error_count++;
@@ -882,7 +884,7 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
          || (frm->pse[frm->pse_tos].stage == brace_stage_e::WOD_PAREN)))
    {
       LOG_FMT(LWARN, "%s(%d): %s, orig_line is %zu, Error: Expected '(', got '%s' for '%s'\n",
-              __func__, __LINE__, cpd.filename, pc->orig_line, pc->text(),
+              __func__, __LINE__, cpd.filename.c_str(), pc->orig_line, pc->text(),
               get_token_name(frm->pse[frm->pse_tos].type));
 
       // Throw out the complex statement
@@ -990,7 +992,7 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
    {
       // PROBLEM
       LOG_FMT(LWARN, "%s(%d): %s:%zu Error: TOS.type='%s' TOS.stage=%u\n",
-              __func__, __LINE__, cpd.filename, pc->orig_line,
+              __func__, __LINE__, cpd.filename.c_str(), pc->orig_line,
               get_token_name(frm->pse[frm->pse_tos].type),
               (unsigned int)frm->pse[frm->pse_tos].stage);
       cpd.error_count++;
