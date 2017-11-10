@@ -45,7 +45,7 @@ public:
     *
     * @return pointer to first element or nullptr if list is empty
     */
-   T *GetHead() const
+   T *GetHead()
    {
       return(first);
    }
@@ -56,7 +56,7 @@ public:
     *
     * @return pointer to last element or nullptr if list is empty
     */
-   T *GetTail() const
+   T *GetTail()
    {
       return(last);
    }
@@ -69,7 +69,7 @@ public:
     *
     * @return pointer to next element or nullptr if no next element exists
     */
-   T *GetNext(const T *ref)
+   T *GetNext(T *ref)
    {
       return((ref != NULL) ? ref->next : NULL);
    }
@@ -82,7 +82,7 @@ public:
     *
     * @return pointer to previous element or nullptr if no previous element exists
     */
-   T *GetPrev(const T *ref)
+   T *GetPrev(T *ref)
    {
       return((ref != NULL) ? ref->prev : NULL);
    }
