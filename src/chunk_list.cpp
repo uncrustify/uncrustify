@@ -230,7 +230,7 @@ static chunk_t *chunk_search_type(const chunk_t *cur, const c_token_t type,
     * Depending on the parameter dir the search function searches
     * in forward or backward direction
     */
-   search_t search_function = select_search_fct(dir);
+   const search_t search_function = select_search_fct(dir);
 
    // loop over the chunk list
    chunk_t *pc = search_function(cur, scope);
@@ -252,7 +252,7 @@ static chunk_t *chunk_search_typelevel(const chunk_t *cur, c_token_t type,
     * Depending on the parameter dir the search function searches
     * in forward or backward direction
     */
-   search_t search_function = select_search_fct(dir);
+   const search_t search_function = select_search_fct(dir);
 
 
    // loop over the chunk list
@@ -287,7 +287,7 @@ static chunk_t *chunk_search_str(const chunk_t *cur, const char *str, size_t len
    /*
     * Depending on the parameter dir the search function searches
     * in forward or backward direction */
-   search_t search_function = select_search_fct(dir);
+   const search_t search_function = select_search_fct(dir);
 
    // loop over the chunk list
    chunk_t *pc = search_function(cur, scope);
@@ -308,7 +308,7 @@ static chunk_t *chunk_search(const chunk_t *cur, const check_t check_fct,
    /*
     * Depending on the parameter dir the search function searches
     * in forward or backward direction */
-   search_t search_function = select_search_fct(dir);
+   const search_t search_function = select_search_fct(dir);
 
    // loop over the chunk list
    chunk_t *pc = search_function(cur, scope);
@@ -413,32 +413,34 @@ static void chunk_log_msg(const chunk_t *chunk, const log_sev_t log, const char 
 
 static void chunk_log(const chunk_t *pc, const char *text)
 {
-   if (  pc != nullptr
-      && (cpd.unc_stage != unc_stage_e::TOKENIZE)
-      && (cpd.unc_stage != unc_stage_e::CLEANUP))
+   if (  pc == nullptr
+      || cpd.unc_stage == unc_stage_e::TOKENIZE
+      || cpd.unc_stage == unc_stage_e::CLEANUP)
    {
-      const log_sev_t log   = LCHUNK;
-      chunk_t         *prev = chunk_get_prev(pc);
-      chunk_t         *next = chunk_get_next(pc);
-
-      chunk_log_msg(pc, log, text);
-
-      if (prev && next)
-      {
-         chunk_log_msg(prev, log, " @ between");
-         chunk_log_msg(next, log, " and");
-      }
-      else if (next)
-      {
-         chunk_log_msg(next, log, " @ before");
-      }
-      else if (prev)
-      {
-         chunk_log_msg(prev, log, " @ after");
-      }
-      LOG_FMT(log, " stage=%d", (int)cpd.unc_stage);
-      log_func_stack_inline(log);
+      return;
    }
+
+   const log_sev_t log   = LCHUNK;
+   chunk_t         *prev = chunk_get_prev(pc);
+   chunk_t         *next = chunk_get_next(pc);
+
+   chunk_log_msg(pc, log, text);
+
+   if (prev && next)
+   {
+      chunk_log_msg(prev, log, " @ between");
+      chunk_log_msg(next, log, " and");
+   }
+   else if (next)
+   {
+      chunk_log_msg(next, log, " @ before");
+   }
+   else if (prev)
+   {
+      chunk_log_msg(prev, log, " @ after");
+   }
+   LOG_FMT(log, " stage=%d", (int)cpd.unc_stage);
+   log_func_stack_inline(log);
 }
 
 
@@ -707,7 +709,7 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
     */
    if (pc1 != nullptr && pc2 != nullptr)
    {
-      size_t nl_count = pc1->nl_count;
+      const size_t nl_count = pc1->nl_count;
 
       pc1->nl_count = pc2->nl_count;
       pc2->nl_count = nl_count;
@@ -743,19 +745,22 @@ void set_chunk_parent_real(chunk_t *pc, c_token_t pt)
 
 void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits)
 {
-   if (pc != nullptr)
+   LOG_FUNC_ENTRY();
+   if (pc == nullptr)
    {
-      LOG_FUNC_ENTRY();
-      UINT64 nflags = (pc->flags & ~clr_bits) | set_bits;
-      if (pc->flags != nflags)
-      {
-         LOG_FMT(LSETFLG, "%s(%d): %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " orig_line is %zu, orig_col is %zu, text() '%s', type is %s, parent_type is %s",
-                 __func__, __LINE__, pc->flags, pc->flags ^ nflags, nflags,
-                 pc->orig_line, pc->orig_col, pc->text(),
-                 get_token_name(pc->type), get_token_name(pc->parent_type));
-         log_func_stack_inline(LSETFLG);
-         pc->flags = nflags;
-      }
+      return;
+   }
+
+   const UINT64 nflags = (pc->flags & ~clr_bits) | set_bits;
+   if (pc->flags != nflags)
+   {
+      LOG_FMT(LSETFLG, "%s(%d): %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " orig_line is %zu, orig_col is %zu, text() '%s', type is %s, parent_type is %s",
+              __func__, __LINE__, pc->flags, pc->flags ^ nflags, nflags,
+              pc->orig_line, pc->orig_col, pc->text(),
+              get_token_name(pc->type), get_token_name(pc->parent_type));
+
+      log_func_stack_inline(LSETFLG);
+      pc->flags = nflags;
    }
 }
 
@@ -810,7 +815,7 @@ static chunk_t *chunk_get_ncnlnp(const chunk_t *cur, const scope_e scope, const 
 static chunk_t *chunk_get_ncnlnpnd(const chunk_t *cur, const scope_e scope,
                                    const direction_e dir)
 {
-   search_t search_function = select_search_fct(dir);
+   const search_t search_function = select_search_fct(dir);
 
    // loop over the chunk list
    chunk_t *pc = search_function(cur, scope);
