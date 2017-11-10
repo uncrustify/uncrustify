@@ -1029,13 +1029,6 @@ std::string bool_to_string(bool val);
 std::string argval_to_string(argval_t argval);
 
 /**
- * convert an integer number to a string
- *
- * @param val  integer number to convert
- */
-std::string number_to_string(int number);
-
-/**
  * convert a line ending type to a string
  *
  * @param val  line ending type to convert
