@@ -1,5 +1,5 @@
 void GetFoo(void)
-                                                                    const
+                                                                     const
 {
 	return (m_Foo);
 }
@@ -9,4 +9,9 @@ int GetFoo(void)
 {
 	return (m_Foo);
 }
+
+class foo {
+	void bar(void)
+	                                                                     const;
+};
 
