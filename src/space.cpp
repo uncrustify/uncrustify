@@ -857,7 +857,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       return(cpd.settings[UO_sp_after_byref_func].a);
    }
 
-   if (first->type == CT_BYREF && CharTable::IsKw1(second->str[0]))
+   if (first->type == CT_BYREF && (CharTable::IsKw1(second->str[0]) || second->type == CT_PAREN_OPEN))
    {
       log_rule("sp_after_byref");
       return(cpd.settings[UO_sp_after_byref].a);

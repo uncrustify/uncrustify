@@ -1657,7 +1657,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                   || tmp->type == CT_QUALIFIER)
                {
                   set_chunk_type(prev, CT_TYPE);
-                  set_chunk_type(pc, CT_ADDR);
+                  set_chunk_type(pc, CT_BYREF);
                   chunk_flags_set(next, PCF_VAR_1ST);
                }
                else if (tmp->type == CT_DC_MEMBER)

@@ -62,6 +62,7 @@
 10102 staging/Uncrustify.Cpp.cfg    staging/pp-ignore.mm
 10103 staging/Uncrustify.CSharp.cfg staging/UNI-2506.cs
 10104 staging/Uncrustify.CSharp.cfg staging/UNI-2505.cs
+60002 staging/Uncrustify.Cpp.cfg    staging/UNI-16283.cpp
 60003 staging/Uncrustify.Cpp.cfg    staging/UNI-1288.cpp
 60008 staging/Uncrustify.JamCS.cfg staging/UNI-17253.cs
 60012 staging/Uncrustify.CSharp.cfg staging/UNI-12303.cs
