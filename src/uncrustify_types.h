@@ -466,7 +466,8 @@ struct cp_data_t
    int               changes;
    int               pass_count; //! indicates how often the chunk list shall be processed
 
-   align_t           al[80];
+#define AL_SIZE    8000
+   align_t           al[AL_SIZE];
    size_t            al_cnt;
    bool              al_c99_array;
 

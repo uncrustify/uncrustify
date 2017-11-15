@@ -19,8 +19,8 @@ function(add_uncrustify_test name lang config rerun_config input result results 
   )
 endfunction()
 
-#foreach(test_lang c-sharp c cpp d java pawn objective-c vala ecma imported regression)
- 	foreach(test_lang objective-c)
+foreach(test_lang c-sharp c cpp d java pawn objective-c vala ecma imported regression)
+# 	foreach(test_lang objective-c)
   # Create dependency on test file so CMake re-runs if changed
   configure_file("${test_lang}.test" "${test_lang}.test" COPYONLY)
   file(READ "${test_lang}.test" content)
