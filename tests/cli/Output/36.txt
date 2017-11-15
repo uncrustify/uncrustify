@@ -1,0 +1,14 @@
+fix_fcn_def_params(): text() '(', type is PAREN_OPEN, on orig_line , level is 
+fix_fcn_def_params(): looking at, text() 'const' on orig_line , level 
+fix_fcn_def_params(): looking at, text() 'char' on orig_line , level 
+fix_fcn_def_params(): looking at, text() '*' on orig_line , level 
+fix_fcn_def_params(): looking at, text() 'pN' on orig_line , level 
+fix_fcn_def_params(): looking at, text() ',' on orig_line , level 
+mark_variable_stack(): parameter on orig_line  : <char> [pN]
+fix_fcn_def_params(): looking at, text() 'unsigned' on orig_line , level 
+fix_fcn_def_params(): looking at, text() 'long' on orig_line , level 
+fix_fcn_def_params(): looking at, text() 'nI' on orig_line , level 
+fix_fcn_def_params(): bailed on text() ')', on orig_line 
+mark_variable_stack(): parameter on orig_line  : <long> <unsigned> [nI]
+fix_fcn_def_params(): text() '(', type is PAREN_OPEN, on orig_line , level is 
+fix_fcn_def_params(): bailed on text() ')', on orig_line 

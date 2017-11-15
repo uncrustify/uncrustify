@@ -1,0 +1,55 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+   <title>Uncrustify: where do the Spaces options work</title>
+</head>
+<body lang="en-US">
+<h1><a href="https://github.com/uncrustify/uncrustify">Uncrustify</a>:
+Where do the options work?</h1>
+<h2>Spaces for new/ delete</h2>
+<p> 
+</p>
+<table border="1", width="100%">
+<tr>
+<td>
+<pre>
+{<a name="sp_after_new"></a>
+    Foo* foo = new<a title="sp_after_new, does'nt work at every place"><font color="red">█</font></a>Foo(a,v);
+    delete[]<a title="sp_after_new"><font color="red">█</font></a>m_used;
+<a name="sp_between_new_paren"></a><a name="sp_after_newop_paren"></a><a name="sp_inside_newop_paren"></a><a name="sp_inside_newop_paren_open"></a><a name="sp_inside_newop_paren_close"></a>
+    Foo* foo = new<a title="sp_between_new_paren"><font color="red">█</font></a>(<a title="sp_inside_newop_paren, sp_inside_newop_paren_open"><font color="red">█</font></a>ptr,std::nothrow<a title="sp_inside_newop_paren"><font color="red">█</font></a>)<a title="sp_after_newop_paren, sp_inside_newop_paren_close"><font color="red">█</font></a>Foo[];
+}
+</pre>
+</td>
+</tr>
+</table>
+<p></p>
+<h1>Register</h1>
+<table border="0", width="100%">
+<tr>
+   <td valign="top"><a href="#sp_after_new">sp_after_new</a></td>
+   <td>Controls the spaces after 'new', 'delete' and 'delete[]'.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_between_new_paren">sp_between_new_paren</a></td>
+   <td>Controls the spaces between new and '(' in 'new()'.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_after_newop_paren">sp_after_newop_paren</a></td>
+   <td>Controls the spaces between ')' and 'type' in 'new(foo) BAR'.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_inside_newop_paren">sp_inside_newop_paren</a></td>
+   <td>Controls the spaces inside paren of the new operator: 'new(foo) BAR'.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_inside_newop_paren_open">sp_inside_newop_paren_open</a></td>
+   <td>Controls the space after open paren of the new operator: 'new(foo) BAR'.<BR>Have precedence of sp_inside_newop_paren.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_inside_newop_paren_close">sp_inside_newop_paren_close</a></td>
+   <td>Controls the space before close paren of the new operator: 'new(foo) BAR'.<BR>Have precedence of sp_inside_newop_paren.</td>
+</tr>
+</table>
+</body>
+</html>

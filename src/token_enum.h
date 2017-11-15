@@ -154,7 +154,9 @@ enum c_token_t
    CT_PRIVATE,
    CT_PRIVATE_COLON,
    CT_THROW,
+   CT_NOEXCEPT,
    CT_TRY,
+   CT_BRACED_INIT_LIST,
    CT_USING,
    CT_USING_STMT,       // using (xxx) ...
    CT_D_WITH,           // D: paren+braced

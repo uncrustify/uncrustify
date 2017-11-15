@@ -29,6 +29,11 @@
 #include "unc_ctype.h"
 #include "uncrustify.h"
 
+#include <algorithm>
+
+
+using namespace std;
+
 
 static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *second, bool complete);
 
@@ -44,6 +49,17 @@ static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *se
  */
 static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool complete);
 
+/**
+ * Ensure to force the space between the \a first and the \a second chunks
+ * if the PCF_FORCE_SPACE flag is set in the \a first.
+ *
+ * @param first   The first chunk
+ * @param second  The second chunk
+ * @param av      Av from the do_space()
+ *
+ * @return AV_IGNORE, AV_ADD, AV_REMOVE or AV_FORCE
+ */
+static argval_t ensure_force_space(chunk_t *first, chunk_t *second, argval_t av);
 
 //! type that stores two chunks between those no space shall occur
 struct no_space_table_t
@@ -109,12 +125,12 @@ static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *se
    LOG_FUNC_ENTRY();
    if (second->type != CT_NEWLINE)
    {
-      LOG_FMT(LSPACE, "%s(%d): Spacing: line %zu [%s/%s] '%s' <===> [%s/%s] '%s' : %s[%zu]%s",
-              __func__, __LINE__, first->orig_line,
-              get_token_name(first->type), get_token_name(first->parent_type),
-              first->text(),
+      LOG_FMT(LSPACE, "%s(%d): Spacing: first->orig_line is %zu, first->orig_col is %zu, first->text() is '%s', [%s/%s] <===>\n",
+              __func__, __LINE__, first->orig_line, first->orig_col, first->text(),
+              get_token_name(first->type), get_token_name(first->parent_type));
+      LOG_FMT(LSPACE, "   second->orig_line is %zu, second->orig_col is %zu, second->text() '%s', [%s/%s] : rule %s[line %zu]%s",
+              second->orig_line, second->orig_col, second->text(),
               get_token_name(second->type), get_token_name(second->parent_type),
-              second->text(),
               rule, line,
               complete ? "\n" : "");
    }
@@ -129,8 +145,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s, %s\n",
-           __func__, __LINE__, first->orig_line, first->orig_col, get_token_name(first->type), first->text());
+   LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, first->text() '%s', type is %s\n",
+           __func__, __LINE__, first->orig_line, first->orig_col, first->text(), get_token_name(first->type));
 
    min_sp = 1;
    if (first->type == CT_IGNORED || second->type == CT_IGNORED)
@@ -173,7 +189,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
-   if (first->type == CT_VBRACE_OPEN && second->type != CT_NL_CONT)
+   if (  first->type == CT_VBRACE_OPEN
+      && second->type != CT_NL_CONT
+      && second->type != CT_SEMICOLON) // # Issue 1158
    {
       log_rule("FORCE");
       return(AV_FORCE);
@@ -214,11 +232,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 
    if (first->type == CT_FOR_COLON)
    {
+      // java
       log_rule("sp_after_for_colon");
       return(cpd.settings[UO_sp_after_for_colon].a);
    }
    if (second->type == CT_FOR_COLON)
    {
+      // java
       log_rule("sp_before_for_colon");
       return(cpd.settings[UO_sp_before_for_colon].a);
    }
@@ -392,7 +412,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
             log_rule("sp_after_semi_for_empty");
             return(cpd.settings[UO_sp_after_semi_for_empty].a);
          }
-         if (cpd.settings[UO_sp_after_semi_for].a != AV_IGNORE)
+         if (  (cpd.settings[UO_sp_after_semi_for].a != AV_IGNORE)
+            && second->type != CT_SPAREN_CLOSE)  // Issue 1324
          {
             log_rule("sp_after_semi_for");
             return(cpd.settings[UO_sp_after_semi_for].a);
@@ -502,10 +523,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          return(AV_FORCE);
       }
 
-      if (  first->type == CT_WORD
-         || first->type == CT_TYPE
-         || first->type == CT_PAREN_CLOSE
-         || CharTable::IsKw1(first->str[0]))
+      if (  (  first->type == CT_WORD
+            || first->type == CT_TYPE
+            || first->type == CT_PAREN_CLOSE
+            || CharTable::IsKw1(first->str[0]))
+         && (strcmp(first->text(), "void") != 0)) // Issue 1249
       {
          log_rule("sp_before_dc");
          return(cpd.settings[UO_sp_before_dc].a);
@@ -546,6 +568,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    {
       if (first->type == CT_SQUARE_OPEN && first->parent_type == CT_TYPE)
       {
+         // Only for C#.
          log_rule("sp_before_mdatype_commas");
          return(cpd.settings[UO_sp_before_mdatype_commas].a);
       }
@@ -843,6 +866,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       }
       if (second->type != CT_BYREF && second->type != CT_PTR_TYPE)
       {
+         if (  second->type == CT_CLASS_COLON
+            && cpd.settings[UO_sp_angle_colon].a != AV_IGNORE)
+         {
+            log_rule("sp_angle_colon");
+            return(cpd.settings[UO_sp_angle_colon].a);
+         }
          log_rule("sp_after_angle");
          return(cpd.settings[UO_sp_after_angle].a);
       }
@@ -902,6 +931,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          log_rule("sp_after_sparen");
          return(cpd.settings[UO_sp_after_sparen].a);
       }
+   }
+   if (  first->type == CT_VBRACE_OPEN
+      && second->type == CT_SEMICOLON) // Issue # 1158
+   {
+      log_rule("sp_before_semi");
+      return(cpd.settings[UO_sp_before_semi].a);
    }
 
    if (  second->type == CT_FPAREN_OPEN
@@ -1054,7 +1089,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       return(cpd.settings[UO_sp_inside_braces_empty].a);
    }
 
-   if (second->type == CT_BRACE_OPEN && second->parent_type == CT_TYPE)
+   if (second->type == CT_BRACE_OPEN && second->parent_type == CT_BRACED_INIT_LIST)
    {
       // 'int{9}' vs 'int {9}'
       return(cpd.settings[UO_sp_type_brace_init_lst].a);
@@ -1072,7 +1107,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          log_rule("sp_inside_braces_struct");
          return(cpd.settings[UO_sp_inside_braces_struct].a);
       }
-      if (second->parent_type == CT_TYPE)
+      if (second->parent_type == CT_BRACED_INIT_LIST)
       {
          if (cpd.settings[UO_sp_before_type_brace_init_lst_close].a != AV_IGNORE)
          {
@@ -1242,6 +1277,17 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       // Arith after a cast comes first
       if (second->type == CT_ARITH || second->type == CT_CARET)
       {
+         if (cpd.settings[UO_sp_arith_additive].a != AV_IGNORE)
+         {
+            auto arith_char = (first->type == CT_ARITH || first->type == CT_CARET)
+                              ? first->str[0] : second->str[0];
+            if (arith_char == '+' || arith_char == '-')
+            {
+               log_rule("sp_arith_additive");
+               return(cpd.settings[UO_sp_arith_additive].a);
+            }
+         }
+
          log_rule("sp_arith");
          return(cpd.settings[UO_sp_arith].a);
       }
@@ -1273,6 +1319,15 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          log_rule("sp_after_newop_paren");
          return(cpd.settings[UO_sp_after_newop_paren].a);
       }
+   }
+
+   /* "((" vs "( (" or "))" vs ") )" */
+   // Issue #1342
+   if (  (chunk_is_str(first, "(", 1) && chunk_is_str(second, "(", 1))
+      || (chunk_is_str(first, ")", 1) && chunk_is_str(second, ")", 1)))
+   {
+      log_rule("sp_paren_paren");
+      return(cpd.settings[UO_sp_paren_paren].a);
    }
 
    // "foo(...)" vs "foo( ... )"
@@ -1483,6 +1538,17 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       || second->type == CT_ARITH
       || second->type == CT_CARET)
    {
+      if (cpd.settings[UO_sp_arith_additive].a != AV_IGNORE)
+      {
+         auto arith_char = (first->type == CT_ARITH || first->type == CT_CARET)
+                           ? first->str[0] : second->str[0];
+         if (arith_char == '+' || arith_char == '-')
+         {
+            log_rule("sp_arith_additive");
+            return(cpd.settings[UO_sp_arith_additive].a);
+         }
+      }
+
       log_rule("sp_arith");
       return(cpd.settings[UO_sp_arith].a);
    }
@@ -1659,7 +1725,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          log_rule("sp_inside_braces_struct");
          return(cpd.settings[UO_sp_inside_braces_struct].a);
       }
-      if (first->parent_type == CT_TYPE)
+      if (first->parent_type == CT_BRACED_INIT_LIST)
       {
          if (cpd.settings[UO_sp_after_type_brace_init_lst_open].a != AV_IGNORE)
          {
@@ -1859,14 +1925,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       return(cpd.settings[UO_sp_extern_paren].a);
    }
 
-   /* "((" vs "( (" or "))" vs ") )" */
-   if (  (chunk_is_str(first, "(", 1) && chunk_is_str(second, "(", 1))
-      || (chunk_is_str(first, ")", 1) && chunk_is_str(second, ")", 1)))
-   {
-      log_rule("sp_paren_paren");
-      return(cpd.settings[UO_sp_paren_paren].a);
-   }
-
    // this table lists out all combos where a space should NOT be present
    // CT_UNKNOWN is a wildcard.
    for (auto it : no_space_table)
@@ -1894,13 +1952,37 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 
 #ifdef DEBUG
    // these lines are only useful for debugging uncrustify itself
-   LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize do_space: first: %zu:%zu %s %s and second: %zu:%zu %s %s\n\n\n",
-           __func__, __LINE__, first->orig_line, first->orig_col, first->text(), get_token_name(first->type),
+   LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize do_space:\n",
+           __func__, __LINE__);
+   LOG_FMT(LSPACE, "   first->orig_line  is %zu, first->orig_col  is %zu, first->text()  '%s', first->type is  %s\n",
+           first->orig_line, first->orig_col, first->text(), get_token_name(first->type));
+   LOG_FMT(LSPACE, "   second->orig_line is %zu, second->orig_col is %zu, second->text() '%s', second->type is %s\n",
            second->orig_line, second->orig_col, second->text(), get_token_name(second->type));
 #endif
    log_rule("ADD as default value");
    return(AV_ADD);
 } // do_space
+
+
+static argval_t ensure_force_space(chunk_t *first, chunk_t *second, argval_t av)
+{
+   if (first->flags & PCF_FORCE_SPACE)
+   {
+      int av_int = av;
+      LOG_FMT(LSPACE, " <force between '%s' and '%s'>",
+              first->text(), second->text());
+      av_int |= AV_ADD;
+      return(static_cast<argval_t>(av_int));
+   }
+
+   return(av);
+}
+
+
+static argval_t do_space_ensured(chunk_t *first, chunk_t *second, int &min_sp, bool complete = true)
+{
+   return(ensure_force_space(first, second, do_space(first, second, min_sp, complete)));
+}
 
 
 void space_text(void)
@@ -1918,8 +2000,16 @@ void space_text(void)
    size_t  column = pc->column;
    while (pc != nullptr)
    {
-      LOG_FMT(LSPACE, "%s(%d): orig_col is %zu, orig_col is %zu, %s type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+      if (pc->type == CT_NEWLINE)
+      {
+         LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, NEWLINE\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col);
+      }
+      else
+      {
+         LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, '%s' type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+      }
       if (  (cpd.settings[UO_use_options_overriding_for_qt_macros].b)
          && (  (strcmp(pc->text(), "SIGNAL") == 0)
             || (strcmp(pc->text(), "SLOT") == 0)))
@@ -2017,6 +2107,8 @@ void space_text(void)
                if (kw1 && kw2)
                {
                   // back-to-back words need a space
+                  LOG_FMT(LSPACE, "%s(%d): back-to-back words need a space: pc->text() '%s', next->text() '%s'\n",
+                          __func__, __LINE__, pc->text(), next->text());
                   chunk_flags_set(pc, PCF_FORCE_SPACE);
                }
                // TODO:  what is the meaning of 4
@@ -2055,6 +2147,8 @@ void space_text(void)
                      }
                      else
                      {
+                        LOG_FMT(LSPACE, "%s(%d): : pc->text() is %s, next->text() is %s\n",
+                                __func__, __LINE__, pc->text(), next->text());
                         chunk_flags_set(pc, PCF_FORCE_SPACE);
                      }
                   }
@@ -2063,17 +2157,9 @@ void space_text(void)
          }
 
          int min_sp;
-         LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, %s type is %s\n",
+         LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, pc-text() '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-         argval_t av = do_space(pc, next, min_sp, false);
-         if (pc->flags & PCF_FORCE_SPACE)
-         {
-            int av_int = av;
-            LOG_FMT(LSPACE, " <force between '%s' and '%s'>",
-                    pc->text(), next->text());
-            av_int |= AV_ADD;
-            av      = static_cast<argval_t>(av_int);
-         }
+         argval_t av = do_space_ensured(pc, next, min_sp, false);
          min_sp = max(1, min_sp);
          switch (av)
          {
@@ -2150,7 +2236,7 @@ void space_text(void)
          }
          next->column = column;
 
-         LOG_FMT(LSPACE, " = %s @ %zu => %zu\n",
+         LOG_FMT(LSPACE, "%s(%d): rule = %s @ %zu => %zu\n", __func__, __LINE__,
                  (av == AV_IGNORE) ? "IGNORE" :
                  (av == AV_ADD) ? "ADD" :
                  (av == AV_REMOVE) ? "REMOVE" : "FORCE",
@@ -2238,7 +2324,7 @@ size_t space_needed(chunk_t *first, chunk_t *second)
    LOG_FMT(LSPACE, "%s(%d)\n", __func__, __LINE__);
 
    int min_sp;
-   switch (do_space(first, second, min_sp))
+   switch (do_space_ensured(first, second, min_sp))
    {
    case AV_ADD:
    case AV_FORCE:
@@ -2268,27 +2354,18 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
    log_func_stack_inline(LSPACE);
 
    int      min_sp;
-   argval_t av = do_space(first, second, min_sp);
+   argval_t av = do_space_ensured(first, second, min_sp);
 
-   LOG_FMT(LSPACE, "%s(%d): av is %d, ", __func__, __LINE__, av);
-#ifdef DEBUG
-   LOG_FMT(LSPACE, "\n");
-#endif
+   LOG_FMT(LSPACE, "%s(%d): av is %s\n", __func__, __LINE__, argval_to_string(av).c_str());
    size_t coldiff;
    if (first->nl_count)
    {
-      LOG_FMT(LSPACE, "nl_count is %zu, orig_col_end is %zu", first->nl_count, first->orig_col_end);
-#ifdef DEBUG
-      LOG_FMT(LSPACE, "\n");
-#endif
+      LOG_FMT(LSPACE, "   nl_count is %zu, orig_col_end is %zu\n", first->nl_count, first->orig_col_end);
       coldiff = first->orig_col_end - 1;
    }
    else
    {
-      LOG_FMT(LSPACE, "len is %zu", first->len());
-#ifdef DEBUG
-      LOG_FMT(LSPACE, "\n");
-#endif
+      LOG_FMT(LSPACE, "   len is %zu\n", first->len());
       coldiff = first->len();
    }
 
@@ -2312,7 +2389,7 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
    case AV_NOT_DEFINED:
       break;
    }
-   LOG_FMT(LSPACE, " => %zu\n", coldiff);
+   LOG_FMT(LSPACE, "   => coldiff is %zu\n", coldiff);
    return(coldiff);
 } // space_col_align
 

@@ -14,6 +14,9 @@
 #include <cstdlib>
 
 
+using namespace std;
+
+
 //! See if all characters are ASCII (0-127)
 static bool is_ascii(const vector<UINT8> &data, size_t &non_ascii_cnt, size_t &zero_cnt);
 

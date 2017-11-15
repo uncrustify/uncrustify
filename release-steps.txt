@@ -1,7 +1,8 @@
-2017-05-05
+2017-11-08 for Version 0.66
 
 Release steps.
 Just in case I don't do a release for a while and forget what to do... =)
+Change the date at the first line of this document.
 
 1. Make sure CI (continuous integration - Travis and AppVeyor) has passed.
    This should ensure all tests pass and building
@@ -15,7 +16,7 @@ Just in case I don't do a release for a while and forget what to do... =)
     ChangeLog
     CMakeLists.txt
       At lines under "# Generate uncrustify_version.h"
-      (Check the value of "FALLBACK_VERSION")
+      (Check the value of "CURRENT_VERSION", such as "Uncrustify-0.66_f")
     documentation/htdocs/index.html
       At line <li>Highly configurable
       TODO: (automat for this) Change the values of <options> and version.
@@ -23,13 +24,13 @@ Just in case I don't do a release for a while and forget what to do... =)
       At line "version" the number
       At line "preinstall"
       At line "url"
+    README.md
+      At line * highly configurable
+      TODO: (automat for this) Change the values of options and version.
 
 2b. Update the option count in documentation/htdocs/index.html
    Use script/count_the_options.sh to count the options.
-   Check the number of options at ./scripts/More_Options_to_Test/help.txt
-
-2c. Update the config files
-   $ scripts/update-defaults.sh
+   Check the number of options at ./tests/cli/Output/help.txt
 
 2d. Update the man file, if any command-line options have changed.
 
@@ -48,6 +49,9 @@ Just in case I don't do a release for a while and forget what to do... =)
    $ git tag -a uncrustify-0.nn -m uncrustify-0.nn
    $ git push --tags --repo=https://github.com/uncrustify/uncrustify.git
      (use an admin)
+
+4b. Update the config files
+   $ scripts/update-defaults.sh
 
 5. The source tarball is available from the release on GitHub, or use
    $ git archive -o uncrustify-0.nn.tar.gz uncrustify-0.nn

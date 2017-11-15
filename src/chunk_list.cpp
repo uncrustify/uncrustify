@@ -37,7 +37,7 @@ enum class direction_e : unsigned int
  * for a function pointer of type
  * bool function(chunk_t *pc)
  */
-typedef bool (*check_t)(chunk_t *pc);
+typedef bool (*check_t)(const chunk_t *pc);
 
 
 /**
@@ -47,7 +47,7 @@ typedef bool (*check_t)(chunk_t *pc);
  * for a function pointer of type
  * chunk_t *function(chunk_t *cur, nav_t scope)
  */
-typedef chunk_t * (*search_t)(chunk_t *cur, scope_e scope);
+typedef chunk_t * (*search_t)(const chunk_t *cur, scope_e scope);
 
 
 /**
@@ -74,10 +74,10 @@ typedef chunk_t * (*search_t)(chunk_t *cur, scope_e scope);
  * @retval nullptr  no requested chunk was found or invalid parameters provided
  * @retval chunk_t  pointer to the found chunk
  */
-static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD, const bool cond = true);
+static chunk_t *chunk_search(const chunk_t *cur, const check_t check_fct, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD, const bool cond = true);
 
 
-static void chunk_log(chunk_t *pc, const char *text);
+static void chunk_log(const chunk_t *pc, const char *text);
 
 
 /*
@@ -101,7 +101,7 @@ static void chunk_log(chunk_t *pc, const char *text);
  * @retval nullptr  no chunk found or invalid parameters provided
  * @retval chunk_t  pointer to the found chunk
  */
-static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
+static chunk_t *chunk_search_type(const chunk_t *cur, const c_token_t type, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
 
 
 /**
@@ -121,7 +121,7 @@ static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type, const scop
  * @retval nullptr  no chunk found or invalid parameters provided
  * @retval chunk_t  pointer to the found chunk
  */
-static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e scope = scope_e::ALL, direction_e dir = direction_e::FORWARD, int level = -1);
+static chunk_t *chunk_search_typelevel(const chunk_t *cur, c_token_t type, scope_e scope = scope_e::ALL, direction_e dir = direction_e::FORWARD, int level = -1);
 
 
 /**
@@ -137,7 +137,10 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
  * @retval nullptr  no chunk found or invalid parameters provided
  * @retval chunk_t  pointer to the found chunk
  */
-static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
+static chunk_t *chunk_get_ncnlnp(const chunk_t *cur, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
+
+
+static chunk_t *chunk_get_ncnlnpnd(const chunk_t *cur, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
 
 
 /**
@@ -157,7 +160,7 @@ static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope = scope_e::AL
  * @retval NULL     no chunk found or invalid parameters provided
  * @retval chunk_t  pointer to the found chunk
  */
-static chunk_t *chunk_search_str(chunk_t *cur, const char *str, size_t len, scope_e scope, direction_e dir, int level);
+static chunk_t *chunk_search_str(const chunk_t *cur, const char *str, size_t len, scope_e scope, direction_e dir, int level);
 
 
 /**
@@ -208,19 +211,19 @@ static search_t select_search_fct(const direction_e dir)
 }
 
 
-chunk_t *chunk_search_prev_cat(chunk_t *pc, const c_token_t cat)
+chunk_t *chunk_search_prev_cat(const chunk_t *pc, const c_token_t cat)
 {
    return(chunk_search_type(pc, cat, scope_e::ALL, direction_e::BACKWARD));
 }
 
 
-chunk_t *chunk_search_next_cat(chunk_t *pc, const c_token_t cat)
+chunk_t *chunk_search_next_cat(const chunk_t *pc, const c_token_t cat)
 {
    return(chunk_search_type(pc, cat, scope_e::ALL, direction_e::FORWARD));
 }
 
 
-static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type,
+static chunk_t *chunk_search_type(const chunk_t *cur, const c_token_t type,
                                   const scope_e scope, const direction_e dir)
 {
    /*
@@ -228,74 +231,94 @@ static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type,
     * in forward or backward direction
     */
    search_t search_function = select_search_fct(dir);
-   chunk_t  *pc             = cur;
 
-   do                                  // loop over the chunk list
+   // loop over the chunk list
+   chunk_t *pc = search_function(cur, scope);
+
+   while (  pc != nullptr           // the end of the list was not reached
+         && pc->type != type)       // and the demanded chunk was not found
    {
-      pc = search_function(pc, scope); // in either direction while
-   } while (  pc != nullptr            // the end of the list was not reached yet
-           && pc->type != type);       // and the demanded chunk was not found either
-   return(pc);                         // the latest chunk is the searched one
+      pc = search_function(pc, scope);
+   }
+
+   return(pc);  // the latest chunk is the searched one or nullptr
 }
 
 
-static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e scope, direction_e dir, int level)
+static chunk_t *chunk_search_typelevel(const chunk_t *cur, c_token_t type,
+                                       scope_e scope, direction_e dir, int level)
 {
    /*
     * Depending on the parameter dir the search function searches
     * in forward or backward direction
     */
    search_t search_function = select_search_fct(dir);
-   chunk_t  *pc             = cur;
 
-   do                                  // loop over the chunk list
+
+   // loop over the chunk list
+   chunk_t *pc = search_function(cur, scope);
+
+   while (  pc != nullptr        // the end of the list was not reached
+         && !is_expected_type_and_level(pc, type, level))
    {
-      pc = search_function(pc, scope); // in either direction while
+      pc = search_function(pc, scope);
 #if DEBUG
       if (pc != nullptr)
       {
-         LOG_FMT(LCHUNK, "%s(%d): %s type is %s, orig_line is %zu, orig_col is %zu\n",
-                 __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
+         if (pc->type == CT_NEWLINE)
+         {
+            LOG_FMT(LCHUNK, "%s(%d): orig_line is %zu, orig_col is %zu, NEWLINE\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col);
+         }
+         else
+         {
+            LOG_FMT(LCHUNK, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s', type is %s\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+         }
       }
 #endif
-   } while (  pc != nullptr        // the end of the list was not reached yet
-           && (is_expected_type_and_level(pc, type, level) == false));
-   return(pc);                     // the latest chunk is the searched one
+   }
+   return(pc);  // the latest chunk is the searched one or nullptr
 }
 
 
-static chunk_t *chunk_search_str(chunk_t *cur, const char *str, size_t len, scope_e scope, direction_e dir, int level)
+static chunk_t *chunk_search_str(const chunk_t *cur, const char *str, size_t len, scope_e scope, direction_e dir, int level)
 {
    /*
     * Depending on the parameter dir the search function searches
     * in forward or backward direction */
    search_t search_function = select_search_fct(dir);
-   chunk_t  *pc             = cur;
 
-   do                                  // loop over the chunk list
+   // loop over the chunk list
+   chunk_t *pc = search_function(cur, scope);
+
+   while (  pc != nullptr            // the end of the list was not reached yet
+         && (is_expected_string_and_level(pc, str, level, len) == false))
    {
-      pc = search_function(pc, scope); // in either direction while
-   } while (  pc != nullptr            // the end of the list was not reached yet
-           && (is_expected_string_and_level(pc, str, level, len) == false));
-   return(pc);                         // the latest chunk is the searched one
+      pc = search_function(pc, scope);
+   }
+   return(pc);  // the latest chunk is the searched one or nullptr
 }
 
 
-static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_e scope,
-                             const direction_e dir, const bool cond)
+static chunk_t *chunk_search(const chunk_t *cur, const check_t check_fct,
+                             const scope_e scope, const direction_e dir,
+                             const bool cond)
 {
    /*
     * Depending on the parameter dir the search function searches
     * in forward or backward direction */
    search_t search_function = select_search_fct(dir);
-   chunk_t  *pc             = cur;
 
-   do                                   // loop over the chunk list
+   // loop over the chunk list
+   chunk_t *pc = search_function(cur, scope);
+
+   while (  pc != nullptr            // end of the list was not reached yet
+         && (check_fct(pc) != cond)) // and the demanded chunk was not found
    {
-      pc = search_function(pc, scope);  // in either direction while
-   } while (  pc != nullptr             // the end of the list was not reached yet
-           && (check_fct(pc) != cond)); // and the demanded chunk was not found either
-   return(pc);                          // the latest chunk is the searched one
+      pc = search_function(pc, scope);
+   }
+   return(pc);                       // the latest chunk is the searched one
 }
 
 
@@ -303,7 +326,7 @@ static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_
  * into a common function However this should be done with the preprocessor
  * to avoid addition check conditions that would be evaluated in the
  * while loop of the calling function */
-chunk_t *chunk_get_next(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_next(const chunk_t *cur, scope_e scope)
 {
    if (cur == nullptr)
    {
@@ -332,7 +355,7 @@ chunk_t *chunk_get_next(chunk_t *cur, scope_e scope)
 }
 
 
-chunk_t *chunk_get_prev(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_prev(const chunk_t *cur, scope_e scope)
 {
    if (cur == nullptr)
    {
@@ -380,7 +403,7 @@ chunk_t *chunk_dup(const chunk_t *pc_in)
 }
 
 
-static void chunk_log_msg(chunk_t *chunk, const log_sev_t log, const char *str)
+static void chunk_log_msg(const chunk_t *chunk, const log_sev_t log, const char *str)
 {
    LOG_FMT(log, "%s %zu:%zu '%s' [%s]",
            str, chunk->orig_line, chunk->orig_col, chunk->text(),
@@ -388,7 +411,7 @@ static void chunk_log_msg(chunk_t *chunk, const log_sev_t log, const char *str)
 }
 
 
-static void chunk_log(chunk_t *pc, const char *text)
+static void chunk_log(const chunk_t *pc, const char *text)
 {
    if (  pc != nullptr
       && (cpd.unc_stage != unc_stage_e::TOKENIZE)
@@ -452,111 +475,122 @@ void chunk_move_after(chunk_t *pc_in, chunk_t *ref)
 }
 
 
-chunk_t *chunk_get_next_nl(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_next_nl(const chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_newline, scope, direction_e::FORWARD, true));
 }
 
 
-chunk_t *chunk_get_prev_nl(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_prev_nl(const chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_newline, scope, direction_e::BACKWARD, true));
 }
 
 
-chunk_t *chunk_get_next_nnl(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_next_nnl(const chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_newline, scope, direction_e::FORWARD, false));
 }
 
 
-chunk_t *chunk_get_prev_nnl(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_prev_nnl(const chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_newline, scope, direction_e::BACKWARD, false));
 }
 
 
-chunk_t *chunk_get_next_ncnl(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_next_ncnl(const chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_comment_or_newline, scope, direction_e::FORWARD, false));
 }
 
 
-chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_next_ncnlnp(const chunk_t *cur, scope_e scope)
 {
    return(chunk_get_ncnlnp(cur, scope, direction_e::FORWARD));
 }
 
 
-chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_prev_ncnlnp(const chunk_t *cur, scope_e scope)
 {
    return(chunk_get_ncnlnp(cur, scope, direction_e::BACKWARD));
 }
 
 
-chunk_t *chunk_get_next_nblank(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_prev_ncnlnpnd(const chunk_t *cur, scope_e scope)
+{
+   return(chunk_get_ncnlnpnd(cur, scope, direction_e::BACKWARD));
+}
+
+
+chunk_t *chunk_get_next_nblank(const chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_comment_newline_or_blank, scope, direction_e::FORWARD, false));
 }
 
 
-chunk_t *chunk_get_prev_nblank(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_prev_nblank(const chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_comment_newline_or_blank, scope, direction_e::BACKWARD, false));
 }
 
 
-chunk_t *chunk_get_next_nc(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_next_nc(const chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_comment, scope, direction_e::FORWARD, false));
 }
 
 
-chunk_t *chunk_get_next_nisq(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_next_nisq(const chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_balanced_square, scope, direction_e::FORWARD, false));
 }
 
 
-chunk_t *chunk_get_prev_ncnl(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_prev_ncnl(const chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_comment_or_newline, scope, direction_e::BACKWARD, false));
 }
 
 
-chunk_t *chunk_get_prev_nc(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_prev_nc(const chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_comment, scope, direction_e::BACKWARD, false));
 }
 
 
-chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level, scope_e scope)
+chunk_t *chunk_get_next_type(const chunk_t *cur, c_token_t type, int level, scope_e scope)
 {
    return(chunk_search_typelevel(cur, type, scope, direction_e::FORWARD, level));
 }
 
 
-chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level, scope_e scope)
+chunk_t *chunk_get_next_str(const chunk_t *cur, const char *str, size_t len, int level, scope_e scope)
 {
    return(chunk_search_str(cur, str, len, scope, direction_e::FORWARD, level));
 }
 
 
-chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type, int level, scope_e scope)
+chunk_t *chunk_get_prev_type(const chunk_t *cur, c_token_t type, int level, scope_e scope)
 {
    return(chunk_search_typelevel(cur, type, scope, direction_e::BACKWARD, level));
 }
 
 
-chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level, scope_e scope)
+chunk_t *chunk_get_prev_str(const chunk_t *cur, const char *str, size_t len, int level, scope_e scope)
 {
    return(chunk_search_str(cur, str, len, scope, direction_e::BACKWARD, level));
 }
 
 
-bool chunk_is_newline_between(chunk_t *start, chunk_t *end)
+bool chunk_is_newline_between(const chunk_t *start, const chunk_t *end)
 {
-   for (chunk_t *pc = start; pc != end; pc = chunk_get_next(pc))
+   if (chunk_is_newline(start))
+   {
+      return(true);
+   }
+
+   for (chunk_t *pc = chunk_get_next(start); pc != end; pc = chunk_get_next(pc))
    {
       if (chunk_is_newline(pc))
       {
@@ -574,37 +608,37 @@ void chunk_swap(chunk_t *pc1, chunk_t *pc2)
 
 
 // TODO: the following function shall be made similar to the search functions
-chunk_t *chunk_first_on_line(chunk_t *pc)
+chunk_t *chunk_first_on_line(const chunk_t *start)
 {
-   chunk_t *first = pc;
+   chunk_t *prev = chunk_get_prev(start);
 
-   while ((pc = chunk_get_prev(pc)) != nullptr && !chunk_is_newline(pc))
+   if (prev == nullptr || chunk_is_newline(prev))
    {
-      first = pc;
+      return(const_cast<chunk_t *>(start));  // can be nullptr
    }
 
-   return(first);
+   chunk_t *out = prev;
+   while (prev != nullptr && !chunk_is_newline(prev))
+   {
+      out  = prev;
+      prev = chunk_get_prev(out);
+   }
+
+   return(out);
 }
 
 
-bool chunk_is_last_on_line(chunk_t &pc)  //TODO: pc should be const here
+bool chunk_is_last_on_line(const chunk_t &pc)
 {
    // check if pc is the very last chunk of the file
-   const auto *end = chunk_get_tail();
-
-   if (&pc == end)
+   if (&pc == chunk_get_tail())
    {
       return(true);
    }
 
    // if the next chunk is a newline then pc is the last chunk on its line
    const auto *next = chunk_get_next(&pc);
-   if (next != nullptr && next->type == CT_NEWLINE)
-   {
-      return(true);
-   }
-
-   return(false);
+   return((next != nullptr && next->type == CT_NEWLINE) ? true : false);
 }
 
 
@@ -683,13 +717,13 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
 } // chunk_swap_lines
 
 
-chunk_t *chunk_get_next_nvb(chunk_t *cur, const scope_e scope)
+chunk_t *chunk_get_next_nvb(const chunk_t *cur, const scope_e scope)
 {
    return(chunk_search(cur, chunk_is_vbrace, scope, direction_e::FORWARD, false));
 }
 
 
-chunk_t *chunk_get_prev_nvb(chunk_t *cur, const scope_e scope)
+chunk_t *chunk_get_prev_nvb(const chunk_t *cur, const scope_e scope)
 {
    return(chunk_search(cur, chunk_is_vbrace, scope, direction_e::BACKWARD, false));
 }
@@ -697,13 +731,13 @@ chunk_t *chunk_get_prev_nvb(chunk_t *cur, const scope_e scope)
 
 void set_chunk_type_real(chunk_t *pc, c_token_t tt)
 {
-   set_chunk_real(pc, tt, LSETTYP, "set_chunk_type");
+   set_chunk_real(pc, tt, LSETTYP);
 }
 
 
 void set_chunk_parent_real(chunk_t *pc, c_token_t pt)
 {
-   set_chunk_real(pc, pt, LSETPAR, "set_chunk_parent");
+   set_chunk_real(pc, pt, LSETPAR);
 }
 
 
@@ -715,8 +749,8 @@ void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits)
       UINT64 nflags = (pc->flags & ~clr_bits) | set_bits;
       if (pc->flags != nflags)
       {
-         LOG_FMT(LSETFLG, "set_chunk_flags(%d): %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " %zu:%zu '%s' %s:%s",
-                 __LINE__, pc->flags, pc->flags ^ nflags, nflags,
+         LOG_FMT(LSETFLG, "%s(%d): %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " orig_line is %zu, orig_col is %zu, text() '%s', type is %s, parent_type is %s",
+                 __func__, __LINE__, pc->flags, pc->flags ^ nflags, nflags,
                  pc->orig_line, pc->orig_col, pc->text(),
                  get_token_name(pc->type), get_token_name(pc->parent_type));
          log_func_stack_inline(LSETFLG);
@@ -726,7 +760,7 @@ void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits)
 }
 
 
-void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what, const char *str)
+void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what)
 {
    LOG_FUNC_ENTRY();
 
@@ -754,8 +788,9 @@ void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what, const char *st
 
    if (pc != nullptr && *where != token)
    {
-      LOG_FMT(what, "%s(%d): orig_line is %zu, orig_col is %zu, '%s' %s:%s => %s:%s",
-              str, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
+      LOG_FMT(what, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+      LOG_FMT(what, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s",
               get_token_name(pc->type), get_token_name(pc->parent_type),
               get_token_name(*type), get_token_name(*parent_type));
       log_func_stack_inline(what);
@@ -764,13 +799,29 @@ void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what, const char *st
 }
 
 
-static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope, const direction_e dir)
+static chunk_t *chunk_get_ncnlnp(const chunk_t *cur, const scope_e scope, const direction_e dir)
 {
-   chunk_t *pc = cur;
+   return(chunk_is_preproc(cur) == true
+          ? chunk_search(cur, chunk_is_comment_or_newline_in_preproc, scope, dir, false)
+          : chunk_search(cur, chunk_is_comment_newline_or_preproc, scope, dir, false));
+}
 
-   pc = (chunk_is_preproc(pc) == true) ?
-        chunk_search(pc, chunk_is_comment_or_newline_in_preproc, scope, dir, false) :
-        chunk_search(pc, chunk_is_comment_newline_or_preproc, scope, dir, false);
+
+static chunk_t *chunk_get_ncnlnpnd(const chunk_t *cur, const scope_e scope,
+                                   const direction_e dir)
+{
+   search_t search_function = select_search_fct(dir);
+
+   // loop over the chunk list
+   chunk_t *pc = search_function(cur, scope);
+
+   while (  pc != nullptr            // the end of the list was not reached yet
+         && !chunk_is_comment_or_newline(pc)
+         && !chunk_is_preproc(pc)
+         && (pc->type == CT_DC_MEMBER))
+   {
+      pc = search_function(pc, scope);
+   }
    return(pc);
 }
 

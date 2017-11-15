@@ -65,140 +65,143 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
 
    m_last_added = 0;
 
+   // Threshold check should begin after
+   // tighten down the spacing between ref and start
+
+   /*
+    * SS_IGNORE: no special handling of '*' or '&', only 'foo' is aligned
+    *     void     foo;  // gap=5, 'foo' is aligned
+    *     char *   foo;  // gap=3, 'foo' is aligned
+    *     foomatic foo;  // gap=1, 'foo' is aligned
+    *  The gap is the columns between 'foo' and the previous token.
+    *  [void - foo], ['*' - foo], etc
+    *
+    * SS_INCLUDE: - space between variable and '*' or '&' is eaten
+    *     void     foo;  // gap=5, 'foo' is aligned
+    *     char     *foo; // gap=5, '*' is aligned
+    *     foomatic foo;  // gap=1, 'foo' is aligned
+    *  The gap is the columns between the first '*' or '&' before foo
+    *  and the previous token. [void - foo], [char - '*'], etc
+    *
+    * SS_DANGLE: - space between variable and '*' or '&' is eaten
+    *     void     foo;  // gap=5
+    *     char    *bar;  // gap=5, as the '*' doesn't count
+    *     foomatic foo;  // gap=1
+    *  The gap is the columns between 'foo' and the chunk before the first
+    *  '*' or '&'. [void - foo], [char - bar], etc
+    *
+    * If the gap < m_gap, then the column is bumped out by the difference.
+    * So, if m_gap is 2, then the above would be:
+    * SS_IGNORE:
+    *     void      foo;  // gap=6
+    *     char *    foo;  // gap=4
+    *     foomatic  foo;  // gap=2
+    * SS_INCLUDE:
+    *     void      foo;  // gap=6
+    *     char      *foo; // gap=6
+    *     foomatic  foo;  // gap=2
+    * SS_DANGLE:
+    *     void      foo;  // gap=6
+    *     char     *bar;  // gap=6, as the '*' doesn't count
+    *     foomatic  foo;  // gap=2
+    * Right aligned numbers:
+    *     #define A    -1
+    *     #define B   631
+    *     #define C     3
+    * Left aligned numbers:
+    *     #define A     -1
+    *     #define B     631
+    *     #define C     3
+    *
+    * In the code below, pc is set to the item that is aligned.
+    * In the above examples, that is 'foo', '*', '-', or 63.
+    *
+    * Ref is set to the last part of the type.
+    * In the above examples, that is 'void', 'char', 'foomatic', 'A', or 'B'.
+    *
+    * The '*' and '&' can float between the two.
+    *
+    * If align_on_tabstop=true, then SS_DANGLE is changed to SS_INCLUDE.
+    */
+
+   if (cpd.settings[UO_align_on_tabstop].b && m_star_style == SS_DANGLE)
+   {
+      m_star_style = SS_INCLUDE;
+   }
+
+   // Find ref. Back up to the real item that is aligned.
+   chunk_t *prev = start;
+   while (  (prev = chunk_get_prev(prev)) != nullptr
+         && (chunk_is_ptr_operator(prev) || prev->type == CT_TPAREN_OPEN))
+   {
+      // do nothing - we want prev when this exits
+   }
+   chunk_t *ref = prev;
+   if (chunk_is_newline(ref))
+   {
+      ref = chunk_get_next(ref);
+   }
+
+   // Find the item that we are going to align.
+   chunk_t *ali = start;
+   if (m_star_style != SS_IGNORE)
+   {
+      // back up to the first '*' or '^' preceding the token
+      prev = chunk_get_prev(ali);
+      while (chunk_is_star(prev) || chunk_is_msref(prev))
+      {
+         ali  = prev;
+         prev = chunk_get_prev(ali);
+      }
+      if (chunk_is_token(prev, CT_TPAREN_OPEN))
+      {
+         ali  = prev;
+         prev = chunk_get_prev(ali);
+         // this is correct, even Coverity says:
+         // CID 76021 (#1 of 1): Unused value (UNUSED_VALUE)returned_pointer: Assigning value from
+         // chunk_get_prev(ali, nav_e::ALL) to prev here, but that stored value is overwritten before it can be used.
+      }
+   }
+   if (m_amp_style != SS_IGNORE)
+   {
+      // back up to the first '&' preceding the token
+      prev = chunk_get_prev(ali);
+      while (chunk_is_addr(prev))
+      {
+         ali  = prev;
+         prev = chunk_get_prev(ali);
+      }
+   }
+
+   chunk_t *tmp;
+   // Tighten down the spacing between ref and start
+   if (!cpd.settings[UO_align_keep_extra_space].b)
+   {
+      size_t tmp_col = ref->column;
+      tmp = ref;
+      while (tmp != start)
+      {
+         chunk_t *next = chunk_get_next(tmp);
+         tmp_col += space_col_align(tmp, next);
+         if (next->column != tmp_col)
+         {
+            align_to_column(next, tmp_col);
+         }
+         tmp = next;
+      }
+   }
+
    // Check threshold limits
    if (  m_max_col == 0
       || m_thresh == 0
-      || (  ((start->column + m_gap) <= (m_thresh + m_max_col))  // don't use subtraction here to prevent underflow
-         && (  (start->column + m_gap + m_thresh) >= m_max_col   // change the expression to mind negative expression
+      || (  ((start->column + m_gap) <= (m_thresh + m_max_col)) // don't use subtraction here to prevent underflow
+         && (  (start->column + m_gap + m_thresh) >= m_max_col  // change the expression to mind negative expression
             || start->column >= m_min_col)))
    {
       // we are adding it, so update the newline seqnum
       if (seqnum > m_nl_seqnum)
       {
          m_nl_seqnum = seqnum;
-      }
-
-      /*
-       * SS_IGNORE: no special handling of '*' or '&', only 'foo' is aligned
-       *     void     foo;  // gap=5, 'foo' is aligned
-       *     char *   foo;  // gap=3, 'foo' is aligned
-       *     foomatic foo;  // gap=1, 'foo' is aligned
-       *  The gap is the columns between 'foo' and the previous token.
-       *  [void - foo], ['*' - foo], etc
-       *
-       * SS_INCLUDE: - space between variable and '*' or '&' is eaten
-       *     void     foo;  // gap=5, 'foo' is aligned
-       *     char     *foo; // gap=5, '*' is aligned
-       *     foomatic foo;  // gap=1, 'foo' is aligned
-       *  The gap is the columns between the first '*' or '&' before foo
-       *  and the previous token. [void - foo], [char - '*'], etc
-       *
-       * SS_DANGLE: - space between variable and '*' or '&' is eaten
-       *     void     foo;  // gap=5
-       *     char    *bar;  // gap=5, as the '*' doesn't count
-       *     foomatic foo;  // gap=1
-       *  The gap is the columns between 'foo' and the chunk before the first
-       *  '*' or '&'. [void - foo], [char - bar], etc
-       *
-       * If the gap < m_gap, then the column is bumped out by the difference.
-       * So, if m_gap is 2, then the above would be:
-       * SS_IGNORE:
-       *     void      foo;  // gap=6
-       *     char *    foo;  // gap=4
-       *     foomatic  foo;  // gap=2
-       * SS_INCLUDE:
-       *     void      foo;  // gap=6
-       *     char      *foo; // gap=6
-       *     foomatic  foo;  // gap=2
-       * SS_DANGLE:
-       *     void      foo;  // gap=6
-       *     char     *bar;  // gap=6, as the '*' doesn't count
-       *     foomatic  foo;  // gap=2
-       * Right aligned numbers:
-       *     #define A    -1
-       *     #define B   631
-       *     #define C     3
-       * Left aligned numbers:
-       *     #define A     -1
-       *     #define B     631
-       *     #define C     3
-       *
-       * In the code below, pc is set to the item that is aligned.
-       * In the above examples, that is 'foo', '*', '-', or 63.
-       *
-       * Ref is set to the last part of the type.
-       * In the above examples, that is 'void', 'char', 'foomatic', 'A', or 'B'.
-       *
-       * The '*' and '&' can float between the two.
-       *
-       * If align_on_tabstop=true, then SS_DANGLE is changed to SS_INCLUDE.
-       */
-
-      if (cpd.settings[UO_align_on_tabstop].b && m_star_style == SS_DANGLE)
-      {
-         m_star_style = SS_INCLUDE;
-      }
-
-      // Find ref. Back up to the real item that is aligned.
-      chunk_t *prev = start;
-      while (  (prev = chunk_get_prev(prev)) != nullptr
-            && (chunk_is_ptr_operator(prev) || prev->type == CT_TPAREN_OPEN))
-      {
-         // do nothing - we want prev when this exits
-      }
-      chunk_t *ref = prev;
-      if (chunk_is_newline(ref))
-      {
-         ref = chunk_get_next(ref);
-      }
-
-      // Find the item that we are going to align.
-      chunk_t *ali = start;
-      if (m_star_style != SS_IGNORE)
-      {
-         // back up to the first '*' or '^' preceding the token
-         prev = chunk_get_prev(ali);
-         while (chunk_is_star(prev) || chunk_is_msref(prev) || chunk_is_nullable(prev))
-         {
-            ali  = prev;
-            prev = chunk_get_prev(ali);
-         }
-         if (chunk_is_token(prev, CT_TPAREN_OPEN))
-         {
-            ali  = prev;
-            prev = chunk_get_prev(ali);
-            // this is correct, even Coverity says:
-            // CID 76021 (#1 of 1): Unused value (UNUSED_VALUE)returned_pointer: Assigning value from
-            // chunk_get_prev(ali, nav_e::ALL) to prev here, but that stored value is overwritten before it can be used.
-         }
-      }
-      if (m_amp_style != SS_IGNORE)
-      {
-         // back up to the first '&' preceding the token
-         prev = chunk_get_prev(ali);
-         while (chunk_is_addr(prev))
-         {
-            ali  = prev;
-            prev = chunk_get_prev(ali);
-         }
-      }
-
-      chunk_t *tmp;
-      // Tighten down the spacing between ref and start
-      if (!cpd.settings[UO_align_keep_extra_space].b)
-      {
-         size_t tmp_col = ref->column;
-         tmp = ref;
-         while (tmp != start)
-         {
-            chunk_t *next = chunk_get_next(tmp);
-            tmp_col += space_col_align(tmp, next);
-            if (next->column != tmp_col)
-            {
-               align_to_column(next, tmp_col);
-            }
-            tmp = next;
-         }
       }
 
       // Set the column adjust and gap
@@ -295,13 +298,17 @@ void AlignStack::NewLines(size_t cnt)
       m_seqnum += cnt;
       if (m_seqnum > (m_nl_seqnum + m_span))
       {
-         LOG_FMT(LAS, "Newlines<%zu>-", cnt);
+         LOG_FMT(LAS, "Newlines(%d): cnt is %zu, -\n", __LINE__, cnt);
          Flush();
       }
       else
       {
-         LOG_FMT(LAS, "Newlines<%zu>\n", cnt);
+         LOG_FMT(LAS, "Newlines(%d): cnt is %zu\n", __LINE__, cnt);
       }
+   }
+   else
+   {
+      LOG_FMT(LAS, "Newlines(%d): is empty\n", __LINE__);
    }
 }
 
@@ -312,8 +319,9 @@ void AlignStack::Flush()
    const ChunkStack::Entry *ce         = nullptr;
    chunk_t                 *pc;
 
-   LOG_FMT(LAS, "%s: m_aligned.Len()=%zu\n", __func__, m_aligned.Len());
-   LOG_FMT(LAS, "Flush (min=%zu, max=%zu)\n", m_min_col, m_max_col);
+   LOG_FMT(LAS, "%s(%d): m_aligned.Len() is %zu\n", __func__, __LINE__, m_aligned.Len());
+   LOG_FMT(LAS, "   (min is %zu, max is %zu)\n", m_min_col, m_max_col);
+
    if (m_aligned.Len() == 1)
    {
       // check if we have *one* typedef in the line
@@ -388,8 +396,8 @@ void AlignStack::Flush()
       m_max_col = align_tab_column(m_max_col);
    }
 
-   LOG_FMT(LAS, "%s: m_aligned.Len()=%zu\n",
-           __func__, m_aligned.Len());
+   LOG_FMT(LAS, "%s(%d): m_aligned.Len() is %zu\n",
+           __func__, __LINE__, m_aligned.Len());
    for (size_t idx = 0; idx < m_aligned.Len(); idx++)
    {
       ce = m_aligned.Get(idx);
@@ -400,8 +408,8 @@ void AlignStack::Flush()
       {
          if (m_skip_first && pc->column != tmp_col)
          {
-            LOG_FMT(LAS, "%s: %zu:%zu dropping first item due to skip_first\n",
-                    __func__, pc->orig_line, pc->orig_col);
+            LOG_FMT(LAS, "%s(%d): orig_line is %zu, orig_col is %zu, dropping first item due to skip_first\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col);
             m_skip_first = false;
             m_aligned.Pop_Front();
             Flush();
@@ -418,8 +426,8 @@ void AlignStack::Flush()
       pc->align.next = m_aligned.GetChunk(idx + 1);
 
       // Indent the token, taking col_adj into account
-      LOG_FMT(LAS, "%s: line %zu: '%s' to col %zu (adj=%d)\n",
-              __func__, pc->orig_line, pc->text(), tmp_col, pc->align.col_adj);
+      LOG_FMT(LAS, "%s(%d): orig_line is %zu, text() '%s', to col %zu (adj is %d)\n",
+              __func__, __LINE__, pc->orig_line, pc->text(), tmp_col, pc->align.col_adj);
       align_to_column(pc, tmp_col);
    }
 

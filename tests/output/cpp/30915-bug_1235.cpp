@@ -1,0 +1,1 @@
+namespace dudeNamespace { class ForwardFooClass; }

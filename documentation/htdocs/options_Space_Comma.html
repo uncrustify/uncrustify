@@ -1,0 +1,36 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+   <title>Uncrustify: where do the Spaces options work</title>
+</head>
+<body lang="en-US">
+<h1><a href="https://github.com/uncrustify/uncrustify">Uncrustify</a>:
+Where do the options work?</h1>
+<h2>Spaces for comma</h2>
+<p> 
+</p>
+<table border="1", width="100%">
+<tr>
+<td>
+<pre>
+{<a name="sp_before_comma"></a><a name="sp_after_comma"></a>
+   int A(bool a<a title="sp_before_comma"><font color="red">█</font></a>,<a title="sp_after_comma"><font color="red">█</font></a>bool b);
+}
+</pre>
+</td>
+</tr>
+</table>
+<p></p>
+<h1>Register</h1>
+<table border="0", width="100%">
+<tr>
+   <td valign="top"><a href="#sp_after_comma">sp_after_comma</a></td>
+   <td>Add or remove space after ',', 'a,b' vs 'a, b'.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_before_comma">sp_before_comma</a></td>
+   <td>Add or remove space before ','. Default=Remove.</td>
+</tr>
+</table>
+</body>
+</html>

@@ -346,7 +346,7 @@ class Lexer
             case 'r':
 //					debug writefln( "    wysiwyg" );
                 if (p[1] != '"') {
-                    goto case_ident;
+                    goto case_identifier;
                 }
                 p++;
 
@@ -357,7 +357,7 @@ class Lexer
             case 'x':
 //					debug writefln( "    hex string" );
                 if (p[1] != '"') {
-                    goto case_ident;
+                    goto case_identifier;
                 }
                 p++;
                 t.value = hexStringConstant(t);
@@ -440,7 +440,7 @@ class Lexer
             case 'Y':
             case 'Z':
             case '_':
-case_ident:
+case_identifier:
                 {
 //					debug writefln( "    identifier" );
                     ubyte c;
@@ -463,9 +463,9 @@ case_ident:
                         stringtable[tmp] = id;
                     }
 
-                    t.ident  = id;
-                    t.value  = cast(TOK)id.value;
-                    anyToken = 1;
+                    t.identifier = id;
+                    t.value      = cast(TOK)id.value;
+                    anyToken     = 1;
 
                     // if special identifier token
                     if (*t.ptr == '_') {
@@ -493,7 +493,7 @@ case_ident:
                                 t.ustring = loc.filename;
                             }
                             else {
-                                t.ustring = mod.ident.toChars();
+                                t.ustring = mod.identifier.toChars();
                             }
                             goto Llen;
                         }
@@ -1001,7 +1001,7 @@ Llen:
                         uint u = decodeUTF();
                         // Check for start of unicode identifier
                         if (isUniAlpha(u)) {
-                            goto case_ident;
+                            goto case_identifier;
                         }
 
                         if (u == PS || u == LS) {
@@ -2104,7 +2104,7 @@ done:
 
         scan(&tok);
 
-        if (tok.value != TOK.TOKidentifier || tok.ident != Id.line) {
+        if (tok.value != TOK.TOKidentifier || tok.identifier != Id.line) {
             goto Lerr;
         }
 
@@ -2146,7 +2146,7 @@ Lnewline:
             case '_':
                 if (mod && memcmp(p, cast(char*)"__FILE__", 8) == 0) {
                     p += 8;
-//!					    filespec = mem.strdup(loc.filename ? loc.filename : mod.ident.toChars());
+//!					    filespec = mem.strdup(loc.filename ? loc.filename : mod.identifier.toChars());
                 }
                 continue;
 

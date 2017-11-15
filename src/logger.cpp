@@ -216,7 +216,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
    char         buf[BUFFERLENGTH];
    // it MUST be a 'unsigned int' variable to be runable under windows
    unsigned int length = strlen(fmt);
-   if (length > BUFFERLENGTH)
+   if (length >= BUFFERLENGTH)
    {
       fprintf(stderr, "FATAL: The variable 'buf' is not big enought:\n");
       fprintf(stderr, "   it should be bigger as = %u\n", length);

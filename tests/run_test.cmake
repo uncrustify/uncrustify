@@ -56,7 +56,7 @@ endif()
 
 # Re-run with the output file as the input to check stability.
 execute_process(
-  COMMAND ${TEST_PROGRAM} -l ${TEST_LANG} -c ${TEST_RERUN_CONFIG} -f ${TEST_OUTPUT} -o ${TEST_RESULT}
+  COMMAND ${TEST_PROGRAM} -l ${TEST_LANG} -c ${TEST_RERUN_CONFIG} -f ${TEST_OUTPUT} -o ${TEST_RESULTS}
   WORKING_DIRECTORY ${TEST_DIR}
   RESULT_VARIABLE uncrustify_error_code
   OUTPUT_QUIET
@@ -68,10 +68,10 @@ if(uncrustify_error_code)
 endif()
 
 execute_process(
-  COMMAND ${CMAKE_COMMAND} -E compare_files ${TEST_DIR}/${TEST_RESULT} ${TEST_DIR}/${TEST_OUTPUT}
+  COMMAND ${CMAKE_COMMAND} -E compare_files ${TEST_DIR}/${TEST_RESULTS} ${TEST_DIR}/${TEST_OUTPUT}
   RESULT_VARIABLE files_are_different
 )
 
 if(files_are_different)
-  message(WARNING "UNSTABLE: ${TEST_RESULT} does not match ${TEST_OUTPUT}")
+  message(WARNING "UNSTABLE: ${TEST_RESULTS} does not match ${TEST_OUTPUT}")
 endif()

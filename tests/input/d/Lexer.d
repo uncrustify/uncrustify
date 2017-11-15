@@ -353,7 +353,7 @@ class Lexer
 			    case 'r':
 //					debug writefln( "    wysiwyg" );
 					if( p[1] != '"')
-					    goto case_ident;
+					    goto case_identifier;
 					p++;
 				    case '`':
 					t.value = wysiwygStringConstant(t, *p);
@@ -362,7 +362,7 @@ class Lexer
 			    case 'x':
 //					debug writefln( "    hex string" );
 					if( p[1] != '"')
-					    goto case_ident;
+					    goto case_identifier;
 					p++;
 					t.value = hexStringConstant(t);
 					return;
@@ -409,7 +409,7 @@ class Lexer
 			    case 'U':  	case 'V':   case 'W':   case 'X':   case 'Y':
 			    case 'Z':
 			    case '_':
-			    case_ident:
+			    case_identifier:
 			    {
 //					debug writefln( "    identifier" );
 					ubyte c;
@@ -435,7 +435,7 @@ class Lexer
 						stringtable[tmp] = id;
 					}
 
-					t.ident = id;
+					t.identifier = id;
 					t.value = cast(TOK) id.value;
 					anyToken = 1;
 
@@ -467,7 +467,7 @@ class Lexer
 							if( loc.filename.length )
 								t.ustring = loc.filename;
 							else
-								t.ustring = mod.ident.toChars();
+								t.ustring = mod.identifier.toChars();
 							goto Llen;
 					    }
 					    else if( mod && id == Id.LINE )
@@ -952,7 +952,7 @@ class Lexer
 						uint u = decodeUTF();
 					    // Check for start of unicode identifier
 					    if( isUniAlpha(u) )
-							goto case_ident;
+							goto case_identifier;
 
 					    if( u == PS || u == LS )
 					    {
@@ -2035,7 +2035,7 @@ class Lexer
 
 	    scan(&tok);
 
-	    if( tok.value != TOK.TOKidentifier || tok.ident != Id.line )
+	    if( tok.value != TOK.TOKidentifier || tok.identifier != Id.line )
 			goto Lerr;
 
 	    scan(&tok);
@@ -2076,7 +2076,7 @@ class Lexer
 					if( mod && memcmp(p, cast(char*)"__FILE__", 8) == 0)
 					{
 					    p += 8;
-//!					    filespec = mem.strdup(loc.filename ? loc.filename : mod.ident.toChars());
+//!					    filespec = mem.strdup(loc.filename ? loc.filename : mod.identifier.toChars());
 					}
 					continue;
 

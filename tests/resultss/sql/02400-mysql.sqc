@@ -1,0 +1,55 @@
+#include <stdlib.h>
+#include <stdio.h>
+
+/*----------------------------------------------------------------*/
+EXEC SQL INCLUDE SQLCA;
+short sqlcode;
+
+EXEC SQL BEGIN DECLARE SECTION;
+   int host_a;
+   double host_b;
+   char host_c;
+EXEC SQL END DECLARE SECTION;
+
+EXEC SQL DECLARE csr1 CURSOR FOR
+   SELECT a, b, c
+   FROM table1
+   WHERE x = :hostvar1;
+
+/* dollar sign notation */
+$ DECLARE cursorName CURSOR for
+   SELECT
+   a,
+   b
+   INTO
+   $struct->a,
+   $struct->b
+   FROM table;
+
+/*----------------------------------------------------------------*/
+void main(void)
+{
+   hostvar1 = 42;
+
+   EXEC SQL OPEN csr1;
+   if (sqlcode < 0)
+   {
+      exit(0);
+   }
+
+   while (rc >= 0 && rc != 100)
+   {
+      EXEC SQL FETCH csr1 INTO :host_a, :host_b, :host_c;
+      printf("Fetch %d, %lf, %s\n", host_a, host_b, host_c);
+   }
+
+   EXEC SQL CLOSE csr1;
+}
+
+void foo(void)
+{
+   strcpy(demoquery1, "some SQL statement");
+   EXEC SQL prepare demo3id from :demoquery1;
+   /* a comment */
+   EXEC SQL declare demo3cursor cursor for demo3id;
+}

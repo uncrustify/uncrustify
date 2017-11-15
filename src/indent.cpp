@@ -24,6 +24,9 @@
 #include "helper_for_print.h"
 
 
+using namespace std;
+
+
 /**
  * General indenting approach:
  * Indenting levels are put into a stack.
@@ -279,10 +282,11 @@ void align_to_column(chunk_t *pc, size_t column)
                       ? pc->column + col_delta : 0;
          pc->column = max(pc->column, min_col);
       }
-      LOG_FMT(LINDLINED, "   %s set column of %s on line %zu to col %zu (orig %zu)\n",
+      LOG_FMT(LINDLINED, "%s(%d):   %s set column of '%s', type is %s, orig_line is %zu, to col %zu (orig_col was %zu)\n",
+              __func__, __LINE__,
               (almod == align_mode_e::KEEP_ABS) ? "abs" :
               (almod == align_mode_e::KEEP_REL) ? "rel" : "sft",
-              get_token_name(pc->type), pc->orig_line, pc->column, pc->orig_col);
+              pc->text(), get_token_name(pc->type), pc->orig_line, pc->column, pc->orig_col);
    } while (pc != nullptr && pc->nl_count == 0);
 } // align_to_column
 
@@ -380,6 +384,12 @@ void reindent_line(chunk_t *pc, size_t column)
 static void indent_pse_push(parse_frame_t &frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
+   if (pc == nullptr)
+   {
+      throw std::invalid_argument(
+               string(__func__) + ":" + std::to_string(__LINE__)
+               + " - pc cannot be nullptr");
+   }
    static size_t ref = 0;
 
    // check the stack depth
@@ -413,7 +423,7 @@ static void indent_pse_push(parse_frame_t &frm, chunk_t *pc)
       log_flush(true);
       exit(EXIT_FAILURE);
    }
-}
+} // indent_pse_push
 
 
 static void indent_pse_pop(parse_frame_t &frm, chunk_t *pc)
@@ -648,7 +658,7 @@ void indent_text(void)
       }
       else
       {
-         LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, column is %zu, for '%s'\n",
+         LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, column is %zu, for '%s'\n   ",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->text());
          log_pcf_flags(LINDLINE, pc->flags);
       }
@@ -817,7 +827,12 @@ void indent_text(void)
 
          // Transition into a preproc by creating a dummy indent
          frm.level++;
-         indent_pse_push(frm, chunk_get_next(pc));
+         chunk_t *pp_next = chunk_get_next(pc);
+         if (pp_next == nullptr)
+         {
+            return;
+         }
+         indent_pse_push(frm, pp_next);
 
          if (  pc->parent_type == CT_PP_DEFINE
             || pc->parent_type == CT_PP_UNDEF)
@@ -1547,10 +1562,17 @@ void indent_text(void)
             && prev->type == CT_BRACE_CLOSE
             && prev->parent_type == CT_CASE)
          {
-            // issue #663
-            chunk_t *temp = chunk_get_prev_type(pc, CT_BRACE_OPEN, pc->level);
-            // This only affects the 'break', so no need for a stack entry
-            indent_column_set(temp->column);
+            // issue #663 + issue #1366
+            chunk_t *prev_newline = chunk_get_prev_nl(pc);
+            if (prev_newline != nullptr)
+            {
+               chunk_t *prev_prev_newline = chunk_get_prev_nl(prev_newline);
+               if (prev_prev_newline != nullptr)
+               {
+                  // This only affects the 'break', so no need for a stack entry
+                  indent_column_set(prev_prev_newline->next->column);
+               }
+            }
          }
       }
       else if (pc->type == CT_LABEL)
@@ -1698,6 +1720,28 @@ void indent_text(void)
          }
       }
       else if (pc->type == CT_PAREN_OPEN && pc->parent_type == CT_IGNORE_CONTENT)
+      {
+         int     move = 0;
+         chunk_t *tmp = chunk_skip_to_match(pc);
+         if (  chunk_is_newline(chunk_get_prev(pc))
+            && pc->column != indent_column)
+         {
+            move = indent_column - pc->column;
+         }
+         else
+         {
+            move = pc->column - pc->orig_col;
+         }
+         do
+         {
+            pc->column = pc->orig_col + move;
+            pc         = chunk_get_next(pc);
+         } while (pc != tmp);
+         reindent_line(pc, indent_column);
+      }
+      else if (  pc->type == CT_PAREN_OPEN
+              && (pc->parent_type == CT_ASM || chunk_get_prev_ncnl(pc)->type == CT_ASM)
+              && cpd.settings[UO_indent_ignore_asm_block].b)
       {
          int     move = 0;
          chunk_t *tmp = chunk_skip_to_match(pc);
@@ -1928,7 +1972,7 @@ void indent_text(void)
       }
       else if (  pc->type == CT_ASSIGN
               || pc->type == CT_IMPORT
-              || pc->type == CT_USING)
+              || (pc->type == CT_USING && (cpd.lang_flags & LANG_CS)))
       {
          /*
           * if there is a newline after the '=' or the line starts with a '=',
@@ -2486,8 +2530,8 @@ void indent_text(void)
          }
          else
          {
-            bool   use_ident = true;
-            size_t ttidx     = frm.pse_tos;
+            bool   use_indent = true;
+            size_t ttidx      = frm.pse_tos;
             if (ttidx > 0)
             {
                //if (strcasecmp(get_token_name(frm.pse[ttidx].pc->parent_type), "FUNC_CALL") == 0)
@@ -2501,14 +2545,14 @@ void indent_text(void)
                   else
                   {
                      LOG_FMT(LINDPC, "use is false [%d]\n", __LINE__);
-                     use_ident = false;
+                     use_indent = false;
                   }
                }
             }
 
             if (pc->column != indent_column)
             {
-               if (use_ident && pc->type != CT_PP_IGNORE) // Leave indentation alone for PP_IGNORE tokens
+               if (use_indent && pc->type != CT_PP_IGNORE) // Leave indentation alone for PP_IGNORE tokens
                {
                   LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, indent set to %zu, for '%s'\n",
                           __func__, __LINE__, pc->orig_line, indent_column, pc->text());
@@ -2626,7 +2670,7 @@ null_pc:
    for (size_t idx_temp = 1; idx_temp <= frm.pse_tos; idx_temp++)
    {
       LOG_FMT(LWARN, "%s:%zu Unmatched %s\n",
-              cpd.filename, frm.pse[idx_temp].open_line,
+              cpd.filename.c_str(), frm.pse[idx_temp].open_line,
               get_token_name(frm.pse[idx_temp].type));
       cpd.error_count++;
    }
@@ -2685,6 +2729,33 @@ static bool single_line_comment_indent_rule_applies(chunk_t *start)
 } // single_line_comment_indent_rule_applies
 
 
+static size_t calc_comment_next_col_diff(chunk_t *pc)
+{
+   chunk_t *next = pc;
+
+   do
+   {
+      chunk_t *next_nl = chunk_get_next(next);
+
+      if (next_nl == NULL || next_nl->nl_count > 1)
+      {
+         // FIXME: Max thresh magic number 5000
+         return(5000);
+      }
+
+      next = chunk_get_next(next_nl);
+   } while (chunk_is_comment(next));
+
+   if (next != NULL)
+   {
+      return(abs(int(next->orig_col - pc->orig_col)));
+   }
+
+   // FIXME: Max thresh magic number 5000
+   return(5000);
+}
+
+
 static void indent_comment(chunk_t *pc, size_t col)
 {
    LOG_FUNC_ENTRY();
@@ -2720,47 +2791,55 @@ static void indent_comment(chunk_t *pc, size_t col)
       }
    }
 
-   prev = chunk_get_prev(nl);
-   if (chunk_is_comment(prev) && nl->nl_count == 1)
+   // TODO: Add an indent_comment_align_thresh option?
+   const size_t indent_comment_align_thresh = 3;
+   if (pc->orig_col > 1)
    {
-      int coldiff = prev->orig_col - pc->orig_col;
-
-      /*
-       * Here we want to align comments that are relatively close one to another
-       * but not when the comment is a Doxygen comment nor when the previous
-       * token is an pp statement because that can lead to an unfortunate mix of
-       * tokens for this rule to work properly and it breaks the indentation.
-       */
-      // Issue #1134, #1287.
-      if (  coldiff <= 3
-         && coldiff >= -3
-         && !chunk_is_Doxygen_comment(pc))
+      prev = chunk_get_prev(nl);
+      if (chunk_is_comment(prev) && nl->nl_count == 1)
       {
-         bool indent = true;
-         if (prev->flags & PCF_IN_PREPROC)
-         {
-            chunk_t *pp = chunk_search_prev_cat(prev, CT_PREPROC);
-            indent = pp == NULL
-                     || !(  pp->next->type == CT_PP_IF
-                         || pp->next->type == CT_PP_ELSE
-                         || pp->next->type == CT_PP_ENDIF);
+         size_t prev_col_diff = abs(int(prev->orig_col - pc->orig_col));
 
-            if (indent && pp)
-            {
-               LOG_FMT(LCMTIND, "rule 3 - prev comment in preproc %s\n",
-                       get_token_name(pp->next->type));
-            }
-         }
-         if (indent)
+         /*
+          * Here we want to align comments that are relatively close one to another
+          * but not when the comment is a Doxygen comment nor when the previous
+          * token is an pp statement because that can lead to an unfortunate mix of
+          * tokens for this rule to work properly and it breaks the indentation.
+          */
+         if (prev_col_diff <= indent_comment_align_thresh
+            && !chunk_is_Doxygen_comment(pc))
          {
-            reindent_line(pc, prev->column);
-            LOG_FMT(LCMTIND, "rule 3 - prev comment, coldiff = %d, now in %zu\n",
-                    coldiff, pc->column);
-            return;
+            bool indent = true;
+            if (prev->flags & PCF_IN_PREPROC)
+            {
+               chunk_t *pp = chunk_search_prev_cat(prev, CT_PREPROC);
+               indent = pp == NULL
+                  || !(pp->next->type == CT_PP_IF
+                     || pp->next->type == CT_PP_ELSE
+                     || pp->next->type == CT_PP_ENDIF);
+
+               if (indent && pp)
+               {
+                  LOG_FMT(LCMTIND, "rule 3 - prev comment in preproc %s\n",
+                     get_token_name(pp->next->type));
+               }
+            }
+            if (indent)
+            {
+               size_t next_col_diff = calc_comment_next_col_diff(pc);
+               // Align to the previous comment or to the next token?
+               if (prev_col_diff <= next_col_diff
+                  || next_col_diff == 5000) // FIXME: Max thresh magic number 5000
+               {
+                  reindent_line(pc, prev->column);
+                  LOG_FMT(LCMTIND, "rule 3 - prev comment, coldiff = %zu, now in %zu\n",
+                     prev_col_diff, pc->column);
+                  return;
+               }
+            }
          }
       }
    }
-
    // check if special single line comment rule applies
    if (  (cpd.settings[UO_indent_sing_line_comments].u > 0)
       && single_line_comment_indent_rule_applies(pc))

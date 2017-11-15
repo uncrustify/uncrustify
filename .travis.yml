@@ -1,3 +1,4 @@
+dist: trusty
 language: cpp
 sudo: false
 
@@ -5,6 +6,7 @@ matrix:
   include:
     - env: BUILD_TYPE=debug
     - env: BUILD_TYPE=release
+    - env: BUILD_TYPE=release NO_MACRO_VARARG=1
 
     # GCC 5
     - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5
@@ -86,5 +88,5 @@ script:
     # test if all the sources are conform to the forUncrustifySources.cfg config file
   - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../; ./scripts/Run_uncrustify_for_sources.sh; fi
     # test if uncrustify runs for (some) command line options
-  - if [ "x${BUILD_TYPE}" == "xrelease" ]; then ./scripts/Test_more_Options.sh; fi
+  - if [ "x${BUILD_TYPE}" == "xrelease" ]; then ./tests/cli/test_cli_options.sh; fi
 #  - /home/travis/build/uncrustify/uncrustify/build/uncrustify -c /home/travis/build/uncrustify/uncrustify/tests/config/mono.cfg -f /home/travis/build/uncrustify/uncrustify/tests/input/cs/simple.cs -L A

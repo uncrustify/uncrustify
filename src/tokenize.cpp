@@ -21,6 +21,9 @@
 #include "keywords.h"
 
 
+using namespace std;
+
+
 struct tok_info
 {
    tok_info()
@@ -1230,12 +1233,16 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
 
                log_sev_t warnlevel = (log_sev_t)cpd.settings[UO_warn_level_tabs_found_in_verbatim_string_literals].n;
 
-               // a tab char can't be replaced with \\t because escapes don't work in here-strings. best we can do is warn.
-               LOG_FMT(warnlevel, "%s:%d Detected non-replaceable tab char in literal string\n", cpd.filename, pc.orig_line);
-               if (warnlevel < LWARN)
-               {
-                  cpd.error_count++;
-               }
+             /*
+             * a tab char can't be replaced with \\t because escapes don't
+             * work in here-strings. best we can do is warn.
+             */
+            LOG_FMT(warnlevel, "%s:%zu Detected non-replaceable tab char in literal string\n",
+                    cpd.filename.c_str(), pc.orig_line);
+            if (warnlevel < LWARN)
+            {
+               cpd.error_count++;
+            }
             }
          }
          else
@@ -2006,7 +2013,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    pc.str.append(ctx.get());
 
    LOG_FMT(LWARN, "%s:%zu Garbage in col %d: %x\n",
-           cpd.filename, pc.orig_line, (int)ctx.c.col, pc.str[0]);
+           cpd.filename.c_str(), pc.orig_line, (int)ctx.c.col, pc.str[0]);
    cpd.error_count++;
    return(true);
 } // parse_next
@@ -2029,7 +2036,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       if (!parse_next(ctx, chunk))
       {
          LOG_FMT(LERR, "%s:%zu Bailed before the end?\n",
-                 cpd.filename, ctx.c.row);
+                 cpd.filename.c_str(), ctx.c.row);
          cpd.error_count++;
          break;
       }
@@ -2062,18 +2069,22 @@ void tokenize(const deque<int> &data, chunk_t *ref)
          last_was_tab    = false;
       }
 
-      // Strip trailing whitespace (for CPP comments and PP blocks)
-      while (  (chunk.str.size() > 0)
-            && (  (chunk.str[chunk.str.size() - 1] == ' ')
-               || (chunk.str[chunk.str.size() - 1] == '\t')))
+      if (chunk.type != CT_IGNORED)
       {
-         // If comment contains backslash '\' followed by whitespace chars, keep last one;
-         // this will prevent it from turning '\' into line continuation.
-         if ((chunk.str.size() > 1) && (chunk.str[chunk.str.size() - 2] == '\\'))
+         // Issue #1338
+         // Strip trailing whitespace (for CPP comments and PP blocks)
+         while (  (chunk.str.size() > 0)
+               && (  (chunk.str[chunk.str.size() - 1] == ' ')
+                  || (chunk.str[chunk.str.size() - 1] == '\t')))
          {
-            break;
+            // If comment contains backslash '\' followed by whitespace chars, keep last one;
+            // this will prevent it from turning '\' into line continuation.
+            if ((chunk.str.size() > 1) && (chunk.str[chunk.str.size() - 2] == '\\'))
+            {
+               break;
+            }
+            chunk.str.pop_back();
          }
-         chunk.str.pop_back();
       }
 
       // Store off the end column
@@ -2190,13 +2201,13 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       }
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LGUY, "%s(%d): orig_line is %zu <NewLine> orig_col is %zu\n",
+         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, <NewLine>\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
       }
       else
       {
-         LOG_FMT(LGUY, "%s(%d): orig_line is %zu %s, type is %s, orig_col is %zu, orig_col_end is %zu\n",
-                 __func__, __LINE__, pc->orig_line, pc->text(), get_token_name(pc->type), pc->orig_col, pc->orig_col_end);
+         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s, orig_col_end is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type), pc->orig_col_end);
       }
    }
 

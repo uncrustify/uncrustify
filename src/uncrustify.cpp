@@ -66,6 +66,9 @@
 #endif
 
 
+using namespace std;
+
+
 // Global data
 cp_data_t cpd;
 
@@ -622,8 +625,8 @@ int main(int argc, char *argv[])
     */
    if (!cfg_file.empty())
    {
-      cpd.filename = cfg_file.c_str();
-      if (load_option_file(cpd.filename) < 0)
+      cpd.filename = cfg_file;
+      if (load_option_file(cpd.filename.c_str()) < 0)
       {
          usage_exit("Unable to load the config file", argv[0], EX_IOERR);
       }
@@ -975,8 +978,10 @@ static void make_folders(const string &filename)
          outname[idx] = 0; // mark the end of the subpath
 
          // create subfolder if it is not the start symbol of a path
+         // and not a Windows drive letter
          if (  (strcmp(&outname[last_idx], ".") != 0)
-            && (strcmp(&outname[last_idx], "..") != 0))
+            && (strcmp(&outname[last_idx], "..") != 0)
+            && (!(last_idx == 0 && idx == 2 && outname[1] == ':')))
          {
             int status;    // Coverity CID 75999
             status = mkdir(outname, 0750);
@@ -1072,7 +1077,7 @@ static int load_mem_file_config(const char *filename, file_mem &fm)
    char buf[1024];
 
    snprintf(buf, sizeof(buf), "%.*s%s",
-            path_dirname_len(cpd.filename), cpd.filename, filename);
+            path_dirname_len(cpd.filename.c_str()), cpd.filename.c_str(), filename);
 
    retval = load_mem_file(buf, fm);
    if (retval < 0)
@@ -1233,8 +1238,8 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
       if (report_status)
       {
          fprintf(stderr, "FAIL: %s (File size changed from %u to %u)\n",
-                 cpd.filename,
-                 static_cast<int>(fm.raw.size()), static_cast<int>(cpd.bout->size()));
+                 cpd.filename.c_str(), static_cast<int>(fm.raw.size()),
+                 static_cast<int>(cpd.bout->size()));
          log_flush(true);
       }
       is_same = false;
@@ -1248,7 +1253,7 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
             if (report_status)
             {
                fprintf(stderr, "FAIL: %s (Difference at byte %u)\n",
-                       cpd.filename, idx);
+                       cpd.filename.c_str(), idx);
                log_flush(true);
             }
             is_same = false;
@@ -1258,7 +1263,8 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
    }
    if (is_same && report_status)
    {
-      fprintf(stdout, "PASS: %s (%u bytes)\n", cpd.filename, static_cast<int>(fm.raw.size()));
+      fprintf(stdout, "PASS: %s (%u bytes)\n",
+              cpd.filename.c_str(), static_cast<int>(fm.raw.size()));
    }
 
    return(is_same);
@@ -1763,15 +1769,25 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
    }
 
    // Check for embedded 0's (represents a decoding failure or corrupt file)
+   size_t count_line   = 1;
+   size_t count_column = 1;
    for (int idx = 0; idx < static_cast<int>(data.size()) - 1; idx++)
    {
       if (data[idx] == 0)
       {
-         LOG_FMT(LERR, "An embedded 0 was found in '%s'.\n", cpd.filename);
+         LOG_FMT(LERR, "An embedded 0 was found in '%s' %zu:%zu.\n",
+                 cpd.filename.c_str(), count_line, count_column);
          LOG_FMT(LERR, "The file may be encoded in an unsupported Unicode format.\n");
          LOG_FMT(LERR, "Aborting.\n");
          cpd.error_count++;
          return;
+      }
+
+      count_column++;
+      if (data[idx] == '\n')
+      {
+         count_line++;
+         count_column = 1;
       }
    }
 
@@ -1937,8 +1953,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       }
 
       // Align everything else, reindent and break at code_width
-      first          = true;
-      cpd.pass_count = 3;
+      first = true;
       do
       {
          align_all();
@@ -1946,7 +1961,8 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          old_changes = cpd.changes;
          if (cpd.settings[UO_code_width].u > 0)
          {
-            LOG_FMT(LNEWLINE, "Code_width loop start: %d\n", cpd.changes);
+            LOG_FMT(LNEWLINE, "%s(%d): Code_width loop start: %d\n",
+                    __func__, __LINE__, cpd.changes);
             do_code_width();
             if (old_changes != cpd.changes && first)
             {
@@ -1956,7 +1972,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
                first = false;
             }
          }
-      } while (old_changes != cpd.changes && cpd.pass_count-- > 0);
+      } while (old_changes != cpd.changes);
 
       // And finally, align the backslash newline stuff
       align_right_comments();

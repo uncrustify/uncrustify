@@ -265,7 +265,7 @@ static void push_fmr_pse(parse_frame_t *frm, chunk_t *pc,
    else
    {
       LOG_FMT(LWARN, "%s:%d Error: Frame stack overflow,  Unable to properly process this file.\n",
-              cpd.filename, cpd.line_number);
+              cpd.filename.c_str(), cpd.line_number);
       cpd.error_count++;
    }
 }
@@ -329,7 +329,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s, tos is %zu, type is %s, TOS.stage is %u\n",
+   LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s, tos is %zu, TOS.type is %s, TOS.stage is %u\n",
            __func__, __LINE__, pc->orig_line, get_token_name(pc->type),
            frm->pse_tos, get_token_name(frm->pse[frm->pse_tos].type),
            (unsigned int)frm->pse[frm->pse_tos].stage);
@@ -343,7 +343,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       && !chunk_is_str(pc, "]", 1))
    {
       chunk_flags_set(pc, PCF_EXPR_START | ((frm->stmt_count == 0) ? PCF_STMT_START : 0));
-      LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 1.marked %s as %s, start st is %d, ex is %d\n",
+      LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 1.marked '%s' as %s, start stmt_count is %d, expr_count is %d\n",
               __func__, __LINE__, pc->orig_line, pc->text(), (pc->flags & PCF_STMT_START) ? "stmt" : "expr",
               frm->stmt_count, frm->expr_count);
    }
@@ -431,9 +431,9 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          if (  (frm->pse[frm->pse_tos].type != CT_NONE)
             && (frm->pse[frm->pse_tos].type != CT_PP_DEFINE))
          {
-            LOG_FMT(LWARN, "%s(%d): %s:%zu Error: Unexpected '%s' for '%s', which was on line %zu\n",
-                    __func__, __LINE__, cpd.filename, pc->orig_line, pc->text(),
-                    get_token_name(frm->pse[frm->pse_tos].pc->type),
+            LOG_FMT(LWARN, "%s(%d): %s, orig_line is %zu, Error: Unexpected '%s' for '%s', which was on line %zu\n",
+                    __func__, __LINE__, cpd.filename.c_str(), pc->orig_line,
+                    pc->text(), get_token_name(frm->pse[frm->pse_tos].pc->type),
                     frm->pse[frm->pse_tos].pc->orig_line);
             print_stack(LBCSPOP, "=Error  ", frm, pc);
             cpd.error_count++;
@@ -504,7 +504,8 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          else
          {
             LOG_FMT(LWARN, "%s: %s(%d): %zu: Error: Expected a semicolon for WHILE_OF_DO, but got '%s'\n",
-                    cpd.filename, __func__, __LINE__, pc->orig_line, get_token_name(pc->type));
+                    cpd.filename.c_str(), __func__, __LINE__, pc->orig_line,
+                    get_token_name(pc->type));
             cpd.error_count++;
          }
          handle_complex_close(frm, pc);
@@ -652,7 +653,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          && frm->pse[frm->pse_tos].type != CT_FPAREN_OPEN
          && frm->pse[frm->pse_tos].type != CT_SPAREN_OPEN))
    {
-      LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, reset1 stmt on %s\n",
+      LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, reset1 stmt on '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->text());
       frm->stmt_count = 0;
       frm->expr_count = 0;
@@ -688,7 +689,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       || pc->type == CT_QUESTION)
    {
       frm->expr_count = 0;
-      LOG_FMT(LSTMT, "%s(%d): %zu> reset expr on %s\n",
+      LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, reset expr on '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->text());
    }
    else if (pc->type == CT_BRACE_CLOSE)
@@ -699,8 +700,16 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          if (!cpd.unc_off_used && pc->pp_level == file_pp_level)
          {  // fatal error
             char *outputMessage;
-            outputMessage = make_message("Unmatched BRACE_CLOSE\nat line=%zu, column=%zu\n",
-                                         pc->orig_line, pc->orig_col);
+            if (cpd.settings[UO_tok_split_gte].b)
+            {
+               outputMessage = make_message("Unmatched BRACE_CLOSE\nat orig_line=%zu, orig_col=%zu\n",
+                                            pc->orig_line, pc->orig_col);
+            }
+            else
+            {
+               outputMessage = make_message("Unmatched BRACE_CLOSE\nat orig_line=%zu, orig_col=%zu\nTry the option 'tok_split_gte = true'\n",
+                                            pc->orig_line, pc->orig_col);
+            }
             fprintf(stderr, "%s", outputMessage);
             free(outputMessage);
             log_flush(true);
@@ -821,8 +830,9 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
          return(true);
       }
 
-      LOG_FMT(LWARN, "%s:%zu Error: Expected 'while', got '%s'\n",
-              cpd.filename, pc->orig_line, pc->text());
+      LOG_FMT(LWARN, "%s(%d): %s, orig_line is %zu, Error: Expected 'while', got '%s'\n",
+              __func__, __LINE__, cpd.filename.c_str(), pc->orig_line,
+              pc->text());
       frm->pse_tos--;
       print_stack(LBCSPOP, "-Error  ", frm, pc);
       cpd.error_count++;
@@ -862,7 +872,8 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
          pc->flags      |= PCF_STMT_START | PCF_EXPR_START;
          frm->stmt_count = 1;
          frm->expr_count = 1;
-         LOG_FMT(LSTMT, "%zu] 2.marked %s as stmt start\n", pc->orig_line, pc->text());
+         LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 2.marked '%s' as stmt start\n",
+                 __func__, __LINE__, pc->orig_line, pc->text());
       }
    }
 
@@ -871,8 +882,8 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
       && (  (frm->pse[frm->pse_tos].stage == brace_stage_e::PAREN1)
          || (frm->pse[frm->pse_tos].stage == brace_stage_e::WOD_PAREN)))
    {
-      LOG_FMT(LWARN, "%s:%zu Error: Expected '(', got '%s' for '%s'\n",
-              cpd.filename, pc->orig_line, pc->text(),
+      LOG_FMT(LWARN, "%s(%d): %s, orig_line is %zu, Error: Expected '(', got '%s' for '%s'\n",
+              __func__, __LINE__, cpd.filename.c_str(), pc->orig_line, pc->text(),
               get_token_name(frm->pse[frm->pse_tos].type));
 
       // Throw out the complex statement
@@ -943,8 +954,8 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
       }
       else
       {
-         LOG_FMT(LNOTE, "%s: close_statement on %s brace_stage_e::BRACE2\n", __func__,
-                 get_token_name(frm->pse[frm->pse_tos].type));
+         LOG_FMT(LNOTE, "%s(%d): close_statement on %s brace_stage_e::BRACE2\n",
+                 __func__, __LINE__, get_token_name(frm->pse[frm->pse_tos].type));
          frm->pse_tos--;
          print_stack(LBCSPOP, "-HCC B2 ", frm, pc);
          if (close_statement(frm, pc))
@@ -959,15 +970,15 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
    }
    else if (frm->pse[frm->pse_tos].stage == brace_stage_e::WOD_PAREN)
    {
-      LOG_FMT(LNOTE, "%s: close_statement on %s brace_stage_e::WOD_PAREN\n", __func__,
-              get_token_name(frm->pse[frm->pse_tos].type));
+      LOG_FMT(LNOTE, "%s(%d): close_statement on %s brace_stage_e::WOD_PAREN\n",
+              __func__, __LINE__, get_token_name(frm->pse[frm->pse_tos].type));
       frm->pse[frm->pse_tos].stage = brace_stage_e::WOD_SEMI;
       print_stack(LBCSPOP, "-HCC WoDP ", frm, pc);
    }
    else if (frm->pse[frm->pse_tos].stage == brace_stage_e::WOD_SEMI)
    {
-      LOG_FMT(LNOTE, "%s: close_statement on %s brace_stage_e::WOD_SEMI\n", __func__,
-              get_token_name(frm->pse[frm->pse_tos].type));
+      LOG_FMT(LNOTE, "%s(%d): close_statement on %s brace_stage_e::WOD_SEMI\n",
+              __func__, __LINE__, get_token_name(frm->pse[frm->pse_tos].type));
       frm->pse_tos--;
       print_stack(LBCSPOP, "-HCC WoDS ", frm, pc);
 
@@ -979,8 +990,8 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
    else
    {
       // PROBLEM
-      LOG_FMT(LWARN, "%s:%zu Error: TOS.type='%s' TOS.stage=%u\n",
-              cpd.filename, pc->orig_line,
+      LOG_FMT(LWARN, "%s(%d): %s:%zu Error: TOS.type='%s' TOS.stage=%u\n",
+              __func__, __LINE__, cpd.filename.c_str(), pc->orig_line,
               get_token_name(frm->pse[frm->pse_tos].type),
               (unsigned int)frm->pse[frm->pse_tos].stage);
       cpd.error_count++;
@@ -1054,8 +1065,8 @@ bool close_statement(parse_frame_t *frm, chunk_t *pc)
    LOG_FUNC_ENTRY();
    chunk_t *vbc = pc;
 
-   LOG_FMT(LTOK, "%s:%zu] %s '%s' type %s stage %u\n", __func__,
-           pc->orig_line,
+   LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s, '%s' type is %s, stage is %u\n",
+           __func__, __LINE__, pc->orig_line,
            get_token_name(pc->type), pc->text(),
            get_token_name(frm->pse[frm->pse_tos].type),
            (unsigned int)frm->pse[frm->pse_tos].stage);
@@ -1064,8 +1075,8 @@ bool close_statement(parse_frame_t *frm, chunk_t *pc)
    {
       frm->stmt_count = 0;
       frm->expr_count = 0;
-      LOG_FMT(LSTMT, "%s: %zu> reset2 stmt on %s\n",
-              __func__, pc->orig_line, pc->text());
+      LOG_FMT(LSTMT, "%s(%d): orig_line is %zu> reset2 stmt on '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->text());
    }
 
    /*

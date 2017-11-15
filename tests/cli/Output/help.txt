@@ -1,0 +1,74 @@
+Usage:
+uncrustify [options] [files ...]
+
+If no input files are specified, the input is read from stdin
+If reading from stdin, you should specify the language using -l
+or specify a filename using --assume for automatic language detection.
+
+If -F is used or files are specified on the command line,
+the output filename is 'prefix/filename' + suffix
+
+When reading from stdin or doing a single file via the '-f' option,
+the output is dumped to stdout, unless redirected with -o FILE.
+
+Errors are always dumped to stderr
+
+The '-f' and '-o' options may not be used with '-F', '--replace' or '--no-backup'.
+The '--prefix' and '--suffix' options may not be used with '--replace' or '--no-backup'.
+
+Basic Options:
+ -c CFG       : Use the config file CFG.
+ -f FILE      : Process the single file FILE (output to stdout, use with -o).
+ -o FILE      : Redirect stdout to FILE.
+ -F FILE      : Read files to process from FILE, one filename per line (- is stdin).
+ --check      : Do not output the new text, instead verify that nothing changes when
+                the file(s) are processed.
+                The status of every file is printed to stderr.
+                The exit code is EXIT_SUCCESS if there were no changes, EXIT_FAILURE otherwise.
+ files        : Files to process (can be combined with -F).
+ --suffix SFX : Append SFX to the output filename. The default is '.uncrustify'
+ --prefix PFX : Prepend PFX to the output filename path.
+ --replace    : Replace source files (creates a backup).
+ --no-backup  : Replace files, no backup. Useful if files are under source control.
+ --if-changed : Write to stdout (or create output FILE) only if a change was detected.
+ -l           : Language override: C, CPP, D, CS, JAVA, PAWN, OC, OC+, VALA.
+ -t           : Load a file with types (usually not needed).
+ -q           : Quiet mode - no output on stderr (-L will override).
+ --frag       : Code fragment, assume the first line is indented correctly.
+ --assume FN  : Uses the filename FN for automatic language detection if reading
+                from stdin unless -l is specified.
+
+Config/Help Options:
+ -h -? --help --usage     : Print this message and exit.
+ --version                : Print the version and exit.
+ --show-config            : Print out option documentation and exit.
+ --update-config          : Output a new config file. Use with -o FILE.
+ --update-config-with-doc : Output a new config file. Use with -o FILE.
+ --universalindent        : Output a config file for Universal Indent GUI.
+ --detect                 : Detects the config from a source file. Use with '-f FILE'.
+                            Detection is fairly limited.
+ --set <option>=<value>   : Sets a new value to a config option.
+
+Debug Options:
+ -p FILE      : Dump debug info to a file.
+ -L SEV       : Set the log severity (see log_levels.h; note 'A' = 'all')
+ -s           : Show the log severity in the logs.
+ --decode     : Decode remaining args (chunk flags) and exit.
+
+Usage Examples
+cat foo.d | uncrustify -q -c my.cfg -l d
+uncrustify -c my.cfg -f foo.d
+uncrustify -c my.cfg -f foo.d -L0-2,20-23,51
+uncrustify -c my.cfg -f foo.d -o foo.d
+uncrustify -c my.cfg foo.d
+uncrustify -c my.cfg --replace foo.d
+uncrustify -c my.cfg --no-backup foo.d
+uncrustify -c my.cfg --prefix=out -F files.txt
+
+Note: Use comments containing ' *INDENT-OFF*' and ' *INDENT-ON*' to disable
+      processing of parts of the source file (these can be overridden with
+      enable_processing_cmt and disable_processing_cmt).
+
+There are currently 609 options and minimal documentation.
+Try UniversalIndentGUI and good luck.
+

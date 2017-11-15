@@ -151,7 +151,7 @@ static void split_before_chunk(chunk_t *pc)
 void do_code_width(void)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "%s\n", __func__);
+   LOG_FMT(LSPLIT, "%s(%d)\n", __func__, __LINE__);
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
@@ -240,8 +240,11 @@ static void try_split_here(cw_entry &ent, chunk_t *pc)
    if (  prev == nullptr
       || (chunk_is_newline(prev) && pc->type != CT_STRING))
    {
-      LOG_FMT(LSPLIT, "%s(%d): Can't split after a newline, orig_line=%zu, return\n",
-              __func__, __LINE__, prev->orig_line);
+      if (prev != nullptr)
+      {
+         LOG_FMT(LSPLIT, "%s(%d): Can't split after a newline, orig_line=%zu, return\n",
+                 __func__, __LINE__, prev->orig_line);
+      }
       return;
    }
 
@@ -319,25 +322,23 @@ static void try_split_here(cw_entry &ent, chunk_t *pc)
 static bool split_line(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "%s(%d): start->flags ", __func__, __LINE__);
+   LOG_FMT(LSPLIT, "%s(%d): start->text() '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
+           __func__, __LINE__, start->text(), start->orig_line, start->orig_col, get_token_name(start->type));
+   LOG_FMT(LSPLIT, "   start->flags ");
    log_pcf_flags(LSPLIT, start->flags);
-   LOG_FMT(LSPLIT, "%s(%d): orig_line is %zu, column is %zu, text() '%s', type is %s,\n",
-           __func__, __LINE__, start->orig_line, start->column, start->text(),
-           get_token_name(start->type));
-   LOG_FMT(LSPLIT, "   parent_type %s, (PCF_IN_FCN_DEF is %s), (PCF_IN_FCN_CALL is %s),",
+   LOG_FMT(LSPLIT, "   start->parent_type %s, (PCF_IN_FCN_DEF is %s), (PCF_IN_FCN_CALL is %s)\n",
            get_token_name(start->parent_type),
            ((start->flags & (PCF_IN_FCN_DEF)) != 0) ? "TRUE" : "FALSE",
            ((start->flags & (PCF_IN_FCN_CALL)) != 0) ? "TRUE" : "FALSE");
-#ifdef DEBUG
-   LOG_FMT(LSPLIT, "\n");
-#endif // DEBUG
 
    // break at maximum line length if ls_code_width is true
    if (start->flags & PCF_ONE_LINER)
    {
-      LOG_FMT(LSPLIT, " ** ONCE LINER SPLIT **\n");
+      LOG_FMT(LSPLIT, "%s(%d): ** ONCE LINER SPLIT **\n", __func__, __LINE__);
       undo_one_liner(start);
       newlines_cleanup_braces(false);
+      // Issue #1352
+      cpd.changes++;
       return(false);
    }
 
@@ -617,10 +618,7 @@ static void split_for_stmt(chunk_t *start)
 static void split_fcn_params_full(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "%s(%d): %s", __func__, __LINE__, start->text());
-#ifdef DEBUG
-   LOG_FMT(LSPLIT, "\n");
-#endif // DEBUG
+   LOG_FMT(LSPLIT, "%s(%d): %s\n", __func__, __LINE__, start->text());
 
    // Find the opening function parenthesis
    chunk_t *fpo = start;
@@ -654,10 +652,7 @@ static void split_fcn_params_full(chunk_t *start)
 static void split_fcn_params(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "%s(%d): '%s'", __func__, __LINE__, start->text());
-#ifdef DEBUG
-   LOG_FMT(LSPLIT, "\n");
-#endif // DEBUG
+   LOG_FMT(LSPLIT, "%s(%d): '%s'\n", __func__, __LINE__, start->text());
 
    // Find the opening function parenthesis
    chunk_t *fpo = start;
