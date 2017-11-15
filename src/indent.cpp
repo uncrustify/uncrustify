@@ -2806,7 +2806,7 @@ static void indent_comment(chunk_t *pc, size_t col)
           * token is an pp statement because that can lead to an unfortunate mix of
           * tokens for this rule to work properly and it breaks the indentation.
           */
-         if (prev_col_diff <= indent_comment_align_thresh
+         if (  prev_col_diff <= indent_comment_align_thresh
             && !chunk_is_Doxygen_comment(pc))
          {
             bool indent = true;
@@ -2814,26 +2814,26 @@ static void indent_comment(chunk_t *pc, size_t col)
             {
                chunk_t *pp = chunk_search_prev_cat(prev, CT_PREPROC);
                indent = pp == NULL
-                  || !(pp->next->type == CT_PP_IF
-                     || pp->next->type == CT_PP_ELSE
-                     || pp->next->type == CT_PP_ENDIF);
+                        || !(  pp->next->type == CT_PP_IF
+                            || pp->next->type == CT_PP_ELSE
+                            || pp->next->type == CT_PP_ENDIF);
 
                if (indent && pp)
                {
                   LOG_FMT(LCMTIND, "rule 3 - prev comment in preproc %s\n",
-                     get_token_name(pp->next->type));
+                          get_token_name(pp->next->type));
                }
             }
             if (indent)
             {
                size_t next_col_diff = calc_comment_next_col_diff(pc);
                // Align to the previous comment or to the next token?
-               if (prev_col_diff <= next_col_diff
+               if (  prev_col_diff <= next_col_diff
                   || next_col_diff == 5000) // FIXME: Max thresh magic number 5000
                {
                   reindent_line(pc, prev->column);
                   LOG_FMT(LCMTIND, "rule 3 - prev comment, coldiff = %zu, now in %zu\n",
-                     prev_col_diff, pc->column);
+                          prev_col_diff, pc->column);
                   return;
                }
             }

@@ -920,14 +920,14 @@ indent_using_block              = true     # false/true
 # 2: When the `:` is a continuation, indent it under `?`
 indent_ternary_operator         = 0        # unsigned number
 
-# If true, ignore indent and align for asm blocks as they have their own indentation.
-indent_ignore_asm_block         = false    # false/true
-
 # If true, the indentation of the chunks after a `return new` sequence will be set at return indentation column.
 indent_off_after_return_new     = false    # false/true
 
 # If true, the tokens after return are indented with regular single indentation.By default (false) the indentation is after the return token.
 indent_single_after_return      = false    # false/true
+
+# If true, ignore indent and align for asm blocks as they have their own indentation.
+indent_ignore_asm_block         = false    # false/true
 
 #
 # Newline adding and removing options

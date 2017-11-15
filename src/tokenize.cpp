@@ -1233,16 +1233,16 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
 
                log_sev_t warnlevel = (log_sev_t)cpd.settings[UO_warn_level_tabs_found_in_verbatim_string_literals].n;
 
-             /*
-             * a tab char can't be replaced with \\t because escapes don't
-             * work in here-strings. best we can do is warn.
-             */
-            LOG_FMT(warnlevel, "%s:%zu Detected non-replaceable tab char in literal string\n",
-                    cpd.filename.c_str(), pc.orig_line);
-            if (warnlevel < LWARN)
-            {
-               cpd.error_count++;
-            }
+               /*
+                * a tab char can't be replaced with \\t because escapes don't
+                * work in here-strings. best we can do is warn.
+                */
+               LOG_FMT(warnlevel, "%s:%zu Detected non-replaceable tab char in literal string\n",
+                       cpd.filename.c_str(), pc.orig_line);
+               if (warnlevel < LWARN)
+               {
+                  cpd.error_count++;
+               }
             }
          }
          else

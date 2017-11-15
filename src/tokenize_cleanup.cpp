@@ -791,40 +791,6 @@ void tokenize_cleanup(void)
          }
       }
 
-    /*  // Check for C# nullable types '?' is in next
-      if (  (cpd.lang_flags & LANG_CS)
-         && next->type == CT_QUESTION
-         && (next->orig_col == (pc->orig_col + pc->len())))
-      {
-         chunk_t *tmp = chunk_get_next_ncnl(next);
-         if (tmp != nullptr)
-         {
-            bool doit = (  tmp->type == CT_PAREN_CLOSE
-                        || tmp->type == CT_ANGLE_CLOSE
-				        || tmp->type == CT_COMMA);
-
-            if (tmp->type == CT_WORD)
-            {
-               chunk_t *tmp2 = chunk_get_next_ncnl(tmp);
-               if (  tmp2 != nullptr
-                  && (  tmp2->type == CT_SEMICOLON
-                     || tmp2->type == CT_ASSIGN
-                     || tmp2->type == CT_COMMA
-                     || tmp2->type == CT_BRACE_OPEN))
-               {
-                  doit = true;
-               }
-            }
-
-            if (doit)
-            {
-               pc->str         += next->str;
-               pc->orig_col_end = next->orig_col_end;
-               chunk_del(next);
-               next = tmp;
-            }
-         }
-      }*/
 
       // Change 'default(' into a sizeof-like statement
       if (  (cpd.lang_flags & LANG_CS)
