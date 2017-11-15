@@ -1,1 +1,0 @@
-videoViewController.videoGravity = (NSString*)videoGravity;
