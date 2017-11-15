@@ -128,7 +128,8 @@ struct parse_frame_t
 
    int                 sparen_count;
 
-   paren_stack_entry_t pse[128];
+#define PSE_SIZE    128
+   paren_stack_entry_t pse[PSE_SIZE];
    size_t              pse_tos;
    int                 paren_count;
 
