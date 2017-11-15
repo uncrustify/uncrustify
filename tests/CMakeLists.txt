@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-function(add_uncrustify_test name lang config rerun_config input result results output)
+function(add_uncrustify_test name lang config rerun_config input result output)
   add_test(NAME ${name}
     COMMAND ${CMAKE_COMMAND}
       -DTEST_PROGRAM=$<TARGET_FILE:uncrustify>
@@ -9,7 +9,6 @@ function(add_uncrustify_test name lang config rerun_config input result results 
       -DTEST_RERUN_CONFIG=${rerun_config}
       -DTEST_INPUT=${input}
       -DTEST_RESULT=${result}
-      -DTEST_RESULTS=${results}
       -DTEST_OUTPUT=${output}
       -DTEST_DIR=${PROJECT_SOURCE_DIR}/tests
       -P ${PROJECT_SOURCE_DIR}/tests/run_test.cmake
@@ -19,8 +18,7 @@ function(add_uncrustify_test name lang config rerun_config input result results 
   )
 endfunction()
 
-foreach(test_lang c-sharp c cpp d java pawn objective-c vala ecma imported regression)
-# 	foreach(test_lang objective-c)
+foreach(test_lang c-sharp c cpp d java pawn objective-c vala ecma imported)
   # Create dependency on test file so CMake re-runs if changed
   configure_file("${test_lang}.test" "${test_lang}.test" COPYONLY)
   file(READ "${test_lang}.test" content)
@@ -43,7 +41,6 @@ foreach(test_lang c-sharp c cpp d java pawn objective-c vala ecma imported regre
         set(test_expected ${test_dir}/${CMAKE_MATCH_1}-${test_file})
         set(test_output output/${test_expected})
         set(test_result results/${test_expected})
-        set(test_results resultss/${test_expected})
 
         if("${CMAKE_MATCH_2} " STREQUAL "! ")
           string(REGEX REPLACE "\\.[^.]*" ".rerun.cfg" test_rerun_config ${test_config})
@@ -52,7 +49,7 @@ foreach(test_lang c-sharp c cpp d java pawn objective-c vala ecma imported regre
         endif()
 
         add_uncrustify_test(${test_name} ${test_dir} ${test_config} ${test_rerun_config}
-          ${test_input} ${test_result} ${test_results} ${test_output})
+          ${test_input} ${test_result} ${test_output})
 
       endif()
     endif()
