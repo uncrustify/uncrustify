@@ -4845,8 +4845,12 @@ static void mark_class_ctor(chunk_t *start)
       next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
       if (chunkstack_match(cs, pc))
       {
+         // Issue #1333 Formatter removes semicolon after variable initializer at class level(C#)
+         // if previous chunk is 'new' operator it is variable initializer not a CLASS_FUNC_DEF.
+         chunk_t *prev = chunk_get_prev_ncnl(pc, scope_e::PREPROC);
          // Issue #1003, next->type should not be CT_FPAREN_OPEN
-         if (next != nullptr && next->type == CT_PAREN_OPEN)
+         if (  prev != nullptr && prev->type != CT_NEW
+            && next != nullptr && next->type == CT_PAREN_OPEN)
          {
             set_chunk_type(pc, CT_FUNC_CLASS_DEF);
             LOG_FMT(LFTOR, "%s(%d): type is %s, orig_line is %zu, orig_col is %zu, Marked CTor/DTor %s\n",
