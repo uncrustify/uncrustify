@@ -1778,7 +1778,7 @@ static void align_init_brace(chunk_t *start)
    LOG_FMT(LALBR, "%s(%d): start @ orig_line is %zu, orig_col is %zu\n",
            __func__, __LINE__, start->orig_line, start->orig_col);
 
-   chunk_t *pc = chunk_get_next_ncnl(start);
+   chunk_t *pc       = chunk_get_next_ncnl(start);
    chunk_t *pcSingle = scan_ib_line(pc, true);
    if (  pcSingle == nullptr
       || (pcSingle->type == CT_BRACE_CLOSE && pcSingle->parent_type == CT_ASSIGN))
