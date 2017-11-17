@@ -272,7 +272,7 @@ void tokenize_cleanup(void)
        */
       if (  (next->type == CT_STAR)
          || ((cpd.lang_flags & LANG_CPP) && (next->type == CT_CARET))
-         || ((cpd.lang_flags & LANG_CS) && (next->type == CT_QUESTION)))
+         || ((cpd.lang_flags & LANG_CS) && (next->type == CT_QUESTION) && (strcmp(pc->text(), "null") != 0)))
       {
          if (  pc->type == CT_TYPE
             || pc->type == CT_QUALIFIER
