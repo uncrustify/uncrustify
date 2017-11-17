@@ -9,7 +9,7 @@
 A source code beautifier for C, C++, C#, ObjectiveC, D, Java, Pawn and VALA
 
 ## Features
-* highly configurable - __608 configurable options as of version 0.66
+* highly configurable - 608 configurable options as of version 0.66
 - <details><summary>add/remove spaces</summary>
 
   - `sp_before_sparen`: _Add or remove space before '(' of 'if', 'for', 'switch', 'while', etc._
@@ -199,7 +199,7 @@ The software has been previously tested on the following operating systems:
 - OS X
 - FreeBSD, NetBSD, OpenBSD
 - Sun Solaris 9
-- Windows XP (binary available)
+- Windows (binary available)
 
 
 ---------------------------------------------------------------------------
