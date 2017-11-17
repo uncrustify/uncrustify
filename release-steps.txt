@@ -46,12 +46,22 @@ Change the date at the first line of this document.
      (use an admin)
 
 4. Create a GIT tag and push it
+
+4a.
    $ git tag -a uncrustify-0.nn -m uncrustify-0.nn
-   $ git push --tags --repo=https://github.com/uncrustify/uncrustify.git
-     (use an admin)
 
 4b. Update the config files
+   $ cd build
+   $ # remove the old file
+   $ rm uncrustify_version.h
+   $ # to be sure to generate a new one with the new version
+   $ make
+   $ # generate the config files
    $ scripts/update-defaults.sh
+
+4c. LATER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   $ git push --tags --repo=https://github.com/uncrustify/uncrustify.git
+     (use an admin)
 
 5. The source tarball is available from the release on GitHub, or use
    $ git archive -o uncrustify-0.nn.tar.gz uncrustify-0.nn
@@ -93,8 +103,10 @@ Change the date at the first line of this document.
       Select files, or drag & drop files here.
         README.md
         uncrustify-0.nn.tar.gz
-        uncrustify-0.nn-win32.zip
-        uncrustify-0.nn-win64.zip
+        buildwin-32/uncrustify-0.nn-win32.zip
+        buildwin-64/uncrustify-0.nn-win64.zip
+
+      "Done"
 
    $ scp -r documentation/htdocs/* ChangeLog USER,uncrustify@web.sourceforge.net:htdocs/
 
