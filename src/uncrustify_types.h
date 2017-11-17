@@ -444,7 +444,7 @@ struct cp_data_t
    int               ifdef_over_whole_file;
 
    bool              frag;          //! activates code fragment option
-   uint32_t          frag_cols;
+   UINT32            frag_cols;
 
    // stuff to auto-detect line endings
    UINT32            le_counts[LE_AUTO];
@@ -474,8 +474,9 @@ struct cp_data_t
 
    op_val_t          settings[UO_option_count]; //! array with all uncrustify option settings
 
-   parse_frame_t     frames[16];
-   int               frame_count;
+#define FRAME_SIZE    16
+   parse_frame_t     frames[FRAME_SIZE];
+   size_t            frame_count;
    int               pp_level; // TODO: can this ever be -1?
 
    // the default values for settings
