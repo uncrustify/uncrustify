@@ -1779,9 +1779,9 @@ static void align_init_brace(chunk_t *start)
            __func__, __LINE__, start->orig_line, start->orig_col);
 
    chunk_t *pc = chunk_get_next_ncnl(start);
-   pc = scan_ib_line(pc, true);
-   if (  pc == nullptr
-      || (pc->type == CT_BRACE_CLOSE && pc->parent_type == CT_ASSIGN))
+   chunk_t *pcSingle = scan_ib_line(pc, true);
+   if (  pcSingle == nullptr
+      || (pcSingle->type == CT_BRACE_CLOSE && pcSingle->parent_type == CT_ASSIGN))
    {
       // single line - nothing to do
       LOG_FMT(LALBR, "%s(%d): single line - nothing to do\n", __func__, __LINE__);
