@@ -22,6 +22,7 @@
 #include "space.h"
 #include "parse_frame.h"
 #include "helper_for_print.h"
+#include "controlPSECount.h"
 
 
 using namespace std;
@@ -399,17 +400,19 @@ static void indent_pse_push(parse_frame_t &frm, chunk_t *pc)
       frm.pse_tos++;
       LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, pse_tos is %zu, type is %s, brace_level is %zu, pc->level is %zu\n",
               __func__, __LINE__, pc->orig_line, frm.pse_tos, get_token_name(pc->type), pc->brace_level, pc->level);
+      controlPSECount(frm.pse_tos);
       memset(&frm.pse[frm.pse_tos], 0, sizeof(frm.pse[frm.pse_tos]));
 
       //LOG_FMT(LINDPSE, "%s(%d):%d] (pp=%d) OPEN  [%d,%s] level=%d\n",
       //        __func__, __LINE__, pc->orig_line, cpd.pp_level, frm.pse_tos, get_token_name(pc->type), pc->level);
 
-      frm.pse[frm.pse_tos].pc          = pc;
-      frm.pse[frm.pse_tos].type        = pc->type;
-      frm.pse[frm.pse_tos].level       = pc->level;
-      frm.pse[frm.pse_tos].open_line   = pc->orig_line;
-      frm.pse[frm.pse_tos].ref         = ++ref;
-      frm.pse[frm.pse_tos].in_preproc  = (pc->flags & PCF_IN_PREPROC);
+      frm.pse[frm.pse_tos].pc         = pc;
+      frm.pse[frm.pse_tos].type       = pc->type;
+      frm.pse[frm.pse_tos].level      = pc->level;
+      frm.pse[frm.pse_tos].open_line  = pc->orig_line;
+      frm.pse[frm.pse_tos].ref        = ++ref;
+      frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC);
+      controlPSECount(frm.pse_tos - 1);
       frm.pse[frm.pse_tos].indent_tab  = frm.pse[frm.pse_tos - 1].indent_tab;
       frm.pse[frm.pse_tos].indent_cont = frm.pse[frm.pse_tos - 1].indent_cont;
       frm.pse[frm.pse_tos].non_vardef  = false;
@@ -430,6 +433,7 @@ static void indent_pse_pop(parse_frame_t &frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    // Bump up the index and initialize it
+   controlPSECount(frm.pse_tos);
    if (frm.pse_tos > 0)
    {
       if (pc != nullptr)
@@ -527,7 +531,8 @@ static size_t calc_indent_continue(parse_frame_t &frm, size_t pse_tos)
 {
    int ic = cpd.settings[UO_indent_continue].n;
 
-   if (ic < 0 && frm.pse[pse_tos].indent_cont)
+   controlPSECount(frm.pse_tos);
+   if (ic < 0 && frm.pse[pse_tos].indent_cont > 0)
    {
       return(frm.pse[pse_tos].indent);
    }
@@ -690,6 +695,7 @@ void indent_text(void)
             {
                in_func_def = true;
                indent_pse_push(frm, pc);
+               controlPSECount(frm.pse_tos);
                frm.pse[frm.pse_tos].indent_tmp = 1;
                frm.pse[frm.pse_tos].indent     = 1;
                frm.pse[frm.pse_tos].indent_tab = 1;
@@ -710,6 +716,7 @@ void indent_text(void)
       // Clean up after a #define, etc
       if (!in_preproc)
       {
+         controlPSECount(frm.pse_tos);
          while (frm.pse_tos > 0 && frm.pse[frm.pse_tos].in_preproc)
          {
             c_token_t type = frm.pse[frm.pse_tos].type;
@@ -729,6 +736,7 @@ void indent_text(void)
       else if (pc->type == CT_PREPROC)
       {
          // Close out PP_IF_INDENT before playing with the parse frames
+         controlPSECount(frm.pse_tos);
          if (  (frm.pse[frm.pse_tos].type == CT_PP_IF_INDENT)
             && (  pc->parent_type == CT_PP_ENDIF
                || pc->parent_type == CT_PP_ELSE))
@@ -753,6 +761,8 @@ void indent_text(void)
             set_chunk_type(next, CT_PP_REGION);
 
             // Indent one level
+            controlPSECount(frm.pse_tos);
+            controlPSECount(frm.pse_tos - 1);
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
             log_indent();
             frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + indent_size;
@@ -762,11 +772,13 @@ void indent_text(void)
          }
 
          // If option set, remove indent inside switch statement
+         controlPSECount(frm.pse_tos);
          if (  frm.pse[frm.pse_tos].type == CT_CASE
             && !cpd.settings[UO_indent_switch_pp].b)
          {
             indent_pse_push(frm, pc);
 
+            controlPSECount(frm.pse_tos - 1);
             frm.pse[frm.pse_tos - 1].indent = frm.pse[frm.pse_tos].indent - indent_size;
             log_indent();
          }
@@ -816,6 +828,8 @@ void indent_text(void)
                // Indent one level except if the #if is a #include guard
                size_t extra = (  pc->pp_level == 0
                               && ifdef_over_whole_file()) ? 0 : indent_size;
+               controlPSECount(frm.pse_tos);
+               controlPSECount(frm.pse_tos - 1);
                frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + extra;
                log_indent();
                frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + extra;
@@ -834,6 +848,8 @@ void indent_text(void)
          }
          indent_pse_push(frm, pp_next);
 
+         controlPSECount(frm.pse_tos);
+         controlPSECount(frm.pse_tos - 1);
          if (  pc->parent_type == CT_PP_DEFINE
             || pc->parent_type == CT_PP_UNDEF)
          {
@@ -930,6 +946,7 @@ void indent_text(void)
          old_pse_tos = frm.pse_tos;
 
          // End anything that drops a level
+         controlPSECount(frm.pse_tos);
          if (  !chunk_is_newline(pc)
             && !chunk_is_comment(pc)
             && (frm.pse[frm.pse_tos].level > pc->level))
@@ -1078,6 +1095,7 @@ void indent_text(void)
       } while (old_pse_tos > frm.pse_tos);
 
       // Grab a copy of the current indent
+      controlPSECount(frm.pse_tos);
       indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
       log_indent_tmp();
 
@@ -1087,9 +1105,9 @@ void indent_text(void)
       {
          LOG_FMT(LINDPC, " -=[ %zu:%zu %s ]=-\n",
                  pc->orig_line, pc->orig_col, pc->text());
-         for (int ttidx = frm.pse_tos; ttidx > 0; ttidx--)
+         for (size_t ttidx = frm.pse_tos; ttidx > 0; ttidx--)
          {
-            LOG_FMT(LINDPC, "     [%d %zu:%zu %s %s/%s tmp=%zu ind=%zu bri=%d tab=%zu cont=%d lvl=%zu blvl=%zu]\n",
+            LOG_FMT(LINDPC, "     [%zu %zu:%zu %s %s/%s tmp=%zu ind=%zu bri=%d tab=%zu cont=%d lvl=%zu blvl=%zu]\n",
                     ttidx,
                     frm.pse[ttidx].pc->orig_line,
                     frm.pse[ttidx].pc->orig_col,
@@ -1136,6 +1154,7 @@ void indent_text(void)
                            || pc->parent_type != CT_STRUCT));
       }
 
+      controlPSECount(frm.pse_tos);
       if (pc->type == CT_BRACE_CLOSE)
       {
          if (frm.pse[frm.pse_tos].type == CT_BRACE_OPEN)
@@ -1787,6 +1806,7 @@ void indent_text(void)
                   && pc->parent_type == CT_FUNC_DEF)))
          {
             // Skip any continuation indents
+            controlPSECount(frm.pse_tos - 1);
             idx = frm.pse_tos - 1;
             while (  idx > 0
                   && frm.pse[idx].type != CT_BRACE_OPEN
@@ -2593,17 +2613,20 @@ void indent_text(void)
 null_pc:
 
    // Throw out any stuff inside a preprocessor - no need to warn
+   controlPSECount(frm.pse_tos);
    while (frm.pse_tos > 0 && frm.pse[frm.pse_tos].in_preproc)
    {
       indent_pse_pop(frm, pc);
    }
 
    // Throw out any VBRACE_OPEN at the end - implied with the end of file
+   controlPSECount(frm.pse_tos);
    while (frm.pse_tos > 0 && (frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN))
    {
       indent_pse_pop(frm, pc);
    }
 
+   controlPSECount(frm.pse_tos);
    for (size_t idx_temp = 1; idx_temp <= frm.pse_tos; idx_temp++)
    {
       LOG_FMT(LWARN, "%s:%zu Unmatched %s\n",
