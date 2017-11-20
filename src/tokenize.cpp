@@ -1740,19 +1740,17 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    }
 
    /*
-    * handle C++(11) string/char literal prefixes u8|u|U|L|R including all
+    * handle C/C++(11) string/char literal prefixes u8|u|U|L|R including all
     * possible combinations and optional R delimiters: R"delim(x)delim"
     */
    auto ch = ctx.peek();
-   if (  (cpd.lang_flags & LANG_CPP)
+   if (  (cpd.lang_flags & (LANG_CPP | LANG_C))
       && (  ch == 'u'
          || ch == 'U'
          || ch == 'R'
          || ch == 'L'))
    {
-      auto idx     = size_t {};
-      auto is_real = false;
-
+      auto idx = size_t {};
       if (ch == 'u' && ctx.peek(1) == '8')
       {
          idx = 2;
@@ -1761,11 +1759,14 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       {
          idx++;
       }
-      if (ctx.peek(idx) == 'R')
+
+      auto is_real = false;
+      if ((cpd.lang_flags & LANG_CPP) && ctx.peek(idx) == 'R')
       {
          idx++;
          is_real = true;
       }
+
       const auto quote = ctx.peek(idx);
 
       if (is_real)
