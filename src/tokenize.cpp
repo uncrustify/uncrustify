@@ -937,7 +937,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
       {
          ctx.restore(ss);
          pc.type = CT_NUMBER;
-         return true;
+         return(true);
       }
       else
       {
