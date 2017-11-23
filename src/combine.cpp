@@ -5152,7 +5152,13 @@ static void handle_cpp_lambda(chunk_t *sq_o)
 
    // make sure there isn't an array with braced-init-list: int a[]{};
    chunk_t *prev = chunk_get_prev_ncnl(sq_o);
-   if (prev && prev->type == CT_WORD)
+   if (  prev == nullptr
+      || (  prev->type != CT_ASSIGN
+         && prev->type != CT_COMMA
+         && prev->type != CT_FPAREN_OPEN
+         && prev->type != CT_SQUARE_OPEN
+         && prev->type != CT_BRACE_OPEN
+         && prev->type != CT_RETURN))
    {
       return;
    }
