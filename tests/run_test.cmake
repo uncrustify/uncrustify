@@ -27,6 +27,9 @@ endif()
 if(NOT TEST_RESULT)
   message( FATAL_ERROR "Variable TEST_RESULT not defined" )
 endif()
+if(NOT TEST_RESULT_2)
+  message( FATAL_ERROR "Variable TEST_RESULT_2 not defined" )
+endif()
 if(NOT TEST_DIR)
   message( FATAL_ERROR "Variable TEST_DIR not defined" )
 endif()
@@ -41,8 +44,8 @@ execute_process(
 )
 
 if(uncrustify_error_code)
-  message(SEND_ERROR "Uncrustify error: ${uncrustify_error}")
-endif()
+  message( WARNING "Uncrustify error(Pass 1): ${uncrustify_error}" )
+endif(uncrustify_error_code)
 
 # Unfortunately I had to pull cmake out of the previous execute_process due to instability issues.
 execute_process(
@@ -51,12 +54,20 @@ execute_process(
 )
 
 if(files_are_different)
-  message(SEND_ERROR "MISSMATCH: ${TEST_RESULT} does not match ${TEST_OUTPUT}")
+  message( WARNING "MISSMATCH (Pass 1): ${TEST_RESULT} does not match ${TEST_OUTPUT}" )
+endif()
+execute_process(
+  COMMAND ${CMAKE_COMMAND} -E echo "MISSMATCH for the test input file: ${TEST_INPUT}"
+)
+if(files_are_different)
+  execute_process(
+    COMMAND ${CMAKE_COMMAND} -E copy ${TEST_DIR}/${TEST_RESULT} /dev/stderr
+  )
 endif()
 
 # Re-run with the output file as the input to check stability.
 execute_process(
-  COMMAND ${TEST_PROGRAM} -l ${TEST_LANG} -c ${TEST_RERUN_CONFIG} -f ${TEST_OUTPUT} -o ${TEST_RESULT}
+  COMMAND ${TEST_PROGRAM} -l ${TEST_LANG} -c ${TEST_RERUN_CONFIG} -f ${TEST_OUTPUT} -o ${TEST_RESULT_2}
   WORKING_DIRECTORY ${TEST_DIR}
   RESULT_VARIABLE uncrustify_error_code
   OUTPUT_QUIET
@@ -64,14 +75,14 @@ execute_process(
 )
 
 if(uncrustify_error_code)
-  message( SEND_ERROR "Uncrustify error: ${uncrustify_error}")
+  message( WARNING "Uncrustify error(Pass 2): ${uncrustify_error}")
 endif()
 
 execute_process(
-  COMMAND ${CMAKE_COMMAND} -E compare_files ${TEST_DIR}/${TEST_RESULT} ${TEST_DIR}/${TEST_OUTPUT}
+  COMMAND ${CMAKE_COMMAND} -E compare_files ${TEST_DIR}/${TEST_RESULT_2} ${TEST_DIR}/${TEST_OUTPUT}
   RESULT_VARIABLE files_are_different
 )
 
 if(files_are_different)
-  message(WARNING "UNSTABLE: ${TEST_RESULT} does not match ${TEST_OUTPUT}")
+  message(WARNING "UNSTABLE(Pass 2): ${TEST_RESULT_2} does not match ${TEST_OUTPUT}")
 endif()
