@@ -232,7 +232,7 @@ static const chunk_tag_t keywords[] =
    { "nonnull",            CT_TYPE,             LANG_OC                                                                     },
    { "not",                CT_SARITH,           LANG_CPP                                                                    },
    { "not_eq",             CT_SCOMPARE,         LANG_CPP                                                                    },
-   { "null",               CT_TYPE,             LANG_CS | LANG_D | LANG_JAVA | LANG_VALA                                    },
+  // { "null",               CT_TYPE,             LANG_CS | LANG_D | LANG_JAVA | LANG_VALA                                    },
    { "null_resettable",    CT_OC_PROPERTY_ATTR, LANG_OC                                                                     },
    { "null_unspecified",   CT_TYPE,             LANG_OC                                                                     },
    { "nullable",           CT_TYPE,             LANG_OC                                                                     },
