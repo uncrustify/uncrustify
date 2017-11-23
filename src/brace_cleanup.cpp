@@ -23,7 +23,6 @@
 #include "logger.h"
 #include "helper_for_print.h"
 #include "indent.h"
-#include "controlPSECount.h"
 
 
 /*
@@ -193,7 +192,6 @@ void brace_cleanup(void)
       // Do before assigning stuff from the frame
       if (cpd.lang_flags & LANG_PAWN)
       {
-         controlPSECount(frm.pse_tos);
          if (  (frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN)
             && pc->type == CT_NEWLINE)
          {
