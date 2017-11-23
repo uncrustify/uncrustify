@@ -1,3 +1,10 @@
+Change highlights in uncrustify-0.66.1 (November 2017)
+-------------------------------------------------------------------------------
+
+Bugfix:
+ - Debian issue #881249 "FTBFS on armel/i386/mips64el/s390x: cpp_33057 fails"
+     is fixed
+
 Change highlights in uncrustify-0.66 (November 2017)
 -------------------------------------------------------------------------------
 

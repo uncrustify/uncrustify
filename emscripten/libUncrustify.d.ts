@@ -340,6 +340,7 @@ declare namespace LibUncrustify
         UO_indent_cpp_lambda_body : EmscriptenEnumTypeObject;
         UO_indent_using_block : EmscriptenEnumTypeObject;
         UO_indent_ternary_operator : EmscriptenEnumTypeObject;
+        UO_indent_ignore_asm_block : EmscriptenEnumTypeObject;
         UO_nl_collapse_empty_body : EmscriptenEnumTypeObject;
         UO_nl_assign_leave_one_liners : EmscriptenEnumTypeObject;
         UO_nl_class_leave_one_liners : EmscriptenEnumTypeObject;

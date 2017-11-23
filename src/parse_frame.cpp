@@ -42,8 +42,8 @@ static void pf_log(log_sev_t logsev, parse_frame_t *pf)
 
 static void pf_log_frms(log_sev_t logsev, const char *txt, parse_frame_t *pf)
 {
-   LOG_FMT(logsev, "%s Parse Frames(%d):", txt, cpd.frame_count);
-   for (int idx = 0; idx < cpd.frame_count; idx++)
+   LOG_FMT(logsev, "%s Parse Frames(%zu):", txt, cpd.frame_count);
+   for (size_t idx = 0; idx < cpd.frame_count; idx++)
    {
       LOG_FMT(logsev, " [%s-%d]",
               get_token_name(cpd.frames[idx].in_ifdef),
@@ -55,11 +55,11 @@ static void pf_log_frms(log_sev_t logsev, const char *txt, parse_frame_t *pf)
 
 static void pf_log_all(log_sev_t logsev)
 {
-   LOG_FMT(logsev, "##=- Parse Frame : %d entries\n", cpd.frame_count);
+   LOG_FMT(logsev, "##=- Parse Frame : %zu entries\n", cpd.frame_count);
 
-   for (int idx = 0; idx < cpd.frame_count; idx++)
+   for (size_t idx = 0; idx < cpd.frame_count; idx++)
    {
-      LOG_FMT(logsev, "##  <%d> ", idx);
+      LOG_FMT(logsev, "##  idx is %zu, ", idx);
 
       pf_log(logsev, &cpd.frames[idx]);
    }
@@ -73,36 +73,46 @@ void pf_copy(parse_frame_t *dst, const parse_frame_t *src)
 }
 
 
+void controlFrameCount()
+{
+   if (cpd.frame_count == FRAME_SIZE)
+   {
+      fprintf(stderr, "Number of 'frame' is too big for the current value %d,\n", FRAME_SIZE);
+      //fprintf(stderr, "at line %zu, column %zu.\n", pc->orig_line, pc->orig_col);
+      fprintf(stderr, "Please make a report.\n");
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+}
+
+
 void pf_push(parse_frame_t *pf)
 {
    static int ref_no = 1;
 
-   if (cpd.frame_count < static_cast<int> ARRAY_SIZE(cpd.frames))
-   {
-      pf_copy(&cpd.frames[cpd.frame_count], pf);
-      cpd.frame_count++;
-
-      pf->ref_no = ref_no++;
-   }
-   LOG_FMT(LPF, "%s(%d): count = %d\n", __func__, __LINE__, cpd.frame_count);
+   pf_copy(&cpd.frames[cpd.frame_count], pf);
+   cpd.frame_count++;
+   controlFrameCount();
+   pf->ref_no = ref_no++;
+   LOG_FMT(LPF, "%s(%d): frame_count is %zu\n", __func__, __LINE__, cpd.frame_count);
 }
 
 
 void pf_push_under(parse_frame_t *pf)
 {
-   LOG_FMT(LPF, "%s(%d): before count = %d\n", __func__, __LINE__, cpd.frame_count);
+   LOG_FMT(LPF, "%s(%d): before frame_count is %zu\n", __func__, __LINE__, cpd.frame_count);
 
-   if (  cpd.frame_count < static_cast<int> ARRAY_SIZE(cpd.frames)
-      && cpd.frame_count >= 1)
+   if (cpd.frame_count >= 1)
    {
       parse_frame_t *npf1 = &cpd.frames[cpd.frame_count - 1];
       parse_frame_t *npf2 = &cpd.frames[cpd.frame_count];
       pf_copy(npf2, npf1);
       pf_copy(npf1, pf);
       cpd.frame_count++;
+      controlFrameCount();
    }
 
-   LOG_FMT(LPF, "%s(%d): after count = %d\n", __func__, __LINE__, cpd.frame_count);
+   LOG_FMT(LPF, "%s(%d): after frame_count is %zu\n", __func__, __LINE__, cpd.frame_count);
 }
 
 
@@ -112,7 +122,7 @@ void pf_copy_tos(parse_frame_t *pf)
    {
       pf_copy(pf, &cpd.frames[cpd.frame_count - 1]);
    }
-   LOG_FMT(LPF, "%s(%d): count = %d\n", __func__, __LINE__, cpd.frame_count);
+   LOG_FMT(LPF, "%s(%d): frame_count is %zu\n", __func__, __LINE__, cpd.frame_count);
 }
 
 
@@ -122,7 +132,7 @@ void pf_copy_2nd_tos(parse_frame_t *pf)
    {
       pf_copy(pf, &cpd.frames[cpd.frame_count - 2]);
    }
-   LOG_FMT(LPF, "%s(%d): count = %d\n", __func__, __LINE__, cpd.frame_count);
+   LOG_FMT(LPF, "%s(%d): frame_count is %zu\n", __func__, __LINE__, cpd.frame_count);
 }
 
 
@@ -132,7 +142,7 @@ void pf_trash_tos(void)
    {
       cpd.frame_count--;
    }
-   LOG_FMT(LPF, "%s(%d): count = %d\n", __func__, __LINE__, cpd.frame_count);
+   LOG_FMT(LPF, "%s(%d): frame_count is %zu\n", __func__, __LINE__, cpd.frame_count);
 }
 
 
@@ -164,7 +174,7 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
 
    if (pc->parent_type != next->type)
    {
-      LOG_FMT(LNOTE, "%s(%d): Preproc parent not set correctly on line %zu: got %s expected %s\n",
+      LOG_FMT(LNOTE, "%s(%d): Preproc parent not set correctly on orig_line %zu: got %s expected %s\n",
               __func__, __LINE__, pc->orig_line, get_token_name(pc->parent_type),
               get_token_name(next->type));
       set_chunk_parent(pc, next->type);
@@ -226,6 +236,14 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
              * We want: [...]-[if]
              */
             pf_copy_tos(frm);     // [...] [base] [if]-[if]
+
+            if (cpd.frame_count < 2)
+            {
+               fprintf(stderr, "Number of 'frame' is too small.\n");
+               fprintf(stderr, "Please make a report.\n");
+               log_flush(true);
+               exit(EX_SOFTWARE);
+            }
             frm->in_ifdef = cpd.frames[cpd.frame_count - 2].in_ifdef;
             pf_trash_tos();       // [...] [base]-[if]
             pf_trash_tos();       // [...]-[if]
@@ -250,7 +268,8 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
 
    if (txt != nullptr)
    {
-      LOG_FMT(LPF, "%s(%d): %zu> %s: %s in_ifdef=%d/%d counts=%d/%d\n", __func__, __LINE__,
+      LOG_FMT(LPF, "%s(%d): orig_line is %zu, type is %s: %s in_ifdef is %d/%d, counts is %d, frame_count is %zu\n",
+              __func__, __LINE__,
               pc->orig_line, get_token_name(pc->parent_type), txt,
               in_ifdef, frm->in_ifdef, b4_cnt, cpd.frame_count);
       pf_log_all(LPF);
