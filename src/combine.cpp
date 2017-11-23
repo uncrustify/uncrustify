@@ -4269,12 +4269,12 @@ static void mark_function(chunk_t *pc)
 #endif
                LOG_FMT(LFCN, " --? Skipped MEMBER and landed on %s\n",
                        (prev == NULL) ? "<null>" : get_token_name(prev->type));
-               if (tmp->type != CT_DC_MEMBER) {
+               if (tmp->type != CT_DC_MEMBER)
+               {
                   set_chunk_type(pc, CT_FUNC_CALL);
                   isa_def = false;
-
                }
-               
+
                break;
             }
 #ifdef DEBUG
