@@ -1,7 +1,0 @@
-<<<<<<< HEAD
-sp_after_type=ignore
-sp_cond_question=add
-sp_inside_paren_cast=remove
-=======
-sp_after_type                   = ignore
->>>>>>> upstream/master
