@@ -1,4 +1,4 @@
-class x : Y {
+class X : Y {
         bool Method (int argument_1, int argument_2)
         {
                 #region something

@@ -16,7 +16,6 @@ function(add_uncrustify_test name lang config rerun_config input result result_2
   )
   set_tests_properties(${name}
     PROPERTIES LABELS "${lang}"
-               FAIL_REGULAR_EXPRESSION "failed guy"
   )
 endfunction()
 
