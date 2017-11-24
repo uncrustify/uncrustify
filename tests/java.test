@@ -4,7 +4,7 @@
 # Range: 80000 - 89999
 # test.name  config.file  input.file
 
-80000 ben.cfg                 java/assert.java
+80000  ben_099.cfg                          java/assert.java
 80010 annotation.cfg          java/annotation1.java
 80011 annot-none.cfg          java/annotation2.java
 80012 annot-after.cfg         java/annotation2.java

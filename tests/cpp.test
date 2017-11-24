@@ -6,25 +6,25 @@
 
 # there are additional tests inside imported.test.
 
-30000 ben.cfg                          cpp/cout.cpp
-#30001 ben.cfg                          cpp/alt_tokens.cpp
-30002 ben.cfg                          cpp/constructor.cpp
-30003 ben.cfg                          cpp/strings.cpp
-30010 ben.cfg                          cpp/class.h
-30011 ben.cfg                          cpp/misc.cpp
+30000  ben_001.cfg                          cpp/cout.cpp
+#30001  ben_002.cfg                          cpp/alt_tokens.cpp
+30002  ben_003.cfg                          cpp/constructor.cpp
+30003  ben_004.cfg                          cpp/strings.cpp
+30010  ben_005.cfg                          cpp/class.h
+30011  ben_006.cfg                          cpp/misc.cpp
 30012 avalon2.cfg                      cpp/misc2.cpp
 30013 sim.cfg                          cpp/sim.h
-30014 ben.cfg                          cpp/ctor-var.cpp
-30015 ben.cfg                          cpp/exception.cpp
+30014  ben_007.cfg                          cpp/ctor-var.cpp
+30015  ben_008.cfg                          cpp/exception.cpp
 30016 custom-open.cfg                  cpp/custom-open.cpp
 30017 custom-open2.cfg                 cpp/custom-open.cpp
-30018 ben.cfg                          cpp/class-addr.h
-30019 ben.cfg                          cpp/wacky-template.cpp
+30018  ben_009.cfg                          cpp/class-addr.h
+30019  ben_010.cfg                          cpp/wacky-template.cpp
 
-30020 ben.cfg                          cpp/bool.cpp
-30021 ben.cfg                          cpp/byref.cpp
-30022 ben.cfg                          cpp/extern_c.h
-30023 ben.cfg                          cpp/templates.cpp
+30020  ben_011.cfg                          cpp/bool.cpp
+30021  ben_012.cfg                          cpp/byref.cpp
+30022  ben_013.cfg                          cpp/extern_c.h
+30023  ben_014.cfg                          cpp/templates.cpp
 30024 class-nl_func-add.cfg            cpp/class-init.cpp
 30025 class-nl_func-del.cfg            cpp/class-init.cpp
 
@@ -32,7 +32,7 @@
 30027 byref-right.cfg                  cpp/byref.cpp
 30028 byref-center.cfg                 cpp/byref.cpp
 
-30029 ben.cfg                          cpp/init_align.h
+30029  ben_015.cfg                          cpp/init_align.h
 
 30030 avalon.cfg                       cpp/Timestamp.h
 30031 avalon.cfg                       cpp/operator.cpp
@@ -86,10 +86,10 @@
 
 30090 bug_488.cfg                      cpp/bug_488.cpp
 30091 bug_472.cfg                      cpp/bug_472.cpp
-30092 ben.cfg                          cpp/bug_481.cpp
+30092  ben_016.cfg                          cpp/bug_481.cpp
 30093 sp_after_cast.cfg                cpp/bug_484.cpp
 30094 align-1.cfg                      cpp/bug_495.cpp
-30095 ben.cfg                          cpp/bug_485.cpp
+30095  ben_017.cfg                          cpp/bug_485.cpp
 
 30099 bug_1127.cfg                     cpp/bug_1127.cpp
 30100 nl_template_class-force.cfg      cpp/templates.cpp
@@ -133,10 +133,10 @@
 30251 align_fcall-2.cfg                cpp/align_fcall.cpp
 30253 align_left_shift.cfg             cpp/align_left_shift.cpp
 30254 align_left_shift.cfg             cpp/align_left_shift2.cpp
-30255 ben.cfg                          cpp/align_constr.cpp
+30255  ben_018.cfg                          cpp/align_constr.cpp
 30256 align_left_shift.cfg             cpp/func_call.cpp
 30257 pbtech.cfg                       cpp/func_call_chain.cpp
-30258 ben.cfg                          cpp/casts.cpp
+30258  ben_019.cfg                          cpp/casts.cpp
 
 30260 var_def_gap.cfg                  cpp/var_def_gap.cpp
 30261 align_var_def_thresh_1.cfg       cpp/align_var_def_thresh.cpp
@@ -157,7 +157,7 @@
 30290 indent_shift.cfg                 cpp/align_left_shift.cpp
 30291 indent_shift.cfg                 cpp/indent_shift.cpp
 
-30300 ben.cfg                          cpp/enum_shr.cpp
+30300  ben_020.cfg                          cpp/enum_shr.cpp
 30301 al.cfg                           cpp/enum_class.h
 30302 bug_1315.cfg                     cpp/bug_1315.cpp
 
@@ -188,7 +188,7 @@
 
 # TODO: Reduce the number of options, leave only those that affect lambda.
 # TODO: Add tests for nested lambdas.
-30750 ben.cfg                          cpp/lambda.cpp
+30750  ben_021.cfg                          cpp/lambda.cpp
 30751 lambda1.cfg                      cpp/lambda.cpp
 30752 lambda2.cfg                      cpp/lambda.cpp
 30753 lambda3.cfg                      cpp/lambda2.cpp
@@ -204,15 +204,15 @@
 30807 ptr_star-3.cfg                   cpp/ptr-star.cpp
 30808 ptr_star-4.cfg                   cpp/ptr-star.cpp
 
-30810 ben.cfg                          cpp/ptr-star.cpp
+30810  ben_022.cfg                          cpp/ptr-star.cpp
 30811 avalon4.cfg                      cpp/misc3.cpp
-30812 ben.cfg                          cpp/misc4.cpp
-30813 ben.cfg                          cpp/misc5.cpp
+30812  ben_023.cfg                          cpp/misc4.cpp
+30813  ben_024.cfg                          cpp/misc5.cpp
 30814 misc6.cfg                        cpp/misc6.cpp
 
 30815! width-2.cfg                     cpp/cmt-reflow.cpp
 30816  cu.cfg                          cpp/for_long.cpp
-30817  ben.cfg                         cpp/cmt-cpp-cont.cpp
+30817  ben_025.cfg                          cpp/cmt-cpp-cont.cpp
 30818  bug_1169.cfg                    cpp/bug_1169.cpp
 30819  bug_1170.cfg                    cpp/bug_1170.cpp
 
@@ -231,7 +231,7 @@
 30841 nl_func_type_name_force.cfg      cpp/nl_func_type_name.cpp
 30842 nl_func_type_name_class.cfg      cpp/nl_func_type_name.cpp
 
-30845 ben.cfg                          cpp/deref.cpp
+30845  ben_026.cfg                          cpp/deref.cpp
 
 30850 sp_cmt_cpp_start_force.cfg       cpp/sp_cmt_cpp_start.cc
 
@@ -254,8 +254,8 @@
 30914 indent_namespace_single_indent.cfg cpp/indent_namespace_single_indent.h
 30915 bug_1235.cfg                     cpp/bug_1235.cpp
 
-30920 ben.cfg                          cpp/indent-off.cpp
-30921 ben.cfg                          cpp/variadic-template.h
+30920  ben_027.cfg                          cpp/indent-off.cpp
+30921  ben_028.cfg                          cpp/variadic-template.h
 30922 sp_before_ellipsis-f.cfg         cpp/variadic-template.h
 30923 sp_before_ellipsis-f.cfg         cpp/sp_before_ellipsis.cpp
 30924 sp_before_ellipsis-r.cfg         cpp/sp_before_ellipsis.cpp
@@ -271,7 +271,7 @@
 
 30933 indent_paren_after_func_def.cfg  cpp/indent_paren_after_func_def.cpp
 30934 indent_paren_after_func_decl.cfg cpp/indent_paren_after_func_decl.cpp
-30935 ben.cfg                          cpp/indent-misc.cpp
+30935  ben_029.cfg                          cpp/indent-misc.cpp
 30936 indent_braces_no.cfg             cpp/indent_braces_no.h
 30937 indent_param.cfg                 cpp/indent_param.cpp
 30938 indent_switch_pp.cfg             cpp/indent_switch_pp.cpp
@@ -289,7 +289,7 @@
 30957 negative_indent.cfg              cpp/class-init.cpp
 
 31000 digraph.cfg                      cpp/digraph.cpp
-31001 ben.cfg                          cpp/digraph.cpp
+31001  ben_030.cfg                          cpp/digraph.cpp
 
 31562 sf562.cfg                        cpp/sf562.cpp
 31567 sf567.cfg                        cpp/sf567.cpp
@@ -302,7 +302,7 @@
 31710 empty.cfg                        cpp/string_replace_tab_chars.cpp
 31711 string_replace_tab_chars.cfg     cpp/string_replace_tab_chars.cpp
 
-31720 ben.cfg                          cpp/bit-colon.cpp
+31720  ben_031.cfg                          cpp/bit-colon.cpp
 31730 ms-style-ref.cfg                 cpp/ms-style-ref.cpp
 
 32000 sp_skip_vbrace_tokens.cfg        cpp/sp_skip_vbrace_tokens.cpp
