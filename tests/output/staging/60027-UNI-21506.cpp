@@ -4,8 +4,7 @@ struct bar
 };
 
 void Class::Foo(void (*callback)(const Class& entry))
-{
-}
+{}
 
 void foo()
 {

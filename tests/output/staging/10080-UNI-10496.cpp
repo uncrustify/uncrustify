@@ -7,5 +7,4 @@ friend void ::testing::PrintDebugInformationForFakesInUse();
 
 template<class TransferFunction>
 void ::DateTime::Transfer(TransferFunction & transfer)
-{
-}
+{}
