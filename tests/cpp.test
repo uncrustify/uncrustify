@@ -323,12 +323,12 @@
 33007 NewLine-i.cfg                    cpp/NewLine.cpp
 33008 NewLine-r.cfg                    cpp/NewLine.cpp
 33009 NewLine-f.cfg                    cpp/NewLine0.cpp
-33010 kdepim.cfg                       cpp/Q_EMIT.cpp
-33011 kdepim.cfg                       cpp/static.h
-33012 kdepim.cfg                       cpp/Q_SIGNAL_SLOT.cpp
-33013 kdepim.cfg                       cpp/Q_2.cpp
-33014 kdepim.cfg                       cpp/DB.cpp
-33015 kdepim.cfg                       cpp/Q_FOREACH.cpp
+33010  kdepim0.cfg                          cpp/Q_EMIT.cpp
+33011  kdepim1.cfg                          cpp/static.h
+33012  kdepim2.cfg                          cpp/Q_SIGNAL_SLOT.cpp
+33013  kdepim3.cfg                          cpp/Q_2.cpp
+33014  kdepim4.cfg                          cpp/DB.cpp
+33015  kdepim5.cfg                          cpp/Q_FOREACH.cpp
 33016 indent_once.cfg                  cpp/indent.cpp
 33017 bug_1160.cfg                     cpp/bug_1160.cpp
 33018 byref-2.cfg                      cpp/byref-2.cpp
@@ -343,7 +343,7 @@
 33027 bug_664.cfg                      cpp/bug_664.cpp
 33028 braces_empty.cfg                 cpp/braces_empty.cpp
 33029 cast.cfg                         cpp/cast.cpp
-33030 kdepim.cfg                       cpp/Q_FOREVER.cpp
+33030  kdepim6.cfg                     cpp/Q_FOREVER.cpp
 33031 bug_612.cfg                      cpp/bug_612.cpp
 33032 bug_670.cfg                      cpp/bug_670.cpp
 33033 bug_670.cfg                      cpp/bug_670.h
