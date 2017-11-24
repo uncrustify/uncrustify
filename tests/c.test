@@ -55,31 +55,31 @@
 00069  ben_057.cfg                          c/vb-pp.c
 
 00070  ben_058.cfg                          c/return-multi.c
-00071  ben_059.cfg                          c/include_define.h
+00071  ben_042.cfg                          c/include_define.h
 00072  star_pos-0.cfg                       c/align-proto.c
-00073  ben_060.cfg                          c/nl_proto_endif.c
+00073  empty.cfg                            c/nl_proto_endif.c
 
 00081  else-if-1.cfg                        c/else-if.c
 00082  else-if-2.cfg                        c/else-if.c
 
 00091  cond-1.cfg                           c/cond.c
-00092  cond-2.cfg                           c/cond.c
+00092  indent_columns-3.cfg                 c/cond.c
 00093  sp_cond_colon.cfg                    c/cond.c
 
 00101  ben_061.cfg                          c/bugs-1.c
-00102  ben_062.cfg                          c/bugs-2.c
+00102  space_indent_columns-3.cfg           c/bugs-2.c
 00103  ben_063.cfg                          c/bugs-3.c
 00104  ben_064.cfg                          c/bugs-4.c
 00105  ben_065.cfg                          c/bugs-5.c
-00106  ben_066.cfg                          c/bugs-6.c
-00107  ben_067.cfg                          c/bugs-7.c
-00108  ben_068.cfg                          c/bugs-8.c
+00106  ben_011.cfg                          c/bugs-6.c
+00107  ben_011.cfg                          c/bugs-7.c
+00108  indent_columns-3.cfg                 c/bugs-8.c
 
 00110  ben_069.cfg                          c/misc.c
 00111  brace-kr-br.cfg                      c/misc.c
 
 00120  sp_cmt_cpp_start_remove.cfg          c/sp_cmt_cpp_start.c
-00121  sp_cmt_cpp_start_add.cfg             c/sp_cmt_cpp_start.c
+00121  sp_cmt_cpp_start-add.cfg             c/sp_cmt_cpp_start.c
 00122  sp_cmt_cpp_start_force.cfg           c/sp_cmt_cpp_start.c
 
 00130  ben_070.cfg                          c/minus-minus.c
@@ -144,15 +144,15 @@
 00405  align-3.cfg                          c/bits.c
 00406  bug_i_771.cfg                        c/bug_i_771.c
 
-00411  ben_082.cfg                          c/align-typedef.c
-00412  align_typedef_func-0.cfg             c/align-typedef.c
+00411  align_typedef_gap-3_span-5.cfg       c/align-typedef.c
+00412  align_typedef_gap-3_span-5.cfg       c/align-typedef.c
 00413  align_typedef_func-1.cfg             c/align-typedef.c
 00414  align_typedef_func-2.cfg             c/align-typedef.c
 
 00421  nl_ds_struct_enum-1.cfg              c/nl_ds_struct_enum.c
 00422  nl_ds_struct_enum-2.cfg              c/nl_ds_struct_enum.c
 
-00430  indent_paren_close-0.cfg             c/paren-indent.c
+00430  empty.cfg                            c/paren-indent.c
 00431  indent_paren_close-1.cfg             c/paren-indent.c
 00432  indent_paren_close-2.cfg             c/paren-indent.c
 
@@ -179,7 +179,7 @@
 
 00600  indent.cfg                           c/dos.c
 00601  indent.cfg                           c/mac.c
-00611  pp-indent-1.cfg                      c/pp-space.c
+00611  empty.cfg                            c/pp-space.c
 00612  pp-indent-2.cfg                      c/pp-space.c
 00613  pp-indent-3.cfg                      c/pp-space.c
 00614  pp-space.cfg                         c/pp-space.c
@@ -247,7 +247,7 @@
 
 01030  multi.cfg                            c/multi.h
 
-01035  func_wrap1.cfg                       c/func_wrap.c
+01035  empty.cfg                            c/func_wrap.c
 01036  func_wrap2.cfg                       c/func_wrap.c
 01037  type_wrap.cfg                        c/type_wrap.c
 
@@ -308,11 +308,11 @@
 02416  cmt_nl_end.cfg                       c/cmt_nl_end.c
 
 02421  cmt_multi-1.cfg                      c/cmt_multi.c
-02422  cmt_multi-2.cfg                      c/cmt_multi.c
-02423  cmt_multi-2.cfg                      c/cmt_multi_utf8.c
+02422  empty.cfg                            c/cmt_multi.c
+02423  empty.cfg                            c/cmt_multi_utf8.c
 
 02431  align_right_cmt_gap-1.cfg            c/cmt_right_align.c
-02432  align_right_cmt_gap-2.cfg            c/cmt_right_align.c
+02432  space_indent_columns-3.cfg           c/cmt_right_align.c
 
 02440  empty.cfg                            c/string_utf8.c
 02441  empty.cfg                            c/utf8-identifiers.c
@@ -340,8 +340,8 @@
 
 08399  ben_095.cfg                          c/gh399.c
 
-09594  ben_096.cfg                          c/sf594.c
-09588  ben_097.cfg                          c/sf588.c
+09594  indent_columns-3.cfg                 c/sf594.c
+09588  empty.cfg                            c/sf588.c
 
 09601  sp_after_sparen.cfg                  c/sp_after_sparen.c
 
@@ -351,8 +351,8 @@
 09604  indent_ternary-2.cfg                 c/indent_ternary-2.c
 
 09610  bug_i_876.cfg                        c/bug_i_876.c
-09611  bug_i_222.cfg                        c/bug_i_222.c
-09612  bug_1041.cfg                         c/bug_1041.c
+09611  space_indent_columns-4.cfg           c/bug_i_222.c
+09612  empty.cfg                            c/bug_1041.c
 09613  empty.cfg                            c/i1413.c
 
-10005  enable_processing_cmt-empty.cfg      c/i1270.c
+10005  empty.cfg                            c/i1270.c
