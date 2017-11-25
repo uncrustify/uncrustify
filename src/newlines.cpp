@@ -368,7 +368,7 @@ static void double_newline(chunk_t *nl)
    }
    else
    {
-      LOG_FMT(LNEWLINE, "%s ", prev->text());
+      LOG_FMT(LNEWLINE, "'%s' ", prev->text());
    }
    LOG_FMT(LNEWLINE, "on line %zu", prev->orig_line);
 
@@ -1239,7 +1239,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
             LOG_FMT(LNEWLINE, "   (%d): next->... , type %s, line %zu, column %zu,\n",
                     __LINE__, get_token_name(next->type), next->orig_line, next->orig_col);
             nl_count += next->nl_count;
-            LOG_FMT(LNEWLINE, "   (%d): nl_count %zu\n", __LINE__, nl_count);
+            LOG_FMT(LNEWLINE, "   (%d): nl_count is %zu\n", __LINE__, nl_count);
          }
 
          // if we have no newlines, add one and make it double
@@ -4008,7 +4008,7 @@ void do_blank_lines(void)
    {
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, NEWLINE, nl is %zu\n",
+         LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>, nl is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->nl_count);
       }
       else

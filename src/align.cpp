@@ -1290,7 +1290,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
    {
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, orig_col is %zu, NEWLINE\n",
+         LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
       }
       else
@@ -1986,7 +1986,7 @@ static void align_left_shift(void)
    {
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, NEWLINE\n", __func__, __LINE__, pc->orig_line);
+         LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, <Newline>\n", __func__, __LINE__, pc->orig_line);
       }
       else
       {

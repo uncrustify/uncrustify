@@ -33,6 +33,9 @@ endif()
 if(NOT TEST_DIR)
   message(FATAL_ERROR "Variable TEST_DIR not defined")
 endif()
+if(NOT TEST_RERUN_OUTPUT)
+  message(FATAL_ERROR "Variable TEST_RERUN_OUTPUT not defined")
+endif()
 
 
 # first pass
@@ -74,7 +77,7 @@ endif(uncrustify_error_code)
 
 # Re-run with the output file as the input to check stability.
 execute_process(
-  COMMAND ${TEST_PROGRAM} -l ${TEST_LANG} -c ${TEST_RERUN_CONFIG} -f ${TEST_OUTPUT} -o ${TEST_RESULT_2}
+  COMMAND ${TEST_PROGRAM} -l ${TEST_LANG} -c ${TEST_RERUN_CONFIG} -f ${TEST_RERUN_OUTPUT} -o ${TEST_RESULT_2}
     WORKING_DIRECTORY ${TEST_DIR}
     RESULT_VARIABLE uncrustify_error_code
     OUTPUT_QUIET
@@ -92,11 +95,11 @@ if(uncrustify_error_code)
   message(SEND_ERROR "Uncrustify error_code (Pass 2)")
 else(uncrustify_error_code)
   execute_process(
-    COMMAND ${CMAKE_COMMAND} -E compare_files ${TEST_DIR}/${TEST_RESULT_2} ${TEST_DIR}/${TEST_OUTPUT}
+    COMMAND ${CMAKE_COMMAND} -E compare_files ${TEST_DIR}/${TEST_RESULT_2} ${TEST_DIR}/${TEST_RERUN_OUTPUT}
       RESULT_VARIABLE files_are_different
   )
   if(files_are_different)
-    message(WARNING "UNSTABLE (Pass 2): ${TEST_RESULT_2} does not match ${TEST_OUTPUT}")
+    message(WARNING "UNSTABLE (Pass 2): ${TEST_RESULT_2} does not match ${TEST_RERUN_OUTPUT}")
     execute_process(
       COMMAND ${CMAKE_COMMAND} -E echo "the result file:"
     )

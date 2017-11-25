@@ -1981,7 +1981,7 @@ void space_text(void)
    {
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, NEWLINE\n",
+         LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
       }
       else

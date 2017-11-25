@@ -3008,7 +3008,7 @@ void combine_labels(void)
    {
       if (cur->type == CT_NEWLINE)
       {
-         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, NEWLINE\n",
+         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>\n",
                  __func__, __LINE__, cur->orig_line, cur->orig_col);
       }
       else if (cur->type == CT_VBRACE_OPEN)
@@ -3157,8 +3157,8 @@ void combine_labels(void)
 #ifdef DEBUG
                LOG_FMT(LGUY, "(%d) ", __LINE__);
 #endif
-               LOG_FMT(LGUY, "%s: %zu:%zu, tmp=%s\n",
-                       __func__, tmp->orig_line, tmp->orig_col, (tmp->type == CT_NEWLINE) ? "<NL>" : tmp->text());
+               LOG_FMT(LGUY, "%s: %zu:%zu, tmp '%s'\n",
+                       __func__, tmp->orig_line, tmp->orig_col, (tmp->type == CT_NEWLINE) ? "<Newline>" : tmp->text());
                log_pcf_flags(LGUY, tmp->flags);
                if (next->flags & PCF_IN_FCN_CALL)
                {
