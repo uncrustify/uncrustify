@@ -17,7 +17,7 @@
 10023  region-3.cfg                         cs/region.cs
 
 10030  sort_imports.cfg                     cs/sort_using.cs
-10031  bug_i_935.cfg                        cs/bug_i_935.cs
+10031  mod_sort_using-t.cfg                 cs/bug_i_935.cs
 10032  sort_using_categ.cfg                 cs/sort_using_categ.cs
 
 10040  tcf.cfg                              cs/tcf.cs
@@ -41,7 +41,7 @@
 10101  sf607.cfg                            cs/sf607.cs
 
 10110  mda_space_a.cfg                      cs/mdarray_space.cs
-10111  mda_space_b.cfg                      cs/mdarray_space.cs
+10111  sp_after_comma-a.cfg                 cs/mdarray_space.cs
 10112  mda_space_c.cfg                      cs/mdarray_space.cs
 
 10120  empty.cfg                            cs/cmt_backslash_eol.cs
@@ -54,13 +54,13 @@
 
 10628  empty.cfg                            cs/sf628.cs
 10160  empty.cfg                            cs/delegate.cs
-10161  cs_delegate_indent.cfg               cs/delegate.cs
+10161  indent_cs_delegate_brace-t.cfg       cs/delegate.cs
 12001  bug_620.cfg                          cs/bug_620.cs
 12002  empty.cfg                            cs/nullable_prop.cs
 12003  ben_043.cfg                          cs/fncall_as_ctor_in_attr.cs
 12004  verbatim_strings.cfg                 cs/verbatim_strings.cs
 
-12101  bug_i_679.cfg                        cs/bug_i_679.cs
+12101  indent_using_block-f.cfg             cs/bug_i_679.cs
 
 12102  mod_full_brace_nl_block_rem_mlcond-0.cfg  cs/mod_full_brace_nl_block_rem_mlcond.cs
 12103  mod_full_brace_nl_block_rem_mlcond-1.cfg  cs/mod_full_brace_nl_block_rem_mlcond.cs

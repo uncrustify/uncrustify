@@ -36,7 +36,7 @@
 
 50050  objc_complex_method.cfg              oc/real_world_file.m
 
-50060  oc-split.cfg                         oc/oc-split.m
+50060  align_oc_msg_colon_span-1.cfg        oc/oc-split.m
 
 50070  blocks.cfg                           oc/blocks.m
 50071  sp_before_oc_block_caret_force.cfg   oc/blocks.m
@@ -75,7 +75,7 @@
 50204  sp_block_as_argument4.cfg            oc/blocks_align.m
 50205  sp_block_as_argument5.cfg            oc/msg_align.m
 
-50300  oc15.cfg                             oc/msg.m
+50300  sp_after_send_oc_colon-f.cfg         oc/msg.m
 
 50400  oc16.cfg                             oc/for.m
 
@@ -86,7 +86,7 @@
 50510  gh293.a.cfg                          oc/gh293.m
 50511  gh293.b.cfg                          oc/gh293.m
 
-50600  bug_i_477.cfg                        oc/bug_i_477.m
+50600  nl_oc_block_brace-f.cfg              oc/bug_i_477.m
 50601  empty.cfg                            oc/bug_i_408.m
 50602  bug_i_125-412.cfg                    oc/bug_i_125-412.m
 50603  oc18.cfg                             oc/gh511.m

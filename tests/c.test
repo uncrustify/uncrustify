@@ -7,7 +7,7 @@
 
 # little general tests ====================================================
 
-00000  indent.cfg                           c/comment-indent.c
+00000  indent_columns-3.cfg                 c/comment-indent.c
 00001  cpp_to_c-1.cfg                       c/comment-indent.c
 00002  cpp_to_c-2.cfg                       c/comment-indent.c
 00003  cpp_to_c-3.cfg                       c/comment-indent.c
@@ -16,7 +16,7 @@
 
 00005  ben_047.cfg                          c/cmt-align.c
 
-00006  indent.cfg                           c/comment-convert.c
+00006  indent_columns-3.cfg                 c/comment-convert.c
 00007  cpp_to_c-1.cfg                       c/comment-convert.c
 00008  cpp_to_c-2.cfg                       c/comment-convert.c
 00009  cpp_to_c-3.cfg                       c/comment-convert.c
@@ -78,8 +78,8 @@
 00110  ben_069.cfg                          c/misc.c
 00111  brace-kr-br.cfg                      c/misc.c
 
-00120  sp_cmt_cpp_start_remove.cfg          c/sp_cmt_cpp_start.c
-00121  sp_cmt_cpp_start-add.cfg             c/sp_cmt_cpp_start.c
+00120  sp_cmt_cpp_start-r.cfg               c/sp_cmt_cpp_start.c
+00121  sp_cmt_cpp_start-a.cfg               c/sp_cmt_cpp_start.c
 00122  sp_cmt_cpp_start_force.cfg           c/sp_cmt_cpp_start.c
 
 00130  ben_070.cfg                          c/minus-minus.c
@@ -149,7 +149,7 @@
 00413  align_typedef_func-1.cfg             c/align-typedef.c
 00414  align_typedef_func-2.cfg             c/align-typedef.c
 
-00421  nl_ds_struct_enum-1.cfg              c/nl_ds_struct_enum.c
+00421  nl_ds_struct_enum_cmt-t.cfg          c/nl_ds_struct_enum.c
 00422  nl_ds_struct_enum-2.cfg              c/nl_ds_struct_enum.c
 
 00430  empty.cfg                            c/paren-indent.c
@@ -158,8 +158,8 @@
 
 00440  bug_489.cfg                          c/bug_489.c
 
-00451  nl_enum_own_lines-1.cfg              c/enum_gallery.c
-00452  nl_enum_own_lines-2.cfg              c/enum_gallery.c
+00451  code_width-80.cfg                    c/enum_gallery.c
+00452  nl_enum_own_lines-a.cfg              c/enum_gallery.c
 00453! nl_enum_own_lines-3.cfg              c/enum_gallery.c
 00454  nl_enum_own_lines-4.cfg              c/enum_gallery.c
 
@@ -170,18 +170,18 @@
 00502  bool-pos-sol.cfg                     c/bool-pos.c
 00503  pos_compare-sol.cfg                  c/pos_compare.c
 00504  pos_compare-eol.cfg                  c/pos_compare.c
-00505  pos_conditional-sol.cfg              c/pos_conditional.c
-00506  pos_conditional-eol.cfg              c/pos_conditional.c
+00505  pos_conditional-l.cfg                c/pos_conditional.c
+00506  pos_conditional-t.cfg                c/pos_conditional.c
 00510  bool-pos-eol-break.cfg               c/bool-pos.c
 00511  bool-pos-sol-break.cfg               c/bool-pos.c
 00512  bool-pos-eol-force.cfg               c/bool-pos.c
 00513  bool-pos-sol-force.cfg               c/bool-pos.c
 
-00600  indent.cfg                           c/dos.c
-00601  indent.cfg                           c/mac.c
+00600  indent_columns-3.cfg                 c/dos.c
+00601  indent_columns-3.cfg                 c/mac.c
 00611  empty.cfg                            c/pp-space.c
 00612  pp-indent-2.cfg                      c/pp-space.c
-00613  pp-indent-3.cfg                      c/pp-space.c
+00613  pp_indent-a.cfg                      c/pp-space.c
 00614  pp-space.cfg                         c/pp-space.c
 
 00615  pp-indent-2.cfg                      c/pp-nest.c
@@ -245,10 +245,10 @@
 01021  kw_subst3.cfg                        c/hello.c
 01022  kw_subst3.cfg                        c/kw_subst.c
 
-01030  multi.cfg                            c/multi.h
+01030  cmt_indent_multi-f.cfg               c/multi.h
 
 01035  empty.cfg                            c/func_wrap.c
-01036  func_wrap2.cfg                       c/func_wrap.c
+01036  sp_inside_fparen-f.cfg               c/func_wrap.c
 01037  type_wrap.cfg                        c/type_wrap.c
 
 01040  newline_after_endif.cfg              c/newline_after_endif.c
@@ -307,7 +307,7 @@
 02415  endif.cfg                            c/endif.c
 02416  cmt_nl_end.cfg                       c/cmt_nl_end.c
 
-02421  cmt_multi-1.cfg                      c/cmt_multi.c
+02421  cmt_multi_check_last-f.cfg           c/cmt_multi.c
 02422  empty.cfg                            c/cmt_multi.c
 02423  empty.cfg                            c/cmt_multi_utf8.c
 
@@ -347,10 +347,10 @@
 
 09602  bug_671.cfg                          c/bug_671.c
 
-09603  indent_ternary-1.cfg                 c/indent_ternary-1.c
-09604  indent_ternary-2.cfg                 c/indent_ternary-2.c
+09603  indent_ternary_operator-1.cfg        c/indent_ternary-1.c
+09604  indent_ternary_operator-2.cfg        c/indent_ternary-2.c
 
-09610  bug_i_876.cfg                        c/bug_i_876.c
+09610  force_tab_after_define-t.cfg         c/bug_i_876.c
 09611  space_indent_columns-4.cfg           c/bug_i_222.c
 09612  empty.cfg                            c/bug_1041.c
 09613  empty.cfg                            c/i1413.c
