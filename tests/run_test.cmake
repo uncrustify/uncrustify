@@ -73,6 +73,7 @@ else(uncrustify_error_code)
     message(SEND_ERROR "Uncrustify MISSMATCH (Pass 1)")
   endif()
 endif(uncrustify_error_code)
+file(REMOVE ${TEST_DIR}/ERR-1.txt)
 
 
 # Re-run with the output file as the input to check stability.
@@ -109,3 +110,4 @@ else(uncrustify_error_code)
     message(SEND_ERROR "Uncrustify UNSTABLE (Pass 2)")
   endif()
 endif()
+file(REMOVE ${TEST_DIR}/ERR-2.txt)
