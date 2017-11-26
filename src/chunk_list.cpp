@@ -259,8 +259,13 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
       {
          if (pc->type == CT_NEWLINE)
          {
-            LOG_FMT(LCHUNK, "%s(%d): orig_line is %zu, orig_col is %zu, NEWLINE\n",
+            LOG_FMT(LCHUNK, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col);
+         }
+         else if (pc->type == CT_VBRACE_OPEN)
+         {
+            LOG_FMT(LCHUNK, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type));
          }
          else
          {
@@ -393,9 +398,24 @@ chunk_t *chunk_dup(const chunk_t *pc_in)
 
 static void chunk_log_msg(chunk_t *chunk, const log_sev_t log, const char *str)
 {
-   LOG_FMT(log, "%s %zu:%zu '%s' [%s]",
-           str, chunk->orig_line, chunk->orig_col, chunk->text(),
-           get_token_name(chunk->type));
+   LOG_FMT(log, "%s orig_line is %zu, orig_col is %zu, ",
+           str, chunk->orig_line, chunk->orig_col);
+   if (chunk->type == CT_NEWLINE)
+   {
+      LOG_FMT(log, "<Newline>,");
+   }
+   else if (chunk->type == CT_VBRACE_OPEN)
+   {
+      LOG_FMT(log, "<VBRACE_OPEN>,");
+   }
+   else if (chunk->type == CT_VBRACE_CLOSE)
+   {
+      LOG_FMT(log, "<VBRACE_CLOSE>,");
+   }
+   else
+   {
+      LOG_FMT(log, "text() '%s', type is %s,", chunk->text(), get_token_name(chunk->type));
+   }
 }
 
 
@@ -424,7 +444,7 @@ static void chunk_log(chunk_t *pc, const char *text)
       {
          chunk_log_msg(prev, log, " @ after");
       }
-      LOG_FMT(log, " stage=%d", (int)cpd.unc_stage);
+      LOG_FMT(log, " stage is %d", cpd.unc_stage);
       log_func_stack_inline(log);
    }
 }
@@ -444,7 +464,7 @@ chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref)
 
 void chunk_del(chunk_t *pc)
 {
-   chunk_log(pc, "chunk_del");
+   chunk_log(pc, "chunk_del:");
    g_cl.Pop(pc);
    delete pc;
 }
@@ -823,7 +843,7 @@ static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const direction_e 
       {
          (pos == direction_e::FORWARD) ? g_cl.AddHead(pc) : g_cl.AddTail(pc);
       }
-      chunk_log(pc, "chunk_add");
+      chunk_log(pc, "chunk_add:");
    }
    return(pc);
 }

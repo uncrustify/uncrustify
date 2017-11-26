@@ -370,7 +370,7 @@ void reindent_line(chunk_t *pc, size_t column)
          LOG_FMT(LINDLINED, "   set column of ");
          if (pc->type == CT_NEWLINE)
          {
-            LOG_FMT(LINDLINED, "NEWLINE");
+            LOG_FMT(LINDLINED, "<Newline>");
          }
          else
          {
@@ -653,7 +653,7 @@ void indent_text(void)
    {
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, NEWLINE\n",
+         LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, <Newline>\n",
                  __func__, __LINE__, pc->orig_line);
       }
       else if (pc->type == CT_NL_CONT)
