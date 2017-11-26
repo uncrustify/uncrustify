@@ -425,6 +425,7 @@
 
 33201 indent_ctor_members_twice.cfg    cpp/indent_ctor_members_twice.cpp
 33202 initlist_leading_commas.cfg      cpp/initlist_leading_commas.cpp
+33203 empty.cfg                        cpp/bug_1288.cpp
 
 34001 nl_before_after.cfg              cpp/nl_before_after.h
 34002 bug_i_793.cfg                    cpp/bug_i_793.cpp
