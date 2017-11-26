@@ -1,42 +1,43 @@
+# d.test ===========
 #
 # Test cases specifically for the D language.
 #
 # Range: 40000 - 49999
 # test.name  config.file  input.file  output.file
 
-40000  d.cfg                   d/HashMap.d
-40001  d.cfg                   d/imports.d
-40002  d.cfg                   d/volatile.d
-40003  d.cfg                   d/volatile-1.d
-40004  d.cfg                   d/volatile-2.d
-40005  d.cfg                   d/volatile-3.d
-40006  d.cfg                   d/Lexer.d
-40007  d2.cfg                  d/Lexer.d
+40000  d.cfg                                d/HashMap.d
+40001  d.cfg                                d/imports.d
+40002  d.cfg                                d/volatile.d
+40003  d.cfg                                d/volatile-1.d
+40004  d.cfg                                d/volatile-2.d
+40005  d.cfg                                d/volatile-3.d
+40006  d.cfg                                d/Lexer.d
+40007  d2.cfg                               d/Lexer.d
 
-40010  d.cfg                   d/template.d
-40011  d2.cfg                  d/template.d
-40020  d.cfg                   d/funcfunc.d
+40010  d.cfg                                d/template.d
+40011  d2.cfg                               d/template.d
+40020  d.cfg                                d/funcfunc.d
 
-40021  d.cfg                   d/tst01.d
-40022  d-tst2.cfg              d/tst02.d
-40023  d.cfg                   d/bug-indent.d
-40024  d3.cfg                  d/tst03.d
-40025  d3a.cfg                 d/tst03.d
+40021  d.cfg                                d/tst01.d
+40022  d-tst2.cfg                           d/tst02.d
+40023  d.cfg                                d/bug-indent.d
+40024  d3.cfg                               d/tst03.d
+40025  d3a.cfg                              d/tst03.d
 
-40030  d.cfg                   d/delegate.d
-40035  d.cfg                   d/enum.d
+40030  d.cfg                                d/delegate.d
+40035  d.cfg                                d/enum.d
 
-40040  sort_imports.cfg        d/sort_import.d
+40040  sort_imports.cfg                     d/sort_import.d
 
-40050  d.cfg                   d/strings.d
-40051  d.cfg                   d/numbers.d
-40052  d2.cfg                  d/numbers.d
+40050  d.cfg                                d/strings.d
+40051  d.cfg                                d/numbers.d
+40052  d2.cfg                               d/numbers.d
 
-40060  d.cfg                   d/casts.d
-40061  d.cfg                   d/const.d
+40060  d.cfg                                d/casts.d
+40061  d.cfg                                d/const.d
 
-40070  d_sp_paren.cfg          d/d_sp_paren.d
+40070  d_sp_paren.cfg                       d/d_sp_paren.d
 
-40080  d.cfg                   d/static_if.d
+40080  d.cfg                                d/static_if.d
 
-40090 libd.cfg                 d/square_indent_tab.d
+40090  libd.cfg                             d/square_indent_tab.d
