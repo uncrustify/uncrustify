@@ -92,6 +92,7 @@ static const chunk_tag_t keywords[] =
    { "__attribute__",      CT_ATTRIBUTE,        LANG_C | LANG_CPP | LANG_OC                                                 },
    { "__block",            CT_QUALIFIER,        LANG_OC                                                                     },
    { "__const__",          CT_QUALIFIER,        LANG_C | LANG_CPP | LANG_OC                                                 },
+   { "__declspec",         CT_DECLSPEC,         LANG_C | LANG_CPP                                                           },
    { "__except",           CT_CATCH,            LANG_C | LANG_CPP                                                           },
    { "__finally",          CT_FINALLY,          LANG_C | LANG_CPP                                                           },
    { "__inline__",         CT_QUALIFIER,        LANG_C | LANG_CPP | LANG_OC                                                 },
