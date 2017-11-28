@@ -508,6 +508,7 @@
 34195  sp_arith_additive-r.cfg              cpp/sp_arith_additive.cpp
 
 34198  sp_dc.cfg                            cpp/bug_1249.cpp
+34199  empty.cfg                            cpp/not_lambda.cpp
 
 # TODO: Find relevant test cases for 'override'.
 34210  empty.cfg                            cpp/override_virtual.cpp

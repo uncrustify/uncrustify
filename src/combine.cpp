@@ -5017,9 +5017,15 @@ static void handle_cpp_lambda(chunk_t *sq_o)
 
    chunk_t *ret = nullptr;
 
-   // make sure there isn't an array with braced-init-list: int a[]{};
+   // abort if type of the previous token is not contained in this whitelist
    chunk_t *prev = chunk_get_prev_ncnl(sq_o);
-   if (prev && prev->type == CT_WORD)
+   if (  prev == nullptr
+      || (  prev->type != CT_ASSIGN
+         && prev->type != CT_COMMA
+         && prev->type != CT_FPAREN_OPEN
+         && prev->type != CT_SQUARE_OPEN
+         && prev->type != CT_BRACE_OPEN
+         && prev->type != CT_RETURN))
    {
       return;
    }
@@ -5052,14 +5058,15 @@ static void handle_cpp_lambda(chunk_t *sq_o)
       }
    }
 
-   // Check if keyword 'mutable' is before '->'
+   // Check for 'mutable' keyword: '[]() mutable {}' or []() mutable -> ret {}
    chunk_t *br_o = pa_c ? chunk_get_next_ncnl(pa_c) : pa_o;
    if (chunk_is_str(br_o, "mutable", 7))
    {
       br_o = chunk_get_next_ncnl(br_o);
    }
+   //TODO: also check for exception and attribute between [] ... {}
 
-   // Make sure a '{' or '->' is next
+   // skip possible arrow syntax: '-> ret'
    if (chunk_is_str(br_o, "->", 2))
    {
       ret = br_o;
