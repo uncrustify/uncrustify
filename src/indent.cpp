@@ -432,46 +432,7 @@ static void indent_pse_pop(parse_frame_t &frm, chunk_t *pc)
    LOG_FUNC_ENTRY();
    // Bump up the index and initialize it
    controlPSECount(frm.pse_tos);
-   if (frm.pse_tos > 0)
-   {
-      if (pc != nullptr)
-      {
-         LOG_FMT(LINDPSE, "%s(%d):\n",
-                 __func__, __LINE__);
-         LOG_FMT(LINDPSE, "  %zu] (pp=%d) CLOSE [%zu,%s] on %s, started on line %zu, level=%zu/%zu\n",
-                 pc->orig_line, cpd.pp_level, frm.pse_tos,
-                 get_token_name(frm.pse[frm.pse_tos].type),
-                 get_token_name(pc->type),
-                 frm.pse[frm.pse_tos].open_line,
-                 frm.pse[frm.pse_tos].level,
-                 pc->level);
-      }
-      else
-      {
-         LOG_FMT(LINDPSE, "%s(%d):\n",
-                 __func__, __LINE__);
-         LOG_FMT(LINDPSE, "   EOF] CLOSE [%zu,%s], started on line %zu\n",
-                 frm.pse_tos, get_token_name(frm.pse[frm.pse_tos].type),
-                 frm.pse[frm.pse_tos].open_line);
-      }
-
-      /*
-       * Don't clear the stack entry because some code 'cheats' and uses the
-       * just-popped indent values
-       */
-      frm.pse_tos--;
-      if (pc != nullptr)
-      {
-         LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, pse_tos is %zu, type is %s\n",
-                 __func__, __LINE__, pc->orig_line, frm.pse_tos, get_token_name(pc->type));
-      }
-      else
-      {
-         LOG_FMT(LINDLINE, "%s(%d): ------------------- pse_tos is %zu\n",
-                 __func__, __LINE__, frm.pse_tos);
-      }
-   }
-   else
+   if (frm.pse_tos == 0)
    {
       // fatal error
       fprintf(stderr, "the stack index is already zero\n");
@@ -482,6 +443,39 @@ static void indent_pse_pop(parse_frame_t &frm, chunk_t *pc)
       free(outputMessage);
       log_flush(true);
       exit(EXIT_FAILURE);
+   }
+   LOG_FMT(LINDPSE, "%s(%d):\n", __func__, __LINE__);
+   if (pc != nullptr)
+   {
+      LOG_FMT(LINDPSE, "  %zu] (pp=%d) CLOSE [%zu,%s] on %s, started on line %zu, level=%zu/%zu\n",
+              pc->orig_line, cpd.pp_level, frm.pse_tos,
+              get_token_name(frm.pse[frm.pse_tos].type),
+              get_token_name(pc->type),
+              frm.pse[frm.pse_tos].open_line,
+              frm.pse[frm.pse_tos].level,
+              pc->level);
+   }
+   else
+   {
+      LOG_FMT(LINDPSE, "   EOF] CLOSE [%zu,%s], started on line %zu\n",
+              frm.pse_tos, get_token_name(frm.pse[frm.pse_tos].type),
+              frm.pse[frm.pse_tos].open_line);
+   }
+
+   /*
+    * Don't clear the stack entry because some code 'cheats' and uses the
+    * just-popped indent values
+    */
+   frm.pse_tos--;
+   if (pc != nullptr)
+   {
+      LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, pse_tos is %zu, type is %s\n",
+              __func__, __LINE__, pc->orig_line, frm.pse_tos, get_token_name(pc->type));
+   }
+   else
+   {
+      LOG_FMT(LINDLINE, "%s(%d): ------------------- pse_tos is %zu\n",
+              __func__, __LINE__, frm.pse_tos);
    }
 } // indent_pse_pop
 
