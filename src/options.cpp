@@ -166,7 +166,7 @@ static void unc_add_option(const char *name, uncrustify_options id, argtype_e ty
       fprintf(stderr,
               "   Number in the options.cpp file = %d\n"
               "   Number in the options.h   file = %d\n"
-              "   for the group '%s'\n", id, checkOptionNumber, name);
+              "   for the option '%s'\n", id, checkOptionNumber, name);
       log_flush(true);
       exit(EX_SOFTWARE);
    }
@@ -925,6 +925,11 @@ void register_options(void)
                   "0: (Default) off\n"
                   "1: When the `if_false` is a continuation, indent it under `if_false`\n"
                   "2: When the `:` is a continuation, indent it under `?`", "", 0, 2);
+   unc_add_option("indent_off_after_return_new", UO_indent_off_after_return_new, AT_BOOL,
+                  "If true, the indentation of the chunks after a `return new` sequence will be set at return indentation column.");
+   unc_add_option("indent_single_after_return", UO_indent_single_after_return, AT_BOOL,
+                  "If true, the tokens after return are indented with regular single indentation."
+                  "By default (false) the indentation is after the return token.");
    unc_add_option("indent_ignore_asm_block", UO_indent_ignore_asm_block, AT_BOOL,
                   "If true, ignore indent and align for asm blocks as they have their own indentation.");
 
