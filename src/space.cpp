@@ -522,7 +522,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
        */
       if (  first->type == CT_TYPE
          && first->prev != nullptr
-         && first->prev->type == CT_FRIEND)
+         && (first->prev->type == CT_FRIEND && first->next->type != CT_DC_MEMBER))
       {
          log_rule("FORCE");
          return(AV_FORCE);
