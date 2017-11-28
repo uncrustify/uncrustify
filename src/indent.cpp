@@ -604,6 +604,41 @@ static void _log_indent_tmp(const char *func, const uint32_t line, parse_frame_t
 }
 
 
+static bool handle_force_fcn_def_col1(parse_frame_t &frm, chunk_t &pc, bool in_func_def)
+{
+   if (!in_func_def)
+   {
+      auto next = chunk_get_next_ncnl(&pc);
+      if (  pc.parent_type == CT_FUNC_DEF
+         || (  pc.type == CT_COMMENT
+            && next != nullptr
+            && next->parent_type == CT_FUNC_DEF))
+      {
+         indent_pse_push(frm, &pc);
+         controlPSECount(frm.pse_tos);
+         frm.pse[frm.pse_tos].indent_tmp = 1;
+         frm.pse[frm.pse_tos].indent     = 1;
+         frm.pse[frm.pse_tos].indent_tab = 1;
+
+         in_func_def = true;
+      }
+   }
+   else
+   {
+      auto prev = chunk_get_prev(&pc);
+      if (  chunk_is_token(prev, CT_BRACE_CLOSE)
+         && prev->parent_type == CT_FUNC_DEF)
+      {
+         indent_pse_pop(frm, &pc);
+
+         in_func_def = false;
+      }
+   }
+
+   return(in_func_def);
+}
+
+
 void indent_text(void)
 {
    LOG_FUNC_ENTRY();
@@ -661,32 +696,7 @@ void indent_text(void)
       // Handle "force indentation of function definition to start in column 1"
       if (cpd.settings[UO_indent_func_def_force_col1].b)
       {
-         if (!in_func_def)
-         {
-            auto next = chunk_get_next_ncnl(pc);
-            if (  pc->parent_type == CT_FUNC_DEF
-               || (  pc->type == CT_COMMENT
-                  && next != nullptr
-                  && next->parent_type == CT_FUNC_DEF))
-            {
-               in_func_def = true;
-               indent_pse_push(frm, pc);
-               controlPSECount(frm.pse_tos);
-               frm.pse[frm.pse_tos].indent_tmp = 1;
-               frm.pse[frm.pse_tos].indent     = 1;
-               frm.pse[frm.pse_tos].indent_tab = 1;
-            }
-         }
-         else
-         {
-            auto prev = chunk_get_prev(pc);
-            if (  prev->type == CT_BRACE_CLOSE
-               && prev->parent_type == CT_FUNC_DEF)
-            {
-               in_func_def = false;
-               indent_pse_pop(frm, pc);
-            }
-         }
+         in_func_def = handle_force_fcn_def_col1(frm, *pc, in_func_def);
       }
 
       // Clean up after a #define, etc
