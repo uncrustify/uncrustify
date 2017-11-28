@@ -4189,6 +4189,17 @@ static void mark_function(chunk_t *pc)
             break;
          }
 
+         if (prev->parent_type == CT_DECLSPEC)  // Issue 1289
+         {
+            prev = chunk_skip_to_match_rev(prev);
+            prev = chunk_get_prev(prev);
+            if (prev->type == CT_DECLSPEC)
+            {
+               prev = chunk_get_prev(prev);
+            }
+         }
+
+
          // Skip the word/type before the '.' or '::'
          if (prev->type == CT_DC_MEMBER || prev->type == CT_MEMBER)
          {
@@ -4632,6 +4643,15 @@ static void mark_class_ctor(chunk_t *start)
    LOG_FUNC_ENTRY();
 
    chunk_t *pclass = chunk_get_next_ncnl(start, scope_e::PREPROC);
+   if (pclass != nullptr && pclass->type == CT_DECLSPEC)  // Issue 1289
+   {
+      pclass = chunk_get_next_ncnl(pclass);
+      if (pclass != nullptr && pclass->type == CT_PAREN_OPEN)
+      {
+         pclass = chunk_get_next_ncnl(chunk_skip_to_match(pclass));
+      }
+   }
+
    if (  pclass == nullptr
       || (pclass->type != CT_TYPE && pclass->type != CT_WORD))
    {

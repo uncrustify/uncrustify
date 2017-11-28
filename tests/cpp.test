@@ -204,6 +204,7 @@
 30806  ptr_star-2.cfg                       cpp/ptr-star.cpp
 30807  ptr_star-3.cfg                       cpp/ptr-star.cpp
 30808  sp_after_ptr_star_qualifier-f.cfg    cpp/ptr-star.cpp
+30809  empty.cfg                            cpp/bug_1289.cpp
 
 30810  ben_022.cfg                          cpp/ptr-star.cpp
 30811  avalon4.cfg                          cpp/misc3.cpp
