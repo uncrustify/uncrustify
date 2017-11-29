@@ -639,6 +639,28 @@ static bool handle_force_fcn_def_col1(parse_frame_t &frm, chunk_t &pc, bool in_f
 }
 
 
+static void handle_preproc_end(parse_frame_t &frm, chunk_t *pc)
+{
+   controlPSECount(frm.pse_tos);
+   while (frm.pse_tos > 0 && frm.pse[frm.pse_tos].in_preproc)
+   {
+      const c_token_t type = frm.pse[frm.pse_tos].type;
+
+      indent_pse_pop(frm, pc);
+
+      /*
+       * If we just removed an #endregion, then check to see if a
+       * PP_REGION_INDENT entry is right below it
+       */
+      if (  type == CT_PP_ENDREGION
+         && frm.pse[frm.pse_tos].type == CT_PP_REGION_INDENT)
+      {
+         indent_pse_pop(frm, pc);
+      }
+   }
+}
+
+
 void indent_text(void)
 {
    LOG_FUNC_ENTRY();
@@ -688,8 +710,6 @@ void indent_text(void)
                  __func__, __LINE__, pc->orig_line, get_token_name(pc->type));
       }
 
-
-      // Handle preprocessor transitions
       const auto parent_token_indent = (cpd.settings[UO_indent_brace_parent].b)
                                        ? token_indent(pc->parent_type) : 0;
 
@@ -703,22 +723,7 @@ void indent_text(void)
       const bool in_preproc = (pc->flags & PCF_IN_PREPROC);
       if (!in_preproc)
       {
-         controlPSECount(frm.pse_tos);
-         while (frm.pse_tos > 0 && frm.pse[frm.pse_tos].in_preproc)
-         {
-            const c_token_t type = frm.pse[frm.pse_tos].type;
-            indent_pse_pop(frm, pc);
-
-            /*
-             * If we just removed an #endregion, then check to see if a
-             * PP_REGION_INDENT entry is right below it
-             */
-            if (  type == CT_PP_ENDREGION
-               && frm.pse[frm.pse_tos].type == CT_PP_REGION_INDENT)
-            {
-               indent_pse_pop(frm, pc);
-            }
-         }
+         handle_preproc_end(frm, pc);
       }
       else if (pc->type == CT_PREPROC) // #
       {
