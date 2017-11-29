@@ -1610,6 +1610,23 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                            && prev->type != CT_SQUARE_CLOSE
                            && prev->type != CT_DC_MEMBER) ? CT_DEREF : CT_ARITH);
          }
+         if (pc->flags & PCF_IN_TYPEDEF)
+         {
+            chunk_t *tmp = pc;
+            while (tmp != nullptr)
+            {
+               if (  tmp->type == CT_SEMICOLON
+                  || tmp->type == CT_BRACE_OPEN)
+               {
+                  break;
+               }
+               else if (tmp->type == CT_TYPEDEF)
+               {
+                  set_chunk_type(pc, CT_PTR_TYPE);
+               }
+               tmp = chunk_get_prev_ncnl(tmp);
+            }
+         }
       }
    }
 
