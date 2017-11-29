@@ -2877,15 +2877,9 @@ bool ifdef_over_whole_file(void)
 void indent_preproc(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *next;
-   int     pp_level;
-   int     pp_level_sub = 0;
 
    // Scan to see if the whole file is covered by one #ifdef
-   if (ifdef_over_whole_file())
-   {
-      pp_level_sub = 1;
-   }
+   const size_t pp_level_sub = ifdef_over_whole_file() ? 1 : 0;
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
@@ -2894,17 +2888,14 @@ void indent_preproc(void)
          continue;
       }
 
-      next = chunk_get_next_ncnl(pc);
+      chunk_t *next = chunk_get_next_ncnl(pc);
       if (next == nullptr)
       {
          break;
       }
 
-      pp_level = pc->pp_level - pp_level_sub;
-      if (pp_level < 0)
-      {
-         pp_level = 0;
-      }
+      const auto pp_level = (pc->pp_level > pp_level_sub)
+                            ? pc->pp_level - pp_level_sub : 0;
 
       // Adjust the indent of the '#'
       if (cpd.settings[UO_pp_indent].a & AV_ADD)
@@ -2921,12 +2912,7 @@ void indent_preproc(void)
       {
          if (cpd.settings[UO_pp_space].a & AV_ADD)
          {
-            size_t mult = cpd.settings[UO_pp_space_count].u;
-
-            if (mult < 1)
-            {
-               mult = 1;
-            }
+            const auto mult = max<size_t>(cpd.settings[UO_pp_space_count].u, 1);
             reindent_line(next, pc->column + pc->len() + (pp_level * mult));
          }
          else if (cpd.settings[UO_pp_space].a & AV_REMOVE)
@@ -2948,7 +2934,7 @@ void indent_preproc(void)
          }
       }
 
-      LOG_FMT(LPPIS, "%s(%d): orig_line is %zu, to %d (len %zu, next->column %zu)\n",
+      LOG_FMT(LPPIS, "%s(%d): orig_line %zu to %zu (len %zu, next->col %zu)\n",
               __func__, __LINE__, pc->orig_line, 1 + pp_level, pc->len(),
               next ? next->column : -1);
    }
