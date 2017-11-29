@@ -1848,11 +1848,13 @@ void indent_text(void)
 
          else if (  pc->type == CT_PAREN_OPEN
                  && !chunk_is_newline(next)
-                 && !cpd.settings[UO_indent_align_paren].b)
+                 && !cpd.settings[UO_indent_align_paren].b
+                 && !(pc->flags & PCF_IN_SPAREN))
          {
             size_t sub = 1;
-            if (  (frm.pse[frm.pse_tos - 1].type == CT_ASSIGN)
-               || (frm.pse[frm.pse_tos - 1].type == CT_RETURN))
+            if (  ((frm.pse[frm.pse_tos - 1].type == CT_ASSIGN)
+               || (frm.pse[frm.pse_tos - 1].type == CT_RETURN)) 
+               && are_chunks_in_same_line(frm.pse[frm.pse_tos - 1].pc, frm.pse[frm.pse_tos].pc))
             {
                sub = 2;
             }
