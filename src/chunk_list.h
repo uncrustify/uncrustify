@@ -427,6 +427,16 @@ chunk_t *chunk_search_prev_cat(chunk_t *pc, const c_token_t cat);
  */
 chunk_t *chunk_search_next_cat(chunk_t *pc, const c_token_t cat);
 
+/**
+ * @brief checks wether two chunks are in same line
+ *
+ * @param  start
+ * @param  end
+ *
+ * @return true if there is no newline between start and end chunks
+ */
+bool are_chunks_in_same_line(chunk_t *start, chunk_t *end);
+
 /*
  * TODO: better move the function implementations to the source file.
  * No need to make the implementation public.
