@@ -2736,9 +2736,6 @@ static size_t calc_comment_next_col_diff(chunk_t *pc)
 static void indent_comment(chunk_t *pc, size_t col)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *nl;
-   chunk_t *prev;
-
    LOG_FMT(LCMTIND, "%s(%d): orig_line %zu, orig_col %zu, level %zu: ",
            __func__, __LINE__, pc->orig_line, pc->orig_col, pc->level);
    D_LOG_FMT(LCMTIND, "\n");
@@ -2746,14 +2743,14 @@ static void indent_comment(chunk_t *pc, size_t col)
    // force column 1 comment to column 1 if not changing them
    if (  pc->orig_col == 1
       && !cpd.settings[UO_indent_col1_comment].b
-      && ((pc->flags & PCF_INSERTED) == 0))
+      && (pc->flags & PCF_INSERTED) == 0)
    {
       LOG_FMT(LCMTIND, "rule 1 - keep in col 1\n");
       reindent_line(pc, 1);
       return;
    }
 
-   nl = chunk_get_prev(pc);
+   chunk_t *nl = chunk_get_prev(pc);
 
    // outside of any expression or statement?
    if (pc->level == 0)
@@ -2770,19 +2767,21 @@ static void indent_comment(chunk_t *pc, size_t col)
    const size_t indent_comment_align_thresh = 3;
    if (pc->orig_col > 1)
    {
-      prev = chunk_get_prev(nl);
+      chunk_t *prev = chunk_get_prev(nl);
       if (chunk_is_comment(prev) && nl->nl_count == 1)
       {
-         size_t prev_col_diff = abs(int(prev->orig_col - pc->orig_col));
+         const size_t prev_col_diff = (prev->orig_col > pc->orig_col)
+                                      ? prev->orig_col - pc->orig_col
+                                      : pc->orig_col - prev->orig_col;
 
          /*
-          * Here we want to align comments that are relatively close one to another
-          * but not when the comment is a Doxygen comment (Issue #1134)
+          * Here we want to align comments that are relatively close one to
+          * another but not when the comment is a Doxygen comment (Issue #1134)
           */
          if (  prev_col_diff <= indent_comment_align_thresh
             && !chunk_is_Doxygen_comment(pc))
          {
-            size_t next_col_diff = calc_comment_next_col_diff(pc);
+            const size_t next_col_diff = calc_comment_next_col_diff(pc);
             // Align to the previous comment or to the next token?
             if (  prev_col_diff <= next_col_diff
                || next_col_diff == 5000) // FIXME: Max thresh magic number 5000
