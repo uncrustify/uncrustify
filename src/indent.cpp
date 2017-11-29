@@ -247,14 +247,13 @@ void align_to_column(chunk_t *pc, size_t column)
          break;
       }
 
-      auto         almod = align_mode_e::SHIFT;
-
       const size_t min_delta = space_col_align(pc, next);
       min_col += min_delta;
 
       const auto *prev = pc;
       pc = next;
 
+      auto almod = align_mode_e::SHIFT;
       if (chunk_is_comment(pc) && pc->parent_type != CT_COMMENT_EMBED)
       {
          almod = (  chunk_is_single_line_comment(pc)
