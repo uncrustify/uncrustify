@@ -928,6 +928,25 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
    // Check if we stopped on a decimal point & make sure it isn't '..'
    if ((ctx.peek() == '.') && (ctx.peek(1) != '.'))
    {
+      //#issue 1265, 5.clamp()
+      tok_info ss;
+      ctx.save(ss);
+      while (ctx.more() && CharTable::IsKw2(ctx.peek(1)))
+      {
+         //skip characters to check for paren open
+         ctx.get();
+      }
+      if (ctx.peek(1) == '(')
+      {
+         ctx.restore(ss);
+         pc.type = CT_NUMBER;
+         return(true);
+      }
+      else
+      {
+         ctx.restore(ss);
+      }
+
       pc.str.append(ctx.get());
       is_float = true;
       if (did_hex)
