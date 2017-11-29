@@ -1851,14 +1851,13 @@ void indent_text(void)
                  && !cpd.settings[UO_indent_align_paren].b
                  && !(pc->flags & PCF_IN_SPAREN))
          {
-            size_t sub = 1;
-            if (  ((frm.pse[frm.pse_tos - 1].type == CT_ASSIGN)
-               || (frm.pse[frm.pse_tos - 1].type == CT_RETURN)) 
-               && are_chunks_in_same_line(frm.pse[frm.pse_tos - 1].pc, frm.pse[frm.pse_tos].pc))
+            idx = frm.pse_tos - 1;
+            while (idx > 0 && are_chunks_in_same_line(frm.pse[idx].pc, frm.pse[frm.pse_tos].pc))
             {
-               sub = 2;
+               idx--;
+               skipped = true;
             }
-            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - sub].indent + indent_size;
+            frm.pse[frm.pse_tos].indent = frm.pse[idx].indent + indent_size;
             log_indent();
             frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
             skipped                         = true;
