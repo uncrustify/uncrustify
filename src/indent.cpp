@@ -389,34 +389,8 @@ static void indent_pse_push(parse_frame_t &frm, chunk_t *pc)
                string(__func__) + ":" + std::to_string(__LINE__)
                + " - pc cannot be nullptr");
    }
-   static size_t ref = 0;
-
    // check the stack depth
-   if (frm.pse_tos < (ARRAY_SIZE(frm.pse) - 1))
-   {
-      // Bump up the index and initialize it
-      frm.pse_tos++;
-      LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, pse_tos is %zu, type is %s, brace_level is %zu, pc->level is %zu\n",
-              __func__, __LINE__, pc->orig_line, frm.pse_tos, get_token_name(pc->type), pc->brace_level, pc->level);
-      controlPSECount(frm.pse_tos);
-      memset(&frm.pse[frm.pse_tos], 0, sizeof(frm.pse[frm.pse_tos]));
-
-      //LOG_FMT(LINDPSE, "%s(%d):%d] (pp=%d) OPEN  [%d,%s] level=%d\n",
-      //        __func__, __LINE__, pc->orig_line, cpd.pp_level, frm.pse_tos, get_token_name(pc->type), pc->level);
-
-      frm.pse[frm.pse_tos].pc         = pc;
-      frm.pse[frm.pse_tos].type       = pc->type;
-      frm.pse[frm.pse_tos].level      = pc->level;
-      frm.pse[frm.pse_tos].open_line  = pc->orig_line;
-      frm.pse[frm.pse_tos].ref        = ++ref;
-      frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC);
-      controlPSECountMinus(frm.pse_tos);
-      frm.pse[frm.pse_tos].indent_tab  = frm.pse[frm.pse_tos - 1].indent_tab;
-      frm.pse[frm.pse_tos].indent_cont = frm.pse[frm.pse_tos - 1].indent_cont;
-      frm.pse[frm.pse_tos].non_vardef  = false;
-      memcpy(&frm.pse[frm.pse_tos].ip, &frm.pse[frm.pse_tos - 1].ip, sizeof(frm.pse[frm.pse_tos].ip));
-   }
-   else
+   if (frm.pse_tos >= (ARRAY_SIZE(frm.pse) - 1))
    {
       // the stack depth is too small
       // fatal error
@@ -424,6 +398,27 @@ static void indent_pse_push(parse_frame_t &frm, chunk_t *pc)
       log_flush(true);
       exit(EXIT_FAILURE);
    }
+
+   // Bump up the index and initialize it
+   frm.pse_tos++;
+   LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, pse_tos is %zu, type is %s, brace_level is %zu, pc->level is %zu\n",
+           __func__, __LINE__, pc->orig_line, frm.pse_tos, get_token_name(pc->type), pc->brace_level, pc->level);
+   controlPSECount(frm.pse_tos);
+
+   frm.pse[frm.pse_tos]           = {};
+   frm.pse[frm.pse_tos].type      = pc->type;
+   frm.pse[frm.pse_tos].level     = pc->level;
+   frm.pse[frm.pse_tos].open_line = pc->orig_line;
+   frm.pse[frm.pse_tos].pc        = pc;
+
+   controlPSECountMinus(frm.pse_tos);
+   frm.pse[frm.pse_tos].indent_tab  = frm.pse[frm.pse_tos - 1].indent_tab;
+   frm.pse[frm.pse_tos].indent_cont = frm.pse[frm.pse_tos - 1].indent_cont;
+
+   frm.pse[frm.pse_tos].ref        = 1;
+   frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC);
+   frm.pse[frm.pse_tos].non_vardef = false;
+   frm.pse[frm.pse_tos].ip         = frm.pse[frm.pse_tos - 1].ip;
 } // indent_pse_push
 
 
