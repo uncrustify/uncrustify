@@ -2812,15 +2812,14 @@ static void indent_comment(chunk_t *pc, size_t col)
 bool ifdef_over_whole_file(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *next;
-   chunk_t *end_pp = nullptr;
-   size_t  stage   = 0;
-
    // the results for this file are cached
    if (cpd.ifdef_over_whole_file)
    {
       return(cpd.ifdef_over_whole_file > 0);
    }
+
+   chunk_t *end_pp = nullptr;
+   size_t  stage   = 0;
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
@@ -2836,7 +2835,7 @@ bool ifdef_over_whole_file(void)
          {
             break;
          }
-         next = chunk_get_next(pc);
+         chunk_t *next = chunk_get_next(pc);
          if (next == nullptr || next->type != CT_PP_IF)
          {
             break;
