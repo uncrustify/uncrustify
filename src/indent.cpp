@@ -661,6 +661,187 @@ static void handle_preproc_end(parse_frame_t &frm, chunk_t *pc)
 }
 
 
+static void handle_preproc(parse_frame_t &frm, chunk_t *pc, size_t indent_size)
+{
+   // Close out PP_IF_INDENT before playing with the parse frames
+   controlPSECount(frm.pse_tos);
+   if (  frm.pse[frm.pse_tos].type == CT_PP_IF_INDENT
+      && (pc->parent_type == CT_PP_ENDIF || pc->parent_type == CT_PP_ELSE))
+   {
+      indent_pse_pop(frm, pc);
+   }
+
+   pf_check(&frm, pc);
+
+   // Indent the body of a #region here
+   if (  cpd.settings[UO_pp_region_indent_code].b
+      && pc->parent_type == CT_PP_REGION)
+   {
+      auto next = chunk_get_next(pc);
+      if (next == nullptr)
+      {
+         return;
+      }
+
+      // Hack to get the logs to look right
+      set_chunk_type(next, CT_PP_REGION_INDENT);
+      indent_pse_push(frm, next);
+      set_chunk_type(next, CT_PP_REGION);
+
+      // Indent one level
+      controlPSECount(frm.pse_tos);
+      controlPSECountMinus(frm.pse_tos);
+      frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
+      log_indent();
+      frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + indent_size;
+      frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+      frm.pse[frm.pse_tos].in_preproc = false;
+      log_indent_tmp();
+   }
+
+   // If option set, remove indent inside switch statement
+   controlPSECount(frm.pse_tos);
+   if (  frm.pse[frm.pse_tos].type == CT_CASE
+      && !cpd.settings[UO_indent_switch_pp].b)
+   {
+      indent_pse_push(frm, pc);
+
+      controlPSECountMinus(frm.pse_tos);
+      frm.pse[frm.pse_tos - 1].indent = frm.pse[frm.pse_tos].indent - indent_size;
+      log_indent();
+   }
+
+   // Indent the body of a #if here
+   if (  cpd.settings[UO_pp_if_indent_code].b
+      && (pc->parent_type == CT_PP_IF || pc->parent_type == CT_PP_ELSE))
+   {
+      auto next = chunk_get_next(pc);
+      if (next == nullptr)
+      {
+         return;
+      }
+
+      int     should_indent_preproc = true;
+      chunk_t *preproc_next         = chunk_get_next_nl(pc);
+      preproc_next = chunk_get_next_nblank(preproc_next);
+
+      /* Look ahead at what's on the line after the #if */
+      while (preproc_next != nullptr && preproc_next->type != CT_NEWLINE)
+      {
+         if (  (  (  (preproc_next->type == CT_BRACE_OPEN)
+                  || (preproc_next->type == CT_BRACE_CLOSE))
+               && !cpd.settings[UO_pp_indent_brace].b)
+            || (  preproc_next->type == CT_FUNC_DEF
+               && !cpd.settings[UO_pp_indent_func_def].b)
+            || (  preproc_next->type == CT_CASE
+               && !cpd.settings[UO_pp_indent_case].b)
+            || (  preproc_next->type == CT_EXTERN
+               && !cpd.settings[UO_pp_indent_extern].b))
+         {
+            should_indent_preproc = false;
+            break;
+         }
+         preproc_next = chunk_get_next(preproc_next);
+      }
+      if (should_indent_preproc)
+      {
+         // Hack to get the logs to look right
+
+         const c_token_t memtype = next->type;
+         set_chunk_type(next, CT_PP_IF_INDENT);
+         indent_pse_push(frm, next);
+         set_chunk_type(next, memtype);
+
+         // Indent one level except if the #if is a #include guard
+         const size_t extra = (pc->pp_level == 0 && ifdef_over_whole_file())
+                              ? 0 : indent_size;
+         controlPSECount(frm.pse_tos);
+         controlPSECountMinus(frm.pse_tos);
+         frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + extra;
+         log_indent();
+         frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + extra;
+         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+         frm.pse[frm.pse_tos].in_preproc = false;
+         log_indent_tmp();
+      }
+   }
+
+   // Transition into a preproc by creating a dummy indent
+   frm.level++;
+   chunk_t *pp_next = chunk_get_next(pc);
+   if (pp_next == nullptr)
+   {
+      return;
+   }
+   indent_pse_push(frm, pp_next);
+
+   controlPSECount(frm.pse_tos);
+   controlPSECountMinus(frm.pse_tos);
+   if (pc->parent_type == CT_PP_DEFINE || pc->parent_type == CT_PP_UNDEF)
+   {
+      frm.pse[frm.pse_tos].indent_tmp = cpd.settings[UO_pp_define_at_level].b
+                                        ? frm.pse[frm.pse_tos - 1].indent_tmp
+                                        : 1;
+      frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos].indent_tmp + indent_size;
+      log_indent();
+      frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
+      log_indent_tmp();
+   }
+   else if (  pc->parent_type == CT_PP_PRAGMA
+           && cpd.settings[UO_pp_define_at_level].b)
+   {
+      frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent_tmp;
+      frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos].indent_tmp + indent_size;
+      log_indent();
+      frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
+      log_indent_tmp();
+   }
+   else
+   {
+      if (  (frm.pse[frm.pse_tos - 1].type == CT_PP_REGION_INDENT)
+         || (  (frm.pse[frm.pse_tos - 1].type == CT_PP_IF_INDENT)
+            && (frm.pse[frm.pse_tos].type != CT_PP_ENDIF)))
+      {
+         frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 2].indent;
+         log_indent();
+      }
+      else
+      {
+         frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
+         log_indent();
+      }
+      log_indent();
+
+
+      auto val = 0;
+      if (  pc->parent_type == CT_PP_REGION
+         || pc->parent_type == CT_PP_ENDREGION)
+      {
+         val = cpd.settings[UO_pp_indent_region].n;
+         log_indent();
+      }
+      else if (  pc->parent_type == CT_PP_IF
+              || pc->parent_type == CT_PP_ELSE
+              || pc->parent_type == CT_PP_ENDIF)
+      {
+         val = cpd.settings[UO_pp_indent_if].n;
+         log_indent();
+      }
+      if (val != 0)
+      {
+         auto &indent = frm.pse[frm.pse_tos].indent;
+
+         indent = (val > 0) ? val                           // reassign if positive val,
+                  : (cast_abs(indent, val) < indent)        // else if no underflow
+                  ? (indent + val) : 0;                     // reduce, else 0
+      }
+
+      frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+      log_indent_tmp();
+   }
+} // handle_preproc
+
+
 void indent_text(void)
 {
    LOG_FUNC_ENTRY();
@@ -727,184 +908,8 @@ void indent_text(void)
       }
       else if (pc->type == CT_PREPROC) // #
       {
-         // Close out PP_IF_INDENT before playing with the parse frames
-         controlPSECount(frm.pse_tos);
-         if (  frm.pse[frm.pse_tos].type == CT_PP_IF_INDENT
-            && (pc->parent_type == CT_PP_ENDIF || pc->parent_type == CT_PP_ELSE))
-         {
-            indent_pse_pop(frm, pc);
-         }
-
-         pf_check(&frm, pc);
-
-         // Indent the body of a #region here
-         if (  cpd.settings[UO_pp_region_indent_code].b
-            && pc->parent_type == CT_PP_REGION)
-         {
-            auto next = chunk_get_next(pc);
-            if (next == nullptr)
-            {
-               break;
-            }
-
-            // Hack to get the logs to look right
-            set_chunk_type(next, CT_PP_REGION_INDENT);
-            indent_pse_push(frm, next);
-            set_chunk_type(next, CT_PP_REGION);
-
-            // Indent one level
-            controlPSECount(frm.pse_tos);
-            controlPSECountMinus(frm.pse_tos);
-            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
-            log_indent();
-            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + indent_size;
-            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
-            frm.pse[frm.pse_tos].in_preproc = false;
-            log_indent_tmp();
-         }
-
-         // If option set, remove indent inside switch statement
-         controlPSECount(frm.pse_tos);
-         if (  frm.pse[frm.pse_tos].type == CT_CASE
-            && !cpd.settings[UO_indent_switch_pp].b)
-         {
-            indent_pse_push(frm, pc);
-
-            controlPSECountMinus(frm.pse_tos);
-            frm.pse[frm.pse_tos - 1].indent = frm.pse[frm.pse_tos].indent - indent_size;
-            log_indent();
-         }
-
-         // Indent the body of a #if here
-         if (  cpd.settings[UO_pp_if_indent_code].b
-            && (pc->parent_type == CT_PP_IF || pc->parent_type == CT_PP_ELSE))
-         {
-            auto next = chunk_get_next(pc);
-            if (next == nullptr)
-            {
-               break;
-            }
-
-            int     should_indent_preproc = true;
-            chunk_t *preproc_next         = chunk_get_next_nl(pc);
-            preproc_next = chunk_get_next_nblank(preproc_next);
-
-            /* Look ahead at what's on the line after the #if */
-            while (preproc_next != nullptr && preproc_next->type != CT_NEWLINE)
-            {
-               if (  (  (  (preproc_next->type == CT_BRACE_OPEN)
-                        || (preproc_next->type == CT_BRACE_CLOSE))
-                     && !cpd.settings[UO_pp_indent_brace].b)
-                  || (  preproc_next->type == CT_FUNC_DEF
-                     && !cpd.settings[UO_pp_indent_func_def].b)
-                  || (  preproc_next->type == CT_CASE
-                     && !cpd.settings[UO_pp_indent_case].b)
-                  || (  preproc_next->type == CT_EXTERN
-                     && !cpd.settings[UO_pp_indent_extern].b))
-               {
-                  should_indent_preproc = false;
-                  break;
-               }
-               preproc_next = chunk_get_next(preproc_next);
-            }
-            if (should_indent_preproc)
-            {
-               // Hack to get the logs to look right
-
-               const c_token_t memtype = next->type;
-               set_chunk_type(next, CT_PP_IF_INDENT);
-               indent_pse_push(frm, next);
-               set_chunk_type(next, memtype);
-
-               // Indent one level except if the #if is a #include guard
-               size_t extra = (pc->pp_level == 0 && ifdef_over_whole_file())
-                              ? 0 : indent_size;
-               controlPSECount(frm.pse_tos);
-               controlPSECountMinus(frm.pse_tos);
-               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + extra;
-               log_indent();
-               frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + extra;
-               frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
-               frm.pse[frm.pse_tos].in_preproc = false;
-               log_indent_tmp();
-            }
-         }
-
-         // Transition into a preproc by creating a dummy indent
-         frm.level++;
-         chunk_t *pp_next = chunk_get_next(pc);
-         if (pp_next == nullptr)
-         {
-            return;
-         }
-         indent_pse_push(frm, pp_next);
-
-         controlPSECount(frm.pse_tos);
-         controlPSECountMinus(frm.pse_tos);
-         if (pc->parent_type == CT_PP_DEFINE || pc->parent_type == CT_PP_UNDEF)
-         {
-            frm.pse[frm.pse_tos].indent_tmp = cpd.settings[UO_pp_define_at_level].b
-                                              ? frm.pse[frm.pse_tos - 1].indent_tmp
-                                              : 1;
-            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos].indent_tmp + indent_size;
-            log_indent();
-            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
-            log_indent_tmp();
-         }
-         else if (  pc->parent_type == CT_PP_PRAGMA
-                 && cpd.settings[UO_pp_define_at_level].b)
-         {
-            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent_tmp;
-            frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos].indent_tmp + indent_size;
-            log_indent();
-            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
-            log_indent_tmp();
-         }
-         else
-         {
-            if (  (frm.pse[frm.pse_tos - 1].type == CT_PP_REGION_INDENT)
-               || (  (frm.pse[frm.pse_tos - 1].type == CT_PP_IF_INDENT)
-                  && (frm.pse[frm.pse_tos].type != CT_PP_ENDIF)))
-            {
-               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 2].indent;
-               log_indent();
-            }
-            else
-            {
-               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
-               log_indent();
-            }
-            log_indent();
-
-
-            auto val = 0;
-            if (  pc->parent_type == CT_PP_REGION
-               || pc->parent_type == CT_PP_ENDREGION)
-            {
-               val = cpd.settings[UO_pp_indent_region].n;
-               log_indent();
-            }
-            else if (  pc->parent_type == CT_PP_IF
-                    || pc->parent_type == CT_PP_ELSE
-                    || pc->parent_type == CT_PP_ENDIF)
-            {
-               val = cpd.settings[UO_pp_indent_if].n;
-               log_indent();
-            }
-            if (val != 0)
-            {
-               auto &indent = frm.pse[frm.pse_tos].indent;
-
-               indent = (val > 0) ? val                     // reassign if positive val,
-                        : (cast_abs(indent, val) < indent)  // else if no underflow
-                        ? (indent + val) : 0;               // reduce, else 0
-            }
-
-            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
-            log_indent_tmp();
-         }
+         handle_preproc(frm, pc, indent_size);
       }
-
       // Check for close XML tags "</..."
       if (cpd.settings[UO_indent_xml_string].u > 0)
       {
