@@ -1,2 +1,2 @@
 typedef void (*func)();
-typedef void (__stdcall * func)();
+typedef void (__stdcall *func)();

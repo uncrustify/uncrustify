@@ -1625,6 +1625,23 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                            && prev->type != CT_SQUARE_CLOSE
                            && prev->type != CT_DC_MEMBER) ? CT_DEREF : CT_ARITH);
          }
+         if (pc->flags & PCF_IN_TYPEDEF)
+         {
+            chunk_t *tmp = pc;
+            while (tmp != nullptr)
+            {
+               if (  tmp->type == CT_SEMICOLON
+                  || tmp->type == CT_BRACE_OPEN)
+               {
+                  break;
+               }
+               else if (tmp->type == CT_TYPEDEF)
+               {
+                  set_chunk_type(pc, CT_PTR_TYPE);
+               }
+               tmp = chunk_get_prev_ncnl(tmp);
+            }
+         }
       }
    }
 
@@ -4246,7 +4263,7 @@ static void mark_function(chunk_t *pc)
 
             // fixes issues 1005, 1288 and 1249
             // should not remove space between '::' and keyword, since it is a return type.
-            if (chunk_is_keyword(prev) && tmp->type == CT_DC_MEMBER)
+            if (prev != nullptr && chunk_is_keyword(prev) && tmp->type == CT_DC_MEMBER)
             {
                isa_def = true;
                set_chunk_parent(tmp, CT_FUNC_START);
@@ -4262,8 +4279,11 @@ static void mark_function(chunk_t *pc)
 #endif
                LOG_FMT(LFCN, " --? Skipped MEMBER and landed on %s\n",
                        (prev == NULL) ? "<null>" : get_token_name(prev->type));
-               set_chunk_type(pc, CT_FUNC_CALL);
-               isa_def = false;
+               if (tmp->type != CT_DC_MEMBER)
+               {
+                  set_chunk_type(pc, CT_FUNC_CALL);
+                  isa_def = false;
+               }
                break;
             }
             LOG_FMT(LFCN, " <skip %s>", prev->text());
