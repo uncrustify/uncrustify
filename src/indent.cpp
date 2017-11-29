@@ -2663,18 +2663,14 @@ null_pc:
 static bool single_line_comment_indent_rule_applies(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc      = start;
-   size_t  nl_count = 0;
-
-   if (!chunk_is_single_line_comment(pc))
+   if (!chunk_is_single_line_comment(start))
    {
       return(false);
    }
 
-   /*
-    * scan forward, if only single newlines and comments before next line of
-    * code, we want to apply
-    */
+   chunk_t *pc      = start;
+   size_t  nl_count = 0;
+
    while ((pc = chunk_get_next(pc)) != nullptr)
    {
       if (chunk_is_newline(pc))
@@ -2683,25 +2679,23 @@ static bool single_line_comment_indent_rule_applies(chunk_t *start)
          {
             return(false);
          }
-
          nl_count++;
+      }
+      else if (chunk_is_single_line_comment(pc))
+      {
+         nl_count = 0;
+      }
+      else if (pc->type == CT_COMMENT_MULTI || chunk_is_closing_brace(pc))
+      {
+         /*
+          * check for things we wouldn't want to indent the comment for
+          * example: non-single line comment, closing brace
+          */
+         return(false);
       }
       else
       {
-         nl_count = 0;
-         if (!chunk_is_single_line_comment(pc))
-         {
-            /*
-             * here we check for things to run into that we wouldn't want to
-             * indent the comment for. for example, non-single line comment,
-             * closing brace */
-            if (chunk_is_comment(pc) || chunk_is_closing_brace(pc))
-            {
-               return(false);
-            }
-
-            return(true);
-         }
+         return(true);
       }
    }
 
