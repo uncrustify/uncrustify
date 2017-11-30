@@ -120,34 +120,40 @@ static size_t fix_len_idx(size_t size, size_t idx, size_t len)
 unc_text::unc_text()
 {
    m_logtext = log_type{ '\0' };
+   m_chars   = value_type{};
 }
 
 
 unc_text::unc_text(const unc_text &ref)
+   : unc_text()
 {
    set(ref);
 }
 
 
 unc_text::unc_text(const unc_text &ref, size_t idx, size_t len)
+   : unc_text()
 {
    set(ref, idx, len);
 }
 
 
 unc_text::unc_text(const char *ascii_text)
+   : unc_text()
 {
    set(ascii_text);
 }
 
 
 unc_text::unc_text(const std::string &ascii_text)
+   : unc_text()
 {
    set(ascii_text);
 }
 
 
 unc_text::unc_text(const value_type &data, size_t idx, size_t len)
+   : unc_text()
 {
    set(data, idx, len);
 }
