@@ -4283,7 +4283,8 @@ static void mark_function(chunk_t *pc)
                || prev->type == CT_STRING
                || prev->type == CT_STRING_MULTI
                || prev->type == CT_NUMBER
-               || prev->type == CT_NUMBER_FP)
+               || prev->type == CT_NUMBER_FP
+               || prev->type == CT_FPAREN_OPEN) // issue #1464
             {
                isa_def = false;
             }
