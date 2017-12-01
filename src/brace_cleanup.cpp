@@ -884,6 +884,15 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
       }
    }
 
+   // Check for "constexpr" after CT_IF or CT_ELSEIF
+   if (  frm->pse[frm->pse_tos].stage == brace_stage_e::PAREN1
+      && (  frm->pse[frm->pse_tos].type == CT_IF
+         || frm->pse[frm->pse_tos].type == CT_ELSEIF)
+      && pc->str.equals("constexpr")) // FIXME: Take care of the "constexpr" const string.
+   {
+      return(false);
+   }
+
    // Verify open parenthesis in complex statement
    if (  pc->type != CT_PAREN_OPEN
       && (  (frm->pse[frm->pse_tos].stage == brace_stage_e::PAREN1)
