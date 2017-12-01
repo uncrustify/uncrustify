@@ -527,6 +527,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          log_rule("sp_after_mdatype_commas");
          return(cpd.settings[UO_sp_after_mdatype_commas].a);
       }
+      // Fix for issue #1243
+      // Don't add extra space after comma immediately followed by Angle close
+      if (second->type == CT_ANGLE_CLOSE)
+      {
+         return(AV_IGNORE);
+      }
       log_rule("sp_after_comma");
       return(cpd.settings[UO_sp_after_comma].a);
    }
