@@ -176,6 +176,31 @@ void braced_init_list_function_call()
 	}
 }
 
+void braced_init_list_function_call_newline()
+{
+	{
+		some_type a{
+			sum(some_type{},
+				some_type{}
+				)
+		};
+		some_type b = sum(
+			some_type{}, some_type{});
+		some_type c = some_type{
+			sum(
+				some_type{}, some_type{})};
+		some_type
+		{sum
+			 (some_type{},
+			 some_type{}
+			 )
+		};
+		some_type
+		{some_type{sum
+			           (some_type{}, some_type{})}};
+	}
+}
+
 void braced_init_list_array()
 {
 	{
