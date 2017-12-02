@@ -442,6 +442,7 @@
 34100  empty.cfg                            cpp/bug_i_525.cpp
 34101  empty.cfg                            cpp/bug_i_646.cpp
 34105  bug_i_663.cfg                        cpp/bug_i_663.cpp
+34108  bug_i_666.cfg                        cpp/bug_i_666.cpp
 
 34112  sp_after_cast-r.cfg                  cpp/bug_i_889.cpp
 34113! nl_before_func_body_def-1.cfg        cpp/bug_902.cpp
