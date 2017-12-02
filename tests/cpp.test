@@ -499,6 +499,7 @@
 34170  empty.cfg                            cpp/i1082.cpp
 34171  empty.cfg                            cpp/i1181.cpp
 34172  space_indent_columns-4.cfg           cpp/i1165.cpp
+34173  i1464.cfg                            cpp/i1464.cpp
 
 34190  bug_1003.cfg                         cpp/bug_1003.cpp
 
