@@ -2900,7 +2900,15 @@ void newlines_cleanup_braces(bool first)
             }
          }
 
-         newlines_brace_pair(pc);
+         // braced-init-list is more like a function call with arguments,
+         // than curly braces that determine a structure of a source code,
+         // so, don't add a newline before a closing brace. Issue #1405.
+         if (!(  pc->parent_type == CT_BRACED_INIT_LIST
+              && cpd.settings[UO_nl_type_brace_init_lst_open].a == AV_IGNORE
+              && cpd.settings[UO_nl_type_brace_init_lst_close].a == AV_IGNORE))
+         {
+            newlines_brace_pair(pc);
+         }
       }
       else if (pc->type == CT_BRACE_CLOSE)
       {

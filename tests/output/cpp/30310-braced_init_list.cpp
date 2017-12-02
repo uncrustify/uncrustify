@@ -8,15 +8,6 @@ using some_type = int;
 
 class BracedInitListBase {
 public:
-BracedInitListBase()
-	: a{int{1}},
-	b(int(some_type(1))),
-	c(int{some_type(1)}),
-	d{int(some_type(1))},
-	e{some_type{some_type{a}}}
-{
-}
-
 virtual int getA() const {
 	return a;
 }
@@ -35,8 +26,8 @@ some_type k[2]{1, 2};
 some_type l[2] = {1, 2};
 
 union SomeUnion {
-int a;
-some_type b{};
+	int a;
+	some_type b{};
 };
 };
 
@@ -190,8 +181,8 @@ void braced_init_list_function_call_newline()
 	{
 		some_type a{
 			sum(some_type{},
-				some_type{}
-				)
+			    some_type{}
+			    )
 		};
 		some_type b = sum(
 			some_type{}, some_type{});
@@ -252,9 +243,17 @@ void braced_init_list_lambda()
 	std::vector<some_type> a{1, 2};
 	some_type b{2};
 
-	auto c = []{return true;};
-	auto d = [](){return true;};
+	auto c = [] {
+			 return true;
+		 };
+	auto d = [](){
+			 return true;
+		 };
 
-	std::find_if(a.begin(), a.end(), [&b](const some_type &v){return v == b;});
-	std::find_if(a.begin(), a.end(), [](const some_type &v){some_type b{2}; return v == b;});
+	std::find_if(a.begin(), a.end(), [&b](const some_type &v){
+		return v == b;
+	});
+	std::find_if(a.begin(), a.end(), [](const some_type &v){
+		some_type b{2}; return v == b;
+	});
 }

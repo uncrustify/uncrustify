@@ -162,7 +162,7 @@
 30302  indent_with_tabs-0.cfg               cpp/bug_1315.cpp
 
 # TODO: Make a tests for a braced_init_list. See also 34153-34166.
-#30310  sp_word_brace_force.cfg              cpp/braced_init_list.cpp
+30310  empty.cfg                            cpp/braced_init_list.cpp
 #30310  sp_word_brace_force.cfg              cpp/uniform_initialization.cpp
 #30311  sp_word_brace_remove.cfg             cpp/uniform_initialization.cpp
 
