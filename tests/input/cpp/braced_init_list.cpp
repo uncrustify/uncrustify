@@ -8,6 +8,15 @@ using some_type = int;
 
 class BracedInitListBase {
 public:
+BracedInitListBase()
+	: a{int{1}},
+	b(int(some_type(1))),
+	c(int{some_type(1)}),
+	d{int(some_type(1))},
+	e{some_type{some_type{a}}}
+{
+}
+
 virtual int getA() const {
 	return a;
 }
