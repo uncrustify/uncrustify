@@ -1739,7 +1739,8 @@ void indent_text(void)
          }
       }
       else if (  pc->type == CT_PAREN_OPEN
-              && (pc->parent_type == CT_ASM || chunk_get_prev_ncnl(pc)->type == CT_ASM)
+              && (  pc->parent_type == CT_ASM
+                 || (chunk_get_prev_ncnl(pc) != nullptr && chunk_get_prev_ncnl(pc)->type == CT_ASM))
               && cpd.settings[UO_indent_ignore_asm_block].b)
       {
          int     move = 0;

@@ -1858,7 +1858,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
 
       if ((ch == '<') && cpd.in_preproc == CT_PP_DEFINE)
       {
-         if (chunk_get_tail()->type == CT_MACRO)
+         if (chunk_get_tail() != nullptr && chunk_get_tail()->type == CT_MACRO)
          {
             // We have "#define XXX <", assume '<' starts an include string
             parse_string(ctx, pc, 0, false);
