@@ -338,6 +338,10 @@ enum c_token_t
    CT_FOR_COLON,    // colon in "for ( TYPE var: EXPR ) { ... }"
    CT_DOUBLE_BRACE, // parent for double brace
 
+   /* Clang */
+   CT_CNG_HASINC,   // Clang: __has_include()
+   CT_CNG_HASINCN,  // Clang: __has_include_next()
+
    // extensions for Qt macros
    CT_Q_EMIT,       // guy 2015-10-16
    CT_Q_FOREACH,    // guy 2015-09-23
