@@ -64,3 +64,7 @@
 
 12102  mod_full_brace_nl_block_rem_mlcond-0.cfg  cs/mod_full_brace_nl_block_rem_mlcond.cs
 12103  mod_full_brace_nl_block_rem_mlcond-1.cfg  cs/mod_full_brace_nl_block_rem_mlcond.cs
+
+# Adopt some UT tests
+10012 empty.cfg                             cs/621_this-spacing.cs
+10013 620_getset-brace.cfg                  cs/620_getset-brace.cs
