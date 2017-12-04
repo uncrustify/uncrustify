@@ -1848,7 +1848,8 @@ void indent_text(void)
 
          else if (  pc->type == CT_PAREN_OPEN
                  && !chunk_is_newline(next)
-                 && !cpd.settings[UO_indent_align_paren].b)
+                 && !cpd.settings[UO_indent_align_paren].b
+                 && !(pc->flags & PCF_IN_SPAREN))
          {
             idx = frm.pse_tos - 1;
             while (idx > 0 && are_chunks_in_same_line(frm.pse[idx].pc, frm.pse[frm.pse_tos].pc))
