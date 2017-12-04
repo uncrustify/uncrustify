@@ -4201,6 +4201,13 @@ static void mark_function(chunk_t *pc)
             }
          }
 
+         // if it was determined that this could be a function definition
+         // but one of the preceding tokens is a CT_MEMBER than this is not a
+         // fcn def, issue #1466
+         if (isa_def && prev->type == CT_MEMBER)
+         {
+            isa_def = false;
+         }
 
          // Skip the word/type before the '.' or '::'
          if (prev->type == CT_DC_MEMBER || prev->type == CT_MEMBER)
@@ -4235,7 +4242,7 @@ static void mark_function(chunk_t *pc)
             continue;
          }
 
-         // If we are on a TYPE or WORD, then we must be on a proto or def
+         // If we are on a TYPE or WORD, then this could be a proto or def
          if (prev->type == CT_TYPE || prev->type == CT_WORD)
          {
             if (!hit_star)
