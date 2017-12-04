@@ -1,13 +1,13 @@
 void foo(void)
 {
 	int a = x ? y
-		  : z,
+	          : z,
 	    b = x ? (y)
-		  : (z),
+	          : (z),
 	    c = x ? *y
-		  : *z,
+	          : *z,
 	    d = x ? &y
-		  : &z;
+	          : &z;
 
 
 	if (x ? y

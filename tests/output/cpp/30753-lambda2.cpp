@@ -34,6 +34,26 @@ void f2()
           );
 }
 
+void f3a()
+{
+   auto a = [] {};
+   auto b = [] { return(true); };
+}
+
+void f3b()
+{
+   Invoke(a, b,
+          [&one, two] {
+             std::cout << "blah: " << one << two;
+          }
+          );
+}
+
+void f3c()
+{
+   int a[]{};
+}
+
 void g1()
 {
    auto a = [=] (int *a, Something&b) { std::cout << "blah: " << *a; };

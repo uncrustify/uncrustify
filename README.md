@@ -9,7 +9,7 @@
 A source code beautifier for C, C++, C#, ObjectiveC, D, Java, Pawn and VALA
 
 ## Features
-* highly configurable - __590__ configurable options as of version 0.65
+* highly configurable - __608 configurable options as of version 0.66
 - <details><summary>add/remove spaces</summary>
 
   - `sp_before_sparen`: _Add or remove space before '(' of 'if', 'for', 'switch', 'while', etc._
@@ -133,6 +133,10 @@ More about this is in the [ISSUE_TEMPLATE](https://github.com/uncrustify/uncrust
 [Look at the Wiki](https://github.com/uncrustify/uncrustify/wiki/Known-Problems)
 
 
+## Which repositories have uncrustify?
+[Look here](https://repology.org/metapackage/uncrustify/versions)
+
+
 ## Contribute
 If you want to add a feature, fix a bug, or implement missing
 functionality, feel free to do so! Patches are welcome!
@@ -177,12 +181,8 @@ The codebase has to be formatted by the options set up in
 cause TravisCI build failures.
 
 The Command line interface (CLI) output is tested by the
-`scripts/Test_more_Options.sh` script. It operates on the files inside
-this directories:
-- `scripts/Config/`
-- `scripts/Output/`
-- `scripts/Input/`
-- `scripts/More_Options_to_Test/`
+`test_cli_options.sh` script. It is located inside of `tests/cli/` and operates
+on the subdirectories of that folder.
 
 If a PR is altering the CLI output, files inside those directories might
 need to be manually updated. This often happens when options are

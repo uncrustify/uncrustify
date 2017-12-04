@@ -1,0 +1,3 @@
+Unmatched BRACE_CLOSE
+at orig_line=9, orig_col=1
+Try the option 'tok_split_gte = true'

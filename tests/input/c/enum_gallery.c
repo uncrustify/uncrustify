@@ -2,7 +2,7 @@ enum one { liner };
 
 enum not {
 
-a, one
+a, one,
 
 liner };
 

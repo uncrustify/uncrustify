@@ -17,6 +17,9 @@
 #include <stdio.h>
 
 
+using namespace std;
+
+
 void print_universal_indent_cfg(FILE *pfile)
 {
    const group_map_value *p_grp;

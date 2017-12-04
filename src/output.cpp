@@ -472,8 +472,8 @@ void output_text(FILE *pfile)
    // loop over the whole chunk list
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
-      LOG_FMT(LOUTIND, "%s(%d): text() is %s, type is %s, orig_col is %zu, column is %zu\n",
-              __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_col, pc->column);
+      LOG_FMT(LOUTIND, "%s(%d): text() is %s, type is %s, orig_col is %zu, column is %zu, nl is %zu\n",
+              __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_col, pc->column, pc->nl_count);
       cpd.output_tab_as_space = (  cpd.settings[UO_cmt_convert_tab_to_spaces].b
                                 && chunk_is_comment(pc));
       if (pc->type == CT_NEWLINE)
@@ -582,6 +582,8 @@ void output_text(FILE *pfile)
       }
       else if (pc->type == CT_JUNK || pc->type == CT_IGNORED)
       {
+         LOG_FMT(LOUTIND, "%s(%d): orig_line is %zu, orig_col is %zu,\npc->text() >%s<, pc->str.size() is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), pc->str.size());
          // do not adjust the column for junk
          add_text(pc->str, true);
       }
@@ -602,10 +604,10 @@ void output_text(FILE *pfile)
                size_t lvlcol;
                /*
                 * FIXME: it would be better to properly set column_indent in
-                * indent_text(), but this hack for '}' and ':' seems to work.
+                * indent_text(), but this hack for '}' and '#' seems to work.
                 */
                if (  pc->type == CT_BRACE_CLOSE
-                  || chunk_is_str(pc, ":", 1)
+                  || pc->type == CT_CASE_COLON
                   || pc->type == CT_PREPROC)
                {
                   lvlcol = pc->column;
@@ -1612,7 +1614,7 @@ static void output_comment_multi(chunk_t *pc)
 static bool kw_fcn_filename(chunk_t *cmt, unc_text &out_txt)
 {
    UNUSED(cmt);
-   out_txt.append(path_basename(cpd.filename));
+   out_txt.append(path_basename(cpd.filename.c_str()));
    return(true);
 }
 

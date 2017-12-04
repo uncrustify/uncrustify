@@ -9,6 +9,9 @@
 #ifndef WINDOWS_COMPAT_H_INCLUDED
 #define WINDOWS_COMPAT_H_INCLUDED
 
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #include "windows.h"
 
 #define HAVE_SYS_STAT_H
@@ -48,8 +51,10 @@ typedef unsigned long long   UINT64;
 #define __func__    __FUNCTION__
 #endif
 #else // _MSC_VER
+#ifndef __GNUC__
 #define __func__    "???"
-#endif
+#endif // __GNUC__
+#endif // _MSC_VER
 
 #include "stdio.h"
 #include "string.h"
