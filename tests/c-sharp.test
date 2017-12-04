@@ -68,3 +68,16 @@
 # Adopt some UT tests
 10012 empty.cfg                             cs/621_this-spacing.cs
 10013 620_getset-brace.cfg                  cs/620_getset-brace.cs
+10014 empty.cfg                             cs/630_bad-new-init-semicolon-removal.cs
+10028 U02-Cs.cfg                            cs/ifcolalign.cs
+10029 U03-Cs.cfg                            cs/when.cs
+10035 U13-Cpp.cfg                           cs/definesalign.h.mm
+10036 U14-Cpp.cfg                           cs/inttypes.h.mm
+10039 615_nested_usings.cfg                 cs/615_nested-usings.cs
+10044 U04-Cs.cfg                            cs/ifcomment.cs
+10055 U06-Cs.cfg                            cs/UNI-1345.cs
+10077 U09-Cs.cfg                            cs/UNI-1919.cs
+10102 U24-Cpp.cfg                           cs/pp-ignore.mm
+10103 U11-Cs.cfg                            cs/UNI-2506.cs
+11030 U08-Cpp.cfg                           cs/argtypes.mm
+11031 U09-Cpp.cfg                           cs/casting.mm
