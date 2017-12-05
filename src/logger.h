@@ -129,6 +129,13 @@ void log_flush(bool force_nl);
 #endif
 
 
+#ifdef DEBUG
+#define D_LOG_FMT    LOG_FMT
+#else
+#define D_LOG_FMT(sev, ...)    ((void)0) //forces semicolon after macro
+#endif
+
+
 /**
  * Dumps hex characters inline, no newlines inserted
  *

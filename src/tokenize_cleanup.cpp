@@ -893,9 +893,7 @@ static void check_template(chunk_t *start)
 {
    LOG_FMT(LTEMPL, "%s(%d): orig_line %zu, orig_col %zu:",
            __func__, __LINE__, start->orig_line, start->orig_col);
-#ifdef DEBUG
-   LOG_FMT(LTEMPL, "\n");
-#endif // DEBUG
+   D_LOG_FMT(LTEMPL, "\n");
 
    chunk_t *prev = chunk_get_prev_ncnl(start, scope_e::PREPROC);
    if (prev == nullptr)
@@ -907,13 +905,9 @@ static void check_template(chunk_t *start)
    chunk_t *pc;
    if (prev->type == CT_TEMPLATE)
    {
-#ifdef DEBUG
-      LOG_FMT(LTEMPL, "%s(%d):", __func__, __LINE__);
-#endif
+      D_LOG_FMT(LTEMPL, "%s(%d):", __func__, __LINE__);
       LOG_FMT(LTEMPL, " CT_TEMPLATE:");
-#ifdef DEBUG
-      LOG_FMT(LTEMPL, "\n");
-#endif
+      D_LOG_FMT(LTEMPL, "\n");
 
       // We have: "template< ... >", which is a template declaration
       size_t level = 1;
@@ -923,17 +917,13 @@ static void check_template(chunk_t *start)
       {
          LOG_FMT(LTEMPL, "%s(%d): [%s,%zu]",
                  __func__, __LINE__, get_token_name(pc->type), level);
-#ifdef DEBUG
-         LOG_FMT(LTEMPL, "\n");
-#endif
+         D_LOG_FMT(LTEMPL, "\n");
 
          if ((pc->str[0] == '>') && (pc->len() > 1))
          {
             LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}",
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
-#ifdef DEBUG
-            LOG_FMT(LTEMPL, "\n");
-#endif
+            D_LOG_FMT(LTEMPL, "\n");
             split_off_angle_close(pc);
          }
 
@@ -971,18 +961,14 @@ static void check_template(chunk_t *start)
       {
          LOG_FMT(LTEMPL, "%s(%d): - after %s + ( - Not a template\n",
                  __func__, __LINE__, get_token_name(prev->type));
-#ifdef DEBUG
-         LOG_FMT(LTEMPL, "\n");
-#endif
+         D_LOG_FMT(LTEMPL, "\n");
          set_chunk_type(start, CT_COMPARE);
          return;
       }
 
       LOG_FMT(LTEMPL, "%s(%d): - prev %s -",
               __func__, __LINE__, get_token_name(prev->type));
-#ifdef DEBUG
-      LOG_FMT(LTEMPL, "\n");
-#endif
+      D_LOG_FMT(LTEMPL, "\n");
 
       // Scan back and make sure we aren't inside square parenthesis
       bool in_if = false;
@@ -1018,9 +1004,7 @@ static void check_template(chunk_t *start)
       {
          LOG_FMT(LTEMPL, "%s(%d): [%s,%zu]",
                  __func__, __LINE__, get_token_name(pc->type), num_tokens);
-#ifdef DEBUG
-         LOG_FMT(LTEMPL, "\n");
-#endif
+         D_LOG_FMT(LTEMPL, "\n");
 
          if (  (tokens[num_tokens - 1] == CT_ANGLE_OPEN)
             && (pc->str[0] == '>')
@@ -1030,9 +1014,8 @@ static void check_template(chunk_t *start)
          {
             LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}",
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
-#ifdef DEBUG
-            LOG_FMT(LTEMPL, "\n");
-#endif
+            D_LOG_FMT(LTEMPL, "\n");
+
             split_off_angle_close(pc);
          }
 
@@ -1093,18 +1076,12 @@ static void check_template(chunk_t *start)
       pc = chunk_get_next_ncnl(end, scope_e::PREPROC);
       if (pc == nullptr || pc->type != CT_NUMBER)
       {
-#ifdef DEBUG
-         LOG_FMT(LTEMPL, "%s(%d):", __func__, __LINE__);
-#endif
+         D_LOG_FMT(LTEMPL, "%s(%d):", __func__, __LINE__);
          LOG_FMT(LTEMPL, " - Template Detected\n");
-#ifdef DEBUG
-         LOG_FMT(LTEMPL, "%s(%d):", __func__, __LINE__);
-#endif
+         D_LOG_FMT(LTEMPL, "%s(%d):", __func__, __LINE__);
          LOG_FMT(LTEMPL, "     from orig_line %zu, orig_col %zu\n",
                  start->orig_line, start->orig_col);
-#ifdef DEBUG
-         LOG_FMT(LTEMPL, "%s(%d):", __func__, __LINE__);
-#endif
+         D_LOG_FMT(LTEMPL, "%s(%d):", __func__, __LINE__);
          LOG_FMT(LTEMPL, "     to   orig_line %zu, orig_col %zu\n",
                  end->orig_line, end->orig_col);
 
