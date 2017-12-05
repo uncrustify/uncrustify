@@ -80,7 +80,7 @@ uncrustify-*-win32
 *~
 .*
 build*
-*.orig
+*.orig 
 
 # Eclipse Build Directories
 Debug/
