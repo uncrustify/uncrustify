@@ -520,3 +520,32 @@
 
 # __asm__
 34300  bug_1236.cfg                         cpp/bug_1236.cpp
+
+# Adopt some UT tests
+10000  empty.cfg                            cpp/621_this-spacing.cpp
+10002  623_caret-spacing.cfg                cpp/623_caret-spacing.cpp
+10004  empty.cfg                            cpp/634_extern-c-no-block.cpp
+10005  U01-Cpp.cfg                          cpp/define-indentation.cpp
+10006  dont-detab-strings.cfg               cpp/dont-detab-strings.cpp
+10007  dont-process-defines.cfg             cpp/dont-process-defines.cpp
+10008  empty.cfg                            cpp/PR326_invalid-backslash-eol-csharp.cpp
+10009  STUCK_macro-difficulties.cfg         cpp/STUCK_macro-difficulties.cpp
+10020  U02-Cpp.cfg                          cpp/macro_spaces.cpp
+10021  U03-Cpp.cfg                          cpp/braces_align.cpp
+10022  U04-Cpp.cfg                          cpp/foreach.cpp
+10024  U06-Cpp.cfg                          cpp/ifcomment.cpp
+10025  U07-Cpp.cfg                          cpp/qtargs.cpp
+10047  U16-Cpp.cfg                          cpp/UNI-1334.cpp
+10048  empty.cfg                            cpp/UNI-1335.cpp
+10050  U18-Cpp.cfg                          cpp/UNI-1337.cpp
+10052  empty.cfg                            cpp/UNI-1339.cpp
+10069  empty.cfg                            cpp/UNI-1980.cpp
+10070  U21-Cpp.cfg                          cpp/UNI-1981.cpp
+10071  empty.cfg                            cpp/UNI-1983.cpp
+10080  UNI-10496.cfg                        cpp/UNI-10496.cpp
+10100  issue_564.cfg                        cpp/issue_564.cpp
+60017  U27-Cpp.cfg                          cpp/UNI-2683.cpp
+60029  empty.cfg                            cpp/UNI-21510.cpp
+60030  U33-Cpp.cfg                          cpp/UNI-21727.cpp
+60031  empty.cfg                            cpp/UNI-21728.cpp
+60034  U35-Cpp.cfg                          cpp/UNI-21731.cpp
