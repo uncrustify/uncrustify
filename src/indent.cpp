@@ -2461,6 +2461,24 @@ void indent_text(void)
                      // 2
                      LOG_FMT(LINDLINE, "%s(%d): [%zu:%zu] indent_paren_close is 2\n",
                              __func__, __LINE__, ck2->orig_line, ck2->orig_col);
+                     if (chunk_get_prev(pc)->type == CT_NEWLINE)
+                     {
+                        chunk_t *search = pc;
+                        while (chunk_is_paren_close(chunk_get_next(search)))
+                        {
+                           search = chunk_get_next(search);
+                        }
+                        if (chunk_get_next(search)->type == CT_SEMICOLON)
+                        {
+                           search = chunk_skip_to_match_rev(search);
+                           search = chunk_get_next(chunk_get_prev_nl(search));
+                           if (search == nullptr)
+                           {
+                              search = chunk_get_head();
+                           }
+                           indent_column_set(search->column);
+                        }
+                     }
                   }
                }
             }
