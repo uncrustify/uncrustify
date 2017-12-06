@@ -79,6 +79,7 @@ enum c_token_t
    CT_TYPE_CAST,           // static_cast<type>(exp)
    CT_TYPENAME,            // typename type
    CT_TEMPLATE,            // template<...>
+   CT_WHERE_SPEC,          // 'where' : used in C# generic constraint
 
    CT_ASSIGN,              // =, +=, /=, etc
    CT_ASSIGN_NL,           // Assign followed by a newline - fake item for indenting
@@ -132,6 +133,7 @@ enum c_token_t
    CT_CONSTR_COLON,        // colon after a constructor
    CT_D_ARRAY_COLON,       // D named array initializer colon
    CT_COND_COLON,          // conditional colon in  'b ? t : f'
+   CT_WHERE_COLON,         // C# where-constraint colon (after the type)
    CT_QUESTION,
    CT_COMMA,
 
@@ -139,6 +141,7 @@ enum c_token_t
    CT_ATTRIBUTE,
    CT_CATCH,
    CT_WHEN,
+   CT_WHERE,            // C# where clause
    CT_CLASS,
    CT_DELETE,
    CT_EXPORT,
