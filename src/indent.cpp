@@ -633,6 +633,7 @@ void indent_text(void)
    size_t        sql_orig_col = 0;
    bool          in_func_def  = false;
    c_token_t     memtype;
+   bool          member_dot_processed = true;
 
    memset(&frm, 0, sizeof(frm));
    cpd.frame_count = 0;
@@ -955,6 +956,7 @@ void indent_text(void)
 
             // End any assign operations with a semicolon on the same level
             if (  (  frm.pse[frm.pse_tos].type == CT_ASSIGN_NL
+                  || frm.pse[frm.pse_tos].type == CT_MEMBER
                   || frm.pse[frm.pse_tos].type == CT_ASSIGN)
                && (  chunk_is_semicolon(pc)
                   || pc->type == CT_COMMA
@@ -1817,6 +1819,7 @@ void indent_text(void)
                         && frm.pse[idx].type != CT_SQUARE_OPEN
                         && frm.pse[idx].type != CT_ANGLE_OPEN
                         && frm.pse[idx].type != CT_CASE
+                        && frm.pse[idx].type != CT_MEMBER
                         && frm.pse[idx].type != CT_ASSIGN_NL)
                      || are_chunks_in_same_line(frm.pse[idx].pc, frm.pse[frm.pse_tos].pc)
                         )
@@ -1879,13 +1882,17 @@ void indent_text(void)
                && !cpd.settings[UO_indent_paren_after_func_decl].b
                && !cpd.settings[UO_indent_paren_after_func_call].b)
             {
-               size_t sub = 1;
-               if (  (frm.pse[frm.pse_tos - 1].type == CT_ASSIGN)
-                  || (frm.pse[frm.pse_tos - 1].type == CT_RETURN))
+               idx = frm.pse_tos - 1;
+               while (  idx > 0
+                     && (  (frm.pse[frm.pse_tos - 1].type == CT_ASSIGN)
+                        || (frm.pse[frm.pse_tos - 1].type == CT_RETURN)
+                        || (frm.pse[frm.pse_tos - 1].type == CT_MEMBER))
+                     && are_chunks_in_same_line(frm.pse[idx].pc, frm.pse[frm.pse_tos].pc))
                {
-                  sub = 2;
+                  idx--;
+                  skipped = true;
                }
-               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - sub].indent + indent_size;
+               frm.pse[frm.pse_tos].indent = frm.pse[idx].indent + indent_size;
                log_indent();
                frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
                skipped                         = true;
@@ -1973,6 +1980,41 @@ void indent_text(void)
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          log_indent_tmp();
          frm.paren_count++;
+      }
+      else if (  pc->type == CT_MEMBER
+              && (strcmp(pc->text(), ".") == 0)
+              && chunk_get_next_ncnl(pc)->type == CT_FUNC_CALL)
+      {
+         member_dot_processed = false;
+         indent_pse_push(frm, pc);
+         if (chunk_is_newline(chunk_get_prev(pc)))
+         {
+            if (frm.pse[frm.pse_tos - 1].type == CT_MEMBER)
+            {
+               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
+            }
+            else
+            {
+               chunk_t *tmp = chunk_get_prev_ncnl(frm.pse[frm.pse_tos].pc);
+               if (are_chunks_in_same_line(frm.pse[frm.pse_tos - 1].pc, tmp))
+               {
+                  frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
+               }
+               else
+               {
+                  frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
+               }
+            }
+            indent_column_set(frm.pse[frm.pse_tos].indent);
+            reindent_line(pc, indent_column);
+         }
+         else
+         {
+            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
+            log_indent();
+         }
+         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+         log_indent_tmp();
       }
       else if (  pc->type == CT_ASSIGN
               || pc->type == CT_IMPORT
@@ -2288,7 +2330,8 @@ void indent_text(void)
       }
 
       // Indent the line if needed
-      if (  did_newline
+      if (  member_dot_processed
+         && did_newline
          && !chunk_is_newline(pc)
          && (pc->len() != 0))
       {
@@ -2622,6 +2665,7 @@ void indent_text(void)
          }
       }
 
+      member_dot_processed = true;
       // if we hit a newline, reset indent_tmp
       if (  chunk_is_newline(pc)
          || pc->type == CT_COMMENT_MULTI
