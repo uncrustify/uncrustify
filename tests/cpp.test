@@ -524,6 +524,7 @@
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
 10002  623_caret-spacing.cfg                cpp/623_caret-spacing.cpp
+10003  633_decl-in-func-typedef.cfg         cpp/633_decl-in-func-typedef.cpp
 10004  empty.cfg                            cpp/634_extern-c-no-block.cpp
 10005  U01-Cpp.cfg                          cpp/define-indentation.cpp
 10006  dont-detab-strings.cfg               cpp/dont-detab-strings.cpp
