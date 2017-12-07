@@ -4425,12 +4425,13 @@ static void mark_function(chunk_t *pc)
       // Fixes issue #1266, identification of a tuple return type in CS.
       if (  !isa_def
          && prev != nullptr
-         && chunk_is_paren_close(prev))
+         && chunk_is_paren_close(prev)
+         && chunk_get_next_ncnl(prev) == pc)
       {
          tmp = chunk_skip_to_match_rev(prev);
          while (tmp != prev)
          {
-            if (tmp->type == CT_COMMA)
+            if (tmp->type == CT_COMMA && tmp->level == prev->level)
             {
 #ifdef DEBUG
                LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
