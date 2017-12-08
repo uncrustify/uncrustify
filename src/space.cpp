@@ -559,6 +559,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          log_rule("sp_after_mdatype_commas");
          return(cpd.settings[UO_sp_after_mdatype_commas].a);
       }
+      // Fix for issue #1243
+      // Don't add extra space after comma immediately followed by Angle close
+      if (second->type == CT_ANGLE_CLOSE)
+      {
+         return(AV_IGNORE);
+      }
       log_rule("sp_after_comma");
       return(cpd.settings[UO_sp_after_comma].a);
    }
@@ -1107,6 +1113,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       }
       if (second->parent_type == CT_STRUCT || second->parent_type == CT_UNION)
       {
+         // Fix for issue #1240  adding space in struct initializers
+         chunk_t *tmp = chunk_get_prev_ncnl(chunk_skip_to_match_rev(second));
+         if (tmp != nullptr && tmp->type == CT_ASSIGN)
+         {
+            return(AV_IGNORE);
+         }
          log_rule("sp_inside_braces_struct");
          return(cpd.settings[UO_sp_inside_braces_struct].a);
       }
@@ -1725,6 +1737,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       }
       if (first->parent_type == CT_STRUCT || first->parent_type == CT_UNION)
       {
+         // Fix for issue #1240  adding space in struct initializers
+         chunk_t *tmp = chunk_get_prev_ncnl(first);
+         if (tmp != nullptr && tmp->type == CT_ASSIGN)
+         {
+            return(AV_IGNORE);
+         }
          log_rule("sp_inside_braces_struct");
          return(cpd.settings[UO_sp_inside_braces_struct].a);
       }
