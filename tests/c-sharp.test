@@ -69,6 +69,7 @@
 # Adopt some UT tests
 10012  empty.cfg                            cs/621_this-spacing.cs
 10014  empty.cfg                            cs/630_bad-new-init-semicolon-removal.cs
+10027  U01-Cs.cfg                           cs/oneline_property.cs
 10028  U02-Cs.cfg                           cs/ifcolalign.cs
 10029  U03-Cs.cfg                           cs/when.cs
 10035  U13-Cpp.cfg                          cs/definesalign.h.mm
