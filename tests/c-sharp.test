@@ -10,6 +10,7 @@
 10003  ben_033.cfg                          cs/region.cs
 10010  ben_034.cfg                          cs/var-member.cs
 10011  indent_columns-3.cfg                 cs/strings.cs
+10013  625_where-constraints.cfg            cs/625_where-constraints.cs
 
 10020  region-0.cfg                         cs/region.cs
 10021  region-1.cfg                         cs/region.cs
