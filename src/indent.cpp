@@ -2010,10 +2010,13 @@ void indent_text(void)
          }
          //check if the funciton call is followed by another ".", else pop the CT_MEMBER from the stack
          chunk_t *tmp = chunk_get_next_ncnl(pc);
-         tmp =  chunk_skip_to_match(chunk_get_next_ncnl(tmp));
-         if (chunk_get_next_ncnl(tmp)->type != CT_MEMBER)
+         tmp = chunk_get_next_ncnl(chunk_skip_to_match(chunk_get_next_ncnl(tmp)));
+         if (  tmp == nullptr
+            || tmp->type != CT_MEMBER
+            || (strcmp(tmp->text(), ".") != 0)
+            || chunk_get_next_ncnl(tmp)->type != CT_FUNC_CALL)
          {
-            indent_pse_pop(frm, pc);
+            indent_pse_pop(frm, tmp);
          }
       }
       else if (  pc->type == CT_ASSIGN
