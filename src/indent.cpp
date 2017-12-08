@@ -972,20 +972,6 @@ void indent_text(void)
             }
 
             // End any assign operations with a semicolon on the same level
-            if (  (frm.pse[frm.pse_tos].type == CT_MEMBER)
-               && (  chunk_is_semicolon(pc)
-                  || pc->type == CT_COMMA
-                  || pc->type == CT_ASSIGN
-                  || pc->type == CT_COMPARE
-                  || pc->type == CT_BOOL
-                  || pc->type == CT_BRACE_OPEN
-                  || pc->type == CT_SPAREN_CLOSE
-                     ))
-            {
-               indent_pse_pop(frm, pc);
-            }
-
-            // End any assign operations with a semicolon on the same level
             if (  chunk_is_semicolon(pc)
                && (  (frm.pse[frm.pse_tos].type == CT_IMPORT)
                   || (frm.pse[frm.pse_tos].type == CT_USING)))
@@ -2021,6 +2007,13 @@ void indent_text(void)
             indent_column_set(frm.pse[frm.pse_tos].indent);
             reindent_line(pc, indent_column);
             did_newline = false;
+         }
+         //check if the funciton call is followed by another ".", else pop the CT_MEMBER from the stack
+         chunk_t *tmp = chunk_get_next_ncnl(pc);
+         tmp =  chunk_skip_to_match(chunk_get_next_ncnl(tmp));
+         if (chunk_get_next_ncnl(tmp)->type != CT_MEMBER)
+         {
+            indent_pse_pop(frm, pc);
          }
       }
       else if (  pc->type == CT_ASSIGN
