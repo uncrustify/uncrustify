@@ -956,7 +956,6 @@ void indent_text(void)
 
             // End any assign operations with a semicolon on the same level
             if (  (  frm.pse[frm.pse_tos].type == CT_ASSIGN_NL
-                  || frm.pse[frm.pse_tos].type == CT_MEMBER
                   || frm.pse[frm.pse_tos].type == CT_ASSIGN)
                && (  chunk_is_semicolon(pc)
                   || pc->type == CT_COMMA
@@ -965,8 +964,23 @@ void indent_text(void)
                   || (  pc->type == CT_SQUARE_OPEN
                      && pc->parent_type == CT_OC_AT)
                   || (  pc->type == CT_SQUARE_OPEN
-                     && pc->parent_type == CT_ASSIGN))
+                     && pc->parent_type == CT_ASSIGN)
+                     )
                && pc->parent_type != CT_CPP_LAMBDA)
+            {
+               indent_pse_pop(frm, pc);
+            }
+
+            // End any assign operations with a semicolon on the same level
+            if (  (frm.pse[frm.pse_tos].type == CT_MEMBER)
+               && (  chunk_is_semicolon(pc)
+                  || pc->type == CT_COMMA
+                  || pc->type == CT_ASSIGN
+                  || pc->type == CT_COMPARE
+                  || pc->type == CT_BOOL
+                  || pc->type == CT_BRACE_OPEN
+                  || pc->type == CT_SPAREN_CLOSE
+                     ))
             {
                indent_pse_pop(frm, pc);
             }
@@ -1986,35 +2000,28 @@ void indent_text(void)
               && chunk_get_next_ncnl(pc)->type == CT_FUNC_CALL)
       {
          member_dot_processed = false;
-         indent_pse_push(frm, pc);
-         if (chunk_is_newline(chunk_get_prev(pc)))
+         if (frm.pse[frm.pse_tos].type != CT_MEMBER)
          {
-            if (frm.pse[frm.pse_tos - 1].type == CT_MEMBER)
+            indent_pse_push(frm, pc);
+            chunk_t *tmp = chunk_get_prev_ncnl(frm.pse[frm.pse_tos].pc);
+            if (are_chunks_in_same_line(frm.pse[frm.pse_tos - 1].pc, tmp))
             {
                frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
             }
             else
             {
-               chunk_t *tmp = chunk_get_prev_ncnl(frm.pse[frm.pse_tos].pc);
-               if (are_chunks_in_same_line(frm.pse[frm.pse_tos - 1].pc, tmp))
-               {
-                  frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
-               }
-               else
-               {
-                  frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
-               }
+               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
             }
+            log_indent();
+            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+            log_indent_tmp();
+         }
+         if (chunk_is_newline(chunk_get_prev(pc)))
+         {
             indent_column_set(frm.pse[frm.pse_tos].indent);
             reindent_line(pc, indent_column);
+            did_newline = false;
          }
-         else
-         {
-            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
-            log_indent();
-         }
-         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
-         log_indent_tmp();
       }
       else if (  pc->type == CT_ASSIGN
               || pc->type == CT_IMPORT
