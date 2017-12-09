@@ -636,7 +636,7 @@ bool chunk_is_last_on_line(chunk_t &pc)  //TODO: pc should be const here
 
    // if the next chunk is a newline then pc is the last chunk on its line
    const auto *next = chunk_get_next(&pc);
-   if (next != nullptr && next->type == CT_NEWLINE)
+   if (chunk_is_token(next, CT_NEWLINE))
    {
       return(true);
    }

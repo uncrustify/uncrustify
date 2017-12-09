@@ -1300,7 +1300,7 @@ void indent_text(void)
                      chunk_t *param_name   = chunk_get_prev(colon);
                      chunk_t *before_param = chunk_get_prev(param_name);
 
-                     if (before_param && before_param->type == CT_NEWLINE)
+                     if (chunk_is_token(before_param, CT_NEWLINE))
                      {
                         indent_from_keyword = true;
                         indent_from_colon   = false;
@@ -2128,7 +2128,7 @@ void indent_text(void)
                in_shift = true;
 
                tmp = chunk_get_prev_ncnl(tmp);
-               if (tmp && tmp->type == CT_OPERATOR)
+               if (chunk_is_token(tmp, CT_OPERATOR))
                {
                   is_operator = true;
                }
@@ -2155,7 +2155,7 @@ void indent_text(void)
                in_shift = true;
 
                tmp = chunk_get_prev_ncnl(tmp);
-               if (tmp && tmp->type == CT_OPERATOR)
+               if (chunk_is_token(tmp, CT_OPERATOR))
                {
                   is_operator = true;
                }
@@ -2188,8 +2188,7 @@ void indent_text(void)
             in_shift = false;
          }
 
-         if (  prev2
-            && prev2->type == CT_NEWLINE
+         if (  chunk_is_token(prev2, CT_NEWLINE)
             && in_shift)
          {
             shiftcontcol                     = calc_indent_continue(frm, frm.pse_tos);
@@ -2348,8 +2347,7 @@ void indent_text(void)
             reindent_line(pc, frm.pse[frm.pse_tos].brace_indent);
          }
          else if (  pc->type == CT_STRING
-                 && prev != nullptr
-                 && prev->type == CT_STRING
+                 && chunk_is_token(prev, CT_STRING)
                  && cpd.settings[UO_indent_align_string].b)
          {
             int tmp = (xml_indent != 0) ? xml_indent : prev->column;
@@ -2487,13 +2485,13 @@ void indent_text(void)
             reindent_line(pc, indent_column);
          }
          else if (  cpd.settings[UO_indent_ternary_operator].u == 1
-                 && (  (  pc->type == CT_ADDR
-                       || pc->type == CT_WORD
-                       || pc->type == CT_DEREF
-                       || pc->type == CT_NUMBER
-                       || pc->type == CT_STRING
-                       || pc->type == CT_PAREN_OPEN)
-                    && prev->type == CT_COND_COLON))
+                 && chunk_is_token(prev, CT_COND_COLON)
+                 && (  pc->type == CT_ADDR
+                    || pc->type == CT_WORD
+                    || pc->type == CT_DEREF
+                    || pc->type == CT_NUMBER
+                    || pc->type == CT_STRING
+                    || pc->type == CT_PAREN_OPEN))
          {
             chunk_t *tmp = chunk_get_prev_type(prev, CT_QUESTION, -1);
             tmp = chunk_get_next_ncnl(tmp);

@@ -608,8 +608,7 @@ void align_struct_initializers(void)
    while (pc != nullptr)
    {
       chunk_t *prev = chunk_get_prev_ncnl(pc);
-      if (  prev != nullptr
-         && prev->type == CT_ASSIGN
+      if (  chunk_is_token(prev, CT_ASSIGN)
          && (  pc->type == CT_BRACE_OPEN
             || ((cpd.lang_flags & LANG_D) && pc->type == CT_SQUARE_OPEN)))
       {
@@ -1243,7 +1242,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
 
    // can't be any variable definitions in a "= {" block
    chunk_t *prev = chunk_get_prev_ncnl(start);
-   if (prev != nullptr && prev->type == CT_ASSIGN)
+   if (chunk_is_token(prev, CT_ASSIGN))
    {
       LOG_FMT(LAVDB, "%s(%d): start->text() '%s', type is %s, on orig_line %zu (abort due to assign)\n",
               __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line);

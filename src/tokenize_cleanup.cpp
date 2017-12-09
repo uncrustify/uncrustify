@@ -277,8 +277,7 @@ void tokenize_cleanup(void)
             set_chunk_type(next, CT_PTR_TYPE);
          }
          else if (  pc->type == CT_WORD
-                 && prev != nullptr
-                 && prev->type == CT_DC_MEMBER
+                 && chunk_is_token(prev, CT_DC_MEMBER)
                  && (cpd.lang_flags & LANG_CPP) != 0)
          {
             set_chunk_type(pc, CT_TYPE);
@@ -345,9 +344,7 @@ void tokenize_cleanup(void)
          }
 
          // handle "version(unittest) { }" vs "unittest { }"
-         if (  prev
-            && pc->type == CT_UNITTEST
-            && prev->type == CT_PAREN_OPEN)
+         if (pc->type == CT_UNITTEST && chunk_is_token(prev, CT_PAREN_OPEN))
          {
             set_chunk_type(pc, CT_WORD);
          }
@@ -429,7 +426,7 @@ void tokenize_cleanup(void)
          if (next->type == CT_PAREN_OPEN)
          {
             chunk_t *tmp = chunk_get_next(next);
-            if (tmp != nullptr && tmp->type == CT_PAREN_CLOSE)
+            if (chunk_is_token(tmp, CT_PAREN_CLOSE))
             {
                next->str = "()";
                set_chunk_type(next, CT_OPERATOR_VAL);
@@ -506,7 +503,7 @@ void tokenize_cleanup(void)
          if (chunk_is_str(next, "slots", 5) || chunk_is_str(next, "Q_SLOTS", 7))
          {
             chunk_t *tmp = chunk_get_next(next);
-            if (tmp != nullptr && tmp->type == CT_COLON)
+            if (chunk_is_token(tmp, CT_COLON))
             {
                next = tmp;
             }
@@ -857,8 +854,7 @@ void tokenize_cleanup(void)
        */
       if (  pc->type == CT_TRY
          && chunk_is_str(pc, "try", 3)
-         && next != nullptr
-         && next->type == CT_COLON)
+         && chunk_is_token(next, CT_COLON))
       {
          set_chunk_type(pc, CT_QUALIFIER);
       }
@@ -1071,7 +1067,7 @@ static void check_template(chunk_t *start)
       end = pc;
    }
 
-   if (end != nullptr && end->type == CT_ANGLE_CLOSE)
+   if (chunk_is_token(end, CT_ANGLE_CLOSE))
    {
       pc = chunk_get_next_ncnl(end, scope_e::PREPROC);
       if (pc == nullptr || pc->type != CT_NUMBER)
@@ -1147,7 +1143,7 @@ static void check_template(chunk_t *start)
 
 static void cleanup_objc_property(chunk_t *start)
 {
-   assert(start && start->type == CT_OC_PROPERTY);
+   assert(chunk_is_token(start, CT_OC_PROPERTY));
 
    chunk_t *open_paren = chunk_get_next_type(start, CT_PAREN_OPEN, start->level);
 
@@ -1182,7 +1178,7 @@ static void cleanup_objc_property(chunk_t *start)
 
 static void mark_selectors_in_property_with_open_paren(chunk_t *open_paren)
 {
-   assert(open_paren && open_paren->type == CT_PAREN_OPEN);
+   assert(chunk_is_token(open_paren, CT_PAREN_OPEN));
 
    chunk_t *tmp = open_paren;
 
@@ -1213,7 +1209,7 @@ static void mark_selectors_in_property_with_open_paren(chunk_t *open_paren)
 
 static void mark_attributes_in_property_with_open_paren(chunk_t *open_paren)
 {
-   assert(open_paren && open_paren->type == CT_PAREN_OPEN);
+   assert(chunk_is_token(open_paren, CT_PAREN_OPEN));
 
    chunk_t *tmp = open_paren;
 

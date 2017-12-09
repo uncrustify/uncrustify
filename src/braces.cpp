@@ -192,7 +192,7 @@ void do_braces(void)
       c_token_t brc_type = c_token_t(pc->type + 1); // corresponds to closing type
       // Detect empty bodies
       chunk_t   *tmp = chunk_get_next_ncnl(pc);
-      if (tmp != nullptr && tmp->type == brc_type)
+      if (chunk_is_token(tmp, brc_type))
       {
          chunk_flags_set(br_open, PCF_EMPTY_BODY);
          chunk_flags_set(tmp, PCF_EMPTY_BODY);
@@ -305,7 +305,6 @@ static bool can_remove_braces(chunk_t *bopen)
    size_t  semi_count = 0;
    size_t  level      = bopen->level + 1;
    bool    hit_semi   = false;
-   bool    was_fcn    = false;
    size_t  nl_max     = cpd.settings[UO_mod_full_brace_nl].u;
    size_t  nl_count   = 0;
    size_t  if_count   = 0;
@@ -317,7 +316,7 @@ static bool can_remove_braces(chunk_t *bopen)
       return(false);
    }
    chunk_t *pc = chunk_get_next_ncnl(bopen, scope_e::PREPROC);
-   if (pc != nullptr && pc->type == CT_BRACE_CLOSE)
+   if (chunk_is_token(pc, CT_BRACE_CLOSE))
    {
       // Can't remove empty statement
       return(false);
@@ -379,8 +378,6 @@ static bool can_remove_braces(chunk_t *bopen)
                return(false);
             }
 
-            was_fcn = (prev != nullptr) && prev->type == CT_FPAREN_CLOSE;
-
             if (  chunk_is_semicolon(pc)
                || pc->type == CT_IF
                || pc->type == CT_ELSEIF
@@ -388,7 +385,8 @@ static bool can_remove_braces(chunk_t *bopen)
                || pc->type == CT_DO
                || pc->type == CT_WHILE
                || pc->type == CT_USING_STMT
-               || (pc->type == CT_BRACE_OPEN && was_fcn))
+               || (  pc->type == CT_BRACE_OPEN
+                  && chunk_is_token(prev, CT_FPAREN_CLOSE)))
             {
                hit_semi |= chunk_is_semicolon(pc);
                if (++semi_count > 1)
@@ -416,8 +414,7 @@ static bool can_remove_braces(chunk_t *bopen)
 
       prev = chunk_get_prev_ncnl(pc, scope_e::PREPROC);
 
-      if (  next != nullptr
-         && next->type == CT_ELSE
+      if (  chunk_is_token(next, CT_ELSE)
          && (prev->type == CT_BRACE_CLOSE || prev->type == CT_VBRACE_CLOSE)
          && prev->parent_type == CT_IF)
       {
@@ -443,7 +440,6 @@ static void examine_brace(chunk_t *bopen)
    size_t  semi_count = 0;
    size_t  level      = bopen->level + 1;
    bool    hit_semi   = false;
-   bool    was_fcn    = false;
    size_t  nl_max     = cpd.settings[UO_mod_full_brace_nl].u;
    size_t  nl_count   = 0;
    size_t  if_count   = 0;
@@ -515,8 +511,6 @@ static void examine_brace(chunk_t *bopen)
                return;
             }
 
-            was_fcn = (prev != nullptr) && prev->type == CT_FPAREN_CLOSE;
-
             if (  chunk_is_semicolon(pc)
                || pc->type == CT_IF
                || pc->type == CT_ELSEIF
@@ -525,7 +519,8 @@ static void examine_brace(chunk_t *bopen)
                || pc->type == CT_WHILE
                || pc->type == CT_SWITCH
                || pc->type == CT_USING_STMT
-               || (pc->type == CT_BRACE_OPEN && was_fcn))
+               || (  pc->type == CT_BRACE_OPEN
+                  && chunk_is_token(prev, CT_FPAREN_CLOSE)))
             {
                hit_semi |= chunk_is_semicolon(pc);
                if (++semi_count > 1)
@@ -555,7 +550,7 @@ static void examine_brace(chunk_t *bopen)
       next = chunk_get_next_ncnl(pc);
       if (next != nullptr)
       {
-         while (next != nullptr && next->type == CT_VBRACE_CLOSE)
+         while (chunk_is_token(next, CT_VBRACE_CLOSE))
          {
             next = chunk_get_next_ncnl(next);
          }
@@ -676,7 +671,7 @@ static void convert_vbrace(chunk_t *vbr)
        * preprocessor.
        */
       chunk_t *tmp = chunk_get_next(vbr);
-      if (tmp != nullptr && tmp->type == CT_PREPROC)
+      if (chunk_is_token(tmp, CT_PREPROC))
       {
          tmp = chunk_get_next(vbr, scope_e::PREPROC);
          chunk_move_after(vbr, tmp);
@@ -897,9 +892,8 @@ void add_long_closebrace_comment(void)
             tmp = chunk_get_next(tmp);
 
             // Check for end of class
-            if (  tmp != nullptr
-               && tmp->parent_type == CT_CLASS
-               && tmp->type == CT_SEMICOLON)
+            if (  chunk_is_token(tmp, CT_SEMICOLON)
+               && tmp->parent_type == CT_CLASS)
             {
                cl_semi_pc = tmp;
                tmp        = chunk_get_next(tmp);
@@ -984,8 +978,7 @@ static void move_case_break(void)
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
       if (  pc->type == CT_BREAK
-         && prev != nullptr
-         && prev->type == CT_BRACE_CLOSE
+         && chunk_is_token(prev, CT_BRACE_CLOSE)
          && prev->parent_type == CT_CASE)
       {
          if (  chunk_is_newline(chunk_get_prev(pc))
@@ -1212,7 +1205,7 @@ static void process_if_chain(chunk_t *br_start)
       }
 
       pc = chunk_get_next_ncnl(pc, scope_e::PREPROC);
-      if (pc != nullptr && pc->type == CT_ELSEIF)
+      if (chunk_is_token(pc, CT_ELSEIF))
       {
          while (  pc != nullptr
                && pc->type != CT_VBRACE_OPEN

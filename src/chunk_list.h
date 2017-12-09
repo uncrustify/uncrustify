@@ -606,9 +606,9 @@ static_inline bool chunk_is_type(chunk_t *pc)
 }
 
 
-static_inline bool chunk_is_token(chunk_t *pc, c_token_t c_token)
+static_inline bool chunk_is_token(const chunk_t *pc, c_token_t c_token)
 {
-   return(pc != NULL && pc->type == c_token);
+   return(pc != nullptr && pc->type == c_token);
 }
 
 
@@ -758,7 +758,7 @@ static_inline bool chunk_safe_to_del_nl(chunk_t *nl)
 {
    chunk_t *tmp = chunk_get_prev(nl);
 
-   if (tmp != NULL && tmp->type == CT_COMMENT_CPP)
+   if (chunk_is_token(tmp, CT_COMMENT_CPP))
    {
       return(false);
    }
@@ -775,8 +775,7 @@ static_inline bool chunk_safe_to_del_nl(chunk_t *nl)
 static_inline bool chunk_is_forin(chunk_t *pc)
 {
    if (  (cpd.lang_flags & LANG_OC)
-      && pc
-      && pc->type == CT_SPAREN_OPEN)
+      && chunk_is_token(pc, CT_SPAREN_OPEN))
    {
       chunk_t *prev = chunk_get_prev_ncnl(pc);
       if (prev->type == CT_FOR)

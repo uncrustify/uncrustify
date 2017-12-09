@@ -749,7 +749,7 @@ static chunk_t *skip_dc_member(chunk_t *start)
 
    chunk_t *pc   = start;
    chunk_t *next = (pc->type == CT_DC_MEMBER) ? pc : chunk_get_next_ncnl(pc);
-   while (next != nullptr && next->type == CT_DC_MEMBER)
+   while (chunk_is_token(next, CT_DC_MEMBER))
    {
       pc = chunk_get_next_ncnl(next);
       if (pc == nullptr)
@@ -1069,7 +1069,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       if (chunk_is_paren_open(next))
       {
          tmp = flag_parens(next, 0, CT_NONE, CT_EXTERN, true);
-         if (tmp && tmp->type == CT_BRACE_OPEN)
+         if (chunk_is_token(tmp, CT_BRACE_OPEN))
          {
             set_paren_parent(tmp, CT_EXTERN);
          }
@@ -1079,7 +1079,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          // next likely is a string (see tokenize_cleanup.cpp)
          set_chunk_parent(next, CT_EXTERN);
          tmp = chunk_get_next_ncnl(next);
-         if (tmp != nullptr && tmp->type == CT_BRACE_OPEN)
+         if (chunk_is_token(tmp, CT_BRACE_OPEN))
          {
             set_paren_parent(tmp, CT_EXTERN);
          }
@@ -1166,9 +1166,9 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          {
             chunk_t *tmpA = chunk_get_next_type(tmp, CT_ASSIGN, pc->level);
             tmp = chunk_get_next(tmp);
-            if (tmp != nullptr && tmp->type == CT_PAREN_OPEN)
+            if (chunk_is_token(tmp, CT_PAREN_OPEN))
             {
-               if (tmpA != nullptr && tmpA->type == CT_ASSIGN)
+               if (chunk_is_token(tmpA, CT_ASSIGN))
                {
                   // we have "TYPE(...)(...) =" such as
                   // Issue #1041
@@ -1185,7 +1185,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                if (pc->parent_type == CT_NONE && ((pc->flags & PCF_IN_TYPEDEF) == 0))
                {
                   tmp = chunk_get_next_ncnl(next);
-                  if (tmp != nullptr && tmp->type == CT_PAREN_CLOSE)
+                  if (chunk_is_token(tmp, CT_PAREN_CLOSE))
                   {
                      // we have TYPE()
                      set_chunk_type(pc, CT_FUNCTION);
@@ -1388,14 +1388,13 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                || pc->parent_type == CT_BRACED_INIT_LIST)))
       {
          auto brace_open = chunk_get_next_ncnl(pc);
-         if (  brace_open != nullptr
-            && brace_open->type == CT_BRACE_OPEN
+         if (  chunk_is_token(brace_open, CT_BRACE_OPEN)
             && (  brace_open->parent_type == CT_NONE
                || brace_open->parent_type == CT_ASSIGN
                || brace_open->parent_type == CT_BRACED_INIT_LIST))
          {
             auto brace_close = chunk_skip_to_match(next);
-            if (brace_close != nullptr && brace_close->type == CT_BRACE_CLOSE)
+            if (chunk_is_token(brace_close, CT_BRACE_CLOSE))
             {
                set_chunk_parent(brace_open, CT_BRACED_INIT_LIST);
                set_chunk_parent(brace_close, CT_BRACED_INIT_LIST);
@@ -1485,7 +1484,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
          tmp = chunk_get_next_ncnl(tmp);
       }
-      if (tmp != nullptr && tmp->type == CT_BRACE_OPEN)
+      if (chunk_is_token(tmp, CT_BRACE_OPEN))
       {
          tmp = chunk_skip_to_match(tmp);
          if (tmp != nullptr)
@@ -2424,7 +2423,7 @@ static void fix_casts(chunk_t *start)
    {
       return;
    }
-   if (prev != nullptr && prev->type == CT_PP_DEFINED)
+   if (chunk_is_token(prev, CT_PP_DEFINED))
    {
       LOG_FMT(LCASTS, " -- not a cast - after defined\n");
       return;
@@ -2535,7 +2534,7 @@ static void fix_casts(chunk_t *start)
       do
       {
          after = chunk_get_next_ncnl(after);
-      } while (after != nullptr && after->type == CT_PAREN_OPEN);
+      } while (chunk_is_token(after, CT_PAREN_OPEN));
 
       if (after == nullptr)
       {
@@ -2691,12 +2690,12 @@ static void fix_enum_struct_union(chunk_t *pc)
    // the next item is either a type or open brace
    next = chunk_get_next_ncnl(pc);
    // the enum-key might be enum, enum class or enum struct (TODO)
-   if (next != nullptr && next->type == CT_ENUM_CLASS)
+   if (chunk_is_token(next, CT_ENUM_CLASS))
    {
       next = chunk_get_next_ncnl(next); // get the next one
    }
    // the next item is either a type, an attribute (TODO), an identifier, a colon or open brace
-   if (next != nullptr && next->type == CT_TYPE)
+   if (chunk_is_token(next, CT_TYPE))
    {
       // i.e. "enum xyz : unsigned int { ... };"
       // i.e. "enum class xyz : unsigned int { ... };"
@@ -2724,7 +2723,7 @@ static void fix_enum_struct_union(chunk_t *pc)
             make_type(next);
             next = chunk_get_next_ncnl(next);
             // enum TYPE : unsigned int { ... };
-            if (next != nullptr && next->type == CT_TYPE)
+            if (chunk_is_token(next, CT_TYPE))
             {
                // get the next part of the type
                next = chunk_get_next_ncnl(next);
@@ -2732,7 +2731,7 @@ static void fix_enum_struct_union(chunk_t *pc)
          }
       }
    }
-   if (next != nullptr && next->type == CT_BRACE_OPEN)
+   if (chunk_is_token(next, CT_BRACE_OPEN))
    {
       flag_series(pc, next, (pc->type == CT_ENUM) ? PCF_IN_ENUM : PCF_IN_STRUCT);
       flag_parens(next, (pc->type == CT_ENUM) ? PCF_IN_ENUM : PCF_IN_STRUCT,
@@ -3111,7 +3110,7 @@ void combine_labels(void)
             hit_case = false;
             set_chunk_type(next, CT_CASE_COLON);
             tmp = chunk_get_next_ncnl(next);
-            if (tmp != nullptr && tmp->type == CT_BRACE_OPEN)
+            if (chunk_is_token(tmp, CT_BRACE_OPEN))
             {
                set_chunk_parent(tmp, CT_CASE);
                tmp = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
@@ -4085,7 +4084,7 @@ static void mark_function(chunk_t *pc)
          prev  = chunk_get_prev_ncnlnp(prev);
       }
 
-      if (prev != nullptr && prev->type == CT_DC_MEMBER)
+      if (chunk_is_token(prev, CT_DC_MEMBER))
       {
          prev = chunk_get_prev_ncnlnp(prev);
          // LOG_FMT(LSYS, "%s: prev1 = %s (%s)\n", __func__,
@@ -4334,8 +4333,7 @@ static void mark_function(chunk_t *pc)
               pc->text(), pc->orig_line, pc->orig_col);
 
       tmp = flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
-      if (  tmp
-         && tmp->type == CT_BRACE_OPEN
+      if (  chunk_is_token(tmp, CT_BRACE_OPEN)
          && tmp->parent_type != CT_DOUBLE_BRACE)
       {
          set_paren_parent(tmp, pc->type);
@@ -4534,7 +4532,7 @@ static void mark_function(chunk_t *pc)
          }
          tmp = chunk_get_next_ncnl(tmp);
       }
-      if (tmp != nullptr && tmp->type == CT_BRACE_OPEN)
+      if (chunk_is_token(tmp, CT_BRACE_OPEN))
       {
          set_chunk_parent(tmp, CT_FUNC_DEF);
          tmp = chunk_skip_to_match(tmp);
@@ -4671,10 +4669,10 @@ static void mark_class_ctor(chunk_t *start)
    LOG_FUNC_ENTRY();
 
    chunk_t *pclass = chunk_get_next_ncnl(start, scope_e::PREPROC);
-   if (pclass != nullptr && pclass->type == CT_DECLSPEC)  // Issue 1289
+   if (chunk_is_token(pclass, CT_DECLSPEC))  // Issue 1289
    {
       pclass = chunk_get_next_ncnl(pclass);
-      if (pclass != nullptr && pclass->type == CT_PAREN_OPEN)
+      if (chunk_is_token(pclass, CT_PAREN_OPEN))
       {
          pclass = chunk_get_next_ncnl(chunk_skip_to_match(pclass));
       }
@@ -4714,17 +4712,14 @@ static void mark_class_ctor(chunk_t *start)
            __func__, __LINE__, pclass->text(), pclass->orig_line, pc->text());
 
    // detect D template class: "class foo(x) { ... }"
-   if (next != nullptr)              // Coverity CID 76004
+   if ((cpd.lang_flags & LANG_D) && chunk_is_token(next, CT_PAREN_OPEN))              // Coverity CID 76004
    {
-      if ((cpd.lang_flags & LANG_D) && next->type == CT_PAREN_OPEN)
+      set_chunk_parent(next, CT_TEMPLATE);
+
+      next = get_d_template_types(cs, next);
+      if (chunk_is_token(next, CT_PAREN_CLOSE))
       {
          set_chunk_parent(next, CT_TEMPLATE);
-
-         next = get_d_template_types(cs, next);
-         if (next && next->type == CT_PAREN_CLOSE)
-         {
-            set_chunk_parent(next, CT_TEMPLATE);
-         }
       }
    }
 
@@ -4780,7 +4775,7 @@ static void mark_class_ctor(chunk_t *start)
       {
          LOG_FMT(LFTOR, "%s(%d): %zu] Hit brace close\n", __func__, __LINE__, pc->orig_line);
          pc = chunk_get_next_ncnl(pc, scope_e::PREPROC);
-         if (pc && pc->type == CT_SEMICOLON)
+         if (chunk_is_token(pc, CT_SEMICOLON))
          {
             set_chunk_parent(pc, start->type);
          }
@@ -4791,7 +4786,7 @@ static void mark_class_ctor(chunk_t *start)
       if (chunkstack_match(cs, pc))
       {
          // Issue #1003, next->type should not be CT_FPAREN_OPEN
-         if (next != nullptr && next->type == CT_PAREN_OPEN)
+         if (chunk_is_token(next, CT_PAREN_OPEN))
          {
             set_chunk_type(pc, CT_FUNC_CLASS_DEF);
             LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s, Marked CTor/DTor text() '%s'\n",
@@ -5372,7 +5367,7 @@ static void mark_exec_sql(chunk_t *pc)
 
 chunk_t *skip_template_next(chunk_t *ang_open)
 {
-   if (ang_open != nullptr && ang_open->type == CT_ANGLE_OPEN)
+   if (chunk_is_token(ang_open, CT_ANGLE_OPEN))
    {
       chunk_t *pc = chunk_get_next_type(ang_open, CT_ANGLE_CLOSE, ang_open->level);
       return(chunk_get_next_ncnl(pc));
@@ -5383,7 +5378,7 @@ chunk_t *skip_template_next(chunk_t *ang_open)
 
 chunk_t *skip_template_prev(chunk_t *ang_close)
 {
-   if (ang_close != nullptr && ang_close->type == CT_ANGLE_CLOSE)
+   if (chunk_is_token(ang_close, CT_ANGLE_CLOSE))
    {
       chunk_t *pc = chunk_get_prev_type(ang_close, CT_ANGLE_OPEN, ang_close->level);
       return(chunk_get_prev_ncnl(pc));
@@ -5405,10 +5400,10 @@ chunk_t *skip_tsquare_next(chunk_t *ary_def)
 
 chunk_t *skip_attribute_next(chunk_t *attr)
 {
-   if (attr != nullptr && attr->type == CT_ATTRIBUTE)
+   if (chunk_is_token(attr, CT_ATTRIBUTE))
    {
       chunk_t *pc = chunk_get_next(attr);
-      if (pc != nullptr && pc->type == CT_FPAREN_OPEN)
+      if (chunk_is_token(pc, CT_FPAREN_OPEN))
       {
          pc = chunk_get_next_type(attr, CT_FPAREN_CLOSE, attr->level);
          return(chunk_get_next_ncnl(pc));
@@ -5421,8 +5416,7 @@ chunk_t *skip_attribute_next(chunk_t *attr)
 
 chunk_t *skip_attribute_prev(chunk_t *fp_close)
 {
-   if (  fp_close != nullptr
-      && fp_close->type == CT_FPAREN_CLOSE
+   if (  chunk_is_token(fp_close, CT_FPAREN_CLOSE)
       && fp_close->parent_type == CT_ATTRIBUTE)
    {
       chunk_t *pc = chunk_get_prev_type(fp_close, CT_ATTRIBUTE, fp_close->level);
@@ -5564,7 +5558,7 @@ static void handle_oc_class(chunk_t *pc)
       }
    }
 
-   if (tmp != nullptr && tmp->type == CT_BRACE_OPEN)
+   if (chunk_is_token(tmp, CT_BRACE_OPEN))
    {
       tmp = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
       if (tmp != nullptr)
@@ -5958,7 +5952,7 @@ static void handle_oc_message_decl(chunk_t *pc)
    //   }
    //}
 
-   //if (tmp != nullptr && tmp->type == CT_BRACE_OPEN)
+   //if (chunk_is_token(tmp, CT_BRACE_OPEN))
    //{
    //   tmp = chunk_skip_to_match(tmp);
    //   if (tmp)
@@ -6071,11 +6065,12 @@ static void handle_oc_message_send(chunk_t *os)
          else if (tmp->type == CT_SQUARE_OPEN)  // move past [collection[index]
          {
             chunk_t *tcs = chunk_get_next_ncnl(tmp);
-            while (tcs && tcs->level > tmp->level)
+            while (tcs != nullptr && tcs->level > tmp->level)
             {
                tcs = chunk_get_next_ncnl(tcs);
             }
-            if (tcs && tcs->type == CT_SQUARE_CLOSE)
+
+            if (chunk_is_token(tcs, CT_SQUARE_CLOSE))
             {
                tmp = chunk_get_next_ncnl(tcs);
             }
@@ -6387,13 +6382,13 @@ static void handle_cs_array_type(chunk_t *pc)
    chunk_t *prev;
 
    for (prev = chunk_get_prev(pc);
-        prev && prev->type == CT_COMMA;
+        chunk_is_token(prev, CT_COMMA);
         prev = chunk_get_prev(prev))
    {
       // empty
    }
 
-   if (prev && prev->type == CT_SQUARE_OPEN)
+   if (chunk_is_token(prev, CT_SQUARE_OPEN))
    {
       while (pc != prev)
       {
@@ -6417,10 +6412,8 @@ void remove_extra_returns(void)
          chunk_t *semi  = chunk_get_next_ncnl(pc);
          chunk_t *cl_br = chunk_get_next_ncnl(semi);
 
-         if (  semi != nullptr
-            && semi->type == CT_SEMICOLON
-            && cl_br != nullptr
-            && cl_br->type == CT_BRACE_CLOSE
+         if (  chunk_is_token(semi, CT_SEMICOLON)
+            && chunk_is_token(cl_br, CT_BRACE_CLOSE)
             && (  cl_br->parent_type == CT_FUNC_DEF
                || cl_br->parent_type == CT_FUNC_CLASS_DEF))
          {
@@ -6452,10 +6445,9 @@ static void handle_wrap(chunk_t *pc)
                  cpd.settings[UO_sp_inside_fparen].a :
                  cpd.settings[UO_sp_inside_paren_cast].a;
 
-   if (  clp != nullptr
+   if (  chunk_is_token(clp, CT_PAREN_CLOSE)
       && opp->type == CT_PAREN_OPEN
-      && (name->type == CT_WORD || name->type == CT_TYPE)
-      && clp->type == CT_PAREN_CLOSE)
+      && (name->type == CT_WORD || name->type == CT_TYPE))
    {
       const char *psp = (pav & AV_ADD) ? " " : "";
       const char *fsp = (av & AV_ADD) ? " " : "";
