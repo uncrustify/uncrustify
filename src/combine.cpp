@@ -4761,6 +4761,7 @@ static void mark_class_ctor(chunk_t *start)
    }
 
    set_paren_parent(pc, start->type);
+   chunk_flags_set(pc, PCF_IN_CLASS);
 
    pc = chunk_get_next_ncnl(pc, scope_e::PREPROC);
    while (pc != nullptr)
