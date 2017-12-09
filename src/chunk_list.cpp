@@ -254,29 +254,9 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
    do                                  // loop over the chunk list
    {
       pc = search_function(pc, scope); // in either direction while
-#if DEBUG
-      if (pc != nullptr)
-      {
-         if (pc->type == CT_NEWLINE)
-         {
-            LOG_FMT(LCHUNK, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col);
-         }
-         else if (pc->type == CT_VBRACE_OPEN)
-         {
-            LOG_FMT(LCHUNK, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type));
-         }
-         else
-         {
-            LOG_FMT(LCHUNK, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s', type is %s\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-         }
-      }
-#endif
-   } while (  pc != nullptr        // the end of the list was not reached yet
+   } while (  pc != nullptr            // the end of the list was not reached yet
            && (is_expected_type_and_level(pc, type, level) == false));
-   return(pc);                     // the latest chunk is the searched one
+   return(pc);                         // the latest chunk is the searched one
 }
 
 

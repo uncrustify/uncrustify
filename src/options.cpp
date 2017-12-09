@@ -968,6 +968,8 @@ void register_options(void)
                   "Add or remove newline between '=' and '{'.");
    unc_add_option("nl_assign_square", UO_nl_assign_square, AT_IARF,
                   "Add or remove newline between '=' and '[' (D only).");
+   unc_add_option("nl_tsquare_brace", UO_nl_tsquare_brace, AT_IARF,
+                  "Add or remove newline between '[]' and '{'.");
    unc_add_option("nl_after_square_assign", UO_nl_after_square_assign, AT_IARF,
                   "Add or remove newline after '= [' (D only). Will also affect the newline before the ']'.");
    unc_add_option("nl_func_var_def_blk", UO_nl_func_var_def_blk, AT_UNUM,
