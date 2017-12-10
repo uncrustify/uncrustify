@@ -109,7 +109,6 @@ struct paren_stack_entry_t
    size_t        indent_tmp;   //! temporary indent level (depends on use)
    size_t        indent_tab;   //! the 'tab' indent (always <= real column)
    bool          indent_cont;  //! indent_continue was applied
-   int           ref;
    c_token_t     parent;       //! if, for, function, etc
    brace_stage_e stage;
    bool          in_preproc;   //! whether this was created in a preprocessor

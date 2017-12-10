@@ -415,7 +415,6 @@ static void indent_pse_push(parse_frame_t &frm, chunk_t *pc)
    frm.pse[frm.pse_tos].indent_tab  = frm.pse[frm.pse_tos - 1].indent_tab;
    frm.pse[frm.pse_tos].indent_cont = frm.pse[frm.pse_tos - 1].indent_cont;
 
-   frm.pse[frm.pse_tos].ref        = 1;
    frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC);
    frm.pse[frm.pse_tos].non_vardef = false;
    frm.pse[frm.pse_tos].ip         = frm.pse[frm.pse_tos - 1].ip;
