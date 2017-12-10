@@ -102,7 +102,7 @@ struct paren_stack_entry_t
 {
    c_token_t     type;         //! the type that opened the entry
    size_t        level;        //! Level of opening type
-   size_t        open_line;    //! line that open symbol is on
+   size_t        open_line;    //! line that open symbol is on, only for logging purposes
    chunk_t       *pc;          //! Chunk that opened the level
    int           brace_indent; //! indent for braces - may not relate to indent
    size_t        indent;       //! indent level (depends on use)
