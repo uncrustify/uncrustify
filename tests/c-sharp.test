@@ -83,3 +83,5 @@
 11030  U08-Cpp.cfg                          cs/argtypes.mm
 11031  U09-Cpp.cfg                          cs/casting.mm
 11032  U10-Cpp.cfg                          cs/newlines.mm
+11072  U07-Cs.cfg                           cs/UNI-2007.cs
+11073  U08-Cs.cfg                           cs/UNI-2008.cs
