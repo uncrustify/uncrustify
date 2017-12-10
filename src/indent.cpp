@@ -842,6 +842,34 @@ static void handle_preproc(parse_frame_t &frm, chunk_t *pc, size_t indent_size)
 } // handle_preproc
 
 
+static void quick_indent_again(void)
+{
+   LOG_FUNC_ENTRY();
+
+   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   {
+      if (pc->indent.ref == nullptr)
+      {
+         continue;
+      }
+
+      chunk_t *tmp = chunk_get_prev(pc);
+      if (!chunk_is_newline(tmp))
+      {
+         continue;
+      }
+
+      const size_t col = pc->indent.ref->column + pc->indent.delta;
+      indent_to_column(pc, col);
+
+      LOG_FMT(LINDENTAG, "%s(%d): [%zu] indent [%s] to %zu based on [%s] @ %zu:%zu\n",
+              __func__, __LINE__, pc->orig_line, pc->text(), col,
+              pc->indent.ref->text(), pc->indent.ref->orig_line,
+              pc->indent.ref->column);
+   }
+}
+
+
 void indent_text(void)
 {
    LOG_FUNC_ENTRY();

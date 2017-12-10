@@ -56,7 +56,4 @@ bool ifdef_over_whole_file(void);
 void reindent_line(chunk_t *pc, size_t column);
 
 
-void quick_indent_again(void);
-
-
 #endif /* INDENT_H_INCLUDED */

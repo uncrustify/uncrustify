@@ -396,30 +396,6 @@ void quick_align_again(void)
 }
 
 
-void quick_indent_again(void)
-{
-   LOG_FUNC_ENTRY();
-
-   for (chunk_t *pc = chunk_get_head(); pc; pc = chunk_get_next(pc))
-   {
-      if (pc->indent.ref)
-      {
-         chunk_t *tmp = chunk_get_prev(pc);
-         if (chunk_is_newline(tmp))
-         {
-            size_t col = pc->indent.ref->column + pc->indent.delta;
-
-            indent_to_column(pc, col);
-            LOG_FMT(LINDENTAG, "%s(%d): [%zu] indent [%s] to %zu based on [%s] @ %zu:%zu\n",
-                    __func__, __LINE__, pc->orig_line, pc->text(), col,
-                    pc->indent.ref->text(),
-                    pc->indent.ref->orig_line, pc->indent.ref->column);
-         }
-      }
-   }
-}
-
-
 void align_all(void)
 {
    LOG_FUNC_ENTRY();
