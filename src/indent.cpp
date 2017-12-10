@@ -332,12 +332,13 @@ void reindent_line(chunk_t *pc, size_t column)
             save_set_options_for_QT(pc->level);
          }
       }
-      chunk_t *next = chunk_get_next(pc);
 
+      chunk_t *next = chunk_get_next(pc);
       if (next == nullptr)
       {
          break;
       }
+
       if (pc->nl_count)
       {
          min_col   = 0;
@@ -346,10 +347,10 @@ void reindent_line(chunk_t *pc, size_t column)
       min_col += space_col_align(pc, next);
       pc       = next;
 
-      bool is_comment = chunk_is_comment(pc);
-      bool keep       = (  is_comment
-                        && chunk_is_single_line_comment(pc)
-                        && cpd.settings[UO_indent_relative_single_line_comments].b);
+      const bool is_comment = chunk_is_comment(pc);
+      const bool keep       = (  is_comment
+                              && chunk_is_single_line_comment(pc)
+                              && cpd.settings[UO_indent_relative_single_line_comments].b);
 
       if (  is_comment
          && pc->parent_type != CT_COMMENT_EMBED
@@ -361,7 +362,7 @@ void reindent_line(chunk_t *pc, size_t column)
       }
       else
       {
-         auto tmp_col = static_cast<int>(pc->column) + col_delta;
+         const auto tmp_col = static_cast<int>(pc->column) + col_delta;
          pc->column = max(tmp_col, static_cast<int>(min_col));
 
          LOG_FMT(LINDLINED, "   set column of ");
