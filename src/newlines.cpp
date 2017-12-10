@@ -1758,7 +1758,8 @@ static void newlines_brace_pair(chunk_t *br_open)
    // Make sure we don't break a one-liner
    if (!one_liner_nl_ok(br_open))
    {
-      LOG_FMT(LNL1LINE, "%s(%d): a new line may NOT be added\n", __func__, __LINE__);
+      LOG_FMT(LNL1LINE, "%s(%d): br_open->orig_line is %zu, br_open->orig_col is %zu, a new line may NOT be added\n",
+              __func__, __LINE__, br_open->orig_line, br_open->orig_col);
       return;
    }
 
