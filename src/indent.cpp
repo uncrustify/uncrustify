@@ -767,7 +767,6 @@ static void handle_preproc(parse_frame_t &frm, chunk_t *pc, size_t indent_size)
    }
 
    // Transition into a preproc by creating a dummy indent
-   frm.level++;
    chunk_t *pp_next = chunk_get_next(pc);
    if (pp_next == nullptr)
    {
@@ -982,7 +981,6 @@ void indent_text(void)
                && frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN)
             {
                indent_pse_pop(frm, pc);
-               frm.level--;
                pc = chunk_get_next(pc);
                if (!pc)
                {
@@ -1187,12 +1185,10 @@ void indent_text(void)
             }
 
             indent_pse_pop(frm, pc);
-            frm.level--;
          }
       }
       else if (pc->type == CT_VBRACE_OPEN)
       {
-         frm.level++;
          indent_pse_push(frm, pc);
 
          size_t iMinIndent = cpd.settings[UO_indent_min_vbrace_open].u;
@@ -1218,7 +1214,6 @@ void indent_text(void)
       else if (  pc->type == CT_BRACE_OPEN
               && (pc->next != nullptr && pc->next->type != CT_NAMESPACE))
       {
-         frm.level++;
          indent_pse_push(frm, pc);
 
          if (  cpd.settings[UO_indent_cpp_lambda_body].b
@@ -1527,7 +1522,6 @@ void indent_text(void)
          if (frm.pse[frm.pse_tos].type == CT_SQL_BEGIN)
          {
             indent_pse_pop(frm, pc);
-            frm.level--;
             indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
             log_indent_tmp();
          }
@@ -1536,7 +1530,6 @@ void indent_text(void)
               || pc->type == CT_MACRO_OPEN
               || pc->type == CT_CLASS)
       {
-         frm.level++;
          indent_pse_push(frm, pc);
          controlPSECountMinus(frm.pse_tos);
          frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
@@ -1547,7 +1540,6 @@ void indent_text(void)
       }
       else if (pc->type == CT_SQL_EXEC)
       {
-         frm.level++;
          indent_pse_push(frm, pc);
          controlPSECountMinus(frm.pse_tos);
          frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
