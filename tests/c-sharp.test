@@ -72,6 +72,8 @@
 10027  U01-Cs.cfg                           cs/oneline_property.cs
 10028  U02-Cs.cfg                           cs/ifcolalign.cs
 10029  U03-Cs.cfg                           cs/when.cs
+10033! U11-Cpp.cfg                          cs/objc.mm
+10034  U12-Cpp.cfg                          cs/asm.h.mm
 10035  U13-Cpp.cfg                          cs/definesalign.h.mm
 10036  U14-Cpp.cfg                          cs/inttypes.h.mm
 10039  615_nested_usings.cfg                cs/615_nested-usings.cs
