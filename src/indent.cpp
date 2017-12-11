@@ -1014,7 +1014,6 @@ void indent_text(void)
             }
 
             if (  (frm.pse[frm.pse_tos].type == CT_MEMBER)
-               && (strcmp(pc->text(), ".") == 0)
                && frm.pse[frm.pse_tos].pop_pc == pc)
             {
                indent_pse_pop(frm, pc);
