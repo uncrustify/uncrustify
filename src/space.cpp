@@ -828,7 +828,18 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    if (first->type == CT_ANGLE_OPEN || second->type == CT_ANGLE_CLOSE)
    {
       log_rule("sp_inside_angle");
-      return(cpd.settings[UO_sp_inside_angle].a);
+
+      argval_t op = cpd.settings[UO_sp_inside_angle].a;
+
+      // special: if we're not supporting digraphs, then we shouldn't create them!
+      if (  (op == AV_REMOVE)
+         && !cpd.settings[UO_enable_digraphs].b
+         && (first->type == CT_ANGLE_OPEN) && (second->type == CT_DC_MEMBER))
+      {
+         op = AV_IGNORE;
+      }
+
+      return(op);
    }
    if (second->type == CT_ANGLE_OPEN)
    {
@@ -2006,7 +2017,7 @@ void space_text(void)
       else
       {
          LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, '%s' type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+                 __func__, __LINE__ + 23, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       }
       if (  (cpd.settings[UO_use_options_overriding_for_qt_macros].b)
          && (  (strcmp(pc->text(), "SIGNAL") == 0)
@@ -2157,7 +2168,7 @@ void space_text(void)
 
          int min_sp;
          LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, pc-text() '%s', type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+                 __func__, __LINE__ + 23, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
          argval_t av = do_space_ensured(pc, next, min_sp, false);
          min_sp = max(1, min_sp);
          switch (av)

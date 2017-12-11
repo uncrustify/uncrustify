@@ -1,4 +1,4 @@
-x = reinterpret_cast<::Symbol *>();
+x = reinterpret_cast< ::Symbol *>();
 
 int b()
 {

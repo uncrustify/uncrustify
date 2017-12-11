@@ -546,6 +546,7 @@
 10069  empty.cfg                            cpp/UNI-1980.cpp
 10070  U21-Cpp.cfg                          cpp/UNI-1981.cpp
 10071  empty.cfg                            cpp/UNI-1983.cpp
+10079  U23-Cpp.cfg                          cpp/UNI-9650.cpp
 10080  UNI-10496.cfg                        cpp/UNI-10496.cpp
 10100  issue_564.cfg                        cpp/issue_564.cpp
 60017  U27-Cpp.cfg                          cpp/UNI-2683.cpp
