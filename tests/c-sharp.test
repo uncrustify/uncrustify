@@ -84,6 +84,7 @@
 10077  U09-Cs.cfg                           cs/UNI-1919.cs
 10102  U24-Cpp.cfg                          cs/pp-ignore.mm
 10103  U11-Cs.cfg                           cs/UNI-2506.cs
+10104  empty.cfg                            cs/UNI-2505.cs
 11030  U08-Cpp.cfg                          cs/argtypes.mm
 11031  U09-Cpp.cfg                          cs/casting.mm
 11032  U10-Cpp.cfg                          cs/newlines.mm
