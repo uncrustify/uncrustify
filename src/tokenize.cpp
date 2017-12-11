@@ -170,18 +170,6 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc);
 
 
 /**
- * Interpolated strings start with $" end with a single "
- * Double quotes are escaped by doubling.
- * Need to track embedded { } pairs and ignore anything between.
- *
- * @param pc  The structure to update, str is an input.
- *
- * @return Whether a string was parsed
- */
-//static bool parse_cs_interpolated_string(tok_ctx &ctx, chunk_t &pc);
-
-
-/**
  * VALA verbatim string, ends with three quotes (""")
  *
  * @param pc  The structure to update, str is an input.
@@ -1847,7 +1835,6 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
          idx++;
       }
 
-      //auto is_real = false;
       if (  ((cpd.lang_flags & LANG_CPP) || (cpd.lang_flags & LANG_C))
          && ctx.peek(idx) == 'R')
       {
