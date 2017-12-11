@@ -854,7 +854,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       if (second->type == CT_FPAREN_OPEN || second->type == CT_PAREN_OPEN)
       {
          chunk_t *next = chunk_get_next_ncnl(second);
-         if (next && next->type == CT_FPAREN_CLOSE)
+         if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
             log_rule("sp_angle_paren_empty");
             return(cpd.settings[UO_sp_angle_paren_empty].a);
@@ -951,7 +951,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          && second->type == CT_FPAREN_OPEN)
       {
          chunk_t *next = chunk_get_next_ncnl(second);
-         if (next && next->type == CT_FPAREN_CLOSE)
+         if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
             log_rule("sp_after_operator_sym_empty");
             return(cpd.settings[UO_sp_after_operator_sym_empty].a);
@@ -972,7 +972,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          && second->type == CT_FPAREN_OPEN)
       {
          chunk_t *next = chunk_get_next_ncnl(second);
-         if (next && next->type == CT_FPAREN_CLOSE)
+         if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
             log_rule("sp_func_call_paren_empty");
             return(cpd.settings[UO_sp_func_call_paren_empty].a);
@@ -997,7 +997,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          && second->type == CT_FPAREN_OPEN)
       {
          chunk_t *next = chunk_get_next_ncnl(second);
-         if (next && next->type == CT_FPAREN_CLOSE)
+         if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
             log_rule("sp_func_def_paren_empty");
             return(cpd.settings[UO_sp_func_def_paren_empty].a);
@@ -1057,7 +1057,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          && second->type == CT_FPAREN_OPEN)
       {
          chunk_t *next = chunk_get_next_ncnl(second);
-         if (next && next->type == CT_FPAREN_CLOSE)
+         if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
             log_rule("sp_func_proto_paren_empty");
             return(cpd.settings[UO_sp_func_proto_paren_empty].a);
@@ -1072,7 +1072,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          && second->type == CT_FPAREN_OPEN)
       {
          chunk_t *next = chunk_get_next_ncnl(second);
-         if (next && next->type == CT_FPAREN_CLOSE)
+         if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
             log_rule("sp_func_class_paren_empty");
             return(cpd.settings[UO_sp_func_class_paren_empty].a);
@@ -1609,7 +1609,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    if (first->type == CT_PTR_TYPE && CharTable::IsKw1(second->str[0]))
    {
       chunk_t *prev = chunk_get_prev(first);
-      if (prev != nullptr && prev->type == CT_IN)
+      if (chunk_is_token(prev, CT_IN))
       {
          log_rule("sp_deref");
          return(cpd.settings[UO_sp_deref].a);
@@ -1638,7 +1638,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          do
          {
             next = chunk_get_next(next);
-         } while (next != nullptr && next->type == CT_PTR_TYPE);
+         } while (chunk_is_token(next, CT_PTR_TYPE));
 
          if (  next != nullptr
             && (next->type == CT_FUNC_DEF || next->type == CT_FUNC_PROTO))
@@ -1650,7 +1650,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       if (cpd.settings[UO_sp_before_unnamed_ptr_star].a != AV_IGNORE)
       {
          chunk_t *next = chunk_get_next_nc(second);
-         while (next != nullptr && next->type == CT_PTR_TYPE)
+         while (chunk_is_token(next, CT_PTR_TYPE))
          {
             next = chunk_get_next_nc(next);
          }

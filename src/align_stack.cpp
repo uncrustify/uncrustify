@@ -368,7 +368,7 @@ void AlignStack::Flush()
          if (pc->align.start->type == CT_NEG)
          {
             tmp = chunk_get_next(pc->align.start);
-            if (tmp != nullptr && tmp->type == CT_NUMBER)
+            if (chunk_is_token(tmp, CT_NUMBER))
             {
                start_len += tmp->len();
             }
