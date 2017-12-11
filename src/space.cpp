@@ -2017,7 +2017,7 @@ void space_text(void)
       else
       {
          LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, '%s' type is %s\n",
-                 __func__, __LINE__ + 23, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       }
       if (  (cpd.settings[UO_use_options_overriding_for_qt_macros].b)
          && (  (strcmp(pc->text(), "SIGNAL") == 0)
@@ -2168,7 +2168,7 @@ void space_text(void)
 
          int min_sp;
          LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, pc-text() '%s', type is %s\n",
-                 __func__, __LINE__ + 23, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
          argval_t av = do_space_ensured(pc, next, min_sp, false);
          min_sp = max(1, min_sp);
          switch (av)
