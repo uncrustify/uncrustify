@@ -1,6 +1,5 @@
 /**
  * @file punctuators.h
- * Automatically generated
  */
 
 #ifndef PUNCTUATORS_H_INCLUDED

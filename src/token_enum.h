@@ -154,7 +154,9 @@ enum c_token_t
    CT_PRIVATE,
    CT_PRIVATE_COLON,
    CT_THROW,
+   CT_NOEXCEPT,
    CT_TRY,
+   CT_BRACED_INIT_LIST,
    CT_USING,
    CT_USING_STMT,       // using (xxx) ...
    CT_D_WITH,           // D: paren+braced
@@ -227,6 +229,7 @@ enum c_token_t
    CT_MACRO,            // a macro def
    CT_QUALIFIER,        // static, const, etc
    CT_EXTERN,           // extern
+   CT_DECLSPEC,         // __declspec
    CT_ALIGN,            // paren'd qualifier: align(4) struct a { }
    CT_TYPE,
    CT_PTR_TYPE,         // a '*' as part of a type

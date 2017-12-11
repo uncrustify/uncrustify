@@ -1,0 +1,481 @@
+space_text(): orig_line is , orig_col is , 'struct' type is STRUCT
+space_text(): back-to-back words need a space: pc->text() 'struct', next->text() 'TelegramIndex'
+space_text(): orig_line is , orig_col is , pc-text() 'struct', type is STRUCT
+do_space(): orig_line is , orig_col is , first->text() 'struct', type is STRUCT
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'struct', [STRUCT/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'TelegramIndex', [TYPE/STRUCT] : rule ADD as default value[line ] <force between 'struct' and 'TelegramIndex'>space_text(): rule = ADD @  => 
+space_text(): orig_line is , orig_col is , 'TelegramIndex' type is TYPE
+space_text(): orig_line is , orig_col is , pc-text() 'TelegramIndex', type is TYPE
+do_space(): orig_line is , orig_col is , first->text() 'TelegramIndex', type is TYPE
+space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , '{' type is BRACE_OPEN
+space_text(): orig_line is , orig_col is , pc-text() '{', type is BRACE_OPEN
+do_space(): orig_line is , orig_col is , first->text() '{', type is BRACE_OPEN
+space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , 'TelegramIndex' type is FUNC_CLASS_DEF
+space_text(): orig_line is , orig_col is , pc-text() 'TelegramIndex', type is FUNC_CLASS_DEF
+do_space(): orig_line is , orig_col is , first->text() 'TelegramIndex', type is FUNC_CLASS_DEF
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'TelegramIndex', [FUNC_CLASS_DEF/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() '(', [FPAREN_OPEN/FUNC_CLASS_DEF] : rule sp_func_class_paren[line ]space_text(): rule = IGNORE @  => 
+space_text(): orig_line is , orig_col is , '(' type is FPAREN_OPEN
+space_text(): orig_line is , orig_col is , pc-text() '(', type is FPAREN_OPEN
+do_space(): orig_line is , orig_col is , first->text() '(', type is FPAREN_OPEN
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is '(', [FPAREN_OPEN/FUNC_CLASS_DEF] <===>
+   second->orig_line is , second->orig_col is , second->text() 'const', [QUALIFIER/NONE] : rule sp_inside_fparen[line ]space_text(): rule = IGNORE @  => 
+space_text(): orig_line is , orig_col is , 'const' type is QUALIFIER
+space_text(): back-to-back words need a space: pc->text() 'const', next->text() 'char'
+space_text(): orig_line is , orig_col is , pc-text() 'const', type is QUALIFIER
+do_space(): orig_line is , orig_col is , first->text() 'const', type is QUALIFIER
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'const', [QUALIFIER/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'char', [TYPE/NONE] : rule sp_after_type[line ] <force between 'const' and 'char'>space_text(): rule = FORCE @  => 
+space_text(): orig_line is , orig_col is , 'char' type is TYPE
+space_text(): orig_line is , orig_col is , pc-text() 'char', type is TYPE
+do_space(): orig_line is , orig_col is , first->text() 'char', type is TYPE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'char', [TYPE/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() '*', [PTR_TYPE/NONE] : rule IGNORE[line ]space_text(): rule = IGNORE @  => 
+space_text(): orig_line is , orig_col is , '*' type is PTR_TYPE
+space_text(): orig_line is , orig_col is , pc-text() '*', type is PTR_TYPE
+do_space(): orig_line is , orig_col is , first->text() '*', type is PTR_TYPE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is '*', [PTR_TYPE/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'pN', [WORD/NONE] : rule IGNORE[line ]space_text(): rule = IGNORE @  => 
+space_text(): orig_line is , orig_col is , 'pN' type is WORD
+space_text(): orig_line is , orig_col is , pc-text() 'pN', type is WORD
+do_space(): orig_line is , orig_col is , first->text() 'pN', type is WORD
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'pN', [WORD/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() ',', [COMMA/NONE] : rule sp_before_comma[line ]space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , ',' type is COMMA
+space_text(): orig_line is , orig_col is , pc-text() ',', type is COMMA
+do_space(): orig_line is , orig_col is , first->text() ',', type is COMMA
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is ',', [COMMA/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'unsigned', [TYPE/NONE] : rule sp_after_comma[line ]space_text(): rule = IGNORE @  => 
+space_text(): orig_line is , orig_col is , 'unsigned' type is TYPE
+space_text(): back-to-back words need a space: pc->text() 'unsigned', next->text() 'long'
+space_text(): orig_line is , orig_col is , pc-text() 'unsigned', type is TYPE
+do_space(): orig_line is , orig_col is , first->text() 'unsigned', type is TYPE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'unsigned', [TYPE/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'long', [TYPE/NONE] : rule sp_after_type[line ] <force between 'unsigned' and 'long'>space_text(): rule = FORCE @  => 
+space_text(): orig_line is , orig_col is , 'long' type is TYPE
+space_text(): back-to-back words need a space: pc->text() 'long', next->text() 'nI'
+space_text(): orig_line is , orig_col is , pc-text() 'long', type is TYPE
+do_space(): orig_line is , orig_col is , first->text() 'long', type is TYPE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'long', [TYPE/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'nI', [WORD/NONE] : rule sp_after_type[line ] <force between 'long' and 'nI'>space_text(): rule = FORCE @  => 
+space_text(): orig_line is , orig_col is , 'nI' type is WORD
+space_text(): orig_line is , orig_col is , pc-text() 'nI', type is WORD
+do_space(): orig_line is , orig_col is , first->text() 'nI', type is WORD
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'nI', [WORD/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() ')', [FPAREN_CLOSE/FUNC_CLASS_DEF] : rule sp_inside_fparen[line ]space_text(): rule = IGNORE @  => 
+space_text(): orig_line is , orig_col is , ')' type is FPAREN_CLOSE
+space_text(): orig_line is , orig_col is , pc-text() ')', type is FPAREN_CLOSE
+do_space(): orig_line is , orig_col is , first->text() ')', type is FPAREN_CLOSE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is ')', [FPAREN_CLOSE/FUNC_CLASS_DEF] <===>
+   second->orig_line is , second->orig_col is , second->text() ':', [CONSTR_COLON/NONE] : rule ADD as default value[line ]space_text(): rule = ADD @  => 
+space_text(): orig_line is , orig_col is , ':' type is CONSTR_COLON
+space_text(): orig_line is , orig_col is , pc-text() ':', type is CONSTR_COLON
+do_space(): orig_line is , orig_col is , first->text() ':', type is CONSTR_COLON
+space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , 'pTelName' type is FUNC_CTOR_VAR
+space_text(): orig_line is , orig_col is , pc-text() 'pTelName', type is FUNC_CTOR_VAR
+do_space(): orig_line is , orig_col is , first->text() 'pTelName', type is FUNC_CTOR_VAR
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'pTelName', [FUNC_CTOR_VAR/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() '(', [FPAREN_OPEN/FUNC_CTOR_VAR] : rule sp_func_call_paren[line ]space_text(): rule = IGNORE @  => 
+space_text(): orig_line is , orig_col is , '(' type is FPAREN_OPEN
+space_text(): orig_line is , orig_col is , pc-text() '(', type is FPAREN_OPEN
+do_space(): orig_line is , orig_col is , first->text() '(', type is FPAREN_OPEN
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is '(', [FPAREN_OPEN/FUNC_CTOR_VAR] <===>
+   second->orig_line is , second->orig_col is , second->text() 'pN', [WORD/NONE] : rule sp_inside_fparen[line ]space_text(): rule = IGNORE @  => 
+space_text(): orig_line is , orig_col is , 'pN' type is WORD
+space_text(): orig_line is , orig_col is , pc-text() 'pN', type is WORD
+do_space(): orig_line is , orig_col is , first->text() 'pN', type is WORD
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'pN', [WORD/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() ')', [FPAREN_CLOSE/FUNC_CTOR_VAR] : rule sp_inside_fparen[line ]space_text(): rule = IGNORE @  => 
+space_text(): orig_line is , orig_col is , ')' type is FPAREN_CLOSE
+space_text(): orig_line is , orig_col is , pc-text() ')', type is FPAREN_CLOSE
+do_space(): orig_line is , orig_col is , first->text() ')', type is FPAREN_CLOSE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is ')', [FPAREN_CLOSE/FUNC_CTOR_VAR] <===>
+   second->orig_line is , second->orig_col is , second->text() ',', [COMMA/NONE] : rule sp_before_comma[line ]space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , ',' type is COMMA
+space_text(): orig_line is , orig_col is , pc-text() ',', type is COMMA
+do_space(): orig_line is , orig_col is , first->text() ',', type is COMMA
+space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , 'nTelIndex' type is FUNC_CTOR_VAR
+space_text(): orig_line is , orig_col is , pc-text() 'nTelIndex', type is FUNC_CTOR_VAR
+do_space(): orig_line is , orig_col is , first->text() 'nTelIndex', type is FUNC_CTOR_VAR
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'nTelIndex', [FUNC_CTOR_VAR/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() '(', [FPAREN_OPEN/FUNC_CTOR_VAR] : rule sp_func_call_paren[line ]space_text(): rule = IGNORE @  => 
+space_text(): orig_line is , orig_col is , '(' type is FPAREN_OPEN
+space_text(): orig_line is , orig_col is , pc-text() '(', type is FPAREN_OPEN
+do_space(): orig_line is , orig_col is , first->text() '(', type is FPAREN_OPEN
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is '(', [FPAREN_OPEN/FUNC_CTOR_VAR] <===>
+   second->orig_line is , second->orig_col is , second->text() 'n', [WORD/NONE] : rule sp_inside_fparen[line ]space_text(): rule = IGNORE @  => 
+space_text(): orig_line is , orig_col is , 'n' type is WORD
+space_text(): orig_line is , orig_col is , pc-text() 'n', type is WORD
+do_space(): orig_line is , orig_col is , first->text() 'n', type is WORD
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'n', [WORD/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() ')', [FPAREN_CLOSE/FUNC_CTOR_VAR] : rule sp_inside_fparen[line ]space_text(): rule = IGNORE @  => 
+space_text(): orig_line is , orig_col is , ')' type is FPAREN_CLOSE
+space_text(): orig_line is , orig_col is , pc-text() ')', type is FPAREN_CLOSE
+do_space(): orig_line is , orig_col is , first->text() ')', type is FPAREN_CLOSE
+space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , '{' type is BRACE_OPEN
+space_text(): orig_line is , orig_col is , pc-text() '{', type is BRACE_OPEN
+do_space(): orig_line is , orig_col is , first->text() '{', type is BRACE_OPEN
+space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , '}' type is BRACE_CLOSE
+space_text(): orig_line is , orig_col is , pc-text() '}', type is BRACE_CLOSE
+do_space(): orig_line is , orig_col is , first->text() '}', type is BRACE_CLOSE
+space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , '~' type is DESTRUCTOR
+space_text(): orig_line is , orig_col is , pc-text() '~', type is DESTRUCTOR
+do_space(): orig_line is , orig_col is , first->text() '~', type is DESTRUCTOR
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is '~', [DESTRUCTOR/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'TelegramIndex', [FUNC_CLASS_DEF/DESTRUCTOR] : rule REMOVE[line ]space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , 'TelegramIndex' type is FUNC_CLASS_DEF
+space_text(): orig_line is , orig_col is , pc-text() 'TelegramIndex', type is FUNC_CLASS_DEF
+do_space(): orig_line is , orig_col is , first->text() 'TelegramIndex', type is FUNC_CLASS_DEF
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'TelegramIndex', [FUNC_CLASS_DEF/DESTRUCTOR] <===>
+   second->orig_line is , second->orig_col is , second->text() '(', [FPAREN_OPEN/FUNC_CLASS_DEF] : rule sp_func_class_paren[line ]space_text(): rule = IGNORE @  => 
+space_text(): orig_line is , orig_col is , '(' type is FPAREN_OPEN
+space_text(): orig_line is , orig_col is , pc-text() '(', type is FPAREN_OPEN
+do_space(): orig_line is , orig_col is , first->text() '(', type is FPAREN_OPEN
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is '(', [FPAREN_OPEN/FUNC_CLASS_DEF] <===>
+   second->orig_line is , second->orig_col is , second->text() ')', [FPAREN_CLOSE/FUNC_CLASS_DEF] : rule sp_inside_fparens[line ]space_text(): rule = IGNORE @  => 
+space_text(): orig_line is , orig_col is , ')' type is FPAREN_CLOSE
+space_text(): orig_line is , orig_col is , pc-text() ')', type is FPAREN_CLOSE
+do_space(): orig_line is , orig_col is , first->text() ')', type is FPAREN_CLOSE
+space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , '{' type is BRACE_OPEN
+space_text(): orig_line is , orig_col is , pc-text() '{', type is BRACE_OPEN
+do_space(): orig_line is , orig_col is , first->text() '{', type is BRACE_OPEN
+space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , '}' type is BRACE_CLOSE
+space_text(): orig_line is , orig_col is , pc-text() '}', type is BRACE_CLOSE
+do_space(): orig_line is , orig_col is , first->text() '}', type is BRACE_CLOSE
+space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , 'const' type is QUALIFIER
+space_text(): back-to-back words need a space: pc->text() 'const', next->text() 'char'
+space_text(): orig_line is , orig_col is , pc-text() 'const', type is QUALIFIER
+do_space(): orig_line is , orig_col is , first->text() 'const', type is QUALIFIER
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'const', [QUALIFIER/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'char', [TYPE/NONE] : rule sp_after_type[line ] <force between 'const' and 'char'>space_text(): rule = FORCE @  => 
+space_text(): orig_line is , orig_col is , 'char' type is TYPE
+space_text(): orig_line is , orig_col is , pc-text() 'char', type is TYPE
+do_space(): orig_line is , orig_col is , first->text() 'char', type is TYPE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'char', [TYPE/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() '*', [PTR_TYPE/NONE] : rule IGNORE[line ]space_text(): rule = IGNORE @  => 
+space_text(): orig_line is , orig_col is , '*' type is PTR_TYPE
+space_text(): orig_line is , orig_col is , pc-text() '*', type is PTR_TYPE
+do_space(): orig_line is , orig_col is , first->text() '*', type is PTR_TYPE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is '*', [PTR_TYPE/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'const', [QUALIFIER/NONE] : rule IGNORE[line ]space_text(): rule = IGNORE @  => 
+space_text(): orig_line is , orig_col is , 'const' type is QUALIFIER
+space_text(): back-to-back words need a space: pc->text() 'const', next->text() 'pTelName'
+space_text(): orig_line is , orig_col is , pc-text() 'const', type is QUALIFIER
+do_space(): orig_line is , orig_col is , first->text() 'const', type is QUALIFIER
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'const', [QUALIFIER/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'pTelName', [WORD/NONE] : rule sp_after_type[line ] <force between 'const' and 'pTelName'>space_text(): rule = FORCE @  => 
+space_text(): orig_line is , orig_col is , 'pTelName' type is WORD
+space_text(): orig_line is , orig_col is , pc-text() 'pTelName', type is WORD
+do_space(): orig_line is , orig_col is , first->text() 'pTelName', type is WORD
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'pTelName', [WORD/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() ';', [SEMICOLON/NONE] : rule sp_before_semi[line ]space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , ';' type is SEMICOLON
+space_text(): orig_line is , orig_col is , pc-text() ';', type is SEMICOLON
+do_space(): orig_line is , orig_col is , first->text() ';', type is SEMICOLON
+space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , 'unsigned' type is TYPE
+space_text(): back-to-back words need a space: pc->text() 'unsigned', next->text() 'long'
+space_text(): orig_line is , orig_col is , pc-text() 'unsigned', type is TYPE
+do_space(): orig_line is , orig_col is , first->text() 'unsigned', type is TYPE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'unsigned', [TYPE/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'long', [TYPE/NONE] : rule sp_after_type[line ] <force between 'unsigned' and 'long'>space_text(): rule = FORCE @  => 
+space_text(): orig_line is , orig_col is , 'long' type is TYPE
+space_text(): back-to-back words need a space: pc->text() 'long', next->text() 'nTelIndex'
+space_text(): orig_line is , orig_col is , pc-text() 'long', type is TYPE
+do_space(): orig_line is , orig_col is , first->text() 'long', type is TYPE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'long', [TYPE/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'nTelIndex', [WORD/NONE] : rule sp_after_type[line ] <force between 'long' and 'nTelIndex'>space_text(): rule = FORCE @  => 
+space_text(): orig_line is , orig_col is , 'nTelIndex' type is WORD
+space_text(): orig_line is , orig_col is , pc-text() 'nTelIndex', type is WORD
+do_space(): orig_line is , orig_col is , first->text() 'nTelIndex', type is WORD
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'nTelIndex', [WORD/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() ';', [SEMICOLON/NONE] : rule sp_before_semi[line ]space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , ';' type is SEMICOLON
+space_text(): orig_line is , orig_col is , pc-text() ';', type is SEMICOLON
+do_space(): orig_line is , orig_col is , first->text() ';', type is SEMICOLON
+space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , '}' type is BRACE_CLOSE
+space_text(): orig_line is , orig_col is , pc-text() '}', type is BRACE_CLOSE
+do_space(): orig_line is , orig_col is , first->text() '}', type is BRACE_CLOSE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is '}', [BRACE_CLOSE/STRUCT] <===>
+   second->orig_line is , second->orig_col is , second->text() ';', [SEMICOLON/STRUCT] : rule sp_before_semi[line ]space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , ';' type is SEMICOLON
+space_text(): orig_line is , orig_col is , pc-text() ';', type is SEMICOLON
+do_space(): orig_line is , orig_col is , first->text() ';', type is SEMICOLON
+space_text(): rule = REMOVE @  => 
+space_text(): orig_line is , orig_col is , NEWLINE
+space_col_align(): orig_line is , orig_col is , [FUNC_CLASS_DEF/NONE] 'TelegramIndex' <==> orig_line is , orig_col is  [FPAREN_OPEN/FUNC_CLASS_DEF] '(' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'TelegramIndex', type is FUNC_CLASS_DEF
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'TelegramIndex', [FUNC_CLASS_DEF/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() '(', [FPAREN_OPEN/FUNC_CLASS_DEF] : rule sp_func_class_paren[line ]
+space_col_align(): av is ignore
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <==> orig_line is , orig_col is  [QUALIFIER/NONE] 'const' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() '(', type is FPAREN_OPEN
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is '(', [FPAREN_OPEN/FUNC_CLASS_DEF] <===>
+   second->orig_line is , second->orig_col is , second->text() 'const', [QUALIFIER/NONE] : rule sp_inside_fparen[line ]
+space_col_align(): av is ignore
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [QUALIFIER/NONE] 'const' <==> orig_line is , orig_col is  [TYPE/NONE] 'char' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'const', type is QUALIFIER
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'const', [QUALIFIER/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'char', [TYPE/NONE] : rule sp_after_type[line ]
+ <force between 'const' and 'char'>space_col_align(): av is force
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'char' <==> orig_line is , orig_col is  [PTR_TYPE/NONE] '*' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'char', type is TYPE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'char', [TYPE/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() '*', [PTR_TYPE/NONE] : rule IGNORE[line ]
+space_col_align(): av is ignore
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [PTR_TYPE/NONE] '*' <==> orig_line is , orig_col is  [WORD/NONE] 'pN' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() '*', type is PTR_TYPE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is '*', [PTR_TYPE/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'pN', [WORD/NONE] : rule IGNORE[line ]
+space_col_align(): av is ignore
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'pN' <==> orig_line is , orig_col is  [COMMA/NONE] ',' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'pN', type is WORD
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'pN', [WORD/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() ',', [COMMA/NONE] : rule sp_before_comma[line ]
+space_col_align(): av is remove
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [COMMA/NONE] ',' <==> orig_line is , orig_col is  [TYPE/NONE] 'unsigned' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() ',', type is COMMA
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is ',', [COMMA/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'unsigned', [TYPE/NONE] : rule sp_after_comma[line ]
+space_col_align(): av is ignore
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'unsigned' <==> orig_line is , orig_col is  [TYPE/NONE] 'long' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'unsigned', type is TYPE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'unsigned', [TYPE/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'long', [TYPE/NONE] : rule sp_after_type[line ]
+ <force between 'unsigned' and 'long'>space_col_align(): av is force
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'long' <==> orig_line is , orig_col is  [WORD/NONE] 'nI' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'long', type is TYPE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'long', [TYPE/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'nI', [WORD/NONE] : rule sp_after_type[line ]
+ <force between 'long' and 'nI'>space_col_align(): av is force
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'nI' <==> orig_line is , orig_col is  [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'nI', type is WORD
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'nI', [WORD/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() ')', [FPAREN_CLOSE/FUNC_CLASS_DEF] : rule sp_inside_fparen[line ]
+space_col_align(): av is ignore
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <==> orig_line is , orig_col is  [CONSTR_COLON/NONE] ':' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() ')', type is FPAREN_CLOSE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is ')', [FPAREN_CLOSE/FUNC_CLASS_DEF] <===>
+   second->orig_line is , second->orig_col is , second->text() ':', [CONSTR_COLON/NONE] : rule ADD as default value[line ]
+space_col_align(): av is add
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [CONSTR_COLON/NONE] ':' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() ':', type is CONSTR_COLON
+space_col_align(): av is remove
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [FUNC_CTOR_VAR/NONE] 'pTelName' <==> orig_line is , orig_col is  [FPAREN_OPEN/FUNC_CTOR_VAR] '(' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'pTelName', type is FUNC_CTOR_VAR
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'pTelName', [FUNC_CTOR_VAR/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() '(', [FPAREN_OPEN/FUNC_CTOR_VAR] : rule sp_func_call_paren[line ]
+space_col_align(): av is ignore
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <==> orig_line is , orig_col is  [WORD/NONE] 'pN' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() '(', type is FPAREN_OPEN
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is '(', [FPAREN_OPEN/FUNC_CTOR_VAR] <===>
+   second->orig_line is , second->orig_col is , second->text() 'pN', [WORD/NONE] : rule sp_inside_fparen[line ]
+space_col_align(): av is ignore
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'pN' <==> orig_line is , orig_col is  [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'pN', type is WORD
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'pN', [WORD/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() ')', [FPAREN_CLOSE/FUNC_CTOR_VAR] : rule sp_inside_fparen[line ]
+space_col_align(): av is ignore
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' <==> orig_line is , orig_col is  [COMMA/NONE] ',' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() ')', type is FPAREN_CLOSE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is ')', [FPAREN_CLOSE/FUNC_CTOR_VAR] <===>
+   second->orig_line is , second->orig_col is , second->text() ',', [COMMA/NONE] : rule sp_before_comma[line ]
+space_col_align(): av is remove
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [COMMA/NONE] ',' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() ',', type is COMMA
+space_col_align(): av is remove
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [FUNC_CTOR_VAR/NONE] 'nTelIndex' <==> orig_line is , orig_col is  [FPAREN_OPEN/FUNC_CTOR_VAR] '(' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'nTelIndex', type is FUNC_CTOR_VAR
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'nTelIndex', [FUNC_CTOR_VAR/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() '(', [FPAREN_OPEN/FUNC_CTOR_VAR] : rule sp_func_call_paren[line ]
+space_col_align(): av is ignore
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <==> orig_line is , orig_col is  [WORD/NONE] 'n' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() '(', type is FPAREN_OPEN
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is '(', [FPAREN_OPEN/FUNC_CTOR_VAR] <===>
+   second->orig_line is , second->orig_col is , second->text() 'n', [WORD/NONE] : rule sp_inside_fparen[line ]
+space_col_align(): av is ignore
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'n' <==> orig_line is , orig_col is  [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'n', type is WORD
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'n', [WORD/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() ')', [FPAREN_CLOSE/FUNC_CTOR_VAR] : rule sp_inside_fparen[line ]
+space_col_align(): av is ignore
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() ')', type is FPAREN_CLOSE
+space_col_align(): av is remove
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [BRACE_OPEN/FUNC_CLASS_DEF] '{' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() '{', type is BRACE_OPEN
+space_col_align(): av is remove
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [BRACE_CLOSE/FUNC_CLASS_DEF] '}' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() '}', type is BRACE_CLOSE
+space_col_align(): av is remove
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [DESTRUCTOR/NONE] '~' <==> orig_line is , orig_col is  [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() '~', type is DESTRUCTOR
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is '~', [DESTRUCTOR/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'TelegramIndex', [FUNC_CLASS_DEF/DESTRUCTOR] : rule REMOVE[line ]
+space_col_align(): av is remove
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' <==> orig_line is , orig_col is  [FPAREN_OPEN/FUNC_CLASS_DEF] '(' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'TelegramIndex', type is FUNC_CLASS_DEF
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'TelegramIndex', [FUNC_CLASS_DEF/DESTRUCTOR] <===>
+   second->orig_line is , second->orig_col is , second->text() '(', [FPAREN_OPEN/FUNC_CLASS_DEF] : rule sp_func_class_paren[line ]
+space_col_align(): av is ignore
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <==> orig_line is , orig_col is  [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() '(', type is FPAREN_OPEN
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is '(', [FPAREN_OPEN/FUNC_CLASS_DEF] <===>
+   second->orig_line is , second->orig_col is , second->text() ')', [FPAREN_CLOSE/FUNC_CLASS_DEF] : rule sp_inside_fparens[line ]
+space_col_align(): av is ignore
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() ')', type is FPAREN_CLOSE
+space_col_align(): av is remove
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [BRACE_OPEN/FUNC_CLASS_DEF] '{' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() '{', type is BRACE_OPEN
+space_col_align(): av is remove
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [BRACE_CLOSE/FUNC_CLASS_DEF] '}' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() '}', type is BRACE_CLOSE
+space_col_align(): av is remove
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [QUALIFIER/NONE] 'const' <==> orig_line is , orig_col is  [TYPE/NONE] 'char' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'const', type is QUALIFIER
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'const', [QUALIFIER/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'char', [TYPE/NONE] : rule sp_after_type[line ]
+ <force between 'const' and 'char'>space_col_align(): av is force
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'char' <==> orig_line is , orig_col is  [PTR_TYPE/NONE] '*' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'char', type is TYPE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'char', [TYPE/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() '*', [PTR_TYPE/NONE] : rule IGNORE[line ]
+space_col_align(): av is ignore
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [PTR_TYPE/NONE] '*' <==> orig_line is , orig_col is  [QUALIFIER/NONE] 'const' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() '*', type is PTR_TYPE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is '*', [PTR_TYPE/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'const', [QUALIFIER/NONE] : rule IGNORE[line ]
+space_col_align(): av is ignore
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [QUALIFIER/NONE] 'const' <==> orig_line is , orig_col is  [WORD/NONE] 'pTelName' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'const', type is QUALIFIER
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'const', [QUALIFIER/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'pTelName', [WORD/NONE] : rule sp_after_type[line ]
+ <force between 'const' and 'pTelName'>space_col_align(): av is force
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'pTelName' <==> orig_line is , orig_col is  [SEMICOLON/NONE] ';' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'pTelName', type is WORD
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'pTelName', [WORD/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() ';', [SEMICOLON/NONE] : rule sp_before_semi[line ]
+space_col_align(): av is remove
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [SEMICOLON/NONE] ';' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() ';', type is SEMICOLON
+space_col_align(): av is remove
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'unsigned' <==> orig_line is , orig_col is  [TYPE/NONE] 'long' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'unsigned', type is TYPE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'unsigned', [TYPE/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'long', [TYPE/NONE] : rule sp_after_type[line ]
+ <force between 'unsigned' and 'long'>space_col_align(): av is force
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'long' <==> orig_line is , orig_col is  [WORD/NONE] 'nTelIndex' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'long', type is TYPE
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'long', [TYPE/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() 'nTelIndex', [WORD/NONE] : rule sp_after_type[line ]
+ <force between 'long' and 'nTelIndex'>space_col_align(): av is force
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'nTelIndex' <==> orig_line is , orig_col is  [SEMICOLON/NONE] ';' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() 'nTelIndex', type is WORD
+log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'nTelIndex', [WORD/NONE] <===>
+   second->orig_line is , second->orig_col is , second->text() ';', [SEMICOLON/NONE] : rule sp_before_semi[line ]
+space_col_align(): av is remove
+   len is 
+   => coldiff is 
+space_col_align(): orig_line is , orig_col is , [SEMICOLON/NONE] ';' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space(): orig_line is , orig_col is , first->text() ';', type is SEMICOLON
+space_col_align(): av is remove
+   len is 
+   => coldiff is 

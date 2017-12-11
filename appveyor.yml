@@ -2,8 +2,13 @@ version: "{build}"
 platform: x64
 environment:
   matrix:
-     - CONFIG: Debug
-     - CONFIG: Release
+  # MSVC
+  - GENERATOR: Visual Studio 15 2017 Win64
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+  - GENERATOR: Visual Studio 14 2015 Win64
+configuration:
+  - Debug
+  - Release
 clone_folder: C:\projects\uncrustify
 branches:
   only:
@@ -16,17 +21,15 @@ skip_tags: true
 
 install:
   - "SET PATH=C:/Python35-x64;C:/Python35-x64/Scripts;%PATH%"
-build_script:
-  - echo Running CMake...
+before_build:
   - cd c:\projects\uncrustify
   - mkdir build
   - cd build
-  - cmake -G "Visual Studio 14 2015 Win64" ..
-  - set MSBuildLogger="C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-  - set MSBuildOptions=/v:m /p:Configuration=%CONFIG% /logger:%MSBuildLogger%
-  - msbuild %MSBuildOptions% uncrustify.sln
+  - cmake -DCMAKE_BUILD_TYPE=%CONFIGURATION% -G "%GENERATOR%" ..
+build_script:
+  - cmake --build . --config %CONFIGURATION%
 test_script:
 #  - echo This is for test only
 #  - C:/projects/uncrustify/build/Debug/uncrustify.exe -c C:/projects/uncrustify/tests/config/mono.cfg -f C:/projects/uncrustify/tests/input/cs/simple.cs -L 66
-  - ctest -C %CONFIG% -V
+  - ctest -C %CONFIGURATION% -V
 deploy: off

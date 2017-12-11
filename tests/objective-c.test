@@ -92,7 +92,9 @@
 50603  obj-c.cfg                                    oc/gh511.m
 50604  objc_bug_497.cfg                             oc/bug_497.m
 50605  empty.cfg                                    oc/bug_404.m
+50606  obj-c.cfg                                    oc/bug_1366.m
 
 50700  cmt_insert-0.cfg                             oc/cmt_insert.m
 
-50800  obj-c-properties.cfg                               oc/properties.m
+50800  obj-c-properties.cfg                         oc/properties.m
+50801  empty.cfg                                    oc/i1213.m

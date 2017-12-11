@@ -1,19 +1,19 @@
-# Uncrustify-0.65-106-9518877-dirty
+# Uncrustify-0.66
 #
 # General options
 #
 
 newlines                        { Auto, LF, CR, CRLF }
-  The type of line endings. Default=Auto
+  The type of line endings. Default=Auto.
 
 input_tab_size                  Unsigned Number
-  The original size of tabs in the input. Default=8
+  The original size of tabs in the input. Default=8.
 
 output_tab_size                 Unsigned Number
-  The size of tabs in the output (only used if align_with_tabs=true). Default=8
+  The size of tabs in the output (only used if align_with_tabs=true). Default=8.
 
 string_escape_char              Unsigned Number
-  The ASCII value of the string escape char, usually 92 (\) or 94 (^). (Pawn)
+  The ASCII value of the string escape char, usually 92 (\) or 94 (^). (Pawn).
 
 string_escape_char2             Unsigned Number
   Alternate string escape char for Pawn. Only works right before the quote char.
@@ -33,16 +33,16 @@ enable_processing_cmt           String
   Override the default ' *INDENT-ON*' in comments for enabling processing of part of the file.
 
 enable_digraphs                 { False, True }
-  Enable parsing of digraphs. Default=False
+  Enable parsing of digraphs. Default=False.
 
 utf8_bom                        { Ignore, Add, Remove, Force }
-  Control what to do with the UTF-8 BOM (recommend 'remove')
+  Control what to do with the UTF-8 BOM (recommend 'remove').
 
 utf8_byte                       { False, True }
-  If the file contains bytes with values between 128 and 255, but is not UTF-8, then output as UTF-8
+  If the file contains bytes with values between 128 and 255, but is not UTF-8, then output as UTF-8.
 
 utf8_force                      { False, True }
-  Force the output encoding to UTF-8
+  Force the output encoding to UTF-8.
 
 #
 # Spacing options
@@ -50,19 +50,22 @@ utf8_force                      { False, True }
 
 sp_arith                        { Ignore, Add, Remove, Force }
   Add or remove space around arithmetic operator '+', '-', '/', '*', etc
-  also '>>>' '<<' '>>' '%' '|'
+  also '>>>' '<<' '>>' '%' '|'.
+
+sp_arith_additive               { Ignore, Add, Remove, Force }
+  Add or remove space around arithmetic operator '+' and '-'. Overrides sp_arith
 
 sp_assign                       { Ignore, Add, Remove, Force }
-  Add or remove space around assignment operator '=', '+=', etc
+  Add or remove space around assignment operator '=', '+=', etc.
 
 sp_cpp_lambda_assign            { Ignore, Add, Remove, Force }
-  Add or remove space around '=' in C++11 lambda capture specifications. Overrides sp_assign
+  Add or remove space around '=' in C++11 lambda capture specifications. Overrides sp_assign.
 
 sp_cpp_lambda_paren             { Ignore, Add, Remove, Force }
   Add or remove space after the capture specification in C++11 lambda.
 
 sp_assign_default               { Ignore, Add, Remove, Force }
-  Add or remove space around assignment operator '=' in a prototype
+  Add or remove space around assignment operator '=' in a prototype.
 
 sp_before_assign                { Ignore, Add, Remove, Force }
   Add or remove space before assignment operator '=', '+=', etc. Overrides sp_assign.
@@ -71,10 +74,10 @@ sp_after_assign                 { Ignore, Add, Remove, Force }
   Add or remove space after assignment operator '=', '+=', etc. Overrides sp_assign.
 
 sp_enum_paren                   { Ignore, Add, Remove, Force }
-  Add or remove space in 'NS_ENUM ('
+  Add or remove space in 'NS_ENUM ('.
 
 sp_enum_assign                  { Ignore, Add, Remove, Force }
-  Add or remove space around assignment '=' in enum
+  Add or remove space around assignment '=' in enum.
 
 sp_enum_before_assign           { Ignore, Add, Remove, Force }
   Add or remove space before assignment '=' in enum. Overrides sp_enum_assign.
@@ -83,10 +86,10 @@ sp_enum_after_assign            { Ignore, Add, Remove, Force }
   Add or remove space after assignment '=' in enum. Overrides sp_enum_assign.
 
 sp_enum_colon                   { Ignore, Add, Remove, Force }
-  Add or remove space around assignment ':' in enum
+  Add or remove space around assignment ':' in enum.
 
 sp_pp_concat                    { Ignore, Add, Remove, Force }
-  Add or remove space around preprocessor '##' concatenation operator. Default=Add
+  Add or remove space around preprocessor '##' concatenation operator. Default=Add.
 
 sp_pp_stringify                 { Ignore, Add, Remove, Force }
   Add or remove space after preprocessor '#' stringify operator. Also affects the '#@' charizing operator.
@@ -95,35 +98,35 @@ sp_before_pp_stringify          { Ignore, Add, Remove, Force }
   Add or remove space before preprocessor '#' stringify operator as in '#define x(y) L#y'.
 
 sp_bool                         { Ignore, Add, Remove, Force }
-  Add or remove space around boolean operators '&&' and '||'
+  Add or remove space around boolean operators '&&' and '||'.
 
 sp_compare                      { Ignore, Add, Remove, Force }
-  Add or remove space around compare operator '<', '>', '==', etc
+  Add or remove space around compare operator '<', '>', '==', etc.
 
 sp_inside_paren                 { Ignore, Add, Remove, Force }
-  Add or remove space inside '(' and ')'
+  Add or remove space inside '(' and ')'.
 
 sp_paren_paren                  { Ignore, Add, Remove, Force }
-  Add or remove space between nested parens: '((' vs ') )'
+  Add or remove space between nested parens: '((' vs ') )'.
 
 sp_cparen_oparen                { Ignore, Add, Remove, Force }
-  Add or remove space between back-to-back parens: ')(' vs ') ('
+  Add or remove space between back-to-back parens: ')(' vs ') ('.
 
 sp_balance_nested_parens        { False, True }
-  Whether to balance spaces inside nested parens
+  Whether to balance spaces inside nested parens.
 
 sp_paren_brace                  { Ignore, Add, Remove, Force }
-  Add or remove space between ')' and '{'
+  Add or remove space between ')' and '{'.
 
 sp_before_ptr_star              { Ignore, Add, Remove, Force }
-  Add or remove space before pointer star '*'
+  Add or remove space before pointer star '*'.
 
 sp_before_unnamed_ptr_star      { Ignore, Add, Remove, Force }
   Add or remove space before pointer star '*' that isn't followed by a variable name
   If set to 'ignore', sp_before_ptr_star is used instead.
 
 sp_between_ptr_star             { Ignore, Add, Remove, Force }
-  Add or remove space between pointer stars '*'
+  Add or remove space between pointer stars '*'.
 
 sp_after_ptr_star               { Ignore, Add, Remove, Force }
   Add or remove space after pointer star '*', if followed by a word.
@@ -141,10 +144,10 @@ sp_before_ptr_star_func         { Ignore, Add, Remove, Force }
   Add or remove space before a pointer star '*', if followed by a func proto/def.
 
 sp_before_byref                 { Ignore, Add, Remove, Force }
-  Add or remove space before a reference sign '&'
+  Add or remove space before a reference sign '&'.
 
 sp_before_unnamed_byref         { Ignore, Add, Remove, Force }
-  Add or remove space before a reference sign '&' that isn't followed by a variable name
+  Add or remove space before a reference sign '&' that isn't followed by a variable name.
   If set to 'ignore', sp_before_byref is used instead.
 
 sp_after_byref                  { Ignore, Add, Remove, Force }
@@ -157,7 +160,7 @@ sp_before_byref_func            { Ignore, Add, Remove, Force }
   Add or remove space before a reference sign '&', if followed by a func proto/def.
 
 sp_after_type                   { Ignore, Add, Remove, Force }
-  Add or remove space between type and word. Default=Force
+  Add or remove space between type and word. Default=Force.
 
 sp_before_template_paren        { Ignore, Add, Remove, Force }
   Add or remove space before the paren in the D constructs 'template Foo(' and 'class Foo('.
@@ -167,35 +170,38 @@ sp_template_angle               { Ignore, Add, Remove, Force }
   If set to ignore, sp_before_angle is used.
 
 sp_before_angle                 { Ignore, Add, Remove, Force }
-  Add or remove space before '<>'
+  Add or remove space before '<>'.
 
 sp_inside_angle                 { Ignore, Add, Remove, Force }
-  Add or remove space inside '<' and '>'
+  Add or remove space inside '<' and '>'.
+
+sp_angle_colon                  { Ignore, Add, Remove, Force }
+  Add or remove space between '<>' and ':'.
 
 sp_after_angle                  { Ignore, Add, Remove, Force }
-  Add or remove space after '<>'
+  Add or remove space after '<>'.
 
 sp_angle_paren                  { Ignore, Add, Remove, Force }
-  Add or remove space between '<>' and '(' as found in 'new List<byte>(foo);'
+  Add or remove space between '<>' and '(' as found in 'new List<byte>(foo);'.
 
 sp_angle_paren_empty            { Ignore, Add, Remove, Force }
-  Add or remove space between '<>' and '()' as found in 'new List<byte>();'
+  Add or remove space between '<>' and '()' as found in 'new List<byte>();'.
 
 sp_angle_word                   { Ignore, Add, Remove, Force }
-  Add or remove space between '<>' and a word as in 'List<byte> m;' or 'template <typename T> static ...'
+  Add or remove space between '<>' and a word as in 'List<byte> m;' or 'template <typename T> static ...'.
 
 sp_angle_shift                  { Ignore, Add, Remove, Force }
-  Add or remove space between '>' and '>' in '>>' (template stuff C++/C# only). Default=Add
+  Add or remove space between '>' and '>' in '>>' (template stuff C++/C# only). Default=Add.
 
 sp_permit_cpp11_shift           { False, True }
-  Permit removal of the space between '>>' in 'foo<bar<int> >' (C++11 only). Default=False
+  Permit removal of the space between '>>' in 'foo<bar<int> >' (C++11 only). Default=False.
   sp_angle_shift cannot remove the space without this option.
 
 sp_before_sparen                { Ignore, Add, Remove, Force }
   Add or remove space before '(' of 'if', 'for', 'switch', 'while', etc.
 
 sp_inside_sparen                { Ignore, Add, Remove, Force }
-  Add or remove space inside if-condition '(' and ')'
+  Add or remove space inside if-condition '(' and ')'.
 
 sp_inside_sparen_close          { Ignore, Add, Remove, Force }
   Add or remove space before if-condition ')'. Overrides sp_inside_sparen.
@@ -216,158 +222,158 @@ sp_after_invariant_paren        { Ignore, Add, Remove, Force }
   Add or remove space after the ')' in 'invariant (C) c' in the D language.
 
 sp_special_semi                 { Ignore, Add, Remove, Force }
-  Add or remove space before empty statement ';' on 'if', 'for' and 'while'
+  Add or remove space before empty statement ';' on 'if', 'for' and 'while'.
 
 sp_before_semi                  { Ignore, Add, Remove, Force }
-  Add or remove space before ';'. Default=Remove
+  Add or remove space before ';'. Default=Remove.
 
 sp_before_semi_for              { Ignore, Add, Remove, Force }
-  Add or remove space before ';' in non-empty 'for' statements
+  Add or remove space before ';' in non-empty 'for' statements.
 
 sp_before_semi_for_empty        { Ignore, Add, Remove, Force }
   Add or remove space before a semicolon of an empty part of a for statement.
 
 sp_after_semi                   { Ignore, Add, Remove, Force }
-  Add or remove space after ';', except when followed by a comment. Default=Add
+  Add or remove space after ';', except when followed by a comment. Default=Add.
 
 sp_after_semi_for               { Ignore, Add, Remove, Force }
-  Add or remove space after ';' in non-empty 'for' statements. Default=Force
+  Add or remove space after ';' in non-empty 'for' statements. Default=Force.
 
 sp_after_semi_for_empty         { Ignore, Add, Remove, Force }
   Add or remove space after the final semicolon of an empty part of a for statement: for ( ; ; <here> ).
 
 sp_before_square                { Ignore, Add, Remove, Force }
-  Add or remove space before '[' (except '[]')
+  Add or remove space before '[' (except '[]').
 
 sp_before_squares               { Ignore, Add, Remove, Force }
-  Add or remove space before '[]'
+  Add or remove space before '[]'.
 
 sp_inside_square                { Ignore, Add, Remove, Force }
-  Add or remove space inside a non-empty '[' and ']'
+  Add or remove space inside a non-empty '[' and ']'.
 
 sp_after_comma                  { Ignore, Add, Remove, Force }
-  Add or remove space after ','
+  Add or remove space after ',', 'a,b' vs 'a, b'.
 
 sp_before_comma                 { Ignore, Add, Remove, Force }
-  Add or remove space before ','. Default=Remove
+  Add or remove space before ','. Default=Remove.
 
 sp_after_mdatype_commas         { Ignore, Add, Remove, Force }
-  Add or remove space between ',' and ']' in multidimensional array type 'int[,,]'
+  Add or remove space between ',' and ']' in multidimensional array type 'int[,,]'. Only for C#.
 
 sp_before_mdatype_commas        { Ignore, Add, Remove, Force }
-  Add or remove space between '[' and ',' in multidimensional array type 'int[,,]'
+  Add or remove space between '[' and ',' in multidimensional array type 'int[,,]'. Only for C#.
 
 sp_between_mdatype_commas       { Ignore, Add, Remove, Force }
-  Add or remove space between ',' in multidimensional array type 'int[,,]'
+  Add or remove space between ',' in multidimensional array type 'int[,,]'. Only for C#.
 
 sp_paren_comma                  { Ignore, Add, Remove, Force }
-  Add or remove space between an open paren and comma: '(,' vs '( ,'. Default=Force
+  Add or remove space between an open paren and comma: '(,' vs '( ,'. Default=Force.
 
 sp_before_ellipsis              { Ignore, Add, Remove, Force }
-  Add or remove space before the variadic '...' when preceded by a non-punctuator
+  Add or remove space before the variadic '...' when preceded by a non-punctuator.
 
 sp_after_class_colon            { Ignore, Add, Remove, Force }
-  Add or remove space after class ':'
+  Add or remove space after class ':'.
 
 sp_before_class_colon           { Ignore, Add, Remove, Force }
-  Add or remove space before class ':'
+  Add or remove space before class ':'.
 
 sp_after_constr_colon           { Ignore, Add, Remove, Force }
-  Add or remove space after class constructor ':'
+  Add or remove space after class constructor ':'.
 
 sp_before_constr_colon          { Ignore, Add, Remove, Force }
-  Add or remove space before class constructor ':'
+  Add or remove space before class constructor ':'.
 
 sp_before_case_colon            { Ignore, Add, Remove, Force }
-  Add or remove space before case ':'. Default=Remove
+  Add or remove space before case ':'. Default=Remove.
 
 sp_after_operator               { Ignore, Add, Remove, Force }
-  Add or remove space between 'operator' and operator sign
+  Add or remove space between 'operator' and operator sign.
 
 sp_after_operator_sym           { Ignore, Add, Remove, Force }
-  Add or remove space between the operator symbol and the open paren, as in 'operator ++('
+  Add or remove space between the operator symbol and the open paren, as in 'operator ++('.
 
 sp_after_operator_sym_empty     { Ignore, Add, Remove, Force }
-  Add or remove space between the operator symbol and the open paren when the operator has no arguments, as in 'operator *()'
+  Overrides sp_after_operator_sym when the operator has no arguments, as in 'operator *()'.
 
 sp_after_cast                   { Ignore, Add, Remove, Force }
-  Add or remove space after C/D cast, i.e. 'cast(int)a' vs 'cast(int) a' or '(int)a' vs '(int) a'
+  Add or remove space after C/D cast, i.e. 'cast(int)a' vs 'cast(int) a' or '(int)a' vs '(int) a'.
 
 sp_inside_paren_cast            { Ignore, Add, Remove, Force }
-  Add or remove spaces inside cast parens
+  Add or remove spaces inside cast parens.
 
 sp_cpp_cast_paren               { Ignore, Add, Remove, Force }
-  Add or remove space between the type and open paren in a C++ cast, i.e. 'int(exp)' vs 'int (exp)'
+  Add or remove space between the type and open paren in a C++ cast, i.e. 'int(exp)' vs 'int (exp)'.
 
 sp_sizeof_paren                 { Ignore, Add, Remove, Force }
-  Add or remove space between 'sizeof' and '('
+  Add or remove space between 'sizeof' and '('.
 
 sp_after_tag                    { Ignore, Add, Remove, Force }
-  Add or remove space after the tag keyword (Pawn)
+  Add or remove space after the tag keyword (Pawn).
 
 sp_inside_braces_enum           { Ignore, Add, Remove, Force }
-  Add or remove space inside enum '{' and '}'
+  Add or remove space inside enum '{' and '}'.
 
 sp_inside_braces_struct         { Ignore, Add, Remove, Force }
-  Add or remove space inside struct/union '{' and '}'
+  Add or remove space inside struct/union '{' and '}'.
 
 sp_after_type_brace_init_lst_open { Ignore, Add, Remove, Force }
-  Add or remove space after open brace in an unnamed temporary direct-list-initialization
+  Add or remove space after open brace in an unnamed temporary direct-list-initialization.
 
 sp_before_type_brace_init_lst_close { Ignore, Add, Remove, Force }
-  Add or remove space before close brace in an unnamed temporary direct-list-initialization
+  Add or remove space before close brace in an unnamed temporary direct-list-initialization.
 
 sp_inside_type_brace_init_lst   { Ignore, Add, Remove, Force }
-  Add or remove space inside an unnamed temporary direct-list-initialization
+  Add or remove space inside an unnamed temporary direct-list-initialization.
 
 sp_inside_braces                { Ignore, Add, Remove, Force }
-  Add or remove space inside '{' and '}'
+  Add or remove space inside '{' and '}'.
 
 sp_inside_braces_empty          { Ignore, Add, Remove, Force }
-  Add or remove space inside '{}'
+  Add or remove space inside '{}'.
 
 sp_type_func                    { Ignore, Add, Remove, Force }
   Add or remove space between return type and function name
   A minimum of 1 is forced except for pointer return types.
 
 sp_type_brace_init_lst          { Ignore, Add, Remove, Force }
-  Add or remove space between type and open brace of an unnamed temporary direct-list-initialization
+  Add or remove space between type and open brace of an unnamed temporary direct-list-initialization.
 
 sp_func_proto_paren             { Ignore, Add, Remove, Force }
-  Add or remove space between function name and '(' on function declaration
+  Add or remove space between function name and '(' on function declaration.
 
 sp_func_proto_paren_empty       { Ignore, Add, Remove, Force }
-  Add or remove space between function name and '()' on function declaration without parameters
+  Add or remove space between function name and '()' on function declaration without parameters.
 
 sp_func_def_paren               { Ignore, Add, Remove, Force }
-  Add or remove space between function name and '(' on function definition
+  Add or remove space between function name and '(' on function definition.
 
 sp_func_def_paren_empty         { Ignore, Add, Remove, Force }
-  Add or remove space between function name and '()' on function definition without parameters
+  Add or remove space between function name and '()' on function definition without parameters.
 
 sp_inside_fparens               { Ignore, Add, Remove, Force }
-  Add or remove space inside empty function '()'
+  Add or remove space inside empty function '()'.
 
 sp_inside_fparen                { Ignore, Add, Remove, Force }
-  Add or remove space inside function '(' and ')'
+  Add or remove space inside function '(' and ')'.
 
 sp_inside_tparen                { Ignore, Add, Remove, Force }
-  Add or remove space inside the first parens in the function type: 'void (*x)(...)'
+  Add or remove space inside the first parens in the function type: 'void (*x)(...)'.
 
 sp_after_tparen_close           { Ignore, Add, Remove, Force }
-  Add or remove between the parens in the function type: 'void (*x)(...)'
+  Add or remove between the parens in the function type: 'void (*x)(...)'.
 
 sp_square_fparen                { Ignore, Add, Remove, Force }
   Add or remove space between ']' and '(' when part of a function call.
 
 sp_fparen_brace                 { Ignore, Add, Remove, Force }
-  Add or remove space between ')' and '{' of function
+  Add or remove space between ')' and '{' of function.
 
 sp_fparen_dbrace                { Ignore, Add, Remove, Force }
   Java: Add or remove space between ')' and '{{' of double brace initializer.
 
 sp_func_call_paren              { Ignore, Add, Remove, Force }
-  Add or remove space between function name and '(' on function calls
+  Add or remove space between function name and '(' on function calls.
 
 sp_func_call_paren_empty        { Ignore, Add, Remove, Force }
   Add or remove space between function name and '()' on function calls without parameters.
@@ -378,25 +384,25 @@ sp_func_call_user_paren         { Ignore, Add, Remove, Force }
   You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.
 
 sp_func_class_paren             { Ignore, Add, Remove, Force }
-  Add or remove space between a constructor/destructor and the open paren
+  Add or remove space between a constructor/destructor and the open paren.
 
 sp_func_class_paren_empty       { Ignore, Add, Remove, Force }
-  Add or remove space between a constructor without parameters or destructor and '()'
+  Add or remove space between a constructor without parameters or destructor and '()'.
 
 sp_return_paren                 { Ignore, Add, Remove, Force }
-  Add or remove space between 'return' and '('
+  Add or remove space between 'return' and '('.
 
 sp_attribute_paren              { Ignore, Add, Remove, Force }
-  Add or remove space between '__attribute__' and '('
+  Add or remove space between '__attribute__' and '('.
 
 sp_defined_paren                { Ignore, Add, Remove, Force }
-  Add or remove space between 'defined' and '(' in '#if defined (FOO)'
+  Add or remove space between 'defined' and '(' in '#if defined (FOO)'.
 
 sp_throw_paren                  { Ignore, Add, Remove, Force }
-  Add or remove space between 'throw' and '(' in 'throw (something)'
+  Add or remove space between 'throw' and '(' in 'throw (something)'.
 
 sp_after_throw                  { Ignore, Add, Remove, Force }
-  Add or remove space between 'throw' and anything other than '(' as in '@throw [...];'
+  Add or remove space between 'throw' and anything other than '(' as in '@throw [...];'.
 
 sp_catch_paren                  { Ignore, Add, Remove, Force }
   Add or remove space between 'catch' and '(' in 'catch (something) { }'
@@ -411,151 +417,151 @@ sp_scope_paren                  { Ignore, Add, Remove, Force }
   If set to ignore, sp_before_sparen is used.
 
 sp_super_paren                  { Ignore, Add, Remove, Force }
-  Add or remove space between 'super' and '(' in 'super (something)'. Default=Remove
+  Add or remove space between 'super' and '(' in 'super (something)'. Default=Remove.
 
 sp_this_paren                   { Ignore, Add, Remove, Force }
-  Add or remove space between 'this' and '(' in 'this (something)'. Default=Remove
+  Add or remove space between 'this' and '(' in 'this (something)'. Default=Remove.
 
 sp_macro                        { Ignore, Add, Remove, Force }
-  Add or remove space between macro and value
+  Add or remove space between macro and value.
 
 sp_macro_func                   { Ignore, Add, Remove, Force }
-  Add or remove space between macro function ')' and value
+  Add or remove space between macro function ')' and value.
 
 sp_else_brace                   { Ignore, Add, Remove, Force }
-  Add or remove space between 'else' and '{' if on the same line
+  Add or remove space between 'else' and '{' if on the same line.
 
 sp_brace_else                   { Ignore, Add, Remove, Force }
-  Add or remove space between '}' and 'else' if on the same line
+  Add or remove space between '}' and 'else' if on the same line.
 
 sp_brace_typedef                { Ignore, Add, Remove, Force }
-  Add or remove space between '}' and the name of a typedef on the same line
+  Add or remove space between '}' and the name of a typedef on the same line.
 
 sp_catch_brace                  { Ignore, Add, Remove, Force }
-  Add or remove space between 'catch' and '{' if on the same line
+  Add or remove space between 'catch' and '{' if on the same line.
 
 sp_brace_catch                  { Ignore, Add, Remove, Force }
-  Add or remove space between '}' and 'catch' if on the same line
+  Add or remove space between '}' and 'catch' if on the same line.
 
 sp_finally_brace                { Ignore, Add, Remove, Force }
-  Add or remove space between 'finally' and '{' if on the same line
+  Add or remove space between 'finally' and '{' if on the same line.
 
 sp_brace_finally                { Ignore, Add, Remove, Force }
-  Add or remove space between '}' and 'finally' if on the same line
+  Add or remove space between '}' and 'finally' if on the same line.
 
 sp_try_brace                    { Ignore, Add, Remove, Force }
-  Add or remove space between 'try' and '{' if on the same line
+  Add or remove space between 'try' and '{' if on the same line.
 
 sp_getset_brace                 { Ignore, Add, Remove, Force }
-  Add or remove space between get/set and '{' if on the same line
+  Add or remove space between get/set and '{' if on the same line.
 
 sp_word_brace                   { Ignore, Add, Remove, Force }
-  Add or remove space between a variable and '{' for C++ uniform initialization. Default=Add
+  Add or remove space between a variable and '{' for C++ uniform initialization. Default=Add.
 
 sp_word_brace_ns                { Ignore, Add, Remove, Force }
-  Add or remove space between a variable and '{' for a namespace. Default=Add
+  Add or remove space between a variable and '{' for a namespace. Default=Add.
 
 sp_before_dc                    { Ignore, Add, Remove, Force }
-  Add or remove space before the '::' operator
+  Add or remove space before the '::' operator.
 
 sp_after_dc                     { Ignore, Add, Remove, Force }
-  Add or remove space after the '::' operator
+  Add or remove space after the '::' operator.
 
 sp_d_array_colon                { Ignore, Add, Remove, Force }
-  Add or remove around the D named array initializer ':' operator
+  Add or remove around the D named array initializer ':' operator.
 
 sp_not                          { Ignore, Add, Remove, Force }
-  Add or remove space after the '!' (not) operator. Default=Remove
+  Add or remove space after the '!' (not) operator. Default=Remove.
 
 sp_inv                          { Ignore, Add, Remove, Force }
-  Add or remove space after the '~' (invert) operator. Default=Remove
+  Add or remove space after the '~' (invert) operator. Default=Remove.
 
 sp_addr                         { Ignore, Add, Remove, Force }
   Add or remove space after the '&' (address-of) operator. Default=Remove
   This does not affect the spacing after a '&' that is part of a type.
 
 sp_member                       { Ignore, Add, Remove, Force }
-  Add or remove space around the '.' or '->' operators. Default=Remove
+  Add or remove space around the '.' or '->' operators. Default=Remove.
 
 sp_deref                        { Ignore, Add, Remove, Force }
   Add or remove space after the '*' (dereference) operator. Default=Remove
   This does not affect the spacing after a '*' that is part of a type.
 
 sp_sign                         { Ignore, Add, Remove, Force }
-  Add or remove space after '+' or '-', as in 'x = -5' or 'y = +7'. Default=Remove
+  Add or remove space after '+' or '-', as in 'x = -5' or 'y = +7'. Default=Remove.
 
 sp_incdec                       { Ignore, Add, Remove, Force }
-  Add or remove space before or after '++' and '--', as in '(--x)' or 'y++;'. Default=Remove
+  Add or remove space before or after '++' and '--', as in '(--x)' or 'y++;'. Default=Remove.
 
 sp_before_nl_cont               { Ignore, Add, Remove, Force }
-  Add or remove space before a backslash-newline at the end of a line. Default=Add
+  Add or remove space before a backslash-newline at the end of a line. Default=Add.
 
 sp_after_oc_scope               { Ignore, Add, Remove, Force }
-  Add or remove space after the scope '+' or '-', as in '-(void) foo;' or '+(int) bar;'
+  Add or remove space after the scope '+' or '-', as in '-(void) foo;' or '+(int) bar;'.
 
 sp_after_oc_colon               { Ignore, Add, Remove, Force }
   Add or remove space after the colon in message specs
-  '-(int) f:(int) x;' vs '-(int) f: (int) x;'
+  '-(int) f:(int) x;' vs '-(int) f: (int) x;'.
 
 sp_before_oc_colon              { Ignore, Add, Remove, Force }
   Add or remove space before the colon in message specs
-  '-(int) f: (int) x;' vs '-(int) f : (int) x;'
+  '-(int) f: (int) x;' vs '-(int) f : (int) x;'.
 
 sp_after_oc_dict_colon          { Ignore, Add, Remove, Force }
   Add or remove space after the colon in immutable dictionary expression
-  'NSDictionary *test = @{@"foo" :@"bar"};'
+  'NSDictionary *test = @{@"foo" :@"bar"};'.
 
 sp_before_oc_dict_colon         { Ignore, Add, Remove, Force }
   Add or remove space before the colon in immutable dictionary expression
-  'NSDictionary *test = @{@"foo" :@"bar"};'
+  'NSDictionary *test = @{@"foo" :@"bar"};'.
 
 sp_after_send_oc_colon          { Ignore, Add, Remove, Force }
   Add or remove space after the colon in message specs
-  '[object setValue:1];' vs '[object setValue: 1];'
+  '[object setValue:1];' vs '[object setValue: 1];'.
 
 sp_before_send_oc_colon         { Ignore, Add, Remove, Force }
   Add or remove space before the colon in message specs
-  '[object setValue:1];' vs '[object setValue :1];'
+  '[object setValue:1];' vs '[object setValue :1];'.
 
 sp_after_oc_type                { Ignore, Add, Remove, Force }
   Add or remove space after the (type) in message specs
-  '-(int)f: (int) x;' vs '-(int)f: (int)x;'
+  '-(int)f: (int) x;' vs '-(int)f: (int)x;'.
 
 sp_after_oc_return_type         { Ignore, Add, Remove, Force }
   Add or remove space after the first (type) in message specs
-  '-(int) f:(int)x;' vs '-(int)f:(int)x;'
+  '-(int) f:(int)x;' vs '-(int)f:(int)x;'.
 
 sp_after_oc_at_sel              { Ignore, Add, Remove, Force }
   Add or remove space between '@selector' and '('
   '@selector(msgName)' vs '@selector (msgName)'
-  Also applies to @protocol() constructs
+  Also applies to @protocol() constructs.
 
 sp_after_oc_at_sel_parens       { Ignore, Add, Remove, Force }
   Add or remove space between '@selector(x)' and the following word
-  '@selector(foo) a:' vs '@selector(foo)a:'
+  '@selector(foo) a:' vs '@selector(foo)a:'.
 
 sp_inside_oc_at_sel_parens      { Ignore, Add, Remove, Force }
   Add or remove space inside '@selector' parens
   '@selector(foo)' vs '@selector( foo )'
-  Also applies to @protocol() constructs
+  Also applies to @protocol() constructs.
 
 sp_before_oc_block_caret        { Ignore, Add, Remove, Force }
   Add or remove space before a block pointer caret
-  '^int (int arg){...}' vs. ' ^int (int arg){...}'
+  '^int (int arg){...}' vs. ' ^int (int arg){...}'.
 
 sp_after_oc_block_caret         { Ignore, Add, Remove, Force }
   Add or remove space after a block pointer caret
-  '^int (int arg){...}' vs. '^ int (int arg){...}'
+  '^int (int arg){...}' vs. '^ int (int arg){...}'.
 
 sp_after_oc_msg_receiver        { Ignore, Add, Remove, Force }
   Add or remove space between the receiver and selector in a message.
-  '[receiver selector ...]'
+  '[receiver selector ...]'.
 
 sp_after_oc_property            { Ignore, Add, Remove, Force }
   Add or remove space after @property.
 
 sp_cond_colon                   { Ignore, Add, Remove, Force }
-  Add or remove space around the ':' in 'b ? t : f'
+  Add or remove space around the ':' in 'b ? t : f'.
 
 sp_cond_colon_before            { Ignore, Add, Remove, Force }
   Add or remove space before the ':' in 'b ? t : f'. Overrides sp_cond_colon.
@@ -564,7 +570,7 @@ sp_cond_colon_after             { Ignore, Add, Remove, Force }
   Add or remove space after the ':' in 'b ? t : f'. Overrides sp_cond_colon.
 
 sp_cond_question                { Ignore, Add, Remove, Force }
-  Add or remove space around the '?' in 'b ? t : f'
+  Add or remove space around the '?' in 'b ? t : f'.
 
 sp_cond_question_before         { Ignore, Add, Remove, Force }
   Add or remove space before the '?' in 'b ? t : f'. Overrides sp_cond_question.
@@ -582,16 +588,16 @@ sp_range                        { Ignore, Add, Remove, Force }
   Control the space around the D '..' operator.
 
 sp_after_for_colon              { Ignore, Add, Remove, Force }
-  Control the spacing after ':' in 'for (TYPE VAR : EXPR)'
+  Control the spacing after ':' in 'for (TYPE VAR : EXPR)'. Only JAVA.
 
 sp_before_for_colon             { Ignore, Add, Remove, Force }
-  Control the spacing before ':' in 'for (TYPE VAR : EXPR)'
+  Control the spacing before ':' in 'for (TYPE VAR : EXPR)'. Only JAVA.
 
 sp_extern_paren                 { Ignore, Add, Remove, Force }
-  Control the spacing in 'extern (C)' (D)
+  Control the spacing in 'extern (C)' (D).
 
 sp_cmt_cpp_start                { Ignore, Add, Remove, Force }
-  Control the space after the opening of a C++ comment '// A' vs '//A'
+  Control the space after the opening of a C++ comment '// A' vs '//A'.
 
 sp_cmt_cpp_doxygen              { False, True }
   True: If space is added with sp_cmt_cpp_start, do it after doxygen sequences like '///', '///<', '//!' and '//!<'.
@@ -600,31 +606,33 @@ sp_cmt_cpp_qttr                 { False, True }
   True: If space is added with sp_cmt_cpp_start, do it after Qt translator or meta-data comments like '//:', '//=', and '//~'.
 
 sp_endif_cmt                    { Ignore, Add, Remove, Force }
-  Controls the spaces between #else or #endif and a trailing comment
+  Controls the spaces between #else or #endif and a trailing comment.
 
 sp_after_new                    { Ignore, Add, Remove, Force }
-  Controls the spaces after 'new', 'delete' and 'delete[]'
+  Controls the spaces after 'new', 'delete' and 'delete[]'.
 
 sp_between_new_paren            { Ignore, Add, Remove, Force }
-  Controls the spaces between new and '(' in 'new()'
+  Controls the spaces between new and '(' in 'new()'.
 
 sp_after_newop_paren            { Ignore, Add, Remove, Force }
-  Controls the spaces between ')' and 'type' in 'new(foo) BAR'
+  Controls the spaces between ')' and 'type' in 'new(foo) BAR'.
 
 sp_inside_newop_paren           { Ignore, Add, Remove, Force }
-  Controls the spaces inside paren of the new operator: 'new(foo) BAR'
+  Controls the spaces inside paren of the new operator: 'new(foo) BAR'.
 
 sp_inside_newop_paren_open      { Ignore, Add, Remove, Force }
-  Controls the space after open paren of the new operator: 'new(foo) BAR'
+  Controls the space after open paren of the new operator: 'new(foo) BAR'.
+  Overrides sp_inside_newop_paren.
 
 sp_inside_newop_paren_close     { Ignore, Add, Remove, Force }
-  Controls the space before close paren of the new operator: 'new(foo) BAR'
+  Controls the space before close paren of the new operator: 'new(foo) BAR'.
+  Overrides sp_inside_newop_paren.
 
 sp_before_tr_emb_cmt            { Ignore, Add, Remove, Force }
-  Controls the spaces before a trailing or embedded comment
+  Controls the spaces before a trailing or embedded comment.
 
 sp_num_before_tr_emb_cmt        Unsigned Number
-  Number of spaces before a trailing or embedded comment
+  Number of spaces before a trailing or embedded comment.
 
 sp_annotation_paren             { Ignore, Add, Remove, Force }
   Control space between a Java annotation and the open paren.
@@ -641,11 +649,11 @@ force_tab_after_define          { False, True }
 
 indent_columns                  Unsigned Number
   The number of columns to indent per level.
-  Usually 2, 3, 4, or 8. Default=8
+  Usually 2, 3, 4, or 8. Default=8.
 
 indent_continue                 Number
   The continuation indent. If non-zero, this overrides the indent of '(' and '=' continuation indents.
-  For FreeBSD, this is set to 4. Negative value is absolute and not increased for each ( level
+  For FreeBSD, this is set to 4. Negative value is absolute and not increased for each '(' level.
 
 indent_param                    Unsigned Number
   The continuation indent for func_*_param if they are true.
@@ -662,26 +670,26 @@ indent_cmt_with_tabs            { False, True }
   Requires indent_with_tabs=2. If false, will use spaces.
 
 indent_align_string             { False, True }
-  Whether to indent strings broken by '\' so that they line up
+  Whether to indent strings broken by '\' so that they line up.
 
 indent_xml_string               Unsigned Number
   The number of spaces to indent multi-line XML strings.
-  Requires indent_align_string=True
+  Requires indent_align_string=True.
 
 indent_brace                    Unsigned Number
-  Spaces to indent '{' from level
+  Spaces to indent '{' from level.
 
 indent_braces                   { False, True }
-  Whether braces are indented to the body level
+  Whether braces are indented to the body level.
 
 indent_braces_no_func           { False, True }
-  Disabled indenting function braces if indent_braces is True
+  Disabled indenting function braces if indent_braces is True.
 
 indent_braces_no_class          { False, True }
-  Disabled indenting class braces if indent_braces is True
+  Disabled indenting class braces if indent_braces is True.
 
 indent_braces_no_struct         { False, True }
-  Disabled indenting struct braces if indent_braces is True
+  Disabled indenting struct braces if indent_braces is True.
 
 indent_brace_parent             { False, True }
   Indent based on the size of the brace parent, i.e. 'if' => 3 spaces, 'for' => 4 spaces, etc.
@@ -693,48 +701,48 @@ indent_cs_delegate_brace        { False, True }
   indent a C# delegate by another level, default is to not indent by another level.
 
 indent_namespace                { False, True }
-  Whether the 'namespace' body is indented
+  Whether the 'namespace' body is indented.
 
 indent_namespace_single_indent  { False, True }
   Only indent one namespace and no sub-namespaces.
   Requires indent_namespace=True.
 
 indent_namespace_level          Unsigned Number
-  The number of spaces to indent a namespace block
+  The number of spaces to indent a namespace block.
 
 indent_namespace_limit          Unsigned Number
   If the body of the namespace is longer than this number, it won't be indented.
   Requires indent_namespace=True. Default=0 (no limit)
 
 indent_extern                   { False, True }
-  Whether the 'extern "C"' body is indented
+  Whether the 'extern "C"' body is indented.
 
 indent_class                    { False, True }
-  Whether the 'class' body is indented
+  Whether the 'class' body is indented.
 
 indent_class_colon              { False, True }
-  Whether to indent the stuff after a leading base class colon
+  Whether to indent the stuff after a leading base class colon.
 
 indent_class_on_colon           { False, True }
   Indent based on a class colon instead of the stuff after the colon.
-  Requires indent_class_colon=True. Default=False
+  Requires indent_class_colon=True. Default=False.
 
 indent_constr_colon             { False, True }
-  Whether to indent the stuff after a leading class initializer colon
+  Whether to indent the stuff after a leading class initializer colon.
 
 indent_ctor_init_leading        Unsigned Number
-  Virtual indent from the ':' for member initializers. Default=2
+  Virtual indent from the ':' for member initializers. Default=2.
 
 indent_ctor_init                Number
   Additional indent for constructor initializer list.
-  Negative values decrease indent down to the first column. Default=0
+  Negative values decrease indent down to the first column. Default=0.
 
 indent_else_if                  { False, True }
   False=treat 'else\nif' as 'else if' for indenting purposes
-  True=indent the 'if' one level
+  True=indent the 'if' one level.
 
 indent_var_def_blk              Number
-  Amount to indent variable declarations after a open brace. neg=relative, pos=absolute
+  Amount to indent variable declarations after a open brace. neg=relative, pos=absolute.
 
 indent_var_def_cont             { False, True }
   Indent continued variable declarations instead of aligning.
@@ -745,54 +753,54 @@ indent_shift                    { False, True }
 
 indent_func_def_force_col1      { False, True }
   True:  force indentation of function definition to start in column 1
-  False: use the default behavior
+  False: use the default behavior.
 
 indent_func_call_param          { False, True }
   True:  indent continued function call parameters one indent level
-  False: align parameters under the open paren
+  False: align parameters under the open paren.
 
 indent_func_def_param           { False, True }
-  Same as indent_func_call_param, but for function defs
+  Same as indent_func_call_param, but for function defs.
 
 indent_func_proto_param         { False, True }
-  Same as indent_func_call_param, but for function protos
+  Same as indent_func_call_param, but for function protos.
 
 indent_func_class_param         { False, True }
-  Same as indent_func_call_param, but for class declarations
+  Same as indent_func_call_param, but for class declarations.
 
 indent_func_ctor_var_param      { False, True }
-  Same as indent_func_call_param, but for class variable constructors
+  Same as indent_func_call_param, but for class variable constructors.
 
 indent_template_param           { False, True }
-  Same as indent_func_call_param, but for templates
+  Same as indent_func_call_param, but for templates.
 
 indent_func_param_double        { False, True }
   Double the indent for indent_func_xxx_param options.
-  Use both values of the options indent_columns and indent_param
+  Use both values of the options indent_columns and indent_param.
 
 indent_func_const               Unsigned Number
-  Indentation column for standalone 'const' function decl/proto qualifier
+  Indentation column for standalone 'const' function decl/proto qualifier.
 
 indent_func_throw               Unsigned Number
-  Indentation column for standalone 'throw' function decl/proto qualifier
+  Indentation column for standalone 'throw' function decl/proto qualifier.
 
 indent_member                   Unsigned Number
   The number of spaces to indent a continued '->' or '.'
   Usually set to 0, 1, or indent_columns.
 
 indent_sing_line_comments       Unsigned Number
-  Spaces to indent single line ('//') comments on lines before code
+  Spaces to indent single line ('//') comments on lines before code.
 
 indent_relative_single_line_comments { False, True }
   If set, will indent trailing single line ('//') comments relative
-  to the code instead of trying to keep the same absolute column
+  to the code instead of trying to keep the same absolute column.
 
 indent_switch_case              Unsigned Number
   Spaces to indent 'case' from 'switch'
   Usually 0 or indent_columns.
 
 indent_switch_pp                { False, True }
-  Whether to indent preproccesor statements inside of switch statements
+  Whether to indent preproccesor statements inside of switch statements.
 
 indent_case_shift               Unsigned Number
   Spaces to shift the 'case' line, without affecting any other lines
@@ -805,7 +813,7 @@ indent_case_brace               Number
   negative value are OK.
 
 indent_col1_comment             { False, True }
-  Whether to indent comments found in first column
+  Whether to indent comments found in first column.
 
 indent_label                    Number
   How to indent goto labels
@@ -818,10 +826,10 @@ indent_access_spec              Number
 
 indent_access_spec_body         { False, True }
   Indent the code after an access specifier by one level.
-  If set, this option forces 'indent_access_spec=0'
+  If set, this option forces 'indent_access_spec=0'.
 
 indent_paren_nl                 { False, True }
-  If an open paren is followed by a newline, indent the next line so that it lines up after the open paren (not recommended)
+  If an open paren is followed by a newline, indent the next line so that it lines up after the open paren (not recommended).
 
 indent_paren_close              Unsigned Number
   Controls the indent of a close paren after a newline.
@@ -829,20 +837,29 @@ indent_paren_close              Unsigned Number
   1: Align under the open paren
   2: Indent to the brace level
 
+indent_paren_after_func_def     { False, True }
+  Controls the indent of the open paren of a function definition, if on it's own line.If True, indents the open paren
+
+indent_paren_after_func_decl    { False, True }
+  Controls the indent of the open paren of a function declaration, if on it's own line.If True, indents the open paren
+
+indent_paren_after_func_call    { False, True }
+  Controls the indent of the open paren of a function call, if on it's own line.If True, indents the open paren
+
 indent_comma_paren              { False, True }
-  Controls the indent of a comma when inside a paren.If True, aligns under the open paren
+  Controls the indent of a comma when inside a paren.If True, aligns under the open paren.
 
 indent_bool_paren               { False, True }
-  Controls the indent of a BOOL operator when inside a paren.If True, aligns under the open paren
+  Controls the indent of a BOOL operator when inside a paren.If True, aligns under the open paren.
 
 indent_first_bool_expr          { False, True }
-  If 'indent_bool_paren' is True, controls the indent of the first expression. If True, aligns the first expression to the following ones
+  If 'indent_bool_paren' is True, controls the indent of the first expression. If True, aligns the first expression to the following ones.
 
 indent_square_nl                { False, True }
-  If an open square is followed by a newline, indent the next line so that it lines up after the open square (not recommended)
+  If an open square is followed by a newline, indent the next line so that it lines up after the open square (not recommended).
 
 indent_preserve_sql             { False, True }
-  Don't change the relative indent of ESQL/C 'EXEC SQL' bodies
+  Don't change the relative indent of ESQL/C 'EXEC SQL' bodies.
 
 indent_align_assign             { False, True }
   Align continued statements at the '='. Default=True
@@ -860,7 +877,7 @@ indent_oc_msg_colon             Unsigned Number
 
 indent_oc_msg_prioritize_first_colon { False, True }
   If True, prioritize aligning with initial colon (and stripping spaces from lines, if necessary).
-  Default=True
+  Default=True.
 
 indent_oc_block_msg_xcode_style { False, True }
   If indent_oc_block_msg and this option are on, blocks will be indented the way that Xcode does by default (from keyword if the parameter is on its own line; otherwise, from the previous indentation level).
@@ -884,13 +901,13 @@ indent_vbrace_open_on_tabstop   { False, True }
   True: When identing after virtual brace open and newline add further spaces after regular indent to reach next tabstop.
 
 indent_token_after_brace        { False, True }
-  If True, a brace followed by another token (not a newline) will indent all contained lines to match the token.Default=True
+  If True, a brace followed by another token (not a newline) will indent all contained lines to match the token.Default=True.
 
 indent_cpp_lambda_body          { False, True }
-  If True, cpp lambda body will be indentedDefault=False
+  If True, cpp lambda body will be indentedDefault=False.
 
 indent_using_block              { False, True }
-  indent (or not) an using block if no braces are used. Only for C#.Default=True
+  indent (or not) an using block if no braces are used. Only for C#.Default=True.
 
 indent_ternary_operator         Unsigned Number
   indent the continuation of ternary operator.
@@ -898,195 +915,198 @@ indent_ternary_operator         Unsigned Number
   1: When the `if_false` is a continuation, indent it under `if_false`
   2: When the `:` is a continuation, indent it under `?`
 
+indent_ignore_asm_block         { False, True }
+  If true, ignore indent and align for asm blocks as they have their own indentation.
+
 #
 # Newline adding and removing options
 #
 
 nl_collapse_empty_body          { False, True }
-  Whether to collapse empty blocks between '{' and '}'
+  Whether to collapse empty blocks between '{' and '}'.
 
 nl_assign_leave_one_liners      { False, True }
-  Don't split one-line braced assignments - 'foo_t f = { 1, 2 };'
+  Don't split one-line braced assignments - 'foo_t f = { 1, 2 };'.
 
 nl_class_leave_one_liners       { False, True }
-  Don't split one-line braced statements inside a class xx { } body
+  Don't split one-line braced statements inside a class xx { } body.
 
 nl_enum_leave_one_liners        { False, True }
   Don't split one-line enums: 'enum foo { BAR = 15 };'
 
 nl_getset_leave_one_liners      { False, True }
-  Don't split one-line get or set functions
+  Don't split one-line get or set functions.
 
 nl_func_leave_one_liners        { False, True }
-  Don't split one-line function definitions - 'int foo() { return 0; }'
+  Don't split one-line function definitions - 'int foo() { return 0; }'.
 
 nl_cpp_lambda_leave_one_liners  { False, True }
-  Don't split one-line C++11 lambdas - '[]() { return 0; }'
+  Don't split one-line C++11 lambdas - '[]() { return 0; }'.
 
 nl_if_leave_one_liners          { False, True }
-  Don't split one-line if/else statements - 'if(a) b++;'
+  Don't split one-line if/else statements - 'if(a) b++;'.
 
 nl_while_leave_one_liners       { False, True }
-  Don't split one-line while statements - 'while(a) b++;'
+  Don't split one-line while statements - 'while(a) b++;'.
 
 nl_oc_msg_leave_one_liner       { False, True }
-  Don't split one-line OC messages
+  Don't split one-line OC messages.
 
 nl_oc_block_brace               { Ignore, Add, Remove, Force }
-  Add or remove newline between Objective-C block signature and '{'
+  Add or remove newline between Objective-C block signature and '{'.
 
 nl_start_of_file                { Ignore, Add, Remove, Force }
-  Add or remove newlines at the start of the file
+  Add or remove newlines at the start of the file.
 
 nl_start_of_file_min            Unsigned Number
-  The number of newlines at the start of the file (only used if nl_start_of_file is 'add' or 'force'
+  The number of newlines at the start of the file (only used if nl_start_of_file is 'add' or 'force'.
 
 nl_end_of_file                  { Ignore, Add, Remove, Force }
-  Add or remove newline at the end of the file
+  Add or remove newline at the end of the file.
 
 nl_end_of_file_min              Unsigned Number
-  The number of newlines at the end of the file (only used if nl_end_of_file is 'add' or 'force')
+  The number of newlines at the end of the file (only used if nl_end_of_file is 'add' or 'force').
 
 nl_assign_brace                 { Ignore, Add, Remove, Force }
-  Add or remove newline between '=' and '{'
+  Add or remove newline between '=' and '{'.
 
 nl_assign_square                { Ignore, Add, Remove, Force }
-  Add or remove newline between '=' and '[' (D only)
+  Add or remove newline between '=' and '[' (D only).
 
 nl_after_square_assign          { Ignore, Add, Remove, Force }
-  Add or remove newline after '= [' (D only). Will also affect the newline before the ']'
+  Add or remove newline after '= [' (D only). Will also affect the newline before the ']'.
 
 nl_func_var_def_blk             Unsigned Number
   The number of blank lines after a block of variable definitions at the top of a function body
-  0 = No change (default)
+  0 = No change (default).
 
 nl_typedef_blk_start            Unsigned Number
   The number of newlines before a block of typedefs
   0 = No change (default)
-  the option 'nl_after_access_spec' takes preference over 'nl_typedef_blk_start'
+  is overridden by the option 'nl_after_access_spec'.
 
 nl_typedef_blk_end              Unsigned Number
   The number of newlines after a block of typedefs
-  0 = No change (default)
+  0 = No change (default).
 
 nl_typedef_blk_in               Unsigned Number
   The maximum consecutive newlines within a block of typedefs
-  0 = No change (default)
+  0 = No change (default).
 
 nl_var_def_blk_start            Unsigned Number
   The number of newlines before a block of variable definitions not at the top of a function body
   0 = No change (default)
-  the option 'nl_after_access_spec' takes preference over 'nl_var_def_blk_start'
+  is overridden by the option 'nl_after_access_spec'.
 
 nl_var_def_blk_end              Unsigned Number
   The number of newlines after a block of variable definitions not at the top of a function body
-  0 = No change (default)
+  0 = No change (default).
 
 nl_var_def_blk_in               Unsigned Number
   The maximum consecutive newlines within a block of variable definitions
-  0 = No change (default)
+  0 = No change (default).
 
 nl_fcall_brace                  { Ignore, Add, Remove, Force }
   Add or remove newline between a function call's ')' and '{', as in:
-  list_for_each(item, &list) { }
+  list_for_each(item, &list) { }.
 
 nl_enum_brace                   { Ignore, Add, Remove, Force }
-  Add or remove newline between 'enum' and '{'
+  Add or remove newline between 'enum' and '{'.
 
 nl_enum_class                   { Ignore, Add, Remove, Force }
-  Add or remove newline between 'enum' and 'class'
+  Add or remove newline between 'enum' and 'class'.
 
 nl_enum_class_identifier        { Ignore, Add, Remove, Force }
-  Add or remove newline between 'enum class' and the identifier
+  Add or remove newline between 'enum class' and the identifier.
 
 nl_enum_identifier_colon        { Ignore, Add, Remove, Force }
-  Add or remove newline between 'enum class' type and ':'
+  Add or remove newline between 'enum class' type and ':'.
 
 nl_enum_colon_type              { Ignore, Add, Remove, Force }
-  Add or remove newline between 'enum class identifier :' and 'type' and/or 'type'
+  Add or remove newline between 'enum class identifier :' and 'type' and/or 'type'.
 
 nl_struct_brace                 { Ignore, Add, Remove, Force }
-  Add or remove newline between 'struct and '{'
+  Add or remove newline between 'struct and '{'.
 
 nl_union_brace                  { Ignore, Add, Remove, Force }
-  Add or remove newline between 'union' and '{'
+  Add or remove newline between 'union' and '{'.
 
 nl_if_brace                     { Ignore, Add, Remove, Force }
-  Add or remove newline between 'if' and '{'
+  Add or remove newline between 'if' and '{'.
 
 nl_brace_else                   { Ignore, Add, Remove, Force }
-  Add or remove newline between '}' and 'else'
+  Add or remove newline between '}' and 'else'.
 
 nl_elseif_brace                 { Ignore, Add, Remove, Force }
   Add or remove newline between 'else if' and '{'
-  If set to ignore, nl_if_brace is used instead
+  If set to ignore, nl_if_brace is used instead.
 
 nl_else_brace                   { Ignore, Add, Remove, Force }
-  Add or remove newline between 'else' and '{'
+  Add or remove newline between 'else' and '{'.
 
 nl_else_if                      { Ignore, Add, Remove, Force }
-  Add or remove newline between 'else' and 'if'
+  Add or remove newline between 'else' and 'if'.
 
 nl_before_if_closing_paren      { Ignore, Add, Remove, Force }
-  Add or remove newline before 'if'/'else if' closing parenthesis
+  Add or remove newline before 'if'/'else if' closing parenthesis.
 
 nl_brace_finally                { Ignore, Add, Remove, Force }
-  Add or remove newline between '}' and 'finally'
+  Add or remove newline between '}' and 'finally'.
 
 nl_finally_brace                { Ignore, Add, Remove, Force }
-  Add or remove newline between 'finally' and '{'
+  Add or remove newline between 'finally' and '{'.
 
 nl_try_brace                    { Ignore, Add, Remove, Force }
-  Add or remove newline between 'try' and '{'
+  Add or remove newline between 'try' and '{'.
 
 nl_getset_brace                 { Ignore, Add, Remove, Force }
-  Add or remove newline between get/set and '{'
+  Add or remove newline between get/set and '{'.
 
 nl_for_brace                    { Ignore, Add, Remove, Force }
-  Add or remove newline between 'for' and '{'
+  Add or remove newline between 'for' and '{'.
 
 nl_catch_brace                  { Ignore, Add, Remove, Force }
-  Add or remove newline between 'catch' and '{'
+  Add or remove newline between 'catch' and '{'.
 
 nl_brace_catch                  { Ignore, Add, Remove, Force }
-  Add or remove newline between '}' and 'catch'
+  Add or remove newline between '}' and 'catch'.
 
 nl_brace_square                 { Ignore, Add, Remove, Force }
-  Add or remove newline between '}' and ']'
+  Add or remove newline between '}' and ']'.
 
 nl_brace_fparen                 { Ignore, Add, Remove, Force }
-  Add or remove newline between '}' and ')' in a function invocation
+  Add or remove newline between '}' and ')' in a function invocation.
 
 nl_while_brace                  { Ignore, Add, Remove, Force }
-  Add or remove newline between 'while' and '{'
+  Add or remove newline between 'while' and '{'.
 
 nl_scope_brace                  { Ignore, Add, Remove, Force }
-  Add or remove newline between 'scope (x)' and '{' (D)
+  Add or remove newline between 'scope (x)' and '{' (D).
 
 nl_unittest_brace               { Ignore, Add, Remove, Force }
-  Add or remove newline between 'unittest' and '{' (D)
+  Add or remove newline between 'unittest' and '{' (D).
 
 nl_version_brace                { Ignore, Add, Remove, Force }
-  Add or remove newline between 'version (x)' and '{' (D)
+  Add or remove newline between 'version (x)' and '{' (D).
 
 nl_using_brace                  { Ignore, Add, Remove, Force }
-  Add or remove newline between 'using' and '{'
+  Add or remove newline between 'using' and '{'.
 
 nl_brace_brace                  { Ignore, Add, Remove, Force }
   Add or remove newline between two open or close braces.
   Due to general newline/brace handling, REMOVE may not work.
 
 nl_do_brace                     { Ignore, Add, Remove, Force }
-  Add or remove newline between 'do' and '{'
+  Add or remove newline between 'do' and '{'.
 
 nl_brace_while                  { Ignore, Add, Remove, Force }
-  Add or remove newline between '}' and 'while' of 'do' statement
+  Add or remove newline between '}' and 'while' of 'do' statement.
 
 nl_switch_brace                 { Ignore, Add, Remove, Force }
-  Add or remove newline between 'switch' and '{'
+  Add or remove newline between 'switch' and '{'.
 
 nl_synchronized_brace           { Ignore, Add, Remove, Force }
-  Add or remove newline between 'synchronized' and '{'
+  Add or remove newline between 'synchronized' and '{'.
 
 nl_multi_line_cond              { False, True }
   Add a newline between ')' and '{' if the ')' is on a different line than the if/for/etc.
@@ -1096,25 +1116,25 @@ nl_multi_line_define            { False, True }
   Force a newline in a define after the macro name for multi-line defines.
 
 nl_before_case                  { False, True }
-  Whether to put a newline before 'case' statement, not after the first 'case'
+  Whether to put a newline before 'case' statement, not after the first 'case'.
 
 nl_before_throw                 { Ignore, Add, Remove, Force }
-  Add or remove newline between ')' and 'throw'
+  Add or remove newline between ')' and 'throw'.
 
 nl_after_case                   { False, True }
-  Whether to put a newline after 'case' statement
+  Whether to put a newline after 'case' statement.
 
 nl_case_colon_brace             { Ignore, Add, Remove, Force }
   Add or remove a newline between a case ':' and '{'. Overrides nl_after_case.
 
 nl_namespace_brace              { Ignore, Add, Remove, Force }
-  Newline between namespace and {
+  Newline between namespace and {.
 
 nl_template_class               { Ignore, Add, Remove, Force }
   Add or remove newline between 'template<>' and whatever follows.
 
 nl_class_brace                  { Ignore, Add, Remove, Force }
-  Add or remove newline between 'class' and '{'
+  Add or remove newline between 'class' and '{'.
 
 nl_class_init_args              { Ignore, Add, Remove, Force }
   Add or remove newline before/after each ',' in the base class list,
@@ -1125,10 +1145,10 @@ nl_constr_init_args             { Ignore, Add, Remove, Force }
   Related to nl_constr_colon, pos_constr_colon and pos_constr_comma.
 
 nl_enum_own_lines               { Ignore, Add, Remove, Force }
-  Add or remove newline before first element, after comma, and after last element in enum
+  Add or remove newline before first element, after comma, and after last element in enum.
 
 nl_func_type_name               { Ignore, Add, Remove, Force }
-  Add or remove newline between return type and function name in a function definition
+  Add or remove newline between return type and function name in a function definition.
 
 nl_func_type_name_class         { Ignore, Add, Remove, Force }
   Add or remove newline between return type and function name inside a class {}
@@ -1136,32 +1156,38 @@ nl_func_type_name_class         { Ignore, Add, Remove, Force }
 
 nl_func_class_scope             { Ignore, Add, Remove, Force }
   Add or remove newline between class specification and '::' in 'void A::f() { }'
-  Only appears in separate member implementation (does not appear with in-line implmementation)
+  Only appears in separate member implementation (does not appear with in-line implmementation).
 
 nl_func_scope_name              { Ignore, Add, Remove, Force }
   Add or remove newline between function scope and name
-  Controls the newline after '::' in 'void A::f() { }'
+  Controls the newline after '::' in 'void A::f() { }'.
 
 nl_func_proto_type_name         { Ignore, Add, Remove, Force }
-  Add or remove newline between return type and function name in a prototype
+  Add or remove newline between return type and function name in a prototype.
 
 nl_func_paren                   { Ignore, Add, Remove, Force }
-  Add or remove newline between a function name and the opening '(' in the declaration
+  Add or remove newline between a function name and the opening '(' in the declaration.
 
 nl_func_paren_empty             { Ignore, Add, Remove, Force }
-  Overrides nl_func_paren for functions with no parameters
+  Overrides nl_func_paren for functions with no parameters.
 
 nl_func_def_paren               { Ignore, Add, Remove, Force }
-  Add or remove newline between a function name and the opening '(' in the definition
+  Add or remove newline between a function name and the opening '(' in the definition.
 
 nl_func_def_paren_empty         { Ignore, Add, Remove, Force }
-  Overrides nl_func_def_paren for functions with no parameters
+  Overrides nl_func_def_paren for functions with no parameters.
+
+nl_func_call_paren              { Ignore, Add, Remove, Force }
+  Add or remove newline between a function name and the opening '(' in the call
+
+nl_func_call_paren_empty        { Ignore, Add, Remove, Force }
+  Overrides nl_func_call_paren for functions with no parameters.
 
 nl_func_decl_start              { Ignore, Add, Remove, Force }
-  Add or remove newline after '(' in a function declaration
+  Add or remove newline after '(' in a function declaration.
 
 nl_func_def_start               { Ignore, Add, Remove, Force }
-  Add or remove newline after '(' in a function definition
+  Add or remove newline after '(' in a function definition.
 
 nl_func_decl_start_single       { Ignore, Add, Remove, Force }
   Overrides nl_func_decl_start when there is only one parameter.
@@ -1176,10 +1202,10 @@ nl_func_def_start_multi_line    { False, True }
   Whether to add newline after '(' in a function definition if '(' and ')' are in different lines.
 
 nl_func_decl_args               { Ignore, Add, Remove, Force }
-  Add or remove newline after each ',' in a function declaration
+  Add or remove newline after each ',' in a function declaration.
 
 nl_func_def_args                { Ignore, Add, Remove, Force }
-  Add or remove newline after each ',' in a function definition
+  Add or remove newline after each ',' in a function definition.
 
 nl_func_decl_args_multi_line    { False, True }
   Whether to add newline after each ',' in a function declaration if '(' and ')' are in different lines.
@@ -1188,10 +1214,10 @@ nl_func_def_args_multi_line     { False, True }
   Whether to add newline after each ',' in a function definition if '(' and ')' are in different lines.
 
 nl_func_decl_end                { Ignore, Add, Remove, Force }
-  Add or remove newline before the ')' in a function declaration
+  Add or remove newline before the ')' in a function declaration.
 
 nl_func_def_end                 { Ignore, Add, Remove, Force }
-  Add or remove newline before the ')' in a function definition
+  Add or remove newline before the ')' in a function definition.
 
 nl_func_decl_end_single         { Ignore, Add, Remove, Force }
   Overrides nl_func_decl_end when there is only one parameter.
@@ -1211,6 +1237,9 @@ nl_func_decl_empty              { Ignore, Add, Remove, Force }
 nl_func_def_empty               { Ignore, Add, Remove, Force }
   Add or remove newline between '()' in a function definition.
 
+nl_func_call_empty              { Ignore, Add, Remove, Force }
+  Add or remove newline between '()' in a function call.
+
 nl_func_call_start_multi_line   { False, True }
   Whether to add newline after '(' in a function call if '(' and ')' are in different lines.
 
@@ -1222,31 +1251,31 @@ nl_func_call_end_multi_line     { False, True }
 
 nl_oc_msg_args                  { False, True }
   Whether to put each OC message parameter on a separate line
-  See nl_oc_msg_leave_one_liner
+  See nl_oc_msg_leave_one_liner.
 
 nl_fdef_brace                   { Ignore, Add, Remove, Force }
-  Add or remove newline between function signature and '{'
+  Add or remove newline between function signature and '{'.
 
 nl_cpp_ldef_brace               { Ignore, Add, Remove, Force }
-  Add or remove newline between C++11 lambda signature and '{'
+  Add or remove newline between C++11 lambda signature and '{'.
 
 nl_return_expr                  { Ignore, Add, Remove, Force }
   Add or remove a newline between the return keyword and return expression.
 
 nl_after_semicolon              { False, True }
-  Whether to put a newline after semicolons, except in 'for' statements
+  Whether to put a newline after semicolons, except in 'for' statements.
 
 nl_paren_dbrace_open            { Ignore, Add, Remove, Force }
   Java: Control the newline between the ')' and '{{' of the double brace initializer.
 
 nl_type_brace_init_lst          { Ignore, Add, Remove, Force }
-  Whether to put a newline after the type in an unnamed temporary direct-list-initialization
+  Whether to put a newline after the type in an unnamed temporary direct-list-initialization.
 
 nl_type_brace_init_lst_open     { Ignore, Add, Remove, Force }
-  Whether to put a newline after open brace in an unnamed temporary direct-list-initialization
+  Whether to put a newline after open brace in an unnamed temporary direct-list-initialization.
 
 nl_type_brace_init_lst_close    { Ignore, Add, Remove, Force }
-  Whether to put a newline before close brace in an unnamed temporary direct-list-initialization
+  Whether to put a newline before close brace in an unnamed temporary direct-list-initialization.
 
 nl_after_brace_open             { False, True }
   Whether to put a newline after brace open.
@@ -1270,14 +1299,14 @@ nl_after_brace_close            { False, True }
 
 nl_after_vbrace_close           { False, True }
   Whether to put a newline after a virtual brace close.
-  Would add a newline before return in: 'if (foo) a++; return;'
+  Would add a newline before return in: 'if (foo) a++; return;'.
 
 nl_brace_struct_var             { Ignore, Add, Remove, Force }
   Control the newline between the close brace and 'b' in: 'struct { int a; } b;'
-  Affects enums, unions and structures. If set to ignore, uses nl_after_brace_close
+  Affects enums, unions and structures. If set to ignore, uses nl_after_brace_close.
 
 nl_define_macro                 { False, True }
-  Whether to alter newlines in '#define' macros
+  Whether to alter newlines in '#define' macros.
 
 nl_squeeze_ifdef                { False, True }
   Whether to remove blanks after '#ifxx' and '#elxx', or before '#elxx' and '#endif'. Does not affect top-level #ifdefs.
@@ -1286,54 +1315,54 @@ nl_squeeze_ifdef_top_level      { False, True }
   Makes the nl_squeeze_ifdef option affect the top-level #ifdefs as well.
 
 nl_before_if                    { Ignore, Add, Remove, Force }
-  Add or remove blank line before 'if'
+  Add or remove blank line before 'if'.
 
 nl_after_if                     { Ignore, Add, Remove, Force }
   Add or remove blank line after 'if' statement.
-  Add/Force work only if the next token is not a closing brace
+  Add/Force work only if the next token is not a closing brace.
 
 nl_before_for                   { Ignore, Add, Remove, Force }
-  Add or remove blank line before 'for'
+  Add or remove blank line before 'for'.
 
 nl_after_for                    { Ignore, Add, Remove, Force }
-  Add or remove blank line after 'for' statement
+  Add or remove blank line after 'for' statement.
 
 nl_before_while                 { Ignore, Add, Remove, Force }
-  Add or remove blank line before 'while'
+  Add or remove blank line before 'while'.
 
 nl_after_while                  { Ignore, Add, Remove, Force }
-  Add or remove blank line after 'while' statement
+  Add or remove blank line after 'while' statement.
 
 nl_before_switch                { Ignore, Add, Remove, Force }
-  Add or remove blank line before 'switch'
+  Add or remove blank line before 'switch'.
 
 nl_after_switch                 { Ignore, Add, Remove, Force }
-  Add or remove blank line after 'switch' statement
+  Add or remove blank line after 'switch' statement.
 
 nl_before_synchronized          { Ignore, Add, Remove, Force }
-  Add or remove blank line before 'synchronized'
+  Add or remove blank line before 'synchronized'.
 
 nl_after_synchronized           { Ignore, Add, Remove, Force }
-  Add or remove blank line after 'synchronized' statement
+  Add or remove blank line after 'synchronized' statement.
 
 nl_before_do                    { Ignore, Add, Remove, Force }
-  Add or remove blank line before 'do'
+  Add or remove blank line before 'do'.
 
 nl_after_do                     { Ignore, Add, Remove, Force }
-  Add or remove blank line after 'do/while' statement
+  Add or remove blank line after 'do/while' statement.
 
 nl_ds_struct_enum_cmt           { False, True }
-  Whether to double-space commented-entries in struct/union/enum
+  Whether to double-space commented-entries in struct/union/enum.
 
 nl_ds_struct_enum_close_brace   { False, True }
   force nl before } of a struct/union/enum
-  (lower priority than 'eat_blanks_before_close_brace')
+  (lower priority than 'eat_blanks_before_close_brace').
 
 nl_before_func_class_def        Unsigned Number
-  Add or remove blank line before 'func_class_def'
+  Add or remove blank line before 'func_class_def'.
 
 nl_before_func_class_proto      Unsigned Number
-  Add or remove blank line before 'func_class_proto'
+  Add or remove blank line before 'func_class_proto'.
 
 nl_class_colon                  { Ignore, Add, Remove, Force }
   Add or remove a newline before/after a class colon,
@@ -1345,64 +1374,64 @@ nl_constr_colon                 { Ignore, Add, Remove, Force }
 
 nl_create_if_one_liner          { False, True }
   Change simple unbraced if statements into a one-liner
-  'if(b)\n i++;' => 'if(b) i++;'
+  'if(b)\n i++;' => 'if(b) i++;'.
 
 nl_create_for_one_liner         { False, True }
   Change simple unbraced for statements into a one-liner
-  'for (i=0;i<5;i++)\n foo(i);' => 'for (i=0;i<5;i++) foo(i);'
+  'for (i=0;i<5;i++)\n foo(i);' => 'for (i=0;i<5;i++) foo(i);'.
 
 nl_create_while_one_liner       { False, True }
   Change simple unbraced while statements into a one-liner
-  'while (i<5)\n foo(i++);' => 'while (i<5) foo(i++);'
+  'while (i<5)\n foo(i++);' => 'while (i<5) foo(i++);'.
 
 nl_split_if_one_liner           { False, True }
    Change a one-liner if statement into simple unbraced if
-  'if(b) i++;' => 'if(b)\n i++;'
+  'if(b) i++;' => 'if(b)\n i++;'.
 
 nl_split_for_one_liner          { False, True }
   Change a one-liner for statement into simple unbraced for
-  'for (i=0;<5;i++) foo(i);' => 'for (i=0;<5;i++)\n foo(i);'
+  'for (i=0;<5;i++) foo(i);' => 'for (i=0;<5;i++)\n foo(i);'.
 
 nl_split_while_one_liner        { False, True }
   Change a one-liner while statement into simple unbraced while
-  'while (i<5) foo(i++);' => 'while (i<5)\n foo(i++);'
+  'while (i<5) foo(i++);' => 'while (i<5)\n foo(i++);'.
 
 #
 # Blank line options
 #
 
 nl_max                          Unsigned Number
-  The maximum consecutive newlines (3 = 2 blank lines)
+  The maximum consecutive newlines (3 = 2 blank lines).
 
 nl_max_blank_in_func            Unsigned Number
-  The maximum consecutive newlines in function
+  The maximum consecutive newlines in function.
 
 nl_after_func_proto             Unsigned Number
-  The number of newlines after a function prototype, if followed by another function prototype
+  The number of newlines after a function prototype, if followed by another function prototype.
 
 nl_after_func_proto_group       Unsigned Number
-  The number of newlines after a function prototype, if not followed by another function prototype
+  The number of newlines after a function prototype, if not followed by another function prototype.
 
 nl_after_func_class_proto       Unsigned Number
-  The number of newlines after a function class prototype, if followed by another function class prototype
+  The number of newlines after a function class prototype, if followed by another function class prototype.
 
 nl_after_func_class_proto_group Unsigned Number
-  The number of newlines after a function class prototype, if not followed by another function class prototype
+  The number of newlines after a function class prototype, if not followed by another function class prototype.
 
 nl_before_func_body_def         Unsigned Number
-  The number of newlines before a multi-line function def body
+  The number of newlines before a multi-line function def body.
 
 nl_before_func_body_proto       Unsigned Number
-  The number of newlines before a multi-line function prototype body
+  The number of newlines before a multi-line function prototype body.
 
 nl_after_func_body              Unsigned Number
-  The number of newlines after '}' of a multi-line function body
+  The number of newlines after '}' of a multi-line function body.
 
 nl_after_func_body_class        Unsigned Number
-  The number of newlines after '}' of a multi-line function body in a class declaration
+  The number of newlines after '}' of a multi-line function body in a class declaration.
 
 nl_after_func_body_one_liner    Unsigned Number
-  The number of newlines after '}' of a single line function body
+  The number of newlines after '}' of a single line function body.
 
 nl_before_block_comment         Unsigned Number
   The minimum number of newlines before a multi-line comment.
@@ -1423,13 +1452,13 @@ nl_after_label_colon            { False, True }
   Whether to force a newline after a label's colon.
 
 nl_after_struct                 Unsigned Number
-  The number of newlines after '}' or ';' of a struct/enum/union definition
+  The number of newlines after '}' or ';' of a struct/enum/union definition.
 
 nl_before_class                 Unsigned Number
-  The number of newlines before a class definition
+  The number of newlines before a class definition.
 
 nl_after_class                  Unsigned Number
-  The number of newlines after '}' or ';' of a class definition
+  The number of newlines after '}' or ';' of a class definition.
 
 nl_before_access_spec           Unsigned Number
   The number of newlines before a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label.
@@ -1439,7 +1468,7 @@ nl_before_access_spec           Unsigned Number
 nl_after_access_spec            Unsigned Number
   The number of newlines after a 'private:', 'public:', 'protected:', 'signals:' or 'slots:' label.
   0 = No change.
-  the option 'nl_after_access_spec' takes preference over 'nl_typedef_blk_start' and 'nl_var_def_blk_start'
+  Overrides 'nl_typedef_blk_start' and 'nl_var_def_blk_start'.
 
 nl_comment_func_def             Unsigned Number
   The number of newlines between a function def and the function comment.
@@ -1458,13 +1487,13 @@ nl_between_get_set              Unsigned Number
   0 = No change.
 
 nl_property_brace               { Ignore, Add, Remove, Force }
-  Add or remove newline between C# property and the '{'
+  Add or remove newline between C# property and the '{'.
 
 eat_blanks_after_open_brace     { False, True }
-  Whether to remove blank lines after '{'
+  Whether to remove blank lines after '{'.
 
 eat_blanks_before_close_brace   { False, True }
-  Whether to remove blank lines before '}'
+  Whether to remove blank lines before '}'.
 
 nl_remove_extra_newlines        Unsigned Number
   How aggressively to remove extra newlines not in preproc.
@@ -1490,26 +1519,26 @@ nl_between_annotation           { Ignore, Add, Remove, Force }
 #
 
 pos_arith                       { Ignore, Lead, Trail }
-  The position of arithmetic operators in wrapped expressions
+  The position of arithmetic operators in wrapped expressions.
 
 pos_assign                      { Ignore, Lead, Trail }
   The position of assignment in wrapped expressions.
-  Do not affect '=' followed by '{'
+  Do not affect '=' followed by '{'.
 
 pos_bool                        { Ignore, Lead, Trail }
-  The position of boolean operators in wrapped expressions
+  The position of boolean operators in wrapped expressions.
 
 pos_compare                     { Ignore, Lead, Trail }
-  The position of comparison operators in wrapped expressions
+  The position of comparison operators in wrapped expressions.
 
 pos_conditional                 { Ignore, Lead, Trail }
-  The position of conditional (b ? t : f) operators in wrapped expressions
+  The position of conditional (b ? t : f) operators in wrapped expressions.
 
 pos_comma                       { Ignore, Lead, Trail }
-  The position of the comma in wrapped expressions
+  The position of the comma in wrapped expressions.
 
 pos_enum_comma                  { Ignore, Lead, Trail }
-  The position of the comma in enum entries
+  The position of the comma in enum entries.
 
 pos_class_comma                 { Ignore, Lead, Trail }
   The position of the comma in the base class list if there are more than one line,
@@ -1536,35 +1565,44 @@ code_width                      Unsigned Number
   Try to limit code width to N number of columns
 
 ls_for_split_full               { False, True }
-  Whether to fully split long 'for' statements at semi-colons
+  Whether to fully split long 'for' statements at semi-colons.
 
 ls_func_split_full              { False, True }
-  Whether to fully split long function protos/calls at commas
+  Whether to fully split long function protos/calls at commas.
 
 ls_code_width                   { False, True }
-  Whether to split lines as close to code_width as possible and ignore some groupings
+  Whether to split lines as close to code_width as possible and ignore some groupings.
 
 #
 # Code alignment (not left column spaces/tabs)
 #
 
 align_keep_tabs                 { False, True }
-  Whether to keep non-indenting tabs
+  Whether to keep non-indenting tabs.
 
 align_with_tabs                 { False, True }
-  Whether to use tabs for aligning
+  Whether to use tabs for aligning.
 
 align_on_tabstop                { False, True }
-  Whether to bump out to the next tab when aligning
+  Whether to bump out to the next tab when aligning.
 
-align_number_left               { False, True }
-  Whether to left-align numbers
+align_number_right              { False, True }
+  Whether to right-align numbers.
 
 align_keep_extra_space          { False, True }
   Whether to keep whitespace not required for alignment.
 
 align_func_params               { False, True }
-  Align variable definitions in prototypes and functions
+  Align variable definitions in prototypes and functions.
+
+align_func_params_span          Unsigned Number
+  The span for aligning parameter definitions in function on parameter name (0=don't align).
+
+align_func_params_thresh        Unsigned Number
+  The threshold for aligning function parameter definitions (0=no limit).
+
+align_func_params_gap           Unsigned Number
+  The gap for aligning function parameter definitions.
 
 align_same_func_call_params     { False, True }
   Align parameters in single-line functions that have the same name.
@@ -1589,19 +1627,19 @@ align_var_def_thresh            Unsigned Number
   The threshold for aligning variable definitions (0=no limit)
 
 align_var_def_gap               Unsigned Number
-  The gap for aligning variable definitions
+  The gap for aligning variable definitions.
 
 align_var_def_colon             { False, True }
-  Whether to align the colon in struct bit fields
+  Whether to align the colon in struct bit fields.
 
 align_var_def_colon_gap         Unsigned Number
-  align variable defs gap for bit colons
+  align variable defs gap for bit colons.
 
 align_var_def_attribute         { False, True }
-  Whether to align any attribute after the variable name
+  Whether to align any attribute after the variable name.
 
 align_var_def_inline            { False, True }
-  Whether to align inline struct/enum/union variable definitions
+  Whether to align inline struct/enum/union variable definitions.
 
 align_assign_span               Unsigned Number
   The span for aligning on '=' in assignments (0=don't align)
@@ -1619,10 +1657,10 @@ align_var_class_span            Unsigned Number
   The span for aligning class (0=don't align)
 
 align_var_class_thresh          Unsigned Number
-  The threshold for aligning class member definitions (0=no limit)
+  The threshold for aligning class member definitions (0=no limit).
 
 align_var_class_gap             Unsigned Number
-  The gap for aligning class member definitions
+  The gap for aligning class member definitions.
 
 align_var_struct_span           Unsigned Number
   The span for aligning struct/union (0=don't align)
@@ -1631,16 +1669,16 @@ align_var_struct_thresh         Unsigned Number
   The threshold for aligning struct/union member definitions (0=no limit)
 
 align_var_struct_gap            Unsigned Number
-  The gap for aligning struct/union member definitions
+  The gap for aligning struct/union member definitions.
 
 align_struct_init_span          Unsigned Number
   The span for aligning struct initializer values (0=don't align)
 
 align_typedef_gap               Unsigned Number
-  The minimum space between the type and the synonym of a typedef
+  The minimum space between the type and the synonym of a typedef.
 
 align_typedef_span              Unsigned Number
-  The span for aligning single-line typedefs (0=don't align)
+  The span for aligning single-line typedefs (0=don't align).
 
 align_typedef_func              Unsigned Number
   How to align typedef'd functions with other typedefs
@@ -1664,7 +1702,7 @@ align_right_cmt_span            Unsigned Number
   The span for aligning comments that end lines (0=don't align)
 
 align_right_cmt_mix             { False, True }
-  If aligning comments, mix with comments after '}' and #endif with less than 3 spaces before the comment
+  If aligning comments, mix with comments after '}' and #endif with less than 3 spaces before the comment.
 
 align_right_cmt_gap             Unsigned Number
   If a trailing comment is more than this number of columns away from the text it follows,
@@ -1674,24 +1712,24 @@ align_right_cmt_at_col          Unsigned Number
   Align trailing comment at or beyond column N; 'pulls in' comments as a bonus side effect (0=ignore)
 
 align_func_proto_span           Unsigned Number
-  The span for aligning function prototypes (0=don't align)
+  The span for aligning function prototypes (0=don't align).
 
 align_func_proto_gap            Unsigned Number
   Minimum gap between the return type and the function name.
 
 align_on_operator               { False, True }
-  Align function protos on the 'operator' keyword instead of what follows
+  Align function protos on the 'operator' keyword instead of what follows.
 
 align_mix_var_proto             { False, True }
   Whether to mix aligning prototype and variable declarations.
   If True, align_var_def_XXX options are used instead of align_func_proto_XXX options.
 
 align_single_line_func          { False, True }
-  Align single-line functions with function prototypes, uses align_func_proto_span
+  Align single-line functions with function prototypes, uses align_func_proto_span.
 
 align_single_line_brace         { False, True }
   Aligning the open brace of single-line functions.
-  Requires align_single_line_func=True, uses align_func_proto_span
+  Requires align_single_line_func=True, uses align_func_proto_span.
 
 align_single_line_brace_gap     Unsigned Number
   Gap for align_single_line_brace.
@@ -1704,16 +1742,16 @@ align_nl_cont                   { False, True }
   This will not work right if the macro contains a multi-line comment.
 
 align_pp_define_together        { False, True }
-  # Align macro functions and variables together
+  # Align macro functions and variables together.
 
 align_pp_define_gap             Unsigned Number
-  The minimum space between label and value of a preprocessor define
+  The minimum space between label and value of a preprocessor define.
 
 align_pp_define_span            Unsigned Number
   The span for aligning on '#define' bodies (0=don't align, other=number of lines including comments between blocks)
 
 align_left_shift                { False, True }
-  Align lines that start with '<<' with previous '<<'. Default=True
+  Align lines that start with '<<' with previous '<<'. Default=True.
 
 align_asm_colon                 { False, True }
   Align text after asm volatile () colons.
@@ -1725,7 +1763,7 @@ align_oc_msg_colon_first        { False, True }
   If True, always align with the first parameter, even if it is too short.
 
 align_oc_decl_colon             { False, True }
-  Aligning parameters in an Obj-C '+' or '-' declaration on the ':'
+  Aligning parameters in an Obj-C '+' or '-' declaration on the ':'.
 
 #
 # Comment modifications
@@ -1745,41 +1783,41 @@ cmt_convert_tab_to_spaces       { False, True }
 
 cmt_indent_multi                { False, True }
   If False, disable all multi-line comment changes, including cmt_width. keyword substitution and leading chars.
-  Default=True
+  Default=True.
 
 cmt_c_group                     { False, True }
-  Whether to group c-comments that look like they are in a block
+  Whether to group c-comments that look like they are in a block.
 
 cmt_c_nl_start                  { False, True }
-  Whether to put an empty '/*' on the first line of the combined c-comment
+  Whether to put an empty '/*' on the first line of the combined c-comment.
 
 cmt_c_nl_end                    { False, True }
-  Whether to put a newline before the closing '*/' of the combined c-comment
+  Whether to put a newline before the closing '*/' of the combined c-comment.
 
 cmt_cpp_group                   { False, True }
-  Whether to group cpp-comments that look like they are in a block
+  Whether to group cpp-comments that look like they are in a block.
 
 cmt_cpp_nl_start                { False, True }
-  Whether to put an empty '/*' on the first line of the combined cpp-comment
+  Whether to put an empty '/*' on the first line of the combined cpp-comment.
 
 cmt_cpp_nl_end                  { False, True }
-  Whether to put a newline before the closing '*/' of the combined cpp-comment
+  Whether to put a newline before the closing '*/' of the combined cpp-comment.
 
 cmt_cpp_to_c                    { False, True }
-  Whether to change cpp-comments into c-comments
+  Whether to change cpp-comments into c-comments.
 
 cmt_star_cont                   { False, True }
-  Whether to put a star on subsequent comment lines
+  Whether to put a star on subsequent comment lines.
 
 cmt_sp_before_star_cont         Unsigned Number
-  The number of spaces to insert at the start of subsequent comment lines
+  The number of spaces to insert at the start of subsequent comment lines.
 
 cmt_sp_after_star_cont          Number
-  The number of spaces to insert after the star on subsequent comment lines
+  The number of spaces to insert after the star on subsequent comment lines.
 
 cmt_multi_check_last            { False, True }
   For multi-line comments with a '*' lead, remove leading spaces if the first and last lines of
-  the comment are the same length. Default=True
+  the comment are the same length. Default=True.
 
 cmt_multi_first_len_minimum     Unsigned Number
   For multi-line comments with a '*' lead, remove leading spaces if the first and last lines of
@@ -1796,7 +1834,7 @@ cmt_insert_file_footer          String
 cmt_insert_func_header          String
   The filename that contains text to insert before a function implementation if the function isn't preceded with a C/C++ comment.
   Will substitute $(function) with the function name and $(javaparam) with the javadoc @param and @return stuff.
-  Will also substitute $(fclass) with the class name: void CFoo::Bar() { ... }
+  Will also substitute $(fclass) with the class name: void CFoo::Bar() { ... }.
 
 cmt_insert_class_header         String
   The filename that contains text to insert before a class if the class isn't preceded with a C/C++ comment.
@@ -1826,13 +1864,13 @@ cmt_insert_before_ctor_dtor     { False, True }
 #
 
 mod_full_brace_do               { Ignore, Add, Remove, Force }
-  Add or remove braces on single-line 'do' statement
+  Add or remove braces on single-line 'do' statement.
 
 mod_full_brace_for              { Ignore, Add, Remove, Force }
-  Add or remove braces on single-line 'for' statement
+  Add or remove braces on single-line 'for' statement.
 
 mod_full_brace_function         { Ignore, Add, Remove, Force }
-  Add or remove braces on single-line function definitions. (Pawn)
+  Add or remove braces on single-line function definitions. (Pawn).
 
 mod_full_brace_if               { Ignore, Add, Remove, Force }
   Add or remove braces on single-line 'if' statement. Will not remove the braces if they contain an 'else'.
@@ -1853,22 +1891,22 @@ mod_full_brace_nl_block_rem_mlcond { False, True }
   Blocks removal of braces if the parenthesis of if/for/while/.. span multiple lines.
 
 mod_full_brace_while            { Ignore, Add, Remove, Force }
-  Add or remove braces on single-line 'while' statement
+  Add or remove braces on single-line 'while' statement.
 
 mod_full_brace_using            { Ignore, Add, Remove, Force }
-  Add or remove braces on single-line 'using ()' statement
+  Add or remove braces on single-line 'using ()' statement.
 
 mod_paren_on_return             { Ignore, Add, Remove, Force }
-  Add or remove unnecessary paren on 'return' statement
+  Add or remove unnecessary paren on 'return' statement.
 
 mod_pawn_semicolon              { False, True }
-  Whether to change optional semicolons to real semicolons
+  Whether to change optional semicolons to real semicolons.
 
 mod_full_paren_if_bool          { False, True }
-  Add parens on 'while' and 'if' statement around bools
+  Add parens on 'while' and 'if' statement around bools.
 
 mod_remove_extra_semicolon      { False, True }
-  Whether to remove superfluous semicolons
+  Whether to remove superfluous semicolons.
 
 mod_add_long_function_closebrace_comment Unsigned Number
   If a function body exceeds the specified number of newlines and doesn't have a comment after
@@ -1895,10 +1933,10 @@ mod_add_long_ifdef_else_comment Unsigned Number
   the #else, a comment will be added.
 
 mod_sort_import                 { False, True }
-  If True, will sort consecutive single-line 'import' statements [Java, D]
+  If True, will sort consecutive single-line 'import' statements [Java, D].
 
 mod_sort_using                  { False, True }
-  If True, will sort consecutive single-line 'using' statements [C#]
+  If True, will sort consecutive single-line 'using' statements [C#].
 
 mod_sort_include                { False, True }
   If True, will sort consecutive single-line '#include' statements [C/C++] and '#import' statements [Obj-C]
@@ -1915,55 +1953,55 @@ mod_remove_empty_return         { False, True }
   If True, it will remove a void 'return;' that appears as the last statement in a function.
 
 mod_sort_oc_properties          { False, True }
-  If True, it will organize the properties (Obj-C)
+  If True, it will organize the properties (Obj-C).
 
 mod_sort_oc_property_class_weight Number
-  Determines weight of class property modifier (Obj-C)
+  Determines weight of class property modifier (Obj-C).
 
 mod_sort_oc_property_thread_safe_weight Number
-  Determines weight of atomic, nonatomic (Obj-C)
+  Determines weight of atomic, nonatomic (Obj-C).
 
 mod_sort_oc_property_readwrite_weight Number
-  Determines weight of readwrite (Obj-C)
+  Determines weight of readwrite (Obj-C).
 
 mod_sort_oc_property_reference_weight Number
-  Determines weight of reference type (retain, copy, assign, weak, strong) (Obj-C)
+  Determines weight of reference type (retain, copy, assign, weak, strong) (Obj-C).
 
 mod_sort_oc_property_getter_weight Number
-  Determines weight of getter type (getter=) (Obj-C)
+  Determines weight of getter type (getter=) (Obj-C).
 
 mod_sort_oc_property_setter_weight Number
-  Determines weight of setter type (setter=) (Obj-C)
+  Determines weight of setter type (setter=) (Obj-C).
 
 mod_sort_oc_property_nullability_weight Number
-  Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C)
+  Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C).
 
 #
 # Preprocessor options
 #
 
 pp_indent                       { Ignore, Add, Remove, Force }
-  Control indent of preprocessors inside #if blocks at brace level 0 (file-level)
+  Control indent of preprocessors inside #if blocks at brace level 0 (file-level).
 
 pp_indent_at_level              { False, True }
-  Whether to indent #if/#else/#endif at the brace level (True) or from column 1 (False)
+  Whether to indent #if/#else/#endif at the brace level (True) or from column 1 (False).
 
 pp_indent_count                 Unsigned Number
   Specifies the number of columns to indent preprocessors per level at brace level 0 (file-level).
   If pp_indent_at_level=False, specifies the number of columns to indent preprocessors per level at brace level > 0 (function-level).
-  Default=1
+  Default=1.
 
 pp_space                        { Ignore, Add, Remove, Force }
-  Add or remove space after # based on pp_level of #if blocks
+  Add or remove space after # based on pp_level of #if blocks.
 
 pp_space_count                  Unsigned Number
-  Sets the number of spaces added with pp_space
+  Sets the number of spaces added with pp_space.
 
 pp_indent_region                Number
-  The indent for #region and #endregion in C# and '#pragma region' in C/C++
+  The indent for #region and #endregion in C# and '#pragma region' in C/C++.
 
 pp_region_indent_code           { False, True }
-  Whether to indent the code between #region and #endregion
+  Whether to indent the code between #region and #endregion.
 
 pp_indent_if                    Number
   If pp_indent_at_level=True, sets the indent for #if, #else and #endif when not at file-level.
@@ -1974,26 +2012,26 @@ pp_if_indent_code               { False, True }
   Control whether to indent the code between #if, #else and #endif.
 
 pp_define_at_level              { False, True }
-  Whether to indent '#define' at the brace level (True) or from column 1 (false)
+  Whether to indent '#define' at the brace level (True) or from column 1 (false).
 
 pp_ignore_define_body           { False, True }
   Whether to ignore the '#define' body while formatting.
 
 pp_indent_case                  { False, True }
   Whether to indent case statements between #if, #else, and #endif.
-  Only applies to the indent of the preprocesser that the case statements directly inside of
+  Only applies to the indent of the preprocesser that the case statements directly inside of.
 
 pp_indent_func_def              { False, True }
   Whether to indent whole function definitions between #if, #else, and #endif.
-  Only applies to the indent of the preprocesser that the function definition is directly inside of
+  Only applies to the indent of the preprocesser that the function definition is directly inside of.
 
 pp_indent_extern                { False, True }
   Whether to indent extern C blocks between #if, #else, and #endif.
-  Only applies to the indent of the preprocesser that the extern block is directly inside of
+  Only applies to the indent of the preprocesser that the extern block is directly inside of.
 
 pp_indent_brace                 { False, True }
   Whether to indent braces directly inside #if, #else, and #endif.
-  Only applies to the indent of the preprocesser that the braces are directly inside of
+  Only applies to the indent of the preprocesser that the braces are directly inside of.
 
 #
 # Sort includes options
@@ -2014,7 +2052,7 @@ include_category_2              String
 
 use_indent_func_call_param      { False, True }
   True:  indent_func_call_param will be used (default)
-  False: indent_func_call_param will NOT be used
+  False: indent_func_call_param will NOT be used.
 
 use_indent_continue_only_once   { False, True }
   The value of the indentation for a continuation line is calculate differently if the line is:
@@ -2025,11 +2063,11 @@ use_indent_continue_only_once   { False, True }
     at the function call (if present)
   To prevent the double use of the option value, use this option with the value 'True'.
   True:  indent_continue will be used only once
-  False: indent_continue will be used every time (default)
+  False: indent_continue will be used every time (default).
 
 use_options_overriding_for_qt_macros { False, True }
   SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.
-  Default=True
+  Default=True.
 
 #
 # Warn levels - 1: error, 2: warning (default), 3: note

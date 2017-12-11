@@ -12,7 +12,7 @@
 
 /*
  * TODO: why do we provide this template class? can't we use
- * a double linked list deque from the standard library ?
+ * a double linked list std::deque from the standard library ?
  */
 /**
  * A simple list manager for a double-linked list.

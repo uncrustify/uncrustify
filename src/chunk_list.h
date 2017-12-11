@@ -41,7 +41,7 @@ enum class scope_e : unsigned int
 };
 
 
-void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what, const char *str);
+void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what);
 
 
 /**
@@ -292,6 +292,15 @@ chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
+ * Gets the prev non-NEWLINE and non-comment chunk, non-preprocessor chunk, non-DC_MEMBER chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
+ */
+chunk_t *chunk_get_prev_ncnlnpnd(chunk_t *cur, scope_e scope = scope_e::ALL);
+
+
+/**
  * Grabs the next chunk of the given type at the level.
  *
  * @param cur    chunk to use as start point
@@ -417,6 +426,16 @@ chunk_t *chunk_search_prev_cat(chunk_t *pc, const c_token_t cat);
  * @retval chunk_t  pointer to the found object
  */
 chunk_t *chunk_search_next_cat(chunk_t *pc, const c_token_t cat);
+
+/**
+ * @brief checks wether two chunks are in same line
+ *
+ * @param  start
+ * @param  end
+ *
+ * @return true if there is no newline between start and end chunks
+ */
+bool are_chunks_in_same_line(chunk_t *start, chunk_t *end);
 
 /*
  * TODO: better move the function implementations to the source file.
@@ -664,8 +683,7 @@ static_inline bool chunk_is_star(chunk_t *pc)
 }
 
 
-static_inline
-bool chunk_is_nullable(chunk_t *pc)
+static_inline bool chunk_is_nullable(chunk_t *pc)
 {
    return((cpd.lang_flags & LANG_CS) && (pc != NULL) && (pc->len() == 1) && (pc->str[0] == '?'));
 }

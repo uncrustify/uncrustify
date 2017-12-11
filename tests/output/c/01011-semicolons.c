@@ -51,7 +51,7 @@ void f2(void)
 {
 	{ i++; }
 
-	for (;;) ;
+	for (;;);
 
 	for (;;) {   }
 }

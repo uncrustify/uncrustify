@@ -166,7 +166,7 @@ void dump_out(unsigned int type)
 
    if (cpd.dumped_file == nullptr)
    {
-      sprintf(dumpFileName, "%s.%u", cpd.filename, type);
+      sprintf(dumpFileName, "%s.%u", cpd.filename.c_str(), type);
    }
    else
    {
@@ -237,7 +237,7 @@ void dump_in(unsigned int type)
 
    if (cpd.dumped_file == nullptr)
    {
-      sprintf(dumpFileName, "%s.%u", cpd.filename, type);
+      sprintf(dumpFileName, "%s.%u", cpd.filename.c_str(), type);
    }
    else
    {

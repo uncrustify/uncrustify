@@ -140,6 +140,9 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
 static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
 
 
+static chunk_t *chunk_get_ncnlnpnd(chunk_t *cur, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
+
+
 /**
  * @brief searches a chunk that holds a specific string
  *
@@ -220,6 +223,30 @@ chunk_t *chunk_search_next_cat(chunk_t *pc, const c_token_t cat)
 }
 
 
+bool are_chunks_in_same_line(chunk_t *start, chunk_t *end)
+{
+   chunk_t *tmp;
+
+   if (start != nullptr)
+   {
+      tmp = chunk_get_next(start);
+   }
+   else
+   {
+      return(false);
+   }
+   while (tmp != nullptr && tmp != end)
+   {
+      if (tmp->type == CT_NEWLINE)
+      {
+         return(false);
+      }
+      tmp = chunk_get_next(tmp);
+   }
+   return(true);
+}
+
+
 static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type,
                                   const scope_e scope, const direction_e dir)
 {
@@ -254,8 +281,16 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
 #if DEBUG
       if (pc != nullptr)
       {
-         LOG_FMT(LCHUNK, "%s(%d): %s type is %s, orig_line is %zu, orig_col is %zu\n",
-                 __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
+         if (pc->type == CT_NEWLINE)
+         {
+            LOG_FMT(LCHUNK, "%s(%d): orig_line is %zu, orig_col is %zu, NEWLINE\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col);
+         }
+         else
+         {
+            LOG_FMT(LCHUNK, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s', type is %s\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+         }
       }
 #endif
    } while (  pc != nullptr        // the end of the list was not reached yet
@@ -494,6 +529,12 @@ chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, scope_e scope)
 }
 
 
+chunk_t *chunk_get_prev_ncnlnpnd(chunk_t *cur, scope_e scope)
+{
+   return(chunk_get_ncnlnpnd(cur, scope, direction_e::BACKWARD));
+}
+
+
 chunk_t *chunk_get_next_nblank(chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_comment_newline_or_blank, scope, direction_e::FORWARD, false));
@@ -697,13 +738,13 @@ chunk_t *chunk_get_prev_nvb(chunk_t *cur, const scope_e scope)
 
 void set_chunk_type_real(chunk_t *pc, c_token_t tt)
 {
-   set_chunk_real(pc, tt, LSETTYP, "set_chunk_type");
+   set_chunk_real(pc, tt, LSETTYP);
 }
 
 
 void set_chunk_parent_real(chunk_t *pc, c_token_t pt)
 {
-   set_chunk_real(pc, pt, LSETPAR, "set_chunk_parent");
+   set_chunk_real(pc, pt, LSETPAR);
 }
 
 
@@ -715,8 +756,8 @@ void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits)
       UINT64 nflags = (pc->flags & ~clr_bits) | set_bits;
       if (pc->flags != nflags)
       {
-         LOG_FMT(LSETFLG, "set_chunk_flags(%d): %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " %zu:%zu '%s' %s:%s",
-                 __LINE__, pc->flags, pc->flags ^ nflags, nflags,
+         LOG_FMT(LSETFLG, "%s(%d): %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " orig_line is %zu, orig_col is %zu, text() '%s', type is %s, parent_type is %s",
+                 __func__, __LINE__, pc->flags, pc->flags ^ nflags, nflags,
                  pc->orig_line, pc->orig_col, pc->text(),
                  get_token_name(pc->type), get_token_name(pc->parent_type));
          log_func_stack_inline(LSETFLG);
@@ -726,7 +767,7 @@ void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits)
 }
 
 
-void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what, const char *str)
+void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what)
 {
    LOG_FUNC_ENTRY();
 
@@ -754,8 +795,9 @@ void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what, const char *st
 
    if (pc != nullptr && *where != token)
    {
-      LOG_FMT(what, "%s(%d): orig_line is %zu, orig_col is %zu, '%s' %s:%s => %s:%s",
-              str, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
+      LOG_FMT(what, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+      LOG_FMT(what, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s",
               get_token_name(pc->type), get_token_name(pc->parent_type),
               get_token_name(*type), get_token_name(*parent_type));
       log_func_stack_inline(what);
@@ -771,6 +813,22 @@ static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope, const direct
    pc = (chunk_is_preproc(pc) == true) ?
         chunk_search(pc, chunk_is_comment_or_newline_in_preproc, scope, dir, false) :
         chunk_search(pc, chunk_is_comment_newline_or_preproc, scope, dir, false);
+   return(pc);
+}
+
+
+static chunk_t *chunk_get_ncnlnpnd(chunk_t *cur, const scope_e scope, const direction_e dir)
+{
+   search_t search_function = select_search_fct(dir);
+   chunk_t  *pc             = cur;
+
+   do                                   // loop over the chunk list
+   {
+      pc = search_function(pc, scope);  // in either direction while
+   } while (  pc != nullptr             // the end of the list was not reached yet
+           && !chunk_is_comment_or_newline(pc)
+           && !chunk_is_preproc(pc)
+           && (pc->type == CT_DC_MEMBER));
    return(pc);
 }
 

@@ -103,3 +103,5 @@ Features
 - Tip: There are also a few options to run_tests.py that can
   help. Most interesting is '-d' will run 'diff' if the test fails.
 
+- Tip: If some errors occur with Windows, set the macro variable
+  NO_MACRO_VARARG to 1 to test some more pointer under Linux.

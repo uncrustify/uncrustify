@@ -1,0 +1,34 @@
+set_chunk_real(): orig_line is , orig_col is , pc->text() 'TelegramIndex'
+   pc->type is WORD, pc->parent_type is NONE => *type is TYPE, *parent_type is NONE [CallStack:-DEBUG NOT SET-]
+set_chunk_real(): orig_line is , orig_col is , pc->text() '*'
+   pc->type is STAR, pc->parent_type is NONE => *type is PTR_TYPE, *parent_type is NONE [CallStack:-DEBUG NOT SET-]
+set_chunk_real(): orig_line is , orig_col is , pc->text() '*'
+   pc->type is STAR, pc->parent_type is NONE => *type is PTR_TYPE, *parent_type is NONE [CallStack:-DEBUG NOT SET-]
+set_chunk_real(): orig_line is , orig_col is , pc->text() 'TelegramIndex'
+   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CLASS_DEF, *parent_type is NONE [CallStack:-DEBUG NOT SET-]
+set_chunk_real(): orig_line is , orig_col is , pc->text() '('
+   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE [CallStack:-DEBUG NOT SET-]
+set_chunk_real(): orig_line is , orig_col is , pc->text() ')'
+   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE [CallStack:-DEBUG NOT SET-]
+set_chunk_real(): orig_line is , orig_col is , pc->text() ':'
+   pc->type is COLON, pc->parent_type is NONE => *type is CONSTR_COLON, *parent_type is NONE [CallStack:-DEBUG NOT SET-]
+set_chunk_real(): orig_line is , orig_col is , pc->text() 'pTelName'
+   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CTOR_VAR, *parent_type is NONE [CallStack:-DEBUG NOT SET-]
+set_chunk_real(): orig_line is , orig_col is , pc->text() '('
+   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE [CallStack:-DEBUG NOT SET-]
+set_chunk_real(): orig_line is , orig_col is , pc->text() ')'
+   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE [CallStack:-DEBUG NOT SET-]
+set_chunk_real(): orig_line is , orig_col is , pc->text() 'nTelIndex'
+   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CTOR_VAR, *parent_type is NONE [CallStack:-DEBUG NOT SET-]
+set_chunk_real(): orig_line is , orig_col is , pc->text() '('
+   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE [CallStack:-DEBUG NOT SET-]
+set_chunk_real(): orig_line is , orig_col is , pc->text() ')'
+   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE [CallStack:-DEBUG NOT SET-]
+set_chunk_real(): orig_line is , orig_col is , pc->text() 'TelegramIndex'
+   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CLASS_DEF, *parent_type is NONE [CallStack:-DEBUG NOT SET-]
+set_chunk_real(): orig_line is , orig_col is , pc->text() '~'
+   pc->type is INV, pc->parent_type is NONE => *type is DESTRUCTOR, *parent_type is NONE [CallStack:-DEBUG NOT SET-]
+set_chunk_real(): orig_line is , orig_col is , pc->text() '('
+   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE [CallStack:-DEBUG NOT SET-]
+set_chunk_real(): orig_line is , orig_col is , pc->text() ')'
+   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE [CallStack:-DEBUG NOT SET-]
