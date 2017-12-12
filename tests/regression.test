@@ -47,7 +47,9 @@
 10052 staging/Uncrustify.Cpp.cfg    staging/UNI-1339.cpp
 10054 staging/UNI-1344.cfg          staging/UNI-1344.cpp
 10055 staging/Uncrustify.CSharp.cfg staging/UNI-1345.cs
+10060 staging/UNI-1350.cfg          staging/UNI-1350.cpp
 10062 staging/UNI-1356.cfg          staging/UNI-1356.cpp
+10065 staging/Uncrustify.CSharp.cfg staging/UNI-1975.cs
 10067 staging/UNI-1978.cfg          staging/UNI-1978.cs 			    
 10069 staging/Uncrustify.Cpp.cfg    staging/UNI-1980.cpp
 10070 staging/Uncrustify.Cpp.cfg    staging/UNI-1981.cpp
@@ -70,10 +72,12 @@
 60006 staging/UNI-2049.cfg          staging/UNI-2049.cpp
 60008 staging/Uncrustify.JamCS.cfg staging/UNI-17253.cs
 60012 staging/Uncrustify.CSharp.cfg staging/UNI-12303.cs
+60013 staging/UNI-13955.cfg         staging/UNI-13955.cs
 60015 staging/Uncrustify.CSharp.cfg staging/UNI-14131.cs
 60016 staging/Uncrustify.CSharp.cfg staging/UNI-11662.cs
 60017 staging/Uncrustify.Cpp.cfg    staging/UNI-2683.cpp
 60019 staging/Uncrustify.CSharp.cfg staging/UNI-18780.cs
+60020 staging/Uncrustify.CSharp.cfg staging/UNI-18829.cs
 60022 staging/Uncrustify.Cpp.cfg staging/UNI-18439.cpp
 60024 staging/Uncrustify.CSharp.cfg staging/UNI-19644.cs
 60025 staging/Uncrustify.Cpp.cfg staging/UNI-19894.cpp
