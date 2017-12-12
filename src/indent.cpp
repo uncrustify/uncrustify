@@ -2021,20 +2021,23 @@ void indent_text(void)
          }
          //check for the series of CT_member chunks else pop it.
          chunk_t *tmp = chunk_get_next_ncnlnp(pc);
-         if (tmp->type == CT_FUNC_CALL)
+         if (tmp != nullptr)
          {
-            tmp = chunk_get_next_ncnlnp(tmp);
-            if (tmp->type == CT_ANGLE_OPEN)
+            if (tmp->type == CT_FUNC_CALL)
             {
+               tmp = chunk_get_next_ncnlnp(tmp);
+               if (tmp->type == CT_ANGLE_OPEN)
+               {
+                  tmp = chunk_get_next_ncnlnp(chunk_skip_to_match(tmp));
+               }
                tmp = chunk_get_next_ncnlnp(chunk_skip_to_match(tmp));
             }
-            tmp = chunk_get_next_ncnlnp(chunk_skip_to_match(tmp));
+            else
+            {
+               tmp = chunk_get_next_ncnlnp(tmp);
+            }
          }
-         else
-         {
-            tmp = chunk_get_next_ncnlnp(tmp);
-         }
-         if (  tmp == nullptr
+         if (  tmp != nullptr
             || (strcmp(tmp->text(), ".") != 0)
             || tmp->type != CT_MEMBER)
          {
