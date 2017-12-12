@@ -2038,8 +2038,8 @@ void indent_text(void)
             }
          }
          if (  tmp != nullptr
-            || (strcmp(tmp->text(), ".") != 0)
-            || tmp->type != CT_MEMBER)
+            && (  (strcmp(tmp->text(), ".") != 0)
+               || tmp->type != CT_MEMBER))
          {
             if (chunk_is_paren_close(tmp))
             {
