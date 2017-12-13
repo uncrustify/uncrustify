@@ -1823,7 +1823,6 @@ void indent_text(void)
                   && pc->parent_type == CT_FUNC_DEF)))
          {
             // Skip any continuation indents
-            controlPSECount(frm.pse_tos - 1);
             controlPSECountMinus(frm.pse_tos);
             idx = frm.pse_tos - 1;
             while (  idx > 0
