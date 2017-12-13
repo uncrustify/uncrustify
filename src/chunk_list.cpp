@@ -732,10 +732,12 @@ void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits)
       UINT64 nflags = (pc->flags & ~clr_bits) | set_bits;
       if (pc->flags != nflags)
       {
-         LOG_FMT(LSETFLG, "%s(%d): %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " orig_line is %zu, orig_col is %zu, text() '%s', type is %s, parent_type is %s",
+         LOG_FMT(LSETFLG, "%s(%d): %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " orig_line is %zu, orig_col is %zu, text() '%s', type is %s, ",
                  __func__, __LINE__, pc->flags, pc->flags ^ nflags, nflags,
                  pc->orig_line, pc->orig_col, pc->text(),
-                 get_token_name(pc->type), get_token_name(pc->parent_type));
+                 get_token_name(pc->type));
+         LOG_FMT(LSETFLG, "parent_type is %s",
+                 get_token_name(pc->parent_type));
          log_func_stack_inline(LSETFLG);
          pc->flags = nflags;
       }
