@@ -1825,17 +1825,20 @@ void indent_text(void)
             // Skip any continuation indents
             controlPSECountMinus(frm.pse_tos);
             idx = frm.pse_tos - 1;
-            while (  idx > 0
-                  && frm.pse[idx].type != CT_BRACE_OPEN
-                  && frm.pse[idx].type != CT_VBRACE_OPEN
-                  && frm.pse[idx].type != CT_PAREN_OPEN
-                  && frm.pse[idx].type != CT_FPAREN_OPEN
-                  && frm.pse[idx].type != CT_SPAREN_OPEN
-                  && frm.pse[idx].type != CT_SQUARE_OPEN
-                  && frm.pse[idx].type != CT_ANGLE_OPEN
-                  && frm.pse[idx].type != CT_CLASS_COLON
-                  && frm.pse[idx].type != CT_CONSTR_COLON
-                  && frm.pse[idx].type != CT_ASSIGN_NL)
+            while (  (  (  idx > 0
+                        && frm.pse[idx].type != CT_BRACE_OPEN
+                        && frm.pse[idx].type != CT_VBRACE_OPEN
+                        && frm.pse[idx].type != CT_PAREN_OPEN
+                        && frm.pse[idx].type != CT_FPAREN_OPEN
+                        && frm.pse[idx].type != CT_SPAREN_OPEN
+                        && frm.pse[idx].type != CT_SQUARE_OPEN
+                        && frm.pse[idx].type != CT_ANGLE_OPEN
+                        && frm.pse[idx].type != CT_CASE
+                        && frm.pse[idx].type != CT_ASSIGN_NL)
+                     || are_chunks_in_same_line(frm.pse[idx].pc, frm.pse[frm.pse_tos].pc)
+                        )
+                  && (  frm.pse[idx].type != CT_CLASS_COLON
+                     && frm.pse[idx].type != CT_CONSTR_COLON))
             {
                idx--;
                skipped = true;
@@ -1860,6 +1863,22 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
          }
 
+         else if (  pc->type == CT_PAREN_OPEN
+                 && !chunk_is_newline(next)
+                 && !cpd.settings[UO_indent_align_paren].b
+                 && !(pc->flags & PCF_IN_SPAREN))
+         {
+            idx = frm.pse_tos - 1;
+            while (idx > 0 && are_chunks_in_same_line(frm.pse[idx].pc, frm.pse[frm.pse_tos].pc))
+            {
+               idx--;
+               skipped = true;
+            }
+            frm.pse[frm.pse_tos].indent = frm.pse[idx].indent + indent_size;
+            log_indent();
+            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
+            skipped                         = true;
+         }
          else if (  (  chunk_is_str(pc, "(", 1)
                     && !cpd.settings[UO_indent_paren_nl].b)
                  || (  chunk_is_str(pc, "<", 1)
@@ -1986,7 +2005,14 @@ void indent_text(void)
           */
          if (pc->type == CT_ASSIGN && chunk_is_newline(chunk_get_prev(pc)))
          {
-            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent + indent_size;
+            if (frm.pse[frm.pse_tos].type == CT_ASSIGN_NL)
+            {
+               frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+            }
+            else
+            {
+               frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent + indent_size;
+            }
             log_indent_tmp();
             indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
             LOG_FMT(LINDENT, "%s(%d): %zu] assign => %zu [%s]\n",
@@ -1997,7 +2023,23 @@ void indent_text(void)
          next = chunk_get_next(pc);
          if (next != nullptr)
          {
+            /*
+             * fixes  1260 , 1268 , 1277 (Extra indentation after line with multiple assignments)
+             * For multiple consecutive assignments in single line , the indent of all these
+             * assignments should be same and one more than this line's indent.
+             * so poping the previous assign and pushing the new one
+             */
+            if (frm.pse[frm.pse_tos].type == CT_ASSIGN && pc->type == CT_ASSIGN)
+            {
+               indent_pse_pop(frm, pc);
+            }
             indent_pse_push(frm, pc);
+
+            if (pc->type == CT_ASSIGN && chunk_is_newline(chunk_get_prev(pc)))
+            {
+               frm.pse[frm.pse_tos].type = CT_ASSIGN_NL;
+            }
+
             if (cpd.settings[UO_indent_continue].n != 0)
             {
                controlPSECountMinus(frm.pse_tos);
@@ -2034,7 +2076,7 @@ void indent_text(void)
                controlPSECountMinus(frm.pse_tos);
                frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent_tmp + indent_size;
                log_indent();
-               if (pc->type == CT_ASSIGN)
+               if (pc->type == CT_ASSIGN && chunk_is_newline(next))
                {
                   frm.pse[frm.pse_tos].type       = CT_ASSIGN_NL;
                   frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
