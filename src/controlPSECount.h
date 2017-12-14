@@ -11,6 +11,8 @@
 #include "uncrustify_types.h"
 
 
+void controlPSECountMinus(size_t value);
+
 void controlPSECount(size_t value);
 
 #endif /* CONTROLPSECOUNT_H_INCLUDED */
