@@ -1224,10 +1224,10 @@ void indent_text(void)
       {
          indent_pse_push(frm, pc);
 
+         controlPSECountMinus(frm.pse_tos);
          if (  cpd.settings[UO_indent_cpp_lambda_body].b
             && pc->parent_type == CT_CPP_LAMBDA)
          {
-            controlPSECountMinus(frm.pse_tos);
             frm.pse[frm.pse_tos].brace_indent = frm.pse[frm.pse_tos - 1].indent;
             indent_column_set(frm.pse[frm.pse_tos].brace_indent);
             frm.pse[frm.pse_tos].indent = indent_column + indent_size;
@@ -1284,7 +1284,6 @@ void indent_text(void)
                     frm.pse[frm.pse_tos - 1].pc->level);
 
             // FIXME: I don't know how much of this is necessary, but it seems to work
-            controlPSECountMinus(frm.pse_tos);
             frm.pse[frm.pse_tos].brace_indent = 1 + (pc->brace_level * indent_size);
             indent_column_set(frm.pse[frm.pse_tos].brace_indent);
             frm.pse[frm.pse_tos].indent = indent_column + indent_size;
@@ -2138,6 +2137,7 @@ void indent_text(void)
 
          if (cpd.settings[UO_indent_continue].n != 0)
          {
+            //controlPSECountMinus(frm.pse_tos);
             //frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent +
             //                              abs(cpd.settings[UO_indent_continue].n);
             controlPSECountMinus(frm.pse_tos);
