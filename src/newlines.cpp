@@ -1757,6 +1757,32 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
    }
 
+   //fixes 1235 Add single line namespace support
+
+   if (  br_open->type == CT_BRACE_OPEN
+      && (br_open->parent_type == CT_NAMESPACE)
+      && chunk_is_newline(chunk_get_prev(br_open)))
+   {
+      chunk_t *chunk_brace_close = chunk_skip_to_match(br_open, scope_e::ALL);
+      if (chunk_brace_close != nullptr)
+      {
+         if (are_chunks_in_same_line(br_open, chunk_brace_close))
+         {
+            if (cpd.settings[UO_nl_namespace_two_to_one_liner].b)
+            {
+               chunk_t *prev = chunk_get_prev_nnl(br_open);
+               newline_del_between(prev, br_open);
+            }
+            else
+            {
+               chunk_t *nxt = chunk_get_next(br_open);
+               newline_add_between(br_open, nxt);
+            }
+         }
+      }
+   }
+
+
    // Make sure we don't break a one-liner
    if (!one_liner_nl_ok(br_open))
    {
