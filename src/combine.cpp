@@ -1630,16 +1630,12 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                   || tmp->type == CT_BRACE_OPEN
                   || tmp->type == CT_QUALIFIER)
                {
+                  set_chunk_type(pc, CT_BYREF);
                   set_chunk_type(prev, CT_TYPE);
-                  if (  next->type == CT_OPERATOR
-                     || next->type == CT_TYPE
-                     || next->type == CT_DC_MEMBER)
+                  if (!(  next->type == CT_OPERATOR
+                       || next->type == CT_TYPE
+                       || next->type == CT_DC_MEMBER))
                   {
-                     set_chunk_type(pc, CT_BYREF);
-                  }
-                  else
-                  {
-                     set_chunk_type(pc, CT_ADDR);
                      chunk_flags_set(next, PCF_VAR_1ST);
                   }
                }
