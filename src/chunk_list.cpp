@@ -223,6 +223,30 @@ chunk_t *chunk_search_next_cat(chunk_t *pc, const c_token_t cat)
 }
 
 
+bool are_chunks_in_same_line(chunk_t *start, chunk_t *end)
+{
+   chunk_t *tmp;
+
+   if (start != nullptr)
+   {
+      tmp = chunk_get_next(start);
+   }
+   else
+   {
+      return(false);
+   }
+   while (tmp != nullptr && tmp != end)
+   {
+      if (tmp->type == CT_NEWLINE)
+      {
+         return(false);
+      }
+      tmp = chunk_get_next(tmp);
+   }
+   return(true);
+}
+
+
 static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type,
                                   const scope_e scope, const direction_e dir)
 {

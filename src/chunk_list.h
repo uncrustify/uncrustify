@@ -404,6 +404,16 @@ chunk_t *chunk_search_prev_cat(chunk_t *pc, const c_token_t cat);
  */
 chunk_t *chunk_search_next_cat(chunk_t *pc, const c_token_t cat);
 
+/**
+ * @brief checks wether two chunks are in same line
+ *
+ * @param  start
+ * @param  end
+ *
+ * @return true if there is no newline between start and end chunks
+ */
+bool are_chunks_in_same_line(chunk_t *start, chunk_t *end);
+
 /*
  * TODO: better move the function implementations to the source file.
  * No need to make the implementation public.
@@ -488,7 +498,7 @@ static_inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, scope_e scope = sco
  */
 static_inline bool chunk_is_comment(chunk_t *pc)
 {
-   return(  pc != NULL
+   return(  pc != nullptr
          && (  pc->type == CT_COMMENT
             || pc->type == CT_COMMENT_MULTI
             || pc->type == CT_COMMENT_CPP));
@@ -497,21 +507,21 @@ static_inline bool chunk_is_comment(chunk_t *pc)
 
 static_inline bool chunk_is_single_line_comment(chunk_t *pc)
 {
-   return(  pc != NULL
+   return(  pc != nullptr
          && (pc->type == CT_COMMENT || pc->type == CT_COMMENT_CPP));
 }
 
 
 static_inline bool chunk_is_newline(chunk_t *pc)
 {
-   return(  pc != NULL
+   return(  pc != nullptr
          && (pc->type == CT_NEWLINE || pc->type == CT_NL_CONT));
 }
 
 
 static_inline bool chunk_is_semicolon(chunk_t *pc)
 {
-   return(  pc != NULL
+   return(  pc != nullptr
          && (pc->type == CT_SEMICOLON || pc->type == CT_VSEMICOLON));
 }
 
@@ -525,7 +535,7 @@ static_inline bool chunk_is_semicolon(chunk_t *pc)
  */
 static_inline bool chunk_is_blank(chunk_t *pc)
 {
-   return(pc != NULL && (pc->len() == 0));
+   return(pc != nullptr && (pc->len() == 0));
 }
 
 
@@ -538,7 +548,7 @@ static_inline bool chunk_is_comment_or_newline(chunk_t *pc)
 
 static_inline bool chunk_is_balanced_square(chunk_t *pc)
 {
-   return(  pc != NULL
+   return(  pc != nullptr
          && (  pc->type == CT_SQUARE_OPEN
             || pc->type == CT_TSQUARE
             || pc->type == CT_SQUARE_CLOSE));
@@ -547,13 +557,13 @@ static_inline bool chunk_is_balanced_square(chunk_t *pc)
 
 static_inline bool chunk_is_preproc(chunk_t *pc)
 {
-   return(pc != NULL && (pc->flags & PCF_IN_PREPROC));
+   return(pc != nullptr && (pc->flags & PCF_IN_PREPROC));
 }
 
 
 static_inline bool chunk_is_comment_or_newline_in_preproc(chunk_t *pc)
 {
-   return(  pc != NULL
+   return(  pc != nullptr
          && chunk_is_preproc(pc)
          && (chunk_is_comment(pc) || chunk_is_newline(pc)));
 }
@@ -594,7 +604,7 @@ static_inline bool chunk_is_Doxygen_comment(chunk_t *pc)
 
 static_inline bool chunk_is_type(chunk_t *pc)
 {
-   return(  pc != NULL
+   return(  pc != nullptr
          && (  pc->type == CT_TYPE
             || pc->type == CT_PTR_TYPE
             || pc->type == CT_BYREF
@@ -614,7 +624,7 @@ static_inline bool chunk_is_token(const chunk_t *pc, c_token_t c_token)
 
 static_inline bool chunk_is_str(chunk_t *pc, const char *str, size_t len)
 {
-   return(  pc != NULL                            // valid pc pointer
+   return(  pc != nullptr                         // valid pc pointer
          && (pc->len() == len)                    // token size equals size parameter
          && (memcmp(pc->text(), str, len) == 0)); // token name is the same as str parameter
 
@@ -627,7 +637,7 @@ static_inline bool chunk_is_str(chunk_t *pc, const char *str, size_t len)
 
 static_inline bool chunk_is_str_case(chunk_t *pc, const char *str, size_t len)
 {
-   return(  pc != NULL
+   return(  pc != nullptr
          && (pc->len() == len)
          && (strncasecmp(pc->text(), str, len) == 0));
 }
@@ -635,7 +645,7 @@ static_inline bool chunk_is_str_case(chunk_t *pc, const char *str, size_t len)
 
 static_inline bool chunk_is_word(chunk_t *pc)
 {
-   return(  pc != NULL
+   return(  pc != nullptr
          && (pc->len() >= 1)
          && CharTable::IsKw1(pc->str[0]));
 }
@@ -643,7 +653,7 @@ static_inline bool chunk_is_word(chunk_t *pc)
 
 static_inline bool chunk_is_star(chunk_t *pc)
 {
-   return(  pc != NULL
+   return(  pc != nullptr
          && (pc->len() == 1)
          && (pc->str[0] == '*')
          && pc->type != CT_OPERATOR_VAL);
@@ -652,7 +662,7 @@ static_inline bool chunk_is_star(chunk_t *pc)
 
 static_inline bool chunk_is_addr(chunk_t *pc)
 {
-   if (  pc != NULL
+   if (  pc != nullptr
       && (  pc->type == CT_BYREF
          || (  (pc->len() == 1)
             && (pc->str[0] == '&')
@@ -661,7 +671,7 @@ static_inline bool chunk_is_addr(chunk_t *pc)
       chunk_t *prev = chunk_get_prev(pc);
 
       if (  (pc->flags & PCF_IN_TEMPLATE)
-         && (  prev != NULL
+         && (  prev != nullptr
             && (prev->type == CT_COMMA || prev->type == CT_ANGLE_OPEN)))
       {
          return(false);
@@ -677,7 +687,7 @@ static_inline bool chunk_is_addr(chunk_t *pc)
 static_inline bool chunk_is_msref(chunk_t *pc) // ms compilers for C++/CLI and WinRT use '^' instead of '*' for marking up reference types vs pointer types
 {
    return(  (cpd.lang_flags & LANG_CPP)
-         && (  pc != NULL
+         && (  pc != nullptr
             && (pc->len() == 1)
             && (pc->str[0] == '^')
             && pc->type != CT_OPERATOR_VAL));
@@ -698,28 +708,28 @@ bool chunk_is_newline_between(chunk_t *start, chunk_t *end);
 
 static_inline bool chunk_is_closing_brace(chunk_t *pc)
 {
-   return(  pc != NULL
+   return(  pc != nullptr
          && (pc->type == CT_BRACE_CLOSE || pc->type == CT_VBRACE_CLOSE));
 }
 
 
 static_inline bool chunk_is_opening_brace(chunk_t *pc)
 {
-   return(  pc != NULL
+   return(  pc != nullptr
          && (pc->type == CT_BRACE_OPEN || pc->type == CT_VBRACE_OPEN));
 }
 
 
 static_inline bool chunk_is_vbrace(chunk_t *pc)
 {
-   return(  pc != NULL
+   return(  pc != nullptr
          && (pc->type == CT_VBRACE_CLOSE || pc->type == CT_VBRACE_OPEN));
 }
 
 
 static_inline bool chunk_is_paren_open(chunk_t *pc)
 {
-   return(  pc != NULL
+   return(  pc != nullptr
          && (  pc->type == CT_PAREN_OPEN
             || pc->type == CT_SPAREN_OPEN
             || pc->type == CT_TPAREN_OPEN
@@ -729,7 +739,7 @@ static_inline bool chunk_is_paren_open(chunk_t *pc)
 
 static_inline bool chunk_is_paren_close(chunk_t *pc)
 {
-   return(  pc != NULL
+   return(  pc != nullptr
          && (  pc->type == CT_PAREN_CLOSE
             || pc->type == CT_SPAREN_CLOSE
             || pc->type == CT_TPAREN_CLOSE
@@ -743,8 +753,8 @@ static_inline bool chunk_is_paren_close(chunk_t *pc)
  */
 static_inline bool chunk_same_preproc(chunk_t *pc1, chunk_t *pc2)
 {
-   return(  pc1 == NULL
-         || pc2 == NULL
+   return(  pc1 == nullptr
+         || pc2 == nullptr
          || ((pc1->flags & PCF_IN_PREPROC) == (pc2->flags & PCF_IN_PREPROC)));
 }
 
@@ -781,7 +791,7 @@ static_inline bool chunk_is_forin(chunk_t *pc)
       if (prev->type == CT_FOR)
       {
          chunk_t *next = pc;
-         while (  next
+         while (  next != nullptr
                && next->type != CT_SPAREN_CLOSE
                && next->type != CT_IN)
          {
