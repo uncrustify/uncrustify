@@ -2705,28 +2705,31 @@ static bool single_line_comment_indent_rule_applies(chunk_t *start)
 
 static size_t calc_comment_next_col_diff(chunk_t *pc)
 {
-   chunk_t *next = pc;
+   chunk_t *next = pc; // assumes pc has a comment type
 
+   // Note: every comment is squashed into a single token
+   // (including newline chars for multiline comments) and is followed by
+   // a newline token (unless there are no more tokens left)
    do
    {
-      chunk_t *next_nl = chunk_get_next(next);
-
-      if (next_nl == nullptr || next_nl->nl_count > 1)
+      chunk_t *newline_token = chunk_get_next(next);
+      if (newline_token == nullptr || newline_token->nl_count > 1)
       {
-         // FIXME: Max thresh magic number 5000
-         return(5000);
+         return(5000);  // FIXME: Max thresh magic number 5000
       }
 
-      next = chunk_get_next(next_nl);
+      next = chunk_get_next(newline_token);
    } while (chunk_is_comment(next));
 
-   if (next != nullptr)
+   if (next == nullptr)
    {
-      return(abs(int(next->orig_col - pc->orig_col)));
+      return(5000);     // FIXME: Max thresh magic number 5000
    }
 
-   // FIXME: Max thresh magic number 5000
-   return(5000);
+   // here next is the first non comment, non newline token
+   return(next->orig_col > pc->orig_col
+          ? next->orig_col - pc->orig_col
+          : pc->orig_col - next->orig_col);
 }
 
 
