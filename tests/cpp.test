@@ -551,6 +551,7 @@
 10100  issue_564.cfg                        cpp/issue_564.cpp
 60001  UNI-2650.cfg                         cpp/UNI-2650.cpp
 60002  U25-Cpp.cfg                          cpp/UNI-16283.cpp
+60003  U26-Cpp.cfg                          cpp/UNI-1288.cpp
 60017  U27-Cpp.cfg                          cpp/UNI-2683.cpp
 60029  empty.cfg                            cpp/UNI-21510.cpp
 60030  U33-Cpp.cfg                          cpp/UNI-21727.cpp
