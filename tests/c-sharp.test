@@ -69,6 +69,10 @@
 # Adopt some UT tests
 10012  empty.cfg                            cs/621_this-spacing.cs
 10014  empty.cfg                            cs/630_bad-new-init-semicolon-removal.cs
+10015  misc-failures.cfg                    cs/misc-failures.cs
+10016  new-constraint-paren-space.cfg       cs/new-constraint-paren-space.cs
+10018  empty.cfg                            cs/delete-space-oc.mm
+10019  empty.cfg                            cs/func-param-wrap-oc.mm
 10027  U01-Cs.cfg                           cs/oneline_property.cs
 10028  U02-Cs.cfg                           cs/ifcolalign.cs
 10029  U03-Cs.cfg                           cs/when.cs
@@ -78,6 +82,7 @@
 10036  U14-Cpp.cfg                          cs/inttypes.h.mm
 10039  615_nested_usings.cfg                cs/615_nested-usings.cs
 10044  U04-Cs.cfg                           cs/ifcomment.cs
+10045  U05-Cs.cfg                           cs/UNI-1288.cs
 10046  U15-Cpp.cfg                          cs/UNI-1333.mm
 10055  U06-Cs.cfg                           cs/UNI-1345.cs
 10067  UNI-1978.cfg                         cs/UNI-1978.cs
@@ -86,6 +91,7 @@
 10102  U24-Cpp.cfg                          cs/pp-ignore.mm
 10103  U11-Cs.cfg                           cs/UNI-2506.cs
 10104  empty.cfg                            cs/UNI-2505.cs
+11011  620_getset-brace.cfg                 cs/620_getset-brace.cs
 11030  U08-Cpp.cfg                          cs/argtypes.mm
 11031  U09-Cpp.cfg                          cs/casting.mm
 11032  U10-Cpp.cfg                          cs/newlines.mm
