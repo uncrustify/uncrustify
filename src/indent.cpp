@@ -619,7 +619,7 @@ void indent_text(void)
 {
    LOG_FUNC_ENTRY();
    chunk_t       *pc;
-   chunk_t       *next;
+   chunk_t       *next       = nullptr;
    chunk_t       *prev       = nullptr;
    bool          did_newline = true;
    int           idx;
