@@ -351,6 +351,13 @@ static bool can_remove_braces(chunk_t *bopen)
          else if (pc->type == CT_BRACE_CLOSE)
          {
             br_count--;
+            if (pc->level == level)
+            {
+               // mean a statement in a braces { stmt; }
+               // as a statement with a semicolon { stmt; };
+               ++semi_count;
+               hit_semi = true;
+            }
          }
          else if (pc->type == CT_IF || pc->type == CT_ELSEIF)
          {
