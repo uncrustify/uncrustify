@@ -76,9 +76,9 @@ enum tokenpos_e
 //! True, False or Ignore
 enum TrueFalseIgnore_e
 {
-   TFI_FALSE  = false,                    //! false
-   TFI_TRUE   = true,                     //! true
-   TFI_IGNORE = 2,                        //! ignore
+   TFI_FALSE  = 0,                    //! false
+   TFI_TRUE   = 1,                    //! true
+   TFI_IGNORE = 2,                    //! ignore
 };
 
 /**
