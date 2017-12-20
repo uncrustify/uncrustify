@@ -76,9 +76,9 @@ enum tokenpos_e
 //! True, False or Ignore
 enum TrueFalseIgnore_e
 {
-   TFI_FALSE  = false,                    //! false
-   TFI_TRUE   = true,                     //! true
-   TFI_IGNORE = 2,                        //! ignore
+   TFI_FALSE  = 0,                    //! false
+   TFI_TRUE   = 1,                    //! true
+   TFI_IGNORE = 2,                    //! ignore
 };
 
 /**
@@ -1027,13 +1027,6 @@ std::string bool_to_string(bool val);
  * @param val  argument value to convert
  */
 std::string argval_to_string(argval_t argval);
-
-/**
- * convert an integer number to a string
- *
- * @param val  integer number to convert
- */
-std::string number_to_string(int number);
 
 /**
  * convert a line ending type to a string

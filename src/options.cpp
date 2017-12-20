@@ -2690,20 +2690,6 @@ string argval_to_string(argval_t argval)
 }
 
 
-string number_to_string(int number)
-{
-   char buffer[12]; // 11 + 1 termination char
-
-   sprintf(buffer, "%d", number);
-
-   /*
-    * NOTE: this creates a std:string class from the char array.
-    *       It isn't returning a pointer to stack memory.
-    */
-   return(buffer);
-}
-
-
 string lineends_to_string(lineends_e linends)
 {
    switch (linends)
@@ -2775,10 +2761,10 @@ string op_val_to_string(argtype_e argtype, op_val_t op_val)
       return(argval_to_string(op_val.a));
 
    case AT_NUM:
-      return(number_to_string(op_val.n));
+      return(to_string(op_val.n));
 
    case AT_UNUM:
-      return(number_to_string(op_val.u));
+      return(to_string(op_val.u));
 
    case AT_LINE:
       return(lineends_to_string(op_val.le));
