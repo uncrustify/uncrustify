@@ -39,11 +39,12 @@
 10036 staging/Uncrustify.Cpp.cfg staging/inttypes.h.mm
 10039 staging/615_nested_usings.cfg staging/615_nested-usings.cs
 10044 staging/Uncrustify.CSharp.cfg staging/ifcomment.cs
-10045 staging/Uncrustify.CSharp.cfg staging/UNI-1288.cs
+10045 staging/UNI-1288.cfg staging/UNI-1288.cs
 10046 staging/Uncrustify.Cpp.cfg    staging/UNI-1333.mm
 10047 staging/Uncrustify.Cpp.cfg    staging/UNI-1334.cpp
 10048 staging/Uncrustify.Cpp.cfg    staging/UNI-1335.cpp
 10050 staging/Uncrustify.Cpp.cfg    staging/UNI-1337.cpp
+10051 staging/UNI-1338.cfg          staging/UNI-1338.cs
 10052 staging/Uncrustify.Cpp.cfg    staging/UNI-1339.cpp
 10054 staging/UNI-1344.cfg          staging/UNI-1344.cpp
 10055 staging/Uncrustify.CSharp.cfg staging/UNI-1345.cs
