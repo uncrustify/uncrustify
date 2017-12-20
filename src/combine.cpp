@@ -1161,24 +1161,15 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
           *
           * FIXME: this check can be done better...
           */
+         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
          tmp = chunk_get_next_type(next, CT_PAREN_CLOSE, next->level);
          if (tmp != nullptr)
          {
-            chunk_t *tmpA = chunk_get_next_type(tmp, CT_ASSIGN, pc->level);
             tmp = chunk_get_next(tmp);
             if (chunk_is_token(tmp, CT_PAREN_OPEN))
             {
-               if (chunk_is_token(tmpA, CT_ASSIGN))
-               {
-                  // we have "TYPE(...)(...) =" such as
-                  // Issue #1041
-                  // void (*g_func_table[32])(void) =
-               }
-               else
-               {
-                  // we have "TYPE(...)("
-                  set_chunk_type(pc, CT_FUNCTION);
-               }
+               set_chunk_type(pc, CT_FUNCTION);
             }
             else
             {
@@ -2049,6 +2040,7 @@ static bool mark_function_type(chunk_t *pc)
 
    // Scan backwards across the name, which can only be a word and single star
    chunk_t *varcnk = chunk_get_prev_ncnl(pc);
+   varcnk = chunk_get_prev_ssq(varcnk);
    if (varcnk != nullptr && !chunk_is_word(varcnk))
    {
       if (  (cpd.lang_flags & LANG_OC)
@@ -2099,6 +2091,8 @@ static bool mark_function_type(chunk_t *pc)
    tmp = pc;
    while ((tmp = chunk_get_prev_ncnl(tmp)) != nullptr)
    {
+      tmp = chunk_get_prev_ssq(tmp);
+
       LOG_FMT(LFTYPE, " -- type is %s, %s on orig_line %zu, orig_col is %zu",
               get_token_name(tmp->type), tmp->text(),
               tmp->orig_line, tmp->orig_col);
@@ -3995,6 +3989,9 @@ static void mark_function(chunk_t *pc)
       {
          tmp3 = chunk_get_next_ncnl(tmp2);
       }
+
+      tmp3 = chunk_get_next_ssq(tmp3);
+
 
       if (  chunk_is_str(tmp3, ")", 1)
          && (  chunk_is_star(tmp1)
