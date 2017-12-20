@@ -3605,6 +3605,7 @@ void newlines_squeeze_ifdef(void)
    }
 } // newlines_squeeze_ifdef
 
+
 void newlines_squeeze_paren_close(void)
 {
    LOG_FUNC_ENTRY();
@@ -3614,7 +3615,7 @@ void newlines_squeeze_paren_close(void)
    {
       chunk_t *next;
       chunk_t *prev;
-      if (pc->type == CT_NEWLINE) 
+      if (pc->type == CT_NEWLINE)
       {
          prev = chunk_get_prev(pc);
       }
@@ -3627,11 +3628,11 @@ void newlines_squeeze_paren_close(void)
       {
          chunk_t *prev_op = chunk_skip_to_match_rev(prev);
          chunk_t *next_op = chunk_skip_to_match_rev(next);
-         bool flag = true;
+         bool    flag     = true;
          if (true)
          {
             chunk_t *tmp = prev;
-            while(chunk_is_paren_close(tmp))
+            while (chunk_is_paren_close(tmp))
             {
                tmp = chunk_get_prev(tmp);
             }

@@ -37,25 +37,25 @@ void newlines_functions_remove_extra_blank_lines(void);
 void newlines_squeeze_ifdef(void);
 
 /**
-* In case of consecutive closing parens, which follow a newline,
-* the closing paren are altered to different lines, as per the respective opening parens.
-* In the given example, first 2 opening paren are in same line, hence the respective closing paren are put in the same line.
-* input:
-* func1(func2(
-*    func3(
-*       func4(
-*       )
-*    )
-* )
-* );
-* output:
-* func1(func2(
-*    func3(
-*       func4(
-*       )
-*    )
-* ));
-*/
+ * In case of consecutive closing parens, which follow a newline,
+ * the closing paren are altered to different lines, as per the respective opening parens.
+ * In the given example, first 2 opening paren are in same line, hence the respective closing paren are put in the same line.
+ * input:
+ * func1(func2(
+ *    func3(
+ *       func4(
+ *       )
+ *    )
+ * )
+ * );
+ * output:
+ * func1(func2(
+ *    func3(
+ *       func4(
+ *       )
+ *    )
+ * ));
+ */
 void newlines_squeeze_paren_close(void);
 
 
