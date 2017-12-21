@@ -901,6 +901,18 @@ static void _blank_line_set(chunk_t *pc, const char *text, uncrustify_options uo
 static void newlines_func_pre_blank_lines(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
+   if (  start == nullptr
+      || (  (  start->type != CT_FUNC_CLASS_DEF
+            || cpd.settings[UO_nl_before_func_class_def].u == 0)
+         && (  start->type != CT_FUNC_CLASS_PROTO
+            || cpd.settings[UO_nl_before_func_class_proto].u == 0)
+         && (  start->type != CT_FUNC_DEF
+            || cpd.settings[UO_nl_before_func_body_def].u == 0)
+         && (  start->type != CT_FUNC_PROTO
+            || cpd.settings[UO_nl_before_func_body_proto].u == 0)))
+   {
+      return;
+   }
 
    LOG_FMT(LNLFUNCT, "\n%s(%d): set blank line(s): for %s at line %zu\n",
            __func__, __LINE__, start->text(), start->orig_line);
@@ -911,21 +923,23 @@ static void newlines_func_pre_blank_lines(chunk_t *start)
     *   - a destructor
     *   - something else (don't remove)
     */
-   chunk_t *pc;
+   chunk_t *pc           = nullptr;
    chunk_t *last_nl      = nullptr;
    chunk_t *last_comment = nullptr;
    bool    do_it         = false;
    for (pc = chunk_get_prev(start); pc != nullptr; pc = chunk_get_prev(pc))
    {
+      LOG_FMT(LNLFUNCT, "   O%zu:%zu %s '%s'\n", pc->orig_line, pc->orig_col,
+              get_token_name(pc->type), pc->text());
+
       if (chunk_is_newline(pc))
       {
          last_nl = pc;
-         LOG_FMT(LNLFUNCT, "   <chunk_is_newline> found at line=%zu column=%zu\n", pc->orig_line, pc->orig_col);
          continue;
       }
-      else if (chunk_is_comment(pc))
+
+      if (chunk_is_comment(pc))
       {
-         LOG_FMT(LNLFUNCT, "   <chunk_is_comment> found at line=%zu column=%zu\n", pc->orig_line, pc->orig_col);
          if (  (  pc->orig_line < start->orig_line
                && ((start->orig_line - pc->orig_line
                     - (pc->type == CT_COMMENT_MULTI ? pc->nl_count : 0))) < 2)
@@ -942,100 +956,89 @@ static void newlines_func_pre_blank_lines(chunk_t *start)
          do_it = true;
          break;
       }
-      else if (pc->type == CT_DESTRUCTOR)
+
+      if (  pc->type == CT_DESTRUCTOR
+         || pc->type == CT_TYPE
+         || pc->type == CT_QUALIFIER
+         || pc->type == CT_PTR_TYPE
+         || pc->type == CT_DC_MEMBER
+         || pc->type == CT_TYPE
+         || pc->type == CT_TYPE)
       {
-         LOG_FMT(LNLFUNCT, "   <CT_DESTRUCTOR> found at line=%zu column=%zu\n", pc->orig_line, pc->orig_col);
          continue;
       }
-      else if (pc->type == CT_TYPE)
+      // skip template stuff to add newlines before it
+      if (pc->type == CT_ANGLE_CLOSE && pc->parent_type == CT_TEMPLATE)
       {
-         LOG_FMT(LNLFUNCT, "   <CT_TYPE> %s found at line=%zu column=%zu\n", pc->text(), pc->orig_line, pc->orig_col);
+         pc = chunk_get_prev_type(pc, CT_TEMPLATE, -1);
          continue;
       }
-      else if (pc->type == CT_QUALIFIER)
-      {
-         LOG_FMT(LNLFUNCT, "   <CT_QUALIFIER> found at line=%zu column=%zu\n", pc->orig_line, pc->orig_col);
-         continue;
-      }
-      else if (pc->type == CT_PTR_TYPE)
-      {
-         LOG_FMT(LNLFUNCT, "   <CT_PTR_TYPE> found at line=%zu column=%zu\n", pc->orig_line, pc->orig_col);
-         continue;
-      }
-      else if (pc->type == CT_DC_MEMBER)
-      {
-         LOG_FMT(LNLFUNCT, "   <CT_DC_MEMBER> %s found at line=%zu column=%zu\n", pc->text(), pc->orig_line, pc->orig_col);
-         continue;
-      }
-      else
-      {
-         LOG_FMT(LNLFUNCT, "   else <%s> found at line=%zu column=%zu\n", get_token_name(pc->type), pc->orig_line, pc->orig_col);
-         do_it = true;
-         break;
-      }
+
+      // else
+      do_it = true;
+      break;
    }
-   if (do_it)
+   if (!do_it || last_nl == nullptr)
    {
-      if (last_nl)
-      {
-         LOG_FMT(LNLFUNCT, "   set blank line(s): for <NL> at line=%zu column=%zu\n", last_nl->orig_line, last_nl->orig_col);
-         switch (start->type)
-         {
-         case CT_FUNC_CLASS_DEF:
-            if (cpd.settings[UO_nl_before_func_class_def].u > 0)
-            {
-               if (cpd.settings[UO_nl_before_func_class_def].u != last_nl->nl_count)
-               {
-                  LOG_FMT(LNLFUNCT, "   set blank line(s) to %zu\n",
-                          cpd.settings[UO_nl_before_func_class_def].u);
-                  blank_line_set(last_nl, UO_nl_before_func_class_def);
-               }
-            }
-            break;
-
-         case CT_FUNC_CLASS_PROTO:
-            if (cpd.settings[UO_nl_before_func_class_proto].u > 0)
-            {
-               if (cpd.settings[UO_nl_before_func_class_proto].u != last_nl->nl_count)
-               {
-                  LOG_FMT(LNLFUNCT, "   set blank line(s) to %zu\n",
-                          cpd.settings[UO_nl_before_func_class_proto].u);
-                  blank_line_set(last_nl, UO_nl_before_func_class_proto);
-               }
-            }
-            break;
-
-         case CT_FUNC_DEF:
-            if (cpd.settings[UO_nl_before_func_body_def].u > 0)
-            {
-               if (cpd.settings[UO_nl_before_func_body_def].u != last_nl->nl_count)
-               {
-                  LOG_FMT(LNLFUNCT, "   set blank line(s) to %zu\n",
-                          cpd.settings[UO_nl_before_func_body_def].u);
-                  blank_line_set(last_nl, UO_nl_before_func_body_def);
-               }
-            }
-            break;
-
-         case CT_FUNC_PROTO:
-            if (cpd.settings[UO_nl_before_func_body_proto].u > 0)
-            {
-               if (cpd.settings[UO_nl_before_func_body_proto].u != last_nl->nl_count)
-               {
-                  LOG_FMT(LNLFUNCT, "   set blank line(s) to %zu\n",
-                          cpd.settings[UO_nl_before_func_body_proto].u);
-                  blank_line_set(last_nl, UO_nl_before_func_body_proto);
-               }
-            }
-            break;
-
-         default:
-            LOG_FMT(LERR, "   setting to blank line(s) at line %zu not possible\n",
-                    pc->orig_line);
-            break;
-         } // switch
-      }
+      return;
    }
+
+   LOG_FMT(LNLFUNCT, "   set blank line(s): for <NL> at O%zu:%zu\n",
+           last_nl->orig_line, last_nl->orig_col);
+
+   switch (start->type)
+   {
+   case CT_FUNC_CLASS_DEF:
+   {
+      if (cpd.settings[UO_nl_before_func_class_def].u != last_nl->nl_count)
+      {
+         LOG_FMT(LNLFUNCT, "   set blank line(s) to %zu\n",
+                 cpd.settings[UO_nl_before_func_class_def].u);
+         blank_line_set(last_nl, UO_nl_before_func_class_def);
+      }
+      break;
+   }
+
+   case CT_FUNC_CLASS_PROTO:
+   {
+      if (cpd.settings[UO_nl_before_func_class_proto].u != last_nl->nl_count)
+      {
+         LOG_FMT(LNLFUNCT, "   set blank line(s) to %zu\n",
+                 cpd.settings[UO_nl_before_func_class_proto].u);
+         blank_line_set(last_nl, UO_nl_before_func_class_proto);
+      }
+      break;
+   }
+
+   case CT_FUNC_DEF:
+   {
+      if (cpd.settings[UO_nl_before_func_body_def].u != last_nl->nl_count)
+      {
+         LOG_FMT(LNLFUNCT, "   set blank line(s) to %zu\n",
+                 cpd.settings[UO_nl_before_func_body_def].u);
+         blank_line_set(last_nl, UO_nl_before_func_body_def);
+      }
+      break;
+   }
+
+   case CT_FUNC_PROTO:
+   {
+      if (cpd.settings[UO_nl_before_func_body_proto].u != last_nl->nl_count)
+      {
+         LOG_FMT(LNLFUNCT, "   set blank line(s) to %zu\n",
+                 cpd.settings[UO_nl_before_func_body_proto].u);
+         blank_line_set(last_nl, UO_nl_before_func_body_proto);
+      }
+      break;
+   }
+
+   default:
+   {
+      LOG_FMT(LERR, "   setting to blank line(s) at line %zu not possible\n",
+              pc->orig_line);
+      break;
+   }
+   }   // switch
 } // newlines_func_pre_blank_lines
 
 
