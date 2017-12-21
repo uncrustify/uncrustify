@@ -1256,6 +1256,8 @@ void register_options(void)
    unc_add_option("nl_constr_colon", UO_nl_constr_colon, AT_IARF,
                   "Add or remove a newline around a class constructor colon.\n"
                   "Related to nl_constr_init_args, pos_constr_colon and pos_constr_comma.");
+   unc_add_option("nl_namespace_two_to_one_liner", UO_nl_namespace_two_to_one_liner, AT_BOOL,
+                  "If true turns two liner namespace to one liner,else will make then four liners");
    unc_add_option("nl_create_if_one_liner", UO_nl_create_if_one_liner, AT_BOOL,
                   "Change simple unbraced if statements into a one-liner\n"
                   "'if(b)\\n i++;' => 'if(b) i++;'.");
