@@ -3633,6 +3633,61 @@ void newlines_squeeze_ifdef(void)
 } // newlines_squeeze_ifdef
 
 
+void newlines_squeeze_paren_close(void)
+{
+   LOG_FUNC_ENTRY();
+
+   chunk_t *pc;
+   for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   {
+      chunk_t *next;
+      chunk_t *prev;
+      if (pc->type == CT_NEWLINE)
+      {
+         prev = chunk_get_prev(pc);
+      }
+      else
+      {
+         prev = pc;
+      }
+      next = chunk_get_next(pc);
+      if (next != nullptr && prev != nullptr && chunk_is_paren_close(next) && chunk_is_paren_close(prev))
+      {
+         chunk_t *prev_op = chunk_skip_to_match_rev(prev);
+         chunk_t *next_op = chunk_skip_to_match_rev(next);
+         bool    flag     = true;
+         if (true)
+         {
+            chunk_t *tmp = prev;
+            while (chunk_is_paren_close(tmp))
+            {
+               tmp = chunk_get_prev(tmp);
+            }
+            if (tmp->type != CT_NEWLINE)
+            {
+               flag = false;
+            }
+         }
+         if (flag)
+         {
+            if (are_chunks_in_same_line(next_op, prev_op))
+            {
+               if (pc->type == CT_NEWLINE)
+               {
+                  pc = next;
+               }
+               newline_del_between(prev, next);
+            }
+            else
+            {
+               newline_add_between(prev, next);
+            }
+         }
+      }
+   }
+} // newlines_squeeze_paren_close
+
+
 void newlines_eat_start_end(void)
 {
    LOG_FUNC_ENTRY();
