@@ -1773,11 +1773,12 @@ static void newlines_brace_pair(chunk_t *br_open)
                chunk_t *prev = chunk_get_prev_nnl(br_open);
                newline_del_between(prev, br_open);
             }
-            else
-            {
-               chunk_t *nxt = chunk_get_next(br_open);
-               newline_add_between(br_open, nxt);
-            }
+            /* Below code is to support conversion of 2 liner to 4 liners
+             * else
+             * {
+             *  chunk_t *nxt = chunk_get_next(br_open);
+             *  newline_add_between(br_open, nxt);
+             * }*/
          }
       }
    }
