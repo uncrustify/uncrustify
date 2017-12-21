@@ -1325,6 +1325,10 @@ nl_brace_struct_var             = ignore   # ignore/add/remove/force
 # Whether to alter newlines in '#define' macros.
 nl_define_macro                 = false    # false/true
 
+# Whether to alter newlines between consecutive paren closes, 
+# The number of closing paren in a line will depend on respective open paren lines
+nl_squeeze_paren_close          = false    # false/true
+
 # Whether to remove blanks after '#ifxx' and '#elxx', or before '#elxx' and '#endif'. Does not affect top-level #ifdefs.
 nl_squeeze_ifdef                = false    # false/true
 
