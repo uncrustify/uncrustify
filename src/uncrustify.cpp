@@ -1894,6 +1894,10 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          {
             newlines_squeeze_ifdef();
          }
+         if (cpd.settings[UO_nl_squeeze_paren_close].b)
+         {
+            newlines_squeeze_paren_close();
+         }
          do_blank_lines();
          newlines_eat_start_end();
          newlines_functions_remove_extra_blank_lines();

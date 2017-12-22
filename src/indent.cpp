@@ -2489,7 +2489,7 @@ void indent_text(void)
                         {
                            search = chunk_get_next(search);
                         }
-                        if (chunk_get_next(search)->type == CT_SEMICOLON)
+                        if (chunk_get_next(search)->type == CT_SEMICOLON || chunk_get_next(search)->type == CT_NEWLINE)
                         {
                            search = chunk_skip_to_match_rev(search);
                            search = chunk_get_next(chunk_get_prev_nl(search));
