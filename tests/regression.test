@@ -45,11 +45,13 @@
 10048 staging/Uncrustify.Cpp.cfg    staging/UNI-1335.cpp
 10050 staging/Uncrustify.Cpp.cfg    staging/UNI-1337.cpp
 10052 staging/Uncrustify.Cpp.cfg    staging/UNI-1339.cpp
+10053 staging/UNI-1340.cfg          staging/UNI-1340.cpp
 10054 staging/UNI-1344.cfg          staging/UNI-1344.cpp
 10055 staging/Uncrustify.CSharp.cfg staging/UNI-1345.cs
 10060 staging/UNI-1350.cfg          staging/UNI-1350.cpp
 10062 staging/UNI-1356.cfg          staging/UNI-1356.cpp
 10065 staging/Uncrustify.CSharp.cfg staging/UNI-1975.cs
+10066 staging/UNI-1977.cfg          staging/UNI-1977.cs
 10067 staging/UNI-1978.cfg          staging/UNI-1978.cs 			    
 10069 staging/Uncrustify.Cpp.cfg    staging/UNI-1980.cpp
 10070 staging/Uncrustify.Cpp.cfg    staging/UNI-1981.cpp
@@ -91,3 +93,4 @@
 60038 staging/UNI-30088.cfg staging/UNI-30088.cpp
 60039 staging/Uncrustify.Cpp.cfg staging/UNI-30498.cpp
 60040 staging/Uncrustify.CSharp.cfg staging/UNI-30498_2.cs
+60041 staging/squeeze-paren-close-Option.cfg staging/squeeze-paren-close-Option.cs
