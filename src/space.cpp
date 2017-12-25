@@ -803,7 +803,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    }
 
    // "a [x]" vs "a[x]"
-   if (second->type == CT_SQUARE_OPEN && second->parent_type != CT_OC_MSG)
+   if (  second->type == CT_SQUARE_OPEN
+      && (  second->parent_type != CT_OC_MSG
+         && second->parent_type != CT_CS_SQ_STMT))
    {
       log_rule("sp_before_square");
       return(cpd.settings[UO_sp_before_square].a);
@@ -2012,8 +2014,8 @@ void space_text(void)
    {
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col);
+         LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>, nl is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->nl_count);
       }
       else
       {

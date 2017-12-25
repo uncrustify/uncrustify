@@ -462,7 +462,7 @@ chunk_t *newline_add_after(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (!pc)
+   if (pc == nullptr)
    {
       return(nullptr);
    }
@@ -1981,8 +1981,10 @@ static void newline_before_return(chunk_t *start)
    }
 
    chunk_t *pc = chunk_get_prev(nl);
-   if (  !pc
-      || (pc->type == CT_BRACE_OPEN || pc->type == CT_VBRACE_OPEN))
+   if (  pc == nullptr
+      || (  pc->type == CT_BRACE_OPEN
+         || pc->type == CT_VBRACE_OPEN
+         || start->parent_type == CT_CASE)) // Issue #1257
    {
       return;
    }
@@ -3815,7 +3817,8 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
             chunk_t *next2 = chunk_get_next(next);
             if (  next2 != nullptr
                && (  next2->type == CT_PREPROC
-                  || (next2->type == CT_BRACE_OPEN && chunk_type == CT_ASSIGN)))
+                  || (  chunk_type == CT_ASSIGN
+                     && next2->type == CT_BRACE_OPEN)))
             {
                continue;
             }

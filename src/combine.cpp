@@ -3017,8 +3017,8 @@ void combine_labels(void)
    {
       if (cur->type == CT_NEWLINE)
       {
-         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>\n",
-                 __func__, __LINE__, cur->orig_line, cur->orig_col);
+         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>, nl is %zu\n",
+                 __func__, __LINE__, cur->orig_line, cur->orig_col, cur->nl_count);
       }
       else if (cur->type == CT_VBRACE_OPEN)
       {

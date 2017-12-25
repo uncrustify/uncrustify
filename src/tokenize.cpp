@@ -916,6 +916,25 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
    // Check if we stopped on a decimal point & make sure it isn't '..'
    if ((ctx.peek() == '.') && (ctx.peek(1) != '.'))
    {
+      // Issue #1265, 5.clamp()
+      tok_info ss;
+      ctx.save(ss);
+      while (ctx.more() && CharTable::IsKw2(ctx.peek(1)))
+      {
+         // skip characters to check for paren open
+         ctx.get();
+      }
+      if (ctx.peek(1) == '(')
+      {
+         ctx.restore(ss);
+         pc.type = CT_NUMBER;
+         return(true);
+      }
+      else
+      {
+         ctx.restore(ss);
+      }
+
       pc.str.append(ctx.get());
       is_float = true;
       if (did_hex)
@@ -2178,8 +2197,8 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       }
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col);
+         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>, nl is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->nl_count);
       }
       else if (pc->type == CT_VBRACE_OPEN)
       {
