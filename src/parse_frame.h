@@ -19,6 +19,7 @@ void pf_copy(parse_frame_t *dst, const parse_frame_t *src);
  * Push a copy of the parse frame onto the stack.
  * This is called on #if and #ifdef.
  */
+void pf_push(ParseFrame &frm); //TODO temp conversion functions, remove after transition to ParseFrame
 void pf_push(parse_frame_t *pf);
 
 
@@ -54,6 +55,7 @@ void pf_trash_tos(void);
  * Pop the top item off the stack and copy into pf.
  * This is called on #endif
  */
+void pf_pop(ParseFrame &frm); //TODO temp conversion functions, remove after transition to ParseFrame
 void pf_pop(parse_frame_t *pf);
 
 

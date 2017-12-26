@@ -174,6 +174,16 @@ void controlFrameCount()
 }
 
 
+void pf_push(ParseFrame &frm)
+{
+   parse_frame_t o_f = genOldFrame(frm);
+
+   pf_push(&o_f);
+
+   frm = genNewFrame(o_f);
+}
+
+
 void pf_push(parse_frame_t *pf)
 {
    static int ref_no = 1;
@@ -231,6 +241,19 @@ void pf_trash_tos(void)
       cpd.frame_count--;
    }
    LOG_FMT(LPF, "%s(%d): frame_count is %zu\n", __func__, __LINE__, cpd.frame_count);
+}
+
+
+void pf_pop(ParseFrame &frm)
+{
+   if (cpd.frame_count > 0)
+   {
+      parse_frame_t o_f = genOldFrame(frm);
+
+      pf_pop(&o_f);
+
+      frm = genNewFrame(o_f);
+   }
 }
 
 
