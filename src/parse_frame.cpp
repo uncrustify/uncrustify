@@ -15,6 +15,94 @@
 #include <cstdlib>
 
 
+//TODO temp conversion functions, remove after transition to ParseFrame
+static parse_frame_t genOldFrame(const ParseFrame &frm)
+{
+   assert(frm.tos() < PSE_SIZE);
+   parse_frame_t ret{};
+
+   ret.ref_no       = frm.ref_no;
+   ret.level        = frm.level;
+   ret.brace_level  = frm.brace_level;
+   ret.pp_level     = frm.pp_level;
+   ret.sparen_count = frm.sparen_count;
+   ret.paren_count  = frm.paren_count;
+   ret.in_ifdef     = frm.in_ifdef;
+   ret.stmt_count   = frm.stmt_count;
+   ret.expr_count   = frm.expr_count;
+   ret.pse_tos      = frm.tos();
+
+   for (size_t i = 0; i <= frm.tos(); ++i)
+   {
+      auto &frm_pse = frm.at(i);
+
+      ret.pse[i].type         = frm_pse.type;
+      ret.pse[i].level        = frm_pse.level;
+      ret.pse[i].open_line    = frm_pse.open_line;
+      ret.pse[i].pc           = frm_pse.pc;
+      ret.pse[i].brace_indent = frm_pse.brace_indent;
+      ret.pse[i].indent       = frm_pse.indent;
+      ret.pse[i].indent_tmp   = frm_pse.indent_tmp;
+      ret.pse[i].indent_tab   = frm_pse.indent_tab;
+      ret.pse[i].indent_cont  = frm_pse.indent_cont;
+      ret.pse[i].parent       = frm_pse.parent;
+      ret.pse[i].stage        = frm_pse.stage;
+      ret.pse[i].in_preproc   = frm_pse.in_preproc;
+      ret.pse[i].ns_cnt       = frm_pse.ns_cnt;
+      ret.pse[i].non_vardef   = frm_pse.non_vardef;
+      ret.pse[i].ip           = frm_pse.ip;
+   }
+   //+1 for the out of bounds elem
+   ret.pse[frm.tos() + 1] = frm.poped();
+
+   return(ret);
+}
+
+
+static ParseFrame genNewFrame(const parse_frame_t &frm)
+{
+   ParseFrame ret{};
+
+   ret.ref_no       = frm.ref_no;
+   ret.level        = frm.level;
+   ret.brace_level  = frm.brace_level;
+   ret.pp_level     = frm.pp_level;
+   ret.sparen_count = frm.sparen_count;
+   ret.paren_count  = frm.paren_count;
+   ret.in_ifdef     = frm.in_ifdef;
+   ret.stmt_count   = frm.stmt_count;
+   ret.expr_count   = frm.expr_count;
+
+   //+1 for the out of bounds elem
+   for (size_t i = 1; i <= frm.pse_tos + 1; ++i)
+   {
+      chunk_t c{};
+      ret.push(c);
+   }
+   for (size_t i = 0; i <= frm.pse_tos + 1; ++i)
+   {
+      ret.at(i).type         = frm.pse[i].type;
+      ret.at(i).level        = frm.pse[i].level;
+      ret.at(i).open_line    = frm.pse[i].open_line;
+      ret.at(i).pc           = frm.pse[i].pc;
+      ret.at(i).brace_indent = frm.pse[i].brace_indent;
+      ret.at(i).indent       = frm.pse[i].indent;
+      ret.at(i).indent_tmp   = frm.pse[i].indent_tmp;
+      ret.at(i).indent_tab   = frm.pse[i].indent_tab;
+      ret.at(i).indent_cont  = frm.pse[i].indent_cont;
+      ret.at(i).parent       = frm.pse[i].parent;
+      ret.at(i).stage        = frm.pse[i].stage;
+      ret.at(i).in_preproc   = frm.pse[i].in_preproc;
+      ret.at(i).ns_cnt       = frm.pse[i].ns_cnt;
+      ret.at(i).non_vardef   = frm.pse[i].non_vardef;
+      ret.at(i).ip           = frm.pse[i].ip;
+   }
+   ret.pop();
+
+   return(ret);
+} // genNewFrame
+
+
 static void pf_log_frms(log_sev_t logsev, const char *txt, parse_frame_t *pf);
 
 
@@ -153,6 +241,18 @@ void pf_pop(parse_frame_t *pf)
       pf_copy_tos(pf);
       pf_trash_tos();
    }
+}
+
+
+int pf_check(ParseFrame &frm, chunk_t *pc)
+{
+   parse_frame_t o_f = genOldFrame(frm);
+
+   const int     ret = pf_check(&o_f, pc);
+
+   frm = genNewFrame(o_f);
+
+   return(ret);
 }
 
 

@@ -9,7 +9,7 @@
 #define PARSE_FRAME_H_INCLUDED
 
 #include "uncrustify_types.h"
-
+#include "ParseFrame.h"
 
 //! Copies src to dst
 void pf_copy(parse_frame_t *dst, const parse_frame_t *src);
@@ -58,6 +58,7 @@ void pf_pop(parse_frame_t *pf);
 
 
 //! Returns the pp_indent to use for this line
+int pf_check(ParseFrame &frm, chunk_t *pc); //TODO temp conversion functions, remove after transition to ParseFrame
 int pf_check(parse_frame_t *frm, chunk_t *pc);
 
 
