@@ -12,6 +12,7 @@
 #include <vector>
 #include <deque>
 
+#include "ParseFrame.h"
 #include "base_types.h"
 #include "options.h"
 #include "token_enum.h"    // c_token_t
@@ -54,23 +55,6 @@
  */
 #define UNUSED(variableName)         ((void)variableName)
 
-
-//! Brace stage enum used in brace_cleanup
-enum class brace_stage_e : unsigned int
-{
-   NONE,
-   PAREN1,      //! if/for/switch/while/synchronized
-   OP_PAREN1,   //! optional paren: catch () {
-   WOD_PAREN,   //! while of do parens
-   WOD_SEMI,    //! semicolon after while of do
-   BRACE_DO,    //! do
-   BRACE2,      //! if/else/for/switch/while
-   ELSE,        //! expecting 'else' after 'if'
-   ELSEIF,      //! expecting 'if' after 'else'
-   WHILE,       //! expecting 'while' after 'do'
-   CATCH,       //! expecting 'catch' or 'finally' after 'try'
-   CATCH_WHEN,  //! optional 'when' after 'catch'
-};
 
 enum class char_encoding_e : unsigned int
 {
