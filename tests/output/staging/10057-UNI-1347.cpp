@@ -6,5 +6,5 @@
 
 extern "C"
 {
-	typedef EXPORT_API int (*Foo)(int arg);
+    typedef EXPORT_API int (*Foo)(int arg);
 };
