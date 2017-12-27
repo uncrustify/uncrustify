@@ -12,7 +12,6 @@
 #include <vector>
 #include <deque>
 
-#include "ParseFrame.h"
 #include "base_types.h"
 #include "options.h"
 #include "token_enum.h"    // c_token_t
@@ -24,6 +23,8 @@
 #ifdef HAVE_UTIME_H
 #include <utime.h>
 #endif
+
+class ParseFrame;
 
 
 /**
@@ -56,6 +57,24 @@
 #define UNUSED(variableName)         ((void)variableName)
 
 
+//! Brace stage enum used in brace_cleanup
+enum class brace_stage_e : unsigned int
+{
+   NONE,
+   PAREN1,      //! if/for/switch/while/synchronized
+   OP_PAREN1,   //! optional paren: catch () {
+   WOD_PAREN,   //! while of do parens
+   WOD_SEMI,    //! semicolon after while of do
+   BRACE_DO,    //! do
+   BRACE2,      //! if/else/for/switch/while
+   ELSE,        //! expecting 'else' after 'if'
+   ELSEIF,      //! expecting 'if' after 'else'
+   WHILE,       //! expecting 'while' after 'do'
+   CATCH,       //! expecting 'catch' or 'finally' after 'try'
+   CATCH_WHEN,  //! optional 'when' after 'catch'
+};
+
+
 enum class char_encoding_e : unsigned int
 {
    e_ASCII,     //! 0-127
@@ -78,27 +97,6 @@ struct indent_ptr_t
 {
    chunk_t *ref;
    int     delta;
-};
-
-
-//! Structure for counting nested level
-struct paren_stack_entry_t
-{
-   c_token_t     type;         //! the type that opened the entry
-   size_t        level;        //! Level of opening type
-   size_t        open_line;    //! line that open symbol is on, only for logging purposes
-   chunk_t       *pc;          //! Chunk that opened the level
-   int           brace_indent; //! indent for braces - may not relate to indent
-   size_t        indent;       //! indent level (depends on use)
-   size_t        indent_tmp;   //! temporary indent level (depends on use)
-   size_t        indent_tab;   //! the 'tab' indent (always <= real column)
-   bool          indent_cont;  //! indent_continue was applied
-   c_token_t     parent;       //! if, for, function, etc
-   brace_stage_e stage;
-   bool          in_preproc;   //! whether this was created in a preprocessor
-   size_t        ns_cnt;       //! Number of consecutive namespace levels
-   bool          non_vardef;   //! Hit a non-vardef line
-   indent_ptr_t  ip;
 };
 
 

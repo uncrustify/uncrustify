@@ -11,37 +11,35 @@
 #define SRC_PARSEFRAME_H_
 
 #include "token_enum.h"
+#include "uncrustify_types.h"
 #include <vector>
 #include <memory>
 
 
-struct paren_stack_entry_t;
-struct chunk_t;
-
-
-//TODO: temp placement, move back to uncrustify_types.h
-//! Brace stage enum used in brace_cleanup
-enum class brace_stage_e : unsigned int
+//! Structure for counting nested level
+struct paren_stack_entry_t
 {
-   NONE,
-   PAREN1,      //! if/for/switch/while/synchronized
-   OP_PAREN1,   //! optional paren: catch () {
-   WOD_PAREN,   //! while of do parens
-   WOD_SEMI,    //! semicolon after while of do
-   BRACE_DO,    //! do
-   BRACE2,      //! if/else/for/switch/while
-   ELSE,        //! expecting 'else' after 'if'
-   ELSEIF,      //! expecting 'if' after 'else'
-   WHILE,       //! expecting 'while' after 'do'
-   CATCH,       //! expecting 'catch' or 'finally' after 'try'
-   CATCH_WHEN,  //! optional 'when' after 'catch'
+   c_token_t     type;         //! the type that opened the entry
+   size_t        level;        //! Level of opening type
+   size_t        open_line;    //! line that open symbol is on, only for logging purposes
+   chunk_t       *pc;          //! Chunk that opened the level, TODO: make const
+   int           brace_indent; //! indent for braces - may not relate to indent
+   size_t        indent;       //! indent level (depends on use)
+   size_t        indent_tmp;   //! temporary indent level (depends on use)
+   size_t        indent_tab;   //! the 'tab' indent (always <= real column)
+   bool          indent_cont;  //! indent_continue was applied
+   c_token_t     parent;       //! if, for, function, etc
+   brace_stage_e stage;        //! used to check progression of complex statements.
+   bool          in_preproc;   //! whether this was created in a preprocessor
+   size_t        ns_cnt;       //! Number of consecutive namespace levels
+   bool          non_vardef;   //! Hit a non-vardef line
+   indent_ptr_t  ip;
 };
-
 
 class ParseFrame {
 private:
-   std::vector<paren_stack_entry_t>     pse;
-   std::shared_ptr<paren_stack_entry_t> last_poped; // TODO simplify once paren_stack_entry_t is fully accessible
+   std::vector<paren_stack_entry_t> pse;
+   paren_stack_entry_t              last_poped;
 
    void clear();
 

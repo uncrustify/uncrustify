@@ -42,7 +42,7 @@ static ContainerType genDummy()
 
 void ParseFrame::clear()
 {
-   *last_poped = genDummy();
+   last_poped = genDummy();
 
    pse = Container{};
    pse.reserve(CONTAINER_INIT_SIZE);
@@ -62,7 +62,6 @@ void ParseFrame::clear()
 
 ParseFrame::ParseFrame()
 {
-   last_poped = std::shared_ptr<ContainerType>(new ContainerType);
    ParseFrame::clear();
 }
 
@@ -179,7 +178,7 @@ void ParseFrame::pop()
            pse.back().open_line, pse.back().level, (pse.size() - 1),
            (pse.size() - 2));
 
-   *last_poped = *std::prev(std::end(pse));
+   last_poped = *std::prev(std::end(pse));
 
    if (pse.size() == 1)
    {
@@ -201,7 +200,7 @@ size_t ParseFrame::size() const
 
 const paren_stack_entry_t &ParseFrame::poped() const
 {
-   return(*last_poped.get());
+   return(last_poped);
 }
 
 
