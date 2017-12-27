@@ -15,95 +15,7 @@
 #include <cstdlib>
 
 
-//TODO temp conversion functions, remove after transition to ParseFrame
-static parse_frame_t genOldFrame(const ParseFrame &frm)
-{
-   assert(frm.tos() < PSE_SIZE);
-   parse_frame_t ret{};
-
-   ret.ref_no       = frm.ref_no;
-   ret.level        = frm.level;
-   ret.brace_level  = frm.brace_level;
-   ret.pp_level     = frm.pp_level;
-   ret.sparen_count = frm.sparen_count;
-   ret.paren_count  = frm.paren_count;
-   ret.in_ifdef     = frm.in_ifdef;
-   ret.stmt_count   = frm.stmt_count;
-   ret.expr_count   = frm.expr_count;
-   ret.pse_tos      = frm.tos();
-
-   for (size_t i = 0; i <= frm.tos(); ++i)
-   {
-      auto &frm_pse = frm.at(i);
-
-      ret.pse[i].type         = frm_pse.type;
-      ret.pse[i].level        = frm_pse.level;
-      ret.pse[i].open_line    = frm_pse.open_line;
-      ret.pse[i].pc           = frm_pse.pc;
-      ret.pse[i].brace_indent = frm_pse.brace_indent;
-      ret.pse[i].indent       = frm_pse.indent;
-      ret.pse[i].indent_tmp   = frm_pse.indent_tmp;
-      ret.pse[i].indent_tab   = frm_pse.indent_tab;
-      ret.pse[i].indent_cont  = frm_pse.indent_cont;
-      ret.pse[i].parent       = frm_pse.parent;
-      ret.pse[i].stage        = frm_pse.stage;
-      ret.pse[i].in_preproc   = frm_pse.in_preproc;
-      ret.pse[i].ns_cnt       = frm_pse.ns_cnt;
-      ret.pse[i].non_vardef   = frm_pse.non_vardef;
-      ret.pse[i].ip           = frm_pse.ip;
-   }
-   //+1 for the out of bounds elem
-   ret.pse[frm.tos() + 1] = frm.poped();
-
-   return(ret);
-}
-
-
-static ParseFrame genNewFrame(const parse_frame_t &frm)
-{
-   ParseFrame ret{};
-
-   ret.ref_no       = frm.ref_no;
-   ret.level        = frm.level;
-   ret.brace_level  = frm.brace_level;
-   ret.pp_level     = frm.pp_level;
-   ret.sparen_count = frm.sparen_count;
-   ret.paren_count  = frm.paren_count;
-   ret.in_ifdef     = frm.in_ifdef;
-   ret.stmt_count   = frm.stmt_count;
-   ret.expr_count   = frm.expr_count;
-
-   //+1 for the out of bounds elem
-   for (size_t i = 1; i <= frm.pse_tos + 1; ++i)
-   {
-      chunk_t c{};
-      ret.push(c);
-   }
-   for (size_t i = 0; i <= frm.pse_tos + 1; ++i)
-   {
-      ret.at(i).type         = frm.pse[i].type;
-      ret.at(i).level        = frm.pse[i].level;
-      ret.at(i).open_line    = frm.pse[i].open_line;
-      ret.at(i).pc           = frm.pse[i].pc;
-      ret.at(i).brace_indent = frm.pse[i].brace_indent;
-      ret.at(i).indent       = frm.pse[i].indent;
-      ret.at(i).indent_tmp   = frm.pse[i].indent_tmp;
-      ret.at(i).indent_tab   = frm.pse[i].indent_tab;
-      ret.at(i).indent_cont  = frm.pse[i].indent_cont;
-      ret.at(i).parent       = frm.pse[i].parent;
-      ret.at(i).stage        = frm.pse[i].stage;
-      ret.at(i).in_preproc   = frm.pse[i].in_preproc;
-      ret.at(i).ns_cnt       = frm.pse[i].ns_cnt;
-      ret.at(i).non_vardef   = frm.pse[i].non_vardef;
-      ret.at(i).ip           = frm.pse[i].ip;
-   }
-   ret.pop();
-
-   return(ret);
-} // genNewFrame
-
-
-static void pf_log_frms(log_sev_t logsev, const char *txt, parse_frame_t *pf);
+static void pf_log_frms(log_sev_t logsev, const char *txt, const ParseFrame &frm);
 
 
 //! Logs the entire parse frame stack
@@ -111,33 +23,32 @@ static void pf_log_all(log_sev_t logsev);
 
 
 //! Logs one parse frame
-static void pf_log(log_sev_t logsev, parse_frame_t *pf)
+static void pf_log(log_sev_t logsev, const ParseFrame &frm)
 {
-   LOG_FMT(logsev, "[%s] BrLevel=%d Level=%d PseTos=%zu\n",
-           get_token_name(pf->in_ifdef),
-           pf->brace_level, pf->level, pf->pse_tos);
+   LOG_FMT(logsev, "[%s] BrLevel=%zu Level=%zu PseTos=%zu\n",
+           get_token_name(frm.in_ifdef), frm.brace_level, frm.level, frm.tos());
 
    LOG_FMT(logsev, " *");
-   for (size_t idx = 1; idx <= pf->pse_tos; idx++)
+   for (size_t idx = 1; idx <= frm.tos(); idx++)
    {
-      LOG_FMT(logsev, " [%s-%d]",
-              get_token_name(pf->pse[idx].type),
-              (int)pf->pse[idx].stage);
+      LOG_FMT(logsev, " [%s-%u]", get_token_name(frm.at(idx).type),
+              static_cast<unsigned int>(frm.at(idx).stage));
    }
    LOG_FMT(logsev, "\n");
 }
 
 
-static void pf_log_frms(log_sev_t logsev, const char *txt, parse_frame_t *pf)
+static void pf_log_frms(log_sev_t logsev, const char *txt, const ParseFrame &frm)
 {
    LOG_FMT(logsev, "%s Parse Frames(%zu):", txt, cpd.frame_count);
+
    for (size_t idx = 0; idx < cpd.frame_count; idx++)
    {
-      LOG_FMT(logsev, " [%s-%d]",
-              get_token_name(cpd.frames[idx].in_ifdef),
+      LOG_FMT(logsev, " [%s-%zu]", get_token_name(cpd.frames[idx].in_ifdef),
               cpd.frames[idx].ref_no);
    }
-   LOG_FMT(logsev, "-[%s-%d]\n", get_token_name(pf->in_ifdef), pf->ref_no);
+
+   LOG_FMT(logsev, "-[%s-%zu]\n", get_token_name(frm.in_ifdef), frm.ref_no);
 }
 
 
@@ -149,15 +60,9 @@ static void pf_log_all(log_sev_t logsev)
    {
       LOG_FMT(logsev, "##  idx is %zu, ", idx);
 
-      pf_log(logsev, &cpd.frames[idx]);
+      pf_log(logsev, cpd.frames[idx]);
    }
    LOG_FMT(logsev, "##=-\n");
-}
-
-
-void pf_copy(parse_frame_t *dst, const parse_frame_t *src)
-{
-   memcpy(dst, src, sizeof(parse_frame_t));
 }
 
 
@@ -176,36 +81,28 @@ void controlFrameCount()
 
 void pf_push(ParseFrame &frm)
 {
-   parse_frame_t o_f = genOldFrame(frm);
-
-   pf_push(&o_f);
-
-   frm = genNewFrame(o_f);
-}
-
-
-void pf_push(parse_frame_t *pf)
-{
    static int ref_no = 1;
 
-   pf_copy(&cpd.frames[cpd.frame_count], pf);
+   cpd.frames[cpd.frame_count] = frm;
    cpd.frame_count++;
    controlFrameCount();
-   pf->ref_no = ref_no++;
+   frm.ref_no = ref_no++;
    LOG_FMT(LPF, "%s(%d): frame_count is %zu\n", __func__, __LINE__, cpd.frame_count);
 }
 
 
-void pf_push_under(parse_frame_t *pf)
+void pf_push_under(ParseFrame &frm)
 {
    LOG_FMT(LPF, "%s(%d): before frame_count is %zu\n", __func__, __LINE__, cpd.frame_count);
 
    if (cpd.frame_count >= 1)
    {
-      parse_frame_t *npf1 = &cpd.frames[cpd.frame_count - 1];
-      parse_frame_t *npf2 = &cpd.frames[cpd.frame_count];
-      pf_copy(npf2, npf1);
-      pf_copy(npf1, pf);
+      ParseFrame &prev = cpd.frames[cpd.frame_count - 1];
+      ParseFrame &top  = cpd.frames[cpd.frame_count];
+
+      top  = prev;
+      prev = frm;
+
       cpd.frame_count++;
       controlFrameCount();
    }
@@ -214,21 +111,21 @@ void pf_push_under(parse_frame_t *pf)
 }
 
 
-void pf_copy_tos(parse_frame_t *pf)
+void pf_copy_tos(ParseFrame &pf)
 {
    if (cpd.frame_count > 0)
    {
-      pf_copy(pf, &cpd.frames[cpd.frame_count - 1]);
+      pf = cpd.frames[cpd.frame_count - 1];
    }
    LOG_FMT(LPF, "%s(%d): frame_count is %zu\n", __func__, __LINE__, cpd.frame_count);
 }
 
 
-void pf_copy_2nd_tos(parse_frame_t *pf)
+void pf_copy_2nd_tos(ParseFrame &pf)
 {
    if (cpd.frame_count > 1)
    {
-      pf_copy(pf, &cpd.frames[cpd.frame_count - 2]);
+      pf = cpd.frames[cpd.frame_count - 2];
    }
    LOG_FMT(LPF, "%s(%d): frame_count is %zu\n", __func__, __LINE__, cpd.frame_count);
 }
@@ -244,20 +141,7 @@ void pf_trash_tos(void)
 }
 
 
-void pf_pop(ParseFrame &frm)
-{
-   if (cpd.frame_count > 0)
-   {
-      parse_frame_t o_f = genOldFrame(frm);
-
-      pf_pop(&o_f);
-
-      frm = genNewFrame(o_f);
-   }
-}
-
-
-void pf_pop(parse_frame_t *pf)
+void pf_pop(ParseFrame &pf)
 {
    if (cpd.frame_count > 0)
    {
@@ -269,30 +153,15 @@ void pf_pop(parse_frame_t *pf)
 
 int pf_check(ParseFrame &frm, chunk_t *pc)
 {
-   parse_frame_t o_f = genOldFrame(frm);
-
-   const int     ret = pf_check(&o_f, pc);
-
-   frm = genNewFrame(o_f);
-
-   return(ret);
-}
-
-
-int pf_check(parse_frame_t *frm, chunk_t *pc)
-{
-   int in_ifdef = frm->in_ifdef;
-   int b4_cnt   = cpd.frame_count;
-   int pp_level = cpd.pp_level;
-
    if (pc->type != CT_PREPROC)
    {
-      return(pp_level);
+      return(cpd.pp_level);
    }
+
    chunk_t *next = chunk_get_next(pc);
    if (next == nullptr)
    {
-      return(pp_level);
+      return(cpd.pp_level);
    }
 
    if (pc->parent_type != next->type)
@@ -307,7 +176,12 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
            __func__, __LINE__, pc->orig_line, get_token_name(pc->parent_type));
    pf_log_frms(LPFCHK, "TOP", frm);
 
-   const char *txt = nullptr;
+
+   int             pp_level = cpd.pp_level;
+   const c_token_t in_ifdef = frm.in_ifdef;
+   const size_t    b4_cnt   = cpd.frame_count;
+
+   const char      *txt = nullptr;
    if (pc->flags & PCF_IN_PREPROC)
    {
       LOG_FMT(LPF, " <In> ");
@@ -318,8 +192,8 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
          // An #if pushes a copy of the current frame on the stack
          cpd.pp_level++;
          pf_push(frm);
-         frm->in_ifdef = CT_PP_IF;
-         txt           = "if-push";
+         frm.in_ifdef = CT_PP_IF;
+         txt          = "if-push";
       }
       else if (pc->parent_type == CT_PP_ELSE)
       {
@@ -332,16 +206,16 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
           * pop and then push.
           * We need to use the copy right before the if.
           */
-         if (frm->in_ifdef == CT_PP_IF)
+         if (frm.in_ifdef == CT_PP_IF)
          {
             // we have [...] [base]-[if], so push an [else]
             pf_push(frm);
-            frm->in_ifdef = CT_PP_ELSE;
+            frm.in_ifdef = CT_PP_ELSE;
          }
          // we have [...] [base] [if]-[else], copy [base] over [else]
          pf_copy_2nd_tos(frm);
-         frm->in_ifdef = CT_PP_ELSE;
-         txt           = "else-push";
+         frm.in_ifdef = CT_PP_ELSE;
+         txt          = "else-push";
       }
       else if (pc->parent_type == CT_PP_ENDIF)
       {
@@ -352,7 +226,7 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
          cpd.pp_level--;
          pp_level--;
 
-         if (frm->in_ifdef == CT_PP_ELSE)
+         if (frm.in_ifdef == CT_PP_ELSE)
          {
             /*
              * We have: [...] [base] [if]-[else]
@@ -367,13 +241,13 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
                log_flush(true);
                exit(EX_SOFTWARE);
             }
-            frm->in_ifdef = cpd.frames[cpd.frame_count - 2].in_ifdef;
+            frm.in_ifdef = cpd.frames[cpd.frame_count - 2].in_ifdef;
             pf_trash_tos();       // [...] [base]-[if]
             pf_trash_tos();       // [...]-[if]
 
             txt = "endif-trash/pop";
          }
-         else if (frm->in_ifdef == CT_PP_IF)
+         else if (frm.in_ifdef == CT_PP_IF)
          {
             /*
              * We have: [...] [base] [if]
@@ -391,10 +265,10 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
 
    if (txt != nullptr)
    {
-      LOG_FMT(LPF, "%s(%d): orig_line is %zu, type is %s: %s in_ifdef is %d/%d, counts is %d, frame_count is %zu\n",
-              __func__, __LINE__,
-              pc->orig_line, get_token_name(pc->parent_type), txt,
-              in_ifdef, frm->in_ifdef, b4_cnt, cpd.frame_count);
+      LOG_FMT(LPF, "%s(%d): orig_line is %zu, type is %s: %s in_ifdef is %d/%d, counts is %zu, frame_count is %zu\n",
+              __func__, __LINE__, pc->orig_line,
+              get_token_name(pc->parent_type), txt, static_cast<int>(in_ifdef),
+              static_cast<int>(frm.in_ifdef), b4_cnt, cpd.frame_count);
       pf_log_all(LPF);
       LOG_FMT(LPF, " <Out>");
       pf_log(LPF, frm);

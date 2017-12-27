@@ -460,7 +460,7 @@ struct cp_data_t
    op_val_t          settings[UO_option_count]; //! array with all uncrustify option settings
 
 #define FRAME_SIZE    16
-   parse_frame_t     frames[FRAME_SIZE];
+   ParseFrame        frames[FRAME_SIZE];
    size_t            frame_count;
    int               pp_level; // TODO: can this ever be -1?
 
