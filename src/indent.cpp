@@ -840,7 +840,7 @@ void indent_text(void)
                   && frm.pse[frm.pse_tos].pc != frmbkup.pse[frmbkup.pse_tos].pc)
                {
                   chunk_t *tmp = chunk_get_next_ncnlnp(pc);
-                  if (tmp->type == CT_WORD)
+                  if (tmp->type == CT_WORD || tmp->type == CT_TYPE)
                   {
                      tmp = chunk_get_next_ncnlnp(pc);
                   }
@@ -849,13 +849,13 @@ void indent_text(void)
                      tmp = chunk_get_next_type(tmp, CT_FPAREN_CLOSE, tmp->level);
                      tmp = chunk_get_next_ncnlnp(pc);
                   }
+                  frm.pse[frm.pse_tos].pop_pc = tmp;
                }
             }
             else if (pc->parent_type == CT_PP_ENDIF)
             {
                if (  frmbkup.pse[frmbkup.pse_tos].type == CT_MEMBER
-                  && frm.pse[frm.pse_tos].type == CT_MEMBER
-                  && frm.pse[frm.pse_tos].pc == frmbkup.pse[frmbkup.pse_tos].pc)
+                  && frm.pse[frm.pse_tos].type == CT_MEMBER)
                {
                   frm.pse[frm.pse_tos].pop_pc = frmbkup.pse[frmbkup.pse_tos].pop_pc;
                }
@@ -2064,7 +2064,7 @@ void indent_text(void)
             {
                tmp = chunk_get_next_ncnlnp(chunk_get_next_type(tmp, CT_FPAREN_CLOSE, tmp->level));
             }
-            else if (tmp->type == CT_WORD)
+            else if (tmp->type == CT_WORD || tmp->type == CT_TYPE)
             {
                tmp = chunk_get_next_ncnlnp(tmp);
             }
