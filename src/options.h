@@ -583,6 +583,7 @@ enum uncrustify_options
    UO_nl_after_vbrace_close,          // force a newline after a virtual brace close
    UO_nl_brace_struct_var,            // force a newline after a brace close
    UO_nl_define_macro,                // alter newlines in #define macros
+   UO_nl_squeeze_paren_close,         // alter newlines between consecutive paren closes
    UO_nl_squeeze_ifdef,               // no blanks after #ifxx, #elxx, or before #elxx and #endif
    UO_nl_squeeze_ifdef_top_level,     // when set, nl_squeeze_ifdef will be applied to top-level
                                       // #ifdefs as well
@@ -604,6 +605,7 @@ enum uncrustify_options
    UO_nl_before_func_class_proto,     // newline before 'func_class_proto'
    UO_nl_class_colon,                 // newline before/after class colon (tied to UO_pos_class_colon)
    UO_nl_constr_colon,                // newline before/after class constr colon (tied to UO_pos_constr_colon)
+   UO_nl_namespace_two_to_one_liner,  // If true turns two liner namespace to one liner,else will make then four liners
    UO_nl_create_if_one_liner,         // Change simple unbraced if statements into a one-liner
                                       // 'if(b)\n i++;' => 'if(b) i++;'
    UO_nl_create_for_one_liner,        // Change simple unbraced for statements into a one-liner
