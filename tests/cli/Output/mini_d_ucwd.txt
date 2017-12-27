@@ -370,6 +370,9 @@ sp_square_fparen                = ignore   # ignore/add/remove/force
 # Add or remove space between ')' and '{' of function.
 sp_fparen_brace                 = ignore   # ignore/add/remove/force
 
+# Add or remove space between ')' and '{' of function call in object initialization. Overrides sp_fparen_brace.
+sp_fparen_brace_initializer     = ignore   # ignore/add/remove/force
+
 # Java: Add or remove space between ')' and '{{' of double brace initializer.
 sp_fparen_dbrace                = ignore   # ignore/add/remove/force
 
