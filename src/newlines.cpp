@@ -1757,6 +1757,33 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
    }
 
+   //fixes 1235 Add single line namespace support
+
+   if (  br_open->type == CT_BRACE_OPEN
+      && (br_open->parent_type == CT_NAMESPACE)
+      && chunk_is_newline(chunk_get_prev(br_open)))
+   {
+      chunk_t *chunk_brace_close = chunk_skip_to_match(br_open, scope_e::ALL);
+      if (chunk_brace_close != nullptr)
+      {
+         if (are_chunks_in_same_line(br_open, chunk_brace_close))
+         {
+            if (cpd.settings[UO_nl_namespace_two_to_one_liner].b)
+            {
+               chunk_t *prev = chunk_get_prev_nnl(br_open);
+               newline_del_between(prev, br_open);
+            }
+            /* Below code is to support conversion of 2 liner to 4 liners
+             * else
+             * {
+             *  chunk_t *nxt = chunk_get_next(br_open);
+             *  newline_add_between(br_open, nxt);
+             * }*/
+         }
+      }
+   }
+
+
    // Make sure we don't break a one-liner
    if (!one_liner_nl_ok(br_open))
    {
@@ -3604,6 +3631,61 @@ void newlines_squeeze_ifdef(void)
       }
    }
 } // newlines_squeeze_ifdef
+
+
+void newlines_squeeze_paren_close(void)
+{
+   LOG_FUNC_ENTRY();
+
+   chunk_t *pc;
+   for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   {
+      chunk_t *next;
+      chunk_t *prev;
+      if (pc->type == CT_NEWLINE)
+      {
+         prev = chunk_get_prev(pc);
+      }
+      else
+      {
+         prev = pc;
+      }
+      next = chunk_get_next(pc);
+      if (next != nullptr && prev != nullptr && chunk_is_paren_close(next) && chunk_is_paren_close(prev))
+      {
+         chunk_t *prev_op = chunk_skip_to_match_rev(prev);
+         chunk_t *next_op = chunk_skip_to_match_rev(next);
+         bool    flag     = true;
+         if (true)
+         {
+            chunk_t *tmp = prev;
+            while (chunk_is_paren_close(tmp))
+            {
+               tmp = chunk_get_prev(tmp);
+            }
+            if (tmp->type != CT_NEWLINE)
+            {
+               flag = false;
+            }
+         }
+         if (flag)
+         {
+            if (are_chunks_in_same_line(next_op, prev_op))
+            {
+               if (pc->type == CT_NEWLINE)
+               {
+                  pc = next;
+               }
+               newline_del_between(prev, next);
+            }
+            else
+            {
+               newline_add_between(prev, next);
+            }
+         }
+      }
+   }
+} // newlines_squeeze_paren_close
 
 
 void newlines_eat_start_end(void)

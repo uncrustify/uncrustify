@@ -531,6 +531,8 @@ void register_options(void)
                   "Add or remove space between ']' and '(' when part of a function call.");
    unc_add_option("sp_fparen_brace", UO_sp_fparen_brace, AT_IARF,
                   "Add or remove space between ')' and '{' of function.");
+   unc_add_option("sp_fparen_brace_initializer", UO_sp_fparen_brace_initializer, AT_IARF,
+                  "Add or remove space between ')' and '{' of function call in object initialization. Overrides sp_fparen_brace.");
    unc_add_option("sp_fparen_dbrace", UO_sp_fparen_dbrace, AT_IARF,
                   "Java: Add or remove space between ')' and '{{' of double brace initializer.");
    unc_add_option("sp_func_call_paren", UO_sp_func_call_paren, AT_IARF,
@@ -1205,6 +1207,9 @@ void register_options(void)
                   "Affects enums, unions and structures. If set to ignore, uses nl_after_brace_close.");
    unc_add_option("nl_define_macro", UO_nl_define_macro, AT_BOOL,
                   "Whether to alter newlines in '#define' macros.");
+   unc_add_option("nl_squeeze_paren_close", UO_nl_squeeze_paren_close, AT_BOOL,
+                  "Whether to alter newlines between consecutive paren closes, \n"
+                  "The number of closing paren in a line will depend on respective open paren lines");
    unc_add_option("nl_squeeze_ifdef", UO_nl_squeeze_ifdef, AT_BOOL,
                   "Whether to remove blanks after '#ifxx' and '#elxx', or before '#elxx' and '#endif'. Does not affect top-level #ifdefs.");
    unc_add_option("nl_squeeze_ifdef_top_level", UO_nl_squeeze_ifdef_top_level, AT_BOOL,
@@ -1253,6 +1258,8 @@ void register_options(void)
    unc_add_option("nl_constr_colon", UO_nl_constr_colon, AT_IARF,
                   "Add or remove a newline around a class constructor colon.\n"
                   "Related to nl_constr_init_args, pos_constr_colon and pos_constr_comma.");
+   unc_add_option("nl_namespace_two_to_one_liner", UO_nl_namespace_two_to_one_liner, AT_BOOL,
+                  "If true turns two liner namespace to one liner,else will make then four liners");
    unc_add_option("nl_create_if_one_liner", UO_nl_create_if_one_liner, AT_BOOL,
                   "Change simple unbraced if statements into a one-liner\n"
                   "'if(b)\\n i++;' => 'if(b) i++;'.");
