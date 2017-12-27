@@ -101,28 +101,6 @@ struct paren_stack_entry_t
    indent_ptr_t  ip;
 };
 
-// TODO: put this on a linked list
-struct parse_frame_t
-{
-   int                 ref_no;
-   int                 level;           //! level of parens/square/angle/brace
-   int                 brace_level;     //! level of brace/vbrace
-   int                 pp_level;        //! level of preproc #if stuff
-
-   int                 sparen_count;
-
-#define PSE_SIZE    128
-   paren_stack_entry_t pse[PSE_SIZE];
-   size_t              pse_tos;
-   int                 paren_count;
-
-   c_token_t           in_ifdef;
-   int                 stmt_count;
-   int                 expr_count;
-
-   bool                maybe_decl;
-   bool                maybe_cast;
-};
 
 #define PCF_BIT(b)    (1ULL << b)
 
