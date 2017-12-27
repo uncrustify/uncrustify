@@ -1246,14 +1246,35 @@ void indent_text(void)
                  && (  pc->parent_type == CT_LAMBDA
                     || pc->parent_type == CT_DELEGATE))
          {
-            frm.pse[frm.pse_tos].brace_indent = 1 + ((pc->brace_level + 1) * indent_size);
+            {
+               frm.pse[frm.pse_tos].brace_indent = 1 + ((pc->brace_level + 1) * indent_size);
+            }
             indent_column_set(frm.pse[frm.pse_tos].brace_indent);
             frm.pse[frm.pse_tos].indent = indent_column + indent_size;
             log_indent();
             frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
             log_indent_tmp();
-
+            frm.pse[frm.pse_tos - 1].indent_tmp = frm.pse[frm.pse_tos].indent_tmp;
+            log_indent_tmp();
+         }
+         else if (  (cpd.lang_flags & LANG_CS)
+                 && !cpd.settings[UO_indent_cs_delegate_brace].b
+                 && !cpd.settings[UO_indent_align_paren].b
+                 && (  pc->parent_type == CT_LAMBDA
+                    || pc->parent_type == CT_DELEGATE))
+         {
+            frm.pse[frm.pse_tos].brace_indent = frm.pse[frm.pse_tos - 1].indent;
+            if (are_chunks_in_same_line(frm.pse[frm.pse_tos - 1].pc, frm.pse[frm.pse_tos].pc))
+            {
+               frm.pse[frm.pse_tos].brace_indent -= indent_size;
+            }
+            indent_column_set(frm.pse[frm.pse_tos].brace_indent);
+            frm.pse[frm.pse_tos].indent = indent_column + indent_size;
+            log_indent();
+            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
+            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+            log_indent_tmp();
             frm.pse[frm.pse_tos - 1].indent_tmp = frm.pse[frm.pse_tos].indent_tmp;
             log_indent_tmp();
          }
