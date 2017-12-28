@@ -38,6 +38,9 @@ New options:
   - pp_indent_extern                     Jun 22
   - pp_indent_brace                      Jun 22
 
+Changing option:
+  - The option name is changed from 'align_number_left' to 'align_number_right' 
+
 Bugfix:
  - Issue # 548, 1098, 1103, 1108, 1112, 1127, 1134, 1158, 1165, 1170, 1187,
      1200, 1203, 1236, 1249, 1310, 1315, 1340, 1349, 1352, 1366 are fixed
