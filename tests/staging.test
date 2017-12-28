@@ -12,7 +12,6 @@
 10043 staging/Uncrustify.CSharp.cfg staging/nl-brace.cs
 10049 staging/Uncrustify.Cpp.cfg    staging/UNI-1336.cpp
 10053 staging/Uncrustify.Cpp.cfg    staging/UNI-1340.cpp
-10056 staging/UNI-1346.cfg          staging/UNI-1346.cpp
 10057 staging/Uncrustify.Cpp.cfg    staging/UNI-1347.cpp
 10058 staging/Uncrustify.Cpp.cfg    staging/UNI-1348.cpp
 10059 staging/UNI-1349.cfg          staging/UNI-1349.cpp
@@ -30,7 +29,6 @@
 60011 staging/Uncrustify.Cpp.cfg    staging/UNI-11095.mm
 60014 staging/Uncrustify.Cpp.cfg    staging/UNI-14107.cpp
 60015 staging/Uncrustify.CSharp.cfg staging/UNI-14131.cs
-60018 staging/Uncrustify.CSharp.cfg staging/UNI-18777.cs
 60021 staging/Uncrustify.Cpp.cfg staging/UNI-12046.cpp
 60023 staging/Uncrustify.CSharp.cfg staging/UNI-18437.cs
 60035 staging/Uncrustify.CSharp.cfg staging/UNI-22858.cs
