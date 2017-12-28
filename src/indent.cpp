@@ -2098,6 +2098,10 @@ void indent_text(void)
             {
                tmp = chunk_get_prev_ncnlnp(tmp);
             }
+            if (chunk_is_newline(tmp->prev))
+            {
+               tmp = chunk_get_next_nl(chunk_get_prev_ncnlnp(tmp));
+            }
             frm.pse[frm.pse_tos].pop_pc = tmp;
             //indent_pse_pop(frm, tmp);
          }
