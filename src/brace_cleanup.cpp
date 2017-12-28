@@ -178,10 +178,10 @@ void brace_cleanup(void)
 {
    LOG_FUNC_ENTRY();
 
-   cpd.unc_stage   = unc_stage_e::BRACE_CLEANUP;
-   cpd.frame_count = 0;
-   cpd.in_preproc  = CT_NONE;
-   cpd.pp_level    = 0;
+   cpd.unc_stage = unc_stage_e::BRACE_CLEANUP;
+   cpd.frames.clear();
+   cpd.in_preproc = CT_NONE;
+   cpd.pp_level   = 0;
 
    ParseFrame frm{};
    chunk_t    *pc = chunk_get_head();

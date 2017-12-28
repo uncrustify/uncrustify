@@ -537,7 +537,7 @@ void indent_text(void)
    size_t       sql_orig_col  = 0;
    bool         in_func_def   = false;
 
-   cpd.frame_count = 0;
+   cpd.frames.clear();
 
    ParseFrame frm{};
 
