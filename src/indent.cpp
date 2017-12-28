@@ -985,7 +985,7 @@ void indent_text(void)
                  pc->orig_line, pc->orig_col, pc->text());
          for (size_t ttidx = frm.size() - 1; ttidx > 0; ttidx--)
          {
-            LOG_FMT(LINDPC, "     [%zu %zu:%zu %s %s/%s tmp=%zu ind=%zu bri=%d tab=%zu cont=%d lvl=%zu blvl=%zu]\n",
+            LOG_FMT(LINDPC, "     [%zu %zu:%zu %s %s/%s tmp=%zu ind=%zu bri=%zu tab=%zu cont=%d lvl=%zu blvl=%zu]\n",
                     ttidx,
                     frm.at(ttidx).pc->orig_line,
                     frm.at(ttidx).pc->orig_col,
@@ -2243,7 +2243,7 @@ void indent_text(void)
                  && cpd.settings[UO_indent_namespace_single_indent].b
                  && frm.top().ns_cnt)
          {
-            LOG_FMT(LINDENT, "%s(%d): %zu] Namespace => %d\n",
+            LOG_FMT(LINDENT, "%s(%d): %zu] Namespace => %zu\n",
                     __func__, __LINE__, pc->orig_line, frm.top().brace_indent);
             reindent_line(pc, frm.top().brace_indent);
          }

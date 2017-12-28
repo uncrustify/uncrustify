@@ -23,7 +23,7 @@ struct paren_stack_entry_t
    size_t        level;        //! Level of opening type
    size_t        open_line;    //! line that open symbol is on, only for logging purposes
    chunk_t       *pc;          //! Chunk that opened the level, TODO: make const
-   int           brace_indent; //! indent for braces - may not relate to indent
+   size_t        brace_indent; //! indent for braces - may not relate to indent
    size_t        indent;       //! indent level (depends on use)
    size_t        indent_tmp;   //! temporary indent level (depends on use)
    size_t        indent_tab;   //! the 'tab' indent (always <= real column)
