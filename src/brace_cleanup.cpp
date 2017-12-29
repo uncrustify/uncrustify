@@ -156,7 +156,7 @@ static void print_stack(log_sev_t logsev, const char *str,
 
    log_fmt(logsev, "%8.8s", str);
 
-   for (size_t idx = 1; idx <= frm.tos(); idx++)
+   for (size_t idx = 1; idx < frm.size(); idx++)
    {
       if (frm.at(idx).stage != brace_stage_e::NONE)
       {
@@ -324,7 +324,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
 
    LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s, tos is %zu, TOS.type is %s, TOS.stage is %u\n",
            __func__, __LINE__, pc->orig_line, get_token_name(pc->type),
-           frm.tos(), get_token_name(frm.top().type),
+           frm.size() - 1, get_token_name(frm.top().type),
            (unsigned int)frm.top().stage);
 
    // Mark statement starts
@@ -349,7 +349,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
       chunk_flags_set(pc, PCF_IN_SPAREN);
 
       // Mark everything in the for statement
-      for (int tmp = static_cast<int>(frm.tos()) - 1; tmp >= 0; tmp--)
+      for (int tmp = static_cast<int>(frm.size()) - 2; tmp >= 0; tmp--)
       {
          if (frm.at(tmp).type == CT_FOR)
          {
@@ -360,7 +360,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
 
       // Mark the parent on semicolons in for() statements
       if (  pc->type == CT_SEMICOLON
-         && frm.tos() > 1
+         && frm.size() > 2
          && frm.prev().type == CT_FOR)
       {
          set_chunk_parent(pc, CT_FOR);

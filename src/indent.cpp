@@ -416,7 +416,7 @@ static size_t calc_indent_continue(const ParseFrame &frm, size_t pse_tos)
 
 static size_t calc_indent_continue(const ParseFrame &frm)
 {
-   return(calc_indent_continue(frm, frm.tos()));
+   return(calc_indent_continue(frm, frm.size() - 1));
 }
 
 
@@ -481,7 +481,7 @@ static chunk_t *oc_msg_prev_colon(chunk_t *pc)
 static void _log_indent(const char *func, const uint32_t line, const ParseFrame &frm)
 {
    LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos is %zu, ...indent is %zu\n",
-           func, line, frm.tos(), frm.top().indent);
+           func, line, frm.size() - 1, frm.top().indent);
 }
 
 
@@ -493,7 +493,7 @@ static void _log_indent(const char *func, const uint32_t line, const ParseFrame 
 static void _log_indent_tmp(const char *func, const uint32_t line, const ParseFrame &frm)
 {
    LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos is %zu, ...indent_tmp is %zu\n",
-           func, line, frm.tos(), frm.top().indent_tmp);
+           func, line, frm.size() - 1, frm.top().indent_tmp);
 }
 
 
@@ -821,10 +821,10 @@ void indent_text(void)
       log_indent_tmp();
 
       bool   token_used = false;
-      size_t old_pse_tos;
+      size_t old_frm_size;
       do
       {
-         old_pse_tos = frm.tos();
+         old_frm_size = frm.size();
 
          // End anything that drops a level
          if (  !chunk_is_newline(pc)
@@ -971,7 +971,7 @@ void indent_text(void)
                frm.paren_count--;
             }
          }
-      } while (old_pse_tos > frm.tos());
+      } while (old_frm_size > frm.size());
 
       // Grab a copy of the current indent
       indent_column_set(frm.top().indent_tmp);
@@ -983,7 +983,7 @@ void indent_text(void)
       {
          LOG_FMT(LINDPC, " -=[ %zu:%zu %s ]=-\n",
                  pc->orig_line, pc->orig_col, pc->text());
-         for (size_t ttidx = frm.tos(); ttidx > 0; ttidx--)
+         for (size_t ttidx = frm.size() - 1; ttidx > 0; ttidx--)
          {
             LOG_FMT(LINDPC, "     [%zu %zu:%zu %s %s/%s tmp=%zu ind=%zu bri=%d tab=%zu cont=%d lvl=%zu blvl=%zu]\n",
                     ttidx,
@@ -1225,7 +1225,7 @@ void indent_text(void)
             // Use the prev indent level + indent_size.
             frm.top().indent = frm.prev().indent + indent_size;
             LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos=%zu, ... indent=%zu\n",
-                    __func__, __LINE__, frm.tos(), frm.top().indent);
+                    __func__, __LINE__, frm.size() - 1, frm.top().indent);
 
             // If this brace is part of a statement, bump it out by indent_brace
             if (  pc->parent_type == CT_IF
@@ -1663,7 +1663,7 @@ void indent_text(void)
                   && pc->parent_type == CT_FUNC_DEF)))
          {
             // Skip any continuation indents
-            size_t idx = (!frm.empty()) ? frm.tos() - 1 : 0;
+            size_t idx = (!frm.empty()) ? frm.size() - 2 : 0;
             while (  (  (  idx > 0
                         && frm.at(idx).type != CT_BRACE_OPEN
                         && frm.at(idx).type != CT_VBRACE_OPEN
@@ -1705,7 +1705,7 @@ void indent_text(void)
                  && !cpd.settings[UO_indent_align_paren].b
                  && !(pc->flags & PCF_IN_SPAREN))
          {
-            int idx = static_cast<int>(frm.tos()) - 1;
+            int idx = static_cast<int>(frm.size()) - 2;
             while (idx > 0 && are_chunks_in_same_line(frm.at(idx).pc, frm.top().pc))
             {
                idx--;
@@ -1740,7 +1740,7 @@ void indent_text(void)
                {
                   sub = 2;
                }
-               frm.top().indent = frm.at(frm.tos() - sub).indent + indent_size;
+               frm.top().indent = frm.prev(sub).indent + indent_size;
                log_indent();
 
                frm.top().indent_tab = frm.top().indent;
@@ -1976,7 +1976,7 @@ void indent_text(void)
                  __func__, __LINE__, frm.top().indent, frm.top().indent_tmp);
          if (cpd.settings[UO_indent_continue].n != 0)
          {
-            frm.top().indent = calc_indent_continue(frm, frm.tos() - 1);
+            frm.top().indent = calc_indent_continue(frm, frm.size() - 2);
             log_indent();
 
             frm.top().indent_cont = true;
@@ -2098,19 +2098,19 @@ void indent_text(void)
             // Work around the doubly increased indent in RETURNs and assignments
             bool   need_workaround = false;
             size_t sub             = 0;
-            for (int i = frm.tos(); i >= 0; i--)
+            for (int i = frm.size() - 1; i >= 0; i--)
             {
                if (frm.at(i).type == CT_RETURN || frm.at(i).type == CT_ASSIGN)
                {
                   need_workaround = true;
-                  sub             = (frm.tos() + 1) - i;
+                  sub             = frm.size() - i;
                   break;
                }
             }
 
             if (need_workaround)
             {
-               shiftcontcol = calc_indent_continue(frm, frm.tos() - sub);
+               shiftcontcol = calc_indent_continue(frm, frm.size() - 1 - sub);
             }
          }
       }
@@ -2412,7 +2412,7 @@ void indent_text(void)
          else
          {
             bool         use_indent = true;
-            const size_t ttidx      = frm.tos();
+            const size_t ttidx      = frm.size() - 1;
             if (ttidx > 0)
             {
                //if (strcasecmp(get_token_name(frm.pse[ttidx].pc->parent_type), "FUNC_CALL") == 0)
@@ -2536,7 +2536,7 @@ null_pc:
       frm.pop();
    }
 
-   for (size_t idx_temp = 1; idx_temp <= frm.tos(); idx_temp++)
+   for (size_t idx_temp = 1; idx_temp < frm.size(); idx_temp++)
    {
       LOG_FMT(LWARN, "%s:%zu Unmatched %s\n",
               cpd.filename.c_str(), frm.at(idx_temp).open_line,

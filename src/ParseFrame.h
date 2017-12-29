@@ -76,7 +76,7 @@ public:
    void push(chunk_t &pc, brace_stage_e stage = brace_stage_e::NONE);
    void pop();
 
-   size_t tos() const;
+   size_t size() const;
 
    using iterator = std::vector<paren_stack_entry_t>::iterator;
    iterator begin();

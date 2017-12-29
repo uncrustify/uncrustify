@@ -26,10 +26,10 @@ static void pf_log_all(log_sev_t logsev);
 static void pf_log(log_sev_t logsev, const ParseFrame &frm)
 {
    LOG_FMT(logsev, "[%s] BrLevel=%zu Level=%zu PseTos=%zu\n",
-           get_token_name(frm.in_ifdef), frm.brace_level, frm.level, frm.tos());
+           get_token_name(frm.in_ifdef), frm.brace_level, frm.level, frm.size() - 1);
 
    LOG_FMT(logsev, " *");
-   for (size_t idx = 1; idx <= frm.tos(); idx++)
+   for (size_t idx = 1; idx < frm.size(); idx++)
    {
       LOG_FMT(logsev, " [%s-%u]", get_token_name(frm.at(idx).type),
               static_cast<unsigned int>(frm.at(idx).stage));

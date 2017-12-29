@@ -192,10 +192,10 @@ void ParseFrame::pop()
 }
 
 
-size_t ParseFrame::tos() const
+size_t ParseFrame::size() const
 {
    // always at least one (dummy) element inside pse guaranteed
-   return(pse.size() - 1);
+   return(pse.size());
 }
 
 
