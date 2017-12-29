@@ -428,6 +428,7 @@ nl_namespace_two_to_one_liner   = false
 nl_create_if_one_liner          = false
 nl_create_for_one_liner         = false
 nl_create_while_one_liner       = false
+nl_create_func_def_one_liner    = false
 nl_split_if_one_liner           = false
 nl_split_for_one_liner          = false
 nl_split_while_one_liner        = false
