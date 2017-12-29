@@ -555,6 +555,7 @@
 60001  UNI-2650.cfg                         cpp/UNI-2650.cpp
 60002  U25-Cpp.cfg                          cpp/UNI-16283.cpp
 60003  U26-Cpp.cfg                          cpp/UNI-1288.cpp
+60006  UNI-2049.cfg                         cpp/UNI-2049.cpp
 60017  U27-Cpp.cfg                          cpp/UNI-2683.cpp
 60022  U28-Cpp.cfg                          cpp/UNI-18439.cpp
 60025  U29-Cpp.cfg                          cpp/UNI-19894.cpp
@@ -563,5 +564,8 @@
 60029  empty.cfg                            cpp/UNI-21510.cpp
 60030  U33-Cpp.cfg                          cpp/UNI-21727.cpp
 60031  empty.cfg                            cpp/UNI-21728.cpp
+60032  empty.cfg                            cpp/UNI-21729.cpp
 60034  U35-Cpp.cfg                          cpp/UNI-21731.cpp
+60036  UNI-2680.cfg                         cpp/UNI-2680.cpp
+60038  UNI-30088.cfg                        cpp/UNI-30088.cpp
 60039  U36-Cpp.cfg                          cpp/UNI-30628.cpp
