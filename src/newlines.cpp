@@ -1783,16 +1783,16 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
    }
 
-   // fix 1247 oneliner function support converts 4,3,2  liners to oneliner
+   // fix 1247 oneliner function support - converts 4,3,2  liners to oneliner
 
-   if (  // br_open->parent_type == CT_FUNC_DEF &&
-       cpd.settings[UO_nl_create_func_def_one_liner].b)
+   if (  br_open->parent_type == CT_FUNC_DEF
+      && cpd.settings[UO_nl_create_func_def_one_liner].b)
    {
       chunk_t *br_close = chunk_skip_to_match(br_open, scope_e::ALL);
 
       chunk_t *tmp = chunk_get_prev_ncnl(br_open);
 
-      if (((br_close->orig_line - br_open->orig_line) <= 4) && chunk_is_paren_close(tmp))  // need to check the conditions.
+      if (((br_close->orig_line - br_open->orig_line) <= 2) && chunk_is_paren_close(tmp))  // need to check the conditions.
       {
          while (  tmp != nullptr
                && (tmp = chunk_get_next(tmp)) != nullptr
@@ -1806,6 +1806,7 @@ static void newlines_brace_pair(chunk_t *br_open)
             }
 
             chunk_flags_set(br_open, PCF_ONE_LINER);         // set the one liner flag if needed
+            chunk_flags_set(br_close, PCF_ONE_LINER);
          }
       }
    }
