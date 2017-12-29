@@ -1792,7 +1792,7 @@ static void newlines_brace_pair(chunk_t *br_open)
 
       chunk_t *tmp = chunk_get_prev_ncnl(br_open);
 
-      if (((br_close->orig_line - br_open->orig_line) <= 2) && chunk_is_paren_close(tmp))  // need to check the conditions.
+      if (((br_close->orig_line - br_open->orig_line) <= 2) && chunk_is_paren_close(tmp))
       {
          while (  tmp != nullptr
                && (tmp = chunk_get_next(tmp)) != nullptr
@@ -1805,7 +1805,7 @@ static void newlines_brace_pair(chunk_t *br_open)
                newline_iarf_pair(tmp, chunk_get_next_ncnl(tmp), AV_REMOVE);
             }
 
-            chunk_flags_set(br_open, PCF_ONE_LINER);         // set the one liner flag if needed
+            chunk_flags_set(br_open, PCF_ONE_LINER);
             chunk_flags_set(br_close, PCF_ONE_LINER);
          }
       }
