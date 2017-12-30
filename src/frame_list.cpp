@@ -5,7 +5,6 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-#include "parse_frame.h"
 #include "uncrustify_types.h"
 #include "prototypes.h"
 #include "chunk_list.h"
@@ -13,6 +12,7 @@
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
+#include "frame_list.h"
 
 
 static void pf_log_frms(log_sev_t logsev, const char *txt, const ParseFrame &frm);

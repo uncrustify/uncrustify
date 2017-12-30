@@ -18,7 +18,6 @@
 #include "unc_ctype.h"
 #include "uncrustify.h"
 #include "lang_pawn.h"
-#include "parse_frame.h"
 #include "keywords.h"
 #include "logger.h"
 #include "helper_for_print.h"
@@ -26,6 +25,7 @@
 
 #include <stdexcept>
 #include <iostream>
+#include "frame_list.h"
 
 
 using std::invalid_argument;

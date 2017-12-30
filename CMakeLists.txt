@@ -196,7 +196,7 @@ add_executable(uncrustify
   src/options_for_QT.cpp
   src/output.cpp
   src/parens.cpp
-  src/parse_frame.cpp
+  src/frame_list.cpp
   src/ParseFrame.cpp
   src/punctuators.cpp
   src/semicolons.cpp

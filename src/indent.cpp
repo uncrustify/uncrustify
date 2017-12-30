@@ -19,8 +19,8 @@
 #include "unc_ctype.h"
 #include "uncrustify.h"
 #include "align.h"
+#include "frame_list.h"
 #include "space.h"
-#include "parse_frame.h"
 #include "helper_for_print.h"
 
 #include "ParseFrame.h"
