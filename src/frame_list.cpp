@@ -22,6 +22,29 @@ static void fl_log_frms(log_sev_t logsev, const char *txt, const ParseFrame &frm
 static void fl_log_all(log_sev_t logsev);
 
 
+/**
+ * Copy the top element of the frame list into the ParseFrame.
+ *
+ * If the frame list is empty nothing happens.
+ *
+ * This is called on #else and #elif.
+ */
+static void fl_copy_tos(ParseFrame &pf);
+
+
+/**
+ * Copy the 2nd top element off the list into the ParseFrame.
+ * This is called on #else and #elif.
+ * The stack contains [...] [base] [if] at this point.
+ * We want to copy [base].
+ */
+static void fl_copy_2nd_tos(ParseFrame &pf);
+
+
+//! Deletes the top element from the list.
+static void fl_trash_tos(void);
+
+
 //! Logs one parse frame
 static void fl_log(log_sev_t logsev, const ParseFrame &frm)
 {
@@ -66,41 +89,7 @@ static void fl_log_all(log_sev_t logsev)
 }
 
 
-void fl_push(ParseFrame &frm)
-{
-   static int ref_no = 1;
-
-   cpd.frames.push_back(frm);
-   frm.ref_no = ref_no++;
-
-   LOG_FMT(LPF, "%s(%d): frame_count is %zu\n", __func__, __LINE__, cpd.frames.size());
-}
-
-
-void fl_push_under(ParseFrame &frm)
-{
-   LOG_FMT(LPF, "%s(%d): before frame_count is %zu\n", __func__, __LINE__, cpd.frames.size());
-
-   if (cpd.frames.size() >= 1)
-   {
-      auto top  = std::prev(std::end(cpd.frames));
-      auto prev = std::prev(top);
-
-      *top  = *prev;
-      *prev = frm;
-
-      ParseFrame n_frm{};
-      cpd.frames.push_back(n_frm);
-
-      // cpd.frames_count++;
-      // pf_push
-   }
-
-   LOG_FMT(LPF, "%s(%d): after frame_count is %zu\n", __func__, __LINE__, cpd.frames.size());
-}
-
-
-void fl_copy_tos(ParseFrame &pf)
+static void fl_copy_tos(ParseFrame &pf)
 {
    if (!cpd.frames.empty())
    {
@@ -110,7 +99,7 @@ void fl_copy_tos(ParseFrame &pf)
 }
 
 
-void fl_copy_2nd_tos(ParseFrame &pf)
+static void fl_copy_2nd_tos(ParseFrame &pf)
 {
    if (cpd.frames.size() > 1)
    {
@@ -120,12 +109,23 @@ void fl_copy_2nd_tos(ParseFrame &pf)
 }
 
 
-void fl_trash_tos(void)
+static void fl_trash_tos(void)
 {
    if (!cpd.frames.empty())
    {
       cpd.frames.pop_back();
    }
+   LOG_FMT(LPF, "%s(%d): frame_count is %zu\n", __func__, __LINE__, cpd.frames.size());
+}
+
+
+void fl_push(ParseFrame &frm)
+{
+   static int ref_no = 1;
+
+   cpd.frames.push_back(frm);
+   frm.ref_no = ref_no++;
+
    LOG_FMT(LPF, "%s(%d): frame_count is %zu\n", __func__, __LINE__, cpd.frames.size());
 }
 
