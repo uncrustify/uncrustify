@@ -3257,8 +3257,28 @@ void combine_labels(void)
                    * the CT_SIZEOF isn't great - test 31720 happens to use a sizeof expr,
                    * but this really should be able to handle any constant expr
                    */
-                  set_chunk_type(cur, CT_LABEL);
-                  set_chunk_type(next, CT_LABEL_COLON);
+                  // Fix for #1242
+                  // For MIDL_INTERFACE classes class name is tokenized as Label.
+                  // Corrected the identification of Label in c style languages.
+                  if (  (cpd.lang_flags & (LANG_C | LANG_CPP | LANG_CS))
+                     && (!(cpd.lang_flags & LANG_OC)))
+                  {
+                     chunk_t *labelPrev = prev;
+                     if (labelPrev->type == CT_NEWLINE)
+                     {
+                        labelPrev = chunk_get_prev_ncnl(prev);
+                     }
+                     if (labelPrev->type != CT_FPAREN_CLOSE)
+                     {
+                        set_chunk_type(cur, CT_LABEL);
+                        set_chunk_type(next, CT_LABEL_COLON);
+                     }
+                  }
+                  else
+                  {
+                     set_chunk_type(cur, CT_LABEL);
+                     set_chunk_type(next, CT_LABEL_COLON);
+                  }
                }
                else if (next->flags & (PCF_IN_STRUCT | PCF_IN_CLASS | PCF_IN_TYPEDEF))
                {

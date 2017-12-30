@@ -53,6 +53,7 @@
 10057 staging/UNI-1347.cfg          staging/UNI-1347.cpp
 10060 staging/UNI-1350.cfg          staging/UNI-1350.cpp
 10062 staging/UNI-1356.cfg          staging/UNI-1356.cpp
+10063 staging/Uncrustify.Cpp.cfg    staging/UNI-1358.cpp
 10065 staging/Uncrustify.CSharp.cfg staging/UNI-1975.cs
 10066 staging/UNI-1977.cfg          staging/UNI-1977.cs
 10067 staging/UNI-1978.cfg          staging/UNI-1978.cs 			    
