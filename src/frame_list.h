@@ -1,6 +1,6 @@
 /**
- * @file parse_frame.h
- * prototypes for parse_frame.c
+ * @file frame_list.h
+ * Functions for the cpd.frames var, mainly used to handle preprocessor stuff
  *
  * @author  Ben Gardner
  * @license GPL v2+
@@ -13,49 +13,55 @@
 
 
 /**
- * Push a copy of the parse frame onto the stack.
+ * Push a copy of a ParseFrame onto the frames list.
  * This is called on #if and #ifdef.
  */
-void pf_push(ParseFrame &pf);
+void fl_push(ParseFrame &pf);
 
 
 /**
- * Push a copy of the parse frame onto the stack, under the tos.
+ * Push a copy of a ParseFrame before the last element on the frames list.
  * If this were a linked list, just add before the last item.
  * This is called on the first #else and #elif.
  */
-void pf_push_under(ParseFrame &pf);
+void fl_push_under(ParseFrame &pf);
 
 
 /**
- * Copy the top item off the stack into pf.
+ * Copy the top element of the frame list into the ParseFrame.
+ *
+ * If the frame list is empty nothing happens.
+ *
  * This is called on #else and #elif.
  */
-void pf_copy_tos(ParseFrame &pf);
+void fl_copy_tos(ParseFrame &pf);
 
 
 /**
- * Copy the 2nd top item off the stack into pf.
+ * Copy the 2nd top element off the list into the ParseFrame.
  * This is called on #else and #elif.
  * The stack contains [...] [base] [if] at this point.
  * We want to copy [base].
  */
-void pf_copy_2nd_tos(ParseFrame &pf);
+void fl_copy_2nd_tos(ParseFrame &pf);
 
 
-//! Deletes the top frame from the stack.
-void pf_trash_tos(void);
+//! Deletes the top element from the list.
+void fl_trash_tos(void);
 
 
 /**
- * Pop the top item off the stack and copy into pf.
+ * Pop the top element off the frame list and copy it into the ParseFrame.
+ *
+ * Does nothing if the frame list is empty.
+ *
  * This is called on #endif
  */
-void pf_pop(ParseFrame &pf);
+void fl_pop(ParseFrame &pf);
 
 
 //! Returns the pp_indent to use for this line
-int pf_check(ParseFrame &frm, chunk_t *pc);
+int fl_check(ParseFrame &frm, chunk_t *pc);
 
 
 #endif /* PARSE_FRAME_H_INCLUDED */

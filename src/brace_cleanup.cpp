@@ -125,11 +125,11 @@ static size_t preproc_start(ParseFrame &frm, chunk_t *pc)
    // If we are not in a define, check for #if, #else, #endif, etc
    if (cpd.in_preproc != CT_PP_DEFINE)
    {
-      return(pf_check(frm, pc));
+      return(fl_check(frm, pc));
    }
 
    // else push the frame stack
-   pf_push(frm);
+   fl_push(frm);
 
    // a preproc body starts a new, blank frame
    frm             = {};
@@ -193,7 +193,7 @@ void brace_cleanup(void)
          if (cpd.in_preproc == CT_PP_DEFINE)
          {
             // out of the #define body, restore the frame
-            pf_pop(frm);
+            fl_pop(frm);
          }
 
          cpd.in_preproc = CT_NONE;

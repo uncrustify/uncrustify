@@ -633,7 +633,7 @@ void indent_text(void)
             frm.pop();
          }
 
-         pf_check(frm, pc);
+         fl_check(frm, pc);
 
          // Indent the body of a #region here
          if (  cpd.settings[UO_pp_region_indent_code].b
