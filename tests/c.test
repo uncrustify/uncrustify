@@ -323,6 +323,7 @@
 09604 indent_ternary-2.cfg      c/indent_ternary-2.c
 
 09605 aet.cfg                   c/negative_value.c
+09606 aet.cfg                   c/extern-c-attribute.c
 
 09610 bug_i_876.cfg             c/bug_i_876.c
 09611 bug_i_222.cfg             c/bug_i_222.c
