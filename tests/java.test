@@ -22,4 +22,5 @@
 
 80100  align_same_func_call_params-t.cfg    java/sf567.java
 
+80200  sp_before_byref-r.cfg                java/sp_before_byref.java
 80201  template_angles.cfg                  java/generics.java

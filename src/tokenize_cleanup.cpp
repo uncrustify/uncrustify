@@ -843,7 +843,9 @@ void tokenize_cleanup(void)
       }
 
       // Add minimal support for C++0x rvalue references
-      if (pc->type == CT_BOOL && chunk_is_str(pc, "&&", 2))
+      if (  pc->type == CT_BOOL
+         && (cpd.lang_flags & LANG_CPP)
+         && chunk_is_str(pc, "&&", 2))
       {
          if (prev->type == CT_TYPE)
          {
