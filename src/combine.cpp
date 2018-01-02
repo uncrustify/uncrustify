@@ -1886,6 +1886,15 @@ void fix_symbols(void)
          }
       }
 
+      if ((pc->type == CT_ATTRIBUTE) && (cpd.lang_flags & (LANG_ALLC)))
+      {
+         chunk_t *tmp = skip_attribute_next(pc);
+         if ((tmp != NULL) && (tmp->type == CT_WORD))
+         {
+            tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+         }
+      }
+
       /*
        * A variable definition is possible after at the start of a statement
        * that starts with: QUALIFIER, TYPE, or WORD

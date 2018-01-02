@@ -353,6 +353,7 @@
 
 09605  sp_arith-f.cfg                       c/negative_value.c
 09606  ptr-arith.cfg                        c/extern.c
+09607  ptr-arith.cfg                        c/attribute.c
 
 09610  force_tab_after_define-t.cfg         c/bug_i_876.c
 09611  space_indent_columns-4.cfg           c/bug_i_222.c
