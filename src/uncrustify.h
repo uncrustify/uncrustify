@@ -12,7 +12,7 @@
 #include "token_enum.h"
 #include "log_levels.h"
 #include "base_types.h"
-
+#include "uncrustify_types.h"
 
 int load_header_files(void);
 

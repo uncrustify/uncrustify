@@ -196,7 +196,8 @@ add_executable(uncrustify
   src/options_for_QT.cpp
   src/output.cpp
   src/parens.cpp
-  src/parse_frame.cpp
+  src/frame_list.cpp
+  src/ParseFrame.cpp
   src/punctuators.cpp
   src/semicolons.cpp
   src/sorting.cpp
@@ -208,7 +209,6 @@ add_executable(uncrustify
   src/unc_tools.cpp
   src/unicode.cpp
   src/universalindentgui.cpp
-  src/controlPSECount.cpp
   src/width.cpp
   src/align_stack.h
   src/args.h
@@ -225,6 +225,7 @@ add_executable(uncrustify
   src/md5.h
   src/options.h
   src/options_for_QT.h
+  src/ParseFrame.h
   src/prototypes.h
   src/punctuators.h
   src/token_enum.h
@@ -232,7 +233,6 @@ add_executable(uncrustify
   src/unc_ctype.h
   src/unc_text.h
   src/unc_tools.h
-  src/controlPSECount.h
 )
 
 if(CMAKE_VERSION VERSION_LESS 2.8.10)
