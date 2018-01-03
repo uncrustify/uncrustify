@@ -102,6 +102,7 @@
 50613  aet.cfg                                      oc/chunk_ends_type2.m
 50614  aet.cfg                                      oc/chunk_ends_type3.m
 50615  aet.cfg                                      oc/block_literal_protocol.m
+50616  aet.cfg                                      oc/oc_msg_in_pp.m
 
 50700  cmt_insert-0.cfg                             oc/cmt_insert.m
 

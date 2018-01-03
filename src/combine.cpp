@@ -939,7 +939,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             handle_oc_message_decl(pc);
          }
       }
-      if (pc->flags & PCF_EXPR_START)
+      if (pc->flags & PCF_EXPR_START || pc->flags & PCF_IN_PREPROC)
       {
          if (pc->type == CT_SQUARE_OPEN)
          {
