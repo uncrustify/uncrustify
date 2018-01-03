@@ -106,6 +106,7 @@
 50617  aet.cfg                                      oc/boxed_receiver.m
 50618  aet-func_def.cfg                             oc/func_def.mm
 50619  aet.cfg                                      oc/cast.m
+50620  aet.cfg                                      oc/sp_after_angle.m
 
 50700  cmt_insert-0.cfg                             oc/cmt_insert.m
 

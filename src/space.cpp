@@ -889,7 +889,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          log_rule("sp_before_dc");
          return(cpd.settings[UO_sp_before_dc].a);
       }
-      if (second->type != CT_BYREF && second->type != CT_PTR_TYPE && second->type != CT_PAREN_CLOSE)
+      if (second->type != CT_BYREF && second->type != CT_PTR_TYPE && second->type != CT_BRACE_OPEN && second->type != CT_PAREN_CLOSE)
       {
          if (  second->type == CT_CLASS_COLON
             && cpd.settings[UO_sp_angle_colon].a != AV_IGNORE)
