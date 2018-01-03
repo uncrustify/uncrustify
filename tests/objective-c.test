@@ -104,6 +104,7 @@
 50615  aet.cfg                                      oc/block_literal_protocol.m
 50616  aet.cfg                                      oc/oc_msg_in_pp.m
 50617  aet.cfg                                      oc/boxed_receiver.m
+50618  aet-func_def.cfg                             oc/func_def.mm
 
 50700  cmt_insert-0.cfg                             oc/cmt_insert.m
 
