@@ -5830,6 +5830,27 @@ static void handle_oc_block_literal(chunk_t *pc)
    chunk_t *tmp;
    for (tmp = next; tmp; tmp = chunk_get_next_ncnl(tmp))
    {
+      /* handle '< protocol >' */
+      if (chunk_is_str(tmp, "<", 1))
+      {
+         chunk_t *ao = tmp;
+         chunk_t *ac = chunk_get_next_str(ao, ">", 1, ao->level);
+
+         if (ac)
+         {
+            set_chunk_type(ao, CT_ANGLE_OPEN);
+            set_chunk_parent(ao, CT_OC_PROTO_LIST);
+            set_chunk_type(ac, CT_ANGLE_CLOSE);
+            set_chunk_parent(ac, CT_OC_PROTO_LIST);
+            for (tmp = chunk_get_next(ao); tmp != ac; tmp = chunk_get_next(tmp))
+            {
+               tmp->level += 1;
+               set_chunk_parent(tmp, CT_OC_PROTO_LIST);
+            }
+         }
+         tmp = chunk_get_next_ncnl(ac);
+      }
+
       LOG_FMT(LOCBLK, " '%s'", tmp->text());
       if (tmp->level < pc->level || tmp->type == CT_SEMICOLON)
       {
