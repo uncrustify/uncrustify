@@ -2543,15 +2543,17 @@ static void fix_casts(chunk_t *start)
             || pc->type == CT_QUESTION
             || pc->type == CT_CARET
             || pc->type == CT_TSQUARE
+            || ((pc->type == CT_ANGLE_OPEN || pc->type == CT_ANGLE_CLOSE) && (cpd.lang_flags & (LANG_OC | LANG_JAVA)))
+            || ((pc->type == CT_QUESTION || pc->type == CT_COMMA || pc->type == CT_MEMBER) && (cpd.lang_flags & (LANG_JAVA)))
             || pc->type == CT_AMP))
    {
       LOG_FMT(LCASTS, " [%s]", get_token_name(pc->type));
 
-      if (pc->type == CT_WORD)
+      if (pc->type == CT_WORD || (last && last->type == CT_ANGLE_CLOSE && pc->type == CT_DC_MEMBER))
       {
          word_count++;
       }
-      else if (pc->type == CT_DC_MEMBER || pc->type == CT_PP)
+      else if (pc->type == CT_DC_MEMBER || pc->type == CT_MEMBER || pc->type == CT_PP)
       {
          word_count--;
       }
@@ -2581,7 +2583,8 @@ static void fix_casts(chunk_t *start)
    if (  last->type == CT_STAR
       || last->type == CT_CARET
       || last->type == CT_PTR_TYPE
-      || last->type == CT_TYPE)
+      || last->type == CT_TYPE
+      || (last->type == CT_ANGLE_CLOSE && (cpd.lang_flags & (LANG_OC | LANG_JAVA))))
    {
       verb = "for sure";
    }

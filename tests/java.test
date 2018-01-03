@@ -26,3 +26,4 @@
 80201 aet.cfg                 java/generics.java
 80202 aet.cfg                 java/generics_wildcard.java
 80203 aet.cfg                 java/generics_return_type.java
+80204 aet.cfg                 java/cast.java
