@@ -95,7 +95,7 @@
 11011  620_getset-brace.cfg                 cs/620_getset-brace.cs
 11030  U08-Cpp.cfg                          cs/argtypes.mm
 11031  U09-Cpp.cfg                          cs/casting.mm
-11032  U10-Cpp.cfg                          cs/newlines.mm
+11032! U10-Cpp.cfg                          cs/newlines.mm
 11072  U07-Cs.cfg                           cs/UNI-2007.cs
 11073  U08-Cs.cfg                           cs/UNI-2008.cs
 
@@ -106,3 +106,4 @@
 60019  empty.cfg                            cs/UNI-18780.cs
 60024  U15-Cs.cfg                           cs/UNI-19644.cs
 60026  UNI-19895.cfg                        cs/UNI-19895.cs
+60033  UNI-21730.cfg                        cs/UNI-21730.cs
