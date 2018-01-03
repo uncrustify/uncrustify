@@ -2789,6 +2789,16 @@ static void fix_enum_struct_union(chunk_t *pc)
             }
          }
       }
+      else if (pc->type == CT_STRUCT && next->type == CT_PAREN_OPEN)
+      {
+         // Fix #1267 structure attributes
+         // struct __attribute__(align(x)) struct_name;
+         // skip to matching parenclose and make next token as type.
+         next = chunk_skip_to_match(next);
+         next = chunk_get_next_ncnl(next);
+         set_chunk_type(next, CT_TYPE);
+         set_chunk_parent(next, pc->type);
+      }
    }
    if (next != nullptr && next->type == CT_BRACE_OPEN)
    {
