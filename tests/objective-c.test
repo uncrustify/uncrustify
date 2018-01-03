@@ -98,6 +98,7 @@
 50609  aet.cfg                                      oc/negative_value.m
 50610  aet.cfg                                      oc/nelem.m
 50611  aet.cfg                                      oc/for2.m
+50612  aet.cfg                                      oc/chunk_ends_type1.m
 
 50700  cmt_insert-0.cfg                             oc/cmt_insert.m
 
