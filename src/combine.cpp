@@ -6245,8 +6245,26 @@ static void handle_oc_message_send(chunk_t *os)
 
    // expect a word first thing or [...]
    tmp = chunk_get_next_ncnl(os);
-   if (tmp->type == CT_SQUARE_OPEN || tmp->type == CT_PAREN_OPEN)
+   if (  tmp->type == CT_SQUARE_OPEN || tmp->type == CT_PAREN_OPEN
+      || (tmp->type == CT_OC_AT))
    {
+      chunk_t *tt = chunk_get_next_ncnl(tmp);
+      if ((tmp->type == CT_OC_AT) && tt)
+      {
+         if (  (tt->type == CT_PAREN_OPEN)
+            || (tt->type == CT_BRACE_OPEN)
+            || (tt->type == CT_SQUARE_OPEN))
+         {
+            tmp = tt;
+         }
+         else
+         {
+            LOG_FMT(LOCMSG, "%s: %d:%d expected identifier, not '%s' [%s]\n", __func__,
+                    tmp->orig_line, tmp->orig_col,
+                    tmp->text(), get_token_name(tmp->type));
+            return;
+         }
+      }
       tmp = chunk_skip_to_match(tmp);
    }
    else if (  tmp->type != CT_WORD
@@ -6337,6 +6355,12 @@ static void handle_oc_message_send(chunk_t *os)
             break;
          }
       }
+   }
+
+   // [(self.foo.bar) method]
+   if (chunk_is_paren_open(tmp))
+   {
+      tmp = chunk_get_next_ncnl(chunk_skip_to_match(tmp));
    }
 
    if (  tmp
