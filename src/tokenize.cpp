@@ -2027,6 +2027,32 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       return(true);
    }
 
+   /* When parsing C/C++ files and running into some unknown token,
+    * check if matches Objective-C as a last resort, before
+    * considering it as garbage.
+    */
+   int probe_lang_flags = 0;
+   if (cpd.lang_flags & (LANG_C | LANG_CPP))
+   {
+      probe_lang_flags = cpd.lang_flags | LANG_OC;
+   }
+
+   if (probe_lang_flags != 0)
+   {
+      if ((punc = find_punctuator(punc_txt, probe_lang_flags)) != NULL)
+      {
+         cpd.lang_flags = probe_lang_flags;
+         int cnt = strlen(punc->tag);
+         while (cnt--)
+         {
+            pc.str.append(ctx.get());
+         }
+         pc.type   = punc->type;
+         pc.flags |= PCF_PUNCTUATOR;
+         return(true);
+      }
+   }
+
    // throw away this character
    pc.type = CT_UNKNOWN;
    pc.str.append(ctx.get());
