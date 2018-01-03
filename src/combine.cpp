@@ -708,6 +708,7 @@ static bool chunk_ends_type(chunk_t *start)
          || pc->type == CT_PTR_TYPE
          || pc->type == CT_STRUCT
          || pc->type == CT_DC_MEMBER
+         || pc->type == CT_PP
          || pc->type == CT_QUALIFIER
          || (cpd.lang_flags & LANG_CS) && (pc->type == CT_MEMBER))
       {
@@ -2534,6 +2535,7 @@ static void fix_casts(chunk_t *start)
             || pc->type == CT_WORD
             || pc->type == CT_QUALIFIER
             || pc->type == CT_DC_MEMBER
+            || pc->type == CT_PP
             || pc->type == CT_STAR
             || pc->type == CT_QUESTION
             || pc->type == CT_CARET
@@ -2546,7 +2548,7 @@ static void fix_casts(chunk_t *start)
       {
          word_count++;
       }
-      else if (pc->type == CT_DC_MEMBER)
+      else if (pc->type == CT_DC_MEMBER || pc->type == CT_PP)
       {
          word_count--;
       }
