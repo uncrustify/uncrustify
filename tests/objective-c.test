@@ -95,6 +95,7 @@
 50606  obj-c.cfg                                    oc/bug_1366.m
 50607  aet-sp_after_oc_msg_receiver.cfg             oc/sp_after_oc_msg_receiver.m
 50608  aet.cfg                                      oc/blocks_align2.m
+50609  aet.cfg                                      oc/negative_value.m
 
 50700  cmt_insert-0.cfg                             oc/cmt_insert.m
 
