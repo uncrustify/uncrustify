@@ -1009,7 +1009,7 @@ static void check_template(chunk_t *start)
             && (pc->str[0] == '>')
             && (pc->len() > 1)
             && (  cpd.settings[UO_tok_split_gte].b
-               || (chunk_is_str(pc, ">>", 2) && num_tokens >= 2)))
+               || ((chunk_is_str(pc, ">>", 2) || chunk_is_str(pc, ">>>", 3)) && num_tokens >= 2)))
          {
             LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}",
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
