@@ -93,6 +93,7 @@
 50604  objc_bug_497.cfg                             oc/bug_497.m
 50605  empty.cfg                                    oc/bug_404.m
 50606  obj-c.cfg                                    oc/bug_1366.m
+50607  aet-sp_after_oc_msg_receiver.cfg             oc/sp_after_oc_msg_receiver.m
 
 50700  cmt_insert-0.cfg                             oc/cmt_insert.m
 
