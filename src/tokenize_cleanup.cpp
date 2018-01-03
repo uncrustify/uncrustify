@@ -940,6 +940,7 @@ static void check_template(chunk_t *start)
       if (  prev->type != CT_WORD
          && prev->type != CT_TYPE
          && prev->type != CT_COMMA
+         && prev->type != CT_QUALIFIER
          && prev->type != CT_OPERATOR_VAL
          && prev->parent_type != CT_OPERATOR)
       {

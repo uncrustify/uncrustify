@@ -25,3 +25,4 @@
 80200 aet.cfg                 java/sp_before_byref.java
 80201 aet.cfg                 java/generics.java
 80202 aet.cfg                 java/generics_wildcard.java
+80203 aet.cfg                 java/generics_return_type.java
