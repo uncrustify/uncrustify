@@ -240,6 +240,7 @@ enum uncrustify_options
    UO_sp_after_tag,                // pawn: space after a tag colon
    UO_sp_inside_braces_enum,       // space inside enum '{' and '}' - '{ a, b, c }'
    UO_sp_inside_braces_struct,     // space inside struct/union '{' and '}'
+   UO_sp_inside_braces_oc_dict,    // space inside OC boxed dictionary @'{' and '}'
    UO_sp_after_type_brace_init_lst_open,
    UO_sp_before_type_brace_init_lst_close,
    UO_sp_inside_type_brace_init_lst,
