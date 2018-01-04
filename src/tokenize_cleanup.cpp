@@ -789,38 +789,38 @@ void tokenize_cleanup(void)
       }
 
       // Check for C# nullable types '?' is in next
-   //   if (  (cpd.lang_flags & LANG_CS)
-   //      && next->type == CT_QUESTION
-   //      && (next->orig_col == (pc->orig_col + pc->len())))
-   //   {
-   //      chunk_t *tmp = chunk_get_next_ncnl(next);
-   //      if (tmp != nullptr)
-   //      {
-   //         bool doit = (  tmp->type == CT_PAREN_CLOSE
-   //                     || tmp->type == CT_ANGLE_CLOSE);
+      //   if (  (cpd.lang_flags & LANG_CS)
+      //      && next->type == CT_QUESTION
+      //      && (next->orig_col == (pc->orig_col + pc->len())))
+      //   {
+      //      chunk_t *tmp = chunk_get_next_ncnl(next);
+      //      if (tmp != nullptr)
+      //      {
+      //         bool doit = (  tmp->type == CT_PAREN_CLOSE
+      //                     || tmp->type == CT_ANGLE_CLOSE);
 
-   //         if (tmp->type == CT_WORD)
-   //         {
-   //            chunk_t *tmp2 = chunk_get_next_ncnl(tmp);
-   //            if (  tmp2 != nullptr
-   //               && (  tmp2->type == CT_SEMICOLON
-   //                  || tmp2->type == CT_ASSIGN
-   //                  || tmp2->type == CT_COMMA
-   //                  || tmp2->type == CT_BRACE_OPEN))
-   //            {
-   //               doit = true;
-   //            }
-   //         }
+      //         if (tmp->type == CT_WORD)
+      //         {
+      //            chunk_t *tmp2 = chunk_get_next_ncnl(tmp);
+      //            if (  tmp2 != nullptr
+      //               && (  tmp2->type == CT_SEMICOLON
+      //                  || tmp2->type == CT_ASSIGN
+      //                  || tmp2->type == CT_COMMA
+      //                  || tmp2->type == CT_BRACE_OPEN))
+      //            {
+      //               doit = true;
+      //            }
+      //         }
 
-   //         if (doit)
-   //         {
-   //            pc->str         += next->str;
-   //            pc->orig_col_end = next->orig_col_end;
-   //            chunk_del(next);
-   //            next = tmp;
-   //         }
-   //      }
-   //   }
+      //         if (doit)
+      //         {
+      //            pc->str         += next->str;
+      //            pc->orig_col_end = next->orig_col_end;
+      //            chunk_del(next);
+      //            next = tmp;
+      //         }
+      //      }
+      //   }
 
       // Change 'default(' into a sizeof-like statement
       if (  (cpd.lang_flags & LANG_CS)
@@ -894,9 +894,8 @@ void tokenize_cleanup(void)
 
 static void check_template(chunk_t *start)
 {
-   LOG_FMT(LTEMPL, "%s(%d): orig_line %zu, orig_col %zu:",
+   LOG_FMT(LTEMPL, "%s(%d): orig_line %zu, orig_col %zu:\n",
            __func__, __LINE__, start->orig_line, start->orig_col);
-   D_LOG_FMT(LTEMPL, "\n");
 
    chunk_t *prev = chunk_get_prev_ncnl(start, scope_e::PREPROC);
    if (prev == nullptr)
@@ -908,9 +907,7 @@ static void check_template(chunk_t *start)
    chunk_t *pc;
    if (prev->type == CT_TEMPLATE)
    {
-      D_LOG_FMT(LTEMPL, "%s(%d):", __func__, __LINE__);
-      LOG_FMT(LTEMPL, " CT_TEMPLATE:");
-      D_LOG_FMT(LTEMPL, "\n");
+      LOG_FMT(LTEMPL, "%s(%d): CT_TEMPLATE:\n", __func__, __LINE__);
 
       // We have: "template< ... >", which is a template declaration
       size_t level = 1;
@@ -918,15 +915,13 @@ static void check_template(chunk_t *start)
            pc != nullptr;
            pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
       {
-         LOG_FMT(LTEMPL, "%s(%d): [%s,%zu]",
+         LOG_FMT(LTEMPL, "%s(%d): type is %s, level is %zu\n",
                  __func__, __LINE__, get_token_name(pc->type), level);
-         D_LOG_FMT(LTEMPL, "\n");
 
          if ((pc->str[0] == '>') && (pc->len() > 1))
          {
-            LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}",
+            LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}\n",
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
-            D_LOG_FMT(LTEMPL, "\n");
             split_off_angle_close(pc);
          }
 
@@ -962,16 +957,14 @@ static void check_template(chunk_t *start)
          && prev->type != CT_OPERATOR_VAL
          && prev->parent_type != CT_OPERATOR)
       {
-         LOG_FMT(LTEMPL, "%s(%d): - after %s + ( - Not a template\n",
+         LOG_FMT(LTEMPL, "%s(%d): - after type %s + ( - Not a template\n",
                  __func__, __LINE__, get_token_name(prev->type));
-         D_LOG_FMT(LTEMPL, "\n");
          set_chunk_type(start, CT_COMPARE);
          return;
       }
 
-      LOG_FMT(LTEMPL, "%s(%d): - prev %s -",
+      LOG_FMT(LTEMPL, "%s(%d): - prev->type is %s -\n",
               __func__, __LINE__, get_token_name(prev->type));
-      D_LOG_FMT(LTEMPL, "\n");
 
       // Scan back and make sure we aren't inside square parenthesis
       bool in_if = false;
@@ -1005,9 +998,8 @@ static void check_template(chunk_t *start)
            pc != nullptr;
            pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
       {
-         LOG_FMT(LTEMPL, "%s(%d): [%s,%zu]",
+         LOG_FMT(LTEMPL, "%s(%d): type is %s, num_tokens is %zu\n",
                  __func__, __LINE__, get_token_name(pc->type), num_tokens);
-         D_LOG_FMT(LTEMPL, "\n");
 
          if (  (tokens[num_tokens - 1] == CT_ANGLE_OPEN)
             && (pc->str[0] == '>')
@@ -1015,9 +1007,8 @@ static void check_template(chunk_t *start)
             && (  cpd.settings[UO_tok_split_gte].b
                || (chunk_is_str(pc, ">>", 2) && num_tokens >= 2)))
          {
-            LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}",
+            LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}\n",
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
-            D_LOG_FMT(LTEMPL, "\n");
 
             split_off_angle_close(pc);
          }
@@ -1079,15 +1070,11 @@ static void check_template(chunk_t *start)
       pc = chunk_get_next_ncnl(end, scope_e::PREPROC);
       if (pc == nullptr || pc->type != CT_NUMBER)
       {
-         D_LOG_FMT(LTEMPL, "%s(%d):", __func__, __LINE__);
-         LOG_FMT(LTEMPL, " - Template Detected\n");
-         D_LOG_FMT(LTEMPL, "%s(%d):", __func__, __LINE__);
-         LOG_FMT(LTEMPL, "     from orig_line %zu, orig_col %zu\n",
-                 start->orig_line, start->orig_col);
-         D_LOG_FMT(LTEMPL, "%s(%d):", __func__, __LINE__);
-         LOG_FMT(LTEMPL, "     to   orig_line %zu, orig_col %zu\n",
-                 end->orig_line, end->orig_col);
-
+         LOG_FMT(LTEMPL, "%s(%d): Template Detected\n", __func__, __LINE__);
+         LOG_FMT(LTEMPL, "%s(%d):     from orig_line %zu, orig_col %zu\n",
+                 __func__, __LINE__, start->orig_line, start->orig_col);
+         LOG_FMT(LTEMPL, "%s(%d):     to   orig_line %zu, orig_col %zu\n",
+                 __func__, __LINE__, end->orig_line, end->orig_col);
          set_chunk_parent(start, CT_TEMPLATE);
 
          // Issue #1127
