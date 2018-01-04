@@ -646,6 +646,20 @@ void indent_text(void)
    pc = chunk_get_head();
    while (pc != nullptr)
    {
+      //  forces string literal to column-1 [Fix for 1246]
+      if (  (pc->type == CT_STRING || pc->type == CT_STRING_MULTI)
+         && !(cpd.lang_flags & LANG_OC))
+      {
+         string str = pc->text();
+         if ((str[0] == '@') && (chunk_get_prev(pc)->type == CT_NEWLINE))
+         {
+            indent_column_set(1);
+            reindent_line(pc, indent_column);
+            pc          = chunk_get_next(pc);
+            did_newline = false;
+         }
+      }
+
       if (pc->type == CT_NEWLINE)
       {
          LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, NEWLINE\n",
