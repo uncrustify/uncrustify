@@ -843,7 +843,7 @@ void register_options(void)
                   "Spaces to indent 'case' from 'switch'\n"
                   "Usually 0 or indent_columns.");
    unc_add_option("indent_switch_pp", UO_indent_switch_pp, AT_BOOL,
-                  "Whether to indent preproccesor statements inside of switch statements.");
+                  "Whether to indent preprocessor statements inside of switch statements.");
    unc_add_option("indent_case_shift", UO_indent_case_shift, AT_UNUM,
                   "Spaces to shift the 'case' line, without affecting any other lines\n"
                   "Usually 0.");
