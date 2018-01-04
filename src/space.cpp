@@ -1375,6 +1375,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    if (  (chunk_is_str(first, "(", 1) && chunk_is_str(second, "(", 1))
       || (chunk_is_str(first, ")", 1) && chunk_is_str(second, ")", 1)))
    {
+      if (second->parent_type == CT_FUNC_CALL_USER)
+      {
+         log_rule("sp_func_call_user_paren_paren");
+         return(cpd.settings[UO_sp_func_call_user_paren_paren].a);
+      }
       log_rule("sp_paren_paren");
       return(cpd.settings[UO_sp_paren_paren].a);
    }
@@ -1382,6 +1387,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    // "foo(...)" vs "foo( ... )"
    if (first->type == CT_FPAREN_OPEN || second->type == CT_FPAREN_CLOSE)
    {
+      if (  (first->parent_type == CT_FUNC_CALL_USER)
+         || (  (second->parent_type == CT_FUNC_CALL_USER)
+            && ((first->type == CT_WORD) || (first->type == CT_SQUARE_CLOSE))))
+      {
+         log_rule("sp_func_call_user_inside_fparen");
+         return(cpd.settings[UO_sp_func_call_user_inside_fparen].a);
+      }
       if (first->type == CT_FPAREN_OPEN && second->type == CT_FPAREN_CLOSE)
       {
          log_rule("sp_inside_fparens");

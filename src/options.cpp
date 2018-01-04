@@ -545,6 +545,12 @@ void register_options(void)
    unc_add_option("sp_func_call_user_paren", UO_sp_func_call_user_paren, AT_IARF,
                   "Add or remove space between the user function name and '(' on function calls\n"
                   "You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.");
+   unc_add_option("sp_func_call_user_inside_fparen", UO_sp_func_call_user_inside_fparen, AT_IARF,
+                  "Add or remove space inside user function '(' and ')'\n"
+                  "You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.");
+   unc_add_option("sp_func_call_user_paren_paren", UO_sp_func_call_user_paren_paren, AT_IARF,
+                  "Add or remove space between nested parens with user functions: '((' vs ') )'"
+                  "You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.");
    unc_add_option("sp_func_class_paren", UO_sp_func_class_paren, AT_IARF,
                   "Add or remove space between a constructor/destructor and the open paren.");
    unc_add_option("sp_func_class_paren_empty", UO_sp_func_class_paren_empty, AT_IARF,
