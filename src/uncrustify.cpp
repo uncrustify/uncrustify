@@ -375,6 +375,8 @@ int main(int argc, char *argv[])
 
    setup_crash_handling();
 
+   init_keywords();
+
    /* check keyword sort */
    assert(keywords_are_sorted());
 
