@@ -4409,7 +4409,7 @@ static void mark_function(chunk_t *pc)
             if (  prev->type == CT_ARITH
                || prev->type == CT_ASSIGN
                || prev->type == CT_COMMA
-               || prev->type == CT_STRING
+               || (prev->type == CT_STRING && prev->parent_type != CT_EXTERN)  // fixes issue 1259
                || prev->type == CT_STRING_MULTI
                || prev->type == CT_NUMBER
                || prev->type == CT_NUMBER_FP
