@@ -727,6 +727,9 @@ static bool chunk_ends_type(chunk_t *start)
          || pc->type == CT_FPAREN_CLOSE
          || chunk_is_forin(pc)
          || pc->type == CT_MACRO
+         || pc->type == CT_PP_IF
+         || pc->type == CT_PP_ELSE
+         || pc->type == CT_PP_ENDIF
          || ((pc->type == CT_COMMA && ((pc->flags & PCF_IN_FCN_CALL) == 0)) && last_expr)
          || (pc->type == CT_SPAREN_OPEN && last_lval))
       {

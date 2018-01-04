@@ -112,6 +112,7 @@
 50623  aet.cfg                                      oc/extern-c-attribute.m
 50624  aet.cfg                                      oc/typeof.m
 50625  aet-sp_inside_braces_oc_dict.cfg             oc/sp_inside_braces_oc_dict.m
+50626  aet.cfg                                      oc/chunk_ends_type4.m
 
 50700  cmt_insert-0.cfg                             oc/cmt_insert.m
 
