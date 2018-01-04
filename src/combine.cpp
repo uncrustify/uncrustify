@@ -1058,6 +1058,15 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
    }
 
+   if (pc->type == CT_SIZEOF && (cpd.lang_flags & LANG_ALLC))
+   {
+      tmp = chunk_get_next_ncnl(pc);
+      if (chunk_is_paren_open(tmp))
+      {
+         set_paren_parent(tmp, CT_TYPE_CAST);
+      }
+   }
+
    // A [] in C# and D only follows a type
    if (  pc->type == CT_TSQUARE
       && (cpd.lang_flags & (LANG_D | LANG_CS | LANG_VALA)))
