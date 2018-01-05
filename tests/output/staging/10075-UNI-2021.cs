@@ -1,43 +1,17 @@
-// Non-indented two-line func+body
-// Test code:
+// updating the testcase for 1247
+// concluded that we need to convert all the 4,3,2 liners to one liner based on the option
+int fun() {return 0; }
 
-int Func()
-    { return 0; }
+int fun() {return 0; }
 
-// The contents of the method will get aligned with 'int'. Sometimes we want this, sometimes we don't.
+int fun() {return 0; }
 
-// There is no workaround; would require a new Uncrustify feature.
-// Re-indentation of wrapped args leaves hanging previous-line args
-// This:
+int fun() {return 0; }
 
-// ```cs
+int fun() {return 0; }
 
-UtilityFunctions.DisplayAwesomeness(
-    position, fullFlagNames.ToArray(),
-    // Only show selections if we are not multi-editing
-    GUI.showMixedValue ? new int[] {} : selectedFlags.ToArray(),
-    Boo.m_Instance.Foo, null);
-// ```
-// becomes this:
+int fun() { return 0; }
 
-// ```cs
+int fun() {return 0; }
 
-UtilityFunctions.DisplayAwesomeness(
-    position, fullFlagNames.ToArray(),
-    // Only show selections if we are not multi-editing
-    GUI.showMixedValue ? new int[] {} : selectedFlags.ToArray(),
-    Boo.m_Instance.Foo, null);
-
-// ```
-
-// but we'd rather have this:
-
-// ```cs
-
-UtilityFunctions.DisplayAwesomeness(
-    position, fullFlagNames.ToArray(),
-    // Only show selections if we are not multi-editing
-    GUI.showMixedValue ? new int[] {} : selectedFlags.ToArray(),
-    Boo.m_Instance.Foo, null);
-
-// ```
+int fun() {return 0; }

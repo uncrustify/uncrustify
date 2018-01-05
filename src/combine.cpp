@@ -1372,7 +1372,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       if (  pc->type == CT_PAREN_OPEN
          && (  pc->parent_type == CT_NONE
             || pc->parent_type == CT_OC_MSG
-            || pc->parent_type == CT_OC_BLOCK_EXPR)
+            || pc->parent_type == CT_OC_BLOCK_EXPR
+            || pc->parent_type == CT_CS_SQ_STMT)
          && (  next->type == CT_WORD
             || next->type == CT_TYPE
             || next->type == CT_STRUCT
@@ -2788,6 +2789,16 @@ static void fix_enum_struct_union(chunk_t *pc)
                next = chunk_get_next_ncnl(next);
             }
          }
+      }
+      else if (pc->type == CT_STRUCT && next->type == CT_PAREN_OPEN)
+      {
+         // Fix #1267 structure attributes
+         // struct __attribute__(align(x)) struct_name;
+         // skip to matching parenclose and make next token as type.
+         next = chunk_skip_to_match(next);
+         next = chunk_get_next_ncnl(next);
+         set_chunk_type(next, CT_TYPE);
+         set_chunk_parent(next, pc->type);
       }
    }
    if (next != nullptr && next->type == CT_BRACE_OPEN)
@@ -4398,7 +4409,7 @@ static void mark_function(chunk_t *pc)
             if (  prev->type == CT_ARITH
                || prev->type == CT_ASSIGN
                || prev->type == CT_COMMA
-               || prev->type == CT_STRING
+               || (prev->type == CT_STRING && prev->parent_type != CT_EXTERN)  // fixes issue 1259
                || prev->type == CT_STRING_MULTI
                || prev->type == CT_NUMBER
                || prev->type == CT_NUMBER_FP
