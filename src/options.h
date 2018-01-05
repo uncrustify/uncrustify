@@ -614,6 +614,7 @@ enum uncrustify_options
    UO_nl_create_while_one_liner,      // Change simple unbraced while statements into a one-liner
                                       // 'while (i<5)\n foo(i++);' => 'while (i<5) foo(i++);'
                                       // Change that back:
+   UO_nl_create_func_def_one_liner,   // Change simple 4, 3, 2 liner function def statements into a one - liner
    UO_nl_split_if_one_liner,          // Change a one-liner for statement into simple unbraced for
                                       // 'if(b) i++;' => 'if(b)\n i++;'
    UO_nl_split_for_one_liner,         // Change a one-liner while statement into simple unbraced while

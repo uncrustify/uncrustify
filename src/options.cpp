@@ -1272,6 +1272,8 @@ void register_options(void)
    unc_add_option("nl_create_while_one_liner", UO_nl_create_while_one_liner, AT_BOOL,
                   "Change simple unbraced while statements into a one-liner\n"
                   "'while (i<5)\\n foo(i++);' => 'while (i<5) foo(i++);'.");
+   unc_add_option("nl_create_func_def_one_liner", UO_nl_create_func_def_one_liner, AT_BOOL,
+                  "Change simple 4,3,2 liner function def statements into a one-liner\n");
    unc_add_option("nl_split_if_one_liner", UO_nl_split_if_one_liner, AT_BOOL,
                   " Change a one-liner if statement into simple unbraced if\n"
                   "'if(b) i++;' => 'if(b)\\n i++;'.");

@@ -1372,7 +1372,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       if (  pc->type == CT_PAREN_OPEN
          && (  pc->parent_type == CT_NONE
             || pc->parent_type == CT_OC_MSG
-            || pc->parent_type == CT_OC_BLOCK_EXPR)
+            || pc->parent_type == CT_OC_BLOCK_EXPR
+            || pc->parent_type == CT_CS_SQ_STMT)
          && (  next->type == CT_WORD
             || next->type == CT_TYPE
             || next->type == CT_STRUCT
@@ -2789,6 +2790,16 @@ static void fix_enum_struct_union(chunk_t *pc)
             }
          }
       }
+      else if (pc->type == CT_STRUCT && next->type == CT_PAREN_OPEN)
+      {
+         // Fix #1267 structure attributes
+         // struct __attribute__(align(x)) struct_name;
+         // skip to matching parenclose and make next token as type.
+         next = chunk_skip_to_match(next);
+         next = chunk_get_next_ncnl(next);
+         set_chunk_type(next, CT_TYPE);
+         set_chunk_parent(next, pc->type);
+      }
    }
    if (next != nullptr && next->type == CT_BRACE_OPEN)
    {
@@ -3257,8 +3268,28 @@ void combine_labels(void)
                    * the CT_SIZEOF isn't great - test 31720 happens to use a sizeof expr,
                    * but this really should be able to handle any constant expr
                    */
-                  set_chunk_type(cur, CT_LABEL);
-                  set_chunk_type(next, CT_LABEL_COLON);
+                  // Fix for #1242
+                  // For MIDL_INTERFACE classes class name is tokenized as Label.
+                  // Corrected the identification of Label in c style languages.
+                  if (  (cpd.lang_flags & (LANG_C | LANG_CPP | LANG_CS))
+                     && (!(cpd.lang_flags & LANG_OC)))
+                  {
+                     chunk_t *labelPrev = prev;
+                     if (labelPrev->type == CT_NEWLINE)
+                     {
+                        labelPrev = chunk_get_prev_ncnl(prev);
+                     }
+                     if (labelPrev->type != CT_FPAREN_CLOSE)
+                     {
+                        set_chunk_type(cur, CT_LABEL);
+                        set_chunk_type(next, CT_LABEL_COLON);
+                     }
+                  }
+                  else
+                  {
+                     set_chunk_type(cur, CT_LABEL);
+                     set_chunk_type(next, CT_LABEL_COLON);
+                  }
                }
                else if (next->flags & (PCF_IN_STRUCT | PCF_IN_CLASS | PCF_IN_TYPEDEF))
                {
@@ -4378,7 +4409,7 @@ static void mark_function(chunk_t *pc)
             if (  prev->type == CT_ARITH
                || prev->type == CT_ASSIGN
                || prev->type == CT_COMMA
-               || prev->type == CT_STRING
+               || (prev->type == CT_STRING && prev->parent_type != CT_EXTERN)  // fixes issue 1259
                || prev->type == CT_STRING_MULTI
                || prev->type == CT_NUMBER
                || prev->type == CT_NUMBER_FP

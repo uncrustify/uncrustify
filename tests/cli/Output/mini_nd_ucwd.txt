@@ -1412,6 +1412,9 @@ nl_create_for_one_liner         = false    # false/true
 # 'while (i<5)\n foo(i++);' => 'while (i<5) foo(i++);'.
 nl_create_while_one_liner       = false    # false/true
 
+# Change simple 4,3,2 liner function def statements into a one-liner
+nl_create_func_def_one_liner    = false    # false/true
+
 #  Change a one-liner if statement into simple unbraced if
 # 'if(b) i++;' => 'if(b)\n i++;'.
 nl_split_if_one_liner           = false    # false/true
