@@ -3250,19 +3250,30 @@ void combine_labels(void)
             else
             {
                tmp = chunk_get_next_ncnl(next);
-               if (  tmp != nullptr
-                  && (tmp->type == CT_BASE || tmp->type == CT_THIS))
+               if (tmp != nullptr)
+
                {
-                  // ignore it, as it is a C# base thingy
-               }
-               else
-               {
-                  LOG_FMT(LWARN, "%s:%zu unexpected colon in col %zu n-parent=%s c-parent=%s l=%zu bl=%zu\n",
-                          cpd.filename.c_str(), next->orig_line, next->orig_col,
-                          get_token_name(next->parent_type),
-                          get_token_name(cur->parent_type),
-                          next->level, next->brace_level);
-                  cpd.error_count++;
+                  if (tmp->type == CT_BASE || tmp->type == CT_THIS)
+                  {
+                     // ignore it, as it is a C# base thingy
+                  }
+                  else if (cpd.lang_flags & LANG_CS)
+                  {
+                     // there should be a better solution for that
+                     //LOG_FMT(LWARN, "%s(%d): orig_line is %zu, orig_col is %zu, tmp '%s', type is %s\n",
+                     //        __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->text(), get_token_name(tmp->type));
+                     //LOG_FMT(LWARN, "%s(%d): orig_line is %zu, orig_col is %zu, next '%s', type is %s\n",
+                     //        __func__, __LINE__, next->orig_line, next->orig_col, next->text(), get_token_name(next->type));
+                  }
+                  else
+                  {
+                     LOG_FMT(LWARN, "%s:%zu unexpected colon in col %zu n-parent=%s c-parent=%s l=%zu bl=%zu\n",
+                             cpd.filename.c_str(), next->orig_line, next->orig_col,
+                             get_token_name(next->parent_type),
+                             get_token_name(cur->parent_type),
+                             next->level, next->brace_level);
+                     cpd.error_count++;
+                  }
                }
             }
          }
