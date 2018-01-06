@@ -2000,6 +2000,13 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
          }
       }
 
+      // Changing words to types into tuple return types in CS.
+      bool is_return_tuple = false;
+      if (pc != nullptr && pc->type == CT_PAREN_CLOSE)
+      {
+         first           = chunk_skip_to_match_rev(pc);
+         is_return_tuple = true;
+      }
       pc = first;
       while (pc != nullptr)
       {
@@ -2009,7 +2016,12 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
          {
             set_chunk_parent(pc, parent_type);
          }
-         make_type(pc);
+         chunk_t *prev = chunk_get_prev_ncnl(pc);
+         if (  !is_return_tuple || pc->type != CT_WORD
+            || (prev != nullptr && prev->type != CT_TYPE))
+         {
+            make_type(pc);
+         }
          if (pc == start)
          {
             break;
@@ -4219,35 +4231,50 @@ static void mark_function(chunk_t *pc)
             isa_def = false;
          }
 
-         // Skip the word/type before the '.' or '::'
+         // get first chunk before: A::B::pc | this.B.pc | this->B->pc
          if (prev->type == CT_DC_MEMBER || prev->type == CT_MEMBER)
          {
-            prev = chunk_get_prev_ncnlnp(prev);
-            if (  prev == nullptr
-               || (  prev->type != CT_WORD
-                  && prev->type != CT_TYPE
-                  && prev->type != CT_THIS))
+            bool do_break = false;
+            while (  prev != nullptr
+                  && (  prev->type == CT_TYPE
+                     || prev->type == CT_DC_MEMBER
+                     || prev->type == CT_MEMBER))
             {
+               prev = chunk_get_prev_ncnlnp(prev);
+               if (  prev == nullptr
+                  || (  prev->type != CT_WORD
+                     && prev->type != CT_TYPE
+                     && prev->type != CT_THIS))
+               {
+                  D_LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
+                  LOG_FMT(LFCN, " --? skipped MEMBER and landed on %s\n",
+                          (prev == NULL) ? "<null>" : get_token_name(prev->type));
+
+                  set_chunk_type(pc, CT_FUNC_CALL);
+                  isa_def  = false;
+                  do_break = true;
+                  break;
+               }
+
                D_LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
-               LOG_FMT(LFCN, " --? Skipped MEMBER and landed on %s\n",
-                       (prev == NULL) ? "<null>" : get_token_name(prev->type));
-               set_chunk_type(pc, CT_FUNC_CALL);
-               isa_def = false;
+               LOG_FMT(LFCN, " <skip '%s'>", prev->text());
+               D_LOG_FMT(LFCN, "\n");
+
+               // Issue #1112
+               prev = chunk_get_prev_ncnlnpnd(prev);
+               if (prev == nullptr)
+               {
+                  LOG_FMT(LFCN, "nullptr\n");
+               }
+               else
+               {
+                  LOG_FMT(LFCN, "orig_line is %zu, orig_col is %zu, text() '%s'\n",
+                          prev->orig_line, prev->orig_col, prev->text());
+               }
+            }
+            if (do_break)
+            {
                break;
-            }
-            D_LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
-            LOG_FMT(LFCN, " <skip '%s'>", prev->text());
-            D_LOG_FMT(LFCN, "\n");
-            // Issue #1112
-            prev = chunk_get_prev_ncnlnpnd(prev);
-            if (prev == nullptr)
-            {
-               LOG_FMT(LFCN, "nullptr\n");
-            }
-            else
-            {
-               LOG_FMT(LFCN, "orig_line is %zu, orig_col is %zu, text() '%s'\n",
-                       prev->orig_line, prev->orig_col, prev->text());
             }
             continue;
          }
@@ -4322,6 +4349,29 @@ static void mark_function(chunk_t *pc)
          LOG_FMT(LFCN, " -- overriding DEF due to %s [%s]\n",
                  prev->text(), get_token_name(prev->type));
          isa_def = false;
+      }
+
+      // Fixes issue #1266, identification of a tuple return type in CS.
+      if (  !isa_def
+         && prev != nullptr
+         && prev->type == CT_PAREN_CLOSE
+         && chunk_get_next_ncnl(prev) == pc)
+      {
+         tmp = chunk_skip_to_match_rev(prev);
+         while (tmp != prev)
+         {
+            if (tmp->type == CT_COMMA && tmp->level == prev->level + 1)
+            {
+#ifdef DEBUG
+               LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
+#endif
+               LOG_FMT(LFCN, " -- overriding call due to tuple return type -- %s [%s]\n",
+                       prev->text(), get_token_name(prev->type));
+               isa_def = true;
+               break;
+            }
+            tmp = chunk_get_next_ncnl(tmp);
+         }
       }
       if (isa_def)
       {
