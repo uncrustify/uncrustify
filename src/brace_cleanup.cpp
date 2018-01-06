@@ -154,7 +154,7 @@ static void print_stack(log_sev_t logsev, const char *str,
       return;
    }
 
-   log_fmt(logsev, "%8.8s", str);
+   log_fmt(logsev, "%s(%d): str is '%s'", __func__, __LINE__, str);
 
    for (size_t idx = 1; idx < frm.size(); idx++)
    {

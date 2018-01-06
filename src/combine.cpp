@@ -514,7 +514,7 @@ void make_type(chunk_t *pc)
       {
          set_chunk_type(pc, CT_TYPE);
       }
-      else if (chunk_is_star(pc) || chunk_is_msref(pc))
+      else if (chunk_is_star(pc) || chunk_is_msref(pc) || chunk_is_nullable(pc))
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
@@ -3262,19 +3262,30 @@ void combine_labels(void)
             else
             {
                tmp = chunk_get_next_ncnl(next);
-               if (  tmp != nullptr
-                  && (tmp->type == CT_BASE || tmp->type == CT_THIS))
+               if (tmp != nullptr)
+
                {
-                  // ignore it, as it is a C# base thingy
-               }
-               else
-               {
-                  LOG_FMT(LWARN, "%s:%zu unexpected colon in col %zu n-parent=%s c-parent=%s l=%zu bl=%zu\n",
-                          cpd.filename.c_str(), next->orig_line, next->orig_col,
-                          get_token_name(next->parent_type),
-                          get_token_name(cur->parent_type),
-                          next->level, next->brace_level);
-                  cpd.error_count++;
+                  if (tmp->type == CT_BASE || tmp->type == CT_THIS)
+                  {
+                     // ignore it, as it is a C# base thingy
+                  }
+                  else if (cpd.lang_flags & LANG_CS)
+                  {
+                     // there should be a better solution for that
+                     //LOG_FMT(LWARN, "%s(%d): orig_line is %zu, orig_col is %zu, tmp '%s', type is %s\n",
+                     //        __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->text(), get_token_name(tmp->type));
+                     //LOG_FMT(LWARN, "%s(%d): orig_line is %zu, orig_col is %zu, next '%s', type is %s\n",
+                     //        __func__, __LINE__, next->orig_line, next->orig_col, next->text(), get_token_name(next->type));
+                  }
+                  else
+                  {
+                     LOG_FMT(LWARN, "%s:%zu unexpected colon in col %zu n-parent=%s c-parent=%s l=%zu bl=%zu\n",
+                             cpd.filename.c_str(), next->orig_line, next->orig_col,
+                             get_token_name(next->parent_type),
+                             get_token_name(cur->parent_type),
+                             next->level, next->brace_level);
+                     cpd.error_count++;
+                  }
                }
             }
          }
@@ -3381,7 +3392,7 @@ static void fix_fcn_def_params(chunk_t *start)
       {
          continue;
       }
-      if (chunk_is_star(pc) || chunk_is_msref(pc))
+      if (chunk_is_star(pc) || chunk_is_msref(pc) || chunk_is_nullable(pc))
       {
          set_chunk_type(pc, CT_PTR_TYPE);
          cs.Push_Back(pc);
@@ -3437,7 +3448,7 @@ static chunk_t *fix_var_def(chunk_t *start)
    int        idx;
    int        ref_idx;
 
-   LOG_FMT(LFVD, "%s(%d): start at [pc->orig_line is %zu, pc->orig_col is %zu]",
+   LOG_FMT(LFVD, "%s(%d): start at pc->orig_line is %zu, pc->orig_col is %zu\n",
            __func__, __LINE__, pc->orig_line, pc->orig_col);
 
    // Scan for words and types and stars oh my!
@@ -3450,38 +3461,45 @@ static chunk_t *fix_var_def(chunk_t *start)
             || pc->type == CT_MEMBER
             || chunk_is_ptr_operator(pc)))
    {
-      LOG_FMT(LFVD, ", pc->text() '%s', type is %s", pc->text(), get_token_name(pc->type));
+      LOG_FMT(LFVD, "%s(%d):   1:pc->text() '%s', type is %s\n", __func__, __LINE__, pc->text(), get_token_name(pc->type));
       cs.Push_Back(pc);
       pc = chunk_get_next_ncnl(pc);
+      LOG_FMT(LFVD, "%s(%d):   2:pc->text() '%s', type is %s\n", __func__, __LINE__, pc->text(), get_token_name(pc->type));
       if (pc == nullptr)
       {
+         LOG_FMT(LFVD, "%s(%d): pc is nullptr\n", __func__, __LINE__);
          return(nullptr);
       }
 
       // Skip templates and attributes
       pc = skip_template_next(pc);
+      LOG_FMT(LFVD, "%s(%d):   3:pc->text() '%s', type is %s\n", __func__, __LINE__, pc->text(), get_token_name(pc->type));
       if (pc == nullptr)
       {
+         LOG_FMT(LFVD, "%s(%d): pc is nullptr\n", __func__, __LINE__);
          return(nullptr);
       }
       pc = skip_attribute_next(pc);
+      LOG_FMT(LFVD, "%s(%d):   4:pc->text() '%s', type is %s\n", __func__, __LINE__, pc->text(), get_token_name(pc->type));
       if (pc == nullptr)
       {
+         LOG_FMT(LFVD, "%s(%d): pc is nullptr\n", __func__, __LINE__);
          return(nullptr);
       }
       if (cpd.lang_flags & LANG_JAVA)
       {
          pc = skip_tsquare_next(pc);
+         LOG_FMT(LFVD, "%s(%d):   5:pc->text() '%s', type is %s\n", __func__, __LINE__, pc->text(), get_token_name(pc->type));
       }
    }
    end = pc;
 
-   LOG_FMT(LFVD, ", end->type is %s\n", (end != NULL) ? get_token_name(end->type) : "NULL");
-
    if (end == nullptr)
    {
+      LOG_FMT(LFVD, "%s(%d): end is nullptr\n", __func__, __LINE__);
       return(nullptr);
    }
+   LOG_FMT(LFVD, "\n%s(%d): end->type is %s\n", __func__, __LINE__, get_token_name(end->type));
 
    if (  cs.Len() == 1
       && end->type == CT_BRACE_OPEN && end->parent_type == CT_BRACED_INIT_LIST)
