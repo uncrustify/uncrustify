@@ -1404,7 +1404,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
 
    // Check for stuff that can only occur at the start of an expression
-   if (pc->flags & PCF_EXPR_START)
+   if (  (pc->flags & PCF_EXPR_START)
+      || ((prev->flags & PCF_EXPR_START) && pc->parent_type == CT_OC_AT))
    {
       // Change STAR, MINUS, and PLUS in the easy cases
       if (pc->type == CT_STAR)
@@ -1642,7 +1643,9 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
    if (pc->type == CT_MINUS || pc->type == CT_PLUS)
    {
-      if (prev->type == CT_POS || prev->type == CT_NEG)
+      if (  prev->type == CT_POS
+         || prev->type == CT_NEG
+         || prev->type == CT_ARITH)
       {
          set_chunk_type(pc, (pc->type == CT_MINUS) ? CT_NEG : CT_POS);
       }
