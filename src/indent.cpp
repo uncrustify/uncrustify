@@ -280,7 +280,7 @@ void reindent_line(chunk_t *pc, size_t column)
            __func__, __LINE__, pc->orig_line, pc->column, pc->text(),
            get_token_name(pc->type), get_token_name(pc->parent_type),
            column);
-   D_LOG_FMT(LINDLINE, "\n");
+   LOG_FMT(LINDLINE, "\n");
    log_func_stack_inline(LINDLINE);
 
    if (column == pc->column)
@@ -2645,7 +2645,7 @@ static void indent_comment(chunk_t *pc, size_t col)
    LOG_FUNC_ENTRY();
    LOG_FMT(LCMTIND, "%s(%d): orig_line %zu, orig_col %zu, level %zu: ",
            __func__, __LINE__, pc->orig_line, pc->orig_col, pc->level);
-   D_LOG_FMT(LCMTIND, "\n");
+   LOG_FMT(LCMTIND, "\n");
 
    // force column 1 comment to column 1 if not changing them
    if (  pc->orig_col == 1
