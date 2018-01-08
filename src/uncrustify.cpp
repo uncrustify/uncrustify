@@ -317,11 +317,63 @@ static void redir_stdout(const char *output_file)
    }
 }
 
+// Currently, the crash handler is only supported while building under MSVC
+#if defined (WIN32) && defined (_MSC_VER)
+
+
+void setup_crash_handling()
+{
+   // prevent crash popup. uncrustify is a batch processing tool and a popup is unacceptable.
+   ::SetErrorMode(::GetErrorMode() | SEM_NOGPFAULTERRORBOX);
+
+   struct local
+   {
+      static LONG WINAPI crash_filter(_In_ struct _EXCEPTION_POINTERS *exceptionInfo)
+      {
+         __try
+         {
+            LOG_FMT(LERR, "crash_filter: exception 0x%08X at [%d:%d] (ip=%p)",
+                    exceptionInfo->ExceptionRecord->ExceptionCode,
+                    cpd.line_number, cpd.column,
+                    exceptionInfo->ExceptionRecord->ExceptionAddress);
+            log_func_stack(LERR, " [CallStack:", "]\n", 0);
+
+            // treat an exception the same as a parse failure. exceptions can result from parse failures where we
+            // do not have specific handling (null-checks for particular parse paths etc.) and callers generally
+            // won't care about the difference. they just want to know it failed.
+            exit(EXIT_FAILURE);
+         }
+         __except (EXCEPTION_EXECUTE_HANDLER)
+         {
+            // have to be careful of crashes in crash handling code
+         }
+
+         // safety - note that this will not flush like we need, but at least will get the right return code
+         ::ExitProcess(EXIT_FAILURE);
+      }
+   };
+
+   // route all crashes through our own handler
+   ::SetUnhandledExceptionFilter(local::crash_filter);
+}
+
+#else
+
+
+void setup_crash_handling()
+{
+   // TODO: unixes
+}
+
+#endif
+
 
 int main(int argc, char *argv[])
 {
    // initialize the global data
    cpd.unc_off_used = false;
+
+   setup_crash_handling();
 
    // check keyword sort
    assert(keywords_are_sorted());
@@ -2052,6 +2104,7 @@ static lang_name_t language_names[] =
    { "PAWN", LANG_PAWN          },
    { "OC",   LANG_OC            },
    { "OC+",  LANG_OC | LANG_CPP },
+   { "CS+",  LANG_CS | LANG_CPP },
    { "ECMA", LANG_ECMA          },
 };
 
