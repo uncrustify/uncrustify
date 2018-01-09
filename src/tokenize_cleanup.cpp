@@ -529,68 +529,68 @@ void tokenize_cleanup(void)
          }
       }
 
-      // Look for <newline> 'EXEC' 'SQL'
-      if (  (chunk_is_str_case(pc, "EXEC", 4) && chunk_is_str_case(next, "SQL", 3))
-         || (  (*pc->str.c_str() == '$') && pc->type != CT_SQL_WORD
-               /* but avoid breaking tokenization for C# 6 interpolated strings. */
-            && (  (cpd.lang_flags & LANG_CS) == 0
-               || ((pc->type == CT_STRING) && (!pc->str.startswith("$\"")) && (!pc->str.startswith("$@\""))))))
-      {
-         chunk_t *tmp = chunk_get_prev(pc);
-         if (chunk_is_newline(tmp))
-         {
-            if (*pc->str.c_str() == '$')
-            {
-               set_chunk_type(pc, CT_SQL_EXEC);
-               if (pc->len() > 1)
-               {
-                  // SPLIT OFF '$'
-                  chunk_t nc;
-
-                  nc = *pc;
-                  pc->str.resize(1);
-                  pc->orig_col_end = pc->orig_col + 1;
-
-                  nc.type = CT_SQL_WORD;
-                  nc.str.pop_front();
-                  nc.orig_col++;
-                  nc.column++;
-                  chunk_add_after(&nc, pc);
-
-                  next = chunk_get_next(pc);
-               }
-            }
-            tmp = chunk_get_next(next);
-            if (chunk_is_str_case(tmp, "BEGIN", 5))
-            {
-               set_chunk_type(pc, CT_SQL_BEGIN);
-            }
-            else if (chunk_is_str_case(tmp, "END", 3))
-            {
-               set_chunk_type(pc, CT_SQL_END);
-            }
-            else
-            {
-               set_chunk_type(pc, CT_SQL_EXEC);
-            }
-
-            // Change words into CT_SQL_WORD until CT_SEMICOLON
-            while (tmp != nullptr)
-            {
-               if (tmp->type == CT_SEMICOLON)
-               {
-                  break;
-               }
-               if (  (tmp->len() > 0)
-                  && (  unc_isalpha(*tmp->str.c_str())
-                     || (*tmp->str.c_str() == '$')))
-               {
-                  set_chunk_type(tmp, CT_SQL_WORD);
-               }
-               tmp = chunk_get_next_ncnl(tmp);
-            }
-         }
-      }
+//      // Look for <newline> 'EXEC' 'SQL'
+//      if (  (chunk_is_str_case(pc, "EXEC", 4) && chunk_is_str_case(next, "SQL", 3))
+//         || (  (*pc->str.c_str() == '$') && pc->type != CT_SQL_WORD
+//               /* but avoid breaking tokenization for C# 6 interpolated strings. */
+//            && (  (cpd.lang_flags & LANG_CS) == 0
+//               || ((pc->type == CT_STRING) && (!pc->str.startswith("$\"")) && (!pc->str.startswith("$@\""))))))
+//      {
+//         chunk_t *tmp = chunk_get_prev(pc);
+//         if (chunk_is_newline(tmp))
+//         {
+//            if (*pc->str.c_str() == '$')
+//            {
+//               set_chunk_type(pc, CT_SQL_EXEC);
+//               if (pc->len() > 1)
+//               {
+//                  // SPLIT OFF '$'
+//                  chunk_t nc;
+//
+//                  nc = *pc;
+//                  pc->str.resize(1);
+//                  pc->orig_col_end = pc->orig_col + 1;
+//
+//                  nc.type = CT_SQL_WORD;
+//                  nc.str.pop_front();
+//                  nc.orig_col++;
+//                  nc.column++;
+//                  chunk_add_after(&nc, pc);
+//
+//                  next = chunk_get_next(pc);
+//               }
+//            }
+//            tmp = chunk_get_next(next);
+//            if (chunk_is_str_case(tmp, "BEGIN", 5))
+//            {
+//               set_chunk_type(pc, CT_SQL_BEGIN);
+//            }
+//            else if (chunk_is_str_case(tmp, "END", 3))
+//            {
+//               set_chunk_type(pc, CT_SQL_END);
+//            }
+//            else
+//            {
+//               set_chunk_type(pc, CT_SQL_EXEC);
+//            }
+//
+//            // Change words into CT_SQL_WORD until CT_SEMICOLON
+//            while (tmp != nullptr)
+//            {
+//               if (tmp->type == CT_SEMICOLON)
+//               {
+//                  break;
+//               }
+//               if (  (tmp->len() > 0)
+//                  && (  unc_isalpha(*tmp->str.c_str())
+//                     || (*tmp->str.c_str() == '$')))
+//               {
+//                  set_chunk_type(tmp, CT_SQL_WORD);
+//               }
+//               tmp = chunk_get_next_ncnl(tmp);
+//            }
+//         }
+//      }
 
       // handle MS abomination 'for each'
       if (  pc->type == CT_FOR
