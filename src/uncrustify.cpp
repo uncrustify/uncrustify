@@ -2104,7 +2104,6 @@ static lang_name_t language_names[] =
    { "PAWN", LANG_PAWN          },
    { "OC",   LANG_OC            },
    { "OC+",  LANG_OC | LANG_CPP },
-   { "CS+",  LANG_CS | LANG_CPP },
    { "ECMA", LANG_ECMA          },
 };
 
