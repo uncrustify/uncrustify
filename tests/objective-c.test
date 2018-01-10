@@ -116,6 +116,7 @@
 50627  aet.cfg                                      oc/method_ends_semicolon.m
 50628  aet.cfg                                      oc/macro-close-brace.m
 50629  aet.cfg                                      oc/pp_bool.m
+50630  aet.cfg                                      oc/react_native.m
 
 50700  cmt_insert-0.cfg                             oc/cmt_insert.m
 
