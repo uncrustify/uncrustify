@@ -805,7 +805,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    }
 
    // "a [x]" vs "a[x]"
-   if (second->type == CT_SQUARE_OPEN && (second->parent_type != CT_OC_MSG && second->parent_type != CT_CS_SQ_STMT))
+   if (second->type == CT_SQUARE_OPEN && (second->parent_type != CT_OC_MSG) && first->type != CT_BRACE_OPEN)
    {
       if (((second->flags & PCF_IN_SPAREN) != 0) && (first->type == CT_IN))
       {
