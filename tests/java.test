@@ -27,3 +27,4 @@
 80201  template_angles.cfg                  java/generics.java
 80203  sp_compare-r.cfg                     java/generics_return_type.java
 80204  sp_inside_angle-r.cfg                java/generics_return_type.java
+80205  sp_before_angle-r.cfg                java/generics_return_type.java
