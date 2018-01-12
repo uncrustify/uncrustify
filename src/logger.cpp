@@ -247,18 +247,17 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
       if (len > cap)
       {
          softwareErrorFound = true;
-         len = cap;
+         len                = cap;
       }
       g_log.buf_len           += len;
       g_log.buf[g_log.buf_len] = 0;
       if (softwareErrorFound)
       {
-         fprintf(stderr, "FATAL: The variable 'g_log.buf' is not big enought:\n");
+         g_log.buf[g_log.buf_len - 1] = '\n';
+         fprintf(stderr, "WARNING: The variable 'g_log.buf' is not big enought:\n");
          fprintf(stderr, "   it should be bigger as = %zu\n", len);
          fprintf(stderr, "   The first part of the message is:\n");
          fprintf(stderr, "   %s\n", g_log.buf);
-         fprintf(stderr, "Please make a report.\n");
-         exit(EX_SOFTWARE);
       }
    }
 
