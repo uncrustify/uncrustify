@@ -77,6 +77,7 @@ sp_after_semi_for               = force
 sp_after_semi_for_empty         = ignore
 sp_before_square                = ignore
 sp_before_squares               = ignore
+sp_cpp_before_struct_binding    = ignore
 sp_inside_square                = ignore
 sp_after_comma                  = ignore
 sp_before_comma                 = remove

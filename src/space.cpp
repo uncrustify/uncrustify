@@ -809,6 +809,19 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       return(cpd.settings[UO_sp_after_oc_msg_receiver].a);
    }
 
+   // c++17 structured bindings e.g., "auto [x, y, z]" vs a[x, y, z]" or "auto const [x, y, z]" vs "auto const[x, y, z]"
+   if (  cpd.lang_flags & LANG_CPP
+      && (  first->type == CT_BYREF
+         || first->type == CT_QUALIFIER
+         || first->type == CT_TYPE)
+      && second->type == CT_SQUARE_OPEN
+      && second->parent_type != CT_OC_MSG
+      && second->parent_type != CT_CS_SQ_STMT)
+   {
+      log_rule("UO_sp_cpp_before_struct_binding");
+      return(cpd.settings[UO_sp_cpp_before_struct_binding].a);
+   }
+
    // "a [x]" vs "a[x]"
    if (  second->type == CT_SQUARE_OPEN
       && (  second->parent_type != CT_OC_MSG
