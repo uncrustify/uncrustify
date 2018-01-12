@@ -53,6 +53,7 @@
 10140  ben_044.cfg                          cs/remove_semi.cs
 
 10150  ben_045.cfg                          cs/operator-null-conditional.cs
+10200  empty.cfg                            cs/logger.cs
 
 10628  empty.cfg                            cs/sf628.cs
 10160  empty.cfg                            cs/delegate.cs
