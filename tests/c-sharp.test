@@ -83,8 +83,9 @@
 10036  U14-Cpp.cfg                          cs/inttypes.h.mm
 10039  615_nested_usings.cfg                cs/615_nested-usings.cs
 10044  U04-Cs.cfg                           cs/ifcomment.cs
-10045  U05-Cs.cfg                           cs/UNI-1288.cs
+10045  UNI-1288.cfg                         cs/UNI-1288.cs
 10046  U15-Cpp.cfg                          cs/UNI-1333.mm
+10051  UNI-1338.cfg                         cs/UNI-1338.cs
 10055  U06-Cs.cfg                           cs/UNI-1345.cs
 10067  UNI-1978.cfg                         cs/UNI-1978.cs
 10077  U09-Cs.cfg                           cs/UNI-1919.cs
