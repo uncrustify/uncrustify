@@ -2104,7 +2104,7 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
 
       // Changing words to types into tuple return types in CS.
       bool is_return_tuple = false;
-      if (pc != nullptr && pc->type == CT_PAREN_CLOSE)
+      if (pc != nullptr && pc->type == CT_PAREN_CLOSE && (pc->flags & PCF_IN_PREPROC) == 0)
       {
          first           = chunk_skip_to_match_rev(pc);
          is_return_tuple = true;
