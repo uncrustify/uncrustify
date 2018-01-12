@@ -9,7 +9,6 @@
 10026 staging/Uncrustify.Cpp.cfg staging/ifoneliner.cpp
 10038 staging/614_multiple-passes.cfg staging/614_multiple-passes.cs
 10042 staging/Uncrustify.Cpp.cfg staging/indent-bad.mm
-10043 staging/Uncrustify.CSharp.cfg staging/nl-brace.cs
 10049 staging/Uncrustify.Cpp.cfg    staging/UNI-1336.cpp
 10053 staging/Uncrustify.Cpp.cfg    staging/UNI-1340.cpp
 10057 staging/Uncrustify.Cpp.cfg    staging/UNI-1347.cpp

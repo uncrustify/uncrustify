@@ -349,6 +349,7 @@ nl_after_case                   = false
 nl_case_colon_brace             = ignore
 nl_namespace_brace              = ignore
 nl_template_class               = ignore
+nl_template                     = false
 nl_class_brace                  = ignore
 nl_class_init_args              = ignore
 nl_constr_init_args             = ignore
