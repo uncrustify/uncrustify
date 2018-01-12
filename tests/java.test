@@ -21,3 +21,5 @@
 80063  empty.cfg                            java/i1121.java
 
 80100  align_same_func_call_params-t.cfg    java/sf567.java
+
+80201  template_angles.cfg                  java/generics.java

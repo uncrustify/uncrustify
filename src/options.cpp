@@ -412,7 +412,7 @@ void register_options(void)
    unc_add_option("sp_angle_word", UO_sp_angle_word, AT_IARF,
                   "Add or remove space between '<>' and a word as in 'List<byte> m;' or 'template <typename T> static ...'.");
    unc_add_option("sp_angle_shift", UO_sp_angle_shift, AT_IARF,
-                  "Add or remove space between '>' and '>' in '>>' (template stuff C++/C# only). Default=Add.");
+                  "Add or remove space between '>' and '>' in '>>' (template stuff). Default=Add.");
    unc_add_option("sp_permit_cpp11_shift", UO_sp_permit_cpp11_shift, AT_BOOL,
                   "Permit removal of the space between '>>' in 'foo<bar<int> >' (C++11 only). Default=False.\n"
                   "sp_angle_shift cannot remove the space without this option.");
