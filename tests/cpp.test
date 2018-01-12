@@ -315,6 +315,8 @@
 32005  align_var_class_span-1.cfg           cpp/issue_633_typename.cpp
 32006  space_indent_columns-4.cfg           cpp/bug_i_687.cpp
 
+32100  cpp17.cfg                            cpp/cpp17.cpp
+
 33000  tab-0-11.cfg                         cpp/tab-0.cpp
 33001  indent_columns-11.cfg                cpp/tab-1.cpp
 33002  empty.cfg                            cpp/cmt_convert_tab_to_spaces.cpp
