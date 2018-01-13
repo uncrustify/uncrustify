@@ -451,7 +451,7 @@ void register_options(void)
    unc_add_option("sp_before_squares", UO_sp_before_squares, AT_IARF,
                   "Add or remove space before '[]'.");
    unc_add_option("sp_cpp_before_struct_binding", UO_sp_cpp_before_struct_binding, AT_IARF,
-				  "Add or remove space before structured bindings. Only for C++17.");
+                  "Add or remove space before structured bindings. Only for C++17.");
    unc_add_option("sp_inside_square", UO_sp_inside_square, AT_IARF,
                   "Add or remove space inside a non-empty '[' and ']'.");
    unc_add_option("sp_after_comma", UO_sp_after_comma, AT_IARF,
