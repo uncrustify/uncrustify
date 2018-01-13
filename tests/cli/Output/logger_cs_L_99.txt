@@ -1,0 +1,16 @@
+WARNING: The variable 'g_log.buf' is not big enought:
+   it should be bigger as = 
+   The first part of the message is:
+   tokenize(): orig_line is , orig_col is , text() '// Turning on sp_inside_braces=add fixes it, but also changes a lot of initializer code we don't want to touch (like x = {}). May need special support, or perhaps there's a bug..', type is COMMENT_
+
+tokenize(): orig_line is , orig_col is , text() '// Turning on sp_inside_braces=add fixes it, but also changes a lot of initializer code we don't want to touch (like x = {}). May need special support, or perhaps there's a bug..', type is COMMENT_
+tokenize(): orig_line is , orig_col is , <Newline>, nl is 
+tokenize(): orig_line is , orig_col is , text() '// long comment line(s), such as here, might be too long to produce a correct LOG-file such as', type is COMMENT_CPP, orig_col_end is 
+tokenize(): orig_line is , orig_col is , <Newline>, nl is 
+tokenize(): orig_line is , orig_col is , text() '// with the use of option -L A', type is COMMENT_CPP, orig_col_end is 
+tokenize(): orig_line is , orig_col is , <Newline>, nl is 
+tokenize(): orig_line is , orig_col is , text() '// in such a case, the output of the log will be cut.', type is COMMENT_CPP, orig_col_end is 
+tokenize(): orig_line is , orig_col is , <Newline>, nl is 
+combine_labels(): orig_line is , orig_col is , <Newline>, nl is 
+combine_labels(): orig_line is , orig_col is , <Newline>, nl is 
+combine_labels(): orig_line is , orig_col is , <Newline>, nl is 
