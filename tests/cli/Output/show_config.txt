@@ -248,6 +248,9 @@ sp_before_square                { Ignore, Add, Remove, Force }
 sp_before_squares               { Ignore, Add, Remove, Force }
   Add or remove space before '[]'.
 
+sp_cpp_before_struct_binding    { Ignore, Add, Remove, Force }
+  Add or remove space before structured bindings. Only for C++17.
+
 sp_inside_square                { Ignore, Add, Remove, Force }
   Add or remove space inside a non-empty '[' and ']'.
 
