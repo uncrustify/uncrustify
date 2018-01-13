@@ -20,7 +20,11 @@
 80062  sp_this_paren.cfg                    java/sp_this_paren.java
 80063  empty.cfg                            java/i1121.java
 
+
 80100  align_same_func_call_params-t.cfg    java/sf567.java
 
 80200  sp_before_byref-r.cfg                java/sp_before_byref.java
 80201  template_angles.cfg                  java/generics.java
+80203  sp_compare-r.cfg                     java/generics_return_type.java
+80204  sp_inside_angle-r.cfg                java/generics_return_type.java
+80205  sp_before_angle-r.cfg                java/generics_return_type.java

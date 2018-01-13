@@ -858,8 +858,17 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          log_rule("sp_template_angle");
          return(cpd.settings[UO_sp_template_angle].a);
       }
-      log_rule("sp_before_angle");
-      return(cpd.settings[UO_sp_before_angle].a);
+
+      if (  first->type == CT_QUALIFIER
+         && cpd.settings[UO_sp_before_angle].a == AV_REMOVE)
+      {
+         // qualifier always needs a space - do nothing
+      }
+      else
+      {
+         log_rule("sp_before_angle");
+         return(cpd.settings[UO_sp_before_angle].a);
+      }
    }
    if (first->type == CT_ANGLE_CLOSE)
    {
