@@ -1,5 +1,5 @@
 bool CompareGenomeByFeatureResults::clickOnLink(std::string const& inLink) {
-   auto const [sequence, type, firstPosition, lastPosition] = parseLink(inLink);
+   auto const[sequence, type, firstPosition, lastPosition] = parseLink(inLink);
    if (sequence.empty()) {
       return true;
    }
