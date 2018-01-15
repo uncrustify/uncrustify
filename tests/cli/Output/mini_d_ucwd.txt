@@ -2147,5 +2147,6 @@ warn_level_tabs_found_in_verbatim_string_literals = 2        # unsigned number
 #       `macro-open  BEGIN_MESSAGE_MAP`
 #       `macro-close END_MESSAGE_MAP`
 #
-## option(s) with 'not default' value: 0
+#
+# option(s) with 'not default' value: 0
 #

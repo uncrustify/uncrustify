@@ -80,7 +80,8 @@ static const char *DOC_TEXT_END = R"___(
 #       `macro-open  BEGIN_MESSAGE_MAP`
 #       `macro-close END_MESSAGE_MAP`
 #
-#)___";
+#
+)___";
 
 
 map<uncrustify_options, option_map_value> option_name_map;
