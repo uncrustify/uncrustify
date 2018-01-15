@@ -1236,6 +1236,18 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          log_rule("sp_fparen_dbrace");
          return(cpd.settings[UO_sp_fparen_dbrace].a);
       }
+      // To fix issue #1234
+      // check for initializers and add space or ignore based on the option.
+      if (first->parent_type == CT_FUNC_CALL)
+      {
+         chunk_t *tmp = chunk_get_prev_type(first, first->parent_type, first->level);
+         tmp = chunk_get_prev_ncnl(tmp);
+         if (chunk_is_token(tmp, CT_NEW))
+         {
+            log_rule("sp_fparen_brace_initializer");
+            return(cpd.settings[UO_sp_fparen_brace_initializer].a);
+         }
+      }
       log_rule("sp_fparen_brace");
       return(cpd.settings[UO_sp_fparen_brace].a);
    }
