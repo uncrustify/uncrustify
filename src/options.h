@@ -257,6 +257,7 @@ enum uncrustify_options
    UO_sp_after_tparen_close,       //
    UO_sp_square_fparen,            // weird pawn stuff: native yark[rect](a[rect])
    UO_sp_fparen_brace,             // space between ')' and '{' of function
+   UO_sp_fparen_brace_initializer, // space between ')' and '{' of function
    UO_sp_fparen_dbrace,            // space between ')' and '{{' of double-brace init
    UO_sp_func_call_paren,          // space between 'func' and '(' - 'foo (' vs 'foo('
    UO_sp_func_call_paren_empty,    //
