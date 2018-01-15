@@ -105,6 +105,7 @@
 
 30110  class-nl_func-add2.cfg               cpp/class-init.cpp
 30111  indent_columns-4.cfg                 cpp/bug_1346.h
+30112  bug_1432.cfg                         cpp/bug_1432.cpp
 
 30201  cmt_indent-1.cfg                     cpp/cmt_indent.cpp
 30202  cmt_indent-2.cfg                     cpp/cmt_indent.cpp
