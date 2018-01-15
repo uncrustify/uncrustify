@@ -2708,7 +2708,7 @@ static void fix_enum_struct_union(chunk_t *pc)
       set_chunk_parent(next, pc->type);
       prev = next;  // save xyz
       next = chunk_get_next_ncnl(next);
-      if (next == nullptr)
+      if (next == nullptr || next->type == CT_SEMICOLON) // c++ forward declaration
       {
          return;
       }
