@@ -89,6 +89,7 @@
 10051  UNI-1338.cfg                         cs/UNI-1338.cs
 10055  U06-Cs.cfg                           cs/UNI-1345.cs
 10067  UNI-1978.cfg                         cs/UNI-1978.cs
+10076  UNI-1343.cfg                         cs/UNI-1343.cs
 10077  U09-Cs.cfg                           cs/UNI-1919.cs
 10078  U10-Cs.cfg                           cs/UNI-3484.cs
 10102  U24-Cpp.cfg                          cs/pp-ignore.mm
