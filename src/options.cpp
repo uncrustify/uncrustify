@@ -80,7 +80,8 @@ static const char *DOC_TEXT_END = R"___(
 #       `macro-open  BEGIN_MESSAGE_MAP`
 #       `macro-close END_MESSAGE_MAP`
 #
-#)___";
+#
+)___";
 
 
 map<uncrustify_options, option_map_value> option_name_map;
@@ -450,6 +451,8 @@ void register_options(void)
                   "Add or remove space before '[' (except '[]').");
    unc_add_option("sp_before_squares", UO_sp_before_squares, AT_IARF,
                   "Add or remove space before '[]'.");
+   unc_add_option("sp_cpp_before_struct_binding", UO_sp_cpp_before_struct_binding, AT_IARF,
+                  "Add or remove space before structured bindings. Only for C++17.");
    unc_add_option("sp_inside_square", UO_sp_inside_square, AT_IARF,
                   "Add or remove space inside a non-empty '[' and ']'.");
    unc_add_option("sp_after_comma", UO_sp_after_comma, AT_IARF,
