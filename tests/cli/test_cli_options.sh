@@ -13,7 +13,10 @@
 
 # jump into the script dir so that printed paths are always the same
 init_pwd=$PWD
-script_dir=$(dirname "$(readlink -f "$0")")
+case $( uname -s ) in
+Darwin) script_dir=$(dirname `perl -e 'use Cwd "abs_path";print abs_path(shift)' $0`);;
+*)      script_dir=$(dirname "$(readlink -f "$0")");;
+esac
 cd $script_dir
 
 RELATIVE=$(perl -MFile::Spec -e "print File::Spec->abs2rel(q(${script_dir}),q(${init_pwd}))")
@@ -279,7 +282,10 @@ for Error_T in ${Liste_of_Error_Tests}; do
 done
 
 
-rmdir --ignore-fail-on-non-empty ${RESULTS}
+case $( uname -s ) in
+Darwin) rmdir ${RESULTS};;
+*)      rmdir --ignore-fail-on-non-empty ${RESULTS};;
+esac
 if [[ -d ${RESULTS} ]]
 then
   echo
