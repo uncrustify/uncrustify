@@ -404,6 +404,7 @@ nl_after_brace_close            = false
 nl_after_vbrace_close           = false
 nl_brace_struct_var             = ignore
 nl_define_macro                 = false
+nl_squeeze_paren_close          = false
 nl_squeeze_ifdef                = false
 nl_squeeze_ifdef_top_level      = false
 nl_before_if                    = ignore

@@ -1210,6 +1210,9 @@ void register_options(void)
                   "Affects enums, unions and structures. If set to ignore, uses nl_after_brace_close.");
    unc_add_option("nl_define_macro", UO_nl_define_macro, AT_BOOL,
                   "Whether to alter newlines in '#define' macros.");
+   unc_add_option("nl_squeeze_paren_close", UO_nl_squeeze_paren_close, AT_BOOL,
+                  "Whether to alter newlines between consecutive paren closes, \n"
+                  "The number of closing paren in a line will depend on respective open paren lines");
    unc_add_option("nl_squeeze_ifdef", UO_nl_squeeze_ifdef, AT_BOOL,
                   "Whether to remove blanks after '#ifxx' and '#elxx', or before '#elxx' and '#endif'. Does not affect top-level #ifdefs.");
    unc_add_option("nl_squeeze_ifdef_top_level", UO_nl_squeeze_ifdef_top_level, AT_BOOL,

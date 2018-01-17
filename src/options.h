@@ -583,6 +583,7 @@ enum uncrustify_options
    UO_nl_after_vbrace_close,          // force a newline after a virtual brace close
    UO_nl_brace_struct_var,            // force a newline after a brace close
    UO_nl_define_macro,                // alter newlines in #define macros
+   UO_nl_squeeze_paren_close,         // alter newlines between consecutive paren closes
    UO_nl_squeeze_ifdef,               // no blanks after #ifxx, #elxx, or before #elxx and #endif
    UO_nl_squeeze_ifdef_top_level,     // when set, nl_squeeze_ifdef will be applied to top-level
                                       // #ifdefs as well
