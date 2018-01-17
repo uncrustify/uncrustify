@@ -969,18 +969,27 @@ static void check_template(chunk_t *start)
               __func__, __LINE__, get_token_name(prev->type));
 
       // Scan back and make sure we aren't inside square parenthesis
-      bool in_if = false;
+      bool in_if         = false;
+      bool hit_semicolon = false;
       pc = start;
       while ((pc = chunk_get_prev_ncnl(pc, scope_e::PREPROC)) != nullptr)
       {
-         if (  pc->type == CT_SEMICOLON
+         if (  (pc->type == CT_SEMICOLON && hit_semicolon)
             || pc->type == CT_BRACE_OPEN
             || pc->type == CT_BRACE_CLOSE
             || pc->type == CT_SQUARE_CLOSE)
          {
             break;
          }
-         if (pc->type == CT_IF || pc->type == CT_RETURN)
+         if (pc->type == CT_SEMICOLON && !hit_semicolon)
+         {
+            hit_semicolon = true;
+         }
+         if (  ((  pc->type == CT_IF
+                || pc->type == CT_RETURN
+                || pc->type == CT_WHILE
+                || pc->type == CT_WHILE_OF_DO) && hit_semicolon == false)
+            || (pc->type == CT_FOR && hit_semicolon == true))
          {
             in_if = true;
             break;
