@@ -4332,32 +4332,32 @@ static void mark_function(chunk_t *pc)
                   && prev->type != CT_TYPE
                   && prev->type != CT_THIS))
             {
-                  D_LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
-                  LOG_FMT(LFCN, " --? skipped MEMBER and landed on %s\n",
-                          (prev == NULL) ? "<null>" : get_token_name(prev->type));
+               D_LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
+               LOG_FMT(LFCN, " --? skipped MEMBER and landed on %s\n",
+                       (prev == NULL) ? "<null>" : get_token_name(prev->type));
                if (tmp->type != CT_DC_MEMBER)
                {
                   set_chunk_type(pc, CT_FUNC_CALL);
                   isa_def = false;
                }
-                  break;
-               }
+               break;
+            }
 
-               D_LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
-               LOG_FMT(LFCN, " <skip '%s'>", prev->text());
-               D_LOG_FMT(LFCN, "\n");
+            D_LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
+            LOG_FMT(LFCN, " <skip '%s'>", prev->text());
+            D_LOG_FMT(LFCN, "\n");
 
-               // Issue #1112
+            // Issue #1112
             prev = chunk_get_prev_ncnlnp(prev);
-               if (prev == nullptr)
-               {
-                  LOG_FMT(LFCN, "nullptr\n");
-               }
-               else
-               {
-                  LOG_FMT(LFCN, "orig_line is %zu, orig_col is %zu, text() '%s'\n",
-                          prev->orig_line, prev->orig_col, prev->text());
-               }
+            if (prev == nullptr)
+            {
+               LOG_FMT(LFCN, "nullptr\n");
+            }
+            else
+            {
+               LOG_FMT(LFCN, "orig_line is %zu, orig_col is %zu, text() '%s'\n",
+                       prev->orig_line, prev->orig_col, prev->text());
+            }
             continue;
          }
 
