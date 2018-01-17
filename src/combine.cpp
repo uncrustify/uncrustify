@@ -4313,6 +4313,13 @@ static void mark_function(chunk_t *pc)
             }
          }
 
+         // if it was determined that this could be a function definition
+         // but one of the preceding tokens is a CT_MEMBER than this is not a
+         // fcn def, issue #1466
+         if (isa_def && prev->type == CT_MEMBER)
+         {
+            isa_def = false;
+         }
          // Skip the word/type before the '.' or '::'
          if (prev->type == CT_DC_MEMBER || prev->type == CT_MEMBER)
          {
