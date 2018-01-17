@@ -1,5 +1,5 @@
 @echo off
-setlocal EnableDelayedExpansion
+setlocal
 
 rem
 rem 14.12.2016
@@ -21,13 +21,13 @@ set DIFF_FILE=lastdiff.txt
 set "PWD=%cd%"
 
 rem Check if uncrustify is available in path
-set prog=D:\proj\uncrustify\build\Debug\uncrustify.exe
-rem for %%i in ("%path:;=";"%") do (
-rem    if exist %%~i\%prog% (
-rem		set found=%%i
+set prog=uncrustify.exe
+for %%i in ("%path:;=";"%") do (
+    if exist %%~i\%prog% (
+		set found=%%i
 rem		echo found %prog% in %%i
-rem	)
-rem )
+	)
+)
 
 rem Check if fc (file compare tool) is available in path
 set CMP=fc.exe
@@ -55,16 +55,16 @@ set DIFF=0
 for /F %%i in (%SRC_LIST%) do (
 	%prog% -q -c ..\%CFG_FILE% -f .\%%i -o ..\%OUT_DIR%\%%i
 	%CMP% /L .\%%i ..\%OUT_DIR%\%%i > ..\%OUT_DIR%\%DIFF_FILE% 
-	if !ERRORLEVEL! NEQ 0 (
+	if %ERRORLEVEL% NEQ 0 (
 		echo "Problem with %%i"
 		echo "use: diff %SRC_DIR%\%%i %OUT_DIR%\%%i to find why"
 		set DIFF=1
 	)
-	if !ERRORLEVEL! EQU 0 (
+	if %ERRORLEVEL% EQU 0 (
 		del ..\%OUT_DIR%\%%i
 		del ..\%OUT_DIR%\%DIFF_FILE%
 	)
-rem	pause
+	pause
 )
 
 del %SRC_LIST%
