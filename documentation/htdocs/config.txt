@@ -1,4 +1,4 @@
-# Uncrustify-0.66
+# Uncrustify-0.66.1
 #
 # General options
 #

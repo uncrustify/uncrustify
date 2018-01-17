@@ -4,4 +4,4 @@ public class Foo {private Runnable bar=new Runnable(){
 			  public void run(){
 				  quux();
 			  }
-		  }; }
+		  };}

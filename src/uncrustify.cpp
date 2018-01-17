@@ -375,7 +375,7 @@ int main(int argc, char *argv[])
 
    setup_crash_handling();
 
-   /* check keyword sort */
+   // check keyword sort
    assert(keywords_are_sorted());
 
    // If ran without options show the usage info and exit */
@@ -2039,11 +2039,11 @@ void uncrustify_end()
    cpd.unc_off     = false;
    cpd.al_cnt      = 0;
    cpd.did_newline = true;
-   cpd.frame_count = 0;
-   cpd.pp_level    = 0;
-   cpd.changes     = 0;
-   cpd.in_preproc  = CT_NONE;
-   cpd.consumed    = false;
+   cpd.frames.clear();
+   cpd.pp_level   = 0;
+   cpd.changes    = 0;
+   cpd.in_preproc = CT_NONE;
+   cpd.consumed   = false;
    memset(cpd.le_counts, 0, sizeof(cpd.le_counts));
    cpd.preproc_ncnl_count                     = 0;
    cpd.ifdef_over_whole_file                  = 0;

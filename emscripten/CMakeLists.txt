@@ -30,6 +30,7 @@ include(CheckSymbolExists)
 include(CheckCXXSymbolExists)
 include(CheckTypeSize)
 
+
 #
 # Determine config
 #
@@ -100,7 +101,7 @@ endif()
 if( NOT CMAKE_BUILD_TYPE )
   set( CMAKE_BUILD_TYPE Release )
 endif()
-set( FALLBACK_VERSION "Uncrustify-0.64_f" )
+set( FALLBACK_VERSION "Uncrustify-0.66.1_f" )
 
 find_package(PythonInterp REQUIRED)
 execute_process(
@@ -142,6 +143,9 @@ ADD_EXECUTABLE(${project_name} ${unc_infiles} ${unc_projdir}/src/token_enum.h)
 SET(unc_compile_flags "--bind -O3")
 SET_TARGET_PROPERTIES(${project_name}
     PROPERTIES
+        CXX_STANDARD 11
+        CXX_STANDARD_REQUIRED YES
+        CXX_EXTENSIONS NO
         COMPILE_FLAGS "${unc_compile_flags}"
         LINK_FLAGS "${unc_compile_flags} \
                     -s TOTAL_MEMORY=67108864 \
@@ -150,6 +154,7 @@ SET_TARGET_PROPERTIES(${project_name}
                     -s MODULARIZE=1 \
                     -s EXPORT_NAME=\"'${project_name}'\" \
                     -s ERROR_ON_UNDEFINED_SYMBOLS=1 \
+                    -s 'EXTRA_EXPORTED_RUNTIME_METHODS=[\"UTF8ToString\",\"stringToUTF8\",\"lengthBytesUTF8\", \"writeAsciiToMemory\"]' \
                     --memory-init-file 0\
                     --pre-js ${CMAKE_CURRENT_LIST_DIR}/prefix_module.js \
                     --post-js ${CMAKE_CURRENT_LIST_DIR}/postfix_module.js \

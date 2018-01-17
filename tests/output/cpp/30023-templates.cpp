@@ -142,9 +142,14 @@ std::vector<int> B;
 std::vector<int> C(2);
 std::vector<int> D;
 
-template<class T> struct X { template<class U> void operator()(U); };
+template<class T> struct X
+{
+   template<class U> void operator()(U);
+};
 
-template<class T> class Y { template<class V> void f(V); };
+template<class T> class Y {
+   template<class V> void f(V);
+};
 
 void                        (*foobar)(void) = NULL;
 std::vector<void (*)(void)> functions;
@@ -170,12 +175,14 @@ void foo()
    a = static_cast<List<B> >(ld);
 }
 
-template<int i> class X { /* ... */ };
-X < 1 > 2 > x1;   // Syntax error.
-X<(1 > 2)> x2;    // Okay.
+template<int i> class X {   /* ... */
+};
+X < 1 > 2 > x1;             // Syntax error.
+X<(1 > 2)> x2;              // Okay.
 
-template<class T> class Y { /* ... */ };
-Y<X<1> >        x3; // Okay, same as "Y<X<1> > x3;".
+template<class T> class Y { /* ... */
+};
+Y<X<1> >        x3;         // Okay, same as "Y<X<1> > x3;".
 Y<X<(6 >> 1)> > x4;
 
 
