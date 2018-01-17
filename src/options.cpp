@@ -450,6 +450,8 @@ void register_options(void)
                   "Add or remove space before '[' (except '[]').");
    unc_add_option("sp_before_squares", UO_sp_before_squares, AT_IARF,
                   "Add or remove space before '[]'.");
+   unc_add_option("sp_cpp_before_struct_binding", UO_sp_cpp_before_struct_binding, AT_IARF,
+                  "Add or remove space before structured bindings. Only for C++17.");
    unc_add_option("sp_inside_square", UO_sp_inside_square, AT_IARF,
                   "Add or remove space inside a non-empty '[' and ']'.");
    unc_add_option("sp_after_comma", UO_sp_after_comma, AT_IARF,
@@ -1207,6 +1209,9 @@ void register_options(void)
                   "Affects enums, unions and structures. If set to ignore, uses nl_after_brace_close.");
    unc_add_option("nl_define_macro", UO_nl_define_macro, AT_BOOL,
                   "Whether to alter newlines in '#define' macros.");
+   unc_add_option("nl_squeeze_paren_close", UO_nl_squeeze_paren_close, AT_BOOL,
+                  "Whether to alter newlines between consecutive paren closes, \n"
+                  "The number of closing paren in a line will depend on respective open paren lines");
    unc_add_option("nl_squeeze_ifdef", UO_nl_squeeze_ifdef, AT_BOOL,
                   "Whether to remove blanks after '#ifxx' and '#elxx', or before '#elxx' and '#endif'. Does not affect top-level #ifdefs.");
    unc_add_option("nl_squeeze_ifdef_top_level", UO_nl_squeeze_ifdef_top_level, AT_BOOL,

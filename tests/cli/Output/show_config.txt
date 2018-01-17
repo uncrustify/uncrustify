@@ -248,6 +248,9 @@ sp_before_square                { Ignore, Add, Remove, Force }
 sp_before_squares               { Ignore, Add, Remove, Force }
   Add or remove space before '[]'.
 
+sp_cpp_before_struct_binding    { Ignore, Add, Remove, Force }
+  Add or remove space before structured bindings. Only for C++17.
+
 sp_inside_square                { Ignore, Add, Remove, Force }
   Add or remove space inside a non-empty '[' and ']'.
 
@@ -1323,6 +1326,10 @@ nl_brace_struct_var             { Ignore, Add, Remove, Force }
 
 nl_define_macro                 { False, True }
   Whether to alter newlines in '#define' macros.
+
+nl_squeeze_paren_close          { False, True }
+  Whether to alter newlines between consecutive paren closes, 
+  The number of closing paren in a line will depend on respective open paren lines
 
 nl_squeeze_ifdef                { False, True }
   Whether to remove blanks after '#ifxx' and '#elxx', or before '#elxx' and '#endif'. Does not affect top-level #ifdefs.

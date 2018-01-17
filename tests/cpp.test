@@ -152,6 +152,7 @@
 30273  sp_cparen_oparen-f.cfg               cpp/sp_cparen_oparen.cpp
 30274  sp_cparen_oparen-r.cfg               cpp/sp_cparen_oparen.cpp
 30275  empty.cfg                            cpp/bug_1321.cpp
+30278  bug_1439.cfg                         cpp/bug_1439.cpp
 
 30280  sp_dc.cfg                            cpp/sf557.cpp
 
@@ -315,6 +316,8 @@
 32004  empty.cfg                            cpp/issue_624_angle.cpp
 32005  align_var_class_span-1.cfg           cpp/issue_633_typename.cpp
 32006  space_indent_columns-4.cfg           cpp/bug_i_687.cpp
+
+32100  cpp17.cfg                            cpp/cpp17.cpp
 
 33000  tab-0-11.cfg                         cpp/tab-0.cpp
 33001  indent_columns-11.cfg                cpp/tab-1.cpp
@@ -551,6 +554,7 @@
 10052  empty.cfg                            cpp/UNI-1339.cpp
 10054  UNI-1344.cfg                         cpp/UNI-1344.cpp
 10057  UNI-1347.cfg                         cpp/UNI-1347.cpp
+10056  UNI-1346.cfg                         cpp/UNI-1346.cpp
 10060  UNI-1350.cfg                         cpp/UNI-1350.cpp
 10062  UNI-1356.cfg                         cpp/UNI-1356.cpp
 10069  empty.cfg                            cpp/UNI-1980.cpp
