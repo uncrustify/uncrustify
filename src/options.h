@@ -510,7 +510,7 @@ enum uncrustify_options
                                       // Overrides nl_after_case
    UO_nl_namespace_brace,             // newline between namespace name and brace
    UO_nl_template_class,              // newline between '>' and class in 'template <x> class'
-   UO_nl_template,                    //Add  newline between '>()' or '>' and '{' .
+   UO_nl_template_def,                // Add  newline between '>()' or '>' and '{' .
    UO_nl_class_brace,                 // newline between class name and brace
    UO_nl_class_init_args,             // newline before/after each comma in the base class list
                                       // (tied to UO_pos_class_comma)

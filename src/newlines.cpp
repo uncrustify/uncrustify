@@ -3349,29 +3349,27 @@ void newlines_cleanup_braces(bool first)
                }
             }
             //Fixes 10043 regression
-            if (cpd.settings[UO_nl_template].b)
+            if (cpd.settings[UO_nl_template_def].b)
             {
-               if (chunk_is_opening_brace(chunk_get_next_ncnl(pc)) || chunk_is_paren_open(chunk_get_next_ncnl(pc)))
+               chunk_t *tmp = chunk_get_next_ncnl(pc);
+               if (chunk_is_opening_brace(tmp) || chunk_is_paren_open(tmp))
                {
-                  chunk_t *tmp = pc;
-
-                  if (  chunk_is_paren_open(chunk_get_next_ncnl(tmp))
-                     && chunk_skip_to_match(chunk_get_next_ncnl(tmp)) != nullptr)
+                  if (  chunk_is_paren_open(tmp)
+                     && chunk_skip_to_match(tmp) != nullptr)
                   {
-                     tmp = chunk_skip_to_match(chunk_get_next_ncnl(tmp), scope_e::ALL);
+                     tmp = chunk_get_next(chunk_skip_to_match(tmp, scope_e::ALL));
                   }
 
-                  if (  chunk_is_opening_brace(chunk_get_next_ncnl(tmp))
-                     && chunk_skip_to_match(chunk_get_next_ncnl(tmp)) != nullptr
-                     && !(chunk_skip_to_match(chunk_get_next_ncnl(tmp))->flags & PCF_ONE_LINER))
+                  if (  chunk_is_opening_brace(tmp)
+                     && chunk_skip_to_match(tmp) != nullptr
+                     && !(chunk_skip_to_match(tmp)->flags & PCF_ONE_LINER))
                   {
-                     tmp = chunk_get_next_ncnl(tmp);
                      newline_add_before(tmp);
                      newline_add_after(tmp);
-                     chunk_t *br_close = chunk_skip_to_match(tmp, scope_e::ALL);
-                     if (!chunk_is_newline(chunk_get_prev(br_close)))
+                     tmp = chunk_skip_to_match(tmp, scope_e::ALL);
+                     if (!chunk_is_newline(chunk_get_prev(tmp)))
                      {
-                        newline_add_before(br_close);
+                        newline_add_before(tmp);
                      }
                   }
                }
