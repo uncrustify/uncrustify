@@ -2706,9 +2706,9 @@ static void fix_enum_struct_union(chunk_t *pc)
       // i.e. "enum class xyz : unsigned int { ... };"
       // xyz is a type
       set_chunk_parent(next, pc->type);
-      prev = next;  // save xyz
+      prev = next;                                       // save xyz
       next = chunk_get_next_ncnl(next);
-      if (next == nullptr)
+      if (next == nullptr || next->type == CT_SEMICOLON) // c++ forward declaration
       {
          return;
       }
