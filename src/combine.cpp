@@ -4313,36 +4313,33 @@ static void mark_function(chunk_t *pc)
             }
          }
 
-         // if it was determined that this could be a function definition
-         // but one of the preceding tokens is a CT_MEMBER than this is not a
-         // fcn def, issue #1466
-         if (isa_def && prev->type == CT_MEMBER)
-         {
-            isa_def = false;
-         }
-
-         // get first chunk before: A::B::pc | this.B.pc | this->B->pc
+         // Skip the word/type before the '.' or '::'
          if (prev->type == CT_DC_MEMBER || prev->type == CT_MEMBER)
          {
-            bool do_break = false;
-            while (  prev != nullptr
-                  && (  prev->type == CT_TYPE
-                     || prev->type == CT_DC_MEMBER
-                     || prev->type == CT_MEMBER))
+            chunk_t *tmp = prev;
+            prev = chunk_get_prev_ncnlnp(prev);
+
+            // fixes issues 1005, 1288 and 1249
+            // should not remove space between '::' and keyword, since it is a return type.
+            if (prev != nullptr && chunk_is_keyword(prev) && tmp->type == CT_DC_MEMBER)
             {
-               prev = chunk_get_prev_ncnlnp(prev);
-               if (  prev == nullptr
-                  || (  prev->type != CT_WORD
-                     && prev->type != CT_TYPE
-                     && prev->type != CT_THIS))
-               {
+               isa_def = true;
+               set_chunk_parent(tmp, CT_FUNC_START);
+               break;
+            }
+            if (  prev == nullptr
+               || (  prev->type != CT_WORD
+                  && prev->type != CT_TYPE
+                  && prev->type != CT_THIS))
+            {
                   D_LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
                   LOG_FMT(LFCN, " --? skipped MEMBER and landed on %s\n",
                           (prev == NULL) ? "<null>" : get_token_name(prev->type));
-
+               if (tmp->type != CT_DC_MEMBER)
+               {
                   set_chunk_type(pc, CT_FUNC_CALL);
-                  isa_def  = false;
-                  do_break = true;
+                  isa_def = false;
+               }
                   break;
                }
 
@@ -4351,7 +4348,7 @@ static void mark_function(chunk_t *pc)
                D_LOG_FMT(LFCN, "\n");
 
                // Issue #1112
-               prev = chunk_get_prev_ncnlnpnd(prev);
+            prev = chunk_get_prev_ncnlnp(prev);
                if (prev == nullptr)
                {
                   LOG_FMT(LFCN, "nullptr\n");
@@ -4361,11 +4358,6 @@ static void mark_function(chunk_t *pc)
                   LOG_FMT(LFCN, "orig_line is %zu, orig_col is %zu, text() '%s'\n",
                           prev->orig_line, prev->orig_col, prev->text());
                }
-            }
-            if (do_break)
-            {
-               break;
-            }
             continue;
          }
 
