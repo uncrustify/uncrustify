@@ -93,6 +93,30 @@
 50604  objc_bug_497.cfg                             oc/bug_497.m
 50605  empty.cfg                                    oc/bug_404.m
 50606  obj-c.cfg                                    oc/bug_1366.m
+50607  aet-sp_after_oc_msg_receiver.cfg             oc/sp_after_oc_msg_receiver.m
+50608  aet.cfg                                      oc/blocks_align2.m
+50609  aet.cfg                                      oc/negative_value.m
+50610  aet.cfg                                      oc/nelem.m
+50611  aet.cfg                                      oc/for2.m
+50612  aet.cfg                                      oc/chunk_ends_type1.m
+50613  aet.cfg                                      oc/chunk_ends_type2.m
+50614  aet.cfg                                      oc/chunk_ends_type3.m
+50615  aet.cfg                                      oc/block_literal_protocol.m
+50616  aet.cfg                                      oc/oc_msg_in_pp.m
+50617  aet.cfg                                      oc/boxed_receiver.m
+50618  aet-func_def.cfg                             oc/func_def.mm
+50619  aet.cfg                                      oc/cast.m
+50620  aet.cfg                                      oc/sp_after_angle.m
+50621  aet.cfg                                      oc/Fraction.h
+50622  aet.cfg                                      oc/c-cpp-oc-wrapper.c
+50623  aet.cfg                                      oc/extern-c-attribute.m
+50624  aet.cfg                                      oc/typeof.m
+50625  aet-sp_inside_braces_oc_dict.cfg             oc/sp_inside_braces_oc_dict.m
+50626  aet.cfg                                      oc/chunk_ends_type4.m
+50627  aet.cfg                                      oc/method_ends_semicolon.m
+50628  aet.cfg                                      oc/macro-close-brace.m
+50629  aet.cfg                                      oc/pp_bool.m
+50630  aet.cfg                                      oc/react_native.m
 
 50700  cmt_insert-0.cfg                             oc/cmt_insert.m
 
