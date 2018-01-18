@@ -221,7 +221,7 @@ for L_Value in ${Liste_of_Ls_A}; do
     diff "${LFile}.sed" "${OutputFile}"
     diff "${LFile}" "${OutputFile}"
     echo
-    break
+#    break
   else
     rm "${LFile}"
     rm "${LFile}.sed"
