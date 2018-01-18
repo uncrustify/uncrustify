@@ -4407,7 +4407,13 @@ static void mark_function(chunk_t *pc)
                || prev->type == CT_STRING_MULTI
                || prev->type == CT_NUMBER
                || prev->type == CT_NUMBER_FP
-               || prev->type == CT_FPAREN_OPEN) // issue #1464
+               || prev->type == CT_COMPARE
+               || prev->type == CT_FPAREN_OPEN             // issue #1464
+               || (cpd.lang_flags & LANG_CS)
+               && (  prev->type == CT_AS
+                  || prev->type == CT_SCOMPARE
+                  || prev->type == CT_BOOL
+                  || prev->type == CT_COLON))
             {
                isa_def = false;
             }
