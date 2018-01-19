@@ -8,9 +8,9 @@ public class Class
         {
             if (entity != null)
                 return entity.ReadState == ReadState.Initial ?
-                       source.NodeType :
-                       entity.EOF ? MyNodeType.EndEntity :
-                       entity.NodeType;
+                    source.NodeType :
+                    entity.EOF? MyNodeType.EndEntity:
+                    entity.NodeType;
             else
                 return source.NodeType;
         }
