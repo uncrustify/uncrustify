@@ -5,6 +5,7 @@
 #
 
 10000 staging/621_this-spacing.cfg staging/621_this-spacing.cpp
+10001 staging/Uncrustify.Common-Cpp.cfg staging/622_ifdef-indentation.cpp
 10002 staging/623_caret-spacing.cfg staging/623_caret-spacing.cpp
 10003 staging/633_decl-in-func-typedef.cfg staging/633_decl-in-func-typedef.cpp
 10004 staging/634_extern-c-no-block.cfg staging/634_extern-c-no-block.cpp
@@ -27,6 +28,7 @@
 10023 staging/Uncrustify.Cpp.cfg staging/for_auto.cpp
 10024 staging/Uncrustify.Cpp.cfg staging/ifcomment.cpp
 10025 staging/Uncrustify.Cpp.cfg staging/qtargs.cpp
+10026 staging/ifoneliner.cfg staging/ifoneliner.cpp
 10027 staging/Uncrustify.CSharp.cfg staging/oneline_property.cs
 10028 staging/Uncrustify.CSharp.cfg staging/ifcolalign.cs
 10029 staging/Uncrustify.CSharp.cfg staging/when.cs
@@ -38,6 +40,7 @@
 10035 staging/Uncrustify.Cpp.cfg staging/definesalign.h.mm
 10036 staging/Uncrustify.Cpp.cfg staging/inttypes.h.mm
 10039 staging/615_nested_usings.cfg staging/615_nested-usings.cs
+10042 staging/ifoneliner.cfg staging/indent-bad.mm
 10044 staging/Uncrustify.CSharp.cfg staging/ifcomment.cs
 10045 staging/UNI-1288.cfg staging/UNI-1288.cs
 10046 staging/Uncrustify.Cpp.cfg    staging/UNI-1333.mm
@@ -51,12 +54,15 @@
 10055 staging/Uncrustify.CSharp.cfg staging/UNI-1345.cs
 10056 staging/UNI-1346.cfg          staging/UNI-1346.cpp
 10057 staging/UNI-1347.cfg          staging/UNI-1347.cpp
+10059 staging/UNI-1349.cfg          staging/UNI-1349.cpp
 10060 staging/UNI-1350.cfg          staging/UNI-1350.cpp
+10061 staging/Uncrustify.CSharp.cfg staging/UNI-1355.cs
 10062 staging/UNI-1356.cfg          staging/UNI-1356.cpp
 10063 staging/Uncrustify.Cpp.cfg    staging/UNI-1358.cpp
 10065 staging/Uncrustify.CSharp.cfg staging/UNI-1975.cs
 10066 staging/UNI-1977.cfg          staging/UNI-1977.cs
-10067 staging/UNI-1978.cfg          staging/UNI-1978.cs 			    
+10067 staging/UNI-1978.cfg          staging/UNI-1978.cs 
+10068 staging/Uncrustify.CSharp.cfg staging/UNI-1979.cs			    
 10069 staging/Uncrustify.Cpp.cfg    staging/UNI-1980.cpp
 10070 staging/Uncrustify.Cpp.cfg    staging/UNI-1981.cpp
 10071 staging/Uncrustify.Cpp.cfg    staging/UNI-1983.cpp
