@@ -1396,6 +1396,9 @@ nl_class_colon                  = ignore   # ignore/add/remove/force
 # Related to nl_constr_init_args, pos_constr_colon and pos_constr_comma.
 nl_constr_colon                 = ignore   # ignore/add/remove/force
 
+# If true turns two liner namespace to one liner,else will make then four liners
+nl_namespace_two_to_one_liner   = false    # false/true
+
 # Change simple unbraced if statements into a one-liner
 # 'if(b)\n i++;' => 'if(b) i++;'.
 nl_create_if_one_liner          = false    # false/true
@@ -1407,6 +1410,9 @@ nl_create_for_one_liner         = false    # false/true
 # Change simple unbraced while statements into a one-liner
 # 'while (i<5)\n foo(i++);' => 'while (i<5) foo(i++);'.
 nl_create_while_one_liner       = false    # false/true
+
+# Change simple 4,3,2 liner function def statements into a one-liner
+nl_create_func_def_one_liner    = false    # false/true
 
 #  Change a one-liner if statement into simple unbraced if
 # 'if(b) i++;' => 'if(b)\n i++;'.

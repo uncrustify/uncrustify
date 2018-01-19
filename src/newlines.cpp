@@ -1752,6 +1752,61 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
    }
 
+   //fixes 1235 Add single line namespace support
+
+   if (  br_open->type == CT_BRACE_OPEN
+      && (br_open->parent_type == CT_NAMESPACE)
+      && chunk_is_newline(chunk_get_prev(br_open)))
+   {
+      chunk_t *chunk_brace_close = chunk_skip_to_match(br_open, scope_e::ALL);
+      if (chunk_brace_close != nullptr)
+      {
+         if (are_chunks_in_same_line(br_open, chunk_brace_close))
+         {
+            if (cpd.settings[UO_nl_namespace_two_to_one_liner].b)
+            {
+               chunk_t *prev = chunk_get_prev_nnl(br_open);
+               newline_del_between(prev, br_open);
+            }
+            /* Below code is to support conversion of 2 liner to 4 liners
+             * else
+             * {
+             *  chunk_t *nxt = chunk_get_next(br_open);
+             *  newline_add_between(br_open, nxt);
+             * }*/
+         }
+      }
+   }
+
+   // fix 1247 oneliner function support - converts 4,3,2  liners to oneliner
+
+   if (  br_open->parent_type == CT_FUNC_DEF
+      && cpd.settings[UO_nl_create_func_def_one_liner].b)
+   {
+      chunk_t *br_close = chunk_skip_to_match(br_open, scope_e::ALL);
+
+      chunk_t *tmp = chunk_get_prev_ncnl(br_open);
+
+      if (((br_close->orig_line - br_open->orig_line) <= 2) && chunk_is_paren_close(tmp))
+      {
+         while (  tmp != nullptr
+               && (tmp = chunk_get_next(tmp)) != nullptr
+               && !chunk_is_closing_brace(tmp)
+               && (chunk_get_next(tmp) != nullptr))
+         {
+            if (chunk_is_newline(tmp))
+            {
+               tmp = chunk_get_prev(tmp);
+               newline_iarf_pair(tmp, chunk_get_next_ncnl(tmp), AV_REMOVE);
+            }
+
+            chunk_flags_set(br_open, PCF_ONE_LINER);
+            chunk_flags_set(br_close, PCF_ONE_LINER);
+         }
+      }
+   }
+
+
    // Make sure we don't break a one-liner
    if (!one_liner_nl_ok(br_open))
    {
