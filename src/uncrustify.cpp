@@ -375,6 +375,8 @@ int main(int argc, char *argv[])
 
    setup_crash_handling();
 
+   init_keywords();
+
    /* check keyword sort */
    assert(keywords_are_sorted());
 
@@ -2099,17 +2101,18 @@ struct lang_name_t
 
 static lang_name_t language_names[] =
 {
-   { "C",    LANG_C             },
-   { "CPP",  LANG_CPP           },
-   { "D",    LANG_D             },
-   { "CS",   LANG_CS            },
-   { "VALA", LANG_VALA          },
-   { "JAVA", LANG_JAVA          },
-   { "PAWN", LANG_PAWN          },
-   { "OC",   LANG_OC            },
-   { "OC+",  LANG_OC | LANG_CPP },
-   { "CS+",  LANG_CS | LANG_CPP },
-   { "ECMA", LANG_ECMA          },
+   { "C",        LANG_C                        },
+   { "CPP",      LANG_CPP                      },
+   { "D",        LANG_D                        },
+   { "CS",       LANG_CS                       },
+   { "VALA",     LANG_VALA                     },
+   { "JAVA",     LANG_JAVA                     },
+   { "PAWN",     LANG_PAWN                     },
+   { "OC",       LANG_OC                       },
+   { "OC+",      LANG_OC | LANG_CPP            },
+   { "CS+",      LANG_CS | LANG_CPP            },
+   { "ECMA",     LANG_ECMA                     },
+   { "C-Header", LANG_OC | LANG_CPP | FLAG_HDR },
 };
 
 
@@ -2159,30 +2162,30 @@ struct lang_ext_t
 //! known filename extensions linked to the corresponding programming language
 struct lang_ext_t language_exts[] =
 {
-   { ".c",    "C"    },
-   { ".cpp",  "CPP"  },
-   { ".d",    "D"    },
-   { ".cs",   "CS"   },
-   { ".vala", "VALA" },
-   { ".java", "JAVA" },
-   { ".pawn", "PAWN" },
-   { ".p",    "PAWN" },
-   { ".sma",  "PAWN" },
-   { ".inl",  "PAWN" },
-   { ".h",    "CPP"  },
-   { ".cxx",  "CPP"  },
-   { ".hpp",  "CPP"  },
-   { ".hxx",  "CPP"  },
-   { ".cc",   "CPP"  },
-   { ".cp",   "CPP"  },
-   { ".C",    "CPP"  },
-   { ".CPP",  "CPP"  },
-   { ".c++",  "CPP"  },
-   { ".di",   "D"    },
-   { ".m",    "OC"   },
-   { ".mm",   "OC+"  },
-   { ".sqc",  "C"    }, // embedded SQL
-   { ".es",   "ECMA" },
+   { ".c",    "C"        },
+   { ".cpp",  "CPP"      },
+   { ".d",    "D"        },
+   { ".cs",   "CS"       },
+   { ".vala", "VALA"     },
+   { ".java", "JAVA"     },
+   { ".pawn", "PAWN"     },
+   { ".p",    "PAWN"     },
+   { ".sma",  "PAWN"     },
+   { ".inl",  "PAWN"     },
+   { ".h",    "C-Header" },
+   { ".cxx",  "CPP"      },
+   { ".hpp",  "CPP"      },
+   { ".hxx",  "CPP"      },
+   { ".cc",   "CPP"      },
+   { ".cp",   "CPP"      },
+   { ".C",    "CPP"      },
+   { ".CPP",  "CPP"      },
+   { ".c++",  "CPP"      },
+   { ".di",   "D"        },
+   { ".m",    "OC"       },
+   { ".mm",   "OC+"      },
+   { ".sqc",  "C"        }, // embedded SQL
+   { ".es",   "ECMA"     },
 };
 
 

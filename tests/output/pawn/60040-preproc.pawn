@@ -1,5 +1,5 @@
 #define SetTeleType(%1,%2)	set_pev(%1, pev_iuser1, %2)
-#define SetTeleMate(%1,%2)	set_pev(%1, pev_iuser2, %2 * 7)
+#define SetTeleMate(%1,%2)	set_pev(%1, pev_iuser2, %2*7)
 
 #define x(%0,%1) \
 	y(%1, %0)

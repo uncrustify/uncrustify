@@ -240,6 +240,7 @@ enum uncrustify_options
    UO_sp_after_tag,                // pawn: space after a tag colon
    UO_sp_inside_braces_enum,       // space inside enum '{' and '}' - '{ a, b, c }'
    UO_sp_inside_braces_struct,     // space inside struct/union '{' and '}'
+   UO_sp_inside_braces_oc_dict,    // space inside OC boxed dictionary @'{' and '}'
    UO_sp_after_type_brace_init_lst_open,
    UO_sp_before_type_brace_init_lst_close,
    UO_sp_inside_type_brace_init_lst,
@@ -263,6 +264,8 @@ enum uncrustify_options
    UO_sp_func_call_paren,          // space between 'func' and '(' - 'foo (' vs 'foo('
    UO_sp_func_call_paren_empty,    //
    UO_sp_func_call_user_paren,     //
+   UO_sp_func_call_user_inside_fparen,
+   UO_sp_func_call_user_paren_paren,
    UO_sp_func_class_paren,         // space between ctor/dtor and '('
    UO_sp_func_class_paren_empty,   // space between ctor/dtor and '()'
    UO_sp_return_paren,             // space between 'return' and '('
@@ -395,7 +398,7 @@ enum uncrustify_options
    UO_indent_sing_line_comments,            // indent single line ('//') comments on lines before code
    UO_indent_relative_single_line_comments, // indent single line ('//') comments after code
    UO_indent_switch_case,                   // spaces to indent case from switch
-   UO_indent_switch_pp,                     // whether to indent preproccesor statements inside of switch statements
+   UO_indent_switch_pp,                     // whether to indent preprocessor statements inside of switch statements
    UO_indent_case_shift,                    // spaces to shift the line with the 'case'
    UO_indent_case_brace,                    // spaces to indent '{' from case (usually 0 or indent_columns)
    UO_indent_col1_comment,                  // indent comments in column 1
