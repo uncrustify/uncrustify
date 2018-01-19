@@ -1783,8 +1783,37 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
    }
 
+   // fix 1247 oneliner function support - converts 4,3,2  liners to oneliner
+
+   if (  br_open->parent_type == CT_FUNC_DEF
+      && cpd.settings[UO_nl_create_func_def_one_liner].b)
+   {
+      chunk_t *br_close = chunk_skip_to_match(br_open, scope_e::ALL);
+
+      chunk_t *tmp = chunk_get_prev_ncnl(br_open);
+
+      if (((br_close->orig_line - br_open->orig_line) <= 2) && chunk_is_paren_close(tmp))
+      {
+         while (  tmp != nullptr
+               && (tmp = chunk_get_next(tmp)) != nullptr
+               && !chunk_is_closing_brace(tmp)
+               && (chunk_get_next(tmp) != nullptr))
+         {
+            if (chunk_is_newline(tmp))
+            {
+               tmp = chunk_get_prev(tmp);
+               newline_iarf_pair(tmp, chunk_get_next_ncnl(tmp), AV_REMOVE);
+            }
+
+            chunk_flags_set(br_open, PCF_ONE_LINER);
+            chunk_flags_set(br_close, PCF_ONE_LINER);
+         }
+      }
+   }
+
 
    // Make sure we don't break a one-liner
+
    if (!one_liner_nl_ok(br_open))
    {
       LOG_FMT(LNL1LINE, "%s(%d): a new line may NOT be added\n", __func__, __LINE__);
@@ -3058,6 +3087,7 @@ void newlines_cleanup_braces(bool first)
                && next->type != CT_SPAREN_CLOSE    // Issue #664
                && next->type != CT_SQUARE_CLOSE
                && next->type != CT_FPAREN_CLOSE
+               && next->type != CT_PAREN_CLOSE
                && next->type != CT_WHILE_OF_DO
                && next->type != CT_VBRACE_CLOSE   // Issue #666
                && (pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_TYPEDEF)) == 0

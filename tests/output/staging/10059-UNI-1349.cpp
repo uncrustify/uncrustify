@@ -54,12 +54,8 @@ using namespace ::comp::run;
 
 // incorrect
 
-class ClassDummy : public ::comp::run::Class
-{
-};
+class ClassDummy : public ::comp::run::Class {};
 // ... --> ...
-class ClassDummy : public ::comp::run::Class
-{
-};
+class ClassDummy : public ::comp::run::Class {};
 
 // Starting to think this may be too hard, because what precedes the :: may be complex. What if it's just a > operator in a comparison expression against a global?

@@ -698,7 +698,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
    }
    else if (pc->type == CT_BRACE_CLOSE)
    {
-      if (!cpd.consumed)
+      if (!cpd.consumed && cpd.in_preproc != CT_PP_DEFINE)
       {
          size_t file_pp_level = ifdef_over_whole_file() ? 1 : 0;
          if (!cpd.unc_off_used && pc->pp_level == file_pp_level)
