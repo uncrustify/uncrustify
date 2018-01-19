@@ -887,7 +887,7 @@ void add_long_closebrace_comment(void)
       size_t  nl_count = 0;
 
       chunk_t *tmp = pc;
-      while ((tmp = chunk_get_next(tmp)) != nullptr)
+      while ((tmp = chunk_get_next(tmp, scope_e::PREPROC)) != nullptr)
       {
          if (chunk_is_newline(tmp))
          {
