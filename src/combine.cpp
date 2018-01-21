@@ -1058,10 +1058,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       || pc->type == CT_STRUCT
       || pc->type == CT_UNION)
    {
-      if (prev->type != CT_TYPEDEF)
-      {
-         fix_enum_struct_union(pc);
-      }
+      fix_enum_struct_union(pc);
    }
 
    if (pc->type == CT_EXTERN)
