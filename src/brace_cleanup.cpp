@@ -418,7 +418,8 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
       // Make sure the open / close match
       if (pc->type != (frm.top().type + 1))
       {
-         if (frm.top().type != CT_EOF && frm.top().type != CT_PP_DEFINE)
+         if (  frm.top().type != CT_EOF
+            && frm.top().type != CT_PP_DEFINE)
          {
             LOG_FMT(LWARN, "%s(%d): %s, orig_line is %zu, Error: Unexpected '%s' for '%s', which was on line %zu\n",
                     __func__, __LINE__, cpd.filename.c_str(), pc->orig_line,
