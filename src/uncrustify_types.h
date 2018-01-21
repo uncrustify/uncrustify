@@ -344,6 +344,7 @@ enum lang_flag_e
                             *  LANG_JAVA | LANG_OC  | LANG_VALA | LANG_ECMA   */
    LANG_ALL  = 0x0fff,     //! applies to all languages
 
+   FLAG_HDR  = 0x2000,     /*<< Header file for C family languages */
    FLAG_DIG  = 0x4000,     //! digraph/trigraph
    FLAG_PP   = 0x8000,     //! only appears in a preprocessor
 };
