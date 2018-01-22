@@ -524,7 +524,7 @@
 34199  empty.cfg                            cpp/not_lambda.cpp
 
 34200  i1536.cfg                            cpp/i1536.cpp
-
+34201  mod_add_long_namespace_closebrace_comment-1.cfg  cpp/i1565.cpp
 
 
 # TODO: Find relevant test cases for 'override'.
