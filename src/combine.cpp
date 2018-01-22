@@ -1951,9 +1951,8 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
    if (pc != nullptr)
    {
       // Step backwards from pc and mark the parent of the return type
-      LOG_FMT(LFCNR, "%s(%d): (backwards) return type for '%s' @ orig_line is %zu, orig_col is %zu",
+      LOG_FMT(LFCNR, "%s(%d): (backwards) return type for '%s' @ orig_line is %zu, orig_col is %zu\n",
               __func__, __LINE__, fname->text(), fname->orig_line, fname->orig_col);
-      D_LOG_FMT(LFCN, "\n");
 
       chunk_t *first = pc;
       while (pc != nullptr)
@@ -3192,9 +3191,8 @@ void combine_labels(void)
                {
                   return;
                }
-               D_LOG_FMT(LGUY, "(%d) ", __LINE__);
-               LOG_FMT(LGUY, "%s: %zu:%zu, tmp '%s'\n",
-                       __func__, tmp->orig_line, tmp->orig_col, (tmp->type == CT_NEWLINE) ? "<Newline>" : tmp->text());
+               LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, tmp '%s'\n   ",
+                       __func__, __LINE__, tmp->orig_line, tmp->orig_col, (tmp->type == CT_NEWLINE) ? "<Newline>" : tmp->text());
                log_pcf_flags(LGUY, tmp->flags);
                if (next->flags & PCF_IN_FCN_CALL)
                {
@@ -3211,8 +3209,28 @@ void combine_labels(void)
                    * the CT_SIZEOF isn't great - test 31720 happens to use a sizeof expr,
                    * but this really should be able to handle any constant expr
                    */
-                  set_chunk_type(cur, CT_LABEL);
-                  set_chunk_type(next, CT_LABEL_COLON);
+                  // Fix for #1242
+                  // For MIDL_INTERFACE classes class name is tokenized as Label.
+                  // Corrected the identification of Label in c style languages.
+                  if (  (cpd.lang_flags & (LANG_C | LANG_CPP | LANG_CS))
+                     && (!(cpd.lang_flags & LANG_OC)))
+                  {
+                     chunk_t *labelPrev = prev;
+                     if (labelPrev->type == CT_NEWLINE)
+                     {
+                        labelPrev = chunk_get_prev_ncnl(prev);
+                     }
+                     if (labelPrev->type != CT_FPAREN_CLOSE)
+                     {
+                        set_chunk_type(cur, CT_LABEL);
+                        set_chunk_type(next, CT_LABEL_COLON);
+                     }
+                  }
+                  else
+                  {
+                     set_chunk_type(cur, CT_LABEL);
+                     set_chunk_type(next, CT_LABEL_COLON);
+                  }
                }
                else if (next->flags & (PCF_IN_STRUCT | PCF_IN_CLASS | PCF_IN_TYPEDEF))
                {
@@ -3960,9 +3978,8 @@ static void mark_function(chunk_t *pc)
    if (pc->flags & PCF_IN_CONST_ARGS)
    {
       set_chunk_type(pc, CT_FUNC_CTOR_VAR);
-      D_LOG_FMT(LFCN, "(%d) ", __LINE__);
-      LOG_FMT(LFCN, "  1) Marked [%s] as FUNC_CTOR_VAR on line %zu col %zu\n",
-              pc->text(), pc->orig_line, pc->orig_col);
+      LOG_FMT(LFCN, "%s(%d)   1) Marked [%s] as FUNC_CTOR_VAR on line %zu col %zu\n",
+              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
       next = skip_template_next(next);
       if (next == nullptr)
       {
@@ -3991,9 +4008,8 @@ static void mark_function(chunk_t *pc)
 
    if (paren_open == nullptr || paren_close == nullptr)
    {
-      D_LOG_FMT(LFCN, "%s(%d) ", __func__, __LINE__);
-      LOG_FMT(LFCN, "No parens found for [%s] on orig_line %zu, orig_col %zu\n",
-              pc->text(), pc->orig_line, pc->orig_col);
+      LOG_FMT(LFCN, "%s(%d): No parens found for [%s] on orig_line %zu, orig_col %zu\n",
+              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
       return;
    }
 
@@ -4048,21 +4064,18 @@ static void mark_function(chunk_t *pc)
       {
          if (tmp2)
          {
-            D_LOG_FMT(LFCN, "%s(%d): ", __func__, __LINE__);
-            LOG_FMT(LFCN, "[%zu/%zu] function variable [%s], changing [%s] into a type\n",
-                    pc->orig_line, pc->orig_col, tmp2->text(), pc->text());
+            LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, function variable '%s', changing '%s' into a type\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, tmp2->text(), pc->text());
             set_chunk_type(tmp2, CT_FUNC_VAR);
             flag_parens(paren_open, 0, CT_PAREN_OPEN, CT_FUNC_VAR, false);
 
-            D_LOG_FMT(LFCN, "%s(%d): ", __func__, __LINE__);
-            LOG_FMT(LFCN, "paren open @ %zu:%zu\n",
-                    paren_open->orig_line, paren_open->orig_col);
+            LOG_FMT(LFCN, "%s(%d): paren open @ orig_line %zu, orig_col %zu\n",
+                    __func__, __LINE__, paren_open->orig_line, paren_open->orig_col);
          }
          else
          {
-            D_LOG_FMT(LFCN, "%s(%d): ", __func__, __LINE__);
-            LOG_FMT(LFCN, "[%zu/%zu] function type, changing [%s] into a type\n",
-                    pc->orig_line, pc->orig_col, pc->text());
+            LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, function type, changing '%s' into a type\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
             if (tmp2)
             {
                set_chunk_type(tmp2, CT_FUNC_TYPE);
