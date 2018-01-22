@@ -27,5 +27,5 @@ if ([receiver conformsTo: @protocol(ReferenceCounting)])
 @protocol B;
 
 @protocol A
--Foo: (id<B> )anObject;
+-Foo: (id<B>)anObject;
 @end

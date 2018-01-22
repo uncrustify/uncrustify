@@ -317,6 +317,9 @@ sp_inside_braces_enum           { Ignore, Add, Remove, Force }
 sp_inside_braces_struct         { Ignore, Add, Remove, Force }
   Add or remove space inside struct/union '{' and '}'.
 
+sp_inside_braces_oc_dict        { Ignore, Add, Remove, Force }
+  Add or remove space inside OC boxed dictionary @'{' and '}'
+
 sp_after_type_brace_init_lst_open { Ignore, Add, Remove, Force }
   Add or remove space after open brace in an unnamed temporary direct-list-initialization.
 
@@ -385,6 +388,13 @@ sp_func_call_paren_empty        { Ignore, Add, Remove, Force }
 sp_func_call_user_paren         { Ignore, Add, Remove, Force }
   Add or remove space between the user function name and '(' on function calls
   You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.
+
+sp_func_call_user_inside_fparen { Ignore, Add, Remove, Force }
+  Add or remove space inside user function '(' and ')'
+  You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.
+
+sp_func_call_user_paren_paren   { Ignore, Add, Remove, Force }
+  Add or remove space between nested parens with user functions: '((' vs ') )'You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.
 
 sp_func_class_paren             { Ignore, Add, Remove, Force }
   Add or remove space between a constructor/destructor and the open paren.
@@ -803,7 +813,7 @@ indent_switch_case              Unsigned Number
   Usually 0 or indent_columns.
 
 indent_switch_pp                { False, True }
-  Whether to indent preproccesor statements inside of switch statements.
+  Whether to indent preprocessor statements inside of switch statements.
 
 indent_case_shift               Unsigned Number
   Spaces to shift the 'case' line, without affecting any other lines

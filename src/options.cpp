@@ -496,6 +496,8 @@ void register_options(void)
                   "Add or remove space inside enum '{' and '}'.");
    unc_add_option("sp_inside_braces_struct", UO_sp_inside_braces_struct, AT_IARF,
                   "Add or remove space inside struct/union '{' and '}'.");
+   unc_add_option("sp_inside_braces_oc_dict", UO_sp_inside_braces_oc_dict, AT_IARF,
+                  "Add or remove space inside OC boxed dictionary @'{' and '}'");
    unc_add_option("sp_after_type_brace_init_lst_open", UO_sp_after_type_brace_init_lst_open, AT_IARF,
                   "Add or remove space after open brace in an unnamed temporary direct-list-initialization.");
    unc_add_option("sp_before_type_brace_init_lst_close", UO_sp_before_type_brace_init_lst_close, AT_IARF,
@@ -542,6 +544,12 @@ void register_options(void)
                   "If set to 'ignore' (the default), sp_func_call_paren is used.");
    unc_add_option("sp_func_call_user_paren", UO_sp_func_call_user_paren, AT_IARF,
                   "Add or remove space between the user function name and '(' on function calls\n"
+                  "You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.");
+   unc_add_option("sp_func_call_user_inside_fparen", UO_sp_func_call_user_inside_fparen, AT_IARF,
+                  "Add or remove space inside user function '(' and ')'\n"
+                  "You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.");
+   unc_add_option("sp_func_call_user_paren_paren", UO_sp_func_call_user_paren_paren, AT_IARF,
+                  "Add or remove space between nested parens with user functions: '((' vs ') )'"
                   "You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.");
    unc_add_option("sp_func_class_paren", UO_sp_func_class_paren, AT_IARF,
                   "Add or remove space between a constructor/destructor and the open paren.");
@@ -835,7 +843,7 @@ void register_options(void)
                   "Spaces to indent 'case' from 'switch'\n"
                   "Usually 0 or indent_columns.");
    unc_add_option("indent_switch_pp", UO_indent_switch_pp, AT_BOOL,
-                  "Whether to indent preproccesor statements inside of switch statements.");
+                  "Whether to indent preprocessor statements inside of switch statements.");
    unc_add_option("indent_case_shift", UO_indent_case_shift, AT_UNUM,
                   "Spaces to shift the 'case' line, without affecting any other lines\n"
                   "Usually 0.");

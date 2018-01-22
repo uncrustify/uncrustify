@@ -463,6 +463,13 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace,
    {
       return(tmp);
    }
+
+   tmp = chunk_first_on_line(tmp);
+   if (tmp && tmp->type == CT_SQUARE_OPEN)
+   {
+      return(tmp);
+   }
+
    return(nullptr);
 } // oc_msg_block_indent
 
@@ -1165,6 +1172,13 @@ void indent_text(void)
             frm.top().brace_indent = 1 + (pc->brace_level * indent_size);
             indent_column_set(frm.top().brace_indent);
             frm.top().indent = indent_column + indent_size;
+
+            if ((pc->parent_type == CT_OC_BLOCK_EXPR) && ((pc->flags & PCF_IN_OC_MSG) != 0))
+            {
+               frm.top().indent       = frm.prev().indent_tmp;
+               frm.top().brace_indent = frm.prev().indent_tmp;
+               indent_column_set(frm.top().indent - indent_size);
+            }
             log_indent();
 
             frm.top().indent_tab = frm.top().indent;
