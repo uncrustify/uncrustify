@@ -1645,12 +1645,11 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
             var_blk       = false;
          }
          else if (  chunk_is_type(pc)
-                 && ((  chunk_is_type(next)
-                     || next->type == CT_WORD
-                     || next->type == CT_FUNC_CTOR_VAR))
-                 && !(next->type == CT_DC_MEMBER))  // DbConfig::configuredDatabase()->apply(db);
-                                                    // is NOT a declaration of a variable
-                                                    // guy 2015-09-22
+                 && (  next->type != CT_DC_MEMBER  // proceed if not CT_DC_MEMBER else skip it
+                    || (next = chunk_skip_dc_member(next)) != nullptr)
+                 && (  chunk_is_type(next)
+                    || next->type == CT_WORD
+                    || next->type == CT_FUNC_CTOR_VAR))
          {
             // set newlines before var def block
             if (  !var_blk
@@ -1695,7 +1694,7 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
                && fn_top
                && (cpd.settings[UO_nl_func_var_def_blk].u > 0))
             {
-               newline_min_after(prev, 1 + cpd.settings[UO_nl_func_var_def_blk].u, PCF_VAR_DEF);
+               newline_min_after(prev, 1 + cpd.settings[UO_nl_func_var_def_blk].u, PCF_VAR_DEF); // TODO: why +1 ?
             }
             // set newlines after var def block
             else if (var_blk && (cpd.settings[UO_nl_var_def_blk_end].u > 0))
