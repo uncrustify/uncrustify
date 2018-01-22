@@ -641,6 +641,12 @@ void tokenize_cleanup(void)
          {
             set_chunk_type(pc, CT_WORD);
          }
+
+         // Fix self keyword back to word when mixing c++/objective-c
+         if (pc->type == CT_THIS && !strcmp(pc->text(), "self") && (next->type == CT_COMMA || next->type == CT_PAREN_CLOSE))
+         {
+            set_chunk_type(pc, CT_WORD);
+         }
       }
 
       // Another hack to clean up more keyword abuse
@@ -813,7 +819,7 @@ void tokenize_cleanup(void)
       }
 
       // Add minimal support for C++0x rvalue references
-      if (pc->type == CT_BOOL && chunk_is_str(pc, "&&", 2))
+      if (pc->type == CT_BOOL && (cpd.lang_flags & LANG_CPP) && chunk_is_str(pc, "&&", 2))
       {
          if (prev->type == CT_TYPE)
          {
@@ -940,6 +946,7 @@ static void check_template(chunk_t *start)
       if (  prev->type != CT_WORD
          && prev->type != CT_TYPE
          && prev->type != CT_COMMA
+         && prev->type != CT_QUALIFIER
          && prev->type != CT_OPERATOR_VAL
          && prev->parent_type != CT_OPERATOR)
       {
@@ -1009,7 +1016,7 @@ static void check_template(chunk_t *start)
             && (pc->str[0] == '>')
             && (pc->len() > 1)
             && (  cpd.settings[UO_tok_split_gte].b
-               || (chunk_is_str(pc, ">>", 2) && num_tokens >= 2)))
+               || ((chunk_is_str(pc, ">>", 2) || chunk_is_str(pc, ">>>", 3)) && num_tokens >= 2)))
          {
             LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}",
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);

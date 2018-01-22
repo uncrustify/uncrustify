@@ -1,4 +1,4 @@
-// 1. Formatting the first produces the second.
+// 1. This doesn't changes when formatted.
 
 namespace Unity.IL2CPP.IntegrationTests.ILTests.Tests
 {

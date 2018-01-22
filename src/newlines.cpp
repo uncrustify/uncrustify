@@ -3087,12 +3087,16 @@ void newlines_cleanup_braces(bool first)
                && next->type != CT_SPAREN_CLOSE    // Issue #664
                && next->type != CT_SQUARE_CLOSE
                && next->type != CT_FPAREN_CLOSE
+               && next->type != CT_PAREN_CLOSE
                && next->type != CT_WHILE_OF_DO
-               && next->type != CT_VBRACE_CLOSE   // Issue #666
+               && next->type != CT_VBRACE_CLOSE                                    // Issue #666
+               && (next->type != CT_BRACE_CLOSE || !(next->flags & PCF_ONE_LINER)) // #1258
                && (pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_TYPEDEF)) == 0
                && !chunk_is_newline(next)
                && !chunk_is_comment(next))
             {
+               // #1258
+               // dont add newline between two consecutive braces closes, if the second is a part of one liner.
                newline_end_newline(pc);
             }
          }

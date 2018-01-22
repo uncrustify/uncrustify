@@ -578,6 +578,13 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace,
    {
       return(tmp);
    }
+
+   tmp = chunk_first_on_line(tmp);
+   if (tmp && tmp->type == CT_SQUARE_OPEN)
+   {
+      return(tmp);
+   }
+
    return(nullptr);
 } // oc_msg_block_indent
 
@@ -646,6 +653,20 @@ void indent_text(void)
    pc = chunk_get_head();
    while (pc != nullptr)
    {
+      //  forces string literal to column-1 [Fix for 1246]
+      if (  (pc->type == CT_STRING || pc->type == CT_STRING_MULTI)
+         && !(cpd.lang_flags & LANG_OC))
+      {
+         string str = pc->text();
+         if ((str[0] == '@') && (chunk_get_prev(pc)->type == CT_NEWLINE))
+         {
+            indent_column_set(1);
+            reindent_line(pc, indent_column);
+            pc          = chunk_get_next(pc);
+            did_newline = false;
+         }
+      }
+
       if (pc->type == CT_NEWLINE)
       {
          LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, NEWLINE\n",
@@ -1304,6 +1325,14 @@ void indent_text(void)
             frm.pse[frm.pse_tos].brace_indent = 1 + (pc->brace_level * indent_size);
             indent_column_set(frm.pse[frm.pse_tos].brace_indent);
             frm.pse[frm.pse_tos].indent = indent_column + indent_size;
+
+            if ((pc->parent_type == CT_OC_BLOCK_EXPR) && ((pc->flags & PCF_IN_OC_MSG) != 0))
+            {
+               frm.pse[frm.pse_tos].indent       = frm.pse[frm.pse_tos - 1].indent_tmp;
+               frm.pse[frm.pse_tos].brace_indent = frm.pse[frm.pse_tos - 1].indent_tmp;
+               indent_column_set(frm.pse[frm.pse_tos].indent - indent_size);
+            }
+
             log_indent();
             frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
