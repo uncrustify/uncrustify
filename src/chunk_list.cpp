@@ -805,7 +805,7 @@ void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what)
       log_func_stack_inline(what);
       *where = token;
    }
-}
+} // set_chunk_real
 
 
 static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope, const direction_e dir)

@@ -3474,10 +3474,12 @@ static chunk_t *fix_var_def(chunk_t *start)
             || pc->type == CT_MEMBER
             || chunk_is_ptr_operator(pc)))
    {
-      LOG_FMT(LFVD, "%s(%d):   1:pc->text() '%s', type is %s\n", __func__, __LINE__, pc->text(), get_token_name(pc->type));
+      LOG_FMT(LFVD, "%s(%d):   1:pc->text() '%s', type is %s\n",
+              __func__, __LINE__, pc->text(), get_token_name(pc->type));
       cs.Push_Back(pc);
       pc = chunk_get_next_ncnl(pc);
-      LOG_FMT(LFVD, "%s(%d):   2:pc->text() '%s', type is %s\n", __func__, __LINE__, pc->text(), get_token_name(pc->type));
+      LOG_FMT(LFVD, "%s(%d):   2:pc->text() '%s', type is %s\n",
+              __func__, __LINE__, pc->text(), get_token_name(pc->type));
       if (pc == nullptr)
       {
          LOG_FMT(LFVD, "%s(%d): pc is nullptr\n", __func__, __LINE__);
@@ -3486,14 +3488,16 @@ static chunk_t *fix_var_def(chunk_t *start)
 
       // Skip templates and attributes
       pc = skip_template_next(pc);
-      LOG_FMT(LFVD, "%s(%d):   3:pc->text() '%s', type is %s\n", __func__, __LINE__, pc->text(), get_token_name(pc->type));
+      LOG_FMT(LFVD, "%s(%d):   3:pc->text() '%s', type is %s\n",
+              __func__, __LINE__, pc->text(), get_token_name(pc->type));
       if (pc == nullptr)
       {
          LOG_FMT(LFVD, "%s(%d): pc is nullptr\n", __func__, __LINE__);
          return(nullptr);
       }
       pc = skip_attribute_next(pc);
-      LOG_FMT(LFVD, "%s(%d):   4:pc->text() '%s', type is %s\n", __func__, __LINE__, pc->text(), get_token_name(pc->type));
+      LOG_FMT(LFVD, "%s(%d):   4:pc->text() '%s', type is %s\n",
+              __func__, __LINE__, pc->text(), get_token_name(pc->type));
       if (pc == nullptr)
       {
          LOG_FMT(LFVD, "%s(%d): pc is nullptr\n", __func__, __LINE__);

@@ -935,11 +935,13 @@ static void newlines_func_pre_blank_lines(chunk_t *start)
       if (chunk_is_newline(pc))
       {
          last_nl = pc;
+         LOG_FMT(LNLFUNCT, "   <chunk_is_newline> found at line=%zu column=%zu\n", pc->orig_line, pc->orig_col);
          continue;
       }
 
       if (chunk_is_comment(pc))
       {
+         LOG_FMT(LNLFUNCT, "   <chunk_is_comment> found at line=%zu column=%zu\n", pc->orig_line, pc->orig_col);
          if (  (  pc->orig_line < start->orig_line
                && ((start->orig_line - pc->orig_line
                     - (pc->type == CT_COMMENT_MULTI ? pc->nl_count : 0))) < 2)
