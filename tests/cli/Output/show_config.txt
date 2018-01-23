@@ -905,7 +905,7 @@ indent_oc_block_msg_from_brace  { False, True }
   If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is.
 
 indent_min_vbrace_open          Unsigned Number
-  When identing after virtual brace open and newline add further spaces to reach this min. indent.
+  When indenting after virtual brace open and newline add further spaces to reach this min. indent.
 
 indent_vbrace_open_on_tabstop   { False, True }
   True: When identing after virtual brace open and newline add further spaces after regular indent to reach next tabstop.

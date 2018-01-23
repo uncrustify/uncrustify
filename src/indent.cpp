@@ -672,7 +672,8 @@ void indent_text(void)
 
          // Indent the body of a #if here
          if (  cpd.settings[UO_pp_if_indent_code].b
-            && (pc->parent_type == CT_PP_IF || pc->parent_type == CT_PP_ELSE))
+            && (  pc->parent_type == CT_PP_IF
+               || pc->parent_type == CT_PP_ELSE))
          {
             chunk_t *next = chunk_get_next(pc);
             if (next == nullptr)
@@ -1890,9 +1891,6 @@ void indent_text(void)
                      || (  pc->parent_type != CT_FUNC_PROTO
                         && pc->parent_type != CT_FUNC_DEF)))
                {
-                  //frm.top().indent += abs(cpd.settings[UO_indent_continue].n);
-                  //   frm.top().indent      = calc_indent_continue(frm);
-                  //   frm.top().indent_cont = true;
                   if (  (cpd.settings[UO_use_indent_continue_only_once].b)
                      && (frm.top().indent_cont)
                      && vardefcol != 0)

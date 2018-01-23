@@ -1285,6 +1285,8 @@ static void process_if_chain(chunk_t *br_start)
        */
       const auto multiline_block = cpd.settings[UO_mod_full_brace_nl_block_rem_mlcond].b;
 
+      LOG_FMT(LBRCH, "%s(%d): remove braces on lines:", __func__, __LINE__);
+
       const auto ite = braces.rend();
       for (auto itc = braces.rbegin(); itc != ite; ++itc)
       {
