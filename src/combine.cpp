@@ -76,11 +76,13 @@ static chunk_t *skip_expression(chunk_t *start);
  */
 static chunk_t *skip_align(chunk_t *start);
 
+
 /**
  * Combines two tokens into {{ and }} if inside parens and nothing is between
  * either pair.
  */
 static void check_double_brace_init(chunk_t *bo1);
+
 
 /**
  * Simply change any STAR to PTR_TYPE and WORD to TYPE
@@ -264,11 +266,13 @@ static void process_returns(void);
  */
 static chunk_t *process_return(chunk_t *pc);
 
+
 /**
  * TODO: add doc cmt
  *
  */
 static UINT64 mark_where_chunk(chunk_t *pc, c_token_t parent_type, UINT64 flags);
+
 
 /**
  * We're on a 'class' or 'struct'.
@@ -2840,26 +2844,23 @@ static void fix_enum_struct_union(chunk_t *pc)
 static void fix_typedef(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-
    if (start == nullptr)
    {
       return;
    }
-
    LOG_FMT(LTYPEDEF, "%s(%d): typedef @ orig_line %zu, orig_col %zu\n",
            __func__, __LINE__, start->orig_line, start->orig_col);
 
    chunk_t *the_type = nullptr;
-   chunk_t *open_paren;
-   chunk_t *last_op = nullptr;
+   chunk_t *last_op  = nullptr;
 
    /*
     * Mark everything in the typedef and scan for ")(", which makes it a
     * function type
     */
-   chunk_t *next = start;
-   while (  ((next = chunk_get_next_ncnl(next, scope_e::PREPROC)) != nullptr)
-         && next->level >= start->level)
+   for (chunk_t *next = chunk_get_next_ncnl(start, scope_e::PREPROC)
+        ; next != nullptr && next->level >= start->level
+        ; next = chunk_get_next_ncnl(next, scope_e::PREPROC))
    {
       chunk_flags_set(next, PCF_IN_TYPEDEF);
       if (start->level == next->level)
@@ -2898,12 +2899,13 @@ static void fix_typedef(chunk_t *start)
       flag_parens(last_op, 0, CT_FPAREN_OPEN, CT_TYPEDEF, false);
       fix_fcn_def_params(last_op);
 
-      open_paren = nullptr;
-      the_type   = chunk_get_prev_ncnl(last_op, scope_e::PREPROC);
+      the_type = chunk_get_prev_ncnl(last_op, scope_e::PREPROC);
       if (the_type == nullptr)
       {
          return;
       }
+
+      chunk_t *open_paren = nullptr;
       if (chunk_is_paren_close(the_type))
       {
          open_paren = chunk_skip_to_match_rev(the_type);
@@ -2925,7 +2927,7 @@ static void fix_typedef(chunk_t *start)
               __func__, __LINE__, the_type->text(), the_type->orig_line);
 
       // If we are aligning on the open parenthesis, grab that instead
-      if (open_paren && cpd.settings[UO_align_typedef_func].u == 1)
+      if (open_paren != nullptr && cpd.settings[UO_align_typedef_func].u == 1)
       {
          the_type = open_paren;
       }
@@ -2944,14 +2946,14 @@ static void fix_typedef(chunk_t *start)
     * Skip over enum/struct/union stuff, as we know it isn't a return type
     * for a function type
     */
-   next = chunk_get_next_ncnl(start, scope_e::PREPROC);
-   if (next == nullptr)
+   chunk_t *after = chunk_get_next_ncnl(start, scope_e::PREPROC);
+   if (after == nullptr)
    {
       return;
    }
-   if (  next->type != CT_ENUM
-      && next->type != CT_STRUCT
-      && next->type != CT_UNION)
+   if (  after->type != CT_ENUM
+      && after->type != CT_STRUCT
+      && after->type != CT_UNION)
    {
       if (the_type != nullptr)
       {
@@ -2963,11 +2965,8 @@ static void fix_typedef(chunk_t *start)
       return;
    }
 
-   // We have a struct/union/enum type, set the parent
-   c_token_t tag = next->type;
-
-   // the next item should be either a type or {
-   next = chunk_get_next_ncnl(next, scope_e::PREPROC);
+   // We have a struct/union/enum, next should be either a type or {
+   chunk_t *next = chunk_get_next_ncnl(after, scope_e::PREPROC);
    if (next == nullptr)
    {
       return;
@@ -2975,26 +2974,37 @@ static void fix_typedef(chunk_t *start)
    if (next->type == CT_TYPE)
    {
       next = chunk_get_next_ncnl(next, scope_e::PREPROC);
-   }
-   if (next == nullptr)
-   {
-      return;
+      if (next == nullptr)
+      {
+         return;
+      }
    }
    if (next->type == CT_BRACE_OPEN)
    {
-      set_chunk_parent(next, tag);
       // Skip to the closing brace
-      next = chunk_get_next_type(next, CT_BRACE_CLOSE, next->level, scope_e::PREPROC);
-      if (next != nullptr)
+      chunk_t *br_c = chunk_get_next_type(next, CT_BRACE_CLOSE, next->level, scope_e::PREPROC);
+      if (br_c != nullptr)
       {
+         const c_token_t tag = after->type;
          set_chunk_parent(next, tag);
+         set_chunk_parent(br_c, tag);
+
+         if (tag == CT_ENUM)
+         {
+            flag_series(after, br_c, PCF_IN_ENUM);
+         }
+         else if (tag == CT_STRUCT)
+         {
+            flag_series(after, br_c, PCF_IN_STRUCT);
+         }
       }
    }
 
    if (the_type != nullptr)
    {
       LOG_FMT(LTYPEDEF, "%s(%d): %s typedef text() %s, on orig_line %zu\n",
-              __func__, __LINE__, get_token_name(tag), the_type->text(), the_type->orig_line);
+              __func__, __LINE__, get_token_name(after->type), the_type->text(),
+              the_type->orig_line);
       chunk_flags_set(the_type, PCF_ANCHOR);
    }
 } // fix_typedef
