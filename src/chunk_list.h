@@ -509,6 +509,11 @@ static_inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, scope_e scope = sco
 }
 
 
+//! skip to the final word/type in a :: chain
+chunk_t *chunk_skip_dc_member(chunk_t *start, scope_e scope = scope_e::ALL);
+chunk_t *chunk_skip_dc_member_rev(chunk_t *start, scope_e scope = scope_e::ALL);
+
+
 /**
  * checks if a chunk is valid and is a comment
  *

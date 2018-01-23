@@ -50,13 +50,6 @@ static void flag_asm(chunk_t *pc);
 static bool chunk_ends_type(chunk_t *start);
 
 
-/**
- * skip to the final word/type in a :: chain
- * pc is either a word or a ::
- */
-static chunk_t *skip_dc_member(chunk_t *start);
-
-
 //! Skips to the start of the next statement.
 static chunk_t *skip_to_next_statement(chunk_t *pc);
 
@@ -741,29 +734,6 @@ static bool chunk_ends_type(chunk_t *start)
 
    return(ret);
 } // chunk_ends_type
-
-
-static chunk_t *skip_dc_member(chunk_t *start)
-{
-   LOG_FUNC_ENTRY();
-   if (!start)
-   {
-      return(nullptr);
-   }
-
-   chunk_t *pc   = start;
-   chunk_t *next = (pc->type == CT_DC_MEMBER) ? pc : chunk_get_next_ncnl(pc);
-   while (chunk_is_token(next, CT_DC_MEMBER))
-   {
-      pc = chunk_get_next_ncnl(next);
-      if (pc == nullptr)
-      {
-         return(nullptr);
-      }
-      next = chunk_get_next_ncnl(pc);
-   }
-   return(pc);
-}
 
 
 void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
@@ -1471,7 +1441,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          || pc->type == CT_CLASS
          || pc->type == CT_ENUM))
    {
-      tmp = skip_dc_member(next);
+      tmp = chunk_skip_dc_member(next);
       if (  tmp
          && (tmp->type == CT_TYPE || tmp->type == CT_WORD))
       {

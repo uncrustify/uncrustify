@@ -881,3 +881,42 @@ chunk_t *chunk_get_prev_ssq(chunk_t *cur)
    }
    return(cur);
 }
+
+
+//! skip to the final word/type in a :: chain
+static chunk_t *chunk_skip_dc_member(chunk_t *start, scope_e scope, direction_e dir)
+{
+   LOG_FUNC_ENTRY();
+   if (start == nullptr)
+   {
+      return(nullptr);
+   }
+
+   const auto step_fcn = (dir == direction_e::FORWARD)
+                         ? chunk_get_next_ncnl : chunk_get_prev_ncnl;
+
+   chunk_t *pc   = start;
+   chunk_t *next = (pc->type == CT_DC_MEMBER) ? pc : step_fcn(pc, scope);
+   while (chunk_is_token(next, CT_DC_MEMBER))
+   {
+      pc = step_fcn(next, scope);
+      if (pc == nullptr)
+      {
+         return(nullptr);
+      }
+      next = step_fcn(pc, scope);
+   }
+   return(pc);
+}
+
+
+chunk_t *chunk_skip_dc_member(chunk_t *start, scope_e scope)
+{
+   return(chunk_skip_dc_member(start, scope, direction_e::FORWARD));
+}
+
+
+chunk_t *chunk_skip_dc_member_rev(chunk_t *start, scope_e scope)
+{
+   return(chunk_skip_dc_member(start, scope, direction_e::BACKWARD));
+}
