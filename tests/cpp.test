@@ -526,6 +526,8 @@
 34200  i1536.cfg                            cpp/i1536.cpp
 34201  mod_add_long_namespace_closebrace_comment-1.cfg  cpp/i1565.cpp
 
+34203  i1516.cfg                            cpp/i1516.cpp
+
 
 # TODO: Find relevant test cases for 'override'.
 34210  empty.cfg                            cpp/override_virtual.cpp

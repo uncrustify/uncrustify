@@ -915,7 +915,7 @@ void register_options(void)
    unc_add_option("indent_oc_block_msg_from_brace", UO_indent_oc_block_msg_from_brace, AT_BOOL,
                   "If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is.");
    unc_add_option("indent_min_vbrace_open", UO_indent_min_vbrace_open, AT_UNUM,
-                  "When identing after virtual brace open and newline add further spaces to reach this min. indent.");
+                  "When indenting after virtual brace open and newline add further spaces to reach this min. indent.");
    unc_add_option("indent_vbrace_open_on_tabstop", UO_indent_vbrace_open_on_tabstop, AT_BOOL,
                   "True: When identing after virtual brace open and newline add further spaces "
                   "after regular indent to reach next tabstop.");

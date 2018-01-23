@@ -1810,7 +1810,6 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    {
       if (parse_cs_string(ctx, pc))
       {
-         //parse_cs_string(ctx, pc);
          return(true);
       }
       // check for non-keyword identifiers such as @if @switch, etc
