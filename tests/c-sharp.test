@@ -34,6 +34,7 @@
 10071  ben_038.cfg                          cs/utf16be.cs
 10072  ben_038.cfg                          cs/utf16le_no_bom.cs
 10073  ben_038.cfg                          cs/utf16be_no_bom.cs
+10074  UNI-2020.cfg                         cs/UNI-2020.cs
 
 10080  ben_042.cfg                          cs/property.cs
 
