@@ -10,10 +10,10 @@ namespace Namespace
     {
         private string[] GetAdditionalReferences()
         {
-            return new []
-                {
-                    "System.dll",
-                };
+            return new[]
+            {
+                "System.dll",
+            };
         }
     }
 }
