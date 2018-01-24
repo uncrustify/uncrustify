@@ -971,22 +971,22 @@ static void check_template(chunk_t *start)
       pc = start;
       while ((pc = chunk_get_prev_ncnl(pc, scope_e::PREPROC)) != nullptr)
       {
-         if (  (pc->type == CT_SEMICOLON && hit_semicolon == true)
+         if (  (pc->type == CT_SEMICOLON && hit_semicolon)
             || pc->type == CT_BRACE_OPEN
             || pc->type == CT_BRACE_CLOSE
             || pc->type == CT_SQUARE_CLOSE)
          {
             break;
          }
-         if (pc->type == CT_SEMICOLON && hit_semicolon == false)
+         if (pc->type == CT_SEMICOLON && !hit_semicolon)
          {
             hit_semicolon = true;
          }
          if (  ((  pc->type == CT_IF
                 || pc->type == CT_RETURN
                 || pc->type == CT_WHILE
-                || pc->type == CT_WHILE_OF_DO) && hit_semicolon == false)
-            || (pc->type == CT_FOR && hit_semicolon == true))
+                || pc->type == CT_WHILE_OF_DO) && !hit_semicolon)
+            || (pc->type == CT_FOR && hit_semicolon))
          {
             in_if = true;
             break;
