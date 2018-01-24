@@ -3361,7 +3361,7 @@ void newlines_cleanup_braces(bool first)
                   if (  chunk_is_paren_open(tmp)
                      && chunk_skip_to_match(tmp) != nullptr)
                   {
-                     tmp = chunk_get_next(chunk_skip_to_match(tmp, scope_e::ALL));
+                     tmp = chunk_get_next_ncnl(chunk_skip_to_match(tmp, scope_e::ALL));
                   }
 
                   if (  chunk_is_opening_brace(tmp)
