@@ -1802,15 +1802,24 @@ void indent_text(void)
                && !cpd.settings[UO_indent_paren_after_func_decl].b
                && !cpd.settings[UO_indent_paren_after_func_call].b)
             {
-               size_t sub = 1;
+               size_t sub = 2;
                if (  (frm.prev().type == CT_ASSIGN)
                   || (frm.prev().type == CT_RETURN))
                {
-                  sub = 2;
+                  sub = 3;
                }
-               frm.top().indent = frm.prev(sub).indent + indent_size;
+               sub = static_cast<int>(frm.size()) - sub;
+               if (!cpd.settings[UO_indent_align_paren].b)
+               {
+                  sub = static_cast<int>(frm.size()) - 2;
+                  while (sub > 0 && are_chunks_in_same_line(frm.at(sub).pc, frm.top().pc))
+                  {
+                     sub--;
+                     skipped = true;
+                  }
+               }
+               frm.top().indent = frm.at(sub).indent + indent_size;
                log_indent();
-
                frm.top().indent_tab = frm.top().indent;
                skipped = true;
             }
