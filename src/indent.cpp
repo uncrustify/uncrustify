@@ -1817,7 +1817,7 @@ void indent_text(void)
                      sub--;
                      skipped = true;
                   }
-                  if (  (frm.at(sub + 1).type == CT_CLASS_COLON)
+                  if (  (frm.at(sub + 1).type == CT_CLASS_COLON || frm.at(sub + 1).type == CT_CONSTR_COLON)
                      && (chunk_is_token(frm.at(sub + 1).pc->prev, CT_NEWLINE)))
                   {
                      sub = sub + 1;
