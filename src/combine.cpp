@@ -1320,7 +1320,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       if (  pc->type == CT_PAREN_OPEN
          && (  pc->parent_type == CT_NONE
             || pc->parent_type == CT_OC_MSG
-            || pc->parent_type == CT_OC_BLOCK_EXPR)
+            || pc->parent_type == CT_OC_BLOCK_EXPR
+            || pc->parent_type == CT_CS_SQ_STMT)           // Issue # 1256
          && (  next->type == CT_WORD
             || next->type == CT_TYPE
             || next->type == CT_STRUCT
