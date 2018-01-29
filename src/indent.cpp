@@ -654,6 +654,8 @@ void indent_text(void)
             frm.pop();
          }
 
+         ParseFrame frmbkup = frm;
+
          fl_check(frm, pc);
 
          // Indent the body of a #region here
@@ -743,6 +745,41 @@ void indent_text(void)
                frm.top().indent_tmp = frm.top().indent;
                frm.top().in_preproc = false;
                log_indent_tmp();
+            }
+         }
+
+         if (cpd.settings[UO_indent_member_single].b)
+         {
+            if (pc->parent_type == CT_PP_IF)
+            {
+               // do nothing
+            }
+            else if (pc->parent_type == CT_PP_ELSE)
+            {
+               if (  frm.top().type == CT_MEMBER
+                  && frm.top().pop_pc
+                  && frm.top().pc != frmbkup.top().pc)
+               {
+                  chunk_t *tmp = chunk_get_next_ncnlnp(pc);
+                  if (tmp->type == CT_WORD || tmp->type == CT_TYPE)
+                  {
+                     tmp = chunk_get_next_ncnlnp(pc);
+                  }
+                  else if (tmp->type == CT_FUNC_CALL || tmp->type == CT_FPAREN_OPEN)
+                  {
+                     tmp = chunk_get_next_type(tmp, CT_FPAREN_CLOSE, tmp->level);
+                     tmp = chunk_get_next_ncnlnp(pc);
+                  }
+                  frm.top().pop_pc = tmp;
+               }
+            }
+            else if (pc->parent_type == CT_PP_ENDIF)
+            {
+               if (  frmbkup.top().type == CT_MEMBER
+                  && frm.top().type == CT_MEMBER)
+               {
+                  frm.top().pop_pc = frmbkup.top().pop_pc;
+               }
             }
          }
 
@@ -880,7 +917,8 @@ void indent_text(void)
                   || (  pc->type == CT_SQUARE_OPEN
                      && pc->parent_type == CT_OC_AT)
                   || (  pc->type == CT_SQUARE_OPEN
-                     && pc->parent_type == CT_ASSIGN))
+                     && pc->parent_type == CT_ASSIGN)
+                     )
                && pc->parent_type != CT_CPP_LAMBDA)
             {
                frm.pop();
@@ -925,6 +963,12 @@ void indent_text(void)
             // a case is ended with another case or a close brace
             if (  (frm.top().type == CT_CASE)
                && (pc->type == CT_BRACE_CLOSE || pc->type == CT_CASE))
+            {
+               frm.pop();
+            }
+
+            if (  (frm.top().type == CT_MEMBER)
+               && frm.top().pop_pc == pc)
             {
                frm.pop();
             }
@@ -1915,6 +1959,14 @@ void indent_text(void)
 
          frm.paren_count++;
       }
+            if (chunk_is_newline(tmp->prev))
+            {
+               tmp = chunk_get_next_nl(chunk_get_prev_ncnlnp(tmp));
+            }
+            frm.top().pop_pc = tmp;
+            //indent_pse_pop(frm, tmp);
+         }
+      }
       else if (  pc->type == CT_ASSIGN
               || pc->type == CT_IMPORT
               || (pc->type == CT_USING && (cpd.lang_flags & LANG_CS)))
@@ -2292,7 +2344,7 @@ void indent_text(void)
             LOG_FMT(LINDENT, "Indent SQL: [%s] to %zu (%zu/%zu)\n",
                     pc->text(), pc->column, sql_col, sql_orig_col);
          }
-         else if (  (pc->flags & PCF_STMT_START) == 0
+         else if (  !cpd.settings[UO_indent_member_single].b && (pc->flags & PCF_STMT_START) == 0
                  && (  pc->type == CT_MEMBER
                     || (  pc->type == CT_DC_MEMBER
                        && prev != nullptr
