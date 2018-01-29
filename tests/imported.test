@@ -4,13 +4,13 @@
 # this suite is not an ordinary language test suite.
 #
 # adopt tests from UT
-10001 622_ifdef-indentation.cfg        cpp/622_ifdef-indentation.cpp
-10002 623_caret-spacing.cfg            cpp/623_caret-spacing.cpp
-10005 Uncrustify.Cpp.cfg               cpp/define-indentation.cpp
-10006 dont-detab-strings.cfg           cpp/dont-detab-strings.cpp
-10008 empty.cfg                        cpp/PR326_invalid-backslash-eol-csharp.cpp
-10009 STUCK_macro-difficulties.cfg     cpp/STUCK_macro-difficulties.cpp
-10018 empty.cfg                        oc/delete-space-oc.mm
-10019 empty.cfg                        oc/func-param-wrap-oc.mm
-10100 issue_564.cfg                    cpp/issue_564.cpp
-10101 issue_574.cfg                    cpp/issue_574.cpp
+10001  empty.cfg                            cpp/622_ifdef-indentation.cpp
+10002  sp_arith-a.cfg                       cpp/623_caret-spacing.cpp
+10005  Uncrustify.Cpp.cfg                   cpp/define-indentation.cpp
+10006  string_replace_tab_chars-t.cfg       cpp/dont-detab-strings.cpp
+10008  empty.cfg                            cpp/PR326_invalid-backslash-eol-csharp.cpp
+10009  STUCK_macro-difficulties.cfg         cpp/STUCK_macro-difficulties.cpp
+10018  empty.cfg                            oc/delete-space-oc.mm
+10019  empty.cfg                            oc/func-param-wrap-oc.mm
+10100  align_same_func_call_params-t.cfg    cpp/issue_564.cpp
+10101  issue_574.cfg                        cpp/issue_574.cpp

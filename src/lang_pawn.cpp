@@ -97,7 +97,7 @@ void pawn_scrub_vsemi(void)
          continue;
       }
       chunk_t *prev = chunk_get_prev_ncnl(pc);
-      if (prev != nullptr && prev->type == CT_BRACE_CLOSE)
+      if (chunk_is_token(prev, CT_BRACE_CLOSE))
       {
          if (  prev->parent_type == CT_IF
             || prev->parent_type == CT_ELSE
@@ -318,7 +318,7 @@ static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
    {
       chunk_t *last = chunk_get_next_type(fcn, CT_PAREN_CLOSE, fcn->level);
       last = chunk_get_next(last);
-      if (last != nullptr && last->type == CT_SEMICOLON)
+      if (chunk_is_token(last, CT_SEMICOLON))
       {
          LOG_FMT(LPFUNC, "%s: %zu] '%s' proto due to semicolon\n",
                  __func__, fcn->orig_line, fcn->text());

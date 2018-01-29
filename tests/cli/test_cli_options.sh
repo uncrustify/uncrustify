@@ -221,12 +221,38 @@ for L_Value in ${Liste_of_Ls_A}; do
     diff "${LFile}.sed" "${OutputFile}"
     diff "${LFile}" "${OutputFile}"
     echo
-    break
+#    break
   else
     rm "${LFile}"
     rm "${LFile}.sed"
   fi
 done
+
+# Debug Options:
+#   -L 99 will show the first line is cut
+# The logger has not enough memory to store a long message
+InputFile="${INPUT}/logger.cs"
+OutputFile="${OUTPUT}/logger_cs_L_99.txt"
+LFile="${RESULTS}/logger_cs_L_99.txt"
+
+../../build/uncrustify -c /dev/null -f "${InputFile}" -o /dev/null -L 99 2> "${LFile}"
+sed 's/[0-9]//g' "${LFile}" > "${LFile}.sed"
+
+cmp -s "${LFile}.sed" "${OutputFile}"
+how_different=${?}
+#echo "the status of is "${how_different}
+if [ ${how_different} != "0" ] ;
+then
+  echo
+  echo "Problem with ${LFile}.sed"
+  echo "use: diff ${RELATIVE}/${LFile}.sed ${RELATIVE}/${OutputFile} to find out why"
+  diff "${LFile}.sed" "${OutputFile}"
+  diff "${LFile}" "${OutputFile}"
+  echo
+else
+  rm "${LFile}"
+  rm "${LFile}.sed"
+fi
 
 Liste_of_Error_Tests="I-842 unmatched_close_pp"
 for Error_T in ${Liste_of_Error_Tests}; do

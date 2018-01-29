@@ -1,6 +1,5 @@
-public class JavaClass {
-    public static void method() {
-        if (argA != null && argB != null) {
-        }
-    }
+public static void method() {
+	if (argA != null && argB != null) {
+	}
+	return (argA != null && argB != null);
 }

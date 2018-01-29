@@ -166,7 +166,7 @@ static void unc_add_option(const char *name, uncrustify_options id, argtype_e ty
       fprintf(stderr,
               "   Number in the options.cpp file = %d\n"
               "   Number in the options.h   file = %d\n"
-              "   for the group '%s'\n", id, checkOptionNumber, name);
+              "   for the option '%s'\n", id, checkOptionNumber, name);
       log_flush(true);
       exit(EX_SOFTWARE);
    }
@@ -412,7 +412,7 @@ void register_options(void)
    unc_add_option("sp_angle_word", UO_sp_angle_word, AT_IARF,
                   "Add or remove space between '<>' and a word as in 'List<byte> m;' or 'template <typename T> static ...'.");
    unc_add_option("sp_angle_shift", UO_sp_angle_shift, AT_IARF,
-                  "Add or remove space between '>' and '>' in '>>' (template stuff C++/C# only). Default=Add.");
+                  "Add or remove space between '>' and '>' in '>>' (template stuff). Default=Add.");
    unc_add_option("sp_permit_cpp11_shift", UO_sp_permit_cpp11_shift, AT_BOOL,
                   "Permit removal of the space between '>>' in 'foo<bar<int> >' (C++11 only). Default=False.\n"
                   "sp_angle_shift cannot remove the space without this option.");
@@ -2711,20 +2711,6 @@ string argval_to_string(argval_t argval)
 }
 
 
-string number_to_string(int number)
-{
-   char buffer[12]; // 11 + 1 termination char
-
-   sprintf(buffer, "%d", number);
-
-   /*
-    * NOTE: this creates a std:string class from the char array.
-    *       It isn't returning a pointer to stack memory.
-    */
-   return(buffer);
-}
-
-
 string lineends_to_string(lineends_e linends)
 {
    switch (linends)
@@ -2796,10 +2782,10 @@ string op_val_to_string(argtype_e argtype, op_val_t op_val)
       return(argval_to_string(op_val.a));
 
    case AT_NUM:
-      return(number_to_string(op_val.n));
+      return(to_string(op_val.n));
 
    case AT_UNUM:
-      return(number_to_string(op_val.u));
+      return(to_string(op_val.u));
 
    case AT_LINE:
       return(lineends_to_string(op_val.le));

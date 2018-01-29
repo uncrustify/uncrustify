@@ -79,7 +79,7 @@ enum c_token_t
    CT_TYPE_CAST,           // static_cast<type>(exp)
    CT_TYPENAME,            // typename type
    CT_TEMPLATE,            // template<...>
-   CT_WHERE_SPEC,          /* 'where' : used in C# generic constraint */
+   CT_WHERE_SPEC,          // 'where' : used in C# generic constraint
 
    CT_ASSIGN,              // =, +=, /=, etc
    CT_ASSIGN_NL,           // Assign followed by a newline - fake item for indenting
@@ -133,7 +133,7 @@ enum c_token_t
    CT_CONSTR_COLON,        // colon after a constructor
    CT_D_ARRAY_COLON,       // D named array initializer colon
    CT_COND_COLON,          // conditional colon in  'b ? t : f'
-   CT_WHERE_COLON,         /* C# where-constraint colon (after the type) */
+   CT_WHERE_COLON,         // C# where-constraint colon (after the type)
    CT_QUESTION,
    CT_COMMA,
 
@@ -141,7 +141,7 @@ enum c_token_t
    CT_ATTRIBUTE,
    CT_CATCH,
    CT_WHEN,
-   CT_WHERE,            /* C# where clause */
+   CT_WHERE,            // C# where clause
    CT_CLASS,
    CT_DELETE,
    CT_EXPORT,
@@ -342,11 +342,11 @@ enum c_token_t
    CT_FOR_COLON,    // colon in "for ( TYPE var: EXPR ) { ... }"
    CT_DOUBLE_BRACE, // parent for double brace
 
-   // extensions for Qt macros
-
    /* Clang */
-   CT_CNG_HASINC,   /* Clang: __has_include() */
-   CT_CNG_HASINCN,  /* Clang: __has_include_next() */
+   CT_CNG_HASINC,   // Clang: __has_include()
+   CT_CNG_HASINCN,  // Clang: __has_include_next()
+
+   // extensions for Qt macros
    CT_Q_EMIT,       // guy 2015-10-16
    CT_Q_FOREACH,    // guy 2015-09-23
    CT_Q_FOREVER,    // guy 2015-10-18

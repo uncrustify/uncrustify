@@ -8,12 +8,12 @@ space_text(): orig_line is , orig_col is , 'TelegramIndex' type is TYPE
 space_text(): orig_line is , orig_col is , pc-text() 'TelegramIndex', type is TYPE
 do_space(): orig_line is , orig_col is , first->text() 'TelegramIndex', type is TYPE
 space_text(): rule = REMOVE @  => 
-space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , <Newline>, nl is 
 space_text(): orig_line is , orig_col is , '{' type is BRACE_OPEN
 space_text(): orig_line is , orig_col is , pc-text() '{', type is BRACE_OPEN
 do_space(): orig_line is , orig_col is , first->text() '{', type is BRACE_OPEN
 space_text(): rule = REMOVE @  => 
-space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , <Newline>, nl is 
 space_text(): orig_line is , orig_col is , 'TelegramIndex' type is FUNC_CLASS_DEF
 space_text(): orig_line is , orig_col is , pc-text() 'TelegramIndex', type is FUNC_CLASS_DEF
 do_space(): orig_line is , orig_col is , first->text() 'TelegramIndex', type is FUNC_CLASS_DEF
@@ -76,7 +76,7 @@ space_text(): orig_line is , orig_col is , ':' type is CONSTR_COLON
 space_text(): orig_line is , orig_col is , pc-text() ':', type is CONSTR_COLON
 do_space(): orig_line is , orig_col is , first->text() ':', type is CONSTR_COLON
 space_text(): rule = REMOVE @  => 
-space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , <Newline>, nl is 
 space_text(): orig_line is , orig_col is , 'pTelName' type is FUNC_CTOR_VAR
 space_text(): orig_line is , orig_col is , pc-text() 'pTelName', type is FUNC_CTOR_VAR
 do_space(): orig_line is , orig_col is , first->text() 'pTelName', type is FUNC_CTOR_VAR
@@ -101,7 +101,7 @@ space_text(): orig_line is , orig_col is , ',' type is COMMA
 space_text(): orig_line is , orig_col is , pc-text() ',', type is COMMA
 do_space(): orig_line is , orig_col is , first->text() ',', type is COMMA
 space_text(): rule = REMOVE @  => 
-space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , <Newline>, nl is 
 space_text(): orig_line is , orig_col is , 'nTelIndex' type is FUNC_CTOR_VAR
 space_text(): orig_line is , orig_col is , pc-text() 'nTelIndex', type is FUNC_CTOR_VAR
 do_space(): orig_line is , orig_col is , first->text() 'nTelIndex', type is FUNC_CTOR_VAR
@@ -121,17 +121,17 @@ space_text(): orig_line is , orig_col is , ')' type is FPAREN_CLOSE
 space_text(): orig_line is , orig_col is , pc-text() ')', type is FPAREN_CLOSE
 do_space(): orig_line is , orig_col is , first->text() ')', type is FPAREN_CLOSE
 space_text(): rule = REMOVE @  => 
-space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , <Newline>, nl is 
 space_text(): orig_line is , orig_col is , '{' type is BRACE_OPEN
 space_text(): orig_line is , orig_col is , pc-text() '{', type is BRACE_OPEN
 do_space(): orig_line is , orig_col is , first->text() '{', type is BRACE_OPEN
 space_text(): rule = REMOVE @  => 
-space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , <Newline>, nl is 
 space_text(): orig_line is , orig_col is , '}' type is BRACE_CLOSE
 space_text(): orig_line is , orig_col is , pc-text() '}', type is BRACE_CLOSE
 do_space(): orig_line is , orig_col is , first->text() '}', type is BRACE_CLOSE
 space_text(): rule = REMOVE @  => 
-space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , <Newline>, nl is 
 space_text(): orig_line is , orig_col is , '~' type is DESTRUCTOR
 space_text(): orig_line is , orig_col is , pc-text() '~', type is DESTRUCTOR
 do_space(): orig_line is , orig_col is , first->text() '~', type is DESTRUCTOR
@@ -151,17 +151,17 @@ space_text(): orig_line is , orig_col is , ')' type is FPAREN_CLOSE
 space_text(): orig_line is , orig_col is , pc-text() ')', type is FPAREN_CLOSE
 do_space(): orig_line is , orig_col is , first->text() ')', type is FPAREN_CLOSE
 space_text(): rule = REMOVE @  => 
-space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , <Newline>, nl is 
 space_text(): orig_line is , orig_col is , '{' type is BRACE_OPEN
 space_text(): orig_line is , orig_col is , pc-text() '{', type is BRACE_OPEN
 do_space(): orig_line is , orig_col is , first->text() '{', type is BRACE_OPEN
 space_text(): rule = REMOVE @  => 
-space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , <Newline>, nl is 
 space_text(): orig_line is , orig_col is , '}' type is BRACE_CLOSE
 space_text(): orig_line is , orig_col is , pc-text() '}', type is BRACE_CLOSE
 do_space(): orig_line is , orig_col is , first->text() '}', type is BRACE_CLOSE
 space_text(): rule = REMOVE @  => 
-space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , <Newline>, nl is 
 space_text(): orig_line is , orig_col is , 'const' type is QUALIFIER
 space_text(): back-to-back words need a space: pc->text() 'const', next->text() 'char'
 space_text(): orig_line is , orig_col is , pc-text() 'const', type is QUALIFIER
@@ -193,7 +193,7 @@ space_text(): orig_line is , orig_col is , ';' type is SEMICOLON
 space_text(): orig_line is , orig_col is , pc-text() ';', type is SEMICOLON
 do_space(): orig_line is , orig_col is , first->text() ';', type is SEMICOLON
 space_text(): rule = REMOVE @  => 
-space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , <Newline>, nl is 
 space_text(): orig_line is , orig_col is , 'unsigned' type is TYPE
 space_text(): back-to-back words need a space: pc->text() 'unsigned', next->text() 'long'
 space_text(): orig_line is , orig_col is , pc-text() 'unsigned', type is TYPE
@@ -215,7 +215,7 @@ space_text(): orig_line is , orig_col is , ';' type is SEMICOLON
 space_text(): orig_line is , orig_col is , pc-text() ';', type is SEMICOLON
 do_space(): orig_line is , orig_col is , first->text() ';', type is SEMICOLON
 space_text(): rule = REMOVE @  => 
-space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , <Newline>, nl is 
 space_text(): orig_line is , orig_col is , '}' type is BRACE_CLOSE
 space_text(): orig_line is , orig_col is , pc-text() '}', type is BRACE_CLOSE
 do_space(): orig_line is , orig_col is , first->text() '}', type is BRACE_CLOSE
@@ -225,7 +225,7 @@ space_text(): orig_line is , orig_col is , ';' type is SEMICOLON
 space_text(): orig_line is , orig_col is , pc-text() ';', type is SEMICOLON
 do_space(): orig_line is , orig_col is , first->text() ';', type is SEMICOLON
 space_text(): rule = REMOVE @  => 
-space_text(): orig_line is , orig_col is , NEWLINE
+space_text(): orig_line is , orig_col is , <Newline>, nl is 
 space_col_align(): orig_line is , orig_col is , [FUNC_CLASS_DEF/NONE] 'TelegramIndex' <==> orig_line is , orig_col is  [FPAREN_OPEN/FUNC_CLASS_DEF] '(' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , first->text() 'TelegramIndex', type is FUNC_CLASS_DEF
 log_rule(): Spacing: first->orig_line is , first->orig_col is , first->text() is 'TelegramIndex', [FUNC_CLASS_DEF/NONE] <===>

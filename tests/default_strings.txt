@@ -1,0 +1,1246 @@
+0 = No change
+0 = No change (default)
+0: Align on typdef type, ignore '&'
+0: Align on typdef type, ignore '*'
+0: Align on typedef type, ignore '&'
+0: Align on typedef type, ignore '*'
+0: Don't mix them at all
+0: Indent to body level
+0: No change
+0: no reflowing (apart from the line wrapping due to cmt_width)
+0:  indent preprocessors using output_tab_size
+0: (Default) off
+0=Part of the type
+0=Part of the type     'void *   foo;'
+0=no change (default)
+0=spaces only
+0=use indent_oc_block rules, 1+=spaces to indent
+1: Align under the open paren
+1: Remove most newlines not handled by other config
+1: The '&' is part of type name: typedef int  &pint;
+1: The '*' is part of type name: typedef int  *pint;
+1: When the `if_false` is a continuation, indent it under `if_false`
+1: align the open paren with the types
+1: no touching at all
+1=Part of the variable
+1=Part of the variable 'void     *foo;'
+1=indent with tabs to brace level, align with spaces
+1=indent with tabs to brace level, align with spaces (default)
+1=indent with tabs, align with spaces
+2: Indent to the brace level
+2: Remove all newlines and reformat completely by config
+2: The '&' is part of the type, but dangling: typedef int &pint;
+2: The '*' is part of the type, but dangling: typedef int *pint;
+2: The '*' is part of the type: typedef int *  pint;
+2: When the `:` is a continuation, indent it under `?`
+2: align the function type name with the other type names
+2: full reflow
+2=Dangling
+2=Dangling             'void    *foo;'
+2=indent and align with tabs
+2=indent and align with tabs, using spaces when not on a tabstop
+Additional indenting for constructor initializer list
+Additional indent for constructor initializer list
+Add a newline between ')' and '{' if the ')' is on a different line than the if/for/etc
+Add or remove around the D named array initializer ':' operator
+Add or remove a newline around a class colon
+Add or remove a newline around a class colon. Related to pos_class_colon, nl_class_init_args, and pos_comma
+Add or remove a newline around a class constructor colon
+Add or remove a newline before/after a class colon,
+Add or remove a newline between a case ':' and '{'. Overrides nl_after_case
+Add or remove a newline between the return keyword and return expression
+Add or remove between the parens in the function type: 'void (*x)(...)'
+Add or remove blank line after 'do/while' statement
+Add or remove blank line after 'for' statement
+Add or remove blank line after 'func_class_def' statement
+Add or remove blank line after 'func_class_proto' statement
+Add or remove blank line after 'if' statement
+Add or remove blank line after 'switch' statement
+Add or remove blank line after 'synchronized' statement
+Add or remove blank line after 'while' statement
+Add or remove blank line before 'do'
+Add or remove blank line before 'for'
+Add or remove blank line before 'func_class_def'
+Add or remove blank line before 'func_class_proto'
+Add or remove blank line before 'if'
+Add or remove blank line before 'switch'
+Add or remove blank line before 'synchronized'
+Add or remove blank line before 'while'
+Add or remove braces on single-line function definitions. (Pawn)
+Add or remove braces on single-line function defintions. (Pawn)
+Add or remove braces on single-line 'do' statement
+Add or remove braces on single-line 'for' statement
+Add or remove braces on single-line 'if' statement
+Add or remove braces on single-line 'if' statement. Will not remove the braces if they contain an 'else'
+Add or remove braces on single-line 'using ()' statement
+Add or remove braces on single-line 'while' statement
+Add or remove indent of preprocessor directives
+Add or remove newlines at the start of the file
+Add or remove newline after each ',' in a function declaration
+Add or remove newline after each ',' in a function definition
+Add or remove newline after each ',' in the class base list
+Add or remove newline after each ',' in the constructor member initialization
+Add or remove newline after 'do'
+Add or remove newline after 'for'
+Add or remove newline after 'if'
+Add or remove newline after 'switch'
+Add or remove newline after 'while'
+Add or remove newline after '(' in a function declaration
+Add or remove newline after '(' in a function definition
+Add or remove newline after '= [' (D only). Will also affect the newline before the ']'
+Add or remove newline at the end of the file
+Add or remove newline before closing parenthesis
+Add or remove newline before first element, after comma, and after last element in enum
+Add or remove newline before the ')' in a function declaration
+Add or remove newline before the ')' in a function definition
+Add or remove newline before 'do'
+Add or remove newline before 'for'
+Add or remove newline before 'if'
+Add or remove newline before 'if'/'else if' closing parenthesis
+Add or remove newline before 'switch'
+Add or remove newline before 'while'
+Add or remove newline before/after each ',' in the base class list,
+Add or remove newline between C# property and the '{'
+Add or remove newline between C++11 lambda signature and '{'
+Add or remove newline between Objective-C block signature and '{'
+Add or remove newline between a function call's ')' and '{', as in:
+Add or remove newline between a function name and the opening '('
+Add or remove newline between a function name and the opening '(' in the call
+Add or remove newline between a function name and the opening '(' in the declaration
+Add or remove newline between a function name and the opening '(' in the definition
+Add or remove newline between class specification and '::' in 'void A::f() { }'
+Add or remove newline between function call and '('
+Add or remove newline between function scope and name
+Add or remove newline between function scope and name in a definition
+Add or remove newline between function signature and '{'
+Add or remove newline between get/set and '{'
+Add or remove newline between return type and function name inside a class {}
+Add or remove newline between return type and function name in a function definition
+Add or remove newline between return type and function name in a prototype
+Add or remove newline between return type and function name in definition
+Add or remove newline between two open or close braces
+Add or remove newline between 'catch' and '{'
+Add or remove newline between 'class' and '{'
+Add or remove newline between 'do' and '{'
+Add or remove newline between 'else if' and '{'
+Add or remove newline between 'else' and 'if'
+Add or remove newline between 'else' and '{'
+Add or remove newline between 'enum class identifier :' and 'type' and/or 'type'
+Add or remove newline between 'enum class' and the identifier
+Add or remove newline between 'enum class' type and ':'
+Add or remove newline between 'enum' and 'class'
+Add or remove newline between 'enum' and '{'
+Add or remove newline between 'finally' and '{'
+Add or remove newline between 'for' and '{'
+Add or remove newline between 'if' and '{'
+Add or remove newline between 'scope (x)' and '{' (D)
+Add or remove newline between 'struct and '{'
+Add or remove newline between 'switch' and '{'
+Add or remove newline between 'synchronized' and '{'
+Add or remove newline between 'template<>' and whatever follows
+Add or remove newline between 'template<>' and 'class'
+Add or remove newline between 'try' and '{'
+Add or remove newline between 'union' and '{'
+Add or remove newline between 'unittest' and '{' (D)
+Add or remove newline between 'using' and '{'
+Add or remove newline between 'version (x)' and '{' (D)
+Add or remove newline between 'while' and '{'
+Add or remove newline between '()' in a function call
+Add or remove newline between '()' in a function declaration
+Add or remove newline between '()' in a function definition
+Add or remove newline between ')' and 'throw'
+Add or remove newline between '=' and '[' (D only)
+Add or remove newline between '=' and '{'
+Add or remove newline between '}' and 'catch'
+Add or remove newline between '}' and 'else'
+Add or remove newline between '}' and 'finally'
+Add or remove newline between '}' and 'while' of 'do' statement
+Add or remove newline between '}' and ')' in a function invocation
+Add or remove newline between '}' and ']'
+Add or remove newline when condition spans two or more lines
+Add or remove spaces inside cast parens
+Add or remove space after C/D cast, ie 'cast(int)a' vs 'cast(int) a' or '(int)a' vs '(int) a'
+Add or remove space after C/D cast, i.e. 'cast(int)a' vs 'cast(int) a' or '(int)a' vs '(int) a'
+Add or remove space after assignment operator '=', '+=', etc. Overrides sp_assign
+Add or remove space after assignment '=' in enum. Overrides sp_enum_assign
+Add or remove space after a block pointer caret
+Add or remove space after a pointer star '*', if followed by an open paren (function types)
+Add or remove space after a pointer star '*', if followed by a func proto/def
+Add or remove space after a reference sign '&', if followed by a func proto/def
+Add or remove space after cast
+Add or remove space after class constructor ':'
+Add or remove space after class ':'
+Add or remove space after if-condition '('. Overrides sp_inside_sparen
+Add or remove space after open brace in an unnamed temporary direct-list-initialization
+Add or remove space after pointer star '*'
+Add or remove space after pointer star '*', if followed by a func proto/def
+Add or remove space after pointer star '*', if followed by a qualifier
+Add or remove space after pointer star '*', if followed by a word
+Add or remove space after preprocessor '#' stringify operator
+Add or remove space after preprocessor '#' stringify operator. Also affects the '#@' charizing operator
+Add or remove space after preprocessor '#' stringify operator. Also affects the '#@' charizing operator. Default=Add
+Add or remove space after preprocessor '#' stringify operator. Default=Add
+Add or remove space after reference sign '&'
+Add or remove space after reference sign '&', if followed by a word
+Add or remove space after the capture specification in C++11 lambda
+Add or remove space after the colon in immutable dictionary expression
+Add or remove space after the colon in message specs
+Add or remove space after the final semicolon of an empty part of a for statement: for ( ; ; <here> )
+Add or remove space after the final semicolon of an empty part of a for statment: for ( ; ; <here> )
+Add or remove space after the first (type) in message specs
+Add or remove space after the scope '+' or '-', as in '-(void) foo;' or '+(int) bar;'
+Add or remove space after the tag keyword (Pawn)
+Add or remove space after the '~' (invert) operator
+Add or remove space after the '~' (invert) operator. Default=Remove
+Add or remove space after the '!' (not) operator
+Add or remove space after the '!' (not) operator. Default=Remove
+Add or remove space after the '&' (address-of) operator
+Add or remove space after the '&' (address-of) operator. Default=Remove
+Add or remove space after the ')' in 'invariant (C) c' in the D language
+Add or remove space after the '*' (dereference) operator
+Add or remove space after the '*' (dereference) operator. Default=Remove
+Add or remove space after the ':' in 'b ? t : f'. Overrides sp_cond_colon
+Add or remove space after the '::' operator
+Add or remove space after the '?' in 'b ? t : f'. Overrides sp_cond_question
+Add or remove space after the (type) in message specs
+Add or remove space after # based on pp_level of #if blocks
+Add or remove space after ')' of 'if', 'for', 'switch', and 'while'
+Add or remove space after ')' of 'if', 'for', 'switch', and 'while', etc
+Add or remove space after '+' or '-', as in 'x = -5' or 'y = +7'
+Add or remove space after '+' or '-', as in 'x = -5' or 'y = +7'. Default=Remove
+Add or remove space after ','
+Add or remove space after ',', 'a,b' vs 'a, b'
+Add or remove space after ';' in non-empty 'for' statements. Default=Force
+Add or remove space after ';', except when followed by a comment. Default=Add
+Add or remove space after '<>'
+Add or remove space after @property
+Add or remove space around arithmetic operator '+' and '-'. Overrides sp_arith
+Add or remove space around arithmetic operator '+', '-', '/', '*', etc
+Add or remove space around assignment operator '=' in a prototype
+Add or remove space around assignment operator '=', '+=', etc
+Add or remove space around assignment ':' in enum
+Add or remove space around assignment '=' in enum
+Add or remove space around boolean operators '&&' and '||'
+Add or remove space around compare operator '<', '>', '==', etc
+Add or remove space around preprocessor '##' concatenation operator
+Add or remove space around preprocessor '##' concatenation operator. Default=Add
+Add or remove space around the '.' or '->' operators
+Add or remove space around the '.' or '->' operators. Default=Remove
+Add or remove space around the ':' in 'b ? t : f'
+Add or remove space around the '?' in 'b ? t : f'
+Add or remove space around '=' in C++11 lambda capture specifications. Overrides sp_assign
+Add or remove space before assignment operator '=', '+=', etc. Overrides sp_assign
+Add or remove space before assignment '=' in enum. Overrides sp_enum_assign
+Add or remove space before a backslash-newline at the end of a line
+Add or remove space before a backslash-newline at the end of a line. Default=Add
+Add or remove space before a block pointer caret
+Add or remove space before a pointer star '*', if followed by a func proto/def
+Add or remove space before a reference sign '&'
+Add or remove space before a reference sign '&' that isn't followed by a variable name
+Add or remove space before a reference sign '&', if followed by a func proto/def
+Add or remove space before a semicolon of an empty part of a for statement
+Add or remove space before a semicolon of an empty part of a for statment
+Add or remove space before case ':'
+Add or remove space before case ':'. Default=Remove
+Add or remove space before class constructor ':'
+Add or remove space before class ':'
+Add or remove space before close brace in an unnamed temporary direct-list-initialization
+Add or remove space before empty statement ';' on 'if', 'for' and 'while'
+Add or remove space before if-condition '('. Overrides sp_inside_sparen
+Add or remove space before if-condition ')'. Overrides sp_inside_sparen
+Add or remove space before or after '++' and '--', as in '(--x)' or 'y++;'
+Add or remove space before or after '++' and '--', as in '(--x)' or 'y++;'. Default=Remove
+Add or remove space before pointer star '*'
+Add or remove space before pointer star '*' that isn't followed by a variable name
+Add or remove space before preprocessor '#' stringify operator as in '#define x(y) L#y'
+Add or remove space before reference sign '&'
+Add or remove space before reference sign '&' that isn't followed by a variable name
+Add or remove space before the colon in immutable dictionary expression
+Add or remove space before the colon in message specs
+Add or remove space before the paren in the D constructs 'template Foo(' and 'class Foo('
+Add or remove space before the variadic '...'
+Add or remove space before the variadic '...' when preceded by a non-punctuator
+Add or remove space before the ':' in 'b ? t : f'. Overrides sp_cond_colon
+Add or remove space before the '::' operator
+Add or remove space before the '?' in 'b ? t : f'. Overrides sp_cond_question
+Add or remove space before '(' of 'if', 'for', 'switch', and 'while'
+Add or remove space before '(' of 'if', 'for', 'switch', 'while', etc
+Add or remove space before ','
+Add or remove space before ','. Default=Remove
+Add or remove space before ';'
+Add or remove space before ';' in non-empty 'for' statements
+Add or remove space before ';' in 'for' statements
+Add or remove space before ';'. Default=Remove
+Add or remove space before '<>'
+Add or remove space before '[' (except '[]')
+Add or remove space before '[]'
+Add or remove space between an open paren and comma: '(,' vs '( ,'
+Add or remove space between an open paren and comma: '(,' vs '( ,'. Default=Force
+Add or remove space between a constructor without parameters or destructor and '()'
+Add or remove space between a constructor/destructor and the open paren
+Add or remove space between a variable and '{' for C++ uniform initialization
+Add or remove space between a variable and '{' for C++ uniform initialization. Default=Add
+Add or remove space between a variable and '{' for a namespace
+Add or remove space between a variable and '{' for a namespace. Default=Add
+Add or remove space between back-to-back parens: ')(' vs ') ('
+Add or remove space between function name and '(' on function calls
+Add or remove space between function name and '(' on function declaration
+Add or remove space between function name and '(' on function definition
+Add or remove space between function name and '()' on function calls without parameters
+Add or remove space between function name and '()' on function declaration without parameters
+Add or remove space between function name and '()' on function definition without parameters
+Add or remove space between get/set and '{' if on the same line
+Add or remove space between macro and value
+Add or remove space between macro function ')' and value
+Add or remove space between nested parens
+Add or remove space between nested parens: '((' vs ') )'
+Add or remove space between pointer stars '*'
+Add or remove space between return type and function name
+Add or remove space between return type and function name (a minimum of 1 is forced except for pointer return types)
+Add or remove space between the operator symbol and the open paren when the operator
+Add or remove space between the operator symbol and the open paren when the operator has no arguments, as in 'operator *()'
+Add or remove space between the operator symbol and the open paren, as in 'operator ++('
+Add or remove space between the receiver and selector in a message
+Add or remove space between the type and open paren in a C++ cast, ie 'int(exp)' vs 'int (exp)'
+Add or remove space between the type and open paren in a C++ cast, i.e. 'int(exp)' vs 'int (exp)'
+Add or remove space between the user function name and '(' on function calls
+Add or remove space between type and open brace of an unnamed temporary direct-list-initialization
+Add or remove space between type and word
+Add or remove space between type and word. Default=Force
+Add or remove space between # and, say, define
+Add or remove space between 'catch' and '(' in 'catch (something) { }'
+Add or remove space between 'catch' and '{' if on the same line
+Add or remove space between 'defined' and '(' in '#if defined (FOO)'
+Add or remove space between 'else' and '{' if on the same line
+Add or remove space between 'finally' and '{' if on the same line
+Add or remove space between 'invariant' and '(' in the D language
+Add or remove space between 'operator' and operator sign
+Add or remove space between 'return' and '('
+Add or remove space between 'scope' and '(' in 'scope (something) { }' (D language)
+Add or remove space between 'sizeof' and '('
+Add or remove space between 'super' and '(' in 'super (something)'. Default=Remove
+Add or remove space between 'this' and '(' in 'this (something)'. Default=Remove
+Add or remove space between 'throw' and anything other than '(' as in '@throw [...];'
+Add or remove space between 'throw' and '(' in 'throw (something)'
+Add or remove space between 'try' and '{' if on the same line
+Add or remove space between 'version' and '(' in 'version (something) { }' (D language)
+Add or remove space between ')' and '{'
+Add or remove space between ')' and '{' of function
+Add or remove space between ')' and '{' of 'if', 'for', 'switch', and 'while'
+Add or remove space between ')' and '{' of 'if', 'for', 'switch', and 'while', etc
+Add or remove space between ',' and ']' in multidimensional array type 'int[,,]'
+Add or remove space between ',' and ']' in multidimensional array type 'int[,,]'. Only for C#
+Add or remove space between ',' in multidimensional array type 'int[,,]'
+Add or remove space between ',' in multidimensional array type 'int[,,]'. Only for C#
+Add or remove space between '<>' and a word as in 'List<byte> m;'
+Add or remove space between '<>' and a word as in 'List<byte> m;' or 'template <typename T> static ...'
+Add or remove space between '<>' and '(' as found in 'new List<byte>(foo);'
+Add or remove space between '<>' and '(' as found in 'new List<byte>();'
+Add or remove space between '<>' and '()' as found in 'new List<byte>();'
+Add or remove space between '<>' and ':'
+Add or remove space between '>' and '>' in '>>' (template stuff C++/C# only). Default=Add
+Add or remove space between '@selector' and '('
+Add or remove space between '@selector(x)' and the following word
+Add or remove space between '[' and ',' in multidimensional array type 'int[,,]'
+Add or remove space between '[' and ',' in multidimensional array type 'int[,,]'. Only for C#
+Add or remove space between ']' and '(' when part of a function call
+Add or remove space between '__attribute__' and '('
+Add or remove space between '}' and the name of a typedef on the same line
+Add or remove space between '}' and 'catch' if on the same line
+Add or remove space between '}' and 'else' if on the same line
+Add or remove space between '}' and 'finally' if on the same line
+Add or remove space inside an unnamed temporary direct-list-initialization
+Add or remove space inside a non-empty '[' and ']'
+Add or remove space inside empty function '()'
+Add or remove space inside enum '{' and '}'
+Add or remove space inside function '(' and ')'
+Add or remove space inside if-condition '(' and ')'
+Add or remove space inside struct/union '{' and '}'
+Add or remove space inside the first parens in the function type: 'void (*x)(...)'
+Add or remove space inside '(' and ')'
+Add or remove space inside '<' and '>'
+Add or remove space inside '@selector' parens
+Add or remove space inside '[' and ']'
+Add or remove space inside '{' and '}'
+Add or remove space inside '{}'
+Add or remove space in 'NS_ENUM ('
+Add or remove space in 'template <' vs 'template<'
+Add or remove unnecessary paren on 'return' statement
+Add parens on 'while' and 'if' statement around bools
+Add    - makes sure there is 1 or more space/brace/newline/etc
+Add/Force work only if the next token is not a closing brace
+Affected options:
+Affected options: mod_full_brace_for, mod_full_brace_if, mod_full_brace_if_chain, mod_full_brace_if_chain_only, mod_full_brace_while,mod_full_brace_using Not affected options: mod_full_brace_do, mod_full_brace_function
+Affects cmt_insert_func_header
+Affects cmt_insert_func_header and cmt_insert_class_header
+Affects cmt_insert_oc_msg_header, cmt_insert_func_header and cmt_insert_class_header
+Affects enums, unions and structures. If set to ignore, uses nl_after_brace_close
+Affects enums, unions, and structures. If set to ignore, uses nl_after_brace_close
+Aligning parameters in an Obj-C '+' or '-' declaration on the ':'
+Aligning the open brace of single-line functions
+Align continued statements at the '='. Default=True
+Align function protos on the 'operator' keyword instead of what follows
+Align lines that start with '<<' with previous '<<'. Default=True
+Align lines that start with '<<' with previous '<<'. Default=true
+Align macro functions and variables together
+Align parameters in an Obj-C message on the ':'
+Align parameters in single-line functions that have the same name
+Align single-line functions with function prototypes, uses align_func_proto_span
+Align text after asm volatile () colons
+Align trailing comment at or beyond column N; 'pulls in' comments as a bonus side effect (0=ignore)
+Align variable definitions in prototypes
+Align variable definitions in prototypes and functions
+Allow interpreting '>=' and '>>=' as part of a template in 'void f(list<list<B>>=val);'
+Also applies to @protocol() constructs
+Alternate string escape char for Pawn. Only works right before the quote char
+Amount to indent variable declarations after a open brace. neg=relative, pos=absolute
+At the second case the option value might be used twice:
+A minimum of 1 is forced except for pointer return types
+A negative value to force comments which are stuck to the previous token
+Blank line options
+Blocks removal of braces if the parenthesis of if/for/while/.. span multiple lines
+By default, the brace will appear under the 'c' in case
+Change a one-liner for statement into simple unbraced for
+Change a one-liner if statement into simple unbraced if
+Change a one-liner while statement into simple unbraced while
+Change simple unbraced for statements into a one-liner
+Change simple unbraced if statements into a one-liner
+Change simple unbraced while statements into a one-liner
+Change simple unbraced while statements into a one-liner while
+Code alignment (not left column spaces/tabs)
+Code modifying options (non-whitespace)
+Comments that are not a brace level are indented with tabs on a tabstop
+Comment modifications
+Controls the indent of a BOOL operator when inside a paren.If TRUE, aligns under the open paren
+Controls the indent of a BOOL operator when inside a paren.If True, aligns under the open paren
+Controls the indent of a BOOL operator when inside a paren. If TRUE, aligns under the open paren
+Controls the indent of a BOOL operator when inside a paren. If True, aligns under the open paren
+Controls the indent of a close paren after a newline
+Controls the indent of a comma when inside a paren.If TRUE, aligns under the open paren
+Controls the indent of a comma when inside a paren.If True, aligns under the open paren
+Controls the indent of a comma when inside a paren. If TRUE, aligns under the open paren
+Controls the indent of a comma when inside a paren. If True, aligns under the open paren
+Controls the indent of the open paren of a function call, if on it's own line.If True, indents the open paren
+Controls the indent of the open paren of a function call, if on it's own line. If True, indents the open paren
+Controls the indent of the open paren of a function declaration, if on it's own line.If True, indents the open paren
+Controls the indent of the open paren of a function declaration, if on it's own line. If True, indents the open paren
+Controls the indent of the open paren of a function definition, if on it's own line.If True, indents the open paren
+Controls the indent of the open paren of a function definition, if on it's own line. If True, indents the open paren
+Controls the newline after '::' in 'void A::f() { }'
+Controls the newline between two annotations
+Controls the positioning of the '&' in typedefs. Just try it
+Controls the positioning of the '*' in typedefs. Just try it
+Controls the spaces after 'new', 'delete' and 'delete[]'
+Controls the spaces after 'new', 'delete', and 'delete['
+Controls the spaces after 'new', 'delete', and 'delete[]'
+Controls the spaces before a trailing or embedded comment
+Controls the spaces between new and '(' in 'new()'
+Controls the spaces between #else or #endif and a trailing comment
+Controls the spaces between ')' and 'type' in 'new(foo) BAR'
+Controls the spaces inside paren of the new operator: 'new(foo) BAR'
+Controls the space after open paren of the new operator: 'new(foo) BAR'
+Controls the space before close paren of the new operator: 'new(foo) BAR'
+Control indent of preprocessors inside #if blocks at brace level 0
+Control indent of preprocessors inside #if blocks at brace level 0 (file-level)
+Control indent of preprocessors inside # at brace level 0
+Control space between a Java annotation and the open paren
+Control the newline between the close brace and 'b' in: 'struct { int a; } b;'
+Control the space after the opening of a C++ comment '// A' vs '//A'
+Control the space around the D '..' operator
+Control the spacing after ':' in 'for (TYPE VAR : EXPR)'
+Control the spacing after ':' in 'for (TYPE VAR : EXPR)' (Java)
+Control the spacing after ':' in 'for (TYPE VAR : EXPR)'. Only JAVA
+Control the spacing before ':' in 'for (TYPE VAR : EXPR)'
+Control the spacing before ':' in 'for (TYPE VAR : EXPR)' (Java)
+Control the spacing before ':' in 'for (TYPE VAR : EXPR)'. Only JAVA
+Control the spacing in 'extern (C)' (D)
+Control what to do with the UTF-8 BOM (recommed 'remove')
+Control what to do with the UTF-8 BOM (recommend 'remove')
+Control what to do with the UTF-16 BOM (recommed 'force')
+Control whether to indent the code between #if, #else and #endif
+Control whether to indent the code between #if, #else and #endif when not at file-level
+Default is true
+Default=1
+Default=True
+Determines weight of atomic, nonatomic (Obj-C)
+Determines weight of atomic/nonatomic (Obj-C)
+Determines weight of class property modifier (Obj-C)
+Determines weight of getter type (getter=) (Obj-C)
+Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C)
+Determines weight of nullability type (nullable/nonnull) (Obj-C)
+Determines weight of readwrite (Obj-C)
+Determines weight of reference type (retain, copy, assign, weak, strong) (Obj-C)
+Determines weight of setter type (setter=) (Obj-C)
+Disabled indenting class braces if indent_braces is True
+Disabled indenting class braces if indent_braces is true
+Disabled indenting function braces if indent_braces is True
+Disabled indenting function braces if indent_braces is true
+Disabled indenting struct braces if indent_braces is True
+Disabled indenting struct braces if indent_braces is true
+Doesn't apply if after a brace open or another multi-line comment
+Doesn't apply if after a brace open or other CPP comments
+Doesn't apply if after a brace open or other single-line C comments
+Does not apply if followed by a necessary ';'
+Don't change the relative indent of ESQL/C 'EXEC SQL' bodies
+Don't remove braces around statements that span N newlines
+Don't split one-line C++11 lambdas - '[]() { return 0; }'
+Don't split one-line OC messages
+Don't split one-line braced assignments - 'foo_t f = { 1, 2 };'
+Don't split one-line braced statements inside a class xx { } body
+Don't split one-line enums: 'enum foo { BAR = 15 };'
+Don't split one-line function definitions - 'int foo() { return 0; }'
+Don't split one-line get or set functions
+Don't split one-line if/else statements - 'if(a) b++;'
+Don't split one-line while statements - 'while(a) b++;'
+Don't touch one-line braced assignments - 'foo_t f = { 1, 2 };'
+Don't touch one-line enums: 'enum foo { BAR = 15 };'
+Don't touch one-line function bodies inside a class xx { } body
+Don't touch one-line get or set functions
+Double the indent for indent_func_xxx_param options
+Do not affect '=' followed by '{'
+Due to general newline/brace handling, REMOVE may not work
+Enable parsing of digraphs. Default=False
+Enable parsing of digraphs. Default=false
+Example:
+False: align parameters under the open paren
+False: indent_continue will be used every time (default)
+False: indent_func_call_param will NOT be used
+False: use the default behavior
+False=treat 'else\
+False=treat 'else\nif' as 'else if' for indenting purposes
+Fix the spacing between 'case' and the label. Only 'ignore' and 'force' make sense here
+Force a newline in a define after the macro name for multi-line defines
+Force the output encoding to UTF-8
+Force  - makes sure there is exactly 1 space/brace/newline/etc,
+For FreeBSD, this is set to 4
+For FreeBSD, this is set to 4. Negative value is absolute and not increased for each '(' level
+For FreeBSD, this is set to 4. Negative value is absolute and not increased for each ( level
+For multi-line comments with a '*' lead, remove leading spaces if the first and last lines of
+G
+Gap for align_single_line_brace
+General options
+Have precedence of sp_after_operator_sym
+Have precedence of sp_inside_newop_paren
+How aggressively to remove extra newlines not in preproc
+How to align the star in variable definitions
+How to align the star in variable definitions. 0=Part of the type, 1=Part of the variable, 2=Dangling
+How to align the '&' in variable definitions
+How to align typedef'd functions with other typedefs
+How to indent goto labels
+How to indent goto labels (>0=absolute column where 1 is the leftmost column, <=0=subtract from brace indent)
+How to use tabs when indenting code
+IARF
+If FALSE or the '=' is followed by a newline, the next line is indent one tab
+If False or the '=' is followed by a newline, the next line is indent one tab
+If False, disable all multi-line comment changes, including cmt_width. keyword substitution and leading chars
+If TRUE, it will move a 'break' that appears after a fully braced 'case' before the close brace
+If TRUE, it will organize the properties (Obj-C)
+If TRUE, it will remove a void 'return;' that appears as the last statement in a function
+If TRUE, will sort consecutive single-line 'import' statements [Java, D]
+If TRUE, will sort consecutive single-line 'using' statements [C#]
+If TRUE, will sort consecutive single-line '#include' statements [C/C++] and '#import' statements [Obj-C]
+If True, align_var_def_XXX options are used instead of align_func_proto_XXX options
+If True, always align with the first parameter, even if it is too short
+If True, a brace followed by another token (not a newline) will indent all contained lines to match the token.Default=True
+If True, a brace followed by another token (not a newline) will indent all contained lines to match the token. Default=True
+If True, a <TAB> is inserted after #define
+If True, cpp lambda body will be indentedDefault=False
+If True, cpp lambda body will be indented Default=False
+If True, it will move a 'break' that appears after a fully braced 'case' before the close brace
+If True, it will organize the properties (Obj-C)
+If True, it will remove a void 'return;' that appears as the last statement in a function
+If True, prioritize aligning with initial colon (and stripping spaces from lines, if necessary)
+If True, vbrace tokens are dropped to the previous token and skipped
+If True, will sort consecutive single-line 'import' statements [Java, D]
+If True, will sort consecutive single-line 'using' statements [C#]
+If True, will sort consecutive single-line '#include' statements [C/C++] and '#import' statements [Obj-C]
+If True, 'assert(x<0 && y>=3)' will be broken. Default=False
+If aligning comments, mix with comments after '}' and #endif with less than 3 spaces before the comment
+If any must be braced, they are all braced.  If all can be unbraced, then the braces are removed
+If an open paren is followed by a newline, indent the next line so that it lines up after the open paren (not recommended)
+If an open square is followed by a newline, indent the next line so that it lines up after the open square (not recommended)
+If an #ifdef body exceeds the specified number of newlines and doesn't have a comment after
+If an #ifdef or #else body exceeds the specified number of newlines and doesn't have a comment after
+If a class body exceeds the specified number of newlines and doesn't have a comment after
+If a function body exceeds the specified number of newlines and doesn't have a comment after
+If a function is declared inline to a class definition, then
+If a namespace body exceeds the specified number of newlines and doesn't have a comment after
+If a preprocessor is encountered when stepping backwards from a function name, then
+If a switch body exceeds the specified number of newlines and doesn't have a comment after
+If a trailing comment is more than this number of columns away from the text it follows,
+If false, disable all multi-line comment changes, including cmt_width and leading chars
+If false, disable all multi-line comment changes, including cmt_width. keyword substitution and leading chars
+If false, disable all multi-line comment changes, including cmt_width. keyword substitution, and leading chars
+If indent_oc_block_msg and this option are on, blocks will be indented from where the block caret is
+If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is
+If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is relative to a msg colon
+If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is relative to a msg keyword
+If indent_oc_block_msg and this option are on, blocks will be indented the way that Xcode does by default (from keyword if the parameter is on its own line; otherwise, from the previous indentation level)
+If mod_full_brace_if_chain is used together with this option, all if-else chains will get braces,
+If nl_after_brace_open and nl_after_brace_open_cmt are True, a newline is
+If nl_after_brace_open and nl_after_brace_open_cmt are true, a newline is
+If non-zero, this overrides the indent
+If pp_indent_at_level=False, specifies the number of columns to indent preprocessors per level at brace level > 0 (function-level)
+If pp_indent_at_level=True, sets the indent for #if, #else and #endif when not at file-level
+If pp_indent_at_level=false, specifies the number of columns to indent per level. Default=1
+If pp_indent_at_level=false, specifies the number of columns to indent preprocessors per level at brace level > 0 (function-level)
+If pp_indent_at_level=false, specifies the of columns to indent per level
+If pp_indent_at_level=true, control whether to indent the code between #if, #else and #endif when not a file-level
+If pp_indent_at_level=true, sets the indent for #if, #else and #endif when not at file-level
+If pp_indent_at_level=true, sets the indent for #if, #else, and #endif when not at file-level
+If set to ignore, nl_if_brace is used instead
+If set to ignore, sp_before_angle is used
+If set to ignore, sp_before_sparen is used
+If set to 'ignore' (the default), sp_func_call_paren is used
+If set to 'ignore', sp_before_byref is used instead
+If set to 'ignore', sp_before_ptr_star is used instead
+If set, this option forces 'indent_access_spec=0'
+If set, will indent trailing single line ('//') comments relative
+If the body of the namespace is longer than this number, it won't be indented
+If the file contains bytes with values between 128 and 255, but is not UTF-8, then output as UTF-8
+If the file contains chars between 128 and 255 and is not UTF-8, then output as UTF-8
+If the file only contains chars between 128 and 255 and is not UTF-8, then output as UTF-8
+If the function is a constructor/destructor, then
+If true (default), 'assert(x<0 && y>=3)' will be broken
+If true, align_var_def_XXX options are used instead of align_func_proto_XXX options
+If true, always align with the first parameter, even if it is too short
+If true, a brace followed by another token (not a newline) will indent all contained lines to match the token. Default=True
+If true, cpp lambda body will be indented Default=False
+If true, ignore indent and align for asm blocks as they have their own indentation
+If true, prioritize aligning with initial colon (and stripping spaces from lines, if necessary)
+If true, vbrace tokens are dropped to the previous token and skipped
+If true, 'assert(x<0 && y>=3)' will be broken. Default=False
+If 'indent_bool_paren' is True, controls the indent of the first expression. If True, aligns the first expression to the following ones
+If 'indent_bool_paren' is True, controls the indent of the first expression.  If True, aligns the first expression to the following ones
+If 'indent_bool_paren' is true, controls the indent of the first expression. If TRUE, aligns the first expression to the following ones
+If 'indent_bool_paren' is true, controls the indent of the first expression.  If TRUE, aligns the first expression to the following ones
+Ignore - do not do any changes
+Improvements to template detection may make this option obsolete
+Indentation column for standalone 'const' function decl/proto qualifier
+Indentation column for standalone 'throw' function decl/proto qualifier
+Indenting
+Indent OC blocks at brace level instead of usual rules
+Indent OC blocks in a message relative to the parameter name
+Indent based on a class colon instead of the stuff after the colon
+Indent based on the paren open instead of the brace open in '({
+Indent based on the paren open instead of the brace open in '({\
+Indent based on the paren open instead of the brace open in '({\n', default is to indent by brace
+Indent based on the size of the brace parent, ie 'if' => 3 spaces, 'for' => 4 spaces, etc
+Indent based on the size of the brace parent, ie 'if' => 3 spaces, 'for' => 4 spaces, etc.
+Indent based on the size of the brace parent, i.e. 'if' => 3 spaces, 'for' => 4 spaces, etc
+Indent continued shift expressions ('<<' and '>>') instead of aligning
+Indent continued variable declarations instead of aligning
+Indent the code after an access specifier by one level
+In the abbreviated ternary form (a ?: b), add/remove space between ? and :.'. Overrides all other sp_cond_* options
+Java: Add or remove space between ')' and '{{' of double brace initializer
+Java: Control the newline between the ')' and '{{' of the double brace initializer
+Line Splitting options
+Makes the nl_squeeze_ifdef option affect the top-level #ifdefs as well
+Make all if/elseif/else statements in a chain be braced or not. Overrides mod_full_brace_if
+Make all if/elseif/else statements with at least one 'else' or 'else if' fully braced
+Meaning of the settings:
+Minimum gap between the return type and the function name
+Minimum indent for subsequent parameters
+My favorite format ("--update-config-with-doc")
+Negative values decrease indent down to the first column. Default=0
+Newline adding and removing options
+Newline between namespace and {
+Note that it takes 2 newlines to get a blank line
+Note: align_assign_span must be set also
+Not affected options:
+Number of spaces before a trailing or embedded comment
+Only affects annotations that are after a newline
+Only appears in separate member implementation (does not appear with in-line implmementation)
+Only applies to the indent of the preprocesser that the braces are directly inside of
+Only applies to the indent of the preprocesser that the case statements directly inside of
+Only applies to the indent of the preprocesser that the extern block is directly inside of
+Only applies to the indent of the preprocesser that the function definition is directly inside of
+Only indent one namespace and no sub-namepaces
+Only indent one namespace and no sub-namespaces
+Overrides nl_for_brace, nl_if_brace, nl_switch_brace, nl_while_switch and nl_catch_brace
+Overrides nl_for_brace, nl_if_brace, nl_switch_brace, nl_while_switch, and nl_catch_brace
+Overrides nl_func_call_paren for functions with no parameters
+Overrides nl_func_decl_end when there is only one parameter
+Overrides nl_func_decl_end when there is only one paramter
+Overrides nl_func_decl_start when there is only one parameter
+Overrides nl_func_decl_start when there is only one paramter
+Overrides nl_func_def_end when there is only one parameter
+Overrides nl_func_def_paren for functions with no parameters
+Overrides nl_func_def_start when there is only one parameter
+Overrides nl_func_paren for functions with no parameters
+Overrides sp_after_operator_sym when the operator has no arguments, as in 'operator *()'
+Overrides sp_inside_newop_paren
+Overrides 'nl_typedef_blk_start' and 'nl_var_def_blk_start'
+Override the default ' *INDENT-OFF*' in comments for disabling processing of part of the file
+Override the default ' *INDENT-ON*' in comments for enabling processing of part of the file
+Permit removal of the space between '>>' in 'foo<bar<int> >' (C++11 only). Default=False
+Positioning options
+Preprocessor options
+Region stuff is always explicitly controlled
+Related to nl_constr_colon, nl_constr_init_args and pos_constr_colon
+Related to nl_constr_colon, nl_constr_init_args and pos_constr_comma
+Related to nl_constr_colon, pos_constr_colon and pos_constr_comma
+Related to nl_constr_init_args, pos_constr_colon and pos_constr_comma
+Related to pos_class_colon, nl_class_init_args, and pos_class_comma
+Related to pos_class_colon, nl_class_init_args, and pos_comma
+Related to pos_constr_colon, nl_constr_init_args, and pos_constr_comma
+Remove - removes space/brace/newline/etc
+Replace tab characters found in string literals with the escape sequence \t instead
+Replace tab characters found in string literals with the escape sequence \\t instead
+Requires align_single_line_func=True, uses align_func_proto_span
+Requires align_single_line_func=true, uses align_func_proto_span
+Requires indent_align_string=True
+Requires indent_class_colon=True. Default=False
+Requires indent_class_colon=true. Default=False
+Requires indent_class_colon=true. Default=false
+Requires indent_namespace=True
+Requires indent_namespace=True. Default=0 (no limit)
+Requires indent_namespace=true
+Requires indent_namespace=true. Default=0 (no limit)
+Requires indent_with_tabs=2. If false, will use spaces
+SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details
+Same as indent_func_call_param, but for class declarations
+Same as indent_func_call_param, but for class variable constructors
+Same as indent_func_call_param, but for function defs
+Same as indent_func_call_param, but for function protos
+Same as indent_func_call_param, but for templates
+Same as indent_label, but for access specifiers that are followed by a colon
+Same as indent_label, but for access specifiers that are followed by a colon. Default=1
+See nl_oc_msg_leave_one_liner
+Sets the number of spaces added with pp_space
+Set the comment reflow mode (Default=0)
+Set the comment reflow mode (default: 0)
+Sort includes options
+Spaces to indent single line ('//') comments on lines before code
+Spaces to indent 'case' body from 'case'
+Spaces to indent 'case' from 'switch'
+Spaces to indent '{' from level
+Spaces to indent '{' from 'case'
+Spaces to shift the 'case' line, without affecting any other lines
+Spacing options
+Span for aligning parameters in an Obj-C message call on the ':' (0=don't align)
+Specifies the number of columns to indent preprocessors per level at brace level 0 (file-level)
+TRUE: If space is added with sp_cmt_cpp_start, do it after Qt translator or meta-data comments like '//:', '//=', and '//~'
+TRUE: If space is added with sp_cmt_cpp_start, do it after doxygen sequences like '///', '///<', '//!' and '//!<'
+TRUE: When identing after virtual brace open and newline add further spaces  after regular indent to reach next tabstop
+TRUE: When identing after virtual brace open and newline add further spaces  after regular indent to reach next tabstop." );
+These occur in un-braced if/while/do/for statement bodies
+The ASCII value of the string escape char, usually 92 (\) or 94 (^). (Pawn)
+The ASCII value of the string escape char, usually 92 (\\) or 94 (^). (Pawn)
+The ascii value of the string escape char, usually 92 (\). (Pawn)
+The ascii value of the string escape char, usually 92 (\\) or 94 (^). (Pawn)
+The ascii value of the string escape char, usually 92 (\\). (Pawn)
+The continuation indent for func_*_param if they are true
+The continuation indent. If non-zero, this overrides the indent of '(' and '=' continuation indents
+The filename that contains text to insert at the end of a file if the file doesn't end with a C/C++ comment
+The filename that contains text to insert at the head of a file if the file doesn't start with a C++ comment
+The filename that contains text to insert at the head of a file if the file doesn't start with a C/C++ comment
+The filename that contains text to insert before a Obj-C message specification if the method isn't preceded with a C/C++ comment
+The filename that contains text to insert before a Obj-C message specification if the method isn't preceeded with a C/C++ comment
+The filename that contains text to insert before a class if the class isn't preceded with a C/C++ comment
+The filename that contains text to insert before a class if the class isn't preceeded with a C++ comment
+The filename that contains text to insert before a class if the class isn't preceeded with a C/C++ comment
+The filename that contains text to insert before a function implementation if the function isn't preceded with a C/C++ comment
+The filename that contains text to insert before a function implementation if the function isn't preceeded with a C++ comment
+The filename that contains text to insert before a function implementation if the function isn't preceeded with a C/C++ comment
+The first arg is the language name used with the '-l' option
+The full syntax description of all custom definition config entries
+The function names must already be aligned with each other
+The gap for aligning class member definitions
+The gap for aligning function parameter definitions
+The gap for aligning struct/union member definitions
+The gap for aligning variable definitions
+The indent for #if, #else, and #endif when not at file-level
+The indent for #region and #endregion in C# and '#pragma region' in C/C++
+The maximum consecutive newlines
+The maximum consecutive newlines in function
+The maximum consecutive newlines within a block of typedefs
+The maximum consecutive newlines within a block of variable definitions
+The maximum consecutive newlines (3 = 2 blank lines)
+The minimum number of newlines before a CPP comment
+The minimum number of newlines before a CPP comment (doesn't apply if after a brace open or other CPP comments)
+The minimum number of newlines before a multi-line comment
+The minimum number of newlines before a multi-line comment (doesn't apply if after a brace open or another multi-line comment)
+The minimum number of newlines before a multi-line comment (doesn't apply if after a brace open)
+The minimum number of newlines before a single-line C comment
+The minimum number of newlines before a single-line C comment (doesn't apply if after a brace open or other single-line C comments)
+The minimum space between label and value of a preprocessor define
+The minimum space between the type and the synonym of a typedef
+The number of blank lines after a block of variable definitions
+The number of blank lines after a block of variable definitions at the top of a function body
+The number of columns to indent per level
+The number of columns to indent per level (usually 2, 3, 4, or 8)
+The number of newlines after a block of typedefs
+The number of newlines after a block of variable definitions
+The number of newlines after a block of variable definitions not at the top of a function body
+The number of newlines after a function class prototype, if followed by another function class prototype
+The number of newlines after a function class prototype, if not followed by another function class prototype
+The number of newlines after a function prototype, if followed by another function prototype
+The number of newlines after a function prototype, if not followed by another function prototype
+The number of newlines after a try-catch-finally block that isn't followed by a brace close
+The number of newlines after a 'private:', 'public:', 'protected:', 'signals:' or 'slots:' label
+The number of newlines after a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label
+The number of newlines after '}' of a multi-line function body
+The number of newlines after '}' of a multi-line function body in a class declaration
+The number of newlines after '}' of a single line function body
+The number of newlines after '}' of the function body
+The number of newlines after '}' or ';' of a class definition
+The number of newlines after '}' or ';' of a struct/enum/union definition
+The number of newlines at the end of the file (only used if nl_end_of_file is 'add' or 'force')
+The number of newlines at the start of the file (only used if nl_start_of_file is 'add' or 'force'
+The number of newlines before and after a property, indexer or event decl
+The number of newlines before a block of typedefs
+The number of newlines before a block of variable definitions not at the top of a function body
+The number of newlines before a class definition
+The number of newlines before a multi-line function def body
+The number of newlines before a multi-line function prototype body
+The number of newlines before a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label
+The number of newlines between a function def and the function comment
+The number of newlines between the get/set/add/remove handlers in C#
+The number of spaces to indent a continued '->' or '.'
+The number of spaces to indent a namespace block
+The number of spaces to indent multi-line XML strings
+The number of spaces to indent multi-line XML strings. Requires indent_align_string=True
+The number of spaces to insert after the star on subsequent comment lines
+The number of spaces to insert at the start of subsequent comment lines
+The of newlines after a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label
+The of newlines between the get/set/add/remove handlers in C#
+The original size of tabs in the input
+The original size of tabs in the input. Default=8
+The position of arithmetic operators in wrapped expressions
+The position of assignment in wrapped expressions
+The position of boolean operators in wrapped expressions
+The position of colons between class and base class list
+The position of colons between constructor and member initialization
+The position of colons between constructor and member initialization,
+The position of comparison operators in wrapped expressions
+The position of conditional (b ? t : f) operators in wrapped expressions
+The position of the comma in enum entries
+The position of the comma in the base class list if there are more than one line,
+The position of the comma in the class base list
+The position of the comma in the constructor initialization list
+The position of the comma in wrapped expressions
+The position of trailing/leading class colon, between class and base class list
+The regex for include category with priority 0
+The regex for include category with priority 1
+The regex for include category with priority 2
+The remaining args are file extensions, matched with 'endswith'
+The size of tabs in the output (only used if align_with_tabs=True). Default=8
+The size of tabs in the output (only used if align_with_tabs=true)
+The size of tabs in the output (only used if align_with_tabs=true). Default=8
+The span for aligning ObjC msg spec (0=don't align)
+The span for aligning class (0=don't align)
+The span for aligning comments that end lines (0=don't align)
+The span for aligning function prototypes (0=don't align)
+The span for aligning on '#define' bodies (0=don't align)
+The span for aligning on '#define' bodies (0=don't align, other=number of lines including comments between blocks)
+The span for aligning on '=' in assignments (0=don't align)
+The span for aligning on '=' in enums (0=don't align)
+The span for aligning parameter definitions in function on parameter name (0=don't align)
+The span for aligning single-line typedefs (0=don't align)
+The span for aligning struct initializer values (0=don't align)
+The span for aligning struct/union (0=don't align)
+The span for aligning variable definitions (0=don't align)
+The threshold for aligning class member definitions (0=no limit)
+The threshold for aligning function parameter definitions (0=no limit)
+The threshold for aligning on '=' in assignments (0=no limit)
+The threshold for aligning on '=' in enums (0=no limit)
+The threshold for aligning struct/union member definitions (0=no limit)
+The threshold for aligning variable definitions (0=no limit)
+The type of line endings
+The type of line endings. Default=Auto
+The value of the indentation for a continuation line is calculate differently if the line is:
+This also adds a newline before the matching brace close
+This can also be achieved with `set TYPE int c_uint_8 Rectangle`
+This does not affect the spacing after a '&' that is part of a type
+This does not affect the spacing after a '*' that is part of a type
+This is generally a bad idea, as it may break your code
+This will not work right if the macro contains a multi-line comment
+To embed whitespace in tokenStrings use the '\' escape character, or quote
+To prevent the double use of the option value, use this option with the value 'True'
+To prevent the double use of the option value, use this option with the value 'true'
+True: If space is added with sp_cmt_cpp_start, do it after Qt translator or meta-data comments like '//:', '//=', and '//~'
+True: If space is added with sp_cmt_cpp_start, do it after doxygen sequences like '///', '///<', '//!' and '//!<'
+True: When identing after virtual brace open and newline add further spaces after regular indent to reach next tabstop
+True: When identing after virtual brace open and newline add further spaces  after regular indent to reach next tabstop
+True:  force indentation of function definition to start in column 1
+True:  indent continued function call parameters one indent level
+True:  indent_continue will be used only once
+True:  indent_func_call_param will be used
+True:  indent_func_call_param will be used (default)
+True=indent the 'if' one level
+Try to limit code width to N number of columns
+Try to wrap comments at cmt_width columns
+Try to wrap comments at cmt_witdth columns
+Turn align_left_shift off when enabling this
+Uncrustify 0.37
+Uncrustify 0.38
+Uncrustify 0.39
+Uncrustify 0.40
+Uncrustify 0.41
+Uncrustify 0.42
+Uncrustify 0.43
+Uncrustify 0.44
+Uncrustify 0.45
+Uncrustify 0.46
+Uncrustify 0.47
+Uncrustify 0.48
+Uncrustify 0.49
+Uncrustify 0.50
+Uncrustify 0.51
+Uncrustify 0.52
+Uncrustify 0.53
+Uncrustify 0.54
+Uncrustify 0.55
+Uncrustify 0.56
+Uncrustify 0.57
+Uncrustify 0.58
+Uncrustify 0.59
+Uncrustify 0.60
+Uncrustify 0.61
+Uncrustify 0.62
+Uncrustify 0.63
+Uncrustify 0.64
+Uncrustify 0.65
+Uncrustify 0.66
+Uncrustify-0.65-301-b52ce477
+Uses nl_func_type_name or nl_func_proto_type_name if set to ignore
+Use both values of the options indent_columns and indent_param
+Use or Do not Use options
+Usually 0
+Usually 0 or indent_columns
+Usually 2, 3, 4, or 8
+Usually 2, 3, 4, or 8. Default=8
+Usually set to 0 or indent_columns
+Usually set to 0, 1, or indent_columns
+Usually set to indent_columns
+Virtual indent from the ':' for member initializers. Default is 2
+Virtual indent from the ':' for member initializers. Default=2
+Warning is given if doing tab-to-\t replacement and we have found one in a C# verbatim string literal
+Warning is given if doing tab-to-\\t replacement and we have found one in a C# verbatim string literal
+Warn levels - 1: error, 2: warning (default), 3: note
+When identing after virtual brace open and newline add further spaces to reach this min. indent
+Whether braces are indented to the body level
+Whether the pointer star is part of the variable name or not
+Whether the 'class' body is indented
+Whether the 'extern "C"' body is indented
+Whether the 'extern \"C\"' body is indented
+Whether the 'namespace' body is indented
+Whether to add newline after each ',' in a function call if '(' and ')' are in different lines
+Whether to add newline after each ',' in a function declaration if '(' and ')' are in different lines
+Whether to add newline after each ',' in a function definition if '(' and ')' are in different lines
+Whether to add newline after '(' in a function call if '(' and ')' are in different lines
+Whether to add newline after '(' in a function declaration if '(' and ')' are in different lines
+Whether to add newline after '(' in a function definition if '(' and ')' are in different lines
+Whether to add newline before ')' in a function call if '(' and ')' are in different lines
+Whether to add newline before ')' in a function declaration if '(' and ')' are in different lines
+Whether to add newline before ')' in a function definition if '(' and ')' are in different lines
+Whether to align any attribute after the variable name
+Whether to align inline struct/enum/union variable definitions
+Whether to align macros wrapped with a backslash and a newline
+Whether to align macros wrapped with a backslash and a newline. This will not work right if the macro contains a multi-line comment
+Whether to align the colon in struct bit fields
+Whether to alter newlines in '#define' macros
+Whether to balance spaces inside nested parens
+Whether to bump out to the next tab when aligning
+Whether to change cpp-comments into c-comments
+Whether to change optional semicolons to real semicolons
+Whether to collapse empty blocks between '{' and '}'
+Whether to convert all tabs to spaces in comments. Default is to leave tabs inside comments alone, unless used for indenting
+Whether to double-space before the close brace of a struct/union/enum
+Whether to double-space commented-entries in struct/enum
+Whether to double-space commented-entries in struct/union/enum
+Whether to force a newline after a label's colon
+Whether to force a newline after a mulit-line comment
+Whether to force a newline after a multi-line comment
+Whether to fully split long function protos/calls at commas
+Whether to fully split long 'for' statements at semi-colons
+Whether to group cpp-comments that look like they are in a block
+Whether to group c-comments that look like they are in a block
+Whether to ignore the '#define' body while formatting
+Whether to indent at the brace level (true) or from column 1 (false)
+Whether to indent braces directly inside #if, #else, and #endif
+Whether to indent case statements between #if, #else, and #endif
+Whether to indent comments found in first column
+Whether to indent continued function call parameters one indent level (true) or aligns instead of indent (false)
+Whether to indent extern C blocks between #if, #else, and #endif
+Whether to indent preproccesor statements inside of switch statements
+Whether to indent strings broken by '\' so that they line up
+Whether to indent strings broken by '\\' so that they line up
+Whether to indent the code between #if, #else and #endif when not a file-level
+Whether to indent the code between #region and #endregion
+Whether to indent the stuff after a leading base class colon
+Whether to indent the stuff after a leading class colon
+Whether to indent the stuff after a leading class initializer colon
+Whether to indent whole function definitions between #if, #else, and #endif
+Whether to indent #if/#else/#endif at the brace level (True) or from column 1 (False)
+Whether to indent #if/#else/#endif at the brace level (true) or from column 1 (false)
+Whether to indent #if/#else/# at the brace level (true) or from column 1 (false)
+Whether to indent '#define' at the brace level (True) or from column 1 (false)
+Whether to indent '#define' at the brace level (true) or from column 1 (false)
+Whether to keep non-indenting tabs
+Whether to keep whitespace not required for alignment
+Whether to left-align numbers
+Whether to mess with the indent of multi-line comments
+Whether to mix aligning prototype and variable declarations
+Whether to not put blanks after '#ifxx', '#elxx', or before '#endif'
+Whether to not put blanks after '#ifxx', '#elxx', or before '#endif'. Does not affect the whole-file #ifdef
+Whether to not put blanks after '#ifxx', '#elxx', or before '#'
+Whether to put an empty '/*' on the first line of the combined cpp-comment
+Whether to put an empty '/*' on the first line of the combined c-comment
+Whether to put a blank line after 'return' statements, unless followed by a close brace
+Whether to put a blank line before 'return' statements, unless after an open brace
+Whether to put a newline after a Java annotation statement
+Whether to put a newline after a brace close
+Whether to put a newline after a virtual brace close
+Whether to put a newline after a virtual brace open
+Whether to put a newline after a virtual brace open with an empty body
+Whether to put a newline after a virtual brace open with a non-empty body
+Whether to put a newline after brace open
+Whether to put a newline after open brace in an unnamed temporary direct-list-initialization
+Whether to put a newline after semicolons, except in 'for' statements
+Whether to put a newline after the type in an unnamed temporary direct-list-initialization
+Whether to put a newline after 'case' statement
+Whether to put a newline after 'return' statement
+Whether to put a newline before close brace in an unnamed temporary direct-list-initialization
+Whether to put a newline before the closing '*/' of the combined cpp-comment
+Whether to put a newline before the closing '*/' of the combined c-comment
+Whether to put a newline before 'case' statement
+Whether to put a newline before 'case' statement, not after the first 'case'
+Whether to put a star on subsequent comment lines
+Whether to put each OC message parameter on a separate line
+Whether to remove blanks after '#ifxx' and '#elxx', or before '#elxx' and '#endif'. Does not affect the whole-file #ifdef
+Whether to remove blanks after '#ifxx' and '#elxx', or before '#elxx' and '#endif'. Does not affect top-level #ifdefs
+Whether to remove blank lines after '{'
+Whether to remove blank lines before '}'
+Whether to remove superfluous semicolons
+Whether to right-align numbers
+Whether to split lines as close to code_width as possible and ignore some groupings
+Whether to use tabs for aligning
+Whether to use tabs for alinging
+Will add or remove the braces around a fully braced case statement
+Will also substitute $(fclass) with the class name: void CFoo::Bar() { ... }
+Will not change the newline count if after a brace open
+Will only remove the braces if there are no variable declarations in the block
+Will substitue $(class) with the class name
+Will substitue $(filename) with the current file's name
+Will substitue $(function) with the function name and $(javaparam) with the javadoc @param and @return stuff
+Will substitute $(class) with the class name
+Will substitute $(filename) with the current file's name
+Will substitute $(function) with the function name and $(javaparam) with the javadoc @param and @return stuff
+Will substitute $(message) with the function name and $(javaparam) with the javadoc @param and @return stuff
+Would add a newline before return in: 'if (foo) a++; return;'
+Xcode inserts <#code placeholders#> into files that will otherwise be mangled. Turn option on to ignore these
+You can add support for other file extensions using the 'file_ext' command
+You can assign any keyword to any type with the set option
+You can create custom macro-based indentation using macro-open,
+You can force a token to be a type with the 'type' option
+You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file
+added using the 'file_ext' command
+align variable defs gap for bit colons
+all tokens are separated by any mix of ',' commas, '=' equal signs
+also '>>>' '<<' '>>' '%' '|'
+and simple 'if' statements will lose them (if possible)
+and whitespace (space, tab)
+an assigment  :your case with pSettings = new QSettings( ...
+an assignment  :your case with pSettings = new QSettings( ...
+at the assigment
+at the assignment
+at the function call (if present)
+auto/lf/crlf/cr
+a declaration :your case with QString fileName ...
+behaves like Add in some contexts
+bool
+define custom tokens as:
+define def_token output_token
+e.g. PP_PRAGMA
+false/true
+false/true/ignore
+file_ext CPP .ch .cxx .cpp.in
+foo(i);'
+foo(i);' => 'for (i=0;i<5;i++) foo(i);'
+foo(i++);'
+foo(i++);' => 'while (i<5) foo(i++);'
+force nl before } of a struct/union/enum
+has no arguments, as in 'operator *()'
+if' as 'else if' for indenting purposes
+ignore/add/remove/force
+ignore/join/lead/lead_break/lead_force/trail/trail_break/trail_force
+ignore/lead/lead_break/lead_force/trail/trail_break/trail_force
+ignore/lead/trail
+indent a C# delegate by another level, default is to not indent by another level
+indent the continuation of ternary operator
+indent (or not) an using block if no braces are used. Only for C#.Default=True
+indent (or not) an using block if no braces are used. Only for C#. Default=True
+is overridden by the option 'nl_after_access_spec'
+is shown below:
+it will qualify for being aligned
+it will qualify for being aligned. This has to be > 0 to do anything
+i++;'
+i++;' => 'if(b) i++;'
+langTypes are defined in uncrusify_types.h in the lang_flag_e enum, use
+list_for_each(item, &list) { }
+macro-close END_MESSAGE_MAP
+macro-close token
+macro-else and macro-close
+macro-else token
+macro-open token
+macro-open  BEGIN_MESSAGE_MAP
+macro-open  BEGIN_TEMPLATE_MESSAGE_MAP
+mod_full_brace_do, mod_full_brace_function
+mod_full_brace_for, mod_full_brace_if, mod_full_brace_if_chain, mod_full_brace_if_chain_only, mod_full_brace_while,mod_full_brace_using
+negative value are OK
+number
+placed between the open brace and a trailing single-line comment
+put token in quotes
+set func_call_user _ N_
+set id token1 token2 ...
+sp_angle_shift cannot remove the space without this option
+string
+them without the 'LANG_' prefix: 'LANG_CPP' -> 'CPP'
+the close brace, a comment will be added
+the comment are the same length AND if the length is bigger as the first_len minimum. Default=4
+the comment are the same length. Default=True
+the option 'nl_after_access_spec' takes preference over 'nl_typedef_blk_start'
+the option 'nl_after_access_spec' takes preference over 'nl_typedef_blk_start' and 'nl_var_def_blk_start'
+the option 'nl_after_access_spec' takes preference over 'nl_var_def_blk_start'
+the tokenStrings. These quotes are supported: "'`
+the #else, a comment will be added
+the #endif, a comment will be added
+this option decides whether the comment should be inserted
+tokenTypes are defined in src/token_enum.h, use them without the
+to the code instead of trying to keep the same absolute column
+type myfoo1 myfoo2
+type token1 token2 token3 ...
+unsigned number
+#option(s) with 'not default' value: 0
+# Align macro functions and variables together
+'CT_' prefix: 'CT_BOOL' -> 'BOOL'
+'NSDictionary *test = @{@"foo" :@"bar"};'
+'NSDictionary *test = @{@\"foo\" :@\"bar\"};'
+'for (i=0;i<5;i++)\
+'for (i=0;i<5;i++)\n foo(i);' => 'for (i=0;i<5;i++) foo(i);'
+'for (i=0;<5;i++) foo(i);' => 'for (i=0;<5;i++) foo(i);'
+'for (i=0;<5;i++) foo(i);' => 'for (i=0;<5;i++)\
+'for (i=0;<5;i++) foo(i);' => 'for (i=0;<5;i++)\n foo(i);'
+'if(b) i++;' => 'if(b) i++;'
+'if(b) i++;' => 'if(b)\
+'if(b) i++;' => 'if(b)\n i++;'
+'if(b)\
+'if(b)\n i++;' => 'if(b) i++;'
+'macro-else' and 'macro-close'
+'while (i<5) foo(i++);' => 'while (i<5)\
+'while (i<5) foo(i++);' => 'while (i<5)\n foo(i++);'
+'while (i<5)\
+'while (i<5)\n foo(i++);' => 'while (i<5) foo(i++);'
+', default is to indent by brace
+'-(int)f: (int) x;' vs '-(int)f: (int)x;'
+'-(int) f: (int) x;' vs '+(int)f : (int)x;'
+'-(int) f: (int) x;' vs '+(int) f : (int) x;'
+'-(int) f: (int) x;' vs '-(int) f : (int) x;'
+'-(int) f: (int) x;' vs '-(int) f: (int)x;'
+'-(int) f:(int)x;' vs '-(int)f:(int)x;'
+'-(int) f:(int) x;' vs '-(int) f: (int) x;'
+'@selector(foo) a:' vs '@selector(foo)a:'
+'@selector(foo)' vs '@selector( foo )'
+'@selector(msgName)' vs '@selector (msgName)'
+'@selector(msgName).' vs '@selector (msgName)'
+'[object setValue:1];' vs '[object setValue :1];'
+'[object setValue:1];' vs '[object setValue: 1];'
+'[receiver selector ...]'
+'^int (int arg){...}' vs. ' ^int (int arg){...}'
+'^int (int arg){...}' vs. '^ int (int arg){...}'
+(a minimum of 1 is forced except for pointer return types)
+(gap=0) into alignment with the others
+(lower priority than 'eat_blanks_before_close_brace')
+(tied to UO_nl_constr_colon)
+(tied to nl_class_colon)
+(tied to nl_class_init_args)
+(tied to nl_constr_colon)
+(tied to pos_class_colon)
+(tied to pos_class_comma)
+- Custom macro-based indentation can be set up using 'macro-open',
+- Support for the auto detection of languages through the file ending can be
+- Token(s) can be treated as specific type(s) with the 'set' option:
+- Token(s) can be treated as type(s) with the 'type' option
+- embed whitespace in token using '' escape character, or
+- these: ' " and ` are recognized as quote delimiters
+<=0 : subtract from brace indent
+<=0: subtract from brace indent
+>0 : absolute column where 1 is the leftmost column
+>0: absolute column where 1 is the leftmost column
+>0: column at which all preprocessors will be indented
+^ id is one of the names in token_enum.h sans the CT_ prefix,
+^ optionally specify multiple tokens on a single line
+^ output_token is optional, then NULL is assumed
+`file_ext CPP .ch .cxx .cpp.in`
+`file_ext langType langString [langString..]`
+`macro-close END_MESSAGE_MAP`
+`macro-open  BEGIN_MESSAGE_MAP`
+`macro-open  BEGIN_TEMPLATE_MESSAGE_MAP`
+`set BOOL __AND__ __OR__`
+`set tokenType tokenString [tokenString...]`
+`type int c_uint_8 Rectangle`
+`type tokenString [tokenString...]`
+`(macro-open | macro-else | macro-close) tokenString`
+{ IARF }
+{ auto/lf/crlf/cr }
+{ bool }
+{ false/true }
+{ false/true/ignore }
+{ ignore/add/remove/force }
+{ ignore/join/lead/lead_break/lead_force/trail/trail_break/trail_force }
+{ ignore/lead/lead_break/lead_force/trail/trail_break/trail_force }
+{ ignore/lead/trail }
+{ number }
+{ string }
+{ unsigned number }
+new tab size
+My favorite format ("--update-config-with-doc")
+My favorite format
+original tab size
+1=indent to level only, 2=indent with tabs
+AUTO (default), DOS, MAC, or UNIX
+"int foo (){" vs "int foo(){"
+"foo (" vs "foo("
+"int foo ();" vs "int foo();"
+use tabs to align
+align on tabstops
+pos : absolute col, neg : relative column
+Whether to fully split long function protos/calls at commas
+
+"do {" vs "do \n {"
+"if () {" vs "if () \n {"
+"for () {" vs "for () \n {"
+"else {" vs "else \n {"
+"while () {" vs "while () \n {"
+"switch () {" vs "switch () \n {"
+"foo() {" vs "foo()\n{"
+"if (" vs "if("
+"if () {" vs "if (){"
+
+"enum {" vs "enum \n {"
+"union {" vs "union \n {"
+"struct {" vs "struct \n {"
+"= {" vs "= \n {"
+space between (( and ))
+"sizeof (int)" vs "sizeof(int)"
+"(int) a" vs "(int)a"
+"{ 1 }" vs "{1}"
+"return (1);" vs "return(1);"
+"return 1;" vs "return (1);"
+"} while" vs "} \n while" - cuddle while
+"} else" vs "} \n else" - cuddle else
+align broken strings
+"if (a) a--;" vs "if (a) { a--; }"
+"for () a--;" vs "for () { a--; }"
+"do a--; while ();" vs "do { a--; } while ();"
+"while (a) a--;" vs "while (a) { a--; }"
+pos: absolute col, neg: relative column
+pos: absolute col, neg: relative column
+"func( param )" vs "func(param)"
+don't remove if more than 3 newlines
+"list_for_each() {" vs "list_for_each()\n{"
+"while (a) a--;" vs "while (a) { a--; }"
+pos: absolute col, neg: relative column
+"while (a) a--;" vs "while (a) { a--; }"
