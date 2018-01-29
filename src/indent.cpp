@@ -1785,6 +1785,7 @@ void indent_text(void)
                         && frm.at(idx).type != CT_SQUARE_OPEN
                         && frm.at(idx).type != CT_ANGLE_OPEN
                         && frm.at(idx).type != CT_CASE
+                        && frm.at(idx).type != CT_MEMBER
                         && frm.at(idx).type != CT_ASSIGN_NL)
                      || are_chunks_in_same_line(frm.at(idx).pc, frm.top().pc))
                   && (  frm.at(idx).type != CT_CLASS_COLON
@@ -1959,6 +1960,60 @@ void indent_text(void)
 
          frm.paren_count++;
       }
+      else if (  cpd.settings[UO_indent_member_single].b
+              && pc->type == CT_MEMBER
+              && (strcmp(pc->text(), ".") == 0)
+              && (cpd.lang_flags & LANG_CS))
+      {
+         if (frm.top().type != CT_MEMBER)
+         {
+            frm.push(*pc);
+            chunk_t *tmp = chunk_get_prev_ncnlnp(frm.top().pc);
+            if (are_chunks_in_same_line(frm.prev().pc, tmp))
+            {
+               frm.top().indent = frm.prev().indent;
+            }
+            else
+            {
+               frm.top().indent = frm.prev().indent + indent_size;
+            }
+            log_indent();
+            frm.top().indent_tmp = frm.top().indent;
+            log_indent_tmp();
+         }
+         if (chunk_is_newline(chunk_get_prev(pc)))
+         {
+            indent_column_set(frm.top().indent);
+            reindent_line(pc, indent_column);
+            did_newline = false;
+         }
+         //else if (chunk_is_newline(chunk_get_next(pc)))
+         //{
+         //   indent_column_set(frm.pse[frm.pse_tos].indent);
+         //   reindent_line(chunk_get_next_ncnlnp(pc), indent_column);
+         //   //did_newline = false;
+         //}
+         //check for the series of CT_member chunks else pop it.
+         chunk_t *tmp = chunk_get_next_ncnlnp(pc);
+         if (tmp != nullptr)
+         {
+            if (tmp->type == CT_FUNC_CALL)
+            {
+               tmp = chunk_get_next_ncnlnp(chunk_get_next_type(tmp, CT_FPAREN_CLOSE, tmp->level));
+            }
+            else if (tmp->type == CT_WORD || tmp->type == CT_TYPE)
+            {
+               tmp = chunk_get_next_ncnlnp(tmp);
+            }
+         }
+         if (  tmp != nullptr
+            && (  (strcmp(tmp->text(), ".") != 0)
+               || tmp->type != CT_MEMBER))
+         {
+            if (chunk_is_paren_close(tmp))
+            {
+               tmp = chunk_get_prev_ncnlnp(tmp);
+            }
             if (chunk_is_newline(tmp->prev))
             {
                tmp = chunk_get_next_nl(chunk_get_prev_ncnlnp(tmp));
