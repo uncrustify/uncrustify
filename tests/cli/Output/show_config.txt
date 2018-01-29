@@ -801,6 +801,10 @@ indent_member                   Unsigned Number
   The number of spaces to indent a continued '->' or '.'
   Usually set to 0, 1, or indent_columns.
 
+indent_member_single            { False, True }
+  setting to true will indent lines broken at '.' or '->' by a single indent
+  UO_indent_member option will not be effective if this is set to true.
+
 indent_sing_line_comments       Unsigned Number
   Spaces to indent single line ('//') comments on lines before code.
 

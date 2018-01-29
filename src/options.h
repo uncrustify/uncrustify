@@ -395,6 +395,7 @@ enum uncrustify_options
    UO_indent_func_const,                    // indentation for standalone 'const' qualifier
    UO_indent_func_throw,                    // indentation for standalone 'throw' qualifier
    UO_indent_member,                        // indent lines broken at a member '.' or '->'
+   UO_indent_member_single,                 // indent lines broken at a member '.' with a single indent
    UO_indent_sing_line_comments,            // indent single line ('//') comments on lines before code
    UO_indent_relative_single_line_comments, // indent single line ('//') comments after code
    UO_indent_switch_case,                   // spaces to indent case from switch
