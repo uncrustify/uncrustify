@@ -220,6 +220,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
    {
       fprintf(stderr, "FATAL: The variable 'buf' is not big enought:\n");
       fprintf(stderr, "   it should be bigger as = %u\n", length);
+      fprintf(stderr, "Please make a report.\n");
       exit(EX_SOFTWARE);
    }
    memcpy(buf, fmt, length);
@@ -237,17 +238,27 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
    // Add on the variable log parameters to the log string
    va_list args;        // determine list of arguments ...
    va_start(args, fmt); //  ... that follow after parameter fmt
-   size_t  len = static_cast<size_t>(vsnprintf(&g_log.buf[g_log.buf_len], cap, fmt, args));
+   size_t  len = static_cast<size_t>(vsnprintf(&g_log.buf[g_log.buf_len], cap, buf, args));
    va_end(args);
 
    if (len > 0)
    {
+      bool softwareErrorFound = false;
       if (len > cap)
       {
-         len = cap;
+         softwareErrorFound = true;
+         len                = cap;
       }
       g_log.buf_len           += len;
       g_log.buf[g_log.buf_len] = 0;
+      if (softwareErrorFound)
+      {
+         g_log.buf[g_log.buf_len - 1] = '\n';
+         fprintf(stderr, "WARNING: The variable 'g_log.buf' is not big enought:\n");
+         fprintf(stderr, "   it should be bigger as = %zu\n", len);
+         fprintf(stderr, "   The first part of the message is:\n");
+         fprintf(stderr, "   %s\n", g_log.buf);
+      }
    }
 
    log_end();

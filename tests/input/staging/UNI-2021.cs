@@ -5,24 +5,24 @@ int fun ()
 return 0; 
 }
 
-int fun() {return 0; }
+int fun() {return 0;}
 
 int fun() {
-return 0; 
+	return 0; 
 }
 
 int fun() {
-return 0; }
+	return 0;}
 
 int fun()
-{return 0; }
+{ return 0;}
 
-int fun() { return 0; 
+int fun() {return 0; 
 }
 
 int fun() 
 {
-return 0; }
+	return 0;}
 
 int fun() 
 { return 0; 

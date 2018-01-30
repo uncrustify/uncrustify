@@ -77,10 +77,17 @@ uncrustify-*-win32
 
 # TRIAGE: To clasify or remove
 .svn
-*~
 .*
 build*
-*.orig 
+
+# backup files
+#   texteditor (kate, etc.)
+*~
+#   git mergetool.keepBackup or KDiff3
+*.orig
+
+# uncrustified files
+*.uncrustify
 
 # Eclipse Build Directories
 Debug/

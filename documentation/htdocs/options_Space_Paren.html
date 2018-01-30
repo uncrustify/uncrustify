@@ -32,6 +32,23 @@ class STDMETHOD
 {
    STDMETHOD(GetValues)<a title="sp_cparen_oparen"><font color="red">█</font></a>(BSTR bsName, REFDATA** pData);
 };
+void (__attribute__(<a title="sp_paren_paren"><font color="red">█</font></a>(noreturn)<a title="sp_paren_paren"><font color="red">█</font></a>) ****f) (void);
+
+char *__attribute__(<a title="sp_paren_paren"><font color="red">█</font></a>(aligned(8)<a title="sp_paren_paren"><font color="red">█</font></a>)<a title="sp_paren_paren"><font color="red">█</font></a>) *f;
+<a name="sp_paren_brace"></a>
+(struct foo)<a title="sp_paren_brace"><font color="red">█</font></a>{...}
+<a name="sp_ptr_star_paren"></a>
+typedef const char *<a title="sp_ptr_star_paren"><font color="red">█</font></a>(*somefunc_t)(void *barstool);
+<a name="sp_before_sparen"></a>
+<a name="sp_inside_sparen"></a>
+<a name="sp_inside_sparen_open"></a>
+<a name="sp_inside_sparen_close"></a>
+<a name="sp_after_sparen"></a>
+if<a title="sp_before_sparen"><font color="red">█</font></a>(<a title="sp_inside_sparen, sp_inside_sparen_open"><font color="red">█</font></a>a<a title="sp_inside_sparen, sp_inside_sparen_close"><font color="red">█</font></a>)<a title="sp_after_sparen"><font color="red">█</font></a>{ b = 13; }
+
+
+<a name=""></a>
+<a title=""><font color="red">█</font></a>
 </pre>
 </td>
 </tr>
@@ -55,45 +72,42 @@ class STDMETHOD
    <td valign="top"><a href="#sp_balance_nested_parens">sp_balance_nested_parens</a></td>
    <td>Whether to balance spaces inside nested parens.</td>
 </tr>
-</table>
-<h1>Register (part 2) TODO</h1>
-<table border="0", width="100%">
 <tr>
    <td valign="top"><a href="#sp_paren_paren">sp_paren_paren</a></td>
    <td>Add or remove space between nested parens: '((' vs ') )'.</td>
 </tr>
 <tr>
    <td valign="top"><a href="#sp_paren_brace">sp_paren_brace</a></td>
-   <td>#(34)Add or remove space between ')' and '{'.</td>
+   <td>Add or remove space between ')' and '{'.</td>
 </tr>
 <tr>
    <td valign="top"><a href="#sp_ptr_star_paren">sp_ptr_star_paren</a></td>
-   <td>#(41)Add or remove space after a pointer star '*', if followed by an open paren (function types).</td>
-</tr>
-<tr>
-   <td valign="top"><a href="#sp_before_template_paren">sp_before_template_paren</a></td>
-   <td>#(49)Add or remove space before the paren in the D constructs 'template Foo(' and 'class Foo('.</td>
+   <td>Add or remove space after a pointer star '*', if followed by an open paren (function types).</td>
 </tr>
 <tr>
    <td valign="top"><a href="#sp_before_sparen">sp_before_sparen</a></td>
-   <td>#(59)Add or remove space before '(' of 'if', 'for', 'switch', 'while', etc.</td>
+   <td>Add or remove space before '(' of 'if', 'for', 'switch', 'while', etc.</td>
 </tr>
 <tr>
    <td valign="top"><a href="#sp_inside_sparen">sp_inside_sparen</a></td>
-   <td>#(60)Add or remove space inside if-condition '(' and ')'.</td>
+   <td>)Add or remove space inside if-condition '(' and ')'.</td>
 </tr>
 <tr>
    <td valign="top"><a href="#sp_inside_sparen_close">sp_inside_sparen_close</a></td>
-   <td>#(61)Add or remove space before if-condition ')'. Overrides sp_inside_sparen.</td>
+   <td>)Add or remove space before if-condition ')'. Overrides sp_inside_sparen.</td>
 </tr>
 <tr>
    <td valign="top"><a href="#sp_inside_sparen_open">sp_inside_sparen_open</a></td>
-   <td>#(62)Add or remove space after if-condition '('. Overrides sp_inside_sparen.</td>
+   <td>)Add or remove space after if-condition '('. Overrides sp_inside_sparen.</td>
 </tr>
 <tr>
    <td valign="top"><a href="#sp_after_sparen">sp_after_sparen</a></td>
-   <td>#(63)Add or remove space after ')' of 'if', 'for', 'switch', and 'while', etc.</td>
+   <td>)Add or remove space after ')' of 'if', 'for', 'switch', and 'while', etc.</td>
 </tr>
+</table>
+
+<h1>Register (part 2) TODO</h1>
+<table border="0", width="100%">
 <tr>
    <td valign="top"><a href="#sp_sparen_brace">sp_sparen_brace</a></td>
    <td>#(64)Add or remove space between ')' and '{' of 'if', 'for', 'switch', and 'while', etc.</td>

@@ -325,6 +325,7 @@ declare namespace LibUncrustify
         UO_indent_square_nl : EmscriptenEnumTypeObject;
         UO_indent_preserve_sql : EmscriptenEnumTypeObject;
         UO_indent_align_assign : EmscriptenEnumTypeObject;
+        UO_indent_align_paren : EmscriptenEnumTypeObject;
         UO_indent_oc_block : EmscriptenEnumTypeObject;
         UO_indent_oc_block_msg : EmscriptenEnumTypeObject;
         UO_indent_oc_msg_colon : EmscriptenEnumTypeObject;
@@ -340,6 +341,9 @@ declare namespace LibUncrustify
         UO_indent_cpp_lambda_body : EmscriptenEnumTypeObject;
         UO_indent_using_block : EmscriptenEnumTypeObject;
         UO_indent_ternary_operator : EmscriptenEnumTypeObject;
+        UO_indent_off_after_return_new : EmscriptenEnumTypeObject;
+        UO_indent_single_after_return : EmscriptenEnumTypeObject;
+        UO_indent_ignore_asm_block : EmscriptenEnumTypeObject;
         UO_nl_collapse_empty_body : EmscriptenEnumTypeObject;
         UO_nl_assign_leave_one_liners : EmscriptenEnumTypeObject;
         UO_nl_class_leave_one_liners : EmscriptenEnumTypeObject;
@@ -357,6 +361,7 @@ declare namespace LibUncrustify
         UO_nl_end_of_file_min : EmscriptenEnumTypeObject;
         UO_nl_assign_brace : EmscriptenEnumTypeObject;
         UO_nl_assign_square : EmscriptenEnumTypeObject;
+        UO_nl_tsquare_brace : EmscriptenEnumTypeObject;
         UO_nl_after_square_assign : EmscriptenEnumTypeObject;
         UO_nl_func_var_def_blk : EmscriptenEnumTypeObject;
         UO_nl_typedef_blk_start : EmscriptenEnumTypeObject;
@@ -855,6 +860,7 @@ declare namespace LibUncrustify
         CT_TYPE_CAST : EmscriptenEnumTypeObject;
         CT_TYPENAME : EmscriptenEnumTypeObject;
         CT_TEMPLATE : EmscriptenEnumTypeObject;
+        CT_WHERE_SPEC : EmscriptenEnumTypeObject;
         CT_ASSIGN : EmscriptenEnumTypeObject;
         CT_ASSIGN_NL : EmscriptenEnumTypeObject;
         CT_SASSIGN : EmscriptenEnumTypeObject;
@@ -900,12 +906,14 @@ declare namespace LibUncrustify
         CT_CONSTR_COLON : EmscriptenEnumTypeObject;
         CT_D_ARRAY_COLON : EmscriptenEnumTypeObject;
         CT_COND_COLON : EmscriptenEnumTypeObject;
+        CT_WHERE_COLON : EmscriptenEnumTypeObject;
         CT_QUESTION : EmscriptenEnumTypeObject;
         CT_COMMA : EmscriptenEnumTypeObject;
         CT_ASM : EmscriptenEnumTypeObject;
         CT_ATTRIBUTE : EmscriptenEnumTypeObject;
         CT_CATCH : EmscriptenEnumTypeObject;
         CT_WHEN : EmscriptenEnumTypeObject;
+        CT_WHERE : EmscriptenEnumTypeObject;
         CT_CLASS : EmscriptenEnumTypeObject;
         CT_DELETE : EmscriptenEnumTypeObject;
         CT_EXPORT : EmscriptenEnumTypeObject;
@@ -979,6 +987,7 @@ declare namespace LibUncrustify
         CT_MACRO : EmscriptenEnumTypeObject;
         CT_QUALIFIER : EmscriptenEnumTypeObject;
         CT_EXTERN : EmscriptenEnumTypeObject;
+        CT_DECLSPEC : EmscriptenEnumTypeObject;
         CT_ALIGN : EmscriptenEnumTypeObject;
         CT_TYPE : EmscriptenEnumTypeObject;
         CT_PTR_TYPE : EmscriptenEnumTypeObject;
@@ -1074,6 +1083,8 @@ declare namespace LibUncrustify
         CT_ANNOTATION : EmscriptenEnumTypeObject;
         CT_FOR_COLON : EmscriptenEnumTypeObject;
         CT_DOUBLE_BRACE : EmscriptenEnumTypeObject;
+        CT_CNG_HASINC : EmscriptenEnumTypeObject;
+        CT_CNG_HASINCN : EmscriptenEnumTypeObject;
         CT_Q_EMIT : EmscriptenEnumTypeObject;
         CT_Q_FOREACH : EmscriptenEnumTypeObject;
         CT_Q_FOREVER : EmscriptenEnumTypeObject;

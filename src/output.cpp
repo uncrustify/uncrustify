@@ -500,7 +500,7 @@ void output_text(FILE *pfile)
                // Try to keep the same relative spacing
                chunk_t *prev = chunk_get_prev(pc);
 
-               if (prev && prev->type == CT_PP_IGNORE)
+               if (chunk_is_token(prev, CT_PP_IGNORE))
                {
                   /*
                    * Want to completely leave alone PP_IGNORE'd blocks because
@@ -1056,8 +1056,7 @@ static bool can_combine_comment(chunk_t *pc, cmt_reflow &cmt)
    {
       // Make sure the comment is the same type at the same column
       next = chunk_get_next(next);
-      if (  next != nullptr
-         && next->type == pc->type
+      if (  chunk_is_token(next, pc->type)
          && (  (next->column == 1 && pc->column == 1)
             || (next->column == cmt.base_col && pc->column == cmt.base_col)
             || (next->column > cmt.base_col && pc->parent_type == CT_COMMENT_END)))
@@ -1914,7 +1913,7 @@ static bool kw_fcn_fclass(chunk_t *cmt, unc_text &out_txt)
    {
       // if outside a class, we expect "CLASS::METHOD(...)"
       chunk_t *tmp = chunk_get_prev_ncnl(fcn);
-      if (tmp != nullptr && tmp->type == CT_OPERATOR)
+      if (chunk_is_token(tmp, CT_OPERATOR))
       {
          tmp = chunk_get_prev_ncnl(tmp);
       }
