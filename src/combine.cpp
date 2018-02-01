@@ -1860,6 +1860,41 @@ void fix_symbols(void)
          }
       }
 
+      if ((pc->type == CT_EXTERN) && (cpd.lang_flags & LANG_ALLC))
+      {
+         chunk_t *next = chunk_get_next_ncnl(pc);
+         if (next->type == CT_STRING)
+         {
+            chunk_t *tmp = chunk_get_next_ncnl(next);
+            while (tmp != NULL)
+            {
+               if (  (tmp->type == CT_TYPE)
+                  || (tmp->type == CT_BRACE_OPEN)
+                  || (tmp->type == CT_ATTRIBUTE))
+               {
+                  break;
+               }
+
+               if (tmp->type == CT_WORD)
+               {
+                  tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+                  break;
+               }
+
+               tmp = chunk_get_next_ncnl(tmp);
+            }
+         }
+      }
+
+      if ((pc->type == CT_ATTRIBUTE) && (cpd.lang_flags & (LANG_ALLC)))
+      {
+         chunk_t *tmp = skip_attribute_next(pc);
+         if ((tmp != NULL) && (tmp->type == CT_WORD))
+         {
+            tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+         }
+      }
+
       /*
        * A variable definition is possible after at the start of a statement
        * that starts with: QUALIFIER, TYPE, or WORD

@@ -1988,6 +1988,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       return(cpd.settings[UO_sp_extern_paren].a);
    }
 
+   if (  (second->type == CT_TYPE)
+      && (  ((first->type == CT_STRING) && (first->parent_type == CT_EXTERN))
+         || ((first->type == CT_FPAREN_CLOSE) && (first->parent_type == CT_ATTRIBUTE))))
+   {
+      log_rule("FORCE");
+      return(AV_FORCE);  /* TODO: make this configurable? */
+   }
+
    // this table lists out all combos where a space should NOT be present
    // CT_UNKNOWN is a wildcard.
    for (auto it : no_space_table)
