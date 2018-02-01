@@ -2184,7 +2184,7 @@ void indent_text(void)
       {
          /* class indentation is ok already, just need to adjust func */
          /* TODO: make this configurable, obviously.. */
-         if (pc->parent_type == CT_FUNC_DEF || pc->parent_type == CT_STRUCT)
+         if (pc->parent_type == CT_FUNC_DEF || (pc->parent_type == CT_STRUCT && frm.top().type != CT_CLASS_COLON))
          {
             indent_column_set(frm.top().indent + 4);
          }
