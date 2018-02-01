@@ -5,6 +5,6 @@ int main(void) {
     int j = 30 * -1;
 
     int frames = 127;
-    frames = ((frames + 15) & - 16);
+    frames = ((frames + 15) & -16);
     return 0;
 }
