@@ -34,6 +34,7 @@
 10071  ben_038.cfg                          cs/utf16be.cs
 10072  ben_038.cfg                          cs/utf16le_no_bom.cs
 10073  ben_038.cfg                          cs/utf16be_no_bom.cs
+10074  UNI-2020.cfg                         cs/UNI-2020.cs
 
 10080  ben_042.cfg                          cs/property.cs
 
@@ -105,7 +106,10 @@
 11073  U08-Cs.cfg                           cs/UNI-2008.cs
 
 60004  UNI-2684.cfg                         cs/UNI-2684.cs
+60005  UNI-2685.cfg                         cs/UNI-2685.cs
+60007  UNI-3083.cfg                         cs/UNI-3083.cs
 60008  U-J.cfg                              cs/UNI-17253.cs
+60009! UNI-9917.cfg                         cs/UNI-9917.cs
 60012  U13-Cs.cfg                           cs/UNI-12303.cs
 60013  UNI-13955.cfg                        cs/UNI-13955.cs
 60015  UNI-14131.cfg                        cs/UNI-14131.cs
