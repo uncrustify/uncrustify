@@ -3070,7 +3070,7 @@ void combine_labels(void)
          }
       }
 
-      if (next->type == CT_QUESTION)
+      if ((next->type == CT_QUESTION) && ((next->flags & PCF_IN_TEMPLATE) == 0))
       {
          cs.Push_Back(next);
       }
