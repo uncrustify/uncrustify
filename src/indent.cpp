@@ -405,7 +405,7 @@ static size_t calc_indent_continue(const ParseFrame &frm, size_t pse_tos)
 {
    const int ic = cpd.settings[UO_indent_continue].n;
 
-   if (ic < 0 && frm.at(pse_tos).indent_cont > 0)
+   if (ic < 0 && frm.at(pse_tos).indent_cont)
    {
       return(frm.at(pse_tos).indent);
    }
