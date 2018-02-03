@@ -805,6 +805,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    }
    if (second->type == CT_OC_MSG_FUNC)
    {
+      if (  (cpd.settings[UO_sp_after_oc_msg_receiver].a == AV_REMOVE)
+         && (  (first->type != CT_SQUARE_CLOSE)
+            && (first->type != CT_FPAREN_CLOSE)
+            && (first->type != CT_PAREN_CLOSE)))
+      {
+         return(AV_FORCE);
+      }
+
       log_rule("sp_after_oc_msg_receiver");
       return(cpd.settings[UO_sp_after_oc_msg_receiver].a);
    }
@@ -827,6 +835,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       && (  second->parent_type != CT_OC_MSG
          && second->parent_type != CT_CS_SQ_STMT))
    {
+      if (((second->flags & PCF_IN_SPAREN) != 0) && (first->type == CT_IN))
+      {
+         return(AV_FORCE);
+      }
+
       log_rule("sp_before_square");
       return(cpd.settings[UO_sp_before_square].a);
    }

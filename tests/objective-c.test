@@ -93,7 +93,11 @@
 50604  objc_bug_497.cfg                     oc/bug_497.m
 50605  empty.cfg                            oc/bug_404.m
 50606  oc19.cfg                             oc/bug_1366.m
+50607  aet-sp_after_oc_msg_receiver.cfg     oc/sp_after_oc_msg_receiver.m
+50608  aet.cfg                              oc/blocks_align2.m
 50609  sp_arith-f.cfg                       oc/negative_value.m
+50610  aet.cfg                              oc/nelem.m
+50611  aet.cfg                              oc/for2.m
 
 50700  cmt_insert-0.cfg                     oc/cmt_insert.m
 
