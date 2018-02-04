@@ -806,7 +806,7 @@ indent_relative_single_line_comments = false    # false/true
 # Usually 0 or indent_columns.
 indent_switch_case              = 0        # unsigned number
 
-# Whether to indent preproccesor statements inside of switch statements.
+# Whether to indent preprocessor statements inside of switch statements.
 indent_switch_pp                = true     # false/true
 
 # Spaces to shift the 'case' line, without affecting any other lines

@@ -806,7 +806,7 @@ indent_switch_case              Unsigned Number
   Usually 0 or indent_columns.
 
 indent_switch_pp                { False, True }
-  Whether to indent preproccesor statements inside of switch statements.
+  Whether to indent preprocessor statements inside of switch statements.
 
 indent_case_shift               Unsigned Number
   Spaces to shift the 'case' line, without affecting any other lines
