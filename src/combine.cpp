@@ -6166,6 +6166,7 @@ static void handle_oc_message_send(chunk_t *os)
    }
    else if (  tmp->type != CT_WORD
            && tmp->type != CT_TYPE
+           && tmp->type != CT_THIS
            && tmp->type != CT_STRING)
    {
       LOG_FMT(LOCMSG, "%s(%d): orig_line is %zu, orig_col is %zu, expected identifier, not '%s' [%s]\n",
