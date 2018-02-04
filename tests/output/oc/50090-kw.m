@@ -17,11 +17,11 @@
 @end
 
 @interface JobExecutor : Object
--doWith: (id<Job> ) job for: (int)count;
+-doWith: (id<Job>)job for: (int)count;
 @end
 
 @implementation JobExecutor
--doWith: (id<Job> )job for: (int)count
+-doWith: (id<Job>)job for: (int)count
 {
    for (int i = 0; i < count; ++i)
    {
