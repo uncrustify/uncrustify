@@ -537,10 +537,11 @@
 
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
+10001  empty.cfg                            cpp/622_ifdef-indentation.cpp
 10002  623_caret-spacing.cfg                cpp/623_caret-spacing.cpp
 10003  633_decl-in-func-typedef.cfg         cpp/633_decl-in-func-typedef.cpp
 10004  empty.cfg                            cpp/634_extern-c-no-block.cpp
-10005  U01-Cpp.cfg                          cpp/define-indentation.cpp
+10005  Uncrustify.Cpp.cfg                   cpp/define-indentation.cpp
 10006  dont-detab-strings.cfg               cpp/dont-detab-strings.cpp
 10007  dont-process-defines.cfg             cpp/dont-process-defines.cpp
 10008  empty.cfg                            cpp/PR326_invalid-backslash-eol-csharp.cpp
@@ -568,6 +569,7 @@
 10079  U23-Cpp.cfg                          cpp/UNI-9650.cpp
 10080  UNI-10496.cfg                        cpp/UNI-10496.cpp
 10100  issue_564.cfg                        cpp/issue_564.cpp
+10101  issue_574.cfg                        cpp/issue_574.cpp
 11000  UNI-12046.cfg                        cpp/UNI-12046.cpp
 60001  UNI-2650.cfg                         cpp/UNI-2650.cpp
 60002  U25-Cpp.cfg                          cpp/UNI-16283.cpp
