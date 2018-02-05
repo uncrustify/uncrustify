@@ -1167,6 +1167,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          log_rule("sp_inside_braces_struct");
          return(cpd.settings[UO_sp_inside_braces_struct].a);
       }
+      else if (  second->parent_type == CT_OC_AT
+              && cpd.settings[UO_sp_inside_braces_oc_dict].a != AV_IGNORE)
+      {
+         log_rule("sp_inside_braces_oc_dict");
+         return(cpd.settings[UO_sp_inside_braces_oc_dict].a);
+      }
+
       if (second->parent_type == CT_BRACED_INIT_LIST)
       {
          if (cpd.settings[UO_sp_before_type_brace_init_lst_close].a != AV_IGNORE)
@@ -1398,6 +1405,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    if (  (chunk_is_str(first, "(", 1) && chunk_is_str(second, "(", 1))
       || (chunk_is_str(first, ")", 1) && chunk_is_str(second, ")", 1)))
    {
+      if (second->parent_type == CT_FUNC_CALL_USER)
+      {
+         log_rule("sp_func_call_user_paren_paren");
+         return(cpd.settings[UO_sp_func_call_user_paren_paren].a);
+      }
       log_rule("sp_paren_paren");
       return(cpd.settings[UO_sp_paren_paren].a);
    }
@@ -1405,6 +1417,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    // "foo(...)" vs "foo( ... )"
    if (first->type == CT_FPAREN_OPEN || second->type == CT_FPAREN_CLOSE)
    {
+      if (  (first->parent_type == CT_FUNC_CALL_USER)
+         || (  (second->parent_type == CT_FUNC_CALL_USER)
+            && ((first->type == CT_WORD) || (first->type == CT_SQUARE_CLOSE))))
+      {
+         log_rule("sp_func_call_user_inside_fparen");
+         return(cpd.settings[UO_sp_func_call_user_inside_fparen].a);
+      }
       if (first->type == CT_FPAREN_OPEN && second->type == CT_FPAREN_CLOSE)
       {
          log_rule("sp_inside_fparens");
@@ -1804,6 +1823,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          log_rule("sp_inside_braces_struct");
          return(cpd.settings[UO_sp_inside_braces_struct].a);
       }
+      else if (  first->parent_type == CT_OC_AT
+              && cpd.settings[UO_sp_inside_braces_oc_dict].a != AV_IGNORE)
+      {
+         log_rule("sp_inside_braces_oc_dict");
+         return(cpd.settings[UO_sp_inside_braces_oc_dict].a);
+      }
       if (first->parent_type == CT_BRACED_INIT_LIST)
       {
          if (cpd.settings[UO_sp_after_type_brace_init_lst_open].a != AV_IGNORE)
@@ -2010,6 +2035,18 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    {
       log_rule("FORCE");
       return(AV_FORCE);  /* TODO: make this configurable? */
+   }
+
+   if (first->parent_type == CT_TYPE_CAST)
+   {
+      if (first->flags & PCF_IN_OC_MSG)
+      {
+         log_rule("FORCE");
+         return(AV_FORCE);
+      }
+
+      log_rule("sp_after_cast");
+      return(cpd.settings[UO_sp_after_cast].a);
    }
 
    // this table lists out all combos where a space should NOT be present
