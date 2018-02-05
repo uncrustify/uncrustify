@@ -64,7 +64,7 @@
 
 - (void)testMethodWrapper {
     SEL testMethodForSelectorSel = @selector(testMethod:);
-    __block void *testMethodForSelectorBlock = TestFunction(encoderTest, testMethodForSelectorSel, ^id (__typeof (encoderTest) self, SEL aSelector) {
+    __block void *testMethodForSelectorBlock = TestFunction(encoderTest, testMethodForSelectorSel, ^id (__typeof(encoderTest) self, SEL aSelector) {
         NSLog(@"OK");
     });
 }
