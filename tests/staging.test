@@ -8,4 +8,3 @@
 10043 staging/Uncrustify.CSharp.cfg staging/nl-brace.cs
 10064 staging/Uncrustify.CSharp.cfg staging/UNI-1443.cs
 60014 staging/Uncrustify.Cpp.cfg    staging/UNI-14107.cpp
-60035 staging/Uncrustify.CSharp.cfg staging/UNI-22858.cs
