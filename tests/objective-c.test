@@ -115,3 +115,9 @@
 
 50800  obj-c-properties.cfg                 oc/properties.m
 50801  empty.cfg                            oc/i1213.m
+
+
+#
+# adopt tests from UT
+10018  empty.cfg                            oc/delete-space-oc.mm
+10019  empty.cfg                            oc/func-param-wrap-oc.mm
