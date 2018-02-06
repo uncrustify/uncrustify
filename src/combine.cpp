@@ -724,6 +724,9 @@ static bool chunk_ends_type(chunk_t *start)
          || pc->type == CT_FPAREN_CLOSE
          || chunk_is_forin(pc)
          || pc->type == CT_MACRO
+         || pc->type == CT_PP_IF
+         || pc->type == CT_PP_ELSE
+         || pc->type == CT_PP_ENDIF
          || ((pc->type == CT_COMMA && ((pc->flags & PCF_IN_FCN_CALL) == 0)) && last_expr)
          || (pc->type == CT_SPAREN_OPEN && last_lval))
       {
@@ -1002,6 +1005,15 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       if (chunk_is_paren_open(tmp))
       {
          set_paren_parent(tmp, CT_ANNOTATION);
+      }
+   }
+
+   if (pc->type == CT_SIZEOF && (cpd.lang_flags & LANG_ALLC))
+   {
+      tmp = chunk_get_next_ncnl(pc);
+      if (chunk_is_paren_open(tmp))
+      {
+         set_paren_parent(tmp, CT_TYPE_CAST);
       }
    }
 
