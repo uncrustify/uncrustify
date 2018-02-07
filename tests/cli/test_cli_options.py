@@ -16,6 +16,7 @@ from shutil import rmtree
 from subprocess import Popen, PIPE, STDOUT
 from io import open
 import re
+import difflib
 
 if os_name == 'nt':
     EX_OK = 0
@@ -206,8 +207,15 @@ def check_std_output(expected_path, result_path, result_str, result_manip=None):
         with open(result_path, 'w', encoding="utf-8", newline="") as f:
             f.write(result_str)
 
-        print("\nProblem with %s" % result_path)
-        print("use: 'diff %s %s' to find out why" % (result_path, expected_path))
+        print("\n************************************")
+        print("Problem with %s" % result_path)
+        print("************************************")
+
+        fileDiff = difflib.ndiff(result_str.splitlines(), exp_txt.splitlines())
+
+        for line in fileDiff:
+          print(line);
+
         return False
     return True
 
