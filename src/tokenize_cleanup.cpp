@@ -966,8 +966,8 @@ static void check_template(chunk_t *start)
 #endif
 
       // Scan back and make sure we aren't inside square parenthesis
-      bool in_if         = false;
-      bool hit_semicolon = false;
+      bool in_if            = false;
+      bool hit_semicolon    = false;
       bool hit_square_close = false;
       pc = start;
       while ((pc = chunk_get_prev_ncnl(pc, scope_e::PREPROC)) != nullptr)
