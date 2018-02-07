@@ -1702,6 +1702,8 @@ void register_options(void)
                   "Determines weight of setter type (setter=) (Obj-C).");
    unc_add_option("mod_sort_oc_property_nullability_weight", UO_mod_sort_oc_property_nullability_weight, AT_NUM,
                   "Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C).");
+   unc_add_option("UO_mod_strict_ASCII", UO_mod_strict_ASCII, AT_BOOL,
+                  "If True,it will detects non-ascii character for words (except strings and comments) and report an error");
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,

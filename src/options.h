@@ -851,6 +851,7 @@ enum uncrustify_options
    UO_mod_sort_oc_property_getter_weight,        // Determines weight of getter type (getter=)
    UO_mod_sort_oc_property_setter_weight,        // Determines weight of setter type (setter=)
    UO_mod_sort_oc_property_nullability_weight,   // Determines weight of nullability type (nullable/nonnull)
+   UO_mod_strict_ASCII,                          // If True, Detects non-ascii character for words (except Strings and comments) it will report an error
 
 
    // group: UG_preprocessor, "Preprocessor options"                                                10

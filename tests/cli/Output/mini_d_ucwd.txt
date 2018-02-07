@@ -2017,6 +2017,9 @@ mod_sort_oc_property_setter_weight = 0        # number
 # Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C).
 mod_sort_oc_property_nullability_weight = 0        # number
 
+# If True,it will detects non-ascii character for words (except strings and comments) and report an error
+UO_mod_strict_ASCII             = false    # false/true
+
 #
 # Preprocessor options
 #

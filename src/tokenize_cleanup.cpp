@@ -128,6 +128,41 @@ void tokenize_cleanup(void)
     * Since [] is expected to be TSQUARE for the 'operator', we need to make
     * this change in the first pass.
     */
+   if (cpd.settings[UO_mod_strict_ASCII].b)
+   {
+      int count = 0;
+      for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
+      {
+         // error out non-ascii char except for comments and strings.
+         if (  pc->type != CT_STRING
+            && pc->type != CT_STRING_MULTI
+            && pc->type != CT_COMMENT
+            && pc->type != CT_COMMENT_CPP
+            && pc->type != CT_COMMENT_EMBED
+            && pc->type != CT_COMMENT_START
+            && pc->type != CT_COMMENT_END
+            && pc->type != CT_COMMENT_MULTI
+            && pc->type != CT_COMMENT_ENDIF
+            && pc->type != CT_COMMENT_START
+            && pc->type != CT_COMMENT_WHOLE)
+         {
+            std::string tmp = pc->text();
+            for (char &c : tmp)
+            {
+               if (!isascii(c))
+               {
+                  LOG_FMT(LNOTE, "$$$ NON-ASCII Charecter  ' %c '  found  in ' %s '  pc->orig_line is %u  \n", c, pc->text(), pc->orig_line);
+                  count++;
+               }
+            }
+         }
+      }
+      if (count != 0)
+      {
+         exit(0);
+      }
+   }
+
    chunk_t *pc;
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
