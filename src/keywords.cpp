@@ -94,7 +94,7 @@ static chunk_tag_t keywords[] =
    { "__asm__",             CT_ASM,              LANG_C                                                                      },
    { "__attribute__",       CT_ATTRIBUTE,        LANG_C                                                                      },
    { "__autoreleasing",     CT_QUALIFIER,        LANG_C                                                                      },
-   { "__block",             CT_QUALIFIER,        LANG_OC                                                                     },
+   { "__block",             CT_QUALIFIER,        LANG_C                                                                      },
    { "__bridge",            CT_QUALIFIER,        LANG_C                                                                      },
    { "__bridge_retained",   CT_QUALIFIER,        LANG_C                                                                      },
    { "__bridge_transfer",   CT_QUALIFIER,        LANG_C                                                                      },
