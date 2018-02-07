@@ -41,3 +41,11 @@ void foo()
         i++;
     }
 }
+
+void foo()
+{
+    if (ps.alive[q] > LifetimePercent || speedSqr < KillSpeedSqr || speedSqr > maxKillSpeedSqr)
+    {
+        i++;
+    }
+}
