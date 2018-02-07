@@ -638,6 +638,18 @@ void tokenize_cleanup(void)
          {
             set_chunk_type(pc, CT_WORD);
          }
+
+         // Fix self keyword back to word when mixing c++/objective-c
+         if (pc->type == CT_THIS && !strcmp(pc->text(), "self") && (next->type == CT_COMMA || next->type == CT_PAREN_CLOSE))
+         {
+            set_chunk_type(pc, CT_WORD);
+         }
+
+         // Fix self keyword back to word when mixing c++/objective-c
+         if (pc->type == CT_THIS && !strcmp(pc->text(), "self") && (next->type == CT_COMMA || next->type == CT_PAREN_CLOSE))
+         {
+            set_chunk_type(pc, CT_WORD);
+         }
       }
 
       // Another hack to clean up more keyword abuse
