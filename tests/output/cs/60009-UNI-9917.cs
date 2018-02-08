@@ -2,14 +2,10 @@
 
 namespace Unity.IL2CPP.IntegrationTests.ILTests.Tests
 {
-    public class GlobalsWithBoxOptimizationAndBrTrueOpcodeTest : BoxTestsBase { public GlobalsWithBoxOptimizationAndBrTrueOpcodeTest() : base(OpCodes.Brtrue) {}
-    }
-    public class GlobalsWithBoxOptimizationAndBrTrueSOpcodeTest : BoxTestsBase { public GlobalsWithBoxOptimizationAndBrTrueSOpcodeTest() : base(OpCodes.Brtrue_S) {}
-    }
-    public class GlobalsWithBoxOptimizationAndBrFalseOpcodeTest : BoxTestsBase { public GlobalsWithBoxOptimizationAndBrFalseOpcodeTest() : base(OpCodes.Brfalse) {}
-    }
-    public class GlobalsWithBoxOptimizationAndBrFalseSOpcodeTest : BoxTestsBase { public GlobalsWithBoxOptimizationAndBrFalseSOpcodeTest() : base(OpCodes.Brfalse_S) {}
-    }
+    public class GlobalsWithBoxOptimizationAndBrTrueOpcodeTest : BoxTestsBase { public GlobalsWithBoxOptimizationAndBrTrueOpcodeTest() : base(OpCodes.Brtrue) {} }
+    public class GlobalsWithBoxOptimizationAndBrTrueSOpcodeTest : BoxTestsBase { public GlobalsWithBoxOptimizationAndBrTrueSOpcodeTest() : base(OpCodes.Brtrue_S) {} }
+    public class GlobalsWithBoxOptimizationAndBrFalseOpcodeTest : BoxTestsBase { public GlobalsWithBoxOptimizationAndBrFalseOpcodeTest() : base(OpCodes.Brfalse) {} }
+    public class GlobalsWithBoxOptimizationAndBrFalseSOpcodeTest : BoxTestsBase { public GlobalsWithBoxOptimizationAndBrFalseSOpcodeTest() : base(OpCodes.Brfalse_S) {} }
 }
 
 // 2. And formatting this produces the third.
