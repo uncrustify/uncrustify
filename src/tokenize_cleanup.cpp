@@ -151,8 +151,10 @@ void tokenize_cleanup(void)
             {
                if (!isascii(c))
                {
-                  LOG_FMT(LNOTE, "$$$ NON-ASCII Charecter  ' %c '  found  in ' %s '  pc->orig_line is %u  \n", c, pc->text(), pc->orig_line);
+                  LOG_FMT(LNOTE, "$$$ orig_line is %u, orig_col is %u, text() ' %s ', type is %s, orig_col_end is %u NON-ASCII Charecter  ' %c '  found.\n",
+                     pc->orig_line,pc->orig_col, pc->text(),get_token_name(pc->type),pc->orig_col_end,c );
                   count++;
+                  
                }
             }
          }
