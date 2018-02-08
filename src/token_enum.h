@@ -170,7 +170,6 @@ enum c_token_t
    CT_UNITTEST,
    CT_UNSAFE,
    CT_FINALLY,
-   CT_FIXED,            // C# fixed
    CT_IMPORT,
    CT_D_SCOPE,
    CT_D_SCOPE_IF,

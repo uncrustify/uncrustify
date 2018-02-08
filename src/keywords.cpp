@@ -212,7 +212,6 @@ static chunk_tag_t keywords[] =
    { "file",                CT_PP_FILE,          LANG_PAWN | FLAG_PP                                                         }, // PAWN
    { "final",               CT_QUALIFIER,        LANG_CPP | LANG_D | LANG_ECMA                                               },
    { "finally",             CT_FINALLY,          LANG_D | LANG_CS | LANG_VALA | LANG_ECMA | LANG_JAVA                        },
-   { "fixed",               CT_FIXED,            LANG_CS                                                                     },
    { "flags",               CT_TYPE,             LANG_VALA                                                                   },
    { "float",               CT_TYPE,             LANG_ALLC                                                                   },
    { "for",                 CT_FOR,              LANG_ALL                                                                    }, // PAWN
