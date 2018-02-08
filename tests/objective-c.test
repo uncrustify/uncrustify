@@ -114,8 +114,16 @@
 50625  aet-sp_inside_braces_oc_dict.cfg     oc/sp_inside_braces_oc_dict.m
 50626  aet.cfg                              oc/chunk_ends_type4.m
 50627  aet.cfg                              oc/method_ends_semicolon.m
+50628  aet.cfg                              oc/macro-close-brace.m
+50629  aet.cfg                              oc/pp_bool.m
 
 50700  cmt_insert-0.cfg                     oc/cmt_insert.m
 
 50800  obj-c-properties.cfg                 oc/properties.m
 50801  empty.cfg                            oc/i1213.m
+
+
+#
+# adopt tests from UT
+10018  empty.cfg                            oc/delete-space-oc.mm
+10019  empty.cfg                            oc/func-param-wrap-oc.mm
