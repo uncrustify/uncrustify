@@ -119,3 +119,4 @@
 60040 staging/Uncrustify.CSharp.cfg staging/UNI-30498_2.cs
 60041 staging/squeeze-paren-close-Option.cfg staging/squeeze-paren-close-Option.cs
 60042 staging/UNI-18777.cfg staging/UNI-18777.cpp
+60043 staging/Uncrustify.CSharp.cfg staging/UNI-36862.cs
