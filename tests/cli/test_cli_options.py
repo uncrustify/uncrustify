@@ -78,7 +78,17 @@ def write_to_output_path(output_path, result_str):
     writes the contents of result_str to the output path
     """
     print("Auto appending differences to: " + output_path)
-    with open(output_path, 'w', encoding="utf-8", newline="") as f:
+
+    '''
+    newline = None: this outputs  \r\n
+    newline = "\r": this outputs  \r
+    newline = "\n": this outputs  \n
+    newline = ""  : this outputs  \n    
+    For the sake of consistency, all newlines are now being written out as \n
+    However, if the result_str itself contains \r\n, then \r\n will be output
+    as this code doesn't post process the data being written out
+    '''
+    with open(output_path, 'w', encoding="utf-8", newline="\n") as f:
         f.write(result_str)
 
 
@@ -101,20 +111,12 @@ def get_file_content(fp):
     out = None
 
     if isfile(fp):
-        with open(fp, encoding="utf-8", newline="") as f:
+        with open(fp, encoding="utf-8", newline="\n") as f:
             out = f.read()
     else:
         eprint("is not a file: %s" % fp)
 
     return out
-
-
-def get_file_content_unix_newlined(file_path):
-    """
-    like get_file_content, additionally removes '\r' from the output
-    """
-    out = get_file_content(file_path)
-    return None if out is None else out.replace("\r", '')
 
 
 def check_generated_output(gen_expected_path, gen_result_path,
@@ -151,11 +153,11 @@ def check_generated_output(gen_expected_path, gen_result_path,
     True
     """
 
-    gen_exp_txt = get_file_content_unix_newlined(gen_expected_path)
+    gen_exp_txt = get_file_content(gen_expected_path)
     if gen_exp_txt is None:
         return False
 
-    gen_res_txt = get_file_content_unix_newlined(gen_result_path)
+    gen_res_txt = get_file_content(gen_result_path)
     if gen_res_txt is None:
         return False
 
@@ -225,7 +227,7 @@ def check_std_output(expected_path, result_path, result_str, result_manip=None,
     True or False depending on whether both files have the same content
 
     """
-    exp_txt = get_file_content_unix_newlined(expected_path)
+    exp_txt = get_file_content(expected_path)
     if exp_txt is None:
         return False
 
@@ -237,7 +239,7 @@ def check_std_output(expected_path, result_path, result_str, result_manip=None,
             result_str = result_manip(result_str)
 
     if result_str != exp_txt:
-        with open(result_path, 'w', encoding="utf-8", newline="") as f:
+        with open(result_path, 'w', encoding="utf-8", newline="\n") as f:
             f.write(result_str)
        
         if program_args.apply and program_args.auto_output_path:
@@ -404,7 +406,7 @@ def file_find_string(search_string, file_path):
         True if found, False otherwise
     """
     if isfile(file_path):
-        with open(file_path, encoding="utf-8", newline="") as f:
+        with open(file_path, encoding="utf-8", newline="\n") as f:
             if search_string.lower() in f.read().lower():
                 return True
     else:
@@ -642,7 +644,7 @@ def main(args):
                       '-p', s_path_join(sc_dir, 'results/p.txt')],
             gen_expected_path=s_path_join(sc_dir, 'output/p.txt'),
             gen_result_path=s_path_join(sc_dir, 'results/p.txt'),
-            gen_result_manip=reg_replace(r'\# Uncrustify.+', '')):
+            gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')):
         return_flag = False
 
     # Debug Options:
