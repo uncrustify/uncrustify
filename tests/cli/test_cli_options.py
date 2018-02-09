@@ -77,7 +77,15 @@ def write_to_output_path(output_path, result_str):
     writes the contents of result_str to the output path
     """
     print("Auto appending differences to: " + output_path)
-    with open(output_path, 'w', encoding="utf-8", newline="") as f:
+    
+    #newline = None: this outputs  \r\n
+    #newline = "\r": this outputs  \r
+    #newline = "\n": this outputs  \n
+    #newline = ""  : this outputs  \n    
+    #For the sake of consistency, all newlines are now being written out as \n
+    #However, if the result_str itself contains \r\n, then \r\n will be output
+    #as this code doesn't post process the data being written out
+    with open(output_path, 'w', encoding="utf-8", newline="\n") as f:
         f.write(result_str)
 
 def get_file_content(fp):
@@ -99,20 +107,12 @@ def get_file_content(fp):
     out = None
 
     if isfile(fp):
-        with open(fp, encoding="utf-8", newline="") as f:
+        with open(fp, encoding="utf-8", newline="\n") as f:
             out = f.read()
     else:
         eprint("is not a file: %s" % fp)
 
     return out
-
-
-def get_file_content_unix_newlined(file_path):
-    """
-    like get_file_content, additionally removes '\r' from the output
-    """
-    out = get_file_content(file_path)
-    return None if out is None else out.replace("\r", '')
 
 
 def check_generated_output(gen_expected_path, gen_result_path, result_manip=None, program_args=None):
@@ -148,13 +148,11 @@ def check_generated_output(gen_expected_path, gen_result_path, result_manip=None
     True
     """
 
-    no_additional_options = bool(program_args.diff is False and program_args.apply is False)
-
-    gen_exp_txt = get_file_content_unix_newlined(gen_expected_path)
+    gen_exp_txt = get_file_content(gen_expected_path)
     if gen_exp_txt is None:
         return False
 
-    gen_res_txt = get_file_content_unix_newlined(gen_result_path)
+    gen_res_txt = get_file_content(gen_result_path)
     if gen_res_txt is None:
         return False
 
@@ -169,17 +167,15 @@ def check_generated_output(gen_expected_path, gen_result_path, result_manip=None
 
         with open(gen_result_path, 'w', encoding="utf-8", newline="") as f:
                 f.write(gen_res_txt)
-
-        if no_additional_options:
-            print("\nProblem with %s" % gen_result_path)
-            print("use: '-diff' to find out why %s %s are different" % (gen_result_path,
-                                                                        gen_expected_path))
-        else:
-            if program_args.apply and program_args.auto_output_path:
+    
+        if program_args.apply and program_args.auto_output_path:
                 write_to_output_path(program_args.auto_output_path, gen_res_txt)
                 return True
-
-        return False
+        else:
+                print("\nProblem with %s" % gen_result_path)
+                print("use: '-diff' to find out why %s %s are different" % (gen_result_path,
+                                                                            gen_expected_path))
+                return False
 
     remove(gen_result_path)
 
@@ -214,12 +210,11 @@ def check_std_output(expected_path, result_path, result_str, result_manip=None, 
     True or False depending on whether both files have the same content
 
     """
-    exp_txt = get_file_content_unix_newlined(expected_path)
+    exp_txt = get_file_content(expected_path)
     if exp_txt is None:
         return False
 
-    no_additional_options = bool(program_args.diff is False and program_args.apply is False)
-
+    
     if result_manip is not None:
         if type(result_manip) is list or type(result_manip) is tuple:
             for m in result_manip:
@@ -228,27 +223,26 @@ def check_std_output(expected_path, result_path, result_str, result_manip=None, 
             result_str = result_manip(result_str)
 
     if result_str != exp_txt:
-        with open(result_path, 'w', encoding="utf-8", newline="") as f:
+        with open(result_path, 'w', encoding="utf-8", newline="\n") as f:
             f.write(result_str)
+       
+        if program_args.apply and program_args.auto_output_path:
+            write_to_output_path(program_args.auto_output_path, result_str)
+            return True 
+            
+        if program_args.diff:
+            print("\n************************************")
+            print("Problem with %s" % result_path)
+            print("************************************")
 
-        if no_additional_options:
-          print("\nProblem with %s" % result_path)
-          print("use: '-diff' to find out why %s %s are different" % (result_path, expected_path))
+            fileDiff = difflib.ndiff(result_str.splitlines(), exp_txt.splitlines())
+
+            for line in fileDiff:
+                print(line);
         else:
-            #came in here with some extra options
-            if program_args.diff:
-                print("\n************************************")
-                print("Problem with %s" % result_path)
-                print("************************************")
-
-                fileDiff = difflib.ndiff(result_str.splitlines(), exp_txt.splitlines())
-
-                for line in fileDiff:
-                    print(line);
-
-            if program_args.apply and program_args.auto_output_path:
-                write_to_output_path(program_args.auto_output_path, result_str)
-                return True
+            print("\nProblem with %s" % result_path)
+            print("use: '-diff' to find out why %s %s are different" % (result_path, expected_path))
+            
 
         return False
     return True
@@ -337,6 +331,10 @@ def check_output(
             program_args=program_args):
         ret_flag = False
 
+    if program_args.apply:
+     valid_path = [err_expected_path, out_expected_path , gen_expected_path]
+     program_args.auto_output_path = next(item for item in valid_path if item is not None)
+
     if err_expected_path and not check_std_output(
             err_expected_path, err_result_path, err_res_txt,
             result_manip=err_result_manip,
@@ -388,7 +386,7 @@ def file_find_string(search_string, file_path):
         True if found, False otherwise
     """
     if isfile(file_path):
-        with open(file_path, encoding="utf-8", newline="") as f:
+        with open(file_path, encoding="utf-8", newline="\n") as f:
             if search_string.lower() in f.read().lower():
                 return True
     else:
@@ -493,10 +491,10 @@ def main(args):
     sc_dir = dirname(relpath(__file__))
 
     parser = argparse.ArgumentParser(description='Test CLI Options')
-    parser.add_argument('-diff', help='show diffs when there is a test mismatch', action='store_true')
-    parser.add_argument('-apply', help='auto apply the changes from the results folder to the output folder', action='store_true')
+    parser.add_argument('--diff', help='show diffs when there is a test mismatch', action='store_true')
+    parser.add_argument('--apply', help='auto apply the changes from the results folder to the output folder', action='store_true')
 
-    parsed_args = parser.parse_args();
+    parsed_args = parser.parse_args()
 
     # find the uncrustify binary (keep Debug dir excluded)
     bin_found = False
@@ -624,7 +622,7 @@ def main(args):
                       '-p', s_path_join(sc_dir, 'Results/p.txt')],
             gen_expected_path=s_path_join(sc_dir, 'Output/p.txt'),
             gen_result_path=s_path_join(sc_dir, 'Results/p.txt'),
-            gen_result_manip=reg_replace(r'\# Uncrustify.+', ''),
+            gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', ''),
             program_args=parsed_args):
         return_flag = False
 
