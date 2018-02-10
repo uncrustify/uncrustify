@@ -110,6 +110,7 @@
 60007  UNI-3083.cfg                         cs/UNI-3083.cs
 60008  U-J.cfg                              cs/UNI-17253.cs
 60009! UNI-9917.cfg                         cs/UNI-9917.cs
+60011  UNI-11095.cfg                        cs/UNI-11095.mm
 60012  U13-Cs.cfg                           cs/UNI-12303.cs
 60013  UNI-13955.cfg                        cs/UNI-13955.cs
 60015  UNI-14131.cfg                        cs/UNI-14131.cs
