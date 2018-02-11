@@ -837,6 +837,9 @@ void register_options(void)
    unc_add_option("indent_member", UO_indent_member, AT_UNUM,
                   "The number of spaces to indent a continued '->' or '.'\n"
                   "Usually set to 0, 1, or indent_columns.");
+   unc_add_option("indent_member_single", UO_indent_member_single, AT_BOOL,
+                  "setting to true will indent lines broken at '.' or '->' by a single indent\n"
+                  "UO_indent_member option will not be effective if this is set to true.");
    unc_add_option("indent_sing_line_comments", UO_indent_sing_line_comments, AT_UNUM,
                   "Spaces to indent single line ('//') comments on lines before code.");
    unc_add_option("indent_relative_single_line_comments", UO_indent_relative_single_line_comments, AT_BOOL,

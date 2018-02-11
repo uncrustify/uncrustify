@@ -89,10 +89,17 @@ ContainerType &ParseFrame::prev(size_t idx)
 {
    LOG_FUNC_ENTRY();
 
-   if (idx == 0 || idx >= pse.size())
+   if (idx == 0)
    {
       throw invalid_argument(string(__FILE__) + ":" + to_string(__LINE__)
-                             + " idx can't be zero or >= size()");
+                             + " idx can't be zero");
+   }
+   if (idx >= pse.size())
+   {
+      LOG_FMT(LINDPSE, "%s(%d): idx is %zu, size is %zu\n",
+              __func__, __LINE__, idx, pse.size());
+      throw invalid_argument(string(__FILE__) + ":" + to_string(__LINE__)
+                             + " idx can't be >= size()");
    }
    return(*std::prev(std::end(pse), idx + 1));
 }
