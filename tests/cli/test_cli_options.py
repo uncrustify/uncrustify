@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 test_cli_options.py
 
