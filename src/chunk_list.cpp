@@ -278,24 +278,9 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
    do                                  // loop over the chunk list
    {
       pc = search_function(pc, scope); // in either direction while
-#if DEBUG
-      if (pc != nullptr)
-      {
-         if (pc->type == CT_NEWLINE)
-         {
-            LOG_FMT(LCHUNK, "%s(%d): orig_line is %zu, orig_col is %zu, NEWLINE\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col);
-         }
-         else
-         {
-            LOG_FMT(LCHUNK, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s', type is %s\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-         }
-      }
-#endif
-   } while (  pc != nullptr        // the end of the list was not reached yet
+   } while (  pc != nullptr            // the end of the list was not reached yet
            && (is_expected_type_and_level(pc, type, level) == false));
-   return(pc);                     // the latest chunk is the searched one
+   return(pc);                         // the latest chunk is the searched one
 }
 
 
@@ -417,9 +402,24 @@ chunk_t *chunk_dup(const chunk_t *pc_in)
 
 static void chunk_log_msg(chunk_t *chunk, const log_sev_t log, const char *str)
 {
-   LOG_FMT(log, "%s %zu:%zu '%s' [%s]",
-           str, chunk->orig_line, chunk->orig_col, chunk->text(),
-           get_token_name(chunk->type));
+   LOG_FMT(log, "%s orig_line is %zu, orig_col is %zu, ",
+           str, chunk->orig_line, chunk->orig_col);
+   if (chunk->type == CT_NEWLINE)
+   {
+      LOG_FMT(log, "<Newline>,");
+   }
+   else if (chunk->type == CT_VBRACE_OPEN)
+   {
+      LOG_FMT(log, "<VBRACE_OPEN>,");
+   }
+   else if (chunk->type == CT_VBRACE_CLOSE)
+   {
+      LOG_FMT(log, "<VBRACE_CLOSE>,");
+   }
+   else
+   {
+      LOG_FMT(log, "text() '%s', type is %s,", chunk->text(), get_token_name(chunk->type));
+   }
 }
 
 
@@ -448,7 +448,7 @@ static void chunk_log(chunk_t *pc, const char *text)
       {
          chunk_log_msg(prev, log, " @ after");
       }
-      LOG_FMT(log, " stage=%d", (int)cpd.unc_stage);
+      LOG_FMT(log, " stage is %u", static_cast<unsigned int>(cpd.unc_stage));
       log_func_stack_inline(log);
    }
 }
@@ -468,7 +468,7 @@ chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref)
 
 void chunk_del(chunk_t *pc)
 {
-   chunk_log(pc, "chunk_del");
+   chunk_log(pc, "chunk_del:");
    g_cl.Pop(pc);
    delete pc;
 }
@@ -640,7 +640,7 @@ bool chunk_is_last_on_line(chunk_t &pc)  //TODO: pc should be const here
 
    // if the next chunk is a newline then pc is the last chunk on its line
    const auto *next = chunk_get_next(&pc);
-   if (next != nullptr && next->type == CT_NEWLINE)
+   if (chunk_is_token(next, CT_NEWLINE))
    {
       return(true);
    }
@@ -756,10 +756,12 @@ void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits)
       UINT64 nflags = (pc->flags & ~clr_bits) | set_bits;
       if (pc->flags != nflags)
       {
-         LOG_FMT(LSETFLG, "%s(%d): %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " orig_line is %zu, orig_col is %zu, text() '%s', type is %s, parent_type is %s",
+         LOG_FMT(LSETFLG, "%s(%d): %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " orig_line is %zu, orig_col is %zu, text() '%s', type is %s, ",
                  __func__, __LINE__, pc->flags, pc->flags ^ nflags, nflags,
                  pc->orig_line, pc->orig_col, pc->text(),
-                 get_token_name(pc->type), get_token_name(pc->parent_type));
+                 get_token_name(pc->type));
+         LOG_FMT(LSETFLG, "parent_type is %s",
+                 get_token_name(pc->parent_type));
          log_func_stack_inline(LSETFLG);
          pc->flags = nflags;
       }
@@ -847,7 +849,7 @@ static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const direction_e 
       {
          (pos == direction_e::FORWARD) ? g_cl.AddHead(pc) : g_cl.AddTail(pc);
       }
-      chunk_log(pc, "chunk_add");
+      chunk_log(pc, "chunk_add:");
    }
    return(pc);
 }

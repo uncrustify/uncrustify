@@ -51,11 +51,13 @@ Change the date at the first line of this document.
      (use an admin)
 
 4b. Update the config files
-   $ scripts/update-defaults.sh
-
-5. The source tarball is available from the release on GitHub, or use
-   $ git archive -o uncrustify-0.nn.tar.gz uncrustify-0.nn
-   Test it somewhere else
+   $ cd build
+   $ # remove the old file
+   $ rm uncrustify_version.h
+   $ # to be sure to generate a new one with the new version
+   $ cmake ..
+   $ make
+   $ ctest
 
 6. Build for windows via mingw (save the zip file)
    Make sure the compiler mingw-w64 is installed.
@@ -71,6 +73,18 @@ Change the date at the first line of this document.
    $ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw64.cmake -DCMAKE_EXE_LINKER_FLAGS="-static -s" ..
    $ make
    $ cpack
+
+5. The source tarball is available from the release on GitHub, or to build it here use
+   $ # generate the config files
+   $ scripts/update-defaults.sh
+   $ git commit -m "make default files" -a \
+       documentation/htdocs/config.txt \
+       documentation/htdocs/default.cfg \
+       etc/defaults.cfg \
+       etc/uigui_uncrustify.ini \
+       release-steps.txt
+   $ git archive -o uncrustify-0.nn.tar.gz `git rev-parse HEAD`
+   Test it somewhere else
 
 7. Update the web page files
    $ cd uncrustify-$UNC_REL/

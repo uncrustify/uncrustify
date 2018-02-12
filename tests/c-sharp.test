@@ -4,65 +4,113 @@
 # Range: 10000 - 19999
 # test.name  config.file  input.file
 
-10000 mono.cfg                 cs/simple.cs
-10001 getset.cfg               cs/getset.cs
-10002 ben.cfg                  cs/simple.cs
-10003 ben.cfg                  cs/region.cs
-10010 ben.cfg                  cs/var-member.cs
-10011 ben.cfg                  cs/strings.cs
+10000  mono.cfg                             cs/simple.cs
+10001  getset.cfg                           cs/getset.cs
+10002  ben_032.cfg                          cs/simple.cs
+10003  ben_033.cfg                          cs/region.cs
+10010  ben_034.cfg                          cs/var-member.cs
+10011  indent_columns-3.cfg                 cs/strings.cs
+10013  625_where-constraints.cfg            cs/625_where-constraints.cs
 
-10020 region-0.cfg             cs/region.cs
-10021 region-1.cfg             cs/region.cs
-10022 region-2.cfg             cs/region.cs
-10023 region-3.cfg             cs/region.cs
+10020  region-0.cfg                         cs/region.cs
+10021  region-1.cfg                         cs/region.cs
+10022  region-2.cfg                         cs/region.cs
+10023  region-3.cfg                         cs/region.cs
 
-10030 sort_imports.cfg         cs/sort_using.cs
-10031 bug_i_935.cfg            cs/bug_i_935.cs
-10032 sort_using_categ.cfg     cs/sort_using_categ.cs
+10030  sort_imports.cfg                     cs/sort_using.cs
+10031  mod_sort_using-t.cfg                 cs/bug_i_935.cs
+10032  sort_using_categ.cfg                 cs/sort_using_categ.cs
 
-10040 tcf.cfg                  cs/tcf.cs
-10041 tcf.cfg                  cs/gs.cs
-10042 ben.cfg                  cs/exception-filters.cs
+10040  tcf.cfg                              cs/tcf.cs
+10041  tcf.cfg                              cs/gs.cs
+10042  ben_036.cfg                          cs/exception-filters.cs
 
-10050 cs_generics.cfg          cs/generics.cs
+10050  cs_generics.cfg                      cs/generics.cs
 
-10060 ben.cfg                  cs/unsafe.cs
+10060  ben_037.cfg                          cs/unsafe.cs
+10065  UNI-1975.cfg                         cs/UNI-1975.cs
 
-10070 ben.cfg                  cs/utf16le.cs
-10071 ben.cfg                  cs/utf16be.cs
-10072 ben.cfg                  cs/utf16le_no_bom.cs
-10073 ben.cfg                  cs/utf16be_no_bom.cs
+10070  ben_038.cfg                          cs/utf16le.cs
+10071  ben_038.cfg                          cs/utf16be.cs
+10072  ben_038.cfg                          cs/utf16le_no_bom.cs
+10073  ben_038.cfg                          cs/utf16be_no_bom.cs
 
-10080 ben.cfg                  cs/property.cs
+10080  ben_042.cfg                          cs/property.cs
 
-10090 ben.cfg                  cs/string_multi.cs
+10090  ben_043.cfg                          cs/string_multi.cs
 
-10100 bug_600.cfg              cs/bug_600.cs
-10101 sf607.cfg                cs/sf607.cs
+10100  empty.cfg                            cs/bug_600.cs
+10101  sf607.cfg                            cs/sf607.cs
 
-10110 mda_space_a.cfg          cs/mdarray_space.cs
-10111 mda_space_b.cfg          cs/mdarray_space.cs
-10112 mda_space_c.cfg          cs/mdarray_space.cs
+10110  mda_space_a.cfg                      cs/mdarray_space.cs
+10111  sp_after_comma-a.cfg                 cs/mdarray_space.cs
+10112  mda_space_c.cfg                      cs/mdarray_space.cs
 
-10120 empty.cfg                cs/cmt_backslash_eol.cs
+10120  empty.cfg                            cs/cmt_backslash_eol.cs
 
-10130 sp_between_new_paren.cfg cs/sp_between_new_paren.cs
+10130  sp_between_new_paren.cfg             cs/sp_between_new_paren.cs
 
-10140 ben.cfg                  cs/remove_semi.cs
+10140  ben_044.cfg                          cs/remove_semi.cs
 
-10150 ben.cfg                  cs/operator-null-conditional.cs
+10150  ben_045.cfg                          cs/operator-null-conditional.cs
+10200  empty.cfg                            cs/logger.cs
 
-10200 where.cfg                cs/where.cs
+10628  empty.cfg                            cs/sf628.cs
+10160  empty.cfg                            cs/delegate.cs
+10161  indent_cs_delegate_brace-t.cfg       cs/delegate.cs
+12001  bug_620.cfg                          cs/bug_620.cs
+12002  empty.cfg                            cs/nullable_prop.cs
+12003  ben_043.cfg                          cs/fncall_as_ctor_in_attr.cs
+12004  verbatim_strings.cfg                 cs/verbatim_strings.cs
 
-10628 sf628.cfg                cs/sf628.cs
-10160 cs_delegate_default.cfg  cs/delegate.cs
-10161 cs_delegate_indent.cfg   cs/delegate.cs
-12001 bug_620.cfg              cs/bug_620.cs
-12002 empty.cfg                cs/nullable_prop.cs
-12003 ben.cfg                  cs/fncall_as_ctor_in_attr.cs
-12004 verbatim_strings.cfg     cs/verbatim_strings.cs
+12101  indent_using_block-f.cfg             cs/bug_i_679.cs
 
-12101 bug_i_679.cfg            cs/bug_i_679.cs
+12102  mod_full_brace_nl_block_rem_mlcond-0.cfg  cs/mod_full_brace_nl_block_rem_mlcond.cs
+12103  mod_full_brace_nl_block_rem_mlcond-1.cfg  cs/mod_full_brace_nl_block_rem_mlcond.cs
 
-12102 mod_full_brace_nl_block_rem_mlcond-0.cfg cs/mod_full_brace_nl_block_rem_mlcond.cs
-12103 mod_full_brace_nl_block_rem_mlcond-1.cfg cs/mod_full_brace_nl_block_rem_mlcond.cs
+# Adopt some UT tests
+10012  empty.cfg                            cs/621_this-spacing.cs
+10014  empty.cfg                            cs/630_bad-new-init-semicolon-removal.cs
+10015  misc-failures.cfg                    cs/misc-failures.cs
+10016  new-constraint-paren-space.cfg       cs/new-constraint-paren-space.cs
+10018  empty.cfg                            cs/delete-space-oc.mm
+10019  empty.cfg                            cs/func-param-wrap-oc.mm
+10027  U01-Cs.cfg                           cs/oneline_property.cs
+10028  U02-Cs.cfg                           cs/ifcolalign.cs
+10029  U03-Cs.cfg                           cs/when.cs
+10033! U11-Cpp.cfg                          cs/objc.mm
+10034  U12-Cpp.cfg                          cs/asm.h.mm
+10035  U13-Cpp.cfg                          cs/definesalign.h.mm
+10036  U14-Cpp.cfg                          cs/inttypes.h.mm
+10039  615_nested_usings.cfg                cs/615_nested-usings.cs
+10044  U04-Cs.cfg                           cs/ifcomment.cs
+10045  UNI-1288.cfg                         cs/UNI-1288.cs
+10046  U15-Cpp.cfg                          cs/UNI-1333.mm
+10051  UNI-1338.cfg                         cs/UNI-1338.cs
+10055  U06-Cs.cfg                           cs/UNI-1345.cs
+10066  UNI-1977.cfg                         cs/UNI-1977.cs
+10067  UNI-1978.cfg                         cs/UNI-1978.cs
+10076  UNI-1343.cfg                         cs/UNI-1343.cs
+10077  U09-Cs.cfg                           cs/UNI-1919.cs
+10078  U10-Cs.cfg                           cs/UNI-3484.cs
+10102  U24-Cpp.cfg                          cs/pp-ignore.mm
+10103  U11-Cs.cfg                           cs/UNI-2506.cs
+10104  empty.cfg                            cs/UNI-2505.cs
+11011  620_getset-brace.cfg                 cs/620_getset-brace.cs
+11030  U08-Cpp.cfg                          cs/argtypes.mm
+11031  U09-Cpp.cfg                          cs/casting.mm
+11032  U10-Cpp.cfg                          cs/newlines.mm
+11072  U07-Cs.cfg                           cs/UNI-2007.cs
+11073  U08-Cs.cfg                           cs/UNI-2008.cs
+
+60008  U-J.cfg                              cs/UNI-17253.cs
+60012  U13-Cs.cfg                           cs/UNI-12303.cs
+60013  UNI-13955.cfg                        cs/UNI-13955.cs
+60016  UNI-11662.cfg                        cs/UNI-11662.cs
+60019  empty.cfg                            cs/UNI-18780.cs
+60020  UNI-18829.cfg                        cs/UNI-18829.cs
+60024  U15-Cs.cfg                           cs/UNI-19644.cs
+60026  UNI-19895.cfg                        cs/UNI-19895.cs
+60033  UNI-21730.cfg                        cs/UNI-21730.cs
+60037  UNI-29933.cfg                        cs/UNI-29933.cs
+60040  UNI-30498_2.cfg                      cs/UNI-30498_2.cs

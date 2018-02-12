@@ -1,6 +1,6 @@
-parse_cleanup(): orig_line is , type is STRUCT, tos is , TOS.type is NONE, TOS.stage is 
-parse_cleanup(): orig_line is , type is TYPE, tos is , TOS.type is NONE, TOS.stage is 
-parse_cleanup(): orig_line is , type is BRACE_OPEN, tos is , TOS.type is NONE, TOS.stage is 
+parse_cleanup(): orig_line is , type is STRUCT, tos is , TOS.type is EOF, TOS.stage is 
+parse_cleanup(): orig_line is , type is TYPE, tos is , TOS.type is EOF, TOS.stage is 
+parse_cleanup(): orig_line is , type is BRACE_OPEN, tos is , TOS.type is EOF, TOS.stage is 
 parse_cleanup(): orig_line is , type is WORD, tos is , TOS.type is BRACE_OPEN, TOS.stage is 
 parse_cleanup(): orig_line is , type is PAREN_OPEN, tos is , TOS.type is BRACE_OPEN, TOS.stage is 
 parse_cleanup(): orig_line is , type is QUALIFIER, tos is , TOS.type is PAREN_OPEN, TOS.stage is 
@@ -41,4 +41,4 @@ parse_cleanup(): orig_line is , type is TYPE, tos is , TOS.type is BRACE_OPEN, T
 parse_cleanup(): orig_line is , type is WORD, tos is , TOS.type is BRACE_OPEN, TOS.stage is 
 parse_cleanup(): orig_line is , type is SEMICOLON, tos is , TOS.type is BRACE_OPEN, TOS.stage is 
 parse_cleanup(): orig_line is , type is BRACE_CLOSE, tos is , TOS.type is BRACE_OPEN, TOS.stage is 
-parse_cleanup(): orig_line is , type is SEMICOLON, tos is , TOS.type is NONE, TOS.stage is 
+parse_cleanup(): orig_line is , type is SEMICOLON, tos is , TOS.type is EOF, TOS.stage is 

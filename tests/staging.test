@@ -5,7 +5,6 @@
 #
 
 10017 empty.cfg staging/PR326_invalid-backslash-eol-csharp.cs
-10038 staging/614_multiple-passes.cfg staging/614_multiple-passes.cs
 10043 staging/Uncrustify.CSharp.cfg staging/nl-brace.cs
 10049 staging/Uncrustify.Cpp.cfg    staging/UNI-1336.cpp
 10053 staging/Uncrustify.Cpp.cfg    staging/UNI-1340.cpp
@@ -23,8 +22,8 @@
 60004 staging/Uncrustify.CSharp.cfg staging/UNI-2684.cs
 60005 staging/Uncrustify.CSharp.cfg staging/UNI-2685.cs
 60006 staging/Uncrustify.Common-CStyle.cfg staging/UNI-2049.cpp
-
 60009 staging/Uncrustify.CSharp.cfg staging/UNI-9917.cs
+60014 staging/Uncrustify.Cpp.cfg    staging/UNI-14107.cpp
 60018 staging/Uncrustify.CSharp.cfg staging/UNI-18777.cs
 60023 staging/Uncrustify.CSharp.cfg staging/UNI-18437.cs
 60035 staging/Uncrustify.CSharp.cfg staging/UNI-22858.cs

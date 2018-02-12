@@ -281,8 +281,7 @@ void tokenize_cleanup(void)
             set_chunk_type(next, CT_PTR_TYPE);
          }
          else if (  pc->type == CT_WORD
-                 && prev != nullptr
-                 && prev->type == CT_DC_MEMBER
+                 && chunk_is_token(prev, CT_DC_MEMBER)
                  && (cpd.lang_flags & LANG_CPP) != 0)
          {
             set_chunk_type(pc, CT_TYPE);
@@ -349,9 +348,7 @@ void tokenize_cleanup(void)
          }
 
          // handle "version(unittest) { }" vs "unittest { }"
-         if (  prev
-            && pc->type == CT_UNITTEST
-            && prev->type == CT_PAREN_OPEN)
+         if (pc->type == CT_UNITTEST && chunk_is_token(prev, CT_PAREN_OPEN))
          {
             set_chunk_type(pc, CT_WORD);
          }
@@ -433,7 +430,7 @@ void tokenize_cleanup(void)
          if (next->type == CT_PAREN_OPEN)
          {
             chunk_t *tmp = chunk_get_next(next);
-            if (tmp != nullptr && tmp->type == CT_PAREN_CLOSE)
+            if (chunk_is_token(tmp, CT_PAREN_CLOSE))
             {
                next->str = "()";
                set_chunk_type(next, CT_OPERATOR_VAL);
@@ -510,7 +507,7 @@ void tokenize_cleanup(void)
          if (chunk_is_str(next, "slots", 5) || chunk_is_str(next, "Q_SLOTS", 7))
          {
             chunk_t *tmp = chunk_get_next(next);
-            if (tmp != nullptr && tmp->type == CT_COLON)
+            if (chunk_is_token(tmp, CT_COLON))
             {
                next = tmp;
             }
@@ -819,7 +816,9 @@ void tokenize_cleanup(void)
       }
 
       // Add minimal support for C++0x rvalue references
-      if (pc->type == CT_BOOL && (cpd.lang_flags & LANG_CPP) && chunk_is_str(pc, "&&", 2))
+      if (  pc->type == CT_BOOL
+         && (cpd.lang_flags & LANG_CPP)
+         && chunk_is_str(pc, "&&", 2))
       {
          if (prev->type == CT_TYPE)
          {
@@ -837,8 +836,7 @@ void tokenize_cleanup(void)
        */
       if (  pc->type == CT_TRY
          && chunk_is_str(pc, "try", 3)
-         && next != nullptr
-         && next->type == CT_COLON)
+         && chunk_is_token(next, CT_COLON))
       {
          set_chunk_type(pc, CT_QUALIFIER);
       }
@@ -871,11 +869,8 @@ void tokenize_cleanup(void)
 
 static void check_template(chunk_t *start)
 {
-   LOG_FMT(LTEMPL, "%s(%d): orig_line %zu, orig_col %zu:",
+   LOG_FMT(LTEMPL, "%s(%d): orig_line %zu, orig_col %zu:\n",
            __func__, __LINE__, start->orig_line, start->orig_col);
-#ifdef DEBUG
-   LOG_FMT(LTEMPL, "\n");
-#endif // DEBUG
 
    chunk_t *prev = chunk_get_prev_ncnl(start, scope_e::PREPROC);
    if (prev == nullptr)
@@ -887,13 +882,7 @@ static void check_template(chunk_t *start)
    chunk_t *pc;
    if (prev->type == CT_TEMPLATE)
    {
-#ifdef DEBUG
-      LOG_FMT(LTEMPL, "%s(%d):", __func__, __LINE__);
-#endif
-      LOG_FMT(LTEMPL, " CT_TEMPLATE:");
-#ifdef DEBUG
-      LOG_FMT(LTEMPL, "\n");
-#endif
+      LOG_FMT(LTEMPL, "%s(%d): CT_TEMPLATE:\n", __func__, __LINE__);
 
       // We have: "template< ... >", which is a template declaration
       size_t level = 1;
@@ -901,19 +890,13 @@ static void check_template(chunk_t *start)
            pc != nullptr;
            pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
       {
-         LOG_FMT(LTEMPL, "%s(%d): [%s,%zu]",
+         LOG_FMT(LTEMPL, "%s(%d): type is %s, level is %zu\n",
                  __func__, __LINE__, get_token_name(pc->type), level);
-#ifdef DEBUG
-         LOG_FMT(LTEMPL, "\n");
-#endif
 
          if ((pc->str[0] == '>') && (pc->len() > 1))
          {
-            LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}",
+            LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}\n",
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
-#ifdef DEBUG
-            LOG_FMT(LTEMPL, "\n");
-#endif
             split_off_angle_close(pc);
          }
 
@@ -950,20 +933,14 @@ static void check_template(chunk_t *start)
          && prev->type != CT_OPERATOR_VAL
          && prev->parent_type != CT_OPERATOR)
       {
-         LOG_FMT(LTEMPL, "%s(%d): - after %s + ( - Not a template\n",
+         LOG_FMT(LTEMPL, "%s(%d): - after type %s + ( - Not a template\n",
                  __func__, __LINE__, get_token_name(prev->type));
-#ifdef DEBUG
-         LOG_FMT(LTEMPL, "\n");
-#endif
          set_chunk_type(start, CT_COMPARE);
          return;
       }
 
-      LOG_FMT(LTEMPL, "%s(%d): - prev %s -",
+      LOG_FMT(LTEMPL, "%s(%d): - prev->type is %s -\n",
               __func__, __LINE__, get_token_name(prev->type));
-#ifdef DEBUG
-      LOG_FMT(LTEMPL, "\n");
-#endif
 
       // Scan back and make sure we aren't inside square parenthesis
       bool in_if         = false;
@@ -1006,23 +983,19 @@ static void check_template(chunk_t *start)
            pc != nullptr;
            pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
       {
-         LOG_FMT(LTEMPL, "%s(%d): [%s,%zu]",
+         LOG_FMT(LTEMPL, "%s(%d): type is %s, num_tokens is %zu\n",
                  __func__, __LINE__, get_token_name(pc->type), num_tokens);
-#ifdef DEBUG
-         LOG_FMT(LTEMPL, "\n");
-#endif
 
          if (  (tokens[num_tokens - 1] == CT_ANGLE_OPEN)
             && (pc->str[0] == '>')
             && (pc->len() > 1)
             && (  cpd.settings[UO_tok_split_gte].b
-               || ((chunk_is_str(pc, ">>", 2) || chunk_is_str(pc, ">>>", 3)) && num_tokens >= 2)))
+               || (  (chunk_is_str(pc, ">>", 2) || chunk_is_str(pc, ">>>", 3))
+                  && num_tokens >= 2)))
          {
-            LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}",
+            LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}\n",
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
-#ifdef DEBUG
-            LOG_FMT(LTEMPL, "\n");
-#endif
+
             split_off_angle_close(pc);
          }
 
@@ -1078,26 +1051,16 @@ static void check_template(chunk_t *start)
       end = pc;
    }
 
-   if (end != nullptr && end->type == CT_ANGLE_CLOSE)
+   if (chunk_is_token(end, CT_ANGLE_CLOSE))
    {
       pc = chunk_get_next_ncnl(end, scope_e::PREPROC);
       if (pc == nullptr || pc->type != CT_NUMBER)
       {
-#ifdef DEBUG
-         LOG_FMT(LTEMPL, "%s(%d):", __func__, __LINE__);
-#endif
-         LOG_FMT(LTEMPL, " - Template Detected\n");
-#ifdef DEBUG
-         LOG_FMT(LTEMPL, "%s(%d):", __func__, __LINE__);
-#endif
-         LOG_FMT(LTEMPL, "     from orig_line %zu, orig_col %zu\n",
-                 start->orig_line, start->orig_col);
-#ifdef DEBUG
-         LOG_FMT(LTEMPL, "%s(%d):", __func__, __LINE__);
-#endif
-         LOG_FMT(LTEMPL, "     to   orig_line %zu, orig_col %zu\n",
-                 end->orig_line, end->orig_col);
-
+         LOG_FMT(LTEMPL, "%s(%d): Template Detected\n", __func__, __LINE__);
+         LOG_FMT(LTEMPL, "%s(%d):     from orig_line %zu, orig_col %zu\n",
+                 __func__, __LINE__, start->orig_line, start->orig_col);
+         LOG_FMT(LTEMPL, "%s(%d):     to   orig_line %zu, orig_col %zu\n",
+                 __func__, __LINE__, end->orig_line, end->orig_col);
          set_chunk_parent(start, CT_TEMPLATE);
 
          // Issue #1127
@@ -1160,7 +1123,7 @@ static void check_template(chunk_t *start)
 
 static void cleanup_objc_property(chunk_t *start)
 {
-   assert(start && start->type == CT_OC_PROPERTY);
+   assert(chunk_is_token(start, CT_OC_PROPERTY));
 
    chunk_t *open_paren = chunk_get_next_type(start, CT_PAREN_OPEN, start->level);
 
@@ -1195,7 +1158,7 @@ static void cleanup_objc_property(chunk_t *start)
 
 static void mark_selectors_in_property_with_open_paren(chunk_t *open_paren)
 {
-   assert(open_paren && open_paren->type == CT_PAREN_OPEN);
+   assert(chunk_is_token(open_paren, CT_PAREN_OPEN));
 
    chunk_t *tmp = open_paren;
 
@@ -1226,7 +1189,7 @@ static void mark_selectors_in_property_with_open_paren(chunk_t *open_paren)
 
 static void mark_attributes_in_property_with_open_paren(chunk_t *open_paren)
 {
-   assert(open_paren && open_paren->type == CT_PAREN_OPEN);
+   assert(chunk_is_token(open_paren, CT_PAREN_OPEN));
 
    chunk_t *tmp = open_paren;
 

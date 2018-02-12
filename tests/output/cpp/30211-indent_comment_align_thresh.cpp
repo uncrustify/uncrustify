@@ -37,7 +37,7 @@ void foo()
 #   if defined(SUPPORT_FEATURE)
     bar();
 #   endif // SUPPORT_FEATURE
-    // SUPPORT_FEATURE
+          // SUPPORT_FEATURE
     // Handle error
     // Handle error
     if (error != 0)
@@ -47,7 +47,7 @@ void foo()
 #   if defined(SUPPORT_FEATURE)
     bar();
 #   endif // SUPPORT_FEATURE
-    // SUPPORT_FEATURE
+          // SUPPORT_FEATURE
     // Handle error
     // Handle error
     if (error != 0)

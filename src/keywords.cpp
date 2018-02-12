@@ -118,7 +118,7 @@ static chunk_tag_t keywords[] =
    { "__except",            CT_CATCH,            LANG_C                                                                      },
    { "__finally",           CT_FINALLY,          LANG_C                                                                      },
    { "__has_include",       CT_CNG_HASINC,       LANG_C | FLAG_PP                                                            }, // clang
-   { "__has_include_next",  CT_CNG_HASINCN,      LANG_C | FLAG_PP                                                            }, // clang
+   { "__has_include_next",  CT_CNG_HASINCN,      LANG_C | FLAG_PP                                                            },
    { "__inline__",          CT_QUALIFIER,        LANG_C                                                                      },
    { "__nonnull",           CT_QUALIFIER,        LANG_OC                                                                     },
    { "__nothrow__",         CT_NOTHROW,          LANG_C                                                                      },

@@ -8,6 +8,15 @@ using some_type = int;
 
 class BracedInitListBase {
 public:
+BracedInitListBase()
+	: a{int{1}},
+	b(int(some_type(1))),
+	c(int{some_type(1)}),
+	d{int(some_type(1))},
+	e{some_type{some_type{a}}}
+{
+}
+
 virtual int getA() const {
 	return a;
 }
@@ -173,6 +182,31 @@ void braced_init_list_function_call()
 		::Ns::some_type c = ::Ns::some_type{sum(::Ns::some_type{1}, ::Ns::some_type{1})};
 		::Ns::some_type{sum(::Ns::some_type{a}, ::Ns::some_type{b})};
 		::Ns::some_type{::Ns::some_type{sum(::Ns::some_type{a}, ::Ns::some_type{b})}};
+	}
+}
+
+void braced_init_list_function_call_newline()
+{
+	{
+		some_type a{
+			sum(some_type{},
+				some_type{}
+				)
+		};
+		some_type b = sum(
+			some_type{}, some_type{});
+		some_type c = some_type{
+			sum(
+				some_type{}, some_type{})};
+		some_type
+		{sum
+			 (some_type{},
+			 some_type{}
+			 )
+		};
+		some_type
+		{some_type{sum
+			           (some_type{}, some_type{})}};
 	}
 }
 
