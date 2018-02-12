@@ -420,7 +420,6 @@ def check_build_type(build_type, cmake_cache_path):
     check_string = "CMAKE_BUILD_TYPE:STRING=%s" % build_type
 
     if file_find_string(check_string, cmake_cache_path):
-        print("CMAKE_BUILD_TYPE is correct")
         return True
 
     eprint("CMAKE_BUILD_TYPE must be '%s'" % build_type)
