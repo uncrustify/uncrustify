@@ -532,6 +532,8 @@
 # TODO: Find relevant test cases for 'override'.
 34210  empty.cfg                            cpp/override_virtual.cpp
 
+34250  empty.cfg                            cpp/bug_1607.cpp
+
 # __asm__
 34300  bug_1236.cfg                         cpp/bug_1236.cpp
 
