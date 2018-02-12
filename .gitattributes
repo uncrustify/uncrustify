@@ -1,3 +1,4 @@
 /tests/config/** -text
 /tests/input/** -text
 /tests/output/** -text
+
