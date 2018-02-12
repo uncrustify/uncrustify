@@ -1963,7 +1963,7 @@ void indent_text(void)
       else if (  cpd.settings[UO_indent_member_single].b
               && pc->type == CT_MEMBER
               && (strcmp(pc->text(), ".") == 0)
-              && (cpd.lang_flags & LANG_CS))
+              && ((cpd.lang_flags & LANG_CS) || (cpd.lang_flags & LANG_CPP)))
       {
          if (frm.top().type != CT_MEMBER)
          {
