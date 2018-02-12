@@ -85,6 +85,7 @@
 20004 staging/Uncrustify.Cpp.cfg    staging/UNI-32009.cpp
 20005 staging/UNI-34114.cfg         staging/UNI-34114.cpp
 20006 staging/UNI-32014.cfg         staging/UNI-32014.cs
+20010 staging/Uncrustify.CSharp.cfg staging/UNI-32658.cs
 60001 staging/UNI-2650.cfg          staging/UNI-2650.cpp
 60002 staging/Uncrustify.Cpp.cfg    staging/UNI-16283.cpp
 60003 staging/Uncrustify.Cpp.cfg    staging/UNI-1288.cpp
