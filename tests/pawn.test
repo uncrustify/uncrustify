@@ -4,17 +4,19 @@
 # Range: 60000 - 69999
 # test.name  config.file  input.file
 
-60000 pawn.cfg                 pawn/functions.pawn
-60001 pawn.cfg                 pawn/comment.p
-60002 pawn.cfg                 pawn/traffic.p
-60003 pawn.cfg                 pawn/tags.pawn
-60004 pawn.cfg                 pawn/enum.pawn
-60005 pawn.cfg                 pawn/unbraced.p
+60000  pawn.cfg                             pawn/functions.pawn
+60001  pawn.cfg                             pawn/comment.p
+60002  pawn.cfg                             pawn/traffic.p
+60003  pawn.cfg                             pawn/tags.pawn
+60004  pawn.cfg                             pawn/enum.pawn
+60005  pawn.cfg                             pawn/unbraced.p
 
-60010 pawn-escape.cfg          pawn/str-escape.p
+60010  pawn-escape.cfg                      pawn/str-escape.p
 
-60020 pawn-escape.cfg          pawn/switch-vsemi.sma
+60020  pawn-escape.cfg                      pawn/switch-vsemi.sma
 
-60030 amxmodx.cfg              pawn/crusty_ex-1.sma
+60030  amxmodx.cfg                          pawn/crusty_ex-1.sma
 
-60040 amxmodx.cfg              pawn/preproc.pawn
+60040  amxmodx.cfg                          pawn/preproc.pawn
+
+60050  mod_full_brace_function-f.cfg        pawn/gh419.pawn

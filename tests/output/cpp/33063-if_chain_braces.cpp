@@ -31,4 +31,9 @@ int foo() {
 	if ( b ) {
 		return 9;
 	}
+
+	if ( b ) {
+		{ b = 5; }
+		return 9;
+	}
 }

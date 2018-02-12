@@ -32,8 +32,8 @@ static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close);
 static void remove_semicolon(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LDELSEMI, "%s: Removed semicolon at line %zu, col %zu",
-           __func__, pc->orig_line, pc->orig_col);
+   LOG_FMT(LDELSEMI, "%s(%d): Removed semicolon: orig_line is %zu, orig_col is %zu",
+           __func__, __LINE__, pc->orig_line, pc->orig_col);
    log_func_stack_inline(LDELSEMI);
    // TODO: do we want to shift stuff back a column?
    chunk_del(pc);
@@ -53,8 +53,8 @@ void remove_extra_semicolons(void)
          && !(pc->flags & PCF_IN_PREPROC)
          && (prev = chunk_get_prev_ncnl(pc)) != nullptr)
       {
-         LOG_FMT(LSCANSEMI, "Semi on %zu:%zu parent=%s, prev = '%s' [%s/%s]\n",
-                 pc->orig_line, pc->orig_col, get_token_name(pc->parent_type),
+         LOG_FMT(LSCANSEMI, "%s(%d): Semi orig_line is %zu, orig_col is %zu, parent is %s, prev = '%s' [%s/%s]\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->parent_type),
                  prev->text(),
                  get_token_name(prev->type), get_token_name(prev->parent_type));
 

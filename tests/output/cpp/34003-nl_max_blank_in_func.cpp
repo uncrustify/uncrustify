@@ -39,7 +39,7 @@ void func0()
 //lambda function in class
 class cls
 {
-public:
+pubic:
 
 
 
@@ -94,7 +94,7 @@ namespace ns
 
 class cls
 {
-public:
+pubic:
 
 
 

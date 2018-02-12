@@ -548,8 +548,6 @@ void unc_text::append(const unc_text &ref)
    m_logtext.pop_back();
    m_logtext.insert(std::end(m_logtext),
                     std::begin(ref.m_logtext), std::end(ref.m_logtext));
-   m_logtext.push_back('\0');
-
 
    m_chars.insert(m_chars.end(), ref.m_chars.begin(), ref.m_chars.end());
 }
@@ -612,23 +610,24 @@ bool unc_text::startswith(const unc_text &text, size_t idx) const
 }
 
 
-int unc_text::find(const char *text, size_t sidx) const
+int unc_text::find(const char *search_txt, size_t start_idx) const
 {
-   const size_t len = strlen(text); // the length of 'text' we are looking for
-   const size_t si  = size();       // the length of the string we are looking in
+   const size_t t_len = strlen(search_txt); // the length of 'text' we are looking for
+   const size_t s_len = size();             // the length of the string we are looking in
 
-   if (si < len)                    // not enough place for 'text'
+   if (  s_len < t_len                      // search_txt longer than the string we are looking in
+      || start_idx + t_len - 1 >= s_len)    // starting position to high to find search_txt
    {
       return(-1);
    }
 
-   const size_t midx = si - len;
-   for (size_t idx = sidx; idx <= midx; idx++)
+   const size_t end_idx = s_len - t_len;
+   for (size_t idx = start_idx; idx <= end_idx; idx++)
    {
       bool match = true;
-      for (size_t ii = 0; ii < len; ii++)
+      for (size_t ii = 0; ii < t_len; ii++)
       {
-         if (m_chars[idx + ii] != text[ii])
+         if (m_chars[idx + ii] != search_txt[ii])
          {
             match = false;
             break;
@@ -643,22 +642,30 @@ int unc_text::find(const char *text, size_t sidx) const
 }
 
 
-int unc_text::rfind(const char *text, size_t sidx) const
+int unc_text::rfind(const char *search_txt, size_t start_idx) const
 {
-   size_t len  = strlen(text);
-   size_t midx = size() - len;
+   const size_t t_len = strlen(search_txt); // the length of 'text' we are looking for
+   const size_t s_len = size();             // the length of the string we are looking in
 
-   if (sidx > midx)
+   if (  s_len < t_len                      // search_txt longer than the string we are looking in
+      || start_idx < t_len - 1)             // starting position to low to find search_txt
    {
-      sidx = midx;
+      return(-1);
    }
 
-   for (size_t idx = sidx; idx != 0; idx--)
+   const size_t end_idx = s_len - t_len;
+
+   if (start_idx > end_idx)
+   {
+      start_idx = end_idx;
+   }
+
+   for (auto idx = static_cast<int>(start_idx); idx >= 0; idx--)
    {
       bool match = true;
-      for (size_t ii = 0; ii < len; ii++)
+      for (size_t ii = 0; ii < t_len; ii++)
       {
-         if (m_chars[idx + ii] != text[ii])
+         if (m_chars[idx + ii] != search_txt[ii])
          {
             match = false;
             break;
@@ -673,46 +680,51 @@ int unc_text::rfind(const char *text, size_t sidx) const
 }
 
 
-void unc_text::erase(size_t idx, size_t len)
+void unc_text::erase(size_t start_idx, size_t len)
 {
    if (len == 0)
    {
       return;
    }
-   if (idx + len >= m_chars.size())
+   const size_t end_idx = start_idx + len - 1;
+   if (end_idx >= m_chars.size())
    {
       throw out_of_range(string(__func__) + ":" + to_string(__LINE__)
                          + " - idx + len >= m_chars.size()");
    }
 
-   const auto pos_s = getLogTextUtf8Len(m_chars, idx);
-   const auto pos_e = pos_s + getLogTextUtf8Len(m_chars, idx, idx + len);
+   const auto pos_s = getLogTextUtf8Len(m_chars, start_idx);
+   const auto pos_e = pos_s + getLogTextUtf8Len(m_chars, start_idx, end_idx);
 
    m_logtext.pop_back();
    m_logtext.erase(std::next(std::begin(m_logtext), pos_s),
-                   std::next(std::begin(m_logtext), pos_e));
+                   std::next(std::begin(m_logtext), pos_e + 1));
    m_logtext.push_back('\0');
 
 
-   m_chars.erase(m_chars.begin() + idx, m_chars.begin() + idx + len);
+   m_chars.erase(std::next(std::begin(m_chars), start_idx),
+                 std::next(std::begin(m_chars), end_idx + 1));
 }
 
 
-int unc_text::replace(const char *oldtext, const unc_text &newtext)
+int unc_text::replace(const char *search_text, const unc_text &replace_text)
 {
-   const auto   olen         = static_cast<unsigned int>(strlen(oldtext));
-   const size_t newtext_size = newtext.size();
+   const size_t s_len = strlen(search_text);
+   const size_t r_len = replace_text.size();
 
    int          rcnt = 0;
-   int          fidx = find(oldtext);
+   int          fidx = find(search_text);
 
    while (fidx >= 0)
    {
       rcnt++;
-      erase(static_cast<size_t>(fidx), olen);
-      insert(static_cast<size_t>(fidx), newtext);
+      erase(static_cast<size_t>(fidx), s_len);
 
-      fidx = find(oldtext, static_cast<size_t>(fidx) + newtext_size - olen + 1);
+      (static_cast<size_t>(fidx) >= m_chars.size())
+      ? append(replace_text)
+      : insert(static_cast<size_t>(fidx), replace_text);
+
+      fidx = find(search_text, static_cast<size_t>(fidx) + r_len);
    }
    return(rcnt);
 }

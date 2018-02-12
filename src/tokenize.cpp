@@ -170,18 +170,6 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc);
 
 
 /**
- * Interpolated strings start with $" end with a single "
- * Double quotes are escaped by doubling.
- * Need to track embedded { } pairs and ignore anything between.
- *
- * @param pc  The structure to update, str is an input.
- *
- * @return Whether a string was parsed
- */
-static bool parse_cs_interpolated_string(tok_ctx &ctx, chunk_t &pc);
-
-
-/**
  * VALA verbatim string, ends with three quotes (""")
  *
  * @param pc  The structure to update, str is an input.
@@ -928,12 +916,12 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
    // Check if we stopped on a decimal point & make sure it isn't '..'
    if ((ctx.peek() == '.') && (ctx.peek(1) != '.'))
    {
-      //#issue 1265, 5.clamp()
+      // Issue #1265, 5.clamp()
       tok_info ss;
       ctx.save(ss);
       while (ctx.more() && CharTable::IsKw2(ctx.peek(1)))
       {
-         //skip characters to check for paren open
+         // skip characters to check for paren open
          ctx.get();
       }
       if (ctx.peek(1) == '(')
@@ -1154,7 +1142,7 @@ static cs_string_t parse_cs_string_start(tok_ctx &ctx, chunk_t &pc)
    }
 
    return(stringType);
-}
+} // parse_cs_string_start
 
 
 struct CsStringParseState
@@ -1822,6 +1810,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    {
       if (parse_cs_string(ctx, pc))
       {
+         //parse_cs_string(ctx, pc);
          return(true);
       }
       // check for non-keyword identifiers such as @if @switch, etc
@@ -1847,7 +1836,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
     * possible combinations and optional R delimiters: R"delim(x)delim"
     */
    auto ch = ctx.peek();
-   if (  (cpd.lang_flags & LANG_CPP)
+   if (  ((cpd.lang_flags & LANG_CPP) || (cpd.lang_flags & LANG_C))
       && (  ch == 'u'
          || ch == 'U'
          || ch == 'R'
@@ -1864,11 +1853,14 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       {
          idx++;
       }
-      if (ctx.peek(idx) == 'R')
+
+      if (  ((cpd.lang_flags & LANG_CPP) || (cpd.lang_flags & LANG_C))
+         && ctx.peek(idx) == 'R')
       {
          idx++;
          is_real = true;
       }
+
       const auto quote = ctx.peek(idx);
 
       if (is_real)
@@ -1960,7 +1952,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
 
       if ((ch == '<') && cpd.in_preproc == CT_PP_DEFINE)
       {
-         if (chunk_get_tail()->type == CT_MACRO)
+         if (chunk_get_tail() != nullptr && chunk_get_tail()->type == CT_MACRO)
          {
             // We have "#define XXX <", assume '<' starts an include string
             parse_string(ctx, pc, 0, false);
@@ -2246,8 +2238,13 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       }
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, <NewLine>\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col);
+         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>, nl is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->nl_count);
+      }
+      else if (pc->type == CT_VBRACE_OPEN)
+      {
+         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s, orig_col_end is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type), pc->orig_col_end);
       }
       else
       {
