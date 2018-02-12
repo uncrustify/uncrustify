@@ -80,6 +80,10 @@
 10102 staging/Uncrustify.Cpp.cfg    staging/pp-ignore.mm
 10103 staging/Uncrustify.CSharp.cfg staging/UNI-2506.cs
 10104 staging/Uncrustify.CSharp.cfg staging/UNI-2505.cs
+20003 staging/UNI-32405.cfg         staging/UNI-32405.cs
+20004 staging/Uncrustify.Cpp.cfg    staging/UNI-32009.cpp
+20005 staging/UNI-34114.cfg         staging/UNI-34114.cpp
+20006 staging/UNI-32014.cfg         staging/UNI-32014.cs
 60001 staging/UNI-2650.cfg          staging/UNI-2650.cpp
 60002 staging/Uncrustify.Cpp.cfg    staging/UNI-16283.cpp
 60003 staging/Uncrustify.Cpp.cfg    staging/UNI-1288.cpp
@@ -119,3 +123,4 @@
 60040 staging/Uncrustify.CSharp.cfg staging/UNI-30498_2.cs
 60041 staging/squeeze-paren-close-Option.cfg staging/squeeze-paren-close-Option.cs
 60042 staging/UNI-18777.cfg staging/UNI-18777.cpp
+60044 staging/UNI-37241.cfg staging/UNI-37241.cs

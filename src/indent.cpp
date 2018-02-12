@@ -1176,7 +1176,7 @@ void indent_text(void)
                     || pc->parent_type == CT_DELEGATE))
          {
             frm.top().brace_indent = frm.prev().indent;
-            if (are_chunks_in_same_line(frm.prev().pc, frm.top().pc))
+            if (are_chunks_in_same_line(frm.prev().pc, chunk_get_prev_ncnlnp(frm.top().pc)))
             {
                frm.top().brace_indent -= indent_size;
             }
