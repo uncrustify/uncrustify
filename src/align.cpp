@@ -878,7 +878,11 @@ static chunk_t *align_func_param(chunk_t *start)
       }
       else if (pc->type == CT_COMMA)
       {
-         comma_count++;
+         chunk_t *tmp_prev = chunk_get_prev_nc(pc);
+         if (!chunk_is_newline(tmp_prev))  // don't count leading commas
+         {
+            comma_count++;
+         }
       }
    }
 
