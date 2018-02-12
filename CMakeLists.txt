@@ -196,7 +196,8 @@ add_executable(uncrustify
   src/options_for_QT.cpp
   src/output.cpp
   src/parens.cpp
-  src/parse_frame.cpp
+  src/frame_list.cpp
+  src/ParseFrame.cpp
   src/punctuators.cpp
   src/semicolons.cpp
   src/sorting.cpp
@@ -224,6 +225,7 @@ add_executable(uncrustify
   src/md5.h
   src/options.h
   src/options_for_QT.h
+  src/ParseFrame.h
   src/prototypes.h
   src/punctuators.h
   src/token_enum.h

@@ -396,30 +396,6 @@ void quick_align_again(void)
 }
 
 
-void quick_indent_again(void)
-{
-   LOG_FUNC_ENTRY();
-
-   for (chunk_t *pc = chunk_get_head(); pc; pc = chunk_get_next(pc))
-   {
-      if (pc->indent.ref)
-      {
-         chunk_t *tmp = chunk_get_prev(pc);
-         if (chunk_is_newline(tmp))
-         {
-            size_t col = pc->indent.ref->column + pc->indent.delta;
-
-            indent_to_column(pc, col);
-            LOG_FMT(LINDENTAG, "%s(%d): [%zu] indent [%s] to %zu based on [%s] @ %zu:%zu\n",
-                    __func__, __LINE__, pc->orig_line, pc->text(), col,
-                    pc->indent.ref->text(),
-                    pc->indent.ref->orig_line, pc->indent.ref->column);
-         }
-      }
-   }
-}
-
-
 void align_all(void)
 {
    LOG_FUNC_ENTRY();
@@ -608,8 +584,7 @@ void align_struct_initializers(void)
    while (pc != nullptr)
    {
       chunk_t *prev = chunk_get_prev_ncnl(pc);
-      if (  prev != nullptr
-         && prev->type == CT_ASSIGN
+      if (  chunk_is_token(prev, CT_ASSIGN)
          && (  pc->type == CT_BRACE_OPEN
             || ((cpd.lang_flags & LANG_D) && pc->type == CT_SQUARE_OPEN)))
       {
@@ -1243,7 +1218,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
 
    // can't be any variable definitions in a "= {" block
    chunk_t *prev = chunk_get_prev_ncnl(start);
-   if (prev != nullptr && prev->type == CT_ASSIGN)
+   if (chunk_is_token(prev, CT_ASSIGN))
    {
       LOG_FMT(LAVDB, "%s(%d): start->text() '%s', type is %s, on orig_line %zu (abort due to assign)\n",
               __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line);
@@ -1290,7 +1265,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
    {
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, orig_col is %zu, NEWLINE\n",
+         LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
       }
       else
@@ -1972,7 +1947,7 @@ static void align_left_shift(void)
    {
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LAVDB, "%s(%d): NEWLINE\n", __func__, __LINE__);
+         LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, <Newline>\n", __func__, __LINE__, pc->orig_line);
       }
       else
       {

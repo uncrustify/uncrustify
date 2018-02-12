@@ -1,0 +1,26 @@
+#
+# Test cases specifically for the Java language.
+#
+# Range: 80000 - 89999
+# test.name  config.file  input.file
+
+80000  ben_099.cfg                          java/assert.java
+80010  annotation.cfg                       java/annotation1.java
+80011  empty.cfg                            java/annotation2.java
+80012  nl_after_annotation-f.cfg            java/annotation2.java
+80013  nl_between_annotation-f.cfg          java/annotation2.java
+80014  annotation.cfg                       java/annotation2.java
+80020  java_foreach.cfg                     java/foreach.java
+80030  indent_var_def.cfg                   java/variable_aligns.java
+80040  empty.cfg                            java/try.java
+80050  jdbi-r.cfg                           java/double_brace.java
+80051  jdbi-f.cfg                           java/double_brace.java
+80060  java_synchronized_1.cfg              java/synchronized.java
+80061  java_synchronized_2.cfg              java/synchronized.java
+80062  sp_this_paren.cfg                    java/sp_this_paren.java
+80063  empty.cfg                            java/i1121.java
+
+80100  align_same_func_call_params-t.cfg    java/sf567.java
+
+80200  sp_before_byref-r.cfg                java/sp_before_byref.java
+80201  template_angles.cfg                  java/generics.java

@@ -24,6 +24,8 @@
 #include <utime.h>
 #endif
 
+class ParseFrame;
+
 
 /**
  * abbreviations used:
@@ -72,6 +74,7 @@ enum class brace_stage_e : unsigned int
    CATCH_WHEN,  //! optional 'when' after 'catch'
 };
 
+
 enum class char_encoding_e : unsigned int
 {
    e_ASCII,     //! 0-127
@@ -96,49 +99,6 @@ struct indent_ptr_t
    int     delta;
 };
 
-
-//! Structure for counting nested level
-struct paren_stack_entry_t
-{
-   c_token_t     type;         //! the type that opened the entry
-   size_t        level;        //! Level of opening type
-   size_t        open_line;    //! line that open symbol is on
-   chunk_t       *pc;          //! Chunk that opened the level
-   int           brace_indent; //! indent for braces - may not relate to indent
-   size_t        indent;       //! indent level (depends on use)
-   size_t        indent_tmp;   //! temporary indent level (depends on use)
-   size_t        indent_tab;   //! the 'tab' indent (always <= real column)
-   bool          indent_cont;  //! indent_continue was applied
-   int           ref;
-   c_token_t     parent;       //! if, for, function, etc
-   brace_stage_e stage;
-   bool          in_preproc;   //! whether this was created in a preprocessor
-   size_t        ns_cnt;       //! Number of consecutive namespace levels
-   bool          non_vardef;   //! Hit a non-vardef line
-   indent_ptr_t  ip;
-};
-
-// TODO: put this on a linked list
-struct parse_frame_t
-{
-   int                 ref_no;
-   int                 level;           //! level of parens/square/angle/brace
-   int                 brace_level;     //! level of brace/vbrace
-   int                 pp_level;        //! level of preproc #if stuff
-
-   int                 sparen_count;
-
-   paren_stack_entry_t pse[128];
-   size_t              pse_tos;
-   int                 paren_count;
-
-   c_token_t           in_ifdef;
-   int                 stmt_count;
-   int                 expr_count;
-
-   bool                maybe_decl;
-   bool                maybe_cast;
-};
 
 #define PCF_BIT(b)    (1ULL << b)
 
@@ -417,73 +377,73 @@ enum class unc_stage_e : unsigned int
 
 struct cp_data_t
 {
-   std::deque<UINT8> *bout;
-   FILE              *fout;
-   int               last_char;
-   bool              do_check;
-   unc_stage_e       unc_stage;
-   int               check_fail_cnt; //! total failure count
-   bool              if_changed;
+   std::deque<UINT8>       *bout;
+   FILE                    *fout;
+   int                     last_char;
+   bool                    do_check;
+   unc_stage_e             unc_stage;
+   int                     check_fail_cnt; //! total failure count
+   bool                    if_changed;
 
-   UINT32            error_count;   //! counts how many errors occurred so far
-   std::string       filename;
+   UINT32                  error_count; //! counts how many errors occurred so far
+   std::string             filename;
 
-   file_mem          file_hdr;      // for cmt_insert_file_header
-   file_mem          file_ftr;      // for cmt_insert_file_footer
-   file_mem          func_hdr;      // for cmt_insert_func_header
-   file_mem          oc_msg_hdr;    // for cmt_insert_oc_msg_header
-   file_mem          class_hdr;     // for cmt_insert_class_header
+   file_mem                file_hdr;    // for cmt_insert_file_header
+   file_mem                file_ftr;    // for cmt_insert_file_footer
+   file_mem                func_hdr;    // for cmt_insert_func_header
+   file_mem                oc_msg_hdr;  // for cmt_insert_oc_msg_header
+   file_mem                class_hdr;   // for cmt_insert_class_header
 
-   size_t            lang_flags;    //! defines the language of the source input
-   bool              lang_forced;   //! overwrites automatic language detection
+   size_t                  lang_flags;  //! defines the language of the source input
+   bool                    lang_forced; //! overwrites automatic language detection
 
-   bool              unc_off;
-   bool              unc_off_used;  //! to check if "unc_off" is used
-   UINT32            line_number;
-   size_t            column;        //! column for parsing
-   UINT16            spaces;        //! space count on output
+   bool                    unc_off;
+   bool                    unc_off_used; //! to check if "unc_off" is used
+   UINT32                  line_number;
+   size_t                  column;       //! column for parsing
+   UINT16                  spaces;       //! space count on output
 
-   int               ifdef_over_whole_file;
+   int                     ifdef_over_whole_file;
 
-   bool              frag;          //! activates code fragment option
-   uint32_t          frag_cols;
+   bool                    frag;    //! activates code fragment option
+   UINT32                  frag_cols;
 
    // stuff to auto-detect line endings
-   UINT32            le_counts[LE_AUTO];
-   unc_text          newline;
+   UINT32                  le_counts[LE_AUTO];
+   unc_text                newline;
 
-   bool              consumed;
+   bool                    consumed;
 
-   int               did_newline;   //! flag indicates if a newline was added or converted
-   c_token_t         in_preproc;
-   int               preproc_ncnl_count;
-   bool              output_trailspace;
-   bool              output_tab_as_space;
+   int                     did_newline; //! flag indicates if a newline was added or converted
+   c_token_t               in_preproc;
+   int                     preproc_ncnl_count;
+   bool                    output_trailspace;
+   bool                    output_tab_as_space;
 
-   bool              bom;
-   char_encoding_e   enc;
+   bool                    bom;
+   char_encoding_e         enc;
 
    // bumped up when a line is split or indented
-   int               changes;
-   int               pass_count; //! indicates how often the chunk list shall be processed
+   int                     changes;
+   int                     pass_count; //! indicates how often the chunk list shall be processed
 
 #define AL_SIZE    8000
-   align_t           al[AL_SIZE];
-   size_t            al_cnt;
-   bool              al_c99_array;
+   align_t                 al[AL_SIZE];
+   size_t                  al_cnt;
+   bool                    al_c99_array;
 
-   bool              warned_unable_string_replace_tab_chars;
+   bool                    warned_unable_string_replace_tab_chars;
 
-   op_val_t          settings[UO_option_count]; //! array with all uncrustify option settings
+   op_val_t                settings[UO_option_count]; //! array with all uncrustify option settings
 
-   parse_frame_t     frames[16];
-   int               frame_count;
-   int               pp_level; // TODO: can this ever be -1?
+   std::vector<ParseFrame> frames;
+//   size_t                  frame_count;
+   int                     pp_level; // TODO: can this ever be -1?
 
    // the default values for settings
-   op_val_t          defaults[UO_option_count];
-   const char        *phase_name;
-   const char        *dumped_file;
+   op_val_t                defaults[UO_option_count];
+   const char              *phase_name;
+   const char              *dumped_file;
 };
 
 extern cp_data_t cpd;  // TODO: can we avoid this external variable?

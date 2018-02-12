@@ -3,4 +3,4 @@ public class Foo {private Runnable bar=new Runnable(){
 			  @SuppressWarnings("baz") public void run(){
 				  quux();
 			  }
-		  }; }
+		  };}

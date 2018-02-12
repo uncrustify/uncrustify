@@ -81,6 +81,10 @@
 10103 staging/Uncrustify.CSharp.cfg staging/UNI-2506.cs
 10104 staging/Uncrustify.CSharp.cfg staging/UNI-2505.cs
 20001 staging/Uncrustify.Cpp.cfg    staging/UNI-32012.cpp
+20003 staging/UNI-32405.cfg         staging/UNI-32405.cs
+20004 staging/Uncrustify.Cpp.cfg    staging/UNI-32009.cpp
+20005 staging/UNI-34114.cfg         staging/UNI-34114.cpp
+20006 staging/UNI-32014.cfg         staging/UNI-32014.cs
 60001 staging/UNI-2650.cfg          staging/UNI-2650.cpp
 60002 staging/Uncrustify.Cpp.cfg    staging/UNI-16283.cpp
 60003 staging/Uncrustify.Cpp.cfg    staging/UNI-1288.cpp
@@ -96,10 +100,12 @@
 60015 staging/UNI-Delegate.cfg      staging/UNI-14131.cs
 60016 staging/Uncrustify.CSharp.cfg staging/UNI-11662.cs
 60017 staging/Uncrustify.Cpp.cfg    staging/UNI-2683.cpp
+60018 staging/UNI-18777.cfg         staging/UNI-18777.cs
 60019 staging/Uncrustify.CSharp.cfg staging/UNI-18780.cs
 60020 staging/Uncrustify.CSharp.cfg staging/UNI-18829.cs
 60021 staging/Uncrustify.Cpp.cfg staging/UNI-12046.cpp
 60022 staging/Uncrustify.Cpp.cfg staging/UNI-18439.cpp
+60023 staging/UNI-18437.cfg staging/UNI-18437.cs
 60024 staging/Uncrustify.CSharp.cfg staging/UNI-19644.cs
 60025 staging/Uncrustify.Cpp.cfg staging/UNI-19894.cpp
 60026 staging/UNI-19895.cfg staging/UNI-19895.cs
@@ -117,3 +123,4 @@
 60039 staging/Uncrustify.Cpp.cfg staging/UNI-30498.cpp
 60040 staging/Uncrustify.CSharp.cfg staging/UNI-30498_2.cs
 60041 staging/squeeze-paren-close-Option.cfg staging/squeeze-paren-close-Option.cs
+60044 staging/UNI-37241.cfg staging/UNI-37241.cs
