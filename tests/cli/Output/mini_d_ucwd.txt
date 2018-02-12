@@ -805,6 +805,10 @@ indent_func_throw               = 0        # unsigned number
 # Usually set to 0, 1, or indent_columns.
 indent_member                   = 0        # unsigned number
 
+# setting to true will indent lines broken at '.' or '->' by a single indent
+# UO_indent_member option will not be effective if this is set to true.
+indent_member_single            = false    # false/true
+
 # Spaces to indent single line ('//') comments on lines before code.
 indent_sing_line_comments       = 0        # unsigned number
 
