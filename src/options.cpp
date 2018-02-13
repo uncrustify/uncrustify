@@ -2305,11 +2305,28 @@ int load_option_file(const char *filename)
 } // load_option_file
 
 
+const char *get_eol_marker()
+{
+   static char                 eol[3] = { 0x0A, 0x00, 0x00 };
+
+   const unc_text::value_type &lines = cpd.newline.get();
+
+   for (size_t i = 0; i < lines.size(); ++i)
+   {
+      eol[i] = (char)lines[i];
+   }
+
+   return(eol);
+}
+
+
 int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
 {
-   int count_the_not_default_options = 0;
+   int        count_the_not_default_options = 0;
 
-   fprintf(pfile, "# %s\n", UNCRUSTIFY_VERSION);
+   const char *eol_marker = get_eol_marker();
+
+   fprintf(pfile, "# %s%s", UNCRUSTIFY_VERSION, eol_marker);
 
    // Print the options by group
    for (auto &jt : group_map)
@@ -2338,13 +2355,12 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
          {
             if (first)
             {
-               // print group description
-               fputs("\n#\n", pfile);
+               fprintf(pfile, "%s#%s", eol_marker, eol_marker);
                fprintf(pfile, "# %s\n", jt.second.short_desc);
-               fputs("#\n\n", pfile);
+               fprintf(pfile, "#%s%s", eol_marker, eol_marker);
             }
 
-            fprintf(pfile, "%s# ", first ? "" : "\n");
+            fprintf(pfile, "%s# ", first ? "" : eol_marker);
 
             auto idx = 0;
             for ( ; option->short_desc[idx] != 0; idx++)
@@ -2356,9 +2372,10 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
                   fputs("# ", pfile);
                }
             }
+
             if (option->short_desc[idx - 1] != '\n')
             {
-               fputc('\n', pfile);
+               fputs(eol_marker, pfile);
             }
          }
          first = false;
@@ -2383,7 +2400,7 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
             fprintf(pfile, "%*.s # %s", 8 - val_len, " ",
                     argtype_to_string(option->type).c_str());
          }
-         fputs("\n", pfile);
+         fputs(eol_marker, pfile);
       }
    }
 
@@ -2396,7 +2413,7 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
    print_defines(pfile);     // Print custom defines
    print_extensions(pfile);  // Print custom file extensions
 
-   fprintf(pfile, "# option(s) with 'not default' value: %d\n#\n", count_the_not_default_options);
+   fprintf(pfile, "# option(s) with 'not default' value: %d%s#%s", count_the_not_default_options, eol_marker, eol_marker);
 
    return(0);
 } // save_option_file_kernel

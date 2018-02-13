@@ -997,6 +997,16 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default);
  */
 int set_option_value(const char *name, const char *value);
 
+/**
+ * get the marker that was selected for the end of line via the config file
+ *
+ * @return "\n"     if newlines was set to LE_LF in the config file
+ * @return "\r\n"   if newlines was set to LE_CRLF in the config file
+ * @return "\r"     if newlines was set to LE_CR in the config file
+ * @return "\n"     if newlines was set to LE_AUTO in the config file
+ * @return "\n"     if newlines was set to LE_AUTO in the config file
+ */
+const char *get_eol_marker();
 
 /**
  * check if a path/filename uses a relative or absolute path

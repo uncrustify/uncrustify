@@ -173,9 +173,20 @@ def check_generated_output(gen_expected_path, gen_result_path, result_manip=None
         if program_args.apply and program_args.auto_output_path:
                 write_to_output_path(program_args.auto_output_path, gen_res_txt)
                 return True
+        elif program_args.diff:
+            print("\n************************************")
+            print("Problem with %s" % gen_result_path)
+            print("************************************")
+
+            fileDiff = difflib.ndiff(gen_res_txt.splitlines(), gen_exp_txt.splitlines())
+
+            for line in fileDiff:
+                print(line);
+            
+            return False
         else:
                 print("\nProblem with %s" % gen_result_path)
-                print("use: '-diff' to find out why %s %s are different" % (gen_result_path,
+                print("use: '--diff' to find out why %s %s are different" % (gen_result_path,
                                                                             gen_expected_path))
                 return False
 
