@@ -2254,7 +2254,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
    {
       // CRLF line ends
       cpd.newline = "\r\n";
-      LOG_FMT(LLINEENDS, "Using CRLF line endings\n");
+      LOG_FMT(LLINEENDS, "Using CRLF line endings\r\n");
    }
    else
    {
