@@ -2248,8 +2248,11 @@ static bool mark_function_type(chunk_t *pc)
       }
    }
 
+   // Fixes #issue 1577
+   // Allow word count 2 incase of function pointer declaration.
+   // Ex: bool (__stdcall* funcptr)(int, int);
    if (  star_count > 1
-      || word_count > 1
+      || (word_count > 1 && !(word_count == 2 && ptp == CT_FUNC_VAR))
       || ((star_count + word_count) == 0))
    {
       LOG_FMT(LFTYPE, "%s(%d): bad counts word: %zu, star: %zu\n",

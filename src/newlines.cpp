@@ -2552,6 +2552,13 @@ static bool one_liner_nl_ok(chunk_t *pc)
          return(false);
       }
 
+      if (  cpd.settings[UO_nl_cs_property_leave_one_liners].b
+         && pc->parent_type == CT_CS_PROPERTY)
+      {
+         LOG_FMT(LNL1LINE, "%s(%d): false (c# property), a new line may NOT be added\n", __func__, __LINE__);
+         return(false);
+      }
+
       if (  cpd.settings[UO_nl_func_leave_one_liners].b
          && (  pc->parent_type == CT_FUNC_DEF
             || pc->parent_type == CT_FUNC_CLASS_DEF))
