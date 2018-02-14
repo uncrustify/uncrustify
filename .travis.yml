@@ -88,5 +88,5 @@ script:
     # test if all the sources are conform to the forUncrustifySources.cfg config file
   - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../; ./scripts/Run_uncrustify_for_sources.sh; fi
     # test if uncrustify runs for (some) command line options
-  - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd tests/cli; ./test_cli_options.py; fi
+  - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd tests/cli; ./test_options_cli.py; fi
   #- /home/travis/build/uncrustify/uncrustify/build/uncrustify -l cs -c /home/travis/build/uncrustify/uncrustify/tests/config/U10-Cpp.cfg -f /home/travis/build/uncrustify/uncrustify/tests/input/cs/newlines.mm -L A
