@@ -578,6 +578,17 @@ def main(args):
                 err_result_manip=reg_replace(r'[0-9]', '')):
             return_flag = False
 
+    # Test logger buffer overflow
+    if not check_output(
+            uncr_bin,
+            args_arr=['-c', NULL_DEVICE, '-L', '99', '-o', NULL_DEVICE,
+                      '-f', s_path_join(sc_dir, 'Input/logger.cs')],
+            err_expected_path=s_path_join(sc_dir, 'Output/logger_cs_L_99.txt'),
+            err_result_path=s_path_join(sc_dir, 'Results/logger_cs_L_99.txt'),
+            err_result_manip=reg_replace(r'[0-9]', '')):
+        return_flag = False
+
+    # misc error_tests
     error_tests = ["I-842", "unmatched_close_pp"]
     for test in error_tests:
         if not check_output(
