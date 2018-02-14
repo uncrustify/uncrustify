@@ -509,16 +509,12 @@ def main(args):
     # set working dir to script dir
     sc_dir = dirname(relpath(__file__))
 
-    print("Debugging, python version: " , version)
-
     parser = argparse.ArgumentParser(description='Test CLI Options')
     parser.add_argument('--diff', help='show diffs when there is a test mismatch', action='store_true')
     parser.add_argument('--apply', help='auto apply the changes from the results folder to the output folder', action='store_true')
 
     parsed_args = parser.parse_args()
 
-    parsed_args.diff = True
-    parsed_args.input_file = ""
     # find the uncrustify binary (keep Debug dir excluded)
     bin_found = False
     uncr_bin = ''
@@ -653,12 +649,11 @@ def main(args):
     # look at src/log_levels.h
     Ls_A = ['9', '21', '25', '28', '31', '36', '66', '92']
     for L in Ls_A:
-        parsed_args.input_file = s_path_join(sc_dir, 'Input/testSrc.cpp') if L is '9' else ""
+        argument_array = ['-c', NULL_DEVICE, '-L', L, '-o', NULL_DEVICE, '-f', s_path_join(sc_dir, 'Input/testSrc.cpp')]
         if not check_output(
                 uncr_bin,
                 parsed_args,
-                args_arr=['-c', NULL_DEVICE, '-L', L, '-o', NULL_DEVICE,
-                          '-f', s_path_join(sc_dir, 'Input/testSrc.cpp')],
+                args_arr=argument_array,
                 err_expected_path=s_path_join(sc_dir, 'Output/%s.txt' % L),
                 err_result_path=s_path_join(sc_dir, 'Results/%s.txt' % L),
                 err_result_manip=reg_replace(r'[0-9]', '')):
@@ -666,12 +661,11 @@ def main(args):
 
     error_tests = ["I-842", "unmatched_close_pp"]
     for test in error_tests:
+        argument_array = ['-q', '-c', s_path_join(sc_dir, 'Config/%s.cfg' % test), '-f', s_path_join(sc_dir, 'Input/%s.cpp' % test),'-o', NULL_DEVICE]
         if not check_output(
                 uncr_bin,
                 parsed_args,
-                args_arr=['-q', '-c', s_path_join(sc_dir, 'Config/%s.cfg' % test),
-                          '-f', s_path_join(sc_dir, 'Input/%s.cpp' % test),
-                          '-o', NULL_DEVICE],
+                args_arr=argument_array,
                 err_expected_path=s_path_join(sc_dir, 'Output/%s.txt' % test),
                 err_result_path=s_path_join(sc_dir, 'Results/%s.txt' % test)):
             return_flag = False
