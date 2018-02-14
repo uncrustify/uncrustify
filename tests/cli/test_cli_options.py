@@ -180,7 +180,7 @@ def check_generated_output(gen_expected_path, gen_result_path, result_manip=None
             fileDiff = difflib.ndiff(gen_res_txt.splitlines(True), gen_exp_txt.splitlines(True))
 
             for line in fileDiff:
-                pprint.PrettyPrinter(indent=4).pprint(line);
+                pprint.PrettyPrinter(indent=4).pprint(line)
             
             return False
         else:
@@ -257,6 +257,15 @@ def check_std_output(expected_path, result_path, result_str, result_manip=None, 
             
 
         return False
+
+
+    if program_args.input_file is not "":
+        with open(program_args.input_file, encoding="utf-8", newline="\n") as f:
+           inputFile = f.read()
+
+        print("Input file is:\n")
+        pprint.PrettyPrinter(indent=4).pprint(inputFile)
+
     return True
 
 
@@ -475,7 +484,7 @@ def s_path_join(path, *paths):
     """
     Wrapper for the os.path.join function, splits every path component to
     replace it wit a system specific path separator. This is for consistent
-    path separators (and also systems that don't use either \ or /)
+    path separators (and also systems that don't use either '\' or '/')
 
 
     Parameter
@@ -488,7 +497,7 @@ def s_path_join(path, *paths):
         a joined path, see os.path.join
 
     >>> s_path_join('./z/d/', '../a/b/c/f')
-    ".\z\a\b\c\f"
+    r'.\z\a\b\c\f'
     """
     p_splits = list(path_split(path))
     for r in map(path_split, paths):
@@ -509,7 +518,7 @@ def main(args):
     parsed_args = parser.parse_args()
 
     parsed_args.diff = True
-
+    parsed_args.input_file = ""
     # find the uncrustify binary (keep Debug dir excluded)
     bin_found = False
     uncr_bin = ''
@@ -644,6 +653,7 @@ def main(args):
     # look at src/log_levels.h
     Ls_A = ['9', '21', '25', '28', '31', '36', '66', '92']
     for L in Ls_A:
+        parsed_args.input_file = s_path_join(sc_dir, 'Input/testSrc.cpp') if L is '9' else ""
         if not check_output(
                 uncr_bin,
                 parsed_args,
