@@ -1607,29 +1607,43 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
       else
       {
-         set_chunk_type(pc, CT_ARITH);
-         if (prev->type == CT_WORD)
+         // Issue # 1398
+         if (  ((pc->flags & PCF_IN_FCN_DEF) != 0)
+            && prev->type == CT_WORD
+            && pc->type == CT_AMP
+            && next->type == CT_WORD)
          {
-            tmp = chunk_get_prev_ncnl(prev);
-            if (tmp != nullptr)
+            /*
+             * Change CT_WORD before CT_AMP before CT_WORD to CT_TYPE
+             */
+            set_chunk_type(prev, CT_TYPE);
+         }
+         else
+         {
+            set_chunk_type(pc, CT_ARITH);
+            if (prev->type == CT_WORD)
             {
-               if (  chunk_is_semicolon(tmp)
-                  || tmp->type == CT_BRACE_OPEN
-                  || tmp->type == CT_QUALIFIER)
+               tmp = chunk_get_prev_ncnl(prev);
+               if (tmp != nullptr)
                {
-                  set_chunk_type(pc, CT_BYREF);
-                  set_chunk_type(prev, CT_TYPE);
-                  if (!(  next->type == CT_OPERATOR
-                       || next->type == CT_TYPE
-                       || next->type == CT_DC_MEMBER))
+                  if (  chunk_is_semicolon(tmp)
+                     || tmp->type == CT_BRACE_OPEN
+                     || tmp->type == CT_QUALIFIER)
                   {
-                     chunk_flags_set(next, PCF_VAR_1ST);
+                     set_chunk_type(pc, CT_BYREF);
+                     set_chunk_type(prev, CT_TYPE);
+                     if (!(  next->type == CT_OPERATOR
+                          || next->type == CT_TYPE
+                          || next->type == CT_DC_MEMBER))
+                     {
+                        chunk_flags_set(next, PCF_VAR_1ST);
+                     }
                   }
-               }
-               else if (tmp->type == CT_DC_MEMBER)
-               {
-                  set_chunk_type(prev, CT_TYPE);
-                  set_chunk_type(pc, CT_BYREF);
+                  else if (tmp->type == CT_DC_MEMBER)
+                  {
+                     set_chunk_type(prev, CT_TYPE);
+                     set_chunk_type(pc, CT_BYREF);
+                  }
                }
             }
          }
@@ -3621,7 +3635,7 @@ static chunk_t *fix_var_def(chunk_t *start)
       return(skip_to_next_statement(end));
    }
 
-   LOG_FMT(LFVD2, "%s(%d):%zu TYPE : ", __func__, __LINE__, start->orig_line);
+   LOG_FMT(LFVD2, "%s(%d): orig_line is %zu, TYPE : ", __func__, __LINE__, start->orig_line);
    for (size_t idxForCs = 0; idxForCs < cs.Len() - 1; idxForCs++)
    {
       tmp_pc = cs.Get(idxForCs)->m_pc;

@@ -534,6 +534,8 @@
 
 34250  empty.cfg                            cpp/bug_1607.cpp
 
+34280  UNI-29935.cfg                        cpp/UNI-29935.cpp
+
 # __asm__
 34300  bug_1236.cfg                         cpp/bug_1236.cpp
 
