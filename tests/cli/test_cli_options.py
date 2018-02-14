@@ -18,6 +18,7 @@ from io import open
 import re
 import difflib
 import argparse
+import pprint
 
 
 if py_version_info[0] == 3:
@@ -190,7 +191,7 @@ def check_generated_output(gen_expected_path, gen_result_path,
                                       gen_exp_txt.splitlines(True))
 
             for line in file_diff:
-                print(line)
+                pprint.PrettyPrinter(indent=4).pprint(line)
             
             return False
         else:
@@ -261,7 +262,7 @@ def check_std_output(expected_path, result_path, result_str, result_manip=None,
                                       exp_txt.splitlines(True))
 
             for line in file_diff:
-                print(line)
+                pprint.PrettyPrinter(indent=4).pprint(line)
         else:
             print("\nProblem with %s" % result_path)
             print("use: '--diff' to find out why %s %s are different"
