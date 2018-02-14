@@ -66,11 +66,9 @@ def proc(bin_path, args_arr=()):
     # call uncrustify, hold output in memory
     call_arr = [bin_path]
     call_arr.extend(args_arr)
-    proc = Popen(call_arr, stdout=PIPE, stderr=PIPE)
+    proc = Popen(call_arr, stdout=PIPE, stderr=PIPE, universal_newlines=True)
 
-    out_b, err_b = proc.communicate()
-    out_txt = out_b.decode("UTF-8")
-    err_txt = err_b.decode("UTF-8")
+    out_txt, err_txt = proc.communicate()
 
     return out_txt, err_txt
 
@@ -329,8 +327,6 @@ def check_output(
         eprint("Set up 'gen_result_path' if 'gen_result_manip' is used")
 
     out_res_txt, err_res_txt = proc(uncr_bin, args_arr)
-    out_res_txt = None if out_res_txt is None else out_res_txt.replace('\r', '')
-    err_res_txt = None if err_res_txt is None else err_res_txt.replace('\r', '')
 
     ret_flag = True
 
