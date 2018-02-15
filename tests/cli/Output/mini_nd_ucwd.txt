@@ -2021,7 +2021,7 @@ mod_sort_oc_property_setter_weight = 0        # number
 mod_sort_oc_property_nullability_weight = 0        # number
 
 # It will support extra characters after the include is closed. (ingore mode by default) and report an error
-UO_mod_include_strict_parsing   = false    # false/true
+mod_include_strict_parsing      = false    # false/true
 
 #
 # Preprocessor options

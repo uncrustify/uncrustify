@@ -2020,7 +2020,7 @@ mod_sort_oc_property_setter_weight Number
 mod_sort_oc_property_nullability_weight Number
   Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C).
 
-UO_mod_include_strict_parsing   { False, True }
+mod_include_strict_parsing      { False, True }
   It will support extra characters after the include is closed. (ingore mode by default) and report an error
 
 #
