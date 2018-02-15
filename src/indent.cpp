@@ -1305,6 +1305,12 @@ void indent_text(void)
                   log_indent();
                }
             }
+            else if (are_chunks_in_same_line(frm.prev().pc, frm.top().pc))
+            {
+               // We are inside ({ ... }) -- indent one tab from the paren
+               frm.top().indent = frm.prev().indent_tmp;
+               log_indent();
+            }
             else
             {
                // We are inside ({ ... }) -- indent one tab from the paren
