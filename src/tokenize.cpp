@@ -1748,8 +1748,8 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       return(true);
    }
 
-   // Handle unknown/unhandled preprocessors
-   if (cpd.in_preproc > CT_PP_BODYCHUNK && cpd.in_preproc <= CT_PP_OTHER)
+   // Handle unknown/known/unhandled preprocessors
+   if ((cpd.in_preproc > CT_PP_BODYCHUNK && cpd.in_preproc <= CT_PP_OTHER) || cpd.in_preproc == CT_PP_INCLUDE)
    {
       pc.str.clear();
       tok_info ss;
