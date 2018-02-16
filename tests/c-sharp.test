@@ -104,6 +104,7 @@
 11032  U10-Cpp.cfg                          cs/newlines.mm
 11072  U07-Cs.cfg                           cs/UNI-2007.cs
 11073  U08-Cs.cfg                           cs/UNI-2008.cs
+20010  UNI-32658.cfg                        cs/UNI-32658.cs
 
 60004  UNI-2684.cfg                         cs/UNI-2684.cs
 60005  UNI-2685.cfg                         cs/UNI-2685.cs
