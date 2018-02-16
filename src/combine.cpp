@@ -1662,7 +1662,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_BYREF);
       }
-      else if (chunk_is_paren_close(next) || next->type == CT_COMMA)
+      else if (next->type == CT_FPAREN_CLOSE || next->type == CT_COMMA)
       {
          // fix the bug #654
          // connect(&mapper, SIGNAL(mapped(QString &)), this, SLOT(onSomeEvent(QString &)));
@@ -1670,29 +1670,43 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
       else
       {
-         set_chunk_type(pc, CT_ARITH);
-         if (prev->type == CT_WORD)
+         // Issue # 1398
+         if (  ((pc->flags & PCF_IN_FCN_DEF) != 0)
+            && prev->type == CT_WORD
+            && pc->type == CT_AMP
+            && next->type == CT_WORD)
          {
-            tmp = chunk_get_prev_ncnl(prev);
-            if (tmp != nullptr)
+            /*
+             * Change CT_WORD before CT_AMP before CT_WORD to CT_TYPE
+             */
+            set_chunk_type(prev, CT_TYPE);
+         }
+         else
+         {
+            set_chunk_type(pc, CT_ARITH);
+            if (prev->type == CT_WORD)
             {
-               if (  chunk_is_semicolon(tmp)
-                  || tmp->type == CT_BRACE_OPEN
-                  || tmp->type == CT_QUALIFIER)
+               tmp = chunk_get_prev_ncnl(prev);
+               if (tmp != nullptr)
                {
-                  set_chunk_type(pc, CT_BYREF);
-                  set_chunk_type(prev, CT_TYPE);
-                  if (!(  next->type == CT_OPERATOR
-                       || next->type == CT_TYPE
-                       || next->type == CT_DC_MEMBER))
+                  if (  chunk_is_semicolon(tmp)
+                     || tmp->type == CT_BRACE_OPEN
+                     || tmp->type == CT_QUALIFIER)
                   {
-                     chunk_flags_set(next, PCF_VAR_1ST);
+                     set_chunk_type(pc, CT_BYREF);
+                     set_chunk_type(prev, CT_TYPE);
+                     if (!(  next->type == CT_OPERATOR
+                          || next->type == CT_TYPE
+                          || next->type == CT_DC_MEMBER))
+                     {
+                        chunk_flags_set(next, PCF_VAR_1ST);
+                     }
                   }
-               }
-               else if (tmp->type == CT_DC_MEMBER)
-               {
-                  set_chunk_type(prev, CT_TYPE);
-                  set_chunk_type(pc, CT_BYREF);
+                  else if (tmp->type == CT_DC_MEMBER)
+                  {
+                     set_chunk_type(prev, CT_TYPE);
+                     set_chunk_type(pc, CT_BYREF);
+                  }
                }
             }
          }
