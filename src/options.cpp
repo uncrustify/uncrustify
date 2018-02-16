@@ -963,6 +963,8 @@ void register_options(void)
                   "Don't split one-line enums: 'enum foo { BAR = 15 };'");
    unc_add_option("nl_getset_leave_one_liners", UO_nl_getset_leave_one_liners, AT_BOOL,
                   "Don't split one-line get or set functions.");
+   unc_add_option("nl_cs_property_leave_one_liners", UO_nl_cs_property_leave_one_liners, AT_BOOL,
+                  "Don't split one-line get or set functions.");
    unc_add_option("nl_func_leave_one_liners", UO_nl_func_leave_one_liners, AT_BOOL,
                   "Don't split one-line function definitions - 'int foo() { return 0; }'.");
    unc_add_option("nl_cpp_lambda_leave_one_liners", UO_nl_cpp_lambda_leave_one_liners, AT_BOOL,

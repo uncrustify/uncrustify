@@ -170,6 +170,7 @@ enum c_token_t
    CT_UNITTEST,
    CT_UNSAFE,
    CT_FINALLY,
+   CT_FIXED,            // C# fixed
    CT_IMPORT,
    CT_D_SCOPE,
    CT_D_SCOPE_IF,
@@ -361,6 +362,7 @@ enum c_token_t
    CT_SI,           // guy 2016-03-11
    CT_NOTHROW,      // guy 2016-03-11
    CT_WORD_,        // guy 2016-03-11
+
    // Token to ignore the content of a block
    CT_IGNORE_CONTENT,
 
