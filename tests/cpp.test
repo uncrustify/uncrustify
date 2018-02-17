@@ -576,6 +576,7 @@
 10100  issue_564.cfg                        cpp/issue_564.cpp
 10101  issue_574.cfg                        cpp/issue_574.cpp
 11000  UNI-12046.cfg                        cpp/UNI-12046.cpp
+20002  UNI-32657.cfg                        cpp/UNI-32657.cpp
 60001  UNI-2650.cfg                         cpp/UNI-2650.cpp
 60002  U25-Cpp.cfg                          cpp/UNI-16283.cpp
 60003  U26-Cpp.cfg                          cpp/UNI-1288.cpp

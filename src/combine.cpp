@@ -1142,6 +1142,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_FUNCTION);
       }
+      else if (pc->type == CT_FIXED)
+      {
+         set_chunk_type(pc, CT_FUNCTION);
+         set_chunk_parent(pc, CT_FIXED);
+      }
       else if (pc->type == CT_TYPE)
       {
          /*
@@ -2181,8 +2186,11 @@ static bool mark_function_type(chunk_t *pc)
       }
    }
 
+   // Fixes #issue 1577
+   // Allow word count 2 incase of function pointer declaration.
+   // Ex: bool (__stdcall* funcptr)(int, int);
    if (  star_count > 1
-      || word_count > 1
+      || (word_count > 1 && !(word_count == 2 && ptp == CT_FUNC_VAR))
       || ((star_count + word_count) == 0))
    {
       LOG_FMT(LFTYPE, "%s(%d): bad counts word: %zu, star: %zu\n",
@@ -4266,6 +4274,11 @@ static void mark_function(chunk_t *pc)
          D_LOG_FMT(LFCN, "%s(%d): next step with: ", __func__, __LINE__);
          LOG_FMT(LFCN, "orig_line is %zu, orig_col is %zu, text() '%s'\n",
                  prev->orig_line, prev->orig_col, prev->text());
+
+         if (pc->parent_type == CT_FIXED)
+         {
+            isa_def = true;
+         }
          if (prev->flags & PCF_IN_PREPROC)
          {
             prev = chunk_get_prev_ncnlnp(prev);
