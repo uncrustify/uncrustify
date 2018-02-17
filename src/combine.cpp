@@ -1142,6 +1142,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_FUNCTION);
       }
+      else if (pc->type == CT_FIXED)
+      {
+         set_chunk_type(pc, CT_FUNCTION);
+         set_chunk_parent(pc, CT_FIXED);
+      }
       else if (pc->type == CT_TYPE)
       {
          /*
@@ -1607,29 +1612,43 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
       else
       {
-         set_chunk_type(pc, CT_ARITH);
-         if (prev->type == CT_WORD)
+         // Issue # 1398
+         if (  ((pc->flags & PCF_IN_FCN_DEF) != 0)
+            && prev->type == CT_WORD
+            && pc->type == CT_AMP
+            && next->type == CT_WORD)
          {
-            tmp = chunk_get_prev_ncnl(prev);
-            if (tmp != nullptr)
+            /*
+             * Change CT_WORD before CT_AMP before CT_WORD to CT_TYPE
+             */
+            set_chunk_type(prev, CT_TYPE);
+         }
+         else
+         {
+            set_chunk_type(pc, CT_ARITH);
+            if (prev->type == CT_WORD)
             {
-               if (  chunk_is_semicolon(tmp)
-                  || tmp->type == CT_BRACE_OPEN
-                  || tmp->type == CT_QUALIFIER)
+               tmp = chunk_get_prev_ncnl(prev);
+               if (tmp != nullptr)
                {
-                  set_chunk_type(pc, CT_BYREF);
-                  set_chunk_type(prev, CT_TYPE);
-                  if (!(  next->type == CT_OPERATOR
-                       || next->type == CT_TYPE
-                       || next->type == CT_DC_MEMBER))
+                  if (  chunk_is_semicolon(tmp)
+                     || tmp->type == CT_BRACE_OPEN
+                     || tmp->type == CT_QUALIFIER)
                   {
-                     chunk_flags_set(next, PCF_VAR_1ST);
+                     set_chunk_type(pc, CT_BYREF);
+                     set_chunk_type(prev, CT_TYPE);
+                     if (!(  next->type == CT_OPERATOR
+                          || next->type == CT_TYPE
+                          || next->type == CT_DC_MEMBER))
+                     {
+                        chunk_flags_set(next, PCF_VAR_1ST);
+                     }
                   }
-               }
-               else if (tmp->type == CT_DC_MEMBER)
-               {
-                  set_chunk_type(prev, CT_TYPE);
-                  set_chunk_type(pc, CT_BYREF);
+                  else if (tmp->type == CT_DC_MEMBER)
+                  {
+                     set_chunk_type(prev, CT_TYPE);
+                     set_chunk_type(pc, CT_BYREF);
+                  }
                }
             }
          }
@@ -2167,8 +2186,11 @@ static bool mark_function_type(chunk_t *pc)
       }
    }
 
+   // Fixes #issue 1577
+   // Allow word count 2 incase of function pointer declaration.
+   // Ex: bool (__stdcall* funcptr)(int, int);
    if (  star_count > 1
-      || word_count > 1
+      || (word_count > 1 && !(word_count == 2 && ptp == CT_FUNC_VAR))
       || ((star_count + word_count) == 0))
    {
       LOG_FMT(LFTYPE, "%s(%d): bad counts word: %zu, star: %zu\n",
@@ -3621,7 +3643,7 @@ static chunk_t *fix_var_def(chunk_t *start)
       return(skip_to_next_statement(end));
    }
 
-   LOG_FMT(LFVD2, "%s(%d):%zu TYPE : ", __func__, __LINE__, start->orig_line);
+   LOG_FMT(LFVD2, "%s(%d): orig_line is %zu, TYPE : ", __func__, __LINE__, start->orig_line);
    for (size_t idxForCs = 0; idxForCs < cs.Len() - 1; idxForCs++)
    {
       tmp_pc = cs.Get(idxForCs)->m_pc;
@@ -4252,6 +4274,11 @@ static void mark_function(chunk_t *pc)
          D_LOG_FMT(LFCN, "%s(%d): next step with: ", __func__, __LINE__);
          LOG_FMT(LFCN, "orig_line is %zu, orig_col is %zu, text() '%s'\n",
                  prev->orig_line, prev->orig_col, prev->text());
+
+         if (pc->parent_type == CT_FIXED)
+         {
+            isa_def = true;
+         }
          if (prev->flags & PCF_IN_PREPROC)
          {
             prev = chunk_get_prev_ncnlnp(prev);

@@ -1963,7 +1963,7 @@ void indent_text(void)
       else if (  cpd.settings[UO_indent_member_single].b
               && pc->type == CT_MEMBER
               && (strcmp(pc->text(), ".") == 0)
-              && (cpd.lang_flags & LANG_CS))
+              && ((cpd.lang_flags & LANG_CS) || (cpd.lang_flags & LANG_CPP)))
       {
          if (frm.top().type != CT_MEMBER)
          {
@@ -2181,7 +2181,9 @@ void indent_text(void)
       {
          /* class indentation is ok already, just need to adjust func */
          /* TODO: make this configurable, obviously.. */
-         if (pc->parent_type == CT_FUNC_DEF)
+         if (  pc->parent_type == CT_FUNC_DEF
+            || pc->parent_type == CT_FUNC_PROTO
+            || (pc->parent_type == CT_STRUCT && frm.top().type != CT_CLASS_COLON))
          {
             indent_column_set(frm.top().indent + 4);
          }

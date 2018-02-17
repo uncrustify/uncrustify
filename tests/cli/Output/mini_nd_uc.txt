@@ -292,6 +292,7 @@ nl_assign_leave_one_liners      = false
 nl_class_leave_one_liners       = false
 nl_enum_leave_one_liners        = false
 nl_getset_leave_one_liners      = false
+nl_cs_property_leave_one_liners = false
 nl_func_leave_one_liners        = false
 nl_cpp_lambda_leave_one_liners  = false
 nl_if_leave_one_liners          = false

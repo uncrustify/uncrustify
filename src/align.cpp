@@ -1538,17 +1538,12 @@ chunk_t *align_trailing_comments(chunk_t *start)
 
          if (cmt_type_cur == cmt_type_start)
          {
-            col = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].u);
-            LOG_FMT(LALADD, "%s(%d): line=%zu col=%zu min_col=%zu pc->col=%zu pc->len=%zu %s\n",
-                    __func__, __LINE__, pc->orig_line, col, min_col, pc->column, pc->len(),
+            LOG_FMT(LALADD, "%s(%d): line=%zu min_col=%zu pc->col=%zu pc->len=%zu %s\n",
+                    __func__, __LINE__, pc->orig_line, min_col, pc->column, pc->len(),
                     get_token_name(pc->type));
             if (min_orig == 0 || min_orig > pc->column)
             {
                min_orig = pc->column;
-            }
-            if (pc->column < col)
-            {
-               pc->column = col;
             }
             align_add(cs, pc, min_col, 1, true); // (intended_col < col));
             nl_count = 0;

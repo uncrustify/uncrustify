@@ -36,7 +36,7 @@
 enum class scope_e : unsigned int
 {
    ALL,      //! search in all kind of chunks
-   PREPROC
+   PREPROC,  //! search only in preprocessor chunks
 };
 
 
