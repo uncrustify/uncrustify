@@ -967,6 +967,9 @@ nl_enum_leave_one_liners        { False, True }
 nl_getset_leave_one_liners      { False, True }
   Don't split one-line get or set functions.
 
+nl_cs_property_leave_one_liners { False, True }
+  Don't split one-line get or set functions.
+
 nl_func_leave_one_liners        { False, True }
   Don't split one-line function definitions - 'int foo() { return 0; }'.
 
