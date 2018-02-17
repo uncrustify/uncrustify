@@ -501,7 +501,6 @@ c_token_t find_keyword_type(const char *word, size_t len)
 
    if (p_ret != nullptr)
    {
-      //p_ret = kw_static_match(p_ret);
       p_ret = kw_static_match(p_ret, cpd.lang_flags);
    }
    return((p_ret != nullptr) ? p_ret->type : CT_WORD);
