@@ -1432,6 +1432,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
+      if ((cpd.lang_flags & LANG_CS) && (pc->type == CT_QUESTION) && (prev->type == CT_ANGLE_CLOSE))
+      {
+         set_chunk_type(pc, CT_PTR_TYPE);
+      }
       if (pc->type == CT_MINUS)
       {
          set_chunk_type(pc, CT_NEG);
@@ -2487,6 +2491,7 @@ static void fix_casts(chunk_t *start)
             || pc->type == CT_DC_MEMBER
             || pc->type == CT_PP
             || pc->type == CT_STAR
+            || pc->type == CT_QUESTION
             || pc->type == CT_CARET
             || pc->type == CT_TSQUARE
             || ((pc->type == CT_ANGLE_OPEN || pc->type == CT_ANGLE_CLOSE) && (cpd.lang_flags & (LANG_OC | LANG_JAVA)))
