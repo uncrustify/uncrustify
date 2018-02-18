@@ -940,17 +940,15 @@ void add_long_closebrace_comment(void)
          {
             nl_min = cpd.settings[UO_mod_add_long_namespace_closebrace_comment].u;
             tag_pc = ns_pc;
+            xstr   = tag_pc->str;    // add 'namespace' to the string
 
-            /*
-             * obtain the next chunk, normally this is the name of the namespace
-             * and append it to generate "namespace xyz"
-             */
-            xstr = tag_pc->str;
-            xstr.append(" ");
-
-            chunk_t *tmp_next = chunk_get_next(tag_pc);
-            if (tmp_next != nullptr)
+            // next chunk, normally is going to be the namespace name
+            // append it with a space to generate "namespace xyz"
+            chunk_t *tmp_next = chunk_get_next_ncnl(tag_pc);
+            if (  tmp_next != nullptr
+               && tmp_next->type != CT_BRACE_OPEN) // anonymous namespace -> ignore
             {
+               xstr.append(" ");
                append_tag_name(xstr, tmp_next);
             }
          }
@@ -962,11 +960,11 @@ void add_long_closebrace_comment(void)
             nl_min = cpd.settings[UO_mod_add_long_class_closebrace_comment].u;
             tag_pc = cl_pc;
             xstr   = tag_pc->str;
-            xstr.append(" ");
 
             chunk_t *tmp_next = chunk_get_next(cl_pc);
             if (tag_pc != nullptr)
             {
+               xstr.append(" ");
                append_tag_name(xstr, tmp_next);
             }
          }
