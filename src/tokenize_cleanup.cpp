@@ -151,11 +151,9 @@ void tokenize_cleanup(void)
             {
                if (!isascii(c))
                {
-
                   LOG_FMT(LGUY, "%s(%d): Error -->  found NON-ASCII Charecter ' %c ' at orig_line is %zu, orig_col is %zu, text() ' %s '.\n",
-                     __func__, __LINE__,c, pc->orig_line, pc->orig_col, pc->text());
+                          __func__, __LINE__, c, pc->orig_line, pc->orig_col, pc->text());
                   count++;
-                  
                }
             }
          }
