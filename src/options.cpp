@@ -1704,8 +1704,7 @@ void register_options(void)
                   "Determines weight of setter type (setter=) (Obj-C).");
    unc_add_option("mod_sort_oc_property_nullability_weight", UO_mod_sort_oc_property_nullability_weight, AT_NUM,
                   "Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C).");
-   unc_add_option("UO_mod_strict_ASCII", UO_mod_strict_ASCII, AT_BOOL,
-                  "If True,it will detects non-ascii character for words (except strings and comments) and report an error");
+
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,
@@ -1772,6 +1771,8 @@ void register_options(void)
    unc_add_option("use_options_overriding_for_qt_macros", UO_use_options_overriding_for_qt_macros, AT_BOOL,
                   "SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.\n"
                   "Default=True.");
+   unc_add_option("use_mod_strict_ASCII", UO_use_mod_strict_ASCII, AT_BOOL,
+                  "If True, will report an error if non-ascii characters outside of strings or comments are found");
 
    unc_begin_group(UG_warnlevels, "Warn levels - 1: error, 2: warning (default), 3: note");
    unc_add_option("warn_level_tabs_found_in_verbatim_string_literals", UO_warn_level_tabs_found_in_verbatim_string_literals, AT_UNUM,

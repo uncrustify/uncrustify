@@ -128,9 +128,9 @@ void tokenize_cleanup(void)
     * Since [] is expected to be TSQUARE for the 'operator', we need to make
     * this change in the first pass.
     */
-   if (cpd.settings[UO_mod_strict_ASCII].b)
+   if (cpd.settings[UO_use_mod_strict_ASCII].b)
    {
-      int count = 0;
+      bool hit = false;
       for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
       {
          // error out non-ascii char except for comments and strings.
@@ -151,14 +151,14 @@ void tokenize_cleanup(void)
             {
                if (!isascii(c))
                {
-                  LOG_FMT(LGUY, "%s(%d): Error -->  found NON-ASCII Charecter ' %c ' at orig_line is %zu, orig_col is %zu, text() ' %s '.\n",
+                  LOG_FMT(LERR, "%s(%d): Found NON-ASCII Charecter ' %c ' at orig_line is %zu, orig_col is %zu, text() ' %s '.\n",
                           __func__, __LINE__, c, pc->orig_line, pc->orig_col, pc->text());
-                  count++;
+                  hit = true;
                }
             }
          }
       }
-      if (count != 0)
+      if (hit)
       {
          exit(0);
       }

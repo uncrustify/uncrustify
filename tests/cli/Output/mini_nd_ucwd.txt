@@ -2020,9 +2020,6 @@ mod_sort_oc_property_setter_weight = 0        # number
 # Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C).
 mod_sort_oc_property_nullability_weight = 0        # number
 
-# If True,it will detects non-ascii character for words (except strings and comments) and report an error
-UO_mod_strict_ASCII             = false    # false/true
-
 #
 # Preprocessor options
 #
@@ -2115,6 +2112,9 @@ use_indent_continue_only_once   = false    # false/true
 # SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.
 # Default=True.
 use_options_overriding_for_qt_macros = true     # false/true
+
+# If True, will report an error if non-ascii characters outside of strings or comments are found
+use_mod_strict_ASCII            = false    # false/true
 
 #
 # Warn levels - 1: error, 2: warning (default), 3: note

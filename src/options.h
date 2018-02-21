@@ -852,7 +852,6 @@ enum uncrustify_options
    UO_mod_sort_oc_property_getter_weight,        // Determines weight of getter type (getter=)
    UO_mod_sort_oc_property_setter_weight,        // Determines weight of setter type (setter=)
    UO_mod_sort_oc_property_nullability_weight,   // Determines weight of nullability type (nullable/nonnull)
-   UO_mod_strict_ASCII,                          // If True, Detects non-ascii character for words (except Strings and comments) it will report an error
 
 
    // group: UG_preprocessor, "Preprocessor options"                                                10
@@ -894,6 +893,7 @@ enum uncrustify_options
                                             // with the value "true". Guy 2016-05-16
    UO_use_options_overriding_for_qt_macros, // SIGNAL/SLOT Qt macros have special formatting options.
                                             // See options_for_QT.cpp for details.
+   UO_use_mod_strict_ASCII,                 // If True, will report an error if non-ascii characters outside of strings or comments are found
 
    // group: UG_warnlevels, "Warn levels - 1: error, 2: warning (default), 3: note"                 13
    // Levels to attach to warnings (log_sev_t; default : LWARN)
