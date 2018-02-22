@@ -99,3 +99,4 @@ build/
 .cproject
 .project
 .settings
+scripts/Run_uncrustify_for_sources.bat
