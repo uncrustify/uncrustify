@@ -2418,10 +2418,15 @@ static chunk_t *process_return(chunk_t *pc)
             chunk_del(next);
             chunk_del(cpar);
 
-            // back up the semicolon
-            semi->column--;
-            semi->orig_col--;
-            semi->orig_col_end--;
+            // back up following chunks
+            temp = semi;
+            while (temp != nullptr && temp->type != CT_NEWLINE)
+            {
+               temp->column       = temp->column - 2;
+               temp->orig_col     = temp->orig_col - 2;
+               temp->orig_col_end = temp->orig_col_end - 2;
+               temp               = chunk_get_next(temp);
+            }
          }
          else
          {
