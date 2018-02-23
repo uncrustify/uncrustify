@@ -2799,15 +2799,39 @@ void newlines_cleanup_braces(bool first)
       }
       else if (pc->type == CT_CATCH)
       {
-         newlines_cuddle_uncuddle(pc, cpd.settings[UO_nl_brace_catch].a);
-         next = chunk_get_next_ncnl(pc);
-         if (chunk_is_token(next, CT_BRACE_OPEN))
+         if (  (cpd.lang_flags & LANG_OC)
+            && (cpd.settings[UO_nl_oc_brace_catch].a != AV_IGNORE))
          {
-            newlines_do_else(pc, cpd.settings[UO_nl_catch_brace].a);
+            newlines_cuddle_uncuddle(pc, cpd.settings[UO_nl_oc_brace_catch].a);
          }
          else
          {
-            newlines_if_for_while_switch(pc, cpd.settings[UO_nl_catch_brace].a);
+            newlines_cuddle_uncuddle(pc, cpd.settings[UO_nl_brace_catch].a);
+         }
+         next = chunk_get_next_ncnl(pc);
+         if (chunk_is_token(next, CT_BRACE_OPEN))
+         {
+            if (  (cpd.lang_flags & LANG_OC)
+               && (cpd.settings[UO_nl_oc_catch_brace].a != AV_IGNORE))
+            {
+               newlines_do_else(pc, cpd.settings[UO_nl_oc_catch_brace].a);
+            }
+            else
+            {
+               newlines_do_else(pc, cpd.settings[UO_nl_catch_brace].a);
+            }
+         }
+         else
+         {
+            if (  (cpd.lang_flags & LANG_OC)
+               && (cpd.settings[UO_nl_oc_catch_brace].a != AV_IGNORE))
+            {
+               newlines_if_for_while_switch(pc, cpd.settings[UO_nl_oc_catch_brace].a);
+            }
+            else
+            {
+               newlines_if_for_while_switch(pc, cpd.settings[UO_nl_catch_brace].a);
+            }
          }
       }
       else if (pc->type == CT_WHILE)

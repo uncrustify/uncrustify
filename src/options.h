@@ -218,6 +218,7 @@ enum uncrustify_options
    UO_sp_before_squares,            // space before '[]', as in 'byte []'
    UO_sp_cpp_before_struct_binding, // space before structured binding declaration
    UO_sp_inside_square,             // space inside 'byte[ 5 ]' vs 'byte[5]'
+   UO_sp_oc_inside_square,          // space inside '@[ @5 ]' vs '@[@5]'
    UO_sp_after_comma,               // space after ','
    UO_sp_before_comma,              // space before ','
    UO_sp_after_mdatype_commas,      //
@@ -274,6 +275,7 @@ enum uncrustify_options
    UO_sp_throw_paren,              //
    UO_sp_after_throw,              //
    UO_sp_catch_paren,              //
+   UO_sp_oc_catch_paren,           // same as sp_catch_paren except for objective-c @catch
    UO_sp_version_paren,            //
    UO_sp_scope_paren,              //
    UO_sp_super_paren,              //
@@ -284,7 +286,9 @@ enum uncrustify_options
    UO_sp_brace_else,               //
    UO_sp_brace_typedef,            //
    UO_sp_catch_brace,              //
+   UO_sp_oc_catch_brace,           // same as sp_catch_brace except for objective-c @catch
    UO_sp_brace_catch,              //
+   UO_sp_oc_brace_catch,           // same as sp_brace_catch except for objective-c @catch
    UO_sp_finally_brace,            //
    UO_sp_brace_finally,            //
    UO_sp_try_brace,                //
@@ -493,7 +497,9 @@ enum uncrustify_options
    UO_nl_getset_brace,                 // newline between 'get/set' and '{'
    UO_nl_for_brace,                    // newline between 'for' and '{'
    UO_nl_catch_brace,                  // newline between 'catch' and '{'
+   UO_nl_oc_catch_brace,               // same as nl_catch_brace except for objective-c @catch newline between '@catch' and '{'
    UO_nl_brace_catch,                  // newline between '}' and 'catch'
+   UO_nl_oc_brace_catch,               // same as nl_brace_catch except for objective-c @catch newline between '}' and '@catch'
    UO_nl_brace_square,                 // newline between '}' and ']'
    UO_nl_brace_fparen,                 // newline between '}' and ')' of a function invocation
    UO_nl_while_brace,                  // newline between 'while' and '{'
