@@ -382,6 +382,8 @@ static void handle_oc_message_send(chunk_t *pc);
 //! Process @Property values and re-arrange them if necessary
 static void handle_oc_property_decl(chunk_t *pc);
 
+//! Process @available annotation
+static void handle_oc_available(chunk_t *pc);
 
 /**
  * Process a type that is enclosed in parens in message declarations.
@@ -907,6 +909,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       if (pc->type == CT_OC_PROPERTY)
       {
          handle_oc_property_decl(pc);
+      }
+      if (pc->type == CT_OC_AVAILABLE)
+      {
+         handle_oc_available(pc);
       }
    }
 
@@ -6333,6 +6339,22 @@ static void handle_oc_message_send(chunk_t *os)
       prev = tmp;
    }
 } // handle_oc_message_send
+
+
+static void handle_oc_available(chunk_t *os)
+{
+   os = chunk_get_next(os);
+   while (os != nullptr)
+   {
+      c_token_t origType = os->type;
+      set_chunk_type(os, CT_OC_AVAILABLE_VALUE);
+      if (origType == CT_PAREN_CLOSE)
+      {
+         break;
+      }
+      os = chunk_get_next(os);
+   }
+}
 
 
 static void handle_oc_property_decl(chunk_t *os)

@@ -57,6 +57,7 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag, int lang_flags
 static chunk_tag_t keywords[] =
 {
    // TODO: it might be useful if users could add there custom keywords to this list
+   { "@available",          CT_OC_AVAILABLE,     LANG_OC                                                                     },
    { "@catch",              CT_CATCH,            LANG_OC                                                                     },
    { "@dynamic",            CT_OC_DYNAMIC,       LANG_OC                                                                     },
    { "@end",                CT_OC_END,           LANG_OC                                                                     },

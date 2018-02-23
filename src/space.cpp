@@ -793,6 +793,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       }
    }
 
+   if (first->type == CT_OC_AVAILABLE_VALUE || second->type == CT_OC_AVAILABLE_VALUE)
+   {
+      log_rule("IGNORE");
+      return(AV_IGNORE);
+   }
    if (second->type == CT_OC_BLOCK_CARET)
    {
       log_rule("sp_before_oc_block_caret");
