@@ -218,7 +218,7 @@ enum uncrustify_options
    UO_sp_before_squares,            // space before '[]', as in 'byte []'
    UO_sp_cpp_before_struct_binding, // space before structured binding declaration
    UO_sp_inside_square,             // space inside 'byte[ 5 ]' vs 'byte[5]'
-   UO_sp_oc_inside_square,          // space inside '@[ @5 ]' vs '@[@5]'
+   UO_sp_inside_square_oc_array,    // space inside '@[ @5 ]' vs '@[@5]'
    UO_sp_after_comma,               // space after ','
    UO_sp_before_comma,              // space before ','
    UO_sp_after_mdatype_commas,      //

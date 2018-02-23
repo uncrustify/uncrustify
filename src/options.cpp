@@ -455,7 +455,7 @@ void register_options(void)
                   "Add or remove space before structured bindings. Only for C++17.");
    unc_add_option("sp_inside_square", UO_sp_inside_square, AT_IARF,
                   "Add or remove space inside a non-empty '[' and ']'.");
-   unc_add_option("sp_oc_inside_square", UO_sp_oc_inside_square, AT_IARF,
+   unc_add_option("sp_inside_square_oc_array", UO_sp_inside_square_oc_array, AT_IARF,
                   "Add or remove space inside a non-empty OC boxed array '@[' and ']'.\n"
                   "If set to ignore, sp_inside_square is used.");
    unc_add_option("sp_after_comma", UO_sp_after_comma, AT_IARF,

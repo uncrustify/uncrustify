@@ -254,7 +254,7 @@ sp_cpp_before_struct_binding    { Ignore, Add, Remove, Force }
 sp_inside_square                { Ignore, Add, Remove, Force }
   Add or remove space inside a non-empty '[' and ']'.
 
-sp_oc_inside_square             { Ignore, Add, Remove, Force }
+sp_inside_square_oc_array       { Ignore, Add, Remove, Force }
   Add or remove space inside a non-empty OC boxed array '@[' and ']'.
   If set to ignore, sp_inside_square is used.
 
