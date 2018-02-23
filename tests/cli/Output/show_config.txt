@@ -254,6 +254,10 @@ sp_cpp_before_struct_binding    { Ignore, Add, Remove, Force }
 sp_inside_square                { Ignore, Add, Remove, Force }
   Add or remove space inside a non-empty '[' and ']'.
 
+sp_oc_inside_square             { Ignore, Add, Remove, Force }
+  Add or remove space inside a non-empty OC boxed array '@[' and ']'.
+  If set to ignore, sp_inside_square is used.
+
 sp_after_comma                  { Ignore, Add, Remove, Force }
   Add or remove space after ',', 'a,b' vs 'a, b'.
 
@@ -424,6 +428,10 @@ sp_catch_paren                  { Ignore, Add, Remove, Force }
   Add or remove space between 'catch' and '(' in 'catch (something) { }'
   If set to ignore, sp_before_sparen is used.
 
+sp_oc_catch_paren               { Ignore, Add, Remove, Force }
+  Add or remove space between '@catch' and '(' in '@catch (something) { }'
+  If set to ignore, sp_catch_paren is used.
+
 sp_version_paren                { Ignore, Add, Remove, Force }
   Add or remove space between 'version' and '(' in 'version (something) { }' (D language)
   If set to ignore, sp_before_sparen is used.
@@ -456,8 +464,16 @@ sp_brace_typedef                { Ignore, Add, Remove, Force }
 sp_catch_brace                  { Ignore, Add, Remove, Force }
   Add or remove space between 'catch' and '{' if on the same line.
 
+sp_oc_catch_brace               { Ignore, Add, Remove, Force }
+  Add or remove space between '@catch' and '{' if on the same line.
+  If set to ignore, sp_catch_brace is used.
+
 sp_brace_catch                  { Ignore, Add, Remove, Force }
   Add or remove space between '}' and 'catch' if on the same line.
+
+sp_oc_brace_catch               { Ignore, Add, Remove, Force }
+  Add or remove space between '}' and '@catch' if on the same line.
+  If set to ignore, sp_brace_catch is used.
 
 sp_finally_brace                { Ignore, Add, Remove, Force }
   Add or remove space between 'finally' and '{' if on the same line.
@@ -1104,8 +1120,16 @@ nl_for_brace                    { Ignore, Add, Remove, Force }
 nl_catch_brace                  { Ignore, Add, Remove, Force }
   Add or remove newline between 'catch' and '{'.
 
+nl_oc_catch_brace               { Ignore, Add, Remove, Force }
+  Add or remove newline between '@catch' and '{'.
+  If set to ignore, nl_catch_brace is used.
+
 nl_brace_catch                  { Ignore, Add, Remove, Force }
   Add or remove newline between '}' and 'catch'.
+
+nl_oc_brace_catch               { Ignore, Add, Remove, Force }
+  Add or remove newline between '}' and 'catch'.
+  If set to ignore, nl_brace_catch is used.
 
 nl_brace_square                 { Ignore, Add, Remove, Force }
   Add or remove newline between '}' and ']'.
