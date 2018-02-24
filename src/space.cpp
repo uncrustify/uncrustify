@@ -1562,7 +1562,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    if (first->type == CT_SQUARE_OPEN || second->type == CT_SQUARE_CLOSE)
    {
       if (  cpd.lang_flags & LANG_OC
-         && (first->parent_type == CT_OC_AT || second->parent_type == CT_OC_AT)
+         && (  (first->parent_type == CT_OC_AT && first->type == CT_SQUARE_OPEN)
+            || (second->parent_type == CT_OC_AT && second->type == CT_SQUARE_CLOSE))
          && (cpd.settings[UO_sp_inside_square_oc_array].a != AV_IGNORE))
       {
          log_rule("sp_inside_square_oc_array");
