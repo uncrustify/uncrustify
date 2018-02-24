@@ -131,6 +131,9 @@ sp_between_ptr_star             { Ignore, Add, Remove, Force }
 sp_after_ptr_star               { Ignore, Add, Remove, Force }
   Add or remove space after pointer star '*', if followed by a word.
 
+sp_after_ptr_block_caret        { Ignore, Add, Remove, Force }
+  Add or remove space after pointer caret '^', if followed by a word.
+
 sp_after_ptr_star_qualifier     { Ignore, Add, Remove, Force }
   Add or remove space after pointer star '*', if followed by a qualifier.
 
@@ -591,6 +594,10 @@ sp_after_oc_msg_receiver        { Ignore, Add, Remove, Force }
 
 sp_after_oc_property            { Ignore, Add, Remove, Force }
   Add or remove space after @property.
+
+sp_after_oc_synchronized        { Ignore, Add, Remove, Force }
+  Add or remove space between '@synchronized' and the parenthesis
+  '@synchronized(foo)' vs '@synchronized (foo)'.
 
 sp_cond_colon                   { Ignore, Add, Remove, Force }
   Add or remove space around the ':' in 'b ? t : f'.

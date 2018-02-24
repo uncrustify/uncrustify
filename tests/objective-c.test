@@ -87,6 +87,8 @@
 50511  gh293.b.cfg                          oc/gh293.m
 50512  sp_oc_catch.cfg                      oc/sp_oc_catch.m
 50513  sp_oc_boxed.cfg                      oc/sp_oc_boxed.m
+50514  indent_boxed.cfg                     oc/indent_boxed.m
+50515  sp_oc_synchronized.cfg               oc/sp_oc_synchronized.m
 
 50600  nl_oc_block_brace-f.cfg              oc/bug_i_477.m
 50601  empty.cfg                            oc/bug_i_408.m

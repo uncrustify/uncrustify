@@ -880,6 +880,18 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       flag_asm(pc);
    }
 
+   // clang stuff - A new derived type is introduced to C and, by extension, Objective-C, C++, and Objective-C++
+   if (cpd.lang_flags & LANG_C || cpd.lang_flags & LANG_CPP || cpd.lang_flags & LANG_OC)
+   {
+      if (pc->type == CT_CARET)
+      {
+         if (pc->flags & PCF_EXPR_START || pc->flags & PCF_IN_PREPROC)
+         {
+            handle_oc_block_literal(pc);
+         }
+      }
+   }
+
    // Objective C stuff
    if (cpd.lang_flags & LANG_OC)
    {
@@ -897,10 +909,6 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          if (pc->type == CT_SQUARE_OPEN)
          {
             handle_oc_message_send(pc);
-         }
-         if (pc->type == CT_CARET)
-         {
-            handle_oc_block_literal(pc);
          }
       }
 
@@ -1128,7 +1136,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    if (next->type == CT_PAREN_OPEN)
    {
       tmp = chunk_get_next_ncnl(next);
-      if ((cpd.lang_flags & LANG_OC) && chunk_is_token(tmp, CT_CARET))
+      if ((cpd.lang_flags & LANG_C || cpd.lang_flags & LANG_CPP || cpd.lang_flags & LANG_OC) && chunk_is_token(tmp, CT_CARET))
       {
          handle_oc_block_type(tmp);
 
@@ -1454,7 +1462,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
       if (pc->type == CT_CARET)
       {
-         if (cpd.lang_flags & LANG_OC)
+         if (cpd.lang_flags & LANG_C || cpd.lang_flags & LANG_CPP || cpd.lang_flags & LANG_OC)
          {
             // This is likely the start of a block literal
             handle_oc_block_literal(pc);

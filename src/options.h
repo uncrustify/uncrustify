@@ -175,6 +175,7 @@ enum uncrustify_options
    UO_sp_before_unnamed_ptr_star,   //
    UO_sp_between_ptr_star,          // space between two '*' that are part of a type
    UO_sp_after_ptr_star,            // space after a '*' that is part of a type
+   UO_sp_after_ptr_block_caret,     // space after a '^' that is part of a type
    UO_sp_after_ptr_star_qualifier,  // space after a '*' next to a qualifier
    UO_sp_after_ptr_star_func,       // space between a '*' and a function proto/def
    UO_sp_ptr_star_paren,            //
@@ -322,6 +323,7 @@ enum uncrustify_options
    UO_sp_after_oc_block_caret,     //
    UO_sp_after_oc_msg_receiver,    //
    UO_sp_after_oc_property,        //
+   UO_sp_after_oc_synchronized,    //
    UO_sp_cond_colon,               //
    UO_sp_cond_colon_before,        //
    UO_sp_cond_colon_after,         //
