@@ -39,8 +39,7 @@ endif()
 
 
 # first pass
-string(RANDOM LENGTH 8 ALPHABET 0123456789 test_uuid)
-
+string(MD5 test_uuid ${TEST_DIR}${TEST_INPUT}${TEST_RESULT})
 execute_process(
   COMMAND ${TEST_PROGRAM} -l ${TEST_LANG} -c ${TEST_CONFIG} -f ${TEST_INPUT} -o ${TEST_RESULT}
     WORKING_DIRECTORY ${TEST_DIR}
