@@ -125,6 +125,7 @@
 
 50800  obj-c-properties.cfg                 oc/properties.m
 50801  empty.cfg                            oc/i1213.m
+50802  obj-c-available.cfg                  oc/available.m
 
 
 #
