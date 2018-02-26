@@ -122,6 +122,8 @@
 50800  obj-c-properties.cfg                 oc/properties.m
 50801  empty.cfg                            oc/i1213.m
 
+50810  bug_841.cfg                          oc/bug_841.m
+
 
 #
 # adopt tests from UT
