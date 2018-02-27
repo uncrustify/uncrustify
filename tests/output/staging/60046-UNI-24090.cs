@@ -3,7 +3,7 @@ new WaveformStreamer(s_sweepedClip, 0, s_sweepedClip.length, 1,
     {
         return false;
     }
-    );
+);
 
 using System.Collections.Generic;
 
@@ -13,12 +13,21 @@ class C
     {
         Action localMethod = () => {
             SomeClass.OtherMethod(new Dictionary<string, string>
-                {
-                    {"a", "one"},
-                    {"b", "two"},
-                    {"c", "three"}
-                });
+            {
+                {"a", "one"},
+                {"b", "two"},
+                {"c", "three"}
+            });
         };
+        m_Mixers.Add(
+            new WeightInfo
+            {
+                parentMixer = parent,
+                mixer = node,
+                port = port,
+                modulate = (type == typeof(AnimationLayerMixerPlayable))
+            }
+        );
     }
 }
 
@@ -27,7 +36,7 @@ MergeJSFiles(new string[] {
     Paths.Combine(buildToolsDir, "UnityConfig"),
     Paths.Combine(args.stagingAreaData, kOutputFileLoaderFileName),
     }, unityLoader
-    );
+);
 
 public void GeneratesCorrectVisualStudioProjectFile()
 {
@@ -54,5 +63,5 @@ public void GeneratesCorrectVisualStudioProjectFile()
             "Projects/TestProjectGeneration_CApplication.vcxproj",
             "Projects/TestProjectGeneration_CApplication.vcxproj.filters"
         }
-        );
+    );
 }

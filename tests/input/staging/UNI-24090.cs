@@ -19,6 +19,15 @@ class C
                 {"c", "three"}
             });
         };
+		m_Mixers.Add(
+			new WeightInfo   
+			{  
+				parentMixer = parent,
+				mixer = node,
+				port = port,
+				modulate = (type == typeof(AnimationLayerMixerPlayable))
+			}
+		);
     }
 }
 
