@@ -38,23 +38,26 @@ if(NOT TEST_RERUN_OUTPUT)
 endif()
 
 
-# first pass
 string(MD5 test_uuid ${TEST_DIR}${TEST_INPUT}${TEST_RESULT})
+set(STDERR_PASS_1 ERR-1-${test_uuid}.txt)
+set(STDERR_PASS_2 ERR-2-${test_uuid}.txt)
+
+# first pass
 execute_process(
   COMMAND ${TEST_PROGRAM} -l ${TEST_LANG} -c ${TEST_CONFIG} -f ${TEST_INPUT} -o ${TEST_RESULT}
     WORKING_DIRECTORY ${TEST_DIR}
     RESULT_VARIABLE uncrustify_error_code
     OUTPUT_QUIET
     ERROR_VARIABLE uncrustify_error
-    ERROR_FILE ${TEST_DIR}/ERR-1-${test_uuid}.txt
+    ERROR_FILE ${TEST_DIR}/${STDERR_PASS_1}
 )
 
 if(uncrustify_error_code)
   execute_process(
-    COMMAND ${CMAKE_COMMAND} -E echo "Uncrustify error: " ${uncrustify_error_code} "  The ERR-1-${test_uuid}.txt file is:"
+    COMMAND ${CMAKE_COMMAND} -E echo "Uncrustify error: " ${uncrustify_error_code} "  The ${STDERR_PASS_1} file is:"
   )
   execute_process(
-    COMMAND ${CMAKE_COMMAND} -E copy ${TEST_DIR}/ERR-1-${test_uuid}.txt /dev/stderr
+    COMMAND ${CMAKE_COMMAND} -E copy ${TEST_DIR}/${STDERR_PASS_1} /dev/stderr
   )
   message(SEND_ERROR "Uncrustify error_code (Pass 1)")
 else(uncrustify_error_code)
@@ -74,7 +77,7 @@ else(uncrustify_error_code)
     message(SEND_ERROR "Uncrustify MISSMATCH (Pass 1)")
   endif()
 endif(uncrustify_error_code)
-file(REMOVE ${TEST_DIR}/ERR-1-${test_uuid}.txt)
+file(REMOVE ${TEST_DIR}/${STDERR_PASS_1})
 
 
 # Re-run with the output file as the input to check stability.
@@ -84,15 +87,15 @@ execute_process(
     RESULT_VARIABLE uncrustify_error_code
     OUTPUT_QUIET
     ERROR_VARIABLE uncrustify_error
-    ERROR_FILE ${TEST_DIR}/ERR-2-${test_uuid}.txt
+    ERROR_FILE ${TEST_DIR}/${STDERR_PASS_2}
 )
 
 if(uncrustify_error_code)
   execute_process(
-    COMMAND ${CMAKE_COMMAND} -E echo "Uncrustify error: " ${uncrustify_error_code} "  The ERR-2-${test_uuid}.txt file is:"
+    COMMAND ${CMAKE_COMMAND} -E echo "Uncrustify error: " ${uncrustify_error_code} "  The ${STDERR_PASS_2} file is:"
   )
   execute_process(
-    COMMAND ${CMAKE_COMMAND} -E copy ${TEST_DIR}/ERR-2-${test_uuid}.txt /dev/stderr
+    COMMAND ${CMAKE_COMMAND} -E copy ${TEST_DIR}/${STDERR_PASS_2} /dev/stderr
   )
   message(SEND_ERROR "Uncrustify error_code (Pass 2)")
 else(uncrustify_error_code)
@@ -111,4 +114,4 @@ else(uncrustify_error_code)
     message(SEND_ERROR "Uncrustify UNSTABLE (Pass 2)")
   endif()
 endif()
-file(REMOVE ${TEST_DIR}/ERR-2-${test_uuid}.txt)
+file(REMOVE ${TEST_DIR}/${STDERR_PASS_2})
