@@ -35,7 +35,7 @@ MergeJSFiles(new string[] {
     GetDecompressor(),
     Paths.Combine(buildToolsDir, "UnityConfig"),
     Paths.Combine(args.stagingAreaData, kOutputFileLoaderFileName),
-    }, unityLoader
+}, unityLoader
 );
 
 public void GeneratesCorrectVisualStudioProjectFile()
