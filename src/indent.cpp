@@ -1307,7 +1307,8 @@ void indent_text(void)
             }
             else if (  are_chunks_in_same_line(frm.prev().pc, frm.top().pc)
                     && !cpd.settings[UO_indent_align_paren].b
-                    && chunk_is_paren_open(frm.prev().pc))
+                    && chunk_is_paren_open(frm.prev().pc)
+                    && !(pc->flags & PCF_ONE_LINER))
             {
                // We are inside ({ ... }) -- where { and ( are on the same line, avoiding double indentations.
                frm.top().brace_indent = frm.prev().indent - indent_size;
@@ -1317,7 +1318,8 @@ void indent_text(void)
             }
             else if (  are_chunks_in_same_line(frm.prev().pc, chunk_get_prev_ncnlnp(frm.top().pc))
                     && !cpd.settings[UO_indent_align_paren].b
-                    && chunk_is_paren_open(frm.prev().pc))
+                    && chunk_is_paren_open(frm.prev().pc)
+                    && !(pc->flags & PCF_ONE_LINER))
             {
                // We are inside ({ ... }) -- where { and ( are on adjacent lines, avoiding indentation of brace.
                frm.top().brace_indent = frm.prev().indent - indent_size;
