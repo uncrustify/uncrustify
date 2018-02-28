@@ -259,13 +259,6 @@ def check_std_output(expected_path, result_path, result_str, result_manip=None, 
         return False
 
 
-    if program_args.input_file is not "":
-        with open(program_args.input_file, encoding="utf-8", newline="\n") as f:
-           inputFile = f.read()
-
-        print("Input file is:\n")
-        pprint.PrettyPrinter(indent=4).pprint(inputFile)
-
     return True
 
 
