@@ -1619,7 +1619,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
 
    // Skip past C99 "[xx] =" stuff
    chunk_t *tmp = skip_c99_array(start);
-   if (tmp)
+   if (tmp != nullptr)
    {
       set_chunk_parent(start, CT_TSQUARE);
       start            = tmp;
@@ -1796,7 +1796,7 @@ static void align_init_brace(chunk_t *start)
       if (idx == 0 && ((tmp = skip_c99_array(pc)) != nullptr))
       {
          pc = tmp;
-         if (pc)
+         if (pc != nullptr)
          {
             LOG_FMT(LALBR, " -%zu- skipped '[] =' to %s\n",
                     pc->orig_line, get_token_name(pc->type));
@@ -2118,19 +2118,21 @@ static void align_oc_msg_colon(chunk_t *so)
    for (size_t idx = 0; idx < len; idx++)
    {
       chunk_t *tmp = nas.m_aligned.GetChunk(idx);
-
-      size_t  tlen = tmp->str.size();
-      if (tlen > mlen)
+      if (tmp != nullptr)
       {
-         mlen = tlen;
-         if (idx != 0)
+         size_t tlen = tmp->str.size();
+         if (tlen > mlen)
          {
-            longest = tmp;
+            mlen = tlen;
+            if (idx != 0)
+            {
+               longest = tmp;
+            }
          }
-      }
-      if (idx == 0)
-      {
-         first_len = tlen + 1;
+         if (idx == 0)
+         {
+            first_len = tlen + 1;
+         }
       }
    }
 
