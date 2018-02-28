@@ -71,6 +71,7 @@ static chunk_tag_t keywords[] =
    { "@protocol",           CT_OC_PROTOCOL,      LANG_OC                                                                     },
    { "@public",             CT_PRIVATE,          LANG_OC                                                                     },
    { "@selector",           CT_OC_SEL,           LANG_OC                                                                     },
+   { "@synchronized",       CT_SYNCHRONIZED,     LANG_OC                                                                     },
    { "@synthesize",         CT_OC_DYNAMIC,       LANG_OC                                                                     },
    { "@throw",              CT_THROW,            LANG_OC                                                                     },
    { "@try",                CT_TRY,              LANG_OC                                                                     },

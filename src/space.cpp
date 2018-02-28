@@ -683,6 +683,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       return(cpd.settings[UO_sp_scope_paren].a);
    }
 
+   if (  cpd.lang_flags & LANG_OC
+      && first->type == CT_SYNCHRONIZED && second->type == CT_SPAREN_OPEN)
+   {
+      log_rule("sp_after_oc_synchronized");
+      return(cpd.settings[UO_sp_after_oc_synchronized].a);
+   }
+
    // "if (" vs "if("
    if (second->type == CT_SPAREN_OPEN)
    {
@@ -1759,6 +1766,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       {
          log_rule("sp_deref");
          return(cpd.settings[UO_sp_deref].a);
+      }
+
+      if (  (first->parent_type == CT_FUNC_VAR || first->parent_type == CT_FUNC_TYPE)
+         && cpd.settings[UO_sp_after_ptr_block_caret].a != AV_IGNORE)
+      {
+         log_rule("sp_after_ptr_block_caret");
+         return(cpd.settings[UO_sp_after_ptr_block_caret].a);
       }
 
       if (  second->type == CT_QUALIFIER

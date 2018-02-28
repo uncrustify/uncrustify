@@ -372,6 +372,8 @@ void register_options(void)
                   "Add or remove space between pointer stars '*'.");
    unc_add_option("sp_after_ptr_star", UO_sp_after_ptr_star, AT_IARF,
                   "Add or remove space after pointer star '*', if followed by a word.");
+   unc_add_option("sp_after_ptr_block_caret", UO_sp_after_ptr_block_caret, AT_IARF,
+                  "Add or remove space after pointer caret '^', if followed by a word.");
    unc_add_option("sp_after_ptr_star_qualifier", UO_sp_after_ptr_star_qualifier, AT_IARF,
                   "Add or remove space after pointer star '*', if followed by a qualifier.");
    unc_add_option("sp_after_ptr_star_func", UO_sp_after_ptr_star_func, AT_IARF,
@@ -691,6 +693,9 @@ void register_options(void)
                   "'[receiver selector ...]'.");
    unc_add_option("sp_after_oc_property", UO_sp_after_oc_property, AT_IARF,
                   "Add or remove space after @property.");
+   unc_add_option("sp_after_oc_synchronized", UO_sp_after_oc_synchronized, AT_IARF,
+                  "Add or remove space between '@synchronized' and the parenthesis\n"
+                  "'@synchronized(foo)' vs '@synchronized (foo)'.");
    unc_add_option("sp_cond_colon", UO_sp_cond_colon, AT_IARF,
                   "Add or remove space around the ':' in 'b ? t : f'.");
    unc_add_option("sp_cond_colon_before", UO_sp_cond_colon_before, AT_IARF,

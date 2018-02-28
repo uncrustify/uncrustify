@@ -185,6 +185,12 @@ static chunk_t *oc_msg_prev_colon(chunk_t *pc);
  */
 static bool single_line_comment_indent_rule_applies(chunk_t *start);
 
+/**
+ * returns true if semicolon on the same level ends any assign operations
+ * false if next thing hit is not the end of an assign operation
+ */
+static bool is_end_of_assignment(chunk_t *pc, const ParseFrame &frm);
+
 
 void indent_to_column(chunk_t *pc, size_t column)
 {
@@ -916,18 +922,7 @@ void indent_text(void)
             }
 
             // End any assign operations with a semicolon on the same level
-            if (  (  frm.top().type == CT_ASSIGN_NL
-                  || frm.top().type == CT_MEMBER
-                  || frm.top().type == CT_ASSIGN)
-               && (  chunk_is_semicolon(pc)
-                  || pc->type == CT_COMMA
-                  || pc->type == CT_BRACE_OPEN
-                  || pc->type == CT_SPAREN_CLOSE
-                  || (  pc->type == CT_SQUARE_OPEN
-                     && pc->parent_type == CT_OC_AT)
-                  || (  pc->type == CT_SQUARE_OPEN
-                     && pc->parent_type == CT_ASSIGN))
-               && pc->parent_type != CT_CPP_LAMBDA)
+            if (is_end_of_assignment(pc, frm))
             {
                frm.pop();
             }
@@ -966,6 +961,46 @@ void indent_text(void)
                && pc->parent_type == CT_OC_GENERIC_SPEC)
             {
                frm.pop();
+            }
+            // End Objc nested message and boxed array
+            // TODO: ideally formatting would know which opens occurred on a line and group closes in the same manor
+            if (pc->flags & PCF_IN_OC_MSG || pc->flags & PCF_OC_BOXED)
+            {
+               if (pc->type == CT_SQUARE_CLOSE)
+               {
+                  size_t  count = 1;
+                  chunk_t *next = chunk_get_next_nc(pc);
+                  while (  next
+                        && (  (next->type == CT_BRACE_CLOSE && next->parent_type == CT_OC_AT)
+                           || (next->type == CT_SQUARE_CLOSE && next->parent_type == CT_OC_AT)
+                           || (next->type == CT_SQUARE_CLOSE && next->parent_type == CT_OC_MSG)))
+                  {
+                     count++;
+                     next = chunk_get_next_nc(next);
+                  }
+
+                  count = std::min(count, frm.size());
+                  if (count > 1)
+                  {
+                     while (count-- > 0)
+                     {
+                        if (frm.top().type == CT_SQUARE_OPEN)
+                        {
+                           frm.paren_count--;
+                        }
+                        frm.pop();
+                     }
+                     if (next)
+                     {
+                        // End any assign operations with a semicolon on the same level
+                        if (is_end_of_assignment(next, frm))
+                        {
+                           frm.pop();
+                        }
+                     }
+                     continue;
+                  }
+               }
             }
 
             // a case is ended with another case or a close brace
@@ -1105,16 +1140,58 @@ void indent_text(void)
       {
          if (frm.top().type == CT_BRACE_OPEN)
          {
-            // Indent the brace to match the open brace
-            indent_column_set(frm.top().brace_indent);
-
-            if (frm.top().ip.ref)
+            size_t  count = 1;
+            chunk_t *next = chunk_get_next_nc(pc);
+            while (  next
+                  && (  (next->type == CT_BRACE_CLOSE && next->parent_type == CT_OC_AT)
+                     || (next->type == CT_SQUARE_CLOSE && next->parent_type == CT_OC_AT)
+                     || (next->type == CT_SQUARE_CLOSE && next->parent_type == CT_OC_MSG)))
             {
-               pc->indent.ref   = frm.top().ip.ref;
-               pc->indent.delta = 0;
+               count++;
+               next = chunk_get_next_nc(next);
             }
+            count = std::min(count, frm.size());
 
-            frm.pop();
+            // End Objc nested boxed dictionary
+            // TODO: ideally formatting would know which opens occurred on a line and group closes in the same manor
+            if (count > 1 && pc->type == CT_BRACE_CLOSE && pc->parent_type == CT_OC_AT)
+            {
+               if (frm.top().ip.ref)
+               {
+                  pc->indent.ref   = frm.top().ip.ref;
+                  pc->indent.delta = 0;
+               }
+
+               while (count-- > 0)
+               {
+                  frm.pop();
+               }
+
+               if (next)
+               {
+                  // End any assign operations with a semicolon on the same level
+                  if (is_end_of_assignment(next, frm))
+                  {
+                     frm.pop();
+                  }
+               }
+
+               // Indent the brace to match outer most brace/square
+               indent_column_set(frm.top().indent_tmp);
+            }
+            else
+            {
+               // Indent the brace to match the open brace
+               indent_column_set(frm.top().brace_indent);
+
+               if (frm.top().ip.ref)
+               {
+                  pc->indent.ref   = frm.top().ip.ref;
+                  pc->indent.delta = 0;
+               }
+
+               frm.pop();
+            }
          }
       }
       else if (pc->type == CT_VBRACE_OPEN)
@@ -1312,6 +1389,12 @@ void indent_text(void)
                   frm.top().indent = frm.prev().indent_tmp + indent_size;
                   log_indent();
                }
+            }
+            else if (frm.top().pc->type == CT_BRACE_OPEN && frm.top().pc->parent_type == CT_OC_AT)
+            {
+               // We are inside @{ ... } -- indent one tab from the paren
+               frm.top().indent = frm.prev().indent_tmp;
+               log_indent();
             }
             else
             {
@@ -2791,6 +2874,23 @@ static bool single_line_comment_indent_rule_applies(chunk_t *start)
 
    return(false);
 } // single_line_comment_indent_rule_applies
+
+
+static bool is_end_of_assignment(chunk_t *pc, const ParseFrame &frm)
+{
+   return(  (  frm.top().type == CT_ASSIGN_NL
+            || frm.top().type == CT_MEMBER
+            || frm.top().type == CT_ASSIGN)
+         && (  chunk_is_semicolon(pc)
+            || pc->type == CT_COMMA
+            || pc->type == CT_BRACE_OPEN
+            || pc->type == CT_SPAREN_CLOSE
+            || (  pc->type == CT_SQUARE_OPEN
+               && pc->parent_type == CT_OC_AT)
+            || (  pc->type == CT_SQUARE_OPEN
+               && pc->parent_type == CT_ASSIGN))
+         && pc->parent_type != CT_CPP_LAMBDA);
+}
 
 
 static size_t calc_comment_next_col_diff(chunk_t *pc)
