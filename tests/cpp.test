@@ -521,6 +521,7 @@
 34194  sp_arith_additive-f.cfg              cpp/sp_arith_additive.cpp
 34195  sp_arith_additive-r.cfg              cpp/sp_arith_additive.cpp
 
+34197  bug_1161.cfg                         cpp/bug_1161.cpp
 34198  sp_dc.cfg                            cpp/bug_1249.cpp
 34199  empty.cfg                            cpp/not_lambda.cpp
 

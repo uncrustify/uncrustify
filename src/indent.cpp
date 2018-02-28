@@ -1592,6 +1592,19 @@ void indent_text(void)
              * indented at brace level
              */
             indent_column_set(frm.top().indent_tmp);
+            // Issue 1161
+            // comments before 'access specifier' need to be aligned with the 'access specifier'
+            chunk_t *pct = pc;
+            while (  ((pct = chunk_get_prev_nnl(pct)) != nullptr)
+                  && chunk_is_comment(pct))
+            {
+               chunk_t *t2 = chunk_get_prev(pct);
+               if (chunk_is_newline(t2))
+               {
+                  pct->column        = frm.top().indent_tmp;
+                  pct->column_indent = pct->column;
+               }
+            }
          }
          else
          {
