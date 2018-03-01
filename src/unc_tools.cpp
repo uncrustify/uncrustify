@@ -40,7 +40,7 @@ void prot_the_line(int theLine, unsigned int actual_line)
          }
          else if (pc->type == CT_NEWLINE)
          {
-            LOG_FMT(LGUY, "<NL>(%zu), ", pc->nl_count);
+            LOG_FMT(LGUY, "(%zu) <NL>(%zu), ", tokenCounter, pc->nl_count);
          }
          else if (pc->type == CT_VBRACE_CLOSE)
          {
@@ -56,7 +56,7 @@ void prot_the_line(int theLine, unsigned int actual_line)
          }
          else
          {
-            LOG_FMT(LGUY, "(%zu) text() %s, type is %s, parent_type is %s, orig_col is %zu, column is %zu, ",
+            LOG_FMT(LGUY, "(%zu) text() '%s', type is %s, parent_type is %s, orig_col is %zu, column is %zu, ",
                     tokenCounter, pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type), pc->orig_col, pc->column);
          }
          LOG_FMT(LGUY, "pc->flags:");

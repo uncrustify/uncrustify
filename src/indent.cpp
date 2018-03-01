@@ -2712,7 +2712,8 @@ void indent_text(void)
             const size_t ttidx      = frm.size() - 1;
             if (ttidx > 0)
             {
-               //if (strcasecmp(get_token_name(frm.pse[ttidx].pc->parent_type), "FUNC_CALL") == 0)
+               LOG_FMT(LINDPC, "%s(%d): (frm.at(ttidx).pc)->parent_type is %s\n",
+                       __func__, __LINE__, get_token_name((frm.at(ttidx).pc)->parent_type));
                if ((frm.at(ttidx).pc)->parent_type == CT_FUNC_CALL)
                {
                   LOG_FMT(LINDPC, "FUNC_CALL OK [%d]\n", __LINE__);
