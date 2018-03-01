@@ -973,6 +973,12 @@ void indent_text(void)
                frm.pop();
             }
 
+            if ((frm.top().type == CT_LAMBDA)
+               && (pc->type == CT_SEMICOLON || chunk_is_paren_close(pc)))
+            {
+               frm.pop();
+            }
+
             // a class scope is ended with another class scope or a close brace
             if (  cpd.settings[UO_indent_access_spec_body].b
                && (frm.top().type == CT_PRIVATE)
@@ -1789,7 +1795,8 @@ void indent_text(void)
                         && frm.at(idx).type != CT_ASSIGN_NL)
                      || are_chunks_in_same_line(frm.at(idx).pc, frm.top().pc))
                   && (  frm.at(idx).type != CT_CLASS_COLON
-                     && frm.at(idx).type != CT_CONSTR_COLON))
+                     && frm.at(idx).type != CT_CONSTR_COLON
+                     && frm.at(idx).type != CT_LAMBDA))
             {
                idx--;
                skipped = true;
@@ -2190,6 +2197,25 @@ void indent_text(void)
          {
             indent_column_set(frm.top().indent + 4);
          }
+      }
+      else if (pc->type == CT_LAMBDA && (cpd.lang_flags & LANG_CS)
+         && chunk_get_next_ncnlnp(pc)->type != CT_BRACE_OPEN)
+      {
+         frm.push(*pc);
+         frm.top().indent = frm.prev().indent;
+         if (chunk_is_newline(chunk_get_prev_nc(pc)) && !are_chunks_in_same_line(frm.prev().pc, chunk_get_prev_ncnl(pc)))
+         {
+            frm.top().indent = frm.prev().indent + indent_size;
+            reindent_line(pc, (frm.prev().indent + indent_size));
+            did_newline = false;
+         }
+         else if (chunk_is_newline(chunk_get_next_nc(pc)) && !are_chunks_in_same_line(frm.prev().pc, frm.top().pc))
+         {
+            frm.top().indent = frm.prev().indent + indent_size;
+         }
+         log_indent();
+         frm.top().indent_tmp = frm.top().indent;
+         log_indent_tmp();
       }
       else
       {
