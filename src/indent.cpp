@@ -973,8 +973,8 @@ void indent_text(void)
                frm.pop();
             }
 
-            if ((frm.top().type == CT_LAMBDA)
-               && (pc->type == CT_SEMICOLON || chunk_is_paren_close(pc)))
+            if (  (frm.top().type == CT_LAMBDA)
+               && (pc->type == CT_SEMICOLON || pc->type == CT_COMMA || pc->type == CT_BRACE_OPEN))
             {
                frm.pop();
             }
@@ -1792,11 +1792,12 @@ void indent_text(void)
                         && frm.at(idx).type != CT_ANGLE_OPEN
                         && frm.at(idx).type != CT_CASE
                         && frm.at(idx).type != CT_MEMBER
+                        && frm.at(idx).type != CT_LAMBDA
                         && frm.at(idx).type != CT_ASSIGN_NL)
                      || are_chunks_in_same_line(frm.at(idx).pc, frm.top().pc))
                   && (  frm.at(idx).type != CT_CLASS_COLON
                      && frm.at(idx).type != CT_CONSTR_COLON
-                     && frm.at(idx).type != CT_LAMBDA))
+                     && !(frm.at(idx).type == CT_LAMBDA && chunk_get_prev_nc(frm.at(idx).pc)->type == CT_NEWLINE)))
             {
                idx--;
                skipped = true;
@@ -2198,8 +2199,8 @@ void indent_text(void)
             indent_column_set(frm.top().indent + 4);
          }
       }
-      else if (pc->type == CT_LAMBDA && (cpd.lang_flags & LANG_CS)
-         && chunk_get_next_ncnlnp(pc)->type != CT_BRACE_OPEN)
+      else if (  pc->type == CT_LAMBDA && (cpd.lang_flags & LANG_CS)
+              && chunk_get_next_ncnlnp(pc)->type != CT_BRACE_OPEN)
       {
          frm.push(*pc);
          frm.top().indent = frm.prev().indent;
