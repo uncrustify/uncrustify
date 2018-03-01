@@ -683,7 +683,9 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
       LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, reset expr on '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->text());
    }
-   else if (pc->type == CT_BRACE_CLOSE && !cpd.consumed)
+   else if (  pc->type == CT_BRACE_CLOSE
+           && !cpd.consumed
+           && cpd.in_preproc != CT_PP_DEFINE)
    {
       size_t file_pp_level = ifdef_over_whole_file() ? 1 : 0;
       if (!cpd.unc_off_used && pc->pp_level == file_pp_level)

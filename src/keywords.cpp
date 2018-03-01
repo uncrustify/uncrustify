@@ -57,6 +57,7 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag, int lang_flags
 static chunk_tag_t keywords[] =
 {
    // TODO: it might be useful if users could add there custom keywords to this list
+   { "@available",          CT_OC_AVAILABLE,     LANG_OC                                                                     },
    { "@catch",              CT_CATCH,            LANG_OC                                                                     },
    { "@dynamic",            CT_OC_DYNAMIC,       LANG_OC                                                                     },
    { "@end",                CT_OC_END,           LANG_OC                                                                     },
@@ -70,6 +71,7 @@ static chunk_tag_t keywords[] =
    { "@protocol",           CT_OC_PROTOCOL,      LANG_OC                                                                     },
    { "@public",             CT_PRIVATE,          LANG_OC                                                                     },
    { "@selector",           CT_OC_SEL,           LANG_OC                                                                     },
+   { "@synchronized",       CT_SYNCHRONIZED,     LANG_OC                                                                     },
    { "@synthesize",         CT_OC_DYNAMIC,       LANG_OC                                                                     },
    { "@throw",              CT_THROW,            LANG_OC                                                                     },
    { "@try",                CT_TRY,              LANG_OC                                                                     },
@@ -94,7 +96,7 @@ static chunk_tag_t keywords[] =
    { "__asm__",             CT_ASM,              LANG_C                                                                      },
    { "__attribute__",       CT_ATTRIBUTE,        LANG_C                                                                      },
    { "__autoreleasing",     CT_QUALIFIER,        LANG_C                                                                      },
-   { "__block",             CT_QUALIFIER,        LANG_OC                                                                     },
+   { "__block",             CT_QUALIFIER,        LANG_C                                                                      },
    { "__bridge",            CT_QUALIFIER,        LANG_C                                                                      },
    { "__bridge_retained",   CT_QUALIFIER,        LANG_C                                                                      },
    { "__bridge_transfer",   CT_QUALIFIER,        LANG_C                                                                      },
@@ -197,6 +199,7 @@ static chunk_tag_t keywords[] =
    { "file",                CT_PP_FILE,          LANG_PAWN | FLAG_PP                                                         }, // PAWN
    { "final",               CT_QUALIFIER,        LANG_CPP | LANG_D | LANG_ECMA                                               },
    { "finally",             CT_FINALLY,          LANG_D | LANG_CS | LANG_VALA | LANG_ECMA | LANG_JAVA                        },
+   { "fixed",               CT_FIXED,            LANG_CS                                                                     },
    { "flags",               CT_TYPE,             LANG_VALA                                                                   },
    { "float",               CT_TYPE,             LANG_ALLC                                                                   },
    { "for",                 CT_FOR,              LANG_ALL                                                                    }, // PAWN
@@ -500,7 +503,6 @@ c_token_t find_keyword_type(const char *word, size_t len)
 
    if (p_ret != nullptr)
    {
-      //p_ret = kw_static_match(p_ret);
       p_ret = kw_static_match(p_ret, cpd.lang_flags);
    }
    return((p_ret != nullptr) ? p_ret->type : CT_WORD);

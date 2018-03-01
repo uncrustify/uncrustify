@@ -119,6 +119,7 @@
 30210  empty.cfg                            cpp/bug_1338.cpp
 30211  space_indent_class-t_columns-4.cfg   cpp/indent_comment_align_thresh.cpp
 30212  indent_comment_align_thresh_2.cfg    cpp/indent_comment_align_thresh.cpp
+30213  align_right_comment.cfg              cpp/align_right_comment.cpp
 
 30220  bug_1340.cfg                         cpp/bug_1340.cpp
 
@@ -203,6 +204,7 @@
 30801  star_pos-1.cfg                       cpp/align-star-amp-pos.cpp
 30802  star_pos-2.cfg                       cpp/align-star-amp-pos.cpp
 
+30804  block_pointer.cfg                    cpp/block_pointer.cpp
 30805  ptr_star-1.cfg                       cpp/ptr-star.cpp
 30806  ptr_star-2.cfg                       cpp/ptr-star.cpp
 30807  ptr_star-3.cfg                       cpp/ptr-star.cpp
@@ -525,12 +527,17 @@
 
 34200  i1536.cfg                            cpp/i1536.cpp
 34201  mod_add_long_namespace_closebrace_comment-1.cfg  cpp/i1565.cpp
+34202  mod_add_long_namespace_closebrace_comment-1.cfg  cpp/i1617.cpp
 
 34203  i1516.cfg                            cpp/i1516.cpp
-
+34204  align_func_params_span-1.cfg         cpp/func_param_indent_leading_comma.cpp
 
 # TODO: Find relevant test cases for 'override'.
 34210  empty.cfg                            cpp/override_virtual.cpp
+
+34250  empty.cfg                            cpp/bug_1607.cpp
+
+34280  UNI-29935.cfg                        cpp/UNI-29935.cpp
 
 # __asm__
 34300  bug_1236.cfg                         cpp/bug_1236.cpp
@@ -571,6 +578,7 @@
 10100  issue_564.cfg                        cpp/issue_564.cpp
 10101  issue_574.cfg                        cpp/issue_574.cpp
 11000  UNI-12046.cfg                        cpp/UNI-12046.cpp
+20002  UNI-32657.cfg                        cpp/UNI-32657.cpp
 60001  UNI-2650.cfg                         cpp/UNI-2650.cpp
 60002  U25-Cpp.cfg                          cpp/UNI-16283.cpp
 60003  U26-Cpp.cfg                          cpp/UNI-1288.cpp
@@ -588,3 +596,4 @@
 60036  UNI-2680.cfg                         cpp/UNI-2680.cpp
 60038  UNI-30088.cfg                        cpp/UNI-30088.cpp
 60039  U36-Cpp.cfg                          cpp/UNI-30628.cpp
+60042  UNI-18777.cfg                        cpp/UNI-18777.cpp

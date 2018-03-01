@@ -650,6 +650,15 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       return(AV_REMOVE);
    }
 
+   if (  (cpd.lang_flags & LANG_OC)
+      && first->type == CT_CATCH
+      && second->type == CT_SPAREN_OPEN
+      && (cpd.settings[UO_sp_oc_catch_paren].a != AV_IGNORE))
+   {
+      log_rule("sp_oc_catch_paren");
+      return(cpd.settings[UO_sp_oc_catch_paren].a);
+   }
+
    if (  first->type == CT_CATCH
       && second->type == CT_SPAREN_OPEN
       && (cpd.settings[UO_sp_catch_paren].a != AV_IGNORE))
@@ -672,6 +681,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    {
       log_rule("sp_scope_paren");
       return(cpd.settings[UO_sp_scope_paren].a);
+   }
+
+   if (  cpd.lang_flags & LANG_OC
+      && first->type == CT_SYNCHRONIZED && second->type == CT_SPAREN_OPEN)
+   {
+      log_rule("sp_after_oc_synchronized");
+      return(cpd.settings[UO_sp_after_oc_synchronized].a);
    }
 
    // "if (" vs "if("
@@ -793,6 +809,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       }
    }
 
+   if (first->type == CT_OC_AVAILABLE_VALUE || second->type == CT_OC_AVAILABLE_VALUE)
+   {
+      log_rule("IGNORE");
+      return(AV_IGNORE);
+   }
    if (second->type == CT_OC_BLOCK_CARET)
    {
       log_rule("sp_before_oc_block_caret");
@@ -831,9 +852,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    }
 
    // "a [x]" vs "a[x]"
-   if (  second->type == CT_SQUARE_OPEN
-      && (  second->parent_type != CT_OC_MSG
-         && second->parent_type != CT_CS_SQ_STMT))
+   if (second->type == CT_SQUARE_OPEN && (second->parent_type != CT_OC_MSG && second->parent_type != CT_CS_SQ_STMT))
+   //if (second->type == CT_SQUARE_OPEN && (second->parent_type != CT_OC_MSG) && first->type != CT_BRACE_OPEN)
    {
       if (((second->flags & PCF_IN_SPAREN) != 0) && (first->type == CT_IN))
       {
@@ -1293,6 +1313,15 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       return(AV_FORCE);
    }
 
+   if (  (cpd.lang_flags & LANG_OC)
+      && first->type == CT_CATCH
+      && second->type == CT_BRACE_OPEN
+      && (cpd.settings[UO_sp_oc_catch_brace].a != AV_IGNORE))
+   {
+      log_rule("sp_oc_catch_brace");
+      return(cpd.settings[UO_sp_oc_catch_brace].a);
+   }
+
    if (first->type == CT_CATCH && second->type == CT_BRACE_OPEN)
    {
       log_rule("sp_catch_brace");
@@ -1541,9 +1570,17 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       return(cpd.settings[UO_sp_inside_paren].a);
    }
 
-   // "[3]" vs "[ 3 ]"
+   // "[3]" vs "[ 3 ]" or for objective-c "@[@3]" vs "@[ @3 ]"
    if (first->type == CT_SQUARE_OPEN || second->type == CT_SQUARE_CLOSE)
    {
+      if (  cpd.lang_flags & LANG_OC
+         && (  (first->parent_type == CT_OC_AT && first->type == CT_SQUARE_OPEN)
+            || (second->parent_type == CT_OC_AT && second->type == CT_SQUARE_CLOSE))
+         && (cpd.settings[UO_sp_inside_square_oc_array].a != AV_IGNORE))
+      {
+         log_rule("sp_inside_square_oc_array");
+         return(cpd.settings[UO_sp_inside_square_oc_array].a);
+      }
       log_rule("sp_inside_square");
       return(cpd.settings[UO_sp_inside_square].a);
    }
@@ -1572,17 +1609,46 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       return(cpd.settings[UO_sp_inside_sparen].a);
    }
 
-   if (  (cpd.settings[UO_sp_after_class_colon].a != AV_IGNORE)
-      && first->type == CT_CLASS_COLON)
+   if (first->type == CT_CLASS_COLON)
    {
-      log_rule("sp_after_class_colon");
-      return(cpd.settings[UO_sp_after_class_colon].a);
+      if (  first->parent_type == CT_OC_CLASS
+         && (  !chunk_get_prev_type(first, CT_OC_INTF, first->level, scope_e::ALL)
+            && !chunk_get_prev_type(first, CT_OC_IMPL, first->level, scope_e::ALL)))
+      {
+         if (cpd.settings[UO_sp_after_oc_colon].a != AV_IGNORE)
+         {
+            log_rule("sp_after_oc_colon");
+            return(cpd.settings[UO_sp_after_oc_colon].a);
+         }
+      }
+
+      if (cpd.settings[UO_sp_after_class_colon].a != AV_IGNORE)
+      {
+         log_rule("sp_after_class_colon");
+         return(cpd.settings[UO_sp_after_class_colon].a);
+      }
    }
-   if (  (cpd.settings[UO_sp_before_class_colon].a != AV_IGNORE)
-      && second->type == CT_CLASS_COLON)
+   if (second->type == CT_CLASS_COLON)
    {
-      log_rule("sp_before_class_colon");
-      return(cpd.settings[UO_sp_before_class_colon].a);
+      if (  second->parent_type == CT_OC_CLASS
+         && (  !chunk_get_prev_type(second, CT_OC_INTF, second->level, scope_e::ALL)
+            && !chunk_get_prev_type(second, CT_OC_IMPL, second->level, scope_e::ALL)))
+      {
+         if (second->parent_type == CT_OC_CLASS && !chunk_get_prev_type(second, CT_OC_INTF, second->level, scope_e::ALL))
+         {
+            if (cpd.settings[UO_sp_before_oc_colon].a != AV_IGNORE)
+            {
+               log_rule("sp_before_oc_colon");
+               return(cpd.settings[UO_sp_before_oc_colon].a);
+            }
+         }
+      }
+
+      if (cpd.settings[UO_sp_before_class_colon].a != AV_IGNORE)
+      {
+         log_rule("sp_before_class_colon");
+         return(cpd.settings[UO_sp_before_class_colon].a);
+      }
    }
 
    if (  (cpd.settings[UO_sp_after_constr_colon].a != AV_IGNORE)
@@ -1702,6 +1768,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          return(cpd.settings[UO_sp_deref].a);
       }
 
+      if (  (first->parent_type == CT_FUNC_VAR || first->parent_type == CT_FUNC_TYPE)
+         && cpd.settings[UO_sp_after_ptr_block_caret].a != AV_IGNORE)
+      {
+         log_rule("sp_after_ptr_block_caret");
+         return(cpd.settings[UO_sp_after_ptr_block_caret].a);
+      }
+
       if (  second->type == CT_QUALIFIER
          && (cpd.settings[UO_sp_after_ptr_star_qualifier].a != AV_IGNORE))
       {
@@ -1790,6 +1863,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       {
          log_rule("sp_brace_else");
          return(cpd.settings[UO_sp_brace_else].a);
+      }
+
+      if (  (cpd.lang_flags & LANG_OC)
+         && second->type == CT_CATCH
+         && (cpd.settings[UO_sp_oc_brace_catch].a != AV_IGNORE))
+      {
+         log_rule("sp_oc_brace_catch");
+         return(cpd.settings[UO_sp_oc_brace_catch].a);
       }
 
       if (second->type == CT_CATCH)

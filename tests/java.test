@@ -19,6 +19,7 @@
 80061  java_synchronized_2.cfg              java/synchronized.java
 80062  sp_this_paren.cfg                    java/sp_this_paren.java
 80063  empty.cfg                            java/i1121.java
+80064  mod_add_long_class_closebrace_comment-1.cfg  java/long_cl_cmt.java
 
 80100  align_same_func_call_params-t.cfg    java/sf567.java
 
@@ -28,3 +29,4 @@
 80203  aet.cfg                              java/generics_return_type.java
 80204  aet.cfg                              java/cast.java
 80205  aet.cfg                              java/sp_after_angle.java
+80206  aet.cfg                              java/annotation3.java

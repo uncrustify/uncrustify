@@ -382,6 +382,8 @@ static void handle_oc_message_send(chunk_t *pc);
 //! Process @Property values and re-arrange them if necessary
 static void handle_oc_property_decl(chunk_t *pc);
 
+//! Process @available annotation
+static void handle_oc_available(chunk_t *pc);
 
 /**
  * Process a type that is enclosed in parens in message declarations.
@@ -880,6 +882,18 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       flag_asm(pc);
    }
 
+   // clang stuff - A new derived type is introduced to C and, by extension, Objective-C, C++, and Objective-C++
+   if (cpd.lang_flags & LANG_C || cpd.lang_flags & LANG_CPP || cpd.lang_flags & LANG_OC)
+   {
+      if (pc->type == CT_CARET)
+      {
+         if (pc->flags & PCF_EXPR_START || pc->flags & PCF_IN_PREPROC)
+         {
+            handle_oc_block_literal(pc);
+         }
+      }
+   }
+
    // Objective C stuff
    if (cpd.lang_flags & LANG_OC)
    {
@@ -898,15 +912,15 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          {
             handle_oc_message_send(pc);
          }
-         if (pc->type == CT_CARET)
-         {
-            handle_oc_block_literal(pc);
-         }
       }
 
       if (pc->type == CT_OC_PROPERTY)
       {
          handle_oc_property_decl(pc);
+      }
+      if (pc->type == CT_OC_AVAILABLE)
+      {
+         handle_oc_available(pc);
       }
    }
 
@@ -1128,7 +1142,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    if (next->type == CT_PAREN_OPEN)
    {
       tmp = chunk_get_next_ncnl(next);
-      if ((cpd.lang_flags & LANG_OC) && chunk_is_token(tmp, CT_CARET))
+      if ((cpd.lang_flags & LANG_C || cpd.lang_flags & LANG_CPP || cpd.lang_flags & LANG_OC) && chunk_is_token(tmp, CT_CARET))
       {
          handle_oc_block_type(tmp);
 
@@ -1141,6 +1155,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       else if (pc->type == CT_WORD || pc->type == CT_OPERATOR_VAL)
       {
          set_chunk_type(pc, CT_FUNCTION);
+      }
+      else if (pc->type == CT_FIXED)
+      {
+         set_chunk_type(pc, CT_FUNCTION);
+         set_chunk_parent(pc, CT_FIXED);
       }
       else if (pc->type == CT_TYPE)
       {
@@ -1427,6 +1446,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
+      if ((cpd.lang_flags & LANG_CS) && (pc->type == CT_QUESTION) && (prev->type == CT_ANGLE_CLOSE))
+      {
+         set_chunk_type(pc, CT_PTR_TYPE);
+      }
       if (pc->type == CT_MINUS)
       {
          set_chunk_type(pc, CT_NEG);
@@ -1445,7 +1468,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
       if (pc->type == CT_CARET)
       {
-         if (cpd.lang_flags & LANG_OC)
+         if (cpd.lang_flags & LANG_C || cpd.lang_flags & LANG_CPP || cpd.lang_flags & LANG_OC)
          {
             // This is likely the start of a block literal
             handle_oc_block_literal(pc);
@@ -1607,29 +1630,43 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
       else
       {
-         set_chunk_type(pc, CT_ARITH);
-         if (prev->type == CT_WORD)
+         // Issue # 1398
+         if (  ((pc->flags & PCF_IN_FCN_DEF) != 0)
+            && prev->type == CT_WORD
+            && pc->type == CT_AMP
+            && next->type == CT_WORD)
          {
-            tmp = chunk_get_prev_ncnl(prev);
-            if (tmp != nullptr)
+            /*
+             * Change CT_WORD before CT_AMP before CT_WORD to CT_TYPE
+             */
+            set_chunk_type(prev, CT_TYPE);
+         }
+         else
+         {
+            set_chunk_type(pc, CT_ARITH);
+            if (prev->type == CT_WORD)
             {
-               if (  chunk_is_semicolon(tmp)
-                  || tmp->type == CT_BRACE_OPEN
-                  || tmp->type == CT_QUALIFIER)
+               tmp = chunk_get_prev_ncnl(prev);
+               if (tmp != nullptr)
                {
-                  set_chunk_type(pc, CT_BYREF);
-                  set_chunk_type(prev, CT_TYPE);
-                  if (!(  next->type == CT_OPERATOR
-                       || next->type == CT_TYPE
-                       || next->type == CT_DC_MEMBER))
+                  if (  chunk_is_semicolon(tmp)
+                     || tmp->type == CT_BRACE_OPEN
+                     || tmp->type == CT_QUALIFIER)
                   {
-                     chunk_flags_set(next, PCF_VAR_1ST);
+                     set_chunk_type(pc, CT_BYREF);
+                     set_chunk_type(prev, CT_TYPE);
+                     if (!(  next->type == CT_OPERATOR
+                          || next->type == CT_TYPE
+                          || next->type == CT_DC_MEMBER))
+                     {
+                        chunk_flags_set(next, PCF_VAR_1ST);
+                     }
                   }
-               }
-               else if (tmp->type == CT_DC_MEMBER)
-               {
-                  set_chunk_type(prev, CT_TYPE);
-                  set_chunk_type(pc, CT_BYREF);
+                  else if (tmp->type == CT_DC_MEMBER)
+                  {
+                     set_chunk_type(prev, CT_TYPE);
+                     set_chunk_type(pc, CT_BYREF);
+                  }
                }
             }
          }
@@ -1737,14 +1774,6 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             }
          }
       }
-   }
-
-   // Issue #548: inline T && someFunc(foo * *p, bar && q) { }
-   if (  pc->type == CT_BOOL
-      && chunk_is_str(pc, "&&", 2)
-      && chunk_ends_type(pc->prev))
-   {
-      set_chunk_type(pc, CT_BYREF);
    }
 } // do_symbol_check
 
@@ -2023,7 +2052,7 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
 
       // Changing words to types into tuple return types in CS.
       bool is_return_tuple = false;
-      if (pc != nullptr && pc->type == CT_PAREN_CLOSE)
+      if (pc != nullptr && pc->type == CT_PAREN_CLOSE && (pc->flags & PCF_IN_PREPROC) == 0)
       {
          first           = chunk_skip_to_match_rev(pc);
          is_return_tuple = true;
@@ -2175,8 +2204,11 @@ static bool mark_function_type(chunk_t *pc)
       }
    }
 
+   // Fixes #issue 1577
+   // Allow word count 2 incase of function pointer declaration.
+   // Ex: bool (__stdcall* funcptr)(int, int);
    if (  star_count > 1
-      || word_count > 1
+      || (word_count > 1 && !(word_count == 2 && ptp == CT_FUNC_VAR))
       || ((star_count + word_count) == 0))
    {
       LOG_FMT(LFTYPE, "%s(%d): bad counts word: %zu, star: %zu\n",
@@ -2473,6 +2505,7 @@ static void fix_casts(chunk_t *start)
             || pc->type == CT_DC_MEMBER
             || pc->type == CT_PP
             || pc->type == CT_STAR
+            || pc->type == CT_QUESTION
             || pc->type == CT_CARET
             || pc->type == CT_TSQUARE
             || ((pc->type == CT_ANGLE_OPEN || pc->type == CT_ANGLE_CLOSE) && (cpd.lang_flags & (LANG_OC | LANG_JAVA)))
@@ -3629,7 +3662,7 @@ static chunk_t *fix_var_def(chunk_t *start)
       return(skip_to_next_statement(end));
    }
 
-   LOG_FMT(LFVD2, "%s(%d):%zu TYPE : ", __func__, __LINE__, start->orig_line);
+   LOG_FMT(LFVD2, "%s(%d): orig_line is %zu, TYPE : ", __func__, __LINE__, start->orig_line);
    for (size_t idxForCs = 0; idxForCs < cs.Len() - 1; idxForCs++)
    {
       tmp_pc = cs.Get(idxForCs)->m_pc;
@@ -4260,6 +4293,11 @@ static void mark_function(chunk_t *pc)
          D_LOG_FMT(LFCN, "%s(%d): next step with: ", __func__, __LINE__);
          LOG_FMT(LFCN, "orig_line is %zu, orig_col is %zu, text() '%s'\n",
                  prev->orig_line, prev->orig_col, prev->text());
+
+         if (pc->parent_type == CT_FIXED)
+         {
+            isa_def = true;
+         }
          if (prev->flags & PCF_IN_PREPROC)
          {
             prev = chunk_get_prev_ncnlnp(prev);
@@ -4384,7 +4422,7 @@ static void mark_function(chunk_t *pc)
             if (  prev->type == CT_ARITH
                || prev->type == CT_ASSIGN
                || prev->type == CT_COMMA
-               || prev->type == CT_STRING
+               || (prev->type == CT_STRING && prev->parent_type != CT_EXTERN)  // fixes issue 1259
                || prev->type == CT_STRING_MULTI
                || prev->type == CT_NUMBER
                || prev->type == CT_NUMBER_FP
@@ -6309,6 +6347,22 @@ static void handle_oc_message_send(chunk_t *os)
       prev = tmp;
    }
 } // handle_oc_message_send
+
+
+static void handle_oc_available(chunk_t *os)
+{
+   os = chunk_get_next(os);
+   while (os != nullptr)
+   {
+      c_token_t origType = os->type;
+      set_chunk_type(os, CT_OC_AVAILABLE_VALUE);
+      if (origType == CT_PAREN_CLOSE)
+      {
+         break;
+      }
+      os = chunk_get_next(os);
+   }
+}
 
 
 static void handle_oc_property_decl(chunk_t *os)

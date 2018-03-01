@@ -1806,6 +1806,31 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
    }
 
+   // fix 1247 oneliner function support - converts 4,3,2  liners to oneliner
+
+   if (  br_open->parent_type == CT_FUNC_DEF
+      && cpd.settings[UO_nl_create_func_def_one_liner].b)
+   {
+      chunk_t *br_close = chunk_skip_to_match(br_open, scope_e::ALL);
+      chunk_t *tmp      = chunk_get_prev_ncnl(br_open);
+      if (((br_close->orig_line - br_open->orig_line) <= 2) && chunk_is_paren_close(tmp))  // need to check the conditions.
+      {
+         while (  tmp != nullptr
+               && (tmp = chunk_get_next(tmp)) != nullptr
+               && !chunk_is_closing_brace(tmp)
+               && (chunk_get_next(tmp) != nullptr))
+         {
+            if (chunk_is_newline(tmp))
+            {
+               tmp = chunk_get_prev(tmp);
+               newline_iarf_pair(tmp, chunk_get_next_ncnl(tmp), AV_REMOVE);
+            }
+
+            chunk_flags_set(br_open, PCF_ONE_LINER);         // set the one liner flag if needed
+            chunk_flags_set(br_close, PCF_ONE_LINER);
+         }
+      }
+   }
 
    // Make sure we don't break a one-liner
    if (!one_liner_nl_ok(br_open))
@@ -2549,6 +2574,14 @@ static bool one_liner_nl_ok(chunk_t *pc)
          return(false);
       }
 
+      // Issue #UT-98
+      if (  cpd.settings[UO_nl_cs_property_leave_one_liners].b
+         && pc->parent_type == CT_CS_PROPERTY)
+      {
+         LOG_FMT(LNL1LINE, "%s(%d): false (c# property), a new line may NOT be added\n", __func__, __LINE__);
+         return(false);
+      }
+
       if (  cpd.settings[UO_nl_func_leave_one_liners].b
          && (  pc->parent_type == CT_FUNC_DEF
             || pc->parent_type == CT_FUNC_CLASS_DEF))
@@ -2766,15 +2799,39 @@ void newlines_cleanup_braces(bool first)
       }
       else if (pc->type == CT_CATCH)
       {
-         newlines_cuddle_uncuddle(pc, cpd.settings[UO_nl_brace_catch].a);
-         next = chunk_get_next_ncnl(pc);
-         if (chunk_is_token(next, CT_BRACE_OPEN))
+         if (  (cpd.lang_flags & LANG_OC)
+            && (cpd.settings[UO_nl_oc_brace_catch].a != AV_IGNORE))
          {
-            newlines_do_else(pc, cpd.settings[UO_nl_catch_brace].a);
+            newlines_cuddle_uncuddle(pc, cpd.settings[UO_nl_oc_brace_catch].a);
          }
          else
          {
-            newlines_if_for_while_switch(pc, cpd.settings[UO_nl_catch_brace].a);
+            newlines_cuddle_uncuddle(pc, cpd.settings[UO_nl_brace_catch].a);
+         }
+         next = chunk_get_next_ncnl(pc);
+         if (chunk_is_token(next, CT_BRACE_OPEN))
+         {
+            if (  (cpd.lang_flags & LANG_OC)
+               && (cpd.settings[UO_nl_oc_catch_brace].a != AV_IGNORE))
+            {
+               newlines_do_else(pc, cpd.settings[UO_nl_oc_catch_brace].a);
+            }
+            else
+            {
+               newlines_do_else(pc, cpd.settings[UO_nl_catch_brace].a);
+            }
+         }
+         else
+         {
+            if (  (cpd.lang_flags & LANG_OC)
+               && (cpd.settings[UO_nl_oc_catch_brace].a != AV_IGNORE))
+            {
+               newlines_if_for_while_switch(pc, cpd.settings[UO_nl_oc_catch_brace].a);
+            }
+            else
+            {
+               newlines_if_for_while_switch(pc, cpd.settings[UO_nl_catch_brace].a);
+            }
          }
       }
       else if (pc->type == CT_WHILE)
@@ -3089,12 +3146,16 @@ void newlines_cleanup_braces(bool first)
                && next->type != CT_SPAREN_CLOSE    // Issue #664
                && next->type != CT_SQUARE_CLOSE
                && next->type != CT_FPAREN_CLOSE
+               && next->type != CT_PAREN_CLOSE
                && next->type != CT_WHILE_OF_DO
-               && next->type != CT_VBRACE_CLOSE   // Issue #666
+               && next->type != CT_VBRACE_CLOSE                                    // Issue #666
+               && (next->type != CT_BRACE_CLOSE || !(next->flags & PCF_ONE_LINER)) // #1258
                && (pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_TYPEDEF)) == 0
                && !chunk_is_newline(next)
                && !chunk_is_comment(next))
             {
+               // #1258
+               // dont add newline between two consecutive braces closes, if the second is a part of one liner.
                newline_end_newline(pc);
             }
          }

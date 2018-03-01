@@ -175,6 +175,7 @@ enum uncrustify_options
    UO_sp_before_unnamed_ptr_star,   //
    UO_sp_between_ptr_star,          // space between two '*' that are part of a type
    UO_sp_after_ptr_star,            // space after a '*' that is part of a type
+   UO_sp_after_ptr_block_caret,     // space after a '^' that is part of a type
    UO_sp_after_ptr_star_qualifier,  // space after a '*' next to a qualifier
    UO_sp_after_ptr_star_func,       // space between a '*' and a function proto/def
    UO_sp_ptr_star_paren,            //
@@ -218,6 +219,7 @@ enum uncrustify_options
    UO_sp_before_squares,            // space before '[]', as in 'byte []'
    UO_sp_cpp_before_struct_binding, // space before structured binding declaration
    UO_sp_inside_square,             // space inside 'byte[ 5 ]' vs 'byte[5]'
+   UO_sp_inside_square_oc_array,    // space inside '@[ @5 ]' vs '@[@5]'
    UO_sp_after_comma,               // space after ','
    UO_sp_before_comma,              // space before ','
    UO_sp_after_mdatype_commas,      //
@@ -274,6 +276,7 @@ enum uncrustify_options
    UO_sp_throw_paren,              //
    UO_sp_after_throw,              //
    UO_sp_catch_paren,              //
+   UO_sp_oc_catch_paren,           // same as sp_catch_paren except for objective-c @catch
    UO_sp_version_paren,            //
    UO_sp_scope_paren,              //
    UO_sp_super_paren,              //
@@ -284,7 +287,9 @@ enum uncrustify_options
    UO_sp_brace_else,               //
    UO_sp_brace_typedef,            //
    UO_sp_catch_brace,              //
+   UO_sp_oc_catch_brace,           // same as sp_catch_brace except for objective-c @catch
    UO_sp_brace_catch,              //
+   UO_sp_oc_brace_catch,           // same as sp_brace_catch except for objective-c @catch
    UO_sp_finally_brace,            //
    UO_sp_brace_finally,            //
    UO_sp_try_brace,                //
@@ -318,6 +323,7 @@ enum uncrustify_options
    UO_sp_after_oc_block_caret,     //
    UO_sp_after_oc_msg_receiver,    //
    UO_sp_after_oc_property,        //
+   UO_sp_after_oc_synchronized,    //
    UO_sp_cond_colon,               //
    UO_sp_cond_colon_before,        //
    UO_sp_cond_colon_after,         //
@@ -395,6 +401,7 @@ enum uncrustify_options
    UO_indent_func_const,                    // indentation for standalone 'const' qualifier
    UO_indent_func_throw,                    // indentation for standalone 'throw' qualifier
    UO_indent_member,                        // indent lines broken at a member '.' or '->'
+   UO_indent_member_single,                 // indent lines broken at a member '.' with a single indent
    UO_indent_sing_line_comments,            // indent single line ('//') comments on lines before code
    UO_indent_relative_single_line_comments, // indent single line ('//') comments after code
    UO_indent_switch_case,                   // spaces to indent case from switch
@@ -443,186 +450,189 @@ enum uncrustify_options
    // UO_indent,                   TODO: 0=don't change indentation, 1=change indentation
 
    // group: UG_newline, "Newline adding and removing options"                                  3
-   UO_nl_collapse_empty_body,         // change '{ \n }' into '{}'
-   UO_nl_assign_leave_one_liners,     // leave one-line assign bodies in 'foo_t f = { a, b, c };'
-   UO_nl_class_leave_one_liners,      // leave one-line function bodies in 'class xx { here }'
-   UO_nl_enum_leave_one_liners,       // leave one-line enum bodies in 'enum FOO { BAR = 5 };'
-   UO_nl_getset_leave_one_liners,     // leave one-line get/set bodies
-   UO_nl_func_leave_one_liners,       // leave one-line function def bodies
-   UO_nl_cpp_lambda_leave_one_liners, // leave one-line C++11 lambda bodies
-   UO_nl_if_leave_one_liners,         //
-   UO_nl_while_leave_one_liners,      //
-   UO_nl_oc_msg_leave_one_liner,      // Don't split one-line OC messages
-   UO_nl_oc_block_brace,              // Add or remove newline between Objective-C block signature and '{'
-   UO_nl_start_of_file,               // alter newlines at the start of file
-   UO_nl_start_of_file_min,           // min number of newlines at the start of the file
-   UO_nl_end_of_file,                 // alter newlines at the end of file
-   UO_nl_end_of_file_min,             // min number of newlines at the end of the file
-   UO_nl_assign_brace,                // newline between '=' and '{'
-   UO_nl_assign_square,               // newline between '=' and '['
-   UO_nl_tsquare_brace,               // newline between '[]' and '{'
-   UO_nl_after_square_assign,         // newline after '= ['
-   UO_nl_func_var_def_blk,            // newline after first block of func variable defs
-   UO_nl_typedef_blk_start,           // newline before typedef block
-   UO_nl_typedef_blk_end,             // newline after typedef block
-   UO_nl_typedef_blk_in,              // newline max within typedef block
-   UO_nl_var_def_blk_start,           // newline before variable defs block
-   UO_nl_var_def_blk_end,             // newline after variable defs block
-   UO_nl_var_def_blk_in,              // newline max within variable defs block
-   UO_nl_fcall_brace,                 // newline between function call and open brace
-   UO_nl_enum_brace,                  // newline between enum and brace
-   UO_nl_enum_class,                  // newline between enum and class
-   UO_nl_enum_class_identifier,       // newline between enum class and 'identifier'
-   UO_nl_enum_identifier_colon,       // newline between enum class 'type' and ':'
-   UO_nl_enum_colon_type,             // newline between enum class identifier :' and 'type'
-                                      // newline between enum class identifier :' 'type' and 'type'
-                                      // i.e.            enum class abcd : unsigned int
-   UO_nl_struct_brace,                // newline between struct and brace
-   UO_nl_union_brace,                 // newline between union and brace
-   UO_nl_if_brace,                    // newline between 'if' and '{'
-   UO_nl_brace_else,                  // newline between '}' and 'else'
-   UO_nl_elseif_brace,                // newline between close paren and open brace in 'else if () {'
-   UO_nl_else_brace,                  // newline between 'else' and '{'
-   UO_nl_else_if,                     // newline between 'else' and 'if'
-   UO_nl_before_if_closing_paren,     // newline before 'if'/'else if' closing parenthesis
-   UO_nl_brace_finally,               // newline between '}' and 'finally'
-   UO_nl_finally_brace,               // newline between 'finally' and '{'
-   UO_nl_try_brace,                   // newline between 'try' and '{'
-   UO_nl_getset_brace,                // newline between 'get/set' and '{'
-   UO_nl_for_brace,                   // newline between 'for' and '{'
-   UO_nl_catch_brace,                 // newline between 'catch' and '{'
-   UO_nl_brace_catch,                 // newline between '}' and 'catch'
-   UO_nl_brace_square,                // newline between '}' and ']'
-   UO_nl_brace_fparen,                // newline between '}' and ')' of a function invocation
-   UO_nl_while_brace,                 // newline between 'while' and '{'
-   UO_nl_scope_brace,                 // Add or remove newline between 'scope (x)' and '{' (D)
-   UO_nl_unittest_brace,              // newline between 'unittest' and '{'
-   UO_nl_version_brace,               // Add or remove newline between 'version (x)' and '{' (D)
-   UO_nl_using_brace,                 // Add or remove newline between 'using' and '{'
-   UO_nl_brace_brace,                 // newline between '{{' or '}}'
-   UO_nl_do_brace,                    // newline between 'do' and '{'
-   UO_nl_brace_while,                 // newline between '}' and 'while' of do stmt
-   UO_nl_switch_brace,                // newline between 'switch' and '{'
-   UO_nl_synchronized_brace,          // newline between 'synchronized' and '{'
-   UO_nl_multi_line_cond,             // newline between ')' and '{' when cond spans >=2 lines
-   UO_nl_multi_line_define,           // newline after define XXX for multi-line define
-   UO_nl_before_case,                 // newline before 'case' statement, not after the first 'case'
-   UO_nl_before_throw,                // Add or remove newline between ')' and 'throw'
-   UO_nl_after_case,                  // disallow nested 'case 1: a=3;'
-   UO_nl_case_colon_brace,            // Add or remove a newline between a case ':' and '{'.
-                                      // Overrides nl_after_case
-   UO_nl_namespace_brace,             // newline between namespace name and brace
-   UO_nl_template_class,              // newline between '>' and class in 'template <x> class'
-   UO_nl_class_brace,                 // newline between class name and brace
-   UO_nl_class_init_args,             // newline before/after each comma in the base class list
-                                      // (tied to UO_pos_class_comma)
-   UO_nl_constr_init_args,            // newline after comma in class init args
-   UO_nl_enum_own_lines,              // put each element of an enum def. on its own line
-   UO_nl_func_type_name,              // newline between return type and func name in def
-   UO_nl_func_type_name_class,        // newline between return type and func name in class
-   UO_nl_func_class_scope,            // Add or remove newline between class specification and '::'
-                                      // in 'void A::f() { }'
-                                      // Only appears in separate member implementation (does not appear
-                                      // with in-line implmementation)
-   UO_nl_func_scope_name,             // Add or remove newline between function scope and name in a definition
-                                      // Controls the newline after '::' in 'void A::f() { }'
-   UO_nl_func_proto_type_name,        // nl_func_type_name, but for prottypes
-   UO_nl_func_paren,                  // newline between function and open paren
-   UO_nl_func_paren_empty,            // Overrides nl_func_paren for functions with no parameters
-   UO_nl_func_def_paren,              // Add or remove newline between a function name and
-                                      // the opening '(' in the definition
-   UO_nl_func_def_paren_empty,        // Overrides nl_func_def_paren for functions with no parameters
-   UO_nl_func_call_paren,             // Add or remove newline between a function name and
-                                      // the opening '(' in the call
-   UO_nl_func_call_paren_empty,       // Overrides nl_func_call_paren for functions with no parameters
-   UO_nl_func_decl_start,             // newline after the '(' in a function decl
-   UO_nl_func_def_start,              // newline after the '(' in a function def
-   UO_nl_func_decl_start_single,      // Overrides nl_func_decl_start when there is only one parameter
-   UO_nl_func_def_start_single,       // Overrides nl_func_def_start when there is only one parameter
-   UO_nl_func_decl_start_multi_line,  // newline after the '(' in a function decl if '(' and ')'
-                                      // are on different lines
-   UO_nl_func_def_start_multi_line,   // newline after the '(' in a function def if '(' and ')'
-                                      // are on different lines
-   UO_nl_func_decl_args,              // newline after each ',' in a function decl
-   UO_nl_func_def_args,               // Add or remove newline after each ',' in a function definition
-   UO_nl_func_decl_args_multi_line,   // newline after each ',' in a function decl if '(' and ')'
-                                      // are on different lines
-   UO_nl_func_def_args_multi_line,    // Add or remove newline after each ',' in a function definition
-                                      // if '(' and ')' are on different lines
-   UO_nl_func_decl_end,               // newline before the ')' in a function decl
-   UO_nl_func_def_end,                // newline before the ')' in a function def
-   UO_nl_func_decl_end_single,        // Overrides nl_func_decl_end when there is only one parameter
-   UO_nl_func_def_end_single,         // Overrides nl_func_def_end when there is only one parameter
-   UO_nl_func_decl_end_multi_line,    // newline before the ')' in a function decl if '(' and ')'
-                                      // are on different lines
-   UO_nl_func_def_end_multi_line,     // newline before the ')' in a function def if '(' and ')'
-                                      // are on different lines
-   UO_nl_func_decl_empty,             // as above, but for empty parens '()'
-   UO_nl_func_def_empty,              // as above, but for empty parens '()'
-   UO_nl_func_call_empty,             // as above, but for empty parens '()'
-   UO_nl_func_call_start_multi_line,  // newline after the '(' in a function call if '(' and ')'
-                                      // are on different lines
-   UO_nl_func_call_args_multi_line,   // newline after each ',' in a function call if '(' and ')'
-                                      // are on different lines
-   UO_nl_func_call_end_multi_line,    // newline before the ')' in a function call if '(' and ')'
-                                      // are on different lines
-   UO_nl_oc_msg_args,                 // Whether to put each OC message parameter on a separate line
-                                      // See nl_oc_msg_leave_one_liner
-   UO_nl_fdef_brace,                  // 'int foo() {' vs 'int foo()\n{'
-   UO_nl_cpp_ldef_brace,              // '[&x](int a) {' vs '[&x](int a)\n{'
-   UO_nl_return_expr,                 // Add or remove a newline between the 'return' keyword and
-                                      // 'return' expression
-   UO_nl_after_semicolon,             // disallow multiple statements on a line 'a=1;b=4;'
-   UO_nl_paren_dbrace_open,           // Java: Control the newline between the ')' and '{{' of the
-                                      // double brace initializer
-   UO_nl_type_brace_init_lst,         // newline between type and unnamed temporary direct-list-initialization
-   UO_nl_type_brace_init_lst_open,    // newline after open brace in unnamed temporary direct-list-initialization
-   UO_nl_type_brace_init_lst_close,   // newline before close brace in unnamed temporary direct-list-initialization
-   UO_nl_after_brace_open,            // force a newline after a brace open
-   UO_nl_after_brace_open_cmt,        // put the newline before the comment
-   UO_nl_after_vbrace_open,           // force a newline after a virtual brace open
-   UO_nl_after_vbrace_open_empty,     // force a newline after a virtual brace open
-   UO_nl_after_brace_close,           // force a newline after a brace close
-   UO_nl_after_vbrace_close,          // force a newline after a virtual brace close
-   UO_nl_brace_struct_var,            // force a newline after a brace close
-   UO_nl_define_macro,                // alter newlines in #define macros
-   UO_nl_squeeze_paren_close,         // alter newlines between consecutive paren closes
-   UO_nl_squeeze_ifdef,               // no blanks after #ifxx, #elxx, or before #elxx and #endif
-   UO_nl_squeeze_ifdef_top_level,     // when set, nl_squeeze_ifdef will be applied to top-level
-                                      // #ifdefs as well
-   UO_nl_before_if,                   // newline before 'if'
-   UO_nl_after_if,                    // newline after 'if'/'else'
-   UO_nl_before_for,                  // newline before 'for'
-   UO_nl_after_for,                   // newline after for 'close'
-   UO_nl_before_while,                // newline before 'while'
-   UO_nl_after_while,                 // newline after while 'close'
-   UO_nl_before_switch,               // newline before 'switch'
-   UO_nl_after_switch,                // newline after switch 'close'
-   UO_nl_before_synchronized,         // newline before 'synchronized'
-   UO_nl_after_synchronized,          // newline after synchronized 'close'
-   UO_nl_before_do,                   // newline before 'do'
-   UO_nl_after_do,                    // newline after 'while' of do
-   UO_nl_ds_struct_enum_cmt,          // newline between commented-elements of struct/enum
-   UO_nl_ds_struct_enum_close_brace,  // force newline before '}' of struct/union/enum
-   UO_nl_before_func_class_def,       // newline before 'func_class_def'
-   UO_nl_before_func_class_proto,     // newline before 'func_class_proto'
-   UO_nl_class_colon,                 // newline before/after class colon (tied to UO_pos_class_colon)
-   UO_nl_constr_colon,                // newline before/after class constr colon (tied to UO_pos_constr_colon)
-   UO_nl_namespace_two_to_one_liner,  // If true turns two liner namespace to one liner,else will make then four liners
-   UO_nl_create_if_one_liner,         // Change simple unbraced if statements into a one-liner
-                                      // 'if(b)\n i++;' => 'if(b) i++;'
-   UO_nl_create_for_one_liner,        // Change simple unbraced for statements into a one-liner
-                                      // 'for (i=0;i<5;i++)\n foo(i);' => 'for (i=0;i<5;i++) foo(i);'
-   UO_nl_create_while_one_liner,      // Change simple unbraced while statements into a one-liner
-                                      // 'while (i<5)\n foo(i++);' => 'while (i<5) foo(i++);'
-                                      // Change that back:
-   UO_nl_create_func_def_one_liner,   // Change simple 4, 3, 2 liner function def statements into a one - liner
-   UO_nl_split_if_one_liner,          // Change a one-liner for statement into simple unbraced for
-                                      // 'if(b) i++;' => 'if(b)\n i++;'
-   UO_nl_split_for_one_liner,         // Change a one-liner while statement into simple unbraced while
-                                      // 'for (i=0;i<5;i++) foo(i);' => 'for (i=0;i<5;i++)\n foo(i);'
-   UO_nl_split_while_one_liner,       // Change a one-liner if statement into simple unbraced if
-                                      // 'while (i<5) foo(i++);' => 'while (i<5)\n foo(i++);'
+   UO_nl_collapse_empty_body,          // change '{ \n }' into '{}'
+   UO_nl_assign_leave_one_liners,      // leave one-line assign bodies in 'foo_t f = { a, b, c };'
+   UO_nl_class_leave_one_liners,       // leave one-line function bodies in 'class xx { here }'
+   UO_nl_enum_leave_one_liners,        // leave one-line enum bodies in 'enum FOO { BAR = 5 };'
+   UO_nl_getset_leave_one_liners,      // leave one-line get/set bodies
+   UO_nl_cs_property_leave_one_liners, // leave one-line c# property bodies
+   UO_nl_func_leave_one_liners,        // leave one-line function def bodies
+   UO_nl_cpp_lambda_leave_one_liners,  // leave one-line C++11 lambda bodies
+   UO_nl_if_leave_one_liners,          //
+   UO_nl_while_leave_one_liners,       //
+   UO_nl_oc_msg_leave_one_liner,       // Don't split one-line OC messages
+   UO_nl_oc_block_brace,               // Add or remove newline between Objective-C block signature and '{'
+   UO_nl_start_of_file,                // alter newlines at the start of file
+   UO_nl_start_of_file_min,            // min number of newlines at the start of the file
+   UO_nl_end_of_file,                  // alter newlines at the end of file
+   UO_nl_end_of_file_min,              // min number of newlines at the end of the file
+   UO_nl_assign_brace,                 // newline between '=' and '{'
+   UO_nl_assign_square,                // newline between '=' and '['
+   UO_nl_tsquare_brace,                // newline between '[]' and '{'
+   UO_nl_after_square_assign,          // newline after '= ['
+   UO_nl_func_var_def_blk,             // newline after first block of func variable defs
+   UO_nl_typedef_blk_start,            // newline before typedef block
+   UO_nl_typedef_blk_end,              // newline after typedef block
+   UO_nl_typedef_blk_in,               // newline max within typedef block
+   UO_nl_var_def_blk_start,            // newline before variable defs block
+   UO_nl_var_def_blk_end,              // newline after variable defs block
+   UO_nl_var_def_blk_in,               // newline max within variable defs block
+   UO_nl_fcall_brace,                  // newline between function call and open brace
+   UO_nl_enum_brace,                   // newline between enum and brace
+   UO_nl_enum_class,                   // newline between enum and class
+   UO_nl_enum_class_identifier,        // newline between enum class and 'identifier'
+   UO_nl_enum_identifier_colon,        // newline between enum class 'type' and ':'
+   UO_nl_enum_colon_type,              // newline between enum class identifier :' and 'type'
+                                       // newline between enum class identifier :' 'type' and 'type'
+                                       // i.e.            enum class abcd : unsigned int
+   UO_nl_struct_brace,                 // newline between struct and brace
+   UO_nl_union_brace,                  // newline between union and brace
+   UO_nl_if_brace,                     // newline between 'if' and '{'
+   UO_nl_brace_else,                   // newline between '}' and 'else'
+   UO_nl_elseif_brace,                 // newline between close paren and open brace in 'else if () {'
+   UO_nl_else_brace,                   // newline between 'else' and '{'
+   UO_nl_else_if,                      // newline between 'else' and 'if'
+   UO_nl_before_if_closing_paren,      // newline before 'if'/'else if' closing parenthesis
+   UO_nl_brace_finally,                // newline between '}' and 'finally'
+   UO_nl_finally_brace,                // newline between 'finally' and '{'
+   UO_nl_try_brace,                    // newline between 'try' and '{'
+   UO_nl_getset_brace,                 // newline between 'get/set' and '{'
+   UO_nl_for_brace,                    // newline between 'for' and '{'
+   UO_nl_catch_brace,                  // newline between 'catch' and '{'
+   UO_nl_oc_catch_brace,               // same as nl_catch_brace except for objective-c @catch newline between '@catch' and '{'
+   UO_nl_brace_catch,                  // newline between '}' and 'catch'
+   UO_nl_oc_brace_catch,               // same as nl_brace_catch except for objective-c @catch newline between '}' and '@catch'
+   UO_nl_brace_square,                 // newline between '}' and ']'
+   UO_nl_brace_fparen,                 // newline between '}' and ')' of a function invocation
+   UO_nl_while_brace,                  // newline between 'while' and '{'
+   UO_nl_scope_brace,                  // Add or remove newline between 'scope (x)' and '{' (D)
+   UO_nl_unittest_brace,               // newline between 'unittest' and '{'
+   UO_nl_version_brace,                // Add or remove newline between 'version (x)' and '{' (D)
+   UO_nl_using_brace,                  // Add or remove newline between 'using' and '{'
+   UO_nl_brace_brace,                  // newline between '{{' or '}}'
+   UO_nl_do_brace,                     // newline between 'do' and '{'
+   UO_nl_brace_while,                  // newline between '}' and 'while' of do stmt
+   UO_nl_switch_brace,                 // newline between 'switch' and '{'
+   UO_nl_synchronized_brace,           // newline between 'synchronized' and '{'
+   UO_nl_multi_line_cond,              // newline between ')' and '{' when cond spans >=2 lines
+   UO_nl_multi_line_define,            // newline after define XXX for multi-line define
+   UO_nl_before_case,                  // newline before 'case' statement, not after the first 'case'
+   UO_nl_before_throw,                 // Add or remove newline between ')' and 'throw'
+   UO_nl_after_case,                   // disallow nested 'case 1: a=3;'
+   UO_nl_case_colon_brace,             // Add or remove a newline between a case ':' and '{'.
+                                       // Overrides nl_after_case
+   UO_nl_namespace_brace,              // newline between namespace name and brace
+   UO_nl_template_class,               // newline between '>' and class in 'template <x> class'
+   UO_nl_class_brace,                  // newline between class name and brace
+   UO_nl_class_init_args,              // newline before/after each comma in the base class list
+                                       // (tied to UO_pos_class_comma)
+   UO_nl_constr_init_args,             // newline after comma in class init args
+   UO_nl_enum_own_lines,               // put each element of an enum def. on its own line
+   UO_nl_func_type_name,               // newline between return type and func name in def
+   UO_nl_func_type_name_class,         // newline between return type and func name in class
+   UO_nl_func_class_scope,             // Add or remove newline between class specification and '::'
+                                       // in 'void A::f() { }'
+                                       // Only appears in separate member implementation (does not appear
+                                       // with in-line implmementation)
+   UO_nl_func_scope_name,              // Add or remove newline between function scope and name in a definition
+                                       // Controls the newline after '::' in 'void A::f() { }'
+   UO_nl_func_proto_type_name,         // nl_func_type_name, but for prottypes
+   UO_nl_func_paren,                   // newline between function and open paren
+   UO_nl_func_paren_empty,             // Overrides nl_func_paren for functions with no parameters
+   UO_nl_func_def_paren,               // Add or remove newline between a function name and
+                                       // the opening '(' in the definition
+   UO_nl_func_def_paren_empty,         // Overrides nl_func_def_paren for functions with no parameters
+   UO_nl_func_call_paren,              // Add or remove newline between a function name and
+                                       // the opening '(' in the call
+   UO_nl_func_call_paren_empty,        // Overrides nl_func_call_paren for functions with no parameters
+   UO_nl_func_decl_start,              // newline after the '(' in a function decl
+   UO_nl_func_def_start,               // newline after the '(' in a function def
+   UO_nl_func_decl_start_single,       // Overrides nl_func_decl_start when there is only one parameter
+   UO_nl_func_def_start_single,        // Overrides nl_func_def_start when there is only one parameter
+   UO_nl_func_decl_start_multi_line,   // newline after the '(' in a function decl if '(' and ')'
+                                       // are on different lines
+   UO_nl_func_def_start_multi_line,    // newline after the '(' in a function def if '(' and ')'
+                                       // are on different lines
+   UO_nl_func_decl_args,               // newline after each ',' in a function decl
+   UO_nl_func_def_args,                // Add or remove newline after each ',' in a function definition
+   UO_nl_func_decl_args_multi_line,    // newline after each ',' in a function decl if '(' and ')'
+                                       // are on different lines
+   UO_nl_func_def_args_multi_line,     // Add or remove newline after each ',' in a function definition
+                                       // if '(' and ')' are on different lines
+   UO_nl_func_decl_end,                // newline before the ')' in a function decl
+   UO_nl_func_def_end,                 // newline before the ')' in a function def
+   UO_nl_func_decl_end_single,         // Overrides nl_func_decl_end when there is only one parameter
+   UO_nl_func_def_end_single,          // Overrides nl_func_def_end when there is only one parameter
+   UO_nl_func_decl_end_multi_line,     // newline before the ')' in a function decl if '(' and ')'
+                                       // are on different lines
+   UO_nl_func_def_end_multi_line,      // newline before the ')' in a function def if '(' and ')'
+                                       // are on different lines
+   UO_nl_func_decl_empty,              // as above, but for empty parens '()'
+   UO_nl_func_def_empty,               // as above, but for empty parens '()'
+   UO_nl_func_call_empty,              // as above, but for empty parens '()'
+   UO_nl_func_call_start_multi_line,   // newline after the '(' in a function call if '(' and ')'
+                                       // are on different lines
+   UO_nl_func_call_args_multi_line,    // newline after each ',' in a function call if '(' and ')'
+                                       // are on different lines
+   UO_nl_func_call_end_multi_line,     // newline before the ')' in a function call if '(' and ')'
+                                       // are on different lines
+   UO_nl_oc_msg_args,                  // Whether to put each OC message parameter on a separate line
+                                       // See nl_oc_msg_leave_one_liner
+   UO_nl_fdef_brace,                   // 'int foo() {' vs 'int foo()\n{'
+   UO_nl_cpp_ldef_brace,               // '[&x](int a) {' vs '[&x](int a)\n{'
+   UO_nl_return_expr,                  // Add or remove a newline between the 'return' keyword and
+                                       // 'return' expression
+   UO_nl_after_semicolon,              // disallow multiple statements on a line 'a=1;b=4;'
+   UO_nl_paren_dbrace_open,            // Java: Control the newline between the ')' and '{{' of the
+                                       // double brace initializer
+   UO_nl_type_brace_init_lst,          // newline between type and unnamed temporary direct-list-initialization
+   UO_nl_type_brace_init_lst_open,     // newline after open brace in unnamed temporary direct-list-initialization
+   UO_nl_type_brace_init_lst_close,    // newline before close brace in unnamed temporary direct-list-initialization
+   UO_nl_after_brace_open,             // force a newline after a brace open
+   UO_nl_after_brace_open_cmt,         // put the newline before the comment
+   UO_nl_after_vbrace_open,            // force a newline after a virtual brace open
+   UO_nl_after_vbrace_open_empty,      // force a newline after a virtual brace open
+   UO_nl_after_brace_close,            // force a newline after a brace close
+   UO_nl_after_vbrace_close,           // force a newline after a virtual brace close
+   UO_nl_brace_struct_var,             // force a newline after a brace close
+   UO_nl_define_macro,                 // alter newlines in #define macros
+   UO_nl_squeeze_paren_close,          // alter newlines between consecutive paren closes
+   UO_nl_squeeze_ifdef,                // no blanks after #ifxx, #elxx, or before #elxx and #endif
+   UO_nl_squeeze_ifdef_top_level,      // when set, nl_squeeze_ifdef will be applied to top-level
+                                       // #ifdefs as well
+   UO_nl_before_if,                    // newline before 'if'
+   UO_nl_after_if,                     // newline after 'if'/'else'
+   UO_nl_before_for,                   // newline before 'for'
+   UO_nl_after_for,                    // newline after for 'close'
+   UO_nl_before_while,                 // newline before 'while'
+   UO_nl_after_while,                  // newline after while 'close'
+   UO_nl_before_switch,                // newline before 'switch'
+   UO_nl_after_switch,                 // newline after switch 'close'
+   UO_nl_before_synchronized,          // newline before 'synchronized'
+   UO_nl_after_synchronized,           // newline after synchronized 'close'
+   UO_nl_before_do,                    // newline before 'do'
+   UO_nl_after_do,                     // newline after 'while' of do
+   UO_nl_ds_struct_enum_cmt,           // newline between commented-elements of struct/enum
+   UO_nl_ds_struct_enum_close_brace,   // force newline before '}' of struct/union/enum
+   UO_nl_before_func_class_def,        // newline before 'func_class_def'
+   UO_nl_before_func_class_proto,      // newline before 'func_class_proto'
+   UO_nl_class_colon,                  // newline before/after class colon (tied to UO_pos_class_colon)
+   UO_nl_constr_colon,                 // newline before/after class constr colon (tied to UO_pos_constr_colon)
+   UO_nl_namespace_two_to_one_liner,   // If true turns two liner namespace to one liner,else will make then four liners
+   UO_nl_create_if_one_liner,          // Change simple unbraced if statements into a one-liner
+                                       // 'if(b)\n i++;' => 'if(b) i++;'
+   UO_nl_create_for_one_liner,         // Change simple unbraced for statements into a one-liner
+                                       // 'for (i=0;i<5;i++)\n foo(i);' => 'for (i=0;i<5;i++) foo(i);'
+   UO_nl_create_while_one_liner,       // Change simple unbraced while statements into a one-liner
+                                       // 'while (i<5)\n foo(i++);' => 'while (i<5) foo(i++);'
+                                       // Change that back:
+   UO_nl_create_func_def_one_liner,    // Change simple 4, 3, 2 liner function def statements into a one - liner
+   UO_nl_split_if_one_liner,           // Change a one-liner for statement into simple unbraced for
+                                       // 'if(b) i++;' => 'if(b)\n i++;'
+   UO_nl_split_for_one_liner,          // Change a one-liner while statement into simple unbraced while
+                                       // 'for (i=0;i<5;i++) foo(i);' => 'for (i=0;i<5;i++)\n foo(i);'
+   UO_nl_split_while_one_liner,        // Change a one-liner if statement into simple unbraced if
+                                       // 'while (i<5) foo(i++);' => 'while (i<5)\n foo(i++);'
 
    // group: UG_blankline, "Blank line options", "Note that it takes 2 newlines to get a blank line"      4
    UO_nl_max,                          // maximum consecutive newlines (3 = 2 blank lines)

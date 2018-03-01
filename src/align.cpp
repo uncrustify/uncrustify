@@ -878,7 +878,11 @@ static chunk_t *align_func_param(chunk_t *start)
       }
       else if (pc->type == CT_COMMA)
       {
-         comma_count++;
+         chunk_t *tmp_prev = chunk_get_prev_nc(pc);
+         if (!chunk_is_newline(tmp_prev))  // don't count leading commas
+         {
+            comma_count++;
+         }
       }
    }
 
@@ -1534,17 +1538,12 @@ chunk_t *align_trailing_comments(chunk_t *start)
 
          if (cmt_type_cur == cmt_type_start)
          {
-            col = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].u);
-            LOG_FMT(LALADD, "%s(%d): line=%zu col=%zu min_col=%zu pc->col=%zu pc->len=%zu %s\n",
-                    __func__, __LINE__, pc->orig_line, col, min_col, pc->column, pc->len(),
+            LOG_FMT(LALADD, "%s(%d): line=%zu min_col=%zu pc->col=%zu pc->len=%zu %s\n",
+                    __func__, __LINE__, pc->orig_line, min_col, pc->column, pc->len(),
                     get_token_name(pc->type));
             if (min_orig == 0 || min_orig > pc->column)
             {
                min_orig = pc->column;
-            }
-            if (pc->column < col)
-            {
-               pc->column = col;
             }
             align_add(cs, pc, min_col, 1, true); // (intended_col < col));
             nl_count = 0;
@@ -1620,7 +1619,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
 
    // Skip past C99 "[xx] =" stuff
    chunk_t *tmp = skip_c99_array(start);
-   if (tmp)
+   if (tmp != nullptr)
    {
       set_chunk_parent(start, CT_TSQUARE);
       start            = tmp;
@@ -1797,7 +1796,7 @@ static void align_init_brace(chunk_t *start)
       if (idx == 0 && ((tmp = skip_c99_array(pc)) != nullptr))
       {
          pc = tmp;
-         if (pc)
+         if (pc != nullptr)
          {
             LOG_FMT(LALBR, " -%zu- skipped '[] =' to %s\n",
                     pc->orig_line, get_token_name(pc->type));
@@ -2119,19 +2118,21 @@ static void align_oc_msg_colon(chunk_t *so)
    for (size_t idx = 0; idx < len; idx++)
    {
       chunk_t *tmp = nas.m_aligned.GetChunk(idx);
-
-      size_t  tlen = tmp->str.size();
-      if (tlen > mlen)
+      if (tmp != nullptr)
       {
-         mlen = tlen;
-         if (idx != 0)
+         size_t tlen = tmp->str.size();
+         if (tlen > mlen)
          {
-            longest = tmp;
+            mlen = tlen;
+            if (idx != 0)
+            {
+               longest = tmp;
+            }
          }
-      }
-      if (idx == 0)
-      {
-         first_len = tlen + 1;
+         if (idx == 0)
+         {
+            first_len = tlen + 1;
+         }
       }
    }
 

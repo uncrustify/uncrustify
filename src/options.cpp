@@ -372,6 +372,8 @@ void register_options(void)
                   "Add or remove space between pointer stars '*'.");
    unc_add_option("sp_after_ptr_star", UO_sp_after_ptr_star, AT_IARF,
                   "Add or remove space after pointer star '*', if followed by a word.");
+   unc_add_option("sp_after_ptr_block_caret", UO_sp_after_ptr_block_caret, AT_IARF,
+                  "Add or remove space after pointer caret '^', if followed by a word.");
    unc_add_option("sp_after_ptr_star_qualifier", UO_sp_after_ptr_star_qualifier, AT_IARF,
                   "Add or remove space after pointer star '*', if followed by a qualifier.");
    unc_add_option("sp_after_ptr_star_func", UO_sp_after_ptr_star_func, AT_IARF,
@@ -455,6 +457,9 @@ void register_options(void)
                   "Add or remove space before structured bindings. Only for C++17.");
    unc_add_option("sp_inside_square", UO_sp_inside_square, AT_IARF,
                   "Add or remove space inside a non-empty '[' and ']'.");
+   unc_add_option("sp_inside_square_oc_array", UO_sp_inside_square_oc_array, AT_IARF,
+                  "Add or remove space inside a non-empty OC boxed array '@[' and ']'.\n"
+                  "If set to ignore, sp_inside_square is used.");
    unc_add_option("sp_after_comma", UO_sp_after_comma, AT_IARF,
                   "Add or remove space after ',', 'a,b' vs 'a, b'.");
    unc_add_option("sp_before_comma", UO_sp_before_comma, AT_IARF,
@@ -571,6 +576,9 @@ void register_options(void)
    unc_add_option("sp_catch_paren", UO_sp_catch_paren, AT_IARF,
                   "Add or remove space between 'catch' and '(' in 'catch (something) { }'\n"
                   "If set to ignore, sp_before_sparen is used.");
+   unc_add_option("sp_oc_catch_paren", UO_sp_oc_catch_paren, AT_IARF,
+                  "Add or remove space between '@catch' and '(' in '@catch (something) { }'\n"
+                  "If set to ignore, sp_catch_paren is used.");
    unc_add_option("sp_version_paren", UO_sp_version_paren, AT_IARF,
                   "Add or remove space between 'version' and '(' in 'version (something) { }' (D language)\n"
                   "If set to ignore, sp_before_sparen is used.");
@@ -593,8 +601,14 @@ void register_options(void)
                   "Add or remove space between '}' and the name of a typedef on the same line.");
    unc_add_option("sp_catch_brace", UO_sp_catch_brace, AT_IARF,
                   "Add or remove space between 'catch' and '{' if on the same line.");
+   unc_add_option("sp_oc_catch_brace", UO_sp_oc_catch_brace, AT_IARF,
+                  "Add or remove space between '@catch' and '{' if on the same line.\n"
+                  "If set to ignore, sp_catch_brace is used.");
    unc_add_option("sp_brace_catch", UO_sp_brace_catch, AT_IARF,
                   "Add or remove space between '}' and 'catch' if on the same line.");
+   unc_add_option("sp_oc_brace_catch", UO_sp_oc_brace_catch, AT_IARF,
+                  "Add or remove space between '}' and '@catch' if on the same line.\n"
+                  "If set to ignore, sp_brace_catch is used.");
    unc_add_option("sp_finally_brace", UO_sp_finally_brace, AT_IARF,
                   "Add or remove space between 'finally' and '{' if on the same line.");
    unc_add_option("sp_brace_finally", UO_sp_brace_finally, AT_IARF,
@@ -679,6 +693,9 @@ void register_options(void)
                   "'[receiver selector ...]'.");
    unc_add_option("sp_after_oc_property", UO_sp_after_oc_property, AT_IARF,
                   "Add or remove space after @property.");
+   unc_add_option("sp_after_oc_synchronized", UO_sp_after_oc_synchronized, AT_IARF,
+                  "Add or remove space between '@synchronized' and the parenthesis\n"
+                  "'@synchronized(foo)' vs '@synchronized (foo)'.");
    unc_add_option("sp_cond_colon", UO_sp_cond_colon, AT_IARF,
                   "Add or remove space around the ':' in 'b ? t : f'.");
    unc_add_option("sp_cond_colon_before", UO_sp_cond_colon_before, AT_IARF,
@@ -837,6 +854,9 @@ void register_options(void)
    unc_add_option("indent_member", UO_indent_member, AT_UNUM,
                   "The number of spaces to indent a continued '->' or '.'\n"
                   "Usually set to 0, 1, or indent_columns.");
+   unc_add_option("indent_member_single", UO_indent_member_single, AT_BOOL,
+                  "setting to true will indent lines broken at '.' or '->' by a single indent\n"
+                  "UO_indent_member option will not be effective if this is set to true.");
    unc_add_option("indent_sing_line_comments", UO_indent_sing_line_comments, AT_UNUM,
                   "Spaces to indent single line ('//') comments on lines before code.");
    unc_add_option("indent_relative_single_line_comments", UO_indent_relative_single_line_comments, AT_BOOL,
@@ -960,6 +980,8 @@ void register_options(void)
                   "Don't split one-line enums: 'enum foo { BAR = 15 };'");
    unc_add_option("nl_getset_leave_one_liners", UO_nl_getset_leave_one_liners, AT_BOOL,
                   "Don't split one-line get or set functions.");
+   unc_add_option("nl_cs_property_leave_one_liners", UO_nl_cs_property_leave_one_liners, AT_BOOL,
+                  "Don't split one-line get or set functions.");
    unc_add_option("nl_func_leave_one_liners", UO_nl_func_leave_one_liners, AT_BOOL,
                   "Don't split one-line function definitions - 'int foo() { return 0; }'.");
    unc_add_option("nl_cpp_lambda_leave_one_liners", UO_nl_cpp_lambda_leave_one_liners, AT_BOOL,
@@ -1053,8 +1075,14 @@ void register_options(void)
                   "Add or remove newline between 'for' and '{'.");
    unc_add_option("nl_catch_brace", UO_nl_catch_brace, AT_IARF,
                   "Add or remove newline between 'catch' and '{'.");
+   unc_add_option("nl_oc_catch_brace", UO_nl_oc_catch_brace, AT_IARF,
+                  "Add or remove newline between '@catch' and '{'.\n"
+                  "If set to ignore, nl_catch_brace is used.");
    unc_add_option("nl_brace_catch", UO_nl_brace_catch, AT_IARF,
                   "Add or remove newline between '}' and 'catch'.");
+   unc_add_option("nl_oc_brace_catch", UO_nl_oc_brace_catch, AT_IARF,
+                  "Add or remove newline between '}' and 'catch'.\n"
+                  "If set to ignore, nl_brace_catch is used.");
    unc_add_option("nl_brace_square", UO_nl_brace_square, AT_IARF,
                   "Add or remove newline between '}' and ']'.");
    unc_add_option("nl_brace_fparen", UO_nl_brace_fparen, AT_IARF,

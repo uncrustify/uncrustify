@@ -3,6 +3,3 @@
 #
 # this suite is not an ordinary language test suite.
 #
-# adopt tests from UT
-10018  empty.cfg                            oc/delete-space-oc.mm
-10019  empty.cfg                            oc/func-param-wrap-oc.mm

@@ -186,13 +186,16 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    {
       size_t  tmp_col = ref->column;
       chunk_t *tmp    = ref;
-      while (tmp != start)
+      while (tmp != nullptr && tmp != start)
       {
          chunk_t *next = chunk_get_next(tmp);
-         tmp_col += space_col_align(tmp, next);
-         if (next->column != tmp_col)
+         if (next != nullptr)
          {
-            align_to_column(next, tmp_col);
+            tmp_col += space_col_align(tmp, next);
+            if (next->column != tmp_col)
+            {
+               align_to_column(next, tmp_col);
+            }
          }
          tmp = next;
       }
@@ -226,6 +229,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       }
       if (  (chunk_is_star(tmp) && m_star_style == SS_DANGLE)
          || (chunk_is_addr(tmp) && m_amp_style == SS_DANGLE)
+         || (chunk_is_nullable(tmp) && (m_star_style == SS_DANGLE))
          || (chunk_is_msref(tmp) && m_star_style == SS_DANGLE))  // TODO: add m_msref_style
       {
          col_adj = start->column - ali->column;
