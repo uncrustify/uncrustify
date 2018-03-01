@@ -806,7 +806,7 @@ void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what)
       else
       {
          LOG_FMT(what, "'%s'\n",
-              pc->text());
+                 pc->text());
       }
       LOG_FMT(what, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s",
               get_token_name(pc->type), get_token_name(pc->parent_type),
