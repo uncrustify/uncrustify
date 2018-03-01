@@ -650,8 +650,9 @@ def main(args):
             return_flag = False
 
     # Test logger buffer overflow
-    if not check_output(
+    if not check_uncrustify_output(
             uncr_bin,
+            parsed_args,
             args_arr=['-c', NULL_DEVICE, '-L', '99', '-o', NULL_DEVICE,
                       '-f', s_path_join(sc_dir, 'Input/logger.cs')],
             err_expected_path=s_path_join(sc_dir, 'Output/logger_cs_L_99.txt'),
