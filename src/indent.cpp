@@ -966,7 +966,7 @@ void indent_text(void)
             // TODO: ideally formatting would know which opens occurred on a line and group closes in the same manor
             if (pc->flags & PCF_IN_OC_MSG || pc->flags & PCF_OC_BOXED)
             {
-               if (pc->type == CT_SQUARE_CLOSE)
+               if (pc->type == CT_SQUARE_CLOSE && frm.top().level >= pc->level)
                {
                   size_t  count = 1;
                   chunk_t *next = chunk_get_next_nc(pc);
@@ -1138,60 +1138,76 @@ void indent_text(void)
 
       if (pc->type == CT_BRACE_CLOSE)
       {
-         if (frm.top().type == CT_BRACE_OPEN)
+         if (cpd.lang_flags & LANG_OC)
          {
-            size_t  count = 1;
-            chunk_t *next = chunk_get_next_nc(pc);
-            while (  next
-                  && (  (next->type == CT_BRACE_CLOSE && next->parent_type == CT_OC_AT)
-                     || (next->type == CT_SQUARE_CLOSE && next->parent_type == CT_OC_AT)
-                     || (next->type == CT_SQUARE_CLOSE && next->parent_type == CT_OC_MSG)))
+            if (frm.top().type == CT_BRACE_OPEN && frm.top().level >= pc->level)
             {
-               count++;
-               next = chunk_get_next_nc(next);
-            }
-            count = std::min(count, frm.size());
-
-            // End Objc nested boxed dictionary
-            // TODO: ideally formatting would know which opens occurred on a line and group closes in the same manor
-            if (count > 1 && pc->type == CT_BRACE_CLOSE && pc->parent_type == CT_OC_AT)
-            {
-               if (frm.top().ip.ref)
+               size_t  count = 1;
+               chunk_t *next = chunk_get_next_nc(pc);
+               while (  next
+                     && (  (next->type == CT_BRACE_CLOSE && next->parent_type == CT_OC_AT)
+                        || (next->type == CT_SQUARE_CLOSE && next->parent_type == CT_OC_AT)
+                        || (next->type == CT_SQUARE_CLOSE && next->parent_type == CT_OC_MSG)))
                {
-                  pc->indent.ref   = frm.top().ip.ref;
-                  pc->indent.delta = 0;
+                  count++;
+                  next = chunk_get_next_nc(next);
                }
+               count = std::min(count, frm.size());
 
-               while (count-- > 0)
+               // End Objc nested boxed dictionary
+               // TODO: ideally formatting would know which opens occurred on a line and group closes in the same manor
+               if (count > 1 && pc->type == CT_BRACE_CLOSE && pc->parent_type == CT_OC_AT)
                {
-                  frm.pop();
-               }
+                  if (frm.top().ip.ref)
+                  {
+                     pc->indent.ref   = frm.top().ip.ref;
+                     pc->indent.delta = 0;
+                  }
 
-               if (next)
-               {
-                  // End any assign operations with a semicolon on the same level
-                  if (is_end_of_assignment(next, frm))
+                  while (count-- > 0)
                   {
                      frm.pop();
                   }
+
+                  if (next)
+                  {
+                     // End any assign operations with a semicolon on the same level
+                     if (is_end_of_assignment(next, frm))
+                     {
+                        frm.pop();
+                     }
+                  }
+
+                  // Indent the brace to match outer most brace/square
+                  indent_column_set(frm.top().indent_tmp);
                }
-
-               // Indent the brace to match outer most brace/square
-               indent_column_set(frm.top().indent_tmp);
-            }
-            else
-            {
-               // Indent the brace to match the open brace
-               indent_column_set(frm.top().brace_indent);
-
-               if (frm.top().ip.ref)
+               else
                {
-                  pc->indent.ref   = frm.top().ip.ref;
-                  pc->indent.delta = 0;
-               }
+                  // Indent the brace to match the open brace
+                  indent_column_set(frm.top().brace_indent);
 
-               frm.pop();
+                  if (frm.top().ip.ref)
+                  {
+                     pc->indent.ref   = frm.top().ip.ref;
+                     pc->indent.delta = 0;
+                  }
+
+                  frm.pop();
+               }
             }
+         }
+         else
+         {
+            // Indent the brace to match the open brace
+            indent_column_set(frm.top().brace_indent);
+
+            if (frm.top().ip.ref)
+            {
+               pc->indent.ref   = frm.top().ip.ref;
+               pc->indent.delta = 0;
+            }
+
+            frm.pop();
          }
       }
       else if (pc->type == CT_VBRACE_OPEN)

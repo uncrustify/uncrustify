@@ -38,3 +38,10 @@
         ]
     }];
 }
+
+inline static void installGelMarkers(void) {
+    [NSOperationQueue.mainQueue addOperationWithBlock:^{
+        [accessoryView.textStorage setAttributedString:[[NSAttributedString alloc] initWithString:error.localizedDescription attributes:@{ NSFontAttributeName: [NSFont systemFontOfSize:NSFont.systemFontSize] }]];
+        NSAlert *alert = [[NSAlert alloc] init];
+    }];
+}
