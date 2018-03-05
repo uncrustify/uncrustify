@@ -797,8 +797,17 @@ void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what)
 
    if (pc != nullptr && *where != token)
    {
-      LOG_FMT(what, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+      LOG_FMT(what, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() ",
+              __func__, __LINE__, pc->orig_line, pc->orig_col);
+      if (*type == CT_NEWLINE)
+      {
+         LOG_FMT(what, "<Newline>\n");
+      }
+      else
+      {
+         LOG_FMT(what, "'%s'\n",
+                 pc->text());
+      }
       LOG_FMT(what, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s",
               get_token_name(pc->type), get_token_name(pc->parent_type),
               get_token_name(*type), get_token_name(*parent_type));
