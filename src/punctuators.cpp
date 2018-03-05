@@ -97,7 +97,7 @@ static const chunk_tag_t symbols2[] =
    { "..",      CT_RANGE,        LANG_D                                                     },
    { "?.",      CT_NULLCOND,     LANG_CS                                                    }, // null conditional operator
    { "/=",      CT_ASSIGN,       LANG_ALL                                                   },
-   { "::",      CT_DC_MEMBER,    LANG_C | LANG_CPP | LANG_OC | LANG_CS | LANG_D | LANG_VALA },
+   { "::",      CT_DC_MEMBER,    LANG_ALLC                                                  },
    { "<<",      CT_ARITH,        LANG_ALL                                                   },
    { "<=",      CT_COMPARE,      LANG_ALL                                                   },
    { "<>",      CT_COMPARE,      LANG_D                                                     },
