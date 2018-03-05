@@ -35,7 +35,7 @@
 using namespace std;
 
 
-static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *second, bool complete);
+static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *second);
 
 
 /**
@@ -47,7 +47,7 @@ static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *se
  *
  * @return AV_IGNORE, AV_ADD, AV_REMOVE or AV_FORCE
  */
-static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool complete);
+static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp);
 
 /**
  * Ensure to force the space between the \a first and the \a second chunks
@@ -114,13 +114,13 @@ const no_space_table_t no_space_table[] =
    { CT_TYPENAME,       CT_TYPE          },
 };
 
-#define log_rule(rule)                                             \
-   do { if (log_sev_on(LSPACE)) {                                  \
-           log_rule2(__LINE__, (rule), first, second, complete); } \
+#define log_rule(rule)                                   \
+   do { if (log_sev_on(LSPACE)) {                        \
+           log_rule2(__LINE__, (rule), first, second); } \
    } while (0)
 
 
-static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *second, bool complete)
+static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *second)
 {
    LOG_FUNC_ENTRY();
    if (second->type != CT_NEWLINE)
@@ -128,11 +128,10 @@ static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *se
       LOG_FMT(LSPACE, "%s(%d): Spacing: first->orig_line is %zu, first->orig_col is %zu, first->text() is '%s', [%s/%s] <===>\n",
               __func__, __LINE__, first->orig_line, first->orig_col, first->text(),
               get_token_name(first->type), get_token_name(first->parent_type));
-      LOG_FMT(LSPACE, "   second->orig_line is %zu, second->orig_col is %zu, second->text() '%s', [%s/%s] : rule %s[line %zu]%s",
+      LOG_FMT(LSPACE, "   second->orig_line is %zu, second->orig_col is %zu, second->text() '%s', [%s/%s] : rule %s[line %zu]\n",
               second->orig_line, second->orig_col, second->text(),
               get_token_name(second->type), get_token_name(second->parent_type),
-              rule, line,
-              complete ? "\n" : "");
+              rule, line);
    }
 }
 
@@ -141,7 +140,7 @@ static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *se
  * this function is called for every chunk in the input file.
  * Thus it is important to keep this function efficient
  */
-static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool complete = true)
+static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 {
    LOG_FUNC_ENTRY();
 
@@ -2183,9 +2182,9 @@ static argval_t ensure_force_space(chunk_t *first, chunk_t *second, argval_t av)
 }
 
 
-static argval_t do_space_ensured(chunk_t *first, chunk_t *second, int &min_sp, bool complete = true)
+static argval_t do_space_ensured(chunk_t *first, chunk_t *second, int &min_sp)
 {
-   return(ensure_force_space(first, second, do_space(first, second, min_sp, complete)));
+   return(ensure_force_space(first, second, do_space(first, second, min_sp)));
 }
 
 
@@ -2364,7 +2363,7 @@ void space_text(void)
          int min_sp;
          LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, pc-text() '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-         argval_t av = do_space_ensured(pc, next, min_sp, false);
+         argval_t av = do_space_ensured(pc, next, min_sp);
          min_sp = max(1, min_sp);
          switch (av)
          {
