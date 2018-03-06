@@ -1019,27 +1019,30 @@ static void align_same_func_call_params(void)
       prev      = chunk_get_next(prev);
       align_fcn = prev;
       align_fcn_name.clear();
-      LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
+      LOG_FMT(LASFCP, "%s(%d): align_fnc_name '%s'\n", __func__, __LINE__, align_fcn_name.c_str());
       while (prev != pc)
       {
-         LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
+         LOG_FMT(LASFCP, "%s(%d): align_fnc_name '%s'\n", __func__, __LINE__, align_fcn_name.c_str());
          align_fcn_name += prev->str;
-         LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
+         LOG_FMT(LASFCP, "%s(%d): align_fnc_name '%s'\n", __func__, __LINE__, align_fcn_name.c_str());
          prev = chunk_get_next(prev);
       }
-      LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
+      LOG_FMT(LASFCP, "%s(%d): align_fnc_name '%s'\n", __func__, __LINE__, align_fcn_name.c_str());
       align_fcn_name += pc->str;
-      LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
-      LOG_FMT(LASFCP, "Func Call @ %zu:%zu [%s]\n",
-              align_fcn->orig_line,
+      LOG_FMT(LASFCP, "%s(%d): align_fnc_name '%s'\n", __func__, __LINE__, align_fcn_name.c_str());
+      LOG_FMT(LASFCP, "%s(%d): Func Call @ orig_line is %zu, orig_col is %zu, c_str() '%s'\n",
+              __func__, __LINE__, align_fcn->orig_line,
               align_fcn->orig_col,
               align_fcn_name.c_str());
 
       add_str = nullptr;
       if (align_root != nullptr)
       {
+         // Issue # 1395
          // can only align functions on the same brace level
+         // and on the same level
          if (  align_root->brace_level == pc->brace_level
+            && align_root->level == pc->level
             && align_fcn_name.equals(align_root_name))
          {
             fcn_as.Add(pc);
@@ -1074,8 +1077,8 @@ static void align_same_func_call_params(void)
 
       if (add_str != nullptr)
       {
-         LOG_FMT(LASFCP, "%s '%s' on line %zu -",
-                 add_str, align_fcn_name.c_str(), pc->orig_line);
+         LOG_FMT(LASFCP, "%s(%d): %s '%s' on line %zu -",
+                 __func__, __LINE__, add_str, align_fcn_name.c_str(), pc->orig_line);
          align_params(pc, chunks);
          LOG_FMT(LASFCP, " %d items:", (int)chunks.size());
 
@@ -1866,6 +1869,8 @@ static void align_init_brace(chunk_t *start)
             else
             {
                // first item on the line
+               LOG_FMT(LALBR, "%s(%d): idx is %zu, cpd.al[%zu].col is %zu\n",
+                       __func__, __LINE__, idx, idx, cpd.al[idx].col);
                reindent_line(pc, cpd.al[idx].col);
                chunk_flags_set(pc, PCF_WAS_ALIGNED);
 
