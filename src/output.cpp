@@ -223,6 +223,16 @@ static bool can_combine_comment(chunk_t *pc, cmt_reflow &cmt);
    LOG_FMT(LCONTTEXT, "%s:%d set cont_text to '%s'\n", __func__, __LINE__, cmt.cont_text.c_str())
 
 
+static void add_spaces()
+{
+   while (cpd.spaces > 0)
+   {
+      write_char(' ');
+      cpd.spaces--;
+   }
+}
+
+
 static void add_char(UINT32 ch)
 {
    // If we did a '\r' and it isn't followed by a '\n', then output a newline
@@ -237,6 +247,7 @@ static void add_char(UINT32 ch)
    // convert a newline into the LF/CRLF/CR sequence
    if (ch == '\n')
    {
+      add_spaces();
       write_string(cpd.newline);
       cpd.column      = 1;
       cpd.did_newline = 1;
@@ -278,11 +289,7 @@ static void add_char(UINT32 ch)
       }
       else
       {
-         while (cpd.spaces > 0)
-         {
-            write_char(' ');
-            cpd.spaces--;
-         }
+         add_spaces();
          write_char(ch);
          if (ch == '\t')
          {
@@ -483,6 +490,10 @@ void output_text(FILE *pfile)
       {
          for (size_t cnt = 0; cnt < pc->nl_count; cnt++)
          {
+            if (cnt > 0 && pc->nl_column > 1)
+            {
+               output_to_column(pc->nl_column, false);
+            }
             add_char('\n');
          }
          cpd.did_newline = 1;
@@ -1105,6 +1116,8 @@ static chunk_t *output_comment_c(chunk_t *first)
       {
          add_text(" ");
       }
+      // In case of reflow, original comment could contain trailing spaces before closing the comment, we don't need them after reflow
+      cmt_trim_whitespace(tmp, false);
       add_comment_text(tmp, cmt, false);
       add_comment_text("\n", cmt, false);
       pc = chunk_get_next(chunk_get_next(pc));
@@ -1114,6 +1127,8 @@ static chunk_t *output_comment_c(chunk_t *first)
    {
       add_text(" ");
    }
+   // In case of reflow, original comment could contain trailing spaces before closing the comment, we don't need them after reflow
+   cmt_trim_whitespace(tmp, false);
    add_comment_text(tmp, cmt, false);
    if (cpd.settings[UO_cmt_c_nl_end].b)
    {
@@ -1525,7 +1540,11 @@ static void output_comment_multi(chunk_t *pc)
                   {
                      add_char(' ');
                   }
-                  add_text(cmt.cont_text);
+                  //Multiline comments with can have empty lines with some spaces in them for alignment
+                  //While adding * symbol and alligning them we don't want to keep these trailing spaces
+                  unc_text tmp = unc_text(cmt.cont_text);
+                  cmt_trim_whitespace(tmp, false);
+                  add_text(tmp);
                }
                add_char('\n');
             }

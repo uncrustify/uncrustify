@@ -760,6 +760,8 @@ void register_options(void)
    unc_add_option("indent_continue", UO_indent_continue, AT_NUM,
                   "The continuation indent. If non-zero, this overrides the indent of '(' and '=' continuation indents.\n"
                   "For FreeBSD, this is set to 4. Negative value is absolute and not increased for each '(' level.");
+   unc_add_option("indent_single_newlines", UO_indent_single_newlines, AT_BOOL,
+                  "Indent empty lines - lines which contain only spaces before newline character");
    unc_add_option("indent_param", UO_indent_param, AT_UNUM,
                   "The continuation indent for func_*_param if they are true.\n"
                   "If non-zero, this overrides the indent.");

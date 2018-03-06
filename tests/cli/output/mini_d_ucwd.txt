@@ -695,6 +695,9 @@ indent_columns                  = 8        # unsigned number
 # For FreeBSD, this is set to 4. Negative value is absolute and not increased for each '(' level.
 indent_continue                 = 0        # number
 
+# Indent empty lines - lines which contain only spaces before newline character
+indent_single_newlines          = false    # false/true
+
 # The continuation indent for func_*_param if they are true.
 # If non-zero, this overrides the indent.
 indent_param                    = 0        # unsigned number

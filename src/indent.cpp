@@ -1084,6 +1084,12 @@ void indent_text(void)
       indent_column_set(frm.top().indent_tmp);
       log_indent_tmp();
 
+      if (  pc->type == CT_NEWLINE
+         && cpd.settings[UO_indent_single_newlines].b)
+      {
+         pc->nl_column = indent_column;
+      }
+
       if (  !chunk_is_newline(pc)
          && !chunk_is_comment(pc)
          && log_sev_on(LINDPC))
