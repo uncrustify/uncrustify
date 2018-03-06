@@ -143,6 +143,10 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    {
       // do nothing - we want prev when this exits
    }
+   if (prev == nullptr)
+   {
+      return;
+   }
    chunk_t *ref = prev;
    if (chunk_is_newline(ref))
    {

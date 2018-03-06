@@ -354,7 +354,7 @@ void tokenize_cleanup(void)
          }
 
          // handle 'static if' and merge the tokens
-         if (  prev
+         if (  prev != nullptr
             && pc->type == CT_IF
             && chunk_is_str(prev, "static", 6))
          {
@@ -365,7 +365,10 @@ void tokenize_cleanup(void)
             pc->orig_line = prev->orig_line;
             chunk_t *to_be_deleted = prev;
             prev = chunk_get_prev_ncnl(prev);
-            chunk_del(to_be_deleted);
+            if (prev != nullptr)
+            {
+               chunk_del(to_be_deleted);
+            }
          }
       }
 
@@ -859,7 +862,8 @@ void tokenize_cleanup(void)
          && (cpd.lang_flags & LANG_CPP)
          && chunk_is_str(pc, "&&", 2))
       {
-         if (prev->type == CT_TYPE)
+         if (  prev != nullptr
+            && prev->type == CT_TYPE)
          {
             // Issue # 1002
             if ((pc->flags & PCF_IN_TEMPLATE) == 0)
