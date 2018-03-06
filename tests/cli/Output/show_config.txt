@@ -694,6 +694,10 @@ indent_continue                 Number
   The continuation indent. If non-zero, this overrides the indent of '(' and '=' continuation indents.
   For FreeBSD, this is set to 4. Negative value is absolute and not increased for each '(' level.
 
+indent_single_newlines          { False, True }
+  Indent empty lines - lines which contain only spaces before newline character
+  
+
 indent_param                    Unsigned Number
   The continuation indent for func_*_param if they are true.
   If non-zero, this overrides the indent.
