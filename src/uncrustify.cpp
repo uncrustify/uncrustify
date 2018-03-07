@@ -1994,7 +1994,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
    // Special hook for dumping parsed data for debugging
    if (parsed_file != nullptr)
    {
-      FILE *p_file = fopen(parsed_file, "w");
+      FILE *p_file = fopen(parsed_file, "wb");
       if (p_file != nullptr)
       {
          output_parsed(p_file);
