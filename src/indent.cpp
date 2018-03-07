@@ -2200,7 +2200,8 @@ void indent_text(void)
          }
       }
       else if (  pc->type == CT_LAMBDA && (cpd.lang_flags & LANG_CS)
-              && chunk_get_next_ncnlnp(pc)->type != CT_BRACE_OPEN)
+              && chunk_get_next_ncnlnp(pc)->type != CT_BRACE_OPEN
+              && cpd.settings[UO_indent_cs_delegate_body].b)
       {
          frm.push(*pc);
          frm.top().indent = frm.prev().indent;
