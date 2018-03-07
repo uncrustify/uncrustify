@@ -773,7 +773,7 @@ void register_options(void)
    unc_add_option("indent_cs_delegate_brace", UO_indent_cs_delegate_brace, AT_BOOL,
                   "indent a C# delegate by another level, default is to not indent by another level.");
    unc_add_option("indent_cs_delegate_body", UO_indent_cs_delegate_body, AT_BOOL,
-	              "indent a C# delegate(To hanndle delegates with no brace) by another level. default: false");
+                  "indent a C# delegate(To hanndle delegates with no brace) by another level. default: false");
    unc_add_option("indent_namespace", UO_indent_namespace, AT_BOOL,
                   "Whether the 'namespace' body is indented.");
    unc_add_option("indent_namespace_single_indent", UO_indent_namespace_single_indent, AT_BOOL,
