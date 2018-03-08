@@ -467,7 +467,7 @@ def main(args):
             'release', s_path_join(sc_dir, '../../build/CMakeCache.txt')):
         sys_exit(EX_USAGE)
 
-    clear_dir("./results")
+    clear_dir(s_path_join(sc_dir, "./results"))
 
     return_flag = True
 
