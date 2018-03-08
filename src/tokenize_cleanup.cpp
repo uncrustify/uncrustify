@@ -179,7 +179,7 @@ void tokenize_cleanup(void)
 
             if (count % 2 != 0)
             {
-               LOG_FMT(LGUY, "%s(%d): Error -->  No proper syntax observed at  orig_line is %zu, orig_col is %zu, text() ' %s '.\n",
+               LOG_FMT(LERR, "%s(%d): Error -->  No proper syntax observed at  orig_line is %zu, orig_col is %zu, text() ' %s '.\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
                exit(0);
             }
