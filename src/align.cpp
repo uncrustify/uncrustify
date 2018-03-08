@@ -878,7 +878,11 @@ static chunk_t *align_func_param(chunk_t *start)
       }
       else if (pc->type == CT_COMMA)
       {
-         comma_count++;
+         chunk_t *tmp_prev = chunk_get_prev_nc(pc);
+         if (!chunk_is_newline(tmp_prev))  // don't count leading commas
+         {
+            comma_count++;
+         }
       }
    }
 
@@ -1015,27 +1019,30 @@ static void align_same_func_call_params(void)
       prev      = chunk_get_next(prev);
       align_fcn = prev;
       align_fcn_name.clear();
-      LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
+      LOG_FMT(LASFCP, "%s(%d): align_fnc_name '%s'\n", __func__, __LINE__, align_fcn_name.c_str());
       while (prev != pc)
       {
-         LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
+         LOG_FMT(LASFCP, "%s(%d): align_fnc_name '%s'\n", __func__, __LINE__, align_fcn_name.c_str());
          align_fcn_name += prev->str;
-         LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
+         LOG_FMT(LASFCP, "%s(%d): align_fnc_name '%s'\n", __func__, __LINE__, align_fcn_name.c_str());
          prev = chunk_get_next(prev);
       }
-      LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
+      LOG_FMT(LASFCP, "%s(%d): align_fnc_name '%s'\n", __func__, __LINE__, align_fcn_name.c_str());
       align_fcn_name += pc->str;
-      LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
-      LOG_FMT(LASFCP, "Func Call @ %zu:%zu [%s]\n",
-              align_fcn->orig_line,
+      LOG_FMT(LASFCP, "%s(%d): align_fnc_name '%s'\n", __func__, __LINE__, align_fcn_name.c_str());
+      LOG_FMT(LASFCP, "%s(%d): Func Call @ orig_line is %zu, orig_col is %zu, c_str() '%s'\n",
+              __func__, __LINE__, align_fcn->orig_line,
               align_fcn->orig_col,
               align_fcn_name.c_str());
 
       add_str = nullptr;
       if (align_root != nullptr)
       {
+         // Issue # 1395
          // can only align functions on the same brace level
+         // and on the same level
          if (  align_root->brace_level == pc->brace_level
+            && align_root->level == pc->level
             && align_fcn_name.equals(align_root_name))
          {
             fcn_as.Add(pc);
@@ -1070,8 +1077,8 @@ static void align_same_func_call_params(void)
 
       if (add_str != nullptr)
       {
-         LOG_FMT(LASFCP, "%s '%s' on line %zu -",
-                 add_str, align_fcn_name.c_str(), pc->orig_line);
+         LOG_FMT(LASFCP, "%s(%d): %s '%s' on line %zu -",
+                 __func__, __LINE__, add_str, align_fcn_name.c_str(), pc->orig_line);
          align_params(pc, chunks);
          LOG_FMT(LASFCP, " %d items:", (int)chunks.size());
 
@@ -1534,17 +1541,12 @@ chunk_t *align_trailing_comments(chunk_t *start)
 
          if (cmt_type_cur == cmt_type_start)
          {
-            col = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].u);
-            LOG_FMT(LALADD, "%s(%d): line=%zu col=%zu min_col=%zu pc->col=%zu pc->len=%zu %s\n",
-                    __func__, __LINE__, pc->orig_line, col, min_col, pc->column, pc->len(),
+            LOG_FMT(LALADD, "%s(%d): line=%zu min_col=%zu pc->col=%zu pc->len=%zu %s\n",
+                    __func__, __LINE__, pc->orig_line, min_col, pc->column, pc->len(),
                     get_token_name(pc->type));
             if (min_orig == 0 || min_orig > pc->column)
             {
                min_orig = pc->column;
-            }
-            if (pc->column < col)
-            {
-               pc->column = col;
             }
             align_add(cs, pc, min_col, 1, true); // (intended_col < col));
             nl_count = 0;
@@ -1620,7 +1622,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
 
    // Skip past C99 "[xx] =" stuff
    chunk_t *tmp = skip_c99_array(start);
-   if (tmp)
+   if (tmp != nullptr)
    {
       set_chunk_parent(start, CT_TSQUARE);
       start            = tmp;
@@ -1785,7 +1787,7 @@ static void align_init_brace(chunk_t *start)
       if (idx == 0 && ((tmp = skip_c99_array(pc)) != nullptr))
       {
          pc = tmp;
-         if (pc)
+         if (pc != nullptr)
          {
             LOG_FMT(LALBR, " -%zu- skipped '[] =' to %s\n",
                     pc->orig_line, get_token_name(pc->type));
@@ -1853,6 +1855,8 @@ static void align_init_brace(chunk_t *start)
             else
             {
                // first item on the line
+               LOG_FMT(LALBR, "%s(%d): idx is %zu, cpd.al[%zu].col is %zu\n",
+                       __func__, __LINE__, idx, idx, cpd.al[idx].col);
                reindent_line(pc, cpd.al[idx].col);
                chunk_flags_set(pc, PCF_WAS_ALIGNED);
 
@@ -2105,19 +2109,21 @@ static void align_oc_msg_colon(chunk_t *so)
    for (size_t idx = 0; idx < len; idx++)
    {
       chunk_t *tmp = nas.m_aligned.GetChunk(idx);
-
-      size_t  tlen = tmp->str.size();
-      if (tlen > mlen)
+      if (tmp != nullptr)
       {
-         mlen = tlen;
-         if (idx != 0)
+         size_t tlen = tmp->str.size();
+         if (tlen > mlen)
          {
-            longest = tmp;
+            mlen = tlen;
+            if (idx != 0)
+            {
+               longest = tmp;
+            }
          }
-      }
-      if (idx == 0)
-      {
-         first_len = tlen + 1;
+         if (idx == 0)
+         {
+            first_len = tlen + 1;
+         }
       }
    }
 

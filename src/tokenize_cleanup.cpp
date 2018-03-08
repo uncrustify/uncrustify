@@ -644,6 +644,12 @@ void tokenize_cleanup(void)
          {
             set_chunk_type(pc, CT_WORD);
          }
+
+         // Fix self keyword back to word when mixing c++/objective-c
+         if (pc->type == CT_THIS && !strcmp(pc->text(), "self") && (next->type == CT_COMMA || next->type == CT_PAREN_CLOSE))
+         {
+            set_chunk_type(pc, CT_WORD);
+         }
       }
 
       // Another hack to clean up more keyword abuse
@@ -948,14 +954,14 @@ static void check_template(chunk_t *start)
       pc = start;
       while ((pc = chunk_get_prev_ncnl(pc, scope_e::PREPROC)) != nullptr)
       {
-         if (  (pc->type == CT_SEMICOLON && hit_semicolon == true)
+         if (  (pc->type == CT_SEMICOLON && hit_semicolon)
             || pc->type == CT_BRACE_OPEN
             || pc->type == CT_BRACE_CLOSE
             || pc->type == CT_SQUARE_CLOSE)
          {
             break;
          }
-         if (pc->type == CT_SEMICOLON && hit_semicolon == false)
+         if (pc->type == CT_SEMICOLON && !hit_semicolon)
          {
             hit_semicolon = true;
          }

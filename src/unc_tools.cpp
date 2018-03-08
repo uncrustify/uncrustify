@@ -35,14 +35,14 @@ void prot_the_line(int theLine, unsigned int actual_line)
       if (pc->orig_line == actual_line)
       {
          tokenCounter++;
-         LOG_FMT(LGUY, " orig_line is %d, ", actual_line);
+         LOG_FMT(LGUY, " orig_line is %d, (%zu) ", actual_line, tokenCounter);
          if (pc->type == CT_VBRACE_OPEN)
          {
             LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
          }
          else if (pc->type == CT_NEWLINE)
          {
-            LOG_FMT(LGUY, "<NL>(%zu), ", pc->nl_count);
+            LOG_FMT(LGUY, "<NL>(nl_count is %zu), ", pc->nl_count);
          }
          else if (pc->type == CT_VBRACE_CLOSE)
          {
@@ -58,8 +58,8 @@ void prot_the_line(int theLine, unsigned int actual_line)
          }
          else
          {
-            LOG_FMT(LGUY, "(%zu) text() %s, type is %s, parent_type is %s, orig_col is %zu, column is %zu, ",
-                    tokenCounter, pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type), pc->orig_col, pc->column);
+            LOG_FMT(LGUY, "text() '%s', type is %s, parent_type is %s, orig_col is %zu, column is %zu, ",
+                    pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type), pc->orig_col, pc->column);
          }
          LOG_FMT(LGUY, "pc->flags:");
          log_pcf_flags(LGUY, pc->flags);

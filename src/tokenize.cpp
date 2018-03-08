@@ -1810,7 +1810,6 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    {
       if (parse_cs_string(ctx, pc))
       {
-         //parse_cs_string(ctx, pc);
          return(true);
       }
       // check for non-keyword identifiers such as @if @switch, etc
@@ -1961,7 +1960,10 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       }
 
       /* Inside clang's __has_include() could be "path/to/file.h" or system-style <path/to/file.h> */
-      if ((ch == '(') && ((chunk_get_tail()->type == CT_CNG_HASINC) || (chunk_get_tail()->type == CT_CNG_HASINCN)))
+      if (  (ch == '(')
+         && (chunk_get_tail() != nullptr)
+         && (  (chunk_get_tail()->type == CT_CNG_HASINC)
+            || (chunk_get_tail()->type == CT_CNG_HASINCN)))
       {
          parse_string(ctx, pc, 0, false);
          return(true);

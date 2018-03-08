@@ -797,15 +797,24 @@ void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what)
 
    if (pc != nullptr && *where != token)
    {
-      LOG_FMT(what, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+      LOG_FMT(what, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() ",
+              __func__, __LINE__, pc->orig_line, pc->orig_col);
+      if (*type == CT_NEWLINE)
+      {
+         LOG_FMT(what, "<Newline>\n");
+      }
+      else
+      {
+         LOG_FMT(what, "'%s'\n",
+                 pc->text());
+      }
       LOG_FMT(what, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s",
               get_token_name(pc->type), get_token_name(pc->parent_type),
               get_token_name(*type), get_token_name(*parent_type));
       log_func_stack_inline(what);
       *where = token;
    }
-}
+} // set_chunk_real
 
 
 static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope, const direction_e dir)
@@ -880,4 +889,43 @@ chunk_t *chunk_get_prev_ssq(chunk_t *cur)
       cur = chunk_get_prev_ncnl(cur);
    }
    return(cur);
+}
+
+
+//! skip to the final word/type in a :: chain
+static chunk_t *chunk_skip_dc_member(chunk_t *start, scope_e scope, direction_e dir)
+{
+   LOG_FUNC_ENTRY();
+   if (start == nullptr)
+   {
+      return(nullptr);
+   }
+
+   const auto step_fcn = (dir == direction_e::FORWARD)
+                         ? chunk_get_next_ncnl : chunk_get_prev_ncnl;
+
+   chunk_t *pc   = start;
+   chunk_t *next = (pc->type == CT_DC_MEMBER) ? pc : step_fcn(pc, scope);
+   while (chunk_is_token(next, CT_DC_MEMBER))
+   {
+      pc = step_fcn(next, scope);
+      if (pc == nullptr)
+      {
+         return(nullptr);
+      }
+      next = step_fcn(pc, scope);
+   }
+   return(pc);
+}
+
+
+chunk_t *chunk_skip_dc_member(chunk_t *start, scope_e scope)
+{
+   return(chunk_skip_dc_member(start, scope, direction_e::FORWARD));
+}
+
+
+chunk_t *chunk_skip_dc_member_rev(chunk_t *start, scope_e scope)
+{
+   return(chunk_skip_dc_member(start, scope, direction_e::BACKWARD));
 }

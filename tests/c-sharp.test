@@ -34,6 +34,7 @@
 10071  ben_038.cfg                          cs/utf16be.cs
 10072  ben_038.cfg                          cs/utf16le_no_bom.cs
 10073  ben_038.cfg                          cs/utf16be_no_bom.cs
+10074  UNI-2020.cfg                         cs/UNI-2020.cs
 
 10080  ben_042.cfg                          cs/property.cs
 
@@ -90,6 +91,7 @@
 10055  U06-Cs.cfg                           cs/UNI-1345.cs
 10066  UNI-1977.cfg                         cs/UNI-1977.cs
 10067  UNI-1978.cfg                         cs/UNI-1978.cs
+10075  UNI-2021.cfg                         cs/UNI-2021.cs
 10076  UNI-1343.cfg                         cs/UNI-1343.cs
 10077  U09-Cs.cfg                           cs/UNI-1919.cs
 10078  U10-Cs.cfg                           cs/UNI-3484.cs
@@ -102,15 +104,27 @@
 11032  U10-Cpp.cfg                          cs/newlines.mm
 11072  U07-Cs.cfg                           cs/UNI-2007.cs
 11073  U08-Cs.cfg                           cs/UNI-2008.cs
+20010  UNI-32658.cfg                        cs/UNI-32658.cs
 
+60004  UNI-2684.cfg                         cs/UNI-2684.cs
+60005  UNI-2685.cfg                         cs/UNI-2685.cs
+60007  UNI-3083.cfg                         cs/UNI-3083.cs
 60008  U-J.cfg                              cs/UNI-17253.cs
+60009! UNI-9917.cfg                         cs/UNI-9917.cs
+60011  UNI-11095.cfg                        cs/UNI-11095.mm
 60012  U13-Cs.cfg                           cs/UNI-12303.cs
 60013  UNI-13955.cfg                        cs/UNI-13955.cs
+60015  UNI-14131.cfg                        cs/UNI-14131.cs
 60016  UNI-11662.cfg                        cs/UNI-11662.cs
+60018  UNI-18777.cfg                        cs/UNI-18777.cs
 60019  empty.cfg                            cs/UNI-18780.cs
 60020  UNI-18829.cfg                        cs/UNI-18829.cs
+60023  UNI-18437.cfg                        cs/UNI-18437.cs
 60024  U15-Cs.cfg                           cs/UNI-19644.cs
 60026  UNI-19895.cfg                        cs/UNI-19895.cs
 60033  UNI-21730.cfg                        cs/UNI-21730.cs
+60036  UNI-11993.cfg                        cs/UNI-11993.cs
 60037  UNI-29933.cfg                        cs/UNI-29933.cs
 60040  UNI-30498_2.cfg                      cs/UNI-30498_2.cs
+60041  squeeze-paren-close-Option.cfg       cs/squeeze-paren-close-Option.cs
+60044  UNI-37241.cfg                        cs/UNI-37241.cs

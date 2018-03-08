@@ -132,6 +132,9 @@ sp_between_ptr_star             = ignore   # ignore/add/remove/force
 # Add or remove space after pointer star '*', if followed by a word.
 sp_after_ptr_star               = ignore   # ignore/add/remove/force
 
+# Add or remove space after pointer caret '^', if followed by a word.
+sp_after_ptr_block_caret        = ignore   # ignore/add/remove/force
+
 # Add or remove space after pointer star '*', if followed by a qualifier.
 sp_after_ptr_star_qualifier     = ignore   # ignore/add/remove/force
 
@@ -249,8 +252,15 @@ sp_before_square                = ignore   # ignore/add/remove/force
 # Add or remove space before '[]'.
 sp_before_squares               = ignore   # ignore/add/remove/force
 
+# Add or remove space before structured bindings. Only for C++17.
+sp_cpp_before_struct_binding    = ignore   # ignore/add/remove/force
+
 # Add or remove space inside a non-empty '[' and ']'.
 sp_inside_square                = ignore   # ignore/add/remove/force
+
+# Add or remove space inside a non-empty OC boxed array '@[' and ']'.
+# If set to ignore, sp_inside_square is used.
+sp_inside_square_oc_array       = ignore   # ignore/add/remove/force
 
 # Add or remove space after ',', 'a,b' vs 'a, b'.
 sp_after_comma                  = ignore   # ignore/add/remove/force
@@ -422,6 +432,10 @@ sp_after_throw                  = ignore   # ignore/add/remove/force
 # If set to ignore, sp_before_sparen is used.
 sp_catch_paren                  = ignore   # ignore/add/remove/force
 
+# Add or remove space between '@catch' and '(' in '@catch (something) { }'
+# If set to ignore, sp_catch_paren is used.
+sp_oc_catch_paren               = ignore   # ignore/add/remove/force
+
 # Add or remove space between 'version' and '(' in 'version (something) { }' (D language)
 # If set to ignore, sp_before_sparen is used.
 sp_version_paren                = ignore   # ignore/add/remove/force
@@ -454,8 +468,16 @@ sp_brace_typedef                = ignore   # ignore/add/remove/force
 # Add or remove space between 'catch' and '{' if on the same line.
 sp_catch_brace                  = ignore   # ignore/add/remove/force
 
+# Add or remove space between '@catch' and '{' if on the same line.
+# If set to ignore, sp_catch_brace is used.
+sp_oc_catch_brace               = ignore   # ignore/add/remove/force
+
 # Add or remove space between '}' and 'catch' if on the same line.
 sp_brace_catch                  = ignore   # ignore/add/remove/force
+
+# Add or remove space between '}' and '@catch' if on the same line.
+# If set to ignore, sp_brace_catch is used.
+sp_oc_brace_catch               = ignore   # ignore/add/remove/force
 
 # Add or remove space between 'finally' and '{' if on the same line.
 sp_finally_brace                = ignore   # ignore/add/remove/force
@@ -573,6 +595,10 @@ sp_after_oc_msg_receiver        = ignore   # ignore/add/remove/force
 
 # Add or remove space after @property.
 sp_after_oc_property            = ignore   # ignore/add/remove/force
+
+# Add or remove space between '@synchronized' and the parenthesis
+# '@synchronized(foo)' vs '@synchronized (foo)'.
+sp_after_oc_synchronized        = ignore   # ignore/add/remove/force
 
 # Add or remove space around the ':' in 'b ? t : f'.
 sp_cond_colon                   = ignore   # ignore/add/remove/force
@@ -1102,8 +1128,16 @@ nl_for_brace                    = ignore   # ignore/add/remove/force
 # Add or remove newline between 'catch' and '{'.
 nl_catch_brace                  = ignore   # ignore/add/remove/force
 
+# Add or remove newline between '@catch' and '{'.
+# If set to ignore, nl_catch_brace is used.
+nl_oc_catch_brace               = ignore   # ignore/add/remove/force
+
 # Add or remove newline between '}' and 'catch'.
 nl_brace_catch                  = ignore   # ignore/add/remove/force
+
+# Add or remove newline between '}' and 'catch'.
+# If set to ignore, nl_brace_catch is used.
+nl_oc_brace_catch               = ignore   # ignore/add/remove/force
 
 # Add or remove newline between '}' and ']'.
 nl_brace_square                 = ignore   # ignore/add/remove/force
@@ -2171,5 +2205,6 @@ warn_level_tabs_found_in_verbatim_string_literals = 2        # unsigned number
 #       `macro-open  BEGIN_MESSAGE_MAP`
 #       `macro-close END_MESSAGE_MAP`
 #
-## option(s) with 'not default' value: 0
+#
+# option(s) with 'not default' value: 0
 #
