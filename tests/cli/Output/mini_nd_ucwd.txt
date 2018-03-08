@@ -2113,6 +2113,9 @@ use_indent_continue_only_once   = false    # false/true
 # Default=True.
 use_options_overriding_for_qt_macros = true     # false/true
 
+# If True, will report an error if non-ascii characters outside of strings or comments are found
+use_mod_strict_ASCII            = false    # false/true
+
 #
 # Warn levels - 1: error, 2: warning (default), 3: note
 #
