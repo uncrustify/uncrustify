@@ -4487,6 +4487,31 @@ static void mark_function(chunk_t *pc)
       //LOG_FMT(LFCN, " -- stopped on %s [%s]\n",
       //        prev->text(), get_token_name(prev->type));
 
+      // Fixes issue #1634
+      if (chunk_is_paren_close(prev))
+      {
+         chunk_t *preproc = chunk_get_next_ncnl(prev);
+         if (chunk_is_token(preproc, CT_PREPROC))
+         {
+            size_t pp_level = preproc->pp_level;
+            if (chunk_is_token(chunk_get_next_ncnl(preproc), CT_PP_ELSE))
+            {
+               do
+               {
+                  preproc = chunk_get_prev_ncnl(preproc);
+                  if (chunk_is_token(preproc, CT_PP_IF))
+                  {
+                     preproc = chunk_get_prev_ncnl(preproc);
+                     if (preproc->pp_level == pp_level)
+                     {
+                        prev = chunk_get_prev_ncnlnp(preproc);
+                        break;
+                     }
+                  }
+               } while (preproc != nullptr);
+            }
+         }
+      }
       if (  isa_def
          && prev != nullptr
          && (  (chunk_is_paren_close(prev) && prev->parent_type != CT_D_CAST)
@@ -6602,6 +6627,19 @@ static void handle_cs_square_stmt(chunk_t *os)
       {
          set_chunk_type(tmp, CT_CS_SQ_COLON);
       }
+
+      if (tmp->type == CT_SQUARE_OPEN)
+      {
+         set_chunk_parent(tmp, CT_NONE);
+      }
+      else if (tmp->type == CT_SQUARE_CLOSE)
+      {
+         chunk_t *tmp2 = chunk_skip_to_match_rev(tmp);
+         if (tmp2->parent_type == CT_NONE)
+         {
+            set_chunk_parent(tmp, CT_NONE);
+         }
+      }
    }
 
    tmp = chunk_get_next_ncnl(cs);
@@ -6609,7 +6647,7 @@ static void handle_cs_square_stmt(chunk_t *os)
    {
       chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
    }
-}
+} // handle_cs_square_stmt
 
 
 static void handle_cs_property(chunk_t *bro)
