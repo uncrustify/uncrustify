@@ -6633,6 +6633,19 @@ static void handle_cs_square_stmt(chunk_t *os)
       {
          set_chunk_type(tmp, CT_CS_SQ_COLON);
       }
+
+      if (tmp->type == CT_SQUARE_OPEN)
+      {
+         set_chunk_parent(tmp, CT_NONE);
+      }
+      else if (tmp->type == CT_SQUARE_CLOSE)
+      {
+         chunk_t *tmp2 = chunk_skip_to_match_rev(tmp);
+         if (tmp2->parent_type == CT_NONE)
+         {
+            set_chunk_parent(tmp, CT_NONE);
+         }
+      }
    }
 
    tmp = chunk_get_next_ncnl(cs);
@@ -6640,7 +6653,7 @@ static void handle_cs_square_stmt(chunk_t *os)
    {
       chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
    }
-}
+} // handle_cs_square_stmt
 
 
 static void handle_cs_property(chunk_t *bro)
