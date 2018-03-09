@@ -272,7 +272,7 @@ void log_hex(log_sev_t sev, const void *vdata, size_t len)
       return;
    }
 
-#define MAX_BUF   80
+#define MAX_BUF    80
    char        buf[MAX_BUF];
    const UINT8 *dat = static_cast<const UINT8 *>(vdata);
    size_t      idx  = 0;
