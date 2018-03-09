@@ -513,6 +513,8 @@
 34174  arith-vs-ptr.cfg                     cpp/i1466.cpp
 34175  align_assign_span-1.cfg              cpp/i1509.cpp
 
+34180  bug_1402.cfg                         cpp/bug_1402.cpp
+
 34190  bug_1003.cfg                         cpp/bug_1003.cpp
 
 34191  empty.cfg                            cpp/comment-align-multiline.cpp
