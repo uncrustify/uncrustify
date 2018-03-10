@@ -406,15 +406,18 @@ static void cmt_output_indent(size_t brace_col, size_t base_col, size_t column)
 
 void output_parsed(FILE *pfile)
 {
+   const char *eol_marker = get_eol_marker();
+
    // save_option_file(pfile, false);
    save_option_file_kernel(pfile, false, true);
 
-   fprintf(pfile, "# -=====-\n");
+   fprintf(pfile, "# -=====-%s", eol_marker);
    fprintf(pfile, "# Line              Tag           Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       char *outputMessage;
-      outputMessage = make_message("\n# %3zu> %16.16s[%16.16s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
+      outputMessage = make_message("%s# %3zu> %16.16s[%16.16s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
+                                   eol_marker,
                                    pc->orig_line, get_token_name(pc->type),
                                    get_token_name(pc->parent_type),
                                    pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
@@ -439,7 +442,7 @@ void output_parsed(FILE *pfile)
          }
       }
    }
-   fprintf(pfile, "\n# -=====-\n");
+   fprintf(pfile, "%s# -=====-%s", eol_marker, eol_marker);
    fflush(pfile);
 } // output_parsed
 

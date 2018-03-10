@@ -86,7 +86,7 @@ script:
   - make VERBOSE=1
   - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest -V; fi
     # test if all the sources are conform to the forUncrustifySources.cfg config file
-  - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../; ./scripts/Run_uncrustify_for_sources.sh; fi
+  - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../ && ./scripts/Run_uncrustify_for_sources.sh; cd -; fi
     # test if uncrustify runs for (some) command line options
-  - if [ "x${BUILD_TYPE}" == "xrelease" ]; then ./tests/cli/test_cli_options.sh; fi
+  - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../tests/cli && ./test_cli_options.py; cd -; fi
   #- /home/travis/build/uncrustify/uncrustify/build/uncrustify -l cs -c /home/travis/build/uncrustify/uncrustify/tests/config/U10-Cpp.cfg -f /home/travis/build/uncrustify/uncrustify/tests/input/cs/newlines.mm -L A
