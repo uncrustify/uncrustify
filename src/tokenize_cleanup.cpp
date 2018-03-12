@@ -282,13 +282,6 @@ void tokenize_cleanup(void)
          {
             set_chunk_type(next, CT_PTR_TYPE);
          }
-         else if (  chunk_is_token(pc, CT_WORD)
-                 && chunk_is_token(prev, CT_DC_MEMBER)
-                 && (cpd.lang_flags & LANG_CPP) != 0)
-         {
-            set_chunk_type(pc, CT_TYPE);
-            set_chunk_type(next, CT_PTR_TYPE);
-         }
       }
 
       if (  chunk_is_token(pc, CT_TYPE_CAST)

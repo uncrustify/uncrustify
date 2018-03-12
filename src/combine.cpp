@@ -1570,6 +1570,45 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
       else if (pc->type == CT_STAR)
       {
+         // Add check for CT_DC_MEMBER CT_WORD CT_STAR sequence
+         // to convert CT_WORD into CT_TYPE
+         // and CT_STAR into CT_PTR_TYPE
+         // look for an assign backward to distinguish between
+         //    double result = Constants::PI * factor;
+         // and
+         //    ::some::name * foo;
+         if (  chunk_is_token(prev, CT_WORD)
+            && chunk_is_token(prev->prev, CT_DC_MEMBER)
+            && (cpd.lang_flags & LANG_CPP) != 0)
+         {
+            // Issue 1402
+            bool assign_found = false;
+            tmp = pc;
+            while (tmp != nullptr)
+            {
+               if (tmp->type == CT_SEMICOLON)
+               {
+                  break;
+               }
+               else if (tmp->type == CT_ASSIGN)
+               {
+                  assign_found = true;
+                  break;
+               }
+               tmp = chunk_get_prev_ncnl(tmp);
+            }
+            if (assign_found)
+            {
+               // double result = Constants::PI * factor;
+               set_chunk_type(pc, CT_ARITH);
+            }
+            else
+            {
+               //    ::some::name * foo;
+               set_chunk_type(prev, CT_TYPE);
+               set_chunk_type(pc, CT_PTR_TYPE);
+            }
+         }
          /*
           * A star can have three meanings
           * 1. CT_DEREF    = pointer dereferencing
@@ -1585,6 +1624,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          }
          else
          {
+            // Issue 1402
             set_chunk_type(pc,
                            (  (prev->flags & PCF_PUNCTUATOR)
                            && (  !chunk_is_paren_close(prev)
