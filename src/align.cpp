@@ -1385,6 +1385,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
          && pc->type != CT_FUNC_CLASS_DEF
          && pc->type != CT_FUNC_CLASS_PROTO
          && ((pc->flags & align_mask) == PCF_VAR_1ST)
+         && pc->type != CT_FUNC_DEF                                   // Issue 1452
          && ((pc->level == (start->level + 1)) || pc->level == 0)
          && pc->prev != nullptr
          && pc->prev->type != CT_MEMBER)
