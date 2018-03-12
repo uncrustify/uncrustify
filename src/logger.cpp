@@ -272,7 +272,8 @@ void log_hex(log_sev_t sev, const void *vdata, size_t len)
       return;
    }
 
-   char        buf[80];
+#define MAX_BUF    80
+   char        buf[MAX_BUF];
    const UINT8 *dat = static_cast<const UINT8 *>(vdata);
    size_t      idx  = 0;
    while (len-- > 0)
@@ -281,7 +282,8 @@ void log_hex(log_sev_t sev, const void *vdata, size_t len)
       buf[idx++] = to_hex_char(*dat);
       dat++;
 
-      if (idx >= (sizeof(buf) - 3))
+      // prevent an overflow
+      if (idx >= (MAX_BUF - 3))
       {
          buf[idx] = 0;
          log_str(sev, buf, idx);
