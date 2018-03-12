@@ -29,8 +29,11 @@ using namespace std;
 /**
  * Flags everything from the open paren to the close paren.
  *
- * @param po     Pointer to the open parenthesis
- * @param flags  flags to add
+ * @param po          Pointer to the open parenthesis
+ * @param flags       flags to add
+ * @param opentype
+ * @param parenttype
+ * @param parent_all
  *
  * @return The token after the close paren
  */
@@ -1760,7 +1763,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                }
             }
             // Issue #322 STDMETHOD(GetValues)(BSTR bsName, REFDATA** pData);
-            if (  (pc->next->next)
+            if (  (pc->next->next != nullptr)
                && pc->next->next->type == CT_STAR
                && ((pc->flags & PCF_IN_CONST_ARGS) != 0))
             {
@@ -1769,11 +1772,18 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                set_chunk_type(pc->next->next, CT_PTR_TYPE);
             }
             // Issue #222 whatever3 *(func_ptr)( whatever4 *foo2, ...
-            if (  (pc->next->next)
+            if (  (pc->next->next != nullptr)
                && pc->next->next->type == CT_WORD
                && (pc->flags & PCF_IN_FCN_DEF))
             {
-               set_chunk_type(pc->next, CT_PTR_TYPE);
+               // look for the opening parenthesis
+               // Issue 1403
+               tmp = chunk_get_prev_type(pc, CT_FPAREN_OPEN, pc->level - 1);
+               if (  tmp != nullptr
+                  && tmp->parent_type != CT_FUNC_CTOR_VAR)
+               {
+                  set_chunk_type(pc->next, CT_PTR_TYPE);
+               }
             }
          }
       }
@@ -4661,7 +4671,7 @@ static void mark_function(chunk_t *pc)
       {
          set_chunk_type(pc, CT_FUNC_CTOR_VAR);
          D_LOG_FMT(LFCN, "%s(%d): ", __func__, __LINE__);
-         LOG_FMT(LFCN, "  3) Marked [%s] as FUNC_CTOR_VAR on line %zu col %zu\n",
+         LOG_FMT(LFCN, "  3) Marked text() '%s' as FUNC_CTOR_VAR on orig_line %zu, orig_col %zu\n",
                  pc->text(), pc->orig_line, pc->orig_col);
       }
       else if (pc->brace_level > 0)
@@ -4697,7 +4707,9 @@ static void mark_function(chunk_t *pc)
       set_chunk_parent(semi, pc->type);
    }
 
+   // Issue # 1403
    flag_parens(paren_open, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, pc->type, false);
+   //flag_parens(paren_open, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, pc->type, true);
 
    if (pc->type == CT_FUNC_CTOR_VAR)
    {
