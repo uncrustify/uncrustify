@@ -854,6 +854,7 @@ enum uncrustify_options
    UO_mod_sort_oc_property_setter_weight,        // Determines weight of setter type (setter=)
    UO_mod_sort_oc_property_nullability_weight,   // Determines weight of nullability type (nullable/nonnull)
 
+   UO_mod_include_strict_parsing,                // it will support extra characters after the include is closed. (ingore mode by default)
 
    // group: UG_preprocessor, "Preprocessor options"                                                10
    UO_pp_indent,             // indent preproc 1 space per level (add/ignore/remove)
