@@ -63,6 +63,7 @@
 12002  empty.cfg                            cs/nullable_prop.cs
 12003  ben_043.cfg                          cs/fncall_as_ctor_in_attr.cs
 12004  verbatim_strings.cfg                 cs/verbatim_strings.cs
+12005  empty.cfg                            cs/bug_1591.cs
 
 12101  indent_using_block-f.cfg             cs/bug_i_679.cs
 
