@@ -259,7 +259,7 @@ static int token_indent(c_token_t type)
       return 8;
 
     default:
-      return 0;  //cpd.settings[UO_indent_braces].n;
+      return 0; //cpd.settings[UO_indent_braces].n;
     }
   }
 
