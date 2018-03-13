@@ -1167,6 +1167,9 @@ nl_namespace_brace              = ignore   # ignore/add/remove/force
 # Add or remove newline between 'template<>' and whatever follows.
 nl_template_class               = ignore   # ignore/add/remove/force
 
+# Add newline between '>()' or '>' and '{' .
+nl_template_def                 = false    # false/true
+
 # Add or remove newline between 'class' and '{'.
 nl_class_brace                  = ignore   # ignore/add/remove/force
 
