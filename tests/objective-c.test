@@ -123,3 +123,5 @@
 50928  aet.cfg                                      oc/macro-close-brace.m
 50929  aet.cfg                                      oc/pp_bool.m
 50930  aet.cfg                                      oc/react_native.m
+50931  U11-Cpp.cfg                                  oc/objc.mm
+50932  U12-Cpp.cfg                                  oc/asm.h.mm

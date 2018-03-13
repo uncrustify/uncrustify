@@ -86,6 +86,7 @@
 20005 staging/UNI-34114.cfg         staging/UNI-34114.cpp
 20006 staging/UNI-32014.cfg         staging/UNI-32014.cs
 20010 staging/Uncrustify.CSharp.cfg staging/UNI-32658.cs
+20011 staging/Uncrustify.Cpp.cfg    staging/UNI-38381.cpp
 60001 staging/UNI-2650.cfg          staging/UNI-2650.cpp
 60002 staging/Uncrustify.Cpp.cfg    staging/UNI-16283.cpp
 60003 staging/Uncrustify.Cpp.cfg    staging/UNI-1288.cpp
@@ -125,5 +126,7 @@
 60040 staging/Uncrustify.CSharp.cfg staging/UNI-30498_2.cs
 60041 staging/squeeze-paren-close-Option.cfg staging/squeeze-paren-close-Option.cs
 60042 staging/UNI-18777.cfg staging/UNI-18777.cpp
+60043 staging/Uncrustify.Cpp.cfg staging/UNI-34087.cpp
 60044 staging/UNI-37241.cfg staging/UNI-37241.cs
+60046 staging/UNI-24090.cfg staging/UNI-24090.cs
 60047 staging/Uncrustify.Common-Cpp.cfg staging/UNI-29935.cpp
