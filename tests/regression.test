@@ -132,5 +132,10 @@
 60044 staging/UNI-37241.cfg staging/UNI-37241.cs
 60045 staging/UNI-25811.cfg staging/UNI-25811.cpp
 60046 staging/UNI-24090.cfg staging/UNI-24090.cs
+<<<<<<< HEAD
 60047 staging/UNI-24076.cfg staging/UNI-24076.cs
 60051 staging/Uncrustify.Cpp.cfg staging/UNI-11643.cpp
+=======
+60050 staging/UNI-40605.cfg staging/UNI-40605.cs
+60051 staging/UNI-40685.cfg staging/UNI-40685.cs
+>>>>>>> origin/c#-6-lambda-indentation
