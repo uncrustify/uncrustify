@@ -6,5 +6,6 @@ public unsafe struct QueryKeyNameCommand : IInputDeviceCommandInfo
         {
             return StringHelpers.ReadStringFromBuffer(new IntPtr(thisPtr->nameBuffer), kMaxNameLength);
         }
+        return array;
     }
 }
