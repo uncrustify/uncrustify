@@ -714,6 +714,9 @@ indent_paren_open_brace         = false    # false/true
 # indent a C# delegate by another level, default is to not indent by another level.
 indent_cs_delegate_brace        = false    # false/true
 
+# indent a C# delegate(To hanndle delegates with no brace) by another level. default: false
+indent_cs_delegate_body         = false    # false/true
+
 # Whether the 'namespace' body is indented.
 indent_namespace                = false    # false/true
 
@@ -1166,6 +1169,9 @@ nl_namespace_brace              = ignore   # ignore/add/remove/force
 
 # Add or remove newline between 'template<>' and whatever follows.
 nl_template_class               = ignore   # ignore/add/remove/force
+
+# Add newline between '>()' or '>' and '{' .
+nl_template_def                 = false    # false/true
 
 # Add or remove newline between 'class' and '{'.
 nl_class_brace                  = ignore   # ignore/add/remove/force
@@ -2019,6 +2025,9 @@ mod_sort_oc_property_setter_weight = 0        # number
 
 # Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C).
 mod_sort_oc_property_nullability_weight = 0        # number
+
+# It will support extra characters after the include is closed. (ingore mode by default) and report an error
+mod_include_strict_parsing      = false    # false/true
 
 #
 # Preprocessor options

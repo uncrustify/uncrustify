@@ -831,8 +831,11 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
     * Check for Hex, Octal, or Binary
     * Note that only D, C++14 and Pawn support binary
     */
+   // Fixes the issue 1591
+   // In c# the numbers starting with 0 are not treated as octal numbers.
+
    bool did_hex = false;
-   if (ctx.peek() == '0')
+   if (ctx.peek() == '0' && !(cpd.lang_flags & LANG_CS))
    {
       size_t  ch;
       chunk_t pc_temp;
@@ -1748,8 +1751,8 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       return(true);
    }
 
-   // Handle unknown/unhandled preprocessors
-   if (cpd.in_preproc > CT_PP_BODYCHUNK && cpd.in_preproc <= CT_PP_OTHER)
+   // Handle unknown/known/unhandled preprocessors
+   if ((cpd.in_preproc > CT_PP_BODYCHUNK && cpd.in_preproc <= CT_PP_OTHER) || cpd.in_preproc == CT_PP_INCLUDE)
    {
       pc.str.clear();
       tok_info ss;
