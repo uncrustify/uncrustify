@@ -3361,6 +3361,32 @@ void newlines_cleanup_braces(bool first)
                   newline_iarf(pc, cpd.settings[UO_nl_template_class].a);
                }
             }
+            //Fixes 10043 regression
+            if (cpd.settings[UO_nl_template_def].b)
+            {
+               chunk_t *tmp = chunk_get_next_ncnl(pc);
+               if (chunk_is_opening_brace(tmp) || chunk_is_paren_open(tmp))
+               {
+                  if (  chunk_is_paren_open(tmp)
+                     && chunk_skip_to_match(tmp) != nullptr)
+                  {
+                     tmp = chunk_get_next_ncnl(chunk_skip_to_match(tmp, scope_e::ALL));
+                  }
+
+                  if (  chunk_is_opening_brace(tmp)
+                     && chunk_skip_to_match(tmp) != nullptr
+                     && !(chunk_skip_to_match(tmp)->flags & PCF_ONE_LINER))
+                  {
+                     newline_add_before(tmp);
+                     newline_add_after(tmp);
+                     tmp = chunk_skip_to_match(tmp, scope_e::ALL);
+                     if (!chunk_is_newline(chunk_get_prev(tmp)))
+                     {
+                        newline_add_before(tmp);
+                     }
+                  }
+               }
+            }
          }
       }
       else if (pc->type == CT_NAMESPACE)
@@ -4292,7 +4318,8 @@ void do_blank_lines(void)
 
       // Add blanks after function bodies
       if (  chunk_is_token(prev, CT_BRACE_CLOSE)
-         && (  prev->parent_type == CT_FUNC_DEF
+         && (  (  prev->parent_type == CT_FUNC_DEF
+               && chunk_get_prev_type(prev, CT_FUNC_DEF, prev->level)->parent_type != CT_FIXED)
             || prev->parent_type == CT_FUNC_CLASS_DEF
             || prev->parent_type == CT_OC_MSG_DECL
             || prev->parent_type == CT_ASSIGN))

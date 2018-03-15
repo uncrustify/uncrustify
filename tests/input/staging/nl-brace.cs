@@ -1,4 +1,3 @@
-public class Class : Base<int> { public Class() : base(Value) { } }
 public class Foo
 {
 	public void foo()

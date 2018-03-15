@@ -1195,6 +1195,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_FUNCTION);
       }
+      else if (pc->type == CT_FIXED)
+      {
+         set_chunk_type(pc, CT_FUNCTION);
+         set_chunk_parent(pc, CT_FIXED);
+      }
       else if (pc->type == CT_TYPE)
       {
          /*
@@ -2432,10 +2437,15 @@ static chunk_t *process_return(chunk_t *pc)
             chunk_del(next);
             chunk_del(cpar);
 
-            // back up the semicolon
-            semi->column--;
-            semi->orig_col--;
-            semi->orig_col_end--;
+            // back up following chunks
+            temp = semi;
+            while (temp != nullptr && temp->type != CT_NEWLINE)
+            {
+               temp->column       = temp->column - 2;
+               temp->orig_col     = temp->orig_col - 2;
+               temp->orig_col_end = temp->orig_col_end - 2;
+               temp               = chunk_get_next(temp);
+            }
          }
          else
          {
@@ -4347,6 +4357,11 @@ static void mark_function(chunk_t *pc)
          D_LOG_FMT(LFCN, "%s(%d): next step with: ", __func__, __LINE__);
          LOG_FMT(LFCN, "orig_line is %zu, orig_col is %zu, text() '%s'\n",
                  prev->orig_line, prev->orig_col, prev->text());
+
+         if (pc->parent_type == CT_FIXED)
+         {
+            isa_def = true;
+         }
          if (prev->flags & PCF_IN_PREPROC)
          {
             prev = chunk_get_prev_ncnlnp(prev);
