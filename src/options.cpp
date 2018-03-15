@@ -792,6 +792,8 @@ void register_options(void)
                   "Indent based on the paren open instead of the brace open in '({\\n', default is to indent by brace.");
    unc_add_option("indent_cs_delegate_brace", UO_indent_cs_delegate_brace, AT_BOOL,
                   "indent a C# delegate by another level, default is to not indent by another level.");
+   unc_add_option("indent_cs_delegate_body", UO_indent_cs_delegate_body, AT_BOOL,
+                  "indent a C# delegate(To hanndle delegates with no brace) by another level. default: false");
    unc_add_option("indent_namespace", UO_indent_namespace, AT_BOOL,
                   "Whether the 'namespace' body is indented.");
    unc_add_option("indent_namespace_single_indent", UO_indent_namespace_single_indent, AT_BOOL,
@@ -1125,6 +1127,8 @@ void register_options(void)
                   "Newline between namespace and {.");
    unc_add_option("nl_template_class", UO_nl_template_class, AT_IARF,
                   "Add or remove newline between 'template<>' and whatever follows.");
+   unc_add_option("nl_template_def", UO_nl_template_def, AT_BOOL,
+                  "Add newline between '>()' or '>' and '{' .");
    unc_add_option("nl_class_brace", UO_nl_class_brace, AT_IARF,
                   "Add or remove newline between 'class' and '{'.");
    unc_add_option("nl_class_init_args", UO_nl_class_init_args, AT_IARF,
@@ -1730,7 +1734,8 @@ void register_options(void)
                   "Determines weight of setter type (setter=) (Obj-C).");
    unc_add_option("mod_sort_oc_property_nullability_weight", UO_mod_sort_oc_property_nullability_weight, AT_NUM,
                   "Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C).");
-
+   unc_add_option("mod_include_strict_parsing", UO_mod_include_strict_parsing, AT_BOOL,
+                  "It will support extra characters after the include is closed. (ingore mode by default) and report an error");
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,
                   "Control indent of preprocessors inside #if blocks at brace level 0 (file-level).");
@@ -1796,6 +1801,8 @@ void register_options(void)
    unc_add_option("use_options_overriding_for_qt_macros", UO_use_options_overriding_for_qt_macros, AT_BOOL,
                   "SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.\n"
                   "Default=True.");
+   unc_add_option("use_mod_strict_ASCII", UO_use_mod_strict_ASCII, AT_BOOL,
+                  "If True, will report an error if non-ascii characters outside of strings or comments are found");
 
    unc_begin_group(UG_warnlevels, "Warn levels - 1: error, 2: warning (default), 3: note");
    unc_add_option("warn_level_tabs_found_in_verbatim_string_literals", UO_warn_level_tabs_found_in_verbatim_string_literals, AT_UNUM,

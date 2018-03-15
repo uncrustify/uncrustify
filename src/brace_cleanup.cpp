@@ -832,8 +832,11 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
       && (  (frm.top().stage == brace_stage_e::BRACE2)
          || (frm.top().stage == brace_stage_e::BRACE_DO)))
    {
+      chunk_t *tmp = chunk_get_prev_ncnl(pc);
       if (  (cpd.lang_flags & LANG_CS)
          && pc->type == CT_USING_STMT
+         && tmp != NULL
+         && tmp->parent_type == CT_USING_STMT
          && (!cpd.settings[UO_indent_using_block].b))
       {
          // don't indent the using block

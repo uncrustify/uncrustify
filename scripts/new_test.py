@@ -36,14 +36,19 @@ def main():
     output_dir = path.join(test_dir, "output")
 
     staging_test_file = path.join(test_dir, "staging.test")
+    regression_test_file = path.join(test_dir, "regression.test")
     staging_config_dir = path.join(config_dir, "staging")
     staging_input_dir = path.join(input_dir, "staging")
     staging_output_dir = path.join(output_dir, "staging")
 
-    tests = None
+    tests = []
     with open(staging_test_file, 'r') as f:
         test_data = f.read()
-        tests = parse_test(test_data)
+        tests.extend(parse_test(test_data))
+
+    with open(regression_test_file, 'r') as f:
+        test_data = f.read()
+        tests.extend(parse_test(test_data))
 
     max_test = max(tests, key=lambda x: x['id'])
     new_id = max_test['id'] + 1

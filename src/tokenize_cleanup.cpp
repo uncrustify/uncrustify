@@ -128,9 +128,101 @@ void tokenize_cleanup(void)
     * Since [] is expected to be TSQUARE for the 'operator', we need to make
     * this change in the first pass.
     */
+   if (cpd.settings[UO_use_mod_strict_ASCII].b)
+   {
+      bool hit = false;
+      for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
+      {
+         // error out non-ascii char except for comments and strings.
+         if (  pc->type != CT_STRING
+            && pc->type != CT_STRING_MULTI
+            && pc->type != CT_COMMENT
+            && pc->type != CT_COMMENT_CPP
+            && pc->type != CT_COMMENT_EMBED
+            && pc->type != CT_COMMENT_START
+            && pc->type != CT_COMMENT_END
+            && pc->type != CT_COMMENT_MULTI
+            && pc->type != CT_COMMENT_ENDIF
+            && pc->type != CT_COMMENT_START
+            && pc->type != CT_COMMENT_WHOLE)
+         {
+            std::string tmp = pc->text();
+            for (char &c : tmp)
+            {
+               if (!isascii(c))
+               {
+                  LOG_FMT(LERR, "%s(%d): Found NON-ASCII Charecter ' %c ' at orig_line is %zu, orig_col is %zu, text() ' %s '.\n",
+                          __func__, __LINE__, c, pc->orig_line, pc->orig_col, pc->text());
+                  hit = true;
+               }
+            }
+         }
+      }
+      if (hit)
+      {
+         exit(0);
+      }
+   }
+
    chunk_t *pc;
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
+      if (  cpd.settings[UO_mod_include_strict_parsing].b
+         && pc->type == CT_PREPROC_BODY
+         && (  pc->prev != nullptr
+            && pc->prev->type == CT_PP_INCLUDE))
+      {
+         int         count = 0;
+         std::string tmp   = pc->text();
+         if ((tmp.front() == '"' && tmp.back() == '"') || (tmp.front() == '<' && tmp.back() == '>'))
+         {
+            switch (tmp.front())
+            {
+            case '"':
+               for (char &c : tmp)
+               {
+                  if (c == '"')
+                  {
+                     count++;
+                  }
+               }
+               break;
+
+            case '<':
+               int         i = 0;
+               std::string arr("");
+               for (char &c : tmp)
+               {
+                  if (c == '<')
+                  {
+                     arr.push_back('<');
+                  }
+                  if (c == '>' && (arr.length() != 0 && arr.back() == '<'))
+                  {
+                     arr.pop_back();
+                  }
+                  else if (c == '>')
+                  {
+                     arr.push_back('>');
+                  }
+               }
+               if (arr.length() != 0)
+               {
+                  count = 1;
+               }
+               break;
+            }
+
+            if (count % 2 != 0)
+            {
+               LOG_FMT(LERR, "%s(%d): Error -->  No proper syntax observed at  orig_line is %zu, orig_col is %zu, text() ' %s '.\n",
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+               exit(0);
+            }
+         }
+      }
+
+
       if (pc->type == CT_SQUARE_OPEN)
       {
          next = chunk_get_next_ncnl(pc);

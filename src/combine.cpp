@@ -2424,10 +2424,15 @@ static chunk_t *process_return(chunk_t *pc)
             chunk_del(next);
             chunk_del(cpar);
 
-            // back up the semicolon
-            semi->column--;
-            semi->orig_col--;
-            semi->orig_col_end--;
+            // back up following chunks
+            temp = semi;
+            while (temp != nullptr && temp->type != CT_NEWLINE)
+            {
+               temp->column       = temp->column - 2;
+               temp->orig_col     = temp->orig_col - 2;
+               temp->orig_col_end = temp->orig_col_end - 2;
+               temp               = chunk_get_next(temp);
+            }
          }
          else
          {
@@ -4502,6 +4507,31 @@ static void mark_function(chunk_t *pc)
       //LOG_FMT(LFCN, " -- stopped on %s [%s]\n",
       //        prev->text(), get_token_name(prev->type));
 
+      // Fixes issue #1634
+      if (chunk_is_paren_close(prev))
+      {
+         chunk_t *preproc = chunk_get_next_ncnl(prev);
+         if (chunk_is_token(preproc, CT_PREPROC))
+         {
+            size_t pp_level = preproc->pp_level;
+            if (chunk_is_token(chunk_get_next_ncnl(preproc), CT_PP_ELSE))
+            {
+               do
+               {
+                  preproc = chunk_get_prev_ncnl(preproc);
+                  if (chunk_is_token(preproc, CT_PP_IF))
+                  {
+                     preproc = chunk_get_prev_ncnl(preproc);
+                     if (preproc->pp_level == pp_level)
+                     {
+                        prev = chunk_get_prev_ncnlnp(preproc);
+                        break;
+                     }
+                  }
+               } while (preproc != nullptr);
+            }
+         }
+      }
       if (  isa_def
          && prev != nullptr
          && (  (chunk_is_paren_close(prev) && prev->parent_type != CT_D_CAST)

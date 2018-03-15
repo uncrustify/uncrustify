@@ -1,7 +1,3 @@
-public class Class : Base<int>
-{
-    public Class() : base(Value) {}
-}
 public class Foo
 {
     public void foo()
@@ -15,7 +11,10 @@ public class Foo
         var v = foo(yolo,
             new List<Type>()
             {
-                new Type { Value = prop; }
+                new Type
+                {
+                    Value = prop;
+                }
             });
     }
 }

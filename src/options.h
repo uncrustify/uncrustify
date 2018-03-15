@@ -374,6 +374,7 @@ enum uncrustify_options
    UO_indent_brace_parent,                  // indent the braces based on the parent size (if=3, for=4, etc)
    UO_indent_paren_open_brace,              // indent on paren level in '({', default by {
    UO_indent_cs_delegate_brace,             // indent a C# delegate by another level. default: false
+   UO_indent_cs_delegate_body,              // indent a C# delegate(To hanndle delegates with no brace) by another level. default: false
    UO_indent_namespace,                     // indent stuff inside namespace braces
    UO_indent_namespace_single_indent,       // indent one namespace and no sub-namespaces
    UO_indent_namespace_level,               // level to indent namespace blocks
@@ -424,7 +425,7 @@ enum uncrustify_options
    UO_indent_first_bool_expr,               // if UO_indent_bool_paren == true, aligns the first
                                             // expression to the following ones
    UO_indent_square_nl,                     // indent-align under square for open followed by nl
-   UO_indent_preserve_sql,                  // preserve indent of EXEC SQL statement body
+   UO_indent_preserve_sql,                  // preserve indent of EXEC SQL statement delegatebody
    UO_indent_align_assign,                  //
    UO_indent_align_paren,                   //  Align continued statements at the '(', to the next line is indent one tab.
    UO_indent_oc_block,                      //
@@ -524,6 +525,7 @@ enum uncrustify_options
                                        // Overrides nl_after_case
    UO_nl_namespace_brace,              // newline between namespace name and brace
    UO_nl_template_class,               // newline between '>' and class in 'template <x> class'
+   UO_nl_template_def,                 // Add  newline between '>()' or '>' and '{' .
    UO_nl_class_brace,                  // newline between class name and brace
    UO_nl_class_init_args,              // newline before/after each comma in the base class list
                                        // (tied to UO_pos_class_comma)
@@ -862,6 +864,7 @@ enum uncrustify_options
    UO_mod_sort_oc_property_setter_weight,        // Determines weight of setter type (setter=)
    UO_mod_sort_oc_property_nullability_weight,   // Determines weight of nullability type (nullable/nonnull)
 
+   UO_mod_include_strict_parsing,                // it will support extra characters after the include is closed. (ingore mode by default)
 
    // group: UG_preprocessor, "Preprocessor options"                                                10
    UO_pp_indent,             // indent preproc 1 space per level (add/ignore/remove)
@@ -902,6 +905,7 @@ enum uncrustify_options
                                             // with the value "true". Guy 2016-05-16
    UO_use_options_overriding_for_qt_macros, // SIGNAL/SLOT Qt macros have special formatting options.
                                             // See options_for_QT.cpp for details.
+   UO_use_mod_strict_ASCII,                 // If True, will report an error if non-ascii characters outside of strings or comments are found
 
    // group: UG_warnlevels, "Warn levels - 1: error, 2: warning (default), 3: note"                 13
    // Levels to attach to warnings (log_sev_t; default : LWARN)
