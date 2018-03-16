@@ -6651,6 +6651,12 @@ static void handle_cs_property(chunk_t *bro)
    {
       if (pc->level == bro->level)
       {
+         //prevent scanning back past 'new' in expressions like new List<int> {1,2,3}
+         // Issue # 1620, UNI-24090.cs
+         if (pc->type == CT_NEW)
+         {
+            break;
+         }
          if (  !did_prop
             && (pc->type == CT_WORD || pc->type == CT_THIS))
          {

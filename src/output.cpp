@@ -658,7 +658,7 @@ void output_text(FILE *pfile)
             {
                allow_tabs |= pc->after_tab;
             }
-            LOG_FMT(LOUTIND, " %s(%d): at column %zu(%s)\n",
+            LOG_FMT(LOUTIND, "%s(%d): at column %zu(%s)\n",
                     __func__, __LINE__, pc->column, (allow_tabs ? "true" : "FALSE"));
          }
 

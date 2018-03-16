@@ -106,6 +106,7 @@
 11072  U07-Cs.cfg                           cs/UNI-2007.cs
 11073  U08-Cs.cfg                           cs/UNI-2008.cs
 20010  UNI-32658.cfg                        cs/UNI-32658.cs
+20011  bug_1620.cfg                         cs/bug_1620.cs
 
 60004  UNI-2684.cfg                         cs/UNI-2684.cs
 60005  UNI-2685.cfg                         cs/UNI-2685.cs
