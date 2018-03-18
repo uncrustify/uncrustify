@@ -128,6 +128,7 @@
 50802  obj-c-available.cfg                  oc/available.m
 
 50810  bug_841.cfg                          oc/bug_841.m
+50811  oc_bug_1674.cfg                      oc/bug_1674.m
 
 
 #
