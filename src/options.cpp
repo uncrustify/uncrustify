@@ -750,6 +750,8 @@ void register_options(void)
                   "Control space between a Java annotation and the open paren.");
    unc_add_option("sp_skip_vbrace_tokens", UO_sp_skip_vbrace_tokens, AT_BOOL,
                   "If True, vbrace tokens are dropped to the previous token and skipped.");
+   unc_add_option("sp_after_noexcept", UO_sp_after_noexcept, AT_IARF,
+                  "Controls the space after 'noexcept'.");
    unc_add_option("force_tab_after_define", UO_force_tab_after_define, AT_BOOL,
                   "If True, a <TAB> is inserted after #define.");
 

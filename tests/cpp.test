@@ -542,6 +542,7 @@
 34210  empty.cfg                            cpp/override_virtual.cpp
 
 34250  empty.cfg                            cpp/bug_1607.cpp
+34251  bug_1649.cfg                         cpp/bug_1649.cpp
 
 34280  UNI-29935.cfg                        cpp/UNI-29935.cpp
 

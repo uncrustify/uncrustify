@@ -2154,6 +2154,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(AV_REMOVE);
    }
 
+   if (first->type == CT_NOEXCEPT)
+   {
+      log_rule("sp_after_noexcept");
+      return(cpd.settings[UO_sp_after_noexcept].a);
+   }
+
    // these lines are only useful for debugging uncrustify itself
    D_LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize do_space:\n",
              __func__, __LINE__);
