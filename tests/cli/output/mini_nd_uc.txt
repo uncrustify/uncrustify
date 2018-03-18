@@ -226,6 +226,7 @@ indent_braces_no_struct         = false
 indent_brace_parent             = false
 indent_paren_open_brace         = false
 indent_cs_delegate_brace        = false
+indent_cs_delegate_body         = false
 indent_namespace                = false
 indent_namespace_single_indent  = false
 indent_namespace_level          = 0

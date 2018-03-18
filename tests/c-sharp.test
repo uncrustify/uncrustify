@@ -70,6 +70,8 @@
 12102  mod_full_brace_nl_block_rem_mlcond-0.cfg  cs/mod_full_brace_nl_block_rem_mlcond.cs
 12103  mod_full_brace_nl_block_rem_mlcond-1.cfg  cs/mod_full_brace_nl_block_rem_mlcond.cs
 12104  bug_1637.cfg                              cs/bug_1637.cs
+12105  bug_1650.cfg                              cs/bug_1650.cs
+12106  bug_1650.cfg                              cs/UNI-40685.cs
 
 # Adopt some UT tests
 10012  empty.cfg                            cs/621_this-spacing.cs
