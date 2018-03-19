@@ -2150,7 +2150,7 @@ static void align_oc_msg_colon(chunk_t *so)
    if (  longest
       && cpd.settings[UO_indent_oc_msg_prioritize_first_colon].b
       && len_diff > 0
-      && ((longest->column - len_diff) > (longest->brace_level * indent_size)))
+      && ((longest->column >= len_diff) && (longest->column - len_diff) > (longest->brace_level * indent_size)))
    {
       longest->column -= len_diff;
    }
