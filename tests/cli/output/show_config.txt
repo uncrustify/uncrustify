@@ -745,6 +745,9 @@ indent_paren_open_brace         { False, True }
 indent_cs_delegate_brace        { False, True }
   indent a C# delegate by another level, default is to not indent by another level.
 
+indent_cs_delegate_body         { False, True }
+  indent a C# delegate(To hanndle delegates with no brace) by another level. default: false
+
 indent_namespace                { False, True }
   Whether the 'namespace' body is indented.
 

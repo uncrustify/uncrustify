@@ -375,6 +375,7 @@ enum uncrustify_options
    UO_indent_brace_parent,                  // indent the braces based on the parent size (if=3, for=4, etc)
    UO_indent_paren_open_brace,              // indent on paren level in '({', default by {
    UO_indent_cs_delegate_brace,             // indent a C# delegate by another level. default: false
+   UO_indent_cs_delegate_body,              // indent a C# delegate(To hanndle delegates with no brace) by another level. default: false
    UO_indent_namespace,                     // indent stuff inside namespace braces
    UO_indent_namespace_single_indent,       // indent one namespace and no sub-namespaces
    UO_indent_namespace_level,               // level to indent namespace blocks
@@ -425,7 +426,7 @@ enum uncrustify_options
    UO_indent_first_bool_expr,               // if UO_indent_bool_paren == true, aligns the first
                                             // expression to the following ones
    UO_indent_square_nl,                     // indent-align under square for open followed by nl
-   UO_indent_preserve_sql,                  // preserve indent of EXEC SQL statement body
+   UO_indent_preserve_sql,                  // preserve indent of EXEC SQL statement delegatebody
    UO_indent_align_assign,                  //
    UO_indent_align_paren,                   //  Align continued statements at the '(', to the next line is indent one tab.
    UO_indent_oc_block,                      //
