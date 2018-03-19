@@ -210,6 +210,7 @@ sp_before_tr_emb_cmt            = ignore
 sp_num_before_tr_emb_cmt        = 0
 sp_annotation_paren             = ignore
 sp_skip_vbrace_tokens           = false
+sp_after_noexcept               = ignore
 force_tab_after_define          = false
 indent_columns                  = 8
 indent_continue                 = 0

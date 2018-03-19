@@ -680,6 +680,9 @@ sp_annotation_paren             = ignore   # ignore/add/remove/force
 # If True, vbrace tokens are dropped to the previous token and skipped.
 sp_skip_vbrace_tokens           = false    # false/true
 
+# Controls the space after 'noexcept'.
+sp_after_noexcept               = ignore   # ignore/add/remove/force
+
 # If True, a <TAB> is inserted after #define.
 force_tab_after_define          = false    # false/true
 

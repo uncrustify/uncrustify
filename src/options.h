@@ -350,8 +350,9 @@ enum uncrustify_options
    UO_sp_inside_newop_paren_close, //
    UO_sp_before_tr_emb_cmt,        // treatment of spaces before comments following code
    UO_sp_num_before_tr_emb_cmt,    // number of spaces before comments following code
-   UO_sp_annotation_paren,         //
-   UO_sp_skip_vbrace_tokens,       //
+   UO_sp_annotation_paren,         // Control space between a Java annotation and the open paren
+   UO_sp_skip_vbrace_tokens,       // If True, vbrace tokens are dropped to the previous token and skipped
+   UO_sp_after_noexcept,           // Controls the space after 'noexcept'
    UO_force_tab_after_define,      // force <TAB> after #define, Issue # 876
 
    // group: UG_indent, "Indenting"                                                                2
