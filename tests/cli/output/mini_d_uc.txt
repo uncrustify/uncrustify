@@ -213,6 +213,7 @@ sp_skip_vbrace_tokens           = false
 force_tab_after_define          = false
 indent_columns                  = 8
 indent_continue                 = 0
+indent_single_newlines          = false
 indent_param                    = 0
 indent_with_tabs                = 1
 indent_cmt_with_tabs            = false

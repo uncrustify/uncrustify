@@ -126,6 +126,7 @@
 50800  obj-c-properties.cfg                 oc/properties.m
 50801  empty.cfg                            oc/i1213.m
 50802  obj-c-available.cfg                  oc/available.m
+50803  indent_single_newline.cfg            oc/indent_single_newline.m
 
 50810  bug_841.cfg                          oc/bug_841.m
 
