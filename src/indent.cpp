@@ -1267,7 +1267,7 @@ void indent_text(void)
          }
          else if (  (cpd.lang_flags & LANG_CPP)
                  && cpd.settings[UO_indent_cpp_lambda_only_once].b
-                 && (  pc->parent_type == CT_CPP_LAMBDA))
+                 && (pc->parent_type == CT_CPP_LAMBDA))
          {
             // Issue # 1296
             frm.top().brace_indent = 1 + (pc->brace_level * indent_size);
