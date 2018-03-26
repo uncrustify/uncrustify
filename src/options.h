@@ -894,14 +894,20 @@ enum uncrustify_options
    // group: UG_Use_Ext, "Use or Do not Use options", "G"                                           12
    UO_use_indent_func_call_param,           // use/don't use indent_func_call_param Guy 2015-09-24
    UO_use_indent_continue_only_once,        // The value of the indentation for a continuation line is calculate
-                                            // differently if the line is:
-                                            //   a declaration :your case with QString fileName ...
-                                            //   an assignment  :your case with pSettings = new QSettings( ...
-                                            // At the second case the option value might be used twice:
+                                            // differently if the statement is:
+                                            //   a declaration: your case with QString fileName ...
+                                            //   an assignment: your case with pSettings = new QSettings( ...
+                                            // At the second case the indentation value might be used twice:
                                             //   at the assignment
                                             //   at the function call (if present)
-                                            // To prevent the double use of the option value, use this option
+                                            // To prevent the double use of the indentation value, use this option
                                             // with the value "true". Guy 2016-05-16
+   UO_indent_cpp_lambda_only_once,          // The value of the indentation for a cpp lambda is calculate
+                                            // the value might be used twice:
+                                            //   at the assignment
+                                            //   at the opening brace
+                                            // To prevent the double use of the indentation value, use this option
+                                            // with the value "true".
    UO_use_options_overriding_for_qt_macros, // SIGNAL/SLOT Qt macros have special formatting options.
                                             // See options_for_QT.cpp for details.
 
