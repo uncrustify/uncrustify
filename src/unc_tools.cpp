@@ -34,23 +34,23 @@ void prot_the_line(int theLine, unsigned int actual_line)
       {
          tokenCounter++;
          LOG_FMT(LGUY, " orig_line is %d, (%zu) ", actual_line, tokenCounter);
-         if (pc->type == CT_VBRACE_OPEN)
+         if (chunk_is_token(pc, CT_VBRACE_OPEN))
          {
             LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
          }
-         else if (pc->type == CT_NEWLINE)
+         else if (chunk_is_token(pc, CT_NEWLINE))
          {
             LOG_FMT(LGUY, "<NL>(nl_count is %zu), ", pc->nl_count);
          }
-         else if (pc->type == CT_VBRACE_CLOSE)
+         else if (chunk_is_token(pc, CT_VBRACE_CLOSE))
          {
             LOG_FMT(LGUY, "<CT_VBRACE_CLOSE>, ");
          }
-         else if (pc->type == CT_VBRACE_OPEN)
+         else if (chunk_is_token(pc, CT_VBRACE_OPEN))
          {
             LOG_FMT(LGUY, "<CT_VBRACE_OPEN>, ");
          }
-         else if (pc->type == CT_SPACE)
+         else if (chunk_is_token(pc, CT_SPACE))
          {
             LOG_FMT(LGUY, "<CT_SPACE>, ");
          }
@@ -90,7 +90,7 @@ void examine_Data(const char *func_name, int theLine, int what)
    case 1:
       for (pc = chunk_get_head(); pc != nullptr; pc = pc->next)
       {
-         if (pc->type == CT_SQUARE_CLOSE || pc->type == CT_TSQUARE)
+         if (chunk_is_token(pc, CT_SQUARE_CLOSE) || chunk_is_token(pc, CT_TSQUARE))
          {
             LOG_FMT(LGUY, "\n");
             LOG_FMT(LGUY, "1:(%d),", theLine);
@@ -105,7 +105,7 @@ void examine_Data(const char *func_name, int theLine, int what)
       {
          if (pc->orig_line == 7)
          {
-            if (pc->type == CT_NEWLINE)
+            if (chunk_is_token(pc, CT_NEWLINE))
             {
                LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->orig_line, pc->orig_col);
             }
@@ -121,7 +121,7 @@ void examine_Data(const char *func_name, int theLine, int what)
       LOG_FMT(LGUY, "3:(%d)\n", theLine);
       for (pc = chunk_get_head(); pc != nullptr; pc = pc->next)
       {
-         if (pc->type == CT_NEWLINE)
+         if (chunk_is_token(pc, CT_NEWLINE))
          {
             LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->orig_line, pc->orig_col);
          }
@@ -138,7 +138,7 @@ void examine_Data(const char *func_name, int theLine, int what)
       {
          if (pc->orig_line == 6)
          {
-            if (pc->type == CT_NEWLINE)
+            if (chunk_is_token(pc, CT_NEWLINE))
             {
                LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->orig_line, pc->orig_col);
             }

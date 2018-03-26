@@ -1486,17 +1486,17 @@ static void add_func_header(c_token_t type, file_mem &fm)
       // Check for one liners for classes. Declarations only. Walk down the chunks.
       ref = pc;
 
-      if (  ref->type == CT_CLASS
+      if (  chunk_is_token(ref, CT_CLASS)
          && ref->parent_type == CT_NONE
          && ref->next)
       {
          ref = ref->next;
-         if (  ref->type == CT_TYPE
+         if (  chunk_is_token(ref, CT_TYPE)
             && ref->parent_type == type
             && ref->next)
          {
             ref = ref->next;
-            if (ref->type == CT_SEMICOLON && ref->parent_type == CT_NONE)
+            if (chunk_is_token(ref, CT_SEMICOLON) && ref->parent_type == CT_NONE)
             {
                continue;
             }
@@ -1506,14 +1506,14 @@ static void add_func_header(c_token_t type, file_mem &fm)
       // Check for one liners for functions. There'll be a closing brace w/o any newlines. Walk down the chunks.
       ref = pc;
 
-      if (  ref->type == CT_FUNC_DEF
+      if (  chunk_is_token(ref, CT_FUNC_DEF)
          && ref->parent_type == CT_NONE
          && ref->next)
       {
          int found_brace = 0;                                 // Set if a close brace is found before a newline
          while (ref->type != CT_NEWLINE && (ref = ref->next)) // TODO: is the assignment of ref wanted here?, better move it to the loop
          {
-            if (ref->type == CT_BRACE_CLOSE)
+            if (chunk_is_token(ref, CT_BRACE_CLOSE))
             {
                found_brace = 1;
                break;
@@ -1535,14 +1535,14 @@ static void add_func_header(c_token_t type, file_mem &fm)
       while ((ref = chunk_get_prev(ref)) != nullptr)
       {
          // Bail if we change level or find an access specifier colon
-         if (ref->level != pc->level || ref->type == CT_PRIVATE_COLON)
+         if (ref->level != pc->level || chunk_is_token(ref, CT_PRIVATE_COLON))
          {
             do_insert = true;
             break;
          }
 
          // If we hit an angle close, back up to the angle open
-         if (ref->type == CT_ANGLE_CLOSE)
+         if (chunk_is_token(ref, CT_ANGLE_CLOSE))
          {
             ref = chunk_get_prev_type(ref, CT_ANGLE_OPEN, ref->level, scope_e::PREPROC);
             continue;
@@ -1571,8 +1571,8 @@ static void add_func_header(c_token_t type, file_mem &fm)
 
          if (  ref->level == pc->level
             && (  (ref->flags & PCF_IN_PREPROC)
-               || ref->type == CT_SEMICOLON
-               || ref->type == CT_BRACE_CLOSE))
+               || chunk_is_token(ref, CT_SEMICOLON)
+               || chunk_is_token(ref, CT_BRACE_CLOSE)))
          {
             do_insert = true;
             break;
@@ -1617,13 +1617,13 @@ static void add_msg_header(c_token_t type, file_mem &fm)
       {
          // ignore the CT_TYPE token that is the result type
          if (  ref->level != pc->level
-            && (ref->type == CT_TYPE || ref->type == CT_PTR_TYPE))
+            && (chunk_is_token(ref, CT_TYPE) || chunk_is_token(ref, CT_PTR_TYPE)))
          {
             continue;
          }
 
          // If we hit a parentheses around return type, back up to the open parentheses
-         if (ref->type == CT_PAREN_CLOSE)
+         if (chunk_is_token(ref, CT_PAREN_CLOSE))
          {
             ref = chunk_get_prev_type(ref, CT_PAREN_OPEN, ref->level, scope_e::PREPROC);
             continue;
@@ -1644,7 +1644,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
             }
          }
          if (  ref->level == pc->level
-            && ((ref->flags & PCF_IN_PREPROC) || ref->type == CT_OC_SCOPE))
+            && ((ref->flags & PCF_IN_PREPROC) || chunk_is_token(ref, CT_OC_SCOPE)))
          {
             ref = chunk_get_prev(ref);
             if (ref != nullptr)
