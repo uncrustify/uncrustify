@@ -139,7 +139,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    // Find ref. Back up to the real item that is aligned.
    chunk_t *prev = start;
    while (  (prev = chunk_get_prev(prev)) != nullptr
-         && (chunk_is_ptr_operator(prev) || prev->type == CT_TPAREN_OPEN))
+         && (chunk_is_ptr_operator(prev) || chunk_is_token(prev, CT_TPAREN_OPEN)))
    {
       // do nothing - we want prev when this exits
    }
@@ -354,7 +354,7 @@ void AlignStack::Flush()
 
       if (m_star_style == SS_DANGLE)
       {
-         chunk_t *tmp = (pc->type == CT_TPAREN_OPEN) ? chunk_get_next(pc) : pc;
+         chunk_t *tmp = (chunk_is_token(pc, CT_TPAREN_OPEN)) ? chunk_get_next(pc) : pc;
          if (chunk_is_ptr_operator(tmp))
          {
             col_adj = pc->align.start->column - pc->column;

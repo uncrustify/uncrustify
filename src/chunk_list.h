@@ -465,6 +465,12 @@ static_inline bool is_expected_string_and_level(chunk_t *pc, const char *str, in
 }
 
 
+static_inline bool chunk_is_token(const chunk_t *pc, c_token_t c_token)
+{
+   return(pc != nullptr && pc->type == c_token);
+}
+
+
 /**
  * Skips to the closing match for the current paren/brace/square.
  *
@@ -475,15 +481,14 @@ static_inline bool is_expected_string_and_level(chunk_t *pc, const char *str, in
  */
 static_inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e::ALL)
 {
-   if (  cur
-      && (  cur->type == CT_PAREN_OPEN
-         || cur->type == CT_SPAREN_OPEN
-         || cur->type == CT_FPAREN_OPEN
-         || cur->type == CT_TPAREN_OPEN
-         || cur->type == CT_BRACE_OPEN
-         || cur->type == CT_VBRACE_OPEN
-         || cur->type == CT_ANGLE_OPEN
-         || cur->type == CT_SQUARE_OPEN))
+   if (  chunk_is_token(cur, CT_PAREN_OPEN)
+      || chunk_is_token(cur, CT_SPAREN_OPEN)
+      || chunk_is_token(cur, CT_FPAREN_OPEN)
+      || chunk_is_token(cur, CT_TPAREN_OPEN)
+      || chunk_is_token(cur, CT_BRACE_OPEN)
+      || chunk_is_token(cur, CT_VBRACE_OPEN)
+      || chunk_is_token(cur, CT_ANGLE_OPEN)
+      || chunk_is_token(cur, CT_SQUARE_OPEN))
    {
       return(chunk_get_next_type(cur, (c_token_t)(cur->type + 1), cur->level, scope));
    }
@@ -493,15 +498,14 @@ static_inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e
 
 static_inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, scope_e scope = scope_e::ALL)
 {
-   if (  cur
-      && (  cur->type == CT_PAREN_CLOSE
-         || cur->type == CT_SPAREN_CLOSE
-         || cur->type == CT_FPAREN_CLOSE
-         || cur->type == CT_TPAREN_CLOSE
-         || cur->type == CT_BRACE_CLOSE
-         || cur->type == CT_VBRACE_CLOSE
-         || cur->type == CT_ANGLE_CLOSE
-         || cur->type == CT_SQUARE_CLOSE))
+   if (  chunk_is_token(cur, CT_PAREN_CLOSE)
+      || chunk_is_token(cur, CT_SPAREN_CLOSE)
+      || chunk_is_token(cur, CT_FPAREN_CLOSE)
+      || chunk_is_token(cur, CT_TPAREN_CLOSE)
+      || chunk_is_token(cur, CT_BRACE_CLOSE)
+      || chunk_is_token(cur, CT_VBRACE_CLOSE)
+      || chunk_is_token(cur, CT_ANGLE_CLOSE)
+      || chunk_is_token(cur, CT_SQUARE_CLOSE))
    {
       return(chunk_get_prev_type(cur, (c_token_t)(cur->type - 1), cur->level, scope));
    }
@@ -525,31 +529,27 @@ chunk_t *chunk_skip_dc_member_rev(chunk_t *start, scope_e scope = scope_e::ALL);
  */
 static_inline bool chunk_is_comment(chunk_t *pc)
 {
-   return(  pc != nullptr
-         && (  pc->type == CT_COMMENT
-            || pc->type == CT_COMMENT_MULTI
-            || pc->type == CT_COMMENT_CPP));
+   return(  chunk_is_token(pc, CT_COMMENT)
+         || chunk_is_token(pc, CT_COMMENT_MULTI)
+         || chunk_is_token(pc, CT_COMMENT_CPP));
 }
 
 
 static_inline bool chunk_is_single_line_comment(chunk_t *pc)
 {
-   return(  pc != nullptr
-         && (pc->type == CT_COMMENT || pc->type == CT_COMMENT_CPP));
+   return(chunk_is_token(pc, CT_COMMENT) || chunk_is_token(pc, CT_COMMENT_CPP));
 }
 
 
 static_inline bool chunk_is_newline(chunk_t *pc)
 {
-   return(  pc != nullptr
-         && (pc->type == CT_NEWLINE || pc->type == CT_NL_CONT));
+   return(chunk_is_token(pc, CT_NEWLINE) || chunk_is_token(pc, CT_NL_CONT));
 }
 
 
 static_inline bool chunk_is_semicolon(chunk_t *pc)
 {
-   return(  pc != nullptr
-         && (pc->type == CT_SEMICOLON || pc->type == CT_VSEMICOLON));
+   return(chunk_is_token(pc, CT_SEMICOLON) || chunk_is_token(pc, CT_VSEMICOLON));
 }
 
 
@@ -575,10 +575,9 @@ static_inline bool chunk_is_comment_or_newline(chunk_t *pc)
 
 static_inline bool chunk_is_balanced_square(chunk_t *pc)
 {
-   return(  pc != nullptr
-         && (  pc->type == CT_SQUARE_OPEN
-            || pc->type == CT_TSQUARE
-            || pc->type == CT_SQUARE_CLOSE));
+   return(  chunk_is_token(pc, CT_SQUARE_OPEN)
+         || chunk_is_token(pc, CT_TSQUARE)
+         || chunk_is_token(pc, CT_SQUARE_CLOSE));
 }
 
 
@@ -631,21 +630,14 @@ static_inline bool chunk_is_Doxygen_comment(chunk_t *pc)
 
 static_inline bool chunk_is_type(chunk_t *pc)
 {
-   return(  pc != nullptr
-         && (  pc->type == CT_TYPE
-            || pc->type == CT_PTR_TYPE
-            || pc->type == CT_BYREF
-            || pc->type == CT_DC_MEMBER
-            || pc->type == CT_QUALIFIER
-            || pc->type == CT_STRUCT
-            || pc->type == CT_ENUM
-            || pc->type == CT_UNION));
-}
-
-
-static_inline bool chunk_is_token(const chunk_t *pc, c_token_t c_token)
-{
-   return(pc != nullptr && pc->type == c_token);
+   return(  chunk_is_token(pc, CT_TYPE)
+         || chunk_is_token(pc, CT_PTR_TYPE)
+         || chunk_is_token(pc, CT_BYREF)
+         || chunk_is_token(pc, CT_DC_MEMBER)
+         || chunk_is_token(pc, CT_QUALIFIER)
+         || chunk_is_token(pc, CT_STRUCT)
+         || chunk_is_token(pc, CT_ENUM)
+         || chunk_is_token(pc, CT_UNION));
 }
 
 
@@ -695,17 +687,15 @@ static_inline bool chunk_is_nullable(chunk_t *pc)
 
 static_inline bool chunk_is_addr(chunk_t *pc)
 {
-   if (  pc != nullptr
-      && (  pc->type == CT_BYREF
-         || (  (pc->len() == 1)
-            && (pc->str[0] == '&')
-            && pc->type != CT_OPERATOR_VAL)))
+   if (  chunk_is_token(pc, CT_BYREF)
+      || (  (pc->len() == 1)
+         && (pc->str[0] == '&')
+         && pc->type != CT_OPERATOR_VAL))
    {
       chunk_t *prev = chunk_get_prev(pc);
 
       if (  (pc->flags & PCF_IN_TEMPLATE)
-         && (  prev != nullptr
-            && (prev->type == CT_COMMA || prev->type == CT_ANGLE_OPEN)))
+         && (chunk_is_token(prev, CT_COMMA) || chunk_is_token(prev, CT_ANGLE_OPEN)))
       {
          return(false);
       }
@@ -742,42 +732,37 @@ bool chunk_is_newline_between(chunk_t *start, chunk_t *end);
 
 static_inline bool chunk_is_closing_brace(chunk_t *pc)
 {
-   return(  pc != nullptr
-         && (pc->type == CT_BRACE_CLOSE || pc->type == CT_VBRACE_CLOSE));
+   return(chunk_is_token(pc, CT_BRACE_CLOSE) || chunk_is_token(pc, CT_VBRACE_CLOSE));
 }
 
 
 static_inline bool chunk_is_opening_brace(chunk_t *pc)
 {
-   return(  pc != nullptr
-         && (pc->type == CT_BRACE_OPEN || pc->type == CT_VBRACE_OPEN));
+   return(chunk_is_token(pc, CT_BRACE_OPEN) || chunk_is_token(pc, CT_VBRACE_OPEN));
 }
 
 
 static_inline bool chunk_is_vbrace(chunk_t *pc)
 {
-   return(  pc != nullptr
-         && (pc->type == CT_VBRACE_CLOSE || pc->type == CT_VBRACE_OPEN));
+   return(chunk_is_token(pc, CT_VBRACE_CLOSE) || chunk_is_token(pc, CT_VBRACE_OPEN));
 }
 
 
 static_inline bool chunk_is_paren_open(chunk_t *pc)
 {
-   return(  pc != nullptr
-         && (  pc->type == CT_PAREN_OPEN
-            || pc->type == CT_SPAREN_OPEN
-            || pc->type == CT_TPAREN_OPEN
-            || pc->type == CT_FPAREN_OPEN));
+   return(  chunk_is_token(pc, CT_PAREN_OPEN)
+         || chunk_is_token(pc, CT_SPAREN_OPEN)
+         || chunk_is_token(pc, CT_TPAREN_OPEN)
+         || chunk_is_token(pc, CT_FPAREN_OPEN));
 }
 
 
 static_inline bool chunk_is_paren_close(chunk_t *pc)
 {
-   return(  pc != nullptr
-         && (  pc->type == CT_PAREN_CLOSE
-            || pc->type == CT_SPAREN_CLOSE
-            || pc->type == CT_TPAREN_CLOSE
-            || pc->type == CT_FPAREN_CLOSE));
+   return(  chunk_is_token(pc, CT_PAREN_CLOSE)
+         || chunk_is_token(pc, CT_SPAREN_CLOSE)
+         || chunk_is_token(pc, CT_TPAREN_CLOSE)
+         || chunk_is_token(pc, CT_FPAREN_CLOSE));
 }
 
 
@@ -822,7 +807,7 @@ static_inline bool chunk_is_forin(chunk_t *pc)
       && chunk_is_token(pc, CT_SPAREN_OPEN))
    {
       chunk_t *prev = chunk_get_prev_ncnl(pc);
-      if (prev->type == CT_FOR)
+      if (chunk_is_token(prev, CT_FOR))
       {
          chunk_t *next = pc;
          while (  next != nullptr
@@ -831,7 +816,7 @@ static_inline bool chunk_is_forin(chunk_t *pc)
          {
             next = chunk_get_next_ncnl(next);
          }
-         if (next->type == CT_IN)
+         if (chunk_is_token(next, CT_IN))
          {
             return(true);
          }

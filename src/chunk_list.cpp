@@ -237,7 +237,7 @@ bool are_chunks_in_same_line(chunk_t *start, chunk_t *end)
    }
    while (tmp != nullptr && tmp != end)
    {
-      if (tmp->type == CT_NEWLINE)
+      if (chunk_is_token(tmp, CT_NEWLINE))
       {
          return(false);
       }
@@ -404,15 +404,15 @@ static void chunk_log_msg(chunk_t *chunk, const log_sev_t log, const char *str)
 {
    LOG_FMT(log, "%s orig_line is %zu, orig_col is %zu, ",
            str, chunk->orig_line, chunk->orig_col);
-   if (chunk->type == CT_NEWLINE)
+   if (chunk_is_token(chunk, CT_NEWLINE))
    {
       LOG_FMT(log, "<Newline>,");
    }
-   else if (chunk->type == CT_VBRACE_OPEN)
+   else if (chunk_is_token(chunk, CT_VBRACE_OPEN))
    {
       LOG_FMT(log, "<VBRACE_OPEN>,");
    }
-   else if (chunk->type == CT_VBRACE_CLOSE)
+   else if (chunk_is_token(chunk, CT_VBRACE_CLOSE))
    {
       LOG_FMT(log, "<VBRACE_CLOSE>,");
    }
@@ -839,7 +839,7 @@ static chunk_t *chunk_get_ncnlnpnd(chunk_t *cur, const scope_e scope, const dire
    } while (  pc != nullptr             // the end of the list was not reached yet
            && !chunk_is_comment_or_newline(pc)
            && !chunk_is_preproc(pc)
-           && (pc->type == CT_DC_MEMBER));
+           && chunk_is_token(pc, CT_DC_MEMBER));
    return(pc);
 }
 
@@ -866,9 +866,9 @@ static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const direction_e 
 
 chunk_t *chunk_get_next_ssq(chunk_t *cur)
 {
-   while (cur->type == CT_TSQUARE || cur->type == CT_SQUARE_OPEN)
+   while (chunk_is_token(cur, CT_TSQUARE) || chunk_is_token(cur, CT_SQUARE_OPEN))
    {
-      if (cur->type == CT_SQUARE_OPEN)
+      if (chunk_is_token(cur, CT_SQUARE_OPEN))
       {
          cur = chunk_skip_to_match(cur);
       }
@@ -880,9 +880,9 @@ chunk_t *chunk_get_next_ssq(chunk_t *cur)
 
 chunk_t *chunk_get_prev_ssq(chunk_t *cur)
 {
-   while (cur->type == CT_TSQUARE || cur->type == CT_SQUARE_CLOSE)
+   while (chunk_is_token(cur, CT_TSQUARE) || chunk_is_token(cur, CT_SQUARE_CLOSE))
    {
-      if (cur->type == CT_SQUARE_CLOSE)
+      if (chunk_is_token(cur, CT_SQUARE_CLOSE))
       {
          cur = chunk_skip_to_match_rev(cur);
       }
@@ -905,7 +905,7 @@ static chunk_t *chunk_skip_dc_member(chunk_t *start, scope_e scope, direction_e 
                          ? chunk_get_next_ncnl : chunk_get_prev_ncnl;
 
    chunk_t *pc   = start;
-   chunk_t *next = (pc->type == CT_DC_MEMBER) ? pc : step_fcn(pc, scope);
+   chunk_t *next = chunk_is_token(pc, CT_DC_MEMBER) ? pc : step_fcn(pc, scope);
    while (chunk_is_token(next, CT_DC_MEMBER))
    {
       pc = step_fcn(next, scope);
