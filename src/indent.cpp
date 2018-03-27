@@ -1265,6 +1265,22 @@ void indent_text(void)
             frm.prev().indent_tmp = frm.top().indent_tmp;
             log_indent_tmp();
          }
+         else if (  (cpd.lang_flags & LANG_CPP)
+                 && cpd.settings[UO_indent_cpp_lambda_only_once].b
+                 && (pc->parent_type == CT_CPP_LAMBDA))
+         {
+            // Issue # 1296
+            frm.top().brace_indent = 1 + (pc->brace_level * indent_size);
+            indent_column_set(frm.top().brace_indent);
+            frm.top().indent = indent_column + indent_size;
+            log_indent();
+            frm.top().indent_tab = frm.top().indent;
+            frm.top().indent_tmp = frm.top().indent;
+            log_indent_tmp();
+
+            frm.prev().indent_tmp = frm.top().indent_tmp;
+            log_indent_tmp();
+         }
          else if (  (cpd.lang_flags & LANG_CS)
                  && cpd.settings[UO_indent_cs_delegate_brace].b
                  && (  pc->parent_type == CT_LAMBDA
@@ -1460,7 +1476,7 @@ void indent_text(void)
          {
             // Use the prev indent level + indent_size.
             frm.top().indent = frm.prev().indent + indent_size;
-            LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos=%zu, ... indent=%zu\n",
+            LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos is %zu, ... indent is %zu\n",
                     __func__, __LINE__, frm.size() - 1, frm.top().indent);
 
             // If this brace is part of a statement, bump it out by indent_brace

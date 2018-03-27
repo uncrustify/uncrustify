@@ -1953,7 +1953,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
 
       if ((ch == '<') && cpd.in_preproc == CT_PP_DEFINE)
       {
-         if (chunk_get_tail() != nullptr && chunk_get_tail()->type == CT_MACRO)
+         if (chunk_is_token(chunk_get_tail(), CT_MACRO))
          {
             // We have "#define XXX <", assume '<' starts an include string
             parse_string(ctx, pc, 0, false);
@@ -1964,8 +1964,8 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       /* Inside clang's __has_include() could be "path/to/file.h" or system-style <path/to/file.h> */
       if (  (ch == '(')
          && (chunk_get_tail() != nullptr)
-         && (  (chunk_get_tail()->type == CT_CNG_HASINC)
-            || (chunk_get_tail()->type == CT_CNG_HASINCN)))
+         && (  chunk_is_token(chunk_get_tail(), CT_CNG_HASINC)
+            || chunk_is_token(chunk_get_tail(), CT_CNG_HASINCN)))
       {
          parse_string(ctx, pc, 0, false);
          return(true);
@@ -2138,7 +2138,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
          chunk_flags_set(pc, rprev->flags & PCF_COPY_FLAGS);
 
          // a newline can't be in a preprocessor
-         if (pc->type == CT_NEWLINE)
+         if (chunk_is_token(pc, CT_NEWLINE))
          {
             chunk_flags_clr(pc, PCF_IN_PREPROC);
          }
@@ -2154,14 +2154,14 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       pc = chunk_add_before(&chunk, ref);
 
       // A newline marks the end of a preprocessor
-      if (pc->type == CT_NEWLINE) // || pc->type == CT_COMMENT_MULTI)
+      if (chunk_is_token(pc, CT_NEWLINE)) // || chunk_is_token(pc, CT_COMMENT_MULTI))
       {
          cpd.in_preproc         = CT_NONE;
          cpd.preproc_ncnl_count = 0;
       }
 
       // Disable indentation when #asm directive found
-      if (pc->type == CT_PP_ASM)
+      if (chunk_is_token(pc, CT_PP_ASM))
       {
          LOG_FMT(LBCTRL, "Found a directive %s on line %zu\n", "#asm", pc->orig_line);
          cpd.unc_off = true;
@@ -2206,7 +2206,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
             }
          }
          else if (  cpd.in_preproc == CT_PP_DEFINE
-                 && pc->type == CT_PAREN_CLOSE
+                 && chunk_is_token(pc, CT_PAREN_CLOSE)
                  && cpd.settings[UO_pp_ignore_define_body].b)
          {
             // When we have a PAREN_CLOSE in a PP_DEFINE we should be terminating a MACRO_FUNC
@@ -2217,20 +2217,20 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       else
       {
          // Check for a preprocessor start
-         if (  pc->type == CT_POUND
-            && (rprev == nullptr || rprev->type == CT_NEWLINE))
+         if (  chunk_is_token(pc, CT_POUND)
+            && (rprev == nullptr || chunk_is_token(rprev, CT_NEWLINE)))
          {
             set_chunk_type(pc, CT_PREPROC);
             pc->flags     |= PCF_IN_PREPROC;
             cpd.in_preproc = CT_PREPROC;
          }
       }
-      if (pc->type == CT_NEWLINE)
+      if (chunk_is_token(pc, CT_NEWLINE))
       {
          LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>, nl is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->nl_count);
       }
-      else if (pc->type == CT_VBRACE_OPEN)
+      else if (chunk_is_token(pc, CT_VBRACE_OPEN))
       {
          LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s, orig_col_end is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type), pc->orig_col_end);

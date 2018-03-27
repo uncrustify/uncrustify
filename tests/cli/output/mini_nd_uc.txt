@@ -631,6 +631,7 @@ include_category_1              = ""
 include_category_2              = ""
 use_indent_func_call_param      = true
 use_indent_continue_only_once   = false
+indent_cpp_lambda_only_once     = false
 use_options_overriding_for_qt_macros = true
 warn_level_tabs_found_in_verbatim_string_literals = 2
 # option(s) with 'not default' value: 1
