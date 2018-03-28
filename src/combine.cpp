@@ -16,6 +16,7 @@
 #include "newlines.h"
 #include "prototypes.h"
 #include "tokenize_cleanup.h"
+#include "language_tools.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -713,7 +714,7 @@ static bool chunk_ends_type(chunk_t *start)
          || chunk_is_token(pc, CT_DC_MEMBER)
          || chunk_is_token(pc, CT_PP)
          || chunk_is_token(pc, CT_QUALIFIER)
-         || ((cpd.lang_flags & LANG_CS) && (chunk_is_token(pc, CT_MEMBER))))
+         || (language_is_set(LANG_CS) && (chunk_is_token(pc, CT_MEMBER))))
       {
          cnt++;
          last_expr = (((pc->flags & PCF_EXPR_START) != 0) && ((pc->flags & PCF_IN_FCN_CALL) == 0));
@@ -772,7 +773,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
 
    // D stuff
-   if (  (cpd.lang_flags & LANG_D)
+   if (  language_is_set(LANG_D)
       && chunk_is_token(pc, CT_QUALIFIER)
       && chunk_is_str(pc, "const", 5)
       && chunk_is_token(next, CT_PAREN_OPEN))
@@ -886,7 +887,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
 
    // clang stuff - A new derived type is introduced to C and, by extension, Objective-C, C++, and Objective-C++
-   if (cpd.lang_flags & LANG_C || cpd.lang_flags & LANG_CPP || cpd.lang_flags & LANG_OC)
+   if (language_is_set(LANG_C | LANG_CPP | LANG_OC))
    {
       if (chunk_is_token(pc, CT_CARET))
       {
@@ -898,7 +899,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
 
    // Objective C stuff
-   if (cpd.lang_flags & LANG_OC)
+   if (language_is_set(LANG_OC))
    {
       // Check for message declarations
       if (pc->flags & PCF_STMT_START)
@@ -929,7 +930,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
 
    // C# stuff
-   if (cpd.lang_flags & LANG_CS)
+   if (language_is_set(LANG_CS))
    {
       // '[assembly: xxx]' stuff
       if ((pc->flags & PCF_EXPR_START) && chunk_is_token(pc, CT_SQUARE_OPEN))
@@ -983,7 +984,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
 
    // C++11 Lambda stuff
-   if (  (cpd.lang_flags & LANG_CPP)
+   if (  language_is_set(LANG_CPP)
       && (chunk_is_token(pc, CT_SQUARE_OPEN) || chunk_is_token(pc, CT_TSQUARE)))
    {
       handle_cpp_lambda(pc);
@@ -1024,7 +1025,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
    }
 
-   if (chunk_is_token(pc, CT_SIZEOF) && (cpd.lang_flags & LANG_ALLC))
+   if (chunk_is_token(pc, CT_SIZEOF) && language_is_set(LANG_ALLC))
    {
       tmp = chunk_get_next_ncnl(pc);
       if (chunk_is_paren_open(tmp))
@@ -1035,7 +1036,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
    // A [] in C# and D only follows a type
    if (  chunk_is_token(pc, CT_TSQUARE)
-      && (cpd.lang_flags & (LANG_D | LANG_CS | LANG_VALA)))
+      && language_is_set(LANG_D | LANG_CS | LANG_VALA))
    {
       if (chunk_is_token(prev, CT_WORD))
       {
@@ -1098,7 +1099,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
    if (chunk_is_token(pc, CT_TEMPLATE))
    {
-      if (cpd.lang_flags & LANG_D)
+      if (language_is_set(LANG_D))
       {
          handle_d_template(pc);
       }
@@ -1144,7 +1145,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    if (chunk_is_token(next, CT_PAREN_OPEN))
    {
       tmp = chunk_get_next_ncnl(next);
-      if ((cpd.lang_flags & LANG_C || cpd.lang_flags & LANG_CPP || cpd.lang_flags & LANG_OC) && chunk_is_token(tmp, CT_CARET))
+      if ((language_is_set(LANG_C | LANG_CPP | LANG_OC)) && chunk_is_token(tmp, CT_CARET))
       {
          handle_oc_block_type(tmp);
 
@@ -1211,7 +1212,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          flag_parens(next, 0, CT_FPAREN_OPEN, CT_ATTRIBUTE, false);
       }
    }
-   if (cpd.lang_flags & LANG_PAWN)
+   if (language_is_set(LANG_PAWN))
    {
       if (chunk_is_token(pc, CT_FUNCTION) && pc->brace_level > 0)
       {
@@ -1321,7 +1322,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       && chunk_is_str(pc, ")", 1)
       && chunk_is_str(next, "(", 1))
    {
-      if (cpd.lang_flags & LANG_D)
+      if (language_is_set(LANG_D))
       {
          flag_parens(next, 0, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
       }
@@ -1334,7 +1335,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    if (  (chunk_is_token(pc, CT_CLASS) || chunk_is_token(pc, CT_STRUCT))
       && pc->level == pc->brace_level)
    {
-      if (pc->type != CT_STRUCT || ((cpd.lang_flags & LANG_C) == 0))
+      if (pc->type != CT_STRUCT || !language_is_set(LANG_C))
       {
          mark_class_ctor(pc);
       }
@@ -1352,7 +1353,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
    // TODO: Check for stuff that can only occur at the start of an statement
 
-   if ((cpd.lang_flags & LANG_D) == 0)
+   if (!language_is_set(LANG_D))
    {
       /*
        * Check a parenthesis pair to see if it is a cast.
@@ -1380,7 +1381,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
 
 
-   if ((cpd.lang_flags & LANG_CPP) != 0)
+   if (language_is_set(LANG_CPP))
    {
       // Detect a braced-init-list
       if (  chunk_is_token(pc, CT_WORD)
@@ -1442,13 +1443,13 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             set_chunk_type(pc, CT_DEREF);
          }
       }
-      if (  (cpd.lang_flags & LANG_CPP)
+      if (  language_is_set(LANG_CPP)
          && chunk_is_token(pc, CT_CARET)
          && chunk_is_token(prev, CT_ANGLE_CLOSE))
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
-      if (  (cpd.lang_flags & LANG_CS)
+      if (  language_is_set(LANG_CS)
          && (chunk_is_token(pc, CT_QUESTION))
          && (chunk_is_token(prev, CT_ANGLE_CLOSE)))
       {
@@ -1472,7 +1473,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
       if (chunk_is_token(pc, CT_CARET))
       {
-         if (cpd.lang_flags & LANG_C || cpd.lang_flags & LANG_CPP || cpd.lang_flags & LANG_OC)
+         if (language_is_set(LANG_C | LANG_CPP | LANG_OC))
          {
             // This is likely the start of a block literal
             handle_oc_block_literal(pc);
@@ -1538,13 +1539,13 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
    // Change CT_STAR to CT_PTR_TYPE or CT_ARITH or CT_DEREF
    if (  chunk_is_token(pc, CT_STAR)
-      || ((cpd.lang_flags & LANG_CPP) && chunk_is_token(pc, CT_CARET)))
+      || (language_is_set(LANG_CPP) && chunk_is_token(pc, CT_CARET)))
    {
       if (chunk_is_paren_close(next) || chunk_is_token(next, CT_COMMA))
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
-      else if ((cpd.lang_flags & LANG_OC) && chunk_is_token(next, CT_STAR))
+      else if (language_is_set(LANG_OC) && chunk_is_token(next, CT_STAR))
       {
          /*
           * Change pointer-to-pointer types in OC_MSG_DECLs
@@ -1567,7 +1568,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
-      else if (chunk_is_token(next, CT_SQUARE_OPEN) && !(cpd.lang_flags & LANG_OC))  // issue # 408
+      else if (chunk_is_token(next, CT_SQUARE_OPEN) && !language_is_set(LANG_OC))  // issue # 408
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
@@ -1582,7 +1583,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          //    ::some::name * foo;
          if (  chunk_is_token(prev, CT_WORD)
             && chunk_is_token(prev->prev, CT_DC_MEMBER)
-            && (cpd.lang_flags & LANG_CPP) != 0)
+            && language_is_set(LANG_CPP))
          {
             // Issue 1402
             bool assign_found = false;
@@ -1888,7 +1889,8 @@ void fix_symbols(void)
 
    mark_define_expressions();
 
-   bool is_java = (cpd.lang_flags & LANG_JAVA) != 0;   // forcing value to bool
+   bool is_java = language_is_set(LANG_JAVA);
+
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
       if (chunk_is_token(pc, CT_FUNC_WRAP) || chunk_is_token(pc, CT_TYPE_WRAP))
@@ -1959,13 +1961,13 @@ void fix_symbols(void)
          }
       }
 
-      if ((chunk_is_token(pc, CT_EXTERN)) && (cpd.lang_flags & LANG_ALLC))
+      if ((chunk_is_token(pc, CT_EXTERN)) && language_is_set(LANG_ALLC))
       {
          chunk_t *next = chunk_get_next_ncnl(pc);
          if (chunk_is_token(next, CT_STRING))
          {
             chunk_t *tmp = chunk_get_next_ncnl(next);
-            while (tmp != NULL)
+            while (tmp != nullptr)
             {
                if (  (chunk_is_token(tmp, CT_TYPE))
                   || (chunk_is_token(tmp, CT_BRACE_OPEN))
@@ -1985,7 +1987,7 @@ void fix_symbols(void)
          }
       }
 
-      if ((chunk_is_token(pc, CT_ATTRIBUTE)) && (cpd.lang_flags & (LANG_ALLC)))
+      if ((chunk_is_token(pc, CT_ATTRIBUTE)) && language_is_set(LANG_ALLC))
       {
          chunk_t *tmp = skip_attribute_next(pc);
          if (chunk_is_token(tmp, CT_WORD))
@@ -2166,7 +2168,7 @@ static bool mark_function_type(chunk_t *pc)
    varcnk = chunk_get_prev_ssq(varcnk);
    if (varcnk != nullptr && !chunk_is_word(varcnk))
    {
-      if (  (cpd.lang_flags & LANG_OC)
+      if (  language_is_set(LANG_OC)
          && chunk_is_str(varcnk, "^", 1)
          && chunk_is_paren_open(chunk_get_prev_ncnl(varcnk)))
       {
@@ -2560,8 +2562,13 @@ static void fix_casts(chunk_t *start)
             || chunk_is_token(pc, CT_QUESTION)
             || chunk_is_token(pc, CT_CARET)
             || chunk_is_token(pc, CT_TSQUARE)
-            || ((chunk_is_token(pc, CT_ANGLE_OPEN) || chunk_is_token(pc, CT_ANGLE_CLOSE)) && (cpd.lang_flags & (LANG_OC | LANG_JAVA)))
-            || ((chunk_is_token(pc, CT_QUESTION) || chunk_is_token(pc, CT_COMMA) || chunk_is_token(pc, CT_MEMBER)) && (cpd.lang_flags & (LANG_JAVA)))
+            || (  (  chunk_is_token(pc, CT_ANGLE_OPEN)
+                  || chunk_is_token(pc, CT_ANGLE_CLOSE))
+               && language_is_set(LANG_OC | LANG_JAVA))
+            || (  (  chunk_is_token(pc, CT_QUESTION)
+                  || chunk_is_token(pc, CT_COMMA)
+                  || chunk_is_token(pc, CT_MEMBER))
+               && language_is_set(LANG_JAVA))
             || chunk_is_token(pc, CT_AMP)))
    {
       LOG_FMT(LCASTS, " [%s]", get_token_name(pc->type));
@@ -2585,7 +2592,7 @@ static void fix_casts(chunk_t *start)
       || chunk_is_token(prev, CT_OC_CLASS))
    {
       LOG_FMT(LCASTS, " -- not a cast, hit type is %s\n",
-              pc == NULL ? "NULL"  : get_token_name(pc->type));
+              pc == nullptr ? "NULL"  : get_token_name(pc->type));
       return;
    }
 
@@ -2601,7 +2608,7 @@ static void fix_casts(chunk_t *start)
       || chunk_is_token(last, CT_CARET)
       || chunk_is_token(last, CT_PTR_TYPE)
       || chunk_is_token(last, CT_TYPE)
-      || (chunk_is_token(last, CT_ANGLE_CLOSE) && (cpd.lang_flags & (LANG_OC | LANG_JAVA))))
+      || (chunk_is_token(last, CT_ANGLE_CLOSE) && language_is_set(LANG_OC | LANG_JAVA)))
    {
       verb = "for sure";
    }
@@ -2626,7 +2633,7 @@ static void fix_casts(chunk_t *start)
       {
          detail = " -- upper case";
       }
-      else if ((cpd.lang_flags & LANG_OC) && chunk_is_str(last, "id", 2))
+      else if (language_is_set(LANG_OC) && chunk_is_str(last, "id", 2))
       {
          detail = " -- Objective-C id";
       }
@@ -2707,7 +2714,7 @@ static void fix_casts(chunk_t *start)
               && pc->type != CT_FUNCTION
               && pc->type != CT_BRACE_OPEN
               && (!(  chunk_is_token(pc, CT_SQUARE_OPEN)
-                   && (cpd.lang_flags & LANG_OC))))
+                   && language_is_set(LANG_OC))))
       {
          LOG_FMT(LCASTS, " -- not a cast - followed by text() '%s', type is %s\n",
                  pc->text(), get_token_name(pc->type));
@@ -2833,7 +2840,7 @@ static void fix_enum_struct_union(chunk_t *pc)
       set_chunk_parent(next, pc->type);
 
       // next up is either a colon, open brace, or open parenthesis (pawn)
-      if ((cpd.lang_flags & LANG_PAWN) && chunk_is_token(next, CT_PAREN_OPEN))
+      if (language_is_set(LANG_PAWN) && chunk_is_token(next, CT_PAREN_OPEN))
       {
          next = set_paren_parent(next, CT_ENUM);
       }
@@ -2900,7 +2907,7 @@ static void fix_enum_struct_union(chunk_t *pc)
    if (!chunk_is_semicolon(next))
    {
       // Pawn does not require a semicolon after an enum
-      if (cpd.lang_flags & LANG_PAWN)
+      if (language_is_set(LANG_PAWN))
       {
          return;
       }
@@ -2909,7 +2916,7 @@ static void fix_enum_struct_union(chunk_t *pc)
        * D does not require a semicolon after an enum, but we add one to make
        * other code happy.
        */
-      if (cpd.lang_flags & LANG_D)
+      if (language_is_set(LANG_D))
       {
          next = pawn_add_vsemi_after(chunk_get_prev_ncnl(next));
       }
@@ -2930,7 +2937,7 @@ static void fix_enum_struct_union(chunk_t *pc)
          }
 
          if (  chunk_is_token(next, CT_STAR)
-            || ((cpd.lang_flags & LANG_CPP) && chunk_is_token(next, CT_CARET)))
+            || (language_is_set(LANG_CPP) && chunk_is_token(next, CT_CARET)))
          {
             set_chunk_type(next, CT_PTR_TYPE);
          }
@@ -2986,7 +2993,7 @@ static void fix_typedef(chunk_t *start)
          {
             break;
          }
-         if ((cpd.lang_flags & LANG_D) && chunk_is_token(next, CT_ASSIGN))
+         if (language_is_set(LANG_D) && chunk_is_token(next, CT_ASSIGN))
          {
             set_chunk_parent(next, CT_TYPEDEF);
             break;
@@ -3005,8 +3012,8 @@ static void fix_typedef(chunk_t *start)
    }
 
    // avoid interpreting typedef NS_ENUM (NSInteger, MyEnum) as a function def
-   if (  last_op
-      && !((cpd.lang_flags & LANG_OC) && last_op->parent_type == CT_ENUM))
+   if (  last_op != nullptr
+      && !(language_is_set(LANG_OC) && last_op->parent_type == CT_ENUM))
    {
       flag_parens(last_op, 0, CT_FPAREN_OPEN, CT_TYPEDEF, false);
       fix_fcn_def_params(last_op);
@@ -3267,7 +3274,7 @@ void combine_labels(void)
             {
                return;
             }
-            if (cpd.lang_flags & LANG_PAWN)
+            if (language_is_set(LANG_PAWN))
             {
                if (chunk_is_token(cur, CT_WORD) || chunk_is_token(cur, CT_BRACE_CLOSE))
                {
@@ -3334,8 +3341,8 @@ void combine_labels(void)
                   // Fix for #1242
                   // For MIDL_INTERFACE classes class name is tokenized as Label.
                   // Corrected the identification of Label in c style languages.
-                  if (  (cpd.lang_flags & (LANG_C | LANG_CPP | LANG_CS))
-                     && (!(cpd.lang_flags & LANG_OC)))
+                  if (  language_is_set(LANG_C | LANG_CPP | LANG_CS)
+                     && (!language_is_set(LANG_OC)))
                   {
                      chunk_t *labelPrev = prev;
                      if (chunk_is_token(labelPrev, CT_NEWLINE))
@@ -3422,7 +3429,7 @@ void combine_labels(void)
                   {
                      // ignore it, as it is a C# base thingy
                   }
-                  else if (cpd.lang_flags & LANG_CS)
+                  else if (language_is_set(LANG_CS))
                   {
                      // there should be a better solution for that
                      //LOG_FMT(LWARN, "%s(%d): orig_line is %zu, orig_col is %zu, tmp '%s', type is %s\n",
@@ -3551,7 +3558,7 @@ static void fix_fcn_def_params(chunk_t *start)
          cs.Push_Back(pc);
       }
       else if (  chunk_is_token(pc, CT_AMP)
-              || ((cpd.lang_flags & LANG_CPP) && chunk_is_str(pc, "&&", 2)))
+              || (language_is_set(LANG_CPP) && chunk_is_str(pc, "&&", 2)))
       {
          set_chunk_type(pc, CT_BYREF);
          cs.Push_Back(pc);
@@ -3642,7 +3649,7 @@ static chunk_t *fix_var_def(chunk_t *start)
          LOG_FMT(LFVD, "%s(%d): pc is nullptr\n", __func__, __LINE__);
          return(nullptr);
       }
-      if (cpd.lang_flags & LANG_JAVA)
+      if (language_is_set(LANG_JAVA))
       {
          pc = skip_tsquare_next(pc);
          LOG_FMT(LFVD, "%s(%d):   5:pc->text() '%s', type is %s\n", __func__, __LINE__, pc->text(), get_token_name(pc->type));
@@ -3969,7 +3976,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          pc = chunk_skip_to_match(pc, scope_e::PREPROC);
       }
       else if (  word_cnt == 1
-              && (cpd.lang_flags & LANG_CPP)
+              && language_is_set(LANG_CPP)
               && chunk_is_str(pc, "&&", 2))
       {
          // ignore possible 'move' operator
@@ -4029,7 +4036,7 @@ static void mark_function(chunk_t *pc)
       {
          set_chunk_type(pc, CT_FUNC_CALL);
       }
-      if (cpd.lang_flags & LANG_CPP)
+      if (language_is_set(LANG_CPP))
       {
          tmp = pc;
          while ((tmp = chunk_get_prev_ncnl(tmp)) != nullptr)
@@ -4180,7 +4187,7 @@ static void mark_function(chunk_t *pc)
       if (  chunk_is_str(tmp3, ")", 1)
          && (  chunk_is_star(tmp1)
             || chunk_is_msref(tmp1)
-            || ((cpd.lang_flags & LANG_OC) && chunk_is_token(tmp1, CT_CARET)))
+            || (language_is_set(LANG_OC) && chunk_is_token(tmp1, CT_CARET)))
          && (tmp2 == nullptr || chunk_is_token(tmp2, CT_WORD)))
       {
          if (tmp2)
@@ -4276,7 +4283,7 @@ static void mark_function(chunk_t *pc)
                LOG_FMT(LFCN, "%s(%d): %zu:%zu - FOUND %sSTRUCTOR for %s[%s]\n",
                        __func__, __LINE__,
                        prev->orig_line, prev->orig_col,
-                       (destr != NULL) ? "DE" : "CON",
+                       (destr != nullptr) ? "DE" : "CON",
                        prev->text(), get_token_name(prev->type));
 
                mark_cpp_constructor(pc);
@@ -4301,7 +4308,7 @@ static void mark_function(chunk_t *pc)
       bool isa_def  = false;
       bool hit_star = false;
       D_LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
-      if (prev == NULL)
+      if (prev == nullptr)
       {
          LOG_FMT(LFCN, "  Checking func call: prev->type is NULL");
       }
@@ -4402,7 +4409,7 @@ static void mark_function(chunk_t *pc)
                {
                   D_LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
                   LOG_FMT(LFCN, " --? skipped MEMBER and landed on %s\n",
-                          (prev == NULL) ? "<null>" : get_token_name(prev->type));
+                          (prev == nullptr) ? "<null>" : get_token_name(prev->type));
 
                   set_chunk_type(pc, CT_FUNC_CALL);
                   isa_def  = false;
@@ -4620,7 +4627,7 @@ static void mark_function(chunk_t *pc)
     * We search backwards and checking the parent of the containing open braces.
     * If the parent is a class or namespace, then it probably is a prototype.
     */
-   if (  (cpd.lang_flags & LANG_CPP)
+   if (  language_is_set(LANG_CPP)
       && chunk_is_token(pc, CT_FUNC_PROTO)
       && pc->parent_type != CT_OPERATOR)
    {
@@ -4726,12 +4733,12 @@ static void mark_function(chunk_t *pc)
    mark_function_return_type(pc, chunk_get_prev_ncnl(pc), pc->type);
 
    /* mark C# where chunk */
-   if (  (cpd.lang_flags & LANG_CS)
+   if (  language_is_set(LANG_CS)
       && ((chunk_is_token(pc, CT_FUNC_DEF)) || (chunk_is_token(pc, CT_FUNC_PROTO))))
    {
       tmp = chunk_get_next_ncnl(paren_close);
       int in_where_spec_flags = 0;
-      while (  (tmp != NULL)
+      while (  (tmp != nullptr)
             && (tmp->type != CT_BRACE_OPEN) && (tmp->type != CT_SEMICOLON))
       {
          mark_where_chunk(tmp, pc->type, tmp->flags | in_where_spec_flags);
@@ -4931,7 +4938,7 @@ static void mark_class_ctor(chunk_t *start)
            __func__, __LINE__, pclass->text(), pclass->orig_line, pc->text());
 
    // detect D template class: "class foo(x) { ... }"
-   if ((cpd.lang_flags & LANG_D) && chunk_is_token(next, CT_PAREN_OPEN))              // Coverity CID 76004
+   if (language_is_set(LANG_D) && chunk_is_token(next, CT_PAREN_OPEN))              // Coverity CID 76004
    {
       set_chunk_parent(next, CT_TEMPLATE);
 

@@ -17,6 +17,7 @@
 #include "combine.h"
 #include "newlines.h"
 #include "chunk_list.h"
+#include "language_tools.h"
 
 #include <vector>
 
@@ -951,7 +952,7 @@ void add_long_closebrace_comment(void)
          }
          else if (  br_open->parent_type == CT_CLASS
                  && cl_pc != nullptr
-                 && (  (cpd.lang_flags & LANG_CPP) == 0           // proceed if not C++
+                 && (  !language_is_set(LANG_CPP)                 // proceed if not C++
                     || (chunk_is_token(br_close, CT_SEMICOLON)))) // else a C++ class needs to end with a semicolon
          {
             nl_min = cpd.settings[UO_mod_add_long_class_closebrace_comment].u;
@@ -971,7 +972,7 @@ void add_long_closebrace_comment(void)
             && tag_pc != nullptr)
          {
             // use the comment style that fits to the selected language
-            const c_token_t style = (cpd.lang_flags & (LANG_CPP | LANG_CS))
+            const c_token_t style = language_is_set(LANG_CPP | LANG_CS)
                                     ? CT_COMMENT_CPP : CT_COMMENT;
 
             // Add a comment after the close brace

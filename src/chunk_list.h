@@ -10,6 +10,7 @@
 
 #include "uncrustify_types.h"
 #include "char_table.h"
+#include "language_tools.h"
 
 
 /*
@@ -681,7 +682,7 @@ static_inline bool chunk_is_star(chunk_t *pc)
 
 static_inline bool chunk_is_nullable(chunk_t *pc)
 {
-   return((cpd.lang_flags & LANG_CS) && (pc != NULL) && (pc->len() == 1) && (pc->str[0] == '?'));
+   return(language_is_set(LANG_CS) && (pc != nullptr) && (pc->len() == 1) && (pc->str[0] == '?'));
 }
 
 
@@ -709,7 +710,7 @@ static_inline bool chunk_is_addr(chunk_t *pc)
 
 static_inline bool chunk_is_msref(chunk_t *pc) // ms compilers for C++/CLI and WinRT use '^' instead of '*' for marking up reference types vs pointer types
 {
-   return(  (cpd.lang_flags & LANG_CPP)
+   return(  language_is_set(LANG_CPP)
          && (  pc != nullptr
             && (pc->len() == 1)
             && (pc->str[0] == '^')
@@ -803,7 +804,7 @@ static_inline bool chunk_safe_to_del_nl(chunk_t *nl)
  */
 static_inline bool chunk_is_forin(chunk_t *pc)
 {
-   if (  (cpd.lang_flags & LANG_OC)
+   if (  language_is_set(LANG_OC)
       && chunk_is_token(pc, CT_SPAREN_OPEN))
    {
       chunk_t *prev = chunk_get_prev_ncnl(pc);

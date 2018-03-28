@@ -22,6 +22,7 @@
 #include "logger.h"
 #include "helper_for_print.h"
 #include "indent.h"
+#include "language_tools.h"
 
 #include <stdexcept>
 #include <iostream>
@@ -205,7 +206,7 @@ void brace_cleanup(void)
                               : cpd.pp_level;
 
       // Do before assigning stuff from the frame
-      if (  (cpd.lang_flags & LANG_PAWN)
+      if (  language_is_set(LANG_PAWN)
          && frm.top().type == CT_VBRACE_OPEN
          && chunk_is_token(pc, CT_NEWLINE))
       {
@@ -386,7 +387,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
          cpd.consumed = true;
          close_statement(frm, pc);
       }
-      else if ((cpd.lang_flags & LANG_PAWN) && chunk_is_token(pc, CT_BRACE_CLOSE))
+      else if (language_is_set(LANG_PAWN) && chunk_is_token(pc, CT_BRACE_CLOSE))
       {
          close_statement(frm, pc);
       }
@@ -470,7 +471,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
           * PAWN: Check the next chunk for a semicolon. If it isn't, then
           * add a virtual semicolon, which will get handled on the next pass.
           */
-         if (cpd.lang_flags & LANG_PAWN)
+         if (language_is_set(LANG_PAWN))
          {
             chunk_t *tmp = chunk_get_next_ncnl(pc);
 
@@ -528,7 +529,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
                parent = CT_FUNCTION;
             }
             // NS_ENUM and NS_OPTIONS are followed by a (type, name) pair
-            else if (chunk_is_token(prev, CT_ENUM) && (cpd.lang_flags & LANG_OC))
+            else if (chunk_is_token(prev, CT_ENUM) && language_is_set(LANG_OC))
             {
                // Treat both as CT_ENUM since the syntax is identical
                set_chunk_type(pc, CT_FPAREN_OPEN);
@@ -553,7 +554,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
             }
             // Carry through CT_ENUM parent in NS_ENUM (type, name) {
             else if (  chunk_is_token(prev, CT_FPAREN_CLOSE)
-                    && (cpd.lang_flags & LANG_OC)
+                    && language_is_set(LANG_OC)
                     && prev->parent_type == CT_ENUM)
             {
                parent = CT_ENUM;
@@ -831,7 +832,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
       && (  (frm.top().stage == brace_stage_e::BRACE2)
          || (frm.top().stage == brace_stage_e::BRACE_DO)))
    {
-      if (  (cpd.lang_flags & LANG_CS)
+      if (  language_is_set(LANG_CS)
          && chunk_is_token(pc, CT_USING_STMT)
          && (!cpd.settings[UO_indent_using_block].b))
       {

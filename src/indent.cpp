@@ -22,6 +22,7 @@
 #include "frame_list.h"
 #include "space.h"
 #include "helper_for_print.h"
+#include "language_tools.h"
 
 #include "ParseFrame.h"
 
@@ -559,7 +560,7 @@ void indent_text(void)
    {
       //  forces string literal to column-1 [Fix for 1246]
       if (  (chunk_is_token(pc, CT_STRING) || chunk_is_token(pc, CT_STRING_MULTI))
-         && !(cpd.lang_flags & LANG_OC))
+         && !language_is_set(LANG_OC))
       {
          string str = pc->text();
          if ((str[0] == '@') && (chunk_get_prev(pc)->type == CT_NEWLINE))
@@ -1152,7 +1153,7 @@ void indent_text(void)
 
       if (chunk_is_token(pc, CT_BRACE_CLOSE))
       {
-         if (cpd.lang_flags & LANG_OC)
+         if (language_is_set(LANG_OC))
          {
             if (frm.top().type == CT_BRACE_OPEN && frm.top().level >= pc->level)
             {
@@ -1267,7 +1268,7 @@ void indent_text(void)
             frm.prev().indent_tmp = frm.top().indent_tmp;
             log_indent_tmp();
          }
-         else if (  (cpd.lang_flags & LANG_CPP)
+         else if (  language_is_set(LANG_CPP)
                  && cpd.settings[UO_indent_cpp_lambda_only_once].b
                  && (pc->parent_type == CT_CPP_LAMBDA))
          {
@@ -1283,7 +1284,7 @@ void indent_text(void)
             frm.prev().indent_tmp = frm.top().indent_tmp;
             log_indent_tmp();
          }
-         else if (  (cpd.lang_flags & LANG_CS)
+         else if (  language_is_set(LANG_CS)
                  && cpd.settings[UO_indent_cs_delegate_brace].b
                  && (  pc->parent_type == CT_LAMBDA
                     || pc->parent_type == CT_DELEGATE))
@@ -1299,7 +1300,7 @@ void indent_text(void)
             frm.prev().indent_tmp = frm.top().indent_tmp;
             log_indent_tmp();
          }
-         else if (  (cpd.lang_flags & LANG_CS)
+         else if (  language_is_set(LANG_CS)
                  && !cpd.settings[UO_indent_cs_delegate_brace].b
                  && !cpd.settings[UO_indent_align_paren].b
                  && (  pc->parent_type == CT_LAMBDA
@@ -1321,7 +1322,7 @@ void indent_text(void)
             log_indent_tmp();
          }
          else if (  !cpd.settings[UO_indent_paren_open_brace].b
-                 && (cpd.lang_flags & LANG_CS) == 0
+                 && !language_is_set(LANG_CS)
                  && pc->parent_type == CT_CPP_LAMBDA
                  && (pc->flags & PCF_IN_FCN_DEF)
                  && chunk_is_newline(chunk_get_next_nc(pc)))
@@ -1906,7 +1907,7 @@ void indent_text(void)
          frm.top().indent = pc->column + pc->len();
          log_indent();
 
-         if (chunk_is_token(pc, CT_SQUARE_OPEN) && (cpd.lang_flags & LANG_D))
+         if (chunk_is_token(pc, CT_SQUARE_OPEN) && language_is_set(LANG_D))
          {
             frm.top().indent_tab = frm.top().indent;
          }
@@ -2121,7 +2122,7 @@ void indent_text(void)
       else if (  cpd.settings[UO_indent_member_single].b
               && chunk_is_token(pc, CT_MEMBER)
               && (strcmp(pc->text(), ".") == 0)
-              && ((cpd.lang_flags & LANG_CS) || (cpd.lang_flags & LANG_CPP)))
+              && language_is_set(LANG_CS | LANG_CPP))
       {
          if (frm.top().type != CT_MEMBER)
          {
@@ -2178,7 +2179,7 @@ void indent_text(void)
       }
       else if (  chunk_is_token(pc, CT_ASSIGN)
               || chunk_is_token(pc, CT_IMPORT)
-              || (chunk_is_token(pc, CT_USING) && (cpd.lang_flags & LANG_CS)))
+              || (chunk_is_token(pc, CT_USING) && language_is_set(LANG_CS)))
       {
          /*
           * if there is a newline after the '=' or the line starts with a '=',
@@ -2342,7 +2343,7 @@ void indent_text(void)
             indent_column_set(frm.top().indent + 4);
          }
       }
-      else if (  chunk_is_token(pc, CT_LAMBDA) && (cpd.lang_flags & LANG_CS)
+      else if (  chunk_is_token(pc, CT_LAMBDA) && language_is_set(LANG_CS)
               && chunk_get_next_ncnlnp(pc)->type != CT_BRACE_OPEN
               && cpd.settings[UO_indent_cs_delegate_body].b)
       {

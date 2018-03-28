@@ -19,6 +19,7 @@
 #include "unc_ctype.h"
 #include "uncrustify.h"
 #include "keywords.h"
+#include "language_tools.h"
 
 
 using namespace std;
@@ -473,8 +474,8 @@ static const char *str_search(const char *needle, const char *haystack, int hays
 
 static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 {
-   bool   is_d    = (cpd.lang_flags & LANG_D) != 0;          // forcing value to bool
-   bool   is_cs   = (cpd.lang_flags & LANG_CS) != 0;         // forcing value to bool
+   bool   is_d    = language_is_set(LANG_D);
+   bool   is_cs   = language_is_set(LANG_CS);
    size_t d_level = 0;
 
    // does this start with '/ /' or '/ *' or '/ +' (d)
@@ -834,7 +835,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
     * In c# the numbers starting with 0 are not treated as octal numbers.
     */
    bool did_hex = false;
-   if (ctx.peek() == '0' && !(cpd.lang_flags & LANG_CS))
+   if (ctx.peek() == '0' && !language_is_set(LANG_CS))
    {
       size_t  ch;
       chunk_t pc_temp;
@@ -1029,7 +1030,7 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, size_t quote_idx, bool allow
    size_t escape_char        = cpd.settings[UO_string_escape_char].u;
    size_t escape_char2       = cpd.settings[UO_string_escape_char2].u;
    bool   should_escape_tabs = (  cpd.settings[UO_string_replace_tab_chars].b
-                               && (cpd.lang_flags & LANG_ALLC));
+                               && language_is_set(LANG_ALLC));
 
    pc.str.clear();
    while (quote_idx-- > 0)
@@ -1482,7 +1483,7 @@ static bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
    else
    {
       // '@interface' is reserved, not an interface itself
-      if (  (cpd.lang_flags & LANG_JAVA)
+      if (  language_is_set(LANG_JAVA)
          && pc.str.startswith("@")
          && !pc.str.equals(intr_txt))
       {
@@ -1808,7 +1809,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       return(true);
    }
 
-   if (cpd.lang_flags & LANG_CS)
+   if (language_is_set(LANG_CS))
    {
       if (parse_cs_string(ctx, pc))
       {
@@ -1823,7 +1824,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    }
 
    // handle VALA """ strings """
-   if (  (cpd.lang_flags & LANG_VALA)
+   if (  language_is_set(LANG_VALA)
       && (ctx.peek() == '"')
       && (ctx.peek(1) == '"')
       && (ctx.peek(2) == '"'))
@@ -1837,7 +1838,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
     * possible combinations and optional R delimiters: R"delim(x)delim"
     */
    auto ch = ctx.peek();
-   if (  ((cpd.lang_flags & LANG_CPP) || (cpd.lang_flags & LANG_C))
+   if (  language_is_set(LANG_C | LANG_CPP)
       && (  ch == 'u'
          || ch == 'U'
          || ch == 'R'
@@ -1855,7 +1856,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
          idx++;
       }
 
-      if (  ((cpd.lang_flags & LANG_CPP) || (cpd.lang_flags & LANG_C))
+      if (  language_is_set(LANG_C | LANG_CPP)
          && ctx.peek(idx) == 'R')
       {
          idx++;
@@ -1879,7 +1880,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    }
 
    // PAWN specific stuff
-   if (cpd.lang_flags & LANG_PAWN)
+   if (language_is_set(LANG_PAWN))
    {
       if (  cpd.preproc_ncnl_count == 1
          && (cpd.in_preproc == CT_PP_DEFINE || cpd.in_preproc == CT_PP_EMIT))
@@ -1926,7 +1927,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       return(true);
    }
 
-   if (cpd.lang_flags & LANG_D)
+   if (language_is_set(LANG_D))
    {
       // D specific stuff
       if (d_parse_string(ctx, pc))
@@ -1973,7 +1974,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    }
 
    // Check for Objective C literals and VALA identifiers ('@1', '@if')
-   if ((cpd.lang_flags & (LANG_OC | LANG_VALA)) && (ctx.peek() == '@'))
+   if (language_is_set(LANG_OC | LANG_VALA) && (ctx.peek() == '@'))
    {
       size_t nc = ctx.peek(1);
       if ((nc == '"') || (nc == '\''))
@@ -2028,7 +2029,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
     * considering it as garbage.
     */
    int probe_lang_flags = 0;
-   if (cpd.lang_flags & (LANG_C | LANG_CPP))
+   if (language_is_set(LANG_C | LANG_CPP))
    {
       probe_lang_flags = cpd.lang_flags | LANG_OC;
    }

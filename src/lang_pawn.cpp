@@ -11,6 +11,7 @@
 #include "ChunkStack.h"
 #include "prototypes.h"
 #include "uncrustify.h"
+#include "language_tools.h"
 
 
 /**
@@ -273,7 +274,7 @@ void pawn_add_virtual_semicolons(void)
    LOG_FUNC_ENTRY();
 
    // Add Pawn virtual semicolons
-   if (cpd.lang_flags & LANG_PAWN)
+   if (language_is_set(LANG_PAWN))
    {
       chunk_t *prev = nullptr;
       chunk_t *pc   = chunk_get_head();
