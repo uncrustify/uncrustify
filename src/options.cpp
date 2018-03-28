@@ -92,6 +92,9 @@ static int                                checkGroupNumber  = -1;
 static int                                checkOptionNumber = -1;
 #endif // DEBUG
 
+// print the name of the configuration file only once
+bool headOfMessagePrinted = false;
+
 
 //!  only compare alpha-numeric characters
 static bool match_text(const char *str1, const char *str2);
@@ -1959,8 +1962,14 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       }
 
       // indent_case_brace = -indent_columns
-      LOG_FMT(LNOTE, "line_number=%d, entry(%s) %s, tmp(%s) %s\n",
-              cpd.line_number, get_argtype_name(entry->type),
+      if (!headOfMessagePrinted)
+      {
+         LOG_FMT(LNOTE, "%s(%d): the configuration file is: %s\n",
+                 __func__, __LINE__, cpd.filename.c_str());
+         headOfMessagePrinted = true;
+      }
+      LOG_FMT(LNOTE, "%s(%d): line_number is %d, entry(%s) %s, tmp(%s) %s\n",
+              __func__, __LINE__, cpd.line_number, get_argtype_name(entry->type),
               entry->name, get_argtype_name(tmp->type), tmp->name);
 
       if (tmp->type == AT_UNUM || tmp->type == AT_NUM)
