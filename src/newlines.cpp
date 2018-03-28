@@ -3106,10 +3106,11 @@ void newlines_cleanup_braces(bool first)
                newline_iarf(pc, cpd.settings[UO_nl_brace_struct_var].a);
             }
          }
-         else if (  cpd.settings[UO_nl_after_brace_close].b
-                 || pc->parent_type == CT_FUNC_CLASS_DEF
-                 || pc->parent_type == CT_FUNC_DEF
-                 || pc->parent_type == CT_OC_MSG_DECL)
+         else if (  pc->parent_type != CT_OC_AT
+                 && (  cpd.settings[UO_nl_after_brace_close].b
+                    || pc->parent_type == CT_FUNC_CLASS_DEF
+                    || pc->parent_type == CT_FUNC_DEF
+                    || pc->parent_type == CT_OC_MSG_DECL))
          {
             next = chunk_get_next(pc);
             if (  next != nullptr
