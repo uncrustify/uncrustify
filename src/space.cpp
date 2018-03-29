@@ -2339,7 +2339,7 @@ void space_text(void)
                       */
                      if (  (  (  language_is_set(LANG_CPP)
                               && cpd.settings[UO_sp_permit_cpp11_shift].b)
-                           || (  language_is_set(LANG_JAVA | LANG_CS)))
+                           || (language_is_set(LANG_JAVA | LANG_CS)))
                         && chunk_is_token(pc, CT_ANGLE_CLOSE)
                         && chunk_is_token(next, CT_ANGLE_CLOSE))
                      {
