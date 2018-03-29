@@ -1672,6 +1672,13 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          // connect(&mapper, SIGNAL(mapped(QString &)), this, SLOT(onSomeEvent(QString &)));
          set_chunk_type(pc, CT_BYREF);
       }
+      else if (pc->parent_type == CT_USING_ALIAS)
+      {
+         // fix the Issue # 1689
+         // using reference = value_type &;
+         set_chunk_type(pc->prev, CT_TYPE);
+         set_chunk_type(pc, CT_BYREF);
+      }
       else
       {
          // Issue # 1398
@@ -1822,6 +1829,44 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                   break;
                }
                tmp = chunk_get_prev(tmp);
+            }
+         }
+      }
+   }
+
+   /*
+    * Issue # 1689
+    * Check for using reference = value_type&;
+    * is it a Type alias, alias template?
+    */
+   if (chunk_is_token(pc, CT_USING))
+   {
+      // look for CT_ASSIGN before CT_SEMICOLON at the end of the statement
+      bool assign_found = false;
+      chunk_t *temp;
+      for (temp = pc; temp != nullptr; temp = chunk_get_next_ncnl(temp))
+      {
+         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+                 __func__, __LINE__, temp->orig_line, temp->orig_col, temp->text(), get_token_name(temp->type));
+         if (chunk_is_token(temp, CT_ASSIGN))
+         {
+            assign_found = true;
+            break;
+         }
+         if (chunk_is_token(temp, CT_SEMICOLON))
+         {
+            break;
+         }
+      }
+      if (assign_found)
+      {
+         // it is a Type alias, alias template
+         for (temp = pc; temp != nullptr; temp = chunk_get_next_ncnl(temp))
+         {
+            set_chunk_parent(temp, CT_USING_ALIAS);
+            if (chunk_is_token(temp, CT_SEMICOLON))
+            {
+               break;
             }
          }
       }
