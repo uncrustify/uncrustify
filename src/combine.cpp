@@ -1842,7 +1842,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    if (chunk_is_token(pc, CT_USING))
    {
       // look for CT_ASSIGN before CT_SEMICOLON at the end of the statement
-      bool assign_found = false;
+      bool    assign_found = false;
       chunk_t *temp;
       for (temp = pc; temp != nullptr; temp = chunk_get_next_ncnl(temp))
       {

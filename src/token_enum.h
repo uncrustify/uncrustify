@@ -161,7 +161,7 @@ enum c_token_t
    CT_BRACED_INIT_LIST,
    CT_USING,
    CT_USING_STMT,       // using (xxx) ...
-   CT_USING_ALIAS,      // using identifier attr(optional) = type-id 
+   CT_USING_ALIAS,      // using identifier attr(optional) = type-id
    CT_D_WITH,           // D: paren+braced
    CT_D_MODULE,
    CT_SUPER,
