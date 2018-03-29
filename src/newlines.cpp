@@ -32,6 +32,7 @@
 #include "combine.h"
 #include "keywords.h"
 #include "options.h"
+#include "language_tools.h"
 
 #include <algorithm>
 
@@ -2358,7 +2359,7 @@ static void newline_func_def_or_call(chunk_t *start)
          if (atmp != AV_IGNORE)
          {
             prev = chunk_get_prev_ncnl(start);
-            if (prev != NULL)
+            if (prev != nullptr)
             {
                newline_iarf(prev, atmp);
             }
@@ -2767,7 +2768,7 @@ void newlines_cleanup_braces(bool first)
       }
       else if (chunk_is_token(pc, CT_CATCH))
       {
-         if (  (cpd.lang_flags & LANG_OC)
+         if (  language_is_set(LANG_OC)
             && (cpd.settings[UO_nl_oc_brace_catch].a != AV_IGNORE))
          {
             newlines_cuddle_uncuddle(pc, cpd.settings[UO_nl_oc_brace_catch].a);
@@ -2779,7 +2780,7 @@ void newlines_cleanup_braces(bool first)
          next = chunk_get_next_ncnl(pc);
          if (chunk_is_token(next, CT_BRACE_OPEN))
          {
-            if (  (cpd.lang_flags & LANG_OC)
+            if (  language_is_set(LANG_OC)
                && (cpd.settings[UO_nl_oc_catch_brace].a != AV_IGNORE))
             {
                newlines_do_else(pc, cpd.settings[UO_nl_oc_catch_brace].a);
@@ -2791,7 +2792,7 @@ void newlines_cleanup_braces(bool first)
          }
          else
          {
-            if (  (cpd.lang_flags & LANG_OC)
+            if (  language_is_set(LANG_OC)
                && (cpd.settings[UO_nl_oc_catch_brace].a != AV_IGNORE))
             {
                newlines_if_for_while_switch(pc, cpd.settings[UO_nl_oc_catch_brace].a);

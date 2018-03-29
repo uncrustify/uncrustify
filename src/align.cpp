@@ -20,6 +20,7 @@
 #include "uncrustify.h"
 #include "indent.h"
 #include "space.h"
+#include "language_tools.h"
 
 
 using namespace std;
@@ -586,7 +587,7 @@ void align_struct_initializers(void)
       chunk_t *prev = chunk_get_prev_ncnl(pc);
       if (  chunk_is_token(prev, CT_ASSIGN)
          && (  chunk_is_token(pc, CT_BRACE_OPEN)
-            || ((cpd.lang_flags & LANG_D) && chunk_is_token(pc, CT_SQUARE_OPEN))))
+            || (language_is_set(LANG_D) && chunk_is_token(pc, CT_SQUARE_OPEN))))
       {
          align_init_brace(pc);
       }

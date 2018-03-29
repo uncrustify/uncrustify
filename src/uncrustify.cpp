@@ -43,6 +43,7 @@
 #include "unicode.h"
 #include "universalindentgui.h"
 #include "width.h"
+#include "language_tools.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -1717,7 +1718,7 @@ static void uncrustify_start(const deque<int> &data)
 
    // At this point, the level information is available and accurate.
 
-   if (cpd.lang_flags & LANG_PAWN)
+   if (language_is_set(LANG_PAWN))
    {
       pawn_prescan();
    }
@@ -1916,7 +1917,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       }
 
       // Scrub certain added semicolons
-      if ((cpd.lang_flags & LANG_PAWN) && cpd.settings[UO_mod_pawn_semicolon].b)
+      if (language_is_set(LANG_PAWN) && cpd.settings[UO_mod_pawn_semicolon].b)
       {
          pawn_scrub_vsemi();
       }

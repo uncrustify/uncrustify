@@ -20,6 +20,8 @@
 #include "space.h"
 #include "combine.h"
 #include "keywords.h"
+#include "language_tools.h"
+
 #include <cstring>
 
 
@@ -162,12 +164,12 @@ void tokenize_cleanup(void)
    next = chunk_get_next_ncnl(pc);
    while (pc != nullptr && next != nullptr)
    {
-      if (chunk_is_token(pc, CT_DOT) && (cpd.lang_flags & LANG_ALLC))
+      if (chunk_is_token(pc, CT_DOT) && language_is_set(LANG_ALLC))
       {
          set_chunk_type(pc, CT_MEMBER);
       }
 
-      if (chunk_is_token(pc, CT_NULLCOND) && (cpd.lang_flags & LANG_CS))
+      if (chunk_is_token(pc, CT_NULLCOND) && language_is_set(LANG_CS))
       {
          set_chunk_type(pc, CT_MEMBER);
       }
@@ -273,8 +275,8 @@ void tokenize_cleanup(void)
        *     CT_WORD which is preceded by CT_DC_MEMBER: '::aaa *b'
        */
       if (  (chunk_is_token(next, CT_STAR))
-         || ((cpd.lang_flags & LANG_CPP) && (chunk_is_token(next, CT_CARET)))
-         || ((cpd.lang_flags & LANG_CS) && (chunk_is_token(next, CT_QUESTION)) && (strcmp(pc->text(), "null") != 0)))
+         || (language_is_set(LANG_CPP) && (chunk_is_token(next, CT_CARET)))
+         || (language_is_set(LANG_CS) && (chunk_is_token(next, CT_QUESTION)) && (strcmp(pc->text(), "null") != 0)))
       {
          if (  chunk_is_token(pc, CT_TYPE)
             || chunk_is_token(pc, CT_QUALIFIER)
@@ -298,7 +300,7 @@ void tokenize_cleanup(void)
           * pretty much all languages except C use <> for something other than
           * comparisons.  "#include<xxx>" is handled elsewhere.
           */
-         if (cpd.lang_flags & (LANG_CPP | LANG_CS | LANG_JAVA | LANG_VALA | LANG_OC))
+         if (language_is_set(LANG_OC | LANG_CPP | LANG_CS | LANG_JAVA | LANG_VALA))
          {
             // bug #663
             check_template(pc);
@@ -322,7 +324,7 @@ void tokenize_cleanup(void)
          }
       }
 
-      if (cpd.lang_flags & LANG_D)
+      if (language_is_set(LANG_D))
       {
          // Check for the D string concat symbol '~'
          if (  chunk_is_token(pc, CT_INV)
@@ -368,7 +370,7 @@ void tokenize_cleanup(void)
          }
       }
 
-      if (cpd.lang_flags & LANG_CPP)
+      if (language_is_set(LANG_CPP))
       {
          // Change Word before '::' into a type
          if (  chunk_is_token(pc, CT_WORD)
@@ -533,7 +535,7 @@ void tokenize_cleanup(void)
       if (  (chunk_is_str_case(pc, "EXEC", 4) && chunk_is_str_case(next, "SQL", 3))
          || (  (*pc->str.c_str() == '$') && pc->type != CT_SQL_WORD
                /* but avoid breaking tokenization for C# 6 interpolated strings. */
-            && (  (cpd.lang_flags & LANG_CS) == 0
+            && (  !language_is_set(LANG_CS)
                || ((chunk_is_token(pc, CT_STRING)) && (!pc->str.startswith("$\"")) && (!pc->str.startswith("$@\""))))))
       {
          chunk_t *tmp = chunk_get_prev(pc);
@@ -623,7 +625,7 @@ void tokenize_cleanup(void)
        * ObjectiveC allows keywords to be used as identifiers in some situations
        * This is a dirty hack to allow some of the more common situations.
        */
-      if (cpd.lang_flags & LANG_OC)
+      if (language_is_set(LANG_OC))
       {
          if (  (  chunk_is_token(pc, CT_IF)
                || chunk_is_token(pc, CT_FOR)
@@ -806,7 +808,7 @@ void tokenize_cleanup(void)
       }
 
       // Change 'default(' into a sizeof-like statement
-      if (  (cpd.lang_flags & LANG_CS)
+      if (  language_is_set(LANG_CS)
          && chunk_is_token(pc, CT_DEFAULT)
          && chunk_is_token(next, CT_PAREN_OPEN))
       {
@@ -819,7 +821,7 @@ void tokenize_cleanup(void)
       }
 
       if (  (  chunk_is_token(pc, CT_USING)
-            || (chunk_is_token(pc, CT_TRY) && (cpd.lang_flags & LANG_JAVA)))
+            || (chunk_is_token(pc, CT_TRY) && language_is_set(LANG_JAVA)))
          && chunk_is_token(next, CT_PAREN_OPEN))
       {
          set_chunk_type(pc, CT_USING_STMT);
@@ -827,7 +829,7 @@ void tokenize_cleanup(void)
 
       // Add minimal support for C++0x rvalue references
       if (  chunk_is_token(pc, CT_BOOL)
-         && (cpd.lang_flags & LANG_CPP)
+         && language_is_set(LANG_CPP)
          && chunk_is_str(pc, "&&", 2))
       {
          if (chunk_is_token(prev, CT_TYPE))
@@ -855,7 +857,7 @@ void tokenize_cleanup(void)
        * If Java's 'synchronized' is in a method declaration, it should be
        * a qualifier.
        */
-      if (  (cpd.lang_flags & LANG_JAVA)
+      if (  language_is_set(LANG_JAVA)
          && chunk_is_token(pc, CT_SYNCHRONIZED)
          && next->type != CT_PAREN_OPEN)
       {

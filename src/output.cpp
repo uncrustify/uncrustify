@@ -18,6 +18,7 @@
 #include "unicode.h"
 #include "helper_for_print.h"
 #include <cstdlib>
+#include "language_tools.h"
 
 
 struct cmt_reflow
@@ -1610,7 +1611,7 @@ static void output_comment_multi(chunk_t *pc)
                   else
                   {
                      // bug #653
-                     if (cpd.lang_flags & LANG_D)
+                     if (language_is_set(LANG_D))
                      {
                         // 0=no lead char present
                         add_text(cmt.cont_text);
@@ -1644,7 +1645,7 @@ static bool kw_fcn_class(chunk_t *cmt, unc_text &out_txt)
 {
    chunk_t *tmp = nullptr;
 
-   if ((cpd.lang_flags & LANG_CPP) && cpd.lang_flags & LANG_OC)
+   if (language_is_set(LANG_CPP | LANG_OC))
    {
       chunk_t *fcn = get_next_function(cmt);
       if (chunk_is_token(fcn, CT_OC_MSG_DECL))
@@ -1656,7 +1657,7 @@ static bool kw_fcn_class(chunk_t *cmt, unc_text &out_txt)
          tmp = get_next_class(cmt);
       }
    }
-   else if (cpd.lang_flags & LANG_OC)
+   else if (language_is_set(LANG_OC))
    {
       tmp = get_prev_oc_class(cmt);
    }
@@ -1665,23 +1666,20 @@ static bool kw_fcn_class(chunk_t *cmt, unc_text &out_txt)
       tmp = get_next_class(cmt);
    }
 
-   if (tmp)
+   if (tmp != nullptr)
    {
       out_txt.append(tmp->str);
-      if (cpd.lang_flags & cpd.lang_flags) // TODO: strange condition ?
+      while ((tmp = chunk_get_next(tmp)) != nullptr)
       {
-         while ((tmp = chunk_get_next(tmp)) != nullptr)
+         if (tmp->type != CT_DC_MEMBER)
          {
-            if (tmp->type != CT_DC_MEMBER)
-            {
-               break;
-            }
-            tmp = chunk_get_next(tmp);
-            if (tmp)
-            {
-               out_txt.append("::");
-               out_txt.append(tmp->str);
-            }
+            break;
+         }
+         tmp = chunk_get_next(tmp);
+         if (tmp != nullptr)
+         {
+            out_txt.append("::");
+            out_txt.append(tmp->str);
          }
       }
       return(true);
@@ -1703,7 +1701,7 @@ static bool kw_fcn_message(chunk_t *cmt, unc_text &out_txt)
 
    chunk_t *tmp  = chunk_get_next_ncnl(fcn);
    chunk_t *word = nullptr;
-   while (tmp)
+   while (tmp != nullptr)
    {
       if (chunk_is_token(tmp, CT_BRACE_OPEN) || chunk_is_token(tmp, CT_SEMICOLON))
       {
@@ -1794,7 +1792,7 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
    {
       chunk_t *tmp = chunk_get_next_ncnl(fcn);
       has_param = false;
-      while (tmp)
+      while (tmp != nullptr)
       {
          if (chunk_is_token(tmp, CT_BRACE_OPEN) || chunk_is_token(tmp, CT_SEMICOLON))
          {
@@ -1888,7 +1886,7 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
    // Do the return stuff
    tmp = chunk_get_prev_ncnl(fcn);
    // For Objective-C we need to go to the previous chunk
-   if (tmp->parent_type == CT_OC_MSG_DECL && chunk_is_token(tmp, CT_PAREN_CLOSE))
+   if (tmp != nullptr && tmp->parent_type == CT_OC_MSG_DECL && chunk_is_token(tmp, CT_PAREN_CLOSE))
    {
       tmp = chunk_get_prev_ncnl(tmp);
    }
@@ -1925,7 +1923,7 @@ static bool kw_fcn_fclass(chunk_t *cmt, unc_text &out_txt)
          tmp = chunk_get_next_ncnl(tmp);
       }
 
-      if (tmp)
+      if (tmp != nullptr)
       {
          out_txt.append(tmp->str);
          return(true);
@@ -2223,7 +2221,7 @@ void add_long_preprocessor_conditional_block_comment(void)
                if (nl_min > 0 && nl_count > nl_min)  // nl_count is 1 too large at all times as #if line was counted too
                {
                   // determine the added comment style
-                  c_token_t style = (cpd.lang_flags & (LANG_CPP | LANG_CS)) ?
+                  c_token_t style = (language_is_set(LANG_CPP)) ?
                                     CT_COMMENT_CPP : CT_COMMENT;
 
                   unc_text str;

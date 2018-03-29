@@ -28,6 +28,7 @@
 #include <cstring>
 #include "unc_ctype.h"
 #include "uncrustify.h"
+#include "language_tools.h"
 
 #include <algorithm>
 
@@ -642,7 +643,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(AV_REMOVE);
    }
 
-   if (  (cpd.lang_flags & LANG_OC)
+   if (  language_is_set(LANG_OC)
       && chunk_is_token(first, CT_CATCH)
       && chunk_is_token(second, CT_SPAREN_OPEN)
       && (cpd.settings[UO_sp_oc_catch_paren].a != AV_IGNORE))
@@ -675,7 +676,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_scope_paren].a);
    }
 
-   if (  cpd.lang_flags & LANG_OC
+   if (  language_is_set(LANG_OC)
       && chunk_is_token(first, CT_SYNCHRONIZED) && chunk_is_token(second, CT_SPAREN_OPEN))
    {
       log_rule("sp_after_oc_synchronized");
@@ -831,7 +832,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // c++17 structured bindings e.g., "auto [x, y, z]" vs a[x, y, z]" or "auto const [x, y, z]" vs "auto const[x, y, z]"
-   if (  cpd.lang_flags & LANG_CPP
+   if (  language_is_set(LANG_CPP)
       && (  chunk_is_token(first, CT_BYREF)
          || chunk_is_token(first, CT_QUALIFIER)
          || chunk_is_token(first, CT_TYPE))
@@ -1309,7 +1310,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(AV_FORCE);
    }
 
-   if (  (cpd.lang_flags & LANG_OC)
+   if (  language_is_set(LANG_OC)
       && chunk_is_token(first, CT_CATCH)
       && chunk_is_token(second, CT_BRACE_OPEN)
       && (cpd.settings[UO_sp_oc_catch_brace].a != AV_IGNORE))
@@ -1567,7 +1568,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    // "[3]" vs "[ 3 ]" or for objective-c "@[@3]" vs "@[ @3 ]"
    if (chunk_is_token(first, CT_SQUARE_OPEN) || chunk_is_token(second, CT_SQUARE_CLOSE))
    {
-      if (  cpd.lang_flags & LANG_OC
+      if (  language_is_set(LANG_OC)
          && (  (first->parent_type == CT_OC_AT && chunk_is_token(first, CT_SQUARE_OPEN))
             || (second->parent_type == CT_OC_AT && chunk_is_token(second, CT_SQUARE_CLOSE)))
          && (cpd.settings[UO_sp_inside_square_oc_array].a != AV_IGNORE))
@@ -1785,7 +1786,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(second, CT_PTR_TYPE) && first->type != CT_IN)
    {
-      if ((cpd.lang_flags & LANG_CS) && chunk_is_nullable(second))
+      if (language_is_set(LANG_CS) && chunk_is_nullable(second))
       {
          min_sp = 0;
          return(AV_REMOVE);
@@ -1858,7 +1859,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(cpd.settings[UO_sp_brace_else].a);
       }
 
-      if (  (cpd.lang_flags & LANG_OC)
+      if (  language_is_set(LANG_OC)
          && chunk_is_token(second, CT_CATCH)
          && (cpd.settings[UO_sp_oc_brace_catch].a != AV_IGNORE))
       {
@@ -2336,10 +2337,9 @@ void space_text(void)
                       * C++11 allows '>>' to mean '> >' in templates:
                       *   some_func<vector<string>>();
                       */
-                     if (  (  (  (cpd.lang_flags & LANG_CPP)
+                     if (  (  (  language_is_set(LANG_CPP)
                               && cpd.settings[UO_sp_permit_cpp11_shift].b)
-                           || (  (cpd.lang_flags & LANG_JAVA)
-                              || (cpd.lang_flags & LANG_CS)))
+                           || (language_is_set(LANG_JAVA | LANG_CS)))
                         && chunk_is_token(pc, CT_ANGLE_CLOSE)
                         && chunk_is_token(next, CT_ANGLE_CLOSE))
                      {

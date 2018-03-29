@@ -11,6 +11,7 @@
 #include "ChunkStack.h"
 #include "prototypes.h"
 #include "uncrustify.h"
+#include "language_tools.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -88,7 +89,7 @@ void remove_extra_semicolons(void)
             LOG_FUNC_CALL();
             remove_semicolon(pc);
          }
-         else if (  (cpd.lang_flags & LANG_D)
+         else if (  language_is_set(LANG_D)
                  && (  prev->parent_type == CT_ENUM
                     || prev->parent_type == CT_UNION
                     || prev->parent_type == CT_STRUCT))
@@ -96,7 +97,7 @@ void remove_extra_semicolons(void)
             LOG_FUNC_CALL();
             remove_semicolon(pc);
          }
-         else if (  (cpd.lang_flags & LANG_JAVA)
+         else if (  language_is_set(LANG_JAVA)
                  && prev->parent_type == CT_SYNCHRONIZED)
          {
             LOG_FUNC_CALL();
