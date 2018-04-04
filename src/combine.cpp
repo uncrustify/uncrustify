@@ -622,6 +622,7 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
       set_chunk_parent(start, parent);
       set_chunk_parent(end, parent);
    }
+   LOG_FMT(LFLPAREN, "%s(%d):\n", __func__, __LINE__);
    return(chunk_get_next_ncnl(end, scope_e::PREPROC));
 }
 
@@ -1833,7 +1834,6 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          }
       }
    }
-
    /*
     * Issue # 1689
     * Check for using reference = value_type&;
@@ -1870,6 +1870,15 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             }
          }
       }
+   }
+
+   // Issue #548: inline T && someFunc(foo * *p, bar && q) { }
+   if (  pc->type == CT_BOOL
+      && !(pc->flags & PCF_IN_PREPROC)
+      && chunk_is_str(pc, "&&", 2)
+      && chunk_ends_type(pc->prev))
+   {
+      set_chunk_type(pc, CT_BYREF);
    }
 } // do_symbol_check
 

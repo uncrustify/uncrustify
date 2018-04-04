@@ -232,6 +232,7 @@
 30823  empty.cfg                            cpp/pp_indent_func_def.cpp
 30824  empty.cfg                            cpp/pp_indent_extern.cpp
 
+30828  bug_1691.cfg                         cpp/bug_1691.cpp
 
 30830  kw_subst2.cfg                        cpp/kw_subst.cpp
 30831  kw_subst.cfg                         cpp/kw_subst2.cpp
