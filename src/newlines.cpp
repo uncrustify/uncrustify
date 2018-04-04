@@ -2066,7 +2066,8 @@ static void newline_after_return(chunk_t *start)
    chunk_t *after = chunk_get_next_nblank(semi);
 
    // If we hit a brace or an 'else', then a newline isn't needed
-   if (  chunk_is_token(after, CT_BRACE_CLOSE)
+   if (  after == nullptr
+      || chunk_is_token(after, CT_BRACE_CLOSE)
       || chunk_is_token(after, CT_VBRACE_CLOSE)
       || chunk_is_token(after, CT_ELSE))
    {

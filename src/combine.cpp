@@ -3007,7 +3007,8 @@ static void fix_enum_struct_union(chunk_t *pc)
       next = chunk_get_next_ncnl(next);
    }
 
-   if (chunk_is_token(next, CT_SEMICOLON))
+   if (  next != nullptr
+      && chunk_is_token(next, CT_SEMICOLON))
    {
       set_chunk_parent(next, pc->type);
    }
