@@ -4403,7 +4403,7 @@ void do_blank_lines(void)
                   {
                      is_var_def = true;
                   }
-                  if (tmp->flags & PCF_STMT_START)
+                  if (chunk_is_token(tmp, CT_STRUCT))
                   {
                      break;
                   }
