@@ -384,9 +384,9 @@ static void double_newline(chunk_t *nl)
 static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
 {
    LOG_FUNC_ENTRY();
-   if (  !prev
-      || !nl
-      || !next)
+   if (  prev == nullptr
+      || nl == nullptr
+      || next == nullptr)
    {
       return;
    }
@@ -4392,7 +4392,26 @@ void do_blank_lines(void)
          {
             if (cpd.settings[UO_nl_after_struct].u > pc->nl_count)
             {
-               blank_line_set(pc, UO_nl_after_struct);
+               // Issue #1702
+               // look back if we have a variable
+               bool is_var_def = false;
+               for (chunk_t *tmp = chunk_get_prev(pc); tmp != nullptr; tmp = chunk_get_prev(tmp))
+               {
+                  LOG_FMT(LBLANK, "%s(%d): %zu:%zu token is '%s'\n",
+                          __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->text());
+                  if (tmp->flags & PCF_VAR_DEF)
+                  {
+                     is_var_def = true;
+                  }
+                  if (chunk_is_token(tmp, CT_STRUCT))
+                  {
+                     break;
+                  }
+               }
+               if (!is_var_def)
+               {
+                  blank_line_set(pc, UO_nl_after_struct);
+               }
             }
          }
       }
