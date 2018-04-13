@@ -1020,6 +1020,12 @@ nl_oc_msg_leave_one_liner       { False, True }
 nl_oc_block_brace               { Ignore, Add, Remove, Force }
   Add or remove newline between Objective-C block signature and '{'.
 
+nl_oc_interface_brace           { Ignore, Add, Remove, Force }
+  Add or remove newline between @interface and '{'.
+
+nl_oc_implementation_brace      { Ignore, Add, Remove, Force }
+  Add or remove newline between @implementation and '{'.
+
 nl_start_of_file                { Ignore, Add, Remove, Force }
   Add or remove newlines at the start of the file.
 

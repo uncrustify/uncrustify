@@ -465,6 +465,8 @@ enum uncrustify_options
    UO_nl_while_leave_one_liners,       //
    UO_nl_oc_msg_leave_one_liner,       // Don't split one-line OC messages
    UO_nl_oc_block_brace,               // Add or remove newline between Objective-C block signature and '{'
+   UO_nl_oc_interface_brace,           // Add or remove newline between @interface and '{'
+   UO_nl_oc_implementation_brace,      // Add or remove newline between @implementation and '{'
    UO_nl_start_of_file,                // alter newlines at the start of file
    UO_nl_start_of_file_min,            // min number of newlines at the start of the file
    UO_nl_end_of_file,                  // alter newlines at the end of file
