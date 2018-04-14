@@ -2913,6 +2913,37 @@ void newlines_cleanup_braces(bool first)
             break;
          }
 
+         case CT_OC_CLASS:
+         {
+            if (pc->level == pc->brace_level)
+            {
+               // Request #126
+               // introduce two new options
+               // look back if we have a @interface or a @implementation
+               for (tmp = chunk_get_prev(pc); tmp != nullptr; tmp = chunk_get_prev(tmp))
+               {
+                  LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, token '%s'\n",
+                          __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->text());
+                  if (  chunk_is_token(tmp, CT_OC_INTF)
+                     || chunk_is_token(tmp, CT_OC_IMPL))
+                  {
+                     LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, may be remove/force newline before {\n",
+                             __func__, __LINE__, pc->orig_line, pc->orig_col);
+                     if (chunk_is_token(tmp, CT_OC_INTF))
+                     {
+                        newlines_do_else(chunk_get_prev_nnl(pc), cpd.settings[UO_nl_oc_interface_brace].a);
+                     }
+                     else
+                     {
+                        newlines_do_else(chunk_get_prev_nnl(pc), cpd.settings[UO_nl_oc_implementation_brace].a);
+                     }
+                     break;
+                  }
+               }
+            }
+            break;
+         }
+
          case CT_BRACED_INIT_LIST:
          {
             newline_iarf_pair(chunk_get_prev_nnl(pc), pc, cpd.settings[UO_nl_type_brace_init_lst].a);

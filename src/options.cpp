@@ -1003,6 +1003,10 @@ void register_options(void)
                   "Don't split one-line OC messages.");
    unc_add_option("nl_oc_block_brace", UO_nl_oc_block_brace, AT_IARF,
                   "Add or remove newline between Objective-C block signature and '{'.");
+   unc_add_option("nl_oc_interface_brace", UO_nl_oc_interface_brace, AT_IARF,
+                  "Add or remove newline between @interface and '{'.");
+   unc_add_option("nl_oc_implementation_brace", UO_nl_oc_implementation_brace, AT_IARF,
+                  "Add or remove newline between @implementation and '{'.");
    unc_add_option("nl_start_of_file", UO_nl_start_of_file, AT_IARF,
                   "Add or remove newlines at the start of the file.");
    unc_add_option("nl_start_of_file_min", UO_nl_start_of_file_min, AT_UNUM,
