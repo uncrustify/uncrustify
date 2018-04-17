@@ -34,7 +34,10 @@ do
     rm ${RESULTS}/${file}
   fi
 done
-rmdir ${RESULTS}
+case $( uname -s ) in
+Darwin) rmdir ${RESULTS};;
+*)      rmdir --ignore-fail-on-non-empty ${RESULTS};;
+esac
 if [[ -d ${RESULTS} ]]
 then
   echo "some problem(s) are still present"

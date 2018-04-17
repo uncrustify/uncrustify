@@ -47,6 +47,7 @@ static int kw_compare(const void *p1, const void *p2);
 static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag);
 
 
+//static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag);
 static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag, int lang_flags);
 
 /**
@@ -72,6 +73,7 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag, int lang_flags
 static chunk_tag_t keywords[] =
 {
    // TODO: it might be useful if users could add there custom keywords to this list
+   { "@available",          CT_OC_AVAILABLE,     LANG_OC                                                                     },
    { "@catch",              CT_CATCH,            LANG_OC                                                                     },
    { "@dynamic",            CT_OC_DYNAMIC,       LANG_OC                                                                     },
    { "@end",                CT_OC_END,           LANG_OC                                                                     },
@@ -85,6 +87,7 @@ static chunk_tag_t keywords[] =
    { "@protocol",           CT_OC_PROTOCOL,      LANG_OC                                                                     },
    { "@public",             CT_PRIVATE,          LANG_OC                                                                     },
    { "@selector",           CT_OC_SEL,           LANG_OC                                                                     },
+   { "@synchronized",       CT_SYNCHRONIZED,     LANG_OC                                                                     },
    { "@synthesize",         CT_OC_DYNAMIC,       LANG_OC                                                                     },
    { "@throw",              CT_THROW,            LANG_OC                                                                     },
    { "@try",                CT_TRY,              LANG_OC                                                                     },
@@ -118,7 +121,7 @@ static chunk_tag_t keywords[] =
    { "__except",            CT_CATCH,            LANG_C                                                                      },
    { "__finally",           CT_FINALLY,          LANG_C                                                                      },
    { "__has_include",       CT_CNG_HASINC,       LANG_C | FLAG_PP                                                            }, // clang
-   { "__has_include_next",  CT_CNG_HASINCN,      LANG_C | FLAG_PP                                                            },
+   { "__has_include_next",  CT_CNG_HASINCN,      LANG_C | FLAG_PP                                                            }, // clang
    { "__inline__",          CT_QUALIFIER,        LANG_C                                                                      },
    { "__nonnull",           CT_QUALIFIER,        LANG_OC                                                                     },
    { "__nothrow__",         CT_NOTHROW,          LANG_C                                                                      },
@@ -481,6 +484,7 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag, int lang_flags
    {
       bool pp_iter = (iter->lang_flags & FLAG_PP) != 0; // forcing value to bool
       if (  (strcmp(iter->tag, tag->tag) == 0)
+         && (cpd.lang_flags & iter->lang_flags)
          && (lang_flags & iter->lang_flags)
          && in_pp == pp_iter)
       {

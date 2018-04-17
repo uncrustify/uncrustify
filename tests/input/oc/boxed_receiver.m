@@ -18,10 +18,10 @@
 
 - (BOOL)isStrimmed {
     if ([(TestClassVideoEditorView *)   (self.parentComponentsView.superview)isTrimmed]) {
-    	return YES;
+        return YES;
     }
     if ([((TestClassVideoEditorView *)   self.parentComponentsView.superview)isTrimmed]) {
-    	return YES;
+        return YES;
     }
     return NO;
 }

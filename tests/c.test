@@ -351,11 +351,18 @@
 09603  indent_ternary_operator-1.cfg        c/indent_ternary-1.c
 09604  indent_ternary_operator-2.cfg        c/indent_ternary-2.c
 
+09605  sp_arith-f.cfg                       c/negative_value.c
+09606  ptr-arith.cfg                        c/extern.c
+09607  ptr-arith.cfg                        c/attribute.c
+09608  aet-func_call_user.cfg               c/func_call_user2.c
+
 09610  force_tab_after_define-t.cfg         c/bug_i_876.c
 09611  space_indent_columns-4.cfg           c/bug_i_222.c
 09612  empty.cfg                            c/bug_1041.c
 09613  empty.cfg                            c/i1413.c
 09614  empty.cfg                            c/string_prefixes.c
+09615  i1564.cfg                            c/i1564.c
+
 
 09905  aet.cfg                              c/negative_value.c
 09906  aet.cfg                              c/extern-c-attribute.c

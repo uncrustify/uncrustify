@@ -19,13 +19,15 @@
 80061  java_synchronized_2.cfg              java/synchronized.java
 80062  sp_this_paren.cfg                    java/sp_this_paren.java
 80063  empty.cfg                            java/i1121.java
+80064  mod_add_long_class_closebrace_comment-1.cfg  java/long_cl_cmt.java
+80065  empty.cfg                            java/Java8DoubleColon.java
 
 80100  align_same_func_call_params-t.cfg    java/sf567.java
 
-80900 aet.cfg                               java/sp_before_byref.java
-80901 aet.cfg                               java/generics.java
-80902 aet.cfg                               java/generics_wildcard.java
-80903 aet.cfg                               java/generics_return_type.java
-80904 aet.cfg                               java/cast.java
-80905 aet.cfg                               java/sp_after_angle.java
-80906 aet.cfg                               java/annotation3.java
+80200  sp_before_byref-r.cfg                java/sp_before_byref.java
+80201  template_angles.cfg                  java/generics.java
+80202  aet.cfg                              java/generics_wildcard.java
+80203  aet.cfg                              java/generics_return_type.java
+80204  aet.cfg                              java/cast.java
+80205  aet.cfg                              java/sp_after_angle.java
+80206  aet.cfg                              java/annotation3.java

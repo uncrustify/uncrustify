@@ -139,6 +139,8 @@ enum c_token_t
 
    CT_ASM,
    CT_ATTRIBUTE,
+   CT_OC_AVAILABLE,
+   CT_OC_AVAILABLE_VALUE,
    CT_CATCH,
    CT_WHEN,
    CT_WHERE,            // C# where clause

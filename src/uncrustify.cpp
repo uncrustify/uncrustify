@@ -2184,7 +2184,7 @@ struct lang_ext_t language_exts[] =
    { ".di",   "D"        },
    { ".m",    "OC"       },
    { ".mm",   "OC+"      },
-   { ".sqc",  "C"        }, // embedded SQL
+   { ".sqc",  "C"        },  // embedded SQL
    { ".es",   "ECMA"     },
 };
 

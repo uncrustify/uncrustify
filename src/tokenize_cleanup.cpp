@@ -736,6 +736,12 @@ void tokenize_cleanup(void)
          {
             set_chunk_type(pc, CT_WORD);
          }
+
+         // Fix self keyword back to word when mixing c++/objective-c
+         if (pc->type == CT_THIS && !strcmp(pc->text(), "self") && (next->type == CT_COMMA || next->type == CT_PAREN_CLOSE))
+         {
+            set_chunk_type(pc, CT_WORD);
+         }
       }
 
       // Another hack to clean up more keyword abuse
@@ -1035,27 +1041,42 @@ static void check_template(chunk_t *start)
               __func__, __LINE__, get_token_name(prev->type));
 
       // Scan back and make sure we aren't inside square parenthesis
-      bool in_if         = false;
-      bool hit_semicolon = false;
+      bool in_if            = false;
+      bool hit_semicolon    = false;
+      bool hit_square_close = false;
       pc = start;
       while ((pc = chunk_get_prev_ncnl(pc, scope_e::PREPROC)) != nullptr)
       {
-         if (  (pc->type == CT_SEMICOLON && hit_semicolon == true)
+         if (  (pc->type == CT_SEMICOLON && hit_semicolon)
             || pc->type == CT_BRACE_OPEN
-            || pc->type == CT_BRACE_CLOSE
-            || pc->type == CT_SQUARE_CLOSE)
+            || pc->type == CT_BRACE_CLOSE)
          {
             break;
          }
-         if (pc->type == CT_SEMICOLON && hit_semicolon == false)
+         if (pc->type == CT_SQUARE_OPEN)
+         {
+            if (hit_square_close)
+            {
+               hit_square_close = false;
+            }
+            else
+            {
+               break;
+            }
+         }
+         if (pc->type == CT_SQUARE_CLOSE)
+         {
+            hit_square_close = true;
+         }
+         if (pc->type == CT_SEMICOLON && !hit_semicolon)
          {
             hit_semicolon = true;
          }
          if (  ((  pc->type == CT_IF
                 || pc->type == CT_RETURN
                 || pc->type == CT_WHILE
-                || pc->type == CT_WHILE_OF_DO) && hit_semicolon == false)
-            || (pc->type == CT_FOR && hit_semicolon == true))
+                || pc->type == CT_WHILE_OF_DO) && !hit_semicolon)
+            || (pc->type == CT_FOR && hit_semicolon))
          {
             in_if = true;
             break;

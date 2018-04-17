@@ -432,13 +432,13 @@ chunk_t *newline_add_before(chunk_t *pc)
       return(prev);
    }
 
-   LOG_FMT(LNEWLINE, "%s(%d): '%s' on orig_line is %zu, orig_col is %zu, pc->column is %zu",
+   LOG_FMT(LNEWLINE, "%s(%d): text() '%s', on orig_line is %zu, orig_col is %zu, pc->column is %zu",
            __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->column);
    log_func_stack_inline(LNEWLINE);
 
    setup_newline_add(prev, &nl, pc);
-   LOG_FMT(LNEWLINE, "%s(%d): '%s' on nl.orig_line is %zu, nl.orig_col is %zu, nl.column is %zu\n",
-           __func__, __LINE__, nl.text(), nl.orig_line, nl.orig_col, nl.column);
+   LOG_FMT(LNEWLINE, "%s(%d): nl.column is %zu\n",
+           __func__, __LINE__, nl.column);
 
    MARK_CHANGE();
    return(chunk_add_before(&nl, pc));
@@ -935,11 +935,13 @@ static void newlines_func_pre_blank_lines(chunk_t *start)
       if (chunk_is_newline(pc))
       {
          last_nl = pc;
+         LOG_FMT(LNLFUNCT, "   <chunk_is_newline> found at line=%zu column=%zu\n", pc->orig_line, pc->orig_col);
          continue;
       }
 
       if (chunk_is_comment(pc))
       {
+         LOG_FMT(LNLFUNCT, "   <chunk_is_comment> found at line=%zu column=%zu\n", pc->orig_line, pc->orig_col);
          if (  (  pc->orig_line < start->orig_line
                && ((start->orig_line - pc->orig_line
                     - (pc->type == CT_COMMENT_MULTI ? pc->nl_count : 0))) < 2)
@@ -1531,7 +1533,6 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
 static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
    bool    did_this_line = false;
    bool    first_var_blk = true;
    bool    typedef_blk   = false;
@@ -1541,10 +1542,11 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
    // can't be any variable definitions in a "= {" block
    if (chunk_is_token(prev, CT_ASSIGN))
    {
-      pc = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
-      return(chunk_get_next_ncnl(pc));
+      chunk_t *tmp = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
+      return(chunk_get_next_ncnl(tmp));
    }
-   pc = chunk_get_next(start);
+
+   chunk_t *pc = chunk_get_next(start);
    while (  pc != nullptr
          && (pc->level >= start->level || pc->level == 0))
    {
@@ -1572,10 +1574,7 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
       if (pc->type == CT_VBRACE_OPEN)
       {
          pc = chunk_get_next_type(pc, CT_VBRACE_CLOSE, pc->level);
-         if (pc != nullptr)
-         {
-            pc = chunk_get_next(pc);
-         }
+         pc = chunk_get_next(pc);
          continue;
       }
 
@@ -1604,13 +1603,14 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
          {
             break;
          }
+
          prev = chunk_get_prev_ncnl(pc);
          if (pc->type == CT_TYPEDEF)
          {
             // set newlines before typedef block
             if (  !typedef_blk
                && prev != nullptr
-               && (cpd.settings[UO_nl_typedef_blk_start].u > 0))
+               && cpd.settings[UO_nl_typedef_blk_start].u > 0)
             {
                newline_min_after(prev, cpd.settings[UO_nl_typedef_blk_start].u, PCF_VAR_DEF);
             }
@@ -1638,27 +1638,27 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
             }
             // set newlines after var def block
             else if (  var_blk
-                    && (cpd.settings[UO_nl_var_def_blk_end].u > 0))
+                    && cpd.settings[UO_nl_var_def_blk_end].u > 0)
             {
                newline_min_after(prev, cpd.settings[UO_nl_var_def_blk_end].u, PCF_VAR_DEF);
             }
+
             pc            = chunk_get_next_type(pc, CT_SEMICOLON, pc->level);
             typedef_blk   = true;
             first_var_blk = false;
             var_blk       = false;
          }
          else if (  chunk_is_type(pc)
-                 && ((  chunk_is_type(next)
-                     || next->type == CT_WORD
-                     || next->type == CT_FUNC_CTOR_VAR))
-                 && !(next->type == CT_DC_MEMBER))  // DbConfig::configuredDatabase()->apply(db);
-                                                    // is NOT a declaration of a variable
-                                                    // guy 2015-09-22
+                 && (  next->type != CT_DC_MEMBER  // proceed if not CT_DC_MEMBER else skip it
+                    || (next = chunk_skip_dc_member(next)) != nullptr)
+                 && (  chunk_is_type(next)
+                    || next->type == CT_WORD
+                    || next->type == CT_FUNC_CTOR_VAR))
          {
             // set newlines before var def block
             if (  !var_blk
                && !first_var_blk
-               && (cpd.settings[UO_nl_var_def_blk_start].u > 0))
+               && cpd.settings[UO_nl_var_def_blk_start].u > 0)
             {
                newline_min_after(prev, cpd.settings[UO_nl_var_def_blk_start].u, PCF_VAR_DEF);
             }
@@ -1698,7 +1698,7 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
                && fn_top
                && (cpd.settings[UO_nl_func_var_def_blk].u > 0))
             {
-               newline_min_after(prev, 1 + cpd.settings[UO_nl_func_var_def_blk].u, PCF_VAR_DEF);
+               newline_min_after(prev, 1 + cpd.settings[UO_nl_func_var_def_blk].u, PCF_VAR_DEF); // TODO: why +1 ?
             }
             // set newlines after var def block
             else if (var_blk && (cpd.settings[UO_nl_var_def_blk_end].u > 0))
@@ -2552,6 +2552,7 @@ static bool one_liner_nl_ok(chunk_t *pc)
          return(false);
       }
 
+      // Issue #UT-98
       if (  cpd.settings[UO_nl_cs_property_leave_one_liners].b
          && pc->parent_type == CT_CS_PROPERTY)
       {
@@ -2776,15 +2777,39 @@ void newlines_cleanup_braces(bool first)
       }
       else if (pc->type == CT_CATCH)
       {
-         newlines_cuddle_uncuddle(pc, cpd.settings[UO_nl_brace_catch].a);
-         next = chunk_get_next_ncnl(pc);
-         if (chunk_is_token(next, CT_BRACE_OPEN))
+         if (  (cpd.lang_flags & LANG_OC)
+            && (cpd.settings[UO_nl_oc_brace_catch].a != AV_IGNORE))
          {
-            newlines_do_else(pc, cpd.settings[UO_nl_catch_brace].a);
+            newlines_cuddle_uncuddle(pc, cpd.settings[UO_nl_oc_brace_catch].a);
          }
          else
          {
-            newlines_if_for_while_switch(pc, cpd.settings[UO_nl_catch_brace].a);
+            newlines_cuddle_uncuddle(pc, cpd.settings[UO_nl_brace_catch].a);
+         }
+         next = chunk_get_next_ncnl(pc);
+         if (chunk_is_token(next, CT_BRACE_OPEN))
+         {
+            if (  (cpd.lang_flags & LANG_OC)
+               && (cpd.settings[UO_nl_oc_catch_brace].a != AV_IGNORE))
+            {
+               newlines_do_else(pc, cpd.settings[UO_nl_oc_catch_brace].a);
+            }
+            else
+            {
+               newlines_do_else(pc, cpd.settings[UO_nl_catch_brace].a);
+            }
+         }
+         else
+         {
+            if (  (cpd.lang_flags & LANG_OC)
+               && (cpd.settings[UO_nl_oc_catch_brace].a != AV_IGNORE))
+            {
+               newlines_if_for_while_switch(pc, cpd.settings[UO_nl_oc_catch_brace].a);
+            }
+            else
+            {
+               newlines_if_for_while_switch(pc, cpd.settings[UO_nl_catch_brace].a);
+            }
          }
       }
       else if (pc->type == CT_WHILE)

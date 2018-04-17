@@ -148,99 +148,102 @@ enum uncrustify_options
 
 
    // group: UG_space, "Spacing options"                                                        1
-   UO_sp_arith,                    // space around + - / * etc
-                                   // also ">>>" "<<" ">>" "%" "|"
-   UO_sp_arith_additive,           // space around + or -
-   UO_sp_assign,                   // space around =, +=, etc
-   UO_sp_cpp_lambda_assign,        // space around the capture spec [=](...){...}
-   UO_sp_cpp_lambda_paren,         // space after the capture spec [] (...){...}
-   UO_sp_assign_default,           // space around '=' in prototype
-   UO_sp_before_assign,            // space before =, +=, etc
-   UO_sp_after_assign,             // space after =, +=, etc
-   UO_sp_enum_paren,               // space in 'NS_ENUM ('"
-   UO_sp_enum_assign,              // space around = in enum
-   UO_sp_enum_before_assign,       // space before = in enum
-   UO_sp_enum_after_assign,        // space after = in enum
-   UO_sp_enum_colon,               // space around ':' in enum
-   UO_sp_pp_concat,                // space around ##
-   UO_sp_pp_stringify,             // space after #
-   UO_sp_before_pp_stringify,      // space before # in a #define x(y) L#y
-   UO_sp_bool,                     // space around || &&
-   UO_sp_compare,                  // space around < > ==, etc
-   UO_sp_inside_paren,             // space inside '+ ( xxx )' vs '+ (xxx)'
-   UO_sp_paren_paren,              // space between nested parens - '( (' vs '(('
-   UO_sp_cparen_oparen,            // space between nested parens - ') (' vs ')('
-   UO_sp_balance_nested_parens,    // balance spaces inside nested parens
-   UO_sp_paren_brace,              // space between ')' and '{'
-   UO_sp_before_ptr_star,          // space before a '*' that is part of a type
-   UO_sp_before_unnamed_ptr_star,  //
-   UO_sp_between_ptr_star,         // space between two '*' that are part of a type
-   UO_sp_after_ptr_star,           // space after a '*' that is part of a type
-   UO_sp_after_ptr_star_qualifier, // space after a '*' next to a qualifier
-   UO_sp_after_ptr_star_func,      // space between a '*' and a function proto/def
-   UO_sp_ptr_star_paren,           //
-   UO_sp_before_ptr_star_func,     //
-   UO_sp_before_byref,             // space before '&' of 'fcn(int& idx)'
-   UO_sp_before_unnamed_byref,     //
-   UO_sp_after_byref,              // space after a '&'  as in 'int& var'
-   UO_sp_after_byref_func,         //
-   UO_sp_before_byref_func,        //
-   UO_sp_after_type,               // space between type and word
-   UO_sp_before_template_paren,    // D: 'template Foo('
-   UO_sp_template_angle,           //
-   UO_sp_before_angle,             // space before '<>', as in '<class T>'
-   UO_sp_inside_angle,             // space inside '<>', as in '<class T>'
-   UO_sp_angle_colon,              // space between '<>' and ':'
-   UO_sp_after_angle,              // space after  '<>', as in '<class T>'
-   UO_sp_angle_paren,              // space between '<>' and '(' in 'a = new List<byte>(foo);'
-   UO_sp_angle_paren_empty,        // space between '<>' and '()' in 'a = new List<byte>();'
-   UO_sp_angle_word,               // space between '<>' and a word in 'List<byte> a;
-                                   // or template <typename T> static ...'
-   UO_sp_angle_shift,              // '> >' vs '>>'
-   UO_sp_permit_cpp11_shift,       // '>>' vs '> >' for C++11 code
-   UO_sp_before_sparen,            // space before '(' of 'if/for/while/switch/etc'
-   UO_sp_inside_sparen,            // space inside 'if( xxx )' vs 'if(xxx)'
-   UO_sp_inside_sparen_close,      //
-   UO_sp_inside_sparen_open,       //
-   UO_sp_after_sparen,             // space after  ')' of 'if/for/while/switch/etc'
-                                   // the do-while does not get set here
-   UO_sp_sparen_brace,             // space between ')' and '{' of if, while, etc
-   UO_sp_invariant_paren,          //
-   UO_sp_after_invariant_paren,    //
-   UO_sp_special_semi,             // space empty stmt ';' on while, if, for
-                                   //   example 'while (*p++ = ' ') ;'
-   UO_sp_before_semi,              // space before all ';'
-   UO_sp_before_semi_for,          // space before the two ';' in a for() - non-empty
-   UO_sp_before_semi_for_empty,    // space before ';' in empty for statement
-   UO_sp_after_semi,               //
-   UO_sp_after_semi_for,           //
-   UO_sp_after_semi_for_empty,     // space after final ';' in empty for statement
-   UO_sp_before_square,            // space before single '['
-   UO_sp_before_squares,           // space before '[]', as in 'byte []'
-   UO_sp_inside_square,            // space inside 'byte[ 5 ]' vs 'byte[5]'
-   UO_sp_after_comma,              // space after ','
-   UO_sp_before_comma,             // space before ','
-   UO_sp_after_mdatype_commas,     //
-   UO_sp_before_mdatype_commas,    //
-   UO_sp_between_mdatype_commas,   //
-   UO_sp_paren_comma,              //
-   UO_sp_before_ellipsis,          // space before '...'
-   UO_sp_after_class_colon,        // space after class ':'
-   UO_sp_before_class_colon,       // space before class ':'
-   UO_sp_after_constr_colon,       // space after class constructor ':'
-   UO_sp_before_constr_colon,      // space before class constructor ':'
-   UO_sp_before_case_colon,        // space before case ':'
-   UO_sp_after_operator,           // space after operator when followed by a punctuator
-   UO_sp_after_operator_sym,       // space after operator when followed by a punctuator
-   UO_sp_after_operator_sym_empty, // space after operator sign when the operator has no arguments
-   UO_sp_after_cast,               // space after C & D cast - '(int) a' vs '(int)a'
-   UO_sp_inside_paren_cast,        // spaces inside the parens of a cast
-   UO_sp_cpp_cast_paren,           //
-   UO_sp_sizeof_paren,             // space between 'sizeof' and '('
-   UO_sp_after_tag,                // pawn: space after a tag colon
-   UO_sp_inside_braces_enum,       // space inside enum '{' and '}' - '{ a, b, c }'
-   UO_sp_inside_braces_struct,     // space inside struct/union '{' and '}'
-   UO_sp_inside_braces_oc_dict,    // space inside OC boxed dictionary @'{' and '}'
+   UO_sp_arith,                     // space around + - / * etc
+                                    // also ">>>" "<<" ">>" "%" "|"
+   UO_sp_arith_additive,            // space around + or -
+   UO_sp_assign,                    // space around =, +=, etc
+   UO_sp_cpp_lambda_assign,         // space around the capture spec [=](...){...}
+   UO_sp_cpp_lambda_paren,          // space after the capture spec [] (...){...}
+   UO_sp_assign_default,            // space around '=' in prototype
+   UO_sp_before_assign,             // space before =, +=, etc
+   UO_sp_after_assign,              // space after =, +=, etc
+   UO_sp_enum_paren,                // space in 'NS_ENUM ('"
+   UO_sp_enum_assign,               // space around = in enum
+   UO_sp_enum_before_assign,        // space before = in enum
+   UO_sp_enum_after_assign,         // space after = in enum
+   UO_sp_enum_colon,                // space around ':' in enum
+   UO_sp_pp_concat,                 // space around ##
+   UO_sp_pp_stringify,              // space after #
+   UO_sp_before_pp_stringify,       // space before # in a #define x(y) L#y
+   UO_sp_bool,                      // space around || &&
+   UO_sp_compare,                   // space around < > ==, etc
+   UO_sp_inside_paren,              // space inside '+ ( xxx )' vs '+ (xxx)'
+   UO_sp_paren_paren,               // space between nested parens - '( (' vs '(('
+   UO_sp_cparen_oparen,             // space between nested parens - ') (' vs ')('
+   UO_sp_balance_nested_parens,     // balance spaces inside nested parens
+   UO_sp_paren_brace,               // space between ')' and '{'
+   UO_sp_before_ptr_star,           // space before a '*' that is part of a type
+   UO_sp_before_unnamed_ptr_star,   //
+   UO_sp_between_ptr_star,          // space between two '*' that are part of a type
+   UO_sp_after_ptr_star,            // space after a '*' that is part of a type
+   UO_sp_after_ptr_block_caret,     // space after a '^' that is part of a type
+   UO_sp_after_ptr_star_qualifier,  // space after a '*' next to a qualifier
+   UO_sp_after_ptr_star_func,       // space between a '*' and a function proto/def
+   UO_sp_ptr_star_paren,            //
+   UO_sp_before_ptr_star_func,      //
+   UO_sp_before_byref,              // space before '&' of 'fcn(int& idx)'
+   UO_sp_before_unnamed_byref,      //
+   UO_sp_after_byref,               // space after a '&'  as in 'int& var'
+   UO_sp_after_byref_func,          //
+   UO_sp_before_byref_func,         //
+   UO_sp_after_type,                // space between type and word
+   UO_sp_before_template_paren,     // D: 'template Foo('
+   UO_sp_template_angle,            //
+   UO_sp_before_angle,              // space before '<>', as in '<class T>'
+   UO_sp_inside_angle,              // space inside '<>', as in '<class T>'
+   UO_sp_angle_colon,               // space between '<>' and ':'
+   UO_sp_after_angle,               // space after  '<>', as in '<class T>'
+   UO_sp_angle_paren,               // space between '<>' and '(' in 'a = new List<byte>(foo);'
+   UO_sp_angle_paren_empty,         // space between '<>' and '()' in 'a = new List<byte>();'
+   UO_sp_angle_word,                // space between '<>' and a word in 'List<byte> a;
+                                    // or template <typename T> static ...'
+   UO_sp_angle_shift,               // '> >' vs '>>'
+   UO_sp_permit_cpp11_shift,        // '>>' vs '> >' for C++11 code
+   UO_sp_before_sparen,             // space before '(' of 'if/for/while/switch/etc'
+   UO_sp_inside_sparen,             // space inside 'if( xxx )' vs 'if(xxx)'
+   UO_sp_inside_sparen_close,       //
+   UO_sp_inside_sparen_open,        //
+   UO_sp_after_sparen,              // space after  ')' of 'if/for/while/switch/etc'
+                                    // the do-while does not get set here
+   UO_sp_sparen_brace,              // space between ')' and '{' of if, while, etc
+   UO_sp_invariant_paren,           //
+   UO_sp_after_invariant_paren,     //
+   UO_sp_special_semi,              // space empty stmt ';' on while, if, for
+                                    //   example 'while (*p++ = ' ') ;'
+   UO_sp_before_semi,               // space before all ';'
+   UO_sp_before_semi_for,           // space before the two ';' in a for() - non-empty
+   UO_sp_before_semi_for_empty,     // space before ';' in empty for statement
+   UO_sp_after_semi,                //
+   UO_sp_after_semi_for,            //
+   UO_sp_after_semi_for_empty,      // space after final ';' in empty for statement
+   UO_sp_before_square,             // space before single '['
+   UO_sp_before_squares,            // space before '[]', as in 'byte []'
+   UO_sp_cpp_before_struct_binding, // space before structured binding declaration
+   UO_sp_inside_square,             // space inside 'byte[ 5 ]' vs 'byte[5]'
+   UO_sp_inside_square_oc_array,    // space inside '@[ @5 ]' vs '@[@5]'
+   UO_sp_after_comma,               // space after ','
+   UO_sp_before_comma,              // space before ','
+   UO_sp_after_mdatype_commas,      //
+   UO_sp_before_mdatype_commas,     //
+   UO_sp_between_mdatype_commas,    //
+   UO_sp_paren_comma,               //
+   UO_sp_before_ellipsis,           // space before '...'
+   UO_sp_after_class_colon,         // space after class ':'
+   UO_sp_before_class_colon,        // space before class ':'
+   UO_sp_after_constr_colon,        // space after class constructor ':'
+   UO_sp_before_constr_colon,       // space before class constructor ':'
+   UO_sp_before_case_colon,         // space before case ':'
+   UO_sp_after_operator,            // space after operator when followed by a punctuator
+   UO_sp_after_operator_sym,        // space after operator when followed by a punctuator
+   UO_sp_after_operator_sym_empty,  // space after operator sign when the operator has no arguments
+   UO_sp_after_cast,                // space after C & D cast - '(int) a' vs '(int)a'
+   UO_sp_inside_paren_cast,         // spaces inside the parens of a cast
+   UO_sp_cpp_cast_paren,            //
+   UO_sp_sizeof_paren,              // space between 'sizeof' and '('
+   UO_sp_after_tag,                 // pawn: space after a tag colon
+   UO_sp_inside_braces_enum,        // space inside enum '{' and '}' - '{ a, b, c }'
+   UO_sp_inside_braces_struct,      // space inside struct/union '{' and '}'
+   UO_sp_inside_braces_oc_dict,     // space inside OC boxed dictionary @'{' and '}'
    UO_sp_after_type_brace_init_lst_open,
    UO_sp_before_type_brace_init_lst_close,
    UO_sp_inside_type_brace_init_lst,
@@ -274,6 +277,7 @@ enum uncrustify_options
    UO_sp_throw_paren,              //
    UO_sp_after_throw,              //
    UO_sp_catch_paren,              //
+   UO_sp_oc_catch_paren,           // same as sp_catch_paren except for objective-c @catch
    UO_sp_version_paren,            //
    UO_sp_scope_paren,              //
    UO_sp_super_paren,              //
@@ -284,7 +288,9 @@ enum uncrustify_options
    UO_sp_brace_else,               //
    UO_sp_brace_typedef,            //
    UO_sp_catch_brace,              //
+   UO_sp_oc_catch_brace,           // same as sp_catch_brace except for objective-c @catch
    UO_sp_brace_catch,              //
+   UO_sp_oc_brace_catch,           // same as sp_brace_catch except for objective-c @catch
    UO_sp_finally_brace,            //
    UO_sp_brace_finally,            //
    UO_sp_try_brace,                //
@@ -318,6 +324,7 @@ enum uncrustify_options
    UO_sp_after_oc_block_caret,     //
    UO_sp_after_oc_msg_receiver,    //
    UO_sp_after_oc_property,        //
+   UO_sp_after_oc_synchronized,    //
    UO_sp_cond_colon,               //
    UO_sp_cond_colon_before,        //
    UO_sp_cond_colon_after,         //
@@ -494,7 +501,9 @@ enum uncrustify_options
    UO_nl_getset_brace,                 // newline between 'get/set' and '{'
    UO_nl_for_brace,                    // newline between 'for' and '{'
    UO_nl_catch_brace,                  // newline between 'catch' and '{'
+   UO_nl_oc_catch_brace,               // same as nl_catch_brace except for objective-c @catch newline between '@catch' and '{'
    UO_nl_brace_catch,                  // newline between '}' and 'catch'
+   UO_nl_oc_brace_catch,               // same as nl_brace_catch except for objective-c @catch newline between '}' and '@catch'
    UO_nl_brace_square,                 // newline between '}' and ']'
    UO_nl_brace_fparen,                 // newline between '}' and ')' of a function invocation
    UO_nl_while_brace,                  // newline between 'while' and '{'
