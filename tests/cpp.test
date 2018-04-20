@@ -462,6 +462,7 @@
 34115  nl_before_func_body_def-2.cfg        cpp/nl_before_func_body_def.cpp
 
 34120  align_assign_span-1.cfg              cpp/bug_i_999.cpp
+34121  bug_1717.cfg                         cpp/bug_1717.cpp
 
 34130  nl_brace_fparen-f.cfg                cpp/bug_i_1000.cpp
 34131  nl_brace_fparen-r.cfg                cpp/bug_i_1000.cpp

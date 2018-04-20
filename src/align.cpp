@@ -776,7 +776,8 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          var_def_cnt = 0;
          equ_count   = 0;
       }
-      else if (pc->flags & PCF_VAR_DEF)
+      else if (  (pc->flags & PCF_VAR_DEF)
+              && !(pc->flags & PCF_IN_CONST_ARGS)) // Issue #1717
       {
          var_def_cnt++;
       }
