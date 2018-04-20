@@ -260,7 +260,6 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
          m_min_col = endcol;
       }
 
-              __func__, __LINE__, endcol, m_max_col);
       if (endcol > m_max_col)
       {
          LOG_FMT(LAS, "AlignStack::%s(%d): Add-aligned: seqnum is %zu, m_nl_seqnum is %zu, m_seqnum is %zu\n",
