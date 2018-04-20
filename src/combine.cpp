@@ -4451,9 +4451,7 @@ static void mark_function(chunk_t *pc)
          // get first chunk before: A::B::pc | this.B.pc | this->B->pc
          if (chunk_is_token(prev, CT_DC_MEMBER) || chunk_is_token(prev, CT_MEMBER))
          {
-            bool do_break = false;
-            while (  chunk_is_token(prev, CT_TYPE)
-                  || chunk_is_token(prev, CT_DC_MEMBER)
+            while (  chunk_is_token(prev, CT_DC_MEMBER)
                   || chunk_is_token(prev, CT_MEMBER))
             {
                prev = chunk_get_prev_ncnlnp(prev);
@@ -4465,10 +4463,6 @@ static void mark_function(chunk_t *pc)
                   D_LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
                   LOG_FMT(LFCN, " --? skipped MEMBER and landed on %s\n",
                           (prev == nullptr) ? "<null>" : get_token_name(prev->type));
-
-                  set_chunk_type(pc, CT_FUNC_CALL);
-                  isa_def  = false;
-                  do_break = true;
                   break;
                }
 
@@ -4477,7 +4471,10 @@ static void mark_function(chunk_t *pc)
                D_LOG_FMT(LFCN, "\n");
 
                // Issue #1112
-               prev = chunk_get_prev_ncnlnpnd(prev);
+               // clarification: this will skip the CT_WORD, CT_TYPE or CT_THIS landing on either
+               // another CT_DC_MEMBER or CT_MEMBER or a token that indicates the context of the
+               // token in question; therefore, exit loop when not a CT_DC_MEMBER or CT_MEMBER
+               prev = chunk_get_prev_ncnlnp(prev);
                if (prev == nullptr)
                {
                   LOG_FMT(LFCN, "nullptr\n");
@@ -4488,11 +4485,10 @@ static void mark_function(chunk_t *pc)
                           prev->orig_line, prev->orig_col, prev->text());
                }
             }
-            if (do_break)
+            if (prev == nullptr)
             {
                break;
             }
-            continue;
          }
 
          // If we are on a TYPE or WORD, then this could be a proto or def
