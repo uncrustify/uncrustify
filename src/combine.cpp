@@ -6174,8 +6174,7 @@ static void handle_oc_message_decl(chunk_t *pc)
             break;
          }
          // attributes for a method parameter sit between the parameter type and the parameter name
-         tmp = skip_attribute_next(tmp);
-         pc = tmp;
+         pc = skip_attribute_next(tmp);
          // we should now be on the arg name
          chunk_flags_set(pc, PCF_VAR_DEF);
          LOG_FMT(LOCMSGD, " arg[%s]", pc->text());
