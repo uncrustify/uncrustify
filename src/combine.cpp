@@ -1208,10 +1208,6 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             }
          }
       }
-      else if (chunk_is_token(pc, CT_ATTRIBUTE))
-      {
-         flag_parens(next, 0, CT_FPAREN_OPEN, CT_ATTRIBUTE, false);
-      }
    }
    if (language_is_set(LANG_PAWN))
    {
@@ -1960,6 +1956,15 @@ void fix_symbols(void)
       if (is_java && chunk_is_token(pc, CT_BRACE_OPEN))
       {
          check_double_brace_init(pc);
+      }
+
+      if (chunk_is_token(pc, CT_ATTRIBUTE))
+      {
+         chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
+         if (next != nullptr && chunk_is_token(next, CT_PAREN_OPEN))
+         {
+            flag_parens(next, 0, CT_FPAREN_OPEN, CT_ATTRIBUTE, false);
+         }
       }
    }
 
@@ -6168,6 +6173,8 @@ static void handle_oc_message_decl(chunk_t *pc)
                     __func__, __LINE__, pc->orig_line, pc->orig_col);
             break;
          }
+         // attributes for a method parameter sit between the parameter type and the parameter name
+         tmp = skip_attribute_next(tmp);
          pc = tmp;
          // we should now be on the arg name
          chunk_flags_set(pc, PCF_VAR_DEF);
