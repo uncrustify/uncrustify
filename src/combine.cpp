@@ -3526,8 +3526,8 @@ static void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
 
    if (var_name != nullptr)
    {
-      LOG_FMT(LFCNP, "%s(%d): parameter on orig_line %zu :",
-              __func__, __LINE__, var_name->orig_line);
+      LOG_FMT(LFCNP, "%s(%d): parameter on orig_line %zu, orig_col %zu:\n",
+              __func__, __LINE__, var_name->orig_line, var_name->orig_col);
 
       size_t  word_cnt = 0;
       chunk_t *word_type;
@@ -3535,8 +3535,8 @@ static void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
       {
          if (chunk_is_token(word_type, CT_WORD) || chunk_is_token(word_type, CT_TYPE))
          {
-            LOG_FMT(LFCNP, " <%s>", word_type->text());
-
+            LOG_FMT(LFCNP, "%s(%d): parameter on orig_line %zu, orig_col %zu: <%s> as TYPE\n",
+                    __func__, __LINE__, var_name->orig_line, var_name->orig_col, word_type->text());
             set_chunk_type(word_type, CT_TYPE);
             chunk_flags_set(word_type, PCF_VAR_TYPE);
          }
@@ -3547,12 +3547,14 @@ static void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
       {
          if (word_cnt)
          {
-            LOG_FMT(LFCNP, " [%s]\n", var_name->text());
+            LOG_FMT(LFCNP, "%s(%d): parameter on orig_line %zu, orig_col %zu: <%s> as VAR\n",
+                    __func__, __LINE__, var_name->orig_line, var_name->orig_col, var_name->text());
             chunk_flags_set(var_name, PCF_VAR_DEF);
          }
          else
          {
-            LOG_FMT(LFCNP, " <%s>\n", var_name->text());
+            LOG_FMT(LFCNP, "%s(%d): parameter on orig_line %zu, orig_col %zu: <%s> as TYPE\n",
+                    __func__, __LINE__, var_name->orig_line, var_name->orig_col, var_name->text());
             set_chunk_type(var_name, CT_TYPE);
             chunk_flags_set(var_name, PCF_VAR_TYPE);
          }
