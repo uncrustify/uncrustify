@@ -18,6 +18,7 @@
 #include <map>
 #include "unc_ctype.h"
 #include "uncrustify.h"
+#include "language_tools.h"
 
 using namespace std;
 
@@ -484,7 +485,7 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag, int lang_flags
    {
       bool pp_iter = (iter->lang_flags & FLAG_PP) != 0; // forcing value to bool
       if (  (strcmp(iter->tag, tag->tag) == 0)
-         && (cpd.lang_flags & iter->lang_flags)
+         && language_is_set(iter->lang_flags)
          && (lang_flags & iter->lang_flags)
          && in_pp == pp_iter)
       {

@@ -1,5 +1,5 @@
 
-newlines                        = auto
+newlines                        = crlf
 input_tab_size                  = 8
 output_tab_size                 = 8
 string_escape_char              = 92
@@ -210,9 +210,11 @@ sp_before_tr_emb_cmt            = ignore
 sp_num_before_tr_emb_cmt        = 0
 sp_annotation_paren             = ignore
 sp_skip_vbrace_tokens           = false
+sp_after_noexcept               = ignore
 force_tab_after_define          = false
 indent_columns                  = 8
 indent_continue                 = 0
+indent_single_newlines          = false
 indent_param                    = 0
 indent_with_tabs                = 1
 indent_cmt_with_tabs            = false
@@ -306,6 +308,8 @@ nl_if_leave_one_liners          = false
 nl_while_leave_one_liners       = false
 nl_oc_msg_leave_one_liner       = false
 nl_oc_block_brace               = ignore
+nl_oc_interface_brace           = ignore
+nl_oc_implementation_brace      = ignore
 nl_start_of_file                = ignore
 nl_start_of_file_min            = 0
 nl_end_of_file                  = ignore
@@ -631,8 +635,9 @@ include_category_1              = ""
 include_category_2              = ""
 use_indent_func_call_param      = true
 use_indent_continue_only_once   = false
+indent_cpp_lambda_only_once     = false
 use_options_overriding_for_qt_macros = true
 use_mod_strict_ASCII            = false
 warn_level_tabs_found_in_verbatim_string_literals = 2
-# option(s) with 'not default' value: 0
+# option(s) with 'not default' value: 1
 #

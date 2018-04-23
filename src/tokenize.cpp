@@ -19,6 +19,7 @@
 #include "unc_ctype.h"
 #include "uncrustify.h"
 #include "keywords.h"
+#include "language_tools.h"
 
 
 using namespace std;
@@ -473,8 +474,8 @@ static const char *str_search(const char *needle, const char *haystack, int hays
 
 static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 {
-   bool   is_d    = (cpd.lang_flags & LANG_D) != 0;          // forcing value to bool
-   bool   is_cs   = (cpd.lang_flags & LANG_CS) != 0;         // forcing value to bool
+   bool   is_d    = language_is_set(LANG_D);
+   bool   is_cs   = language_is_set(LANG_CS);
    size_t d_level = 0;
 
    // does this start with '/ /' or '/ *' or '/ +' (d)
@@ -830,12 +831,14 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
    /*
     * Check for Hex, Octal, or Binary
     * Note that only D, C++14 and Pawn support binary
+    * Fixes the issue # 1591
+    * In c# the numbers starting with 0 are not treated as octal numbers.
     */
    // Fixes the issue 1591
    // In c# the numbers starting with 0 are not treated as octal numbers.
 
    bool did_hex = false;
-   if (ctx.peek() == '0' && !(cpd.lang_flags & LANG_CS))
+   if (ctx.peek() == '0' && !language_is_set(LANG_CS))
    {
       size_t  ch;
       chunk_t pc_temp;
@@ -1030,7 +1033,7 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, size_t quote_idx, bool allow
    size_t escape_char        = cpd.settings[UO_string_escape_char].u;
    size_t escape_char2       = cpd.settings[UO_string_escape_char2].u;
    bool   should_escape_tabs = (  cpd.settings[UO_string_replace_tab_chars].b
-                               && (cpd.lang_flags & LANG_ALLC));
+                               && language_is_set(LANG_ALLC));
 
    pc.str.clear();
    while (quote_idx-- > 0)
@@ -1483,7 +1486,7 @@ static bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
    else
    {
       // '@interface' is reserved, not an interface itself
-      if (  (cpd.lang_flags & LANG_JAVA)
+      if (  language_is_set(LANG_JAVA)
          && pc.str.startswith("@")
          && !pc.str.equals(intr_txt))
       {
@@ -1809,7 +1812,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       return(true);
    }
 
-   if (cpd.lang_flags & LANG_CS)
+   if (language_is_set(LANG_CS))
    {
       if (parse_cs_string(ctx, pc))
       {
@@ -1824,7 +1827,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    }
 
    // handle VALA """ strings """
-   if (  (cpd.lang_flags & LANG_VALA)
+   if (  language_is_set(LANG_VALA)
       && (ctx.peek() == '"')
       && (ctx.peek(1) == '"')
       && (ctx.peek(2) == '"'))
@@ -1838,7 +1841,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
     * possible combinations and optional R delimiters: R"delim(x)delim"
     */
    auto ch = ctx.peek();
-   if (  ((cpd.lang_flags & LANG_CPP) || (cpd.lang_flags & LANG_C))
+   if (  language_is_set(LANG_C | LANG_CPP)
       && (  ch == 'u'
          || ch == 'U'
          || ch == 'R'
@@ -1856,7 +1859,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
          idx++;
       }
 
-      if (  ((cpd.lang_flags & LANG_CPP) || (cpd.lang_flags & LANG_C))
+      if (  language_is_set(LANG_C | LANG_CPP)
          && ctx.peek(idx) == 'R')
       {
          idx++;
@@ -1880,7 +1883,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    }
 
    // PAWN specific stuff
-   if (cpd.lang_flags & LANG_PAWN)
+   if (language_is_set(LANG_PAWN))
    {
       if (  cpd.preproc_ncnl_count == 1
          && (cpd.in_preproc == CT_PP_DEFINE || cpd.in_preproc == CT_PP_EMIT))
@@ -1927,7 +1930,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       return(true);
    }
 
-   if (cpd.lang_flags & LANG_D)
+   if (language_is_set(LANG_D))
    {
       // D specific stuff
       if (d_parse_string(ctx, pc))
@@ -1954,7 +1957,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
 
       if ((ch == '<') && cpd.in_preproc == CT_PP_DEFINE)
       {
-         if (chunk_get_tail() != nullptr && chunk_get_tail()->type == CT_MACRO)
+         if (chunk_is_token(chunk_get_tail(), CT_MACRO))
          {
             // We have "#define XXX <", assume '<' starts an include string
             parse_string(ctx, pc, 0, false);
@@ -1965,8 +1968,8 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       /* Inside clang's __has_include() could be "path/to/file.h" or system-style <path/to/file.h> */
       if (  (ch == '(')
          && (chunk_get_tail() != nullptr)
-         && (  (chunk_get_tail()->type == CT_CNG_HASINC)
-            || (chunk_get_tail()->type == CT_CNG_HASINCN)))
+         && (  chunk_is_token(chunk_get_tail(), CT_CNG_HASINC)
+            || chunk_is_token(chunk_get_tail(), CT_CNG_HASINCN)))
       {
          parse_string(ctx, pc, 0, false);
          return(true);
@@ -1974,7 +1977,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    }
 
    // Check for Objective C literals and VALA identifiers ('@1', '@if')
-   if ((cpd.lang_flags & (LANG_OC | LANG_VALA)) && (ctx.peek() == '@'))
+   if (language_is_set(LANG_OC | LANG_VALA) && (ctx.peek() == '@'))
    {
       size_t nc = ctx.peek(1);
       if ((nc == '"') || (nc == '\''))
@@ -2029,7 +2032,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
     * considering it as garbage.
     */
    int probe_lang_flags = 0;
-   if (cpd.lang_flags & (LANG_C | LANG_CPP))
+   if (language_is_set(LANG_C | LANG_CPP))
    {
       probe_lang_flags = cpd.lang_flags | LANG_OC;
    }
@@ -2139,7 +2142,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
          chunk_flags_set(pc, rprev->flags & PCF_COPY_FLAGS);
 
          // a newline can't be in a preprocessor
-         if (pc->type == CT_NEWLINE)
+         if (chunk_is_token(pc, CT_NEWLINE))
          {
             chunk_flags_clr(pc, PCF_IN_PREPROC);
          }
@@ -2155,14 +2158,14 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       pc = chunk_add_before(&chunk, ref);
 
       // A newline marks the end of a preprocessor
-      if (pc->type == CT_NEWLINE) // || pc->type == CT_COMMENT_MULTI)
+      if (chunk_is_token(pc, CT_NEWLINE)) // || chunk_is_token(pc, CT_COMMENT_MULTI))
       {
          cpd.in_preproc         = CT_NONE;
          cpd.preproc_ncnl_count = 0;
       }
 
       // Disable indentation when #asm directive found
-      if (pc->type == CT_PP_ASM)
+      if (chunk_is_token(pc, CT_PP_ASM))
       {
          LOG_FMT(LBCTRL, "Found a directive %s on line %zu\n", "#asm", pc->orig_line);
          cpd.unc_off = true;
@@ -2222,7 +2225,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
             }
          }
          else if (  cpd.in_preproc == CT_PP_DEFINE
-                 && pc->type == CT_PAREN_CLOSE
+                 && chunk_is_token(pc, CT_PAREN_CLOSE)
                  && cpd.settings[UO_pp_ignore_define_body].b)
          {
             // When we have a PAREN_CLOSE in a PP_DEFINE we should be terminating a MACRO_FUNC
@@ -2233,20 +2236,20 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       else
       {
          // Check for a preprocessor start
-         if (  pc->type == CT_POUND
-            && (rprev == nullptr || rprev->type == CT_NEWLINE))
+         if (  chunk_is_token(pc, CT_POUND)
+            && (rprev == nullptr || chunk_is_token(rprev, CT_NEWLINE)))
          {
             set_chunk_type(pc, CT_PREPROC);
             pc->flags     |= PCF_IN_PREPROC;
             cpd.in_preproc = CT_PREPROC;
          }
       }
-      if (pc->type == CT_NEWLINE)
+      if (chunk_is_token(pc, CT_NEWLINE))
       {
          LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>, nl is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->nl_count);
       }
-      else if (pc->type == CT_VBRACE_OPEN)
+      else if (chunk_is_token(pc, CT_VBRACE_OPEN))
       {
          LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s, orig_col_end is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type), pc->orig_col_end);
@@ -2275,7 +2278,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
    {
       // CRLF line ends
       cpd.newline = "\r\n";
-      LOG_FMT(LLINEENDS, "Using CRLF line endings\n");
+      LOG_FMT(LLINEENDS, "Using CRLF line endings\r\n");
    }
    else
    {

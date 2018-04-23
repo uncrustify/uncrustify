@@ -1,5 +1,16 @@
-Change highlights in current git (December 2017)
+Change highlights in current git preview (March 2018)
 -------------------------------------------------------------------------------
+
+New options:
+  - sp_inside_square_oc_array            Feb 23
+  - sp_oc_catch_paren                    Feb 23
+  - sp_oc_catch_brace                    Feb 23
+  - sp_oc_brace_catch                    Feb 23
+  - nl_oc_catch_brace                    Feb 23
+  - nl_oc_brace_catch               2018 Feb 23
+
+New keyword:
+  - @available                      2018 Feb 23
 
 Bugfix:
  - Debian issue #881249 "FTBFS on armel/i386/mips64el/s390x: cpp_33057 fails"
@@ -88,6 +99,7 @@ New:
   - emscripten interface
   - removal of autogen / configure build
   - list options that are now AT_UNUM type
+  - change option name from align_number_left to align_number_right
 
 Removed option:
   - dont_protect_xcode_code_placeholders

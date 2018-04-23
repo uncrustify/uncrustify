@@ -20,6 +20,8 @@
 #include "space.h"
 #include "combine.h"
 #include "keywords.h"
+#include "language_tools.h"
+
 #include <cstring>
 
 
@@ -68,8 +70,8 @@ static chunk_t *handle_double_angle_close(chunk_t *pc)
 
    if (next)
    {
-      if (  pc->type == CT_ANGLE_CLOSE
-         && next->type == CT_ANGLE_CLOSE
+      if (  chunk_is_token(pc, CT_ANGLE_CLOSE)
+         && chunk_is_token(next, CT_ANGLE_CLOSE)
          && pc->parent_type == CT_NONE
          && (pc->orig_col_end + 1) == next->orig_col
          && next->parent_type == CT_NONE)
@@ -240,7 +242,7 @@ void tokenize_cleanup(void)
             chunk_del(next);
          }
       }
-      if (  pc->type == CT_SEMICOLON
+      if (  chunk_is_token(pc, CT_SEMICOLON)
          && (pc->flags & PCF_IN_PREPROC)
          && !chunk_get_next_ncnl(pc, scope_e::PREPROC))
       {
@@ -254,20 +256,20 @@ void tokenize_cleanup(void)
    next = chunk_get_next_ncnl(pc);
    while (pc != nullptr && next != nullptr)
    {
-      if (pc->type == CT_DOT && (cpd.lang_flags & LANG_ALLC))
+      if (chunk_is_token(pc, CT_DOT) && language_is_set(LANG_ALLC))
       {
          set_chunk_type(pc, CT_MEMBER);
       }
 
-      if (pc->type == CT_NULLCOND && (cpd.lang_flags & LANG_CS))
+      if (chunk_is_token(pc, CT_NULLCOND) && language_is_set(LANG_CS))
       {
          set_chunk_type(pc, CT_MEMBER);
       }
 
       // Determine the version stuff (D only)
-      if (pc->type == CT_D_VERSION)
+      if (chunk_is_token(pc, CT_D_VERSION))
       {
-         if (next->type == CT_PAREN_OPEN)
+         if (chunk_is_token(next, CT_PAREN_OPEN))
          {
             set_chunk_type(pc, CT_D_VERSION_IF);
          }
@@ -284,9 +286,9 @@ void tokenize_cleanup(void)
       }
 
       // Determine the scope stuff (D only)
-      if (pc->type == CT_D_SCOPE)
+      if (chunk_is_token(pc, CT_D_SCOPE))
       {
-         if (next->type == CT_PAREN_OPEN)
+         if (chunk_is_token(next, CT_PAREN_OPEN))
          {
             set_chunk_type(pc, CT_D_SCOPE_IF);
          }
@@ -302,12 +304,14 @@ void tokenize_cleanup(void)
        * -or-
        * var x = (T)base.y;
        */
-      if (pc->type == CT_BASE && (next->type == CT_PAREN_OPEN || next->type == CT_DOT))
+      if (  chunk_is_token(pc, CT_BASE)
+         && (chunk_is_token(next, CT_PAREN_OPEN) || chunk_is_token(next, CT_DOT)))
       {
          set_chunk_type(pc, CT_WORD);
       }
 
-      if (pc->type == CT_ENUM && next->type == CT_CLASS)
+      if (  chunk_is_token(pc, CT_ENUM)
+         && chunk_is_token(next, CT_CLASS))
       {
          set_chunk_type(next, CT_ENUM_CLASS);
       }
@@ -316,16 +320,16 @@ void tokenize_cleanup(void)
        * Change CT_WORD after CT_ENUM, CT_UNION, or CT_STRUCT to CT_TYPE
        * Change CT_WORD before CT_WORD to CT_TYPE
        */
-      if (next->type == CT_WORD)
+      if (chunk_is_token(next, CT_WORD))
       {
-         if (  pc->type == CT_ENUM
-            || pc->type == CT_ENUM_CLASS
-            || pc->type == CT_UNION
-            || pc->type == CT_STRUCT)
+         if (  chunk_is_token(pc, CT_ENUM)
+            || chunk_is_token(pc, CT_ENUM_CLASS)
+            || chunk_is_token(pc, CT_UNION)
+            || chunk_is_token(pc, CT_STRUCT))
          {
             set_chunk_type(next, CT_TYPE);
          }
-         if (pc->type == CT_WORD)
+         if (chunk_is_token(pc, CT_WORD))
          {
             set_chunk_type(pc, CT_TYPE);
          }
@@ -335,13 +339,13 @@ void tokenize_cleanup(void)
        * change extern to qualifier if extern isn't followed by a string or
        * an open parenthesis
        */
-      if (pc->type == CT_EXTERN)
+      if (chunk_is_token(pc, CT_EXTERN))
       {
-         if (next->type == CT_STRING)
+         if (chunk_is_token(next, CT_STRING))
          {
             // Probably 'extern "C"'
          }
-         else if (next->type == CT_PAREN_OPEN)
+         else if (chunk_is_token(next, CT_PAREN_OPEN))
          {
             // Probably 'extern (C)'
          }
@@ -362,39 +366,33 @@ void tokenize_cleanup(void)
        * or by a
        *     CT_WORD which is preceded by CT_DC_MEMBER: '::aaa *b'
        */
-      if (  (next->type == CT_STAR)
-         || ((cpd.lang_flags & LANG_CPP) && (next->type == CT_CARET))
-         || ((cpd.lang_flags & LANG_CS) && (next->type == CT_QUESTION) && (strcmp(pc->text(), "null") != 0)))
+      if (  (chunk_is_token(next, CT_STAR))
+         || (language_is_set(LANG_CPP) && (chunk_is_token(next, CT_CARET)))
+         || (language_is_set(LANG_CS) && (chunk_is_token(next, CT_QUESTION)) && (strcmp(pc->text(), "null") != 0)))
       {
-         if (  pc->type == CT_TYPE
-            || pc->type == CT_QUALIFIER
-            || pc->type == CT_PTR_TYPE)
+         if (  chunk_is_token(pc, CT_TYPE)
+            || chunk_is_token(pc, CT_QUALIFIER)
+            || chunk_is_token(pc, CT_PTR_TYPE))
          {
-            set_chunk_type(next, CT_PTR_TYPE);
-         }
-         else if (  pc->type == CT_WORD
-                 && chunk_is_token(prev, CT_DC_MEMBER)
-                 && (cpd.lang_flags & LANG_CPP) != 0)
-         {
-            set_chunk_type(pc, CT_TYPE);
             set_chunk_type(next, CT_PTR_TYPE);
          }
       }
 
-      if (pc->type == CT_TYPE_CAST && next->type == CT_ANGLE_OPEN)
+      if (  chunk_is_token(pc, CT_TYPE_CAST)
+         && chunk_is_token(next, CT_ANGLE_OPEN))
       {
          set_chunk_parent(next, CT_TYPE_CAST);
          in_type_cast = true;
       }
 
       // Change angle open/close to CT_COMPARE, if not a template thingy
-      if (pc->type == CT_ANGLE_OPEN && pc->parent_type != CT_TYPE_CAST)
+      if (chunk_is_token(pc, CT_ANGLE_OPEN) && pc->parent_type != CT_TYPE_CAST)
       {
          /*
           * pretty much all languages except C use <> for something other than
           * comparisons.  "#include<xxx>" is handled elsewhere.
           */
-         if (cpd.lang_flags & (LANG_CPP | LANG_CS | LANG_JAVA | LANG_VALA | LANG_OC))
+         if (language_is_set(LANG_OC | LANG_CPP | LANG_CS | LANG_JAVA | LANG_VALA))
          {
             // bug #663
             check_template(pc);
@@ -405,7 +403,7 @@ void tokenize_cleanup(void)
             set_chunk_type(pc, CT_COMPARE);
          }
       }
-      if (pc->type == CT_ANGLE_CLOSE && pc->parent_type != CT_TEMPLATE)
+      if (chunk_is_token(pc, CT_ANGLE_CLOSE) && pc->parent_type != CT_TEMPLATE)
       {
          if (in_type_cast)
          {
@@ -418,36 +416,36 @@ void tokenize_cleanup(void)
          }
       }
 
-      if (cpd.lang_flags & LANG_D)
+      if (language_is_set(LANG_D))
       {
          // Check for the D string concat symbol '~'
-         if (  pc->type == CT_INV
-            && (  prev->type == CT_STRING
-               || prev->type == CT_WORD
-               || next->type == CT_STRING))
+         if (  chunk_is_token(pc, CT_INV)
+            && (  chunk_is_token(prev, CT_STRING)
+               || chunk_is_token(prev, CT_WORD)
+               || chunk_is_token(next, CT_STRING)))
          {
             set_chunk_type(pc, CT_CONCAT);
          }
 
          // Check for the D template symbol '!' (word + '!' + word or '(')
-         if (  pc->type == CT_NOT
-            && prev->type == CT_WORD
-            && (  next->type == CT_PAREN_OPEN
-               || next->type == CT_WORD
-               || next->type == CT_TYPE))
+         if (  chunk_is_token(pc, CT_NOT)
+            && chunk_is_token(prev, CT_WORD)
+            && (  chunk_is_token(next, CT_PAREN_OPEN)
+               || chunk_is_token(next, CT_WORD)
+               || chunk_is_token(next, CT_TYPE)))
          {
             set_chunk_type(pc, CT_D_TEMPLATE);
          }
 
          // handle "version(unittest) { }" vs "unittest { }"
-         if (pc->type == CT_UNITTEST && chunk_is_token(prev, CT_PAREN_OPEN))
+         if (  chunk_is_token(pc, CT_UNITTEST)
+            && chunk_is_token(prev, CT_PAREN_OPEN))
          {
             set_chunk_type(pc, CT_WORD);
          }
 
          // handle 'static if' and merge the tokens
-         if (  prev
-            && pc->type == CT_IF
+         if (  chunk_is_token(pc, CT_IF)
             && chunk_is_str(prev, "static", 6))
          {
             // delete PREV and merge with IF
@@ -457,26 +455,31 @@ void tokenize_cleanup(void)
             pc->orig_line = prev->orig_line;
             chunk_t *to_be_deleted = prev;
             prev = chunk_get_prev_ncnl(prev);
-            chunk_del(to_be_deleted);
+            if (prev != nullptr)
+            {
+               chunk_del(to_be_deleted);
+            }
          }
       }
 
-      if (cpd.lang_flags & LANG_CPP)
+      if (language_is_set(LANG_CPP))
       {
          // Change Word before '::' into a type
-         if (pc->type == CT_WORD && next->type == CT_DC_MEMBER)
+         if (  chunk_is_token(pc, CT_WORD)
+            && chunk_is_token(next, CT_DC_MEMBER))
          {
             set_chunk_type(pc, CT_TYPE);
          }
       }
 
       // Change get/set to CT_WORD if not followed by a brace open
-      if (pc->type == CT_GETSET && next->type != CT_BRACE_OPEN)
+      if (  chunk_is_token(pc, CT_GETSET)
+         && next->type != CT_BRACE_OPEN)
       {
-         if (  next->type == CT_SEMICOLON
-            && (  prev->type == CT_BRACE_CLOSE
-               || prev->type == CT_BRACE_OPEN
-               || prev->type == CT_SEMICOLON))
+         if (  chunk_is_token(next, CT_SEMICOLON)
+            && (  chunk_is_token(prev, CT_BRACE_CLOSE)
+               || chunk_is_token(prev, CT_BRACE_OPEN)
+               || chunk_is_token(prev, CT_SEMICOLON)))
          {
             set_chunk_type(pc, CT_GETSET_EMPTY);
             set_chunk_parent(next, CT_GETSET);
@@ -491,7 +494,7 @@ void tokenize_cleanup(void)
        * Interface is only a keyword in MS land if followed by 'class' or 'struct'
        * likewise, 'class' may be a member name in Java.
        */
-      if (  pc->type == CT_CLASS
+      if (  chunk_is_token(pc, CT_CLASS)
          && !CharTable::IsKw1(next->str[0])
          && pc->next->type != CT_DC_MEMBER)
       {
@@ -515,11 +518,11 @@ void tokenize_cleanup(void)
        * In all cases except the last, this will put the entire operator value
        * in one chunk.
        */
-      if (pc->type == CT_OPERATOR)
+      if (chunk_is_token(pc, CT_OPERATOR))
       {
          chunk_t *tmp2 = chunk_get_next(next);
          // Handle special case of () operator -- [] already handled
-         if (next->type == CT_PAREN_OPEN)
+         if (chunk_is_token(next, CT_PAREN_OPEN))
          {
             chunk_t *tmp = chunk_get_next(next);
             if (chunk_is_token(tmp, CT_PAREN_CLOSE))
@@ -530,9 +533,8 @@ void tokenize_cleanup(void)
                next->orig_col_end += 1;
             }
          }
-         else if (  next->type == CT_ANGLE_CLOSE
-                 && tmp2
-                 && tmp2->type == CT_ANGLE_CLOSE
+         else if (  chunk_is_token(next, CT_ANGLE_CLOSE)
+                 && chunk_is_token(tmp2, CT_ANGLE_CLOSE)
                  && tmp2->orig_col == next->orig_col_end)
          {
             next->str.append('>');
@@ -593,7 +595,7 @@ void tokenize_cleanup(void)
       }
 
       // Change private, public, protected into either a qualifier or label
-      if (pc->type == CT_PRIVATE)
+      if (chunk_is_token(pc, CT_PRIVATE))
       {
          // Handle Qt slots - maybe should just check for a CT_WORD?
          if (chunk_is_str(next, "slots", 5) || chunk_is_str(next, "Q_SLOTS", 7))
@@ -604,7 +606,7 @@ void tokenize_cleanup(void)
                next = tmp;
             }
          }
-         if (next->type == CT_COLON)
+         if (chunk_is_token(next, CT_COLON))
          {
             set_chunk_type(next, CT_PRIVATE_COLON);
             chunk_t *tmp;
@@ -625,8 +627,8 @@ void tokenize_cleanup(void)
       if (  (chunk_is_str_case(pc, "EXEC", 4) && chunk_is_str_case(next, "SQL", 3))
          || (  (*pc->str.c_str() == '$') && pc->type != CT_SQL_WORD
                /* but avoid breaking tokenization for C# 6 interpolated strings. */
-            && (  (cpd.lang_flags & LANG_CS) == 0
-               || ((pc->type == CT_STRING) && (!pc->str.startswith("$\"")) && (!pc->str.startswith("$@\""))))))
+            && (  !language_is_set(LANG_CS)
+               || ((chunk_is_token(pc, CT_STRING)) && (!pc->str.startswith("$\"")) && (!pc->str.startswith("$@\""))))))
       {
          chunk_t *tmp = chunk_get_prev(pc);
          if (chunk_is_newline(tmp))
@@ -669,7 +671,7 @@ void tokenize_cleanup(void)
             // Change words into CT_SQL_WORD until CT_SEMICOLON
             while (tmp != nullptr)
             {
-               if (tmp->type == CT_SEMICOLON)
+               if (chunk_is_token(tmp, CT_SEMICOLON))
                {
                   break;
                }
@@ -685,7 +687,7 @@ void tokenize_cleanup(void)
       }
 
       // handle MS abomination 'for each'
-      if (  pc->type == CT_FOR
+      if (  chunk_is_token(pc, CT_FOR)
          && chunk_is_str(next, "each", 4)
          && (next == chunk_get_next(pc)))
       {
@@ -696,7 +698,7 @@ void tokenize_cleanup(void)
          chunk_del(next);
          next = chunk_get_next_ncnl(pc);
          // label the 'in'
-         if (next && next->type == CT_PAREN_OPEN)
+         if (chunk_is_token(next, CT_PAREN_OPEN))
          {
             chunk_t *tmp = chunk_get_next_ncnl(next);
             while (tmp && tmp->type != CT_PAREN_CLOSE)
@@ -715,16 +717,16 @@ void tokenize_cleanup(void)
        * ObjectiveC allows keywords to be used as identifiers in some situations
        * This is a dirty hack to allow some of the more common situations.
        */
-      if (cpd.lang_flags & LANG_OC)
+      if (language_is_set(LANG_OC))
       {
-         if (  (  pc->type == CT_IF
-               || pc->type == CT_FOR
-               || pc->type == CT_WHILE)
+         if (  (  chunk_is_token(pc, CT_IF)
+               || chunk_is_token(pc, CT_FOR)
+               || chunk_is_token(pc, CT_WHILE))
             && !chunk_is_token(next, CT_PAREN_OPEN))
          {
             set_chunk_type(pc, CT_WORD);
          }
-         if (  pc->type == CT_DO
+         if (  chunk_is_token(pc, CT_DO)
             && (  chunk_is_token(prev, CT_MINUS)
                || chunk_is_token(next, CT_SQUARE_CLOSE)))
          {
@@ -732,29 +734,32 @@ void tokenize_cleanup(void)
          }
 
          // Fix self keyword back to word when mixing c++/objective-c
-         if (pc->type == CT_THIS && !strcmp(pc->text(), "self") && (next->type == CT_COMMA || next->type == CT_PAREN_CLOSE))
+         if (  chunk_is_token(pc, CT_THIS) && !strcmp(pc->text(), "self")
+            && (chunk_is_token(next, CT_COMMA) || chunk_is_token(next, CT_PAREN_CLOSE)))
          {
             set_chunk_type(pc, CT_WORD);
          }
 
          // Fix self keyword back to word when mixing c++/objective-c
-         if (pc->type == CT_THIS && !strcmp(pc->text(), "self") && (next->type == CT_COMMA || next->type == CT_PAREN_CLOSE))
+         if (  chunk_is_token(pc, CT_THIS)
+            && !strcmp(pc->text(), "self")
+            && (chunk_is_token(next, CT_COMMA) || chunk_is_token(next, CT_PAREN_CLOSE)))
          {
             set_chunk_type(pc, CT_WORD);
          }
       }
 
       // Another hack to clean up more keyword abuse
-      if (  pc->type == CT_CLASS
+      if (  chunk_is_token(pc, CT_CLASS)
          && (chunk_is_token(prev, CT_DOT) || chunk_is_token(next, CT_DOT)))
       {
          set_chunk_type(pc, CT_WORD);
       }
 
       // Detect Objective C class name
-      if (  pc->type == CT_OC_IMPL
-         || pc->type == CT_OC_INTF
-         || pc->type == CT_OC_PROTOCOL)
+      if (  chunk_is_token(pc, CT_OC_IMPL)
+         || chunk_is_token(pc, CT_OC_INTF)
+         || chunk_is_token(pc, CT_OC_PROTOCOL))
       {
          if (next->type != CT_PAREN_OPEN)
          {
@@ -775,7 +780,7 @@ void tokenize_cleanup(void)
          }
       }
 
-      if (pc->type == CT_OC_INTF)
+      if (chunk_is_token(pc, CT_OC_INTF))
       {
          chunk_t *tmp = chunk_get_next_ncnl(pc, scope_e::PREPROC);
          while (tmp != nullptr && tmp->type != CT_OC_END)
@@ -800,15 +805,15 @@ void tokenize_cleanup(void)
        */
       if (  (  pc->parent_type == CT_OC_IMPL
             || pc->parent_type == CT_OC_INTF
-            || pc->type == CT_OC_CLASS)
-         && next->type == CT_PAREN_OPEN)
+            || chunk_is_token(pc, CT_OC_CLASS))
+         && chunk_is_token(next, CT_PAREN_OPEN))
       {
          set_chunk_parent(next, pc->parent_type);
 
          chunk_t *tmp = chunk_get_next(next);
          if (tmp != nullptr && tmp->next != nullptr)
          {
-            if (tmp->type == CT_PAREN_CLOSE)
+            if (chunk_is_token(tmp, CT_PAREN_CLOSE))
             {
                //set_chunk_type(tmp, CT_OC_CLASS_EXT);
                set_chunk_parent(tmp, pc->parent_type);
@@ -832,7 +837,7 @@ void tokenize_cleanup(void)
        *   @property NSString *stringProperty;
        *   @property(nonatomic, retain) NSMutableDictionary *shareWith;
        */
-      if (pc->type == CT_OC_PROPERTY)
+      if (chunk_is_token(pc, CT_OC_PROPERTY))
       {
          if (next->type != CT_PAREN_OPEN)
          {
@@ -850,7 +855,8 @@ void tokenize_cleanup(void)
        *   @selector(msgNameWith1Arg:)
        *   @selector(msgNameWith2Args:arg2Name:)
        */
-      if (pc->type == CT_OC_SEL && next->type == CT_PAREN_OPEN)
+      if (  chunk_is_token(pc, CT_OC_SEL)
+         && chunk_is_token(next, CT_PAREN_OPEN))
       {
          set_chunk_parent(next, pc->type);
 
@@ -862,7 +868,7 @@ void tokenize_cleanup(void)
 
             while ((tmp = chunk_get_next_ncnl(tmp)) != nullptr)
             {
-               if (tmp->type == CT_PAREN_CLOSE)
+               if (chunk_is_token(tmp, CT_PAREN_CLOSE))
                {
                   set_chunk_parent(tmp, CT_OC_SEL);
                   break;
@@ -874,13 +880,14 @@ void tokenize_cleanup(void)
       }
 
       // Handle special preprocessor junk
-      if (pc->type == CT_PREPROC)
+      if (chunk_is_token(pc, CT_PREPROC))
       {
          set_chunk_parent(pc, next->type);
       }
 
       // Detect "pragma region" and "pragma endregion"
-      if (pc->type == CT_PP_PRAGMA && next->type == CT_PREPROC_BODY)
+      if (  chunk_is_token(pc, CT_PP_PRAGMA)
+         && chunk_is_token(next, CT_PREPROC_BODY))
       {
          if (  (strncmp(next->str.c_str(), "region", 6) == 0)
             || (strncmp(next->str.c_str(), "endregion", 9) == 0))
@@ -892,33 +899,32 @@ void tokenize_cleanup(void)
          }
       }
 
-
       // Change 'default(' into a sizeof-like statement
-      if (  (cpd.lang_flags & LANG_CS)
-         && pc->type == CT_DEFAULT
-         && next->type == CT_PAREN_OPEN)
+      if (  language_is_set(LANG_CS)
+         && chunk_is_token(pc, CT_DEFAULT)
+         && chunk_is_token(next, CT_PAREN_OPEN))
       {
          set_chunk_type(pc, CT_SIZEOF);
       }
 
-      if (pc->type == CT_UNSAFE && next->type != CT_BRACE_OPEN)
+      if (chunk_is_token(pc, CT_UNSAFE) && next->type != CT_BRACE_OPEN)
       {
          set_chunk_type(pc, CT_QUALIFIER);
       }
 
-      if (  (  pc->type == CT_USING
-            || (pc->type == CT_TRY && (cpd.lang_flags & LANG_JAVA)))
-         && next->type == CT_PAREN_OPEN)
+      if (  (  chunk_is_token(pc, CT_USING)
+            || (chunk_is_token(pc, CT_TRY) && language_is_set(LANG_JAVA)))
+         && chunk_is_token(next, CT_PAREN_OPEN))
       {
          set_chunk_type(pc, CT_USING_STMT);
       }
 
       // Add minimal support for C++0x rvalue references
-      if (  pc->type == CT_BOOL
-         && (cpd.lang_flags & LANG_CPP)
+      if (  chunk_is_token(pc, CT_BOOL)
+         && language_is_set(LANG_CPP)
          && chunk_is_str(pc, "&&", 2))
       {
-         if (prev->type == CT_TYPE)
+         if (chunk_is_token(prev, CT_TYPE))
          {
             // Issue # 1002
             if ((pc->flags & PCF_IN_TEMPLATE) == 0)
@@ -932,7 +938,7 @@ void tokenize_cleanup(void)
        * HACK: treat try followed by a colon as a qualifier to handle this:
        *   A::A(int) try : B() { } catch (...) { }
        */
-      if (  pc->type == CT_TRY
+      if (  chunk_is_token(pc, CT_TRY)
          && chunk_is_str(pc, "try", 3)
          && chunk_is_token(next, CT_COLON))
       {
@@ -943,16 +949,16 @@ void tokenize_cleanup(void)
        * If Java's 'synchronized' is in a method declaration, it should be
        * a qualifier.
        */
-      if (  (cpd.lang_flags & LANG_JAVA)
-         && pc->type == CT_SYNCHRONIZED
+      if (  language_is_set(LANG_JAVA)
+         && chunk_is_token(pc, CT_SYNCHRONIZED)
          && next->type != CT_PAREN_OPEN)
       {
          set_chunk_type(pc, CT_QUALIFIER);
       }
 
       // change CT_DC_MEMBER + CT_FOR into CT_DC_MEMBER + CT_FUNC_CALL
-      if (  pc->type == CT_FOR
-         && (pc->prev != nullptr && pc->prev->type == CT_DC_MEMBER))
+      if (  chunk_is_token(pc, CT_FOR)
+         && chunk_is_token(pc->prev, CT_DC_MEMBER))
       {
          set_chunk_type(pc, CT_FUNC_CALL);
       }
@@ -978,7 +984,7 @@ static void check_template(chunk_t *start)
 
    chunk_t *end;
    chunk_t *pc;
-   if (prev->type == CT_TEMPLATE)
+   if (chunk_is_token(prev, CT_TEMPLATE))
    {
       LOG_FMT(LTEMPL, "%s(%d): CT_TEMPLATE:\n", __func__, __LINE__);
 
@@ -1047,9 +1053,9 @@ static void check_template(chunk_t *start)
       pc = start;
       while ((pc = chunk_get_prev_ncnl(pc, scope_e::PREPROC)) != nullptr)
       {
-         if (  (pc->type == CT_SEMICOLON && hit_semicolon)
-            || pc->type == CT_BRACE_OPEN
-            || pc->type == CT_BRACE_CLOSE)
+         if (  (chunk_is_token(pc, CT_SEMICOLON) && hit_semicolon)
+            || chunk_is_token(pc, CT_BRACE_OPEN)
+            || chunk_is_token(pc, CT_BRACE_CLOSE))
          {
             break;
          }
@@ -1072,11 +1078,11 @@ static void check_template(chunk_t *start)
          {
             hit_semicolon = true;
          }
-         if (  ((  pc->type == CT_IF
-                || pc->type == CT_RETURN
-                || pc->type == CT_WHILE
-                || pc->type == CT_WHILE_OF_DO) && !hit_semicolon)
-            || (pc->type == CT_FOR && hit_semicolon))
+         if (  ((  chunk_is_token(pc, CT_IF)
+                || chunk_is_token(pc, CT_RETURN)
+                || chunk_is_token(pc, CT_WHILE)
+                || chunk_is_token(pc, CT_WHILE_OF_DO)) && hit_semicolon == false)
+            || (chunk_is_token(pc, CT_FOR) && hit_semicolon == true))
          {
             in_if = true;
             break;
@@ -1133,17 +1139,17 @@ static void check_template(chunk_t *start)
             }
          }
          else if (  in_if
-                 && (pc->type == CT_BOOL || pc->type == CT_COMPARE))
+                 && (chunk_is_token(pc, CT_BOOL) || chunk_is_token(pc, CT_COMPARE)))
          {
             break;
          }
-         else if (  pc->type == CT_BRACE_OPEN
-                 || pc->type == CT_BRACE_CLOSE
-                 || pc->type == CT_SEMICOLON)
+         else if (  chunk_is_token(pc, CT_BRACE_OPEN)
+                 || chunk_is_token(pc, CT_BRACE_CLOSE)
+                 || chunk_is_token(pc, CT_SEMICOLON))
          {
             break;
          }
-         else if (pc->type == CT_PAREN_OPEN)
+         else if (chunk_is_token(pc, CT_PAREN_OPEN))
          {
             if (num_tokens >= MAX_NUMBER_OF_TOKEN - 1)
             {
@@ -1152,7 +1158,7 @@ static void check_template(chunk_t *start)
             tokens[num_tokens] = CT_PAREN_OPEN;
             num_tokens++;
          }
-         else if (pc->type == CT_PAREN_CLOSE)
+         else if (chunk_is_token(pc, CT_PAREN_CLOSE))
          {
             num_tokens--;
             if (tokens[num_tokens] != CT_PAREN_OPEN)
@@ -1195,8 +1201,8 @@ static void check_template(chunk_t *start)
             chunk_flags_set(pc, PCF_IN_TEMPLATE);
             if (next->type != CT_PAREN_OPEN)
             {
-               if (  pc->type == CT_NUMBER
-                  || (pc->type == CT_ARITH && pc->type != CT_STAR))
+               if (  chunk_is_token(pc, CT_NUMBER)
+                  || (chunk_is_token(pc, CT_ARITH) && pc->type != CT_STAR))
                {
                   expressionIsNumeric = true;
                   break;
@@ -1277,7 +1283,7 @@ static void mark_selectors_in_property_with_open_paren(chunk_t *open_paren)
 
    while (tmp && tmp->type != CT_PAREN_CLOSE)
    {
-      if (  tmp->type == CT_WORD
+      if (  chunk_is_token(tmp, CT_WORD)
          && (chunk_is_str(tmp, "setter", 6) || chunk_is_str(tmp, "getter", 6)))
       {
          tmp = tmp->next;
@@ -1285,7 +1291,7 @@ static void mark_selectors_in_property_with_open_paren(chunk_t *open_paren)
                && tmp->type != CT_COMMA
                && tmp->type != CT_PAREN_CLOSE)
          {
-            if (tmp->type == CT_WORD || chunk_is_str(tmp, ":", 1))
+            if (chunk_is_token(tmp, CT_WORD) || chunk_is_str(tmp, ":", 1))
             {
                tmp->type = CT_OC_SEL_NAME;
             }
@@ -1308,9 +1314,8 @@ static void mark_attributes_in_property_with_open_paren(chunk_t *open_paren)
 
    while (tmp && tmp->type != CT_PAREN_CLOSE)
    {
-      if (  (tmp->type == CT_COMMA || tmp->type == CT_PAREN_OPEN)
-         && tmp->next
-         && (tmp->next->type == CT_WORD || tmp->next->type == CT_TYPE))
+      if (  (chunk_is_token(tmp, CT_COMMA) || chunk_is_token(tmp, CT_PAREN_OPEN))
+         && (chunk_is_token(tmp->next, CT_WORD) || chunk_is_token(tmp->next, CT_TYPE)))
       {
          tmp->next->type = CT_OC_PROPERTY_ATTR;
       }

@@ -28,6 +28,7 @@
 #include <cstring>
 #include "unc_ctype.h"
 #include "uncrustify.h"
+#include "language_tools.h"
 
 #include <algorithm>
 
@@ -148,28 +149,28 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
            __func__, __LINE__, first->orig_line, first->orig_col, first->text(), get_token_name(first->type));
 
    min_sp = 1;
-   if (first->type == CT_IGNORED || second->type == CT_IGNORED)
+   if (chunk_is_token(first, CT_IGNORED) || chunk_is_token(second, CT_IGNORED))
    {
       log_rule("IGNORED");
       return(AV_REMOVE);
    }
-   if (first->type == CT_PP_IGNORE && second->type == CT_PP_IGNORE)
+   if (chunk_is_token(first, CT_PP_IGNORE) && chunk_is_token(second, CT_PP_IGNORE))
    {
       // Leave spacing alone between PP_IGNORE tokens as we don't want the default behavior (which is ADD).
       log_rule("PP_IGNORE");
       return(AV_IGNORE);
    }
-   if (first->type == CT_PP || second->type == CT_PP)
+   if (chunk_is_token(first, CT_PP) || chunk_is_token(second, CT_PP))
    {
       log_rule("sp_pp_concat");
       return(cpd.settings[UO_sp_pp_concat].a);
    }
-   if (first->type == CT_POUND)
+   if (chunk_is_token(first, CT_POUND))
    {
       log_rule("sp_pp_stringify");
       return(cpd.settings[UO_sp_pp_stringify].a);
    }
-   if (  second->type == CT_POUND
+   if (  chunk_is_token(second, CT_POUND)
       && (second->flags & PCF_IN_PREPROC)
       && first->parent_type != CT_MACRO_FUNC)
    {
@@ -177,82 +178,82 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_before_pp_stringify].a);
    }
 
-   if (first->type == CT_SPACE || second->type == CT_SPACE)
+   if (chunk_is_token(first, CT_SPACE) || chunk_is_token(second, CT_SPACE))
    {
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
 
-   if (first->type == CT_DECLSPEC)  // Issue 1289
+   if (chunk_is_token(first, CT_DECLSPEC))  // Issue 1289
    {
       log_rule("Remove");
       return(AV_REMOVE);
    }
-   if (first->type == CT_PAREN_CLOSE && first->parent_type == CT_DECLSPEC)
+   if (chunk_is_token(first, CT_PAREN_CLOSE) && first->parent_type == CT_DECLSPEC)
    {
       log_rule("Ignore");
       return(AV_IGNORE);
    }
-   if (second->type == CT_NEWLINE || second->type == CT_VBRACE_OPEN)
+   if (chunk_is_token(second, CT_NEWLINE) || chunk_is_token(second, CT_VBRACE_OPEN))
    {
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
-   if (  first->type == CT_VBRACE_OPEN
+   if (  chunk_is_token(first, CT_VBRACE_OPEN)
       && second->type != CT_NL_CONT
       && second->type != CT_SEMICOLON) // # Issue 1158
    {
       log_rule("FORCE");
       return(AV_FORCE);
    }
-   if (first->type == CT_VBRACE_CLOSE && second->type != CT_NL_CONT)
+   if (chunk_is_token(first, CT_VBRACE_CLOSE) && second->type != CT_NL_CONT)
    {
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
-   if (second->type == CT_VSEMICOLON)
+   if (chunk_is_token(second, CT_VSEMICOLON))
    {
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
-   if (first->type == CT_MACRO_FUNC)
+   if (chunk_is_token(first, CT_MACRO_FUNC))
    {
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
-   if (second->type == CT_NL_CONT)
+   if (chunk_is_token(second, CT_NL_CONT))
    {
       log_rule("sp_before_nl_cont");
       return(cpd.settings[UO_sp_before_nl_cont].a);
    }
 
-   if (first->type == CT_D_ARRAY_COLON || second->type == CT_D_ARRAY_COLON)
+   if (chunk_is_token(first, CT_D_ARRAY_COLON) || chunk_is_token(second, CT_D_ARRAY_COLON))
    {
       log_rule("sp_d_array_colon");
       return(cpd.settings[UO_sp_d_array_colon].a);
    }
 
-   if (  first->type == CT_CASE
-      && ((CharTable::IsKw1(second->str[0]) || second->type == CT_NUMBER)))
+   if (  chunk_is_token(first, CT_CASE)
+      && ((CharTable::IsKw1(second->str[0]) || chunk_is_token(second, CT_NUMBER))))
    {
       log_rule("sp_case_label");
       return(argval_t(cpd.settings[UO_sp_case_label].a | AV_ADD));
    }
 
-   if (first->type == CT_FOR_COLON)
+   if (chunk_is_token(first, CT_FOR_COLON))
    {
       // java
       log_rule("sp_after_for_colon");
       return(cpd.settings[UO_sp_after_for_colon].a);
    }
-   if (second->type == CT_FOR_COLON)
+   if (chunk_is_token(second, CT_FOR_COLON))
    {
       // java
       log_rule("sp_before_for_colon");
       return(cpd.settings[UO_sp_before_for_colon].a);
    }
 
-   if (first->type == CT_QUESTION && second->type == CT_COND_COLON)
+   if (chunk_is_token(first, CT_QUESTION) && chunk_is_token(second, CT_COND_COLON))
    {
       if (cpd.settings[UO_sp_cond_ternary_short].a != AV_IGNORE)
       {
@@ -260,15 +261,15 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (first->type == CT_QUESTION || second->type == CT_QUESTION)
+   if (chunk_is_token(first, CT_QUESTION) || chunk_is_token(second, CT_QUESTION))
    {
-      if (  second->type == CT_QUESTION
+      if (  chunk_is_token(second, CT_QUESTION)
          && (cpd.settings[UO_sp_cond_question_before].a != AV_IGNORE))
       {
          log_rule("sp_cond_question_before");
          return(cpd.settings[UO_sp_cond_question_before].a);
       }
-      if (  first->type == CT_QUESTION
+      if (  chunk_is_token(first, CT_QUESTION)
          && (cpd.settings[UO_sp_cond_question_after].a != AV_IGNORE))
       {
          log_rule("sp_cond_question_after");
@@ -281,15 +282,15 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (first->type == CT_COND_COLON || second->type == CT_COND_COLON)
+   if (chunk_is_token(first, CT_COND_COLON) || chunk_is_token(second, CT_COND_COLON))
    {
-      if (  second->type == CT_COND_COLON
+      if (  chunk_is_token(second, CT_COND_COLON)
          && (cpd.settings[UO_sp_cond_colon_before].a != AV_IGNORE))
       {
          log_rule("sp_cond_colon_before");
          return(cpd.settings[UO_sp_cond_colon_before].a);
       }
-      if (  first->type == CT_COND_COLON
+      if (  chunk_is_token(first, CT_COND_COLON)
          && (cpd.settings[UO_sp_cond_colon_after].a != AV_IGNORE))
       {
          log_rule("sp_cond_colon_after");
@@ -302,33 +303,33 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (first->type == CT_RANGE || second->type == CT_RANGE)
+   if (chunk_is_token(first, CT_RANGE) || chunk_is_token(second, CT_RANGE))
    {
       return(cpd.settings[UO_sp_range].a);
    }
 
-   if (first->type == CT_COLON && first->parent_type == CT_SQL_EXEC)
+   if (chunk_is_token(first, CT_COLON) && first->parent_type == CT_SQL_EXEC)
    {
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
 
    // Macro stuff can only return IGNORE, ADD, or FORCE
-   if (first->type == CT_MACRO)
+   if (chunk_is_token(first, CT_MACRO))
    {
       log_rule("sp_macro");
       argval_t arg = cpd.settings[UO_sp_macro].a;
       return(static_cast<argval_t>(arg | ((arg != AV_IGNORE) ? AV_ADD : AV_IGNORE)));
    }
 
-   if (first->type == CT_FPAREN_CLOSE && first->parent_type == CT_MACRO_FUNC)
+   if (chunk_is_token(first, CT_FPAREN_CLOSE) && first->parent_type == CT_MACRO_FUNC)
    {
       log_rule("sp_macro_func");
       argval_t arg = cpd.settings[UO_sp_macro_func].a;
       return(static_cast<argval_t>(arg | ((arg != AV_IGNORE) ? AV_ADD : AV_IGNORE)));
    }
 
-   if (first->type == CT_PREPROC)
+   if (chunk_is_token(first, CT_PREPROC))
    {
       // Remove spaces, unless we are ignoring. See indent_preproc()
       if (cpd.settings[UO_pp_space].a == AV_IGNORE)
@@ -340,13 +341,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(AV_REMOVE);
    }
 
-   if (second->type == CT_SEMICOLON)
+   if (chunk_is_token(second, CT_SEMICOLON))
    {
       if (second->parent_type == CT_FOR)
       {
          if (  (cpd.settings[UO_sp_before_semi_for_empty].a != AV_IGNORE)
-            && (  first->type == CT_SPAREN_OPEN
-               || first->type == CT_SEMICOLON))
+            && (  chunk_is_token(first, CT_SPAREN_OPEN)
+               || chunk_is_token(first, CT_SEMICOLON)))
          {
             log_rule("sp_before_semi_for_empty");
             return(cpd.settings[UO_sp_before_semi_for_empty].a);
@@ -359,7 +360,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
 
       argval_t arg = cpd.settings[UO_sp_before_semi].a;
-      if (  first->type == CT_SPAREN_CLOSE
+      if (  chunk_is_token(first, CT_SPAREN_CLOSE)
          && first->parent_type != CT_WHILE_OF_DO)
       {
          log_rule("sp_before_semi|sp_special_semi");
@@ -372,8 +373,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(arg);
    }
 
-   if (  second->type == CT_COMMENT
-      && (first->type == CT_PP_ELSE || first->type == CT_PP_ENDIF))
+   if (  chunk_is_token(second, CT_COMMENT)
+      && (chunk_is_token(first, CT_PP_ELSE) || chunk_is_token(first, CT_PP_ENDIF)))
    {
       if (cpd.settings[UO_sp_endif_cmt].a != AV_IGNORE)
       {
@@ -411,12 +412,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // "for (;;)" vs "for (;; )" and "for (a;b;c)" vs "for (a; b; c)"
-   if (first->type == CT_SEMICOLON)
+   if (chunk_is_token(first, CT_SEMICOLON))
    {
       if (first->parent_type == CT_FOR)
       {
          if (  (cpd.settings[UO_sp_after_semi_for_empty].a != AV_IGNORE)
-            && second->type == CT_SPAREN_CLOSE)
+            && chunk_is_token(second, CT_SPAREN_CLOSE))
          {
             log_rule("sp_after_semi_for_empty");
             return(cpd.settings[UO_sp_after_semi_for_empty].a);
@@ -437,21 +438,21 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // puts a space in the rare '+-' or '-+'
-   if (  (  first->type == CT_NEG
-         || first->type == CT_POS
-         || first->type == CT_ARITH)
-      && (  second->type == CT_NEG
-         || second->type == CT_POS
-         || second->type == CT_ARITH))
+   if (  (  chunk_is_token(first, CT_NEG)
+         || chunk_is_token(first, CT_POS)
+         || chunk_is_token(first, CT_ARITH))
+      && (  chunk_is_token(second, CT_NEG)
+         || chunk_is_token(second, CT_POS)
+         || chunk_is_token(second, CT_ARITH)))
    {
       log_rule("ADD");
       return(AV_ADD);
    }
 
    // "return(a);" vs "return (foo_t)a + 3;" vs "return a;" vs "return;"
-   if (first->type == CT_RETURN)
+   if (chunk_is_token(first, CT_RETURN))
    {
-      if (second->type == CT_PAREN_OPEN && second->parent_type == CT_RETURN)
+      if (chunk_is_token(second, CT_PAREN_OPEN) && second->parent_type == CT_RETURN)
       {
          log_rule("sp_return_paren");
          return(cpd.settings[UO_sp_return_paren].a);
@@ -462,9 +463,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // "sizeof(foo_t)" vs "sizeof foo_t"
-   if (first->type == CT_SIZEOF)
+   if (chunk_is_token(first, CT_SIZEOF))
    {
-      if (second->type == CT_PAREN_OPEN)
+      if (chunk_is_token(second, CT_PAREN_OPEN))
       {
          log_rule("sp_sizeof_paren");
          return(cpd.settings[UO_sp_sizeof_paren].a);
@@ -474,22 +475,22 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // handle '::'
-   if (first->type == CT_DC_MEMBER)
+   if (chunk_is_token(first, CT_DC_MEMBER))
    {
       log_rule("sp_after_dc");
       return(cpd.settings[UO_sp_after_dc].a);
    }
    // Issue #889
    // mapped_file_source abc((int) ::CW2A(sTemp));
-   if (  first->type == CT_PAREN_CLOSE
-      && second->type == CT_DC_MEMBER
+   if (  chunk_is_token(first, CT_PAREN_CLOSE)
+      && chunk_is_token(second, CT_DC_MEMBER)
       && second->next != nullptr
       && second->next->type == CT_FUNC_CALL)
    {
       log_rule("REMOVE_889_A");
       return(AV_REMOVE);
    }
-   if (second->type == CT_DC_MEMBER)
+   if (chunk_is_token(second, CT_DC_MEMBER))
    {
       /* '::' at the start of an identifier is not member access, but global scope operator.
        * Detect if previous chunk is keyword
@@ -532,9 +533,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(AV_FORCE);
       }
 
-      if (  (  first->type == CT_WORD
-            || first->type == CT_TYPE
-            || first->type == CT_PAREN_CLOSE
+      if (  (  chunk_is_token(first, CT_WORD)
+            || chunk_is_token(first, CT_TYPE)
+            || chunk_is_token(first, CT_PAREN_CLOSE)
             || CharTable::IsKw1(first->str[0]))
          && (strcmp(first->text(), "void") != 0)) // Issue 1249
       {
@@ -544,12 +545,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // "a,b" vs "a, b"
-   if (first->type == CT_COMMA)
+   if (chunk_is_token(first, CT_COMMA))
    {
       if (first->parent_type == CT_TYPE)
       {
          // C# multidimensional array type: ',,' vs ', ,' or ',]' vs ', ]'
-         if (second->type == CT_COMMA)
+         if (chunk_is_token(second, CT_COMMA))
          {
             log_rule("sp_between_mdatype_commas");
             return(cpd.settings[UO_sp_between_mdatype_commas].a);
@@ -560,7 +561,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
       // Fix for issue #1243
       // Don't add extra space after comma immediately followed by Angle close
-      if (second->type == CT_ANGLE_CLOSE)
+      if (chunk_is_token(second, CT_ANGLE_CLOSE))
       {
          return(AV_IGNORE);
       }
@@ -571,8 +572,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    // test if we are within a SIGNAL/SLOT call
    if (QT_SIGNAL_SLOT_found)
    {
-      if (  first->type == CT_FPAREN_CLOSE
-         && (second->type == CT_FPAREN_CLOSE || second->type == CT_COMMA))
+      if (  chunk_is_token(first, CT_FPAREN_CLOSE)
+         && (chunk_is_token(second, CT_FPAREN_CLOSE) || chunk_is_token(second, CT_COMMA)))
       {
          if (second->level == QT_SIGNAL_SLOT_level)
          {
@@ -580,15 +581,15 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          }
       }
    }
-   if (second->type == CT_COMMA)
+   if (chunk_is_token(second, CT_COMMA))
    {
-      if (first->type == CT_SQUARE_OPEN && first->parent_type == CT_TYPE)
+      if (chunk_is_token(first, CT_SQUARE_OPEN) && first->parent_type == CT_TYPE)
       {
          // Only for C#.
          log_rule("sp_before_mdatype_commas");
          return(cpd.settings[UO_sp_before_mdatype_commas].a);
       }
-      if (  first->type == CT_PAREN_OPEN
+      if (  chunk_is_token(first, CT_PAREN_OPEN)
          && (cpd.settings[UO_sp_paren_comma].a != AV_IGNORE))
       {
          log_rule("sp_paren_comma");
@@ -598,7 +599,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_before_comma].a);
    }
 
-   if (second->type == CT_ELLIPSIS)
+   if (chunk_is_token(second, CT_ELLIPSIS))
    {
       // non-punc followed by a ellipsis
       if (  ((first->flags & PCF_PUNCTUATOR) == 0)
@@ -608,90 +609,83 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(cpd.settings[UO_sp_before_ellipsis].a);
       }
 
-      if (first->type == CT_TAG_COLON)
+      if (chunk_is_token(first, CT_TAG_COLON))
       {
          log_rule("FORCE");
          return(AV_FORCE);
       }
-      // U0_sp_before_ellipsis = AV_IGNORE returning AV_ADD which is causing issue 1291.
-      // To fix issue 1291
-      //if (first->type == CT_WORD)
-      //{
-      //   log_rule("IGNORE");
-      //   return(AV_IGNORE);
-      //}
    }
-   if (first->type == CT_ELLIPSIS && CharTable::IsKw1(second->str[0]))
+   if (chunk_is_token(first, CT_ELLIPSIS) && CharTable::IsKw1(second->str[0]))
    {
       log_rule("FORCE");
       return(AV_FORCE);
    }
-   if (first->type == CT_TAG_COLON)
+   if (chunk_is_token(first, CT_TAG_COLON))
    {
       log_rule("sp_after_tag");
       return(cpd.settings[UO_sp_after_tag].a);
    }
-   if (second->type == CT_TAG_COLON)
+   if (chunk_is_token(second, CT_TAG_COLON))
    {
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
 
    // handle '~'
-   if (first->type == CT_DESTRUCTOR)
+   if (chunk_is_token(first, CT_DESTRUCTOR))
    {
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
 
-   if (  (cpd.lang_flags & LANG_OC)
-      && first->type == CT_CATCH
-      && second->type == CT_SPAREN_OPEN
+   if (  language_is_set(LANG_OC)
+      && chunk_is_token(first, CT_CATCH)
+      && chunk_is_token(second, CT_SPAREN_OPEN)
       && (cpd.settings[UO_sp_oc_catch_paren].a != AV_IGNORE))
    {
       log_rule("sp_oc_catch_paren");
       return(cpd.settings[UO_sp_oc_catch_paren].a);
    }
 
-   if (  first->type == CT_CATCH
-      && second->type == CT_SPAREN_OPEN
+   if (  chunk_is_token(first, CT_CATCH)
+      && chunk_is_token(second, CT_SPAREN_OPEN)
       && (cpd.settings[UO_sp_catch_paren].a != AV_IGNORE))
    {
       log_rule("sp_catch_paren");
       return(cpd.settings[UO_sp_catch_paren].a);
    }
 
-   if (  first->type == CT_D_VERSION_IF
-      && second->type == CT_SPAREN_OPEN
+   if (  chunk_is_token(first, CT_D_VERSION_IF)
+      && chunk_is_token(second, CT_SPAREN_OPEN)
       && (cpd.settings[UO_sp_version_paren].a != AV_IGNORE))
    {
       log_rule("sp_version_paren");
       return(cpd.settings[UO_sp_version_paren].a);
    }
 
-   if (  first->type == CT_D_SCOPE_IF
-      && second->type == CT_SPAREN_OPEN
+   if (  chunk_is_token(first, CT_D_SCOPE_IF)
+      && chunk_is_token(second, CT_SPAREN_OPEN)
       && (cpd.settings[UO_sp_scope_paren].a != AV_IGNORE))
    {
       log_rule("sp_scope_paren");
       return(cpd.settings[UO_sp_scope_paren].a);
    }
 
-   if (  cpd.lang_flags & LANG_OC
-      && first->type == CT_SYNCHRONIZED && second->type == CT_SPAREN_OPEN)
+   if (  language_is_set(LANG_OC)
+      && chunk_is_token(first, CT_SYNCHRONIZED) && chunk_is_token(second, CT_SPAREN_OPEN))
    {
       log_rule("sp_after_oc_synchronized");
       return(cpd.settings[UO_sp_after_oc_synchronized].a);
    }
 
    // "if (" vs "if("
-   if (second->type == CT_SPAREN_OPEN)
+   if (chunk_is_token(second, CT_SPAREN_OPEN))
    {
       log_rule("sp_before_sparen");
       return(cpd.settings[UO_sp_before_sparen].a);
    }
 
-   if (first->type == CT_LAMBDA || second->type == CT_LAMBDA)
+   if (chunk_is_token(first, CT_LAMBDA) || chunk_is_token(second, CT_LAMBDA))
    {
       log_rule("sp_assign (lambda)");
       return(cpd.settings[UO_sp_assign].a);
@@ -700,11 +694,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    // Handle the special lambda case for C++11:
    //    [=](Something arg){.....}
    if (  (cpd.settings[UO_sp_cpp_lambda_assign].a != AV_IGNORE)
-      && (  (  first->type == CT_SQUARE_OPEN
+      && (  (  chunk_is_token(first, CT_SQUARE_OPEN)
             && first->parent_type == CT_CPP_LAMBDA
-            && second->type == CT_ASSIGN)
-         || (  first->type == CT_ASSIGN
-            && second->type == CT_SQUARE_CLOSE
+            && chunk_is_token(second, CT_ASSIGN))
+         || (  chunk_is_token(first, CT_ASSIGN)
+            && chunk_is_token(second, CT_SQUARE_CLOSE)
             && second->parent_type == CT_CPP_LAMBDA)))
    {
       log_rule("UO_sp_cpp_lambda_assign");
@@ -714,15 +708,15 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    // Handle the special lambda case for C++11:
    //    [](Something arg){.....}
    if (  (cpd.settings[UO_sp_cpp_lambda_paren].a != AV_IGNORE)
-      && first->type == CT_SQUARE_CLOSE
+      && chunk_is_token(first, CT_SQUARE_CLOSE)
       && first->parent_type == CT_CPP_LAMBDA
-      && second->type == CT_FPAREN_OPEN)
+      && chunk_is_token(second, CT_FPAREN_OPEN))
    {
       log_rule("UO_sp_cpp_lambda_paren");
       return(cpd.settings[UO_sp_cpp_lambda_paren].a);
    }
 
-   if (first->type == CT_ENUM && second->type == CT_FPAREN_OPEN)
+   if (chunk_is_token(first, CT_ENUM) && chunk_is_token(second, CT_FPAREN_OPEN))
    {
       if (cpd.settings[UO_sp_enum_paren].a != AV_IGNORE)
       {
@@ -731,7 +725,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (second->type == CT_ASSIGN)
+   if (chunk_is_token(second, CT_ASSIGN))
    {
       if (second->flags & PCF_IN_ENUM)
       {
@@ -758,7 +752,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_assign].a);
    }
 
-   if (first->type == CT_ASSIGN)
+   if (chunk_is_token(first, CT_ASSIGN))
    {
       if (first->flags & PCF_IN_ENUM)
       {
@@ -785,7 +779,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_assign].a);
    }
 
-   if (first->type == CT_BIT_COLON)
+   if (chunk_is_token(first, CT_BIT_COLON))
    {
       if (first->flags & PCF_IN_ENUM)
       {
@@ -794,7 +788,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (second->type == CT_BIT_COLON)
+   if (chunk_is_token(second, CT_BIT_COLON))
    {
       if (second->flags & PCF_IN_ENUM)
       {
@@ -803,22 +797,22 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (first->type == CT_OC_AVAILABLE_VALUE || second->type == CT_OC_AVAILABLE_VALUE)
+   if (chunk_is_token(first, CT_OC_AVAILABLE_VALUE) || chunk_is_token(second, CT_OC_AVAILABLE_VALUE))
    {
       log_rule("IGNORE");
       return(AV_IGNORE);
    }
-   if (second->type == CT_OC_BLOCK_CARET)
+   if (chunk_is_token(second, CT_OC_BLOCK_CARET))
    {
       log_rule("sp_before_oc_block_caret");
       return(cpd.settings[UO_sp_before_oc_block_caret].a);
    }
-   if (first->type == CT_OC_BLOCK_CARET)
+   if (chunk_is_token(first, CT_OC_BLOCK_CARET))
    {
       log_rule("sp_after_oc_block_caret");
       return(cpd.settings[UO_sp_after_oc_block_caret].a);
    }
-   if (second->type == CT_OC_MSG_FUNC)
+   if (chunk_is_token(second, CT_OC_MSG_FUNC))
    {
       if (  (cpd.settings[UO_sp_after_oc_msg_receiver].a == AV_REMOVE)
          && (  (first->type != CT_SQUARE_CLOSE)
@@ -833,11 +827,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // c++17 structured bindings e.g., "auto [x, y, z]" vs a[x, y, z]" or "auto const [x, y, z]" vs "auto const[x, y, z]"
-   if (  cpd.lang_flags & LANG_CPP
-      && (  first->type == CT_BYREF
-         || first->type == CT_QUALIFIER
-         || first->type == CT_TYPE)
-      && second->type == CT_SQUARE_OPEN
+   if (  language_is_set(LANG_CPP)
+      && (  chunk_is_token(first, CT_BYREF)
+         || chunk_is_token(first, CT_QUALIFIER)
+         || chunk_is_token(first, CT_TYPE))
+      && chunk_is_token(second, CT_SQUARE_OPEN)
       && second->parent_type != CT_OC_MSG
       && second->parent_type != CT_CS_SQ_STMT)
    {
@@ -851,7 +845,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && (  second->parent_type != CT_OC_MSG
          && second->parent_type != CT_CS_SQ_STMT))
    {
-      if (((second->flags & PCF_IN_SPAREN) != 0) && (first->type == CT_IN))
+      if (((second->flags & PCF_IN_SPAREN) != 0) && (chunk_is_token(first, CT_IN)))
       {
          return(AV_FORCE);
       }
@@ -861,22 +855,22 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // "byte[]" vs "byte []"
-   if (second->type == CT_TSQUARE)
+   if (chunk_is_token(second, CT_TSQUARE))
    {
       log_rule("sp_before_squares");
       return(cpd.settings[UO_sp_before_squares].a);
    }
 
    if (  (cpd.settings[UO_sp_angle_shift].a != AV_IGNORE)
-      && first->type == CT_ANGLE_CLOSE
-      && second->type == CT_ANGLE_CLOSE)
+      && chunk_is_token(first, CT_ANGLE_CLOSE)
+      && chunk_is_token(second, CT_ANGLE_CLOSE))
    {
       log_rule("sp_angle_shift");
       return(cpd.settings[UO_sp_angle_shift].a);
    }
 
    // spacing around template < > stuff
-   if (first->type == CT_ANGLE_OPEN || second->type == CT_ANGLE_CLOSE)
+   if (chunk_is_token(first, CT_ANGLE_OPEN) || chunk_is_token(second, CT_ANGLE_CLOSE))
    {
       log_rule("sp_inside_angle");
 
@@ -885,16 +879,17 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       // special: if we're not supporting digraphs, then we shouldn't create them!
       if (  (op == AV_REMOVE)
          && !cpd.settings[UO_enable_digraphs].b
-         && (first->type == CT_ANGLE_OPEN) && (second->type == CT_DC_MEMBER))
+         && chunk_is_token(first, CT_ANGLE_OPEN)
+         && chunk_is_token(second, CT_DC_MEMBER))
       {
          op = AV_IGNORE;
       }
 
       return(op);
    }
-   if (second->type == CT_ANGLE_OPEN)
+   if (chunk_is_token(second, CT_ANGLE_OPEN))
    {
-      if (  first->type == CT_TEMPLATE
+      if (  chunk_is_token(first, CT_TEMPLATE)
          && (cpd.settings[UO_sp_template_angle].a != AV_IGNORE))
       {
          log_rule("sp_template_angle");
@@ -906,9 +901,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(cpd.settings[UO_sp_before_angle].a);
       }
    }
-   if (first->type == CT_ANGLE_CLOSE)
+   if (chunk_is_token(first, CT_ANGLE_CLOSE))
    {
-      if (second->type == CT_WORD || CharTable::IsKw1(second->str[0]))
+      if (chunk_is_token(second, CT_WORD) || CharTable::IsKw1(second->str[0]))
       {
          if (cpd.settings[UO_sp_angle_word].a != AV_IGNORE)
          {
@@ -916,7 +911,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
             return(cpd.settings[UO_sp_angle_word].a);
          }
       }
-      if (second->type == CT_FPAREN_OPEN || second->type == CT_PAREN_OPEN)
+      if (chunk_is_token(second, CT_FPAREN_OPEN) || chunk_is_token(second, CT_PAREN_OPEN))
       {
          chunk_t *next = chunk_get_next_ncnl(second);
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
@@ -928,14 +923,17 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_angle_paren");
          return(cpd.settings[UO_sp_angle_paren].a);
       }
-      if (second->type == CT_DC_MEMBER)
+      if (chunk_is_token(second, CT_DC_MEMBER))
       {
          log_rule("sp_before_dc");
          return(cpd.settings[UO_sp_before_dc].a);
       }
-      if (second->type != CT_BYREF && second->type != CT_PTR_TYPE && second->type != CT_BRACE_OPEN && second->type != CT_PAREN_CLOSE)
+      if (  second->type != CT_BYREF
+         && second->type != CT_PTR_TYPE
+         && second->type != CT_BRACE_OPEN
+         && second->type != CT_PAREN_CLOSE)
       {
-         if (  second->type == CT_CLASS_COLON
+         if (  chunk_is_token(second, CT_CLASS_COLON)
             && cpd.settings[UO_sp_angle_colon].a != AV_IGNORE)
          {
             log_rule("sp_angle_colon");
@@ -946,7 +944,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (  first->type == CT_BYREF
+   if (  chunk_is_token(first, CT_BYREF)
       && (cpd.settings[UO_sp_after_byref_func].a != AV_IGNORE)
       && (  first->parent_type == CT_FUNC_DEF
          || first->parent_type == CT_FUNC_PROTO))
@@ -955,20 +953,20 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_after_byref_func].a);
    }
 
-   if (  first->type == CT_BYREF
-      && (CharTable::IsKw1(second->str[0]) || second->type == CT_PAREN_OPEN))
+   if (  chunk_is_token(first, CT_BYREF)
+      && (CharTable::IsKw1(second->str[0]) || chunk_is_token(second, CT_PAREN_OPEN)))
    {
       log_rule("sp_after_byref");
       return(cpd.settings[UO_sp_after_byref].a);
    }
 
-   if (second->type == CT_BYREF)
+   if (chunk_is_token(second, CT_BYREF))
    {
       if (cpd.settings[UO_sp_before_byref_func].a != AV_IGNORE)
       {
          chunk_t *next = chunk_get_next(second);
          if (  next != nullptr
-            && (next->type == CT_FUNC_DEF || next->type == CT_FUNC_PROTO))
+            && (chunk_is_token(next, CT_FUNC_DEF) || chunk_is_token(next, CT_FUNC_PROTO)))
          {
             return(cpd.settings[UO_sp_before_byref_func].a);
          }
@@ -987,9 +985,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_before_byref].a);
    }
 
-   if (first->type == CT_SPAREN_CLOSE)
+   if (chunk_is_token(first, CT_SPAREN_CLOSE))
    {
-      if (  second->type == CT_BRACE_OPEN
+      if (  chunk_is_token(second, CT_BRACE_OPEN)
          && (cpd.settings[UO_sp_sparen_brace].a != AV_IGNORE))
       {
          log_rule("sp_sparen_brace");
@@ -1002,19 +1000,19 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(cpd.settings[UO_sp_after_sparen].a);
       }
    }
-   if (  first->type == CT_VBRACE_OPEN
-      && second->type == CT_SEMICOLON) // Issue # 1158
+   if (  chunk_is_token(first, CT_VBRACE_OPEN)
+      && chunk_is_token(second, CT_SEMICOLON)) // Issue # 1158
    {
       log_rule("sp_before_semi");
       return(cpd.settings[UO_sp_before_semi].a);
    }
 
-   if (  second->type == CT_FPAREN_OPEN
+   if (  chunk_is_token(second, CT_FPAREN_OPEN)
       && first->parent_type == CT_OPERATOR
       && (cpd.settings[UO_sp_after_operator_sym].a != AV_IGNORE))
    {
       if (  (cpd.settings[UO_sp_after_operator_sym_empty].a != AV_IGNORE)
-         && second->type == CT_FPAREN_OPEN)
+         && chunk_is_token(second, CT_FPAREN_OPEN))
       {
          chunk_t *next = chunk_get_next_ncnl(second);
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
@@ -1029,13 +1027,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // spaces between function and open paren
-   if (  first->type == CT_FUNC_CALL
-      || first->type == CT_FUNC_CTOR_VAR
-      || first->type == CT_CNG_HASINC
-      || first->type == CT_CNG_HASINCN)
+   if (  chunk_is_token(first, CT_FUNC_CALL)
+      || chunk_is_token(first, CT_FUNC_CTOR_VAR)
+      || chunk_is_token(first, CT_CNG_HASINC)
+      || chunk_is_token(first, CT_CNG_HASINCN))
    {
       if (  (cpd.settings[UO_sp_func_call_paren_empty].a != AV_IGNORE)
-         && second->type == CT_FPAREN_OPEN)
+         && chunk_is_token(second, CT_FPAREN_OPEN))
       {
          chunk_t *next = chunk_get_next_ncnl(second);
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
@@ -1047,20 +1045,20 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("sp_func_call_paren");
       return(cpd.settings[UO_sp_func_call_paren].a);
    }
-   if (first->type == CT_FUNC_CALL_USER)
+   if (chunk_is_token(first, CT_FUNC_CALL_USER))
    {
       log_rule("sp_func_call_user_paren");
       return(cpd.settings[UO_sp_func_call_user_paren].a);
    }
-   if (first->type == CT_ATTRIBUTE)
+   if (chunk_is_token(first, CT_ATTRIBUTE))
    {
       log_rule("sp_attribute_paren");
       return(cpd.settings[UO_sp_attribute_paren].a);
    }
-   if (first->type == CT_FUNC_DEF)
+   if (chunk_is_token(first, CT_FUNC_DEF))
    {
       if (  (cpd.settings[UO_sp_func_def_paren_empty].a != AV_IGNORE)
-         && second->type == CT_FPAREN_OPEN)
+         && chunk_is_token(second, CT_FPAREN_OPEN))
       {
          chunk_t *next = chunk_get_next_ncnl(second);
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
@@ -1072,20 +1070,20 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("sp_func_def_paren");
       return(cpd.settings[UO_sp_func_def_paren].a);
    }
-   if (first->type == CT_CPP_CAST || first->type == CT_TYPE_WRAP)
+   if (chunk_is_token(first, CT_CPP_CAST) || chunk_is_token(first, CT_TYPE_WRAP))
    {
       log_rule("sp_cpp_cast_paren");
       return(cpd.settings[UO_sp_cpp_cast_paren].a);
    }
 
-   if (first->type == CT_PAREN_CLOSE && second->type == CT_WHEN)
+   if (chunk_is_token(first, CT_PAREN_CLOSE) && chunk_is_token(second, CT_WHEN))
    {
       log_rule("FORCE");
       return(AV_FORCE); // TODO: make this configurable?
    }
 
-   if (  first->type == CT_PAREN_CLOSE
-      && (second->type == CT_PAREN_OPEN || second->type == CT_FPAREN_OPEN))
+   if (  chunk_is_token(first, CT_PAREN_CLOSE)
+      && (chunk_is_token(second, CT_PAREN_OPEN) || chunk_is_token(second, CT_FPAREN_OPEN)))
    {
       // "(int)a" vs "(int) a" or "cast(int)a" vs "cast(int) a"
       if (first->parent_type == CT_C_CAST || first->parent_type == CT_D_CAST)
@@ -1100,7 +1098,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // handle the space between parens in fcn type 'void (*f)(void)'
-   if (first->type == CT_TPAREN_CLOSE)
+   if (chunk_is_token(first, CT_TPAREN_CLOSE))
    {
       log_rule("sp_after_tparen_close");
       return(cpd.settings[UO_sp_after_tparen_close].a);
@@ -1115,12 +1113,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_cparen_oparen].a);
    }
 
-   if (  first->type == CT_FUNC_PROTO
-      || (  second->type == CT_FPAREN_OPEN
+   if (  chunk_is_token(first, CT_FUNC_PROTO)
+      || (  chunk_is_token(second, CT_FPAREN_OPEN)
          && second->parent_type == CT_FUNC_PROTO))
    {
       if (  (cpd.settings[UO_sp_func_proto_paren_empty].a != AV_IGNORE)
-         && second->type == CT_FPAREN_OPEN)
+         && chunk_is_token(second, CT_FPAREN_OPEN))
       {
          chunk_t *next = chunk_get_next_ncnl(second);
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
@@ -1132,10 +1130,10 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("sp_func_proto_paren");
       return(cpd.settings[UO_sp_func_proto_paren].a);
    }
-   if (first->type == CT_FUNC_CLASS_DEF || first->type == CT_FUNC_CLASS_PROTO)
+   if (chunk_is_token(first, CT_FUNC_CLASS_DEF) || chunk_is_token(first, CT_FUNC_CLASS_PROTO))
    {
       if (  (cpd.settings[UO_sp_func_class_paren_empty].a != AV_IGNORE)
-         && second->type == CT_FPAREN_OPEN)
+         && chunk_is_token(second, CT_FPAREN_OPEN))
       {
          chunk_t *next = chunk_get_next_ncnl(second);
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
@@ -1147,25 +1145,25 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("sp_func_class_paren");
       return(cpd.settings[UO_sp_func_class_paren].a);
    }
-   if (first->type == CT_CLASS && !(first->flags & PCF_IN_OC_MSG))
+   if (chunk_is_token(first, CT_CLASS) && !(first->flags & PCF_IN_OC_MSG))
    {
       log_rule("FORCE");
       return(AV_FORCE);
    }
 
-   if (first->type == CT_BRACE_OPEN && second->type == CT_BRACE_CLOSE)
+   if (chunk_is_token(first, CT_BRACE_OPEN) && chunk_is_token(second, CT_BRACE_CLOSE))
    {
       log_rule("sp_inside_braces_empty");
       return(cpd.settings[UO_sp_inside_braces_empty].a);
    }
 
-   if (second->type == CT_BRACE_OPEN && second->parent_type == CT_BRACED_INIT_LIST)
+   if (chunk_is_token(second, CT_BRACE_OPEN) && second->parent_type == CT_BRACED_INIT_LIST)
    {
       // 'int{9}' vs 'int {9}'
       return(cpd.settings[UO_sp_type_brace_init_lst].a);
    }
 
-   if (second->type == CT_BRACE_CLOSE)
+   if (chunk_is_token(second, CT_BRACE_CLOSE))
    {
       if (second->parent_type == CT_ENUM)
       {
@@ -1176,7 +1174,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          // Fix for issue #1240  adding space in struct initializers
          chunk_t *tmp = chunk_get_prev_ncnl(chunk_skip_to_match_rev(second));
-         if (tmp != nullptr && tmp->type == CT_ASSIGN)
+         if (chunk_is_token(tmp, CT_ASSIGN))
          {
             return(AV_IGNORE);
          }
@@ -1208,21 +1206,21 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_inside_braces].a);
    }
 
-   if (first->type == CT_D_CAST)
+   if (chunk_is_token(first, CT_D_CAST))
    {
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
 
-   if (first->type == CT_PP_DEFINED && second->type == CT_PAREN_OPEN)
+   if (chunk_is_token(first, CT_PP_DEFINED) && chunk_is_token(second, CT_PAREN_OPEN))
    {
       log_rule("sp_defined_paren");
       return(cpd.settings[UO_sp_defined_paren].a);
    }
 
-   if (first->type == CT_THROW)
+   if (chunk_is_token(first, CT_THROW))
    {
-      if (second->type == CT_PAREN_OPEN)
+      if (chunk_is_token(second, CT_PAREN_OPEN))
       {
          log_rule("sp_throw_paren");
          return(cpd.settings[UO_sp_throw_paren].a);
@@ -1231,44 +1229,44 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_after_throw].a);
    }
 
-   if (first->type == CT_THIS && second->type == CT_PAREN_OPEN)
+   if (chunk_is_token(first, CT_THIS) && chunk_is_token(second, CT_PAREN_OPEN))
    {
       log_rule("sp_this_paren");
       return(cpd.settings[UO_sp_this_paren].a);
    }
 
-   if (first->type == CT_STATE && second->type == CT_PAREN_OPEN)
+   if (chunk_is_token(first, CT_STATE) && chunk_is_token(second, CT_PAREN_OPEN))
    {
       log_rule("ADD");
       return(AV_ADD);
    }
 
-   if (first->type == CT_DELEGATE && second->type == CT_PAREN_OPEN)
+   if (chunk_is_token(first, CT_DELEGATE) && chunk_is_token(second, CT_PAREN_OPEN))
    {
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
 
-   if (first->type == CT_MEMBER || second->type == CT_MEMBER)
+   if (chunk_is_token(first, CT_MEMBER) || chunk_is_token(second, CT_MEMBER))
    {
       log_rule("sp_member");
       return(cpd.settings[UO_sp_member].a);
    }
 
-   if (first->type == CT_C99_MEMBER)
+   if (chunk_is_token(first, CT_C99_MEMBER))
    {
       // always remove space(s) after then '.' of a C99-member
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
 
-   if (first->type == CT_SUPER && second->type == CT_PAREN_OPEN)
+   if (chunk_is_token(first, CT_SUPER) && chunk_is_token(second, CT_PAREN_OPEN))
    {
       log_rule("sp_super_paren");
       return(cpd.settings[UO_sp_super_paren].a);
    }
 
-   if (first->type == CT_FPAREN_CLOSE && second->type == CT_BRACE_OPEN)
+   if (chunk_is_token(first, CT_FPAREN_CLOSE) && chunk_is_token(second, CT_BRACE_OPEN))
    {
       if (second->parent_type == CT_DOUBLE_BRACE)
       {
@@ -1291,60 +1289,58 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_fparen_brace].a);
    }
 
-   if (first->type == CT_D_TEMPLATE || second->type == CT_D_TEMPLATE)
+   if (chunk_is_token(first, CT_D_TEMPLATE) || chunk_is_token(second, CT_D_TEMPLATE))
    {
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
 
-   if (first->type == CT_ELSE && second->type == CT_BRACE_OPEN)
+   if (chunk_is_token(first, CT_ELSE) && chunk_is_token(second, CT_BRACE_OPEN))
    {
       log_rule("sp_else_brace");
       return(cpd.settings[UO_sp_else_brace].a);
    }
 
-   if (first->type == CT_ELSE && second->type == CT_ELSEIF)
+   if (chunk_is_token(first, CT_ELSE) && chunk_is_token(second, CT_ELSEIF))
    {
       log_rule("FORCE");
       return(AV_FORCE);
    }
 
-   if (  (cpd.lang_flags & LANG_OC)
-      && first->type == CT_CATCH
-      && second->type == CT_BRACE_OPEN
+   if (  language_is_set(LANG_OC)
+      && chunk_is_token(first, CT_CATCH)
+      && chunk_is_token(second, CT_BRACE_OPEN)
       && (cpd.settings[UO_sp_oc_catch_brace].a != AV_IGNORE))
    {
       log_rule("sp_oc_catch_brace");
       return(cpd.settings[UO_sp_oc_catch_brace].a);
    }
 
-   if (first->type == CT_CATCH && second->type == CT_BRACE_OPEN)
+   if (chunk_is_token(first, CT_CATCH) && chunk_is_token(second, CT_BRACE_OPEN))
    {
       log_rule("sp_catch_brace");
       return(cpd.settings[UO_sp_catch_brace].a);
    }
 
-   if (first->type == CT_FINALLY && second->type == CT_BRACE_OPEN)
+   if (chunk_is_token(first, CT_FINALLY) && chunk_is_token(second, CT_BRACE_OPEN))
    {
       log_rule("sp_finally_brace");
       return(cpd.settings[UO_sp_finally_brace].a);
    }
 
-   if (first->type == CT_TRY && second->type == CT_BRACE_OPEN)
+   if (chunk_is_token(first, CT_TRY) && chunk_is_token(second, CT_BRACE_OPEN))
    {
       log_rule("sp_try_brace");
       return(cpd.settings[UO_sp_try_brace].a);
    }
 
-   if (first->type == CT_GETSET && second->type == CT_BRACE_OPEN)
+   if (chunk_is_token(first, CT_GETSET) && chunk_is_token(second, CT_BRACE_OPEN))
    {
       log_rule("sp_getset_brace");
       return(cpd.settings[UO_sp_getset_brace].a);
    }
 
-   //if ((first->type == CT_WORD || first->type == CT_WORD) &&   Coverity CID 76001 Same on both sides, 2016-03-16
-   //    second->type == CT_BRACE_OPEN)
-   if (first->type == CT_WORD && second->type == CT_BRACE_OPEN)
+   if (chunk_is_token(first, CT_WORD) && chunk_is_token(second, CT_BRACE_OPEN))
    {
       if (first->parent_type == CT_NAMESPACE)
       {
@@ -1358,13 +1354,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (second->type == CT_PAREN_OPEN && second->parent_type == CT_INVARIANT)
+   if (chunk_is_token(second, CT_PAREN_OPEN) && second->parent_type == CT_INVARIANT)
    {
       log_rule("sp_invariant_paren");
       return(cpd.settings[UO_sp_invariant_paren].a);
    }
 
-   if (first->type == CT_PAREN_CLOSE)
+   if (chunk_is_token(first, CT_PAREN_CLOSE))
    {
       if (first->parent_type == CT_D_TEMPLATE)
       {
@@ -1379,11 +1375,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
 
       // Arith after a cast comes first
-      if (second->type == CT_ARITH || second->type == CT_CARET)
+      if (chunk_is_token(second, CT_ARITH) || chunk_is_token(second, CT_CARET))
       {
          if (cpd.settings[UO_sp_arith_additive].a != AV_IGNORE)
          {
-            auto arith_char = (first->type == CT_ARITH || first->type == CT_CARET)
+            auto arith_char = (chunk_is_token(first, CT_ARITH) || chunk_is_token(first, CT_CARET))
                               ? first->str[0] : second->str[0];
             if (arith_char == '+' || arith_char == '-')
             {
@@ -1397,7 +1393,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
 
       // "(struct foo) {...}" vs "(struct foo){...}"
-      if (second->type == CT_BRACE_OPEN)
+      if (chunk_is_token(second, CT_BRACE_OPEN))
       {
          log_rule("sp_paren_brace");
          return(cpd.settings[UO_sp_paren_brace].a);
@@ -1440,16 +1436,16 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // "foo(...)" vs "foo( ... )"
-   if (first->type == CT_FPAREN_OPEN || second->type == CT_FPAREN_CLOSE)
+   if (chunk_is_token(first, CT_FPAREN_OPEN) || chunk_is_token(second, CT_FPAREN_CLOSE))
    {
       if (  (first->parent_type == CT_FUNC_CALL_USER)
          || (  (second->parent_type == CT_FUNC_CALL_USER)
-            && ((first->type == CT_WORD) || (first->type == CT_SQUARE_CLOSE))))
+            && ((chunk_is_token(first, CT_WORD)) || (chunk_is_token(first, CT_SQUARE_CLOSE)))))
       {
          log_rule("sp_func_call_user_inside_fparen");
          return(cpd.settings[UO_sp_func_call_user_inside_fparen].a);
       }
-      if (first->type == CT_FPAREN_OPEN && second->type == CT_FPAREN_CLOSE)
+      if (chunk_is_token(first, CT_FPAREN_OPEN) && chunk_is_token(second, CT_FPAREN_CLOSE))
       {
          log_rule("sp_inside_fparens");
          return(cpd.settings[UO_sp_inside_fparens].a);
@@ -1459,13 +1455,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // "foo(...)" vs "foo( ... )"
-   if (first->type == CT_TPAREN_OPEN || second->type == CT_TPAREN_CLOSE)
+   if (chunk_is_token(first, CT_TPAREN_OPEN) || chunk_is_token(second, CT_TPAREN_CLOSE))
    {
       log_rule("sp_inside_tparen");
       return(cpd.settings[UO_sp_inside_tparen].a);
    }
 
-   if (first->type == CT_PAREN_CLOSE)
+   if (chunk_is_token(first, CT_PAREN_CLOSE))
    {
       if (  (first->flags & PCF_OC_RTYPE)  // == CT_OC_RTYPE)
          && (  first->parent_type == CT_OC_MSG_DECL
@@ -1490,10 +1486,10 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (cpd.settings[UO_sp_inside_oc_at_sel_parens].a != AV_IGNORE)
    {
-      if (  (  first->type == CT_PAREN_OPEN
+      if (  (  chunk_is_token(first, CT_PAREN_OPEN)
             && (  first->parent_type == CT_OC_SEL
                || first->parent_type == CT_OC_PROTOCOL))
-         || (  second->type == CT_PAREN_CLOSE
+         || (  chunk_is_token(second, CT_PAREN_CLOSE)
             && (  second->parent_type == CT_OC_SEL
                || second->parent_type == CT_OC_PROTOCOL)))
       {
@@ -1502,8 +1498,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (  second->type == CT_PAREN_OPEN
-      && (first->type == CT_OC_SEL || first->type == CT_OC_PROTOCOL))
+   if (  chunk_is_token(second, CT_PAREN_OPEN)
+      && (chunk_is_token(first, CT_OC_SEL) || chunk_is_token(first, CT_OC_PROTOCOL)))
    {
       log_rule("sp_after_oc_at_sel");
       return(cpd.settings[UO_sp_after_oc_at_sel].a);
@@ -1514,7 +1510,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
     * D cast:   "cast(int)"  vs "cast( int )"
     * CPP cast: "int(a + 3)" vs "int( a + 3 )"
     */
-   if (first->type == CT_PAREN_OPEN)
+   if (chunk_is_token(first, CT_PAREN_OPEN))
    {
       if (  first->parent_type == CT_C_CAST
          || first->parent_type == CT_CPP_CAST
@@ -1540,7 +1536,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_inside_paren].a);
    }
 
-   if (second->type == CT_PAREN_CLOSE)
+   if (chunk_is_token(second, CT_PAREN_CLOSE))
    {
       if (  second->parent_type == CT_C_CAST
          || second->parent_type == CT_CPP_CAST
@@ -1567,11 +1563,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // "[3]" vs "[ 3 ]" or for objective-c "@[@3]" vs "@[ @3 ]"
-   if (first->type == CT_SQUARE_OPEN || second->type == CT_SQUARE_CLOSE)
+   if (chunk_is_token(first, CT_SQUARE_OPEN) || chunk_is_token(second, CT_SQUARE_CLOSE))
    {
-      if (  cpd.lang_flags & LANG_OC
-         && (  (first->parent_type == CT_OC_AT && first->type == CT_SQUARE_OPEN)
-            || (second->parent_type == CT_OC_AT && second->type == CT_SQUARE_CLOSE))
+      if (  language_is_set(LANG_OC)
+         && (  (first->parent_type == CT_OC_AT && chunk_is_token(first, CT_SQUARE_OPEN))
+            || (second->parent_type == CT_OC_AT && chunk_is_token(second, CT_SQUARE_CLOSE)))
          && (cpd.settings[UO_sp_inside_square_oc_array].a != AV_IGNORE))
       {
          log_rule("sp_inside_square_oc_array");
@@ -1580,32 +1576,32 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("sp_inside_square");
       return(cpd.settings[UO_sp_inside_square].a);
    }
-   if (first->type == CT_SQUARE_CLOSE && second->type == CT_FPAREN_OPEN)
+   if (chunk_is_token(first, CT_SQUARE_CLOSE) && chunk_is_token(second, CT_FPAREN_OPEN))
    {
       log_rule("sp_square_fparen");
       return(cpd.settings[UO_sp_square_fparen].a);
    }
 
    // "if(...)" vs "if( ... )"
-   if (  second->type == CT_SPAREN_CLOSE
+   if (  chunk_is_token(second, CT_SPAREN_CLOSE)
       && (cpd.settings[UO_sp_inside_sparen_close].a != AV_IGNORE))
    {
       log_rule("sp_inside_sparen_close");
       return(cpd.settings[UO_sp_inside_sparen_close].a);
    }
-   if (  first->type == CT_SPAREN_OPEN
+   if (  chunk_is_token(first, CT_SPAREN_OPEN)
       && (cpd.settings[UO_sp_inside_sparen_open].a != AV_IGNORE))
    {
       log_rule("sp_inside_sparen_open");
       return(cpd.settings[UO_sp_inside_sparen_open].a);
    }
-   if (first->type == CT_SPAREN_OPEN || second->type == CT_SPAREN_CLOSE)
+   if (chunk_is_token(first, CT_SPAREN_OPEN) || chunk_is_token(second, CT_SPAREN_CLOSE))
    {
       log_rule("sp_inside_sparen");
       return(cpd.settings[UO_sp_inside_sparen].a);
    }
 
-   if (first->type == CT_CLASS_COLON)
+   if (chunk_is_token(first, CT_CLASS_COLON))
    {
       if (  first->parent_type == CT_OC_CLASS
          && (  !chunk_get_prev_type(first, CT_OC_INTF, first->level, scope_e::ALL)
@@ -1624,7 +1620,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(cpd.settings[UO_sp_after_class_colon].a);
       }
    }
-   if (second->type == CT_CLASS_COLON)
+   if (chunk_is_token(second, CT_CLASS_COLON))
    {
       if (  second->parent_type == CT_OC_CLASS
          && (  !chunk_get_prev_type(second, CT_OC_INTF, second->level, scope_e::ALL)
@@ -1648,7 +1644,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    if (  (cpd.settings[UO_sp_after_constr_colon].a != AV_IGNORE)
-      && first->type == CT_CONSTR_COLON)
+      && chunk_is_token(first, CT_CONSTR_COLON))
    {
       min_sp = cpd.settings[UO_indent_ctor_init_leading].u - 1; // default indent is 1 space
 
@@ -1656,44 +1652,44 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_after_constr_colon].a);
    }
    if (  (cpd.settings[UO_sp_before_constr_colon].a != AV_IGNORE)
-      && second->type == CT_CONSTR_COLON)
+      && chunk_is_token(second, CT_CONSTR_COLON))
    {
       log_rule("sp_before_constr_colon");
       return(cpd.settings[UO_sp_before_constr_colon].a);
    }
 
    if (  (cpd.settings[UO_sp_before_case_colon].a != AV_IGNORE)
-      && second->type == CT_CASE_COLON)
+      && chunk_is_token(second, CT_CASE_COLON))
    {
       log_rule("sp_before_case_colon");
       return(cpd.settings[UO_sp_before_case_colon].a);
    }
 
-   if (first->type == CT_DOT)
+   if (chunk_is_token(first, CT_DOT))
    {
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
-   if (second->type == CT_DOT)
+   if (chunk_is_token(second, CT_DOT))
    {
       log_rule("ADD");
       return(AV_ADD);
    }
 
-   if (first->type == CT_NULLCOND || second->type == CT_NULLCOND)
+   if (chunk_is_token(first, CT_NULLCOND) || chunk_is_token(second, CT_NULLCOND))
    {
       log_rule("sp_member");
       return(cpd.settings[UO_sp_member].a);
    }
 
-   if (  first->type == CT_ARITH
-      || first->type == CT_CARET
-      || second->type == CT_ARITH
-      || second->type == CT_CARET)
+   if (  chunk_is_token(first, CT_ARITH)
+      || chunk_is_token(first, CT_CARET)
+      || chunk_is_token(second, CT_ARITH)
+      || chunk_is_token(second, CT_CARET))
    {
       if (cpd.settings[UO_sp_arith_additive].a != AV_IGNORE)
       {
-         auto arith_char = (first->type == CT_ARITH || first->type == CT_CARET)
+         auto arith_char = (chunk_is_token(first, CT_ARITH) || chunk_is_token(first, CT_CARET))
                            ? first->str[0] : second->str[0];
          if (arith_char == '+' || arith_char == '-')
          {
@@ -1705,7 +1701,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("sp_arith");
       return(cpd.settings[UO_sp_arith].a);
    }
-   if (first->type == CT_BOOL || second->type == CT_BOOL)
+   if (chunk_is_token(first, CT_BOOL) || chunk_is_token(second, CT_BOOL))
    {
       argval_t arg = cpd.settings[UO_sp_bool].a;
       if (  (cpd.settings[UO_pos_bool].tp != TP_IGNORE)
@@ -1717,35 +1713,35 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("sp_bool");
       return(arg);
    }
-   if (first->type == CT_COMPARE || second->type == CT_COMPARE)
+   if (chunk_is_token(first, CT_COMPARE) || chunk_is_token(second, CT_COMPARE))
    {
       log_rule("sp_compare");
       return(cpd.settings[UO_sp_compare].a);
    }
 
-   if (first->type == CT_PAREN_OPEN && second->type == CT_PTR_TYPE)
+   if (chunk_is_token(first, CT_PAREN_OPEN) && chunk_is_token(second, CT_PTR_TYPE))
    {
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
 
-   if (  first->type == CT_PTR_TYPE
+   if (  chunk_is_token(first, CT_PTR_TYPE)
       && (cpd.settings[UO_sp_ptr_star_paren].a != AV_IGNORE)
-      && (second->type == CT_FPAREN_OPEN || second->type == CT_TPAREN_OPEN))
+      && (chunk_is_token(second, CT_FPAREN_OPEN) || chunk_is_token(second, CT_TPAREN_OPEN)))
    {
       log_rule("sp_ptr_star_paren");
       return(cpd.settings[UO_sp_ptr_star_paren].a);
    }
 
-   if (  first->type == CT_PTR_TYPE
-      && second->type == CT_PTR_TYPE
+   if (  chunk_is_token(first, CT_PTR_TYPE)
+      && chunk_is_token(second, CT_PTR_TYPE)
       && (cpd.settings[UO_sp_between_ptr_star].a != AV_IGNORE))
    {
       log_rule("sp_between_ptr_star");
       return(cpd.settings[UO_sp_between_ptr_star].a);
    }
 
-   if (  first->type == CT_PTR_TYPE
+   if (  chunk_is_token(first, CT_PTR_TYPE)
       && (cpd.settings[UO_sp_after_ptr_star_func].a != AV_IGNORE)
       && (  first->parent_type == CT_FUNC_DEF
          || first->parent_type == CT_FUNC_PROTO
@@ -1755,7 +1751,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_after_ptr_star_func].a);
    }
 
-   if (first->type == CT_PTR_TYPE && CharTable::IsKw1(second->str[0]))
+   if (chunk_is_token(first, CT_PTR_TYPE) && CharTable::IsKw1(second->str[0]))
    {
       chunk_t *prev = chunk_get_prev(first);
       if (chunk_is_token(prev, CT_IN))
@@ -1771,7 +1767,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(cpd.settings[UO_sp_after_ptr_block_caret].a);
       }
 
-      if (  second->type == CT_QUALIFIER
+      if (  chunk_is_token(second, CT_QUALIFIER)
          && (cpd.settings[UO_sp_after_ptr_star_qualifier].a != AV_IGNORE))
       {
          log_rule("sp_after_ptr_star_qualifier");
@@ -1785,9 +1781,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (second->type == CT_PTR_TYPE && first->type != CT_IN)
+   if (chunk_is_token(second, CT_PTR_TYPE) && first->type != CT_IN)
    {
-      if ((cpd.lang_flags & LANG_CS) && chunk_is_nullable(second))
+      if (language_is_set(LANG_CS) && chunk_is_nullable(second))
       {
          min_sp = 0;
          return(AV_REMOVE);
@@ -1801,8 +1797,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
             next = chunk_get_next(next);
          } while (chunk_is_token(next, CT_PTR_TYPE));
 
-         if (  next != nullptr
-            && (next->type == CT_FUNC_DEF || next->type == CT_FUNC_PROTO))
+         if (chunk_is_token(next, CT_FUNC_DEF) || chunk_is_token(next, CT_FUNC_PROTO))
          {
             log_rule("sp_before_ptr_star_func");
             return(cpd.settings[UO_sp_before_ptr_star_func].a);
@@ -1829,13 +1824,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (first->type == CT_OPERATOR)
+   if (chunk_is_token(first, CT_OPERATOR))
    {
       log_rule("sp_after_operator");
       return(cpd.settings[UO_sp_after_operator].a);
    }
 
-   if (second->type == CT_FUNC_PROTO || second->type == CT_FUNC_DEF)
+   if (chunk_is_token(second, CT_FUNC_PROTO) || chunk_is_token(second, CT_FUNC_DEF))
    {
       if (first->type != CT_PTR_TYPE)
       {
@@ -1853,36 +1848,36 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_after_cast].a);
    }
 
-   if (first->type == CT_BRACE_CLOSE)
+   if (chunk_is_token(first, CT_BRACE_CLOSE))
    {
-      if (second->type == CT_ELSE)
+      if (chunk_is_token(second, CT_ELSE))
       {
          log_rule("sp_brace_else");
          return(cpd.settings[UO_sp_brace_else].a);
       }
 
-      if (  (cpd.lang_flags & LANG_OC)
-         && second->type == CT_CATCH
+      if (  language_is_set(LANG_OC)
+         && chunk_is_token(second, CT_CATCH)
          && (cpd.settings[UO_sp_oc_brace_catch].a != AV_IGNORE))
       {
          log_rule("sp_oc_brace_catch");
          return(cpd.settings[UO_sp_oc_brace_catch].a);
       }
 
-      if (second->type == CT_CATCH)
+      if (chunk_is_token(second, CT_CATCH))
       {
          log_rule("sp_brace_catch");
          return(cpd.settings[UO_sp_brace_catch].a);
       }
 
-      if (second->type == CT_FINALLY)
+      if (chunk_is_token(second, CT_FINALLY))
       {
          log_rule("sp_brace_finally");
          return(cpd.settings[UO_sp_brace_finally].a);
       }
    }
 
-   if (first->type == CT_BRACE_OPEN)
+   if (chunk_is_token(first, CT_BRACE_OPEN))
    {
       if (first->parent_type == CT_ENUM)
       {
@@ -1893,7 +1888,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          // Fix for issue #1240  adding space in struct initializers
          chunk_t *tmp = chunk_get_prev_ncnl(first);
-         if (tmp != nullptr && tmp->type == CT_ASSIGN)
+         if (chunk_is_token(tmp, CT_ASSIGN))
          {
             return(AV_IGNORE);
          }
@@ -1927,7 +1922,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
 
-   if (  first->type == CT_BRACE_CLOSE
+   if (  chunk_is_token(first, CT_BRACE_CLOSE)
       && (first->flags & PCF_IN_TYPEDEF)
       && (  first->parent_type == CT_ENUM
          || first->parent_type == CT_STRUCT
@@ -1937,31 +1932,31 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_brace_typedef].a);
    }
 
-   if (second->type == CT_SPAREN_OPEN)
+   if (chunk_is_token(second, CT_SPAREN_OPEN))
    {
       log_rule("sp_before_sparen");
       return(cpd.settings[UO_sp_before_sparen].a);
    }
 
-   if (second->type == CT_PAREN_OPEN && second->parent_type == CT_TEMPLATE)
+   if (chunk_is_token(second, CT_PAREN_OPEN) && second->parent_type == CT_TEMPLATE)
    {
       log_rule("UO_sp_before_template_paren");
       return(cpd.settings[UO_sp_before_template_paren].a);
    }
 
    if (  second->type != CT_PTR_TYPE
-      && (first->type == CT_QUALIFIER || first->type == CT_TYPE))
+      && (chunk_is_token(first, CT_QUALIFIER) || chunk_is_token(first, CT_TYPE)))
    {
       argval_t arg = cpd.settings[UO_sp_after_type].a;
       log_rule("sp_after_type");
       return((arg != AV_REMOVE) ? arg : AV_FORCE);
    }
 
-   if (  first->type == CT_MACRO_OPEN
-      || first->type == CT_MACRO_CLOSE
-      || first->type == CT_MACRO_ELSE)
+   if (  chunk_is_token(first, CT_MACRO_OPEN)
+      || chunk_is_token(first, CT_MACRO_CLOSE)
+      || chunk_is_token(first, CT_MACRO_ELSE))
    {
-      if (second->type == CT_PAREN_OPEN)
+      if (chunk_is_token(second, CT_PAREN_OPEN))
       {
          log_rule("sp_func_call_paren");
          return(cpd.settings[UO_sp_func_call_paren].a);
@@ -1971,68 +1966,68 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // If nothing claimed the PTR_TYPE, then return ignore
-   if (first->type == CT_PTR_TYPE || second->type == CT_PTR_TYPE)
+   if (chunk_is_token(first, CT_PTR_TYPE) || chunk_is_token(second, CT_PTR_TYPE))
    {
       log_rule("IGNORE");
       return(AV_IGNORE);
    }
 
-   if (first->type == CT_NOT)
+   if (chunk_is_token(first, CT_NOT))
    {
       log_rule("sp_not");
       return(cpd.settings[UO_sp_not].a);
    }
-   if (first->type == CT_INV)
+   if (chunk_is_token(first, CT_INV))
    {
       log_rule("sp_inv");
       return(cpd.settings[UO_sp_inv].a);
    }
-   if (first->type == CT_ADDR)
+   if (chunk_is_token(first, CT_ADDR))
    {
       log_rule("sp_addr");
       return(cpd.settings[UO_sp_addr].a);
    }
-   if (first->type == CT_DEREF)
+   if (chunk_is_token(first, CT_DEREF))
    {
       log_rule("sp_deref");
       return(cpd.settings[UO_sp_deref].a);
    }
-   if (first->type == CT_POS || first->type == CT_NEG)
+   if (chunk_is_token(first, CT_POS) || chunk_is_token(first, CT_NEG))
    {
       log_rule("sp_sign");
       return(cpd.settings[UO_sp_sign].a);
    }
-   if (first->type == CT_INCDEC_BEFORE || second->type == CT_INCDEC_AFTER)
+   if (chunk_is_token(first, CT_INCDEC_BEFORE) || chunk_is_token(second, CT_INCDEC_AFTER))
    {
       log_rule("sp_incdec");
       return(cpd.settings[UO_sp_incdec].a);
    }
-   if (second->type == CT_CS_SQ_COLON)
+   if (chunk_is_token(second, CT_CS_SQ_COLON))
    {
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
-   if (first->type == CT_CS_SQ_COLON)
+   if (chunk_is_token(first, CT_CS_SQ_COLON))
    {
       log_rule("FORCE");
       return(AV_FORCE);
    }
-   if (first->type == CT_OC_SCOPE)
+   if (chunk_is_token(first, CT_OC_SCOPE))
    {
       log_rule("sp_after_oc_scope");
       return(cpd.settings[UO_sp_after_oc_scope].a);
    }
-   if (first->type == CT_OC_DICT_COLON)
+   if (chunk_is_token(first, CT_OC_DICT_COLON))
    {
       log_rule("sp_after_oc_dict_colon");
       return(cpd.settings[UO_sp_after_oc_dict_colon].a);
    }
-   if (second->type == CT_OC_DICT_COLON)
+   if (chunk_is_token(second, CT_OC_DICT_COLON))
    {
       log_rule("sp_before_oc_dict_colon");
       return(cpd.settings[UO_sp_before_oc_dict_colon].a);
    }
-   if (first->type == CT_OC_COLON)
+   if (chunk_is_token(first, CT_OC_COLON))
    {
       if (first->flags & PCF_IN_OC_MSG)
       {
@@ -2043,10 +2038,10 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("sp_after_oc_colon");
       return(cpd.settings[UO_sp_after_oc_colon].a);
    }
-   if (second->type == CT_OC_COLON)
+   if (chunk_is_token(second, CT_OC_COLON))
    {
       if (  (first->flags & PCF_IN_OC_MSG)
-         && (first->type == CT_OC_MSG_FUNC || first->type == CT_OC_MSG_NAME))
+         && (chunk_is_token(first, CT_OC_MSG_FUNC) || chunk_is_token(first, CT_OC_MSG_NAME)))
       {
          log_rule("sp_before_send_oc_colon");
          return(cpd.settings[UO_sp_before_send_oc_colon].a);
@@ -2056,7 +2051,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_before_oc_colon].a);
    }
 
-   if (second->type == CT_COMMENT && second->parent_type == CT_COMMENT_EMBED)
+   if (chunk_is_token(second, CT_COMMENT) && second->parent_type == CT_COMMENT_EMBED)
    {
       log_rule("FORCE");
       return(AV_FORCE);
@@ -2068,47 +2063,47 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(AV_IGNORE);
    }
 
-   if (first->type == CT_COMMENT)
+   if (chunk_is_token(first, CT_COMMENT))
    {
       log_rule("FORCE");
       return(AV_FORCE);
    }
 
-   if (first->type == CT_NEW && second->type == CT_PAREN_OPEN)
+   if (chunk_is_token(first, CT_NEW) && chunk_is_token(second, CT_PAREN_OPEN))
    {
       // c# new Constraint, c++ new operator
       log_rule("sp_between_new_paren");
       return(cpd.settings[UO_sp_between_new_paren].a);
    }
-   if (  first->type == CT_NEW
-      || first->type == CT_DELETE
-      || (first->type == CT_TSQUARE && first->parent_type == CT_DELETE))
+   if (  chunk_is_token(first, CT_NEW)
+      || chunk_is_token(first, CT_DELETE)
+      || (chunk_is_token(first, CT_TSQUARE) && first->parent_type == CT_DELETE))
    {
       log_rule("sp_after_new");
       return(cpd.settings[UO_sp_after_new].a);
    }
 
-   if (first->type == CT_ANNOTATION && chunk_is_paren_open(second))
+   if (chunk_is_token(first, CT_ANNOTATION) && chunk_is_paren_open(second))
    {
       log_rule("sp_annotation_paren");
       return(cpd.settings[UO_sp_annotation_paren].a);
    }
 
-   if (first->type == CT_OC_PROPERTY)
+   if (chunk_is_token(first, CT_OC_PROPERTY))
    {
       log_rule("sp_after_oc_property");
       return(cpd.settings[UO_sp_after_oc_property].a);
    }
 
-   if (first->type == CT_EXTERN && second->type == CT_PAREN_OPEN)
+   if (chunk_is_token(first, CT_EXTERN) && chunk_is_token(second, CT_PAREN_OPEN))
    {
       log_rule("sp_extern_paren");
       return(cpd.settings[UO_sp_extern_paren].a);
    }
 
-   if (  second->type == CT_TYPE
-      && (  (first->type == CT_STRING && first->parent_type == CT_EXTERN)
-         || (first->type == CT_FPAREN_CLOSE && first->parent_type == CT_ATTRIBUTE)))
+   if (  chunk_is_token(second, CT_TYPE)
+      && (  (chunk_is_token(first, CT_STRING) && first->parent_type == CT_EXTERN)
+         || (chunk_is_token(first, CT_FPAREN_CLOSE) && first->parent_type == CT_ATTRIBUTE)))
    {
       log_rule("FORCE");
       return(AV_FORCE);  /* TODO: make this configurable? */
@@ -2140,8 +2135,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    // Issue #889
    // mapped_file_source abc((int) A::CW2A(sTemp));
-   if (  first->type == CT_PAREN_CLOSE
-      && second->type == CT_TYPE
+   if (  chunk_is_token(first, CT_PAREN_CLOSE)
+      && chunk_is_token(second, CT_TYPE)
       && second->next != nullptr
       && second->next->type == CT_DC_MEMBER
       && second->next->next != nullptr
@@ -2149,6 +2144,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       log_rule("REMOVE_889_B");
       return(AV_REMOVE);
+   }
+
+   if (chunk_is_token(first, CT_NOEXCEPT))
+   {
+      log_rule("sp_after_noexcept");
+      return(cpd.settings[UO_sp_after_noexcept].a);
    }
 
    // these lines are only useful for debugging uncrustify itself
@@ -2200,7 +2201,7 @@ void space_text(void)
    size_t  column = pc->column;
    while (pc != nullptr)
    {
-      if (pc->type == CT_NEWLINE)
+      if (chunk_is_token(pc, CT_NEWLINE))
       {
          LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>, nl is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->nl_count);
@@ -2227,7 +2228,7 @@ void space_text(void)
          next = chunk_get_next(pc);
          while (  chunk_is_blank(next)
                && !chunk_is_newline(next)
-               && (next->type == CT_VBRACE_OPEN || next->type == CT_VBRACE_CLOSE))
+               && (chunk_is_token(next, CT_VBRACE_OPEN) || chunk_is_token(next, CT_VBRACE_CLOSE)))
          {
             LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, Skip %s (%zu+%zu)\n",
                     __func__, __LINE__, next->orig_line, next->orig_col, get_token_name(next->type),
@@ -2257,9 +2258,9 @@ void space_text(void)
        * If the current chunk contains a newline, do not change the column
        * of the next item
        */
-      if (  pc->type == CT_NEWLINE
-         || pc->type == CT_NL_CONT
-         || pc->type == CT_COMMENT_MULTI)
+      if (  chunk_is_token(pc, CT_NEWLINE)
+         || chunk_is_token(pc, CT_NL_CONT)
+         || chunk_is_token(pc, CT_COMMENT_MULTI))
       {
          column = next->column;
       }
@@ -2333,11 +2334,11 @@ void space_text(void)
                       * C++11 allows '>>' to mean '> >' in templates:
                       *   some_func<vector<string>>();
                       */
-                     if (  ((cpd.lang_flags & LANG_CPP)
+                     if (  (language_is_set(LANG_CPP)
                             ? cpd.settings[UO_sp_permit_cpp11_shift].b
-                            : ((cpd.lang_flags & LANG_JAVA) || (cpd.lang_flags & LANG_CS)))
-                        && pc->type == CT_ANGLE_CLOSE
-                        && next->type == CT_ANGLE_CLOSE)
+                            : (language_is_set(LANG_JAVA | LANG_CS)))
+                        && chunk_is_token(pc, CT_ANGLE_CLOSE)
+                        && chunk_is_token(next, CT_ANGLE_CLOSE))
                      {
                         // allow '>' and '>' to become '>>'
                      }
@@ -2617,7 +2618,7 @@ void space_add_after(chunk_t *pc, size_t count)
    }
 
    // Two CT_SPACE in a row -- use the max of the two
-   if (next->type == CT_SPACE)
+   if (chunk_is_token(next, CT_SPACE))
    {
       if (next->len() < count)
       {

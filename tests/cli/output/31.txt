@@ -14,7 +14,7 @@ indent_text(): orig_line is , orig_col is , column is , for '{'
    [x:IN_STRUCT,IN_CLASS,PUNCTUATOR]
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
-indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos is , ... indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
@@ -137,7 +137,7 @@ indent_text(): orig_line is , orig_col is , column is , for '{'
    [x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
-indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos is , ... indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 reindent_line(): orig_line is , orig_col is , on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 
  [CallStack:-DEBUG NOT SET-]
@@ -184,7 +184,7 @@ indent_text(): orig_line is , orig_col is , column is , for '{'
    [x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
-indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos is , ... indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 reindent_line(): orig_line is , orig_col is , on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 
  [CallStack:-DEBUG NOT SET-]
@@ -326,7 +326,7 @@ indent_text(): orig_line is , orig_col is , column is , for '{'
    [x:IN_STRUCT,IN_CLASS,PUNCTUATOR]
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
-indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos is , ... indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
@@ -443,7 +443,7 @@ indent_text(): orig_line is , orig_col is , column is , for '{'
    [x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
-indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos is , ... indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
@@ -484,7 +484,7 @@ indent_text(): orig_line is , orig_col is , column is , for '{'
    [x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
-indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos is , ... indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 

@@ -156,6 +156,8 @@ static int load_mem_file(const char *filename, file_mem &fm);
  */
 static int load_mem_file_config(const char *filename, file_mem &fm);
 
+void print_logs(const char *funtion_name);
+
 
 //! print uncrustify version number and terminate
 static void version_exit(void);
@@ -1678,6 +1680,7 @@ static void uncrustify_start(const deque<int> &data)
 {
    // Parse the text into chunks
    tokenize(data, nullptr);
+   print_logs("Tokenize");
 
    cpd.unc_stage = unc_stage_e::HEADER;
 
@@ -1693,12 +1696,14 @@ static void uncrustify_start(const deque<int> &data)
    if (!cpd.file_hdr.data.empty())
    {
       add_file_header();
+      print_logs("add_file_header");
    }
 
    // Add the file footer
    if (!cpd.file_ftr.data.empty())
    {
       add_file_footer();
+      print_logs("add_file_footer");
    }
 
    /*
@@ -1708,12 +1713,14 @@ static void uncrustify_start(const deque<int> &data)
     * processing that doesn't need to know level info. (that's very little!)
     */
    tokenize_cleanup();
+   print_logs("tokenize_cleanup");
 
    /*
     * Detect the brace and paren levels and insert virtual braces.
     * This handles all that nasty preprocessor stuff
     */
    brace_cleanup();
+   print_logs("brace_cleanup");
 
    // At this point, the level information is available and accurate.
 
@@ -1724,11 +1731,14 @@ static void uncrustify_start(const deque<int> &data)
 
    // Re-type chunks, combine chunks
    fix_symbols();
+   print_logs("fix_symbols");
 
    mark_comments();
+   print_logs("mark_comments");
 
    // Look at all colons ':' and mark labels, :? sequences, etc.
    combine_labels();
+   print_logs("combine_labels");
 } // uncrustify_start
 
 
@@ -1821,21 +1831,25 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       }
 
       do_braces();  // Change virtual braces into real braces...
+      print_logs("do_braces");
 
       // Scrub extra semicolons
       if (cpd.settings[UO_mod_remove_extra_semicolon].b)
       {
          remove_extra_semicolons();
+         print_logs("remove_extra_semicolons");
       }
 
       // Remove unnecessary returns
       if (cpd.settings[UO_mod_remove_empty_return].b)
       {
          remove_extra_returns();
+         print_logs("remove_extra_returns");
       }
 
       // Add parens
       do_parens();
+      print_logs("do_parens");
 
       // Modify line breaks as needed
       bool first = true;
@@ -1844,6 +1858,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       if (cpd.settings[UO_nl_remove_extra_newlines].u == 2)
       {
          newlines_remove_newlines();
+         print_logs("newlines_remove_newlines");
       }
       cpd.pass_count = 3;
       do
@@ -1853,8 +1868,11 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          LOG_FMT(LNEWLINE, "Newline loop start: %d\n", cpd.changes);
 
          annotations_newlines();
+         print_logs("annotations_newlines");
          newlines_cleanup_dup();
+         print_logs("newlines_cleanup_dup");
          newlines_cleanup_braces(first);
+         print_logs("newlines_cleanup_braces");
          if (cpd.settings[UO_nl_after_multiline_comment].b)
          {
             newline_after_multiline_comment();
@@ -1901,18 +1919,27 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
             newlines_squeeze_paren_close();
          }
          do_blank_lines();
+         print_logs("do_blank_lines");
          newlines_eat_start_end();
+         print_logs("newlines_eat_start_end");
          newlines_functions_remove_extra_blank_lines();
+         print_logs("newlines_functions_remove_extra_blank_lines");
          newlines_cleanup_dup();
+         print_logs("newlines_cleanup_dup");
          first = false;
+         string name = "newline_loop_";
+         string test = name + to_string(3 - cpd.pass_count);
+         print_logs(test.c_str());
       } while (old_changes != cpd.changes && cpd.pass_count-- > 0);
 
       mark_comments();
+      print_logs("mark_comments");
 
       // Add balanced spaces around nested params
       if (cpd.settings[UO_sp_balance_nested_parens].b)
       {
          space_text_balance_nested_parens();
+         print_logs("space_text_balance_nested_parens");
       }
 
       // Scrub certain added semicolons
@@ -1931,16 +1958,20 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
 
       // Fix same-line inter-chunk spacing
       space_text();
+      print_logs("space_text");
 
       // Do any aligning of preprocessors
       if (cpd.settings[UO_align_pp_define_span].u > 0)
       {
          align_preprocessor();
+         print_logs("align_preprocessor");
       }
 
       // Indent the text
       indent_preproc();
+      print_logs("indent_preproc");
       indent_text();
+      print_logs("indent_text");
 
       // Insert trailing comments after certain close braces
       if (  (cpd.settings[UO_mod_add_long_switch_closebrace_comment].u > 0)
@@ -1963,18 +1994,23 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       do
       {
          align_all();
+         print_logs("align_all");
          indent_text();
+         print_logs("indent_text");
          old_changes = cpd.changes;
          if (cpd.settings[UO_code_width].u > 0)
          {
             LOG_FMT(LNEWLINE, "%s(%d): Code_width loop start: %d\n",
                     __func__, __LINE__, cpd.changes);
             do_code_width();
+            print_logs("do_code_width");
             if (old_changes != cpd.changes && first)
             {
                // retry line breaks caused by splitting 1-liners
                newlines_cleanup_braces(false);
+               print_logs("newlines_cleanup_braces");
                newlines_insert_blank_lines();
+               print_logs("newlines_insert_blank_lines");
                first = false;
             }
          }
@@ -2184,7 +2220,7 @@ struct lang_ext_t language_exts[] =
    { ".di",   "D"        },
    { ".m",    "OC"       },
    { ".mm",   "OC+"      },
-   { ".sqc",  "C"        },  // embedded SQL
+   { ".sqc",  "C"        }, // embedded SQL
    { ".es",   "ECMA"     },
 };
 
@@ -2320,4 +2356,35 @@ void log_pcf_flags(log_sev_t sev, UINT64 flags)
    }
 
    log_str(sev, "]\n", 2);
+}
+
+
+void print_logs(const char *funtion_name)
+{
+   LOG_FMT(LGUY, "\nANEESH(%s) start ", funtion_name);
+   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   {
+      LOG_FMT(LGUY, "\nANEESH: % 3zu> %16.16s[%16.16s][% 3zu / % 3zu / % 3zu / % 3d][%zu / %zu / %zu][% 10" PRIx64 "][%zu - %d]",
+              pc->orig_line, get_token_name(pc->type),
+              get_token_name(pc->parent_type),
+              pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
+              pc->brace_level, pc->level, pc->pp_level,
+              pc->flags, pc->nl_count, pc->after_tab);
+      if (pc->type != CT_NEWLINE && (pc->len() != 0))
+      {
+         for (size_t cnt = 0; cnt < pc->column; cnt++)
+         {
+            LOG_FMT(LGUY, " ");
+         }
+         if (pc->type != CT_NL_CONT)
+         {
+            LOG_FMT(LGUY, "%s", pc->text());
+         }
+         else
+         {
+            LOG_FMT(LGUY, "\\");
+         }
+      }
+   }
+   LOG_FMT(LGUY, "\nANEESH(%s) End ", funtion_name);
 }
