@@ -190,14 +190,21 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    {
       size_t  tmp_col = ref->column;
       chunk_t *tmp    = ref;
+      LOG_FMT(LAS, "AlignStack::%s(%d): tmp_col is %zu\n",
+              __func__, __LINE__, tmp_col);
       while (tmp != nullptr && tmp != start)
       {
          chunk_t *next = chunk_get_next(tmp);
          if (next != nullptr)
          {
+            LOG_FMT(LAS, "AlignStack::%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
+                    __func__, __LINE__, next->orig_line, next->orig_col, next->text());
             tmp_col += space_col_align(tmp, next);
+            LOG_FMT(LAS, "AlignStack::%s(%d): column is %zu, tmp_col is %zu\n",
+                    __func__, __LINE__, next->column, tmp_col);
             if (next->column != tmp_col)
             {
+               LOG_FMT(LAS, "AlignStack::%s(%d): Call align_to_column\n", __func__, __LINE__);
                align_to_column(next, tmp_col);
             }
          }
@@ -306,9 +313,11 @@ void AlignStack::NewLines(size_t cnt)
    }
 
    m_seqnum += cnt;
+   LOG_FMT(LAS, "AlignStack::Newlines(%d): m_seqnum is %zu, m_nl_seqnum is %zu, m_span is %zu, \n",
+           __LINE__, m_seqnum, m_nl_seqnum, m_span);
    if (m_seqnum > (m_nl_seqnum + m_span))
    {
-      //LOG_FMT(LAS, "AlignStack::Newlines(%d): cnt is %zu, -\n", __LINE__, cnt);
+      LOG_FMT(LAS, "AlignStack::Newlines(%d): cnt is %zu, >\n", __LINE__, cnt);
       Flush();
    }
 }
