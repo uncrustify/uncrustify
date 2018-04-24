@@ -8,7 +8,6 @@ IFileDialogEvents : public IUnknown
 {
 public:
     virtual HRESULT STDMETHODCALLTYPE OnStuff(
-        int a,
         /* [in] */ __RPC__in_opt IFileDialog *pfd,
         /* [in] */ __RPC__in_opt IShellItem *psi,
         /* [out] */ __RPC__out FDE_SHAREVIOLATION_RESPONSE *pGoodResponse,

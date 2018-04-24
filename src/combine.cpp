@@ -4502,49 +4502,58 @@ static void mark_function(chunk_t *pc)
          // get first chunk before: A::B::pc | this.B.pc | this->B->pc
          if (chunk_is_token(prev, CT_DC_MEMBER) || chunk_is_token(prev, CT_MEMBER))
          {
-            chunk_t *tmp = prev;
-            prev = chunk_get_prev_ncnlnp(prev);
-
-            // fixes issues 1005, 1288 and 1249
-            // should not remove space between '::' and keyword, since it is a return type.
-            if (prev != nullptr && chunk_is_keyword(prev) && tmp->type == CT_DC_MEMBER)
+            while (  chunk_is_token(prev, CT_DC_MEMBER)
+                  || chunk_is_token(prev, CT_MEMBER))
             {
-               isa_def = true;
-               set_chunk_parent(tmp, CT_FUNC_START);
-               break;
-            }
-            if (  prev == nullptr
-               || (  prev->type != CT_WORD
-                  && prev->type != CT_TYPE
-                  && prev->type != CT_THIS))
-            {
-               D_LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
-               LOG_FMT(LFCN, " --? skipped MEMBER and landed on %s\n",
-                       (prev == NULL) ? "<null>" : get_token_name(prev->type));
-               if (tmp->type != CT_DC_MEMBER)
+               chunk_t *tmp = prev;
+               prev = chunk_get_prev_ncnlnp(prev);
+               // fixes issues 1005, 1288 and 1249
+               // should not remove space between '::' and keyword, since it is a return type.
+               if (prev != nullptr && chunk_is_keyword(prev) && tmp->type == CT_DC_MEMBER)
                {
-                  set_chunk_type(pc, CT_FUNC_CALL);
-                  isa_def = false;
+                  isa_def = true;
+                  set_chunk_parent(tmp, CT_FUNC_START);
+                  break;
                }
-               break;
+               if (  prev == nullptr
+                  || (  prev->type != CT_WORD
+                     && prev->type != CT_TYPE
+                     && prev->type != CT_THIS))
+               {
+                  D_LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
+                  LOG_FMT(LFCN, " --? skipped MEMBER and landed on %s\n",
+                          (prev == nullptr) ? "<null>" : get_token_name(prev->type));
+                  if (tmp->type != CT_DC_MEMBER)
+                  {
+                     set_chunk_type(pc, CT_FUNC_CALL);
+                     isa_def = false;
+                  }
+                  break;
+               }
+
+               D_LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
+               LOG_FMT(LFCN, " <skip '%s'>", prev->text());
+               D_LOG_FMT(LFCN, "\n");
+
+               // Issue #1112
+               // clarification: this will skip the CT_WORD, CT_TYPE or CT_THIS landing on either
+               // another CT_DC_MEMBER or CT_MEMBER or a token that indicates the context of the
+               // token in question; therefore, exit loop when not a CT_DC_MEMBER or CT_MEMBER
+               prev = chunk_get_prev_ncnlnp(prev);
+               if (prev == nullptr)
+               {
+                  LOG_FMT(LFCN, "nullptr\n");
+               }
+               else
+               {
+                  LOG_FMT(LFCN, "orig_line is %zu, orig_col is %zu, text() '%s'\n",
+                          prev->orig_line, prev->orig_col, prev->text());
+               }
             }
-
-            D_LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
-            LOG_FMT(LFCN, " <skip '%s'>", prev->text());
-            D_LOG_FMT(LFCN, "\n");
-
-            // Issue #1112
-            prev = chunk_get_prev_ncnlnp(prev);
             if (prev == nullptr)
             {
-               LOG_FMT(LFCN, "nullptr\n");
+               break;
             }
-            else
-            {
-               LOG_FMT(LFCN, "orig_line is %zu, orig_col is %zu, text() '%s'\n",
-                       prev->orig_line, prev->orig_col, prev->text());
-            }
-            continue;
          }
 
          // If we are on a TYPE or WORD, then this could be a proto or def
