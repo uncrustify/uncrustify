@@ -543,6 +543,10 @@
 34204  align_func_params_span-1.cfg         cpp/func_param_indent_leading_comma.cpp
 34205  bug_1395.cfg                         cpp/bug_1395.cpp
 
+34206  indent_semicolon_for_paren-t.cfg     cpp/for_loop_head.cpp
+34207  indent_first_for_expr-t.cfg          cpp/for_loop_head.cpp
+
+
 # TODO: Find relevant test cases for 'override'.
 34210  empty.cfg                            cpp/override_virtual.cpp
 

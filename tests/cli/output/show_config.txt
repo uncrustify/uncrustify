@@ -904,8 +904,14 @@ indent_comma_paren              { False, True }
 indent_bool_paren               { False, True }
   Controls the indent of a BOOL operator when inside a paren.If True, aligns under the open paren.
 
+indent_semicolon_for_paren      { False, True }
+  Controls the indent of a semicolon when inside a for paren.If True, aligns under the open for paren.
+
 indent_first_bool_expr          { False, True }
   If 'indent_bool_paren' is True, controls the indent of the first expression. If True, aligns the first expression to the following ones.
+
+indent_first_for_expr           { False, True }
+  If 'indent_semicolon_for_paren' is True, controls the indent of the first expression. If True, aligns the first expression to the following ones.
 
 indent_square_nl                { False, True }
   If an open square is followed by a newline, indent the next line so that it lines up after the open square (not recommended).
