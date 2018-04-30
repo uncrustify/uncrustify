@@ -300,6 +300,7 @@
 
 02400  ben_091.cfg                          sql/mysql.sqc
 02401  ben_092.cfg                          sql/sta-select.sqc
+02402  issue_527.cfg                        sql/issue_527.sqc
 
 
 02410  pp_if_indent-0.cfg                   c/ifdef-indent.c
