@@ -190,14 +190,21 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    {
       size_t  tmp_col = ref->column;
       chunk_t *tmp    = ref;
+      LOG_FMT(LAS, "AlignStack::%s(%d): tmp_col is %zu\n",
+              __func__, __LINE__, tmp_col);
       while (tmp != nullptr && tmp != start)
       {
          chunk_t *next = chunk_get_next(tmp);
          if (next != nullptr)
          {
+            LOG_FMT(LAS, "AlignStack::%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
+                    __func__, __LINE__, next->orig_line, next->orig_col, next->text());
             tmp_col += space_col_align(tmp, next);
+            LOG_FMT(LAS, "AlignStack::%s(%d): column is %zu, tmp_col is %zu\n",
+                    __func__, __LINE__, next->column, tmp_col);
             if (next->column != tmp_col)
             {
+               LOG_FMT(LAS, "AlignStack::%s(%d): Call align_to_column\n", __func__, __LINE__);
                align_to_column(next, tmp_col);
             }
          }
@@ -250,9 +257,10 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       m_aligned.Push_Back(ali, seqnum);
       m_last_added = 1;
 
-      LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s]: ali->orig_line is %zu, ali->column is %zu, ali->align.col_adj %d, ref [%s], endcol is %zu\n",
-              __func__, __LINE__, ali->text(), ali->orig_line, ali->column,
-              ali->align.col_adj, ref->text(), endcol);
+      LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s]: ali->orig_line is %zu, ali->column is %zu\n",
+              __func__, __LINE__, ali->text(), ali->orig_line, ali->column);
+      LOG_FMT(LAS, "AlignStack::%s(%d):    ali->align.col_adj is %d, ref '%s', endcol is %zu\n",
+              __func__, __LINE__, ali->align.col_adj, ref->text(), endcol);
 
       if (m_min_col > endcol)
       {
@@ -261,9 +269,10 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
 
       if (endcol > m_max_col)
       {
-         LOG_FMT(LAS, "AlignStack::%s(%d): Add-aligned [%zu/%zu/%zu]: ali->orig_line is %zu, ali->column is %zu, max_col old is %zu, new is %zu, m_min_col is %zu\n",
-                 __func__, __LINE__, seqnum, m_nl_seqnum, m_seqnum,
-                 ali->orig_line, ali->column, m_max_col, endcol, m_min_col);
+         LOG_FMT(LAS, "AlignStack::%s(%d): Add-aligned: seqnum is %zu, m_nl_seqnum is %zu, m_seqnum is %zu\n",
+                 __func__, __LINE__, seqnum, m_nl_seqnum, m_seqnum);
+         LOG_FMT(LAS, "AlignStack::%s(%d):    ali->orig_line is %zu, ali->column is %zu, max_col old is %zu, new is %zu, m_min_col is %zu\n",
+                 __func__, __LINE__, ali->orig_line, ali->column, m_max_col, endcol, m_min_col);
          m_max_col = endcol;
 
          /*
@@ -304,14 +313,12 @@ void AlignStack::NewLines(size_t cnt)
    }
 
    m_seqnum += cnt;
+   LOG_FMT(LAS, "AlignStack::Newlines(%d): m_seqnum is %zu, m_nl_seqnum is %zu, m_span is %zu, \n",
+           __LINE__, m_seqnum, m_nl_seqnum, m_span);
    if (m_seqnum > (m_nl_seqnum + m_span))
    {
-      LOG_FMT(LAS, "AlignStack::Newlines(%d): cnt is %zu, -\n", __LINE__, cnt);
+      LOG_FMT(LAS, "AlignStack::Newlines(%d): cnt is %zu, >\n", __LINE__, cnt);
       Flush();
-   }
-   else
-   {
-      LOG_FMT(LAS, "AlignStack::Newlines(%d): cnt is %zu\n", __LINE__, cnt);
    }
 }
 

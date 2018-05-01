@@ -293,15 +293,6 @@ chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
- * Gets the prev non-NEWLINE and non-comment chunk, non-preprocessor chunk, non-DC_MEMBER chunk
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-chunk_t *chunk_get_prev_ncnlnpnd(chunk_t *cur, scope_e scope = scope_e::ALL);
-
-
-/**
  * Grabs the next chunk of the given type at the level.
  *
  * @param cur    chunk to use as start point
@@ -516,7 +507,7 @@ static_inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, scope_e scope = sco
 
 
 //! skip to the final word/type in a :: chain
-chunk_t *chunk_skip_dc_member(chunk_t *start, scope_e scope = scope_e::ALL);
+chunk_t *chunk_skip_dc_member(chunk_t *start, scope_e scope     = scope_e::ALL);
 chunk_t *chunk_skip_dc_member_rev(chunk_t *start, scope_e scope = scope_e::ALL);
 
 

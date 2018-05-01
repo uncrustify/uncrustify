@@ -369,9 +369,10 @@ static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col, size_t min_p
 void quick_align_again(void)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LALAGAIN, "%s(%d):\n", __func__, __LINE__);
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
+      LOG_FMT(LALAGAIN, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, pc->text() '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
       if (pc->align.next != nullptr && (pc->flags & PCF_ALIGN_START))
       {
          AlignStack as;
@@ -482,7 +483,6 @@ void align_all(void)
 static void align_oc_msg_spec(size_t span)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LALIGN, "%s(%d)\n", __func__, __LINE__);
 
    AlignStack as;
    as.Start(span, 0);
@@ -776,8 +776,13 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          var_def_cnt = 0;
          equ_count   = 0;
       }
-      else if (pc->flags & PCF_VAR_DEF)
+      else if (  (pc->flags & PCF_VAR_DEF)
+              && !(pc->flags & PCF_IN_CONST_ARGS) // Issue #1717
+              && !(pc->flags & PCF_IN_FCN_DEF)    // Issue #1717
+              && !(pc->flags & PCF_IN_FCN_CALL))  // Issue #1717
       {
+         LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->flags:\n", __func__, __LINE__);
+         log_pcf_flags(LGUY, pc->flags);
          var_def_cnt++;
       }
       else if (var_def_cnt > 1)
@@ -789,6 +794,10 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
               && chunk_is_token(pc, CT_ASSIGN)
               && ((pc->flags & PCF_IN_TEMPLATE) == 0))  // Issue #999
       {
+         LOG_FMT(LALASS, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+         LOG_FMT(LALASS, "%s(%d): var_def_cnt is %zu\n",
+                 __func__, __LINE__, var_def_cnt);
          equ_count++;
          if (var_def_cnt != 0)
          {
@@ -1138,7 +1147,6 @@ static void align_func_proto(size_t span)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LALIGN, "%s(%d)\n", __func__, __LINE__);
 
    AlignStack as;
    as.Start(span, 0);

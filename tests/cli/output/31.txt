@@ -9,6 +9,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for '{'
    [x:IN_STRUCT,IN_CLASS,PUNCTUATOR]
@@ -19,6 +20,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for 'TelegramIndex'
    [x:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START]
@@ -78,6 +80,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for 'pTelName'
    [x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,STMT_START,EXPR_START]
@@ -107,6 +110,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for 'nTelIndex'
    [x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,EXPR_START]
@@ -132,6 +136,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for '{'
    [x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
@@ -144,6 +149,7 @@ reindent_line(): orig_line is , orig_col is , on '{' [BRACE_OPEN/FUNC_CLASS_DEF]
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for '}'
    [x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
@@ -154,6 +160,7 @@ reindent_line(): orig_line is , orig_col is , on '}' [BRACE_CLOSE/FUNC_CLASS_DEF
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for '~'
    [x:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START,PUNCTUATOR]
@@ -179,6 +186,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for '{'
    [x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
@@ -191,6 +199,7 @@ reindent_line(): orig_line is , orig_col is , on '{' [BRACE_OPEN/FUNC_CLASS_DEF]
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for '}'
    [x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
@@ -201,6 +210,7 @@ reindent_line(): orig_line is , orig_col is , on '}' [BRACE_CLOSE/FUNC_CLASS_DEF
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for 'const'
    [x:IN_STRUCT,IN_CLASS,FORCE_SPACE,STMT_START,EXPR_START,VAR_TYPE]
@@ -231,6 +241,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for 'unsigned'
    [x:IN_STRUCT,IN_CLASS,FORCE_SPACE,STMT_START,EXPR_START,VAR_TYPE]
@@ -253,6 +264,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for '}'
    [x:IN_CLASS,PUNCTUATOR]
@@ -265,6 +277,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 [x:IN_STRUCT,FORCE_SPACE,STMT_START,EXPR_START]
 [x:IN_STRUCT]
@@ -321,6 +334,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for '{'
    [x:IN_STRUCT,IN_CLASS,PUNCTUATOR]
@@ -331,6 +345,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for 'TelegramIndex'
    [x:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START]
@@ -388,6 +403,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for 'pTelName'
    [x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,STMT_START,EXPR_START]
@@ -415,6 +431,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for 'nTelIndex'
    [x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,EXPR_START]
@@ -438,6 +455,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for '{'
    [x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
@@ -448,6 +466,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for '}'
    [x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
@@ -456,6 +475,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for '~'
    [x:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START,PUNCTUATOR]
@@ -479,6 +499,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for '{'
    [x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
@@ -489,6 +510,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for '}'
    [x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
@@ -497,6 +519,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for 'const'
    [x:IN_STRUCT,IN_CLASS,FORCE_SPACE,STMT_START,EXPR_START,VAR_TYPE]
@@ -525,6 +548,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for 'unsigned'
    [x:IN_STRUCT,IN_CLASS,FORCE_SPACE,STMT_START,EXPR_START,VAR_TYPE]
@@ -545,6 +569,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for '}'
    [x:IN_CLASS,PUNCTUATOR]
@@ -557,4 +582,5 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): orig_line is , <Newline>
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
