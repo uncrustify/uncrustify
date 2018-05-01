@@ -2604,7 +2604,6 @@ void indent_text(void)
                     __func__, __LINE__, pc->orig_line, tmp);
             reindent_line(pc, tmp);
          }
-
          else if (do_vardefcol)
          {
             LOG_FMT(LINDENT, "%s(%d): %zu] Vardefcol => %zu\n",
@@ -2768,18 +2767,36 @@ void indent_text(void)
                     __func__, __LINE__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, indent_column);
          }
+         else if (  (pc->flags & PCF_IN_FOR)
+                 && cpd.settings[UO_indent_semicolon_for_paren].b
+                 && chunk_is_token(pc, CT_SEMICOLON))
+         {
+            indent_column_set(frm.top().pc->column);
+
+            if (cpd.settings[UO_indent_first_for_expr].b)
+            {
+               reindent_line(chunk_get_next(frm.top().pc),
+                             indent_column + pc->len() + 1);
+            }
+
+            LOG_FMT(LINDENT, "%s(%d): %zu] SEMICOLON => %zu [%s]\n",
+                    __func__, __LINE__, pc->orig_line, indent_column, pc->text());
+            reindent_line(pc, indent_column);
+         }
          else if (chunk_is_token(pc, CT_BOOL))
          {
             if (  cpd.settings[UO_indent_bool_paren].b
                && chunk_is_paren_open(frm.top().pc))
             {
                indent_column_set(frm.top().pc->column);
+
                if (cpd.settings[UO_indent_first_bool_expr].b)
                {
                   reindent_line(chunk_get_next(frm.top().pc),
                                 indent_column + pc->len() + 1);
                }
             }
+
             LOG_FMT(LINDENT, "%s(%d): %zu] bool => %zu [%s]\n",
                     __func__, __LINE__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, indent_column);

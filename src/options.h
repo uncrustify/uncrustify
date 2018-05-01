@@ -423,8 +423,10 @@ enum uncrustify_options
    UO_indent_paren_after_func_call,         // indent of open paren for a function call
    UO_indent_comma_paren,                   // indent of comma if inside a paren
    UO_indent_bool_paren,                    // indent of bool if inside a paren
+   UO_indent_semicolon_for_paren,
    UO_indent_first_bool_expr,               // if UO_indent_bool_paren == true, aligns the first
                                             // expression to the following ones
+   UO_indent_first_for_expr,
    UO_indent_square_nl,                     // indent-align under square for open followed by nl
    UO_indent_preserve_sql,                  // preserve indent of EXEC SQL statement delegatebody
    UO_indent_align_assign,                  //
