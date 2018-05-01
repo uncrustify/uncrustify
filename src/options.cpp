@@ -918,8 +918,15 @@ void register_options(void)
    unc_add_option("indent_bool_paren", UO_indent_bool_paren, AT_BOOL,
                   "Controls the indent of a BOOL operator when inside a paren."
                   "If True, aligns under the open paren.");
+   unc_add_option("indent_semicolon_for_paren", UO_indent_semicolon_for_paren,
+                  AT_BOOL,
+                  "Controls the indent of a semicolon when inside a for paren."
+                  "If True, aligns under the open for paren.");
    unc_add_option("indent_first_bool_expr", UO_indent_first_bool_expr, AT_BOOL,
                   "If 'indent_bool_paren' is True, controls the indent of the first expression. "
+                  "If True, aligns the first expression to the following ones.");
+   unc_add_option("indent_first_for_expr", UO_indent_first_for_expr, AT_BOOL,
+                  "If 'indent_semicolon_for_paren' is True, controls the indent of the first expression. "
                   "If True, aligns the first expression to the following ones.");
    unc_add_option("indent_square_nl", UO_indent_square_nl, AT_BOOL,
                   "If an open square is followed by a newline, indent the next line so that it lines up after the open square (not recommended).");
