@@ -734,7 +734,7 @@ static bool chunk_ends_type(chunk_t *start)
          || chunk_is_token(pc, CT_PP_IF)
          || chunk_is_token(pc, CT_PP_ELSE)
          || chunk_is_token(pc, CT_PP_ENDIF)
-         || ((chunk_is_token(pc, CT_COMMA) && ((pc->flags & PCF_IN_FCN_CALL) == 0)) && last_expr)
+         || ((chunk_is_token(pc, CT_COMMA) || (chunk_is_token(pc, CT_FPAREN_OPEN)) && ((pc->flags & PCF_IN_FCN_CALL) == 0)) && last_expr)
          || (chunk_is_token(pc, CT_SPAREN_OPEN) && last_lval))
       {
          ret = cnt > 0;
@@ -1713,7 +1713,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       else
       {
          // Issue # 1398
-         if (  ((pc->flags & PCF_IN_FCN_DEF) != 0)
+         if (  ((pc->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)) != 0)
             && chunk_is_token(prev, CT_WORD)
             && chunk_is_token(pc, CT_AMP)
             && chunk_is_token(next, CT_WORD))
@@ -1743,6 +1743,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                      {
                         chunk_flags_set(next, PCF_VAR_1ST);
                      }
+                  }
+                  else if (chunk_is_token(tmp, CT_BRACE_OPEN))
+                  {
+                     set_chunk_type(pc, CT_BYREF);
+                     set_chunk_type(prev, CT_TYPE);
                   }
                   else if (chunk_is_token(tmp, CT_DC_MEMBER))
                   {
