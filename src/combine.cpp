@@ -1744,7 +1744,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                         chunk_flags_set(next, PCF_VAR_1ST);
                      }
                   }
-                  else if (chunk_is_token(tmp, CT_PAREN_OPEN))
+                  else if (  ((tmp->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)) != 0)
+                          && chunk_is_token(tmp, CT_PAREN_OPEN))
                   {
                      set_chunk_type(pc, CT_BYREF);
                      set_chunk_type(prev, CT_TYPE);
