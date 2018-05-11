@@ -4369,8 +4369,8 @@ void do_blank_lines(void)
       // Add blanks after function bodies
       if (  chunk_is_token(prev, CT_BRACE_CLOSE)
          && (  (  prev->parent_type == CT_FUNC_DEF
-               && (  (chunk_get_prev_type(prev, CT_FUNC_DEF, prev->level) != NULL)
-                  && chunk_get_prev_type(prev, CT_FUNC_DEF, prev->level)->parent_type != CT_FIXED))
+               && chunk_get_prev_type(prev, CT_FUNC_DEF, prev->level) != NULL
+               && chunk_get_prev_type(prev, CT_FUNC_DEF, prev->level)->parent_type != CT_FIXED)
             || prev->parent_type == CT_FUNC_CLASS_DEF
             || prev->parent_type == CT_OC_MSG_DECL
             || prev->parent_type == CT_ASSIGN))
