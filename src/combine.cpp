@@ -4678,7 +4678,7 @@ static void mark_function(chunk_t *pc)
 #endif
                LOG_FMT(LFCN, " -- overriding call due to tuple return type -- %s [%s]\n",
                        prev->text(), get_token_name(prev->type));
-               isa_def = true;
+               //    isa_def = true;
                break;
             }
             tmp = chunk_get_next_ncnl(tmp);
