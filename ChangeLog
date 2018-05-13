@@ -1,6 +1,10 @@
 Change highlights in uncrustify-0.67 (May 2018)
 -------------------------------------------------------------------------------
 
+Changing option:
+
+Removed option:
+
 New options:
   - indent_first_for_expr                Apr 29
   - indent_semicolon_for_paren           Apr 29
@@ -35,7 +39,26 @@ New options:
   - indent_ignore_asm_block         2017 Nov 05
 
 New keyword:
-  - @available                      2018 Feb 23
+  - __unused                             Apr 21
+  - @synchronized                        Feb 24
+  - @available                           Feb 23
+  - fixed                                Feb 16
+  - @protected                           Feb  4
+  - @public                              Feb  4
+  - __autoreleasing                      Feb  4
+  - __bridge                             Feb  4
+  - __bridge_retained                    Feb  4
+  - __bridge_transfer                    Feb  4
+  - __declspec                           Feb  4
+  - __has_include                        Feb  4
+  - __has_include_next                   Feb  4
+  - __strong                             Feb  4
+  - __typeof                             Feb  4
+  - __unsafe_unretained                  Feb  4
+  - __weak                               Feb  4
+  - self                                 Feb  4
+  - unsafe_unretained               2018 Feb  4
+  - where                           2017 Dec  6
 
 Bugfix:
  - Debian issue #881249 "FTBFS on armel/i386/mips64el/s390x: cpp_33057 fails"
