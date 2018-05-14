@@ -1,6 +1,6 @@
 {
   "name": "uncrustify",
-  "version": "0.66.1",
+  "version": "0.67",
   "description": "A highly configurable, easily modifiable source code beautifier for C, C++, C#, ObjectiveC, D, Java, Pawn and VALA",
   "main": "uncrustify",
   "scripts": {

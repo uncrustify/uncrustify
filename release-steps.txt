@@ -30,7 +30,7 @@ Change the date at the first line of this document.
 
 2b. Update the option count in documentation/htdocs/index.html
    Use script/count_the_options.sh to count the options.
-   Check the number of options at ./tests/cli/Output/help.txt
+   Check the number of options at ./tests/cli/output/help.txt
 
 2d. Update the man file, if any command-line options have changed.
 
