@@ -335,6 +335,7 @@ enum c_token_t
    CT_SQL_BEGIN,        // the 'BEGINN' in 'EXEC SQL BEGIN ...'
    CT_SQL_END,          // the 'END' in 'EXEC SQL END ...'
    CT_SQL_WORD,         // CT_WORDs in the 'EXEC SQL' statement
+   CT_SQL_ASSIGN,       // :=
 
    // Vala stuff
    CT_CONSTRUCT,        // braced "construct { }" or qualifier "(construct int x)"

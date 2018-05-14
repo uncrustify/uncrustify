@@ -7,7 +7,7 @@ void myfunc1()
         x date;
     BEGIN
     IF in_str IS NULL THEN
-        x :  = NULL;
+        x := NULL;
     ELSIF substr
         (in_str, 5,  1) = '-' THEN
                           x := to_date(in_str, 'YYYY-MM-DD HH24:MI:SS');

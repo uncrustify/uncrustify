@@ -3383,10 +3383,6 @@ void combine_labels(void)
                LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, tmp '%s'\n   ",
                        __func__, __LINE__, tmp->orig_line, tmp->orig_col, (tmp->type == CT_NEWLINE) ? "<Newline>" : tmp->text());
                log_pcf_flags(LGUY, tmp->flags);
-               if (chunk_is_token(tmp, CT_ASSIGN)) // Issue #527
-               {
-                  return;
-               }
                if (next->flags & PCF_IN_FCN_CALL)
                {
                   // Must be a macro thingy, assume some sort of label
