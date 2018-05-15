@@ -188,6 +188,7 @@ add_executable(uncrustify
   src/indent.cpp
   src/keywords.cpp
   src/lang_pawn.cpp
+  src/language_tools.cpp
   src/logger.cpp
   src/logmask.cpp
   src/md5.cpp
@@ -218,6 +219,7 @@ add_executable(uncrustify
   src/ChunkStack.h
   src/chunk_list.h
   src/helper_for_print.h
+  src/language_tools.h
   src/ListManager.h
   src/logger.h
   src/logmask.h

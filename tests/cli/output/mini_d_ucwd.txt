@@ -680,6 +680,9 @@ sp_annotation_paren             = ignore   # ignore/add/remove/force
 # If True, vbrace tokens are dropped to the previous token and skipped.
 sp_skip_vbrace_tokens           = false    # false/true
 
+# Controls the space after 'noexcept'.
+sp_after_noexcept               = ignore   # ignore/add/remove/force
+
 # If True, a <TAB> is inserted after #define.
 force_tab_after_define          = false    # false/true
 
@@ -694,6 +697,9 @@ indent_columns                  = 8        # unsigned number
 # The continuation indent. If non-zero, this overrides the indent of '(' and '=' continuation indents.
 # For FreeBSD, this is set to 4. Negative value is absolute and not increased for each '(' level.
 indent_continue                 = 0        # number
+
+# Indent empty lines - lines which contain only spaces before newline character
+indent_single_newlines          = false    # false/true
 
 # The continuation indent for func_*_param if they are true.
 # If non-zero, this overrides the indent.
@@ -1014,6 +1020,12 @@ nl_oc_msg_leave_one_liner       = false    # false/true
 
 # Add or remove newline between Objective-C block signature and '{'.
 nl_oc_block_brace               = ignore   # ignore/add/remove/force
+
+# Add or remove newline between @interface and '{'.
+nl_oc_interface_brace           = ignore   # ignore/add/remove/force
+
+# Add or remove newline between @implementation and '{'.
+nl_oc_implementation_brace      = ignore   # ignore/add/remove/force
 
 # Add or remove newlines at the start of the file.
 nl_start_of_file                = ignore   # ignore/add/remove/force
@@ -2141,16 +2153,24 @@ include_category_2              = ""         # string
 # False: indent_func_call_param will NOT be used.
 use_indent_func_call_param      = true     # false/true
 
-# The value of the indentation for a continuation line is calculate differently if the line is:
-#   a declaration :your case with QString fileName ...
-#   an assignment  :your case with pSettings = new QSettings( ...
-# At the second case the option value might be used twice:
+# The value of the indentation for a continuation line is calculate differently if the statement is:
+#   a declaration: your case with QString fileName ...
+#   an assignment: your case with pSettings = new QSettings( ...
+# At the second case the indentation value might be used twice:
 #   at the assignment
 #   at the function call (if present)
-# To prevent the double use of the option value, use this option with the value 'True'.
+# To prevent the double use of the indentation value, use this option with the value 'True'.
 # True:  indent_continue will be used only once
 # False: indent_continue will be used every time (default).
 use_indent_continue_only_once   = false    # false/true
+
+# the value might be used twice:
+#   at the assignment
+#   at the opening brace
+# To prevent the double use of the indentation value, use this option with the value 'True'.
+# True:  indentation will be used only once
+# False: indentation will be used every time (default).
+indent_cpp_lambda_only_once     = false    # false/true
 
 # SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.
 # Default=True.

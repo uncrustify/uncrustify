@@ -63,11 +63,15 @@
 12002  empty.cfg                            cs/nullable_prop.cs
 12003  ben_043.cfg                          cs/fncall_as_ctor_in_attr.cs
 12004  verbatim_strings.cfg                 cs/verbatim_strings.cs
+12005  empty.cfg                            cs/bug_1591.cs
 
 12101  indent_using_block-f.cfg             cs/bug_i_679.cs
 
 12102  mod_full_brace_nl_block_rem_mlcond-0.cfg  cs/mod_full_brace_nl_block_rem_mlcond.cs
 12103  mod_full_brace_nl_block_rem_mlcond-1.cfg  cs/mod_full_brace_nl_block_rem_mlcond.cs
+12104  bug_1637.cfg                              cs/bug_1637.cs
+12105  bug_1650.cfg                              cs/bug_1650.cs
+12106  bug_1650.cfg                              cs/UNI-40685.cs
 
 # Adopt some UT tests
 10012  empty.cfg                            cs/621_this-spacing.cs
@@ -103,6 +107,7 @@
 11072  U07-Cs.cfg                           cs/UNI-2007.cs
 11073  U08-Cs.cfg                           cs/UNI-2008.cs
 20010  UNI-32658.cfg                        cs/UNI-32658.cs
+20011  bug_1620.cfg                         cs/bug_1620.cs
 
 60004  UNI-2684.cfg                         cs/UNI-2684.cs
 60005  UNI-2685.cfg                         cs/UNI-2685.cs

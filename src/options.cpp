@@ -92,6 +92,9 @@ static int                                checkGroupNumber  = -1;
 static int                                checkOptionNumber = -1;
 #endif // DEBUG
 
+// print the name of the configuration file only once
+bool headOfMessagePrinted = false;
+
 
 //!  only compare alpha-numeric characters
 static bool match_text(const char *str1, const char *str2);
@@ -750,6 +753,8 @@ void register_options(void)
                   "Control space between a Java annotation and the open paren.");
    unc_add_option("sp_skip_vbrace_tokens", UO_sp_skip_vbrace_tokens, AT_BOOL,
                   "If True, vbrace tokens are dropped to the previous token and skipped.");
+   unc_add_option("sp_after_noexcept", UO_sp_after_noexcept, AT_IARF,
+                  "Controls the space after 'noexcept'.");
    unc_add_option("force_tab_after_define", UO_force_tab_after_define, AT_BOOL,
                   "If True, a <TAB> is inserted after #define.");
 
@@ -760,6 +765,8 @@ void register_options(void)
    unc_add_option("indent_continue", UO_indent_continue, AT_NUM,
                   "The continuation indent. If non-zero, this overrides the indent of '(' and '=' continuation indents.\n"
                   "For FreeBSD, this is set to 4. Negative value is absolute and not increased for each '(' level.");
+   unc_add_option("indent_single_newlines", UO_indent_single_newlines, AT_BOOL,
+                  "Indent empty lines - lines which contain only spaces before newline character");
    unc_add_option("indent_param", UO_indent_param, AT_UNUM,
                   "The continuation indent for func_*_param if they are true.\n"
                   "If non-zero, this overrides the indent.");
@@ -996,6 +1003,10 @@ void register_options(void)
                   "Don't split one-line OC messages.");
    unc_add_option("nl_oc_block_brace", UO_nl_oc_block_brace, AT_IARF,
                   "Add or remove newline between Objective-C block signature and '{'.");
+   unc_add_option("nl_oc_interface_brace", UO_nl_oc_interface_brace, AT_IARF,
+                  "Add or remove newline between @interface and '{'.");
+   unc_add_option("nl_oc_implementation_brace", UO_nl_oc_implementation_brace, AT_IARF,
+                  "Add or remove newline between @implementation and '{'.");
    unc_add_option("nl_start_of_file", UO_nl_start_of_file, AT_IARF,
                   "Add or remove newlines at the start of the file.");
    unc_add_option("nl_start_of_file_min", UO_nl_start_of_file_min, AT_UNUM,
@@ -1789,15 +1800,22 @@ void register_options(void)
                   "True:  indent_func_call_param will be used (default)\n"
                   "False: indent_func_call_param will NOT be used.");
    unc_add_option("use_indent_continue_only_once", UO_use_indent_continue_only_once, AT_BOOL,
-                  "The value of the indentation for a continuation line is calculate differently if the line is:\n"
-                  "  a declaration :your case with QString fileName ...\n"
-                  "  an assignment  :your case with pSettings = new QSettings( ...\n"
-                  "At the second case the option value might be used twice:\n"
+                  "The value of the indentation for a continuation line is calculate differently if the statement is:\n"
+                  "  a declaration: your case with QString fileName ...\n"
+                  "  an assignment: your case with pSettings = new QSettings( ...\n"
+                  "At the second case the indentation value might be used twice:\n"
                   "  at the assignment\n"
                   "  at the function call (if present)\n"
-                  "To prevent the double use of the option value, use this option with the value 'True'.\n"
+                  "To prevent the double use of the indentation value, use this option with the value 'True'.\n"
                   "True:  indent_continue will be used only once\n"
                   "False: indent_continue will be used every time (default).");
+   unc_add_option("indent_cpp_lambda_only_once", UO_indent_cpp_lambda_only_once, AT_BOOL,
+                  "the value might be used twice:\n"
+                  "  at the assignment\n"
+                  "  at the opening brace\n"
+                  "To prevent the double use of the indentation value, use this option with the value 'True'.\n"
+                  "True:  indentation will be used only once\n"
+                  "False: indentation will be used every time (default).");
    unc_add_option("use_options_overriding_for_qt_macros", UO_use_options_overriding_for_qt_macros, AT_BOOL,
                   "SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.\n"
                   "Default=True.");
@@ -1953,8 +1971,14 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       }
 
       // indent_case_brace = -indent_columns
-      LOG_FMT(LNOTE, "line_number=%d, entry(%s) %s, tmp(%s) %s\n",
-              cpd.line_number, get_argtype_name(entry->type),
+      if (!headOfMessagePrinted)
+      {
+         LOG_FMT(LNOTE, "%s(%d): the configuration file is: %s\n",
+                 __func__, __LINE__, cpd.filename.c_str());
+         headOfMessagePrinted = true;
+      }
+      LOG_FMT(LNOTE, "%s(%d): line_number is %d, entry(%s) %s, tmp(%s) %s\n",
+              __func__, __LINE__, cpd.line_number, get_argtype_name(entry->type),
               entry->name, get_argtype_name(tmp->type), tmp->name);
 
       if (tmp->type == AT_UNUM || tmp->type == AT_NUM)
@@ -2340,11 +2364,28 @@ int load_option_file(const char *filename)
 } // load_option_file
 
 
+const char *get_eol_marker()
+{
+   static char                 eol[3] = { 0x0A, 0x00, 0x00 };
+
+   const unc_text::value_type &lines = cpd.newline.get();
+
+   for (size_t i = 0; i < lines.size(); ++i)
+   {
+      eol[i] = (char)lines[i];
+   }
+
+   return(eol);
+}
+
+
 int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
 {
-   int count_the_not_default_options = 0;
+   int        count_the_not_default_options = 0;
 
-   fprintf(pfile, "# %s\n", UNCRUSTIFY_VERSION);
+   const char *eol_marker = get_eol_marker();
+
+   fprintf(pfile, "# %s%s", UNCRUSTIFY_VERSION, eol_marker);
 
    // Print the options by group
    for (auto &jt : group_map)
@@ -2373,13 +2414,12 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
          {
             if (first)
             {
-               // print group description
-               fputs("\n#\n", pfile);
+               fprintf(pfile, "%s#%s", eol_marker, eol_marker);
                fprintf(pfile, "# %s\n", jt.second.short_desc);
-               fputs("#\n\n", pfile);
+               fprintf(pfile, "#%s%s", eol_marker, eol_marker);
             }
 
-            fprintf(pfile, "%s# ", first ? "" : "\n");
+            fprintf(pfile, "%s# ", first ? "" : eol_marker);
 
             auto idx = 0;
             for ( ; option->short_desc[idx] != 0; idx++)
@@ -2391,9 +2431,10 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
                   fputs("# ", pfile);
                }
             }
+
             if (option->short_desc[idx - 1] != '\n')
             {
-               fputc('\n', pfile);
+               fputs(eol_marker, pfile);
             }
          }
          first = false;
@@ -2418,7 +2459,7 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
             fprintf(pfile, "%*.s # %s", 8 - val_len, " ",
                     argtype_to_string(option->type).c_str());
          }
-         fputs("\n", pfile);
+         fputs(eol_marker, pfile);
       }
    }
 
@@ -2431,7 +2472,7 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
    print_defines(pfile);     // Print custom defines
    print_extensions(pfile);  // Print custom file extensions
 
-   fprintf(pfile, "# option(s) with 'not default' value: %d\n#\n", count_the_not_default_options);
+   fprintf(pfile, "# option(s) with 'not default' value: %d%s#%s", count_the_not_default_options, eol_marker, eol_marker);
 
    return(0);
 } // save_option_file_kernel

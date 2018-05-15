@@ -106,6 +106,7 @@
 30110  class-nl_func-add2.cfg               cpp/class-init.cpp
 30111  indent_columns-4.cfg                 cpp/bug_1346.h
 30112  bug_1432.cfg                         cpp/bug_1432.cpp
+30113  bug_1452.cfg                         cpp/bug_1452.cpp
 
 30201  cmt_indent-1.cfg                     cpp/cmt_indent.cpp
 30202  cmt_indent-2.cfg                     cpp/cmt_indent.cpp
@@ -199,10 +200,12 @@
 30753  lambda3.cfg                          cpp/lambda2.cpp
 30754  indent_with_tabs-0.cfg               cpp/bug_i_682.h
 30755  empty.cfg                            cpp/bug_i_938.h
+30756  bug_1296.cfg                         cpp/bug_1296.cpp
 
 30800  star_pos-0.cfg                       cpp/align-star-amp-pos.cpp
 30801  star_pos-1.cfg                       cpp/align-star-amp-pos.cpp
 30802  star_pos-2.cfg                       cpp/align-star-amp-pos.cpp
+30803  bug_1403.cfg                         cpp/bug_1403.cpp
 
 30804  block_pointer.cfg                    cpp/block_pointer.cpp
 30805  ptr_star-1.cfg                       cpp/ptr-star.cpp
@@ -229,6 +232,7 @@
 30823  empty.cfg                            cpp/pp_indent_func_def.cpp
 30824  empty.cfg                            cpp/pp_indent_extern.cpp
 
+30828  bug_1691.cfg                         cpp/bug_1691.cpp
 
 30830  kw_subst2.cfg                        cpp/kw_subst.cpp
 30831  kw_subst.cfg                         cpp/kw_subst2.cpp
@@ -288,6 +292,7 @@
 
 30945  sp_before_byref-r.cfg                cpp/sf.3266678.cpp
 30946  sf.3315874.cfg                       cpp/sf.3315874.h
+30947  bug_1689.cfg                         cpp/bug_1689.cpp
 
 30950  sp_before_tr_emb_cmt-f.cfg           cpp/sp_before_tr_emb_cmt_input.cpp
 30951  sp_before_tr_emb_cmt-a.cfg           cpp/sp_before_tr_emb_cmt_input.cpp
@@ -457,6 +462,7 @@
 34115  nl_before_func_body_def-2.cfg        cpp/nl_before_func_body_def.cpp
 
 34120  align_assign_span-1.cfg              cpp/bug_i_999.cpp
+34121  bug_1717.cfg                         cpp/bug_1717.cpp
 
 34130  nl_brace_fparen-f.cfg                cpp/bug_i_1000.cpp
 34131  nl_brace_fparen-r.cfg                cpp/bug_i_1000.cpp
@@ -512,6 +518,9 @@
 34173  arith-vs-ptr.cfg                     cpp/i1464.cpp
 34174  arith-vs-ptr.cfg                     cpp/i1466.cpp
 34175  align_assign_span-1.cfg              cpp/i1509.cpp
+34176  align_assign_span-1.cfg              cpp/i1509_bug_1112_correction.cpp
+
+34180  bug_1402.cfg                         cpp/bug_1402.cpp
 
 34190  bug_1003.cfg                         cpp/bug_1003.cpp
 
@@ -538,6 +547,7 @@
 34210  empty.cfg                            cpp/override_virtual.cpp
 
 34250  empty.cfg                            cpp/bug_1607.cpp
+34251  bug_1649.cfg                         cpp/bug_1649.cpp
 
 34280  UNI-29935.cfg                        cpp/UNI-29935.cpp
 

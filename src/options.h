@@ -351,13 +351,15 @@ enum uncrustify_options
    UO_sp_inside_newop_paren_close, //
    UO_sp_before_tr_emb_cmt,        // treatment of spaces before comments following code
    UO_sp_num_before_tr_emb_cmt,    // number of spaces before comments following code
-   UO_sp_annotation_paren,         //
-   UO_sp_skip_vbrace_tokens,       //
+   UO_sp_annotation_paren,         // Control space between a Java annotation and the open paren
+   UO_sp_skip_vbrace_tokens,       // If True, vbrace tokens are dropped to the previous token and skipped
+   UO_sp_after_noexcept,           // Controls the space after 'noexcept'
    UO_force_tab_after_define,      // force <TAB> after #define, Issue # 876
 
    // group: UG_indent, "Indenting"                                                                2
    UO_indent_columns,                       // ie 3 or 8
    UO_indent_continue,                      //
+   UO_indent_single_newlines,               //
    UO_indent_param,                         // indent value of indent_*_param
    UO_indent_with_tabs,                     // 1=only to the 'level' indent, 2=use tabs for indenting
    UO_indent_cmt_with_tabs,                 //
@@ -464,6 +466,8 @@ enum uncrustify_options
    UO_nl_while_leave_one_liners,       //
    UO_nl_oc_msg_leave_one_liner,       // Don't split one-line OC messages
    UO_nl_oc_block_brace,               // Add or remove newline between Objective-C block signature and '{'
+   UO_nl_oc_interface_brace,           // Add or remove newline between @interface and '{'
+   UO_nl_oc_implementation_brace,      // Add or remove newline between @implementation and '{'
    UO_nl_start_of_file,                // alter newlines at the start of file
    UO_nl_start_of_file_min,            // min number of newlines at the start of the file
    UO_nl_end_of_file,                  // alter newlines at the end of file
@@ -895,14 +899,20 @@ enum uncrustify_options
    // group: UG_Use_Ext, "Use or Do not Use options", "G"                                           12
    UO_use_indent_func_call_param,           // use/don't use indent_func_call_param Guy 2015-09-24
    UO_use_indent_continue_only_once,        // The value of the indentation for a continuation line is calculate
-                                            // differently if the line is:
-                                            //   a declaration :your case with QString fileName ...
-                                            //   an assignment  :your case with pSettings = new QSettings( ...
-                                            // At the second case the option value might be used twice:
+                                            // differently if the statement is:
+                                            //   a declaration: your case with QString fileName ...
+                                            //   an assignment: your case with pSettings = new QSettings( ...
+                                            // At the second case the indentation value might be used twice:
                                             //   at the assignment
                                             //   at the function call (if present)
-                                            // To prevent the double use of the option value, use this option
+                                            // To prevent the double use of the indentation value, use this option
                                             // with the value "true". Guy 2016-05-16
+   UO_indent_cpp_lambda_only_once,          // The value of the indentation for a cpp lambda is calculate
+                                            // the value might be used twice:
+                                            //   at the assignment
+                                            //   at the opening brace
+                                            // To prevent the double use of the indentation value, use this option
+                                            // with the value "true".
    UO_use_options_overriding_for_qt_macros, // SIGNAL/SLOT Qt macros have special formatting options.
                                             // See options_for_QT.cpp for details.
    UO_use_mod_strict_ASCII,                 // If True, will report an error if non-ascii characters outside of strings or comments are found
@@ -1012,6 +1022,16 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default);
  */
 int set_option_value(const char *name, const char *value);
 
+/**
+ * get the marker that was selected for the end of line via the config file
+ *
+ * @return "\n"     if newlines was set to LE_LF in the config file
+ * @return "\r\n"   if newlines was set to LE_CRLF in the config file
+ * @return "\r"     if newlines was set to LE_CR in the config file
+ * @return "\n"     if newlines was set to LE_AUTO in the config file
+ * @return "\n"     if newlines was set to LE_AUTO in the config file
+ */
+const char *get_eol_marker();
 
 /**
  * check if a path/filename uses a relative or absolute path

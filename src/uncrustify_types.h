@@ -242,6 +242,7 @@ struct chunk_t
       column        = 0;
       column_indent = 0;
       nl_count      = 0;
+      nl_column     = 0;
       level         = 0;
       brace_level   = 0;
       pp_level      = 0;
@@ -279,6 +280,7 @@ struct chunk_t
                                    * column, which may be less than the real
                                    * column used to indent with tabs          */
    size_t       nl_count;         //! number of newlines in CT_NEWLINE
+   size_t       nl_column;        //! column of the subsequent newline entries(all of them should have the same column)
    size_t       level;            //! nest level in {, (, or [
    size_t       brace_level;      //! nest level in braces only
    size_t       pp_level;         //! nest level in preprocessor

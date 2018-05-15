@@ -20,6 +20,7 @@
 #include "uncrustify.h"
 #include "indent.h"
 #include "space.h"
+#include "language_tools.h"
 
 
 using namespace std;
@@ -332,7 +333,7 @@ static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col, size_t min_p
    }
    else
    {
-      if (prev->type == CT_COMMENT_MULTI)
+      if (chunk_is_token(prev, CT_COMMENT_MULTI))
       {
          min_col = prev->orig_col_end + min_pad;
       }
@@ -348,8 +349,8 @@ static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col, size_t min_p
          }
       }
       LOG_FMT(LALADD, "%s(%d): pc->orig_line=%zu, pc->col=%zu max_col=%zu min_pad=%zu min_col=%zu multi:%s prev->col=%zu prev->len()=%zu %s\n",
-              __func__, __LINE__, pc->orig_line, pc->column, max_col, min_pad, min_col, (prev->type == CT_COMMENT_MULTI) ? "Y" : "N",
-              (prev->type == CT_COMMENT_MULTI) ? prev->orig_col_end : (UINT32)prev->column, prev->len(), get_token_name(prev->type));
+              __func__, __LINE__, pc->orig_line, pc->column, max_col, min_pad, min_col, (chunk_is_token(prev, CT_COMMENT_MULTI)) ? "Y" : "N",
+              (chunk_is_token(prev, CT_COMMENT_MULTI)) ? prev->orig_col_end : (UINT32)prev->column, prev->len(), get_token_name(prev->type));
    }
 
    if (cs.Empty())
@@ -368,9 +369,10 @@ static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col, size_t min_p
 void quick_align_again(void)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LALAGAIN, "%s(%d):\n", __func__, __LINE__);
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
+      LOG_FMT(LALAGAIN, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, pc->text() '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
       if (pc->align.next != nullptr && (pc->flags & PCF_ALIGN_START))
       {
          AlignStack as;
@@ -481,7 +483,6 @@ void align_all(void)
 static void align_oc_msg_spec(size_t span)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LALIGN, "%s(%d)\n", __func__, __LINE__);
 
    AlignStack as;
    as.Start(span, 0);
@@ -492,7 +493,7 @@ static void align_oc_msg_spec(size_t span)
       {
          as.NewLines(pc->nl_count);
       }
-      else if (pc->type == CT_OC_MSG_SPEC)
+      else if (chunk_is_token(pc, CT_OC_MSG_SPEC))
       {
          as.Add(pc);
       }
@@ -523,9 +524,9 @@ void align_right_comments(void)
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
-      if (  pc->type == CT_COMMENT
-         || pc->type == CT_COMMENT_CPP
-         || pc->type == CT_COMMENT_MULTI)
+      if (  chunk_is_token(pc, CT_COMMENT)
+         || chunk_is_token(pc, CT_COMMENT_CPP)
+         || chunk_is_token(pc, CT_COMMENT_MULTI))
       {
          if (pc->parent_type == CT_COMMENT_END)
          {
@@ -585,8 +586,8 @@ void align_struct_initializers(void)
    {
       chunk_t *prev = chunk_get_prev_ncnl(pc);
       if (  chunk_is_token(prev, CT_ASSIGN)
-         && (  pc->type == CT_BRACE_OPEN
-            || ((cpd.lang_flags & LANG_D) && pc->type == CT_SQUARE_OPEN)))
+         && (  chunk_is_token(pc, CT_BRACE_OPEN)
+            || (language_is_set(LANG_D) && chunk_is_token(pc, CT_SQUARE_OPEN))))
       {
          align_init_brace(pc);
       }
@@ -612,7 +613,7 @@ void align_preprocessor(void)
    while (pc != nullptr)
    {
       // Note: not counting back-slash newline combos
-      if (pc->type == CT_NEWLINE)
+      if (chunk_is_token(pc, CT_NEWLINE))
       {
          as.NewLines(pc->nl_count);
          asf.NewLines(pc->nl_count);
@@ -636,7 +637,7 @@ void align_preprocessor(void)
               __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
 
       cur_as = &as;
-      if (pc->type == CT_MACRO_FUNC)
+      if (chunk_is_token(pc, CT_MACRO_FUNC))
       {
          if (!cpd.settings[UO_align_pp_define_together].b)
          {
@@ -707,10 +708,10 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->text() '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->text());
       // Don't check inside PAREN or SQUARE groups
-      if (  pc->type == CT_SPAREN_OPEN
-            // || pc->type == CT_FPAREN_OPEN Issue #1340
-         || pc->type == CT_SQUARE_OPEN
-         || pc->type == CT_PAREN_OPEN)
+      if (  chunk_is_token(pc, CT_SPAREN_OPEN)
+            // || chunk_is_token(pc, CT_FPAREN_OPEN) Issue #1340
+         || chunk_is_token(pc, CT_SQUARE_OPEN)
+         || chunk_is_token(pc, CT_PAREN_OPEN))
       {
          LOG_FMT(LALASS, "%s(%d): Don't check inside PAREN or SQUARE groups, type is %s\n",
                  __func__, __LINE__, get_token_name(pc->type));
@@ -725,7 +726,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       }
 
       // Recurse if a brace set is found
-      if (pc->type == CT_BRACE_OPEN || pc->type == CT_VBRACE_OPEN)
+      if (chunk_is_token(pc, CT_BRACE_OPEN) || chunk_is_token(pc, CT_VBRACE_OPEN))
       {
          size_t myspan;
          size_t mythresh;
@@ -757,7 +758,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       }
 
       // Done with this brace set?
-      if (pc->type == CT_BRACE_CLOSE || pc->type == CT_VBRACE_CLOSE)
+      if (chunk_is_token(pc, CT_BRACE_CLOSE) || chunk_is_token(pc, CT_VBRACE_CLOSE))
       {
          pc = chunk_get_next(pc);
          break;
@@ -775,8 +776,13 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          var_def_cnt = 0;
          equ_count   = 0;
       }
-      else if (pc->flags & PCF_VAR_DEF)
+      else if (  (pc->flags & PCF_VAR_DEF)
+              && !(pc->flags & PCF_IN_CONST_ARGS) // Issue #1717
+              && !(pc->flags & PCF_IN_FCN_DEF)    // Issue #1717
+              && !(pc->flags & PCF_IN_FCN_CALL))  // Issue #1717
       {
+         LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->flags:\n", __func__, __LINE__);
+         log_pcf_flags(LGUY, pc->flags);
          var_def_cnt++;
       }
       else if (var_def_cnt > 1)
@@ -785,9 +791,13 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          vdas.Reset();
       }
       else if (  equ_count == 0
-              && pc->type == CT_ASSIGN
+              && chunk_is_token(pc, CT_ASSIGN)
               && ((pc->flags & PCF_IN_TEMPLATE) == 0))  // Issue #999
       {
+         LOG_FMT(LALASS, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+         LOG_FMT(LALASS, "%s(%d): var_def_cnt is %zu\n",
+                 __func__, __LINE__, var_def_cnt);
          equ_count++;
          if (var_def_cnt != 0)
          {
@@ -876,7 +886,7 @@ static chunk_t *align_func_param(chunk_t *start)
             break;
          }
       }
-      else if (pc->type == CT_COMMA)
+      else if (chunk_is_token(pc, CT_COMMA))
       {
          chunk_t *tmp_prev = chunk_get_prev_nc(pc);
          if (!chunk_is_newline(tmp_prev))  // don't count leading commas
@@ -928,8 +938,8 @@ static void align_params(chunk_t *start, deque<chunk_t *> &chunks)
    while ((pc = chunk_get_next(pc)) != nullptr)
    {
       if (  chunk_is_newline(pc)
-         || pc->type == CT_SEMICOLON
-         || (  pc->type == CT_FPAREN_CLOSE
+         || chunk_is_token(pc, CT_SEMICOLON)
+         || (  chunk_is_token(pc, CT_FPAREN_CLOSE)
             && pc->level == start->level))
       {
          break;
@@ -942,7 +952,7 @@ static void align_params(chunk_t *start, deque<chunk_t *> &chunks)
             chunks.push_back(pc);
             hit_comma = false;
          }
-         else if (pc->type == CT_COMMA)
+         else if (chunk_is_token(pc, CT_COMMA))
          {
             hit_comma = true;
          }
@@ -1091,10 +1101,10 @@ static void align_same_func_call_params(void)
                as[idx].Start(3);
                if (!cpd.settings[UO_align_number_right].b)
                {
-                  if (  (chunks[idx]->type == CT_NUMBER_FP)
-                     || (chunks[idx]->type == CT_NUMBER)
-                     || (chunks[idx]->type == CT_POS)
-                     || (chunks[idx]->type == CT_NEG))
+                  if (  chunk_is_token(chunks[idx], CT_NUMBER_FP)
+                     || chunk_is_token(chunks[idx], CT_NUMBER)
+                     || chunk_is_token(chunks[idx], CT_POS)
+                     || chunk_is_token(chunks[idx], CT_NEG))
                   {
                      as[idx].m_right_align = !cpd.settings[UO_align_on_tabstop].b;
                   }
@@ -1124,7 +1134,7 @@ chunk_t *step_back_over_member(chunk_t *pc)
 
    // Skip over any class stuff: bool CFoo::bar()
    while (  ((tmp = chunk_get_prev_ncnl(pc)) != nullptr)
-         && tmp->type == CT_DC_MEMBER)
+         && chunk_is_token(tmp, CT_DC_MEMBER))
    {
       // TODO: verify that we are pointing at something sane?
       pc = chunk_get_prev_ncnl(tmp);
@@ -1137,7 +1147,6 @@ static void align_func_proto(size_t span)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LALIGN, "%s(%d)\n", __func__, __LINE__);
 
    AlignStack as;
    as.Start(span, 0);
@@ -1160,8 +1169,8 @@ static void align_func_proto(size_t span)
          as.NewLines(pc->nl_count);
          as_br.NewLines(pc->nl_count);
       }
-      else if (  pc->type == CT_FUNC_PROTO
-              || (  pc->type == CT_FUNC_DEF
+      else if (  chunk_is_token(pc, CT_FUNC_PROTO)
+              || (  chunk_is_token(pc, CT_FUNC_DEF)
                  && cpd.settings[UO_align_single_line_func].b))
       {
          if (  pc->parent_type == CT_OPERATOR
@@ -1174,11 +1183,11 @@ static void align_func_proto(size_t span)
             toadd = pc;
          }
          as.Add(step_back_over_member(toadd));
-         look_bro = (pc->type == CT_FUNC_DEF)
+         look_bro = (chunk_is_token(pc, CT_FUNC_DEF))
                     && cpd.settings[UO_align_single_line_brace].b;
       }
       else if (  look_bro
-              && pc->type == CT_BRACE_OPEN
+              && chunk_is_token(pc, CT_BRACE_OPEN)
               && (pc->flags & PCF_ONE_LINER))
       {
          as_br.Add(pc);
@@ -1270,7 +1279,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
    while (  pc != nullptr
          && (pc->level >= start->level || pc->level == 0))
    {
-      if (pc->type == CT_NEWLINE)
+      if (chunk_is_token(pc, CT_NEWLINE))
       {
          LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
@@ -1296,8 +1305,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
       if (fp_active && !(pc->flags & PCF_IN_CLASS_BASE))
       {
          // WARNING: Duplicate from the align_func_proto()
-         if (  pc->type == CT_FUNC_PROTO
-            || (  pc->type == CT_FUNC_DEF
+         if (  chunk_is_token(pc, CT_FUNC_PROTO)
+            || (  chunk_is_token(pc, CT_FUNC_DEF)
                && cpd.settings[UO_align_single_line_func].b))
          {
             LOG_FMT(LAVDB, "%s(%d): add=[%s], orig_line is %zu, orig_col is %zu, level is %zu\n",
@@ -1314,11 +1323,11 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
                toadd = pc;
             }
             as.Add(step_back_over_member(toadd));
-            fp_look_bro = (pc->type == CT_FUNC_DEF)
+            fp_look_bro = (chunk_is_token(pc, CT_FUNC_DEF))
                           && cpd.settings[UO_align_single_line_brace].b;
          }
          else if (  fp_look_bro
-                 && pc->type == CT_BRACE_OPEN
+                 && chunk_is_token(pc, CT_BRACE_OPEN)
                  && (pc->flags & PCF_ONE_LINER))
          {
             as_br.Add(pc);
@@ -1327,7 +1336,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
       }
 
       // process nested braces
-      if (pc->type == CT_BRACE_OPEN)
+      if (chunk_is_token(pc, CT_BRACE_OPEN))
       {
          size_t sub_nl_count = 0;
 
@@ -1349,7 +1358,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
       }
 
       // Done with this brace set?
-      if (pc->type == CT_BRACE_CLOSE)
+      if (chunk_is_token(pc, CT_BRACE_CLOSE))
       {
          pc = chunk_get_next(pc);
          break;
@@ -1385,6 +1394,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
          && pc->type != CT_FUNC_CLASS_DEF
          && pc->type != CT_FUNC_CLASS_PROTO
          && ((pc->flags & align_mask) == PCF_VAR_1ST)
+         && pc->type != CT_FUNC_DEF                                   // Issue 1452
          && ((pc->level == (start->level + 1)) || pc->level == 0)
          && pc->prev != nullptr
          && pc->prev->type != CT_MEMBER)
@@ -1396,8 +1406,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
             {
                // we must look after the previous token
                chunk_t *prev_local = pc->prev;
-               while (  prev_local->type == CT_PTR_TYPE
-                     || prev_local->type == CT_ADDR)
+               while (  chunk_is_token(prev_local, CT_PTR_TYPE)
+                     || chunk_is_token(prev_local, CT_ADDR))
                {
                   LOG_FMT(LAVDB, "%s(%d): prev_local %s, prev_local->type %s\n",
                           __func__, __LINE__, prev_local->text(), get_token_name(prev_local->type));
@@ -1413,7 +1423,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
             if (cpd.settings[UO_align_var_def_colon].b)
             {
                next = chunk_get_next_nc(pc);
-               if (next->type == CT_BIT_COLON)
+               if (chunk_is_token(next, CT_BIT_COLON))
                {
                   as_bc.Add(next);
                }
@@ -1423,12 +1433,12 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
                next = pc;
                while ((next = chunk_get_next_nc(next)) != nullptr)
                {
-                  if (next->type == CT_ATTRIBUTE)
+                  if (chunk_is_token(next, CT_ATTRIBUTE))
                   {
                      as_at.Add(next);
                      break;
                   }
-                  if (next->type == CT_SEMICOLON || chunk_is_newline(next))
+                  if (chunk_is_token(next, CT_SEMICOLON) || chunk_is_newline(next))
                   {
                      break;
                   }
@@ -1437,7 +1447,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
          }
          did_this_line = true;
       }
-      else if (pc->type == CT_BIT_COLON)
+      else if (chunk_is_token(pc, CT_BIT_COLON))
       {
          if (!did_this_line)
          {
@@ -1472,7 +1482,7 @@ chunk_t *align_nl_cont(chunk_t *start)
          && pc->type != CT_NEWLINE
          && pc->type != CT_COMMENT_MULTI)
    {
-      if (pc->type == CT_NL_CONT)
+      if (chunk_is_token(pc, CT_NL_CONT))
       {
          align_add(cs, pc, max_col, 1, true);
       }
@@ -1499,15 +1509,15 @@ static comment_align_e get_comment_align_type(chunk_t *cmt)
    if (  !cpd.settings[UO_align_right_cmt_mix].b
       && ((prev = chunk_get_prev(cmt)) != nullptr))
    {
-      if (  prev->type == CT_PP_ENDIF
-         || prev->type == CT_PP_ELSE
-         || prev->type == CT_ELSE
-         || prev->type == CT_BRACE_CLOSE)
+      if (  chunk_is_token(prev, CT_PP_ENDIF)
+         || chunk_is_token(prev, CT_PP_ELSE)
+         || chunk_is_token(prev, CT_ELSE)
+         || chunk_is_token(prev, CT_BRACE_CLOSE))
       {
          // TODO: make the magic 3 configurable
          if ((cmt->column - (prev->column + prev->len())) < 3)
          {
-            cmt_type = (prev->type == CT_PP_ENDIF) ? comment_align_e::ENDIF : comment_align_e::BRACE;
+            cmt_type = (chunk_is_token(prev, CT_PP_ENDIF)) ? comment_align_e::ENDIF : comment_align_e::BRACE;
          }
       }
    }
@@ -1648,10 +1658,10 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
       {
          // do nothing
       }
-      else if (  pc->type == CT_ASSIGN
-              || pc->type == CT_BRACE_OPEN
-              || pc->type == CT_BRACE_CLOSE
-              || pc->type == CT_COMMA)
+      else if (  chunk_is_token(pc, CT_ASSIGN)
+              || chunk_is_token(pc, CT_BRACE_OPEN)
+              || chunk_is_token(pc, CT_BRACE_CLOSE)
+              || chunk_is_token(pc, CT_COMMA))
       {
          size_t token_width = space_col_align(pc, next);
 
@@ -1747,10 +1757,10 @@ static void align_init_brace(chunk_t *start)
    LOG_FMT(LALBR, "%s(%d): start @ %zu:%zu\n",
            __func__, __LINE__, start->orig_line, start->orig_col);
 
-   chunk_t *pc = chunk_get_next_ncnl(start);
-   pc = scan_ib_line(pc, true);
-   if (  pc == nullptr
-      || (pc->type == CT_BRACE_CLOSE && pc->parent_type == CT_ASSIGN))
+   chunk_t *pc       = chunk_get_next_ncnl(start);
+   chunk_t *pcSingle = scan_ib_line(pc, true);
+   if (  pcSingle == nullptr
+      || (chunk_is_token(pcSingle, CT_BRACE_CLOSE) && pcSingle->parent_type == CT_ASSIGN))
    {
       // single line - nothing to do
       return;
@@ -1826,7 +1836,7 @@ static void align_init_brace(chunk_t *start)
             }
 
             // Comma's need to 'fall back' to the previous token
-            if (pc->type == CT_COMMA)
+            if (chunk_is_token(pc, CT_COMMA))
             {
                next = chunk_get_next(pc);
                if (next != nullptr && !chunk_is_newline(next))
@@ -1837,10 +1847,10 @@ static void align_init_brace(chunk_t *start)
 
                   if (  (idx < (cpd.al_cnt - 1))
                      && cpd.settings[UO_align_number_right].b
-                     && (  next->type == CT_NUMBER_FP
-                        || next->type == CT_NUMBER
-                        || next->type == CT_POS
-                        || next->type == CT_NEG))
+                     && (  chunk_is_token(next, CT_NUMBER_FP)
+                        || chunk_is_token(next, CT_NUMBER)
+                        || chunk_is_token(next, CT_POS)
+                        || chunk_is_token(next, CT_NEG)))
                   {
                      // Need to wait until the next match to indent numbers
                      num_token = next;
@@ -1867,10 +1877,10 @@ static void align_init_brace(chunk_t *start)
                   next = chunk_get_next(pc);
                   if (  next != nullptr
                      && !chunk_is_newline(next)
-                     && (  next->type == CT_NUMBER_FP
-                        || next->type == CT_NUMBER
-                        || next->type == CT_POS
-                        || next->type == CT_NEG))
+                     && (  chunk_is_token(next, CT_NUMBER_FP)
+                        || chunk_is_token(next, CT_NUMBER)
+                        || chunk_is_token(next, CT_POS)
+                        || chunk_is_token(next, CT_NEG)))
                   {
                      // Need to wait until the next match to indent numbers
                      num_token = next;
@@ -1925,7 +1935,7 @@ static void align_typedefs(size_t span)
       }
       else
       {
-         if (pc->type == CT_TYPEDEF)
+         if (chunk_is_token(pc, CT_TYPEDEF))
          {
             c_typedef = pc;
          }
@@ -1949,7 +1959,7 @@ static void align_left_shift(void)
    chunk_t *pc = chunk_get_head();
    while (pc != nullptr)
    {
-      if (pc->type == CT_NEWLINE)
+      if (chunk_is_token(pc, CT_NEWLINE))
       {
          LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, <Newline>\n", __func__, __LINE__, pc->orig_line);
       }
@@ -1980,7 +1990,7 @@ static void align_left_shift(void)
       {
          // Ignore any deeper levels when aligning
       }
-      else if (pc->type == CT_SEMICOLON)
+      else if (chunk_is_token(pc, CT_SEMICOLON))
       {
          // A semicolon at the same level flushes
          as.Flush();
@@ -2081,13 +2091,13 @@ static void align_oc_msg_colon(chunk_t *so)
       }
       else if (  !did_line
               && (lcnt < span + 1)
-              && pc->type == CT_OC_COLON)
+              && chunk_is_token(pc, CT_OC_COLON))
       {
          has_colon = true;
          cas.Add(pc);
          chunk_t *tmp = chunk_get_prev(pc);
          if (  tmp != nullptr
-            && (tmp->type == CT_OC_MSG_FUNC || tmp->type == CT_OC_MSG_NAME))
+            && (chunk_is_token(tmp, CT_OC_MSG_FUNC) || chunk_is_token(tmp, CT_OC_MSG_NAME)))
          {
             nas.Add(tmp);
             chunk_flags_set(tmp, PCF_DONT_INDENT);
@@ -2135,7 +2145,7 @@ static void align_oc_msg_colon(chunk_t *so)
    if (  longest
       && cpd.settings[UO_indent_oc_msg_prioritize_first_colon].b
       && len_diff > 0
-      && ((longest->column - len_diff) > (longest->brace_level * indent_size)))
+      && ((longest->column >= len_diff) && (longest->column - len_diff) > (longest->brace_level * indent_size)))
    {
       longest->column -= len_diff;
    }
@@ -2169,7 +2179,7 @@ static void align_oc_msg_colons(void)
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
-      if (pc->type == CT_SQUARE_OPEN && pc->parent_type == CT_OC_MSG)
+      if (chunk_is_token(pc, CT_SQUARE_OPEN) && pc->parent_type == CT_OC_MSG)
       {
          align_oc_msg_colon(pc);
       }
@@ -2208,7 +2218,7 @@ static void align_oc_decl_colon(void)
       while (pc != nullptr && pc->level >= level)
       {
          // The declaration ends with an open brace or semicolon
-         if (pc->type == CT_BRACE_OPEN || chunk_is_semicolon(pc))
+         if (chunk_is_token(pc, CT_BRACE_OPEN) || chunk_is_semicolon(pc))
          {
             break;
          }
@@ -2219,7 +2229,7 @@ static void align_oc_decl_colon(void)
             cas.NewLines(pc->nl_count);
             did_line = false;
          }
-         else if (!did_line && pc->type == CT_OC_COLON)
+         else if (!did_line && chunk_is_token(pc, CT_OC_COLON))
          {
             cas.Add(pc);
 
@@ -2229,13 +2239,13 @@ static void align_oc_decl_colon(void)
             // Check for an un-labeled parameter
             if (  tmp != nullptr
                && tmp2 != nullptr
-               && (  tmp->type == CT_WORD
-                  || tmp->type == CT_TYPE
-                  || tmp->type == CT_OC_MSG_DECL
-                  || tmp->type == CT_OC_MSG_SPEC)
-               && (  tmp2->type == CT_WORD
-                  || tmp2->type == CT_TYPE
-                  || tmp2->type == CT_PAREN_CLOSE))
+               && (  chunk_is_token(tmp, CT_WORD)
+                  || chunk_is_token(tmp, CT_TYPE)
+                  || chunk_is_token(tmp, CT_OC_MSG_DECL)
+                  || chunk_is_token(tmp, CT_OC_MSG_SPEC))
+               && (  chunk_is_token(tmp2, CT_WORD)
+                  || chunk_is_token(tmp2, CT_TYPE)
+                  || chunk_is_token(tmp2, CT_PAREN_CLOSE)))
             {
                nas.Add(tmp);
             }
@@ -2278,7 +2288,7 @@ static void align_asm_colon(void)
             cas.NewLines(pc->nl_count);
             did_nl = true;
          }
-         else if (pc->type == CT_ASM_COLON)
+         else if (chunk_is_token(pc, CT_ASM_COLON))
          {
             cas.Flush();
             did_nl = true;

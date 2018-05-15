@@ -18,6 +18,7 @@
 #include <map>
 #include "unc_ctype.h"
 #include "uncrustify.h"
+#include "language_tools.h"
 
 using namespace std;
 
@@ -135,7 +136,8 @@ static chunk_tag_t keywords[] =
    { "__try",               CT_TRY,              LANG_C                                                                      },
    { "__typeof",            CT_SIZEOF,           LANG_C                                                                      },
    { "__typeof__",          CT_SIZEOF,           LANG_C                                                                      },
-   { "__unsafe_unretained", CT_QUALIFIER,        LANG_C                                                                      },
+   { "__unsafe_unretained", CT_QUALIFIER,        LANG_OC                                                                     },
+   { "__unused",            CT_ATTRIBUTE,        LANG_C                                                                      },
    { "__volatile__",        CT_QUALIFIER,        LANG_C                                                                      },
    { "__weak",              CT_QUALIFIER,        LANG_C                                                                      },
    { "__word__",            CT_WORD_,            LANG_C                                                                      },
@@ -336,6 +338,7 @@ static chunk_tag_t keywords[] =
    { "union",               CT_UNION,            LANG_C | LANG_D                                                             },
    { "unittest",            CT_UNITTEST,         LANG_D                                                                      },
    { "unsafe",              CT_UNSAFE,           LANG_CS                                                                     },
+   { "unsafe_unretained",   CT_QUALIFIER,        LANG_OC                                                                     },
    { "unsigned",            CT_TYPE,             LANG_C                                                                      },
    { "ushort",              CT_TYPE,             LANG_CS | LANG_VALA | LANG_D                                                },
    { "using",               CT_USING,            LANG_CPP | LANG_CS | LANG_VALA                                              },
@@ -484,7 +487,7 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag, int lang_flags
    {
       bool pp_iter = (iter->lang_flags & FLAG_PP) != 0; // forcing value to bool
       if (  (strcmp(iter->tag, tag->tag) == 0)
-         && (cpd.lang_flags & iter->lang_flags)
+         && language_is_set(iter->lang_flags)
          && (lang_flags & iter->lang_flags)
          && in_pp == pp_iter)
       {
