@@ -44,6 +44,7 @@ Change the date at the first line of this document.
    $ git commit <all the files created above>
    $ git push --repo=https://github.com/uncrustify/uncrustify.git
      (use an admin)
+   Test the build of 32-bit and 64-bit version before going on.
 
 4. Create a GIT tag and push it
 
@@ -76,11 +77,14 @@ Change the date at the first line of this document.
    $ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw64.cmake -DCMAKE_EXE_LINKER_FLAGS="-static -s" ..
    $ make
    $ cpack
+   $ # make the name of the zip-file shorter
+   $ mv uncrustify-Uncrustify-0.67-win64.zip uncrustify-0.67-win64.zip
 
 5. The source tarball is available from the release on GitHub, or to build it here use
    $ # generate the config files
    $ scripts/update-defaults.sh
-   $ git commit -m "make default files" -a \
+   $ # use the git gui command to commit or use the following:
+   $ git commit -m "make default files" \
        documentation/htdocs/config.txt \
        documentation/htdocs/default.cfg \
        etc/defaults.cfg \
