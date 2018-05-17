@@ -1,16 +1,64 @@
-Change highlights in current git preview (March 2018)
+Change highlights in uncrustify-0.67 (May 2018)
 -------------------------------------------------------------------------------
 
+Changing option:
+
+Removed option:
+
 New options:
+  - indent_first_for_expr                Apr 29
+  - indent_semicolon_for_paren           Apr 29
+  - nl_oc_interface_brace                Apr 13
+  - nl_oc_implementation_brace           Apr 13
+  - indent_cpp_lambda_only_once          Mar 24
+  - indent_cs_delegate_body              Mar 18
+  - sp_after_noexcept                    Mar 18
+  - indent_single_newlines               Mar  6
+  - sp_after_ptr_block_caret             Feb 24
+  - sp_after_oc_synchronized             Feb 24
   - sp_inside_square_oc_array            Feb 23
   - sp_oc_catch_paren                    Feb 23
   - sp_oc_catch_brace                    Feb 23
   - sp_oc_brace_catch                    Feb 23
   - nl_oc_catch_brace                    Feb 23
-  - nl_oc_brace_catch               2018 Feb 23
+  - nl_oc_brace_catch                    Feb 23
+  - nl_cs_property_leave_one_liners      Feb 16
+  - indent_member_single                 Feb 10
+  - sp_func_call_user_paren_paren        Feb  5
+  - sp_func_call_user_inside_fparen      Feb  5
+  - sp_inside_braces_oc_dict             Feb  5
+  - nl_create_func_def_one_liner         Jan 17
+  - nl_namespace_two_to_one_liner        Jan 15
+  - nl_squeeze_paren_close               Jan 15
+  - sp_fparen_brace_initializer          Jan 12
+  - sp_cpp_before_struct_binding    2018 Jan 12
+  - indent_align_paren                   Dec 14
+  - nl_tsquare_brace                     Dec  9
+  - indent_single_after_return           Nov 28
+  - indent_off_after_return_new          Nov 28
+  - indent_ignore_asm_block         2017 Nov 05
 
 New keyword:
-  - @available                      2018 Feb 23
+  - __unused                             Apr 21
+  - @synchronized                        Feb 24
+  - @available                           Feb 23
+  - fixed                                Feb 16
+  - @protected                           Feb  4
+  - @public                              Feb  4
+  - __autoreleasing                      Feb  4
+  - __bridge                             Feb  4
+  - __bridge_retained                    Feb  4
+  - __bridge_transfer                    Feb  4
+  - __declspec                           Feb  4
+  - __has_include                        Feb  4
+  - __has_include_next                   Feb  4
+  - __strong                             Feb  4
+  - __typeof                             Feb  4
+  - __unsafe_unretained                  Feb  4
+  - __weak                               Feb  4
+  - self                                 Feb  4
+  - unsafe_unretained               2018 Feb  4
+  - where                           2017 Dec  6
 
 Bugfix:
  - Debian issue #881249 "FTBFS on armel/i386/mips64el/s390x: cpp_33057 fails"
@@ -36,7 +84,7 @@ Change highlights in uncrustify-0.66 (November 2017)
 -------------------------------------------------------------------------------
 
 New options:
-  - indent_ignore_asm_block              Nov 05
+  - sp_arith_additive                    Oct 17
   - sp_angle_colon                       Oct 17
   - nl_func_call_empty                   Sep 30
   - nl_func_call_paren_empty             Sep 30
