@@ -1939,18 +1939,43 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       {
          if (entry->type == AT_UNUM && (*val == '-'))
          {
-            fprintf(stderr, "%s:%d\n  for the option '%s' is a negative value not possible: %s",
+            fprintf(stderr, "%s: line %d\n  for the option '%s' is a negative value not possible: %s",
                     cpd.filename.c_str(), cpd.line_number, entry->name, val);
             log_flush(true);
             exit(EX_CONFIG);
          }
          if (entry->type == AT_NUM)
          {
-            dest->n = strtol(val, nullptr, 0);
+            int n = strtol(val, nullptr, 0);
+            // test the ranges Issue #672
+            if (n < entry->min_val)
+            {
+               fprintf(stderr, "%s: line %d\n  for the option '%s' the value: %d is less than the min value: %d\n",
+                       cpd.filename.c_str(), cpd.line_number, entry->name, n, entry->min_val);
+               log_flush(true);
+               exit(EX_CONFIG);
+            }
+            if (n > entry->max_val)
+            {
+               fprintf(stderr, "%s: line %d\n  for the option '%s' the value: %d is bigger than the max value: %d\n",
+                       cpd.filename.c_str(), cpd.line_number, entry->name, n, entry->max_val);
+               log_flush(true);
+               exit(EX_CONFIG);
+            }
+            dest->n = n;
          }
          else
          {
-            dest->u = strtoul(val, nullptr, 0);
+            size_t u = strtoul(val, nullptr, 0);
+            // test the ranges
+            if (u > (size_t) entry->max_val)
+            {
+               fprintf(stderr, "%s: line %d\n  for the option '%s' the value: %zu is bigger than the max value: %d\n",
+                       cpd.filename.c_str(), cpd.line_number, entry->name, u, entry->max_val);
+               log_flush(true);
+               exit(EX_CONFIG);
+            }
+            dest->u = u;
          }
          return;
       }
