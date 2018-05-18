@@ -159,6 +159,23 @@ void tokenize_cleanup(void)
       }
    }
 
+   // change := to CT_SQL_ASSIGN Issue #527
+   for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
+   {
+      if (chunk_is_token(pc, CT_COLON))
+      {
+         next = chunk_get_next_ncnl(pc);
+         if (chunk_is_token(next, CT_ASSIGN))
+         {
+            // Change ':' + '=' into ':='
+            set_chunk_type(pc, CT_SQL_ASSIGN);
+            pc->str          = ":=";
+            pc->orig_col_end = next->orig_col_end;
+            chunk_del(next);
+         }
+      }
+   }
+
    // We can handle everything else in the second pass
    pc   = chunk_get_head();
    next = chunk_get_next_ncnl(pc);
