@@ -122,6 +122,7 @@
 50629  aet.cfg                              oc/pp_bool.m
 
 50700  cmt_insert-0.cfg                     oc/cmt_insert.m
+50701  cmt_insert-0.cfg                     oc/cmt_insert2.m
 
 50800  obj-c-properties.cfg                 oc/properties.m
 50801  empty.cfg                            oc/i1213.m
