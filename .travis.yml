@@ -12,6 +12,7 @@ matrix:
     - env: C_COMPILER=gcc-6 CXX_COMPILER=g++-6
       addons:
         apt:
+          update: true
           sources:
             - ubuntu-toolchain-r-test
           packages:
