@@ -860,9 +860,9 @@ void register_options(void)
                   "Double the indent for indent_func_xxx_param options.\n"
                   "Use both values of the options indent_columns and indent_param.");
    unc_add_option("indent_func_const", UO_indent_func_const, AT_UNUM,
-                  "Indentation column for standalone 'const' function decl/proto qualifier.");
+                  "Indentation column for standalone 'const' function decl/proto qualifier.", "", 0, 69);
    unc_add_option("indent_func_throw", UO_indent_func_throw, AT_UNUM,
-                  "Indentation column for standalone 'throw' function decl/proto qualifier.");
+                  "Indentation column for standalone 'throw' function decl/proto qualifier.", "", 0, 41);
    unc_add_option("indent_member", UO_indent_member, AT_UNUM,
                   "The number of spaces to indent a continued '->' or '.'\n"
                   "Usually set to 0, 1, or indent_columns.");
@@ -1707,7 +1707,7 @@ void register_options(void)
                   "Whether to remove superfluous semicolons.");
    unc_add_option("mod_add_long_function_closebrace_comment", UO_mod_add_long_function_closebrace_comment, AT_UNUM,
                   "If a function body exceeds the specified number of newlines and doesn't have a comment after\n"
-                  "the close brace, a comment will be added.");
+                  "the close brace, a comment will be added.", "", 0, 50);
    unc_add_option("mod_add_long_namespace_closebrace_comment", UO_mod_add_long_namespace_closebrace_comment, AT_UNUM,
                   "If a namespace body exceeds the specified number of newlines and doesn't have a comment after\n"
                   "the close brace, a comment will be added.");
@@ -1716,7 +1716,7 @@ void register_options(void)
                   "the close brace, a comment will be added.");
    unc_add_option("mod_add_long_switch_closebrace_comment", UO_mod_add_long_switch_closebrace_comment, AT_UNUM,
                   "If a switch body exceeds the specified number of newlines and doesn't have a comment after\n"
-                  "the close brace, a comment will be added.");
+                  "the close brace, a comment will be added.", "", 0, 50);
    unc_add_option("mod_add_long_ifdef_endif_comment", UO_mod_add_long_ifdef_endif_comment, AT_UNUM,
                   "If an #ifdef body exceeds the specified number of newlines and doesn't have a comment after\n"
                   "the #endif, a comment will be added.");
@@ -1973,7 +1973,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          {
             size_t u = strtoul(val, nullptr, 0);
             // test the ranges
-            if (u > (size_t) entry->max_val)
+            if (u > (size_t)entry->max_val)
             {
                fprintf(stderr, "%s: line %d\n  for the option '%s' the value: %zu is bigger than the max value: %d\n",
                        cpd.filename.c_str(), cpd.line_number, entry->name, u, entry->max_val);

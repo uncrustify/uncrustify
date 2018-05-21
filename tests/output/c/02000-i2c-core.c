@@ -349,7 +349,7 @@ int i2c_add_driver(struct i2c_driver *driver)
  out_unlock:
    up(&core_lists);
    return(res);
-} /* i2c_add_driver */
+}
 
 int i2c_del_driver(struct i2c_driver *driver)
 {
@@ -520,7 +520,7 @@ int i2c_detach_client(struct i2c_client *client)
 
  out:
    return(res);
-} /* i2c_detach_client */
+}
 
 static int i2c_inc_use_client(struct i2c_client *client)
 {
@@ -574,7 +574,7 @@ int i2c_use_client(struct i2c_client *client)
  busy:
    i2c_dec_use_client(client);
    return(-EBUSY);
-} /* i2c_use_client */
+}
 
 int i2c_release_client(struct i2c_client *client)
 {
@@ -595,7 +595,7 @@ int i2c_release_client(struct i2c_client *client)
    i2c_dec_use_client(client);
 
    return(0);
-} /* i2c_release_client */
+}
 
 void i2c_clients_command(struct i2c_adapter *adap, unsigned int cmd, void *arg)
 {
@@ -619,7 +619,7 @@ void i2c_clients_command(struct i2c_adapter *adap, unsigned int cmd, void *arg)
       module_put(client->driver->owner);
    }
    up(&adap->clist_lock);
-} /* i2c_clients_command */
+}
 
 static int __init i2c_init(void)
 {
@@ -679,7 +679,7 @@ int i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
       dev_dbg(&adap->dev, "I2C level transfers not supported\n");
       return(-ENOSYS);
    }
-} /* i2c_transfer */
+}
 
 int i2c_master_send(struct i2c_client *client, const char *buf, int count)
 {
@@ -743,7 +743,7 @@ int i2c_control(struct i2c_client *client,
       }
    }
    return(ret);
-} /* i2c_control */
+}
 
 /* ----------------------------------------------------
  * the i2c address scanning function
@@ -793,7 +793,7 @@ static int i2c_probe_address(struct i2c_adapter *adapter, int addr, int kind,
     * but it isn't supported by this chip driver. We catch it here as
     * this isn't an error. */
    return((err == -ENODEV) ? 0 : err);
-} /* i2c_probe_address */
+}
 
 int i2c_probe(struct i2c_adapter *adapter,
               struct i2c_client_address_data *address_data,
@@ -999,9 +999,9 @@ static int i2c_smbus_add_pec(u16 addr, u8 command, int size,
          i2c_smbus_pec(2, buf, data->block);
       size = I2C_SMBUS_BLOCK_DATA_PEC;
       break;
-   } /* switch */
+   }
    return(size);
-} /* i2c_smbus_add_pec */
+}
 
 static int i2c_smbus_check_pec(u16 addr, u8 command, int size, u8 partial,
                                union i2c_smbus_data *data)
@@ -1158,7 +1158,7 @@ s32 i2c_smbus_write_block_data(struct i2c_client *client, u8 command,
    return(i2c_smbus_xfer(client->adapter, client->addr, client->flags,
                          I2C_SMBUS_WRITE, command,
                          I2C_SMBUS_BLOCK_DATA, &data));
-} /* i2c_smbus_write_block_data */
+}
 
 /* Returns the number of read bytes */
 s32 i2c_smbus_read_i2c_block_data(struct i2c_client *client, u8 command, u8 *values)
@@ -1180,7 +1180,7 @@ s32 i2c_smbus_read_i2c_block_data(struct i2c_client *client, u8 command, u8 *val
       }
       return(data.block[0]);
    }
-} /* i2c_smbus_read_i2c_block_data */
+}
 
 /* Simulate a SMBus command using the i2c protocol
  * No checking of parameters is done!  */
@@ -1346,7 +1346,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
             data->block[i + 1] = msgbuf1[i];
          }
          break;
-      } /* switch */
+      }
    }
    return(0);
 } /* i2c_smbus_xfer_emulated */
