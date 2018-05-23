@@ -654,16 +654,18 @@ static void split_fcn_params(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "%s(%d): '%s'\n", __func__, __LINE__, start->text());
-
-   // Find the opening function parenthesis
    chunk_t *fpo = start;
-   LOG_FMT(LSPLIT, "%s(%d): Find the opening function parenthesis\n", __func__, __LINE__);
-   while (  ((fpo = chunk_get_prev(fpo)) != nullptr)
-         && fpo->type != CT_FPAREN_OPEN)
+   if (!chunk_is_token(start, CT_FPAREN_OPEN))
    {
-      // do nothing
-      LOG_FMT(LSPLIT, "%s(%d): '%s', orig_col is %zu, level is %zu\n",
-              __func__, __LINE__, fpo->text(), fpo->orig_col, fpo->level);
+      // Find the opening function parenthesis
+      LOG_FMT(LSPLIT, "%s(%d): Find the opening function parenthesis\n", __func__, __LINE__);
+      while (  ((fpo = chunk_get_prev(fpo)) != nullptr)
+            && fpo->type != CT_FPAREN_OPEN)
+      {
+         // do nothing
+         LOG_FMT(LSPLIT, "%s(%d): '%s', orig_col is %zu, level is %zu\n",
+                 __func__, __LINE__, fpo->text(), fpo->orig_col, fpo->level);
+      }
    }
 
    chunk_t *pc     = chunk_get_next_ncnl(fpo);
