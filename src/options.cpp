@@ -764,7 +764,8 @@ void register_options(void)
                   "Usually 2, 3, 4, or 8. Default=8.");
    unc_add_option("indent_continue", UO_indent_continue, AT_NUM,
                   "The continuation indent. If non-zero, this overrides the indent of '(' and '=' continuation indents.\n"
-                  "For FreeBSD, this is set to 4. Negative value is absolute and not increased for each '(' level.");
+                  "For FreeBSD, this is set to 4. Negative value is absolute and not increased for each '(' level.\n"
+                  "negative value are OK.", "", -16, 16);
    unc_add_option("indent_single_newlines", UO_indent_single_newlines, AT_BOOL,
                   "Indent empty lines - lines which contain only spaces before newline character");
    unc_add_option("indent_param", UO_indent_param, AT_UNUM,
@@ -826,12 +827,14 @@ void register_options(void)
                   "Virtual indent from the ':' for member initializers. Default=2.");
    unc_add_option("indent_ctor_init", UO_indent_ctor_init, AT_NUM,
                   "Additional indent for constructor initializer list.\n"
-                  "Negative values decrease indent down to the first column. Default=0.");
+                  "Negative values decrease indent down to the first column. Default=0.",
+                  "", -16, 16);
    unc_add_option("indent_else_if", UO_indent_else_if, AT_BOOL,
                   "False=treat 'else\\nif' as 'else if' for indenting purposes\n"
                   "True=indent the 'if' one level.");
    unc_add_option("indent_var_def_blk", UO_indent_var_def_blk, AT_NUM,
-                  "Amount to indent variable declarations after a open brace. neg=relative, pos=absolute.");
+                  "Amount to indent variable declarations after a open brace. neg=relative, pos=absolute.\n"
+                  "negative value are OK.", "", -16, 16);
    unc_add_option("indent_var_def_cont", UO_indent_var_def_cont, AT_BOOL,
                   "Indent continued variable declarations instead of aligning.");
    unc_add_option("indent_shift", UO_indent_shift, AT_BOOL,
@@ -857,9 +860,9 @@ void register_options(void)
                   "Double the indent for indent_func_xxx_param options.\n"
                   "Use both values of the options indent_columns and indent_param.");
    unc_add_option("indent_func_const", UO_indent_func_const, AT_UNUM,
-                  "Indentation column for standalone 'const' function decl/proto qualifier.");
+                  "Indentation column for standalone 'const' function decl/proto qualifier.", "", 0, 69);
    unc_add_option("indent_func_throw", UO_indent_func_throw, AT_UNUM,
-                  "Indentation column for standalone 'throw' function decl/proto qualifier.");
+                  "Indentation column for standalone 'throw' function decl/proto qualifier.", "", 0, 41);
    unc_add_option("indent_member", UO_indent_member, AT_UNUM,
                   "The number of spaces to indent a continued '->' or '.'\n"
                   "Usually set to 0, 1, or indent_columns.");
@@ -883,7 +886,7 @@ void register_options(void)
                   "Spaces to indent '{' from 'case'.\n"
                   "By default, the brace will appear under the 'c' in case.\n"
                   "Usually set to 0 or indent_columns.\n"
-                  "negative value are OK.");
+                  "negative value are OK.", "", -16, 16);
    unc_add_option("indent_col1_comment", UO_indent_col1_comment, AT_BOOL,
                   "Whether to indent comments found in first column.");
    unc_add_option("indent_label", UO_indent_label, AT_NUM,
@@ -1704,7 +1707,7 @@ void register_options(void)
                   "Whether to remove superfluous semicolons.");
    unc_add_option("mod_add_long_function_closebrace_comment", UO_mod_add_long_function_closebrace_comment, AT_UNUM,
                   "If a function body exceeds the specified number of newlines and doesn't have a comment after\n"
-                  "the close brace, a comment will be added.");
+                  "the close brace, a comment will be added.", "", 0, 50);
    unc_add_option("mod_add_long_namespace_closebrace_comment", UO_mod_add_long_namespace_closebrace_comment, AT_UNUM,
                   "If a namespace body exceeds the specified number of newlines and doesn't have a comment after\n"
                   "the close brace, a comment will be added.");
@@ -1713,7 +1716,7 @@ void register_options(void)
                   "the close brace, a comment will be added.");
    unc_add_option("mod_add_long_switch_closebrace_comment", UO_mod_add_long_switch_closebrace_comment, AT_UNUM,
                   "If a switch body exceeds the specified number of newlines and doesn't have a comment after\n"
-                  "the close brace, a comment will be added.");
+                  "the close brace, a comment will be added.", "", 0, 50);
    unc_add_option("mod_add_long_ifdef_endif_comment", UO_mod_add_long_ifdef_endif_comment, AT_UNUM,
                   "If an #ifdef body exceeds the specified number of newlines and doesn't have a comment after\n"
                   "the #endif, a comment will be added.");
@@ -1765,13 +1768,15 @@ void register_options(void)
    unc_add_option("pp_space_count", UO_pp_space_count, AT_UNUM,
                   "Sets the number of spaces added with pp_space.");
    unc_add_option("pp_indent_region", UO_pp_indent_region, AT_NUM,
-                  "The indent for #region and #endregion in C# and '#pragma region' in C/C++.");
+                  "The indent for #region and #endregion in C# and '#pragma region' in C/C++.\n"
+                  "negative value are OK.", "", -16, 16);
    unc_add_option("pp_region_indent_code", UO_pp_region_indent_code, AT_BOOL,
                   "Whether to indent the code between #region and #endregion.");
    unc_add_option("pp_indent_if", UO_pp_indent_if, AT_NUM,
                   "If pp_indent_at_level=True, sets the indent for #if, #else and #endif when not at file-level.\n"
                   "0:  indent preprocessors using output_tab_size.\n"
-                  ">0: column at which all preprocessors will be indented.");
+                  ">0: column at which all preprocessors will be indented.\n"
+                  "negative value are OK.", "", -16, 16);
    unc_add_option("pp_if_indent_code", UO_pp_if_indent_code, AT_BOOL,
                   "Control whether to indent the code between #if, #else and #endif.");
    unc_add_option("pp_define_at_level", UO_pp_define_at_level, AT_BOOL,
@@ -1939,18 +1944,43 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       {
          if (entry->type == AT_UNUM && (*val == '-'))
          {
-            fprintf(stderr, "%s:%d\n  for the option '%s' is a negative value not possible: %s",
+            fprintf(stderr, "%s: line %d\n  for the option '%s' is a negative value not possible: %s",
                     cpd.filename.c_str(), cpd.line_number, entry->name, val);
             log_flush(true);
             exit(EX_CONFIG);
          }
          if (entry->type == AT_NUM)
          {
-            dest->n = strtol(val, nullptr, 0);
+            int n = strtol(val, nullptr, 0);
+            // test the ranges Issue #672
+            if (n < entry->min_val)
+            {
+               fprintf(stderr, "%s: line %d\n  for the option '%s' the value: %d is less than the min value: %d\n",
+                       cpd.filename.c_str(), cpd.line_number, entry->name, n, entry->min_val);
+               log_flush(true);
+               exit(EX_CONFIG);
+            }
+            if (n > entry->max_val)
+            {
+               fprintf(stderr, "%s: line %d\n  for the option '%s' the value: %d is bigger than the max value: %d\n",
+                       cpd.filename.c_str(), cpd.line_number, entry->name, n, entry->max_val);
+               log_flush(true);
+               exit(EX_CONFIG);
+            }
+            dest->n = n;
          }
          else
          {
-            dest->u = strtoul(val, nullptr, 0);
+            size_t u = strtoul(val, nullptr, 0);
+            // test the ranges
+            if (u > (size_t)entry->max_val)
+            {
+               fprintf(stderr, "%s: line %d\n  for the option '%s' the value: %zu is bigger than the max value: %d\n",
+                       cpd.filename.c_str(), cpd.line_number, entry->name, u, entry->max_val);
+               log_flush(true);
+               exit(EX_CONFIG);
+            }
+            dest->u = u;
          }
          return;
       }
