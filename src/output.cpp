@@ -420,11 +420,15 @@ void output_parsed(FILE *pfile)
    save_option_file_kernel(pfile, false, true);
 
    fprintf(pfile, "# -=====-%s", eol_marker);
-   fprintf(pfile, "# Line              Tag           Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
+   // MAXLENGTHOFTHENAME must be consider at the format line at the file
+   // output.cpp, line 427: fprintf(pfile, "# Line              Tag                Parent...
+   // and              431: ... make_message("%s# %3zu>%19.19s[%19.19s] ...
+   // here                                              xx xx   xx xx
+   fprintf(pfile, "# Line              Tag                Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       char *outputMessage;
-      outputMessage = make_message("%s# %3zu> %16.16s[%16.16s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
+      outputMessage = make_message("%s# %3zu>%19.19s[%19.19s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
                                    eol_marker,
                                    pc->orig_line, get_token_name(pc->type),
                                    get_token_name(pc->parent_type),
