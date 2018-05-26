@@ -424,7 +424,7 @@ void output_parsed(FILE *pfile)
    // output.cpp, line 427: fprintf(pfile, "# Line              Tag                Parent...
    // and              431: ... make_message("%s# %3zu>%19.19s[%19.19s] ...
    // here                                              xx xx   xx xx
-   fprintf(pfile, "# Line              Tag                Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
+   fprintf(pfile, "# Line                Tag              Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       char *outputMessage;
