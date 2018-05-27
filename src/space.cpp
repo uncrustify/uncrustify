@@ -29,6 +29,7 @@
 #include "unc_ctype.h"
 #include "uncrustify.h"
 #include "language_tools.h"
+#include "punctuators.h"
 
 #include <algorithm>
 
