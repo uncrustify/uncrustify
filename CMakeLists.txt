@@ -241,7 +241,6 @@ add_executable(uncrustify
   src/ParseFrame.h
   src/prototypes.h
   src/punctuators.h
-  src/punctuator_table.h
   src/symbols_table.h
   src/token_enum.h
   src/uncrustify_types.h

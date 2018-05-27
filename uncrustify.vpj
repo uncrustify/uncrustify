@@ -107,7 +107,6 @@
          <F N="src/options.h"/>
          <F N="src/prototypes.h"/>
          <F N="src/punctuators.h"/>
-         <F N="src/punctuator_table.h"/>
          <F N="src/token_enum.h"/>
          <F N="src/token_names.h"/>
          <F N="src/unc_ctype.h"/>
