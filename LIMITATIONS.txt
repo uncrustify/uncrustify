@@ -6,7 +6,10 @@ uncrustify_types.h:
 uncrustify_types.h:430:
 #define AL_SIZE                8000
 
-uncrustify.cpp:654:
+uncrustify.cpp:392:
+#define MAXLENGTHOFTHENAME     19
+
+uncrustify.cpp:680:
 #define MAXLENGTHFORARG        256
 
 sorting.h:14:

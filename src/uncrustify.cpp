@@ -387,8 +387,30 @@ int main(int argc, char *argv[])
       usage_exit(nullptr, argv[0], EXIT_SUCCESS);
    }
 
+#ifdef DEBUG
+   // make sure we have 'name' not too big
+#define MAXLENGTHOFTHENAME    19
+   // maxLengthOfTheName must be consider at the format line at the file
+   // output.cpp, line 427: fprintf(pfile, "# Line              Tag                Parent...
+   // and              431: ... make_message("%s# %3zu>%19.19s[%19.19s] ...
+   // here                                              xx xx   xx xx
+   for (size_t token = 0; token < ARRAY_SIZE(token_names); token++)
+   {
+      size_t lengthOfTheName = strlen(token_names[token]);
+      if (lengthOfTheName > MAXLENGTHOFTHENAME)
+      {
+         fprintf(stderr, "%s(%d): The token name '%s' is too long (%zu)\n",
+                 __func__, __LINE__, token_names[token], lengthOfTheName);
+         fprintf(stderr, "%s(%d): the max token name length is %d\n",
+                 __func__, __LINE__, MAXLENGTHOFTHENAME);
+         log_flush(true);
+         exit(EX_SOFTWARE);
+      }
+   }
+
    // make sure we have token_names.h in sync with token_enum.h
    assert(ARRAY_SIZE(token_names) == CT_TOKEN_COUNT_);
+#endif // DEBUG
 
    // Build options map
    register_options();
