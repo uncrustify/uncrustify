@@ -5,7 +5,7 @@
 #
 
 function(generate_punctuator_table)
-   exec_program ("python ../scripts/punc.py 1> punctuator_table.h")
+   exec_program ("python ../scripts/punc.py > punctuator_table.h")
 endfunction()
 
 generate_punctuator_table()
