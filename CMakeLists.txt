@@ -168,6 +168,17 @@ add_custom_command(
 )
 
 #
+# Generate punctuator_table.h
+#
+add_custom_command(
+  OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/punctuator_table.h"
+  COMMAND ${CMAKE_COMMAND}
+    -P "${PROJECT_SOURCE_DIR}/cmake/GeneratePunctuatorTable.cmake"
+  MAIN_DEPENDENCY src/symbols_table.h
+  COMMENT "Generating punctuator_table.h"
+)
+
+#
 # Uncrustify
 #
 add_executable(uncrustify
@@ -230,6 +241,7 @@ add_executable(uncrustify
   src/ParseFrame.h
   src/prototypes.h
   src/punctuators.h
+  src/symbols_table.h
   src/token_enum.h
   src/uncrustify_types.h
   src/unc_ctype.h

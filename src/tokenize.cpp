@@ -20,6 +20,7 @@
 #include "uncrustify.h"
 #include "keywords.h"
 #include "language_tools.h"
+#include "punctuators.h"
 
 
 using namespace std;
