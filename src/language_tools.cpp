@@ -13,5 +13,5 @@
  */
 bool language_is_set(size_t lang)
 {
-   return(cpd.lang_flags & lang);
+   return(!((cpd.lang_flags & lang) == 0));
 }
