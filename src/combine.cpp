@@ -5406,7 +5406,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
       // REVISIT: really should check the stuff we are skipping
       br_o = chunk_get_next_type(br_o, CT_BRACE_OPEN, br_o->level);
    }
-   if (br_o == nullptr
+   if (  br_o == nullptr
       || br_o->type != CT_BRACE_OPEN)
    {
       return;
