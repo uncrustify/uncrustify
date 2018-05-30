@@ -2964,7 +2964,7 @@ void indent_text(void)
       // Issue #672
       if (  chunk_is_token(pc, CT_CLASS)
          && language_is_set(LANG_CPP | LANG_JAVA)
-         && cpd.settings[UO_indent_continue].u != 0
+         && cpd.settings[UO_indent_continue_class_head].u != 0
          && !classFound)
       {
          LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, CT_CLASS found and UO_indent_continue != 0, OPEN IT\n",

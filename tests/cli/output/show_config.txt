@@ -698,6 +698,11 @@ indent_continue                 Number
   For FreeBSD, this is set to 4. Negative value is absolute and not increased for each '(' level.
   negative value are OK.
 
+indent_continue_class_head      Unsigned Number
+  The continuation indent, only for class header line(s).
+  If non-zero, this overrides the indent of 'class' continuation indents.
+  
+
 indent_single_newlines          { False, True }
   Indent empty lines - lines which contain only spaces before newline character
 
