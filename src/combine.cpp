@@ -644,7 +644,7 @@ static void flag_asm(chunk_t *pc)
    }
 
    chunk_t *end = chunk_skip_to_match(po, scope_e::PREPROC);
-   if (!end)
+   if (end == nullptr)
    {
       return;
    }
@@ -5376,7 +5376,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
 
    // lambda-declarator '( params )' is optional
    chunk_t *pa_o = chunk_get_next_ncnl(sq_c);
-   if (!pa_o)
+   if (pa_o == nullptr)
    {
       return;
    }
@@ -5385,7 +5385,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
    {
       // and now find the ')'
       pa_c = chunk_skip_to_match(pa_o);
-      if (!pa_c)
+      if (pa_c == nullptr)
       {
          return;
       }
@@ -5406,13 +5406,14 @@ static void handle_cpp_lambda(chunk_t *sq_o)
       // REVISIT: really should check the stuff we are skipping
       br_o = chunk_get_next_type(br_o, CT_BRACE_OPEN, br_o->level);
    }
-   if (!br_o || br_o->type != CT_BRACE_OPEN)
+   if (  br_o == nullptr
+      || br_o->type != CT_BRACE_OPEN)
    {
       return;
    }
    // and now find the '}'
    chunk_t *br_c = chunk_skip_to_match(br_o);
-   if (!br_c)
+   if (br_c == nullptr)
    {
       return;
    }
@@ -5525,7 +5526,8 @@ static void handle_d_template(chunk_t *pc)
       // TODO: log an error, expected NAME
       return;
    }
-   if (!po || po->type != CT_PAREN_OPEN)
+   if (  po == nullptr
+      || po->type != CT_PAREN_OPEN)
    {
       // TODO: log an error, expected '('
       return;
@@ -5538,7 +5540,8 @@ static void handle_d_template(chunk_t *pc)
    ChunkStack cs;
    chunk_t    *tmp = get_d_template_types(cs, po);
 
-   if (!tmp || tmp->type != CT_PAREN_CLOSE)
+   if (  tmp == nullptr
+      || tmp->type != CT_PAREN_CLOSE)
    {
       // TODO: log an error, expected ')'
       return;
@@ -5861,9 +5864,9 @@ static void handle_oc_block_literal(chunk_t *pc)
    chunk_t *prev = chunk_get_prev_ncnl(pc);
    chunk_t *next = chunk_get_next_ncnl(pc);
 
-   if (  !pc
-      || !prev
-      || !next)
+   if (  pc == nullptr
+      || prev == nullptr
+      || next == nullptr)
    {
       return; // let's be paranoid
    }
@@ -5928,7 +5931,8 @@ static void handle_oc_block_literal(chunk_t *pc)
 
    // make sure we have braces
    bbc = chunk_skip_to_match(bbo);
-   if (!bbo || !bbc)
+   if (  bbo == nullptr
+      || bbc == nullptr)
    {
       LOG_FMT(LOCBLK, " -- no braces found\n");
       return;
@@ -5976,7 +5980,7 @@ static void handle_oc_block_literal(chunk_t *pc)
 static void handle_oc_block_type(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   if (!pc)
+   if (pc == nullptr)
    {
       return;
    }
