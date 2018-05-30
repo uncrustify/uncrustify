@@ -214,7 +214,7 @@ void dump_out(unsigned int type)
          {
             fprintf(D_file, "  after_tab %d\n", pc->after_tab);
          }
-         if (pc->type != CT_NEWLINE)
+         if (!chunk_is_token(pc, CT_NEWLINE))
          {
             fprintf(D_file, "  text %s\n", pc->text());
          }

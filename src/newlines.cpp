@@ -901,13 +901,13 @@ static void newlines_func_pre_blank_lines(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
    if (  start == nullptr
-      || (  (  start->type != CT_FUNC_CLASS_DEF
+      || (  (  !chunk_is_token(start, CT_FUNC_CLASS_DEF)
             || cpd.settings[UO_nl_before_func_class_def].u == 0)
-         && (  start->type != CT_FUNC_CLASS_PROTO
+         && (  !chunk_is_token(start, CT_FUNC_CLASS_PROTO)
             || cpd.settings[UO_nl_before_func_class_proto].u == 0)
-         && (  start->type != CT_FUNC_DEF
+         && (  !chunk_is_token(start, CT_FUNC_DEF)
             || cpd.settings[UO_nl_before_func_body_def].u == 0)
-         && (  start->type != CT_FUNC_PROTO
+         && (  !chunk_is_token(start, CT_FUNC_PROTO)
             || cpd.settings[UO_nl_before_func_body_proto].u == 0)))
    {
       return;
@@ -1217,7 +1217,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
          {
             return;
          }
-         if (nextNNL->type != CT_VBRACE_CLOSE)
+         if (!chunk_is_token(nextNNL, CT_VBRACE_CLOSE))
          {
             next = nextNNL;
             break;
@@ -1227,7 +1227,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
 
       LOG_FMT(LNEWLINE, "   (%d): next->... , type %s, line %zu, column %zu,\n",
               __LINE__, get_token_name(next->type), next->orig_line, next->orig_col);
-      if (next->type != CT_BRACE_CLOSE)
+      if (!chunk_is_token(next, CT_BRACE_CLOSE))
       {
          // if vbrace, have to check before and after
          // if chunk before vbrace, check its count
@@ -1591,8 +1591,8 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
 
       // Determine if this is a variable def or code
       if (  !did_this_line
-         && pc->type != CT_FUNC_CLASS_DEF
-         && pc->type != CT_FUNC_CLASS_PROTO
+         && !chunk_is_token(pc, CT_FUNC_CLASS_DEF)
+         && !chunk_is_token(pc, CT_FUNC_CLASS_PROTO)
          && ((pc->level == (start->level + 1)) || pc->level == 0))
       {
          chunk_t *next = chunk_get_next_ncnl(pc);
@@ -1646,7 +1646,7 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
             var_blk       = false;
          }
          else if (  chunk_is_type(pc)
-                 && (  next->type != CT_DC_MEMBER  // proceed if not CT_DC_MEMBER else skip it
+                 && (  !chunk_is_token(next, CT_DC_MEMBER)  // proceed if not CT_DC_MEMBER else skip it
                     || (next = chunk_skip_dc_member(next)) != nullptr)
                  && (  chunk_is_type(next)
                     || chunk_is_token(next, CT_WORD)
@@ -1734,7 +1734,7 @@ static void newlines_brace_pair(chunk_t *br_open)
       {
          pc = chunk_get_next(br_open);
 
-         while (pc != nullptr && pc->type != CT_BRACE_CLOSE)
+         while (!chunk_is_token(pc, CT_BRACE_CLOSE))
          {
             next = chunk_get_next(pc);
             if (chunk_is_token(pc, CT_NEWLINE))
