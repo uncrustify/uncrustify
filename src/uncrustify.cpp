@@ -1533,8 +1533,10 @@ static void add_func_header(c_token_t type, file_mem &fm)
          && ref->parent_type == CT_NONE
          && ref->next)
       {
-         int found_brace = 0;                                 // Set if a close brace is found before a newline
-         while (ref->type != CT_NEWLINE && (ref = ref->next)) // TODO: is the assignment of ref wanted here?, better move it to the loop
+         int found_brace = 0;
+         // Set if a close brace is found before a newline
+         // TODO: is the assignment of ref wanted here?, better move it to the loop
+         while (!chunk_is_token(ref, CT_NEWLINE) && (ref = ref->next))
          {
             if (chunk_is_token(ref, CT_BRACE_CLOSE))
             {

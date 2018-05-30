@@ -438,13 +438,13 @@ void output_parsed(FILE *pfile)
       fprintf(pfile, "%s", outputMessage);
       free(outputMessage);
 
-      if (pc->type != CT_NEWLINE && (pc->len() != 0))
+      if (!chunk_is_token(pc, CT_NEWLINE) && (pc->len() != 0))
       {
          for (size_t cnt = 0; cnt < pc->column; cnt++)
          {
             fprintf(pfile, " ");
          }
-         if (pc->type != CT_NL_CONT)
+         if (!chunk_is_token(pc, CT_NL_CONT))
          {
             fprintf(pfile, "%s", pc->text());
          }
@@ -1675,7 +1675,7 @@ static bool kw_fcn_class(chunk_t *cmt, unc_text &out_txt)
       out_txt.append(tmp->str);
       while ((tmp = chunk_get_next(tmp)) != nullptr)
       {
-         if (tmp->type != CT_DC_MEMBER)
+         if (!chunk_is_token(tmp, CT_DC_MEMBER))
          {
             break;
          }
@@ -2153,15 +2153,16 @@ void add_long_preprocessor_conditional_block_comment(void)
    chunk_t *pp_start = nullptr;
    chunk_t *pp_end   = nullptr;
 
-   for (chunk_t *pc = chunk_get_head(); pc; pc = chunk_get_next_ncnl(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
       // just track the preproc level:
       if (chunk_is_token(pc, CT_PREPROC))
       {
-         pp_end = pp_start = pc;
+         pp_end = pc;
+         pp_start = pc;
       }
 
-      if (pc->type != CT_PP_IF || !pp_start)
+      if (!chunk_is_token(pc, CT_PP_IF) || pp_start == nullptr)
       {
          continue;
       }
@@ -2205,7 +2206,7 @@ void add_long_preprocessor_conditional_block_comment(void)
             LOG_FMT(LPPIF, "next item type %d (is %s)\n",
                     (tmp ? tmp->type : -1), (tmp ? chunk_is_newline(tmp) ? "newline"
                                              : chunk_is_comment(tmp) ? "comment" : "other" : "---"));
-            if (tmp == nullptr || chunk_is_token(tmp, CT_NEWLINE))  // chunk_is_newline(tmp))
+            if (chunk_is_token(tmp, CT_NEWLINE))  // chunk_is_newline(tmp))
             {
                size_t nl_min;
 

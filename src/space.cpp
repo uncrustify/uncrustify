@@ -125,7 +125,7 @@ const no_space_table_t no_space_table[] =
 static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *second)
 {
    LOG_FUNC_ENTRY();
-   if (second->type != CT_NEWLINE)
+   if (!chunk_is_token(second, CT_NEWLINE))
    {
       LOG_FMT(LSPACE, "%s(%d): Spacing: first->orig_line is %zu, first->orig_col is %zu, first->text() is '%s', [%s/%s] <===>\n",
               __func__, __LINE__, first->orig_line, first->orig_col, first->text(),
@@ -201,13 +201,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(AV_REMOVE);
    }
    if (  chunk_is_token(first, CT_VBRACE_OPEN)
-      && second->type != CT_NL_CONT
-      && second->type != CT_SEMICOLON) // # Issue 1158
+      && !chunk_is_token(second, CT_NL_CONT)
+      && !chunk_is_token(second, CT_SEMICOLON)) // # Issue 1158
    {
       log_rule("FORCE");
       return(AV_FORCE);
    }
-   if (chunk_is_token(first, CT_VBRACE_CLOSE) && second->type != CT_NL_CONT)
+   if (chunk_is_token(first, CT_VBRACE_CLOSE) && !chunk_is_token(second, CT_NL_CONT))
    {
       log_rule("REMOVE");
       return(AV_REMOVE);
@@ -424,13 +424,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
             return(cpd.settings[UO_sp_after_semi_for_empty].a);
          }
          if (  (cpd.settings[UO_sp_after_semi_for].a != AV_IGNORE)
-            && second->type != CT_SPAREN_CLOSE)  // Issue 1324
+            && !chunk_is_token(second, CT_SPAREN_CLOSE))  // Issue 1324
          {
             log_rule("sp_after_semi_for");
             return(cpd.settings[UO_sp_after_semi_for].a);
          }
       }
-      else if (!chunk_is_comment(second) && second->type != CT_BRACE_CLOSE) // issue #197
+      else if (!chunk_is_comment(second) && !chunk_is_token(second, CT_BRACE_CLOSE)) // issue #197
       {
          log_rule("sp_after_semi");
          return(cpd.settings[UO_sp_after_semi].a);
@@ -531,9 +531,10 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       /* '::' at the start of an identifier is not member access, but global scope operator.
        * Detect if previous chunk is a type and previous-previous is "friend"
        */
+      chunk_t *firstnext = first->next;
       if (  chunk_is_token(first, CT_TYPE)
          && first->prev != nullptr
-         && (first->prev->type == CT_FRIEND && first->next->type != CT_DC_MEMBER))
+         && (first->prev->type == CT_FRIEND && !chunk_is_token(firstnext, CT_DC_MEMBER)))
       {
          log_rule("FORCE");
          return(AV_FORCE);
@@ -821,9 +822,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(second, CT_OC_MSG_FUNC))
    {
       if (  (cpd.settings[UO_sp_after_oc_msg_receiver].a == AV_REMOVE)
-         && (  (first->type != CT_SQUARE_CLOSE)
-            && (first->type != CT_FPAREN_CLOSE)
-            && (first->type != CT_PAREN_CLOSE)))
+         && (  (!chunk_is_token(first, CT_SQUARE_CLOSE))
+            && (!chunk_is_token(first, CT_FPAREN_CLOSE))
+            && (!chunk_is_token(first, CT_PAREN_CLOSE))))
       {
          return(AV_FORCE);
       }
@@ -899,7 +900,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_template_angle");
          return(cpd.settings[UO_sp_template_angle].a);
       }
-      if (first->type != CT_QUALIFIER)
+      if (!chunk_is_token(first, CT_QUALIFIER))
       {
          log_rule("sp_before_angle");
          return(cpd.settings[UO_sp_before_angle].a);
@@ -932,10 +933,10 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_before_dc");
          return(cpd.settings[UO_sp_before_dc].a);
       }
-      if (  second->type != CT_BYREF
-         && second->type != CT_PTR_TYPE
-         && second->type != CT_BRACE_OPEN
-         && second->type != CT_PAREN_CLOSE)
+      if (  !chunk_is_token(second, CT_BYREF)
+         && !chunk_is_token(second, CT_PTR_TYPE)
+         && !chunk_is_token(second, CT_BRACE_OPEN)
+         && !chunk_is_token(second, CT_PAREN_CLOSE))
       {
          if (  chunk_is_token(second, CT_CLASS_COLON)
             && cpd.settings[UO_sp_angle_colon].a != AV_IGNORE)
@@ -979,7 +980,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (cpd.settings[UO_sp_before_unnamed_byref].a != AV_IGNORE)
       {
          chunk_t *next = chunk_get_next_nc(second);
-         if (next != nullptr && next->type != CT_WORD)
+         if (!chunk_is_token(next, CT_WORD))
          {
             log_rule("sp_before_unnamed_byref");
             return(cpd.settings[UO_sp_before_unnamed_byref].a);
@@ -1481,7 +1482,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(cpd.settings[UO_sp_after_oc_type].a);
       }
 
-      if (first->parent_type == CT_OC_SEL && second->type != CT_SQUARE_CLOSE)
+      if (first->parent_type == CT_OC_SEL && !chunk_is_token(second, CT_SQUARE_CLOSE))
       {
          log_rule("sp_after_oc_at_sel_parens");
          return(cpd.settings[UO_sp_after_oc_at_sel_parens].a);
@@ -1785,7 +1786,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (chunk_is_token(second, CT_PTR_TYPE) && first->type != CT_IN)
+   if (chunk_is_token(second, CT_PTR_TYPE) && !chunk_is_token(first, CT_IN))
    {
       if (language_is_set(LANG_CS) && chunk_is_nullable(second))
       {
@@ -1815,7 +1816,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          {
             next = chunk_get_next_nc(next);
          }
-         if (next != nullptr && next->type != CT_WORD)
+         if (!chunk_is_token(next, CT_WORD))
          {
             log_rule("sp_before_unnamed_ptr_star");
             return(cpd.settings[UO_sp_before_unnamed_ptr_star].a);
@@ -1836,7 +1837,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(second, CT_FUNC_PROTO) || chunk_is_token(second, CT_FUNC_DEF))
    {
-      if (first->type != CT_PTR_TYPE)
+      if (!chunk_is_token(first, CT_PTR_TYPE))
       {
          log_rule("sp_type_func|ADD");
          return(static_cast<argval_t>(cpd.settings[UO_sp_type_func].a | AV_ADD));
@@ -1948,7 +1949,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_before_template_paren].a);
    }
 
-   if (  second->type != CT_PTR_TYPE
+   if (  !chunk_is_token(second, CT_PTR_TYPE)
       && (chunk_is_token(first, CT_QUALIFIER) || chunk_is_token(first, CT_TYPE)))
    {
       argval_t arg = cpd.settings[UO_sp_after_type].a;
@@ -2414,8 +2415,8 @@ void space_text(void)
                   || (  next->parent_type != CT_COMMENT_END
                      && next->parent_type != CT_COMMENT_EMBED))
                && (  cpd.settings[UO_sp_endif_cmt].a == AV_IGNORE
-                  || (  pc->type != CT_PP_ELSE
-                     && pc->type != CT_PP_ENDIF)))
+                  || (  !chunk_is_token(pc, CT_PP_ELSE)
+                     && !chunk_is_token(pc, CT_PP_ENDIF))))
             {
                if (cpd.settings[UO_indent_relative_single_line_comments].b)
                {

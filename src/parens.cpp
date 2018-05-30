@@ -49,7 +49,7 @@ void do_parens(void)
       chunk_t *pc = chunk_get_head();
       while ((pc = chunk_get_next_ncnl(pc)) != nullptr)
       {
-         if (  pc->type != CT_SPAREN_OPEN
+         if (  !chunk_is_token(pc, CT_SPAREN_OPEN)
             || (  pc->parent_type != CT_IF
                && pc->parent_type != CT_ELSEIF
                && pc->parent_type != CT_SWITCH))

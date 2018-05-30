@@ -157,7 +157,7 @@ void do_code_width(void)
    {
       if (  !chunk_is_newline(pc)
          && !chunk_is_comment(pc)
-         && pc->type != CT_SPACE
+         && !chunk_is_token(pc, CT_SPACE)
          && is_past_width(pc))
       {
          if (  chunk_is_token(pc, CT_VBRACE_CLOSE) // don't break if a vbrace close
@@ -238,7 +238,7 @@ static void try_split_here(cw_entry &ent, chunk_t *pc)
    // Can't split after a newline
    chunk_t *prev = chunk_get_prev(pc);
    if (  prev == nullptr
-      || (chunk_is_newline(prev) && pc->type != CT_STRING))
+      || (chunk_is_newline(prev) && !chunk_is_token(pc, CT_STRING)))
    {
       if (prev != nullptr)
       {
@@ -265,7 +265,7 @@ static void try_split_here(cw_entry &ent, chunk_t *pc)
    if (chunk_is_token(pc, CT_STRING))
    {
       chunk_t *next = chunk_get_next(pc);
-      if (next->type != CT_STRING)
+      if (!chunk_is_token(next, CT_STRING))
       {
          LOG_FMT(LSPLIT, "%s(%d): Only split concatenated strings, return\n", __func__, __LINE__);
          return;
@@ -285,7 +285,7 @@ static void try_split_here(cw_entry &ent, chunk_t *pc)
    if (pc_pri == 25)
    {
       chunk_t *next = chunk_get_next(pc);
-      if (next->type != CT_WORD && (get_split_pri(next->type) != 25))
+      if (!chunk_is_token(next, CT_WORD) && (get_split_pri(next->type) != 25))
       {
          LOG_FMT(LSPLIT, "%s(%d): don't break after last term of a qualified type, return\n", __func__, __LINE__);
          return;
@@ -403,7 +403,7 @@ static bool split_line(chunk_t *start)
    {
       LOG_FMT(LSPLIT, "%s(%d): at %s, orig_line=%zu, orig_col=%zu\n",
               __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
-      if (pc->type != CT_SPACE)
+      if (!chunk_is_token(pc, CT_SPACE))
       {
          try_split_here(ent, pc);
          // break at maximum line length
@@ -660,7 +660,7 @@ static void split_fcn_params(chunk_t *start)
       // Find the opening function parenthesis
       LOG_FMT(LSPLIT, "%s(%d): Find the opening function parenthesis\n", __func__, __LINE__);
       while (  ((fpo = chunk_get_prev(fpo)) != nullptr)
-            && fpo->type != CT_FPAREN_OPEN)
+            && !chunk_is_token(fpo, CT_FPAREN_OPEN))
       {
          // do nothing
          LOG_FMT(LSPLIT, "%s(%d): '%s', orig_col is %zu, level is %zu\n",
