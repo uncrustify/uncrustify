@@ -5526,7 +5526,7 @@ static void handle_d_template(chunk_t *pc)
       // TODO: log an error, expected NAME
       return;
    }
-   if (po == nullptr
+   if (  po == nullptr
       || po->type != CT_PAREN_OPEN)
    {
       // TODO: log an error, expected '('
@@ -5540,7 +5540,7 @@ static void handle_d_template(chunk_t *pc)
    ChunkStack cs;
    chunk_t    *tmp = get_d_template_types(cs, po);
 
-   if (tmp == nullptr
+   if (  tmp == nullptr
       || tmp->type != CT_PAREN_CLOSE)
    {
       // TODO: log an error, expected ')'
@@ -5931,7 +5931,7 @@ static void handle_oc_block_literal(chunk_t *pc)
 
    // make sure we have braces
    bbc = chunk_skip_to_match(bbo);
-   if (bbo == nullptr 
+   if (  bbo == nullptr
       || bbc == nullptr)
    {
       LOG_FMT(LOCBLK, " -- no braces found\n");
