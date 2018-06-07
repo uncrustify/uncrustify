@@ -172,8 +172,9 @@ add_custom_command(
 #
 add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/punctuator_table.h"
-  COMMAND ${CMAKE_COMMAND}
-    -P "${PROJECT_SOURCE_DIR}/cmake/GeneratePunctuatorTable.cmake"
+  COMMAND ${PYTHON_EXECUTABLE}
+    "${PROJECT_SOURCE_DIR}/scripts/punc.py"
+    "${CMAKE_CURRENT_BINARY_DIR}/punctuator_table.h"
   MAIN_DEPENDENCY src/symbols_table.h
   COMMENT "Generating punctuator_table.h"
 )
