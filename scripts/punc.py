@@ -7,7 +7,7 @@
 #
 from __future__ import print_function  # python >= 2.6
 from os.path import dirname, join, abspath, relpath
-from sys import stderr, exit as sys_exit
+from sys import argv, stderr, exit as sys_exit
 
 
 def scan_file(file_path):
@@ -93,6 +93,10 @@ def add_to_db(entry, db_top):
 
 
 def main():
+    if len(argv) > 1:
+        import sys
+        sys.stdout = open(argv[1], 'wt')
+
     root = dirname(dirname(abspath(__file__)))
     pl = scan_file(join(root, 'src', 'symbols_table.h'))
     pl.sort()
