@@ -699,6 +699,10 @@ indent_columns                  = 8        # unsigned number
 # negative value are OK.
 indent_continue                 = 0        # number
 
+# The continuation indent, only for class header line(s).
+# If non-zero, this overrides the indent of 'class' continuation indents.
+indent_continue_class_head      = 0        # unsigned number
+
 # Indent empty lines - lines which contain only spaces before newline character
 indent_single_newlines          = false    # false/true
 

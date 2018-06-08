@@ -567,7 +567,8 @@ void indent_text(void)
 
    ParseFrame frm{};
 
-   chunk_t    *pc = chunk_get_head();
+   chunk_t    *pc        = chunk_get_head();
+   bool       classFound = false; // Issue #672
    while (pc != nullptr)
    {
       //  forces string literal to column-1 [Fix for 1246]
@@ -931,7 +932,7 @@ void indent_text(void)
             {
                frm.pop();
                pc = chunk_get_next(pc);
-               if (!pc)
+               if (pc == nullptr)
                {
                   // need to break out of both the do and while loops
                   goto null_pc;
@@ -1138,6 +1139,20 @@ void indent_text(void)
                     frm.at(ttidx).level,
                     frm.at(ttidx).pc->brace_level);
          }
+      }
+
+      // Issue #672
+      if (  chunk_is_token(pc, CT_BRACE_OPEN)
+         && classFound)
+      {
+         LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, CT_BRACE_OPEN found, CLOSE IT\n",
+                 __func__, __LINE__, pc->orig_line);
+         frm.pop();
+         frm.top().indent_tmp = 1;
+         frm.top().indent     = 1;
+         frm.top().indent_tab = 1;
+         log_indent();
+         classFound = false;
       }
 
       /*
@@ -1805,7 +1820,8 @@ void indent_text(void)
             }
          }
       }
-      else if (chunk_is_token(pc, CT_CLASS_COLON) || chunk_is_token(pc, CT_CONSTR_COLON))
+      else if (  chunk_is_token(pc, CT_CLASS_COLON)
+              || chunk_is_token(pc, CT_CONSTR_COLON))
       {
          // just indent one level
          frm.push(*pc);
@@ -2324,10 +2340,11 @@ void indent_text(void)
             log_indent();
          }
       }
-      else if (chunk_is_token(pc, CT_OC_SCOPE) || chunk_is_token(pc, CT_TYPEDEF))
+      else if (  chunk_is_token(pc, CT_OC_SCOPE)
+              || chunk_is_token(pc, CT_TYPEDEF))
       {
          frm.push(*pc);
-         // Issue # 405
+         // Issue #405
          frm.top().indent = frm.prev().indent;
          log_indent();
 
@@ -2506,8 +2523,6 @@ void indent_text(void)
       {
          if (cpd.settings[UO_indent_continue].n != 0)
          {
-            //vardefcol = frm.top().indent +
-            //            abs(cpd.settings[UO_indent_continue].n);
             vardefcol = calc_indent_continue(frm);
             frm.top().indent_cont = true;
          }
@@ -2944,6 +2959,24 @@ void indent_text(void)
             xml_indent = pc->column;
          }
          xml_indent += cpd.settings[UO_indent_xml_string].u;
+      }
+
+      // Issue #672
+      if (  chunk_is_token(pc, CT_CLASS)
+         && language_is_set(LANG_CPP | LANG_JAVA)
+         && cpd.settings[UO_indent_continue_class_head].u != 0
+         && !classFound)
+      {
+         LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, CT_CLASS found and UO_indent_continue != 0, OPEN IT\n",
+                 __func__, __LINE__, pc->orig_line);
+         frm.push(*pc);
+         frm.top().indent = cpd.settings[UO_indent_continue].u + 1;
+         log_indent();
+
+         frm.top().indent_tmp = frm.top().indent;
+         frm.top().indent_tab = frm.top().indent;
+         log_indent_tmp();
+         classFound = true;
       }
 
       pc = chunk_get_next(pc);

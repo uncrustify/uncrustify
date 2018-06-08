@@ -358,6 +358,7 @@ enum uncrustify_options
    // group: UG_indent, "Indenting"                                                                2
    UO_indent_columns,                       // ie 3 or 8
    UO_indent_continue,                      //
+   UO_indent_continue_class_head,           // only for class header line(s)
    UO_indent_single_newlines,               //
    UO_indent_param,                         // indent value of indent_*_param
    UO_indent_with_tabs,                     // 1=only to the 'level' indent, 2=use tabs for indenting

@@ -766,6 +766,9 @@ void register_options(void)
                   "The continuation indent. If non-zero, this overrides the indent of '(' and '=' continuation indents.\n"
                   "For FreeBSD, this is set to 4. Negative value is absolute and not increased for each '(' level.\n"
                   "negative value are OK.", "", -16, 16);
+   unc_add_option("indent_continue_class_head", UO_indent_continue_class_head, AT_UNUM,
+                  "The continuation indent, only for class header line(s).\n"
+                  "If non-zero, this overrides the indent of 'class' continuation indents.\n", "", 0, 16);
    unc_add_option("indent_single_newlines", UO_indent_single_newlines, AT_BOOL,
                   "Indent empty lines - lines which contain only spaces before newline character");
    unc_add_option("indent_param", UO_indent_param, AT_UNUM,
