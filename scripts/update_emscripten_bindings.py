@@ -134,24 +134,24 @@ def get_enum_lines(enum_info):
                         'extra_arg' (extra arguments passed to clang-check)
     :return: list containing enum values
     """
-    cut_len = len(enum_info['name']) + 2  # "$enumName::"
+    cut_len = len(enum_info['name'])
 
     proc_args = ["clang-check", "-p=%s" % NULL_DEV, enum_info['filepath'],
-                 "-ast-dump", '-ast-dump-filter=%s::' % enum_info['name']]
+                 "-ast-dump", '-ast-dump-filter=%s' % enum_info['name']]
     proc_args += enum_info['extra_arg']
 
     output = proc_output(proc_args)
     if output is None or len(output) == 0:
-        print("%s: empty clang-check return" % get_enum_lines.__name__,
+        print("ScriptError: %s - empty clang-check return" % get_enum_lines.__name__,
               file=stderr)
         return ()
 
-    reg_obj = re.compile("(%s::\w+)" % enum_info['name'])
+    reg_obj = re.compile("col:\d+ (\w+)")
 
-    lines = [m.group(1)[cut_len:] for l in output.splitlines()
+    lines = [m.group(1) for l in output.splitlines()
              for m in [re.search(reg_obj, l)] if m]
     if len(lines) == 0:
-        print("%s: no enum_info names found" % get_enum_lines.__name__,
+        print("ScriptError: %s - no enum_info names found" % get_enum_lines.__name__,
               file=stderr)
         return ()
     return lines
@@ -269,6 +269,7 @@ def main():
         return 1
 
     return 0
+
 
 if __name__ == "__main__":
     sys_exit(main())

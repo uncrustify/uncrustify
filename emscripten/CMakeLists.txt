@@ -134,11 +134,24 @@ add_custom_command(
   COMMENT "Generating token_names.h"
 )
 
+
+#
+# Generate punctuator_table.h
+#
+add_custom_command(
+  OUTPUT "punctuator_table.h"
+  COMMAND ${PYTHON_EXECUTABLE}
+    "${unc_projdir}/scripts/punc.py"
+    "punctuator_table.h"
+  MAIN_DEPENDENCY "${unc_projdir}/src/symbols_table.h"
+  COMMENT "Generating punctuator_table.h"
+)
+
 # ------------------------------------------------------------------------------
 
 FILE(GLOB unc_infiles "${unc_projdir}/src/*.cpp")
 
-ADD_EXECUTABLE(${project_name} ${unc_infiles} ${unc_projdir}/src/token_enum.h)
+ADD_EXECUTABLE(${project_name} ${unc_infiles} ${unc_projdir}/src/token_enum.h ${unc_projdir}/src/symbols_table.h)
 
 SET(unc_compile_flags "--bind -O3")
 SET_TARGET_PROPERTIES(${project_name}
@@ -155,6 +168,7 @@ SET_TARGET_PROPERTIES(${project_name}
                     -s EXPORT_NAME=\"'${project_name}'\" \
                     -s ERROR_ON_UNDEFINED_SYMBOLS=1 \
                     -s 'EXTRA_EXPORTED_RUNTIME_METHODS=[\"UTF8ToString\",\"stringToUTF8\",\"lengthBytesUTF8\", \"writeAsciiToMemory\"]' \
+                    -s WASM=0\
                     --memory-init-file 0\
                     --pre-js ${CMAKE_CURRENT_LIST_DIR}/prefix_module.js \
                     --post-js ${CMAKE_CURRENT_LIST_DIR}/postfix_module.js \
