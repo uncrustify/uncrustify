@@ -858,6 +858,12 @@ int main(int argc, char *argv[])
    }
    else
    {
+      if (parsed_file != nullptr)  // Issue #930
+      {
+         fprintf(stderr, "FAIL: -p option must be used with the -f option\n");
+         log_flush(true);
+         exit(EX_CONFIG);
+      }
       // Doing multiple files, TODO: multiple threads for parallel processing
       if (prefix != nullptr)
       {
