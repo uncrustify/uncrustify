@@ -1161,7 +1161,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_inside_braces_empty].a);
    }
 
-   if ( !chunk_is_token(first, CT_BRACE_OPEN)
+   if (  !chunk_is_token(first, CT_BRACE_OPEN)
+      && !chunk_is_token(first, CT_FPAREN_OPEN)
       && chunk_is_token(second, CT_BRACE_OPEN)
       && second->parent_type == CT_BRACED_INIT_LIST)
    {
