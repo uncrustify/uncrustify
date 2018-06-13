@@ -525,6 +525,8 @@ def main(args):
     parser.add_argument('--build',
                         default=s_path_join(sc_dir, '../../build'),
                         help='specify location of the build directory')
+    parser.add_argument('--cache',
+                        help='specify location of CMake cache')
 
     parsed_args = parser.parse_args()
 
@@ -557,7 +559,7 @@ def main(args):
     '''
     if os_name != 'nt' and not check_build_type(
             ['release', 'relwithdebinfo', 'minsizerel'],
-            s_path_join(bd_dir, 'CMakeCache.txt')):
+            parsed_args.cache or s_path_join(bd_dir, 'CMakeCache.txt')):
         sys_exit(EX_USAGE)
 
     clear_dir(s_path_join(sc_dir, "./results"))

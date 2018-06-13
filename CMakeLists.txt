@@ -123,9 +123,9 @@ endif()
 # FIXME: the version number should be automatically integrated
 set(CURRENT_VERSION "Uncrustify-0.67_f")
 
+find_package(PythonInterp)
 option(NoGitVersionString "Do not use make_version.py and git to build a version string" OFF)
 if(NOT NoGitVersionString)
-    find_package(PythonInterp)
     if(PythonInterp_FOUND)
         set(version_debug_flag "")
         STRING(REGEX MATCH "-g[0-3]?" version_debug_flag ${CMAKE_CXX_FLAGS})
