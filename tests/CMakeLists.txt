@@ -65,8 +65,10 @@ if(PythonInterp_FOUND)
   if (CMAKE_CONFIGURATION_TYPES)
     # Not really, but just to make the following if() true
     set(_build_type release)
+    set(_configs CONFIGURATIONS Release RelWithDebInfo MinSizeRel)
   else()
     string(TOLOWER "${CMAKE_BUILD_TYPE}" _build_type)
+    set(_configs)
   endif()
 
   # Only enable test_cli_options stuff if building a release configuration,
@@ -80,6 +82,7 @@ if(PythonInterp_FOUND)
         --build ${uncrustify_BINARY_DIR}
         --cache ${CMAKE_BINARY_DIR}/CMakeCache.txt
         --diff
+      ${_configs}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cli
     )
 
