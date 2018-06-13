@@ -521,15 +521,19 @@ def main(args):
                         help='show diffs when there is a test mismatch')
     parser.add_argument('--apply', action='store_true',
                         help='auto apply the changes from the results folder to the output folder')
+    parser.add_argument('--build',
+                        default=s_path_join(sc_dir, '../../build'),
+                        help='specify location of the build directory')
 
     parsed_args = parser.parse_args()
 
     # find the uncrustify binary (keep Debug dir excluded)
     bin_found = False
     uncr_bin = ''
-    bin_paths = [s_path_join(sc_dir, '../../build/uncrustify'),
-                 s_path_join(sc_dir, '../../build/Release/uncrustify'),
-                 s_path_join(sc_dir, '../../build/Release/uncrustify.exe')]
+    bd_dir = parsed_args.build
+    bin_paths = [s_path_join(bd_dir, 'uncrustify'),
+                 s_path_join(bd_dir, 'Release/uncrustify'),
+                 s_path_join(bd_dir, 'Release/uncrustify.exe')]
     for uncr_bin in bin_paths:
         if not isfile(uncr_bin):
             eprint("is not a file: %s" % uncr_bin)
@@ -548,7 +552,7 @@ def main(args):
           for now rely on the ../../build/Release/ location
     '''
     if os_name != 'nt' and not check_build_type(
-            'release', s_path_join(sc_dir, '../../build/CMakeCache.txt')):
+            'release', s_path_join(bd_dir, 'CMakeCache.txt')):
         sys_exit(EX_USAGE)
 
     clear_dir(s_path_join(sc_dir, "./results"))
