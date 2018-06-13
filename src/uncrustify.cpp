@@ -265,7 +265,7 @@ void usage_exit(const char *msg, const char *argv0, int code)
            " --set <option>=<value>   : Sets a new value to a config option.\n"
            "\n"
            "Debug Options:\n"
-           " -p FILE      : Dump debug info to a file.\n"
+           " -p FILE      : Dump debug info to a file. Must be use with the option -f FILE.\n"
            " -L SEV       : Set the log severity (see log_levels.h; note 'A' = 'all')\n"
            " -s           : Show the log severity in the logs.\n"
            " --decode     : Decode remaining args (chunk flags) and exit.\n"
