@@ -422,15 +422,15 @@ def file_find_string(search_string, file_path):
     return False
 
 
-def check_build_type(build_type, cmake_cache_path):
+def check_build_type(build_types, cmake_cache_path):
     """
     checks if a cmake build was of a certain single-configuration type
 
 
     Parameters:
     ----------------------------------------------------------------------------
-    :param build_type: string
-        the build type that is going to be expected
+    :param build_types: list/tuple
+        list of acceptable build types
 
     :param cmake_cache_path: string
         the path of the to be checked CMakeCache.txt file
@@ -442,12 +442,13 @@ def check_build_type(build_type, cmake_cache_path):
 
     """
 
-    check_string = "CMAKE_BUILD_TYPE:STRING=%s" % build_type
+    for build_type in build_types:
+        check_string = "CMAKE_BUILD_TYPE:STRING=%s" % build_type
 
-    if file_find_string(check_string, cmake_cache_path):
-        return True
+        if file_find_string(check_string, cmake_cache_path):
+            return True
 
-    eprint("CMAKE_BUILD_TYPE must be '%s'" % build_type)
+    eprint("CMAKE_BUILD_TYPE must be one of %r" % build_types)
     return False
 
 
@@ -533,7 +534,11 @@ def main(args):
     bd_dir = parsed_args.build
     bin_paths = [s_path_join(bd_dir, 'uncrustify'),
                  s_path_join(bd_dir, 'Release/uncrustify'),
-                 s_path_join(bd_dir, 'Release/uncrustify.exe')]
+                 s_path_join(bd_dir, 'Release/uncrustify.exe'),
+                 s_path_join(bd_dir, 'RelWithDebInfo/uncrustify'),
+                 s_path_join(bd_dir, 'RelWithDebInfo/uncrustify.exe'),
+                 s_path_join(bd_dir, 'MinSizeRel/uncrustify'),
+                 s_path_join(bd_dir, 'MinSizeRel/uncrustify.exe')]
     for uncr_bin in bin_paths:
         if not isfile(uncr_bin):
             eprint("is not a file: %s" % uncr_bin)
@@ -548,11 +553,11 @@ def main(args):
     '''
     Check if the binary was build as Release-type
     
-    TODO: find a check for Windows,
-          for now rely on the ../../build/Release/ location
+    TODO: fix this for multi-configuration generators
     '''
     if os_name != 'nt' and not check_build_type(
-            'release', s_path_join(bd_dir, 'CMakeCache.txt')):
+            ['release', 'relwithdebinfo', 'minsizerel'],
+            s_path_join(bd_dir, 'CMakeCache.txt')):
         sys_exit(EX_USAGE)
 
     clear_dir(s_path_join(sc_dir, "./results"))
