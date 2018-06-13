@@ -123,34 +123,32 @@ endif()
 # FIXME: the version number should be automatically integrated
 set(CURRENT_VERSION "Uncrustify-0.67_f")
 
-find_package(PythonInterp)
+find_package(PythonInterp REQUIRED)
 option(NoGitVersionString "Do not use make_version.py and git to build a version string" OFF)
 if(NOT NoGitVersionString)
-    if(PythonInterp_FOUND)
-        set(version_debug_flag "")
-        STRING(REGEX MATCH "-g[0-3]?" version_debug_flag ${CMAKE_CXX_FLAGS})
+  set(version_debug_flag "")
+  STRING(REGEX MATCH "-g[0-3]?" version_debug_flag ${CMAKE_CXX_FLAGS})
 
-        # checking for build type and passing it to make_version.py
-        # FIXME: does not work with VS .sln projects
-        if(NOT "${version_debug_flag}" STREQUAL "" OR "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
-            set(version_debug_flag "Debug")
-        endif()
+  # checking for build type and passing it to make_version.py
+  # FIXME: does not work with VS .sln projects
+  if(NOT "${version_debug_flag}" STREQUAL "" OR "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
+    set(version_debug_flag "Debug")
+  endif()
 
-        execute_process(
-            COMMAND ${PYTHON_EXECUTABLE} scripts/make_version.py ${version_debug_flag}
-            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-            RESULT_VARIABLE make_version_error
-            OUTPUT_VARIABLE make_version_output
-        )
+  execute_process(
+    COMMAND ${PYTHON_EXECUTABLE} scripts/make_version.py ${version_debug_flag}
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    RESULT_VARIABLE make_version_error
+    OUTPUT_VARIABLE make_version_output
+  )
 
-        if (make_version_error)
-            message(STATUS "scripts/make_version.py exited with code ${make_version_error}: ${make_version_output}\n"
-                           "As a fallback, version '${CURRENT_VERSION}' will be used.")
-        else()
-            string(STRIP ${make_version_output} CURRENT_VERSION)
-            message(STATUS "Version: '${CURRENT_VERSION}'")
-        endif()
-    endif()
+  if (make_version_error)
+    message(STATUS "scripts/make_version.py exited with code ${make_version_error}: ${make_version_output}\n"
+                   "As a fallback, version '${CURRENT_VERSION}' will be used.")
+  else()
+    string(STRIP ${make_version_output} CURRENT_VERSION)
+    message(STATUS "Version: '${CURRENT_VERSION}'")
+  endif()
 endif()
 
 configure_file(src/uncrustify_version.h.in uncrustify_version.h @ONLY)
