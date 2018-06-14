@@ -868,6 +868,9 @@ indent_case_brace               = 0        # number
 # Whether to indent comments found in first column.
 indent_col1_comment             = false    # false/true
 
+# Whether to indent multi string literal in first column.
+indent_col1_multi_string_literal = false    # false/true
+
 # How to indent goto labels
 #   >0: absolute column where 1 is the leftmost column
 #  <=0: subtract from brace indent

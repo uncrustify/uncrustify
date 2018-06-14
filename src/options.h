@@ -413,6 +413,7 @@ enum uncrustify_options
    UO_indent_case_shift,                    // spaces to shift the line with the 'case'
    UO_indent_case_brace,                    // spaces to indent '{' from case (usually 0 or indent_columns)
    UO_indent_col1_comment,                  // indent comments in column 1
+   UO_indent_col1_multi_string_literal,     // indent multi string literal in column 1
    UO_indent_label,                         // 0=left >0=col from left, <0=sub from brace indent
    UO_indent_access_spec,                   // same as indent_label, but for 'private:', 'public:'
    UO_indent_access_spec_body,              // indent private/public/protected inside a class

@@ -4,10 +4,10 @@
     var a = @"asdasda";
 
     var d =
-@"asdasda";
+        @"asdasda";
 
     var d =
-@"asdasda";
+        @"asdasda";
 
     var b = @"
 line1

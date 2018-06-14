@@ -886,6 +886,8 @@ void register_options(void)
                   "negative value are OK.");
    unc_add_option("indent_col1_comment", UO_indent_col1_comment, AT_BOOL,
                   "Whether to indent comments found in first column.");
+   unc_add_option("indent_col1_multi_string_literal", UO_indent_col1_multi_string_literal, AT_BOOL,
+                  "Whether to indent multi string literal in first column.");
    unc_add_option("indent_label", UO_indent_label, AT_NUM,
                   "How to indent goto labels\n"
                   "  >0: absolute column where 1 is the leftmost column\n"

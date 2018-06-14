@@ -263,6 +263,7 @@ indent_switch_pp                = true
 indent_case_shift               = 0
 indent_case_brace               = 0
 indent_col1_comment             = false
+indent_col1_multi_string_literal = false
 indent_label                    = 1
 indent_access_spec              = 1
 indent_access_spec_body         = false
