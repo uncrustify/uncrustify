@@ -5,7 +5,6 @@
 #
 
 10017 empty.cfg staging/PR326_invalid-backslash-eol-csharp.cs
-10043 staging/Uncrustify.CSharp.cfg staging/nl-brace.cs
 10049 staging/Uncrustify.Cpp.cfg    staging/UNI-1336.cpp
 10057 staging/Uncrustify.Cpp.cfg    staging/UNI-1347.cpp
 10058 staging/Uncrustify.Cpp.cfg    staging/UNI-1348.cpp
