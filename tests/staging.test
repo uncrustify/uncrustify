@@ -17,7 +17,6 @@
 
 # ids used in regression.test as well
 60004 staging/Uncrustify.CSharp.cfg staging/UNI-2684.cs
-60005 staging/Uncrustify.CSharp.cfg staging/UNI-2685.cs
 60006 staging/Uncrustify.Common-CStyle.cfg staging/UNI-2049.cpp
 60009 staging/Uncrustify.CSharp.cfg staging/UNI-9917.cs
 60014 staging/Uncrustify.Cpp.cfg    staging/UNI-14107.cpp
