@@ -1388,6 +1388,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          || chunk_is_token(pc, CT_ANGLE_CLOSE)
          || chunk_is_token(pc, CT_SQUARE_CLOSE)
          || chunk_is_token(pc, CT_TSQUARE)
+         || chunk_is_token(pc, CT_FPAREN_OPEN)
          || (  chunk_is_token(pc, CT_BRACE_OPEN)
             && (  pc->parent_type == CT_NONE
                || pc->parent_type == CT_BRACED_INIT_LIST)))

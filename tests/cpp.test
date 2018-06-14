@@ -556,6 +556,15 @@
 
 34280  UNI-29935.cfg                        cpp/UNI-29935.cpp
 
+34290  sp_type_brace_init_lst-f.cfg         cpp/brace_brace_init_lst.cpp
+34291  sp_type_brace_init_lst-r.cfg         cpp/brace_brace_init_lst.cpp
+
+34292  sp_inside_type_brace_init_lst-f.cfg  cpp/brace_brace_init_lst.cpp
+34293  sp_inside_type_brace_init_lst-r.cfg  cpp/brace_brace_init_lst.cpp
+
+34294  sp_after_type_brace_init_lst_open-f.cfg  cpp/brace_brace_init_lst.cpp
+34295  sp_after_type_brace_init_lst_open-r.cfg  cpp/brace_brace_init_lst.cpp
+
 # __asm__
 34300  bug_1236.cfg                         cpp/bug_1236.cpp
 
