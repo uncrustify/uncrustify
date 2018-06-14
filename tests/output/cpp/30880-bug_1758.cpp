@@ -1,6 +1,6 @@
-for(int f=0; f<(Element::nf)*2; f++) {
+for(int f=0; f<(Element::nf)*2; f++)
+{
 	if (f%2==1) p = p-1;
-
 	{
 		this->pInterpolation[i]=p;
 		this->cInterpolation[i]=0.;
