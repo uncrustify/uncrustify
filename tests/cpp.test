@@ -269,8 +269,8 @@
 30920  ben_027.cfg                          cpp/indent-off.cpp
 30921  ben_028.cfg                          cpp/variadic-template.h
 30922  sp_before_ellipsis-f.cfg             cpp/variadic-template.h
-30923  sp_before_ellipsis-f.cfg             cpp/sp_before_ellipsis.cpp
-30924  sp_before_ellipsis-r.cfg             cpp/sp_before_ellipsis.cpp
+30923  sf.2886991-f.cfg                     cpp/sf.2886991.cpp
+30924  sf.2886991-r.cfg                     cpp/sf.2886991.cpp
 30925  sp_func_call_empty.cfg               cpp/function-def.cpp
 30926  sp_func_class_empty.cfg              cpp/function-def.cpp
 30927  sp_func_def_empty.cfg                cpp/function-def.cpp
