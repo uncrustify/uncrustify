@@ -505,6 +505,8 @@ void register_options(void)
                   "Add or remove space between 'sizeof' and '('.");
    unc_add_option("sp_sizeof_ellipsis", UO_sp_sizeof_ellipsis, AT_IARF,
                   "Add or remove space between 'sizeof' and '...'.");
+   unc_add_option("sp_sizeof_ellipsis_paren", UO_sp_sizeof_ellipsis_paren, AT_IARF,
+                  "Add or remove space between 'sizeof...' and '('.");
    unc_add_option("sp_after_tag", UO_sp_after_tag, AT_IARF,
                   "Add or remove space after the tag keyword (Pawn).");
    unc_add_option("sp_inside_braces_enum", UO_sp_inside_braces_enum, AT_IARF,

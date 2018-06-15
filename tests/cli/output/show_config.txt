@@ -324,6 +324,9 @@ sp_sizeof_paren                 { Ignore, Add, Remove, Force }
 sp_sizeof_ellipsis              { Ignore, Add, Remove, Force }
   Add or remove space between 'sizeof' and '...'.
 
+sp_sizeof_ellipsis_paren        { Ignore, Add, Remove, Force }
+  Add or remove space between 'sizeof...' and '('.
+
 sp_after_tag                    { Ignore, Add, Remove, Force }
   Add or remove space after the tag keyword (Pawn).
 

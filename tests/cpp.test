@@ -316,6 +316,8 @@
 31603  sp_sizeof_ellipsis-r.cfg             cpp/parameter-packs.cpp
 31604  sp_before_ellipsis-f.cfg             cpp/parameter-packs.cpp
 31605  sp_before_ellipsis-r.cfg             cpp/parameter-packs.cpp
+31606  sp_sizeof_ellipsis_paren-f.cfg       cpp/parameter-packs.cpp
+31607  sp_sizeof_ellipsis_paren-r.cfg       cpp/parameter-packs.cpp
 
 31700  toggle_processing_cmt.cfg            cpp/toggle_processing_cmt.cpp
 31701  toggle_processing_cmt2.cfg           cpp/toggle_processing_cmt2.cpp

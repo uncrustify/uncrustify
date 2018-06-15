@@ -633,10 +633,19 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(AV_FORCE);
       }
    }
-   if (chunk_is_token(first, CT_ELLIPSIS) && CharTable::IsKw1(second->str[0]))
+   if (chunk_is_token(first, CT_ELLIPSIS))
    {
-      log_rule("FORCE");
-      return(AV_FORCE);
+      if (CharTable::IsKw1(second->str[0]))
+      {
+         log_rule("FORCE");
+         return(AV_FORCE);
+      }
+      if (  chunk_is_token(second, CT_PAREN_OPEN)
+         && first->prev && chunk_is_token(first->prev, CT_SIZEOF))
+      {
+         log_rule("sp_sizeof_ellipsis_paren");
+         return(cpd.settings[UO_sp_sizeof_ellipsis_paren].a);
+      }
    }
    if (chunk_is_token(first, CT_TAG_COLON))
    {

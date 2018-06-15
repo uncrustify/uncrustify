@@ -102,6 +102,7 @@ sp_inside_paren_cast            = ignore
 sp_cpp_cast_paren               = ignore
 sp_sizeof_paren                 = ignore
 sp_sizeof_ellipsis              = ignore
+sp_sizeof_ellipsis_paren        = ignore
 sp_after_tag                    = ignore
 sp_inside_braces_enum           = ignore
 sp_inside_braces_struct         = ignore

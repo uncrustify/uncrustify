@@ -241,6 +241,7 @@ enum uncrustify_options
    UO_sp_cpp_cast_paren,            //
    UO_sp_sizeof_paren,              // space between 'sizeof' and '('
    UO_sp_sizeof_ellipsis,           // space between 'sizeof' and '...'
+   UO_sp_sizeof_ellipsis_paren,     // space between 'sizeof...' and '('
    UO_sp_after_tag,                 // pawn: space after a tag colon
    UO_sp_inside_braces_enum,        // space inside enum '{' and '}' - '{ a, b, c }'
    UO_sp_inside_braces_struct,      // space inside struct/union '{' and '}'
