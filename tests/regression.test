@@ -144,6 +144,7 @@
 60056 staging/Uncrustify.Common-Cpp.cfg staging/UNI-29935.cpp
 60057 staging/Uncrustify.Cpp.cfg staging/UNI-crash.cpp
 60058 staging/Uncrustify.Common-Cpp.cfg staging/UNI-10566.cpp
+60061 staging/Uncrustify.Common-Cpp.cfg staging/UNI-46333.cpp
 60062 staging/Uncrustify.Common-Cpp.cfg staging/UNI-2048.cpp
 60063 staging/Uncrustify.Cpp.cfg staging/UNI-47842.cpp
 60064 staging/Uncrustify.CSharp.cfg staging/UNI-47842.cs
