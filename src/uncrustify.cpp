@@ -264,7 +264,7 @@ void usage_exit(const char *msg, const char *argv0, int code)
            " --set <option>=<value>   : Sets a new value to a config option.\n"
            "\n"
            "Debug Options:\n"
-           " -p FILE      : Dump debug info to a file.\n"
+           " -p FILE      : Dump debug info to a file. Must be used with the option -f FILE.\n"
            " -L SEV       : Set the log severity (see log_levels.h; note 'A' = 'all')\n"
            " -s           : Show the log severity in the logs.\n"
            " --decode     : Decode remaining args (chunk flags) and exit.\n"
@@ -386,8 +386,30 @@ int main(int argc, char *argv[])
       usage_exit(nullptr, argv[0], EXIT_SUCCESS);
    }
 
+#ifdef DEBUG
+   // make sure we have 'name' not too big
+#define MAXLENGTHOFTHENAME    19
+   // maxLengthOfTheName must be consider at the format line at the file
+   // output.cpp, line 427: fprintf(pfile, "# Line              Tag                Parent...
+   // and              431: ... make_message("%s# %3zu>%19.19s[%19.19s] ...
+   // here                                              xx xx   xx xx
+   for (size_t token = 0; token < ARRAY_SIZE(token_names); token++)
+   {
+      size_t lengthOfTheName = strlen(token_names[token]);
+      if (lengthOfTheName > MAXLENGTHOFTHENAME)
+      {
+         fprintf(stderr, "%s(%d): The token name '%s' is too long (%zu)\n",
+                 __func__, __LINE__, token_names[token], lengthOfTheName);
+         fprintf(stderr, "%s(%d): the max token name length is %d\n",
+                 __func__, __LINE__, MAXLENGTHOFTHENAME);
+         log_flush(true);
+         exit(EX_SOFTWARE);
+      }
+   }
+
    // make sure we have token_names.h in sync with token_enum.h
    assert(ARRAY_SIZE(token_names) == CT_TOKEN_COUNT_);
+#endif // DEBUG
 
    // Build options map
    register_options();
@@ -835,6 +857,12 @@ int main(int argc, char *argv[])
    }
    else
    {
+      if (parsed_file != nullptr)  // Issue #930
+      {
+         fprintf(stderr, "FAIL: -p option must be used with the -f option\n");
+         log_flush(true);
+         exit(EX_CONFIG);
+      }
       // Doing multiple files, TODO: multiple threads for parallel processing
       if (prefix != nullptr)
       {

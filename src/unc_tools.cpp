@@ -58,8 +58,8 @@ void prot_the_line(int theLine, unsigned int actual_line)
          }
          else
          {
-            LOG_FMT(LGUY, "text() '%s', type is %s, parent_type is %s, orig_col is %zu, column is %zu, ",
-                    pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type), pc->orig_col, pc->column);
+            LOG_FMT(LGUY, "text() '%s', column is %zu, type is %s, parent_type is %s, orig_col is %zu, ",
+                    pc->text(), pc->column, get_token_name(pc->type), get_token_name(pc->parent_type), pc->orig_col);
          }
          LOG_FMT(LGUY, "pc->flags:");
          log_pcf_flags(LGUY, pc->flags);

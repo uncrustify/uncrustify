@@ -9,7 +9,7 @@
 A source code beautifier for C, C++, C#, ObjectiveC, D, Java, Pawn and VALA
 
 ## Features
-* highly configurable - __608 configurable options as of version 0.66
+* highly configurable - 641 configurable options as of version 0.67
 - <details><summary>add/remove spaces</summary>
 
   - `sp_before_sparen`: _Add or remove space before '(' of 'if', 'for', 'switch', 'while', etc._
@@ -62,6 +62,8 @@ That should give you a pretty good idea of what Uncrustify can do.
 Pre compiled binaries for Windows can be downloaded [here](https://sourceforge.net/projects/uncrustify/files/uncrustify/).
 
 ## Build
+[Python](https://www.python.org/) is an "interpreted high-level programming language for general-purpose programming", for this project it is needed to extend the capabilities of CMake.
+
 [CMake](https://cmake.org/) is a tool that generates build systems
 (Makefiles, Visual Studio project files, Xcode project files and others).
 

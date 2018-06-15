@@ -21,6 +21,7 @@
 #include "combine.h"
 #include "keywords.h"
 #include "language_tools.h"
+#include "punctuators.h"
 
 #include <cstring>
 
@@ -248,6 +249,23 @@ void tokenize_cleanup(void)
       {
          LOG_FMT(LNOTE, "%s(%d): %s:%zu Detected a macro that ends with a semicolon. Possible failures if used.\n",
                  __func__, __LINE__, cpd.filename.c_str(), pc->orig_line);
+      }
+   }
+
+   // change := to CT_SQL_ASSIGN Issue #527
+   for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
+   {
+      if (chunk_is_token(pc, CT_COLON))
+      {
+         next = chunk_get_next_ncnl(pc);
+         if (chunk_is_token(next, CT_ASSIGN))
+         {
+            // Change ':' + '=' into ':='
+            set_chunk_type(pc, CT_SQL_ASSIGN);
+            pc->str          = ":=";
+            pc->orig_col_end = next->orig_col_end;
+            chunk_del(next);
+         }
       }
    }
 

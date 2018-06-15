@@ -1,0 +1,18 @@
+void myfunc1()
+{
+    EXEC SQL create or replace
+        function my_func (in_str IN varchar2)
+        return date
+        IS
+        x date;
+    BEGIN
+    IF in_str IS NULL THEN
+        x := NULL;
+    ELSIF substr
+        (in_str, 5,  1) = '-' THEN
+                          x := to_date(in_str, 'YYYY-MM-DD HH24:MI:SS');
+    END IF;
+    return x;
+    END my_func;
+    END-EXEC;
+}

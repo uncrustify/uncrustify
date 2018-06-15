@@ -395,42 +395,15 @@ def clear_dir(path):
     mkdir(path)
 
 
-def file_find_string(search_string, file_path):
-    """
-    checks if a strings appears in a file
-
-
-    Paramerters
-    ----------------------------------------------------------------------------
-    :param search_string: string
-        string that is going to be searched
-
-    :param file_path: string
-        file in which the string is going to be searched
-
-    :return: bool
-    ----------------------------------------------------------------------------
-        True if found, False otherwise
-    """
-    if isfile(file_path):
-        with open(file_path, encoding="utf-8", newline="\n") as f:
-            if search_string.lower() in f.read().lower():
-                return True
-    else:
-        eprint("file_path is not a file: %s" % file_path)
-
-    return False
-
-
-def check_build_type(build_type, cmake_cache_path):
+def check_build_type(build_types, cmake_cache_path):
     """
     checks if a cmake build was of a certain single-configuration type
 
 
     Parameters:
     ----------------------------------------------------------------------------
-    :param build_type: string
-        the build type that is going to be expected
+    :param build_types: list/tuple
+        list of acceptable build types
 
     :param cmake_cache_path: string
         the path of the to be checked CMakeCache.txt file
@@ -442,13 +415,37 @@ def check_build_type(build_type, cmake_cache_path):
 
     """
 
-    check_string = "CMAKE_BUILD_TYPE:STRING=%s" % build_type
+    if not isfile(cmake_cache_path):
+        eprint("cmake_cache_path is not a file: %s" % cmake_cache_path)
+        return False
 
-    if file_find_string(check_string, cmake_cache_path):
-        return True
+    cache_values = {}
+    with open(cmake_cache_path, encoding="utf-8", newline="\n") as f:
+        pat = re.compile("^(\\w+):\w+=(.*)$")
+        for l in f:
+            m = pat.match(l)
+            if m:
+                cache_values[m.group(1).upper()] = m.group(2).strip()
 
-    eprint("CMAKE_BUILD_TYPE must be '%s'" % build_type)
-    return False
+    if "CMAKE_CONFIGURATION_TYPES" in cache_values:
+        # If a multi-config generator is in use, we have no way of determining
+        # the build type just from the cache; instead, guess True and rely on
+        # the list of possible locations of uncrustify including only release
+        # configurations for configuration-specific locations
+        if len(cache_values["CMAKE_CONFIGURATION_TYPES"]):
+            return True
+
+    if not "CMAKE_BUILD_TYPE" in cache_values:
+        eprint("unable to determine build type from %s" % cmake_cache_path)
+        return False
+
+    build_type = cache_values["CMAKE_BUILD_TYPE"]
+    if not build_type.lower() in [x.lower() for x in build_types]:
+        eprint("CMAKE_BUILD_TYPE must be one of %r" % build_types)
+        eprint("actual CMAKE_BUILD_TYPE is %s" % build_type)
+        return False
+
+    return True
 
 
 def reg_replace(pattern, replacement):
@@ -521,15 +518,25 @@ def main(args):
                         help='show diffs when there is a test mismatch')
     parser.add_argument('--apply', action='store_true',
                         help='auto apply the changes from the results folder to the output folder')
+    parser.add_argument('--build',
+                        default=s_path_join(sc_dir, '../../build'),
+                        help='specify location of the build directory')
+    parser.add_argument('--cache',
+                        help='specify location of CMake cache')
 
     parsed_args = parser.parse_args()
 
     # find the uncrustify binary (keep Debug dir excluded)
     bin_found = False
     uncr_bin = ''
-    bin_paths = [s_path_join(sc_dir, '../../build/uncrustify'),
-                 s_path_join(sc_dir, '../../build/Release/uncrustify'),
-                 s_path_join(sc_dir, '../../build/Release/uncrustify.exe')]
+    bd_dir = parsed_args.build
+    bin_paths = [s_path_join(bd_dir, 'uncrustify'),
+                 s_path_join(bd_dir, 'Release/uncrustify'),
+                 s_path_join(bd_dir, 'Release/uncrustify.exe'),
+                 s_path_join(bd_dir, 'RelWithDebInfo/uncrustify'),
+                 s_path_join(bd_dir, 'RelWithDebInfo/uncrustify.exe'),
+                 s_path_join(bd_dir, 'MinSizeRel/uncrustify'),
+                 s_path_join(bd_dir, 'MinSizeRel/uncrustify.exe')]
     for uncr_bin in bin_paths:
         if not isfile(uncr_bin):
             eprint("is not a file: %s" % uncr_bin)
@@ -543,12 +550,10 @@ def main(args):
 
     '''
     Check if the binary was build as Release-type
-    
-    TODO: find a check for Windows,
-          for now rely on the ../../build/Release/ location
     '''
-    if os_name != 'nt' and not check_build_type(
-            'release', s_path_join(sc_dir, '../../build/CMakeCache.txt')):
+    if not check_build_type(
+            ['Release', 'RelWithDebInfo', 'MinSizeRel'],
+            parsed_args.cache or s_path_join(bd_dir, 'CMakeCache.txt')):
         sys_exit(EX_USAGE)
 
     clear_dir(s_path_join(sc_dir, "./results"))
