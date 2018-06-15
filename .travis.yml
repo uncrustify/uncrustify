@@ -1,15 +1,22 @@
-dist: trusty
 language: cpp
 sudo: false
 
 matrix:
   include:
-    - env: BUILD_TYPE=debug
-    - env: BUILD_TYPE=release
-    - env: BUILD_TYPE=release NO_MACRO_VARARG=1
+    - os: linux
+      dist: trusty
+      env: BUILD_TYPE=debug
+    - os: linux
+      dist: trusty
+      env: BUILD_TYPE=release
+    - os: linux
+      dist: trusty
+      env: BUILD_TYPE=release NO_MACRO_VARARG=1
 
     # GCC 6
-    - env: C_COMPILER=gcc-6 CXX_COMPILER=g++-6
+    - os: linux
+      dist: trusty 
+      env: C_COMPILER=gcc-6 CXX_COMPILER=g++-6
       addons:
         apt:
           update: true
@@ -20,7 +27,9 @@ matrix:
             - g++-6
 
     # Clang 3.8 address sanitizer
-    - env: BUILD_TYPE=asan C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8
+    - os: linux
+      dist: trusty
+      env: BUILD_TYPE=asan C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8
       addons:
         apt:
           sources:
@@ -30,7 +39,9 @@ matrix:
             - clang-3.8
 
     # mingw-w64 Win64 cross-compile
-    - env: BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
+    - os: linux
+      dist: trusty
+      env: BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
       addons:
         apt:
           packages:
@@ -44,6 +55,12 @@ matrix:
             - g++-mingw-w64
             - g++-mingw-w64-i686
             - g++-mingw-w64-x86-64
+
+    # OSX
+    - os: osx
+      env: BUILD_TYPE=debug
+    - os: osx
+      env: BUILD_TYPE=release
 
 branches:
   only:
