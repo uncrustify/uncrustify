@@ -77,6 +77,14 @@ before_install:
 before_script:
   # to stop the script after an error/warning
   - set -e
+  # workarounds for OSX traivs build failure issues:
+  # 1. rvm overrides cd with a function so that it can hook into it to run some scripts from the new
+  # working directory. The workaround is to revert it to the builtin shell one.
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then unset -f cd; fi
+  # 2. Redefine shell_session_update as a dummy function to avoid travis error:
+  # /Users/travis/.rvm/scripts/functions/support: line 57: shell_session_update: command not found.
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then shell_session_update() { :; }; fi
+  # prepare make files with cmake
   - |-
     case "${BUILD_TYPE}" in
       "coverage")
