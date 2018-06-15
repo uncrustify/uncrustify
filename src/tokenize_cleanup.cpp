@@ -915,7 +915,8 @@ static void check_template(chunk_t *start)
       LOG_FMT(LTEMPL, "%s(%d): CT_TEMPLATE:\n", __func__, __LINE__);
 
       // We have: "template< ... >", which is a template declaration
-      size_t level = 1;
+      size_t level  = 1;
+      size_t parens = 0;
       for (pc = chunk_get_next_ncnl(start, scope_e::PREPROC);
            pc != nullptr;
            pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
@@ -930,16 +931,28 @@ static void check_template(chunk_t *start)
             split_off_angle_close(pc);
          }
 
-         if (chunk_is_str(pc, "<", 1))
+         if (pc->type == CT_PAREN_OPEN)
          {
-            level++;
+            ++parens;
          }
-         else if (chunk_is_str(pc, ">", 1))
+         else if (pc->type == CT_PAREN_CLOSE)
          {
-            level--;
-            if (level == 0)
+            --parens;
+         }
+
+         if (parens == 0)
+         {
+            if (chunk_is_str(pc, "<", 1))
             {
-               break;
+               level++;
+            }
+            else if (chunk_is_str(pc, ">", 1))
+            {
+               level--;
+               if (level == 0)
+               {
+                  break;
+               }
             }
          }
       }
