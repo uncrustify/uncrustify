@@ -1878,7 +1878,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // "(int)a" vs "(int) a" or "cast(int)a" vs "cast(int) a"
-   if (first->parent_type == CT_C_CAST || first->parent_type == CT_D_CAST)
+   if (  (first->parent_type == CT_C_CAST || first->parent_type == CT_D_CAST)
+      && chunk_is_token(first, CT_PAREN_CLOSE))
    {
       log_rule("sp_after_cast");
       return(cpd.settings[UO_sp_after_cast].a);

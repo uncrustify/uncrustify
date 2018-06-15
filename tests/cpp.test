@@ -323,6 +323,10 @@
 
 31620  sp_after_type-f.cfg                  cpp/sp_after_type.cpp
 31621  sp_after_type-i.cfg                  cpp/sp_after_type.cpp
+31622  sp_after_cast-f.cfg                  cpp/sp_after_type.cpp
+31623  sp_after_cast-r.cfg                  cpp/sp_after_type.cpp
+31624  sp_before_ptr_star-f.cfg             cpp/sp_after_type.cpp
+31625  sp_before_ptr_star-r.cfg             cpp/sp_after_type.cpp
 
 31700  toggle_processing_cmt.cfg            cpp/toggle_processing_cmt.cpp
 31701  toggle_processing_cmt2.cfg           cpp/toggle_processing_cmt2.cpp

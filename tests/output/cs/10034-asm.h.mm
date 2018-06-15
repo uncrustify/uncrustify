@@ -1,7 +1,7 @@
 static inline void atomic_retain(volatile int *p)
 {
 #if defined(_MSC_VER)
-    _InterlockedIncrement((LONG volatile*)p);
+    _InterlockedIncrement((LONG volatile *)p);
 #else
     __asm__(
         "lock incl  %0\n\t"

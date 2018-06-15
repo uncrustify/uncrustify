@@ -6,8 +6,8 @@ foo((const int*)0);
 static_cast<long long>(0);
 
 static int x2;
-unsigned long int y2  =  (  unsigned short  )  0;
+unsigned long int y2  =  (  unsigned short  )0;
 const int  foo2  (  int x  );
 
-foo  (  (  const int  *  )  0  );
+foo  (  (  const int  *  )0  );
 static_cast  <  long long  >  (  0  );
