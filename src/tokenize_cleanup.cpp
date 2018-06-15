@@ -1114,7 +1114,7 @@ static void check_template(chunk_t *start)
          //   typename std::enable_if<!std::is_void<T>::value,
          //   QVector<T> >::type dummy(const std::function<T*(const S&)>&
          //   pFunc, const QVector<S>& pItems)
-         // we nees two runs
+         // we need two runs
          // 1. run to test if expression is numeric
          bool expressionIsNumeric = false;
          pc = start;
@@ -1135,7 +1135,7 @@ static void check_template(chunk_t *start)
             pc = next;
          }
          LOG_FMT(LTEMPL, "%s(%d): expressionIsNumeric is %s\n",
-                 __func__, __LINE__, expressionIsNumeric ? "FALSE" : "TRUE");
+                 __func__, __LINE__, expressionIsNumeric ? "TRUE" : "FALSE");
          // 2. run to do the work
          if (!expressionIsNumeric)
          {
