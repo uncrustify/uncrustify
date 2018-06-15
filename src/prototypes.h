@@ -14,23 +14,6 @@
 #include <string>
 #include <deque>
 
-
-/*
- *  punctuators.cpp
- */
-
-/**
- * Checks if the first max. 6 chars of a given string match a punctuator
- *
- * @param str         string that will be checked, can be shorter than 6 chars
- * @param lang_flags  specifies from which language punctuators will be
- *                    considered
- * @return				 chunk tag of the found punctuator
- *                    nullptr if nothing found
- */
-const chunk_tag_t *find_punctuator(const char *str, int lang_flags);
-
-
 /**
  * Advances to the next tab stop.
  * Column 1 is the left-most column.

@@ -20,6 +20,7 @@
 #include "uncrustify.h"
 #include "keywords.h"
 #include "language_tools.h"
+#include "punctuators.h"
 
 
 using namespace std;
@@ -1774,6 +1775,13 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
             continue;
          }
 
+         // Fix for issue #1752
+         // Ignoring extra spaces after ' \ ' for preproc body continuations
+         if (last == '\\' && ch == ' ')
+         {
+            ctx.get();
+            continue;
+         }
          if ((ch == '\n') || (ch == '\r'))
          {
             // Back off if this is an escaped newline

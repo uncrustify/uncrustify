@@ -50,7 +50,7 @@ Config/Help Options:
  --set <option>=<value>   : Sets a new value to a config option.
 
 Debug Options:
- -p FILE      : Dump debug info to a file.
+ -p FILE      : Dump debug info to a file. Must be used with the option -f FILE.
  -L SEV       : Set the log severity (see log_levels.h; note 'A' = 'all')
  -s           : Show the log severity in the logs.
  --decode     : Decode remaining args (chunk flags) and exit.
@@ -69,6 +69,6 @@ Note: Use comments containing ' *INDENT-OFF*' and ' *INDENT-ON*' to disable
       processing of parts of the source file (these can be overridden with
       enable_processing_cmt and disable_processing_cmt).
 
-There are currently 641 options and minimal documentation.
+There are currently 644 options and minimal documentation.
 Try UniversalIndentGUI and good luck.
 

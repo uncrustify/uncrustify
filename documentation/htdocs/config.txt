@@ -1,4 +1,4 @@
-# Uncrustify-0.66.1
+# Uncrustify-0.67
 #
 # General options
 #
@@ -131,6 +131,9 @@ sp_between_ptr_star             { Ignore, Add, Remove, Force }
 sp_after_ptr_star               { Ignore, Add, Remove, Force }
   Add or remove space after pointer star '*', if followed by a word.
 
+sp_after_ptr_block_caret        { Ignore, Add, Remove, Force }
+  Add or remove space after pointer caret '^', if followed by a word.
+
 sp_after_ptr_star_qualifier     { Ignore, Add, Remove, Force }
   Add or remove space after pointer star '*', if followed by a qualifier.
 
@@ -191,7 +194,7 @@ sp_angle_word                   { Ignore, Add, Remove, Force }
   Add or remove space between '<>' and a word as in 'List<byte> m;' or 'template <typename T> static ...'.
 
 sp_angle_shift                  { Ignore, Add, Remove, Force }
-  Add or remove space between '>' and '>' in '>>' (template stuff C++/C# only). Default=Add.
+  Add or remove space between '>' and '>' in '>>' (template stuff). Default=Add.
 
 sp_permit_cpp11_shift           { False, True }
   Permit removal of the space between '>>' in 'foo<bar<int> >' (C++11 only). Default=False.
@@ -248,8 +251,15 @@ sp_before_square                { Ignore, Add, Remove, Force }
 sp_before_squares               { Ignore, Add, Remove, Force }
   Add or remove space before '[]'.
 
+sp_cpp_before_struct_binding    { Ignore, Add, Remove, Force }
+  Add or remove space before structured bindings. Only for C++17.
+
 sp_inside_square                { Ignore, Add, Remove, Force }
   Add or remove space inside a non-empty '[' and ']'.
+
+sp_inside_square_oc_array       { Ignore, Add, Remove, Force }
+  Add or remove space inside a non-empty OC boxed array '@[' and ']'.
+  If set to ignore, sp_inside_square is used.
 
 sp_after_comma                  { Ignore, Add, Remove, Force }
   Add or remove space after ',', 'a,b' vs 'a, b'.
@@ -317,6 +327,9 @@ sp_inside_braces_enum           { Ignore, Add, Remove, Force }
 sp_inside_braces_struct         { Ignore, Add, Remove, Force }
   Add or remove space inside struct/union '{' and '}'.
 
+sp_inside_braces_oc_dict        { Ignore, Add, Remove, Force }
+  Add or remove space inside OC boxed dictionary @'{' and '}'
+
 sp_after_type_brace_init_lst_open { Ignore, Add, Remove, Force }
   Add or remove space after open brace in an unnamed temporary direct-list-initialization.
 
@@ -369,6 +382,9 @@ sp_square_fparen                { Ignore, Add, Remove, Force }
 sp_fparen_brace                 { Ignore, Add, Remove, Force }
   Add or remove space between ')' and '{' of function.
 
+sp_fparen_brace_initializer     { Ignore, Add, Remove, Force }
+  Add or remove space between ')' and '{' of function call in object initialization. Overrides sp_fparen_brace.
+
 sp_fparen_dbrace                { Ignore, Add, Remove, Force }
   Java: Add or remove space between ')' and '{{' of double brace initializer.
 
@@ -382,6 +398,13 @@ sp_func_call_paren_empty        { Ignore, Add, Remove, Force }
 sp_func_call_user_paren         { Ignore, Add, Remove, Force }
   Add or remove space between the user function name and '(' on function calls
   You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.
+
+sp_func_call_user_inside_fparen { Ignore, Add, Remove, Force }
+  Add or remove space inside user function '(' and ')'
+  You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.
+
+sp_func_call_user_paren_paren   { Ignore, Add, Remove, Force }
+  Add or remove space between nested parens with user functions: '((' vs ') )'You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.
 
 sp_func_class_paren             { Ignore, Add, Remove, Force }
   Add or remove space between a constructor/destructor and the open paren.
@@ -407,6 +430,10 @@ sp_after_throw                  { Ignore, Add, Remove, Force }
 sp_catch_paren                  { Ignore, Add, Remove, Force }
   Add or remove space between 'catch' and '(' in 'catch (something) { }'
   If set to ignore, sp_before_sparen is used.
+
+sp_oc_catch_paren               { Ignore, Add, Remove, Force }
+  Add or remove space between '@catch' and '(' in '@catch (something) { }'
+  If set to ignore, sp_catch_paren is used.
 
 sp_version_paren                { Ignore, Add, Remove, Force }
   Add or remove space between 'version' and '(' in 'version (something) { }' (D language)
@@ -440,8 +467,16 @@ sp_brace_typedef                { Ignore, Add, Remove, Force }
 sp_catch_brace                  { Ignore, Add, Remove, Force }
   Add or remove space between 'catch' and '{' if on the same line.
 
+sp_oc_catch_brace               { Ignore, Add, Remove, Force }
+  Add or remove space between '@catch' and '{' if on the same line.
+  If set to ignore, sp_catch_brace is used.
+
 sp_brace_catch                  { Ignore, Add, Remove, Force }
   Add or remove space between '}' and 'catch' if on the same line.
+
+sp_oc_brace_catch               { Ignore, Add, Remove, Force }
+  Add or remove space between '}' and '@catch' if on the same line.
+  If set to ignore, sp_brace_catch is used.
 
 sp_finally_brace                { Ignore, Add, Remove, Force }
   Add or remove space between 'finally' and '{' if on the same line.
@@ -560,6 +595,10 @@ sp_after_oc_msg_receiver        { Ignore, Add, Remove, Force }
 sp_after_oc_property            { Ignore, Add, Remove, Force }
   Add or remove space after @property.
 
+sp_after_oc_synchronized        { Ignore, Add, Remove, Force }
+  Add or remove space between '@synchronized' and the parenthesis
+  '@synchronized(foo)' vs '@synchronized (foo)'.
+
 sp_cond_colon                   { Ignore, Add, Remove, Force }
   Add or remove space around the ':' in 'b ? t : f'.
 
@@ -640,6 +679,9 @@ sp_annotation_paren             { Ignore, Add, Remove, Force }
 sp_skip_vbrace_tokens           { False, True }
   If True, vbrace tokens are dropped to the previous token and skipped.
 
+sp_after_noexcept               { Ignore, Add, Remove, Force }
+  Controls the space after 'noexcept'.
+
 force_tab_after_define          { False, True }
   If True, a <TAB> is inserted after #define.
 
@@ -654,6 +696,9 @@ indent_columns                  Unsigned Number
 indent_continue                 Number
   The continuation indent. If non-zero, this overrides the indent of '(' and '=' continuation indents.
   For FreeBSD, this is set to 4. Negative value is absolute and not increased for each '(' level.
+
+indent_single_newlines          { False, True }
+  Indent empty lines - lines which contain only spaces before newline character
 
 indent_param                    Unsigned Number
   The continuation indent for func_*_param if they are true.
@@ -699,6 +744,9 @@ indent_paren_open_brace         { False, True }
 
 indent_cs_delegate_brace        { False, True }
   indent a C# delegate by another level, default is to not indent by another level.
+
+indent_cs_delegate_body         { False, True }
+  indent a C# delegate(To hanndle delegates with no brace) by another level. default: false
 
 indent_namespace                { False, True }
   Whether the 'namespace' body is indented.
@@ -788,6 +836,10 @@ indent_member                   Unsigned Number
   The number of spaces to indent a continued '->' or '.'
   Usually set to 0, 1, or indent_columns.
 
+indent_member_single            { False, True }
+  setting to true will indent lines broken at '.' or '->' by a single indent
+  UO_indent_member option will not be effective if this is set to true.
+
 indent_sing_line_comments       Unsigned Number
   Spaces to indent single line ('//') comments on lines before code.
 
@@ -800,7 +852,7 @@ indent_switch_case              Unsigned Number
   Usually 0 or indent_columns.
 
 indent_switch_pp                { False, True }
-  Whether to indent preproccesor statements inside of switch statements.
+  Whether to indent preprocessor statements inside of switch statements.
 
 indent_case_shift               Unsigned Number
   Spaces to shift the 'case' line, without affecting any other lines
@@ -852,8 +904,14 @@ indent_comma_paren              { False, True }
 indent_bool_paren               { False, True }
   Controls the indent of a BOOL operator when inside a paren.If True, aligns under the open paren.
 
+indent_semicolon_for_paren      { False, True }
+  Controls the indent of a semicolon when inside a for paren.If True, aligns under the open for paren.
+
 indent_first_bool_expr          { False, True }
   If 'indent_bool_paren' is True, controls the indent of the first expression. If True, aligns the first expression to the following ones.
+
+indent_first_for_expr           { False, True }
+  If 'indent_semicolon_for_paren' is True, controls the indent of the first expression. If True, aligns the first expression to the following ones.
 
 indent_square_nl                { False, True }
   If an open square is followed by a newline, indent the next line so that it lines up after the open square (not recommended).
@@ -864,6 +922,10 @@ indent_preserve_sql             { False, True }
 indent_align_assign             { False, True }
   Align continued statements at the '='. Default=True
   If False or the '=' is followed by a newline, the next line is indent one tab.
+
+indent_align_paren              { False, True }
+  Align continued statements at the '('. Default=True
+  If FALSE or the '(' is not followed by a newline, the next line indent is one tab.
 
 indent_oc_block                 { False, True }
   Indent OC blocks at brace level instead of usual rules.
@@ -895,7 +957,7 @@ indent_oc_block_msg_from_brace  { False, True }
   If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is.
 
 indent_min_vbrace_open          Unsigned Number
-  When identing after virtual brace open and newline add further spaces to reach this min. indent.
+  When indenting after virtual brace open and newline add further spaces to reach this min. indent.
 
 indent_vbrace_open_on_tabstop   { False, True }
   True: When identing after virtual brace open and newline add further spaces after regular indent to reach next tabstop.
@@ -914,6 +976,12 @@ indent_ternary_operator         Unsigned Number
   0: (Default) off
   1: When the `if_false` is a continuation, indent it under `if_false`
   2: When the `:` is a continuation, indent it under `?`
+
+indent_off_after_return_new     { False, True }
+  If true, the indentation of the chunks after a `return new` sequence will be set at return indentation column.
+
+indent_single_after_return      { False, True }
+  If true, the tokens after return are indented with regular single indentation.By default (false) the indentation is after the return token.
 
 indent_ignore_asm_block         { False, True }
   If true, ignore indent and align for asm blocks as they have their own indentation.
@@ -937,6 +1005,9 @@ nl_enum_leave_one_liners        { False, True }
 nl_getset_leave_one_liners      { False, True }
   Don't split one-line get or set functions.
 
+nl_cs_property_leave_one_liners { False, True }
+  Don't split one-line get or set functions.
+
 nl_func_leave_one_liners        { False, True }
   Don't split one-line function definitions - 'int foo() { return 0; }'.
 
@@ -955,6 +1026,12 @@ nl_oc_msg_leave_one_liner       { False, True }
 nl_oc_block_brace               { Ignore, Add, Remove, Force }
   Add or remove newline between Objective-C block signature and '{'.
 
+nl_oc_interface_brace           { Ignore, Add, Remove, Force }
+  Add or remove newline between @interface and '{'.
+
+nl_oc_implementation_brace      { Ignore, Add, Remove, Force }
+  Add or remove newline between @implementation and '{'.
+
 nl_start_of_file                { Ignore, Add, Remove, Force }
   Add or remove newlines at the start of the file.
 
@@ -972,6 +1049,9 @@ nl_assign_brace                 { Ignore, Add, Remove, Force }
 
 nl_assign_square                { Ignore, Add, Remove, Force }
   Add or remove newline between '=' and '[' (D only).
+
+nl_tsquare_brace                { Ignore, Add, Remove, Force }
+  Add or remove newline between '[]' and '{'.
 
 nl_after_square_assign          { Ignore, Add, Remove, Force }
   Add or remove newline after '= [' (D only). Will also affect the newline before the ']'.
@@ -1068,8 +1148,16 @@ nl_for_brace                    { Ignore, Add, Remove, Force }
 nl_catch_brace                  { Ignore, Add, Remove, Force }
   Add or remove newline between 'catch' and '{'.
 
+nl_oc_catch_brace               { Ignore, Add, Remove, Force }
+  Add or remove newline between '@catch' and '{'.
+  If set to ignore, nl_catch_brace is used.
+
 nl_brace_catch                  { Ignore, Add, Remove, Force }
   Add or remove newline between '}' and 'catch'.
+
+nl_oc_brace_catch               { Ignore, Add, Remove, Force }
+  Add or remove newline between '}' and 'catch'.
+  If set to ignore, nl_brace_catch is used.
 
 nl_brace_square                 { Ignore, Add, Remove, Force }
   Add or remove newline between '}' and ']'.
@@ -1308,6 +1396,10 @@ nl_brace_struct_var             { Ignore, Add, Remove, Force }
 nl_define_macro                 { False, True }
   Whether to alter newlines in '#define' macros.
 
+nl_squeeze_paren_close          { False, True }
+  Whether to alter newlines between consecutive paren closes, 
+  The number of closing paren in a line will depend on respective open paren lines
+
 nl_squeeze_ifdef                { False, True }
   Whether to remove blanks after '#ifxx' and '#elxx', or before '#elxx' and '#endif'. Does not affect top-level #ifdefs.
 
@@ -1372,6 +1464,9 @@ nl_constr_colon                 { Ignore, Add, Remove, Force }
   Add or remove a newline around a class constructor colon.
   Related to nl_constr_init_args, pos_constr_colon and pos_constr_comma.
 
+nl_namespace_two_to_one_liner   { False, True }
+  If true turns two liner namespace to one liner,else will make then four liners
+
 nl_create_if_one_liner          { False, True }
   Change simple unbraced if statements into a one-liner
   'if(b)\n i++;' => 'if(b) i++;'.
@@ -1383,6 +1478,10 @@ nl_create_for_one_liner         { False, True }
 nl_create_while_one_liner       { False, True }
   Change simple unbraced while statements into a one-liner
   'while (i<5)\n foo(i++);' => 'while (i<5) foo(i++);'.
+
+nl_create_func_def_one_liner    { False, True }
+  Change simple 4,3,2 liner function def statements into a one-liner
+  
 
 nl_split_if_one_liner           { False, True }
    Change a one-liner if statement into simple unbraced if
@@ -2055,15 +2154,23 @@ use_indent_func_call_param      { False, True }
   False: indent_func_call_param will NOT be used.
 
 use_indent_continue_only_once   { False, True }
-  The value of the indentation for a continuation line is calculate differently if the line is:
-    a declaration :your case with QString fileName ...
-    an assignment  :your case with pSettings = new QSettings( ...
-  At the second case the option value might be used twice:
+  The value of the indentation for a continuation line is calculate differently if the statement is:
+    a declaration: your case with QString fileName ...
+    an assignment: your case with pSettings = new QSettings( ...
+  At the second case the indentation value might be used twice:
     at the assignment
     at the function call (if present)
-  To prevent the double use of the option value, use this option with the value 'True'.
+  To prevent the double use of the indentation value, use this option with the value 'True'.
   True:  indent_continue will be used only once
   False: indent_continue will be used every time (default).
+
+indent_cpp_lambda_only_once     { False, True }
+  the value might be used twice:
+    at the assignment
+    at the opening brace
+  To prevent the double use of the indentation value, use this option with the value 'True'.
+  True:  indentation will be used only once
+  False: indentation will be used every time (default).
 
 use_options_overriding_for_qt_macros { False, True }
   SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.

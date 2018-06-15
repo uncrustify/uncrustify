@@ -13,6 +13,9 @@ tests/pclint/
 *.sh.log
 test-suite.log
 
+# Testing with gcov
+gcov_test/
+
 # UNIX build artifacts
 *.[oadisS]
 src/uncrustify

@@ -65,10 +65,10 @@ def main(args):
             (\d+\.\d+(\.\d+)?) #2: version 0.64.2 (,#3 optional 3rd nr)
             (                  #4: additional version info (long string format)
                 -(\d+)         #5: tag commit distance
-                -g(\w{7,8})    #g-prefix + #6: commithash
+                -g(\w{7,})     #g-prefix + #6: commithash
             )?
         |
-            (\w{7,8})          #7: commithash only format (last N commits pulled and no tag available)
+            (\w{7,})           #7: commithash only format (last N commits pulled and no tag available)
         )
         (-(dirty))?            #9: optional dirty specifier (#8,)
         $

@@ -464,6 +464,12 @@ static_inline bool chunk_is_token(const chunk_t *pc, c_token_t c_token)
 }
 
 
+static_inline bool chunk_is_not_token(const chunk_t *pc, c_token_t c_token)
+{
+   return(pc != nullptr && pc->type != c_token);
+}
+
+
 /**
  * Skips to the closing match for the current paren/brace/square.
  *
