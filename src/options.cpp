@@ -477,6 +477,8 @@ void register_options(void)
                   "Add or remove space between an open paren and comma: '(,' vs '( ,'. Default=Force.");
    unc_add_option("sp_before_ellipsis", UO_sp_before_ellipsis, AT_IARF,
                   "Add or remove space before the variadic '...' when preceded by a non-punctuator.");
+   unc_add_option("sp_type_ellipsis", UO_sp_type_ellipsis, AT_IARF,
+                  "Add or remove space between a type and '...'.");
    unc_add_option("sp_paren_ellipsis", UO_sp_paren_ellipsis, AT_IARF,
                   "Add or remove space between ')' and '...'.");
    unc_add_option("sp_after_class_colon", UO_sp_after_class_colon, AT_IARF,

@@ -282,6 +282,9 @@ sp_paren_comma                  { Ignore, Add, Remove, Force }
 sp_before_ellipsis              { Ignore, Add, Remove, Force }
   Add or remove space before the variadic '...' when preceded by a non-punctuator.
 
+sp_type_ellipsis                { Ignore, Add, Remove, Force }
+  Add or remove space between a type and '...'.
+
 sp_paren_ellipsis               { Ignore, Add, Remove, Force }
   Add or remove space between ')' and '...'.
 

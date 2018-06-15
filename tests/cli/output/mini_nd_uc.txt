@@ -88,6 +88,7 @@ sp_before_mdatype_commas        = ignore
 sp_between_mdatype_commas       = ignore
 sp_paren_comma                  = force
 sp_before_ellipsis              = ignore
+sp_type_ellipsis                = ignore
 sp_paren_ellipsis               = ignore
 sp_after_class_colon            = ignore
 sp_before_class_colon           = ignore

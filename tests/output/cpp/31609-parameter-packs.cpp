@@ -18,22 +18,22 @@ struct invoke1<R(fp*)(FArgs...)>
 {
 };
 
-template  <  typename  ... A, int... B  >
-struct foo2 :  foo2<  A..., (  sizeof  ...  (  A  )  +  B  )  ...  >
+template  <  typename  ... A, int  ... B  >
+struct foo2 :  foo2<  A  ..., (  sizeof  ...(  A  )  +  B  )  ...  >
 {
 	foo2() {
-		int x = sizeof  ...  (  A  );
+		int x = sizeof  ...(  A  );
 	}
 }
 
-template  <  int... X  > int bar2()
+template  <  int  ... X  > int bar2()
 {
-	auto s = sizeof  ...  (  X  );
+	auto s = sizeof  ...(  X  );
 	chomp(  X  )  ...;
 	return X  +  ...;
 }
 
 template  <  class R, typename  ... Args  >
-struct invoke2  <  R  (  fp*  )  (  FArgs...  )  >
+struct invoke2  <  R  (  fp*  )  (  FArgs  ...  )  >
 {
 };

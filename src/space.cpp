@@ -613,6 +613,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(second, CT_ELLIPSIS))
    {
       // non-punc followed by a ellipsis
+      if (  chunk_is_token(first, CT_TYPE)
+         || chunk_is_token(first, CT_QUALIFIER))
+      {
+         log_rule("sp_type_ellipsis");
+         return(cpd.settings[UO_sp_type_ellipsis].a);
+      }
+
       if (  ((first->flags & PCF_PUNCTUATOR) == 0)
          && (cpd.settings[UO_sp_before_ellipsis].a != AV_IGNORE))
       {

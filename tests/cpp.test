@@ -316,8 +316,13 @@
 31603  sp_sizeof_ellipsis-r.cfg             cpp/parameter-packs.cpp
 31604  sp_before_ellipsis-f.cfg             cpp/parameter-packs.cpp
 31605  sp_before_ellipsis-r.cfg             cpp/parameter-packs.cpp
-31606  sp_sizeof_ellipsis_paren-f.cfg       cpp/parameter-packs.cpp
-31607  sp_sizeof_ellipsis_paren-r.cfg       cpp/parameter-packs.cpp
+31606  sp_type_ellipsis-f.cfg               cpp/parameter-packs.cpp
+31607  sp_type_ellipsis-r.cfg               cpp/parameter-packs.cpp
+31608  sp_sizeof_ellipsis_paren-f.cfg       cpp/parameter-packs.cpp
+31609  sp_sizeof_ellipsis_paren-r.cfg       cpp/parameter-packs.cpp
+
+31620  sp_after_type-f.cfg                  cpp/sp_after_type.cpp
+31621  sp_after_type-i.cfg                  cpp/sp_after_type.cpp
 
 31700  toggle_processing_cmt.cfg            cpp/toggle_processing_cmt.cpp
 31701  toggle_processing_cmt2.cfg           cpp/toggle_processing_cmt2.cpp
@@ -630,7 +635,6 @@
 60030  U33-Cpp.cfg                          cpp/UNI-21727.cpp
 60031  empty.cfg                            cpp/UNI-21728.cpp
 60032  empty.cfg                            cpp/UNI-21729.cpp
-60034  U35-Cpp.cfg                          cpp/UNI-21731.cpp
 60036  UNI-2680.cfg                         cpp/UNI-2680.cpp
 60038  UNI-30088.cfg                        cpp/UNI-30088.cpp
 60039  U36-Cpp.cfg                          cpp/UNI-30628.cpp

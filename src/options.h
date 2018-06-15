@@ -227,6 +227,7 @@ enum uncrustify_options
    UO_sp_between_mdatype_commas,    //
    UO_sp_paren_comma,               //
    UO_sp_before_ellipsis,           // space before '...'
+   UO_sp_type_ellipsis,             // space between type and '...'
    UO_sp_paren_ellipsis,            // space between ')' and '...'
    UO_sp_after_class_colon,         // space after class ':'
    UO_sp_before_class_colon,        // space before class ':'
