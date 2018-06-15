@@ -310,6 +310,13 @@
 31593  indent_continue-8.cfg                cpp/sf593.cpp
 31594  issue_672.cfg                        cpp/issue_672.cpp
 
+31600  sp_paren_ellipsis-f.cfg              cpp/parameter-packs.cpp
+31601  sp_paren_ellipsis-r.cfg              cpp/parameter-packs.cpp
+31602  sp_sizeof_ellipsis-f.cfg             cpp/parameter-packs.cpp
+31603  sp_sizeof_ellipsis-r.cfg             cpp/parameter-packs.cpp
+31604  sp_before_ellipsis-f.cfg             cpp/parameter-packs.cpp
+31605  sp_before_ellipsis-r.cfg             cpp/parameter-packs.cpp
+
 31700  toggle_processing_cmt.cfg            cpp/toggle_processing_cmt.cpp
 31701  toggle_processing_cmt2.cfg           cpp/toggle_processing_cmt2.cpp
 
