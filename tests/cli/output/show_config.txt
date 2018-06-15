@@ -282,6 +282,9 @@ sp_paren_comma                  { Ignore, Add, Remove, Force }
 sp_before_ellipsis              { Ignore, Add, Remove, Force }
   Add or remove space before the variadic '...' when preceded by a non-punctuator.
 
+sp_paren_ellipsis               { Ignore, Add, Remove, Force }
+  Add or remove space between ')' and '...'.
+
 sp_after_class_colon            { Ignore, Add, Remove, Force }
   Add or remove space after class ':'.
 
@@ -317,6 +320,9 @@ sp_cpp_cast_paren               { Ignore, Add, Remove, Force }
 
 sp_sizeof_paren                 { Ignore, Add, Remove, Force }
   Add or remove space between 'sizeof' and '('.
+
+sp_sizeof_ellipsis              { Ignore, Add, Remove, Force }
+  Add or remove space between 'sizeof' and '...'.
 
 sp_after_tag                    { Ignore, Add, Remove, Force }
   Add or remove space after the tag keyword (Pawn).

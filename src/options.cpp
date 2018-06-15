@@ -477,6 +477,8 @@ void register_options(void)
                   "Add or remove space between an open paren and comma: '(,' vs '( ,'. Default=Force.");
    unc_add_option("sp_before_ellipsis", UO_sp_before_ellipsis, AT_IARF,
                   "Add or remove space before the variadic '...' when preceded by a non-punctuator.");
+   unc_add_option("sp_paren_ellipsis", UO_sp_paren_ellipsis, AT_IARF,
+                  "Add or remove space between ')' and '...'.");
    unc_add_option("sp_after_class_colon", UO_sp_after_class_colon, AT_IARF,
                   "Add or remove space after class ':'.");
    unc_add_option("sp_before_class_colon", UO_sp_before_class_colon, AT_IARF,
@@ -501,6 +503,8 @@ void register_options(void)
                   "Add or remove space between the type and open paren in a C++ cast, i.e. 'int(exp)' vs 'int (exp)'.");
    unc_add_option("sp_sizeof_paren", UO_sp_sizeof_paren, AT_IARF,
                   "Add or remove space between 'sizeof' and '('.");
+   unc_add_option("sp_sizeof_ellipsis", UO_sp_sizeof_ellipsis, AT_IARF,
+                  "Add or remove space between 'sizeof' and '...'.");
    unc_add_option("sp_after_tag", UO_sp_after_tag, AT_IARF,
                   "Add or remove space after the tag keyword (Pawn).");
    unc_add_option("sp_inside_braces_enum", UO_sp_inside_braces_enum, AT_IARF,

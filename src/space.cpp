@@ -471,6 +471,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_sizeof_paren");
          return(cpd.settings[UO_sp_sizeof_paren].a);
       }
+      if (chunk_is_token(second, CT_ELLIPSIS))
+      {
+         log_rule("sp_sizeof_ellipsis");
+         return(cpd.settings[UO_sp_sizeof_ellipsis].a);
+      }
       log_rule("FORCE");
       return(AV_FORCE);
    }
@@ -613,6 +618,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          log_rule("sp_before_ellipsis");
          return(cpd.settings[UO_sp_before_ellipsis].a);
+      }
+
+      if (  chunk_is_token(first, CT_FPAREN_CLOSE)
+         || chunk_is_token(first, CT_PAREN_CLOSE))
+      {
+         log_rule("sp_paren_ellipsis");
+         return(cpd.settings[UO_sp_paren_ellipsis].a);
       }
 
       if (chunk_is_token(first, CT_TAG_COLON))
