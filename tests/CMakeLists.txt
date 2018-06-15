@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
+find_package(Git QUIET)
+
 function(add_uncrustify_test name lang config rerun_config input result result_2 output rerun_output)
   add_test(NAME ${name}
     COMMAND ${CMAKE_COMMAND}
@@ -13,6 +15,7 @@ function(add_uncrustify_test name lang config rerun_config input result result_2
       -DTEST_OUTPUT=${output}
       -DTEST_RERUN_OUTPUT=${rerun_output}
       -DTEST_DIR=${PROJECT_SOURCE_DIR}/tests
+      -DGIT_EXECUTABLE=${GIT_EXECUTABLE}
       -P ${PROJECT_SOURCE_DIR}/tests/run_test.cmake
   )
   set_tests_properties(${name}
