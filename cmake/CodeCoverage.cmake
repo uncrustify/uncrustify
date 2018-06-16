@@ -15,7 +15,6 @@ if ( NOT DEFINED CODECOV_HTMLOUTPUTDIR )
 endif ( NOT DEFINED CODECOV_HTMLOUTPUTDIR )
 
 if ( CMAKE_COMPILER_IS_GNUCXX )
-    find_program( CODECOV_GCOV gcov )
     find_program( CODECOV_LCOV lcov )
     find_program( CODECOV_GENHTML genhtml )
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -Wall -W -Wshadow \
