@@ -57,7 +57,6 @@ before_install:
     if [ "x${BUILD_TYPE}" == "xcoverage" ]; then
       sudo apt-get update
       sudo apt-get install -qy python3-pip lcov
-      pip install gcovr
       pip3 install --user PyYAML
       pip3 install --user --upgrade cpp-coveralls
     fi
