@@ -1,26 +1,35 @@
-dist: trusty
 language: cpp
 sudo: false
 
 matrix:
   include:
-    - env: BUILD_TYPE=debug
-    - env: BUILD_TYPE=release
-    - env: BUILD_TYPE=release NO_MACRO_VARARG=1
+    - os: linux
+      dist: trusty
+      env: BUILD_TYPE=debug
+    - os: linux
+      dist: trusty
+      env: BUILD_TYPE=release
+    - os: linux
+      dist: trusty
+      env: BUILD_TYPE=release NO_MACRO_VARARG=1
 
-    # GCC 5
-    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5
+    # GCC 6
+    - os: linux
+      dist: trusty 
+      env: C_COMPILER=gcc-6 CXX_COMPILER=g++-6
       addons:
         apt:
           update: true
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - gcc-5
-            - g++-5
+            - gcc-6
+            - g++-6
 
     # Clang 3.8 address sanitizer
-    - env: BUILD_TYPE=asan C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8
+    - os: linux
+      dist: trusty
+      env: BUILD_TYPE=asan C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8
       addons:
         apt:
           sources:
@@ -30,7 +39,9 @@ matrix:
             - clang-3.8
 
     # mingw-w64 Win64 cross-compile
-    - env: BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
+    - os: linux
+      dist: trusty
+      env: BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
       addons:
         apt:
           packages:
@@ -45,8 +56,16 @@ matrix:
             - g++-mingw-w64-i686
             - g++-mingw-w64-x86-64
 
-    - env: BUILD_TYPE=coverage COVERALLS_TOKEN="iJXKQxvt6RJMcxkn99GIhakcoCx7XvzbU"
+    - os: linux
+      dist: trusty
+      env: BUILD_TYPE=coverage COVERALLS_TOKEN="iJXKQxvt6RJMcxkn99GIhakcoCx7XvzbU"
       compiler: gcc
+
+    # OSX
+    - os: osx
+      env: BUILD_TYPE=debug
+    - os: osx
+      env: BUILD_TYPE=release
 
 branches:
   only:
@@ -70,6 +89,14 @@ before_install:
 before_script:
   # to stop the script after an error/warning
   - set -e
+  # workarounds for OSX traivs build failure issues:
+  # 1. rvm overrides cd with a function so that it can hook into it to run some scripts from the new
+  # working directory. The workaround is to revert it to the builtin shell one.
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then unset -f cd; fi
+  # 2. Redefine shell_session_update as a dummy function to avoid travis error:
+  # /Users/travis/.rvm/scripts/functions/support: line 57: shell_session_update: command not found.
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then shell_session_update() { :; }; fi
+  # prepare make files with cmake
   - |-
     case "${BUILD_TYPE}" in
       "coverage")
@@ -94,13 +121,16 @@ before_script:
 
 
 script:
+  # build
   - make VERBOSE=1
   - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest -V -j 4; fi
   - if [ "x${BUILD_TYPE}" == "xcoverage" ]; then make coverage; fi
-    # test if all the sources are conform to the forUncrustifySources.cfg config file
+  # test if all the sources are conform to the forUncrustifySources.cfg config file
   - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../ && ./scripts/Run_uncrustify_for_sources.sh; cd -; fi
-    # test if uncrustify runs for (some) command line options
+  # test if uncrustify runs for (some) command line options
   - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../tests/cli && ./test_cli_options.py; cd -; fi
+
+  # DO NOT REMOVE (debugging purposes)
   #- /home/travis/build/uncrustify/uncrustify/build/uncrustify -l cs -c /home/travis/build/uncrustify/uncrustify/tests/config/U10-Cpp.cfg -f /home/travis/build/uncrustify/uncrustify/tests/input/cs/newlines.mm -L A
 
 after_success:
