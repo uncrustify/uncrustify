@@ -54,13 +54,6 @@ if(ENABLE_SANITIZER)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O1 -fno-omit-frame-pointer -fsanitize=${ENABLE_SANITIZER}")
 endif()
 
-
-OPTION( ENABLE_CODECOVERAGE "Enable code coverage testing support" )
-if ( ENABLE_CODECOVERAGE )
-    include(${CMAKE_SOURCE_DIR}/cmake/CodeCoverage.cmake)
-endif (ENABLE_CODECOVERAGE )
-
-
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 #
@@ -286,6 +279,15 @@ if(BUILD_TESTING)
   enable_testing()
   add_subdirectory(tests)
 endif()
+
+#
+# Coverage
+#
+OPTION(ENABLE_CODECOVERAGE "Enable code coverage testing support")
+if(ENABLE_CODECOVERAGE)
+    set(CODECOVERAGE_DEPENDS uncrustify)
+    include(${CMAKE_SOURCE_DIR}/cmake/CodeCoverage.cmake)
+endif(ENABLE_CODECOVERAGE)
 
 #
 # Package

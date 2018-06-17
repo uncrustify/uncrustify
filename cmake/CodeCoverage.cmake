@@ -23,7 +23,11 @@ if ( CMAKE_COMPILER_IS_GNUCXX )
     -fprofile-arcs -ftest-coverage" )
     link_libraries( gcov )
     set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage" )
-    add_custom_target( coverage_init ALL ${CODECOV_LCOV} --base-directory ${PROJECT_SOURCE_DIR}/src  --directory ${CMAKE_BINARY_DIR} --output-file ${CODECOV_OUTPUTFILE} --no-external --capture --initial DEPENDS uncrustify)
-    add_custom_target( coverage          ${CODECOV_LCOV} --base-directory ${PROJECT_SOURCE_DIR}/src  --directory ${CMAKE_BINARY_DIR} --output-file ${CODECOV_OUTPUTFILE} --no-external --capture)
-    add_custom_target( coverage_html     ${CODECOV_GENHTML} -o ${CODECOV_HTMLOUTPUTDIR} ${CODECOV_OUTPUTFILE} DEPENDS coverage )
+    add_custom_target( coverage_init ALL ${CODECOV_LCOV} --base-directory ${PROJECT_SOURCE_DIR}/src
+        --directory ${CMAKE_BINARY_DIR} --output-file ${CODECOV_OUTPUTFILE} --no-external --capture --initial
+        DEPENDS ${CODECOVERAGE_DEPENDS})
+    add_custom_target( coverage          ${CODECOV_LCOV} --base-directory ${PROJECT_SOURCE_DIR}/src
+        --directory ${CMAKE_BINARY_DIR} --output-file ${CODECOV_OUTPUTFILE} --no-external --capture)
+    add_custom_target( coverage_html     ${CODECOV_GENHTML} -o ${CODECOV_HTMLOUTPUTDIR} ${CODECOV_OUTPUTFILE}
+        DEPENDS coverage )
 endif ( CMAKE_COMPILER_IS_GNUCXX )
