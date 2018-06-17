@@ -1,8 +1,8 @@
 [![Travis CI](https://img.shields.io/travis/uncrustify/uncrustify/master.svg?style=flat-square&label=Linux)](https://travis-ci.org/uncrustify/uncrustify)
 [![AppVeyor](https://img.shields.io/appveyor/ci/uncrustify/uncrustify/master.svg?style=flat-square&label=Windows)](https://ci.appveyor.com/project/uncrustify/uncrustify)
 [![Coverity](https://scan.coverity.com/projects/8264/badge.svg)](https://scan.coverity.com/projects/uncrustify)
+[![Coverage Status](https://coveralls.io/repos/github/Unity-Technologies/uncrustify/badge.svg?branch=master)](https://coveralls.io/github/Unity-Technologies/uncrustify?branch=master)
 <a href="#"><img src="https://img.shields.io/badge/C++-11-blue.svg?style=flat-square"></a>
-[![Coverage Status](https://coveralls.io/repos/github/Unity-Technologies/uncrustify/badge.svg?branch=ci-cd%2Fcoveralls)](https://coveralls.io/github/Unity-Technologies/uncrustify?branch=ci-cd%2Fcoveralls)
 
 ---------------------------
 
