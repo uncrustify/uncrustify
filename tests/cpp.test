@@ -107,6 +107,7 @@
 30111  indent_columns-4.cfg                 cpp/bug_1346.h
 30112  bug_1432.cfg                         cpp/bug_1432.cpp
 30113  bug_1452.cfg                         cpp/bug_1452.cpp
+30114  empty.cfg                            cpp/bug_1462.cpp
 
 30201  cmt_indent-1.cfg                     cpp/cmt_indent.cpp
 30202  cmt_indent-2.cfg                     cpp/cmt_indent.cpp
@@ -606,6 +607,7 @@
 10566  empty.cfg                            cpp/issue_1752.cpp
 11000  UNI-12046.cfg                        cpp/UNI-12046.cpp
 20002  UNI-32657.cfg                        cpp/UNI-32657.cpp
+20011  empty.cfg                            cpp/UNI-38381.cpp
 60001  UNI-2650.cfg                         cpp/UNI-2650.cpp
 60002  U25-Cpp.cfg                          cpp/UNI-16283.cpp
 60003  U26-Cpp.cfg                          cpp/UNI-1288.cpp
