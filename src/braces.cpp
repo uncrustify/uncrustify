@@ -451,8 +451,8 @@ static bool can_remove_braces(chunk_t *bopen)
 static void examine_brace(chunk_t *bopen)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LBRDEL, "%s(%d): start on orig_line %zu:\n",
-           __func__, __LINE__, bopen->orig_line);
+   LOG_FMT(LBRDEL, "%s(%d): start on orig_line %zu, bopen->level is %zu\n",
+           __func__, __LINE__, bopen->orig_line, bopen->level);
 
    const size_t level  = bopen->level + 1;
    const size_t nl_max = cpd.settings[UO_mod_full_brace_nl].u;
@@ -496,13 +496,21 @@ static void examine_brace(chunk_t *bopen)
       }
       else
       {
-         if (chunk_is_token(pc, CT_BRACE_OPEN))
+         LOG_FMT(LBRDEL, "%s(%d): for pc->text() '%s', pc->level is %zu,  bopen->level is %zu\n",
+                 __func__, __LINE__, pc->text(), pc->level, bopen->level);
+         if (  chunk_is_token(pc, CT_BRACE_OPEN)
+            && pc->level == bopen->level)
          {
             br_count++;
+            LOG_FMT(LBRDEL, "%s(%d): br_count is now %d, pc->level is %zu,  bopen->level is %zu\n",
+                    __func__, __LINE__, br_count, pc->level, bopen->level);
          }
-         else if (chunk_is_token(pc, CT_BRACE_CLOSE))
+         else if (  chunk_is_token(pc, CT_BRACE_CLOSE)
+                 && pc->level == bopen->level)
          {
             br_count--;
+            LOG_FMT(LBRDEL, "%s(%d): br_count is now %d, pc->level is %zu,  bopen->level is %zu\n",
+                    __func__, __LINE__, br_count, pc->level, bopen->level);
             if (br_count == 0)
             {
                chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
@@ -550,6 +558,8 @@ static void examine_brace(chunk_t *bopen)
                LOG_FMT(LBRDEL, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', prev is nullptr\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
             }
+            LOG_FMT(LBRDEL, "%s(%d): for pc->text() '%s', pc->level is %zu,  bopen->level is %zu\n",
+                    __func__, __LINE__, pc->text(), pc->level, bopen->level);
             if (  chunk_is_semicolon(pc)
                || chunk_is_token(pc, CT_IF)
                || chunk_is_token(pc, CT_ELSEIF)
@@ -558,7 +568,8 @@ static void examine_brace(chunk_t *bopen)
                || chunk_is_token(pc, CT_WHILE)
                || chunk_is_token(pc, CT_SWITCH)
                || chunk_is_token(pc, CT_USING_STMT)
-               || chunk_is_token(pc, CT_BRACE_OPEN)) // Issue #1758
+               || (  chunk_is_token(pc, CT_BRACE_OPEN)
+                  && pc->level == bopen->level)) // Issue #1758
             {
                LOG_FMT(LBRDEL, "%s(%d): pc->text() '%s', orig_line is %zu, orig_col is %zu, level is %zu\n",
                        __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
