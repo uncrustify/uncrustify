@@ -19,7 +19,7 @@ class a
                 abc(transform.rotation * Quaternion.LookRotation(Vector3.forward),
                     size,
                     EventType.Repaint
-                    );
+                );
             }
         }
     }
@@ -28,12 +28,12 @@ class a
 //Case 4
 static void DefaultRadiusHandleDrawFunction(
     int controlID, Vector3 position, Quaternion rotation, float size, EventType eventType
-    )
+)
 {
     return Scripting::ScriptingWrapperFor(useCurveRanges ?
         cache.GetPreview(previewSize, actualObject, color, topFillColor, bottomFillColor, curveRanges) :
         cache.GetPreview(previewSize, actualObject, color, topFillColor, bottomFillColor)
-        );
+    );
 }
 
 //Case-5
@@ -49,7 +49,7 @@ int func_name()
 REGISTER_TYPE_ATTRIBUTES(AvatarMask,
     (LegacyPersistentTypeID, (1011,      // AvatarMask (old)
         1012))                           // AvatarSkeletonMask
-    );
+);
 
 //Case 7
 char* br = (char*)mem2chunk((size_t)(((size_t)((char*)mem + alignment -
@@ -123,7 +123,7 @@ templateProp.stringValue = Templates[
         GetTemplateIndex(templateProp.stringValue),
         TemplateGUIThumbnails,
         numCols
-        )].ToString();
+    )].ToString();
 
 
 //Case 15
