@@ -2,31 +2,31 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(Git QUIET)
 
-function(add_uncrustify_test name lang config rerun_config input input_lang result result_2 output rerun_output)
+function(add_uncrustify_test
+  name group lang input config rerun_config expected rerun_expected
+)
   add_test(NAME ${name}
-    COMMAND ${CMAKE_COMMAND}
-      -DTEST_PROGRAM=$<TARGET_FILE:uncrustify>
-      -DTEST_LANG=${input_lang}
-      -DTEST_CONFIG=${config}
-      -DTEST_RERUN_CONFIG=${rerun_config}
-      -DTEST_INPUT=${input}
-      -DTEST_RESULT=${result}
-      -DTEST_RESULT_2=${result_2}
-      -DTEST_OUTPUT=${output}
-      -DTEST_RERUN_OUTPUT=${rerun_output}
-      -DTEST_DIR=${PROJECT_SOURCE_DIR}/tests
-      -DGIT_EXECUTABLE=${GIT_EXECUTABLE}
-      -P ${PROJECT_SOURCE_DIR}/tests/run_test.cmake
+    COMMAND ${PYTHON_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/run_test.py
+      ${name}
+      --executable     $<TARGET_FILE:uncrustify>
+      --lang           ${lang}
+      --input          ${input}
+      --config         ${config}
+      --expected       ${expected}
+      --rerun-config   ${rerun_config}
+      --rerun-expected ${rerun_expected}
+      -d --git         ${GIT_EXECUTABLE}
   )
   set_tests_properties(${name}
-    PROPERTIES LABELS "${lang}"
+    PROPERTIES LABELS "${group}"
   )
 endfunction()
 
-foreach(test_lang c-sharp c cpp d java pawn objective-c vala ecma imported)
+foreach(test_group c-sharp c cpp d java pawn objective-c vala ecma imported)
   # Create dependency on test file so CMake re-runs if changed
-  configure_file("${test_lang}.test" "${test_lang}.test" COPYONLY)
-  file(READ "${test_lang}.test" content)
+  configure_file("${test_group}.test" "${test_group}.test" COPYONLY)
+  file(READ "${test_group}.test" content)
   string(REPLACE "\n" ";" lines "${content}")
   foreach(line ${lines})
     string(STRIP "${line}" line)
@@ -35,36 +35,45 @@ foreach(test_lang c-sharp c cpp d java pawn objective-c vala ecma imported)
     if(NOT "${first} " STREQUAL "# ")
       if("${line}" MATCHES "^([0-9]+)([!]?)[ ]+([^ ]+)[ ]+([^ ]+)([ ]+([^ ]+))?$")
         set(test_number "${CMAKE_MATCH_1}")
-        set(test_name "${test_lang}_${test_number}")
+        set(test_name "${test_group}:${test_number}")
 
-        set(test_config config/${CMAKE_MATCH_3})
-        set(test_input input/${CMAKE_MATCH_4})
+        set(test_config ${CMAKE_CURRENT_SOURCE_DIR}/config/${CMAKE_MATCH_3})
+        set(test_input ${CMAKE_CURRENT_SOURCE_DIR}/input/${CMAKE_MATCH_4})
 
         get_filename_component(test_dir ${CMAKE_MATCH_4} PATH)
         get_filename_component(test_file ${CMAKE_MATCH_4} NAME)
 
         set(test_expected ${test_dir}/${CMAKE_MATCH_1}-${test_file})
-        set(test_output expected/${test_expected})
-        set(test_result results/${test_expected})
-        set(test_result_2 results_2/${test_expected})
+        set(test_expected ${CMAKE_CURRENT_SOURCE_DIR}/expected/${test_expected})
 
         if("${CMAKE_MATCH_2} " STREQUAL "! ")
-          string(REGEX REPLACE "\\.[^.]*" ".rerun.cfg"  test_rerun_config ${test_config})
-          string(REGEX REPLACE "\\.[^.]*" ".rerun.lang" test_rerun_output ${test_output})
+          string(REGEX REPLACE
+            "\\.[^.]*" ".rerun.cfg"
+            test_rerun_config ${test_config}
+          )
+          string(REGEX REPLACE
+            "\\.([^.]*)" ".rerun.\\1"
+            test_rerun_expected ${test_expected}
+          )
+         message(STATUS "input: ${test_input}")
+         message(STATUS "expected: ${test_expected}")
+         message(STATUS "rerun_expected: ${test_rerun_expected}")
         else()
           set(test_rerun_config ${test_config})
-          set(test_rerun_output ${test_output})
+          set(test_rerun_expected ${test_expected})
         endif()
 
         if(NOT "${CMAKE_MATCH_6} " STREQUAL " ")
-          set(test_input_lang "${CMAKE_MATCH_6}")
+          set(test_lang "${CMAKE_MATCH_6}")
         else()
-          string(TOUPPER "${test_dir}" test_input_lang)
+          string(TOUPPER "${test_dir}" test_lang)
         endif()
 
-        add_uncrustify_test(${test_name} ${test_dir} ${test_config} ${test_rerun_config}
-          ${test_input} ${test_input_lang} ${test_result} ${test_result_2} ${test_output} ${test_rerun_output})
-
+        add_uncrustify_test(
+          ${test_name} ${test_group} ${test_lang} ${test_input}
+          ${test_config} ${test_rerun_config}
+          ${test_expected} ${test_rerun_expected}
+        )
       endif()
     endif()
   endforeach()
