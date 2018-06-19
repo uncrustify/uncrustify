@@ -1,5 +1,6 @@
-[![Travis CI](https://img.shields.io/travis/Unity-Technologies/uncrustify/master.svg?style=flat-square&label=Linux)](https://travis-ci.org/Unity-Technologies/uncrustify)
-[![AppVeyor](https://img.shields.io/appveyor/ci/henriksunity/uncrustify/master.svg?style=flat-square&label=Windows)](https://ci.appveyor.com/project/henriksunity/uncrustify)
+[![Travis CI](http://badges.herokuapp.com/travis/Unity-Technologies/uncrustify?style=flat-square&env=BADGE=linux&label=Linux&branch=master)](https://travis-ci.org/Unity-Technologies/uncrustify)
+[![Travis CI](http://badges.herokuapp.com/travis/Unity-Technologies/uncrustify?style=flat-square&env=BADGE=osx&label=OSX&branch=master)](https://travis-ci.org/Unity-Technologies/uncrustify)
+[![AppVeyor](https://img.shields.io/appveyor/ci/mihaipopescu/uncrustify/master.svg?style=flat-square&label=Windows)](https://ci.appveyor.com/project/mihaipopescu/uncrustify)
 [![Coverity](https://scan.coverity.com/projects/8264/badge.svg)](https://scan.coverity.com/projects/uncrustify)
 [![Coverage Status](https://coveralls.io/repos/github/Unity-Technologies/uncrustify/badge.svg?branch=master)](https://coveralls.io/github/Unity-Technologies/uncrustify?branch=master)
 <a href="#"><img src="https://img.shields.io/badge/C++-11-blue.svg?style=flat-square"></a>
