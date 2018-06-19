@@ -566,6 +566,8 @@
 34294  sp_after_type_brace_init_lst_open-f.cfg  cpp/brace_brace_init_lst.cpp
 34295  sp_after_type_brace_init_lst_open-r.cfg  cpp/brace_brace_init_lst.cpp
 
+34296  i1768.cfg                            cpp/i1768.cpp
+
 # __asm__
 34300  bug_1236.cfg                         cpp/bug_1236.cpp
 
@@ -626,3 +628,4 @@
 60038  UNI-30088.cfg                        cpp/UNI-30088.cpp
 60039  U36-Cpp.cfg                          cpp/UNI-30628.cpp
 60042  UNI-18777.cfg                        cpp/UNI-18777.cpp
+
