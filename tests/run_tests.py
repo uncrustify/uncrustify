@@ -14,6 +14,7 @@ import sys
 import os
 import string
 import filecmp
+import shutil
 
 # OK, so I just had way too much fun with the colors..
 
@@ -76,12 +77,14 @@ if disablecolors:
     MISMATCH_COLOR = ""
     UNSTABLE_COLOR = ""
     SKIP_COLOR     = ""
+    MESSAGE_COLOR  = ""
 else:
     FAIL_COLOR     = UNDERSCORE
     PASS_COLOR     = FG_GREEN
     MISMATCH_COLOR = FG_RED #REVERSE
     UNSTABLE_COLOR = FGB_CYAN
     SKIP_COLOR     = FGB_YELLOW
+    MESSAGE_COLOR  = FG_BLUE
 
 def run_tests(args, test_name, config_name, input_name, lang):
     # print("Test:  ", test_name)
@@ -116,12 +119,16 @@ def run_tests(args, test_name, config_name, input_name, lang):
 
     try:
         if not filecmp.cmp(resultname, outputname):
-            print(MISMATCH_COLOR + "MISMATCH: " + NORMAL + test_name)
-            if args.d:
-                cmd = "git diff --no-index %s %s" % (outputname, resultname)
-                sys.stdout.flush()
-                os.system(cmd)
-            return -1
+            if args.m:
+                print(MESSAGE_COLOR + "ACCEPT: " + NORMAL + resultname)
+                shutil.copyfile(resultname, outputname)
+            else:
+                print(MISMATCH_COLOR + "MISMATCH: " + NORMAL + test_name)
+                if args.d:
+                    cmd = "git diff --no-index %s %s" % (outputname, resultname)
+                    sys.stdout.flush()
+                    os.system(cmd)
+                return -1
     except:
         print(MISMATCH_COLOR + "MISSING: " + NORMAL + test_name)
         return -1
@@ -210,6 +217,7 @@ def main(argv):
     parser = argparse.ArgumentParser(description='Run uncrustify tests')
     parser.add_argument('-c', help='show commands', action='store_true')
     parser.add_argument('-d', help='show diff on failure', action='store_true')
+    parser.add_argument('-m', help='accept results a output', action='store_true')
     parser.add_argument('-p', help='show passed/skipped tests', action='store_true')
     parser.add_argument('-g', help='generate debug files (.log, .unc)', action='store_true')
     parser.add_argument('-r', help='specify test filter range list', type=str, default=None)
