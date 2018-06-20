@@ -13,4 +13,4 @@ from .selector import Selector
 from .test import Test
 
 from .utilities import (add_test_arguments, add_tests_arguments, parse_args,
-                        run_tests, read_tests)
+                        run_tests, read_tests, report, fixup_ctest_path)

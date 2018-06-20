@@ -78,6 +78,7 @@ def add_tests_arguments(parser):
     # Arguments for generating the CTest script; users should not use these
     # directly
     parser.add_argument("--write-ctest", type=str, help=argparse.SUPPRESS)
+    parser.add_argument("--cmake-config", type=str, help=argparse.SUPPRESS)
     parser.add_argument("--python", type=str, help=argparse.SUPPRESS)
 
 
@@ -144,6 +145,22 @@ def run_tests(tests, args, selector=None):
 
 
 # -----------------------------------------------------------------------------
+def report(counts):
+    total = sum(counts.values())
+    print('{passing} / {total} tests passed'.format(total=total, **counts))
+    if counts['failing'] > 0:
+        printc('{failing} tests failed to execute'.format(**counts),
+               **FAIL_ATTRS)
+    if counts['mismatch'] > 0:
+        printc(
+            '{mismatch} tests did not match the expected output'.format(
+                **counts),
+            **FAIL_ATTRS)
+    if counts['unstable'] > 0:
+        print('{unstable} tests were unstable'.format(**counts))
+
+
+# -----------------------------------------------------------------------------
 def read_tests(filename, group):
     tests = []
 
@@ -161,3 +178,16 @@ def read_tests(filename, group):
             tests.append(test)
 
     return tests
+
+
+# -----------------------------------------------------------------------------
+def fixup_ctest_path(path, config):
+    if config is None:
+        return path
+
+    dirname, basename = os.path.split(path)
+    if os.path.basename(dirname).lower() == config.lower():
+        dirname, junk = os.path.split(dirname)
+        return os.path.join(dirname, '${CTEST_CONFIGURATION_TYPE}', basename)
+
+    return path
