@@ -123,7 +123,7 @@ before_script:
         cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZER=undefined ..
         ;;
       "cross")
-        cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw64.cmake -DCMAKE_EXE_LINKER_FLAGS="-static -s" ..
+        cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw64.cmake -DCMAKE_EXE_LINKER_FLAGS="-static -s" ..
         ;;
       "release")
         cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Release ..
