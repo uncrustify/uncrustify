@@ -36,7 +36,7 @@ var islands = EditorCompilationInterface.GetAllMonoIslands().Select(i => new Isl
 var projectEntries = islands.Select(i => string.Format(
     DefaultSynchronizationSettings.SolutionProjectEntryTemplate,
     SolutionGuid(i), _projectName, Path.GetFileName(ProjectFile(i)), ProjectGuid(i._output)
-    ));
+));
 
 
 Func<IEnumerable<IMemberDefinition>, IEnumerable<IMemberDefinition>> filterMembersWithObsoleteAttr = members => members.Where(m =>

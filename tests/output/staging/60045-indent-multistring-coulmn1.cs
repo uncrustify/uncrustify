@@ -1,7 +1,7 @@
 //This
 var a = hello(
     @"world"
-    );
+);
 
 //should stay the same.
 //But this
