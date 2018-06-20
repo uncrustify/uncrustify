@@ -108,6 +108,13 @@ class Test(object):
     def print_as_ctest(self, out_file=sys.stdout):
         self.check()
 
+        def to_cmake_path(path):
+            if type(path) is dict:
+                return {k: to_cmake_path(v) for k, v in path.items()}
+            return path.replace(os.sep, '/')
+
+        runner = os.path.join(test_dir, 'run_test.py')
+
         out_file.write(
             ('add_test({test_name}\n' +
              '  "{python_exe}" "{test_runner}" "{test_name}"\n' +
@@ -120,11 +127,11 @@ class Test(object):
              '    --rerun-expected "{test_rerun_expected}"\n' +
              '    -d --git         "{git_exe}"\n' +
              ')\n').format(
-                 test_runner=os.path.join(test_dir, 'run_test.py'),
-                 python_exe=config.python_exe,
-                 uncrustify_exe=config.uncrustify_exe,
-                 git_exe=config.git_exe,
-                 **self.__dict__))
+                 test_runner=to_cmake_path(runner),
+                 python_exe=to_cmake_path(config.python_exe),
+                 uncrustify_exe=to_cmake_path(config.uncrustify_exe),
+                 git_exe=to_cmake_path(config.git_exe),
+                 **to_cmake_path(self.__dict__)))
         out_file.write(
             ('set_tests_properties({}\n' +
              '  PROPERTIES LABELS "{}"\n)\n').format(
