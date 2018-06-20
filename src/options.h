@@ -139,12 +139,13 @@ enum uncrustify_options
    UO_string_escape_char2,      // the string escape char to use
    UO_string_replace_tab_chars, // replace tab chars found in strings to the escape sequence \t
    UO_tok_split_gte,            // allow split of '>>=' in template detection
-   UO_disable_processing_cmt,   // override UNCRUSTIFY_DEFAULT_OFF_TEXT
-   UO_enable_processing_cmt,    // override UNCRUSTIFY_DEFAULT_ON_TEXT
+   UO_disable_processing_cmt,   // override UNCRUSTIFY_OFF_TEXT
+   UO_enable_processing_cmt,    // override UNCRUSTIFY_ON_TEXT
    UO_enable_digraphs,
    UO_utf8_bom,
    UO_utf8_byte,
    UO_utf8_force,
+
 
    // group: UG_space, "Spacing options"                                                        1
    UO_sp_arith,                     // space around + - / * etc
@@ -413,6 +414,7 @@ enum uncrustify_options
    UO_indent_case_shift,                    // spaces to shift the line with the 'case'
    UO_indent_case_brace,                    // spaces to indent '{' from case (usually 0 or indent_columns)
    UO_indent_col1_comment,                  // indent comments in column 1
+   UO_indent_col1_multi_string_literal,     // indent multi string literal in column 1
    UO_indent_label,                         // 0=left >0=col from left, <0=sub from brace indent
    UO_indent_access_spec,                   // same as indent_label, but for 'private:', 'public:'
    UO_indent_access_spec_body,              // indent private/public/protected inside a class
@@ -531,6 +533,7 @@ enum uncrustify_options
                                        // Overrides nl_after_case
    UO_nl_namespace_brace,              // newline between namespace name and brace
    UO_nl_template_class,               // newline between '>' and class in 'template <x> class'
+   UO_nl_template_def,                 // Add  newline between '>()' or '>' and '{' .
    UO_nl_class_brace,                  // newline between class name and brace
    UO_nl_class_init_args,              // newline before/after each comma in the base class list
                                        // (tied to UO_pos_class_comma)
@@ -869,6 +872,7 @@ enum uncrustify_options
    UO_mod_sort_oc_property_setter_weight,        // Determines weight of setter type (setter=)
    UO_mod_sort_oc_property_nullability_weight,   // Determines weight of nullability type (nullable/nonnull)
 
+   UO_mod_include_strict_parsing,                // it will support extra characters after the include is closed. (ingore mode by default)
 
    // group: UG_preprocessor, "Preprocessor options"                                                10
    UO_pp_indent,             // indent preproc 1 space per level (add/ignore/remove)
@@ -915,6 +919,7 @@ enum uncrustify_options
                                             // with the value "true".
    UO_use_options_overriding_for_qt_macros, // SIGNAL/SLOT Qt macros have special formatting options.
                                             // See options_for_QT.cpp for details.
+   UO_use_mod_strict_ASCII,                 // If True, will report an error if non-ascii characters outside of strings or comments are found
 
    // group: UG_warnlevels, "Warn levels - 1: error, 2: warning (default), 3: note"                 13
    // Levels to attach to warnings (log_sev_t; default : LWARN)

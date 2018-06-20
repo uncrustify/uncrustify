@@ -281,6 +281,15 @@ if(BUILD_TESTING)
 endif()
 
 #
+# Coverage
+#
+OPTION(ENABLE_CODECOVERAGE "Enable code coverage testing support")
+if(ENABLE_CODECOVERAGE)
+    set(CODECOVERAGE_DEPENDS uncrustify)
+    include(${CMAKE_SOURCE_DIR}/cmake/CodeCoverage.cmake)
+endif(ENABLE_CODECOVERAGE)
+
+#
 # Package
 #
 set(CPACK_PACKAGE_NAME "uncrustify")

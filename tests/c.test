@@ -367,5 +367,9 @@
 09615  i1564.cfg                            c/i1564.c
 
 
-10005  empty.cfg                            c/i1270.c
+09905  aet.cfg                              c/negative_value.c
+09906  aet.cfg                              c/extern-c-attribute.c
+09907  aet-func_call_user.cfg               c/func_call_user2.c
+
+10005 empty.cfg                             c/i1270.c
 

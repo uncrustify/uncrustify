@@ -54,6 +54,22 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag, int lang_flags
 /**
  * interesting static keywords - keep sorted.
  * Table includes the Name, Type, and Language flags.
+ *
+ * Let's make some "good enough" assumptions here
+ *
+ * Assume LANG_OC and LANG_CPP are always a superset of LANG_C
+ * when it comes to maintaining the basic set of known keywords
+ *
+ * For potential special cases, it's still possible to override
+ * the type inheritance for both LANG_OC and LANG_CPP separately,
+ * where as with LANG_ALLC you don't have a choice for override
+ *
+ * Certain keywords with LANG_C are obviously not really a part
+ * of C, but since they have been previously defined for LANG_C,
+ * let's not break existing behaviour
+ *
+ * Type inheritance is implemented at init_keywords()
+ *
  */
 static chunk_tag_t keywords[] =
 {
@@ -486,19 +502,23 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag, int lang_flags
 }
 
 
-c_token_t find_keyword_type(const char *word, size_t len)
+c_token_t find_keyword_type(const char *word, size_t len, bool enableDynamicSubstitution)
 {
    if (len <= 0)
    {
       return(CT_NONE);
    }
 
+   string ss(word, len);
+
    // check the dynamic word list first
-   string           ss(word, len);
-   dkwmap::iterator it = dkwm.find(ss);
-   if (it != dkwm.end())
+   if (enableDynamicSubstitution)
    {
-      return((*it).second);
+      dkwmap::iterator it = dkwm.find(ss);
+      if (it != dkwm.end())
+      {
+         return((*it).second);
+      }
    }
 
    chunk_tag_t key;

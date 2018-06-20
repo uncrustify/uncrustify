@@ -734,7 +734,7 @@ static bool chunk_ends_type(chunk_t *start)
          || chunk_is_token(pc, CT_PP_IF)
          || chunk_is_token(pc, CT_PP_ELSE)
          || chunk_is_token(pc, CT_PP_ENDIF)
-         || ((chunk_is_token(pc, CT_COMMA) && ((pc->flags & PCF_IN_FCN_CALL) == 0)) && last_expr)
+         || ((chunk_is_token(pc, CT_COMMA) || (chunk_is_token(pc, CT_FPAREN_OPEN)) && ((pc->flags & PCF_IN_FCN_CALL) == 0)) && last_expr)
          || (chunk_is_token(pc, CT_SPAREN_OPEN) && last_lval))
       {
          ret = cnt > 0;
@@ -827,11 +827,12 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             }
          }
 
+
          for (tmp = chunk_get_prev_ncnl(pc); tmp != nullptr; tmp = chunk_get_prev_ncnl(tmp))
          {
             if (  chunk_is_semicolon(tmp)
-               || chunk_is_token(tmp, CT_BRACE_OPEN)
-               || chunk_is_token(tmp, CT_VBRACE_OPEN))
+               || tmp->type == CT_BRACE_OPEN
+               || tmp->type == CT_VBRACE_OPEN)
             {
                break;
             }
@@ -897,6 +898,30 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             handle_oc_block_literal(pc);
          }
       }
+   }
+
+   if (pc->type == CT_IGNORE_CONTENT)
+   {
+      chunk_t *po = chunk_get_next_ncnl(pc);
+      if (!chunk_is_paren_open(po))
+      {
+         return;
+      }
+
+      chunk_t *end = chunk_skip_to_match(po);
+      if (!end)
+      {
+         return;
+      }
+      pc = chunk_get_next_ncnl(po);
+      while (pc != end)
+      {
+         set_chunk_type(pc, CT_IGNORE_CONTENT);
+         pc = chunk_get_next_ncnl(pc);
+      }
+
+      set_chunk_parent(po, CT_IGNORE_CONTENT);
+      set_chunk_parent(end, CT_IGNORE_CONTENT);
    }
 
    // Objective C stuff
@@ -1570,7 +1595,13 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
-      else if (chunk_is_token(pc, CT_STAR))
+      // Fix Issue #1286
+      else if (  pc->type == CT_STAR
+              && (prev->type == CT_QUALIFIER || next->type == CT_QUALIFIER))
+      {
+         set_chunk_type(pc, CT_PTR_TYPE);
+      }
+      else if (pc->type == CT_STAR)
       {
          // Add check for CT_DC_MEMBER CT_WORD CT_STAR sequence
          // to convert CT_WORD into CT_TYPE
@@ -1611,6 +1642,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                set_chunk_type(pc, CT_PTR_TYPE);
             }
          }
+
+
          /*
           * A star can have three meanings
           * 1. CT_DEREF    = pointer dereferencing
@@ -1620,6 +1653,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
           * most PCF_PUNCTUATOR chunks except a paren close would make this
           * a deref. A paren close may end a cast or may be part of a macro fcn.
           */
+
          if (chunk_is_token(prev, CT_TYPE))
          {
             set_chunk_type(pc, CT_PTR_TYPE);
@@ -1664,7 +1698,9 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_BYREF);
       }
-      else if (chunk_is_token(next, CT_FPAREN_CLOSE) || chunk_is_token(next, CT_COMMA))
+      else if (  chunk_is_token(next, CT_FPAREN_CLOSE)
+              || chunk_is_token(next, CT_PAREN_CLOSE)
+              || chunk_is_token(next, CT_COMMA))
       {
          // fix the bug #654
          // connect(&mapper, SIGNAL(mapped(QString &)), this, SLOT(onSomeEvent(QString &)));
@@ -1680,7 +1716,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       else
       {
          // Issue # 1398
-         if (  ((pc->flags & PCF_IN_FCN_DEF) != 0)
+         if (  ((pc->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)) != 0)
             && chunk_is_token(prev, CT_WORD)
             && chunk_is_token(pc, CT_AMP)
             && chunk_is_token(next, CT_WORD))
@@ -1944,7 +1980,23 @@ void fix_symbols(void)
 
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
-      if (chunk_is_token(pc, CT_FUNC_WRAP) || chunk_is_token(pc, CT_TYPE_WRAP))
+      //To Avoid new lines in swith case before return - setting parent type of return to CT_CASE inside switch
+      //So while adding new lines before return, will check the parent_type and add the new lines
+      if (pc->type == CT_BRACE_OPEN && pc->parent_type == CT_SWITCH)
+      {
+         chunk_t *temp = pc;
+         chunk_t *bc   = chunk_skip_to_match(temp);
+         while (temp != bc)
+         {
+            temp = chunk_get_next_ncnl(temp);
+            if (temp->type == CT_RETURN)
+            {
+               set_chunk_parent(temp, CT_CASE);
+            }
+         }
+      }
+
+      if (pc->type == CT_FUNC_WRAP || pc->type == CT_TYPE_WRAP)
       {
          handle_wrap(pc);
       }
@@ -2174,7 +2226,8 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
       {
          LOG_FMT(LFCNR, " text() '%s', type is %s", pc->text(), get_token_name(pc->type));
 
-         if (parent_type != CT_NONE)
+         if (  parent_type != CT_NONE
+            && pc->parent_type != CT_FUNC_START)
          {
             set_chunk_parent(pc, parent_type);
          }
@@ -4462,7 +4515,16 @@ static void mark_function(chunk_t *pc)
             while (  chunk_is_token(prev, CT_DC_MEMBER)
                   || chunk_is_token(prev, CT_MEMBER))
             {
+               chunk_t *tmp = prev;
                prev = chunk_get_prev_ncnlnp(prev);
+               // fixes issues 1005, 1288 and 1249
+               // should not remove space between '::' and keyword, since it is a return type.
+               if (prev != nullptr && chunk_is_keyword(prev) && tmp->type == CT_DC_MEMBER)
+               {
+                  isa_def = true;
+                  set_chunk_parent(tmp, CT_FUNC_START);
+                  break;
+               }
                if (  prev == nullptr
                   || (  prev->type != CT_WORD
                      && prev->type != CT_TYPE
@@ -4531,14 +4593,20 @@ static void mark_function(chunk_t *pc)
             LOG_FMT(LFCN, " --> Stopping on %s [%s]\n",
                     prev->text(), get_token_name(prev->type));
             // certain tokens are unlikely to precede a prototype or definition
-            if (  chunk_is_token(prev, CT_ARITH)
-               || chunk_is_token(prev, CT_ASSIGN)
-               || chunk_is_token(prev, CT_COMMA)
-               || (chunk_is_token(prev, CT_STRING) && prev->parent_type != CT_EXTERN)  // fixes issue 1259
-               || chunk_is_token(prev, CT_STRING_MULTI)
-               || chunk_is_token(prev, CT_NUMBER)
-               || chunk_is_token(prev, CT_NUMBER_FP)
-               || chunk_is_token(prev, CT_FPAREN_OPEN)) // issue #1464
+            if (  prev->type == CT_ARITH
+               || prev->type == CT_ASSIGN
+               || prev->type == CT_COMMA
+               || (prev->type == CT_STRING && prev->parent_type != CT_EXTERN)  // fixes issue 1259
+               || prev->type == CT_STRING_MULTI
+               || prev->type == CT_NUMBER
+               || prev->type == CT_NUMBER_FP
+               || prev->type == CT_COMPARE
+               || prev->type == CT_FPAREN_OPEN             // issue #1464
+               || (cpd.lang_flags & LANG_CS)
+               && (  prev->type == CT_AS
+                  || prev->type == CT_SCOMPARE
+                  || prev->type == CT_BOOL
+                  || prev->type == CT_COLON))
             {
                isa_def = false;
             }
@@ -4844,6 +4912,7 @@ static void mark_function(chunk_t *pc)
          {
             chunk_flags_set(tmp, PCF_OLD_FCN_PARAMS);
          }
+
          tmp = chunk_get_next_ncnl(tmp);
       }
       if (chunk_is_token(tmp, CT_BRACE_OPEN))
@@ -5034,7 +5103,7 @@ static void mark_class_ctor(chunk_t *start)
    }
 
    // Find the open brace, abort on semicolon
-   size_t flags = 0;
+   UINT64 flags = 0;
    while (pc != nullptr && pc->type != CT_BRACE_OPEN)
    {
       LOG_FMT(LFTOR, " [%s]", pc->text());
@@ -6641,6 +6710,19 @@ static void handle_cs_square_stmt(chunk_t *os)
       {
          set_chunk_type(tmp, CT_CS_SQ_COLON);
       }
+
+      if (tmp->type == CT_SQUARE_OPEN)
+      {
+         set_chunk_parent(tmp, CT_NONE);
+      }
+      else if (tmp->type == CT_SQUARE_CLOSE)
+      {
+         chunk_t *tmp2 = chunk_skip_to_match_rev(tmp);
+         if (tmp2->parent_type == CT_NONE)
+         {
+            set_chunk_parent(tmp, CT_NONE);
+         }
+      }
    }
 
    tmp = chunk_get_next_ncnl(cs);
@@ -6648,7 +6730,7 @@ static void handle_cs_square_stmt(chunk_t *os)
    {
       chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
    }
-}
+} // handle_cs_square_stmt
 
 
 static void handle_cs_property(chunk_t *bro)

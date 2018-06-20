@@ -5,18 +5,18 @@ matrix:
   include:
     - os: linux
       dist: trusty
-      env: BUILD_TYPE=debug
+      env: BADGE=linux BUILD_TYPE=debug
     - os: linux
       dist: trusty
-      env: BUILD_TYPE=release
+      env: BADGE=linux BUILD_TYPE=release
     - os: linux
       dist: trusty
-      env: BUILD_TYPE=release NO_MACRO_VARARG=1
+      env: BADGE=linux BUILD_TYPE=release NO_MACRO_VARARG=1
 
     # GCC 6
     - os: linux
       dist: trusty 
-      env: C_COMPILER=gcc-6 CXX_COMPILER=g++-6
+      env: BADGE=linux C_COMPILER=gcc-6 CXX_COMPILER=g++-6
       addons:
         apt:
           update: true
@@ -29,7 +29,7 @@ matrix:
     # Clang 3.8 address sanitizer
     - os: linux
       dist: trusty
-      env: BUILD_TYPE=asan C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8
+      env: BADGE=linux BUILD_TYPE=asan C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8
       addons:
         apt:
           sources:
@@ -41,7 +41,7 @@ matrix:
     # mingw-w64 Win64 cross-compile
     - os: linux
       dist: trusty
-      env: BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
+      env: BADGE=linux BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
       addons:
         apt:
           packages:
@@ -56,17 +56,29 @@ matrix:
             - g++-mingw-w64-i686
             - g++-mingw-w64-x86-64
 
+    - os: linux
+      dist: trusty
+      env: BUILD_TYPE=coverage COVERALLS_TOKEN="iJXKQxvt6RJMcxkn99GIhakcoCx7XvzbU"
+      compiler: gcc
+
     # OSX
     - os: osx
-      env: BUILD_TYPE=debug
+      env: BADGE=osx BUILD_TYPE=debug
     - os: osx
-      env: BUILD_TYPE=release
+      env: BADGE=osx BUILD_TYPE=release
 
 branches:
   only:
   - master
 
 before_install:
+  - |
+    if [ "x${BUILD_TYPE}" == "xcoverage" ]; then
+      sudo apt-get update
+      sudo apt-get install -qy python3-pip lcov
+      pip3 install --user PyYAML
+      pip3 install --user --upgrade cpp-coveralls
+    fi
   - if [ -n "${C_COMPILER}" ]; then export CC="${C_COMPILER}"; fi
   - if [ -n "${CXX_COMPILER}" ]; then export CXX="${CXX_COMPILER}"; fi
   - ${CXX} --version
@@ -88,7 +100,7 @@ before_script:
   - |-
     case "${BUILD_TYPE}" in
       "coverage")
-        cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_COVERAGE=ON ..
+        cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_CODECOVERAGE=ON ..
         ;;
       "asan")
         cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZER=address ..
@@ -111,12 +123,16 @@ before_script:
 script:
   # build
   - make VERBOSE=1
+  - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest -V -j 4; fi
+  - if [ "x${BUILD_TYPE}" == "xcoverage" ]; then make coverage; fi
   # test if all the sources are conform to the forUncrustifySources.cfg config file
   - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../ && ./scripts/Run_uncrustify_for_sources.sh; cd -; fi
   # test if uncrustify runs for (some) command line options
   - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../tests/cli && ./test_cli_options.py; cd -; fi
-  # run all tests
-  - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest -V; fi
 
   # DO NOT REMOVE (debugging purposes)
   #- /home/travis/build/uncrustify/uncrustify/build/uncrustify -l cs -c /home/travis/build/uncrustify/uncrustify/tests/config/U10-Cpp.cfg -f /home/travis/build/uncrustify/uncrustify/tests/input/cs/newlines.mm -L A
+
+after_success:
+  # publish coverage data to coveralls
+  - if [ "x${BUILD_TYPE}" == "xcoverage" ]; then cd ../ && coveralls -l build/cmake_coverage.output -t $COVERALLS_TOKEN; fi

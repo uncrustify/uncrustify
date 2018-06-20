@@ -527,13 +527,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          break;
       }
 
-      // Issue #1005
-      /* '::' at the start of an identifier is not member access, but global scope operator.
-       * Detect if previous chunk is a type and previous-previous is "friend"
-       */
-      if (  chunk_is_token(first, CT_TYPE)
-         && first->prev != nullptr
-         && (first->prev->type == CT_FRIEND && first->next->type != CT_DC_MEMBER))
+      // force space between '::' and keyword, since it is a return type.
+      if (second->parent_type == CT_FUNC_START)
       {
          log_rule("FORCE");
          return(AV_FORCE);
@@ -846,8 +841,10 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // "a [x]" vs "a[x]"
-   if (  chunk_is_token(second, CT_SQUARE_OPEN)
-      && (second->parent_type != CT_OC_MSG && second->parent_type != CT_CS_SQ_STMT))
+   if (  second->type == CT_SQUARE_OPEN
+      && first->type != CT_BRACE_OPEN
+      && (  second->parent_type != CT_OC_MSG
+         && second->parent_type != CT_CS_SQ_STMT))
    {
       if (((second->flags & PCF_IN_SPAREN) != 0) && (chunk_is_token(first, CT_IN)))
       {
@@ -2342,9 +2339,9 @@ void space_text(void)
                       * C++11 allows '>>' to mean '> >' in templates:
                       *   some_func<vector<string>>();
                       */
-                     if (  (  (  language_is_set(LANG_CPP)
-                              && cpd.settings[UO_sp_permit_cpp11_shift].b)
-                           || (language_is_set(LANG_JAVA | LANG_CS)))
+                     if (  (language_is_set(LANG_CPP)
+                            ? cpd.settings[UO_sp_permit_cpp11_shift].b
+                            : (language_is_set(LANG_JAVA | LANG_CS)))
                         && chunk_is_token(pc, CT_ANGLE_CLOSE)
                         && chunk_is_token(next, CT_ANGLE_CLOSE))
                      {

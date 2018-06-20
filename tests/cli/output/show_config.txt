@@ -874,6 +874,9 @@ indent_case_brace               Number
 indent_col1_comment             { False, True }
   Whether to indent comments found in first column.
 
+indent_col1_multi_string_literal { False, True }
+  Whether to indent multi string literal in first column.
+
 indent_label                    Number
   How to indent goto labels
     >0: absolute column where 1 is the leftmost column
@@ -1227,6 +1230,9 @@ nl_namespace_brace              { Ignore, Add, Remove, Force }
 
 nl_template_class               { Ignore, Add, Remove, Force }
   Add or remove newline between 'template<>' and whatever follows.
+
+nl_template_def                 { False, True }
+  Add newline between '>()' or '>' and '{' .
 
 nl_class_brace                  { Ignore, Add, Remove, Force }
   Add or remove newline between 'class' and '{'.
@@ -2082,6 +2088,9 @@ mod_sort_oc_property_setter_weight Number
 mod_sort_oc_property_nullability_weight Number
   Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C).
 
+mod_include_strict_parsing      { False, True }
+  It will support extra characters after the include is closed. (ingore mode by default) and report an error
+
 #
 # Preprocessor options
 #
@@ -2184,6 +2193,9 @@ indent_cpp_lambda_only_once     { False, True }
 use_options_overriding_for_qt_macros { False, True }
   SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.
   Default=True.
+
+use_mod_strict_ASCII            { False, True }
+  If True, will report an error if non-ascii characters outside of strings or comments are found
 
 #
 # Warn levels - 1: error, 2: warning (default), 3: note

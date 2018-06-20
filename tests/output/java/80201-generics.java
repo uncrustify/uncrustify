@@ -1,5 +1,3 @@
-// Note: Some tests running on this _input_ file rely upon that the tripple
-// closing '>' are not separated by spaces or anything else!
 public class TestClass {
 private static void initMap(void) {
 	HashMap<String, HashMap<String, List<Track>>> resolutionTracks = new HashMap<String, HashMap<String, List<Track>>>();

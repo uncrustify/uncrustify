@@ -892,6 +892,8 @@ void register_options(void)
                   "negative value are OK.", "", -16, 16);
    unc_add_option("indent_col1_comment", UO_indent_col1_comment, AT_BOOL,
                   "Whether to indent comments found in first column.");
+   unc_add_option("indent_col1_multi_string_literal", UO_indent_col1_multi_string_literal, AT_BOOL,
+                  "Whether to indent multi string literal in first column.");
    unc_add_option("indent_label", UO_indent_label, AT_NUM,
                   "How to indent goto labels\n"
                   "  >0: absolute column where 1 is the leftmost column\n"
@@ -1151,6 +1153,8 @@ void register_options(void)
                   "Newline between namespace and {.");
    unc_add_option("nl_template_class", UO_nl_template_class, AT_IARF,
                   "Add or remove newline between 'template<>' and whatever follows.");
+   unc_add_option("nl_template_def", UO_nl_template_def, AT_BOOL,
+                  "Add newline between '>()' or '>' and '{' .");
    unc_add_option("nl_class_brace", UO_nl_class_brace, AT_IARF,
                   "Add or remove newline between 'class' and '{'.");
    unc_add_option("nl_class_init_args", UO_nl_class_init_args, AT_IARF,
@@ -1756,7 +1760,8 @@ void register_options(void)
                   "Determines weight of setter type (setter=) (Obj-C).");
    unc_add_option("mod_sort_oc_property_nullability_weight", UO_mod_sort_oc_property_nullability_weight, AT_NUM,
                   "Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C).");
-
+   unc_add_option("mod_include_strict_parsing", UO_mod_include_strict_parsing, AT_BOOL,
+                  "It will support extra characters after the include is closed. (ingore mode by default) and report an error");
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,
                   "Control indent of preprocessors inside #if blocks at brace level 0 (file-level).");
@@ -1831,6 +1836,8 @@ void register_options(void)
    unc_add_option("use_options_overriding_for_qt_macros", UO_use_options_overriding_for_qt_macros, AT_BOOL,
                   "SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.\n"
                   "Default=True.");
+   unc_add_option("use_mod_strict_ASCII", UO_use_mod_strict_ASCII, AT_BOOL,
+                  "If True, will report an error if non-ascii characters outside of strings or comments are found");
 
    unc_begin_group(UG_warnlevels, "Warn levels - 1: error, 2: warning (default), 3: note");
    unc_add_option("warn_level_tabs_found_in_verbatim_string_literals", UO_warn_level_tabs_found_in_verbatim_string_literals, AT_UNUM,
@@ -2631,6 +2638,7 @@ void set_option_defaults(void)
    cpd.defaults[UO_pp_indent_func_def].b                                = true;
    cpd.defaults[UO_pp_indent_extern].b                                  = true;
    cpd.defaults[UO_pp_indent_brace].b                                   = true;
+   cpd.defaults[UO_nl_tsquare_brace].a                                  = AV_IGNORE;
 
 #ifdef DEBUG
    // test all the default values if they are in the allowed interval

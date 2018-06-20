@@ -47,10 +47,7 @@ Change the date at the first line of this document.
    Test the build of 32-bit and 64-bit version before going on.
 
 4. Create a GIT tag and push it
-
-4a.
    $ git tag -a uncrustify-0.nn -m uncrustify-0.nn
-   Push to the server
    $ git push --tags --repo=https://github.com/uncrustify/uncrustify.git
      (use an admin)
 
@@ -114,10 +111,8 @@ Change the date at the first line of this document.
       Select files, or drag & drop files here.
         README.md
         uncrustify-0.nn.tar.gz
-        buildwin-32/uncrustify-0.nn-win32.zip
-        buildwin-64/uncrustify-0.nn-win64.zip
-
-      "Done"
+        uncrustify-0.nn-win32.zip
+        uncrustify-0.nn-win64.zip
 
    $ scp -r documentation/htdocs/* ChangeLog USER,uncrustify@web.sourceforge.net:htdocs/
 
