@@ -113,8 +113,6 @@ script:
   - make VERBOSE=1
   # test if all the sources are conform to the forUncrustifySources.cfg config file
   - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../ && ./scripts/Run_uncrustify_for_sources.sh; cd -; fi
-  # test if uncrustify runs for (some) command line options
-  - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../tests/cli && ./test_cli_options.py; cd -; fi
   # run all tests
   - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest -V; fi
 
