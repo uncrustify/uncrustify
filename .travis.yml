@@ -114,7 +114,7 @@ script:
   # test if all the sources are conform to the forUncrustifySources.cfg config file
   - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../ && ./scripts/Run_uncrustify_for_sources.sh; cd -; fi
   # run all tests
-  - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest -V; fi
+  - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest --output-on-failure; fi
 
   # DO NOT REMOVE (debugging purposes)
   #- /home/travis/build/uncrustify/uncrustify/build/uncrustify -l cs -c /home/travis/build/uncrustify/uncrustify/tests/config/U10-Cpp.cfg -f /home/travis/build/uncrustify/uncrustify/tests/input/cs/newlines.mm -L A
