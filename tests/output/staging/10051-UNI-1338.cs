@@ -21,7 +21,7 @@ public class Class
 
     public void foo()
     {
-        sas.Foo("bar", new Dictionary<string, object>() { { "k1", "v1" }, { "k2", "v2" } });
+        sas.Foo("bar", new Dictionary<string, object>(){ { "k1", "v1" }, { "k2", "v2" } });
         // ... --> ...
         sas.Foo("bar", new Dictionary<string, object>() { { "k1", "v1" }, { "k2", "v2" } });
     }

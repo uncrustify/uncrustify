@@ -2,7 +2,7 @@ interface D {} interface E {}
 
 class C<T1, T2, TX, T3, T4, T5>
     : IDisposable, IEnumerable<T1>
-    where T1 : class, D, E, new()
+    where T1 : class, D , E , new()
     where T2 : IDictionary<D, Dictionary<string, float>>
     where TX : struct, IDisposable
     where T3 : class
@@ -18,7 +18,7 @@ class C<T1, T2, TX, T3, T4, T5>
 
     class C2<T1, T2, TX, T3, T4, T5>
         : IDisposable, IEnumerable<T1>
-        where T1 : class, D, E, new()
+        where T1 : class, D , E, new()
         where T2 : IDictionary<D, Dictionary<string, float>>
         where TX : struct, IDisposable
         where T3 : class
