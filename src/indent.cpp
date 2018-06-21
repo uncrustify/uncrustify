@@ -2514,7 +2514,10 @@ void indent_text(void)
          if (chunk_is_token(prev2, CT_NEWLINE) && in_shift)
          {
             shiftcontcol = calc_indent_continue(frm);
-            frm.top().indent_cont = true;
+            // setting this in the top context when the indent is not also set just leads to compications
+            // when succeeding statements try to indent based on being embedded in a continuation
+            // or in other words it should only be set if frm.top().indent is also set
+            //frm.top().indent_cont = true;
 
             // Work around the doubly increased indent in RETURNs and assignments
             bool   need_workaround = false;
@@ -2545,7 +2548,10 @@ void indent_text(void)
          if (cpd.settings[UO_indent_continue].n != 0)
          {
             vardefcol = calc_indent_continue(frm);
-            frm.top().indent_cont = true;
+            // setting this in the top context when the indent is not also set just leads to compications
+            // when succeeding statements try to indent based on being embedded in a continuation
+            // or in other words it should only be set if frm.top().indent is also set
+            //frm.top().indent_cont = true;
          }
          else if (  cpd.settings[UO_indent_var_def_cont].b
                  || chunk_is_newline(chunk_get_prev(pc)))
