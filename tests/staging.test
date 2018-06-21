@@ -21,8 +21,18 @@
 60014 staging/Uncrustify.Cpp.cfg    staging/UNI-14107.cpp
 60018 staging/Uncrustify.CSharp.cfg staging/UNI-18777.cs
 60023 staging/Uncrustify.CSharp.cfg staging/UNI-18437.cs
-
 60035 staging/Uncrustify.CSharp.cfg staging/UNI-22858.cs
+
+# doens't look like the right fix
+10007 staging/dont-process-defines.cfg staging/dont-process-defines.cpp
+10009 staging/STUCK_macro-difficulties.cfg staging/STUCK_macro-difficulties.cpp
+
+# need to make these ones work with our configs
+10018 empty.cfg staging/delete-space-oc.mm
+10019 empty.cfg staging/func-param-wrap-oc.mm
+
+# we would never enforce any kind of alignment
+10100 staging/issue_564.cfg staging/issue_564.cpp
 
 # low max limit of mod_add_long_namespace_closebrace_comment to 16 makes noise
 10076 staging/UNI-1343.cfg          staging/UNI-1343.cs
@@ -36,6 +46,3 @@
 
 # unstable (see #1826)
 60047 staging/UNI-24076.cfg         staging/UNI-24076.cs
-
-# we would never enforce any kind of alignment
-10100 staging/issue_564.cfg staging/issue_564.cpp

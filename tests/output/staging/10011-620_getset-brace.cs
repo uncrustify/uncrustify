@@ -1,10 +1,10 @@
 class C
 {
-	float V
-	{
-		get
-		{
-			return _v;
-		}
-		set { _v = value; } }
+    float V
+    {
+        get
+        {
+            return _v;
+        }
+        set { _v = value; } }
 }

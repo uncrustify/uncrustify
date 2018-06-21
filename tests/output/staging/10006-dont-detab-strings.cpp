@@ -1,6 +1,7 @@
-void f() {
-	auto x = "\ttest\t \t \t \t\t...   ???";
+void f()
+{
+    auto x = "\ttest\t \t \t \t\t...   ???";
 // *INDENT-OFF*
-	 			auto x = "	test\t 	 	 		...   ???";
+    auto x = "\ttest\t \t \t \t\t...   ???";
 // *INDENT-ON*
 }
