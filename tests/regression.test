@@ -129,9 +129,9 @@
 60039 staging/Uncrustify.Cpp.cfg    staging/UNI-30498.cpp
 60040 staging/Uncrustify.CSharp.cfg staging/UNI-30498_2.cs
 60041 staging/squeeze-paren-close-Option.cfg staging/squeeze-paren-close-Option.cs
-60044 staging/UNI-37241.cfg staging/UNI-37241.cs
 60042 staging/Uncrustify.Cpp.cfg    staging/UNI-18777.cpp
 60043 staging/Uncrustify.Cpp.cfg    staging/UNI-34087.cpp
+60044 staging/Uncrustify.CSharp.cfg staging/UNI-37241.cs
 60045 staging/Uncrustify.CSharp.cfg staging/indent-multistring-coulmn1.cs
 60046 staging/Uncrustify.CSharp.cfg staging/UNI-24090.cs
 60047 staging/Uncrustify.CSharp.cfg staging/UNI-24076.cs
