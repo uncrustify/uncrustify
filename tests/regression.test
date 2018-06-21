@@ -83,7 +83,7 @@
 10104 staging/Uncrustify.CSharp.cfg staging/UNI-2505.cs
 20001 staging/Uncrustify.Cpp.cfg    staging/UNI-32012.cpp
 20002 staging/Uncrustify.Cpp.cfg    staging/UNI-32657.cpp
-20003 staging/UNI-32405.cfg         staging/UNI-32405.cs
+20003 staging/Uncrustify.CSharp.cfg staging/UNI-32405.cs
 20004 staging/Uncrustify.Cpp.cfg    staging/UNI-32009.cpp
 20005 staging/Uncrustify.Cpp.cfg    staging/UNI-34114.cpp
 20006 staging/Uncrustify.CSharp.cfg staging/UNI-32014.cs
