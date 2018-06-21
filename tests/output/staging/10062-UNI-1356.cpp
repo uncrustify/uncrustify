@@ -12,16 +12,16 @@
 // orignal code
 // The long line are manually split and not indented to test uncrustify indent
 
-int main(int argc, char *argv[])
+int main (int argc, char *argv[])
 {
-    double a_very_long_variable = test(foobar1, foobar2, foobar3, foobar4,
-        foobar5, foobar6);
+  double a_very_long_variable = test (foobar1, foobar2, foobar3, foobar4,
+      foobar5, foobar6);
 
-    double a_other_very_long = asdfasdfasdfasdfasdf + asdfasfafasdfa +
-        asdfasdfasdf - asdfasdf + 56598;
+  double a_other_very_long = asdfasdfasdfasdfasdf + asdfasfafasdfa +
+      asdfasdfasdf - asdfasdf + 56598;
 
-    testadsfa(dfasdf, fdssaf, dsfasdf, sadfa, sadfas, fsadfa,
-        aaafsdfa, afsd, asfdas, asdfa, asfasdfa, afsda, asfdasfds, asdfasf);
+  testadsfa (dfasdf, fdssaf, dsfasdf, sadfa, sadfas, fsadfa,
+      aaafsdfa, afsd, asfdas, asdfa, asfasdfa, afsda, asfdasfds, asdfasf);
 
-    return 0;
+  return 0;
 }
