@@ -45,7 +45,7 @@
 10047 staging/Uncrustify.Cpp.cfg    staging/UNI-1334.cpp
 10048 staging/Uncrustify.Cpp.cfg    staging/UNI-1335.cpp
 10050 staging/Uncrustify.Cpp.cfg    staging/UNI-1337.cpp
-10051 staging/Uncrustify.Cpp.cfg    staging/UNI-1338.cs
+10051 staging/UNI-1338.cfg          staging/UNI-1338.cs
 10052 staging/Uncrustify.Cpp.cfg    staging/UNI-1339.cpp
 10053 staging/Uncrustify.Cpp.cfg    staging/UNI-1340.cpp
 10054 staging/Uncrustify.Cpp.cfg    staging/UNI-1344.cpp
