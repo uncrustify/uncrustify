@@ -8,12 +8,12 @@ extern "C" EXPORTDLL void LaunchXCode()
     NSString* curApp = GetXcodePath();
     [[NSWorkspace sharedWorkspace] launchApplication: curApp];
 
-    NSArray *selectedApps =
+    NSArray* selectedApps =
         [NSRunningApplication runningApplicationsWithBundleIdentifier: kXCodeBundleId];
 
     for (int i = 0; i < [selectedApps count]; i++)
     {
-        NSRunningApplication *app = [selectedApps objectAtIndex: i];
+        NSRunningApplication* app = [selectedApps objectAtIndex: i];
         int count = 0;
         NSLog(@"Checking %@\n", app);
         while (![app isFinishedLaunching] && count++ < 300)

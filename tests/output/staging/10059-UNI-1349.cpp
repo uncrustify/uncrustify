@@ -19,9 +19,9 @@ void foo()
 
 // correct
 
-typedef void (Goo::*Boo)(const TYPE &data, ULONG index, LONG minimum, LONG maximum);
+typedef void (Goo::* Boo)(const TYPE &data, ULONG index, LONG minimum, LONG maximum);
 // ... --> ...
-typedef void (Goo::*Boo)(const TYPE &data, ULONG index, LONG minimum, LONG maximum);
+typedef void (Goo::* Boo)(const TYPE &data, ULONG index, LONG minimum, LONG maximum);
 
 // incorrect
 

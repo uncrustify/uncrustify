@@ -186,7 +186,7 @@ MessageIdentifier::MessageIdentifier(const char* name, Options opts, const Unity
 typedef HRESULT(WINAPI* PFN_CREATE_DXGI_FACTORY)(
     REFIID ridd,
     void** ppFactory
-    ); // Used in CreateDXGIFactory
+);     // Used in CreateDXGIFactory
 
 //Case11
 Class abc
@@ -247,16 +247,16 @@ int func_name()
 
 //Case 15
 Class abc{
-    return  (metrics.meanAngularDistortion < angleThreshold
+    return metrics.meanAngularDistortion < angleThreshold
         && metrics.meanAreaDistortion < areaThreshold
-        );
+    ;
 };
 
 //Case 16
 public class ProductDefinition
 {
     public ProductDefinition(string id, string storeSpecificId, ProductType type, bool enabled, PayoutDefinition payout) : this(id, storeSpecificId, type, enabled, new List<PayoutDefinition> { payout }
-        )
+    )
 }
 //Case 17
 int func_name() {
@@ -280,14 +280,14 @@ int func_name() {
 //Case 19
     try
     {
-        return (s_AvailableKeyalias = AndroidSDKTools.GetInstanceOrThrowException().
-                ReadAvailableKeys(keystore, storepass));
+        return s_AvailableKeyalias = AndroidSDKTools.GetInstanceOrThrowException().
+            ReadAvailableKeys(keystore, storepass);
     }
 
 
 //Case 20
     int number_to_move = (yy_n_chars) + 2;
-    char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
+    char* dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
         YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
 
 
@@ -299,7 +299,7 @@ int func_name() {
             imageHeight - y - size.y,
             size.x,
             size.y
-            );
+        );
     }
 
 
@@ -334,7 +334,7 @@ static FORCEINLINE void* win32direct_mmap(size_t size)
 }
 
 //Case 26
-void *tfBufferPtr = sce::Gnm::getTessellationFactorRingBufferBaseAddress();
+void* tfBufferPtr = sce::Gnm::getTessellationFactorRingBufferBaseAddress();
 int func_name()
 {
     if (!ret)
@@ -354,7 +354,7 @@ int func_name()
             TangoExternal::TangoCameraId::TANGO_CAMERA_COLOR,
             nullptr,
             &OnTextureAvailableRouter);
-        return (err == TangoExternal::TANGO_SUCCESS);
+        return err == TangoExternal::TANGO_SUCCESS;
     }
 }
 

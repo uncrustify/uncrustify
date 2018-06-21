@@ -14,9 +14,9 @@ class C
         Action localMethod = () => {
             SomeClass.OtherMethod(new Dictionary<string, string>
             {
-                {"a", "one"},
-                {"b", "two"},
-                {"c", "three"}
+                { "a", "one" },
+                { "b", "two" },
+                { "c", "three" }
             });
         };
         m_Mixers.Add(

@@ -128,7 +128,7 @@ templateProp.stringValue = Templates[
 
 //Case 15
 int number_to_move = (yy_n_chars) + 2;
-char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
+char* dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
     YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
 
 
