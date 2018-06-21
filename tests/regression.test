@@ -39,7 +39,7 @@
 10034 staging/Uncrustify.Cpp.cfg staging/asm.h.mm
 10035 staging/Uncrustify.Cpp.cfg staging/definesalign.h.mm
 10036 staging/Uncrustify.Cpp.cfg staging/inttypes.h.mm
-10038 staging/614_multiple-passes.cfg staging/614_multiple-passes.cs
+10038 staging/Uncrustify.CSharp.cfg staging/614_multiple-passes.cs
 10039 staging/Uncrustify.CSharp.cfg staging/615_nested-usings.cs
 10042 staging/Uncrustify.Cpp.cfg    staging/indent-bad.mm
 10043 staging/Uncrustify.CSharp.cfg staging/nl-brace.cs
