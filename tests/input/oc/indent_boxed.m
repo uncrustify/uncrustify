@@ -45,3 +45,15 @@ inline static void installGelMarkers(void) {
 NSAlert *alert = [[NSAlert alloc] init];
 }];
 }
+
+[[NSAttributedString alloc] initWithString:inJunction.reverseName attributes:@{
+NSFontAttributeName: font,
+NSForegroundColorAttributeName: inJunction.reverseColor
+}];
+@{
+NSFontAttributeName: self.font,
+NSForegroundColorAttributeName: inJunction.forwardColor
+}
+[[NSAttributedString alloc] initWithString:inJunction.reverseName attributes:@{ NSFontAttributeName: font, NSForegroundColorAttributeName: inJunction.reverseColor }];
+[[NSAttributedString alloc] initWithString:inJunction.reverseName
+attributes:@{ NSFontAttributeName: font, NSForegroundColorAttributeName: inJunction.reverseColor }];

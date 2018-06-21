@@ -1475,7 +1475,14 @@ void indent_text(void)
                     && frm.top().pc->parent_type == CT_OC_AT)
             {
                // We are inside @{ ... } -- indent one tab from the paren
-               frm.top().indent = frm.prev().indent_tmp;
+               if (frm.prev().indent_cont)
+               {
+                  frm.top().indent = frm.prev().indent_tmp;
+               }
+               else
+               {
+                  frm.top().indent = frm.prev().indent_tmp + indent_size;
+               }
                log_indent();
             }
             // Issue # 1620, UNI-24090.cs
@@ -1507,6 +1514,20 @@ void indent_text(void)
                frm.top().indent = frm.prev().indent_tmp + indent_size;
                log_indent();
             }
+         }
+         else if (  frm.top().pc->type == CT_BRACE_OPEN
+                 && frm.top().pc->parent_type == CT_OC_AT)
+         {
+            // We are inside @{ ... } -- indent one tab from the paren
+            if (frm.prev().indent_cont)
+            {
+               frm.top().indent = frm.prev().indent_tmp;
+            }
+            else
+            {
+               frm.top().indent = frm.prev().indent_tmp + indent_size;
+            }
+            log_indent();
          }
          else
          {
