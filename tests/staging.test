@@ -23,3 +23,17 @@
 60023 staging/Uncrustify.CSharp.cfg staging/UNI-18437.cs
 
 60035 staging/Uncrustify.CSharp.cfg staging/UNI-22858.cs
+
+# low max limit of mod_add_long_namespace_closebrace_comment to 16 makes noise
+10076 staging/UNI-1343.cfg          staging/UNI-1343.cs
+
+# too agressive
+60006 staging/UNI-2049.cfg          staging/UNI-2049.cpp
+
+# infinite loop (see #1825)
+10075 staging/UNI-2021.cfg          staging/UNI-2021.cs
+60011 staging/UNI-11095.cfg         staging/UNI-11095.mm
+
+# unstable (see #1826)
+60047 staging/UNI-24076.cfg         staging/UNI-24076.cs
+
