@@ -37,3 +37,5 @@
 # unstable (see #1826)
 60047 staging/UNI-24076.cfg         staging/UNI-24076.cs
 
+# we would never enforce any kind of alignment
+10100 staging/issue_564.cfg staging/issue_564.cpp
