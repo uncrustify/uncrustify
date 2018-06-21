@@ -98,3 +98,5 @@ if (_build_type MATCHES "release|relwithdebinfo|minsizerel")
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cli
   )
 endif()
+
+add_test(NAME sanity COMMAND uncrustify --help)
