@@ -28,7 +28,7 @@
 10023 staging/Uncrustify.Cpp.cfg staging/for_auto.cpp
 10024 staging/Uncrustify.Cpp.cfg staging/ifcomment.cpp
 10025 staging/Uncrustify.Cpp.cfg staging/qtargs.cpp
-10026 staging/ifoneliner.cfg staging/ifoneliner.cpp
+10026 staging/Uncrustify.Cpp.cfg staging/ifoneliner.cpp
 10027 staging/Uncrustify.CSharp.cfg staging/oneline_property.cs
 10028 staging/Uncrustify.CSharp.cfg staging/ifcolalign.cs
 10029 staging/Uncrustify.CSharp.cfg staging/when.cs
@@ -41,7 +41,7 @@
 10036 staging/Uncrustify.Cpp.cfg staging/inttypes.h.mm
 10038 staging/614_multiple-passes.cfg staging/614_multiple-passes.cs
 10039 staging/Uncrustify.CSharp.cfg staging/615_nested-usings.cs
-10042 staging/ifoneliner.cfg staging/indent-bad.mm
+10042 staging/Uncrustify.Cpp.cfg    staging/indent-bad.mm
 10043 staging/Uncrustify.CSharp.cfg staging/nl-brace.cs
 10044 staging/Uncrustify.CSharp.cfg staging/ifcomment.cs
 10045 staging/Uncrustify.CSharp.cfg staging/UNI-1288.cs
