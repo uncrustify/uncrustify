@@ -247,9 +247,9 @@ int func_name()
 
 //Case 15
 Class abc{
-    return metrics.meanAngularDistortion < angleThreshold
+    return  (metrics.meanAngularDistortion < angleThreshold
         && metrics.meanAreaDistortion < areaThreshold
-    ;
+    );
 };
 
 //Case 16
@@ -280,14 +280,14 @@ int func_name() {
 //Case 19
     try
     {
-        return s_AvailableKeyalias = AndroidSDKTools.GetInstanceOrThrowException().
-            ReadAvailableKeys(keystore, storepass);
+        return (s_AvailableKeyalias = AndroidSDKTools.GetInstanceOrThrowException().
+                ReadAvailableKeys(keystore, storepass));
     }
 
 
 //Case 20
     int number_to_move = (yy_n_chars) + 2;
-    char* dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
+    char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
         YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
 
 
@@ -334,7 +334,7 @@ static FORCEINLINE void* win32direct_mmap(size_t size)
 }
 
 //Case 26
-void* tfBufferPtr = sce::Gnm::getTessellationFactorRingBufferBaseAddress();
+void *tfBufferPtr = sce::Gnm::getTessellationFactorRingBufferBaseAddress();
 int func_name()
 {
     if (!ret)
@@ -354,7 +354,7 @@ int func_name()
             TangoExternal::TangoCameraId::TANGO_CAMERA_COLOR,
             nullptr,
             &OnTextureAvailableRouter);
-        return err == TangoExternal::TANGO_SUCCESS;
+        return (err == TangoExternal::TANGO_SUCCESS);
     }
 }
 

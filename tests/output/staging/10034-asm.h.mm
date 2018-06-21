@@ -1,4 +1,4 @@
-static inline void atomic_retain(volatile int* p)
+static inline void atomic_retain(volatile int *p)
 {
 #if defined(_MSC_VER)
     _InterlockedIncrement((LONG volatile*)p);

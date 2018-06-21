@@ -1,4 +1,4 @@
-char* array_assign[2][4] =
+char *array_assign[2][4] =
 {
     {
         // foo
