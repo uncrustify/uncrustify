@@ -269,8 +269,8 @@
 30920  ben_027.cfg                          cpp/indent-off.cpp
 30921  ben_028.cfg                          cpp/variadic-template.h
 30922  sp_before_ellipsis-f.cfg             cpp/variadic-template.h
-30923  sp_before_ellipsis-f.cfg             cpp/sp_before_ellipsis.cpp
-30924  sp_before_ellipsis-r.cfg             cpp/sp_before_ellipsis.cpp
+30923  sf.2886991-f.cfg                     cpp/sf.2886991.cpp
+30924  sf.2886991-r.cfg                     cpp/sf.2886991.cpp
 30925  sp_func_call_empty.cfg               cpp/function-def.cpp
 30926  sp_func_class_empty.cfg              cpp/function-def.cpp
 30927  sp_func_def_empty.cfg                cpp/function-def.cpp
@@ -309,6 +309,24 @@
 31583  empty.cfg                            cpp/sf583.cpp
 31593  indent_continue-8.cfg                cpp/sf593.cpp
 31594  issue_672.cfg                        cpp/issue_672.cpp
+
+31600  sp_paren_ellipsis-f.cfg              cpp/parameter-packs.cpp
+31601  sp_paren_ellipsis-r.cfg              cpp/parameter-packs.cpp
+31602  sp_sizeof_ellipsis-f.cfg             cpp/parameter-packs.cpp
+31603  sp_sizeof_ellipsis-r.cfg             cpp/parameter-packs.cpp
+31604  sp_before_ellipsis-f.cfg             cpp/parameter-packs.cpp
+31605  sp_before_ellipsis-r.cfg             cpp/parameter-packs.cpp
+31606  sp_type_ellipsis-f.cfg               cpp/parameter-packs.cpp
+31607  sp_type_ellipsis-r.cfg               cpp/parameter-packs.cpp
+31608  sp_sizeof_ellipsis_paren-f.cfg       cpp/parameter-packs.cpp
+31609  sp_sizeof_ellipsis_paren-r.cfg       cpp/parameter-packs.cpp
+
+31620  sp_after_type-f.cfg                  cpp/sp_after_type.cpp
+31621  sp_after_type-i.cfg                  cpp/sp_after_type.cpp
+31622  sp_after_cast-f.cfg                  cpp/sp_after_type.cpp
+31623  sp_after_cast-r.cfg                  cpp/sp_after_type.cpp
+31624  sp_before_ptr_star-f.cfg             cpp/sp_after_type.cpp
+31625  sp_before_ptr_star-r.cfg             cpp/sp_after_type.cpp
 
 31700  toggle_processing_cmt.cfg            cpp/toggle_processing_cmt.cpp
 31701  toggle_processing_cmt2.cfg           cpp/toggle_processing_cmt2.cpp
@@ -623,7 +641,6 @@
 60030  U33-Cpp.cfg                          cpp/UNI-21727.cpp
 60031  empty.cfg                            cpp/UNI-21728.cpp
 60032  empty.cfg                            cpp/UNI-21729.cpp
-60034  U35-Cpp.cfg                          cpp/UNI-21731.cpp
 60036  UNI-2680.cfg                         cpp/UNI-2680.cpp
 60038  UNI-30088.cfg                        cpp/UNI-30088.cpp
 60039  U36-Cpp.cfg                          cpp/UNI-30628.cpp
