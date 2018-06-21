@@ -16,7 +16,7 @@
 10009 staging/STUCK_macro-difficulties.cfg staging/STUCK_macro-difficulties.cpp
 10011 staging/620_getset-brace.cfg staging/620_getset-brace.cs
 10012 staging/621_this-spacing.cfg staging/621_this-spacing.cs
-10013 staging/625_where-constraints.cfg staging/625_where-constraints.cs
+10013 staging/Uncrustify.CSharp.cfg staging/625_where-constraints.cs
 10014 staging/Uncrustify.CSharp.cfg staging/630_bad-new-init-semicolon-removal.cs
 10015 staging/Uncrustify.CSharp.cfg staging/misc-failures.cs
 10016 staging/Uncrustify.Cpp.cfg    staging/new-constraint-paren-space.cs
