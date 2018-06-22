@@ -75,7 +75,7 @@ const char *path_basename(const char *path);
 int path_dirname_len(const char *filename);
 
 
-void usage_exit(const char *msg, const char *argv0, int code);
+void usage(const char *msg = nullptr, const char *argv0 = nullptr);
 
 
 /**
