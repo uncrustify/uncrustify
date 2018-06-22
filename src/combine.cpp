@@ -1054,6 +1054,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    if (chunk_is_token(pc, CT_SIZEOF) && language_is_set(LANG_ALLC))
    {
       tmp = chunk_get_next_ncnl(pc);
+      if (chunk_is_token(tmp, CT_ELLIPSIS))
+      {
+         set_chunk_parent(tmp, CT_SIZEOF);
+         tmp = chunk_get_next_ncnl(pc);
+      }
       if (chunk_is_paren_open(tmp))
       {
          set_paren_parent(tmp, CT_TYPE_CAST);
@@ -1395,6 +1400,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             || chunk_is_token(next, CT_ENUM)
             || chunk_is_token(next, CT_UNION))
          && prev->type != CT_SIZEOF
+         && prev->parent_type != CT_SIZEOF
          && prev->parent_type != CT_OPERATOR
          && (pc->flags & PCF_IN_TYPEDEF) == 0)
       {
@@ -1581,7 +1587,9 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          set_chunk_parent(next, pc->parent_type);
       }
       else if (  chunk_is_token(pc, CT_STAR)
-              && (chunk_is_token(prev, CT_SIZEOF) || chunk_is_token(prev, CT_DELETE)))
+              && (  chunk_is_token(prev, CT_SIZEOF)
+                 || chunk_is_token(prev, CT_DELETE)
+                 || (pc && pc->parent_type == CT_SIZEOF)))
       {
          set_chunk_type(pc, CT_DEREF);
       }
@@ -2822,6 +2830,7 @@ static void fix_casts(chunk_t *start)
               && pc->type != CT_PAREN_OPEN
               && pc->type != CT_STRING
               && pc->type != CT_SIZEOF
+              && pc->parent_type != CT_SIZEOF
               && pc->type != CT_FUNC_CALL
               && pc->type != CT_FUNC_CALL_USER
               && pc->type != CT_FUNCTION
@@ -3445,6 +3454,7 @@ void combine_labels(void)
                else if (  tmp == nullptr
                        || (  tmp->type != CT_NUMBER
                           && tmp->type != CT_SIZEOF
+                          && tmp->parent_type != CT_SIZEOF
                           && !(tmp->flags & (PCF_IN_STRUCT | PCF_IN_CLASS)))
                        || chunk_is_token(tmp, CT_NEWLINE))
                {

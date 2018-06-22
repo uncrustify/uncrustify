@@ -123,7 +123,7 @@ before_script:
 script:
   # build
   - make VERBOSE=1
-  - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest -V -j 4; fi
+  - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest --output-on-failure -j 4; fi
   - if [ "x${BUILD_TYPE}" == "xcoverage" ]; then make coverage; fi
   # test if all the sources are conform to the forUncrustifySources.cfg config file
   - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../ && ./scripts/Run_uncrustify_for_sources.sh; cd -; fi
