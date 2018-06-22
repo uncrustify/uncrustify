@@ -835,6 +835,9 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
     * Fixes the issue # 1591
     * In c# the numbers starting with 0 are not treated as octal numbers.
     */
+   // Fixes the issue 1591
+   // In c# the numbers starting with 0 are not treated as octal numbers.
+
    bool did_hex = false;
    if (ctx.peek() == '0' && !language_is_set(LANG_CS))
    {
@@ -1502,7 +1505,7 @@ static bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
           * substitution. */
          if (pc.type == CT_PP_IGNORE && !cpd.in_preproc)
          {
-            pc.type = find_keyword_type(pc.text(), pc.str.size());
+            pc.type = find_keyword_type(pc.text(), pc.str.size(), false);
          }
       }
    }
@@ -1752,8 +1755,8 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       return(true);
    }
 
-   // Handle unknown/unhandled preprocessors
-   if (cpd.in_preproc > CT_PP_BODYCHUNK && cpd.in_preproc <= CT_PP_OTHER)
+   // Handle unknown/known/unhandled preprocessors
+   if ((cpd.in_preproc > CT_PP_BODYCHUNK && cpd.in_preproc <= CT_PP_OTHER) || cpd.in_preproc == CT_PP_INCLUDE)
    {
       pc.str.clear();
       tok_info ss;
@@ -1764,6 +1767,13 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       while (ctx.more())
       {
          size_t ch = ctx.peek();
+         // Fix for issue #1752
+         // Ignoring extra spaces after ' \ ' for preproc body continuations
+         if (last == '\\' && ch == ' ')
+         {
+            ctx.get();
+            continue;
+         }
 
          // Fix for issue #1752
          // Ignoring extra spaces after ' \ ' for preproc body continuations
@@ -2205,6 +2215,21 @@ void tokenize(const deque<int> &data, chunk_t *ref)
                set_chunk_type(pc, CT_PP_OTHER);
             }
             cpd.in_preproc = pc->type;
+         }
+         else if (cpd.in_preproc == CT_PP_IGNORE)
+         {
+            // ASSERT(cpd.settings[UO_pp_ignore_define_body].b);
+            if (pc->type != CT_NL_CONT && pc->type != CT_COMMENT_CPP)
+            {
+               set_chunk_type(pc, CT_PP_IGNORE);
+            }
+         }
+         else if (  cpd.in_preproc == CT_PP_DEFINE && pc->type == CT_PAREN_CLOSE
+                 && cpd.settings[UO_pp_ignore_define_body].b)
+         {
+            // When we have a PAREN_CLOSE in a PP_DEFINE we should be terminating a MACRO_FUNC
+            // arguments list. Therefore we can enter the PP_IGNORE state and ignore next chunks.
+            cpd.in_preproc = CT_PP_IGNORE;
          }
          else if (cpd.in_preproc == CT_PP_IGNORE)
          {

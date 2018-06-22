@@ -728,7 +728,7 @@ def reduce(options_list):
     ret_flag = ERROR_CODE.NONE
 
     file_count = len(FLAGS.input_file_path)
-    lang_max_idx = -1 if FLAGS.lang is None else len(FLAGS.lang) - 1
+        lang_max_idx = -1 if FLAGS.lang is None else len(FLAGS.lang) - 1
 
     pool = Pool(processes=FLAGS.jobs)
     with make_temp_directory() as tmp_dir:
@@ -787,7 +787,7 @@ def reduce(options_list):
             option_idx = idx % config_list_len
 
             if option_flags[option_idx] == RESTULTSFLAG.KEEP:
-                continue
+                    continue
 
             option_flags[option_idx] = flag
         del results[:]
@@ -886,7 +886,7 @@ def reduce_mode():
 
         if ret_flag != ERROR_CODE.NONE \
                 or config_lines_redu == old_config_lines_redu:
-            break
+                    break
 
     if ret_flag == ERROR_CODE.NONE:
         # use the debug file trick again to get correctly sorted options
@@ -1112,12 +1112,12 @@ if __name__ == "__main__":
             sys_exit(ERROR_CODE.FLAGS)
 
         # flatten 2 dimensional args: -f p -f p -f p -f p0 p1 p2 -> [[],[], ...]
-        FLAGS.input_file_path = [j for i in FLAGS.input_file_path for j in i]
+    FLAGS.input_file_path = [j for i in FLAGS.input_file_path for j in i]
 
-        FLAGS.formatted_file_path = [j for i in
-                                     FLAGS.formatted_file_path for j in i]
+    FLAGS.formatted_file_path = [j for i in
+                                 FLAGS.formatted_file_path for j in i]
 
-        if len(FLAGS.input_file_path) != len(FLAGS.formatted_file_path):
+    if len(FLAGS.input_file_path) != len(FLAGS.formatted_file_path):
             print("Unequal amount of input and formatted file paths.",
                   file=stderr)
             sys_exit(ERROR_CODE.FLAGS)

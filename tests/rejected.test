@@ -1,0 +1,34 @@
+#
+# Rejected test suite. These are tests that pass but need to be reworked.
+# 
+# test.name  config.file  input.file 
+#
+
+# doens't look like the right fix
+10007 staging/dont-process-defines.cfg staging/dont-process-defines.cpp
+10009 staging/STUCK_macro-difficulties.cfg staging/STUCK_macro-difficulties.cpp
+
+# need to make these ones work with our configs
+10018 empty.cfg staging/delete-space-oc.mm
+10019 empty.cfg staging/func-param-wrap-oc.mm
+10045 staging/UNI-1288.cfg staging/UNI-1288.cs
+10051 staging/UNI-1338.cfg          staging/UNI-1338.cs
+10060 staging/UNI-1350.cfg          staging/UNI-1350.cpp
+10062 staging/UNI-1356.cfg          staging/UNI-1356.cpp
+20003 staging/UNI-32405.cfg         staging/UNI-32405.cs
+
+# we would never enforce any kind of alignment
+10100 staging/issue_564.cfg staging/issue_564.cpp
+
+# low max limit of mod_add_long_namespace_closebrace_comment to 16 makes noise
+10076 staging/UNI-1343.cfg          staging/UNI-1343.cs
+
+# too agressive
+60006 staging/UNI-2049.cfg          staging/UNI-2049.cpp
+
+# infinite loop (see #1825)
+10075 staging/UNI-2021.cfg          staging/UNI-2021.cs
+60011 staging/UNI-11095.cfg         staging/UNI-11095.mm
+
+# unstable (see #1826)
+60047 staging/UNI-24076.cfg         staging/UNI-24076.cs

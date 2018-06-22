@@ -56,6 +56,11 @@ matrix:
             - g++-mingw-w64-i686
             - g++-mingw-w64-x86-64
 
+    - os: linux
+      dist: trusty
+      env: BUILD_TYPE=coverage COVERALLS_TOKEN="iJXKQxvt6RJMcxkn99GIhakcoCx7XvzbU"
+      compiler: gcc
+
     # OSX
     - os: osx
       env: BADGE=osx BUILD_TYPE=debug
@@ -67,6 +72,13 @@ branches:
   - master
 
 before_install:
+  - |
+    if [ "x${BUILD_TYPE}" == "xcoverage" ]; then
+      sudo apt-get update
+      sudo apt-get install -qy python3-pip lcov
+      pip3 install --user PyYAML
+      pip3 install --user --upgrade cpp-coveralls
+    fi
   - if [ -n "${C_COMPILER}" ]; then export CC="${C_COMPILER}"; fi
   - if [ -n "${CXX_COMPILER}" ]; then export CXX="${CXX_COMPILER}"; fi
   - ${CXX} --version
@@ -88,7 +100,7 @@ before_script:
   - |-
     case "${BUILD_TYPE}" in
       "coverage")
-        cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_COVERAGE=ON ..
+        cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_CODECOVERAGE=ON ..
         ;;
       "asan")
         cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZER=address ..
@@ -111,10 +123,16 @@ before_script:
 script:
   # build
   - make VERBOSE=1
+  - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest --output-on-failure -j 4; fi
+  - if [ "x${BUILD_TYPE}" == "xcoverage" ]; then make coverage; fi
   # test if all the sources are conform to the forUncrustifySources.cfg config file
   - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../ && ./scripts/Run_uncrustify_for_sources.sh; cd -; fi
-  # run all tests
-  - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest --output-on-failure; fi
+  # test if uncrustify runs for (some) command line options
+  - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../tests/cli && ./test_cli_options.py; cd -; fi
 
   # DO NOT REMOVE (debugging purposes)
   #- /home/travis/build/uncrustify/uncrustify/build/uncrustify -l cs -c /home/travis/build/uncrustify/uncrustify/tests/config/U10-Cpp.cfg -f /home/travis/build/uncrustify/uncrustify/tests/input/cs/newlines.mm -L A
+
+after_success:
+  # publish coverage data to coveralls
+  - if [ "x${BUILD_TYPE}" == "xcoverage" ]; then cd ../ && coveralls -l build/cmake_coverage.output -t $COVERALLS_TOKEN; fi

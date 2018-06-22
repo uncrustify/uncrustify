@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+    <!--
+        Copy or symlink this file into ~\Documents\Common\Visual Studio 2013\Visualizers
+
+        Help on .natvis files: http://code.msdn.microsoft.com/windowsdesktop/Writing-type-visualizers-2eae77a2
+        C++ format specifiers: http://msdn.microsoft.com/en-us/library/75w45ekt.aspx
+    -->
+
+    <Type Name="chunk_t">
+        <DisplayString>{type} l:{orig_line}/c:{orig_col} {str.m_logtext._Myfirst,s}</DisplayString>
+    </Type>
+
+</AutoVisualizer>
+

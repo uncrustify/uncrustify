@@ -572,8 +572,9 @@ void indent_text(void)
    while (pc != nullptr)
    {
       //  forces string literal to column-1 [Fix for 1246]
-      if (  (chunk_is_token(pc, CT_STRING) || chunk_is_token(pc, CT_STRING_MULTI))
-         && !language_is_set(LANG_OC))
+      if (  chunk_is_token(pc, CT_STRING_MULTI)
+         && !language_is_set(LANG_OC)
+         && cpd.settings[UO_indent_col1_multi_string_literal].b)
       {
          string str = pc->text();
          if ((str[0] == '@') && (chunk_get_prev(pc)->type == CT_NEWLINE))
@@ -1338,7 +1339,6 @@ void indent_text(void)
                     || pc->parent_type == CT_DELEGATE))
          {
             frm.top().brace_indent = frm.prev().indent;
-            // Issue # 1620, UNI-24090.cs
             if (are_chunks_in_same_line(frm.prev().pc, chunk_get_prev_ncnlnp(frm.top().pc)))
             {
                frm.top().brace_indent -= indent_size;
@@ -1478,7 +1478,6 @@ void indent_text(void)
                frm.top().indent = frm.prev().indent_tmp;
                log_indent();
             }
-            // Issue # 1620, UNI-24090.cs
             else if (  are_chunks_in_same_line(frm.prev().pc, frm.top().pc)
                     && !cpd.settings[UO_indent_align_paren].b
                     && chunk_is_paren_open(frm.prev().pc)
@@ -1895,7 +1894,27 @@ void indent_text(void)
             }
          }
       }
-      else if (  chunk_is_token(pc, CT_PAREN_OPEN)
+      else if (pc->type == CT_PAREN_OPEN && pc->parent_type == CT_IGNORE_CONTENT)
+      {
+         int     move = 0;
+         chunk_t *tmp = chunk_skip_to_match(pc);
+         if (  chunk_is_newline(chunk_get_prev(pc))
+            && pc->column != indent_column)
+         {
+            move = indent_column - pc->column;
+         }
+         else
+         {
+            move = pc->column - pc->orig_col;
+         }
+         do
+         {
+            pc->column = pc->orig_col + move;
+            pc         = chunk_get_next(pc);
+         } while (pc != tmp);
+         reindent_line(pc, indent_column);
+      }
+      else if (  pc->type == CT_PAREN_OPEN
               && (  pc->parent_type == CT_ASM
                  || (chunk_get_prev_ncnl(pc) != nullptr && chunk_get_prev_ncnl(pc)->type == CT_ASM))
               && cpd.settings[UO_indent_ignore_asm_block].b)
@@ -2062,7 +2081,6 @@ void indent_text(void)
                }
                frm.top().indent = frm.at(sub).indent + indent_size;
                log_indent();
-
                frm.top().indent_tab = frm.top().indent;
                skipped = true;
             }
@@ -3054,7 +3072,6 @@ static bool single_line_comment_indent_rule_applies(chunk_t *start)
 static bool is_end_of_assignment(chunk_t *pc, const ParseFrame &frm)
 {
    return(  (  frm.top().type == CT_ASSIGN_NL
-            || frm.top().type == CT_MEMBER
             || frm.top().type == CT_ASSIGN)
          && (  chunk_is_semicolon(pc)
             || chunk_is_token(pc, CT_COMMA)
