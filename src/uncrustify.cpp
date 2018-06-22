@@ -67,6 +67,15 @@
 #endif
 
 
+// VS throws an error if an attribute newer than the requested standard level
+// is used; everyone else just ignores it (or warns) like they are supposed to
+#if __cplusplus >= 201703L || !defined (_MSC_VER)
+#define NODISCARD    [[nodiscard]]
+#else
+#define NODISCARD
+#endif
+
+
 using namespace std;
 
 
@@ -196,19 +205,20 @@ int path_dirname_len(const char *filename)
 }
 
 
-void usage_exit(const char *msg, const char *argv0, int code)
+void usage_error(const char *msg)
 {
    if (msg != nullptr)
    {
       fprintf(stderr, "%s\n", msg);
       log_flush(true);
    }
-   if (code != EXIT_SUCCESS || argv0 == nullptr)
-   {
-      fprintf(stderr, "Try running with -h for usage information\n");
-      log_flush(true);
-      exit(code);
-   }
+   fprintf(stderr, "Try running with -h for usage information\n");
+   log_flush(true);
+}
+
+
+void usage(const char *argv0)
+{
    fprintf(stdout,
            "Usage:\n"
            "%s [options] [files ...]\n"
@@ -289,8 +299,7 @@ void usage_exit(const char *msg, const char *argv0, int code)
            "\n"
            ,
            path_basename(argv0), UO_option_count);
-   exit(code);
-} // usage_exit
+} // usage
 
 
 static void version_exit(void)
@@ -300,7 +309,7 @@ static void version_exit(void)
 }
 
 
-static void redir_stdout(const char *output_file)
+NODISCARD static int redir_stdout(const char *output_file)
 {
    FILE *my_stdout = stdout;  // Reopen stdout
 
@@ -312,10 +321,12 @@ static void redir_stdout(const char *output_file)
          LOG_FMT(LERR, "Unable to open %s for write: %s (%d)\n",
                  output_file, strerror(errno), errno);
          cpd.error_count++;
-         usage_exit(nullptr, nullptr, EX_IOERR);
+         usage_error();
+         return(EX_IOERR);
       }
       LOG_FMT(LNOTE, "Redirecting output to %s\n", output_file);
    }
+   return(EXIT_SUCCESS);
 }
 
 // Currently, the crash handler is only supported while building under MSVC
@@ -384,7 +395,8 @@ int main(int argc, char *argv[])
    // If ran without options show the usage info and exit */
    if (argc == 1)
    {
-      usage_exit(nullptr, argv[0], EXIT_SUCCESS);
+      usage(argv[0]);
+      return(EXIT_SUCCESS);
    }
 
 #ifdef DEBUG
@@ -425,7 +437,8 @@ int main(int argc, char *argv[])
       || arg.Present("--usage")
       || arg.Present("-?"))
    {
-      usage_exit(nullptr, argv[0], EXIT_SUCCESS);
+      usage(argv[0]);
+      return(EXIT_SUCCESS);
    }
 
    if (arg.Present("--show-config"))
@@ -618,7 +631,8 @@ int main(int argc, char *argv[])
          || suffix
          || cpd.if_changed))
    {
-      usage_exit("Cannot use --check with output options.", argv[0], EX_NOUSER);
+      usage_error("Cannot use --check with output options.");
+      return(EX_NOUSER);
    }
 
    if (!cpd.do_check)
@@ -627,11 +641,13 @@ int main(int argc, char *argv[])
       {
          if (prefix != nullptr || suffix != nullptr)
          {
-            usage_exit("Cannot use --replace with --prefix or --suffix", argv[0], EX_NOINPUT);
+            usage_error("Cannot use --replace with --prefix or --suffix");
+            return(EX_NOINPUT);
          }
          if (source_file != nullptr || output_file != nullptr)
          {
-            usage_exit("Cannot use --replace or --no-backup with -f or -o", argv[0], EX_NOINPUT);
+            usage_error("Cannot use --replace or --no-backup with -f or -o");
+            return(EX_NOINPUT);
          }
       }
       else
@@ -653,7 +669,8 @@ int main(int argc, char *argv[])
       cpd.filename = cfg_file;
       if (load_option_file(cpd.filename.c_str()) < 0)
       {
-         usage_exit("Unable to load the config file", argv[0], EX_IOERR);
+         usage_error("Unable to load the config file");
+         return(EX_IOERR);
       }
       // test if all options are compatible to each other
       if (cpd.settings[UO_nl_max].u > 0)
@@ -704,7 +721,8 @@ int main(int argc, char *argv[])
       else
       {
          // TODO: consider using defines like EX_USAGE from sysexits.h
-         usage_exit("Error while parsing --set", argv[0], EX_USAGE);
+         usage_error("Error while parsing --set");
+         return(EX_USAGE);
       }
    }
 
@@ -759,7 +777,10 @@ int main(int argc, char *argv[])
       detect_options();
       uncrustify_end();
 
-      redir_stdout(output_file);
+      if (auto error = redir_stdout(output_file))
+      {
+         return(error);
+      }
       save_option_file(stdout, update_config_wd);
       return(EXIT_SUCCESS);
    }
@@ -767,7 +788,10 @@ int main(int argc, char *argv[])
    if (update_config || update_config_wd)
    {
       // TODO: complain if file-processing related options are present
-      redir_stdout(output_file);
+      if (auto error = redir_stdout(output_file))
+      {
+         return(error);
+      }
       save_option_file(stdout, update_config_wd);
       return(EXIT_SUCCESS);
    }
@@ -778,8 +802,8 @@ int main(int argc, char *argv[])
     */
    if (cfg_file.empty())
    {
-      usage_exit("Specify the config file with '-c file' or set UNCRUSTIFY_CONFIG",
-                 argv[0], EX_IOERR);
+      usage_error("Specify the config file with '-c file' or set UNCRUSTIFY_CONFIG");
+      return(EX_IOERR);
    }
 
    // Done parsing args
@@ -793,14 +817,14 @@ int main(int argc, char *argv[])
    {
       if (source_file != nullptr)
       {
-         usage_exit("Cannot specify both the single file option and a multi-file option.",
-                    argv[0], EX_NOUSER);
+         usage_error("Cannot specify both the single file option and a multi-file option.");
+         return(EX_NOUSER);
       }
 
       if (output_file != nullptr)
       {
-         usage_exit("Cannot specify -o with a multi-file option.",
-                    argv[0], EX_NOHOST);
+         usage_error("Cannot specify -o with a multi-file option.");
+         return(EX_NOHOST);
       }
    }
 
@@ -831,7 +855,10 @@ int main(int argc, char *argv[])
 
       if (!cpd.do_check)
       {
-         redir_stdout(output_file);
+         if (auto error = redir_stdout(output_file))
+         {
+            return(error);
+         }
       }
 
       file_mem fm;
