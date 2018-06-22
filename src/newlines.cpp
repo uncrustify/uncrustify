@@ -2385,6 +2385,11 @@ static void newline_func_def_or_call(chunk_t *start)
          {
             pc = tmp;
          }
+
+         if (is_call)
+         {
+            continue;
+         } // else:
          newline_iarf(pc, cpd.settings[(  start->parent_type == CT_FUNC_DEF
                                        || start->parent_type == CT_FUNC_CLASS_DEF) ?
                                        UO_nl_func_def_args :
@@ -2410,13 +2415,16 @@ static void newline_func_def_or_call(chunk_t *start)
          ae = atmp;
       }
    }
-   newline_iarf(start, as);
+   if (!is_call)
+   {
+      newline_iarf(start, as);
+   }
 
    // and fix up the close parenthesis
    if (chunk_is_token(pc, CT_FPAREN_CLOSE))
    {
       prev = chunk_get_prev_nnl(pc);
-      if (prev != nullptr && prev->type != CT_FPAREN_OPEN)
+      if (prev != nullptr && prev->type != CT_FPAREN_OPEN && !is_call)
       {
          newline_iarf(prev, ae);
       }

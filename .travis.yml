@@ -5,18 +5,18 @@ matrix:
   include:
     - os: linux
       dist: trusty
-      env: BUILD_TYPE=debug
+      env: BADGE=linux BUILD_TYPE=debug
     - os: linux
       dist: trusty
-      env: BUILD_TYPE=release
+      env: BADGE=linux BUILD_TYPE=release
     - os: linux
       dist: trusty
-      env: BUILD_TYPE=release NO_MACRO_VARARG=1
+      env: BADGE=linux BUILD_TYPE=release NO_MACRO_VARARG=1
 
     # GCC 6
     - os: linux
       dist: trusty 
-      env: C_COMPILER=gcc-6 CXX_COMPILER=g++-6
+      env: BADGE=linux C_COMPILER=gcc-6 CXX_COMPILER=g++-6
       addons:
         apt:
           update: true
@@ -29,7 +29,7 @@ matrix:
     # Clang 3.8 address sanitizer
     - os: linux
       dist: trusty
-      env: BUILD_TYPE=asan C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8
+      env: BADGE=linux BUILD_TYPE=asan C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8
       addons:
         apt:
           sources:
@@ -41,7 +41,7 @@ matrix:
     # mingw-w64 Win64 cross-compile
     - os: linux
       dist: trusty
-      env: BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
+      env: BADGE=linux BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
       addons:
         apt:
           packages:
@@ -58,9 +58,9 @@ matrix:
 
     # OSX
     - os: osx
-      env: BUILD_TYPE=debug
+      env: BADGE=osx BUILD_TYPE=debug
     - os: osx
-      env: BUILD_TYPE=release
+      env: BADGE=osx BUILD_TYPE=release
 
     - os: linux
       dist: trusty
@@ -123,9 +123,11 @@ before_script:
 script:
   # build
   - make VERBOSE=1
-  - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest -V -j 4; fi
+  # run all tests
+  - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest --output-on-failure -j 4; fi
+  # collect coverage (needs to be after running tests)
   - if [ "x${BUILD_TYPE}" == "xcoverage" ]; then make coverage; fi
-    # test if all the sources are conform to the forUncrustifySources.cfg config file
+  # test if all the sources are conform to the forUncrustifySources.cfg config file
   - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../ && ./scripts/Run_uncrustify_for_sources.sh; cd -; fi
   # test if uncrustify runs for (some) command line options
   - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../tests/cli && ./test_cli_options.py; cd -; fi

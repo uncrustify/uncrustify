@@ -227,6 +227,8 @@ enum uncrustify_options
    UO_sp_between_mdatype_commas,    //
    UO_sp_paren_comma,               //
    UO_sp_before_ellipsis,           // space before '...'
+   UO_sp_type_ellipsis,             // space between type and '...'
+   UO_sp_paren_ellipsis,            // space between ')' and '...'
    UO_sp_after_class_colon,         // space after class ':'
    UO_sp_before_class_colon,        // space before class ':'
    UO_sp_after_constr_colon,        // space after class constructor ':'
@@ -239,6 +241,8 @@ enum uncrustify_options
    UO_sp_inside_paren_cast,         // spaces inside the parens of a cast
    UO_sp_cpp_cast_paren,            //
    UO_sp_sizeof_paren,              // space between 'sizeof' and '('
+   UO_sp_sizeof_ellipsis,           // space between 'sizeof' and '...'
+   UO_sp_sizeof_ellipsis_paren,     // space between 'sizeof...' and '('
    UO_sp_after_tag,                 // pawn: space after a tag colon
    UO_sp_inside_braces_enum,        // space inside enum '{' and '}' - '{ a, b, c }'
    UO_sp_inside_braces_struct,      // space inside struct/union '{' and '}'
