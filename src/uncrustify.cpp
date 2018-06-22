@@ -205,19 +205,20 @@ int path_dirname_len(const char *filename)
 }
 
 
-void usage(const char *msg, const char *argv0)
+void usage_error(const char *msg)
 {
    if (msg != nullptr)
    {
       fprintf(stderr, "%s\n", msg);
       log_flush(true);
    }
-   if (argv0 == nullptr)
-   {
-      fprintf(stderr, "Try running with -h for usage information\n");
-      log_flush(true);
-      return;
-   }
+   fprintf(stderr, "Try running with -h for usage information\n");
+   log_flush(true);
+}
+
+
+void usage(const char *argv0)
+{
    fprintf(stdout,
            "Usage:\n"
            "%s [options] [files ...]\n"
@@ -320,7 +321,7 @@ NODISCARD static int redir_stdout(const char *output_file)
          LOG_FMT(LERR, "Unable to open %s for write: %s (%d)\n",
                  output_file, strerror(errno), errno);
          cpd.error_count++;
-         usage();
+         usage_error();
          return(EX_IOERR);
       }
       LOG_FMT(LNOTE, "Redirecting output to %s\n", output_file);
@@ -394,7 +395,7 @@ int main(int argc, char *argv[])
    // If ran without options show the usage info and exit */
    if (argc == 1)
    {
-      usage(nullptr, argv[0]);
+      usage(argv[0]);
       return(EXIT_SUCCESS);
    }
 
@@ -436,7 +437,7 @@ int main(int argc, char *argv[])
       || arg.Present("--usage")
       || arg.Present("-?"))
    {
-      usage(nullptr, argv[0]);
+      usage(argv[0]);
       return(EXIT_SUCCESS);
    }
 
@@ -630,7 +631,7 @@ int main(int argc, char *argv[])
          || suffix
          || cpd.if_changed))
    {
-      usage("Cannot use --check with output options.");
+      usage_error("Cannot use --check with output options.");
       return(EX_NOUSER);
    }
 
@@ -640,12 +641,12 @@ int main(int argc, char *argv[])
       {
          if (prefix != nullptr || suffix != nullptr)
          {
-            usage("Cannot use --replace with --prefix or --suffix");
+            usage_error("Cannot use --replace with --prefix or --suffix");
             return(EX_NOINPUT);
          }
          if (source_file != nullptr || output_file != nullptr)
          {
-            usage("Cannot use --replace or --no-backup with -f or -o");
+            usage_error("Cannot use --replace or --no-backup with -f or -o");
             return(EX_NOINPUT);
          }
       }
@@ -668,7 +669,7 @@ int main(int argc, char *argv[])
       cpd.filename = cfg_file;
       if (load_option_file(cpd.filename.c_str()) < 0)
       {
-         usage("Unable to load the config file");
+         usage_error("Unable to load the config file");
          return(EX_IOERR);
       }
       // test if all options are compatible to each other
@@ -720,7 +721,7 @@ int main(int argc, char *argv[])
       else
       {
          // TODO: consider using defines like EX_USAGE from sysexits.h
-         usage("Error while parsing --set");
+         usage_error("Error while parsing --set");
          return(EX_USAGE);
       }
    }
@@ -801,7 +802,7 @@ int main(int argc, char *argv[])
     */
    if (cfg_file.empty())
    {
-      usage("Specify the config file with '-c file' or set UNCRUSTIFY_CONFIG");
+      usage_error("Specify the config file with '-c file' or set UNCRUSTIFY_CONFIG");
       return(EX_IOERR);
    }
 
@@ -816,13 +817,13 @@ int main(int argc, char *argv[])
    {
       if (source_file != nullptr)
       {
-         usage("Cannot specify both the single file option and a multi-file option.");
+         usage_error("Cannot specify both the single file option and a multi-file option.");
          return(EX_NOUSER);
       }
 
       if (output_file != nullptr)
       {
-         usage("Cannot specify -o with a multi-file option.");
+         usage_error("Cannot specify -o with a multi-file option.");
          return(EX_NOHOST);
       }
    }
