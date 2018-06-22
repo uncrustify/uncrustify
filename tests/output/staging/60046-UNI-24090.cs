@@ -31,7 +31,8 @@ class C
     }
 }
 
-MergeJSFiles(new string[] {
+MergeJSFiles(new string[]
+{
     GetDecompressor(),
     Paths.Combine(buildToolsDir, "UnityConfig"),
     Paths.Combine(args.stagingAreaData, kOutputFileLoaderFileName),
@@ -44,7 +45,8 @@ public void GeneratesCorrectVisualStudioProjectFile()
         runInJam: InJamCreateTestProject,
         generatedPath: TestRoot.Combine("Solution"),
         templatesPath: "Tools/Unity.BuildSystem/Unity.BuildSystem.VisualStudio.Tests/Templates",
-        templates: new[] {
+        templates: new[]
+        {
             "TestProjectGeneration_CApplication.sln",
             "Projects/TestProjectGeneration_CApplication.vcxproj",
             "Projects/TestProjectGeneration_CApplication.vcxproj.filters"

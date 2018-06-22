@@ -186,7 +186,7 @@ MessageIdentifier::MessageIdentifier(const char* name, Options opts, const Unity
 typedef HRESULT(WINAPI* PFN_CREATE_DXGI_FACTORY)(
     REFIID ridd,
     void** ppFactory
-    ); // Used in CreateDXGIFactory
+);     // Used in CreateDXGIFactory
 
 //Case11
 Class abc
@@ -249,14 +249,14 @@ int func_name()
 Class abc{
     return  (metrics.meanAngularDistortion < angleThreshold
         && metrics.meanAreaDistortion < areaThreshold
-        );
+    );
 };
 
 //Case 16
 public class ProductDefinition
 {
     public ProductDefinition(string id, string storeSpecificId, ProductType type, bool enabled, PayoutDefinition payout) : this(id, storeSpecificId, type, enabled, new List<PayoutDefinition> { payout }
-        )
+    )
 }
 //Case 17
 int func_name() {
@@ -299,7 +299,7 @@ int func_name() {
             imageHeight - y - size.y,
             size.x,
             size.y
-            );
+        );
     }
 
 

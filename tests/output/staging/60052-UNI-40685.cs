@@ -18,7 +18,8 @@ namespace Namespace
             var Test = FooBar(
                 B,
                 cp => cp.WithB(Bar).WithSource("Path/File.ext"),
-                new[] {
+                new[]
+                {
                     A,
                     B,
                     C

@@ -4,11 +4,11 @@ static inline void atomic_retain(volatile int *p)
     _InterlockedIncrement((LONG volatile*)p);
 #else
     __asm__ (
-        "lock incl  %0\n\t"
+    "lock incl  %0\n\t"
         : "+m" (*p)
         :
         : "cc", "memory"
-        );
+    );
 #endif
 }
 
