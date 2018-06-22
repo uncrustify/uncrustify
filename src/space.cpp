@@ -471,6 +471,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_sizeof_paren");
          return(cpd.settings[UO_sp_sizeof_paren].a);
       }
+      if (chunk_is_token(second, CT_ELLIPSIS))
+      {
+         log_rule("sp_sizeof_ellipsis");
+         return(cpd.settings[UO_sp_sizeof_ellipsis].a);
+      }
       log_rule("FORCE");
       return(AV_FORCE);
    }
@@ -603,11 +608,25 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(second, CT_ELLIPSIS))
    {
       // non-punc followed by a ellipsis
+      if (  chunk_is_token(first, CT_TYPE)
+         || chunk_is_token(first, CT_QUALIFIER))
+      {
+         log_rule("sp_type_ellipsis");
+         return(cpd.settings[UO_sp_type_ellipsis].a);
+      }
+
       if (  ((first->flags & PCF_PUNCTUATOR) == 0)
          && (cpd.settings[UO_sp_before_ellipsis].a != AV_IGNORE))
       {
          log_rule("sp_before_ellipsis");
          return(cpd.settings[UO_sp_before_ellipsis].a);
+      }
+
+      if (  chunk_is_token(first, CT_FPAREN_CLOSE)
+         || chunk_is_token(first, CT_PAREN_CLOSE))
+      {
+         log_rule("sp_paren_ellipsis");
+         return(cpd.settings[UO_sp_paren_ellipsis].a);
       }
 
       if (chunk_is_token(first, CT_TAG_COLON))
@@ -616,10 +635,19 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(AV_FORCE);
       }
    }
-   if (chunk_is_token(first, CT_ELLIPSIS) && CharTable::IsKw1(second->str[0]))
+   if (chunk_is_token(first, CT_ELLIPSIS))
    {
-      log_rule("FORCE");
-      return(AV_FORCE);
+      if (CharTable::IsKw1(second->str[0]))
+      {
+         log_rule("FORCE");
+         return(AV_FORCE);
+      }
+      if (  chunk_is_token(second, CT_PAREN_OPEN)
+         && first->prev && chunk_is_token(first->prev, CT_SIZEOF))
+      {
+         log_rule("sp_sizeof_ellipsis_paren");
+         return(cpd.settings[UO_sp_sizeof_ellipsis_paren].a);
+      }
    }
    if (chunk_is_token(first, CT_TAG_COLON))
    {
@@ -1847,7 +1875,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // "(int)a" vs "(int) a" or "cast(int)a" vs "cast(int) a"
-   if (first->parent_type == CT_C_CAST || first->parent_type == CT_D_CAST)
+   if (  (first->parent_type == CT_C_CAST || first->parent_type == CT_D_CAST)
+      && chunk_is_token(first, CT_PAREN_CLOSE))
    {
       log_rule("sp_after_cast");
       return(cpd.settings[UO_sp_after_cast].a);

@@ -6,6 +6,9 @@ Changing option:
 Removed option:
 
 New options:
+  - sp_paren_ellipsis                    Jun 15
+  - sp_sizeof_ellipsis                   Jun 15
+  - sp_sizeof_ellipsis_paren             Jun 15
   - indent_first_for_expr                Apr 29
   - indent_semicolon_for_paren           Apr 29
   - nl_oc_interface_brace                Apr 13

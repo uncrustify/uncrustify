@@ -23,7 +23,27 @@
 #include "language_tools.h"
 #include "punctuators.h"
 
+#include <vector>
+
 #include <cstring>
+
+
+/**
+ * Mark types in a single template argument.
+ *
+ * @param start  chunk to start check at
+ * @param end    chunk to end check at
+ */
+static void check_template_arg(chunk_t *start, chunk_t *end);
+
+
+/**
+ * Mark types in template argument(s).
+ *
+ * @param start  chunk to start check at
+ * @param end    chunk to end check at
+ */
+static void check_template_args(chunk_t *start, chunk_t *end);
 
 
 /**
@@ -1206,59 +1226,15 @@ static void check_template(chunk_t *start)
       pc = chunk_get_next_ncnl(end, scope_e::PREPROC);
       if (pc == nullptr || pc->type != CT_NUMBER)
       {
-         LOG_FMT(LTEMPL, "%s(%d): Template Detected\n", __func__, __LINE__);
+         LOG_FMT(LTEMPL, "%s(%d): Template detected\n", __func__, __LINE__);
          LOG_FMT(LTEMPL, "%s(%d):     from orig_line %zu, orig_col %zu\n",
                  __func__, __LINE__, start->orig_line, start->orig_col);
          LOG_FMT(LTEMPL, "%s(%d):     to   orig_line %zu, orig_col %zu\n",
                  __func__, __LINE__, end->orig_line, end->orig_col);
          set_chunk_parent(start, CT_TEMPLATE);
 
-         // Issue #1127
-         // MyFoo<mySize * 2> foo1;
-         // MyFoo<2*mySize * 2> foo1;
-         // Issue #1346
-         // use it as ONE line:
-         //   typename std::enable_if<!std::is_void<T>::value,
-         //   QVector<T> >::type dummy(const std::function<T*(const S&)>&
-         //   pFunc, const QVector<S>& pItems)
-         // we nees two runs
-         // 1. run to test if expression is numeric
-         bool expressionIsNumeric = false;
-         pc = start;
-         while (pc != end)
-         {
-            chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
-            // a test "if (next == nullptr)" is not necessary
-            chunk_flags_set(pc, PCF_IN_TEMPLATE);
-            if (next->type != CT_PAREN_OPEN)
-            {
-               if (  chunk_is_token(pc, CT_NUMBER)
-                  || (chunk_is_token(pc, CT_ARITH) && pc->type != CT_STAR))
-               {
-                  expressionIsNumeric = true;
-                  break;
-               }
-            }
-            pc = next;
-         }
-         LOG_FMT(LTEMPL, "%s(%d): expressionIsNumeric is %s\n",
-                 __func__, __LINE__, expressionIsNumeric ? "FALSE" : "TRUE");
-         // 2. run to do the work
-         if (!expressionIsNumeric)
-         {
-            pc = start;
-            while (pc != end)
-            {
-               chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
-               // a test "if (next == nullptr)" is not necessary
-               chunk_flags_set(pc, PCF_IN_TEMPLATE);
-               if (next->type != CT_PAREN_OPEN)
-               {
-                  make_type(pc);
-               }
-               pc = next;
-            }
-         }
+         check_template_args(start, end);
+
          set_chunk_parent(end, CT_TEMPLATE);
          chunk_flags_set(end, PCF_IN_TEMPLATE);
          return;
@@ -1269,6 +1245,114 @@ static void check_template(chunk_t *start)
            __func__, __LINE__, (end != NULL) ? get_token_name(end->type) : "<null>");
    set_chunk_type(start, CT_COMPARE);
 } // check_template
+
+
+static void check_template_arg(chunk_t *start, chunk_t *end)
+{
+   LOG_FMT(LTEMPL, "%s(%d): Template argument detected\n", __func__, __LINE__);
+   LOG_FMT(LTEMPL, "%s(%d):     from orig_line %zu, orig_col %zu\n",
+           __func__, __LINE__, start->orig_line, start->orig_col);
+   LOG_FMT(LTEMPL, "%s(%d):     to   orig_line %zu, orig_col %zu\n",
+           __func__, __LINE__, end->orig_line, end->orig_col);
+
+   // Issue #1127
+   // MyFoo<mySize * 2> foo1;
+   // MyFoo<2*mySize * 2> foo1;
+   // Issue #1346
+   // use it as ONE line:
+   //   typename std::enable_if<!std::is_void<T>::value,
+   //   QVector<T> >::type dummy(const std::function<T*(const S&)>&
+   //   pFunc, const QVector<S>& pItems)
+   // we need two runs
+   // 1. run to test if expression is numeric
+   bool    expressionIsNumeric = false;
+   chunk_t *pc                 = start;
+   while (pc != end)
+   {
+      chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
+      // a test "if (next == nullptr)" is not necessary
+      chunk_flags_set(pc, PCF_IN_TEMPLATE);
+      if (next->type != CT_PAREN_OPEN)
+      {
+         if (  chunk_is_token(pc, CT_NUMBER)
+            || (chunk_is_token(pc, CT_ARITH) && pc->type != CT_STAR))
+         {
+            expressionIsNumeric = true;
+            break;
+         }
+      }
+      pc = next;
+   }
+   LOG_FMT(LTEMPL, "%s(%d): expressionIsNumeric is %s\n",
+           __func__, __LINE__, expressionIsNumeric ? "TRUE" : "FALSE");
+   // 2. run to do the work
+   if (!expressionIsNumeric)
+   {
+      pc = start;
+      while (pc != end)
+      {
+         chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
+         // a test "if (next == nullptr)" is not necessary
+         chunk_flags_set(pc, PCF_IN_TEMPLATE);
+         if (next->type != CT_PAREN_OPEN)
+         {
+            make_type(pc);
+         }
+         pc = next;
+      }
+   }
+} // check_template_arg
+
+
+static void check_template_args(chunk_t *start, chunk_t *end)
+{
+   std::vector<c_token_t> tokens;
+
+   // Scan for commas
+   chunk_t *pc;
+
+   for (pc = chunk_get_next_ncnl(start, scope_e::PREPROC);
+        pc != nullptr && pc != end;
+        pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
+   {
+      switch (pc->type)
+      {
+      case CT_COMMA:
+         if (tokens.empty())
+         {
+            // Check current argument
+            check_template_args(start, pc);
+            start = pc;
+         }
+         break;
+
+      case CT_ANGLE_OPEN:
+      case CT_PAREN_OPEN:
+         tokens.push_back(pc->type);
+         break;
+
+      case CT_ANGLE_CLOSE:
+         if (!tokens.empty() && tokens.back() == CT_ANGLE_OPEN)
+         {
+            tokens.pop_back();
+         }
+         break;
+
+      case CT_PAREN_CLOSE:
+         if (!tokens.empty() && tokens.back() == CT_PAREN_OPEN)
+         {
+            tokens.pop_back();
+         }
+         break;
+
+      default:
+         break;
+      }
+   }
+
+   // Check whatever is left
+   check_template_arg(start, end);
+} // check_template_args
 
 
 static void cleanup_objc_property(chunk_t *start)
