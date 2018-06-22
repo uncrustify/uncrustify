@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(Git QUIET)
 
-function(add_uncrustify_test name lang config rerun_config input result result_2 output rerun_output)
+function(add_uncrustify_test name lang config rerun_config input input_lang result result_2 output rerun_output)
   add_test(NAME ${name}
     COMMAND ${CMAKE_COMMAND}
       -DTEST_PROGRAM=$<TARGET_FILE:uncrustify>
-      -DTEST_LANG=${lang}
+      -DTEST_LANG=${input_lang}
       -DTEST_CONFIG=${config}
       -DTEST_RERUN_CONFIG=${rerun_config}
       -DTEST_INPUT=${input}
@@ -33,7 +33,7 @@ foreach(test_lang c-sharp c cpp d java pawn objective-c vala ecma imported)
     string(SUBSTRING "${line}" 0 1 first)
     # trailing space avoids double evaluation with older CMake versions
     if(NOT "${first} " STREQUAL "# ")
-      if("${line}" MATCHES "^([0-9]+)([!]?)[ ]+([^ ]+)[ ]+([^ ]+)$")
+      if("${line}" MATCHES "^([0-9]+)([!]?)[ ]+([^ ]+)[ ]+([^ ]+)([ ]+([^ ]+))?$")
         set(test_number "${CMAKE_MATCH_1}")
         set(test_name "${test_lang}_${test_number}")
 
@@ -56,8 +56,14 @@ foreach(test_lang c-sharp c cpp d java pawn objective-c vala ecma imported)
           set(test_rerun_output ${test_output})
         endif()
 
+        if(NOT "${CMAKE_MATCH_6} " STREQUAL " ")
+          set(test_input_lang "${CMAKE_MATCH_6}")
+        else()
+          string(TOUPPER "${test_dir}" test_input_lang)
+        endif()
+
         add_uncrustify_test(${test_name} ${test_dir} ${test_config} ${test_rerun_config}
-          ${test_input} ${test_result} ${test_result_2} ${test_output} ${test_rerun_output})
+          ${test_input} ${test_input_lang} ${test_result} ${test_result_2} ${test_output} ${test_rerun_output})
 
       endif()
     endif()
