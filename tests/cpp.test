@@ -312,6 +312,7 @@
 31583  empty.cfg                            cpp/sf583.cpp
 31593  indent_continue-8.cfg                cpp/sf593.cpp
 31594  issue_672.cfg                        cpp/issue_672.cpp
+31595  issue_1778.cfg                       cpp/issue_1778.cpp
 
 31600  sp_paren_ellipsis-f.cfg              cpp/parameter-packs.cpp
 31601  sp_paren_ellipsis-r.cfg              cpp/parameter-packs.cpp
