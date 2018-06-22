@@ -1168,7 +1168,7 @@ static void check_template_arg(chunk_t *start, chunk_t *end)
       if (next->type != CT_PAREN_OPEN)
       {
          if (  chunk_is_token(pc, CT_NUMBER)
-            || (chunk_is_token(pc, CT_ARITH) && pc->type != CT_STAR))
+            || chunk_is_token(pc, CT_ARITH))
          {
             expressionIsNumeric = true;
             break;
