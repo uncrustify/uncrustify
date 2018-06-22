@@ -14,6 +14,7 @@
 10045 staging/UNI-1288.cfg staging/UNI-1288.cs
 10051 staging/UNI-1338.cfg          staging/UNI-1338.cs
 10060 staging/UNI-1350.cfg          staging/UNI-1350.cpp
+10062 staging/UNI-1356.cfg          staging/UNI-1356.cpp
 20003 staging/UNI-32405.cfg         staging/UNI-32405.cs
 
 # we would never enforce any kind of alignment
