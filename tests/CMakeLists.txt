@@ -44,7 +44,7 @@ foreach(test_lang c-sharp c cpp d java pawn objective-c vala ecma imported)
         get_filename_component(test_file ${CMAKE_MATCH_4} NAME)
 
         set(test_expected ${test_dir}/${CMAKE_MATCH_1}-${test_file})
-        set(test_output output/${test_expected})
+        set(test_output expected/${test_expected})
         set(test_result results/${test_expected})
         set(test_result_2 results_2/${test_expected})
 

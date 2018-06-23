@@ -100,7 +100,7 @@ def run_tests(args, test_name, config_name, input_name, lang):
 
     expected_name = os.path.join(os.path.dirname(input_name), test_name + '-' + os.path.basename(input_name))
     resultname = os.path.join(args.results, expected_name)
-    outputname = os.path.join('output', expected_name)
+    outputname = os.path.join('expected', expected_name)
     try:
         os.makedirs(os.path.dirname(resultname))
     except:
