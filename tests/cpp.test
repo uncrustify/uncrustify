@@ -569,6 +569,8 @@
 34206  indent_semicolon_for_paren-t.cfg     cpp/for_loop_head.cpp
 34207  indent_first_for_expr-t.cfg          cpp/for_loop_head.cpp
 
+34208  nl_func_type_name-r.cfg              cpp/conversion_operator.cpp
+
 
 # TODO: Find relevant test cases for 'override'.
 34210  empty.cfg                            cpp/override_virtual.cpp
