@@ -1248,8 +1248,10 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
                 * a tab char can't be replaced with \\t because escapes don't
                 * work in here-strings. best we can do is warn.
                 */
-               LOG_FMT(warnlevel, "%s:%zu Detected non-replaceable tab char in literal string\n",
-                       cpd.filename.c_str(), pc.orig_line);
+               LOG_FMT(warnlevel, "%s(%d): %s: orig_line is %zu, orig_col is %zu, Detected non-replaceable tab char in literal string\n",
+                       __func__, __LINE__, cpd.filename.c_str(), pc.orig_line, pc.orig_col);
+               LOG_FMT(warnlevel, "%s(%d): Warning is given if doing tab-to-\t replacement and we have found one in a C# verbatim string literal.\n",
+                       __func__, __LINE__);
                if (warnlevel < LWARN)
                {
                   cpd.error_count++;
