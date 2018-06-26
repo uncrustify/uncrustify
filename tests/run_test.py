@@ -22,7 +22,8 @@ def main():
 
     try:
         test.run(args)
-    except tu.Failure:
+    except tu.Failure as f:
+        sys.stderr.write('{}\n'.format(f))
         sys.exit(-1)
 
 
