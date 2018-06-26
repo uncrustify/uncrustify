@@ -254,6 +254,9 @@
 30870  cmt_insert-0.cfg                     cpp/cmt_insert.cpp
 30871  cmt_insert-1.cfg                     cpp/cmt_insert.cpp
 
+30880  empty.cfg                            cpp/bug_1758.cpp
+30881  bug_1758-f.cfg                       cpp/bug_1758-f.cpp
+
 30900  region-0.cfg                         cpp/region.cpp
 30901  region-1.cfg                         cpp/region.cpp
 30902  region-2.cfg                         cpp/region.cpp
