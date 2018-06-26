@@ -10,16 +10,11 @@ import os
 import subprocess
 import sys
 
+from .ansicolor import printc
 from .config import (config, test_dir, FAIL_ATTRS,
                      MISMATCH_ATTRS, UNSTABLE_ATTRS)
 from .failure import (ExecutionFailure, MissingFailure,
                       MismatchFailure, UnstableFailure)
-
-try:
-    from .ansicolor import printc
-except Exception:
-    def printc(ctext, ntext, *args, **kwargs):
-        print(ctext + ntext)
 
 
 # =============================================================================

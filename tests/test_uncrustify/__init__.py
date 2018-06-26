@@ -3,6 +3,8 @@
 # * @author  Matthew Woehlke    June 2018
 #
 
+from .ansicolor import printc
+
 from .config import config, test_dir, all_tests
 
 from .failure import (Failure, ExecutionFailure, MissingFailure,
