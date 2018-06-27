@@ -2339,7 +2339,12 @@ static void newline_func_def_or_call(chunk_t *start)
                   && prev->type != CT_VBRACE_CLOSE
                   && prev->type != CT_BRACE_OPEN
                   && prev->type != CT_SEMICOLON
-                  && prev->type != CT_PRIVATE_COLON)
+                  && prev->type != CT_PRIVATE_COLON
+                     // #1008: if we landed on an operator check that it is having
+                     // a type before it, in order to not apply nl_func_type_name
+                     // on conversion operators as they don't have a normal
+                     // return type syntax
+                  && (tmp_next->type != CT_OPERATOR ? true : chunk_is_type(prev)))
                {
                   newline_iarf(prev, a);
                }
