@@ -1868,7 +1868,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          // it is a Type alias, alias template
          for (temp = pc; temp != nullptr; temp = chunk_get_next_ncnl(temp))
          {
-            set_chunk_parent(temp, CT_USING_ALIAS);
+            if (temp->parent_type == CT_NONE)
+            {
+               set_chunk_parent(temp, CT_USING_ALIAS);
+            }
             if (chunk_is_token(temp, CT_SEMICOLON))
             {
                break;
