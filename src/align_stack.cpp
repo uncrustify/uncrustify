@@ -64,6 +64,9 @@ void AlignStack::ReAddSkipped()
 void AlignStack::Add(chunk_t *start, size_t seqnum)
 {
    LOG_FUNC_ENTRY();
+   LOG_FMT(LAS, "AlignStack::%s(%d): m_aligned.Len() is %zu\n",
+           __func__, __LINE__, m_aligned.Len());
+
    // Assign a seqnum if needed
    if (seqnum == 0)
    {
@@ -204,7 +207,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
                     __func__, __LINE__, next->column, tmp_col);
             if (next->column != tmp_col)
             {
-               LOG_FMT(LAS, "AlignStack::%s(%d): Call align_to_column\n", __func__, __LINE__);
+               LOG_FMT(LAS, "AlignStack::%s(%d): Call align_to_column %zu\n",
+                       __func__, __LINE__, tmp_col);
                align_to_column(next, tmp_col);
             }
          }
@@ -286,9 +290,12 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       }
       else
       {
-         LOG_FMT(LAS, "AlignStack::Add-aligned [%zu/%zu/%zu]: line %zu, col %zu : col %zu <= %zu - min_col %zu\n",
-                 seqnum, m_nl_seqnum, m_seqnum,
-                 ali->orig_line, ali->column, endcol, m_max_col, m_min_col);
+         LOG_FMT(LAS, "AlignStack::%s(%d): Add-aligned: seqnum is %zu, m_nl_seqnum is %zu, m_seqnum is %zu\n",
+                 __func__, __LINE__, seqnum, m_nl_seqnum, m_seqnum);
+         LOG_FMT(LAS, "AlignStack::%s(%d):    ali->orig_line is %zu, ali->column is %zu, max_col old is %zu, new is %zu, m_min_col is %zu\n",
+                 __func__, __LINE__, ali->orig_line, ali->column, endcol, m_max_col, m_min_col);
+         LOG_FMT(LAS, "AlignStack::%s(%d): m_aligned.Len() is %zu\n",
+                 __func__, __LINE__, m_aligned.Len());
       }
    }
    else
@@ -325,7 +332,8 @@ void AlignStack::NewLines(size_t cnt)
 
 void AlignStack::Flush()
 {
-   LOG_FMT(LAS, "AlignStack::%s(%d): m_aligned.Len() is %zu\n", __func__, __LINE__, m_aligned.Len());
+   LOG_FMT(LAS, "AlignStack::%s(%d): m_aligned.Len() is %zu\n",
+           __func__, __LINE__, m_aligned.Len());
    LOG_FMT(LAS, "   (min is %zu, max is %zu)\n", m_min_col, m_max_col);
 
    if (m_aligned.Len() == 1)
