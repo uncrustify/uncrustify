@@ -15,6 +15,7 @@
 #include "chunk_list.h"
 #include "align.h"
 #include "args.h"
+#include "BlockNumbering.h"
 #include "brace_cleanup.h"
 #include "braces.h"
 #include "backup.h"
@@ -1889,6 +1890,9 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       {
          remove_extra_returns();
       }
+
+      // number the blocks
+      numberTheBlocks();
 
       // Add parens
       do_parens();

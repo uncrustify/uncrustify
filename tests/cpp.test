@@ -544,6 +544,7 @@
 34174  arith-vs-ptr.cfg                     cpp/i1466.cpp
 34175  align_assign_span-1.cfg              cpp/i1509.cpp
 34176  align_assign_span-1.cfg              cpp/i1509_bug_1112_correction.cpp
+34177  bug_1760.cfg                         cpp/bug_1760.cpp
 
 34180  bug_1402.cfg                         cpp/bug_1402.cpp
 

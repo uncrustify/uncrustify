@@ -250,6 +250,7 @@ struct chunk_t
       brace_level   = 0;
       pp_level      = 0;
       after_tab     = false;
+      blockNumber   = 0;
       str.clear();
    }
 
@@ -288,6 +289,7 @@ struct chunk_t
    size_t       brace_level;      //! nest level in braces only
    size_t       pp_level;         //! nest level in preprocessor
    bool         after_tab;        //! whether this token was after a tab
+   size_t       blockNumber;      //! The block number
    unc_text     str;              //! the token text
 };
 
