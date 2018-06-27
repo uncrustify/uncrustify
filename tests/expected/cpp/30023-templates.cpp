@@ -163,7 +163,7 @@ void g(X<>& x);
 typedef std::vector<std::vector<int> >    Table; // OK
 typedef std::vector<std::vector<bool> >   Flags; // Error
 
-void func(List<B>        =default_val1);
+void func(List<B> =default_val1);
 void func(List<List<B> > =default_val2);
 
 BLAH<(3.14 >= 42)> blah;
