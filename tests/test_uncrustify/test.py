@@ -112,7 +112,7 @@ class Test(object):
 
         out_file.write(
             ('add_test({test_name}\n' +
-             '  "{python_exe}" "{test_runner}" "{test_name}"\n' +
+             '  "{python_exe}" -S "{test_runner}" "{test_name}"\n' +
              '    --executable     "{uncrustify_exe}"\n' +
              '    --lang           "{test_lang}"\n' +
              '    --input          "{test_input}"\n' +
