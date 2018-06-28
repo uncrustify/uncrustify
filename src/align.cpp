@@ -705,8 +705,8 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    chunk_t *pc = first;
    while (pc != nullptr)
    {
-      LOG_FMT(LALASS, "%s(%d): orig_line is %zu, pc->Block_Number is %zu, check pc->text() '%s', type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->Block_Number, pc->text(), get_token_name(pc->type));
+      LOG_FMT(LALASS, "%s(%d): orig_line is %zu, pc->blockNumber is %zu, check pc->text() '%s', type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->blockNumber, pc->text(), get_token_name(pc->type));
       // Don't check inside PAREN or SQUARE groups
       if (  chunk_is_token(pc, CT_SPAREN_OPEN)
             // || chunk_is_token(pc, CT_FPAREN_OPEN)  // Issue #1340
@@ -820,11 +820,11 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
             {
                // compare the block number
                chunk_t *t2 = as.m_aligned.Top()->m_pc;
-               LOG_FMT(LAS, "AlignStack::%s(%d): pc->Block_Number is %zu\n",
-                       __func__, __LINE__, pc->Block_Number);
-               LOG_FMT(LAS, "AlignStack::%s(%d): t2->Block_Number is %zu\n",
-                       __func__, __LINE__, t2->Block_Number);
-               if (pc->Block_Number != t2->Block_Number)
+               LOG_FMT(LAS, "AlignStack::%s(%d): pc->blockbNumber is %zu\n",
+                       __func__, __LINE__, pc->blockNumber);
+               LOG_FMT(LAS, "AlignStack::%s(%d): t2->blockNumber is %zu\n",
+                       __func__, __LINE__, t2->blockNumber);
+               if (pc->blockNumber != t2->blockNumber)
                {
                   do_it = false;
                }

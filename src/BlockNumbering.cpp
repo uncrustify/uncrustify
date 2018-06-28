@@ -11,23 +11,23 @@
 #include "log_levels.h"
 #include "logger.h"
 
-static size_t Number = 0;
+static size_t number = 0;
 
 
-size_t GetBlockNumber()
+size_t getBlockNumber()
 {
-   Number++;
-   return(Number);
+   number++;
+   return(number);
 }
 
 
-void NumberTheBlocks()
+void numberTheBlocks()
 {
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LALASS, "%s(%d): Number the blocks.\n", __func__, __LINE__);
 
-   size_t  BlockNumber = GetBlockNumber();
+   size_t  blockNumber = getBlockNumber();
    chunk_t *pc         = chunk_get_head();
    while (pc != nullptr)
    {
@@ -47,10 +47,10 @@ void NumberTheBlocks()
          || chunk_is_token(pc, CT_ANGLE_OPEN))
       {
          // get a new number
-         BlockNumber = GetBlockNumber();
+         blockNumber = getBlockNumber();
       }
 
-      pc->Block_Number = BlockNumber;
+      pc->blockNumber = blockNumber;
 
       if (  chunk_is_token(pc, CT_BRACE_CLOSE)
          || chunk_is_token(pc, CT_FPAREN_CLOSE)
@@ -63,14 +63,14 @@ void NumberTheBlocks()
          // this is the 'old' block number
          if (prev == nullptr)
          {
-            BlockNumber = 0;
+            blockNumber = 0;
          }
          else
          {
-            BlockNumber = prev->Block_Number;
+            blockNumber = prev->blockNumber;
          }
       }
 
       pc = chunk_get_next(pc);
    }
-} // NumberTheBlocks
+} // numberTheBlocks
