@@ -1892,7 +1892,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       }
 
       // number the blocks
-      NumberTheBlocks();
+      numberTheBlocks();
 
       // Add parens
       do_parens();

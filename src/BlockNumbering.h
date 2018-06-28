@@ -11,9 +11,10 @@
 
 /*
  * To align (or not align) the assign character it is important to know if:
- *    1. the level of the chunk is the same
- *    2. the block number of the statements are the same.
+ *    1. the levels of the chunks are the same
+ *    2. the block numbers of the statements are the same.
  *
+ * Introducing block numbering as:
  * A new block is opened if the type of the chunk is:
  *    CT_BRACE_OPEN
  *    CT_FPAREN_OPEN
@@ -28,6 +29,6 @@
  *    void g(int x                 = 144);
  */
 
-void NumberTheBlocks();
+void numberTheBlocks();
 
 #endif /* BLOCKNUMBERING_H_INCLUDED */
