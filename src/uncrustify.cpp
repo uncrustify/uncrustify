@@ -69,8 +69,15 @@
 
 // VS throws an error if an attribute newer than the requested standard level
 // is used; everyone else just ignores it (or warns) like they are supposed to
-#if __cplusplus >= 201703L || !defined (_MSC_VER)
+
+#if __cplusplus >= 201703L
 #define NODISCARD    [[nodiscard]]
+#elif defined (__has_cpp_attribute)
+#if __has_cpp_attribute(nodiscard)
+#define NODISCARD    [[nodiscard]]
+#else
+#define NODISCARD
+#endif
 #else
 #define NODISCARD
 #endif
