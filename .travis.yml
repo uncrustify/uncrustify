@@ -64,7 +64,7 @@ matrix:
 
     - os: linux
       dist: trusty
-      env: BUILD_TYPE=coverage COVERALLS_TOKEN="iJXKQxvt6RJMcxkn99GIhakcoCx7XvzbU"
+      env: BUILD_TYPE=coverage COVERALLS_TOKEN="Dy94SOU3ajc1VbIy1wnWaNaeIUzfgdtEg"
       compiler: gcc
 
 branches:
