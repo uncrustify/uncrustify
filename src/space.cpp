@@ -992,7 +992,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_after_byref].a);
    }
 
-   if (chunk_is_token(second, CT_BYREF))
+   if (  chunk_is_token(second, CT_BYREF)
+      && !chunk_is_token(first, CT_PAREN_OPEN))
    {
       if (cpd.settings[UO_sp_before_byref_func].a != AV_IGNORE)
       {
