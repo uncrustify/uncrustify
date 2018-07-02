@@ -4039,8 +4039,10 @@ void newlines_class_colon_pos(c_token_t tok)
 {
    LOG_FUNC_ENTRY();
 
-   tokenpos_e tpc, pcc;
-   argval_t   anc, ncia;
+   tokenpos_e tpc;
+   tokenpos_e pcc;
+   argval_t   anc;
+   argval_t   ncia;
 
    if (tok == CT_CLASS_COLON)
    {
