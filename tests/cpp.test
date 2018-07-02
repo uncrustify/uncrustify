@@ -312,6 +312,8 @@
 31583  empty.cfg                            cpp/sf583.cpp
 31593  indent_continue-8.cfg                cpp/sf593.cpp
 31594  issue_672.cfg                        cpp/issue_672.cpp
+31595  issue_1778.cfg                       cpp/issue_1778.cpp
+31596  issue_1782.cfg                       cpp/issue_1782.cpp
 
 31600  sp_paren_ellipsis-f.cfg              cpp/parameter-packs.cpp
 31601  sp_paren_ellipsis-r.cfg              cpp/parameter-packs.cpp
@@ -568,6 +570,8 @@
 
 34206  indent_semicolon_for_paren-t.cfg     cpp/for_loop_head.cpp
 34207  indent_first_for_expr-t.cfg          cpp/for_loop_head.cpp
+
+34208  nl_func_type_name-r.cfg              cpp/conversion_operator.cpp
 
 
 # TODO: Find relevant test cases for 'override'.

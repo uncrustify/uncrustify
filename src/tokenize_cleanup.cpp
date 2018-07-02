@@ -1165,10 +1165,15 @@ static void check_template_arg(chunk_t *start, chunk_t *end)
       chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
       // a test "if (next == nullptr)" is not necessary
       chunk_flags_set(pc, PCF_IN_TEMPLATE);
+      if (chunk_is_token(pc, CT_SIZEOF))
+      {
+         expressionIsNumeric = true;
+         break;
+      }
       if (next->type != CT_PAREN_OPEN)
       {
          if (  chunk_is_token(pc, CT_NUMBER)
-            || (chunk_is_token(pc, CT_ARITH) && pc->type != CT_STAR))
+            || chunk_is_token(pc, CT_ARITH))
          {
             expressionIsNumeric = true;
             break;
