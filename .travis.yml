@@ -138,7 +138,7 @@ script:
   # build
   - if [ -f build.ninja ]; then ninja -v; else make VERBOSE=1; fi
   # run all tests
-  - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest --output-on-failure -j 4; fi
+  - if [ "x${BUILD_TYPE}" != "xcross" ]; then ../scripts/run_ctest.py; fi
   # collect coverage (needs to be after running tests)
   - if [ "x${BUILD_TYPE}" == "xcoverage" ]; then make coverage; fi
   # test if all the sources are conform to the forUncrustifySources.cfg config file
