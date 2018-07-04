@@ -1728,7 +1728,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
          // Insert between after and ref
          chunk_t *after = chunk_get_next_ncnl(ref);
          tokenize(fm.data, after);
-         for (tmp = chunk_get_next(ref); tmp != after; tmp = chunk_get_next(tmp))
+         for (tmp = chunk_get_next(ref); (tmp != nullptr && tmp != after); tmp = chunk_get_next(tmp))
          {
             tmp->level = after->level;
          }
