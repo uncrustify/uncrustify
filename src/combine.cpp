@@ -1173,8 +1173,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       else if (chunk_is_token(pc, CT_TYPE))
       {
          /*
-          * If we are on a type, then we are either on a C++ style cast, a
-          * function or we are on a function type.
+          * If we are on a type, then we are either on a C++ style cast, an
+          * array reference, a function or we are on a function type.
           * The only way to tell for sure is to find the close paren and see
           * if it is followed by an open paren.
           * "int(5.6)"
@@ -1185,29 +1185,59 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
           */
          LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
-         tmp = chunk_get_next_type(next, CT_PAREN_CLOSE, next->level);
-         if (tmp != nullptr)
+
+         bool is_byref_array = false;
+         if (language_is_set(LANG_CPP))
          {
-            tmp = chunk_get_next(tmp);
-            if (chunk_is_token(tmp, CT_PAREN_OPEN))
+            // If the open paren is followed by an ampersand, an optional word,
+            // a close parenthesis, and an open square bracket, then it is an
+            // array being passed by reference, not a cast
+            tmp = chunk_get_next_ncnl(next);
+            if (chunk_is_token(tmp, CT_AMP))
             {
-               set_chunk_type(pc, CT_FUNCTION);
-            }
-            else
-            {
-               if (pc->parent_type == CT_NONE && ((pc->flags & PCF_IN_TYPEDEF) == 0))
+               auto tmp2 = chunk_get_next_ncnl(tmp);
+               if (chunk_is_token(tmp2, CT_WORD))
                {
-                  tmp = chunk_get_next_ncnl(next);
-                  if (chunk_is_token(tmp, CT_PAREN_CLOSE))
+                  tmp2 = chunk_get_next_ncnl(tmp2);
+               }
+               if (chunk_is_token(tmp2, CT_PAREN_CLOSE))
+               {
+                  tmp2 = chunk_get_next_ncnl(tmp2);
+                  if (chunk_is_token(tmp2, CT_SQUARE_OPEN))
                   {
-                     // we have TYPE()
-                     set_chunk_type(pc, CT_FUNCTION);
+                     is_byref_array = true;
+                     set_chunk_type(tmp, CT_BYREF);
                   }
-                  else
+               }
+            }
+         }
+
+         if (!is_byref_array)
+         {
+            tmp = chunk_get_next_type(next, CT_PAREN_CLOSE, next->level);
+            if (tmp != nullptr)
+            {
+               tmp = chunk_get_next(tmp);
+               if (chunk_is_token(tmp, CT_PAREN_OPEN))
+               {
+                  set_chunk_type(pc, CT_FUNCTION);
+               }
+               else
+               {
+                  if (pc->parent_type == CT_NONE && ((pc->flags & PCF_IN_TYPEDEF) == 0))
                   {
-                     // we have TYPE(...)
-                     set_chunk_type(pc, CT_CPP_CAST);
-                     set_paren_parent(next, CT_CPP_CAST);
+                     tmp = chunk_get_next_ncnl(next);
+                     if (chunk_is_token(tmp, CT_PAREN_CLOSE))
+                     {
+                        // we have TYPE()
+                        set_chunk_type(pc, CT_FUNCTION);
+                     }
+                     else
+                     {
+                        // we have TYPE(...)
+                        set_chunk_type(pc, CT_CPP_CAST);
+                        set_paren_parent(next, CT_CPP_CAST);
+                     }
                   }
                }
             }
