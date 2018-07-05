@@ -8,3 +8,9 @@ enum
     item3,
     item4, // comment 4
 }
+enum { x, y };
+enum { x, y=0 };
+enum { x, y=0 /*comment*/ };
+enum { x, y,};
+enum { x, y=0,};
+enum { x, y=0,/*comment*/ };
