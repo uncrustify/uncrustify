@@ -639,10 +639,10 @@ sp_range                        { Ignore, Add, Remove, Force }
   Control the space around the D '..' operator.
 
 sp_after_for_colon              { Ignore, Add, Remove, Force }
-  Control the spacing after ':' in 'for (TYPE VAR : EXPR)'. Only JAVA.
+  Control the spacing after ':' in 'for (Type var : expr)'.
 
 sp_before_for_colon             { Ignore, Add, Remove, Force }
-  Control the spacing before ':' in 'for (TYPE VAR : EXPR)'. Only JAVA.
+  Control the spacing before ':' in 'for (Type var : expr)'.
 
 sp_extern_paren                 { Ignore, Add, Remove, Force }
   Control the spacing in 'extern (C)' (D).
