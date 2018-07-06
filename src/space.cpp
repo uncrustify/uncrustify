@@ -2433,8 +2433,17 @@ void space_text(void)
             {
                column += next->orig_col - pc->orig_col_end;
             }
+            else
+            {
+               // preserve the position if virtual brace
+               // Issue #1854
+               if (chunk_is_token(pc, CT_VBRACE_OPEN))
+               {
+                  column = next->orig_col;
+               }
+            }
             break;
-         }
+         } // switch
 
          if (  chunk_is_comment(next)
             && chunk_is_newline(chunk_get_next(next))
