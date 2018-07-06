@@ -3,7 +3,7 @@ newlines                        = crlf
 # option(s) with 'not default' value: 1
 #
 # -=====-
-# Line                Tag              Parent          Columns Br/Lvl/pp     Flag   Nl  blockNu Text
+# Line                Tag              Parent          Columns Br/Lvl/Pp     Flag   Nl    Block Text
 #   1>             STRUCT[               NONE][  1/  1/  7/  0][0/0/0][     70002][0-0]       1 struct
 #   1>               TYPE[             STRUCT][  8/  8/ 21/  1][0/0/0][         2][0-0]       1        TelegramIndex
 #   1>            NEWLINE[               NONE][ 21/ 21/  1/  0][0/0/0][         2][1-0]       1
