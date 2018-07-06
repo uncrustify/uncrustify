@@ -25,16 +25,13 @@ void enum_cleanup(void)
    chunk_t *pc = chunk_get_head();  // Issue #858
    while (pc != nullptr)
    {
-      if (  chunk_is_token(pc, CT_BRACE_CLOSE)
-         && pc->parent_type == CT_ENUM)
+      if (  pc->parent_type == CT_ENUM
+         && chunk_is_token(pc, CT_BRACE_CLOSE))
       {
          LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s\n",
                  __func__, __LINE__, pc->orig_line, get_token_name(pc->type));
          chunk_t *prev = chunk_get_prev_ncnl(pc);
-         if (prev == nullptr)
-         {
-            return;
-         }
+         // test of (prev == nullptr) is not necessary
          if (chunk_is_token(prev, CT_COMMA))
          {
             if (cpd.settings[UO_mod_enum_last_comma].a == AV_REMOVE)
