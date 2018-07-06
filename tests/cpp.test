@@ -573,7 +573,7 @@
 34207  indent_first_for_expr-t.cfg          cpp/for_loop_head.cpp
 
 34208  nl_func_type_name-r.cfg              cpp/conversion_operator.cpp
-
+34209  nl-brAfter-fcallParen.cfg            cpp/lambda_selfcalling.cpp
 
 # TODO: Find relevant test cases for 'override'.
 34210  empty.cfg                            cpp/override_virtual.cpp
