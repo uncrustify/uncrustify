@@ -5424,6 +5424,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
    if (  prev == nullptr
       || (  prev->type != CT_ASSIGN
          && prev->type != CT_COMMA
+         && prev->type != CT_PAREN_OPEN   // allow Js like self invoking lambda syntax: ([](){})();
          && prev->type != CT_FPAREN_OPEN
          && prev->type != CT_SQUARE_OPEN
          && prev->type != CT_BRACE_OPEN
@@ -5538,6 +5539,20 @@ static void handle_cpp_lambda(chunk_t *sq_o)
    if (pa_c)
    {
       fix_fcn_def_params(pa_o);
+   }
+
+   //handle self calling lambda paren
+   chunk_t *call_pa_o = chunk_get_next_ncnl(br_c);
+   if (chunk_is_token(call_pa_o, CT_PAREN_OPEN))
+   {
+      chunk_t *call_pa_c = chunk_skip_to_match(call_pa_o);
+      if (call_pa_c != nullptr)
+      {
+         set_chunk_type(call_pa_o, CT_FPAREN_OPEN);
+         set_chunk_parent(call_pa_o, CT_FUNC_CALL);
+         set_chunk_type(call_pa_c, CT_FPAREN_CLOSE);
+         set_chunk_parent(call_pa_c, CT_FUNC_CALL);
+      }
    }
 } // handle_cpp_lambda
 
