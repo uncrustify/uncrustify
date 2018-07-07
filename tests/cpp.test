@@ -90,6 +90,7 @@
 30093  sp_after_cast.cfg                    cpp/bug_484.cpp
 30094  align-1.cfg                          cpp/bug_495.cpp
 30095  ben_017.cfg                          cpp/bug_485.cpp
+30096  bug_1854.cfg                         cpp/bug_1854.cpp
 
 30099  sp_arith-f.cfg                       cpp/bug_1127.cpp
 30100  nl_template_class-force.cfg          cpp/templates.cpp
