@@ -2097,6 +2097,9 @@ mod_sort_oc_property_setter_weight Number
 mod_sort_oc_property_nullability_weight Number
   Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C).
 
+mod_enum_last_comma             { Ignore, Add, Remove, Force }
+  add or remove the comma between the last token and the closing brace.
+
 #
 # Preprocessor options
 #
