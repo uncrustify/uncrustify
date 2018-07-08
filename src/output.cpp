@@ -2032,7 +2032,7 @@ static void output_comment_multi_simple(chunk_t *pc)
       if (chunk_is_newline(chunk_get_prev(pc)))
       {
          // The comment should be indented correctly
-         diff = pc->orig_col - pc->column;
+         diff = pc->column - pc->orig_col;
       }
 
       return(diff);
@@ -2099,7 +2099,8 @@ static void output_comment_multi_simple(chunk_t *pc)
                if (line_count > 1)
                {
                   // apply comment column shift without underflowing
-                  line_column -= col_diff;
+                  line_column = (col_diff < 0 && (cast_abs(line_column, col_diff) > line_column))
+                                ? 0 : line_column + col_diff;
                }
 
                cmt.column = line_column;
