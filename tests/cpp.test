@@ -110,6 +110,7 @@
 30113  bug_1452.cfg                         cpp/bug_1452.cpp
 30114  empty.cfg                            cpp/bug_1462.cpp
 
+30200  bug_1862.cfg                         cpp/bug_1862.cpp
 30201  cmt_indent-1.cfg                     cpp/cmt_indent.cpp
 30202  cmt_indent-2.cfg                     cpp/cmt_indent.cpp
 30203  cmt_indent-3.cfg                     cpp/cmt_indent.cpp
