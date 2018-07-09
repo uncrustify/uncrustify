@@ -726,9 +726,9 @@ void register_options(void)
    unc_add_option("sp_range", UO_sp_range, AT_IARF,
                   "Control the space around the D '..' operator.");
    unc_add_option("sp_after_for_colon", UO_sp_after_for_colon, AT_IARF,
-                  "Control the spacing after ':' in 'for (TYPE VAR : EXPR)'. Only JAVA.");
+                  "Control the spacing after ':' in 'for (Type var : expr)'.");
    unc_add_option("sp_before_for_colon", UO_sp_before_for_colon, AT_IARF,
-                  "Control the spacing before ':' in 'for (TYPE VAR : EXPR)'. Only JAVA.");
+                  "Control the spacing before ':' in 'for (Type var : expr)'.");
    unc_add_option("sp_extern_paren", UO_sp_extern_paren, AT_IARF,
                   "Control the spacing in 'extern (C)' (D).");
    unc_add_option("sp_cmt_cpp_start", UO_sp_cmt_cpp_start, AT_IARF,
@@ -1022,6 +1022,8 @@ void register_options(void)
                   "Don't split one-line while statements - 'while(a) b++;'.");
    unc_add_option("nl_oc_msg_leave_one_liner", UO_nl_oc_msg_leave_one_liner, AT_BOOL,
                   "Don't split one-line OC messages.");
+   unc_add_option("nl_oc_mdef_brace", UO_nl_oc_mdef_brace, AT_IARF,
+                  "Add or remove newline between method declaration and '{'.");
    unc_add_option("nl_oc_block_brace", UO_nl_oc_block_brace, AT_IARF,
                   "Add or remove newline between Objective-C block signature and '{'.");
    unc_add_option("nl_oc_interface_brace", UO_nl_oc_interface_brace, AT_IARF,
@@ -1764,6 +1766,8 @@ void register_options(void)
                   "Determines weight of setter type (setter=) (Obj-C).");
    unc_add_option("mod_sort_oc_property_nullability_weight", UO_mod_sort_oc_property_nullability_weight, AT_NUM,
                   "Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C).");
+   unc_add_option("mod_enum_last_comma", UO_mod_enum_last_comma, AT_IARF,
+                  "add or remove the comma between the last token and the closing brace.");
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,

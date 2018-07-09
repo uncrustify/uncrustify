@@ -22,6 +22,7 @@
 #include "compat.h"
 #include "detect.h"
 #include "defines.h"
+#include "enum_cleanup.h"
 #include "indent.h"
 #include "keywords.h"
 #include "logger.h"
@@ -1792,6 +1793,8 @@ static void uncrustify_start(const deque<int> &data)
 
    // Look at all colons ':' and mark labels, :? sequences, etc.
    combine_labels();
+
+   enum_cleanup();
 } // uncrustify_start
 
 

@@ -639,10 +639,10 @@ sp_range                        { Ignore, Add, Remove, Force }
   Control the space around the D '..' operator.
 
 sp_after_for_colon              { Ignore, Add, Remove, Force }
-  Control the spacing after ':' in 'for (TYPE VAR : EXPR)'. Only JAVA.
+  Control the spacing after ':' in 'for (Type var : expr)'.
 
 sp_before_for_colon             { Ignore, Add, Remove, Force }
-  Control the spacing before ':' in 'for (TYPE VAR : EXPR)'. Only JAVA.
+  Control the spacing before ':' in 'for (Type var : expr)'.
 
 sp_extern_paren                 { Ignore, Add, Remove, Force }
   Control the spacing in 'extern (C)' (D).
@@ -1041,6 +1041,9 @@ nl_while_leave_one_liners       { False, True }
 
 nl_oc_msg_leave_one_liner       { False, True }
   Don't split one-line OC messages.
+
+nl_oc_mdef_brace                { Ignore, Add, Remove, Force }
+  Add or remove newline between method declaration and '{'.
 
 nl_oc_block_brace               { Ignore, Add, Remove, Force }
   Add or remove newline between Objective-C block signature and '{'.
@@ -2093,6 +2096,9 @@ mod_sort_oc_property_setter_weight Number
 
 mod_sort_oc_property_nullability_weight Number
   Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C).
+
+mod_enum_last_comma             { Ignore, Add, Remove, Force }
+  add or remove the comma between the last token and the closing brace.
 
 #
 # Preprocessor options

@@ -639,10 +639,10 @@ sp_case_label                   = ignore   # ignore/add/remove/force
 # Control the space around the D '..' operator.
 sp_range                        = ignore   # ignore/add/remove/force
 
-# Control the spacing after ':' in 'for (TYPE VAR : EXPR)'. Only JAVA.
+# Control the spacing after ':' in 'for (Type var : expr)'.
 sp_after_for_colon              = ignore   # ignore/add/remove/force
 
-# Control the spacing before ':' in 'for (TYPE VAR : EXPR)'. Only JAVA.
+# Control the spacing before ':' in 'for (Type var : expr)'.
 sp_before_for_colon             = ignore   # ignore/add/remove/force
 
 # Control the spacing in 'extern (C)' (D).
@@ -1041,6 +1041,9 @@ nl_while_leave_one_liners       = false    # false/true
 
 # Don't split one-line OC messages.
 nl_oc_msg_leave_one_liner       = false    # false/true
+
+# Add or remove newline between method declaration and '{'.
+nl_oc_mdef_brace                = ignore   # ignore/add/remove/force
 
 # Add or remove newline between Objective-C block signature and '{'.
 nl_oc_block_brace               = ignore   # ignore/add/remove/force
@@ -2092,6 +2095,9 @@ mod_sort_oc_property_setter_weight = 0        # number
 
 # Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C).
 mod_sort_oc_property_nullability_weight = 0        # number
+
+# add or remove the comma between the last token and the closing brace.
+mod_enum_last_comma             = ignore   # ignore/add/remove/force
 
 #
 # Preprocessor options

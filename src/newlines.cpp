@@ -1885,16 +1885,23 @@ static void newlines_brace_pair(chunk_t *br_open)
       pc = chunk_get_next_ncnl(br_open);
       newline_add_between(br_open, pc);
 
-      val = ((  br_open->parent_type == CT_FUNC_DEF
-             || br_open->parent_type == CT_FUNC_CLASS_DEF
-             || br_open->parent_type == CT_OC_CLASS
-             || br_open->parent_type == CT_OC_MSG_DECL) ?
-             cpd.settings[UO_nl_fdef_brace].a :
-             ((br_open->parent_type == CT_CS_PROPERTY) ?
-              cpd.settings[UO_nl_property_brace].a :
-              ((br_open->parent_type == CT_CPP_LAMBDA) ?
-               cpd.settings[UO_nl_cpp_ldef_brace].a :
-               cpd.settings[UO_nl_fcall_brace].a)));
+      if (br_open->parent_type == CT_OC_MSG_DECL)
+      {
+         // Issue #167
+         val = cpd.settings[UO_nl_oc_mdef_brace].a;
+      }
+      else
+      {
+         val = ((  br_open->parent_type == CT_FUNC_DEF
+                || br_open->parent_type == CT_FUNC_CLASS_DEF
+                || br_open->parent_type == CT_OC_CLASS) ?
+                cpd.settings[UO_nl_fdef_brace].a :
+                ((br_open->parent_type == CT_CS_PROPERTY) ?
+                 cpd.settings[UO_nl_property_brace].a :
+                 ((br_open->parent_type == CT_CPP_LAMBDA) ?
+                  cpd.settings[UO_nl_cpp_ldef_brace].a :
+                  cpd.settings[UO_nl_fcall_brace].a)));
+      }
 
       if (val != AV_IGNORE)
       {

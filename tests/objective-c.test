@@ -37,6 +37,7 @@
 50050  objc_complex_method.cfg              oc/real_world_file.m
 
 50060  align_oc_msg_colon_span-1.cfg        oc/oc-split.m
+50061  bug_167.cfg                          oc/bug_167.m
 
 50070  blocks.cfg                           oc/blocks.m
 50071  sp_before_oc_block_caret_force.cfg   oc/blocks.m

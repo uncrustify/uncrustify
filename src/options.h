@@ -471,6 +471,7 @@ enum uncrustify_options
    UO_nl_if_leave_one_liners,          //
    UO_nl_while_leave_one_liners,       //
    UO_nl_oc_msg_leave_one_liner,       // Don't split one-line OC messages
+   UO_nl_oc_mdef_brace,                // Add or remove newline between method declaration and '{'
    UO_nl_oc_block_brace,               // Add or remove newline between Objective-C block signature and '{'
    UO_nl_oc_interface_brace,           // Add or remove newline between @interface and '{'
    UO_nl_oc_implementation_brace,      // Add or remove newline between @implementation and '{'
@@ -872,6 +873,7 @@ enum uncrustify_options
    UO_mod_sort_oc_property_getter_weight,        // Determines weight of getter type (getter=)
    UO_mod_sort_oc_property_setter_weight,        // Determines weight of setter type (setter=)
    UO_mod_sort_oc_property_nullability_weight,   // Determines weight of nullability type (nullable/nonnull)
+   UO_mod_enum_last_comma,                       // add or remove the comma between the last token and the closing brace
 
 
    // group: UG_preprocessor, "Preprocessor options"                                                10
