@@ -1236,19 +1236,6 @@ void indent_text(void)
                      indent_column_set(frm.top().indent_tmp);
                   }
                }
-               else if ((pc->parent_type == CT_OC_BLOCK_EXPR) && ((pc->flags & PCF_IN_OC_MSG) != 0))
-               {
-                  // Indent the brace to match the open brace
-                  indent_column_set(frm.top().brace_indent);
-
-                  if (frm.top().ip.ref)
-                  {
-                     pc->indent.ref   = frm.top().ip.ref;
-                     pc->indent.delta = 0;
-                  }
-
-                  frm.pop();
-               }
                else
                {
                   // Indent the brace to match the open brace
