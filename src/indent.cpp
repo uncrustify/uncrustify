@@ -982,42 +982,44 @@ void indent_text(void)
             }
             // End Objc nested message and boxed array
             // TODO: ideally formatting would know which opens occurred on a line and group closes in the same manor
-            if (pc->flags & PCF_IN_OC_MSG || pc->flags & PCF_OC_BOXED)
+            if (language_is_set(LANG_OC)
+               && chunk_is_token(pc, CT_SQUARE_CLOSE)
+               && pc->parent_type == CT_OC_AT
+               && frm.top().level >= pc->level)
             {
-               if (chunk_is_token(pc, CT_SQUARE_CLOSE) && frm.top().level >= pc->level)
+               size_t  count = 1;
+               chunk_t *next = chunk_get_next_nc(pc);
+               while (  next
+                     && (  (chunk_is_token(next, CT_BRACE_CLOSE) && next->parent_type == CT_OC_AT)
+                        || (chunk_is_token(next, CT_SQUARE_CLOSE) && next->parent_type == CT_OC_AT)
+                        || (chunk_is_token(next, CT_SQUARE_CLOSE) && next->parent_type == CT_OC_MSG)))
                {
-                  size_t  count = 1;
-                  chunk_t *next = chunk_get_next_nc(pc);
-                  while (  next
-                        && (  (chunk_is_token(next, CT_BRACE_CLOSE) && next->parent_type == CT_OC_AT)
-                           || (chunk_is_token(next, CT_SQUARE_CLOSE) && next->parent_type == CT_OC_AT)
-                           || (chunk_is_token(next, CT_SQUARE_CLOSE) && next->parent_type == CT_OC_MSG)))
-                  {
-                     count++;
-                     next = chunk_get_next_nc(next);
-                  }
+                  count++;
+                  next = chunk_get_next_nc(next);
+               }
 
-                  count = std::min(count, frm.size());
-                  if (count > 1)
+               count = std::min(count, frm.size());
+               if (count > 0)
+               {
+                  while (count-- > 0)
                   {
-                     while (count-- > 0)
+                     if (frm.top().type == CT_SQUARE_OPEN)
                      {
-                        if (frm.top().type == CT_SQUARE_OPEN)
-                        {
-                           frm.paren_count--;
-                        }
+                        frm.paren_count--;
+                     }
+                     frm.pop();
+                  }
+                  if (next)
+                  {
+                     // End any assign operations with a semicolon on the same level
+                     if (is_end_of_assignment(next, frm))
+                     {
                         frm.pop();
                      }
-                     if (next)
-                     {
-                        // End any assign operations with a semicolon on the same level
-                        if (is_end_of_assignment(next, frm))
-                        {
-                           frm.pop();
-                        }
-                     }
-                     continue;
                   }
+                  // Indent the brace to match outer most brace/square
+                  indent_column_set(frm.top().indent_tmp);
+                  continue;
                }
             }
 
@@ -1202,7 +1204,7 @@ void indent_text(void)
 
                // End Objc nested boxed dictionary
                // TODO: ideally formatting would know which opens occurred on a line and group closes in the same manor
-               if (count > 1 && chunk_is_token(pc, CT_BRACE_CLOSE) && pc->parent_type == CT_OC_AT)
+               if (count > 0 && chunk_is_token(pc, CT_BRACE_CLOSE) && pc->parent_type == CT_OC_AT)
                {
                   if (frm.top().ip.ref)
                   {
@@ -1225,7 +1227,25 @@ void indent_text(void)
                   }
 
                   // Indent the brace to match outer most brace/square
-                  indent_column_set(frm.top().indent_tmp);
+                  if (frm.top().indent_cont)
+                  {
+                     indent_column_set(frm.top().indent_tmp - indent_size);
+				  } else {
+                     indent_column_set(frm.top().indent_tmp);
+                  }
+               }
+               else if ((pc->parent_type == CT_OC_BLOCK_EXPR) && ((pc->flags & PCF_IN_OC_MSG) != 0))
+               {
+                  // Indent the brace to match the open brace
+                  indent_column_set(frm.top().brace_indent);
+
+                  if (frm.top().ip.ref)
+                  {
+                     pc->indent.ref   = frm.top().ip.ref;
+                     pc->indent.delta = 0;
+                  }
+
+                  frm.pop();
                }
                else
                {
@@ -1383,10 +1403,10 @@ void indent_text(void)
 
             if ((pc->parent_type == CT_OC_BLOCK_EXPR) && ((pc->flags & PCF_IN_OC_MSG) != 0))
             {
-               frm.top().indent = frm.prev().indent_tmp;
+               frm.top().indent = frm.prev().indent_tmp + indent_size;
                log_indent();
                frm.top().brace_indent = frm.prev().indent_tmp;
-               indent_column_set(frm.top().indent - indent_size);
+               indent_column_set(frm.top().brace_indent);
             }
 
             log_indent();
@@ -2504,7 +2524,7 @@ void indent_text(void)
              || chunk_is_token(prev_nonl, CT_VBRACE_CLOSE)
              || chunk_is_token(prev_nonl, CT_VBRACE_OPEN)
              || chunk_is_token(prev_nonl, CT_CASE_COLON)
-             || (prev_nonl->flags & PCF_IN_PREPROC) != (pc->flags & PCF_IN_PREPROC)
+             || (prev_nonl && prev_nonl->flags & PCF_IN_PREPROC) != (pc->flags & PCF_IN_PREPROC)
              || chunk_is_token(prev_nonl, CT_COMMA)
              || is_operator))
          {
@@ -3085,10 +3105,9 @@ static bool is_end_of_assignment(chunk_t *pc, const ParseFrame &frm)
             || frm.top().type == CT_ASSIGN)
          && (  chunk_is_semicolon(pc)
             || chunk_is_token(pc, CT_COMMA)
-            || chunk_is_token(pc, CT_BRACE_OPEN)
+            || ( chunk_is_token(pc, CT_BRACE_OPEN)
+               && pc->parent_type != CT_OC_AT)
             || chunk_is_token(pc, CT_SPAREN_CLOSE)
-            || (  chunk_is_token(pc, CT_SQUARE_OPEN)
-               && pc->parent_type == CT_OC_AT)
             || (  chunk_is_token(pc, CT_SQUARE_OPEN)
                && pc->parent_type == CT_ASSIGN))
          && pc->parent_type != CT_CPP_LAMBDA);
