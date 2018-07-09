@@ -11,7 +11,7 @@
 #include "log_levels.h"
 #include "logger.h"
 
-static size_t number = 0;
+size_t number = 0;
 
 
 size_t getBlockNumber()
@@ -43,6 +43,7 @@ void numberTheBlocks()
       }
 
       if (  chunk_is_token(pc, CT_BRACE_OPEN)
+         || chunk_is_token(pc, CT_VBRACE_OPEN)
          || chunk_is_token(pc, CT_FPAREN_OPEN)
          || chunk_is_token(pc, CT_ANGLE_OPEN))
       {
@@ -53,6 +54,7 @@ void numberTheBlocks()
       pc->blockNumber = blockNumber;
 
       if (  chunk_is_token(pc, CT_BRACE_CLOSE)
+         || chunk_is_token(pc, CT_VBRACE_CLOSE)
          || chunk_is_token(pc, CT_FPAREN_CLOSE)
          || chunk_is_token(pc, CT_ANGLE_CLOSE))
       {

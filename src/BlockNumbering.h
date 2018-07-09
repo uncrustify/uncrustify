@@ -17,6 +17,7 @@
  * Introducing block numbering as:
  * A new block is opened if the type of the chunk is:
  *    CT_BRACE_OPEN
+ *    CT_VBRACE_OPEN
  *    CT_FPAREN_OPEN
  *    CT_ANGLE_OPEN
  *
