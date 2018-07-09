@@ -982,7 +982,7 @@ void indent_text(void)
             }
             // End Objc nested message and boxed array
             // TODO: ideally formatting would know which opens occurred on a line and group closes in the same manor
-            if (language_is_set(LANG_OC)
+            if (  language_is_set(LANG_OC)
                && chunk_is_token(pc, CT_SQUARE_CLOSE)
                && pc->parent_type == CT_OC_AT
                && frm.top().level >= pc->level)
@@ -1230,7 +1230,9 @@ void indent_text(void)
                   if (frm.top().indent_cont)
                   {
                      indent_column_set(frm.top().indent_tmp - indent_size);
-				  } else {
+                  }
+                  else
+                  {
                      indent_column_set(frm.top().indent_tmp);
                   }
                }
@@ -3105,7 +3107,7 @@ static bool is_end_of_assignment(chunk_t *pc, const ParseFrame &frm)
             || frm.top().type == CT_ASSIGN)
          && (  chunk_is_semicolon(pc)
             || chunk_is_token(pc, CT_COMMA)
-            || ( chunk_is_token(pc, CT_BRACE_OPEN)
+            || (  chunk_is_token(pc, CT_BRACE_OPEN)
                && pc->parent_type != CT_OC_AT)
             || chunk_is_token(pc, CT_SPAREN_CLOSE)
             || (  chunk_is_token(pc, CT_SQUARE_OPEN)
