@@ -20,7 +20,7 @@ from .failure import (ExecutionFailure, MissingFailure,
 # =============================================================================
 class Test(object):
     pass_config = ['test_config', 'test_rerun_config']
-    pass_input = ['test_input', 'test_rerun_expected']
+    pass_input = ['test_input', 'test_expected']
     pass_expected = ['test_expected', 'test_rerun_expected']
     pass_result_dir = ['results', 'results_2']
 
@@ -143,6 +143,9 @@ class Test(object):
         _config = getattr(self, self.pass_config[i])
         _input = getattr(self, self.pass_input[i])
         _expected = getattr(self, self.pass_expected[i])
+        if i == 1 and not os.path.exists(_expected):
+            _expected = getattr(self, self.pass_expected[0])
+
         _result = os.path.join(args.result_dir, self.pass_result_dir[i],
                                os.path.basename(os.path.dirname(_expected)),
                                os.path.basename(_expected))

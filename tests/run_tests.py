@@ -48,7 +48,7 @@ def main(argv):
 
         if counts['failing'] > 0:
             sys.exit(2)
-        if counts['mismatch'] > 0:
+        if counts['mismatch'] > 0 or counts['unstable'] > 0:
             sys.exit(1)
 
 

@@ -152,7 +152,8 @@ def report(counts):
                 **counts),
             **FAIL_ATTRS)
     if counts['unstable'] > 0:
-        print('{unstable} tests were unstable'.format(**counts))
+        printc('{unstable} tests were unstable'.format(**counts),
+               **FAIL_ATTRS)
 
 
 # -----------------------------------------------------------------------------
