@@ -493,8 +493,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && second->next != nullptr
       && second->next->type == CT_FUNC_CALL)
    {
-      log_rule("REMOVE_889_A");
-      return(AV_REMOVE);
+      log_rule("REMOVE_889");
+      return(cpd.settings[UO_sp_after_cast].a);
    }
    if (chunk_is_token(second, CT_DC_MEMBER))
    {
@@ -2169,19 +2169,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("REMOVE from no_space_table");
          return(AV_REMOVE);
       }
-   }
-
-   // Issue #889
-   // mapped_file_source abc((int) A::CW2A(sTemp));
-   if (  chunk_is_token(first, CT_PAREN_CLOSE)
-      && chunk_is_token(second, CT_TYPE)
-      && second->next != nullptr
-      && second->next->type == CT_DC_MEMBER
-      && second->next->next != nullptr
-      && second->next->next->type == CT_FUNC_CALL)
-   {
-      log_rule("REMOVE_889_B");
-      return(AV_REMOVE);
    }
 
    if (chunk_is_token(first, CT_NOEXCEPT))
