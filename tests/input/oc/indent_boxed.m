@@ -45,3 +45,30 @@ inline static void installGelMarkers(void) {
 NSAlert *alert = [[NSAlert alloc] init];
 }];
 }
+
+[[NSAttributedString alloc] initWithString:inJunction.reverseName attributes:@{
+NSFontAttributeName: font,
+NSForegroundColorAttributeName: inJunction.reverseColor
+}];
+@{
+NSFontAttributeName: self.font,
+NSForegroundColorAttributeName: inJunction.forwardColor
+}
+[[NSAttributedString alloc] initWithString:inJunction.reverseName attributes:@{ NSFontAttributeName: font, NSForegroundColorAttributeName: inJunction.reverseColor }];
+[[NSAttributedString alloc] initWithString:inJunction.reverseName
+attributes:@{ NSFontAttributeName: font, NSForegroundColorAttributeName: inJunction.reverseColor }];
+- (void) drawReversePrimerForJunction:(GibsonJunction*) inJunction bounds:(NSRect) inBounds {
+NSString* const string1 = nil,
+string2 = nil,
+string3 = nil;
+//does not compile but does test shift operator formatting
+std::ostringstream ostream;
+ostream << "hello"
+<< ' '
+<< "world";
+NSString* const string = inJunction.reversePrimer;
+[attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[string substringToIndex:range.location] attributes:@{
+NSFontAttributeName: self.font,
+NSForegroundColorAttributeName: inJunction.forwardColor
+}]];
+}
