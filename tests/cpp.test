@@ -297,6 +297,7 @@
 
 30940  mod_case_brace_rm.cfg                cpp/case-brace-remove.cpp
 
+30944  sp_paren_comma.cfg                   cpp/sp_paren_comma.cpp
 30945  sp_before_byref-r.cfg                cpp/sf.3266678.cpp
 30946  sf.3315874.cfg                       cpp/sf.3315874.h
 30947  bug_1689.cfg                         cpp/bug_1689.cpp
