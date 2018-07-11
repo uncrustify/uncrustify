@@ -361,10 +361,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
 
       argval_t arg = cpd.settings[UO_sp_before_semi].a;
-      if (  chunk_is_token(first, CT_SPAREN_CLOSE)
+      if (  chunk_is_token(first, CT_VBRACE_OPEN)
+         && chunk_is_token(first->prev, CT_SPAREN_CLOSE)
          && first->parent_type != CT_WHILE_OF_DO)
       {
-         log_rule("sp_before_semi|sp_special_semi");
+         log_rule("sp_special_semi");
          arg = static_cast<argval_t>(arg | cpd.settings[UO_sp_special_semi].a);
       }
       else
