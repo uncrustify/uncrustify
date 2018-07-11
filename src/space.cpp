@@ -493,7 +493,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && second->next != nullptr
       && second->next->type == CT_FUNC_CALL)
    {
-      log_rule("REMOVE_889");
+      log_rule("REMOVE");
       return(cpd.settings[UO_sp_after_cast].a);
    }
    if (chunk_is_token(second, CT_DC_MEMBER))
