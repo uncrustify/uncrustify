@@ -375,8 +375,10 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(arg);
    }
 
-   if (  chunk_is_token(second, CT_COMMENT)
-      && (chunk_is_token(first, CT_PP_ELSE) || chunk_is_token(first, CT_PP_ENDIF)))
+   if (  (  chunk_is_token(second, CT_COMMENT)
+         || chunk_is_token(second, CT_COMMENT_CPP))
+      && (  chunk_is_token(first, CT_PP_ELSE)
+         || chunk_is_token(first, CT_PP_ENDIF)))
    {
       if (cpd.settings[UO_sp_endif_cmt].a != AV_IGNORE)
       {
