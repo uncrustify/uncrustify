@@ -190,11 +190,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("Remove");
       return(AV_REMOVE);
    }
-   if (chunk_is_token(first, CT_PAREN_CLOSE) && first->parent_type == CT_DECLSPEC)
-   {
-      log_rule("Ignore");
-      return(AV_IGNORE);
-   }
+   // there are not any data for this case, this block will never been reached
+   //if (chunk_is_token(first, CT_PAREN_CLOSE) && first->parent_type == CT_DECLSPEC)
+   //{
+   //   log_rule("Ignore");
+   //   return(AV_IGNORE);
+   //}
    if (chunk_is_token(second, CT_NEWLINE) || chunk_is_token(second, CT_VBRACE_OPEN))
    {
       log_rule("REMOVE");
@@ -361,8 +362,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
 
       argval_t arg = cpd.settings[UO_sp_before_semi].a;
-      if (  chunk_is_token(first, CT_VBRACE_OPEN)
-         && chunk_is_token(first->prev, CT_SPAREN_CLOSE)
+      if (  chunk_is_token(first, CT_SPAREN_CLOSE)
          && first->parent_type != CT_WHILE_OF_DO)
       {
          log_rule("sp_special_semi");
