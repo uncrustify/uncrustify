@@ -1,5 +1,7 @@
-%:include <iostream>                // #include <iostream>
-int main(int argc, char *argv[])    // {
-<% int array<:10:>;                 // int array[10];
+// how to use digraps:
+// https://en.wikipedia.org/wiki/Digraphs_and_trigraphs
+
+int main(int argc, char *argv[]) <% // {
+int array<: 10 :>;                    // int array[10];
 %>                                  // }
 
