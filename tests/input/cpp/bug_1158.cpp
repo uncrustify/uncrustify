@@ -1,4 +1,4 @@
 void Class1::Func(void)
 {
-        while (Next());
+        while (Next()) ;
 }
