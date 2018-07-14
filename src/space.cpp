@@ -1005,6 +1005,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
             && (  next->parent_type == CT_FUNC_DEF
                || next->parent_type == CT_FUNC_PROTO))
          {
+            log_rule("sp_before_byref_func");
             return(cpd.settings[UO_sp_before_byref_func].a);
          }
       }
