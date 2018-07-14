@@ -1002,7 +1002,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          chunk_t *next = chunk_get_next(second);
          if (  next != nullptr
-            && (chunk_is_token(next, CT_FUNC_DEF) || chunk_is_token(next, CT_FUNC_PROTO)))
+            && (  next->parent_type == CT_FUNC_DEF
+               || next->parent_type == CT_FUNC_PROTO))
          {
             return(cpd.settings[UO_sp_before_byref_func].a);
          }
