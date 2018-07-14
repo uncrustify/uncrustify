@@ -1531,10 +1531,12 @@ chunk_t *align_trailing_comments(chunk_t *start)
    size_t          min_col  = 0;
    size_t          min_orig = 0;
    chunk_t         *pc      = start;
+   const size_t    lvl      = start->brace_level;
    size_t          nl_count = 0;
    ChunkStack      cs;
    size_t          col;
    size_t          intended_col = cpd.settings[UO_align_right_cmt_at_col].u;
+   const bool      same_level   = cpd.settings[UO_align_right_cmt_same_level].b;
    comment_align_e cmt_type_cur;
    comment_align_e cmt_type_start = get_comment_align_type(pc);
 
@@ -1547,6 +1549,12 @@ chunk_t *align_trailing_comments(chunk_t *start)
    {
       if ((pc->flags & PCF_RIGHT_COMMENT) && pc->column > 1)
       {
+         if (same_level && pc->brace_level != lvl)
+         {
+            pc = chunk_get_prev(pc);
+            break;
+         }
+
          cmt_type_cur = get_comment_align_type(pc);
 
          if (cmt_type_cur == cmt_type_start)

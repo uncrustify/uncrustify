@@ -778,6 +778,7 @@ enum uncrustify_options
    UO_align_typedef_amp_style,     // align_typedef_star_style for ref '&' stuff
    UO_align_right_cmt_span,        // align comment that end lines. 0=don't align
    UO_align_right_cmt_mix,         // mix comments after '}' and preproc with others
+   UO_align_right_cmt_same_level,  // only align comments at same brace level
    UO_align_right_cmt_gap,         //
    UO_align_right_cmt_at_col,      // align comment that end lines at or beyond column N;
                                    // 'pulls in' comments as a bonus side effect
