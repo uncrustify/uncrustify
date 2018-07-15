@@ -1416,24 +1416,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(cpd.settings[UO_sp_after_invariant_paren].a);
       }
 
-      // Arith after a cast comes first
-      if (chunk_is_token(second, CT_ARITH) || chunk_is_token(second, CT_CARET))
-      {
-         if (cpd.settings[UO_sp_arith_additive].a != AV_IGNORE)
-         {
-            auto arith_char = (chunk_is_token(first, CT_ARITH) || chunk_is_token(first, CT_CARET))
-                              ? first->str[0] : second->str[0];
-            if (arith_char == '+' || arith_char == '-')
-            {
-               log_rule("sp_arith_additive");
-               return(cpd.settings[UO_sp_arith_additive].a);
-            }
-         }
-
-         log_rule("sp_arith");
-         return(cpd.settings[UO_sp_arith].a);
-      }
-
       // "(struct foo) {...}" vs "(struct foo){...}"
       if (chunk_is_token(second, CT_BRACE_OPEN))
       {
