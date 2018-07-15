@@ -35,14 +35,13 @@ const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
       return(nullptr);
    }
 
-   const auto binary_find =
-      [](const lookup_entry_t *first, const lookup_entry_t *last, const char &value)
-      {
-         const auto tmp = std::lower_bound(first, last, value,
-                                           lookup_entry_t::comperator());
+   const auto binary_find = [](const lookup_entry_t *first, const lookup_entry_t *last, const char &value)
+   {
+      const auto tmp = std::lower_bound(first, last, value,
+                                        lookup_entry_t::comperator());
 
-         return((value == tmp->ch) ? tmp : nullptr);
-      };
+      return((value == tmp->ch) ? tmp : nullptr);
+   };
 
    const chunk_tag_t *match  = nullptr;
    const auto        *parent = punc_table; //!< graph in table form, initially point at first entry
