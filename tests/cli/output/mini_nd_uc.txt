@@ -544,6 +544,7 @@ align_typedef_star_style        = 0
 align_typedef_amp_style         = 0
 align_right_cmt_span            = 0
 align_right_cmt_mix             = false
+align_right_cmt_same_level      = false
 align_right_cmt_gap             = 0
 align_right_cmt_at_col          = 0
 align_func_proto_span           = 0

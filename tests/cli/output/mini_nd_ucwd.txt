@@ -1824,6 +1824,9 @@ align_right_cmt_span            = 0        # unsigned number
 # If aligning comments, mix with comments after '}' and #endif with less than 3 spaces before the comment.
 align_right_cmt_mix             = false    # false/true
 
+# Whether to only align trailing comments that are at the same brace level.
+align_right_cmt_same_level      = false    # false/true
+
 # If a trailing comment is more than this number of columns away from the text it follows,
 # it will qualify for being aligned. This has to be > 0 to do anything.
 align_right_cmt_gap             = 0        # unsigned number
