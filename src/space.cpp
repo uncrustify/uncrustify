@@ -1028,6 +1028,17 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  chunk_is_token(second, CT_BRACE_OPEN)
          && (cpd.settings[UO_sp_sparen_brace].a != AV_IGNORE))
       {
+         chunk_t *prev = chunk_get_prev_type(first, CT_CATCH, first->level);
+         if (prev != nullptr)
+         {
+            if (language_is_set(LANG_OC) && (cpd.settings[UO_sp_oc_catch_brace].a != AV_IGNORE))
+            {
+               log_rule("sp_oc_catch_brace");
+               return(cpd.settings[UO_sp_oc_catch_brace].a);
+            }
+            log_rule("sp_catch_brace");
+            return(cpd.settings[UO_sp_catch_brace].a);
+         }
          log_rule("sp_sparen_brace");
          return(cpd.settings[UO_sp_sparen_brace].a);
       }
@@ -1347,21 +1358,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       log_rule("FORCE");
       return(AV_FORCE);
-   }
-
-   if (  language_is_set(LANG_OC)
-      && chunk_is_token(first, CT_CATCH)
-      && chunk_is_token(second, CT_BRACE_OPEN)
-      && (cpd.settings[UO_sp_oc_catch_brace].a != AV_IGNORE))
-   {
-      log_rule("sp_oc_catch_brace");
-      return(cpd.settings[UO_sp_oc_catch_brace].a);
-   }
-
-   if (chunk_is_token(first, CT_CATCH) && chunk_is_token(second, CT_BRACE_OPEN))
-   {
-      log_rule("sp_catch_brace");
-      return(cpd.settings[UO_sp_catch_brace].a);
    }
 
    if (chunk_is_token(first, CT_FINALLY) && chunk_is_token(second, CT_BRACE_OPEN))
