@@ -1025,8 +1025,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_SPAREN_CLOSE))
    {
-      if (  chunk_is_token(second, CT_BRACE_OPEN)
-         && (cpd.settings[UO_sp_sparen_brace].a != AV_IGNORE))
+      if (chunk_is_token(second, CT_BRACE_OPEN))
       {
          chunk_t *prev = chunk_get_prev_type(first, CT_CATCH, first->level);
          if (prev != nullptr)
@@ -1039,8 +1038,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
             log_rule("sp_catch_brace");
             return(cpd.settings[UO_sp_catch_brace].a);
          }
-         log_rule("sp_sparen_brace");
-         return(cpd.settings[UO_sp_sparen_brace].a);
+         if (cpd.settings[UO_sp_sparen_brace].a != AV_IGNORE)
+         {
+            log_rule("sp_sparen_brace");
+            return(cpd.settings[UO_sp_sparen_brace].a);
+         }
       }
       if (  !chunk_is_comment(second)
          && (cpd.settings[UO_sp_after_sparen].a != AV_IGNORE))
