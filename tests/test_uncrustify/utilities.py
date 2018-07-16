@@ -30,7 +30,7 @@ def _add_common_arguments(parser):
     parser.add_argument('-g', '--debug', action='store_true',
                         help='generate debug files (.log, .unc)')
 
-    parser.add_argument('--executable', type=str, required=True,
+    parser.add_argument('-e', '--executable', type=str, required=True,
                         metavar='PATH',
                         help='uncrustify executable to test')
 
