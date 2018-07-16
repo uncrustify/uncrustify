@@ -259,6 +259,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (cpd.settings[UO_sp_cond_ternary_short].a != AV_IGNORE)
       {
+         log_rule("sp_cond_ternary_short");
          return(cpd.settings[UO_sp_cond_ternary_short].a);
       }
    }
@@ -307,6 +308,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_RANGE) || chunk_is_token(second, CT_RANGE))
    {
+      log_rule("sp_range");
       return(cpd.settings[UO_sp_range].a);
    }
 
