@@ -158,8 +158,8 @@ class Test(object):
             print('  Expected : {}'.format(_expected))
             print('    Result : {}'.format(_result))
 
-        if not os.path.exists(self.pass_result_dir[i]):
-            os.makedirs(self.pass_result_dir[i])
+        if not os.path.exists(os.path.dirname(_result)):
+            os.makedirs(os.path.dirname(_result))
 
         cmd = [
             config.uncrustify_exe,
@@ -174,7 +174,7 @@ class Test(object):
                 '-LA',
                 '-p', _result + '.unc'
             ]
-            stderr = open(_result + '.log')
+            stderr = open(_result + '.log', 'wt')
 
         else:
             cmd += ['-L1,2']
