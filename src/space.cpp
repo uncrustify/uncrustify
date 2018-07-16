@@ -738,7 +738,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
             && chunk_is_token(second, CT_SQUARE_CLOSE)
             && second->parent_type == CT_CPP_LAMBDA)))
    {
-      log_rule("UO_sp_cpp_lambda_assign");
+      log_rule("sp_cpp_lambda_assign");
       return(cpd.settings[UO_sp_cpp_lambda_assign].a);
    }
 
@@ -749,7 +749,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && first->parent_type == CT_CPP_LAMBDA
       && chunk_is_token(second, CT_FPAREN_OPEN))
    {
-      log_rule("UO_sp_cpp_lambda_paren");
+      log_rule("sp_cpp_lambda_paren");
       return(cpd.settings[UO_sp_cpp_lambda_paren].a);
    }
 
@@ -872,7 +872,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && second->parent_type != CT_OC_MSG
       && second->parent_type != CT_CS_SQ_STMT)
    {
-      log_rule("UO_sp_cpp_before_struct_binding");
+      log_rule("sp_cpp_before_struct_binding");
       return(cpd.settings[UO_sp_cpp_before_struct_binding].a);
    }
 
@@ -1983,7 +1983,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(second, CT_PAREN_OPEN) && second->parent_type == CT_TEMPLATE)
    {
-      log_rule("UO_sp_before_template_paren");
+      log_rule("sp_before_template_paren");
       return(cpd.settings[UO_sp_before_template_paren].a);
    }
 
