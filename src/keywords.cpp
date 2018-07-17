@@ -417,14 +417,16 @@ void add_keyword(const char *tag, c_token_t type)
 
    if (it != dkwm.end())
    {
-      LOG_FMT(LDYNKW, "%s: changed '%s' to %d\n", __func__, tag, type);
+      LOG_FMT(LDYNKW, "%s(%d): changed '%s' to '%s'\n",
+              __func__, __LINE__, tag, get_token_name(type));
       (*it).second = type;
       return;
    }
 
    // Insert the keyword
    dkwm.insert(dkwmap::value_type(ss, type));
-   LOG_FMT(LDYNKW, "%s: added '%s' as %d\n", __func__, tag, type);
+   LOG_FMT(LDYNKW, "%s(%d): added '%s' as '%s'\n",
+           __func__, __LINE__, tag, get_token_name(type));
 }
 
 
