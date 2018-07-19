@@ -1037,8 +1037,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
                log_rule("sp_oc_catch_brace");
                return(cpd.settings[UO_sp_oc_catch_brace].a);
             }
-            log_rule("sp_catch_brace");
-            return(cpd.settings[UO_sp_catch_brace].a);
+            if (cpd.settings[UO_sp_catch_brace].a != AV_IGNORE)
+            {
+               log_rule("sp_catch_brace");
+               return(cpd.settings[UO_sp_catch_brace].a);
+            }
          }
          if (cpd.settings[UO_sp_sparen_brace].a != AV_IGNORE)
          {
