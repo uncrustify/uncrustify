@@ -1959,12 +1959,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_brace_typedef].a);
    }
 
-   if (chunk_is_token(second, CT_SPAREN_OPEN))
-   {
-      log_rule("sp_before_sparen");
-      return(cpd.settings[UO_sp_before_sparen].a);
-   }
-
    if (chunk_is_token(second, CT_PAREN_OPEN) && second->parent_type == CT_TEMPLATE)
    {
       log_rule("sp_before_template_paren");
