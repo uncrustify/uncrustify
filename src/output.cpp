@@ -75,9 +75,10 @@ static bool kw_fcn_fclass(chunk_t *cmt, unc_text &out_txt);
 /**
  * Output a multiline comment without any reformatting other than shifting
  * it left or right to get the column right.
- * Trim trailing whitespace and do keyword substitution.
+ *
+ * Trims trailing whitespaces.
  */
-static void output_comment_multi_simple(chunk_t *pc, bool kw_subst);
+static void output_comment_multi_simple(chunk_t *pc);
 
 
 /**
@@ -580,7 +581,7 @@ void output_text(FILE *pfile)
          }
          else
          {
-            output_comment_multi_simple(pc, (pc->flags & PCF_INSERTED) != 0);  // forcing value to bool
+            output_comment_multi_simple(pc);
          }
       }
       else if (chunk_is_token(pc, CT_COMMENT_CPP))
@@ -2011,35 +2012,57 @@ static void do_kw_subst(chunk_t *pc)
 } // do_kw_subst
 
 
-static void output_comment_multi_simple(chunk_t *pc, bool kw_subst)
+static void output_comment_multi_simple(chunk_t *pc)
 {
-   UNUSED(kw_subst);
+   if (pc == nullptr)
+   {
+      return;
+   }
+
    cmt_reflow cmt;
    output_cmt_start(cmt, pc);
 
-   int col_diff = 0;
-   if (chunk_is_newline(chunk_get_prev(pc)))
-   {
-      // The comment should be indented correctly
-      col_diff = pc->orig_col - pc->column;
-   }
-   else
-   {
-      // The comment starts after something else
-      col_diff = 0;
-   }
+   // The multiline comment is saved inside one chunk. If the comment is
+   // shifted all lines of the comment need to be shifter by the same amount.
+   // Save the difference of initial and current position to apply it on every
+   // line_column
+   const int col_diff = [pc](){
+      int diff = 0;
+
+      if (chunk_is_newline(chunk_get_prev(pc)))
+      {
+         // The comment should be indented correctly
+         diff = pc->column - pc->orig_col;
+      }
+
+      return(diff);
+   } ();
 
    unc_text line;
-   line.clear();
-   size_t   line_count = 0;
-   size_t   cmt_idx    = 0;
-   size_t   ccol       = pc->column;
-   bool     nl_end     = false;
+   size_t   line_count  = 0;
+   size_t   line_column = pc->column;
+   size_t   cmt_idx     = 0;
    while (cmt_idx < pc->len())
    {
-      int ch = pc->str[cmt_idx++];
+      int ch = pc->str[cmt_idx];
+      cmt_idx++;
 
-      // handle the CRLF and CR endings. convert both to LF
+      // 1: step through leading tabs and spaces to find the start column
+      if (line.size() == 0)
+      {
+         if (ch == ' ')
+         {
+            line_column++;
+            continue;
+         }
+         else if (ch == '\t')
+         {
+            line_column = calc_next_tab_column(line_column, cpd.settings[UO_input_tab_size].u);
+            continue;
+         }
+      }
+
+      // 2: add chars to line, handle the CRLF and CR endings (convert both to LF)
       if (ch == '\r')
       {
          ch = '\n';
@@ -2048,32 +2071,10 @@ static void output_comment_multi_simple(chunk_t *pc, bool kw_subst)
             cmt_idx++;
          }
       }
-
-      // Find the start column
-      if (line.size() == 0)
-      {
-         nl_end = false;
-         if (ch == ' ')
-         {
-            ccol++;
-            continue;
-         }
-         else if (ch == '\t')
-         {
-            ccol = calc_next_tab_column(ccol, cpd.settings[UO_input_tab_size].u);
-            continue;
-         }
-         else
-         {
-            // LOG_FMT(LSYS, "%d] Text starts in col %d, col_diff=%d, real=%d\n",
-            //        line_count, ccol, col_diff, ccol - col_diff);
-         }
-      }
-
       line.append(ch);
 
       // If we just hit an end of line OR we just hit end-of-comment...
-      if ((ch == '\n') || (cmt_idx == pc->len()))
+      if (ch == '\n' || cmt_idx == pc->len())
       {
          line_count++;
 
@@ -2081,29 +2082,36 @@ static void output_comment_multi_simple(chunk_t *pc, bool kw_subst)
          if (ch == '\n')
          {
             line.pop_back();
-            nl_end = true;
 
             // Say we aren't in a preproc to prevent changing any bs-nl
             cmt_trim_whitespace(line, false);
-         }
 
-         if (line_count > 1)
-         {
-            ccol -= col_diff;
+            line.append('\n');
          }
 
          if (line.size() > 0)
          {
-            cmt.column = ccol;
-            cmt_output_indent(cmt.brace_col, cmt.base_col, cmt.column);
+            // unless line contains only a single newline char, indent if the
+            // line consists of either:
+            if (  line.size() > 1 // more than a single newline char or
+               || ch != '\n')     // (end-of-comment) a single non newline char
+            {
+               if (line_count > 1)
+               {
+                  // apply comment column shift without underflowing
+                  line_column = (col_diff < 0 && (cast_abs(line_column, col_diff) > line_column))
+                                ? 0 : line_column + col_diff;
+               }
+
+               cmt.column = line_column;
+               cmt_output_indent(cmt.brace_col, cmt.base_col, cmt.column);
+            }
             add_text(line);
+
+            line.clear();
          }
-         if (nl_end)
-         {
-            add_char('\n');
-         }
-         line.clear();
-         ccol = 1;
+
+         line_column = 1;
       }
    }
 } // output_comment_multi_simple
