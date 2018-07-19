@@ -477,10 +477,10 @@ sp_brace_else                   = ignore   # ignore/add/remove/force
 # Add or remove space between '}' and the name of a typedef on the same line.
 sp_brace_typedef                = ignore   # ignore/add/remove/force
 
-# Add or remove space between 'catch' and '{' in 'catch (something) { }' if on the same line.
+# Add or remove space before '{' after a catch statement as in 'catch (something) { }' if on the same line.
 sp_catch_brace                  = ignore   # ignore/add/remove/force
 
-# Add or remove space between '@catch' and '{' in '@catch (something) { }' if on the same line.
+# Add or remove space before '{' after a @catch statement as in '@catch (something) { }' if on the same line.
 # If set to ignore, sp_catch_brace is used.
 sp_oc_catch_brace               = ignore   # ignore/add/remove/force
 
@@ -1167,10 +1167,10 @@ nl_getset_brace                 = ignore   # ignore/add/remove/force
 # Add or remove newline between 'for' and '{'.
 nl_for_brace                    = ignore   # ignore/add/remove/force
 
-# Add or remove newline between 'catch' and '{' in 'catch (something) { }'.
+# Add or remove newline before '{' after a catch statement as in 'catch (something) { }'.
 nl_catch_brace                  = ignore   # ignore/add/remove/force
 
-# Add or remove newline between '@catch' and '{' in '@catch (something) { }'.
+# Add or remove newline before '{' after a @catch statement as in '@catch (something) { }'.
 # If set to ignore, nl_catch_brace is used.
 nl_oc_catch_brace               = ignore   # ignore/add/remove/force
 

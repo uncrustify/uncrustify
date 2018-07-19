@@ -9,7 +9,7 @@ void foo()
       if( buf == 0 )
          throw "Out of memory";
    }
-   catch( char * str ) {
+   catch( char * str )  {
       cout << "Exception: " << str << '\n';
    }
 }
