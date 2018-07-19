@@ -16,7 +16,6 @@
 #include "indent.h"
 #include "braces.h"
 #include "unicode.h"
-#include "helper_for_print.h"
 #include <cstdlib>
 #include "language_tools.h"
 
@@ -422,21 +421,17 @@ void output_parsed(FILE *pfile)
    fprintf(pfile, "# -=====-%s", eol_marker);
    // MAXLENGTHOFTHENAME must be consider at the format line at the file
    // output.cpp, line 427: fprintf(pfile, "# Line              Tag                Parent...
-   // and              431: ... make_message("%s# %3zu>%19.19s[%19.19s] ...
-   // here                                              xx xx   xx xx
+   // and              430: ... fprintf(pfile, "%s# %3zu>%19.19s[%19.19s] ...
+   // here                                                xx xx   xx xx
    fprintf(pfile, "# Line                Tag              Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
-      char *outputMessage;
-      outputMessage = make_message("%s# %3zu>%19.19s[%19.19s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
-                                   eol_marker,
-                                   pc->orig_line, get_token_name(pc->type),
-                                   get_token_name(pc->parent_type),
-                                   pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
-                                   pc->brace_level, pc->level, pc->pp_level,
-                                   pc->flags, pc->nl_count, pc->after_tab);
-      fprintf(pfile, "%s", outputMessage);
-      free(outputMessage);
+      fprintf(pfile, "%s# %3zu>%19.19s[%19.19s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
+              eol_marker, pc->orig_line, get_token_name(pc->type),
+              get_token_name(pc->parent_type),
+              pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
+              pc->brace_level, pc->level, pc->pp_level,
+              pc->flags, pc->nl_count, pc->after_tab);
 
       if (pc->type != CT_NEWLINE && (pc->len() != 0))
       {
@@ -543,11 +538,8 @@ void output_text(FILE *pfile)
                      int orig_sp = (pc->orig_col - prev->orig_col_end);
                      if ((int)(cpd.column + orig_sp) < 0)
                      {
-                        char *outputMessage;
-                        outputMessage = make_message("FATAL: negative value.\n   pc->orig_col=%zu prev->orig_col_end=%zu\n",
-                                                     pc->orig_col, prev->orig_col_end);
-                        fprintf(stderr, "%s", outputMessage);
-                        free(outputMessage);
+                        fprintf(stderr, "FATAL: negative value.\n   pc->orig_col=%zu prev->orig_col_end=%zu\n",
+                                pc->orig_col, prev->orig_col_end);
                         log_flush(true);
                         exit(EX_SOFTWARE);
                      }
