@@ -88,7 +88,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc);
  * - checks for if after else
  * - checks for while after do
  * - checks for open brace in BRACE2 and BRACE_DO stages, inserts open VBRACE
- * - checks for open paren in PAREN1 and PAREN2 stages, complains
+ * - checks for open paren in PAREN1 and BRACE2 stages, complains
  *
  * @param frm  The parse frame
  * @param pc   The current chunk
@@ -770,7 +770,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
          {
             // historically this used OP_PAREN1; however, to my knowledge the expression after a catch clause
             // is only optional for C# which has been handled above; therefore, this should now always expect
-            // a parenthetical expression after catch keyword and brace after the finally keyword
+            // a parenthetical expression after the catch keyword and brace after the finally keyword
             frm.top().stage = (chunk_is_token(pc, CT_CATCH)) ? brace_stage_e::PAREN1 : brace_stage_e::BRACE2;
          }
          print_stack(LBCSSWAP, "=Swap   ", frm);
