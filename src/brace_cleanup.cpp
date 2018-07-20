@@ -760,9 +760,16 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
    {
       if (chunk_is_token(pc, CT_CATCH) || chunk_is_token(pc, CT_FINALLY))
       {
-         // Replace CT_TRY with CT_CATCH on the stack & we are done
+         // Replace CT_TRY with CT_CATCH or CT_FINALLY on the stack & we are done
          frm.top().type  = pc->type;
-         frm.top().stage = (chunk_is_token(pc, CT_CATCH)) ? brace_stage_e::CATCH_WHEN : brace_stage_e::BRACE2;
+         if (language_is_set(LANG_CS))
+		 {
+            frm.top().stage = (chunk_is_token(pc, CT_CATCH)) ? brace_stage_e::CATCH_WHEN : brace_stage_e::BRACE2;
+         }
+         else
+		 {
+            frm.top().stage = (chunk_is_token(pc, CT_CATCH)) ? brace_stage_e::OP_PAREN1 : brace_stage_e::BRACE2;
+         }
          print_stack(LBCSSWAP, "=Swap   ", frm);
 
          return(true);
