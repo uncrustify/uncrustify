@@ -1029,7 +1029,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (chunk_is_token(second, CT_BRACE_OPEN))
       {
-         if (chunk_is_token(chunk_get_prev(chunk_get_prev_type(first, CT_SPAREN_OPEN, first->level)), CT_CATCH))
+         if (second->parent_type == CT_CATCH)
          {
             if (language_is_set(LANG_OC) && (cpd.settings[UO_sp_oc_catch_brace].a != AV_IGNORE))
             {
