@@ -186,6 +186,7 @@ add_executable(uncrustify
   src/align_stack.cpp
   src/args.cpp
   src/backup.cpp
+  src/BlockNumbering.cpp
   src/braces.cpp
   src/brace_cleanup.cpp
   src/ChunkStack.cpp
@@ -227,6 +228,7 @@ add_executable(uncrustify
   src/args.h
   src/backup.h
   src/base_types.h
+  src/BlockNumbering.h
   src/char_table.h
   src/ChunkStack.h
   src/chunk_list.h

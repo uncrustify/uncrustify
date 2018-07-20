@@ -705,13 +705,13 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    chunk_t *pc = first;
    while (pc != nullptr)
    {
-      LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->text() '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->text());
+      LOG_FMT(LALASS, "%s(%d): orig_line is %zu, pc->blockNumber is %zu, check pc->text() '%s', type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->blockNumber, pc->text(), get_token_name(pc->type));
       // Don't check inside PAREN or SQUARE groups
       if (  chunk_is_token(pc, CT_SPAREN_OPEN)
-            // || chunk_is_token(pc, CT_FPAREN_OPEN) Issue #1340
-         || chunk_is_token(pc, CT_SQUARE_OPEN)
-         || chunk_is_token(pc, CT_PAREN_OPEN))
+            // || chunk_is_token(pc, CT_FPAREN_OPEN)  // Issue #1340
+            // || chunk_is_token(pc, CT_PAREN_OPEN)   // Issue #1760
+         || chunk_is_token(pc, CT_SQUARE_OPEN))
       {
          LOG_FMT(LALASS, "%s(%d): Don't check inside PAREN or SQUARE groups, type is %s\n",
                  __func__, __LINE__, get_token_name(pc->type));
@@ -726,7 +726,11 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       }
 
       // Recurse if a brace set is found
-      if (chunk_is_token(pc, CT_BRACE_OPEN) || chunk_is_token(pc, CT_VBRACE_OPEN))
+      // This a new block
+      // Issue #1760
+      if (  chunk_is_token(pc, CT_BRACE_OPEN)
+         || chunk_is_token(pc, CT_PAREN_OPEN)
+         || chunk_is_token(pc, CT_VBRACE_OPEN))
       {
          size_t myspan;
          size_t mythresh;
@@ -744,6 +748,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
             mythresh = cpd.settings[UO_align_assign_thresh].u;
          }
 
+         LOG_FMT(LALASS, "%s(%d): Recurse if a brace set is found\n", __func__, __LINE__);
          pc = align_assign(chunk_get_next_ncnl(pc), myspan, mythresh, &sub_nl_count);
          if (sub_nl_count > 0)
          {
@@ -758,7 +763,11 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       }
 
       // Done with this brace set?
-      if (chunk_is_token(pc, CT_BRACE_CLOSE) || chunk_is_token(pc, CT_VBRACE_CLOSE))
+      // The new block is closed
+      // Issue #1760
+      if (  chunk_is_token(pc, CT_BRACE_CLOSE)
+         || chunk_is_token(pc, CT_PAREN_CLOSE)
+         || chunk_is_token(pc, CT_VBRACE_CLOSE))
       {
          pc = chunk_get_next(pc);
          break;
@@ -798,14 +807,33 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
          LOG_FMT(LALASS, "%s(%d): var_def_cnt is %zu\n",
                  __func__, __LINE__, var_def_cnt);
-         equ_count++;
          if (var_def_cnt != 0)
          {
             vdas.Add(pc);
+            equ_count++;
          }
          else
          {
-            as.Add(pc);
+            // Issue #1760
+            bool do_it = true;
+            if (!as.m_aligned.Empty())
+            {
+               // compare the block number
+               chunk_t *t2 = as.m_aligned.Top()->m_pc;
+               LOG_FMT(LAS, "AlignStack::%s(%d): pc->blockbNumber is %zu\n",
+                       __func__, __LINE__, pc->blockNumber);
+               LOG_FMT(LAS, "AlignStack::%s(%d): t2->blockNumber is %zu\n",
+                       __func__, __LINE__, t2->blockNumber);
+               if (pc->blockNumber != t2->blockNumber)
+               {
+                  do_it = false;
+               }
+            }
+            if (do_it)
+            {
+               equ_count++;
+               as.Add(pc);
+            }
          }
       }
 
