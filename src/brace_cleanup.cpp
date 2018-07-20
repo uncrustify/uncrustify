@@ -768,7 +768,10 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
          }
          else
          {
-            frm.top().stage = (chunk_is_token(pc, CT_CATCH)) ? brace_stage_e::OP_PAREN1 : brace_stage_e::BRACE2;
+            // historically this used OP_PAREN1; however, to my knowledge the expression after a catch clause
+            // is only optional for C# which has been handled above; therefore, this should now always expect
+            // a parenthetical expression after catch keyword and brace after the finally keyword
+            frm.top().stage = (chunk_is_token(pc, CT_CATCH)) ? brace_stage_e::PAREN1 : brace_stage_e::BRACE2;
          }
          print_stack(LBCSSWAP, "=Swap   ", frm);
 

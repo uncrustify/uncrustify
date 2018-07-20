@@ -64,12 +64,12 @@ class ParseFrame;
 enum class brace_stage_e : unsigned int
 {
    NONE,
-   PAREN1,      //! if/for/switch/while/synchronized
-   OP_PAREN1,   //! optional paren: catch () {
+   PAREN1,      //! expected paren after if/catch (C++)/for/switch/synchronized/while
+   OP_PAREN1,   //! optional paren after catch (C#)
    WOD_PAREN,   //! while of do parens
    WOD_SEMI,    //! semicolon after while of do
    BRACE_DO,    //! do
-   BRACE2,      //! if/else/for/switch/while
+   BRACE2,      //! if/catch/else/finally/for/switch/synchronized/while
    ELSE,        //! expecting 'else' after 'if'
    ELSEIF,      //! expecting 'if' after 'else'
    WHILE,       //! expecting 'while' after 'do'
