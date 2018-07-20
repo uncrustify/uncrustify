@@ -251,6 +251,7 @@ set(uncrustify_headers
   src/ChunkStack.h
   src/chunk_list.h
   src/enum_cleanup.h
+  src/enum_flags.h
   src/language_tools.h
   src/ListManager.h
   src/logger.h
