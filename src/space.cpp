@@ -468,7 +468,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(AV_FORCE);
    }
 
-   // "sizeof(foo_t)" vs "sizeof foo_t"
+   // "sizeof(foo_t)" vs "sizeof (foo_t)"
    if (chunk_is_token(first, CT_SIZEOF))
    {
       if (chunk_is_token(second, CT_PAREN_OPEN))
@@ -480,6 +480,18 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          log_rule("sp_sizeof_ellipsis");
          return(cpd.settings[UO_sp_sizeof_ellipsis].a);
+      }
+      log_rule("FORCE");
+      return(AV_FORCE);
+   }
+
+   // "decltype(foo_t)" vs "decltype (foo_t)"
+   if (chunk_is_token(first, CT_DECLTYPE))
+   {
+      if (chunk_is_token(second, CT_PAREN_OPEN))
+      {
+         log_rule("sp_decltype_paren");
+         return(cpd.settings[UO_sp_decltype_paren].a);
       }
       log_rule("FORCE");
       return(AV_FORCE);
@@ -524,6 +536,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       case CT_QUALIFIER:
       case CT_RETURN:
       case CT_SIZEOF:
+      case CT_DECLTYPE:
       case CT_STRUCT:
       case CT_THROW:
       case CT_TYPEDEF:
@@ -1971,7 +1984,20 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_before_template_paren].a);
    }
 
-   if (  second->type != CT_PTR_TYPE
+   if (  !chunk_is_token(second, CT_PTR_TYPE)
+      && chunk_is_token(first, CT_PAREN_CLOSE)
+      && first->parent_type == CT_DECLTYPE)
+   {
+      if (auto arg = cpd.settings[UO_sp_after_decltype].a)
+      {
+         log_rule("sp_after_decltype");
+         return(arg);
+      }
+      log_rule("sp_after_type");
+      return(cpd.settings[UO_sp_after_type].a);
+   }
+
+   if (  !chunk_is_token(second, CT_PTR_TYPE)
       && (chunk_is_token(first, CT_QUALIFIER) || chunk_is_token(first, CT_TYPE)))
    {
       argval_t arg = cpd.settings[UO_sp_after_type].a;

@@ -398,6 +398,8 @@ void register_options(void)
                   "Add or remove space before a reference sign '&', if followed by a func proto/def.");
    unc_add_option("sp_after_type", UO_sp_after_type, AT_IARF,
                   "Add or remove space between type and word. Default=Force.");
+   unc_add_option("sp_after_decltype", UO_sp_after_decltype, AT_IARF,
+                  "Add or remove space between 'decltype(...)' and word.");
    unc_add_option("sp_before_template_paren", UO_sp_before_template_paren, AT_IARF,
                   "Add or remove space before the paren in the D constructs 'template Foo(' and 'class Foo('.");
    unc_add_option("sp_template_angle", UO_sp_template_angle, AT_IARF,
@@ -509,6 +511,8 @@ void register_options(void)
                   "Add or remove space between 'sizeof' and '...'.");
    unc_add_option("sp_sizeof_ellipsis_paren", UO_sp_sizeof_ellipsis_paren, AT_IARF,
                   "Add or remove space between 'sizeof...' and '('.");
+   unc_add_option("sp_decltype_paren", UO_sp_decltype_paren, AT_IARF,
+                  "Add or remove space between 'decltype' and '('.");
    unc_add_option("sp_after_tag", UO_sp_after_tag, AT_IARF,
                   "Add or remove space after the tag keyword (Pawn).");
    unc_add_option("sp_inside_braces_enum", UO_sp_inside_braces_enum, AT_IARF,

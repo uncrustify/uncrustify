@@ -1032,11 +1032,15 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       if (chunk_is_token(tmp, CT_ELLIPSIS))
       {
          set_chunk_parent(tmp, CT_SIZEOF);
-         tmp = chunk_get_next_ncnl(pc);
       }
+   }
+
+   if (chunk_is_token(pc, CT_DECLTYPE))
+   {
+      tmp = chunk_get_next_ncnl(pc);
       if (chunk_is_paren_open(tmp))
       {
-         set_paren_parent(tmp, CT_TYPE_CAST);
+         set_paren_parent(tmp, CT_DECLTYPE);
       }
    }
 
@@ -1404,6 +1408,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             || chunk_is_token(next, CT_DC_MEMBER)
             || chunk_is_token(next, CT_ENUM)
             || chunk_is_token(next, CT_UNION))
+         && prev->type != CT_DECLTYPE
          && prev->type != CT_SIZEOF
          && prev->parent_type != CT_SIZEOF
          && prev->parent_type != CT_OPERATOR
@@ -1592,7 +1597,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          set_chunk_parent(next, pc->parent_type);
       }
       else if (  chunk_is_token(pc, CT_STAR)
-              && (  chunk_is_token(prev, CT_SIZEOF)
+              && (  chunk_is_token(prev, CT_DECLTYPE)
+                 || chunk_is_token(prev, CT_SIZEOF)
                  || chunk_is_token(prev, CT_DELETE)
                  || (pc && pc->parent_type == CT_SIZEOF)))
       {
@@ -2809,6 +2815,7 @@ static void fix_casts(chunk_t *start)
               && pc->type != CT_TYPE
               && pc->type != CT_PAREN_OPEN
               && pc->type != CT_STRING
+              && pc->type != CT_DECLTYPE
               && pc->type != CT_SIZEOF
               && pc->parent_type != CT_SIZEOF
               && pc->type != CT_FUNC_CALL
@@ -3433,6 +3440,7 @@ void combine_labels(void)
                }
                else if (  tmp == nullptr
                        || (  tmp->type != CT_NUMBER
+                          && tmp->type != CT_DECLTYPE
                           && tmp->type != CT_SIZEOF
                           && tmp->parent_type != CT_SIZEOF
                           && !(tmp->flags & (PCF_IN_STRUCT | PCF_IN_CLASS)))

@@ -122,8 +122,8 @@ static chunk_tag_t keywords[] =
    { "__thread",                        CT_QUALIFIER,        LANG_C                                                                      },
    { "__traits",                        CT_QUALIFIER,        LANG_D                                                                      },
    { "__try",                           CT_TRY,              LANG_C                                                                      },
-   { "__typeof",                        CT_SIZEOF,           LANG_C                                                                      },
-   { "__typeof__",                      CT_SIZEOF,           LANG_C                                                                      },
+   { "__typeof",                        CT_DECLTYPE,         LANG_C                                                                      },
+   { "__typeof__",                      CT_DECLTYPE,         LANG_C                                                                      },
    { "__unsafe_unretained",             CT_QUALIFIER,        LANG_OC                                                                     },
    { "__unused",                        CT_ATTRIBUTE,        LANG_C                                                                      },
    { "__volatile__",                    CT_QUALIFIER,        LANG_C                                                                      },
@@ -173,7 +173,7 @@ static chunk_tag_t keywords[] =
    { "dchar",                           CT_TYPE,             LANG_D                                                                      },
    { "debug",                           CT_DEBUG,            LANG_D                                                                      },
    { "debugger",                        CT_DEBUGGER,         LANG_ECMA                                                                   },
-   { "decltype",                        CT_SIZEOF,           LANG_CPP                                                                    },
+   { "decltype",                        CT_DECLTYPE,         LANG_CPP                                                                    },
    { "default",                         CT_DEFAULT,          LANG_ALL                                                                    }, // PAWN
    { "define",                          CT_PP_DEFINE,        LANG_ALL | FLAG_PP                                                          }, // PAWN
    { "defined",                         CT_DEFINED,          LANG_PAWN                                                                   }, // PAWN
@@ -316,7 +316,8 @@ static chunk_tag_t keywords[] =
    { "typedef",                         CT_TYPEDEF,          LANG_C | LANG_D                                                             },
    { "typeid",                          CT_SIZEOF,           LANG_CPP | LANG_D                                                           },
    { "typename",                        CT_TYPENAME,         LANG_CPP                                                                    },
-   { "typeof",                          CT_SIZEOF,           LANG_C | LANG_CS | LANG_D | LANG_VALA | LANG_ECMA                           },
+   { "typeof",                          CT_DECLTYPE,         LANG_C                                                                      },
+   { "typeof",                          CT_SIZEOF,           LANG_CS | LANG_D | LANG_VALA | LANG_ECMA                                    },
    { "ubyte",                           CT_TYPE,             LANG_D                                                                      },
    { "ucent",                           CT_TYPE,             LANG_D                                                                      },
    { "uint",                            CT_TYPE,             LANG_CS | LANG_VALA | LANG_D                                                },
