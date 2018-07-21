@@ -1538,6 +1538,19 @@ void indent_text(void)
             }
             log_indent();
          }
+         else if (  pc->parent_type == CT_BRACED_INIT_LIST
+                 && frm.prev().type == CT_RETURN)
+         {
+            if (frm.prev().indent_cont)
+            {
+               frm.top().indent = frm.prev().indent_tmp;
+            }
+            else
+            {
+               frm.top().indent = frm.prev().indent_tmp + indent_size;
+            }
+            log_indent();
+         }
          else
          {
             // Use the prev indent level + indent_size.
