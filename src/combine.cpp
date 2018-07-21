@@ -1420,6 +1420,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       if (  chunk_is_token(pc, CT_WORD)
          || chunk_is_token(pc, CT_TYPE)
          || chunk_is_token(pc, CT_ASSIGN)
+         || chunk_is_token(pc, CT_RETURN)
          || chunk_is_token(pc, CT_COMMA)
          || chunk_is_token(pc, CT_ANGLE_CLOSE)
          || chunk_is_token(pc, CT_SQUARE_CLOSE)
@@ -1433,6 +1434,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          if (  chunk_is_token(brace_open, CT_BRACE_OPEN)
             && (  brace_open->parent_type == CT_NONE
                || brace_open->parent_type == CT_ASSIGN
+               || brace_open->parent_type == CT_RETURN
                || brace_open->parent_type == CT_BRACED_INIT_LIST))
          {
             auto brace_close = chunk_skip_to_match(next);
