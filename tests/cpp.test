@@ -60,6 +60,7 @@
 30051  nl_namespace-a.cfg                   cpp/nl-namespace.h
 
 30052  nl_try-a.cfg                         cpp/try-catch-nl.cpp
+30053  sp_catch_brace.cfg                   cpp/exception.cpp
 
 30055  nl_after_func_body.cfg               cpp/nl_func.cpp
 30056  nl_after_func_body-2.cfg             cpp/nl_func.cpp

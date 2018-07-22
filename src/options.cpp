@@ -611,9 +611,9 @@ void register_options(void)
    unc_add_option("sp_brace_typedef", UO_sp_brace_typedef, AT_IARF,
                   "Add or remove space between '}' and the name of a typedef on the same line.");
    unc_add_option("sp_catch_brace", UO_sp_catch_brace, AT_IARF,
-                  "Add or remove space between 'catch' and '{' if on the same line.");
+                  "Add or remove space before '{' after a catch statement as in 'catch (something) { }' if on the same line.");
    unc_add_option("sp_oc_catch_brace", UO_sp_oc_catch_brace, AT_IARF,
-                  "Add or remove space between '@catch' and '{' if on the same line.\n"
+                  "Add or remove space before '{' after a @catch statement as in '@catch (something) { }' if on the same line.\n"
                   "If set to ignore, sp_catch_brace is used.");
    unc_add_option("sp_brace_catch", UO_sp_brace_catch, AT_IARF,
                   "Add or remove space between '}' and 'catch' if on the same line.");
@@ -1110,9 +1110,9 @@ void register_options(void)
    unc_add_option("nl_for_brace", UO_nl_for_brace, AT_IARF,
                   "Add or remove newline between 'for' and '{'.");
    unc_add_option("nl_catch_brace", UO_nl_catch_brace, AT_IARF,
-                  "Add or remove newline between 'catch' and '{'.");
+                  "Add or remove newline before '{' after a catch statement as in 'catch (something) { }'.");
    unc_add_option("nl_oc_catch_brace", UO_nl_oc_catch_brace, AT_IARF,
-                  "Add or remove newline between '@catch' and '{'.\n"
+                  "Add or remove newline before '{' after a @catch statement as in '@catch (something) { }'.\n"
                   "If set to ignore, nl_catch_brace is used.");
    unc_add_option("nl_brace_catch", UO_nl_brace_catch, AT_IARF,
                   "Add or remove newline between '}' and 'catch'.");

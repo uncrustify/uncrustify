@@ -2790,6 +2790,7 @@ void newlines_cleanup_braces(bool first)
       else if (chunk_is_token(pc, CT_CATCH))
       {
          if (  language_is_set(LANG_OC)
+            && (pc->str[0] == '@')
             && (cpd.settings[UO_nl_oc_brace_catch].a != AV_IGNORE))
          {
             newlines_cuddle_uncuddle(pc, cpd.settings[UO_nl_oc_brace_catch].a);
