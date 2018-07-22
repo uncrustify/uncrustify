@@ -7,7 +7,7 @@
 # there are additional tests inside imported.test.
 
 30000  ben_001.cfg                          cpp/cout.cpp
-#30001  ben_002.cfg                          cpp/alt_tokens.cpp
+30001  sp_angle_colon.cfg                   cpp/alt_tokens.cpp
 30002  ben_003.cfg                          cpp/constructor.cpp
 30003  ben_004.cfg                          cpp/strings.cpp
 30010  ben_005.cfg                          cpp/class.h
@@ -167,7 +167,7 @@
 
 30300  ben_020.cfg                          cpp/enum_shr.cpp
 30301  al.cfg                               cpp/enum_class.h
-30302  indent_with_tabs-0.cfg               cpp/bug_1315.cpp
+30302  bug_1315.cfg                         cpp/bug_1315.cpp
 
 # TODO: Make a tests for a braced_init_list. See also 34153-34166.
 30310  empty.cfg                            cpp/braced_init_list.cpp
