@@ -1,10 +1,10 @@
-while ( a >= 0)
+while (a >= 0)
 {
-   if ( b)
+   if (b)
    {
-      for ( j = 0; j < 10; j++)
+      for (j = 0; j < 10; j++)
       {
-         if ( j == b)
+         if (j == b)
          {
             return;
          }

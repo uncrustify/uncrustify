@@ -20,7 +20,6 @@
 #include "lang_pawn.h"
 #include "keywords.h"
 #include "logger.h"
-#include "helper_for_print.h"
 #include "indent.h"
 #include "language_tools.h"
 

@@ -111,6 +111,7 @@
 00162  indent_func_def_param.cfg            c/fcn_indent.c
 00163  indent_func_proto_param.cfg          c/fcn_indent.c
 00164  rdan.cfg                             c/fcn_indent_func_def_col1.c
+00165  sp_func_call_user_inside_fparen.cfg  c/sp_func_call_user_inside_fparen.c
 
 00170  empty.cfg                            c/beautifier-off.c
 00180  sf538.cfg                            c/lvalue.c

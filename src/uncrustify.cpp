@@ -412,8 +412,8 @@ int main(int argc, char *argv[])
 #define MAXLENGTHOFTHENAME    19
    // maxLengthOfTheName must be consider at the format line at the file
    // output.cpp, line 427: fprintf(pfile, "# Line              Tag                Parent...
-   // and              431: ... make_message("%s# %3zu>%19.19s[%19.19s] ...
-   // here                                              xx xx   xx xx
+   // and              430: ... fprintf(pfile, "%s# %3zu>%19.19s[%19.19s] ...
+   // here                                                xx xx   xx xx
    for (size_t token = 0; token < ARRAY_SIZE(token_names); token++)
    {
       size_t lengthOfTheName = strlen(token_names[token]);
