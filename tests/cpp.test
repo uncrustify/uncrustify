@@ -145,7 +145,7 @@
 30256  empty.cfg                            cpp/func_call.cpp
 30257  indent_columns-4.cfg                 cpp/func_call_chain.cpp
 30258  indent_columns-3.cfg                 cpp/casts.cpp
-
+30259  sp_after_constr_colon.cfg            cpp/sp_after_constr_colon.cpp
 30260  var_def_gap.cfg                      cpp/var_def_gap.cpp
 30261  align_var_def_thresh_1.cfg           cpp/align_var_def_thresh.cpp
 30262  align_var_def_thresh_2.cfg           cpp/align_var_def_thresh.cpp
