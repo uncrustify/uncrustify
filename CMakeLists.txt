@@ -196,7 +196,6 @@ add_executable(uncrustify
   src/defines.cpp
   src/detect.cpp
   src/enum_cleanup.cpp
-  src/helper_for_print.cpp
   src/indent.cpp
   src/keywords.cpp
   src/lang_pawn.cpp
@@ -231,7 +230,6 @@ add_executable(uncrustify
   src/ChunkStack.h
   src/chunk_list.h
   src/enum_cleanup.h
-  src/helper_for_print.h
   src/language_tools.h
   src/ListManager.h
   src/logger.h

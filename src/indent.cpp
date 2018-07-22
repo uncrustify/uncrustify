@@ -21,7 +21,6 @@
 #include "align.h"
 #include "frame_list.h"
 #include "space.h"
-#include "helper_for_print.h"
 #include "language_tools.h"
 
 #include "ParseFrame.h"
