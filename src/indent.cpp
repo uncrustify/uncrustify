@@ -1550,13 +1550,6 @@ void indent_text(void)
             }
             log_indent();
          }
-#if !NEVER
-#else
-         else if (pc->parent_type == CT_BRACED_INIT_LIST)
-         {
-            log_indent();
-         }
-#endif
          else
          {
             // Use the prev indent level + indent_size.
