@@ -4,8 +4,8 @@ newlines                        = crlf
 #
 # -=====-
 # Line                Tag              Parent          Columns Br/Lvl/pp     Flag   Nl  Text
-#   1>             STRUCT[               NONE][  1/  1/  7/  0][0/0/0][     70002][0-0] struct
-#   1>               TYPE[             STRUCT][  8/  8/ 21/  1][0/0/0][         2][0-0]        TelegramIndex
+#   1>             STRUCT[               NONE][  1/  1/  7/  0][0/0/0][  10070002][0-0] struct
+#   1>               TYPE[             STRUCT][  8/  8/ 21/  1][0/0/0][  10000002][0-0]        TelegramIndex
 #   1>            NEWLINE[               NONE][ 21/ 21/  1/  0][0/0/0][         2][1-0]
 #   2>         BRACE_OPEN[             STRUCT][  1/  1/  2/  0][0/0/0][ 100000402][0-0] {
 #   2>            NEWLINE[               NONE][  2/  2/  1/  0][1/1/0][         2][1-0]

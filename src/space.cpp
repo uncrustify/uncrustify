@@ -1249,6 +1249,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
       if (second->parent_type == CT_BRACED_INIT_LIST)
       {
+         if (  cpd.settings[UO_sp_brace_brace].a != AV_IGNORE
+            && chunk_is_token(first, CT_BRACE_CLOSE)
+            && first->parent_type == CT_BRACED_INIT_LIST)
+         {
+            log_rule("sp_brace_brace");
+            return(cpd.settings[UO_sp_brace_brace].a);
+         }
          if (cpd.settings[UO_sp_before_type_brace_init_lst_close].a != AV_IGNORE)
          {
             log_rule("sp_before_type_brace_init_lst_close");
@@ -1930,6 +1937,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
       if (first->parent_type == CT_BRACED_INIT_LIST)
       {
+         if (  cpd.settings[UO_sp_brace_brace].a != AV_IGNORE
+            && chunk_is_token(second, CT_BRACE_OPEN)
+            && second->parent_type == CT_BRACED_INIT_LIST)
+         {
+            log_rule("sp_brace_brace");
+            return(cpd.settings[UO_sp_brace_brace].a);
+         }
          if (cpd.settings[UO_sp_after_type_brace_init_lst_open].a != AV_IGNORE)
          {
             log_rule("sp_after_type_brace_init_lst_open");

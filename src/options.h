@@ -171,6 +171,7 @@ enum uncrustify_options
    UO_sp_cparen_oparen,             // space between nested parens - ') (' vs ')('
    UO_sp_balance_nested_parens,     // balance spaces inside nested parens
    UO_sp_paren_brace,               // space between ')' and '{'
+   UO_sp_brace_brace,               // space between nested braces - '{ {' vs '{{'
    UO_sp_before_ptr_star,           // space before a '*' that is part of a type
    UO_sp_before_unnamed_ptr_star,   //
    UO_sp_between_ptr_star,          // space between two '*' that are part of a type

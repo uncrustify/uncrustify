@@ -1550,6 +1550,13 @@ void indent_text(void)
             }
             log_indent();
          }
+#if !NEVER
+#else
+         else if (pc->parent_type == CT_BRACED_INIT_LIST)
+         {
+            log_indent();
+         }
+#endif
          else
          {
             // Use the prev indent level + indent_size.
@@ -1677,9 +1684,17 @@ void indent_text(void)
             {
                break;
             }
-            if (  !chunk_is_newline_between(pc, next)
-               && cpd.settings[UO_indent_token_after_brace].b
-               && !(pc->flags & PCF_ONE_LINER))      // Issue #1108
+            chunk_t *prev = chunk_get_prev(pc);
+            if (pc->parent_type == CT_BRACED_INIT_LIST && chunk_is_token(prev, CT_BRACE_OPEN) && prev->parent_type == CT_BRACED_INIT_LIST)
+            {
+               indent_column = frm.prev().brace_indent;
+               frm.top().indent = frm.prev().indent;
+               log_indent();
+            }
+            else if (  !chunk_is_newline_between(pc, next)
+                    && next->parent_type != CT_BRACED_INIT_LIST
+                    && cpd.settings[UO_indent_token_after_brace].b
+                    && !(pc->flags & PCF_ONE_LINER))      // Issue #1108
             {
                frm.top().indent = next->column;
                log_indent();

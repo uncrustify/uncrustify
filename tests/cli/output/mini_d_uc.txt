@@ -35,6 +35,7 @@ sp_paren_paren                  = ignore
 sp_cparen_oparen                = ignore
 sp_balance_nested_parens        = false
 sp_paren_brace                  = ignore
+sp_brace_brace                  = ignore
 sp_before_ptr_star              = ignore
 sp_before_unnamed_ptr_star      = ignore
 sp_between_ptr_star             = ignore

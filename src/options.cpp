@@ -366,6 +366,8 @@ void register_options(void)
                   "Whether to balance spaces inside nested parens.");
    unc_add_option("sp_paren_brace", UO_sp_paren_brace, AT_IARF,
                   "Add or remove space between ')' and '{'.");
+   unc_add_option("sp_brace_brace", UO_sp_brace_brace, AT_IARF,
+                  "Add or remove space between nested braces: '{{' vs '} }'.");
    unc_add_option("sp_before_ptr_star", UO_sp_before_ptr_star, AT_IARF,
                   "Add or remove space before pointer star '*'.");
    unc_add_option("sp_before_unnamed_ptr_star", UO_sp_before_unnamed_ptr_star, AT_IARF,

@@ -1,9 +1,9 @@
 indent_text(): orig_line is , orig_col is , column is , for 'struct'
-   [x:IN_STRUCT,FORCE_SPACE,STMT_START,EXPR_START]
+   [x:IN_STRUCT,FORCE_SPACE,STMT_START,EXPR_START,LVALUE]
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for 'TelegramIndex'
-   [x:IN_STRUCT]
+   [x:IN_STRUCT,LVALUE]
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , <Newline>
@@ -280,11 +280,11 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): frm.pse_tos is , ...indent is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for 'struct'
-   [x:IN_STRUCT,FORCE_SPACE,STMT_START,EXPR_START]
+   [x:IN_STRUCT,FORCE_SPACE,STMT_START,EXPR_START,LVALUE]
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , column is , for 'TelegramIndex'
-   [x:IN_STRUCT]
+   [x:IN_STRUCT,LVALUE]
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , <Newline>
