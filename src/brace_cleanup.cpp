@@ -551,6 +551,10 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
             {
                parent = CT_ASSIGN;
             }
+            else if (chunk_is_token(prev, CT_RETURN) && language_is_set(LANG_CPP))
+            {
+               parent = CT_RETURN;
+            }
             // Carry through CT_ENUM parent in NS_ENUM (type, name) {
             else if (  chunk_is_token(prev, CT_FPAREN_CLOSE)
                     && language_is_set(LANG_OC)
