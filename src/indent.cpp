@@ -3318,24 +3318,24 @@ void indent_preproc(void)
                               ? pc->pp_level - pp_level_sub : 0;
 
       // Adjust the indent of the '#'
-      if (cpd.settings[UO_pp_indent].a & AV_ADD)
+      if (cpd.settings[UO_pp_indent].a & IARF_ADD)
       {
          reindent_line(pc, 1 + pp_level * cpd.settings[UO_pp_indent_count].u);
       }
-      else if (cpd.settings[UO_pp_indent].a & AV_REMOVE)
+      else if (cpd.settings[UO_pp_indent].a & IARF_REMOVE)
       {
          reindent_line(pc, 1);
       }
 
       // Add spacing by adjusting the length
-      if ((cpd.settings[UO_pp_space].a != AV_IGNORE) && next != nullptr)
+      if ((cpd.settings[UO_pp_space].a != IARF_IGNORE) && next != nullptr)
       {
-         if (cpd.settings[UO_pp_space].a & AV_ADD)
+         if (cpd.settings[UO_pp_space].a & IARF_ADD)
          {
             const auto mult = max<size_t>(cpd.settings[UO_pp_space_count].u, 1);
             reindent_line(next, pc->column + pc->len() + (pp_level * mult));
          }
-         else if (cpd.settings[UO_pp_space].a & AV_REMOVE)
+         else if (cpd.settings[UO_pp_space].a & IARF_REMOVE)
          {
             reindent_line(next, pc->column + pc->len());
          }

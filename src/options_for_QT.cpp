@@ -15,18 +15,18 @@
 bool   QT_SIGNAL_SLOT_found      = false;
 size_t QT_SIGNAL_SLOT_level      = 0;
 bool   restoreValues             = false;
-iarf_e SaveUO_sp_inside_fparen_A = AV_NOT_DEFINED;
+iarf_e SaveUO_sp_inside_fparen_A = IARF_NOT_DEFINED;
 // Issue #481
 // connect( timer,SIGNAL( timeout() ),this,SLOT( timeoutImage() ) );
-iarf_e SaveUO_sp_inside_fparens_A = AV_NOT_DEFINED;
-iarf_e SaveUO_sp_paren_paren_A    = AV_NOT_DEFINED;
-iarf_e SaveUO_sp_before_comma_A   = AV_NOT_DEFINED;
-iarf_e SaveUO_sp_after_comma_A    = AV_NOT_DEFINED;
+iarf_e SaveUO_sp_inside_fparens_A = IARF_NOT_DEFINED;
+iarf_e SaveUO_sp_paren_paren_A    = IARF_NOT_DEFINED;
+iarf_e SaveUO_sp_before_comma_A   = IARF_NOT_DEFINED;
+iarf_e SaveUO_sp_after_comma_A    = IARF_NOT_DEFINED;
 // Bug #654
 // connect(&mapper, SIGNAL(mapped(QString &)), this, SLOT(onSomeEvent(QString &)));
-iarf_e SaveUO_sp_before_byref_A         = AV_NOT_DEFINED;
-iarf_e SaveUO_sp_before_unnamed_byref_A = AV_NOT_DEFINED;
-iarf_e SaveUO_sp_after_type_A           = AV_NOT_DEFINED;
+iarf_e SaveUO_sp_before_byref_A         = IARF_NOT_DEFINED;
+iarf_e SaveUO_sp_before_unnamed_byref_A = IARF_NOT_DEFINED;
+iarf_e SaveUO_sp_after_type_A           = IARF_NOT_DEFINED;
 
 
 void save_set_options_for_QT(size_t level)
@@ -45,14 +45,14 @@ void save_set_options_for_QT(size_t level)
    SaveUO_sp_before_unnamed_byref_A = cpd.settings[UO_sp_before_unnamed_byref].a;
    SaveUO_sp_after_type_A           = cpd.settings[UO_sp_after_type].a;
    // set values for SIGNAL/SLOT
-   cpd.settings[UO_sp_inside_fparen].a        = AV_REMOVE;
-   cpd.settings[UO_sp_inside_fparens].a       = AV_REMOVE;
-   cpd.settings[UO_sp_paren_paren].a          = AV_REMOVE;
-   cpd.settings[UO_sp_before_comma].a         = AV_REMOVE;
-   cpd.settings[UO_sp_after_comma].a          = AV_REMOVE;
-   cpd.settings[UO_sp_before_byref].a         = AV_REMOVE;
-   cpd.settings[UO_sp_before_unnamed_byref].a = AV_REMOVE;
-   cpd.settings[UO_sp_after_type].a           = AV_REMOVE;
+   cpd.settings[UO_sp_inside_fparen].a        = IARF_REMOVE;
+   cpd.settings[UO_sp_inside_fparens].a       = IARF_REMOVE;
+   cpd.settings[UO_sp_paren_paren].a          = IARF_REMOVE;
+   cpd.settings[UO_sp_before_comma].a         = IARF_REMOVE;
+   cpd.settings[UO_sp_after_comma].a          = IARF_REMOVE;
+   cpd.settings[UO_sp_before_byref].a         = IARF_REMOVE;
+   cpd.settings[UO_sp_before_unnamed_byref].a = IARF_REMOVE;
+   cpd.settings[UO_sp_after_type].a           = IARF_REMOVE;
    QT_SIGNAL_SLOT_found                       = true;
 }
 
@@ -72,14 +72,14 @@ void restore_options_for_QT(void)
    cpd.settings[UO_sp_before_byref].a         = SaveUO_sp_before_byref_A;
    cpd.settings[UO_sp_before_unnamed_byref].a = SaveUO_sp_before_unnamed_byref_A;
    cpd.settings[UO_sp_after_type].a           = SaveUO_sp_after_type_A;
-   SaveUO_sp_inside_fparen_A                  = AV_NOT_DEFINED;
-   SaveUO_sp_inside_fparens_A                 = AV_NOT_DEFINED;
-   SaveUO_sp_paren_paren_A                    = AV_NOT_DEFINED;
-   SaveUO_sp_before_comma_A                   = AV_NOT_DEFINED;
-   SaveUO_sp_after_comma_A                    = AV_NOT_DEFINED;
-   SaveUO_sp_before_byref_A                   = AV_NOT_DEFINED;
-   SaveUO_sp_before_unnamed_byref_A           = AV_NOT_DEFINED;
-   SaveUO_sp_after_type_A                     = AV_NOT_DEFINED;
+   SaveUO_sp_inside_fparen_A                  = IARF_NOT_DEFINED;
+   SaveUO_sp_inside_fparens_A                 = IARF_NOT_DEFINED;
+   SaveUO_sp_paren_paren_A                    = IARF_NOT_DEFINED;
+   SaveUO_sp_before_comma_A                   = IARF_NOT_DEFINED;
+   SaveUO_sp_after_comma_A                    = IARF_NOT_DEFINED;
+   SaveUO_sp_before_byref_A                   = IARF_NOT_DEFINED;
+   SaveUO_sp_before_unnamed_byref_A           = IARF_NOT_DEFINED;
+   SaveUO_sp_after_type_A                     = IARF_NOT_DEFINED;
    QT_SIGNAL_SLOT_found                       = false;
    restoreValues                              = false;
 }

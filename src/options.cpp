@@ -2160,22 +2160,22 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
    // Must be AT_IARF
    if ((strcasecmp(val, "add") == 0) || (strcasecmp(val, "a") == 0))
    {
-      dest->a = AV_ADD;
+      dest->a = IARF_ADD;
       return;
    }
    if ((strcasecmp(val, "remove") == 0) || (strcasecmp(val, "r") == 0))
    {
-      dest->a = AV_REMOVE;
+      dest->a = IARF_REMOVE;
       return;
    }
    if ((strcasecmp(val, "force") == 0) || (strcasecmp(val, "f") == 0))
    {
-      dest->a = AV_FORCE;
+      dest->a = IARF_FORCE;
       return;
    }
    if ((strcasecmp(val, "ignore") == 0) || (strcasecmp(val, "i") == 0))
    {
-      dest->a = AV_IGNORE;
+      dest->a = IARF_IGNORE;
       return;
    }
    if (  ((tmp = unc_find_option(val)) != nullptr)
@@ -2188,7 +2188,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
            cpd.filename.c_str(), cpd.line_number, entry->name, val);
    log_flush(true);
    cpd.error_count++;
-   dest->a = AV_IGNORE;
+   dest->a = IARF_IGNORE;
 } // convert_value
 
 
@@ -2627,27 +2627,27 @@ void set_option_defaults(void)
    cpd.defaults[UO_newlines].le                                         = LE_AUTO;
    cpd.defaults[UO_output_tab_size].u                                   = 8;
    cpd.defaults[UO_pp_indent_count].u                                   = 1;
-   cpd.defaults[UO_sp_addr].a                                           = AV_REMOVE;
-   cpd.defaults[UO_sp_after_semi].a                                     = AV_ADD;
-   cpd.defaults[UO_sp_after_semi_for].a                                 = AV_FORCE;
-   cpd.defaults[UO_sp_after_type].a                                     = AV_FORCE;
-   cpd.defaults[UO_sp_angle_shift].a                                    = AV_ADD;
-   cpd.defaults[UO_sp_before_case_colon].a                              = AV_REMOVE;
-   cpd.defaults[UO_sp_before_comma].a                                   = AV_REMOVE;
-   cpd.defaults[UO_sp_before_nl_cont].a                                 = AV_ADD;
-   cpd.defaults[UO_sp_before_semi].a                                    = AV_REMOVE;
-   cpd.defaults[UO_sp_deref].a                                          = AV_REMOVE;
-   cpd.defaults[UO_sp_incdec].a                                         = AV_REMOVE;
-   cpd.defaults[UO_sp_inv].a                                            = AV_REMOVE;
-   cpd.defaults[UO_sp_member].a                                         = AV_REMOVE;
-   cpd.defaults[UO_sp_not].a                                            = AV_REMOVE;
-   cpd.defaults[UO_sp_paren_comma].a                                    = AV_FORCE;
-   cpd.defaults[UO_sp_pp_concat].a                                      = AV_ADD;
-   cpd.defaults[UO_sp_sign].a                                           = AV_REMOVE;
-   cpd.defaults[UO_sp_super_paren].a                                    = AV_REMOVE;
-   cpd.defaults[UO_sp_this_paren].a                                     = AV_REMOVE;
-   cpd.defaults[UO_sp_word_brace].a                                     = AV_ADD;
-   cpd.defaults[UO_sp_word_brace_ns].a                                  = AV_ADD;
+   cpd.defaults[UO_sp_addr].a                                           = IARF_REMOVE;
+   cpd.defaults[UO_sp_after_semi].a                                     = IARF_ADD;
+   cpd.defaults[UO_sp_after_semi_for].a                                 = IARF_FORCE;
+   cpd.defaults[UO_sp_after_type].a                                     = IARF_FORCE;
+   cpd.defaults[UO_sp_angle_shift].a                                    = IARF_ADD;
+   cpd.defaults[UO_sp_before_case_colon].a                              = IARF_REMOVE;
+   cpd.defaults[UO_sp_before_comma].a                                   = IARF_REMOVE;
+   cpd.defaults[UO_sp_before_nl_cont].a                                 = IARF_ADD;
+   cpd.defaults[UO_sp_before_semi].a                                    = IARF_REMOVE;
+   cpd.defaults[UO_sp_deref].a                                          = IARF_REMOVE;
+   cpd.defaults[UO_sp_incdec].a                                         = IARF_REMOVE;
+   cpd.defaults[UO_sp_inv].a                                            = IARF_REMOVE;
+   cpd.defaults[UO_sp_member].a                                         = IARF_REMOVE;
+   cpd.defaults[UO_sp_not].a                                            = IARF_REMOVE;
+   cpd.defaults[UO_sp_paren_comma].a                                    = IARF_FORCE;
+   cpd.defaults[UO_sp_pp_concat].a                                      = IARF_ADD;
+   cpd.defaults[UO_sp_sign].a                                           = IARF_REMOVE;
+   cpd.defaults[UO_sp_super_paren].a                                    = IARF_REMOVE;
+   cpd.defaults[UO_sp_this_paren].a                                     = IARF_REMOVE;
+   cpd.defaults[UO_sp_word_brace].a                                     = IARF_ADD;
+   cpd.defaults[UO_sp_word_brace_ns].a                                  = IARF_ADD;
    cpd.defaults[UO_string_escape_char].u                                = '\\';
    cpd.defaults[UO_use_indent_func_call_param].b                        = true;
    cpd.defaults[UO_use_options_overriding_for_qt_macros].b              = true;
@@ -2826,16 +2826,16 @@ string argval_to_string(iarf_e argval)
 {
    switch (argval)
    {
-   case AV_IGNORE:
+   case IARF_IGNORE:
       return("ignore");
 
-   case AV_ADD:
+   case IARF_ADD:
       return("add");
 
-   case AV_REMOVE:
+   case IARF_REMOVE:
       return("remove");
 
-   case AV_FORCE:
+   case IARF_FORCE:
       return("force");
 
    default:

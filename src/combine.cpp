@@ -2560,7 +2560,7 @@ static chunk_t *process_return(chunk_t *pc)
       return(next);
    }
 
-   if (cpd.settings[UO_nl_return_expr].a != AV_IGNORE)
+   if (cpd.settings[UO_nl_return_expr].a != IARF_IGNORE)
    {
       newline_iarf(pc, cpd.settings[UO_nl_return_expr].a);
    }
@@ -2580,7 +2580,7 @@ static chunk_t *process_return(chunk_t *pc)
       }
       if (chunk_is_semicolon(semi))
       {
-         if (cpd.settings[UO_mod_paren_on_return].a == AV_REMOVE)
+         if (cpd.settings[UO_mod_paren_on_return].a == IARF_REMOVE)
          {
             LOG_FMT(LRETURN, "%s(%d): removing parens on orig_line %zu\n",
                     __func__, __LINE__, pc->orig_line);
@@ -2619,7 +2619,7 @@ static chunk_t *process_return(chunk_t *pc)
    }
 
    // We don't have a fully paren'd return. Should we add some?
-   if ((cpd.settings[UO_mod_paren_on_return].a & AV_ADD) == 0)
+   if ((cpd.settings[UO_mod_paren_on_return].a & IARF_ADD) == 0)
    {
       return(next);
    }
@@ -6892,8 +6892,8 @@ static void handle_wrap(chunk_t *pc)
       && chunk_is_token(opp, CT_PAREN_OPEN)
       && (chunk_is_token(name, CT_WORD) || chunk_is_token(name, CT_TYPE)))
    {
-      const char *psp = (pav & AV_ADD) ? " " : "";
-      const char *fsp = (av & AV_ADD) ? " " : "";
+      const char *psp = (pav & IARF_ADD) ? " " : "";
+      const char *fsp = (av & IARF_ADD) ? " " : "";
 
       pc->str.append(psp);
       pc->str.append("(");
