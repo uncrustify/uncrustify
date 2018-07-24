@@ -761,6 +761,7 @@ enum uncrustify_options
    UO_align_var_def_inline,        // also align inline struct/enum/union var defs
    UO_align_assign_span,           // align on '='. 0=don't align
    UO_align_assign_thresh,         // threshold for aligning on '='. 0=no limit
+   UO_align_assign_decl_func,      // how to handle assign in special function decls (ro5 & pure virtual)
    UO_align_enum_equ_span,         // align the '=' in enums
    UO_align_enum_equ_thresh,       // threshold for aligning on '=' in enums. 0=no limit
    UO_align_var_class_span,        // span for class (0=don't align)

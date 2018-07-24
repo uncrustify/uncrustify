@@ -807,12 +807,16 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       {
          equ_count++;
 
-         if (  !(pc->flags & PCF_IN_FCN_DEF)
+         if (  cpd.settings[UO_align_assign_decl_func].u != 0
+            && !(pc->flags & PCF_IN_FCN_DEF)
             && (  pc->parent_type == CT_QUALIFIER         // '= 0;' of a virtual function
                || pc->parent_type == CT_FUNC_CLASS_PROTO  // '= delete|default; of a xtor
                || pc->parent_type == CT_FUNC_PROTO))      // '= delete|default; of other special functions
          {
-            fcnEnd_as.Add(pc);
+            if (cpd.settings[UO_align_assign_decl_func].u != 2)
+            {
+               fcnEnd_as.Add(pc);
+            }
          }
          else if (var_def_cnt != 0)
          {
