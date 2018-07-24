@@ -1811,7 +1811,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
    {
       cpd.enc = char_encoding_e::e_UTF8;
    }
-   argval_t av;
+   iarf_e av;
    switch (cpd.enc)
    {
    case char_encoding_e::e_UTF8:

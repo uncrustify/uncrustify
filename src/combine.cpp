@@ -6876,17 +6876,17 @@ void remove_extra_returns(void)
 static void handle_wrap(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t  *opp  = chunk_get_next(pc);
-   chunk_t  *name = chunk_get_next(opp);
-   chunk_t  *clp  = chunk_get_next(name);
+   chunk_t *opp  = chunk_get_next(pc);
+   chunk_t *name = chunk_get_next(opp);
+   chunk_t *clp  = chunk_get_next(name);
 
-   argval_t pav = (pc->type == CT_FUNC_WRAP) ?
-                  cpd.settings[UO_sp_func_call_paren].a :
-                  cpd.settings[UO_sp_cpp_cast_paren].a;
+   iarf_e  pav = (pc->type == CT_FUNC_WRAP) ?
+                 cpd.settings[UO_sp_func_call_paren].a :
+                 cpd.settings[UO_sp_cpp_cast_paren].a;
 
-   argval_t av = (pc->type == CT_FUNC_WRAP) ?
-                 cpd.settings[UO_sp_inside_fparen].a :
-                 cpd.settings[UO_sp_inside_paren_cast].a;
+   iarf_e av = (pc->type == CT_FUNC_WRAP) ?
+               cpd.settings[UO_sp_inside_fparen].a :
+               cpd.settings[UO_sp_inside_paren_cast].a;
 
    if (  chunk_is_token(clp, CT_PAREN_CLOSE)
       && chunk_is_token(opp, CT_PAREN_OPEN)

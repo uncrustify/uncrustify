@@ -75,7 +75,7 @@ static void newlines_double_space_struct_enum_union(chunk_t *open_brace);
 
 
 //! If requested, make sure each entry in an enum is on its own line
-static void newlines_enum_entries(chunk_t *open_brace, argval_t av);
+static void newlines_enum_entries(chunk_t *open_brace, iarf_e av);
 
 
 /**
@@ -102,7 +102,7 @@ static void nl_handle_define(chunk_t *pc);
  * @param after   The second chunk
  * @param av      The IARF value
  */
-static void newline_iarf_pair(chunk_t *before, chunk_t *after, argval_t av);
+static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av);
 
 
 /**
@@ -142,7 +142,7 @@ static void newline_end_newline(chunk_t *br_close);
  * For virtual braces, we can only add a newline after the vbrace open.
  * If we do so, also add a newline after the vbrace close.
  */
-static bool newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt);
+static bool newlines_if_for_while_switch(chunk_t *start, iarf_e nl_opt);
 
 
 /**
@@ -151,7 +151,7 @@ static bool newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt);
  * Doesn't do anything if open brace before it
  * "code\n\ncomment\nif (...)" or "code\ncomment\nif (...)"
  */
-static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_t nl_opt);
+static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e nl_opt);
 
 
 static void _blank_line_set(chunk_t *pc, const char *text, uncrustify_options uo);
@@ -184,7 +184,7 @@ static void remove_next_newlines(chunk_t *start);
  * VBraces will stay VBraces, conversion to real ones should have already happened
  * "if (...)\ncode\ncode" or "if (...)\ncode\n\ncode"
  */
-static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval_t nl_opt);
+static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e nl_opt);
 
 
 /**
@@ -195,7 +195,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
  *
  * "struct [name] {" or "struct [name] \n {"
  */
-static void newlines_struct_union(chunk_t *start, argval_t nl_opt, bool leave_trailing);
+static void newlines_struct_union(chunk_t *start, iarf_e nl_opt, bool leave_trailing);
 static void newlines_enum(chunk_t *start);
 
 
@@ -207,14 +207,14 @@ static void newlines_enum(chunk_t *start);
  *
  * @param start  The chunk - should be CT_ELSE or CT_WHILE_OF_DO
  */
-static void newlines_cuddle_uncuddle(chunk_t *start, argval_t nl_opt);
+static void newlines_cuddle_uncuddle(chunk_t *start, iarf_e nl_opt);
 
 
 /**
  * Adds/removes a newline between else and '{'.
  * "else {" or "else \n {"
  */
-static void newlines_do_else(chunk_t *start, argval_t nl_opt);
+static void newlines_do_else(chunk_t *start, iarf_e nl_opt);
 
 
 //! Put a newline before and after a block of variable definitions
@@ -702,7 +702,7 @@ void newline_del_between(chunk_t *start, chunk_t *end)
 } // newline_del_between
 
 
-static bool newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
+static bool newlines_if_for_while_switch(chunk_t *start, iarf_e nl_opt)
 {
    LOG_FUNC_ENTRY();
 
@@ -768,7 +768,7 @@ static bool newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
 } // newlines_if_for_while_switch
 
 
-static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_t nl_opt)
+static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e nl_opt)
 {
    LOG_FUNC_ENTRY();
 
@@ -1091,7 +1091,7 @@ static void remove_next_newlines(chunk_t *start)
 }
 
 
-static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval_t nl_opt)
+static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e nl_opt)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;
@@ -1314,7 +1314,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
 } // newlines_if_for_while_switch_post_blank_lines
 
 
-static void newlines_struct_union(chunk_t *start, argval_t nl_opt, bool leave_trailing)
+static void newlines_struct_union(chunk_t *start, iarf_e nl_opt, bool leave_trailing)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;
@@ -1376,13 +1376,13 @@ static void newlines_struct_union(chunk_t *start, argval_t nl_opt, bool leave_tr
 static void newlines_enum(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   chunk_t  *pc;
-   chunk_t  *pcClass;
-   chunk_t  *pcType;
-   chunk_t  *pcColon;
-   chunk_t  *pcType1;
-   chunk_t  *pcType2;
-   argval_t nl_opt;
+   chunk_t *pc;
+   chunk_t *pcClass;
+   chunk_t *pcType;
+   chunk_t *pcColon;
+   chunk_t *pcType1;
+   chunk_t *pcType2;
+   iarf_e  nl_opt;
 
    if ((start->flags & PCF_IN_PREPROC) && !cpd.settings[UO_nl_define_macro].b)
    {
@@ -1461,7 +1461,7 @@ static void newlines_enum(chunk_t *start)
 } // newlines_enum
 
 
-static void newlines_cuddle_uncuddle(chunk_t *start, argval_t nl_opt)
+static void newlines_cuddle_uncuddle(chunk_t *start, iarf_e nl_opt)
 {
    LOG_FUNC_ENTRY();
    chunk_t *br_close;
@@ -1479,7 +1479,7 @@ static void newlines_cuddle_uncuddle(chunk_t *start, argval_t nl_opt)
 }
 
 
-static void newlines_do_else(chunk_t *start, argval_t nl_opt)
+static void newlines_do_else(chunk_t *start, iarf_e nl_opt)
 {
    LOG_FUNC_ENTRY();
    chunk_t *next;
@@ -1863,8 +1863,8 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
    }
 
-   argval_t val            = AV_IGNORE;
-   bool     nl_close_brace = false;
+   iarf_e val            = AV_IGNORE;
+   bool   nl_close_brace = false;
    // Handle the cases where the brace is part of a function call or definition
    if (  br_open->parent_type == CT_FUNC_DEF
       || br_open->parent_type == CT_FUNC_CALL
@@ -2096,7 +2096,7 @@ static void newline_after_return(chunk_t *start)
 }
 
 
-static void newline_iarf_pair(chunk_t *before, chunk_t *after, argval_t av)
+static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av)
 {
    LOG_FUNC_ENTRY();
    log_func_stack(LNEWLINE, "Call Stack:");
@@ -2121,7 +2121,7 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, argval_t av)
 }
 
 
-void newline_iarf(chunk_t *pc, argval_t av)
+void newline_iarf(chunk_t *pc, iarf_e av)
 {
    LOG_FUNC_ENTRY();
    log_func_stack(LNEWLINE, "CallStack:");
@@ -2230,7 +2230,7 @@ static void newline_func_def_or_call(chunk_t *start)
 
    if (is_call)
    {
-      argval_t atmp = cpd.settings[UO_nl_func_call_paren].a;
+      iarf_e atmp = cpd.settings[UO_nl_func_call_paren].a;
       if (atmp != AV_IGNORE)
       {
          prev = chunk_get_prev_ncnl(start);
@@ -2263,7 +2263,7 @@ static void newline_func_def_or_call(chunk_t *start)
    }
    else
    {
-      argval_t atmp = cpd.settings[is_def ? UO_nl_func_def_paren : UO_nl_func_paren].a;
+      iarf_e atmp = cpd.settings[is_def ? UO_nl_func_def_paren : UO_nl_func_paren].a;
       if (atmp != AV_IGNORE)
       {
          prev = chunk_get_prev_ncnl(start);
@@ -2309,9 +2309,9 @@ static void newline_func_def_or_call(chunk_t *start)
          const chunk_t *tmp_next = chunk_get_next_ncnl(prev);
          if (tmp_next != nullptr && tmp_next->type != CT_FUNC_CLASS_DEF)
          {
-            argval_t a = (tmp->parent_type == CT_FUNC_PROTO) ?
-                         cpd.settings[UO_nl_func_proto_type_name].a :
-                         cpd.settings[UO_nl_func_type_name].a;
+            iarf_e a = (tmp->parent_type == CT_FUNC_PROTO) ?
+                       cpd.settings[UO_nl_func_proto_type_name].a :
+                       cpd.settings[UO_nl_func_type_name].a;
             if (  (tmp->flags & PCF_IN_CLASS)
                && (cpd.settings[UO_nl_func_type_name_class].a != AV_IGNORE))
             {
@@ -2409,11 +2409,11 @@ static void newline_func_def_or_call(chunk_t *start)
       }
    }
 
-   argval_t as = cpd.settings[is_def ? UO_nl_func_def_start : UO_nl_func_decl_start].a;
-   argval_t ae = cpd.settings[is_def ? UO_nl_func_def_end : UO_nl_func_decl_end].a;
+   iarf_e as = cpd.settings[is_def ? UO_nl_func_def_start : UO_nl_func_decl_start].a;
+   iarf_e ae = cpd.settings[is_def ? UO_nl_func_def_end : UO_nl_func_decl_end].a;
    if (comma_count == 0)
    {
-      argval_t atmp;
+      iarf_e atmp;
       atmp = cpd.settings[is_def ? UO_nl_func_def_start_single :
                           UO_nl_func_decl_start_single].a;
       if (atmp != AV_IGNORE)
@@ -2769,7 +2769,7 @@ void newlines_cleanup_braces(bool first)
       }
       else if (chunk_is_token(pc, CT_ELSEIF))
       {
-         argval_t arg = cpd.settings[UO_nl_elseif_brace].a;
+         iarf_e arg = cpd.settings[UO_nl_elseif_brace].a;
          newlines_if_for_while_switch(
             pc, (arg != AV_IGNORE) ? arg : cpd.settings[UO_nl_if_brace].a);
          tmp = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level);
@@ -3449,7 +3449,7 @@ void newlines_cleanup_braces(bool first)
             tmp = chunk_get_prev_ncnl(pc);
             newline_iarf(tmp, cpd.settings[UO_nl_assign_square].a);
 
-            argval_t arg = cpd.settings[UO_nl_after_square_assign].a;
+            iarf_e arg = cpd.settings[UO_nl_after_square_assign].a;
 
             if (cpd.settings[UO_nl_assign_square].a & AV_ADD)
             {
@@ -4049,8 +4049,8 @@ void newlines_class_colon_pos(c_token_t tok)
 
    tokenpos_e tpc;
    tokenpos_e pcc;
-   argval_t   anc;
-   argval_t   ncia;
+   iarf_e     anc;
+   iarf_e     ncia;
 
    if (tok == CT_CLASS_COLON)
    {
@@ -4570,7 +4570,7 @@ void newlines_cleanup_dup(void)
 }
 
 
-static void newlines_enum_entries(chunk_t *open_brace, argval_t av)
+static void newlines_enum_entries(chunk_t *open_brace, iarf_e av)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc = open_brace;

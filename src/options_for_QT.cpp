@@ -12,21 +12,21 @@
 #include "options_for_QT.h"
 
 // for the modification of options within the SIGNAL/SLOT call.
-bool     QT_SIGNAL_SLOT_found      = false;
-size_t   QT_SIGNAL_SLOT_level      = 0;
-bool     restoreValues             = false;
-argval_t SaveUO_sp_inside_fparen_A = AV_NOT_DEFINED;
+bool   QT_SIGNAL_SLOT_found      = false;
+size_t QT_SIGNAL_SLOT_level      = 0;
+bool   restoreValues             = false;
+iarf_e SaveUO_sp_inside_fparen_A = AV_NOT_DEFINED;
 // Issue #481
 // connect( timer,SIGNAL( timeout() ),this,SLOT( timeoutImage() ) );
-argval_t SaveUO_sp_inside_fparens_A = AV_NOT_DEFINED;
-argval_t SaveUO_sp_paren_paren_A    = AV_NOT_DEFINED;
-argval_t SaveUO_sp_before_comma_A   = AV_NOT_DEFINED;
-argval_t SaveUO_sp_after_comma_A    = AV_NOT_DEFINED;
+iarf_e SaveUO_sp_inside_fparens_A = AV_NOT_DEFINED;
+iarf_e SaveUO_sp_paren_paren_A    = AV_NOT_DEFINED;
+iarf_e SaveUO_sp_before_comma_A   = AV_NOT_DEFINED;
+iarf_e SaveUO_sp_after_comma_A    = AV_NOT_DEFINED;
 // Bug #654
 // connect(&mapper, SIGNAL(mapped(QString &)), this, SLOT(onSomeEvent(QString &)));
-argval_t SaveUO_sp_before_byref_A         = AV_NOT_DEFINED;
-argval_t SaveUO_sp_before_unnamed_byref_A = AV_NOT_DEFINED;
-argval_t SaveUO_sp_after_type_A           = AV_NOT_DEFINED;
+iarf_e SaveUO_sp_before_byref_A         = AV_NOT_DEFINED;
+iarf_e SaveUO_sp_before_unnamed_byref_A = AV_NOT_DEFINED;
+iarf_e SaveUO_sp_after_type_A           = AV_NOT_DEFINED;
 
 
 void save_set_options_for_QT(size_t level)

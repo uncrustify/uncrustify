@@ -2822,7 +2822,7 @@ string tfi_to_string(TrueFalseIgnore_e val)
 }
 
 
-string argval_to_string(argval_t argval)
+string argval_to_string(iarf_e argval)
 {
    switch (argval)
    {

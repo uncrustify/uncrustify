@@ -23,13 +23,13 @@ static void detect_space_options(void);
 class sp_votes
 {
 protected:
-   size_t   m_add;
-   size_t   m_remove;
-   size_t   m_force;
-   argval_t *m_av;
+   size_t m_add;
+   size_t m_remove;
+   size_t m_force;
+   iarf_e *m_av;
 
 public:
-   sp_votes(argval_t &av)
+   sp_votes(iarf_e &av)
    {
       m_add    = 0;
       m_remove = 0;

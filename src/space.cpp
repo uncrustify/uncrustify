@@ -49,7 +49,7 @@ static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *se
  *
  * @return AV_IGNORE, AV_ADD, AV_REMOVE or AV_FORCE
  */
-static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp);
+static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp);
 
 /**
  * Ensure to force the space between the \a first and the \a second chunks
@@ -61,7 +61,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp);
  *
  * @return AV_IGNORE, AV_ADD, AV_REMOVE or AV_FORCE
  */
-static argval_t ensure_force_space(chunk_t *first, chunk_t *second, argval_t av);
+static iarf_e ensure_force_space(chunk_t *first, chunk_t *second, iarf_e av);
 
 //! type that stores two chunks between those no space shall occur
 struct no_space_table_t
@@ -142,7 +142,7 @@ static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *se
  * this function is called for every chunk in the input file.
  * Thus it is important to keep this function efficient
  */
-static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
+static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 {
    LOG_FUNC_ENTRY();
 
@@ -239,7 +239,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && ((CharTable::IsKw1(second->str[0]) || chunk_is_token(second, CT_NUMBER))))
    {
       log_rule("sp_case_label");
-      return(argval_t(cpd.settings[UO_sp_case_label].a | AV_ADD));
+      return(iarf_e(cpd.settings[UO_sp_case_label].a | AV_ADD));
    }
 
    if (chunk_is_token(first, CT_FOR_COLON))
@@ -322,15 +322,15 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_MACRO))
    {
       log_rule("sp_macro");
-      argval_t arg = cpd.settings[UO_sp_macro].a;
-      return(static_cast<argval_t>(arg | ((arg != AV_IGNORE) ? AV_ADD : AV_IGNORE)));
+      iarf_e arg = cpd.settings[UO_sp_macro].a;
+      return(static_cast<iarf_e>(arg | ((arg != AV_IGNORE) ? AV_ADD : AV_IGNORE)));
    }
 
    if (chunk_is_token(first, CT_FPAREN_CLOSE) && first->parent_type == CT_MACRO_FUNC)
    {
       log_rule("sp_macro_func");
-      argval_t arg = cpd.settings[UO_sp_macro_func].a;
-      return(static_cast<argval_t>(arg | ((arg != AV_IGNORE) ? AV_ADD : AV_IGNORE)));
+      iarf_e arg = cpd.settings[UO_sp_macro_func].a;
+      return(static_cast<iarf_e>(arg | ((arg != AV_IGNORE) ? AV_ADD : AV_IGNORE)));
    }
 
    if (chunk_is_token(first, CT_PREPROC))
@@ -363,12 +363,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          }
       }
 
-      argval_t arg = cpd.settings[UO_sp_before_semi].a;
+      iarf_e arg = cpd.settings[UO_sp_before_semi].a;
       if (  chunk_is_token(first, CT_SPAREN_CLOSE)
          && first->parent_type != CT_WHILE_OF_DO)
       {
          log_rule("sp_special_semi");
-         arg = static_cast<argval_t>(arg | cpd.settings[UO_sp_special_semi].a);
+         arg = static_cast<iarf_e>(arg | cpd.settings[UO_sp_special_semi].a);
       }
       else
       {
@@ -924,7 +924,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       log_rule("sp_inside_angle");
 
-      argval_t op = cpd.settings[UO_sp_inside_angle].a;
+      iarf_e op = cpd.settings[UO_sp_inside_angle].a;
 
       // special: if we're not supporting digraphs, then we shouldn't create them!
       if (  (op == AV_REMOVE)
@@ -1749,12 +1749,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
    if (chunk_is_token(first, CT_BOOL) || chunk_is_token(second, CT_BOOL))
    {
-      argval_t arg = cpd.settings[UO_sp_bool].a;
+      iarf_e arg = cpd.settings[UO_sp_bool].a;
       if (  (cpd.settings[UO_pos_bool].tp != TP_IGNORE)
          && first->orig_line != second->orig_line
          && arg != AV_REMOVE)
       {
-         arg = static_cast<argval_t>(arg | AV_ADD);
+         arg = static_cast<iarf_e>(arg | AV_ADD);
       }
       log_rule("sp_bool");
       return(arg);
@@ -1881,7 +1881,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (first->type != CT_PTR_TYPE)
       {
          log_rule("sp_type_func|ADD");
-         return(static_cast<argval_t>(cpd.settings[UO_sp_type_func].a | AV_ADD));
+         return(static_cast<iarf_e>(cpd.settings[UO_sp_type_func].a | AV_ADD));
       }
       log_rule("sp_type_func");
       return(cpd.settings[UO_sp_type_func].a);
@@ -2008,7 +2008,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  !chunk_is_token(second, CT_PTR_TYPE)
       && (chunk_is_token(first, CT_QUALIFIER) || chunk_is_token(first, CT_TYPE)))
    {
-      argval_t arg = cpd.settings[UO_sp_after_type].a;
+      iarf_e arg = cpd.settings[UO_sp_after_type].a;
       log_rule("sp_after_type");
       return((arg != AV_REMOVE) ? arg : AV_FORCE);
    }
@@ -2201,7 +2201,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 } // do_space
 
 
-static argval_t ensure_force_space(chunk_t *first, chunk_t *second, argval_t av)
+static iarf_e ensure_force_space(chunk_t *first, chunk_t *second, iarf_e av)
 {
    if (first->flags & PCF_FORCE_SPACE)
    {
@@ -2209,14 +2209,14 @@ static argval_t ensure_force_space(chunk_t *first, chunk_t *second, argval_t av)
       LOG_FMT(LSPACE, " <force between '%s' and '%s'>",
               first->text(), second->text());
       av_int |= AV_ADD;
-      return(static_cast<argval_t>(av_int));
+      return(static_cast<iarf_e>(av_int));
    }
 
    return(av);
 }
 
 
-static argval_t do_space_ensured(chunk_t *first, chunk_t *second, int &min_sp)
+static iarf_e do_space_ensured(chunk_t *first, chunk_t *second, int &min_sp)
 {
    return(ensure_force_space(first, second, do_space(first, second, min_sp)));
 }
@@ -2396,7 +2396,7 @@ void space_text(void)
          int min_sp;
          LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, pc-text() '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-         argval_t av = do_space_ensured(pc, next, min_sp);
+         iarf_e av = do_space_ensured(pc, next, min_sp);
          min_sp = max(1, min_sp);
          switch (av)
          {
@@ -2599,8 +2599,8 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
            second->text());
    log_func_stack_inline(LSPACE);
 
-   int      min_sp;
-   argval_t av = do_space_ensured(first, second, min_sp);
+   int    min_sp;
+   iarf_e av = do_space_ensured(first, second, min_sp);
 
    LOG_FMT(LSPACE, "%s(%d): av is %s\n", __func__, __LINE__, argval_to_string(av).c_str());
    size_t coldiff;
