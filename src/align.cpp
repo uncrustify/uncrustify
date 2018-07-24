@@ -327,8 +327,6 @@ static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col, size_t min_p
    chunk_t *prev = chunk_get_prev(pc);
    if (prev == nullptr || chunk_is_newline(prev))
    {
-      // info for coveralls: these lines are never used
-      // no example found
       min_col = squeeze ? 1 : pc->column;
       LOG_FMT(LALADD, "%s(%d): pc->orig_line=%zu, pc->col=%zu max_col=%zu min_pad=%zu min_col=%zu\n",
               __func__, __LINE__, pc->orig_line, pc->column, max_col, min_pad, min_col);
