@@ -1165,7 +1165,7 @@ static void check_template_arg(chunk_t *start, chunk_t *end)
       chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
       // a test "if (next == nullptr)" is not necessary
       chunk_flags_set(pc, PCF_IN_TEMPLATE);
-      if (chunk_is_token(pc, CT_SIZEOF))
+      if (chunk_is_token(pc, CT_DECLTYPE) || chunk_is_token(pc, CT_SIZEOF))
       {
          expressionIsNumeric = true;
          break;

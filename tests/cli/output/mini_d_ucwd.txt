@@ -166,6 +166,9 @@ sp_before_byref_func            = ignore   # ignore/add/remove/force
 # Add or remove space between type and word. Default=Force.
 sp_after_type                   = force    # ignore/add/remove/force
 
+# Add or remove space between 'decltype(...)' and word.
+sp_after_decltype               = ignore   # ignore/add/remove/force
+
 # Add or remove space before the paren in the D constructs 'template Foo(' and 'class Foo('.
 sp_before_template_paren        = ignore   # ignore/add/remove/force
 
@@ -330,6 +333,9 @@ sp_sizeof_ellipsis              = ignore   # ignore/add/remove/force
 
 # Add or remove space between 'sizeof...' and '('.
 sp_sizeof_ellipsis_paren        = ignore   # ignore/add/remove/force
+
+# Add or remove space between 'decltype' and '('.
+sp_decltype_paren               = ignore   # ignore/add/remove/force
 
 # Add or remove space after the tag keyword (Pawn).
 sp_after_tag                    = ignore   # ignore/add/remove/force

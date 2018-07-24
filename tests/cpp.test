@@ -342,6 +342,14 @@
 31624  sp_before_ptr_star-f.cfg             cpp/sp_after_type.cpp
 31625  sp_before_ptr_star-r.cfg             cpp/sp_after_type.cpp
 
+31626  sp_decltype_paren-f.cfg              cpp/issue_1916.cpp
+31627  sp_decltype_paren-r.cfg              cpp/issue_1916.cpp
+31628  sp_after_decltype-f.cfg              cpp/issue_1916.cpp
+31629  sp_after_decltype-r.cfg              cpp/issue_1916.cpp
+31630  sp_after_type-f.cfg                  cpp/issue_1916.cpp
+31631  sp_after_type-r.cfg                  cpp/issue_1916.cpp
+31632  issue_1916.cfg                       cpp/issue_1916.cpp
+
 31700  toggle_processing_cmt.cfg            cpp/toggle_processing_cmt.cpp
 31701  toggle_processing_cmt2.cfg           cpp/toggle_processing_cmt2.cpp
 

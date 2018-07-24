@@ -68,6 +68,7 @@ enum c_token_t
    CT_ENUM,
    CT_ENUM_CLASS,
    CT_SIZEOF,
+   CT_DECLTYPE,
    CT_RETURN,
    CT_BREAK,
    CT_UNION,
