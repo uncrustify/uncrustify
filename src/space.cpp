@@ -1228,12 +1228,26 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  !chunk_is_token(first, CT_BRACE_OPEN)
       && !chunk_is_token(first, CT_FPAREN_OPEN)
       && chunk_is_token(second, CT_BRACE_OPEN)
-      && first->parent_type != CT_DECLTYPE
       && second->parent_type == CT_BRACED_INIT_LIST)
    {
-      // 'int{9}' vs 'int {9}' but not 'decltype(var){9}' as it is covered by sp_after_decltype
+      auto arg = cpd.settings[UO_sp_type_brace_init_lst].a;
+      if (arg)
+      {
+         // 'int{9}' vs 'int {9}'
+         log_rule("sp_type_brace_init_lst");
+         return(arg);
+      }
+      // 'decltype(entity){9}' may be covered by sp_after_decltype
+      if (first->parent_type == CT_DECLTYPE)
+      {
+         if (auto arg = cpd.settings[UO_sp_after_decltype].a)
+         {
+            log_rule("sp_after_decltype");
+            return(arg);
+         }
+      }
       log_rule("sp_type_brace_init_lst");
-      return(cpd.settings[UO_sp_type_brace_init_lst].a);
+      return(arg);
    }
 
    if (chunk_is_token(second, CT_BRACE_CLOSE))
@@ -1987,11 +2001,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          log_rule("sp_after_decltype");
          return(arg);
-      }
-      if (cpd.settings[UO_sp_type_brace_init_lst].a && second->parent_type == CT_BRACED_INIT_LIST)
-      {
-         log_rule("sp_type_brace_init_lst");
-         return(cpd.settings[UO_sp_type_brace_init_lst].a);
       }
       log_rule("sp_after_type");
       return(cpd.settings[UO_sp_after_type].a);
