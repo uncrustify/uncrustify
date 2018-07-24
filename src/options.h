@@ -187,6 +187,7 @@ enum uncrustify_options
    UO_sp_after_byref_func,          //
    UO_sp_before_byref_func,         //
    UO_sp_after_type,                // space between type and word
+   UO_sp_after_decltype,            // space between 'decltype(...)' and word
    UO_sp_before_template_paren,     // D: 'template Foo('
    UO_sp_template_angle,            //
    UO_sp_before_angle,              // space before '<>', as in '<class T>'
@@ -244,6 +245,7 @@ enum uncrustify_options
    UO_sp_sizeof_paren,              // space between 'sizeof' and '('
    UO_sp_sizeof_ellipsis,           // space between 'sizeof' and '...'
    UO_sp_sizeof_ellipsis_paren,     // space between 'sizeof...' and '('
+   UO_sp_decltype_paren,            // space between 'decltype' and '('
    UO_sp_after_tag,                 // pawn: space after a tag colon
    UO_sp_inside_braces_enum,        // space inside enum '{' and '}' - '{ a, b, c }'
    UO_sp_inside_braces_struct,      // space inside struct/union '{' and '}'

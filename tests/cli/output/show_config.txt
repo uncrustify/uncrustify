@@ -168,6 +168,9 @@ sp_before_byref_func            { Ignore, Add, Remove, Force }
 sp_after_type                   { Ignore, Add, Remove, Force }
   Add or remove space between type and word. Default=Force.
 
+sp_after_decltype               { Ignore, Add, Remove, Force }
+  Add or remove space between 'decltype(...)' and word.
+
 sp_before_template_paren        { Ignore, Add, Remove, Force }
   Add or remove space before the paren in the D constructs 'template Foo(' and 'class Foo('.
 
@@ -332,6 +335,9 @@ sp_sizeof_ellipsis              { Ignore, Add, Remove, Force }
 
 sp_sizeof_ellipsis_paren        { Ignore, Add, Remove, Force }
   Add or remove space between 'sizeof...' and '('.
+
+sp_decltype_paren               { Ignore, Add, Remove, Force }
+  Add or remove space between 'decltype' and '('.
 
 sp_after_tag                    { Ignore, Add, Remove, Force }
   Add or remove space after the tag keyword (Pawn).
