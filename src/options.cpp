@@ -2544,59 +2544,6 @@ int save_option_file(FILE *pfile, bool withDoc)
 }
 
 
-void print_options(FILE *pfile)
-{
-   // TODO refactor to be independent of type positioning
-   const char *names[] =
-   {
-      "{ False, True }",
-      "{ Ignore, Add, Remove, Force }",
-      "Number",
-      "{ Auto, LF, CR, CRLF }",
-      "{ Ignore, Lead, Trail }",
-      "String",
-      "Unsigned Number",
-   };
-
-   fprintf(pfile, "# %s\n", UNCRUSTIFY_VERSION);
-
-   // Print the all out
-   for (auto &jt : group_map)
-   {
-      fprintf(pfile, "#\n# %s\n#\n\n", jt.second.short_desc);
-
-      for (auto option_id : jt.second.options)
-      {
-         const option_map_value *option = get_option_name(option_id);
-         int                    cur     = strlen(option->name);
-         int                    pad     = (cur < MAX_OPTION_NAME_LEN) ? (MAX_OPTION_NAME_LEN - cur) : 1;
-         fprintf(pfile, "%s%*c%s\n",
-                 option->name,
-                 pad, ' ',
-                 names[option->type]);
-
-         const char *text = option->short_desc;
-
-         if (text != nullptr)
-         {
-            fputs("  ", pfile);
-            while (*text != 0)
-            {
-               fputc(*text, pfile);
-               if (*text == '\n')
-               {
-                  fputs("  ", pfile);
-               }
-               text++;
-            }
-         }
-         fputs("\n\n", pfile);
-      }
-   }
-   fprintf(pfile, "%s", DOC_TEXT_END);
-} // print_options
-
-
 void set_option_defaults(void)
 {
    // set all the default values to zero

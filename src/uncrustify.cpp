@@ -451,7 +451,8 @@ int main(int argc, char *argv[])
 
    if (arg.Present("--show-config"))
    {
-      print_options(stdout);
+      set_option_defaults();
+      save_option_file(stdout, true);
       return(EXIT_SUCCESS);
    }
 
