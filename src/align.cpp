@@ -699,6 +699,10 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    vdas.Start(span, thresh);
    vdas.m_right_align = as.m_right_align;
 
+   AlignStack fcnEnd_as;
+   fcnEnd_as.Start(span, thresh);
+   fcnEnd_as.m_right_align = as.m_right_align;
+
    size_t  var_def_cnt = 0;
    size_t  equ_count   = 0;
    size_t  tmp;
@@ -707,6 +711,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    {
       LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->text() '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->text());
+
       // Don't check inside PAREN or SQUARE groups
       if (  chunk_is_token(pc, CT_SPAREN_OPEN)
             // || chunk_is_token(pc, CT_FPAREN_OPEN) Issue #1340
@@ -721,9 +726,11 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          {
             as.NewLines(pc->orig_line - tmp);
             vdas.NewLines(pc->orig_line - tmp);
+            fcnEnd_as.NewLines(pc->orig_line - tmp);
          }
          continue;
       }
+
 
       // Recurse if a brace set is found
       if (chunk_is_token(pc, CT_BRACE_OPEN) || chunk_is_token(pc, CT_VBRACE_OPEN))
@@ -749,6 +756,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          {
             as.NewLines(sub_nl_count);
             vdas.NewLines(sub_nl_count);
+            fcnEnd_as.NewLines(sub_nl_count);
             if (p_nl_count != nullptr)
             {
                *p_nl_count += sub_nl_count;
@@ -764,10 +772,13 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          break;
       }
 
+
       if (chunk_is_newline(pc))
       {
          as.NewLines(pc->nl_count);
          vdas.NewLines(pc->nl_count);
+         fcnEnd_as.NewLines(pc->nl_count);
+
          if (p_nl_count != nullptr)
          {
             *p_nl_count += pc->nl_count;
@@ -790,16 +801,20 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          // we hit the second variable def - don't look for assigns, don't align
          vdas.Reset();
       }
-      else if (  equ_count == 0
-              && chunk_is_token(pc, CT_ASSIGN)
-              && ((pc->flags & PCF_IN_TEMPLATE) == 0))  // Issue #999
+      else if (  equ_count == 0                      // indent only if first '=' in line
+              && (pc->flags & PCF_IN_TEMPLATE) == 0  // and it is not inside a template #999
+              && chunk_is_token(pc, CT_ASSIGN))
       {
-         LOG_FMT(LALASS, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
-         LOG_FMT(LALASS, "%s(%d): var_def_cnt is %zu\n",
-                 __func__, __LINE__, var_def_cnt);
          equ_count++;
-         if (var_def_cnt != 0)
+
+         if (  !(pc->flags & PCF_IN_FCN_DEF)
+            && (  pc->parent_type == CT_QUALIFIER         // '= 0;' of a virtual function
+               || pc->parent_type == CT_FUNC_CLASS_PROTO  // '= delete|default; of a xtor
+               || pc->parent_type == CT_FUNC_PROTO))      // '= delete|default; of other special functions
+         {
+            fcnEnd_as.Add(pc);
+         }
+         else if (var_def_cnt != 0)
          {
             vdas.Add(pc);
          }
@@ -814,6 +829,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
 
    as.End();
    vdas.End();
+   fcnEnd_as.End();
 
    if (pc != nullptr)
    {
