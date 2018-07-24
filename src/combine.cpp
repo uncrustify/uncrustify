@@ -1041,6 +1041,17 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       if (chunk_is_paren_open(tmp))
       {
          set_paren_parent(tmp, CT_DECLTYPE);
+
+         // decltype may be followed by a braced-init-list
+         tmp = chunk_get_next_type(tmp, CT_PAREN_CLOSE, tmp->level);
+         if (tmp != nullptr)
+         {
+            tmp = chunk_get_next_ncnl(tmp);
+            if (chunk_is_opening_brace(tmp))
+            {
+               set_paren_parent(tmp, CT_BRACED_INIT_LIST);
+            }
+         }
       }
    }
 
