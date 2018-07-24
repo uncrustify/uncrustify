@@ -355,6 +355,8 @@
 31633  sp_after_decltype-f.cfg              cpp/sp_after_decltype.cpp
 31634  sp_after_decltype-r.cfg              cpp/sp_after_decltype.cpp
 
+31660  nl_func_var_def_blk-1.cfg            cpp/issue_1919.cpp
+
 31700  toggle_processing_cmt.cfg            cpp/toggle_processing_cmt.cpp
 31701  toggle_processing_cmt2.cfg           cpp/toggle_processing_cmt2.cpp
 
