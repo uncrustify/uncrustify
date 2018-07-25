@@ -1513,6 +1513,55 @@ static bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
 } // parse_word
 
 
+static bool parse_attribute(tok_ctx &ctx, chunk_t &pc)
+{
+   size_t nested = 1;
+
+   // The first two characters are already valid
+   pc.str.clear();
+   pc.str.append(ctx.get());
+   pc.str.append(ctx.get());
+   while (ctx.more())
+   {
+      size_t ch1 = ctx.get();
+      size_t ch2 = ctx.peek();
+      if (ch1 == '[' && ch2 == '[')
+      {
+         // TODO per the standard "Two consecutive left square bracket tokens ([[) may only appear
+         // when introducing an attribute-specifier or inside an attribute argument." For now the
+         // attribute is simply preserved as is with no special checking of its contents. If the
+         // attribute itself should be formatted someday then this will need to change.
+         pc.str.append(ch1);
+         pc.str.append(ctx.get());
+         ++nested;
+         continue;
+      }
+      if (ch1 == ']' && ch2 == ']')
+      {
+         pc.str.append(ch1);
+         pc.str.append(ctx.get());
+         if (--nested == 0)
+         {
+            break;
+         }
+         continue;
+      }
+      // presently all characters between [[ and ]] are preserved as is
+      pc.str.append(ch1);
+   }
+
+   pc.type = CT_ATTRIBUTE;
+
+   if (nested)
+   {
+      LOG_FMT(LWARN, "%s:%zu incomplete attribute specifier sequence in col %d\n",
+              cpd.filename.c_str(), pc.orig_line, (int)ctx.c.col);
+      cpd.error_count++;
+   }
+   return(true);
+} // parse_attribute
+
+
 static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc)
 {
    size_t nl_count = 0;
@@ -2009,6 +2058,13 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       || ((ctx.peek() == '@') && CharTable::IsKw1(ctx.peek(1))))
    {
       parse_word(ctx, pc, false);
+      return(true);
+   }
+
+   // Check for C++11/14/17/20 attribute specifier sequences
+   if (language_is_set(LANG_CPP) && ctx.peek() == '[' && ctx.peek(1) == '[')
+   {
+      parse_attribute(ctx, pc);
       return(true);
    }
 
