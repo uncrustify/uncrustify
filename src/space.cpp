@@ -1237,14 +1237,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_type_brace_init_lst");
          return(arg);
       }
-      // 'decltype(entity){9}' may be covered by sp_after_decltype
-      if (auto arg = cpd.settings[UO_sp_after_decltype].a)
-      {
-         log_rule("sp_after_decltype");
-         return(arg);
-      }
-      log_rule("sp_type_brace_init_lst");
-      return(arg);
    }
 
    if (chunk_is_token(second, CT_BRACE_CLOSE))
