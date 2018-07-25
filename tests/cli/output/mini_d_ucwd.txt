@@ -119,6 +119,9 @@ sp_balance_nested_parens        = false    # false/true
 # Add or remove space between ')' and '{'.
 sp_paren_brace                  = ignore   # ignore/add/remove/force
 
+# Add or remove space between nested braces: '{{' vs '} }'.
+sp_brace_brace                  = ignore   # ignore/add/remove/force
+
 # Add or remove space before pointer star '*'.
 sp_before_ptr_star              = ignore   # ignore/add/remove/force
 

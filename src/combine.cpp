@@ -2040,6 +2040,7 @@ void fix_symbols(void)
 
    mark_define_expressions();
 
+   bool is_cpp  = language_is_set(LANG_CPP);
    bool is_java = language_is_set(LANG_JAVA);
 
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
@@ -2050,6 +2051,17 @@ void fix_symbols(void)
       }
 
       if (chunk_is_token(pc, CT_ASSIGN))
+      {
+         mark_lvalue(pc);
+      }
+
+      // a brace immediately preceeded by word in C++11 is an initializer list though it may also
+      // by a type casting initializer list if the word is really a type; sadly unucustify knows
+      // only builtin types and knows nothing of user-defined types
+      chunk_t *prev = chunk_get_prev_ncnl(pc);
+      if (  is_cpp
+         && chunk_is_token(pc, CT_BRACE_OPEN)
+         && (chunk_is_token(prev, CT_WORD) || chunk_is_token(prev, CT_TYPE)))
       {
          mark_lvalue(pc);
       }
