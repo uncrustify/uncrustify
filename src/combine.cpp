@@ -1421,6 +1421,57 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
    if (language_is_set(LANG_CPP))
    {
+      chunk_t *nnext = chunk_get_next_ncnl(next);
+
+      // handle parent_type of assigns in special functions (ro5 + pure virtual)
+      if (  (pc->flags & (PCF_IN_STRUCT | PCF_IN_CLASS))
+         && chunk_is_token(pc, CT_ASSIGN)
+         && chunk_is_token(nnext, CT_SEMICOLON)
+         && (  chunk_is_token(next, CT_DEFAULT)
+            || chunk_is_token(next, CT_DELETE)
+            || (chunk_is_token(next, CT_NUMBER) && chunk_is_str(next, "0", 1))))
+      {
+         const size_t level        = pc->level;
+         bool         found_status = false;
+         chunk_t      *pprev       = chunk_get_prev(pc);
+
+         for ( ; (  pprev != nullptr
+                 && pprev->level >= level
+                 && pprev->type != CT_SEMICOLON
+                 && pprev->type != CT_PRIVATE_COLON)
+               ; pprev = chunk_get_prev(pprev))
+         {
+            if (pprev->level != level)
+            {
+               continue;
+            }
+
+            if (chunk_is_token(next, CT_NUMBER))
+            {
+               if (  pprev->type == CT_QUALIFIER
+                  && chunk_is_str(pprev, "virtual", 7))
+               {
+                  found_status = true;
+                  break;
+               }
+            }
+            else
+            {
+               if (  pprev->type == CT_FUNC_CLASS_PROTO  // ctor/dtor
+                  || pprev->type == CT_FUNC_PROTO)       // normal function
+               {
+                  found_status = true;
+                  break;
+               }
+            }
+         }
+
+         if (found_status)
+         {
+            pc->parent_type = pprev->type;
+         }
+      }
+
       // Detect a braced-init-list
       if (  chunk_is_token(pc, CT_WORD)
          || chunk_is_token(pc, CT_TYPE)

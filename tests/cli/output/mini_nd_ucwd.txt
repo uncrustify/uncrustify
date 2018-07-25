@@ -1773,6 +1773,12 @@ align_assign_span               = 0        # unsigned number
 # The threshold for aligning on '=' in assignments (0=no limit)
 align_assign_thresh             = 0        # unsigned number
 
+# Defines how align_assign_span is applied onto function decl. with: virtual ... = 0, = delete, = default.
+# 0 - default align_assign_span behavior
+# 1 - indent the '=' on their own, with each other
+# 2 - don't indent
+align_assign_decl_func          = 0        # unsigned number
+
 # The span for aligning on '=' in enums (0=don't align)
 align_enum_equ_span             = 0        # unsigned number
 

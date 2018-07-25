@@ -611,6 +611,9 @@
 34295  sp_after_type_brace_init_lst_open-r.cfg  cpp/brace_brace_init_lst.cpp
 
 34296  i1768.cfg                            cpp/i1768.cpp
+34297  align_assign_decl_func-0.cfg         cpp/align-assign-mixed.cpp
+34298  align_assign_decl_func-1.cfg         cpp/align-assign-mixed.cpp
+34299  align_assign_decl_func-2.cfg         cpp/align-assign-mixed.cpp
 
 # __asm__
 34300  bug_1236.cfg                         cpp/bug_1236.cpp
