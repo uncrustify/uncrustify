@@ -483,6 +483,8 @@
 
 33160  sp_before_byref-r.cfg                cpp/bug_1112.cpp
 
+33180  pp_multi_comment.cfg                 cpp/pp_multi_comment.cpp
+
 33200  cmt_multi_first_len_minimum-1.cfg    cpp/first_len_minimum.cpp
 
 33201  indent_ctor_members_twice.cfg        cpp/indent_ctor_members_twice.cpp
