@@ -1,11 +1,11 @@
 void asd(void)
 {
 	a < up_lim() ? do_hi() : do_low;
-	a[ a<b>c] = d;
+	a[ a<b>c ] = d;
 }
 
 [[nodiscard]] inline static CFErrorRef _Nullable CreateErrorIfError(CFStringRef const inDomain, CFIndex const inCode, CFDictionaryRef const inInformation) {
-	[[maybe_unused]] auto const [iterator, inserted]{ super_type::insert(ioFileReference) };
+	[[maybe_unused]] auto const [ iterator, inserted ]{ super_type::insert(ioFileReference) };
 	if (inCode == 0) {
 		return nullptr;
 	}
