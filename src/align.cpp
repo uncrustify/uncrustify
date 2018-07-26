@@ -628,7 +628,12 @@ void align_preprocessor(void)
 
       // step past the 'define'
       pc = chunk_get_next_nc(pc);
-      // if (pc == nullptr) will never occurs, at least it is a newline
+      if (pc == nullptr)
+      {
+         // coveralls will complain here. There are no example for that.
+         // see https://en.wikipedia.org/wiki/Robustness_principle
+         break;
+      }
 
       LOG_FMT(LALPP, "%s(%d): define (%s) on line %zu col %zu\n",
               __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
@@ -651,7 +656,12 @@ void align_preprocessor(void)
 
       // step to the value past the close parenthesis or the macro name
       pc = chunk_get_next(pc);
-      // if (pc == nullptr) will never occurs, at least it is a newline
+      if (pc == nullptr)
+      {
+         // coveralls will complain here. There are no example for that.
+         // see https://en.wikipedia.org/wiki/Robustness_principle
+         break;
+      }
 
       /*
        * don't align anything if the first line ends with a newline before
