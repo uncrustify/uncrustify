@@ -178,6 +178,8 @@
 30313  sp_brace_brace-r.cfg                 cpp/sp_brace_brace.cpp 
 30314  sp_brace_brace-f.cfg                 cpp/sp_brace_brace.cpp
 
+30400  attribute_specifier_seqs.cfg         cpp/attribute_specifier_seqs.cpp
+
 # function def newlines
 30701  func-def-1.cfg                       cpp/function-def.cpp
 30702  func-def-2.cfg                       cpp/function-def.cpp
