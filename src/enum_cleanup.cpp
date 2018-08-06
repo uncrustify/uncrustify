@@ -11,6 +11,8 @@
 #include "chunk_list.h"
 #include "logger.h"
 
+using namespace uncrustify;
+
 
 void enum_cleanup(void)
 {

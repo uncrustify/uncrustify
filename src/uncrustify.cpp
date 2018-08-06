@@ -85,6 +85,7 @@
 
 
 using namespace std;
+using namespace uncrustify;
 
 
 // Global data

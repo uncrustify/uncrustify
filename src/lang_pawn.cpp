@@ -13,6 +13,8 @@
 #include "uncrustify.h"
 #include "language_tools.h"
 
+using namespace uncrustify;
+
 
 /**
  * Checks to see if a token continues a statement to the next line.

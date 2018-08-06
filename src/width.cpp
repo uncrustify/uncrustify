@@ -16,6 +16,8 @@
 
 #include <cstdlib>
 
+using namespace uncrustify;
+
 
 /**
  * abbreviations used:

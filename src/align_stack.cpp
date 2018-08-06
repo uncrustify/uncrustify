@@ -15,6 +15,7 @@
 
 #include <limits>
 
+using namespace uncrustify;
 
 using std::numeric_limits;
 

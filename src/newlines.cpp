@@ -38,6 +38,7 @@
 
 
 using namespace std;
+using namespace uncrustify;
 
 
 static void mark_change(const char *func, size_t line);

@@ -11,6 +11,8 @@
 
 #include "options_for_QT.h"
 
+using namespace uncrustify;
+
 // for the modification of options within the SIGNAL/SLOT call.
 bool   QT_SIGNAL_SLOT_found      = false;
 size_t QT_SIGNAL_SLOT_level      = 0;

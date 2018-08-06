@@ -21,6 +21,7 @@
 #include <cstring>
 #include <vector>
 
+using namespace uncrustify;
 
 using std::vector;
 

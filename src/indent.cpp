@@ -26,6 +26,7 @@
 #include "ParseFrame.h"
 
 using namespace std;
+using namespace uncrustify;
 
 
 /**

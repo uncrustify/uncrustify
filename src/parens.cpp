@@ -14,6 +14,8 @@
 #include "unc_ctype.h"
 #include "uncrustify.h"
 
+using namespace uncrustify;
+
 
 //! Add an open parenthesis after first and add a close parenthesis before the last
 static void add_parens_between(chunk_t *first, chunk_t *last);

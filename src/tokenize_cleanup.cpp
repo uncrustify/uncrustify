@@ -27,6 +27,8 @@
 
 #include <cstring>
 
+using namespace uncrustify;
+
 
 /**
  * Mark types in a single template argument.

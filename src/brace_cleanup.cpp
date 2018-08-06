@@ -27,6 +27,7 @@
 #include <iostream>
 #include "frame_list.h"
 
+using namespace uncrustify;
 
 using std::invalid_argument;
 using std::string;

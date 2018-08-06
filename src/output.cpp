@@ -19,6 +19,8 @@
 #include <cstdlib>
 #include "language_tools.h"
 
+using namespace uncrustify;
+
 
 struct cmt_reflow
 {

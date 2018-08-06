@@ -10,6 +10,8 @@
 #include "prototypes.h"
 #include <regex>
 
+using namespace uncrustify;
+
 
 enum
 {
