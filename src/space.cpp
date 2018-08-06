@@ -1230,9 +1230,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && chunk_is_token(second, CT_BRACE_OPEN)
       && second->parent_type == CT_BRACED_INIT_LIST)
    {
-      // 'int{9}' vs 'int {9}'
-      log_rule("sp_type_brace_init_lst");
-      return(cpd.settings[UO_sp_type_brace_init_lst].a);
+      auto arg = cpd.settings[UO_sp_type_brace_init_lst].a;
+      if (arg || first->parent_type != CT_DECLTYPE)
+      {
+         // 'int{9}' vs 'int {9}'
+         log_rule("sp_type_brace_init_lst");
+         return(arg);
+      }
    }
 
    if (chunk_is_token(second, CT_BRACE_CLOSE))
@@ -1424,7 +1428,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_invariant_paren].a);
    }
 
-   if (chunk_is_token(first, CT_PAREN_CLOSE))
+   if (chunk_is_token(first, CT_PAREN_CLOSE) && first->parent_type != CT_DECLTYPE)
    {
       if (first->parent_type == CT_D_TEMPLATE)
       {

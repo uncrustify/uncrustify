@@ -352,6 +352,8 @@
 31630  sp_after_type-f.cfg                  cpp/issue_1916.cpp
 31631  sp_after_type-r.cfg                  cpp/issue_1916.cpp
 31632  issue_1916.cfg                       cpp/issue_1916.cpp
+31633  sp_after_decltype-f.cfg              cpp/sp_after_decltype.cpp
+31634  sp_after_decltype-r.cfg              cpp/sp_after_decltype.cpp
 
 31700  toggle_processing_cmt.cfg            cpp/toggle_processing_cmt.cpp
 31701  toggle_processing_cmt2.cfg           cpp/toggle_processing_cmt2.cpp
