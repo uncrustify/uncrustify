@@ -63,6 +63,8 @@ const char *Args::Params(const char *token, size_t &index)
 {
    if (token == nullptr)
    {
+      // coveralls will complain
+      // can only occur with a call such as: arg.Param(nullptr)
       return(nullptr);
    }
 
