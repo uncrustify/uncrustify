@@ -60,7 +60,7 @@ const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
       if (  parent->tag != nullptr
          && (parent->tag->lang_flags & lang_flags) != 0   // punctuator lang and processing lang match
          && (  (parent->tag->lang_flags & FLAG_DIG) == 0  // punctuator is not a di/tri-graph
-            || cpd.settings[UO_enable_digraphs].b))       // or di/tri-graph processing is enabled
+            || options::enable_digraphs()))       // or di/tri-graph processing is enabled
       {
          match = parent->tag;
       }

@@ -46,7 +46,7 @@ void do_parens(void)
 {
    LOG_FUNC_ENTRY();
 
-   if (cpd.settings[UO_mod_full_paren_if_bool].b)
+   if (options::mod_full_paren_if_bool())
    {
       chunk_t *pc = chunk_get_head();
       while ((pc = chunk_get_next_ncnl(pc)) != nullptr)

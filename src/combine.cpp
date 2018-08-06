@@ -2566,9 +2566,9 @@ static chunk_t *process_return(chunk_t *pc)
       return(next);
    }
 
-   if (cpd.settings[UO_nl_return_expr].a != IARF_IGNORE)
+   if (options::nl_return_expr() != IARF_IGNORE)
    {
-      newline_iarf(pc, cpd.settings[UO_nl_return_expr].a);
+      newline_iarf(pc, options::nl_return_expr());
    }
 
    if (chunk_is_token(next, CT_PAREN_OPEN))
@@ -2586,7 +2586,7 @@ static chunk_t *process_return(chunk_t *pc)
       }
       if (chunk_is_semicolon(semi))
       {
-         if (cpd.settings[UO_mod_paren_on_return].a == IARF_REMOVE)
+         if (options::mod_paren_on_return() == IARF_REMOVE)
          {
             LOG_FMT(LRETURN, "%s(%d): removing parens on orig_line %zu\n",
                     __func__, __LINE__, pc->orig_line);
@@ -2625,7 +2625,7 @@ static chunk_t *process_return(chunk_t *pc)
    }
 
    // We don't have a fully paren'd return. Should we add some?
-   if ((cpd.settings[UO_mod_paren_on_return].a & IARF_ADD) == 0)
+   if ((options::mod_paren_on_return() & IARF_ADD) == 0)
    {
       return(next);
    }
@@ -3227,11 +3227,11 @@ static void fix_typedef(chunk_t *start)
               __func__, __LINE__, the_type->text(), the_type->orig_line);
 
       // If we are aligning on the open parenthesis, grab that instead
-      if (open_paren != nullptr && cpd.settings[UO_align_typedef_func].u == 1)
+      if (open_paren != nullptr && options::align_typedef_func() == 1)
       {
          the_type = open_paren;
       }
-      if (cpd.settings[UO_align_typedef_func].u != 0)
+      if (options::align_typedef_func() != 0)
       {
          LOG_FMT(LTYPEDEF, "%s(%d):  -- align anchor on text() %s, @ orig_line %zu, orig_col %zu\n",
                  __func__, __LINE__, the_type->text(), the_type->orig_line, the_type->orig_col);
@@ -5272,13 +5272,13 @@ static void mark_namespace(chunk_t *pns)
          continue;
       }
 
-      if (  (cpd.settings[UO_indent_namespace_limit].u > 0)
+      if (  (options::indent_namespace_limit() > 0)
          && ((br_close = chunk_skip_to_match(pc)) != nullptr))
       {
          // br_close->orig_line is always >= pc->orig_line;
          size_t diff = br_close->orig_line - pc->orig_line;
 
-         if (diff > cpd.settings[UO_indent_namespace_limit].u)
+         if (diff > options::indent_namespace_limit())
          {
             chunk_flags_set(pc, PCF_LONG_BLOCK);
             chunk_flags_set(br_close, PCF_LONG_BLOCK);
@@ -6570,7 +6570,7 @@ static void handle_oc_available(chunk_t *os)
 
 static void handle_oc_property_decl(chunk_t *os)
 {
-   if (cpd.settings[UO_mod_sort_oc_properties].b)
+   if (options::mod_sort_oc_properties())
    {
       typedef std::vector<chunk_t *> ChunkGroup;
 
@@ -6681,13 +6681,13 @@ static void handle_oc_property_decl(chunk_t *os)
             next = chunk_get_next(next);
          }
 
-         int class_w       = cpd.settings[UO_mod_sort_oc_property_class_weight].n;
-         int thread_w      = cpd.settings[UO_mod_sort_oc_property_thread_safe_weight].n;
-         int readwrite_w   = cpd.settings[UO_mod_sort_oc_property_readwrite_weight].n;
-         int ref_w         = cpd.settings[UO_mod_sort_oc_property_reference_weight].n;
-         int getter_w      = cpd.settings[UO_mod_sort_oc_property_getter_weight].n;
-         int setter_w      = cpd.settings[UO_mod_sort_oc_property_setter_weight].n;
-         int nullability_w = cpd.settings[UO_mod_sort_oc_property_nullability_weight].n;
+         int class_w       = options::mod_sort_oc_property_class_weight();
+         int thread_w      = options::mod_sort_oc_property_thread_safe_weight();
+         int readwrite_w   = options::mod_sort_oc_property_readwrite_weight();
+         int ref_w         = options::mod_sort_oc_property_reference_weight();
+         int getter_w      = options::mod_sort_oc_property_getter_weight();
+         int setter_w      = options::mod_sort_oc_property_setter_weight();
+         int nullability_w = options::mod_sort_oc_property_nullability_weight();
 
          //
          std::multimap<int, std::vector<ChunkGroup> > sorted_chunk_map;
@@ -6889,12 +6889,12 @@ static void handle_wrap(chunk_t *pc)
    chunk_t *clp  = chunk_get_next(name);
 
    iarf_e  pav = (pc->type == CT_FUNC_WRAP) ?
-                 cpd.settings[UO_sp_func_call_paren].a :
-                 cpd.settings[UO_sp_cpp_cast_paren].a;
+                 options::sp_func_call_paren() :
+                 options::sp_cpp_cast_paren();
 
    iarf_e av = (pc->type == CT_FUNC_WRAP) ?
-               cpd.settings[UO_sp_inside_fparen].a :
-               cpd.settings[UO_sp_inside_paren_cast].a;
+               options::sp_inside_fparen() :
+               options::sp_inside_paren_cast();
 
    if (  chunk_is_token(clp, CT_PAREN_CLOSE)
       && chunk_is_token(opp, CT_PAREN_OPEN)

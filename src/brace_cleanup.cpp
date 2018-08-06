@@ -697,7 +697,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
          // fatal error
          cerr << "Unmatched BRACE_CLOSE\nat orig_line="
               << pc->orig_line << ", orig_col=" << pc->orig_col << "\n";
-         if (!cpd.settings[UO_tok_split_gte].b)
+         if (!options::tok_split_gte())
          {
             cerr << "Try the option 'tok_split_gte = true'\n";
          }
@@ -745,7 +745,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
    if (frm.top().stage == brace_stage_e::ELSEIF)
    {
       if (  chunk_is_token(pc, CT_IF)
-         && (  !cpd.settings[UO_indent_else_if].b
+         && (  !options::indent_else_if()
             || !chunk_is_newline(chunk_get_prev_nc(pc))))
       {
          // Replace CT_ELSE with CT_IF
@@ -848,7 +848,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
    {
       if (  language_is_set(LANG_CS)
          && chunk_is_token(pc, CT_USING_STMT)
-         && (!cpd.settings[UO_indent_using_block].b))
+         && (!options::indent_using_block()))
       {
          // don't indent the using block
       }

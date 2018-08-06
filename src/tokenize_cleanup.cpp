@@ -1054,7 +1054,7 @@ static void check_template(chunk_t *start)
          if (  (tokens[num_tokens - 1] == CT_ANGLE_OPEN)
             && (pc->str[0] == '>')
             && (pc->len() > 1)
-            && (  cpd.settings[UO_tok_split_gte].b
+            && (  options::tok_split_gte()
                || (  (chunk_is_str(pc, ">>", 2) || chunk_is_str(pc, ">>>", 3))
                   && num_tokens >= 2)))
          {
