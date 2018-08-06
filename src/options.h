@@ -1058,8 +1058,6 @@ const group_map_value *get_group_name(size_t ug);
 const option_map_value *get_option_name(uncrustify_options uo);
 
 
-void print_options(FILE *pfile);
-
 /**
  * convert a argument type to a string
  *
