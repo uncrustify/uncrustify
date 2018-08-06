@@ -55,7 +55,7 @@ void save_set_options_for_QT(size_t level)
    options::sp_before_byref()         = IARF_REMOVE;
    options::sp_before_unnamed_byref() = IARF_REMOVE;
    options::sp_after_type()           = IARF_REMOVE;
-   QT_SIGNAL_SLOT_found                       = true;
+   QT_SIGNAL_SLOT_found               = true;
 }
 
 
@@ -65,7 +65,7 @@ void restore_options_for_QT(void)
 
    LOG_FMT(LGUY, "restore values\n");
    // restore the values we had before SIGNAL/SLOT
-   QT_SIGNAL_SLOT_level                       = 0;
+   QT_SIGNAL_SLOT_level               = 0;
    options::sp_inside_fparen()        = SaveUO_sp_inside_fparen_A;
    options::sp_inside_fparens()       = SaveUO_sp_inside_fparens_A;
    options::sp_paren_paren()          = SaveUO_sp_paren_paren_A;
@@ -74,14 +74,14 @@ void restore_options_for_QT(void)
    options::sp_before_byref()         = SaveUO_sp_before_byref_A;
    options::sp_before_unnamed_byref() = SaveUO_sp_before_unnamed_byref_A;
    options::sp_after_type()           = SaveUO_sp_after_type_A;
-   SaveUO_sp_inside_fparen_A                  = IARF_NOT_DEFINED;
-   SaveUO_sp_inside_fparens_A                 = IARF_NOT_DEFINED;
-   SaveUO_sp_paren_paren_A                    = IARF_NOT_DEFINED;
-   SaveUO_sp_before_comma_A                   = IARF_NOT_DEFINED;
-   SaveUO_sp_after_comma_A                    = IARF_NOT_DEFINED;
-   SaveUO_sp_before_byref_A                   = IARF_NOT_DEFINED;
-   SaveUO_sp_before_unnamed_byref_A           = IARF_NOT_DEFINED;
-   SaveUO_sp_after_type_A                     = IARF_NOT_DEFINED;
-   QT_SIGNAL_SLOT_found                       = false;
-   restoreValues                              = false;
+   SaveUO_sp_inside_fparen_A          = IARF_NOT_DEFINED;
+   SaveUO_sp_inside_fparens_A         = IARF_NOT_DEFINED;
+   SaveUO_sp_paren_paren_A            = IARF_NOT_DEFINED;
+   SaveUO_sp_before_comma_A           = IARF_NOT_DEFINED;
+   SaveUO_sp_after_comma_A            = IARF_NOT_DEFINED;
+   SaveUO_sp_before_byref_A           = IARF_NOT_DEFINED;
+   SaveUO_sp_before_unnamed_byref_A   = IARF_NOT_DEFINED;
+   SaveUO_sp_after_type_A             = IARF_NOT_DEFINED;
+   QT_SIGNAL_SLOT_found               = false;
+   restoreValues                      = false;
 }

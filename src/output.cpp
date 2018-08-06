@@ -1148,7 +1148,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    output_cmt_start(cmt, first);
    cmt.reflow = (options::cmt_reflow_mode() != 1);
 
-   unc_text leadin = "//";                     // default setting to keep previous behaviour
+   unc_text leadin = "//";             // default setting to keep previous behaviour
    if (options::sp_cmt_cpp_doxygen())  // special treatment for doxygen style comments (treat as unity)
    {
       const char *sComment = first->text();
