@@ -124,7 +124,7 @@ static void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t
  * @param max_col    pointer to the column variable
  * @param extra_pad  extra padding
  */
-static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col, size_t min_pad, bool squeeze);
+static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col);
 
 
 /**
@@ -319,7 +319,7 @@ static void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t
 }
 
 
-static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col, size_t min_pad, bool squeeze)
+static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col)
 {
    LOG_FUNC_ENTRY();
 
@@ -327,29 +327,22 @@ static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col, size_t min_p
    chunk_t *prev = chunk_get_prev(pc);
    if (prev == nullptr || chunk_is_newline(prev))
    {
-      min_col = squeeze ? 1 : pc->column;
-      LOG_FMT(LALADD, "%s(%d): pc->orig_line=%zu, pc->col=%zu max_col=%zu min_pad=%zu min_col=%zu\n",
-              __func__, __LINE__, pc->orig_line, pc->column, max_col, min_pad, min_col);
+      min_col = 1;
+      LOG_FMT(LALADD, "%s(%d): pc->orig_line=%zu, pc->col=%zu max_col=%zu min_col=%zu\n",
+              __func__, __LINE__, pc->orig_line, pc->column, max_col, min_col);
    }
    else
    {
       if (chunk_is_token(prev, CT_COMMENT_MULTI))
       {
-         min_col = prev->orig_col_end + min_pad;
+         min_col = prev->orig_col_end + 1;
       }
       else
       {
-         min_col = prev->column + prev->len() + min_pad;
+         min_col = prev->column + prev->len() + 1;
       }
-      if (!squeeze)
-      {
-         if (min_col < pc->column)
-         {
-            min_col = pc->column;
-         }
-      }
-      LOG_FMT(LALADD, "%s(%d): pc->orig_line=%zu, pc->col=%zu max_col=%zu min_pad=%zu min_col=%zu multi:%s prev->col=%zu prev->len()=%zu %s\n",
-              __func__, __LINE__, pc->orig_line, pc->column, max_col, min_pad, min_col, (chunk_is_token(prev, CT_COMMENT_MULTI)) ? "Y" : "N",
+      LOG_FMT(LALADD, "%s(%d): pc->orig_line=%zu, pc->col=%zu max_col=%zu min_col=%zu multi:%s prev->col=%zu prev->len()=%zu %s\n",
+              __func__, __LINE__, pc->orig_line, pc->column, max_col, min_col, (chunk_is_token(prev, CT_COMMENT_MULTI)) ? "Y" : "N",
               (chunk_is_token(prev, CT_COMMENT_MULTI)) ? prev->orig_col_end : (UINT32)prev->column, prev->len(), get_token_name(prev->type));
    }
 
@@ -1504,7 +1497,7 @@ chunk_t *align_nl_cont(chunk_t *start)
    {
       if (chunk_is_token(pc, CT_NL_CONT))
       {
-         align_add(cs, pc, max_col, 1, true);
+         align_add(cs, pc, max_col);
       }
       pc = chunk_get_next(pc);
    }
@@ -1586,7 +1579,7 @@ chunk_t *align_trailing_comments(chunk_t *start)
             {
                min_orig = pc->column;
             }
-            align_add(cs, pc, min_col, 1, true); // (intended_col < col));
+            align_add(cs, pc, min_col); // (intended_col < col));
             nl_count = 0;
          }
       }
