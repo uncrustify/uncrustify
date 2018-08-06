@@ -40,13 +40,13 @@ enum argtype_e
 };
 
 //! Arg values - these are bit fields
-enum argval_t
+enum iarf_e
 {
-   AV_IGNORE      = 0,                    //! option ignores a given feature
-   AV_ADD         = (1u << 0),            //! option adds a given feature
-   AV_REMOVE      = (1u << 1),            //! option removes a given feature
-   AV_FORCE       = (AV_ADD | AV_REMOVE), //! option forces the usage of a given feature
-   AV_NOT_DEFINED = (1u << 2)             //! to be used with QT, SIGNAL SLOT macros
+   IARF_IGNORE      = 0,                        //! option ignores a given feature
+   IARF_ADD         = (1u << 0),                //! option adds a given feature
+   IARF_REMOVE      = (1u << 1),                //! option removes a given feature
+   IARF_FORCE       = (IARF_ADD | IARF_REMOVE), //! option forces the usage of a given feature
+   IARF_NOT_DEFINED = (1u << 2)                 //! for debugging
 };
 
 //! Line endings
@@ -89,7 +89,7 @@ enum TrueFalseIgnore_e
  */
 union op_val_t
 {
-   argval_t          a;    //! ignore / add / remove / force
+   iarf_e            a;    //! ignore / add / remove / force
    int               n;    //! a signed number
    bool              b;    //! a bool flag
    lineends_e        le;   //! line ending type
@@ -1079,7 +1079,7 @@ std::string bool_to_string(bool val);
  *
  * @param val  argument value to convert
  */
-std::string argval_to_string(argval_t argval);
+std::string argval_to_string(iarf_e argval);
 
 /**
  * convert a line ending type to a string

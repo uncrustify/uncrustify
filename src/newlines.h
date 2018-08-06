@@ -115,7 +115,7 @@ void undo_one_liner(chunk_t *pc);
  * @param pc  The chunk
  * @param av  The IARF value
  */
-void newline_iarf(chunk_t *pc, argval_t av);
+void newline_iarf(chunk_t *pc, iarf_e av);
 
 
 /**

@@ -47,9 +47,9 @@ static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *se
  * @param first   The first chunk
  * @param second  The second chunk
  *
- * @return AV_IGNORE, AV_ADD, AV_REMOVE or AV_FORCE
+ * @return IARF_IGNORE, IARF_ADD, IARF_REMOVE or IARF_FORCE
  */
-static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp);
+static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp);
 
 /**
  * Ensure to force the space between the \a first and the \a second chunks
@@ -59,9 +59,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp);
  * @param second  The second chunk
  * @param av      Av from the do_space()
  *
- * @return AV_IGNORE, AV_ADD, AV_REMOVE or AV_FORCE
+ * @return IARF_IGNORE, IARF_ADD, IARF_REMOVE or IARF_FORCE
  */
-static argval_t ensure_force_space(chunk_t *first, chunk_t *second, argval_t av);
+static iarf_e ensure_force_space(chunk_t *first, chunk_t *second, iarf_e av);
 
 //! type that stores two chunks between those no space shall occur
 struct no_space_table_t
@@ -142,7 +142,7 @@ static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *se
  * this function is called for every chunk in the input file.
  * Thus it is important to keep this function efficient
  */
-static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
+static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 {
    LOG_FUNC_ENTRY();
 
@@ -153,13 +153,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_IGNORED) || chunk_is_token(second, CT_IGNORED))
    {
       log_rule("IGNORED");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
    if (chunk_is_token(first, CT_PP_IGNORE) && chunk_is_token(second, CT_PP_IGNORE))
    {
       // Leave spacing alone between PP_IGNORE tokens as we don't want the default behavior (which is ADD).
       log_rule("PP_IGNORE");
-      return(AV_IGNORE);
+      return(IARF_IGNORE);
    }
    if (chunk_is_token(first, CT_PP) || chunk_is_token(second, CT_PP))
    {
@@ -182,46 +182,46 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_SPACE) || chunk_is_token(second, CT_SPACE))
    {
       log_rule("REMOVE");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
 
    if (chunk_is_token(first, CT_DECLSPEC))  // Issue 1289
    {
       log_rule("Remove");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
    // there are not any data for this case, this block will never been reached
    //if (chunk_is_token(first, CT_PAREN_CLOSE) && first->parent_type == CT_DECLSPEC)
    //{
    //   log_rule("Ignore");
-   //   return(AV_IGNORE);
+   //   return(IARF_IGNORE);
    //}
    if (chunk_is_token(second, CT_NEWLINE) || chunk_is_token(second, CT_VBRACE_OPEN))
    {
       log_rule("REMOVE");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
    if (  chunk_is_token(first, CT_VBRACE_OPEN)
       && second->type != CT_NL_CONT
       && second->type != CT_SEMICOLON) // # Issue 1158
    {
       log_rule("FORCE");
-      return(AV_FORCE);
+      return(IARF_FORCE);
    }
    if (chunk_is_token(first, CT_VBRACE_CLOSE) && second->type != CT_NL_CONT)
    {
       log_rule("REMOVE");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
    if (chunk_is_token(second, CT_VSEMICOLON))
    {
       log_rule("REMOVE");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
    if (chunk_is_token(first, CT_MACRO_FUNC))
    {
       log_rule("REMOVE");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
    if (chunk_is_token(second, CT_NL_CONT))
    {
@@ -239,7 +239,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && ((CharTable::IsKw1(second->str[0]) || chunk_is_token(second, CT_NUMBER))))
    {
       log_rule("sp_case_label");
-      return(argval_t(cpd.settings[UO_sp_case_label].a | AV_ADD));
+      return(iarf_e(cpd.settings[UO_sp_case_label].a | IARF_ADD));
    }
 
    if (chunk_is_token(first, CT_FOR_COLON))
@@ -257,7 +257,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_QUESTION) && chunk_is_token(second, CT_COND_COLON))
    {
-      if (cpd.settings[UO_sp_cond_ternary_short].a != AV_IGNORE)
+      if (cpd.settings[UO_sp_cond_ternary_short].a != IARF_IGNORE)
       {
          log_rule("sp_cond_ternary_short");
          return(cpd.settings[UO_sp_cond_ternary_short].a);
@@ -267,18 +267,18 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_QUESTION) || chunk_is_token(second, CT_QUESTION))
    {
       if (  chunk_is_token(second, CT_QUESTION)
-         && (cpd.settings[UO_sp_cond_question_before].a != AV_IGNORE))
+         && (cpd.settings[UO_sp_cond_question_before].a != IARF_IGNORE))
       {
          log_rule("sp_cond_question_before");
          return(cpd.settings[UO_sp_cond_question_before].a);
       }
       if (  chunk_is_token(first, CT_QUESTION)
-         && (cpd.settings[UO_sp_cond_question_after].a != AV_IGNORE))
+         && (cpd.settings[UO_sp_cond_question_after].a != IARF_IGNORE))
       {
          log_rule("sp_cond_question_after");
          return(cpd.settings[UO_sp_cond_question_after].a);
       }
-      if (cpd.settings[UO_sp_cond_question].a != AV_IGNORE)
+      if (cpd.settings[UO_sp_cond_question].a != IARF_IGNORE)
       {
          log_rule("sp_cond_question");
          return(cpd.settings[UO_sp_cond_question].a);
@@ -288,18 +288,18 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_COND_COLON) || chunk_is_token(second, CT_COND_COLON))
    {
       if (  chunk_is_token(second, CT_COND_COLON)
-         && (cpd.settings[UO_sp_cond_colon_before].a != AV_IGNORE))
+         && (cpd.settings[UO_sp_cond_colon_before].a != IARF_IGNORE))
       {
          log_rule("sp_cond_colon_before");
          return(cpd.settings[UO_sp_cond_colon_before].a);
       }
       if (  chunk_is_token(first, CT_COND_COLON)
-         && (cpd.settings[UO_sp_cond_colon_after].a != AV_IGNORE))
+         && (cpd.settings[UO_sp_cond_colon_after].a != IARF_IGNORE))
       {
          log_rule("sp_cond_colon_after");
          return(cpd.settings[UO_sp_cond_colon_after].a);
       }
-      if (cpd.settings[UO_sp_cond_colon].a != AV_IGNORE)
+      if (cpd.settings[UO_sp_cond_colon].a != IARF_IGNORE)
       {
          log_rule("sp_cond_colon");
          return(cpd.settings[UO_sp_cond_colon].a);
@@ -315,60 +315,60 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_COLON) && first->parent_type == CT_SQL_EXEC)
    {
       log_rule("REMOVE");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
 
    // Macro stuff can only return IGNORE, ADD, or FORCE
    if (chunk_is_token(first, CT_MACRO))
    {
       log_rule("sp_macro");
-      argval_t arg = cpd.settings[UO_sp_macro].a;
-      return(static_cast<argval_t>(arg | ((arg != AV_IGNORE) ? AV_ADD : AV_IGNORE)));
+      iarf_e arg = cpd.settings[UO_sp_macro].a;
+      return(static_cast<iarf_e>(arg | ((arg != IARF_IGNORE) ? IARF_ADD : IARF_IGNORE)));
    }
 
    if (chunk_is_token(first, CT_FPAREN_CLOSE) && first->parent_type == CT_MACRO_FUNC)
    {
       log_rule("sp_macro_func");
-      argval_t arg = cpd.settings[UO_sp_macro_func].a;
-      return(static_cast<argval_t>(arg | ((arg != AV_IGNORE) ? AV_ADD : AV_IGNORE)));
+      iarf_e arg = cpd.settings[UO_sp_macro_func].a;
+      return(static_cast<iarf_e>(arg | ((arg != IARF_IGNORE) ? IARF_ADD : IARF_IGNORE)));
    }
 
    if (chunk_is_token(first, CT_PREPROC))
    {
       // Remove spaces, unless we are ignoring. See indent_preproc()
-      if (cpd.settings[UO_pp_space].a == AV_IGNORE)
+      if (cpd.settings[UO_pp_space].a == IARF_IGNORE)
       {
          log_rule("IGNORE");
-         return(AV_IGNORE);
+         return(IARF_IGNORE);
       }
       log_rule("REMOVE");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
 
    if (chunk_is_token(second, CT_SEMICOLON))
    {
       if (second->parent_type == CT_FOR)
       {
-         if (  (cpd.settings[UO_sp_before_semi_for_empty].a != AV_IGNORE)
+         if (  (cpd.settings[UO_sp_before_semi_for_empty].a != IARF_IGNORE)
             && (  chunk_is_token(first, CT_SPAREN_OPEN)
                || chunk_is_token(first, CT_SEMICOLON)))
          {
             log_rule("sp_before_semi_for_empty");
             return(cpd.settings[UO_sp_before_semi_for_empty].a);
          }
-         if (cpd.settings[UO_sp_before_semi_for].a != AV_IGNORE)
+         if (cpd.settings[UO_sp_before_semi_for].a != IARF_IGNORE)
          {
             log_rule("sp_before_semi_for");
             return(cpd.settings[UO_sp_before_semi_for].a);
          }
       }
 
-      argval_t arg = cpd.settings[UO_sp_before_semi].a;
+      iarf_e arg = cpd.settings[UO_sp_before_semi].a;
       if (  chunk_is_token(first, CT_SPAREN_CLOSE)
          && first->parent_type != CT_WHILE_OF_DO)
       {
          log_rule("sp_special_semi");
-         arg = static_cast<argval_t>(arg | cpd.settings[UO_sp_special_semi].a);
+         arg = static_cast<iarf_e>(arg | cpd.settings[UO_sp_special_semi].a);
       }
       else
       {
@@ -382,7 +382,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && (  chunk_is_token(first, CT_PP_ELSE)
          || chunk_is_token(first, CT_PP_ENDIF)))
    {
-      if (cpd.settings[UO_sp_endif_cmt].a != AV_IGNORE)
+      if (cpd.settings[UO_sp_endif_cmt].a != IARF_IGNORE)
       {
          set_chunk_type(second, CT_COMMENT_ENDIF);
          log_rule("sp_endif_cmt");
@@ -390,7 +390,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (  (cpd.settings[UO_sp_before_tr_emb_cmt].a != AV_IGNORE)
+   if (  (cpd.settings[UO_sp_before_tr_emb_cmt].a != IARF_IGNORE)
       && (  second->parent_type == CT_COMMENT_END
          || second->parent_type == CT_COMMENT_EMBED))
    {
@@ -405,15 +405,15 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
       case 0:
          log_rule("orig_prev_sp-REMOVE");
-         return(AV_REMOVE);
+         return(IARF_REMOVE);
 
       case 1:
          log_rule("orig_prev_sp-FORCE");
-         return(AV_FORCE);
+         return(IARF_FORCE);
 
       default:
          log_rule("orig_prev_sp-ADD");
-         return(AV_ADD);
+         return(IARF_ADD);
       }
    }
 
@@ -422,13 +422,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (first->parent_type == CT_FOR)
       {
-         if (  (cpd.settings[UO_sp_after_semi_for_empty].a != AV_IGNORE)
+         if (  (cpd.settings[UO_sp_after_semi_for_empty].a != IARF_IGNORE)
             && chunk_is_token(second, CT_SPAREN_CLOSE))
          {
             log_rule("sp_after_semi_for_empty");
             return(cpd.settings[UO_sp_after_semi_for_empty].a);
          }
-         if (  (cpd.settings[UO_sp_after_semi_for].a != AV_IGNORE)
+         if (  (cpd.settings[UO_sp_after_semi_for].a != IARF_IGNORE)
             && second->type != CT_SPAREN_CLOSE)  // Issue 1324
          {
             log_rule("sp_after_semi_for");
@@ -452,7 +452,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          || chunk_is_token(second, CT_ARITH)))
    {
       log_rule("ADD");
-      return(AV_ADD);
+      return(IARF_ADD);
    }
 
    // "return(a);" vs "return (foo_t)a + 3;" vs "return a;" vs "return;"
@@ -465,7 +465,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
       // everything else requires a space
       log_rule("FORCE");
-      return(AV_FORCE);
+      return(IARF_FORCE);
    }
 
    // "sizeof(foo_t)" vs "sizeof (foo_t)"
@@ -482,7 +482,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(cpd.settings[UO_sp_sizeof_ellipsis].a);
       }
       log_rule("FORCE");
-      return(AV_FORCE);
+      return(IARF_FORCE);
    }
 
    // "decltype(foo_t)" vs "decltype (foo_t)"
@@ -494,7 +494,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(cpd.settings[UO_sp_decltype_paren].a);
       }
       log_rule("FORCE");
-      return(AV_FORCE);
+      return(IARF_FORCE);
    }
 
    // handle '::'
@@ -544,7 +544,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       case CT_UNION:
       case CT_USING:
          log_rule("FORCE");
-         return(AV_FORCE);
+         return(IARF_FORCE);
 
       default:
          break;
@@ -559,7 +559,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          && (first->prev->type == CT_FRIEND && first->next->type != CT_DC_MEMBER))
       {
          log_rule("FORCE");
-         return(AV_FORCE);
+         return(IARF_FORCE);
       }
 
       if (  (  chunk_is_token(first, CT_WORD)
@@ -592,7 +592,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       // Don't add extra space after comma immediately followed by Angle close
       if (chunk_is_token(second, CT_ANGLE_CLOSE))
       {
-         return(AV_IGNORE);
+         return(IARF_IGNORE);
       }
 
       log_rule("sp_after_comma");
@@ -619,7 +619,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(cpd.settings[UO_sp_before_mdatype_commas].a);
       }
       if (  chunk_is_token(first, CT_PAREN_OPEN)
-         && (cpd.settings[UO_sp_paren_comma].a != AV_IGNORE))
+         && (cpd.settings[UO_sp_paren_comma].a != IARF_IGNORE))
       {
          log_rule("sp_paren_comma");
          return(cpd.settings[UO_sp_paren_comma].a);
@@ -639,7 +639,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
 
       if (  ((first->flags & PCF_PUNCTUATOR) == 0)
-         && (cpd.settings[UO_sp_before_ellipsis].a != AV_IGNORE))
+         && (cpd.settings[UO_sp_before_ellipsis].a != IARF_IGNORE))
       {
          log_rule("sp_before_ellipsis");
          return(cpd.settings[UO_sp_before_ellipsis].a);
@@ -655,7 +655,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (chunk_is_token(first, CT_TAG_COLON))
       {
          log_rule("FORCE");
-         return(AV_FORCE);
+         return(IARF_FORCE);
       }
    }
    if (chunk_is_token(first, CT_ELLIPSIS))
@@ -663,7 +663,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (CharTable::IsKw1(second->str[0]))
       {
          log_rule("FORCE");
-         return(AV_FORCE);
+         return(IARF_FORCE);
       }
       if (  chunk_is_token(second, CT_PAREN_OPEN)
          && first->prev && chunk_is_token(first->prev, CT_SIZEOF))
@@ -680,20 +680,20 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(second, CT_TAG_COLON))
    {
       log_rule("REMOVE");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
 
    // handle '~'
    if (chunk_is_token(first, CT_DESTRUCTOR))
    {
       log_rule("REMOVE");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
 
    if (  language_is_set(LANG_OC)
       && chunk_is_token(first, CT_CATCH)
       && chunk_is_token(second, CT_SPAREN_OPEN)
-      && (cpd.settings[UO_sp_oc_catch_paren].a != AV_IGNORE))
+      && (cpd.settings[UO_sp_oc_catch_paren].a != IARF_IGNORE))
    {
       log_rule("sp_oc_catch_paren");
       return(cpd.settings[UO_sp_oc_catch_paren].a);
@@ -701,7 +701,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (  chunk_is_token(first, CT_CATCH)
       && chunk_is_token(second, CT_SPAREN_OPEN)
-      && (cpd.settings[UO_sp_catch_paren].a != AV_IGNORE))
+      && (cpd.settings[UO_sp_catch_paren].a != IARF_IGNORE))
    {
       log_rule("sp_catch_paren");
       return(cpd.settings[UO_sp_catch_paren].a);
@@ -709,7 +709,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (  chunk_is_token(first, CT_D_VERSION_IF)
       && chunk_is_token(second, CT_SPAREN_OPEN)
-      && (cpd.settings[UO_sp_version_paren].a != AV_IGNORE))
+      && (cpd.settings[UO_sp_version_paren].a != IARF_IGNORE))
    {
       log_rule("sp_version_paren");
       return(cpd.settings[UO_sp_version_paren].a);
@@ -717,7 +717,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (  chunk_is_token(first, CT_D_SCOPE_IF)
       && chunk_is_token(second, CT_SPAREN_OPEN)
-      && (cpd.settings[UO_sp_scope_paren].a != AV_IGNORE))
+      && (cpd.settings[UO_sp_scope_paren].a != IARF_IGNORE))
    {
       log_rule("sp_scope_paren");
       return(cpd.settings[UO_sp_scope_paren].a);
@@ -745,7 +745,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    // Handle the special lambda case for C++11:
    //    [=](Something arg){.....}
-   if (  (cpd.settings[UO_sp_cpp_lambda_assign].a != AV_IGNORE)
+   if (  (cpd.settings[UO_sp_cpp_lambda_assign].a != IARF_IGNORE)
       && (  (  chunk_is_token(first, CT_SQUARE_OPEN)
             && first->parent_type == CT_CPP_LAMBDA
             && chunk_is_token(second, CT_ASSIGN))
@@ -759,7 +759,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    // Handle the special lambda case for C++11:
    //    [](Something arg){.....}
-   if (  (cpd.settings[UO_sp_cpp_lambda_paren].a != AV_IGNORE)
+   if (  (cpd.settings[UO_sp_cpp_lambda_paren].a != IARF_IGNORE)
       && chunk_is_token(first, CT_SQUARE_CLOSE)
       && first->parent_type == CT_CPP_LAMBDA
       && chunk_is_token(second, CT_FPAREN_OPEN))
@@ -770,7 +770,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_ENUM) && chunk_is_token(second, CT_FPAREN_OPEN))
    {
-      if (cpd.settings[UO_sp_enum_paren].a != AV_IGNORE)
+      if (cpd.settings[UO_sp_enum_paren].a != IARF_IGNORE)
       {
          log_rule("sp_enum_paren");
          return(cpd.settings[UO_sp_enum_paren].a);
@@ -781,7 +781,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (second->flags & PCF_IN_ENUM)
       {
-         if (cpd.settings[UO_sp_enum_before_assign].a != AV_IGNORE)
+         if (cpd.settings[UO_sp_enum_before_assign].a != IARF_IGNORE)
          {
             log_rule("sp_enum_before_assign");
             return(cpd.settings[UO_sp_enum_before_assign].a);
@@ -789,13 +789,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_enum_assign");
          return(cpd.settings[UO_sp_enum_assign].a);
       }
-      if (  (cpd.settings[UO_sp_assign_default].a != AV_IGNORE)
+      if (  (cpd.settings[UO_sp_assign_default].a != IARF_IGNORE)
          && second->parent_type == CT_FUNC_PROTO)
       {
          log_rule("sp_assign_default");
          return(cpd.settings[UO_sp_assign_default].a);
       }
-      if (cpd.settings[UO_sp_before_assign].a != AV_IGNORE)
+      if (cpd.settings[UO_sp_before_assign].a != IARF_IGNORE)
       {
          log_rule("sp_before_assign");
          return(cpd.settings[UO_sp_before_assign].a);
@@ -808,7 +808,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (first->flags & PCF_IN_ENUM)
       {
-         if (cpd.settings[UO_sp_enum_after_assign].a != AV_IGNORE)
+         if (cpd.settings[UO_sp_enum_after_assign].a != IARF_IGNORE)
          {
             log_rule("sp_enum_after_assign");
             return(cpd.settings[UO_sp_enum_after_assign].a);
@@ -816,13 +816,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_enum_assign");
          return(cpd.settings[UO_sp_enum_assign].a);
       }
-      if (  (cpd.settings[UO_sp_assign_default].a != AV_IGNORE)
+      if (  (cpd.settings[UO_sp_assign_default].a != IARF_IGNORE)
          && first->parent_type == CT_FUNC_PROTO)
       {
          log_rule("sp_assign_default");
          return(cpd.settings[UO_sp_assign_default].a);
       }
-      if (cpd.settings[UO_sp_after_assign].a != AV_IGNORE)
+      if (cpd.settings[UO_sp_after_assign].a != IARF_IGNORE)
       {
          log_rule("sp_after_assign");
          return(cpd.settings[UO_sp_after_assign].a);
@@ -852,7 +852,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_OC_AVAILABLE_VALUE) || chunk_is_token(second, CT_OC_AVAILABLE_VALUE))
    {
       log_rule("IGNORE");
-      return(AV_IGNORE);
+      return(IARF_IGNORE);
    }
    if (chunk_is_token(second, CT_OC_BLOCK_CARET))
    {
@@ -866,12 +866,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
    if (chunk_is_token(second, CT_OC_MSG_FUNC))
    {
-      if (  (cpd.settings[UO_sp_after_oc_msg_receiver].a == AV_REMOVE)
+      if (  (cpd.settings[UO_sp_after_oc_msg_receiver].a == IARF_REMOVE)
          && (  (first->type != CT_SQUARE_CLOSE)
             && (first->type != CT_FPAREN_CLOSE)
             && (first->type != CT_PAREN_CLOSE)))
       {
-         return(AV_FORCE);
+         return(IARF_FORCE);
       }
 
       log_rule("sp_after_oc_msg_receiver");
@@ -897,7 +897,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (((second->flags & PCF_IN_SPAREN) != 0) && (chunk_is_token(first, CT_IN)))
       {
-         return(AV_FORCE);
+         return(IARF_FORCE);
       }
 
       log_rule("sp_before_square");
@@ -911,7 +911,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(cpd.settings[UO_sp_before_squares].a);
    }
 
-   if (  (cpd.settings[UO_sp_angle_shift].a != AV_IGNORE)
+   if (  (cpd.settings[UO_sp_angle_shift].a != IARF_IGNORE)
       && chunk_is_token(first, CT_ANGLE_CLOSE)
       && chunk_is_token(second, CT_ANGLE_CLOSE))
    {
@@ -924,15 +924,15 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       log_rule("sp_inside_angle");
 
-      argval_t op = cpd.settings[UO_sp_inside_angle].a;
+      iarf_e op = cpd.settings[UO_sp_inside_angle].a;
 
       // special: if we're not supporting digraphs, then we shouldn't create them!
-      if (  (op == AV_REMOVE)
+      if (  (op == IARF_REMOVE)
          && !cpd.settings[UO_enable_digraphs].b
          && chunk_is_token(first, CT_ANGLE_OPEN)
          && chunk_is_token(second, CT_DC_MEMBER))
       {
-         op = AV_IGNORE;
+         op = IARF_IGNORE;
       }
 
       return(op);
@@ -940,7 +940,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(second, CT_ANGLE_OPEN))
    {
       if (  chunk_is_token(first, CT_TEMPLATE)
-         && (cpd.settings[UO_sp_template_angle].a != AV_IGNORE))
+         && (cpd.settings[UO_sp_template_angle].a != IARF_IGNORE))
       {
          log_rule("sp_template_angle");
          return(cpd.settings[UO_sp_template_angle].a);
@@ -955,7 +955,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (chunk_is_token(second, CT_WORD) || CharTable::IsKw1(second->str[0]))
       {
-         if (cpd.settings[UO_sp_angle_word].a != AV_IGNORE)
+         if (cpd.settings[UO_sp_angle_word].a != IARF_IGNORE)
          {
             log_rule("sp_angle_word");
             return(cpd.settings[UO_sp_angle_word].a);
@@ -984,7 +984,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          && second->type != CT_PAREN_CLOSE)
       {
          if (  chunk_is_token(second, CT_CLASS_COLON)
-            && cpd.settings[UO_sp_angle_colon].a != AV_IGNORE)
+            && cpd.settings[UO_sp_angle_colon].a != IARF_IGNORE)
          {
             log_rule("sp_angle_colon");
             return(cpd.settings[UO_sp_angle_colon].a);
@@ -995,7 +995,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    if (  chunk_is_token(first, CT_BYREF)
-      && (cpd.settings[UO_sp_after_byref_func].a != AV_IGNORE)
+      && (cpd.settings[UO_sp_after_byref_func].a != IARF_IGNORE)
       && (  first->parent_type == CT_FUNC_DEF
          || first->parent_type == CT_FUNC_PROTO))
    {
@@ -1013,7 +1013,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(second, CT_BYREF)
       && !chunk_is_token(first, CT_PAREN_OPEN))
    {
-      if (cpd.settings[UO_sp_before_byref_func].a != AV_IGNORE)
+      if (cpd.settings[UO_sp_before_byref_func].a != IARF_IGNORE)
       {
          chunk_t *next = chunk_get_next(second);
          if (  next != nullptr
@@ -1025,7 +1025,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          }
       }
 
-      if (cpd.settings[UO_sp_before_unnamed_byref].a != AV_IGNORE)
+      if (cpd.settings[UO_sp_before_unnamed_byref].a != IARF_IGNORE)
       {
          chunk_t *next = chunk_get_next_nc(second);
          if (next != nullptr && next->type != CT_WORD)
@@ -1044,25 +1044,25 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          if (second->parent_type == CT_CATCH)
          {
-            if (language_is_set(LANG_OC) && (cpd.settings[UO_sp_oc_catch_brace].a != AV_IGNORE))
+            if (language_is_set(LANG_OC) && (cpd.settings[UO_sp_oc_catch_brace].a != IARF_IGNORE))
             {
                log_rule("sp_oc_catch_brace");
                return(cpd.settings[UO_sp_oc_catch_brace].a);
             }
-            if (cpd.settings[UO_sp_catch_brace].a != AV_IGNORE)
+            if (cpd.settings[UO_sp_catch_brace].a != IARF_IGNORE)
             {
                log_rule("sp_catch_brace");
                return(cpd.settings[UO_sp_catch_brace].a);
             }
          }
-         if (cpd.settings[UO_sp_sparen_brace].a != AV_IGNORE)
+         if (cpd.settings[UO_sp_sparen_brace].a != IARF_IGNORE)
          {
             log_rule("sp_sparen_brace");
             return(cpd.settings[UO_sp_sparen_brace].a);
          }
       }
       if (  !chunk_is_comment(second)
-         && (cpd.settings[UO_sp_after_sparen].a != AV_IGNORE))
+         && (cpd.settings[UO_sp_after_sparen].a != IARF_IGNORE))
       {
          log_rule("sp_after_sparen");
          return(cpd.settings[UO_sp_after_sparen].a);
@@ -1077,9 +1077,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (  chunk_is_token(second, CT_FPAREN_OPEN)
       && first->parent_type == CT_OPERATOR
-      && (cpd.settings[UO_sp_after_operator_sym].a != AV_IGNORE))
+      && (cpd.settings[UO_sp_after_operator_sym].a != IARF_IGNORE))
    {
-      if (  (cpd.settings[UO_sp_after_operator_sym_empty].a != AV_IGNORE)
+      if (  (cpd.settings[UO_sp_after_operator_sym_empty].a != IARF_IGNORE)
          && chunk_is_token(second, CT_FPAREN_OPEN))
       {
          chunk_t *next = chunk_get_next_ncnl(second);
@@ -1100,7 +1100,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       || chunk_is_token(first, CT_CNG_HASINC)
       || chunk_is_token(first, CT_CNG_HASINCN))
    {
-      if (  (cpd.settings[UO_sp_func_call_paren_empty].a != AV_IGNORE)
+      if (  (cpd.settings[UO_sp_func_call_paren_empty].a != IARF_IGNORE)
          && chunk_is_token(second, CT_FPAREN_OPEN))
       {
          chunk_t *next = chunk_get_next_ncnl(second);
@@ -1125,7 +1125,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
    if (chunk_is_token(first, CT_FUNC_DEF))
    {
-      if (  (cpd.settings[UO_sp_func_def_paren_empty].a != AV_IGNORE)
+      if (  (cpd.settings[UO_sp_func_def_paren_empty].a != IARF_IGNORE)
          && chunk_is_token(second, CT_FPAREN_OPEN))
       {
          chunk_t *next = chunk_get_next_ncnl(second);
@@ -1147,7 +1147,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_PAREN_CLOSE) && chunk_is_token(second, CT_WHEN))
    {
       log_rule("FORCE");
-      return(AV_FORCE); // TODO: make this configurable?
+      return(IARF_FORCE); // TODO: make this configurable?
    }
 
    if (  chunk_is_token(first, CT_PAREN_CLOSE)
@@ -1162,7 +1162,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
       // Must be an indirect/chained function call?
       log_rule("REMOVE");
-      return(AV_REMOVE);  // TODO: make this configurable?
+      return(IARF_REMOVE);  // TODO: make this configurable?
    }
 
    // handle the space between parens in fcn type 'void (*f)(void)'
@@ -1185,7 +1185,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       || (  chunk_is_token(second, CT_FPAREN_OPEN)
          && second->parent_type == CT_FUNC_PROTO))
    {
-      if (  (cpd.settings[UO_sp_func_proto_paren_empty].a != AV_IGNORE)
+      if (  (cpd.settings[UO_sp_func_proto_paren_empty].a != IARF_IGNORE)
          && chunk_is_token(second, CT_FPAREN_OPEN))
       {
          chunk_t *next = chunk_get_next_ncnl(second);
@@ -1200,7 +1200,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
    if (chunk_is_token(first, CT_FUNC_CLASS_DEF) || chunk_is_token(first, CT_FUNC_CLASS_PROTO))
    {
-      if (  (cpd.settings[UO_sp_func_class_paren_empty].a != AV_IGNORE)
+      if (  (cpd.settings[UO_sp_func_class_paren_empty].a != IARF_IGNORE)
          && chunk_is_token(second, CT_FPAREN_OPEN))
       {
          chunk_t *next = chunk_get_next_ncnl(second);
@@ -1216,7 +1216,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_CLASS) && !(first->flags & PCF_IN_OC_MSG))
    {
       log_rule("FORCE");
-      return(AV_FORCE);
+      return(IARF_FORCE);
    }
 
    if (chunk_is_token(first, CT_BRACE_OPEN) && chunk_is_token(second, CT_BRACE_CLOSE))
@@ -1248,13 +1248,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          chunk_t *tmp = chunk_get_prev_ncnl(chunk_skip_to_match_rev(second));
          if (chunk_is_token(tmp, CT_ASSIGN))
          {
-            return(AV_IGNORE);
+            return(IARF_IGNORE);
          }
          log_rule("sp_inside_braces_struct");
          return(cpd.settings[UO_sp_inside_braces_struct].a);
       }
       else if (  second->parent_type == CT_OC_AT
-              && cpd.settings[UO_sp_inside_braces_oc_dict].a != AV_IGNORE)
+              && cpd.settings[UO_sp_inside_braces_oc_dict].a != IARF_IGNORE)
       {
          log_rule("sp_inside_braces_oc_dict");
          return(cpd.settings[UO_sp_inside_braces_oc_dict].a);
@@ -1262,19 +1262,19 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
       if (second->parent_type == CT_BRACED_INIT_LIST)
       {
-         if (  cpd.settings[UO_sp_brace_brace].a != AV_IGNORE
+         if (  cpd.settings[UO_sp_brace_brace].a != IARF_IGNORE
             && chunk_is_token(first, CT_BRACE_CLOSE)
             && first->parent_type == CT_BRACED_INIT_LIST)
          {
             log_rule("sp_brace_brace");
             return(cpd.settings[UO_sp_brace_brace].a);
          }
-         if (cpd.settings[UO_sp_before_type_brace_init_lst_close].a != AV_IGNORE)
+         if (cpd.settings[UO_sp_before_type_brace_init_lst_close].a != IARF_IGNORE)
          {
             log_rule("sp_before_type_brace_init_lst_close");
             return(cpd.settings[UO_sp_before_type_brace_init_lst_close].a);
          }
-         if (cpd.settings[UO_sp_inside_type_brace_init_lst].a != AV_IGNORE)
+         if (cpd.settings[UO_sp_inside_type_brace_init_lst].a != IARF_IGNORE)
          {
             log_rule("sp_inside_type_brace_init_lst");
             return(cpd.settings[UO_sp_inside_type_brace_init_lst].a);
@@ -1288,7 +1288,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_D_CAST))
    {
       log_rule("REMOVE");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
 
    if (chunk_is_token(first, CT_PP_DEFINED) && chunk_is_token(second, CT_PAREN_OPEN))
@@ -1317,13 +1317,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_STATE) && chunk_is_token(second, CT_PAREN_OPEN))
    {
       log_rule("ADD");
-      return(AV_ADD);
+      return(IARF_ADD);
    }
 
    if (chunk_is_token(first, CT_DELEGATE) && chunk_is_token(second, CT_PAREN_OPEN))
    {
       log_rule("REMOVE");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
 
    if (chunk_is_token(first, CT_MEMBER) || chunk_is_token(second, CT_MEMBER))
@@ -1336,7 +1336,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       // always remove space(s) after then '.' of a C99-member
       log_rule("REMOVE");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
 
    if (chunk_is_token(first, CT_SUPER) && chunk_is_token(second, CT_PAREN_OPEN))
@@ -1371,7 +1371,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_D_TEMPLATE) || chunk_is_token(second, CT_D_TEMPLATE))
    {
       log_rule("REMOVE");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
 
    if (chunk_is_token(first, CT_ELSE) && chunk_is_token(second, CT_BRACE_OPEN))
@@ -1383,7 +1383,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_ELSE) && chunk_is_token(second, CT_ELSEIF))
    {
       log_rule("FORCE");
-      return(AV_FORCE);
+      return(IARF_FORCE);
    }
 
    if (chunk_is_token(first, CT_FINALLY) && chunk_is_token(second, CT_BRACE_OPEN))
@@ -1429,7 +1429,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (first->parent_type == CT_D_TEMPLATE)
       {
          log_rule("FORCE");
-         return(AV_FORCE);
+         return(IARF_FORCE);
       }
 
       if (first->parent_type == CT_INVARIANT)
@@ -1449,14 +1449,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (first->parent_type == CT_DELEGATE)
       {
          log_rule("ADD");
-         return(AV_ADD);
+         return(IARF_ADD);
       }
 
       // PAWN-specific: "state (condition) next"
       if (first->parent_type == CT_STATE)
       {
          log_rule("ADD");
-         return(AV_ADD);
+         return(IARF_ADD);
       }
 
       /* C++ new operator: new(bar) Foo */
@@ -1530,7 +1530,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (cpd.settings[UO_sp_inside_oc_at_sel_parens].a != AV_IGNORE)
+   if (cpd.settings[UO_sp_inside_oc_at_sel_parens].a != IARF_IGNORE)
    {
       if (  (  chunk_is_token(first, CT_PAREN_OPEN)
             && (  first->parent_type == CT_OC_SEL
@@ -1567,12 +1567,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
       if (first->parent_type == CT_NEW)
       {
-         if (cpd.settings[UO_sp_inside_newop_paren_open].a != AV_IGNORE)
+         if (cpd.settings[UO_sp_inside_newop_paren_open].a != IARF_IGNORE)
          {
             log_rule("sp_inside_newop_paren_open");
             return(cpd.settings[UO_sp_inside_newop_paren_open].a);
          }
-         if (cpd.settings[UO_sp_inside_newop_paren].a != AV_IGNORE)
+         if (cpd.settings[UO_sp_inside_newop_paren].a != IARF_IGNORE)
          {
             log_rule("sp_inside_newop_paren");
             return(cpd.settings[UO_sp_inside_newop_paren].a);
@@ -1593,12 +1593,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
       if (second->parent_type == CT_NEW)
       {
-         if (cpd.settings[UO_sp_inside_newop_paren_close].a != AV_IGNORE)
+         if (cpd.settings[UO_sp_inside_newop_paren_close].a != IARF_IGNORE)
          {
             log_rule("sp_inside_newop_paren_close");
             return(cpd.settings[UO_sp_inside_newop_paren_close].a);
          }
-         if (cpd.settings[UO_sp_inside_newop_paren].a != AV_IGNORE)
+         if (cpd.settings[UO_sp_inside_newop_paren].a != IARF_IGNORE)
          {
             log_rule("sp_inside_newop_paren");
             return(cpd.settings[UO_sp_inside_newop_paren].a);
@@ -1614,7 +1614,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  language_is_set(LANG_OC)
          && (  (first->parent_type == CT_OC_AT && chunk_is_token(first, CT_SQUARE_OPEN))
             || (second->parent_type == CT_OC_AT && chunk_is_token(second, CT_SQUARE_CLOSE)))
-         && (cpd.settings[UO_sp_inside_square_oc_array].a != AV_IGNORE))
+         && (cpd.settings[UO_sp_inside_square_oc_array].a != IARF_IGNORE))
       {
          log_rule("sp_inside_square_oc_array");
          return(cpd.settings[UO_sp_inside_square_oc_array].a);
@@ -1630,13 +1630,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    // "if(...)" vs "if( ... )"
    if (  chunk_is_token(second, CT_SPAREN_CLOSE)
-      && (cpd.settings[UO_sp_inside_sparen_close].a != AV_IGNORE))
+      && (cpd.settings[UO_sp_inside_sparen_close].a != IARF_IGNORE))
    {
       log_rule("sp_inside_sparen_close");
       return(cpd.settings[UO_sp_inside_sparen_close].a);
    }
    if (  chunk_is_token(first, CT_SPAREN_OPEN)
-      && (cpd.settings[UO_sp_inside_sparen_open].a != AV_IGNORE))
+      && (cpd.settings[UO_sp_inside_sparen_open].a != IARF_IGNORE))
    {
       log_rule("sp_inside_sparen_open");
       return(cpd.settings[UO_sp_inside_sparen_open].a);
@@ -1653,14 +1653,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          && (  !chunk_get_prev_type(first, CT_OC_INTF, first->level, scope_e::ALL)
             && !chunk_get_prev_type(first, CT_OC_IMPL, first->level, scope_e::ALL)))
       {
-         if (cpd.settings[UO_sp_after_oc_colon].a != AV_IGNORE)
+         if (cpd.settings[UO_sp_after_oc_colon].a != IARF_IGNORE)
          {
             log_rule("sp_after_oc_colon");
             return(cpd.settings[UO_sp_after_oc_colon].a);
          }
       }
 
-      if (cpd.settings[UO_sp_after_class_colon].a != AV_IGNORE)
+      if (cpd.settings[UO_sp_after_class_colon].a != IARF_IGNORE)
       {
          log_rule("sp_after_class_colon");
          return(cpd.settings[UO_sp_after_class_colon].a);
@@ -1674,7 +1674,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          if (second->parent_type == CT_OC_CLASS && !chunk_get_prev_type(second, CT_OC_INTF, second->level, scope_e::ALL))
          {
-            if (cpd.settings[UO_sp_before_oc_colon].a != AV_IGNORE)
+            if (cpd.settings[UO_sp_before_oc_colon].a != IARF_IGNORE)
             {
                log_rule("sp_before_oc_colon");
                return(cpd.settings[UO_sp_before_oc_colon].a);
@@ -1682,14 +1682,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          }
       }
 
-      if (cpd.settings[UO_sp_before_class_colon].a != AV_IGNORE)
+      if (cpd.settings[UO_sp_before_class_colon].a != IARF_IGNORE)
       {
          log_rule("sp_before_class_colon");
          return(cpd.settings[UO_sp_before_class_colon].a);
       }
    }
 
-   if (  (cpd.settings[UO_sp_after_constr_colon].a != AV_IGNORE)
+   if (  (cpd.settings[UO_sp_after_constr_colon].a != IARF_IGNORE)
       && chunk_is_token(first, CT_CONSTR_COLON))
    {
       min_sp = cpd.settings[UO_indent_ctor_init_leading].u - 1; // default indent is 1 space
@@ -1697,14 +1697,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("sp_after_constr_colon");
       return(cpd.settings[UO_sp_after_constr_colon].a);
    }
-   if (  (cpd.settings[UO_sp_before_constr_colon].a != AV_IGNORE)
+   if (  (cpd.settings[UO_sp_before_constr_colon].a != IARF_IGNORE)
       && chunk_is_token(second, CT_CONSTR_COLON))
    {
       log_rule("sp_before_constr_colon");
       return(cpd.settings[UO_sp_before_constr_colon].a);
    }
 
-   if (  (cpd.settings[UO_sp_before_case_colon].a != AV_IGNORE)
+   if (  (cpd.settings[UO_sp_before_case_colon].a != IARF_IGNORE)
       && chunk_is_token(second, CT_CASE_COLON))
    {
       log_rule("sp_before_case_colon");
@@ -1714,12 +1714,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_DOT))
    {
       log_rule("REMOVE");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
    if (chunk_is_token(second, CT_DOT))
    {
       log_rule("ADD");
-      return(AV_ADD);
+      return(IARF_ADD);
    }
 
    if (chunk_is_token(first, CT_NULLCOND) || chunk_is_token(second, CT_NULLCOND))
@@ -1733,7 +1733,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       || chunk_is_token(second, CT_ARITH)
       || chunk_is_token(second, CT_CARET))
    {
-      if (cpd.settings[UO_sp_arith_additive].a != AV_IGNORE)
+      if (cpd.settings[UO_sp_arith_additive].a != IARF_IGNORE)
       {
          auto arith_char = (chunk_is_token(first, CT_ARITH) || chunk_is_token(first, CT_CARET))
                            ? first->str[0] : second->str[0];
@@ -1749,12 +1749,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
    if (chunk_is_token(first, CT_BOOL) || chunk_is_token(second, CT_BOOL))
    {
-      argval_t arg = cpd.settings[UO_sp_bool].a;
+      iarf_e arg = cpd.settings[UO_sp_bool].a;
       if (  (cpd.settings[UO_pos_bool].tp != TP_IGNORE)
          && first->orig_line != second->orig_line
-         && arg != AV_REMOVE)
+         && arg != IARF_REMOVE)
       {
-         arg = static_cast<argval_t>(arg | AV_ADD);
+         arg = static_cast<iarf_e>(arg | IARF_ADD);
       }
       log_rule("sp_bool");
       return(arg);
@@ -1768,11 +1768,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_PAREN_OPEN) && chunk_is_token(second, CT_PTR_TYPE))
    {
       log_rule("REMOVE");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
 
    if (  chunk_is_token(first, CT_PTR_TYPE)
-      && (cpd.settings[UO_sp_ptr_star_paren].a != AV_IGNORE)
+      && (cpd.settings[UO_sp_ptr_star_paren].a != IARF_IGNORE)
       && (chunk_is_token(second, CT_FPAREN_OPEN) || chunk_is_token(second, CT_TPAREN_OPEN)))
    {
       log_rule("sp_ptr_star_paren");
@@ -1781,14 +1781,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (  chunk_is_token(first, CT_PTR_TYPE)
       && chunk_is_token(second, CT_PTR_TYPE)
-      && (cpd.settings[UO_sp_between_ptr_star].a != AV_IGNORE))
+      && (cpd.settings[UO_sp_between_ptr_star].a != IARF_IGNORE))
    {
       log_rule("sp_between_ptr_star");
       return(cpd.settings[UO_sp_between_ptr_star].a);
    }
 
    if (  chunk_is_token(first, CT_PTR_TYPE)
-      && (cpd.settings[UO_sp_after_ptr_star_func].a != AV_IGNORE)
+      && (cpd.settings[UO_sp_after_ptr_star_func].a != IARF_IGNORE)
       && (  first->parent_type == CT_FUNC_DEF
          || first->parent_type == CT_FUNC_PROTO
          || first->parent_type == CT_FUNC_VAR))
@@ -1807,20 +1807,20 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
 
       if (  (first->parent_type == CT_FUNC_VAR || first->parent_type == CT_FUNC_TYPE)
-         && cpd.settings[UO_sp_after_ptr_block_caret].a != AV_IGNORE)
+         && cpd.settings[UO_sp_after_ptr_block_caret].a != IARF_IGNORE)
       {
          log_rule("sp_after_ptr_block_caret");
          return(cpd.settings[UO_sp_after_ptr_block_caret].a);
       }
 
       if (  chunk_is_token(second, CT_QUALIFIER)
-         && (cpd.settings[UO_sp_after_ptr_star_qualifier].a != AV_IGNORE))
+         && (cpd.settings[UO_sp_after_ptr_star_qualifier].a != IARF_IGNORE))
       {
          log_rule("sp_after_ptr_star_qualifier");
          return(cpd.settings[UO_sp_after_ptr_star_qualifier].a);
       }
 
-      if (cpd.settings[UO_sp_after_ptr_star].a != AV_IGNORE)
+      if (cpd.settings[UO_sp_after_ptr_star].a != IARF_IGNORE)
       {
          log_rule("sp_after_ptr_star");
          return(cpd.settings[UO_sp_after_ptr_star].a);
@@ -1832,9 +1832,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (language_is_set(LANG_CS) && chunk_is_nullable(second))
       {
          min_sp = 0;
-         return(AV_REMOVE);
+         return(IARF_REMOVE);
       }
-      if (cpd.settings[UO_sp_before_ptr_star_func].a != AV_IGNORE)
+      if (cpd.settings[UO_sp_before_ptr_star_func].a != IARF_IGNORE)
       {
          // Find the next non-'*' chunk
          chunk_t *next = second;
@@ -1850,7 +1850,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          }
       }
 
-      if (cpd.settings[UO_sp_before_unnamed_ptr_star].a != AV_IGNORE)
+      if (cpd.settings[UO_sp_before_unnamed_ptr_star].a != IARF_IGNORE)
       {
          chunk_t *next = chunk_get_next_nc(second);
          while (chunk_is_token(next, CT_PTR_TYPE))
@@ -1863,7 +1863,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
             return(cpd.settings[UO_sp_before_unnamed_ptr_star].a);
          }
       }
-      if (cpd.settings[UO_sp_before_ptr_star].a != AV_IGNORE)
+      if (cpd.settings[UO_sp_before_ptr_star].a != IARF_IGNORE)
       {
          log_rule("sp_before_ptr_star");
          return(cpd.settings[UO_sp_before_ptr_star].a);
@@ -1881,7 +1881,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (first->type != CT_PTR_TYPE)
       {
          log_rule("sp_type_func|ADD");
-         return(static_cast<argval_t>(cpd.settings[UO_sp_type_func].a | AV_ADD));
+         return(static_cast<iarf_e>(cpd.settings[UO_sp_type_func].a | IARF_ADD));
       }
       log_rule("sp_type_func");
       return(cpd.settings[UO_sp_type_func].a);
@@ -1905,7 +1905,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
       if (  language_is_set(LANG_OC)
          && chunk_is_token(second, CT_CATCH)
-         && (cpd.settings[UO_sp_oc_brace_catch].a != AV_IGNORE))
+         && (cpd.settings[UO_sp_oc_brace_catch].a != IARF_IGNORE))
       {
          log_rule("sp_oc_brace_catch");
          return(cpd.settings[UO_sp_oc_brace_catch].a);
@@ -1937,32 +1937,32 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          chunk_t *tmp = chunk_get_prev_ncnl(first);
          if (chunk_is_token(tmp, CT_ASSIGN))
          {
-            return(AV_IGNORE);
+            return(IARF_IGNORE);
          }
          log_rule("sp_inside_braces_struct");
          return(cpd.settings[UO_sp_inside_braces_struct].a);
       }
       else if (  first->parent_type == CT_OC_AT
-              && cpd.settings[UO_sp_inside_braces_oc_dict].a != AV_IGNORE)
+              && cpd.settings[UO_sp_inside_braces_oc_dict].a != IARF_IGNORE)
       {
          log_rule("sp_inside_braces_oc_dict");
          return(cpd.settings[UO_sp_inside_braces_oc_dict].a);
       }
       if (first->parent_type == CT_BRACED_INIT_LIST)
       {
-         if (  cpd.settings[UO_sp_brace_brace].a != AV_IGNORE
+         if (  cpd.settings[UO_sp_brace_brace].a != IARF_IGNORE
             && chunk_is_token(second, CT_BRACE_OPEN)
             && second->parent_type == CT_BRACED_INIT_LIST)
          {
             log_rule("sp_brace_brace");
             return(cpd.settings[UO_sp_brace_brace].a);
          }
-         if (cpd.settings[UO_sp_after_type_brace_init_lst_open].a != AV_IGNORE)
+         if (cpd.settings[UO_sp_after_type_brace_init_lst_open].a != IARF_IGNORE)
          {
             log_rule("sp_after_type_brace_init_lst_open");
             return(cpd.settings[UO_sp_after_type_brace_init_lst_open].a);
          }
-         if (cpd.settings[UO_sp_inside_type_brace_init_lst].a != AV_IGNORE)
+         if (cpd.settings[UO_sp_inside_type_brace_init_lst].a != IARF_IGNORE)
          {
             log_rule("sp_inside_type_brace_init_lst");
             return(cpd.settings[UO_sp_inside_type_brace_init_lst].a);
@@ -2008,9 +2008,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  !chunk_is_token(second, CT_PTR_TYPE)
       && (chunk_is_token(first, CT_QUALIFIER) || chunk_is_token(first, CT_TYPE)))
    {
-      argval_t arg = cpd.settings[UO_sp_after_type].a;
+      iarf_e arg = cpd.settings[UO_sp_after_type].a;
       log_rule("sp_after_type");
-      return((arg != AV_REMOVE) ? arg : AV_FORCE);
+      return((arg != IARF_REMOVE) ? arg : IARF_FORCE);
    }
 
    if (  chunk_is_token(first, CT_MACRO_OPEN)
@@ -2023,14 +2023,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(cpd.settings[UO_sp_func_call_paren].a);
       }
       log_rule("IGNORE");
-      return(AV_IGNORE);
+      return(IARF_IGNORE);
    }
 
    // If nothing claimed the PTR_TYPE, then return ignore
    if (chunk_is_token(first, CT_PTR_TYPE) || chunk_is_token(second, CT_PTR_TYPE))
    {
       log_rule("IGNORE");
-      return(AV_IGNORE);
+      return(IARF_IGNORE);
    }
 
    if (chunk_is_token(first, CT_NOT))
@@ -2066,12 +2066,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(second, CT_CS_SQ_COLON))
    {
       log_rule("REMOVE");
-      return(AV_REMOVE);
+      return(IARF_REMOVE);
    }
    if (chunk_is_token(first, CT_CS_SQ_COLON))
    {
       log_rule("FORCE");
-      return(AV_FORCE);
+      return(IARF_FORCE);
    }
    if (chunk_is_token(first, CT_OC_SCOPE))
    {
@@ -2115,19 +2115,19 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(second, CT_COMMENT) && second->parent_type == CT_COMMENT_EMBED)
    {
       log_rule("FORCE");
-      return(AV_FORCE);
+      return(IARF_FORCE);
    }
 
    if (chunk_is_comment(second))
    {
       log_rule("IGNORE");
-      return(AV_IGNORE);
+      return(IARF_IGNORE);
    }
 
    if (chunk_is_token(first, CT_COMMENT))
    {
       log_rule("FORCE");
-      return(AV_FORCE);
+      return(IARF_FORCE);
    }
 
    if (chunk_is_token(first, CT_NEW) && chunk_is_token(second, CT_PAREN_OPEN))
@@ -2167,7 +2167,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          || (chunk_is_token(first, CT_FPAREN_CLOSE) && first->parent_type == CT_ATTRIBUTE)))
    {
       log_rule("FORCE");
-      return(AV_FORCE);  /* TODO: make this configurable? */
+      return(IARF_FORCE);  /* TODO: make this configurable? */
    }
 
    // this table lists out all combos where a space should NOT be present
@@ -2178,7 +2178,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
          && (it.second == CT_UNKNOWN || it.second == second->type))
       {
          log_rule("REMOVE from no_space_table");
-         return(AV_REMOVE);
+         return(IARF_REMOVE);
       }
    }
 
@@ -2197,26 +2197,26 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp)
              second->orig_line, second->orig_col, second->text(), get_token_name(second->type));
 
    log_rule("ADD as default value");
-   return(AV_ADD);
+   return(IARF_ADD);
 } // do_space
 
 
-static argval_t ensure_force_space(chunk_t *first, chunk_t *second, argval_t av)
+static iarf_e ensure_force_space(chunk_t *first, chunk_t *second, iarf_e av)
 {
    if (first->flags & PCF_FORCE_SPACE)
    {
       int av_int = av;
       LOG_FMT(LSPACE, " <force between '%s' and '%s'>",
               first->text(), second->text());
-      av_int |= AV_ADD;
-      return(static_cast<argval_t>(av_int));
+      av_int |= IARF_ADD;
+      return(static_cast<iarf_e>(av_int));
    }
 
    return(av);
 }
 
 
-static argval_t do_space_ensured(chunk_t *first, chunk_t *second, int &min_sp)
+static iarf_e do_space_ensured(chunk_t *first, chunk_t *second, int &min_sp)
 {
    return(ensure_force_space(first, second, do_space(first, second, min_sp)));
 }
@@ -2396,15 +2396,15 @@ void space_text(void)
          int min_sp;
          LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, pc-text() '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-         argval_t av = do_space_ensured(pc, next, min_sp);
+         iarf_e av = do_space_ensured(pc, next, min_sp);
          min_sp = max(1, min_sp);
          switch (av)
          {
-         case AV_FORCE:
+         case IARF_FORCE:
             column += min_sp;  // add exactly the specified number of spaces
             break;
 
-         case AV_ADD:
+         case IARF_ADD:
          {
             int delta = min_sp;
             if (next->orig_col >= pc->orig_col_end && pc->orig_col_end != 0)
@@ -2420,12 +2420,11 @@ void space_text(void)
             break;
          }
 
-         case AV_REMOVE:
-         // the symbols will be back-to-back "a+3"
-         case AV_NOT_DEFINED:
+         case IARF_REMOVE:
+            // the symbols will be back-to-back "a+3"
             break;
 
-         case AV_IGNORE:
+         case IARF_IGNORE:
             // Keep the same relative spacing, if possible
             if (next->orig_col >= pc->orig_col_end && pc->orig_col_end != 0)
             {
@@ -2441,6 +2440,10 @@ void space_text(void)
                }
             }
             break;
+
+         default:
+            // If we got here, something is wrong...
+            break;
          } // switch
 
          if (  chunk_is_comment(next)
@@ -2451,10 +2454,10 @@ void space_text(void)
              * do some comment adjustments if sp_before_tr_emb_cmt and
              * sp_endif_cmt did not apply.
              */
-            if (  (  cpd.settings[UO_sp_before_tr_emb_cmt].a == AV_IGNORE
+            if (  (  cpd.settings[UO_sp_before_tr_emb_cmt].a == IARF_IGNORE
                   || (  next->parent_type != CT_COMMENT_END
                      && next->parent_type != CT_COMMENT_EMBED))
-               && (  cpd.settings[UO_sp_endif_cmt].a == AV_IGNORE
+               && (  cpd.settings[UO_sp_endif_cmt].a == IARF_IGNORE
                   || (  pc->type != CT_PP_ELSE
                      && pc->type != CT_PP_ENDIF)))
             {
@@ -2483,9 +2486,9 @@ void space_text(void)
          next->column = column;
 
          LOG_FMT(LSPACE, "%s(%d): rule = %s @ %zu => %zu\n", __func__, __LINE__,
-                 (av == AV_IGNORE) ? "IGNORE" :
-                 (av == AV_ADD) ? "ADD" :
-                 (av == AV_REMOVE) ? "REMOVE" : "FORCE",
+                 (av == IARF_IGNORE) ? "IGNORE" :
+                 (av == IARF_ADD) ? "ADD" :
+                 (av == IARF_REMOVE) ? "REMOVE" : "FORCE",
                  column - prev_column, next->column);
          if (restoreValues)    // guy 2015-09-22
          {
@@ -2572,14 +2575,14 @@ size_t space_needed(chunk_t *first, chunk_t *second)
    int min_sp;
    switch (do_space_ensured(first, second, min_sp))
    {
-   case AV_ADD:
-   case AV_FORCE:
+   case IARF_ADD:
+   case IARF_FORCE:
       return(max(1, min_sp));
 
-   case AV_REMOVE:
+   case IARF_REMOVE:
       return(0);
 
-   case AV_IGNORE:
+   case IARF_IGNORE:
    default:
       return(second->orig_col > (first->orig_col + first->len()));
    }
@@ -2599,8 +2602,8 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
            second->text());
    log_func_stack_inline(LSPACE);
 
-   int      min_sp;
-   argval_t av = do_space_ensured(first, second, min_sp);
+   int    min_sp;
+   iarf_e av = do_space_ensured(first, second, min_sp);
 
    LOG_FMT(LSPACE, "%s(%d): av is %s\n", __func__, __LINE__, argval_to_string(av).c_str());
    size_t coldiff;
@@ -2617,22 +2620,23 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
 
    switch (av)
    {
-   case AV_ADD:
-   case AV_FORCE:
+   case IARF_ADD:
+   case IARF_FORCE:
       coldiff++;
       break;
 
-   case AV_REMOVE:
+   case IARF_REMOVE:
       break;
 
-   case AV_IGNORE:
+   case IARF_IGNORE:
       if (second->orig_col > (first->orig_col + first->len()))
       {
          coldiff++;
       }
       break;
 
-   case AV_NOT_DEFINED:
+   default:
+      // If we got here, something is wrong...
       break;
    }
    LOG_FMT(LSPACE, "   => coldiff is %zu\n", coldiff);

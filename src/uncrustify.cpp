@@ -1811,7 +1811,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
    {
       cpd.enc = char_encoding_e::e_UTF8;
    }
-   argval_t av;
+   iarf_e av;
    switch (cpd.enc)
    {
    case char_encoding_e::e_UTF8:
@@ -1820,18 +1820,18 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
 
    case char_encoding_e::e_UTF16_LE:
    case char_encoding_e::e_UTF16_BE:
-      av = AV_FORCE;
+      av = IARF_FORCE;
       break;
 
    default:
-      av = AV_IGNORE;
+      av = IARF_IGNORE;
       break;
    }
-   if (av == AV_REMOVE)
+   if (av == IARF_REMOVE)
    {
       cpd.bom = false;
    }
-   else if (av != AV_IGNORE)
+   else if (av != IARF_IGNORE)
    {
       cpd.bom = true;
    }

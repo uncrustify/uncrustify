@@ -506,9 +506,9 @@ void output_text(FILE *pfile)
          // FIXME: this really shouldn't be done here!
          if ((pc->flags & PCF_WAS_ALIGNED) == 0)
          {
-            if (cpd.settings[UO_sp_before_nl_cont].a & AV_REMOVE)
+            if (cpd.settings[UO_sp_before_nl_cont].a & IARF_REMOVE)
             {
-               pc->column = cpd.column + (cpd.settings[UO_sp_before_nl_cont].a == AV_FORCE);
+               pc->column = cpd.column + (cpd.settings[UO_sp_before_nl_cont].a == IARF_FORCE);
             }
             else
             {
@@ -545,7 +545,7 @@ void output_text(FILE *pfile)
                         exit(EX_SOFTWARE);
                      }
                      pc->column = cpd.column + orig_sp;
-                     if (  (cpd.settings[UO_sp_before_nl_cont].a != AV_IGNORE)
+                     if (  (cpd.settings[UO_sp_before_nl_cont].a != IARF_IGNORE)
                         && (pc->column < (cpd.column + 1)))
                      {
                         pc->column = cpd.column + 1;
@@ -1190,13 +1190,13 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    if (!cpd.settings[UO_cmt_cpp_to_c].b)
    {
       cmt.cont_text = leadin;
-      if (cpd.settings[UO_sp_cmt_cpp_start].a != AV_REMOVE)
+      if (cpd.settings[UO_sp_cmt_cpp_start].a != IARF_REMOVE)
       {
          cmt.cont_text += ' ';
       }
       LOG_CONTTEXT();
 
-      if (cpd.settings[UO_sp_cmt_cpp_start].a == AV_IGNORE)
+      if (cpd.settings[UO_sp_cmt_cpp_start].a == IARF_IGNORE)
       {
          add_comment_text(first->str, cmt, false);
       }
@@ -1208,7 +1208,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
 
          tmp.set(first->str, iLISz, first->len() - iLISz);
 
-         if (cpd.settings[UO_sp_cmt_cpp_start].a & AV_REMOVE)
+         if (cpd.settings[UO_sp_cmt_cpp_start].a & IARF_REMOVE)
          {
             while ((tmp.size() > 0) && unc_isspace(tmp[0]))
             {
@@ -1217,7 +1217,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
          }
          if (tmp.size() > 0)
          {
-            if (cpd.settings[UO_sp_cmt_cpp_start].a & AV_ADD)
+            if (cpd.settings[UO_sp_cmt_cpp_start].a & IARF_ADD)
             {
                if (!unc_isspace(tmp[0]) && (tmp[0] != '/'))
                {
@@ -1243,7 +1243,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
       add_text("/*");
       // patch # 32, 2012-03-23
       if (  !unc_isspace(first->str[2])
-         && (cpd.settings[UO_sp_cmt_cpp_start].a & AV_ADD))
+         && (cpd.settings[UO_sp_cmt_cpp_start].a & IARF_ADD))
       {
          add_char(' ');
       }

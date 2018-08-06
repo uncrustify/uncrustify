@@ -28,7 +28,7 @@ size_t space_needed(chunk_t *first, chunk_t *second);
 
 /**
  * Calculates the column difference between two chunks.
- * The rules are bent a bit here, as AV_IGNORE and AV_ADD become AV_FORCE.
+ * The rules are bent a bit here, as IARF_IGNORE and IARF_ADD become IARF_FORCE.
  * So the column difference is either first->len or first->len + 1.
  *
  * @param first   The first chunk

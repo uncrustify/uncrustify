@@ -16,7 +16,7 @@ void enum_cleanup(void)
 {
    LOG_FUNC_ENTRY();
 
-   if (cpd.settings[UO_mod_enum_last_comma].a == AV_IGNORE)
+   if (cpd.settings[UO_mod_enum_last_comma].a == IARF_IGNORE)
    {
       // nothing to do
       return;
@@ -34,15 +34,15 @@ void enum_cleanup(void)
          // test of (prev == nullptr) is not necessary
          if (chunk_is_token(prev, CT_COMMA))
          {
-            if (cpd.settings[UO_mod_enum_last_comma].a == AV_REMOVE)
+            if (cpd.settings[UO_mod_enum_last_comma].a == IARF_REMOVE)
             {
                chunk_del(prev);
             }
          }
          else
          {
-            if (  cpd.settings[UO_mod_enum_last_comma].a == AV_ADD
-               || cpd.settings[UO_mod_enum_last_comma].a == AV_FORCE)
+            if (  cpd.settings[UO_mod_enum_last_comma].a == IARF_ADD
+               || cpd.settings[UO_mod_enum_last_comma].a == IARF_FORCE)
             {
                // create a comma
                chunk_t comma;

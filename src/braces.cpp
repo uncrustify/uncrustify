@@ -170,7 +170,7 @@ void do_braces(void)
         cpd.settings[UO_mod_full_brace_do].a |
         cpd.settings[UO_mod_full_brace_for].a |
         cpd.settings[UO_mod_full_brace_using].a |
-        cpd.settings[UO_mod_full_brace_while].a) & AV_REMOVE)
+        cpd.settings[UO_mod_full_brace_while].a) & IARF_REMOVE)
    {
       examine_braces();
    }
@@ -181,7 +181,7 @@ void do_braces(void)
         cpd.settings[UO_mod_full_brace_for].a |
         cpd.settings[UO_mod_full_brace_function].a |
         cpd.settings[UO_mod_full_brace_using].a |
-        cpd.settings[UO_mod_full_brace_while].a) & AV_ADD)
+        cpd.settings[UO_mod_full_brace_while].a) & IARF_ADD)
    {
       convert_vbrace_to_brace();
    }
@@ -220,7 +220,7 @@ void do_braces(void)
       }
    }
 
-   if (cpd.settings[UO_mod_case_brace].a != AV_IGNORE)
+   if (cpd.settings[UO_mod_case_brace].a != IARF_IGNORE)
    {
       mod_case_brace();
    }
@@ -246,15 +246,15 @@ static void examine_braces(void)
          && (  (  (  pc->parent_type == CT_IF
                   || pc->parent_type == CT_ELSE
                   || pc->parent_type == CT_ELSEIF)
-               && cpd.settings[UO_mod_full_brace_if].a == AV_REMOVE)
+               && cpd.settings[UO_mod_full_brace_if].a == IARF_REMOVE)
             || (  pc->parent_type == CT_DO
-               && cpd.settings[UO_mod_full_brace_do].a == AV_REMOVE)
+               && cpd.settings[UO_mod_full_brace_do].a == IARF_REMOVE)
             || (  pc->parent_type == CT_FOR
-               && cpd.settings[UO_mod_full_brace_for].a == AV_REMOVE)
+               && cpd.settings[UO_mod_full_brace_for].a == IARF_REMOVE)
             || (  pc->parent_type == CT_USING_STMT
-               && cpd.settings[UO_mod_full_brace_using].a == AV_REMOVE)
+               && cpd.settings[UO_mod_full_brace_using].a == IARF_REMOVE)
             || (  pc->parent_type == CT_WHILE
-               && cpd.settings[UO_mod_full_brace_while].a == AV_REMOVE)))
+               && cpd.settings[UO_mod_full_brace_while].a == IARF_REMOVE)))
       {
          if (multiline_block && paren_multiline_before_brace(pc))
          {
@@ -641,7 +641,7 @@ static void examine_brace(chunk_t *bopen)
                chunk_del(bopen);
                chunk_del(pc);
                newline_del_between(tmp_prev, tmp_next);
-               if (cpd.settings[UO_nl_else_if].a & AV_ADD)
+               if (cpd.settings[UO_nl_else_if].a & IARF_ADD)
                {
                   newline_add_between(tmp_prev, tmp_next);
                }
@@ -775,18 +775,18 @@ static void convert_vbrace_to_brace(void)
       if (  (  (  pc->parent_type == CT_IF
                || pc->parent_type == CT_ELSE
                || pc->parent_type == CT_ELSEIF)
-            && (cpd.settings[UO_mod_full_brace_if].a & AV_ADD)
+            && (cpd.settings[UO_mod_full_brace_if].a & IARF_ADD)
             && !cpd.settings[UO_mod_full_brace_if_chain].b)
          || (  pc->parent_type == CT_FOR
-            && (cpd.settings[UO_mod_full_brace_for].a & AV_ADD))
+            && (cpd.settings[UO_mod_full_brace_for].a & IARF_ADD))
          || (  pc->parent_type == CT_DO
-            && (cpd.settings[UO_mod_full_brace_do].a & AV_ADD))
+            && (cpd.settings[UO_mod_full_brace_do].a & IARF_ADD))
          || (  pc->parent_type == CT_WHILE
-            && (cpd.settings[UO_mod_full_brace_while].a & AV_ADD))
+            && (cpd.settings[UO_mod_full_brace_while].a & IARF_ADD))
          || (  pc->parent_type == CT_USING_STMT
-            && (cpd.settings[UO_mod_full_brace_using].a & AV_ADD))
+            && (cpd.settings[UO_mod_full_brace_using].a & IARF_ADD))
          || (  pc->parent_type == CT_FUNC_DEF
-            && (cpd.settings[UO_mod_full_brace_function].a & AV_ADD)))
+            && (cpd.settings[UO_mod_full_brace_function].a & IARF_ADD)))
       {
          // Find the matching vbrace close
          chunk_t *vbc = nullptr;
@@ -1195,13 +1195,13 @@ static void mod_case_brace(void)
          return;
       }
 
-      if (  cpd.settings[UO_mod_case_brace].a == AV_REMOVE
+      if (  cpd.settings[UO_mod_case_brace].a == IARF_REMOVE
          && chunk_is_token(pc, CT_BRACE_OPEN)
          && pc->parent_type == CT_CASE)
       {
          pc = mod_case_brace_remove(pc);
       }
-      else if (  (cpd.settings[UO_mod_case_brace].a & AV_ADD)
+      else if (  (cpd.settings[UO_mod_case_brace].a & IARF_ADD)
               && chunk_is_token(pc, CT_CASE_COLON)
               && next->type != CT_BRACE_OPEN
               && next->type != CT_BRACE_CLOSE
