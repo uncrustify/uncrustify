@@ -2426,7 +2426,7 @@ int load_option_file(const char *filename)
 
 const char *get_eol_marker()
 {
-   static char                 eol[3] = { 0x0A, 0x00, 0x00 };
+   static char                eol[3] = { 0x0A, 0x00, 0x00 };
 
    const unc_text::value_type &lines = cpd.newline.get();
 
