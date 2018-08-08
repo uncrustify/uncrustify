@@ -76,10 +76,10 @@ matrix:
     ##  env: BADGE=osx BUILD_TYPE=release
 
     # Coveralls
-    - os: linux
-      dist: trusty
-      env: BUILD_TYPE=coverage COVERALLS_TOKEN="Dy94SOU3ajc1VbIy1wnWaNaeIUzfgdtEg"
-      compiler: gcc
+    ##- os: linux
+    ##  dist: trusty
+    ##  env: BUILD_TYPE=coverage COVERALLS_TOKEN="Dy94SOU3ajc1VbIy1wnWaNaeIUzfgdtEg"
+    ##  compiler: gcc
     - os: linux
       dist: trusty
       env: BUILD_TYPE=coverage COVERALLS_TOKEN="Dy94SOU3ajc1VbIy1wnWaNaeIUzfgdtEg" BADGE=linux BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
