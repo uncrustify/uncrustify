@@ -143,8 +143,8 @@ struct tok_ctx
 
 
    const deque<int> &data;
-   tok_info          c; //! current
-   tok_info          s; //! saved
+   tok_info         c; //! current
+   tok_info         s; //! saved
 };
 
 
