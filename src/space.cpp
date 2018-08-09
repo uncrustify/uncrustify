@@ -1118,7 +1118,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("sp_func_call_user_paren");
       return(cpd.settings[UO_sp_func_call_user_paren].a);
    }
-   if (chunk_is_token(first, CT_ATTRIBUTE))
+   if (chunk_is_token(first, CT_ATTRIBUTE) && chunk_is_paren_open(second))
    {
       log_rule("sp_attribute_paren");
       return(cpd.settings[UO_sp_attribute_paren].a);

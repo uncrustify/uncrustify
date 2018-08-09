@@ -1513,6 +1513,84 @@ static bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
 } // parse_word
 
 
+static size_t parse_attribute_specifier_sequence(tok_ctx &ctx)
+{
+   size_t nested = 0;
+   size_t offset = 0;
+   size_t parens = 0;
+   auto   ch1    = ctx.peek(offset++);
+
+   while (ch1)
+   {
+      auto ch2 = ctx.peek(offset++);
+      while (ch2 == ' ' || ch2 == '\n' || ch2 == '\r' || ch2 == '\t')
+      {
+         ch2 = ctx.peek(offset++);
+      }
+      if (nested == 0 && ch2 != '[')
+      {
+         break;
+      }
+      if (ch1 == '(')
+      {
+         ++parens;
+         ch1 = ch2;
+         continue;
+      }
+      if (ch1 == ')')
+      {
+         if (parens == 0)
+         {
+            break;
+         }
+         --parens;
+         ch1 = ch2;
+         continue;
+      }
+      if (ch1 != '[' && ch1 != ']')
+      {
+         ch1 = ch2;
+         continue;
+      }
+      if (ch2 != ch1)
+      {
+         if (parens == 0)
+         {
+            break;
+         }
+         ch1 = ch2;
+         continue;
+      }
+      if (ch1 == '[')
+      {
+         if (nested != 0 && parens == 0)
+         {
+            break;
+         }
+         ++nested;
+      }
+      else if (--nested == 0)
+      {
+         return(offset);
+      }
+      ch1 = ctx.peek(offset++);
+   }
+   return(0);
+} // parse_attribute_specifier_sequence
+
+
+static bool extract_attribute_specifier_sequence(tok_ctx &ctx, chunk_t &pc, size_t length)
+{
+   pc.str.clear();
+   while (length--)
+   {
+      pc.str.append(ctx.get());
+   }
+   pc.type = CT_ATTRIBUTE;
+   return(true);
+} // extract_attribute_specifier_sequence
+
+
 static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc)
 {
    size_t nl_count = 0;
@@ -2010,6 +2088,16 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    {
       parse_word(ctx, pc, false);
       return(true);
+   }
+
+   // Check for C++11/14/17/20 attribute specifier sequences
+   if (language_is_set(LANG_CPP) && ctx.peek() == '[')
+   {
+      if (auto length = parse_attribute_specifier_sequence(ctx))
+      {
+         extract_attribute_specifier_sequence(ctx, pc, length);
+         return(true);
+      }
    }
 
    // see if we have a punctuator
