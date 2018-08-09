@@ -78,6 +78,9 @@
 30069  nl_func_class_scope-a.cfg            cpp/class-implementation.cpp
 
 30070  nl_func_scope_name-a.cfg             cpp/nl_func_scope_name.cpp
+30071  lineEndings-to-Win.cfg               cpp/lineEndings-Mac.cpp
+30072  lineEndings-to-Unix.cfg              cpp/lineEndings-Win.cpp
+30073  lineEndings-to-Mac.cfg               cpp/lineEndings-Unix.cpp
 
 30075  empty.cfg                            cpp/goto.cpp
 
