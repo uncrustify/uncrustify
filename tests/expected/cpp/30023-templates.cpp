@@ -27,6 +27,7 @@ void asd(void)
    A<B, C>  bar;
    A<B *>   baz;
    A<B<C> > bay;
+
    if (a < b && b > c)
    {
       a = b < c > 0;
@@ -172,6 +173,7 @@ bool               X = j<3> > 1;
 void foo()
 {
    A<(X > Y)> a;
+
    a = static_cast<List<B> >(ld);
 }
 

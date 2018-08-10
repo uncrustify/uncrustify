@@ -217,6 +217,10 @@ static void newlines_cuddle_uncuddle(chunk_t *start, iarf_e nl_opt);
 static void newlines_do_else(chunk_t *start, iarf_e nl_opt);
 
 
+//! Check if token starts a variable declaration
+static bool is_var_def(chunk_t *pc, chunk_t *next);
+
+
 //! Put a newline before and after a block of variable definitions
 static chunk_t *newline_def_blk(chunk_t *start, bool fn_top);
 
@@ -1527,6 +1531,37 @@ static void newlines_do_else(chunk_t *start, iarf_e nl_opt)
 } // newlines_do_else
 
 
+static bool is_var_def(chunk_t *pc, chunk_t *next)
+{
+   if (chunk_is_token(pc, CT_DECLTYPE) && chunk_is_token(next, CT_PAREN_OPEN))
+   {
+      // If current token starts a decltype expression, skip it
+      next = chunk_skip_to_match(next);
+      next = chunk_get_next_ncnl(next);
+   }
+   else if (!chunk_is_type(pc))
+   {
+      // Otherwise, if the current token is not a type --> not a declaration
+      return(false);
+   }
+   else if (chunk_is_token(next, CT_DC_MEMBER))
+   {
+      // If next token is CT_DC_MEMBER, skip it
+      next = chunk_skip_dc_member(next);
+   }
+   else if (chunk_is_token(next, CT_ANGLE_OPEN))
+   {
+      // If we have a template type, skip it
+      next = chunk_skip_to_match(next);
+      next = chunk_get_next_ncnl(next);
+   }
+
+   return(  chunk_is_type(next)
+         || chunk_is_token(next, CT_WORD)
+         || chunk_is_token(next, CT_FUNC_CTOR_VAR));
+}
+
+
 static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
 {
    LOG_FUNC_ENTRY();
@@ -1631,6 +1666,8 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
                && fn_top
                && (cpd.settings[UO_nl_func_var_def_blk].u > 0))
             {
+               LOG_FMT(LBLANKD, "%s(%d): nl_func_var_def_blk %zu\n",
+                       __func__, __LINE__, prev->orig_line);
                newline_min_after(prev, 1 + cpd.settings[UO_nl_func_var_def_blk].u, PCF_VAR_DEF);
             }
             // set newlines after var def block
@@ -1645,12 +1682,7 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
             first_var_blk = false;
             var_blk       = false;
          }
-         else if (  chunk_is_type(pc)
-                 && (  next->type != CT_DC_MEMBER  // proceed if not CT_DC_MEMBER else skip it
-                    || (next = chunk_skip_dc_member(next)) != nullptr)
-                 && (  chunk_is_type(next)
-                    || chunk_is_token(next, CT_WORD)
-                    || chunk_is_token(next, CT_FUNC_CTOR_VAR)))
+         else if (is_var_def(pc, next))
          {
             // set newlines before var def block
             if (  !var_blk
@@ -1695,7 +1727,9 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
                && fn_top
                && (cpd.settings[UO_nl_func_var_def_blk].u > 0))
             {
-               newline_min_after(prev, 1 + cpd.settings[UO_nl_func_var_def_blk].u, PCF_VAR_DEF); // TODO: why +1 ?
+               LOG_FMT(LBLANKD, "%s(%d): nl_func_var_def_blk %zu\n",
+                       __func__, __LINE__, prev->orig_line);
+               newline_min_after(prev, 1 + cpd.settings[UO_nl_func_var_def_blk].u, PCF_VAR_DEF);
             }
             // set newlines after var def block
             else if (var_blk && (cpd.settings[UO_nl_var_def_blk_end].u > 0))
