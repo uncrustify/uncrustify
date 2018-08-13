@@ -1538,8 +1538,8 @@ void register_options(void)
    unc_add_option("align_assign_decl_func", UO_align_assign_decl_func, AT_UNUM,
                   "Defines how align_assign_span is applied onto function decl. with: virtual ... = 0, = delete, = default.\n"
                   "0 - default align_assign_span behavior\n"
-                  "1 - indent the '=' on their own, with each other\n"
-                  "2 - don't indent", "", 0, 2);
+                  "1 - align the '=' on their own, with each other\n"
+                  "2 - don't align", "", 0, 2);
    unc_add_option("align_enum_equ_span", UO_align_enum_equ_span, AT_UNUM,
                   "The span for aligning on '=' in enums (0=don't align)", "", 0, 5000);
    unc_add_option("align_enum_equ_thresh", UO_align_enum_equ_thresh, AT_UNUM,
