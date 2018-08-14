@@ -1,3 +1,3 @@
 void f() {
-	auto x = "	test\t                          ...   ???";
+	auto x = "	test\t 	 	 		...   ???";
 }
