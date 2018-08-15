@@ -4792,6 +4792,7 @@ static void mark_function(chunk_t *pc)
       if (tmp->level < pc->level)
       {
          // No semicolon - guess that it is a prototype
+         chunk_flags_clr(pc, PCF_VAR_1ST_DEF);
          set_chunk_type(pc, CT_FUNC_PROTO);
          break;
       }
@@ -4806,6 +4807,7 @@ static void mark_function(chunk_t *pc)
          {
             // Set the parent for the semicolon for later
             semi = tmp;
+            chunk_flags_clr(pc, PCF_VAR_1ST_DEF);
             set_chunk_type(pc, CT_FUNC_PROTO);
             D_LOG_FMT(LFCN, "%s(%d): ", __func__, __LINE__);
             LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_PROTO on line %zu col %zu\n",
