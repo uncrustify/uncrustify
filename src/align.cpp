@@ -623,6 +623,8 @@ void align_preprocessor(void)
       pc = chunk_get_next_nc(pc);
       if (pc == nullptr)
       {
+         // coveralls will complain here. There are no example for that.
+         // see https://en.wikipedia.org/wiki/Robustness_principle
          break;
       }
 
@@ -649,6 +651,8 @@ void align_preprocessor(void)
       pc = chunk_get_next(pc);
       if (pc == nullptr)
       {
+         // coveralls will complain here. There are no example for that.
+         // see https://en.wikipedia.org/wiki/Robustness_principle
          break;
       }
 
