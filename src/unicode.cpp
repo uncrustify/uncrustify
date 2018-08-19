@@ -512,7 +512,10 @@ void write_bom(void)
       break;
 
    default:
+      // char_encoding_e::e_ASCII
+      // char_encoding_e::e_BYTE
       // do nothing
+      // Coveralls will complain
       break;
    }
 }
