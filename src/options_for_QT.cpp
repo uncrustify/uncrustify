@@ -14,74 +14,98 @@
 using namespace uncrustify;
 
 // for the modification of options within the SIGNAL/SLOT call.
-bool   QT_SIGNAL_SLOT_found      = false;
-size_t QT_SIGNAL_SLOT_level      = 0;
-bool   restoreValues             = false;
-iarf_e SaveUO_sp_inside_fparen_A = IARF_NOT_DEFINED;
+bool   QT_SIGNAL_SLOT_found = false;
+size_t QT_SIGNAL_SLOT_level = 0;
+bool   restoreValues        = false;
+
+namespace
+{
+//-----------------------------------------------------------------------------
+class temporary_iarf_option
+{
+public:
+   temporary_iarf_option(iarf_e &(*option)(),
+                         iarf_e override_value = IARF_REMOVE)
+      : m_option{option}
+      , m_override_value{override_value}
+   {}
+
+   void save_and_override();
+   void restore();
+
+private:
+   iarf_e &(*const m_option)();
+   const iarf_e m_override_value;
+
+   iarf_e       m_saved_vale = IARF_NOT_DEFINED;
+};
+
+
+//-----------------------------------------------------------------------------
+void temporary_iarf_option::save_and_override()
+{
+   auto &optval = (*m_option)();
+
+   m_saved_vale = optval;
+   optval       = m_override_value;
+}
+
+
+//-----------------------------------------------------------------------------
+void temporary_iarf_option::restore()
+{
+   auto &optval = (*m_option)();
+
+   optval       = m_saved_vale;
+   m_saved_vale = IARF_NOT_DEFINED;
+}
+
+//-----------------------------------------------------------------------------
+temporary_iarf_option for_qt_options[] = {
+   { &options::sp_inside_fparen        },
 // Issue #481
 // connect( timer,SIGNAL( timeout() ),this,SLOT( timeoutImage() ) );
-iarf_e SaveUO_sp_inside_fparens_A = IARF_NOT_DEFINED;
-iarf_e SaveUO_sp_paren_paren_A    = IARF_NOT_DEFINED;
-iarf_e SaveUO_sp_before_comma_A   = IARF_NOT_DEFINED;
-iarf_e SaveUO_sp_after_comma_A    = IARF_NOT_DEFINED;
+   { &options::sp_inside_fparens       },
+   { &options::sp_paren_paren          },
+   { &options::sp_before_comma         },
+   { &options::sp_after_comma          },
 // Bug #654
 // connect(&mapper, SIGNAL(mapped(QString &)), this, SLOT(onSomeEvent(QString &)));
-iarf_e SaveUO_sp_before_byref_A         = IARF_NOT_DEFINED;
-iarf_e SaveUO_sp_before_unnamed_byref_A = IARF_NOT_DEFINED;
-iarf_e SaveUO_sp_after_type_A           = IARF_NOT_DEFINED;
+   { &options::sp_before_byref         },
+   { &options::sp_before_unnamed_byref },
+   { &options::sp_after_type           },
+};
+} // anonymous namespace
 
 
+//-----------------------------------------------------------------------------
 void save_set_options_for_QT(size_t level)
 {
    assert(options::use_options_overriding_for_qt_macros());
 
    LOG_FMT(LGUY, "save values, level=%zu\n", level);
    // save the values
-   QT_SIGNAL_SLOT_level             = level;
-   SaveUO_sp_inside_fparen_A        = options::sp_inside_fparen();
-   SaveUO_sp_inside_fparens_A       = options::sp_inside_fparens();
-   SaveUO_sp_paren_paren_A          = options::sp_paren_paren();
-   SaveUO_sp_before_comma_A         = options::sp_before_comma();
-   SaveUO_sp_after_comma_A          = options::sp_after_comma();
-   SaveUO_sp_before_byref_A         = options::sp_before_byref();
-   SaveUO_sp_before_unnamed_byref_A = options::sp_before_unnamed_byref();
-   SaveUO_sp_after_type_A           = options::sp_after_type();
-   // set values for SIGNAL/SLOT
-   options::sp_inside_fparen()        = IARF_REMOVE;
-   options::sp_inside_fparens()       = IARF_REMOVE;
-   options::sp_paren_paren()          = IARF_REMOVE;
-   options::sp_before_comma()         = IARF_REMOVE;
-   options::sp_after_comma()          = IARF_REMOVE;
-   options::sp_before_byref()         = IARF_REMOVE;
-   options::sp_before_unnamed_byref() = IARF_REMOVE;
-   options::sp_after_type()           = IARF_REMOVE;
-   QT_SIGNAL_SLOT_found               = true;
+   QT_SIGNAL_SLOT_level = level;
+   for (auto &opt : for_qt_options)
+   {
+      opt.save_and_override();
+   }
+   QT_SIGNAL_SLOT_found = true;
 }
 
 
+//-----------------------------------------------------------------------------
 void restore_options_for_QT(void)
 {
    assert(options::use_options_overriding_for_qt_macros());
 
    LOG_FMT(LGUY, "restore values\n");
    // restore the values we had before SIGNAL/SLOT
-   QT_SIGNAL_SLOT_level               = 0;
-   options::sp_inside_fparen()        = SaveUO_sp_inside_fparen_A;
-   options::sp_inside_fparens()       = SaveUO_sp_inside_fparens_A;
-   options::sp_paren_paren()          = SaveUO_sp_paren_paren_A;
-   options::sp_before_comma()         = SaveUO_sp_before_comma_A;
-   options::sp_after_comma()          = SaveUO_sp_after_comma_A;
-   options::sp_before_byref()         = SaveUO_sp_before_byref_A;
-   options::sp_before_unnamed_byref() = SaveUO_sp_before_unnamed_byref_A;
-   options::sp_after_type()           = SaveUO_sp_after_type_A;
-   SaveUO_sp_inside_fparen_A          = IARF_NOT_DEFINED;
-   SaveUO_sp_inside_fparens_A         = IARF_NOT_DEFINED;
-   SaveUO_sp_paren_paren_A            = IARF_NOT_DEFINED;
-   SaveUO_sp_before_comma_A           = IARF_NOT_DEFINED;
-   SaveUO_sp_after_comma_A            = IARF_NOT_DEFINED;
-   SaveUO_sp_before_byref_A           = IARF_NOT_DEFINED;
-   SaveUO_sp_before_unnamed_byref_A   = IARF_NOT_DEFINED;
-   SaveUO_sp_after_type_A             = IARF_NOT_DEFINED;
-   QT_SIGNAL_SLOT_found               = false;
-   restoreValues                      = false;
+   QT_SIGNAL_SLOT_level = 0;
+   for (auto &opt : for_qt_options)
+   {
+      opt.restore();
+   }
+   QT_SIGNAL_SLOT_found = false;
+   restoreValues        = false;
 }
