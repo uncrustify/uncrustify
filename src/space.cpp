@@ -511,7 +511,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && second->next != nullptr
       && second->next->type == CT_FUNC_CALL)
    {
-      log_rule("REMOVE");
+      log_rule("sp_after_cast");
       return(options::sp_after_cast());
    }
    if (chunk_is_token(second, CT_DC_MEMBER))
