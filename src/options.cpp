@@ -79,13 +79,21 @@ bool &tok_split_gte()
 
 std::string disable_processing_cmt()
 {
-   return(cpd.settings[UO_disable_processing_cmt].str);
+   if (cpd.settings[UO_disable_processing_cmt].str)
+   {
+      return(cpd.settings[UO_disable_processing_cmt].str);
+   }
+   return(std::string{});
 }
 
 
 std::string enable_processing_cmt()
 {
-   return(cpd.settings[UO_enable_processing_cmt].str);
+   if (cpd.settings[UO_enable_processing_cmt].str)
+   {
+      return(cpd.settings[UO_enable_processing_cmt].str);
+   }
+   return(std::string{});
 }
 
 
@@ -3547,31 +3555,51 @@ size_t &cmt_multi_first_len_minimum()
 
 std::string cmt_insert_file_header()
 {
-   return(cpd.settings[UO_cmt_insert_file_header].str);
+   if (cpd.settings[UO_cmt_insert_file_header].str)
+   {
+      return(cpd.settings[UO_cmt_insert_file_header].str);
+   }
+   return(std::string{});
 }
 
 
 std::string cmt_insert_file_footer()
 {
-   return(cpd.settings[UO_cmt_insert_file_footer].str);
+   if (cpd.settings[UO_cmt_insert_file_footer].str)
+   {
+      return(cpd.settings[UO_cmt_insert_file_footer].str);
+   }
+   return(std::string{});
 }
 
 
 std::string cmt_insert_func_header()
 {
-   return(cpd.settings[UO_cmt_insert_func_header].str);
+   if (cpd.settings[UO_cmt_insert_func_header].str)
+   {
+      return(cpd.settings[UO_cmt_insert_func_header].str);
+   }
+   return(std::string{});
 }
 
 
 std::string cmt_insert_class_header()
 {
-   return(cpd.settings[UO_cmt_insert_class_header].str);
+   if (cpd.settings[UO_cmt_insert_class_header].str)
+   {
+      return(cpd.settings[UO_cmt_insert_class_header].str);
+   }
+   return(std::string{});
 }
 
 
 std::string cmt_insert_oc_msg_header()
 {
-   return(cpd.settings[UO_cmt_insert_oc_msg_header].str);
+   if (cpd.settings[UO_cmt_insert_oc_msg_header].str)
+   {
+      return(cpd.settings[UO_cmt_insert_oc_msg_header].str);
+   }
+   return(std::string{});
 }
 
 
@@ -3895,19 +3923,31 @@ bool &pp_indent_brace()
 
 std::string include_category_0()
 {
-   return(cpd.settings[UO_include_category_0].str);
+   if (cpd.settings[UO_include_category_0].str)
+   {
+      return(cpd.settings[UO_include_category_0].str);
+   }
+   return(std::string{});
 }
 
 
 std::string include_category_1()
 {
-   return(cpd.settings[UO_include_category_1].str);
+   if (cpd.settings[UO_include_category_1].str)
+   {
+      return(cpd.settings[UO_include_category_1].str);
+   }
+   return(std::string{});
 }
 
 
 std::string include_category_2()
 {
-   return(cpd.settings[UO_include_category_2].str);
+   if (cpd.settings[UO_include_category_2].str)
+   {
+      return(cpd.settings[UO_include_category_2].str);
+   }
+   return(std::string{});
 }
 
 
