@@ -28,10 +28,10 @@ string_replace_tab_chars        = false    # false/true
 tok_split_gte                   = false    # false/true
 
 # Override the default ' *INDENT-OFF*' in comments for disabling processing of part of the file.
-disable_processing_cmt          = ""         # string
+disable_processing_cmt          = " *INDENT-OFF*"      # string
 
 # Override the default ' *INDENT-ON*' in comments for enabling processing of part of the file.
-enable_processing_cmt           = ""         # string
+enable_processing_cmt           = " *INDENT-ON*"     # string
 
 # Enable parsing of digraphs. Default=False.
 enable_digraphs                 = false    # false/true

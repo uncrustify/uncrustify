@@ -2603,6 +2603,8 @@ void set_option_defaults(void)
    cpd.defaults[UO_pp_indent_func_def].b                                = true;
    cpd.defaults[UO_pp_indent_extern].b                                  = true;
    cpd.defaults[UO_pp_indent_brace].b                                   = true;
+   cpd.defaults[UO_enable_processing_cmt].str                           = UNCRUSTIFY_ON_TEXT;
+   cpd.defaults[UO_disable_processing_cmt].str                          = UNCRUSTIFY_OFF_TEXT;
 
 #ifdef DEBUG
    // test all the default values if they are in the allowed interval
