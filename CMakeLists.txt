@@ -204,6 +204,7 @@ add_executable(uncrustify
   src/logmask.cpp
   src/md5.cpp
   src/newlines.cpp
+  src/option.cpp
   src/options.cpp
   src/options_for_QT.cpp
   src/output.cpp
@@ -236,6 +237,7 @@ add_executable(uncrustify
   src/logmask.h
   src/log_levels.h
   src/md5.h
+  src/option.h
   src/options.h
   src/options_for_QT.h
   src/ParseFrame.h

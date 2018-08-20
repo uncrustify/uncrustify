@@ -10,6 +10,8 @@
 #include "prototypes.h"
 #include <regex>
 
+using namespace uncrustify;
+
 
 enum
 {
@@ -268,21 +270,21 @@ void sort_imports(void)
       }
       else if (chunk_is_token(pc, CT_IMPORT))
       {
-         if (cpd.settings[UO_mod_sort_import].b)
+         if (options::mod_sort_import())
          {
             p_imp = chunk_get_next(pc);
          }
       }
       else if (chunk_is_token(pc, CT_USING))
       {
-         if (cpd.settings[UO_mod_sort_using].b)
+         if (options::mod_sort_using())
          {
             p_imp = chunk_get_next(pc);
          }
       }
       else if (chunk_is_token(pc, CT_PP_INCLUDE))
       {
-         if (cpd.settings[UO_mod_sort_include].b)
+         if (options::mod_sort_include())
          {
             p_imp  = chunk_get_next(pc);
             p_last = pc;

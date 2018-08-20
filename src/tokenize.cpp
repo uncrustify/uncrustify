@@ -24,6 +24,7 @@
 
 
 using namespace std;
+using namespace uncrustify;
 
 
 struct tok_info
@@ -104,7 +105,7 @@ struct tok_ctx
          switch (ch)
          {
          case '\t':
-            c.col = calc_next_tab_column(c.col, cpd.settings[UO_input_tab_size].u);
+            c.col = calc_next_tab_column(c.col, options::input_tab_size());
             break;
 
          case '\n':
@@ -1028,9 +1029,9 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
 
 static bool parse_string(tok_ctx &ctx, chunk_t &pc, size_t quote_idx, bool allow_escape)
 {
-   size_t escape_char        = cpd.settings[UO_string_escape_char].u;
-   size_t escape_char2       = cpd.settings[UO_string_escape_char2].u;
-   bool   should_escape_tabs = (  cpd.settings[UO_string_replace_tab_chars].b
+   size_t escape_char        = options::string_escape_char();
+   size_t escape_char2       = options::string_escape_char2();
+   bool   should_escape_tabs = (  options::string_replace_tab_chars()
                                && language_is_set(LANG_ALLC));
 
    pc.str.clear();
@@ -1182,7 +1183,7 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
    std::stack<CsStringParseState> parseState; // each entry is a nested string
    parseState.push(CsStringParseState(stringType));
 
-   bool should_escape_tabs = cpd.settings[UO_string_replace_tab_chars].b;
+   bool should_escape_tabs = options::string_replace_tab_chars();
 
    while (ctx.more())
    {
@@ -1242,7 +1243,7 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
             {
                cpd.warned_unable_string_replace_tab_chars = true;
 
-               log_sev_t warnlevel = (log_sev_t)cpd.settings[UO_warn_level_tabs_found_in_verbatim_string_literals].n;
+               log_sev_t warnlevel = (log_sev_t)options::warn_level_tabs_found_in_verbatim_string_literals();
 
                /*
                 * a tab char can't be replaced with \\t because escapes don't
@@ -1473,7 +1474,7 @@ static bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
       else
       {
          pc.type = CT_MACRO;
-         if (cpd.settings[UO_pp_ignore_define_body].b)
+         if (options::pp_ignore_define_body())
          {
             /*
              * We are setting the PP_IGNORE preproc state because the following
@@ -1625,7 +1626,7 @@ static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc)
          break;
 
       case '\t':
-         pc.orig_prev_sp += calc_next_tab_column(cpd.column, cpd.settings[UO_input_tab_size].u) - cpd.column;
+         pc.orig_prev_sp += calc_next_tab_column(cpd.column, options::input_tab_size()) - cpd.column;
          break;
 
       case ' ':
@@ -2298,7 +2299,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
          }
          else if (cpd.in_preproc == CT_PP_IGNORE)
          {
-            // ASSERT(cpd.settings[UO_pp_ignore_define_body].b);
+            // ASSERT(options::pp_ignore_define_body());
             if (pc->type != CT_NL_CONT && pc->type != CT_COMMENT_CPP)
             {
                set_chunk_type(pc, CT_PP_IGNORE);
@@ -2306,7 +2307,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
          }
          else if (  cpd.in_preproc == CT_PP_DEFINE
                  && chunk_is_token(pc, CT_PAREN_CLOSE)
-                 && cpd.settings[UO_pp_ignore_define_body].b)
+                 && options::pp_ignore_define_body())
          {
             // When we have a PAREN_CLOSE in a PP_DEFINE we should be terminating a MACRO_FUNC
             // arguments list. Therefore we can enter the PP_IGNORE state and ignore next chunks.
@@ -2342,8 +2343,8 @@ void tokenize(const deque<int> &data, chunk_t *ref)
    }
 
    // Set the cpd.newline string for this file
-   if (  cpd.settings[UO_newlines].le == LE_LF
-      || (  cpd.settings[UO_newlines].le == LE_AUTO
+   if (  options::newlines() == LE_LF
+      || (  options::newlines() == LE_AUTO
          && (cpd.le_counts[LE_LF] >= cpd.le_counts[LE_CRLF])
          && (cpd.le_counts[LE_LF] >= cpd.le_counts[LE_CR])))
    {
@@ -2351,8 +2352,8 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       cpd.newline = "\n";
       LOG_FMT(LLINEENDS, "Using LF line endings\n");
    }
-   else if (  cpd.settings[UO_newlines].le == LE_CRLF
-           || (  cpd.settings[UO_newlines].le == LE_AUTO
+   else if (  options::newlines() == LE_CRLF
+           || (  options::newlines() == LE_AUTO
               && (cpd.le_counts[LE_CRLF] >= cpd.le_counts[LE_LF])
               && (cpd.le_counts[LE_CRLF] >= cpd.le_counts[LE_CR])))
    {

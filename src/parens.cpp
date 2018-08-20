@@ -14,6 +14,8 @@
 #include "unc_ctype.h"
 #include "uncrustify.h"
 
+using namespace uncrustify;
+
 
 //! Add an open parenthesis after first and add a close parenthesis before the last
 static void add_parens_between(chunk_t *first, chunk_t *last);
@@ -44,7 +46,7 @@ void do_parens(void)
 {
    LOG_FUNC_ENTRY();
 
-   if (cpd.settings[UO_mod_full_paren_if_bool].b)
+   if (options::mod_full_paren_if_bool())
    {
       chunk_t *pc = chunk_get_head();
       while ((pc = chunk_get_next_ncnl(pc)) != nullptr)
