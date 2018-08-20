@@ -62,18 +62,24 @@ void temporary_iarf_option::restore()
 
 //-----------------------------------------------------------------------------
 temporary_iarf_option for_qt_options[] = {
-   { &options::sp_inside_fparen        },
+   { &options::sp_inside_fparen           },
 // Issue #481
 // connect( timer,SIGNAL( timeout() ),this,SLOT( timeoutImage() ) );
-   { &options::sp_inside_fparens       },
-   { &options::sp_paren_paren          },
-   { &options::sp_before_comma         },
-   { &options::sp_after_comma          },
+   { &options::sp_inside_fparens          },
+   { &options::sp_paren_paren             },
+   { &options::sp_before_comma            },
+   { &options::sp_after_comma             },
 // Bug #654
 // connect(&mapper, SIGNAL(mapped(QString &)), this, SLOT(onSomeEvent(QString &)));
-   { &options::sp_before_byref         },
-   { &options::sp_before_unnamed_byref },
-   { &options::sp_after_type           },
+   { &options::sp_before_byref            },
+   { &options::sp_before_unnamed_byref    },
+   { &options::sp_after_type              },
+// Issue #1969
+// connect( a, SIGNAL(b(c *)), this, SLOT(d(e *)) );
+   { &options::sp_before_ptr_star         },
+   { &options::sp_before_unnamed_ptr_star },
+// connect( a, SIGNAL(b(c< d >)), this, SLOT(e(f< g >)) );
+   { &options::sp_inside_angle            },
 };
 } // anonymous namespace
 
