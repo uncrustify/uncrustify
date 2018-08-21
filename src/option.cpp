@@ -582,6 +582,8 @@ void register_options(void)
                   "Add or remove space between a constructor without parameters or destructor and '()'.");
    unc_add_option("sp_return_paren", UO_sp_return_paren, AT_IARF,
                   "Add or remove space between 'return' and '('.");
+   unc_add_option("sp_return_brace", UO_sp_return_brace, AT_IARF,
+                  "Add or remove space between 'return' and '{'.");
    unc_add_option("sp_attribute_paren", UO_sp_attribute_paren, AT_IARF,
                   "Add or remove space between '__attribute__' and '('.");
    unc_add_option("sp_defined_paren", UO_sp_defined_paren, AT_IARF,

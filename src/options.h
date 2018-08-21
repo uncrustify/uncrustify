@@ -155,6 +155,7 @@ iarf_e &sp_func_call_user_paren_paren();
 iarf_e &sp_func_class_paren();
 iarf_e &sp_func_class_paren_empty();
 iarf_e &sp_return_paren();
+iarf_e &sp_return_brace();
 iarf_e &sp_attribute_paren();
 iarf_e &sp_defined_paren();
 iarf_e &sp_throw_paren();

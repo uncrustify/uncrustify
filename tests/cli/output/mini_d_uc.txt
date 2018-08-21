@@ -138,6 +138,7 @@ sp_func_call_user_paren_paren   = ignore
 sp_func_class_paren             = ignore
 sp_func_class_paren_empty       = ignore
 sp_return_paren                 = ignore
+sp_return_brace                 = ignore
 sp_attribute_paren              = ignore
 sp_defined_paren                = ignore
 sp_throw_paren                  = ignore
