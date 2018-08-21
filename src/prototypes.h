@@ -51,7 +51,7 @@ size_t calc_next_tab_column(size_t col, size_t tabsize)
 static_inline
 size_t next_tab_column(size_t col)
 {
-   return(calc_next_tab_column(col, cpd.settings[UO_output_tab_size].u));
+   return(calc_next_tab_column(col, uncrustify::options::output_tab_size()));
 }
 
 
@@ -69,7 +69,7 @@ size_t align_tab_column(size_t col)
    {
       col = 1;
    }
-   if ((col % cpd.settings[UO_output_tab_size].u) != 1)
+   if ((col % uncrustify::options::output_tab_size()) != 1)
    {
       col = next_tab_column(col);
    }
