@@ -181,7 +181,7 @@ add_custom_command(
 #
 # Uncrustify
 #
-add_executable(uncrustify
+set(uncrustify_sources
   src/align.cpp
   src/align_stack.cpp
   src/args.cpp
@@ -223,6 +223,9 @@ add_executable(uncrustify
   src/unicode.cpp
   src/universalindentgui.cpp
   src/width.cpp
+)
+
+set(uncrustify_headers
   src/align_stack.h
   src/args.h
   src/backup.h
@@ -250,6 +253,8 @@ add_executable(uncrustify
   src/unc_text.h
   src/unc_tools.h
 )
+
+add_executable(uncrustify ${uncrustify_sources} ${uncrustify_headers})
 
 if(CMAKE_VERSION VERSION_LESS 2.8.10)
   if(CMAKE_CONFIGURATION_TYPES OR CMAKE_BUILD_TYPE)
@@ -290,6 +295,22 @@ if(ENABLE_CODECOVERAGE)
     set(CODECOVERAGE_DEPENDS uncrustify)
     include(${CMAKE_SOURCE_DIR}/cmake/CodeCoverage.cmake)
 endif(ENABLE_CODECOVERAGE)
+
+#
+# Build command to run uncrustify on its own sources
+#
+add_custom_target(format-sources)
+foreach(source IN LISTS uncrustify_sources uncrustify_headers)
+  get_filename_component(source_name  ${source} NAME)
+  add_custom_target(format-${source_name}
+    COMMAND uncrustify
+      -c forUncrustifySources.cfg
+      -lCPP --no-backup ${source}
+    COMMENT "Formatting ${source}"
+    WORKING_DIRECTORY ${uncrustify_SOURCE_DIR}
+  )
+  add_dependencies(format-sources format-${source_name})
+endforeach()
 
 #
 # Package
