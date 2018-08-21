@@ -399,6 +399,8 @@ bool keywords_are_sorted(void)
       {
          fprintf(stderr, "%s: bad sort order at idx %d, words '%s' and '%s'\n",
                  __func__, idx - 1, keywords[idx - 1].tag, keywords[idx].tag);
+         // coveralls will always complain.
+         // these lines are only needed for the developper.
          log_flush(true);
          cpd.error_count++;
          return(false);
