@@ -1,18 +1,18 @@
 inline static std::tuple<bool, std::string> foo(void) {
 // should remain a one liner
-	return { true, ""s };
+	return{ true, ""s };
 }
 inline static std::tuple<bool, std::string, std::string> foo(void) {
 	if (condition) {
 // should remain a one liner
-		return { true, ""s, ""s };
+		return{ true, ""s, ""s };
 	}
 // should remain a one liner
-	return { false, ""s, ""s };
+	return{ false, ""s, ""s };
 }
 inline static std::tuple<bool, std::string> foo(void) {
 // should indent one level
-	return {
+	return{
 	        true, ""s
 	};
 }
