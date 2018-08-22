@@ -173,12 +173,14 @@ add_custom_command(
 function(py_gen OUTPUT SCRIPT INPUT)
   set(out "${PROJECT_BINARY_DIR}/src/${OUTPUT}")
   set(deps "${PROJECT_SOURCE_DIR}/src/${INPUT}")
+  get_filename_component(outdir "${out}" DIRECTORY)
   foreach(arg IN LISTS ARGN)
     list(APPEND deps "${PROJECT_SOURCE_DIR}/src/${arg}")
   endforeach()
 
   add_custom_command(
     OUTPUT "${out}"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${outdir}"
     COMMAND ${PYTHON_EXECUTABLE}
       "${PROJECT_SOURCE_DIR}/scripts/${SCRIPT}"
       "${out}"
