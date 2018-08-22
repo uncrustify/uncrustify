@@ -651,29 +651,21 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 
    if (cpd.unc_off)
    {
-      const char *ontext = cpd.settings[UO_enable_processing_cmt].str;
-      if (ontext == nullptr || ontext[0] == '\0')
+      const auto &ontext = options::enable_processing_cmt();
+      if (!ontext.empty() && pc.str.find(ontext.c_str()) >= 0)
       {
-         ontext = UNCRUSTIFY_ON_TEXT;
-      }
-
-      if (pc.str.find(ontext) >= 0)
-      {
-         LOG_FMT(LBCTRL, "Found '%s' on line %zu\n", ontext, pc.orig_line);
+         LOG_FMT(LBCTRL, "Found '%s' on line %zu\n",
+                 ontext.c_str(), pc.orig_line);
          cpd.unc_off = false;
       }
    }
    else
    {
-      const char *offtext = cpd.settings[UO_disable_processing_cmt].str;
-      if (offtext == nullptr || !offtext[0])
+      const auto &offtext = options::disable_processing_cmt();
+      if (!offtext.empty() && pc.str.find(offtext.c_str()) >= 0)
       {
-         offtext = UNCRUSTIFY_OFF_TEXT;
-      }
-
-      if (pc.str.find(offtext) >= 0)
-      {
-         LOG_FMT(LBCTRL, "Found '%s' on line %zu\n", offtext, pc.orig_line);
+         LOG_FMT(LBCTRL, "Found '%s' on line %zu\n",
+                 offtext.c_str(), pc.orig_line);
          cpd.unc_off = true;
          // Issue #842
          cpd.unc_off_used = true;
@@ -1761,12 +1753,8 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
       return(false);
    }
    // Note that we aren't actually making sure this is in a comment, yet
-   const char *ontext = cpd.settings[UO_enable_processing_cmt].str;
-   if (ontext == nullptr || ontext[0] == '\0')
-   {
-      ontext = UNCRUSTIFY_ON_TEXT;
-   }
-   if (pc.str.find(ontext) < 0)
+   const auto &ontext = options::enable_processing_cmt();
+   if (!ontext.empty() && pc.str.find(ontext.c_str()) < 0)
    {
       pc.type = CT_IGNORED;
       return(true);

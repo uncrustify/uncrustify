@@ -940,10 +940,6 @@ enum uncrustify_options
    UO_option_count
 };
 
-// for helping by sort
-#define   UO_include_category_first    UO_include_category_0
-#define   UO_include_category_last     UO_include_category_2
-
 
 #ifdef EMSCRIPTEN
 #define group_map_value_options_t    std::vector<uncrustify_options>

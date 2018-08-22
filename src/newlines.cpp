@@ -1864,7 +1864,7 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
    }
 
-   //fixes #1245 will add new line between tsquare and brace open based on UO_nl_tsquare_brace
+   //fixes #1245 will add new line between tsquare and brace open based on nl_tsquare_brace
 
    if (chunk_is_token(br_open, CT_BRACE_OPEN))
    {
@@ -2298,7 +2298,8 @@ static void newline_func_def_or_call(chunk_t *start)
    }
    else
    {
-      iarf_e atmp = cpd.settings[is_def ? UO_nl_func_def_paren : UO_nl_func_paren].a;
+      auto atmp = is_def ? options::nl_func_def_paren()
+                  : options::nl_func_paren();
       if (atmp != IARF_IGNORE)
       {
          prev = chunk_get_prev_ncnl(start);
@@ -2397,13 +2398,15 @@ static void newline_func_def_or_call(chunk_t *start)
       chunk_t *pc = chunk_get_next_ncnl(start);
       if (chunk_is_str(pc, ")", 1))
       {
-         atmp = cpd.settings[is_def ? UO_nl_func_def_empty : UO_nl_func_decl_empty].a;
+         atmp = is_def ? options::nl_func_def_empty()
+                : options::nl_func_decl_empty();
          if (atmp != IARF_IGNORE)
          {
             newline_iarf(start, atmp);
          }
 
-         atmp = cpd.settings[is_def ? UO_nl_func_def_paren_empty : UO_nl_func_paren_empty].a;
+         atmp = is_def ? options::nl_func_def_paren_empty()
+                : options::nl_func_paren_empty();
          if (atmp != IARF_IGNORE)
          {
             prev = chunk_get_prev_ncnl(start);
@@ -2437,26 +2440,26 @@ static void newline_func_def_or_call(chunk_t *start)
          {
             continue;
          } // else:
-         newline_iarf(pc, cpd.settings[(  start->parent_type == CT_FUNC_DEF
-                                       || start->parent_type == CT_FUNC_CLASS_DEF) ?
-                                       UO_nl_func_def_args :
-                                       UO_nl_func_decl_args].a);
+         newline_iarf(pc, (  start->parent_type == CT_FUNC_DEF
+                          || start->parent_type == CT_FUNC_CLASS_DEF) ?
+                      options::nl_func_def_args() :
+                      options::nl_func_decl_args());
       }
    }
 
-   iarf_e as = cpd.settings[is_def ? UO_nl_func_def_start : UO_nl_func_decl_start].a;
-   iarf_e ae = cpd.settings[is_def ? UO_nl_func_def_end : UO_nl_func_decl_end].a;
+   iarf_e as = is_def ? options::nl_func_def_start() : options::nl_func_decl_start();
+   iarf_e ae = is_def ? options::nl_func_def_end() : options::nl_func_decl_end();
    if (comma_count == 0)
    {
       iarf_e atmp;
-      atmp = cpd.settings[is_def ? UO_nl_func_def_start_single :
-                          UO_nl_func_decl_start_single].a;
+      atmp = is_def ? options::nl_func_def_start_single() :
+             options::nl_func_decl_start_single();
       if (atmp != IARF_IGNORE)
       {
          as = atmp;
       }
-      atmp = cpd.settings[is_def ? UO_nl_func_def_end_single :
-                          UO_nl_func_decl_end_single].a;
+      atmp = is_def ? options::nl_func_def_end_single() :
+             options::nl_func_decl_end_single();
       if (atmp != IARF_IGNORE)
       {
          ae = atmp;

@@ -13,15 +13,17 @@
 using namespace uncrustify;
 
 
-enum
-{
-   kIncludeCategoriesCount = UO_include_category_last - UO_include_category_first + 1,
+std::string          (*include_category_options[])() = {
+   &options::include_category_0,
+   &options::include_category_1,
+   &options::include_category_2,
 };
+constexpr static int kIncludeCategoriesCount = 3;
 
 
 struct include_category
 {
-   include_category(const char *pattern)
+   include_category(const std::string &pattern)
       : regex(pattern)
    {
    }
@@ -52,11 +54,10 @@ static void do_the_sort(chunk_t **chunks, size_t num_chunks);
 
 static void prepare_categories()
 {
-   for (int i = 0; i < kIncludeCategoriesCount; i++)
+   for (int i = 0; i < kIncludeCategoriesCount; ++i)
    {
-      const auto *cat_pattern = cpd.settings[UO_include_category_first + i].str;
-
-      if (cat_pattern != nullptr && cat_pattern[0] != '\0')
+      const auto &cat_pattern = (*include_category_options[i])();
+      if (!cat_pattern.empty())
       {
          include_categories[i] = new include_category(cat_pattern);
       }

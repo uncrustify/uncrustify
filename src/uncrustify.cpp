@@ -173,7 +173,7 @@ static int load_mem_file(const char *filename, file_mem &fm);
  * @retval true   file was loaded successfully
  * @retval false  file could not be loaded
  */
-static int load_mem_file_config(const char *filename, file_mem &fm);
+static int load_mem_file_config(const std::string &filename, file_mem &fm);
 
 
 //! print uncrustify version number and terminate
@@ -1139,21 +1139,21 @@ static int load_mem_file(const char *filename, file_mem &fm)
 } // load_mem_file
 
 
-static int load_mem_file_config(const char *filename, file_mem &fm)
+static int load_mem_file_config(const std::string &filename, file_mem &fm)
 {
    int  retval;
    char buf[1024];
 
    snprintf(buf, sizeof(buf), "%.*s%s",
-            path_dirname_len(cpd.filename.c_str()), cpd.filename.c_str(), filename);
+            path_dirname_len(cpd.filename.c_str()), cpd.filename.c_str(), filename.c_str());
 
    retval = load_mem_file(buf, fm);
    if (retval < 0)
    {
-      retval = load_mem_file(filename, fm);
+      retval = load_mem_file(filename.c_str(), fm);
       if (retval < 0)
       {
-         LOG_FMT(LERR, "Failed to load (%s) or (%s)\n", buf, filename);
+         LOG_FMT(LERR, "Failed to load (%s) or (%s)\n", buf, filename.c_str());
          cpd.error_count++;
       }
    }
@@ -1165,35 +1165,30 @@ int load_header_files()
 {
    int retval = 0;
 
-   if (  cpd.settings[UO_cmt_insert_file_header].str != nullptr // option holds a string
-      && cpd.settings[UO_cmt_insert_file_header].str[0] != 0)   // that is not empty
+   if (!options::cmt_insert_file_header().empty())
    {
       // try to load the file referred to by the options string
-      retval |= load_mem_file_config(cpd.settings[UO_cmt_insert_file_header].str,
+      retval |= load_mem_file_config(options::cmt_insert_file_header(),
                                      cpd.file_hdr);
    }
-   if (  (cpd.settings[UO_cmt_insert_file_footer].str != nullptr)
-      && (cpd.settings[UO_cmt_insert_file_footer].str[0] != 0))
+   if (!options::cmt_insert_file_footer().empty())
    {
-      retval |= load_mem_file_config(cpd.settings[UO_cmt_insert_file_footer].str,
+      retval |= load_mem_file_config(options::cmt_insert_file_footer(),
                                      cpd.file_ftr);
    }
-   if (  (cpd.settings[UO_cmt_insert_func_header].str != nullptr)
-      && (cpd.settings[UO_cmt_insert_func_header].str[0] != 0))
+   if (!options::cmt_insert_func_header().empty())
    {
-      retval |= load_mem_file_config(cpd.settings[UO_cmt_insert_func_header].str,
+      retval |= load_mem_file_config(options::cmt_insert_func_header(),
                                      cpd.func_hdr);
    }
-   if (  (cpd.settings[UO_cmt_insert_class_header].str != nullptr)
-      && (cpd.settings[UO_cmt_insert_class_header].str[0] != 0))
+   if (!options::cmt_insert_class_header().empty())
    {
-      retval |= load_mem_file_config(cpd.settings[UO_cmt_insert_class_header].str,
+      retval |= load_mem_file_config(options::cmt_insert_class_header(),
                                      cpd.class_hdr);
    }
-   if (  (cpd.settings[UO_cmt_insert_oc_msg_header].str != nullptr)
-      && (cpd.settings[UO_cmt_insert_oc_msg_header].str[0] != 0))
+   if (!options::cmt_insert_oc_msg_header().empty())
    {
-      retval |= load_mem_file_config(cpd.settings[UO_cmt_insert_oc_msg_header].str,
+      retval |= load_mem_file_config(options::cmt_insert_oc_msg_header(),
                                      cpd.oc_msg_hdr);
    }
    return(retval);
