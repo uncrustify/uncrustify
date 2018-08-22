@@ -13,6 +13,11 @@ connect(&mapper,
       SLOT(onSomeEvent(const Q2 &)));
 
 connect(&mapper,
-        SIGNAL(mapped(Q1 &)),
-        this,
-        SLOT(onSomeEvent(const Q2 &)));
+      SIGNAL(emitted(Q1 *)),
+      this,
+      SLOT(accept(const Q2 *)));
+
+connect(&mapper,
+      SIGNAL(emitted(X< int >)),
+      this,
+      SLOT(accept(X< int >)));
