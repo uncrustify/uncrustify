@@ -473,6 +473,7 @@ enum uncrustify_options
    UO_nl_cpp_lambda_leave_one_liners,  // leave one-line C++11 lambda bodies
    UO_nl_if_leave_one_liners,          //
    UO_nl_while_leave_one_liners,       //
+   UO_nl_for_leave_one_liners,         // leave one-line for statement bodies
    UO_nl_oc_msg_leave_one_liner,       // Don't split one-line OC messages
    UO_nl_oc_mdef_brace,                // Add or remove newline between method declaration and '{'
    UO_nl_oc_block_brace,               // Add or remove newline between Objective-C block signature and '{'

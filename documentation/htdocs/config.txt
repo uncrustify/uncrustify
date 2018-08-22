@@ -1020,6 +1020,9 @@ nl_if_leave_one_liners          { False, True }
 nl_while_leave_one_liners       { False, True }
   Don't split one-line while statements - 'while(a) b++;'.
 
+nl_for_leave_one_liners         { False, True }
+  Don't split one-line for statements - 'for(...) b++;'.
+
 nl_oc_msg_leave_one_liner       { False, True }
   Don't split one-line OC messages.
 

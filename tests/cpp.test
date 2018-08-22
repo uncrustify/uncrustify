@@ -323,6 +323,9 @@
 30956  indent_ctor_init_leading.cfg         cpp/indent_ctor_init.cpp
 30957  negative_indent.cfg                  cpp/class-init.cpp
 
+30958  nl_for_leave_one_liners-f.cfg        cpp/nl_for_leave_one_liners.cpp
+30959  nl_for_leave_one_liners-t.cfg        cpp/nl_for_leave_one_liners.cpp
+
 31000  empty.cfg                            cpp/digraph.cpp
 31001  ben_030.cfg                          cpp/digraph.cpp
 
