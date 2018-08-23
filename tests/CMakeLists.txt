@@ -74,7 +74,7 @@ if (_build_type MATCHES "release|relwithdebinfo|minsizerel")
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cli
   )
 
-  add_custom_target(update_cli_options
+  add_custom_target(update-cli-options
     COMMAND ${PYTHON_EXECUTABLE}
       test_cli_options.py
       --build ${uncrustify_BINARY_DIR}
