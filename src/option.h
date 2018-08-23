@@ -278,6 +278,7 @@ enum uncrustify_options
    UO_sp_func_class_paren,         // space between ctor/dtor and '('
    UO_sp_func_class_paren_empty,   // space between ctor/dtor and '()'
    UO_sp_return_paren,             // space between 'return' and '('
+   UO_sp_return_brace,             // space between 'return' and '{'
    UO_sp_attribute_paren,          // space between '__attribute__' and '('
    UO_sp_defined_paren,            //
    UO_sp_throw_paren,              //

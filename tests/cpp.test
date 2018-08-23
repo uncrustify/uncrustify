@@ -180,8 +180,15 @@
 #30310  sp_word_brace_force.cfg              cpp/uniform_initialization.cpp
 #30311  sp_word_brace_remove.cfg             cpp/uniform_initialization.cpp
 30312  sp_inside_type_brace_init_lst-f.cfg  cpp/return_init_list.cpp
-30313  sp_brace_brace-r.cfg                 cpp/sp_brace_brace.cpp 
+30313  sp_brace_brace-r.cfg                 cpp/sp_brace_brace.cpp
 30314  sp_brace_brace-f.cfg                 cpp/sp_brace_brace.cpp
+
+30320  sp_return_paren-r.cfg                cpp/returns.cpp
+30321  sp_return_paren-f.cfg                cpp/returns.cpp
+30322  sp_return_brace-r.cfg                cpp/returns.cpp
+30323  sp_return_brace-f.cfg                cpp/returns.cpp
+30324  mod_paren_on_return-a.cfg            cpp/returns.cpp
+30325  mod_paren_on_return-r.cfg            cpp/returns.cpp
 
 30400  attribute_specifier_seqs.cfg         cpp/attribute_specifier_seqs.cpp
 

@@ -459,10 +459,17 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    // "return(a);" vs "return (foo_t)a + 3;" vs "return a;" vs "return;"
    if (chunk_is_token(first, CT_RETURN))
    {
-      if (chunk_is_token(second, CT_PAREN_OPEN) && second->parent_type == CT_RETURN)
+      if (  chunk_is_token(second, CT_PAREN_OPEN)
+         && second->parent_type == CT_RETURN)
       {
          log_rule("sp_return_paren");
          return(options::sp_return_paren());
+      }
+      else if (  chunk_is_token(second, CT_BRACE_OPEN)
+              && second->parent_type == CT_BRACED_INIT_LIST)
+      {
+         log_rule("sp_return_brace");
+         return(options::sp_return_brace());
       }
       // everything else requires a space
       log_rule("FORCE");

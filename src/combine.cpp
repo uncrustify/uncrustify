@@ -2624,6 +2624,19 @@ static chunk_t *process_return(chunk_t *pc)
       }
    }
 
+   // Issue #1917
+   // Never add parens to a braced init list; that breaks the code
+   //   return {args...};    // C++11 type elision; okay
+   //   return ({args...});  // ill-formed
+   if (  language_is_set(LANG_CPP) && chunk_is_token(next, CT_BRACE_OPEN)
+      && next->parent_type == CT_BRACED_INIT_LIST)
+   {
+      LOG_FMT(LRETURN, "%s(%d): not adding parens around braced initializer"
+              " on orig_line %zd\n",
+              __func__, __LINE__, pc->orig_line);
+      return(next);
+   }
+
    // We don't have a fully paren'd return. Should we add some?
    if ((options::mod_paren_on_return() & IARF_ADD) == 0)
    {

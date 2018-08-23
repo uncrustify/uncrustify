@@ -877,6 +877,12 @@ iarf_e &sp_return_paren()
 }
 
 
+iarf_e &sp_return_brace()
+{
+   return(cpd.settings[UO_sp_return_brace].a);
+}
+
+
 iarf_e &sp_attribute_paren()
 {
    return(cpd.settings[UO_sp_attribute_paren].a);

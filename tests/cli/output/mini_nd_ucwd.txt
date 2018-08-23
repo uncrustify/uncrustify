@@ -437,6 +437,9 @@ sp_func_class_paren_empty       = ignore   # ignore/add/remove/force
 # Add or remove space between 'return' and '('.
 sp_return_paren                 = ignore   # ignore/add/remove/force
 
+# Add or remove space between 'return' and '{'.
+sp_return_brace                 = ignore   # ignore/add/remove/force
+
 # Add or remove space between '__attribute__' and '('.
 sp_attribute_paren              = ignore   # ignore/add/remove/force
 
