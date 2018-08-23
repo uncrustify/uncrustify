@@ -334,6 +334,7 @@ bool &nl_func_leave_one_liners();
 bool &nl_cpp_lambda_leave_one_liners();
 bool &nl_if_leave_one_liners();
 bool &nl_while_leave_one_liners();
+bool &nl_for_leave_one_liners();
 bool &nl_oc_msg_leave_one_liner();
 iarf_e &nl_oc_mdef_brace();
 iarf_e &nl_oc_block_brace();

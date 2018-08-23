@@ -2654,6 +2654,13 @@ static bool one_liner_nl_ok(chunk_t *pc)
          LOG_FMT(LNL1LINE, "%s(%d): false (while)\n", __func__, __LINE__);
          return(false);
       }
+
+      if (  options::nl_for_leave_one_liners()
+         && pc->parent_type == CT_FOR)
+      {
+         LOG_FMT(LNL1LINE, "%s(%d): false (for)\n", __func__, __LINE__);
+         return(false);
+      }
    }
    LOG_FMT(LNL1LINE, "%s(%d): true, a new line may be added\n", __func__, __LINE__);
    return(true);

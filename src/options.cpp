@@ -1951,6 +1951,12 @@ bool &nl_while_leave_one_liners()
 }
 
 
+bool &nl_for_leave_one_liners()
+{
+   return(cpd.settings[UO_nl_for_leave_one_liners].b);
+}
+
+
 bool &nl_oc_msg_leave_one_liner()
 {
    return(cpd.settings[UO_nl_oc_msg_leave_one_liner].b);
