@@ -33,8 +33,10 @@
 
 namespace uncrustify
 {
+
 namespace options
 {
+
 lineends_e &newlines()
 {
    return(cpd.settings[UO_newlines].le);
@@ -3997,5 +3999,7 @@ size_t &warn_level_tabs_found_in_verbatim_string_literals()
 {
    return(cpd.settings[UO_warn_level_tabs_found_in_verbatim_string_literals].u);
 }
+
 } // namespace option
+
 } // namespace uncrustify

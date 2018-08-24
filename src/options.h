@@ -14,8 +14,10 @@
 
 namespace uncrustify
 {
+
 namespace options
 {
+
 lineends_e &newlines();
 size_t &input_tab_size();
 size_t &output_tab_size();
@@ -670,7 +672,9 @@ bool &use_indent_continue_only_once();
 bool &indent_cpp_lambda_only_once();
 bool &use_options_overriding_for_qt_macros();
 size_t &warn_level_tabs_found_in_verbatim_string_literals();
+
 } // namespace options
+
 } // namespace uncrustify
 
 #endif /* OPTIONS_H_INCLUDED */
