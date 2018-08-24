@@ -1430,6 +1430,13 @@ void register_options(void)
                   "0 = No change.");
    unc_add_option("nl_property_brace", UO_nl_property_brace, AT_IARF,
                   "Add or remove newline between C# property and the '{'.");
+   unc_add_option("nl_inside_namespace", UO_nl_inside_namespace, AT_UNUM,
+                  "The number of newlines after '{' of a namespace. This also "
+                  "adds newlines\nbefore the matching '}'.\n\n"
+                  "0 = Apply eat_blanks_after_open_brace or "
+                  "eat_blanks_before_close_brace if\n    applicable, otherwise "
+                  "no change.\n\nOverrides eat_blanks_after_open_brace "
+                  "and eat_blanks_before_close_brace.");
    unc_add_option("eat_blanks_after_open_brace", UO_eat_blanks_after_open_brace, AT_BOOL,
                   "Whether to remove blank lines after '{'.");
    unc_add_option("eat_blanks_before_close_brace", UO_eat_blanks_before_close_brace, AT_BOOL,

@@ -507,6 +507,7 @@ size_t &nl_after_try_catch_finally();
 size_t &nl_around_cs_property();
 size_t &nl_between_get_set();
 iarf_e &nl_property_brace();
+size_t &nl_inside_namespace();
 bool &eat_blanks_after_open_brace();
 bool &eat_blanks_before_close_brace();
 size_t &nl_remove_extra_newlines();

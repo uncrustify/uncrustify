@@ -2989,6 +2989,12 @@ iarf_e &nl_property_brace()
 }
 
 
+size_t &nl_inside_namespace()
+{
+   return(cpd.settings[UO_nl_inside_namespace].u);
+}
+
+
 bool &eat_blanks_after_open_brace()
 {
    return(cpd.settings[UO_eat_blanks_after_open_brace].b);

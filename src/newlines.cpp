@@ -50,6 +50,8 @@ static void mark_change(const char *func, size_t line);
  *  - if nl_squeeze_ifdef and a preproc is after the newline.
  *  - if eat_blanks_before_close_brace and the next is '}'
  *  - if eat_blanks_after_open_brace and the prev is '{'
+ *    - unless the brace belongs to a namespace
+ *      and nl_inside_namespace is non-zero
  */
 static bool can_increase_nl(chunk_t *nl);
 
@@ -321,20 +323,36 @@ static bool can_increase_nl(chunk_t *nl)
       }
    }
 
-   if (  options::eat_blanks_before_close_brace()
-      && chunk_is_token(next, CT_BRACE_CLOSE))
+   if (chunk_is_token(next, CT_BRACE_CLOSE))
    {
-      LOG_FMT(LBLANKD, "%s(%d): eat_blanks_before_close_brace %zu\n",
-              __func__, __LINE__, nl->orig_line);
-      return(false);
+      if (options::nl_inside_namespace() && next->parent_type == CT_NAMESPACE)
+      {
+         LOG_FMT(LBLANKD, "%s(%d): nl_inside_namespace %zu\n",
+                 __func__, __LINE__, nl->orig_line);
+         return(true);
+      }
+      if (options::eat_blanks_before_close_brace())
+      {
+         LOG_FMT(LBLANKD, "%s(%d): eat_blanks_before_close_brace %zu\n",
+                 __func__, __LINE__, nl->orig_line);
+         return(false);
+      }
    }
 
-   if (  options::eat_blanks_after_open_brace()
-      && chunk_is_token(prev, CT_BRACE_OPEN))
+   if (chunk_is_token(prev, CT_BRACE_OPEN))
    {
-      LOG_FMT(LBLANKD, "%s(%d): eat_blanks_after_open_brace %zu\n",
-              __func__, __LINE__, nl->orig_line);
-      return(false);
+      if (options::nl_inside_namespace() && prev->parent_type == CT_NAMESPACE)
+      {
+         LOG_FMT(LBLANKD, "%s(%d): nl_inside_namespace %zu\n",
+                 __func__, __LINE__, nl->orig_line);
+         return(true);
+      }
+      if (options::eat_blanks_after_open_brace())
+      {
+         LOG_FMT(LBLANKD, "%s(%d): eat_blanks_after_open_brace %zu\n",
+                 __func__, __LINE__, nl->orig_line);
+         return(false);
+      }
    }
 
    if (!pcmt && (options::nl_start_of_file() != IARF_IGNORE))
@@ -4579,6 +4597,17 @@ void do_blank_lines(void)
          {
             blank_line_set(pc, UO_nl_around_cs_property);
          }
+      }
+
+      // Change blanks inside namespace braces
+      if (  (options::nl_inside_namespace() != 0)
+         && (options::nl_inside_namespace() != pc->nl_count)
+         && (  (  chunk_is_token(prev, CT_BRACE_OPEN)
+               && prev->parent_type == CT_NAMESPACE)
+            || (  chunk_is_token(next, CT_BRACE_CLOSE)
+               && next->parent_type == CT_NAMESPACE)))
+      {
+         blank_line_set(pc, UO_nl_inside_namespace);
       }
 
       if (line_added && pc->nl_count > 1)
