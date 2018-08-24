@@ -54,7 +54,10 @@ if(ENABLE_SANITIZER)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O1 -fno-omit-frame-pointer -fsanitize=${ENABLE_SANITIZER}")
 endif()
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(
+  ${PROJECT_BINARY_DIR}/src
+  ${PROJECT_BINARY_DIR}
+)
 
 #
 # Determine config
@@ -166,16 +169,31 @@ add_custom_command(
   COMMENT "Generating token_names.h"
 )
 
-#
-# Generate punctuator_table.h
-#
-add_custom_command(
-  OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/punctuator_table.h"
-  COMMAND ${PYTHON_EXECUTABLE}
-    "${PROJECT_SOURCE_DIR}/scripts/punc.py"
-    "${CMAKE_CURRENT_BINARY_DIR}/punctuator_table.h"
-  MAIN_DEPENDENCY src/symbols_table.h
-  COMMENT "Generating punctuator_table.h"
+# Set up commands for generated source files
+function(py_gen OUTPUT SCRIPT INPUT)
+  set(out "${PROJECT_BINARY_DIR}/src/${OUTPUT}")
+  set(deps "${PROJECT_SOURCE_DIR}/src/${INPUT}")
+  get_filename_component(outdir "${out}" DIRECTORY)
+  foreach(arg IN LISTS ARGN)
+    list(APPEND deps "${PROJECT_SOURCE_DIR}/src/${arg}")
+  endforeach()
+
+  add_custom_command(
+    OUTPUT "${out}"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${outdir}"
+    COMMAND ${PYTHON_EXECUTABLE}
+      "${PROJECT_SOURCE_DIR}/scripts/${SCRIPT}"
+      "${out}"
+      ${deps}
+    DEPENDS ${deps} "${PROJECT_SOURCE_DIR}/scripts/${SCRIPT}"
+    MAIN_DEPENDENCY src/${INPUT}
+    COMMENT "Generating ${OUTPUT}"
+  )
+endfunction()
+
+py_gen(punctuator_table.h
+  make_punctuator_table.py
+  symbols_table.h
 )
 
 #
