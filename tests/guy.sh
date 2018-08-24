@@ -3,8 +3,7 @@
 # runs extra tests
 #
 # guy maurel
-#
-cd build
+# 2018-08-24
 #
 mkdir -p extras
-./uncrustify -c ../tests/config/ben_001.cfg -f ../tests/input/cpp/cout.cpp -p extras/out.cpp
+../build/uncrustify -c config/ben_001.cfg -f input/cpp/cout.cpp -p extras/out.cpp
