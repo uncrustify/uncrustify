@@ -86,8 +86,6 @@ if (_build_type MATCHES "release|relwithdebinfo|minsizerel")
 endif()
 
 add_test(NAME sanity COMMAND uncrustify --help)
+add_test(NAME PWD COMMAND pwd)
 
-add_test(
-   NAME guy
-   COMMAND ../tests/guy.sh
-)
+#add_test( NAME guy COMMAND ../tests/guy.sh)
