@@ -89,5 +89,5 @@ add_test(NAME sanity COMMAND uncrustify --help)
 
 add_test(
    NAME guy
-   COMMAND guy.sh
+   COMMAND ../tests/guy.sh
 )
