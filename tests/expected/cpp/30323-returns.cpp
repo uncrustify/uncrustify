@@ -1,3 +1,9 @@
+#define case1(x)    { return x; }
+#define case2(x)    { return(x); }
+#define case3(x)    { return  (x); }
+#define case4(x)    { return {x}; }
+#define case5(x)    { return {x}; }
+
 void foo(int x)
 {
 	switch (x)
