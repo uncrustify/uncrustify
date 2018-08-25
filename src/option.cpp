@@ -241,7 +241,7 @@ static void unc_add_option(const char *name, uncrustify_options id, argtype_e ty
       fprintf(stderr, "FATAL: %s(%d): Illegal option type %d for '%s'\n", __func__, __LINE__, type, name);
       log_flush(true);
       exit(EX_SOFTWARE);
-   }
+   } // switch
 
    option_name_map[id] = value;
 } // unc_add_option
