@@ -1,9 +1,9 @@
 Newline loop start: 
-newline_add_between(): ';'[SEMICOLON] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
-newline_add_between(): '{'[BRACE_OPEN] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
-newline_add_between(): '{'[BRACE_OPEN] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
-newline_add_between(): '{'[BRACE_OPEN] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
-newline_add_between(): '{'[BRACE_OPEN] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
+newline_add_between(): ';'[SEMICOLON] line : and '}' line : : [CallStack]
+newline_add_between(): '{'[BRACE_OPEN] line : and '}' line : : [CallStack]
+newline_add_between(): '{'[BRACE_OPEN] line : and '}' line : : [CallStack]
+newline_add_between(): '{'[BRACE_OPEN] line : and '}' line : : [CallStack]
+newline_add_between(): '{'[BRACE_OPEN] line : and '}' line : : [CallStack]
 newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'struct', type is STRUCT
 newlines_insert_blank_lines(): ignore it
 newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'TelegramIndex', type is TYPE

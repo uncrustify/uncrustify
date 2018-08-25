@@ -39,6 +39,10 @@ else:
     from os import EX_OK, EX_USAGE, EX_SOFTWARE
     NULL_DEVICE = '/dev/null'
 
+RE_CALLSTACK = r'\[CallStack:( \w+:(, \w+:)*|-DEBUG NOT SET-)?\]'
+RE_DO_SPACE = (r'\n\ndo_space\(\): WARNING: unrecognize do_space:'
+               r'\n[^\n]+\n[^\n]+\n')
+
 
 def eprint(*args, **kwargs):
     """
@@ -395,59 +399,6 @@ def clear_dir(path):
     mkdir(path)
 
 
-def check_build_type(build_types, cmake_cache_path):
-    """
-    checks if a cmake build was of a certain single-configuration type
-
-
-    Parameters:
-    ----------------------------------------------------------------------------
-    :param build_types: list/tuple
-        list of acceptable build types
-
-    :param cmake_cache_path: string
-        the path of the to be checked CMakeCache.txt file
-
-
-    :return: bool
-    ----------------------------------------------------------------------------
-    True if the right build type was used, False if not
-
-    """
-
-    if not isfile(cmake_cache_path):
-        eprint("cmake_cache_path is not a file: %s" % cmake_cache_path)
-        return False
-
-    cache_values = {}
-    with open(cmake_cache_path, encoding="utf-8", newline="\n") as f:
-        pat = re.compile("^(\\w+):\w+=(.*)$")
-        for l in f:
-            m = pat.match(l)
-            if m:
-                cache_values[m.group(1).upper()] = m.group(2).strip()
-
-    if "CMAKE_CONFIGURATION_TYPES" in cache_values:
-        # If a multi-config generator is in use, we have no way of determining
-        # the build type just from the cache; instead, guess True and rely on
-        # the list of possible locations of uncrustify including only release
-        # configurations for configuration-specific locations
-        if len(cache_values["CMAKE_CONFIGURATION_TYPES"]):
-            return True
-
-    if not "CMAKE_BUILD_TYPE" in cache_values:
-        eprint("unable to determine build type from %s" % cmake_cache_path)
-        return False
-
-    build_type = cache_values["CMAKE_BUILD_TYPE"]
-    if not build_type.lower() in [x.lower() for x in build_types]:
-        eprint("CMAKE_BUILD_TYPE must be one of %r" % build_types)
-        eprint("actual CMAKE_BUILD_TYPE is %s" % build_type)
-        return False
-
-    return True
-
-
 def reg_replace(pattern, replacement):
     """
     returns a generated lambda function that applies a regex string replacement
@@ -521,16 +472,16 @@ def main(args):
     parser.add_argument('--build',
                         default=s_path_join(sc_dir, '../../build'),
                         help='specify location of the build directory')
-    parser.add_argument('--cache',
-                        help='specify location of CMake cache')
 
     parsed_args = parser.parse_args()
 
-    # find the uncrustify binary (keep Debug dir excluded)
+    # find the uncrustify binary
     bin_found = False
     uncr_bin = ''
     bd_dir = parsed_args.build
     bin_paths = [s_path_join(bd_dir, 'uncrustify'),
+                 s_path_join(bd_dir, 'Debug/uncrustify'),
+                 s_path_join(bd_dir, 'Debug/uncrustify.exe'),
                  s_path_join(bd_dir, 'Release/uncrustify'),
                  s_path_join(bd_dir, 'Release/uncrustify.exe'),
                  s_path_join(bd_dir, 'RelWithDebInfo/uncrustify'),
@@ -546,14 +497,6 @@ def main(args):
             break
     if not bin_found:
         eprint("No Uncrustify binary found")
-        sys_exit(EX_USAGE)
-
-    '''
-    Check if the binary was build as Release-type
-    '''
-    if not check_build_type(
-            ['Release', 'RelWithDebInfo', 'MinSizeRel'],
-            parsed_args.cache or s_path_join(bd_dir, 'CMakeCache.txt')):
         sys_exit(EX_USAGE)
 
     clear_dir(s_path_join(sc_dir, "./results"))
@@ -671,7 +614,9 @@ def main(args):
                           '-f', s_path_join(sc_dir, 'input/testSrc.cpp')],
                 err_expected_path=s_path_join(sc_dir, 'output/%s.txt' % L),
                 err_result_path=s_path_join(sc_dir, 'results/%s.txt' % L),
-                err_result_manip=reg_replace(r'[0-9]', '')):
+                err_result_manip=[reg_replace(r'[0-9]', ''),
+                                  reg_replace(RE_CALLSTACK, '[CallStack]'),
+                                  reg_replace(RE_DO_SPACE, '')]):
             return_flag = False
 
     # Test logger buffer overflow
