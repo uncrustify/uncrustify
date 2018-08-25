@@ -2539,7 +2539,7 @@ static void process_returns(void)
    pc = chunk_get_head();
    while (pc != nullptr)
    {
-      if (pc->type != CT_RETURN || (pc->flags & PCF_IN_PREPROC))
+      if (pc->type != CT_RETURN)
       {
          pc = chunk_get_next_type(pc, CT_RETURN, -1);
          continue;
@@ -2560,13 +2560,15 @@ static chunk_t *process_return(chunk_t *pc)
    chunk_t chunk;
 
    // grab next and bail if it is a semicolon
-   next = chunk_get_next_ncnl(pc);
-   if (next == nullptr || chunk_is_semicolon(next))
+   next = chunk_ppa_get_next_ncnl(pc);
+   if (  next == nullptr || chunk_is_semicolon(next)
+      || chunk_is_token(next, CT_NEWLINE))
    {
       return(next);
    }
 
-   if (options::nl_return_expr() != IARF_IGNORE)
+   if (  options::nl_return_expr() != IARF_IGNORE
+      && !(pc->flags & PCF_IN_PREPROC))
    {
       newline_iarf(pc, options::nl_return_expr());
    }
@@ -2579,12 +2581,12 @@ static chunk_t *process_return(chunk_t *pc)
       {
          return(nullptr);
       }
-      semi = chunk_get_next_ncnl(cpar);
+      semi = chunk_ppa_get_next_ncnl(cpar);
       if (semi == nullptr)
       {
          return(nullptr);
       }
-      if (chunk_is_semicolon(semi))
+      if (chunk_is_token(semi, CT_NEWLINE) || chunk_is_semicolon(semi))
       {
          if (options::mod_paren_on_return() == IARF_REMOVE)
          {
@@ -2645,15 +2647,39 @@ static chunk_t *process_return(chunk_t *pc)
 
    // find the next semicolon on the same level
    semi = next;
-   while ((semi = chunk_get_next(semi)) != nullptr)
+   if (pc->flags & PCF_IN_PREPROC)
    {
-      if (  (chunk_is_semicolon(semi) && pc->level == semi->level)
-         || semi->level < pc->level)
+      while ((semi = semi->next) != nullptr)
       {
-         break;
+         if (!(semi->flags & PCF_IN_PREPROC))
+         {
+            break;
+         }
+         if (semi->level < pc->level)
+         {
+            return(semi);
+         }
+         if (chunk_is_semicolon(semi) && pc->level == semi->level)
+         {
+            break;
+         }
       }
    }
-   if (chunk_is_semicolon(semi) && pc->level == semi->level)
+   else
+   {
+      while ((semi = chunk_get_next(semi)) != nullptr)
+      {
+         if (semi->level < pc->level)
+         {
+            return(semi);
+         }
+         if (chunk_is_semicolon(semi) && pc->level == semi->level)
+         {
+            break;
+         }
+      }
+   }
+   if (semi)
    {
       // add the parenthesis
       chunk.type        = CT_PAREN_OPEN;
