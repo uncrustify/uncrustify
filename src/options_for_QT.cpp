@@ -20,6 +20,7 @@ bool   restoreValues        = false;
 
 namespace
 {
+
 //-----------------------------------------------------------------------------
 class temporary_iarf_option
 {
@@ -81,6 +82,7 @@ temporary_iarf_option for_qt_options[] = {
 // connect( a, SIGNAL(b(c< d >)), this, SLOT(e(f< g >)) );
    { &options::sp_inside_angle            },
 };
+
 } // anonymous namespace
 
 

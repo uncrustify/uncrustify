@@ -14,8 +14,10 @@
 
 namespace uncrustify
 {
+
 namespace options
 {
+
 lineends_e &newlines();
 size_t &input_tab_size();
 size_t &output_tab_size();
@@ -507,6 +509,7 @@ size_t &nl_after_try_catch_finally();
 size_t &nl_around_cs_property();
 size_t &nl_between_get_set();
 iarf_e &nl_property_brace();
+size_t &nl_inside_namespace();
 bool &eat_blanks_after_open_brace();
 bool &eat_blanks_before_close_brace();
 size_t &nl_remove_extra_newlines();
@@ -669,7 +672,9 @@ bool &use_indent_continue_only_once();
 bool &indent_cpp_lambda_only_once();
 bool &use_options_overriding_for_qt_macros();
 size_t &warn_level_tabs_found_in_verbatim_string_literals();
+
 } // namespace options
+
 } // namespace uncrustify
 
 #endif /* OPTIONS_H_INCLUDED */

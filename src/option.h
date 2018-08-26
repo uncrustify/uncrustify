@@ -698,6 +698,7 @@ enum uncrustify_options
    UO_nl_between_get_set,              // The number of newlines between the get/set/add/remove handlers in C#
                                        // (0 = No change)
    UO_nl_property_brace,               // Add or remove newline between C# property and the '{'
+   UO_nl_inside_namespace,             // blank lines inside namespace braces
    UO_eat_blanks_after_open_brace,     // remove blank lines after {
    UO_eat_blanks_before_close_brace,   // remove blank lines before }
    UO_nl_remove_extra_newlines,        // How aggressively to remove extra newlines not in preproc

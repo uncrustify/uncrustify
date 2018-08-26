@@ -33,8 +33,10 @@
 
 namespace uncrustify
 {
+
 namespace options
 {
+
 lineends_e &newlines()
 {
    return(cpd.settings[UO_newlines].le);
@@ -2989,6 +2991,12 @@ iarf_e &nl_property_brace()
 }
 
 
+size_t &nl_inside_namespace()
+{
+   return(cpd.settings[UO_nl_inside_namespace].u);
+}
+
+
 bool &eat_blanks_after_open_brace()
 {
    return(cpd.settings[UO_eat_blanks_after_open_brace].b);
@@ -3991,5 +3999,7 @@ size_t &warn_level_tabs_found_in_verbatim_string_literals()
 {
    return(cpd.settings[UO_warn_level_tabs_found_in_verbatim_string_literals].u);
 }
+
 } // namespace option
+
 } // namespace uncrustify
