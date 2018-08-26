@@ -190,7 +190,7 @@ enum c_token_t
    CT_ANGLE_OPEN,       // template<T*>
    CT_ANGLE_CLOSE,
 
-   CT_SPAREN_OPEN,      // 'special' paren after if/for/switch/while/synchronized
+   CT_SPAREN_OPEN,      // 'special' paren after if/for/switch/while/synchronized/catch
    CT_SPAREN_CLOSE,
 
    CT_FPAREN_OPEN,      // 'function' paren after fcn/macro fcn
