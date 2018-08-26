@@ -595,7 +595,7 @@ def main(args):
             uncr_bin,
             parsed_args,
             args_arr=['-c', s_path_join(sc_dir, 'config/mini_nd.cfg'),
-                      '-f', s_path_join(sc_dir, 'input/testSrc.cpp'),
+                      '-f', s_path_join(sc_dir, 'input/testSrcP.cpp'),
                       '-p', s_path_join(sc_dir, 'results/p.txt')],
             gen_expected_path=s_path_join(sc_dir, 'output/p.txt'),
             gen_result_path=s_path_join(sc_dir, 'results/p.txt'),
