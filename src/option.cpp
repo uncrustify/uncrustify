@@ -133,6 +133,7 @@ void unc_begin_group(uncrustify_groups id, const char *short_desc,
    checkGroupNumber++;
    if (checkGroupNumber != id)
    {
+      // coveralls will complain
       fprintf(stderr, "FATAL: The order of 'groups for options' is not the same:\n");
       fprintf(stderr,
               "   Number in the options.cpp file = %d\n"
@@ -166,6 +167,7 @@ static void unc_add_option(const char *name, uncrustify_options id, argtype_e ty
    checkOptionNumber++;
    if (checkOptionNumber != id)
    {
+      // coveralls will complain
       fprintf(stderr, "FATAL: The order of 'options' is not the same:\n");
       fprintf(stderr,
               "   Number in the options.cpp file = %d\n"
@@ -179,6 +181,7 @@ static void unc_add_option(const char *name, uncrustify_options id, argtype_e ty
    int lengthOfTheOption = strlen(name);
    if (lengthOfTheOption > OptionMaxLength)
    {
+      // coveralls will complain
       fprintf(stderr, "FATAL: length of the option name (%s) is too big (%d)\n", name, lengthOfTheOption);
       fprintf(stderr, "FATAL: the maximal length of an option name is %d characters\n", OptionMaxLength);
       log_flush(true);
@@ -234,10 +237,11 @@ static void unc_add_option(const char *name, uncrustify_options id, argtype_e ty
       break;
 
    default:
+      // coveralls will complain
       fprintf(stderr, "FATAL: %s(%d): Illegal option type %d for '%s'\n", __func__, __LINE__, type, name);
       log_flush(true);
       exit(EX_SOFTWARE);
-   }
+   } // switch
 
    option_name_map[id] = value;
 } // unc_add_option
@@ -2629,6 +2633,7 @@ void set_option_defaults(void)
          size_t default_value = cpd.defaults[id.first].u;
          if (default_value > max_value)
          {
+            // coveralls will complain
             fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
             fprintf(stderr, "The default value '%zu' is more than the max value '%zu'.\n",
                     default_value, max_value);
@@ -2637,6 +2642,7 @@ void set_option_defaults(void)
          }
          if (min_value > 0 && default_value < min_value)
          {
+            // coveralls will complain
             fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
             fprintf(stderr, "The default value '%zu' is less than the min value '%zu'.\n",
                     default_value, min_value);
@@ -2652,6 +2658,7 @@ void set_option_defaults(void)
          int default_value = cpd.defaults[id.first].n;
          if (default_value > max_value)
          {
+            // coveralls will complain
             fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
             fprintf(stderr, "The default value '%d' is more than the max value '%d'.\n",
                     default_value, max_value);
@@ -2660,6 +2667,7 @@ void set_option_defaults(void)
          }
          if (default_value < min_value)
          {
+            // coveralls will complain
             fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
             fprintf(stderr, "The default value '%d' is less than the min value '%d'.\n",
                     default_value, min_value);
@@ -2707,6 +2715,7 @@ string argtype_to_string(argtype_e argtype)
       return("false/true/ignore");
 
    default:
+      // coveralls will complain
       fprintf(stderr, "%s(%d): Unknown argtype '%d'\n", __func__, __LINE__, argtype);
       log_flush(true);
       exit(EX_SOFTWARE);
@@ -2743,6 +2752,7 @@ const char *get_argtype_name(argtype_e argtype)
       return("AT_TFI");
 
    default:
+      // coveralls will complain
       fprintf(stderr, "%s(%d): Unknown argtype '%d'\n", __func__, __LINE__, argtype);
       log_flush(true);
       exit(EX_SOFTWARE);
@@ -2775,6 +2785,7 @@ string tfi_to_string(TrueFalseIgnore_e val)
       return("ignore");
 
    default:
+      // coveralls will complain
       fprintf(stderr, "%s(%d): Unknown argval '%d'\n", __func__, __LINE__, val);
       log_flush(true);
       return("");
@@ -2799,6 +2810,7 @@ string argval_to_string(iarf_e argval)
       return("force");
 
    default:
+      // coveralls will complain
       fprintf(stderr, "argval_to_string: Unknown argval '%d'\n", argval);
       log_flush(true);
       return("");
@@ -2823,6 +2835,7 @@ string lineends_to_string(lineends_e linends)
       return("auto");
 
    default:
+      // coveralls will complain
       fprintf(stderr, "Unknown lineends '%d'\n", linends);
       log_flush(true);
       return("");
@@ -2859,6 +2872,7 @@ string tokenpos_to_string(tokenpos_e tokenpos)
       return("trail_force");
 
    default:
+      // coveralls will complain
       fprintf(stderr, "Unknown tokenpos '%d'\n", tokenpos);
       log_flush(true);
       return("");
@@ -2895,6 +2909,7 @@ string op_val_to_string(argtype_e argtype, op_val_t op_val)
       return(tfi_to_string(op_val.tfi));
 
    default:
+      // coveralls will complain
       fprintf(stderr, "%s(%d): Unknown argtype '%d'\n", __func__, __LINE__, argtype);
       log_flush(true);
       exit(EX_SOFTWARE);
