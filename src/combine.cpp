@@ -2687,6 +2687,7 @@ static chunk_t *process_return(chunk_t *pc)
       chunk.level       = pc->level;
       chunk.brace_level = pc->brace_level;
       chunk.orig_line   = pc->orig_line;
+      chunk.orig_col    = next->orig_col - 1;
       chunk.parent_type = CT_RETURN;
       chunk.flags       = pc->flags & PCF_COPY_FLAGS;
       chunk_add_before(&chunk, next);
@@ -2694,6 +2695,7 @@ static chunk_t *process_return(chunk_t *pc)
       chunk.type      = CT_PAREN_CLOSE;
       chunk.str       = ")";
       chunk.orig_line = semi->orig_line;
+      chunk.orig_col  = semi->orig_col - 1;
       cpar            = chunk_add_before(&chunk, semi);
 
       LOG_FMT(LRETURN, "%s(%d): added parens on orig_line %zu\n",
