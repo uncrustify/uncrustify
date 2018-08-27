@@ -11,6 +11,24 @@
 #ifndef OPTIONS_H_INCLUDED
 #define OPTIONS_H_INCLUDED
 
+/* NOTE:
+ * This file is processed by make_options.py, and must conform to a particular
+ * format. Option groups are marked by '//begin ' (in upper case; this example
+ * is lower case to prevent being considered a region marker for code folding)
+ * followed by the group description. Options consist of two lines of
+ * declaration preceded by one or more lines of C++ comments. The comments form
+ * the option description and are taken verbatim, aside from stripping the
+ * leading '// '. Only comments immediately preceding an option declaration,
+ * with no blank lines, are taken as part of the description, so a blank line
+ * may be used to separate notations from a description.
+ *
+ * An option declaration is 'extern TYPE\nNAME;', optionally followed by
+ * ' // = VALUE' if the option has a default value that is different from the
+ * default-constructed value type of the option. The 'VALUE' must be valid C++
+ * code, and is taken verbatim as an argument when creating the option's
+ * instantiation. Note also that the line break, as shown, is required.
+ */
+
 #include "option.h"
 #include "option_enum.h"
 
