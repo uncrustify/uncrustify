@@ -439,14 +439,10 @@ struct cp_data_t
 
    bool                    warned_unable_string_replace_tab_chars;
 
-   op_val_t                settings[UO_option_count]; //! array with all uncrustify option settings
-
    std::vector<ParseFrame> frames;
 //   size_t                  frame_count;
    int                     pp_level; // TODO: can this ever be -1?
 
-   // the default values for settings
-   op_val_t                defaults[UO_option_count];
    const char              *phase_name;
    const char              *dumped_file;
 };
