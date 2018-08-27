@@ -5,11 +5,18 @@
  * @author  Ben Gardner
  * @author  Guy Maurel since version 0.62 for uncrustify4Qt
  *          October 2015, 2016
+ * @author  Matthew Woehlke since version 0.67
  * @license GPL v2+
  */
 #include "option.h"
 
 #include "uncrustify_types.h"
+
+#include <unordered_map>
+
+#include <cstring>
+
+#if 0
 #include "args.h"
 #include "prototypes.h"
 #include "uncrustify_version.h"
@@ -24,11 +31,11 @@
 #include <cstdlib>
 #include <cerrno>
 #include "unc_ctype.h"
+#endif // TODO
 
 
-using namespace std;
-using namespace uncrustify;
-
+namespace uncrustify
+{
 
 static const char *DOC_TEXT_END = R"___(
 # Meaning of the settings:
@@ -86,14 +93,10 @@ static const char *DOC_TEXT_END = R"___(
 )___";
 
 
-map<uncrustify_options, option_map_value> option_name_map;
-map<uncrustify_groups, group_map_value>   group_map;
-static uncrustify_groups                  current_group; //defines the currently active options group
-#ifdef DEBUG
-static int                                checkGroupNumber  = -1;
-static int                                checkOptionNumber = -1;
-#endif // DEBUG
+std::vector<OptionGroup>                         option_groups;
+std::unordered_map<std::string, GenericOption *> option_map;
 
+#if 0 // TODO
 // print the name of the configuration file only once
 bool headOfMessagePrinted = false;
 
@@ -104,146 +107,6 @@ static bool match_text(const char *str1, const char *str2);
 
 //! Convert the value string to the correct type in dest.
 static void convert_value(const option_map_value *entry, const char *val, op_val_t *dest);
-
-
-/**
- * @brief adds an uncrustify option to the global option list
- *
- * The option group is taken from the global 'current_group' variable
- *
- * @param name        name of the option, maximal 60 characters
- * @param id          ENUM value of the option
- * @param type        kind of option r.g. AT_IARF, AT_NUM, etc.
- * @param short_desc  short human readable description
- * @param long_desc   long  human readable description
- * @param min_val     minimal value, only used for integer values
- * @param max_val     maximal value, only used for integer values
- */
-static void unc_add_option(const char *name, uncrustify_options id, option_type_e type, const char *short_desc = nullptr, const char *long_desc = nullptr, int min_val = 0, int max_val = 16);
-
-
-void unc_begin_group(uncrustify_groups id, const char *short_desc,
-                     const char *long_desc)
-{
-#ifdef DEBUG
-   /*
-    * The order of the calls of 'unc_begin_group' in the function
-    * 'register_options' is the master over all.
-    * This order must be the same in the declaration of the enum uncrustify_groups
-    * This will be checked here
-    */
-   checkGroupNumber++;
-   if (checkGroupNumber != id)
-   {
-      // coveralls will complain
-      fprintf(stderr, "FATAL: The order of 'groups for options' is not the same:\n");
-      fprintf(stderr,
-              "   Number in the options.cpp file = %d\n"
-              "   Number in the options.h   file = %d\n"
-              "   for the group '%s'\n", id, checkGroupNumber, short_desc);
-      log_flush(true);
-      exit(EX_SOFTWARE);
-   }
-#endif // DEBUG
-   current_group = id;
-
-   group_map_value value;
-
-   value.id         = id;
-   value.short_desc = short_desc;
-   value.long_desc  = long_desc;
-
-   group_map[id] = value;
-}
-
-
-static void unc_add_option(const char *name, uncrustify_options id,
-                           option_type_e type, const char *short_desc,
-                           const char *long_desc, int min_val, int max_val)
-{
-#ifdef DEBUG
-   // The order of the calls of 'unc_add_option' in the function 'register_options'
-   // is the master over all.
-   // This order must be the same in the declaration of the enum uncrustify_options
-   // This will be checked here
-   checkOptionNumber++;
-   if (checkOptionNumber != id)
-   {
-      // coveralls will complain
-      fprintf(stderr, "FATAL: The order of 'options' is not the same:\n");
-      fprintf(stderr,
-              "   Number in the options.cpp file = %d\n"
-              "   Number in the options.h   file = %d\n"
-              "   for the option '%s'\n", id, checkOptionNumber, name);
-      log_flush(true);
-      exit(EX_SOFTWARE);
-   }
-#endif // DEBUG
-#define OptionMaxLength    60
-   int lengthOfTheOption = strlen(name);
-   if (lengthOfTheOption > OptionMaxLength)
-   {
-      // coveralls will complain
-      fprintf(stderr, "FATAL: length of the option name (%s) is too big (%d)\n", name, lengthOfTheOption);
-      fprintf(stderr, "FATAL: the maximal length of an option name is %d characters\n", OptionMaxLength);
-      log_flush(true);
-      exit(EX_SOFTWARE);
-   }
-   group_map[current_group].options.push_back(id);
-
-   option_map_value value;
-
-   value.id         = id;
-   value.group_id   = current_group;
-   value.type       = type;
-   value.name       = name;
-   value.short_desc = short_desc;
-   value.long_desc  = long_desc;
-   value.min_val    = 0;
-
-   // Calculate the max/min values
-   switch (type)
-   {
-   case AT_BOOL:
-      value.max_val = 1;
-      break;
-
-   case AT_IARF:
-      value.max_val = 3;
-      break;
-
-   case AT_NUM:
-      value.min_val = min_val;
-      value.max_val = max_val;
-      break;
-
-   case AT_UNUM:
-      value.min_val = min_val;
-      value.max_val = max_val;
-      break;
-
-   case AT_LINE:
-      value.max_val = 3;
-      break;
-
-   case AT_POS:
-      value.max_val = 2;
-      break;
-
-   case AT_STRING:
-      value.max_val = 0;
-      break;
-
-   default:
-      // coveralls will complain
-      fprintf(stderr, "FATAL: %s(%d): Illegal option type %d for '%s'\n",
-              __func__, __LINE__, static_cast<int>(type), name);
-      log_flush(true);
-      exit(EX_SOFTWARE);
-   }
-
-   option_name_map[id] = value;
-} // unc_add_option
 
 
 static bool match_text(const char *str1, const char *str2)
@@ -934,111 +797,30 @@ int save_option_file(FILE *pfile, bool withDoc)
 {
    return(save_option_file_kernel(pfile, withDoc, false));
 }
+#endif
 
 
-void set_option_defaults(void)
+//-----------------------------------------------------------------------------
+void begin_option_group(const char *description)
 {
-#ifdef DEBUG
-   // test all the default values if they are in the allowed interval
-   for (const auto &id : option_name_map)
-   {
-      option_map_value value = id.second;
-      if (value.type == AT_UNUM)
-      {
-         size_t min_value     = value.min_val;
-         size_t max_value     = value.max_val;
-         size_t default_value = cpd.defaults[id.first].u;
-         if (default_value > max_value)
-         {
-            // coveralls will complain
-            fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
-            fprintf(stderr, "The default value '%zu' is more than the max value '%zu'.\n",
-                    default_value, max_value);
-            log_flush(true);
-            exit(EX_SOFTWARE);
-         }
-         if (min_value > 0 && default_value < min_value)
-         {
-            // coveralls will complain
-            fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
-            fprintf(stderr, "The default value '%zu' is less than the min value '%zu'.\n",
-                    default_value, min_value);
-            log_flush(true);
-            exit(EX_SOFTWARE);
-         }
-      }
+   auto g = OptionGroup{ description, {} };
 
-      if (value.type == AT_NUM)
-      {
-         int min_value     = value.min_val;
-         int max_value     = value.max_val;
-         int default_value = cpd.defaults[id.first].n;
-         if (default_value > max_value)
-         {
-            // coveralls will complain
-            fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
-            fprintf(stderr, "The default value '%d' is more than the max value '%d'.\n",
-                    default_value, max_value);
-            log_flush(true);
-            exit(EX_SOFTWARE);
-         }
-         if (default_value < min_value)
-         {
-            // coveralls will complain
-            fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
-            fprintf(stderr, "The default value '%d' is less than the min value '%d'.\n",
-                    default_value, min_value);
-            log_flush(true);
-            exit(EX_SOFTWARE);
-         }
-      }
-   }
-#endif // DEBUG
-
-   // copy all the default values to settings array
-   for (unsigned int count = 0; count < UO_option_count; count++)
-   {
-      cpd.settings[count] = cpd.defaults[count];
-   }
-} // set_option_defaults
-
-
-string argtype_to_string(option_type_e argtype)
-{
-   switch (argtype)
-   {
-   case AT_BOOL:
-      return("false/true");
-
-   case AT_IARF:
-      return("ignore/add/remove/force");
-
-   case AT_NUM:
-      return("number");
-
-   case AT_LINE:
-      return("auto/lf/crlf/cr");
-
-   case AT_POS:
-      return("ignore/join/lead/lead_break/lead_force/trail/trail_break/trail_force");
-
-   case AT_STRING:
-      return("string");
-
-   case AT_UNUM:
-      return("unsigned number");
-
-   default:
-      // coveralls will complain
-      fprintf(stderr, "%s(%d): Unknown argtype '%d'\n",
-              __func__, __LINE__, static_cast<int>(argtype));
-      log_flush(true);
-      exit(EX_SOFTWARE);
-   }
+   option_groups.push_back(g);
 }
 
 
-const char *get_argtype_name(option_type_e argtype)
+//-----------------------------------------------------------------------------
+void register_option(GenericOption *option)
+{
+   assert(!option_groups.empty());
+
+   option_groups.back().options.push_back(option);
+   option_map.emplace(option->name(), option);
+}
+
+// TODO template for to_string
+#if 0
+const char *get_argtype_name(argtype_e argtype)
 {
    switch (argtype)
    {
@@ -1207,3 +989,6 @@ string op_val_to_string(option_type_e argtype, op_val_t op_val)
       exit(EX_SOFTWARE);
    }
 }
+#endif
+
+} // namespace uncrustify

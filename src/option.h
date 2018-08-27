@@ -186,62 +186,35 @@ UNC_OPTVAL_ALIAS(iarf_e, ADD, "a");
 UNC_OPTVAL_ALIAS(iarf_e, REMOVE, "r");
 UNC_OPTVAL_ALIAS(iarf_e, FORCE, "f");
 
-} // namespace uncrustify
-
-#ifdef EMSCRIPTEN
-#define group_map_value_options_t    std::vector<uncrustify_options>
-#else
-#define group_map_value_options_t    std::list<uncrustify_options>
-#endif
-
-struct group_map_value
+struct OptionGroup
 {
-   uncrustify_groups         id;
-   const char                *short_desc;
-   const char                *long_desc;
-   group_map_value_options_t options;
+   const char                   *description;
+   std::vector<GenericOption *> options;
 };
-
-struct option_map_value
-{
-   uncrustify_options        id;
-   uncrustify_groups         group_id;
-   uncrustify::option_type_e type;
-   int                       min_val;
-   int                       max_val;
-   const char                *name;
-   const char                *short_desc;
-   const char                *long_desc;
-};
-
-
-const char *get_argtype_name(uncrustify::option_type_e argtype);
-
 
 /**
- * @brief defines a new group of uncrustify options
+ * @brief Defines a new group of uncrustify options.
  *
- * The current group is stored as global variable which
- * will be used whenever a new option is added.
+ * New options are always added to the most recently defined group.
  */
-void unc_begin_group(uncrustify_groups id, const char *short_desc, const char *long_desc = NULL);
+void begin_option_group(const char *description);
 
+/**
+ * @brief Adds an uncrustify option to the global option registry.
+ *
+ * The option is added to the most recently defined option group.
+ */
+void register_option(GenericOption *);
 
-const option_map_value *unc_find_option(const char *name);
+const uncrustify::GenericOption *find_option(const std::string &name);
 
-
-//! Add all uncrustify options to the global option list
+//! Add all uncrustify options to the global option registry
 void register_options(void);
 
-
-/**
- * Sets non-zero settings defaults
- *
- * TODO: select from various sets? - i.e., K&R, GNU, Linux, Ben
- */
-void set_option_defaults(void);
+} // namespace uncrustify
 
 
+#if 0
 /**
  * processes a single line string to extract configuration settings
  * increments cpd.line_number and cpd.error_count, modifies configLine parameter
@@ -294,13 +267,6 @@ const char *get_eol_marker();
  */
 bool is_path_relative(const char *path);
 
-
-const group_map_value *get_group_name(size_t ug);
-
-
-const option_map_value *get_option_name(uncrustify_options uo);
-
-
 /**
  * convert a argument type to a string
  *
@@ -344,11 +310,6 @@ std::string tokenpos_to_string(uncrustify::tokenpos_e tokenpos);
  */
 std::string op_val_to_string(uncrustify::option_type_e argtype, op_val_t op_val);
 
-
-typedef std::map<uncrustify_options, option_map_value>::iterator   option_name_map_it;
-typedef std::map<uncrustify_groups, group_map_value>::iterator     group_map_it;
-typedef group_map_value_options_t::iterator                        option_list_it;
-typedef group_map_value_options_t::const_iterator                  option_list_cit;
-
+#endif
 
 #endif /* OPTION_H_INCLUDED */

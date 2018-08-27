@@ -1,0 +1,27 @@
+##BANNER##
+#include "options.h"
+
+#include "uncrustify_types.h"
+
+namespace uncrustify
+{
+
+//BEGIN declarations of option object instances
+
+namespace options
+{
+
+##DECLARATIONS##
+} // namespace options
+
+//END declarations of option object instances
+
+///////////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------------
+void register_options(void)
+{
+##REGISTRATIONS##
+}
+
+} // namespace uncrustify

@@ -56,6 +56,7 @@ endif()
 
 include_directories(
   ${PROJECT_BINARY_DIR}/src
+  ${PROJECT_SOURCE_DIR}/src
   ${PROJECT_BINARY_DIR}
 )
 
@@ -196,6 +197,12 @@ py_gen(punctuator_table.h
   symbols_table.h
 )
 
+py_gen(options.cpp
+  make_options.py
+  options.h
+  options.cpp.in
+)
+
 #
 # Uncrustify
 #
@@ -222,7 +229,6 @@ set(uncrustify_sources
   src/md5.cpp
   src/newlines.cpp
   src/option.cpp
-  src/options.cpp
   src/options_for_QT.cpp
   src/output.cpp
   src/parens.cpp
@@ -270,6 +276,7 @@ set(uncrustify_headers
   src/unc_ctype.h
   src/unc_text.h
   src/unc_tools.h
+  ${PROJECT_BINARY_DIR}/src/options.cpp
 )
 
 add_executable(uncrustify ${uncrustify_sources} ${uncrustify_headers})
