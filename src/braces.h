@@ -17,7 +17,7 @@ void do_braces(void);
 /**
  * See the preprocessor counterpart:
  *   add_long_preprocessor_conditional_block_comment
- * in defines.cpp
+ * in output.cpp
  */
 void add_long_closebrace_comment(void);
 
