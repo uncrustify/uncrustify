@@ -14,7 +14,7 @@ from __future__ import print_function
 from sys import stderr, argv, exit as sys_exit, version_info as py_version_info
 from os import mkdir, remove, name as os_name
 from os.path import dirname, relpath, isdir, isfile, join as path_join, split as path_split
-from shutil import rmtree
+from shutil import rmtree, copyfile
 from subprocess import Popen, PIPE, STDOUT
 from io import open
 import re
@@ -600,6 +600,21 @@ def main(args):
             gen_expected_path=s_path_join(sc_dir, 'output/p.txt'),
             gen_result_path=s_path_join(sc_dir, 'results/p.txt'),
             gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')):
+        return_flag = False
+
+    #
+    # Test --replace
+    #
+    copyfile("input/backup.h-save", "input/backup.h")
+    if not check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            args_arr=['-c', s_path_join(sc_dir, 'config/replace.cfg'),
+                      '-F', s_path_join(sc_dir, 'input/replace.list'),
+                      '--replace'],
+            gen_expected_path=s_path_join(sc_dir, 'output/backup.h'),
+            gen_result_path=s_path_join(sc_dir, 'input/backup.h')
+            ):
         return_flag = False
 
     # Debug Options:
