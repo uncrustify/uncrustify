@@ -14,6 +14,7 @@
 
 #include "base_types.h"
 #include "options.h"
+#include "option_enum.h"
 #include "token_enum.h"    // c_token_t
 #include "log_levels.h"
 #include "logger.h"

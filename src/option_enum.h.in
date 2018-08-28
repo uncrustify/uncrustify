@@ -1,0 +1,17 @@
+##BANNER##
+#ifndef OPTION_ENUM_H_INCLUDED
+#define OPTION_ENUM_H_INCLUDED
+
+#include "option.h"
+
+#ifdef IGNORE // WinBase.h
+#undef IGNORE
+#endif
+
+namespace uncrustify
+{
+
+##ALIASES##
+} // namespace uncrustify
+
+#endif /* OPTION_ENUM_H_INCLUDED */

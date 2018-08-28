@@ -11,6 +11,15 @@
 #ifndef OPTION_H_INCLUDED
 #define OPTION_H_INCLUDED
 
+/* NOTE:
+ * This file is processed by make_option_enum.py, which parses any 'enum class'
+ * it finds, as well as the special macros UNC_OPTVAL_ALIAS and UNC_OPTVALS.
+ *
+ * The '// <PREFIX>' comment after an 'enum class' tells the script to generate
+ * aliases for the enum values using the prefix that is given in the '<>'s.
+ * Don't remove or alter these.
+ */
+
 #include "enum_flags.h"
 
 #include <vector>
@@ -27,8 +36,9 @@ namespace uncrustify
 
 //-----------------------------------------------------------------------------
 // Option types
-enum class option_type_e
+enum class option_type_e // <OT>
 {
+   // UNC_CONVERT_INTERNAL
    BOOL,
    IARF,
    LINEEND,
@@ -38,14 +48,23 @@ enum class option_type_e
    STRING,
 };
 
+#if 0 // Fake enumeration for make_option_enum.py
+enum class bool
+{
+   true,
+   false,
+};
+#endif
+
 //-----------------------------------------------------------------------------
 /// I/A/R/F values - these are bit fields
-enum class iarf_e
+enum class iarf_e // <IARF>
 {
    IGNORE      = 0,              //! option ignores a given feature
    ADD         = (1u << 0),      //! option adds a given feature
    REMOVE      = (1u << 1),      //! option removes a given feature
    FORCE       = (ADD | REMOVE), //! option forces the usage of a given feature
+   // UNC_INTERNAL
    NOT_DEFINED = (1u << 2)       //! for debugging
 };
 
@@ -54,7 +73,7 @@ UNC_DECLARE_OPERATORS_FOR_FLAGS(iarf_flags_t);
 
 //-----------------------------------------------------------------------------
 /// Line endings
-enum class lineend_e
+enum class lineend_e // <LE>
 {
    LF,   //! "\n"   typically used on Unix/Linux system
    CRLF, //! "\r\n" typically used on Windows systems
@@ -65,7 +84,7 @@ constexpr auto lineend_styles = static_cast<size_t>(lineend_e::AUTO);
 
 //-----------------------------------------------------------------------------
 /// Token position - these are bit fields
-enum class tokenpos_e
+enum class tokenpos_e // <TP>
 {
    IGNORE      = 0,  //! don't change it
    BREAK       = 1,  //! add a newline before or after the if not present
@@ -186,6 +205,23 @@ UNC_OPTVAL_ALIAS(iarf_e, ADD, "a");
 UNC_OPTVAL_ALIAS(iarf_e, REMOVE, "r");
 UNC_OPTVAL_ALIAS(iarf_e, FORCE, "f");
 
+// Possible values for options, by type
+#define UNC_OPTVALS(e)    extern const char *const e ## _values[]
+UNC_OPTVALS(iarf);
+UNC_OPTVALS(lineend);
+UNC_OPTVALS(tokenpos);
+
+extern bool convert_string(const char *, bool &);
+extern bool convert_string(const char *, iarf_e &);
+extern bool convert_string(const char *, lineend_e &);
+extern bool convert_string(const char *, tokenpos_e &);
+
+extern const char *to_string(bool);
+extern const char *to_string(iarf_e);
+extern const char *to_string(lineend_e);
+extern const char *to_string(tokenpos_e);
+extern const char *to_string(option_type_e);
+
 struct OptionGroup
 {
    const char                   *description;
@@ -266,49 +302,6 @@ const char *get_eol_marker();
  * @retval true  path is a  relative one
  */
 bool is_path_relative(const char *path);
-
-/**
- * convert a argument type to a string
- *
- * @param val  argument type to convert
- */
-std::string argtype_to_string(uncrustify::option_type_e argtype);
-
-/**
- * convert a boolean to a string
- *
- * @param val  boolean to convert
- */
-std::string bool_to_string(bool val);
-
-/**
- * convert an argument value to a string
- *
- * @param val  argument value to convert
- */
-std::string argval_to_string(uncrustify::iarf_e argval);
-
-/**
- * convert a line ending type to a string
- *
- * @param val  line ending type to convert
- */
-std::string lineends_to_string(uncrustify::lineend_e linends);
-
-/**
- * convert a token to a string
- *
- * @param val  token to convert
- */
-std::string tokenpos_to_string(uncrustify::tokenpos_e tokenpos);
-
-/**
- * convert an argument of a given type to a string
- *
- * @param argtype   type of argument
- * @param op_val_t  value of argument
- */
-std::string op_val_to_string(uncrustify::option_type_e argtype, op_val_t op_val);
 
 #endif
 

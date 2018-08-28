@@ -203,6 +203,18 @@ py_gen(options.cpp
   options.cpp.in
 )
 
+py_gen(option_enum.h
+  make_option_enum.py
+  option.h
+  option_enum.h.in
+)
+
+py_gen(option_enum.cpp
+  make_option_enum.py
+  option.h
+  option_enum.cpp.in
+)
+
 #
 # Uncrustify
 #
@@ -277,6 +289,8 @@ set(uncrustify_headers
   src/unc_text.h
   src/unc_tools.h
   ${PROJECT_BINARY_DIR}/src/options.cpp
+  ${PROJECT_BINARY_DIR}/src/option_enum.cpp
+  ${PROJECT_BINARY_DIR}/src/option_enum.h
 )
 
 add_executable(uncrustify ${uncrustify_sources} ${uncrustify_headers})
