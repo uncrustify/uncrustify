@@ -211,7 +211,6 @@ set(uncrustify_sources
   src/combine.cpp
   src/compat_posix.cpp
   src/compat_win32.cpp
-  src/defines.cpp
   src/detect.cpp
   src/enum_cleanup.cpp
   src/indent.cpp

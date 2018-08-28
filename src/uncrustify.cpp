@@ -21,7 +21,6 @@
 #include "combine.h"
 #include "compat.h"
 #include "detect.h"
-#include "defines.h"
 #include "enum_cleanup.h"
 #include "indent.h"
 #include "keywords.h"
@@ -554,24 +553,6 @@ int main(int argc, char *argv[])
       add_keyword(p_arg, CT_TYPE);
    }
 
-   // Load define files
-   idx = 0;
-   while ((p_arg = arg.Params("-d", idx)) != nullptr)
-   {
-      int return_code = load_define_file(p_arg);
-      if (return_code != EX_OK)
-      {
-         return(return_code);
-      }
-   }
-
-   // add defines
-   idx = 0;
-   while ((p_arg = arg.Params("--define", idx)) != nullptr)
-   {
-      add_define(p_arg, nullptr);
-   }
-
    // Check for a language override
    if ((p_arg = arg.Param("-l")) != nullptr)
    {
@@ -928,7 +909,6 @@ int main(int argc, char *argv[])
    }
 
    clear_keyword_file();
-   clear_defines();
 
    if (cpd.error_count != 0)
    {

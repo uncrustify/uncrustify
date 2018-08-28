@@ -14,7 +14,6 @@
 #include "uncrustify.h"
 #include "error_types.h"
 #include "keywords.h"
-#include "defines.h"
 #include <cstring>
 #ifdef HAVE_STRINGS_H
 #include <strings.h>  // strcasecmp()
@@ -2297,10 +2296,6 @@ void process_option_line(char *configLine, const char *filename)
          add_keyword(args[idx], CT_TYPE);
       }
    }
-   else if (strcasecmp(args[0], "define") == 0)
-   {
-      add_define(args[1], args[2]);
-   }
    else if (strcasecmp(args[0], "macro-open") == 0)
    {
       add_keyword(args[1], CT_MACRO_OPEN);
@@ -2544,7 +2539,6 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
    }
 
    print_keywords(pfile);    // Print custom keywords
-   print_defines(pfile);     // Print custom defines
    print_extensions(pfile);  // Print custom file extensions
 
    fprintf(pfile, "# option(s) with 'not default' value: %d%s#%s", count_the_not_default_options, eol_marker, eol_marker);
