@@ -34,6 +34,8 @@
 namespace uncrustify
 {
 
+template<typename T> class Option;
+
 //-----------------------------------------------------------------------------
 // Option types
 enum class option_type_e // <OT>
@@ -116,16 +118,39 @@ public:
    const char *name() const { return(m_name); }
    const char *description() const { return(m_desc); }
    virtual const char *const *possibleValues() const = 0;
+
    virtual std::string defaultStr() const = 0;
+
+   virtual bool isDefault() const = 0;
 
    virtual bool read(const char *s) = 0;
    virtual std::string str() const = 0;
 
 protected:
+   template<typename V> friend bool read_enum(const char *s, Option<V> &o);
+   template<typename V> friend bool read_number(const char *s, Option<V> &o);
+
    void warnUnexpectedValue(const char *actual) const;
+   void warnIncompatibleReference(const GenericOption *ref) const;
 
    const char *const m_name;
    const char *const m_desc;
+};
+
+//-----------------------------------------------------------------------------
+// Helper class for reporting problems with options
+class OptionWarning
+{
+public:
+   OptionWarning(const char *filename);
+   OptionWarning(const GenericOption *);
+   OptionWarning(const OptionWarning &) = delete;
+   ~OptionWarning();
+
+#ifdef __GNUC__
+   [[gnu::format(printf, 2, 3)]]
+#endif
+   void operator()(const char *fmt, ...);
 };
 
 //-----------------------------------------------------------------------------
@@ -141,7 +166,10 @@ public:
 
    option_type_e type() const override;
    const char *const *possibleValues() const override;
+
    std::string defaultStr() const override;
+
+   bool isDefault() const override { return(m_val == m_default); }
 
    bool read(const char *s) override;
    std::string str() const override;
@@ -150,7 +178,10 @@ public:
    Option &operator=(T val) { m_val = val; return(*this); }
 
 protected:
-   virtual bool validate(T val) { return(true); }
+   template<typename V> friend bool read_enum(const char *s, Option<V> &o);
+   template<typename V> friend bool read_number(const char *s, Option<V> &o);
+
+   virtual bool validate(long) { return(true); }
 
    T m_val     = T{};
    T m_default = T{};
@@ -169,10 +200,25 @@ public:
    }
 
 protected:
-   bool validate(T val) override
+   bool validate(long val) override
    {
-      // FIXME report errors
-      return(val >= min && val <= max);
+      if (val < static_cast<long>(min))
+      {
+         OptionWarning w{ this };
+         w("requested value %ld for option %s "
+           "is less than the minimum value %ld",
+           val, this->name(), static_cast<long>(min));
+         return(false);
+      }
+      if (val > static_cast<long>(max))
+      {
+         OptionWarning w{ this };
+         w("requested value %ld for option %s "
+           "is greater than the maximum value %ld",
+           val, this->name(), static_cast<long>(min));
+         return(false);
+      }
+      return(true);
    }
 };
 
@@ -182,9 +228,8 @@ protected:
 #define UNC_IMPLEMENT_OPTION(T)                                     \
    template<> option_type_e Option<T>::type() const;                \
    template<> const char *const *Option<T>::possibleValues() const; \
-   template<> std::string Option<T>::defaultStr() const;            \
    template<> bool Option<T>::read(const char *s);                  \
-   template<> std::string Option<T>::str() const
+   extern template class Option<T>
 
 UNC_IMPLEMENT_OPTION(bool);
 UNC_IMPLEMENT_OPTION(iarf_e);
@@ -228,12 +273,14 @@ struct OptionGroup
    std::vector<GenericOption *> options;
 };
 
+
 /**
  * @brief Defines a new group of uncrustify options.
  *
  * New options are always added to the most recently defined group.
  */
 void begin_option_group(const char *description);
+
 
 /**
  * @brief Adds an uncrustify option to the global option registry.
@@ -242,47 +289,40 @@ void begin_option_group(const char *description);
  */
 void register_option(GenericOption *);
 
-const uncrustify::GenericOption *find_option(const std::string &name);
+
+GenericOption *find_option(const char *name);
+
 
 //! Add all uncrustify options to the global option registry
 void register_options(void);
 
-} // namespace uncrustify
+
+OptionGroup *get_option_group(size_t);
 
 
-#if 0
 /**
  * processes a single line string to extract configuration settings
- * increments cpd.line_number and cpd.error_count, modifies configLine parameter
+ * increments cpd.line_number and cpd.error_count
  *
- * @param configLine  single line string that will be processed
- * @param filename    for log messages, file from which the configLine param
- *                    was extracted
+ * @param config_line  single line string that will be processed
+ * @param filename     for log messages, file from which the \p config_line
+ *                     param was extracted
  */
-void process_option_line(char *configLine, const char *filename);
+void process_option_line(const std::string &config_line, const char *filename);
 
 
-int load_option_file(const char *filename);
-
-
-int save_option_file(FILE *pfile, bool withDoc);
+bool load_option_file(const char *filename);
 
 
 /**
  * save the used options into a text file
  *
- * @param pfile             file to print into
- * @param withDoc           also print description
- * @param only_not_default  print only options with non default value
+ * @param pfile     file to print into
+ * @param with_doc  also print description
+ * @param minimal   print only options with non default value
  */
-int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default);
+void save_option_file(FILE *pfile, bool with_doc = false, bool minimal = false);
 
-
-/**
- * @return >= 0  entry was found
- * @return   -1  entry was not found
- */
-int set_option_value(const char *name, const char *value);
 
 /**
  * get the marker that was selected for the end of line via the config file
@@ -291,18 +331,9 @@ int set_option_value(const char *name, const char *value);
  * @return "\r\n"   if newlines was set to LE_CRLF in the config file
  * @return "\r"     if newlines was set to LE_CR in the config file
  * @return "\n"     if newlines was set to LE_AUTO in the config file
- * @return "\n"     if newlines was set to LE_AUTO in the config file
  */
 const char *get_eol_marker();
 
-/**
- * check if a path/filename uses a relative or absolute path
- *
- * @retval false path is an absolute one
- * @retval true  path is a  relative one
- */
-bool is_path_relative(const char *path);
-
-#endif
+} // namespace uncrustify
 
 #endif /* OPTION_H_INCLUDED */

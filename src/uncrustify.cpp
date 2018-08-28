@@ -658,7 +658,7 @@ int main(int argc, char *argv[])
    if (!cfg_file.empty())
    {
       cpd.filename = cfg_file;
-      if (load_option_file(cpd.filename.c_str()) < 0)
+      if (!load_option_file(cpd.filename.c_str()))
       {
          usage_error("Unable to load the config file");
          return(EX_IOERR);
