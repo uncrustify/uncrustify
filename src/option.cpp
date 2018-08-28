@@ -261,10 +261,18 @@ void print_description(FILE *pfile, std::string description,
    for (std::string::size_type start = 1, length = description.length();
         start != std::string::npos && start < length; ++start)
    {
-      const auto end = description.find('\n', start);
-      fprintf(pfile, "# %s%s",
-              description.substr(start, end - start).c_str(), eol_marker);
-      start = end;
+      // Check for empty line so we can squelch trailing whitespace
+      if (description[start] == '\n')
+      {
+         fprintf(pfile, "#%s", eol_marker);
+      }
+      else
+      {
+         const auto end = description.find('\n', start);
+         fprintf(pfile, "# %s%s",
+                 description.substr(start, end - start).c_str(), eol_marker);
+         start = end;
+      }
    }
 }
 
