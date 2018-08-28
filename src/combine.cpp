@@ -8,19 +8,22 @@
  * @license GPL v2+
  */
 #include "combine.h"
-#include "uncrustify_types.h"
+
 #include "chunk_list.h"
 #include "ChunkStack.h"
-#include "uncrustify.h"
 #include "lang_pawn.h"
+#include "language_tools.h"
 #include "newlines.h"
 #include "prototypes.h"
 #include "tokenize_cleanup.h"
-#include "language_tools.h"
+#include "uncrustify.h"
+#include "unc_ctype.h"
+#include "uncrustify_types.h"
+
+#include <map>
 
 #include <cstdio>
 #include <cstdlib>
-#include "unc_ctype.h"
 #include <cassert>
 
 

@@ -305,6 +305,9 @@ void register_options(void);
 OptionGroup *get_option_group(size_t);
 
 
+size_t get_option_count();
+
+
 /**
  * processes a single line string to extract configuration settings
  * increments cpd.line_number and cpd.error_count

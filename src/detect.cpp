@@ -27,14 +27,15 @@ static void detect_space_options(void);
 
 class sp_votes
 {
-   size_t m_add    = 0;
-   size_t m_remove = 0;
-   size_t m_force  = 0;
-   iarf_e &(*const m_option)();
+protected:
+   size_t         m_add    = 0;
+   size_t         m_remove = 0;
+   size_t         m_force  = 0;
+   Option<iarf_e> &m_option;
 
 public:
-   sp_votes(iarf_e &(*opt)())
-      : m_option{opt} {}
+   sp_votes(Option<iarf_e> &opt)
+      : m_option(opt) {}
 
    //! Figure out the result of the vote and maybe update *m_av
    ~sp_votes();
@@ -82,11 +83,11 @@ sp_votes::~sp_votes()
 
    if (m_remove == 0)
    {
-      (*m_option)() = (m_force > m_add) ? IARF_FORCE : IARF_ADD;
+      m_option = (m_force > m_add) ? IARF_FORCE : IARF_ADD;
    }
    else if (m_force == 0 && m_add == 0)
    {
-      (*m_option)() = IARF_REMOVE;
+      m_option = IARF_REMOVE;
    }
    else
    {

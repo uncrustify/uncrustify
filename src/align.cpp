@@ -528,7 +528,7 @@ void align_right_comments(void)
 
             if (pc->orig_col < prev->orig_col_end + options::align_right_cmt_gap())
             {
-               LOG_FMT(LALTC, "NOT changing END comment on line %zu (%zu <= %zu + %zu)\n",
+               LOG_FMT(LALTC, "NOT changing END comment on line %zu (%zu <= %zu + %u)\n",
                        pc->orig_line, pc->orig_col, prev->orig_col_end,
                        options::align_right_cmt_gap());
             }
