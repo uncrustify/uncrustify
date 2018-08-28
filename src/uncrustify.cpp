@@ -9,41 +9,47 @@
 #define DEFINE_PCF_NAMES
 #define DEFINE_CHAR_TABLE
 
-#include "uncrustify_version.h"
-#include "uncrustify_types.h"
-#include "char_table.h"
-#include "chunk_list.h"
+#include "uncrustify.h"
+
 #include "align.h"
 #include "args.h"
+#include "backup.h"
 #include "brace_cleanup.h"
 #include "braces.h"
-#include "backup.h"
+#include "char_table.h"
+#include "chunk_list.h"
 #include "combine.h"
 #include "compat.h"
 #include "detect.h"
 #include "enum_cleanup.h"
 #include "indent.h"
 #include "keywords.h"
-#include "logger.h"
-#include "log_levels.h"
 #include "lang_pawn.h"
+#include "language_tools.h"
+#include "log_levels.h"
+#include "logger.h"
 #include "md5.h"
 #include "newlines.h"
 #include "options.h"
 #include "output.h"
 #include "parens.h"
 #include "prototypes.h"
-#include "space.h"
 #include "semicolons.h"
 #include "sorting.h"
+#include "space.h"
+#include "token_names.h"
 #include "tokenize.h"
 #include "tokenize_cleanup.h"
-#include "token_names.h"
-#include "uncrustify.h"
+#include "unc_ctype.h"
+#include "uncrustify_types.h"
+#include "uncrustify_version.h"
 #include "unicode.h"
 #include "universalindentgui.h"
 #include "width.h"
-#include "language_tools.h"
+
+#include <deque>
+#include <map>
+#include <vector>
 
 #include <cstdio>
 #include <cstdlib>
@@ -53,15 +59,12 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#include "unc_ctype.h"
 #ifdef HAVE_SYS_STAT_H
 #include <sys/stat.h>
 #endif
 #ifdef HAVE_STRINGS_H
 #include <strings.h>    // provides strcasecmp()
 #endif
-#include <vector>
-#include <deque>
 #ifdef HAVE_UTIME_H
 #include <time.h>
 #endif
@@ -302,11 +305,11 @@ void usage(const char *argv0)
            "      processing of parts of the source file (these can be overridden with\n"
            "      enable_processing_cmt and disable_processing_cmt).\n"
            "\n"
-           "There are currently %d options and minimal documentation.\n"
+           "There are currently %zd options and minimal documentation.\n"
            "Try UniversalIndentGUI and good luck.\n"
            "\n"
            ,
-           path_basename(argv0), UO_option_count);
+           path_basename(argv0), get_option_count());
 } // usage
 
 
@@ -400,6 +403,9 @@ int main(int argc, char *argv[])
    // check keyword sort
    assert(keywords_are_sorted());
 
+   // Build options map
+   register_options();
+
    // If ran without options show the usage info and exit */
    if (argc == 1)
    {
@@ -432,9 +438,6 @@ int main(int argc, char *argv[])
    assert(ARRAY_SIZE(token_names) == CT_TOKEN_COUNT_);
 #endif // DEBUG
 
-   // Build options map
-   register_options();
-
    Args arg(argc, argv);
    if (arg.Present("--version") || arg.Present("-v"))
    {
@@ -451,7 +454,6 @@ int main(int argc, char *argv[])
 
    if (arg.Present("--show-config"))
    {
-      set_option_defaults();
       save_option_file(stdout, true);
       return(EXIT_SUCCESS);
    }
@@ -535,9 +537,6 @@ int main(int argc, char *argv[])
    {
       log_show_sev(true);
    }
-
-   // Load the config file
-   set_option_defaults();
 
    // Load type files
    size_t idx = 0;
@@ -702,7 +701,14 @@ int main(int argc, char *argv[])
          && value != nullptr
          && strtok(nullptr, "=") == nullptr)   // end of argument reached
       {
-         if (set_option_value(option, value) == -1)
+         if (auto *opt = uncrustify::find_option(option))
+         {
+            if (!opt->read(value))
+            {
+               return(EXIT_FAILURE);
+            }
+         }
+         else
          {
             fprintf(stderr, "Unknown option '%s' to override.\n", buffer);
             log_flush(true);

@@ -766,6 +766,13 @@ OptionGroup *get_option_group(size_t i)
 
 
 //-----------------------------------------------------------------------------
+size_t get_option_count()
+{
+   return(option_map.size());
+}
+
+
+//-----------------------------------------------------------------------------
 void process_option_line(const std::string &config_line, const char *filename)
 {
    // Split line into arguments, and punt if no arguments are present
