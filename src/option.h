@@ -120,6 +120,8 @@ public:
    virtual const char *const *possibleValues() const = 0;
 
    virtual std::string defaultStr() const = 0;
+   virtual std::string minStr() const { return(std::string{}); }
+   virtual std::string maxStr() const { return(std::string{}); }
 
    virtual bool isDefault() const = 0;
 
@@ -198,6 +200,9 @@ public:
    {
       assert(val >= min && val <= max);
    }
+
+   std::string minStr() const override { return(std::to_string(min)); }
+   std::string maxStr() const override { return(std::to_string(max)); }
 
 protected:
    bool validate(long val) override
