@@ -4842,11 +4842,13 @@ static void mark_function(chunk_t *pc)
    /*
     * C++ syntax is wacky. We need to check to see if a prototype is really a
     * variable definition with parameters passed into the constructor.
-    * Unfortunately, the only mostly reliable way to do so is to guess that
-    * it is a constructor variable if inside a function body and scan the
-    * 'parameter list' for items that are not allowed in a prototype.
-    * We search backwards and checking the parent of the containing open braces.
-    * If the parent is a class or namespace, then it probably is a prototype.
+    * Unfortunately, without being able to accurately determine if an
+    * identifier is a type (which would require us to more or less be a full
+    * compiler), the only mostly reliable way to do so is to guess that it is
+    * a constructor variable if inside a function body and scan the 'parameter
+    * list' for items that are not allowed in a prototype. We search backwards
+    * and checking the parent of the containing open braces. If the parent is a
+    * class or namespace, then it probably is a prototype.
     */
    if (  language_is_set(LANG_CPP)
       && chunk_is_token(pc, CT_FUNC_PROTO)
@@ -4857,6 +4859,17 @@ static void mark_function(chunk_t *pc)
               pc->text(),
               get_token_name(paren_open->type),
               get_token_name(paren_close->type));
+
+      /*
+       * Check the token at the start of the statement. If it's 'extern', we
+       * definitely have a function prototype.
+       */
+      tmp = pc;
+      while (tmp && !(tmp->flags & PCF_STMT_START))
+      {
+         tmp = chunk_get_prev_ncnl(tmp);
+      }
+      const bool is_extern = (tmp && tmp->str.equals("extern"));
 
       /*
        * Scan the parameters looking for:
@@ -4883,14 +4896,14 @@ static void mark_function(chunk_t *pc)
          }
          tmp = tmp2;
       }
-      if (is_param && ref != tmp)
+      if (!is_extern && is_param && ref != tmp)
       {
          if (!can_be_full_param(ref, tmp))
          {
             is_param = false;
          }
       }
-      if (!is_param)
+      if (!is_extern && !is_param)
       {
          set_chunk_type(pc, CT_FUNC_CTOR_VAR);
          D_LOG_FMT(LFCN, "%s(%d): ", __func__, __LINE__);
