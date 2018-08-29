@@ -949,6 +949,7 @@ static void newlines_func_pre_blank_lines(chunk_t *start)
    chunk_t *last_nl      = nullptr;
    chunk_t *last_comment = nullptr;
    bool    do_it         = false;
+   size_t  first_line    = start->orig_line;
    for (pc = chunk_get_prev(start); pc != nullptr; pc = chunk_get_prev(pc))
    {
       LOG_FMT(LNLFUNCT, "   O%zu:%zu %s '%s'\n", pc->orig_line, pc->orig_col,
@@ -964,8 +965,8 @@ static void newlines_func_pre_blank_lines(chunk_t *start)
       if (chunk_is_comment(pc))
       {
          LOG_FMT(LNLFUNCT, "   <chunk_is_comment> found at line=%zu column=%zu\n", pc->orig_line, pc->orig_col);
-         if (  (  pc->orig_line < start->orig_line
-               && ((start->orig_line - pc->orig_line
+         if (  (  pc->orig_line < first_line
+               && ((first_line - pc->orig_line
                     - (chunk_is_token(pc, CT_COMMENT_MULTI) ? pc->nl_count : 0))) < 2)
             || (  last_comment != nullptr
                && chunk_is_token(pc, CT_COMMENT_CPP) // combine only cpp comments
@@ -989,12 +990,14 @@ static void newlines_func_pre_blank_lines(chunk_t *start)
          || chunk_is_token(pc, CT_TYPE)
          || chunk_is_token(pc, CT_TYPE))
       {
+         first_line = pc->orig_line;
          continue;
       }
       // skip template stuff to add newlines before it
       if (chunk_is_token(pc, CT_ANGLE_CLOSE) && pc->parent_type == CT_TEMPLATE)
       {
-         pc = chunk_get_prev_type(pc, CT_TEMPLATE, -1);
+         pc         = chunk_get_prev_type(pc, CT_TEMPLATE, -1);
+         first_line = pc->orig_line;
          continue;
       }
 
