@@ -984,6 +984,7 @@ static void newlines_func_pre_blank_lines(chunk_t *start)
 
       if (  chunk_is_token(pc, CT_DESTRUCTOR)
          || chunk_is_token(pc, CT_TYPE)
+         || chunk_is_token(pc, CT_TEMPLATE)
          || chunk_is_token(pc, CT_QUALIFIER)
          || chunk_is_token(pc, CT_PTR_TYPE)
          || chunk_is_token(pc, CT_DC_MEMBER)
@@ -996,8 +997,11 @@ static void newlines_func_pre_blank_lines(chunk_t *start)
       // skip template stuff to add newlines before it
       if (chunk_is_token(pc, CT_ANGLE_CLOSE) && pc->parent_type == CT_TEMPLATE)
       {
-         pc         = chunk_get_prev_type(pc, CT_TEMPLATE, -1);
-         first_line = pc->orig_line;
+         pc = chunk_skip_to_match_rev(pc);
+         if (pc)
+         {
+            first_line = pc->orig_line;
+         }
          continue;
       }
 
