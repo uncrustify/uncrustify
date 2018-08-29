@@ -631,6 +631,7 @@
 34250  empty.cfg                            cpp/bug_1607.cpp
 34251  bug_1649.cfg                         cpp/bug_1649.cpp
 34252  nl_after_func_proto_group-3.cfg      cpp/issue_2001.cpp
+34253  nl_after_func_proto_group-3.cfg      cpp/friends.cpp
 
 34280  UNI-29935.cfg                        cpp/UNI-29935.cpp
 

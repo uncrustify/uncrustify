@@ -2290,6 +2290,8 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
          pc = chunk_get_prev_ncnl(pc);
       }
 
+      LOG_FMT(LFCNR, "%s(%d): marking returns...", __func__, __LINE__);
+
       // Changing words to types into tuple return types in CS.
       bool is_return_tuple = false;
       if (chunk_is_token(pc, CT_PAREN_CLOSE) && (pc->flags & PCF_IN_PREPROC) == 0)
@@ -2330,6 +2332,31 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
          }
       }
       LOG_FMT(LFCNR, "\n");
+
+      // Back up and mark parent type on friend declarations
+      if (parent_type != CT_NONE && first && first->flags & PCF_IN_CLASS)
+      {
+         pc = chunk_get_prev_ncnl(first);
+         if (chunk_is_token(pc, CT_FRIEND))
+         {
+            LOG_FMT(LFCNR, "%s(%d): marking friend\n", __func__, __LINE__);
+            set_chunk_parent(pc, parent_type);
+            // A friend might be preceded by a template specification, as in:
+            //   template <...> friend type func(...);
+            // If so, we need to mark that also
+            pc = chunk_get_prev_ncnl(pc);
+            if (chunk_is_token(pc, CT_ANGLE_CLOSE))
+            {
+               pc = skip_template_prev(pc);
+               if (chunk_is_token(pc, CT_TEMPLATE))
+               {
+                  LOG_FMT(LFCNR, "%s(%d): marking friend template\n",
+                          __func__, __LINE__);
+                  set_chunk_parent(pc, parent_type);
+               }
+            }
+         }
+      }
    }
 } // mark_function_return_type
 
