@@ -4493,6 +4493,7 @@ void do_blank_lines(void)
          }
          if (  (options::nl_after_func_class_proto_group() > pc->nl_count)
             && next != nullptr
+            && next->type != CT_FUNC_CLASS_PROTO
             && next->parent_type != CT_FUNC_CLASS_PROTO)
          {
             blank_line_set(pc, UO_nl_after_func_class_proto_group);
