@@ -664,6 +664,7 @@ enum uncrustify_options
                                        // by another function class prototype
    UO_nl_after_func_class_proto_group, // The number of newlines after a function class prototype, if not
                                        // followed by another function class prototype
+   UO_nl_class_leave_one_liner_groups, // treat one-liners as prototypes
    UO_nl_before_func_body_def,         // The number of newlines before a multi-line function def body
    UO_nl_before_func_body_proto,       // The number of newlines before a multi-line function prototype body
    UO_nl_after_func_body,              // The number of newlines after '}' of a multi-line function body

@@ -2871,6 +2871,12 @@ size_t &nl_after_func_class_proto_group()
 }
 
 
+bool &nl_class_leave_one_liner_groups()
+{
+   return(cpd.settings[UO_nl_class_leave_one_liner_groups].b);
+}
+
+
 size_t &nl_before_func_body_def()
 {
    return(cpd.settings[UO_nl_before_func_body_def].u);

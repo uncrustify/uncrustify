@@ -1382,6 +1382,14 @@ void register_options(void)
                   "The number of newlines after a function class prototype, if followed by another function class prototype.");
    unc_add_option("nl_after_func_class_proto_group", UO_nl_after_func_class_proto_group, AT_UNUM,
                   "The number of newlines after a function class prototype, if not followed by another function class prototype.");
+   unc_add_option("nl_class_leave_one_liner_groups",
+                  UO_nl_class_leave_one_liner_groups, AT_BOOL,
+                  "Whether one-liner method definitions inside a class body "
+                  "should be treated\nas if they were prototypes for the "
+                  "purposes of adding newlines.\n\nRequires "
+                  "nl_class_leave_one_liners=true. Overrides "
+                  "nl_before_func_body_def\nand nl_before_func_class_def for "
+                  "one-liners.");
    unc_add_option("nl_before_func_body_def", UO_nl_before_func_body_def, AT_UNUM,
                   "The number of newlines before a multi-line function def body.");
    unc_add_option("nl_before_func_body_proto", UO_nl_before_func_body_proto, AT_UNUM,
