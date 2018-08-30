@@ -102,7 +102,7 @@ def write_to_output_path(output_path, result_str):
     as this code doesn't post process the data being written out
     '''
     with open(output_path, 'w', encoding="utf-8", newline="\n") as f:
-        f.write(unicode(result_str, 'utf-8'))
+        f.write(result_str)
 
 
 def get_file_content(fp):
