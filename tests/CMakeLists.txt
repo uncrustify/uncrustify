@@ -25,7 +25,7 @@ if (UNCRUSTIFY_SEPARATE_TESTS)
 
   add_custom_command(
     OUTPUT ${tests_ctest_file}
-    COMMAND ${PYTHON_EXECUTABLE} run_tests.py
+    COMMAND ${PYTHON_EXECUTABLE} run_format_tests.py
       --executable $<TARGET_FILE:uncrustify>
       --git ${GIT_EXECUTABLE}
       --python ${PYTHON_EXECUTABLE}
@@ -41,7 +41,7 @@ else()
   foreach(suite IN LISTS test_suites)
     string(REPLACE ".test" "" lang "${suite}")
     add_test(NAME ${lang}
-      COMMAND ${PYTHON_EXECUTABLE} run_tests.py ${lang}
+      COMMAND ${PYTHON_EXECUTABLE} run_format_tests.py ${lang}
         --executable $<TARGET_FILE:uncrustify>
         -d --git ${GIT_EXECUTABLE}
         --result-dir ${CMAKE_CURRENT_BINARY_DIR}
