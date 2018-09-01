@@ -95,7 +95,7 @@ static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_
  * @retval chunk_t  pointer to the found chunk or pointer to the chunk at the
  *                  end of the preprocessor directive
  */
-static chunk_t *chunk_ppa_search(chunk_t *cur, const check_t check_fct, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD, const bool cond = true);
+static chunk_t *chunk_ppa_search(chunk_t *cur, const check_t check_fct, const bool cond = true);
 
 
 static void chunk_log(chunk_t *pc, const char *text);
