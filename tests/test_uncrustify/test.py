@@ -18,17 +18,145 @@ from .failure import (ExecutionFailure, MissingFailure,
 
 
 # =============================================================================
-class Test(object):
+class SourceTest(object):
+    # -------------------------------------------------------------------------
+    def __init__(self):
+        self.test_result_dir = 'results'
+
+        self.diff_text = 'MISMATCH'
+        self.diff_attrs = MISMATCH_ATTRS
+        self.diff_exception = MismatchFailure
+
+    # -------------------------------------------------------------------------
+    def _check_attr(self, name):
+        if not hasattr(self, name) or getattr(self, name) is None:
+            raise AttributeError(
+                'Test is missing required attribute {!r}'.format(name))
+
+    # -------------------------------------------------------------------------
+    def _make_abs(self, name, base):
+        path = getattr(self, name)
+        if not os.path.isabs(path):
+            setattr(self, name, os.path.join(test_dir, base, path))
+
+    # -------------------------------------------------------------------------
+    def _diff(self, expected, actual):
+        sys.stdout.flush()
+        cmd = [config.git_exe, 'diff', '--no-index', expected, actual]
+        subprocess.call(cmd)
+
+    # -------------------------------------------------------------------------
+    def _check(self):
+        self._check_attr('test_name')
+        self._check_attr('test_lang')
+        self._check_attr('test_input')
+        self._check_attr('test_config')
+        self._check_attr('test_expected')
+
+    # -------------------------------------------------------------------------
+    def run(self, args):
+        self._check()
+
+        _expected = self.test_expected
+        _result = os.path.join(args.result_dir, self.test_result_dir,
+                               os.path.basename(os.path.dirname(_expected)),
+                               os.path.basename(_expected))
+
+        if args.verbose:
+            print(self.test_name)
+            print('  Language : {}'.format(self.test_lang))
+            print('     Input : {}'.format(self.test_input))
+            print('    Config : {}'.format(self.test_config))
+            print('  Expected : {}'.format(_expected))
+            print('    Result : {}'.format(_result))
+
+        if not os.path.exists(os.path.dirname(_result)):
+            os.makedirs(os.path.dirname(_result))
+
+        cmd = [
+            config.uncrustify_exe,
+            '-q',
+            '-l', self.test_lang,
+            '-c', self.test_config,
+            '-f', self.test_input,
+            '-o', _result
+        ]
+        if args.debug:
+            cmd += [
+                '-LA',
+                '-p', _result + '.unc'
+            ]
+            stderr = open(_result + '.log', 'wt')
+
+        else:
+            cmd += ['-L1,2']
+            stderr = None
+
+        if args.show_commands:
+            printc('RUN: ', repr(cmd))
+
+        try:
+            subprocess.check_call(cmd, stderr=stderr)
+        except subprocess.CalledProcessError as exc:
+            msg = '{}: Uncrustify error code {}'
+            msg = msg.format(self.test_name, exc.returncode)
+            printc('FAILED: ', msg, **FAIL_ATTRS)
+            raise ExecutionFailure(exc)
+        finally:
+            del stderr
+
+        try:
+            if not filecmp.cmp(_expected, _result):
+                printc('{}: '.format(self.diff_text),
+                       self.test_name, **self.diff_attrs)
+                if args.diff:
+                    self._diff(_expected, _result)
+                raise self.diff_exception(_expected, _result)
+        except OSError as exc:
+            printc('MISSING: ', self.test_name, **self.diff_attrs)
+            raise MissingFailure(exc, _expected)
+
+# =============================================================================
+class FormatTest(SourceTest):
     pass_config = ['test_config', 'test_rerun_config']
     pass_input = ['test_input', 'test_expected']
     pass_expected = ['test_expected', 'test_rerun_expected']
-    pass_result_dir = ['results', 'results_2']
 
-    pass_diff_text = ['MISMATCH', 'UNSTABLE']
-    pass_diff_attrs = [MISMATCH_ATTRS, UNSTABLE_ATTRS]
+    # -------------------------------------------------------------------------
+    def _build_pass(self, i):
+        p = SourceTest()
 
-    pass_note = ['', ' (re-run)']
-    pass_exception = [MismatchFailure, UnstableFailure]
+        p.test_name = self.test_name
+        p.test_lang = self.test_lang
+        p.test_config = getattr(self, self.pass_config[i])
+        p.test_input = getattr(self, self.pass_input[i])
+        p.test_expected = getattr(self, self.pass_expected[i])
+        if i == 1 and not os.path.exists(p.test_expected):
+            p.test_expected = getattr(self, self.pass_expected[0])
+
+        return p
+
+    # -------------------------------------------------------------------------
+    def _build_passes(self):
+        self._check()
+        self._check_attr('test_rerun_config')
+        self._check_attr('test_rerun_expected')
+
+        self._make_abs('test_input', 'input')
+        self._make_abs('test_config', 'config')
+        self._make_abs('test_expected', 'expected')
+        self._make_abs('test_rerun_config', 'config')
+        self._make_abs('test_rerun_expected', 'expected')
+
+        self.test_passes = [
+            self._build_pass(0),
+            self._build_pass(1)]
+
+        self.test_passes[1].test_name = self.test_name + ' (re-run)'
+        self.test_passes[1].test_result_dir = 'results_2'
+        self.test_passes[1].diff_text = 'UNSTABLE'
+        self.test_passes[1].diff_attrs = UNSTABLE_ATTRS
+        self.test_passes[1].diff_exception = UnstableFailure
 
     # -------------------------------------------------------------------------
     def build_from_declaration(self, decl, group):
@@ -63,6 +191,8 @@ class Test(object):
 
         self.test_name = '{}:{}'.format(group, num)
 
+        self._build_passes()
+
     # -------------------------------------------------------------------------
     def build_from_args(self, args):
         self.test_name = args.name
@@ -73,35 +203,11 @@ class Test(object):
         self.test_rerun_config = args.rerun_config or args.config
         self.test_rerun_expected = args.rerun_expected or args.expected
 
-    # -------------------------------------------------------------------------
-    def check(self):
-        def check_attr(name):
-            if not hasattr(self, name) or getattr(self, name) is None:
-                raise AttributeError(
-                    'Test is missing required attribute {!r}'.format(name))
-
-        check_attr('test_name')
-        check_attr('test_lang')
-        check_attr('test_input')
-        check_attr('test_config')
-        check_attr('test_expected')
-        check_attr('test_rerun_config')
-        check_attr('test_rerun_expected')
-
-        def make_abs(name, base):
-            path = getattr(self, name)
-            if not os.path.isabs(path):
-                setattr(self, name, os.path.join(test_dir, base, path))
-
-        make_abs('test_input', 'input')
-        make_abs('test_config', 'config')
-        make_abs('test_expected', 'expected')
-        make_abs('test_rerun_config', 'config')
-        make_abs('test_rerun_expected', 'expected')
+        self._build_passes()
 
     # -------------------------------------------------------------------------
     def print_as_ctest(self, out_file=sys.stdout):
-        self.check()
+        self._check()
 
         def to_cmake_path(path):
             if type(path) is dict:
@@ -133,82 +239,6 @@ class Test(object):
                  self.test_name, self.test_name.split(':')[0]))
 
     # -------------------------------------------------------------------------
-    def _diff(self, expected, actual):
-        sys.stdout.flush()
-        cmd = [config.git_exe, 'diff', '--no-index', expected, actual]
-        subprocess.call(cmd)
-
-    # -------------------------------------------------------------------------
-    def _run_pass(self, i, args):
-        _config = getattr(self, self.pass_config[i])
-        _input = getattr(self, self.pass_input[i])
-        _expected = getattr(self, self.pass_expected[i])
-        if i == 1 and not os.path.exists(_expected):
-            _expected = getattr(self, self.pass_expected[0])
-
-        _result = os.path.join(args.result_dir, self.pass_result_dir[i],
-                               os.path.basename(os.path.dirname(_expected)),
-                               os.path.basename(_expected))
-
-        if args.verbose:
-            print(self.test_name + self.pass_note[i])
-            print('  Language : {}'.format(self.test_lang))
-            print('     Input : {}'.format(_input))
-            print('    Config : {}'.format(_config))
-            print('  Expected : {}'.format(_expected))
-            print('    Result : {}'.format(_result))
-
-        if not os.path.exists(os.path.dirname(_result)):
-            os.makedirs(os.path.dirname(_result))
-
-        cmd = [
-            config.uncrustify_exe,
-            '-q',
-            '-l', self.test_lang,
-            '-c', _config,
-            '-f', _input,
-            '-o', _result
-        ]
-        if args.debug:
-            cmd += [
-                '-LA',
-                '-p', _result + '.unc'
-            ]
-            stderr = open(_result + '.log', 'wt')
-
-        else:
-            cmd += ['-L1,2']
-            stderr = None
-
-        if args.show_commands:
-            printc('RUN: ', repr(cmd))
-
-        try:
-            subprocess.check_call(cmd, stderr=stderr)
-        except subprocess.CalledProcessError as exc:
-            msg = '{}{}: Uncrustify error code {}'
-            msg = msg.format(self.test_name, self.pass_note[i], exc.returncode)
-            printc('FAILED: ', msg, **FAIL_ATTRS)
-            raise ExecutionFailure(exc)
-        finally:
-            del stderr
-
-        try:
-            if not filecmp.cmp(_expected, _result):
-                printc('{}: '.format(self.pass_diff_text[i]),
-                       self.test_name + self.pass_note[i],
-                       **self.pass_diff_attrs[i])
-                if args.diff:
-                    self._diff(_expected, _result)
-                raise self.pass_exception[i](_expected, _result)
-        except OSError as exc:
-            printc('MISSING: ', self.test_name + self.pass_note[i],
-                   **self.pass_diff_attrs[i])
-            raise MissingFailure(exc, _expected)
-
-    # -------------------------------------------------------------------------
     def run(self, args):
-        self.check()
-
-        self._run_pass(0, args)
-        self._run_pass(1, args)
+        for p in self.test_passes:
+            p.run(args)

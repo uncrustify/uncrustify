@@ -12,7 +12,8 @@ from .failure import (Failure, ExecutionFailure, MissingFailure,
 
 from .selector import Selector
 
-from .test import Test
+from .test import SourceTest, FormatTest
 
-from .utilities import (add_test_arguments, add_tests_arguments, parse_args,
-                        run_tests, read_tests, report, fixup_ctest_path)
+from .utilities import (add_test_arguments, add_format_tests_arguments,
+                        add_source_tests_arguments, parse_args, run_tests,
+                        read_format_tests, report, fixup_ctest_path)

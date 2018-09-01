@@ -17,7 +17,7 @@ def main():
     tu.add_test_arguments(parser)
     args = tu.parse_args(parser)
 
-    test = tu.Test()
+    test = tu.FormatTest()
     test.build_from_args(args)
 
     try:
