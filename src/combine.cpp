@@ -1045,7 +1045,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          tmp = set_paren_parent(tmp, CT_DECLTYPE);
          if (chunk_is_opening_brace(tmp))
          {
-            set_paren_parent(tmp, CT_BRACED_INIT_LIST);
+            tmp = set_paren_parent(tmp, CT_BRACED_INIT_LIST);
+            if (tmp)
+            {
+               chunk_flags_clr(tmp, PCF_EXPR_START | PCF_STMT_START);
+            }
          }
       }
    }
@@ -1504,6 +1508,12 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             {
                set_chunk_parent(brace_open, CT_BRACED_INIT_LIST);
                set_chunk_parent(brace_close, CT_BRACED_INIT_LIST);
+
+               tmp = chunk_get_next_ncnl(brace_close);
+               if (tmp)
+               {
+                  chunk_flags_clr(tmp, PCF_EXPR_START | PCF_STMT_START);
+               }
 
                // TODO: Change pc->type CT_WORD -> CT_TYPE
                // for the case CT_ASSIGN (and others).

@@ -3220,6 +3220,7 @@ void newlines_cleanup_braces(bool first)
             }
          }
          else if (  pc->parent_type != CT_OC_AT
+                 && pc->parent_type != CT_BRACED_INIT_LIST
                  && (  options::nl_after_brace_close()
                     || pc->parent_type == CT_FUNC_CLASS_DEF
                     || pc->parent_type == CT_FUNC_DEF
