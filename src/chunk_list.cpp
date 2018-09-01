@@ -77,6 +77,27 @@ typedef chunk_t * (*search_t)(chunk_t *cur, scope_e scope);
 static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD, const bool cond = true);
 
 
+/**
+ * @brief search for a chunk that satisfies a condition in a chunk list.
+ *
+ * This function is similar to chunk_search, except that it is tweaked to
+ * handle searches inside of preprocessor directives. Specifically, if the
+ * starting token is inside a preprocessor directive, it will ignore a line
+ * continuation, and will abort the search if it reaches the end of the
+ * directive. This function only searches forward.
+ *
+ * @param  cur        chunk to start search at
+ * @param  check_fct  compare function
+ * @param  scope      code parts to consider for search
+ * @param  cond       success condition
+ *
+ * @retval nullptr  no requested chunk was found or invalid parameters provided
+ * @retval chunk_t  pointer to the found chunk or pointer to the chunk at the
+ *                  end of the preprocessor directive
+ */
+static chunk_t *chunk_ppa_search(chunk_t *cur, const check_t check_fct, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD, const bool cond = true);
+
+
 static void chunk_log(chunk_t *pc, const char *text);
 
 
@@ -316,6 +337,46 @@ static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_
 }
 
 
+static chunk_t *chunk_ppa_search(chunk_t *cur, const check_t check_fct, const bool cond)
+{
+   if (cur && !(cur->flags & PCF_IN_PREPROC))
+   {
+      // if not in preprocessor, do a regular search
+      return(chunk_search(cur, check_fct, scope_e::ALL,
+                          direction_e::FORWARD, cond));
+   }
+
+   chunk_t *pc = cur;
+
+   while (pc && (pc = pc->next) != nullptr)
+   {
+      if (!(pc->flags & PCF_IN_PREPROC))
+      {
+         // Bail if we run off the end of the preprocessor directive, but
+         // return the next token, NOT nullptr, because the caller may need to
+         // know where the search ended
+         assert(chunk_is_token(pc, CT_NEWLINE));
+         return(pc);
+      }
+
+      if (chunk_is_token(pc, CT_NL_CONT))
+      {
+         // Skip line continuation
+         continue;
+      }
+
+      if (check_fct(pc) == cond)
+      {
+         // Requested token was found
+         return(pc);
+      }
+   }
+
+   // Ran out of tokens
+   return(nullptr);
+}
+
+
 /* @todo maybe it is better to combine chunk_get_next and chunk_get_prev
  * into a common function However this should be done with the preprocessor
  * to avoid addition check conditions that would be evaluated in the
@@ -517,6 +578,12 @@ chunk_t *chunk_get_next_ncnl(chunk_t *cur, scope_e scope)
 chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, scope_e scope)
 {
    return(chunk_get_ncnlnp(cur, scope, direction_e::FORWARD));
+}
+
+
+chunk_t *chunk_ppa_get_next_ncnl(chunk_t *cur)
+{
+   return(chunk_ppa_search(cur, chunk_is_comment_or_newline, false));
 }
 
 

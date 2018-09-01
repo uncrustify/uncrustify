@@ -20,7 +20,7 @@ dcrp_license_feature(int32_t idx)
 {
 #define FEATURESTR(f)      \
 case DCRMIB_LICENSE_ ## f: \
-   return DCRP_LICENSE_FEATURE_ ## f ## _STR
+   return(DCRP_LICENSE_FEATURE_ ## f ## _STR)
 
    switch (idx)
    {
@@ -36,7 +36,7 @@ isValidLicenseType(int32_t idx)
 {
 #define CHECKFEATURE(f)    \
 case DCRMIB_LICENSE_ ## f: \
-   return 1
+   return(1)
 
    switch (idx)
    {

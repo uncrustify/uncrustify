@@ -40,11 +40,11 @@ struct X
 
    int f()
    {
-      return(*b); // 7:8
+      return (*b); // 7:8
    }
    int g()
    {
-      return(*c); // 11:8
+      return (*c); // 11:8
    }
 };
 

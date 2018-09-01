@@ -328,6 +328,9 @@
 02453  return-3.cfg                         c/nl_return_expr.c
 02454  return-4.cfg                         c/nl_return_expr.c
 
+02455  mod_paren_on_return-a.cfg            c/macro-returns.c
+02456  mod_paren_on_return-r.cfg            c/macro-returns.c
+
 02460  freebsd.cfg                          c/freebsd.c
 
 02486  doxy-comment-no.cfg                  c/doxy-comment.c

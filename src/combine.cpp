@@ -2539,7 +2539,7 @@ static void process_returns(void)
    pc = chunk_get_head();
    while (pc != nullptr)
    {
-      if (pc->type != CT_RETURN || (pc->flags & PCF_IN_PREPROC))
+      if (pc->type != CT_RETURN)
       {
          pc = chunk_get_next_type(pc, CT_RETURN, -1);
          continue;
@@ -2560,13 +2560,15 @@ static chunk_t *process_return(chunk_t *pc)
    chunk_t chunk;
 
    // grab next and bail if it is a semicolon
-   next = chunk_get_next_ncnl(pc);
-   if (next == nullptr || chunk_is_semicolon(next))
+   next = chunk_ppa_get_next_ncnl(pc);
+   if (  next == nullptr || chunk_is_semicolon(next)
+      || chunk_is_token(next, CT_NEWLINE))
    {
       return(next);
    }
 
-   if (options::nl_return_expr() != IARF_IGNORE)
+   if (  options::nl_return_expr() != IARF_IGNORE
+      && !(pc->flags & PCF_IN_PREPROC))
    {
       newline_iarf(pc, options::nl_return_expr());
    }
@@ -2579,12 +2581,12 @@ static chunk_t *process_return(chunk_t *pc)
       {
          return(nullptr);
       }
-      semi = chunk_get_next_ncnl(cpar);
+      semi = chunk_ppa_get_next_ncnl(cpar);
       if (semi == nullptr)
       {
          return(nullptr);
       }
-      if (chunk_is_semicolon(semi))
+      if (chunk_is_token(semi, CT_NEWLINE) || chunk_is_semicolon(semi))
       {
          if (options::mod_paren_on_return() == IARF_REMOVE)
          {
@@ -2624,6 +2626,12 @@ static chunk_t *process_return(chunk_t *pc)
       }
    }
 
+   // We don't have a fully paren'd return. Should we add some?
+   if ((options::mod_paren_on_return() & IARF_ADD) == 0)
+   {
+      return(next);
+   }
+
    // Issue #1917
    // Never add parens to a braced init list; that breaks the code
    //   return {args...};    // C++11 type elision; okay
@@ -2637,23 +2645,41 @@ static chunk_t *process_return(chunk_t *pc)
       return(next);
    }
 
-   // We don't have a fully paren'd return. Should we add some?
-   if ((options::mod_paren_on_return() & IARF_ADD) == 0)
-   {
-      return(next);
-   }
-
    // find the next semicolon on the same level
    semi = next;
-   while ((semi = chunk_get_next(semi)) != nullptr)
+   if (pc->flags & PCF_IN_PREPROC)
    {
-      if (  (chunk_is_semicolon(semi) && pc->level == semi->level)
-         || semi->level < pc->level)
+      while ((semi = semi->next) != nullptr)
       {
-         break;
+         if (!(semi->flags & PCF_IN_PREPROC))
+         {
+            break;
+         }
+         if (semi->level < pc->level)
+         {
+            return(semi);
+         }
+         if (chunk_is_semicolon(semi) && pc->level == semi->level)
+         {
+            break;
+         }
       }
    }
-   if (chunk_is_semicolon(semi) && pc->level == semi->level)
+   else
+   {
+      while ((semi = chunk_get_next(semi)) != nullptr)
+      {
+         if (semi->level < pc->level)
+         {
+            return(semi);
+         }
+         if (chunk_is_semicolon(semi) && pc->level == semi->level)
+         {
+            break;
+         }
+      }
+   }
+   if (semi)
    {
       // add the parenthesis
       chunk.type        = CT_PAREN_OPEN;
@@ -2661,6 +2687,7 @@ static chunk_t *process_return(chunk_t *pc)
       chunk.level       = pc->level;
       chunk.brace_level = pc->brace_level;
       chunk.orig_line   = pc->orig_line;
+      chunk.orig_col    = next->orig_col - 1;
       chunk.parent_type = CT_RETURN;
       chunk.flags       = pc->flags & PCF_COPY_FLAGS;
       chunk_add_before(&chunk, next);
@@ -2668,6 +2695,7 @@ static chunk_t *process_return(chunk_t *pc)
       chunk.type      = CT_PAREN_CLOSE;
       chunk.str       = ")";
       chunk.orig_line = semi->orig_line;
+      chunk.orig_col  = semi->orig_col - 1;
       cpar            = chunk_add_before(&chunk, semi);
 
       LOG_FMT(LRETURN, "%s(%d): added parens on orig_line %zu\n",
