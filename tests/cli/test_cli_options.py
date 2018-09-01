@@ -24,9 +24,9 @@ import pprint
 
 
 if py_version_info[0] == 3:
-    def unicode(str):
+    def unicode(str, codec):
         """
-        compatibility function vor python 3, returns provided param string
+        compatibility function for python 3, returns provided param string
         """
         return str
 
@@ -96,13 +96,13 @@ def write_to_output_path(output_path, result_str):
     newline = None: this outputs  \r\n
     newline = "\r": this outputs  \r
     newline = "\n": this outputs  \n
-    newline = ""  : this outputs  \n    
+    newline = ""  : this outputs  \n
     For the sake of consistency, all newlines are now being written out as \n
     However, if the result_str itself contains \r\n, then \r\n will be output
     as this code doesn't post process the data being written out
     '''
     with open(output_path, 'w', encoding="utf-8", newline="\n") as f:
-        f.write(unicode(result_str))
+        f.write(unicode(result_str, 'utf-8'))
 
 
 def get_file_content(fp):
@@ -183,7 +183,7 @@ def check_generated_output(gen_expected_path, gen_result_path,
 
     if gen_res_txt != gen_exp_txt:
         with open(gen_result_path, 'w', encoding="utf-8", newline="") as f:
-                f.write(unicode(gen_res_txt))
+                f.write(unicode(gen_res_txt, 'utf-8'))
 
         if program_args.apply and program_args.auto_output_path:
                 write_to_output_path(program_args.auto_output_path, gen_res_txt)
@@ -198,7 +198,7 @@ def check_generated_output(gen_expected_path, gen_result_path,
 
             for line in file_diff:
                 pprint.PrettyPrinter(indent=4).pprint(line)
-            
+
             return False
         else:
             print("\nProblem with %s" % gen_result_path)
@@ -251,14 +251,15 @@ def check_std_output(expected_path, result_path, result_str, result_manip=None,
         else:
             result_str = result_manip(result_str)
 
+    result_str = unicode(result_str, 'utf-8')
     if result_str != exp_txt:
         with open(result_path, 'w', encoding="utf-8", newline="\n") as f:
-            f.write(unicode(result_str))
-       
+            f.write(result_str)
+
         if program_args.apply and program_args.auto_output_path:
             write_to_output_path(program_args.auto_output_path, result_str)
-            return True 
-            
+            return True
+
         if program_args.diff:
             print("\n************************************")
             print("Problem with %s" % result_path)
