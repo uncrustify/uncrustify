@@ -100,13 +100,13 @@ static void do_kw_subst(chunk_t *pc);
 
 
 //! All output text is sent here, one char at a time.
-static void add_char(UINT32 ch);
+static void add_char(UINT32 ch, bool is_literal = false);
 
 
 static void add_text(const char *ascii_text);
 
 
-static void add_text(const unc_text &text, bool is_ignored);
+static void add_text(const unc_text &text, bool is_ignored, bool is_literal);
 
 
 /**
@@ -236,7 +236,7 @@ static void add_spaces()
 }
 
 
-static void add_char(UINT32 ch)
+static void add_char(UINT32 ch, bool is_literal)
 {
    // If we did a '\r' and it isn't followed by a '\n', then output a newline
    if ((cpd.last_char == '\r') && (ch != '\n'))
@@ -275,7 +275,7 @@ static void add_char(UINT32 ch)
    else
    {
       // explicitly disallow a tab after a space
-      if (ch == '\t' && cpd.last_char == ' ')
+      if (!is_literal && ch == '\t' && cpd.last_char == ' ')
       {
          size_t endcol = next_tab_column(cpd.column);
          while (cpd.column < endcol)
@@ -320,7 +320,7 @@ static void add_text(const char *ascii_text)
 }
 
 
-static void add_text(const unc_text &text, bool is_ignored = false)
+static void add_text(const unc_text &text, bool is_ignored = false, bool is_literal = false)
 {
    for (size_t idx = 0; idx < text.size(); idx++)
    {
@@ -331,7 +331,7 @@ static void add_text(const unc_text &text, bool is_ignored = false)
       }
       else
       {
-         add_char(ch);
+         add_char(ch, is_literal);
       }
    }
 }
@@ -674,7 +674,7 @@ void output_text(FILE *pfile)
          }
 
          output_to_column(pc->column, allow_tabs);
-         add_text(pc->str);
+         add_text(pc->str, false, chunk_is_token(pc, CT_STRING));
          if (chunk_is_token(pc, CT_PP_DEFINE))  // Issue #876
          {
             if (options::force_tab_after_define())

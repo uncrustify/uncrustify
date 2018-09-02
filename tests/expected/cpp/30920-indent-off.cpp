@@ -23,7 +23,7 @@ struct Y
    void operator()(){}
    void func()
    {
-      auto x = "	test\t            ...   ???";
+      auto x = "	test\t 	 	 		...   ???";
    }
 };
 
