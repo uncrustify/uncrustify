@@ -629,8 +629,8 @@ def main(args):
             args_arr=['-o', s_path_join(sc_dir, 'results/universalindent.cfg'),
                       '--universalindent'],
             gen_expected_path=s_path_join(sc_dir, 'output/universalindent.cfg'),
-            gen_result_path=s_path_join(sc_dir, 'results/universalindent.cfg')
-            out_result_manip=reg_replace(r'\version=Uncrustify+', '')):
+            gen_result_path=s_path_join(sc_dir, 'results/universalindent.cfg'),
+            out_result_manip=reg_replace(r'\version=Uncrustify+', '')
             ):
         return_flag = False
 
