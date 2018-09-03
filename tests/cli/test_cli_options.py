@@ -630,20 +630,8 @@ def main(args):
                       '--universalindent'],
             gen_expected_path=s_path_join(sc_dir, 'output/universalindent.cfg'),
             gen_result_path=s_path_join(sc_dir, 'results/universalindent.cfg'),
-            out_result_manip=reg_replace(r'version+', '')
-            ):
-        return_flag = False
-
-    #
-    # Test --universalindent
-    #
-    if not check_uncrustify_output(
-            uncr_bin,
-            parsed_args,
-            args_arr=['-o', s_path_join(sc_dir, 'results/universalindent.cfg'),
-                      '--universalindent'],
-            gen_expected_path=s_path_join(sc_dir, 'output/universalindent.cfg'),
-            gen_result_path=s_path_join(sc_dir, 'results/universalindent.cfg')
+            gen_result_manip=[reg_replace(r'version=U.+', ''),
+                              reg_replace(r'\([0-9]+\)', '')]
             ):
         return_flag = False
 
