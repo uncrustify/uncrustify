@@ -182,8 +182,10 @@ def check_generated_output(gen_expected_path, gen_result_path,
             gen_res_txt = result_manip(gen_res_txt)
 
     if gen_res_txt != gen_exp_txt:
+        if not (type(gen_res_txt) is unicode):
+            gen_res_txt = unicode(gen_res_txt, 'utf-8')
         with open(gen_result_path, 'w', encoding="utf-8", newline="") as f:
-                f.write(unicode(gen_res_txt, 'utf-8'))
+                f.write(gen_res_txt)
 
         if program_args.apply and program_args.auto_output_path:
                 write_to_output_path(program_args.auto_output_path, gen_res_txt)
@@ -448,7 +450,7 @@ def s_path_join(path, *paths):
     :params path, paths: string
         see os.path.join
 
-    :return: sting
+    :return: string
     ----------------------------------------------------------------------------
         a joined path, see os.path.join
 
@@ -615,6 +617,19 @@ def main(args):
                       '--replace'],
             gen_expected_path=s_path_join(sc_dir, 'output/backup.h'),
             gen_result_path=s_path_join(sc_dir, 'input/backup.h')
+            ):
+        return_flag = False
+
+    #
+    # Test --universalindent
+    #
+    if not check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            args_arr=['-o', s_path_join(sc_dir, 'results/universalindent.cfg'),
+                      '--universalindent'],
+            gen_expected_path=s_path_join(sc_dir, 'output/universalindent.cfg'),
+            gen_result_path=s_path_join(sc_dir, 'results/universalindent.cfg')
             ):
         return_flag = False
 
