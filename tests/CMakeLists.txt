@@ -51,6 +51,15 @@ else()
 endif()
 
 add_test(
+  NAME sources_format
+  COMMAND ${PYTHON_EXECUTABLE} run_sources_tests.py
+    --executable $<TARGET_FILE:uncrustify>
+    -d --git ${GIT_EXECUTABLE}
+    --result-dir ${CMAKE_CURRENT_BINARY_DIR}
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+add_test(
   NAME cli_options
   COMMAND ${PYTHON_EXECUTABLE}
     test_cli_options.py

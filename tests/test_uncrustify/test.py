@@ -46,6 +46,14 @@ class SourceTest(object):
         subprocess.call(cmd)
 
     # -------------------------------------------------------------------------
+    def build(self, test_input, test_lang, test_config):
+        self.test_name = os.path.basename(test_input)
+        self.test_lang = test_lang
+        self.test_input = test_input
+        self.test_config = test_config
+        self.test_expected = test_input
+
+    # -------------------------------------------------------------------------
     def _check(self):
         self._check_attr('test_name')
         self._check_attr('test_lang')

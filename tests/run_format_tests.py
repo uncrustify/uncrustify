@@ -17,7 +17,7 @@ import test_uncrustify as tu
 
 # -----------------------------------------------------------------------------
 def main(argv):
-    parser = argparse.ArgumentParser(description='Run uncrustify tests')
+    parser = argparse.ArgumentParser(description='Run uncrustify format tests')
     tu.add_format_tests_arguments(parser)
     args = tu.parse_args(parser)
 
