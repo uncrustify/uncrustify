@@ -20,6 +20,10 @@
 #include <map>
 #include <string>
 
+#ifdef IGNORE // WinBase.h
+#undef IGNORE
+#endif
+
 namespace uncrustify
 {
 
