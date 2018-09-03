@@ -240,7 +240,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && ((CharTable::IsKw1(second->str[0]) || chunk_is_token(second, CT_NUMBER))))
    {
       log_rule("sp_case_label");
-      return(iarf_e(options::sp_case_label() | IARF_ADD));
+      return(options::sp_case_label() | IARF_ADD);
    }
 
    if (chunk_is_token(first, CT_FOR_COLON))
@@ -324,14 +324,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       log_rule("sp_macro");
       iarf_e arg = options::sp_macro();
-      return(static_cast<iarf_e>(arg | ((arg != IARF_IGNORE) ? IARF_ADD : IARF_IGNORE)));
+      return(arg | ((arg != IARF_IGNORE) ? IARF_ADD : IARF_IGNORE));
    }
 
    if (chunk_is_token(first, CT_FPAREN_CLOSE) && first->parent_type == CT_MACRO_FUNC)
    {
       log_rule("sp_macro_func");
       iarf_e arg = options::sp_macro_func();
-      return(static_cast<iarf_e>(arg | ((arg != IARF_IGNORE) ? IARF_ADD : IARF_IGNORE)));
+      return(arg | ((arg != IARF_IGNORE) ? IARF_ADD : IARF_IGNORE));
    }
 
    if (chunk_is_token(first, CT_PREPROC))
@@ -368,8 +368,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  chunk_is_token(first, CT_SPAREN_CLOSE)
          && first->parent_type != CT_WHILE_OF_DO)
       {
-         log_rule("sp_special_semi");
-         arg = static_cast<iarf_e>(arg | options::sp_special_semi());
+         log_rule("sp_before_semi|sp_special_semi");
+         arg = arg | options::sp_special_semi();
       }
       else
       {
@@ -1238,7 +1238,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && chunk_is_token(second, CT_BRACE_OPEN)
       && second->parent_type == CT_BRACED_INIT_LIST)
    {
-      auto arg = options::sp_type_brace_init_lst();
+      auto arg = iarf_flags_t{ options::sp_type_brace_init_lst() };
       if (arg || first->parent_type != CT_DECLTYPE)
       {
          // 'int{9}' vs 'int {9}'
@@ -1766,7 +1766,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          && first->orig_line != second->orig_line
          && arg != IARF_REMOVE)
       {
-         arg = static_cast<iarf_e>(arg | IARF_ADD);
+         arg = arg | IARF_ADD;
       }
       log_rule("sp_bool");
       return(arg);
@@ -1893,7 +1893,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (first->type != CT_PTR_TYPE)
       {
          log_rule("sp_type_func|ADD");
-         return(static_cast<iarf_e>(options::sp_type_func() | IARF_ADD));
+         return(options::sp_type_func() | IARF_ADD);
       }
       log_rule("sp_type_func");
       return(options::sp_type_func());
@@ -2008,7 +2008,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && chunk_is_token(first, CT_PAREN_CLOSE)
       && first->parent_type == CT_DECLTYPE)
    {
-      if (auto arg = options::sp_after_decltype())
+      if (auto arg = iarf_flags_t{ options::sp_after_decltype() })
       {
          log_rule("sp_after_decltype");
          return(arg);
@@ -2217,11 +2217,9 @@ static iarf_e ensure_force_space(chunk_t *first, chunk_t *second, iarf_e av)
 {
    if (first->flags & PCF_FORCE_SPACE)
    {
-      int av_int = av;
       LOG_FMT(LSPACE, " <force between '%s' and '%s'>",
               first->text(), second->text());
-      av_int |= IARF_ADD;
-      return(static_cast<iarf_e>(av_int));
+      return(av | IARF_ADD);
    }
 
    return(av);

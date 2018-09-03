@@ -69,7 +69,7 @@ void newlines_eat_start_end(void);
  * exactly 1 newline before (UO_pos_comma == TRAIL) or after (UO_pos_comma == LEAD).
  * We can't remove a newline if it is right before a preprocessor.
  */
-void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode);
+void newlines_chunk_pos(c_token_t chunk_type, uncrustify::tokenpos_e mode);
 
 
 /**
@@ -115,7 +115,7 @@ void undo_one_liner(chunk_t *pc);
  * @param pc  The chunk
  * @param av  The IARF value
  */
-void newline_iarf(chunk_t *pc, iarf_e av);
+void newline_iarf(chunk_t *pc, uncrustify::iarf_e av);
 
 
 /**

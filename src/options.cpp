@@ -37,7 +37,7 @@ namespace uncrustify
 namespace options
 {
 
-lineends_e &newlines()
+lineend_e &newlines()
 {
    return(cpd.settings[UO_newlines].le);
 }
