@@ -196,13 +196,23 @@ def check_generated_output(gen_expected_path, gen_result_path,
             file_diff = difflib.ndiff(gen_res_txt.splitlines(True),
                                       gen_exp_txt.splitlines(True))
 
+            res_file_diff = difflib.ndiff(gen_res_txt.splitlines(True))
+
+            exp_file_diff = difflib.ndiff(gen_exp_txt.splitlines(True))
+
             for line in file_diff:
+                pprint.PrettyPrinter(indent=4).pprint(line)
+
+            for line in res_file_diff:
+                pprint.PrettyPrinter(indent=4).pprint(line)
+
+            for line in exp_file_diff:
                 pprint.PrettyPrinter(indent=4).pprint(line)
 
             return False
         else:
             print("\nProblem with %s" % gen_result_path)
-            print("use: '--diff' to find out why %s %s are different"
+            print("use(gen): '--diff' to find out why %s %s are different"
                   % (gen_result_path, gen_expected_path))
             return False
 
@@ -448,7 +458,7 @@ def s_path_join(path, *paths):
     :params path, paths: string
         see os.path.join
 
-    :return: sting
+    :return: string
     ----------------------------------------------------------------------------
         a joined path, see os.path.join
 
@@ -615,6 +625,26 @@ def main(args):
                       '--replace'],
             gen_expected_path=s_path_join(sc_dir, 'output/backup.h'),
             gen_result_path=s_path_join(sc_dir, 'input/backup.h')
+            ):
+        return_flag = False
+
+    #
+    # Test --universalindent
+    #
+    # Before using: The file 'output/universalindent.cfg' must be prepared.
+    # The line with 'version=Uncrustify-xyz-123' must be replaced with an empty line.
+    # The flag CMAKE_BUILD_TYPE must be set to "Release", or all lines with
+    # 'Description="<html>(<number>)text abc.</html>" must be changed to
+    # 'Description="<html>text abc.</html>"
+    if not check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            args_arr=['-o', s_path_join(sc_dir, 'results/universalindent.cfg'),
+                      '--universalindent'],
+            gen_expected_path=s_path_join(sc_dir, 'output/universalindent.cfg'),
+            gen_result_path=s_path_join(sc_dir, 'results/universalindent.cfg'),
+            gen_result_manip=[reg_replace(r'version=U.+', ''),
+                              reg_replace(r'\(\d+\)', '')]
             ):
         return_flag = False
 
