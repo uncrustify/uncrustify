@@ -22,6 +22,7 @@
 #include "language_tools.h"
 #include "punctuators.h"
 
+#define LE_COUNT(x)    cpd.le_counts[static_cast<size_t>(LE_ ## x)]
 
 using namespace std;
 using namespace uncrustify;
@@ -579,17 +580,17 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
             {
                if (ctx.peek() == '\n')
                {
-                  cpd.le_counts[LE_CRLF]++;
+                  ++LE_COUNT(CRLF);
                   pc.str.append(ctx.get());  // store the '\n'
                }
                else
                {
-                  cpd.le_counts[LE_CR]++;
+                  ++LE_COUNT(CR);
                }
             }
             else
             {
-               cpd.le_counts[LE_LF]++;
+               ++LE_COUNT(LF);
             }
          }
       }
@@ -633,17 +634,17 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
             {
                if (ctx.peek() == '\n')
                {
-                  cpd.le_counts[LE_CRLF]++;
+                  ++LE_COUNT(CRLF);
                   pc.str.append(ctx.get());  // store the '\n'
                }
                else
                {
-                  cpd.le_counts[LE_CR]++;
+                  ++LE_COUNT(CR);
                }
             }
             else
             {
-               cpd.le_counts[LE_LF]++;
+               ++LE_COUNT(LF);
             }
          }
       }
@@ -1599,12 +1600,12 @@ static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc)
          if (ctx.expect('\n'))
          {
             // CRLF ending
-            cpd.le_counts[LE_CRLF]++;
+            ++LE_COUNT(CRLF);
          }
          else
          {
             // CR ending
-            cpd.le_counts[LE_CR]++;
+            ++LE_COUNT(CR);
          }
          nl_count++;
          pc.orig_prev_sp = 0;
@@ -1612,7 +1613,7 @@ static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc)
 
       case '\n':
          // LF ending
-         cpd.le_counts[LE_LF]++;
+         ++LE_COUNT(LF);
          nl_count++;
          pc.orig_prev_sp = 0;
          break;
@@ -2333,8 +2334,8 @@ void tokenize(const deque<int> &data, chunk_t *ref)
    // Set the cpd.newline string for this file
    if (  options::newlines() == LE_LF
       || (  options::newlines() == LE_AUTO
-         && (cpd.le_counts[LE_LF] >= cpd.le_counts[LE_CRLF])
-         && (cpd.le_counts[LE_LF] >= cpd.le_counts[LE_CR])))
+         && (LE_COUNT(LF) >= LE_COUNT(CRLF))
+         && (LE_COUNT(LF) >= LE_COUNT(CR))))
    {
       // LF line ends
       cpd.newline = "\n";
@@ -2342,8 +2343,8 @@ void tokenize(const deque<int> &data, chunk_t *ref)
    }
    else if (  options::newlines() == LE_CRLF
            || (  options::newlines() == LE_AUTO
-              && (cpd.le_counts[LE_CRLF] >= cpd.le_counts[LE_LF])
-              && (cpd.le_counts[LE_CRLF] >= cpd.le_counts[LE_CR])))
+              && (LE_COUNT(CRLF) >= LE_COUNT(LF))
+              && (LE_COUNT(CRLF) >= LE_COUNT(CR))))
    {
       // CRLF line ends
       cpd.newline = "\r\n";

@@ -5,10 +5,13 @@
  * @author  Ben Gardner
  * @author  Guy Maurel since version 0.62 for uncrustify4Qt
  *          October 2015, 2016
+ * @author  Matthew Woehlke since version 0.67
  * @license GPL v2+
  */
 #ifndef OPTION_H_INCLUDED
 #define OPTION_H_INCLUDED
+
+#include "enum_flags.h"
 
 #ifdef EMSCRIPTEN
 #include <vector>
@@ -17,69 +20,103 @@
 #include <map>
 #include <string>
 
-/**
- * abbreviations used
- *
- * av     = argument values
- * bal    = balance, balanced
- * pstart = pointer star
- * rel    = relative
- */
+#ifdef IGNORE // WinBase.h
+#undef IGNORE
+#endif
 
-
-enum argtype_e
+namespace uncrustify
 {
-   AT_BOOL,    //! true / false
-   AT_IARF,    //! Ignore / Add / Remove / Force
-   AT_NUM,     //! Number
-   AT_LINE,    //! Line Endings
-   AT_POS,     //! start/end or Trail/Lead
-   AT_STRING,  //! string value
-   AT_UNUM,    //! unsigned Number
-   AT_TFI,     //! false / true / ignore
+
+//-----------------------------------------------------------------------------
+// Option types
+enum class option_type_e
+{
+   BOOL,
+   IARF,
+   LINEEND,
+   TOKENPOS,
+   NUM,
+   UNUM,
+   STRING,
 };
 
-//! Arg values - these are bit fields
-enum iarf_e
+//-----------------------------------------------------------------------------
+/// I/A/R/F values - these are bit fields
+enum class iarf_e
 {
-   IARF_IGNORE      = 0,                        //! option ignores a given feature
-   IARF_ADD         = (1u << 0),                //! option adds a given feature
-   IARF_REMOVE      = (1u << 1),                //! option removes a given feature
-   IARF_FORCE       = (IARF_ADD | IARF_REMOVE), //! option forces the usage of a given feature
-   IARF_NOT_DEFINED = (1u << 2)                 //! for debugging
+   IGNORE      = 0,              //! option ignores a given feature
+   ADD         = (1u << 0),      //! option adds a given feature
+   REMOVE      = (1u << 1),      //! option removes a given feature
+   FORCE       = (ADD | REMOVE), //! option forces the usage of a given feature
+   NOT_DEFINED = (1u << 2)       //! for debugging
 };
 
-//! Line endings
-enum lineends_e
+UNC_DECLARE_FLAGS(iarf_flags_t, iarf_e);
+UNC_DECLARE_OPERATORS_FOR_FLAGS(iarf_flags_t);
+
+//-----------------------------------------------------------------------------
+/// Line endings
+enum class lineend_e
 {
-   LE_LF,      //! "\n"   typically used on Unix/Linux system
-   LE_CRLF,    //! "\r\n" typically used on Windows systems
-   LE_CR,      //! "\r"   carriage return without newline
-   LE_AUTO     //! keep last
+   LF,   //! "\n"   typically used on Unix/Linux system
+   CRLF, //! "\r\n" typically used on Windows systems
+   CR,   //! "\r"   carriage return without newline
+   AUTO, //! keep last
+};
+constexpr auto lineend_styles = static_cast<size_t>(lineend_e::AUTO);
+
+//-----------------------------------------------------------------------------
+/// Token position - these are bit fields
+enum class tokenpos_e
+{
+   IGNORE      = 0,  //! don't change it
+   BREAK       = 1,  //! add a newline before or after the if not present
+   FORCE       = 2,  //! force a newline on one side and not the other
+   LEAD        = 4,  //! at the start of a line or leading if wrapped line
+   TRAIL       = 8,  //! at the end of a line or trailing if wrapped line
+   JOIN        = 16, //! remove newlines on both sides
+   LEAD_BREAK  = (LEAD | BREAK),
+   LEAD_FORCE  = (LEAD | FORCE),
+   TRAIL_BREAK = (TRAIL | BREAK),
+   TRAIL_FORCE = (TRAIL | FORCE),
 };
 
-//! Token position - these are bit fields
-enum tokenpos_e
-{
-   TP_IGNORE      = 0,                        //! don't change it
-   TP_BREAK       = 1,                        //! add a newline before or after the if not present
-   TP_FORCE       = 2,                        //! force a newline on one side and not the other
-   TP_LEAD        = 4,                        //! at the start of a line or leading if wrapped line
-   TP_LEAD_BREAK  = (TP_LEAD | TP_BREAK),
-   TP_LEAD_FORCE  = (TP_LEAD | TP_FORCE),
-   TP_TRAIL       = 8,                        //! at the end of a line or trailing if wrapped line
-   TP_TRAIL_BREAK = (TP_TRAIL | TP_BREAK),
-   TP_TRAIL_FORCE = (TP_TRAIL | TP_FORCE),
-   TP_JOIN        = 16,                       //! remove newlines on both sides
-};
+UNC_DECLARE_FLAGS(tokenpos_flags_t, tokenpos_e);
+UNC_DECLARE_OPERATORS_FOR_FLAGS(tokenpos_flags_t);
 
-//! True, False or Ignore
-enum TrueFalseIgnore_e
-{
-   TFI_FALSE  = 0,                    //! false
-   TFI_TRUE   = 1,                    //! true
-   TFI_IGNORE = 2,                    //! ignore
-};
+// TODO: generate these
+constexpr auto AT_BOOL   = option_type_e::BOOL;
+constexpr auto AT_IARF   = option_type_e::IARF;
+constexpr auto AT_LINE   = option_type_e::LINEEND;
+constexpr auto AT_POS    = option_type_e::TOKENPOS;
+constexpr auto AT_NUM    = option_type_e::NUM;
+constexpr auto AT_UNUM   = option_type_e::UNUM;
+constexpr auto AT_STRING = option_type_e::STRING;
+
+constexpr auto IARF_IGNORE      = iarf_e::IGNORE;
+constexpr auto IARF_ADD         = iarf_e::ADD;
+constexpr auto IARF_REMOVE      = iarf_e::REMOVE;
+constexpr auto IARF_FORCE       = iarf_e::FORCE;
+constexpr auto IARF_NOT_DEFINED = iarf_e::NOT_DEFINED;
+
+constexpr auto LE_LF   = lineend_e::LF;
+constexpr auto LE_CRLF = lineend_e::CRLF;
+constexpr auto LE_CR   = lineend_e::CR;
+constexpr auto LE_AUTO = lineend_e::AUTO;
+
+constexpr auto TP_IGNORE      = tokenpos_e::IGNORE;
+constexpr auto TP_BREAK       = tokenpos_e::BREAK;
+constexpr auto TP_FORCE       = tokenpos_e::FORCE;
+constexpr auto TP_LEAD        = tokenpos_e::LEAD;
+constexpr auto TP_TRAIL       = tokenpos_e::TRAIL;
+constexpr auto TP_JOIN        = tokenpos_e::JOIN;
+constexpr auto TP_LEAD_BREAK  = tokenpos_e::LEAD_BREAK;
+constexpr auto TP_LEAD_FORCE  = tokenpos_e::LEAD_FORCE;
+constexpr auto TP_TRAIL_BREAK = tokenpos_e::TRAIL_BREAK;
+constexpr auto TP_TRAIL_FORCE = tokenpos_e::TRAIL_FORCE;
+
+} // namespace uncrustify
+
 
 /**
  * Uncrustify options are configured with a parameter of this type.
@@ -89,14 +126,13 @@ enum TrueFalseIgnore_e
  */
 union op_val_t
 {
-   iarf_e            a;    //! ignore / add / remove / force
-   int               n;    //! a signed number
-   bool              b;    //! a bool flag
-   lineends_e        le;   //! line ending type
-   tokenpos_e        tp;   //! token position type
-   const char        *str; //! a string
-   size_t            u;    //! an unsigned number
-   TrueFalseIgnore_e tfi;  //! false / true / ignore
+   uncrustify::iarf_e     a;    //! ignore / add / remove / force
+   int                    n;    //! a signed number
+   bool                   b;    //! a bool flag
+   uncrustify::lineend_e  le;   //! line ending type
+   uncrustify::tokenpos_e tp;   //! token position type
+   const char             *str; //! a string
+   size_t                 u;    //! an unsigned number
 };
 
 /**
@@ -961,18 +997,18 @@ struct group_map_value
 
 struct option_map_value
 {
-   uncrustify_options id;
-   uncrustify_groups  group_id;
-   argtype_e          type;
-   int                min_val;
-   int                max_val;
-   const char         *name;
-   const char         *short_desc;
-   const char         *long_desc;
+   uncrustify_options        id;
+   uncrustify_groups         group_id;
+   uncrustify::option_type_e type;
+   int                       min_val;
+   int                       max_val;
+   const char                *name;
+   const char                *short_desc;
+   const char                *long_desc;
 };
 
 
-const char *get_argtype_name(argtype_e argtype);
+const char *get_argtype_name(uncrustify::option_type_e argtype);
 
 
 /**
@@ -1063,7 +1099,7 @@ const option_map_value *get_option_name(uncrustify_options uo);
  *
  * @param val  argument type to convert
  */
-std::string argtype_to_string(argtype_e argtype);
+std::string argtype_to_string(uncrustify::option_type_e argtype);
 
 /**
  * convert a boolean to a string
@@ -1077,21 +1113,21 @@ std::string bool_to_string(bool val);
  *
  * @param val  argument value to convert
  */
-std::string argval_to_string(iarf_e argval);
+std::string argval_to_string(uncrustify::iarf_e argval);
 
 /**
  * convert a line ending type to a string
  *
  * @param val  line ending type to convert
  */
-std::string lineends_to_string(lineends_e linends);
+std::string lineends_to_string(uncrustify::lineend_e linends);
 
 /**
  * convert a token to a string
  *
  * @param val  token to convert
  */
-std::string tokenpos_to_string(tokenpos_e tokenpos);
+std::string tokenpos_to_string(uncrustify::tokenpos_e tokenpos);
 
 /**
  * convert an argument of a given type to a string
@@ -1099,7 +1135,7 @@ std::string tokenpos_to_string(tokenpos_e tokenpos);
  * @param argtype   type of argument
  * @param op_val_t  value of argument
  */
-std::string op_val_to_string(argtype_e argtype, op_val_t op_val);
+std::string op_val_to_string(uncrustify::option_type_e argtype, op_val_t op_val);
 
 
 typedef std::map<uncrustify_options, option_map_value>::iterator   option_name_map_it;

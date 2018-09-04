@@ -2664,7 +2664,7 @@ static chunk_t *process_return(chunk_t *pc)
    }
 
    // We don't have a fully paren'd return. Should we add some?
-   if ((options::mod_paren_on_return() & IARF_ADD) == 0)
+   if (!(options::mod_paren_on_return() & IARF_ADD))
    {
       return(next);
    }

@@ -18,7 +18,7 @@ namespace uncrustify
 namespace options
 {
 
-lineends_e &newlines();
+lineend_e &newlines();
 size_t &input_tab_size();
 size_t &output_tab_size();
 size_t &string_escape_char();

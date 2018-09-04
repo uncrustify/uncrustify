@@ -17,6 +17,7 @@
 
 
 using namespace std;
+using namespace uncrustify;
 
 
 void print_universal_indent_cfg(FILE *pfile)
@@ -286,19 +287,9 @@ void print_universal_indent_cfg(FILE *pfile)
                break;
             }
 
-            case AT_TFI:
-            {
-               fprintf(pfile, "EditorType=multiple\n");
-               fprintf(pfile, "Choices=\"%s=false|%s=true|%s=ignore\"\n",
-                       option->name, option->name, option->name);
-               fprintf(pfile, "ChoicesReadable=\"False %s|True %s|Ignore %s\"\n",
-                       optionNameReadable, optionNameReadable, optionNameReadable);
-               fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].tfi);
-               break;
-            }
-
             default:
-               fprintf(stderr, "FATAL: Illegal option type %d for '%s'\n", option->type, option->name);
+               fprintf(stderr, "FATAL: Illegal option type %d for '%s'\n",
+                       static_cast<int>(option->type), option->name);
                log_flush(true);
                exit(EX_SOFTWARE);
                break;

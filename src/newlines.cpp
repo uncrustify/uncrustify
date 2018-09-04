@@ -2180,7 +2180,7 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av)
 
    if (before != nullptr && after != nullptr)
    {
-      if ((av & IARF_ADD) != 0)
+      if (av & IARF_ADD)
       {
          chunk_t *nl = newline_add_between(before, after);
          if (  nl
@@ -2190,7 +2190,7 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av)
             nl->nl_count = 1;
          }
       }
-      else if ((av & IARF_REMOVE) != 0)
+      else if (av & IARF_REMOVE)
       {
          newline_del_between(before, after);
       }
@@ -4008,7 +4008,7 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
 {
    LOG_FUNC_ENTRY();
 
-   if (  (mode & (TP_JOIN | TP_LEAD | TP_TRAIL)) == 0
+   if (  !(mode & (TP_JOIN | TP_LEAD | TP_TRAIL))
       && chunk_type != CT_COMMA)
    {
       return;
@@ -4076,8 +4076,8 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
             continue;
          }
 
-         if (  (nl_flag == 0 && ((mode_local & (TP_FORCE | TP_BREAK)) == 0))
-            || (nl_flag == 3 && ((mode_local & TP_FORCE) == 0)))
+         if (  (nl_flag == 0 && !(mode_local & (TP_FORCE | TP_BREAK)))
+            || (nl_flag == 3 && !(mode_local & TP_FORCE)))
          {
             // No newlines and not adding any or both and not forcing
             continue;
@@ -4195,7 +4195,7 @@ void newlines_class_colon_pos(c_token_t tok)
 
          if (  !chunk_is_newline(prev)
             && !chunk_is_newline(next)
-            && ((anc & IARF_ADD) != 0))
+            && (anc & IARF_ADD))
          {
             newline_add_after(pc);
             prev = chunk_get_prev_nc(pc);
@@ -4247,7 +4247,7 @@ void newlines_class_colon_pos(c_token_t tok)
 
          if (chunk_is_token(pc, CT_COMMA) && pc->level == ccolon->level)
          {
-            if ((ncia & IARF_ADD) != 0)
+            if (ncia & IARF_ADD)
             {
                if (pcc & TP_TRAIL)
                {

@@ -25,6 +25,7 @@
 
 
 using namespace std;
+using namespace uncrustify;
 
 
 static const char *DOC_TEXT_END = R"___(
@@ -116,7 +117,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
  * @param min_val     minimal value, only used for integer values
  * @param max_val     maximal value, only used for integer values
  */
-static void unc_add_option(const char *name, uncrustify_options id, argtype_e type, const char *short_desc = nullptr, const char *long_desc = nullptr, int min_val = 0, int max_val = 16);
+static void unc_add_option(const char *name, uncrustify_options id, option_type_e type, const char *short_desc = nullptr, const char *long_desc = nullptr, int min_val = 0, int max_val = 16);
 
 
 void unc_begin_group(uncrustify_groups id, const char *short_desc,
@@ -154,9 +155,9 @@ void unc_begin_group(uncrustify_groups id, const char *short_desc,
 }
 
 
-static void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
-                           const char *short_desc, const char *long_desc,
-                           int min_val, int max_val)
+static void unc_add_option(const char *name, uncrustify_options id,
+                           option_type_e type, const char *short_desc,
+                           const char *long_desc, int min_val, int max_val)
 {
 #ifdef DEBUG
    // The order of the calls of 'unc_add_option' in the function 'register_options'
@@ -231,16 +232,13 @@ static void unc_add_option(const char *name, uncrustify_options id, argtype_e ty
       value.max_val = 0;
       break;
 
-   case AT_TFI:
-      value.max_val = 2;
-      break;
-
    default:
       // coveralls will complain
-      fprintf(stderr, "FATAL: %s(%d): Illegal option type %d for '%s'\n", __func__, __LINE__, type, name);
+      fprintf(stderr, "FATAL: %s(%d): Illegal option type %d for '%s'\n",
+              __func__, __LINE__, static_cast<int>(type), name);
       log_flush(true);
       exit(EX_SOFTWARE);
-   } // switch
+   }
 
    option_name_map[id] = value;
 } // unc_add_option
@@ -2144,41 +2142,6 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       return;
    }
 
-   if (entry->type == AT_TFI)
-   {
-      if (  (strcasecmp(val, "true") == 0)
-         || (strcasecmp(val, "t") == 0)
-         || (strcmp(val, "1") == 0))
-      {
-         dest->tfi = TFI_TRUE;
-         return;
-      }
-
-      if (  (strcasecmp(val, "false") == 0)
-         || (strcasecmp(val, "f") == 0)
-         || (strcmp(val, "0") == 0))
-      {
-         dest->tfi = TFI_FALSE;
-         return;
-      }
-
-      if (  (strcasecmp(val, "ignore") == 0)
-         || (strcasecmp(val, "i") == 0)
-         || (strcmp(val, "2") == 0))
-      {
-         dest->tfi = TFI_IGNORE;
-         return;
-      }
-
-      fprintf(stderr, "%s(%d): %s:%d Expected 'True' or 'False' or 'Ignore' for %s, got '%s'\n",
-              __func__, __LINE__, cpd.filename.c_str(), cpd.line_number,
-              entry->name, val);
-      log_flush(true);
-      cpd.error_count++;
-      dest->tfi = TFI_FALSE;
-      return;
-   }
-
    // Must be AT_IARF
    if ((strcasecmp(val, "add") == 0) || (strcasecmp(val, "a") == 0))
    {
@@ -2688,7 +2651,7 @@ void set_option_defaults(void)
 } // set_option_defaults
 
 
-string argtype_to_string(argtype_e argtype)
+string argtype_to_string(option_type_e argtype)
 {
    switch (argtype)
    {
@@ -2713,19 +2676,17 @@ string argtype_to_string(argtype_e argtype)
    case AT_UNUM:
       return("unsigned number");
 
-   case AT_TFI:
-      return("false/true/ignore");
-
    default:
       // coveralls will complain
-      fprintf(stderr, "%s(%d): Unknown argtype '%d'\n", __func__, __LINE__, argtype);
+      fprintf(stderr, "%s(%d): Unknown argtype '%d'\n",
+              __func__, __LINE__, static_cast<int>(argtype));
       log_flush(true);
       exit(EX_SOFTWARE);
    }
 }
 
 
-const char *get_argtype_name(argtype_e argtype)
+const char *get_argtype_name(option_type_e argtype)
 {
    switch (argtype)
    {
@@ -2750,12 +2711,10 @@ const char *get_argtype_name(argtype_e argtype)
    case AT_UNUM:
       return("AT_UNUM");
 
-   case AT_TFI:
-      return("AT_TFI");
-
    default:
       // coveralls will complain
-      fprintf(stderr, "%s(%d): Unknown argtype '%d'\n", __func__, __LINE__, argtype);
+      fprintf(stderr, "%s(%d): Unknown argtype '%d'\n",
+              __func__, __LINE__, static_cast<int>(argtype));
       log_flush(true);
       exit(EX_SOFTWARE);
    }
@@ -2770,28 +2729,6 @@ string bool_to_string(bool val)
    }
 
    return("false");
-}
-
-
-string tfi_to_string(TrueFalseIgnore_e val)
-{
-   switch (val)
-   {
-   case TFI_FALSE:
-      return("false");
-
-   case TFI_TRUE:
-      return("true");
-
-   case TFI_IGNORE:
-      return("ignore");
-
-   default:
-      // coveralls will complain
-      fprintf(stderr, "%s(%d): Unknown argval '%d'\n", __func__, __LINE__, val);
-      log_flush(true);
-      return("");
-   }
 }
 
 
@@ -2813,14 +2750,15 @@ string argval_to_string(iarf_e argval)
 
    default:
       // coveralls will complain
-      fprintf(stderr, "argval_to_string: Unknown argval '%d'\n", argval);
+      fprintf(stderr, "%s(%d): Unknown argval '%d'\n",
+              __func__, __LINE__, static_cast<int>(argval));
       log_flush(true);
       return("");
    }
 }
 
 
-string lineends_to_string(lineends_e linends)
+string lineends_to_string(lineend_e linends)
 {
    switch (linends)
    {
@@ -2838,7 +2776,8 @@ string lineends_to_string(lineends_e linends)
 
    default:
       // coveralls will complain
-      fprintf(stderr, "Unknown lineends '%d'\n", linends);
+      fprintf(stderr, "%s(%d): Unknown lineends '%d'\n",
+              __func__, __LINE__, static_cast<int>(linends));
       log_flush(true);
       return("");
    }
@@ -2875,14 +2814,15 @@ string tokenpos_to_string(tokenpos_e tokenpos)
 
    default:
       // coveralls will complain
-      fprintf(stderr, "Unknown tokenpos '%d'\n", tokenpos);
+      fprintf(stderr, "%s(%d) Unknown tokenpos '%d'\n",
+              __func__, __LINE__, static_cast<int>(tokenpos));
       log_flush(true);
       return("");
    }
 }
 
 
-string op_val_to_string(argtype_e argtype, op_val_t op_val)
+string op_val_to_string(option_type_e argtype, op_val_t op_val)
 {
    switch (argtype)
    {
@@ -2907,12 +2847,10 @@ string op_val_to_string(argtype_e argtype, op_val_t op_val)
    case AT_STRING:
       return(op_val.str != nullptr ? op_val.str : "");
 
-   case AT_TFI:
-      return(tfi_to_string(op_val.tfi));
-
    default:
       // coveralls will complain
-      fprintf(stderr, "%s(%d): Unknown argtype '%d'\n", __func__, __LINE__, argtype);
+      fprintf(stderr, "%s(%d): Unknown argtype '%d'\n",
+              __func__, __LINE__, static_cast<int>(argtype));
       log_flush(true);
       exit(EX_SOFTWARE);
    }
