@@ -37,7 +37,7 @@ namespace uncrustify
 namespace options
 {
 
-lineends_e &newlines()
+lineend_e &newlines()
 {
    return(cpd.settings[UO_newlines].le);
 }
@@ -2868,6 +2868,12 @@ size_t &nl_after_func_class_proto()
 size_t &nl_after_func_class_proto_group()
 {
    return(cpd.settings[UO_nl_after_func_class_proto_group].u);
+}
+
+
+bool &nl_class_leave_one_liner_groups()
+{
+   return(cpd.settings[UO_nl_class_leave_one_liner_groups].b);
 }
 
 

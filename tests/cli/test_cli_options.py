@@ -185,7 +185,7 @@ def check_generated_output(gen_expected_path, gen_result_path,
         if not (type(gen_res_txt) is unicode):
             gen_res_txt = unicode(gen_res_txt, 'utf-8')
         with open(gen_result_path, 'w', encoding="utf-8", newline="") as f:
-                f.write(gen_res_txt)
+            f.write(gen_res_txt)
 
         if program_args.apply and program_args.auto_output_path:
                 write_to_output_path(program_args.auto_output_path, gen_res_txt)

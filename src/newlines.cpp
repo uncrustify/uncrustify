@@ -94,6 +94,23 @@ static bool one_liner_nl_ok(chunk_t *pc);
 static void nl_create_one_liner(chunk_t *vbrace_open);
 
 
+/**
+ * Test if a chunk belongs to a one-liner method definition inside a class body
+ */
+static bool is_class_one_liner(chunk_t *pc);
+
+
+/**
+ * Test if a chunk may be combined with a function prototype group.
+ *
+ * If nl_class_leave_one_liner_groups is enabled, a chunk may be combined with
+ * a function prototype group if it is a one-liner inside a class body, and is
+ * a definition of the same sort as surrounding prototypes. This checks against
+ * either the function name, or the function closing brace.
+ */
+bool is_func_proto_group(chunk_t *pc, c_token_t one_liner_type);
+
+
 //! Find the next newline or nl_cont
 static void nl_handle_define(chunk_t *pc);
 
@@ -167,7 +184,7 @@ static void _blank_line_set(chunk_t *pc, const char *text, uncrustify_options uo
  * Doesn't do anything if open brace before it
  * "code\n\ncomment\nif (...)" or "code\ncomment\nif (...)"
  */
-static void newlines_func_pre_blank_lines(chunk_t *start);
+static void newlines_func_pre_blank_lines(chunk_t *start, c_token_t start_type);
 
 
 static chunk_t *get_closing_brace(chunk_t *start);
@@ -920,17 +937,17 @@ static void _blank_line_set(chunk_t *pc, const char *text, uncrustify_options uo
 #define blank_line_set(pc, op)    _blank_line_set(pc, #op, op)
 
 
-static void newlines_func_pre_blank_lines(chunk_t *start)
+static void newlines_func_pre_blank_lines(chunk_t *start, c_token_t start_type)
 {
    LOG_FUNC_ENTRY();
    if (  start == nullptr
-      || (  (  start->type != CT_FUNC_CLASS_DEF
+      || (  (  start_type != CT_FUNC_CLASS_DEF
             || options::nl_before_func_class_def() == 0)
-         && (  start->type != CT_FUNC_CLASS_PROTO
+         && (  start_type != CT_FUNC_CLASS_PROTO
             || options::nl_before_func_class_proto() == 0)
-         && (  start->type != CT_FUNC_DEF
+         && (  start_type != CT_FUNC_DEF
             || options::nl_before_func_body_def() == 0)
-         && (  start->type != CT_FUNC_PROTO
+         && (  start_type != CT_FUNC_PROTO
             || options::nl_before_func_body_proto() == 0)))
    {
       return;
@@ -1017,7 +1034,7 @@ static void newlines_func_pre_blank_lines(chunk_t *start)
    LOG_FMT(LNLFUNCT, "   set blank line(s): for <NL> at O%zu:%zu\n",
            last_nl->orig_line, last_nl->orig_col);
 
-   switch (start->type)
+   switch (start_type)
    {
    case CT_FUNC_CLASS_DEF:
    {
@@ -2163,7 +2180,7 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av)
 
    if (before != nullptr && after != nullptr)
    {
-      if ((av & IARF_ADD) != 0)
+      if (av & IARF_ADD)
       {
          chunk_t *nl = newline_add_between(before, after);
          if (  nl
@@ -2173,7 +2190,7 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av)
             nl->nl_count = 1;
          }
       }
-      else if ((av & IARF_REMOVE) != 0)
+      else if (av & IARF_REMOVE)
       {
          newline_del_between(before, after);
       }
@@ -3658,6 +3675,20 @@ void newline_after_label_colon(void)
 }
 
 
+static bool is_class_one_liner(chunk_t *pc)
+{
+   if (  (  chunk_is_token(pc, CT_FUNC_CLASS_DEF)
+         || chunk_is_token(pc, CT_FUNC_DEF))
+      && (pc->flags & PCF_IN_CLASS))
+   {
+      // Find opening brace
+      pc = chunk_get_next_type(pc, CT_BRACE_OPEN, pc->level);
+      return(pc && (pc->flags & PCF_ONE_LINER));
+   }
+   return(false);
+}
+
+
 void newlines_insert_blank_lines(void)
 {
    LOG_FUNC_ENTRY();
@@ -3701,7 +3732,15 @@ void newlines_insert_blank_lines(void)
               || chunk_is_token(pc, CT_FUNC_CLASS_PROTO)
               || chunk_is_token(pc, CT_FUNC_PROTO))
       {
-         newlines_func_pre_blank_lines(pc);
+         if (  options::nl_class_leave_one_liner_groups()
+            && is_class_one_liner(pc))
+         {
+            newlines_func_pre_blank_lines(pc, CT_FUNC_PROTO);
+         }
+         else
+         {
+            newlines_func_pre_blank_lines(pc, pc->type);
+         }
       }
       else
       {
@@ -3969,7 +4008,7 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
 {
    LOG_FUNC_ENTRY();
 
-   if (  (mode & (TP_JOIN | TP_LEAD | TP_TRAIL)) == 0
+   if (  !(mode & (TP_JOIN | TP_LEAD | TP_TRAIL))
       && chunk_type != CT_COMMA)
    {
       return;
@@ -4037,8 +4076,8 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
             continue;
          }
 
-         if (  (nl_flag == 0 && ((mode_local & (TP_FORCE | TP_BREAK)) == 0))
-            || (nl_flag == 3 && ((mode_local & TP_FORCE) == 0)))
+         if (  (nl_flag == 0 && !(mode_local & (TP_FORCE | TP_BREAK)))
+            || (nl_flag == 3 && !(mode_local & TP_FORCE)))
          {
             // No newlines and not adding any or both and not forcing
             continue;
@@ -4156,7 +4195,7 @@ void newlines_class_colon_pos(c_token_t tok)
 
          if (  !chunk_is_newline(prev)
             && !chunk_is_newline(next)
-            && ((anc & IARF_ADD) != 0))
+            && (anc & IARF_ADD))
          {
             newline_add_after(pc);
             prev = chunk_get_prev_nc(pc);
@@ -4208,7 +4247,7 @@ void newlines_class_colon_pos(c_token_t tok)
 
          if (chunk_is_token(pc, CT_COMMA) && pc->level == ccolon->level)
          {
-            if ((ncia & IARF_ADD) != 0)
+            if (ncia & IARF_ADD)
             {
                if (pcc & TP_TRAIL)
                {
@@ -4286,6 +4325,27 @@ static void _blank_line_max(chunk_t *pc, const char *text, uncrustify_options uo
 
 
 #define blank_line_max(pc, op)    _blank_line_max(pc, # op, op)
+
+
+bool is_func_proto_group(chunk_t *pc, c_token_t one_liner_type)
+{
+   if (  pc && options::nl_class_leave_one_liner_groups()
+      && (pc->type == one_liner_type || pc->parent_type == one_liner_type)
+      && (pc->flags & PCF_IN_CLASS))
+   {
+      if (pc->type == CT_BRACE_CLOSE)
+      {
+         return(pc->flags & PCF_ONE_LINER);
+      }
+      else
+      {
+         // Find opening brace
+         pc = chunk_get_next_type(pc, CT_BRACE_OPEN, pc->level);
+         return(pc && (pc->flags & PCF_ONE_LINER));
+      }
+   }
+   return(false);
+}
 
 
 void do_blank_lines(void)
@@ -4466,8 +4526,9 @@ void do_blank_lines(void)
       }
 
       // Add blanks after function prototypes
-      if (  chunk_is_token(prev, CT_SEMICOLON)
-         && prev->parent_type == CT_FUNC_PROTO)
+      if (  (  chunk_is_token(prev, CT_SEMICOLON)
+            && prev->parent_type == CT_FUNC_PROTO)
+         || is_func_proto_group(prev, CT_FUNC_DEF))
       {
          if (options::nl_after_func_proto() > pc->nl_count)
          {
@@ -4476,15 +4537,17 @@ void do_blank_lines(void)
          }
          if (  (options::nl_after_func_proto_group() > pc->nl_count)
             && next != nullptr
-            && next->parent_type != CT_FUNC_PROTO)
+            && next->parent_type != CT_FUNC_PROTO
+            && !is_func_proto_group(next, CT_FUNC_DEF))
          {
             blank_line_set(pc, UO_nl_after_func_proto_group);
          }
       }
 
       // Issue #411: Add blanks after function class prototypes
-      if (  chunk_is_token(prev, CT_SEMICOLON)
-         && prev->parent_type == CT_FUNC_CLASS_PROTO)
+      if (  (  chunk_is_token(prev, CT_SEMICOLON)
+            && prev->parent_type == CT_FUNC_CLASS_PROTO)
+         || is_func_proto_group(prev, CT_FUNC_CLASS_DEF))
       {
          if (options::nl_after_func_class_proto() > pc->nl_count)
          {
@@ -4493,7 +4556,9 @@ void do_blank_lines(void)
          }
          if (  (options::nl_after_func_class_proto_group() > pc->nl_count)
             && next != nullptr
-            && next->parent_type != CT_FUNC_CLASS_PROTO)
+            && next->type != CT_FUNC_CLASS_PROTO
+            && next->parent_type != CT_FUNC_CLASS_PROTO
+            && !is_func_proto_group(next, CT_FUNC_CLASS_DEF))
          {
             blank_line_set(pc, UO_nl_after_func_class_proto_group);
          }

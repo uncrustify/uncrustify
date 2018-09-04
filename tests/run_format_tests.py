@@ -17,8 +17,8 @@ import test_uncrustify as tu
 
 # -----------------------------------------------------------------------------
 def main(argv):
-    parser = argparse.ArgumentParser(description='Run uncrustify tests')
-    tu.add_tests_arguments(parser)
+    parser = argparse.ArgumentParser(description='Run uncrustify format tests')
+    tu.add_format_tests_arguments(parser)
     args = tu.parse_args(parser)
 
     # Read tests
@@ -26,7 +26,7 @@ def main(argv):
     print('Tests: {!s}'.format(args.tests))
     for group in args.tests:
         tests_file = os.path.join(tu.test_dir, '{}.test'.format(group))
-        tests += tu.read_tests(tests_file, group)
+        tests += tu.read_format_tests(tests_file, group)
 
     if args.write_ctest:
         tu.config.python_exe = args.python

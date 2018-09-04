@@ -1553,6 +1553,13 @@ nl_after_func_class_proto       = 0        # unsigned number
 # The number of newlines after a function class prototype, if not followed by another function class prototype.
 nl_after_func_class_proto_group = 0        # unsigned number
 
+# Whether one-liner method definitions inside a class body should be treated
+# as if they were prototypes for the purposes of adding newlines.
+# 
+# Requires nl_class_leave_one_liners=true. Overrides nl_before_func_body_def
+# and nl_before_func_class_def for one-liners.
+nl_class_leave_one_liner_groups = false    # false/true
+
 # The number of newlines before a multi-line function def body.
 nl_before_func_body_def         = 0        # unsigned number
 

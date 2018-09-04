@@ -18,7 +18,7 @@ namespace uncrustify
 namespace options
 {
 
-lineends_e &newlines();
+lineend_e &newlines();
 size_t &input_tab_size();
 size_t &output_tab_size();
 size_t &string_escape_char();
@@ -489,6 +489,7 @@ size_t &nl_after_func_proto();
 size_t &nl_after_func_proto_group();
 size_t &nl_after_func_class_proto();
 size_t &nl_after_func_class_proto_group();
+bool &nl_class_leave_one_liner_groups();
 size_t &nl_before_func_body_def();
 size_t &nl_before_func_body_proto();
 size_t &nl_after_func_body();
