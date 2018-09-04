@@ -13,7 +13,7 @@ import sys
 from .ansicolor import printc
 from .config import config, all_tests, FAIL_ATTRS, PASS_ATTRS, SKIP_ATTRS
 from .failure import Failure, MismatchFailure, UnstableFailure
-from .test import Test
+from .test import FormatTest
 
 
 # -----------------------------------------------------------------------------
@@ -57,7 +57,15 @@ def add_test_arguments(parser):
 
 
 # -----------------------------------------------------------------------------
-def add_tests_arguments(parser):
+def add_source_tests_arguments(parser):
+    _add_common_arguments(parser)
+
+    parser.add_argument('-p', '--show-all', action='store_true',
+                        help='show passed/skipped tests')
+
+
+# -----------------------------------------------------------------------------
+def add_format_tests_arguments(parser):
     _add_common_arguments(parser)
 
     parser.add_argument('-p', '--show-all', action='store_true',
@@ -157,7 +165,7 @@ def report(counts):
 
 
 # -----------------------------------------------------------------------------
-def read_tests(filename, group):
+def read_format_tests(filename, group):
     tests = []
 
     print("Processing " + filename)
@@ -169,7 +177,7 @@ def read_tests(filename, group):
             if line.startswith('#'):
                 continue
 
-            test = Test()
+            test = FormatTest()
             test.build_from_declaration(line, group)
             tests.append(test)
 

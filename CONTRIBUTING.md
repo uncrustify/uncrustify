@@ -31,6 +31,6 @@ There are lots of ways to contribute to Uncrustify:
     - The change should always be accompanied by regression tests (explain why if not possible)
 * Preparing a Pull Request (PR):
     - To reduce the likelihood of conflicts and test failures, try to avoid merges, rebasing your work on top of latest master before creating a PR 
-    - Verify that your code is properly formatted by running `scripts/Run_uncrustify_for_sources`
+    - Verify that your code is working properly by running `ctest` in your build directory
     - The PR title should represent _what_ is being changed (a rephrasing of the branch name if set correctly)
     - The PR description should document the _why_ the change needed to be done and _not how_ which should be obvious by doing the code review

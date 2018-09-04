@@ -4,15 +4,15 @@ Running the tests
 - All tests reside in the tests/ directory tree.
 
 - Running the tests is as simple as:
-    $ make check
+    $ ctest
 
 - Alternatively, the test scripts can be run directly:
     $ cd tests
-    $ ./run_tests.py
+    $ ./run_format_tests.py
 
 - To run the only the tests associated with language X ("cpp", "java", etc.):
     $ cd tests
-    $ ./run_tests.py X  
+    $ ./run_format_tests.py X
 
 Adding new tests
 ----------------
@@ -71,7 +71,7 @@ Features
 
 - Reference output files (the reference against which the uncrustify
   test run output is compared) are to be stored in the path
-  tests/output/<X>/<NNN-TTTTT.TTT> where <X> is the 'language
+  tests/expected/<X>/<NNN-TTTTT.TTT> where <X> is the 'language
   directory' part of the input file, e.g. 'c' for input file
   'c/nl_return_expr.c', <NNN> is the test name (number), e.g. '21051',
   and <TTTTT.TTT> is the file name part of the input test filespec,
@@ -83,7 +83,7 @@ Features
 
   the accompanying reference output is:
 
-    tests/output/c/21051-nl_return_expr.c
+    tests/expected/c/21051-nl_return_expr.c
 
 - When starting out with a new test, you don't need to have a
   'reference output' yet: the test will simply be reported as a
@@ -91,7 +91,7 @@ Features
 
 - Tip: the easiest way to produce 'reference output' is to copy the
   test output (from tests/results/...etc... ) to
-  tests/output/...etc... once you've ascertained that those tests
+  tests/expected/...etc... once you've ascertained that those tests
   produce the desired (correct) output. The helper script
   tests/fixtest.sh will copy the results file to the output folder:
 
@@ -100,7 +100,7 @@ Features
 - Tip: the helper script tests/difftest.sh runs 'diff' on the result
   and output versions to point out what changed.
 
-- Tip: There are also a few options to run_tests.py that can
+- Tip: There are also a few options to run_format_tests.py that can
   help. Most interesting is '-d' will run 'diff' if the test fails.
 
 - Tip: If some errors occur with Windows, set the macro variable
