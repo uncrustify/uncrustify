@@ -183,7 +183,7 @@ def check_generated_output(gen_expected_path, gen_result_path,
 
     if gen_res_txt != gen_exp_txt:
         with open(gen_result_path, 'w', encoding="utf-8", newline="") as f:
-                f.write(unicode(gen_res_txt, 'utf-8'))
+            f.write(gen_res_txt)
 
         if program_args.apply and program_args.auto_output_path:
                 write_to_output_path(program_args.auto_output_path, gen_res_txt)
