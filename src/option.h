@@ -75,18 +75,18 @@ UNC_DECLARE_OPERATORS_FOR_FLAGS(iarf_flags_t);
 
 //-----------------------------------------------------------------------------
 /// Line endings
-enum class lineend_e // <LE>
+enum class line_end_e // <LE>
 {
    LF,   //! "\n"   typically used on Unix/Linux system
    CRLF, //! "\r\n" typically used on Windows systems
    CR,   //! "\r"   carriage return without newline
    AUTO, //! keep last
 };
-constexpr auto lineend_styles = static_cast<size_t>(lineend_e::AUTO);
+constexpr auto line_end_styles = static_cast<size_t>(line_end_e::AUTO);
 
 //-----------------------------------------------------------------------------
 /// Token position - these are bit fields
-enum class tokenpos_e // <TP>
+enum class token_pos_e // <TP>
 {
    IGNORE      = 0,  //! don't change it
    BREAK       = 1,  //! add a newline before or after the if not present
@@ -100,8 +100,8 @@ enum class tokenpos_e // <TP>
    TRAIL_FORCE = (TRAIL | FORCE),
 };
 
-UNC_DECLARE_FLAGS(tokenpos_flags_t, tokenpos_e);
-UNC_DECLARE_OPERATORS_FOR_FLAGS(tokenpos_flags_t);
+UNC_DECLARE_FLAGS(token_pos_flags_t, token_pos_e);
+UNC_DECLARE_OPERATORS_FOR_FLAGS(token_pos_flags_t);
 
 //-----------------------------------------------------------------------------
 /// Abstract (untyped) interface for options
@@ -238,8 +238,8 @@ protected:
 
 UNC_IMPLEMENT_OPTION(bool);
 UNC_IMPLEMENT_OPTION(iarf_e);
-UNC_IMPLEMENT_OPTION(lineend_e);
-UNC_IMPLEMENT_OPTION(tokenpos_e);
+UNC_IMPLEMENT_OPTION(line_end_e);
+UNC_IMPLEMENT_OPTION(token_pos_e);
 UNC_IMPLEMENT_OPTION(signed);
 UNC_IMPLEMENT_OPTION(unsigned);
 UNC_IMPLEMENT_OPTION(std::string);
@@ -258,18 +258,18 @@ UNC_OPTVAL_ALIAS(iarf_e, FORCE, "f");
 // Possible values for options, by type
 #define UNC_OPTVALS(e)    extern const char *const e ## _values[]
 UNC_OPTVALS(iarf);
-UNC_OPTVALS(lineend);
-UNC_OPTVALS(tokenpos);
+UNC_OPTVALS(line_end);
+UNC_OPTVALS(token_pos);
 
 extern bool convert_string(const char *, bool &);
 extern bool convert_string(const char *, iarf_e &);
-extern bool convert_string(const char *, lineend_e &);
-extern bool convert_string(const char *, tokenpos_e &);
+extern bool convert_string(const char *, line_end_e &);
+extern bool convert_string(const char *, token_pos_e &);
 
 extern const char *to_string(bool);
 extern const char *to_string(iarf_e);
-extern const char *to_string(lineend_e);
-extern const char *to_string(tokenpos_e);
+extern const char *to_string(line_end_e);
+extern const char *to_string(token_pos_e);
 extern const char *to_string(option_type_e);
 
 struct OptionGroup

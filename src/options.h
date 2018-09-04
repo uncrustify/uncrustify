@@ -44,7 +44,7 @@ using std::string;
 //BEGIN General options
 
 // The type of line endings.
-extern Option<lineend_e>
+extern Option<line_end_e>
 newlines; // = LE_AUTO
 
 // The original size of tabs in the input.
@@ -2403,53 +2403,53 @@ nl_between_annotation;
 //BEGIN Positioning options
 
 // The position of arithmetic operators in wrapped expressions.
-extern Option<tokenpos_e>
+extern Option<token_pos_e>
 pos_arith;
 
 // The position of assignment in wrapped expressions. Do not affect '='
 // followed by '{'.
-extern Option<tokenpos_e>
+extern Option<token_pos_e>
 pos_assign;
 
 // The position of Boolean operators in wrapped expressions.
-extern Option<tokenpos_e>
+extern Option<token_pos_e>
 pos_bool;
 
 // The position of comparison operators in wrapped expressions.
-extern Option<tokenpos_e>
+extern Option<token_pos_e>
 pos_compare;
 
 // The position of conditional operators, as in the '?' and ':' of
 // 'expr ? stmt : stmt', in wrapped expressions.
-extern Option<tokenpos_e>
+extern Option<token_pos_e>
 pos_conditional;
 
 // The position of the comma in wrapped expressions.
-extern Option<tokenpos_e>
+extern Option<token_pos_e>
 pos_comma;
 
 // The position of the comma in enum entries.
-extern Option<tokenpos_e>
+extern Option<token_pos_e>
 pos_enum_comma;
 
 // The position of the comma in the base class list if there is more than one
 // line. Affects nl_class_init_args.
-extern Option<tokenpos_e>
+extern Option<token_pos_e>
 pos_class_comma;
 
 // The position of the comma in the constructor initialization list.
 // Related to nl_constr_colon, nl_constr_init_args and pos_constr_colon.
-extern Option<tokenpos_e>
+extern Option<token_pos_e>
 pos_constr_comma;
 
 // The position of trailing/leading class colon, between class and base class
 // list. Affects nl_class_colon.
-extern Option<tokenpos_e>
+extern Option<token_pos_e>
 pos_class_colon;
 
 // The position of colons between constructor and member initialization.
 // Related to nl_constr_colon, nl_constr_init_args and pos_constr_comma.
-extern Option<tokenpos_e>
+extern Option<token_pos_e>
 pos_constr_colon;
 
 //END

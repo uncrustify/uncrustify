@@ -4000,7 +4000,7 @@ void newlines_eat_start_end(void)
 } // newlines_eat_start_end
 
 
-void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
+void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
 {
    LOG_FUNC_ENTRY();
 
@@ -4014,7 +4014,7 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
    {
       if (pc->type == chunk_type)
       {
-         tokenpos_e mode_local;
+         token_pos_e mode_local;
          if (chunk_type == CT_COMMA)
          {
             /*
@@ -4153,10 +4153,10 @@ void newlines_class_colon_pos(c_token_t tok)
 {
    LOG_FUNC_ENTRY();
 
-   tokenpos_e tpc;
-   tokenpos_e pcc;
-   iarf_e     anc;
-   iarf_e     ncia;
+   token_pos_e tpc;
+   token_pos_e pcc;
+   iarf_e      anc;
+   iarf_e      ncia;
 
    if (tok == CT_CLASS_COLON)
    {

@@ -415,7 +415,7 @@ struct cp_data_t
    UINT32                  frag_cols;
 
    // stuff to auto-detect line endings
-   UINT32                  le_counts[uncrustify::lineend_styles];
+   UINT32                  le_counts[uncrustify::line_end_styles];
    unc_text                newline;
 
    bool                    consumed;

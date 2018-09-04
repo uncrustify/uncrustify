@@ -470,8 +470,8 @@ std::string Option<T>::defaultStr() const
 // Explicit instantiations
 template class Option<bool>;
 template class Option<iarf_e>;
-template class Option<lineend_e>;
-template class Option<tokenpos_e>;
+template class Option<line_end_e>;
+template class Option<token_pos_e>;
 template class Option<signed>;
 template class Option<unsigned>;
 template class Option<std::string>;
@@ -570,12 +570,12 @@ bool Option<iarf_e>::read(const char *in)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-//BEGIN Option<lineend_e>
+//BEGIN Option<line_end_e>
 
 
 //-----------------------------------------------------------------------------
 template<>
-option_type_e Option<lineend_e>::type() const
+option_type_e Option<line_end_e>::type() const
 {
    return(OT_LINEEND);
 }
@@ -583,29 +583,29 @@ option_type_e Option<lineend_e>::type() const
 
 //-----------------------------------------------------------------------------
 template<>
-const char *const *Option<lineend_e>::possibleValues() const
+const char *const *Option<line_end_e>::possibleValues() const
 {
-   return(lineend_values);
+   return(line_end_values);
 }
 
 
 //-----------------------------------------------------------------------------
 template<>
-bool Option<lineend_e>::read(const char *in)
+bool Option<line_end_e>::read(const char *in)
 {
    return(read_enum(in, *this));
 }
 
-//END Option<lineend_e>
+//END Option<line_end_e>
 
 ///////////////////////////////////////////////////////////////////////////////
 
-//BEGIN Option<tokenpos_e>
+//BEGIN Option<token_pos_e>
 
 
 //-----------------------------------------------------------------------------
 template<>
-option_type_e Option<tokenpos_e>::type() const
+option_type_e Option<token_pos_e>::type() const
 {
    return(OT_TOKENPOS);
 }
@@ -613,20 +613,20 @@ option_type_e Option<tokenpos_e>::type() const
 
 //-----------------------------------------------------------------------------
 template<>
-const char *const *Option<tokenpos_e>::possibleValues() const
+const char *const *Option<token_pos_e>::possibleValues() const
 {
-   return(tokenpos_values);
+   return(token_pos_values);
 }
 
 
 //-----------------------------------------------------------------------------
 template<>
-bool Option<tokenpos_e>::read(const char *in)
+bool Option<token_pos_e>::read(const char *in)
 {
    return(read_enum(in, *this));
 }
 
-//END Option<tokenpos_e>
+//END Option<token_pos_e>
 
 ///////////////////////////////////////////////////////////////////////////////
 
