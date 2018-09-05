@@ -196,17 +196,7 @@ def check_generated_output(gen_expected_path, gen_result_path,
             file_diff = difflib.ndiff(gen_res_txt.splitlines(True),
                                       gen_exp_txt.splitlines(True))
 
-            res_file_diff = difflib.ndiff(gen_res_txt.splitlines(True))
-
-            exp_file_diff = difflib.ndiff(gen_exp_txt.splitlines(True))
-
             for line in file_diff:
-                pprint.PrettyPrinter(indent=4).pprint(line)
-
-            for line in res_file_diff:
-                pprint.PrettyPrinter(indent=4).pprint(line)
-
-            for line in exp_file_diff:
                 pprint.PrettyPrinter(indent=4).pprint(line)
 
             return False
@@ -636,6 +626,9 @@ def main(args):
     # The flag CMAKE_BUILD_TYPE must be set to "Release", or all lines with
     # 'Description="<html>(<number>)text abc.</html>" must be changed to
     # 'Description="<html>text abc.</html>"
+    #
+    # OR it is possible to introduce a new parameter: gen_expected_manip
+
     if not check_uncrustify_output(
             uncr_bin,
             parsed_args,
