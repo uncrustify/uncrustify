@@ -108,9 +108,9 @@ UNC_DECLARE_OPERATORS_FOR_FLAGS(token_pos_flags_t);
 class GenericOption
 {
 public:
-   GenericOption(const char *name, const char *desc)
-      : m_name{name}
-      , m_desc{desc} {}
+   GenericOption(const char *opt_name, const char *opt_desc)
+      : m_name{opt_name}
+      , m_desc{opt_desc} {}
 
    virtual ~GenericOption() = default;
 
@@ -161,10 +161,10 @@ template<typename T>
 class Option : public GenericOption
 {
 public:
-   Option(const char *name, const char *desc, T val = T{})
-      : GenericOption{name, desc}
-      , m_val{val}
-      , m_default{val} {}
+   Option(const char *opt_name, const char *opt_desc, T opt_val = T{})
+      : GenericOption{opt_name, opt_desc}
+      , m_val{opt_val}
+      , m_default{opt_val} {}
 
    option_type_e type() const override;
    const char *const *possibleValues() const override;
@@ -195,10 +195,10 @@ template<typename T, T min, T max>
 class BoundedOption : public Option<T>
 {
 public:
-   BoundedOption(const char *name, const char *desc, T val = T{})
-      : Option<T>{name, desc, val}
+   BoundedOption(const char *opt_name, const char *opt_desc, T opt_val = T{})
+      : Option<T>{opt_name, opt_desc, opt_val}
    {
-      assert(val >= min && val <= max);
+      assert(opt_val >= min && opt_val <= max);
    }
 
    std::string minStr() const override { return(std::to_string(min)); }
