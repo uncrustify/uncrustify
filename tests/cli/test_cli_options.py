@@ -641,6 +641,27 @@ def main(args):
             ):
         return_flag = False
 
+    #
+    # Test --universalindent
+    #
+    # Before using: The file 'output/universalindent.cfg' must be prepared.
+    # The line with 'version=Uncrustify-xyz-123' must be replaced with an empty line.
+    # The flag CMAKE_BUILD_TYPE must be set to "Release", or all lines with
+    # 'Description="<html>(<number>)text abc.</html>" must be changed to
+    # 'Description="<html>text abc.</html>"
+    if not check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            args_arr=['-o', s_path_join(sc_dir, 'results/universalindent.cfg'),
+                      '--universalindent'],
+            gen_expected_path=s_path_join(sc_dir, 'output/universalindent.cfg'),
+            gen_result_path=s_path_join(sc_dir, 'results/universalindent.cfg'),
+            gen_result_manip=[reg_replace(r'version=U.+', ''),
+                              reg_replace(r'\(\d+\)', ''),
+                              reg_replace(r'\r', '')]
+            ):
+        return_flag = False
+
     # Debug Options:
     #   -L
     # look at src/log_levels.h
