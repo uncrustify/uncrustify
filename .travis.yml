@@ -143,7 +143,7 @@ script:
   - if [ "x${BUILD_TYPE}" == "xcoverage" ]; then make coverage; fi
 
   # DO NOT REMOVE (debugging purposes)
-  #- /home/travis/build/uncrustify/uncrustify/build/uncrustify -l cs -c /home/travis/build/uncrustify/uncrustify/tests/config/U10-Cpp.cfg -f /home/travis/build/uncrustify/uncrustify/tests/input/cs/newlines.mm -L A
+  - /home/travis/build/uncrustify/uncrustify/build/uncrustify -l cs -c /home/travis/build/uncrustify/uncrustify/tests/config/verbatim_strings.cfg -f /home/travis/build/uncrustify/uncrustify/tests/input/cs/verbatim_strings.cs -L A
 
 after_success:
   # publish coverage data to coveralls

@@ -4,4 +4,4 @@
 # Range: reserve ID from dedicated language range
 # test.name  config.file  input.file  lang
 
-19000  UNI-58354.cfg                        cs/UNI-58354.cs     CS
+#19000  UNI-58354.cfg                        cs/UNI-58354.cs     CS
