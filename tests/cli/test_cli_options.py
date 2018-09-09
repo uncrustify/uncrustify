@@ -623,6 +623,11 @@ def main(args):
     # 'Description="<html>text abc.</html>"
     #
     # OR it is possible to introduce a new parameter: gen_expected_manip
+    #
+    # The last "reg_replace(r'\r', '')" is necessary under Windows, because
+    # fprintf puts a \r\n at the end of a line. To make the check, we use
+    # output/universalindent.cfg, generated under Linux, with only \n at the
+    # end of a line.
     if not check_uncrustify_output(
             uncr_bin,
             parsed_args,
