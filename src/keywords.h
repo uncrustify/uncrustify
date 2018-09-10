@@ -46,14 +46,6 @@ c_token_t find_keyword_type(const char *word, size_t len);
 void add_keyword(const char *tag, c_token_t type);
 
 
-/*
- * Removes a keyword from the list of dynamic keywords
- *
- * @param tag        The tag (string)
- */
-void remove_keyword(const std::string &tag);
-
-
 void print_keywords(FILE *pfile);
 
 
