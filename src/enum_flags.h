@@ -9,9 +9,9 @@
 #ifndef ENUM_FLAGS_H_INCLUDED
 #define ENUM_FLAGS_H_INCLUDED
 
-#if __GNUC__ == 4
+#if __GNUC__ == 4 && !defined (__clang__)
 #pragma GCC diagnostic push
-#if __GNUC_MAJOR__ < 9 || __GNUC_PATCHLEVEL__ < 2
+#if __GNUC_MINOR__ < 9 || __GNUC_PATCHLEVEL__ < 2
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=59624
 #pragma GCC diagnostic ignored "-Wunused-but-set-parameter"
 #endif
@@ -89,7 +89,7 @@ protected:
 
 } // namespace uncrustify
 
-#if __GNUC__ == 4
+#if __GNUC__ == 4 && !defined (__clang__)
 #pragma GCC diagnostic pop
 #endif
 
