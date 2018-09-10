@@ -22,6 +22,7 @@ include(CTest)
 #
 if(MSVC)
   add_definitions(/D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_WARNINGS /wd4267)
+  add_definitions(/utf-8)
 elseif(CMAKE_COMPILER_IS_GNUCXX)
   add_definitions(-std=gnu++0x)
   set(gcc_warning_flags
