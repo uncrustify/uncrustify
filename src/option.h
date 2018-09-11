@@ -149,7 +149,9 @@ public:
    OptionWarning(const OptionWarning &) = delete;
    ~OptionWarning();
 
+#ifdef __GNUC__
    [[gnu::format(printf, 2, 3)]]
+#endif
    void operator()(const char *fmt, ...);
 };
 
