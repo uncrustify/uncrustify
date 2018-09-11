@@ -765,7 +765,7 @@ uncrustify::GenericOption *find_option(const char *name)
 //-----------------------------------------------------------------------------
 OptionGroup *get_option_group(size_t i)
 {
-   if (i > option_groups.size())
+   if (i >= option_groups.size())
    {
       return(nullptr);
    }
