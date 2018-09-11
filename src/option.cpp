@@ -1008,7 +1008,7 @@ void save_option_file(FILE *pfile, bool with_doc, bool minimal)
             fprintf(pfile, "%s", eol_marker);
             print_description(pfile, option->description(), eol_marker);
 
-            auto ds = option->defaultStr();
+            const auto ds = option->defaultStr();
             if (!ds.empty())
             {
                fprintf(pfile, "#%s# Default: %s%s",
