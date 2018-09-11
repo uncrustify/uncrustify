@@ -14,6 +14,7 @@
 
 #include "base_types.h"
 #include "options.h"
+#include "option_enum.h"
 #include "token_enum.h"    // c_token_t
 #include "log_levels.h"
 #include "logger.h"
@@ -414,7 +415,7 @@ struct cp_data_t
    UINT32                  frag_cols;
 
    // stuff to auto-detect line endings
-   UINT32                  le_counts[uncrustify::lineend_styles];
+   UINT32                  le_counts[uncrustify::line_end_styles];
    unc_text                newline;
 
    bool                    consumed;
@@ -439,14 +440,10 @@ struct cp_data_t
 
    bool                    warned_unable_string_replace_tab_chars;
 
-   op_val_t                settings[UO_option_count]; //! array with all uncrustify option settings
-
    std::vector<ParseFrame> frames;
 //   size_t                  frame_count;
    int                     pp_level; // TODO: can this ever be -1?
 
-   // the default values for settings
-   op_val_t                defaults[UO_option_count];
    const char              *phase_name;
    const char              *dumped_file;
 };

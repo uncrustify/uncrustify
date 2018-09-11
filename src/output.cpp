@@ -418,8 +418,7 @@ void output_parsed(FILE *pfile)
 {
    const char *eol_marker = get_eol_marker();
 
-   // save_option_file(pfile, false);
-   save_option_file_kernel(pfile, false, true);
+   save_option_file(pfile, false, true);
 
    fprintf(pfile, "# -=====-%s", eol_marker);
    // MAXLENGTHOFTHENAME must be consider at the format line at the file

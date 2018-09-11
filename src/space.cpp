@@ -2615,7 +2615,7 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
    int    min_sp;
    iarf_e av = do_space_ensured(first, second, min_sp);
 
-   LOG_FMT(LSPACE, "%s(%d): av is %s\n", __func__, __LINE__, argval_to_string(av).c_str());
+   LOG_FMT(LSPACE, "%s(%d): av is %s\n", __func__, __LINE__, to_string(av));
    size_t coldiff;
    if (first->nl_count)
    {
