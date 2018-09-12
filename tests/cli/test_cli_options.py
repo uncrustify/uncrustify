@@ -23,13 +23,6 @@ import argparse
 import pprint
 
 
-if py_version_info[0] == 3:
-    def unicode(str, codec):
-        """
-        compatibility function for python 3, returns provided param string
-        """
-        return str
-
 if os_name == 'nt':
     EX_OK = 0
     EX_USAGE = 64
@@ -49,6 +42,13 @@ def eprint(*args, **kwargs):
         print() wraper that sets file=stderr
     """
     print(*args, file=stderr, **kwargs)
+
+
+def decode_out(text):
+    text = text.decode('utf-8')
+    text = text.replace(u'\r\n', u'\n')
+    text = text.replace(u'\r', u'\n')
+    return text
 
 
 def proc(bin_path, args_arr=()):
@@ -79,11 +79,11 @@ def proc(bin_path, args_arr=()):
     # call uncrustify, hold output in memory
     call_arr = [bin_path]
     call_arr.extend(args_arr)
-    proc = Popen(call_arr, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    proc = Popen(call_arr, stdout=PIPE, stderr=PIPE)
 
     out_txt, err_txt = proc.communicate()
 
-    return out_txt, err_txt
+    return decode_out(out_txt), decode_out(err_txt)
 
 
 def write_to_output_path(output_path, result_str):
@@ -251,7 +251,6 @@ def check_std_output(expected_path, result_path, result_str, result_manip=None,
         else:
             result_str = result_manip(result_str)
 
-    result_str = unicode(result_str, 'utf-8')
     if result_str != exp_txt:
         with open(result_path, 'w', encoding="utf-8", newline="\n") as f:
             f.write(result_str)
