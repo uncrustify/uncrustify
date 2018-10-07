@@ -176,7 +176,9 @@ class FormatTest(SourceTest):
         else:
             self.test_lang = test_dir
 
-        if parts[0].endswith('!'):
+        is_rerun = parts[0].endswith('!')
+
+        if is_rerun:
             num = parts[0][:-1]
         else:
             num = parts[0]
@@ -190,7 +192,7 @@ class FormatTest(SourceTest):
             parts = name.split('.')
             return '.'.join(parts[:-1] + ['rerun'] + parts[-1:])
 
-        if parts[0].endswith('!'):
+        if is_rerun:
             self.test_rerun_config = rerun_file(self.test_config)
             self.test_rerun_expected = rerun_file(self.test_expected)
         else:
