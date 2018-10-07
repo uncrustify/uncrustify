@@ -3,16 +3,16 @@ cmake_minimum_required(VERSION 2.8)
 find_package(Git QUIET)
 
 set(test_suites
-    c-sharp.test
     c.test
+    c-sharp.test
     cpp.test
     d.test
-    ecma.test
-    imported.test
-    java.test
     objective-c.test
     pawn.test
     vala.test
+    java.test
+    ecma.test
+    imported.test
 )
 
 option("UNCRUSTIFY_SEPARATE_TESTS"
