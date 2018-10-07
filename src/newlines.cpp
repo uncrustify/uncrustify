@@ -2180,22 +2180,26 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av)
    LOG_FUNC_ENTRY();
    log_func_stack(LNEWLINE, "Call Stack:");
 
-   if (before != nullptr && after != nullptr && !chunk_is_token(after, CT_IGNORED))
+   if (  before == nullptr
+      || after == nullptr
+      || chunk_is_token(after, CT_IGNORED))
    {
-      if (av & IARF_ADD)
+      return;
+   }
+
+   if (av & IARF_ADD)
+   {
+      chunk_t *nl = newline_add_between(before, after);
+      if (  nl
+         && av == IARF_FORCE
+         && nl->nl_count > 1)
       {
-         chunk_t *nl = newline_add_between(before, after);
-         if (  nl
-            && av == IARF_FORCE
-            && nl->nl_count > 1)
-         {
-            nl->nl_count = 1;
-         }
+         nl->nl_count = 1;
       }
-      else if (av & IARF_REMOVE)
-      {
-         newline_del_between(before, after);
-      }
+   }
+   else if (av & IARF_REMOVE)
+   {
+      newline_del_between(before, after);
    }
 }
 
