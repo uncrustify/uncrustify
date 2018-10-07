@@ -623,7 +623,9 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
 {
    LOG_FUNC_ENTRY();
 
-   if (start == nullptr || end == nullptr)
+   if (  start == nullptr
+      || end == nullptr
+      || chunk_is_token(end, CT_IGNORED))
    {
       return(nullptr);
    }
@@ -2178,7 +2180,7 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av)
    LOG_FUNC_ENTRY();
    log_func_stack(LNEWLINE, "Call Stack:");
 
-   if (before != nullptr && after != nullptr)
+   if (before != nullptr && after != nullptr && !chunk_is_token(after, CT_IGNORED))
    {
       if (av & IARF_ADD)
       {
