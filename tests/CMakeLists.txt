@@ -15,6 +15,10 @@ set(test_suites
     imported.test
 )
 
+if (NOT ENABLE_CODECOVERAGE)
+  list(APPEND test_suites staging.test)
+endif()
+
 option("UNCRUSTIFY_SEPARATE_TESTS"
   "Create a separate CTest test for each test case;\
 \ this is slower, especially with Python 3" OFF
@@ -50,24 +54,26 @@ else()
   endforeach()
 endif()
 
-add_test(
-  NAME sources_format
-  COMMAND ${PYTHON_EXECUTABLE} run_sources_tests.py
-    --executable $<TARGET_FILE:uncrustify>
-    -d --git ${GIT_EXECUTABLE}
-    --result-dir ${CMAKE_CURRENT_BINARY_DIR}
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
+if (NOT ENABLE_CODECOVERAGE)
+  add_test(
+    NAME sources_format
+    COMMAND ${PYTHON_EXECUTABLE} run_sources_tests.py
+      --executable $<TARGET_FILE:uncrustify>
+      -d --git ${GIT_EXECUTABLE}
+      --result-dir ${CMAKE_CURRENT_BINARY_DIR}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  )
 
-add_test(
-  NAME cli_options
-  COMMAND ${PYTHON_EXECUTABLE}
-    test_cli_options.py
-    --build ${uncrustify_BINARY_DIR}
-    --diff
-  ${_configs}
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cli
-)
+  add_test(
+    NAME cli_options
+    COMMAND ${PYTHON_EXECUTABLE}
+      test_cli_options.py
+      --build ${uncrustify_BINARY_DIR}
+      --diff
+    ${_configs}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cli
+  )
+endif()
 
 add_custom_target(update-cli-options
   COMMAND ${PYTHON_EXECUTABLE}

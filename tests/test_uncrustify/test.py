@@ -14,7 +14,8 @@ from .ansicolor import printc
 from .config import (config, test_dir, FAIL_ATTRS,
                      MISMATCH_ATTRS, UNSTABLE_ATTRS)
 from .failure import (ExecutionFailure, MissingFailure,
-                      MismatchFailure, UnstableFailure)
+                      MismatchFailure, UnstableFailure,
+                      UnexpectedlyPassing)
 
 
 # =============================================================================
@@ -52,6 +53,7 @@ class SourceTest(object):
         self.test_input = test_input
         self.test_config = test_config
         self.test_expected = test_expected
+        self.test_xfail = False
 
     # -------------------------------------------------------------------------
     def _check(self):
@@ -60,6 +62,7 @@ class SourceTest(object):
         self._check_attr('test_input')
         self._check_attr('test_config')
         self._check_attr('test_expected')
+        self._check_attr('test_xfail')
 
     # -------------------------------------------------------------------------
     def run(self, args):
@@ -77,6 +80,7 @@ class SourceTest(object):
             print('    Config : {}'.format(self.test_config))
             print('  Expected : {}'.format(_expected))
             print('    Result : {}'.format(_result))
+            print('ExpectFail : {}'.format(self.test_xfail))
 
         if not os.path.exists(os.path.dirname(_result)):
             os.makedirs(os.path.dirname(_result))
@@ -108,18 +112,30 @@ class SourceTest(object):
         except subprocess.CalledProcessError as exc:
             msg = '{}: Uncrustify error code {}'
             msg = msg.format(self.test_name, exc.returncode)
-            printc('FAILED: ', msg, **FAIL_ATTRS)
-            raise ExecutionFailure(exc)
+            if not self.test_xfail:
+                printc('FAILED: ', msg, **FAIL_ATTRS)
+                raise ExecutionFailure(exc)
+            else:
+                printc('XFAILED: ', msg, **FAIL_ATTRS)
+                return
         finally:
             del stderr
 
         try:
-            if not filecmp.cmp(_expected, _result):
+            has_diff = not filecmp.cmp(_expected, _result)
+            if has_diff and not self.test_xfail:
                 printc('{}: '.format(self.diff_text),
                        self.test_name, **self.diff_attrs)
                 if args.diff:
                     self._diff(_expected, _result)
                 raise self.diff_exception(_expected, _result)
+            if not has_diff and self.test_xfail:
+                raise UnexpectedlyPassing(_expected, _result)
+            if has_diff and self.test_xfail:
+                msg = '{}: Difference'
+                msg = msg.format(self.test_name)
+                printc('XFAILED: ', msg, **MISMATCH_ATTRS)
+                return
         except OSError as exc:
             printc('MISSING: ', self.test_name, **self.diff_attrs)
             raise MissingFailure(exc, _expected)
@@ -139,6 +155,7 @@ class FormatTest(SourceTest):
         p.test_config = getattr(self, self.pass_config[i])
         p.test_input = getattr(self, self.pass_input[i])
         p.test_expected = getattr(self, self.pass_expected[i])
+        p.test_xfail = self.test_xfail
         if i == 1 and not os.path.exists(p.test_expected):
             p.test_expected = getattr(self, self.pass_expected[0])
 
@@ -177,8 +194,9 @@ class FormatTest(SourceTest):
             self.test_lang = test_dir
 
         is_rerun = parts[0].endswith('!')
+        is_xfail = parts[0].endswith('~')
 
-        if is_rerun:
+        if is_rerun or is_xfail:
             num = parts[0][:-1]
         else:
             num = parts[0]
@@ -187,6 +205,7 @@ class FormatTest(SourceTest):
         self.test_input = parts[2]
         self.test_expected = os.path.join(
             test_dir, '{}-{}'.format(num, os.path.basename(parts[2])))
+        self.test_xfail = is_xfail
 
         def rerun_file(name):
             parts = name.split('.')
@@ -212,6 +231,7 @@ class FormatTest(SourceTest):
         self.test_expected = args.expected
         self.test_rerun_config = args.rerun_config or args.config
         self.test_rerun_expected = args.rerun_expected or args.expected
+        self.test_xfail = False
 
         self._build_passes()
 

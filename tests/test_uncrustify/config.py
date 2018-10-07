@@ -19,7 +19,8 @@ all_tests = [
     'vala',
     'java',
     'ecma',
-    'imported'
+    'imported',
+    'staging'
 ]
 
 FAIL_ATTRS     = {'bold': True}
