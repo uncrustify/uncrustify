@@ -9,18 +9,19 @@ import os
 
 test_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
+# sorted by lexicographic order
 all_tests = [
     'c-sharp',
     'c',
     'cpp',
     'd',
-    'java',
-    'pawn',
-    'objective-c',
-    'vala',
     'ecma',
     'imported',
-    'staging'
+    'java',
+    'objective-c',
+    'pawn',
+    'staging',
+    'vala',
 ]
 
 FAIL_ATTRS     = {'bold': True}
