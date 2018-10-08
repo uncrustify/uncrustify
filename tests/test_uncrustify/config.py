@@ -10,14 +10,14 @@ import os
 test_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 all_tests = [
-    'c',
     'c-sharp',
+    'c',
     'cpp',
     'd',
-    'objective-c',
-    'pawn',
-    'vala',
     'java',
+    'pawn',
+    'objective-c',
+    'vala',
     'ecma',
     'imported',
     'staging'
