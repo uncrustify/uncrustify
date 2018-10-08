@@ -66,5 +66,5 @@ class UnexpectedlyPassingFailure(Failure):
 
     # -------------------------------------------------------------------------
     def __str__(self):
-        return 'Output {!r} was not expected to match expected output {!r}'.format(
+        return 'Output {!r} was not expected to match output {!r}'.format(
             self.actual_path, self.expected_path)
