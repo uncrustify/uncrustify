@@ -709,4 +709,4 @@
 60038  UNI-30088.cfg                        cpp/UNI-30088.cpp
 60039  U36-Cpp.cfg                          cpp/UNI-30628.cpp
 60042  UNI-18777.cfg                        cpp/UNI-18777.cpp
-
+60043  nl_remove_extra_newlines-1.cfg       cpp/i2033.cpp
