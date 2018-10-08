@@ -63,17 +63,17 @@ if (NOT ENABLE_CODECOVERAGE)
       --result-dir ${CMAKE_CURRENT_BINARY_DIR}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   )
-
-  add_test(
-    NAME cli_options
-    COMMAND ${PYTHON_EXECUTABLE}
-      test_cli_options.py
-      --build ${uncrustify_BINARY_DIR}
-      --diff
-    ${_configs}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cli
-  )
 endif()
+
+add_test(
+  NAME cli_options
+  COMMAND ${PYTHON_EXECUTABLE}
+    test_cli_options.py
+    --build ${uncrustify_BINARY_DIR}
+    --diff
+  ${_configs}
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cli
+)
 
 add_custom_target(update-cli-options
   COMMAND ${PYTHON_EXECUTABLE}
