@@ -58,7 +58,7 @@ class UnstableFailure(Failure):
             self.actual_path, self.expected_path)
 
 # =============================================================================
-class UnexpectedlyPassing(Failure):
+class UnexpectedlyPassingFailure(Failure):
     # -------------------------------------------------------------------------
     def __init__(self, expected, actual):
         self.expected_path = expected

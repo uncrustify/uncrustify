@@ -15,7 +15,7 @@ from .config import (config, test_dir, FAIL_ATTRS,
                      MISMATCH_ATTRS, UNSTABLE_ATTRS)
 from .failure import (ExecutionFailure, MissingFailure,
                       MismatchFailure, UnstableFailure,
-                      UnexpectedlyPassing)
+                      UnexpectedlyPassingFailure)
 
 
 # =============================================================================
@@ -130,7 +130,7 @@ class SourceTest(object):
                     self._diff(_expected, _result)
                 raise self.diff_exception(_expected, _result)
             if not has_diff and self.test_xfail:
-                raise UnexpectedlyPassing(_expected, _result)
+                raise UnexpectedlyPassingFailure(_expected, _result)
             if has_diff and self.test_xfail:
                 msg = '{}: Difference'
                 msg = msg.format(self.test_name)
