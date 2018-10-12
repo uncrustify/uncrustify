@@ -12,6 +12,17 @@
 #include "args.h"
 #include "output.h"
 
+/*
+ * the test suite Coveralls: https://coveralls.io
+ * will complains because these functions are only
+ * used at developement time.
+ * Don't worry about unsed lines for the functions:
+ *   prot_the_line
+ *   prot_the_source
+ *   examine_Data
+ *   dump_out
+ *   dump_in
+ */
 
 static size_t counter = 0;
 static size_t tokenCounter;
@@ -73,9 +84,6 @@ void prot_the_source(int theLine)
    LOG_FMT(LGUY, "Prot_the_source:(%d)(%zu)\n", theLine, counter);
    output_text(stderr);
 }
-
-
-// TODO: examine_Data seems not to be used, is it still required?
 
 
 // examples:
