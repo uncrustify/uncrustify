@@ -231,7 +231,7 @@ class FormatTest(SourceTest):
         self.test_expected = args.expected
         self.test_rerun_config = args.rerun_config or args.config
         self.test_rerun_expected = args.rerun_expected or args.expected
-        self.test_xfail = False
+        self.test_xfail = args.xfail
 
         self._build_passes()
 
@@ -256,6 +256,7 @@ class FormatTest(SourceTest):
              '    --expected       "{test_expected}"\n' +
              '    --rerun-config   "{test_rerun_config}"\n' +
              '    --rerun-expected "{test_rerun_expected}"\n' +
+             '    --xfail          "{test_xfail}"\n' +
              '    -d --git         "{git_exe}"\n' +
              ')\n').format(
                  test_runner=to_cmake_path(runner),

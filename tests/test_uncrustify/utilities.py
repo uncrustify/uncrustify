@@ -54,6 +54,7 @@ def add_test_arguments(parser):
     parser.add_argument("--expected",           type=str, required=True)
     parser.add_argument("--rerun-config",       type=str, metavar='INPUT')
     parser.add_argument("--rerun-expected",     type=str, metavar='CONFIG')
+    parser.add_argument("--xfail",              action='store_true')
 
 
 # -----------------------------------------------------------------------------
