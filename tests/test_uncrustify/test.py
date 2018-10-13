@@ -7,6 +7,7 @@
 
 import filecmp
 import os
+import re
 import subprocess
 import sys
 
@@ -15,7 +16,8 @@ from .config import (config, test_dir, FAIL_ATTRS,
                      MISMATCH_ATTRS, UNSTABLE_ATTRS)
 from .failure import (ExecutionFailure, MissingFailure,
                       MismatchFailure, UnstableFailure,
-                      UnexpectedlyPassingFailure)
+                      UnexpectedlyPassingFailure,
+                      TestDeclarationParseError)
 
 
 # =============================================================================
@@ -193,28 +195,34 @@ class FormatTest(SourceTest):
         self.test_passes[1].diff_exception = UnstableFailure
 
     # -------------------------------------------------------------------------
-    def build_from_declaration(self, decl, group):
-        parts = decl.split()
-        test_dir = os.path.dirname(parts[2])
+    def build_from_declaration(self, decl, group, line_number):
+        prog = re.compile(r'^(?P<num>\d+)(?P<mark>[~!])?\s+'
+                          r'(?P<config>\S+)\s+(?P<input>\S+)'
+                          r'(?:\s+(?P<lang>\S+))?$')
 
-        if len(parts) == 4:
-            self.test_lang = parts[3]
+        match = prog.match(decl)
+        if not match:
+            raise TestDeclarationParseError(group, line_number)
+
+        num = match.group('num')
+        is_rerun = match.group('mark') == '!'
+        is_xfail = match.group('mark') == '~'
+
+        self.test_xfail = is_xfail
+
+        self.test_config = match.group('config')
+        self.test_input = match.group('input')
+
+        test_dir = os.path.dirname(self.test_input)
+        test_filename = os.path.basename(self.test_input)
+
+        if match.group('lang'):
+            self.test_lang = match.group('lang')
         else:
             self.test_lang = test_dir
 
-        is_rerun = parts[0].endswith('!')
-        is_xfail = parts[0].endswith('~')
-
-        if is_rerun or is_xfail:
-            num = parts[0][:-1]
-        else:
-            num = parts[0]
-
-        self.test_config = parts[1]
-        self.test_input = parts[2]
         self.test_expected = os.path.join(
-            test_dir, '{}-{}'.format(num, os.path.basename(parts[2])))
-        self.test_xfail = is_xfail
+            test_dir, '{}-{}'.format(num, test_filename))
 
         def rerun_file(name):
             parts = name.split('.')

@@ -8,6 +8,18 @@
 class Failure(Exception):
     pass
 
+# =============================================================================
+class TestDeclarationParseError(Failure):
+    # -------------------------------------------------------------------------
+    def __init__(self, test_suite, line_number):
+        self.test_suite = test_suite
+        self.line_number = line_number
+
+    # -------------------------------------------------------------------------
+    def __str__(self):
+        return 'Error parsing line {!r} from the {!r} test suite'.format(
+            self.line_number, self.test_suite)
+
 
 # =============================================================================
 class ExecutionFailure(Failure):

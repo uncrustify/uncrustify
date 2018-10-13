@@ -183,8 +183,11 @@ def read_format_tests(filename, group):
     tests = []
 
     print("Processing " + filename)
+    line_number = 0
     with open(filename, 'rt') as f:
         for line in f:
+            line_number += 1
+
             line = line.strip()
             if not len(line):
                 continue
@@ -192,7 +195,7 @@ def read_format_tests(filename, group):
                 continue
 
             test = FormatTest()
-            test.build_from_declaration(line, group)
+            test.build_from_declaration(line, group, line_number)
             tests.append(test)
 
     return tests
