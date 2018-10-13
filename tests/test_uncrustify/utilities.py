@@ -120,6 +120,7 @@ def run_tests(tests, args, selector=None):
     fail_count = 0
     mismatch_count = 0
     unstable_count = 0
+    unexpectedly_passing_count = 0
 
     for test in tests:
         if selector is not None and not selector.test(test.test_name):
@@ -136,6 +137,8 @@ def run_tests(tests, args, selector=None):
             unstable_count += 1
         except MismatchFailure:
             mismatch_count += 1
+        except UnexpectedlyPassingFailure:
+            unexpectedly_passing_count += 1
         except Failure:
             fail_count += 1
 
@@ -143,7 +146,8 @@ def run_tests(tests, args, selector=None):
         'passing': pass_count,
         'failing': fail_count,
         'mismatch': mismatch_count,
-        'unstable': unstable_count
+        'unstable': unstable_count,
+        'xpass': unexpectedly_passing_count
     }
 
 
@@ -162,6 +166,9 @@ def report(counts):
     if counts['unstable'] > 0:
         printc('{unstable} tests were unstable'.format(**counts),
                **FAIL_ATTRS)
+    if counts['xpass'] > 0:
+        printc('{xpass} tests passed but were expected to fail'
+            .format(**counts), **FAIL_ATTRS)
 
 
 # -----------------------------------------------------------------------------
