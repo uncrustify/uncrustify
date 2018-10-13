@@ -29,8 +29,7 @@ def main(argv):
         if os.path.splitext(s)[1] in ('.cpp', '.h'):
             t = tu.SourceTest()
             filepath = os.path.join(src_dir, s)
-            t.build(test_input=filepath,
-                    test_lang='CPP', test_config=config,
+            t.build(test_input=filepath, test_lang='CPP', test_config=config,
                     test_expected=filepath)
             tests.append(t)
 
