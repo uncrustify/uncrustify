@@ -66,6 +66,11 @@ class SourceTest(object):
 
     # -------------------------------------------------------------------------
     def run(self, args):
+        """Runs a test.
+        On failure, it throws a specific exception except if it's a known
+        failure when it just returns 1.
+        Otherwise it returns 0.
+        """
         self._check()
 
         _expected = self.test_expected
@@ -102,7 +107,7 @@ class SourceTest(object):
 
         else:
             cmd += ['-L1,2']
-            stderr = None
+            stderr = subprocess.PIPE
 
         if args.show_commands:
             printc('RUN: ', repr(cmd))
@@ -113,11 +118,14 @@ class SourceTest(object):
             msg = '{}: Uncrustify error code {}'
             msg = msg.format(self.test_name, exc.returncode)
             if not self.test_xfail:
+                printc(exc.output)
                 printc('FAILED: ', msg, **FAIL_ATTRS)
                 raise ExecutionFailure(exc)
             else:
-                printc('XFAILED: ', msg, **FAIL_ATTRS)
-                return
+                if args.xdiff:
+                    printc(exc.output)
+                    printc('XFAILED: ', msg, **FAIL_ATTRS)
+                return 1
         finally:
             del stderr
 
@@ -132,13 +140,14 @@ class SourceTest(object):
             if not has_diff and self.test_xfail:
                 raise UnexpectedlyPassingFailure(_expected, _result)
             if has_diff and self.test_xfail:
-                msg = '{}: Difference'
-                msg = msg.format(self.test_name)
-                printc('XFAILED: ', msg, **MISMATCH_ATTRS)
-                return
+                if args.xdiff:
+                    self._diff(_expected, _result)
+                return 1
         except OSError as exc:
             printc('MISSING: ', self.test_name, **self.diff_attrs)
             raise MissingFailure(exc, _expected)
+        
+        return 0
 
 # =============================================================================
 class FormatTest(SourceTest):
@@ -272,4 +281,6 @@ class FormatTest(SourceTest):
     # -------------------------------------------------------------------------
     def run(self, args):
         for p in self.test_passes:
-            p.run(args)
+            if not p.run(args):
+                return 1
+        return 0

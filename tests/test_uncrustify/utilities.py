@@ -27,6 +27,9 @@ def _add_common_arguments(parser):
     parser.add_argument('-d', '--diff', action='store_true',
                         help='show diff on failure')
 
+    parser.add_argument('-x', '--xdiff', action='store_true',
+                        help='show diff on expected failure')
+
     parser.add_argument('-g', '--debug', action='store_true',
                         help='generate debug files (.log, .unc)')
 
@@ -130,9 +133,12 @@ def run_tests(tests, args, selector=None):
             continue
 
         try:
-            test.run(args)
+            result = test.run(args)
             if args.show_all:
-                printc('PASSED: ', test.test_name, **PASS_ATTRS)
+                if result == 0:
+                    printc('PASSED: ', test.test_name, **PASS_ATTRS)
+                else:
+                    printc('XFAILED: ', test.test_name, **PASS_ATTRS)
             pass_count += 1
         except UnstableFailure:
             unstable_count += 1
