@@ -12,6 +12,7 @@
 #include "args.h"
 #include "output.h"
 
+#ifdef DEVELOP_ONLY
 /*
  * the test suite Coveralls: https://coveralls.io
  * will complains because these functions are only
@@ -348,3 +349,4 @@ void dump_in(unsigned int type)
       exit(EX_SOFTWARE);
    }
 } // dump_in
+#endif /* DEVELOP_ONLY */

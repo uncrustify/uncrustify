@@ -9,6 +9,7 @@
 #ifndef UNC_TOOLS_H_INCLUDED
 #define UNC_TOOLS_H_INCLUDED
 
+#ifdef DEVELOP_ONLY
 #include "prototypes.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
@@ -31,4 +32,5 @@ void dump_out(unsigned int type);
 void dump_in(unsigned int type);
 
 
+#endif /* DEVELOP_ONLY */
 #endif /* UNC_TOOLS_H_INCLUDED */

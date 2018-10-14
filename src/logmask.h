@@ -73,6 +73,7 @@ static_inline void logmask_set_all(log_mask_t &mask, bool value)
 }
 
 
+#ifdef DEVELOP_ONLY
 /**
  * Convert a logmask into a string.
  * The string is a comma-delimited list of severities.
@@ -85,6 +86,8 @@ static_inline void logmask_set_all(log_mask_t &mask, bool value)
  * @return buf (pass through)
  */
 char *logmask_to_str(const log_mask_t &mask, char *buf, int size);
+
+#endif /* DEVELOP_ONLY */
 
 
 /**
