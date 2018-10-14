@@ -100,31 +100,32 @@ class SourceTest(object):
                 '-LA',
                 '-p', _result + '.unc'
             ]
-            stderr = open(_result + '.log', 'wt')
 
         else:
             cmd += ['-L1,2']
-            stderr = subprocess.PIPE
 
         if args.show_commands:
             printc('RUN: ', repr(cmd))
 
         try:
-            subprocess.check_call(cmd, stderr=stderr)
+            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as exc:
+            output = exc.output
             msg = '{}: Uncrustify error code {}'
             msg = msg.format(self.test_name, exc.returncode)
             if not self.test_xfail:
-                printc(exc.output)
+                printc(output)
                 printc('FAILED: ', msg, **FAIL_ATTRS)
                 raise ExecutionFailure(exc)
             else:
                 if args.xdiff:
-                    printc(exc.output)
+                    printc(output)
                     printc('XFAILED: ', msg, **FAIL_ATTRS)
                 return
         finally:
-            del stderr
+            if args.debug:
+                with open(_result + '.log', 'wt') as f:
+                    f.write(output)
 
         try:
             has_diff = not filecmp.cmp(_expected, _result)
