@@ -9,6 +9,7 @@
 #ifndef CHAR_TABLE_H_INCLUDED
 #define CHAR_TABLE_H_INCLUDED
 
+#include "base_types.h"
 
 /**
  * bit0-7 = paired char
@@ -26,7 +27,7 @@ struct CharTable
    };
 
 
-   static inline size_t Get(size_t ch)
+   static_inline size_t Get(size_t ch)
    {
       if (ch < ARRAY_SIZE(chars))
       {
@@ -44,13 +45,13 @@ struct CharTable
    }
 
 
-   static inline bool IsKw1(size_t ch)
+   static_inline bool IsKw1(size_t ch)
    {
       return((Get(ch) & KW1) != 0);
    }
 
 
-   static inline bool IsKw2(size_t ch)
+   static_inline bool IsKw2(size_t ch)
    {
       return((Get(ch) & KW2) != 0);
    }
