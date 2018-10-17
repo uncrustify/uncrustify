@@ -27,7 +27,7 @@ struct CharTable
    };
 
 
-   static_inline size_t Get(size_t ch)
+   static inline size_t Get(size_t ch)
    {
       if (ch < ARRAY_SIZE(chars))
       {
@@ -45,13 +45,13 @@ struct CharTable
    }
 
 
-   static_inline bool IsKw1(size_t ch)
+   static inline bool IsKw1(size_t ch)
    {
       return((Get(ch) & KW1) != 0);
    }
 
 
-   static_inline bool IsKw2(size_t ch)
+   static inline bool IsKw2(size_t ch)
    {
       return((Get(ch) & KW2) != 0);
    }

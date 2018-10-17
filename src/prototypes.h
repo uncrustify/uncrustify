@@ -23,7 +23,7 @@
  * @param tabsize The tabsize
  * @return the next tabstop column
  */
-static_inline
+static inline
 size_t calc_next_tab_column(size_t col, size_t tabsize)
 {
    if (col == 0)
@@ -49,7 +49,7 @@ size_t calc_next_tab_column(size_t col, size_t tabsize)
  * @param col  The current column
  * @return the next tabstop column
  */
-static_inline
+static inline
 size_t next_tab_column(size_t col)
 {
    return(calc_next_tab_column(col, uncrustify::options::output_tab_size()));
@@ -62,7 +62,7 @@ size_t next_tab_column(size_t col)
  * @param col  The current column
  * @return the next tabstop column
  */
-static_inline
+static inline
 size_t align_tab_column(size_t col)
 {
    //if (col <= 0)

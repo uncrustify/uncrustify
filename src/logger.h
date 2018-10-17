@@ -180,7 +180,7 @@ void log_hex_blk(log_sev_t sev, const void *data, size_t len);
  * @return '0', '1', '2', '3', '4', '5', '6', '7','8', '9',
  *         'a', 'b', 'c', 'd', 'e', or 'f'
  */
-static_inline char to_hex_char(int nibble)
+static inline char to_hex_char(int nibble)
 {
    const char *hex_string = "0123456789abcdef";
 

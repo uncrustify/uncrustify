@@ -44,10 +44,6 @@ typedef uint32_t   UINT32;
 typedef uint64_t   UINT64;
 #endif   /* ifdef WIN32 */
 
-
-// and a nice macro to keep SlickEdit happy
-#define static_inline    static inline
-
 // and the ever-so-important array size macro
 #ifndef ARRAY_SIZE
 #define ARRAY_SIZE(x)    (sizeof(x) / sizeof((x)[0]))

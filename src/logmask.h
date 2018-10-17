@@ -27,7 +27,7 @@ typedef std::bitset<256> log_mask_t;
  *
  * @return true (is set) or false (not set)
  */
-static_inline bool logmask_test(const log_mask_t &mask, log_sev_t sev)
+static inline bool logmask_test(const log_mask_t &mask, log_sev_t sev)
 {
    return(mask.test(sev));
 }
@@ -40,7 +40,7 @@ static_inline bool logmask_test(const log_mask_t &mask, log_sev_t sev)
  * @param sev    The severity to check
  * @param value  true (set bit) or false (clear bit)
  */
-static_inline void logmask_set_sev(log_mask_t &mask, log_sev_t sev, bool value)
+static inline void logmask_set_sev(log_mask_t &mask, log_sev_t sev, bool value)
 {
    mask.set(sev, value);
 }
@@ -52,7 +52,7 @@ static_inline void logmask_set_sev(log_mask_t &mask, log_sev_t sev, bool value)
  * @param mast   log mask to operate on
  * @param value  true (set bit) or false (clear bit)
  */
-static_inline void logmask_set_all(log_mask_t &mask, bool value)
+static inline void logmask_set_all(log_mask_t &mask, bool value)
 {
    if (value)
    {

@@ -38,7 +38,7 @@ struct token_pri
 };
 
 
-static_inline bool is_past_width(chunk_t *pc);
+static inline bool is_past_width(chunk_t *pc);
 
 
 //! Split right after the chunk
@@ -127,7 +127,7 @@ static void split_fcn_params_full(chunk_t *start);
 static void split_for_stmt(chunk_t *start);
 
 
-static_inline bool is_past_width(chunk_t *pc)
+static inline bool is_past_width(chunk_t *pc)
 {
    // allow char to sit at last column by subtracting 1
    return((pc->column + pc->len() - 1) > options::code_width());
