@@ -11,7 +11,16 @@
 #include <cstdlib>     // strtoul()
 #include "unc_ctype.h"
 
+#ifdef DEVELOP_ONLY
 
+
+/*
+ * the test suite Coveralls: https://coveralls.io
+ * will complains because these functions are only
+ * used at developement time.
+ * Don't worry about unsed lines for the functions:
+ *   logmask_to_str
+ */
 char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
 {
    if (buf == nullptr || size <= 0)
@@ -68,6 +77,7 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
 
    return(buf);
 } // logmask_to_str
+#endif /* DEVELOP_ONLY */
 
 
 void logmask_from_string(const char *str, log_mask_t &mask)

@@ -14,6 +14,14 @@
 #include <bitset>
 #include "log_levels.h"
 
+/*
+ * the test suite Coveralls: https://coveralls.io
+ * will complains because these functions are only
+ * used at developement time.
+ * Don't worry about unsed lines for the functions:
+ *   logmask_test
+ *   logmask_set_all
+ */
 
 //! A simple array of 256 bits
 typedef std::bitset<256> log_mask_t;
@@ -65,6 +73,7 @@ static_inline void logmask_set_all(log_mask_t &mask, bool value)
 }
 
 
+#ifdef DEVELOP_ONLY
 /**
  * Convert a logmask into a string.
  * The string is a comma-delimited list of severities.
@@ -77,6 +86,8 @@ static_inline void logmask_set_all(log_mask_t &mask, bool value)
  * @return buf (pass through)
  */
 char *logmask_to_str(const log_mask_t &mask, char *buf, int size);
+
+#endif /* DEVELOP_ONLY */
 
 
 /**
