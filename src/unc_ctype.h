@@ -13,8 +13,6 @@
 
 #include <cctype>
 
-#include "base_types.h"
-
 // TODO: better avoid inline and move implementation to cpp file
 
 
