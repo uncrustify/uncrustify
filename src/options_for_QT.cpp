@@ -25,8 +25,8 @@ namespace
 class temporary_iarf_option
 {
 public:
-   temporary_iarf_option(iarf_e &(*option)(),
-                         iarf_e override_value = IARF_REMOVE)
+   temporary_iarf_option(Option<iarf_e> *option,
+                         iarf_e         override_value = IARF_REMOVE)
       : m_option{option}
       , m_override_value{override_value}
    {}
@@ -35,30 +35,26 @@ public:
    void restore();
 
 private:
-   iarf_e &(*const m_option)();
-   const iarf_e m_override_value;
+   Option<iarf_e> *m_option;
+   const iarf_e   m_override_value;
 
-   iarf_e       m_saved_vale = IARF_NOT_DEFINED;
+   iarf_e         m_saved_value = iarf_e::NOT_DEFINED;
 };
 
 
 //-----------------------------------------------------------------------------
 void temporary_iarf_option::save_and_override()
 {
-   auto &optval = (*m_option)();
-
-   m_saved_vale = optval;
-   optval       = m_override_value;
+   m_saved_value = (*m_option)();
+   (*m_option)   = m_override_value;
 }
 
 
 //-----------------------------------------------------------------------------
 void temporary_iarf_option::restore()
 {
-   auto &optval = (*m_option)();
-
-   optval       = m_saved_vale;
-   m_saved_vale = IARF_NOT_DEFINED;
+   (*m_option)   = m_saved_value;
+   m_saved_value = iarf_e::NOT_DEFINED;
 }
 
 //-----------------------------------------------------------------------------

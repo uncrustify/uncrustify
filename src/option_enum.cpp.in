@@ -1,0 +1,22 @@
+##BANNER##
+#include "options.h"
+
+#include "base_types.h"
+#include "logger.h"
+
+#include <cstdlib>
+
+#ifdef HAVE_STRINGS_H
+#include <strings.h>  // strcasecmp()
+#endif
+
+#ifdef __GNUC__
+#pragma GCC diagnostic ignored "-Wswitch-bool"
+#endif
+
+namespace uncrustify
+{
+
+##VALUE_STRINGS##
+##CONVERSIONS##
+} // namespace uncrustify

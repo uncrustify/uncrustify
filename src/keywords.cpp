@@ -411,25 +411,23 @@ bool keywords_are_sorted(void)
 }
 
 
-void add_keyword(const char *tag, c_token_t type)
+void add_keyword(const std::string &tag, c_token_t type)
 {
-   string ss = tag;
-
    // See if the keyword has already been added
-   dkwmap::iterator it = dkwm.find(ss);
+   dkwmap::iterator it = dkwm.find(tag);
 
    if (it != dkwm.end())
    {
       LOG_FMT(LDYNKW, "%s(%d): changed '%s' to '%s'\n",
-              __func__, __LINE__, tag, get_token_name(type));
+              __func__, __LINE__, tag.c_str(), get_token_name(type));
       (*it).second = type;
       return;
    }
 
    // Insert the keyword
-   dkwm.insert(dkwmap::value_type(ss, type));
+   dkwm.insert(dkwmap::value_type(tag, type));
    LOG_FMT(LDYNKW, "%s(%d): added '%s' as '%s'\n",
-           __func__, __LINE__, tag, get_token_name(type));
+           __func__, __LINE__, tag.c_str(), get_token_name(type));
 }
 
 

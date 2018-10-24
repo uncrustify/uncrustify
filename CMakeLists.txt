@@ -22,6 +22,7 @@ include(CTest)
 #
 if(MSVC)
   add_definitions(/D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_WARNINGS /wd4267)
+  add_definitions(/utf-8)
 elseif(CMAKE_COMPILER_IS_GNUCXX)
   add_definitions(-std=gnu++0x)
   set(gcc_warning_flags
@@ -56,6 +57,7 @@ endif()
 
 include_directories(
   ${PROJECT_BINARY_DIR}/src
+  ${PROJECT_SOURCE_DIR}/src
   ${PROJECT_BINARY_DIR}
 )
 
@@ -196,6 +198,24 @@ py_gen(punctuator_table.h
   symbols_table.h
 )
 
+py_gen(options.cpp
+  make_options.py
+  options.h
+  options.cpp.in
+)
+
+py_gen(option_enum.h
+  make_option_enum.py
+  option.h
+  option_enum.h.in
+)
+
+py_gen(option_enum.cpp
+  make_option_enum.py
+  option.h
+  option_enum.cpp.in
+)
+
 #
 # Uncrustify
 #
@@ -222,7 +242,6 @@ set(uncrustify_sources
   src/md5.cpp
   src/newlines.cpp
   src/option.cpp
-  src/options.cpp
   src/options_for_QT.cpp
   src/output.cpp
   src/parens.cpp
@@ -270,6 +289,9 @@ set(uncrustify_headers
   src/unc_ctype.h
   src/unc_text.h
   src/unc_tools.h
+  ${PROJECT_BINARY_DIR}/src/options.cpp
+  ${PROJECT_BINARY_DIR}/src/option_enum.cpp
+  ${PROJECT_BINARY_DIR}/src/option_enum.h
 )
 
 add_executable(uncrustify ${uncrustify_sources} ${uncrustify_headers})
