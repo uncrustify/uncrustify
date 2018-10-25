@@ -501,8 +501,6 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_decltype_paren");
          return(options::sp_decltype_paren());
       }
-      log_rule("FORCE");
-      return(IARF_FORCE);
    }
 
    // handle '::'
