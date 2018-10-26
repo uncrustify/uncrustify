@@ -251,9 +251,9 @@ UNC_IMPLEMENT_OPTION(std::string);
 UNC_OPTVAL_ALIAS(bool, false, "0", "f", "n", "no");
 UNC_OPTVAL_ALIAS(bool, true, "1", "t", "y", "yes");
 UNC_OPTVAL_ALIAS(iarf_e, IGNORE, "i");
-UNC_OPTVAL_ALIAS(iarf_e, ADD, "a");
-UNC_OPTVAL_ALIAS(iarf_e, REMOVE, "r");
-UNC_OPTVAL_ALIAS(iarf_e, FORCE, "f");
+UNC_OPTVAL_ALIAS(iarf_e, ADD, "a", "2", "t", "true", "y", "yes");
+UNC_OPTVAL_ALIAS(iarf_e, REMOVE, "r", "0", "f", "false", "n", "no");
+UNC_OPTVAL_ALIAS(iarf_e, FORCE, "f", "1");
 
 // Possible values for options, by type
 #define UNC_OPTVALS(e)    extern const char *const e ## _values[]
