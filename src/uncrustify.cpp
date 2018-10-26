@@ -273,6 +273,7 @@ void usage(const char *argv0)
            " --frag       : Code fragment, assume the first line is indented correctly.\n"
            " --assume FN  : Uses the filename FN for automatic language detection if reading\n"
            "                from stdin unless -l is specified.\n"
+           " --unbuffered : Set stdout/stderr output to be unbuffered.\n"
            "\n"
            "Config/Help Options:\n"
            " -h -? --help --usage     : Print this message and exit.\n"
@@ -473,6 +474,13 @@ int main(int argc, char *argv[])
    {
       logmask_from_string("", mask);
       log_set_mask(mask);
+   }
+
+   // Unbuffered output option
+   if (arg.Present("--unbuffered"))
+   {
+      setvbuf(stdout, NULL, _IONBF, 0);
+      setvbuf(stderr, NULL, _IONBF, 0);
    }
 
    const char *p_arg;

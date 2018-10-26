@@ -37,6 +37,7 @@ Basic Options:
  --frag       : Code fragment, assume the first line is indented correctly.
  --assume FN  : Uses the filename FN for automatic language detection if reading
                 from stdin unless -l is specified.
+ --unbuffered : Set stdout/stderr output to be unbuffered.
 
 Config/Help Options:
  -h -? --help --usage     : Print this message and exit.
