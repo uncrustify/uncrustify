@@ -9,7 +9,6 @@
 #ifndef CHAR_TABLE_H_INCLUDED
 #define CHAR_TABLE_H_INCLUDED
 
-
 /**
  * bit0-7 = paired char
  * bit8 = OK for keyword 1st char
