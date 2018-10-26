@@ -376,6 +376,7 @@
 31632  issue_1916.cfg                       cpp/issue_1916.cpp
 31633  sp_after_decltype-f.cfg              cpp/sp_after_decltype.cpp
 31634  sp_after_decltype-r.cfg              cpp/sp_after_decltype.cpp
+31635  empty.cfg                            cpp/sp_decltype.cpp
 
 31660  nl_func_var_def_blk-1.cfg            cpp/issue_1919.cpp
 
