@@ -253,7 +253,9 @@ class FormatTest(SourceTest):
         def to_cmake_path(path):
             if type(path) is dict:
                 return {k: to_cmake_path(v) for k, v in path.items()}
-            return path.replace(os.sep, '/')
+            if type(path) is str:
+                return path.replace(os.sep, '/')
+            return path
 
         runner = os.path.join(test_dir, 'run_test.py')
 
@@ -267,13 +269,14 @@ class FormatTest(SourceTest):
              '    --expected       "{test_expected}"\n' +
              '    --rerun-config   "{test_rerun_config}"\n' +
              '    --rerun-expected "{test_rerun_expected}"\n' +
-             '    --xfail          "{test_xfail}"\n' +
              '    -d --git         "{git_exe}"\n' +
+             '{xfail}' +
              ')\n').format(
                  test_runner=to_cmake_path(runner),
                  python_exe=to_cmake_path(config.python_exe),
                  uncrustify_exe=to_cmake_path(config.uncrustify_exe),
                  git_exe=to_cmake_path(config.git_exe),
+                 xfail=('    --xfail\n' if self.test_xfail else ''),
                  **to_cmake_path(self.__dict__)))
         out_file.write(
             ('set_tests_properties({}\n' +
