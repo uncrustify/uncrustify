@@ -151,6 +151,10 @@ class FormatTest(SourceTest):
     pass_input = ['test_input', 'test_expected']
     pass_expected = ['test_expected', 'test_rerun_expected']
 
+    re_test_declaration = re.compile(r'^(?P<num>\d+)(?P<mark>[~!])?\s+'
+                          r'(?P<config>\S+)\s+(?P<input>\S+)'
+                          r'(?:\s+(?P<lang>\S+))?$')
+
     # -------------------------------------------------------------------------
     def _build_pass(self, i):
         p = SourceTest()
@@ -190,11 +194,7 @@ class FormatTest(SourceTest):
 
     # -------------------------------------------------------------------------
     def build_from_declaration(self, decl, group, line_number):
-        prog = re.compile(r'^(?P<num>\d+)(?P<mark>[~!])?\s+'
-                          r'(?P<config>\S+)\s+(?P<input>\S+)'
-                          r'(?:\s+(?P<lang>\S+))?$')
-
-        match = prog.match(decl)
+        match = self.re_test_declaration.match(decl)
         if not match:
             raise TestDeclarationParseError(group, line_number)
 
