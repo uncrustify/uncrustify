@@ -12,7 +12,7 @@ import subprocess
 import sys
 
 from .ansicolor import printc
-from .config import (config, test_dir, FAIL_ATTRS,
+from .config import (config, test_dir, FAIL_ATTRS, PASS_ATTRS,
                      MISMATCH_ATTRS, UNSTABLE_ATTRS)
 from .failure import (ExecutionFailure, MismatchFailure, MissingFailure,
                       TestDeclarationParseError, UnexpectedlyPassingFailure,
@@ -119,7 +119,7 @@ class SourceTest(object):
             else:
                 if args.xdiff:
                     print(output)
-                    printc('XFAILED: ', msg, **FAIL_ATTRS)
+                    printc('XFAILED: ', msg, **PASS_ATTRS)
                 return
         finally:
             if args.debug:
