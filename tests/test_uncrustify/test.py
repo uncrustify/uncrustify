@@ -81,7 +81,7 @@ class SourceTest(object):
             print('    Config : {}'.format(self.test_config))
             print('  Expected : {}'.format(_expected))
             print('    Result : {}'.format(_result))
-            print('ExpectFail : {}'.format(self.test_xfail))
+            print('     XFail : {}'.format(self.test_xfail))
 
         if not os.path.exists(os.path.dirname(_result)):
             os.makedirs(os.path.dirname(_result))
