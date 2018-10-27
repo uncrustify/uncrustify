@@ -133,10 +133,10 @@ def run_tests(tests, args, selector=None):
             continue
 
         try:
-            result = test.run(args)
+            test.run(args)
             if args.show_all:
                 outcome = 'XFAILED' if test.test_xfail else 'PASSED'
-                printc('%s: ' % outcome, test.test_name, **PASS_ATTRS)
+                printc('%s: '.format(outcome), test.test_name, **PASS_ATTRS)
             pass_count += 1
         except UnstableFailure:
             unstable_count += 1
@@ -181,11 +181,8 @@ def read_format_tests(filename, group):
     tests = []
 
     print("Processing " + filename)
-    line_number = 0
     with open(filename, 'rt') as f:
-        for line in f:
-            line_number += 1
-
+        for line_number, line in enumerate(f, 1):
             line = line.strip()
             if not len(line):
                 continue
