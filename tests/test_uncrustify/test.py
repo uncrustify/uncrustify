@@ -113,12 +113,12 @@ class SourceTest(object):
             msg = '{}: Uncrustify error code {}'
             msg = msg.format(self.test_name, exc.returncode)
             if not self.test_xfail:
-                printc(output)
+                print(output)
                 printc('FAILED: ', msg, **FAIL_ATTRS)
                 raise ExecutionFailure(exc)
             else:
                 if args.xdiff:
-                    printc(output)
+                    print(output)
                     printc('XFAILED: ', msg, **FAIL_ATTRS)
                 return
         finally:
