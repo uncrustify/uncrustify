@@ -14,10 +14,9 @@ import sys
 from .ansicolor import printc
 from .config import (config, test_dir, FAIL_ATTRS,
                      MISMATCH_ATTRS, UNSTABLE_ATTRS)
-from .failure import (ExecutionFailure, MissingFailure,
-                      MismatchFailure, UnstableFailure,
-                      UnexpectedlyPassingFailure,
-                      TestDeclarationParseError)
+from .failure import (ExecutionFailure, MismatchFailure, MissingFailure,
+                      TestDeclarationParseError, UnexpectedlyPassingFailure,
+                      UnstableFailure)
 
 
 # =============================================================================
