@@ -119,6 +119,7 @@ class SourceTest(object):
             else:
                 if args.xdiff:
                     print(output)
+                if not args.show_all:
                     printc('XFAILED: ', msg, **PASS_ATTRS)
                 return
         finally:
