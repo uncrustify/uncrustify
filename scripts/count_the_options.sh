@@ -2,8 +2,8 @@
 #
 # count the options
 # guy maurel
-# 5. 10. 2016
+# 6. 11. 2018
 #
-grep "UO_" ../src/options.h > count.UO
-gawk -f count.awk < count.UO
+grep "register_option(" ../build/src/options.cpp > count.UO
+wc -l count.UO
 rm count.UO

@@ -1,3 +1,23 @@
+Change highlights in uncrustify-0.68 (November 2018)
+-------------------------------------------------------------------------------
+
+New options:
+  - nl_class_leave_one_liner_groups      Oct 17
+  - nl_inside_namespace                  Aug 26
+  - sp_return_brace                      Aug 21
+  - align_assign_decl_func               Jul 24
+  - sp_brace_brace                       Jul 23
+  - sp_after_decltype                    Jul 22
+  - align_right_cmt_same_level           Jul 14
+  - nl_oc_mdef_brace                     Jul  8
+  - mod_enum_last_comma                  Jul  8
+  - sp_type_ellipsis                     Jun 15
+  - indent_continue_class_head           May 30
+  - sp_decltype_paren
+
+Bugfix:
+
+
 Change highlights in uncrustify-0.67 (May 2018)
 -------------------------------------------------------------------------------
 
