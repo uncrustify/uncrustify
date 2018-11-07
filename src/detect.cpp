@@ -312,15 +312,23 @@ static void detect_space_options(void)
             if (chunk_is_token(prev, CT_SPAREN_OPEN))
             {
                // empty, ie for (;;)
+               //               ^ is prev
+               //                ^ is pc
                vote_sp_before_semi_for_empty.vote(prev, pc);
             }
             else if (chunk_is_token(next, CT_SPAREN_CLOSE))
             {
                // empty, ie for (;;)
+               //                 ^ is pc
+               //                  ^ is next
                vote_sp_after_semi_for_empty.vote(pc, next);
             }
             else if (prev->type != CT_SEMICOLON)
             {
+               // empty, ie for (; i < 8;)
+               //                       ^ is pc
+               // or
+               //                      ^ is prev
                vote_sp_before_semi_for.vote(prev, pc);
             }
          }
