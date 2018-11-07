@@ -4576,7 +4576,7 @@ void do_blank_lines(void)
                {
                   LOG_FMT(LBLANK, "%s(%d): %zu:%zu token is '%s'\n",
                           __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->text());
-                  if (tmp->flags & PCF_VAR_DEF)
+                  if ((tmp->flags & PCF_VAR_DEF) && !(tmp->flags & PCF_IN_STRUCT))
                   {
                      is_var_def = true;
                   }
