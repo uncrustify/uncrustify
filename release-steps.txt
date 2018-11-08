@@ -28,9 +28,9 @@ Change the date at the first line of this document.
       At line * highly configurable
       TODO: (automat for this) Change the values of options and version.
 
-2b. Update the option count in documentation/htdocs/index.html
-   Use under script the script count_the_options.sh to count the options.
+2b. Update the option count in documentation/htdocs/index.html .
    Check the number of options at ./tests/cli/output/help.txt
+   or use uncrustify --help .
 
 2d. Update the man file, if any command-line options have changed.
 

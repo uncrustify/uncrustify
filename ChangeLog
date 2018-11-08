@@ -8,12 +8,12 @@ New options:
   - align_assign_decl_func               Jul 24
   - sp_brace_brace                       Jul 23
   - sp_after_decltype                    Jul 22
+  - sp_decltype_paren                    Jul 22
   - align_right_cmt_same_level           Jul 14
   - nl_oc_mdef_brace                     Jul  8
   - mod_enum_last_comma                  Jul  8
   - sp_type_ellipsis                     Jun 15
   - indent_continue_class_head           May 30
-  - sp_decltype_paren
 
 Bugfix:
  - Issue # 1709, 1713, 1729, 1736, 1739, 1740, 1748, 1752, 1755, 1758, 1760, 
