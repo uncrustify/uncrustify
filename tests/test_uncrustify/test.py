@@ -119,8 +119,8 @@ class SourceTest(object):
             else:
                 if args.xdiff:
                     print(output)
-                if not args.show_all:
-                    printc('XFAILED: ', msg, **PASS_ATTRS)
+                    if not args.show_all:
+                        printc('XFAILED: ', msg, **PASS_ATTRS)
                 return
         finally:
             if args.debug:
@@ -140,6 +140,8 @@ class SourceTest(object):
             if has_diff and self.test_xfail:
                 if args.xdiff:
                     self._diff(_expected, _result)
+                    if not args.show_all:
+                        printc('XFAILED: ', msg, **PASS_ATTRS)
                 return
         except OSError as exc:
             printc('MISSING: ', self.test_name, **self.diff_attrs)
