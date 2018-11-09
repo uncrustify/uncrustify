@@ -253,12 +253,12 @@ class FormatTest(SourceTest):
     def print_as_ctest(self, out_file=sys.stdout):
         self._check()
 
-        def to_cmake_path(path):
-            if type(path) is dict:
-                return {k: to_cmake_path(v) for k, v in path.items()}
-            if type(path) is str:
-                return path.replace(os.sep, '/')
-            return path
+        def to_cmake_path(obj):
+            if type(obj) is dict:
+                return {k: to_cmake_path(v) for k, v in obj.items()}
+            if type(obj) is str:
+                return obj.replace(os.sep, '/')
+            return obj
 
         runner = os.path.join(test_dir, 'run_test.py')
 
