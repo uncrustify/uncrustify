@@ -136,7 +136,7 @@ def run_tests(tests, args, selector=None):
             test.run(args)
             if args.show_all:
                 outcome = 'XFAILED' if test.test_xfail else 'PASSED'
-                printc('%s: '.format(outcome), test.test_name, **PASS_ATTRS)
+                printc('{}: '.format(outcome), test.test_name, **PASS_ATTRS)
             pass_count += 1
         except UnstableFailure:
             unstable_count += 1
