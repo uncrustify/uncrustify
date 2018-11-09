@@ -169,7 +169,7 @@ single test: `testNr[!] testConfigFileName testInputFileName [lang]`
 
 The configuration file `testConfigFileName` has to be located inside `tests/config`,
 the input file `testInputFileName` inside `tests/input/<testSetName>/`,
-and expected results file inside the `tests/output/<testSetName>/`
+and expected results file inside the `tests/expected/<testSetName>/`
 directory.
 Expected results have the following naming convention: `testNr-testConfigFileName`.
 

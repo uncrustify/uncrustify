@@ -576,6 +576,8 @@ declare namespace LibUncrustify
         UO_align_func_params_thresh : EmscriptenEnumTypeObject;
         UO_align_func_params_gap : EmscriptenEnumTypeObject;
         UO_align_same_func_call_params : EmscriptenEnumTypeObject;
+        UO_align_same_func_call_params_span : EmscriptenEnumTypeObject;
+        UO_align_same_func_call_params_thresh : EmscriptenEnumTypeObject;
         UO_align_var_def_span : EmscriptenEnumTypeObject;
         UO_align_var_def_star_style : EmscriptenEnumTypeObject;
         UO_align_var_def_amp_style : EmscriptenEnumTypeObject;

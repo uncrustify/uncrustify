@@ -465,7 +465,7 @@ void align_all(void)
       align_func_params();
    }
 
-   if (options::align_same_func_call_params())
+   if (options::align_same_func_call_params() && options::align_same_func_call_params_span() > 0)
    {
       align_same_func_call_params();
    }
@@ -980,10 +980,10 @@ static void align_params(chunk_t *start, deque<chunk_t *> &chunks)
    }
 }
 
-
 static void align_same_func_call_params(void)
 {
    LOG_FUNC_ENTRY();
+
    chunk_t           *pc;
    chunk_t           *align_root = nullptr;
    chunk_t           *align_cur  = nullptr;
@@ -996,7 +996,13 @@ static void align_same_func_call_params(void)
    AlignStack        fcn_as;
    const char        *add_str;
 
-   fcn_as.Start(3);
+   size_t span = 3;
+   size_t thresh = 0;
+
+   span = options::align_same_func_call_params_span();
+   thresh = options::align_same_func_call_params_thresh();
+
+   fcn_as.Start(span, thresh);
 
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
@@ -1118,7 +1124,7 @@ static void align_same_func_call_params(void)
             if (idx >= as.size())
             {
                as.resize(idx + 1);
-               as[idx].Start(3);
+               as[idx].Start(span, thresh);
                if (!options::align_number_right())
                {
                   if (  chunk_is_token(chunks[idx], CT_NUMBER_FP)
