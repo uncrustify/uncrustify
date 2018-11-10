@@ -2475,7 +2475,16 @@ void space_text(void)
                {
                   // Try to keep relative spacing between tokens
                   LOG_FMT(LSPACE, " <relative adj>");
-                  column = pc->column + 1 + (next->orig_col - pc->orig_col_end);
+                  // Issue #2064
+                  if (pc->type == CT_VBRACE_CLOSE)
+                  {
+                     // take the token before
+                     column = pc->prev->column + 1 + (next->orig_col - pc->prev->orig_col_end);
+                  }
+                  else
+                  {
+                     column = pc->column + 1 + (next->orig_col - pc->orig_col_end);
+                  }
                }
                else
                {
@@ -2624,7 +2633,7 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
    }
    else
    {
-      LOG_FMT(LSPACE, "   len is %zu\n", first->len());
+      LOG_FMT(LSPACE, "   %s(%d): len is %zu\n", __func__, __LINE__, first->len());
       coldiff = first->len();
    }
 
@@ -2649,7 +2658,7 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
       // If we got here, something is wrong...
       break;
    }
-   LOG_FMT(LSPACE, "   => coldiff is %zu\n", coldiff);
+   LOG_FMT(LSPACE, "   %s(%d): => coldiff is %zu\n", __func__, __LINE__, coldiff);
    return(coldiff);
 } // space_col_align
 
