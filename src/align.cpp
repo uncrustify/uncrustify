@@ -465,7 +465,7 @@ void align_all(void)
       align_func_params();
    }
 
-   if (options::align_same_func_call_params() && options::align_same_func_call_params_span() > 0)
+   if (options::align_same_func_call_params())
    {
       align_same_func_call_params();
    }
@@ -980,6 +980,7 @@ static void align_params(chunk_t *start, deque<chunk_t *> &chunks)
    }
 }
 
+
 static void align_same_func_call_params(void)
 {
    LOG_FUNC_ENTRY();
@@ -988,6 +989,8 @@ static void align_same_func_call_params(void)
    chunk_t           *align_root = nullptr;
    chunk_t           *align_cur  = nullptr;
    size_t            align_len   = 0;
+   size_t            span        = 3;
+   size_t            thresh      = 0;
    chunk_t           *align_fcn;
    unc_text          align_fcn_name;
    unc_text          align_root_name;
@@ -996,11 +999,17 @@ static void align_same_func_call_params(void)
    AlignStack        fcn_as;
    const char        *add_str;
 
-   size_t span = 3;
-   size_t thresh = 0;
+   // Default span is 3 if align_same_func_call_params is true
+   if (options::align_same_func_call_params_span() > 0)
+   {
+      span = options::align_same_func_call_params_span();
+   }
 
-   span = options::align_same_func_call_params_span();
-   thresh = options::align_same_func_call_params_thresh();
+   // Default thresh is 0 (no limit) if align_same_func_call_params is true
+   if (options::align_same_func_call_params_thresh() > 0)
+   {
+      thresh = options::align_same_func_call_params_thresh();
+   }
 
    fcn_as.Start(span, thresh);
 
