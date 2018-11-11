@@ -133,6 +133,7 @@
 30212  indent_comment_align_thresh_2.cfg    cpp/indent_comment_align_thresh.cpp
 30213  align_right_comment.cfg              cpp/align_right_comment.cpp
 30214  issue_1887.cfg                       cpp/align_across_braces.cpp
+30215  commentAfterVBRACE_END.cfg           cpp/commentAfterVBRACE_END.cpp
 
 30220  bug_1340.cfg                         cpp/bug_1340.cpp
 
