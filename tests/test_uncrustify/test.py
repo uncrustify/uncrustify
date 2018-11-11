@@ -110,18 +110,11 @@ class SourceTest(object):
             output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as exc:
             output = exc.output
-            msg = '{}: Uncrustify error code {}'
-            msg = msg.format(self.test_name, exc.returncode)
             if not self.test_xfail:
-                print(output)
+                msg = '{}: Uncrustify error code {}'
+                msg = msg.format(self.test_name, exc.returncode)
                 printc('FAILED: ', msg, **FAIL_ATTRS)
                 raise ExecutionFailure(exc)
-            else:
-                if args.xdiff:
-                    print(output)
-                    if not args.show_all:
-                        printc('XFAILED: ', msg, **PASS_ATTRS)
-                return
         finally:
             if args.debug:
                 with open(_result + '.log', 'wt') as f:
