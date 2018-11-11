@@ -132,10 +132,10 @@ class SourceTest(object):
                 raise UnexpectedlyPassingFailure(_expected, _result)
             if has_diff and self.test_xfail:
                 if args.xdiff:
+                    msg = '{}: Difference on expected failure'
+                    msg = msg.format(self.test_name)
+                    printc('XFAILED: ', msg, **PASS_ATTRS)
                     self._diff(_expected, _result)
-                    if not args.show_all:
-                        printc('XFAILED: ', msg, **PASS_ATTRS)
-                return
         except OSError as exc:
             printc('MISSING: ', self.test_name, **self.diff_attrs)
             raise MissingFailure(exc, _expected)
