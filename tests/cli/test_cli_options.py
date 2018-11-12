@@ -519,6 +519,19 @@ def main(args):
         return_flag = False
 
     #
+    # Test false parameter
+    #   --xyz
+    if not check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            args_arr=['--xyz'],
+            err_expected_path=s_path_join(sc_dir, 'output/xyz-err.txt'),
+            err_result_path=s_path_join(sc_dir, 'results/xyz-err.txt')
+        ):
+        #
+        return_flag = False
+
+    #
     # Test --show-config
     #
     if not check_uncrustify_output(
