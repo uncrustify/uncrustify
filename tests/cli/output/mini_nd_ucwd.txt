@@ -1072,7 +1072,7 @@ indent_paren_nl                 = false    # true/false
 
 # How to indent a close parenthesis after a newline.
 #
-# 0: Indent to body level
+# 0: Indent to body level (default)
 # 1: Align under the open parenthesis
 # 2: Indent to the brace level
 indent_paren_close              = 0        # unsigned number
@@ -1291,42 +1291,42 @@ nl_after_square_assign          = ignore   # ignore/add/remove/force
 # The number of blank lines after a block of variable definitions at the top
 # of a function body.
 #
-# 0 = No change (default)
+# 0 = No change (default).
 nl_func_var_def_blk             = 0        # unsigned number
 
 # The number of newlines before a block of typedefs. If nl_after_access_spec
 # is non-zero, that option takes precedence.
 #
-# 0 = No change (default)
+# 0 = No change (default).
 nl_typedef_blk_start            = 0        # unsigned number
 
 # The number of newlines after a block of typedefs.
 #
-# 0 = No change (default)
+# 0 = No change (default).
 nl_typedef_blk_end              = 0        # unsigned number
 
 # The maximum number of consecutive newlines within a block of typedefs.
 #
-# 0 = No change (default)
+# 0 = No change (default).
 nl_typedef_blk_in               = 0        # unsigned number
 
 # The number of newlines before a block of variable definitions not at the top
 # of a function body. If nl_after_access_spec is non-zero, that option takes
 # precedence.
 #
-# 0 = No change (default)
+# 0 = No change (default).
 nl_var_def_blk_start            = 0        # unsigned number
 
 # The number of newlines after a block of variable definitions not at the top
 # of a function body.
 #
-# 0 = No change (default)
+# 0 = No change (default).
 nl_var_def_blk_end              = 0        # unsigned number
 
 # The maximum number of consecutive newlines within a block of variable
 # definitions.
 #
-# 0 = No change (default)
+# 0 = No change (default).
 nl_var_def_blk_in               = 0        # unsigned number
 
 # Add or remove newline between a function call's ')' and '{', as in
@@ -1855,14 +1855,14 @@ nl_after_class                  = 0        # unsigned number
 # the Qt-specific 'signals:' and 'slots:'. Will not change the newline count
 # if after a brace open.
 #
-# 0 = No change.
+# 0 = No change (default).
 nl_before_access_spec           = 0        # unsigned number
 
 # The number of newlines after an access specifier label. This also includes
 # the Qt-specific 'signals:' and 'slots:'. Will not change the newline count
 # if after a brace open.
 #
-# 0 = No change.
+# 0 = No change (default).
 #
 # Overrides nl_typedef_blk_start and nl_var_def_blk_start.
 nl_after_access_spec            = 0        # unsigned number
@@ -1870,24 +1870,24 @@ nl_after_access_spec            = 0        # unsigned number
 # The number of newlines between a function definition and the function
 # comment, as in '// comment\n <here> void foo() {...}'.
 #
-# 0 = No change.
+# 0 = No change (default).
 nl_comment_func_def             = 0        # unsigned number
 
 # The number of newlines after a try-catch-finally block that isn't followed
 # by a brace close.
 #
-# 0 = No change.
+# 0 = No change (default).
 nl_after_try_catch_finally      = 0        # unsigned number
 
 # (C#) The number of newlines before and after a property, indexer or event
 # declaration.
 #
-# 0 = No change.
+# 0 = No change (default).
 nl_around_cs_property           = 0        # unsigned number
 
 # (C#) The number of newlines between the get/set/add/remove handlers.
 #
-# 0 = No change.
+# 0 = No change (default).
 nl_between_get_set              = 0        # unsigned number
 
 # (C#) Add or remove newline between property and the '{'.
@@ -1910,7 +1910,7 @@ eat_blanks_before_close_brace   = false    # true/false
 
 # How aggressively to remove extra newlines not in preprocessor.
 #
-# 0: No change
+# 0: No change (default)
 # 1: Remove most newlines not handled by other config
 # 2: Remove all newlines and reformat completely by config
 nl_remove_extra_newlines        = 0        # unsigned number
@@ -2014,7 +2014,7 @@ align_func_params               = false    # true/false
 
 # The span for aligning parameter definitions in function on parameter name.
 #
-# 0 = Don't align (default)
+# 0 = Don't align (default).
 align_func_params_span          = 0        # unsigned number
 
 # The threshold for aligning function parameter definitions.
@@ -2031,19 +2031,19 @@ align_same_func_call_params     = false    # true/false
 
 # The span for aligning variable definitions.
 #
-# 0 = Don't align (default)
+# 0 = Don't align (default).
 align_var_def_span              = 0        # unsigned number
 
 # How to align the '*' in variable definitions.
 #
-# 0: Part of the type     'void *   foo;'
+# 0: Part of the type     'void *   foo;' (default)
 # 1: Part of the variable 'void     *foo;'
 # 2: Dangling             'void    *foo;'
 align_var_def_star_style        = 0        # unsigned number
 
 # How to align the '&' in variable definitions.
 #
-# 0: Part of the type     'long &   foo;'
+# 0: Part of the type     'long &   foo;' (default)
 # 1: Part of the variable 'long     &foo;'
 # 2: Dangling             'long    &foo;'
 align_var_def_amp_style         = 0        # unsigned number
@@ -2081,7 +2081,7 @@ align_assign_thresh             = 0        # unsigned number
 # How to apply align_assign_span to function declaration "assignments", i.e.
 # 'virtual void foo() = 0' or '~foo() = {default|delete}'.
 #
-# 0: Align with other assignments
+# 0: Align with other assignments (default)
 # 1: Align with each other, ignoring regular assignments
 # 2: Don't align
 align_assign_decl_func          = 0        # unsigned number
@@ -2137,21 +2137,21 @@ align_typedef_span              = 0        # unsigned number
 
 # How to align typedef'd functions with other typedefs.
 #
-# 0: Don't mix them at all
+# 0: Don't mix them at all (default)
 # 1: Align the open parenthesis with the types
 # 2: Align the function type name with the other type names
 align_typedef_func              = 0        # unsigned number
 
 # How to align the '*' in typedefs.
 #
-# 0: Align on typedef type, ignore '*'
+# 0: Align on typedef type, ignore '*' (default)
 # 1: The '*' is part of type name: 'typedef int  *pint;'
 # 2: The '*' is part of the type, but dangling: 'typedef int *pint;'
 align_typedef_star_style        = 0        # unsigned number
 
 # How to align the '&' in typedefs.
 #
-# 0: Align on typedef type, ignore '&'
+# 0: Align on typedef type, ignore '&' (default)
 # 1: The '&' is part of type name: 'typedef int  &pint;'
 # 2: The '&' is part of the type, but dangling: 'typedef int &pint;'
 align_typedef_amp_style         = 0        # unsigned number
@@ -2259,7 +2259,7 @@ cmt_width                       = 0        # unsigned number
 
 # How to reflow comments.
 #
-# 0: No reflowing (apart from the line wrapping due to cmt_width)
+# 0: No reflowing (apart from the line wrapping due to cmt_width) (default)
 # 1: No touching at all
 # 2: Full reflow
 cmt_reflow_mode                 = 0        # unsigned number

@@ -1324,7 +1324,7 @@ indent_paren_nl;
 
 // How to indent a close parenthesis after a newline.
 //
-// 0: Indent to body level
+// 0: Indent to body level (default)
 // 1: Align under the open parenthesis
 // 2: Indent to the brace level
 extern BoundedOption<unsigned, 0, 2>
@@ -1589,26 +1589,26 @@ nl_after_square_assign;
 // The number of blank lines after a block of variable definitions at the top
 // of a function body.
 //
-// 0 = No change (default)
+// 0 = No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_func_var_def_blk;
 
 // The number of newlines before a block of typedefs. If nl_after_access_spec
 // is non-zero, that option takes precedence.
 //
-// 0 = No change (default)
+// 0 = No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_typedef_blk_start;
 
 // The number of newlines after a block of typedefs.
 //
-// 0 = No change (default)
+// 0 = No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_typedef_blk_end;
 
 // The maximum number of consecutive newlines within a block of typedefs.
 //
-// 0 = No change (default)
+// 0 = No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_typedef_blk_in;
 
@@ -1616,21 +1616,21 @@ nl_typedef_blk_in;
 // of a function body. If nl_after_access_spec is non-zero, that option takes
 // precedence.
 //
-// 0 = No change (default)
+// 0 = No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_var_def_blk_start;
 
 // The number of newlines after a block of variable definitions not at the top
 // of a function body.
 //
-// 0 = No change (default)
+// 0 = No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_var_def_blk_end;
 
 // The maximum number of consecutive newlines within a block of variable
 // definitions.
 //
-// 0 = No change (default)
+// 0 = No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_var_def_blk_in;
 
@@ -2307,7 +2307,7 @@ nl_after_class;
 // the Qt-specific 'signals:' and 'slots:'. Will not change the newline count
 // if after a brace open.
 //
-// 0 = No change.
+// 0 = No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_before_access_spec;
 
@@ -2315,7 +2315,7 @@ nl_before_access_spec;
 // the Qt-specific 'signals:' and 'slots:'. Will not change the newline count
 // if after a brace open.
 //
-// 0 = No change.
+// 0 = No change (default).
 //
 // Overrides nl_typedef_blk_start and nl_var_def_blk_start.
 extern BoundedOption<unsigned, 0, 16>
@@ -2324,27 +2324,27 @@ nl_after_access_spec;
 // The number of newlines between a function definition and the function
 // comment, as in '// comment\n <here> void foo() {...}'.
 //
-// 0 = No change.
+// 0 = No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_comment_func_def;
 
 // The number of newlines after a try-catch-finally block that isn't followed
 // by a brace close.
 //
-// 0 = No change.
+// 0 = No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_after_try_catch_finally;
 
 // (C#) The number of newlines before and after a property, indexer or event
 // declaration.
 //
-// 0 = No change.
+// 0 = No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_around_cs_property;
 
 // (C#) The number of newlines between the get/set/add/remove handlers.
 //
-// 0 = No change.
+// 0 = No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_between_get_set;
 
@@ -2372,7 +2372,7 @@ eat_blanks_before_close_brace;
 
 // How aggressively to remove extra newlines not in preprocessor.
 //
-// 0: No change
+// 0: No change (default)
 // 1: Remove most newlines not handled by other config
 // 2: Remove all newlines and reformat completely by config
 extern BoundedOption<unsigned, 0, 2>
@@ -2505,7 +2505,7 @@ align_func_params;
 
 // The span for aligning parameter definitions in function on parameter name.
 //
-// 0 = Don't align (default)
+// 0 = Don't align (default).
 extern BoundedOption<unsigned, 0, 16>
 align_func_params_span;
 
@@ -2526,13 +2526,13 @@ align_same_func_call_params;
 
 // The span for aligning variable definitions.
 //
-// 0 = Don't align (default)
+// 0 = Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
 align_var_def_span;
 
 // How to align the '*' in variable definitions.
 //
-// 0: Part of the type     'void *   foo;'
+// 0: Part of the type     'void *   foo;' (default)
 // 1: Part of the variable 'void     *foo;'
 // 2: Dangling             'void    *foo;'
 extern BoundedOption<unsigned, 0, 2>
@@ -2540,7 +2540,7 @@ align_var_def_star_style;
 
 // How to align the '&' in variable definitions.
 //
-// 0: Part of the type     'long &   foo;'
+// 0: Part of the type     'long &   foo;' (default)
 // 1: Part of the variable 'long     &foo;'
 // 2: Dangling             'long    &foo;'
 extern BoundedOption<unsigned, 0, 2>
@@ -2587,7 +2587,7 @@ align_assign_thresh;
 // How to apply align_assign_span to function declaration "assignments", i.e.
 // 'virtual void foo() = 0' or '~foo() = {default|delete}'.
 //
-// 0: Align with other assignments
+// 0: Align with other assignments (default)
 // 1: Align with each other, ignoring regular assignments
 // 2: Don't align
 extern BoundedOption<unsigned, 0, 2>
@@ -2655,7 +2655,7 @@ align_typedef_span;
 
 // How to align typedef'd functions with other typedefs.
 //
-// 0: Don't mix them at all
+// 0: Don't mix them at all (default)
 // 1: Align the open parenthesis with the types
 // 2: Align the function type name with the other type names
 extern BoundedOption<unsigned, 0, 2>
@@ -2663,7 +2663,7 @@ align_typedef_func;
 
 // How to align the '*' in typedefs.
 //
-// 0: Align on typedef type, ignore '*'
+// 0: Align on typedef type, ignore '*' (default)
 // 1: The '*' is part of type name: 'typedef int  *pint;'
 // 2: The '*' is part of the type, but dangling: 'typedef int *pint;'
 extern BoundedOption<unsigned, 0, 2>
@@ -2671,7 +2671,7 @@ align_typedef_star_style;
 
 // How to align the '&' in typedefs.
 //
-// 0: Align on typedef type, ignore '&'
+// 0: Align on typedef type, ignore '&' (default)
 // 1: The '&' is part of type name: 'typedef int  &pint;'
 // 2: The '&' is part of the type, but dangling: 'typedef int &pint;'
 extern BoundedOption<unsigned, 0, 2>
@@ -2802,7 +2802,7 @@ cmt_width;
 
 // How to reflow comments.
 //
-// 0: No reflowing (apart from the line wrapping due to cmt_width)
+// 0: No reflowing (apart from the line wrapping due to cmt_width) (default)
 // 1: No touching at all
 // 2: Full reflow
 extern BoundedOption<unsigned, 0, 2>
