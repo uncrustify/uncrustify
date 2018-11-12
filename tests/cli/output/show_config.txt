@@ -2031,13 +2031,14 @@ align_same_func_call_params     = false    # true/false
 
 # The span for aligning function-call parameters for single line functions.
 #
-# 0 = Don't align (default)
-align_same_func_call_params_span = 0        # unsigned number
+# 0 = Don't align (default).
+align_same_func_call_params_span = 0       # unsigned number
 
 # The threshold for aligning function-call parameters for single line
 # functions.
-# 0 = No limit (default)
-align_same_func_call_params_thresh = 0        # unsigned number
+#
+# 0 = No limit (default).
+align_same_func_call_params_thresh = 0     # unsigned number
 
 # The span for aligning variable definitions.
 #
