@@ -10,7 +10,9 @@
 #include <strings.h>  // strcasecmp()
 #endif
 
-#ifdef __GNUC__
+#if defined(_MSC_VER)
+#pragma warning(disable: 4809)
+#elif defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wswitch-bool"
 #endif
 
