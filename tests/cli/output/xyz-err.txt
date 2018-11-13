@@ -1,0 +1,2 @@
+Specify the config file with '-c file' or set UNCRUSTIFY_CONFIG
+Try running with -h for usage information
