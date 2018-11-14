@@ -66,7 +66,7 @@ class UnstableFailure(Failure):
 
     # -------------------------------------------------------------------------
     def __str__(self):
-        return 'Output {!r} unexpectedly matches expected output {!r}'.format(
+        return 'Output {!r} does not match expected output {!r}'.format(
             self.actual_path, self.expected_path)
 
 # =============================================================================
@@ -78,5 +78,5 @@ class UnexpectedlyPassingFailure(Failure):
 
     # -------------------------------------------------------------------------
     def __str__(self):
-        return 'Output {!r} was not expected to match output {!r}'.format(
+        return 'Output {!r} unexpectedly matches expected output {!r}'.format(
             self.actual_path, self.expected_path)
