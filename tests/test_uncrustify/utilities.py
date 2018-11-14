@@ -12,7 +12,8 @@ import sys
 
 from .ansicolor import printc
 from .config import config, all_tests, FAIL_ATTRS, PASS_ATTRS, SKIP_ATTRS
-from .failure import Failure, MismatchFailure, UnstableFailure
+from .failure import (Failure, MismatchFailure, UnexpectedlyPassingFailure,
+                      UnstableFailure)
 from .test import FormatTest
 
 
