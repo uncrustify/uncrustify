@@ -149,7 +149,7 @@ class FormatTest(SourceTest):
     pass_input = ['test_input', 'test_expected']
     pass_expected = ['test_expected', 'test_rerun_expected']
 
-    re_test_declaration = re.compile(r'^(?P<num>\d+)(?P<mark>[~!])?\s+'
+    re_test_declaration = re.compile(r'^(?P<num>\d+)(?P<mark>[~!]*)\s+'
                           r'(?P<config>\S+)\s+(?P<input>\S+)'
                           r'(?:\s+(?P<lang>\S+))?$')
 
@@ -197,8 +197,8 @@ class FormatTest(SourceTest):
             raise TestDeclarationParseError(group, line_number)
 
         num = match.group('num')
-        is_rerun = match.group('mark') == '!'
-        is_xfail = match.group('mark') == '~'
+        is_rerun = ('!' in match.group('mark'))
+        is_xfail = ('~' in match.group('mark'))
 
         self.test_xfail = is_xfail
 
