@@ -515,7 +515,6 @@ def main(args):
                 string_replace(' --mtime      : Preserve mtime on replaced files.\n', ''),
                 string_replace('.exe', '')
             ]):
-        #
         return_flag = False
 
     #
@@ -527,8 +526,20 @@ def main(args):
             args_arr=['--xyz'],
             err_expected_path=s_path_join(sc_dir, 'output/xyz-err.txt'),
             err_result_path=s_path_join(sc_dir, 'results/xyz-err.txt')
-        ):
-        #
+            ):
+        return_flag = False
+
+    #
+    # Test Version
+    #   -v
+    if not check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            args_arr=['-v'],
+            out_expected_path=s_path_join(sc_dir, 'output/v-out.txt'),
+            out_result_path=s_path_join(sc_dir, 'results/v-out.txt'),
+            out_result_manip=reg_replace(r'Uncrustify-.+', 'Uncrustify-')
+            ):
         return_flag = False
 
     #
@@ -540,7 +551,8 @@ def main(args):
             args_arr=['--show-config'],
             out_expected_path=s_path_join(sc_dir, 'output/show_config.txt'),
             out_result_path=s_path_join(sc_dir, 'results/show_config.txt'),
-            out_result_manip=reg_replace(r'\# Uncrustify.+', '')):
+            out_result_manip=reg_replace(r'\# Uncrustify.+', '')
+            ):
         return_flag = False
 
     #
@@ -556,7 +568,8 @@ def main(args):
             out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
             err_expected_path=s_path_join(sc_dir, 'output/mini_d_error.txt'),
             err_result_path=s_path_join(sc_dir, 'results/mini_d_error0.txt'),
-            err_result_manip=string_replace('\\', '/')):
+            err_result_manip=string_replace('\\', '/')
+            ):
         return_flag = False
 
     if not check_uncrustify_output(
@@ -569,7 +582,8 @@ def main(args):
             out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
             err_expected_path=s_path_join(sc_dir, 'output/mini_d_error.txt'),
             err_result_path=s_path_join(sc_dir, 'results/mini_d_error1.txt'),
-            err_result_manip=string_replace('\\', '/')):
+            err_result_manip=string_replace('\\', '/')
+            ):
         return_flag = False
 
     #
@@ -585,7 +599,8 @@ def main(args):
             out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
             err_expected_path=s_path_join(sc_dir, 'output/mini_d_error.txt'),
             err_result_path=s_path_join(sc_dir, 'results/mini_d_error2.txt'),
-            err_result_manip=string_replace('\\', '/')):
+            err_result_manip=string_replace('\\', '/')
+            ):
         return_flag = False
 
     if not check_uncrustify_output(
@@ -598,7 +613,8 @@ def main(args):
             out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
             err_expected_path=s_path_join(sc_dir, 'output/mini_d_error.txt'),
             err_result_path=s_path_join(sc_dir, 'results/mini_d_error3.txt'),
-            err_result_manip=string_replace('\\', '/')):
+            err_result_manip=string_replace('\\', '/')
+            ):
         return_flag = False
 
     #
@@ -612,7 +628,8 @@ def main(args):
                       '-p', s_path_join(sc_dir, 'results/p.txt')],
             gen_expected_path=s_path_join(sc_dir, 'output/p.txt'),
             gen_result_path=s_path_join(sc_dir, 'results/p.txt'),
-            gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')):
+            gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
+            ):
         return_flag = False
 
     #
@@ -667,7 +684,8 @@ def main(args):
                 err_result_path=s_path_join(sc_dir, 'results/%s.txt' % L),
                 err_result_manip=[reg_replace(r'[0-9]', ''),
                                   reg_replace(RE_CALLSTACK, '[CallStack]'),
-                                  reg_replace(RE_DO_SPACE, '')]):
+                                  reg_replace(RE_DO_SPACE, '')]
+            ):
             return_flag = False
 
     # Test logger buffer overflow
@@ -678,7 +696,8 @@ def main(args):
                       '-f', s_path_join(sc_dir, 'input/logger.cs')],
             err_expected_path=s_path_join(sc_dir, 'output/logger_cs_L_99.txt'),
             err_result_path=s_path_join(sc_dir, 'results/logger_cs_L_99.txt'),
-            err_result_manip=reg_replace(r'[0-9]', '')):
+            err_result_manip=reg_replace(r'[0-9]', '')
+            ):
         return_flag = False
 
     # misc error_tests
@@ -691,7 +710,8 @@ def main(args):
                           '-f', s_path_join(sc_dir, 'input/%s.cpp' % test),
                           '-o', NULL_DEVICE, '-q'],
                 err_expected_path=s_path_join(sc_dir, 'output/%s.txt' % test),
-                err_result_path=s_path_join(sc_dir, 'results/%s.txt' % test)):
+                err_result_path=s_path_join(sc_dir, 'results/%s.txt' % test)
+                ):
             return_flag = False
 
     if return_flag:
