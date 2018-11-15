@@ -538,7 +538,7 @@ def main(args):
             args_arr=['-v'],
             out_expected_path=s_path_join(sc_dir, 'output/v-out.txt'),
             out_result_path=s_path_join(sc_dir, 'results/v-out.txt'),
-            out_result_manip=reg_replace(r'Uncrustify-.+', 'Uncrustify-')
+            out_result_manip=reg_replace(r'Uncrustify.+', 'Uncrustify')
             ):
         return_flag = False
 
