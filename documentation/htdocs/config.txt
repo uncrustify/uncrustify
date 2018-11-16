@@ -1710,6 +1710,12 @@ align_same_func_call_params     { False, True }
   Align parameters in single-line functions that have the same name.
   The function names must already be aligned with each other.
 
+align_same_func_call_params_span       Unsigned Number
+  The span for function call parameter alignment (0=don't align)
+
+align_same_func_call_params_thresh            Unsigned Number
+  The threshold for function call parameter alignment (0=no limit)
+
 align_var_def_span              Unsigned Number
   The span for aligning variable definitions (0=don't align)
 

@@ -12,7 +12,8 @@ import sys
 
 from .ansicolor import printc
 from .config import config, all_tests, FAIL_ATTRS, PASS_ATTRS, SKIP_ATTRS
-from .failure import Failure, MismatchFailure, UnstableFailure
+from .failure import (Failure, MismatchFailure, UnexpectedlyPassingFailure,
+                      UnstableFailure)
 from .test import FormatTest
 
 
@@ -26,6 +27,9 @@ def _add_common_arguments(parser):
 
     parser.add_argument('-d', '--diff', action='store_true',
                         help='show diff on failure')
+
+    parser.add_argument('-x', '--xdiff', action='store_true',
+                        help='show diff on expected failure')
 
     parser.add_argument('-g', '--debug', action='store_true',
                         help='generate debug files (.log, .unc)')
@@ -54,6 +58,7 @@ def add_test_arguments(parser):
     parser.add_argument("--expected",           type=str, required=True)
     parser.add_argument("--rerun-config",       type=str, metavar='INPUT')
     parser.add_argument("--rerun-expected",     type=str, metavar='CONFIG')
+    parser.add_argument("--xfail",              action='store_true')
 
 
 # -----------------------------------------------------------------------------
@@ -120,6 +125,7 @@ def run_tests(tests, args, selector=None):
     fail_count = 0
     mismatch_count = 0
     unstable_count = 0
+    unexpectedly_passing_count = 0
 
     for test in tests:
         if selector is not None and not selector.test(test.test_name):
@@ -130,12 +136,15 @@ def run_tests(tests, args, selector=None):
         try:
             test.run(args)
             if args.show_all:
-                printc('PASSED: ', test.test_name, **PASS_ATTRS)
+                outcome = 'XFAILED' if test.test_xfail else 'PASSED'
+                printc('{}: '.format(outcome), test.test_name, **PASS_ATTRS)
             pass_count += 1
         except UnstableFailure:
             unstable_count += 1
         except MismatchFailure:
             mismatch_count += 1
+        except UnexpectedlyPassingFailure:
+            unexpectedly_passing_count += 1
         except Failure:
             fail_count += 1
 
@@ -143,7 +152,8 @@ def run_tests(tests, args, selector=None):
         'passing': pass_count,
         'failing': fail_count,
         'mismatch': mismatch_count,
-        'unstable': unstable_count
+        'unstable': unstable_count,
+        'xpass': unexpectedly_passing_count
     }
 
 
@@ -162,6 +172,9 @@ def report(counts):
     if counts['unstable'] > 0:
         printc('{unstable} tests were unstable'.format(**counts),
                **FAIL_ATTRS)
+    if counts['xpass'] > 0:
+        printc('{xpass} tests passed but were expected to fail'
+            .format(**counts), **FAIL_ATTRS)
 
 
 # -----------------------------------------------------------------------------
@@ -170,7 +183,7 @@ def read_format_tests(filename, group):
 
     print("Processing " + filename)
     with open(filename, 'rt') as f:
-        for line in f:
+        for line_number, line in enumerate(f, 1):
             line = line.strip()
             if not len(line):
                 continue
@@ -178,7 +191,7 @@ def read_format_tests(filename, group):
                 continue
 
             test = FormatTest()
-            test.build_from_declaration(line, group)
+            test.build_from_declaration(line, group, line_number)
             tests.append(test)
 
     return tests

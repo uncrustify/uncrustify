@@ -11,7 +11,7 @@
 A source code beautifier for C, C++, C#, ObjectiveC, D, Java, Pawn and VALA
 
 ## Features
-* highly configurable - 639 configurable options as of version 0.67
+* highly configurable - 655 configurable options as of version 0.68
 - <details><summary>add/remove spaces</summary>
 
   - `sp_before_sparen`: _Add or remove space before '(' of 'if', 'for', 'switch', 'while', etc._
@@ -169,7 +169,7 @@ single test: `testNr[!] testConfigFileName testInputFileName [lang]`
 
 The configuration file `testConfigFileName` has to be located inside `tests/config`,
 the input file `testInputFileName` inside `tests/input/<testSetName>/`,
-and expected results file inside the `tests/output/<testSetName>/`
+and expected results file inside the `tests/expected/<testSetName>/`
 directory.
 Expected results have the following naming convention: `testNr-testConfigFileName`.
 
