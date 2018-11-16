@@ -2524,6 +2524,19 @@ align_func_params_gap;
 extern Option<bool>
 align_same_func_call_params;
 
+// The span for aligning function-call parameters for single line functions.
+//
+// 0 = Don't align (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_same_func_call_params_span;
+
+// The threshold for aligning function-call parameters for single line
+// functions.
+//
+// 0 = No limit (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_same_func_call_params_thresh;
+
 // The span for aligning variable definitions.
 //
 // 0 = Don't align (default).
