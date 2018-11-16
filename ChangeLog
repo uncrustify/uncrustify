@@ -2,6 +2,8 @@ Change highlights in uncrustify-0.68 (November 2018)
 -------------------------------------------------------------------------------
 
 New options:
+  - align_same_func_call_params_span     Nov  9
+  - align_same_func_call_params_thresh   Nov  9
   - nl_class_leave_one_liner_groups      Oct 17
   - nl_inside_namespace                  Aug 26
   - sp_return_brace                      Aug 21
