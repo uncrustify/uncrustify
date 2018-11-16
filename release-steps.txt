@@ -1,4 +1,4 @@
-2018-05-14 for Version 0.67
+2018-11-04 for Version 0.68
 
 Release steps.
 Just in case I don't do a release for a while and forget what to do... =)
@@ -16,7 +16,7 @@ Change the date at the first line of this document.
     ChangeLog
     CMakeLists.txt
       At lines under "# Generate uncrustify_version.h"
-      (Check the value of "CURRENT_VERSION", such as "Uncrustify-0.67_f")
+      (Check the value of "CURRENT_VERSION", such as "Uncrustify-0.68_f")
     documentation/htdocs/index.html
       At line <li>Highly configurable
       TODO: (automat for this) Change the values of <options> and version.
@@ -28,9 +28,9 @@ Change the date at the first line of this document.
       At line * highly configurable
       TODO: (automat for this) Change the values of options and version.
 
-2b. Update the option count in documentation/htdocs/index.html
-   Use script/count_the_options.sh to count the options.
+2b. Update the option count in documentation/htdocs/index.html .
    Check the number of options at ./tests/cli/output/help.txt
+   or use uncrustify --help .
 
 2d. Update the man file, if any command-line options have changed.
 
