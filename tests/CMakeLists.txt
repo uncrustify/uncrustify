@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(Git QUIET)
 
+# sorted by lexicographic order
 set(test_suites
     c-sharp.test
     c.test
@@ -14,6 +15,10 @@ set(test_suites
     pawn.test
     vala.test
 )
+
+if (NOT ENABLE_CODECOVERAGE)
+  list(APPEND test_suites staging.test)
+endif()
 
 option("UNCRUSTIFY_SEPARATE_TESTS"
   "Create a separate CTest test for each test case;\

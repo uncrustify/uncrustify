@@ -28,8 +28,9 @@ def main(argv):
     for s in os.listdir(src_dir):
         if os.path.splitext(s)[1] in ('.cpp', '.h'):
             t = tu.SourceTest()
-            t.build(test_input=os.path.join(src_dir, s),
-                    test_lang='CPP', test_config=config)
+            filepath = os.path.join(src_dir, s)
+            t.build(test_input=filepath, test_lang='CPP', test_config=config,
+                    test_expected=filepath)
             tests.append(t)
 
     counts = tu.run_tests(tests, args)

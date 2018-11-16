@@ -7,14 +7,16 @@
 
 import filecmp
 import os
+import re
 import subprocess
 import sys
 
 from .ansicolor import printc
-from .config import (config, test_dir, FAIL_ATTRS,
+from .config import (config, test_dir, FAIL_ATTRS, PASS_ATTRS,
                      MISMATCH_ATTRS, UNSTABLE_ATTRS)
-from .failure import (ExecutionFailure, MissingFailure,
-                      MismatchFailure, UnstableFailure)
+from .failure import (ExecutionFailure, MismatchFailure, MissingFailure,
+                      TestDeclarationParseError, UnexpectedlyPassingFailure,
+                      UnstableFailure)
 
 
 # =============================================================================
@@ -46,12 +48,13 @@ class SourceTest(object):
         subprocess.call(cmd)
 
     # -------------------------------------------------------------------------
-    def build(self, test_input, test_lang, test_config):
+    def build(self, test_input, test_lang, test_config, test_expected):
         self.test_name = os.path.basename(test_input)
         self.test_lang = test_lang
         self.test_input = test_input
         self.test_config = test_config
-        self.test_expected = test_input
+        self.test_expected = test_expected
+        self.test_xfail = False
 
     # -------------------------------------------------------------------------
     def _check(self):
@@ -60,6 +63,7 @@ class SourceTest(object):
         self._check_attr('test_input')
         self._check_attr('test_config')
         self._check_attr('test_expected')
+        self._check_attr('test_xfail')
 
     # -------------------------------------------------------------------------
     def run(self, args):
@@ -77,6 +81,7 @@ class SourceTest(object):
             print('    Config : {}'.format(self.test_config))
             print('  Expected : {}'.format(_expected))
             print('    Result : {}'.format(_result))
+            print('     XFail : {}'.format(self.test_xfail))
 
         if not os.path.exists(os.path.dirname(_result)):
             os.makedirs(os.path.dirname(_result))
@@ -94,41 +99,59 @@ class SourceTest(object):
                 '-LA',
                 '-p', _result + '.unc'
             ]
-            stderr = open(_result + '.log', 'wt')
 
         else:
             cmd += ['-L1,2']
-            stderr = None
 
         if args.show_commands:
             printc('RUN: ', repr(cmd))
 
         try:
-            subprocess.check_call(cmd, stderr=stderr)
+            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as exc:
-            msg = '{}: Uncrustify error code {}'
-            msg = msg.format(self.test_name, exc.returncode)
-            printc('FAILED: ', msg, **FAIL_ATTRS)
-            raise ExecutionFailure(exc)
+            output = exc.output
+            if not self.test_xfail:
+                print(output.rstrip())
+                msg = '{} (Uncrustify error code {})'
+                msg = msg.format(self.test_name, exc.returncode)
+                printc('FAILED: ', msg, **FAIL_ATTRS)
+                raise ExecutionFailure(exc)
+            elif args.xdiff:
+                print(output.rstrip())
         finally:
-            del stderr
+            if args.debug:
+                with open(_result + '.log', 'wt') as f:
+                    f.write(output)
 
         try:
-            if not filecmp.cmp(_expected, _result):
-                printc('{}: '.format(self.diff_text),
-                       self.test_name, **self.diff_attrs)
+            has_diff = not filecmp.cmp(_expected, _result)
+            if has_diff and not self.test_xfail:
                 if args.diff:
                     self._diff(_expected, _result)
+                printc('{}: '.format(self.diff_text),
+                       self.test_name, **self.diff_attrs)
                 raise self.diff_exception(_expected, _result)
+            if not has_diff and self.test_xfail:
+                raise UnexpectedlyPassingFailure(_expected, _result)
+            if has_diff and self.test_xfail:
+                if args.xdiff:
+                    self._diff(_expected, _result)
+                    if not args.show_all:
+                        printc('XFAILED: ', self.test_name, **PASS_ATTRS)
         except OSError as exc:
             printc('MISSING: ', self.test_name, **self.diff_attrs)
             raise MissingFailure(exc, _expected)
+
 
 # =============================================================================
 class FormatTest(SourceTest):
     pass_config = ['test_config', 'test_rerun_config']
     pass_input = ['test_input', 'test_expected']
     pass_expected = ['test_expected', 'test_rerun_expected']
+
+    re_test_declaration = re.compile(r'^(?P<num>\d+)(?P<mark>[~!]*)\s+'
+                          r'(?P<config>\S+)\s+(?P<input>\S+)'
+                          r'(?:\s+(?P<lang>\S+))?$')
 
     # -------------------------------------------------------------------------
     def _build_pass(self, i):
@@ -139,6 +162,7 @@ class FormatTest(SourceTest):
         p.test_config = getattr(self, self.pass_config[i])
         p.test_input = getattr(self, self.pass_input[i])
         p.test_expected = getattr(self, self.pass_expected[i])
+        p.test_xfail = self.test_xfail
         if i == 1 and not os.path.exists(p.test_expected):
             p.test_expected = getattr(self, self.pass_expected[0])
 
@@ -167,30 +191,36 @@ class FormatTest(SourceTest):
         self.test_passes[1].diff_exception = UnstableFailure
 
     # -------------------------------------------------------------------------
-    def build_from_declaration(self, decl, group):
-        parts = decl.split()
-        test_dir = os.path.dirname(parts[2])
+    def build_from_declaration(self, decl, group, line_number):
+        match = self.re_test_declaration.match(decl)
+        if not match:
+            raise TestDeclarationParseError(group, line_number)
 
-        if len(parts) == 4:
-            self.test_lang = parts[3]
+        num = match.group('num')
+        is_rerun = ('!' in match.group('mark'))
+        is_xfail = ('~' in match.group('mark'))
+
+        self.test_xfail = is_xfail
+
+        self.test_config = match.group('config')
+        self.test_input = match.group('input')
+
+        test_dir = os.path.dirname(self.test_input)
+        test_filename = os.path.basename(self.test_input)
+
+        if match.group('lang'):
+            self.test_lang = match.group('lang')
         else:
             self.test_lang = test_dir
 
-        if parts[0].endswith('!'):
-            num = parts[0][:-1]
-        else:
-            num = parts[0]
-
-        self.test_config = parts[1]
-        self.test_input = parts[2]
         self.test_expected = os.path.join(
-            test_dir, '{}-{}'.format(num, os.path.basename(parts[2])))
+            test_dir, '{}-{}'.format(num, test_filename))
 
         def rerun_file(name):
             parts = name.split('.')
             return '.'.join(parts[:-1] + ['rerun'] + parts[-1:])
 
-        if parts[0].endswith('!'):
+        if is_rerun:
             self.test_rerun_config = rerun_file(self.test_config)
             self.test_rerun_expected = rerun_file(self.test_expected)
         else:
@@ -210,6 +240,7 @@ class FormatTest(SourceTest):
         self.test_expected = args.expected
         self.test_rerun_config = args.rerun_config or args.config
         self.test_rerun_expected = args.rerun_expected or args.expected
+        self.test_xfail = args.xfail
 
         self._build_passes()
 
@@ -217,10 +248,12 @@ class FormatTest(SourceTest):
     def print_as_ctest(self, out_file=sys.stdout):
         self._check()
 
-        def to_cmake_path(path):
-            if type(path) is dict:
-                return {k: to_cmake_path(v) for k, v in path.items()}
-            return path.replace(os.sep, '/')
+        def to_cmake_path(obj):
+            if type(obj) is dict:
+                return {k: to_cmake_path(v) for k, v in obj.items()}
+            if type(obj) is str:
+                return obj.replace(os.sep, '/')
+            return obj
 
         runner = os.path.join(test_dir, 'run_test.py')
 
@@ -235,11 +268,13 @@ class FormatTest(SourceTest):
              '    --rerun-config   "{test_rerun_config}"\n' +
              '    --rerun-expected "{test_rerun_expected}"\n' +
              '    -d --git         "{git_exe}"\n' +
+             '{xfail}' +
              ')\n').format(
                  test_runner=to_cmake_path(runner),
                  python_exe=to_cmake_path(config.python_exe),
                  uncrustify_exe=to_cmake_path(config.uncrustify_exe),
                  git_exe=to_cmake_path(config.git_exe),
+                 xfail=('    --xfail\n' if self.test_xfail else ''),
                  **to_cmake_path(self.__dict__)))
         out_file.write(
             ('set_tests_properties({}\n' +
