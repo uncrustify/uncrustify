@@ -2968,6 +2968,12 @@ void newlines_cleanup_braces(bool first)
       {
          newlines_cuddle_uncuddle(pc, options::nl_brace_while());
       }
+      else if (  language_is_set(LANG_OC)
+              && chunk_is_token(pc, CT_OC_END)
+              && options::nl_oc_force_after_end())
+      {
+         newline_end_newline(pc);
+      }
       else if (chunk_is_token(pc, CT_BRACE_OPEN))
       {
          switch (pc->parent_type)
