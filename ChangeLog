@@ -15,11 +15,14 @@ New options:
   - nl_oc_mdef_brace                     Jul  8
   - mod_enum_last_comma                  Jul  8
   - sp_type_ellipsis                     Jun 15
+  - sp_paren_ellipsis                    Jun 15
+  - sp_sizeof_ellipsis                   Jun 15
+  - sp_sizeof_ellipsis_paren             Jun 15
   - indent_continue_class_head           May 30
 
 Bugfix:
- - Issue # 1709, 1713, 1729, 1736, 1739, 1740, 1748, 1752, 1755, 1758, 1760, 
-     1762, 1763, 1776, 1778, 1782, 1783, 1784, 1786, 1788, 1789, 1804, 1827, 
+ - Issue # 1709, 1713, 1729, 1736, 1739, 1740, 1748, 1752, 1755, 1758, 1760,
+     1762, 1763, 1776, 1778, 1782, 1783, 1784, 1786, 1788, 1789, 1804, 1827,
      1832, 1838, 1839, 1854, 1865, 1867, 1870, 1875, 1876, 1888, 1904, 1916,
      1917, 1918, 1919, 1942, 1946, 1947, 1958, 1960, 1962, 1965, 1969, 1979,
      1982, 1985, 1997, 2000, 2001, 2009, 2014, 2015, 2024, 2028, 2032, 2033,
@@ -34,9 +37,6 @@ Changing option:
 Removed option:
 
 New options:
-  - sp_paren_ellipsis                    Jun 15
-  - sp_sizeof_ellipsis                   Jun 15
-  - sp_sizeof_ellipsis_paren             Jun 15
   - indent_first_for_expr                Apr 29
   - indent_semicolon_for_paren           Apr 29
   - nl_oc_interface_brace                Apr 13
