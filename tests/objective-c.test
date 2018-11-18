@@ -135,6 +135,7 @@
 50811  oc_bug_1674.cfg                      oc/bug_1674.m
 50812  oc_bug_1683.cfg                      oc/bug_1683.m
 
+50900 nl_oc_force_after_end.cfg		    oc/EndDirective.m
 
 #
 # adopt tests from UT
