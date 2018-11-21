@@ -1258,8 +1258,8 @@ nl_oc_block_brace               = ignore   # ignore/add/remove/force
 # (OC) Add or remove newline between '@interface' and '{'.
 nl_oc_interface_brace           = ignore   # ignore/add/remove/force
 
-# (OC) Force newline after an @end directive.
-nl_oc_force_after_end           = false    # true/false
+# (OC) Newline after an @end directive.
+nl_oc_after_end                 = ignore   # ignore/add/remove/force
 
 # (OC) Add or remove newline between '@implementation' and '{'.
 nl_oc_implementation_brace      = ignore   # ignore/add/remove/force

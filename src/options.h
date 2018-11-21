@@ -1547,9 +1547,9 @@ nl_oc_block_brace;
 extern Option<iarf_e>
 nl_oc_interface_brace;
 
-// (OC) Force newline after an @end directive.
-extern Option<bool>
-nl_oc_force_after_end;  // = false
+// (OC) Newline after an @end directive.
+extern Option<iarf_e>
+nl_oc_after_end;
 
 // (OC) Add or remove newline between '@implementation' and '{'.
 extern Option<iarf_e>
