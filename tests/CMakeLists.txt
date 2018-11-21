@@ -20,10 +20,11 @@ if (NOT ENABLE_CODECOVERAGE)
   list(APPEND test_suites staging.test)
 endif()
 
-option("UNCRUSTIFY_SEPARATE_TESTS"
-  "Create a separate CTest test for each test case;\
-\ this is slower, especially with Python 3" OFF
+set(stdoc
+  "Create a separate CTest test for each test case"
+  " this is slower, especially with Python 3"
 )
+option("UNCRUSTIFY_SEPARATE_TESTS" "${stdoc}" OFF)
 if (UNCRUSTIFY_SEPARATE_TESTS)
   set(tests_ctest_file "${CMAKE_CURRENT_BINARY_DIR}/tests.cmake")
   set_property(DIRECTORY PROPERTY TEST_INCLUDE_FILE ${tests_ctest_file})
