@@ -66,11 +66,11 @@ static chunk_tag_t keywords[] =
    { "@implementation",                 CT_OC_IMPL,          LANG_OC                                                                     },
    { "@interface",                      CT_OC_INTF,          LANG_OC                                                                     },
    { "@interface",                      CT_CLASS,            LANG_JAVA                                                                   },
-   { "@private",                        CT_PRIVATE,          LANG_OC                                                                     },
+   { "@private",                        CT_ACCESS,           LANG_OC                                                                     },
    { "@property",                       CT_OC_PROPERTY,      LANG_OC                                                                     },
-   { "@protected",                      CT_PRIVATE,          LANG_OC                                                                     },
+   { "@protected",                      CT_ACCESS,           LANG_OC                                                                     },
    { "@protocol",                       CT_OC_PROTOCOL,      LANG_OC                                                                     },
-   { "@public",                         CT_PRIVATE,          LANG_OC                                                                     },
+   { "@public",                         CT_ACCESS,           LANG_OC                                                                     },
    { "@selector",                       CT_OC_SEL,           LANG_OC                                                                     },
    { "@synchronized",                   CT_SYNCHRONIZED,     LANG_OC                                                                     },
    { "@synthesize",                     CT_OC_DYNAMIC,       LANG_OC                                                                     },
@@ -263,14 +263,14 @@ static chunk_tag_t keywords[] =
    { "or_eq",                           CT_SASSIGN,          LANG_CPP                                                                    },
    { "out",                             CT_QUALIFIER,        LANG_CS | LANG_D | LANG_VALA                                                },
    { "override",                        CT_QUALIFIER,        LANG_CPP | LANG_CS | LANG_D | LANG_VALA                                     },
-   { "package",                         CT_PRIVATE,          LANG_D                                                                      },
+   { "package",                         CT_ACCESS,           LANG_D                                                                      },
    { "package",                         CT_PACKAGE,          LANG_ECMA | LANG_JAVA                                                       },
    { "params",                          CT_TYPE,             LANG_CS | LANG_VALA                                                         },
    { "pragma",                          CT_PP_PRAGMA,        LANG_ALL | FLAG_PP                                                          }, // PAWN
-   { "private",                         CT_PRIVATE,          LANG_ALLC                                                                   }, // not C
+   { "private",                         CT_ACCESS,           LANG_ALLC                                                                   }, // not C
    { "property",                        CT_PP_PROPERTY,      LANG_CS | FLAG_PP                                                           },
-   { "protected",                       CT_PRIVATE,          LANG_ALLC                                                                   }, // not C
-   { "public",                          CT_PRIVATE,          LANG_ALL                                                                    }, // PAWN // not C
+   { "protected",                       CT_ACCESS,           LANG_ALLC                                                                   }, // not C
+   { "public",                          CT_ACCESS,           LANG_ALL                                                                    }, // PAWN // not C
    { "readonly",                        CT_QUALIFIER,        LANG_CS                                                                     },
    { "real",                            CT_TYPE,             LANG_D                                                                      },
    { "ref",                             CT_QUALIFIER,        LANG_CS | LANG_VALA                                                         },
@@ -287,8 +287,8 @@ static chunk_tag_t keywords[] =
    { "self",                            CT_THIS,             LANG_OC                                                                     },
    { "set",                             CT_GETSET,           LANG_CS | LANG_VALA                                                         },
    { "short",                           CT_TYPE,             LANG_ALLC                                                                   },
-   { "signal",                          CT_PRIVATE,          LANG_VALA                                                                   },
-   { "signals",                         CT_PRIVATE,          LANG_CPP                                                                    },
+   { "signal",                          CT_ACCESS,           LANG_VALA                                                                   },
+   { "signals",                         CT_ACCESS,           LANG_CPP                                                                    },
    { "signed",                          CT_TYPE,             LANG_C                                                                      },
    { "sizeof",                          CT_SIZEOF,           LANG_C | LANG_CS | LANG_VALA | LANG_PAWN                                    }, // PAWN
    { "sleep",                           CT_SIZEOF,           LANG_PAWN                                                                   }, // PAWN

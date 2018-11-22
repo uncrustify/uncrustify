@@ -1045,8 +1045,8 @@ void indent_text(void)
 
             // a class scope is ended with another class scope or a close brace
             if (  options::indent_access_spec_body()
-               && (frm.top().type == CT_PRIVATE)
-               && (chunk_is_token(pc, CT_BRACE_CLOSE) || chunk_is_token(pc, CT_PRIVATE)))
+               && (frm.top().type == CT_ACCESS)
+               && (chunk_is_token(pc, CT_BRACE_CLOSE) || chunk_is_token(pc, CT_ACCESS)))
             {
                frm.pop();
             }
@@ -1821,7 +1821,7 @@ void indent_text(void)
             indent_column_set(((no_underflow) ? (pse_indent + val) : 0));
          }
       }
-      else if (chunk_is_token(pc, CT_PRIVATE))
+      else if (chunk_is_token(pc, CT_ACCESS))
       {
          if (options::indent_access_spec_body())
          {
