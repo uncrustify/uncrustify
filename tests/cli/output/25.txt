@@ -1,92 +1,92 @@
-Newline loop start: 
-newline_add_between(): ';'[SEMICOLON] line : and '}' line : : [CallStack]
-newline_add_between(): '{'[BRACE_OPEN] line : and '}' line : : [CallStack]
-newline_add_between(): '{'[BRACE_OPEN] line : and '}' line : : [CallStack]
-newline_add_between(): '{'[BRACE_OPEN] line : and '}' line : : [CallStack]
-newline_add_between(): '{'[BRACE_OPEN] line : and '}' line : : [CallStack]
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'struct', type is STRUCT
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'TelegramIndex', type is TYPE
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() '{', type is BRACE_OPEN
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'TelegramIndex', type is FUNC_CLASS_DEF
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() '(', type is FPAREN_OPEN
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'const', type is QUALIFIER
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'char', type is TYPE
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() '*', type is PTR_TYPE
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'pN', type is WORD
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() ',', type is COMMA
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'unsigned', type is TYPE
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'long', type is TYPE
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'nI', type is WORD
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() ')', type is FPAREN_CLOSE
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() ':', type is CONSTR_COLON
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'pTelName', type is FUNC_CTOR_VAR
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() '(', type is FPAREN_OPEN
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'pN', type is WORD
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() ')', type is FPAREN_CLOSE
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() ',', type is COMMA
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'nTelIndex', type is FUNC_CTOR_VAR
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() '(', type is FPAREN_OPEN
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'n', type is WORD
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() ')', type is FPAREN_CLOSE
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() '{', type is BRACE_OPEN
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() '}', type is BRACE_CLOSE
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() '~', type is DESTRUCTOR
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'TelegramIndex', type is FUNC_CLASS_DEF
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() '(', type is FPAREN_OPEN
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() ')', type is FPAREN_CLOSE
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() '{', type is BRACE_OPEN
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() '}', type is BRACE_CLOSE
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'const', type is QUALIFIER
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'char', type is TYPE
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() '*', type is PTR_TYPE
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'const', type is QUALIFIER
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'pTelName', type is WORD
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() ';', type is SEMICOLON
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'unsigned', type is TYPE
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'long', type is TYPE
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() 'nTelIndex', type is WORD
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() ';', type is SEMICOLON
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() '}', type is BRACE_CLOSE
-newlines_insert_blank_lines(): ignore it
-newlines_insert_blank_lines(): orig_line is , orig_col is , text() ';', type is SEMICOLON
-newlines_insert_blank_lines(): ignore it
+Newline loop start: 0
+newline_add_between : ';'[SEMICOLON] line 14:24 and '}' line 15:1 : [CallStack: newlines_brace_pair:1795, newlines_cleanup_braces:2831]
+newline_add_between : '{'[BRACE_OPEN] line 6:1 and '}' line 7:1 : [CallStack: newlines_brace_pair:1795, newlines_cleanup_braces:2831]
+newline_add_between : '{'[BRACE_OPEN] line 6:1 and '}' line 7:1 : [CallStack: newlines_brace_pair:1795, newlines_cleanup_braces:2831]
+newline_add_between : '{'[BRACE_OPEN] line 10:1 and '}' line 11:1 : [CallStack: newlines_brace_pair:1795, newlines_cleanup_braces:2831]
+newline_add_between : '{'[BRACE_OPEN] line 10:1 and '}' line 11:1 : [CallStack: newlines_brace_pair:1795, newlines_cleanup_braces:2831]
+newlines_insert_blank_lines : orig_line is 1, orig_col is 1, text() 'struct', type is STRUCT
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 1, orig_col is 8, text() 'TelegramIndex', type is TYPE
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 2, orig_col is 1, text() '{', type is BRACE_OPEN
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 3, orig_col is 1, text() 'TelegramIndex', type is FUNC_CLASS_DEF
+newlines_insert_blank_lines : orig_line is 3, orig_col is 14, text() '(', type is FPAREN_OPEN
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 3, orig_col is 15, text() 'const', type is QUALIFIER
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 3, orig_col is 21, text() 'char', type is TYPE
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 3, orig_col is 25, text() '*', type is PTR_TYPE
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 3, orig_col is 27, text() 'pN', type is WORD
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 3, orig_col is 29, text() ',', type is COMMA
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 3, orig_col is 31, text() 'unsigned', type is TYPE
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 3, orig_col is 40, text() 'long', type is TYPE
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 3, orig_col is 45, text() 'nI', type is WORD
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 3, orig_col is 47, text() ')', type is FPAREN_CLOSE
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 3, orig_col is 49, text() ':', type is CONSTR_COLON
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 4, orig_col is 1, text() 'pTelName', type is FUNC_CTOR_VAR
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 4, orig_col is 9, text() '(', type is FPAREN_OPEN
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 4, orig_col is 10, text() 'pN', type is WORD
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 4, orig_col is 12, text() ')', type is FPAREN_CLOSE
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 4, orig_col is 13, text() ',', type is COMMA
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 5, orig_col is 1, text() 'nTelIndex', type is FUNC_CTOR_VAR
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 5, orig_col is 10, text() '(', type is FPAREN_OPEN
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 5, orig_col is 11, text() 'n', type is WORD
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 5, orig_col is 12, text() ')', type is FPAREN_CLOSE
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 6, orig_col is 1, text() '{', type is BRACE_OPEN
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 7, orig_col is 1, text() '}', type is BRACE_CLOSE
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 9, orig_col is 1, text() '~', type is DESTRUCTOR
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 9, orig_col is 2, text() 'TelegramIndex', type is FUNC_CLASS_DEF
+newlines_insert_blank_lines : orig_line is 9, orig_col is 15, text() '(', type is FPAREN_OPEN
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 9, orig_col is 16, text() ')', type is FPAREN_CLOSE
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 10, orig_col is 1, text() '{', type is BRACE_OPEN
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 11, orig_col is 1, text() '}', type is BRACE_CLOSE
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 13, orig_col is 1, text() 'const', type is QUALIFIER
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 13, orig_col is 7, text() 'char', type is TYPE
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 13, orig_col is 11, text() '*', type is PTR_TYPE
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 13, orig_col is 13, text() 'const', type is QUALIFIER
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 13, orig_col is 19, text() 'pTelName', type is WORD
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 13, orig_col is 27, text() ';', type is SEMICOLON
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 14, orig_col is 1, text() 'unsigned', type is TYPE
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 14, orig_col is 10, text() 'long', type is TYPE
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 14, orig_col is 15, text() 'nTelIndex', type is WORD
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 14, orig_col is 24, text() ';', type is SEMICOLON
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 15, orig_col is 1, text() '}', type is BRACE_CLOSE
+newlines_insert_blank_lines : ignore it
+newlines_insert_blank_lines : orig_line is 15, orig_col is 2, text() ';', type is SEMICOLON
+newlines_insert_blank_lines : ignore it

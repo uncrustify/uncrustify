@@ -6820,7 +6820,8 @@ static void handle_oc_property_decl(chunk_t *os)
                endchunk.level       = curr_chunk->level;
                endchunk.brace_level = curr_chunk->brace_level;
                endchunk.orig_line   = curr_chunk->orig_line;
-               endchunk.column      = static_cast<int>(curr_chunk->orig_col_end) + 1;
+               endchunk.orig_col    = curr_chunk->orig_col;
+               endchunk.column      = curr_chunk->orig_col_end + 1;
                endchunk.parent_type = curr_chunk->parent_type;
                endchunk.flags       = curr_chunk->flags & PCF_COPY_FLAGS;
                chunk_add_after(&endchunk, curr_chunk);
