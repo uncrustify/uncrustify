@@ -350,10 +350,15 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (second->parent_type == CT_FOR)
       {
-         if (  (options::sp_before_semi_for_empty() != IARF_IGNORE)
-            && (  chunk_is_token(first, CT_SPAREN_OPEN)
-               || chunk_is_token(first, CT_SEMICOLON)))
+         if (  chunk_is_token(first, CT_SPAREN_OPEN) // a
+            || chunk_is_token(first, CT_SEMICOLON))  // b
          {
+            // empty, ie for (;;)
+            //               ^ is first    // a
+            //                ^ is second  // a
+            // or
+            //                ^ is first   // b
+            //                 ^ is second // b
             log_rule("sp_before_semi_for_empty");
             return(options::sp_before_semi_for_empty());
          }
