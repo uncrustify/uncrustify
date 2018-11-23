@@ -32,8 +32,13 @@ else:
     from os import EX_OK, EX_USAGE, EX_SOFTWARE
     NULL_DEVICE = '/dev/null'
 
-RE_CALLSTACK = r'\[CallStack:( \w+:(, \w+:)*|-DEBUG NOT SET-)?\]'
-RE_DO_SPACE = (r'\n\ndo_space\(\): WARNING: unrecognize do_space:'
+# an example:
+#newline_add_between(640): ';'[SEMICOLON] line 14:24 and '}' line 15:1 : [CallStack: newlines_brace_pair:1795, newlines_cleanup_braces:2831]
+RE_CALLSTACK = r'\[CallStack:( \w+:\w+(, \w+:\w+)*|-DEBUG NOT SET-)?\]'
+#do_space : WARNING: unrecognize do_space:
+#   first->orig_line  is 1, first->orig_col  is 1, first->text()  'struct', first->type is  STRUCT
+#   second->orig_line is 1, second->orig_col is 8, second->text() 'TelegramIndex', second->type is TYPE
+RE_DO_SPACE = (r'\n\ndo_space : WARNING: unrecognize do_space:'
                r'\n[^\n]+\n[^\n]+\n')
 
 
