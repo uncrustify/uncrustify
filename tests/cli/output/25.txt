@@ -1,9 +1,9 @@
 Newline loop start: 0
-newline_add_between : ';'[SEMICOLON] line 14:24 and '}' line 15:1 : [CallStack: newlines_brace_pair:1795, newlines_cleanup_braces:2831]
-newline_add_between : '{'[BRACE_OPEN] line 6:1 and '}' line 7:1 : [CallStack: newlines_brace_pair:1795, newlines_cleanup_braces:2831]
-newline_add_between : '{'[BRACE_OPEN] line 6:1 and '}' line 7:1 : [CallStack: newlines_brace_pair:1795, newlines_cleanup_braces:2831]
-newline_add_between : '{'[BRACE_OPEN] line 10:1 and '}' line 11:1 : [CallStack: newlines_brace_pair:1795, newlines_cleanup_braces:2831]
-newline_add_between : '{'[BRACE_OPEN] line 10:1 and '}' line 11:1 : [CallStack: newlines_brace_pair:1795, newlines_cleanup_braces:2831]
+newline_add_between : ';'[SEMICOLON] line 14:24 and '}' line 15:1 : [CallStack]
+newline_add_between : '{'[BRACE_OPEN] line 6:1 and '}' line 7:1 : [CallStack]
+newline_add_between : '{'[BRACE_OPEN] line 6:1 and '}' line 7:1 : [CallStack]
+newline_add_between : '{'[BRACE_OPEN] line 10:1 and '}' line 11:1 : [CallStack]
+newline_add_between : '{'[BRACE_OPEN] line 10:1 and '}' line 11:1 : [CallStack]
 newlines_insert_blank_lines : orig_line is 1, orig_col is 1, text() 'struct', type is STRUCT
 newlines_insert_blank_lines : ignore it
 newlines_insert_blank_lines : orig_line is 1, orig_col is 8, text() 'TelegramIndex', type is TYPE

@@ -5,30 +5,30 @@ set_chunk_real : orig_line is 3, orig_col is 25, pc->text() '*'
 set_chunk_real : orig_line is 13, orig_col is 11, pc->text() '*'
    pc->type is STAR, pc->parent_type is NONE => *type is PTR_TYPE, *parent_type is NONE [CallStack]
 set_chunk_real : orig_line is 3, orig_col is 1, pc->text() 'TelegramIndex'
-   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CLASS_DEF, *parent_type is NONE [CallStack: mark_class_ctor:5323, do_symbol_check:763, fix_symbols:2054]
+   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CLASS_DEF, *parent_type is NONE [CallStack]
 set_chunk_real : orig_line is 3, orig_col is 14, pc->text() '('
-   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE [CallStack: flag_parens:599, mark_cpp_constructor:5082, mark_class_ctor:5323, do_symbol_check:763, fix_symbols:2054]
+   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE [CallStack]
 set_chunk_real : orig_line is 3, orig_col is 47, pc->text() ')'
-   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE [CallStack: flag_parens:600, mark_cpp_constructor:5082, mark_class_ctor:5323, do_symbol_check:763, fix_symbols:2054]
+   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE [CallStack]
 set_chunk_real : orig_line is 3, orig_col is 49, pc->text() ':'
-   pc->type is COLON, pc->parent_type is NONE => *type is CONSTR_COLON, *parent_type is NONE [CallStack: mark_cpp_constructor:5129, mark_class_ctor:5323, do_symbol_check:763, fix_symbols:2054]
+   pc->type is COLON, pc->parent_type is NONE => *type is CONSTR_COLON, *parent_type is NONE [CallStack]
 set_chunk_real : orig_line is 4, orig_col is 1, pc->text() 'pTelName'
-   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CTOR_VAR, *parent_type is NONE [CallStack: mark_cpp_constructor:5139, mark_class_ctor:5323, do_symbol_check:763, fix_symbols:2054]
+   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CTOR_VAR, *parent_type is NONE [CallStack]
 set_chunk_real : orig_line is 4, orig_col is 9, pc->text() '('
-   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE [CallStack: flag_parens:599, mark_cpp_constructor:5139, mark_class_ctor:5323, do_symbol_check:763, fix_symbols:2054]
+   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE [CallStack]
 set_chunk_real : orig_line is 4, orig_col is 12, pc->text() ')'
-   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE [CallStack: flag_parens:600, mark_cpp_constructor:5139, mark_class_ctor:5323, do_symbol_check:763, fix_symbols:2054]
+   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE [CallStack]
 set_chunk_real : orig_line is 5, orig_col is 1, pc->text() 'nTelIndex'
-   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CTOR_VAR, *parent_type is NONE [CallStack: mark_cpp_constructor:5139, mark_class_ctor:5323, do_symbol_check:763, fix_symbols:2054]
+   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CTOR_VAR, *parent_type is NONE [CallStack]
 set_chunk_real : orig_line is 5, orig_col is 10, pc->text() '('
-   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE [CallStack: flag_parens:599, mark_cpp_constructor:5139, mark_class_ctor:5323, do_symbol_check:763, fix_symbols:2054]
+   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE [CallStack]
 set_chunk_real : orig_line is 5, orig_col is 12, pc->text() ')'
-   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE [CallStack: flag_parens:600, mark_cpp_constructor:5139, mark_class_ctor:5323, do_symbol_check:763, fix_symbols:2054]
+   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE [CallStack]
 set_chunk_real : orig_line is 9, orig_col is 2, pc->text() 'TelegramIndex'
-   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CLASS_DEF, *parent_type is NONE [CallStack: mark_class_ctor:5323, do_symbol_check:763, fix_symbols:2054]
+   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CLASS_DEF, *parent_type is NONE [CallStack]
 set_chunk_real : orig_line is 9, orig_col is 1, pc->text() '~'
-   pc->type is INV, pc->parent_type is NONE => *type is DESTRUCTOR, *parent_type is NONE [CallStack: mark_cpp_constructor:5092, mark_class_ctor:5323, do_symbol_check:763, fix_symbols:2054]
+   pc->type is INV, pc->parent_type is NONE => *type is DESTRUCTOR, *parent_type is NONE [CallStack]
 set_chunk_real : orig_line is 9, orig_col is 15, pc->text() '('
-   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE [CallStack: flag_parens:599, mark_cpp_constructor:5093, mark_class_ctor:5323, do_symbol_check:763, fix_symbols:2054]
+   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE [CallStack]
 set_chunk_real : orig_line is 9, orig_col is 16, pc->text() ')'
-   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE [CallStack: flag_parens:600, mark_cpp_constructor:5093, mark_class_ctor:5323, do_symbol_check:763, fix_symbols:2054]
+   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE [CallStack]
