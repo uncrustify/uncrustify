@@ -1,4 +1,4 @@
 template< >
-struct Bar< false > : Foo
+struct Bar< false >: Foo
 {
 };
