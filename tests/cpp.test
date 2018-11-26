@@ -501,7 +501,7 @@
 33103  bug_858-f.cfg                        cpp/bug_858.cpp
 33104  bug_858-r.cfg                        cpp/bug_858.cpp
 
-33105  empty.cfg                            cpp/bug_1001.cpp
+33105  bug_1001.cfg                         cpp/bug_1001.cpp
 
 33110  enum.cfg                             cpp/enum.cpp
 
