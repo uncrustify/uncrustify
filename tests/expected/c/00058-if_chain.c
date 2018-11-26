@@ -61,7 +61,7 @@ void funct(int v1, int v2, int v3)
 		if ( v2 ) {
 			f1();
 		}
-	}else {
+	} else {
 		if ( v3 ) {
 			f2();
 		}

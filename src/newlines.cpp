@@ -477,6 +477,7 @@ chunk_t *newline_add_before(chunk_t *pc)
    log_func_stack_inline(LNEWLINE);
 
    setup_newline_add(prev, &nl, pc);
+   nl.orig_col = pc->orig_col;
    LOG_FMT(LNEWLINE, "%s(%d): nl.column is %zu\n",
            __func__, __LINE__, nl.column);
 
@@ -519,9 +520,13 @@ chunk_t *newline_add_after(chunk_t *pc)
    log_func_stack_inline(LNEWLINE);
 
    chunk_t nl;
+   nl.orig_line = pc->orig_line;
+   nl.orig_col  = pc->orig_col;
    setup_newline_add(pc, &nl, next);
 
    MARK_CHANGE();
+   // TO DO: check why the next statement is necessary
+   nl.orig_col = pc->orig_col;
    return(chunk_add_after(&nl, pc));
 }
 
@@ -548,6 +553,7 @@ static void newline_end_newline(chunk_t *br_close)
    if (!chunk_is_newline(next) && !chunk_is_comment(next))
    {
       nl.orig_line = br_close->orig_line;
+      nl.orig_col  = br_close->orig_col;
       nl.nl_count  = 1;
       nl.flags     = (br_close->flags & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC;
       if (  (br_close->flags & PCF_IN_PREPROC)
@@ -3943,6 +3949,7 @@ void newlines_eat_start_end(void)
          {
             chunk_t chunk;
             chunk.orig_line = pc->orig_line;
+            chunk.orig_col  = pc->orig_col;
             chunk.type      = CT_NEWLINE;
             chunk.nl_count  = options::nl_start_of_file_min();
             chunk_add_before(&chunk, pc);
@@ -3988,6 +3995,7 @@ void newlines_eat_start_end(void)
          {
             chunk_t chunk;
             chunk.orig_line = pc->orig_line;
+            chunk.orig_col  = pc->orig_col;
             chunk.type      = CT_NEWLINE;
             chunk.nl_count  = options::nl_end_of_file_min();
             chunk_add_before(&chunk, nullptr);
