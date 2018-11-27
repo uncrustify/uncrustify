@@ -24,7 +24,7 @@ try {
 }
 try {
   int a = (int)when.foo();
-} catch (Exception e) when (DateTime.Now.DayOfWeek == DayOfWeek.Saturday)
+} catch (Exception e)when (DateTime.Now.DayOfWeek == DayOfWeek.Saturday)
 {
   string b = ((int)when.prop).ToString();
 }}}

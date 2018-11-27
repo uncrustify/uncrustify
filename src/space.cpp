@@ -1157,7 +1157,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_cpp_cast_paren());
    }
 
-   if (chunk_is_token(first, CT_PAREN_CLOSE) && chunk_is_token(second, CT_WHEN))
+   if (chunk_is_token(first, CT_SPAREN_CLOSE) && chunk_is_token(second, CT_WHEN))
    {
       log_rule("FORCE");
       return(IARF_FORCE); // TODO: make this configurable?
