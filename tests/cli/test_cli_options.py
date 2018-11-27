@@ -32,7 +32,7 @@ else:
     from os import EX_OK, EX_USAGE, EX_SOFTWARE
     NULL_DEVICE = '/dev/null'
 
-RE_CALLSTACK = r'\[CallStack:( \w+:(, \w+:)*|-DEBUG NOT SET-)?\]'
+RE_CALLSTACK = r'\[CallStack:( \w+:\w+(, \w+:\w+)*|-DEBUG NOT SET-)?\]'
 RE_DO_SPACE = (r'\n\ndo_space\(\): WARNING: unrecognize do_space:'
                r'\n[^\n]+\n[^\n]+\n')
 
