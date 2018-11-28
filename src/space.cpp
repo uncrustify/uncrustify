@@ -2135,11 +2135,11 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(IARF_FORCE);
    }
 
-   if (chunk_is_comment(second))
-   {
-      log_rule("IGNORE");
-      return(IARF_IGNORE);
-   }
+   //if (chunk_is_comment(second))
+   //{
+   //   log_rule("IGNORE");
+   //   return(IARF_IGNORE);
+   //}
 
    if (chunk_is_token(first, CT_COMMENT))
    {
