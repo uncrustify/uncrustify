@@ -1782,12 +1782,6 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_compare());
    }
 
-   if (chunk_is_token(first, CT_PAREN_OPEN) && chunk_is_token(second, CT_PTR_TYPE))
-   {
-      log_rule("REMOVE");
-      return(IARF_REMOVE);
-   }
-
    if (  chunk_is_token(first, CT_PTR_TYPE)
       && (options::sp_ptr_star_paren() != IARF_IGNORE)
       && (chunk_is_token(second, CT_FPAREN_OPEN) || chunk_is_token(second, CT_TPAREN_OPEN)))
