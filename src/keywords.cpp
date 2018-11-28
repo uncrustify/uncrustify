@@ -88,6 +88,7 @@ static chunk_tag_t keywords[] =
    { "Q_FOREVER",                       CT_Q_FOREVER,        LANG_CPP                                                                    }, // guy 2015-10-18
    { "Q_GADGET",                        CT_Q_GADGET,         LANG_CPP                                                                    }, // guy 2016-05-04
    { "Q_OBJECT",                        CT_COMMENT_EMBED,    LANG_CPP                                                                    },
+   { "Q_SIGNALS",                       CT_ACCESS,           LANG_CPP                                                                    },
    { "_Bool",                           CT_TYPE,             LANG_C                                                                      },
    { "_Complex",                        CT_TYPE,             LANG_C                                                                      },
    { "_Imaginary",                      CT_TYPE,             LANG_C                                                                      },
