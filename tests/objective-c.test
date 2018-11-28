@@ -135,6 +135,8 @@
 50811  oc_bug_1674.cfg                      oc/bug_1674.m
 50812  oc_bug_1683.cfg                      oc/bug_1683.m
 
+50900  1927.cfg                             oc/1927.m
+
 
 #
 # adopt tests from UT
