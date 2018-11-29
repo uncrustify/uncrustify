@@ -2359,7 +2359,7 @@ static void newline_func_def_or_call(chunk_t *start)
          newline_iarf(chunk_get_prev_ncnl(prev), options::nl_func_class_scope());
       }
 
-      if (prev != nullptr && prev->type != CT_PRIVATE_COLON)
+      if (prev != nullptr && prev->type != CT_ACCESS_COLON)
       {
          chunk_t *tmp;
          if (chunk_is_token(prev, CT_OPERATOR))
@@ -2420,7 +2420,7 @@ static void newline_func_def_or_call(chunk_t *start)
                   && prev->type != CT_VBRACE_CLOSE
                   && prev->type != CT_BRACE_OPEN
                   && prev->type != CT_SEMICOLON
-                  && prev->type != CT_PRIVATE_COLON
+                  && prev->type != CT_ACCESS_COLON
                      // #1008: if we landed on an operator check that it is having
                      // a type before it, in order to not apply nl_func_type_name
                      // on conversion operators as they don't have a normal
@@ -3556,7 +3556,7 @@ void newlines_cleanup_braces(bool first)
             }
          }
       }
-      else if (chunk_is_token(pc, CT_PRIVATE))
+      else if (chunk_is_token(pc, CT_ACCESS))
       {
          // Make sure there is a newline before an access spec
          if (options::nl_before_access_spec() > 0)
@@ -3568,7 +3568,7 @@ void newlines_cleanup_braces(bool first)
             }
          }
       }
-      else if (chunk_is_token(pc, CT_PRIVATE_COLON))
+      else if (chunk_is_token(pc, CT_ACCESS_COLON))
       {
          // Make sure there is a newline after an access spec
          if (options::nl_after_access_spec() > 0)
@@ -4448,7 +4448,7 @@ void do_blank_lines(void)
       // Control blanks before an access spec
       if (  (options::nl_before_access_spec() > 0)
          && (options::nl_before_access_spec() != pc->nl_count)
-         && chunk_is_token(next, CT_PRIVATE))
+         && chunk_is_token(next, CT_ACCESS))
       {
          // Don't add blanks after a open brace
          if (  prev == nullptr
@@ -4473,7 +4473,7 @@ void do_blank_lines(void)
       // Control blanks after an access spec
       if (  (options::nl_after_access_spec() > 0)
          && (options::nl_after_access_spec() != pc->nl_count)
-         && chunk_is_token(prev, CT_PRIVATE_COLON))
+         && chunk_is_token(prev, CT_ACCESS_COLON))
       {
          blank_line_set(pc, options::nl_after_access_spec);
       }

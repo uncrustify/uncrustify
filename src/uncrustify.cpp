@@ -1582,7 +1582,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
       while ((ref = chunk_get_prev(ref)) != nullptr)
       {
          // Bail if we change level or find an access specifier colon
-         if (ref->level != pc->level || chunk_is_token(ref, CT_PRIVATE_COLON))
+         if (ref->level != pc->level || chunk_is_token(ref, CT_ACCESS_COLON))
          {
             do_insert = true;
             break;

@@ -1451,7 +1451,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          for ( ; (  pprev != nullptr
                  && pprev->level >= level
                  && pprev->type != CT_SEMICOLON
-                 && pprev->type != CT_PRIVATE_COLON)
+                 && pprev->type != CT_ACCESS_COLON)
                ; pprev = chunk_get_prev(pprev))
          {
             if (pprev->level != level)
@@ -3665,7 +3665,7 @@ void combine_labels(void)
                set_chunk_type(next, CT_BIT_COLON);
             }
             else if (  chunk_is_token(cur, CT_ENUM)
-                    || chunk_is_token(cur, CT_PRIVATE)
+                    || chunk_is_token(cur, CT_ACCESS)
                     || chunk_is_token(cur, CT_QUALIFIER)
                     || cur->parent_type == CT_ALIGN)
             {

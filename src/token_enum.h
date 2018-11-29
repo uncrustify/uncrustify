@@ -154,8 +154,8 @@ enum c_token_t
    CT_NEW,              // may turn into CT_PBRACED if followed by a '('
    CT_OPERATOR,
    CT_OPERATOR_VAL,
-   CT_PRIVATE,
-   CT_PRIVATE_COLON,
+   CT_ACCESS,
+   CT_ACCESS_COLON,
    CT_THROW,
    CT_NOEXCEPT,
    CT_TRY,
