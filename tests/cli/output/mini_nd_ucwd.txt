@@ -1611,6 +1611,10 @@ nl_oc_msg_args                  = false    # true/false
 # Add or remove newline between function signature and '{'.
 nl_fdef_brace                   = ignore   # ignore/add/remove/force
 
+# Add or remove newline between function signature and '{',
+# if signature ends with ')'. Overrides nl_fdef_brace.
+nl_fdef_brace_cond              = ignore   # ignore/add/remove/force
+
 # Add or remove newline between C++11 lambda signature and '{'.
 nl_cpp_ldef_brace               = ignore   # ignore/add/remove/force
 

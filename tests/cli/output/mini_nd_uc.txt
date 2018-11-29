@@ -420,6 +420,7 @@ nl_func_call_args_multi_line    = false
 nl_func_call_end_multi_line     = false
 nl_oc_msg_args                  = false
 nl_fdef_brace                   = ignore
+nl_fdef_brace_cond              = ignore
 nl_cpp_ldef_brace               = ignore
 nl_return_expr                  = ignore
 nl_after_semicolon              = false
