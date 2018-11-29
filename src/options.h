@@ -1998,6 +1998,11 @@ nl_oc_msg_args;
 extern Option<iarf_e>
 nl_fdef_brace;
 
+// Add or remove newline between function signature and '{',
+// if signature ends with ')'. Overrides nl_fdef_brace.
+extern Option<iarf_e>
+nl_fdef_brace_cond;
+
 // Add or remove newline between C++11 lambda signature and '{'.
 extern Option<iarf_e>
 nl_cpp_ldef_brace;
