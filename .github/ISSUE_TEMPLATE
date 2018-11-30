@@ -3,7 +3,7 @@
 [//]: # "  • a link to a debug file:"
 [//]: # "      generated with: 'uncrustify -p debug.txt -c pathToUsedConfig.cfg -f toBeFormatedFile.cpp' "
 [//]: # "      Example: [debug.txt](https://linkToTheFile)"
-[//]: # "      Example hosters for debug files: pastbin.com, gist.github.com, ..."
+[//]: # "      Example hosters for debug files: pastebin.com, gist.github.com, ..."
 [//]: # "      The used config file is included in the debug file and does not need to be included here."
 [//]: # 
 [//]: # "  • include a small but complete test file that will be uncrustifyed"
