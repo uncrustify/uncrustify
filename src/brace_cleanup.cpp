@@ -228,6 +228,7 @@ void brace_cleanup(void)
        */
       if (  !chunk_is_comment(pc)
          && !chunk_is_newline(pc)
+         && !chunk_is_token(pc, CT_ATTRIBUTE)
          && (cpd.in_preproc == CT_PP_DEFINE || cpd.in_preproc == CT_NONE))
       {
          cpd.consumed = false;
