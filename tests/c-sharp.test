@@ -56,7 +56,7 @@
 10150  ben_045.cfg                          cs/operator-null-conditional.cs
 10200  empty.cfg                            cs/logger.cs
 
-10300  1822.cfg                             cs/1822.cs
+10300  empty.cfg                            cs/1822.cs
 
 10628  empty.cfg                            cs/sf628.cs
 10160  empty.cfg                            cs/delegate.cs

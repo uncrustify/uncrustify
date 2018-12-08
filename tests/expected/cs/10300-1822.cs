@@ -1,2 +1,2 @@
-foreach (Cat c in * cats)
+foreach (Cat c in *cats)
 	System.Console.WriteLine(c.Name);
