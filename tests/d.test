@@ -41,3 +41,5 @@
 40080  d.cfg                                d/static_if.d
 
 40090  libd.cfg                             d/square_indent_tab.d
+
+40100  1438.cfg                             d/1438.d
