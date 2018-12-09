@@ -134,6 +134,8 @@
 30213  align_right_comment.cfg              cpp/align_right_comment.cpp
 30214  issue_1887.cfg                       cpp/align_across_braces.cpp
 
+30217  empty.cfg                            cpp/2138.cpp
+
 30220  bug_1340.cfg                         cpp/bug_1340.cpp
 
 30240  align_func_params-t.cfg              cpp/align_func_params.cpp
