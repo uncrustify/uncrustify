@@ -2129,7 +2129,15 @@ void indent_text(void)
                         break;
                      }
                   }
-                  frm.top().indent = next->column;
+                  if (chunk_is_comment(next->prev))
+                  {
+                     // Issue #2099
+                     frm.top().indent = next->prev->column;
+                  }
+                  else
+                  {
+                     frm.top().indent = next->column;
+                  }
                   log_indent();
                }
             }
