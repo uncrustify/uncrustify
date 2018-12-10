@@ -133,6 +133,7 @@
 30212  indent_comment_align_thresh_2.cfg    cpp/indent_comment_align_thresh.cpp
 30213  align_right_comment.cfg              cpp/align_right_comment.cpp
 30214  issue_1887.cfg                       cpp/align_across_braces.cpp
+30215  empty.cfg                            cpp/Issue_2099.cpp
 
 30220  bug_1340.cfg                         cpp/bug_1340.cpp
 
@@ -653,6 +654,8 @@
 
 # __asm__
 34300  bug_1236.cfg                         cpp/bug_1236.cpp
+34305  issue_2124-1.cfg						cpp/issue_2124-1.cpp
+34306  issue_2124-2.cfg						cpp/issue_2124-2.cpp
 
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp

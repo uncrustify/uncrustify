@@ -10,6 +10,7 @@ import os
 import re
 import subprocess
 import sys
+import errno
 
 from .ansicolor import printc
 from .config import (config, test_dir, FAIL_ATTRS, PASS_ATTRS,
@@ -84,7 +85,11 @@ class SourceTest(object):
             print('     XFail : {}'.format(self.test_xfail))
 
         if not os.path.exists(os.path.dirname(_result)):
-            os.makedirs(os.path.dirname(_result))
+            try:
+                os.makedirs(os.path.dirname(_result))
+            except OSError as e:
+                if e.errno != errno.EEXIST:
+                    raise
 
         cmd = [
             config.uncrustify_exe,
