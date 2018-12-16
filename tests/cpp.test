@@ -135,6 +135,8 @@
 30214  issue_1887.cfg                       cpp/align_across_braces.cpp
 30215  empty.cfg                            cpp/Issue_2099.cpp
 
+30217  empty.cfg                            cpp/2138.cpp
+
 30220  bug_1340.cfg                         cpp/bug_1340.cpp
 
 30240  align_func_params-t.cfg              cpp/align_func_params.cpp
