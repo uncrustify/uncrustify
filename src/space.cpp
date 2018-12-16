@@ -2135,12 +2135,6 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(IARF_FORCE);
    }
 
-   if (chunk_is_comment(second))
-   {
-      log_rule("IGNORE");
-      return(IARF_IGNORE);
-   }
-
    if (chunk_is_token(first, CT_COMMENT))
    {
       log_rule("FORCE");
@@ -2479,8 +2473,11 @@ void space_text(void)
                if (options::indent_relative_single_line_comments())
                {
                   // Try to keep relative spacing between tokens
-                  LOG_FMT(LSPACE, " <relative adj>");
-                  column = pc->column + 1 + (next->orig_col - pc->orig_col_end);
+                  LOG_FMT(LSPACE, "%s(%d): <relative adj>", __func__, __LINE__);
+                  LOG_FMT(LSPACE, "%s(%d): pc is '%s', pc->orig_col is %zu, next->orig_col is %zu, pc->orig_col_end is %zu\n",
+                          __func__, __LINE__, pc->text(),
+                          pc->orig_col, next->orig_col, pc->orig_col_end);
+                  column = pc->column + (next->orig_col - pc->orig_col_end);
                }
                else
                {
@@ -2494,13 +2491,13 @@ void space_text(void)
                   {
                      column = col_min;
                   }
-                  LOG_FMT(LSPACE, " <relative set>");
+                  LOG_FMT(LSPACE, "%s(%d): <relative set>", __func__, __LINE__);
                }
             }
          }
          next->column = column;
 
-         LOG_FMT(LSPACE, "%s(%d): rule = %s @ %zu => %zu\n", __func__, __LINE__,
+         LOG_FMT(LSPACE, " rule = %s @ %zu => %zu\n",
                  (av == IARF_IGNORE) ? "IGNORE" :
                  (av == IARF_ADD) ? "ADD" :
                  (av == IARF_REMOVE) ? "REMOVE" : "FORCE",
@@ -2624,15 +2621,20 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
    size_t coldiff;
    if (first->nl_count)
    {
-      LOG_FMT(LSPACE, "   nl_count is %zu, orig_col_end is %zu\n", first->nl_count, first->orig_col_end);
+      LOG_FMT(LSPACE, "%s(%d):    nl_count is %zu, orig_col_end is %zu\n", __func__, __LINE__, first->nl_count, first->orig_col_end);
       coldiff = first->orig_col_end - 1;
    }
    else
    {
-      LOG_FMT(LSPACE, "   len is %zu\n", first->len());
+      LOG_FMT(LSPACE, "%s(%d):    len is %zu\n", __func__, __LINE__, first->len());
       coldiff = first->len();
    }
+   LOG_FMT(LSPACE, "%s(%d):    => coldiff is %zu\n", __func__, __LINE__, coldiff);
 
+   LOG_FMT(LSPACE, "%s(%d):    => av is %s\n", __func__, __LINE__,
+           (av == IARF_IGNORE) ? "IGNORE" :
+           (av == IARF_ADD) ? "ADD" :
+           (av == IARF_REMOVE) ? "REMOVE" : "FORCE");
    switch (av)
    {
    case IARF_ADD:
@@ -2643,8 +2645,16 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
    case IARF_REMOVE:
       break;
 
-   case IARF_IGNORE:
-      if (second->orig_col > (first->orig_col + first->len()))
+   case IARF_IGNORE:                // Issue #2064
+      LOG_FMT(LSPACE, "%s(%d):    => first->orig_line  is %zu\n", __func__, __LINE__, first->orig_line);
+      LOG_FMT(LSPACE, "%s(%d):    => second->orig_line is %zu\n", __func__, __LINE__, second->orig_line);
+      LOG_FMT(LSPACE, "%s(%d):    => first->text()     is '%s'\n", __func__, __LINE__, first->text());
+      LOG_FMT(LSPACE, "%s(%d):    => second->text()    is '%s'\n", __func__, __LINE__, second->text());
+      LOG_FMT(LSPACE, "%s(%d):    => first->orig_col   is %zu\n", __func__, __LINE__, first->orig_col);
+      LOG_FMT(LSPACE, "%s(%d):    => second->orig_col  is %zu\n", __func__, __LINE__, second->orig_col);
+      LOG_FMT(LSPACE, "%s(%d):    => first->len()      is %zu\n", __func__, __LINE__, first->len());
+      if (  first->orig_line == second->orig_line
+         && second->orig_col > (first->orig_col + first->len()))
       {
          coldiff++;
       }
@@ -2654,7 +2664,7 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
       // If we got here, something is wrong...
       break;
    }
-   LOG_FMT(LSPACE, "   => coldiff is %zu\n", coldiff);
+   LOG_FMT(LSPACE, "%s(%d):    => coldiff is %zu\n", __func__, __LINE__, coldiff);
    return(coldiff);
 } // space_col_align
 
@@ -2705,6 +2715,7 @@ void space_add_after(chunk_t *pc, size_t count)
    sp.pp_level    = pc->pp_level;
    sp.column      = pc->column + pc->len();
    sp.orig_line   = pc->orig_line;
+   sp.orig_col    = pc->orig_col;
 
    chunk_add_after(&sp, pc);
 } // space_add_after
