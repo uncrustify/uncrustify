@@ -8,6 +8,7 @@
  * @license GPL v2+
  */
 #include "output.h"
+#include "align_tab_column.h"
 #include "uncrustify_types.h"
 #include "prototypes.h"
 #include "chunk_list.h"

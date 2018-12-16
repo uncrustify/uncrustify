@@ -441,7 +441,6 @@ struct cp_data_t
    bool                    warned_unable_string_replace_tab_chars;
 
    std::vector<ParseFrame> frames;
-//   size_t                  frame_count;
    int                     pp_level; // TODO: can this ever be -1?
 
    const char              *phase_name;

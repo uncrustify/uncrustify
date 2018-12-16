@@ -12,6 +12,7 @@
 #include "chunk_list.h"
 #include "prototypes.h"
 #include "options_for_QT.h"
+#include "quick_align_again.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
