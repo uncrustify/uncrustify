@@ -10,7 +10,7 @@
 #ifndef IB_SHIFT_OUT_H_INCLUDED
 #define IB_SHIFT_OUT_H_INCLUDED
 
-#include <cstdio>
+#include "uncrustify_types.h"
 
 
 void ib_shift_out(size_t idx, size_t num);

@@ -11,7 +11,6 @@
 #define ALIGN_TRAILING_COMMENTS_H_INCLUDED
 
 #include "chunk_list.h"
-//#include "comment_align_e.h"
 #include "ChunkStack.h"
 
 enum class comment_align_e : unsigned int
