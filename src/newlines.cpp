@@ -1790,6 +1790,30 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
 } // newline_def_blk
 
 
+static bool collapse_empty_body(chunk_t *br_open)
+{
+   if (  !options::nl_collapse_empty_body()
+      || !chunk_is_token(chunk_get_next_nnl(br_open), CT_BRACE_CLOSE))
+   {
+      return(false);
+   }
+
+   for (chunk_t *pc = chunk_get_next(br_open)
+        ; pc != nullptr && pc->type != CT_BRACE_CLOSE
+        ; pc = chunk_get_next(pc))
+   {
+      if (chunk_is_token(pc, CT_NEWLINE) && chunk_safe_to_del_nl(pc))
+      {
+         pc = pc->prev;
+         chunk_del(pc->next);
+         MARK_CHANGE();
+      }
+   }
+
+   return(true);
+}
+
+
 static void newlines_brace_pair(chunk_t *br_open)
 {
    LOG_FUNC_ENTRY();
@@ -1799,35 +1823,7 @@ static void newlines_brace_pair(chunk_t *br_open)
       return;
    }
 
-   chunk_t *next;
-   chunk_t *pc;
-
-   if (options::nl_collapse_empty_body())
-   {
-      next = chunk_get_next_nnl(br_open);
-      if (chunk_is_token(next, CT_BRACE_CLOSE))
-      {
-         pc = chunk_get_next(br_open);
-
-         while (pc != nullptr && pc->type != CT_BRACE_CLOSE)
-         {
-            next = chunk_get_next(pc);
-            if (chunk_is_token(pc, CT_NEWLINE))
-            {
-               if (chunk_safe_to_del_nl(pc))
-               {
-                  chunk_del(pc);
-                  MARK_CHANGE();
-               }
-            }
-            pc = next;
-         }
-         return;
-      }
-   }
-
    //fixes 1235 Add single line namespace support
-
    if (  chunk_is_token(br_open, CT_BRACE_OPEN)
       && (br_open->parent_type == CT_NAMESPACE)
       && chunk_is_newline(chunk_get_prev(br_open)))
@@ -1853,7 +1849,6 @@ static void newlines_brace_pair(chunk_t *br_open)
    }
 
    // fix 1247 oneliner function support - converts 4,3,2  liners to oneliner
-
    if (  br_open->parent_type == CT_FUNC_DEF
       && options::nl_create_func_def_one_liner())
    {
@@ -1888,8 +1883,7 @@ static void newlines_brace_pair(chunk_t *br_open)
 
    LOG_FMT(LNL1LINE, "%s(%d): a new line may be added\n", __func__, __LINE__);
 
-   next = chunk_get_next_nc(br_open);
-   chunk_t *prev;
+   chunk_t *next = chunk_get_next_nc(br_open);
    // Insert a newline between the '=' and open brace, if needed
    LOG_FMT(LNL1LINE, "%s(%d): br_open->text() '%s', br_open->type [%s], br_open->parent_type [%s]\n",
            __func__, __LINE__, br_open->text(), get_token_name(br_open->type), get_token_name(br_open->parent_type));
@@ -1898,10 +1892,42 @@ static void newlines_brace_pair(chunk_t *br_open)
       // Only mess with it if the open brace is followed by a newline
       if (chunk_is_newline(next))
       {
-         prev = chunk_get_prev_ncnl(br_open);
-
+         chunk_t *prev = chunk_get_prev_ncnl(br_open);
          newline_iarf_pair(prev, br_open, options::nl_assign_brace());
       }
+   }
+
+   if (  br_open->parent_type == CT_OC_MSG_DECL
+      || br_open->parent_type == CT_FUNC_DEF
+      || br_open->parent_type == CT_FUNC_CLASS_DEF
+      || br_open->parent_type == CT_OC_CLASS
+      || br_open->parent_type == CT_CS_PROPERTY
+      || br_open->parent_type == CT_CPP_LAMBDA
+      || br_open->parent_type == CT_FUNC_CALL
+      || br_open->parent_type == CT_FUNC_CALL_USER)
+   {
+      const iarf_e val = (br_open->parent_type == CT_OC_MSG_DECL)
+                         ? options::nl_oc_mdef_brace()
+                         : ((  br_open->parent_type == CT_FUNC_DEF
+                            || br_open->parent_type == CT_FUNC_CLASS_DEF
+                            || br_open->parent_type == CT_OC_CLASS)
+                            ? options::nl_fdef_brace()
+                            : ((br_open->parent_type == CT_CS_PROPERTY)
+                               ? options::nl_property_brace()
+                               : ((br_open->parent_type == CT_CPP_LAMBDA)
+                                  ? options::nl_cpp_ldef_brace()
+                                  : options::nl_fcall_brace())));
+      if (val != IARF_IGNORE)
+      {
+         // Grab the chunk before the open brace
+         chunk_t *prev = chunk_get_prev_ncnl(br_open);
+         newline_iarf_pair(prev, br_open, val);
+      }
+   }
+
+   if (collapse_empty_body(br_open))
+   {
+      return;
    }
 
    //fixes #1245 will add new line between tsquare and brace open based on nl_tsquare_brace
@@ -1913,7 +1939,7 @@ static void newlines_brace_pair(chunk_t *br_open)
       {
          if (chunk_closeing_brace->orig_line > br_open->orig_line)
          {
-            prev = chunk_get_prev_nc(br_open);
+            chunk_t *prev = chunk_get_prev_nc(br_open);
             if (  chunk_is_token(prev, CT_TSQUARE)
                && chunk_is_newline(next))
             {
@@ -1938,8 +1964,7 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
    }
 
-   iarf_e val            = IARF_IGNORE;
-   bool   nl_close_brace = false;
+   bool nl_close_brace = false;
    // Handle the cases where the brace is part of a function call or definition
    if (  br_open->parent_type == CT_FUNC_DEF
       || br_open->parent_type == CT_FUNC_CALL
@@ -1957,34 +1982,8 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
 
       // handle newlines after the open brace
-      pc = chunk_get_next_ncnl(br_open);
+      chunk_t *pc = chunk_get_next_ncnl(br_open);
       newline_add_between(br_open, pc);
-
-      if (br_open->parent_type == CT_OC_MSG_DECL)
-      {
-         // Issue #167
-         val = options::nl_oc_mdef_brace();
-      }
-      else
-      {
-         val = ((  br_open->parent_type == CT_FUNC_DEF
-                || br_open->parent_type == CT_FUNC_CLASS_DEF
-                || br_open->parent_type == CT_OC_CLASS) ?
-                options::nl_fdef_brace() :
-                ((br_open->parent_type == CT_CS_PROPERTY) ?
-                 options::nl_property_brace() :
-                 ((br_open->parent_type == CT_CPP_LAMBDA) ?
-                  options::nl_cpp_ldef_brace() :
-                  options::nl_fcall_brace())));
-      }
-
-      if (val != IARF_IGNORE)
-      {
-         // Grab the chunk before the open brace
-         prev = chunk_get_prev_ncnl(br_open);
-
-         newline_iarf_pair(prev, br_open, val);
-      }
 
       newline_def_blk(br_open, true);
    }
@@ -2010,7 +2009,7 @@ static void newlines_brace_pair(chunk_t *br_open)
        * CT_COMMENT_CPP without hitting anything other than CT_COMMENT, then
        * there should be a newline before the close brace.
        */
-      pc = chunk_get_next(br_open);
+      chunk_t *pc = chunk_get_next(br_open);
       while (chunk_is_token(pc, CT_COMMENT))
       {
          pc = chunk_get_next(pc);
@@ -2021,7 +2020,7 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
    }
 
-   prev = chunk_get_prev_nblank(br_close);
+   chunk_t *prev = chunk_get_prev_nblank(br_close);
    if (nl_close_brace)
    {
       newline_add_between(prev, br_close);
