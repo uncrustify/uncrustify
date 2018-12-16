@@ -32,8 +32,8 @@ else:
     from os import EX_OK, EX_USAGE, EX_SOFTWARE
     NULL_DEVICE = '/dev/null'
 
-RE_CALLSTACK = r'\[CallStack:( \w+:(, \w+:)*|-DEBUG NOT SET-)?\]'
-RE_DO_SPACE = (r'\n\ndo_space\(\): WARNING: unrecognize do_space:'
+RE_CALLSTACK = r'\[CallStack:( \w+:\w+(, \w+:\w+)*|-DEBUG NOT SET-)?\]'
+RE_DO_SPACE = (r'\n\ndo_space : WARNING: unrecognize do_space:'
                r'\n[^\n]+\n[^\n]+\n')
 
 
@@ -682,7 +682,7 @@ def main(args):
                           '-f', s_path_join(sc_dir, 'input/testSrc.cpp')],
                 err_expected_path=s_path_join(sc_dir, 'output/%s.txt' % L),
                 err_result_path=s_path_join(sc_dir, 'results/%s.txt' % L),
-                err_result_manip=[reg_replace(r'[0-9]', ''),
+                err_result_manip=[reg_replace(r'\([0-9]+\)', ' '),
                                   reg_replace(RE_CALLSTACK, '[CallStack]'),
                                   reg_replace(RE_DO_SPACE, '')]
             ):
