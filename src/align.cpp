@@ -580,8 +580,7 @@ void align_struct_initializers(void)
    {
       chunk_t *prev = chunk_get_prev_ncnl(pc);
       if (  chunk_is_token(prev, CT_ASSIGN)
-         && (  chunk_is_token(pc, CT_BRACE_OPEN)
-            || (language_is_set(LANG_D) && chunk_is_token(pc, CT_SQUARE_OPEN))))
+         && chunk_is_token(pc, CT_BRACE_OPEN))
       {
          align_init_brace(pc);
       }
