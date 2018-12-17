@@ -1001,8 +1001,9 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
       pc.str.append(ctx.get());
    }
 
-   // skip the Microsoft-specific '64' suffix
-   if ((ctx.peek() == '6') && (ctx.peek(1) == '4'))
+   // skip the Microsoft-specific '32' and '64' suffix
+   if (  ((ctx.peek() == '3') && (ctx.peek(1) == '2'))
+      || ((ctx.peek() == '6') && (ctx.peek(1) == '4')))
    {
       pc.str.append(ctx.get());
       pc.str.append(ctx.get());
