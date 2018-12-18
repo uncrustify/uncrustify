@@ -1830,7 +1830,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                   else if (chunk_is_token(tmp, CT_DC_MEMBER))
                   {
                      set_chunk_type(prev, CT_TYPE);
-                     set_chunk_type(pc, CT_BYREF);
+                     if (!chunk_is_token(next, CT_TYPE))            // Issue #2103
+                     {
+                        set_chunk_type(pc, CT_BYREF);
+                     }
                   }
                }
             }
