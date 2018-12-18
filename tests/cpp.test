@@ -391,6 +391,7 @@
 
 31720  ben_031.cfg                          cpp/bit-colon.cpp
 31730  sp_arith-a.cfg                       cpp/ms-style-ref.cpp
+31740  empty.cfg                            cpp/I2102.cpp
 
 32000  sp_skip_vbrace_tokens.cfg            cpp/sp_skip_vbrace_tokens.cpp
 32001  empty.cfg                            cpp/issue_547_for_each.cpp
