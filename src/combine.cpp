@@ -3890,31 +3890,33 @@ static chunk_t *fix_var_def(chunk_t *start)
               __func__, __LINE__, pc->text(), get_token_name(pc->type));
       cs.Push_Back(pc);
       pc = chunk_get_next_ncnl(pc);
-      LOG_FMT(LFVD, "%s(%d):   2:pc->text() '%s', type is %s\n",
-              __func__, __LINE__, pc->text(), get_token_name(pc->type));
       if (pc == nullptr)
       {
          LOG_FMT(LFVD, "%s(%d): pc is nullptr\n", __func__, __LINE__);
          return(nullptr);
       }
+      LOG_FMT(LFVD, "%s(%d):   2:pc->text() '%s', type is %s\n",
+              __func__, __LINE__, pc->text(), get_token_name(pc->type));
 
       // Skip templates and attributes
       pc = skip_template_next(pc);
+      if (pc == nullptr)
+      {
+         LOG_FMT(LFVD, "%s(%d): pc is nullptr\n", __func__, __LINE__);
+         return(nullptr);
+      }
       LOG_FMT(LFVD, "%s(%d):   3:pc->text() '%s', type is %s\n",
               __func__, __LINE__, pc->text(), get_token_name(pc->type));
+
+      pc = skip_attribute_next(pc);
       if (pc == nullptr)
       {
          LOG_FMT(LFVD, "%s(%d): pc is nullptr\n", __func__, __LINE__);
          return(nullptr);
       }
-      pc = skip_attribute_next(pc);
       LOG_FMT(LFVD, "%s(%d):   4:pc->text() '%s', type is %s\n",
               __func__, __LINE__, pc->text(), get_token_name(pc->type));
-      if (pc == nullptr)
-      {
-         LOG_FMT(LFVD, "%s(%d): pc is nullptr\n", __func__, __LINE__);
-         return(nullptr);
-      }
+
       if (language_is_set(LANG_JAVA))
       {
          pc = skip_tsquare_next(pc);
