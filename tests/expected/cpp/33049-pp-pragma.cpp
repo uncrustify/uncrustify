@@ -12,5 +12,9 @@ int main(int argc, char** argv)
 			printf("Hello from thread!\n");
 		}
 	#endif
+
+	#pragma CoverageScanner(cov-off)
+	__pragma ( CoverageScanner(cov-off) )
+
 	return 0;
 }
