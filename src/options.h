@@ -1586,54 +1586,6 @@ nl_tsquare_brace;
 extern Option<iarf_e>
 nl_after_square_assign;
 
-// The number of blank lines after a block of variable definitions at the top
-// of a function body.
-//
-// 0 = No change (default).
-extern BoundedOption<unsigned, 0, 16>
-nl_func_var_def_blk;
-
-// The number of newlines before a block of typedefs. If nl_after_access_spec
-// is non-zero, that option takes precedence.
-//
-// 0 = No change (default).
-extern BoundedOption<unsigned, 0, 16>
-nl_typedef_blk_start;
-
-// The number of newlines after a block of typedefs.
-//
-// 0 = No change (default).
-extern BoundedOption<unsigned, 0, 16>
-nl_typedef_blk_end;
-
-// The maximum number of consecutive newlines within a block of typedefs.
-//
-// 0 = No change (default).
-extern BoundedOption<unsigned, 0, 16>
-nl_typedef_blk_in;
-
-// The number of newlines before a block of variable definitions not at the top
-// of a function body. If nl_after_access_spec is non-zero, that option takes
-// precedence.
-//
-// 0 = No change (default).
-extern BoundedOption<unsigned, 0, 16>
-nl_var_def_blk_start;
-
-// The number of newlines after a block of variable definitions not at the top
-// of a function body.
-//
-// 0 = No change (default).
-extern BoundedOption<unsigned, 0, 16>
-nl_var_def_blk_end;
-
-// The maximum number of consecutive newlines within a block of variable
-// definitions.
-//
-// 0 = No change (default).
-extern BoundedOption<unsigned, 0, 16>
-nl_var_def_blk_in;
-
 // Add or remove newline between a function call's ')' and '{', as in
 // 'list_for_each(item, &list) { }'.
 extern Option<iarf_e>
@@ -2134,6 +2086,16 @@ nl_before_do;
 extern Option<iarf_e>
 nl_after_do;
 
+// Whether to put a blank line before 'return' statements, unless after an open
+// brace.
+extern Option<bool>
+nl_before_return;
+
+// Whether to put a blank line after 'return' statements, unless followed by a
+// close brace.
+extern Option<bool>
+nl_after_return;
+
 // Whether to double-space commented-entries in 'struct'/'union'/'enum'.
 extern Option<bool>
 nl_ds_struct_enum_cmt;
@@ -2268,6 +2230,54 @@ nl_after_func_body_class;
 extern BoundedOption<unsigned, 0, 16>
 nl_after_func_body_one_liner;
 
+// The number of blank lines after a block of variable definitions at the top
+// of a function body.
+//
+// 0 = No change (default).
+extern BoundedOption<unsigned, 0, 16>
+nl_func_var_def_blk;
+
+// The number of newlines before a block of typedefs. If nl_after_access_spec
+// is non-zero, that option takes precedence.
+//
+// 0 = No change (default).
+extern BoundedOption<unsigned, 0, 16>
+nl_typedef_blk_start;
+
+// The number of newlines after a block of typedefs.
+//
+// 0 = No change (default).
+extern BoundedOption<unsigned, 0, 16>
+nl_typedef_blk_end;
+
+// The maximum number of consecutive newlines within a block of typedefs.
+//
+// 0 = No change (default).
+extern BoundedOption<unsigned, 0, 16>
+nl_typedef_blk_in;
+
+// The number of newlines before a block of variable definitions not at the top
+// of a function body. If nl_after_access_spec is non-zero, that option takes
+// precedence.
+//
+// 0 = No change (default).
+extern BoundedOption<unsigned, 0, 16>
+nl_var_def_blk_start;
+
+// The number of newlines after a block of variable definitions not at the top
+// of a function body.
+//
+// 0 = No change (default).
+extern BoundedOption<unsigned, 0, 16>
+nl_var_def_blk_end;
+
+// The maximum number of consecutive newlines within a block of variable
+// definitions.
+//
+// 0 = No change (default).
+extern BoundedOption<unsigned, 0, 16>
+nl_var_def_blk_in;
+
 // The minimum number of newlines before a multi-line comment.
 // Doesn't apply if after a brace open or another multi-line comment.
 extern BoundedOption<unsigned, 0, 16>
@@ -2377,16 +2387,6 @@ eat_blanks_before_close_brace;
 // 2: Remove all newlines and reformat completely by config
 extern BoundedOption<unsigned, 0, 2>
 nl_remove_extra_newlines;
-
-// Whether to put a blank line before 'return' statements, unless after an open
-// brace.
-extern Option<bool>
-nl_before_return;
-
-// Whether to put a blank line after 'return' statements, unless followed by a
-// close brace.
-extern Option<bool>
-nl_after_return;
 
 // (Java) Add or remove newline after an annotation statement. Only affects
 // annotations that are after a newline.
