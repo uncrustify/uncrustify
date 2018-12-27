@@ -33,6 +33,8 @@ foo(const B& other)
 class A
 {
 public:
+explicit
+A(int);
 int
 aFunct() {
 	return a;

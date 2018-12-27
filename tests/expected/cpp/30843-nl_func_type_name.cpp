@@ -12,15 +12,18 @@ public:
 	A&                    operator+(const A& other);
 };
 
-A& A::operator+(const A& other)
+A&
+A::operator+(const A& other)
 {
 }
 
-B operator+(const B& other)
+B
+operator+(const B& other)
 {
 }
 
-B foo(const B& other)
+B
+foo(const B& other)
 {
 }
 
@@ -28,24 +31,28 @@ class A
 {
 public:
 explicit A(int);
-int aFunct() {
+int
+aFunct() {
 	return a;
 }
 int bFunc();
 };
 
 // Another file
-int A::bFunc()
+int
+A::bFunc()
 {
 // some code
 }
 
 template<typename T>
-typename Foo<T>::Type Foo<T>::Func()
+typename Foo<T>::Type
+Foo<T>::Func()
 {
 }
 
-void Foo::bar() {
+void
+Foo::bar() {
 }
 
 namespace foo {
@@ -62,18 +69,21 @@ class Object
 };
 
 template <class T>
-void SampleClassTemplate<T>::connect()
+void
+SampleClassTemplate<T>::connect()
 {
 }
 
 template <>
-inline void bar<MyType>(MyType r)
+inline void
+bar<MyType>(MyType r)
 {
 	foo(r);
 }
 
 template <T>
-inline void baz<>(T r)
+inline void
+baz<>(T r)
 {
 	foo(r);
 }

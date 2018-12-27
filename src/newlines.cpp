@@ -2388,7 +2388,9 @@ static void newline_func_def_or_call(chunk_t *start)
          const chunk_t *tmp_next = chunk_get_next_ncnl(prev);
          if (tmp_next != nullptr && tmp_next->type != CT_FUNC_CLASS_DEF)
          {
-            iarf_e a = (tmp->parent_type == CT_FUNC_PROTO) ?
+            bool   is_proto = (  tmp->parent_type == CT_FUNC_PROTO
+                              || tmp->parent_type == CT_FUNC_CLASS_PROTO);
+            iarf_e a = (is_proto) ?
                        options::nl_func_proto_type_name() :
                        options::nl_func_type_name();
             if (  (tmp->flags & PCF_IN_CLASS)
