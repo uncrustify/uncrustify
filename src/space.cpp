@@ -2381,7 +2381,7 @@ void space_text(void)
                       */
                      if (  (  (  language_is_set(LANG_CPP)
                               && options::sp_permit_cpp11_shift())
-                           || (language_is_set(LANG_JAVA | LANG_CS)))
+                           || (language_is_set(LANG_JAVA | LANG_CS | LANG_VALA)))
                         && chunk_is_token(pc, CT_ANGLE_CLOSE)
                         && chunk_is_token(next, CT_ANGLE_CLOSE))
                      {
