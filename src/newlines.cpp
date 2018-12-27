@@ -4471,6 +4471,11 @@ void do_blank_lines(void)
       {
          chunk_t *tmp = chunk_get_prev_type(prev, CT_CLASS, prev->level);
          tmp = chunk_get_prev_nc(tmp);
+         while (  chunk_is_token(tmp, CT_NEWLINE)
+               && chunk_is_comment(tmp->prev))
+         {
+            tmp = chunk_get_prev_nc(tmp->prev);
+         }
          if (options::nl_before_class() > pc->nl_count)
          {
             blank_line_set(tmp, options::nl_before_class);
