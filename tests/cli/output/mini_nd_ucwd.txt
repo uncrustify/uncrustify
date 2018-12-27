@@ -225,6 +225,9 @@ sp_before_angle                 = ignore   # ignore/add/remove/force
 # Add or remove space inside '<' and '>'.
 sp_inside_angle                 = ignore   # ignore/add/remove/force
 
+# Add or remove space inside '<>'.
+sp_inside_angle_empty           = ignore   # ignore/add/remove/force
+
 # Add or remove space between '>' and ':'.
 sp_angle_colon                  = ignore   # ignore/add/remove/force
 

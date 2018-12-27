@@ -933,8 +933,17 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // spacing around template < > stuff
-   if (chunk_is_token(first, CT_ANGLE_OPEN) || chunk_is_token(second, CT_ANGLE_CLOSE))
+   if (  chunk_is_token(first, CT_ANGLE_OPEN)
+      || chunk_is_token(second, CT_ANGLE_CLOSE))
    {
+      if (  chunk_is_token(first, CT_ANGLE_OPEN)
+         && chunk_is_token(second, CT_ANGLE_CLOSE))
+      {
+         log_rule("sp_inside_angle_empty");
+
+         return(options::sp_inside_angle_empty());
+      }
+
       log_rule("sp_inside_angle");
 
       iarf_e op = options::sp_inside_angle();

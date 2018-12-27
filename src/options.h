@@ -306,6 +306,10 @@ sp_before_angle;
 extern Option<iarf_e>
 sp_inside_angle;
 
+// Add or remove space inside '<>'.
+extern Option<iarf_e>
+sp_inside_angle_empty;
+
 // Add or remove space between '>' and ':'.
 extern Option<iarf_e>
 sp_angle_colon;
