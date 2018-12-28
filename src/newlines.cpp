@@ -1678,6 +1678,12 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
          }
 
          prev = chunk_get_prev_ncnl(pc);
+         if (  chunk_is_token(prev, CT_STRING)
+            && prev->parent_type == CT_EXTERN
+            && chunk_is_token(prev->prev, CT_EXTERN))
+         {
+            prev = chunk_get_prev_ncnl(prev->prev);
+         }
          if (chunk_is_token(pc, CT_TYPEDEF))
          {
             // set newlines before typedef block
