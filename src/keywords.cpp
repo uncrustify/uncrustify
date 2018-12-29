@@ -117,6 +117,7 @@ static chunk_tag_t keywords[] =
    { "__nothrow__",                     CT_NOTHROW,          LANG_C                                                                      },
    { "__null_unspecified",              CT_QUALIFIER,        LANG_OC                                                                     },
    { "__nullable",                      CT_QUALIFIER,        LANG_OC                                                                     },
+   { "__pragma",                        CT_PP_PRAGMA,        LANG_ALL | FLAG_PP                                                          },
    { "__restrict",                      CT_QUALIFIER,        LANG_C                                                                      },
    { "__signed__",                      CT_TYPE,             LANG_C                                                                      },
    { "__strong",                        CT_QUALIFIER,        LANG_C                                                                      },
@@ -267,7 +268,7 @@ static chunk_tag_t keywords[] =
    { "package",                         CT_ACCESS,           LANG_D                                                                      },
    { "package",                         CT_PACKAGE,          LANG_ECMA | LANG_JAVA                                                       },
    { "params",                          CT_TYPE,             LANG_CS | LANG_VALA                                                         },
-   { "pragma",                          CT_PP_PRAGMA,        LANG_ALL | FLAG_PP                                                          }, // PAWN
+   { "pragma",                          CT_PP_PRAGMA,        LANG_ALL | FLAG_PP                                                          },
    { "private",                         CT_ACCESS,           LANG_ALLC                                                                   }, // not C
    { "property",                        CT_PP_PROPERTY,      LANG_CS | FLAG_PP                                                           },
    { "protected",                       CT_ACCESS,           LANG_ALLC                                                                   }, // not C
@@ -494,6 +495,10 @@ c_token_t find_keyword_type(const char *word, size_t len)
 
    if (p_ret != nullptr)
    {
+      if (strcmp(p_ret->tag, "__pragma") == 0)
+      {
+         cpd.in_preproc = CT_PREPROC;
+      }
       p_ret = kw_static_match(p_ret, cpd.lang_flags);
    }
    return((p_ret != nullptr) ? p_ret->type : CT_WORD);
