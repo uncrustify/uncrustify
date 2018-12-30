@@ -15,3 +15,21 @@ public:
 
 } // namespace S
 } // namespace A
+
+namespace B {
+
+// This is a comment!
+class D
+{
+public:
+    D();
+};
+
+} // namespace B
+
+// This is also a comment!
+class E
+{
+public:
+    E();
+};
