@@ -199,7 +199,7 @@ static chunk_tag_t keywords[] =
    { "error",                           CT_PP_ERROR,         LANG_PAWN | FLAG_PP                                                         }, // PAWN
    { "event",                           CT_TYPE,             LANG_CS                                                                     },
    { "exit",                            CT_FUNCTION,         LANG_PAWN                                                                   }, // PAWN
-   { "explicit",                        CT_TYPE,             LANG_CPP | LANG_CS                                                          },
+   { "explicit",                        CT_QUALIFIER,        LANG_CPP | LANG_CS                                                          },
    { "export",                          CT_EXPORT,           LANG_CPP | LANG_D | LANG_ECMA                                               },
    { "extends",                         CT_QUALIFIER,        LANG_JAVA | LANG_ECMA                                                       },
    { "extern",                          CT_EXTERN,           LANG_C | LANG_CS | LANG_D | LANG_VALA                                       },
