@@ -1003,8 +1003,8 @@ static void newlines_func_pre_blank_lines(chunk_t *start, c_token_t start_type)
          || chunk_is_token(pc, CT_QUALIFIER)
          || chunk_is_token(pc, CT_PTR_TYPE)
          || chunk_is_token(pc, CT_DC_MEMBER)
-         || chunk_is_token(pc, CT_TYPE)
-         || chunk_is_token(pc, CT_TYPE))
+         || chunk_is_token(pc, CT_EXTERN)
+         || (chunk_is_token(pc, CT_STRING) && pc->parent_type == CT_EXTERN))
       {
          first_line = pc->orig_line;
          continue;
@@ -1678,6 +1678,12 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
          }
 
          prev = chunk_get_prev_ncnl(pc);
+         if (  chunk_is_token(prev, CT_STRING)
+            && prev->parent_type == CT_EXTERN
+            && chunk_is_token(prev->prev, CT_EXTERN))
+         {
+            prev = chunk_get_prev_ncnl(prev->prev);
+         }
          if (chunk_is_token(pc, CT_TYPEDEF))
          {
             // set newlines before typedef block
