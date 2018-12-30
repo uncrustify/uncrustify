@@ -216,6 +216,14 @@ py_gen(option_enum.cpp
   option_enum.cpp.in
 )
 
+py_gen(../etc/uncrustify.xml
+  make_katehl.py
+  ../etc/uncrustify.xml.in
+  options.h
+  option.h
+  token_enum.h
+)
+
 #
 # Uncrustify
 #
@@ -318,6 +326,13 @@ endif()
 # Generate uncrustify.1
 #
 configure_file(man/uncrustify.1.in uncrustify.1 @ONLY)
+
+#
+# Generate uncrustify.xml (katepart highlighting file)
+#
+add_custom_target(katehl
+  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/etc/uncrustify.xml
+)
 
 #
 # Tests
