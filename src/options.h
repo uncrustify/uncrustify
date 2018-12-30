@@ -1384,7 +1384,7 @@ indent_preserve_sql;
 extern Option<bool>
 indent_align_assign; // = true
 
-// Whether to align continued statements at the '('. If false or the '(' is not
+// Whether to align continued statements at the '('. If false or the '(' is
 // followed by a newline, the next line indent is one tab.
 extern Option<bool>
 indent_align_paren; // = true

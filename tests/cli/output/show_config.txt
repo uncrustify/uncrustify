@@ -1122,7 +1122,7 @@ indent_preserve_sql             = false    # true/false
 # Default: true
 indent_align_assign             = true     # true/false
 
-# Whether to align continued statements at the '('. If false or the '(' is not
+# Whether to align continued statements at the '('. If false or the '(' is
 # followed by a newline, the next line indent is one tab.
 #
 # Default: true
