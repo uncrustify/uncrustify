@@ -1291,47 +1291,6 @@ nl_tsquare_brace                = ignore   # ignore/add/remove/force
 # the ']'.
 nl_after_square_assign          = ignore   # ignore/add/remove/force
 
-# The number of blank lines after a block of variable definitions at the top
-# of a function body.
-#
-# 0 = No change (default).
-nl_func_var_def_blk             = 0        # unsigned number
-
-# The number of newlines before a block of typedefs. If nl_after_access_spec
-# is non-zero, that option takes precedence.
-#
-# 0 = No change (default).
-nl_typedef_blk_start            = 0        # unsigned number
-
-# The number of newlines after a block of typedefs.
-#
-# 0 = No change (default).
-nl_typedef_blk_end              = 0        # unsigned number
-
-# The maximum number of consecutive newlines within a block of typedefs.
-#
-# 0 = No change (default).
-nl_typedef_blk_in               = 0        # unsigned number
-
-# The number of newlines before a block of variable definitions not at the top
-# of a function body. If nl_after_access_spec is non-zero, that option takes
-# precedence.
-#
-# 0 = No change (default).
-nl_var_def_blk_start            = 0        # unsigned number
-
-# The number of newlines after a block of variable definitions not at the top
-# of a function body.
-#
-# 0 = No change (default).
-nl_var_def_blk_end              = 0        # unsigned number
-
-# The maximum number of consecutive newlines within a block of variable
-# definitions.
-#
-# 0 = No change (default).
-nl_var_def_blk_in               = 0        # unsigned number
-
 # Add or remove newline between a function call's ')' and '{', as in
 # 'list_for_each(item, &list) { }'.
 nl_fcall_brace                  = ignore   # ignore/add/remove/force
@@ -1720,6 +1679,14 @@ nl_before_do                    = ignore   # ignore/add/remove/force
 # Add or remove blank line after 'do/while' statement.
 nl_after_do                     = ignore   # ignore/add/remove/force
 
+# Whether to put a blank line before 'return' statements, unless after an open
+# brace.
+nl_before_return                = false    # true/false
+
+# Whether to put a blank line after 'return' statements, unless followed by a
+# close brace.
+nl_after_return                 = false    # true/false
+
 # Whether to double-space commented-entries in 'struct'/'union'/'enum'.
 nl_ds_struct_enum_cmt           = false    # true/false
 
@@ -1827,6 +1794,47 @@ nl_after_func_body_class        = 0        # unsigned number
 # Overrides nl_after_func_body and nl_after_func_body_class.
 nl_after_func_body_one_liner    = 0        # unsigned number
 
+# The number of blank lines after a block of variable definitions at the top
+# of a function body.
+#
+# 0 = No change (default).
+nl_func_var_def_blk             = 0        # unsigned number
+
+# The number of newlines before a block of typedefs. If nl_after_access_spec
+# is non-zero, that option takes precedence.
+#
+# 0 = No change (default).
+nl_typedef_blk_start            = 0        # unsigned number
+
+# The number of newlines after a block of typedefs.
+#
+# 0 = No change (default).
+nl_typedef_blk_end              = 0        # unsigned number
+
+# The maximum number of consecutive newlines within a block of typedefs.
+#
+# 0 = No change (default).
+nl_typedef_blk_in               = 0        # unsigned number
+
+# The number of newlines before a block of variable definitions not at the top
+# of a function body. If nl_after_access_spec is non-zero, that option takes
+# precedence.
+#
+# 0 = No change (default).
+nl_var_def_blk_start            = 0        # unsigned number
+
+# The number of newlines after a block of variable definitions not at the top
+# of a function body.
+#
+# 0 = No change (default).
+nl_var_def_blk_end              = 0        # unsigned number
+
+# The maximum number of consecutive newlines within a block of variable
+# definitions.
+#
+# 0 = No change (default).
+nl_var_def_blk_in               = 0        # unsigned number
+
 # The minimum number of newlines before a multi-line comment.
 # Doesn't apply if after a brace open or another multi-line comment.
 nl_before_block_comment         = 0        # unsigned number
@@ -1917,14 +1925,6 @@ eat_blanks_before_close_brace   = false    # true/false
 # 1: Remove most newlines not handled by other config
 # 2: Remove all newlines and reformat completely by config
 nl_remove_extra_newlines        = 0        # unsigned number
-
-# Whether to put a blank line before 'return' statements, unless after an open
-# brace.
-nl_before_return                = false    # true/false
-
-# Whether to put a blank line after 'return' statements, unless followed by a
-# close brace.
-nl_after_return                 = false    # true/false
 
 # (Java) Add or remove newline after an annotation statement. Only affects
 # annotations that are after a newline.
