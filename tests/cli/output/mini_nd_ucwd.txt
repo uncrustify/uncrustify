@@ -356,6 +356,9 @@ sp_before_ellipsis              = ignore   # ignore/add/remove/force
 # Add or remove space between a type and '...'.
 sp_type_ellipsis                = ignore   # ignore/add/remove/force
 
+# (D) Add or remove space between a type and '?'.
+sp_type_question                = ignore   # ignore/add/remove/force
+
 # Add or remove space between ')' and '...'.
 sp_paren_ellipsis               = ignore   # ignore/add/remove/force
 

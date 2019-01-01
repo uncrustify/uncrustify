@@ -2026,9 +2026,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && chunk_is_token(second, CT_QUESTION))
    {
       // Issue #2090
-      // TODO do we need an option for that?
-      log_rule("ignore");
-      return(IARF_IGNORE);
+      log_rule("sp_type_question");
+      return(options::sp_type_question());
    }
    if (  !chunk_is_token(second, CT_PTR_TYPE)
       && (chunk_is_token(first, CT_QUALIFIER) || chunk_is_token(first, CT_TYPE)))
