@@ -2031,6 +2031,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_after_type());
    }
 
+   if (  language_is_set(LANG_VALA)
+      && chunk_is_token(second, CT_QUESTION))
+   {
+      // Issue #2090
+      log_rule("sp_type_question");
+      return(options::sp_type_question());
+   }
    if (  !chunk_is_token(second, CT_PTR_TYPE)
       && (chunk_is_token(first, CT_QUALIFIER) || chunk_is_token(first, CT_TYPE)))
    {
