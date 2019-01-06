@@ -529,7 +529,14 @@ int main(int argc, char *argv[])
    if (  ((parsed_file = arg.Param("--parsed")) != nullptr)
       || ((parsed_file = arg.Param("-p")) != nullptr))
    {
-      LOG_FMT(LNOTE, "Will export parsed data to: %s\n", parsed_file);
+      if (parsed_file[0] == '-' && !parsed_file[1])
+      {
+         LOG_FMT(LNOTE, "Will print parsed data to stdout\n");
+      }
+      else
+      {
+         LOG_FMT(LNOTE, "Will export parsed data to: %s\n", parsed_file);
+      }
    }
 
    // Enable log severities
@@ -651,8 +658,8 @@ int main(int argc, char *argv[])
 
    /*
     * Try to load the config file, if available.
-    * It is optional for "--universalindent" and "--detect", but required for
-    * everything else.
+    * It is optional for "--universalindent", "--parsed" and "--detect", but
+    * required for everything else.
     */
    if (!cfg_file.empty())
    {
@@ -794,10 +801,10 @@ int main(int argc, char *argv[])
    }
 
    /*
-    * Everything beyond this point requires a config file, so complain and
-    * bail if we don't have one.
+    * Everything beyond this point aside from dumping the parse tree is silly
+    * without a config file, so complain and bail if we don't have one.
     */
-   if (cfg_file.empty())
+   if (cfg_file.empty() && !parsed_file)
    {
       usage_error("Specify the config file with '-c file' or set UNCRUSTIFY_CONFIG");
       return(EX_IOERR);
@@ -2043,11 +2050,22 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
    // Special hook for dumping parsed data for debugging
    if (parsed_file != nullptr)
    {
-      FILE *p_file = fopen(parsed_file, "wb");
+      FILE *p_file;
+      if (parsed_file[0] == '-' && !parsed_file[1])
+      {
+         p_file = stdout;
+      }
+      else
+      {
+         p_file = fopen(parsed_file, "wb");
+      }
       if (p_file != nullptr)
       {
          output_parsed(p_file);
-         fclose(p_file);
+         if (p_file != stdout)
+         {
+            fclose(p_file);
+         }
       }
       else
       {
