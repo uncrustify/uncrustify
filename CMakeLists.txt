@@ -229,7 +229,27 @@ py_gen(../etc/uncrustify.xml
 #
 set(uncrustify_sources
   src/align.cpp
+  src/align_add.cpp
+  src/align_assign.cpp
+  src/align_asm_colon.cpp
+  src/align_func_params.cpp
+  src/align_func_proto.cpp
+  src/align_init_brace.cpp
+  src/align_left_shift.cpp
+  src/align_log_al.cpp
+  src/align_nl_cont.cpp
+  src/align_oc_decl_colon.cpp
+  src/align_oc_msg_spec.cpp
+  src/align_oc_msg_colons.cpp
+  src/align_preprocessor.cpp
+  src/align_same_func_call_params.cpp
   src/align_stack.cpp
+  src/align_struct_initializers.cpp
+  src/align_tab_column.cpp
+  src/align_tools.cpp
+  src/align_trailing_comments.cpp
+  src/align_typedefs.cpp
+  src/align_var_def_brace.cpp
   src/args.cpp
   src/backup.cpp
   src/braces.cpp
@@ -253,6 +273,7 @@ set(uncrustify_sources
   src/options_for_QT.cpp
   src/output.cpp
   src/parens.cpp
+  src/quick_align_again.cpp
   src/frame_list.cpp
   src/ParseFrame.cpp
   src/punctuators.cpp
@@ -270,7 +291,28 @@ set(uncrustify_sources
 )
 
 set(uncrustify_headers
+  src/align.h
+  src/align_add.h
+  src/align_assign.h
+  src/align_asm_colon.h
+  src/align_func_params.h
+  src/align_func_proto.h
+  src/align_init_brace.h
+  src/align_left_shift.h
+  src/align_log_al.h
+  src/align_nl_cont.h
+  src/align_oc_decl_colon.h
+  src/align_oc_msg_colons.h
+  src/align_oc_msg_spec.h
+  src/align_preprocessor.h
+  src/align_same_func_call_params.h
   src/align_stack.h
+  src/align_struct_initializers.h
+  src/align_tab_column.h
+  src/align_tools.h
+  src/align_trailing_comments.h
+  src/align_typedefs.h
+  src/align_var_def_brace.h
   src/args.h
   src/backup.h
   src/base_types.h
@@ -291,6 +333,7 @@ set(uncrustify_headers
   src/ParseFrame.h
   src/prototypes.h
   src/punctuators.h
+  src/quick_align_again.h
   src/symbols_table.h
   src/token_enum.h
   src/uncrustify_types.h

@@ -12,6 +12,9 @@
 #include "uncrustify.h"
 
 #include "align.h"
+#include "align_nl_cont.h"
+#include "align_preprocessor.h"
+#include "align_trailing_comments.h"
 #include "args.h"
 #include "backup.h"
 #include "brace_cleanup.h"

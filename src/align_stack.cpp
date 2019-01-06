@@ -7,7 +7,9 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #include "align_stack.h"
+#include "align_tab_column.h"
 #include "prototypes.h"
 #include "chunk_list.h"
 #include "indent.h"
