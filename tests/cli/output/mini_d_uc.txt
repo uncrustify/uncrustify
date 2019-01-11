@@ -94,6 +94,7 @@ sp_before_ellipsis              = ignore
 sp_type_ellipsis                = ignore
 sp_type_question                = ignore
 sp_paren_ellipsis               = ignore
+sp_paren_qualifier              = ignore
 sp_after_class_colon            = ignore
 sp_before_class_colon           = ignore
 sp_after_constr_colon           = ignore
