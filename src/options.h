@@ -476,6 +476,10 @@ sp_paren_ellipsis;
 extern Option<iarf_e>
 sp_paren_qualifier;
 
+// Add or remove space between ')' and 'noexcept'.
+extern Option<iarf_e>
+sp_paren_noexcept;
+
 // Add or remove space after class ':'.
 extern Option<iarf_e>
 sp_after_class_colon;

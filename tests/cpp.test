@@ -278,6 +278,7 @@
 
 30850  sp_cmt_cpp_start_force.cfg           cpp/sp_cmt_cpp_start.cc
 30852  sp_paren_qualifier-f.cfg             cpp/Issue_2138.cpp
+30853  sp_paren_noexcept.cfg                cpp/noexcept.cpp
 
 30855  empty.cfg                            cpp/cpp_move.cpp
 
