@@ -2223,6 +2223,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_paren_qualifier());
    }
 
+   // Issue #2098
+   if (  chunk_is_token(first, CT_PP_PRAGMA)
+      && chunk_is_token(second, CT_PREPROC_BODY))
+   {
+      log_rule("REMOVE");
+      return(IARF_REMOVE);
+   }
+
    // these lines are only useful for debugging uncrustify itself
    D_LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize do_space:\n",
              __func__, __LINE__);
