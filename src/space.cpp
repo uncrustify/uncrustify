@@ -2216,18 +2216,18 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // Issue #2138
-   if (  chunk_is_token(first, CT_FPAREN_CLOSE)
-      && chunk_is_token(second, CT_QUALIFIER))
+   if (chunk_is_token(first, CT_FPAREN_CLOSE))
    {
-      log_rule("sp_paren_qualifier");
-      return(options::sp_paren_qualifier());
-   }
-
-   if (  chunk_is_token(first, CT_FPAREN_CLOSE)
-      && chunk_is_token(second, CT_NOEXCEPT))
-   {
-      log_rule("sp_paren_noexcept");
-      return(options::sp_paren_noexcept());
+      if (chunk_is_token(second, CT_QUALIFIER))
+      {
+         log_rule("sp_paren_qualifier");
+         return(options::sp_paren_qualifier());
+      }
+      else if (chunk_is_token(second, CT_NOEXCEPT))
+      {
+         log_rule("sp_paren_noexcept");
+         return(options::sp_paren_noexcept());
+      }
    }
 
    // these lines are only useful for debugging uncrustify itself
