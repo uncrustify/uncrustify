@@ -2,8 +2,7 @@
 /* Before Unrustify */
 /********************/
 
-#define MACRO(cond, action)    if ((cond)) \
-      (action)
+#define MACRO(cond, action)    if ((cond)) (action)
 
 void hurz(murks)
 {

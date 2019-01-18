@@ -1156,6 +1156,7 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
    chunk_t chunk;
    chunk.type        = CT_BRACE_OPEN;
    chunk.orig_line   = cl_colon->orig_line;
+   chunk.orig_col    = cl_colon->orig_col;
    chunk.parent_type = CT_CASE;
    chunk.level       = cl_colon->level;
    chunk.brace_level = cl_colon->brace_level;
@@ -1166,6 +1167,7 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
 
    chunk.type      = CT_BRACE_CLOSE;
    chunk.orig_line = last->orig_line;
+   chunk.orig_col  = last->orig_col;
    chunk.str       = "}";
 
    chunk_t *br_close = chunk_add_before(&chunk, last);

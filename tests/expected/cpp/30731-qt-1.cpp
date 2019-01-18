@@ -53,7 +53,9 @@ class Foo1 : public QObject
 
 	void publicSlot();
 
-Q_SIGNALS:
+
+ Q_SIGNALS:
+
 	void somesignal();
 };
 

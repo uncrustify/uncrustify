@@ -12,6 +12,7 @@
 #include "chunk_list.h"
 #include "prototypes.h"
 #include "options_for_QT.h"
+#include "quick_align_again.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -1045,8 +1046,8 @@ void indent_text(void)
 
             // a class scope is ended with another class scope or a close brace
             if (  options::indent_access_spec_body()
-               && (frm.top().type == CT_PRIVATE)
-               && (chunk_is_token(pc, CT_BRACE_CLOSE) || chunk_is_token(pc, CT_PRIVATE)))
+               && (frm.top().type == CT_ACCESS)
+               && (chunk_is_token(pc, CT_BRACE_CLOSE) || chunk_is_token(pc, CT_ACCESS)))
             {
                frm.pop();
             }
@@ -1821,7 +1822,7 @@ void indent_text(void)
             indent_column_set(((no_underflow) ? (pse_indent + val) : 0));
          }
       }
-      else if (chunk_is_token(pc, CT_PRIVATE))
+      else if (chunk_is_token(pc, CT_ACCESS))
       {
          if (options::indent_access_spec_body())
          {
@@ -2129,7 +2130,15 @@ void indent_text(void)
                         break;
                      }
                   }
-                  frm.top().indent = next->column;
+                  if (chunk_is_comment(next->prev))
+                  {
+                     // Issue #2099
+                     frm.top().indent = next->prev->column;
+                  }
+                  else
+                  {
+                     frm.top().indent = next->column;
+                  }
                   log_indent();
                }
             }

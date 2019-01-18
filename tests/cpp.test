@@ -133,6 +133,9 @@
 30212  indent_comment_align_thresh_2.cfg    cpp/indent_comment_align_thresh.cpp
 30213  align_right_comment.cfg              cpp/align_right_comment.cpp
 30214  issue_1887.cfg                       cpp/align_across_braces.cpp
+30215  empty.cfg                            cpp/Issue_2099.cpp
+
+30217  empty.cfg                            cpp/2138.cpp
 
 30220  bug_1340.cfg                         cpp/bug_1340.cpp
 
@@ -269,10 +272,13 @@
 30840  nl_func_type_name_remove.cfg         cpp/nl_func_type_name.cpp
 30841  nl_func_type_name_force.cfg          cpp/nl_func_type_name.cpp
 30842  nl_func_type_name_class.cfg          cpp/nl_func_type_name.cpp
+30843  nl_func_type_name_mixed.cfg          cpp/nl_func_type_name.cpp
 
 30845  ben_026.cfg                          cpp/deref.cpp
 
 30850  sp_cmt_cpp_start_force.cfg           cpp/sp_cmt_cpp_start.cc
+30852  sp_paren_qualifier-f.cfg             cpp/Issue_2138.cpp
+30853  sp_paren_noexcept-f.cfg              cpp/noexcept.cpp
 
 30855  empty.cfg                            cpp/cpp_move.cpp
 
@@ -388,6 +394,7 @@
 
 31720  ben_031.cfg                          cpp/bit-colon.cpp
 31730  sp_arith-a.cfg                       cpp/ms-style-ref.cpp
+31740  empty.cfg                            cpp/I2102.cpp
 
 32000  sp_skip_vbrace_tokens.cfg            cpp/sp_skip_vbrace_tokens.cpp
 32001  empty.cfg                            cpp/issue_547_for_each.cpp
@@ -398,6 +405,7 @@
 32006  space_indent_columns-4.cfg           cpp/bug_i_687.cpp
 
 32100  cpp17.cfg                            cpp/cpp17.cpp
+32105  I2103.cfg                            cpp/I2103.cpp
 
 33000  tab-0-11.cfg                         cpp/tab-0.cpp
 33001  indent_columns-11.cfg                cpp/tab-1.cpp
@@ -537,6 +545,7 @@
 34114  nl_before_func_body_def-2.cfg        cpp/bug_902.cpp
 34115  nl_before_func_body_def-2.cfg        cpp/nl_before_func_body_def.cpp
 34116  nl_before_func_body_def-2.cfg        cpp/issue_2000.cpp
+34117  extern_func.cfg                      cpp/extern_func.cpp
 
 34120  align_assign_span-1.cfg              cpp/bug_i_999.cpp
 34121  bug_1717.cfg                         cpp/bug_1717.cpp
@@ -653,6 +662,8 @@
 
 # __asm__
 34300  bug_1236.cfg                         cpp/bug_1236.cpp
+34305  issue_2124-1.cfg						cpp/issue_2124-1.cpp
+34306  issue_2124-2.cfg						cpp/issue_2124-2.cpp
 
 34301  nl_fdef_brace_cond-f.cfg             cpp/nl_fdef_brace_cond-f.cpp
 34302  nl_fdef_brace_cond-r.cfg             cpp/nl_fdef_brace_cond-r.cpp
@@ -716,3 +727,4 @@
 60039  U36-Cpp.cfg                          cpp/UNI-30628.cpp
 60042  UNI-18777.cfg                        cpp/UNI-18777.cpp
 60043  nl_remove_extra_newlines-1.cfg       cpp/i2033.cpp
+60044  nl_fdef_brace-r__nl_collapse_empty_body-t.cfg  cpp/i2116.cpp

@@ -80,41 +80,41 @@ struct no_space_table_t
  */
 const no_space_table_t no_space_table[] =
 {
-   { CT_OC_AT,          CT_UNKNOWN       },
-   { CT_INCDEC_BEFORE,  CT_WORD          },
-   { CT_UNKNOWN,        CT_INCDEC_AFTER  },
-   { CT_UNKNOWN,        CT_LABEL_COLON   },
-   { CT_UNKNOWN,        CT_PRIVATE_COLON },
-   { CT_UNKNOWN,        CT_SEMICOLON     },
-   { CT_UNKNOWN,        CT_D_TEMPLATE    },
-   { CT_D_TEMPLATE,     CT_UNKNOWN       },
-   { CT_MACRO_FUNC,     CT_FPAREN_OPEN   },
-   { CT_PAREN_OPEN,     CT_UNKNOWN       },
-   { CT_UNKNOWN,        CT_PAREN_CLOSE   },
-   { CT_FPAREN_OPEN,    CT_UNKNOWN       },
-   { CT_UNKNOWN,        CT_SPAREN_CLOSE  },
-   { CT_SPAREN_OPEN,    CT_UNKNOWN       },
-   { CT_UNKNOWN,        CT_FPAREN_CLOSE  },
-   { CT_UNKNOWN,        CT_COMMA         },
-   { CT_POS,            CT_UNKNOWN       },
-   { CT_STAR,           CT_UNKNOWN       },
-   { CT_VBRACE_CLOSE,   CT_UNKNOWN       },
-   { CT_VBRACE_OPEN,    CT_UNKNOWN       },
-   { CT_UNKNOWN,        CT_VBRACE_CLOSE  },
-   { CT_UNKNOWN,        CT_VBRACE_OPEN   },
-   { CT_PREPROC,        CT_UNKNOWN       },
-   { CT_PREPROC_INDENT, CT_UNKNOWN       },
-   { CT_NEG,            CT_UNKNOWN       },
-   { CT_UNKNOWN,        CT_SQUARE_OPEN   },
-   { CT_UNKNOWN,        CT_SQUARE_CLOSE  },
-   { CT_SQUARE_OPEN,    CT_UNKNOWN       },
-   { CT_PAREN_CLOSE,    CT_WORD          },
-   { CT_PAREN_CLOSE,    CT_FUNC_DEF      },
-   { CT_PAREN_CLOSE,    CT_FUNC_CALL     },
-   { CT_PAREN_CLOSE,    CT_ADDR          },
-   { CT_PAREN_CLOSE,    CT_FPAREN_OPEN   },
-   { CT_OC_SEL_NAME,    CT_OC_SEL_NAME   },
-   { CT_TYPENAME,       CT_TYPE          },
+   { CT_OC_AT,          CT_UNKNOWN      },
+   { CT_INCDEC_BEFORE,  CT_WORD         },
+   { CT_UNKNOWN,        CT_INCDEC_AFTER },
+   { CT_UNKNOWN,        CT_LABEL_COLON  },
+   { CT_UNKNOWN,        CT_ACCESS_COLON },
+   { CT_UNKNOWN,        CT_SEMICOLON    },
+   { CT_UNKNOWN,        CT_D_TEMPLATE   },
+   { CT_D_TEMPLATE,     CT_UNKNOWN      },
+   { CT_MACRO_FUNC,     CT_FPAREN_OPEN  },
+   { CT_PAREN_OPEN,     CT_UNKNOWN      },
+   { CT_UNKNOWN,        CT_PAREN_CLOSE  },
+   { CT_FPAREN_OPEN,    CT_UNKNOWN      },
+   { CT_UNKNOWN,        CT_SPAREN_CLOSE },
+   { CT_SPAREN_OPEN,    CT_UNKNOWN      },
+   { CT_UNKNOWN,        CT_FPAREN_CLOSE },
+   { CT_UNKNOWN,        CT_COMMA        },
+   { CT_POS,            CT_UNKNOWN      },
+   { CT_STAR,           CT_UNKNOWN      },
+   { CT_VBRACE_CLOSE,   CT_UNKNOWN      },
+   { CT_VBRACE_OPEN,    CT_UNKNOWN      },
+   { CT_UNKNOWN,        CT_VBRACE_CLOSE },
+   { CT_UNKNOWN,        CT_VBRACE_OPEN  },
+   { CT_PREPROC,        CT_UNKNOWN      },
+   { CT_PREPROC_INDENT, CT_UNKNOWN      },
+   { CT_NEG,            CT_UNKNOWN      },
+   { CT_UNKNOWN,        CT_SQUARE_OPEN  },
+   { CT_UNKNOWN,        CT_SQUARE_CLOSE },
+   { CT_SQUARE_OPEN,    CT_UNKNOWN      },
+   { CT_PAREN_CLOSE,    CT_WORD         },
+   { CT_PAREN_CLOSE,    CT_FUNC_DEF     },
+   { CT_PAREN_CLOSE,    CT_FUNC_CALL    },
+   { CT_PAREN_CLOSE,    CT_ADDR         },
+   { CT_PAREN_CLOSE,    CT_FPAREN_OPEN  },
+   { CT_OC_SEL_NAME,    CT_OC_SEL_NAME  },
+   { CT_TYPENAME,       CT_TYPE         },
 };
 
 #define log_rule(rule)                                   \
@@ -545,7 +545,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       case CT_SARITH:
       case CT_SCOMPARE:
       case CT_OPERATOR:
-      case CT_PRIVATE:
+      case CT_ACCESS:
       case CT_QUALIFIER:
       case CT_RETURN:
       case CT_SIZEOF:
@@ -933,8 +933,17 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // spacing around template < > stuff
-   if (chunk_is_token(first, CT_ANGLE_OPEN) || chunk_is_token(second, CT_ANGLE_CLOSE))
+   if (  chunk_is_token(first, CT_ANGLE_OPEN)
+      || chunk_is_token(second, CT_ANGLE_CLOSE))
    {
+      if (  chunk_is_token(first, CT_ANGLE_OPEN)
+         && chunk_is_token(second, CT_ANGLE_CLOSE))
+      {
+         log_rule("sp_inside_angle_empty");
+
+         return(options::sp_inside_angle_empty());
+      }
+
       log_rule("sp_inside_angle");
 
       iarf_e op = options::sp_inside_angle();
@@ -1157,7 +1166,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_cpp_cast_paren());
    }
 
-   if (chunk_is_token(first, CT_PAREN_CLOSE) && chunk_is_token(second, CT_WHEN))
+   if (chunk_is_token(first, CT_SPAREN_CLOSE) && chunk_is_token(second, CT_WHEN))
    {
       log_rule("FORCE");
       return(IARF_FORCE); // TODO: make this configurable?
@@ -2022,6 +2031,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_after_type());
    }
 
+   if (  language_is_set(LANG_VALA)
+      && chunk_is_token(second, CT_QUESTION))
+   {
+      // Issue #2090
+      log_rule("sp_type_question");
+      return(options::sp_type_question());
+   }
    if (  !chunk_is_token(second, CT_PTR_TYPE)
       && (chunk_is_token(first, CT_QUALIFIER) || chunk_is_token(first, CT_TYPE)))
    {
@@ -2135,12 +2151,6 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(IARF_FORCE);
    }
 
-   if (chunk_is_comment(second))
-   {
-      log_rule("IGNORE");
-      return(IARF_IGNORE);
-   }
-
    if (chunk_is_token(first, CT_COMMENT))
    {
       log_rule("FORCE");
@@ -2203,6 +2213,21 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       log_rule("sp_after_noexcept");
       return(options::sp_after_noexcept());
+   }
+
+   // Issue #2138
+   if (chunk_is_token(first, CT_FPAREN_CLOSE))
+   {
+      if (chunk_is_token(second, CT_QUALIFIER))
+      {
+         log_rule("sp_paren_qualifier");
+         return(options::sp_paren_qualifier());
+      }
+      else if (chunk_is_token(second, CT_NOEXCEPT))
+      {
+         log_rule("sp_paren_noexcept");
+         return(options::sp_paren_noexcept());
+      }
    }
 
    // these lines are only useful for debugging uncrustify itself
@@ -2387,7 +2412,7 @@ void space_text(void)
                       */
                      if (  (  (  language_is_set(LANG_CPP)
                               && options::sp_permit_cpp11_shift())
-                           || (language_is_set(LANG_JAVA | LANG_CS)))
+                           || (language_is_set(LANG_JAVA | LANG_CS | LANG_VALA)))
                         && chunk_is_token(pc, CT_ANGLE_CLOSE)
                         && chunk_is_token(next, CT_ANGLE_CLOSE))
                      {
@@ -2479,8 +2504,11 @@ void space_text(void)
                if (options::indent_relative_single_line_comments())
                {
                   // Try to keep relative spacing between tokens
-                  LOG_FMT(LSPACE, " <relative adj>");
-                  column = pc->column + 1 + (next->orig_col - pc->orig_col_end);
+                  LOG_FMT(LSPACE, "%s(%d): <relative adj>", __func__, __LINE__);
+                  LOG_FMT(LSPACE, "%s(%d): pc is '%s', pc->orig_col is %zu, next->orig_col is %zu, pc->orig_col_end is %zu\n",
+                          __func__, __LINE__, pc->text(),
+                          pc->orig_col, next->orig_col, pc->orig_col_end);
+                  column = pc->column + (next->orig_col - pc->orig_col_end);
                }
                else
                {
@@ -2494,13 +2522,13 @@ void space_text(void)
                   {
                      column = col_min;
                   }
-                  LOG_FMT(LSPACE, " <relative set>");
+                  LOG_FMT(LSPACE, "%s(%d): <relative set>", __func__, __LINE__);
                }
             }
          }
          next->column = column;
 
-         LOG_FMT(LSPACE, "%s(%d): rule = %s @ %zu => %zu\n", __func__, __LINE__,
+         LOG_FMT(LSPACE, " rule = %s @ %zu => %zu\n",
                  (av == IARF_IGNORE) ? "IGNORE" :
                  (av == IARF_ADD) ? "ADD" :
                  (av == IARF_REMOVE) ? "REMOVE" : "FORCE",
@@ -2624,15 +2652,20 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
    size_t coldiff;
    if (first->nl_count)
    {
-      LOG_FMT(LSPACE, "   nl_count is %zu, orig_col_end is %zu\n", first->nl_count, first->orig_col_end);
+      LOG_FMT(LSPACE, "%s(%d):    nl_count is %zu, orig_col_end is %zu\n", __func__, __LINE__, first->nl_count, first->orig_col_end);
       coldiff = first->orig_col_end - 1;
    }
    else
    {
-      LOG_FMT(LSPACE, "   len is %zu\n", first->len());
+      LOG_FMT(LSPACE, "%s(%d):    len is %zu\n", __func__, __LINE__, first->len());
       coldiff = first->len();
    }
+   LOG_FMT(LSPACE, "%s(%d):    => coldiff is %zu\n", __func__, __LINE__, coldiff);
 
+   LOG_FMT(LSPACE, "%s(%d):    => av is %s\n", __func__, __LINE__,
+           (av == IARF_IGNORE) ? "IGNORE" :
+           (av == IARF_ADD) ? "ADD" :
+           (av == IARF_REMOVE) ? "REMOVE" : "FORCE");
    switch (av)
    {
    case IARF_ADD:
@@ -2643,8 +2676,16 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
    case IARF_REMOVE:
       break;
 
-   case IARF_IGNORE:
-      if (second->orig_col > (first->orig_col + first->len()))
+   case IARF_IGNORE:                // Issue #2064
+      LOG_FMT(LSPACE, "%s(%d):    => first->orig_line  is %zu\n", __func__, __LINE__, first->orig_line);
+      LOG_FMT(LSPACE, "%s(%d):    => second->orig_line is %zu\n", __func__, __LINE__, second->orig_line);
+      LOG_FMT(LSPACE, "%s(%d):    => first->text()     is '%s'\n", __func__, __LINE__, first->text());
+      LOG_FMT(LSPACE, "%s(%d):    => second->text()    is '%s'\n", __func__, __LINE__, second->text());
+      LOG_FMT(LSPACE, "%s(%d):    => first->orig_col   is %zu\n", __func__, __LINE__, first->orig_col);
+      LOG_FMT(LSPACE, "%s(%d):    => second->orig_col  is %zu\n", __func__, __LINE__, second->orig_col);
+      LOG_FMT(LSPACE, "%s(%d):    => first->len()      is %zu\n", __func__, __LINE__, first->len());
+      if (  first->orig_line == second->orig_line
+         && second->orig_col > (first->orig_col + first->len()))
       {
          coldiff++;
       }
@@ -2654,7 +2695,7 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
       // If we got here, something is wrong...
       break;
    }
-   LOG_FMT(LSPACE, "   => coldiff is %zu\n", coldiff);
+   LOG_FMT(LSPACE, "%s(%d):    => coldiff is %zu\n", __func__, __LINE__, coldiff);
    return(coldiff);
 } // space_col_align
 
@@ -2705,6 +2746,7 @@ void space_add_after(chunk_t *pc, size_t count)
    sp.pp_level    = pc->pp_level;
    sp.column      = pc->column + pc->len();
    sp.orig_line   = pc->orig_line;
+   sp.orig_col    = pc->orig_col;
 
    chunk_add_after(&sp, pc);
 } // space_add_after

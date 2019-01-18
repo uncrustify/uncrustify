@@ -1451,7 +1451,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          for ( ; (  pprev != nullptr
                  && pprev->level >= level
                  && pprev->type != CT_SEMICOLON
-                 && pprev->type != CT_PRIVATE_COLON)
+                 && pprev->type != CT_ACCESS_COLON)
                ; pprev = chunk_get_prev(pprev))
          {
             if (pprev->level != level)
@@ -1830,7 +1830,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                   else if (chunk_is_token(tmp, CT_DC_MEMBER))
                   {
                      set_chunk_type(prev, CT_TYPE);
-                     set_chunk_type(pc, CT_BYREF);
+                     if (!chunk_is_token(next, CT_TYPE))            // Issue #2103
+                     {
+                        set_chunk_type(pc, CT_BYREF);
+                     }
                   }
                }
             }
@@ -3665,7 +3668,7 @@ void combine_labels(void)
                set_chunk_type(next, CT_BIT_COLON);
             }
             else if (  chunk_is_token(cur, CT_ENUM)
-                    || chunk_is_token(cur, CT_PRIVATE)
+                    || chunk_is_token(cur, CT_ACCESS)
                     || chunk_is_token(cur, CT_QUALIFIER)
                     || cur->parent_type == CT_ALIGN)
             {
@@ -3890,31 +3893,33 @@ static chunk_t *fix_var_def(chunk_t *start)
               __func__, __LINE__, pc->text(), get_token_name(pc->type));
       cs.Push_Back(pc);
       pc = chunk_get_next_ncnl(pc);
-      LOG_FMT(LFVD, "%s(%d):   2:pc->text() '%s', type is %s\n",
-              __func__, __LINE__, pc->text(), get_token_name(pc->type));
       if (pc == nullptr)
       {
          LOG_FMT(LFVD, "%s(%d): pc is nullptr\n", __func__, __LINE__);
          return(nullptr);
       }
+      LOG_FMT(LFVD, "%s(%d):   2:pc->text() '%s', type is %s\n",
+              __func__, __LINE__, pc->text(), get_token_name(pc->type));
 
       // Skip templates and attributes
       pc = skip_template_next(pc);
+      if (pc == nullptr)
+      {
+         LOG_FMT(LFVD, "%s(%d): pc is nullptr\n", __func__, __LINE__);
+         return(nullptr);
+      }
       LOG_FMT(LFVD, "%s(%d):   3:pc->text() '%s', type is %s\n",
               __func__, __LINE__, pc->text(), get_token_name(pc->type));
+
+      pc = skip_attribute_next(pc);
       if (pc == nullptr)
       {
          LOG_FMT(LFVD, "%s(%d): pc is nullptr\n", __func__, __LINE__);
          return(nullptr);
       }
-      pc = skip_attribute_next(pc);
       LOG_FMT(LFVD, "%s(%d):   4:pc->text() '%s', type is %s\n",
               __func__, __LINE__, pc->text(), get_token_name(pc->type));
-      if (pc == nullptr)
-      {
-         LOG_FMT(LFVD, "%s(%d): pc is nullptr\n", __func__, __LINE__);
-         return(nullptr);
-      }
+
       if (language_is_set(LANG_JAVA))
       {
          pc = skip_tsquare_next(pc);
@@ -6820,7 +6825,8 @@ static void handle_oc_property_decl(chunk_t *os)
                endchunk.level       = curr_chunk->level;
                endchunk.brace_level = curr_chunk->brace_level;
                endchunk.orig_line   = curr_chunk->orig_line;
-               endchunk.column      = static_cast<int>(curr_chunk->orig_col_end) + 1;
+               endchunk.orig_col    = curr_chunk->orig_col;
+               endchunk.column      = curr_chunk->orig_col_end + 1;
                endchunk.parent_type = curr_chunk->parent_type;
                endchunk.flags       = curr_chunk->flags & PCF_COPY_FLAGS;
                chunk_add_after(&endchunk, curr_chunk);

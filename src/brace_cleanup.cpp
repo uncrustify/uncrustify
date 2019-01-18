@@ -228,6 +228,7 @@ void brace_cleanup(void)
        */
       if (  !chunk_is_comment(pc)
          && !chunk_is_newline(pc)
+         && !chunk_is_token(pc, CT_ATTRIBUTE)
          && (cpd.in_preproc == CT_PP_DEFINE || cpd.in_preproc == CT_NONE))
       {
          cpd.consumed = false;
@@ -842,7 +843,9 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
    }
 
    // Insert a CT_VBRACE_OPEN, if needed
+   // but not in a preprocessor
    if (  pc->type != CT_BRACE_OPEN
+      && !(pc->flags & PCF_IN_PREPROC)
       && (  (frm.top().stage == brace_stage_e::BRACE2)
          || (frm.top().stage == brace_stage_e::BRACE_DO)))
    {
@@ -1019,7 +1022,8 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
 
    if (after)
    {
-      chunk.type = CT_VBRACE_CLOSE;
+      chunk.orig_col = pc->orig_col;
+      chunk.type     = CT_VBRACE_CLOSE;
       return(chunk_add_after(&chunk, pc));
    }
 
@@ -1068,6 +1072,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
    }
 
    chunk.orig_line = ref->orig_line;
+   chunk.orig_col  = ref->orig_col;
    chunk.column    = ref->column + ref->len() + 1;
    chunk.type      = CT_VBRACE_OPEN;
 

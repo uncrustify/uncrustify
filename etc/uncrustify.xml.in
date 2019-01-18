@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE language SYSTEM "language.dtd">
+<language name="Uncrustify Configuration" section="Configuration" extensions="uncrustify.cfg;uncrustify.conf;.uncrustify.cfg;.uncrustify.conf" mimetype="" version="0.68" kateversion="2.0" author="Matthew Woehlke (mwoehlke.floss@gmail.com)" license="LGPL">
+
+  <highlighting>
+    <list name="options">
+      ##OPTION_KEYWORDS##
+    </list>
+    <list name="values">
+      ##VALUE_KEYWORDS##
+    </list>
+    <list name="tokens">
+      ##TOKEN_TYPE_KEYWORDS##
+    </list>
+    <list name="directives">
+      <item>file_ext</item>
+      <item>include</item>
+      <item>macro-close</item>
+      <item>macro-else</item>
+      <item>macro-open</item>
+      <item>type</item>
+    </list>
+
+    <contexts>
+      <context name="Root" attribute="Normal Text" lineEndContext="#stay">
+        <WordDetect context="SetDirective" attribute="Directive" String="set" />
+        <keyword context="Values" attribute="Directive" String="directives" />
+        <keyword context="Values" attribute="Option" String="options" />
+        <keyword context="Values" attribute="Token" String="tokens" />
+        <DetectChar context="Comment" attribute="Comment" char="#" />
+      </context>
+
+      <context name="Values" attribute="String" lineEndContext="#pop" >
+        <DetectSpaces attribute="Normal Text" />
+        <RegExpr contex="#stay" attribute="Number" String="-?[0-9]+" />
+        <keyword contex="#stay" attribute="Value" String="values" />
+        <DetectChar context="#stay" attribute="Assignment" char="=" />
+        <DetectChar context="StringSQ" attribute="String" char="'" />
+        <DetectChar context="StringDQ" attribute="String" char="&quot;" />
+        <DetectChar context="Comment" attribute="Comment" char="#" />
+      </context>
+
+      <context name="StringSQ" attribute="String" lineEndContext="Error" >
+        <RegExpr context="#stay" attribute="String" String="\\." />
+        <DetectChar context="#pop" attribute="String" char="'" />
+      </context>
+
+      <context name="StringDQ" attribute="String" lineEndContext="Error" >
+        <RegExpr context="#stay" attribute="String" String="\\." />
+        <DetectChar context="#pop" attribute="String" char="&quot;" />
+      </context>
+
+      <context name="SetDirective" attribute="Error" lineEndContext="#pop" >
+        <DetectSpaces attribute="Normal Text" />
+        <keyword context="Values" attribute="Token" String="tokens" />
+      </context>
+
+      <context name="Error" attribute="Error" lineEndContext="#stay" />
+
+      <context name="Comment" attribute="Comment" lineEndContext="#pop">
+        <DetectSpaces />
+        <IncludeRules context="##Alerts" />
+        <DetectIdentifier />
+      </context>
+    </contexts>
+
+    <itemDatas>
+      <itemData name="Normal Text" defStyleNum="dsNormal" />
+      <itemData name="Directive" defStyleNum="dsFunction" />
+      <itemData name="Option" defStyleNum="dsDataType" />
+      <itemData name="Token" defStyleNum="dsChar" />
+      <itemData name="Value" defStyleNum="dsKeyword" />
+      <itemData name="String" defStyleNum="dsString" />
+      <itemData name="Number" defStyleNum="dsDecVal" />
+      <itemData name="Assignment" defStyleNum="dsOthers" />
+      <itemData name="Comment" defStyleNum="dsComment" />
+      <itemData name="Error" defStyleNum="dsError" />
+    </itemDatas>
+  </highlighting>
+
+  <general>
+    <comments>
+      <comment name="singleLine" start="#" />
+    </comments>
+    <keywords casesensitive="0" />
+  </general>
+</language>
