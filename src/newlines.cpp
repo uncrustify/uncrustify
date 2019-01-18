@@ -1912,21 +1912,53 @@ static void newlines_brace_pair(chunk_t *br_open)
       || br_open->parent_type == CT_FUNC_CALL
       || br_open->parent_type == CT_FUNC_CALL_USER)
    {
-      const iarf_e val = (br_open->parent_type == CT_OC_MSG_DECL)
-                         ? options::nl_oc_mdef_brace()
-                         : ((  br_open->parent_type == CT_FUNC_DEF
-                            || br_open->parent_type == CT_FUNC_CLASS_DEF
-                            || br_open->parent_type == CT_OC_CLASS)
-                            ? options::nl_fdef_brace()
-                            : ((br_open->parent_type == CT_CS_PROPERTY)
-                               ? options::nl_property_brace()
-                               : ((br_open->parent_type == CT_CPP_LAMBDA)
-                                  ? options::nl_cpp_ldef_brace()
-                                  : options::nl_fcall_brace())));
+      chunk_t *prev = nullptr;
+      iarf_e  val;
+      if (br_open->parent_type == CT_OC_MSG_DECL)
+      {
+         val = options::nl_oc_mdef_brace();
+      }
+      else
+      {
+         if (  br_open->parent_type == CT_FUNC_DEF
+            || br_open->parent_type == CT_FUNC_CLASS_DEF
+            || br_open->parent_type == CT_OC_CLASS)
+         {
+            val = iarf_e::NOT_DEFINED;
+            const iarf_e nl_fdef_brace_cond_v = options::nl_fdef_brace_cond();
+
+            if (nl_fdef_brace_cond_v != IARF_IGNORE)
+            {
+               prev = chunk_get_prev_ncnl(br_open);
+               if (chunk_is_token(prev, CT_FPAREN_CLOSE))
+               {
+                  val = nl_fdef_brace_cond_v;
+               }
+            }
+
+            if (val == iarf_e::NOT_DEFINED)
+            {
+               val = options::nl_fdef_brace();
+            }
+         }
+         else
+         {
+            val = ((br_open->parent_type == CT_CS_PROPERTY) ?
+                   options::nl_property_brace() :
+                   ((br_open->parent_type == CT_CPP_LAMBDA) ?
+                    options::nl_cpp_ldef_brace() :
+                    options::nl_fcall_brace()));
+         }
+      }
+
       if (val != IARF_IGNORE)
       {
-         // Grab the chunk before the open brace
-         chunk_t *prev = chunk_get_prev_ncnl(br_open);
+         if (prev == nullptr)
+         {
+            // Grab the chunk before the open brace
+            prev = chunk_get_prev_ncnl(br_open);
+         }
+
          newline_iarf_pair(prev, br_open, val);
       }
    }
@@ -1990,56 +2022,6 @@ static void newlines_brace_pair(chunk_t *br_open)
       // handle newlines after the open brace
       chunk_t *pc = chunk_get_next_ncnl(br_open);
       newline_add_between(br_open, pc);
-
-      prev = nullptr;
-      if (br_open->parent_type == CT_OC_MSG_DECL)
-      {
-         // Issue #167
-         val = options::nl_oc_mdef_brace();
-      }
-      else
-      {
-         if (  br_open->parent_type == CT_FUNC_DEF
-            || br_open->parent_type == CT_FUNC_CLASS_DEF
-            || br_open->parent_type == CT_OC_CLASS)
-         {
-            val = iarf_e::NOT_DEFINED;
-            const iarf_e nl_fdef_brace_cond_v = options::nl_fdef_brace_cond();
-
-            if (nl_fdef_brace_cond_v != IARF_IGNORE)
-            {
-               prev = chunk_get_prev_ncnl(br_open);
-               if (chunk_is_token(prev, CT_FPAREN_CLOSE))
-               {
-                  val = nl_fdef_brace_cond_v;
-               }
-            }
-
-            if (val == iarf_e::NOT_DEFINED)
-            {
-               val = options::nl_fdef_brace();
-            }
-         }
-         else
-         {
-            val = ((br_open->parent_type == CT_CS_PROPERTY) ?
-                   options::nl_property_brace() :
-                   ((br_open->parent_type == CT_CPP_LAMBDA) ?
-                    options::nl_cpp_ldef_brace() :
-                    options::nl_fcall_brace()));
-         }
-      }
-
-      if (val != IARF_IGNORE)
-      {
-         if (prev == nullptr)
-         {
-            // Grab the chunk before the open brace
-            prev = chunk_get_prev_ncnl(br_open);
-         }
-
-         newline_iarf_pair(prev, br_open, val);
-      }
 
       newline_def_blk(br_open, true);
    }
