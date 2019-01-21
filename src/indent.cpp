@@ -940,6 +940,22 @@ void indent_text(void)
                }
             }
 
+            if (  chunk_is_token(pc, CT_BRACE_CLOSE)
+               && pc->parent_type == CT_ENUM)
+            {
+               chunk_t *prev_ncnl = chunk_get_prev_ncnl(pc);
+               LOG_FMT(LINDLINE, "%s(%d): prev_ncnl is '%s', prev_ncnl->orig_line is %zu, prev_ncnl->orig_col is %zu\n",
+                       __func__, __LINE__, prev_ncnl->text(), prev_ncnl->orig_line, prev_ncnl->orig_col);
+
+               if (chunk_is_token(prev_ncnl, CT_COMMA))
+               {
+                  LOG_FMT(LINDLINE, "%s(%d): prev_ncnl is comma\n", __func__, __LINE__);
+               }
+               else
+               {
+                  LOG_FMT(LINDLINE, "%s(%d): prev_ncnl is NOT comma\n", __func__, __LINE__);
+               }
+            }
             // End any assign operations with a semicolon on the same level
             if (is_end_of_assignment(pc, frm))
             {
@@ -2489,6 +2505,8 @@ void indent_text(void)
                && (chunk_is_str(tmp, "<<", 2) || chunk_is_str(tmp, ">>", 2)))
             {
                in_shift = true;
+               LOG_FMT(LINDENT2, "%s(%d): in_shift set to TRUE\n",
+                       __func__, __LINE__);
 
                tmp = chunk_get_prev_ncnl(tmp);
                if (chunk_is_token(tmp, CT_OPERATOR))
@@ -2516,6 +2534,8 @@ void indent_text(void)
                && (chunk_is_str(tmp, "<<", 2) || chunk_is_str(tmp, ">>", 2)))
             {
                in_shift = true;
+               LOG_FMT(LINDENT2, "%s(%d): in_shift set to TRUE\n",
+                       __func__, __LINE__);
 
                tmp = chunk_get_prev_ncnl(tmp);
                if (chunk_is_token(tmp, CT_OPERATOR))
@@ -2534,6 +2554,8 @@ void indent_text(void)
                  && tmp->type != CT_SPAREN_OPEN
                  && tmp->type != CT_SPAREN_CLOSE);
 
+         LOG_FMT(LINDENT2, "%s(%d): in_shift is %s\n",
+                 __func__, __LINE__, in_shift ? "TRUE" : "FALSE");
          chunk_t *prev_nonl = chunk_get_prev_ncnl(pc);
          chunk_t *prev2     = chunk_get_prev_nc(pc);
 
@@ -2550,6 +2572,8 @@ void indent_text(void)
             in_shift = false;
          }
 
+         LOG_FMT(LINDENT2, "%s(%d): in_shift is %s\n",
+                 __func__, __LINE__, in_shift ? "TRUE" : "FALSE");
          if (chunk_is_token(prev2, CT_NEWLINE) && in_shift)
          {
             shiftcontcol = calc_indent_continue(frm);
@@ -2681,19 +2705,19 @@ void indent_text(void)
                           && chunk_is_token(prevv, CT_TYPE)))))
          {
             size_t tmp = options::indent_member() + indent_column;
-            LOG_FMT(LINDENT, "%s(%d): %zu] member => %zu\n",
+            LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, member => %zu\n",
                     __func__, __LINE__, pc->orig_line, tmp);
             reindent_line(pc, tmp);
          }
          else if (do_vardefcol)
          {
-            LOG_FMT(LINDENT, "%s(%d): %zu] Vardefcol => %zu\n",
+            LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, vardefcol is %zu\n",
                     __func__, __LINE__, pc->orig_line, vardefcol);
             reindent_line(pc, vardefcol);
          }
          else if (shiftcontcol > 0)
          {
-            LOG_FMT(LINDENT, "%s(%d): %zu] indent_shift => %zu\n",
+            LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, shiftcontcol is %zu\n",
                     __func__, __LINE__, pc->orig_line, shiftcontcol);
             reindent_line(pc, shiftcontcol);
          }
@@ -2702,7 +2726,7 @@ void indent_text(void)
                  && options::indent_namespace_single_indent()
                  && frm.top().ns_cnt)
          {
-            LOG_FMT(LINDENT, "%s(%d): %zu] Namespace => %zu\n",
+            LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, Namespace => %zu\n",
                     __func__, __LINE__, pc->orig_line, frm.top().brace_indent);
             reindent_line(pc, frm.top().brace_indent);
          }
@@ -2712,19 +2736,19 @@ void indent_text(void)
          {
             const int tmp = (xml_indent != 0) ? xml_indent : prev->column;
 
-            LOG_FMT(LINDENT, "%s(%d): %zu] String => %d\n",
+            LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, String => %d\n",
                     __func__, __LINE__, pc->orig_line, tmp);
             reindent_line(pc, tmp);
          }
          else if (chunk_is_comment(pc))
          {
-            LOG_FMT(LINDENT, "%s(%d): %zu] comment => %zu\n",
+            LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, comment => %zu\n",
                     __func__, __LINE__, pc->orig_line, frm.top().indent_tmp);
             indent_comment(pc, frm.top().indent_tmp);
          }
          else if (chunk_is_token(pc, CT_PREPROC))
          {
-            LOG_FMT(LINDENT, "%s(%d): %zu] pp-indent => %zu [%s]\n",
+            LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, pp-indent => %zu [%s]\n",
                     __func__, __LINE__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, indent_column);
          }
