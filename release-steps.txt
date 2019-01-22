@@ -21,7 +21,7 @@ Change the date at the first line of this document.
       At line <li>Highly configurable
       TODO: (automat for this) Change the values of <options> and version.
     package.json
-      At line "version" the number
+      At line "version" the number (major.minor.patch, must include .patch)
       At line "preinstall"
       At line "url"
     README.md
