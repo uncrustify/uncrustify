@@ -665,6 +665,11 @@
 34305  issue_2124-1.cfg						cpp/issue_2124-1.cpp
 34306  issue_2124-2.cfg						cpp/issue_2124-2.cpp
 
+34301  nl_fdef_brace_cond-f.cfg             cpp/nl_fdef_brace_cond-f.cpp
+34302  nl_fdef_brace_cond-r.cfg             cpp/nl_fdef_brace_cond-r.cpp
+34303  nl_fdef_brace_cond-fr.cfg            cpp/nl_fdef_brace_cond-fr.cpp
+34304  nl_fdef_brace_cond-rf.cfg            cpp/nl_fdef_brace_cond-rf.cpp
+
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
 10001  empty.cfg                            cpp/622_ifdef-indentation.cpp
