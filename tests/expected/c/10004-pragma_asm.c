@@ -48,7 +48,7 @@ int main2(int argc, char *argv[])
     PUSH     _my_var+0
     RETF
     App_CallEnd:
-#pragma  endasm
+#pragma endasm
 
 int main3(int argc, char *argv[])
 {
@@ -73,7 +73,7 @@ int main3(int argc, char *argv[])
     PUSH     _my_var+0
     RETF
     App_CallEnd:
-#pragma         endasm
+#pragma endasm
 
 int main3(int argc, char *argv[])
 {
