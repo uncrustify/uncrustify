@@ -512,6 +512,7 @@
 33105  bug_1001.cfg                         cpp/bug_1001.cpp
 
 33110  enum.cfg                             cpp/enum.cpp
+33120  Issue_2149.cfg                       cpp/Issue_2149.cpp
 
 33150  indent_columns-4.cfg                 cpp/bug_i_753.cpp
 33151  bug_i_752.cfg                        cpp/bug_i_752.cpp

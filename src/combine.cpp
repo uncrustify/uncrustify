@@ -569,13 +569,15 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype,
       return(nullptr);
    }
 
-   LOG_FMT(LFLPAREN, "%s(%d): %zu:%zu '%s' and %zu:%zu '%s' type is %s, parent_type is %s",
-           __func__, __LINE__, po->orig_line, po->orig_col, po->text(),
-           paren_close->orig_line, paren_close->orig_col, paren_close->text(),
+   LOG_FMT(LFLPAREN, "%s(%d): between  po is '%s', orig_line is %zu, orig_col is %zu, and\n",
+           __func__, __LINE__, po->text(), po->orig_line, po->orig_col);
+   LOG_FMT(LFLPAREN, "%s(%d): paren_close is '%s', orig_line is %zu, orig_col is %zu, type is %s, parent_type is %s\n",
+           __func__, __LINE__, paren_close->text(), paren_close->orig_line, paren_close->orig_col,
            get_token_name(opentype), get_token_name(parenttype));
-   //log_func_stack_inline(LSETTYP);
    log_func_stack_inline(LFLPAREN);
 
+   // the last chunk must be also modified. Issue #2149
+   chunk_t *after_paren_close = chunk_get_next(paren_close);
    if (po != paren_close)
    {
       if (  flags != 0
@@ -583,7 +585,7 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype,
       {
          chunk_t *pc;
          for (pc = chunk_get_next(po, scope_e::PREPROC);
-              pc != nullptr && pc != paren_close;
+              pc != nullptr && pc != after_paren_close;
               pc = chunk_get_next(pc, scope_e::PREPROC))
          {
             chunk_flags_set(pc, flags);
