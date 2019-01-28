@@ -85,6 +85,14 @@ enum c_token_t
    CT_ASSIGN,              // =, +=, /=, etc
    CT_ASSIGN_NL,           // Assign followed by a newline - fake item for indenting
    CT_SASSIGN,             // 'and_eq'
+
+   CT_ASSIGN_DEFAULT_ARG,  // Default argument such as
+                           // Foo( int Foo = 5 );
+   CT_ASSIGN_FUNC_PROTO,   // function prototype modifier such as
+                           // void* operator new(std::size_t) = delete;
+                           // Foo( const Foo & ) = default;
+                           // Foo( const Foo & ) = 0;
+
    CT_COMPARE,             // ==, !=, <=, >=
    CT_SCOMPARE,            // compare op that is a string 'is', 'neq'
    CT_BOOL,                // || or &&
@@ -154,6 +162,8 @@ enum c_token_t
    CT_NEW,              // may turn into CT_PBRACED if followed by a '('
    CT_OPERATOR,
    CT_OPERATOR_VAL,
+   CT_ASSIGN_OPERATOR,  // the value after 'operator' such as:
+                        // Foo &operator= ( const Foo & );
    CT_ACCESS,
    CT_ACCESS_COLON,
    CT_THROW,

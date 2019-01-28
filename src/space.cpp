@@ -817,6 +817,23 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_assign());
    }
 
+   if (chunk_is_token(second, CT_ASSIGN_DEFAULT_ARG))
+   {
+      if (  (options::sp_assign_default() != IARF_IGNORE)
+         && second->parent_type == CT_FUNC_PROTO)
+      {
+         log_rule("sp_assign_default");
+         return(options::sp_assign_default());
+      }
+      if (options::sp_before_assign() != IARF_IGNORE)
+      {
+         log_rule("sp_before_assign");
+         return(options::sp_before_assign());
+      }
+      log_rule("sp_assign");
+      return(options::sp_assign());
+   }
+
    if (chunk_is_token(first, CT_ASSIGN))
    {
       if (first->flags & PCF_IN_ENUM)
@@ -829,6 +846,23 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_enum_assign");
          return(options::sp_enum_assign());
       }
+      if (  (options::sp_assign_default() != IARF_IGNORE)
+         && first->parent_type == CT_FUNC_PROTO)
+      {
+         log_rule("sp_assign_default");
+         return(options::sp_assign_default());
+      }
+      if (options::sp_after_assign() != IARF_IGNORE)
+      {
+         log_rule("sp_after_assign");
+         return(options::sp_after_assign());
+      }
+      log_rule("sp_assign");
+      return(options::sp_assign());
+   }
+
+   if (chunk_is_token(first, CT_ASSIGN_DEFAULT_ARG))
+   {
       if (  (options::sp_assign_default() != IARF_IGNORE)
          && first->parent_type == CT_FUNC_PROTO)
       {
