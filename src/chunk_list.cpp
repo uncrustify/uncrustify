@@ -898,6 +898,7 @@ static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const direction_e 
    if (pc_in->orig_col == 0)
    {
       fprintf(stderr, "%s(%d): no column number\n", __func__, __LINE__);
+      log_func_stack_inline(LSETFLG);
       log_flush(true);
       exit(EX_SOFTWARE);
    }
