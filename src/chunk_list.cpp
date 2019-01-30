@@ -447,6 +447,8 @@ chunk_t *chunk_dup(const chunk_t *pc_in)
    {
       // @todo clean up properly before crashing
       LOG_FMT(LERR, "Failed to allocate memory\n");
+      log_func_stack_inline(LSETFLG);
+      log_flush(true);
       exit(EXIT_FAILURE);
    }
 
@@ -892,6 +894,7 @@ static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const direction_e 
    if (pc_in->orig_line == 0)
    {
       fprintf(stderr, "%s(%d): no line number\n", __func__, __LINE__);
+      log_func_stack_inline(LSETFLG);
       log_flush(true);
       exit(EX_SOFTWARE);
    }
