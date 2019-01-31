@@ -513,7 +513,8 @@ def main(args):
             out_result_path=s_path_join(sc_dir, 'results/help.txt'),
             out_result_manip=[
                 string_replace(' --mtime      : Preserve mtime on replaced files.\n', ''),
-                string_replace('.exe', '')
+                string_replace('.exe', ''),
+                reg_replace(r'currently \d+ options', 'currently x options')
             ]):
         return_flag = False
 

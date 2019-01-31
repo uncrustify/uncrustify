@@ -38,9 +38,13 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    vdas.Start(span, thresh);
    vdas.m_right_align = as.m_right_align;
 
-   AlignStack fcnEnd_as;
-   fcnEnd_as.Start(span, thresh);
-   fcnEnd_as.m_right_align = as.m_right_align;
+   AlignStack fcnDefault;
+   fcnDefault.Start(span, thresh);
+   fcnDefault.m_right_align = as.m_right_align;
+
+   AlignStack fcnProto;
+   fcnProto.Start(span, thresh);
+   fcnProto.m_right_align = as.m_right_align;
 
    size_t  var_def_cnt = 0;
    size_t  equ_count   = 0;
@@ -48,8 +52,8 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    chunk_t *pc = first;
    while (pc != nullptr)
    {
-      LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->text() '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->text());
+      LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->text() '%s', type is %s, parent_type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type));
 
       // Don't check inside SPAREN, PAREN or SQUARE groups
       if (  chunk_is_token(pc, CT_SPAREN_OPEN)
@@ -65,7 +69,8 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          {
             as.NewLines(pc->orig_line - tmp);
             vdas.NewLines(pc->orig_line - tmp);
-            fcnEnd_as.NewLines(pc->orig_line - tmp);
+            fcnDefault.NewLines(pc->orig_line - tmp);
+            fcnProto.NewLines(pc->orig_line - tmp);
          }
          continue;
       }
@@ -95,7 +100,8 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          {
             as.NewLines(sub_nl_count);
             vdas.NewLines(sub_nl_count);
-            fcnEnd_as.NewLines(sub_nl_count);
+            fcnDefault.NewLines(sub_nl_count);
+            fcnProto.NewLines(sub_nl_count);
             if (p_nl_count != nullptr)
             {
                *p_nl_count += sub_nl_count;
@@ -116,7 +122,8 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       {
          as.NewLines(pc->nl_count);
          vdas.NewLines(pc->nl_count);
-         fcnEnd_as.NewLines(pc->nl_count);
+         fcnDefault.NewLines(pc->nl_count);
+         fcnProto.NewLines(pc->nl_count);
 
          if (p_nl_count != nullptr)
          {
@@ -142,28 +149,56 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       }
       else if (  equ_count == 0                      // indent only if first '=' in line
               && (pc->flags & PCF_IN_TEMPLATE) == 0  // and it is not inside a template #999
-              && chunk_is_token(pc, CT_ASSIGN))
+              && (  chunk_is_token(pc, CT_ASSIGN)
+                 || chunk_is_token(pc, CT_ASSIGN_DEFAULT_ARG)
+                 || chunk_is_token(pc, CT_ASSIGN_FUNC_PROTO)))
       {
          equ_count++;
+         LOG_FMT(LALASS, "%s(%d): align_assign_decl_func() is %d\n",
+                 __func__, __LINE__, options::align_assign_decl_func());
+         LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->flags: ", __func__, __LINE__);
+         log_pcf_flags(LALASS, pc->flags);
 
-         if (  options::align_assign_decl_func() != 0
+         if (  options::align_assign_decl_func() == 0         // Align with other assignments (default)
             && !(pc->flags & PCF_IN_FCN_DEF)
-            && (  pc->parent_type == CT_QUALIFIER         // '= 0;' of a virtual function
-               || pc->parent_type == CT_FUNC_CLASS_PROTO  // '= delete|default; of a xtor
-               || pc->parent_type == CT_FUNC_PROTO))      // '= delete|default; of other special functions
+            && (  chunk_is_token(pc, CT_ASSIGN_DEFAULT_ARG)   // Foo( int bar = 777 );
+               || chunk_is_token(pc, CT_ASSIGN_FUNC_PROTO)))  // Foo( const Foo & ) = delete;
          {
-            if (options::align_assign_decl_func() != 2)
+            LOG_FMT(LALASS, "%s(%d): 0: fcnDefault.Add on '%s' on orig_line %zu, orig_col is %zu\n",
+                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+            fcnDefault.Add(pc);
+         }
+         else if (  options::align_assign_decl_func() == 1  // Align with each other
+                 && !(pc->flags & PCF_IN_FCN_DEF))
+         {
+            if (chunk_is_token(pc, CT_ASSIGN_DEFAULT_ARG))  // Foo( int bar = 777 );
             {
-               fcnEnd_as.Add(pc);
+               LOG_FMT(LALASS, "%s(%d): 1default: fcnDefault.Add on '%s' on orig_line %zu, orig_col is %zu\n",
+                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+               fcnDefault.Add(pc);
+            }
+            else if (chunk_is_token(pc, CT_ASSIGN_FUNC_PROTO))  // Foo( const Foo & ) = delete;
+            {
+               LOG_FMT(LALASS, "%s(%d): 1proto: fcnProto.Add on '%s' on orig_line %zu, orig_col is %zu\n",
+                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+               fcnProto.Add(pc);
             }
          }
          else if (var_def_cnt != 0)
          {
+            LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig_line %zu, orig_col is %zu\n",
+                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
             vdas.Add(pc);
          }
          else
          {
-            as.Add(pc);
+            if (chunk_is_token(pc, CT_ASSIGN))
+            //if (options::align_assign_decl_func() != 2)
+            {
+               LOG_FMT(LALASS, "%s(%d): as.Add on '%s' on orig_line %zu, orig_col is %zu\n",
+                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+               as.Add(pc);
+            }
          }
       }
 
@@ -172,7 +207,8 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
 
    as.End();
    vdas.End();
-   fcnEnd_as.End();
+   fcnDefault.End();
+   fcnProto.End();
 
    if (pc != nullptr)
    {

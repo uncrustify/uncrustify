@@ -541,6 +541,7 @@ align_var_def_colon_gap         = 0
 align_var_def_attribute         = false
 align_var_def_inline            = false
 align_assign_span               = 0
+align_assign_func_proto         = 0
 align_assign_thresh             = 0
 align_assign_decl_func          = 0
 align_enum_equ_span             = 0

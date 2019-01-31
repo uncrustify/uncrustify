@@ -86,6 +86,8 @@ sp_cpp_lambda_assign            = ignore   # ignore/add/remove/force
 sp_cpp_lambda_paren             = ignore   # ignore/add/remove/force
 
 # Add or remove space around assignment operator '=' in a prototype.
+#
+# If set to ignore, use sp_assign.
 sp_assign_default               = ignore   # ignore/add/remove/force
 
 # Add or remove space before assignment operator '=', '+=', etc.
@@ -2099,6 +2101,11 @@ align_var_def_inline            = false    # true/false
 #
 # 0 = Don't align (default).
 align_assign_span               = 0        # unsigned number
+
+# The span for aligning on '=' in function prototype modifier.
+#
+# 0 = Don't align (default).
+align_assign_func_proto         = 0        # unsigned number
 
 # The threshold for aligning on '=' in assignments.
 #

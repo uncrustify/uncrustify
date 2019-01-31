@@ -132,6 +132,8 @@ extern Option<iarf_e>
 sp_cpp_lambda_paren;
 
 // Add or remove space around assignment operator '=' in a prototype.
+//
+// If set to ignore, use sp_assign.
 extern Option<iarf_e>
 sp_assign_default;
 
@@ -2611,6 +2613,12 @@ align_var_def_inline;
 // 0 = Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
 align_assign_span;
+
+// The span for aligning on '=' in function prototype modifier.
+//
+// 0 = Don't align (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_assign_func_proto;
 
 // The threshold for aligning on '=' in assignments.
 //

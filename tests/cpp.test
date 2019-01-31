@@ -220,6 +220,11 @@
 30741  al.cfg                               cpp/al.cpp
 30742  indent_columns-2.cfg                 cpp/delete.cpp
 
+30745  Issue_2170.cfg                       cpp/Issue_2170.cpp
+30746  DefaultAndDelete-0.cfg               cpp/DefaultAndDelete.cpp
+30747  DefaultAndDelete-1.cfg               cpp/DefaultAndDelete.cpp
+30748  DefaultAndDelete-2.cfg               cpp/DefaultAndDelete.cpp
+
 # TODO: Reduce the number of options, leave only those that affect lambda.
 # TODO: Add tests for nested lambdas.
 
