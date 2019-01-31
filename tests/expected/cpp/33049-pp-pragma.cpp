@@ -15,6 +15,7 @@ int main(int argc, char** argv)
 
 	#pragma CoverageScanner(cov-off)
 	__pragma( CoverageScanner(cov-off) )
+	_Pragma( CoverageScanner(cov-off) )
 
 	return 0;
 }

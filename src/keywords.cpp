@@ -95,6 +95,7 @@ static chunk_tag_t keywords[] =
    { "_Nonnull",                        CT_QUALIFIER,        LANG_OC                                                                     },
    { "_Null_unspecified",               CT_QUALIFIER,        LANG_OC                                                                     },
    { "_Nullable",                       CT_QUALIFIER,        LANG_OC                                                                     },
+   { "_Pragma",                         CT_PP_PRAGMA,        LANG_ALL | FLAG_PP                                                          },
    { "__DI__",                          CT_DI,               LANG_C                                                                      },
    { "__HI__",                          CT_HI,               LANG_C                                                                      },
    { "__QI__",                          CT_QI,               LANG_C                                                                      },
@@ -495,7 +496,7 @@ c_token_t find_keyword_type(const char *word, size_t len)
 
    if (p_ret != nullptr)
    {
-      if (strcmp(p_ret->tag, "__pragma") == 0)
+      if (strcmp(p_ret->tag, "__pragma") == 0 || strcmp(p_ret->tag, "_Pragma") == 0)
       {
          cpd.in_preproc = CT_PREPROC;
       }

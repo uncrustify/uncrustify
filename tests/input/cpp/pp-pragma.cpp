@@ -15,6 +15,7 @@ printf("Hello from thread!\n");
 
 #pragma CoverageScanner(cov-off)
 __pragma ( CoverageScanner(cov-off) )
+_Pragma ( CoverageScanner(cov-off) )
 
 return 0;
 }
