@@ -1793,8 +1793,8 @@ nl_template_class;
 extern Option<iarf_e>
 nl_class_brace;
 
-// Add or remove newline before or after (depending on pos_class_comma) each
-// ',' in the base class list.
+// Add or remove newline before or after (depending on pos_class_comma,
+// may not be IGNORE) each',' in the base class list.
 extern Option<iarf_e>
 nl_class_init_args;
 
