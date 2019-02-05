@@ -4538,7 +4538,7 @@ static void mark_function(chunk_t *pc)
    {
       LOG_FMT(LFCN, "%s(%d): examine: text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
               __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, get_token_name(pc->type));
-      // look for an assigment. Issue 575
+      // look for an assigment. Issue #575
       chunk_t *temp = chunk_get_next_type(pc, CT_ASSIGN, pc->level);
       if (temp != nullptr)
       {
