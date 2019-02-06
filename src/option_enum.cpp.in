@@ -12,7 +12,7 @@
 
 #if defined(_MSC_VER)
 #pragma warning(disable: 4809)
-#elif defined(__GNUC__)
+#elif __GNUC__ > 4 || __clang_major__ > 3 || __clang_minor__ > 4
 #pragma GCC diagnostic ignored "-Wswitch-bool"
 #endif
 
