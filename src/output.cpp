@@ -429,12 +429,20 @@ void output_parsed(FILE *pfile)
    fprintf(pfile, "# Line                Tag              Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
-      fprintf(pfile, "%s# %3zu>%19.19s[%19.19s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
-              eol_marker, pc->orig_line, get_token_name(pc->type),
-              get_token_name(pc->parent_type),
-              pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
-              pc->brace_level, pc->level, pc->pp_level,
-              pc->flags, pc->nl_count, pc->after_tab);
+      fprintf(pfile, "%s#", eol_marker);
+      fprintf(pfile, "%4zu>", pc->orig_line);
+      fprintf(pfile, "%19.19s[", get_token_name(pc->type));
+      fprintf(pfile, "%19.19s][", get_token_name(pc->parent_type));
+      fprintf(pfile, "%3zu/", pc->column);
+      fprintf(pfile, "%3zu/", pc->orig_col);
+      fprintf(pfile, "%3zu/", pc->orig_col_end);
+      fprintf(pfile, "%3d][", pc->orig_prev_sp);
+      fprintf(pfile, "%zu/", pc->brace_level);
+      fprintf(pfile, "%zu/", pc->level);
+      fprintf(pfile, "%zu][", pc->pp_level);
+      fprintf(pfile, "%10" PRIx64 "][", pc->flags);
+      fprintf(pfile, "%zu-", pc->nl_count);
+      fprintf(pfile, "%d]", pc->after_tab);
 
       if (pc->type != CT_NEWLINE && (pc->len() != 0))
       {
