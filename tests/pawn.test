@@ -5,18 +5,18 @@
 # test.name  config.file  input.file
 
 60000  pawn.cfg                             pawn/functions.pawn
-60001  pawn.cfg                             pawn/comment.p
-60002  pawn.cfg                             pawn/traffic.p
-60003  pawn.cfg                             pawn/tags.pawn
-60004  pawn.cfg                             pawn/enum.pawn
-60005  pawn.cfg                             pawn/unbraced.p
-
-60010  pawn-escape.cfg                      pawn/str-escape.p
-
-60020  pawn-escape.cfg                      pawn/switch-vsemi.sma
-
-60030  amxmodx.cfg                          pawn/crusty_ex-1.sma
-
-60040  amxmodx.cfg                          pawn/preproc.pawn
-
-60050  mod_full_brace_function-f.cfg        pawn/gh419.pawn
+##g 60001  pawn.cfg                             pawn/comment.p
+##g 60002  pawn.cfg                             pawn/traffic.p
+##g 60003  pawn.cfg                             pawn/tags.pawn
+##g 60004  pawn.cfg                             pawn/enum.pawn
+##g 60005  pawn.cfg                             pawn/unbraced.p
+##g 
+##g 60010  pawn-escape.cfg                      pawn/str-escape.p
+##g 
+##g 60020  pawn-escape.cfg                      pawn/switch-vsemi.sma
+##g 
+##g 60030  amxmodx.cfg                          pawn/crusty_ex-1.sma
+##g 
+##g 60040  amxmodx.cfg                          pawn/preproc.pawn
+##g 
+##g 60050  mod_full_brace_function-f.cfg        pawn/gh419.pawn

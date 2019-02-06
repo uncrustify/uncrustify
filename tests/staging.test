@@ -4,6 +4,6 @@
 # Range: reserve ID from dedicated language range
 # test.name  config.file  input.file  lang
 
-19000~ UNI-58354.cfg                        cs/UNI-58354.cs     CS
-39000~ UNI-64325.cfg                        cpp/UNI-64325.cpp   CPP
-39001~ GH-2091.cfg                          cpp/GH-2091.cpp     CPP
+##g 19000~ UNI-58354.cfg                        cs/UNI-58354.cs     CS
+##g 39000~ UNI-64325.cfg                        cpp/UNI-64325.cpp   CPP
+##g 39001~ GH-2091.cfg                          cpp/GH-2091.cpp     CPP
