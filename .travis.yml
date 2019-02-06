@@ -130,8 +130,11 @@ before_script:
       "release")
         cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Release -DENABLE_CODECOVERAGE:BOOL=True ..
         ;;
+      "debug")
+        cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Release -DUNCRUSTIFY_SEPARATE_TESTS=True ..
+        ;;
       *)
-        cmake ${GENERATOR} -DENABLE_CODECOVERAGE:BOOL=True ..
+        cmake ${GENERATOR} ..
         ;;
     esac
 
