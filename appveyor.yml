@@ -25,7 +25,7 @@ before_build:
   - cd c:\projects\uncrustify
   - mkdir build
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=%CONFIGURATION% -D ENABLE_CODECOVERAGE:BOOL=True -G "%GENERATOR%" ..
+  - cmake -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DENABLE_CODECOVERAGE:BOOL=True -G "%GENERATOR%" ..
 build_script:
   - cmake --build . --config %CONFIGURATION%
 test_script:
