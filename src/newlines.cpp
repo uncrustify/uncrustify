@@ -831,7 +831,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e 
    chunk_t *next;
    chunk_t *last_nl = nullptr;
    size_t  level    = start->level;
-   bool    do_add   = (nl_opt & IARF_ADD) != 0; // forcing value to bool
+   bool    do_add   = (nl_opt & IARF_ADD) != IARF_IGNORE; // forcing value to bool
 
 
    /*

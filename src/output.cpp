@@ -418,6 +418,14 @@ static void cmt_output_indent(size_t brace_col, size_t base_col, size_t column)
 void output_parsed(FILE *pfile)
 {
    const char *eol_marker = get_eol_marker();
+   char       *tmp_text;
+
+   tmp_text = new char[256];
+   if (tmp_text == nullptr)
+   {
+      exit(EX_SOFTWARE);
+   }
+
 
    save_option_file(pfile, false, true);
 
@@ -431,6 +439,7 @@ void output_parsed(FILE *pfile)
    {
       fprintf(pfile, "%s#", eol_marker);
       fprintf(pfile, "%4zu>", pc->orig_line);
+      sprintf(tmp_text, "%4zu>", pc->orig_line);
       fprintf(pfile, "%19.19s[", get_token_name(pc->type));
       fprintf(pfile, "%19.19s][", get_token_name(pc->parent_type));
       fprintf(pfile, "%3zu/", pc->column);
