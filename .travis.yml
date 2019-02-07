@@ -128,10 +128,7 @@ before_script:
         cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw64.cmake -DCMAKE_EXE_LINKER_FLAGS="-static -s" ..
         ;;
       "release")
-        cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Release -DENABLE_CODECOVERAGE:BOOL=True ..
-        ;;
-      "debug")
-        cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Release -DUNCRUSTIFY_SEPARATE_TESTS=True ..
+        cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Release ..
         ;;
       *)
         cmake ${GENERATOR} ..
