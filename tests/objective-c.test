@@ -5,139 +5,139 @@
 
 # The .h file needs a language override
 50001  oc1.cfg                              oc/Fraction.h                   OC
-##g 50002  oc2.cfg                              oc/Fraction.m
-##g 50003  oc2.cfg                              oc/main.m
-##g 50004  oc4.cfg                              oc/string.m
-##g 50005  oc5.cfg                              oc/Declarations.h               OC
-##g 50006  oc6.cfg                              oc/exceptions.m
-##g 50007  oc7.cfg                              oc/misc.m
-##g 50008  oc8.cfg                              oc/protocol.m
-##g 50009  oc9.cfg                              oc/literals.m
-##g 
-##g 50010  sp_after_oc_return_type_add.cfg      oc/return_type.m
-##g 50011  sp_after_oc_return_type_force.cfg    oc/return_type.m
-##g 50012  sp_after_oc_return_type_remove.cfg   oc/return_type.m
-##g 
-##g 50015  oc10.cfg                             oc/receiver.m
-##g 
-##g 50016  oc11.cfg                             oc/ternary.m
-##g 50017  ternary_short.cfg                    oc/ternary.m
-##g 
-##g 50020  sp_after_oc_at_sel_add.cfg           oc/selector.m
-##g 50021  sp_after_oc_at_sel_force.cfg         oc/selector.m
-##g 50022  sp_after_oc_at_sel_remove.cfg        oc/selector.m
-##g 
-##g 50025  oc6.cfg                              oc/exceptions.m
-##g 50026  sp_after_throw_remove.cfg            oc/exceptions.m
-##g 
-##g 50030  sort_imports.cfg                     oc/sort_import.m
-##g 
-##g 50040  objc_complex_method.cfg              oc/complex_method.m
-##g 
-##g 50050  objc_complex_method.cfg              oc/real_world_file.m
-##g 
-##g 50060  align_oc_msg_colon_span-1.cfg        oc/oc-split.m
-##g 50061  bug_167.cfg                          oc/bug_167.m
-##g 
-##g 50070  blocks.cfg                           oc/blocks.m
-##g 50071  sp_before_oc_block_caret_force.cfg   oc/blocks.m
-##g 50072  sp_before_oc_block_caret_remove.cfg  oc/blocks.m
-##g 50073  sp_after_oc_block_caret_add.cfg      oc/blocks.m
-##g 50074  sp_after_oc_block_caret_force.cfg    oc/blocks.m
-##g 50075  blocks.cfg                           oc/blocks.m
-##g 50076  sp_before_oc_block_caret_remove.cfg  oc/blocks.m
-##g 
-##g 50077  blocks.cfg                           oc/more_blocks.m
-##g 50078  sp_before_oc_block_caret_force.cfg   oc/more_blocks.m
-##g 50079  sp_before_oc_block_caret_remove.cfg  oc/more_blocks.m
-##g 50080  sp_after_oc_block_caret_add.cfg      oc/more_blocks.m
-##g 50081  sp_after_oc_block_caret_force.cfg    oc/more_blocks.m
-##g 50082  blocks.cfg                           oc/more_blocks.m
-##g 50083  sp_before_oc_block_caret_remove.cfg  oc/more_blocks.m
-##g 50084  nl_brace_square.cfg                  oc/more_blocks.m
-##g 50085  nl_after_func_body-3.cfg             oc/block_in_method.m
-##g 
-##g 50090  oc12.cfg                             oc/kw.m
-##g 
-##g 50095  oc13.cfg                             oc/box.m
-##g 50100  bug_340.cfg                          oc/bug_340.m
-##g 
-##g 50110  oc14.cfg                             oc/msg_align.m
-##g 50111  del_semicolon.cfg                    oc/ns_enum.m
-##g 50112  empty.cfg                            oc/ns_enum.m
-##g 50113  sp_enum_paren-r.cfg                  oc/ns_enum.m
-##g 
-##g 50120  gh137.cfg                            oc/gh137.m
-##g 
-##g 50200  sp_block_as_argument.cfg             oc/more_blocks_2.m
-##g 50201  sp_block_as_argument.cfg             oc/blocks_align.m
-##g 50202  sp_block_as_argument2.cfg            oc/blocks_align.m
-##g 50203  sp_block_as_argument3.cfg            oc/blocks_align.m
-##g 50204  sp_block_as_argument4.cfg            oc/blocks_align.m
-##g 50205  sp_block_as_argument5.cfg            oc/msg_align.m
-##g 
-##g 50300  sp_after_send_oc_colon-f.cfg         oc/msg.m
-##g 
-##g 50400  oc16.cfg                             oc/for.m
-##g 
-##g 50410  oc_cond_colon.cfg                    oc/oc_cond_colon.m              OC+
-##g 50411  attribute_specifier_seqs.cfg         oc/attribute_specifier_seqs.mm  OC+
-##g 
-##g 50500  oc17.cfg                             oc/code_placeholder.m
-##g 
-##g 50510  gh293.a.cfg                          oc/gh293.m
-##g 50511  gh293.b.cfg                          oc/gh293.m
-##g 50512  sp_oc_catch.cfg                      oc/sp_oc_catch.m
-##g 50513  sp_oc_boxed.cfg                      oc/sp_oc_boxed.m
-##g 50514  indent_boxed.cfg                     oc/indent_boxed.m
-##g 50515  sp_oc_synchronized.cfg               oc/sp_oc_synchronized.m
-##g 
-##g 50600  nl_oc_block_brace-f.cfg              oc/bug_i_477.m
-##g 50601  empty.cfg                            oc/bug_i_408.m
-##g 50602  bug_i_125-412.cfg                    oc/bug_i_125-412.m
-##g 50603  oc18.cfg                             oc/gh511.m
-##g 50604  objc_bug_497.cfg                     oc/bug_497.m
-##g 50605  empty.cfg                            oc/bug_404.m
-##g 50606  oc19.cfg                             oc/bug_1366.m
-##g 50607  aet-sp_after_oc_msg_receiver.cfg     oc/sp_after_oc_msg_receiver.m
-##g 50608  aet.cfg                              oc/blocks_align2.m
-##g 50609  sp_arith-f.cfg                       oc/negative_value.m
-##g 50610  aet.cfg                              oc/nelem.m
-##g 50611  aet.cfg                              oc/for2.m
-##g 50612  aet.cfg                              oc/chunk_ends_type1.m
-##g 50613  aet.cfg                              oc/chunk_ends_type2.m
-##g 50614  aet.cfg                              oc/chunk_ends_type3.m
-##g 50615  aet.cfg                              oc/block_literal_protocol.m
-##g 50616  aet.cfg                              oc/oc_msg_in_pp.m
-##g 50617  aet.cfg                              oc/boxed_receiver.m
-##g 50618  aet-func_def.cfg                     oc/func_def.mm
-##g 50619  aet.cfg                              oc/cast.m
-##g 50620  aet.cfg                              oc/sp_after_angle.m
-##g 50621  aet.cfg                              oc/Fraction.h
-##g 50622  aet.cfg                              oc/c-cpp-oc-wrapper.c
-##g 50623  aet.cfg                              oc/extern-c-attribute.m
-##g 50624  aet.cfg                              oc/typeof.m
-##g 50625  aet-sp_inside_braces_oc_dict.cfg     oc/sp_inside_braces_oc_dict.m
-##g 50626  aet.cfg                              oc/chunk_ends_type4.m
-##g 50627  aet.cfg                              oc/method_ends_semicolon.m
-##g 50628  aet.cfg                              oc/macro-close-brace.m
-##g 50629  aet.cfg                              oc/pp_bool.m
-##g 
-##g 50700  cmt_insert-0.cfg                     oc/cmt_insert.m
-##g 50701  cmt_insert-0.cfg                     oc/cmt_insert2.m
-##g 
-##g 50800  obj-c-properties.cfg                 oc/properties.m
-##g 50801  empty.cfg                            oc/i1213.m
-##g 50802  obj-c-available.cfg                  oc/available.m
-##g 50803  indent_single_newline.cfg            oc/indent_single_newline.m
-##g 
-##g 50810  bug_841.cfg                          oc/bug_841.m
-##g 50811  oc_bug_1674.cfg                      oc/bug_1674.m
-##g 50812  oc_bug_1683.cfg                      oc/bug_1683.m
-##g 
-##g 50900  1927.cfg                             oc/1927.m
-##g 
-##g #
-##g # adopt tests from UT
-##g 10018  empty.cfg                            oc/delete-space-oc.mm
-##g 10019  empty.cfg                            oc/func-param-wrap-oc.mm
+50002  oc2.cfg                              oc/Fraction.m
+50003  oc2.cfg                              oc/main.m
+50004  oc4.cfg                              oc/string.m
+50005  oc5.cfg                              oc/Declarations.h               OC
+50006  oc6.cfg                              oc/exceptions.m
+50007  oc7.cfg                              oc/misc.m
+50008  oc8.cfg                              oc/protocol.m
+50009  oc9.cfg                              oc/literals.m
+
+50010  sp_after_oc_return_type_add.cfg      oc/return_type.m
+50011  sp_after_oc_return_type_force.cfg    oc/return_type.m
+50012  sp_after_oc_return_type_remove.cfg   oc/return_type.m
+
+50015  oc10.cfg                             oc/receiver.m
+
+50016  oc11.cfg                             oc/ternary.m
+50017  ternary_short.cfg                    oc/ternary.m
+
+50020  sp_after_oc_at_sel_add.cfg           oc/selector.m
+50021  sp_after_oc_at_sel_force.cfg         oc/selector.m
+50022  sp_after_oc_at_sel_remove.cfg        oc/selector.m
+
+50025  oc6.cfg                              oc/exceptions.m
+50026  sp_after_throw_remove.cfg            oc/exceptions.m
+
+50030  sort_imports.cfg                     oc/sort_import.m
+
+50040  objc_complex_method.cfg              oc/complex_method.m
+
+50050  objc_complex_method.cfg              oc/real_world_file.m
+
+50060  align_oc_msg_colon_span-1.cfg        oc/oc-split.m
+50061  bug_167.cfg                          oc/bug_167.m
+
+50070  blocks.cfg                           oc/blocks.m
+50071  sp_before_oc_block_caret_force.cfg   oc/blocks.m
+50072  sp_before_oc_block_caret_remove.cfg  oc/blocks.m
+50073  sp_after_oc_block_caret_add.cfg      oc/blocks.m
+50074  sp_after_oc_block_caret_force.cfg    oc/blocks.m
+50075  blocks.cfg                           oc/blocks.m
+50076  sp_before_oc_block_caret_remove.cfg  oc/blocks.m
+
+50077  blocks.cfg                           oc/more_blocks.m
+50078  sp_before_oc_block_caret_force.cfg   oc/more_blocks.m
+50079  sp_before_oc_block_caret_remove.cfg  oc/more_blocks.m
+50080  sp_after_oc_block_caret_add.cfg      oc/more_blocks.m
+50081  sp_after_oc_block_caret_force.cfg    oc/more_blocks.m
+50082  blocks.cfg                           oc/more_blocks.m
+50083  sp_before_oc_block_caret_remove.cfg  oc/more_blocks.m
+50084  nl_brace_square.cfg                  oc/more_blocks.m
+50085  nl_after_func_body-3.cfg             oc/block_in_method.m
+
+50090  oc12.cfg                             oc/kw.m
+
+50095  oc13.cfg                             oc/box.m
+50100  bug_340.cfg                          oc/bug_340.m
+
+50110  oc14.cfg                             oc/msg_align.m
+50111  del_semicolon.cfg                    oc/ns_enum.m
+50112  empty.cfg                            oc/ns_enum.m
+50113  sp_enum_paren-r.cfg                  oc/ns_enum.m
+
+50120  gh137.cfg                            oc/gh137.m
+
+50200  sp_block_as_argument.cfg             oc/more_blocks_2.m
+50201  sp_block_as_argument.cfg             oc/blocks_align.m
+50202  sp_block_as_argument2.cfg            oc/blocks_align.m
+50203  sp_block_as_argument3.cfg            oc/blocks_align.m
+50204  sp_block_as_argument4.cfg            oc/blocks_align.m
+50205  sp_block_as_argument5.cfg            oc/msg_align.m
+
+50300  sp_after_send_oc_colon-f.cfg         oc/msg.m
+
+50400  oc16.cfg                             oc/for.m
+
+50410  oc_cond_colon.cfg                    oc/oc_cond_colon.m              OC+
+50411  attribute_specifier_seqs.cfg         oc/attribute_specifier_seqs.mm  OC+
+
+50500  oc17.cfg                             oc/code_placeholder.m
+
+50510  gh293.a.cfg                          oc/gh293.m
+50511  gh293.b.cfg                          oc/gh293.m
+50512  sp_oc_catch.cfg                      oc/sp_oc_catch.m
+50513  sp_oc_boxed.cfg                      oc/sp_oc_boxed.m
+50514  indent_boxed.cfg                     oc/indent_boxed.m
+50515  sp_oc_synchronized.cfg               oc/sp_oc_synchronized.m
+
+50600  nl_oc_block_brace-f.cfg              oc/bug_i_477.m
+50601  empty.cfg                            oc/bug_i_408.m
+50602  bug_i_125-412.cfg                    oc/bug_i_125-412.m
+50603  oc18.cfg                             oc/gh511.m
+50604  objc_bug_497.cfg                     oc/bug_497.m
+50605  empty.cfg                            oc/bug_404.m
+50606  oc19.cfg                             oc/bug_1366.m
+50607  aet-sp_after_oc_msg_receiver.cfg     oc/sp_after_oc_msg_receiver.m
+50608  aet.cfg                              oc/blocks_align2.m
+50609  sp_arith-f.cfg                       oc/negative_value.m
+50610  aet.cfg                              oc/nelem.m
+50611  aet.cfg                              oc/for2.m
+50612  aet.cfg                              oc/chunk_ends_type1.m
+50613  aet.cfg                              oc/chunk_ends_type2.m
+50614  aet.cfg                              oc/chunk_ends_type3.m
+50615  aet.cfg                              oc/block_literal_protocol.m
+50616  aet.cfg                              oc/oc_msg_in_pp.m
+50617  aet.cfg                              oc/boxed_receiver.m
+50618  aet-func_def.cfg                     oc/func_def.mm
+50619  aet.cfg                              oc/cast.m
+50620  aet.cfg                              oc/sp_after_angle.m
+50621  aet.cfg                              oc/Fraction.h
+50622  aet.cfg                              oc/c-cpp-oc-wrapper.c
+50623  aet.cfg                              oc/extern-c-attribute.m
+50624  aet.cfg                              oc/typeof.m
+50625  aet-sp_inside_braces_oc_dict.cfg     oc/sp_inside_braces_oc_dict.m
+50626  aet.cfg                              oc/chunk_ends_type4.m
+50627  aet.cfg                              oc/method_ends_semicolon.m
+50628  aet.cfg                              oc/macro-close-brace.m
+50629  aet.cfg                              oc/pp_bool.m
+
+50700  cmt_insert-0.cfg                     oc/cmt_insert.m
+50701  cmt_insert-0.cfg                     oc/cmt_insert2.m
+
+50800  obj-c-properties.cfg                 oc/properties.m
+50801  empty.cfg                            oc/i1213.m
+50802  obj-c-available.cfg                  oc/available.m
+50803  indent_single_newline.cfg            oc/indent_single_newline.m
+
+50810  bug_841.cfg                          oc/bug_841.m
+50811  oc_bug_1674.cfg                      oc/bug_1674.m
+50812  oc_bug_1683.cfg                      oc/bug_1683.m
+
+50900  1927.cfg                             oc/1927.m
+
+#
+# adopt tests from UT
+10018  empty.cfg                            oc/delete-space-oc.mm
+10019  empty.cfg                            oc/func-param-wrap-oc.mm
