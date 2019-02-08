@@ -220,7 +220,7 @@ protected:
          OptionWarning w{ this };
          w("requested value %ld for option %s "
            "is greater than the maximum value %ld",
-           val, this->name(), static_cast<long>(min));
+           val, this->name(), static_cast<long>(max));
          return(false);
       }
       return(true);
