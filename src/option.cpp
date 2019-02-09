@@ -349,7 +349,7 @@ void GenericOption::warnUnexpectedValue(const char *actual) const
          }
       }
    }
-   w("for %s; got '%s'", name(), actual);
+   w("for '%s'; got '%s'", name(), actual);
 }
 
 

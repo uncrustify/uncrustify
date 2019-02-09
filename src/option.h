@@ -210,7 +210,7 @@ protected:
       if (val < static_cast<long>(min))
       {
          OptionWarning w{ this };
-         w("requested value %ld for option %s "
+         w("requested value %ld for option '%s' "
            "is less than the minimum value %ld",
            val, this->name(), static_cast<long>(min));
          return(false);
@@ -218,7 +218,7 @@ protected:
       if (val > static_cast<long>(max))
       {
          OptionWarning w{ this };
-         w("requested value %ld for option %s "
+         w("requested value %ld for option '%s' "
            "is greater than the maximum value %ld",
            val, this->name(), static_cast<long>(max));
          return(false);
