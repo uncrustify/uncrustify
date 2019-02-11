@@ -3190,9 +3190,8 @@ static size_t calc_comment_next_col_diff(chunk_t *pc)
 static void indent_comment(chunk_t *pc, size_t col)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LCMTIND, "%s(%d): orig_line %zu, orig_col %zu, level %zu: ",
+   LOG_FMT(LCMTIND, "%s(%d): orig_line %zu, orig_col %zu, level %zu\n",
            __func__, __LINE__, pc->orig_line, pc->orig_col, pc->level);
-   LOG_FMT(LCMTIND, "\n");
 
    // force column 1 comment to column 1 if not changing them
    if (  pc->orig_col == 1

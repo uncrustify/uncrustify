@@ -831,7 +831,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e 
    chunk_t *next;
    chunk_t *last_nl = nullptr;
    size_t  level    = start->level;
-   bool    do_add   = nl_opt & IARF_ADD;
+   bool    do_add   = (nl_opt & IARF_ADD) != IARF_IGNORE; // forcing value to bool
 
    /*
     * look backwards until we find
@@ -4369,7 +4369,7 @@ bool is_func_proto_group(chunk_t *pc, c_token_t one_liner_type)
    {
       if (pc->type == CT_BRACE_CLOSE)
       {
-         return(pc->flags & PCF_ONE_LINER);
+         return((pc->flags & PCF_ONE_LINER) != 0); // forcing value to bool
       }
       else
       {
