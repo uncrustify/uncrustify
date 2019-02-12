@@ -3000,9 +3000,9 @@ void indent_text(void)
                            : (cast_abs(indent, val) < indent)  // else if no underflow
                            ? (indent + val) : 0;               // reduce, else 0
 
-                  reindent_line(pc, indent);
                   LOG_FMT(LINDENT, "%s(%d): %zu] var_type indent => %zu [%s]\n",
                           __func__, __LINE__, pc->orig_line, indent, pc->text());
+                  reindent_line(pc, indent);
                }
             }
          }
@@ -3161,18 +3161,25 @@ static size_t calc_comment_next_col_diff(chunk_t *pc)
 {
    chunk_t *next = pc; // assumes pc has a comment type
 
+   LOG_FMT(LCMTIND, "%s(%d): next->text() is '%s'\n",
+           __func__, __LINE__, next->text());
+
    // Note: every comment is squashed into a single token
    // (including newline chars for multiline comments) and is followed by
    // a newline token (unless there are no more tokens left)
    do
    {
       chunk_t *newline_token = chunk_get_next(next);
+      LOG_FMT(LCMTIND, "%s(%d): newline_token->text() is '%s', orig_line is %zu, orig_col is %zu\n",
+              __func__, __LINE__, newline_token->text(), newline_token->orig_line, newline_token->orig_col);
       if (newline_token == nullptr || newline_token->nl_count > 1)
       {
          return(5000);  // FIXME: Max thresh magic number 5000
       }
 
       next = chunk_get_next(newline_token);
+      LOG_FMT(LCMTIND, "%s(%d): next->text() is '%s', orig_line is %zu, orig_col is %zu\n",
+              __func__, __LINE__, next->text(), next->orig_line, next->orig_col);
    } while (chunk_is_comment(next));
 
    if (next == nullptr)
@@ -3180,6 +3187,8 @@ static size_t calc_comment_next_col_diff(chunk_t *pc)
       return(5000);     // FIXME: Max thresh magic number 5000
    }
 
+   LOG_FMT(LCMTIND, "%s(%d): next->text() is '%s'\n",
+           __func__, __LINE__, next->text());
    // here next is the first non comment, non newline token
    return(next->orig_col > pc->orig_col
           ? next->orig_col - pc->orig_col
@@ -3190,27 +3199,32 @@ static size_t calc_comment_next_col_diff(chunk_t *pc)
 static void indent_comment(chunk_t *pc, size_t col)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LCMTIND, "%s(%d): orig_line %zu, orig_col %zu, level %zu\n",
-           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->level);
+   LOG_FMT(LCMTIND, "%s(%d): pc->text() is '%s', orig_line %zu, orig_col %zu, level %zu\n",
+           __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
 
    // force column 1 comment to column 1 if not changing them
    if (  pc->orig_col == 1
       && !options::indent_col1_comment()
       && (pc->flags & PCF_INSERTED) == 0)
    {
-      LOG_FMT(LCMTIND, "rule 1 - keep in col 1\n");
+      LOG_FMT(LCMTIND, "%s(%d): rule 1 - keep in col 1\n", __func__, __LINE__);
       reindent_line(pc, 1);
       return;
    }
 
    chunk_t *nl = chunk_get_prev(pc);
+   if (nl != nullptr)
+   {
+      LOG_FMT(LCMTIND, "%s(%d): nl->text() is '%s', orig_line %zu, orig_col %zu, level %zu\n",
+              __func__, __LINE__, nl->text(), nl->orig_line, nl->orig_col, nl->level);
+   }
 
    // outside of any expression or statement?
    if (pc->level == 0)
    {
       if (nl != nullptr && nl->nl_count > 1)
       {
-         LOG_FMT(LCMTIND, "rule 2 - level 0, nl before\n");
+         LOG_FMT(LCMTIND, "%s(%d): rule 2 - level 0, nl before\n", __func__, __LINE__);
          reindent_line(pc, 1);
          return;
       }
@@ -3221,28 +3235,44 @@ static void indent_comment(chunk_t *pc, size_t col)
    if (pc->orig_col > 1)
    {
       chunk_t *prev = chunk_get_prev(nl);
+      if (prev != nullptr)
+      {
+         LOG_FMT(LCMTIND, "%s(%d): prev->text() is '%s', orig_line %zu, orig_col %zu, level %zu\n",
+                 __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col, prev->level);
+         log_pcf_flags(LCMTIND, prev->flags);
+      }
       if (chunk_is_comment(prev) && nl->nl_count == 1)
       {
          const size_t prev_col_diff = (prev->orig_col > pc->orig_col)
                                       ? prev->orig_col - pc->orig_col
                                       : pc->orig_col - prev->orig_col;
+         LOG_FMT(LCMTIND, "%s(%d): prev_col_diff is %zu\n",
+                 __func__, __LINE__, prev_col_diff);
 
          /*
           * Here we want to align comments that are relatively close one to
           * another but not when the comment is a Doxygen comment (Issue #1134)
           */
-         if (  prev_col_diff <= indent_comment_align_thresh
-            && !chunk_is_Doxygen_comment(pc))
+         if (prev_col_diff <= indent_comment_align_thresh)
          {
-            const size_t next_col_diff = calc_comment_next_col_diff(pc);
-            // Align to the previous comment or to the next token?
-            if (  prev_col_diff <= next_col_diff
-               || next_col_diff == 5000) // FIXME: Max thresh magic number 5000
+            LOG_FMT(LCMTIND, "%s(%d): prev->text() is '%s', Doxygen_comment(prev) is %s\n",
+                    __func__, __LINE__, prev->text(), chunk_is_Doxygen_comment(prev) ? "TRUE" : "FALSE");
+            LOG_FMT(LCMTIND, "%s(%d): pc->text() is '%s', Doxygen_comment(pc) is %s\n",
+                    __func__, __LINE__, pc->text(), chunk_is_Doxygen_comment(pc) ? "TRUE" : "FALSE");
+            if (chunk_is_Doxygen_comment(prev) == chunk_is_Doxygen_comment(pc))
             {
-               reindent_line(pc, prev->column);
-               LOG_FMT(LCMTIND, "rule 3 - prev comment, coldiff = %zu, now in %zu\n",
-                       prev_col_diff, pc->column);
-               return;
+               const size_t next_col_diff = calc_comment_next_col_diff(pc);
+               LOG_FMT(LCMTIND, "%s(%d): next_col_diff is %zu\n",
+                       __func__, __LINE__, next_col_diff);
+               // Align to the previous comment or to the next token?
+               if (  prev_col_diff <= next_col_diff
+                  || next_col_diff == 5000) // FIXME: Max thresh magic number 5000
+               {
+                  LOG_FMT(LCMTIND, "%s(%d): rule 3 - prev comment, coldiff = %zu, now in %zu\n",
+                          __func__, __LINE__, prev_col_diff, pc->column);
+                  reindent_line(pc, prev->column);
+                  return;
+               }
             }
          }
       }
@@ -3252,12 +3282,14 @@ static void indent_comment(chunk_t *pc, size_t col)
    if (  (options::indent_sing_line_comments() > 0)
       && single_line_comment_indent_rule_applies(pc))
    {
+      LOG_FMT(LCMTIND, "%s(%d): rule 4 - single line comment indent, now in %zu\n",
+              __func__, __LINE__, pc->column);
       reindent_line(pc, col + options::indent_sing_line_comments());
-      LOG_FMT(LCMTIND, "rule 4 - single line comment indent, now in %zu\n", pc->column);
       return;
    }
-   LOG_FMT(LCMTIND, "rule 5 - fall-through, stay in %zu\n", col);
 
+   LOG_FMT(LCMTIND, "%s(%d): rule 5 - fall-through, stay in %zu\n",
+           __func__, __LINE__, col);
    reindent_line(pc, col);
 } // indent_comment
 
