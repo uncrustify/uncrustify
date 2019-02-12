@@ -3178,8 +3178,11 @@ static size_t calc_comment_next_col_diff(chunk_t *pc)
       }
 
       next = chunk_get_next(newline_token);
-      LOG_FMT(LCMTIND, "%s(%d): next->text() is '%s', orig_line is %zu, orig_col is %zu\n",
-              __func__, __LINE__, next->text(), next->orig_line, next->orig_col);
+      if (next != nullptr)
+      {
+         LOG_FMT(LCMTIND, "%s(%d): next->text() is '%s', orig_line is %zu, orig_col is %zu\n",
+                 __func__, __LINE__, next->text(), next->orig_line, next->orig_col);
+      }
    } while (chunk_is_comment(next));
 
    if (next == nullptr)
