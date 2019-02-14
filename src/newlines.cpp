@@ -4185,7 +4185,8 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
                prev = chunk_get_prev_nc(prev);
                if (  prev != nullptr
                   && !chunk_is_newline(prev)
-                  && !(prev->flags & PCF_IN_PREPROC))
+                  && !(prev->flags & PCF_IN_PREPROC)
+                  && !(prev->flags & PCF_IN_OC_MSG))
                {
                   chunk_move_after(pc, prev);
                }
