@@ -79,6 +79,7 @@ ContainerType &ParseFrame::at(size_t idx)
    return(pse.at(idx));
 }
 
+
 const ContainerType &ParseFrame::at(size_t idx) const
 {
    return(pse.at(idx));
@@ -104,6 +105,7 @@ ContainerType &ParseFrame::prev(size_t idx)
    return(*std::prev(std::end(pse), idx + 1));
 }
 
+
 const ContainerType &ParseFrame::prev(size_t idx) const
 {
    LOG_FUNC_ENTRY();
@@ -127,6 +129,7 @@ ContainerType &ParseFrame::top()
 //   }
    return(*std::prev(std::end(pse)));
 }
+
 
 const ContainerType &ParseFrame::top() const
 {
