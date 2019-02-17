@@ -160,8 +160,8 @@ void ParseFrame::push(chunk_t &pc, brace_stage_e stage)
 
    pse.push_back(new_entry);
 
-   LOG_FMT(LINDPSE, "%s(%d): O%zu:%zu, type: %s, brace_level: %zu, "
-           "level: %zu, pse_tos: %zu -> %zu\n",
+   LOG_FMT(LINDPSE, "ParseFrame::%s(%d): orig_line is %zu, orig_col is %zu, type is %s, brace_level is %zu, "
+           "level is %zu, pse_tos: %zu -> %zu\n",
            __func__, __LINE__, pc.orig_line, pc.orig_col,
            get_token_name(pc.type), pc.brace_level, pc.level, (pse.size() - 2),
            (pse.size() - 1));
@@ -179,8 +179,8 @@ void ParseFrame::pop()
 //                        + "the stack index is already zero");
 //   }
 
-   LOG_FMT(LINDPSE, "%s(%d): cpd.pp_level: %d, pse type: %s, "
-           "pse open_line: %zu, pse level: %zu, pse_tos: %zu -> %zu\n",
+   LOG_FMT(LINDPSE, "ParseFrame::%s(%d): cpd.pp_level is %d, pse type is %s, "
+           "pse open_line is %zu, pse level is %zu, pse_tos: %zu -> %zu\n",
            __func__, __LINE__, cpd.pp_level, get_token_name(pse.back().type),
            pse.back().open_line, pse.back().level, (pse.size() - 1),
            (pse.size() - 2));

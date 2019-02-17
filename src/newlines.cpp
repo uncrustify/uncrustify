@@ -1143,8 +1143,8 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
    chunk_t *next;
    chunk_t *prev;
 
-   LOG_FMT(LNEWLINE, "%s:\n   (%d):start->..., type %s, line %zu, column %zu,\n",
-           __func__, __LINE__, get_token_name(start->type), start->orig_line, start->orig_col);
+   LOG_FMT(LNEWLINE, "%s(%d): start->text() is '%s', type is %s, orig_line is %zu, orig_column is %zu\n",
+           __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line, start->orig_col);
    if (  nl_opt == IARF_IGNORE
       || (  (start->flags & PCF_IN_PREPROC)
          && !options::nl_define_macro()))
@@ -1157,8 +1157,8 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
    {
       return;
    }
-   LOG_FMT(LNEWLINE, "   (%d):pc->...   , type %s, line %zu, column %zu,\n",
-           __LINE__, get_token_name(pc->type), pc->orig_line, pc->orig_col);
+   LOG_FMT(LNEWLINE, "%s(%d): pc->text() is '%s', type is %s, orig_line is %zu, orig_column is %zu\n",
+           __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
 
    /*
     * if we're dealing with an if, we actually want to add or remove
@@ -1177,8 +1177,8 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
             {
                return;
             }
-            LOG_FMT(LNEWLINE, "   (%d):pc->...   , type %s, line %zu, column %zu,\n",
-                    __LINE__, get_token_name(pc->type), pc->orig_line, pc->orig_col);
+            LOG_FMT(LNEWLINE, "%s(%d): pc->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
+                    __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
          }
          else
          {
@@ -1198,18 +1198,18 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
       {
          return;
       }
-      LOG_FMT(LNEWLINE, "   (%d):pc->...   , type %s, line %zu, column %zu,\n",
-              __LINE__, get_token_name(pc->type), pc->orig_line, pc->orig_col);
+      LOG_FMT(LNEWLINE, "%s(%d): pc->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
+              __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
    }
 
    bool isVBrace = (chunk_is_token(pc, CT_VBRACE_CLOSE));
    if (isVBrace)
    {
-      LOG_FMT(LNEWLINE, "   (%d): isVBrace is TRUE\n", __LINE__);
+      LOG_FMT(LNEWLINE, "%s(%d): isVBrace is TRUE\n", __func__, __LINE__);
    }
    else
    {
-      LOG_FMT(LNEWLINE, "   (%d): isVBrace is FALSE\n", __LINE__);
+      LOG_FMT(LNEWLINE, "%s(%d): isVBrace is FALSE\n", __func__, __LINE__);
    }
 
    if ((prev = chunk_get_prev_nvb(pc)) == nullptr)
@@ -1220,11 +1220,11 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
    bool have_pre_vbrace_nl = isVBrace && chunk_is_newline(prev);
    if (have_pre_vbrace_nl)
    {
-      LOG_FMT(LNEWLINE, "   (%d): have_pre_vbrace_nl is TRUE\n", __LINE__);
+      LOG_FMT(LNEWLINE, "%s(%d): have_pre_vbrace_nl is TRUE\n", __func__, __LINE__);
    }
    else
    {
-      LOG_FMT(LNEWLINE, "   (%d): have_pre_vbrace_nl is FALSE\n", __LINE__);
+      LOG_FMT(LNEWLINE, "%s(%d): have_pre_vbrace_nl is FALSE\n", __func__, __LINE__);
    }
    if (nl_opt & IARF_REMOVE)
    {
@@ -1270,86 +1270,86 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
          nextNNL = chunk_get_next_nnl(nextNNL);
       } while (true);
 
-      LOG_FMT(LNEWLINE, "   (%d): next->... , type %s, line %zu, column %zu,\n",
-              __LINE__, get_token_name(next->type), next->orig_line, next->orig_col);
+      LOG_FMT(LNEWLINE, "%s(%d): next->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
+              __func__, __LINE__, next->text(), get_token_name(next->type), next->orig_line, next->orig_col);
       if (next->type != CT_BRACE_CLOSE)
       {
          // if vbrace, have to check before and after
          // if chunk before vbrace, check its count
          size_t nl_count = have_pre_vbrace_nl ? prev->nl_count : 0;
-         LOG_FMT(LNEWLINE, "   (%d): nl_count %zu\n", __LINE__, nl_count);
+         LOG_FMT(LNEWLINE, "%s(%d): nl_count %zu\n", __func__, __LINE__, nl_count);
          if (chunk_is_newline(next = chunk_get_next_nvb(pc)))
          {
-            LOG_FMT(LNEWLINE, "   (%d): next->... , type %s, line %zu, column %zu,\n",
-                    __LINE__, get_token_name(next->type), next->orig_line, next->orig_col);
+            LOG_FMT(LNEWLINE, "%s(%d): next->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
+                    __func__, __LINE__, next->text(), get_token_name(next->type), next->orig_line, next->orig_col);
             nl_count += next->nl_count;
-            LOG_FMT(LNEWLINE, "   (%d): nl_count is %zu\n", __LINE__, nl_count);
+            LOG_FMT(LNEWLINE, "%s(%d): nl_count is %zu\n", __func__, __LINE__, nl_count);
          }
 
          // if we have no newlines, add one and make it double
          if (nl_count == 0)
          {
-            LOG_FMT(LNEWLINE, "   (%d): nl_count is 0\n", __LINE__);
+            LOG_FMT(LNEWLINE, "%s(%d): nl_count is 0\n", __func__, __LINE__);
             if (  ((next = chunk_get_next(pc)) != nullptr)
                && chunk_is_comment(next))
             {
-               LOG_FMT(LNEWLINE, "   (%d): next->... , type %s, line %zu, column %zu,\n",
-                       __LINE__, get_token_name(next->type), next->orig_line, next->orig_col);
+               LOG_FMT(LNEWLINE, "%s(%d): next->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
+                       __func__, __LINE__, next->text(), get_token_name(next->type), next->orig_line, next->orig_col);
                pc = next;
-               LOG_FMT(LNEWLINE, "   (%d): pc->...   , type %s, line %zu, column %zu,\n",
-                       __LINE__, get_token_name(pc->type), pc->orig_line, pc->orig_col);
+               LOG_FMT(LNEWLINE, "%s(%d): pc->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
+                       __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
             }
 
             if ((next = newline_add_after(pc)) == nullptr)
             {
                return;
             }
-            LOG_FMT(LNEWLINE, "   (%d): next->... , type %s, line %zu, column %zu,\n",
-                    __LINE__, get_token_name(next->type), next->orig_line, next->orig_col);
+            LOG_FMT(LNEWLINE, "%s(%d): next->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
+                    __func__, __LINE__, next->text(), get_token_name(next->type), next->orig_line, next->orig_col);
             double_newline(next);
          }
          else if (nl_count == 1) // if we don't have enough newlines
          {
-            LOG_FMT(LNEWLINE, "   (%d): nl_count is 1\n", __LINE__);
+            LOG_FMT(LNEWLINE, "%s(%d): nl_count is 1\n", __func__, __LINE__);
             // if we have a preceeding vbrace, add one after it
             if (have_pre_vbrace_nl)
             {
-               LOG_FMT(LNEWLINE, "   (%d): have_pre_vbrace_nl is TRUE\n", __LINE__);
+               LOG_FMT(LNEWLINE, "%s(%d): have_pre_vbrace_nl is TRUE\n", __func__, __LINE__);
                next = newline_add_after(pc);
-               LOG_FMT(LNEWLINE, "   (%d): next->... , type %s, line %zu, column %zu,\n",
-                       __LINE__, get_token_name(next->type), next->orig_line, next->orig_col);
+               LOG_FMT(LNEWLINE, "%s(%d): next->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
+                       __func__, __LINE__, next->text(), get_token_name(next->type), next->orig_line, next->orig_col);
             }
             else
             {
-               LOG_FMT(LNEWLINE, "   (%d): have_pre_vbrace_nl is FALSE\n", __LINE__);
+               LOG_FMT(LNEWLINE, "%s(%d): have_pre_vbrace_nl is FALSE\n", __func__, __LINE__);
                prev = chunk_get_prev_nnl(next);
-               LOG_FMT(LNEWLINE, "   (%d): prev->... , type %s, line %zu, column %zu,\n",
-                       __LINE__, get_token_name(prev->type), prev->orig_line, prev->orig_col);
+               LOG_FMT(LNEWLINE, "%s(%d): prev->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
+                       __func__, __LINE__, prev->text(), get_token_name(prev->type), prev->orig_line, prev->orig_col);
                pc = chunk_get_next_nl(next);
-               LOG_FMT(LNEWLINE, "   (%d): pc->...   , type %s, line %zu, column %zu,\n",
-                       __LINE__, get_token_name(pc->type), pc->orig_line, pc->orig_col);
+               LOG_FMT(LNEWLINE, "%s(%d): pc->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
+                       __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
                chunk_t *pc2 = chunk_get_next(pc);
                if (pc2 != nullptr)
                {
                   pc = pc2;
-                  LOG_FMT(LNEWLINE, "   (%d): pc->...   , type %s, line %zu, column %zu,\n",
-                          __LINE__, get_token_name(pc->type), pc->orig_line, pc->orig_col);
+                  LOG_FMT(LNEWLINE, "%s(%d): pc->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
+                          __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
                }
                else
                {
-                  LOG_FMT(LNEWLINE, "   (%d): no next found: <EOF>\n", __LINE__);
+                  LOG_FMT(LNEWLINE, "%s(%d): no next found: <EOF>\n", __func__, __LINE__);
                }
                if (  chunk_is_token(pc, CT_PREPROC)
                   && pc->parent_type == CT_PP_ENDIF
                   && options::nl_squeeze_ifdef())
                {
-                  LOG_FMT(LNEWLINE, "%s(%d): cannot add newline after line %zu due to nl_squeeze_ifdef\n",
+                  LOG_FMT(LNEWLINE, "%s(%d): cannot add newline after orig_line %zu due to nl_squeeze_ifdef\n",
                           __func__, __LINE__, prev->orig_line);
                }
                else
                {
                   // make newline after double
-                  LOG_FMT(LNEWLINE, "   (%d): call double_newline\n", __LINE__);
+                  LOG_FMT(LNEWLINE, "%s(%d): call double_newline\n", __func__, __LINE__);
                   double_newline(next);
                }
             }
