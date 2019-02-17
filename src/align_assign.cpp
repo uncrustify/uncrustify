@@ -164,7 +164,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
             && (  chunk_is_token(pc, CT_ASSIGN_DEFAULT_ARG)   // Foo( int bar = 777 );
                || chunk_is_token(pc, CT_ASSIGN_FUNC_PROTO)))  // Foo( const Foo & ) = delete;
          {
-            LOG_FMT(LALASS, "%s(%d): 0: fcnDefault.Add on '%s' on orig_line %zu, orig_col is %zu\n",
+            LOG_FMT(LALASS, "%s(%d): fcnDefault.Add on '%s' on orig_line %zu, orig_col is %zu\n",
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
             fcnDefault.Add(pc);
          }
@@ -173,15 +173,21 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          {
             if (chunk_is_token(pc, CT_ASSIGN_DEFAULT_ARG))  // Foo( int bar = 777 );
             {
-               LOG_FMT(LALASS, "%s(%d): 1default: fcnDefault.Add on '%s' on orig_line %zu, orig_col is %zu\n",
+               LOG_FMT(LALASS, "%s(%d): default: fcnDefault.Add on '%s' on orig_line %zu, orig_col is %zu\n",
                        __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
                fcnDefault.Add(pc);
             }
             else if (chunk_is_token(pc, CT_ASSIGN_FUNC_PROTO))  // Foo( const Foo & ) = delete;
             {
-               LOG_FMT(LALASS, "%s(%d): 1proto: fcnProto.Add on '%s' on orig_line %zu, orig_col is %zu\n",
+               LOG_FMT(LALASS, "%s(%d): proto: fcnProto.Add on '%s' on orig_line %zu, orig_col is %zu\n",
                        __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
                fcnProto.Add(pc);
+            }
+            else if (chunk_is_token(pc, CT_ASSIGN)) // Issue #2197
+            {
+               LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig_line %zu, orig_col is %zu\n",
+                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+               vdas.Add(pc);
             }
          }
          else if (var_def_cnt != 0)
