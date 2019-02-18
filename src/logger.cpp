@@ -45,13 +45,13 @@ struct log_buf
    {
    }
 
-   FILE       *log_file;  //! file where the log messages are stored into
-   log_sev_t  sev;        //! log level determines which messages are logged
-   int        in_log;     //! flag indicates if a log operation is going on
-   char       buf[256];   //! buffer holds the log message
-   size_t     buf_len;    //! number of characters currently stored in buffer
+   FILE       *log_file;      //! file where the log messages are stored into
+   log_sev_t  sev;            //! log level determines which messages are logged
+   int        in_log;         //! flag indicates if a log operation is going on
+   char       buf[256 * 16];  //! buffer holds the log message
+   size_t     buf_len;        //! number of characters currently stored in buffer
    log_mask_t mask;
-   bool       show_hdr;   //! flag determine if a header gets added to log message
+   bool       show_hdr;       //! flag determine if a header gets added to log message
 };
 static struct log_buf g_log;
 
@@ -130,7 +130,8 @@ void log_flush(bool force_nl)
          g_log.buf[g_log.buf_len++] = '\n';
          g_log.buf[g_log.buf_len]   = 0;
       }
-      if (fwrite(g_log.buf, g_log.buf_len, 1, g_log.log_file) != 1)
+      size_t retlength = fwrite(g_log.buf, g_log.buf_len, 1, g_log.log_file);
+      if (retlength != 1)
       {
          // maybe we should log something to complain... =)
       }
@@ -244,6 +245,12 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
    if (len > 0)
    {
       bool softwareErrorFound = false;
+      // The functions snprintf() and vsnprintf() do not  write  more  than  size  bytes
+      // (including  the terminating null byte ('\0')).  If the output was truncated due
+      // to this limit, then the return value is the number of characters (excluding the
+      // terminating  null  byte)  which  would have been written to the final string if
+      // enough space had been available.  Thus, a return value of size  or  more  means
+      // that the output was truncated.
       if (len > cap)
       {
          softwareErrorFound = true;
@@ -254,10 +261,11 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
       if (softwareErrorFound)
       {
          g_log.buf[g_log.buf_len - 1] = '\n';
-         fprintf(stderr, "WARNING: The variable 'g_log.buf' is not big enought:\n");
+         fprintf(stderr, "Software error: The variable 'g_log.buf' is not big enought:\n");
          fprintf(stderr, "   it should be bigger as = %zu\n", len);
          fprintf(stderr, "   The first part of the message is:\n");
          fprintf(stderr, "   %s\n", g_log.buf);
+         exit(EX_SOFTWARE);
       }
    }
 
