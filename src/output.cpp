@@ -429,12 +429,26 @@ void output_parsed(FILE *pfile)
    fprintf(pfile, "# Line                Tag              Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
-      fprintf(pfile, "%s# %3zu>%19.19s[%19.19s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
+#ifdef WIN32
+      fprintf(pfile, "%s# %3lu>%19.19s[%19.19s][%3lu/%3lu/%3lu/%3d][%lu/%lu/%lu]",
               eol_marker, pc->orig_line, get_token_name(pc->type),
               get_token_name(pc->parent_type),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
-              pc->brace_level, pc->level, pc->pp_level,
-              pc->flags, pc->nl_count, pc->after_tab);
+              pc->brace_level, pc->level, pc->pp_level);
+      // TODO: print the flags under Windows
+      fprintf(pfile, "[%lu-%d]",
+              pc->nl_count, pc->after_tab);
+#else // not WIN32
+      fprintf(pfile, "%s# %3zu>%19.19s[%19.19s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu]",
+              eol_marker, pc->orig_line, get_token_name(pc->type),
+              get_token_name(pc->parent_type),
+              pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
+              pc->brace_level, pc->level, pc->pp_level);
+      fprintf(pfile, "[%10" PRIx64 "]",
+              pc->flags);
+      fprintf(pfile, "[%zu-%d]",
+              pc->nl_count, pc->after_tab);
+#endif   /* ifdef WIN32 */
 
       if (pc->type != CT_NEWLINE && (pc->len() != 0))
       {
