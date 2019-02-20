@@ -430,13 +430,13 @@ void output_parsed(FILE *pfile)
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
 #ifdef WIN32
-      fprintf(pfile, "%s# %3lu>%19.19s[%19.19s][%3lu/%3lu/%3lu/%3d][%lu/%lu/%lu]",
+      fprintf(pfile, "%s# %3llu>%19.19s[%19.19s][%3llu/%3llu/%3llu/%3d][%llu/%llu/%llu]",
               eol_marker, pc->orig_line, get_token_name(pc->type),
               get_token_name(pc->parent_type),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
       // TODO: print the flags under Windows
-      fprintf(pfile, "[%lu-%d]",
+      fprintf(pfile, "[%llu-%d]",
               pc->nl_count, pc->after_tab);
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s[%19.19s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu]",
