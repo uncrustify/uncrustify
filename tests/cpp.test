@@ -555,6 +555,7 @@
 34115  nl_before_func_body_def-2.cfg        cpp/nl_before_func_body_def.cpp
 34116  nl_before_func_body_def-2.cfg        cpp/issue_2000.cpp
 34117  extern_func.cfg                      cpp/extern_func.cpp
+34118  Issue_2163.cfg                       cpp/Issue_2163.cpp
 
 34120  align_assign_span-1.cfg              cpp/bug_i_999.cpp
 34121  bug_1717.cfg                         cpp/bug_1717.cpp
