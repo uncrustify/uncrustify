@@ -17,6 +17,7 @@
 #include "log_levels.h"
 #include <cstdio>
 #include <deque>
+#include <vector>
 #include <stdarg.h>
 
 
@@ -43,15 +44,17 @@ struct log_buf
       , buf_len(0)
       , show_hdr(false)
    {
+      bufX.clear();
+      bufX.resize(256);
    }
 
-   FILE       *log_file;      //! file where the log messages are stored into
-   log_sev_t  sev;            //! log level determines which messages are logged
-   int        in_log;         //! flag indicates if a log operation is going on
-   char       buf[256 * 16];  //! buffer holds the log message
-   size_t     buf_len;        //! number of characters currently stored in buffer
-   log_mask_t mask;
-   bool       show_hdr;       //! flag determine if a header gets added to log message
+   FILE              *log_file; //! file where the log messages are stored into
+   log_sev_t         sev;       //! log level determines which messages are logged
+   int               in_log;    //! flag indicates if a log operation is going on
+   size_t            buf_len;   //! number of characters currently stored in buffer
+   std::vector<char> bufX;      //! buffer holds the log message
+   log_mask_t        mask;
+   bool              show_hdr;  //! flag determine if a header gets added to log message
 };
 static struct log_buf g_log;
 
@@ -125,12 +128,12 @@ void log_flush(bool force_nl)
 {
    if (g_log.buf_len > 0)
    {
-      if (force_nl && g_log.buf[g_log.buf_len - 1] != '\n')
+      if (force_nl && g_log.bufX[g_log.buf_len - 1] != '\n')
       {
-         g_log.buf[g_log.buf_len++] = '\n';
-         g_log.buf[g_log.buf_len]   = 0;
+         g_log.bufX[g_log.buf_len++] = '\n';
+         g_log.bufX[g_log.buf_len]   = 0;
       }
-      size_t retlength = fwrite(g_log.buf, g_log.buf_len, 1, g_log.log_file);
+      size_t retlength = fwrite(&g_log.bufX[0], g_log.buf_len, 1, g_log.log_file);
       if (retlength != 1)
       {
          // maybe we should log something to complain... =)
@@ -156,10 +159,10 @@ static size_t log_start(log_sev_t sev)
    // If not in a log, the buffer is empty. Add the header, if enabled.
    if (!g_log.in_log && g_log.show_hdr)
    {
-      g_log.buf_len = static_cast<size_t>(snprintf(g_log.buf, sizeof(g_log.buf), "<%d>", sev));
+      g_log.buf_len = static_cast<size_t>(snprintf(&g_log.bufX[0], g_log.bufX.size(), "<%d>", sev));
    }
 
-   size_t cap = (sizeof(g_log.buf) - 2) - g_log.buf_len;
+   size_t cap = (g_log.bufX.size() - 2) - g_log.buf_len;
 
    return((cap > 0) ? cap : 0);
 }
@@ -167,9 +170,9 @@ static size_t log_start(log_sev_t sev)
 
 static void log_end(void)
 {
-   g_log.in_log = (g_log.buf[g_log.buf_len - 1] != '\n');
+   g_log.in_log = (g_log.bufX[g_log.buf_len - 1] != '\n');
    if (  !g_log.in_log
-      || (g_log.buf_len > static_cast<int>(sizeof(g_log.buf) / 2)))
+      || (g_log.buf_len > (g_log.bufX.size() / 2)))
    {
       log_flush(false);
    }
@@ -192,9 +195,9 @@ void log_str(log_sev_t sev, const char *str, size_t len)
       {
          len = cap;
       }
-      memcpy(&g_log.buf[g_log.buf_len], str, len);
-      g_log.buf_len           += len;
-      g_log.buf[g_log.buf_len] = 0;
+      memcpy(&g_log.bufX[g_log.buf_len], str, len);
+      g_log.buf_len            += len;
+      g_log.bufX[g_log.buf_len] = 0;
    }
    log_end();
 }
@@ -228,44 +231,40 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
    buf[length] = 0;
    convert_log_zu2lu(buf);
 
-   /* Some implementation of vsnprintf() return the number of characters
-    * that would have been stored if the buffer was large enough instead of
-    * the number of characters actually stored.
-    *
-    * this gets the number of characters that fit into the log buffer
-    */
-   size_t cap = log_start(sev);
-
-   // Add on the variable log parameters to the log string
-   va_list args;        // determine list of arguments ...
-   va_start(args, fmt); //  ... that follow after parameter fmt
-   size_t  len = static_cast<size_t>(vsnprintf(&g_log.buf[g_log.buf_len], cap, buf, args));
-   va_end(args);
-
-   if (len > 0)
+   while (true)
    {
-      bool softwareErrorFound = false;
-      // The functions snprintf() and vsnprintf() do not  write  more  than  size  bytes
-      // (including  the terminating null byte ('\0')).  If the output was truncated due
-      // to this limit, then the return value is the number of characters (excluding the
-      // terminating  null  byte)  which  would have been written to the final string if
-      // enough space had been available.  Thus, a return value of size  or  more  means
-      // that the output was truncated.
-      if (len > cap)
+      /* Some implementation of vsnprintf() return the number of characters
+       * that would have been stored if the buffer was large enough instead of
+       * the number of characters actually stored.
+       *
+       * this gets the number of characters that fit into the log buffer
+       */
+      size_t  cap = log_start(sev);
+      // Add on the variable log parameters to the log string
+      va_list args;        // determine list of arguments ...
+      va_start(args, fmt); //  ... that follow after parameter fmt
+      size_t  lenX = static_cast<size_t>(vsnprintf(&g_log.bufX[g_log.buf_len], cap, buf, args));
+      va_end(args);
+
+      if (lenX > 0)
       {
-         softwareErrorFound = true;
-         len                = cap;
-      }
-      g_log.buf_len           += len;
-      g_log.buf[g_log.buf_len] = 0;
-      if (softwareErrorFound)
-      {
-         g_log.buf[g_log.buf_len - 1] = '\n';
-         fprintf(stderr, "Software error: The variable 'g_log.buf' is not big enought:\n");
-         fprintf(stderr, "   it should be bigger as = %zu\n", len);
-         fprintf(stderr, "   The first part of the message is:\n");
-         fprintf(stderr, "   %s\n", g_log.buf);
-         exit(EX_SOFTWARE);
+         // The functions snprintf() and vsnprintf() do not  write  more  than  size  bytes
+         // (including  the terminating null byte ('\0')).  If the output was truncated due
+         // to this limit, then the return value is the number of characters (excluding the
+         // terminating  null  byte)  which  would have been written to the final string if
+         // enough space had been available.  Thus, a return value of size  or  more  means
+         // that the output was truncated.
+         if (lenX > cap)
+         {
+            size_t X = g_log.bufX.size() * 2;
+            g_log.bufX.resize(X);
+         }
+         else
+         {
+            g_log.buf_len            += lenX;
+            g_log.bufX[g_log.buf_len] = 0;
+            break;
+         }
       }
    }
 
