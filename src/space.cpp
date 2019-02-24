@@ -2077,7 +2077,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       iarf_e arg = options::sp_after_type();
       log_rule("sp_after_type");
-      return((arg != IARF_REMOVE) ? arg : IARF_FORCE);
+      return(arg);
    }
 
    if (  chunk_is_token(first, CT_MACRO_OPEN)
