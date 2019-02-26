@@ -3800,7 +3800,7 @@ void newlines_functions_remove_extra_blank_lines(void)
    LOG_FUNC_ENTRY();
 
    const size_t nl_max_blank_in_func = options::nl_max_blank_in_func();
-   if (nl_max_blank_in_func <= 0)
+   if (nl_max_blank_in_func == 0)
    {
       return;
    }
@@ -3823,7 +3823,8 @@ void newlines_functions_remove_extra_blank_lines(void)
          }
 
          // delete newlines
-         if (pc->nl_count > nl_max_blank_in_func)
+         if (  !chunk_is_token(pc, CT_COMMENT_MULTI)   // Issue #2195
+            && pc->nl_count > nl_max_blank_in_func)
          {
             pc->nl_count = nl_max_blank_in_func;
             MARK_CHANGE();
@@ -3835,7 +3836,7 @@ void newlines_functions_remove_extra_blank_lines(void)
          }
       }
    }
-}
+} // newlines_functions_remove_extra_blank_lines
 
 
 void newlines_squeeze_ifdef(void)

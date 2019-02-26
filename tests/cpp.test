@@ -479,6 +479,7 @@
 33062  mod_full_brace_if_chain-t.cfg        cpp/if_chain_braces.cpp
 33063  mod_full_brace_if_chain_only-t.cfg   cpp/if_chain_braces.cpp
 33064  if_chain_braces_2.cfg                cpp/if_chain_braces.cpp
+33069  Issue_2195.cfg                       cpp/Issue_2195.cpp
 33070  code_width-70.cfg                    cpp/multi_line.cpp
 33071  multi_line_1.cfg                     cpp/multi_line.cpp
 33072  multi_line_2.cfg                     cpp/multi_line.cpp
