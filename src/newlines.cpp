@@ -4768,7 +4768,7 @@ static void newlines_enum_entries(chunk_t *open_brace, iarf_e av)
    while (  (pc = chunk_get_next_nc(pc)) != nullptr
          && pc->level > open_brace->level)
    {
-      if ((pc->level != (open_brace->level + 1)) || pc->type != CT_COMMA)
+      if ((pc->level != (open_brace->level + 1)) || pc->type != CT_COMMA || (pc->type == CT_COMMA && pc->next && (pc->next->type == CT_COMMENT_CPP || pc->next->type == CT_COMMENT)))
       {
          continue;
       }
