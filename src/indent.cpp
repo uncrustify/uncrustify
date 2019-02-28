@@ -3060,7 +3060,7 @@ void indent_text(void)
          LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, CT_CLASS found and UO_indent_continue != 0, OPEN IT\n",
                  __func__, __LINE__, pc->orig_line);
          frm.push(*pc);
-         frm.top().indent = options::indent_continue() + 1;
+         frm.top().indent = options::indent_continue_class_head() + 1;
          log_indent();
 
          frm.top().indent_tmp = frm.top().indent;

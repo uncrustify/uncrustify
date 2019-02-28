@@ -32,4 +32,5 @@
 80205  aet.cfg                              java/sp_after_angle.java
 80206  aet.cfg                              java/annotation3.java
 
+80300  Issue_670.cfg                        java/Issue_670.java
 80301  issue_672.cfg                        java/issue_672.java
