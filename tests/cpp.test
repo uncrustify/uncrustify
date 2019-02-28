@@ -681,6 +681,7 @@
 34304  nl_fdef_brace_cond-rf.cfg            cpp/nl_fdef_brace_cond-rf.cpp
 
 34307 2203.cfg                              cpp/2203.cpp
+34308 enum_comment_wrap.cfg                 cpp/enum_comment_wrap.cpp
 
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
