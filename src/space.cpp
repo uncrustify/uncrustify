@@ -2610,20 +2610,11 @@ void space_text_balance_nested_parens(void)
          // insert a space between them
          space_add_after(first, 1);
 
-         /*
-          * find the closing paren that matches the 'first' open paren and force
-          * a space before it
-          */
-         chunk_t *cur  = next;
-         chunk_t *prev = cur;
-         while ((cur = chunk_get_next(cur)) != nullptr) // find the closing parenthesis
-         {                                              // that matches the
-            if (cur->level == first->level)             // first open parenthesis
-            {
-               space_add_after(prev, 1);                // and force a space before it
-               break;
-            }
-            prev = cur;
+         // test after the closing parens   Issue #1703
+         chunk_t *closing = chunk_get_next_type(first, (c_token_t)(first->type + 1), first->level);
+         if (closing->orig_col == closing->prev->orig_col_end)
+         {
+            space_add_after(closing->prev, 1);
          }
       }
       else if (chunk_is_str(first, ")", 1) && chunk_is_str(next, ")", 1))
@@ -2631,20 +2622,12 @@ void space_text_balance_nested_parens(void)
          // insert a space between the two closing parens
          space_add_after(first, 1);
 
-         // issue # 752
-         // the next lines are never used in the tests.
-         // TODO: why that?
-         ///* find the opening paren that matches the 'next' close paren and force
-         // * a space after it */
-         //cur = first;
-         //while ((cur = chunk_get_prev(cur)) != nullptr)
-         //{
-         //   if (cur->level == next->level)
-         //   {
-         //      //space_add_after(cur, 1);
-         //      break;
-         //   }
-         //}
+         // test after the opening parens   Issue #1703
+         chunk_t *opening = chunk_get_prev_type(next, (c_token_t)(next->type - 1), next->level);
+         if (opening->orig_col_end == opening->next->orig_col)
+         {
+            space_add_after(opening, 1);
+         }
       }
 
       first = next;
@@ -2745,10 +2728,6 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
 void space_add_after(chunk_t *pc, size_t count)
 {
    LOG_FUNC_ENTRY();
-   //if (count <= 0)
-   //{
-   //   return;
-   //}
 
    chunk_t *next = chunk_get_next(pc);
 
