@@ -2105,7 +2105,7 @@ align_assign_span               = 0        # unsigned number
 # The span for aligning on '=' in function prototype modifier.
 #
 # 0 = Don't align (default).
-align_assign_func_proto         = 0        # unsigned number
+align_assign_func_proto_span    = 0        # unsigned number
 
 # The threshold for aligning on '=' in assignments.
 #
