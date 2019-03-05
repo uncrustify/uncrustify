@@ -2618,7 +2618,7 @@ align_assign_span;
 //
 // 0 = Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
-align_assign_func_proto;
+align_assign_func_proto_span;
 
 // The threshold for aligning on '=' in assignments.
 //
