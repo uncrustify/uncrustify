@@ -636,10 +636,11 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
       return(nullptr);
    }
 
-   LOG_FMT(LNEWLINE, "%s(%d): '%s'[%s] line %zu:%zu and '%s' line %zu:%zu :",
+   LOG_FMT(LNEWLINE, "%s(%d): start->text() is '%s', type is %s, orig_line is %zu, orig_col is %zu\n",
            __func__, __LINE__, start->text(), get_token_name(start->type),
-           start->orig_line, start->orig_col,
-           end->text(), end->orig_line, end->orig_col);
+           start->orig_line, start->orig_col);
+   LOG_FMT(LNEWLINE, "%s(%d): and end->text() is '%s', orig_line is %zu, orig_col is %zu\n  ",
+           __func__, __LINE__, end->text(), end->orig_line, end->orig_col);
    log_func_stack_inline(LNEWLINE);
 
    // Back-up check for one-liners (should never be true!)
@@ -687,9 +688,10 @@ void newline_del_between(chunk_t *start, chunk_t *end)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LNEWLINE, "%s(%d): '%s' line %zu:%zu and '%s' line %zu:%zu : preproc=%d/%d ",
-           __func__, __LINE__, start->text(), start->orig_line, start->orig_col,
-           end->text(), end->orig_line, end->orig_col,
+   LOG_FMT(LNEWLINE, "%s(%d): start->text() is '%s', orig_line is %zu, orig_col is %zu\n",
+           __func__, __LINE__, start->text(), start->orig_line, start->orig_col);
+   LOG_FMT(LNEWLINE, "%s(%d): and end->text() is '%s', orig_line is %zu, orig_col is %zu: preproc=%d/%d\n",
+           __func__, __LINE__, end->text(), end->orig_line, end->orig_col,
            ((start->flags & PCF_IN_PREPROC) != 0),
            ((end->flags & PCF_IN_PREPROC) != 0));
    log_func_stack_inline(LNEWLINE);
@@ -2214,7 +2216,8 @@ static void newline_after_return(chunk_t *start)
 static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av)
 {
    LOG_FUNC_ENTRY();
-   log_func_stack(LNEWLINE, "Call Stack:");
+   LOG_FMT(LNEWLINE, "%s(%d): ", __func__, __LINE__);
+   log_func_stack(LNEWLINE, " CallStack:");
 
    if (  before == nullptr
       || after == nullptr
@@ -2226,7 +2229,7 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av)
    if (av & IARF_ADD)
    {
       chunk_t *nl = newline_add_between(before, after);
-      if (  nl
+      if (  nl != nullptr
          && av == IARF_FORCE
          && nl->nl_count > 1)
       {
@@ -2243,7 +2246,8 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av)
 void newline_iarf(chunk_t *pc, iarf_e av)
 {
    LOG_FUNC_ENTRY();
-   log_func_stack(LNEWLINE, "CallStack:");
+   LOG_FMT(LNFD, "%s(%d): ", __func__, __LINE__);
+   log_func_stack(LNFD, " CallStack:");
 
    newline_iarf_pair(pc, chunk_get_next_nnl(pc), av);
 }
@@ -2337,15 +2341,17 @@ static void newline_func_def_or_call(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LNFD, "%s(%d): called on %zu:%zu '%s' [%s/%s]\n",
-           __func__, __LINE__, start->orig_line, start->orig_col,
-           start->text(), get_token_name(start->type), get_token_name(start->parent_type));
+   LOG_FMT(LNFD, "%s(%d): called on start->text() is '%s', orig_line is %zu, orig_col is %zu, [%s/%s]\n",
+           __func__, __LINE__, start->text(), start->orig_line, start->orig_col,
+           get_token_name(start->type), get_token_name(start->parent_type));
 
    chunk_t *prev  = nullptr;
    bool    is_def = (start->parent_type == CT_FUNC_DEF)
                     || start->parent_type == CT_FUNC_CLASS_DEF;
    bool    is_call = (start->parent_type == CT_FUNC_CALL)
                      || start->parent_type == CT_FUNC_CALL_USER;
+   LOG_FMT(LNFD, "%s(%d): is_def is %s, is_call is %s\n",
+           __func__, __LINE__, is_def ? "TRUE" : "FALSE", is_call ? "TRUE" : "FALSE");
 
    if (is_call)
    {
@@ -2384,6 +2390,11 @@ static void newline_func_def_or_call(chunk_t *start)
    {
       auto atmp = is_def ? options::nl_func_def_paren()
                   : options::nl_func_paren();
+      LOG_FMT(LSPACE, "%s(%d): atmp is %s\n",
+              __func__, __LINE__,
+              (atmp == IARF_IGNORE) ? "IGNORE" :
+              (atmp == IARF_ADD) ? "ADD" :
+              (atmp == IARF_REMOVE) ? "REMOVE" : "FORCE");
       if (atmp != IARF_IGNORE)
       {
          prev = chunk_get_prev_ncnl(start);
@@ -2442,9 +2453,9 @@ static void newline_func_def_or_call(chunk_t *start)
 
             if (a != IARF_IGNORE && prev != nullptr)
             {
-               LOG_FMT(LNFD, "%s(%d): prev %zu:%zu '%s' [%s/%s]\n",
-                       __func__, __LINE__, prev->orig_line, prev->orig_col,
-                       prev->text(), get_token_name(prev->type),
+               LOG_FMT(LNFD, "%s(%d): prev->text() '%s', orig_line is %zu, orig_col is %zu, [%s/%s]\n",
+                       __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col,
+                       get_token_name(prev->type),
                        get_token_name(prev->parent_type));
 
                if (chunk_is_token(prev, CT_DESTRUCTOR))
