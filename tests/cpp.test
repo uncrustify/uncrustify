@@ -684,6 +684,9 @@
 34307 2203.cfg                              cpp/2203.cpp
 34308 enum_comment_wrap.cfg                 cpp/enum_comment_wrap.cpp
 
+34309 issue_2209.cfg                        cpp/issue_2209-1.cpp
+34310 issue_2209.cfg                        cpp/issue_2209-2.cpp
+
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
 10001  empty.cfg                            cpp/622_ifdef-indentation.cpp

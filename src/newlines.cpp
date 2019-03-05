@@ -1995,7 +1995,11 @@ static void newlines_brace_pair(chunk_t *br_open)
    {
       if (chunk_is_newline(next))
       {
-         if (next->nl_count > 1)
+         if (options::nl_inside_namespace() && br_open->parent_type == CT_NAMESPACE)
+         {
+            blank_line_set(next, options::nl_inside_namespace);
+         }
+         else if (next->nl_count > 1)
          {
             next->nl_count = 1;
             LOG_FMT(LBLANKD, "%s(%d): eat_blanks_after_open_brace %zu\n",
@@ -3244,7 +3248,11 @@ void newlines_cleanup_braces(bool first)
             prev = chunk_get_prev(pc);
             if (chunk_is_newline(prev))
             {
-               if (prev->nl_count != 1)
+               if (options::nl_inside_namespace() && pc->parent_type == CT_NAMESPACE)
+               {
+                  blank_line_set(prev, options::nl_inside_namespace);
+               }
+               else if (prev->nl_count != 1)
                {
                   prev->nl_count = 1;
                   LOG_FMT(LBLANKD, "%s(%d): eat_blanks_before_close_brace %zu\n",
