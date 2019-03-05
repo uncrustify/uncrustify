@@ -510,7 +510,7 @@ void output_text(FILE *pfile)
          {
             if (cnt > 0 && pc->nl_column > 1)
             {
-               output_to_column(pc->nl_column, false);
+               output_to_column(pc->nl_column, (options::indent_with_tabs() == 2));
             }
             add_char('\n');
          }
