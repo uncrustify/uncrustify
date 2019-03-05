@@ -348,7 +348,7 @@ static chunk_t *chunk_ppa_search(chunk_t *cur, const check_t check_fct, const bo
 
    chunk_t *pc = cur;
 
-   while (pc && (pc = pc->next) != nullptr)
+   while (pc != nullptr && (pc = pc->next) != nullptr)
    {
       if (!(pc->flags & PCF_IN_PREPROC))
       {
@@ -478,7 +478,7 @@ static void chunk_log_msg(chunk_t *chunk, const log_sev_t log, const char *str)
    }
    else
    {
-      LOG_FMT(log, "text() '%s', type is %s,", chunk->text(), get_token_name(chunk->type));
+      LOG_FMT(log, "text() is '%s', type is %s,", chunk->text(), get_token_name(chunk->type));
    }
 }
 
@@ -495,16 +495,16 @@ static void chunk_log(chunk_t *pc, const char *text)
 
       chunk_log_msg(pc, log, text);
 
-      if (prev && next)
+      if (prev != nullptr && next != nullptr)
       {
          chunk_log_msg(prev, log, " @ between");
          chunk_log_msg(next, log, " and");
       }
-      else if (next)
+      else if (next != nullptr)
       {
          chunk_log_msg(next, log, " @ before");
       }
-      else if (prev)
+      else if (prev != nullptr)
       {
          chunk_log_msg(prev, log, " @ after");
       }
