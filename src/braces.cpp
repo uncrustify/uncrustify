@@ -720,6 +720,10 @@ static void convert_brace(chunk_t *br)
          else if (chunk_is_token(br, CT_VBRACE_CLOSE))
          {
             brace = chunk_get_prev_type(br, CT_VBRACE_OPEN, br->level);
+            if (brace == nullptr)
+            {
+               brace = chunk_get_prev_type(br, CT_BRACE_OPEN, br->level);
+            }
          }
          if (  chunk_is_token(br, CT_VBRACE_OPEN)
             || (  chunk_is_token(br, CT_VBRACE_CLOSE)
