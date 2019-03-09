@@ -651,6 +651,8 @@ static void examine_brace(chunk_t *bopen)
          }
 
          // we have a pair of braces with only 1 statement inside
+         LOG_FMT(LBRDEL, "%s(%d): we have a pair of braces with only 1 statement inside\n",
+                 __func__, __LINE__);
          LOG_FMT(LBRDEL, "%s(%d): removing braces on line %zu and %zu\n",
                  __func__, __LINE__, bopen->orig_line, pc->orig_line);
          convert_brace(bopen);
@@ -702,9 +704,36 @@ static void convert_brace(chunk_t *br)
       {
          tmp->nl_count--;
       }
-      else if (chunk_safe_to_del_nl(tmp))
+      else
       {
-         chunk_del(tmp);
+         // Issue #2219
+         LOG_FMT(LGUY, "%s(%d): br->text() is '%s', br->parent_type is %s\n",
+                 __func__, __LINE__, br->text(), get_token_name(br->parent_type));
+         LOG_FMT(LGUY, "%s(%d): br->orig_line is %zu, tmp->orig_line is %zu\n",
+                 __func__, __LINE__, br->orig_line, tmp->orig_line);
+         // look for opening brace
+         chunk_t *brace;
+         if (chunk_is_token(br, CT_VBRACE_OPEN))
+         {
+            brace = tmp;
+         }
+         else if (chunk_is_token(br, CT_VBRACE_CLOSE))
+         {
+            brace = chunk_get_prev_type(br, CT_VBRACE_OPEN, br->level);
+            if (brace == nullptr)
+            {
+               brace = chunk_get_prev_type(br, CT_BRACE_OPEN, br->level);
+            }
+         }
+         if (  chunk_is_token(br, CT_VBRACE_OPEN)
+            || (  chunk_is_token(br, CT_VBRACE_CLOSE)
+               && brace->orig_line < tmp->orig_line))
+         {
+            if (chunk_safe_to_del_nl(tmp))
+            {
+               chunk_del(tmp);
+            }
+         }
       }
    }
 } // convert_brace

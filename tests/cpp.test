@@ -349,6 +349,9 @@
 30958  nl_for_leave_one_liners-f.cfg        cpp/nl_for_leave_one_liners.cpp
 30959  nl_for_leave_one_liners-t.cfg        cpp/nl_for_leave_one_liners.cpp
 
+30970  Issue_2219.cfg                       cpp/Issue_2219.cpp
+30971  Issue_2224.cfg                       cpp/Issue_2224.cpp
+
 31000  empty.cfg                            cpp/digraph.cpp
 31001  ben_030.cfg                          cpp/digraph.cpp
 
