@@ -27,7 +27,6 @@
 #include "md5.h"
 #include "logger.h"
 #include <cstdio>
-#include <cerrno>
 #include "unc_ctype.h"
 #include <cstring>
 #include "uncrustify.h"
