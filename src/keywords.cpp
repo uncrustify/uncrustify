@@ -13,6 +13,7 @@
 #include "char_table.h"
 #include "args.h"
 #include <cstring>
+#include <cerrno>
 #include <cstdlib>
 #include <map>
 #include "unc_ctype.h"
