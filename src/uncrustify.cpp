@@ -57,6 +57,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <cerrno>
 #include <fcntl.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
