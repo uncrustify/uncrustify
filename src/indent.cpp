@@ -3138,16 +3138,12 @@ null_pc:
    // Throw out any stuff inside a preprocessor - no need to warn
    while (!frm.empty() && frm.top().in_preproc)
    {
-      LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       frm.pop();
    }
 
    // Throw out any VBRACE_OPEN at the end - implied with the end of file
    while (!frm.empty() && frm.top().type == CT_VBRACE_OPEN)
    {
-      LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       frm.pop();
    }
 
