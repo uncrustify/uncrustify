@@ -522,6 +522,7 @@
 33104  bug_858-r.cfg                        cpp/bug_858.cpp
 
 33105  bug_1001.cfg                         cpp/bug_1001.cpp
+33108  Issue_2045.cfg                       cpp/Issue_2045.cpp
 
 33110  enum.cfg                             cpp/enum.cpp
 33120  Issue_2149.cfg                       cpp/Issue_2149.cpp

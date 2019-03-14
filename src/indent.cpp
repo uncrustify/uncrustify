@@ -2188,6 +2188,7 @@ void indent_text(void)
             if (  pc->level == pc->brace_level
                && (  chunk_is_token(pc, CT_FPAREN_OPEN)
                   || chunk_is_token(pc, CT_SPAREN_OPEN)
+                  || (chunk_is_token(pc, CT_SQUARE_OPEN) && pc->parent_type != CT_OC_MSG)
                   || chunk_is_token(pc, CT_ANGLE_OPEN)))     // Issue #1170
             {
                //frm.top().indent += abs(options::indent_continue());
