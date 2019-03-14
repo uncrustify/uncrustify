@@ -1080,9 +1080,9 @@ force_tab_after_define;
 extern BoundedOption<unsigned, 0, 16>
 indent_columns; // = 8
 
-// The continuation indent. If non-zero, this overrides the indent of '(' and
-// '=' continuation indents. Negative values are OK; negative value is absolute
-// and not increased for each '(' level.
+// The continuation indent. If non-zero, this overrides the indent of '(', '['
+// and '=' continuation indents. Negative values are OK; negative value is
+// absolute and not increased for each '(' or '[' level.
 //
 // For FreeBSD, this is set to 4.
 extern BoundedOption<signed, -16, 16>
