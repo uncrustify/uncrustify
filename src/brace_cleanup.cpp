@@ -420,8 +420,6 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
       {
          LOG_FMT(LWARN, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-         LOG_FMT(LWARN, "%s(%d): (frm.top().type + 1) is %s\n",
-                 __func__, __LINE__, get_token_name((c_token_t)(frm.top().type + 1)));
          if (  frm.top().type != CT_EOF
             && frm.top().type != CT_PP_DEFINE)
          {
