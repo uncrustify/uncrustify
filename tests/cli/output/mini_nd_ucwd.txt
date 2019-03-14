@@ -858,9 +858,9 @@ force_tab_after_define          = false    # true/false
 # Default: 8
 indent_columns                  = 8        # unsigned number
 
-# The continuation indent. If non-zero, this overrides the indent of '(' and
-# '=' continuation indents. Negative values are OK; negative value is absolute
-# and not increased for each '(' level.
+# The continuation indent. If non-zero, this overrides the indent of '(', '['
+# and '=' continuation indents. Negative values are OK; negative value is
+# absolute and not increased for each '(' or '[' level.
 #
 # For FreeBSD, this is set to 4.
 indent_continue                 = 0        # number
