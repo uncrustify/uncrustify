@@ -1,270 +1,270 @@
-##
-## Test cases specifically for the C++ language.
-##
-## Range: 30000 - 39999
-## test.name  config.file  input.file
 #
-## there are additional tests inside imported.test.
+# Test cases specifically for the C++ language.
 #
-#30000  ben_001.cfg                          cpp/cout.cpp
-#30001  sp_angle_colon.cfg                   cpp/alt_tokens.cpp
-#30002  ben_003.cfg                          cpp/constructor.cpp
-#30003  ben_004.cfg                          cpp/strings.cpp
-#30010  ben_005.cfg                          cpp/class.h
-#30011  ben_006.cfg                          cpp/misc.cpp
-#30012  avalon2.cfg                          cpp/misc2.cpp
-#30013  sim.cfg                              cpp/sim.h
-#30014  indent_columns-3.cfg                 cpp/ctor-var.cpp
-#30015  ben_008.cfg                          cpp/exception.cpp
-#30016  custom-open.cfg                      cpp/custom-open.cpp
-#30017  custom-open2.cfg                     cpp/custom-open.cpp
-#30018  ben_009.cfg                          cpp/class-addr.h
-#30019  ben_010.cfg                          cpp/wacky-template.cpp
-#
-#30020  ben_011.cfg                          cpp/bool.cpp
-#30021  ben_012.cfg                          cpp/byref.cpp
-#30022  ben_013.cfg                          cpp/extern_c.h
-#30023  ben_014.cfg                          cpp/templates.cpp
-#30024  class-nl_func-add.cfg                cpp/class-init.cpp
-#30025  class-nl_func-del.cfg                cpp/class-init.cpp
-#
-#30026  byref-left.cfg                       cpp/byref.cpp
-#30027  byref-right.cfg                      cpp/byref.cpp
-#30028  byref-center.cfg                     cpp/byref.cpp
-#
-#30029  ben_015.cfg                          cpp/init_align.h
-#
-#30030  avalon.cfg                           cpp/Timestamp.h
-#30031  avalon.cfg                           cpp/operator.cpp
-#30032  op-space-force.cfg                   cpp/operator.cpp
-#30033  op-space-remove.cfg                  cpp/operator.cpp
-#30034  op-space-force.cfg                   cpp/operator_proto.cpp
-#30035  op-space-remove.cfg                  cpp/operator_proto.cpp
-#30036  op-space-remove-align-1.cfg          cpp/operator.cpp
-#30037  op-space-remove-align-1.cfg          cpp/operator_proto.cpp
-#30038  op-space-remove-align-2.cfg          cpp/operator.cpp
-#30039  op-space-remove-align-2.cfg          cpp/operator_proto.cpp
-#
-#30040  nl_class-r.cfg                       cpp/nl-class.h
-#30041  nl_class-a.cfg                       cpp/nl-class.h
-#
-#30043  nl_func_call_empty-r.cfg             cpp/nl_func_call_empty.cpp
-#30044  nl_func_call_paren_empty-r.cfg       cpp/nl_func_call_paren_empty.cpp
-#30045  nl_func_decl_1.cfg                   cpp/nl_func_decl.cpp
-#30046  nl_func_decl_2.cfg                   cpp/nl_func_decl.cpp
-#30047  nl_func_paren_empty.cfg              cpp/nl_func_paren_empty.cpp
-#30048  nl_func_def_paren_empty-r.cfg        cpp/nl_func_def_paren_empty.cpp
-#30049  nl_func_call_paren-f.cfg             cpp/nl_func_call_paren.cpp
-#
-#30050  nl_namespace-r.cfg                   cpp/nl-namespace.h
-#30051  nl_namespace-a.cfg                   cpp/nl-namespace.h
-#
-#30052  nl_try-a.cfg                         cpp/try-catch-nl.cpp
-#30053  sp_catch_brace.cfg                   cpp/exception.cpp
-#
-#30055  nl_after_func_body.cfg               cpp/nl_func.cpp
-#30056  nl_after_func_body-2.cfg             cpp/nl_func.cpp
-#
-#30057  nl_inside_namespace_1.cfg            cpp/nl_inside_namespace.cpp
-#30058  nl_inside_namespace_2.cfg            cpp/nl_inside_namespace.cpp
-#
-## Class colon positioning
-#30061  class-colon-pos-eol.cfg              cpp/class-init.cpp
-#30062  class-colon-pos-sol.cfg              cpp/class-init.cpp
-#30063  class-colon-pos-eol-add.cfg          cpp/class-init.cpp
-#30064  class-colon-pos-sol-add.cfg          cpp/class-init.cpp
-#30065  class-colon-pos-sol.cfg              cpp/Example.h
-#30066  class-on-colon-indent.cfg            cpp/class-init.cpp
-#
-#30067  nl_func_class_scope-a.cfg            cpp/nl_func_type_name.cpp
-#30068  nl_func_class_scope-a.cfg            cpp/nl_func_scope_name.cpp
-#30069  nl_func_class_scope-a.cfg            cpp/class-implementation.cpp
-#
-#30070  nl_func_scope_name-a.cfg             cpp/nl_func_scope_name.cpp
-#30071  lineEndings-to-Win.cfg               cpp/lineEndings-Mac.cpp
-#30072  lineEndings-to-Unix.cfg              cpp/lineEndings-Win.cpp
-#30073  lineEndings-to-Mac.cfg               cpp/lineEndings-Unix.cpp
-#30074  empty.cfg                            cpp/bom.cpp
-#30075  empty.cfg                            cpp/goto.cpp
-#
-#30080  nl_brace_brace-a.cfg                 cpp/nl_brace_brace.cpp
-#
-#30085  nSolve.cfg                           cpp/align_class.cpp
-#
-#30090  bug_488.cfg                          cpp/bug_488.cpp
-#30091  bug_472.cfg                          cpp/bug_472.cpp
-#30092  ben_016.cfg                          cpp/bug_481.cpp
-#30093  sp_after_cast.cfg                    cpp/bug_484.cpp
-#30094  align-1.cfg                          cpp/bug_495.cpp
-#30095  ben_017.cfg                          cpp/bug_485.cpp
-#30096  bug_1854.cfg                         cpp/bug_1854.cpp
-#30097  align-1.cfg                          cpp/issue_1946.cpp
-#
-#30099  sp_arith-f.cfg                       cpp/bug_1127.cpp
-#30100  nl_template_class-force.cfg          cpp/templates.cpp
-#30101  nl_template_class-remove.cfg         cpp/templates.cpp
-#30102  template_sp-force.cfg                cpp/templates.cpp
-#30103  template_sp-remove.cfg               cpp/templates.cpp
-#30104  avalon3.cfg                          cpp/templ_class.h
-#30105  avalon4.cfg                          cpp/av.h
-#30106  nl_template_class-force.cfg          cpp/templates2.cpp
-#30107  nl_template_class-remove.cfg         cpp/templates2.cpp
-#30108  nl_template_class-remove.cfg         cpp/templates3.cpp
-#30109  empty.cfg                            cpp/templates4.cpp
-#
-#30110  class-nl_func-add2.cfg               cpp/class-init.cpp
-#30111  indent_columns-4.cfg                 cpp/bug_1346.h
-#30112  bug_1432.cfg                         cpp/bug_1432.cpp
-#30113  bug_1452.cfg                         cpp/bug_1452.cpp
-#30114  empty.cfg                            cpp/bug_1462.cpp
-#
-#30200  bug_1862.cfg                         cpp/bug_1862.cpp
-#30201  cmt_indent-1.cfg                     cpp/cmt_indent.cpp
-#30202  cmt_indent-2.cfg                     cpp/cmt_indent.cpp
-#30203  cmt_indent-3.cfg                     cpp/cmt_indent.cpp
-#30204  indent_columns-4.cfg                 cpp/comment-align.cpp
-#30205  indent_columns-4.cfg                 cpp/cmt_right.cpp
-#30206  empty.cfg                            cpp/cmt_backslash_eol.cpp
-#30207  indent_class-t_columns-4.cfg         cpp/cmt_indent_pp.h
-#30208  bug_1108.cfg                         cpp/bug_1108.cpp
-#30209  empty.cfg                            cpp/bug_1134.cpp
-#30210  empty.cfg                            cpp/bug_1338.cpp
-#30211  space_indent_class-t_columns-4.cfg   cpp/indent_comment_align_thresh.cpp
-#30212  indent_comment_align_thresh_2.cfg    cpp/indent_comment_align_thresh.cpp
-#30213  align_right_comment.cfg              cpp/align_right_comment.cpp
-#30214  issue_1887.cfg                       cpp/align_across_braces.cpp
-#30215  empty.cfg                            cpp/Issue_2099.cpp
-#
-#30217  empty.cfg                            cpp/2138.cpp
-#
-#30220  bug_1340.cfg                         cpp/bug_1340.cpp
-#
-#30240  align_func_params-t.cfg              cpp/align_func_params.cpp
-#30241  align_func_params_span-1.cfg         cpp/align_func_params.cpp
-#30242  align_func_params_gap.cfg            cpp/align_func_params.cpp
-#30243  align_func_params_thresh_1.cfg       cpp/align_func_params.cpp
-#30244  align_func_params_thresh_2.cfg       cpp/align_func_params.cpp
-#30245  align_func_params_thresh_3.cfg       cpp/align_func_params.cpp
-#30246  align_func_params_thresh_4.cfg       cpp/align_func_params.cpp
-#
-#30249  align-330.cfg                        cpp/align-330.cpp
-#30250  align_fcall.cfg                      cpp/align_fcall.cpp
-#30251  align_fcall-2.cfg                    cpp/align_fcall.cpp
-#30253  empty.cfg                            cpp/align_left_shift.cpp
-#30254  empty.cfg                            cpp/align_left_shift2.cpp
-#30255  ben_018.cfg                          cpp/align_constr.cpp
-#30256  empty.cfg                            cpp/func_call.cpp
-#30257  indent_columns-4.cfg                 cpp/func_call_chain.cpp
-#30258  indent_columns-3.cfg                 cpp/casts.cpp
-#30259  sp_after_constr_colon.cfg            cpp/sp_after_constr_colon.cpp
-#30260  var_def_gap.cfg                      cpp/var_def_gap.cpp
-#30261  align_var_def_thresh_1.cfg           cpp/align_var_def_thresh.cpp
-#30262  align_var_def_thresh_2.cfg           cpp/align_var_def_thresh.cpp
-#30263  align_var_def_thresh_3.cfg           cpp/align_var_def_thresh.cpp
-#
-#30265  long_br_cmt.cfg                      cpp/long_br_cmt.cpp
-#
-#30270  const_throw.cfg                      cpp/const_throw.cpp
-#30271  sp_throw_paren-r.cfg                 cpp/sp_throw_paren.cpp
-#30272  sp_throw_paren-f.cfg                 cpp/sp_throw_paren.cpp
-#30273  sp_cparen_oparen-f.cfg               cpp/sp_cparen_oparen.cpp
-#30274  sp_cparen_oparen-r.cfg               cpp/sp_cparen_oparen.cpp
-#30275  empty.cfg                            cpp/bug_1321.cpp
-#30278  bug_1439.cfg                         cpp/bug_1439.cpp
-#
-#30280  sp_dc.cfg                            cpp/sf557.cpp
-#
-#30290  indent_shift.cfg                     cpp/align_left_shift.cpp
-#30291  indent_shift.cfg                     cpp/indent_shift.cpp
-#
-#30300  ben_020.cfg                          cpp/enum_shr.cpp
-#30301  al.cfg                               cpp/enum_class.h
-#30302  bug_1315.cfg                         cpp/bug_1315.cpp
-#
-## TODO: Make a tests for a braced_init_list. See also 34153-34166.
-#30310  empty.cfg                            cpp/braced_init_list.cpp
-##30310  sp_word_brace_force.cfg              cpp/uniform_initialization.cpp
-##30311  sp_word_brace_remove.cfg             cpp/uniform_initialization.cpp
-#30312  sp_inside_type_brace_init_lst-f.cfg  cpp/return_init_list.cpp
-#30313  sp_brace_brace-r.cfg                 cpp/sp_brace_brace.cpp
-#30314  sp_brace_brace-f.cfg                 cpp/sp_brace_brace.cpp
-#30315  issue_1997.cfg                       cpp/return_braced_init.cpp
-#
-#30320  sp_return_paren-r.cfg                cpp/returns.cpp
-#30321  sp_return_paren-f.cfg                cpp/returns.cpp
-#30322  sp_return_brace-r.cfg                cpp/returns.cpp
-#30323  sp_return_brace-f.cfg                cpp/returns.cpp
-#30324  mod_paren_on_return-a.cfg            cpp/returns.cpp
-#30325  mod_paren_on_return-r.cfg            cpp/returns.cpp
-#
-#30400  attribute_specifier_seqs.cfg         cpp/attribute_specifier_seqs.cpp
-#
-## function def newlines
-#30701  func-def-1.cfg                       cpp/function-def.cpp
-#30702  func-def-2.cfg                       cpp/function-def.cpp
-#30703  func-def-3.cfg                       cpp/function-def.cpp
-#
-#30705  func_param.cfg                       cpp/func_param.cpp
-#30706  bug_1020.cfg                         cpp/bug_1020.cpp
-#
-#30711  del_semicolon.cfg                    cpp/semicolons.cpp
-#30712  empty.cfg                            cpp/bug_1158.cpp
-#30713  empty.cfg                            cpp/fix_for_relational_operators.cpp
-#
-#30720  wessex.cfg                           cpp/custom-open-2.cpp
-#
-#30730  qt-1.cfg                             cpp/qt-1.cpp
-#30731  nl_access_spec.cfg                   cpp/qt-1.cpp
-#
-#30740  sef.cfg                              cpp/sef.cpp
-#30741  al.cfg                               cpp/al.cpp
-#30742  indent_columns-2.cfg                 cpp/delete.cpp
-#
-#30745  Issue_2170.cfg                       cpp/Issue_2170.cpp
-#30746  DefaultAndDelete-0.cfg               cpp/DefaultAndDelete.cpp
-#30747  DefaultAndDelete-1.cfg               cpp/DefaultAndDelete.cpp
-#30748  DefaultAndDelete-2.cfg               cpp/DefaultAndDelete.cpp
-#
-## TODO: Reduce the number of options, leave only those that affect lambda.
-## TODO: Add tests for nested lambdas.
-#
-#30750  ben_021.cfg                          cpp/lambda.cpp
-#30751  lambda1.cfg                          cpp/lambda.cpp
-#30752  lambda2.cfg                          cpp/lambda.cpp
-#30753  lambda3.cfg                          cpp/lambda2.cpp
-#30754  indent_with_tabs-0.cfg               cpp/bug_i_682.h
-#30755  empty.cfg                            cpp/bug_i_938.h
-#30756  bug_1296.cfg                         cpp/bug_1296.cpp
-#30761  out-668-F.cfg                        cpp/out-668.cpp
-#30762  out-668-T.cfg                        cpp/out-668.cpp
-#
-#30800  star_pos-0.cfg                       cpp/align-star-amp-pos.cpp
-#30801  star_pos-1.cfg                       cpp/align-star-amp-pos.cpp
-#30802  star_pos-2.cfg                       cpp/align-star-amp-pos.cpp
-#30803  bug_1403.cfg                         cpp/bug_1403.cpp
-#
-#30804  block_pointer.cfg                    cpp/block_pointer.cpp
-#30805  ptr_star-1.cfg                       cpp/ptr-star.cpp
-#30806  ptr_star-2.cfg                       cpp/ptr-star.cpp
-#30807  ptr_star-3.cfg                       cpp/ptr-star.cpp
-#30808  sp_after_ptr_star_qualifier-f.cfg    cpp/ptr-star.cpp
-#30809  empty.cfg                            cpp/bug_1289.cpp
-#
-#30810  ben_022.cfg                          cpp/ptr-star.cpp
-#30811  avalon4.cfg                          cpp/misc3.cpp
-#30812  ben_023.cfg                          cpp/misc4.cpp
-#30813  ben_024.cfg                          cpp/misc5.cpp
-#30814  empty.cfg                            cpp/misc6.cpp
-#
-#30815! width-2.cfg                          cpp/cmt-reflow.cpp
-#30816  cu.cfg                               cpp/for_long.cpp
-#30817  indent_columns-3.cfg                 cpp/cmt-cpp-cont.cpp
-#30818  bug_1169.cfg                         cpp/bug_1169.cpp
-#30819  bug_1170.cfg                         cpp/bug_1170.cpp
-#
-#30820  pp_define_at_level-1.cfg             cpp/pp-define-indent.cpp
-#30821  empty.cfg                            cpp/pp_indent_case.cpp
-#30822  empty.cfg                            cpp/pp_indent_brace.cpp
+# Range: 30000 - 39999
+# test.name  config.file  input.file
+
+# there are additional tests inside imported.test.
+
+30000  ben_001.cfg                          cpp/cout.cpp
+30001  sp_angle_colon.cfg                   cpp/alt_tokens.cpp
+30002  ben_003.cfg                          cpp/constructor.cpp
+30003  ben_004.cfg                          cpp/strings.cpp
+30010  ben_005.cfg                          cpp/class.h
+30011  ben_006.cfg                          cpp/misc.cpp
+30012  avalon2.cfg                          cpp/misc2.cpp
+30013  sim.cfg                              cpp/sim.h
+30014  indent_columns-3.cfg                 cpp/ctor-var.cpp
+30015  ben_008.cfg                          cpp/exception.cpp
+30016  custom-open.cfg                      cpp/custom-open.cpp
+30017  custom-open2.cfg                     cpp/custom-open.cpp
+30018  ben_009.cfg                          cpp/class-addr.h
+30019  ben_010.cfg                          cpp/wacky-template.cpp
+
+30020  ben_011.cfg                          cpp/bool.cpp
+30021  ben_012.cfg                          cpp/byref.cpp
+30022  ben_013.cfg                          cpp/extern_c.h
+30023  ben_014.cfg                          cpp/templates.cpp
+30024  class-nl_func-add.cfg                cpp/class-init.cpp
+30025  class-nl_func-del.cfg                cpp/class-init.cpp
+
+30026  byref-left.cfg                       cpp/byref.cpp
+30027  byref-right.cfg                      cpp/byref.cpp
+30028  byref-center.cfg                     cpp/byref.cpp
+
+30029  ben_015.cfg                          cpp/init_align.h
+
+30030  avalon.cfg                           cpp/Timestamp.h
+30031  avalon.cfg                           cpp/operator.cpp
+30032  op-space-force.cfg                   cpp/operator.cpp
+30033  op-space-remove.cfg                  cpp/operator.cpp
+30034  op-space-force.cfg                   cpp/operator_proto.cpp
+30035  op-space-remove.cfg                  cpp/operator_proto.cpp
+30036  op-space-remove-align-1.cfg          cpp/operator.cpp
+30037  op-space-remove-align-1.cfg          cpp/operator_proto.cpp
+30038  op-space-remove-align-2.cfg          cpp/operator.cpp
+30039  op-space-remove-align-2.cfg          cpp/operator_proto.cpp
+
+30040  nl_class-r.cfg                       cpp/nl-class.h
+30041  nl_class-a.cfg                       cpp/nl-class.h
+
+30043  nl_func_call_empty-r.cfg             cpp/nl_func_call_empty.cpp
+30044  nl_func_call_paren_empty-r.cfg       cpp/nl_func_call_paren_empty.cpp
+30045  nl_func_decl_1.cfg                   cpp/nl_func_decl.cpp
+30046  nl_func_decl_2.cfg                   cpp/nl_func_decl.cpp
+30047  nl_func_paren_empty.cfg              cpp/nl_func_paren_empty.cpp
+30048  nl_func_def_paren_empty-r.cfg        cpp/nl_func_def_paren_empty.cpp
+30049  nl_func_call_paren-f.cfg             cpp/nl_func_call_paren.cpp
+
+30050  nl_namespace-r.cfg                   cpp/nl-namespace.h
+30051  nl_namespace-a.cfg                   cpp/nl-namespace.h
+
+30052  nl_try-a.cfg                         cpp/try-catch-nl.cpp
+30053  sp_catch_brace.cfg                   cpp/exception.cpp
+
+30055  nl_after_func_body.cfg               cpp/nl_func.cpp
+30056  nl_after_func_body-2.cfg             cpp/nl_func.cpp
+
+30057  nl_inside_namespace_1.cfg            cpp/nl_inside_namespace.cpp
+30058  nl_inside_namespace_2.cfg            cpp/nl_inside_namespace.cpp
+
+# Class colon positioning
+30061  class-colon-pos-eol.cfg              cpp/class-init.cpp
+30062  class-colon-pos-sol.cfg              cpp/class-init.cpp
+30063  class-colon-pos-eol-add.cfg          cpp/class-init.cpp
+30064  class-colon-pos-sol-add.cfg          cpp/class-init.cpp
+30065  class-colon-pos-sol.cfg              cpp/Example.h
+30066  class-on-colon-indent.cfg            cpp/class-init.cpp
+
+30067  nl_func_class_scope-a.cfg            cpp/nl_func_type_name.cpp
+30068  nl_func_class_scope-a.cfg            cpp/nl_func_scope_name.cpp
+30069  nl_func_class_scope-a.cfg            cpp/class-implementation.cpp
+
+30070  nl_func_scope_name-a.cfg             cpp/nl_func_scope_name.cpp
+30071  lineEndings-to-Win.cfg               cpp/lineEndings-Mac.cpp
+30072  lineEndings-to-Unix.cfg              cpp/lineEndings-Win.cpp
+30073  lineEndings-to-Mac.cfg               cpp/lineEndings-Unix.cpp
+30074  empty.cfg                            cpp/bom.cpp
+30075  empty.cfg                            cpp/goto.cpp
+
+30080  nl_brace_brace-a.cfg                 cpp/nl_brace_brace.cpp
+
+30085  nSolve.cfg                           cpp/align_class.cpp
+
+30090  bug_488.cfg                          cpp/bug_488.cpp
+30091  bug_472.cfg                          cpp/bug_472.cpp
+30092  ben_016.cfg                          cpp/bug_481.cpp
+30093  sp_after_cast.cfg                    cpp/bug_484.cpp
+30094  align-1.cfg                          cpp/bug_495.cpp
+30095  ben_017.cfg                          cpp/bug_485.cpp
+30096  bug_1854.cfg                         cpp/bug_1854.cpp
+30097  align-1.cfg                          cpp/issue_1946.cpp
+
+30099  sp_arith-f.cfg                       cpp/bug_1127.cpp
+30100  nl_template_class-force.cfg          cpp/templates.cpp
+30101  nl_template_class-remove.cfg         cpp/templates.cpp
+30102  template_sp-force.cfg                cpp/templates.cpp
+30103  template_sp-remove.cfg               cpp/templates.cpp
+30104  avalon3.cfg                          cpp/templ_class.h
+30105  avalon4.cfg                          cpp/av.h
+30106  nl_template_class-force.cfg          cpp/templates2.cpp
+30107  nl_template_class-remove.cfg         cpp/templates2.cpp
+30108  nl_template_class-remove.cfg         cpp/templates3.cpp
+30109  empty.cfg                            cpp/templates4.cpp
+
+30110  class-nl_func-add2.cfg               cpp/class-init.cpp
+30111  indent_columns-4.cfg                 cpp/bug_1346.h
+30112  bug_1432.cfg                         cpp/bug_1432.cpp
+30113  bug_1452.cfg                         cpp/bug_1452.cpp
+30114  empty.cfg                            cpp/bug_1462.cpp
+
+30200  bug_1862.cfg                         cpp/bug_1862.cpp
+30201  cmt_indent-1.cfg                     cpp/cmt_indent.cpp
+30202  cmt_indent-2.cfg                     cpp/cmt_indent.cpp
+30203  cmt_indent-3.cfg                     cpp/cmt_indent.cpp
+30204  indent_columns-4.cfg                 cpp/comment-align.cpp
+30205  indent_columns-4.cfg                 cpp/cmt_right.cpp
+30206  empty.cfg                            cpp/cmt_backslash_eol.cpp
+30207  indent_class-t_columns-4.cfg         cpp/cmt_indent_pp.h
+30208  bug_1108.cfg                         cpp/bug_1108.cpp
+30209  empty.cfg                            cpp/bug_1134.cpp
+30210  empty.cfg                            cpp/bug_1338.cpp
+30211  space_indent_class-t_columns-4.cfg   cpp/indent_comment_align_thresh.cpp
+30212  indent_comment_align_thresh_2.cfg    cpp/indent_comment_align_thresh.cpp
+30213  align_right_comment.cfg              cpp/align_right_comment.cpp
+30214  issue_1887.cfg                       cpp/align_across_braces.cpp
+30215  empty.cfg                            cpp/Issue_2099.cpp
+
+30217  empty.cfg                            cpp/2138.cpp
+
+30220  bug_1340.cfg                         cpp/bug_1340.cpp
+
+30240  align_func_params-t.cfg              cpp/align_func_params.cpp
+30241  align_func_params_span-1.cfg         cpp/align_func_params.cpp
+30242  align_func_params_gap.cfg            cpp/align_func_params.cpp
+30243  align_func_params_thresh_1.cfg       cpp/align_func_params.cpp
+30244  align_func_params_thresh_2.cfg       cpp/align_func_params.cpp
+30245  align_func_params_thresh_3.cfg       cpp/align_func_params.cpp
+30246  align_func_params_thresh_4.cfg       cpp/align_func_params.cpp
+
+30249  align-330.cfg                        cpp/align-330.cpp
+30250  align_fcall.cfg                      cpp/align_fcall.cpp
+30251  align_fcall-2.cfg                    cpp/align_fcall.cpp
+30253  empty.cfg                            cpp/align_left_shift.cpp
+30254  empty.cfg                            cpp/align_left_shift2.cpp
+30255  ben_018.cfg                          cpp/align_constr.cpp
+30256  empty.cfg                            cpp/func_call.cpp
+30257  indent_columns-4.cfg                 cpp/func_call_chain.cpp
+30258  indent_columns-3.cfg                 cpp/casts.cpp
+30259  sp_after_constr_colon.cfg            cpp/sp_after_constr_colon.cpp
+30260  var_def_gap.cfg                      cpp/var_def_gap.cpp
+30261  align_var_def_thresh_1.cfg           cpp/align_var_def_thresh.cpp
+30262  align_var_def_thresh_2.cfg           cpp/align_var_def_thresh.cpp
+30263  align_var_def_thresh_3.cfg           cpp/align_var_def_thresh.cpp
+
+30265  long_br_cmt.cfg                      cpp/long_br_cmt.cpp
+
+30270  const_throw.cfg                      cpp/const_throw.cpp
+30271  sp_throw_paren-r.cfg                 cpp/sp_throw_paren.cpp
+30272  sp_throw_paren-f.cfg                 cpp/sp_throw_paren.cpp
+30273  sp_cparen_oparen-f.cfg               cpp/sp_cparen_oparen.cpp
+30274  sp_cparen_oparen-r.cfg               cpp/sp_cparen_oparen.cpp
+30275  empty.cfg                            cpp/bug_1321.cpp
+30278  bug_1439.cfg                         cpp/bug_1439.cpp
+
+30280  sp_dc.cfg                            cpp/sf557.cpp
+
+30290  indent_shift.cfg                     cpp/align_left_shift.cpp
+30291  indent_shift.cfg                     cpp/indent_shift.cpp
+
+30300  ben_020.cfg                          cpp/enum_shr.cpp
+30301  al.cfg                               cpp/enum_class.h
+30302  bug_1315.cfg                         cpp/bug_1315.cpp
+
+# TODO: Make a tests for a braced_init_list. See also 34153-34166.
+30310  empty.cfg                            cpp/braced_init_list.cpp
+#30310  sp_word_brace_force.cfg              cpp/uniform_initialization.cpp
+#30311  sp_word_brace_remove.cfg             cpp/uniform_initialization.cpp
+30312  sp_inside_type_brace_init_lst-f.cfg  cpp/return_init_list.cpp
+30313  sp_brace_brace-r.cfg                 cpp/sp_brace_brace.cpp
+30314  sp_brace_brace-f.cfg                 cpp/sp_brace_brace.cpp
+30315  issue_1997.cfg                       cpp/return_braced_init.cpp
+
+30320  sp_return_paren-r.cfg                cpp/returns.cpp
+30321  sp_return_paren-f.cfg                cpp/returns.cpp
+30322  sp_return_brace-r.cfg                cpp/returns.cpp
+30323  sp_return_brace-f.cfg                cpp/returns.cpp
+30324  mod_paren_on_return-a.cfg            cpp/returns.cpp
+30325  mod_paren_on_return-r.cfg            cpp/returns.cpp
+
+30400  attribute_specifier_seqs.cfg         cpp/attribute_specifier_seqs.cpp
+
+# function def newlines
+30701  func-def-1.cfg                       cpp/function-def.cpp
+30702  func-def-2.cfg                       cpp/function-def.cpp
+30703  func-def-3.cfg                       cpp/function-def.cpp
+
+30705  func_param.cfg                       cpp/func_param.cpp
+30706  bug_1020.cfg                         cpp/bug_1020.cpp
+
+30711  del_semicolon.cfg                    cpp/semicolons.cpp
+30712  empty.cfg                            cpp/bug_1158.cpp
+30713  empty.cfg                            cpp/fix_for_relational_operators.cpp
+
+30720  wessex.cfg                           cpp/custom-open-2.cpp
+
+30730  qt-1.cfg                             cpp/qt-1.cpp
+30731  nl_access_spec.cfg                   cpp/qt-1.cpp
+
+30740  sef.cfg                              cpp/sef.cpp
+30741  al.cfg                               cpp/al.cpp
+30742  indent_columns-2.cfg                 cpp/delete.cpp
+
+30745  Issue_2170.cfg                       cpp/Issue_2170.cpp
+30746  DefaultAndDelete-0.cfg               cpp/DefaultAndDelete.cpp
+30747  DefaultAndDelete-1.cfg               cpp/DefaultAndDelete.cpp
+30748  DefaultAndDelete-2.cfg               cpp/DefaultAndDelete.cpp
+
+# TODO: Reduce the number of options, leave only those that affect lambda.
+# TODO: Add tests for nested lambdas.
+
+30750  ben_021.cfg                          cpp/lambda.cpp
+30751  lambda1.cfg                          cpp/lambda.cpp
+30752  lambda2.cfg                          cpp/lambda.cpp
+30753  lambda3.cfg                          cpp/lambda2.cpp
+30754  indent_with_tabs-0.cfg               cpp/bug_i_682.h
+30755  empty.cfg                            cpp/bug_i_938.h
+30756  bug_1296.cfg                         cpp/bug_1296.cpp
+30761  out-668-F.cfg                        cpp/out-668.cpp
+30762  out-668-T.cfg                        cpp/out-668.cpp
+
+30800  star_pos-0.cfg                       cpp/align-star-amp-pos.cpp
+30801  star_pos-1.cfg                       cpp/align-star-amp-pos.cpp
+30802  star_pos-2.cfg                       cpp/align-star-amp-pos.cpp
+30803  bug_1403.cfg                         cpp/bug_1403.cpp
+
+30804  block_pointer.cfg                    cpp/block_pointer.cpp
+30805  ptr_star-1.cfg                       cpp/ptr-star.cpp
+30806  ptr_star-2.cfg                       cpp/ptr-star.cpp
+30807  ptr_star-3.cfg                       cpp/ptr-star.cpp
+30808  sp_after_ptr_star_qualifier-f.cfg    cpp/ptr-star.cpp
+30809  empty.cfg                            cpp/bug_1289.cpp
+
+30810  ben_022.cfg                          cpp/ptr-star.cpp
+30811  avalon4.cfg                          cpp/misc3.cpp
+30812  ben_023.cfg                          cpp/misc4.cpp
+30813  ben_024.cfg                          cpp/misc5.cpp
+30814  empty.cfg                            cpp/misc6.cpp
+
+30815! width-2.cfg                          cpp/cmt-reflow.cpp
+30816  cu.cfg                               cpp/for_long.cpp
+30817  indent_columns-3.cfg                 cpp/cmt-cpp-cont.cpp
+30818  bug_1169.cfg                         cpp/bug_1169.cpp
+30819  bug_1170.cfg                         cpp/bug_1170.cpp
+
+30820  pp_define_at_level-1.cfg             cpp/pp-define-indent.cpp
+30821  empty.cfg                            cpp/pp_indent_case.cpp
+30822  empty.cfg                            cpp/pp_indent_brace.cpp
 30823  empty.cfg                            cpp/pp_indent_func_def.cpp
 #30824  empty.cfg                            cpp/pp_indent_extern.cpp
 #
@@ -748,4 +748,4 @@
 #60039  U36-Cpp.cfg                          cpp/UNI-30628.cpp
 #60042  UNI-18777.cfg                        cpp/UNI-18777.cpp
 #60043  nl_remove_extra_newlines-1.cfg       cpp/i2033.cpp
-#60044  nl_fdef_brace-r__nl_collapse_empty_body-t.cfg  cpp/i2116.cpp
+60044  nl_fdef_brace-r__nl_collapse_empty_body-t.cfg  cpp/i2116.cpp

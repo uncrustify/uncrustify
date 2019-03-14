@@ -5,10 +5,10 @@ environment:
   # MSVC
   - GENERATOR: Visual Studio 15 2017 Win64
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-#  - GENERATOR: Visual Studio 14 2015 Win64
+  - GENERATOR: Visual Studio 14 2015 Win64
 configuration:
   - Debug
-#  - Release
+  - Release
 clone_folder: C:\projects\uncrustify
 branches:
   only:
@@ -25,7 +25,7 @@ before_build:
   - cd c:\projects\uncrustify
   - mkdir build
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DUNCRUSTIFY_SEPARATE_TESTS=ON -G "%GENERATOR%" ..
+  - cmake -DCMAKE_BUILD_TYPE=%CONFIGURATION% -G "%GENERATOR%" ..
 build_script:
   - cmake --build . --config %CONFIGURATION%
 test_script:
