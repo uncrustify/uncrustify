@@ -655,8 +655,8 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
       const auto &ontext = options::enable_processing_cmt();
       if (!ontext.empty() && pc.str.find(ontext.c_str()) >= 0)
       {
-         LOG_FMT(LBCTRL, "Found '%s' on line %zu\n",
-                 ontext.c_str(), pc.orig_line);
+         LOG_FMT(LBCTRL, "%s(%d): Found '%s' on line %zu\n",
+                 __func__, __LINE__, ontext.c_str(), pc.orig_line);
          cpd.unc_off = false;
       }
    }
@@ -665,8 +665,8 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
       const auto &offtext = options::disable_processing_cmt();
       if (!offtext.empty() && pc.str.find(offtext.c_str()) >= 0)
       {
-         LOG_FMT(LBCTRL, "Found '%s' on line %zu\n",
-                 offtext.c_str(), pc.orig_line);
+         LOG_FMT(LBCTRL, "%s(%d): Found '%s' on line %zu\n",
+                 __func__, __LINE__, offtext.c_str(), pc.orig_line);
          cpd.unc_off = true;
          // Issue #842
          cpd.unc_off_used = true;

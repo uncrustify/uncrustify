@@ -33,7 +33,6 @@ using std::invalid_argument;
 using std::string;
 using std::to_string;
 using std::stringstream;
-using std::cerr;
 
 
 /*
@@ -419,11 +418,15 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
       // Make sure the open / close match
       if (pc->type != (frm.top().type + 1))
       {
+         LOG_FMT(LWARN, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+         LOG_FMT(LWARN, "%s(%d): (frm.top().type + 1) is %s\n",
+                 __func__, __LINE__, get_token_name((c_token_t)(frm.top().type + 1)));
          if (  frm.top().type != CT_EOF
             && frm.top().type != CT_PP_DEFINE)
          {
-            LOG_FMT(LWARN, "%s(%d): %s, orig_line is %zu, Error: Unexpected '%s' for '%s', which was on line %zu\n",
-                    __func__, __LINE__, cpd.filename.c_str(), pc->orig_line,
+            LOG_FMT(LWARN, "%s(%d): File: %s, orig_line is %zu, orig_col is %zu, Error: Unexpected '%s' for '%s', which was on line %zu\n",
+                    __func__, __LINE__, cpd.filename.c_str(), pc->orig_line, pc->orig_col,
                     pc->text(), get_token_name(frm.top().pc->type),
                     frm.top().pc->orig_line);
             print_stack(LBCSPOP, "=Error  ", frm);
@@ -447,6 +450,8 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
          pc->brace_level = frm.brace_level;
 
          // Pop the entry
+         LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
          frm.pop();
          print_stack(LBCSPOP, "-Close  ", frm);
 
@@ -656,6 +661,8 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
    }
 
    // Mark expression starts
+   LOG_FMT(LSTMT, "%s(%d): Mark expression starts: orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
    chunk_t *tmp = chunk_get_next_ncnl(pc);
    if (  chunk_is_token(pc, CT_ARITH)
       || chunk_is_token(pc, CT_ASSIGN)
@@ -685,8 +692,8 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
       || chunk_is_token(pc, CT_QUESTION))
    {
       frm.expr_count = 0;
-      LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, reset expr on '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->text());
+      LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, orig_col is %zu, reset expr on '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
    }
    else if (  chunk_is_token(pc, CT_BRACE_CLOSE)
            && !cpd.consumed
@@ -696,11 +703,12 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
       if (!cpd.unc_off_used && pc->pp_level == file_pp_level)
       {
          // fatal error
-         cerr << "Unmatched BRACE_CLOSE\nat orig_line="
-              << pc->orig_line << ", orig_col=" << pc->orig_col << "\n";
+         LOG_FMT(LERR, "%s(%d): Unmatched BRACE_CLOSE\norig_line is %zu, orig_col is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col);
          if (!options::tok_split_gte())
          {
-            cerr << "Try the option 'tok_split_gte = true'\n";
+            LOG_FMT(LERR, "%s(%d): Try the option 'tok_split_gte = true'\n",
+                    __func__, __LINE__);
          }
          exit(EXIT_FAILURE);
       }
@@ -734,6 +742,8 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
       }
 
       // Remove the CT_IF and close the statement
+      LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       frm.pop();
       print_stack(LBCSPOP, "-IF-CCS ", frm);
       if (close_statement(frm, pc))
@@ -784,6 +794,8 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
       }
 
       // Remove the CT_TRY and close the statement
+      LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       frm.pop();
       print_stack(LBCSPOP, "-TRY-CCS ", frm);
 
@@ -837,6 +849,8 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
       LOG_FMT(LWARN, "%s(%d): %s, orig_line is %zu, Error: Expected 'while', got '%s'\n",
               __func__, __LINE__, cpd.filename.c_str(), pc->orig_line,
               pc->text());
+      LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       frm.pop();
       print_stack(LBCSPOP, "-Error  ", frm);
       cpd.error_count++;
@@ -904,6 +918,8 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
               get_token_name(frm.top().type));
 
       // Throw out the complex statement
+      LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       frm.pop();
       print_stack(LBCSPOP, "-Error  ", frm);
       cpd.error_count++;
@@ -942,6 +958,8 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc)
          chunk_t *next = chunk_get_next_ncnl(pc);
          if (next != nullptr && next->type != CT_ELSE)
          {
+            LOG_FMT(LBCSPOP, "%s(%d): no CT_ELSE, pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
             frm.pop();
             print_stack(LBCSPOP, "-IF-HCS ", frm);
 
@@ -959,6 +977,8 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc)
             && next->type != CT_CATCH
             && next->type != CT_FINALLY)
          {
+            LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
             frm.pop();
             print_stack(LBCSPOP, "-TRY-HCS ", frm);
 
@@ -969,6 +989,8 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc)
       {
          LOG_FMT(LNOTE, "%s(%d): close_statement on %s brace_stage_e::BRACE2\n",
                  __func__, __LINE__, get_token_name(frm.top().type));
+         LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
          frm.pop();
          print_stack(LBCSPOP, "-HCC B2 ", frm);
 
@@ -990,6 +1012,8 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc)
    {
       LOG_FMT(LNOTE, "%s(%d): close_statement on %s brace_stage_e::WOD_SEMI\n",
               __func__, __LINE__, get_token_name(frm.top().type));
+      LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       frm.pop();
       print_stack(LBCSPOP, "-HCC WoDS ", frm);
 
@@ -1123,6 +1147,8 @@ bool close_statement(ParseFrame &frm, chunk_t *pc)
 
          frm.level--;
          frm.brace_level--;
+         LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
          frm.pop();
 
          // Update the token level
