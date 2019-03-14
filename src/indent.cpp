@@ -1185,12 +1185,12 @@ void indent_text(void)
          && !chunk_is_comment(pc)
          && log_sev_on(LINDPC))
       {
-         LOG_FMT(LINDPC, " -=[ %zu:%zu %s ]=-\n",
-                 pc->orig_line, pc->orig_col, pc->text());
+         LOG_FMT(LINDPC, "%s(%d):  -=[ %zu:%zu %s ]=-\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
          for (size_t ttidx = frm.size() - 1; ttidx > 0; ttidx--)
          {
-            LOG_FMT(LINDPC, "     [%zu %zu:%zu %s %s/%s tmp=%zu ind=%zu bri=%zu tab=%zu cont=%d lvl=%zu blvl=%zu]\n",
-                    ttidx,
+            LOG_FMT(LINDPC, "%s(%d):      [%zu %zu:%zu %s %s/%s tmp=%zu ind=%zu bri=%zu tab=%zu cont=%d lvl=%zu blvl=%zu]\n",
+                    __func__, __LINE__, ttidx,
                     frm.at(ttidx).pc->orig_line,
                     frm.at(ttidx).pc->orig_col,
                     frm.at(ttidx).pc->text(),
@@ -1204,6 +1204,7 @@ void indent_text(void)
                     frm.at(ttidx).level,
                     frm.at(ttidx).pc->brace_level);
          }
+         LOG_FMT(LINDPC, "%s(%d):\n", __func__, __LINE__);
       }
 
       // Issue #672
