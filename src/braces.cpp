@@ -703,8 +703,8 @@ static void convert_brace(chunk_t *br)
    }
    LOG_FMT(LGUY, "%s(%d): br->type is %s, br->parent_type is %s\n",
            __func__, __LINE__, get_token_name(br->type), get_token_name(br->parent_type));
-   LOG_FMT(LGUY, "%s(%d): br->orig_line is %zu, br->orig_col is %zu, tmp->orig_line is %zu\n",
-           __func__, __LINE__, br->orig_line, br->orig_col, tmp->orig_line);
+   LOG_FMT(LGUY, "%s(%d): br->orig_line is %zu, br->orig_col is %zu\n",
+           __func__, __LINE__, br->orig_line, br->orig_col);
 
    if (chunk_is_newline(tmp))
    {
