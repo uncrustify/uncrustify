@@ -2285,7 +2285,8 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
       chunk_t *first = pc;
       while (pc != nullptr)
       {
-         LOG_FMT(LFCNR, "%s(%d): text() '%s', type is %s\n", __func__, __LINE__, pc->text(), get_token_name(pc->type));
+         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s, ",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
          log_pcf_flags(LFCNR, pc->flags);
          if (chunk_is_token(pc, CT_ANGLE_CLOSE))
          {

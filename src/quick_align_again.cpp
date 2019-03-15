@@ -28,14 +28,16 @@ void quick_align_again(void)
          as.m_amp_style   = static_cast<AlignStack::StarStyle>(pc->align.amp_style);
          as.m_gap         = pc->align.gap;
 
-         LOG_FMT(LALAGAIN, "   [%s:%zu]", pc->text(), pc->orig_line);
+         LOG_FMT(LALAGAIN, "%s(%d):   pc->text() is '%s', orig_line is %zu\n",
+                 __func__, __LINE__, pc->text(), pc->orig_line);
          as.Add(pc->align.start);
          chunk_flags_set(pc, PCF_WAS_ALIGNED);
          for (chunk_t *tmp = pc->align.next; tmp != nullptr; tmp = tmp->align.next)
          {
             chunk_flags_set(tmp, PCF_WAS_ALIGNED);
             as.Add(tmp->align.start);
-            LOG_FMT(LALAGAIN, " => [%s:%zu]", tmp->text(), tmp->orig_line);
+            LOG_FMT(LALAGAIN, "%s(%d):    => tmp->text() is '%s', orig_line is %zu\n",
+                    __func__, __LINE__, tmp->text(), tmp->orig_line);
          }
          LOG_FMT(LALAGAIN, "\n");
          as.End();
