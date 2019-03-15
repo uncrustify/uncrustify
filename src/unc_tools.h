@@ -9,6 +9,7 @@
 #ifndef UNC_TOOLS_H_INCLUDED
 #define UNC_TOOLS_H_INCLUDED
 
+//#define DEVELOP_ONLY
 #ifdef DEVELOP_ONLY
 #include "prototypes.h"
 #include "uncrustify_types.h"

@@ -310,6 +310,9 @@ static bool should_add_braces(chunk_t *vbopen)
 static bool can_remove_braces(chunk_t *bopen)
 {
    LOG_FUNC_ENTRY();
+   LOG_FMT(LBRDEL, "%s(%d): start on line %zu:\n",
+           __func__, __LINE__, bopen->orig_line);
+
    // Cannot remove braces inside a preprocessor
    if (bopen->flags & PCF_IN_PREPROC)
    {
@@ -321,9 +324,6 @@ static bool can_remove_braces(chunk_t *bopen)
       // Can't remove empty statement
       return(false);
    }
-   LOG_FMT(LBRDEL, "%s(%d): start on %zu : ",
-           __func__, __LINE__, bopen->orig_line);
-
 
    const size_t level  = bopen->level + 1;
    const size_t nl_max = options::mod_full_brace_nl();
@@ -336,8 +336,12 @@ static bool can_remove_braces(chunk_t *bopen)
    int          br_count   = 0;
 
    pc = chunk_get_next_nc(bopen, scope_e::ALL);
+   LOG_FMT(LBRDEL, "%s(%d):  - begin with token '%s', orig_line is %zu, orig_col is %zu\n",
+           __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
    while (pc != nullptr && pc->level >= level)
    {
+      LOG_FMT(LBRDEL, "%s(%d): test token '%s', orig_line is %zu, orig_col is %zu\n",
+              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
       if (pc->flags & PCF_IN_PREPROC)
       {
          // Cannot remove braces that contain a preprocessor
@@ -697,6 +701,10 @@ static void convert_brace(chunk_t *br)
    {
       return;
    }
+   LOG_FMT(LGUY, "%s(%d): br->type is %s, br->parent_type is %s\n",
+           __func__, __LINE__, get_token_name(br->type), get_token_name(br->parent_type));
+   LOG_FMT(LGUY, "%s(%d): br->orig_line is %zu, br->orig_col is %zu, tmp->orig_line is %zu\n",
+           __func__, __LINE__, br->orig_line, br->orig_col, tmp->orig_line);
 
    if (chunk_is_newline(tmp))
    {
@@ -707,10 +715,6 @@ static void convert_brace(chunk_t *br)
       else
       {
          // Issue #2219
-         LOG_FMT(LGUY, "%s(%d): br->text() is '%s', br->parent_type is %s\n",
-                 __func__, __LINE__, br->text(), get_token_name(br->parent_type));
-         LOG_FMT(LGUY, "%s(%d): br->orig_line is %zu, tmp->orig_line is %zu\n",
-                 __func__, __LINE__, br->orig_line, tmp->orig_line);
          // look for opening brace
          chunk_t *brace;
          if (chunk_is_token(br, CT_VBRACE_OPEN))
@@ -719,7 +723,7 @@ static void convert_brace(chunk_t *br)
          }
          else if (chunk_is_token(br, CT_VBRACE_CLOSE))
          {
-            brace = chunk_get_prev_type(br, CT_VBRACE_OPEN, br->level);
+            brace = chunk_skip_to_match_rev(br);
             if (brace == nullptr)
             {
                brace = chunk_get_prev_type(br, CT_BRACE_OPEN, br->level);
@@ -1252,8 +1256,8 @@ static void mod_case_brace(void)
 static void process_if_chain(chunk_t *br_start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LBRCH, "%s(%d): if starts on line %zu\n",
-           __func__, __LINE__, br_start->orig_line);
+   LOG_FMT(LBRCH, "%s(%d): if starts on line %zu, orig_col is %zu.\n",
+           __func__, __LINE__, br_start->orig_line, br_start->orig_col);
 
    vector<chunk_t *> braces;
    braces.reserve(16);
@@ -1263,10 +1267,12 @@ static void process_if_chain(chunk_t *br_start)
    chunk_t *pc = br_start;
    while (pc != nullptr)
    {
+      LOG_FMT(LBRCH, "%s(%d): pc->text() is '%s', orig_line is %zu, orig_col is %zu.\n",
+              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
       if (chunk_is_token(pc, CT_BRACE_OPEN))
       {
          const bool tmp = can_remove_braces(pc);
-         LOG_FMT(LBRCH, "%s(%d):   [%zu] line %zu - can%s remove %s\n",
+         LOG_FMT(LBRCH, "%s(%d): braces.size() is %zu, line is %zu, - can%s remove %s\n",
                  __func__, __LINE__, braces.size(), pc->orig_line, tmp ? "" : "not",
                  get_token_name(pc->type));
          if (!tmp)
@@ -1281,7 +1287,7 @@ static void process_if_chain(chunk_t *br_start)
          {
             must_have_braces = true;
          }
-         LOG_FMT(LBRCH, "%s(%d):   [%zu] line %zu - %s %s\n",
+         LOG_FMT(LBRCH, "%s(%d): braces.size() is %zu, line is %zu, - %s %s\n",
                  __func__, __LINE__, braces.size(), pc->orig_line, tmp ? "should add" : "ignore",
                  get_token_name(pc->type));
       }
@@ -1353,38 +1359,38 @@ static void process_if_chain(chunk_t *br_start)
    }
    else if (options::mod_full_brace_if_chain())
    {
-      LOG_FMT(LBRCH, "%s(%d): remove braces on lines[%zu]:",
+      LOG_FMT(LBRCH, "%s(%d): remove braces on lines[%zu]:\n",
               __func__, __LINE__, braces.size());
 
       /*
        * This might run because either
-       * UO_mod_full_brace_if_chain or UO_mod_full_brace_if_chain_only
+       * mod_full_brace_if_chain or mod_full_brace_if_chain_only
        * is used.
        * We only want to remove braces if the first one is active.
        */
       const auto multiline_block = options::mod_full_brace_nl_block_rem_mlcond();
 
-      LOG_FMT(LBRCH, "%s(%d): remove braces on lines:", __func__, __LINE__);
+      LOG_FMT(LBRCH, "%s(%d): remove braces on lines:\n", __func__, __LINE__);
 
-      const auto ite = braces.rend();
-      for (auto itc = braces.rbegin(); itc != ite; ++itc)
+      // Issue #2229
+      const auto ite = braces.end();
+      for (auto itc = braces.begin(); itc != ite; ++itc)
       {
          const auto brace = *itc;
 
          if (  (chunk_is_token(brace, CT_BRACE_OPEN) || chunk_is_token(brace, CT_BRACE_CLOSE))
             && (multiline_block ? !paren_multiline_before_brace(brace) : true))
          {
-            LOG_FMT(LBRCH, "%s(%d): brace->orig_line is %zu",
-                    __func__, __LINE__, brace->orig_line);
+            LOG_FMT(LBRCH, "%s(%d): brace->orig_line is %zu, brace->orig_col is %zu\n",
+                    __func__, __LINE__, brace->orig_line, brace->orig_col);
             convert_brace(brace);
          }
          else
          {
-            LOG_FMT(LBRCH, "%s(%d): brace->orig_line is %zu",
-                    __func__, __LINE__, brace->orig_line);
+            LOG_FMT(LBRCH, "%s(%d): brace->orig_line is %zu, brace->orig_col is %zu\n",
+                    __func__, __LINE__, brace->orig_line, brace->orig_col);
          }
       }
-      LOG_FMT(LBRCH, "\n");
    }
 } // process_if_chain
 
