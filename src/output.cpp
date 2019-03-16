@@ -619,7 +619,8 @@ void output_text(FILE *pfile)
       else if (pc->len() == 0)
       {
          // don't do anything for non-visible stuff
-         LOG_FMT(LOUTIND, " <%zu> -", pc->column);
+         LOG_FMT(LOUTIND, "%s(%d): orig_line is %zu, column is %zu, non-visible stuff: type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->column, get_token_name(pc->type));
       }
       else
       {

@@ -352,6 +352,7 @@
 
 30970  Issue_2219.cfg                       cpp/Issue_2219.cpp
 30971  Issue_2224.cfg                       cpp/Issue_2224.cpp
+30972  Issue_2229.cfg                       cpp/Issue_2229.cpp
 
 31000  empty.cfg                            cpp/digraph.cpp
 31001  ben_030.cfg                          cpp/digraph.cpp
