@@ -3608,7 +3608,7 @@ void combine_labels(void)
                {
                   return;
                }
-               LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, tmp '%s'\n   ",
+               LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, tmp '%s': ",
                        __func__, __LINE__, tmp->orig_line, tmp->orig_col, (tmp->type == CT_NEWLINE) ? "<Newline>" : tmp->text());
                log_pcf_flags(LGUY, tmp->flags);
                if (next->flags & PCF_IN_FCN_CALL)
@@ -4413,7 +4413,7 @@ static void mark_function(chunk_t *pc)
    if (pc->flags & PCF_IN_CONST_ARGS)
    {
       set_chunk_type(pc, CT_FUNC_CTOR_VAR);
-      LOG_FMT(LFCN, "%s(%d)   1) Marked [%s] as FUNC_CTOR_VAR on line %zu col %zu\n",
+      LOG_FMT(LFCN, "%s(%d):   1) Marked [%s] as FUNC_CTOR_VAR on line %zu col %zu\n",
               __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
       next = skip_template_next(next);
       if (next == nullptr)
@@ -4624,22 +4624,25 @@ static void mark_function(chunk_t *pc)
     * wrapped in a macro: "MACRO(void foo(void));"
     */
    if (  chunk_is_token(pc, CT_FUNC_CALL)
-      && (pc->level == pc->brace_level || pc->level == 1)
+      && (  pc->level == pc->brace_level
+         || pc->level == 1)
       && ((pc->flags & PCF_IN_ARRAY_ASSIGN) == 0))
    {
       bool isa_def  = false;
       bool hit_star = false;
-      LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
+      LOG_FMT(LFCN, "%s(%d): pc->text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
+              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col,
+              get_token_name(pc->type));
       if (prev == nullptr)
       {
-         LOG_FMT(LFCN, "  Checking func call: prev->type is NULL");
+         LOG_FMT(LFCN, "%s(%d): Checking func call: prev is NULL\n",
+                 __func__, __LINE__);
       }
       else
       {
-         LOG_FMT(LFCN, "  Checking func call: prev->text() '%s', prev->type is %s",
-                 prev->text(), get_token_name(prev->type));
+         LOG_FMT(LFCN, "%s(%d): Checking func call: prev->text() '%s', prev->type is %s\n",
+                 __func__, __LINE__, prev->text(), get_token_name(prev->type));
       }
-      LOG_FMT(LFCN, "\n");
 
       // if (!chunk_ends_type(prev))
       // {
@@ -4666,9 +4669,8 @@ static void mark_function(chunk_t *pc)
        */
       while (prev != nullptr)
       {
-         LOG_FMT(LFCN, "%s(%d): next step with: ", __func__, __LINE__);
-         LOG_FMT(LFCN, "orig_line is %zu, orig_col is %zu, text() '%s'\n",
-                 prev->orig_line, prev->orig_col, prev->text());
+         LOG_FMT(LFCN, "%s(%d): next step with: prev->orig_line is %zu, orig_col is %zu, text() '%s'\n",
+                 __func__, __LINE__, prev->orig_line, prev->orig_col, prev->text());
 
          if (pc->parent_type == CT_FIXED)
          {
@@ -4691,8 +4693,8 @@ static void mark_function(chunk_t *pc)
          // skip const(TYPE)
          if (chunk_is_token(prev, CT_PAREN_CLOSE) && prev->parent_type == CT_D_CAST)
          {
-            LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
-            LOG_FMT(LFCN, " --> For sure a prototype or definition\n");
+            LOG_FMT(LFCN, "%s(%d): --> For sure a prototype or definition\n",
+                    __func__, __LINE__);
             isa_def = true;
             break;
          }
@@ -4727,14 +4729,13 @@ static void mark_function(chunk_t *pc)
                      && prev->type != CT_TYPE
                      && prev->type != CT_THIS))
                {
-                  LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
-                  LOG_FMT(LFCN, " --? skipped MEMBER and landed on %s\n",
-                          (prev == nullptr) ? "<null>" : get_token_name(prev->type));
+                  LOG_FMT(LFCN, "%s(%d): --? skipped MEMBER and landed on %s\n",
+                          __func__, __LINE__, (prev == nullptr) ? "<null>" : get_token_name(prev->type));
                   break;
                }
 
-               LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
-               LOG_FMT(LFCN, " <skip '%s'\n>", prev->text());
+               LOG_FMT(LFCN, "%s(%d): <skip> '%s'\n",
+                       __func__, __LINE__, prev->text());
 
                // Issue #1112
                // clarification: this will skip the CT_WORD, CT_TYPE or CT_THIS landing on either
@@ -4743,12 +4744,13 @@ static void mark_function(chunk_t *pc)
                prev = chunk_get_prev_ncnlnp(prev);
                if (prev == nullptr)
                {
-                  LOG_FMT(LFCN, "nullptr\n");
+                  LOG_FMT(LFCN, "%s(%d): prev is nullptr\n",
+                          __func__, __LINE__);
                }
                else
                {
-                  LOG_FMT(LFCN, "orig_line is %zu, orig_col is %zu, text() '%s'\n",
-                          prev->orig_line, prev->orig_col, prev->text());
+                  LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
+                          __func__, __LINE__, prev->orig_line, prev->orig_col, prev->text());
                }
             }
             if (prev == nullptr)
@@ -4762,14 +4764,23 @@ static void mark_function(chunk_t *pc)
          {
             if (!hit_star)
             {
-               LOG_FMT(LFCN, "%s(%d) ", __func__, __LINE__);
-               LOG_FMT(LFCN, " --> For sure a prototype or definition\n");
+               LOG_FMT(LFCN, "%s(%d):   --> For sure a prototype or definition\n",
+                       __func__, __LINE__);
                isa_def = true;
                break;
             }
-            LOG_FMT(LFCN, "%s(%d) ", __func__, __LINE__);
-            LOG_FMT(LFCN, " --> maybe a proto/def\n");
-            isa_def = true;
+            chunk_t *prev_prev = chunk_get_prev_ncnlnp(prev);
+            if (!chunk_is_token(prev_prev, CT_QUESTION))               // Issue #1753
+            {
+               LOG_FMT(LFCN, "%s(%d):   --> maybe a proto/def\n",
+                       __func__, __LINE__);
+
+               LOG_FMT(LFCN, "%s(%d): prev is '%s', orig_line is %zu, orig_col is %zu, type is %s, parent_type is %s\n",
+                       __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col,
+                       get_token_name(prev->type), get_token_name(prev->parent_type));
+               log_pcf_flags(LGUY, pc->flags);
+               isa_def = true;
+            }
          }
 
          if (chunk_is_ptr_operator(prev))
@@ -4785,7 +4796,7 @@ static void mark_function(chunk_t *pc)
             && prev->type != CT_WORD
             && !chunk_is_ptr_operator(prev))
          {
-            LOG_FMT(LFCN, "%s(%d):  --> Stopping on pc is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
+            LOG_FMT(LFCN, "%s(%d):  --> Stopping on prev is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
                     __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col, get_token_name(prev->type));
             // certain tokens are unlikely to precede a prototype or definition
             if (  chunk_is_token(prev, CT_ARITH)
@@ -4884,19 +4895,17 @@ static void mark_function(chunk_t *pc)
          for (  tmp = prev; (tmp != nullptr)
              && tmp != pc; tmp = chunk_get_next_ncnl(tmp))
          {
-            LOG_FMT(LFCN, " %s[%s]",
-                    tmp->text(), get_token_name(tmp->type));
+            LOG_FMT(LFCN, "%s(%d): text() is '%s', type is %s\n",
+                    __func__, __LINE__, tmp->text(), get_token_name(tmp->type));
             make_type(tmp);
          }
-         LOG_FMT(LFCN, "\n");
       }
    }
 
    if (pc->type != CT_FUNC_DEF)
    {
-      LOG_FMT(LFCN, "%s(%d): ", __func__, __LINE__);
-      LOG_FMT(LFCN, "  Detected %s '%s' on line %zu col %zu\n",
-              get_token_name(pc->type),
+      LOG_FMT(LFCN, "%s(%d):  Detected type %s, text() is '%s', on orig_line %zu, orig_col %zu\n",
+              __func__, __LINE__, get_token_name(pc->type),
               pc->text(), pc->orig_line, pc->orig_col);
 
       tmp = flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
@@ -4943,17 +4952,15 @@ static void mark_function(chunk_t *pc)
             semi = tmp;
             chunk_flags_clr(pc, PCF_VAR_1ST_DEF);
             set_chunk_type(pc, CT_FUNC_PROTO);
-            LOG_FMT(LFCN, "%s(%d): ", __func__, __LINE__);
-            LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_PROTO on line %zu col %zu\n",
-                    pc->text(), pc->orig_line, pc->orig_col);
+            LOG_FMT(LFCN, "%s(%d):   2) Marked text() is '%s', as FUNC_PROTO on orig_line %zu, orig_col %zu\n",
+                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
             break;
          }
          else if (chunk_is_token(pc, CT_COMMA))
          {
             set_chunk_type(pc, CT_FUNC_CTOR_VAR);
-            LOG_FMT(LFCN, "%s(%d): ", __func__, __LINE__);
-            LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_CTOR_VAR on line %zu col %zu\n",
-                    pc->text(), pc->orig_line, pc->orig_col);
+            LOG_FMT(LFCN, "%s(%d):   2) Marked text() is '%s', as FUNC_CTOR_VAR on orig_line %zu, orig_col %zu\n",
+                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
             break;
          }
       }
@@ -5026,9 +5033,8 @@ static void mark_function(chunk_t *pc)
       if (!is_extern && !is_param)
       {
          set_chunk_type(pc, CT_FUNC_CTOR_VAR);
-         LOG_FMT(LFCN, "%s(%d): ", __func__, __LINE__);
-         LOG_FMT(LFCN, "  3) Marked text() '%s' as FUNC_CTOR_VAR on orig_line %zu, orig_col %zu\n",
-                 pc->text(), pc->orig_line, pc->orig_col);
+         LOG_FMT(LFCN, "%s(%d):   3) Marked text() '%s' as FUNC_CTOR_VAR on orig_line %zu, orig_col %zu\n",
+                 __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
       }
       else if (pc->brace_level > 0)
       {
@@ -5049,9 +5055,8 @@ static void mark_function(chunk_t *pc)
                   && p_op->parent_type != CT_NAMESPACE)
                {
                   set_chunk_type(pc, CT_FUNC_CTOR_VAR);
-                  LOG_FMT(LFCN, "%s(%d) ", __func__, __LINE__);
-                  LOG_FMT(LFCN, "  4) Marked [%s] as FUNC_CTOR_VAR on line %zu col %zu\n",
-                          pc->text(), pc->orig_line, pc->orig_col);
+                  LOG_FMT(LFCN, "%s(%d):   4) Marked text() is'%s', as FUNC_CTOR_VAR on orig_line %zu, orig_col %zu\n",
+                          __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
                }
             }
          }
