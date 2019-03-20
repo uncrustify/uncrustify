@@ -2002,10 +2002,12 @@ code_width                      = 0        # unsigned number
 ls_for_split_full               = false    # true/false
 
 # Whether to fully split long function prototypes/calls at commas.
+# The option ls_code_width has priority over the option ls_func_split_full.
 ls_func_split_full              = false    # true/false
 
 # Whether to split lines as close to code_width as possible and ignore some
 # groupings.
+# The option ls_code_width has priority over the option ls_func_split_full.
 ls_code_width                   = false    # true/false
 
 #

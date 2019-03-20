@@ -2489,11 +2489,13 @@ extern Option<bool>
 ls_for_split_full;
 
 // Whether to fully split long function prototypes/calls at commas.
+// The option ls_code_width has priority over the option ls_func_split_full.
 extern Option<bool>
 ls_func_split_full;
 
 // Whether to split lines as close to code_width as possible and ignore some
 // groupings.
+// The option ls_code_width has priority over the option ls_func_split_full.
 extern Option<bool>
 ls_code_width;
 
