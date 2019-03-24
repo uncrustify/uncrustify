@@ -106,7 +106,7 @@ class SourceTest(object):
             ]
 
         else:
-            cmd += ['-L1,2']
+            cmd += ['-LA']
 
         if args.show_commands:
             printc('RUN: ', repr(cmd))
