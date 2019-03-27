@@ -6,10 +6,10 @@ namespace boo3 {
 }
 
 namespace boo4 {
-int Fun2()
-{
-	int a = 7;
-	int b = 8;
-	return a+b;
-}
+	int Fun2()
+	{
+		int a = 7;
+		int b = 8;
+		return a+b;
+	}
 }

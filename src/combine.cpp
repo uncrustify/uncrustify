@@ -11,6 +11,7 @@
 
 #include "chunk_list.h"
 #include "ChunkStack.h"
+#include "flag_parens.h"
 #include "lang_pawn.h"
 #include "language_tools.h"
 #include "newlines.h"
@@ -21,7 +22,6 @@
 #include "uncrustify_types.h"
 
 #include <map>
-
 #include <cstdio>
 #include <cstdlib>
 #include <cassert>
@@ -29,20 +29,6 @@
 
 using namespace std;
 using namespace uncrustify;
-
-
-/**
- * Flags everything from the open paren to the close paren.
- *
- * @param po          Pointer to the open parenthesis
- * @param flags       flags to add
- * @param opentype
- * @param parenttype
- * @param parent_all
- *
- * @return The token after the close paren
- */
-static chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype, c_token_t parenttype, bool parent_all);
 
 
 /**
@@ -280,10 +266,6 @@ static UINT64 mark_where_chunk(chunk_t *pc, c_token_t parent_type, UINT64 flags)
  * Scan for CT_FUNCTION with a string that matches pclass->str
  */
 static void mark_class_ctor(chunk_t *pclass);
-
-
-//! We're on a 'namespace' skip the word and then set the parent of the braces.
-static void mark_namespace(chunk_t *pns);
 
 
 static void mark_cpp_constructor(chunk_t *pc);
@@ -551,65 +533,6 @@ void flag_series(chunk_t *start, chunk_t *end, UINT64 set_flags, UINT64 clr_flag
       chunk_flags_upd(end, clr_flags, set_flags);
    }
 }
-
-
-static chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype,
-                            c_token_t parenttype, bool parent_all)
-{
-   LOG_FUNC_ENTRY();
-   chunk_t *paren_close;
-
-   paren_close = chunk_skip_to_match(po, scope_e::PREPROC);
-   if (paren_close == nullptr)
-   {
-      LOG_FMT(LERR, "%s(%d): no match for '%s' at [%zu:%zu]",
-              __func__, __LINE__, po->text(), po->orig_line, po->orig_col);
-      log_func_stack_inline(LERR);
-      cpd.error_count++;
-      return(nullptr);
-   }
-
-   LOG_FMT(LFLPAREN, "%s(%d): between  po is '%s', orig_line is %zu, orig_col is %zu, and\n",
-           __func__, __LINE__, po->text(), po->orig_line, po->orig_col);
-   LOG_FMT(LFLPAREN, "%s(%d): paren_close is '%s', orig_line is %zu, orig_col is %zu, type is %s, parent_type is %s\n",
-           __func__, __LINE__, paren_close->text(), paren_close->orig_line, paren_close->orig_col,
-           get_token_name(opentype), get_token_name(parenttype));
-   log_func_stack_inline(LFLPAREN);
-
-   // the last chunk must be also modified. Issue #2149
-   chunk_t *after_paren_close = chunk_get_next(paren_close);
-   if (po != paren_close)
-   {
-      if (  flags != 0
-         || (parent_all && parenttype != CT_NONE))
-      {
-         chunk_t *pc;
-         for (pc = chunk_get_next(po, scope_e::PREPROC);
-              pc != nullptr && pc != after_paren_close;
-              pc = chunk_get_next(pc, scope_e::PREPROC))
-         {
-            chunk_flags_set(pc, flags);
-            if (parent_all)
-            {
-               set_chunk_parent(pc, parenttype);
-            }
-         }
-      }
-
-      if (opentype != CT_NONE)
-      {
-         set_chunk_type(po, opentype);
-         set_chunk_type(paren_close, (c_token_t)(opentype + 1));
-      }
-
-      if (parenttype != CT_NONE)
-      {
-         set_chunk_parent(po, parenttype);
-         set_chunk_parent(paren_close, parenttype);
-      }
-   }
-   return(chunk_get_next_ncnl(paren_close, scope_e::PREPROC));
-} // flag_parens
 
 
 chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
@@ -1416,11 +1339,6 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    if (chunk_is_token(pc, CT_OC_CLASS))
    {
       handle_oc_class(pc);
-   }
-
-   if (chunk_is_token(pc, CT_NAMESPACE))
-   {
-      mark_namespace(pc);
    }
 
    // TODO: Check for stuff that can only occur at the start of an statement
@@ -5403,55 +5321,6 @@ static void mark_class_ctor(chunk_t *start)
       pc = next;
    }
 } // mark_class_ctor
-
-
-static void mark_namespace(chunk_t *pns)
-{
-   LOG_FUNC_ENTRY();
-   chunk_t *br_close;
-   bool    is_using = false;
-
-   chunk_t *pc = chunk_get_prev_ncnl(pns);
-   if (chunk_is_token(pc, CT_USING))
-   {
-      is_using = true;
-      set_chunk_parent(pns, CT_USING);
-   }
-
-   pc = chunk_get_next_ncnl(pns);
-   while (pc != nullptr)
-   {
-      set_chunk_parent(pc, CT_NAMESPACE);
-      if (pc->type != CT_BRACE_OPEN)
-      {
-         if (chunk_is_token(pc, CT_SEMICOLON))
-         {
-            if (is_using)
-            {
-               set_chunk_parent(pc, CT_USING);
-            }
-            return;
-         }
-         pc = chunk_get_next_ncnl(pc);
-         continue;
-      }
-
-      if (  (options::indent_namespace_limit() > 0)
-         && ((br_close = chunk_skip_to_match(pc)) != nullptr))
-      {
-         // br_close->orig_line is always >= pc->orig_line;
-         size_t diff = br_close->orig_line - pc->orig_line;
-
-         if (diff > options::indent_namespace_limit())
-         {
-            chunk_flags_set(pc, PCF_LONG_BLOCK);
-            chunk_flags_set(br_close, PCF_LONG_BLOCK);
-         }
-      }
-      flag_parens(pc, PCF_IN_NAMESPACE, CT_NONE, CT_NAMESPACE, false);
-      return;
-   }
-} // mark_namespace
 
 
 static chunk_t *skip_align(chunk_t *start)

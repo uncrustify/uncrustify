@@ -1,8 +1,8 @@
 /**
  * @file unc_tools.h
  *
- * @author  Guy Maurel since version 0.62 for uncrustify4Qt
- *          October 2015, 2016
+ * @author  Guy Maurel
+ *          October 2015, 2016, 2017, 2018, 2019
  * @license GPL v2+
  */
 

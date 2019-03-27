@@ -1174,6 +1174,7 @@ extern Option<bool>
 indent_namespace_single_indent;
 
 // The number of spaces to indent a namespace block.
+// If set to zero, use the value indent_columns
 extern BoundedOption<unsigned, 0, 16>
 indent_namespace_level;
 
