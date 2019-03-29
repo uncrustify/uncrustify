@@ -2819,8 +2819,8 @@ static void fix_casts(chunk_t *start)
    bool       doubtful_cast = false;
 
 
-   LOG_FMT(LCASTS, "%s(%d): orig_line is %zu, orig_col is %zu:",
-           __func__, __LINE__, start->orig_line, start->orig_col);
+   LOG_FMT(LCASTS, "%s(%d): start->text() is '%s', orig_line is %zu, orig_col is %zu\n",
+           __func__, __LINE__, start->text(), start->orig_line, start->orig_col);
 
    prev = chunk_get_prev_ncnl(start);
    if (prev == nullptr)
@@ -2829,7 +2829,14 @@ static void fix_casts(chunk_t *start)
    }
    if (chunk_is_token(prev, CT_PP_DEFINED))
    {
-      LOG_FMT(LCASTS, " -- not a cast - after defined\n");
+      LOG_FMT(LCASTS, "%s(%d):  -- not a cast - after defined\n",
+              __func__, __LINE__);
+      return;
+   }
+   if (chunk_is_token(prev, CT_ANGLE_CLOSE))
+   {
+      LOG_FMT(LCASTS, "%s(%d):  -- not a cast - after > (template)\n",
+              __func__, __LINE__);
       return;
    }
 
@@ -2855,7 +2862,8 @@ static void fix_casts(chunk_t *start)
                && language_is_set(LANG_JAVA))
             || chunk_is_token(pc, CT_AMP)))
    {
-      LOG_FMT(LCASTS, " [%s]", get_token_name(pc->type));
+      LOG_FMT(LCASTS, "%s(%d): pc->text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
+              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, get_token_name(pc->type));
 
       if (chunk_is_token(pc, CT_WORD) || (chunk_is_token(last, CT_ANGLE_CLOSE) && chunk_is_token(pc, CT_DC_MEMBER)))
       {
@@ -2875,14 +2883,15 @@ static void fix_casts(chunk_t *start)
       || pc->type != CT_PAREN_CLOSE
       || chunk_is_token(prev, CT_OC_CLASS))
    {
-      LOG_FMT(LCASTS, " -- not a cast, hit type is %s\n",
-              pc == nullptr ? "NULL"  : get_token_name(pc->type));
+      LOG_FMT(LCASTS, "%s(%d):  -- not a cast, hit type is %s\n",
+              __func__, __LINE__, pc == nullptr ? "NULL"  : get_token_name(pc->type));
       return;
    }
 
    if (word_count > 1)
    {
-      LOG_FMT(LCASTS, " -- too many words: %d\n", word_count);
+      LOG_FMT(LCASTS, "%s(%d):  -- too many words: %d\n",
+              __func__, __LINE__, word_count);
       return;
    }
    paren_close = pc;
@@ -2952,7 +2961,8 @@ static void fix_casts(chunk_t *start)
 
       if (after == nullptr)
       {
-         LOG_FMT(LCASTS, " -- not a cast - hit NULL\n");
+         LOG_FMT(LCASTS, "%s(%d):  -- not a cast - hit NULL\n",
+                 __func__, __LINE__);
          return;
       }
 
@@ -3002,15 +3012,15 @@ static void fix_casts(chunk_t *start)
               && (!(  chunk_is_token(pc, CT_SQUARE_OPEN)
                    && language_is_set(LANG_OC))))
       {
-         LOG_FMT(LCASTS, " -- not a cast - followed by text() '%s', type is %s\n",
-                 pc->text(), get_token_name(pc->type));
+         LOG_FMT(LCASTS, "%s(%d):  -- not a cast - followed by text() '%s', type is %s\n",
+                 __func__, __LINE__, pc->text(), get_token_name(pc->type));
          return;
       }
 
       if (nope)
       {
-         LOG_FMT(LCASTS, " -- not a cast - text() '%s' followed by type %s\n",
-                 pc->text(), get_token_name(after->type));
+         LOG_FMT(LCASTS, "%s(%d):  -- not a cast - text() '%s' followed by type %s\n",
+                 __func__, __LINE__, pc->text(), get_token_name(after->type));
          return;
       }
    }
@@ -3025,14 +3035,16 @@ static void fix_casts(chunk_t *start)
       || chunk_is_token(pc, CT_COMMA)
       || chunk_is_paren_close(pc))
    {
-      LOG_FMT(LCASTS, " -- not a cast - followed by type %s\n", get_token_name(pc->type));
+      LOG_FMT(LCASTS, "%s(%d):  -- not a cast - followed by type %s\n",
+              __func__, __LINE__, get_token_name(pc->type));
       return;
    }
 
    set_chunk_parent(start, CT_C_CAST);
    set_chunk_parent(paren_close, CT_C_CAST);
 
-   LOG_FMT(LCASTS, " -- %s c-cast: (", verb);
+   LOG_FMT(LCASTS, "%s(%d):  -- %s c-cast: (",
+           __func__, __LINE__, verb);
 
    for (pc = first;
         pc != nullptr && pc != paren_close;
@@ -5385,19 +5397,36 @@ static void mark_class_ctor(chunk_t *start)
          LOG_FMT(LFTOR, "%s(%d): prev is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
                  __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col, get_token_name(prev->type));
          // Issue #1003, next->type should not be CT_FPAREN_OPEN
-         if (  prev != nullptr && prev->type != CT_NEW
-            && chunk_is_token(next, CT_PAREN_OPEN))
+         if (  prev != nullptr
+            && (prev->type != CT_NEW))
          {
-            set_chunk_type(pc, CT_FUNC_CLASS_DEF);
-            LOG_FMT(LFTOR, "%s(%d): text() is '%s', orig_line is %zu, orig_col is %zu, type is %s, Marked CTor/DTor\n",
-                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, get_token_name(pc->type));
-            mark_cpp_constructor(pc);
-         }
-         else
-         {
-            LOG_FMT(LFTOR, "%s(%d): text() is '%s', sorig_line is %zu, orig_col is %zu, type is %s\n",
-                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, get_token_name(pc->type));
-            make_type(pc);
+            bool is_func_class_def = false;
+            if (chunk_is_token(next, CT_PAREN_OPEN))
+            {
+               is_func_class_def = true;
+            }
+            else if (chunk_is_token(next, CT_ANGLE_OPEN))          // Issue # 1737
+            {
+               chunk_t *closeAngle    = chunk_skip_to_match(next);
+               chunk_t *afterTemplate = chunk_get_next(closeAngle);
+               if (chunk_is_token(afterTemplate, CT_PAREN_OPEN))
+               {
+                  is_func_class_def = true;
+               }
+            }
+            else
+            {
+               LOG_FMT(LFTOR, "%s(%d): text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
+                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, get_token_name(pc->type));
+               make_type(pc);
+            }
+            if (is_func_class_def)
+            {
+               set_chunk_type(pc, CT_FUNC_CLASS_DEF);
+               LOG_FMT(LFTOR, "%s(%d): text() is '%s', orig_line is %zu, orig_col is %zu, type is %s, Marked CTor/DTor\n",
+                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, get_token_name(pc->type));
+               mark_cpp_constructor(pc);
+            }
          }
       }
       pc = next;
