@@ -1,7 +1,7 @@
 void Func()
 {
     OtherFunc(
-@"multi
+        @"multi
 line");
 }
 
