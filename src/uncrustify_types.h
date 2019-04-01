@@ -449,4 +449,6 @@ struct cp_data_t
 
 extern cp_data_t cpd;  // TODO: can we avoid this external variable?
 
+const char *get_brace_stage_name(brace_stage_e brace_stage);
+
 #endif /* UNCRUSTIFY_TYPES_H_INCLUDED */

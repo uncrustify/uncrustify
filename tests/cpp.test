@@ -309,6 +309,7 @@
 30913  indent_namespace-t.cfg               cpp/indent_namespace2.h
 30914  indent_namespace_single_indent.cfg   cpp/indent_namespace_single_indent.h
 30915  empty.cfg                            cpp/bug_1235.cpp
+30916  empty.cfg                            cpp/Issue_1737.cpp
 
 30920  ben_027.cfg                          cpp/indent-off.cpp
 30921  ben_028.cfg                          cpp/variadic-template.h
