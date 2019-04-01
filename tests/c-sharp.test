@@ -134,4 +134,5 @@
 60037  UNI-29933.cfg                        cs/UNI-29933.cs
 60040  UNI-30498_2.cfg                      cs/UNI-30498_2.cs
 60041  squeeze-paren-close-Option.cfg       cs/squeeze-paren-close-Option.cs
+60042  indent-multistring-coulmn1.cfg       cs/indent-multistring-coulmn1.cs
 60044  UNI-37241.cfg                        cs/UNI-37241.cs

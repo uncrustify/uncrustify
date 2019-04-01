@@ -1319,6 +1319,10 @@ indent_case_brace;
 extern Option<bool>
 indent_col1_comment;
 
+// Whether to indent multi string literal in first column.
+extern Option<bool>
+indent_col1_multi_string_literal;
+
 // How to indent goto labels.
 //
 // >0: Absolute column where 1 is the leftmost column

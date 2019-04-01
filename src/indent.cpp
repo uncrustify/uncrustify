@@ -573,8 +573,9 @@ void indent_text(void)
    while (pc != nullptr)
    {
       //  forces string literal to column-1 [Fix for 1246]
-      if (  (chunk_is_token(pc, CT_STRING) || chunk_is_token(pc, CT_STRING_MULTI))
-         && !language_is_set(LANG_OC))
+      if (  (pc->type == CT_STRING_MULTI)
+         && !(cpd.lang_flags & LANG_OC)                      // Issue #1795
+         && options::indent_col1_multi_string_literal())
       {
          string str = pc->text();
          if ((str[0] == '@') && (chunk_get_prev(pc)->type == CT_NEWLINE))

@@ -7,7 +7,7 @@ abc";
       var y = @"
 abc" + "def";
       var z = "" +
-@"
+              @"
 ";
    }
 }
