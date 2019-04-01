@@ -1185,8 +1185,9 @@ void indent_text(void)
          && !chunk_is_comment(pc)
          && log_sev_on(LINDPC))
       {
-         LOG_FMT(LINDPC, " -=[ %zu:%zu %s ]=-\n",
-                 pc->orig_line, pc->orig_col, pc->text());
+         LOG_FMT(LINDPC, "%s(%d):\n", __func__, __LINE__);
+         LOG_FMT(LINDPC, " -=[ pc->orig_line is %zu, orig_col is %zu %s ]=-, frm.size() is %zu\n",
+                 pc->orig_line, pc->orig_col, pc->text(), frm.size());
          for (size_t ttidx = frm.size() - 1; ttidx > 0; ttidx--)
          {
             LOG_FMT(LINDPC, "     [%zu %zu:%zu %s %s/%s tmp=%zu ind=%zu bri=%zu tab=%zu cont=%d lvl=%zu blvl=%zu]\n",

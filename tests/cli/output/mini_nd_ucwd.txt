@@ -946,6 +946,7 @@ indent_namespace                = false    # true/false
 indent_namespace_single_indent  = false    # true/false
 
 # The number of spaces to indent a namespace block.
+# If set to zero, use the value indent_columns
 indent_namespace_level          = 0        # unsigned number
 
 # If the body of the namespace is longer than this number, it won't be

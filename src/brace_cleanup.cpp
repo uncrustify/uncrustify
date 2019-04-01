@@ -9,23 +9,24 @@
  */
 
 #include "brace_cleanup.h"
-#include "uncrustify_types.h"
-#include "prototypes.h"
 #include "chunk_list.h"
+#include "frame_list.h"
+#include "flag_parens.h"
+#include "indent.h"
+#include "keywords.h"
+#include "language_tools.h"
+#include "lang_pawn.h"
+#include "logger.h"
+#include "prototypes.h"
+#include "uncrustify.h"
+#include "uncrustify_types.h"
+#include "unc_ctype.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include "unc_ctype.h"
-#include "uncrustify.h"
-#include "lang_pawn.h"
-#include "keywords.h"
-#include "logger.h"
-#include "indent.h"
-#include "language_tools.h"
-
 #include <stdexcept>
 #include <iostream>
-#include "frame_list.h"
 
 using namespace uncrustify;
 
@@ -107,6 +108,10 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc);
  * @return true - done with this chunk, false - keep processing
  */
 static bool handle_complex_close(ParseFrame &frm, chunk_t *pc);
+
+
+//! We're on a 'namespace' skip the word and then set the parent of the braces.
+static void mark_namespace(chunk_t *pns);
 
 
 static size_t preproc_start(ParseFrame &frm, chunk_t *pc)
@@ -216,6 +221,11 @@ void brace_cleanup(void)
          }
       }
 
+      // Issue #1813
+      if (chunk_is_token(pc, CT_NAMESPACE))
+      {
+         mark_namespace(pc);
+      }
       // Assume the level won't change
       pc->level       = frm.level;
       pc->brace_level = frm.brace_level;
@@ -445,6 +455,9 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
             || chunk_is_token(pc, CT_MACRO_CLOSE))
          {
             frm.brace_level--;
+            LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level decreased to %zu\n",
+                    __func__, __LINE__, frm.brace_level);
+            log_pcf_flags(LBCSPOP, pc->flags);
          }
          pc->level       = frm.level;
          pc->brace_level = frm.brace_level;
@@ -593,7 +606,34 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
       frm.level++;
       if (chunk_is_token(pc, CT_BRACE_OPEN) || chunk_is_token(pc, CT_MACRO_OPEN))
       {
-         frm.brace_level++;
+         // Issue #1813
+         bool single = false;
+         if (pc->parent_type == CT_NAMESPACE)
+         {
+            LOG_FMT(LBCSPOP, "%s(%d): parent_type is NAMESPACE\n",
+                    __func__, __LINE__);
+            chunk_t *tmp = frm.top().pc;
+            if (tmp != nullptr && tmp->parent_type == CT_NAMESPACE)
+            {
+               LOG_FMT(LBCSPOP, "%s(%d): tmp->parent_type is NAMESPACE\n",
+                       __func__, __LINE__);
+               if (  options::indent_namespace()
+                  && options::indent_namespace_single_indent())
+               {
+                  LOG_FMT(LBCSPOP, "%s(%d): Options are SINGLE\n",
+                          __func__, __LINE__);
+                  single = true;
+               }
+            }
+         }
+         LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type));
+         if (!single)
+         {
+            frm.brace_level++;
+            LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level increased to %zu\n",
+                    __func__, __LINE__, frm.brace_level);
+         }
       }
       frm.push(*pc);
       frm.top().parent = parent;
@@ -878,6 +918,9 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
 
          frm.level++;
          frm.brace_level++;
+         LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level increased to %zu\n",
+                 __func__, __LINE__, frm.brace_level);
+         log_pcf_flags(LBCSPOP, pc->flags);
 
          frm.push(*vbrace, brace_stage_e::NONE);
          // "+VBrace");
@@ -1032,6 +1075,56 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc)
 } // handle_complex_close
 
 
+static void mark_namespace(chunk_t *pns)
+{
+   LOG_FUNC_ENTRY();
+   // Issue #1813
+   chunk_t *br_close;
+   bool    is_using = false;
+
+   chunk_t *pc = chunk_get_prev_ncnl(pns);
+   if (chunk_is_token(pc, CT_USING))
+   {
+      is_using = true;
+      set_chunk_parent(pns, CT_USING);
+   }
+
+   pc = chunk_get_next_ncnl(pns);
+   while (pc != nullptr)
+   {
+      set_chunk_parent(pc, CT_NAMESPACE);
+      if (pc->type != CT_BRACE_OPEN)
+      {
+         if (chunk_is_token(pc, CT_SEMICOLON))
+         {
+            if (is_using)
+            {
+               set_chunk_parent(pc, CT_USING);
+            }
+            return;
+         }
+         pc = chunk_get_next_ncnl(pc);
+         continue;
+      }
+
+      if (  (options::indent_namespace_limit() > 0)
+         && ((br_close = chunk_skip_to_match(pc)) != nullptr))
+      {
+         // br_close->orig_line is always >= pc->orig_line;
+         size_t diff = br_close->orig_line - pc->orig_line;
+
+         if (diff > options::indent_namespace_limit())
+         {
+            chunk_flags_set(pc, PCF_LONG_BLOCK);
+            chunk_flags_set(br_close, PCF_LONG_BLOCK);
+         }
+      }
+      flag_parens(pc, PCF_IN_NAMESPACE, CT_NONE, CT_NAMESPACE, false);
+      return;
+   }
+} // mark_namespace
+
+
 static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
 {
    LOG_FUNC_ENTRY();
@@ -1147,6 +1240,9 @@ bool close_statement(ParseFrame &frm, chunk_t *pc)
 
          frm.level--;
          frm.brace_level--;
+         LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level decreased to %zu\n",
+                 __func__, __LINE__, frm.brace_level);
+         log_pcf_flags(LBCSPOP, pc->flags);
          LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
          frm.pop();
