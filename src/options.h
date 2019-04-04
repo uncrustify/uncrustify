@@ -719,6 +719,11 @@ sp_catch_paren;
 extern Option<iarf_e>
 sp_oc_catch_paren;
 
+// (OC) Add or remove space between class name and '('
+// in '@interface className(categoryName)<ProtocolName>:BaseClass'
+extern Option<iarf_e>
+sp_oc_classname_paren;
+
 // (D) Add or remove space between 'version' and '('
 // in 'version (something) { }'. If set to ignore, sp_before_sparen is used.
 extern Option<iarf_e>

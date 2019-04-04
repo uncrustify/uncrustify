@@ -712,6 +712,15 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_oc_catch_paren());
    }
 
+   if (  language_is_set(LANG_OC)
+      && chunk_is_token(first, CT_OC_CLASS)
+      && chunk_is_token(second, CT_PAREN_OPEN)
+      && (options::sp_oc_classname_paren() != IARF_IGNORE))
+   {
+      log_rule("sp_oc_classname_paren");
+      return(options::sp_oc_classname_paren());
+   }
+
    if (  chunk_is_token(first, CT_CATCH)
       && chunk_is_token(second, CT_SPAREN_OPEN)
       && (options::sp_catch_paren() != IARF_IGNORE))

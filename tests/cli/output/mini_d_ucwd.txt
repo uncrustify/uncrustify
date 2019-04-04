@@ -559,6 +559,10 @@ sp_catch_paren                  = ignore   # ignore/add/remove/force
 # in '@catch (something) { }'. If set to ignore, sp_catch_paren is used.
 sp_oc_catch_paren               = ignore   # ignore/add/remove/force
 
+# (OC) Add or remove space between class name and '('
+# in '@interface className(categoryName)<ProtocolName>:BaseClass'
+sp_oc_classname_paren           = ignore   # ignore/add/remove/force
+
 # (D) Add or remove space between 'version' and '('
 # in 'version (something) { }'. If set to ignore, sp_before_sparen is used.
 sp_version_paren                = ignore   # ignore/add/remove/force

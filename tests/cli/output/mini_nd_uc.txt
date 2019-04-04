@@ -149,6 +149,7 @@ sp_throw_paren                  = ignore
 sp_after_throw                  = ignore
 sp_catch_paren                  = ignore
 sp_oc_catch_paren               = ignore
+sp_oc_classname_paren           = ignore
 sp_version_paren                = ignore
 sp_scope_paren                  = ignore
 sp_super_paren                  = remove
