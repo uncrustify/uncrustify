@@ -478,7 +478,7 @@ static void chunk_log_msg(chunk_t *chunk, const log_sev_t log, const char *str)
    }
    else
    {
-      LOG_FMT(log, "text() is '%s', type is %s,", chunk->text(), get_token_name(chunk->type));
+      LOG_FMT(log, "text() is '%s', type is %s,\n", chunk->text(), get_token_name(chunk->type));
    }
 }
 
@@ -508,7 +508,8 @@ static void chunk_log(chunk_t *pc, const char *text)
       {
          chunk_log_msg(prev, log, " @ after");
       }
-      LOG_FMT(log, " stage is %u", static_cast<unsigned int>(cpd.unc_stage));
+      LOG_FMT(log, " stage is %s",
+              get_unc_stage_name(cpd.unc_stage));
       log_func_stack_inline(log);
    }
 }
