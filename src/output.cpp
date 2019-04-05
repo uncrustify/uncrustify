@@ -278,12 +278,15 @@ static void add_char(UINT32 ch, bool is_literal)
       // explicitly disallow a tab after a space
       if (!is_literal && ch == '\t' && cpd.last_char == ' ')
       {
-         size_t endcol = next_tab_column(cpd.column);
-         while (cpd.column < endcol)
+         if (options::indent_with_tabs() == 0)
          {
-            add_char(' ');
+            size_t endcol = next_tab_column(cpd.column);
+            while (cpd.column < endcol)
+            {
+               add_char(' ');
+            }
+            return;
          }
-         return;
       }
 
       if ((ch == ' ') && !cpd.output_trailspace)
