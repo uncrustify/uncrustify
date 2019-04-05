@@ -4841,6 +4841,7 @@ void annotations_newlines(void)
    LOG_FUNC_ENTRY();
 
    chunk_t *next;
+   chunk_t *prev;
    chunk_t *ae;   // last token of the annotation
    chunk_t *pc = chunk_get_head();
    while (  (pc = chunk_get_next_type(pc, CT_ANNOTATION, -1)) != nullptr
@@ -4861,20 +4862,28 @@ void annotations_newlines(void)
          break;
       }
 
-      LOG_FMT(LANNOT, "%s(%d): %zu:%zu annotation '%s' end@%zu:%zu '%s'",
+      LOG_FMT(LANNOT, "%s(%d): orig_line is %zu, orig_col is %zu, annotation is '%s',  end @ orig_line %zu, orig_col %zu, is '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
               ae->orig_line, ae->orig_col, ae->text());
 
+      prev = chunk_get_prev(ae);             // Issue #1845
+      LOG_FMT(LANNOT, "%s(%d): prev->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+              __func__, __LINE__, prev->orig_line, prev->orig_col, prev->text());
       next = chunk_get_next_nnl(ae);
       if (chunk_is_token(next, CT_ANNOTATION))
       {
-         LOG_FMT(LANNOT, " -- nl_between_annotation\n");
+         LOG_FMT(LANNOT, "%s(%d):  -- nl_between_annotation\n",
+                 __func__, __LINE__);
          newline_iarf(ae, options::nl_between_annotation());
       }
-      else
+      if (chunk_is_token(next, CT_NEWLINE))
       {
-         LOG_FMT(LANNOT, " -- nl_after_annotation\n");
-         newline_iarf(ae, options::nl_after_annotation());
+         if (chunk_is_token(next, CT_ANNOTATION))
+         {
+            LOG_FMT(LANNOT, "%s(%d):  -- nl_after_annotation\n",
+                    __func__, __LINE__);
+            newline_iarf(ae, options::nl_after_annotation());
+         }
       }
    }
 } // annotations_newlines
