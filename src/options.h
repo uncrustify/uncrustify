@@ -2770,6 +2770,12 @@ align_func_proto_span;
 extern BoundedOption<unsigned, 0, 16>
 align_func_proto_gap;
 
+// The threshold for aligning function prototypes.
+//
+// 0 = No limit (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_func_proto_thresh;
+
 // Whether to align function prototypes on the 'operator' keyword instead of
 // what follows.
 extern Option<bool>

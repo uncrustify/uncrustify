@@ -18,9 +18,11 @@ void align_func_proto(size_t span)
 {
    LOG_FUNC_ENTRY();
 
+   size_t mythresh = 0;
+   mythresh = options::align_func_proto_thresh();
 
    AlignStack as;
-   as.Start(span, 0);
+   as.Start(span, mythresh);
    as.m_gap        = options::align_func_proto_gap();
    as.m_star_style = static_cast<AlignStack::StarStyle>(options::align_var_def_star_style());
    as.m_amp_style  = static_cast<AlignStack::StarStyle>(options::align_var_def_amp_style());
