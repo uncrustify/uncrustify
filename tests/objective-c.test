@@ -18,6 +18,7 @@
 50011  sp_after_oc_return_type_force.cfg    oc/return_type.m
 50012  sp_after_oc_return_type_remove.cfg   oc/return_type.m
 
+50014  sp_oc_classname_paren-r.cfg          oc/sp_oc_classname_paren-r.m
 50015  oc10.cfg                             oc/receiver.m
 
 50016  oc11.cfg                             oc/ternary.m
