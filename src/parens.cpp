@@ -156,7 +156,10 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
          if (hit_compare)
          {
             hit_compare = false;
-            add_parens_between(ref, pc);
+            if (!language_is_set(LANG_CS))
+            {
+               add_parens_between(ref, pc);
+            }
          }
          ref = pc;
       }
@@ -184,7 +187,9 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
       }
    }
 
-   if (hit_compare && ref != popen)
+   if (  hit_compare
+      && ref != popen
+      && !language_is_set(LANG_CS))
    {
       add_parens_between(ref, pclose);
    }

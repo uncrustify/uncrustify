@@ -375,7 +375,6 @@ enum class unc_stage_e : unsigned int
    MARK_COMMENTS,
    COMBINE_LABELS,
    OTHER,
-
    CLEANUP
 };
 
@@ -450,5 +449,7 @@ struct cp_data_t
 extern cp_data_t cpd;  // TODO: can we avoid this external variable?
 
 const char *get_brace_stage_name(brace_stage_e brace_stage);
+
+const char *get_unc_stage_name(unc_stage_e unc_stage);
 
 #endif /* UNCRUSTIFY_TYPES_H_INCLUDED */
