@@ -567,6 +567,7 @@ align_right_cmt_gap             = 0
 align_right_cmt_at_col          = 0
 align_func_proto_span           = 0
 align_func_proto_gap            = 0
+align_func_proto_thresh         = 0
 align_on_operator               = false
 align_mix_var_proto             = false
 align_single_line_func          = false

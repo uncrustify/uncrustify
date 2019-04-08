@@ -2232,6 +2232,11 @@ align_func_proto_span           = 0        # unsigned number
 # Minimum gap between the return type and the function name.
 align_func_proto_gap            = 0        # unsigned number
 
+# The threshold for aligning function prototypes.
+#
+# 0 = No limit (default).
+align_func_proto_thresh         = 0        # unsigned number
+
 # Whether to align function prototypes on the 'operator' keyword instead of
 # what follows.
 align_on_operator               = false    # true/false
