@@ -2070,7 +2070,8 @@ void indent_text(void)
           */
          frm.push(*pc);
          if (  chunk_is_newline(chunk_get_prev(pc))
-            && pc->column != indent_column)
+            && pc->column != indent_column
+            && !(pc->flags & PCF_DONT_INDENT))
          {
             LOG_FMT(LINDENT, "%s[line %d]: %zu] indent => %zu [%s]\n",
                     __func__, __LINE__, pc->orig_line, indent_column, pc->text());
