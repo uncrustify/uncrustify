@@ -700,7 +700,9 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       log_pcf_flags(LSYS, pc->flags);
       set_chunk_type(pc, CT_ASSIGN_DEFAULT_ARG);
    }
-   if (  chunk_is_token(prev, CT_FPAREN_CLOSE)
+   if (  (  chunk_is_token(prev, CT_FPAREN_CLOSE)
+         || (  chunk_is_str(prev, "const", 5)
+            && chunk_is_token(prev->prev, CT_FPAREN_CLOSE)))
       && chunk_is_token(pc, CT_ASSIGN)
       && (  chunk_is_token(next, CT_DEFAULT)
          || chunk_is_token(next, CT_DELETE)
