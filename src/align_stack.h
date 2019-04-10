@@ -32,6 +32,7 @@ public:
    size_t     m_nl_seqnum;
    size_t     m_gap;
    bool       m_right_align;
+   bool       m_absolute_thresh;
    StarStyle  m_star_style;
    StarStyle  m_amp_style;  //! do not include the first item if it causes it to be indented
    bool       m_skip_first; //! do not include the first item if it causes it to be indented
@@ -83,7 +84,7 @@ public:
     * @param span       The row span limit
     * @param threshold  The column threshold
     */
-   void Start(size_t span, size_t threshold = 0);
+   void Start(size_t span, int threshold = 0);
 
 
    /**

@@ -22,14 +22,24 @@ using namespace uncrustify;
 using std::numeric_limits;
 
 
-void AlignStack::Start(size_t span, size_t thresh)
+void AlignStack::Start(size_t span, int thresh)
 {
-   LOG_FMT(LAS, "AlignStack::Start(%d): span is %zu, thresh is %zu\n", __LINE__, span, thresh);
+   LOG_FMT(LAS, "AlignStack::Start(%d): span is %zu, thresh is %d\n", __LINE__, span, thresh);
 
    m_aligned.Reset();
    m_skipped.Reset();
+   if (thresh > 0)
+   {
+      m_absolute_thresh = false;
+      m_thresh          = thresh;
+   }
+   else
+   {
+      m_absolute_thresh = true;
+      m_thresh          = -thresh;
+   }
+
    m_span        = span;
-   m_thresh      = thresh;
    m_min_col     = numeric_limits<size_t>::max();
    m_max_col     = 0;
    m_nl_seqnum   = 0;
@@ -218,8 +228,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    // Check threshold limits
    if (  m_max_col == 0
       || m_thresh == 0
-      || (  ((start->column + m_gap) <= (m_thresh + m_max_col)) // don't use subtraction here to prevent underflow
-         && (  (start->column + m_gap + m_thresh) >= m_max_col  // change the expression to mind negative expression
+      || (  ((start->column + m_gap) <= (m_thresh + (m_absolute_thresh ? m_min_col : m_max_col))) // don't use subtraction here to prevent underflow
+         && (  (start->column + m_gap + m_thresh) >= m_max_col                                    // change the expression to mind negative expression
             || start->column >= m_min_col)))
    {
       // we are adding it, so update the newline seqnum

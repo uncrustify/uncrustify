@@ -2545,9 +2545,10 @@ extern BoundedOption<unsigned, 0, 16>
 align_func_params_span;
 
 // The threshold for aligning function parameter definitions.
+// Use a negative number for absolute thresholds.
 //
 // 0 = No limit (default).
-extern BoundedOption<unsigned, 0, 5000>
+extern BoundedOption<signed, -1000, 5000>
 align_func_params_thresh;
 
 // The gap for aligning function parameter definitions.
@@ -2567,9 +2568,10 @@ align_same_func_call_params_span;
 
 // The threshold for aligning function-call parameters for single line
 // functions.
+// Use a negative number for absolute thresholds.
 //
 // 0 = No limit (default).
-extern BoundedOption<unsigned, 0, 5000>
+extern BoundedOption<signed, -1000, 5000>
 align_same_func_call_params_thresh;
 
 // The span for aligning variable definitions.
@@ -2595,9 +2597,10 @@ extern BoundedOption<unsigned, 0, 2>
 align_var_def_amp_style;
 
 // The threshold for aligning variable definitions.
+// Use a negative number for absolute thresholds.
 //
 // 0 = No limit (default).
-extern BoundedOption<unsigned, 0, 5000>
+extern BoundedOption<signed, -1000, 5000>
 align_var_def_thresh;
 
 // The gap for aligning variable definitions.
@@ -2633,9 +2636,10 @@ extern BoundedOption<unsigned, 0, 5000>
 align_assign_func_proto_span;
 
 // The threshold for aligning on '=' in assignments.
+// Use a negative number for absolute thresholds.
 //
 // 0 = No limit (default).
-extern BoundedOption<unsigned, 0, 5000>
+extern BoundedOption<signed, -1000, 5000>
 align_assign_thresh;
 
 // How to apply align_assign_span to function declaration "assignments", i.e.
@@ -2654,9 +2658,10 @@ extern BoundedOption<unsigned, 0, 5000>
 align_enum_equ_span;
 
 // The threshold for aligning on '=' in enums.
+// Use a negative number for absolute thresholds.
 //
 // 0 = no limit (default).
-extern BoundedOption<unsigned, 0, 5000>
+extern BoundedOption<signed, -1000, 5000>
 align_enum_equ_thresh;
 
 // The span for aligning class member definitions.
@@ -2666,9 +2671,10 @@ extern BoundedOption<unsigned, 0, 5000>
 align_var_class_span;
 
 // The threshold for aligning class member definitions.
+// Use a negative number for absolute thresholds.
 //
 // 0 = No limit (default).
-extern BoundedOption<unsigned, 0, 5000>
+extern BoundedOption<signed, -1000, 5000>
 align_var_class_thresh;
 
 // The gap for aligning class member definitions.
@@ -2682,9 +2688,10 @@ extern BoundedOption<unsigned, 0, 5000>
 align_var_struct_span;
 
 // The threshold for aligning struct/union member definitions.
+// Use a negative number for absolute thresholds.
 //
 // 0 = No limit (default).
-extern BoundedOption<unsigned, 0, 5000>
+extern BoundedOption<signed, -1000, 5000>
 align_var_struct_thresh;
 
 // The gap for aligning struct/union member definitions.
@@ -2734,7 +2741,7 @@ align_typedef_amp_style;
 // The span for aligning comments that end lines.
 //
 // 0 = Don't align (default).
-extern BoundedOption<unsigned, 0, 5000>
+extern BoundedOption<signed, -1000, 5000>
 align_right_cmt_span;
 
 // If aligning comments, whether to mix with comments after '}' and #endif with
@@ -2771,9 +2778,10 @@ extern BoundedOption<unsigned, 0, 16>
 align_func_proto_gap;
 
 // The threshold for aligning function prototypes.
+// Use a negative number for absolute thresholds.
 //
 // 0 = No limit (default).
-extern BoundedOption<unsigned, 0, 5000>
+extern BoundedOption<signed, -1000, 5000>
 align_func_proto_thresh;
 
 // Whether to align function prototypes on the 'operator' keyword instead of
