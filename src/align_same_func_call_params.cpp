@@ -23,7 +23,7 @@ void align_same_func_call_params(void)
    chunk_t           *align_cur  = nullptr;
    size_t            align_len   = 0;
    size_t            span        = 3;
-   size_t            thresh      = 0;
+   size_t            thresh;
    chunk_t           *align_fcn;
    unc_text          align_fcn_name;
    unc_text          align_root_name;
@@ -38,11 +38,7 @@ void align_same_func_call_params(void)
       span = options::align_same_func_call_params_span();
    }
 
-   // Default thresh is 0 (no limit) if align_same_func_call_params is true
-   if (options::align_same_func_call_params_thresh() > 0)
-   {
-      thresh = options::align_same_func_call_params_thresh();
-   }
+   thresh = options::align_same_func_call_params_thresh();
 
    fcn_as.Start(span, thresh);
 
