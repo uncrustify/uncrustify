@@ -64,7 +64,7 @@ public:
    paren_stack_entry_t &at(size_t idx);
    const paren_stack_entry_t &at(size_t idx) const;
 
-   paren_stack_entry_t &prev(size_t idx       = 1);
+   paren_stack_entry_t &prev(size_t idx = 1);
    const paren_stack_entry_t &prev(size_t idx = 1) const;
 
    paren_stack_entry_t &top();

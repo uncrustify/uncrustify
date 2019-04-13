@@ -2678,11 +2678,12 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, [%s/%s] '%s' <==> orig_line is %zu, orig_col is %zu [%s/%s] '%s'",
+   LOG_FMT(LSPACE, "%s(%d): first->orig_line is %zu, orig_col is %zu, [%s/%s], text() '%s' <==>\n",
            __func__, __LINE__, first->orig_line, first->orig_col,
            get_token_name(first->type), get_token_name(first->parent_type),
-           first->text(),
-           second->orig_line, second->orig_col,
+           first->text());
+   LOG_FMT(LSPACE, "%s(%d): second->orig_line is %zu, orig_col is %zu [%s/%s], text() '%s',",
+           __func__, __LINE__, second->orig_line, second->orig_col,
            get_token_name(second->type), get_token_name(second->parent_type),
            second->text());
    log_func_stack_inline(LSPACE);

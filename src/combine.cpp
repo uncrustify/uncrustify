@@ -692,8 +692,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    // into CT_ASSIGN_DEFAULT_ARG, CT_ASSIGN_FUNC_PROTO
    if (  chunk_is_token(prev, CT_WORD)
       && chunk_is_token(pc, CT_ASSIGN)
-      && chunk_is_token(next, CT_NUMBER)
-      && (pc->flags & PCF_IN_CONST_ARGS))
+      && (  chunk_is_token(next, CT_NUMBER)
+         || chunk_is_str(next, "nullptr", 7))         // Issue #2236
+      && (  (pc->flags & PCF_IN_FCN_DEF)              // Issue #2236
+         || (pc->flags & PCF_IN_CONST_ARGS)))
    {
       LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());

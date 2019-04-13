@@ -153,14 +153,16 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
                  || chunk_is_token(pc, CT_ASSIGN_DEFAULT_ARG)
                  || chunk_is_token(pc, CT_ASSIGN_FUNC_PROTO)))
       {
-         equ_count++;
+         if (chunk_is_token(pc, CT_ASSIGN))               // Issue #2236
+         {
+            equ_count++;
+         }
          LOG_FMT(LALASS, "%s(%d): align_assign_decl_func() is %d\n",
                  __func__, __LINE__, options::align_assign_decl_func());
          LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->flags: ", __func__, __LINE__);
          log_pcf_flags(LALASS, pc->flags);
 
          if (  options::align_assign_decl_func() == 0         // Align with other assignments (default)
-            && !(pc->flags & PCF_IN_FCN_DEF)
             && (  chunk_is_token(pc, CT_ASSIGN_DEFAULT_ARG)   // Foo( int bar = 777 );
                || chunk_is_token(pc, CT_ASSIGN_FUNC_PROTO)))  // Foo( const Foo & ) = delete;
          {
@@ -168,8 +170,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
             fcnDefault.Add(pc);
          }
-         else if (  options::align_assign_decl_func() == 1  // Align with each other
-                 && !(pc->flags & PCF_IN_FCN_DEF))
+         else if (options::align_assign_decl_func() == 1)   // Align with each other
          {
             if (chunk_is_token(pc, CT_ASSIGN_DEFAULT_ARG))  // Foo( int bar = 777 );
             {
@@ -189,6 +190,13 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
                        __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
                vdas.Add(pc);
             }
+         }
+         else if (  options::align_assign_decl_func() == 2         // Don't align
+                 && (  chunk_is_token(pc, CT_ASSIGN_DEFAULT_ARG)   // Foo( int bar = 777 );
+                    || chunk_is_token(pc, CT_ASSIGN_FUNC_PROTO)))  // Foo( const Foo & ) = delete;
+         {
+            LOG_FMT(LALASS, "%s(%d): Don't align\n",               // Issue #2236
+                    __func__, __LINE__);
          }
          else if (var_def_cnt != 0)
          {

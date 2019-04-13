@@ -458,7 +458,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
             || chunk_is_token(pc, CT_MACRO_CLOSE))
          {
             frm.brace_level--;
-            LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level decreased to %zu\n",
+            LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level decreased to %zu",
                     __func__, __LINE__, frm.brace_level);
             log_pcf_flags(LBCSPOP, pc->flags);
          }
