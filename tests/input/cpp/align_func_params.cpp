@@ -98,4 +98,14 @@ class SomeClass
                              {
                              doSomething();
                              }
+        void increasing_length(
+        int         int_param,
+                             float         float_param,
+                             double double_param,
+                             ah_long_t & string_param,
+                             very_long_type t_param,
+                             even_longer_type l_param)
+                             {
+                             doSomething();
+                             }
 };

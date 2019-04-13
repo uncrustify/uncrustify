@@ -144,7 +144,28 @@ As a reminder, the old system would have produced:
 Which is probably not wanted.
 
 
+--===---===---===---===--
+Absolute thresholds
+To get a better grip on what thresholds do the absolute thresholds were introduced.
+An absolute threshold means that the item, in this case the assign statement, is never
+moved more than the threshold value.
 
+See the below example:
+Relative threshold = 10
+   000000000111111111122222222223
+   123456789012345678901234567890
+1| a                     = 1
+2| aaaaa                 = 1
+3| bbbbbbbbbbb           = 2
+4| ccccccccccccccccccccc = 3
+
+Absolute threshold:
+   000000000111111111122222222223
+   123456789012345678901234567890
+1| a     = 1
+2| aaaaa = 1
+3| bbbbbbbbbbb          = 2
+4| cccccccccccccccccccc = 3
 
 --===---===---===---===--
 How to do this generically in the code...

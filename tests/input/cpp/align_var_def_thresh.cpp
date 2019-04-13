@@ -44,6 +44,7 @@ float float_var;
 float   &float_ref_var;
 float & float_ref_var;
 double    &     double_var;
+long_type little_long_var;
                      SomeLongNamespace::SomeLongType       long_var;
    int   *  other_int_var;
                SomeLooooongType       long_var;
