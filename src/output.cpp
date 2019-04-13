@@ -433,7 +433,7 @@ void output_parsed(FILE *pfile)
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
 #ifdef WIN32
-      fprintf(pfile, "%s# %3I64>%19.19s[%19.19s][%3I64/%3I64/%3I64/%3d][%I64/%I64/%I64]",
+      fprintf(pfile, "%s# %3I64 %19.19s[%19.19s][%3I64 %3I64 %3I64/%3d][%I64 %I64 %I64]",
               eol_marker, pc->orig_line, get_token_name(pc->type),
               get_token_name(pc->parent_type),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
