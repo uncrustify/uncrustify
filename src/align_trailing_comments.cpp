@@ -63,7 +63,7 @@ chunk_t *align_trailing_comments(chunk_t *start)
 
    // Find the max column
    while (  pc != nullptr
-         && (nl_count < options::align_right_cmt_span()))
+         && (nl_count < (size_t)abs(options::align_right_cmt_span())))
    {
       if ((pc->flags & PCF_RIGHT_COMMENT) && pc->column > 1)
       {

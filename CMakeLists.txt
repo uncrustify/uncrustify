@@ -26,6 +26,7 @@ if(MSVC)
 elseif(CMAKE_COMPILER_IS_GNUCXX)
   add_definitions(-std=gnu++0x)
   set(gcc_warning_flags
+    -Werror
     -Wall
     -Wextra
     -Wshadow
