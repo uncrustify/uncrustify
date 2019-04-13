@@ -433,15 +433,17 @@ void output_parsed(FILE *pfile)
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
 #ifdef WIN32
-      fprintf(pfile, "%s# %3I64 %19.19s[%19.19s][%3I64 %3I64 %3I64/%3d][%I64 %I64 %I64]",
-              eol_marker, pc->orig_line, get_token_name(pc->type),
-              get_token_name(pc->parent_type),
-              pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
-              pc->brace_level, pc->level, pc->pp_level);
+      fprintf(pfile, "%s# ", eol_marker);
+      fprintf(pfile, "%3d>", (int)pc->orig_line);
+      fprintf(pfile, "%19.19s[%19.19s][",
+              get_token_name(pc->type), get_token_name(pc->parent_type));
+      fprintf(pfile, "%3d/%3d/%3d/%3d][%d/%d/%d]",
+              (int)pc->column, (int)pc->orig_col, (int)pc->orig_col_end, (int)pc->orig_prev_sp,
+              (int)pc->brace_level, (int)pc->level, (int)pc->pp_level);
       fprintf(pfile, "[%10" PRIx64 "]",
               pc->flags);
-      fprintf(pfile, "[%I64-%d]",
-              pc->nl_count, pc->after_tab);
+      fprintf(pfile, "[%d-%d]",
+              (int)pc->nl_count, pc->after_tab);
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s[%19.19s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu]",
               eol_marker, pc->orig_line, get_token_name(pc->type),
