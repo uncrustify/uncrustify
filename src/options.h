@@ -2741,7 +2741,7 @@ align_typedef_amp_style;
 // The span for aligning comments that end lines.
 //
 // 0 = Don't align (default).
-extern BoundedOption<signed, -1000, 5000>
+extern BoundedOption<unsigned, 0, 5000>
 align_right_cmt_span;
 
 // If aligning comments, whether to mix with comments after '}' and #endif with

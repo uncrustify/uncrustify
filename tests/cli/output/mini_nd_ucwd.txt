@@ -2210,7 +2210,7 @@ align_typedef_amp_style         = 0        # unsigned number
 # The span for aligning comments that end lines.
 #
 # 0 = Don't align (default).
-align_right_cmt_span            = 0        # number
+align_right_cmt_span            = 0        # unsigned number
 
 # If aligning comments, whether to mix with comments after '}' and #endif with
 # less than three spaces before the comment.
