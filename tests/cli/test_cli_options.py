@@ -621,17 +621,18 @@ def main(args):
     #
     # Test -p
     #
-    if not check_uncrustify_output(
-            uncr_bin,
-            parsed_args,
-            args_arr=['-c', s_path_join(sc_dir, 'config/mini_nd.cfg'),
-                      '-f', s_path_join(sc_dir, 'input/testSrcP.cpp'),
-                      '-p', s_path_join(sc_dir, 'results/p.txt')],
-            gen_expected_path=s_path_join(sc_dir, 'output/p.txt'),
-            gen_result_path=s_path_join(sc_dir, 'results/p.txt'),
-            gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
-            ):
-        return_flag = False
+    if os_name != 'nt':
+        if not check_uncrustify_output(
+                uncr_bin,
+                parsed_args,
+                args_arr=['-c', s_path_join(sc_dir, 'config/mini_nd.cfg'),
+                          '-f', s_path_join(sc_dir, 'input/testSrcP.cpp'),
+                          '-p', s_path_join(sc_dir, 'results/p.txt')],
+                gen_expected_path=s_path_join(sc_dir, 'output/p.txt'),
+                gen_result_path=s_path_join(sc_dir, 'results/p.txt'),
+                gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
+                ):
+            return_flag = False
 
     #
     # Test --replace
