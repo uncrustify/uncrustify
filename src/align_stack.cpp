@@ -10,10 +10,11 @@
 
 #include "align_stack.h"
 #include "align_tab_column.h"
-#include "prototypes.h"
 #include "chunk_list.h"
 #include "indent.h"
 #include "space.h"
+#include "prototypes.h"
+#include "uncrustify.h"
 
 #include <limits>
 
@@ -210,8 +211,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
          chunk_t *next = chunk_get_next(tmp);
          if (next != nullptr)
          {
-            LOG_FMT(LAS, "AlignStack::%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
-                    __func__, __LINE__, next->orig_line, next->orig_col, next->text());
+            LOG_FMT(LAS, "AlignStack::%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+                    __func__, __LINE__, next->orig_line, next->orig_col, next->text(), get_token_name(next->type));
             tmp_col += space_col_align(tmp, next);
             LOG_FMT(LAS, "AlignStack::%s(%d): column is %zu, tmp_col is %zu\n",
                     __func__, __LINE__, next->column, tmp_col);
@@ -270,8 +271,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       m_aligned.Push_Back(ali, seqnum);
       m_last_added = 1;
 
-      LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s]: ali->orig_line is %zu, ali->column is %zu\n",
-              __func__, __LINE__, ali->text(), ali->orig_line, ali->column);
+      LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s]: ali->orig_line is %zu, ali->column is %zu, type is %s\n",
+              __func__, __LINE__, ali->text(), ali->orig_line, ali->column, get_token_name(ali->type));
       LOG_FMT(LAS, "AlignStack::%s(%d):    ali->align.col_adj is %d, ref '%s', endcol is %zu\n",
               __func__, __LINE__, ali->align.col_adj, ref->text(), endcol);
 
@@ -491,7 +492,7 @@ void AlignStack::End()
 {
    if (!m_aligned.Empty())
    {
-      LOG_FMT(LAS, "AlignStack::End-");
+      LOG_FMT(LAS, "AlignStack::End(%d):\n", __LINE__);
       Flush();
    }
 
