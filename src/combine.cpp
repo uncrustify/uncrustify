@@ -699,7 +699,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    {
       LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
-      log_pcf_flags(LSYS, pc->flags);
+      log_pcf_flags(LGUY, pc->flags);
       set_chunk_type(pc, CT_ASSIGN_DEFAULT_ARG);
    }
    if (  (  chunk_is_token(prev, CT_FPAREN_CLOSE)
@@ -2059,6 +2059,8 @@ void fix_symbols(void)
    }
    while (pc != nullptr)
    {
+      LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col);
       chunk_t *prev = chunk_get_prev_ncnl(pc, scope_e::PREPROC);
       if (prev == nullptr)
       {
