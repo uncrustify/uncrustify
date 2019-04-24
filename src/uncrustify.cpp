@@ -308,11 +308,11 @@ void usage(const char *argv0)
            "      processing of parts of the source file (these can be overridden with\n"
            "      enable_processing_cmt and disable_processing_cmt).\n"
            "\n"
-           "There are currently %zd options and minimal documentation.\n"
+           "There are currently %d options and minimal documentation.\n"
            "Try UniversalIndentGUI and good luck.\n"
            "\n"
            ,
-           path_basename(argv0), get_option_count());
+           path_basename(argv0), (int)get_option_count());
 } // usage
 
 

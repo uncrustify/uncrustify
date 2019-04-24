@@ -429,19 +429,18 @@ void output_parsed(FILE *pfile)
    // output.cpp, line 427: fprintf(pfile, "# Line              Tag                Parent...
    // and              430: ... fprintf(pfile, "%s# %3zu>%19.19s[%19.19s] ...
    // here                                                xx xx   xx xx
+#ifdef WIN32
+   fprintf(pfile, "# Line                Tag              Parent          Columns Br/Lvl/pp     Nl  Text");
+#else // not WIN32
    fprintf(pfile, "# Line                Tag              Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
+#endif // ifdef WIN32
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
 #ifdef WIN32
-      fprintf(pfile, "%s# %3llu>%19.19s[%19.19s][%3llu/%3llu/%3llu/%3d][%llu/%llu/%llu]",
-              eol_marker, pc->orig_line, get_token_name(pc->type),
-              get_token_name(pc->parent_type),
-              pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
-              pc->brace_level, pc->level, pc->pp_level);
-      fprintf(pfile, "[%10" PRIx64 "]",
-              pc->flags);
-      fprintf(pfile, "[%llu-%d]",
-              pc->nl_count, pc->after_tab);
+      fprintf(pfile, "%s# %3d>%19.19s[%19.19s][%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
+              eol_marker, (int)pc->orig_line, get_token_name(pc->type), get_token_name(pc->parent_type),
+              (int)pc->column, (int)pc->orig_col, (int)pc->orig_col_end, (int)pc->orig_prev_sp,
+              (int)pc->brace_level, (int)pc->level, (int)pc->pp_level, (int)pc->nl_count, pc->after_tab);
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s[%19.19s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu]",
               eol_marker, pc->orig_line, get_token_name(pc->type),
@@ -452,7 +451,7 @@ void output_parsed(FILE *pfile)
               pc->flags);
       fprintf(pfile, "[%zu-%d]",
               pc->nl_count, pc->after_tab);
-#endif   /* ifdef WIN32 */
+#endif // ifdef WIN32
 
       if (pc->type != CT_NEWLINE && (pc->len() != 0))
       {
@@ -559,8 +558,13 @@ void output_text(FILE *pfile)
                      int orig_sp = (pc->orig_col - prev->orig_col_end);
                      if ((int)(cpd.column + orig_sp) < 0)
                      {
-                        fprintf(stderr, "FATAL: negative value.\n   pc->orig_col=%zu prev->orig_col_end=%zu\n",
+#ifdef WIN32
+                        fprintf(stderr, "FATAL: negative value.\n   pc->orig_col is %d, prev->orig_col_end is %d\n",
+                                (int)pc->orig_col, (int)prev->orig_col_end);
+#else // not WIN32
+                        fprintf(stderr, "FATAL: negative value.\n   pc->orig_col is %zu, prev->orig_col_end is %zu\n",
                                 pc->orig_col, prev->orig_col_end);
+#endif // ifdef WIN32
                         log_flush(true);
                         exit(EX_SOFTWARE);
                      }
