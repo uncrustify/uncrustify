@@ -2054,6 +2054,20 @@ align_func_params_thresh        = 0        # number
 # The gap for aligning function parameter definitions.
 align_func_params_gap           = 0        # unsigned number
 
+# The span for aligning constructor value.
+#
+# 0 = Don't align (default).
+align_constr_value_span         = 0        # unsigned number
+
+# The threshold for aligning constructor value.
+# Use a negative number for absolute thresholds.
+#
+# 0 = No limit (default).
+align_constr_value_thresh       = 0        # number
+
+# The gap for aligning constructor value.
+align_constr_value_gap          = 0        # unsigned number
+
 # Whether to align parameters in single-line functions that have the same
 # name. The function names must already be aligned with each other.
 align_same_func_call_params     = false    # true/false
@@ -2178,13 +2192,13 @@ align_var_struct_gap            = 0        # unsigned number
 # 0 = Don't align (default).
 align_struct_init_span          = 0        # unsigned number
 
-# The minimum space between the type and the synonym of a typedef.
-align_typedef_gap               = 0        # unsigned number
-
 # The span for aligning single-line typedefs.
 #
 # 0 = Don't align (default).
 align_typedef_span              = 0        # unsigned number
+
+# The minimum space between the type and the synonym of a typedef.
+align_typedef_gap               = 0        # unsigned number
 
 # How to align typedef'd functions with other typedefs.
 #
@@ -2212,17 +2226,17 @@ align_typedef_amp_style         = 0        # unsigned number
 # 0 = Don't align (default).
 align_right_cmt_span            = 0        # unsigned number
 
+# Minimum number of columns between preceding text and a trailing comment in
+# order for the comment to qualify for being aligned. Must be non-zero to have
+# an effect.
+align_right_cmt_gap             = 0        # unsigned number
+
 # If aligning comments, whether to mix with comments after '}' and #endif with
 # less than three spaces before the comment.
 align_right_cmt_mix             = false    # true/false
 
 # Whether to only align trailing comments that are at the same brace level.
 align_right_cmt_same_level      = false    # true/false
-
-# Minimum number of columns between preceding text and a trailing comment in
-# order for the comment to qualify for being aligned. Must be non-zero to have
-# an effect.
-align_right_cmt_gap             = 0        # unsigned number
 
 # Minimum column at which to align trailing comments. Comments which are
 # aligned beyond this column, but which can be aligned in a lesser column,
@@ -2236,14 +2250,14 @@ align_right_cmt_at_col          = 0        # unsigned number
 # 0 = Don't align (default).
 align_func_proto_span           = 0        # unsigned number
 
-# Minimum gap between the return type and the function name.
-align_func_proto_gap            = 0        # unsigned number
-
 # The threshold for aligning function prototypes.
 # Use a negative number for absolute thresholds.
 #
 # 0 = No limit (default).
 align_func_proto_thresh         = 0        # number
+
+# Minimum gap between the return type and the function name.
+align_func_proto_gap            = 0        # unsigned number
 
 # Whether to align function prototypes on the 'operator' keyword instead of
 # what follows.
@@ -2276,14 +2290,14 @@ align_nl_cont                   = false    # true/false
 # Whether to align macro functions and variables together.
 align_pp_define_together        = false    # true/false
 
-# The minimum space between label and value of a preprocessor define.
-align_pp_define_gap             = 0        # unsigned number
-
 # The span for aligning on '#define' bodies.
 #
 # =0: Don't align (default)
 # >0: Number of lines (including comments) between blocks
 align_pp_define_span            = 0        # unsigned number
+
+# The minimum space between label and value of a preprocessor define.
+align_pp_define_gap             = 0        # unsigned number
 
 # Whether to align lines that start with '<<' with previous '<<'.
 #

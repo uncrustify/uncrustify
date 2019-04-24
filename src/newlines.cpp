@@ -18,23 +18,24 @@
  * @license GPL v2+
  */
 #include "newlines.h"
-#include "uncrustify_types.h"
+#include "align_stack.h"
 #include "chunk_list.h"
+#include "combine.h"
+#include "indent.h"
+#include "keywords.h"
+#include "language_tools.h"
+#include "options.h"
 #include "prototypes.h"
+#include "space.h"
+#include "unc_ctype.h"
+#include "unc_tools.h"
+#include "uncrustify_types.h"
+#include "uncrustify.h"
+
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include "unc_ctype.h"
-#include "unc_tools.h"
-#include "uncrustify.h"
-#include "indent.h"
-#include "space.h"
-#include "combine.h"
-#include "keywords.h"
-#include "options.h"
-#include "language_tools.h"
-
-#include <algorithm>
 
 
 using namespace std;
@@ -4244,7 +4245,19 @@ void newlines_class_colon_pos(c_token_t tok)
       pcc  = options::pos_constr_comma();
    }
 
-   chunk_t *ccolon = nullptr;
+   chunk_t    *ccolon  = nullptr;
+   size_t     acv_span = options::align_constr_value_span();
+   bool       with_acv = (acv_span > 0) && language_is_set(LANG_CPP);
+   AlignStack constructorValue;    // ABC_Member(abc_value)
+   if (with_acv)
+   {
+      int    acv_thresh = options::align_constr_value_thresh();
+      size_t acv_gap    = options::align_constr_value_gap();
+      constructorValue.Start(acv_span, acv_thresh);
+      constructorValue.m_gap         = acv_gap;
+      constructorValue.m_right_align = !options::align_on_tabstop();
+   }
+
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
       if (!ccolon && pc->type != tok)
@@ -4256,9 +4269,25 @@ void newlines_class_colon_pos(c_token_t tok)
       chunk_t *next;
       if (pc->type == tok)
       {
+         LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
          ccolon = pc;
          prev   = chunk_get_prev_nc(pc);
          next   = chunk_get_next_nc(pc);
+         if (chunk_is_token(pc, CT_CONSTR_COLON))
+         {
+            LOG_FMT(LBLANKD, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+            chunk_t *paren_vor_value = chunk_get_next_type(pc, CT_FPAREN_OPEN, pc->level);
+            if (with_acv && paren_vor_value != nullptr)
+            {
+               LOG_FMT(LBLANKD, "%s(%d): paren_vor_value->orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+                       __func__, __LINE__, paren_vor_value->orig_line, paren_vor_value->orig_col,
+                       paren_vor_value->text(), get_token_name(paren_vor_value->type));
+               constructorValue.NewLines(paren_vor_value->nl_count);
+               constructorValue.Add(paren_vor_value);
+            }
+         }
 
          if (  !chunk_is_newline(prev)
             && !chunk_is_newline(next)
@@ -4309,11 +4338,26 @@ void newlines_class_colon_pos(c_token_t tok)
          if (chunk_is_token(pc, CT_BRACE_OPEN) || chunk_is_token(pc, CT_SEMICOLON))
          {
             ccolon = nullptr;
+            if (with_acv)
+            {
+               constructorValue.End();
+            }
             continue;
          }
 
          if (chunk_is_token(pc, CT_COMMA) && pc->level == ccolon->level)
          {
+            LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+            chunk_t *paren_vor_value = chunk_get_next_type(pc, CT_FPAREN_OPEN, pc->level);
+            if (with_acv && paren_vor_value != nullptr)
+            {
+               LOG_FMT(LBLANKD, "%s(%d): paren_vor_value->orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+                       __func__, __LINE__, paren_vor_value->orig_line, paren_vor_value->orig_col,
+                       paren_vor_value->text(), get_token_name(paren_vor_value->type));
+               constructorValue.NewLines(paren_vor_value->nl_count);
+               constructorValue.Add(paren_vor_value);
+            }
             if (ncia & IARF_ADD)
             {
                if (pcc & TP_TRAIL)

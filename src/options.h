@@ -2555,6 +2555,23 @@ align_func_params_thresh;
 extern BoundedOption<unsigned, 0, 16>
 align_func_params_gap;
 
+// The span for aligning constructor value.
+//
+// 0 = Don't align (default).
+extern BoundedOption<unsigned, 0, 16>
+align_constr_value_span;
+
+// The threshold for aligning constructor value.
+// Use a negative number for absolute thresholds.
+//
+// 0 = No limit (default).
+extern BoundedOption<signed, -1000, 5000>
+align_constr_value_thresh;
+
+// The gap for aligning constructor value.
+extern BoundedOption<unsigned, 0, 16>
+align_constr_value_gap;
+
 // Whether to align parameters in single-line functions that have the same
 // name. The function names must already be aligned with each other.
 extern Option<bool>
@@ -2704,15 +2721,15 @@ align_var_struct_gap;
 extern BoundedOption<unsigned, 0, 5000>
 align_struct_init_span;
 
-// The minimum space between the type and the synonym of a typedef.
-extern BoundedOption<unsigned, 0, 16>
-align_typedef_gap;
-
 // The span for aligning single-line typedefs.
 //
 // 0 = Don't align (default).
 extern BoundedOption<unsigned, 0, 16>
 align_typedef_span;
+
+// The minimum space between the type and the synonym of a typedef.
+extern BoundedOption<unsigned, 0, 16>
+align_typedef_gap;
 
 // How to align typedef'd functions with other typedefs.
 //
@@ -2744,6 +2761,12 @@ align_typedef_amp_style;
 extern BoundedOption<unsigned, 0, 5000>
 align_right_cmt_span;
 
+// Minimum number of columns between preceding text and a trailing comment in
+// order for the comment to qualify for being aligned. Must be non-zero to have
+// an effect.
+extern BoundedOption<unsigned, 0, 16>
+align_right_cmt_gap;
+
 // If aligning comments, whether to mix with comments after '}' and #endif with
 // less than three spaces before the comment.
 extern Option<bool>
@@ -2752,12 +2775,6 @@ align_right_cmt_mix;
 // Whether to only align trailing comments that are at the same brace level.
 extern Option<bool>
 align_right_cmt_same_level;
-
-// Minimum number of columns between preceding text and a trailing comment in
-// order for the comment to qualify for being aligned. Must be non-zero to have
-// an effect.
-extern BoundedOption<unsigned, 0, 16>
-align_right_cmt_gap;
 
 // Minimum column at which to align trailing comments. Comments which are
 // aligned beyond this column, but which can be aligned in a lesser column,
@@ -2773,16 +2790,16 @@ align_right_cmt_at_col;
 extern BoundedOption<unsigned, 0, 5000>
 align_func_proto_span;
 
-// Minimum gap between the return type and the function name.
-extern BoundedOption<unsigned, 0, 16>
-align_func_proto_gap;
-
 // The threshold for aligning function prototypes.
 // Use a negative number for absolute thresholds.
 //
 // 0 = No limit (default).
 extern BoundedOption<signed, -1000, 5000>
 align_func_proto_thresh;
+
+// Minimum gap between the return type and the function name.
+extern BoundedOption<unsigned, 0, 16>
+align_func_proto_gap;
 
 // Whether to align function prototypes on the 'operator' keyword instead of
 // what follows.
@@ -2823,16 +2840,16 @@ align_nl_cont;
 extern Option<bool>
 align_pp_define_together;
 
-// The minimum space between label and value of a preprocessor define.
-extern BoundedOption<unsigned, 0, 16>
-align_pp_define_gap;
-
 // The span for aligning on '#define' bodies.
 //
 // =0: Don't align (default)
 // >0: Number of lines (including comments) between blocks
 extern BoundedOption<unsigned, 0, 5000>
 align_pp_define_span;
+
+// The minimum space between label and value of a preprocessor define.
+extern BoundedOption<unsigned, 0, 16>
+align_pp_define_gap;
 
 // Whether to align lines that start with '<<' with previous '<<'.
 extern Option<bool>
