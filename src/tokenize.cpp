@@ -1854,8 +1854,10 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
             break;
          }
 
-         // Quit on a C++ comment start
-         if ((ch == '/') && (ctx.peek(1) == '/'))
+         // Quit on a C or C++ comment start           Issue #1966
+         if (  (ch == '/')
+            && (  (ctx.peek(1) == '/')
+               || (ctx.peek(1) == '*')))
          {
             break;
          }
@@ -2158,6 +2160,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
    chunk_t *rprev       = nullptr;
    bool    last_was_tab = false;
    size_t  prev_sp      = 0;
+   int     num_stripped = 0;                    // Issue #1966
 
    cpd.unc_stage = unc_stage_e::TOKENIZE;
 
@@ -2204,6 +2207,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       {
          // Issue #1338
          // Strip trailing whitespace (for CPP comments and PP blocks)
+         num_stripped = 0;                     // Issue #1966
          while (  (chunk.str.size() > 0)
                && (  (chunk.str[chunk.str.size() - 1] == ' ')
                   || (chunk.str[chunk.str.size() - 1] == '\t')))
@@ -2215,11 +2219,20 @@ void tokenize(const deque<int> &data, chunk_t *ref)
                break;
             }
             chunk.str.pop_back();
+            num_stripped++;                    // Issue #1966
          }
       }
 
       // Store off the end column
       chunk.orig_col_end = ctx.c.col;
+
+      if (  (  chunk.type == CT_COMMENT_MULTI                  // Issue #1966
+            || chunk.type == CT_COMMENT
+            || chunk.type == CT_COMMENT_CPP)
+         && pc && pc->type == CT_PP_IGNORE)
+      {
+         chunk.orig_col_end -= num_stripped;
+      }
 
       // Add the chunk to the list
       rprev = pc;
@@ -2290,7 +2303,10 @@ void tokenize(const deque<int> &data, chunk_t *ref)
          else if (cpd.in_preproc == CT_PP_IGNORE)
          {
             // ASSERT(options::pp_ignore_define_body());
-            if (pc->type != CT_NL_CONT && pc->type != CT_COMMENT_CPP)
+            if (  pc->type != CT_NL_CONT
+               && pc->type != CT_COMMENT_CPP
+               && pc->type != CT_COMMENT
+               && pc->type != CT_COMMENT_MULTI)     // Issue #1966
             {
                set_chunk_type(pc, CT_PP_IGNORE);
             }
