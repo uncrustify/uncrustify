@@ -268,6 +268,7 @@
 30822  empty.cfg                            cpp/pp_indent_brace.cpp
 30823  empty.cfg                            cpp/pp_indent_func_def.cpp
 30824  empty.cfg                            cpp/pp_indent_extern.cpp
+30825  Issue_1966.cfg                       cpp/Issue_1966.cpp
 
 30828  bug_1691.cfg                         cpp/bug_1691.cpp
 
