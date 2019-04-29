@@ -1954,6 +1954,11 @@ nl_func_def_empty;
 extern Option<iarf_e>
 nl_func_call_empty;
 
+// Whether to add a newline after '(' in a function call,
+// has preference over nl_func_call_start_multi_line.
+extern Option<iarf_e>
+nl_func_call_start;
+
 // Whether to add a newline after '(' in a function call if '(' and ')' are in
 // different lines.
 extern Option<bool>
