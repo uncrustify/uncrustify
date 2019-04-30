@@ -3548,6 +3548,12 @@ void newlines_cleanup_braces(bool first)
          {
             newline_func_def_or_call(pc);
          }
+         else if (  (  pc->parent_type == CT_FUNC_CALL                // Issue #2020
+                    || pc->parent_type == CT_FUNC_CALL_USER)
+                 && options::nl_func_call_start() != IARF_IGNORE)
+         {
+            newline_iarf(pc, options::nl_func_call_start());
+         }
          else if (  (  pc->parent_type == CT_FUNC_CALL
                     || pc->parent_type == CT_FUNC_CALL_USER)
                  && (  (options::nl_func_call_start_multi_line())
