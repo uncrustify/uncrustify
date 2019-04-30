@@ -1072,6 +1072,10 @@ sp_skip_vbrace_tokens;
 extern Option<iarf_e>
 sp_after_noexcept;
 
+// Add or remove space after '_'.
+extern Option<iarf_e>
+sp_vala_after_translation;
+
 // If true, a <TAB> is inserted after #define.
 extern Option<bool>
 force_tab_after_define;
