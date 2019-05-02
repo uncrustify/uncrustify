@@ -663,6 +663,7 @@ static bool chunk_ends_type(chunk_t *start)
          || chunk_is_token(pc, CT_PP_IF)
          || chunk_is_token(pc, CT_PP_ELSE)
          || chunk_is_token(pc, CT_PP_ENDIF)
+         || chunk_is_token(pc, CT_IGNORED)                   // Issue #2279
          || ((chunk_is_token(pc, CT_COMMA) && ((pc->flags & PCF_IN_FCN_CALL) == 0)) && last_expr)
          || (chunk_is_token(pc, CT_SPAREN_OPEN) && last_lval))
       {
