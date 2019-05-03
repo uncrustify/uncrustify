@@ -45,7 +45,7 @@ static const char *DOC_TEXT_END = u8R"___(
 #       `set BOOL __AND__ __OR__`
 #
 #     tokenTypes are defined in src/token_enum.h, use them without the
-#     'CT_' prefix: 'CT_BOOL' → 'BOOL'
+#     'CT_' prefix: 'CT_BOOL' => 'BOOL'
 #
 #
 # - Token(s) can be treated as type(s) with the 'type' option.
@@ -69,7 +69,7 @@ static const char *DOC_TEXT_END = u8R"___(
 #       `file_ext CPP .ch .cxx .cpp.in`
 #
 #     langTypes are defined in uncrusify_types.h in the lang_flag_e enum, use
-#     them without the 'LANG_' prefix: 'LANG_CPP' → 'CPP'
+#     them without the 'LANG_' prefix: 'LANG_CPP' => 'CPP'
 #
 #
 # - Custom macro-based indentation can be set up using 'macro-open',

@@ -1151,7 +1151,7 @@ extern Option<bool>
 indent_braces_no_struct;
 
 // Whether to indent based on the size of the brace parent,
-// i.e. 'if' → 3 spaces, 'for' → 4 spaces, etc.
+// i.e. 'if' => 3 spaces, 'for' => 4 spaces, etc.
 extern Option<bool>
 indent_brace_parent;
 
@@ -1225,8 +1225,8 @@ indent_else_if;
 
 // Amount to indent variable declarations after a open brace.
 //
-// <0: Relative
-// ≥0: Absolute
+//  <0: Relative
+// >=0: Absolute
 extern BoundedOption<signed, -16, 16>
 indent_var_def_blk;
 
@@ -1330,8 +1330,8 @@ indent_col1_multi_string_literal;
 
 // How to indent goto labels.
 //
-// >0: Absolute column where 1 is the leftmost column
-// ≤0: Subtract from brace indent
+//  >0: Absolute column where 1 is the leftmost column
+// <=0: Subtract from brace indent
 extern BoundedOption<signed, -16, 16>
 indent_label; // = 1
 
@@ -2160,17 +2160,17 @@ extern Option<bool>
 nl_namespace_two_to_one_liner;
 
 // Whether to remove a newline in simple unbraced if statements, turning them
-// into one-liners, as in 'if(b)\n i++;' → 'if(b) i++;'.
+// into one-liners, as in 'if(b)\n i++;' => 'if(b) i++;'.
 extern Option<bool>
 nl_create_if_one_liner;
 
 // Whether to remove a newline in simple unbraced for statements, turning them
-// into one-liners, as in 'for (...)\n stmt;' → 'for (...) stmt;'.
+// into one-liners, as in 'for (...)\n stmt;' => 'for (...) stmt;'.
 extern Option<bool>
 nl_create_for_one_liner;
 
 // Whether to remove a newline in simple unbraced while statements, turning
-// them into one-liners, as in 'while (expr)\n stmt;' → 'while (expr) stmt;'.
+// them into one-liners, as in 'while (expr)\n stmt;' => 'while (expr) stmt;'.
 extern Option<bool>
 nl_create_while_one_liner;
 
@@ -3106,7 +3106,7 @@ extern Option<bool>
 mod_pawn_semicolon;
 
 // Whether to fully parenthesize Boolean expressions in 'while' and 'if'
-// statement, as in 'if (a && b > c)' → 'if (a && (b > c))'.
+// statement, as in 'if (a && b > c)' => 'if (a && (b > c))'.
 extern Option<bool>
 mod_full_paren_if_bool;
 
@@ -3159,7 +3159,7 @@ extern Option<bool>
 mod_sort_include;
 
 // Whether to move a 'break' that appears after a fully braced 'case' before
-// the close brace, as in 'case X: { ... } break;' → 'case X: { ... break; }'.
+// the close brace, as in 'case X: { ... } break;' => 'case X: { ... break; }'.
 extern Option<bool>
 mod_move_case_break;
 
