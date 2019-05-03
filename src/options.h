@@ -2607,6 +2607,7 @@ align_var_def_span;
 // 0: Part of the type     'void *   foo;' (default)
 // 1: Part of the variable 'void     *foo;'
 // 2: Dangling             'void    *foo;'
+// Dangling: the '*' will not be taken into account when aligning.
 extern BoundedOption<unsigned, 0, 2>
 align_var_def_star_style;
 
@@ -2615,6 +2616,7 @@ align_var_def_star_style;
 // 0: Part of the type     'long &   foo;' (default)
 // 1: Part of the variable 'long     &foo;'
 // 2: Dangling             'long    &foo;'
+// Dangling: the '&' will not be taken into account when aligning.
 extern BoundedOption<unsigned, 0, 2>
 align_var_def_amp_style;
 
@@ -2746,17 +2748,19 @@ align_typedef_func;
 
 // How to align the '*' in typedefs.
 //
-// 0: Align on typedef type, ignore '*' (default)
-// 1: The '*' is part of type name: 'typedef int  *pint;'
-// 2: The '*' is part of the type, but dangling: 'typedef int *pint;'
+// 0: Part of the typedef type, 'typedef int * pint;' (default)
+// 1: Part of type name:        'typedef int   *pint;'
+// 2: Dangling:                 'typedef int  *pint;'
+// Dangling: the '*' will not be taken into account when aligning.
 extern BoundedOption<unsigned, 0, 2>
 align_typedef_star_style;
 
 // How to align the '&' in typedefs.
 //
-// 0: Align on typedef type, ignore '&' (default)
-// 1: The '&' is part of type name: 'typedef int  &pint;'
-// 2: The '&' is part of the type, but dangling: 'typedef int &pint;'
+// 0: Part of the typedef type, 'typedef int & intref;' (default)
+// 1: Part of type name:        'typedef int   &intref;'
+// 2: Dangling:                 'typedef int  &intref;'
+// Dangling: the '&' will not be taken into account when aligning.
 extern BoundedOption<unsigned, 0, 2>
 align_typedef_amp_style;
 
