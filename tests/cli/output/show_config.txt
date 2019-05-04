@@ -928,7 +928,7 @@ indent_braces_no_class          = false    # true/false
 indent_braces_no_struct         = false    # true/false
 
 # Whether to indent based on the size of the brace parent,
-# i.e. 'if' → 3 spaces, 'for' → 4 spaces, etc.
+# i.e. 'if' => 3 spaces, 'for' => 4 spaces, etc.
 indent_brace_parent             = false    # true/false
 
 # Whether to indent based on the open parenthesis instead of the open brace
@@ -988,8 +988,8 @@ indent_else_if                  = false    # true/false
 
 # Amount to indent variable declarations after a open brace.
 #
-# <0: Relative
-# ≥0: Absolute
+#  <0: Relative
+# >=0: Absolute
 indent_var_def_blk              = 0        # number
 
 # Whether to indent continued variable declarations instead of aligning.
@@ -1072,8 +1072,8 @@ indent_col1_multi_string_literal = false    # true/false
 
 # How to indent goto labels.
 #
-# >0: Absolute column where 1 is the leftmost column
-# ≤0: Subtract from brace indent
+#  >0: Absolute column where 1 is the leftmost column
+# <=0: Subtract from brace indent
 #
 # Default: 1
 indent_label                    = 1        # number
@@ -1735,15 +1735,15 @@ nl_constr_colon                 = ignore   # ignore/add/remove/force
 nl_namespace_two_to_one_liner   = false    # true/false
 
 # Whether to remove a newline in simple unbraced if statements, turning them
-# into one-liners, as in 'if(b)\n i++;' → 'if(b) i++;'.
+# into one-liners, as in 'if(b)\n i++;' => 'if(b) i++;'.
 nl_create_if_one_liner          = false    # true/false
 
 # Whether to remove a newline in simple unbraced for statements, turning them
-# into one-liners, as in 'for (...)\n stmt;' → 'for (...) stmt;'.
+# into one-liners, as in 'for (...)\n stmt;' => 'for (...) stmt;'.
 nl_create_for_one_liner         = false    # true/false
 
 # Whether to remove a newline in simple unbraced while statements, turning
-# them into one-liners, as in 'while (expr)\n stmt;' → 'while (expr) stmt;'.
+# them into one-liners, as in 'while (expr)\n stmt;' => 'while (expr) stmt;'.
 nl_create_while_one_liner       = false    # true/false
 
 # Whether to collapse a function definition whose body (not counting braces)
@@ -2512,7 +2512,7 @@ mod_paren_on_return             = ignore   # ignore/add/remove/force
 mod_pawn_semicolon              = false    # true/false
 
 # Whether to fully parenthesize Boolean expressions in 'while' and 'if'
-# statement, as in 'if (a && b > c)' → 'if (a && (b > c))'.
+# statement, as in 'if (a && b > c)' => 'if (a && (b > c))'.
 mod_full_paren_if_bool          = false    # true/false
 
 # Whether to remove superfluous semicolons.
@@ -2554,7 +2554,7 @@ mod_sort_using                  = false    # true/false
 mod_sort_include                = false    # true/false
 
 # Whether to move a 'break' that appears after a fully braced 'case' before
-# the close brace, as in 'case X: { ... } break;' → 'case X: { ... break; }'.
+# the close brace, as in 'case X: { ... } break;' => 'case X: { ... break; }'.
 mod_move_case_break             = false    # true/false
 
 # Add or remove braces around a fully braced case statement. Will only remove
@@ -2759,7 +2759,7 @@ warn_level_tabs_found_in_verbatim_string_literals = 2        # unsigned number
 #       `set BOOL __AND__ __OR__`
 #
 #     tokenTypes are defined in src/token_enum.h, use them without the
-#     'CT_' prefix: 'CT_BOOL' → 'BOOL'
+#     'CT_' prefix: 'CT_BOOL' => 'BOOL'
 #
 #
 # - Token(s) can be treated as type(s) with the 'type' option.
@@ -2783,7 +2783,7 @@ warn_level_tabs_found_in_verbatim_string_literals = 2        # unsigned number
 #       `file_ext CPP .ch .cxx .cpp.in`
 #
 #     langTypes are defined in uncrusify_types.h in the lang_flag_e enum, use
-#     them without the 'LANG_' prefix: 'LANG_CPP' → 'CPP'
+#     them without the 'LANG_' prefix: 'LANG_CPP' => 'CPP'
 #
 #
 # - Custom macro-based indentation can be set up using 'macro-open',
