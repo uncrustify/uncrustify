@@ -2602,7 +2602,7 @@ align_same_func_call_params_thresh;
 extern BoundedOption<unsigned, 0, 5000>
 align_var_def_span;
 
-// How to align the '*' in variable definitions.
+// How to consider (or treat) the '*' in the alignment of variable definitions.
 //
 // 0: Part of the type     'void *   foo;' (default)
 // 1: Part of the variable 'void     *foo;'
@@ -2611,7 +2611,7 @@ align_var_def_span;
 extern BoundedOption<unsigned, 0, 2>
 align_var_def_star_style;
 
-// How to align the '&' in variable definitions.
+// How to consider (or treat) the '&' in the alignment of variable definitions.
 //
 // 0: Part of the type     'long &   foo;' (default)
 // 1: Part of the variable 'long     &foo;'
@@ -2746,7 +2746,7 @@ align_typedef_gap;
 extern BoundedOption<unsigned, 0, 2>
 align_typedef_func;
 
-// How to align the '*' in typedefs.
+// How to consider (or treat) the '*' in the alignment of typedefs.
 //
 // 0: Part of the typedef type, 'typedef int * pint;' (default)
 // 1: Part of type name:        'typedef int   *pint;'
@@ -2755,7 +2755,7 @@ align_typedef_func;
 extern BoundedOption<unsigned, 0, 2>
 align_typedef_star_style;
 
-// How to align the '&' in typedefs.
+// How to consider (or treat) the '&' in the alignment of typedefs.
 //
 // 0: Part of the typedef type, 'typedef int & intref;' (default)
 // 1: Part of type name:        'typedef int   &intref;'

@@ -2093,7 +2093,7 @@ align_same_func_call_params_thresh = 0        # number
 # 0 = Don't align (default).
 align_var_def_span              = 0        # unsigned number
 
-# How to align the '*' in variable definitions.
+# How to consider (or treat) the '*' in the alignment of variable definitions.
 #
 # 0: Part of the type     'void *   foo;' (default)
 # 1: Part of the variable 'void     *foo;'
@@ -2101,7 +2101,7 @@ align_var_def_span              = 0        # unsigned number
 # Dangling: the '*' will not be taken into account when aligning.
 align_var_def_star_style        = 0        # unsigned number
 
-# How to align the '&' in variable definitions.
+# How to consider (or treat) the '&' in the alignment of variable definitions.
 #
 # 0: Part of the type     'long &   foo;' (default)
 # 1: Part of the variable 'long     &foo;'
@@ -2213,7 +2213,7 @@ align_typedef_gap               = 0        # unsigned number
 # 2: Align the function type name with the other type names
 align_typedef_func              = 0        # unsigned number
 
-# How to align the '*' in typedefs.
+# How to consider (or treat) the '*' in the alignment of typedefs.
 #
 # 0: Part of the typedef type, 'typedef int * pint;' (default)
 # 1: Part of type name:        'typedef int   *pint;'
@@ -2221,7 +2221,7 @@ align_typedef_func              = 0        # unsigned number
 # Dangling: the '*' will not be taken into account when aligning.
 align_typedef_star_style        = 0        # unsigned number
 
-# How to align the '&' in typedefs.
+# How to consider (or treat) the '&' in the alignment of typedefs.
 #
 # 0: Part of the typedef type, 'typedef int & intref;' (default)
 # 1: Part of type name:        'typedef int   &intref;'
