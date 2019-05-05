@@ -1159,6 +1159,20 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_after_operator_sym());
    }
 
+   // Issue #2270
+   // Translations under vala
+   if (  language_is_set(LANG_VALA)
+      && chunk_is_token(first, CT_FUNC_CALL))
+   {
+      if (  chunk_is_str(first, "_", 1)
+         && chunk_is_token(second, CT_FPAREN_OPEN)
+         && (options::sp_vala_after_translation() != IARF_IGNORE))
+      {
+         log_rule("sp_vala_after_translation");
+         return(options::sp_vala_after_translation());
+      }
+   }
+
    // spaces between function and open paren
    if (  chunk_is_token(first, CT_FUNC_CALL)
       || chunk_is_token(first, CT_FUNC_CTOR_VAR)

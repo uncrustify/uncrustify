@@ -861,6 +861,9 @@ sp_skip_vbrace_tokens           = false    # true/false
 # Add or remove space after 'noexcept'.
 sp_after_noexcept               = ignore   # ignore/add/remove/force
 
+# Add or remove space after '_'.
+sp_vala_after_translation       = ignore   # ignore/add/remove/force
+
 # If true, a <TAB> is inserted after #define.
 force_tab_after_define          = false    # true/false
 
