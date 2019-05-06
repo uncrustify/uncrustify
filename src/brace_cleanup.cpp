@@ -332,7 +332,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s, tos is %zu, TOS.type is %s, TOS.stage is %s, ",
+   LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s, tos is %zu, TOS.type is %s, TOS.stage is %s,\n   ",
            __func__, __LINE__, pc->orig_line, get_token_name(pc->type),
            frm.size() - 1, get_token_name(frm.top().type),
            get_brace_stage_name(frm.top().stage));
@@ -341,10 +341,13 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
    // Mark statement starts
    LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
            __func__, __LINE__, frm.stmt_count, frm.expr_count);
+   LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, text() is '%s', type is %s\n",
+           __func__, __LINE__, pc->orig_line, pc->text(), get_token_name(pc->type));
    if (  (frm.stmt_count == 0 || frm.expr_count == 0)
       && !chunk_is_semicolon(pc)
       && pc->type != CT_BRACE_CLOSE
       && pc->type != CT_VBRACE_CLOSE
+      && pc->type != CT_IGNORED
       && !chunk_is_str(pc, ")", 1)
       && !chunk_is_str(pc, "]", 1))
    {
@@ -458,7 +461,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
             || chunk_is_token(pc, CT_MACRO_CLOSE))
          {
             frm.brace_level--;
-            LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level decreased to %zu",
+            LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level decreased to %zu\n   ",
                     __func__, __LINE__, frm.brace_level);
             log_pcf_flags(LBCSPOP, pc->flags);
          }
@@ -704,8 +707,9 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
    }
 
    // Mark expression starts
-   LOG_FMT(LSTMT, "%s(%d): Mark expression starts: orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+   LOG_FMT(LSTMT, "%s(%d): Mark expression starts: orig_line is %zu, orig_col is %zu, text() is '%s'\n   ",
            __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+   log_pcf_flags(LTOK, pc->flags);
    chunk_t *tmp = chunk_get_next_ncnl(pc);
    if (  chunk_is_token(pc, CT_ARITH)
       || chunk_is_token(pc, CT_ASSIGN)
@@ -735,8 +739,9 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
       || chunk_is_token(pc, CT_QUESTION))
    {
       frm.expr_count = 0;
-      LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, orig_col is %zu, reset expr on '%s'\n",
+      LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, orig_col is %zu, reset expr on '%s'\n   ",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+      log_pcf_flags(LTOK, pc->flags);
    }
    else if (  chunk_is_token(pc, CT_BRACE_CLOSE)
            && !cpd.consumed
@@ -921,7 +926,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
 
          frm.level++;
          frm.brace_level++;
-         LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level increased to %zu\n",
+         LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level increased to %zu\n   ",
                  __func__, __LINE__, frm.brace_level);
          log_pcf_flags(LBCSPOP, pc->flags);
 
@@ -1243,7 +1248,7 @@ bool close_statement(ParseFrame &frm, chunk_t *pc)
 
          frm.level--;
          frm.brace_level--;
-         LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level decreased to %zu\n",
+         LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level decreased to %zu\n   ",
                  __func__, __LINE__, frm.brace_level);
          log_pcf_flags(LBCSPOP, pc->flags);
          LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",

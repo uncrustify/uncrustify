@@ -698,7 +698,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       && (  (pc->flags & PCF_IN_FCN_DEF)              // Issue #2236
          || (pc->flags & PCF_IN_CONST_ARGS)))
    {
-      LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
+      LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n   ",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
       log_pcf_flags(LGUY, pc->flags);
       set_chunk_type(pc, CT_ASSIGN_DEFAULT_ARG);
@@ -2087,6 +2087,8 @@ void fix_symbols(void)
    int square_level = -1;
    while (pc != nullptr)
    {
+      LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col);
       // Can't have a variable definition inside [ ]
       if (square_level < 0)
       {
@@ -2142,6 +2144,9 @@ void fix_symbols(void)
        * A variable definition is possible after at the start of a statement
        * that starts with: QUALIFIER, TYPE, or WORD
        */
+      LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n   ",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type));
+      log_pcf_flags(LFCNR, pc->flags);
       if (  square_level < 0
          && (pc->flags & PCF_STMT_START)
          && (  chunk_is_token(pc, CT_QUALIFIER)
@@ -2151,11 +2156,25 @@ void fix_symbols(void)
          && pc->parent_type != CT_ENUM
          && ((pc->flags & PCF_IN_ENUM) == 0))
       {
+         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type));
          pc = fix_var_def(pc);
+         if (pc != nullptr)
+         {
+            LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type));
+         }
       }
       else
       {
+         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type));
          pc = chunk_get_next_ncnl(pc);
+         if (pc != nullptr)
+         {
+            LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type));
+         }
       }
    }
 } // fix_symbols
@@ -2210,7 +2229,7 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
       chunk_t *first = pc;
       while (pc != nullptr)
       {
-         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s, ",
+         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n   ",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
          log_pcf_flags(LFCNR, pc->flags);
          if (chunk_is_token(pc, CT_ANGLE_CLOSE))
@@ -3545,7 +3564,7 @@ void combine_labels(void)
                {
                   return;
                }
-               LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, tmp '%s': ",
+               LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, tmp '%s'\n   ",
                        __func__, __LINE__, tmp->orig_line, tmp->orig_col, (tmp->type == CT_NEWLINE) ? "<Newline>" : tmp->text());
                log_pcf_flags(LGUY, tmp->flags);
                if (next->flags & PCF_IN_FCN_CALL)
@@ -4712,7 +4731,7 @@ static void mark_function(chunk_t *pc)
                LOG_FMT(LFCN, "%s(%d):   --> maybe a proto/def\n",
                        __func__, __LINE__);
 
-               LOG_FMT(LFCN, "%s(%d): prev is '%s', orig_line is %zu, orig_col is %zu, type is %s, parent_type is %s\n",
+               LOG_FMT(LFCN, "%s(%d): prev is '%s', orig_line is %zu, orig_col is %zu, type is %s, parent_type is %s\n   ",
                        __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col,
                        get_token_name(prev->type), get_token_name(prev->parent_type));
                log_pcf_flags(LGUY, pc->flags);
