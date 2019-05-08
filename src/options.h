@@ -2500,7 +2500,7 @@ pos_constr_colon;
 //BEGIN Line splitting options
 
 // Try to limit code width to N columns.
-extern BoundedOption<unsigned, 0, 256>
+extern BoundedOption<unsigned, 0, 10000>
 code_width;
 
 // Whether to fully split long 'for' statements at semi-colons.
