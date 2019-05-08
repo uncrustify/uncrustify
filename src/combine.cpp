@@ -5195,6 +5195,9 @@ static void mark_class_ctor(chunk_t *start)
    LOG_FUNC_ENTRY();
 
    chunk_t *pclass = chunk_get_next_ncnl(start, scope_e::PREPROC);
+
+   pclass = skip_attribute_next(pclass);
+
    if (chunk_is_token(pclass, CT_DECLSPEC))  // Issue 1289
    {
       pclass = chunk_get_next_ncnl(pclass);
