@@ -626,6 +626,12 @@ chunk_t *chunk_get_prev_ncnl(chunk_t *cur, scope_e scope)
 }
 
 
+chunk_t *chunk_get_prev_ncnlni(chunk_t *cur, scope_e scope)
+{
+   return(chunk_search(cur, chunk_is_comment_or_newline_or_ignored, scope, direction_e::BACKWARD, false));
+}
+
+
 chunk_t *chunk_get_prev_nc(chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_comment, scope, direction_e::BACKWARD, false));
