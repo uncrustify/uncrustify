@@ -1,3 +1,24 @@
+Change highlights in uncrustify-0.69.0 (May 2019)
+-------------------------------------------------------------------------------
+
+Changing option:
+  - The option name is changed from 'align_assign_func_proto' to 'align_assign_func_proto_span'
+      Mar  4 17:19:40 2019
+
+New options:
+  - align_constr_value_gap               Apr 24 2019
+  - align_constr_value_span              Apr 24 2019
+  - align_constr_value_thresh            Apr 24 2019
+  - align_func_proto_thresh              Apr  5 2019
+  - indent_col1_multi_string_literal     Mar 31 2019
+  - sp_paren_noexcept                    Jan 13 2019
+  - sp_paren_qualifier                   Jan 11 2019
+  - sp_type_question                     Jan 11 2019
+  - sp_inside_angle_empty                Dec 27 2018
+  - nl_fdef_brace_cond                   Nov 29 2018
+  - nl_func_call_start                   Nov 29 2018
+
+
 Change highlights in uncrustify-0.68 (November 2018)
 -------------------------------------------------------------------------------
 

@@ -1,4 +1,4 @@
-2018-11-04 for Version 0.68
+2019-05-11 for Version 0.69.0
 
 Release steps.
 Just in case I don't do a release for a while and forget what to do... =)
@@ -16,7 +16,7 @@ Change the date at the first line of this document.
     ChangeLog
     CMakeLists.txt
       At lines under "# Generate uncrustify_version.h"
-      (Check the value of "CURRENT_VERSION", such as "Uncrustify-0.68_f")
+      (Check the value of "CURRENT_VERSION", such as "Uncrustify-0.69.0_f")
     documentation/htdocs/index.html
       At line <li>Highly configurable
       TODO: (automat for this) Change the values of <options> and version.
@@ -29,8 +29,6 @@ Change the date at the first line of this document.
       TODO: (automat for this) Change the values of options and version.
 
 2b. Update the option count in documentation/htdocs/index.html .
-   Check the number of options at ./tests/cli/output/help.txt
-   or use uncrustify --help .
 
 2d. Update the man file, if any command-line options have changed.
 
@@ -78,7 +76,7 @@ Change the date at the first line of this document.
    $ make
    $ cpack
    $ # make the name of the zip-file shorter
-   $ mv uncrustify-Uncrustify-0.67-win64.zip uncrustify-0.67-win64.zip
+   $ mv uncrustify-Uncrustify-0.69.0-win64.zip uncrustify-0.69.0-win64.zip
 
 5. The source tarball is available from the release on GitHub, or to build it here use
    $ # generate the config files

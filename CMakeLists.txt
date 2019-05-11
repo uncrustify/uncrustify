@@ -128,7 +128,7 @@ endif()
 #
 
 # FIXME: the version number should be automatically integrated
-set(CURRENT_VERSION "Uncrustify-0.68_f")
+set(CURRENT_VERSION "Uncrustify-0.69.0_f")
 
 find_package(PythonInterp REQUIRED)
 option(NoGitVersionString "Do not use make_version.py and git to build a version string" OFF)
