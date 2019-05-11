@@ -238,6 +238,7 @@ void brace_cleanup(void)
       if (  !chunk_is_comment(pc)
          && !chunk_is_newline(pc)
          && !chunk_is_token(pc, CT_ATTRIBUTE)
+         && !chunk_is_token(pc, CT_IGNORED)            // Issue #2279
          && (cpd.in_preproc == CT_PP_DEFINE || cpd.in_preproc == CT_NONE))
       {
          cpd.consumed = false;
@@ -339,6 +340,8 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
    log_pcf_flags(LTOK, pc->flags);
 
    // Mark statement starts
+   LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s, text() is '%s'\n",
+           __func__, __LINE__, pc->orig_line, get_token_name(pc->type), pc->text());
    LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
            __func__, __LINE__, frm.stmt_count, frm.expr_count);
    if (  (frm.stmt_count == 0 || frm.expr_count == 0)
@@ -356,6 +359,8 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
    }
    frm.stmt_count++;
    frm.expr_count++;
+   LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
+           __func__, __LINE__, frm.stmt_count, frm.expr_count);
 
    if (frm.sparen_count > 0)
    {
@@ -701,6 +706,8 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
               __func__, __LINE__, pc->orig_line, pc->text());
       frm.stmt_count = 0;
       frm.expr_count = 0;
+      LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
+              __func__, __LINE__, frm.stmt_count, frm.expr_count);
    }
 
    // Mark expression starts
@@ -937,6 +944,8 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
          // Mark as a start of a statement
          frm.stmt_count = 0;
          frm.expr_count = 0;
+         LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
+                 __func__, __LINE__, frm.stmt_count, frm.expr_count);
          pc->flags     |= PCF_STMT_START | PCF_EXPR_START;
          frm.stmt_count = 1;
          frm.expr_count = 1;

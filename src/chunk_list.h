@@ -295,6 +295,15 @@ chunk_t *chunk_get_prev_ncnl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
+ * Gets the prev non-NEWLINE and non-comment and non-ignored chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
+ */
+chunk_t *chunk_get_prev_ncnlni(chunk_t *cur, scope_e scope = scope_e::ALL);
+
+
+/**
  * Gets the prev non-NEWLINE and non-comment chunk, non-preprocessor chunk
  *
  * @param cur    chunk to use as start point
@@ -580,6 +589,13 @@ static inline bool chunk_is_blank(chunk_t *pc)
 static inline bool chunk_is_comment_or_newline(chunk_t *pc)
 {
    return(chunk_is_comment(pc) || chunk_is_newline(pc));
+}
+
+
+//! checks if a chunk is valid and either a comment or newline or ignored
+static inline bool chunk_is_comment_or_newline_or_ignored(chunk_t *pc)
+{
+   return(chunk_is_comment(pc) || chunk_is_newline(pc) || chunk_is_token(pc, CT_IGNORED));
 }
 
 

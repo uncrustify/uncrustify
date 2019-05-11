@@ -66,14 +66,25 @@ void prot_the_line(int theLine, unsigned int actual_line)
          {
             LOG_FMT(LGUY, "<CT_SPACE>, ");
          }
+         else if (chunk_is_token(pc, CT_IGNORED))
+         {
+            LOG_FMT(LGUY, "<IGNORED> ");
+         }
          else
          {
             LOG_FMT(LGUY, "text() '%s', ", pc->text());
          }
-         LOG_FMT(LGUY, " column is %zu, type is %s, parent_type is %s, orig_col is %zu, ",
+         LOG_FMT(LGUY, " column is %zu, type is %s, parent_type is %s, orig_col is %zu,",
                  pc->column, get_token_name(pc->type), get_token_name(pc->parent_type), pc->orig_col);
-         LOG_FMT(LGUY, "pc->flags:");
-         log_pcf_flags(LGUY, pc->flags);
+         if (chunk_is_token(pc, CT_IGNORED))
+         {
+            LOG_FMT(LGUY, "\n");
+         }
+         else
+         {
+            LOG_FMT(LGUY, " pc->flags: ");
+            log_pcf_flags(LGUY, pc->flags);
+         }
       }
    }
    LOG_FMT(LGUY, "\n");

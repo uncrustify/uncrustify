@@ -138,8 +138,8 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
               && !(pc->flags & PCF_IN_FCN_DEF)    // Issue #1717
               && !(pc->flags & PCF_IN_FCN_CALL))  // Issue #1717
       {
-         LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->flags:\n", __func__, __LINE__);
-         log_pcf_flags(LGUY, pc->flags);
+         LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->flags:\n   ", __func__, __LINE__);
+         log_pcf_flags(LALASS, pc->flags);
          var_def_cnt++;
       }
       else if (var_def_cnt > 1)

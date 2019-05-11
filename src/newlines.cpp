@@ -1522,7 +1522,7 @@ static void newlines_cuddle_uncuddle(chunk_t *start, iarf_e nl_opt)
       return;
    }
 
-   br_close = chunk_get_prev_ncnl(start);
+   br_close = chunk_get_prev_ncnlni(start);   // Issue #2279
    if (chunk_is_token(br_close, CT_BRACE_CLOSE))
    {
       newline_iarf_pair(br_close, start, nl_opt);
@@ -1617,7 +1617,7 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
    bool    typedef_blk   = false;
    bool    var_blk       = false;
 
-   chunk_t *prev = chunk_get_prev_ncnl(start);
+   chunk_t *prev = chunk_get_prev_ncnlni(start);   // Issue #2279
    // can't be any variable definitions in a "= {" block
    if (chunk_is_token(prev, CT_ASSIGN))
    {
@@ -1683,12 +1683,12 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
             break;
          }
 
-         prev = chunk_get_prev_ncnl(pc);
+         prev = chunk_get_prev_ncnlni(pc);   // Issue #2279
          if (  chunk_is_token(prev, CT_STRING)
             && prev->parent_type == CT_EXTERN
             && chunk_is_token(prev->prev, CT_EXTERN))
          {
-            prev = chunk_get_prev_ncnl(prev->prev);
+            prev = chunk_get_prev_ncnlni(prev->prev);   // Issue #2279
          }
          if (chunk_is_token(pc, CT_TYPEDEF))
          {
@@ -1865,8 +1865,8 @@ static void newlines_brace_pair(chunk_t *br_open)
       && options::nl_create_func_def_one_liner())
    {
       chunk_t *br_close = chunk_skip_to_match(br_open, scope_e::ALL);
-      chunk_t *tmp      = chunk_get_prev_ncnl(br_open);
-      if (((br_close->orig_line - br_open->orig_line) <= 2) && chunk_is_paren_close(tmp))  // need to check the conditions.
+      chunk_t *tmp      = chunk_get_prev_ncnlni(br_open);                                 // Issue #2279
+      if (((br_close->orig_line - br_open->orig_line) <= 2) && chunk_is_paren_close(tmp)) // need to check the conditions.
       {
          while (  tmp != nullptr
                && (tmp = chunk_get_next(tmp)) != nullptr
@@ -1904,7 +1904,7 @@ static void newlines_brace_pair(chunk_t *br_open)
       // Only mess with it if the open brace is followed by a newline
       if (chunk_is_newline(next))
       {
-         chunk_t *prev = chunk_get_prev_ncnl(br_open);
+         chunk_t *prev = chunk_get_prev_ncnlni(br_open);   // Issue #2279
          newline_iarf_pair(prev, br_open, options::nl_assign_brace());
       }
    }
@@ -1935,7 +1935,7 @@ static void newlines_brace_pair(chunk_t *br_open)
 
             if (nl_fdef_brace_cond_v != IARF_IGNORE)
             {
-               prev = chunk_get_prev_ncnl(br_open);
+               prev = chunk_get_prev_ncnlni(br_open);   // Issue #2279
                if (chunk_is_token(prev, CT_FPAREN_CLOSE))
                {
                   val = nl_fdef_brace_cond_v;
@@ -1962,7 +1962,7 @@ static void newlines_brace_pair(chunk_t *br_open)
          if (prev == nullptr)
          {
             // Grab the chunk before the open brace
-            prev = chunk_get_prev_ncnl(br_open);
+            prev = chunk_get_prev_ncnlni(br_open);   // Issue #2279
          }
 
          newline_iarf_pair(prev, br_open, val);
@@ -2363,7 +2363,7 @@ static void newline_func_def_or_call(chunk_t *start)
       iarf_e atmp = options::nl_func_call_paren();
       if (atmp != IARF_IGNORE)
       {
-         prev = chunk_get_prev_ncnl(start);
+         prev = chunk_get_prev_ncnlni(start);   // Issue #2279
          if (prev != nullptr)
          {
             newline_iarf(prev, atmp);
@@ -2376,7 +2376,7 @@ static void newline_func_def_or_call(chunk_t *start)
          atmp = options::nl_func_call_paren_empty();
          if (atmp != IARF_IGNORE)
          {
-            prev = chunk_get_prev_ncnl(start);
+            prev = chunk_get_prev_ncnlni(start);   // Issue #2279
             if (prev != nullptr)
             {
                newline_iarf(prev, atmp);
@@ -2402,7 +2402,7 @@ static void newline_func_def_or_call(chunk_t *start)
               (atmp == IARF_REMOVE) ? "REMOVE" : "FORCE");
       if (atmp != IARF_IGNORE)
       {
-         prev = chunk_get_prev_ncnl(start);
+         prev = chunk_get_prev_ncnlni(start);   // Issue #2279
          if (prev != nullptr)
          {
             newline_iarf(prev, atmp);
@@ -2410,15 +2410,15 @@ static void newline_func_def_or_call(chunk_t *start)
       }
 
       // Handle break newlines type and function
-      prev = chunk_get_prev_ncnl(start);
+      prev = chunk_get_prev_ncnlni(start);   // Issue #2279
       prev = skip_template_prev(prev);
       // Don't split up a function variable
-      prev = chunk_is_paren_close(prev) ? nullptr : chunk_get_prev_ncnl(prev);
+      prev = chunk_is_paren_close(prev) ? nullptr : chunk_get_prev_ncnlni(prev);   // Issue #2279
 
       if (  chunk_is_token(prev, CT_DC_MEMBER)
          && (options::nl_func_class_scope() != IARF_IGNORE))
       {
-         newline_iarf(chunk_get_prev_ncnl(prev), options::nl_func_class_scope());
+         newline_iarf(chunk_get_prev_ncnlni(prev), options::nl_func_class_scope());   // Issue #2279
       }
 
       if (prev != nullptr && prev->type != CT_ACCESS_COLON)
@@ -2427,7 +2427,7 @@ static void newline_func_def_or_call(chunk_t *start)
          if (chunk_is_token(prev, CT_OPERATOR))
          {
             tmp  = prev;
-            prev = chunk_get_prev_ncnl(prev);
+            prev = chunk_get_prev_ncnlni(prev);   // Issue #2279
          }
          else
          {
@@ -2465,7 +2465,7 @@ static void newline_func_def_or_call(chunk_t *start)
 
                if (chunk_is_token(prev, CT_DESTRUCTOR))
                {
-                  prev = chunk_get_prev_ncnl(prev);
+                  prev = chunk_get_prev_ncnlni(prev);   // Issue #2279
                }
 
                /*
@@ -2474,9 +2474,9 @@ static void newline_func_def_or_call(chunk_t *start)
                 */
                while (chunk_is_token(prev, CT_DC_MEMBER))
                {
-                  prev = chunk_get_prev_ncnl(prev);
+                  prev = chunk_get_prev_ncnlni(prev);   // Issue #2279
                   prev = skip_template_prev(prev);
-                  prev = chunk_get_prev_ncnl(prev);
+                  prev = chunk_get_prev_ncnlni(prev);   // Issue #2279
                }
 
                if (  prev != nullptr
@@ -2511,7 +2511,7 @@ static void newline_func_def_or_call(chunk_t *start)
                 : options::nl_func_paren_empty();
          if (atmp != IARF_IGNORE)
          {
-            prev = chunk_get_prev_ncnl(start);
+            prev = chunk_get_prev_ncnlni(start);   // Issue #2279
             if (prev != nullptr)
             {
                newline_iarf(prev, atmp);
@@ -3040,7 +3040,7 @@ void newlines_cleanup_braces(bool first)
          {
             if (options::nl_paren_dbrace_open() != IARF_IGNORE)
             {
-               prev = chunk_get_prev_ncnl(pc, scope_e::PREPROC);
+               prev = chunk_get_prev_ncnlni(pc, scope_e::PREPROC);   // Issue #2279
                if (chunk_is_paren_close(prev))
                {
                   newline_iarf_pair(prev, pc, options::nl_paren_dbrace_open());
@@ -3439,7 +3439,7 @@ void newlines_cleanup_braces(bool first)
          prev = chunk_get_prev(pc);
          if (chunk_is_token(prev, CT_PAREN_CLOSE))
          {
-            newline_iarf(chunk_get_prev_ncnl(pc), options::nl_before_throw());
+            newline_iarf(chunk_get_prev_ncnlni(pc), options::nl_before_throw());   // Issue #2279
          }
       }
       else if (chunk_is_token(pc, CT_CASE_COLON))
@@ -3583,7 +3583,7 @@ void newlines_cleanup_braces(bool first)
             next = chunk_get_next_ncnl(pc);
             if (next != nullptr && next->level == next->brace_level)
             {
-               tmp = chunk_get_prev_ncnl(chunk_get_prev_type(pc, CT_ANGLE_OPEN, pc->level));
+               tmp = chunk_get_prev_ncnlni(chunk_get_prev_type(pc, CT_ANGLE_OPEN, pc->level));   // Issue #2279
                if (chunk_is_token(tmp, CT_TEMPLATE))
                {
                   newline_iarf(pc, options::nl_template_class());
@@ -3604,7 +3604,7 @@ void newlines_cleanup_braces(bool first)
          if (  pc->parent_type == CT_ASSIGN
             && ((pc->flags & PCF_ONE_LINER) == 0))
          {
-            tmp = chunk_get_prev_ncnl(pc);
+            tmp = chunk_get_prev_ncnlni(pc);   // Issue #2279
             newline_iarf(tmp, options::nl_assign_square());
 
             iarf_e arg = options::nl_after_square_assign();
@@ -4186,7 +4186,7 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
             }
             else
             {
-               remove_next_newlines(chunk_get_prev_ncnl(pc));
+               remove_next_newlines(chunk_get_prev_ncnlni(pc));   // Issue #2279
             }
             continue;
          }

@@ -368,7 +368,7 @@
 09606  ptr-arith.cfg                        c/extern.c
 09607  ptr-arith.cfg                        c/attribute.c
 09608  aet-func_call_user.cfg               c/func_call_user2.c
-
+09609  Issue_2279.cfg                       c/Issue_2279.c
 09610  force_tab_after_define-t.cfg         c/bug_i_876.c
 09611  space_indent_columns-4.cfg           c/bug_i_222.c
 09612  empty.cfg                            c/bug_1041.c
