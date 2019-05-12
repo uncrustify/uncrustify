@@ -632,6 +632,7 @@ mod_add_long_class_closebrace_comment = 0
 mod_add_long_switch_closebrace_comment = 0
 mod_add_long_ifdef_endif_comment = 0
 mod_add_long_ifdef_else_comment = 0
+mod_sort_case_sensitive         = false
 mod_sort_import                 = false
 mod_sort_using                  = false
 mod_sort_include                = false
