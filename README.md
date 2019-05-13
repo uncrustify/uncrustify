@@ -11,7 +11,7 @@
 A source code beautifier for C, C++, C#, ObjectiveC, D, Java, Pawn and VALA
 
 ## Features
-* highly configurable - 655 configurable options as of version 0.68
+* highly configurable - 671 configurable options as of version 0.69.0
 - <details><summary>add/remove spaces</summary>
 
   - `sp_before_sparen`: _Add or remove space before '(' of 'if', 'for', 'switch', 'while', etc._
@@ -191,7 +191,7 @@ on the subdirectories of that folder.
 If a PR is altering the CLI output, files inside those directories might
 need to be manually updated. This often happens when options are
 added, removed or altered. Keep in mind that the version string line
-(example: `# Uncrustify-0.65_f`) of outputs from commands like
+(example: `# Uncrustify-0.69.0_f`) of outputs from commands like
 `--show-config` should be replaced with a blank line.
 
 ### Portability
@@ -282,3 +282,12 @@ To ease the process a bit, some 3rd party tools are available:
 - [UncrustifyX](https://github.com/ryanmaxwell/UncrustifyX) - Uncrustify
   utility and documentation browser for Mac OS X
 
+Under Windows:
+Uncrustify is a command-line tool, if you run it by double-clicking the
+executable, it will open a command prompt run the executable
+(which prints the help message), and then immediately close the window
+as uncrustify exits.
+
+You can open the command prompt (which is an interactive terminal
+window that allows you to run commands without it closing as soon as
+they exit) and run uncristify.exe there.
