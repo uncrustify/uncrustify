@@ -905,7 +905,7 @@ void process_option_line(const std::string &config_line, const char *filename)
       if (oi == option_map.end())
       {
          OptionWarning w{ filename };
-         w("unknown symbol '%s'", args[0].c_str());
+         w("unknown option '%s'", args[0].c_str());
       }
       else
       {
