@@ -27,11 +27,9 @@
 30023  ben_014.cfg                          cpp/templates.cpp
 30024  class-nl_func-add.cfg                cpp/class-init.cpp
 30025  class-nl_func-del.cfg                cpp/class-init.cpp
-
 30026  byref-left.cfg                       cpp/byref.cpp
 30027  byref-right.cfg                      cpp/byref.cpp
 30028  byref-center.cfg                     cpp/byref.cpp
-
 30029  ben_015.cfg                          cpp/init_align.h
 
 30030  avalon.cfg                           cpp/Timestamp.h
@@ -55,13 +53,12 @@
 30047  nl_func_paren_empty.cfg              cpp/nl_func_paren_empty.cpp
 30048  nl_func_def_paren_empty-r.cfg        cpp/nl_func_def_paren_empty.cpp
 30049  nl_func_call_paren-f.cfg             cpp/nl_func_call_paren.cpp
-
 30050  nl_namespace-r.cfg                   cpp/nl-namespace.h
-30051  nl_namespace-a.cfg                   cpp/nl-namespace.h
 
+30051  nl_namespace-a.cfg                   cpp/nl-namespace.h
 30052  nl_try-a.cfg                         cpp/try-catch-nl.cpp
 30053  sp_catch_brace.cfg                   cpp/exception.cpp
-
+30054  Issue_2091.cfg                       cpp/Issue_2091.cpp
 30055  nl_after_func_body.cfg               cpp/nl_func.cpp
 30056  nl_after_func_body-2.cfg             cpp/nl_func.cpp
 

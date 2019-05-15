@@ -36,12 +36,15 @@ include_category *include_categories[kIncludeCategoriesCount];
 
 /**
  * Compare two series of chunks, starting with the given ones.
+ * @param pc1   first  instance to compare
+ * @param pc2   second instance to compare
+ * @param tcare take care of case (lower case/ upper case)   Issue #2091
  *
  * @retval == 0  both text elements are equal
  * @retval  > 0
  * @retval  < 0
  */
-static int compare_chunks(chunk_t *pc1, chunk_t *pc2);
+static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare = false);
 
 
 /**
@@ -102,7 +105,7 @@ static int get_chunk_priority(chunk_t *pc)
 
 
 //! Compare two chunks
-static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
+static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LSORT, "\n@begin pc1->len=%zu, line=%zu, column=%zu\n", pc1->len(), pc1->orig_line, pc1->orig_col);
@@ -124,7 +127,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
       LOG_FMT(LSORT, "text=%s, pc1->len=%zu, line=%zu, column=%zu\n", pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
       LOG_FMT(LSORT, "text=%s, pc2->len=%zu, line=%zu, column=%zu\n", pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
       size_t min_len = (pc1->len() < pc2->len()) ? pc1->len() : pc2->len();
-      int    ret_val = unc_text::compare(pc1->str, pc2->str, min_len);
+      int    ret_val = unc_text::compare(pc1->str, pc2->str, min_len, tcare);
       LOG_FMT(LSORT, "ret_val=%d\n", ret_val);
 
       if (ret_val != 0)
@@ -193,13 +196,14 @@ static void do_the_sort(chunk_t **chunks, size_t num_chunks)
    LOG_FMT(LSORT, "\n");
 
    size_t start_idx;
+   bool   take_care = options::mod_sort_case_sensitive();                  // Issue #2091
    for (start_idx = 0; start_idx < (num_chunks - 1); start_idx++)
    {
       // Find the index of the minimum value
       size_t min_idx = start_idx;
       for (size_t idx = start_idx + 1; idx < num_chunks; idx++)
       {
-         if (compare_chunks(chunks[idx], chunks[min_idx]) < 0)
+         if (compare_chunks(chunks[idx], chunks[min_idx], take_care) < 0)  // Issue #2091
          {
             min_idx = idx;
          }

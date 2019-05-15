@@ -2275,26 +2275,26 @@ nl_after_func_body_one_liner;
 // The number of blank lines after a block of variable definitions at the top
 // of a function body.
 //
-// 0 = No change (default).
+// 0: No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_func_var_def_blk;
 
 // The number of newlines before a block of typedefs. If nl_after_access_spec
 // is non-zero, that option takes precedence.
 //
-// 0 = No change (default).
+// 0: No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_typedef_blk_start;
 
 // The number of newlines after a block of typedefs.
 //
-// 0 = No change (default).
+// 0: No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_typedef_blk_end;
 
 // The maximum number of consecutive newlines within a block of typedefs.
 //
-// 0 = No change (default).
+// 0: No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_typedef_blk_in;
 
@@ -2302,21 +2302,21 @@ nl_typedef_blk_in;
 // of a function body. If nl_after_access_spec is non-zero, that option takes
 // precedence.
 //
-// 0 = No change (default).
+// 0: No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_var_def_blk_start;
 
 // The number of newlines after a block of variable definitions not at the top
 // of a function body.
 //
-// 0 = No change (default).
+// 0: No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_var_def_blk_end;
 
 // The maximum number of consecutive newlines within a block of variable
 // definitions.
 //
-// 0 = No change (default).
+// 0: No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_var_def_blk_in;
 
@@ -2359,7 +2359,7 @@ nl_after_class;
 // the Qt-specific 'signals:' and 'slots:'. Will not change the newline count
 // if after a brace open.
 //
-// 0 = No change (default).
+// 0: No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_before_access_spec;
 
@@ -2367,7 +2367,7 @@ nl_before_access_spec;
 // the Qt-specific 'signals:' and 'slots:'. Will not change the newline count
 // if after a brace open.
 //
-// 0 = No change (default).
+// 0: No change (default).
 //
 // Overrides nl_typedef_blk_start and nl_var_def_blk_start.
 extern BoundedOption<unsigned, 0, 16>
@@ -2376,27 +2376,27 @@ nl_after_access_spec;
 // The number of newlines between a function definition and the function
 // comment, as in '// comment\n <here> void foo() {...}'.
 //
-// 0 = No change (default).
+// 0: No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_comment_func_def;
 
 // The number of newlines after a try-catch-finally block that isn't followed
 // by a brace close.
 //
-// 0 = No change (default).
+// 0: No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_after_try_catch_finally;
 
 // (C#) The number of newlines before and after a property, indexer or event
 // declaration.
 //
-// 0 = No change (default).
+// 0: No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_around_cs_property;
 
 // (C#) The number of newlines between the get/set/add/remove handlers.
 //
-// 0 = No change (default).
+// 0: No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_between_get_set;
 
@@ -2407,7 +2407,7 @@ nl_property_brace;
 // The number of newlines after '{' of a namespace. This also adds newlines
 // before the matching '}'.
 //
-// 0 = Apply eat_blanks_after_open_brace or eat_blanks_before_close_brace if
+// 0: Apply eat_blanks_after_open_brace or eat_blanks_before_close_brace if
 //     applicable, otherwise no change.
 //
 // Overrides eat_blanks_after_open_brace and eat_blanks_before_close_brace.
@@ -2549,14 +2549,14 @@ align_func_params;
 
 // The span for aligning parameter definitions in function on parameter name.
 //
-// 0 = Don't align (default).
+// 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 16>
 align_func_params_span;
 
 // The threshold for aligning function parameter definitions.
 // Use a negative number for absolute thresholds.
 //
-// 0 = No limit (default).
+// 0: No limit (default).
 extern BoundedOption<signed, -1000, 5000>
 align_func_params_thresh;
 
@@ -2566,14 +2566,14 @@ align_func_params_gap;
 
 // The span for aligning constructor value.
 //
-// 0 = Don't align (default).
+// 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 16>
 align_constr_value_span;
 
 // The threshold for aligning constructor value.
 // Use a negative number for absolute thresholds.
 //
-// 0 = No limit (default).
+// 0: No limit (default).
 extern BoundedOption<signed, -1000, 5000>
 align_constr_value_thresh;
 
@@ -2588,7 +2588,7 @@ align_same_func_call_params;
 
 // The span for aligning function-call parameters for single line functions.
 //
-// 0 = Don't align (default).
+// 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
 align_same_func_call_params_span;
 
@@ -2596,13 +2596,13 @@ align_same_func_call_params_span;
 // functions.
 // Use a negative number for absolute thresholds.
 //
-// 0 = No limit (default).
+// 0: No limit (default).
 extern BoundedOption<signed, -1000, 5000>
 align_same_func_call_params_thresh;
 
 // The span for aligning variable definitions.
 //
-// 0 = Don't align (default).
+// 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
 align_var_def_span;
 
@@ -2627,7 +2627,7 @@ align_var_def_amp_style;
 // The threshold for aligning variable definitions.
 // Use a negative number for absolute thresholds.
 //
-// 0 = No limit (default).
+// 0: No limit (default).
 extern BoundedOption<signed, -1000, 5000>
 align_var_def_thresh;
 
@@ -2653,20 +2653,20 @@ align_var_def_inline;
 
 // The span for aligning on '=' in assignments.
 //
-// 0 = Don't align (default).
+// 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
 align_assign_span;
 
 // The span for aligning on '=' in function prototype modifier.
 //
-// 0 = Don't align (default).
+// 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
 align_assign_func_proto_span;
 
 // The threshold for aligning on '=' in assignments.
 // Use a negative number for absolute thresholds.
 //
-// 0 = No limit (default).
+// 0: No limit (default).
 extern BoundedOption<signed, -1000, 5000>
 align_assign_thresh;
 
@@ -2681,27 +2681,27 @@ align_assign_decl_func;
 
 // The span for aligning on '=' in enums.
 //
-// 0 = Don't align (default).
+// 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
 align_enum_equ_span;
 
 // The threshold for aligning on '=' in enums.
 // Use a negative number for absolute thresholds.
 //
-// 0 = no limit (default).
+// 0: no limit (default).
 extern BoundedOption<signed, -1000, 5000>
 align_enum_equ_thresh;
 
 // The span for aligning class member definitions.
 //
-// 0 = Don't align (default).
+// 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
 align_var_class_span;
 
 // The threshold for aligning class member definitions.
 // Use a negative number for absolute thresholds.
 //
-// 0 = No limit (default).
+// 0: No limit (default).
 extern BoundedOption<signed, -1000, 5000>
 align_var_class_thresh;
 
@@ -2711,14 +2711,14 @@ align_var_class_gap;
 
 // The span for aligning struct/union member definitions.
 //
-// 0 = Don't align (default).
+// 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
 align_var_struct_span;
 
 // The threshold for aligning struct/union member definitions.
 // Use a negative number for absolute thresholds.
 //
-// 0 = No limit (default).
+// 0: No limit (default).
 extern BoundedOption<signed, -1000, 5000>
 align_var_struct_thresh;
 
@@ -2728,13 +2728,13 @@ align_var_struct_gap;
 
 // The span for aligning struct initializer values.
 //
-// 0 = Don't align (default).
+// 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
 align_struct_init_span;
 
 // The span for aligning single-line typedefs.
 //
-// 0 = Don't align (default).
+// 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 16>
 align_typedef_span;
 
@@ -2770,7 +2770,7 @@ align_typedef_amp_style;
 
 // The span for aligning comments that end lines.
 //
-// 0 = Don't align (default).
+// 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
 align_right_cmt_span;
 
@@ -2793,20 +2793,20 @@ align_right_cmt_same_level;
 // aligned beyond this column, but which can be aligned in a lesser column,
 // may be "pulled in".
 //
-// 0 = Ignore (default).
+// 0: Ignore (default).
 extern BoundedOption<unsigned, 0, 200>
 align_right_cmt_at_col;
 
 // The span for aligning function prototypes.
 //
-// 0 = Don't align (default).
+// 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
 align_func_proto_span;
 
 // The threshold for aligning function prototypes.
 // Use a negative number for absolute thresholds.
 //
-// 0 = No limit (default).
+// 0: No limit (default).
 extern BoundedOption<signed, -1000, 5000>
 align_func_proto_thresh;
 
@@ -2840,7 +2840,7 @@ align_single_line_brace_gap;
 
 // (OC) The span for aligning Objective-C message specifications.
 //
-// 0 = Don't align (default).
+// 0: Don't align (default).
 extern BoundedOption<unsigned, 0, 5000>
 align_oc_msg_spec_span;
 
@@ -2875,7 +2875,7 @@ align_asm_colon;
 // (OC) Span for aligning parameters in an Objective-C message call
 // on the ':'.
 //
-// 0 = Don't align.
+// 0: Don't align.
 extern BoundedOption<unsigned, 0, 5000>
 align_oc_msg_colon_span;
 
@@ -3151,6 +3151,10 @@ mod_add_long_ifdef_endif_comment;
 // doesn't have a comment after the #else, a comment will be added.
 extern BoundedOption<unsigned, 0, 16>
 mod_add_long_ifdef_else_comment;
+
+// Whether to take care of the case by the mod_sort_xx options.
+extern Option<bool>
+mod_sort_case_sensitive;
 
 // Whether to sort consecutive single-line 'import' statements.
 extern Option<bool>
