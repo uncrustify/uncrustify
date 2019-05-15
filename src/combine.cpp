@@ -3503,7 +3503,7 @@ void combine_labels(void)
          {
             hit_case = false;
             set_chunk_type(next, CT_CASE_COLON);
-            tmp = chunk_get_next_ncnl(next);
+            tmp = chunk_get_next_ncnlnp(next);                // Issue #2150
             if (chunk_is_token(tmp, CT_BRACE_OPEN))
             {
                set_chunk_parent(tmp, CT_CASE);

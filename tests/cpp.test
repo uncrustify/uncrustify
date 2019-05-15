@@ -331,8 +331,8 @@
 30937  indent_param.cfg                     cpp/indent_param.cpp
 30938  empty.cfg                            cpp/indent_switch_pp.cpp
 30939  indent_paren_after_func_call-t.cfg   cpp/indent_paren_after_func_call.cpp
-
 30940  mod_case_brace_rm.cfg                cpp/case-brace-remove.cpp
+30941  Issue_2150.cfg                       cpp/Issue_2150.cpp
 
 30944  sp_paren_comma.cfg                   cpp/sp_paren_comma.cpp
 30945  sp_before_byref-r.cfg                cpp/sf.3266678.cpp
