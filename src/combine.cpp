@@ -2974,7 +2974,7 @@ static void fix_casts(chunk_t *start)
       }
    }
 
-   // if the 'cast' is followed by a semicolon, comma or close parenthesis, it isn't
+   // if the 'cast' is followed by a semicolon, comma, bool or close parenthesis, it isn't
    pc = chunk_get_next_ncnl(paren_close);
    if (pc == nullptr)
    {
@@ -2982,6 +2982,7 @@ static void fix_casts(chunk_t *start)
    }
    if (  chunk_is_semicolon(pc)
       || chunk_is_token(pc, CT_COMMA)
+      || chunk_is_token(pc, CT_BOOL)               // Issue #2151
       || chunk_is_paren_close(pc))
    {
       LOG_FMT(LCASTS, "%s(%d):  -- not a cast - followed by type %s\n",
