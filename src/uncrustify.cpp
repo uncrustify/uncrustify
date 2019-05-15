@@ -50,15 +50,14 @@
 #include "universalindentgui.h"
 #include "width.h"
 
-#include <deque>
-#include <map>
-#include <vector>
-
+#include <cerrno>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <cerrno>
+#include <deque>
 #include <fcntl.h>
+#include <map>
+#include <vector>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif

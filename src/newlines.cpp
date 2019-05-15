@@ -17,7 +17,9 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
+
 #include "newlines.h"
+
 #include "align_stack.h"
 #include "chunk_list.h"
 #include "combine.h"
@@ -29,8 +31,8 @@
 #include "space.h"
 #include "unc_ctype.h"
 #include "unc_tools.h"
-#include "uncrustify_types.h"
 #include "uncrustify.h"
+#include "uncrustify_types.h"
 
 #include <algorithm>
 #include <cstdio>

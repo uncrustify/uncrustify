@@ -5,10 +5,11 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #include "args.h"
-#include <cstring>
 #include "unc_ctype.h"
 
+#include <cstring>
 
 Args::Args(int argc, char **argv)
 {

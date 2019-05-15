@@ -8,8 +8,9 @@
  */
 
 #include "align_asm_colon.h"
-#include "chunk_list.h"
+
 #include "align_stack.h"
+#include "chunk_list.h"
 
 
 void align_asm_colon(void)

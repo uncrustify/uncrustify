@@ -5,13 +5,16 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #include "unicode.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
+
 #include "prototypes.h"
 #include "unc_ctype.h"
-#include <cstring>
+#include "uncrustify.h"
+#include "uncrustify_types.h"
+
 #include <cstdlib>
+#include <cstring>
 
 
 using namespace std;

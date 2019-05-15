@@ -9,14 +9,16 @@
  */
 
 #include "align_stack.h"
+
 #include "align_tab_column.h"
 #include "chunk_list.h"
 #include "indent.h"
-#include "space.h"
 #include "prototypes.h"
+#include "space.h"
 #include "uncrustify.h"
 
 #include <limits>
+
 
 using namespace uncrustify;
 

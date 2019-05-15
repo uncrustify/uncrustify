@@ -9,25 +9,27 @@
  */
 
 #include "align.h"
+
+#include "align_asm_colon.h"
 #include "align_assign.h"
 #include "align_func_params.h"
-#include "align_typedefs.h"
-#include "align_asm_colon.h"
 #include "align_func_proto.h"
 #include "align_init_brace.h"
 #include "align_left_shift.h"
 #include "align_oc_decl_colon.h"
+#include "align_oc_msg_colons.h"
 #include "align_oc_msg_spec.h"
 #include "align_preprocessor.h"
 #include "align_same_func_call_params.h"
-#include "align_oc_msg_colons.h"
+#include "align_stack.h"
 #include "align_struct_initializers.h"
 #include "align_trailing_comments.h"
+#include "align_typedefs.h"
 #include "align_var_def_brace.h"
-#include "align_stack.h"
+#include "language_tools.h"
 #include "quick_align_again.h"
 #include "uncrustify.h"
-#include "language_tools.h"
+
 
 using namespace uncrustify;
 

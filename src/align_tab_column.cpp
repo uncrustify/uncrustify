@@ -8,9 +8,10 @@
  */
 
 #include "align_tab_column.h"
-#include "uncrustify_types.h"
+
 #include "chunk_list.h"
 #include "prototypes.h"
+#include "uncrustify_types.h"
 
 using namespace uncrustify;
 

@@ -8,9 +8,11 @@
  */
 
 #include "align_oc_decl_colon.h"
+
 #include "align_oc_msg_colons.h"
-#include "chunk_list.h"
 #include "align_stack.h"
+#include "chunk_list.h"
+
 
 using namespace uncrustify;
 

@@ -8,6 +8,7 @@
  */
 
 #include "align_struct_initializers.h"
+
 #include "align_init_brace.h"
 #include "chunk_list.h"
 

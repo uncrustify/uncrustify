@@ -7,18 +7,21 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
+
 #include "keywords.h"
-#include "uncrustify_types.h"
-#include "prototypes.h"
-#include "char_table.h"
+
 #include "args.h"
-#include <cstring>
-#include <cerrno>
-#include <cstdlib>
-#include <map>
+#include "char_table.h"
+#include "language_tools.h"
+#include "prototypes.h"
 #include "unc_ctype.h"
 #include "uncrustify.h"
-#include "language_tools.h"
+#include "uncrustify_types.h"
+
+#include <cerrno>
+#include <cstdlib>
+#include <cstring>
+#include <map>
 
 using namespace std;
 

@@ -7,18 +7,22 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
+
 #include "output.h"
+
 #include "align_tab_column.h"
-#include "uncrustify_types.h"
-#include "prototypes.h"
+#include "braces.h"
 #include "chunk_list.h"
+#include "indent.h"
+#include "language_tools.h"
+#include "prototypes.h"
 #include "unc_ctype.h"
 #include "uncrustify.h"
-#include "indent.h"
-#include "braces.h"
+#include "uncrustify_types.h"
 #include "unicode.h"
+
 #include <cstdlib>
-#include "language_tools.h"
+
 
 using namespace uncrustify;
 

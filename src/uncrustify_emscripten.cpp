@@ -48,20 +48,20 @@
 
 #ifdef EMSCRIPTEN
 
-#include "prototypes.h"
-#include "unicode.h"
 #include "defines.h"
 #include "keywords.h"
-#include "options.h"
-#include "uncrustify_version.h"
-#include "logger.h"
 #include "log_levels.h"
+#include "logger.h"
+#include "options.h"
 #include "output.h"
+#include "prototypes.h"
+#include "uncrustify_version.h"
+#include "unicode.h"
 
 #include <iostream>
+#include <memory>
 #include <stdio.h>
 #include <stdlib.h>
-#include <memory>
 
 #include <emscripten/bind.h>
 

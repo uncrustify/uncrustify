@@ -8,8 +8,9 @@
  */
 
 #include "align_same_func_call_params.h"
-#include "chunk_list.h"
+
 #include "align_stack.h"
+#include "chunk_list.h"
 
 using namespace uncrustify;
 

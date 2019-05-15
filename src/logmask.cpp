@@ -6,10 +6,13 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #include "logmask.h"
+
+#include "unc_ctype.h"
+
 #include <cstdio>      // snprintf()
 #include <cstdlib>     // strtoul()
-#include "unc_ctype.h"
 
 #ifdef DEVELOP_ONLY
 

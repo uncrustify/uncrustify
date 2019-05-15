@@ -5,8 +5,11 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #include "punctuators.h"
+
 #include "prototypes.h"
+
 #include <algorithm>
 
 

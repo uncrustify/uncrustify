@@ -8,8 +8,9 @@
  */
 
 #include "align_tools.h"
-#include "uncrustify.h"
+
 #include "space.h"
+#include "uncrustify.h"
 
 
 chunk_t *skip_c99_array(chunk_t *sq_open)

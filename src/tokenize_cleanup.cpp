@@ -10,18 +10,20 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
+
 #include "tokenize_cleanup.h"
-#include "uncrustify_types.h"
-#include "prototypes.h"
-#include "chunk_list.h"
+
 #include "char_table.h"
-#include "unc_ctype.h"
-#include "uncrustify.h"
-#include "space.h"
+#include "chunk_list.h"
 #include "combine.h"
 #include "keywords.h"
 #include "language_tools.h"
+#include "prototypes.h"
 #include "punctuators.h"
+#include "space.h"
+#include "unc_ctype.h"
+#include "uncrustify.h"
+#include "uncrustify_types.h"
 
 #include <vector>
 
