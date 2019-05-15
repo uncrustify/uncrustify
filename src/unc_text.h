@@ -123,12 +123,13 @@ public:
     * @param ref1  first  instance to compare
     * @param ref2  second instance to compare
     * @param len   number of character to compare
+    * @param tcare take care of case (lower case/ upper case)                  Issue #2091
     *
     * @retval == 0  both text elements are equal
     * @retval  > 0
     * @retval  < 0
     */
-   static int compare(const unc_text &ref1, const unc_text &ref2, size_t len = 0);
+   static int compare(const unc_text &ref1, const unc_text &ref2, size_t len = 0, bool tcare = false);
 
 
    bool equals(const unc_text &ref) const;

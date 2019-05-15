@@ -282,7 +282,7 @@ void unc_text::update_logtext()
 }
 
 
-int unc_text::compare(const unc_text &ref1, const unc_text &ref2, size_t len)
+int unc_text::compare(const unc_text &ref1, const unc_text &ref2, size_t len, bool tcare)
 {
    const size_t len1    = ref1.size();
    const size_t len2    = ref2.size();
@@ -297,7 +297,15 @@ int unc_text::compare(const unc_text &ref1, const unc_text &ref2, size_t len)
          continue;
       }
 
-      int diff = unc_tolower(ref1.m_chars[idx]) - unc_tolower(ref2.m_chars[idx]);
+      int diff;                                             // Issue #2091
+      if (tcare)
+      {
+         diff = ref1.m_chars[idx] - ref2.m_chars[idx];
+      }
+      else
+      {
+         diff = unc_tolower(ref1.m_chars[idx]) - unc_tolower(ref2.m_chars[idx]);
+      }
       if (diff == 0)
       {
          /*
@@ -319,7 +327,7 @@ int unc_text::compare(const unc_text &ref1, const unc_text &ref2, size_t len)
 
    // underflow save: return(len1 - len2);
    return((len1 > len2) ? (len1 - len2) : -static_cast<int>(len2 - len1));
-}
+} // unc_text::compare
 
 
 bool unc_text::equals(const unc_text &ref) const
