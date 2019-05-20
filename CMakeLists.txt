@@ -459,6 +459,10 @@ else()
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/uncrustify.1"
     DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
   )
+  install(DIRECTORY "${PROJECT_SOURCE_DIR}/etc/"
+    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/uncrustify"
+    FILES_MATCHING PATTERN "*.cfg"
+  )
 endif()
 
 #
