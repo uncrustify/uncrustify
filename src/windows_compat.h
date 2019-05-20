@@ -6,6 +6,7 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #ifndef WINDOWS_COMPAT_H_INCLUDED
 #define WINDOWS_COMPAT_H_INCLUDED
 
@@ -78,9 +79,9 @@ typedef unsigned long long   UINT64;
 #define fileno         _fileno
 
 // includes for _setmode()
-#include <io.h>
-#include <fcntl.h>
 #include <direct.h>
+#include <fcntl.h>
+#include <io.h>
 
 // on windows the file permissions have no meaning thus neglect them
 #define mkdir(x, y)    _mkdir(x)

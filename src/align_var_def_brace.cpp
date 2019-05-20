@@ -8,6 +8,7 @@
  */
 
 #include "align_var_def_brace.h"
+
 #include "align_stack.h"
 #include "align_tools.h"
 #include "uncrustify.h"

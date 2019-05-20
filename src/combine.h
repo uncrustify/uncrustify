@@ -8,8 +8,8 @@
 #ifndef COMBINE_H_INCLUDED
 #define COMBINE_H_INCLUDED
 
-#include "uncrustify_types.h"
 #include "chunk_list.h"
+#include "uncrustify_types.h"
 
 
 /**

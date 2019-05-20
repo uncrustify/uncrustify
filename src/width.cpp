@@ -7,12 +7,13 @@
  */
 
 #include "width.h"
-#include "uncrustify_types.h"
+
 #include "chunk_list.h"
-#include "prototypes.h"
-#include "uncrustify.h"
 #include "indent.h"
 #include "newlines.h"
+#include "prototypes.h"
+#include "uncrustify.h"
+#include "uncrustify_types.h"
 
 #include <cstdlib>
 

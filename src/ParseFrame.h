@@ -12,8 +12,9 @@
 
 #include "token_enum.h"
 #include "uncrustify_types.h"
-#include <vector>
+
 #include <memory>
+#include <vector>
 
 
 //! Structure for counting nested level

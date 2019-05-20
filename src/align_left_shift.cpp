@@ -8,11 +8,12 @@
  */
 
 #include "align_left_shift.h"
+
+#include "align_stack.h"
 #include "chunk_list.h"
 #include "ChunkStack.h"
-#include "align_stack.h"
-#include "uncrustify.h"
 #include "indent.h"
+#include "uncrustify.h"
 
 using namespace uncrustify;
 

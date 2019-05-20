@@ -7,24 +7,26 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
+
 #include "indent.h"
-#include "uncrustify_types.h"
+
+#include "align.h"
 #include "chunk_list.h"
-#include "prototypes.h"
+#include "frame_list.h"
+#include "language_tools.h"
 #include "options_for_QT.h"
+#include "prototypes.h"
+#include "ParseFrame.h"
 #include "quick_align_again.h"
+#include "space.h"
+#include "unc_ctype.h"
+#include "uncrustify.h"
+#include "uncrustify_types.h"
+
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <algorithm>
-#include "unc_ctype.h"
-#include "uncrustify.h"
-#include "align.h"
-#include "frame_list.h"
-#include "space.h"
-#include "language_tools.h"
-
-#include "ParseFrame.h"
 
 using namespace std;
 using namespace uncrustify;

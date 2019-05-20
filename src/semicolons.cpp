@@ -5,18 +5,20 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #include "semicolons.h"
-#include "uncrustify_types.h"
+
 #include "chunk_list.h"
 #include "ChunkStack.h"
-#include "prototypes.h"
-#include "uncrustify.h"
 #include "language_tools.h"
+#include "prototypes.h"
+#include "unc_ctype.h"
+#include "uncrustify.h"
+#include "uncrustify_types.h"
 
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include "unc_ctype.h"
 
 
 static void remove_semicolon(chunk_t *pc);

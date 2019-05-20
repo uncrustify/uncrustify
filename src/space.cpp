@@ -17,21 +17,23 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
+
 #include "space.h"
-#include "uncrustify_types.h"
-#include "chunk_list.h"
-#include "prototypes.h"
+
 #include "char_table.h"
+#include "chunk_list.h"
+#include "language_tools.h"
 #include "options_for_QT.h"
+#include "prototypes.h"
+#include "punctuators.h"
+#include "unc_ctype.h"
+#include "uncrustify.h"
+#include "uncrustify_types.h"
+
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include "unc_ctype.h"
-#include "uncrustify.h"
-#include "language_tools.h"
-#include "punctuators.h"
-
-#include <algorithm>
 
 
 using namespace std;

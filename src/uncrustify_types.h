@@ -6,24 +6,26 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #ifndef UNCRUSTIFY_TYPES_H_INCLUDED
 #define UNCRUSTIFY_TYPES_H_INCLUDED
 
-#include <vector>
-#include <deque>
-
 #include "base_types.h"
-#include "options.h"
-#include "option_enum.h"
-#include "token_enum.h"    // c_token_t
 #include "log_levels.h"
 #include "logger.h"
+#include "option_enum.h"
+#include "options.h"
+#include "token_enum.h"    // c_token_t
 #include "unc_text.h"
-#include <cstdio>
+
 #include <assert.h>
+#include <cstdio>
+#include <deque>
+#include <vector>
 #ifdef HAVE_UTIME_H
 #include <utime.h>
 #endif
+
 
 class ParseFrame;
 

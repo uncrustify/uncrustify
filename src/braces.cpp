@@ -5,21 +5,23 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #include "braces.h"
-#include "uncrustify_types.h"
+
 #include "chunk_list.h"
+#include "combine.h"
+#include "language_tools.h"
+#include "newlines.h"
 #include "prototypes.h"
 #include "unc_ctype.h"
 #include "uncrustify.h"
-#include "combine.h"
-#include "newlines.h"
-#include "chunk_list.h"
-#include "language_tools.h"
+#include "uncrustify_types.h"
 
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <vector>
+
 
 using namespace uncrustify;
 

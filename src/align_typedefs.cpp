@@ -8,6 +8,7 @@
  */
 
 #include "align_typedefs.h"
+
 #include "align_stack.h"
 #include "chunk_list.h"
 

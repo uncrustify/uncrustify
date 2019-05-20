@@ -5,11 +5,12 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #ifndef NEWLINES_H_INCLUDED
 #define NEWLINES_H_INCLUDED
 
-#include "uncrustify_types.h"
 #include "chunk_list.h"
+#include "uncrustify_types.h"
 
 
 /**

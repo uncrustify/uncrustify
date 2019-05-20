@@ -22,15 +22,18 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #include "prototypes.h"
+
 #include "backup.h"
-#include "md5.h"
 #include "logger.h"
-#include <cstdio>
-#include <cerrno>
+#include "md5.h"
 #include "unc_ctype.h"
-#include <cstring>
 #include "uncrustify.h"
+
+#include <cerrno>
+#include <cstdio>
+#include <cstring>
 
 
 using namespace std;

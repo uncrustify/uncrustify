@@ -8,10 +8,11 @@
  */
 
 #include "align_trailing_comments.h"
+
 #include "align_add.h"
 #include "align_tab_column.h"
-#include "uncrustify.h"
 #include "indent.h"
+#include "uncrustify.h"
 
 using namespace uncrustify;
 

@@ -7,20 +7,24 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #include "tokenize.h"
-#include "uncrustify_types.h"
+
 #include "char_table.h"
-#include "prototypes.h"
 #include "chunk_list.h"
+#include "keywords.h"
+#include "language_tools.h"
+#include "prototypes.h"
+#include "punctuators.h"
+#include "unc_ctype.h"
+#include "uncrustify.h"
+#include "uncrustify_types.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <stack>
-#include "unc_ctype.h"
-#include "uncrustify.h"
-#include "keywords.h"
-#include "language_tools.h"
-#include "punctuators.h"
+
 
 #define LE_COUNT(x)    cpd.le_counts[static_cast<size_t>(LE_ ## x)]
 

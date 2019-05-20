@@ -11,12 +11,13 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #ifndef LOGGER_H_INCLUDED
 #define LOGGER_H_INCLUDED
 
 #include "logmask.h"
-#include <cstring>     // strlen()
 #include <cstdio>      // FILE
+#include <cstring>     // strlen()
 
 
 /**

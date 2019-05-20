@@ -8,8 +8,9 @@
  */
 
 #include "quick_align_again.h"
-#include "chunk_list.h"
+
 #include "align_stack.h"
+#include "chunk_list.h"
 
 
 void quick_align_again(void)

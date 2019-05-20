@@ -9,6 +9,7 @@
 #define BRACE_CLEANUP_H_INCLUDED
 
 #include "uncrustify_types.h"
+// necessary to not sort
 #include "ParseFrame.h"
 
 /**
