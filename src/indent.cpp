@@ -1635,6 +1635,8 @@ void indent_text(void)
             frm.top().indent = frm.prev().indent + indent_size;
             LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos is %zu, ... indent is %zu\n",
                     __func__, __LINE__, frm.size() - 1, frm.top().indent);
+            LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', parent_type is %s\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->parent_type));
 
             // If this brace is part of a statement, bump it out by indent_brace
             if (  pc->parent_type == CT_IF
