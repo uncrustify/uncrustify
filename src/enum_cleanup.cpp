@@ -5,11 +5,13 @@
  * @author  Guy Maurel Juli 2018
  * @license GPL v2+
  */
+
 #include "enum_cleanup.h"
-#include "uncrustify_types.h"
-#include "uncrustify.h"
+
 #include "chunk_list.h"
 #include "logger.h"
+#include "uncrustify.h"
+#include "uncrustify_types.h"
 
 using namespace uncrustify;
 

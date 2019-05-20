@@ -8,11 +8,12 @@
  */
 
 #include "scan_ib_line.h"
+
+#include "chunk_list.h"
 #include "ib_shift_out.h"
 #include "skip_c99_array.h"
-#include "chunk_list.h"
-#include "uncrustify.h"
 #include "space.h"
+#include "uncrustify.h"
 
 
 chunk_t *scan_ib_line(chunk_t *start, bool first_pass)

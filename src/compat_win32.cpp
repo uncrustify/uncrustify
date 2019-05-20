@@ -10,8 +10,9 @@
    && !defined (__CYGWIN__)
 
 #include "windows_compat.h"
-#include <string>
+
 #include <cstdio>
+#include <string>
 
 
 bool unc_getenv(const char *name, std::string &str)

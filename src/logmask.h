@@ -10,9 +10,10 @@
 #define LOGMASK_H_INCLUDED
 
 #include "base_types.h"
-#include <cstring>     // memset()
-#include <bitset>
 #include "log_levels.h"
+
+#include <bitset>
+#include <cstring>     // memset()
 
 /*
  * the test suite Coveralls: https://coveralls.io

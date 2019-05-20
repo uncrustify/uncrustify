@@ -5,14 +5,14 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #include "detect.h"
 
-#include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "ChunkStack.h"
 #include "prototypes.h"
-
 #include "unc_ctype.h"
+#include "uncrustify_types.h"
 
 #include <cstdio>
 #include <cstdlib>

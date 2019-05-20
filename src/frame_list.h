@@ -5,11 +5,12 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #ifndef PARSE_FRAME_H_INCLUDED
 #define PARSE_FRAME_H_INCLUDED
 
-#include "uncrustify_types.h"
 #include "ParseFrame.h"
+#include "uncrustify_types.h"
 
 
 /**

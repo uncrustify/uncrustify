@@ -5,11 +5,13 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #ifndef OUTPUT_H_INCLUDED
 #define OUTPUT_H_INCLUDED
 
-#include <stdio.h>
 #include "unc_text.h"
+
+#include <stdio.h>
 
 
 //! This renders the chunk list to a file.

@@ -8,6 +8,7 @@
  */
 
 #include "align_oc_msg_spec.h"
+
 #include "align_assign.h"
 #include "align_stack.h"
 

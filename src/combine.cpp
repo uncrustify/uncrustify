@@ -17,14 +17,14 @@
 #include "newlines.h"
 #include "prototypes.h"
 #include "tokenize_cleanup.h"
-#include "uncrustify.h"
 #include "unc_ctype.h"
+#include "uncrustify.h"
 #include "uncrustify_types.h"
 
-#include <map>
+#include <cassert>
 #include <cstdio>
 #include <cstdlib>
-#include <cassert>
+#include <map>
 
 
 using namespace std;

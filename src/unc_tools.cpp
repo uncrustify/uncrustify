@@ -8,9 +8,11 @@
  */
 
 #include "unc_tools.h"
-#include "uncrustify.h"
+
 #include "args.h"
 #include "output.h"
+#include "uncrustify.h"
+
 
 #ifdef DEVELOP_ONLY
 /*

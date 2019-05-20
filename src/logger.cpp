@@ -11,14 +11,15 @@
  */
 
 #include "compat.h"
-#include "logger.h"
-#include "uncrustify_types.h"
-#include "unc_ctype.h"
 #include "log_levels.h"
+#include "logger.h"
+#include "unc_ctype.h"
+#include "uncrustify_types.h"
+
 #include <cstdio>
 #include <deque>
-#include <vector>
 #include <stdarg.h>
+#include <vector>
 
 
 struct log_fcn_info

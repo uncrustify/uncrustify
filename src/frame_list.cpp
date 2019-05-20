@@ -5,14 +5,17 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-#include "uncrustify_types.h"
-#include "prototypes.h"
-#include "chunk_list.h"
-#include "uncrustify.h"
-#include <cstdio>
-#include <cstring>
-#include <cstdlib>
+
 #include "frame_list.h"
+
+#include "chunk_list.h"
+#include "prototypes.h"
+#include "uncrustify.h"
+#include "uncrustify_types.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 
 static void fl_log_frms(log_sev_t logsev, const char *txt, const ParseFrame &frm);

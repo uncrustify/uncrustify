@@ -8,6 +8,7 @@
  */
 
 #include "align_nl_cont.h"
+
 #include "align_add.h"
 #include "ChunkStack.h"
 #include "uncrustify.h"

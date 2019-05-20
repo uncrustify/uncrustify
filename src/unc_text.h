@@ -7,13 +7,16 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #ifndef UNC_TEXT_H_INCLUDED
 #define UNC_TEXT_H_INCLUDED
 
 #include "base_types.h"
-#include <vector>
+
 #include <deque>
 #include <string>
+#include <vector>
+
 
 /**
  *  abbreviations used:

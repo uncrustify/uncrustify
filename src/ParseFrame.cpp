@@ -8,10 +8,11 @@
  */
 
 #include "ParseFrame.h"
+
 #include "uncrustify.h"
 #include "uncrustify_types.h"
-#include <string>
 #include <stdexcept>
+#include <string>
 
 
 using std::string;

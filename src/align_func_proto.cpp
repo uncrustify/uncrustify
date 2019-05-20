@@ -8,8 +8,9 @@
  */
 
 #include "align_func_proto.h"
-#include "align_tools.h"
+
 #include "align_stack.h"
+#include "align_tools.h"
 
 using namespace uncrustify;
 

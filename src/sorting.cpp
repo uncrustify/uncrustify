@@ -5,9 +5,12 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #include "sorting.h"
+
 #include "chunk_list.h"
 #include "prototypes.h"
+
 #include <regex>
 
 using namespace uncrustify;

@@ -22,8 +22,8 @@
 
 #include "enum_flags.h"
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #include <cassert>
 

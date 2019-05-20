@@ -9,24 +9,25 @@
  */
 
 #include "brace_cleanup.h"
+
 #include "chunk_list.h"
-#include "frame_list.h"
 #include "flag_parens.h"
+#include "frame_list.h"
 #include "indent.h"
 #include "keywords.h"
-#include "language_tools.h"
 #include "lang_pawn.h"
+#include "language_tools.h"
 #include "logger.h"
 #include "prototypes.h"
+#include "unc_ctype.h"
 #include "uncrustify.h"
 #include "uncrustify_types.h"
-#include "unc_ctype.h"
 
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <stdexcept>
 #include <iostream>
+#include <stdexcept>
 
 using namespace uncrustify;
 

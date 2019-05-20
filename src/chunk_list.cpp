@@ -5,15 +5,17 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-#include "chunk_list.h"
-#include <cstring>
-#include <cstdlib>
 
-#include "uncrustify_types.h"
+#include "chunk_list.h"
+
 #include "ListManager.h"
 #include "prototypes.h"
-#include "uncrustify.h"
 #include "space.h"
+#include "uncrustify.h"
+#include "uncrustify_types.h"
+
+#include <cstdlib>
+#include <cstring>
 
 
 typedef ListManager<chunk_t> ChunkList_t;

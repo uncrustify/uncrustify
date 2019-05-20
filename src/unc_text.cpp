@@ -5,11 +5,14 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #include "unc_text.h"
+
 #include "unc_ctype.h"
 #include "unicode.h" // encode_utf8()
-#include <stdexcept>
+
 #include <algorithm>
+#include <stdexcept>
 
 
 using namespace std;
