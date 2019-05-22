@@ -7,6 +7,7 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
+
 #include "combine.h"
 
 #include "chunk_list.h"
@@ -633,9 +634,10 @@ static bool chunk_ends_type(chunk_t *start)
 
    for ( ; pc != nullptr; pc = chunk_get_prev_ncnlni(pc)) // Issue #2279
    {
-      LOG_FMT(LFTYPE, "%s(%d): type is %s, text() '%s', flags %" PRIx64 " on orig_line %zu, orig_col %zu\n",
+      LOG_FMT(LFTYPE, "%s(%d): type is %s, text() '%s', orig_line %zu, orig_col %zu\n   ",
               __func__, __LINE__, get_token_name(pc->type), pc->text(),
-              pc->flags, pc->orig_line, pc->orig_col);
+              pc->orig_line, pc->orig_col);
+      log_pcf_flags(LFTYPE, pc->flags);
 
       if (  chunk_is_token(pc, CT_WORD)
          || chunk_is_token(pc, CT_TYPE)
@@ -1621,10 +1623,15 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_DEREF);
       }
-      else if (  (chunk_is_token(prev, CT_WORD) && chunk_ends_type(prev))
+      else if (  (  chunk_is_token(prev, CT_WORD)
+                 && chunk_ends_type(prev)
+                 && ((prev->flags & PCF_IN_FCN_CTOR) == 0))
               || chunk_is_token(prev, CT_DC_MEMBER)
               || chunk_is_token(prev, CT_PTR_TYPE))
       {
+         LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n   ",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+         log_pcf_flags(LFCNR, pc->flags);
          set_chunk_type(pc, CT_PTR_TYPE);
       }
       else if (chunk_is_token(next, CT_SQUARE_OPEN) && !language_is_set(LANG_OC))  // issue # 408
@@ -5034,8 +5041,15 @@ static void mark_function(chunk_t *pc)
       set_chunk_parent(semi, pc->type);
    }
 
-   // Issue # 1403
-   flag_parens(paren_open, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, pc->type, false);
+   // Issue # 1403, 2152
+   if (chunk_is_token(paren_open->prev, CT_FUNC_CTOR_VAR))
+   {
+      flag_parens(paren_open, PCF_IN_FCN_CTOR, CT_FPAREN_OPEN, pc->type, false);
+   }
+   else
+   {
+      flag_parens(paren_open, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, pc->type, false);
+   }
    //flag_parens(paren_open, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, pc->type, true);
 
    if (chunk_is_token(pc, CT_FUNC_CTOR_VAR))
