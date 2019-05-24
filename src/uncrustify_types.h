@@ -155,6 +155,7 @@ struct indent_ptr_t
 #define PCF_OC_ATYPE           PCF_BIT(38)  //! inside OC arg type
 #define PCF_WF_ENDIF           PCF_BIT(39)  //! #endif for whole file ifdef
 #define PCF_IN_QT_MACRO        PCF_BIT(40)  //! in a QT-macro, i.e. SIGNAL, SLOT
+#define PCF_IN_FCN_CTOR        PCF_BIT(41)  //! inside function constructor
 
 #ifdef DEFINE_PCF_NAMES
 static const char *pcf_names[] =
@@ -200,6 +201,7 @@ static const char *pcf_names[] =
    "OC_ATYPE",          // 38
    "WF_ENDIF",          // 39
    "IN_QT_MACRO",       // 40
+   "IN_FCN_CTOR",       // 41                    Issue #2152
 };
 #endif
 

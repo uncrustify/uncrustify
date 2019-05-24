@@ -1442,11 +1442,13 @@ void indent_text(void)
          else if (  !options::indent_paren_open_brace()
                  && !language_is_set(LANG_CS)
                  && pc->parent_type == CT_CPP_LAMBDA
-                 && (pc->flags & PCF_IN_FCN_DEF)
+                 && (  pc->flags & PCF_IN_FCN_DEF
+                    || pc->flags & PCF_IN_FCN_CTOR)                   // Issue #2152
                  && chunk_is_newline(chunk_get_next_nc(pc)))
          {
             // Issue #1165
-            log_pcf_flags(LINDENT2, pc->flags);
+            LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, pc->brace_level is %zu, for '%s', pc->level is %zu, pc(-1)->level is %zu\n",
+                    __func__, __LINE__, pc->orig_line, pc->brace_level, pc->text(), pc->level, frm.prev().pc->level);
             frm.top().brace_indent = 1 + ((pc->brace_level + 1) * indent_size);
             indent_column_set(frm.top().brace_indent);
             frm.top().indent = frm.prev().indent_tmp;
@@ -1460,9 +1462,9 @@ void indent_text(void)
                  && chunk_is_paren_open(frm.prev().pc)
                  && chunk_is_newline(chunk_get_next_nc(pc)))
          {
-            // FIXME: I don't know how much of this is necessary, but it seems to work
             LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, pc->brace_level is %zu, for '%s', pc->level is %zu, pc(-1)->level is %zu\n",
                     __func__, __LINE__, pc->orig_line, pc->brace_level, pc->text(), pc->level, frm.prev().pc->level);
+            // FIXME: I don't know how much of this is necessary, but it seems to work
             frm.top().brace_indent = 1 + (pc->brace_level * indent_size);
             indent_column_set(frm.top().brace_indent);
             frm.top().indent = indent_column + indent_size;

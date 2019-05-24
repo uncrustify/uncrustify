@@ -1,6 +1,6 @@
-void Foo1(BarType& x, void BarFunc());
+void Foo1(BarType & x, void BarFunc());
 
 void Bar()
 {
-    void BarFunc2(BarType& x);
+    void BarFunc2(BarType & x);
 }
