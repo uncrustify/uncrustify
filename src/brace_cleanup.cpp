@@ -388,6 +388,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
 
    // Check the progression of complex statements
    if (  frm.top().stage != brace_stage_e::NONE
+      && !chunk_is_token(pc, CT_AUTORELEASEPOOL)
       && check_complex_statements(frm, pc))
    {
       return;
@@ -754,7 +755,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
       if (!cpd.unc_off_used && pc->pp_level == file_pp_level)
       {
          // fatal error
-         LOG_FMT(LERR, "%s(%d): Unmatched BRACE_CLOSE\norig_line is %zu, orig_col is %zu\n",
+         LOG_FMT(LERR, "%s(%d): Unmatched BRACE_CLOSE\n   orig_line is %zu, orig_col is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
          if (!options::tok_split_gte())
          {
