@@ -148,6 +148,7 @@ enum c_token_t
 
    CT_ASM,
    CT_ATTRIBUTE,
+   CT_AUTORELEASEPOOL,     // OC: Autorelease Pool Blocks, used by iOS
    CT_OC_AVAILABLE,
    CT_OC_AVAILABLE_VALUE,
    CT_CATCH,
