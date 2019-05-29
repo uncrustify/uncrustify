@@ -19,7 +19,6 @@ chunk_t *chunk_get_next_local(chunk_t *pc, scope_e scope = scope_e::ALL)
 
    do
    {
-      //tmp = chunk_get_next_ncnlnpni(tmp, scope);
       tmp = chunk_get_next(tmp, scope);
    } while (  tmp != nullptr
            && (  chunk_is_comment(tmp)
@@ -35,7 +34,6 @@ chunk_t *chunk_get_prev_local(chunk_t *pc, scope_e scope = scope_e::ALL)
 
    do
    {
-      //tmp = chunk_get_next_ncnlnpni(tmp, scope);
       tmp = chunk_get_prev(tmp, scope);
    } while (  tmp != nullptr
            && (  chunk_is_comment(tmp)
@@ -67,17 +65,11 @@ void combine_labels(void)
       return;
    }
    cur = chunk_get_next_nc(prev);
-   //cur = chunk_get_next_local(prev);
    if (cur == nullptr)
    {
       return;
    }
    next = chunk_get_next_nc(cur);
-   //next = chunk_get_next_local(cur);
-   //if (next == nullptr)
-   //{
-   //   return;
-   //}
 
    // unlikely that the file will start with a label...
    // prev cur next
@@ -191,17 +183,7 @@ void combine_labels(void)
                     __func__, __LINE__, cur->text(), cur->orig_line, cur->orig_col);
             LOG_FMT(LFCN, "%s(%d): next->text() is '%s', orig_line is %zu, orig_col is %zu\n\n",
                     __func__, __LINE__, next->text(), next->orig_line, next->orig_col);
-            //chunk_t *nextprev = chunk_get_prev_ncnlni(next);   // Issue #2279
-            chunk_t *testen = chunk_get_prev_local(next);   // Issue #2279
-            //chunk_t *nextprev = cur;
-            chunk_t *nextprev = testen;
-            LOG_FMT(LFCN, "%s(%d): nextprev->text() is '%s', orig_line is %zu, orig_col is %zu\n",
-                    __func__, __LINE__, nextprev->text(), nextprev->orig_line, nextprev->orig_col);
-            LOG_FMT(LFCN, "%s(%d): testen->text() is '%s', orig_line is %zu, orig_col is %zu\n",
-                    __func__, __LINE__, testen->text(), testen->orig_line, testen->orig_col);
-            LOG_FMT(LFCN, "%s(%d): cur->text() is '%s', orig_line is %zu, orig_col is %zu\n",
-                    __func__, __LINE__, cur->text(), cur->orig_line, cur->orig_col);
-            // cur ??
+            chunk_t *nextprev = chunk_get_prev_local(next);   // Issue #2279
             if (nextprev == nullptr)
             {
                return;
@@ -405,12 +387,6 @@ void combine_labels(void)
 
       prev = cur;
       cur  = next;
-      //next = chunk_get_next_nc(next);
       next = chunk_get_next_local(next);
-      if (next != nullptr)
-      {
-         LOG_FMT(LFCN, "%s(%d): NEU: next->orig_line is %zu, next->orig_col is %zu, text() '%s'\n",
-                 __func__, __LINE__, next->orig_line, next->orig_col, next->text());
-      }
    }
 } // combine_labels
