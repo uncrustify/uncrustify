@@ -259,8 +259,10 @@ set(uncrustify_sources
   src/ChunkStack.cpp
   src/chunk_list.cpp
   src/combine.cpp
+  src/combine_labels.cpp
   src/compat_posix.cpp
   src/compat_win32.cpp
+  src/cs_top_is_question.cpp
   src/detect.cpp
   src/enum_cleanup.cpp
   src/flag_parens.cpp
@@ -323,6 +325,8 @@ set(uncrustify_headers
   src/char_table.h
   src/ChunkStack.h
   src/chunk_list.h
+  src/combine_labels.h
+  src/cs_top_is_question.h
   src/enum_cleanup.h
   src/enum_flags.h
   src/flag_parens.h
