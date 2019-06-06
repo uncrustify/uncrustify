@@ -65,7 +65,9 @@ public:
 private:
    UINT32 m_buf[4];
    UINT32 m_bits[2];
-   UINT8  m_in[64];
+   UINT32 m_in32[16];
+   // Alternate view of m_in32
+   UINT8  *m_in8;
    bool   m_need_byteswap;
    bool   m_big_endian;
 
