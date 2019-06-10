@@ -208,13 +208,6 @@ void print_universal_indent_cfg(FILE *pfile)
             switch (option->type())
             {
             case uncrustify::OT_BOOL:
-               // [align_keep_tabs]
-               // Category=3
-               // Description=<html>Whether to keep non-indenting tabs</html>
-               // Value=0
-               // ValueDefault=0
-               // EditorType=boolean
-               // TrueFalse="align_keep_tabs=true|align_keep_tabs=false"
                fprintf(pfile, "EditorType=boolean\n");
                print_option_choices(pfile, option, "TrueFalse");
                fprintf(pfile, "ValueDefault=%s\n", option->str().c_str());
@@ -223,30 +216,13 @@ void print_universal_indent_cfg(FILE *pfile)
             case uncrustify::OT_IARF:
                fprintf(pfile, "EditorType=multiple\n");
                print_option_choices(pfile, option);
+               //                                0         1      2         3
                fprintf(pfile, "ChoicesReadable=\"Ignore %s|Add %s|Remove %s|Force %s\"\n",
                        optionNameReadable, optionNameReadable, optionNameReadable, optionNameReadable);
                fprintf(pfile, "ValueDefault=%s\n", option->str().c_str());
-               // [nl_after_switch]
-               // Category=4
-               // Description=<html>Add or remove newline after 'switch'</html>
-               // Value=3
-               // ValueDefault=-1
-               // Enabled=true
-               // EditorType=multiple
-               // Choices="nl_after_switch=ignore|nl_after_switch=add|nl_after_switch=remove|nl_after_switch=force"
                break;
 
             case uncrustify::OT_NUM:
-               // [align_assign_span]
-               // CallName="align_assign_span="
-               // Category=3
-               // Description="<html>The span for aligning on '=' in assignments (0=don't align)</html>"
-               // EditorType=numeric
-               // Enabled=false
-               // MaxVal=300
-               // MinVal=0
-               // Value=0
-               // ValueDefault=0
                fprintf(pfile, "EditorType=numeric\n");
                fprintf(pfile, "CallName=\"%s=\"\n", option->name());
                fprintf(pfile, "MinVal=%s\n", option->minStr().c_str());
@@ -255,15 +231,6 @@ void print_universal_indent_cfg(FILE *pfile)
                break;
 
             case uncrustify::OT_UNUM:
-               // [input_tab_size]
-               // CallName="input_tab_size="
-               // Category=3
-               // Description="<html>The original size of tabs in the input. Default=8</html>"
-               // EditorType=numeric
-               // Enabled=false
-               // MaxVal=32
-               // MinVal=1
-               // ValueDefault=8
                fprintf(pfile, "EditorType=numeric\n");
                fprintf(pfile, "CallName=\"%s=\"\n", option->name());
                fprintf(pfile, "MinVal=%s\n", option->minStr().c_str());
@@ -272,14 +239,6 @@ void print_universal_indent_cfg(FILE *pfile)
                break;
 
             case uncrustify::OT_LINEEND:
-               // [newlines]
-               // Category=0
-               // Description=<html>The type of line endings</html>
-               // Value=0
-               // ValueDefault=-1
-               // Enabled=true
-               // EditorType=multiple
-               // Choices="newlines=auto|newlines=lf|newlines=crlf|newlines=cr"
                fprintf(pfile, "EditorType=multiple\n");
                print_option_choices(pfile, option);
                fprintf(pfile, "ChoicesReadable=\"Newlines Unix|Newlines Win|Newlines Mac|Newlines Auto\"\n");
@@ -287,20 +246,17 @@ void print_universal_indent_cfg(FILE *pfile)
                break;
 
             case uncrustify::OT_TOKENPOS:
-               // [pos_bool]
-               // Category=5
-               // Description=<html>The position of boolean operators in wrapped expressions</html>
-               // Enabled=false
-               // Value=0
-               // ValueDefault=-1
-               // EditorType=multiple
-               // Choices="pos_bool=ignore|pos_bool=lead|pos_bool=trail"
                fprintf(pfile, "EditorType=multiple\n");
+               // Issue #2300-a
                print_option_choices(pfile, option);
-               fprintf(pfile, "ChoicesReadable=\"Ignore %s|Lead %s|Lead Break %s|Lead Force %s|Trail %s|Trail Break %s|Trail Force %s\"\n",
+               //                                0         1        2        4       8
+               fprintf(pfile, "ChoicesReadable=\"Ignore %s|Break %s|Force %s|Lead %s|Trail %s|",
                        optionNameReadable, optionNameReadable, optionNameReadable,
+                       optionNameReadable, optionNameReadable);
+               //                                16      5             6             9              10
+               fprintf(pfile, "Join %s|Lead Break %s|Lead Force %s|Trail Break %s|Trail Force %s\"\n",
                        optionNameReadable, optionNameReadable, optionNameReadable,
-                       optionNameReadable);
+                       optionNameReadable, optionNameReadable);
                fprintf(pfile, "ValueDefault=%s\n", option->str().c_str());
                break;
 
