@@ -53,6 +53,9 @@ void print_universal_indent_cfg(FILE *pfile)
 {
    const char *p_name;
 
+#ifdef DEBUG
+   fprintf(pfile, "# [header] is now at the end of this file\n");
+#else    // DEBUG
    // Dump the header and the categories
    fprintf(pfile, "[header]\n");
 
@@ -106,16 +109,30 @@ void print_universal_indent_cfg(FILE *pfile)
            "useCfgFileParameter=\"-c \"\n");
 
    fprintf(pfile, "version=%s\n", UNCRUSTIFY_VERSION);
+#endif // DEBUG
 
 #ifdef DEBUG
-   size_t optionNumber = 0;
+   size_t     optionNumber = 0;
+   const auto &groups      = get_option_groups();
+   char       ch           = '=';
+   size_t     allGroups[groups.size() + 1];
 #endif // DEBUG
    // Now add each option
+#ifdef DEBUG
+   bool firstOptionNumberSet = false;
+#endif // DEBUG
    for (size_t idx = 0; idx < groups.size(); ++idx)
    {
       const auto *p_grp = groups[idx];
       for (auto *const option : p_grp->options)
       {
+#ifdef DEBUG
+         if (!firstOptionNumberSet)
+         {
+            allGroups[idx]       = optionNumber;
+            firstOptionNumberSet = true;
+         }
+#endif // DEBUG
          /*
           * Create a better readable name from the options name
           * by replacing '_' by a space and use some upper case characters.
@@ -142,7 +159,6 @@ void print_universal_indent_cfg(FILE *pfile)
          fprintf(pfile, "Category=%zu\n", idx);
 #ifdef DEBUG
          fprintf(pfile, "Description=\"<html>(%zu)", optionNumber);
-         optionNumber++;
 #else    // DEBUG
          fprintf(pfile, "Description=\"<html>");
 #endif
@@ -197,7 +213,12 @@ void print_universal_indent_cfg(FILE *pfile)
             fprintf(pfile, "EditorType=multiple\n");
             fprintf(pfile, "Choices=\"%s=0|%s=1|%s=2\"\n",
                     option->name(), option->name(), option->name());
+#ifdef DEBUG
+            fprintf(pfile, "ChoicesReadable=\"(%zu)Spaces only|(%zu)Indent with tabs, align with spaces|(%zu)Indent and align with tabs\"\n",
+                    optionNumber, optionNumber, optionNumber);
+#else    // DEBUG
             fprintf(pfile, "ChoicesReadable=\"Spaces only|Indent with tabs, align with spaces|Indent and align with tabs\"\n");
+#endif
             fprintf(pfile, "ValueDefault=%s\n", option->str().c_str());
          }
          else
@@ -216,9 +237,17 @@ void print_universal_indent_cfg(FILE *pfile)
             case uncrustify::OT_IARF:
                fprintf(pfile, "EditorType=multiple\n");
                print_option_choices(pfile, option);
+#ifdef DEBUG
+               fprintf(pfile, "ChoicesReadable=\"(%zu)Ignore %s|(%zu)Add %s|(%zu)Remove %s|(%zu)Force %s\"\n",
+                       optionNumber, optionNameReadable,
+                       optionNumber, optionNameReadable,
+                       optionNumber, optionNameReadable,
+                       optionNumber, optionNameReadable);
+#else    // DEBUG
                //                                0         1      2         3
                fprintf(pfile, "ChoicesReadable=\"Ignore %s|Add %s|Remove %s|Force %s\"\n",
                        optionNameReadable, optionNameReadable, optionNameReadable, optionNameReadable);
+#endif
                fprintf(pfile, "ValueDefault=%s\n", option->str().c_str());
                break;
 
@@ -241,7 +270,12 @@ void print_universal_indent_cfg(FILE *pfile)
             case uncrustify::OT_LINEEND:
                fprintf(pfile, "EditorType=multiple\n");
                print_option_choices(pfile, option);
+#ifdef DEBUG
+               fprintf(pfile, "ChoicesReadable=\"(%zu)Newlines Unix|(%zu)Newlines Win|(%zu)Newlines Mac|(%zu)Newlines Auto\"\n",
+                       optionNumber, optionNumber, optionNumber, optionNumber);
+#else    // DEBUG
                fprintf(pfile, "ChoicesReadable=\"Newlines Unix|Newlines Win|Newlines Mac|Newlines Auto\"\n");
+#endif
                fprintf(pfile, "ValueDefault=%s\n", option->str().c_str());
                break;
 
@@ -249,14 +283,32 @@ void print_universal_indent_cfg(FILE *pfile)
                fprintf(pfile, "EditorType=multiple\n");
                // Issue #2300-a
                print_option_choices(pfile, option);
+#ifdef DEBUG
+               fprintf(pfile, "ChoicesReadable=\"(%zu)Ignore %s|(%zu)Break %s|(%zu)Force %s|(%zu)Lead %s|(%zu)Trail %s|",
+                       optionNumber, optionNameReadable,
+                       optionNumber, optionNameReadable,
+                       optionNumber, optionNameReadable,
+                       optionNumber, optionNameReadable,
+                       optionNumber, optionNameReadable);
+#else    // DEBUG
                //                                0         1        2        4       8
                fprintf(pfile, "ChoicesReadable=\"Ignore %s|Break %s|Force %s|Lead %s|Trail %s|",
                        optionNameReadable, optionNameReadable, optionNameReadable,
                        optionNameReadable, optionNameReadable);
+#endif
                //                                16      5             6             9              10
+#ifdef DEBUG
+               fprintf(pfile, "(%zu)Join %s|(%zu)Lead Break %s|(%zu)Lead Force %s|(%zu)Trail Break %s|(%zu)Trail Force %s\"\n",
+                       optionNumber, optionNameReadable,
+                       optionNumber, optionNameReadable,
+                       optionNumber, optionNameReadable,
+                       optionNumber, optionNameReadable,
+                       optionNumber, optionNameReadable);
+#else    // DEBUG
                fprintf(pfile, "Join %s|Lead Break %s|Lead Force %s|Trail Break %s|Trail Force %s\"\n",
                        optionNameReadable, optionNameReadable, optionNameReadable,
                        optionNameReadable, optionNameReadable);
+#endif
                fprintf(pfile, "ValueDefault=%s\n", option->str().c_str());
                break;
 
@@ -276,7 +328,71 @@ void print_universal_indent_cfg(FILE *pfile)
                break;
             } // switch
          }
+#ifdef DEBUG
+         optionNumber++;
+#endif
          delete[] optionNameReadable;
-      }
+      } // for (auto *const option : p_grp->options)
+#ifdef DEBUG
+      firstOptionNumberSet = false;
+#endif
    }
+#ifdef DEBUG
+   // Dump the header and the categories
+   fprintf(pfile, "[header]\n");
+
+   // Add all the categories
+   //const auto &groups = get_option_groups();
+   ch = '=';
+
+   fprintf(pfile, "categories");
+   size_t idx = 0;
+   for (auto *const g : groups)
+   {
+      fputc(ch, pfile);
+      ch = '|';
+
+      fprintf(pfile, "%zu- ", allGroups[idx]);
+      // Write description, stripping leading and trailing newlines
+      for (auto dc = g->description + 1; *(dc + 1); ++dc)
+      {
+         fputc(*dc, pfile);
+      }
+      idx++;
+   }
+   fprintf(pfile, "\n");
+
+   fprintf(pfile,
+           "cfgFileParameterEnding=cr\n"
+           "configFilename=uncrustify.cfg\n");
+
+
+   // Add all the recognized file extensions
+   ch = '=';
+   int fileIdx = 0;
+   fprintf(pfile, "fileTypes");
+   while ((p_name = get_file_extension(fileIdx)) != nullptr)
+   {
+      fprintf(pfile, "%c*%s", ch, p_name);
+      ch = '|';
+   }
+   fprintf(pfile, "\n");
+
+   // Add the rest of the constant file header
+   fprintf(pfile,
+           "indenterFileName=uncrustify\n"
+           "indenterName=Uncrustify (C, C++, C#, ObjectiveC, D, Java, Pawn, VALA)\n"
+           "inputFileName=indentinput\n"
+           "inputFileParameter=\"-f \"\n"
+           "manual=http://uncrustify.sourceforge.net/config.txt\n"
+           "outputFileName=indentoutput\n"
+           "outputFileParameter=\"-o \"\n"
+           "stringparaminquotes=false\n"
+           "parameterOrder=ipo\n"
+           "showHelpParameter=-h\n"
+           "stringparaminquotes=false\n"
+           "useCfgFileParameter=\"-c \"\n");
+
+   fprintf(pfile, "version=%s\n", UNCRUSTIFY_VERSION);
+#endif // DEBUG
 } // print_universal_indent_cfg
