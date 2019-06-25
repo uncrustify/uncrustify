@@ -54,7 +54,8 @@ void print_universal_indent_cfg(FILE *pfile)
    const char *p_name;
    char       ch      = '=';
    const auto &groups = get_option_groups();
-   size_t     allGroups[groups.size() + 1];
+   static const int groups_size = groups.size() + 1;
+   size_t     allGroups[groups_size];
    size_t     idx;
 
 #ifdef DEBUG
