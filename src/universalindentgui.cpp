@@ -56,11 +56,10 @@ void print_universal_indent_cfg(FILE *pfile)
    const auto     &groups = get_option_groups();
    size_t         idx;
 
+#if defined (DEBUG) \
+  && !defined(WIN32)
    vector<size_t> allGroups;
-
    allGroups.reserve(16);
-
-#ifdef DEBUG
    // first run to get the first option number of each group/categorie
    size_t optionNumber         = 0;
    bool   firstOptionNumberSet = false;
@@ -79,8 +78,8 @@ void print_universal_indent_cfg(FILE *pfile)
       } // for (auto *const option : p_grp->options)
       firstOptionNumberSet = false;
    } // end of first run
-#else
-   UNUSED(allGroups);
+//#else
+//   UNUSED(allGroups);
 #endif // DEBUG
 
    // second run
@@ -93,7 +92,8 @@ void print_universal_indent_cfg(FILE *pfile)
 
    fprintf(pfile, "categories");
    idx = 0;
-#ifdef DEBUG
+#if defined (DEBUG) \
+  && !defined(WIN32)
    optionNumber = 0;
 #endif // DEBUG
    for (auto *const g : groups)
@@ -101,7 +101,8 @@ void print_universal_indent_cfg(FILE *pfile)
       fputc(ch, pfile);
       ch = '|';
 
-#ifdef DEBUG
+#if defined (DEBUG) \
+  && !defined(WIN32)
       fprintf(pfile, "(%zu)", allGroups[idx]);
 #endif // DEBUG
       // Write description, stripping leading and trailing newlines
@@ -147,7 +148,6 @@ void print_universal_indent_cfg(FILE *pfile)
    fprintf(pfile, "version=%s\n", UNCRUSTIFY_VERSION);
 
    ch = '=';
-   //size_t allGroups[groups.size() + 1];
    // Now add each option
    for (idx = 0; idx < groups.size(); ++idx)
    {
@@ -178,9 +178,10 @@ void print_universal_indent_cfg(FILE *pfile)
 
          fprintf(pfile, "\n[%s]\n", optionNameReadable);
          fprintf(pfile, "Category=%zu\n", idx);
-#ifdef DEBUG
+#if defined (DEBUG) \
+  && !defined(WIN32)
          fprintf(pfile, "Description=\"<html>(%zu)", optionNumber);
-#else    // DEBUG
+#else  // DEBUG
          fprintf(pfile, "Description=\"<html>");
 #endif // DEBUG
 
@@ -234,10 +235,11 @@ void print_universal_indent_cfg(FILE *pfile)
             fprintf(pfile, "EditorType=multiple\n");
             fprintf(pfile, "Choices=\"%s=0|%s=1|%s=2\"\n",
                     option->name(), option->name(), option->name());
-#ifdef DEBUG
+#if defined (DEBUG) \
+  && !defined(WIN32)
             fprintf(pfile, "ChoicesReadable=\"(%zu)Spaces only|(%zu)Indent with tabs, align with spaces|(%zu)Indent and align with tabs\"\n",
                     optionNumber, optionNumber, optionNumber);
-#else    // DEBUG
+#else  // DEBUG
             fprintf(pfile, "ChoicesReadable=\"Spaces only|Indent with tabs, align with spaces|Indent and align with tabs\"\n");
 #endif // DEBUG
             fprintf(pfile, "ValueDefault=%s\n", option->str().c_str());
@@ -258,13 +260,14 @@ void print_universal_indent_cfg(FILE *pfile)
             case uncrustify::OT_IARF:
                fprintf(pfile, "EditorType=multiple\n");
                print_option_choices(pfile, option);
-#ifdef DEBUG
+#if defined (DEBUG) \
+  && !defined(WIN32)
                fprintf(pfile, "ChoicesReadable=\"(%zu)Ignore %s|(%zu)Add %s|(%zu)Remove %s|(%zu)Force %s\"\n",
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable);
-#else    // DEBUG
+#else  // DEBUG
                //                                0         1      2         3
                fprintf(pfile, "ChoicesReadable=\"Ignore %s|Add %s|Remove %s|Force %s\"\n",
                        optionNameReadable, optionNameReadable, optionNameReadable, optionNameReadable);
@@ -291,10 +294,11 @@ void print_universal_indent_cfg(FILE *pfile)
             case uncrustify::OT_LINEEND:
                fprintf(pfile, "EditorType=multiple\n");
                print_option_choices(pfile, option);
-#ifdef DEBUG
+#if defined (DEBUG) \
+  && !defined(WIN32)
                fprintf(pfile, "ChoicesReadable=\"(%zu)Newlines Unix|(%zu)Newlines Win|(%zu)Newlines Mac|(%zu)Newlines Auto\"\n",
                        optionNumber, optionNumber, optionNumber, optionNumber);
-#else    // DEBUG
+#else  // DEBUG
                fprintf(pfile, "ChoicesReadable=\"Newlines Unix|Newlines Win|Newlines Mac|Newlines Auto\"\n");
 #endif // DEBUG
                fprintf(pfile, "ValueDefault=%s\n", option->str().c_str());
@@ -304,28 +308,30 @@ void print_universal_indent_cfg(FILE *pfile)
                fprintf(pfile, "EditorType=multiple\n");
                // Issue #2300-a
                print_option_choices(pfile, option);
-#ifdef DEBUG
+#if defined (DEBUG) \
+  && !defined(WIN32)
                fprintf(pfile, "ChoicesReadable=\"(%zu)Ignore %s|(%zu)Break %s|(%zu)Force %s|(%zu)Lead %s|(%zu)Trail %s|",
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable);
-#else    // DEBUG
+#else  // DEBUG
                //                                0         1        2        4       8
                fprintf(pfile, "ChoicesReadable=\"Ignore %s|Break %s|Force %s|Lead %s|Trail %s|",
                        optionNameReadable, optionNameReadable, optionNameReadable,
                        optionNameReadable, optionNameReadable);
 #endif // DEBUG
                //                                16      5             6             9              10
-#ifdef DEBUG
+#if defined (DEBUG) \
+  && !defined(WIN32)
                fprintf(pfile, "(%zu)Join %s|(%zu)Lead Break %s|(%zu)Lead Force %s|(%zu)Trail Break %s|(%zu)Trail Force %s\"\n",
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable);
-#else    // DEBUG
+#else  // DEBUG
                fprintf(pfile, "Join %s|Lead Break %s|Lead Force %s|Trail Break %s|Trail Force %s\"\n",
                        optionNameReadable, optionNameReadable, optionNameReadable,
                        optionNameReadable, optionNameReadable);
@@ -349,7 +355,8 @@ void print_universal_indent_cfg(FILE *pfile)
                break;
             } // switch
          }
-#ifdef DEBUG
+#if defined (DEBUG) \
+  && !defined(WIN32)
          optionNumber++;
 #endif // DEBUG
          delete[] optionNameReadable;
