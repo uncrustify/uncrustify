@@ -51,12 +51,14 @@ void print_option_choices(FILE *pfile, uncrustify::GenericOption *option,
 
 void print_universal_indent_cfg(FILE *pfile)
 {
-   const char *p_name;
-   char       ch      = '=';
-   const auto &groups = get_option_groups();
-   static const int groups_size = groups.size() + 1;
-   size_t     allGroups[groups_size];
-   size_t     idx;
+   const char     *p_name;
+   char           ch      = '=';
+   const auto     &groups = get_option_groups();
+   size_t         idx;
+
+   vector<size_t> allGroups;
+
+   allGroups.reserve(16);
 
 #ifdef DEBUG
    // first run to get the first option number of each group/categorie
