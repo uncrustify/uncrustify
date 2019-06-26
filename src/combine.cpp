@@ -4499,7 +4499,8 @@ static void mark_function(chunk_t *pc)
          && chunk_get_next_ncnl(prev) == pc)
       {
          tmp = chunk_skip_to_match_rev(prev);
-         while (tmp != prev)
+         while (  tmp != nullptr                     // Issue #2315
+               && tmp != prev)
          {
             if (chunk_is_token(tmp, CT_COMMA) && tmp->level == prev->level + 1)
             {
