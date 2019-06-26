@@ -51,13 +51,13 @@ void print_option_choices(FILE *pfile, uncrustify::GenericOption *option,
 
 void print_universal_indent_cfg(FILE *pfile)
 {
-   const char     *p_name;
-   char           ch      = '=';
-   const auto     &groups = get_option_groups();
-   size_t         idx;
+   const char *p_name;
+   char       ch      = '=';
+   const auto &groups = get_option_groups();
+   size_t     idx;
 
 #if defined (DEBUG) \
-  && !defined(WIN32)
+   && !defined (WIN32)
    vector<size_t> allGroups;
    allGroups.reserve(16);
    // first run to get the first option number of each group/categorie
@@ -93,7 +93,7 @@ void print_universal_indent_cfg(FILE *pfile)
    fprintf(pfile, "categories");
    idx = 0;
 #if defined (DEBUG) \
-  && !defined(WIN32)
+   && !defined (WIN32)
    optionNumber = 0;
 #endif // DEBUG
    for (auto *const g : groups)
@@ -102,7 +102,7 @@ void print_universal_indent_cfg(FILE *pfile)
       ch = '|';
 
 #if defined (DEBUG) \
-  && !defined(WIN32)
+      && !defined (WIN32)
       fprintf(pfile, "(%zu)", allGroups[idx]);
 #endif // DEBUG
       // Write description, stripping leading and trailing newlines
@@ -179,7 +179,7 @@ void print_universal_indent_cfg(FILE *pfile)
          fprintf(pfile, "\n[%s]\n", optionNameReadable);
          fprintf(pfile, "Category=%zu\n", idx);
 #if defined (DEBUG) \
-  && !defined(WIN32)
+         && !defined (WIN32)
          fprintf(pfile, "Description=\"<html>(%zu)", optionNumber);
 #else  // DEBUG
          fprintf(pfile, "Description=\"<html>");
@@ -236,7 +236,7 @@ void print_universal_indent_cfg(FILE *pfile)
             fprintf(pfile, "Choices=\"%s=0|%s=1|%s=2\"\n",
                     option->name(), option->name(), option->name());
 #if defined (DEBUG) \
-  && !defined(WIN32)
+            && !defined (WIN32)
             fprintf(pfile, "ChoicesReadable=\"(%zu)Spaces only|(%zu)Indent with tabs, align with spaces|(%zu)Indent and align with tabs\"\n",
                     optionNumber, optionNumber, optionNumber);
 #else  // DEBUG
@@ -261,7 +261,7 @@ void print_universal_indent_cfg(FILE *pfile)
                fprintf(pfile, "EditorType=multiple\n");
                print_option_choices(pfile, option);
 #if defined (DEBUG) \
-  && !defined(WIN32)
+               && !defined (WIN32)
                fprintf(pfile, "ChoicesReadable=\"(%zu)Ignore %s|(%zu)Add %s|(%zu)Remove %s|(%zu)Force %s\"\n",
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable,
@@ -295,7 +295,7 @@ void print_universal_indent_cfg(FILE *pfile)
                fprintf(pfile, "EditorType=multiple\n");
                print_option_choices(pfile, option);
 #if defined (DEBUG) \
-  && !defined(WIN32)
+               && !defined (WIN32)
                fprintf(pfile, "ChoicesReadable=\"(%zu)Newlines Unix|(%zu)Newlines Win|(%zu)Newlines Mac|(%zu)Newlines Auto\"\n",
                        optionNumber, optionNumber, optionNumber, optionNumber);
 #else  // DEBUG
@@ -309,7 +309,7 @@ void print_universal_indent_cfg(FILE *pfile)
                // Issue #2300-a
                print_option_choices(pfile, option);
 #if defined (DEBUG) \
-  && !defined(WIN32)
+               && !defined (WIN32)
                fprintf(pfile, "ChoicesReadable=\"(%zu)Ignore %s|(%zu)Break %s|(%zu)Force %s|(%zu)Lead %s|(%zu)Trail %s|",
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable,
@@ -324,7 +324,7 @@ void print_universal_indent_cfg(FILE *pfile)
 #endif // DEBUG
                //                                16      5             6             9              10
 #if defined (DEBUG) \
-  && !defined(WIN32)
+               && !defined (WIN32)
                fprintf(pfile, "(%zu)Join %s|(%zu)Lead Break %s|(%zu)Lead Force %s|(%zu)Trail Break %s|(%zu)Trail Force %s\"\n",
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable,
@@ -356,7 +356,7 @@ void print_universal_indent_cfg(FILE *pfile)
             } // switch
          }
 #if defined (DEBUG) \
-  && !defined(WIN32)
+         && !defined (WIN32)
          optionNumber++;
 #endif // DEBUG
          delete[] optionNameReadable;
