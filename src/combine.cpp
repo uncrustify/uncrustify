@@ -1693,6 +1693,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          {
             set_chunk_type(pc, CT_PTR_TYPE);
          }
+         else if (chunk_is_token(pc->next, CT_SEMICOLON))      // Issue #2319
+         {
+            // example: using AbstractLinkPtr = AbstractLink*;
+            set_chunk_type(pc, CT_PTR_TYPE);
+         }
          else
          {
             // Issue 1402

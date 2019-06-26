@@ -241,7 +241,6 @@
 30801  star_pos-1.cfg                       cpp/align-star-amp-pos.cpp
 30802  star_pos-2.cfg                       cpp/align-star-amp-pos.cpp
 30803  bug_1403.cfg                         cpp/bug_1403.cpp
-
 30804  block_pointer.cfg                    cpp/block_pointer.cpp
 30805  ptr_star-1.cfg                       cpp/ptr-star.cpp
 30806  ptr_star-2.cfg                       cpp/ptr-star.cpp
@@ -254,7 +253,6 @@
 30812  ben_023.cfg                          cpp/misc4.cpp
 30813  ben_024.cfg                          cpp/misc5.cpp
 30814  empty.cfg                            cpp/misc6.cpp
-
 30815! width-2.cfg                          cpp/cmt-reflow.cpp
 30816  cu.cfg                               cpp/for_long.cpp
 30817  indent_columns-3.cfg                 cpp/cmt-cpp-cont.cpp
@@ -267,6 +265,7 @@
 30823  empty.cfg                            cpp/pp_indent_func_def.cpp
 30824  empty.cfg                            cpp/pp_indent_extern.cpp
 30825  Issue_1966.cfg                       cpp/Issue_1966.cpp
+30826  Issue_2319.cfg                       cpp/Issue_2319.cpp
 
 30828  bug_1691.cfg                         cpp/bug_1691.cpp
 
