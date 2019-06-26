@@ -88,16 +88,16 @@ constexpr auto line_end_styles = static_cast<size_t>(line_end_e::AUTO);
 /// Token position - these are bit fields
 enum class token_pos_e // <TP>
 {
-   IGNORE      = 0,  //! don't change it
-   BREAK       = 1,  //! add a newline before or after the if not present
-   FORCE       = 2,  //! force a newline on one side and not the other
-   LEAD        = 4,  //! at the start of a line or leading if wrapped line
-   TRAIL       = 8,  //! at the end of a line or trailing if wrapped line
-   JOIN        = 16, //! remove newlines on both sides
-   LEAD_BREAK  = (LEAD | BREAK),
-   LEAD_FORCE  = (LEAD | FORCE),
-   TRAIL_BREAK = (TRAIL | BREAK),
-   TRAIL_FORCE = (TRAIL | FORCE),
+   IGNORE      = 0,               //! don't change it
+   BREAK       = 1,               //! add a newline before or after the if not present
+   FORCE       = 2,               //! force a newline on one side and not the other
+   LEAD        = 4,               //! at the start of a line or leading if wrapped line
+   TRAIL       = 8,               //! at the end of a line or trailing if wrapped line
+   JOIN        = 16,              //! remove newlines on both sides
+   LEAD_BREAK  = (LEAD | BREAK),  //  5
+   LEAD_FORCE  = (LEAD | FORCE),  //  6
+   TRAIL_BREAK = (TRAIL | BREAK), //  9
+   TRAIL_FORCE = (TRAIL | FORCE), // 10
 };
 
 UNC_DECLARE_FLAGS(token_pos_flags_t, token_pos_e);

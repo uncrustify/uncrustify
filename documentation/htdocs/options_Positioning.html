@@ -21,7 +21,7 @@ void Mode( TDistMode dm )
     ms_DistMode
         = dm;
 	<a title="pos_assign"><strong><font color="red">^</font></strong></a>
-    if ((count > 0)<a name="pos_bool"></a>
+    if (   (count > 0)<a name="pos_bool"></a>
         && (count < MAX_COUNT)) { ... }
         <a title="pos_bool"><strong><font color="red">^</font></strong></a>
     b = ( GetDistanceMode()<a name="pos_compare"></a>
@@ -41,12 +41,12 @@ void Mode( TDistMode dm )
 <a name="pos_class_colon"></a><a name="nl_class_colon"></a><a name="pos_class_comma"></a>
 class GLOX_API ClientBase
         : public Class
-        <a title="nl_class_colon"><strong><font color="red">^</a><a title="pos_class_colon">^</font></strong></a><a name="nl_class_init_args<strong>"</a>
+        <a title="nl_class_colon=force"><strong><font color="red">^</a><a title="pos_class_colon=lead_force">^</font></strong></a><a name="nl_class_init_args<strong>"</a>
         , public OtherClass   // if many lines are wanted
-        <a title="nl_class_init_args"><strong><font color="red">^</font></strong></a>
+        <a title="nl_class_init_args=force"><strong><font color="red">^</font></strong></a>
         , public ThridClass
         , public ForthClass
-        <a title="pos_class_comma"><strong><font color="red">^</font></strong></a>
+        <a title="pos_class_comma=lead_force"><strong><font color="red">^</font></strong></a>
 { }
 <a name="pos_constr_colon"></a><a name="pos_constr_comma"></a>
 class foo : public
