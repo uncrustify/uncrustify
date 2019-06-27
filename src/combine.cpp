@@ -1693,10 +1693,25 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          {
             set_chunk_type(pc, CT_PTR_TYPE);
          }
-         else if (chunk_is_token(pc->next, CT_SEMICOLON))      // Issue #2319
+         else if (  chunk_is_token(pc->next, CT_SEMICOLON)      // Issue #2319
+                 || (  chunk_is_token(pc->next, CT_STAR)
+                    && chunk_is_token(pc->next->next, CT_SEMICOLON)))
          {
-            // example: using AbstractLinkPtr = AbstractLink*;
+            // example:
+            //    using AbstractLinkPtr = AbstractLink*;
+            //    using AbstractLinkPtrPtr = AbstractLink**;
             set_chunk_type(pc, CT_PTR_TYPE);
+         }
+         else if (  chunk_is_token(pc->next, CT_SEMICOLON)      // Issue #2319
+                 || (  chunk_is_token(pc->next, CT_STAR)
+                    && chunk_is_token(pc->next->next, CT_STAR)))
+         {
+            // more pointers are NOT yet possible
+            fprintf(stderr, "Too many pointers\n");
+            fprintf(stderr, "at line %zu, column %zu.\n", pc->orig_line, pc->orig_col);
+            fprintf(stderr, "Please make a report.\n");
+            log_flush(true);
+            exit(EX_SOFTWARE);
          }
          else
          {
