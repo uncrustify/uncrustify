@@ -649,7 +649,7 @@ int main(int argc, char *argv[])
             return(EX_NOINPUT);
          }
       }
-      else
+      else if (!no_backup)
       {
          if (prefix == nullptr && suffix == nullptr)
          {
