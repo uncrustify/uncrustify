@@ -345,6 +345,7 @@
 30951  sp_before_tr_emb_cmt-a.cfg           cpp/sp_before_tr_emb_cmt_input.cpp
 30952  sp_before_constr_colon.cfg           cpp/sp_before_constr_colon.cpp
 30953  constr_colon.cfg                     cpp/constr_colon.cpp
+30954  Issue_2305.cfg                       cpp/Issue_2305.cpp
 30955  indent_ctor_init.cfg                 cpp/indent_ctor_init.cpp
 30956  indent_ctor_init_leading.cfg         cpp/indent_ctor_init.cpp
 30957  negative_indent.cfg                  cpp/class-init.cpp
