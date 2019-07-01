@@ -700,9 +700,9 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       && (  (pc->flags & PCF_IN_FCN_DEF)              // Issue #2236
          || (pc->flags & PCF_IN_CONST_ARGS)))
    {
-      LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
+      LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
-      log_pcf_flags(LGUY, pc->flags);
+      log_pcf_flags(LFCNR, pc->flags);
       set_chunk_type(pc, CT_ASSIGN_DEFAULT_ARG);
    }
    if (  (  chunk_is_token(prev, CT_FPAREN_CLOSE)
@@ -1153,7 +1153,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
           *
           * FIXME: this check can be done better...
           */
-         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
+         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
 
          bool is_byref_array = false;
@@ -1797,7 +1797,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                           || chunk_is_token(next, CT_TYPE)
                           || chunk_is_token(next, CT_DC_MEMBER)))
                      {
-                        LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', set PCF_VAR_1ST\n",
+                        LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', set PCF_VAR_1ST\n",
                                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
                         chunk_flags_set(next, PCF_VAR_1ST);
                      }
@@ -1907,9 +1907,9 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             {
                if (chunk_is_token(tmp, CT_ATTRIBUTE))
                {
-                  LOG_FMT(LGUY, "%s(%d): ATTRIBUTE found, type is %s, text() '%s'\n",
+                  LOG_FMT(LFCNR, "%s(%d): ATTRIBUTE found, type is %s, text() '%s'\n",
                           __func__, __LINE__, get_token_name(tmp->type), tmp->text());
-                  LOG_FMT(LGUY, "for token, type is %s, text() '%s'\n", get_token_name(pc->type), pc->text());
+                  LOG_FMT(LFCNR, "for token, type is %s, text() '%s'\n", get_token_name(pc->type), pc->text());
                   // change CT_WORD => CT_TYPE
                   set_chunk_type(pc, CT_TYPE);
                   // change CT_STAR => CT_PTR_TYPE
@@ -1937,7 +1937,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       chunk_t *temp;
       for (temp = pc; temp != nullptr; temp = chunk_get_next_ncnl(temp))
       {
-         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
                  __func__, __LINE__, temp->orig_line, temp->orig_col, temp->text(), get_token_name(temp->type));
          if (chunk_is_token(temp, CT_ASSIGN))
          {
@@ -3210,7 +3210,7 @@ static void fix_enum_struct_union(chunk_t *pc)
          {
             chunk_flags_set(next, flags);
             flags &= ~PCF_VAR_1ST;   // clear the first flag for the next items
-            LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', set PCF_VAR_1ST\n",
+            LOG_FMT(LCASTS, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', set PCF_VAR_1ST\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
          }
 
@@ -3753,7 +3753,7 @@ static chunk_t *mark_variable_definition(chunk_t *start)
             chunk_flags_set(pc, flags);
          }
          flags &= ~PCF_VAR_1ST;
-         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', set PCF_VAR_1ST\n",
+         LOG_FMT(LVARDEF, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', set PCF_VAR_1ST\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
 
          LOG_FMT(LVARDEF, "%s(%d): orig_line is %zu, marked text() '%s'[%s] in orig_col %zu, flags: %#" PRIx64 " -> %#" PRIx64 "\n",
@@ -4428,7 +4428,7 @@ static void mark_function(chunk_t *pc)
                LOG_FMT(LFCN, "%s(%d): prev is '%s', orig_line is %zu, orig_col is %zu, type is %s, parent_type is %s\n",
                        __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col,
                        get_token_name(prev->type), get_token_name(prev->parent_type));
-               log_pcf_flags(LGUY, pc->flags);
+               log_pcf_flags(LFCN, pc->flags);
                isa_def = true;
             }
          }
@@ -4916,16 +4916,55 @@ static void mark_class_ctor(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
 
+   LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, start is '%s', parent_type is %s\n",
+           __func__, __LINE__, start->orig_line, start->orig_col, start->text(), get_token_name(start->parent_type));
+   log_pcf_flags(LFTOR, start->flags);
+
    chunk_t *pclass = chunk_get_next_ncnl(start, scope_e::PREPROC);
+   LOG_FMT(LFTOR, "%s(%d): pclass is '%s'\n",
+           __func__, __LINE__, pclass->text());
+   log_pcf_flags(LFTOR, pclass->flags);
+   if (start->parent_type == CT_TEMPLATE)
+   {
+      // look after the class name
+      chunk_t *openingTemplate = chunk_get_next_ncnl(pclass);
+      LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, openingTemplate is '%s', type is %s\n",
+              __func__, __LINE__, openingTemplate->orig_line, openingTemplate->orig_col,
+              openingTemplate->text(), get_token_name(openingTemplate->type));
+      if (chunk_is_token(openingTemplate, CT_ANGLE_OPEN))
+      {
+         chunk_t *closingTemplate = chunk_skip_to_match(openingTemplate);
+         LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, closingTemplate is '%s', type is %s\n",
+                 __func__, __LINE__, closingTemplate->orig_line, closingTemplate->orig_col,
+                 closingTemplate->text(), get_token_name(closingTemplate->type));
+         chunk_t *thirdToken = chunk_get_next_ncnl(closingTemplate);
+         LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, thirdToken is '%s', type is %s\n",
+                 __func__, __LINE__, thirdToken->orig_line, thirdToken->orig_col,
+                 thirdToken->text(), get_token_name(thirdToken->type));
+         if (chunk_is_token(thirdToken, CT_DC_MEMBER))
+         {
+            pclass = chunk_get_next_ncnl(thirdToken);
+            LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, pclass is '%s', type is %s\n",
+                    __func__, __LINE__, pclass->orig_line, pclass->orig_col,
+                    pclass->text(), get_token_name(pclass->type));
+         }
+      }
+   }
 
    pclass = skip_attribute_next(pclass);
+   LOG_FMT(LFTOR, "%s(%d): pclass is '%s'\n",
+           __func__, __LINE__, pclass->text());
 
    if (chunk_is_token(pclass, CT_DECLSPEC))  // Issue 1289
    {
       pclass = chunk_get_next_ncnl(pclass);
+      LOG_FMT(LFTOR, "%s(%d): pclass is '%s'\n",
+              __func__, __LINE__, pclass->text());
       if (chunk_is_token(pclass, CT_PAREN_OPEN))
       {
          pclass = chunk_get_next_ncnl(chunk_skip_to_match(pclass));
+         LOG_FMT(LFTOR, "%s(%d): pclass is '%s'\n",
+                 __func__, __LINE__, pclass->text());
       }
    }
 
@@ -4941,7 +4980,9 @@ static void mark_class_ctor(chunk_t *start)
          || chunk_is_token(next, CT_DC_MEMBER))
    {
       pclass = next;
-      next   = chunk_get_next_ncnl(next, scope_e::PREPROC);
+      LOG_FMT(LFTOR, "%s(%d): pclass is '%s'\n",
+              __func__, __LINE__, pclass->text());
+      next = chunk_get_next_ncnl(next, scope_e::PREPROC);
    }
 
    chunk_t *pc   = chunk_get_next_ncnl(pclass, scope_e::PREPROC);
@@ -4958,7 +4999,7 @@ static void mark_class_ctor(chunk_t *start)
    ChunkStack cs;
    cs.Push_Back(pclass);
 
-   LOG_FMT(LFTOR, "%s(%d): Called on %s on orig_line %zu (next='%s')\n",
+   LOG_FMT(LFTOR, "%s(%d): Called on %s on orig_line %zu (next is '%s')\n",
            __func__, __LINE__, pclass->text(), pclass->orig_line, pc->text());
 
    // detect D template class: "class foo(x) { ... }"
@@ -5009,6 +5050,8 @@ static void mark_class_ctor(chunk_t *start)
    chunk_flags_set(pc, PCF_IN_CLASS);
 
    pc = chunk_get_next_ncnl(pc, scope_e::PREPROC);
+   LOG_FMT(LFTOR, "%s(%d): pclass is '%s'\n",
+           __func__, __LINE__, pclass->text());
    while (pc != nullptr)
    {
       LOG_FMT(LFTOR, "%s(%d): pc is '%s', orig_line is %zu, orig_col is %zu\n",
