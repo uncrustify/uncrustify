@@ -176,7 +176,7 @@ Expected results have the following naming convention: `testNr-testConfigFileNam
 Optionally a `!` can follow the `testNr` to enable a custom rerun
 configuration.
 Rerun configurations need to be named like this:
-`testConfigFileName`(without extension)+`.rerun`+`.exension`
+`testConfigFileName`(without extension)+`.rerun`+`.extension`
 
 Also, optionally a language for the input can be provided with `lang`.
 
@@ -229,7 +229,7 @@ If flag `-f` is used without flag `-o` the output will be send to `stdout`.
 
 Alternatively multiple or single files that should be processed can be
 specified at the command end without flags.
-If the flag `--no-backup` is missing, every file saved with the initial
+If the flag `--no-backup` is missing, every file is saved with the initial
 name and an additional suffix (can be changed with --suffix).
 
 For more options descriptions call:
@@ -278,7 +278,7 @@ To ease the process a bit, some 3rd party tools are available:
   cross-platform graphical configuration file editor for many code
   beautifiers, including Uncrustify.
 - [uncrustify_config](https://github.com/CDanU/uncrustify_config) - A web
-  configuration tool based on Uncrustifys emscripten interface.
+  configuration tool based on Uncrustify's emscripten interface.
 - [UncrustifyX](https://github.com/ryanmaxwell/UncrustifyX) - Uncrustify
   utility and documentation browser for Mac OS X
 
@@ -290,4 +290,4 @@ as uncrustify exits.
 
 You can open the command prompt (which is an interactive terminal
 window that allows you to run commands without it closing as soon as
-they exit) and run uncristify.exe there.
+they exit) and run uncrustify.exe there.
