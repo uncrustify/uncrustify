@@ -1528,7 +1528,14 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
       if (chunk_is_token(pc, CT_AMP))
       {
-         set_chunk_type(pc, CT_ADDR);
+         if (chunk_is_token(prev, CT_ANGLE_CLOSE))             // Issue #2324
+         {
+            set_chunk_type(pc, CT_BYREF);
+         }
+         else
+         {
+            set_chunk_type(pc, CT_ADDR);
+         }
       }
       if (chunk_is_token(pc, CT_CARET))
       {
