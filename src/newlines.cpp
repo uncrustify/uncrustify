@@ -3390,7 +3390,8 @@ void newlines_cleanup_braces(bool first)
                LOG_FMT(LNEWLINE, "\n");
                for (chunk_t *temp = pc; temp != end; temp = chunk_get_next(temp))
                {
-                  LOG_FMT(LNEWLINE, "%s type=%s , level=%zu", temp->text(), get_token_name(temp->type), temp->level);
+                  LOG_FMT(LNEWLINE, "%s(%d): text() is '%s', type is %s, level is %zu\n   ",
+                          __func__, __LINE__, temp->text(), get_token_name(temp->type), temp->level);
                   log_pcf_flags(LNEWLINE, temp->flags);
                   chunk_flags_clr(temp, PCF_ONE_LINER);
                }
@@ -4083,6 +4084,8 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
 {
    LOG_FUNC_ENTRY();
 
+   LOG_FMT(LNEWLINE, "%s(%d): mode is %s\n",
+           __func__, __LINE__, to_string(mode));
    if (  !(mode & (TP_JOIN | TP_LEAD | TP_TRAIL))
       && chunk_type != CT_COMMA)
    {
@@ -4091,11 +4094,22 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
+      LOG_FMT(LNEWLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s'\n   ",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+      log_pcf_flags(LNEWLINE, pc->flags);
+      if ((pc->flags & PCF_IN_CONST_ARGS) != 0)                          // Issue #2250
+      {
+         return;
+      }
+
       if (pc->type == chunk_type)
       {
          token_pos_e mode_local;
          if (chunk_type == CT_COMMA)
          {
+            LOG_FMT(LNEWLINE, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n   ",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+            log_pcf_flags(LNEWLINE, pc->flags);
             /*
              * for chunk_type == CT_COMMA
              * we get 'mode' from options::pos_comma()
@@ -4115,6 +4129,8 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
             {
                mode_local = mode;
             }
+            LOG_FMT(LNEWLINE, "%s(%d): mode_local is %s\n",
+                    __func__, __LINE__, to_string(mode_local));
          }
          else
          {
@@ -4123,8 +4139,17 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
          chunk_t *prev = chunk_get_prev_nc(pc);
          chunk_t *next = chunk_get_next_nc(pc);
 
-         size_t  nl_flag = ((chunk_is_newline(prev) ? 1 : 0) |
-                            (chunk_is_newline(next) ? 2 : 0));
+         LOG_FMT(LNEWLINE, "%s(%d): mode_local is %s\n",
+                 __func__, __LINE__, to_string(mode_local));
+
+         LOG_FMT(LNEWLINE, "%s(%d): prev->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+                 __func__, __LINE__, prev->orig_line, prev->orig_col, prev->text());
+         LOG_FMT(LNEWLINE, "%s(%d): next->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+                 __func__, __LINE__, next->orig_line, next->orig_col, next->text());
+         size_t nl_flag = ((chunk_is_newline(prev) ? 1 : 0) |
+                           (chunk_is_newline(next) ? 2 : 0));
+         LOG_FMT(LNEWLINE, "%s(%d): nl_flag is %zu\n",
+                 __func__, __LINE__, nl_flag);
 
          if (mode_local & TP_JOIN)
          {
@@ -4211,10 +4236,14 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
          }
          else
          {
+            LOG_FMT(LNEWLINE, "%s(%d): prev->orig_line is %zu, orig_col is %zu, text() is '%s', nl_count is %zu\n",
+                    __func__, __LINE__, prev->orig_line, prev->orig_col, prev->text(), prev->nl_count);
             if (prev->nl_count == 1)
             {
                // Back up to the next non-comment item
                prev = chunk_get_prev_nc(prev);
+               LOG_FMT(LNEWLINE, "%s(%d): prev->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+                       __func__, __LINE__, prev->orig_line, prev->orig_col, prev->text());
                if (  prev != nullptr
                   && !chunk_is_newline(prev)
                   && !(prev->flags & PCF_IN_PREPROC)
