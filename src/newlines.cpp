@@ -4097,10 +4097,6 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
       LOG_FMT(LNEWLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s'\n   ",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
       log_pcf_flags(LNEWLINE, pc->flags);
-      if ((pc->flags & PCF_IN_CONST_ARGS) != 0)                          // Issue #2250
-      {
-         return;
-      }
 
       if (pc->type == chunk_type)
       {
@@ -4110,6 +4106,10 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
             LOG_FMT(LNEWLINE, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n   ",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
             log_pcf_flags(LNEWLINE, pc->flags);
+            if ((pc->flags & PCF_IN_CONST_ARGS) != 0)                          // Issue #2250
+            {
+               continue;
+            }
             /*
              * for chunk_type == CT_COMMA
              * we get 'mode' from options::pos_comma()
