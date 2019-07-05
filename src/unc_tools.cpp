@@ -35,9 +35,12 @@ static size_t tokenCounter;
 // examples:
 //   prot_the_line(__LINE__, pc->orig_line);
 //   prot_the_line(__LINE__, 6);
+//   prot_the_line(__LINE__, 6, 5);
 //   prot_the_source(__LINE__);
 // log_pcf_flags(LSYS, pc->flags);
-void prot_the_line(int theLine, unsigned int actual_line)
+// if partNumber is zero, all the tokens of the line are shown,
+// if partNumber is NOT zero, only the token with this partNumber is shown.
+void prot_the_line(int theLine, unsigned int actual_line, size_t partNumber)
 {
    counter++;
    tokenCounter = 0;
@@ -47,45 +50,49 @@ void prot_the_line(int theLine, unsigned int actual_line)
       if (pc->orig_line == actual_line)
       {
          tokenCounter++;
-         LOG_FMT(LGUY, " orig_line is %d, (%zu) ", actual_line, tokenCounter);
-         if (chunk_is_token(pc, CT_VBRACE_OPEN))
+         if (  partNumber == 0
+            || partNumber == tokenCounter)
          {
-            LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
-         }
-         else if (chunk_is_token(pc, CT_NEWLINE))
-         {
-            LOG_FMT(LGUY, "<NL>(nl_count is %zu), ", pc->nl_count);
-         }
-         else if (chunk_is_token(pc, CT_VBRACE_CLOSE))
-         {
-            LOG_FMT(LGUY, "<CT_VBRACE_CLOSE>, ");
-         }
-         else if (chunk_is_token(pc, CT_VBRACE_OPEN))
-         {
-            LOG_FMT(LGUY, "<CT_VBRACE_OPEN>, ");
-         }
-         else if (chunk_is_token(pc, CT_SPACE))
-         {
-            LOG_FMT(LGUY, "<CT_SPACE>, ");
-         }
-         else if (chunk_is_token(pc, CT_IGNORED))
-         {
-            LOG_FMT(LGUY, "<IGNORED> ");
-         }
-         else
-         {
-            LOG_FMT(LGUY, "text() '%s', ", pc->text());
-         }
-         LOG_FMT(LGUY, " column is %zu, type is %s, parent_type is %s, orig_col is %zu,",
-                 pc->column, get_token_name(pc->type), get_token_name(pc->parent_type), pc->orig_col);
-         if (chunk_is_token(pc, CT_IGNORED))
-         {
-            LOG_FMT(LGUY, "\n");
-         }
-         else
-         {
-            LOG_FMT(LGUY, " pc->flags: ");
-            log_pcf_flags(LGUY, pc->flags);
+            LOG_FMT(LGUY, " orig_line is %d, (%zu) ", actual_line, tokenCounter);
+            if (chunk_is_token(pc, CT_VBRACE_OPEN))
+            {
+               LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
+            }
+            else if (chunk_is_token(pc, CT_NEWLINE))
+            {
+               LOG_FMT(LGUY, "<NL>(nl_count is %zu), ", pc->nl_count);
+            }
+            else if (chunk_is_token(pc, CT_VBRACE_CLOSE))
+            {
+               LOG_FMT(LGUY, "<CT_VBRACE_CLOSE>, ");
+            }
+            else if (chunk_is_token(pc, CT_VBRACE_OPEN))
+            {
+               LOG_FMT(LGUY, "<CT_VBRACE_OPEN>, ");
+            }
+            else if (chunk_is_token(pc, CT_SPACE))
+            {
+               LOG_FMT(LGUY, "<CT_SPACE>, ");
+            }
+            else if (chunk_is_token(pc, CT_IGNORED))
+            {
+               LOG_FMT(LGUY, "<IGNORED> ");
+            }
+            else
+            {
+               LOG_FMT(LGUY, "text() '%s', ", pc->text());
+            }
+            LOG_FMT(LGUY, " column is %zu, type is %s, parent_type is %s, orig_col is %zu,",
+                    pc->column, get_token_name(pc->type), get_token_name(pc->parent_type), pc->orig_col);
+            if (chunk_is_token(pc, CT_IGNORED))
+            {
+               LOG_FMT(LGUY, "\n");
+            }
+            else
+            {
+               LOG_FMT(LGUY, " pc->flags: ");
+               log_pcf_flags(LGUY, pc->flags);
+            }
          }
       }
    }
