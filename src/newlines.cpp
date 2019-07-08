@@ -30,7 +30,6 @@
 #include "prototypes.h"
 #include "space.h"
 #include "unc_ctype.h"
-#include "unc_tools.h"
 #include "uncrustify.h"
 #include "uncrustify_types.h"
 
