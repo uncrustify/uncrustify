@@ -163,33 +163,8 @@ static bool paren_multiline_before_brace(chunk_t *brace)
 void do_braces(void)
 {
    LOG_FUNC_ENTRY();
-   if (  options::mod_full_brace_if_chain()
-      || options::mod_full_brace_if_chain_only())
-   {
-      mod_full_brace_if_chain();
-   }
-
-   if ((options::mod_full_brace_if() |
-        options::mod_full_brace_do() |
-        options::mod_full_brace_for() |
-        options::mod_full_brace_using() |
-        options::mod_full_brace_while()) & IARF_REMOVE)
-   {
-      examine_braces();
-   }
-
-   // convert vbraces if needed
-   if ((options::mod_full_brace_if() |
-        options::mod_full_brace_do() |
-        options::mod_full_brace_for() |
-        options::mod_full_brace_function() |
-        options::mod_full_brace_using() |
-        options::mod_full_brace_while()) & IARF_ADD)
-   {
-      convert_vbrace_to_brace();
-   }
-
    // Mark one-liners
+   // Issue #2232 put this at the beginning
    chunk_t *pc = chunk_get_head();
    while ((pc = chunk_get_next_ncnl(pc)) != nullptr)
    {
@@ -221,6 +196,32 @@ void do_braces(void)
             break;
          }
       }
+   }
+
+   if (  options::mod_full_brace_if_chain()
+      || options::mod_full_brace_if_chain_only())
+   {
+      mod_full_brace_if_chain();
+   }
+
+   if ((options::mod_full_brace_if() |
+        options::mod_full_brace_do() |
+        options::mod_full_brace_for() |
+        options::mod_full_brace_using() |
+        options::mod_full_brace_while()) & IARF_REMOVE)
+   {
+      examine_braces();
+   }
+
+   // convert vbraces if needed
+   if ((options::mod_full_brace_if() |
+        options::mod_full_brace_do() |
+        options::mod_full_brace_for() |
+        options::mod_full_brace_function() |
+        options::mod_full_brace_using() |
+        options::mod_full_brace_while()) & IARF_ADD)
+   {
+      convert_vbrace_to_brace();
    }
 
    if (options::mod_case_brace() != IARF_IGNORE)
@@ -692,27 +693,36 @@ static void convert_brace(chunk_t *br)
       set_chunk_type(br, CT_VBRACE_OPEN);
       br->str.clear();
       tmp = chunk_get_prev(br);
+      if (tmp == nullptr)
+      {
+         return;
+      }
    }
    else if (chunk_is_token(br, CT_BRACE_CLOSE))
    {
       set_chunk_type(br, CT_VBRACE_CLOSE);
       br->str.clear();
       tmp = chunk_get_next(br);
+      if (tmp == nullptr)
+      {
+         return;
+      }
    }
    else
    {
       return;
    }
-   LOG_FMT(LGUY, "%s(%d): br->type is %s, br->parent_type is %s\n",
-           __func__, __LINE__, get_token_name(br->type), get_token_name(br->parent_type));
-   LOG_FMT(LGUY, "%s(%d): br->orig_line is %zu, br->orig_col is %zu\n",
-           __func__, __LINE__, br->orig_line, br->orig_col);
 
    if (chunk_is_newline(tmp))
    {
       if (tmp->nl_count > 1)
       {
-         tmp->nl_count--;
+         if ((br->flags & PCF_ONE_LINER) == 0) // Issue #2232
+         {
+            tmp->nl_count--;
+            LOG_FMT(LBRDEL, "%s(%d): tmp->nl_count is %zu\n",
+                    __func__, __LINE__, tmp->nl_count);
+         }
       }
       else
       {
