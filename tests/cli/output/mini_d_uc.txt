@@ -15,6 +15,7 @@ utf8_force                      = false
 sp_arith                        = ignore
 sp_arith_additive               = ignore
 sp_assign                       = ignore
+sp_trailing_ret_t               = ignore
 sp_cpp_lambda_assign            = ignore
 sp_cpp_lambda_paren             = ignore
 sp_assign_default               = ignore
