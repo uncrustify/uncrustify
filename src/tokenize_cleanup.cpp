@@ -153,6 +153,11 @@ void tokenize_trailing_return_types(void)
          && (strcmp(pc->text(), "->") == 0))
       {
          chunk_t *tmp = chunk_get_prev_ncnl(pc);
+         if (chunk_is_token(tmp, CT_QUALIFIER))
+         {
+            // auto max(int a, int b) const->int;
+            tmp = chunk_get_prev_ncnl(tmp);
+         }
          if (  chunk_is_token(tmp, CT_FPAREN_CLOSE)
             && tmp->parent_type == CT_FUNC_PROTO)
          {
