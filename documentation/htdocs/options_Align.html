@@ -1,5 +1,5 @@
 #define SUCCESS    0
-                ^
+                █
 align_pp_define_gap
 The minimum space between label and value of a preprocessor define
 
@@ -11,7 +11,7 @@ align_nl_cont                 = true
 
 #define LOG_STR(sev, str, len)                           \
    do { if (log_sev_on(sev)) { log_str(sev, str, len); } } while (0)
-                                                          ^
+                                                          █
 nl_after_brace_close
 
 
@@ -20,7 +20,7 @@ extern struct cp_data cpd;
 extern bool           QT_SIGNAL_SLOT_found;
 extern int            QT_SIGNAL_SLOT_level;
 extern bool           restoreValues;
-align_var_def_span    ^
+align_var_def_span    █
 
 enum argval_t
 {
@@ -30,7 +30,7 @@ enum argval_t
    AV_FORCE       = 3, /**< remove + add */
    AV_NOT_DEFINED = 4  /* to be used with QT, SIGNAL SLOT macros */
 };
-                  ^
+                  █
 align_var_struct_span
 
 

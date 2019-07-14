@@ -134,6 +134,7 @@
 30215  empty.cfg                            cpp/Issue_2099.cpp
 30216  Issue_2302.cfg                       cpp/Issue_2302.cpp
 30217  empty.cfg                            cpp/2138.cpp
+30218  trailing_return.cfg                  cpp/trailing_return.cpp
 
 30220  bug_1340.cfg                         cpp/bug_1340.cpp
 

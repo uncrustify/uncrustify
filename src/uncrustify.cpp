@@ -1780,6 +1780,7 @@ static void uncrustify_start(const deque<int> &data)
 
    // Re-type chunks, combine chunks
    fix_symbols();
+   tokenize_trailing_return_types();
 
    mark_comments();
 

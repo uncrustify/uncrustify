@@ -872,6 +872,19 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_assign());
    }
 
+
+   if (chunk_is_token(first, CT_TRAILING_RET_T))
+   {
+      log_rule("sp_trailing_ret_t");
+      return(options::sp_trailing_ret_t());
+   }
+
+   if (chunk_is_token(second, CT_TRAILING_RET_T))
+   {
+      log_rule("sp_trailing_ret_t");
+      return(options::sp_trailing_ret_t());
+   }
+
    if (chunk_is_token(first, CT_ASSIGN_DEFAULT_ARG))
    {
       if (  (options::sp_assign_default() != IARF_IGNORE)

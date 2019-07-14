@@ -34,7 +34,6 @@ static size_t tokenCounter;
 // protocol of the line
 // examples:
 //   prot_the_line(__LINE__, pc->orig_line);
-//   prot_the_line(__LINE__, 6);
 //   prot_the_line(__LINE__, 6, 5);
 //   prot_the_source(__LINE__);
 // log_pcf_flags(LSYS, pc->flags);

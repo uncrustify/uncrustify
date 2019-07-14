@@ -121,6 +121,10 @@ sp_arith_additive;
 extern Option<iarf_e>
 sp_assign;
 
+// Add or remove space around trailing return operator '->'.
+extern Option<iarf_e>
+sp_trailing_ret_t;
+
 // Add or remove space around '=' in C++11 lambda capture specifications.
 //
 // Overrides sp_assign.

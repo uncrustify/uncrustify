@@ -141,6 +141,35 @@ void split_off_angle_close(chunk_t *pc)
 }
 
 
+void tokenize_trailing_return_types(void)
+{
+   // Issue #2330
+   // auto max(int a, int b)->int;
+   chunk_t *pc;
+
+   for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
+   {
+      if (  chunk_is_token(pc, CT_MEMBER)
+         && (strcmp(pc->text(), "->") == 0))
+      {
+         chunk_t *tmp = chunk_get_prev_ncnl(pc);
+         if (chunk_is_token(tmp, CT_QUALIFIER))
+         {
+            // auto max(int a, int b) const->int;
+            tmp = chunk_get_prev_ncnl(tmp);
+         }
+         if (  chunk_is_token(tmp, CT_FPAREN_CLOSE)
+            && tmp->parent_type == CT_FUNC_PROTO)
+         {
+            set_chunk_type(pc, CT_TRAILING_RET_T);
+            LOG_FMT(LNOTE, "%s(%d): set trailing return type for text() is '%s'\n",
+                    __func__, __LINE__, tmp->text());
+         }
+      }
+   }
+}
+
+
 void tokenize_cleanup(void)
 {
    LOG_FUNC_ENTRY();

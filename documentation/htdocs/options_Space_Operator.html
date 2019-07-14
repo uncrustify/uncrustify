@@ -21,7 +21,9 @@ Where do the options work?</h1>
    unc_text operator =<a title="sp_after_operator_sym, sp_after_operator_sym_empty"><font color="red">█</font></a>()
    {
       ...
-   }
+   }<a name="sp_trailing_ret_t"></a>
+   auto max(int a, int b)<a title="sp_trailing_ret_t"><font color="red">█</font></a>-&gt;<a title="sp_trailing_ret_t"><font color="red">█</font></a>int;
+   auto max(int a, int b) const<a title="sp_trailing_ret_t"><font color="red">█</font></a>-&gt;<a title="sp_trailing_ret_t"><font color="red">█</font></a>int;
 }
 </pre>
 </td>
@@ -37,6 +39,10 @@ Where do the options work?</h1>
 <tr>
    <td valign="top"><a href="#sp_after_operator_sym">sp_after_operator_sym</a></td>
    <td>Add or remove space between the operator symbol and the open paren, as in 'operator ++('.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_trailing_ret_t">sp_trailing_ret_t</a></td>
+   <td>Add or remove space around trailing return operator '-&gt;'.</td>
 </tr>
 <tr>
    <td valign="top"><a href="#sp_after_operator_sym_empty">sp_after_operator_sym_empty</a></td>
