@@ -3596,7 +3596,16 @@ void newlines_cleanup_braces(bool first)
       else if (chunk_is_token(pc, CT_NAMESPACE))
       {
          // Issue #1235
-         if ((pc->next->next->flags & PCF_ONE_LINER) == 0)
+         if (  chunk_is_token(pc->next, CT_TYPE)
+            && chunk_is_token(pc->next->next, CT_DC_MEMBER)
+            && chunk_is_token(pc->next->next->next, CT_WORD))
+         {
+            // Issue #2186
+            // namespace ui::dlg
+            //         TYPE MEMBER WORD
+            LOG_FMT(LNEWLINE, "%s(%d): AAAA\n", __func__, __LINE__);
+         }
+         else if ((pc->next->next->flags & PCF_ONE_LINER) == 0)
          {
             newlines_struct_union(pc, options::nl_namespace_brace(), false);
          }
