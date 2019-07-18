@@ -1,0 +1,67 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+   <title>Uncrustify: where do the New Lines options work</title>
+</head>
+<body lang="en-US">
+<h1><a href="https://github.com/uncrustify/uncrustify">Uncrustify</a>:
+Where do the options work?</h1>
+<h2>Spaces and New lines for Namespace</h2>
+<p>
+</p>
+<hr><a name="nl_namespace_brace"></a>
+<pre>
+namespace fooA {
+<a title="nl_namespace_brace=false"><strong><font color="red">             █</font></strong></a>
+     ...
+<a name="sp_word_brace_ns"></a>
+namespace fooB {<a name="nl_after_brace_open"></a><a title="nl_after_brace_open=true"><strong><font color="red">█</font></strong></a>
+<a title="sp_word_brace_ns=true"><strong><font color="red">             █</font></strong></a>
+<a title="indent_namespace=true"><strong><font color="red">█</font></strong></a><a title="indent_namespace_level=5"><strong><font color="red">   █</font></strong></a>void a();
+     ...
+
+namespace foo1 {<a title="indent_namespace_single_indent=true"><strong><font color="red">█</font></strong></a>
+namespace foo2 {
+<a title="indent_namespace=true"><strong><font color="red">    █</font></strong></a>void a();
+     ...
+
+namespace fooC {
+<a title="indent_namespace=true"><strong><font color="red">█</font></strong></a>
+<a title="indent_namespace_limit=3"><strong><font color="red">█</font></strong></a>
+void a();
+void b();
+void c();
+}
+
+namespace dudeNamespace
+<a title="nl_namespace_two_to_one_liner"><strong><font color="red">█</font></strong></a>
+{ class ForwardFooClass; }
+
+
+namespace fooD {
+<a title="nl_inside_namespace=2"><strong><font color="red">█</font></strong></a>
+	void a();
+	void b();
+	void c();
+<a title="nl_inside_namespace=2"><strong><font color="red">█</font></strong></a>
+}
+
+namespace fooD {
+	void a();
+	void b();
+	void c();
+}<a title="mod_add_long_namespace_closebrace_comment=2"><strong><font color="red">█</font></strong></a>// namespace fooD
+
+
+indent_namespace_level
+indent_namespace_limit
+indent_namespace_single_indent
+indent_namespace
+mod_add_long_namespace_closebrace_comment
+nl_inside_namespace
+nl_namespace_brace
+nl_namespace_two_to_one_liner
+sp_word_brace_ns
+</pre>
+</body>
+</html>
