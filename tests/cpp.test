@@ -64,6 +64,7 @@
 30056  nl_after_func_body-2.cfg             cpp/nl_func.cpp
 30057  nl_inside_namespace_1.cfg            cpp/nl_inside_namespace.cpp
 30058  nl_inside_namespace_2.cfg            cpp/nl_inside_namespace.cpp
+30059  Issue_2186.cfg                       cpp/Issue_2186-a.cpp
 
 # Class colon positioning
 30061  class-colon-pos-eol.cfg              cpp/class-init.cpp
