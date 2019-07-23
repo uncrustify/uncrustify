@@ -194,6 +194,47 @@ added, removed or altered. Keep in mind that the version string line
 (example: `# Uncrustify-0.69.0_f`) of outputs from commands like
 `--show-config` should be replaced with a blank line.
 
+### Debugging
+
+The first method is to use uncrutify itself to get debug informations.
+Using:
+```.txt
+   uncrustify -c myExample.cfg -f myExample.cpp -p myExample.p -L A 2>myExample.A
+```
+you get two files for the first informations.
+The p-file gives you details of the parsing process and indentation.
+```.txt
+# Line                Tag              Parent          Columns Br/Lvl/pp     Flag   Nl  Text
+#   1>              CLASS[               NONE][  1/  1/  6/  0][0/0/0][  10070000][0-0] class
+#   1>               TYPE[              CLASS][  7/  7/ 14/  1][0/0/0][  10000000][0-0]       Capteur
+#   1>         BRACE_OPEN[              CLASS][ 15/ 15/ 16/  1][0/0/0][ 100000400][0-0]               {
+```
+
+The A-file gives you many details about the run itself, where the process is running thru,
+which values have the most important variables.
+```.txt
+tokenize(2351): orig_line is 1, orig_col is 1, text() 'class', type is CLASS, orig_col_end is 6
+tokenize(2351): orig_line is 1, orig_col is 7, text() 'Capteur', type is WORD, orig_col_end is 14
+tokenize(2351): orig_line is 1, orig_col is 15, text() '{', type is BRACE_OPEN, orig_col_end is 16
+```
+
+It might be usefull to add some code lines to see where something is happening.
+Use the package `unc_tools`.
+Remove the comment at line:
+```.cpp
+#define DEVELOP_ONLY
+```
+Import the package:
+```.cpp
+#include "unc_tools.h"
+```
+Add at some places the line:
+```.cpp
+prot_the_line(__LINE__, 6, 0);
+```
+Compile again with DEBUG option.
+
+
 ### Portability
 
 We are pretty sure that nothing OS-specific is used in the code base.
