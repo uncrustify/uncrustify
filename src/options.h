@@ -416,6 +416,11 @@ sp_after_semi_for_empty;
 extern Option<iarf_e>
 sp_before_square;
 
+// Whether to ignore sp_before_square for 'asm' blocks (i.e. assume they
+// have their own indentation).
+extern Option<bool>
+sp_before_square_ignore_asm_block;
+
 // Add or remove space before '[]'.
 extern Option<iarf_e>
 sp_before_squares;

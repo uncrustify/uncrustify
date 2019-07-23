@@ -970,6 +970,10 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          return(IARF_FORCE);
       }
+      if (chunk_is_token(first, CT_ASM_COLON) && options::sp_before_square_ignore_asm_block())
+      {
+         return(IARF_FORCE);
+      }
 
       log_rule("sp_before_square");
       return(options::sp_before_square());
