@@ -166,11 +166,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
    if (chunk_is_token(first, CT_PP) || chunk_is_token(second, CT_PP))
    {
+      // Add or remove space around preprocessor '##' concatenation operator.
       log_rule("sp_pp_concat");
       return(options::sp_pp_concat());
    }
    if (chunk_is_token(first, CT_POUND))
    {
+      // Add or remove space after preprocessor '#' stringify operator.
+      // Also affects the '#@' charizing operator.
       log_rule("sp_pp_stringify");
       return(options::sp_pp_stringify());
    }
@@ -178,6 +181,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && (second->flags & PCF_IN_PREPROC)
       && first->parent_type != CT_MACRO_FUNC)
    {
+      // Add or remove space before preprocessor '#' stringify operator
+      // as in '#define x(y) L#y'.
       log_rule("sp_before_pp_stringify");
       return(options::sp_before_pp_stringify());
    }
@@ -228,12 +233,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
    if (chunk_is_token(second, CT_NL_CONT))
    {
+      // Add or remove space before a backslash-newline at the end of a line.
       log_rule("sp_before_nl_cont");
       return(options::sp_before_nl_cont());
    }
 
    if (chunk_is_token(first, CT_D_ARRAY_COLON) || chunk_is_token(second, CT_D_ARRAY_COLON))
    {
+      // (D) Add or remove around the D named array initializer ':' operator.
       log_rule("sp_d_array_colon");
       return(options::sp_d_array_colon());
    }
@@ -241,6 +248,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(first, CT_CASE)
       && ((CharTable::IsKw1(second->str[0]) || chunk_is_token(second, CT_NUMBER))))
    {
+      // Fix the spacing between 'case' and the label. Only 'ignore' and 'force' make
+      // sense here.
       log_rule("sp_case_label");
       return(options::sp_case_label() | IARF_ADD);
    }
@@ -248,12 +257,16 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_FOR_COLON))
    {
       // java
+      // Add or remove space after ':' in a Java/C++11 range-based 'for',
+      // as in 'for (Type var : expr)'.
       log_rule("sp_after_for_colon");
       return(options::sp_after_for_colon());
    }
    if (chunk_is_token(second, CT_FOR_COLON))
    {
       // java
+      // Add or remove space before ':' in a Java/C++11 range-based 'for',
+      // as in 'for (Type var : expr)'.
       log_rule("sp_before_for_colon");
       return(options::sp_before_for_colon());
    }
@@ -262,6 +275,9 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (options::sp_cond_ternary_short() != IARF_IGNORE)
       {
+         // In the abbreviated ternary form '(a ?: b)', add or remove space between '?'
+         // and ':'.
+         // Overrides all other sp_cond_* options.
          log_rule("sp_cond_ternary_short");
          return(options::sp_cond_ternary_short());
       }
@@ -272,17 +288,22 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  chunk_is_token(second, CT_QUESTION)
          && (options::sp_cond_question_before() != IARF_IGNORE))
       {
+         // Add or remove space before the '?' in 'b ? t : f'.
+         // Overrides sp_cond_question.
          log_rule("sp_cond_question_before");
          return(options::sp_cond_question_before());
       }
       if (  chunk_is_token(first, CT_QUESTION)
          && (options::sp_cond_question_after() != IARF_IGNORE))
       {
+         // Add or remove space after the '?' in 'b ? t : f'.
+         // Overrides sp_cond_question.
          log_rule("sp_cond_question_after");
          return(options::sp_cond_question_after());
       }
       if (options::sp_cond_question() != IARF_IGNORE)
       {
+         // Add or remove space around the '?' in 'b ? t : f'.
          log_rule("sp_cond_question");
          return(options::sp_cond_question());
       }
@@ -293,17 +314,22 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  chunk_is_token(second, CT_COND_COLON)
          && (options::sp_cond_colon_before() != IARF_IGNORE))
       {
+         // Add or remove space before the ':' in 'b ? t : f'.
+         // Overrides sp_cond_colon.
          log_rule("sp_cond_colon_before");
          return(options::sp_cond_colon_before());
       }
       if (  chunk_is_token(first, CT_COND_COLON)
          && (options::sp_cond_colon_after() != IARF_IGNORE))
       {
+         // Add or remove space after the ':' in 'b ? t : f'.
+         // Overrides sp_cond_colon.
          log_rule("sp_cond_colon_after");
          return(options::sp_cond_colon_after());
       }
       if (options::sp_cond_colon() != IARF_IGNORE)
       {
+         // Add or remove space around the ':' in 'b ? t : f'.
          log_rule("sp_cond_colon");
          return(options::sp_cond_colon());
       }
@@ -311,6 +337,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_RANGE) || chunk_is_token(second, CT_RANGE))
    {
+      // (D) Add or remove space around the D '..' operator.
       log_rule("sp_range");
       return(options::sp_range());
    }
@@ -324,6 +351,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    // Macro stuff can only return IGNORE, ADD, or FORCE
    if (chunk_is_token(first, CT_MACRO))
    {
+      // Add or remove space between a macro name and its definition.
       log_rule("sp_macro");
       iarf_e arg = options::sp_macro();
       return(arg | ((arg != IARF_IGNORE) ? IARF_ADD : IARF_IGNORE));
@@ -331,6 +359,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_FPAREN_CLOSE) && first->parent_type == CT_MACRO_FUNC)
    {
+      // Add or remove space between a macro function ')' and its definition.
       log_rule("sp_macro_func");
       iarf_e arg = options::sp_macro_func();
       return(arg | ((arg != IARF_IGNORE) ? IARF_ADD : IARF_IGNORE));
@@ -361,11 +390,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
             // or
             //                ^ is first   // b
             //                 ^ is second // b
+            // Add or remove space before a semicolon of an empty part of a for statement.
             log_rule("sp_before_semi_for_empty");
             return(options::sp_before_semi_for_empty());
          }
          if (options::sp_before_semi_for() != IARF_IGNORE)
          {
+            // Add or remove space before ';' in non-empty 'for' statements.
             log_rule("sp_before_semi_for");
             return(options::sp_before_semi_for());
          }
@@ -375,11 +406,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  chunk_is_token(first, CT_SPAREN_CLOSE)
          && first->parent_type != CT_WHILE_OF_DO)
       {
+         // Add or remove space before empty statement ';' on 'if', 'for' and 'while'.
          log_rule("sp_before_semi|sp_special_semi");
          arg = arg | options::sp_special_semi();
       }
       else
       {
+         // Add or remove space before ';'.
          log_rule("sp_before_semi");
       }
       return(arg);
@@ -393,6 +426,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (options::sp_endif_cmt() != IARF_IGNORE)
       {
          set_chunk_type(second, CT_COMMENT_ENDIF);
+         // Add or remove space between #else or #endif and a trailing comment.
          log_rule("sp_endif_cmt");
          return(options::sp_endif_cmt());
       }
@@ -402,7 +436,9 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && (  second->parent_type == CT_COMMENT_END
          || second->parent_type == CT_COMMENT_EMBED))
    {
-      log_rule("sp_before_tr_emb_cmt");
+      // Add or remove space before a trailing or embedded comment.
+      // Number of spaces before a trailing or embedded comment.
+      log_rule("sp_num_before_tr_emb_cmt");
       min_sp = options::sp_num_before_tr_emb_cmt();
       return(options::sp_before_tr_emb_cmt());
    }
@@ -433,18 +469,22 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          if (  (options::sp_after_semi_for_empty() != IARF_IGNORE)
             && chunk_is_token(second, CT_SPAREN_CLOSE))
          {
+            // Add or remove space after the final semicolon of an empty part of a for
+            // statement, as in 'for ( ; ; <here> )'.
             log_rule("sp_after_semi_for_empty");
             return(options::sp_after_semi_for_empty());
          }
          if (  (options::sp_after_semi_for() != IARF_IGNORE)
             && second->type != CT_SPAREN_CLOSE)  // Issue 1324
          {
+            // Add or remove space after ';' in non-empty 'for' statements.
             log_rule("sp_after_semi_for");
             return(options::sp_after_semi_for());
          }
       }
       else if (!chunk_is_comment(second) && second->type != CT_BRACE_CLOSE) // issue #197
       {
+         // Add or remove space after ';', except when followed by a comment.
          log_rule("sp_after_semi");
          return(options::sp_after_semi());
       }
@@ -469,12 +509,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  chunk_is_token(second, CT_PAREN_OPEN)
          && second->parent_type == CT_RETURN)
       {
+         // Add or remove space between 'return' and '('.
          log_rule("sp_return_paren");
          return(options::sp_return_paren());
       }
       else if (  chunk_is_token(second, CT_BRACE_OPEN)
               && second->parent_type == CT_BRACED_INIT_LIST)
       {
+         // Add or remove space between 'return' and '{'.
          log_rule("sp_return_brace");
          return(options::sp_return_brace());
       }
@@ -488,11 +530,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (chunk_is_token(second, CT_PAREN_OPEN))
       {
+         // Add or remove space between 'sizeof' and '('.
          log_rule("sp_sizeof_paren");
          return(options::sp_sizeof_paren());
       }
       if (chunk_is_token(second, CT_ELLIPSIS))
       {
+         // Add or remove space between 'sizeof' and '...'.
          log_rule("sp_sizeof_ellipsis");
          return(options::sp_sizeof_ellipsis());
       }
@@ -505,6 +549,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (chunk_is_token(second, CT_PAREN_OPEN))
       {
+         // Add or remove space between 'decltype' and '('.
          log_rule("sp_decltype_paren");
          return(options::sp_decltype_paren());
       }
@@ -515,6 +560,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    // handle '::'
    if (chunk_is_token(first, CT_DC_MEMBER))
    {
+      // Add or remove space after the '::' operator.
       log_rule("sp_after_dc");
       return(options::sp_after_dc());
    }
@@ -583,6 +629,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
             || CharTable::IsKw1(first->str[0]))
          && (strcmp(first->text(), "void") != 0)) // Issue 1249
       {
+         // Add or remove space before the '::' operator.
          log_rule("sp_before_dc");
          return(options::sp_before_dc());
       }
@@ -596,10 +643,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          // C# multidimensional array type: ',,' vs ', ,' or ',]' vs ', ]'
          if (chunk_is_token(second, CT_COMMA))
          {
+            // (C#) Add or remove space between ',' in multidimensional array type
+            // like 'int[,,]'.
             log_rule("sp_between_mdatype_commas");
             return(options::sp_between_mdatype_commas());
          }
-
+         // (C#) Add or remove space between ',' and ']' in multidimensional array type
+         // like 'int[,,]'.
          log_rule("sp_after_mdatype_commas");
          return(options::sp_after_mdatype_commas());
       }
@@ -609,7 +659,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          return(IARF_IGNORE);
       }
-
+      // Add or remove space after ',', i.e. 'a,b' vs. 'a, b'.
       log_rule("sp_after_comma");
       return(options::sp_after_comma());
    }
@@ -630,15 +680,20 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (chunk_is_token(first, CT_SQUARE_OPEN) && first->parent_type == CT_TYPE)
       {
          // Only for C#.
+         // (C#) Add or remove space between '[' and ',' in multidimensional array type
+         // like 'int[,,]'.
          log_rule("sp_before_mdatype_commas");
          return(options::sp_before_mdatype_commas());
       }
       if (  chunk_is_token(first, CT_PAREN_OPEN)
          && (options::sp_paren_comma() != IARF_IGNORE))
       {
+         // Add or remove space between an open parenthesis and comma,
+         // i.e. '(,' vs. '( ,'.
          log_rule("sp_paren_comma");
          return(options::sp_paren_comma());
       }
+      // Add or remove space before ','.
       log_rule("sp_before_comma");
       return(options::sp_before_comma());
    }
@@ -649,6 +704,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  chunk_is_token(first, CT_TYPE)
          || chunk_is_token(first, CT_QUALIFIER))
       {
+         // Add or remove space between a type and '...'.
          log_rule("sp_type_ellipsis");
          return(options::sp_type_ellipsis());
       }
@@ -656,6 +712,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  ((first->flags & PCF_PUNCTUATOR) == 0)
          && (options::sp_before_ellipsis() != IARF_IGNORE))
       {
+         // Add or remove space before the variadic '...' when preceded by a
+         // non-punctuator.
          log_rule("sp_before_ellipsis");
          return(options::sp_before_ellipsis());
       }
@@ -663,6 +721,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  chunk_is_token(first, CT_FPAREN_CLOSE)
          || chunk_is_token(first, CT_PAREN_CLOSE))
       {
+         // Add or remove space between ')' and '...'.
          log_rule("sp_paren_ellipsis");
          return(options::sp_paren_ellipsis());
       }
@@ -683,12 +742,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  chunk_is_token(second, CT_PAREN_OPEN)
          && first->prev && chunk_is_token(first->prev, CT_SIZEOF))
       {
+         // Add or remove space between 'sizeof...' and '('.
          log_rule("sp_sizeof_ellipsis_paren");
          return(options::sp_sizeof_ellipsis_paren());
       }
    }
    if (chunk_is_token(first, CT_TAG_COLON))
    {
+      // (Pawn) Add or remove space after the tag keyword.
       log_rule("sp_after_tag");
       return(options::sp_after_tag());
    }
@@ -710,6 +771,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && chunk_is_token(second, CT_SPAREN_OPEN)
       && (options::sp_oc_catch_paren() != IARF_IGNORE))
    {
+      // (OC) Add or remove space between '@catch' and '('
+      // in '@catch (something) { }'. If set to ignore, sp_catch_paren is used.
       log_rule("sp_oc_catch_paren");
       return(options::sp_oc_catch_paren());
    }
@@ -719,6 +782,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && chunk_is_token(second, CT_PAREN_OPEN)
       && (options::sp_oc_classname_paren() != IARF_IGNORE))
    {
+      // (OC) Add or remove space between class name and '('
+      // in '@interface className(categoryName)<ProtocolName>:BaseClass'
       log_rule("sp_oc_classname_paren");
       return(options::sp_oc_classname_paren());
    }
@@ -727,6 +792,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && chunk_is_token(second, CT_SPAREN_OPEN)
       && (options::sp_catch_paren() != IARF_IGNORE))
    {
+      // Add or remove space between 'catch' and '(' in 'catch (something) { }'.
+      // If set to ignore, sp_before_sparen is used.
       log_rule("sp_catch_paren");
       return(options::sp_catch_paren());
    }
@@ -735,6 +802,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && chunk_is_token(second, CT_SPAREN_OPEN)
       && (options::sp_version_paren() != IARF_IGNORE))
    {
+      // (D) Add or remove space between 'version' and '('
+      // in 'version (something) { }'. If set to ignore, sp_before_sparen is used.
       log_rule("sp_version_paren");
       return(options::sp_version_paren());
    }
@@ -743,6 +812,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && chunk_is_token(second, CT_SPAREN_OPEN)
       && (options::sp_scope_paren() != IARF_IGNORE))
    {
+      // (D) Add or remove space between 'scope' and '('
+      // in 'scope (something) { }'. If set to ignore, sp_before_sparen is used.
       log_rule("sp_scope_paren");
       return(options::sp_scope_paren());
    }
@@ -750,6 +821,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  language_is_set(LANG_OC)
       && chunk_is_token(first, CT_SYNCHRONIZED) && chunk_is_token(second, CT_SPAREN_OPEN))
    {
+      // (OC) Add or remove space between '@synchronized' and the open parenthesis,
+      // i.e. '@synchronized(foo)' vs. '@synchronized (foo)'.
       log_rule("sp_after_oc_synchronized");
       return(options::sp_after_oc_synchronized());
    }
@@ -757,6 +830,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    // "if (" vs "if("
    if (chunk_is_token(second, CT_SPAREN_OPEN))
    {
+      // Add or remove space before '(' of control statements ('if', 'for', 'switch',
+      // 'while', etc.).
       log_rule("sp_before_sparen");
       return(options::sp_before_sparen());
    }
@@ -769,6 +844,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    // Handle the special lambda case for C++11:
    //    [=](Something arg){.....}
+   // Add or remove space around '=' in C++11 lambda capture specifications.
+   // Overrides sp_assign.
    if (  (options::sp_cpp_lambda_assign() != IARF_IGNORE)
       && (  (  chunk_is_token(first, CT_SQUARE_OPEN)
             && first->parent_type == CT_CPP_LAMBDA
@@ -783,6 +860,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    // Handle the special lambda case for C++11:
    //    [](Something arg){.....}
+   // Add or remove space after the capture specification in C++11 lambda.
    if (  (options::sp_cpp_lambda_paren() != IARF_IGNORE)
       && chunk_is_token(first, CT_SQUARE_CLOSE)
       && first->parent_type == CT_CPP_LAMBDA
@@ -794,6 +872,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_ENUM) && chunk_is_token(second, CT_FPAREN_OPEN))
    {
+      // Add or remove space in 'NS_ENUM ('.
       if (options::sp_enum_paren() != IARF_IGNORE)
       {
          log_rule("sp_enum_paren");
@@ -805,25 +884,33 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (second->flags & PCF_IN_ENUM)
       {
+         // Add or remove space before assignment '=' in enum.
+         // Overrides sp_enum_assign.
          if (options::sp_enum_before_assign() != IARF_IGNORE)
          {
             log_rule("sp_enum_before_assign");
             return(options::sp_enum_before_assign());
          }
+         // Add or remove space around assignment '=' in enum.
          log_rule("sp_enum_assign");
          return(options::sp_enum_assign());
       }
+      // Add or remove space around assignment operator '=' in a prototype.
+      // If set to ignore, use sp_assign.
       if (  (options::sp_assign_default() != IARF_IGNORE)
          && second->parent_type == CT_FUNC_PROTO)
       {
          log_rule("sp_assign_default");
          return(options::sp_assign_default());
       }
+      // Add or remove space before assignment operator '=', '+=', etc.
+      // Overrides sp_assign.
       if (options::sp_before_assign() != IARF_IGNORE)
       {
          log_rule("sp_before_assign");
          return(options::sp_before_assign());
       }
+      // Add or remove space around assignment operator '=', '+=', etc.
       log_rule("sp_assign");
       return(options::sp_assign());
    }
@@ -849,11 +936,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (first->flags & PCF_IN_ENUM)
       {
+         // Add or remove space after assignment '=' in enum.
+         // Overrides sp_enum_assign.
          if (options::sp_enum_after_assign() != IARF_IGNORE)
          {
             log_rule("sp_enum_after_assign");
             return(options::sp_enum_after_assign());
          }
+         // Add or remove space around assignment '=' in enum.
          log_rule("sp_enum_assign");
          return(options::sp_enum_assign());
       }
@@ -863,6 +953,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_assign_default");
          return(options::sp_assign_default());
       }
+      // Add or remove space after assignment operator '=', '+=', etc.
+      // Overrides sp_assign.
       if (options::sp_after_assign() != IARF_IGNORE)
       {
          log_rule("sp_after_assign");
@@ -875,6 +967,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_TRAILING_RET_T))
    {
+      // Add or remove space around trailing return operator '->'.
       log_rule("sp_trailing_ret_t");
       return(options::sp_trailing_ret_t());
    }
@@ -893,6 +986,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_assign_default");
          return(options::sp_assign_default());
       }
+      // Add or remove space after assignment operator '=', '+=', etc.
+      // Overrides sp_assign.
       if (options::sp_after_assign() != IARF_IGNORE)
       {
          log_rule("sp_after_assign");
@@ -906,6 +1001,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (first->flags & PCF_IN_ENUM)
       {
+         // Add or remove space around assignment ':' in enum.
          log_rule("sp_enum_colon");
          return(options::sp_enum_colon());
       }
@@ -915,6 +1011,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (second->flags & PCF_IN_ENUM)
       {
+         // Add or remove space around assignment ':' in enum.
          log_rule("sp_enum_colon");
          return(options::sp_enum_colon());
       }
@@ -927,11 +1024,15 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
    if (chunk_is_token(second, CT_OC_BLOCK_CARET))
    {
+      // (OC) Add or remove space before a block pointer caret,
+      // i.e. '^int (int arg){...}' vs. ' ^int (int arg){...}'.
       log_rule("sp_before_oc_block_caret");
       return(options::sp_before_oc_block_caret());
    }
    if (chunk_is_token(first, CT_OC_BLOCK_CARET))
    {
+      // (OC) Add or remove space after a block pointer caret,
+      // i.e. '^int (int arg){...}' vs. '^ int (int arg){...}'.
       log_rule("sp_after_oc_block_caret");
       return(options::sp_after_oc_block_caret());
    }
@@ -944,7 +1045,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          return(IARF_FORCE);
       }
-
+      // (OC) Add or remove space between the receiver and selector in a message,
+      // as in '[receiver selector ...]'.
       log_rule("sp_after_oc_msg_receiver");
       return(options::sp_after_oc_msg_receiver());
    }
@@ -958,6 +1060,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && second->parent_type != CT_OC_MSG
       && second->parent_type != CT_CS_SQ_STMT)
    {
+      // Add or remove space before C++17 structured bindings.
       log_rule("sp_cpp_before_struct_binding");
       return(options::sp_cpp_before_struct_binding());
    }
@@ -970,7 +1073,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          return(IARF_FORCE);
       }
-
+      // Add or remove space before '[' (except '[]').
       log_rule("sp_before_square");
       return(options::sp_before_square());
    }
@@ -978,6 +1081,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    // "byte[]" vs "byte []"
    if (chunk_is_token(second, CT_TSQUARE))
    {
+      // Add or remove space before '[]'.
       log_rule("sp_before_squares");
       return(options::sp_before_squares());
    }
@@ -986,6 +1090,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && chunk_is_token(first, CT_ANGLE_CLOSE)
       && chunk_is_token(second, CT_ANGLE_CLOSE))
    {
+      // Add or remove space between '>' and '>' in '>>' (template stuff).
       log_rule("sp_angle_shift");
       return(options::sp_angle_shift());
    }
@@ -997,13 +1102,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  chunk_is_token(first, CT_ANGLE_OPEN)
          && chunk_is_token(second, CT_ANGLE_CLOSE))
       {
+         // Add or remove space inside '<>'.
          log_rule("sp_inside_angle_empty");
-
          return(options::sp_inside_angle_empty());
       }
 
+      // Add or remove space inside '<' and '>'.
       log_rule("sp_inside_angle");
-
       iarf_e op = options::sp_inside_angle();
 
       // special: if we're not supporting digraphs, then we shouldn't create them!
@@ -1014,7 +1119,6 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          op = IARF_IGNORE;
       }
-
       return(op);
    }
    if (chunk_is_token(second, CT_ANGLE_OPEN))
@@ -1022,11 +1126,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  chunk_is_token(first, CT_TEMPLATE)
          && (options::sp_template_angle() != IARF_IGNORE))
       {
+         // Add or remove space between 'template' and '<'.
+         // If set to ignore, sp_before_angle is used.
          log_rule("sp_template_angle");
          return(options::sp_template_angle());
       }
       if (first->type != CT_QUALIFIER)
       {
+         // Add or remove space before '<'.
          log_rule("sp_before_angle");
          return(options::sp_before_angle());
       }
@@ -1035,6 +1142,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (chunk_is_token(second, CT_WORD) || CharTable::IsKw1(second->str[0]))
       {
+         // Add or remove space between '>' and a word as in 'List<byte> m;' or
+         // 'template <typename T> static ...'.
          if (options::sp_angle_word() != IARF_IGNORE)
          {
             log_rule("sp_angle_word");
@@ -1046,15 +1155,18 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          chunk_t *next = chunk_get_next_ncnl(second);
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
+            // Add or remove space between '>' and '()' as found in 'new List<byte>();'.
             log_rule("sp_angle_paren_empty");
             return(options::sp_angle_paren_empty());
          }
 
+         // Add or remove space between '>' and '(' as found in 'new List<byte>(foo);'.
          log_rule("sp_angle_paren");
          return(options::sp_angle_paren());
       }
       if (chunk_is_token(second, CT_DC_MEMBER))
       {
+         // Add or remove space before the '::' operator.
          log_rule("sp_before_dc");
          return(options::sp_before_dc());
       }
@@ -1066,9 +1178,11 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          if (  chunk_is_token(second, CT_CLASS_COLON)
             && options::sp_angle_colon() != IARF_IGNORE)
          {
+            // Add or remove space between '>' and ':'.
             log_rule("sp_angle_colon");
             return(options::sp_angle_colon());
          }
+         // Add or remove space after '<>'.
          log_rule("sp_after_angle");
          return(options::sp_after_angle());
       }
@@ -1079,6 +1193,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && (  first->parent_type == CT_FUNC_DEF
          || first->parent_type == CT_FUNC_PROTO))
    {
+      // Add or remove space after a reference sign '&', if followed by a function
+      // prototype or function definition.
       log_rule("sp_after_byref_func");
       return(options::sp_after_byref_func());
    }
@@ -1086,6 +1202,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(first, CT_BYREF)
       && (CharTable::IsKw1(second->str[0]) || chunk_is_token(second, CT_PAREN_OPEN)))
    {
+      // Add or remove space after reference sign '&', if followed by a word.
       log_rule("sp_after_byref");
       return(options::sp_after_byref());
    }
@@ -1093,6 +1210,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(second, CT_BYREF)
       && !chunk_is_token(first, CT_PAREN_OPEN))
    {
+      // Add or remove space before a reference sign '&', if followed by a function
+      // prototype or function definition.
       if (options::sp_before_byref_func() != IARF_IGNORE)
       {
          chunk_t *next = chunk_get_next(second);
@@ -1105,6 +1224,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          }
       }
 
+      // Add or remove space before a reference sign '&' that isn't followed by a
+      // variable name. If set to 'ignore', sp_before_byref is used instead.
       if (options::sp_before_unnamed_byref() != IARF_IGNORE)
       {
          chunk_t *next = chunk_get_next_nc(second);
@@ -1114,6 +1235,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
             return(options::sp_before_unnamed_byref());
          }
       }
+      // Add or remove space before a reference sign '&'.
       log_rule("sp_before_byref");
       return(options::sp_before_byref());
    }
@@ -1126,17 +1248,23 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          {
             if (language_is_set(LANG_OC) && (options::sp_oc_catch_brace() != IARF_IGNORE))
             {
+               // (OC) Add or remove space before the '{' of a '@catch' statement, if the '{'
+               // and '@catch' are on the same line, as in '@catch (decl) <here> {'.
+               // If set to ignore, sp_catch_brace is used.
                log_rule("sp_oc_catch_brace");
                return(options::sp_oc_catch_brace());
             }
             if (options::sp_catch_brace() != IARF_IGNORE)
             {
+               // Add or remove space before the '{' of a 'catch' statement, if the '{' and
+               // 'catch' are on the same line, as in 'catch (decl) <here> {'.
                log_rule("sp_catch_brace");
                return(options::sp_catch_brace());
             }
          }
          if (options::sp_sparen_brace() != IARF_IGNORE)
          {
+            // Add or remove space between ')' and '{' of of control statements.
             log_rule("sp_sparen_brace");
             return(options::sp_sparen_brace());
          }
@@ -1144,6 +1272,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  !chunk_is_comment(second)
          && (options::sp_after_sparen() != IARF_IGNORE))
       {
+         // Add or remove space after ')' of control statements.
          log_rule("sp_after_sparen");
          return(options::sp_after_sparen());
       }
@@ -1151,6 +1280,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(first, CT_VBRACE_OPEN)
       && chunk_is_token(second, CT_SEMICOLON)) // Issue # 1158
    {
+      // Add or remove space before ';'.
       log_rule("sp_before_semi");
       return(options::sp_before_semi());
    }
@@ -1165,11 +1295,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          chunk_t *next = chunk_get_next_ncnl(second);
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
+            // Overrides sp_after_operator_sym when the operator has no arguments, as in
+            // 'operator *()'.
             log_rule("sp_after_operator_sym_empty");
             return(options::sp_after_operator_sym_empty());
          }
       }
-
+      // Add or remove space between the operator symbol and the open parenthesis, as
+      // in 'operator ++('.
       log_rule("sp_after_operator_sym");
       return(options::sp_after_operator_sym());
    }
@@ -1183,6 +1316,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          && chunk_is_token(second, CT_FPAREN_OPEN)
          && (options::sp_vala_after_translation() != IARF_IGNORE))
       {
+         // Add or remove space after '_'.
          log_rule("sp_vala_after_translation");
          return(options::sp_vala_after_translation());
       }
@@ -1200,20 +1334,28 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          chunk_t *next = chunk_get_next_ncnl(second);
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
+            // Add or remove space between function name and '()' on function calls without
+            // parameters. If set to 'ignore' (the default), sp_func_call_paren is used.
             log_rule("sp_func_call_paren_empty");
             return(options::sp_func_call_paren_empty());
          }
       }
+      // Add or remove space between function name and '(' on function calls.
       log_rule("sp_func_call_paren");
       return(options::sp_func_call_paren());
    }
    if (chunk_is_token(first, CT_FUNC_CALL_USER))
    {
+      // Add or remove space between the user function name and '(' on function
+      // calls. You need to set a keyword to be a user function in the config file,
+      // like:
+      //   set func_call_user tr _ i18n
       log_rule("sp_func_call_user_paren");
       return(options::sp_func_call_user_paren());
    }
    if (chunk_is_token(first, CT_ATTRIBUTE) && chunk_is_paren_open(second))
    {
+      // Add or remove space between '__attribute__' and '('.
       log_rule("sp_attribute_paren");
       return(options::sp_attribute_paren());
    }
@@ -1225,15 +1367,20 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          chunk_t *next = chunk_get_next_ncnl(second);
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
+            // Add or remove space between function name and '()' on function definition
+            // without parameters.
             log_rule("sp_func_def_paren_empty");
             return(options::sp_func_def_paren_empty());
          }
       }
+      // Add or remove space between function name and '(' on function definition.
       log_rule("sp_func_def_paren");
       return(options::sp_func_def_paren());
    }
    if (chunk_is_token(first, CT_CPP_CAST) || chunk_is_token(first, CT_TYPE_WRAP))
    {
+      // Add or remove space between the type and open parenthesis in a C++ cast,
+      // i.e. 'int(exp)' vs. 'int (exp)'.
       log_rule("sp_cpp_cast_paren");
       return(options::sp_cpp_cast_paren());
    }
@@ -1250,6 +1397,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       // "(int)a" vs "(int) a" or "cast(int)a" vs "cast(int) a"
       if (first->parent_type == CT_C_CAST || first->parent_type == CT_D_CAST)
       {
+         // Add or remove space after C/D cast, i.e. 'cast(int)a' vs. 'cast(int) a' or
+         // '(int)a' vs. '(int) a'.
          log_rule("sp_after_cast");
          return(options::sp_after_cast());
       }
@@ -1262,6 +1411,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    // handle the space between parens in fcn type 'void (*f)(void)'
    if (chunk_is_token(first, CT_TPAREN_CLOSE))
    {
+      // Add or remove space between the ')' and '(' in a function type, as in
+      // 'void (*x)(...)'.
       log_rule("sp_after_tparen_close");
       return(options::sp_after_tparen_close());
    }
@@ -1271,6 +1422,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          && chunk_is_str(second, "(", 1))
       || (chunk_is_paren_close(first) && chunk_is_paren_open(second)))
    {
+      // Add or remove space between back-to-back parentheses, i.e. ')(' vs. ') ('.
       log_rule("sp_cparen_oparen");
       return(options::sp_cparen_oparen());
    }
@@ -1285,10 +1437,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          chunk_t *next = chunk_get_next_ncnl(second);
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
+            // Add or remove space between function name and '()' on function declaration
+            // without parameters.
             log_rule("sp_func_proto_paren_empty");
             return(options::sp_func_proto_paren_empty());
          }
       }
+      // Add or remove space between function name and '(' on function declaration.
       log_rule("sp_func_proto_paren");
       return(options::sp_func_proto_paren());
    }
@@ -1300,10 +1455,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          chunk_t *next = chunk_get_next_ncnl(second);
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
+            // Add or remove space between a constructor without parameters or destructor
+            // and '()'.
             log_rule("sp_func_class_paren_empty");
             return(options::sp_func_class_paren_empty());
          }
       }
+      // Add or remove space between a constructor/destructor and the open
+      // parenthesis.
       log_rule("sp_func_class_paren");
       return(options::sp_func_class_paren());
    }
@@ -1315,6 +1474,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_BRACE_OPEN) && chunk_is_token(second, CT_BRACE_CLOSE))
    {
+      // Add or remove space inside '{}'.
       log_rule("sp_inside_braces_empty");
       return(options::sp_inside_braces_empty());
    }
@@ -1328,6 +1488,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (arg || first->parent_type != CT_DECLTYPE)
       {
          // 'int{9}' vs 'int {9}'
+         // Add or remove space between type and open brace of an unnamed temporary
+         // direct-list-initialization.
          log_rule("sp_type_brace_init_lst");
          return(arg);
       }
@@ -1337,6 +1499,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (second->parent_type == CT_ENUM)
       {
+         // Add or remove space inside enum '{' and '}'.
          log_rule("sp_inside_braces_enum");
          return(options::sp_inside_braces_enum());
       }
@@ -1348,18 +1511,21 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          {
             return(IARF_IGNORE);
          }
+         // Add or remove space inside struct/union '{' and '}'.
          log_rule("sp_inside_braces_struct");
          return(options::sp_inside_braces_struct());
       }
       else if (  second->parent_type == CT_OC_AT
               && options::sp_inside_braces_oc_dict() != IARF_IGNORE)
       {
+         // (OC) Add or remove space inside Objective-C boxed dictionary '{' and '}'
          log_rule("sp_inside_braces_oc_dict");
          return(options::sp_inside_braces_oc_dict());
       }
 
       if (second->parent_type == CT_BRACED_INIT_LIST)
       {
+         // Add or remove space between nested braces, i.e. '{{' vs '{ {'.
          if (  options::sp_brace_brace() != IARF_IGNORE
             && chunk_is_token(first, CT_BRACE_CLOSE)
             && first->parent_type == CT_BRACED_INIT_LIST)
@@ -1369,16 +1535,19 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          }
          if (options::sp_before_type_brace_init_lst_close() != IARF_IGNORE)
          {
+            // Add or remove space before close brace in an unnamed temporary
+            // direct-list-initialization.
             log_rule("sp_before_type_brace_init_lst_close");
             return(options::sp_before_type_brace_init_lst_close());
          }
          if (options::sp_inside_type_brace_init_lst() != IARF_IGNORE)
          {
+            // Add or remove space inside an unnamed temporary direct-list-initialization.
             log_rule("sp_inside_type_brace_init_lst");
             return(options::sp_inside_type_brace_init_lst());
          }
       }
-
+      // Add or remove space inside '{' and '}'.
       log_rule("sp_inside_braces");
       return(options::sp_inside_braces());
    }
@@ -1391,6 +1560,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_PP_DEFINED) && chunk_is_token(second, CT_PAREN_OPEN))
    {
+      // Add or remove space between 'defined' and '(' in '#if defined (FOO)'.
       log_rule("sp_defined_paren");
       return(options::sp_defined_paren());
    }
@@ -1399,15 +1569,19 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (chunk_is_token(second, CT_PAREN_OPEN))
       {
+         // Add or remove space between 'throw' and '(' in 'throw (something)'.
          log_rule("sp_throw_paren");
          return(options::sp_throw_paren());
       }
+      // Add or remove space between 'throw' and anything other than '(' as in
+      // '@throw [...];'.
       log_rule("sp_after_throw");
       return(options::sp_after_throw());
    }
 
    if (chunk_is_token(first, CT_THIS) && chunk_is_token(second, CT_PAREN_OPEN))
    {
+      // Add or remove space between 'this' and '(' in 'this (something)'.
       log_rule("sp_this_paren");
       return(options::sp_this_paren());
    }
@@ -1426,6 +1600,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_MEMBER) || chunk_is_token(second, CT_MEMBER))
    {
+      // Add or remove space around the '.' or '->' operators.
       log_rule("sp_member");
       return(options::sp_member());
    }
@@ -1439,6 +1614,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_SUPER) && chunk_is_token(second, CT_PAREN_OPEN))
    {
+      // Add or remove space between 'super' and '(' in 'super (something)'.
       log_rule("sp_super_paren");
       return(options::sp_super_paren());
    }
@@ -1447,6 +1623,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (second->parent_type == CT_DOUBLE_BRACE)
       {
+         // (Java) Add or remove space between ')' and '{{' of double brace initializer.
          log_rule("sp_fparen_dbrace");
          return(options::sp_fparen_dbrace());
       }
@@ -1458,10 +1635,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          tmp = chunk_get_prev_ncnl(tmp);
          if (chunk_is_token(tmp, CT_NEW))
          {
+            // Add or remove space between ')' and '{' of s function call in object
+            // initialization.
+            // Overrides sp_fparen_brace.
             log_rule("sp_fparen_brace_initializer");
             return(options::sp_fparen_brace_initializer());
          }
       }
+      // Add or remove space between ')' and '{' of function.
       log_rule("sp_fparen_brace");
       return(options::sp_fparen_brace());
    }
@@ -1474,6 +1655,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_ELSE) && chunk_is_token(second, CT_BRACE_OPEN))
    {
+      // Add or remove space between 'else' and '{' if on the same line.
       log_rule("sp_else_brace");
       return(options::sp_else_brace());
    }
@@ -1486,18 +1668,21 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_FINALLY) && chunk_is_token(second, CT_BRACE_OPEN))
    {
+      // Add or remove space between 'finally' and '{' if on the same line.
       log_rule("sp_finally_brace");
       return(options::sp_finally_brace());
    }
 
    if (chunk_is_token(first, CT_TRY) && chunk_is_token(second, CT_BRACE_OPEN))
    {
+      // Add or remove space between 'try' and '{' if on the same line.
       log_rule("sp_try_brace");
       return(options::sp_try_brace());
    }
 
    if (chunk_is_token(first, CT_GETSET) && chunk_is_token(second, CT_BRACE_OPEN))
    {
+      // Add or remove space between get/set and '{' if on the same line.
       log_rule("sp_getset_brace");
       return(options::sp_getset_brace());
    }
@@ -1506,11 +1691,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (first->parent_type == CT_NAMESPACE)
       {
+         // Add or remove space between a variable and '{' for a namespace.
          log_rule("sp_word_brace_ns");
          return(options::sp_word_brace_ns());
       }
       if (first->parent_type == CT_NONE && second->parent_type == CT_NONE)
       {
+         // Add or remove space between a variable and '{' for C++ uniform
+         // initialization.
          log_rule("sp_word_brace");
          return(options::sp_word_brace());
       }
@@ -1518,6 +1706,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(second, CT_PAREN_OPEN) && second->parent_type == CT_INVARIANT)
    {
+      // (D) Add or remove space between 'invariant' and '('.
       log_rule("sp_invariant_paren");
       return(options::sp_invariant_paren());
    }
@@ -1532,6 +1721,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
       if (first->parent_type == CT_INVARIANT)
       {
+         // (D) Add or remove space after the ')' in 'invariant (C) c'.
          log_rule("sp_after_invariant_paren");
          return(options::sp_after_invariant_paren());
       }
@@ -1539,6 +1729,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       // "(struct foo) {...}" vs "(struct foo){...}"
       if (chunk_is_token(second, CT_BRACE_OPEN))
       {
+         // Add or remove space between ')' and '{'.
          log_rule("sp_paren_brace");
          return(options::sp_paren_brace());
       }
@@ -1560,6 +1751,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       /* C++ new operator: new(bar) Foo */
       if (first->parent_type == CT_NEW)
       {
+         // Add or remove space between ')' and type in 'new(foo) BAR'.
          log_rule("sp_after_newop_paren");
          return(options::sp_after_newop_paren());
       }
@@ -1572,9 +1764,12 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (second->parent_type == CT_FUNC_CALL_USER)
       {
+         // Add or remove space between nested parentheses with user functions,
+         // i.e. '((' vs. '( ('.
          log_rule("sp_func_call_user_paren_paren");
          return(options::sp_func_call_user_paren_paren());
       }
+      // Add or remove space between nested parentheses, i.e. '((' vs. ') )'.
       log_rule("sp_paren_paren");
       return(options::sp_paren_paren());
    }
@@ -1586,14 +1781,17 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          || (  (second->parent_type == CT_FUNC_CALL_USER)
             && ((chunk_is_token(first, CT_WORD)) || (chunk_is_token(first, CT_SQUARE_CLOSE)))))
       {
+         // Add or remove space inside user function '(' and ')'.
          log_rule("sp_func_call_user_inside_fparen");
          return(options::sp_func_call_user_inside_fparen());
       }
       if (chunk_is_token(first, CT_FPAREN_OPEN) && chunk_is_token(second, CT_FPAREN_CLOSE))
       {
+         // Add or remove space inside empty function '()'.
          log_rule("sp_inside_fparens");
          return(options::sp_inside_fparens());
       }
+      // Add or remove space inside function '(' and ')'.
       log_rule("sp_inside_fparen");
       return(options::sp_inside_fparen());
    }
@@ -1601,6 +1799,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    // "foo(...)" vs "foo( ... )"
    if (chunk_is_token(first, CT_TPAREN_OPEN) || chunk_is_token(second, CT_TPAREN_CLOSE))
    {
+      // Add or remove space inside the first parentheses in a function type, as in
+      // 'void (*x)(...)'.
       log_rule("sp_inside_tparen");
       return(options::sp_inside_tparen());
    }
@@ -1611,18 +1811,24 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          && (  first->parent_type == CT_OC_MSG_DECL
             || first->parent_type == CT_OC_MSG_SPEC))
       {
+         // (OC) Add or remove space after the first (type) in message specs,
+         // i.e. '-(int) f:(int)x;' vs. '-(int)f:(int)x;'.
          log_rule("sp_after_oc_return_type");
          return(options::sp_after_oc_return_type());
       }
 
       if (first->parent_type == CT_OC_MSG_SPEC || first->parent_type == CT_OC_MSG_DECL)
       {
+         // (OC) Add or remove space after the (type) in message specs,
+         // i.e. '-(int)f: (int) x;' vs. '-(int)f: (int)x;'.
          log_rule("sp_after_oc_type");
          return(options::sp_after_oc_type());
       }
 
       if (first->parent_type == CT_OC_SEL && second->type != CT_SQUARE_CLOSE)
       {
+         // (OC) Add or remove space between '@selector(x)' and the following word,
+         // i.e. '@selector(foo) a:' vs. '@selector(foo)a:'.
          log_rule("sp_after_oc_at_sel_parens");
          return(options::sp_after_oc_at_sel_parens());
       }
@@ -1637,6 +1843,9 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
             && (  second->parent_type == CT_OC_SEL
                || second->parent_type == CT_OC_PROTOCOL)))
       {
+         // (OC) Add or remove space inside '@selector' parentheses,
+         // i.e. '@selector(foo)' vs. '@selector( foo )'.
+         // Also applies to '@protocol()' constructs.
          log_rule("sp_inside_oc_at_sel_parens");
          return(options::sp_inside_oc_at_sel_parens());
       }
@@ -1645,6 +1854,9 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(second, CT_PAREN_OPEN)
       && (chunk_is_token(first, CT_OC_SEL) || chunk_is_token(first, CT_OC_PROTOCOL)))
    {
+      // (OC) Add or remove space between '@selector' and '(',
+      // i.e. '@selector(msgName)' vs. '@selector (msgName)'.
+      // Also applies to '@protocol()' constructs.
       log_rule("sp_after_oc_at_sel");
       return(options::sp_after_oc_at_sel());
    }
@@ -1660,6 +1872,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          || first->parent_type == CT_CPP_CAST
          || first->parent_type == CT_D_CAST)
       {
+         // Add or remove spaces inside cast parentheses.
          log_rule("sp_inside_paren_cast");
          return(options::sp_inside_paren_cast());
       }
@@ -1667,11 +1880,16 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          if (options::sp_inside_newop_paren_open() != IARF_IGNORE)
          {
+            // Add or remove space after the open parenthesis of the new operator,
+            // as in 'new(foo) BAR'.
+            // Overrides sp_inside_newop_paren.
             log_rule("sp_inside_newop_paren_open");
             return(options::sp_inside_newop_paren_open());
          }
          if (options::sp_inside_newop_paren() != IARF_IGNORE)
          {
+            // Add or remove space inside parenthesis of the new operator
+            // as in 'new(foo) BAR'.
             log_rule("sp_inside_newop_paren");
             return(options::sp_inside_newop_paren());
          }
@@ -1686,6 +1904,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          || second->parent_type == CT_CPP_CAST
          || second->parent_type == CT_D_CAST)
       {
+         // Add or remove spaces inside cast parentheses.
          log_rule("sp_inside_paren_cast");
          return(options::sp_inside_paren_cast());
       }
@@ -1693,15 +1912,21 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          if (options::sp_inside_newop_paren_close() != IARF_IGNORE)
          {
+            // Add or remove space before the close parenthesis of the new operator,
+            // as in 'new(foo) BAR'.
+            // Overrides sp_inside_newop_paren.
             log_rule("sp_inside_newop_paren_close");
             return(options::sp_inside_newop_paren_close());
          }
          if (options::sp_inside_newop_paren() != IARF_IGNORE)
          {
+            // Add or remove space inside parenthesis of the new operator
+            // as in 'new(foo) BAR'.
             log_rule("sp_inside_newop_paren");
             return(options::sp_inside_newop_paren());
          }
       }
+      // Add or remove space inside '(' and ')'.
       log_rule("sp_inside_paren");
       return(options::sp_inside_paren());
    }
@@ -1714,14 +1939,18 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
             || (second->parent_type == CT_OC_AT && chunk_is_token(second, CT_SQUARE_CLOSE)))
          && (options::sp_inside_square_oc_array() != IARF_IGNORE))
       {
+         // (OC) Add or remove space inside a non-empty Objective-C boxed array '@[' and
+         // ']'. If set to ignore, sp_inside_square is used.
          log_rule("sp_inside_square_oc_array");
          return(options::sp_inside_square_oc_array());
       }
+      // Add or remove space inside a non-empty '[' and ']'.
       log_rule("sp_inside_square");
       return(options::sp_inside_square());
    }
    if (chunk_is_token(first, CT_SQUARE_CLOSE) && chunk_is_token(second, CT_FPAREN_OPEN))
    {
+      // Add or remove space between ']' and '(' when part of a function call.
       log_rule("sp_square_fparen");
       return(options::sp_square_fparen());
    }
@@ -1730,17 +1959,22 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(second, CT_SPAREN_CLOSE)
       && (options::sp_inside_sparen_close() != IARF_IGNORE))
    {
+      // Add or remove space before ')' of control statements.
+      // Overrides sp_inside_sparen.
       log_rule("sp_inside_sparen_close");
       return(options::sp_inside_sparen_close());
    }
    if (  chunk_is_token(first, CT_SPAREN_OPEN)
       && (options::sp_inside_sparen_open() != IARF_IGNORE))
    {
+      // Add or remove space after '(' of control statements.
+      // Overrides sp_inside_sparen.
       log_rule("sp_inside_sparen_open");
       return(options::sp_inside_sparen_open());
    }
    if (chunk_is_token(first, CT_SPAREN_OPEN) || chunk_is_token(second, CT_SPAREN_CLOSE))
    {
+      // Add or remove space inside '(' and ')' of control statements.
       log_rule("sp_inside_sparen");
       return(options::sp_inside_sparen());
    }
@@ -1753,6 +1987,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          if (options::sp_after_oc_colon() != IARF_IGNORE)
          {
+            // (OC) Add or remove space after the colon in message specs,
+            // i.e. '-(int) f:(int) x;' vs. '-(int) f: (int) x;'.
             log_rule("sp_after_oc_colon");
             return(options::sp_after_oc_colon());
          }
@@ -1760,6 +1996,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
       if (options::sp_after_class_colon() != IARF_IGNORE)
       {
+         // Add or remove space after class ':'.
          log_rule("sp_after_class_colon");
          return(options::sp_after_class_colon());
       }
@@ -1774,6 +2011,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          {
             if (options::sp_before_oc_colon() != IARF_IGNORE)
             {
+               // (OC) Add or remove space before the colon in message specs,
+               // i.e. '-(int) f: (int) x;' vs. '-(int) f : (int) x;'.
                log_rule("sp_before_oc_colon");
                return(options::sp_before_oc_colon());
             }
@@ -1782,6 +2021,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
       if (options::sp_before_class_colon() != IARF_IGNORE)
       {
+         // Add or remove space before class ':'.
          log_rule("sp_before_class_colon");
          return(options::sp_before_class_colon());
       }
@@ -1792,12 +2032,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       min_sp = options::indent_ctor_init_leading() - 1; // default indent is 1 space
 
+      // Add or remove space after class constructor ':'.
       log_rule("sp_after_constr_colon");
       return(options::sp_after_constr_colon());
    }
    if (  (options::sp_before_constr_colon() != IARF_IGNORE)
       && chunk_is_token(second, CT_CONSTR_COLON))
    {
+      // Add or remove space before class constructor ':'.
       log_rule("sp_before_constr_colon");
       return(options::sp_before_constr_colon());
    }
@@ -1805,6 +2047,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  (options::sp_before_case_colon() != IARF_IGNORE)
       && chunk_is_token(second, CT_CASE_COLON))
    {
+      // Add or remove space before case ':'.
       log_rule("sp_before_case_colon");
       return(options::sp_before_case_colon());
    }
@@ -1822,6 +2065,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_NULLCOND) || chunk_is_token(second, CT_NULLCOND))
    {
+      // Add or remove space around the '.' or '->' operators.
       log_rule("sp_member");
       return(options::sp_member());
    }
@@ -1831,6 +2075,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       || chunk_is_token(second, CT_ARITH)
       || chunk_is_token(second, CT_CARET))
    {
+      // Add or remove space around arithmetic operators '+' and '-'.
+      // Overrides sp_arith.
       if (options::sp_arith_additive() != IARF_IGNORE)
       {
          auto arith_char = (chunk_is_token(first, CT_ARITH) || chunk_is_token(first, CT_CARET))
@@ -1842,11 +2088,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          }
       }
 
+      // Add or remove space around non-assignment symbolic operators ('+', '/', '%',
+      // '<<', and so forth).
       log_rule("sp_arith");
       return(options::sp_arith());
    }
    if (chunk_is_token(first, CT_BOOL) || chunk_is_token(second, CT_BOOL))
    {
+      // Add or remove space around boolean operators '&&' and '||'.
       iarf_e arg = options::sp_bool();
       if (  (options::pos_bool() != TP_IGNORE)
          && first->orig_line != second->orig_line
@@ -1859,6 +2108,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
    if (chunk_is_token(first, CT_COMPARE) || chunk_is_token(second, CT_COMPARE))
    {
+      // Add or remove space around compare operator '<', '>', '==', etc.
       log_rule("sp_compare");
       return(options::sp_compare());
    }
@@ -1873,6 +2123,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && (options::sp_ptr_star_paren() != IARF_IGNORE)
       && (chunk_is_token(second, CT_FPAREN_OPEN) || chunk_is_token(second, CT_TPAREN_OPEN)))
    {
+      // Add or remove space after a pointer star '*', if followed by an open
+      // parenthesis, as in 'void* (*)().
       log_rule("sp_ptr_star_paren");
       return(options::sp_ptr_star_paren());
    }
@@ -1881,6 +2133,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && chunk_is_token(second, CT_PTR_TYPE)
       && (options::sp_between_ptr_star() != IARF_IGNORE))
    {
+      // Add or remove space between pointer stars '*'.
       log_rule("sp_between_ptr_star");
       return(options::sp_between_ptr_star());
    }
@@ -1891,6 +2144,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          || first->parent_type == CT_FUNC_PROTO
          || first->parent_type == CT_FUNC_VAR))
    {
+      // Add or remove space after a pointer star '*', if followed by a function
+      // prototype or function definition.
       log_rule("sp_after_ptr_star_func");
       return(options::sp_after_ptr_star_func());
    }
@@ -1900,6 +2155,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       chunk_t *prev = chunk_get_prev(first);
       if (chunk_is_token(prev, CT_IN))
       {
+         // Add or remove space after the '*' (dereference) unary operator. This does
+         // not affect the spacing after a '*' that is part of a type.
          log_rule("sp_deref");
          return(options::sp_deref());
       }
@@ -1907,6 +2164,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  (first->parent_type == CT_FUNC_VAR || first->parent_type == CT_FUNC_TYPE)
          && options::sp_after_ptr_block_caret() != IARF_IGNORE)
       {
+         // Add or remove space after pointer caret '^', if followed by a word.
          log_rule("sp_after_ptr_block_caret");
          return(options::sp_after_ptr_block_caret());
       }
@@ -1914,10 +2172,12 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  chunk_is_token(second, CT_QUALIFIER)
          && (options::sp_after_ptr_star_qualifier() != IARF_IGNORE))
       {
+         // Add or remove space after pointer star '*', if followed by a qualifier.
          log_rule("sp_after_ptr_star_qualifier");
          return(options::sp_after_ptr_star_qualifier());
       }
 
+      // Add or remove space after pointer star '*', if followed by a word.
       if (options::sp_after_ptr_star() != IARF_IGNORE)
       {
          log_rule("sp_after_ptr_star");
@@ -1932,6 +2192,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          min_sp = 0;
          return(IARF_REMOVE);
       }
+      // Add or remove space before a pointer star '*', if followed by a function
+      // prototype or function definition.
       if (options::sp_before_ptr_star_func() != IARF_IGNORE)
       {
          // Find the next non-'*' chunk
@@ -1948,6 +2210,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          }
       }
 
+      // Add or remove space before pointer star '*' that isn't followed by a
+      // variable name. If set to 'ignore', sp_before_ptr_star is used instead.
       if (options::sp_before_unnamed_ptr_star() != IARF_IGNORE)
       {
          chunk_t *next = chunk_get_next_nc(second);
@@ -1961,6 +2225,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
             return(options::sp_before_unnamed_ptr_star());
          }
       }
+      // Add or remove space before pointer star '*'.
       if (options::sp_before_ptr_star() != IARF_IGNORE)
       {
          log_rule("sp_before_ptr_star");
@@ -1970,6 +2235,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_OPERATOR))
    {
+      // Add or remove space between 'operator' and operator sign.
       log_rule("sp_after_operator");
       return(options::sp_after_operator());
    }
@@ -1978,9 +2244,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (first->type != CT_PTR_TYPE)
       {
+         // Add or remove space between return type and function name. A minimum of 1
+         // is forced except for pointer return types.
          log_rule("sp_type_func|ADD");
          return(options::sp_type_func() | IARF_ADD);
       }
+      // Add or remove space between return type and function name. A minimum of 1
+      // is forced except for pointer return types.
       log_rule("sp_type_func");
       return(options::sp_type_func());
    }
@@ -1997,6 +2267,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (chunk_is_token(second, CT_ELSE))
       {
+         // Add or remove space between '}' and 'else' if on the same line.
          log_rule("sp_brace_else");
          return(options::sp_brace_else());
       }
@@ -2005,18 +2276,22 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          && chunk_is_token(second, CT_CATCH)
          && (options::sp_oc_brace_catch() != IARF_IGNORE))
       {
+         // (OC) Add or remove space between '}' and '@catch' if on the same line.
+         // If set to ignore, sp_brace_catch is used.
          log_rule("sp_oc_brace_catch");
          return(options::sp_oc_brace_catch());
       }
 
       if (chunk_is_token(second, CT_CATCH))
       {
+         // Add or remove space between '}' and 'catch' if on the same line.
          log_rule("sp_brace_catch");
          return(options::sp_brace_catch());
       }
 
       if (chunk_is_token(second, CT_FINALLY))
       {
+         // Add or remove space between '}' and 'finally' if on the same line.
          log_rule("sp_brace_finally");
          return(options::sp_brace_finally());
       }
@@ -2026,6 +2301,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (first->parent_type == CT_ENUM)
       {
+         // Add or remove space inside enum '{' and '}'.
          log_rule("sp_inside_braces_enum");
          return(options::sp_inside_braces_enum());
       }
@@ -2037,17 +2313,20 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          {
             return(IARF_IGNORE);
          }
+         // Add or remove space inside struct/union '{' and '}'.
          log_rule("sp_inside_braces_struct");
          return(options::sp_inside_braces_struct());
       }
       else if (  first->parent_type == CT_OC_AT
               && options::sp_inside_braces_oc_dict() != IARF_IGNORE)
       {
+         // (OC) Add or remove space inside Objective-C boxed dictionary '{' and '}'
          log_rule("sp_inside_braces_oc_dict");
          return(options::sp_inside_braces_oc_dict());
       }
       if (first->parent_type == CT_BRACED_INIT_LIST)
       {
+         // Add or remove space between nested braces, i.e. '{{' vs '{ {'.
          if (  options::sp_brace_brace() != IARF_IGNORE
             && chunk_is_token(second, CT_BRACE_OPEN)
             && second->parent_type == CT_BRACED_INIT_LIST)
@@ -2057,17 +2336,21 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          }
          if (options::sp_after_type_brace_init_lst_open() != IARF_IGNORE)
          {
+            // Add or remove space after open brace in an unnamed temporary
+            // direct-list-initialization.
             log_rule("sp_after_type_brace_init_lst_open");
             return(options::sp_after_type_brace_init_lst_open());
          }
          if (options::sp_inside_type_brace_init_lst() != IARF_IGNORE)
          {
+            // Add or remove space inside an unnamed temporary direct-list-initialization.
             log_rule("sp_inside_type_brace_init_lst");
             return(options::sp_inside_type_brace_init_lst());
          }
       }
       if (!chunk_is_comment(second))
       {
+         // Add or remove space inside '{' and '}'.
          log_rule("sp_inside_braces");
          return(options::sp_inside_braces());
       }
@@ -2080,12 +2363,15 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          || first->parent_type == CT_STRUCT
          || first->parent_type == CT_UNION))
    {
+      // Add or remove space between '}' and the name of a typedef on the same line.
       log_rule("sp_brace_typedef");
       return(options::sp_brace_typedef());
    }
 
    if (chunk_is_token(second, CT_PAREN_OPEN) && second->parent_type == CT_TEMPLATE)
    {
+      // (D) Add or remove space before the parenthesis in the D constructs
+      // 'template Foo(' and 'class Foo('.
       log_rule("sp_before_template_paren");
       return(options::sp_before_template_paren());
    }
@@ -2096,9 +2382,11 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (auto arg = iarf_flags_t{ options::sp_after_decltype() })
       {
+         // Add or remove space between 'decltype(...)' and word.
          log_rule("sp_after_decltype");
          return(arg);
       }
+      // Add or remove space between type and word.
       log_rule("sp_after_type");
       return(options::sp_after_type());
    }
@@ -2107,12 +2395,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && chunk_is_token(second, CT_QUESTION))
    {
       // Issue #2090
+      // (D) Add or remove space between a type and '?'.
       log_rule("sp_type_question");
       return(options::sp_type_question());
    }
    if (  !chunk_is_token(second, CT_PTR_TYPE)
       && (chunk_is_token(first, CT_QUALIFIER) || chunk_is_token(first, CT_TYPE)))
    {
+      // Add or remove space between type and word.
       iarf_e arg = options::sp_after_type();
       log_rule("sp_after_type");
       return(arg);
@@ -2124,6 +2414,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (chunk_is_token(second, CT_PAREN_OPEN))
       {
+         // Add or remove space between function name and '(' on function calls.
          log_rule("sp_func_call_paren");
          return(options::sp_func_call_paren());
       }
@@ -2140,31 +2431,40 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_NOT))
    {
+      // Add or remove space after the '!' (not) unary operator.
       log_rule("sp_not");
       return(options::sp_not());
    }
    if (chunk_is_token(first, CT_INV))
    {
+      // Add or remove space after the '~' (invert) unary operator.
       log_rule("sp_inv");
       return(options::sp_inv());
    }
    if (chunk_is_token(first, CT_ADDR))
    {
+      // Add or remove space after the '&' (address-of) unary operator. This does not
+      // affect the spacing after a '&' that is part of a type.
       log_rule("sp_addr");
       return(options::sp_addr());
    }
    if (chunk_is_token(first, CT_DEREF))
    {
+      // Add or remove space after the '*' (dereference) unary operator. This does
+      // not affect the spacing after a '*' that is part of a type.
       log_rule("sp_deref");
       return(options::sp_deref());
    }
    if (chunk_is_token(first, CT_POS) || chunk_is_token(first, CT_NEG))
    {
+      // Add or remove space after '+' or '-', as in 'x = -5' or 'y = +7'.
       log_rule("sp_sign");
       return(options::sp_sign());
    }
    if (chunk_is_token(first, CT_INCDEC_BEFORE) || chunk_is_token(second, CT_INCDEC_AFTER))
    {
+      // Add or remove space between '++' and '--' the word to which it is being
+      // applied, as in '(--x)' or 'y++;'.
       log_rule("sp_incdec");
       return(options::sp_incdec());
    }
@@ -2180,16 +2480,22 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
    if (chunk_is_token(first, CT_OC_SCOPE))
    {
+      // (OC) Add or remove space after the scope '+' or '-', as in '-(void) foo;'
+      // or '+(int) bar;'.
       log_rule("sp_after_oc_scope");
       return(options::sp_after_oc_scope());
    }
    if (chunk_is_token(first, CT_OC_DICT_COLON))
    {
+      // (OC) Add or remove space after the colon in immutable dictionary expression
+      // 'NSDictionary *test = @{@"foo" :@"bar"};'.
       log_rule("sp_after_oc_dict_colon");
       return(options::sp_after_oc_dict_colon());
    }
    if (chunk_is_token(second, CT_OC_DICT_COLON))
    {
+      // (OC) Add or remove space before the colon in immutable dictionary expression
+      // 'NSDictionary *test = @{@"foo" :@"bar"};'.
       log_rule("sp_before_oc_dict_colon");
       return(options::sp_before_oc_dict_colon());
    }
@@ -2197,10 +2503,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (first->flags & PCF_IN_OC_MSG)
       {
+         // (OC) Add or remove space after the colon in message specs,
+         // i.e. '[object setValue:1];' vs. '[object setValue: 1];'.
          log_rule("sp_after_send_oc_colon");
          return(options::sp_after_send_oc_colon());
       }
-
+      // (OC) Add or remove space after the colon in message specs,
+      // i.e. '-(int) f:(int) x;' vs. '-(int) f: (int) x;'.
       log_rule("sp_after_oc_colon");
       return(options::sp_after_oc_colon());
    }
@@ -2209,10 +2518,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  (first->flags & PCF_IN_OC_MSG)
          && (chunk_is_token(first, CT_OC_MSG_FUNC) || chunk_is_token(first, CT_OC_MSG_NAME)))
       {
+         // (OC) Add or remove space before the colon in message specs,
+         // i.e. '[object setValue:1];' vs. '[object setValue :1];'.
          log_rule("sp_before_send_oc_colon");
          return(options::sp_before_send_oc_colon());
       }
-
+      // (OC) Add or remove space before the colon in message specs,
+      // i.e. '-(int) f: (int) x;' vs. '-(int) f : (int) x;'.
       log_rule("sp_before_oc_colon");
       return(options::sp_before_oc_colon());
    }
@@ -2232,6 +2544,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_NEW) && chunk_is_token(second, CT_PAREN_OPEN))
    {
       // c# new Constraint, c++ new operator
+      // Add or remove space between 'new' and '(' in 'new()'.
       log_rule("sp_between_new_paren");
       return(options::sp_between_new_paren());
    }
@@ -2239,24 +2552,28 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       || chunk_is_token(first, CT_DELETE)
       || (chunk_is_token(first, CT_TSQUARE) && first->parent_type == CT_DELETE))
    {
+      // Add or remove space after 'new', 'delete' and 'delete[]'.
       log_rule("sp_after_new");
       return(options::sp_after_new());
    }
 
    if (chunk_is_token(first, CT_ANNOTATION) && chunk_is_paren_open(second))
    {
+      // (Java) Add or remove space between an annotation and the open parenthesis.
       log_rule("sp_annotation_paren");
       return(options::sp_annotation_paren());
    }
 
    if (chunk_is_token(first, CT_OC_PROPERTY))
    {
+      // (OC) Add or remove space after '@property'.
       log_rule("sp_after_oc_property");
       return(options::sp_after_oc_property());
    }
 
    if (chunk_is_token(first, CT_EXTERN) && chunk_is_token(second, CT_PAREN_OPEN))
    {
+      // (D) Add or remove space between 'extern' and '(' as in 'extern (C)'.
       log_rule("sp_extern_paren");
       return(options::sp_extern_paren());
    }
@@ -2283,6 +2600,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_NOEXCEPT))
    {
+      // Add or remove space after 'noexcept'.
       log_rule("sp_after_noexcept");
       return(options::sp_after_noexcept());
    }
@@ -2292,11 +2610,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (chunk_is_token(second, CT_QUALIFIER))
       {
+         // Add or remove space between ')' and a qualifier such as 'const'.
          log_rule("sp_paren_qualifier");
          return(options::sp_paren_qualifier());
       }
       else if (chunk_is_token(second, CT_NOEXCEPT))
       {
+         // Add or remove space between ')' and 'noexcept'.
          log_rule("sp_paren_noexcept");
          return(options::sp_paren_noexcept());
       }
@@ -2378,15 +2698,16 @@ void space_text(void)
       if (  (options::use_options_overriding_for_qt_macros())
          && (  (strcmp(pc->text(), "SIGNAL") == 0)
             || (strcmp(pc->text(), "SLOT") == 0)))
-      {  // guy 2015-09-22
+      {
          LOG_FMT(LSPACE, "%s(%d): orig_col is %zu, type is %s SIGNAL/SLOT found\n",
                  __func__, __LINE__, pc->orig_line, get_token_name(pc->type));
          chunk_flags_set(pc, PCF_IN_QT_MACRO); // flag the chunk for a second processing
 
          // save the values
          save_set_options_for_QT(pc->level);
-      } // guy
-        // Bug # 637
+      }
+      // Bug # 637
+      // If true, vbrace tokens are dropped to the previous token and skipped.
       if (options::sp_skip_vbrace_tokens())
       {
          next = chunk_get_next(pc);
@@ -2410,6 +2731,7 @@ void space_text(void)
          break;
       }
       // Issue # 481
+      // Whether to balance spaces inside nested parentheses.
       if ((QT_SIGNAL_SLOT_found) && (options::sp_balance_nested_parens()))
       {
          if (next->next != nullptr && next->next->type == CT_SPACE)
@@ -2498,6 +2820,8 @@ void space_text(void)
                       * C++11 allows '>>' to mean '> >' in templates:
                       *   some_func<vector<string>>();
                       */
+                     // (C++11) Permit removal of the space between '>>' in 'foo<bar<int> >'. Note
+                     // that sp_angle_shift cannot remove the space without this option.
                      if (  (  (  language_is_set(LANG_CPP)
                               && options::sp_permit_cpp11_shift())
                            || (language_is_set(LANG_JAVA | LANG_CS | LANG_VALA)))
