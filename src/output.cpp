@@ -529,6 +529,7 @@ void output_text(FILE *pfile)
          // FIXME: this really shouldn't be done here!
          if ((pc->flags & PCF_WAS_ALIGNED) == 0)
          {
+            // Add or remove space before a backslash-newline at the end of a line.
             if (options::sp_before_nl_cont() & IARF_REMOVE)
             {
                pc->column = cpd.column + (options::sp_before_nl_cont() == IARF_FORCE);
@@ -573,6 +574,7 @@ void output_text(FILE *pfile)
                         exit(EX_SOFTWARE);
                      }
                      pc->column = cpd.column + orig_sp;
+                     // Add or remove space before a backslash-newline at the end of a line.
                      if (  (options::sp_before_nl_cont() != IARF_IGNORE)
                         && (pc->column < (cpd.column + 1)))
                      {
@@ -997,6 +999,7 @@ static void add_comment_text(const unc_text &text,
          }
 
          add_text(cmt.cont_text);
+         // The number of spaces to insert after the star on subsequent comment lines.
          output_to_column(cmt.column + options::cmt_sp_after_star_cont(),
                           false);
          ch_cnt = 0;
@@ -1176,6 +1179,8 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    cmt.reflow = (options::cmt_reflow_mode() != 1);
 
    unc_text leadin = "//";             // default setting to keep previous behaviour
+   // If true, space is added with sp_cmt_cpp_start will be added after doxygen
+   // sequences like '///', '///<', '//!' and '//!<'.
    if (options::sp_cmt_cpp_doxygen())  // special treatment for doxygen style comments (treat as unity)
    {
       const char *sComment = first->text();
@@ -1203,6 +1208,8 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    }
 
    // Special treatment for Qt translator or meta-data comments (treat as unity)
+   // If true, space is added with sp_cmt_cpp_start will be added after Qt
+   // translator or meta-data comments like '//:', '//=', and '//~'.
    if (options::sp_cmt_cpp_qttr())
    {
       const int c = first->str[2];
@@ -1219,12 +1226,16 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    if (!options::cmt_cpp_to_c())
    {
       cmt.cont_text = leadin;
+      // Add or remove space after the opening of a C++ comment,
+      // i.e. '// A' vs. '//A'.
       if (options::sp_cmt_cpp_start() != IARF_REMOVE)
       {
          cmt.cont_text += ' ';
       }
       LOG_CONTTEXT();
 
+      // Add or remove space after the opening of a C++ comment,
+      // i.e. '// A' vs. '//A'.
       if (options::sp_cmt_cpp_start() == IARF_IGNORE)
       {
          add_comment_text(first->str, cmt, false);
@@ -1237,6 +1248,8 @@ static chunk_t *output_comment_cpp(chunk_t *first)
 
          tmp.set(first->str, iLISz, first->len() - iLISz);
 
+         // Add or remove space after the opening of a C++ comment,
+         // i.e. '// A' vs. '//A'.
          if (options::sp_cmt_cpp_start() & IARF_REMOVE)
          {
             while ((tmp.size() > 0) && unc_isspace(tmp[0]))
@@ -1246,6 +1259,8 @@ static chunk_t *output_comment_cpp(chunk_t *first)
          }
          if (tmp.size() > 0)
          {
+            // Add or remove space after the opening of a C++ comment,
+            // i.e. '// A' vs. '//A'.
             if (options::sp_cmt_cpp_start() & IARF_ADD)
             {
                if (!unc_isspace(tmp[0]) && (tmp[0] != '/'))
@@ -1271,6 +1286,8 @@ static chunk_t *output_comment_cpp(chunk_t *first)
       // nothing to group: just output a single line
       add_text("/*");
       // patch # 32, 2012-03-23
+      // Add or remove space after the opening of a C++ comment,
+      // i.e. '// A' vs. '//A'.
       if (  !unc_isspace(first->str[2])
          && (options::sp_cmt_cpp_start() & IARF_ADD))
       {
@@ -1561,6 +1578,7 @@ static void output_comment_multi(chunk_t *pc)
                // Empty line - just a '\n'
                if (options::cmt_star_cont())
                {
+                  // The number of spaces to insert at the start of subsequent comment lines.
                   cmt.column = cmt_col + options::cmt_sp_before_star_cont();
                   cmt_output_indent(cmt.brace_col, cmt.base_col, cmt.column);
                   if (cmt.xtra_indent > 0)
@@ -1588,6 +1606,7 @@ static void output_comment_multi(chunk_t *pc)
                   && (line[0] != '\\' || unc_isalpha(line[1]))
                   && line[0] != '+')
                {
+                  // The number of spaces to insert at the start of subsequent comment lines.
                   size_t start_col = cmt_col + options::cmt_sp_before_star_cont();
 
                   if (options::cmt_star_cont())
@@ -1599,6 +1618,7 @@ static void output_comment_multi(chunk_t *pc)
                         add_char(' ');
                      }
                      add_text(cmt.cont_text);
+                     // The number of spaces to insert after the star on subsequent comment lines.
                      output_to_column(ccol + options::cmt_sp_after_star_cont(),
                                       false);
                   }
@@ -1610,6 +1630,7 @@ static void output_comment_multi(chunk_t *pc)
                }
                else
                {
+                  // The number of spaces to insert at the start of subsequent comment lines.
                   cmt.column = cmt_col + options::cmt_sp_before_star_cont();
                   cmt_output_indent(cmt.brace_col, cmt.base_col, cmt.column);
                   if (cmt.xtra_indent > 0)
