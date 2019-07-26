@@ -16,7 +16,7 @@
 #include "uncrustify_types.h"
 
 
-void prot_the_line(int theLine, unsigned int actual_line, size_t partNumber);
+void prot_the_line(const char *func_name, int theLine, unsigned int actual_line, size_t partNumber);
 
 
 void prot_the_source(int theLine);

@@ -219,6 +219,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
  */
 static void newlines_struct_union(chunk_t *start, iarf_e nl_opt, bool leave_trailing);
 static void newlines_enum(chunk_t *start);
+static void newlines_namespace(chunk_t *start); // Issue #2186
 
 
 /**
@@ -675,14 +676,41 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
          pc = chunk_get_next(pc);
          if (chunk_is_newline(pc))
          {
+            // are there some more (comment + newline)s ?
+            chunk_t *pc1 = chunk_get_next_ncnl(end);
+            if (!chunk_is_newline(pc1))
+            {
+               // yes, go back
+               chunk_t *pc2 = chunk_get_prev(pc1);
+               pc = pc2;
+            }
+         }
+         if (end == pc)
+         {
+            LOG_FMT(LNEWLINE, "%s(%d): pc1 and pc are identical\n",
+                    __func__, __LINE__);
+         }
+         else
+         {
             // Move the open brace to after the newline
             chunk_move_after(end, pc);
-            return(pc);
          }
+         LOG_FMT(LNEWLINE, "%s(%d):\n", __func__, __LINE__);
+         newline_add_after(end);
+         return(pc);
+      }
+      else
+      {
+         LOG_FMT(LNEWLINE, "%s(%d):\n", __func__, __LINE__);
       }
    }
+   else
+   {
+      LOG_FMT(LNEWLINE, "%s(%d):\n", __func__, __LINE__);
+   }
 
-   return(newline_add_before(end));
+   chunk_t *tmp = newline_add_before(end);
+   return(tmp);
 } // newline_add_between
 
 
@@ -1511,6 +1539,40 @@ static void newlines_enum(chunk_t *start)
       newline_iarf_pair(start, pc, nl_opt);
    }
 } // newlines_enum
+
+
+// namespace {
+// namespace word {
+// namespace type::word {
+static void newlines_namespace(chunk_t *start)
+{
+   LOG_FUNC_ENTRY();
+   iarf_e nl_opt = options::nl_namespace_brace();
+   // Add or remove newline between 'namespace' and '{'.
+
+   if (  nl_opt == IARF_IGNORE
+      || (  (start->flags & PCF_IN_PREPROC)
+         && !options::nl_define_macro()))
+   {
+      return;
+   }
+   chunk_t *braceOpen = chunk_get_next_type(start, CT_BRACE_OPEN, start->level);
+   LOG_FMT(LNEWLINE, "%s(%d): braceOpen->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+           __func__, __LINE__, braceOpen->orig_line, braceOpen->orig_col, braceOpen->text());
+   log_pcf_flags(LNEWLINE, braceOpen->flags);
+   if ((braceOpen->flags & PCF_ONE_LINER) != 0)
+   {
+      LOG_FMT(LNEWLINE, "%s(%d): is one_liner\n",
+              __func__, __LINE__);
+      return;
+   }
+
+   chunk_t *beforeBrace = chunk_get_prev(braceOpen);
+   LOG_FMT(LNEWLINE, "%s(%d): beforeBrace->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+           __func__, __LINE__, beforeBrace->orig_line, beforeBrace->orig_col, beforeBrace->text());
+   // namespace {
+   newline_iarf_pair(beforeBrace, braceOpen, nl_opt);
+} // newlines_namespace
 
 
 static void newlines_cuddle_uncuddle(chunk_t *start, iarf_e nl_opt)
@@ -2901,6 +2963,8 @@ void newlines_cleanup_braces(bool first)
    chunk_t *tmp;
    for ( ; pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
+      LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
       if (chunk_is_token(pc, CT_IF))
       {
          newlines_if_for_while_switch(pc, options::nl_if_brace());
@@ -3091,7 +3155,7 @@ void newlines_cleanup_braces(bool first)
                // look back if we have a @interface or a @implementation
                for (tmp = chunk_get_prev(pc); tmp != nullptr; tmp = chunk_get_prev(tmp))
                {
-                  LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, token '%s'\n",
+                  LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
                           __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->text());
                   if (  chunk_is_token(tmp, CT_OC_INTF)
                      || chunk_is_token(tmp, CT_OC_IMPL))
@@ -3596,19 +3660,12 @@ void newlines_cleanup_braces(bool first)
       else if (chunk_is_token(pc, CT_NAMESPACE))
       {
          // Issue #1235
-         if (  chunk_is_token(pc->next, CT_TYPE)
-            && chunk_is_token(pc->next->next, CT_DC_MEMBER)
-            && chunk_is_token(pc->next->next->next, CT_WORD))
-         {
-            // Issue #2186
-            // namespace ui::dlg
-            //         TYPE MEMBER WORD
-            LOG_FMT(LNEWLINE, "%s(%d): AAAA\n", __func__, __LINE__);
-         }
-         else if ((pc->next->next->flags & PCF_ONE_LINER) == 0)
-         {
-            newlines_struct_union(pc, options::nl_namespace_brace(), false);
-         }
+         // Issue #2186
+         chunk_t *braceOpen = chunk_get_next_type(pc, CT_BRACE_OPEN, pc->level);
+         LOG_FMT(LNEWLINE, "%s(%d): braceOpen->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+                 __func__, __LINE__, braceOpen->orig_line, braceOpen->orig_col, braceOpen->text());
+         log_pcf_flags(LNEWLINE, braceOpen->flags);
+         newlines_namespace(pc);
       }
       else if (chunk_is_token(pc, CT_SQUARE_OPEN))
       {

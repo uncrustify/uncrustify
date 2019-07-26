@@ -572,6 +572,7 @@ void indent_text(void)
 
    chunk_t    *pc        = chunk_get_head();
    bool       classFound = false; // Issue #672
+
    while (pc != nullptr)
    {
       //  forces string literal to column-1 [Fix for 1246]
@@ -1189,7 +1190,7 @@ void indent_text(void)
          && log_sev_on(LINDPC))
       {
          LOG_FMT(LINDPC, "%s(%d):\n", __func__, __LINE__);
-         LOG_FMT(LINDPC, " -=[ pc->orig_line is %zu, orig_col is %zu %s ]=-, frm.size() is %zu\n",
+         LOG_FMT(LINDPC, "   -=[ pc->orig_line is %zu, orig_col is %zu %s ]=-, frm.size() is %zu\n",
                  pc->orig_line, pc->orig_col, pc->text(), frm.size());
          for (size_t ttidx = frm.size() - 1; ttidx > 0; ttidx--)
          {
@@ -1209,7 +1210,8 @@ void indent_text(void)
                     frm.at(ttidx).pc->brace_level);
          }
       }
-      LOG_FMT(LINDLINE, "%s(%d):\n", __func__, __LINE__);
+      LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
 
       // Issue #672
       if (  chunk_is_token(pc, CT_BRACE_OPEN)
@@ -1369,6 +1371,8 @@ void indent_text(void)
       else if (  chunk_is_token(pc, CT_BRACE_OPEN)
               && (pc->next != nullptr && pc->next->type != CT_NAMESPACE))
       {
+         LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
          frm.push(*pc);
 
          if (  options::indent_cpp_lambda_body()
