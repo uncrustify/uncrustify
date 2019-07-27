@@ -3657,7 +3657,8 @@ void newlines_cleanup_braces(bool first)
             }
          }
       }
-      else if (chunk_is_token(pc, CT_NAMESPACE))
+      else if (  chunk_is_token(pc, CT_NAMESPACE)
+              && pc->parent_type != CT_USING)
       {
          // Issue #1235
          // Issue #2186
