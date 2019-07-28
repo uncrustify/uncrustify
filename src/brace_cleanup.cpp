@@ -1125,10 +1125,15 @@ static void mark_namespace(chunk_t *pns)
          && ((br_close = chunk_skip_to_match(pc)) != nullptr))
       {
          // br_close->orig_line is always >= pc->orig_line;
-         size_t diff = br_close->orig_line - pc->orig_line;
+         size_t numberOfLines = br_close->orig_line - pc->orig_line - 1;                 // Issue #2345
+         LOG_FMT(LTOK, "%s(%d): br_close->orig_line is %zu, pc->orig_line is %zu\n",
+                 __func__, __LINE__, br_close->orig_line, pc->orig_line);
+         LOG_FMT(LTOK, "%s(%d): numberOfLines is %zu, indent_namespace_limit() is %d\n",
+                 __func__, __LINE__, numberOfLines, options::indent_namespace_limit());
 
-         if (diff > options::indent_namespace_limit())
+         if (numberOfLines > options::indent_namespace_limit())
          {
+            LOG_FMT(LTOK, "%s(%d): PCF_LONG_BLOCK is set\n", __func__, __LINE__);
             chunk_flags_set(pc, PCF_LONG_BLOCK);
             chunk_flags_set(br_close, PCF_LONG_BLOCK);
          }
