@@ -190,7 +190,7 @@ chunk_t *chunk_get_next_nc(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
- * Gets the next non-NEWLINE and non-comment chunk
+ * Gets the next non-NEWLINE
  *
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
