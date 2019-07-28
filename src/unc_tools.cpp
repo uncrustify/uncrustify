@@ -33,17 +33,17 @@ static size_t tokenCounter;
 
 // protocol of the line
 // examples:
-//   prot_the_line(__LINE__, pc->orig_line);
-//   prot_the_line(__LINE__, 6, 5);
+//   prot_the_line(__func__, __LINE__, pc->orig_line);
+//   prot_the_line(__func__, __LINE__, 6, 5);
 //   prot_the_source(__LINE__);
 // log_pcf_flags(LSYS, pc->flags);
 // if partNumber is zero, all the tokens of the line are shown,
 // if partNumber is NOT zero, only the token with this partNumber is shown.
-void prot_the_line(int theLine, unsigned int actual_line, size_t partNumber)
+void prot_the_line(const char *func_name, int theLine, unsigned int actual_line, size_t partNumber)
 {
    counter++;
    tokenCounter = 0;
-   LOG_FMT(LGUY, "Prot_the_line:(%d)(%zu)\n", theLine, counter);
+   LOG_FMT(LGUY, "Prot_the_line:(%s:%d)(%zu)\n", func_name, theLine, counter);
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = pc->next)
    {
       if (pc->orig_line == actual_line)
