@@ -238,6 +238,7 @@
 30756  bug_1296.cfg                         cpp/bug_1296.cpp
 30761  out-668-F.cfg                        cpp/out-668.cpp
 30762  out-668-T.cfg                        cpp/out-668.cpp
+30763  Issue_2166.cfg                       cpp/Issue_2166.cpp
 
 30800  star_pos-0.cfg                       cpp/align-star-amp-pos.cpp
 30801  star_pos-1.cfg                       cpp/align-star-amp-pos.cpp

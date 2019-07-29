@@ -509,7 +509,8 @@ void make_type(chunk_t *pc)
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
-      else if (chunk_is_addr(pc))
+      else if (  chunk_is_addr(pc)
+              && !chunk_is_token(pc->prev, CT_SQUARE_OPEN))            // Issue # 2166
       {
          set_chunk_type(pc, CT_BYREF);
       }
