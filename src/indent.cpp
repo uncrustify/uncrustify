@@ -286,11 +286,10 @@ void align_to_column(chunk_t *pc, size_t column)
 void reindent_line(chunk_t *pc, size_t column)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, on '%s' [%s/%s] => %zu",
+   LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, on '%s' [%s/%s] => %zu\n",
            __func__, __LINE__, pc->orig_line, pc->column, pc->text(),
            get_token_name(pc->type), get_token_name(pc->parent_type),
            column);
-   LOG_FMT(LINDLINE, "\n");
    log_func_stack_inline(LINDLINE);
 
    if (column == pc->column)
@@ -3034,19 +3033,32 @@ void indent_text(void)
                   }
                }
             }
+            LOG_FMT(LINDENT, "%s(%d): pc->line is %zu, pc->column is %zu, pc->text() is '%s, indent_column is %zu\n",
+                    __func__, __LINE__, pc->orig_line, pc->column, pc->text(), indent_column);
             if (pc->column != indent_column)
             {
                if (use_indent && pc->type != CT_PP_IGNORE) // Leave indentation alone for PP_IGNORE tokens
                {
-                  LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, indent set to %zu, for '%s'\n",
-                          __func__, __LINE__, pc->orig_line, indent_column, pc->text());
-                  reindent_line(pc, indent_column);
+                  if (  (  chunk_is_token(pc, CT_QUESTION)      // Issue #2101
+                        || chunk_is_token(pc, CT_COND_COLON))   // Issue #2101
+                     && options::pos_conditional() == TP_IGNORE)
+                  {
+                     // do not indent this line
+                     LOG_FMT(LINDENT, "%s(%d): %zu] don't indent this line\n",
+                             __func__, __LINE__, pc->orig_line);
+                  }
+                  else
+                  {
+                     LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, indent set to %zu, for '%s'\n",
+                             __func__, __LINE__, pc->orig_line, indent_column, pc->text());
+                     reindent_line(pc, indent_column);
+                  }
                }
                else
                {
                   // do not indent this line
-                  LOG_FMT(LINDENT, "%s(%d): %zu] don't indent this line [%d]\n",
-                          __func__, __LINE__, pc->orig_line, __LINE__);
+                  LOG_FMT(LINDENT, "%s(%d): %zu] don't indent this line\n",
+                          __func__, __LINE__, pc->orig_line);
                }
             }
          }

@@ -16,8 +16,8 @@ o.Func2(a, b,
 
 
 AnimatorStateMachine rootStateMachine = syncedIndex == -1
-    ? animatorController.layers[selectedLayerIndex].stateMachine
-    : animatorController.layers[syncedIndex].stateMachine;
+                                                        ? animatorController.layers[selectedLayerIndex].stateMachine
+                                                        : animatorController.layers[syncedIndex].stateMachine;
 
 
 m_ActiveStateMachine = AnimatorControllerTool.tool ? m_Type == TransitionType.eAnyState ?
