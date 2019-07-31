@@ -196,7 +196,7 @@ added, removed or altered. Keep in mind that the version string line
 
 ### Debugging
 
-The first method is to use uncrutify itself to get debug informations.
+The first method is to use uncrustify itself to get debug informations.
 Using:
 ```.txt
    uncrustify -c myExample.cfg -f myExample.cpp -p myExample.p -L A 2>myExample.A
@@ -233,6 +233,46 @@ Add at some places the line:
 prot_the_line(__LINE__, 6, 0);
 ```
 Compile again with DEBUG option.
+
+
+
+### How to add an option
+
+If you need a new option, there are a few steps to follow.
+Take as example the option `sp_trailing_ret_t`
+
+First define the option:
+- Insert the code below to the file src/options.h
+_NOTE:
+This file is processed by make_options.py, and must conform to a particular
+format. Option groups are marked by '//begin ' (in upper case; this example
+is lower case to prevent being considered a region marker for code folding)
+followed by the group description. Options consist of two lines of
+declaration preceded by one or more lines of C++ comments. The comments form
+the option description and are taken verbatim, aside from stripping the
+leading '// '. Only comments immediately preceding an option declaration,
+with no blank lines, are taken as part of the description, so a blank line
+may be used to separate notations from a description.
+An option declaration is 'extern TYPE\nNAME;', optionally followed by
+' // = VALUE' if the option has a default value that is different from the
+default-constructed value type of the option. The 'VALUE' must be valid C++
+code, and is taken verbatim as an argument when creating the option's
+instantiation. Note also that the line break, as shown, is required.
+_
+```.cpp
+// Add or remove space around trailing return operator '->'.
+extern Option<iarf_e>
+sp_trailing_ret_t;
+```
+- Insert the code below to the file src/space.cpp
+```.cpp
+   if (chunk_is_token(first, CT_TRAILING_RET_T))
+   {
+      // Add or remove space around trailing return operator '->'.
+      log_rule("sp_trailing_ret_t");
+      return(options::sp_trailing_ret_t());
+   }
+```
 
 
 ### Portability
