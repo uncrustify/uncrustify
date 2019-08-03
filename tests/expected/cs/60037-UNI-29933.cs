@@ -20,8 +20,8 @@ void Foo1()
             break;
         case 5:
             foo.bar = Bar.BarFunc(x, (x == y)
-                ? foo.x
-                : foo.y);
+            ? foo.x
+            : foo.y);
             break;
     }
 }

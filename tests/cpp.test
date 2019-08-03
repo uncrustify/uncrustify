@@ -696,19 +696,20 @@
 34304  nl_fdef_brace_cond-rf.cfg            cpp/nl_fdef_brace_cond-rf.cpp
 34305  issue_2124-1.cfg                     cpp/issue_2124-1.cpp
 34306  issue_2124-2.cfg                     cpp/issue_2124-2.cpp
-34307 2203.cfg                              cpp/2203.cpp
-34308 enum_comment_wrap.cfg                 cpp/enum_comment_wrap.cpp
-34309 issue_2209.cfg                        cpp/issue_2209-1.cpp
-34310 issue_2209.cfg                        cpp/issue_2209-2.cpp
-34311 Issue_2250.cfg                        cpp/Issue_2250.cpp
+34307  2203.cfg                             cpp/2203.cpp
+34308  enum_comment_wrap.cfg                cpp/enum_comment_wrap.cpp
+34309  issue_2209.cfg                       cpp/issue_2209-1.cpp
+34310  issue_2209.cfg                       cpp/issue_2209-2.cpp
+34311  Issue_2250.cfg                       cpp/Issue_2250.cpp
+34312  Issue_2101.cfg                       cpp/Issue_2101.cpp
 
-34315 align_func_proto_thresh_1.cfg         cpp/align_func_proto_thresh.cpp
-34316 align_func_proto_thresh_2.cfg         cpp/align_func_proto_thresh.cpp
-34317 align_func_proto_thresh_3.cfg         cpp/align_func_proto_thresh.cpp
-34318 align_assign_func_proto_1.cfg         cpp/align_assign_func_proto.cpp
-34319 align_func_proto_thresh_4.cfg         cpp/align_func_proto_thresh2.cpp
-34320 align_func_proto_thresh_5.cfg         cpp/align_func_proto_thresh2.cpp
-34321 bug_2285.cfg                          cpp/bug_2285.cpp
+34315  align_func_proto_thresh_1.cfg        cpp/align_func_proto_thresh.cpp
+34316  align_func_proto_thresh_2.cfg        cpp/align_func_proto_thresh.cpp
+34317  align_func_proto_thresh_3.cfg        cpp/align_func_proto_thresh.cpp
+34318  align_assign_func_proto_1.cfg        cpp/align_assign_func_proto.cpp
+34319  align_func_proto_thresh_4.cfg        cpp/align_func_proto_thresh2.cpp
+34320  align_func_proto_thresh_5.cfg        cpp/align_func_proto_thresh2.cpp
+34321  bug_2285.cfg                         cpp/bug_2285.cpp
 
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp

@@ -1,10 +1,36 @@
+indent_text : pc->line is 1, pc->column is 1, pc->text() is 'struct, indent_column is 1
+indent_text : pc->line is 2, pc->column is 1, pc->text() is '{, indent_column is 1
+indent_text : pc->line is 3, pc->column is 1, pc->text() is 'TelegramIndex, indent_column is 9
 indent_text : orig_line is 3, indent set to 9, for 'TelegramIndex'
+indent_text : pc->line is 4, pc->column is 1, pc->text() is 'pTelName, indent_column is 17
 indent_text : orig_line is 4, indent set to 17, for 'pTelName'
+indent_text : pc->line is 5, pc->column is 1, pc->text() is 'nTelIndex, indent_column is 17
 indent_text : orig_line is 5, indent set to 17, for 'nTelIndex'
+indent_text : pc->line is 6, pc->column is 1, pc->text() is '{, indent_column is 9
 indent_text : orig_line is 6, indent set to 9, for '{'
+indent_text : pc->line is 7, pc->column is 1, pc->text() is '}, indent_column is 9
 indent_text : orig_line is 7, indent set to 9, for '}'
+indent_text : pc->line is 9, pc->column is 1, pc->text() is '~, indent_column is 9
 indent_text : orig_line is 9, indent set to 9, for '~'
+indent_text : pc->line is 10, pc->column is 1, pc->text() is '{, indent_column is 9
 indent_text : orig_line is 10, indent set to 9, for '{'
+indent_text : pc->line is 11, pc->column is 1, pc->text() is '}, indent_column is 9
 indent_text : orig_line is 11, indent set to 9, for '}'
+indent_text : pc->line is 13, pc->column is 1, pc->text() is 'const, indent_column is 9
 indent_text : orig_line is 13, indent set to 9, for 'const'
+indent_text : pc->line is 14, pc->column is 1, pc->text() is 'unsigned, indent_column is 9
 indent_text : orig_line is 14, indent set to 9, for 'unsigned'
+indent_text : pc->line is 15, pc->column is 1, pc->text() is '}, indent_column is 1
+indent_text : pc->line is 1, pc->column is 1, pc->text() is 'struct, indent_column is 1
+indent_text : pc->line is 2, pc->column is 1, pc->text() is '{, indent_column is 1
+indent_text : pc->line is 3, pc->column is 9, pc->text() is 'TelegramIndex, indent_column is 9
+indent_text : pc->line is 4, pc->column is 17, pc->text() is 'pTelName, indent_column is 17
+indent_text : pc->line is 5, pc->column is 17, pc->text() is 'nTelIndex, indent_column is 17
+indent_text : pc->line is 6, pc->column is 9, pc->text() is '{, indent_column is 9
+indent_text : pc->line is 7, pc->column is 9, pc->text() is '}, indent_column is 9
+indent_text : pc->line is 9, pc->column is 9, pc->text() is '~, indent_column is 9
+indent_text : pc->line is 10, pc->column is 9, pc->text() is '{, indent_column is 9
+indent_text : pc->line is 11, pc->column is 9, pc->text() is '}, indent_column is 9
+indent_text : pc->line is 13, pc->column is 9, pc->text() is 'const, indent_column is 9
+indent_text : pc->line is 14, pc->column is 9, pc->text() is 'unsigned, indent_column is 9
+indent_text : pc->line is 15, pc->column is 1, pc->text() is '}, indent_column is 1
