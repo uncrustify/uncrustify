@@ -1913,6 +1913,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
 
          annotations_newlines();
          newlines_cleanup_dup();
+         newlines_sparens();
          newlines_cleanup_braces(first);
          if (options::nl_after_multiline_comment())
          {

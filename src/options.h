@@ -1776,6 +1776,16 @@ nl_synchronized_brace;
 extern Option<bool>
 nl_multi_line_cond;
 
+// Add a newline after '(' if the '(', ')' are on different lines after
+// if/for/etc.
+extern Option<bool>
+nl_multi_line_sparen_open;
+
+// Add a newline before ')' if the '(', ')' are on different lines after
+// if/for/etc. Overrides nl_before_if_closing_paren.
+extern Option<bool>
+nl_multi_line_sparen_close;
+
 // Force a newline in a define after the macro name for multi-line defines.
 extern Option<bool>
 nl_multi_line_define;

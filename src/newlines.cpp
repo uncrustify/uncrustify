@@ -782,6 +782,47 @@ void newline_del_between(chunk_t *start, chunk_t *end)
 } // newline_del_between
 
 
+void newlines_sparens()
+{
+   LOG_FUNC_ENTRY();
+
+   // Get the first token that's not an empty line:
+   chunk_t *open_paren;
+
+   for (open_paren = chunk_get_next_type(chunk_get_head(), CT_SPAREN_OPEN, ANY_LEVEL);
+        open_paren != nullptr;
+        open_paren = chunk_get_next_type(open_paren, CT_SPAREN_OPEN, ANY_LEVEL))
+   {
+      chunk_t *close_paren = chunk_get_next_type(open_paren, CT_SPAREN_CLOSE, open_paren->level);
+      if (!close_paren)
+      {
+         continue;
+      }
+
+      if (
+         options::nl_multi_line_sparen_close()
+         && !are_chunks_in_same_line(open_paren, close_paren))
+      {
+         newline_add_before(close_paren);
+      }
+      else
+      {
+         chunk_t *ctrl_structure     = chunk_get_prev_ncnl(open_paren);
+         chunk_t *before_close_paren = chunk_get_prev(close_paren);
+         if (ctrl_structure->type == CT_IF || ctrl_structure->type == CT_ELSEIF)
+         {
+            newline_iarf_pair(before_close_paren, close_paren, options::nl_before_if_closing_paren());
+         }
+      }
+
+      if (options::nl_multi_line_sparen_open() && !are_chunks_in_same_line(open_paren, close_paren))
+      {
+         newline_add_after(open_paren);
+      }
+   }
+} // newlines_sparens
+
+
 static bool newlines_if_for_while_switch(chunk_t *start, iarf_e nl_opt)
 {
    LOG_FUNC_ENTRY();
@@ -2968,32 +3009,12 @@ void newlines_cleanup_braces(bool first)
       if (chunk_is_token(pc, CT_IF))
       {
          newlines_if_for_while_switch(pc, options::nl_if_brace());
-         tmp = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level);
-         if (tmp != nullptr)
-         {
-            prev = chunk_get_prev(tmp);
-            if (prev != nullptr)
-            {
-               // Issue #1139
-               newline_iarf_pair(prev, tmp, options::nl_before_if_closing_paren());
-            }
-         }
       }
       else if (chunk_is_token(pc, CT_ELSEIF))
       {
          iarf_e arg = options::nl_elseif_brace();
          newlines_if_for_while_switch(
             pc, (arg != IARF_IGNORE) ? arg : options::nl_if_brace());
-         tmp = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level);
-         if (tmp != nullptr)
-         {
-            prev = chunk_get_prev(tmp);
-            if (prev != nullptr)
-            {
-               // Issue #1139
-               newline_iarf_pair(prev, tmp, options::nl_before_if_closing_paren());
-            }
-         }
       }
       else if (chunk_is_token(pc, CT_FOR))
       {

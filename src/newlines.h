@@ -19,6 +19,9 @@
  */
 void newlines_remove_newlines(void);
 
+/** Step through all chunks, altering newlines inside parens of
+ * if/for/while/do as needed */
+void newlines_sparens();
 
 //! Step through all chunks.
 void newlines_cleanup_braces(bool first);
