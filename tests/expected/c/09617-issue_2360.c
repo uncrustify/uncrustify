@@ -12,7 +12,7 @@ int main() {
 	// long condition, no newlines
 	if (
 		some_very_very_very_very_very_very_very_very_long_function() &&
-		some_very_very_very_very_very_very_very_very_long_function
+		some_very_very_very_very_very_very_very_very_long_function()
 		) {}
 
 	// long condition, newlines
@@ -29,16 +29,16 @@ int main() {
 	case default: break;
 	}
 
-	// while condition, no newlines
+	// while condition, line comments
 	while (
-		some_very_very_very_very_very_very_very_very_long_function() ||
-		some_very_very_very_very_very_very_very_very_long_function()
+		// comment 1
+		short_function()
+		// comment 2
 		) {}
 
-	// for condition, no newlines
+	// for condition, inline comments
 	for (
-		some_very_very_very_very_very_very_very_very_long_function();
-		some_very_very_very_very_very_very_very_very_long_function();
-		some_very_very_very_very_very_very_very_very_long_function()
+		/* a */ int i=0; some_very_very_very_very_very_very_very_very_long_function()
+		&& some_very_very_very_very_very_very_very_very_long_function() && i < 10; i++ // trailing comment
 		) {}
 }

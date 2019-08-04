@@ -786,38 +786,38 @@ void newlines_sparens()
 {
    LOG_FUNC_ENTRY();
 
-   // Get the first token that's not an empty line:
-   chunk_t *open_paren;
-
-   for (open_paren = chunk_get_next_type(chunk_get_head(), CT_SPAREN_OPEN, ANY_LEVEL);
-        open_paren != nullptr;
-        open_paren = chunk_get_next_type(open_paren, CT_SPAREN_OPEN, ANY_LEVEL))
+   chunk_t *sparen_open;
+   for (sparen_open = chunk_get_next_type(chunk_get_head(), CT_SPAREN_OPEN, ANY_LEVEL);
+        sparen_open != nullptr; sparen_open = chunk_get_next_type(
+           sparen_open, CT_SPAREN_OPEN, ANY_LEVEL))
    {
-      chunk_t *close_paren = chunk_get_next_type(open_paren, CT_SPAREN_CLOSE, open_paren->level);
-      if (!close_paren)
+      chunk_t *sparen_close = chunk_get_next_type(sparen_open, CT_SPAREN_CLOSE, sparen_open->level);
+      if (!sparen_close)
       {
          continue;
       }
+      chunk_t *sparen_content_start = chunk_get_next_nnl(sparen_open);
+      chunk_t *sparen_content_end   = chunk_get_prev_nnl(sparen_close);
+      bool    is_multiline          = (
+         sparen_content_start != sparen_content_end
+                                      && !are_chunks_in_same_line(sparen_content_start, sparen_content_end));
 
-      if (
-         options::nl_multi_line_sparen_close()
-         && !are_chunks_in_same_line(open_paren, close_paren))
+      if (is_multiline)
       {
-         newline_add_before(close_paren);
+         newline_iarf(sparen_open, options::nl_multi_line_sparen_open());
+      }
+
+      if (is_multiline && options::nl_multi_line_sparen_close() != IARF_IGNORE)
+      {
+         newline_iarf(sparen_content_end, options::nl_multi_line_sparen_close());
       }
       else
       {
-         chunk_t *ctrl_structure     = chunk_get_prev_ncnl(open_paren);
-         chunk_t *before_close_paren = chunk_get_prev(close_paren);
+         chunk_t *ctrl_structure = chunk_get_prev_ncnl(sparen_open);
          if (ctrl_structure->type == CT_IF || ctrl_structure->type == CT_ELSEIF)
          {
-            newline_iarf_pair(before_close_paren, close_paren, options::nl_before_if_closing_paren());
+            newline_iarf_pair(sparen_content_end, sparen_close, options::nl_before_if_closing_paren());
          }
-      }
-
-      if (options::nl_multi_line_sparen_open() && !are_chunks_in_same_line(open_paren, close_paren))
-      {
-         newline_add_after(open_paren);
       }
    }
 } // newlines_sparens
