@@ -802,17 +802,22 @@ void newlines_sparens()
          sparen_content_start != sparen_content_end
                                       && !are_chunks_in_same_line(sparen_content_start, sparen_content_end));
 
+      // Add a newline after '(' if an if/for/while/switch condition spans multiple lines,
+      // as e.g. required by the ROS 2 development style guidelines:
+      // https://index.ros.org/doc/ros2/Contributing/Developer-Guide/#open-versus-cuddled-braces
       if (is_multiline)
       {
          newline_iarf(sparen_open, options::nl_multi_line_sparen_open());
       }
 
+      // Add a newline before ')' if an if/for/while/switch condition spans multiple lines. Overrides nl_before_if_closing_paren if both are specified.
       if (is_multiline && options::nl_multi_line_sparen_close() != IARF_IGNORE)
       {
          newline_iarf(sparen_content_end, options::nl_multi_line_sparen_close());
       }
       else
       {
+         // add/remove trailing newline in an if condition
          chunk_t *ctrl_structure = chunk_get_prev_ncnl(sparen_open);
          if (ctrl_structure->type == CT_IF || ctrl_structure->type == CT_ELSEIF)
          {

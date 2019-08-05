@@ -19,8 +19,9 @@
  */
 void newlines_remove_newlines(void);
 
-/** Step through all chunks, altering newlines inside parens of
- * if/for/while/do as needed */
+/** Step through all chunks, altering newlines inside parens of if/for/while/do as needed.
+ * Handles the style options: nl_multi_line_sparen_open, nl_multi_line_sparen_close, nl_before_if_closing_paren
+ */
 void newlines_sparens();
 
 //! Step through all chunks.
