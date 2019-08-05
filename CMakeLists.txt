@@ -17,6 +17,8 @@ include(CheckCXXSymbolExists)
 include(CheckTypeSize)
 include(CTest)
 
+find_package(PythonInterp REQUIRED)
+
 #
 # Check compiler flags
 #
@@ -130,35 +132,28 @@ endif()
 # FIXME: the version number should be automatically integrated
 set(CURRENT_VERSION "Uncrustify-0.69.0_f")
 
-find_package(PythonInterp REQUIRED)
 option(NoGitVersionString "Do not use make_version.py and git to build a version string" OFF)
-if(NOT NoGitVersionString)
-  set(version_debug_flag "")
-  STRING(REGEX MATCH "-g[0-3]?" version_debug_flag ${CMAKE_CXX_FLAGS})
-
-  # checking for build type and passing it to make_version.py
-  # FIXME: does not work with VS .sln projects
-  if(NOT "${version_debug_flag}" STREQUAL "" OR "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
-    set(version_debug_flag "Debug")
-  endif()
-
-  execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} scripts/make_version.py ${version_debug_flag}
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-    RESULT_VARIABLE make_version_error
-    OUTPUT_VARIABLE make_version_output
+if(NoGitVersionString)
+  configure_file(src/uncrustify_version.h.in uncrustify_version.h @ONLY)
+else()
+  # Add target to generate version header;
+  # do this every build to ensure git SHA is up to date
+  add_custom_target(generate_version_header
+    ${CMAKE_COMMAND}
+    -D PYTHON_EXECUTABLE:STRING=${PYTHON_EXECUTABLE}
+    -D SOURCE_DIR:PATH="${PROJECT_SOURCE_DIR}"
+    -D INPUT:PATH="${PROJECT_SOURCE_DIR}/src/uncrustify_version.h.in"
+    -D OUTPUT:PATH="${PROJECT_BINARY_DIR}/uncrustify_version.h"
+    -D DEBUG:STRING="$<$<OR:$<CONFIG:Debug>,$<CONFIG:>>:Debug>"
+    -D CURRENT_VERSION:STRING="CURRENT_VERSION"
+    -P ${PROJECT_SOURCE_DIR}/cmake/GenerateVersionHeader.cmake
+    COMMENT "Generating version header"
   )
-
-  if (make_version_error)
-    message(STATUS "scripts/make_version.py exited with code ${make_version_error}: ${make_version_output}\n"
-                   "As a fallback, version '${CURRENT_VERSION}' will be used.")
-  else()
-    string(STRIP ${make_version_output} CURRENT_VERSION)
-    message(STATUS "Version: '${CURRENT_VERSION}'")
-  endif()
+  set_source_files_properties(
+    "${CMAKE_CURRENT_BINARY_DIR}/uncrustify_version.h"
+    PROPERTIES GENERATED TRUE
+  )
 endif()
-
-configure_file(src/uncrustify_version.h.in uncrustify_version.h @ONLY)
 
 #
 # Generate token_names.h
@@ -294,6 +289,8 @@ set(uncrustify_sources
   src/unicode.cpp
   src/universalindentgui.cpp
   src/width.cpp
+  ${PROJECT_BINARY_DIR}/src/options.cpp
+  ${PROJECT_BINARY_DIR}/src/option_enum.cpp
 )
 
 set(uncrustify_headers
@@ -349,12 +346,12 @@ set(uncrustify_headers
   src/unc_ctype.h
   src/unc_text.h
   src/unc_tools.h
-  ${PROJECT_BINARY_DIR}/src/options.cpp
-  ${PROJECT_BINARY_DIR}/src/option_enum.cpp
   ${PROJECT_BINARY_DIR}/src/option_enum.h
+  ${PROJECT_BINARY_DIR}/uncrustify_version.h
 )
 
 add_executable(uncrustify ${uncrustify_sources} ${uncrustify_headers})
+add_dependencies(uncrustify generate_version_header)
 
 if(CMAKE_VERSION VERSION_LESS 2.8.10)
   if(CMAKE_CONFIGURATION_TYPES OR CMAKE_BUILD_TYPE)
