@@ -144,7 +144,6 @@ else()
     -D SOURCE_DIR:PATH="${PROJECT_SOURCE_DIR}"
     -D INPUT:PATH="${PROJECT_SOURCE_DIR}/src/uncrustify_version.h.in"
     -D OUTPUT:PATH="${PROJECT_BINARY_DIR}/uncrustify_version.h"
-    -D DEBUG:STRING="$<$<OR:$<CONFIG:Debug>,$<CONFIG:>>:Debug>"
     -D CURRENT_VERSION:STRING="CURRENT_VERSION"
     -P ${PROJECT_SOURCE_DIR}/cmake/GenerateVersionHeader.cmake
     COMMENT "Generating version header"

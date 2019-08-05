@@ -17,12 +17,6 @@ else:
     from os import EX_IOERR, EX_OK, EX_USAGE
 
 def main(args):
-    is_debug_build = False
-
-    if len(args) > 0:
-        is_debug_build = str(args[0]).lower() == "debug"
-
-
     root = dirname(dirname(abspath(__file__)))
     git_path = join(root, '.git')
     hg_path = join(root, '.hg')
@@ -79,11 +73,6 @@ def main(args):
         print("Regex version match failed on: '%s' (%s)" % (txt, error_txt))
         exit(EX_IOERR)
 
-    version_string = "Uncrustify"
-    if is_debug_build:
-        version_string += "_d"
-
-
     if r_match.group(2) is not None:
         string_groups = [r_match.group(2)]
         if r_match.group(5) is not None and r_match.group(6) is not None:
@@ -96,13 +85,12 @@ def main(args):
         string_groups.append(r_match.group(9))
 
 
-    for group_txt in string_groups:
-        if group_txt is None:
+    for g in string_groups:
+        if g is None:
             print("Unexpected empty regex group")
             exit(EX_IOERR)
-        version_string += "-" + group_txt
 
-    print("%s" % version_string)
+    print("%s" % "-".join(string_groups))
     return EX_OK
 
 

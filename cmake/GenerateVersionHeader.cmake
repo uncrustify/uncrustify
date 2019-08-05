@@ -3,12 +3,12 @@
 #
 # This script is meant to be executed with `cmake -P` from a custom target,
 # and expects the variables `PYTHON_EXECUTABLE`, `SOURCE_DIR`, `INPUT`,
-# `OUTPUT`, `DEBUG` and `CURRENT_VERSION` to be set.
+# `OUTPUT` and `CURRENT_VERSION` to be set.
 #
 
 
 execute_process(
-  COMMAND ${PYTHON_EXECUTABLE} ${SOURCE_DIR}/scripts/make_version.py ${DEBUG}
+  COMMAND ${PYTHON_EXECUTABLE} ${SOURCE_DIR}/scripts/make_version.py
   WORKING_DIRECTORY ${SOURCE_DIR}
   RESULT_VARIABLE make_version_error
   OUTPUT_VARIABLE make_version_output
