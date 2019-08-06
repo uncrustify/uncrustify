@@ -1434,6 +1434,14 @@ nl_synchronized_brace           = ignore   # ignore/add/remove/force
 # nl_catch_brace.
 nl_multi_line_cond              = false    # true/false
 
+# Add a newline after '(' if an if/for/while/switch condition spans multiple
+# lines
+nl_multi_line_sparen_open       = ignore   # ignore/add/remove/force
+
+# Add a newline before ')' if an if/for/while/switch condition spans multiple
+# lines. Overrides nl_before_if_closing_paren if both are specified.
+nl_multi_line_sparen_close      = ignore   # ignore/add/remove/force
+
 # Force a newline in a define after the macro name for multi-line defines.
 nl_multi_line_define            = false    # true/false
 

@@ -782,6 +782,52 @@ void newline_del_between(chunk_t *start, chunk_t *end)
 } // newline_del_between
 
 
+void newlines_sparens()
+{
+   LOG_FUNC_ENTRY();
+
+   chunk_t *sparen_open;
+   for (sparen_open = chunk_get_next_type(chunk_get_head(), CT_SPAREN_OPEN, ANY_LEVEL);
+        sparen_open != nullptr; sparen_open = chunk_get_next_type(
+           sparen_open, CT_SPAREN_OPEN, ANY_LEVEL))
+   {
+      chunk_t *sparen_close = chunk_get_next_type(sparen_open, CT_SPAREN_CLOSE, sparen_open->level);
+      if (!sparen_close)
+      {
+         continue;
+      }
+      chunk_t *sparen_content_start = chunk_get_next_nnl(sparen_open);
+      chunk_t *sparen_content_end   = chunk_get_prev_nnl(sparen_close);
+      bool    is_multiline          = (
+         sparen_content_start != sparen_content_end
+                                      && !are_chunks_in_same_line(sparen_content_start, sparen_content_end));
+
+      // Add a newline after '(' if an if/for/while/switch condition spans multiple lines,
+      // as e.g. required by the ROS 2 development style guidelines:
+      // https://index.ros.org/doc/ros2/Contributing/Developer-Guide/#open-versus-cuddled-braces
+      if (is_multiline)
+      {
+         newline_iarf(sparen_open, options::nl_multi_line_sparen_open());
+      }
+
+      // Add a newline before ')' if an if/for/while/switch condition spans multiple lines. Overrides nl_before_if_closing_paren if both are specified.
+      if (is_multiline && options::nl_multi_line_sparen_close() != IARF_IGNORE)
+      {
+         newline_iarf(sparen_content_end, options::nl_multi_line_sparen_close());
+      }
+      else
+      {
+         // add/remove trailing newline in an if condition
+         chunk_t *ctrl_structure = chunk_get_prev_ncnl(sparen_open);
+         if (ctrl_structure->type == CT_IF || ctrl_structure->type == CT_ELSEIF)
+         {
+            newline_iarf_pair(sparen_content_end, sparen_close, options::nl_before_if_closing_paren());
+         }
+      }
+   }
+} // newlines_sparens
+
+
 static bool newlines_if_for_while_switch(chunk_t *start, iarf_e nl_opt)
 {
    LOG_FUNC_ENTRY();
@@ -2968,32 +3014,12 @@ void newlines_cleanup_braces(bool first)
       if (chunk_is_token(pc, CT_IF))
       {
          newlines_if_for_while_switch(pc, options::nl_if_brace());
-         tmp = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level);
-         if (tmp != nullptr)
-         {
-            prev = chunk_get_prev(tmp);
-            if (prev != nullptr)
-            {
-               // Issue #1139
-               newline_iarf_pair(prev, tmp, options::nl_before_if_closing_paren());
-            }
-         }
       }
       else if (chunk_is_token(pc, CT_ELSEIF))
       {
          iarf_e arg = options::nl_elseif_brace();
          newlines_if_for_while_switch(
             pc, (arg != IARF_IGNORE) ? arg : options::nl_if_brace());
-         tmp = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level);
-         if (tmp != nullptr)
-         {
-            prev = chunk_get_prev(tmp);
-            if (prev != nullptr)
-            {
-               // Issue #1139
-               newline_iarf_pair(prev, tmp, options::nl_before_if_closing_paren());
-            }
-         }
       }
       else if (chunk_is_token(pc, CT_FOR))
       {

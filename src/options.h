@@ -1776,6 +1776,16 @@ nl_synchronized_brace;
 extern Option<bool>
 nl_multi_line_cond;
 
+// Add a newline after '(' if an if/for/while/switch condition spans multiple
+// lines
+extern Option<iarf_e>
+nl_multi_line_sparen_open;
+
+// Add a newline before ')' if an if/for/while/switch condition spans multiple
+// lines. Overrides nl_before_if_closing_paren if both are specified.
+extern Option<iarf_e>
+nl_multi_line_sparen_close;
+
 // Force a newline in a define after the macro name for multi-line defines.
 extern Option<bool>
 nl_multi_line_define;
