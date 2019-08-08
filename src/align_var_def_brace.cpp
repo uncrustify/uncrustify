@@ -126,7 +126,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
             || (  chunk_is_token(pc, CT_FUNC_DEF)
                && options::align_single_line_func()))
          {
-            LOG_FMT(LAVDB, "%s(%d): add=[%s], orig_line is %zu, orig_col is %zu, level is %zu\n",
+            LOG_FMT(LAVDB, "%s(%d): add = '%s', orig_line is %zu, orig_col is %zu, level is %zu\n",
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
 
             chunk_t *toadd;

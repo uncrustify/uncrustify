@@ -1008,6 +1008,13 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                chunk_flags_clr(tmp, PCF_EXPR_START | PCF_STMT_START);
             }
          }
+         else
+         {
+            if (chunk_is_token(tmp, CT_WORD))
+            {
+               chunk_flags_set(tmp, PCF_VAR_1ST_DEF);
+            }
+         }
       }
    }
 
