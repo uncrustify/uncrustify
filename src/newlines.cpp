@@ -1013,6 +1013,90 @@ static void blank_line_set(chunk_t *pc, Option<unsigned> &opt)
 }
 
 
+bool do_it_newlines_func_pre_blank_lines(chunk_t *last_nl, c_token_t start_type)
+{
+   LOG_FUNC_ENTRY();
+   if (last_nl == nullptr)
+   {
+      return(false);
+   }
+
+   LOG_FMT(LNLFUNCT, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s, text() is '%s'\n",
+           __func__, __LINE__,
+           last_nl->orig_line, last_nl->orig_col, get_token_name(last_nl->type), last_nl->text());
+
+   switch (start_type)
+   {
+   case CT_FUNC_CLASS_DEF:
+   {
+      bool diff = options::nl_before_func_class_def() <= last_nl->nl_count;
+      LOG_FMT(LNLFUNCT, "%s(%d): is %s\n",
+              __func__, __LINE__, diff ? "TRUE" : "FALSE");
+      if (options::nl_before_func_class_def() != last_nl->nl_count)
+      {
+         LOG_FMT(LNLFUNCT, "%s(%d):   set blank line(s) to %u\n",
+                 __func__, __LINE__, options::nl_before_func_class_def());
+         blank_line_set(last_nl, options::nl_before_func_class_def);
+      }
+      return(diff);
+   }
+
+   case CT_FUNC_CLASS_PROTO:
+   {
+      bool diff = options::nl_before_func_class_proto() <= last_nl->nl_count;
+      LOG_FMT(LNLFUNCT, "%s(%d): is %s\n",
+              __func__, __LINE__, diff ? "TRUE" : "FALSE");
+      if (options::nl_before_func_class_proto() != last_nl->nl_count)
+      {
+         LOG_FMT(LNLFUNCT, "%s(%d):   set blank line(s) to %u\n",
+                 __func__, __LINE__, options::nl_before_func_class_proto());
+         blank_line_set(last_nl, options::nl_before_func_class_proto);
+      }
+      return(diff);
+   }
+
+   case CT_FUNC_DEF:
+   {
+      LOG_FMT(LNLFUNCT, "%s(%d): nl_before_func_body_def() is %u, last_nl->nl_count is %zu\n",
+              __func__, __LINE__, options::nl_before_func_body_def(), last_nl->nl_count);
+      bool diff = options::nl_before_func_body_def() <= last_nl->nl_count;
+      LOG_FMT(LNLFUNCT, "%s(%d): is %s\n",
+              __func__, __LINE__, diff ? "TRUE" : "FALSE");
+      if (options::nl_before_func_body_def() != last_nl->nl_count)
+      {
+         LOG_FMT(LNLFUNCT, "%s(%d):    set blank line(s) to %u\n",
+                 __func__, __LINE__, options::nl_before_func_body_def());
+         blank_line_set(last_nl, options::nl_before_func_body_def);
+      }
+      LOG_FMT(LNLFUNCT, "%s(%d): nl_before_func_body_def() is %u, last_nl->nl_count is %zu\n",
+              __func__, __LINE__, options::nl_before_func_body_def(), last_nl->nl_count);
+      return(diff);
+   }
+
+   case CT_FUNC_PROTO:
+   {
+      bool diff = options::nl_before_func_body_proto() <= last_nl->nl_count;
+      LOG_FMT(LNLFUNCT, "%s(%d): is %s\n",
+              __func__, __LINE__, diff ? "TRUE" : "FALSE");
+      if (options::nl_before_func_body_proto() != last_nl->nl_count)
+      {
+         LOG_FMT(LNLFUNCT, "%s(%d):   set blank line(s) to %u\n",
+                 __func__, __LINE__, options::nl_before_func_body_proto());
+         blank_line_set(last_nl, options::nl_before_func_body_proto);
+      }
+      return(diff);
+   }
+
+   default:
+   {
+      LOG_FMT(LERR, "%s(%d):   setting to blank line(s) at line %zu not possible\n",
+              __func__, __LINE__, last_nl->orig_line);
+      return(false);
+   }
+   } // switch
+} // do_it_newlines_func_pre_blank_lines
+
+
 static void newlines_func_pre_blank_lines(chunk_t *start, c_token_t start_type)
 {
    LOG_FUNC_ENTRY();
@@ -1028,8 +1112,9 @@ static void newlines_func_pre_blank_lines(chunk_t *start, c_token_t start_type)
    {
       return;
    }
-
-   LOG_FMT(LNLFUNCT, "%s(%d): set blank line(s): for '%s' at line %zu\n",
+   LOG_FMT(LNLFUNCT, "%s(%d):    set blank line(s): for <NL> at line %zu, column %zu, start_type is %s\n",
+           __func__, __LINE__, start->orig_line, start->orig_col, get_token_name(start_type));
+   LOG_FMT(LNLFUNCT, "\n%s(%d): BEGIN set blank line(s) for '%s' at line %zu\n",
            __func__, __LINE__, start->text(), start->orig_line);
    /*
     * look backwards until we find:
@@ -1041,22 +1126,36 @@ static void newlines_func_pre_blank_lines(chunk_t *start, c_token_t start_type)
    chunk_t *pc           = nullptr;
    chunk_t *last_nl      = nullptr;
    chunk_t *last_comment = nullptr;
-   bool    do_it         = false;
    size_t  first_line    = start->orig_line;
    for (pc = chunk_get_prev(start); pc != nullptr; pc = chunk_get_prev(pc))
    {
-      LOG_FMT(LNLFUNCT, "%s(%d):   O: orig_line is %zu, orig_col is %zu, type is %s, text() is '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type), pc->text());
+      LOG_FMT(LNLFUNCT, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s, text() is '%s', nl_count is %zu\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type), pc->text(), pc->nl_count);
 
       if (chunk_is_newline(pc))
       {
          last_nl = pc;
-         LOG_FMT(LNLFUNCT, "%s(%d):    <chunk_is_newline> found at line %zu, column %zu\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col);
-         continue;
+         LOG_FMT(LNLFUNCT, "%s(%d):    <chunk_is_newline> found at line %zu, column %zu, nl_count is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->nl_count);
+         LOG_FMT(LNLFUNCT, "%s(%d):    last_nl set to %zu\n",
+                 __func__, __LINE__, last_nl->orig_line);
+         bool break_now = false;
+         if (pc->nl_count > 1)
+         {
+            break_now = do_it_newlines_func_pre_blank_lines(last_nl, start_type);
+            LOG_FMT(LNLFUNCT, "%s(%d): break_now is %s\n",
+                    __func__, __LINE__, break_now ? "TRUE" : "FALSE");
+         }
+         if (break_now)
+         {
+            break;
+         }
+         else
+         {
+            continue;
+         }
       }
-
-      if (chunk_is_comment(pc))
+      else if (chunk_is_comment(pc))
       {
          LOG_FMT(LNLFUNCT, "%s(%d):    <chunk_is_comment> found at line %zu, column %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
@@ -1073,99 +1172,47 @@ static void newlines_func_pre_blank_lines(chunk_t *start, c_token_t start_type)
             continue;
          }
 
-         do_it = true;
-         break;
+         bool break_now = do_it_newlines_func_pre_blank_lines(last_nl, start_type);
+         LOG_FMT(LNLFUNCT, "%s(%d): break_now is %s\n",
+                 __func__, __LINE__, break_now ? "TRUE" : "FALSE");
+         continue;
       }
-
-      if (  chunk_is_token(pc, CT_DESTRUCTOR)
-         || chunk_is_token(pc, CT_TYPE)
-         || chunk_is_token(pc, CT_TEMPLATE)
-         || chunk_is_token(pc, CT_QUALIFIER)
-         || chunk_is_token(pc, CT_PTR_TYPE)
-         || chunk_is_token(pc, CT_BYREF)                  // Issue #2163
-         || chunk_is_token(pc, CT_DC_MEMBER)
-         || chunk_is_token(pc, CT_EXTERN)
-         || (chunk_is_token(pc, CT_STRING) && pc->parent_type == CT_EXTERN))
+      else if (  chunk_is_token(pc, CT_DESTRUCTOR)
+              || chunk_is_token(pc, CT_TYPE)
+              || chunk_is_token(pc, CT_TEMPLATE)
+              || chunk_is_token(pc, CT_QUALIFIER)
+              || chunk_is_token(pc, CT_PTR_TYPE)
+              || chunk_is_token(pc, CT_BYREF)                  // Issue #2163
+              || chunk_is_token(pc, CT_DC_MEMBER)
+              || chunk_is_token(pc, CT_EXTERN)
+              || (chunk_is_token(pc, CT_STRING) && pc->parent_type == CT_EXTERN))
       {
+         LOG_FMT(LNLFUNCT, "%s(%d): first_line set to %zu\n",
+                 __func__, __LINE__, pc->orig_line);
          first_line = pc->orig_line;
          continue;
       }
-      // skip template stuff to add newlines before it
-      if (chunk_is_token(pc, CT_ANGLE_CLOSE) && pc->parent_type == CT_TEMPLATE)
+      else if (chunk_is_token(pc, CT_ANGLE_CLOSE) && pc->parent_type == CT_TEMPLATE)
       {
+         LOG_FMT(LNLFUNCT, "%s(%d):\n", __func__, __LINE__);
+         // skip template stuff to add newlines before it
          pc = chunk_skip_to_match_rev(pc);
-         if (pc)
+         if (pc != nullptr)
          {
             first_line = pc->orig_line;
          }
          continue;
       }
-
-      // else
-      do_it = true;
-      break;
-   }
-   if (!do_it || last_nl == nullptr)
-   {
-      return;
-   }
-
-   LOG_FMT(LNLFUNCT, "%s(%d):    set blank line(s): for <NL> at line %zu, column %zu\n",
-           __func__, __LINE__, last_nl->orig_line, last_nl->orig_col);
-
-   switch (start_type)
-   {
-   case CT_FUNC_CLASS_DEF:
-   {
-      if (options::nl_before_func_class_def() != last_nl->nl_count)
+      else
       {
-         LOG_FMT(LNLFUNCT, "%s(%d):   set blank line(s) to %u\n",
-                 __func__, __LINE__, options::nl_before_func_class_def());
-         blank_line_set(last_nl, options::nl_before_func_class_def);
+         LOG_FMT(LNLFUNCT, "%s(%d): else ==================================\n",
+                 __func__, __LINE__);
+         bool break_now = do_it_newlines_func_pre_blank_lines(last_nl, start_type);
+         LOG_FMT(LNLFUNCT, "%s(%d): break_now is %s\n",
+                 __func__, __LINE__, break_now ? "TRUE" : "FALSE");
+         break;
       }
-      break;
    }
-
-   case CT_FUNC_CLASS_PROTO:
-   {
-      if (options::nl_before_func_class_proto() != last_nl->nl_count)
-      {
-         LOG_FMT(LNLFUNCT, "%s(%d):   set blank line(s) to %u\n",
-                 __func__, __LINE__, options::nl_before_func_class_proto());
-         blank_line_set(last_nl, options::nl_before_func_class_proto);
-      }
-      break;
-   }
-
-   case CT_FUNC_DEF:
-   {
-      if (options::nl_before_func_body_def() != last_nl->nl_count)
-      {
-         LOG_FMT(LNLFUNCT, "%s(%d):    set blank line(s) to %u\n",
-                 __func__, __LINE__, options::nl_before_func_body_def());
-         blank_line_set(last_nl, options::nl_before_func_body_def);
-      }
-      break;
-   }
-
-   case CT_FUNC_PROTO:
-   {
-      if (options::nl_before_func_body_proto() != last_nl->nl_count)
-      {
-         LOG_FMT(LNLFUNCT, "%s(%d):   set blank line(s) to %u\n",
-                 __func__, __LINE__, options::nl_before_func_body_proto());
-         blank_line_set(last_nl, options::nl_before_func_body_proto);
-      }
-      break;
-   }
-
-   default:
-   {
-      LOG_FMT(LERR, "%s(%d):   setting to blank line(s) at line %zu not possible\n",
-              __func__, __LINE__, pc->orig_line);
-      break;
-   }
-   }   // switch
 } // newlines_func_pre_blank_lines
 
 
@@ -3860,8 +3907,8 @@ void newlines_insert_blank_lines(void)
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
-      LOG_FMT(LNEWLINE, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+      //LOG_FMT(LNEWLINE, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+      //        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       if (chunk_is_token(pc, CT_IF))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_if());
@@ -3910,7 +3957,7 @@ void newlines_insert_blank_lines(void)
       else
       {
          // ignore it
-         LOG_FMT(LNEWLINE, "%s(%d): ignore it\n", __func__, __LINE__);
+         //LOG_FMT(LNEWLINE, "%s(%d): ignore it\n", __func__, __LINE__);
       }
    }
 } // newlines_insert_blank_lines
