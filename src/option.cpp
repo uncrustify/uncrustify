@@ -284,9 +284,12 @@ void print_description(FILE *pfile, std::string description,
 
 
 //-----------------------------------------------------------------------------
-OptionWarning::OptionWarning(const char *filename)
+OptionWarning::OptionWarning(const char *filename, Severity severity)
 {
-   ++cpd.error_count;
+   if (severity != MINOR)
+   {
+      ++cpd.error_count;
+   }
    if (cpd.line_number != 0)
    {
       fprintf(stderr, "%s:%u: ", filename, cpd.line_number);
@@ -299,9 +302,12 @@ OptionWarning::OptionWarning(const char *filename)
 
 
 //-----------------------------------------------------------------------------
-OptionWarning::OptionWarning(const GenericOption *opt)
+OptionWarning::OptionWarning(const GenericOption *opt, Severity severity)
 {
-   ++cpd.error_count;
+   if (severity != MINOR)
+   {
+      ++cpd.error_count;
+   }
    fprintf(stderr, "Option<%s>: at %s:%d: ", to_string(opt->type()),
            cpd.filename.c_str(), cpd.line_number);
 }
