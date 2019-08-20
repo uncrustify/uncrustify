@@ -96,8 +96,9 @@ std::unordered_map<std::string, GenericOption *> option_map;
 //-----------------------------------------------------------------------------
 constexpr int option_level(int major, int minor)
 {
-   return (major << 16) | (minor << 0);
+   return((major << 16) | (minor << 0));
 }
+
 
 //-----------------------------------------------------------------------------
 void log_config()
@@ -291,11 +292,21 @@ void print_description(FILE *pfile, std::string description,
 
 
 //-----------------------------------------------------------------------------
-bool process_option_line_compat_0_68(
-   const std::string &cmd, const std::vector<std::string> &args,
-   const char *filename)
+bool process_option_line_compat_0_68(const std::string              &cmd,
+                                     const std::vector<std::string> &args,
+                                     const char                     *filename)
 {
-   return false;
+   if (cmd == "sp_cpp_lambda_paren")
+   {
+      OptionWarning w{ filename, OptionWarning::MINOR };
+      w("option '%s' is deprecated; use '%s' instead",
+        cmd.c_str(), options::sp_cpp_lambda_square_paren.name());
+
+      UNUSED(options::sp_cpp_lambda_square_paren.read(args[1].c_str()));
+      return(true);
+   }
+
+   return(false);
 } // process_option_line_compat_0_68
 
 } // namespace

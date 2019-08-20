@@ -85,8 +85,17 @@ sp_trailing_ret_t               = ignore   # ignore/add/remove/force
 # Overrides sp_assign.
 sp_cpp_lambda_assign            = ignore   # ignore/add/remove/force
 
-# Add or remove space after the capture specification in C++11 lambda.
-sp_cpp_lambda_paren             = ignore   # ignore/add/remove/force
+# Add or remove space after the capture specification of a C++11 lambda when
+# an argument list is present, as in '[] <here> (int x){ ... }'.
+sp_cpp_lambda_square_paren      = ignore   # ignore/add/remove/force
+
+# Add or remove space after the capture specification of a C++11 lambda with
+# no argument list is present, as in '[] <here> { ... }'.
+sp_cpp_lambda_square_brace      = ignore   # ignore/add/remove/force
+
+# Add or remove space after the argument list of a C++11 lambda, as in
+# '[](int x) <here> { ... }'.
+sp_cpp_lambda_paren_brace       = ignore   # ignore/add/remove/force
 
 # Add or remove space around assignment operator '=' in a prototype.
 #
