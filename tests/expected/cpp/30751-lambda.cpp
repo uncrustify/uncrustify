@@ -33,7 +33,7 @@ void f2()
 
 void f3a()
 {
-   auto a = [] {};
+   auto a = []  {};
    auto b = [] { return(true); };
 }
 

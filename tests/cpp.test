@@ -240,6 +240,13 @@
 30762  out-668-T.cfg                        cpp/out-668.cpp
 30763  Issue_2166.cfg                       cpp/Issue_2166.cpp
 
+30770 sp_cpp_lambda_square_paren-r.cfg      cpp/lambda.cpp
+30771 sp_cpp_lambda_square_paren-f.cfg      cpp/lambda.cpp
+30772 sp_cpp_lambda_square_brace-r.cfg      cpp/lambda.cpp
+30773 sp_cpp_lambda_square_brace-f.cfg      cpp/lambda.cpp
+30774 sp_cpp_lambda_paren_brace-r.cfg       cpp/lambda.cpp
+30775 sp_cpp_lambda_paren_brace-f.cfg       cpp/lambda.cpp
+
 30800  star_pos-0.cfg                       cpp/align-star-amp-pos.cpp
 30801  star_pos-1.cfg                       cpp/align-star-amp-pos.cpp
 30802  star_pos-2.cfg                       cpp/align-star-amp-pos.cpp
