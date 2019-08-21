@@ -2389,6 +2389,12 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av)
 
    if (av & IARF_ADD)
    {
+      if (  options::nl_assign_leave_one_liners()
+         && (after->flags & PCF_ONE_LINER))
+      {
+         return;
+      }
+
       chunk_t *nl = newline_add_between(before, after);
       if (  nl != nullptr
          && av == IARF_FORCE
