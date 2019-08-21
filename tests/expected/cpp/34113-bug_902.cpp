@@ -12,13 +12,11 @@ int i = 0;
 void a(){
 	return 0;
 }
-
 //0
 /*b*/
 void b(){
 	return 0;
 }
-
 /*0*/
 //c
 void c(){
@@ -30,14 +28,12 @@ void c(){
 void d(){
 	return 0;
 }
-
 //0
 //h
 //h
 void h(){
 	return 0;
 }
-
 /*0*/
 /*e*/
 void e(){
@@ -60,12 +56,10 @@ void j(){
 void k(){
 	return 0;
 }
-
 //0
 void l(){
 	return 0;
 }
-
 /*
  * 0
  */

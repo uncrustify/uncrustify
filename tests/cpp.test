@@ -569,7 +569,7 @@
 34108  bug_i_666.cfg                        cpp/bug_i_666.cpp
 
 34112  sp_after_cast-r.cfg                  cpp/bug_i_889.cpp
-34113! nl_before_func_body_def-1.cfg        cpp/bug_902.cpp
+34113  nl_before_func_body_def-1.cfg        cpp/bug_902.cpp
 34114  nl_before_func_body_def-2.cfg        cpp/bug_902.cpp
 34115  nl_before_func_body_def-2.cfg        cpp/nl_before_func_body_def.cpp
 34116  nl_before_func_body_def-2.cfg        cpp/issue_2000.cpp
