@@ -177,7 +177,7 @@ void print_universal_indent_cfg(FILE *pfile)
          fprintf(pfile, "Category=%zu\n", idx);
 #if defined (DEBUG) && !defined (WIN32)
          fprintf(pfile, "Description=\"<html>(%zu)", optionNumber);
-#else  // DEBUG
+#else // DEBUG
          fprintf(pfile, "Description=\"<html>");
 #endif // DEBUG
 
@@ -234,7 +234,7 @@ void print_universal_indent_cfg(FILE *pfile)
 #if defined (DEBUG) && !defined (WIN32)
             fprintf(pfile, "ChoicesReadable=\"(%zu)Spaces only|(%zu)Indent with tabs, align with spaces|(%zu)Indent and align with tabs\"\n",
                     optionNumber, optionNumber, optionNumber);
-#else  // DEBUG
+#else // DEBUG
             fprintf(pfile, "ChoicesReadable=\"Spaces only|Indent with tabs, align with spaces|Indent and align with tabs\"\n");
 #endif // DEBUG
             fprintf(pfile, "ValueDefault=%s\n", option->str().c_str());
@@ -261,7 +261,7 @@ void print_universal_indent_cfg(FILE *pfile)
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable);
-#else  // DEBUG
+#else // DEBUG
                //                                0         1      2         3
                fprintf(pfile, "ChoicesReadable=\"Ignore %s|Add %s|Remove %s|Force %s\"\n",
                        optionNameReadable, optionNameReadable, optionNameReadable, optionNameReadable);
@@ -291,7 +291,7 @@ void print_universal_indent_cfg(FILE *pfile)
 #if defined (DEBUG) && !defined (WIN32)
                fprintf(pfile, "ChoicesReadable=\"(%zu)Newlines Unix|(%zu)Newlines Win|(%zu)Newlines Mac|(%zu)Newlines Auto\"\n",
                        optionNumber, optionNumber, optionNumber, optionNumber);
-#else  // DEBUG
+#else // DEBUG
                fprintf(pfile, "ChoicesReadable=\"Newlines Unix|Newlines Win|Newlines Mac|Newlines Auto\"\n");
 #endif // DEBUG
                fprintf(pfile, "ValueDefault=%s\n", option->str().c_str());
@@ -308,7 +308,7 @@ void print_universal_indent_cfg(FILE *pfile)
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable);
-#else  // DEBUG
+#else // DEBUG
                //                                0         1        2        4       8
                fprintf(pfile, "ChoicesReadable=\"Ignore %s|Break %s|Force %s|Lead %s|Trail %s|",
                        optionNameReadable, optionNameReadable, optionNameReadable,
@@ -322,7 +322,7 @@ void print_universal_indent_cfg(FILE *pfile)
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable,
                        optionNumber, optionNameReadable);
-#else  // DEBUG
+#else // DEBUG
                fprintf(pfile, "Join %s|Lead Break %s|Lead Force %s|Trail Break %s|Trail Force %s\"\n",
                        optionNameReadable, optionNameReadable, optionNameReadable,
                        optionNameReadable, optionNameReadable);

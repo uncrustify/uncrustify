@@ -1105,7 +1105,7 @@ enum cs_string_t
    CS_STRING_INTERPOLATED = 1 << 2,    // $"" or $@"" style string
 };
 
-static cs_string_t operator |=(cs_string_t &value, cs_string_t other)
+static cs_string_t operator|=(cs_string_t &value, cs_string_t other)
 {
    return(value = static_cast<cs_string_t>(value | other));
 }
@@ -1929,7 +1929,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
          || ch == 'R'
          || ch == 'L'))
    {
-      auto idx     = size_t {};
+      auto idx     = size_t{};
       auto is_real = false;
 
       if (ch == 'u' && ctx.peek(1) == '8')

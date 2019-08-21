@@ -2876,7 +2876,7 @@ static void fix_casts(chunk_t *start)
       || chunk_is_token(prev, CT_OC_CLASS))
    {
       LOG_FMT(LCASTS, "%s(%d):  -- not a cast, hit type is %s\n",
-              __func__, __LINE__, pc == nullptr ? "NULL"  : get_token_name(pc->type));
+              __func__, __LINE__, pc == nullptr ? "NULL" : get_token_name(pc->type));
       return;
    }
 

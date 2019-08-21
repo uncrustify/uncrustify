@@ -207,7 +207,6 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          else
          {
             if (chunk_is_token(pc, CT_ASSIGN))
-            //if (options::align_assign_decl_func() != 2)
             {
                LOG_FMT(LALASS, "%s(%d): as.Add on '%s' on orig_line %zu, orig_col is %zu\n",
                        __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
