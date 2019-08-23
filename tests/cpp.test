@@ -256,7 +256,7 @@
 30812  ben_023.cfg                          cpp/misc4.cpp
 30813  ben_024.cfg                          cpp/misc5.cpp
 30814  empty.cfg                            cpp/misc6.cpp
-30815! width-2.cfg                          cpp/cmt-reflow.cpp
+30815  width-2.cfg                          cpp/cmt-reflow.cpp
 30816  cu.cfg                               cpp/for_long.cpp
 30817  indent_columns-3.cfg                 cpp/cmt-cpp-cont.cpp
 30818  bug_1169.cfg                         cpp/bug_1169.cpp
