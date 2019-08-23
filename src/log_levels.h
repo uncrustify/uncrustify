@@ -127,4 +127,4 @@ enum log_sev_t
    LGUY      = 99, //! for guy-test
 };
 
-#endif  /* LOG_LEVELS_H_INCLUDED */
+#endif /* LOG_LEVELS_H_INCLUDED */

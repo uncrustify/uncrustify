@@ -147,7 +147,7 @@ static bool paren_multiline_before_brace(chunk_t *brace)
    }
 
    // determine number of lines in the parenthesis pair spans
-   auto       nl_count = size_t {};
+   auto       nl_count = size_t{};
    const auto ret_flag = newlines_between(paren_open, paren_close, nl_count);
    if (!ret_flag)
    {

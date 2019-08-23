@@ -69,13 +69,13 @@ public:
    void set(const value_type &data, size_t idx = 0, size_t len = 0);
 
 
-   unc_text &operator =(int ch);
+   unc_text &operator=(int ch);
 
-   unc_text &operator =(const unc_text &ref);
+   unc_text &operator=(const unc_text &ref);
 
-   unc_text &operator =(const std::string &ascii_text);
+   unc_text &operator=(const std::string &ascii_text);
 
-   unc_text &operator =(const char *ascii_text);
+   unc_text &operator=(const char *ascii_text);
 
 
    void insert(size_t idx, int ch);
@@ -107,13 +107,13 @@ public:
    void append(const value_type &data, size_t idx = 0, size_t len = 0);
 
 
-   unc_text &operator +=(int ch);
+   unc_text &operator+=(int ch);
 
-   unc_text &operator +=(const unc_text &ref);
+   unc_text &operator+=(const unc_text &ref);
 
-   unc_text &operator +=(const std::string &ascii_text);
+   unc_text &operator+=(const std::string &ascii_text);
 
-   unc_text &operator +=(const char *ascii_text);
+   unc_text &operator+=(const char *ascii_text);
 
 
    //! Returns the UTF-8 string for logging

@@ -121,4 +121,4 @@ public:
 };
 
 
-#endif   /* CHUNKSTACK_H_INCLUDED */
+#endif /* CHUNKSTACK_H_INCLUDED */

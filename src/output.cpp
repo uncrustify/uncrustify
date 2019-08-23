@@ -2068,7 +2068,7 @@ static void output_comment_multi_simple(chunk_t *pc)
    // shifted all lines of the comment need to be shifter by the same amount.
    // Save the difference of initial and current position to apply it on every
    // line_column
-   const int col_diff = [pc](){
+   const int col_diff = [pc]() {
       int diff = 0;
 
       if (chunk_is_newline(chunk_get_prev(pc)))

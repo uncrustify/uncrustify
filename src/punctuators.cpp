@@ -49,7 +49,7 @@ const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
 
    const chunk_tag_t *match  = nullptr;
    const auto        *parent = punc_table; //!< graph in table form, initially point at first entry
-   auto              ch_idx  = int {};
+   auto              ch_idx  = int{};
 
    while (ch_idx < 6 && str[ch_idx] != '\0')  //!< symbols6: max punc len = 6
    {

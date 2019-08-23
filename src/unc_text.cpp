@@ -162,56 +162,56 @@ size_t unc_text::size() const
 }
 
 
-unc_text &unc_text::operator =(int ch)
+unc_text &unc_text::operator=(int ch)
 {
    set(ch);
    return(*this);
 }
 
 
-unc_text &unc_text::operator =(const unc_text &ref)
+unc_text &unc_text::operator=(const unc_text &ref)
 {
    set(ref);
    return(*this);
 }
 
 
-unc_text &unc_text::operator =(const std::string &ascii_text)
+unc_text &unc_text::operator=(const std::string &ascii_text)
 {
    set(ascii_text);
    return(*this);
 }
 
 
-unc_text &unc_text::operator =(const char *ascii_text)
+unc_text &unc_text::operator=(const char *ascii_text)
 {
    set(ascii_text);
    return(*this);
 }
 
 
-unc_text &unc_text::operator +=(int ch)
+unc_text &unc_text::operator+=(int ch)
 {
    append(ch);
    return(*this);
 }
 
 
-unc_text &unc_text::operator +=(const unc_text &ref)
+unc_text &unc_text::operator+=(const unc_text &ref)
 {
    append(ref);
    return(*this);
 }
 
 
-unc_text &unc_text::operator +=(const std::string &ascii_text)
+unc_text &unc_text::operator+=(const std::string &ascii_text)
 {
    append(ascii_text);
    return(*this);
 }
 
 
-unc_text &unc_text::operator +=(const char *ascii_text)
+unc_text &unc_text::operator+=(const char *ascii_text)
 {
    append(ascii_text);
    return(*this);
