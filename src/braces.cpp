@@ -595,7 +595,7 @@ static void examine_brace(chunk_t *bopen)
          }
       }
       prev = pc;
-      pc   = chunk_get_next_nc(pc);
+      pc   = chunk_get_next(pc);                  // Issue #1907
    }
 
    if (pc == nullptr)
