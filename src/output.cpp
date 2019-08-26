@@ -228,7 +228,7 @@ static bool can_combine_comment(chunk_t *pc, cmt_reflow &cmt);
 
 
 #define LOG_CONTTEXT() \
-   LOG_FMT(LCONTTEXT, "%s:%d set cont_text to '%s'\n", __func__, __LINE__, cmt.cont_text.c_str())
+   LOG_FMT(LCONTTEXT, "%s(%d): set cont_text to '%s'\n", __func__, __LINE__, cmt.cont_text.c_str())
 
 
 static void add_spaces()
@@ -506,7 +506,7 @@ void output_text(FILE *pfile)
    // loop over the whole chunk list
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
-      LOG_FMT(LOUTIND, "%s(%d): text() is %s, type is %s, orig_col is %zu, column is %zu, nl is %zu\n",
+      LOG_FMT(LCONTTEXT, "%s(%d): text() is '%s', type is %s, orig_col is %zu, column is %zu, nl is %zu\n",
               __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_col, pc->column, pc->nl_count);
       cpd.output_tab_as_space = (  options::cmt_convert_tab_to_spaces()
                                 && chunk_is_comment(pc));
@@ -1141,16 +1141,27 @@ static chunk_t *output_comment_c(chunk_t *first)
    unc_text tmp;
    while (can_combine_comment(pc, cmt))
    {
+      LOG_FMT(LCONTTEXT, "%s(%d): text() is '%s'\n",
+              __func__, __LINE__, pc->text());
       tmp.set(pc->str, 2, pc->len() - 4);
-      if (cpd.last_char == '*' && tmp[0] == '/')
+      if (  cpd.last_char == '*'
+         && (  tmp[0] == '/'
+            || tmp[0] != ' '))                 // Issue #1908
       {
+         LOG_FMT(LCONTTEXT, "%s(%d): add_text a " "\n", __func__, __LINE__);
          add_text(" ");
       }
       // In case of reflow, original comment could contain trailing spaces before closing the comment, we don't need them after reflow
+      LOG_FMT(LCONTTEXT, "%s(%d): trim\n", __func__, __LINE__);
       cmt_trim_whitespace(tmp, false);
+      LOG_FMT(LCONTTEXT, "%s(%d): add_comment_text(tmp is '%s')\n",
+              __func__, __LINE__, tmp.c_str());
       add_comment_text(tmp, cmt, false);
+      LOG_FMT(LCONTTEXT, "%s(%d): add_comment_text(newline)\n",
+              __func__, __LINE__);
       add_comment_text("\n", cmt, false);
-      pc = chunk_get_next(chunk_get_next(pc));
+      pc = chunk_get_next(pc);
+      pc = chunk_get_next(pc);
    }
    tmp.set(pc->str, 2, pc->len() - 4);
    if (cpd.last_char == '*' && tmp[0] == '/')
