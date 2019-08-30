@@ -6,6 +6,9 @@
 
 # there are additional tests inside imported.test.
 
+02102  clark.cfg                            cpp/indent-c.cpp
+02103  clark.cfg                            cpp/output.cpp
+
 30000  ben_001.cfg                          cpp/cout.cpp
 30001  sp_angle_colon.cfg                   cpp/alt_tokens.cpp
 30002  ben_003.cfg                          cpp/constructor.cpp

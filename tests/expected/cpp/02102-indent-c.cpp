@@ -568,9 +568,10 @@ void indent_text(void)
         prev = chunk_get_prev(pc);
 
         if (chunk_is_newline(prev))
+          {
           frm.pse[frm.pse_tos].indent += 2;
-
-        /* don't change indent of current line */
+          /* don't change indent of current line */
+          }
         }
       }
     else if ((pc->type == CT_PAREN_OPEN) ||
