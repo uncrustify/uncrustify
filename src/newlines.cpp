@@ -2055,7 +2055,11 @@ static void newlines_brace_pair(chunk_t *br_open)
 
             chunk_flags_set(br_open, PCF_ONE_LINER);         // set the one liner flag if needed
             chunk_flags_set(br_close, PCF_ONE_LINER);
+            LOG_FMT(LNL1LINE, "%s(%d): tmp->orig_line is %zu, tmp->orig_col is %zu\n",
+                    __func__, __LINE__, tmp->orig_line, tmp->orig_col);
             tmp = chunk_get_next(tmp);
+            LOG_FMT(LNL1LINE, "%s(%d): tmp->orig_line is %zu, tmp->orig_col is %zu\n",
+                    __func__, __LINE__, tmp->orig_line, tmp->orig_col);
          }
       }
    }
