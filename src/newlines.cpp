@@ -2020,23 +2020,32 @@ static void newlines_brace_pair(chunk_t *br_open)
    if (  br_open->parent_type == CT_FUNC_DEF
       && options::nl_create_func_def_one_liner())
    {
+      LOG_FMT(LNL1LINE, "%s(%d): br_open->orig_line is %zu, br_open->orig_col is %zu, br_open->parent_type is CT_FUNC_DEF\n",
+              __func__, __LINE__, br_open->orig_line, br_open->orig_col);
       chunk_t *br_close = chunk_skip_to_match(br_open, scope_e::ALL);
-      chunk_t *tmp      = chunk_get_prev_ncnlni(br_open);                                 // Issue #2279
-      if (((br_close->orig_line - br_open->orig_line) <= 2) && chunk_is_paren_close(tmp)) // need to check the conditions.
+      LOG_FMT(LNL1LINE, "%s(%d): br_close->orig_line is %zu, br_close->orig_col is %zu\n",
+              __func__, __LINE__, br_close->orig_line, br_close->orig_col);
+      chunk_t *tmp = chunk_get_prev_ncnlni(br_open);                           // Issue #2279
+      if (  ((br_close->orig_line - br_open->orig_line) <= 2)
+         && chunk_is_paren_close(tmp))                                         // need to check the conditions.
       {
          while (  tmp != nullptr
-               && (tmp = chunk_get_next(tmp)) != nullptr
-               && !chunk_is_closing_brace(tmp)
-               && (chunk_get_next(tmp) != nullptr))
+               && !chunk_is_closing_brace(tmp))
          {
+            LOG_FMT(LNL1LINE, "%s(%d): tmp->orig_line is %zu, tmp->orig_col is %zu\n",
+                    __func__, __LINE__, tmp->orig_line, tmp->orig_col);
             if (chunk_is_newline(tmp))
             {
-               chunk_t *prev = chunk_get_prev(tmp);                  // Issue #1825
+               chunk_t *prev = chunk_get_prev(tmp);                            // Issue #1825
                if (prev != nullptr)
                {
+                  LOG_FMT(LNL1LINE, "%s(%d): prev->orig_line is %zu, prev->orig_col is %zu\n",
+                          __func__, __LINE__, prev->orig_line, prev->orig_col);
                   chunk_t *prev_nextncnl = chunk_get_next_ncnl(prev);
                   if (prev_nextncnl != nullptr)
                   {
+                     LOG_FMT(LNL1LINE, "%s(%d): prev_nextncnl->orig_line is %zu, prev_nextncnl->orig_col is %zu\n",
+                             __func__, __LINE__, prev_nextncnl->orig_line, prev_nextncnl->orig_col);
                      newline_iarf_pair(tmp, prev_nextncnl, IARF_REMOVE);
                   }
                }
@@ -2044,6 +2053,7 @@ static void newlines_brace_pair(chunk_t *br_open)
 
             chunk_flags_set(br_open, PCF_ONE_LINER);         // set the one liner flag if needed
             chunk_flags_set(br_close, PCF_ONE_LINER);
+            tmp = chunk_get_next(tmp);
          }
       }
    }
