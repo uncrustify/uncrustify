@@ -95,6 +95,7 @@
 10044  U04-Cs.cfg                           cs/ifcomment.cs
 10045  UNI-1288.cfg                         cs/UNI-1288.cs
 10046  U15-Cpp.cfg                          cs/UNI-1333.mm
+10047  U04-Cs-liner.cfg                     cs/ifcomment.cs
 10051  UNI-1338.cfg                         cs/UNI-1338.cs
 10055  U06-Cs.cfg                           cs/UNI-1345.cs
 10066  UNI-1977.cfg                         cs/UNI-1977.cs

@@ -2034,7 +2034,11 @@ static void newlines_brace_pair(chunk_t *br_open)
                chunk_t *prev = chunk_get_prev(tmp);                  // Issue #1825
                if (prev != nullptr)
                {
-                  newline_iarf_pair(tmp, chunk_get_next_ncnl(prev), IARF_REMOVE);
+                  chunk_t *prev_nextncnl = chunk_get_next_ncnl(prev);
+                  if (prev_nextncnl != nullptr)
+                  {
+                     newline_iarf_pair(tmp, prev_nextncnl, IARF_REMOVE);
+                  }
                }
             }
 
