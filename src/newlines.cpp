@@ -2047,12 +2047,16 @@ static void newlines_brace_pair(chunk_t *br_open)
                   {
                      LOG_FMT(LNL1LINE, "%s(%d): prev_nextncnl->orig_line is %zu, prev_nextncnl->orig_col is %zu\n",
                              __func__, __LINE__, prev_nextncnl->orig_line, prev_nextncnl->orig_col);
+                     LOG_FMT(LNL1LINE, "%s(%d): tmp->orig_line is %zu, tmp->orig_col is %zu\n",
+                             __func__, __LINE__, tmp->orig_line, tmp->orig_col);
                      newline_iarf_pair(tmp, prev_nextncnl, IARF_REMOVE);
                      LOG_FMT(LNL1LINE, "%s(%d):\n", __func__, __LINE__);
                   }
                }
             }
 
+            LOG_FMT(LNL1LINE, "%s(%d): tmp->orig_line is %zu, tmp->orig_col is %zu\n",
+                    __func__, __LINE__, tmp->orig_line, tmp->orig_col);
             chunk_flags_set(br_open, PCF_ONE_LINER);         // set the one liner flag if needed
             chunk_flags_set(br_close, PCF_ONE_LINER);
             LOG_FMT(LNL1LINE, "%s(%d): tmp->orig_line is %zu, tmp->orig_col is %zu\n",
