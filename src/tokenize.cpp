@@ -2034,6 +2034,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
          || ((ch == '<') && cpd.in_preproc == CT_PP_INCLUDE))
       {
          parse_string(ctx, pc, unc_isalpha(ch) ? 1 : 0, true);
+         set_chunk_parent(&pc, CT_PP_INCLUDE);
          return(true);
       }
 

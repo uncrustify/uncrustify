@@ -9,3 +9,14 @@
 // should be just bbb
 #include "bbb"
 
+// should be a, aa
+#include "a"
+#include "aa"
+
+// should be a, aa
+#include <a>
+#include <aa>
+
+// should be b, a
+#include "b"
+#include <a>
