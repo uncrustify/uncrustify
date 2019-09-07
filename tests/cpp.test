@@ -781,3 +781,4 @@
 60042  UNI-18777.cfg                        cpp/UNI-18777.cpp
 60043  nl_remove_extra_newlines-1.cfg       cpp/i2033.cpp
 60044  nl_fdef_brace-r__nl_collapse_empty_body-t.cfg  cpp/i2116.cpp
+60045  align_asterisk_after_type_cast.cfg   cpp/align_asterisk_after_type_cast.cpp

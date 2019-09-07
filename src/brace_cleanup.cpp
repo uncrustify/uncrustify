@@ -546,7 +546,18 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
             || chunk_is_token(pc, CT_SPAREN_OPEN))
          {
             // Set the parent for parenthesis and change parenthesis type
-            if (frm.top().stage != brace_stage_e::NONE)
+            if (  chunk_is_token(prev, CT_IF)
+               || chunk_is_token(prev, CT_ELSEIF)
+               || chunk_is_token(prev, CT_WHILE)
+               || chunk_is_token(prev, CT_DO)
+               || chunk_is_token(prev, CT_FOR)
+               || chunk_is_token(prev, CT_SWITCH)
+               || chunk_is_token(prev, CT_CATCH)
+               || chunk_is_token(prev, CT_SYNCHRONIZED)
+               || chunk_is_token(prev, CT_D_VERSION)
+               || chunk_is_token(prev, CT_D_VERSION_IF)
+               || chunk_is_token(prev, CT_D_SCOPE)
+               || chunk_is_token(prev, CT_D_SCOPE_IF))
             {
                set_chunk_type(pc, CT_SPAREN_OPEN);
                parent = frm.top().type;
