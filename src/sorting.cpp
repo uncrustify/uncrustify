@@ -108,6 +108,16 @@ static int get_chunk_priority(chunk_t *pc)
 }
 
 
+static unc_text chunk_sort_str(chunk_t *pc)
+{
+   if (pc->parent_type == CT_PP_INCLUDE)
+   {
+      return(unc_text{ pc->str, 0, pc->len() - 1 });
+   }
+   return(pc->str);
+}
+
+
 //! Compare two chunks
 static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
 {
@@ -130,8 +140,9 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
 
       LOG_FMT(LSORT, "text=%s, pc1->len=%zu, line=%zu, column=%zu\n", pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
       LOG_FMT(LSORT, "text=%s, pc2->len=%zu, line=%zu, column=%zu\n", pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
-      size_t min_len = (pc1->len() < pc2->len()) ? pc1->len() : pc2->len();
-      int    ret_val = unc_text::compare(pc1->str, pc2->str, min_len, tcare);
+      auto const &s1     = chunk_sort_str(pc1);
+      auto const &s2     = chunk_sort_str(pc2);
+      int        ret_val = unc_text::compare(s1, s2, std::min(s1.size(), s2.size()), tcare);
       LOG_FMT(LSORT, "ret_val=%d\n", ret_val);
 
       if (ret_val != 0)
