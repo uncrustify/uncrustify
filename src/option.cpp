@@ -94,6 +94,13 @@ std::unordered_map<std::string, GenericOption *> option_map;
 
 
 //-----------------------------------------------------------------------------
+constexpr int option_level(int major, int minor)
+{
+   return((major << 16) | (minor << 0));
+}
+
+
+//-----------------------------------------------------------------------------
 void log_config()
 {
    // Print the name of the configuration file only once
@@ -149,6 +156,13 @@ std::string to_lower(const std::string &in)
 bool is_arg_sep(int ch)
 {
    return(isspace(ch) || ch == ',' || ch == '=');
+}
+
+
+//-----------------------------------------------------------------------------
+bool is_varg_sep(int ch)
+{
+   return(ch == '.');
 }
 
 
@@ -276,6 +290,25 @@ void print_description(FILE *pfile, std::string description,
    }
 }
 
+
+//-----------------------------------------------------------------------------
+bool process_option_line_compat_0_68(const std::string              &cmd,
+                                     const std::vector<std::string> &args,
+                                     const char                     *filename)
+{
+   if (cmd == "sp_cpp_lambda_paren")
+   {
+      OptionWarning w{ filename, OptionWarning::MINOR };
+      w("option '%s' is deprecated; use '%s' instead",
+        cmd.c_str(), options::sp_cpp_lambda_square_paren.name());
+
+      UNUSED(options::sp_cpp_lambda_square_paren.read(args[1].c_str()));
+      return(true);
+   }
+
+   return(false);
+} // process_option_line_compat_0_68
+
 } // namespace
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -284,9 +317,12 @@ void print_description(FILE *pfile, std::string description,
 
 
 //-----------------------------------------------------------------------------
-OptionWarning::OptionWarning(const char *filename)
+OptionWarning::OptionWarning(const char *filename, Severity severity)
 {
-   ++cpd.error_count;
+   if (severity != MINOR)
+   {
+      ++cpd.error_count;
+   }
    if (cpd.line_number != 0)
    {
       fprintf(stderr, "%s:%u: ", filename, cpd.line_number);
@@ -299,9 +335,12 @@ OptionWarning::OptionWarning(const char *filename)
 
 
 //-----------------------------------------------------------------------------
-OptionWarning::OptionWarning(const GenericOption *opt)
+OptionWarning::OptionWarning(const GenericOption *opt, Severity severity)
 {
-   ++cpd.error_count;
+   if (severity != MINOR)
+   {
+      ++cpd.error_count;
+   }
    fprintf(stderr, "Option<%s>: at %s:%d: ", to_string(opt->type()),
            cpd.filename.c_str(), cpd.line_number);
 }
@@ -783,6 +822,9 @@ size_t get_option_count()
 //-----------------------------------------------------------------------------
 void process_option_line(const std::string &config_line, const char *filename)
 {
+   // Compatibility level; by default, we are compatible with everything
+   static auto compat_level = 0;
+
    // Split line into arguments, and punt if no arguments are present
    auto args = split_args(config_line, filename, is_arg_sep);
 
@@ -898,9 +940,29 @@ void process_option_line(const std::string &config_line, const char *filename)
          }
       }
    }
+   else if (cmd == "using")
+   {
+      auto vargs = split_args(args[1], filename, is_varg_sep);
+      if (vargs.size() != 2)
+      {
+         OptionWarning w{ filename };
+         w("%s requires a version number in the form MAJOR.MINOR", cmd.c_str());
+         return;
+      }
+
+      compat_level = option_level(std::stoi(vargs[0]), std::stoi(vargs[1]));
+   }
    else
    {
       // Must be a regular option = value
+      if (compat_level < option_level(0, 69))
+      {
+         if (process_option_line_compat_0_68(cmd, args, filename))
+         {
+            return;
+         }
+      }
+
       const auto oi = option_map.find(cmd);
       if (oi == option_map.end())
       {

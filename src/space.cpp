@@ -858,16 +858,33 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_cpp_lambda_assign());
    }
 
-   // Handle the special lambda case for C++11:
-   //    [](Something arg){.....}
-   // Add or remove space after the capture specification in C++11 lambda.
-   if (  (options::sp_cpp_lambda_paren() != IARF_IGNORE)
-      && chunk_is_token(first, CT_SQUARE_CLOSE)
-      && first->parent_type == CT_CPP_LAMBDA
-      && chunk_is_token(second, CT_FPAREN_OPEN))
+   if (  chunk_is_token(first, CT_SQUARE_CLOSE)
+      && first->parent_type == CT_CPP_LAMBDA)
    {
-      log_rule("sp_cpp_lambda_paren");
-      return(options::sp_cpp_lambda_paren());
+      // Handle the special lambda case for C++11:
+      //    [](Something arg){.....}
+      // Add or remove space after the capture specification in C++11 lambda.
+      if (  (options::sp_cpp_lambda_square_paren() != IARF_IGNORE)
+         && chunk_is_token(second, CT_FPAREN_OPEN))
+      {
+         log_rule("sp_cpp_lambda_square_paren");
+         return(options::sp_cpp_lambda_square_paren());
+      }
+      else if (  (options::sp_cpp_lambda_square_brace() != IARF_IGNORE)
+              && chunk_is_token(second, CT_BRACE_OPEN))
+      {
+         log_rule("sp_cpp_lambda_square_brace");
+         return(options::sp_cpp_lambda_square_brace());
+      }
+   }
+
+   if (  (options::sp_cpp_lambda_paren_brace() != IARF_IGNORE)
+      && chunk_is_token(first, CT_FPAREN_CLOSE)
+      && first->parent_type == CT_CPP_LAMBDA
+      && chunk_is_token(second, CT_BRACE_OPEN))
+   {
+      log_rule("sp_cpp_lambda_paren_brace");
+      return(options::sp_cpp_lambda_paren_brace());
    }
 
    if (chunk_is_token(first, CT_ENUM) && chunk_is_token(second, CT_FPAREN_OPEN))

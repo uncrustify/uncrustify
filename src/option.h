@@ -144,8 +144,17 @@ protected:
 class OptionWarning
 {
 public:
-   OptionWarning(const char *filename);
-   OptionWarning(const GenericOption *);
+   enum class /* UNC_NO_META */ Severity
+   {
+      OS_CRITICAL,
+      OS_MINOR,
+   };
+
+   constexpr static auto CRITICAL = Severity::OS_CRITICAL;
+   constexpr static auto MINOR    = Severity::OS_MINOR;
+
+   OptionWarning(const char *filename, Severity  = CRITICAL);
+   OptionWarning(const GenericOption *, Severity = CRITICAL);
    OptionWarning(const OptionWarning &) = delete;
    ~OptionWarning();
 

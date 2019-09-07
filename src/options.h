@@ -131,9 +131,20 @@ sp_trailing_ret_t;
 extern Option<iarf_e>
 sp_cpp_lambda_assign;
 
-// Add or remove space after the capture specification in C++11 lambda.
+// Add or remove space after the capture specification of a C++11 lambda when
+// an argument list is present, as in '[] <here> (int x){ ... }'.
 extern Option<iarf_e>
-sp_cpp_lambda_paren;
+sp_cpp_lambda_square_paren;
+
+// Add or remove space after the capture specification of a C++11 lambda with
+// no argument list is present, as in '[] <here> { ... }'.
+extern Option<iarf_e>
+sp_cpp_lambda_square_brace;
+
+// Add or remove space after the argument list of a C++11 lambda, as in
+// '[](int x) <here> { ... }'.
+extern Option<iarf_e>
+sp_cpp_lambda_paren_brace;
 
 // Add or remove space around assignment operator '=' in a prototype.
 //
