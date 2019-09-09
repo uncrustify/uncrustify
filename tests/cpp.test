@@ -316,6 +316,7 @@
 30916  empty.cfg                            cpp/Issue_1737.cpp
 30917  Issue_2345.cfg                       cpp/Issue_2345-3.cpp
 30918  Issue_2345.cfg                       cpp/Issue_2345-4.cpp
+30919  empty.cfg                            cpp/Issue_2387.cpp
 
 30920  ben_027.cfg                          cpp/indent-off.cpp
 30921  ben_028.cfg                          cpp/variadic-template.h
