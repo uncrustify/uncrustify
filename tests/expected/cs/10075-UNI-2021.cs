@@ -14,4 +14,4 @@ int fun() { return 0;}
 
 int fun() {return 0; }
 
-int fun() {return 0;}
+int fun() { return 0;}
