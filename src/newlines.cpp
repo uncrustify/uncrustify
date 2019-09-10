@@ -3739,13 +3739,29 @@ void newlines_cleanup_braces(bool first)
       else if (  chunk_is_token(pc, CT_NAMESPACE)
               && pc->parent_type != CT_USING)
       {
-         // Issue #1235
-         // Issue #2186
-         chunk_t *braceOpen = chunk_get_next_type(pc, CT_BRACE_OPEN, pc->level);
-         LOG_FMT(LNEWLINE, "%s(%d): braceOpen->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
-                 __func__, __LINE__, braceOpen->orig_line, braceOpen->orig_col, braceOpen->text());
-         log_pcf_flags(LNEWLINE, braceOpen->flags);
-         newlines_namespace(pc);
+         // Issue #2387
+         next = chunk_get_next_ncnl(pc);
+         if (next != nullptr)
+         {
+            next = chunk_get_next_ncnl(next);
+            if (!chunk_is_token(next, CT_ASSIGN))
+            {
+               // Issue #1235
+               // Issue #2186
+               chunk_t *braceOpen = chunk_get_next_type(pc, CT_BRACE_OPEN, pc->level);
+               if (!braceOpen)
+               {
+                  // fatal error
+                  LOG_FMT(LERR, "%s(%d): Missing BRACE_OPEN after namespace\n   orig_line is %zu, orig_col is %zu\n",
+                          __func__, __LINE__, pc->orig_line, pc->orig_col);
+                  exit(EXIT_FAILURE);
+               }
+               LOG_FMT(LNEWLINE, "%s(%d): braceOpen->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+                       __func__, __LINE__, braceOpen->orig_line, braceOpen->orig_col, braceOpen->text());
+               log_pcf_flags(LNEWLINE, braceOpen->flags);
+               newlines_namespace(pc);
+            }
+         }
       }
       else if (chunk_is_token(pc, CT_SQUARE_OPEN))
       {
