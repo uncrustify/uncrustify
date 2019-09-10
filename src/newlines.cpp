@@ -2052,8 +2052,8 @@ static void newlines_brace_pair(chunk_t *br_open)
                        __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->text());
                if (chunk_is_newline(tmp))
                {
-                  chunk_t *tmp2 = chunk_get_prev(tmp);       // Issue #1825
-                  newline_iarf_pair(tmp, chunk_get_next_ncnl(tmp2), IARF_REMOVE);
+                  tmp = chunk_get_prev(tmp);                 // Issue #1825
+                  newline_iarf_pair(tmp, chunk_get_next_ncnl(tmp), IARF_REMOVE);
                }
             }
             chunk_flags_set(br_open, PCF_ONE_LINER);         // set the one liner flag if needed
