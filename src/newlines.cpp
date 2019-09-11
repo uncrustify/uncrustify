@@ -2024,17 +2024,38 @@ static void newlines_brace_pair(chunk_t *br_open)
       chunk_t *tmp      = chunk_get_prev_ncnlni(br_open);                                 // Issue #2279
       if (((br_close->orig_line - br_open->orig_line) <= 2) && chunk_is_paren_close(tmp)) // need to check the conditions.
       {
+         // Issue #1825
+         bool is_it_possible = true;
          while (  tmp != nullptr
                && (tmp = chunk_get_next(tmp)) != nullptr
                && !chunk_is_closing_brace(tmp)
                && (chunk_get_next(tmp) != nullptr))
          {
-            if (chunk_is_newline(tmp))
+            LOG_FMT(LNL1LINE, "%s(%d): tmp->orig_line is %zu, tmp->orig_col is %zu, text() is '%s'\n",
+                    __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->text());
+            if (chunk_is_comment(tmp))
             {
-               tmp = chunk_get_prev(tmp);
-               newline_iarf_pair(tmp, chunk_get_next_ncnl(tmp), IARF_REMOVE);
+               is_it_possible = false;
+               break;
             }
+         }
 
+         if (is_it_possible)
+         {
+            tmp = chunk_get_prev_ncnlni(br_open);
+            while (  tmp != nullptr
+                  && (tmp = chunk_get_next(tmp)) != nullptr
+                  && !chunk_is_closing_brace(tmp)
+                  && (chunk_get_next(tmp) != nullptr))
+            {
+               LOG_FMT(LNL1LINE, "%s(%d): tmp->orig_line is %zu, tmp->orig_col is %zu, text() is '%s'\n",
+                       __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->text());
+               if (chunk_is_newline(tmp))
+               {
+                  tmp = chunk_get_prev(tmp);                 // Issue #1825
+                  newline_iarf_pair(tmp, chunk_get_next_ncnl(tmp), IARF_REMOVE);
+               }
+            }
             chunk_flags_set(br_open, PCF_ONE_LINER);         // set the one liner flag if needed
             chunk_flags_set(br_close, PCF_ONE_LINER);
          }
