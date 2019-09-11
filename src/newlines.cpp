@@ -4742,8 +4742,11 @@ void do_blank_lines(void)
          && chunk_is_token(next, CT_COMMENT_MULTI))
       {
          // Don't add blanks after a open brace
-         if (  prev == nullptr
-            || (prev->type != CT_BRACE_OPEN && prev->type != CT_VBRACE_OPEN))
+         if (  (  prev == nullptr
+               || (  prev->type != CT_BRACE_OPEN
+                  && prev->type != CT_VBRACE_OPEN))
+            && pcmt != nullptr                          // Issue #2383
+            && pcmt->type != CT_COMMENT_MULTI)
          {
             blank_line_set(pc, options::nl_before_block_comment);
          }
@@ -4754,11 +4757,11 @@ void do_blank_lines(void)
          && chunk_is_token(next, CT_COMMENT))
       {
          // Don't add blanks after a open brace or a comment
-         if (  prev == nullptr
-            || (  prev->type != CT_BRACE_OPEN
-               && prev->type != CT_VBRACE_OPEN
-               && pcmt != nullptr
-               && pcmt->type != CT_COMMENT))
+         if (  (  prev == nullptr
+               || (  prev->type != CT_BRACE_OPEN
+                  && prev->type != CT_VBRACE_OPEN))
+            && pcmt != nullptr                          // Issue #2383
+            && pcmt->type != CT_COMMENT)
          {
             blank_line_set(pc, options::nl_before_c_comment);
          }
@@ -4769,11 +4772,11 @@ void do_blank_lines(void)
          && chunk_is_token(next, CT_COMMENT_CPP))
       {
          // Don't add blanks after a open brace
-         if (  prev == nullptr
-            || (  prev->type != CT_BRACE_OPEN
-               && prev->type != CT_VBRACE_OPEN
-               && pcmt != nullptr
-               && pcmt->type != CT_COMMENT_CPP))
+         if (  (  prev == nullptr
+               || (  prev->type != CT_BRACE_OPEN
+                  && prev->type != CT_VBRACE_OPEN))
+            && pcmt != nullptr                          // Issue #2383
+            && pcmt->type != CT_COMMENT_CPP)
          {
             blank_line_set(pc, options::nl_before_cpp_comment);
          }
