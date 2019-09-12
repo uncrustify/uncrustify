@@ -172,7 +172,7 @@ sp_brace_brace                  = ignore   # ignore/add/remove/force
 sp_before_ptr_star              = ignore   # ignore/add/remove/force
 
 # Add or remove space before pointer star '*' that isn't followed by a
-# variable name. If set to 'ignore', sp_before_ptr_star is used instead.
+# variable name. If set to ignore, sp_before_ptr_star is used instead.
 sp_before_unnamed_ptr_star      = ignore   # ignore/add/remove/force
 
 # Add or remove space between pointer stars '*'.
@@ -203,7 +203,7 @@ sp_before_ptr_star_func         = ignore   # ignore/add/remove/force
 sp_before_byref                 = ignore   # ignore/add/remove/force
 
 # Add or remove space before a reference sign '&' that isn't followed by a
-# variable name. If set to 'ignore', sp_before_byref is used instead.
+# variable name. If set to ignore, sp_before_byref is used instead.
 sp_before_unnamed_byref         = ignore   # ignore/add/remove/force
 
 # Add or remove space after reference sign '&', if followed by a word.
@@ -520,7 +520,7 @@ sp_fparen_dbrace                = ignore   # ignore/add/remove/force
 sp_func_call_paren              = ignore   # ignore/add/remove/force
 
 # Add or remove space between function name and '()' on function calls without
-# parameters. If set to 'ignore' (the default), sp_func_call_paren is used.
+# parameters. If set to ignore (the default), sp_func_call_paren is used.
 sp_func_call_paren_empty        = ignore   # ignore/add/remove/force
 
 # Add or remove space between the user function name and '(' on function

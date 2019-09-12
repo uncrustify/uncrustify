@@ -239,7 +239,7 @@ extern Option<iarf_e>
 sp_before_ptr_star;
 
 // Add or remove space before pointer star '*' that isn't followed by a
-// variable name. If set to 'ignore', sp_before_ptr_star is used instead.
+// variable name. If set to ignore, sp_before_ptr_star is used instead.
 extern Option<iarf_e>
 sp_before_unnamed_ptr_star;
 
@@ -279,7 +279,7 @@ extern Option<iarf_e>
 sp_before_byref;
 
 // Add or remove space before a reference sign '&' that isn't followed by a
-// variable name. If set to 'ignore', sp_before_byref is used instead.
+// variable name. If set to ignore, sp_before_byref is used instead.
 extern Option<iarf_e>
 sp_before_unnamed_byref;
 
@@ -669,7 +669,7 @@ extern Option<iarf_e>
 sp_func_call_paren;
 
 // Add or remove space between function name and '()' on function calls without
-// parameters. If set to 'ignore' (the default), sp_func_call_paren is used.
+// parameters. If set to ignore (the default), sp_func_call_paren is used.
 extern Option<iarf_e>
 sp_func_call_paren_empty;
 
