@@ -248,6 +248,8 @@ extern Option<iarf_e>
 sp_between_ptr_star;
 
 // Add or remove space after pointer star '*', if followed by a word.
+//
+// Overrides sp_type_func.
 extern Option<iarf_e>
 sp_after_ptr_star;
 
@@ -261,6 +263,8 @@ sp_after_ptr_star_qualifier;
 
 // Add or remove space after a pointer star '*', if followed by a function
 // prototype or function definition.
+//
+// Overrides sp_after_ptr_star and sp_type_func.
 extern Option<iarf_e>
 sp_after_ptr_star_func;
 
@@ -284,11 +288,15 @@ extern Option<iarf_e>
 sp_before_unnamed_byref;
 
 // Add or remove space after reference sign '&', if followed by a word.
+//
+// Overrides sp_type_func.
 extern Option<iarf_e>
 sp_after_byref;
 
 // Add or remove space after a reference sign '&', if followed by a function
 // prototype or function definition.
+//
+// Overrides sp_after_byref and sp_type_func.
 extern Option<iarf_e>
 sp_after_byref_func;
 

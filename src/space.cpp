@@ -1205,23 +1205,28 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (  chunk_is_token(first, CT_BYREF)
-      && (options::sp_after_byref_func() != IARF_IGNORE)
-      && (  first->parent_type == CT_FUNC_DEF
-         || first->parent_type == CT_FUNC_PROTO))
+   if (chunk_is_token(first, CT_BYREF))
    {
-      // Add or remove space after a reference sign '&', if followed by a function
-      // prototype or function definition.
-      log_rule("sp_after_byref_func");
-      return(options::sp_after_byref_func());
-   }
+      if (  options::sp_after_byref_func() != IARF_IGNORE
+         && (  first->parent_type == CT_FUNC_DEF
+            || first->parent_type == CT_FUNC_PROTO))
+      {
+         // Add or remove space after a reference sign '&', if followed by a function
+         // prototype or function definition.
+         log_rule("sp_after_byref_func");
+         return(options::sp_after_byref_func());
+      }
 
-   if (  chunk_is_token(first, CT_BYREF)
-      && (CharTable::IsKw1(second->str[0]) || chunk_is_token(second, CT_PAREN_OPEN)))
-   {
-      // Add or remove space after reference sign '&', if followed by a word.
-      log_rule("sp_after_byref");
-      return(options::sp_after_byref());
+      if (  (  CharTable::IsKw1(second->str[0])
+            && (  options::sp_after_byref() != IARF_IGNORE
+               || (  !chunk_is_token(second, CT_FUNC_PROTO)
+                  && !chunk_is_token(second, CT_FUNC_DEF))))
+         || chunk_is_token(second, CT_PAREN_OPEN))
+      {
+         // Add or remove space after reference sign '&', if followed by a word.
+         log_rule("sp_after_byref");
+         return(options::sp_after_byref());
+      }
    }
 
    if (  chunk_is_token(second, CT_BYREF)
@@ -2202,6 +2207,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
+   if (  chunk_is_token(first, CT_PTR_TYPE)
+      && chunk_is_token(second, CT_PAREN_OPEN))
+   {
+      // Add or remove space after pointer star '*', if followed by a word.
+      log_rule("sp_after_ptr_star");
+      return(options::sp_after_ptr_star());
+   }
+
    if (chunk_is_token(second, CT_PTR_TYPE) && first->type != CT_IN)
    {
       if (language_is_set(LANG_CS) && chunk_is_nullable(second))
@@ -2259,15 +2272,15 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(second, CT_FUNC_PROTO) || chunk_is_token(second, CT_FUNC_DEF))
    {
-      if (first->type != CT_PTR_TYPE)
+      if (first->type != CT_PTR_TYPE && first->type != CT_BYREF)
       {
-         // Add or remove space between return type and function name. A minimum of 1
-         // is forced except for pointer return types.
+         // Add or remove space between return type and function name. A
+         // minimum of 1 is forced except for pointer/reference return types.
          log_rule("sp_type_func|ADD");
          return(options::sp_type_func() | IARF_ADD);
       }
-      // Add or remove space between return type and function name. A minimum of 1
-      // is forced except for pointer return types.
+      // Add or remove space between return type and function name. A
+      // minimum of 1 is forced except for pointer/reference return types.
       log_rule("sp_type_func");
       return(options::sp_type_func());
    }

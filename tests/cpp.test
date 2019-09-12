@@ -143,6 +143,13 @@
 
 30220  bug_1340.cfg                         cpp/bug_1340.cpp
 
+30230  sp_type_func-r.cfg                   cpp/sp_type_func.cpp
+30231  sp_type_func-f.cfg                   cpp/sp_type_func.cpp
+30232  sp_type_func-1.cfg                   cpp/sp_type_func.cpp
+30233  sp_type_func-2.cfg                   cpp/sp_type_func.cpp
+30234  functype_param-r.cfg                 cpp/functype_param.cpp
+30235  functype_param-f.cfg                 cpp/functype_param.cpp
+
 30240  align_func_params-t.cfg              cpp/align_func_params.cpp
 30241  align_func_params_span-1.cfg         cpp/align_func_params.cpp
 30242  align_func_params_gap.cfg            cpp/align_func_params.cpp
