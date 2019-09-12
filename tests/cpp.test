@@ -785,3 +785,4 @@
 60044  nl_fdef_brace-r__nl_collapse_empty_body-t.cfg  cpp/i2116.cpp
 60045  align_asterisk_after_type_cast.cfg   cpp/align_asterisk_after_type_cast.cpp
 60046  align_continuation_left_shift.cfg    cpp/align_continuation_left_shift.cpp
+60047  align_default_after_override.cfg     cpp/align_default_after_override.cpp
