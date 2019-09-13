@@ -5361,6 +5361,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
          && prev->type != CT_FPAREN_OPEN
          && prev->type != CT_SQUARE_OPEN
          && prev->type != CT_BRACE_OPEN
+         && prev->type != CT_SEMICOLON
          && prev->type != CT_RETURN))
    {
       return;
