@@ -146,6 +146,11 @@ sp_cpp_lambda_square_brace;
 extern Option<iarf_e>
 sp_cpp_lambda_paren_brace;
 
+// Add or remove space between a lambda body and its call operator of an
+// immediately invoked lambda, as in '[]( ... ){ ... } <here> ( ... )'.
+extern Option<iarf_e>
+sp_cpp_lambda_fparen;
+
 // Add or remove space around assignment operator '=' in a prototype.
 //
 // If set to ignore, use sp_assign.

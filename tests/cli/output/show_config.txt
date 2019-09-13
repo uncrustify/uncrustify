@@ -97,6 +97,10 @@ sp_cpp_lambda_square_brace      = ignore   # ignore/add/remove/force
 # '[](int x) <here> { ... }'.
 sp_cpp_lambda_paren_brace       = ignore   # ignore/add/remove/force
 
+# Add or remove space between a lambda body and its call operator of an
+# immediately invoked lambda, as in '[]( ... ){ ... } <here> ( ... )'.
+sp_cpp_lambda_fparen            = ignore   # ignore/add/remove/force
+
 # Add or remove space around assignment operator '=' in a prototype.
 #
 # If set to ignore, use sp_assign.

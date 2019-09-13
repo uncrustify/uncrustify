@@ -878,6 +878,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
+   if (  chunk_is_token(first, CT_BRACE_CLOSE)
+      && first->parent_type == CT_CPP_LAMBDA
+      && chunk_is_token(second, CT_FPAREN_OPEN))
+   {
+      log_rule("sp_cpp_lambda_fparen");
+      return(options::sp_cpp_lambda_fparen());
+   }
+
    if (  (options::sp_cpp_lambda_paren_brace() != IARF_IGNORE)
       && chunk_is_token(first, CT_FPAREN_CLOSE)
       && first->parent_type == CT_CPP_LAMBDA
