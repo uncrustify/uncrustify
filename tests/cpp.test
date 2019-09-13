@@ -119,6 +119,14 @@
 30113  bug_1452.cfg                         cpp/bug_1452.cpp
 30114  empty.cfg                            cpp/bug_1462.cpp
 
+30120  template_sp-force.cfg                cpp/sp_after_angle.cpp
+30121  template_sp-remove.cfg               cpp/sp_after_angle.cpp
+30122  sp_inside_fparen-f.cfg               cpp/sp_after_angle.cpp
+30123  sp_inside_fparen-r.cfg               cpp/sp_after_angle.cpp
+30124  sp_after_angle-1.cfg                 cpp/sp_after_angle.cpp
+30125  sp_after_angle-2.cfg                 cpp/sp_after_angle.cpp
+30126  sp_after_angle-3.cfg                 cpp/sp_after_angle.cpp
+
 30200  bug_1862.cfg                         cpp/bug_1862.cpp
 30201  cmt_indent-1.cfg                     cpp/cmt_indent.cpp
 30202  cmt_indent-2.cfg                     cpp/cmt_indent.cpp
