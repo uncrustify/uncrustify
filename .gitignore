@@ -51,3 +51,8 @@ xcuserdata
 
 # uncrustified files
 *.uncrustify
+
+
+# CLion
+.idea/
+cmake-build-*/
