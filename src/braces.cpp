@@ -1391,6 +1391,7 @@ static void process_if_chain(chunk_t *br_start)
          const auto brace = *itc;
 
          if (  (chunk_is_token(brace, CT_BRACE_OPEN) || chunk_is_token(brace, CT_BRACE_CLOSE))
+            && (brace->parent_type != CT_BRACED_INIT_LIST)
             && (multiline_block ? !paren_multiline_before_brace(brace) : true))
          {
             LOG_FMT(LBRCH, "%s(%d): brace->orig_line is %zu, brace->orig_col is %zu\n",
