@@ -804,3 +804,4 @@
 60046  align_continuation_left_shift.cfg    cpp/align_continuation_left_shift.cpp
 60047  align_default_after_override.cfg     cpp/align_default_after_override.cpp
 60048  bug_2322.cfg                         cpp/bug_2322.cpp
+60050  mod_remove_extra_semicolon-t.cfg     cpp/semicolon-removal-after-ternary-operator.cpp
