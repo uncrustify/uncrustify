@@ -124,7 +124,7 @@ static void nl_handle_define(chunk_t *pc);
  * @param after   The second chunk
  * @param av      The IARF value
  */
-static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av);
+static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av, bool check_nl_assign_leave_one_liners = false);
 
 
 /**
@@ -2395,7 +2395,7 @@ static void newline_after_return(chunk_t *start)
 }
 
 
-static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av)
+static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av, bool check_nl_assign_leave_one_liners)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LNEWLINE, "%s(%d): ", __func__, __LINE__);
@@ -2410,7 +2410,8 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av)
 
    if (av & IARF_ADD)
    {
-      if (  options::nl_assign_leave_one_liners()
+      if (  check_nl_assign_leave_one_liners
+         && options::nl_assign_leave_one_liners()
          && (after->flags & PCF_ONE_LINER))
       {
          return;
@@ -3279,7 +3280,7 @@ void newlines_cleanup_braces(bool first)
 
          case CT_BRACED_INIT_LIST:
          {
-            newline_iarf_pair(chunk_get_prev_nnl(pc), pc, options::nl_type_brace_init_lst());
+            newline_iarf_pair(chunk_get_prev_nnl(pc), pc, options::nl_type_brace_init_lst(), true);
             break;
          }
 
@@ -3326,7 +3327,7 @@ void newlines_cleanup_braces(bool first)
             if (pc->parent_type == CT_BRACED_INIT_LIST)
             {
                newline_iarf_pair(pc, chunk_get_next_nnl(pc),
-                                 options::nl_type_brace_init_lst_open());
+                                 options::nl_type_brace_init_lst_open(), true);
             }
             // Handle nl_after_brace_open
             else if (  (  pc->parent_type == CT_CPP_LAMBDA
@@ -3415,7 +3416,7 @@ void newlines_cleanup_braces(bool first)
          {
             // Handle unnamed temporary direct-list-initialization
             newline_iarf_pair(chunk_get_prev_nnl(pc), pc,
-                              options::nl_type_brace_init_lst_close());
+                              options::nl_type_brace_init_lst_close(), true);
          }
 
          // blanks before a close brace
