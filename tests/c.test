@@ -377,6 +377,7 @@
 09616  enum_comma_ifdef.cfg                 c/enum_comma_ifdef.c
 09617  Issue_2360-a.cfg                     c/Issue_2360.c
 09618  Issue_2360-b.cfg                     c/Issue_2360.c
+09619  Issue_2411.cfg                       c/Issue_2411.c
 
 10005  empty.cfg                            c/i1270.c
 
