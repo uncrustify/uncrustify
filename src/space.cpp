@@ -700,15 +700,22 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(second, CT_ELLIPSIS))
    {
-      // non-punc followed by a ellipsis
-      if (  chunk_is_token(first, CT_TYPE)
-         || chunk_is_token(first, CT_QUALIFIER))
+      // type followed by a ellipsis
+      chunk_t *tmp = first;
+      if (  chunk_is_token(tmp, CT_PTR_TYPE)
+         || chunk_is_token(tmp, CT_BYREF))
+      {
+         tmp = chunk_get_prev_ncnl(tmp);
+      }
+      if (  chunk_is_token(tmp, CT_TYPE)
+         || chunk_is_token(tmp, CT_QUALIFIER))
       {
          // Add or remove space between a type and '...'.
          log_rule("sp_type_ellipsis");
          return(options::sp_type_ellipsis());
       }
 
+      // non-punc followed by a ellipsis
       if (  ((first->flags & PCF_PUNCTUATOR) == 0)
          && (options::sp_before_ellipsis() != IARF_IGNORE))
       {
