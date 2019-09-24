@@ -339,7 +339,7 @@ sp_inside_angle_empty;
 extern Option<iarf_e>
 sp_angle_colon;
 
-// Add or remove space after '<>'.
+// Add or remove space after '>'.
 extern Option<iarf_e>
 sp_after_angle;
 
@@ -636,6 +636,7 @@ extern Option<iarf_e>
 sp_func_def_paren_empty;
 
 // Add or remove space inside empty function '()'.
+// Overrides sp_after_angle unless use_sp_after_angle_always is set to true.
 extern Option<iarf_e>
 sp_inside_fparens;
 
@@ -3401,6 +3402,12 @@ use_indent_continue_only_once;
 // false: indentation will be used every time (default)
 extern Option<bool>
 indent_cpp_lambda_only_once;
+
+// Whether sp_after_angle takes precedence over sp_inside_fparen. This was the
+// historic behavior, but is probably not the desired behavior, so this is off
+// by default.
+extern Option<bool>
+use_sp_after_angle_always;
 
 // Whether to apply special formatting for Qt SIGNAL/SLOT macros. Essentially,
 // this tries to format these so that they match Qt's normalized form (i.e. the

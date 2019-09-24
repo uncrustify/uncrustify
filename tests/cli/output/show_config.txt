@@ -253,7 +253,7 @@ sp_inside_angle_empty           = ignore   # ignore/add/remove/force
 # Add or remove space between '>' and ':'.
 sp_angle_colon                  = ignore   # ignore/add/remove/force
 
-# Add or remove space after '<>'.
+# Add or remove space after '>'.
 sp_after_angle                  = ignore   # ignore/add/remove/force
 
 # Add or remove space between '>' and '(' as found in 'new List<byte>(foo);'.
@@ -496,6 +496,7 @@ sp_func_def_paren               = ignore   # ignore/add/remove/force
 sp_func_def_paren_empty         = ignore   # ignore/add/remove/force
 
 # Add or remove space inside empty function '()'.
+# Overrides sp_after_angle unless use_sp_after_angle_always is set to true.
 sp_inside_fparens               = ignore   # ignore/add/remove/force
 
 # Add or remove space inside function '(' and ')'.
@@ -2760,6 +2761,11 @@ use_indent_continue_only_once   = false    # true/false
 # true:  indentation will be used only once
 # false: indentation will be used every time (default)
 indent_cpp_lambda_only_once     = false    # true/false
+
+# Whether sp_after_angle takes precedence over sp_inside_fparen. This was the
+# historic behavior, but is probably not the desired behavior, so this is off
+# by default.
+use_sp_after_angle_always       = false    # true/false
 
 # Whether to apply special formatting for Qt SIGNAL/SLOT macros. Essentially,
 # this tries to format these so that they match Qt's normalized form (i.e. the
