@@ -2089,7 +2089,7 @@ static void output_comment_multi_simple(chunk_t *pc)
       }
 
       return(diff);
-   } ();
+   }();
 
    unc_text line;
    size_t   line_count  = 0;

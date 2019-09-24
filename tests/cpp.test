@@ -265,6 +265,8 @@
 30773 sp_cpp_lambda_square_brace-f.cfg      cpp/lambda.cpp
 30774 sp_cpp_lambda_paren_brace-r.cfg       cpp/lambda.cpp
 30775 sp_cpp_lambda_paren_brace-f.cfg       cpp/lambda.cpp
+30776 sp_cpp_lambda_fparen-r.cfg            cpp/sp_cpp_lambda_fparen.cpp
+30777 sp_cpp_lambda_fparen-f.cfg            cpp/sp_cpp_lambda_fparen.cpp
 
 30800  star_pos-0.cfg                       cpp/align-star-amp-pos.cpp
 30801  star_pos-1.cfg                       cpp/align-star-amp-pos.cpp
