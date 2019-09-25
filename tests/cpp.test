@@ -268,6 +268,8 @@
 30776 sp_cpp_lambda_fparen-r.cfg            cpp/sp_cpp_lambda_fparen.cpp
 30777 sp_cpp_lambda_fparen-f.cfg            cpp/sp_cpp_lambda_fparen.cpp
 
+30780 lambda_in_one_liner.cfg               cpp/lambda_in_one_liner.cpp
+
 30800  star_pos-0.cfg                       cpp/align-star-amp-pos.cpp
 30801  star_pos-1.cfg                       cpp/align-star-amp-pos.cpp
 30802  star_pos-2.cfg                       cpp/align-star-amp-pos.cpp

@@ -1099,7 +1099,9 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    // "a [x]" vs "a[x]"
    if (  chunk_is_token(second, CT_SQUARE_OPEN)
-      && (second->parent_type != CT_OC_MSG && second->parent_type != CT_CS_SQ_STMT))
+      && (  second->parent_type != CT_OC_MSG
+         && second->parent_type != CT_CS_SQ_STMT
+         && second->parent_type != CT_CPP_LAMBDA))
    {
       if (((second->flags & PCF_IN_SPAREN) != 0) && (chunk_is_token(first, CT_IN)))
       {
