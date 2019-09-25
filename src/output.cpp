@@ -2101,7 +2101,8 @@ static void output_comment_multi_simple(chunk_t *pc)
       cmt_idx++;
 
       // 1: step through leading tabs and spaces to find the start column
-      if (line.size() == 0 && (line_column < cmt.base_col || options::cmt_convert_tab_to_spaces()))
+      if (  line.size() == 0
+         && (line_column < cmt.base_col || options::cmt_convert_tab_to_spaces()))
       {
          if (ch == ' ')
          {
