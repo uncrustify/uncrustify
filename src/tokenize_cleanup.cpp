@@ -1368,4 +1368,3 @@ static void mark_attributes_in_property_with_open_paren(chunk_t *open_paren)
       tmp = tmp->next;
    }
 }
-
