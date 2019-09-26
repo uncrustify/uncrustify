@@ -124,4 +124,3 @@ protected:
 
 
 #endif /* ALIGN_STACK_H_INCLUDED */
-

@@ -142,4 +142,3 @@ static const chunk_tag_t symbols1[] =
    { "}", CT_BRACE_CLOSE,  LANG_ALL                            },
    { "~", CT_INV,          LANG_ALL                            },
 };
-

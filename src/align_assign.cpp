@@ -235,4 +235,3 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
 
    return(pc);
 } // align_assign
-

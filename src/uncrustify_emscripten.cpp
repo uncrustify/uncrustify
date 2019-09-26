@@ -1786,4 +1786,3 @@ EMSCRIPTEN_BINDINGS(MainModule)
 }
 
 #endif
-
