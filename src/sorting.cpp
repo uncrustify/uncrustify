@@ -122,8 +122,10 @@ static unc_text chunk_sort_str(chunk_t *pc)
 static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSORT, "\n@begin pc1->len=%zu, line=%zu, column=%zu\n", pc1->len(), pc1->orig_line, pc1->orig_col);
-   LOG_FMT(LSORT, "@begin pc2->len=%zu, line=%zu, column=%zu\n", pc2->len(), pc2->orig_line, pc2->orig_col);
+   LOG_FMT(LSORT, "%s(%d): @begin pc1->len is %zu, line is %zu, column is %zu\n",
+           __func__, __LINE__, pc1->len(), pc1->orig_line, pc1->orig_col);
+   LOG_FMT(LSORT, "%s(%d): @begin pc2->len is %zu, line is %zu, column is %zu\n",
+           __func__, __LINE__, pc2->len(), pc2->orig_line, pc2->orig_col);
    if (pc1 == pc2) // same chunk is always identical thus return 0 differences
    {
       return(0);
@@ -138,12 +140,15 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
          return(ppc1 - ppc2);
       }
 
-      LOG_FMT(LSORT, "text=%s, pc1->len=%zu, line=%zu, column=%zu\n", pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
-      LOG_FMT(LSORT, "text=%s, pc2->len=%zu, line=%zu, column=%zu\n", pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
+      LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
+              __func__, __LINE__, pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
+      LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
+              __func__, __LINE__, pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
       auto const &s1     = chunk_sort_str(pc1);
       auto const &s2     = chunk_sort_str(pc2);
       int        ret_val = unc_text::compare(s1, s2, std::min(s1.size(), s2.size()), tcare);
-      LOG_FMT(LSORT, "ret_val=%d\n", ret_val);
+      LOG_FMT(LSORT, "%s(%d): ret_val is %d\n",
+              __func__, __LINE__, ret_val);
 
       if (ret_val != 0)
       {
@@ -156,21 +161,27 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
 
       // Same word, same length. Step to the next chunk.
       pc1 = chunk_get_next(pc1);
-      LOG_FMT(LSORT, "text=%s, pc1->len=%zu, line=%zu, column=%zu\n", pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
+      LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
+              __func__, __LINE__, pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
       if (chunk_is_token(pc1, CT_MEMBER))
       {
          pc1 = chunk_get_next(pc1);
-         LOG_FMT(LSORT, "text=%s, pc1->len=%zu, line=%zu, column=%zu\n", pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
+         LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
+                 __func__, __LINE__, pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
       }
       pc2 = chunk_get_next(pc2);
-      LOG_FMT(LSORT, "text=%s, pc2->len=%zu, line=%zu, column=%zu\n", pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
+      LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
+              __func__, __LINE__, pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
       if (chunk_is_token(pc2, CT_MEMBER))
       {
          pc2 = chunk_get_next(pc2);
-         LOG_FMT(LSORT, "text=%s, pc2->len=%zu, line=%zu, column=%zu\n", pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
+         LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
+                 __func__, __LINE__, pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
       }
-      LOG_FMT(LSORT, ">>>text=%s, pc1->len=%zu, line=%zu, column=%zu\n", pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
-      LOG_FMT(LSORT, ">>>text=%s, pc2->len=%zu, line=%zu, column=%zu\n", pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
+      LOG_FMT(LSORT, "%s(%d): >>>text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
+              __func__, __LINE__, pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
+      LOG_FMT(LSORT, "%s(%d): >>>text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
+              __func__, __LINE__, pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
 
       // If we hit a newline or nullptr, we are done
       if (  pc1 == nullptr
@@ -203,7 +214,8 @@ static void do_the_sort(chunk_t **chunks, size_t num_chunks)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LSORT, "%s: %zu chunks:", __func__, num_chunks);
+   LOG_FMT(LSORT, "%s(%d): %zu chunks:",
+           __func__, __LINE__, num_chunks);
    for (size_t idx = 0; idx < num_chunks; idx++)
    {
       LOG_FMT(LSORT, " [%s]", chunks[idx]->text());
@@ -262,7 +274,8 @@ void sort_imports(void)
          {
             if (num_chunks < MAX_NUMBER_TO_SORT)
             {
-               LOG_FMT(LSORT, "p_imp %s\n", p_imp->text());
+               LOG_FMT(LSORT, "%s(%d): p_imp is %s\n",
+                       __func__, __LINE__, p_imp->text());
                chunks[num_chunks++] = p_imp;
             }
             else
