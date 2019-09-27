@@ -339,6 +339,9 @@ sp_after_semi_for_empty         = ignore   # ignore/add/remove/force
 # Add or remove space before '[' (except '[]').
 sp_before_square                = ignore   # ignore/add/remove/force
 
+# Add or remove space before '[' for asm block.
+sp_before_square_asm_block      = ignore   # ignore/add/remove/force
+
 # Add or remove space before '[]'.
 sp_before_squares               = ignore   # ignore/add/remove/force
 
