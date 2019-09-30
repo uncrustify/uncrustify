@@ -94,7 +94,8 @@ std::unordered_map<std::string, GenericOption *> option_map;
 
 
 //-----------------------------------------------------------------------------
-constexpr int option_level(int major, int minor)
+constexpr int option_level(int major,
+                           int minor)
 {
    return((major << 16) | (minor << 0));
 }
@@ -127,7 +128,8 @@ using std::to_string;
 
 
 //-----------------------------------------------------------------------------
-std::string to_lower(const char *in, std::string::size_type size = 0)
+std::string to_lower(const char             *in,
+                     std::string::size_type size = 0)
 {
    std::string out;
 
@@ -135,6 +137,7 @@ std::string to_lower(const char *in, std::string::size_type size = 0)
    {
       out.reserve(size);
    }
+
    while (*in)
    {
       out += static_cast<char>(std::tolower(*in));
@@ -167,8 +170,9 @@ bool is_varg_sep(int ch)
 
 
 //-----------------------------------------------------------------------------
-std::vector<std::string> split_args(std::string in, const char *filename,
-                                    bool (*is_sep)(int))
+std::vector<std::string> split_args(std::string in,
+                                    const char  *filename,
+                                    bool (      *is_sep)(int))
 {
    std::vector<std::string> out;
    std::string::size_type   n = 0;
@@ -193,6 +197,7 @@ std::vector<std::string> split_args(std::string in, const char *filename,
       if (const auto *quote = strchr("\'\"`", in[n]))
       {
          const auto start = ++n;
+
          for ((void)n; in[n] != *quote; ++n)
          {
             if (n < k && in[n] == '\\')
@@ -200,6 +205,7 @@ std::vector<std::string> split_args(std::string in, const char *filename,
                in.erase(n, 1);
                --k;
             }
+
             if (n >= k)
             {
                OptionWarning w{ filename };
@@ -207,18 +213,22 @@ std::vector<std::string> split_args(std::string in, const char *filename,
                return{};
             }
          }
+
          out.push_back(in.substr(start, n - start));
+
          if (++n < k && !is_sep(in[n]))
          {
             OptionWarning w{ filename };
             w("unexpected text following quoted-string");
             return{};
          }
+
          continue;
       }
 
       // Extract anything else
       const auto start = n;
+
       for ((void)n; n < k && !is_sep(in[n]); ++n)
       {
          if (in[n] == '\\')
@@ -226,6 +236,7 @@ std::vector<std::string> split_args(std::string in, const char *filename,
             in.erase(n, 1);
             --k;
          }
+
          if (n >= k)
          {
             OptionWarning w{ filename };
@@ -233,6 +244,7 @@ std::vector<std::string> split_args(std::string in, const char *filename,
             return{};
          }
       }
+
       out.push_back(in.substr(start, n - start));
    }
 
@@ -268,8 +280,9 @@ bool is_path_relative(const std::string &path)
 
 
 //-----------------------------------------------------------------------------
-void print_description(FILE *pfile, std::string description,
-                       const char *eol_marker)
+void print_description(FILE        *pfile,
+                       std::string description,
+                       const char  *eol_marker)
 {
    // Descriptions always start with a '\n', so skip the first character
    for (std::string::size_type start = 1, length = description.length();
@@ -317,12 +330,14 @@ bool process_option_line_compat_0_68(const std::string              &cmd,
 
 
 //-----------------------------------------------------------------------------
-OptionWarning::OptionWarning(const char *filename, Severity severity)
+OptionWarning::OptionWarning(const char *filename,
+                             Severity   severity)
 {
    if (severity != MINOR)
    {
       ++cpd.error_count;
    }
+
    if (cpd.line_number != 0)
    {
       fprintf(stderr, "%s:%u: ", filename, cpd.line_number);
@@ -335,12 +350,14 @@ OptionWarning::OptionWarning(const char *filename, Severity severity)
 
 
 //-----------------------------------------------------------------------------
-OptionWarning::OptionWarning(const GenericOption *opt, Severity severity)
+OptionWarning::OptionWarning(const GenericOption *opt,
+                             Severity            severity)
 {
    if (severity != MINOR)
    {
       ++cpd.error_count;
    }
+
    fprintf(stderr, "Option<%s>: at %s:%d: ", to_string(opt->type()),
            cpd.filename.c_str(), cpd.line_number);
 }
@@ -355,7 +372,8 @@ OptionWarning::~OptionWarning()
 
 
 //-----------------------------------------------------------------------------
-void OptionWarning::operator()(const char *fmt, ...)
+void OptionWarning::operator()(const char *fmt,
+                               ...)
 {
    va_list args;
 
@@ -379,15 +397,18 @@ void GenericOption::warnUnexpectedValue(const char *actual) const
    else
    {
       w("Expected one of ");
+
       while (*values)
       {
          w("'%s'", *values);
+
          if (*(++values))
          {
             w(", ");
          }
       }
    }
+
    w(", for '%s'; got '%s'", name(), actual);
 }
 
@@ -404,7 +425,8 @@ void GenericOption::warnIncompatibleReference(const GenericOption *ref) const
 
 //-----------------------------------------------------------------------------
 template<typename T>
-bool read_enum(const char *in, Option<T> &out)
+bool read_enum(const char *in,
+               Option<T>  &out)
 {
    assert(in);
 
@@ -433,7 +455,8 @@ bool read_enum(const char *in, Option<T> &out)
 
 //-----------------------------------------------------------------------------
 template<typename T>
-bool read_number(const char *in, Option<T> &out)
+bool read_number(const char *in,
+                 Option<T>  &out)
 {
    assert(in);
 
@@ -447,6 +470,7 @@ bool read_number(const char *in, Option<T> &out)
    }
 
    bool invert = false;
+
    if (strchr("-", in[0]))
    {
       invert = true;
@@ -461,6 +485,7 @@ bool read_number(const char *in, Option<T> &out)
                  to_string(opt->type()), opt->name());
 
       long tval;
+
       if (opt->type() == OT_NUM)
       {
          auto &sopt = *static_cast<const Option<signed> *>(opt);
@@ -478,11 +503,13 @@ bool read_number(const char *in, Option<T> &out)
       }
 
       const auto rval = (invert ? -tval : tval);
+
       if (out.validate(rval))
       {
          out.m_val = static_cast<T>(rval);
          return(true);
       }
+
       return(false);
    }
 
@@ -552,6 +579,7 @@ bool Option<bool>::read(const char *in)
    }
 
    bool invert = false;
+
    if (strchr("~!-", in[0]))
    {
       invert = true;
@@ -797,6 +825,7 @@ uncrustify::GenericOption *find_option(const char *name)
    {
       return(iter->second);
    }
+
    return(nullptr);
 }
 
@@ -808,6 +837,7 @@ OptionGroup *get_option_group(size_t i)
    {
       return(nullptr);
    }
+
    return(&option_groups[i]);
 }
 
@@ -820,7 +850,8 @@ size_t get_option_count()
 
 
 //-----------------------------------------------------------------------------
-void process_option_line(const std::string &config_line, const char *filename)
+void process_option_line(const std::string &config_line,
+                         const char        *filename)
 {
    // Compatibility level; by default, we are compatible with everything
    static auto compat_level = 0;
@@ -835,6 +866,7 @@ void process_option_line(const std::string &config_line, const char *filename)
 
    // Check for necessary arguments
    const auto &cmd = to_lower(args.front());
+
    if (cmd == "set" || cmd == "file_ext")
    {
       if (args.size() < 3)
@@ -876,15 +908,18 @@ void process_option_line(const std::string &config_line, const char *filename)
    else if (cmd == "set")
    {
       const auto token = find_token_name(args[1].c_str());
+
       if (token != CT_NONE)
       {
          LOG_FMT(LNOTE, "%s:%d set '%s':",
                  filename, cpd.line_number, args[1].c_str());
+
          for (size_t i = 2; i < args.size(); ++i)
          {
             LOG_FMT(LNOTE, " '%s'", args[i].c_str());
             add_keyword(args[i], token);
          }
+
          LOG_FMT(LNOTE, "\n");
       }
       else
@@ -893,6 +928,7 @@ void process_option_line(const std::string &config_line, const char *filename)
          w("%s: unknown type '%s'", cmd.c_str(), args[1].c_str());
       }
    }
+
 #ifndef EMSCRIPTEN
    else if (cmd == "include")
    {
@@ -924,9 +960,11 @@ void process_option_line(const std::string &config_line, const char *filename)
    else if (cmd == "file_ext")
    {
       auto *const lang_arg = args[1].c_str();
+
       for (size_t i = 2; i < args.size(); ++i)
       {
          auto *const lang_name = extension_add(args[i].c_str(), lang_arg);
+
          if (lang_name)
          {
             LOG_FMT(LNOTE, "%s:%d file_ext '%s' => '%s'\n",
@@ -943,6 +981,7 @@ void process_option_line(const std::string &config_line, const char *filename)
    else if (cmd == "using")
    {
       auto vargs = split_args(args[1], filename, is_varg_sep);
+
       if (vargs.size() != 2)
       {
          OptionWarning w{ filename };
@@ -964,6 +1003,7 @@ void process_option_line(const std::string &config_line, const char *filename)
       }
 
       const auto oi = option_map.find(cmd);
+
       if (oi == option_map.end())
       {
          OptionWarning w{ filename };
@@ -992,6 +1032,7 @@ bool load_option_file(const char *filename)
 
    std::ifstream in;
    in.open(filename, std::ifstream::in);
+
    if (!in.good())
    {
       OptionWarning w{ filename };
@@ -1002,11 +1043,13 @@ bool load_option_file(const char *filename)
 
    // Read in the file line by line
    std::string line;
+
    while (std::getline(in, line))
    {
       ++cpd.line_number;
       process_option_line(line, filename);
    }
+
    return(true);
 }
 
@@ -1028,7 +1071,9 @@ const char *get_eol_marker()
 
 
 //-----------------------------------------------------------------------------
-void save_option_file(FILE *pfile, bool with_doc, bool minimal)
+void save_option_file(FILE *pfile,
+                      bool with_doc,
+                      bool minimal)
 {
    int        non_default_values = 0;
    const char *eol_marker        = get_eol_marker();
@@ -1071,12 +1116,14 @@ void save_option_file(FILE *pfile, bool with_doc, bool minimal)
             print_description(pfile, option->description(), eol_marker);
 
             const auto ds = option->defaultStr();
+
             if (!ds.empty())
             {
                fprintf(pfile, "#%s# Default: %s%s",
                        eol_marker, ds.c_str(), eol_marker);
             }
          }
+
          first = false;
 
          const int name_len = static_cast<int>(strlen(option->name()));
@@ -1093,15 +1140,18 @@ void save_option_file(FILE *pfile, bool with_doc, bool minimal)
          {
             fprintf(pfile, "%s", val.c_str());
          }
+
          if (with_doc)
          {
             const int val_len = static_cast<int>(val.length());
             fprintf(pfile, "%*.s # ", 8 - val_len, " ");
+
             for (auto pv = option->possibleValues(); *pv; ++pv)
             {
                fprintf(pfile, "%s%s", *pv, pv[1] ? "/" : "");
             }
          }
+
          fputs(eol_marker, pfile);
       }
    }

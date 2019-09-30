@@ -461,7 +461,9 @@ bool are_chunks_in_same_line(chunk_t *start, chunk_t *end);
  * The compiler should know how to optimize the code itself.
  * To clarify do a profiling run with and without inline
  */
-static inline bool is_expected_type_and_level(chunk_t *pc, c_token_t type, int level)
+static inline bool is_expected_type_and_level(chunk_t   *pc,
+                                              c_token_t type,
+                                              int       level)
 {
    // we don't care about the level (if it is negative) or it is as expected
    // and the type is as expected
@@ -470,7 +472,10 @@ static inline bool is_expected_type_and_level(chunk_t *pc, c_token_t type, int l
 }
 
 
-static inline bool is_expected_string_and_level(chunk_t *pc, const char *str, int level, size_t len)
+static inline bool is_expected_string_and_level(chunk_t    *pc,
+                                                const char *str,
+                                                int        level,
+                                                size_t     len)
 {
    // we don't care about the level (if it is negative) or it is as expected
    return(  (level < 0 || pc->level == static_cast<size_t>(level))
@@ -479,13 +484,15 @@ static inline bool is_expected_string_and_level(chunk_t *pc, const char *str, in
 }
 
 
-static inline bool chunk_is_token(const chunk_t *pc, c_token_t c_token)
+static inline bool chunk_is_token(const chunk_t *pc,
+                                  c_token_t     c_token)
 {
    return(pc != nullptr && pc->type == c_token);
 }
 
 
-static inline bool chunk_is_not_token(const chunk_t *pc, c_token_t c_token)
+static inline bool chunk_is_not_token(const chunk_t *pc,
+                                      c_token_t     c_token)
 {
    return(pc != nullptr && pc->type != c_token);
 }
@@ -499,7 +506,8 @@ static inline bool chunk_is_not_token(const chunk_t *pc, c_token_t c_token)
  *
  * @return nullptr or the matching paren/brace/square
  */
-static inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e::ALL)
+static inline chunk_t *chunk_skip_to_match(chunk_t *cur,
+                                           scope_e scope = scope_e::ALL)
 {
    if (  chunk_is_token(cur, CT_PAREN_OPEN)
       || chunk_is_token(cur, CT_SPAREN_OPEN)
@@ -512,11 +520,13 @@ static inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e
    {
       return(chunk_get_next_type(cur, (c_token_t)(cur->type + 1), cur->level, scope));
    }
+
    return(cur);
 }
 
 
-static inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, scope_e scope = scope_e::ALL)
+static inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur,
+                                               scope_e scope = scope_e::ALL)
 {
    if (  chunk_is_token(cur, CT_PAREN_CLOSE)
       || chunk_is_token(cur, CT_SPAREN_CLOSE)
@@ -529,6 +539,7 @@ static inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, scope_e scope = sco
    {
       return(chunk_get_prev_type(cur, (c_token_t)(cur->type - 1), cur->level, scope));
    }
+
    return(cur);
 }
 
@@ -642,13 +653,16 @@ static inline bool chunk_is_Doxygen_comment(chunk_t *pc)
    {
       return(false);
    }
+
    // check the third character
    const char   *sComment = pc->text();
    const size_t len       = strlen(sComment);
+
    if (len < 3)
    {
       return(false);
    }
+
    return(  (sComment[2] == '/')
          || (sComment[2] == '!')
          || (sComment[2] == '@'));
@@ -668,7 +682,9 @@ static inline bool chunk_is_type(chunk_t *pc)
 }
 
 
-static inline bool chunk_is_str(chunk_t *pc, const char *str, size_t len)
+static inline bool chunk_is_str(chunk_t    *pc,
+                                const char *str,
+                                size_t     len)
 {
    return(  pc != nullptr                         // valid pc pointer
          && (pc->len() == len)                    // token size equals size parameter
@@ -681,7 +697,9 @@ static inline bool chunk_is_str(chunk_t *pc, const char *str, size_t len)
 }
 
 
-static inline bool chunk_is_str_case(chunk_t *pc, const char *str, size_t len)
+static inline bool chunk_is_str_case(chunk_t    *pc,
+                                     const char *str,
+                                     size_t     len)
 {
    return(  pc != nullptr
          && (pc->len() == len)
@@ -797,7 +815,8 @@ static inline bool chunk_is_paren_close(chunk_t *pc)
  * Returns true if either chunk is null or both have the same preproc flags.
  * If this is true, you can remove a newline/nl_cont between the two.
  */
-static inline bool chunk_same_preproc(chunk_t *pc1, chunk_t *pc2)
+static inline bool chunk_same_preproc(chunk_t *pc1,
+                                      chunk_t *pc2)
 {
    return(  pc1 == nullptr
          || pc2 == nullptr
@@ -818,6 +837,7 @@ static inline bool chunk_safe_to_del_nl(chunk_t *nl)
    {
       return(false);
    }
+
    return(chunk_same_preproc(chunk_get_prev(nl), chunk_get_next(nl)));
 }
 
@@ -834,21 +854,25 @@ static inline bool chunk_is_forin(chunk_t *pc)
       && chunk_is_token(pc, CT_SPAREN_OPEN))
    {
       chunk_t *prev = chunk_get_prev_ncnl(pc);
+
       if (chunk_is_token(prev, CT_FOR))
       {
          chunk_t *next = pc;
+
          while (  next != nullptr
                && next->type != CT_SPAREN_CLOSE
                && next->type != CT_IN)
          {
             next = chunk_get_next_ncnl(next);
          }
+
          if (chunk_is_token(next, CT_IN))
          {
             return(true);
          }
       }
    }
+
    return(false);
 }
 

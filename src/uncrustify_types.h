@@ -310,8 +310,8 @@ enum lang_flag_e
    LANG_PAWN = 0x0080,
    LANG_ECMA = 0x0100,     //! ECMA Script (JavaScript)
 
-   LANG_ALLC = 0x017f,     /** LANG_C    | LANG_CPP | LANG_D    | LANG_CS   |
-                            *  LANG_JAVA | LANG_OC  | LANG_VALA | LANG_ECMA   */
+   LANG_ALLC = 0x017f,     //  LANG_C    | LANG_CPP | LANG_D    | LANG_CS   |
+                           //  LANG_JAVA | LANG_OC  | LANG_VALA | LANG_ECMA
    LANG_ALL  = 0x0fff,     //! applies to all languages
 
    FLAG_HDR  = 0x2000,     /*<< Header file for C family languages */
@@ -323,22 +323,22 @@ enum lang_flag_e
 enum class pattern_class_e : unsigned int
 {
    NONE,
-   BRACED,   /** keyword + braced statement:
-              *    do, try, finally, body, unittest, unsafe, volatile
-              *    add, get, remove, set                                      */
-   PBRACED,  /** keyword + parens + braced statement:
-              *    if, elseif, switch, for, while, synchronized,
-              *    using, lock, with, version, CT_D_SCOPE_IF                  */
-   OPBRACED, /** keyword + optional parens + braced statement:
-              *    catch, version, debug                                      */
-   VBRACED,  /** keyword + value + braced statement:
-              *    namespace                                                  */
-   PAREN,    /** keyword + parens:
-              *    while-of-do                                                */
-   OPPAREN,  /** keyword + optional parens:
-              *    invariant (D lang)                                         */
-   ELSE,     /** Special case of pattern_class_e::BRACED for handling CT_IF
-              *    else                                                       */
+   BRACED,   //  keyword + braced statement:
+             //    do, try, finally, body, unittest, unsafe, volatile
+             //    add, get, remove, set
+   PBRACED,  //  keyword + parens + braced statement:
+             //    if, elseif, switch, for, while, synchronized,
+             //    using, lock, with, version, CT_D_SCOPE_IF
+   OPBRACED, //  keyword + optional parens + braced statement:
+             //    catch, version, debug
+   VBRACED,  //  keyword + value + braced statement:
+             //    namespace
+   PAREN,    //  keyword + parens:
+             //    while-of-do
+   OPPAREN,  //  keyword + optional parens:
+             //    invariant (D lang)
+   ELSE,     //  Special case of pattern_class_e::BRACED for handling CT_IF
+             //    else
 };
 
 //! used to link language keywords with some addition information

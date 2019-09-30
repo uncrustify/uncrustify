@@ -38,10 +38,12 @@ std::vector<uncrustify::OptionGroup *> get_option_groups()
 }
 
 
-void print_option_choices(FILE *pfile, uncrustify::GenericOption *option,
-                          char const *key = "Choices")
+void print_option_choices(FILE                      *pfile,
+                          uncrustify::GenericOption *option,
+                          char const                *key = "Choices")
 {
    fprintf(pfile, "%s=", key);
+
    for (auto c = option->possibleValues(); *c; ++c)
    {
       fprintf(pfile, "%s=%s%c", option->name(), *c, c[1] ? '|' : '\n');
@@ -62,21 +64,27 @@ void print_universal_indent_cfg(FILE *pfile)
    // first run to get the first option number of each group/categorie
    size_t optionNumber         = 0;
    bool   firstOptionNumberSet = false;
+
    for (idx = 0; idx < groups.size(); ++idx)
    {
       const auto *p_grp = groups[idx];
+
       for (auto *const option : p_grp->options)
       {
          UNUSED(option);
+
          if (!firstOptionNumberSet)
          {
             allGroups[idx]       = optionNumber;
             firstOptionNumberSet = true;
          }
+
          optionNumber++;
       } // for (auto *const option : p_grp->options)
+
       firstOptionNumberSet = false;
    } // end of first run
+
 //#else
 //   UNUSED(allGroups);
 #endif // DEBUG
@@ -94,6 +102,7 @@ void print_universal_indent_cfg(FILE *pfile)
 #if defined (DEBUG) && !defined (WIN32)
    optionNumber = 0;
 #endif // DEBUG
+
    for (auto *const g : groups)
    {
       fputc(ch, pfile);
@@ -102,13 +111,16 @@ void print_universal_indent_cfg(FILE *pfile)
 #if defined (DEBUG) && !defined (WIN32)
       fprintf(pfile, "(%zu)", allGroups[idx]);
 #endif // DEBUG
+
       // Write description, stripping leading and trailing newlines
       for (auto dc = g->description + 1; *(dc + 1); ++dc)
       {
          fputc(*dc, pfile);
       }
+
       idx++;
    }
+
    fprintf(pfile, "\n");
 
    fprintf(pfile,
@@ -120,11 +132,13 @@ void print_universal_indent_cfg(FILE *pfile)
    ch = '=';
    int fileIdx = 0;
    fprintf(pfile, "fileTypes");
+
    while ((p_name = get_file_extension(fileIdx)) != nullptr)
    {
       fprintf(pfile, "%c*%s", ch, p_name);
       ch = '|';
    }
+
    fprintf(pfile, "\n");
 
    // Add the rest of the constant file header
@@ -145,10 +159,12 @@ void print_universal_indent_cfg(FILE *pfile)
    fprintf(pfile, "version=%s\n", UNCRUSTIFY_VERSION);
 
    ch = '=';
+
    // Now add each option
    for (idx = 0; idx < groups.size(); ++idx)
    {
       const auto *p_grp = groups[idx];
+
       for (auto *const option : p_grp->options)
       {
          /*
@@ -159,6 +175,7 @@ void print_universal_indent_cfg(FILE *pfile)
          strcpy(optionNameReadable, option->name());
 
          bool was_space = true;
+
          for (char *character = optionNameReadable; *character != 0; character++)
          {
             if (*character == '_')
@@ -210,17 +227,18 @@ void print_universal_indent_cfg(FILE *pfile)
             default:
                fputc(*tmp, pfile);
             }
+
             tmp++;
          }
 
          const auto ds = option->defaultStr();
+
          if (!ds.empty())
          {
             fprintf(pfile, "<br/><br/>Default: %s", ds.c_str());
          }
 
          fprintf(pfile, "</html>\"\n");
-
 
          // Handle some options independent of their type and most by their type.
          if (option == &uncrustify::options::indent_with_tabs)
@@ -244,6 +262,7 @@ void print_universal_indent_cfg(FILE *pfile)
             // All not specially handled options are created only dependent by
             // their type.
             fprintf(pfile, "Enabled=false\n");
+
             switch (option->type())
             {
             case uncrustify::OT_BOOL:
@@ -346,6 +365,7 @@ void print_universal_indent_cfg(FILE *pfile)
                break;
             } // switch
          }
+
 #if defined (DEBUG) && !defined (WIN32)
          optionNumber++;
 #endif // DEBUG

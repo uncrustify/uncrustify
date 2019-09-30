@@ -11,12 +11,14 @@
 
 #include <cstring>
 
-Args::Args(int argc, char **argv)
+Args::Args(int  argc,
+           char **argv)
 {
    m_count  = argc;
    m_values = argv;
    size_t len = (argc >> 3) + 1;
    m_used = new UINT8[len];
+
    if (m_used != nullptr)
    {
       memset(m_used, 0, len);
@@ -31,6 +33,7 @@ Args::~Args()
       delete[] m_used;
       m_used = nullptr;
    }
+
    m_count = 0;
 }
 
@@ -48,6 +51,7 @@ bool Args::Present(const char *token)
          }
       }
    }
+
    return(false);
 }
 
@@ -60,7 +64,8 @@ const char *Args::Param(const char *token)
 }
 
 
-const char *Args::Params(const char *token, size_t &index)
+const char *Args::Params(const char *token,
+                         size_t     &index)
 {
    if (token == nullptr)
    {
@@ -79,22 +84,27 @@ const char *Args::Params(const char *token, size_t &index)
          && (memcmp(token, m_values[idx], token_len) == 0))
       {
          SetUsed(idx);
+
          if (arg_len > token_len)
          {
             if (m_values[idx][token_len] == '=')
             {
                token_len++;
             }
+
             index = idx + 1;
             return(&m_values[idx][token_len]);
          }
+
          idx++;
          index = idx + 1;
+
          if (idx < m_count)
          {
             SetUsed(idx);
             return(m_values[idx]);
          }
+
          return("");
       }
    }
@@ -111,6 +121,7 @@ bool Args::GetUsed(size_t idx)
    {
       return((m_used[idx >> 3] & (1 << (idx & 0x07))) != 0);
    }
+
    return(false);
 }
 
@@ -141,12 +152,15 @@ const char *Args::Unused(size_t &index)
          return(m_values[idx]);
       }
    }
+
    index = m_count;
    return(nullptr);
 }
 
 
-size_t Args::SplitLine(char *text, char *args[], size_t num_args)
+size_t Args::SplitLine(char   *text,
+                       char   *args[],
+                       size_t num_args)
 {
    if (text == nullptr || num_args == 0)
    {
@@ -202,6 +216,7 @@ size_t Args::SplitLine(char *text, char *args[], size_t num_args)
             *dest = 0;
             dest++;
             in_arg = false;
+
             if (argc == num_args)
             {
                break; // all arguments found, we can stop
@@ -213,8 +228,10 @@ size_t Args::SplitLine(char *text, char *args[], size_t num_args)
             dest++;
          }
       }
+
       text++; // go on with next character
    }
+
    *dest = 0;
 
    return(argc);

@@ -29,6 +29,7 @@ void align_preprocessor(void)
    asf.m_gap = options::align_pp_define_gap();
 
    chunk_t *pc = chunk_get_head();
+
    while (pc != nullptr)
    {
       // Note: not counting back-slash newline combos
@@ -47,6 +48,7 @@ void align_preprocessor(void)
 
       // step past the 'define'
       pc = chunk_get_next_nc(pc);
+
       if (pc == nullptr)
       {
          // coveralls will complain here. There are no example for that.
@@ -58,6 +60,7 @@ void align_preprocessor(void)
               __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
 
       cur_as = &as;
+
       if (chunk_is_token(pc, CT_MACRO_FUNC))
       {
          if (!options::align_pp_define_together())
@@ -75,6 +78,7 @@ void align_preprocessor(void)
 
       // step to the value past the close parenthesis or the macro name
       pc = chunk_get_next(pc);
+
       if (pc == nullptr)
       {
          // coveralls will complain here. There are no example for that.

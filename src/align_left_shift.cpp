@@ -27,6 +27,7 @@ void align_left_shift(void)
    as.Start(255);
 
    chunk_t *pc = chunk_get_head();
+
    while (pc != nullptr)
    {
       if (chunk_is_newline(pc))
@@ -38,6 +39,7 @@ void align_left_shift(void)
          LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
       }
+
       if (  start != nullptr
          && ((pc->flags & PCF_IN_PREPROC) != (start->flags & PCF_IN_PREPROC)))
       {
@@ -82,6 +84,7 @@ void align_left_shift(void)
              *          << "something";
              */
             chunk_t *prev = chunk_get_prev(pc);
+
             if (prev != nullptr && chunk_is_newline(prev))
             {
                indent_to_column(pc, pc->column_indent + options::indent_columns());
@@ -109,6 +112,7 @@ void align_left_shift(void)
           *          "something";
           */
          chunk_t *prev = chunk_get_prev(pc);
+
          if (prev != nullptr && chunk_is_newline(prev))
          {
             indent_to_column(pc, pc->column_indent + options::indent_columns());
@@ -119,5 +123,6 @@ void align_left_shift(void)
 
       pc = chunk_get_next(pc);
    }
+
    as.End();
 } // align_left_shift

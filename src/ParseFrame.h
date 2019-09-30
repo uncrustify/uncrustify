@@ -38,7 +38,8 @@ struct paren_stack_entry_t
    chunk_t       *pop_pc;
 };
 
-class ParseFrame {
+class ParseFrame
+{
 private:
    std::vector<paren_stack_entry_t> pse;
    paren_stack_entry_t              last_poped;

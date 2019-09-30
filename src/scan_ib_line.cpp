@@ -16,7 +16,8 @@
 #include "uncrustify.h"
 
 
-chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
+chunk_t *scan_ib_line(chunk_t *start,
+                      bool    first_pass)
 {
    UNUSED(first_pass);
    LOG_FUNC_ENTRY();
@@ -25,12 +26,14 @@ chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
 
    // Skip past C99 "[xx] =" stuff
    chunk_t *tmp = skip_c99_array(start);
+
    if (tmp != nullptr)
    {
       set_chunk_parent(start, CT_TSQUARE);
       start            = tmp;
       cpd.al_c99_array = true;
    }
+
    chunk_t *pc = start;
 
    if (pc != nullptr)
@@ -47,6 +50,7 @@ chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
       //        pc->text(), pc->column, pc->orig_col, pc->orig_line);
 
       chunk_t *next = chunk_get_next(pc);
+
       if (next == nullptr || chunk_is_comment(next))
       {
          // do nothing
@@ -67,12 +71,14 @@ chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
             {
                LOG_FMT(LSIB, "%s(%d): Prepare the 'idx's\n", __func__, __LINE__);
             }
+
             LOG_FMT(LSIB, "%s(%d):   New idx is %2.1zu, pc->column is %2.1zu, text() '%s', token_width is %zu, type is %s\n",
                     __func__, __LINE__, idx, pc->column, pc->text(), token_width, get_token_name(pc->type));
             cpd.al[cpd.al_cnt].type = pc->type;
             cpd.al[cpd.al_cnt].col  = pc->column;
             cpd.al[cpd.al_cnt].len  = token_width;
             cpd.al_cnt++;
+
             if (cpd.al_cnt == AL_SIZE)
             {
                fprintf(stderr, "Number of 'entry' to be aligned is too big for the current value %d,\n", AL_SIZE);
@@ -81,6 +87,7 @@ chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
                log_flush(true);
                exit(EX_SOFTWARE);
             }
+
             idx++;
          }
          else
@@ -109,6 +116,7 @@ chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
                           __func__, __LINE__, prev_match->text(), prev_match->orig_line, prev_match->orig_col);
                   int min_col_diff = pc->column - prev_match->column;
                   int cur_col_diff = cpd.al[idx].col - cpd.al[idx - 1].col;
+
                   if (cur_col_diff < min_col_diff)
                   {
                      LOG_FMT(LSIB, "%s(%d):   pc->orig_line is %zu\n",
@@ -116,14 +124,18 @@ chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
                      ib_shift_out(idx, min_col_diff - cur_col_diff);
                   }
                }
+
                LOG_FMT(LSIB, "%s(%d): at ende of the loop: now is col %zu, len is %zu\n",
                        __func__, __LINE__, cpd.al[idx].col, cpd.al[idx].len);
                idx++;
             }
          }
+
          prev_match = pc;
       }
+
       pc = chunk_get_next_nc(pc);
    }
+
    return(pc);
 } // scan_ib_line

@@ -30,7 +30,8 @@ public:
       }
 
 
-      Entry(size_t sn, chunk_t *pc)
+      Entry(size_t  sn,
+            chunk_t *pc)
          : m_seqnum(sn)
          , m_pc(pc)
       {

@@ -32,6 +32,7 @@ void align_init_brace(chunk_t *start)
 
    chunk_t *pc       = chunk_get_next_ncnl(start);
    chunk_t *pcSingle = scan_ib_line(pc, true);
+
    if (  pcSingle == nullptr
       || (chunk_is_token(pcSingle, CT_BRACE_CLOSE) && pcSingle->parent_type == CT_ASSIGN))
    {
@@ -39,6 +40,7 @@ void align_init_brace(chunk_t *start)
       LOG_FMT(LALBR, "%s(%d): single line - nothing to do\n", __func__, __LINE__);
       return;
    }
+
    LOG_FMT(LALBR, "%s(%d): is not a single line\n", __func__, __LINE__);
 
    do
@@ -68,35 +70,43 @@ void align_init_brace(chunk_t *start)
 
    pc = chunk_get_next(start);
    size_t idx = 0;
+
    do
    {
       chunk_t *tmp;
+
       if (idx == 0 && ((tmp = skip_c99_array(pc)) != nullptr))
       {
          pc = tmp;
+
          if (pc != nullptr)
          {
             LOG_FMT(LALBR, " -%zu- skipped '[] =' to %s\n",
                     pc->orig_line, get_token_name(pc->type));
          }
+
          continue;
       }
 
       chunk_t *next = pc;
+
       if (idx < cpd.al_cnt)
       {
          LOG_FMT(LALBR, " (%zu) check %s vs %s -- ",
                  idx, get_token_name(pc->type), get_token_name(cpd.al[idx].type));
+
          if (pc->type == cpd.al[idx].type)
          {
             if (idx == 0 && cpd.al_c99_array)
             {
                chunk_t *prev = chunk_get_prev(pc);
+
                if (chunk_is_newline(prev))
                {
                   chunk_flags_set(pc, PCF_DONT_INDENT);
                }
             }
+
             LOG_FMT(LALBR, " [%s] to col %zu\n", pc->text(), cpd.al[idx].col);
 
             if (num_token != nullptr)
@@ -116,6 +126,7 @@ void align_init_brace(chunk_t *start)
             if (chunk_is_token(pc, CT_COMMA))
             {
                next = chunk_get_next(pc);
+
                if (next != nullptr && !chunk_is_newline(next))
                {
                   //LOG_FMT(LSYS, "-= %zu =- indent [%s] col=%d len=%d\n",
@@ -154,6 +165,7 @@ void align_init_brace(chunk_t *start)
                   && options::align_number_right())
                {
                   next = chunk_get_next(pc);
+
                   if (  next != nullptr
                      && !chunk_is_newline(next)
                      && (  chunk_is_token(next, CT_NUMBER_FP)
@@ -166,6 +178,7 @@ void align_init_brace(chunk_t *start)
                   }
                }
             }
+
             idx++;
          }
          else
@@ -173,10 +186,12 @@ void align_init_brace(chunk_t *start)
             LOG_FMT(LALBR, " no match\n");
          }
       }
+
       if (chunk_is_newline(pc) || chunk_is_newline(next))
       {
          idx = 0;
       }
+
       pc = chunk_get_next(pc);
    } while (pc != nullptr && pc->level > start->level);
 } // align_init_brace

@@ -115,12 +115,14 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc);
 static void mark_namespace(chunk_t *pns);
 
 
-static size_t preproc_start(ParseFrame &frm, chunk_t *pc)
+static size_t preproc_start(ParseFrame &frm,
+                            chunk_t    *pc)
 {
    LOG_FUNC_ENTRY();
    const size_t pp_level = cpd.pp_level;
 
    chunk_t      *next = chunk_get_next_ncnl(pc);
+
    if (next == nullptr)
    {
       return(pp_level);
@@ -128,6 +130,7 @@ static size_t preproc_start(ParseFrame &frm, chunk_t *pc)
 
    // Get the type of preprocessor and handle it
    cpd.in_preproc = next->type;
+
    // If we are not in a define, check for #if, #else, #endif, etc
    if (cpd.in_preproc != CT_PP_DEFINE)
    {
@@ -151,10 +154,12 @@ static size_t preproc_start(ParseFrame &frm, chunk_t *pc)
 }
 
 
-static void print_stack(log_sev_t logsev, const char *str,
+static void print_stack(log_sev_t        logsev,
+                        const char       *str,
                         const ParseFrame &frm)
 {
    LOG_FUNC_ENTRY();
+
    if (!log_sev_on(logsev))
    {
       return;
@@ -191,6 +196,7 @@ void brace_cleanup(void)
 
    ParseFrame frm{};
    chunk_t    *pc = chunk_get_head();
+
    while (pc != nullptr)
    {
       // Check for leaving a #define body
@@ -216,6 +222,7 @@ void brace_cleanup(void)
          && chunk_is_token(pc, CT_NEWLINE))
       {
          pc = pawn_check_vsemicolon(pc);
+
          if (pc == nullptr)
          {
             return;
@@ -227,6 +234,7 @@ void brace_cleanup(void)
       {
          mark_namespace(pc);
       }
+
       // Assume the level won't change
       pc->level       = frm.level;
       pc->brace_level = frm.brace_level;
@@ -246,6 +254,7 @@ void brace_cleanup(void)
          parse_cleanup(frm, pc);
          print_stack(LBCSAFTER, (chunk_is_token(pc, CT_VBRACE_CLOSE)) ? "Virt-}" : pc->str.c_str(), frm);
       }
+
       pc = chunk_get_next(pc);
    }
 } // brace_cleanup
@@ -256,6 +265,7 @@ static bool maybe_while_of_do(chunk_t *pc)
    LOG_FUNC_ENTRY();
 
    chunk_t *prev = chunk_get_prev_ncnl(pc);
+
    if (prev == nullptr || !(prev->flags & PCF_IN_PREPROC))
    {
       return(false);
@@ -272,6 +282,7 @@ static bool maybe_while_of_do(chunk_t *pc)
    {
       return(true);
    }
+
    return(false);
 }
 
@@ -330,7 +341,8 @@ static bool maybe_while_of_do(chunk_t *pc)
  * When a #define is entered, the current frame is pushed and cleared.
  * When a #define is exited, the frame is popped.
  */
-static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
+static void parse_cleanup(ParseFrame &frm,
+                          chunk_t    *pc)
 {
    LOG_FUNC_ENTRY();
 
@@ -345,6 +357,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
            __func__, __LINE__, pc->orig_line, get_token_name(pc->type), pc->text());
    LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
            __func__, __LINE__, frm.stmt_count, frm.expr_count);
+
    if (  (frm.stmt_count == 0 || frm.expr_count == 0)
       && !chunk_is_semicolon(pc)
       && pc->type != CT_BRACE_CLOSE
@@ -358,6 +371,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
               (pc->flags & PCF_STMT_START) ? "stmt" : "expr", frm.stmt_count,
               frm.expr_count);
    }
+
    frm.stmt_count++;
    frm.expr_count++;
    LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
@@ -428,6 +442,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
       {
          // TODO: fix enum hack
          set_chunk_type(pc, static_cast<c_token_t>(frm.top().type + 1));
+
          if (chunk_is_token(pc, CT_SPAREN_CLOSE))
          {
             frm.sparen_count--;
@@ -442,6 +457,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
          LOG_FMT(LWARN, "%s(%d): (frm.top().type + 1) is %s\n",
                  __func__, __LINE__, get_token_name((c_token_t)(frm.top().type + 1)));
+
          if (  frm.top().type != CT_EOF
             && frm.top().type != CT_PP_DEFINE)
          {
@@ -460,6 +476,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
          // Copy the parent, update the parenthesis/brace levels
          set_chunk_parent(pc, frm.top().parent);
          frm.level--;
+
          if (  chunk_is_token(pc, CT_BRACE_CLOSE)
             || chunk_is_token(pc, CT_VBRACE_CLOSE)
             || chunk_is_token(pc, CT_MACRO_CLOSE))
@@ -469,6 +486,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
                     __func__, __LINE__, frm.brace_level);
             log_pcf_flags(LBCSPOP, pc->flags);
          }
+
          pc->level       = frm.level;
          pc->brace_level = frm.brace_level;
 
@@ -527,18 +545,21 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
                     get_token_name(pc->type));
             cpd.error_count++;
          }
+
          handle_complex_close(frm, pc);
       }
    }
 
    // Get the parent type for brace and parenthesis open
    c_token_t parent = pc->parent_type;
+
    if (  chunk_is_token(pc, CT_PAREN_OPEN)
       || chunk_is_token(pc, CT_FPAREN_OPEN)
       || chunk_is_token(pc, CT_SPAREN_OPEN)
       || chunk_is_token(pc, CT_BRACE_OPEN))
    {
       chunk_t *prev = chunk_get_prev_ncnl(pc);
+
       if (prev != nullptr)
       {
          if (  chunk_is_token(pc, CT_PAREN_OPEN)
@@ -579,6 +600,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
             {
                parent = CT_DECLSPEC;
             }
+
             // else: no need to set parent
          }
          else  // must be CT_BRACE_OPEN
@@ -607,6 +629,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
             {
                parent = CT_FUNCTION;
             }
+
             // else: no need to set parent
          }
       }
@@ -625,19 +648,23 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
       || chunk_is_token(pc, CT_SQUARE_OPEN))
    {
       frm.level++;
+
       if (chunk_is_token(pc, CT_BRACE_OPEN) || chunk_is_token(pc, CT_MACRO_OPEN))
       {
          // Issue #1813
          bool single = false;
+
          if (pc->parent_type == CT_NAMESPACE)
          {
             LOG_FMT(LBCSPOP, "%s(%d): parent_type is NAMESPACE\n",
                     __func__, __LINE__);
             chunk_t *tmp = frm.top().pc;
+
             if (tmp != nullptr && tmp->parent_type == CT_NAMESPACE)
             {
                LOG_FMT(LBCSPOP, "%s(%d): tmp->parent_type is NAMESPACE\n",
                        __func__, __LINE__);
+
                if (  options::indent_namespace()
                   && options::indent_namespace_single_indent())
                {
@@ -647,8 +674,10 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
                }
             }
          }
+
          LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type));
+
          if (!single)
          {
             frm.brace_level++;
@@ -656,6 +685,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
                     __func__, __LINE__, frm.brace_level);
          }
       }
+
       frm.push(*pc);
       frm.top().parent = parent;
       set_chunk_parent(pc, parent);
@@ -683,6 +713,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
          set_chunk_type(pc, CT_WHILE_OF_DO);
          bs = brace_stage_e::WOD_PAREN;
       }
+
       frm.push(*pc, bs);
       // "+ComplexParenBraced"
    }
@@ -727,6 +758,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
    LOG_FMT(LSTMT, "%s(%d): Mark expression starts: orig_line is %zu, orig_col is %zu, text() is '%s'\n",
            __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
    chunk_t *tmp = chunk_get_next_ncnl(pc);
+
    if (  chunk_is_token(pc, CT_ARITH)
       || chunk_is_token(pc, CT_ASSIGN)
       || chunk_is_token(pc, CT_CASE)
@@ -763,23 +795,27 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
            && cpd.in_preproc != CT_PP_DEFINE)
    {
       size_t file_pp_level = ifdef_over_whole_file() ? 1 : 0;
+
       if (!cpd.unc_off_used && pc->pp_level == file_pp_level)
       {
          // fatal error
          LOG_FMT(LERR, "%s(%d): Unmatched BRACE_CLOSE\n   orig_line is %zu, orig_col is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
+
          if (!options::tok_split_gte())
          {
             LOG_FMT(LERR, "%s(%d): Try the option 'tok_split_gte = true'\n",
                     __func__, __LINE__);
          }
+
          exit(EXIT_FAILURE);
       }
    }
 } // parse_cleanup
 
 
-static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
+static bool check_complex_statements(ParseFrame &frm,
+                                     chunk_t    *pc)
 {
    LOG_FUNC_ENTRY();
 
@@ -809,6 +845,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       frm.pop();
       print_stack(LBCSPOP, "-IF-CCS ", frm);
+
       if (close_statement(frm, pc))
       {
          return(true);
@@ -840,6 +877,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
       {
          // Replace CT_TRY with CT_CATCH or CT_FINALLY on the stack & we are done
          frm.top().type = pc->type;
+
          if (language_is_set(LANG_CS))
          {
             frm.top().stage = (chunk_is_token(pc, CT_CATCH)) ? brace_stage_e::CATCH_WHEN : brace_stage_e::BRACE2;
@@ -851,6 +889,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
             // a parenthetical expression after the catch keyword and brace after the finally keyword
             frm.top().stage = (chunk_is_token(pc, CT_CATCH)) ? brace_stage_e::PAREN1 : brace_stage_e::BRACE2;
          }
+
          print_stack(LBCSSWAP, "=Swap   ", frm);
 
          return(true);
@@ -997,7 +1036,8 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
 } // check_complex_statements
 
 
-static bool handle_complex_close(ParseFrame &frm, chunk_t *pc)
+static bool handle_complex_close(ParseFrame &frm,
+                                 chunk_t    *pc)
 {
    LOG_FUNC_ENTRY();
 
@@ -1024,6 +1064,7 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc)
 
          // If the next chunk isn't CT_ELSE, close the statement
          chunk_t *next = chunk_get_next_ncnl(pc);
+
          if (next != nullptr && next->type != CT_ELSE)
          {
             LOG_FMT(LBCSPOP, "%s(%d): no CT_ELSE, pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
@@ -1041,6 +1082,7 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc)
 
          // If the next chunk isn't CT_CATCH or CT_FINALLY, close the statement
          chunk_t *next = chunk_get_next_ncnl(pc);
+
          if (  next != nullptr
             && next->type != CT_CATCH
             && next->type != CT_FINALLY)
@@ -1096,6 +1138,7 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc)
               (unsigned int)frm.top().stage);
       cpd.error_count++;
    }
+
    return(false);
 } // handle_complex_close
 
@@ -1108,6 +1151,7 @@ static void mark_namespace(chunk_t *pns)
    bool    is_using = false;
 
    chunk_t *pc = chunk_get_prev_ncnl(pns);
+
    if (chunk_is_token(pc, CT_USING))
    {
       is_using = true;
@@ -1115,9 +1159,11 @@ static void mark_namespace(chunk_t *pns)
    }
 
    pc = chunk_get_next_ncnl(pns);
+
    while (pc != nullptr)
    {
       set_chunk_parent(pc, CT_NAMESPACE);
+
       if (pc->type != CT_BRACE_OPEN)
       {
          if (chunk_is_token(pc, CT_SEMICOLON))
@@ -1126,8 +1172,10 @@ static void mark_namespace(chunk_t *pns)
             {
                set_chunk_parent(pc, CT_USING);
             }
+
             return;
          }
+
          pc = chunk_get_next_ncnl(pc);
          continue;
       }
@@ -1149,13 +1197,16 @@ static void mark_namespace(chunk_t *pns)
             chunk_flags_set(br_close, PCF_LONG_BLOCK);
          }
       }
+
       flag_parens(pc, PCF_IN_NAMESPACE, CT_NONE, CT_NAMESPACE, false);
       return;
    }
 } // mark_namespace
 
 
-static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
+static chunk_t *insert_vbrace(chunk_t          *pc,
+                              bool             after,
+                              const ParseFrame &frm)
 {
    LOG_FUNC_ENTRY();
 
@@ -1174,8 +1225,8 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
       return(chunk_add_after(&chunk, pc));
    }
 
-
    chunk_t *ref = chunk_get_prev(pc);
+
    if (ref == nullptr)
    {
       return(nullptr);
@@ -1192,6 +1243,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
       ref->brace_level++;
       ref = chunk_get_prev(ref);
    }
+
    if (ref == nullptr)
    {
       return(nullptr);
@@ -1213,6 +1265,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
          ref = chunk_get_next(ref);
       }
    }
+
    if (ref == nullptr)
    {
       return(nullptr);
@@ -1227,14 +1280,17 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
 } // insert_vbrace
 
 
-bool close_statement(ParseFrame &frm, chunk_t *pc)
+bool close_statement(ParseFrame &frm,
+                     chunk_t    *pc)
 {
    LOG_FUNC_ENTRY();
+
    if (pc == nullptr)
    {
       throw invalid_argument(string(__func__) + ":" + to_string(__LINE__)
                              + "args cannot be nullptr");
    }
+
    LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s, '%s' type is %s, stage is %u\n",
            __func__, __LINE__, pc->orig_line,
            get_token_name(pc->type), pc->text(),
@@ -1254,6 +1310,7 @@ bool close_statement(ParseFrame &frm, chunk_t *pc)
     * If we are in a virtual brace and we are not ON a CT_VBRACE_CLOSE add one
     */
    chunk_t *vbc = pc;
+
    if (frm.top().type == CT_VBRACE_OPEN)
    {
       // If the current token has already been consumed, then add after it
@@ -1297,5 +1354,6 @@ bool close_statement(ParseFrame &frm, chunk_t *pc)
          return(true);
       }
    }
+
    return(false);
 } // close_statement

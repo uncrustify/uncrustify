@@ -373,6 +373,7 @@ void init_keywords()
       {
          int               lang_flags = LANG_OC;
          const chunk_tag_t *probe     = kw_static_match(tag, lang_flags);
+
          if (probe == NULL)
          {
             tag->lang_flags |= lang_flags;
@@ -380,6 +381,7 @@ void init_keywords()
 
          lang_flags = LANG_CPP;
          probe      = kw_static_match(tag, lang_flags);
+
          if (probe == NULL)
          {
             tag->lang_flags |= lang_flags;
@@ -389,7 +391,8 @@ void init_keywords()
 }
 
 
-static int kw_compare(const void *p1, const void *p2)
+static int kw_compare(const void *p1,
+                      const void *p2)
 {
    const chunk_tag_t *t1 = static_cast<const chunk_tag_t *>(p1);
    const chunk_tag_t *t2 = static_cast<const chunk_tag_t *>(p2);
@@ -418,7 +421,8 @@ bool keywords_are_sorted(void)
 }
 
 
-void add_keyword(const std::string &tag, c_token_t type)
+void add_keyword(const std::string &tag,
+                 c_token_t         type)
 {
    // See if the keyword has already been added
    dkwmap::iterator it = dkwm.find(tag);
@@ -450,11 +454,13 @@ static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag)
       tag = prev;
       prev--;
    }
+
    return(tag);
 }
 
 
-static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag, int lang_flags)
+static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag,
+                                          int               lang_flags)
 {
    bool in_pp = (  cpd.in_preproc != CT_NONE
                 && cpd.in_preproc != CT_PP_DEFINE);
@@ -464,6 +470,7 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag, int lang_flags
         iter++)
    {
       bool pp_iter = (iter->lang_flags & FLAG_PP) != 0; // forcing value to bool
+
       if (  (strcmp(iter->tag, tag->tag) == 0)
          && language_is_set(iter->lang_flags)
          && (lang_flags & iter->lang_flags)
@@ -472,11 +479,13 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag, int lang_flags
          return(iter);
       }
    }
+
    return(nullptr);
 }
 
 
-c_token_t find_keyword_type(const char *word, size_t len)
+c_token_t find_keyword_type(const char *word,
+                            size_t     len)
 {
    if (len <= 0)
    {
@@ -486,6 +495,7 @@ c_token_t find_keyword_type(const char *word, size_t len)
    // check the dynamic word list first
    string           ss(word, len);
    dkwmap::iterator it = dkwm.find(ss);
+
    if (it != dkwm.end())
    {
       return((*it).second);
@@ -504,8 +514,10 @@ c_token_t find_keyword_type(const char *word, size_t len)
       {
          cpd.in_preproc = CT_PREPROC;
       }
+
       p_ret = kw_static_match(p_ret, cpd.lang_flags);
    }
+
    return((p_ret != nullptr) ? p_ret->type : CT_WORD);
 }
 
@@ -536,6 +548,7 @@ int load_keyword_file(const char *filename)
 
       // remove comments after '#' sign
       char *ptr;
+
       if ((ptr = strchr(buf, '#')) != nullptr)
       {
          *ptr = 0; // set string end where comment begins
@@ -572,6 +585,7 @@ void print_keywords(FILE *pfile)
    for (const auto &keyword_pair : dkwm)
    {
       c_token_t tt = keyword_pair.second;
+
       if (tt == CT_TYPE)
       {
          fprintf(pfile, "type %*.s%s\n",

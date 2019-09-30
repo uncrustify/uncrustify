@@ -27,6 +27,7 @@ void align_typedefs(size_t span)
 
    chunk_t *c_typedef = nullptr;
    chunk_t *pc        = chunk_get_head();
+
    while (pc != nullptr)
    {
       if (chunk_is_newline(pc))

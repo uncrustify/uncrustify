@@ -111,18 +111,22 @@ public:
          {
             first = obj->next;
          }
+
          if (last == obj)
          {
             last = obj->prev;
          }
+
          if (obj->next != NULL)
          {
             obj->next->prev = obj->prev;
          }
+
          if (obj->prev != NULL)
          {
             obj->prev->next = obj->next;
          }
+
          obj->next = NULL;
          obj->prev = NULL;
       }
@@ -130,7 +134,8 @@ public:
 
 
    //! swap two elements of a list
-   void Swap(T *obj1, T *obj2)
+   void Swap(T *obj1,
+             T *obj2)
    {
       if (obj1 != NULL && obj2 != NULL)
       {
@@ -165,13 +170,15 @@ public:
     * @param obj  new element to add to list
     * @param ref  chunk after which to insert new object
     */
-   void AddAfter(T *obj, T *ref)
+   void AddAfter(T *obj,
+                 T *ref)
    {
       if (obj != NULL && ref != NULL)
       {
          Pop(obj); // TODO: is this necessary?
          obj->next = ref->next;
          obj->prev = ref;
+
          if (ref->next != NULL)
          {
             ref->next->prev = obj;
@@ -180,6 +187,7 @@ public:
          {
             last = obj;
          }
+
          ref->next = obj;
       }
    }
@@ -191,13 +199,15 @@ public:
     * @param obj  new element to add to list
     * @param ref  chunk before to insert new object
     */
-   void AddBefore(T *obj, T *ref)
+   void AddBefore(T *obj,
+                  T *ref)
    {
       if (obj != NULL && ref != NULL)
       {
          Pop(obj);
          obj->next = ref;
          obj->prev = ref->prev;
+
          if (ref->prev != NULL)
          {
             ref->prev->next = obj;
@@ -206,6 +216,7 @@ public:
          {
             first = obj;
          }
+
          ref->prev = obj;
       }
    }
@@ -220,6 +231,7 @@ public:
    {
       obj->next = NULL;
       obj->prev = last;
+
       if (last == NULL)
       {
          last  = obj;
@@ -229,6 +241,7 @@ public:
       {
          last->next = obj;
       }
+
       last = obj;
    }
 
@@ -242,6 +255,7 @@ public:
    {
       obj->next = first;
       obj->prev = NULL;
+
       if (first == NULL)
       {
          last  = obj;
@@ -251,6 +265,7 @@ public:
       {
          first->prev = obj;
       }
+
       first = obj;
    }
 };

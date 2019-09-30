@@ -24,7 +24,8 @@
 
 struct log_fcn_info
 {
-   log_fcn_info(const char *name_, int line_)
+   log_fcn_info(const char *name_,
+                int        line_)
       : name(name_)
       , line(line_)
    {
@@ -107,7 +108,8 @@ bool log_sev_on(log_sev_t sev)
 }
 
 
-void log_set_sev(log_sev_t sev, bool value)
+void log_set_sev(log_sev_t sev,
+                 bool      value)
 {
    logmask_set_sev(g_log.mask, sev, value);
 }
@@ -134,7 +136,9 @@ void log_flush(bool force_nl)
          g_log.bufX[g_log.buf_len++] = '\n';
          g_log.bufX[g_log.buf_len]   = 0;
       }
+
       size_t retlength = fwrite(&g_log.bufX[0], g_log.buf_len, 1, g_log.log_file);
+
       if (retlength != 1)
       {
          // maybe we should log something to complain... =)
@@ -153,6 +157,7 @@ static size_t log_start(log_sev_t sev)
       {
          log_flush(true);
       }
+
       g_log.sev    = sev;
       g_log.in_log = false;
    }
@@ -172,6 +177,7 @@ static size_t log_start(log_sev_t sev)
 static void log_end(void)
 {
    g_log.in_log = (g_log.bufX[g_log.buf_len - 1] != '\n');
+
    if (  !g_log.in_log
       || (g_log.buf_len > (g_log.bufX.size() / 2)))
    {
@@ -180,7 +186,9 @@ static void log_end(void)
 }
 
 
-void log_str(log_sev_t sev, const char *str, size_t len)
+void log_str(log_sev_t  sev,
+             const char *str,
+             size_t     len)
 {
    if (  str == nullptr
       || len == 0
@@ -190,21 +198,26 @@ void log_str(log_sev_t sev, const char *str, size_t len)
    }
 
    size_t cap = log_start(sev);
+
    if (cap > 0)
    {
       if (len > cap)
       {
          len = cap;
       }
+
       memcpy(&g_log.bufX[g_log.buf_len], str, len);
       g_log.buf_len            += len;
       g_log.bufX[g_log.buf_len] = 0;
    }
+
    log_end();
 }
 
 
-void log_fmt(log_sev_t sev, const char *fmt, ...)
+void log_fmt(log_sev_t  sev,
+             const char *fmt,
+             ...)
 {
    if (fmt == nullptr || !log_sev_on(sev))
    {
@@ -221,6 +234,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
    char         buf[BUFFERLENGTH];
    // it MUST be a 'unsigned int' variable to be runable under windows
    unsigned int length = strlen(fmt);
+
    if (length >= BUFFERLENGTH)
    {
       fprintf(stderr, "FATAL: The variable 'buf' is not big enought:\n");
@@ -228,6 +242,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
       fprintf(stderr, "Please make a report.\n");
       exit(EX_SOFTWARE);
    }
+
    memcpy(buf, fmt, length);
    buf[length] = 0;
    convert_log_zu2lu(buf);
@@ -273,7 +288,9 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
 } // log_fmt
 
 
-void log_hex(log_sev_t sev, const void *vdata, size_t len)
+void log_hex(log_sev_t  sev,
+             const void *vdata,
+             size_t     len)
 {
    if (vdata == nullptr || !log_sev_on(sev))
    {
@@ -284,6 +301,7 @@ void log_hex(log_sev_t sev, const void *vdata, size_t len)
    char        buf[MAX_BUF];
    const UINT8 *dat = static_cast<const UINT8 *>(vdata);
    size_t      idx  = 0;
+
    while (len-- > 0)
    {
       buf[idx++] = to_hex_char(*dat >> 4);
@@ -307,7 +325,9 @@ void log_hex(log_sev_t sev, const void *vdata, size_t len)
 }
 
 
-void log_hex_blk(log_sev_t sev, const void *data, size_t len)
+void log_hex_blk(log_sev_t  sev,
+                 const void *data,
+                 size_t     len)
 {
    if (data == nullptr || !log_sev_on(sev))
    {
@@ -327,6 +347,7 @@ void log_hex_blk(log_sev_t sev, const void *data, size_t len)
    // Loop through the data of the current iov
    int count = 0;
    int total = 0;
+
    for (size_t idx = 0; idx < len; idx++)
    {
       if (count == 0)
@@ -349,6 +370,7 @@ void log_hex_blk(log_sev_t sev, const void *data, size_t len)
 
       total++;
       count++;
+
       if (count >= 16)
       {
          count = 0;
@@ -370,12 +392,14 @@ void log_hex_blk(log_sev_t sev, const void *data, size_t len)
 
          count++;
       }
+
       log_str(sev, buf, 73);
    }
 } // log_hex_blk
 
 
-log_func::log_func(const char *name, int line)
+log_func::log_func(const char *name,
+                   int        line)
 {
    g_fq.push_back(log_fcn_info(name, line));
 }
@@ -397,7 +421,10 @@ void log_func_call(int line)
 }
 
 
-void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, size_t skip_cnt)
+void log_func_stack(log_sev_t  sev,
+                    const char *prefix,
+                    const char *suffix,
+                    size_t     skip_cnt)
 {
    UNUSED(skip_cnt);
 
@@ -405,23 +432,28 @@ void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, size_
    {
       LOG_FMT(sev, "%s", prefix);
    }
+
 #ifdef DEBUG
    const char *sep      = "";
    size_t     g_fq_size = g_fq.size();
    size_t     begin_with;
+
    if (g_fq_size > (skip_cnt + 1))
    {
       begin_with = g_fq_size - (skip_cnt + 1);
+
       for (size_t idx = begin_with; idx != 0; idx--)
       {
          LOG_FMT(sev, "%s %s:%d", sep, g_fq[idx].name, g_fq[idx].line);
          sep = ",";
       }
+
       LOG_FMT(sev, "%s %s:%d", sep, g_fq[0].name, g_fq[0].line);
    }
 #else
    LOG_FMT(sev, "-DEBUG NOT SET-");
 #endif
+
    if (suffix)
    {
       LOG_FMT(sev, "%s", suffix);

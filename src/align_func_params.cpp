@@ -21,6 +21,7 @@ chunk_t *align_func_param(chunk_t *start)
    size_t myspan   = 2;
    size_t mythresh = 0;
    size_t mygap    = 0;
+
    // Override, if the align_func_params_span > 0
    if (options::align_func_params_span() > 0)
    {
@@ -40,9 +41,11 @@ chunk_t *align_func_param(chunk_t *start)
    size_t  chunk_count   = 0;
 
    chunk_t *pc = start;
+
    while ((pc = chunk_get_next(pc)) != nullptr)
    {
       chunk_count++;
+
       if (chunk_is_newline(pc))
       {
          did_this_line = false;
@@ -60,6 +63,7 @@ chunk_t *align_func_param(chunk_t *start)
          {
             as.Add(pc);
          }
+
          did_this_line = true;
       }
       else if (comma_count > 0)
@@ -73,6 +77,7 @@ chunk_t *align_func_param(chunk_t *start)
       else if (chunk_is_token(pc, CT_COMMA))
       {
          chunk_t *tmp_prev = chunk_get_prev_nc(pc);
+
          if (!chunk_is_newline(tmp_prev))  // don't count leading commas
          {
             comma_count++;
@@ -93,6 +98,7 @@ void align_func_params(void)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc = chunk_get_head();
+
    while ((pc = chunk_get_next(pc)) != nullptr)
    {
       if (  pc->type != CT_FPAREN_OPEN

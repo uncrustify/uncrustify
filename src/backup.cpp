@@ -39,7 +39,8 @@
 using namespace std;
 
 
-int backup_copy_file(const char *filename, const vector<UINT8> &data)
+int backup_copy_file(const char          *filename,
+                     const vector<UINT8> &data)
 {
    char  newpath[1024];
    char  md5_str_in[33];
@@ -60,9 +61,11 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
    snprintf(newpath, sizeof(newpath), "%s%s", filename, UNC_BACKUP_MD5_SUFFIX);
 
    FILE *thefile = fopen(newpath, "rb");
+
    if (thefile != nullptr)
    {
       char buffer[128];
+
       if (fgets(buffer, sizeof(buffer), thefile) != nullptr)
       {
          for (int i = 0; buffer[i] != 0; i++)
@@ -78,6 +81,7 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
             }
          }
       }
+
       fclose(thefile);
    }
 
@@ -94,6 +98,7 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
    snprintf(newpath, sizeof(newpath), "%s%s", filename, UNC_BACKUP_SUFFIX);
 
    thefile = fopen(newpath, "wb");
+
    if (thefile != nullptr)
    {
       size_t retval   = fwrite(&data[0], data.size(), 1, thefile);
@@ -105,6 +110,7 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
       {
          return(EX_OK);
       }
+
       LOG_FMT(LERR, "fwrite(%s) failed: %s (%d)\n",
               newpath, strerror(my_errno), my_errno);
       cpd.error_count++;
@@ -115,6 +121,7 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
               newpath, strerror(errno), errno);
       cpd.error_count++;
    }
+
    return(EX_IOERR);
 } // backup_copy_file
 
@@ -131,6 +138,7 @@ void backup_create_md5_file(const char *filename)
    md5.Init();
 
    thefile = fopen(filename, "rb");
+
    if (thefile == nullptr)
    {
       LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
@@ -151,6 +159,7 @@ void backup_create_md5_file(const char *filename)
    snprintf(newpath, sizeof(newpath), "%s%s", filename, UNC_BACKUP_MD5_SUFFIX);
 
    thefile = fopen(newpath, "wb");
+
    if (thefile != nullptr)
    {
       fprintf(thefile,

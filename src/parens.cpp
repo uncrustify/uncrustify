@@ -52,6 +52,7 @@ void do_parens(void)
    if (options::mod_full_paren_if_bool())
    {
       chunk_t *pc = chunk_get_head();
+
       while ((pc = chunk_get_next_ncnl(pc)) != nullptr)
       {
          if (  pc->type != CT_SPAREN_OPEN
@@ -64,6 +65,7 @@ void do_parens(void)
 
          // Grab the close sparen
          chunk_t *pclose = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level, scope_e::PREPROC);
+
          if (pclose != nullptr)
          {
             check_bool_parens(pc, pclose, 0);
@@ -74,7 +76,8 @@ void do_parens(void)
 }
 
 
-static void add_parens_between(chunk_t *first, chunk_t *last)
+static void add_parens_between(chunk_t *first,
+                               chunk_t *last)
 {
    LOG_FUNC_ENTRY();
 
@@ -85,6 +88,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
 
    // Don't do anything if we have a bad sequence, ie "&& )"
    chunk_t *first_n = chunk_get_next_ncnl(first);
+
    if (first_n == last)
    {
       return;
@@ -120,11 +124,14 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
    {
       tmp->level++;
    }
+
    last_p->level++;
 } // add_parens_between
 
 
-static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
+static void check_bool_parens(chunk_t *popen,
+                              chunk_t *pclose,
+                              int     nest)
 {
    LOG_FUNC_ENTRY();
 
@@ -138,6 +145,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
            popen->level);
 
    chunk_t *pc = popen;
+
    while ((pc = chunk_get_next_ncnl(pc)) != nullptr && pc != pclose)
    {
       if (pc->flags & PCF_IN_PREPROC)
@@ -156,14 +164,17 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
          LOG_FMT(LPARADD2, " -- %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->type),
                  pc->text(), pc->orig_line, pc->orig_col, pc->level);
+
          if (hit_compare)
          {
             hit_compare = false;
+
             if (!language_is_set(LANG_CS))
             {
                add_parens_between(ref, pc);
             }
          }
+
          ref = pc;
       }
       else if (chunk_is_token(pc, CT_COMPARE))
@@ -175,6 +186,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
       else if (chunk_is_paren_open(pc))
       {
          chunk_t *next = chunk_skip_to_match(pc);
+
          if (next != nullptr)
          {
             check_bool_parens(pc, next, nest + 1);

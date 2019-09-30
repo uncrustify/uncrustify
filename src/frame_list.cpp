@@ -49,22 +49,27 @@ static void fl_trash_tos(void);
 
 
 //! Logs one parse frame
-static void fl_log(log_sev_t logsev, const ParseFrame &frm)
+static void fl_log(log_sev_t        logsev,
+                   const ParseFrame &frm)
 {
    LOG_FMT(logsev, "[%s] BrLevel=%zu Level=%zu PseTos=%zu\n",
            get_token_name(frm.in_ifdef), frm.brace_level, frm.level, frm.size() - 1);
 
    LOG_FMT(logsev, " *");
+
    for (size_t idx = 1; idx < frm.size(); idx++)
    {
       LOG_FMT(logsev, " [%s-%u]", get_token_name(frm.at(idx).type),
               static_cast<unsigned int>(frm.at(idx).stage));
    }
+
    LOG_FMT(logsev, "\n");
 }
 
 
-static void fl_log_frms(log_sev_t logsev, const char *txt, const ParseFrame &frm)
+static void fl_log_frms(log_sev_t        logsev,
+                        const char       *txt,
+                        const ParseFrame &frm)
 {
    LOG_FMT(logsev, "%s Parse Frames(%zu):", txt, cpd.frames.size());
 
@@ -88,6 +93,7 @@ static void fl_log_all(log_sev_t logsev)
 
       fl_log(logsev, cpd.frames.at(idx));
    }
+
    LOG_FMT(logsev, "##=-\n");
 }
 
@@ -98,6 +104,7 @@ static void fl_copy_tos(ParseFrame &pf)
    {
       pf = *std::prev(std::end(cpd.frames));
    }
+
    LOG_FMT(LPF, "%s(%d): frame_count is %zu\n", __func__, __LINE__, cpd.frames.size());
 }
 
@@ -108,6 +115,7 @@ static void fl_copy_2nd_tos(ParseFrame &pf)
    {
       pf = *std::prev(std::end(cpd.frames), 2);
    }
+
    LOG_FMT(LPF, "%s(%d): frame_count is %zu\n", __func__, __LINE__, cpd.frames.size());
 }
 
@@ -118,6 +126,7 @@ static void fl_trash_tos(void)
    {
       cpd.frames.pop_back();
    }
+
    LOG_FMT(LPF, "%s(%d): frame_count is %zu\n", __func__, __LINE__, cpd.frames.size());
 }
 
@@ -143,7 +152,8 @@ void fl_pop(ParseFrame &pf)
 }
 
 
-int fl_check(ParseFrame &frm, chunk_t *pc)
+int fl_check(ParseFrame &frm,
+             chunk_t    *pc)
 {
    if (pc->type != CT_PREPROC)
    {
@@ -151,6 +161,7 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
    }
 
    chunk_t *next = chunk_get_next(pc);
+
    if (next == nullptr)
    {
       return(cpd.pp_level);
@@ -174,6 +185,7 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
    const size_t    b4_cnt   = cpd.frames.size();
 
    const char      *txt = nullptr;
+
    if (pc->flags & PCF_IN_PREPROC)
    {
       LOG_FMT(LPF, " <In> ");
@@ -204,6 +216,7 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
             fl_push(frm);
             frm.in_ifdef = CT_PP_ELSE;
          }
+
          // we have [...] [base] [if]-[else], copy [base] over [else]
          fl_copy_2nd_tos(frm);
          frm.in_ifdef = CT_PP_ELSE;
@@ -233,6 +246,7 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
                log_flush(true);
                exit(EX_SOFTWARE);
             }
+
             frm.in_ifdef = cpd.frames[cpd.frames.size() - 2].in_ifdef;
             fl_trash_tos();       // [...] [base]-[if]
             fl_trash_tos();       // [...]-[if]

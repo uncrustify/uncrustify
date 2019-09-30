@@ -13,7 +13,8 @@
 #include "uncrustify.h"
 
 
-chunk_t *chunk_get_next_local(chunk_t *pc, scope_e scope = scope_e::ALL)
+chunk_t *chunk_get_next_local(chunk_t *pc,
+                              scope_e scope = scope_e::ALL)
 {
    chunk_t *tmp = pc;
 
@@ -28,7 +29,8 @@ chunk_t *chunk_get_next_local(chunk_t *pc, scope_e scope = scope_e::ALL)
 }
 
 
-chunk_t *chunk_get_prev_local(chunk_t *pc, scope_e scope = scope_e::ALL)
+chunk_t *chunk_get_prev_local(chunk_t *pc,
+                              scope_e scope = scope_e::ALL)
 {
    chunk_t *tmp = pc;
 
@@ -60,15 +62,19 @@ void combine_labels(void)
    ChunkStack cs;
 
    prev = chunk_get_head();
+
    if (prev == nullptr)
    {
       return;
    }
+
    cur = chunk_get_next_nc(prev);
+
    if (cur == nullptr)
    {
       return;
    }
+
    next = chunk_get_next_nc(cur);
 
    // unlikely that the file will start with a label...
@@ -103,6 +109,7 @@ void combine_labels(void)
       {
          hit_class = true;
       }
+
       if (chunk_is_semicolon(next) || chunk_is_token(next, CT_BRACE_OPEN))
       {
          hit_class = false;
@@ -119,6 +126,7 @@ void combine_labels(void)
          {
             chunk_t *t2 = cs.Top()->m_pc;
             cs.Pop_Back();
+
             if (chunk_is_token(t2, CT_SQUARE_OPEN))
             {
                break;
@@ -151,6 +159,7 @@ void combine_labels(void)
             set_chunk_type(cur, CT_CASE);
             hit_case = true;
          }
+
          if (cs_top_is_question(cs, next->level))
          {
             set_chunk_type(next, CT_COND_COLON);
@@ -161,10 +170,12 @@ void combine_labels(void)
             hit_case = false;
             set_chunk_type(next, CT_CASE_COLON);
             tmp = chunk_get_next_ncnlnp(next);                // Issue #2150
+
             if (chunk_is_token(tmp, CT_BRACE_OPEN))
             {
                set_chunk_parent(tmp, CT_CASE);
                tmp = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
+
                if (tmp != nullptr)
                {
                   set_chunk_parent(tmp, CT_CASE);
@@ -184,10 +195,12 @@ void combine_labels(void)
             LOG_FMT(LFCN, "%s(%d): next->text() is '%s', orig_line is %zu, orig_col is %zu\n\n",
                     __func__, __LINE__, next->text(), next->orig_line, next->orig_col);
             chunk_t *nextprev = chunk_get_prev_local(next);   // Issue #2279
+
             if (nextprev == nullptr)
             {
                return;
             }
+
             if (language_is_set(LANG_PAWN))
             {
                if (chunk_is_token(cur, CT_WORD) || chunk_is_token(cur, CT_BRACE_CLOSE))
@@ -195,10 +208,12 @@ void combine_labels(void)
                   c_token_t new_type = CT_TAG;
 
                   tmp = chunk_get_next_nc(next);
+
                   if (tmp == nullptr)
                   {
                      return;
                   }
+
                   if (chunk_is_newline(prev) && chunk_is_newline(tmp))
                   {
                      new_type = CT_LABEL;
@@ -208,6 +223,7 @@ void combine_labels(void)
                   {
                      set_chunk_type(next, CT_TAG_COLON);
                   }
+
                   if (chunk_is_token(cur, CT_WORD))
                   {
                      set_chunk_type(cur, new_type);
@@ -229,14 +245,17 @@ void combine_labels(void)
             else if (chunk_is_token(cur, CT_WORD))
             {
                tmp = chunk_get_next_nc(next, scope_e::PREPROC);
+
                // Issue #1187
                if (tmp == nullptr)
                {
                   return;
                }
+
                LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, tmp '%s': ",
                        __func__, __LINE__, tmp->orig_line, tmp->orig_col, (tmp->type == CT_NEWLINE) ? "<Newline>" : tmp->text());
                log_pcf_flags(LGUY, tmp->flags);
+
                if (next->flags & PCF_IN_FCN_CALL)
                {
                   // Must be a macro thingy, assume some sort of label
@@ -261,10 +280,12 @@ void combine_labels(void)
                      && (!language_is_set(LANG_OC)))
                   {
                      chunk_t *labelPrev = prev;
+
                      if (chunk_is_token(labelPrev, CT_NEWLINE))
                      {
                         labelPrev = chunk_get_prev_ncnlni(prev);   // Issue #2279
                      }
+
                      if (labelPrev->type != CT_FPAREN_CLOSE)
                      {
                         set_chunk_type(cur, CT_LABEL);
@@ -282,16 +303,19 @@ void combine_labels(void)
                   set_chunk_type(next, CT_BIT_COLON);
 
                   tmp = chunk_get_next(next);
+
                   if (tmp == nullptr)
                   {
                      return;
                   }
+
                   while ((tmp = chunk_get_next(tmp)) != nullptr)
                   {
                      if (chunk_is_token(tmp, CT_SEMICOLON))
                      {
                         break;
                      }
+
                      if (chunk_is_token(tmp, CT_COLON))
                      {
                         set_chunk_type(tmp, CT_BIT_COLON);
@@ -307,6 +331,7 @@ void combine_labels(void)
                LOG_FMT(LFCN, "%s(%d): next->text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
                        __func__, __LINE__, next->text(), next->orig_line, next->orig_col,
                        get_token_name(next->type));
+
                // Issue #2172
                if (next->parent_type == CT_FUNC_DEF)
                {
@@ -355,6 +380,7 @@ void combine_labels(void)
             else
             {
                tmp = chunk_get_next_ncnl(next);
+
                //tmp = chunk_get_next_local(next);
                if (tmp != nullptr)
 
@@ -362,6 +388,7 @@ void combine_labels(void)
                   LOG_FMT(LFCN, "%s(%d): tmp->text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
                           __func__, __LINE__, tmp->text(), tmp->orig_line, tmp->orig_col,
                           get_token_name(tmp->type));
+
                   if (chunk_is_token(tmp, CT_BASE) || chunk_is_token(tmp, CT_THIS))
                   {
                      // ignore it, as it is a C# base thingy

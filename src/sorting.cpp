@@ -64,6 +64,7 @@ static void prepare_categories()
    for (int i = 0; i < kIncludeCategoriesCount; ++i)
    {
       const auto &cat_pattern = (*include_category_options[i])();
+
       if (!cat_pattern.empty())
       {
          include_categories[i] = new include_category(cat_pattern);
@@ -114,22 +115,27 @@ static unc_text chunk_sort_str(chunk_t *pc)
    {
       return(unc_text{ pc->str, 0, pc->len() - 1 });
    }
+
    return(pc->str);
 }
 
 
 //! Compare two chunks
-static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
+static int compare_chunks(chunk_t *pc1,
+                          chunk_t *pc2,
+                          bool    tcare)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LSORT, "%s(%d): @begin pc1->len is %zu, line is %zu, column is %zu\n",
            __func__, __LINE__, pc1->len(), pc1->orig_line, pc1->orig_col);
    LOG_FMT(LSORT, "%s(%d): @begin pc2->len is %zu, line is %zu, column is %zu\n",
            __func__, __LINE__, pc2->len(), pc2->orig_line, pc2->orig_col);
+
    if (pc1 == pc2) // same chunk is always identical thus return 0 differences
    {
       return(0);
    }
+
    while (pc1 != nullptr && pc2 != nullptr)
    {
       int ppc1 = get_chunk_priority(pc1);
@@ -154,6 +160,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
       {
          return(ret_val);
       }
+
       if (pc1->len() != pc2->len())
       {
          return(pc1->len() - pc2->len());
@@ -163,21 +170,25 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
       pc1 = chunk_get_next(pc1);
       LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
               __func__, __LINE__, pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
+
       if (chunk_is_token(pc1, CT_MEMBER))
       {
          pc1 = chunk_get_next(pc1);
          LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
                  __func__, __LINE__, pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
       }
+
       pc2 = chunk_get_next(pc2);
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
               __func__, __LINE__, pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
+
       if (chunk_is_token(pc2, CT_MEMBER))
       {
          pc2 = chunk_get_next(pc2);
          LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
                  __func__, __LINE__, pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
       }
+
       LOG_FMT(LSORT, "%s(%d): >>>text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
               __func__, __LINE__, pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
       LOG_FMT(LSORT, "%s(%d): >>>text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
@@ -197,10 +208,12 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
    {
       return(-1);
    }
+
    if (!chunk_is_newline(pc1))
    {
       return(1);
    }
+
    return(0);
 } // compare_chunks
 
@@ -210,24 +223,29 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
  * We need to minimize the number of swaps, as those are expensive.
  * So, we do a min sort.
  */
-static void do_the_sort(chunk_t **chunks, size_t num_chunks)
+static void do_the_sort(chunk_t **chunks,
+                        size_t  num_chunks)
 {
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LSORT, "%s(%d): %zu chunks:",
            __func__, __LINE__, num_chunks);
+
    for (size_t idx = 0; idx < num_chunks; idx++)
    {
       LOG_FMT(LSORT, " [%s]", chunks[idx]->text());
    }
+
    LOG_FMT(LSORT, "\n");
 
    size_t start_idx;
    bool   take_care = options::mod_sort_case_sensitive();                  // Issue #2091
+
    for (start_idx = 0; start_idx < (num_chunks - 1); start_idx++)
    {
       // Find the index of the minimum value
       size_t min_idx = start_idx;
+
       for (size_t idx = start_idx + 1; idx < num_chunks; idx++)
       {
          if (compare_chunks(chunks[idx], chunks[min_idx], take_care) < 0)  // Issue #2091
@@ -259,6 +277,7 @@ void sort_imports(void)
    prepare_categories();
 
    chunk_t *pc = chunk_get_head();
+
    while (pc != nullptr)
    {
       chunk_t *next = chunk_get_next(pc);
@@ -286,8 +305,10 @@ void sort_imports(void)
                cpd.error_count++;
                exit(2);
             }
+
             did_import = true;
          }
+
          if (  !did_import
             || pc->nl_count > 1
             || next == nullptr)
@@ -296,8 +317,10 @@ void sort_imports(void)
             {
                do_the_sort(chunks, num_chunks);
             }
+
             num_chunks = 0;
          }
+
          p_imp  = nullptr;
          p_last = nullptr;
       }
@@ -327,6 +350,7 @@ void sort_imports(void)
       {
          p_last = pc;
       }
+
       pc = next;
    }
 

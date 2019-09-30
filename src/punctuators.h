@@ -29,7 +29,8 @@ struct lookup_entry_t
       }
 
       template<typename T1, typename T2>
-      bool operator()(T1 const &t1, T2 const &t2)
+      bool operator()(T1 const &t1,
+                      T2 const &t2)
       {
          return(get_char(t1) < get_char(t2));
       }

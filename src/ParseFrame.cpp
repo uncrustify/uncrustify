@@ -96,6 +96,7 @@ ContainerType &ParseFrame::prev(size_t idx)
       throw invalid_argument(string(__FILE__) + ":" + to_string(__LINE__)
                              + " idx can't be zero");
    }
+
    if (idx >= pse.size())
    {
       LOG_FMT(LINDPSE, "%s(%d): idx is %zu, size is %zu\n",
@@ -103,6 +104,7 @@ ContainerType &ParseFrame::prev(size_t idx)
       throw invalid_argument(string(__FILE__) + ":" + to_string(__LINE__)
                              + " idx can't be >= size()");
    }
+
    return(*std::prev(std::end(pse), idx + 1));
 }
 
@@ -116,6 +118,7 @@ const ContainerType &ParseFrame::prev(size_t idx) const
       throw invalid_argument(string(__FILE__) + ":" + to_string(__LINE__)
                              + " idx can't be zero or >= size()");
    }
+
    return(*std::prev(std::end(pse), idx + 1));
 }
 
@@ -144,7 +147,8 @@ const ContainerType &ParseFrame::top() const
 }
 
 
-void ParseFrame::push(chunk_t &pc, brace_stage_e stage)
+void ParseFrame::push(chunk_t       &pc,
+                      brace_stage_e stage)
 {
    LOG_FUNC_ENTRY();
 

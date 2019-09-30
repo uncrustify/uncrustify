@@ -49,6 +49,7 @@ const char *get_brace_stage_name(brace_stage_e brace_stage)
    case brace_stage_e::CATCH_WHEN:
       return("CATCH_WHEN");
    }
+
    return("?????");
 } // get_brace_stage_name
 
@@ -84,5 +85,6 @@ const char *get_unc_stage_name(unc_stage_e unc_stage)
    case unc_stage_e::CLEANUP:
       return("CLEANUP");
    }
+
    return("?????");
 } // get_unc_stage_name

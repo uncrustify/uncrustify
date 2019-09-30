@@ -102,6 +102,7 @@ int load_option_fileChar(char *configString)
    while (true)
    {
       delimPos = strchr(delimPos, '\n');
+
       if (delimPos == nullptr)
       {
          break;
@@ -115,6 +116,7 @@ int load_option_fileChar(char *configString)
       delimPos++;
       subStringStart = delimPos;
    }
+
    //get last line, expectation: ends with \0
    process_option_line(subStringStart, "");
 
@@ -128,13 +130,15 @@ int load_option_fileChar(char *configString)
  * @param tag:  keyword that is going to be added
  * @param type: type of the keyword
  */
-void _add_keyword(string tag, c_token_t type)
+void _add_keyword(string    tag,
+                  c_token_t type)
 {
    if (tag.empty())
    {
       LOG_FMT(LERR, "%s: input string is empty\n", __func__);
       return;
    }
+
    add_keyword(tag.c_str(), type);
 }
 
@@ -152,13 +156,15 @@ void clear_keywords()
  * @param tag:   tag string
  * @param value: value of the define
  */
-void add_define(string tag, string val)
+void add_define(string tag,
+                string val)
 {
    if (tag.empty())
    {
       LOG_FMT(LERR, "%s: tag string is empty\n", __func__);
       return;
    }
+
    if (val.empty())
    {
       LOG_FMT(LERR, "%s: val string is empty\n", __func__);
@@ -181,6 +187,7 @@ void add_define(string tag)
       LOG_FMT(LERR, "%s: tag string is empty\n", __func__);
       return;
    }
+
    add_define(tag.c_str(), nullptr);
 }
 
@@ -232,13 +239,15 @@ void set_quiet()
  * @param value: value that is going to be set
  * @return options enum value of the found option or -1 if option was not found
  */
-int set_option(string name, string value)
+int set_option(string name,
+               string value)
 {
    if (name.empty())
    {
       LOG_FMT(LERR, "%s: name string is empty\n", __func__);
       return(-1);
    }
+
    if (value.empty())
    {
       LOG_FMT(LERR, "%s: value string is empty\n", __func__);
@@ -264,6 +273,7 @@ string get_option(string name)
    }
 
    const auto option = unc_find_option(name.c_str());
+
    if (option == nullptr)
    {
       LOG_FMT(LWARN, "Option %s not found\n", name.c_str());
@@ -291,7 +301,6 @@ string show_options()
       return("");
    }
 
-
    print_options(stream);
    fflush(stream);
    fclose(stream);
@@ -312,7 +321,8 @@ string show_options()
  *                          true=containing only options with non default values
  * @return returns the config file string based on the current configuration
  */
-string show_config(bool withDoc, bool only_not_default)
+string show_config(bool withDoc,
+                   bool only_not_default)
 {
    char   *buf;
    size_t len;
@@ -398,7 +408,6 @@ int _loadConfig(intptr_t _cfg)
    // memory management is done in /emscripten/postfix_module.js
    char *cfg = reinterpret_cast<char *>(_cfg);
 
-
    if (load_option_fileChar(cfg) != EXIT_SUCCESS)
    {
       LOG_FMT(LERR, "unable to load the config\n");
@@ -437,7 +446,10 @@ map<uncrustify_groups, group_map_value> getGroupMap()
  *
  * @return pointer to the formatted file char* string
  */
-intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
+intptr_t _uncrustify(intptr_t    _file,
+                     lang_flag_e langIDX,
+                     bool        frag,
+                     bool        defer)
 {
    // Problem: uncrustify originally is not a lib and uses global vars such as
    // cpd.error_count for the whole program execution
@@ -445,6 +457,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    cpd.error_count = 0;
    cpd.filename    = "stdin";
    cpd.frag        = frag;
+
    if (langIDX == 0)   // 0 == undefined
    {
       LOG_FMT(LWARN, "language of input file not defined, C++ will be assumed\n");
@@ -466,6 +479,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    fm.raw = vector<UINT8>();
 
    char c;
+
    for (auto idx = 0; (c = file[idx]) != 0; ++idx)
    {
       fm.raw.push_back(c);
@@ -492,6 +506,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    // apparently emscripten has its own implementation, if that is not working
    // see: stackoverflow.com/questions/10305095#answer-10341073
    FILE *stream = open_memstream(&buf, &len);
+
    if (stream == nullptr)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");
@@ -526,6 +541,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    {
       return(0);
    }
+
    // buf is deleted inside js code
    return(reinterpret_cast<intptr_t>(buf));
 } // uncrustify
@@ -540,7 +556,9 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
  *
  * @return pointer to the formatted file char* string
  */
-intptr_t _uncrustify(intptr_t file, lang_flag_e langIDX, bool frag)
+intptr_t _uncrustify(intptr_t    file,
+                     lang_flag_e langIDX,
+                     bool        frag)
 {
    return(_uncrustify(file, langIDX, frag, false));
 }
@@ -554,7 +572,8 @@ intptr_t _uncrustify(intptr_t file, lang_flag_e langIDX, bool frag)
  *
  * @return pointer to the formatted file char* string
  */
-intptr_t _uncrustify(intptr_t file, lang_flag_e langIDX)
+intptr_t _uncrustify(intptr_t    file,
+                     lang_flag_e langIDX)
 {
    return(_uncrustify(file, langIDX, false, false));
 }
@@ -569,7 +588,9 @@ intptr_t _uncrustify(intptr_t file, lang_flag_e langIDX)
  *
  * @return pointer to the debug file char* string
  */
-intptr_t _debug(intptr_t _file, lang_flag_e langIDX, bool frag)
+intptr_t _debug(intptr_t    _file,
+                lang_flag_e langIDX,
+                bool        frag)
 {
    auto formatted_str_ptr = _uncrustify(_file, langIDX, frag, true);
    char *formatted_str    = reinterpret_cast<char *>(formatted_str_ptr);
@@ -582,11 +603,13 @@ intptr_t _debug(intptr_t _file, lang_flag_e langIDX, bool frag)
    char   *buf    = nullptr;
    size_t len     = 0;
    FILE   *stream = open_memstream(&buf, &len);
+
    if (stream == nullptr)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");
       return(0);
    }
+
    output_parsed(stream);
    fflush(stream);
    fclose(stream);
@@ -612,7 +635,8 @@ intptr_t _debug(intptr_t _file, lang_flag_e langIDX, bool frag)
  *
  * @return pointer to the debug file char* string
  */
-intptr_t _debug(intptr_t _file, lang_flag_e langIDX)
+intptr_t _debug(intptr_t    _file,
+                lang_flag_e langIDX)
 {
    return(_debug(_file, langIDX, false));
 }

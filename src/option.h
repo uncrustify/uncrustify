@@ -108,7 +108,8 @@ UNC_DECLARE_OPERATORS_FOR_FLAGS(token_pos_flags_t);
 class GenericOption
 {
 public:
-   GenericOption(const char *opt_name, const char *opt_desc)
+   GenericOption(const char *opt_name,
+                 const char *opt_desc)
       : m_name{opt_name}
       , m_desc{opt_desc} {}
 
@@ -170,7 +171,9 @@ template<typename T>
 class Option : public GenericOption
 {
 public:
-   Option(const char *opt_name, const char *opt_desc, T opt_val = T{})
+   Option(const char *opt_name,
+          const char *opt_desc,
+          T          opt_val = T{})
       : GenericOption{opt_name, opt_desc}
       , m_val{opt_val}
       , m_default{opt_val} {}
@@ -204,7 +207,9 @@ template<typename T, T min, T max>
 class BoundedOption : public Option<T>
 {
 public:
-   BoundedOption(const char *opt_name, const char *opt_desc, T opt_val = T{})
+   BoundedOption(const char *opt_name,
+                 const char *opt_desc,
+                 T          opt_val = T{})
       : Option<T>{opt_name, opt_desc, opt_val}
    {
       assert(opt_val >= min && opt_val <= max);
@@ -224,6 +229,7 @@ protected:
            val, this->name(), static_cast<long>(min));
          return(false);
       }
+
       if (val > static_cast<long>(max))
       {
          OptionWarning w{ this };
@@ -232,6 +238,7 @@ protected:
            val, this->name(), static_cast<long>(max));
          return(false);
       }
+
       return(true);
    }
 };

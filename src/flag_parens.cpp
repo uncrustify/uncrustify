@@ -9,12 +9,17 @@
 #include "uncrustify.h"
 
 
-chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype, c_token_t parenttype, bool parent_all)
+chunk_t *flag_parens(chunk_t   *po,
+                     UINT64    flags,
+                     c_token_t opentype,
+                     c_token_t parenttype,
+                     bool      parent_all)
 {
    LOG_FUNC_ENTRY();
    chunk_t *paren_close;
 
    paren_close = chunk_skip_to_match(po, scope_e::PREPROC);
+
    if (paren_close == nullptr)
    {
       LOG_FMT(LERR, "%s(%d): no match for '%s' at [%zu:%zu]",
@@ -33,17 +38,20 @@ chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype, c_token_t pa
 
    // the last chunk must be also modified. Issue #2149
    chunk_t *after_paren_close = chunk_get_next(paren_close);
+
    if (po != paren_close)
    {
       if (  flags != 0
          || (parent_all && parenttype != CT_NONE))
       {
          chunk_t *pc;
+
          for (pc = chunk_get_next(po, scope_e::PREPROC);
               pc != nullptr && pc != after_paren_close;
               pc = chunk_get_next(pc, scope_e::PREPROC))
          {
             chunk_flags_set(pc, flags);
+
             if (parent_all)
             {
                set_chunk_parent(pc, parenttype);
@@ -63,5 +71,6 @@ chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype, c_token_t pa
          set_chunk_parent(paren_close, parenttype);
       }
    }
+
    return(chunk_get_next_ncnl(paren_close, scope_e::PREPROC));
 } // flag_parens

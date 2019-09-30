@@ -14,7 +14,10 @@
 using namespace uncrustify;
 
 
-chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_count)
+chunk_t *align_assign(chunk_t *first,
+                      size_t  span,
+                      size_t  thresh,
+                      size_t  *p_nl_count)
 {
    LOG_FUNC_ENTRY();
 
@@ -24,6 +27,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       // see https://en.wikipedia.org/wiki/Robustness_principle
       return(nullptr);
    }
+
    size_t my_level = first->level;
 
    LOG_FMT(LALASS, "%s(%d): [my_level is %zu]: start checking with '%s', on orig_line %zu, span is %zu, thresh is %zu\n",
@@ -50,6 +54,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    size_t  equ_count   = 0;
    size_t  tmp;
    chunk_t *pc = first;
+
    while (pc != nullptr)
    {
       LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->text() '%s', type is %s, parent_type is %s\n",
@@ -65,6 +70,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
                  __func__, __LINE__, get_token_name(pc->type));
          tmp = pc->orig_line;
          pc  = chunk_skip_to_match(pc);
+
          if (pc != nullptr)
          {
             as.NewLines(pc->orig_line - tmp);
@@ -72,9 +78,9 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
             fcnDefault.NewLines(pc->orig_line - tmp);
             fcnProto.NewLines(pc->orig_line - tmp);
          }
+
          continue;
       }
-
 
       // Recurse if a brace set is found
       if (chunk_is_token(pc, CT_BRACE_OPEN) || chunk_is_token(pc, CT_VBRACE_OPEN))
@@ -96,17 +102,20 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          }
 
          pc = align_assign(chunk_get_next_ncnl(pc), myspan, mythresh, &sub_nl_count);
+
          if (sub_nl_count > 0)
          {
             as.NewLines(sub_nl_count);
             vdas.NewLines(sub_nl_count);
             fcnDefault.NewLines(sub_nl_count);
             fcnProto.NewLines(sub_nl_count);
+
             if (p_nl_count != nullptr)
             {
                *p_nl_count += sub_nl_count;
             }
          }
+
          continue;
       }
 
@@ -116,7 +125,6 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          pc = chunk_get_next(pc);
          break;
       }
-
 
       if (chunk_is_newline(pc))
       {
@@ -157,6 +165,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          {
             equ_count++;
          }
+
          LOG_FMT(LALASS, "%s(%d): align_assign_decl_func() is %d\n",
                  __func__, __LINE__, options::align_assign_decl_func());
          LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->flags: ", __func__, __LINE__);

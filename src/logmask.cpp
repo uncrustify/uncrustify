@@ -24,7 +24,9 @@
  * Don't worry about unsed lines for the functions:
  *   logmask_to_str
  */
-char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
+char *logmask_to_str(const log_mask_t &mask,
+                     char             *buf,
+                     int              size)
 {
    if (buf == nullptr || size <= 0)
    {
@@ -47,6 +49,7 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
          {
             is_range = true;
          }
+
          last_sev = sev;
       }
       else
@@ -57,6 +60,7 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
             len         += snprintf(&buf[len], size - len, "%d,", last_sev);
             is_range     = false;
          }
+
          last_sev = -1;
       }
    }
@@ -83,7 +87,8 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
 #endif /* DEVELOP_ONLY */
 
 
-void logmask_from_string(const char *str, log_mask_t &mask)
+void logmask_from_string(const char *str,
+                         log_mask_t &mask)
 {
    if (str == nullptr)
    {
@@ -102,6 +107,7 @@ void logmask_from_string(const char *str, log_mask_t &mask)
    char *ptmp;
    bool was_dash   = false;
    int  last_level = -1;
+
    while (*str != 0)         // check string until termination character
    {
       if (unc_isspace(*str)) // ignore spaces and go on with next character
@@ -116,12 +122,14 @@ void logmask_from_string(const char *str, log_mask_t &mask)
          str = ptmp;
 
          logmask_set_sev(mask, static_cast<log_sev_t>(level), true);
+
          if (was_dash)
          {
             for (int idx = last_level + 1; idx < level; idx++)
             {
                logmask_set_sev(mask, static_cast<log_sev_t>(idx), true);
             }
+
             was_dash = false;
          }
 

@@ -11,7 +11,8 @@
 #include "chunk_list.h"
 
 
-bool cs_top_is_question(ChunkStack &cs, size_t level)
+bool cs_top_is_question(ChunkStack &cs,
+                        size_t     level)
 {
    chunk_t *pc = cs.Empty() ? nullptr : cs.Top()->m_pc;
 

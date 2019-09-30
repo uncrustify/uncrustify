@@ -56,6 +56,7 @@ void align_func_proto(size_t span)
          {
             toadd = pc;
          }
+
          as.Add(step_back_over_member(toadd));
          look_bro = (chunk_is_token(pc, CT_FUNC_DEF))
                     && options::align_single_line_brace();
@@ -68,6 +69,7 @@ void align_func_proto(size_t span)
          look_bro = false;
       }
    }
+
    as.End();
    as_br.End();
 } // align_func_proto

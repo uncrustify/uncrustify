@@ -115,6 +115,7 @@ using namespace uncrustify;
 void align_all(void)
 {
    LOG_FUNC_ENTRY();
+
    if (options::align_typedef_span() > 0)
    {
       align_typedefs(options::align_typedef_span());
@@ -189,6 +190,7 @@ void align_all(void)
    {
       align_same_func_call_params();
    }
+
    // Just in case something was aligned out of order... do it again
    quick_align_again();
 } // align_all
