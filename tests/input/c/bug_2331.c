@@ -6,6 +6,6 @@
 			: [oper] "r" (stack)    \
 			: "S"                   \
 			);                      \
-	} while(0)
+	} while (0)
 
 int somearray  [10];
