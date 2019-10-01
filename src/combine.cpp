@@ -1952,6 +1952,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    {
       // look for CT_ASSIGN before CT_SEMICOLON at the end of the statement
       bool    assign_found = false;
+      bool    is_preproc   = (pc->flags & PCF_IN_PREPROC);
       chunk_t *temp;
       for (temp = pc; temp != nullptr; temp = chunk_get_next_ncnl(temp))
       {
@@ -1962,7 +1963,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             assign_found = true;
             break;
          }
-         if (chunk_is_token(temp, CT_SEMICOLON))
+         if (  chunk_is_token(temp, CT_SEMICOLON)
+            || (  is_preproc
+               && (  !(temp->flags & PCF_IN_PREPROC)
+                  || chunk_is_token(temp, CT_PREPROC))))
          {
             break;
          }
@@ -1976,7 +1980,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             {
                set_chunk_parent(temp, CT_USING_ALIAS);
             }
-            if (chunk_is_token(temp, CT_SEMICOLON))
+            if (  chunk_is_token(temp, CT_SEMICOLON)
+               || (  is_preproc
+                  && (  !(temp->flags & PCF_IN_PREPROC)
+                     || chunk_is_token(temp, CT_PREPROC))))
             {
                break;
             }
