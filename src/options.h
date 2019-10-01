@@ -3167,32 +3167,32 @@ mod_remove_extra_semicolon;
 
 // If a function body exceeds the specified number of newlines and doesn't have
 // a comment after the close brace, a comment will be added.
-extern BoundedOption<unsigned, 0, 50>
+extern BoundedOption<unsigned, 0, 255>
 mod_add_long_function_closebrace_comment;
 
 // If a namespace body exceeds the specified number of newlines and doesn't
 // have a comment after the close brace, a comment will be added.
-extern BoundedOption<unsigned, 0, 16>
+extern BoundedOption<unsigned, 0, 255>
 mod_add_long_namespace_closebrace_comment;
 
 // If a class body exceeds the specified number of newlines and doesn't have a
 // comment after the close brace, a comment will be added.
-extern BoundedOption<unsigned, 0, 16>
+extern BoundedOption<unsigned, 0, 255>
 mod_add_long_class_closebrace_comment;
 
 // If a switch body exceeds the specified number of newlines and doesn't have a
 // comment after the close brace, a comment will be added.
-extern BoundedOption<unsigned, 0, 50>
+extern BoundedOption<unsigned, 0, 255>
 mod_add_long_switch_closebrace_comment;
 
 // If an #ifdef body exceeds the specified number of newlines and doesn't have
 // a comment after the #endif, a comment will be added.
-extern BoundedOption<unsigned, 0, 16>
+extern BoundedOption<unsigned, 0, 255>
 mod_add_long_ifdef_endif_comment;
 
 // If an #ifdef or #else body exceeds the specified number of newlines and
 // doesn't have a comment after the #else, a comment will be added.
-extern BoundedOption<unsigned, 0, 16>
+extern BoundedOption<unsigned, 0, 255>
 mod_add_long_ifdef_else_comment;
 
 // Whether to take care of the case by the mod_sort_xx options.
