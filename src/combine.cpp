@@ -3810,8 +3810,8 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
 
    LOG_FMT(LFPARAM, "%s:", __func__);
 
-   int     word_cnt   = 0;
-   size_t  type_count = 0;
+   int     word_count = 0;
+   int     type_count = 0;
    chunk_t *pc;
 
    for (pc = start;
@@ -3832,17 +3832,17 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
 
       if (chunk_is_token(pc, CT_WORD) || chunk_is_token(pc, CT_TYPE))
       {
-         word_cnt++;
+         ++word_count;
          if (chunk_is_token(pc, CT_TYPE))
          {
-            type_count++;
+            ++type_count;
          }
       }
       else if (chunk_is_token(pc, CT_MEMBER) || chunk_is_token(pc, CT_DC_MEMBER))
       {
-         if (word_cnt > 0)
+         if (word_count > 0)
          {
-            word_cnt--;
+            --word_count;
          }
       }
       else if (pc != start && chunk_is_ptr_operator(pc))
@@ -3864,7 +3864,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          LOG_FMT(LFPARAM, " <== elipses\n");
          return(true);
       }
-      else if (word_cnt == 0 && chunk_is_token(pc, CT_PAREN_OPEN))
+      else if (word_count == 0 && chunk_is_token(pc, CT_PAREN_OPEN))
       {
          // Check for old-school func proto param '(type)'
          chunk_t *tmp1 = chunk_skip_to_match(pc, scope_e::PREPROC);
@@ -3891,7 +3891,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
             } while (pc != tmp1);
 
             // reset some vars to allow [] after parens
-            word_cnt   = 1;
+            word_count = 1;
             type_count = 1;
          }
          else
@@ -3900,7 +3900,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
             return(false);
          }
       }
-      else if (  (word_cnt == 1 || (static_cast<size_t>(word_cnt) == type_count))
+      else if (  (word_count == 1 || (word_count == type_count))
               && chunk_is_token(pc, CT_PAREN_OPEN))
       {
          // Check for func proto param 'void (*name)' or 'void (*name)(params)'
@@ -3940,24 +3940,24 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          pc = tmp3;
 
          // reset some vars to allow [] after parens
-         word_cnt   = 1;
+         word_count = 1;
          type_count = 1;
       }
       else if (chunk_is_token(pc, CT_TSQUARE))
       {
          // ignore it
       }
-      else if (word_cnt == 1 && chunk_is_token(pc, CT_SQUARE_OPEN))
+      else if (word_count == 1 && chunk_is_token(pc, CT_SQUARE_OPEN))
       {
          // skip over any array stuff
          pc = chunk_skip_to_match(pc, scope_e::PREPROC);
       }
-      else if (word_cnt == 2 && chunk_is_token(pc, CT_SQUARE_OPEN))
+      else if (word_count == 2 && chunk_is_token(pc, CT_SQUARE_OPEN))
       {
          // Bug #671: is it such as: bool foo[FOO_MAX]
          pc = chunk_skip_to_match(pc, scope_e::PREPROC);
       }
-      else if (  word_cnt == 1
+      else if (  word_count == 1
               && language_is_set(LANG_CPP)
               && chunk_is_str(pc, "&&", 2))
       {
@@ -3965,8 +3965,8 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
       }
       else
       {
-         LOG_FMT(LFPARAM, " <== [%s] no way! tc=%zu wc=%d\n",
-                 get_token_name(pc->type), type_count, word_cnt);
+         LOG_FMT(LFPARAM, " <== [%s] no way! tc=%d wc=%d\n",
+                 get_token_name(pc->type), type_count, word_count);
          return(false);
       }
    }
@@ -3978,8 +3978,8 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
       return(true);
    }
 
-   bool ret = (  word_cnt >= 2
-              || (word_cnt == 1 && type_count == 1));
+   bool ret = (  word_count >= 2
+              || (word_count == 1 && type_count == 1));
 
    LOG_FMT(LFPARAM, " <== [%s] %s!\n",
            (pc == nullptr ? "nullptr" : get_token_name(pc->type)),
