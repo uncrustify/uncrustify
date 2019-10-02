@@ -1,4 +1,4 @@
-class SomeClass ()
+class SomeClass
 {
 public:
 void SomeFunction
