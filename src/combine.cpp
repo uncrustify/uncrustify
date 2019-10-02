@@ -3978,6 +3978,30 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
       return(true);
    }
 
+   if (word_count < 2 && type_count < 1 && start->brace_level > 0)
+   {
+      LOG_FMT(LFPARAM, " !MVP!");
+      // Oh, joy, we are in Most Vexing Parse territory
+      auto const brace =
+         chunk_get_prev_type(start, CT_BRACE_OPEN, start->brace_level - 1);
+      if (brace)
+      {
+         LOG_FMT(LFPARAM, " (matching %s brace at %zu:%zu)",
+                 get_token_name(brace->parent_type),
+                 brace->orig_line, brace->orig_col);
+      }
+      if (  brace
+         && (  brace->parent_type == CT_CLASS
+            || brace->parent_type == CT_STRUCT))
+      {
+         // A Most Vexing Parse variable declaration cannot occur in the body
+         // of a struct/class, so we probably have a function prototype
+         LOG_FMT(LFPARAM, " <== [%s] Likely!\n",
+                 (pc == nullptr ? "nullptr" : get_token_name(pc->type)));
+         return(true);
+      }
+   }
+
    bool ret = (  word_count >= 2
               || (word_count == 1 && type_count == 1));
 
