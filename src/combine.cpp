@@ -3236,7 +3236,6 @@ static void fix_enum_struct_union(chunk_t *pc)
          }
       }();
 
-      flag_series(pc, next, flag);
       flag_parens(next, flag, CT_NONE, CT_NONE, false);
 
       if (  chunk_is_token(pc, CT_UNION)
