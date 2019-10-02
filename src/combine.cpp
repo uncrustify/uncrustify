@@ -68,6 +68,12 @@ static chunk_t *skip_align(chunk_t *start);
 
 
 /**
+ * Skips the list of class/struct parent types.
+ */
+chunk_t *skip_parent_types(chunk_t *colon);
+
+
+/**
  * Combines two tokens into {{ and }} if inside parens and nothing is between
  * either pair.
  */
@@ -1051,7 +1057,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
    if (  chunk_is_token(pc, CT_ENUM)
       || chunk_is_token(pc, CT_STRUCT)
-      || chunk_is_token(pc, CT_UNION))
+      || chunk_is_token(pc, CT_UNION)
+      || (chunk_is_token(pc, CT_CLASS) && !language_is_set(LANG_D)))
    {
       if (prev->type != CT_TYPEDEF)
       {
@@ -3149,7 +3156,7 @@ static void fix_enum_struct_union(chunk_t *pc)
       next = chunk_get_next_ncnl(next); // get the next one
    }
    // the next item is either a type, an attribute (TODO), an identifier, a colon or open brace
-   if (chunk_is_token(next, CT_TYPE))
+   if (chunk_is_token(next, CT_TYPE) || chunk_is_token(next, CT_WORD))
    {
       // i.e. "enum xyz : unsigned int { ... };"
       // i.e. "enum class xyz : unsigned int { ... };"
@@ -3157,34 +3164,43 @@ static void fix_enum_struct_union(chunk_t *pc)
       set_chunk_parent(next, pc->type);
       prev = next;                                               // save xyz
       next = chunk_get_next_ncnl(next);
-      if (next == nullptr || chunk_is_token(next, CT_SEMICOLON)) // c++ forward declaration
+      if (next == nullptr)
       {
          return;
       }
       set_chunk_parent(next, pc->type);
+      auto const is_struct_or_class =
+         (chunk_is_token(pc, CT_STRUCT) || chunk_is_token(pc, CT_CLASS));
 
       // next up is either a colon, open brace, or open parenthesis (pawn)
       if (language_is_set(LANG_PAWN) && chunk_is_token(next, CT_PAREN_OPEN))
       {
          next = set_paren_parent(next, CT_ENUM);
       }
-      else if (chunk_is_token(pc, CT_ENUM) && chunk_is_token(next, CT_COLON))
+      else if (chunk_is_token(next, CT_COLON))
       {
-         // enum TYPE : INT_TYPE { ... };
-         next = chunk_get_next_ncnl(next);
-         if (next != nullptr)
+         if (chunk_is_token(pc, CT_ENUM))
          {
-            make_type(next);
+            // enum TYPE : INT_TYPE { ... };
             next = chunk_get_next_ncnl(next);
-            // enum TYPE : unsigned int { ... };
-            if (chunk_is_token(next, CT_TYPE))
+            if (next != nullptr)
             {
-               // get the next part of the type
+               make_type(next);
                next = chunk_get_next_ncnl(next);
+               // enum TYPE : unsigned int { ... };
+               if (chunk_is_token(next, CT_TYPE))
+               {
+                  // get the next part of the type
+                  next = chunk_get_next_ncnl(next);
+               }
             }
          }
+         else if (is_struct_or_class)
+         {
+            next = skip_parent_types(next);
+         }
       }
-      else if (chunk_is_token(pc, CT_STRUCT) && chunk_is_token(next, CT_PAREN_OPEN))
+      else if (is_struct_or_class && chunk_is_token(next, CT_PAREN_OPEN))
       {
          // Fix #1267 structure attributes
          // struct __attribute__(align(x)) struct_name;
@@ -3194,14 +3210,38 @@ static void fix_enum_struct_union(chunk_t *pc)
          set_chunk_type(next, CT_TYPE);
          set_chunk_parent(next, pc->type);
       }
+      if (chunk_is_token(next, CT_SEMICOLON)) // c++ forward declaration
+      {
+         set_chunk_parent(next, pc->type);
+         flag_series(pc, prev, PCF_INCOMPLETE);
+         return;
+      }
    }
    if (chunk_is_token(next, CT_BRACE_OPEN))
    {
-      flag_series(pc, next, (pc->type == CT_ENUM) ? PCF_IN_ENUM : PCF_IN_STRUCT);
-      flag_parens(next, (pc->type == CT_ENUM) ? PCF_IN_ENUM : PCF_IN_STRUCT,
-                  CT_NONE, CT_NONE, false);
+      auto const flag = [pc] {
+         switch (pc->type)
+         {
+         case CT_ENUM:
+            return(PCF_IN_ENUM);
 
-      if (chunk_is_token(pc, CT_UNION) || chunk_is_token(pc, CT_STRUCT))
+         case CT_STRUCT:
+            return(PCF_IN_STRUCT);
+
+         case CT_CLASS:
+            return(PCF_IN_CLASS);
+
+         default:
+            return(PCF_NONE);
+         }
+      }();
+
+      flag_series(pc, next, flag);
+      flag_parens(next, flag, CT_NONE, CT_NONE, false);
+
+      if (  chunk_is_token(pc, CT_UNION)
+         || chunk_is_token(pc, CT_STRUCT)
+         || chunk_is_token(pc, CT_CLASS))
       {
          mark_struct_union_body(next);
       }
@@ -5229,6 +5269,54 @@ static chunk_t *skip_align(chunk_t *start)
    }
    return(pc);
 }
+
+
+chunk_t *skip_parent_types(chunk_t *colon)
+{
+   auto pc = chunk_get_next_ncnlnp(colon);
+
+   while (pc)
+   {
+      // Skip access specifier
+      if (chunk_is_token(pc, CT_ACCESS))
+      {
+         pc = chunk_get_next_ncnlnp(pc);
+         continue;
+      }
+
+      // Check for a type name
+      if (!(chunk_is_token(pc, CT_WORD) || chunk_is_token(pc, CT_TYPE)))
+      {
+         LOG_FMT(LPCU,
+                 "%s is confused; expected a word at %zu:%zu "
+                 "following type list at %zu:%zu\n", __func__,
+                 colon->orig_line, colon->orig_col,
+                 pc->orig_line, pc->orig_col);
+         return(colon);
+      }
+
+      // Get next token
+      auto next = skip_template_next(chunk_get_next_ncnlnp(pc));
+      if (chunk_is_token(next, CT_DC_MEMBER) || chunk_is_token(next, CT_COMMA))
+      {
+         pc = chunk_get_next_ncnlnp(next);
+      }
+      else if (next)
+      {
+         LOG_FMT(LPCU, "%s -> %zu:%zu ('%s')\n", __func__,
+                 next->orig_line, next->orig_col, next->text());
+         return(next);
+      }
+      else
+      {
+         break;
+      }
+   }
+
+   LOG_FMT(LPCU, "%s: did not find end of type list (start was %zu:%zu)\n",
+           __func__, colon->orig_line, colon->orig_col);
+   return(colon);
+} // skip_parent_types
 
 
 static void mark_struct_union_body(chunk_t *start)
