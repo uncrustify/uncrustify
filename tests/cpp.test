@@ -104,15 +104,15 @@
 30097  align-1.cfg                          cpp/issue_1946.cpp
 30099  sp_arith-f.cfg                       cpp/bug_1127.cpp
 
-30100  nl_template_class-force.cfg          cpp/templates.cpp
-30101  nl_template_class-remove.cfg         cpp/templates.cpp
+30100  nl_template-f.cfg                    cpp/templates.cpp
+30101  nl_template-r.cfg                    cpp/templates.cpp
 30102  template_sp-force.cfg                cpp/templates.cpp
 30103  template_sp-remove.cfg               cpp/templates.cpp
 30104  avalon3.cfg                          cpp/templ_class.h
 30105  avalon4.cfg                          cpp/av.h
-30106  nl_template_class-force.cfg          cpp/templates2.cpp
-30107  nl_template_class-remove.cfg         cpp/templates2.cpp
-30108  nl_template_class-remove.cfg         cpp/templates3.cpp
+30106  nl_template-f.cfg                    cpp/templates2.cpp
+30107  nl_template-r.cfg                    cpp/templates2.cpp
+30108  nl_template-r.cfg                    cpp/templates3.cpp
 30109  empty.cfg                            cpp/templates4.cpp
 
 30110  class-nl_func-add2.cfg               cpp/class-init.cpp

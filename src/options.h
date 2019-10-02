@@ -1846,9 +1846,74 @@ nl_before_throw;
 extern Option<iarf_e>
 nl_namespace_brace;
 
-// Add or remove newline between 'template<>' and whatever follows.
+// Add or remove newline after 'template<...>' of a template class.
 extern Option<iarf_e>
 nl_template_class;
+
+// Add or remove newline after 'template<...>' of a template class declaration.
+//
+// Overrides nl_template_class.
+extern Option<iarf_e>
+nl_template_class_decl;
+
+// Add or remove newline after 'template<>' of a specialized class declaration.
+//
+// Overrides nl_template_class_decl.
+extern Option<iarf_e>
+nl_template_class_decl_special;
+
+// Add or remove newline after 'template<...>' of a template class definition.
+//
+// Overrides nl_template_class.
+extern Option<iarf_e>
+nl_template_class_def;
+
+// Add or remove newline after 'template<>' of a specialized class definition.
+//
+// Overrides nl_template_class_def.
+extern Option<iarf_e>
+nl_template_class_def_special;
+
+// Add or remove newline after 'template<...>' of a template function.
+extern Option<iarf_e>
+nl_template_func;
+
+// Add or remove newline after 'template<...>' of a template function
+// declaration.
+//
+// Overrides nl_template_func.
+extern Option<iarf_e>
+nl_template_func_decl;
+
+// Add or remove newline after 'template<>' of a specialized function
+// declaration.
+//
+// Overrides nl_template_func_decl.
+extern Option<iarf_e>
+nl_template_func_decl_special;
+
+// Add or remove newline after 'template<...>' of a template function
+// definition.
+//
+// Overrides nl_template_func.
+extern Option<iarf_e>
+nl_template_func_def;
+
+// Add or remove newline after 'template<>' of a specialized function
+// definition.
+//
+// Overrides nl_template_func_def.
+extern Option<iarf_e>
+nl_template_func_def_special;
+
+// Add or remove newline after 'template<...>' of a template variable.
+extern Option<iarf_e>
+nl_template_var;
+
+// Add or remove newline between 'template<...>' and 'using' of a templated
+// type alias.
+extern Option<iarf_e>
+nl_template_using;
 
 // Add or remove newline between 'class' and '{'.
 extern Option<iarf_e>
