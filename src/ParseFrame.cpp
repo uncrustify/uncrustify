@@ -144,17 +144,11 @@ const ContainerType &ParseFrame::top() const
 }
 
 
-void ParseFrame::push(chunk_t &pc, brace_stage_e stage)
-{
-   push(&pc, stage);
-}
-
-
 void ParseFrame::push(std::nullptr_t, brace_stage_e stage)
 {
    static chunk_t dummy;
 
-   push(dummy, stage);
+   push(&dummy, stage);
    top().pc = nullptr;
 }
 
