@@ -43,6 +43,7 @@ private:
    std::vector<paren_stack_entry_t> pse;
    paren_stack_entry_t              last_poped;
 
+   void push(chunk_t *pc, brace_stage_e stage);
    void clear();
 
 public:
@@ -73,7 +74,8 @@ public:
 
    const paren_stack_entry_t &poped() const;
 
-   void push(chunk_t &pc, brace_stage_e stage = brace_stage_e::NONE);
+   void push(chunk_t &pc, brace_stage_e stage    = brace_stage_e::NONE);
+   void push(std::nullptr_t, brace_stage_e stage = brace_stage_e::NONE);
    void pop();
 
    size_t size() const;

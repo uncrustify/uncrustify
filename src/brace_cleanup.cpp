@@ -143,8 +143,7 @@ static size_t preproc_start(ParseFrame &frm, chunk_t *pc)
    frm.brace_level = 1;
 
    // TODO: not sure about the next 3 lines
-   chunk_t tmp{};
-   frm.push(tmp);
+   frm.push(nullptr);
    frm.top().type = CT_PP_DEFINE;
 
    return(pp_level);
