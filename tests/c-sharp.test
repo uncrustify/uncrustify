@@ -138,3 +138,4 @@
 60041  squeeze-paren-close-Option.cfg       cs/squeeze-paren-close-Option.cs
 60042  indent-multistring-coulmn1.cfg       cs/indent-multistring-coulmn1.cs
 60044  UNI-37241.cfg                        cs/UNI-37241.cs
+60045  nl_before_after.cfg                  cs/add-nl-before-namespace.cs
