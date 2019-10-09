@@ -144,21 +144,30 @@ const ContainerType &ParseFrame::top() const
 }
 
 
-void ParseFrame::push(chunk_t &pc, brace_stage_e stage)
+void ParseFrame::push(std::nullptr_t, brace_stage_e stage)
+{
+   static chunk_t dummy;
+
+   push(&dummy, stage);
+   top().pc = nullptr;
+}
+
+
+void ParseFrame::push(chunk_t *pc, brace_stage_e stage)
 {
    LOG_FUNC_ENTRY();
 
    ContainerType new_entry = {};
-   new_entry.type      = pc.type;
-   new_entry.level     = pc.level;
-   new_entry.open_line = pc.orig_line;
-   new_entry.pc        = &pc;
+   new_entry.type      = pc->type;
+   new_entry.level     = pc->level;
+   new_entry.open_line = pc->orig_line;
+   new_entry.pc        = pc;
 
    new_entry.indent_tab  = top().indent_tab;
    new_entry.indent_cont = top().indent_cont;
    new_entry.stage       = stage;
 
-   new_entry.in_preproc = (pc.flags & PCF_IN_PREPROC);
+   new_entry.in_preproc = (pc->flags & PCF_IN_PREPROC);
    new_entry.non_vardef = false;
    new_entry.ip         = top().ip;
 
@@ -166,9 +175,9 @@ void ParseFrame::push(chunk_t &pc, brace_stage_e stage)
 
    LOG_FMT(LINDPSE, "ParseFrame::%s(%d): orig_line is %zu, orig_col is %zu, type is %s, brace_level is %zu, "
            "level is %zu, pse_tos: %zu -> %zu\n",
-           __func__, __LINE__, pc.orig_line, pc.orig_col,
-           get_token_name(pc.type), pc.brace_level, pc.level, (pse.size() - 2),
-           (pse.size() - 1));
+           __func__, __LINE__, pc->orig_line, pc->orig_col,
+           get_token_name(pc->type), pc->brace_level, pc->level,
+           (pse.size() - 2), (pse.size() - 1));
 }
 
 

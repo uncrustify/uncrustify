@@ -143,8 +143,7 @@ static size_t preproc_start(ParseFrame &frm, chunk_t *pc)
    frm.brace_level = 1;
 
    // TODO: not sure about the next 3 lines
-   chunk_t tmp{};
-   frm.push(tmp);
+   frm.push(nullptr);
    frm.top().type = CT_PP_DEFINE;
 
    return(pp_level);
@@ -656,7 +655,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
                     __func__, __LINE__, frm.brace_level);
          }
       }
-      frm.push(*pc);
+      frm.push(pc);
       frm.top().parent = parent;
       set_chunk_parent(pc, parent);
    }
@@ -670,8 +669,8 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
     */
    if (patcls == pattern_class_e::BRACED)
    {
-      frm.push(*pc, (chunk_is_token(pc, CT_DO) ? brace_stage_e::BRACE_DO
-                     : brace_stage_e::BRACE2));
+      frm.push(pc, (chunk_is_token(pc, CT_DO) ? brace_stage_e::BRACE_DO
+                    : brace_stage_e::BRACE2));
       // "+ComplexBraced"
    }
    else if (patcls == pattern_class_e::PBRACED)
@@ -683,17 +682,17 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
          set_chunk_type(pc, CT_WHILE_OF_DO);
          bs = brace_stage_e::WOD_PAREN;
       }
-      frm.push(*pc, bs);
+      frm.push(pc, bs);
       // "+ComplexParenBraced"
    }
    else if (patcls == pattern_class_e::OPBRACED)
    {
-      frm.push(*pc, brace_stage_e::OP_PAREN1);
+      frm.push(pc, brace_stage_e::OP_PAREN1);
       // "+ComplexOpParenBraced");
    }
    else if (patcls == pattern_class_e::ELSE)
    {
-      frm.push(*pc, brace_stage_e::ELSEIF);
+      frm.push(pc, brace_stage_e::ELSEIF);
       // "+ComplexElse");
    }
 
@@ -945,7 +944,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
                  __func__, __LINE__, frm.brace_level);
          log_pcf_flags(LBCSPOP, pc->flags);
 
-         frm.push(*vbrace, brace_stage_e::NONE);
+         frm.push(vbrace, brace_stage_e::NONE);
          // "+VBrace");
 
          frm.top().parent = parent;
