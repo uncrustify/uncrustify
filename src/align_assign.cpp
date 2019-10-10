@@ -7,6 +7,8 @@
  * @license GPL v2+
  */
 
+#include <deque>
+
 #include "align_assign.h"
 #include "align_stack.h"
 #include "uncrustify.h"
@@ -38,9 +40,9 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    vdas.Start(span, thresh);
    vdas.m_right_align = as.m_right_align;
 
-   AlignStack fcnDefault;
-   fcnDefault.Start(span, thresh);
-   fcnDefault.m_right_align = as.m_right_align;
+   std::deque<AlignStack> fcnDefault(1);
+   fcnDefault.back().Start(span, thresh);
+   fcnDefault.back().m_right_align = as.m_right_align;
 
    AlignStack fcnProto;
    fcnProto.Start(span, thresh);
@@ -48,6 +50,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
 
    size_t  var_def_cnt = 0;
    size_t  equ_count   = 0;
+   size_t  fcn_idx     = 0;
    size_t  tmp;
    chunk_t *pc = first;
    while (pc != nullptr)
@@ -69,7 +72,14 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          {
             as.NewLines(pc->orig_line - tmp);
             vdas.NewLines(pc->orig_line - tmp);
-            fcnDefault.NewLines(pc->orig_line - tmp);
+            if (pc->orig_line != tmp)
+            {
+               fcn_idx = 0;
+               for (auto &fcn : fcnDefault)
+               {
+                  fcn.NewLines(pc->orig_line - tmp);
+               }
+            }
             fcnProto.NewLines(pc->orig_line - tmp);
          }
          continue;
@@ -100,7 +110,11 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          {
             as.NewLines(sub_nl_count);
             vdas.NewLines(sub_nl_count);
-            fcnDefault.NewLines(sub_nl_count);
+            fcn_idx = 0;
+            for (auto &fcn : fcnDefault)
+            {
+               fcn.NewLines(sub_nl_count);
+            }
             fcnProto.NewLines(sub_nl_count);
             if (p_nl_count != nullptr)
             {
@@ -122,7 +136,11 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       {
          as.NewLines(pc->nl_count);
          vdas.NewLines(pc->nl_count);
-         fcnDefault.NewLines(pc->nl_count);
+         fcn_idx = 0;
+         for (auto &fcn : fcnDefault)
+         {
+            fcn.NewLines(pc->nl_count);
+         }
          fcnProto.NewLines(pc->nl_count);
 
          if (p_nl_count != nullptr)
@@ -166,17 +184,29 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
             && (  chunk_is_token(pc, CT_ASSIGN_DEFAULT_ARG)   // Foo( int bar = 777 );
                || chunk_is_token(pc, CT_ASSIGN_FUNC_PROTO)))  // Foo( const Foo & ) = delete;
          {
-            LOG_FMT(LALASS, "%s(%d): fcnDefault.Add on '%s' on orig_line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
-            fcnDefault.Add(pc);
+            LOG_FMT(LALASS, "%s(%d): fcnDefault[%zu].Add on '%s' on orig_line %zu, orig_col is %zu\n",
+                    __func__, __LINE__, fcn_idx, pc->text(), pc->orig_line, pc->orig_col);
+            if (++fcn_idx == fcnDefault.size())
+            {
+               fcnDefault.emplace_back();
+               fcnDefault.back().Start(span, thresh);
+               fcnDefault.back().m_right_align = as.m_right_align;
+            }
+            fcnDefault[fcn_idx].Add(pc);
          }
          else if (options::align_assign_decl_func() == 1)   // Align with each other
          {
             if (chunk_is_token(pc, CT_ASSIGN_DEFAULT_ARG))  // Foo( int bar = 777 );
             {
-               LOG_FMT(LALASS, "%s(%d): default: fcnDefault.Add on '%s' on orig_line %zu, orig_col is %zu\n",
-                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
-               fcnDefault.Add(pc);
+               LOG_FMT(LALASS, "%s(%d): default: fcnDefault[%zu].Add on '%s' on orig_line %zu, orig_col is %zu\n",
+                       __func__, __LINE__, fcn_idx, pc->text(), pc->orig_line, pc->orig_col);
+               if (++fcn_idx == fcnDefault.size())
+               {
+                  fcnDefault.emplace_back();
+                  fcnDefault.back().Start(span, thresh);
+                  fcnDefault.back().m_right_align = as.m_right_align;
+               }
+               fcnDefault[fcn_idx].Add(pc);
             }
             else if (chunk_is_token(pc, CT_ASSIGN_FUNC_PROTO))  // Foo( const Foo & ) = delete;
             {
@@ -220,7 +250,10 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
 
    as.End();
    vdas.End();
-   fcnDefault.End();
+   for (auto &fcn : fcnDefault)
+   {
+      fcn.End();
+   }
    fcnProto.End();
 
    if (pc != nullptr)
