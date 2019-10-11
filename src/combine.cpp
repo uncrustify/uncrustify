@@ -13,6 +13,7 @@
 #include "chunk_list.h"
 #include "combine_labels.h"
 #include "ChunkStack.h"
+#include "error_types.h"
 #include "flag_parens.h"
 #include "lang_pawn.h"
 #include "language_tools.h"
@@ -2661,6 +2662,13 @@ static chunk_t *process_return(chunk_t *pc)
             // lower the level of everything
             for (temp = next; temp != cpar; temp = chunk_get_next(temp))
             {
+               if (temp->level == 0)
+               {
+                  fprintf(stderr, "%s(%d): temp->level is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                          __func__, __LINE__, temp->orig_line, temp->orig_col);
+                  log_flush(true);
+                  exit(EX_SOFTWARE);
+               }
                temp->level--;
             }
 
@@ -2871,6 +2879,8 @@ static void fix_casts(chunk_t *start)
       }
       else if (chunk_is_token(pc, CT_DC_MEMBER) || chunk_is_token(pc, CT_MEMBER) || chunk_is_token(pc, CT_PP))
       {
+         // might be negativ, such as with:
+         // a = val + (CFoo::bar_t)7;
          word_count--;
       }
 
@@ -3674,6 +3684,13 @@ static chunk_t *fix_var_def(chunk_t *start)
          if (tmp_pc->type != CT_DC_MEMBER && tmp_pc->type != CT_MEMBER)
          {
             break;
+         }
+         if (idx == 0)
+         {
+            fprintf(stderr, "%s(%d): idx is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                    __func__, __LINE__, tmp_pc->orig_line, tmp_pc->orig_col);
+            log_flush(true);
+            exit(EX_SOFTWARE);
          }
          idx--;
          tmp_pc = cs.Get(idx)->m_pc;
@@ -5833,6 +5850,13 @@ static void handle_oc_class(chunk_t *pc)
          else
          {
             set_chunk_parent(tmp, CT_OC_GENERIC_SPEC);
+            if (generic_level == 0)
+            {
+               fprintf(stderr, "%s(%d): generic_level is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                       __func__, __LINE__, tmp->orig_line, tmp->orig_col);
+               log_flush(true);
+               exit(EX_SOFTWARE);
+            }
             generic_level--;
             if (generic_level == 0)
             {
