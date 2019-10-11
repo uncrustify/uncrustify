@@ -495,6 +495,9 @@ sp_func_proto_paren             = ignore   # ignore/add/remove/force
 # without parameters.
 sp_func_proto_paren_empty       = ignore   # ignore/add/remove/force
 
+# Add or remove space between function name and '(' with a typedef specifier.
+sp_func_type_paren              = ignore   # ignore/add/remove/force
+
 # Add or remove space between function name and '(' on function definition.
 sp_func_def_paren               = ignore   # ignore/add/remove/force
 

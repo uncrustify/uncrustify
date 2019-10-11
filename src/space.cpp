@@ -1500,6 +1500,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("sp_func_proto_paren");
       return(options::sp_func_proto_paren());
    }
+   // Issue #2437
+   if (  chunk_is_token(first, CT_FUNC_TYPE)
+      && chunk_is_token(second, CT_FPAREN_OPEN))
+   {
+      // Add or remove space between function name and '(' with a typedef specifier.
+      log_rule("sp_func_type_paren");
+      return(options::sp_func_type_paren());
+   }
    if (chunk_is_token(first, CT_FUNC_CLASS_DEF) || chunk_is_token(first, CT_FUNC_CLASS_PROTO))
    {
       if (  (options::sp_func_class_paren_empty() != IARF_IGNORE)
