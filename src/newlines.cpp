@@ -3500,6 +3500,18 @@ void newlines_cleanup_braces(bool first)
                newline_end_newline(pc);
             }
          }
+         else if (pc->parent_type == CT_NAMESPACE)
+         {
+            if (options::nl_after_namespace() > 0)
+            {
+               next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
+               if (next)
+               {
+                  newline_add_before(next);
+                  // newline_iarf(next, IARF_ADD);
+               }
+            }
+         }
       }
       else if (chunk_is_token(pc, CT_VBRACE_OPEN))
       {

@@ -22,4 +22,19 @@ void f5();
 
 void f6();
 
+namespace E
+{
 
+void f7();
+
+class D
+{
+};
+
+;
+void f9();
+
+}
+
+;
+void f10();
