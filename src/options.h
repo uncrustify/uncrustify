@@ -639,7 +639,7 @@ sp_func_proto_paren_empty;
 extern Option<iarf_e>
 sp_func_type_paren;
 
-// Add or remove space between function name and '(' on function definition.
+// Add or remove space between alias name and '(' of a non-pointer function type typedef.
 extern Option<iarf_e>
 sp_func_def_paren;
 
