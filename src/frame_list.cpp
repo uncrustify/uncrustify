@@ -9,6 +9,7 @@
 #include "frame_list.h"
 
 #include "chunk_list.h"
+#include "error_types.h"
 #include "prototypes.h"
 #include "uncrustify.h"
 #include "uncrustify_types.h"
@@ -189,6 +190,13 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
       }
       else if (pc->parent_type == CT_PP_ELSE)
       {
+         if (pp_level == 0)
+         {
+            fprintf(stderr, "%s(%d): pp_level is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col);
+            log_flush(true);
+            exit(EX_SOFTWARE);
+         }
          pp_level--;
 
          /*
@@ -215,7 +223,22 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
           * we may have [...] [base] [if]-[else] or [...] [base]-[if].
           * Throw out the [else].
           */
+         if (cpd.pp_level == 0)
+         {
+            // cpd.pp_level is ZERO, cannot be decremented.
+            fprintf(stderr, "%s(%d): #endif found, at line %zu, column %zu, without corresponding #if\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col);
+            log_flush(true);
+            exit(EX_SOFTWARE);
+         }
          cpd.pp_level--;
+         if (pp_level == 0)
+         {
+            fprintf(stderr, "%s(%d): pp_level is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col);
+            log_flush(true);
+            exit(EX_SOFTWARE);
+         }
          pp_level--;
 
          if (frm.in_ifdef == CT_PP_ELSE)
