@@ -129,6 +129,7 @@ sp_type_func                    = ignore
 sp_type_brace_init_lst          = ignore
 sp_func_proto_paren             = ignore
 sp_func_proto_paren_empty       = ignore
+sp_func_type_paren              = ignore
 sp_func_def_paren               = ignore
 sp_func_def_paren_empty         = ignore
 sp_inside_fparens               = ignore
