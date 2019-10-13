@@ -13,6 +13,7 @@
 #include "align_tab_column.h"
 #include "braces.h"
 #include "chunk_list.h"
+#include "error_types.h"
 #include "indent.h"
 #include "language_tools.h"
 #include "prototypes.h"
@@ -809,6 +810,13 @@ static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str)
          first_len = idx;
          while (str[first_len - 1] == ' ' || str[first_len - 1] == '\t')
          {
+            if (first_len == 0)
+            {
+               fprintf(stderr, "%s(%d): first_len is ZERO, cannot be decremented.\n",
+                       __func__, __LINE__);
+               log_flush(true);
+               exit(EX_SOFTWARE);
+            }
             first_len--;
          }
 
