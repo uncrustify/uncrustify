@@ -16,6 +16,7 @@
 #include "char_table.h"
 #include "chunk_list.h"
 #include "combine.h"
+#include "error_types.h"
 #include "keywords.h"
 #include "language_tools.h"
 #include "prototypes.h"
@@ -1001,6 +1002,13 @@ static void check_template(chunk_t *start)
             }
             else if (chunk_is_str(pc, ">", 1))
             {
+               if (level == 0)
+               {
+                  fprintf(stderr, "%s(%d): level is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                          __func__, __LINE__, pc->orig_line, pc->orig_col);
+                  log_flush(true);
+                  exit(EX_SOFTWARE);
+               }
                level--;
                if (level == 0)
                {
@@ -1137,6 +1145,13 @@ static void check_template(chunk_t *start)
          }
          else if (chunk_is_token(pc, CT_PAREN_CLOSE))
          {
+            if (num_tokens == 0)
+            {
+               fprintf(stderr, "%s(%d): num_tokens is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                       __func__, __LINE__, pc->orig_line, pc->orig_col);
+               log_flush(true);
+               exit(EX_SOFTWARE);
+            }
             num_tokens--;
             if (tokens[num_tokens] != CT_PAREN_OPEN)
             {
