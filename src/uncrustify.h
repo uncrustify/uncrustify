@@ -46,7 +46,7 @@ const char *language_name_from_flags(size_t lang);
 c_token_t find_token_name(const char *text);
 
 
-void log_pcf_flags(log_sev_t sev, UINT64 flags);
+void log_pcf_flags(log_sev_t sev, pcf_flags_t flags);
 
 
 /**

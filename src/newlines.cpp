@@ -583,11 +583,11 @@ static void newline_end_newline(chunk_t *br_close)
 }
 
 
-static void newline_min_after(chunk_t *ref, size_t count, UINT64 flag)
+static void newline_min_after(chunk_t *ref, size_t count, pcf_flag_e flag)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LNEWLINE, "%s(%d): '%s' line %zu - count=%zu flg=0x%" PRIx64 ":",
+   LOG_FMT(LNEWLINE, "%s(%d): '%s' line %zu - count=%zu flg=0x%llx:",
            __func__, __LINE__, ref->text(), ref->orig_line, count, flag);
    log_func_stack_inline(LNEWLINE);
 
@@ -722,8 +722,8 @@ void newline_del_between(chunk_t *start, chunk_t *end)
            __func__, __LINE__, start->text(), start->orig_line, start->orig_col);
    LOG_FMT(LNEWLINE, "%s(%d): and end->text() is '%s', orig_line is %zu, orig_col is %zu: preproc=%d/%d\n",
            __func__, __LINE__, end->text(), end->orig_line, end->orig_col,
-           ((start->flags & PCF_IN_PREPROC) != 0),
-           ((end->flags & PCF_IN_PREPROC) != 0));
+           static_cast<bool>(start->flags & PCF_IN_PREPROC),
+           static_cast<bool>(end->flags & PCF_IN_PREPROC));
    log_func_stack_inline(LNEWLINE);
 
    // Can't remove anything if the preproc status differs
@@ -2798,8 +2798,8 @@ static void newline_oc_msg(chunk_t *start)
    }
 
    // we don't use the 1-liner flag, but set it anyway
-   UINT64 flags = one_liner ? PCF_ONE_LINER : 0;
-   flag_series(start, sq_c, flags, flags ^ PCF_ONE_LINER);
+   auto const flags = one_liner ? PCF_ONE_LINER : PCF_NONE;
+   flag_series(start, sq_c, flags, PCF_ONE_LINER);
 
    if (options::nl_oc_msg_leave_one_liner() && one_liner)
    {
@@ -2823,9 +2823,9 @@ static void newline_oc_msg(chunk_t *start)
 static bool one_liner_nl_ok(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LNL1LINE, "%s(%d): check type is %s, parent is %s, flag is %" PRIx64 ", orig_line is %zu, orig_col is %zu\n",
+   LOG_FMT(LNL1LINE, "%s(%d): check type is %s, parent is %s, flag is %llx, orig_line is %zu, orig_col is %zu\n",
            __func__, __LINE__, get_token_name(pc->type), get_token_name(pc->parent_type),
-           pc->flags, pc->orig_line, pc->orig_col);
+           static_cast<pcf_flags_t::int_t>(pc->flags), pc->orig_line, pc->orig_col);
 
 
    if (!(pc->flags & PCF_ONE_LINER))

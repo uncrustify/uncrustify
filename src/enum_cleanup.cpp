@@ -53,7 +53,7 @@ void enum_cleanup(void)
                comma.orig_line = prev->orig_line;
                comma.orig_col  = prev->orig_col + 1;
                comma.nl_count  = 0;
-               comma.flags     = 0;
+               comma.flags     = PCF_NONE;
                comma.type      = CT_COMMA;
                comma.str       = ",";
                chunk_add_after(&comma, prev);

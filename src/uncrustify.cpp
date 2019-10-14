@@ -491,7 +491,7 @@ int main(int argc, char *argv[])
       size_t idx = 1;
       while ((p_arg = arg.Unused(idx)) != nullptr)
       {
-         log_pcf_flags(LSYS, strtoul(p_arg, nullptr, 16));
+         log_pcf_flags(LSYS, static_cast<pcf_flag_e>(strtoul(p_arg, nullptr, 16)));
       }
       return(EXIT_SUCCESS);
    }
@@ -2362,19 +2362,19 @@ static size_t language_flags_from_filename(const char *filename)
 }
 
 
-void log_pcf_flags(log_sev_t sev, UINT64 flags)
+void log_pcf_flags(log_sev_t sev, pcf_flags_t flags)
 {
    if (!log_sev_on(sev))
    {
       return;
    }
 
-   log_fmt(sev, "[0x%" PRIx64 ":", flags);
+   log_fmt(sev, "[0x%llx:", static_cast<pcf_flags_t::int_t>(flags));
 
    const char *tolog = nullptr;
    for (size_t i = 0; i < ARRAY_SIZE(pcf_names); i++)
    {
-      if (flags & (1ULL << i))
+      if (flags & static_cast<pcf_flag_e>(pcf_bit(i)))
       {
          if (tolog != nullptr)
          {

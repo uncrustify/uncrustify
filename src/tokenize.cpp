@@ -1810,7 +1810,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    pc.orig_col  = ctx.c.col;
    pc.type      = CT_NONE;
    pc.nl_count  = 0;
-   pc.flags     = 0;
+   pc.flags     = PCF_NONE;
 
    // If it is turned off, we put everything except newlines into CT_UNKNOWN
    if (cpd.unc_off)

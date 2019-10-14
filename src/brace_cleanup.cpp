@@ -351,7 +351,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
       && !chunk_is_str(pc, ")", 1)
       && !chunk_is_str(pc, "]", 1))
    {
-      chunk_flags_set(pc, PCF_EXPR_START | ((frm.stmt_count == 0) ? PCF_STMT_START : 0));
+      chunk_flags_set(pc, PCF_EXPR_START | ((frm.stmt_count == 0) ? PCF_STMT_START : PCF_NONE));
       LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 1.marked '%s' as %s, start stmt_count is %zu, expr_count is %zu\n",
               __func__, __LINE__, pc->orig_line, pc->text(),
               (pc->flags & PCF_STMT_START) ? "stmt" : "expr", frm.stmt_count,

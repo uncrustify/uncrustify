@@ -258,7 +258,7 @@ struct chunk_t
       orig_col      = 0;
       orig_col_end  = 0;
       orig_prev_sp  = 0;
-      flags         = 0;
+      flags         = PCF_NONE;
       column        = 0;
       column_indent = 0;
       nl_count      = 0;

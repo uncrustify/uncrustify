@@ -817,16 +817,21 @@ void set_chunk_parent_real(chunk_t *pc, c_token_t pt)
 }
 
 
-void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits)
+void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits)
 {
    if (pc != nullptr)
    {
       LOG_FUNC_ENTRY();
-      UINT64 nflags = (pc->flags & ~clr_bits) | set_bits;
+      auto const nflags = (pc->flags & ~clr_bits) | set_bits;
       if (pc->flags != nflags)
       {
-         LOG_FMT(LSETFLG, "%s(%d): %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " orig_line is %zu, orig_col is %zu, text() '%s', type is %s, ",
-                 __func__, __LINE__, pc->flags, pc->flags ^ nflags, nflags,
+         LOG_FMT(LSETFLG,
+                 "%s(%d): %016llx^%016llx=%016llx "
+                 "orig_line is %zu, orig_col is %zu, text() '%s', type is %s, ",
+                 __func__, __LINE__,
+                 static_cast<pcf_flags_t::int_t>(pc->flags),
+                 static_cast<pcf_flags_t::int_t>(pc->flags ^ nflags),
+                 static_cast<pcf_flags_t::int_t>(nflags),
                  pc->orig_line, pc->orig_col, pc->text(),
                  get_token_name(pc->type));
          LOG_FMT(LSETFLG, "parent_type is %s",
