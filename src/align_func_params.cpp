@@ -54,7 +54,7 @@ chunk_t *align_func_param(chunk_t *start)
       {
          break;
       }
-      else if (!did_this_line && (pc->flags & PCF_VAR_DEF))
+      else if (!did_this_line && pc->flags.test(PCF_VAR_DEF))
       {
          if (chunk_count > 1)
          {

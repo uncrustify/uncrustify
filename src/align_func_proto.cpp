@@ -62,7 +62,7 @@ void align_func_proto(size_t span)
       }
       else if (  look_bro
               && chunk_is_token(pc, CT_BRACE_OPEN)
-              && (pc->flags & PCF_ONE_LINER))
+              && pc->flags.test(PCF_ONE_LINER))
       {
          as_br.Add(pc);
          look_bro = false;

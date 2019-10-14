@@ -175,7 +175,7 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
    const size_t    b4_cnt   = cpd.frames.size();
 
    const char      *txt = nullptr;
-   if (pc->flags & PCF_IN_PREPROC)
+   if (pc->flags.test(PCF_IN_PREPROC))
    {
       LOG_FMT(LPF, " <In> ");
       fl_log(LPF, frm);

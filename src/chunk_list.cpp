@@ -341,7 +341,7 @@ static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_
 
 static chunk_t *chunk_ppa_search(chunk_t *cur, const check_t check_fct, const bool cond)
 {
-   if (cur && !(cur->flags & PCF_IN_PREPROC))
+   if (cur && !cur->flags.test(PCF_IN_PREPROC))
    {
       // if not in preprocessor, do a regular search
       return(chunk_search(cur, check_fct, scope_e::ALL,
@@ -352,7 +352,7 @@ static chunk_t *chunk_ppa_search(chunk_t *cur, const check_t check_fct, const bo
 
    while (pc != nullptr && (pc = pc->next) != nullptr)
    {
-      if (!(pc->flags & PCF_IN_PREPROC))
+      if (!pc->flags.test(PCF_IN_PREPROC))
       {
          // Bail if we run off the end of the preprocessor directive, but
          // return the next token, NOT nullptr, because the caller may need to
@@ -394,17 +394,17 @@ chunk_t *chunk_get_next(chunk_t *cur, scope_e scope)
    {
       return(pc);
    }
-   if (cur->flags & PCF_IN_PREPROC)
+   if (cur->flags.test(PCF_IN_PREPROC))
    {
       // If in a preproc, return nullptr if trying to leave
-      if ((pc->flags & PCF_IN_PREPROC) == 0)
+      if (!pc->flags.test(PCF_IN_PREPROC))
       {
          return(nullptr);
       }
       return(pc);
    }
    // Not in a preproc, skip any preproc
-   while (pc != nullptr && (pc->flags & PCF_IN_PREPROC))
+   while (pc != nullptr && pc->flags.test(PCF_IN_PREPROC))
    {
       pc = g_cl.GetNext(pc);
    }
@@ -423,17 +423,17 @@ chunk_t *chunk_get_prev(chunk_t *cur, scope_e scope)
    {
       return(pc);
    }
-   if (cur->flags & PCF_IN_PREPROC)
+   if (cur->flags.test(PCF_IN_PREPROC))
    {
       // If in a preproc, return NULL if trying to leave
-      if ((pc->flags & PCF_IN_PREPROC) == 0)
+      if (!pc->flags.test(PCF_IN_PREPROC))
       {
          return(nullptr);
       }
       return(pc);
    }
    // Not in a preproc, skip any preproc
-   while (pc != nullptr && (pc->flags & PCF_IN_PREPROC))
+   while (pc != nullptr && pc->flags.test(PCF_IN_PREPROC))
    {
       pc = g_cl.GetPrev(pc);
    }

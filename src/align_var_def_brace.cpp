@@ -117,7 +117,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
          continue;
       }
 
-      if (fp_active && !(pc->flags & PCF_IN_CLASS_BASE))
+      if (fp_active && !pc->flags.test(PCF_IN_CLASS_BASE))
       {
          // WARNING: Duplicate from the align_func_proto()
          if (  chunk_is_token(pc, CT_FUNC_PROTO)
@@ -143,7 +143,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
          }
          else if (  fp_look_bro
                  && chunk_is_token(pc, CT_BRACE_OPEN)
-                 && (pc->flags & PCF_ONE_LINER))
+                 && pc->flags.test(PCF_ONE_LINER))
          {
             as_br.Add(pc);
             fp_look_bro = false;
@@ -213,7 +213,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
       }
 
       // If this is a variable def, update the max_col
-      if (  !(pc->flags & PCF_IN_CLASS_BASE)
+      if (  !pc->flags.test(PCF_IN_CLASS_BASE)
          && pc->type != CT_FUNC_CLASS_DEF
          && pc->type != CT_FUNC_CLASS_PROTO
          && ((pc->flags & align_mask) == PCF_VAR_1ST)

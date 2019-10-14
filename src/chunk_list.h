@@ -610,7 +610,7 @@ static inline bool chunk_is_balanced_square(chunk_t *pc)
 
 static inline bool chunk_is_preproc(chunk_t *pc)
 {
-   return(pc != nullptr && (pc->flags & PCF_IN_PREPROC));
+   return(pc != nullptr && pc->flags.test(PCF_IN_PREPROC));
 }
 
 
@@ -721,7 +721,7 @@ static inline bool chunk_is_addr(chunk_t *pc)
    {
       chunk_t *prev = chunk_get_prev(pc);
 
-      if (  (pc->flags & PCF_IN_TEMPLATE)
+      if (  pc->flags.test(PCF_IN_TEMPLATE)
          && (chunk_is_token(prev, CT_COMMA) || chunk_is_token(prev, CT_ANGLE_OPEN)))
       {
          return(false);

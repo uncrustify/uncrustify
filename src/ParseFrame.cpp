@@ -167,7 +167,7 @@ void ParseFrame::push(chunk_t *pc, brace_stage_e stage)
    new_entry.indent_cont = top().indent_cont;
    new_entry.stage       = stage;
 
-   new_entry.in_preproc = (pc->flags & PCF_IN_PREPROC);
+   new_entry.in_preproc = pc->flags.test(PCF_IN_PREPROC);
    new_entry.non_vardef = false;
    new_entry.ip         = top().ip;
 

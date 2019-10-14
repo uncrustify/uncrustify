@@ -151,10 +151,10 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          var_def_cnt = 0;
          equ_count   = 0;
       }
-      else if (  (pc->flags & PCF_VAR_DEF)
-              && !(pc->flags & PCF_IN_CONST_ARGS) // Issue #1717
-              && !(pc->flags & PCF_IN_FCN_DEF)    // Issue #1717
-              && !(pc->flags & PCF_IN_FCN_CALL))  // Issue #1717
+      else if (  pc->flags.test(PCF_VAR_DEF)
+              && !pc->flags.test(PCF_IN_CONST_ARGS) // Issue #1717
+              && !pc->flags.test(PCF_IN_FCN_DEF)    // Issue #1717
+              && !pc->flags.test(PCF_IN_FCN_CALL))  // Issue #1717
       {
          LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->flags:\n   ", __func__, __LINE__);
          log_pcf_flags(LALASS, pc->flags);
@@ -166,7 +166,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          vdas.Reset();
       }
       else if (  equ_count == 0                      // indent only if first '=' in line
-              && (pc->flags & PCF_IN_TEMPLATE) == 0  // and it is not inside a template #999
+              && !pc->flags.test(PCF_IN_TEMPLATE)    // and it is not inside a template #999
               && (  chunk_is_token(pc, CT_ASSIGN)
                  || chunk_is_token(pc, CT_ASSIGN_DEFAULT_ARG)
                  || chunk_is_token(pc, CT_ASSIGN_FUNC_PROTO)))

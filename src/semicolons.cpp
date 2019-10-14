@@ -53,7 +53,7 @@ void remove_extra_semicolons(void)
       chunk_t *next = chunk_get_next_ncnl(pc);
       chunk_t *prev;
       if (  chunk_is_token(pc, CT_SEMICOLON)
-         && !(pc->flags & PCF_IN_PREPROC)
+         && !pc->flags.test(PCF_IN_PREPROC)
          && (prev = chunk_get_prev_ncnl(pc)) != nullptr)
       {
          LOG_FMT(LSCANSEMI, "%s(%d): Semi orig_line is %zu, orig_col is %zu, parent is %s, prev = '%s' [%s/%s]\n",

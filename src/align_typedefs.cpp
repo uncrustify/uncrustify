@@ -36,7 +36,7 @@ void align_typedefs(size_t span)
       }
       else if (c_typedef != nullptr)
       {
-         if (pc->flags & PCF_ANCHOR)
+         if (pc->flags.test(PCF_ANCHOR))
          {
             as.Add(pc);
             LOG_FMT(LALTD, "%s(%d): typedef @ %zu:%zu, tag '%s' @ %zu:%zu\n",

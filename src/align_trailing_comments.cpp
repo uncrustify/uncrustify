@@ -66,7 +66,7 @@ chunk_t *align_trailing_comments(chunk_t *start)
    while (  pc != nullptr
          && (nl_count < options::align_right_cmt_span()))
    {
-      if ((pc->flags & PCF_RIGHT_COMMENT) && pc->column > 1)
+      if (pc->flags.test(PCF_RIGHT_COMMENT) && pc->column > 1)
       {
          if (same_level && pc->brace_level != lvl)
          {
@@ -197,7 +197,7 @@ void align_right_comments(void)
    chunk_t *pc = chunk_get_head();
    while (pc != nullptr)
    {
-      if (pc->flags & PCF_RIGHT_COMMENT)
+      if (pc->flags.test(PCF_RIGHT_COMMENT))
       {
          pc = align_trailing_comments(pc);
       }

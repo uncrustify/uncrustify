@@ -172,7 +172,7 @@ static void detect_space_options(void)
       }
       if (chunk_is_token(pc, CT_ASSIGN))
       {
-         if ((pc->flags & PCF_IN_ENUM) == 0)
+         if (!pc->flags.test(PCF_IN_ENUM))
          {
             vote_sp_before_assign.vote(prev, pc);
             vote_sp_after_assign.vote(pc, next);

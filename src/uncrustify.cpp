@@ -1533,7 +1533,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
       {
          continue;
       }
-      if (  (pc->flags & PCF_IN_CLASS)
+      if (  pc->flags.test(PCF_IN_CLASS)
          && !options::cmt_insert_before_inlines())
       {
          continue;
@@ -1605,7 +1605,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
          }
 
          // Bail if we hit a preprocessor and cmt_insert_before_preproc is false
-         if (ref->flags & PCF_IN_PREPROC)
+         if (ref->flags.test(PCF_IN_PREPROC))
          {
             tmp = chunk_get_prev_type(ref, CT_PREPROC, ref->level);
             if (tmp != nullptr && tmp->parent_type == CT_PP_IF)
@@ -1626,7 +1626,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
          }
 
          if (  ref->level == pc->level
-            && (  (ref->flags & PCF_IN_PREPROC)
+            && (  ref->flags.test(PCF_IN_PREPROC)
                || chunk_is_token(ref, CT_SEMICOLON)
                || chunk_is_token(ref, CT_BRACE_CLOSE)))
          {
@@ -1686,7 +1686,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
          }
 
          // Bail if we hit a preprocessor and cmt_insert_before_preproc is false
-         if (ref->flags & PCF_IN_PREPROC)
+         if (ref->flags.test(PCF_IN_PREPROC))
          {
             tmp = chunk_get_prev_type(ref, CT_PREPROC, ref->level);
             if (tmp != nullptr && tmp->parent_type == CT_PP_IF)
@@ -1700,7 +1700,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
             }
          }
          if (  ref->level == pc->level
-            && ((ref->flags & PCF_IN_PREPROC) || chunk_is_token(ref, CT_OC_SCOPE)))
+            && (ref->flags.test(PCF_IN_PREPROC) || chunk_is_token(ref, CT_OC_SCOPE)))
          {
             ref = chunk_get_prev(ref);
             if (ref != nullptr)

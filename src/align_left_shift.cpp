@@ -65,7 +65,8 @@ void align_left_shift(void)
          as.Flush();
          start = nullptr;
       }
-      else if (  (!(pc->flags & PCF_IN_ENUM) && !(pc->flags & PCF_IN_TYPEDEF))
+      else if (  !pc->flags.test(PCF_IN_ENUM)
+              && !pc->flags.test(PCF_IN_TYPEDEF)
               && chunk_is_str(pc, "<<", 2))
       {
          if (pc->parent_type == CT_OPERATOR)

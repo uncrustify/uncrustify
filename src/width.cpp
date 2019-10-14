@@ -332,11 +332,11 @@ static bool split_line(chunk_t *start)
    log_pcf_flags(LSPLIT, start->flags);
    LOG_FMT(LSPLIT, "   start->parent_type %s, (PCF_IN_FCN_DEF is %s), (PCF_IN_FCN_CALL is %s)\n",
            get_token_name(start->parent_type),
-           ((start->flags & (PCF_IN_FCN_DEF)) != 0) ? "TRUE" : "FALSE",
-           ((start->flags & (PCF_IN_FCN_CALL)) != 0) ? "TRUE" : "FALSE");
+           start->flags.test((PCF_IN_FCN_DEF)) ? "TRUE" : "FALSE",
+           start->flags.test((PCF_IN_FCN_CALL)) ? "TRUE" : "FALSE");
 
    // break at maximum line length if ls_code_width is true
-   if (start->flags & PCF_ONE_LINER)
+   if (start->flags.test(PCF_ONE_LINER))
    {
       LOG_FMT(LSPLIT, "%s(%d): ** ONCE LINER SPLIT **\n", __func__, __LINE__);
       undo_one_liner(start);
@@ -351,7 +351,7 @@ static bool split_line(chunk_t *start)
    {
    }
    // Check to see if we are in a for statement
-   else if (start->flags & PCF_IN_FOR)
+   else if (start->flags.test(PCF_IN_FOR))
    {
       LOG_FMT(LSPLIT, " ** FOR SPLIT **\n");
       split_for_stmt(start);
@@ -366,10 +366,10 @@ static bool split_line(chunk_t *start)
     * If this is in a function call or prototype, split on commas or right
     * after the open parenthesis
     */
-   else if (  (start->flags & PCF_IN_FCN_DEF)
+   else if (  start->flags.test(PCF_IN_FCN_DEF)
            || start->parent_type == CT_FUNC_PROTO            // Issue #1169
            || (  (start->level == (start->brace_level + 1))
-              && (start->flags & PCF_IN_FCN_CALL)))
+              && start->flags.test(PCF_IN_FCN_CALL)))
    {
       LOG_FMT(LSPLIT, " ** FUNC SPLIT **\n");
 
@@ -388,7 +388,7 @@ static bool split_line(chunk_t *start)
    /*
     * If this is in a template, split on commas, Issue #1170
     */
-   else if (start->flags & PCF_IN_TEMPLATE)
+   else if (start->flags.test(PCF_IN_TEMPLATE))
    {
       LOG_FMT(LSPLIT, " ** TEMPLATE SPLIT **\n");
       split_template(start);
@@ -557,7 +557,7 @@ static void split_for_stmt(chunk_t *start)
    // first scan backwards for the semicolons
    while (  (count < static_cast<int>(max_cnt))
          && ((pc = chunk_get_prev(pc)) != nullptr)
-         && (pc->flags & PCF_IN_SPAREN))
+         && pc->flags.test(PCF_IN_SPAREN))
    {
       if (chunk_is_token(pc, CT_SEMICOLON) && pc->parent_type == CT_FOR)
       {
@@ -569,7 +569,7 @@ static void split_for_stmt(chunk_t *start)
    pc = start;
    while (  (count < static_cast<int>(max_cnt))
          && ((pc = chunk_get_next(pc)) != nullptr)
-         && (pc->flags & PCF_IN_SPAREN))
+         && pc->flags.test(PCF_IN_SPAREN))
    {
       if (chunk_is_token(pc, CT_SEMICOLON) && pc->parent_type == CT_FOR)
       {
