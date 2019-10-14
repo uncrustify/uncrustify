@@ -87,7 +87,7 @@ void align_left_shift(void)
             {
                indent_to_column(pc, pc->column_indent + options::indent_columns());
                pc->column_indent = pc->column;
-               pc->flags        |= PCF_DONT_INDENT;
+               chunk_flags_set(pc, PCF_DONT_INDENT);
             }
 
             // first one can be anywhere
@@ -114,7 +114,7 @@ void align_left_shift(void)
          {
             indent_to_column(pc, pc->column_indent + options::indent_columns());
             pc->column_indent = pc->column;
-            pc->flags        |= PCF_DONT_INDENT;
+            chunk_flags_set(pc, PCF_DONT_INDENT);
          }
       }
 

@@ -2204,7 +2204,7 @@ void fix_symbols(void)
 
                if (chunk_is_token(tmp, CT_WORD))
                {
-                  tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+                  chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
                   break;
                }
 
@@ -2218,7 +2218,7 @@ void fix_symbols(void)
          chunk_t *tmp = skip_attribute_next(pc);
          if (chunk_is_token(tmp, CT_WORD))
          {
-            tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+            chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
          }
       }
 
@@ -4985,7 +4985,7 @@ static pcf_flags_t mark_where_chunk(chunk_t *pc, c_token_t parent_type, pcf_flag
 
    if (flags.test(PCF_IN_WHERE_SPEC))
    {
-      pc->flags |= PCF_IN_WHERE_SPEC;
+      chunk_flags_set(pc, PCF_IN_WHERE_SPEC);
    }
 
    return(flags);

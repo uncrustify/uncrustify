@@ -2332,7 +2332,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
             && (rprev == nullptr || chunk_is_token(rprev, CT_NEWLINE)))
          {
             set_chunk_type(pc, CT_PREPROC);
-            pc->flags     |= PCF_IN_PREPROC;
+            chunk_flags_set(pc, PCF_IN_PREPROC);
             cpd.in_preproc = CT_PREPROC;
          }
       }

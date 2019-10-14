@@ -958,7 +958,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
          frm.expr_count = 0;
          LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
                  __func__, __LINE__, frm.stmt_count, frm.expr_count);
-         pc->flags     |= PCF_STMT_START | PCF_EXPR_START;
+         chunk_flags_set(pc, PCF_STMT_START | PCF_EXPR_START);
          frm.stmt_count = 1;
          frm.expr_count = 1;
          LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 2.marked '%s' as stmt start\n",
