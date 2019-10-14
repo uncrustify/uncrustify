@@ -9,6 +9,8 @@
 #ifndef ENUM_FLAGS_H_INCLUDED
 #define ENUM_FLAGS_H_INCLUDED
 
+#include <type_traits>
+
 #if __GNUC__ == 4 && !defined (__clang__)
 #pragma GCC diagnostic push
 #if __GNUC_MINOR__ < 9 || __GNUC_PATCHLEVEL__ < 2
@@ -37,53 +39,68 @@ template<typename Enum> class flags
 {
 public:
    using enum_t = Enum;
+   using int_t  = typename std::underlying_type<enum_t>::type;
+
+   template<typename T> using integral =
+      typename std::enable_if<std::is_integral<T>::value, bool>::type;
 
    inline flags() = default;
    inline flags(Enum flag)
-      : m_i{static_cast<int>(flag)} {}
+      : m_i{static_cast<int_t>(flag)} {}
 
-   inline flags &operator&=(int mask)
-   { m_i &= mask; return(*this); }
-   inline flags &operator&=(unsigned int mask)
-   { m_i &= mask; return(*this); }
+   inline bool operator==(Enum const &other)
+   { return(m_i == static_cast<int_t>(other)); }
+   inline bool operator==(flags const &other)
+   { return(m_i == other.m_i); }
+   inline bool operator!=(Enum const &other)
+   { return(m_i != static_cast<int_t>(other)); }
+   inline bool operator!=(flags const &other)
+   { return(m_i != other.m_i); }
+
+   template<typename T, integral<T> = true>
+   inline flags &operator&=(T mask)
+   { m_i &= static_cast<int_t>(mask); return(*this); }
 
    inline flags &operator|=(flags f)
-   { m_i |= f.i; return(*this); }
+   { m_i |= f.m_i; return(*this); }
    inline flags &operator|=(Enum f)
    { m_i |= f; return(*this); }
 
    inline flags &operator^=(flags f)
-   { m_i ^= f.i; return(*this); }
+   { m_i ^= f.m_i; return(*this); }
    inline flags &operator^=(Enum f)
    { m_i ^= f; return(*this); }
 
-   inline operator int() const { return(m_i); }
+   inline operator int_t() const { return(m_i); }
    inline operator enum_t() const { return(static_cast<enum_t>(m_i)); }
 
    inline flags operator&(Enum f) const
-   { flags g; g.m_i = m_i & static_cast<int>(f); return(g); }
-   inline flags operator&(int mask) const
-   { flags g; g.m_i = m_i & mask; return(g); }
-   inline flags operator&(unsigned int mask) const
-   { flags g; g.m_i = m_i & mask; return(g); }
+   { flags g; g.m_i = m_i & static_cast<int_t>(f); return(g); }
+   inline flags operator&(flags f) const
+   { flags g; g.m_i = m_i & static_cast<int_t>(f); return(g); }
+
+   template<typename T, integral<T> = true>
+   inline flags operator&(T mask) const
+   { flags g; g.m_i = m_i & static_cast<int_t>(mask); return(g); }
 
    inline flags operator|(flags f) const
    { flags g; g.m_i = m_i | f.m_i; return(g); }
    inline flags operator|(Enum f) const
-   { flags g; g.m_i = m_i | static_cast<int>(f); return(g); }
+   { flags g; g.m_i = m_i | static_cast<int_t>(f); return(g); }
 
    inline flags operator^(flags f) const
    { flags g; g.m_i = m_i ^ f.m_i; return(g); }
    inline flags operator^(Enum f) const
-   { flags g; g.m_i = m_i ^ static_cast<int>(f); return(g); }
+   { flags g; g.m_i = m_i ^ static_cast<int_t>(f); return(g); }
 
-   inline int operator~() const
+   inline int_t operator~() const
    { return(~m_i); }
 
+   inline operator bool() const { return(m_i); }
    inline bool operator!() const { return(!m_i); }
 
 protected:
-   int m_i = 0;
+   int_t m_i = 0;
 };
 
 } // namespace uncrustify
