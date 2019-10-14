@@ -119,6 +119,7 @@
 30112  bug_1432.cfg                         cpp/bug_1432.cpp
 30113  bug_1452.cfg                         cpp/bug_1452.cpp
 30114  empty.cfg                            cpp/bug_1462.cpp
+30115  empty.cfg                            cpp/Issue_1704.cpp
 
 30120  template_sp-force.cfg                cpp/sp_after_angle.cpp
 30121  template_sp-remove.cfg               cpp/sp_after_angle.cpp
