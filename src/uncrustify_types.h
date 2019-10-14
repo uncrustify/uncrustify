@@ -187,7 +187,7 @@ static const char *pcf_names[] =
    "IN_NAMESPACE",      // 12
    "IN_FOR",            // 13
    "IN_OC_MSG",         // 14
-   "#15",               // 15
+   "IN_WHERE_SPEC",     // 15
    "FORCE_SPACE",       // 16
    "STMT_START",        // 17
    "EXPR_START",        // 18
