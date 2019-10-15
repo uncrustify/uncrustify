@@ -608,10 +608,11 @@
 34116  nl_before_func_body_def-2.cfg        cpp/issue_2000.cpp
 34117  extern_func.cfg                      cpp/extern_func.cpp
 34118  Issue_2163.cfg                       cpp/Issue_2163.cpp
-34119  Issue_2440.cfg                       cpp/Issue_2440.cpp
 
 34120  align_assign_span-1.cfg              cpp/bug_i_999.cpp
 34121  bug_1717.cfg                         cpp/bug_1717.cpp
+34122  Issue_2440.cfg                       cpp/Issue_2440.cpp
+34123  Issue_2440+nl.cfg                    cpp/Issue_2440+nl.cpp
 
 34130  nl_brace_fparen-f.cfg                cpp/bug_i_1000.cpp
 34131  nl_brace_fparen-r.cfg                cpp/bug_i_1000.cpp
