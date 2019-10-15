@@ -1998,6 +1998,18 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    {
       set_chunk_type(pc, CT_BYREF);
    }
+
+   // Issue #1704
+   if (  chunk_is_token(pc, CT_INCDEC_AFTER)
+      && (pc->flags & PCF_IN_PREPROC))
+   {
+      chunk_t *tmp_2 = chunk_get_next(pc);
+      log_pcf_flags(LFTYPE, pc->flags);
+      if (chunk_is_token(tmp_2, CT_WORD))
+      {
+         set_chunk_type(pc, CT_INCDEC_BEFORE);
+      }
+   }
 } // do_symbol_check
 
 
