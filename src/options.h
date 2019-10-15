@@ -2402,6 +2402,24 @@ nl_before_class;
 extern BoundedOption<unsigned, 0, 16>
 nl_after_class;
 
+// The number of newlines before a namespace.
+extern BoundedOption<unsigned, 0, 16>
+nl_before_namespace;
+
+// The number of newlines after '{' of a namespace. This also adds newlines
+// before the matching '}'.
+//
+// 0: Apply eat_blanks_after_open_brace or eat_blanks_before_close_brace if
+//     applicable, otherwise no change.
+//
+// Overrides eat_blanks_after_open_brace and eat_blanks_before_close_brace.
+extern BoundedOption<unsigned, 0, 16>
+nl_inside_namespace;
+
+// The number of newlines after '}' of a namespace.
+extern BoundedOption<unsigned, 0, 16>
+nl_after_namespace;
+
 // The number of newlines before an access specifier label. This also includes
 // the Qt-specific 'signals:' and 'slots:'. Will not change the newline count
 // if after a brace open.
@@ -2450,16 +2468,6 @@ nl_between_get_set;
 // (C#) Add or remove newline between property and the '{'.
 extern Option<iarf_e>
 nl_property_brace;
-
-// The number of newlines after '{' of a namespace. This also adds newlines
-// before the matching '}'.
-//
-// 0: Apply eat_blanks_after_open_brace or eat_blanks_before_close_brace if
-//     applicable, otherwise no change.
-//
-// Overrides eat_blanks_after_open_brace and eat_blanks_before_close_brace.
-extern BoundedOption<unsigned, 0, 16>
-nl_inside_namespace;
 
 // Whether to remove blank lines after '{'.
 extern Option<bool>

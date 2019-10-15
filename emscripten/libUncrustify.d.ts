@@ -537,6 +537,8 @@ declare namespace LibUncrustify
         UO_nl_after_struct : EmscriptenEnumTypeObject;
         UO_nl_before_class : EmscriptenEnumTypeObject;
         UO_nl_after_class : EmscriptenEnumTypeObject;
+        UO_nl_before_namespace : EmscriptenEnumTypeObject;
+        UO_nl_after_namespace : EmscriptenEnumTypeObject;
         UO_nl_before_access_spec : EmscriptenEnumTypeObject;
         UO_nl_after_access_spec : EmscriptenEnumTypeObject;
         UO_nl_comment_func_def : EmscriptenEnumTypeObject;

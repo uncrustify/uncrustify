@@ -1931,6 +1931,21 @@ nl_before_class                 = 0        # unsigned number
 # The number of newlines after '}' or ';' of a class definition.
 nl_after_class                  = 0        # unsigned number
 
+# The number of newlines before a namespace.
+nl_before_namespace             = 0        # unsigned number
+
+# The number of newlines after '{' of a namespace. This also adds newlines
+# before the matching '}'.
+#
+# 0: Apply eat_blanks_after_open_brace or eat_blanks_before_close_brace if
+#     applicable, otherwise no change.
+#
+# Overrides eat_blanks_after_open_brace and eat_blanks_before_close_brace.
+nl_inside_namespace             = 0        # unsigned number
+
+# The number of newlines after '}' of a namespace.
+nl_after_namespace              = 0        # unsigned number
+
 # The number of newlines before an access specifier label. This also includes
 # the Qt-specific 'signals:' and 'slots:'. Will not change the newline count
 # if after a brace open.
@@ -1972,15 +1987,6 @@ nl_between_get_set              = 0        # unsigned number
 
 # (C#) Add or remove newline between property and the '{'.
 nl_property_brace               = ignore   # ignore/add/remove/force
-
-# The number of newlines after '{' of a namespace. This also adds newlines
-# before the matching '}'.
-#
-# 0: Apply eat_blanks_after_open_brace or eat_blanks_before_close_brace if
-#     applicable, otherwise no change.
-#
-# Overrides eat_blanks_after_open_brace and eat_blanks_before_close_brace.
-nl_inside_namespace             = 0        # unsigned number
 
 # Whether to remove blank lines after '{'.
 eat_blanks_after_open_brace     = false    # true/false

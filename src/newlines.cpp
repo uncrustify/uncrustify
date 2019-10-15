@@ -3500,6 +3500,18 @@ void newlines_cleanup_braces(bool first)
                newline_end_newline(pc);
             }
          }
+         else if (pc->parent_type == CT_NAMESPACE)
+         {
+            if (options::nl_after_namespace() > 0)
+            {
+               next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
+               if (next)
+               {
+                  newline_add_before(next);
+                  // newline_iarf(next, IARF_ADD);
+               }
+            }
+         }
       }
       else if (chunk_is_token(pc, CT_VBRACE_OPEN))
       {
@@ -4807,9 +4819,32 @@ void do_blank_lines(void)
          {
             tmp = chunk_get_prev_nc(tmp->prev);
          }
-         if (options::nl_before_class() > pc->nl_count)
+         if (tmp != nullptr && options::nl_before_class() > tmp->nl_count)
          {
             blank_line_set(tmp, options::nl_before_class);
+         }
+      }
+
+      if (  chunk_is_token(prev, CT_BRACE_CLOSE)
+         && prev->parent_type == CT_NAMESPACE)
+      {
+         // Control blanks before a namespace
+         chunk_t *tmp = chunk_get_prev_type(prev, CT_NAMESPACE, prev->level);
+         tmp = chunk_get_prev_nc(tmp);
+         while (  chunk_is_token(tmp, CT_NEWLINE)
+               && chunk_is_comment(tmp->prev))
+         {
+            tmp = chunk_get_prev_nc(tmp->prev);
+         }
+         if (tmp != nullptr && options::nl_before_namespace() > tmp->nl_count)
+         {
+            blank_line_set(tmp, options::nl_before_namespace);
+         }
+
+         // Add blanks after namespace
+         if (options::nl_after_namespace() > pc->nl_count)
+         {
+            blank_line_set(pc, options::nl_after_namespace);
          }
       }
 
