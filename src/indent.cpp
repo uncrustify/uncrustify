@@ -12,6 +12,7 @@
 
 #include "align.h"
 #include "chunk_list.h"
+#include "error_types.h"
 #include "frame_list.h"
 #include "language_tools.h"
 #include "options_for_QT.h"
@@ -1047,6 +1048,13 @@ void indent_text(void)
                   {
                      if (frm.top().type == CT_SQUARE_OPEN)
                      {
+                        if (frm.paren_count == 0)
+                        {
+                           fprintf(stderr, "%s(%d): frm.paren_count is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                                   __func__, __LINE__, pc->orig_line, pc->orig_col);
+                           log_flush(true);
+                           exit(EX_SOFTWARE);
+                        }
                         frm.paren_count--;
                      }
                      LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
@@ -1169,6 +1177,13 @@ void indent_text(void)
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
                frm.pop();
+               if (frm.paren_count == 0)
+               {
+                  fprintf(stderr, "%s(%d): frm.paren_count is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                          __func__, __LINE__, pc->orig_line, pc->orig_col);
+                  log_flush(true);
+                  exit(EX_SOFTWARE);
+               }
                frm.paren_count--;
             }
          }
@@ -2122,6 +2137,13 @@ void indent_text(void)
                      && frm.at(idx).type != CT_CONSTR_COLON
                      && !(frm.at(idx).type == CT_LAMBDA && chunk_get_prev_nc(frm.at(idx).pc)->type == CT_NEWLINE)))
             {
+               if (idx == 0)
+               {
+                  fprintf(stderr, "%s(%d): idx is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                          __func__, __LINE__, pc->orig_line, pc->orig_col);
+                  log_flush(true);
+                  exit(EX_SOFTWARE);
+               }
                idx--;
                skipped = true;
             }
@@ -2152,6 +2174,13 @@ void indent_text(void)
             int idx = static_cast<int>(frm.size()) - 2;
             while (idx > 0 && are_chunks_in_same_line(frm.at(idx).pc, frm.top().pc))
             {
+               if (idx == 0)
+               {
+                  fprintf(stderr, "%s(%d): idx is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                          __func__, __LINE__, pc->orig_line, pc->orig_col);
+                  log_flush(true);
+                  exit(EX_SOFTWARE);
+               }
                idx--;
                skipped = true;
             }
@@ -2190,6 +2219,13 @@ void indent_text(void)
                   sub = static_cast<int>(frm.size()) - 2;
                   while (sub > 0 && are_chunks_in_same_line(frm.at(sub).pc, frm.top().pc))
                   {
+                     if (sub == 0)
+                     {
+                        fprintf(stderr, "%s(%d): sub is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                                __func__, __LINE__, pc->orig_line, pc->orig_col);
+                        log_flush(true);
+                        exit(EX_SOFTWARE);
+                     }
                      sub--;
                      skipped = true;
                   }
@@ -2872,6 +2908,13 @@ void indent_text(void)
                      {
                         LOG_FMT(LINDLINE, "%s(%d): [%zu:%zu] indent_paren_close is 1\n",
                                 __func__, __LINE__, ck2->orig_line, ck2->orig_col);
+                        if (indent_column == 0)
+                        {
+                           fprintf(stderr, "%s(%d): indent_column is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                                   __func__, __LINE__, pc->orig_line, pc->orig_col);
+                           log_flush(true);
+                           exit(EX_SOFTWARE);
+                        }
                         indent_column--;
                         LOG_FMT(LINDLINE, "%s(%d): [%zu:%zu] indent_column set to %zu\n",
                                 __func__, __LINE__, ck2->orig_line, ck2->orig_col, indent_column);
