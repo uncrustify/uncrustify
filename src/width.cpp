@@ -9,6 +9,7 @@
 #include "width.h"
 
 #include "chunk_list.h"
+#include "error_types.h"
 #include "indent.h"
 #include "newlines.h"
 #include "prototypes.h"
@@ -704,6 +705,13 @@ static void split_fcn_params(chunk_t *start)
                  __func__, __LINE__, last_col);
          if (chunk_is_token(pc, CT_COMMA) || chunk_is_token(pc, CT_FPAREN_CLOSE))
          {
+            if (cur_width == 0)
+            {
+               fprintf(stderr, "%s(%d): cur_width is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                       __func__, __LINE__, pc->orig_line, pc->orig_col);
+               log_flush(true);
+               exit(EX_SOFTWARE);
+            }
             cur_width--;
             LOG_FMT(LSPLIT, "%s(%d): cur_width is %d\n",
                     __func__, __LINE__, cur_width);
