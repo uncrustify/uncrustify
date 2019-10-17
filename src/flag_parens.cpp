@@ -38,6 +38,8 @@ chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype, c_token_t pa
       if (  flags != 0
          || (parent_all && parenttype != CT_NONE))
       {
+         // Issue #1734
+         //chunk_flags_set(po, flags);
          chunk_t *pc;
          for (pc = chunk_get_next(po, scope_e::PREPROC);
               pc != nullptr && pc != after_paren_close;

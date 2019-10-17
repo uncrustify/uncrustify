@@ -23,6 +23,7 @@
 #include "align_stack.h"
 #include "chunk_list.h"
 #include "combine.h"
+#include "flag_parens.h"
 #include "indent.h"
 #include "keywords.h"
 #include "language_tools.h"
@@ -3184,6 +3185,9 @@ void newlines_cleanup_braces(bool first)
       else if (chunk_is_token(pc, CT_TRY))
       {
          newlines_do_else(pc, options::nl_try_brace());
+         // Issue #1734
+         chunk_t *po = chunk_get_next_ncnl(pc);
+         flag_parens(po, PCF_IN_TRY_BLOCK, po->type, CT_NONE, false);
       }
       else if (chunk_is_token(pc, CT_GETSET))
       {
@@ -4882,9 +4886,13 @@ void do_blank_lines(void)
             }
             else if (options::nl_after_func_body() > 0)
             {
-               if (options::nl_after_func_body() != pc->nl_count)
+               // Issue #1734
+               if (!(pc->prev->flags & PCF_IN_TRY_BLOCK))
                {
-                  blank_line_set(pc, options::nl_after_func_body);
+                  if (options::nl_after_func_body() != pc->nl_count)
+                  {
+                     blank_line_set(pc, options::nl_after_func_body);
+                  }
                }
             }
          }

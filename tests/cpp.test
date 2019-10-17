@@ -68,6 +68,7 @@
 30057  nl_inside_namespace_1.cfg            cpp/nl_inside_namespace.cpp
 30058  nl_inside_namespace_2.cfg            cpp/nl_inside_namespace.cpp
 30059  Issue_2186.cfg                       cpp/Issue_2186.cpp
+30060  Issue_1734.cfg                       cpp/Issue_1734.cpp
 
 # Class colon positioning
 30061  class-colon-pos-eol.cfg              cpp/class-init.cpp
