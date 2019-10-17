@@ -324,11 +324,12 @@ size_t get_option_count();
  * @param config_line  single line string that will be processed
  * @param filename     for log messages, file from which the \p config_line
  *                     param was extracted
+ * @param compat_level version of Uncrustify with which to be compatible
  */
-void process_option_line(const std::string &config_line, const char *filename);
+void process_option_line(const std::string &config_line, const char *filename, int &compat_level);
 
 
-bool load_option_file(const char *filename);
+bool load_option_file(const char *filename, int compat_level = 0);
 
 
 /**
