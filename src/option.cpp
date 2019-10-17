@@ -94,9 +94,9 @@ std::unordered_map<std::string, GenericOption *> option_map;
 
 
 //-----------------------------------------------------------------------------
-constexpr int option_level(int major, int minor)
+constexpr int option_level(int major, int minor, int patch = 0)
 {
-   return((major << 16) | (minor << 0));
+   return((major << 20) | (minor << 10) | (patch << 0));
 }
 
 
@@ -943,14 +943,22 @@ void process_option_line(const std::string &config_line, const char *filename)
    else if (cmd == "using")
    {
       auto vargs = split_args(args[1], filename, is_varg_sep);
-      if (vargs.size() != 2)
+      if (vargs.size() == 2)
+      {
+         compat_level = option_level(std::stoi(vargs[0]), std::stoi(vargs[1]));
+      }
+      else if (vargs.size() == 3)
+      {
+         compat_level = option_level(std::stoi(vargs[0]),
+                                     std::stoi(vargs[1]),
+                                     std::stoi(vargs[2]));
+      }
+      else
       {
          OptionWarning w{ filename };
-         w("%s requires a version number in the form MAJOR.MINOR", cmd.c_str());
-         return;
+         w("%s requires a version number in the form MAJOR.MINOR[.PATCH]",
+           cmd.c_str());
       }
-
-      compat_level = option_level(std::stoi(vargs[0]), std::stoi(vargs[1]));
    }
    else
    {
