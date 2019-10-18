@@ -35,7 +35,8 @@ namespace uncrustify
 {
 
 //-----------------------------------------------------------------------------
-template<typename Enum> class flags
+template<typename Enum>
+class flags
 {
 public:
    using enum_t = Enum;
