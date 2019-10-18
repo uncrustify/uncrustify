@@ -180,30 +180,6 @@ static void log_end(void)
 }
 
 
-void log_str(log_sev_t sev, const char *str, size_t len)
-{
-   if (  str == nullptr
-      || len == 0
-      || !log_sev_on(sev))
-   {
-      return;
-   }
-
-   size_t cap = log_start(sev);
-   if (cap > 0)
-   {
-      if (len > cap)
-      {
-         len = cap;
-      }
-      memcpy(&g_log.bufX[g_log.buf_len], str, len);
-      g_log.buf_len            += len;
-      g_log.bufX[g_log.buf_len] = 0;
-   }
-   log_end();
-}
-
-
 void log_fmt(log_sev_t sev, const char *fmt, ...)
 {
    if (fmt == nullptr || !log_sev_on(sev))
@@ -271,108 +247,6 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
 
    log_end();
 } // log_fmt
-
-
-void log_hex(log_sev_t sev, const void *vdata, size_t len)
-{
-   if (vdata == nullptr || !log_sev_on(sev))
-   {
-      return;
-   }
-
-#define MAX_BUF    80
-   char        buf[MAX_BUF];
-   const UINT8 *dat = static_cast<const UINT8 *>(vdata);
-   size_t      idx  = 0;
-   while (len-- > 0)
-   {
-      buf[idx++] = to_hex_char(*dat >> 4);
-      buf[idx++] = to_hex_char(*dat);
-      dat++;
-
-      // prevent an overflow
-      if (idx >= (MAX_BUF - 3))
-      {
-         buf[idx] = 0;
-         log_str(sev, buf, idx);
-         idx = 0;
-      }
-   }
-
-   if (idx > 0)
-   {
-      buf[idx] = 0;
-      log_str(sev, buf, idx);
-   }
-}
-
-
-void log_hex_blk(log_sev_t sev, const void *data, size_t len)
-{
-   if (data == nullptr || !log_sev_on(sev))
-   {
-      return;
-   }
-
-   static char buf[80] = "nnn | XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX | cccccccccccccccc\n";
-   const UINT8 *dat    = static_cast<const UINT8 *>(data);
-   int         str_idx = 0;
-   int         chr_idx = 0;
-
-   /*
-    * Dump the specified number of bytes in hex, 16 byte per line by
-    * creating a string and then calling log_str()
-    */
-
-   // Loop through the data of the current iov
-   int count = 0;
-   int total = 0;
-   for (size_t idx = 0; idx < len; idx++)
-   {
-      if (count == 0)
-      {
-         str_idx = 6;
-         chr_idx = 56;
-
-         buf[0] = to_hex_char(total >> 12);
-         buf[1] = to_hex_char(total >> 8);
-         buf[2] = to_hex_char(total >> 4);
-      }
-
-      int tmp = dat[idx];
-
-      buf[str_idx]     = to_hex_char(tmp >> 4);
-      buf[str_idx + 1] = to_hex_char(tmp);
-      str_idx         += 3;
-
-      buf[chr_idx++] = unc_isprint(tmp) ? tmp : '.';
-
-      total++;
-      count++;
-      if (count >= 16)
-      {
-         count = 0;
-         log_str(sev, buf, 73);
-      }
-   }
-
-   // Print partial line if any
-   if (count != 0)
-   {
-      // Clear out any junk
-      while (count < 16)
-      {
-         buf[str_idx]     = ' ';   // MSB hex
-         buf[str_idx + 1] = ' ';   // LSB hex
-         str_idx         += 3;
-
-         buf[chr_idx++] = ' ';
-
-         count++;
-      }
-      log_str(sev, buf, 73);
-   }
-} // log_hex_blk
 
 
 log_func::log_func(const char *name, int line)
