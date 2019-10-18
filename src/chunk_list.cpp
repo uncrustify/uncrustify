@@ -282,6 +282,7 @@ static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type,
       pc = search_function(pc, scope); // in either direction while
    } while (  pc != nullptr            // the end of the list was not reached yet
            && pc->type != type);       // and the demanded chunk was not found either
+
    return(pc);                         // the latest chunk is the searched one
 }
 
@@ -300,6 +301,7 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
       pc = search_function(pc, scope); // in either direction while
    } while (  pc != nullptr            // the end of the list was not reached yet
            && (is_expected_type_and_level(pc, type, level) == false));
+
    return(pc);                         // the latest chunk is the searched one
 }
 
@@ -317,6 +319,7 @@ static chunk_t *chunk_search_str(chunk_t *cur, const char *str, size_t len, scop
       pc = search_function(pc, scope); // in either direction while
    } while (  pc != nullptr            // the end of the list was not reached yet
            && (is_expected_string_and_level(pc, str, level, len) == false));
+
    return(pc);                         // the latest chunk is the searched one
 }
 
@@ -335,6 +338,7 @@ static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_
       pc = search_function(pc, scope);  // in either direction while
    } while (  pc != nullptr             // the end of the list was not reached yet
            && (check_fct(pc) != cond)); // and the demanded chunk was not found either
+
    return(pc);                          // the latest chunk is the searched one
 }
 
