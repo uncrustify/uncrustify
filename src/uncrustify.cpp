@@ -491,7 +491,7 @@ int main(int argc, char *argv[])
       size_t idx = 1;
       while ((p_arg = arg.Unused(idx)) != nullptr)
       {
-         log_pcf_flags(LSYS, strtoul(p_arg, nullptr, 16));
+         log_pcf_flags(LSYS, static_cast<pcf_flag_e>(strtoul(p_arg, nullptr, 16)));
       }
       return(EXIT_SUCCESS);
    }
@@ -1533,7 +1533,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
       {
          continue;
       }
-      if (  (pc->flags & PCF_IN_CLASS)
+      if (  pc->flags.test(PCF_IN_CLASS)
          && !options::cmt_insert_before_inlines())
       {
          continue;
@@ -1605,7 +1605,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
          }
 
          // Bail if we hit a preprocessor and cmt_insert_before_preproc is false
-         if (ref->flags & PCF_IN_PREPROC)
+         if (ref->flags.test(PCF_IN_PREPROC))
          {
             tmp = chunk_get_prev_type(ref, CT_PREPROC, ref->level);
             if (tmp != nullptr && tmp->parent_type == CT_PP_IF)
@@ -1626,7 +1626,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
          }
 
          if (  ref->level == pc->level
-            && (  (ref->flags & PCF_IN_PREPROC)
+            && (  ref->flags.test(PCF_IN_PREPROC)
                || chunk_is_token(ref, CT_SEMICOLON)
                || chunk_is_token(ref, CT_BRACE_CLOSE)))
          {
@@ -1686,7 +1686,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
          }
 
          // Bail if we hit a preprocessor and cmt_insert_before_preproc is false
-         if (ref->flags & PCF_IN_PREPROC)
+         if (ref->flags.test(PCF_IN_PREPROC))
          {
             tmp = chunk_get_prev_type(ref, CT_PREPROC, ref->level);
             if (tmp != nullptr && tmp->parent_type == CT_PP_IF)
@@ -1700,7 +1700,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
             }
          }
          if (  ref->level == pc->level
-            && ((ref->flags & PCF_IN_PREPROC) || chunk_is_token(ref, CT_OC_SCOPE)))
+            && (ref->flags.test(PCF_IN_PREPROC) || chunk_is_token(ref, CT_OC_SCOPE)))
          {
             ref = chunk_get_prev(ref);
             if (ref != nullptr)
@@ -2362,19 +2362,19 @@ static size_t language_flags_from_filename(const char *filename)
 }
 
 
-void log_pcf_flags(log_sev_t sev, UINT64 flags)
+void log_pcf_flags(log_sev_t sev, pcf_flags_t flags)
 {
    if (!log_sev_on(sev))
    {
       return;
    }
 
-   log_fmt(sev, "[0x%" PRIx64 ":", flags);
+   log_fmt(sev, "[0x%llx:", static_cast<pcf_flags_t::int_t>(flags));
 
    const char *tolog = nullptr;
    for (size_t i = 0; i < ARRAY_SIZE(pcf_names); i++)
    {
-      if (flags & (1ULL << i))
+      if (flags & static_cast<pcf_flag_e>(pcf_bit(i)))
       {
          if (tolog != nullptr)
          {

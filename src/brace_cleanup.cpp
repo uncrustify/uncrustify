@@ -193,7 +193,7 @@ void brace_cleanup(void)
    while (pc != nullptr)
    {
       // Check for leaving a #define body
-      if (cpd.in_preproc != CT_NONE && (pc->flags & PCF_IN_PREPROC) == 0)
+      if (cpd.in_preproc != CT_NONE && !pc->flags.test(PCF_IN_PREPROC))
       {
          if (cpd.in_preproc == CT_PP_DEFINE)
          {
@@ -255,13 +255,13 @@ static bool maybe_while_of_do(chunk_t *pc)
    LOG_FUNC_ENTRY();
 
    chunk_t *prev = chunk_get_prev_ncnl(pc);
-   if (prev == nullptr || !(prev->flags & PCF_IN_PREPROC))
+   if (prev == nullptr || !prev->flags.test(PCF_IN_PREPROC))
    {
       return(false);
    }
 
    // Find the chunk before the preprocessor
-   while (prev != nullptr && (prev->flags & PCF_IN_PREPROC))
+   while (prev != nullptr && prev->flags.test(PCF_IN_PREPROC))
    {
       prev = chunk_get_prev_ncnl(prev);
    }
@@ -351,10 +351,10 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
       && !chunk_is_str(pc, ")", 1)
       && !chunk_is_str(pc, "]", 1))
    {
-      chunk_flags_set(pc, PCF_EXPR_START | ((frm.stmt_count == 0) ? PCF_STMT_START : 0));
+      chunk_flags_set(pc, PCF_EXPR_START | ((frm.stmt_count == 0) ? PCF_STMT_START : PCF_NONE));
       LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 1.marked '%s' as %s, start stmt_count is %zu, expr_count is %zu\n",
               __func__, __LINE__, pc->orig_line, pc->text(),
-              (pc->flags & PCF_STMT_START) ? "stmt" : "expr", frm.stmt_count,
+              pc->flags.test(PCF_STMT_START) ? "stmt" : "expr", frm.stmt_count,
               frm.expr_count);
    }
    frm.stmt_count++;
@@ -921,7 +921,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
    // Insert a CT_VBRACE_OPEN, if needed
    // but not in a preprocessor
    if (  pc->type != CT_BRACE_OPEN
-      && !(pc->flags & PCF_IN_PREPROC)
+      && !pc->flags.test(PCF_IN_PREPROC)
       && (  (frm.top().stage == brace_stage_e::BRACE2)
          || (frm.top().stage == brace_stage_e::BRACE_DO)))
    {
@@ -958,7 +958,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
          frm.expr_count = 0;
          LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
                  __func__, __LINE__, frm.stmt_count, frm.expr_count);
-         pc->flags     |= PCF_STMT_START | PCF_EXPR_START;
+         chunk_flags_set(pc, PCF_STMT_START | PCF_EXPR_START);
          frm.stmt_count = 1;
          frm.expr_count = 1;
          LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 2.marked '%s' as stmt start\n",
@@ -1180,7 +1180,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
       return(nullptr);
    }
 
-   if ((ref->flags & PCF_IN_PREPROC) == 0)
+   if (!ref->flags.test(PCF_IN_PREPROC))
    {
       chunk.flags &= ~PCF_IN_PREPROC;
    }
@@ -1197,12 +1197,12 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
    }
 
    // Don't back into a preprocessor
-   if (  (pc->flags & PCF_IN_PREPROC) == 0
-      && (ref->flags & PCF_IN_PREPROC) != 0)
+   if (  !pc->flags.test(PCF_IN_PREPROC)
+      && ref->flags.test(PCF_IN_PREPROC))
    {
       if (chunk_is_token(ref, CT_PREPROC_BODY))
       {
-         while (ref != nullptr && (ref->flags & PCF_IN_PREPROC))
+         while (ref != nullptr && ref->flags.test(PCF_IN_PREPROC))
          {
             ref = chunk_get_prev(ref);
          }

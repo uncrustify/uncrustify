@@ -9,7 +9,7 @@
 #include "uncrustify.h"
 
 
-chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype, c_token_t parenttype, bool parent_all)
+chunk_t *flag_parens(chunk_t *po, pcf_flags_t flags, c_token_t opentype, c_token_t parenttype, bool parent_all)
 {
    LOG_FUNC_ENTRY();
    chunk_t *paren_close;
@@ -35,7 +35,7 @@ chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype, c_token_t pa
    chunk_t *after_paren_close = chunk_get_next(paren_close);
    if (po != paren_close)
    {
-      if (  flags != 0
+      if (  flags != PCF_NONE
          || (parent_all && parenttype != CT_NONE))
       {
          chunk_t *pc;

@@ -270,7 +270,7 @@ void sort_imports(void)
          if (  p_imp != nullptr
             && p_last != nullptr
             && (  chunk_is_token(p_last, CT_SEMICOLON)
-               || (p_imp->flags & PCF_IN_PREPROC)))
+               || p_imp->flags.test(PCF_IN_PREPROC)))
          {
             if (num_chunks < MAX_NUMBER_TO_SORT)
             {

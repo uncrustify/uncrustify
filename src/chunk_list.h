@@ -610,7 +610,7 @@ static inline bool chunk_is_balanced_square(chunk_t *pc)
 
 static inline bool chunk_is_preproc(chunk_t *pc)
 {
-   return(pc != nullptr && (pc->flags & PCF_IN_PREPROC));
+   return(pc != nullptr && pc->flags.test(PCF_IN_PREPROC));
 }
 
 
@@ -721,7 +721,7 @@ static inline bool chunk_is_addr(chunk_t *pc)
    {
       chunk_t *prev = chunk_get_prev(pc);
 
-      if (  (pc->flags & PCF_IN_TEMPLATE)
+      if (  pc->flags.test(PCF_IN_TEMPLATE)
          && (chunk_is_token(prev, CT_COMMA) || chunk_is_token(prev, CT_ANGLE_OPEN)))
       {
          return(false);
@@ -870,7 +870,7 @@ void set_chunk_parent_real(chunk_t *pc, c_token_t tt);
 } while (false)
 
 
-void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits);
+void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits);
 
 
 #define chunk_flags_upd(pc, cc, ss)    do {   \
@@ -880,12 +880,12 @@ void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits);
 
 #define chunk_flags_set(pc, ss)        do { \
       LOG_FUNC_CALL();                      \
-      chunk_flags_set_real((pc), 0, (ss));  \
+      chunk_flags_set_real((pc), {}, (ss)); \
 } while (false)
 
 #define chunk_flags_clr(pc, cc)        do { \
       LOG_FUNC_CALL();                      \
-      chunk_flags_set_real((pc), (cc), 0);  \
+      chunk_flags_set_real((pc), (cc), {}); \
 } while (false)
 
 

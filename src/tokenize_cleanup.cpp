@@ -206,7 +206,7 @@ void tokenize_cleanup(void)
          }
       }
       if (  chunk_is_token(pc, CT_SEMICOLON)
-         && (pc->flags & PCF_IN_PREPROC)
+         && pc->flags.test(PCF_IN_PREPROC)
          && !chunk_get_next_ncnl(pc, scope_e::PREPROC))
       {
          LOG_FMT(LNOTE, "%s(%d): %s:%zu Detected a macro that ends with a semicolon. Possible failures if used.\n",
@@ -522,7 +522,7 @@ void tokenize_cleanup(void)
             set_chunk_type(next, CT_OPERATOR_VAL);
             chunk_del(tmp2);
          }
-         else if (next->flags & PCF_PUNCTUATOR)
+         else if (next->flags.test(PCF_PUNCTUATOR))
          {
             set_chunk_type(next, CT_OPERATOR_VAL);
          }
@@ -907,7 +907,7 @@ void tokenize_cleanup(void)
          if (chunk_is_token(prev, CT_TYPE))
          {
             // Issue # 1002
-            if ((pc->flags & PCF_IN_TEMPLATE) == 0)
+            if (!pc->flags.test(PCF_IN_TEMPLATE))
             {
                set_chunk_type(pc, CT_BYREF);
             }

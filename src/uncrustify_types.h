@@ -11,6 +11,7 @@
 #define UNCRUSTIFY_TYPES_H_INCLUDED
 
 #include "base_types.h"
+#include "enum_flags.h"
 #include "log_levels.h"
 #include "logger.h"
 #include "option_enum.h"
@@ -106,56 +107,67 @@ struct indent_ptr_t
 };
 
 
-#define PCF_BIT(b)    (1ULL << b)
+constexpr auto pcf_bit(size_t b)->decltype(0ULL)
+{
+   return(1ULL << b);
+}
 
+
+enum pcf_flag_e : decltype(0ULL)
+{
 // Copy flags are in the lower 16 bits
-#define PCF_COPY_FLAGS         0x0000ffff
-#define PCF_IN_PREPROC         PCF_BIT(0)  //! in a preprocessor
-#define PCF_IN_STRUCT          PCF_BIT(1)  //! in a struct
-#define PCF_IN_ENUM            PCF_BIT(2)  //! in enum
-#define PCF_IN_FCN_DEF         PCF_BIT(3)  //! inside function def parens
-#define PCF_IN_FCN_CALL        PCF_BIT(4)  //! inside function call parens
-#define PCF_IN_SPAREN          PCF_BIT(5)  //! inside for/if/while/switch parens
-#define PCF_IN_TEMPLATE        PCF_BIT(6)
-#define PCF_IN_TYPEDEF         PCF_BIT(7)
-#define PCF_IN_CONST_ARGS      PCF_BIT(8)
-#define PCF_IN_ARRAY_ASSIGN    PCF_BIT(9)
-#define PCF_IN_CLASS           PCF_BIT(10)
-#define PCF_IN_CLASS_BASE      PCF_BIT(11)
-#define PCF_IN_NAMESPACE       PCF_BIT(12)
-#define PCF_IN_FOR             PCF_BIT(13)
-#define PCF_IN_OC_MSG          PCF_BIT(14)
-#define PCF_IN_WHERE_SPEC      PCF_BIT(15)  /* inside C# 'where' constraint clause on class or function def */
+   PCF_NONE            = 0ULL,
+   PCF_COPY_FLAGS      = 0x0000ffffULL,
+   PCF_IN_PREPROC      = pcf_bit(0),  //! in a preprocessor
+   PCF_IN_STRUCT       = pcf_bit(1),  //! in a struct
+   PCF_IN_ENUM         = pcf_bit(2),  //! in enum
+   PCF_IN_FCN_DEF      = pcf_bit(3),  //! inside function def parens
+   PCF_IN_FCN_CALL     = pcf_bit(4),  //! inside function call parens
+   PCF_IN_SPAREN       = pcf_bit(5),  //! inside for/if/while/switch parens
+   PCF_IN_TEMPLATE     = pcf_bit(6),
+   PCF_IN_TYPEDEF      = pcf_bit(7),
+   PCF_IN_CONST_ARGS   = pcf_bit(8),
+   PCF_IN_ARRAY_ASSIGN = pcf_bit(9),
+   PCF_IN_CLASS        = pcf_bit(10),
+   PCF_IN_CLASS_BASE   = pcf_bit(11),
+   PCF_IN_NAMESPACE    = pcf_bit(12),
+   PCF_IN_FOR          = pcf_bit(13),
+   PCF_IN_OC_MSG       = pcf_bit(14),
+   PCF_IN_WHERE_SPEC   = pcf_bit(15),  /* inside C# 'where' constraint clause on class or function def */
 
 // Non-Copy flags are in the upper 48 bits
-#define PCF_FORCE_SPACE        PCF_BIT(16)  //! must have a space after this token
-#define PCF_STMT_START         PCF_BIT(17)  //! marks the start of a statement
-#define PCF_EXPR_START         PCF_BIT(18)
-#define PCF_DONT_INDENT        PCF_BIT(19)  //! already aligned!
-#define PCF_ALIGN_START        PCF_BIT(20)
-#define PCF_WAS_ALIGNED        PCF_BIT(21)
-#define PCF_VAR_TYPE           PCF_BIT(22)  //! part of a variable def type
-#define PCF_VAR_DEF            PCF_BIT(23)  //! variable name in a variable def
-#define PCF_VAR_1ST            PCF_BIT(24)  //! 1st variable def in a statement
-#define PCF_VAR_1ST_DEF        (PCF_VAR_DEF | PCF_VAR_1ST)
-#define PCF_VAR_INLINE         PCF_BIT(25)  //! type was an inline struct/enum/union
-#define PCF_RIGHT_COMMENT      PCF_BIT(26)
-#define PCF_OLD_FCN_PARAMS     PCF_BIT(27)
-#define PCF_LVALUE             PCF_BIT(28)  //! left of assignment
-#define PCF_ONE_LINER          PCF_BIT(29)
-#define PCF_ONE_CLASS          (PCF_ONE_LINER | PCF_IN_CLASS)
-#define PCF_EMPTY_BODY         PCF_BIT(30)
-#define PCF_ANCHOR             PCF_BIT(31)  //! aligning anchor
-#define PCF_PUNCTUATOR         PCF_BIT(32)
-#define PCF_INSERTED           PCF_BIT(33)  //! chunk was inserted from another file
-#define PCF_LONG_BLOCK         PCF_BIT(34)  //! the block is 'long' by some measure
-#define PCF_OC_BOXED           PCF_BIT(35)  //! inside OC boxed expression
-#define PCF_KEEP_BRACE         PCF_BIT(36)  //! do not remove brace
-#define PCF_OC_RTYPE           PCF_BIT(37)  //! inside OC return type
-#define PCF_OC_ATYPE           PCF_BIT(38)  //! inside OC arg type
-#define PCF_WF_ENDIF           PCF_BIT(39)  //! #endif for whole file ifdef
-#define PCF_IN_QT_MACRO        PCF_BIT(40)  //! in a QT-macro, i.e. SIGNAL, SLOT
-#define PCF_IN_FCN_CTOR        PCF_BIT(41)  //! inside function constructor
+   PCF_FORCE_SPACE    = pcf_bit(16),   //! must have a space after this token
+   PCF_STMT_START     = pcf_bit(17),   //! marks the start of a statement
+   PCF_EXPR_START     = pcf_bit(18),
+   PCF_DONT_INDENT    = pcf_bit(19),   //! already aligned!
+   PCF_ALIGN_START    = pcf_bit(20),
+   PCF_WAS_ALIGNED    = pcf_bit(21),
+   PCF_VAR_TYPE       = pcf_bit(22),   //! part of a variable def type
+   PCF_VAR_DEF        = pcf_bit(23),   //! variable name in a variable def
+   PCF_VAR_1ST        = pcf_bit(24),   //! 1st variable def in a statement
+   PCF_VAR_1ST_DEF    = (PCF_VAR_DEF | PCF_VAR_1ST),
+   PCF_VAR_INLINE     = pcf_bit(25),   //! type was an inline struct/enum/union
+   PCF_RIGHT_COMMENT  = pcf_bit(26),
+   PCF_OLD_FCN_PARAMS = pcf_bit(27),
+   PCF_LVALUE         = pcf_bit(28),   //! left of assignment
+   PCF_ONE_LINER      = pcf_bit(29),
+   PCF_ONE_CLASS      = (PCF_ONE_LINER | PCF_IN_CLASS),
+   PCF_EMPTY_BODY     = pcf_bit(30),
+   PCF_ANCHOR         = pcf_bit(31),   //! aligning anchor
+   PCF_PUNCTUATOR     = pcf_bit(32),
+   PCF_INSERTED       = pcf_bit(33),   //! chunk was inserted from another file
+   PCF_LONG_BLOCK     = pcf_bit(34),   //! the block is 'long' by some measure
+   PCF_OC_BOXED       = pcf_bit(35),   //! inside OC boxed expression
+   PCF_KEEP_BRACE     = pcf_bit(36),   //! do not remove brace
+   PCF_OC_RTYPE       = pcf_bit(37),   //! inside OC return type
+   PCF_OC_ATYPE       = pcf_bit(38),   //! inside OC arg type
+   PCF_WF_ENDIF       = pcf_bit(39),   //! #endif for whole file ifdef
+   PCF_IN_QT_MACRO    = pcf_bit(40),   //! in a QT-macro, i.e. SIGNAL, SLOT
+   PCF_IN_FCN_CTOR    = pcf_bit(41),   //! inside function constructor
+};
+
+UNC_DECLARE_FLAGS(pcf_flags_t, pcf_flag_e);
+UNC_DECLARE_OPERATORS_FOR_FLAGS(pcf_flags_t);
 
 #ifdef DEFINE_PCF_NAMES
 static const char *pcf_names[] =
@@ -175,7 +187,7 @@ static const char *pcf_names[] =
    "IN_NAMESPACE",      // 12
    "IN_FOR",            // 13
    "IN_OC_MSG",         // 14
-   "#15",               // 15
+   "IN_WHERE_SPEC",     // 15
    "FORCE_SPACE",       // 16
    "STMT_START",        // 17
    "EXPR_START",        // 18
@@ -246,7 +258,7 @@ struct chunk_t
       orig_col      = 0;
       orig_col_end  = 0;
       orig_prev_sp  = 0;
-      flags         = 0;
+      flags         = PCF_NONE;
       column        = 0;
       column_indent = 0;
       nl_count      = 0;
@@ -282,7 +294,7 @@ struct chunk_t
    size_t       orig_col;         //! column where chunk started in the input file, is always > 0
    size_t       orig_col_end;     //! column where chunk ended in the input file, is always > 1
    UINT32       orig_prev_sp;     //! whitespace before this token
-   UINT64       flags;            //! see PCF_xxx
+   pcf_flags_t  flags;            //! see PCF_xxx
    size_t       column;           //! column of chunk
    size_t       column_indent;    /** if 1st on a line, set to the 'indent'
                                    * column, which may be less than the real

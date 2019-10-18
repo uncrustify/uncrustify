@@ -140,7 +140,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
    chunk_t *pc = popen;
    while ((pc = chunk_get_next_ncnl(pc)) != nullptr && pc != pclose)
    {
-      if (pc->flags & PCF_IN_PREPROC)
+      if (pc->flags.test(PCF_IN_PREPROC))
       {
          LOG_FMT(LPARADD2, " -- bail on PP %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->type),

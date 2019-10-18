@@ -96,7 +96,7 @@ void combine_labels(void)
                  __func__, __LINE__, next->orig_line, next->orig_col, next->text());
       }
 
-      if (  !(next->flags & PCF_IN_OC_MSG)  // filter OC case of [self class] msg send
+      if (  !next->flags.test(PCF_IN_OC_MSG) // filter OC case of [self class] msg send
          && (  chunk_is_token(next, CT_CLASS)
             || chunk_is_token(next, CT_OC_CLASS)
             || chunk_is_token(next, CT_TEMPLATE)))
@@ -126,7 +126,7 @@ void combine_labels(void)
          }
       }
 
-      if ((chunk_is_token(next, CT_QUESTION)) && ((next->flags & PCF_IN_TEMPLATE) == 0))
+      if (chunk_is_token(next, CT_QUESTION) && !next->flags.test(PCF_IN_TEMPLATE))
       {
          cs.Push_Back(next);
       }
@@ -171,7 +171,7 @@ void combine_labels(void)
                }
             }
          }
-         else if (cur->flags & PCF_IN_WHERE_SPEC)
+         else if (cur->flags.test(PCF_IN_WHERE_SPEC))
          {
             /* leave colons in where-constraint clauses alone */
          }
@@ -214,15 +214,15 @@ void combine_labels(void)
                   }
                }
             }
-            else if (next->flags & PCF_IN_ARRAY_ASSIGN)
+            else if (next->flags.test(PCF_IN_ARRAY_ASSIGN))
             {
                set_chunk_type(next, CT_D_ARRAY_COLON);
             }
-            else if (next->flags & PCF_IN_FOR)
+            else if (next->flags.test(PCF_IN_FOR))
             {
                set_chunk_type(next, CT_FOR_COLON);
             }
-            else if (next->flags & PCF_OC_BOXED)
+            else if (next->flags.test(PCF_OC_BOXED))
             {
                set_chunk_type(next, CT_OC_DICT_COLON);
             }
@@ -237,7 +237,7 @@ void combine_labels(void)
                LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, tmp '%s': ",
                        __func__, __LINE__, tmp->orig_line, tmp->orig_col, (tmp->type == CT_NEWLINE) ? "<Newline>" : tmp->text());
                log_pcf_flags(LGUY, tmp->flags);
-               if (next->flags & PCF_IN_FCN_CALL)
+               if (next->flags.test(PCF_IN_FCN_CALL))
                {
                   // Must be a macro thingy, assume some sort of label
                   set_chunk_type(next, CT_LABEL_COLON);
@@ -247,7 +247,7 @@ void combine_labels(void)
                           && tmp->type != CT_DECLTYPE
                           && tmp->type != CT_SIZEOF
                           && tmp->parent_type != CT_SIZEOF
-                          && !(tmp->flags & (PCF_IN_STRUCT | PCF_IN_CLASS)))
+                          && !tmp->flags.test_any(PCF_IN_STRUCT | PCF_IN_CLASS))
                        || chunk_is_token(tmp, CT_NEWLINE))
                {
                   /*
@@ -277,7 +277,7 @@ void combine_labels(void)
                      set_chunk_type(next, CT_LABEL_COLON);
                   }
                }
-               else if (next->flags & (PCF_IN_STRUCT | PCF_IN_CLASS | PCF_IN_TYPEDEF))
+               else if (next->flags.test_any(PCF_IN_STRUCT | PCF_IN_CLASS | PCF_IN_TYPEDEF))
                {
                   set_chunk_type(next, CT_BIT_COLON);
 

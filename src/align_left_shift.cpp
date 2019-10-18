@@ -65,7 +65,8 @@ void align_left_shift(void)
          as.Flush();
          start = nullptr;
       }
-      else if (  (!(pc->flags & PCF_IN_ENUM) && !(pc->flags & PCF_IN_TYPEDEF))
+      else if (  !pc->flags.test(PCF_IN_ENUM)
+              && !pc->flags.test(PCF_IN_TYPEDEF)
               && chunk_is_str(pc, "<<", 2))
       {
          if (pc->parent_type == CT_OPERATOR)
@@ -86,7 +87,7 @@ void align_left_shift(void)
             {
                indent_to_column(pc, pc->column_indent + options::indent_columns());
                pc->column_indent = pc->column;
-               pc->flags        |= PCF_DONT_INDENT;
+               chunk_flags_set(pc, PCF_DONT_INDENT);
             }
 
             // first one can be anywhere
@@ -113,7 +114,7 @@ void align_left_shift(void)
          {
             indent_to_column(pc, pc->column_indent + options::indent_columns());
             pc->column_indent = pc->column;
-            pc->flags        |= PCF_DONT_INDENT;
+            chunk_flags_set(pc, PCF_DONT_INDENT);
          }
       }
 

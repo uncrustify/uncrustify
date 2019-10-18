@@ -341,7 +341,7 @@ static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_
 
 static chunk_t *chunk_ppa_search(chunk_t *cur, const check_t check_fct, const bool cond)
 {
-   if (cur && !(cur->flags & PCF_IN_PREPROC))
+   if (cur && !cur->flags.test(PCF_IN_PREPROC))
    {
       // if not in preprocessor, do a regular search
       return(chunk_search(cur, check_fct, scope_e::ALL,
@@ -352,7 +352,7 @@ static chunk_t *chunk_ppa_search(chunk_t *cur, const check_t check_fct, const bo
 
    while (pc != nullptr && (pc = pc->next) != nullptr)
    {
-      if (!(pc->flags & PCF_IN_PREPROC))
+      if (!pc->flags.test(PCF_IN_PREPROC))
       {
          // Bail if we run off the end of the preprocessor directive, but
          // return the next token, NOT nullptr, because the caller may need to
@@ -394,17 +394,17 @@ chunk_t *chunk_get_next(chunk_t *cur, scope_e scope)
    {
       return(pc);
    }
-   if (cur->flags & PCF_IN_PREPROC)
+   if (cur->flags.test(PCF_IN_PREPROC))
    {
       // If in a preproc, return nullptr if trying to leave
-      if ((pc->flags & PCF_IN_PREPROC) == 0)
+      if (!pc->flags.test(PCF_IN_PREPROC))
       {
          return(nullptr);
       }
       return(pc);
    }
    // Not in a preproc, skip any preproc
-   while (pc != nullptr && (pc->flags & PCF_IN_PREPROC))
+   while (pc != nullptr && pc->flags.test(PCF_IN_PREPROC))
    {
       pc = g_cl.GetNext(pc);
    }
@@ -423,17 +423,17 @@ chunk_t *chunk_get_prev(chunk_t *cur, scope_e scope)
    {
       return(pc);
    }
-   if (cur->flags & PCF_IN_PREPROC)
+   if (cur->flags.test(PCF_IN_PREPROC))
    {
       // If in a preproc, return NULL if trying to leave
-      if ((pc->flags & PCF_IN_PREPROC) == 0)
+      if (!pc->flags.test(PCF_IN_PREPROC))
       {
          return(nullptr);
       }
       return(pc);
    }
    // Not in a preproc, skip any preproc
-   while (pc != nullptr && (pc->flags & PCF_IN_PREPROC))
+   while (pc != nullptr && pc->flags.test(PCF_IN_PREPROC))
    {
       pc = g_cl.GetPrev(pc);
    }
@@ -817,16 +817,21 @@ void set_chunk_parent_real(chunk_t *pc, c_token_t pt)
 }
 
 
-void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits)
+void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits)
 {
    if (pc != nullptr)
    {
       LOG_FUNC_ENTRY();
-      UINT64 nflags = (pc->flags & ~clr_bits) | set_bits;
+      auto const nflags = (pc->flags & ~clr_bits) | set_bits;
       if (pc->flags != nflags)
       {
-         LOG_FMT(LSETFLG, "%s(%d): %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " orig_line is %zu, orig_col is %zu, text() '%s', type is %s, ",
-                 __func__, __LINE__, pc->flags, pc->flags ^ nflags, nflags,
+         LOG_FMT(LSETFLG,
+                 "%s(%d): %016llx^%016llx=%016llx "
+                 "orig_line is %zu, orig_col is %zu, text() '%s', type is %s, ",
+                 __func__, __LINE__,
+                 static_cast<pcf_flags_t::int_t>(pc->flags),
+                 static_cast<pcf_flags_t::int_t>(pc->flags ^ nflags),
+                 static_cast<pcf_flags_t::int_t>(nflags),
                  pc->orig_line, pc->orig_col, pc->text(),
                  get_token_name(pc->type));
          LOG_FMT(LSETFLG, "parent_type is %s",
