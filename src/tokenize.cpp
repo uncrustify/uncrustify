@@ -862,6 +862,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
          {
             pc.str.append(ctx.get()); // store the rest
          } while (is_hex_(ctx.peek()));
+
          pc.str.append(ctx.get());    // store the h
          LOG_FMT(LGUY, "%s(%d): pc:%s\n", __func__, __LINE__, pc.text());
       }
@@ -875,6 +876,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
             {
                pc.str.append(ctx.get());  // store the 'x' and then the rest
             } while (is_hex_(ctx.peek()));
+
             break;
 
          case 'B':               // binary
@@ -882,6 +884,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
             {
                pc.str.append(ctx.get());  // store the 'b' and then the rest
             } while (is_bin_(ctx.peek()));
+
             break;
 
          case '0':               // octal or decimal
@@ -898,6 +901,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
             {
                pc.str.append(ctx.get());
             } while (is_oct_(ctx.peek()));
+
             break;
 
          default:

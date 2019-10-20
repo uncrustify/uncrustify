@@ -2071,6 +2071,7 @@ void indent_text(void)
             pc->column = pc->orig_col + move;
             pc         = chunk_get_next(pc);
          } while (pc != tmp);
+
          reindent_line(pc, indent_column);
       }
       else if (  chunk_is_token(pc, CT_PAREN_OPEN)

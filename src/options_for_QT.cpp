@@ -58,7 +58,8 @@ void temporary_iarf_option::restore()
 }
 
 //-----------------------------------------------------------------------------
-temporary_iarf_option for_qt_options[] = {
+temporary_iarf_option for_qt_options[] =
+{
    { &options::sp_inside_fparen           },
 // Issue #481
 // connect( timer,SIGNAL( timeout() ),this,SLOT( timeoutImage() ) );
