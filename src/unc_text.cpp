@@ -84,6 +84,7 @@ static int getLogTextUtf8Len(unc_text::value_type &c0, size_t start, size_t end)
                             + " - ch value too big, can't convert to utf8");
       }
    }
+
    return(c1_idx);
 } // getLogTextUTF8Len
 
@@ -281,6 +282,7 @@ void unc_text::update_logtext()
    {
       toLogTextUtf8(m_char, m_logtext);
    }
+
    m_logtext.push_back(0);
 }
 
@@ -349,6 +351,7 @@ bool unc_text::equals(const unc_text &ref) const
          return(false);
       }
    }
+
    return(true);
 }
 
@@ -399,7 +402,6 @@ void unc_text::set(const unc_text &ref, size_t idx, size_t len)
       m_chars[di] = ref.m_chars[idx];
    }
 
-
    update_logtext();
 }
 
@@ -414,7 +416,6 @@ void unc_text::set(const string &ascii_text)
       m_chars[idx] = ascii_text[idx];
    }
 
-
    update_logtext();
 }
 
@@ -428,7 +429,6 @@ void unc_text::set(const char *ascii_text)
    {
       m_chars[idx] = *ascii_text++;
    }
-
 
    update_logtext();
 }
@@ -445,7 +445,6 @@ void unc_text::set(const value_type &data, size_t idx, size_t len)
    {
       m_chars[di] = data[idx];
    }
-
 
    update_logtext();
 }
@@ -644,11 +643,13 @@ int unc_text::find(const char *search_txt, size_t start_idx) const
             break;
          }
       }
+
       if (match) // 'text' found at position 'idx'
       {
          return(idx);
       }
    }
+
    return(-1);  //  'text' not found
 }
 
@@ -682,11 +683,13 @@ int unc_text::rfind(const char *search_txt, size_t start_idx) const
             break;
          }
       }
+
       if (match)
       {
          return(idx);
       }
    }
+
    return(-1);
 }
 

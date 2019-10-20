@@ -1430,6 +1430,7 @@ static void do_source_file(const char *filename_in,
       {
          fputc(*i, pfout);
       }
+
       uncrustify_end();
    }
    else
@@ -2196,6 +2197,7 @@ static size_t language_flags_from_name(const char *name)
          return(language.lang);
       }
    }
+
    return(0);
 }
 
@@ -2219,6 +2221,7 @@ const char *language_name_from_flags(size_t lang)
          return(language_name.name);
       }
    }
+
    return("???");
 }
 
@@ -2351,6 +2354,7 @@ static size_t language_flags_from_filename(const char *filename)
          return(language_flags_from_name(extension_val.second.c_str()));
       }
    }
+
    for (auto &lanugage : language_exts)
    {
       if (ends_with(filename, lanugage.ext, false))
@@ -2358,6 +2362,7 @@ static size_t language_flags_from_filename(const char *filename)
          return(language_flags_from_name(lanugage.name));
       }
    }
+
    return(LANG_C);
 }
 

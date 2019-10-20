@@ -86,6 +86,7 @@ static bool is_ascii(const vector<UINT8> &data, size_t &non_ascii_cnt, size_t &z
          zero_cnt++;
       }
    }
+
    return((non_ascii_cnt + zero_cnt) == 0);
 }
 
@@ -97,6 +98,7 @@ static bool decode_bytes(const vector<UINT8> &in_data, deque<int> &out_data)
    {
       out_data[idx] = in_data[idx];
    }
+
    return(true);
 }
 

@@ -614,6 +614,7 @@ static void flag_asm(chunk_t *pc)
          }
       }
    }
+
    tmp = chunk_get_next_ncnl(end, scope_e::PREPROC);
    if (tmp == nullptr)
    {
@@ -1970,6 +1971,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             break;
          }
       }
+
       if (assign_found)
       {
          // it is a Type alias, alias template
@@ -3077,6 +3079,7 @@ static void fix_casts(chunk_t *start)
       make_type(pc);
       LOG_FMT(LCASTS, " %s", pc->text());
    }
+
    LOG_FMT(LCASTS, " )%s\n", detail);
 
    // Mark the next item as an expression start
@@ -3732,6 +3735,7 @@ static chunk_t *fix_var_def(chunk_t *start)
       chunk_flags_set(tmp_pc, PCF_VAR_TYPE);
       LOG_FMT(LFVD2, " '%s'[%s]", tmp_pc->text(), get_token_name(tmp_pc->type));
    }
+
    LOG_FMT(LFVD2, "\n");
 
    // OK we have two or more items, mark types up to the end.
@@ -5592,6 +5596,7 @@ static bool chunkstack_match(ChunkStack &cs, chunk_t *pc)
          return(true);
       }
    }
+
    return(false);
 }
 

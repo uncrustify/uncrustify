@@ -122,6 +122,7 @@ void logmask_from_string(const char *str, log_mask_t &mask)
             {
                logmask_set_sev(mask, static_cast<log_sev_t>(idx), true);
             }
+
             was_dash = false;
          }
 

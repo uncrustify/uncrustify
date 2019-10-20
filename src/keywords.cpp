@@ -472,6 +472,7 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag, int lang_flags
          return(iter);
       }
    }
+
    return(nullptr);
 }
 

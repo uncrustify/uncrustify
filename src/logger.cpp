@@ -291,6 +291,7 @@ void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, size_
          LOG_FMT(sev, "%s %s:%d", sep, g_fq[idx].name, g_fq[idx].line);
          sep = ",";
       }
+
       LOG_FMT(sev, "%s %s:%d", sep, g_fq[0].name, g_fq[0].line);
    }
 #else

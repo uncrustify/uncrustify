@@ -18,6 +18,7 @@ void ChunkStack::Set(const ChunkStack &cs)
       m_cse[idx].m_pc     = cs.m_cse[idx].m_pc;
       m_cse[idx].m_seqnum = cs.m_cse[idx].m_seqnum;
    }
+
    m_seqnum = cs.m_seqnum;
 }
 
@@ -113,5 +114,6 @@ void ChunkStack::Collapse()
          wr_idx++;
       }
    }
+
    m_cse.resize(wr_idx);
 }

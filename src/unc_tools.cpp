@@ -95,6 +95,7 @@ void prot_the_line(const char *func_name, int theLine, unsigned int actual_line,
          }
       }
    }
+
    LOG_FMT(LGUY, "\n");
 } // prot_the_line
 
@@ -126,6 +127,7 @@ void examine_Data(const char *func_name, int theLine, int what)
             LOG_FMT(LGUY, "%s, orig_col=%zu, orig_col_end=%zu\n", pc->text(), pc->orig_col, pc->orig_col_end);
          }
       }
+
       break;
 
    case 2:
@@ -144,6 +146,7 @@ void examine_Data(const char *func_name, int theLine, int what)
             }
          }
       }
+
       break;
 
    case 3:
@@ -159,6 +162,7 @@ void examine_Data(const char *func_name, int theLine, int what)
             LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->orig_line, pc->text(), get_token_name(pc->type), pc->orig_col, pc->column);
          }
       }
+
       break;
 
    case 4:
@@ -177,6 +181,7 @@ void examine_Data(const char *func_name, int theLine, int what)
             }
          }
       }
+
       break;
 
    default:
@@ -248,6 +253,7 @@ void dump_out(unsigned int type)
             fprintf(D_file, "  text %s\n", pc->text());
          }
       }
+
       fclose(D_file);
    }
 } // dump_out

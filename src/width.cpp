@@ -221,6 +221,7 @@ static size_t get_split_pri(c_token_t tok)
          return(token.pri);
       }
    }
+
    return(0);
 }
 

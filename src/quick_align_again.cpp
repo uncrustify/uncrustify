@@ -40,6 +40,7 @@ void quick_align_again(void)
             LOG_FMT(LALAGAIN, "%s(%d):    => tmp->text() is '%s', orig_line is %zu\n",
                     __func__, __LINE__, tmp->text(), tmp->orig_line);
          }
+
          LOG_FMT(LALAGAIN, "\n");
          as.End();
       }

@@ -68,6 +68,7 @@ void align_func_proto(size_t span)
          look_bro = false;
       }
    }
+
    as.End();
    as_br.End();
 } // align_func_proto

@@ -677,6 +677,7 @@ bool chunk_is_newline_between(chunk_t *start, chunk_t *end)
          return(true);
       }
    }
+
    return(false);
 }
 

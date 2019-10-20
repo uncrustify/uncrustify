@@ -141,6 +141,7 @@ const char *Args::Unused(size_t &index)
          return(m_values[idx]);
       }
    }
+
    index = m_count;
    return(nullptr);
 }

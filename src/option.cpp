@@ -207,6 +207,7 @@ std::vector<std::string> split_args(std::string in, const char *filename,
                return{};
             }
          }
+
          out.push_back(in.substr(start, n - start));
          if (++n < k && !is_sep(in[n]))
          {
@@ -233,6 +234,7 @@ std::vector<std::string> split_args(std::string in, const char *filename,
             return{};
          }
       }
+
       out.push_back(in.substr(start, n - start));
    }
 
@@ -883,6 +885,7 @@ void process_option_line(const std::string &config_line, const char *filename,
             LOG_FMT(LNOTE, " '%s'", args[i].c_str());
             add_keyword(args[i], token);
          }
+
          LOG_FMT(LNOTE, "\n");
       }
       else

@@ -477,6 +477,7 @@ void AlignStack::Flush()
             m_skipped.Zap(idx);
          }
       }
+
       m_skipped.Collapse();
 
       ReAddSkipped(); // Add all items from the skipped list

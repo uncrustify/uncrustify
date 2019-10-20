@@ -220,6 +220,7 @@ static void do_the_sort(chunk_t **chunks, size_t num_chunks)
    {
       LOG_FMT(LSORT, " [%s]", chunks[idx]->text());
    }
+
    LOG_FMT(LSORT, "\n");
 
    size_t start_idx;
