@@ -94,9 +94,9 @@ std::unordered_map<std::string, GenericOption *> option_map;
 
 
 //-----------------------------------------------------------------------------
-constexpr int option_level(int major, int minor)
+constexpr int option_level(int major, int minor, int patch = 0)
 {
-   return((major << 16) | (minor << 0));
+   return((major << 20) | (minor << 10) | (patch << 0));
 }
 
 
@@ -820,11 +820,9 @@ size_t get_option_count()
 
 
 //-----------------------------------------------------------------------------
-void process_option_line(const std::string &config_line, const char *filename)
+void process_option_line(const std::string &config_line, const char *filename,
+                         int &compat_level)
 {
-   // Compatibility level; by default, we are compatible with everything
-   static auto compat_level = 0;
-
    // Split line into arguments, and punt if no arguments are present
    auto args = split_args(config_line, filename, is_arg_sep);
 
@@ -910,12 +908,12 @@ void process_option_line(const std::string &config_line, const char *filename)
          unc_text ut = std::string{ filename };
          ut.resize(static_cast<unsigned>(path_dirname_len(filename)));
          ut.append(include_path);
-         UNUSED(load_option_file(ut.c_str()));
+         UNUSED(load_option_file(ut.c_str(), compat_level));
       }
       else
       {
          // include is an absolute path
-         UNUSED(load_option_file(include_path.c_str()));
+         UNUSED(load_option_file(include_path.c_str(), compat_level));
       }
 
       cpd.line_number = this_line_number;
@@ -943,14 +941,22 @@ void process_option_line(const std::string &config_line, const char *filename)
    else if (cmd == "using")
    {
       auto vargs = split_args(args[1], filename, is_varg_sep);
-      if (vargs.size() != 2)
+      if (vargs.size() == 2)
+      {
+         compat_level = option_level(std::stoi(vargs[0]), std::stoi(vargs[1]));
+      }
+      else if (vargs.size() == 3)
+      {
+         compat_level = option_level(std::stoi(vargs[0]),
+                                     std::stoi(vargs[1]),
+                                     std::stoi(vargs[2]));
+      }
+      else
       {
          OptionWarning w{ filename };
-         w("%s requires a version number in the form MAJOR.MINOR", cmd.c_str());
-         return;
+         w("%s requires a version number in the form MAJOR.MINOR[.PATCH]",
+           cmd.c_str());
       }
-
-      compat_level = option_level(std::stoi(vargs[0]), std::stoi(vargs[1]));
    }
    else
    {
@@ -978,7 +984,7 @@ void process_option_line(const std::string &config_line, const char *filename)
 
 
 //-----------------------------------------------------------------------------
-bool load_option_file(const char *filename)
+bool load_option_file(const char *filename, int compat_level)
 {
    cpd.line_number = 0;
 
@@ -1005,7 +1011,7 @@ bool load_option_file(const char *filename)
    while (std::getline(in, line))
    {
       ++cpd.line_number;
-      process_option_line(line, filename);
+      process_option_line(line, filename, compat_level);
    }
    return(true);
 }
