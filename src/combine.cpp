@@ -3810,11 +3810,11 @@ static chunk_t *mark_variable_definition(chunk_t *start)
 
          LOG_FMT(LVARDEF,
                  "%s(%d): orig_line is %zu, marked text() '%s'[%s] "
-                 "in orig_col %zu, flags: %#llx -> %#llx\n",
+                 "in orig_col %zu, flags: %s -> %s\n",
                  __func__, __LINE__, pc->orig_line, pc->text(),
                  get_token_name(pc->type), pc->orig_col,
-                 static_cast<pcf_flags_t::int_t>(orig_flags),
-                 static_cast<pcf_flags_t::int_t>(pc->flags));
+                 pcf_flags_str(orig_flags).c_str(),
+                 pcf_flags_str(pc->flags).c_str());
       }
       else if (chunk_is_star(pc) || chunk_is_msref(pc))
       {

@@ -2362,6 +2362,37 @@ static size_t language_flags_from_filename(const char *filename)
 }
 
 
+std::string pcf_flags_str(pcf_flags_t flags)
+{
+   char buffer[64];
+
+   // Generate hex representation first
+   snprintf(buffer, 63, "[0x%llx:", static_cast<pcf_flags_t::int_t>(flags));
+
+   // Add human-readable names
+   auto out   = std::string{ buffer };
+   auto first = true;
+   for (size_t i = 0; i < ARRAY_SIZE(pcf_names); ++i)
+   {
+      if (flags & static_cast<pcf_flag_e>(pcf_bit(i)))
+      {
+         if (first)
+         {
+            first = false;
+         }
+         else
+         {
+            out += ',';
+         }
+         out += pcf_names[i];
+      }
+   }
+
+   out += ']';
+   return(out);
+}
+
+
 void log_pcf_flags(log_sev_t sev, pcf_flags_t flags)
 {
    if (!log_sev_on(sev))
@@ -2369,26 +2400,5 @@ void log_pcf_flags(log_sev_t sev, pcf_flags_t flags)
       return;
    }
 
-   log_fmt(sev, "[0x%llx:", static_cast<pcf_flags_t::int_t>(flags));
-
-   const char *tolog = nullptr;
-   for (size_t i = 0; i < ARRAY_SIZE(pcf_names); i++)
-   {
-      if (flags & static_cast<pcf_flag_e>(pcf_bit(i)))
-      {
-         if (tolog != nullptr)
-         {
-            log_str(sev, tolog, strlen(tolog));
-            log_str(sev, ",", 1);
-         }
-         tolog = pcf_names[i];
-      }
-   }
-
-   if (tolog != nullptr)
-   {
-      log_str(sev, tolog, strlen(tolog));
-   }
-
-   log_str(sev, "]\n", 2);
+   log_fmt(sev, "%s\n", pcf_flags_str(flags).c_str());
 }

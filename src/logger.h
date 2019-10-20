@@ -75,28 +75,6 @@ void log_get_mask(log_mask_t &mask);
 
 
 /**
- * Logs a string of known length
- *
- * @param sev  The severity
- * @param str  The pointer to the string
- * @param len  The length of the string from strlen(str)
- *
- * TODO call strlen internally instead of providing len
- */
-void log_str(log_sev_t sev, const char *str, size_t len);
-
-
-#define LOG_STR(sev, str, len)                           \
-   do { if (log_sev_on(sev)) { log_str(sev, str, len); } \
-   } while (0)
-
-
-#define LOG_STRING(sev, str)                                     \
-   do { if (log_sev_on(sev)) { log_str(sev, str, strlen(str)); } \
-   } while (0)
-
-
-/**
  * Logs a formatted string -- similar to printf()
  *
  * @param sev  The severity
@@ -135,58 +113,6 @@ void log_flush(bool force_nl);
 #else
 #define D_LOG_FMT(sev, ...)    ((void)0) //forces semicolon after macro
 #endif
-
-
-/**
- * Dumps hex characters inline, no newlines inserted
- *
- * @param sev     The severity
- * @param data    The data to log
- * @param len     The number of bytes to log
- */
-void log_hex(log_sev_t sev, const void *vdata, size_t len);
-
-
-#define LOG_HEX(sev, ptr, len)                           \
-   do { if (log_sev_on(sev)) { log_hex(sev, ptr, len); } \
-   } while (0)
-
-
-/**
- * Logs a block of data in a pretty hex format
- * Numbers on the left, characters on the right, just like I like it.
- *
- * "nnn | XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX | ................"
- *  0     ^6                                            54^ ^56           72^
- *
- *  nnn is the line number or index/16
- *
- * @param sev   The severity
- * @param data  The data to log
- * @param len   The number of bytes to log
- */
-void log_hex_blk(log_sev_t sev, const void *data, size_t len);
-
-
-#define LOG_HEX_BLK(sev, ptr, len)                           \
-   do { if (log_sev_on(sev)) { log_hex_blk(sev, ptr, len); } \
-   } while (0)
-
-
-/**
- * Returns the HEX digit for a low nibble in a number
- *
- * @param nibble  The nibble
- *
- * @return '0', '1', '2', '3', '4', '5', '6', '7','8', '9',
- *         'a', 'b', 'c', 'd', 'e', or 'f'
- */
-static inline char to_hex_char(int nibble)
-{
-   const char *hex_string = "0123456789abcdef";
-
-   return(hex_string[nibble & 0x0F]);
-}
 
 
 #ifdef DEBUG

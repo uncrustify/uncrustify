@@ -587,8 +587,9 @@ static void newline_min_after(chunk_t *ref, size_t count, pcf_flag_e flag)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LNEWLINE, "%s(%d): '%s' line %zu - count=%zu flg=0x%llx:",
-           __func__, __LINE__, ref->text(), ref->orig_line, count, flag);
+   LOG_FMT(LNEWLINE, "%s(%d): '%s' line %zu - count=%zu flg=%s:",
+           __func__, __LINE__, ref->text(), ref->orig_line, count,
+           pcf_flags_str(flag).c_str());
    log_func_stack_inline(LNEWLINE);
 
    chunk_t *pc = ref;
@@ -2823,9 +2824,9 @@ static void newline_oc_msg(chunk_t *start)
 static bool one_liner_nl_ok(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LNL1LINE, "%s(%d): check type is %s, parent is %s, flag is %llx, orig_line is %zu, orig_col is %zu\n",
+   LOG_FMT(LNL1LINE, "%s(%d): check type is %s, parent is %s, flag is %s, orig_line is %zu, orig_col is %zu\n",
            __func__, __LINE__, get_token_name(pc->type), get_token_name(pc->parent_type),
-           static_cast<pcf_flags_t::int_t>(pc->flags), pc->orig_line, pc->orig_col);
+           pcf_flags_str(pc->flags).c_str(), pc->orig_line, pc->orig_col);
 
 
    if (!pc->flags.test(PCF_ONE_LINER))
