@@ -4888,7 +4888,7 @@ void do_blank_lines(void)
             else if (options::nl_after_func_body() > 0)
             {
                // Issue #1734
-               if (!(pc->prev->flags & PCF_IN_TRY_BLOCK))
+               if (!(pc->prev->flags.test(PCF_IN_TRY_BLOCK)))
                {
                   if (options::nl_after_func_body() != pc->nl_count)
                   {
