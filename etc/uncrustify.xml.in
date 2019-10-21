@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE language SYSTEM "language.dtd">
-<language name="Uncrustify Configuration" section="Configuration" extensions="uncrustify.cfg;uncrustify.conf;.uncrustify.cfg;.uncrustify.conf" mimetype="" version="0.68" kateversion="2.0" author="Matthew Woehlke (mwoehlke.floss@gmail.com)" license="LGPL">
+<language name="Uncrustify Configuration" section="Configuration" extensions="uncrustify.cfg;uncrustify.conf;.uncrustify.cfg;.uncrustify.conf" mimetype="" version="0.69.0" kateversion="2.0" author="Matthew Woehlke (mwoehlke.floss@gmail.com)" license="LGPL">
 
   <highlighting>
     <list name="options">
@@ -19,6 +19,7 @@
       <item>macro-else</item>
       <item>macro-open</item>
       <item>type</item>
+      <item>using</item>
     </list>
 
     <contexts>
@@ -26,7 +27,6 @@
         <WordDetect context="SetDirective" attribute="Directive" String="set" />
         <keyword context="Values" attribute="Directive" String="directives" />
         <keyword context="Values" attribute="Option" String="options" />
-        <keyword context="Values" attribute="Token" String="tokens" />
         <DetectChar context="Comment" attribute="Comment" char="#" />
       </context>
 
