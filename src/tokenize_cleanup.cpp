@@ -146,18 +146,39 @@ void tokenize_trailing_return_types(void)
 {
    // Issue #2330
    // auto max(int a, int b)->int;
+   // Issue #2460
+   // auto f2() noexcept -> bool;
+   // auto f3() const noexcept -> bool;
    chunk_t *pc;
 
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
+      LOG_FMT(LNOTE, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
       if (  chunk_is_token(pc, CT_MEMBER)
          && (strcmp(pc->text(), "->") == 0))
       {
          chunk_t *tmp = chunk_get_prev_ncnl(pc);
+         chunk_t *tmp_2;
          if (chunk_is_token(tmp, CT_QUALIFIER))
          {
             // auto max(int a, int b) const->int;
             tmp = chunk_get_prev_ncnl(tmp);
+         }
+         else if (chunk_is_token(tmp, CT_NOEXCEPT))
+         {
+            // noexcept is present
+            // auto f2() noexcept -> bool;
+            tmp_2 = chunk_get_prev_ncnl(tmp);
+            if (chunk_is_token(tmp_2, CT_QUALIFIER))
+            {
+               // auto f3() const noexcept -> bool;
+               tmp = chunk_get_prev_ncnl(tmp_2);
+            }
+            else
+            {
+               tmp = tmp_2;
+            }
          }
          if (  chunk_is_token(tmp, CT_FPAREN_CLOSE)
             && tmp->parent_type == CT_FUNC_PROTO)
@@ -168,7 +189,7 @@ void tokenize_trailing_return_types(void)
          }
       }
    }
-}
+} // tokenize_trailing_return_types
 
 
 void tokenize_cleanup(void)
