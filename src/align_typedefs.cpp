@@ -52,7 +52,6 @@ void align_typedefs(size_t span)
             c_typedef = pc;
          }
       }
-
       pc = chunk_get_next(pc);
    }
 

@@ -351,7 +351,6 @@ static chunk_t *chunk_ppa_search(chunk_t *cur, const check_t check_fct, const bo
       return(chunk_search(cur, check_fct, scope_e::ALL,
                           direction_e::FORWARD, cond));
    }
-
    chunk_t *pc = cur;
 
    while (pc != nullptr && (pc = pc->next) != nullptr)
@@ -394,10 +393,12 @@ chunk_t *chunk_get_next(chunk_t *cur, scope_e scope)
       return(nullptr);
    }
    chunk_t *pc = g_cl.GetNext(cur);
+
    if (pc == nullptr || scope == scope_e::ALL)
    {
       return(pc);
    }
+
    if (cur->flags.test(PCF_IN_PREPROC))
    {
       // If in a preproc, return nullptr if trying to leave
@@ -423,10 +424,12 @@ chunk_t *chunk_get_prev(chunk_t *cur, scope_e scope)
       return(nullptr);
    }
    chunk_t *pc = g_cl.GetPrev(cur);
+
    if (pc == nullptr || scope == scope_e::ALL)
    {
       return(pc);
    }
+
    if (cur->flags.test(PCF_IN_PREPROC))
    {
       // If in a preproc, return NULL if trying to leave
@@ -457,7 +460,6 @@ chunk_t *chunk_dup(const chunk_t *pc_in)
       log_flush(true);
       exit(EXIT_FAILURE);
    }
-
    // Copy all fields and then init the entry
    *pc = *pc_in; // TODO: what happens if pc_in == nullptr?
    g_cl.InitEntry(pc);
@@ -470,6 +472,7 @@ static void chunk_log_msg(chunk_t *chunk, const log_sev_t log, const char *str)
 {
    LOG_FMT(log, "%s orig_line is %zu, orig_col is %zu, ",
            str, chunk->orig_line, chunk->orig_col);
+
    if (chunk_is_token(chunk, CT_NEWLINE))
    {
       LOG_FMT(log, "<Newline>,");
@@ -711,14 +714,13 @@ bool chunk_is_last_on_line(chunk_t &pc)  //TODO: pc should be const here
    {
       return(true);
    }
-
    // if the next chunk is a newline then pc is the last chunk on its line
    const auto *next = chunk_get_next(&pc);
+
    if (chunk_is_token(next, CT_NEWLINE))
    {
       return(true);
    }
-
    return(false);
 }
 
@@ -736,7 +738,6 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
    {
       return;
    }
-
    /*
     * Example start:
     * ? - start1 - a1 - b1 - nl1 - ? - ref2 - start2 - a2 - b2 - nl2 - ?
@@ -764,6 +765,7 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
    {
       chunk_t *tmp = chunk_get_next(pc1);
       g_cl.Pop(pc1);
+
       if (ref2 != nullptr)
       {
          g_cl.AddAfter(pc1, ref2);
@@ -828,6 +830,7 @@ void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bit
    {
       LOG_FUNC_ENTRY();
       auto const nflags = (pc->flags & ~clr_bits) | set_bits;
+
       if (pc->flags != nflags)
       {
          LOG_FMT(LSETFLG,
@@ -878,6 +881,7 @@ void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what)
    {
       LOG_FMT(what, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() ",
               __func__, __LINE__, pc->orig_line, pc->orig_col);
+
       if (*type == CT_NEWLINE)
       {
          LOG_FMT(what, "<Newline>\n");
@@ -917,6 +921,7 @@ static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const direction_e 
       log_flush(true);
       exit(EX_SOFTWARE);
    }
+
    if (pc_in->orig_col == 0)
    {
       fprintf(stderr, "%s(%d): no column number\n", __func__, __LINE__);
@@ -976,11 +981,11 @@ chunk_t *chunk_get_prev_ssq(chunk_t *cur)
 static chunk_t *chunk_skip_dc_member(chunk_t *start, scope_e scope, direction_e dir)
 {
    LOG_FUNC_ENTRY();
+
    if (start == nullptr)
    {
       return(nullptr);
    }
-
    const auto step_fcn = (dir == direction_e::FORWARD)
                          ? chunk_get_next_ncnl : chunk_get_prev_ncnl;
 
@@ -989,6 +994,7 @@ static chunk_t *chunk_skip_dc_member(chunk_t *start, scope_e scope, direction_e 
    while (chunk_is_token(next, CT_DC_MEMBER))
    {
       pc = step_fcn(next, scope);
+
       if (pc == nullptr)
       {
          return(nullptr);

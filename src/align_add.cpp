@@ -17,6 +17,7 @@ void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col)
 
    size_t  min_col;
    chunk_t *prev = chunk_get_prev(pc);
+
    if (prev == nullptr || chunk_is_newline(prev))
    {
       min_col = 1;
@@ -42,8 +43,8 @@ void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col)
    {
       max_col = 0;
    }
-
    cs.Push_Back(pc);
+
    if (min_col > max_col)
    {
       max_col = min_col;

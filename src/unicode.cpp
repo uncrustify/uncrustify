@@ -81,6 +81,7 @@ static bool is_ascii(const vector<UINT8> &data, size_t &non_ascii_cnt, size_t &z
       {
          non_ascii_cnt++;
       }
+
       if (!value)
       {
          zero_cnt++;
@@ -174,10 +175,10 @@ static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
          idx = 3;  // skip it
       }
    }
-
    while (idx < in_data.size())
    {
       int ch = in_data[idx++];
+
       if (ch < 0x80)                   // 1-byte sequence
       {
          out_data.push_back(ch);
@@ -213,10 +214,10 @@ static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
          // invalid UTF-8 sequence
          return(false);
       }
-
       while (cnt-- > 0 && idx < in_data.size())
       {
          int tmp = in_data[idx++];
+
          if ((tmp & 0xC0) != 0x80)
          {
             // invalid UTF-8 sequence
@@ -224,6 +225,7 @@ static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
          }
          ch = (ch << 6) | (tmp & 0x3f);
       }
+
       if (cnt >= 0)
       {
          // short UTF-8 sequence
@@ -271,8 +273,8 @@ static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, cha
       // we require the BOM or at least 1 char
       return(false);
    }
-
    size_t idx = 2;
+
    if ((in_data[0] == 0xfe) && (in_data[1] == 0xff))
    {
       enc = char_encoding_e::e_UTF16_BE;
@@ -289,6 +291,7 @@ static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, cha
        */
       enc = char_encoding_e::e_ASCII;
       idx = 0;
+
       if (in_data.size() >= 6)
       {
          if (  (in_data[0] == 0)
@@ -304,22 +307,24 @@ static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, cha
             enc = char_encoding_e::e_UTF16_LE;
          }
       }
+
       if (enc == char_encoding_e::e_ASCII)
       {
          return(false);
       }
    }
-
    bool be = (enc == char_encoding_e::e_UTF16_BE);
 
    while (idx < in_data.size())
    {
       int ch = get_word(in_data, idx, be);
+
       if ((ch & 0xfc00) == 0xd800)
       {
          ch  &= 0x3ff;
          ch <<= 10;
          int tmp = get_word(in_data, idx, be);
+
          if ((tmp & 0xfc00) != 0xdc00)
          {
             return(false);
@@ -346,6 +351,7 @@ static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, cha
 static bool decode_bom(const vector<UINT8> &in_data, char_encoding_e &enc)
 {
    enc = char_encoding_e::e_ASCII;
+
    if (in_data.size() >= 2)
    {
       if ((in_data[0] == 0xfe) && (in_data[1] == 0xff))
@@ -379,11 +385,11 @@ bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, char_enc
    if (decode_bom(in_data, enc))
    {
       has_bom = true;
+
       if (enc == char_encoding_e::e_UTF8)
       {
          return(decode_utf8(in_data, out_data));
       }
-
       return(decode_utf16(in_data, out_data, enc));
    }
    has_bom = false;
@@ -391,6 +397,7 @@ bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, char_enc
    // Check for simple ASCII
    size_t non_ascii_cnt;
    size_t zero_cnt;
+
    if (is_ascii(in_data, non_ascii_cnt, zero_cnt))
    {
       enc = char_encoding_e::e_ASCII;
@@ -413,7 +420,6 @@ bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, char_enc
       enc = char_encoding_e::e_UTF8;
       return(true);
    }
-
    // it is an unrecognized byte sequence
    enc = char_encoding_e::e_BYTE;
    return(decode_bytes(in_data, out_data));
@@ -428,6 +434,7 @@ static void write_byte(int ch)
       {
          fputc(ch, cpd.fout);
       }
+
       if (cpd.bout)
       {
          cpd.bout->push_back(static_cast<UINT8>(ch));
@@ -476,6 +483,7 @@ static void write_utf16(int ch, bool be)
       int v1 = ch - 0x10000;
       int w1 = 0xD800 + (v1 >> 10);
       int w2 = 0xDC00 + (v1 & 0x3ff);
+
       if (be)
       {
          write_byte(w1 >> 8);

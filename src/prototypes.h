@@ -30,11 +30,13 @@ static inline size_t calc_next_tab_column(size_t col, size_t tabsize)
    {
       col = 1;
    }
+
    if (cpd.frag_cols > 0)
    {
       col += cpd.frag_cols - 1;
    }
    col = 1 + ((((col - 1) / tabsize) + 1) * tabsize);
+
    if (cpd.frag_cols > 0)
    {
       col -= cpd.frag_cols - 1;

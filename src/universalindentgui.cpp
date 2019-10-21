@@ -68,6 +68,7 @@ void print_universal_indent_cfg(FILE *pfile)
       for (auto *const option : p_grp->options)
       {
          UNUSED(option);
+
          if (!firstOptionNumberSet)
          {
             allGroups[idx]       = optionNumber;
@@ -218,13 +219,12 @@ void print_universal_indent_cfg(FILE *pfile)
          }
 
          const auto ds = option->defaultStr();
+
          if (!ds.empty())
          {
             fprintf(pfile, "<br/><br/>Default: %s", ds.c_str());
          }
-
          fprintf(pfile, "</html>\"\n");
-
 
          // Handle some options independent of their type and most by their type.
          if (option == &uncrustify::options::indent_with_tabs)
