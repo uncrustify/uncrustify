@@ -31,5 +31,6 @@ void align_oc_msg_spec(size_t span)
          as.Add(pc);
       }
    }
+
    as.End();
 } // void align_oc_msg_spec

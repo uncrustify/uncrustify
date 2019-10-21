@@ -61,6 +61,7 @@ static void fl_log(log_sev_t logsev, const ParseFrame &frm)
       LOG_FMT(logsev, " [%s-%u]", get_token_name(frm.at(idx).type),
               static_cast<unsigned int>(frm.at(idx).stage));
    }
+
    LOG_FMT(logsev, "\n");
 }
 
@@ -89,6 +90,7 @@ static void fl_log_all(log_sev_t logsev)
 
       fl_log(logsev, cpd.frames.at(idx));
    }
+
    LOG_FMT(logsev, "##=-\n");
 }
 

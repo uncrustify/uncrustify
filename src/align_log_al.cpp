@@ -23,6 +23,7 @@ void align_log_al(log_sev_t sev, size_t line)
                  idx, cpd.al[idx].col, idx, cpd.al[idx].len,
                  get_token_name(cpd.al[idx].type));
       }
+
       log_fmt(sev, "\n");
    }
 } // align_log_al

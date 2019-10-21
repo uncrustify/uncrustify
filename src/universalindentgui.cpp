@@ -75,8 +75,10 @@ void print_universal_indent_cfg(FILE *pfile)
          }
          optionNumber++;
       } // for (auto *const option : p_grp->options)
+
       firstOptionNumberSet = false;
    } // end of first run
+
 //#else
 //   UNUSED(allGroups);
 #endif // DEBUG
@@ -107,8 +109,10 @@ void print_universal_indent_cfg(FILE *pfile)
       {
          fputc(*dc, pfile);
       }
+
       idx++;
    }
+
    fprintf(pfile, "\n");
 
    fprintf(pfile,

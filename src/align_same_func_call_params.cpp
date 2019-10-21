@@ -53,6 +53,7 @@ void align_same_func_call_params(void)
             {
                as_v.NewLines(pc->nl_count);
             }
+
             fcn_as.NewLines(pc->nl_count);
          }
          else
@@ -68,6 +69,7 @@ void align_same_func_call_params(void)
                {
                   as_v.Flush();
                }
+
                align_root = nullptr;
             }
          }
@@ -136,6 +138,7 @@ void align_same_func_call_params(void)
             {
                as_v.Flush();
             }
+
             align_root = nullptr;
          }
       }
@@ -177,6 +180,7 @@ void align_same_func_call_params(void)
             }
             as[idx].Add(chunks[idx]);
          }
+
          LOG_FMT(LASFCP, "\n");
       }
    }

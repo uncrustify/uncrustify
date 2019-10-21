@@ -464,6 +464,7 @@ void output_parsed(FILE *pfile)
          {
             fprintf(pfile, " ");
          }
+
          if (pc->type != CT_NL_CONT)
          {
             fprintf(pfile, "%s", pc->text());
@@ -474,6 +475,7 @@ void output_parsed(FILE *pfile)
          }
       }
    }
+
    fprintf(pfile, "%s# -=====-%s", eol_marker, eol_marker);
    fflush(pfile);
 } // output_parsed
@@ -501,6 +503,7 @@ void output_text(FILE *pfile)
          pc->column        += indent;
          pc->column_indent += indent;
       }
+
       cpd.frag_cols = 0;
    }
 
@@ -521,6 +524,7 @@ void output_text(FILE *pfile)
             }
             add_char('\n');
          }
+
          cpd.did_newline = 1;
          cpd.column      = 1;
          LOG_FMT(LOUTIND, " xx\n");
@@ -2211,6 +2215,7 @@ static void generate_if_conditional_as_text(unc_text &dst, chunk_t *ifdef)
             dst += ' ';
             column++;
          }
+
          dst.append(pc->str);
          column += pc->len();
       }

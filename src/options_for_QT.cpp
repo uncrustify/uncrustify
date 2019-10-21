@@ -95,6 +95,7 @@ void save_set_options_for_QT(size_t level)
    {
       opt.save_and_override();
    }
+
    QT_SIGNAL_SLOT_found = true;
 }
 
@@ -111,6 +112,7 @@ void restore_options_for_QT(void)
    {
       opt.restore();
    }
+
    QT_SIGNAL_SLOT_found = false;
    restoreValues        = false;
 }

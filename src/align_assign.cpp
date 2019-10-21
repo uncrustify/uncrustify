@@ -115,6 +115,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
             {
                fcn.NewLines(sub_nl_count);
             }
+
             fcnProto.NewLines(sub_nl_count);
             if (p_nl_count != nullptr)
             {
@@ -141,6 +142,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          {
             fcn.NewLines(pc->nl_count);
          }
+
          fcnProto.NewLines(pc->nl_count);
 
          if (p_nl_count != nullptr)
@@ -254,6 +256,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    {
       fcn.End();
    }
+
    fcnProto.End();
 
    if (pc != nullptr)

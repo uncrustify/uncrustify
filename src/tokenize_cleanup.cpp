@@ -1017,6 +1017,7 @@ static void check_template(chunk_t *start)
             }
          }
       }
+
       end = pc;
    }
    else
@@ -1159,6 +1160,7 @@ static void check_template(chunk_t *start)
             }
          }
       }
+
       end = pc;
    }
 

@@ -3577,6 +3577,7 @@ void newlines_cleanup_braces(bool first)
                   log_pcf_flags(LNEWLINE, temp->flags);
                   chunk_flags_clr(temp, PCF_ONE_LINER);
                }
+
                // split
                newline_add_between(pc, pc->next);
             }
@@ -3876,6 +3877,7 @@ void newlines_cleanup_braces(bool first)
          // ignore it
       }
    }
+
    newline_def_blk(chunk_get_head(), false);
 } // newlines_cleanup_braces
 
@@ -4973,6 +4975,7 @@ void do_blank_lines(void)
                      break;
                   }
                }
+
                if (!is_var_def)
                {
                   blank_line_set(pc, options::nl_after_struct);

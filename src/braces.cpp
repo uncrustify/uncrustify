@@ -1166,6 +1166,7 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
          return(next);
       }
    }
+
    LOG_FMT(LMCB, "%s(%d):  - removing braces on lines %zu and %zu\n",
            __func__, __LINE__, br_open->orig_line, br_close->orig_line);
 
@@ -1190,6 +1191,7 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
       }
       tmp_pc->level--;
    }
+
    next = chunk_get_prev(br_open, scope_e::PREPROC);
 
    chunk_del(br_open);
@@ -1403,6 +1405,7 @@ static void process_if_chain(chunk_t *br_start)
                     __func__, __LINE__, brace->orig_line);
          }
       }
+
       LOG_FMT(LBRCH, "\n");
    }
    else if (options::mod_full_brace_if_chain())
