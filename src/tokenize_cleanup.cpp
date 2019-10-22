@@ -145,10 +145,26 @@ void split_off_angle_close(chunk_t *pc)
 void tokenize_trailing_return_types(void)
 {
    // Issue #2330
-   // auto max(int a, int b)->int;
+   // auto max(int a, int b) -> int;
    // Issue #2460
-   // auto f2() noexcept -> bool;
-   // auto f3() const noexcept -> bool;
+   // auto f01() -> bool;
+   // auto f02() noexcept -> bool;
+   // auto f03() noexcept(true) -> bool;
+   // auto f04() noexcept(false) -> bool;
+   // auto f05() noexcept -> bool = delete;
+   // auto f06() noexcept(true) -> bool = delete;
+   // auto f07() noexcept(false) -> bool = delete;
+   // auto f11() const -> bool;
+   // auto f12() const noexcept -> bool;
+   // auto f13() const noexcept(true) -> bool;
+   // auto f14() const noexcept(false) -> bool;
+   // auto f15() const noexcept -> bool = delete;
+   // auto f16() const noexcept(true) -> bool = delete;
+   // auto f17() const noexcept(false) -> bool = delete;
+   // auto f21() throw() -> bool;
+   // auto f22() throw() -> bool = delete;
+   // auto f23() const throw() -> bool;
+   // auto f24() const throw() -> bool = delete;
    chunk_t *pc;
 
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
@@ -160,25 +176,80 @@ void tokenize_trailing_return_types(void)
       {
          chunk_t *tmp = chunk_get_prev_ncnl(pc);
          chunk_t *tmp_2;
+         chunk_t *open_paren;
          if (chunk_is_token(tmp, CT_QUALIFIER))
          {
-            // auto max(int a, int b) const->int;
+            // auto max(int a, int b) const -> int;
+            // auto f11() const -> bool;
             tmp = chunk_get_prev_ncnl(tmp);
          }
          else if (chunk_is_token(tmp, CT_NOEXCEPT))
          {
             // noexcept is present
-            // auto f2() noexcept -> bool;
             tmp_2 = chunk_get_prev_ncnl(tmp);
             if (chunk_is_token(tmp_2, CT_QUALIFIER))
             {
-               // auto f3() const noexcept -> bool;
+               // auto f12() const noexcept -> bool;
+               // auto f15() const noexcept -> bool = delete;
                tmp = chunk_get_prev_ncnl(tmp_2);
             }
             else
             {
+               // auto f02() noexcept -> bool;
+               // auto f05() noexcept -> bool = delete;
                tmp = tmp_2;
             }
+         }
+         else if (chunk_is_token(tmp, CT_PAREN_CLOSE))
+         {
+            open_paren = chunk_get_prev_type(tmp, CT_PAREN_OPEN, tmp->level);
+            tmp        = chunk_get_prev_ncnl(open_paren);
+            if (chunk_is_token(tmp, CT_NOEXCEPT))
+            {
+               // noexcept is present
+               tmp_2 = chunk_get_prev_ncnl(tmp);
+               if (chunk_is_token(tmp_2, CT_QUALIFIER))
+               {
+                  // auto f13() const noexcept(true) -> bool;
+                  // auto f14() const noexcept(false) -> bool;
+                  // auto f16() const noexcept(true) -> bool = delete;
+                  // auto f17() const noexcept(false) -> bool = delete;
+                  tmp = chunk_get_prev_ncnl(tmp_2);
+               }
+               else
+               {
+                  // auto f03() noexcept(true) -> bool;
+                  // auto f04() noexcept(false) -> bool;
+                  // auto f06() noexcept(true) -> bool = delete;
+                  // auto f07() noexcept(false) -> bool = delete;
+                  tmp = tmp_2;
+               }
+            }
+            else if (chunk_is_token(tmp, CT_THROW))
+            {
+               // throw is present
+               tmp_2 = chunk_get_prev_ncnl(tmp);
+               if (chunk_is_token(tmp_2, CT_QUALIFIER))
+               {
+                  // auto f23() const throw() -> bool;
+                  // auto f24() const throw() -> bool = delete;
+                  tmp = chunk_get_prev_ncnl(tmp_2);
+               }
+               else
+               {
+                  // auto f21() throw() -> bool;
+                  // auto f22() throw() -> bool = delete;
+                  tmp = tmp_2;
+               }
+            }
+            else
+            {
+               LOG_FMT(LNOTE, "%s(%d): NOT COVERED\n", __func__, __LINE__);
+            }
+         }
+         else
+         {
+            LOG_FMT(LNOTE, "%s(%d): NOT COVERED\n", __func__, __LINE__);
          }
          if (  chunk_is_token(tmp, CT_FPAREN_CLOSE)
             && tmp->parent_type == CT_FUNC_PROTO)
