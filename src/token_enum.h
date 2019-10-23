@@ -252,7 +252,7 @@ enum c_token_t
    CT_TYPE_WRAP,        // macro that wraps a type name
    CT_CPP_LAMBDA,       // parent for '[=](...){...}'
    CT_CPP_LAMBDA_RET,   // '->' in '[=](...) -> type {...}'
-   CT_TRAILING_RET_T,   // '->' in 'auto fname(...) -> type;'
+   CT_TRAILING_RET,     // '->' in 'auto fname(...) -> type;'
                         // '->' in 'auto fname(...) const -> type;'
    CT_BIT_COLON,        // a ':' in a variable declaration
 

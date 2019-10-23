@@ -83,7 +83,7 @@ void g1a()
 
 void g1b()
 {
-   std::for_each(a, b, [] (int& b) -> foo
+   std::for_each(a, b, [] (int& b)->foo
    {
       b += 3;
       return(b);
