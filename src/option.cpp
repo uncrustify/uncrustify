@@ -200,6 +200,7 @@ std::vector<std::string> split_args(std::string in, const char *filename,
                in.erase(n, 1);
                --k;
             }
+
             if (n >= k)
             {
                OptionWarning w{ filename };
@@ -209,6 +210,7 @@ std::vector<std::string> split_args(std::string in, const char *filename,
          }
 
          out.push_back(in.substr(start, n - start));
+
          if (++n < k && !is_sep(in[n]))
          {
             OptionWarning w{ filename };
@@ -217,7 +219,6 @@ std::vector<std::string> split_args(std::string in, const char *filename,
          }
          continue;
       }
-
       // Extract anything else
       const auto start = n;
       for ((void)n; n < k && !is_sep(in[n]); ++n)
@@ -227,6 +228,7 @@ std::vector<std::string> split_args(std::string in, const char *filename,
             in.erase(n, 1);
             --k;
          }
+
          if (n >= k)
          {
             OptionWarning w{ filename };
@@ -307,7 +309,6 @@ bool process_option_line_compat_0_68(const std::string              &cmd,
       UNUSED(options::sp_cpp_lambda_square_paren.read(args[1].c_str()));
       return(true);
    }
-
    return(false);
 } // process_option_line_compat_0_68
 
@@ -325,6 +326,7 @@ OptionWarning::OptionWarning(const char *filename, Severity severity)
    {
       ++cpd.error_count;
    }
+
    if (cpd.line_number != 0)
    {
       fprintf(stderr, "%s:%u: ", filename, cpd.line_number);
@@ -384,6 +386,7 @@ void GenericOption::warnUnexpectedValue(const char *actual) const
       while (*values)
       {
          w("'%s'", *values);
+
          if (*(++values))
          {
             w(", ");
@@ -422,12 +425,10 @@ bool read_enum(const char *in, Option<T> &out)
          out.warnIncompatibleReference(opt);
          return(false);
       }
-
       auto &topt = *static_cast<const Option<T> *>(opt);
       out.m_val = topt();
       return(true);
    }
-
    out.warnUnexpectedValue(in);
    return(false);
 }
@@ -447,8 +448,8 @@ bool read_number(const char *in, Option<T> &out)
       out.m_val = static_cast<T>(val);
       return(true);
    }
-
    bool invert = false;
+
    if (strchr("-", in[0]))
    {
       invert = true;
@@ -463,6 +464,7 @@ bool read_number(const char *in, Option<T> &out)
                  to_string(opt->type()), opt->name());
 
       long tval;
+
       if (opt->type() == OT_NUM)
       {
          auto &sopt = *static_cast<const Option<signed> *>(opt);
@@ -478,8 +480,8 @@ bool read_number(const char *in, Option<T> &out)
          out.warnIncompatibleReference(opt);
          return(false);
       }
-
       const auto rval = (invert ? -tval : tval);
+
       if (out.validate(rval))
       {
          out.m_val = static_cast<T>(rval);
@@ -487,7 +489,6 @@ bool read_number(const char *in, Option<T> &out)
       }
       return(false);
    }
-
    out.warnUnexpectedValue(in);
    return(false);
 } // read_number
@@ -552,8 +553,8 @@ bool Option<bool>::read(const char *in)
    {
       return(true);
    }
-
    bool invert = false;
+
    if (strchr("~!-", in[0]))
    {
       invert = true;
@@ -567,12 +568,10 @@ bool Option<bool>::read(const char *in)
          warnIncompatibleReference(opt);
          return(false);
       }
-
       auto &bopt = *static_cast<const Option<bool> *>(opt);
       m_val = (invert ? !bopt() : bopt());
       return(true);
    }
-
    warnUnexpectedValue(in);
    return(false);
 }
@@ -832,9 +831,9 @@ void process_option_line(const std::string &config_line, const char *filename,
    {
       return;
    }
-
    // Check for necessary arguments
    const auto &cmd = to_lower(args.front());
+
    if (cmd == "set" || cmd == "file_ext")
    {
       if (args.size() < 3)
@@ -876,6 +875,7 @@ void process_option_line(const std::string &config_line, const char *filename,
    else if (cmd == "set")
    {
       const auto token = find_token_name(args[1].c_str());
+
       if (token != CT_NONE)
       {
          LOG_FMT(LNOTE, "%s:%d set '%s':",
@@ -918,7 +918,6 @@ void process_option_line(const std::string &config_line, const char *filename,
          // include is an absolute path
          UNUSED(load_option_file(include_path.c_str(), compat_level));
       }
-
       cpd.line_number = this_line_number;
    }
 #endif
@@ -928,6 +927,7 @@ void process_option_line(const std::string &config_line, const char *filename,
       for (size_t i = 2; i < args.size(); ++i)
       {
          auto *const lang_name = extension_add(args[i].c_str(), lang_arg);
+
          if (lang_name)
          {
             LOG_FMT(LNOTE, "%s:%d file_ext '%s' => '%s'\n",
@@ -944,6 +944,7 @@ void process_option_line(const std::string &config_line, const char *filename,
    else if (cmd == "using")
    {
       auto vargs = split_args(args[1], filename, is_varg_sep);
+
       if (vargs.size() == 2)
       {
          compat_level = option_level(std::stoi(vargs[0]), std::stoi(vargs[1]));
@@ -971,8 +972,8 @@ void process_option_line(const std::string &config_line, const char *filename,
             return;
          }
       }
-
       const auto oi = option_map.find(cmd);
+
       if (oi == option_map.end())
       {
          OptionWarning w{ filename };
@@ -1001,6 +1002,7 @@ bool load_option_file(const char *filename, int compat_level)
 
    std::ifstream in;
    in.open(filename, std::ifstream::in);
+
    if (!in.good())
    {
       OptionWarning w{ filename };
@@ -1008,7 +1010,6 @@ bool load_option_file(const char *filename, int compat_level)
         strerror(errno), errno);
       return(false);
    }
-
    // Read in the file line by line
    std::string line;
    while (std::getline(in, line))
@@ -1061,7 +1062,6 @@ void save_option_file(FILE *pfile, bool with_doc, bool minimal)
          {
             continue;
          }
-
          //....................................................................
 
          if (with_doc)
@@ -1075,11 +1075,11 @@ void save_option_file(FILE *pfile, bool with_doc, bool minimal)
                print_description(pfile, og.description, eol_marker);
                fprintf(pfile, "#%s", eol_marker);
             }
-
             fprintf(pfile, "%s", eol_marker);
             print_description(pfile, option->description(), eol_marker);
 
             const auto ds = option->defaultStr();
+
             if (!ds.empty())
             {
                fprintf(pfile, "#%s# Default: %s%s",
@@ -1102,6 +1102,7 @@ void save_option_file(FILE *pfile, bool with_doc, bool minimal)
          {
             fprintf(pfile, "%s", val.c_str());
          }
+
          if (with_doc)
          {
             const int val_len = static_cast<int>(val.length());
@@ -1119,7 +1120,6 @@ void save_option_file(FILE *pfile, bool with_doc, bool minimal)
    {
       fprintf(pfile, "%s", DOC_TEXT_END);
    }
-
    print_keywords(pfile);    // Print custom keywords
    print_extensions(pfile);  // Print custom file extensions
 

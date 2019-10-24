@@ -152,8 +152,8 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
    {
       return(cpd.pp_level);
    }
-
    chunk_t *next = chunk_get_next(pc);
+
    if (next == nullptr)
    {
       return(cpd.pp_level);
@@ -166,7 +166,6 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
               get_token_name(next->type));
       set_chunk_parent(pc, next->type);
    }
-
    LOG_FMT(LPFCHK, "%s(%d): %zu] %s\n",
            __func__, __LINE__, pc->orig_line, get_token_name(pc->parent_type));
    fl_log_frms(LPFCHK, "TOP", frm);
@@ -177,6 +176,7 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
    const size_t    b4_cnt   = cpd.frames.size();
 
    const char      *txt = nullptr;
+
    if (pc->flags.test(PCF_IN_PREPROC))
    {
       LOG_FMT(LPF, " <In> ");
@@ -234,6 +234,7 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
             exit(EX_SOFTWARE);
          }
          cpd.pp_level--;
+
          if (pp_level == 0)
          {
             fprintf(stderr, "%s(%d): pp_level is ZERO, cannot be decremented, at line %zu, column %zu\n",
@@ -290,7 +291,6 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
       LOG_FMT(LPF, " <Out>");
       fl_log(LPF, frm);
    }
-
    fl_log_frms(LPFCHK, "END", frm);
 
    return(pp_level);

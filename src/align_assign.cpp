@@ -68,10 +68,12 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
                  __func__, __LINE__, get_token_name(pc->type));
          tmp = pc->orig_line;
          pc  = chunk_skip_to_match(pc);
+
          if (pc != nullptr)
          {
             as.NewLines(pc->orig_line - tmp);
             vdas.NewLines(pc->orig_line - tmp);
+
             if (pc->orig_line != tmp)
             {
                fcn_idx = 0;
@@ -84,7 +86,6 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          }
          continue;
       }
-
 
       // Recurse if a brace set is found
       if (chunk_is_token(pc, CT_BRACE_OPEN) || chunk_is_token(pc, CT_VBRACE_OPEN))
@@ -104,8 +105,8 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
             myspan   = options::align_assign_span();
             mythresh = options::align_assign_thresh();
          }
-
          pc = align_assign(chunk_get_next_ncnl(pc), myspan, mythresh, &sub_nl_count);
+
          if (sub_nl_count > 0)
          {
             as.NewLines(sub_nl_count);
@@ -117,6 +118,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
             }
 
             fcnProto.NewLines(sub_nl_count);
+
             if (p_nl_count != nullptr)
             {
                *p_nl_count += sub_nl_count;
@@ -131,7 +133,6 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          pc = chunk_get_next(pc);
          break;
       }
-
 
       if (chunk_is_newline(pc))
       {
@@ -149,7 +150,6 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          {
             *p_nl_count += pc->nl_count;
          }
-
          var_def_cnt = 0;
          equ_count   = 0;
       }
@@ -188,6 +188,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          {
             LOG_FMT(LALASS, "%s(%d): fcnDefault[%zu].Add on '%s' on orig_line %zu, orig_col is %zu\n",
                     __func__, __LINE__, fcn_idx, pc->text(), pc->orig_line, pc->orig_col);
+
             if (++fcn_idx == fcnDefault.size())
             {
                fcnDefault.emplace_back();
@@ -202,6 +203,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
             {
                LOG_FMT(LALASS, "%s(%d): default: fcnDefault[%zu].Add on '%s' on orig_line %zu, orig_col is %zu\n",
                        __func__, __LINE__, fcn_idx, pc->text(), pc->orig_line, pc->orig_col);
+
                if (++fcn_idx == fcnDefault.size())
                {
                   fcnDefault.emplace_back();
@@ -246,7 +248,6 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
             }
          }
       }
-
       pc = chunk_get_next(pc);
    }
 
@@ -268,6 +269,5 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    {
       LOG_FMT(LALASS, "%s(%d): done on NULL\n", __func__, __LINE__);
    }
-
    return(pc);
 } // align_assign

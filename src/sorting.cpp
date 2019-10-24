@@ -64,6 +64,7 @@ static void prepare_categories()
    for (int i = 0; i < kIncludeCategoriesCount; ++i)
    {
       const auto &cat_pattern = (*include_category_options[i])();
+
       if (!cat_pattern.empty())
       {
          include_categories[i] = new include_category(cat_pattern);
@@ -84,7 +85,6 @@ static void cleanup_categories()
       {
          continue;
       }
-
       delete include_category;
       include_category = NULL;
    }
@@ -126,6 +126,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
            __func__, __LINE__, pc1->len(), pc1->orig_line, pc1->orig_col);
    LOG_FMT(LSORT, "%s(%d): @begin pc2->len is %zu, line is %zu, column is %zu\n",
            __func__, __LINE__, pc2->len(), pc2->orig_line, pc2->orig_col);
+
    if (pc1 == pc2) // same chunk is always identical thus return 0 differences
    {
       return(0);
@@ -139,7 +140,6 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
       {
          return(ppc1 - ppc2);
       }
-
       LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
               __func__, __LINE__, pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
@@ -154,15 +154,16 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
       {
          return(ret_val);
       }
+
       if (pc1->len() != pc2->len())
       {
          return(pc1->len() - pc2->len());
       }
-
       // Same word, same length. Step to the next chunk.
       pc1 = chunk_get_next(pc1);
       LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
               __func__, __LINE__, pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
+
       if (chunk_is_token(pc1, CT_MEMBER))
       {
          pc1 = chunk_get_next(pc1);
@@ -172,6 +173,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
       pc2 = chunk_get_next(pc2);
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
               __func__, __LINE__, pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
+
       if (chunk_is_token(pc2, CT_MEMBER))
       {
          pc2 = chunk_get_next(pc2);
@@ -197,6 +199,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
    {
       return(-1);
    }
+
    if (!chunk_is_newline(pc1))
    {
       return(1);
@@ -289,6 +292,7 @@ void sort_imports(void)
             }
             did_import = true;
          }
+
          if (  !did_import
             || pc->nl_count > 1
             || next == nullptr)

@@ -96,6 +96,7 @@ ContainerType &ParseFrame::prev(size_t idx)
       throw invalid_argument(string(__FILE__) + ":" + to_string(__LINE__)
                              + " idx can't be zero");
    }
+
    if (idx >= pse.size())
    {
       LOG_FMT(LINDPSE, "%s(%d): idx is %zu, size is %zu\n",

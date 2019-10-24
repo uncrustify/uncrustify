@@ -102,11 +102,11 @@ int load_option_fileChar(char *configString)
    while (true)
    {
       delimPos = strchr(delimPos, '\n');
+
       if (delimPos == nullptr)
       {
          break;
       }
-
       // replaces \n with \0 -> string including multiple terminated substrings
       *delimPos = '\0';
 
@@ -159,12 +159,12 @@ void add_define(string tag, string val)
       LOG_FMT(LERR, "%s: tag string is empty\n", __func__);
       return;
    }
+
    if (val.empty())
    {
       LOG_FMT(LERR, "%s: val string is empty\n", __func__);
       return;
    }
-
    add_define(tag.c_str(), val.c_str());
 }
 
@@ -239,12 +239,12 @@ int set_option(string name, string value)
       LOG_FMT(LERR, "%s: name string is empty\n", __func__);
       return(-1);
    }
+
    if (value.empty())
    {
       LOG_FMT(LERR, "%s: value string is empty\n", __func__);
       return(-1);
    }
-
    return(set_option_value(name.c_str(), value.c_str()));
 }
 
@@ -262,14 +262,13 @@ string get_option(string name)
       LOG_FMT(LERR, "%s: input string is empty\n", __func__);
       return("");
    }
-
    const auto option = unc_find_option(name.c_str());
+
    if (option == nullptr)
    {
       LOG_FMT(LWARN, "Option %s not found\n", name.c_str());
       return("");
    }
-
    return(op_val_to_string(option->type, cpd.settings[option->id]));
 }
 
@@ -290,8 +289,6 @@ string show_options()
       free(buf);
       return("");
    }
-
-
    print_options(stream);
    fflush(stream);
    fclose(stream);
@@ -327,7 +324,6 @@ string show_config(bool withDoc, bool only_not_default)
       free(buf);
       return("");
    }
-
    save_option_file_kernel(stream, withDoc, only_not_default);
 
    fflush(stream);
@@ -398,13 +394,11 @@ int _loadConfig(intptr_t _cfg)
    // memory management is done in /emscripten/postfix_module.js
    char *cfg = reinterpret_cast<char *>(_cfg);
 
-
    if (load_option_fileChar(cfg) != EXIT_SUCCESS)
    {
       LOG_FMT(LERR, "unable to load the config\n");
       return(EXIT_FAILURE);
    }
-
    // This relies on cpd.filename being the config file name
    load_header_files();
 
@@ -445,6 +439,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    cpd.error_count = 0;
    cpd.filename    = "stdin";
    cpd.frag        = frag;
+
    if (langIDX == 0)   // 0 == undefined
    {
       LOG_FMT(LWARN, "language of input file not defined, C++ will be assumed\n");
@@ -454,7 +449,6 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    {
       cpd.lang_flags = langIDX;
    }
-
    // embind complains about char* so we use an intptr_t to get the pointer and
    // cast it, memory management is done in /emscripten/postfix_module.js
    char     *file = reinterpret_cast<char *>(_file);
@@ -476,7 +470,6 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
       LOG_FMT(LERR, "Failed to read code\n");
       return(0);
    }
-
    // Done reading from stdin
    LOG_FMT(LSYS, "Parsing: %d bytes (%d chars) from stdin as language %s\n",
            (int)fm.raw.size(), (int)fm.data.size(),
@@ -492,12 +485,12 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    // apparently emscripten has its own implementation, if that is not working
    // see: stackoverflow.com/questions/10305095#answer-10341073
    FILE *stream = open_memstream(&buf, &len);
+
    if (stream == nullptr)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");
       return(0);
    }
-
    // TODO One way to implement the --parsed, -p functionality would
    // be to let the uncrustify_file function run, throw away the formated
    // output and return the debug as a string. For this uncrustify_file would
@@ -582,6 +575,7 @@ intptr_t _debug(intptr_t _file, lang_flag_e langIDX, bool frag)
    char   *buf    = nullptr;
    size_t len     = 0;
    FILE   *stream = open_memstream(&buf, &len);
+
    if (stream == nullptr)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");
@@ -598,7 +592,6 @@ intptr_t _debug(intptr_t _file, lang_flag_e langIDX, bool frag)
    {
       return(0);
    }
-
    // buf is deleted inside js code
    return(reinterpret_cast<intptr_t>(buf));
 } // uncrustify

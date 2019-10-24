@@ -60,9 +60,11 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
    snprintf(newpath, sizeof(newpath), "%s%s", filename, UNC_BACKUP_MD5_SUFFIX);
 
    FILE *thefile = fopen(newpath, "rb");
+
    if (thefile != nullptr)
    {
       char buffer[128];
+
       if (fgets(buffer, sizeof(buffer), thefile) != nullptr)
       {
          for (int i = 0; buffer[i] != 0; i++)
@@ -87,13 +89,13 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
       LOG_FMT(LNOTE, "%s: MD5 match for %s\n", __func__, filename);
       return(EX_OK);
    }
-
    LOG_FMT(LNOTE, "%s: MD5 mismatch - backing up %s\n", __func__, filename);
 
    // Create the backup file
    snprintf(newpath, sizeof(newpath), "%s%s", filename, UNC_BACKUP_SUFFIX);
 
    thefile = fopen(newpath, "wb");
+
    if (thefile != nullptr)
    {
       size_t retval   = fwrite(&data[0], data.size(), 1, thefile);
@@ -131,6 +133,7 @@ void backup_create_md5_file(const char *filename)
    md5.Init();
 
    thefile = fopen(filename, "rb");
+
    if (thefile == nullptr)
    {
       LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
@@ -138,7 +141,6 @@ void backup_create_md5_file(const char *filename)
       cpd.error_count++;
       return;
    }
-
    // read file chunk by chunk and calculate its MD5 checksum
    while ((len = fread(buf, 1, sizeof(buf), thefile)) > 0)
    {
@@ -151,6 +153,7 @@ void backup_create_md5_file(const char *filename)
    snprintf(newpath, sizeof(newpath), "%s%s", filename, UNC_BACKUP_MD5_SUFFIX);
 
    thefile = fopen(newpath, "wb");
+
    if (thefile != nullptr)
    {
       fprintf(thefile,

@@ -115,6 +115,7 @@ using namespace uncrustify;
 void align_all(void)
 {
    LOG_FUNC_ENTRY();
+
    if (options::align_typedef_span() > 0)
    {
       align_typedefs(options::align_typedef_span());

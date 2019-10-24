@@ -21,6 +21,7 @@ chunk_t *align_func_param(chunk_t *start)
    size_t myspan   = 2;
    size_t mythresh = 0;
    size_t mygap    = 0;
+
    // Override, if the align_func_params_span > 0
    if (options::align_func_params_span() > 0)
    {
@@ -28,7 +29,6 @@ chunk_t *align_func_param(chunk_t *start)
       mythresh = options::align_func_params_thresh();
       mygap    = options::align_func_params_gap();
    }
-
    AlignStack as;
    as.Start(myspan, mythresh);
    as.m_gap        = mygap;
@@ -43,6 +43,7 @@ chunk_t *align_func_param(chunk_t *start)
    while ((pc = chunk_get_next(pc)) != nullptr)
    {
       chunk_count++;
+
       if (chunk_is_newline(pc))
       {
          did_this_line = false;
@@ -73,6 +74,7 @@ chunk_t *align_func_param(chunk_t *start)
       else if (chunk_is_token(pc, CT_COMMA))
       {
          chunk_t *tmp_prev = chunk_get_prev_nc(pc);
+
          if (!chunk_is_newline(tmp_prev))  // don't count leading commas
          {
             comma_count++;
@@ -84,7 +86,6 @@ chunk_t *align_func_param(chunk_t *start)
    {
       as.End();
    }
-
    return(pc);
 } // align_func_param
 
@@ -104,7 +105,6 @@ void align_func_params(void)
       {
          continue;
       }
-
       // We are on a open parenthesis of a prototype
       pc = align_func_param(pc);
    }

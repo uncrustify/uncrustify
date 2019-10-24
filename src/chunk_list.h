@@ -645,6 +645,7 @@ static inline bool chunk_is_Doxygen_comment(chunk_t *pc)
    // check the third character
    const char   *sComment = pc->text();
    const size_t len       = strlen(sComment);
+
    if (len < 3)
    {
       return(false);
@@ -726,10 +727,8 @@ static inline bool chunk_is_addr(chunk_t *pc)
       {
          return(false);
       }
-
       return(true);
    }
-
    return(false);
 }
 
@@ -834,6 +833,7 @@ static inline bool chunk_is_forin(chunk_t *pc)
       && chunk_is_token(pc, CT_SPAREN_OPEN))
    {
       chunk_t *prev = chunk_get_prev_ncnl(pc);
+
       if (chunk_is_token(prev, CT_FOR))
       {
          chunk_t *next = pc;
@@ -843,6 +843,7 @@ static inline bool chunk_is_forin(chunk_t *pc)
          {
             next = chunk_get_next_ncnl(next);
          }
+
          if (chunk_is_token(next, CT_IN))
          {
             return(true);

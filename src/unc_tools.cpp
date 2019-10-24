@@ -49,10 +49,12 @@ void prot_the_line(const char *func_name, int theLine, unsigned int actual_line,
       if (pc->orig_line == actual_line)
       {
          tokenCounter++;
+
          if (  partNumber == 0
             || partNumber == tokenCounter)
          {
             LOG_FMT(LGUY, " orig_line is %d, (%zu) ", actual_line, tokenCounter);
+
             if (chunk_is_token(pc, CT_VBRACE_OPEN))
             {
                LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
@@ -83,6 +85,7 @@ void prot_the_line(const char *func_name, int theLine, unsigned int actual_line,
             }
             LOG_FMT(LGUY, " column is %zu, type is %s, parent_type is %s, orig_col is %zu,",
                     pc->column, get_token_name(pc->type), get_token_name(pc->parent_type), pc->orig_col);
+
             if (chunk_is_token(pc, CT_IGNORED))
             {
                LOG_FMT(LGUY, "\n");
@@ -203,6 +206,7 @@ void dump_out(unsigned int type)
       sprintf(dumpFileName, "%s.%u", cpd.dumped_file, type);
    }
    FILE *D_file = fopen(dumpFileName, "w");
+
    if (D_file != nullptr)
    {
       for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = pc->next)
@@ -212,42 +216,52 @@ void dump_out(unsigned int type)
          fprintf(D_file, "  orig_line %zu\n", pc->orig_line);
          fprintf(D_file, "  orig_col %zu\n", pc->orig_col);
          fprintf(D_file, "  orig_col_end %zu\n", pc->orig_col_end);
+
          if (pc->orig_prev_sp != 0)
          {
             fprintf(D_file, "  orig_prev_sp %u\n", pc->orig_prev_sp);
          }
+
          if (pc->flags != 0)
          {
             fprintf(D_file, "  flags %" PRIu64 "\n", pc->flags);
          }
+
          if (pc->column != 0)
          {
             fprintf(D_file, "  column %zu\n", pc->column);
          }
+
          if (pc->column_indent != 0)
          {
             fprintf(D_file, "  column_indent %zu\n", pc->column_indent);
          }
+
          if (pc->nl_count != 0)
          {
             fprintf(D_file, "  nl_count %zu\n", pc->nl_count);
          }
+
          if (pc->level != 0)
          {
             fprintf(D_file, "  level %zu\n", pc->level);
          }
+
          if (pc->brace_level != 0)
          {
             fprintf(D_file, "  brace_level %zu\n", pc->brace_level);
          }
+
          if (pc->pp_level != 0)
          {
             fprintf(D_file, "  pp_level %zu\n", pc->pp_level);
          }
+
          if (pc->after_tab != 0)
          {
             fprintf(D_file, "  after_tab %d\n", pc->after_tab);
          }
+
          if (pc->type != CT_NEWLINE)
          {
             fprintf(D_file, "  text %s\n", pc->text());
@@ -282,10 +296,12 @@ void dump_in(unsigned int type)
       while (fgets(buffer, sizeof(buffer), D_file) != nullptr)
       {
          ++lineNumber;
+
          if (aNewChunkIsFound)
          {
             // look for the next chunk
             char first = buffer[0];
+
             if (first == '[')
             {
                aNewChunkIsFound = false;
@@ -301,6 +317,7 @@ void dump_in(unsigned int type)
 #define NUMBER_OF_PARTS    3
             char *parts[NUMBER_OF_PARTS];
             int partCount = Args::SplitLine(buffer, parts, NUMBER_OF_PARTS - 1);
+
             if (partCount != 2)
             {
                exit(EX_SOFTWARE);
@@ -357,6 +374,7 @@ void dump_in(unsigned int type)
          {
             // look for a new chunk
             char first = buffer[0];
+
             if (first == '[')
             {
                aNewChunkIsFound = true;
