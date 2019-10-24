@@ -7,15 +7,12 @@ provided). It accepts an optional second revision to use as the cut-off. The
 default is your LOCAL "master". Thus, you should ensure that this is up to date
 before running this script.
 
-.. caution::
-
-   This script functions by making a bunch of assumptions that added options
-   will cause specific patterns to appear in patches. This logic is likely
-   susceptible to edge cases and may well miss additions or generate false
-   positives. (In particular, options that are not new but have been relocated
-   will likely show up.) It is ***strongly recommended*** that the output of
-   this script be independently verified by inspecting the mentioned commits
-   and comparing the contents of ``options.h`` at the relevant revisions.
+This script works by extracting the set of options before and after every
+commit that affected ':src/options.h' and computing the differences. It should,
+therefore, be fairly robust (for example, options that moved around won't show
+up). However, if an option is removed and subsequently re-added, or if an
+option was added and subsequently removed, the resulting records will need to
+be reconciled manually.
 '''
 
 import argparse
@@ -25,7 +22,25 @@ import re
 import sys
 import time
 
-re_option = re.compile(r'[+]extern (Bounded)?Option<[^>]+>')
+re_option = re.compile(r'extern (Bounded)?Option<[^>]+>')
+
+
+# -----------------------------------------------------------------------------
+def extract_options(repo, blob_id):
+    from git.util import hex_to_bin
+
+    blob = git.Blob(repo, hex_to_bin(blob_id))
+    content = blob.data_stream.stream
+    options = set()
+
+    for line in iter(content.readline, b''):
+        line = line.decode('utf-8').strip()
+
+        if re_option.match(line):
+            line = content.readline().decode('utf-8').strip()
+            options.add(line.split(';')[0])
+
+    return options
 
 
 # =============================================================================
@@ -33,26 +48,22 @@ class Changeset(object):
     # -------------------------------------------------------------------------
     def __init__(self, repo, sha):
         self.sha = sha
-        self.options = []
+        self.added_options = set()
+        self.removed_options = set()
 
         commit = repo.commit(sha)
         ad = time.gmtime(commit.authored_date)
-        self.date = time.strftime('%Y-%m-%d', ad)
+        self.date = time.strftime('%b %d %Y', ad).replace(' 0', '  ')
 
         info = repo.git.log('-1', '--raw', '--abbrev=40', '--pretty=',
                             sha, '--', ':src/options.h').split(' ')
         if len(info) < 5:
             return
 
-        diff = repo.git.diff('-U0', info[2], info[3]).split('\n')
-        next_is_option = False
-        for line in diff:
-            if re_option.match(line):
-                next_is_option = True
-            elif next_is_option:
-                if line[0] == '+':
-                    self.options.append(line[1:].split(';')[0])
-                next_is_option = False
+        old_options = extract_options(repo, info[2])
+        new_options = extract_options(repo, info[3])
+        self.added_options = new_options.difference(old_options)
+        self.removed_options = old_options.difference(new_options)
 
 
 # -----------------------------------------------------------------------------
@@ -78,23 +89,18 @@ def main():
         print('No changes were found')
         return 1
 
-    new_options = set()
     changes = []
     for r in revs:
-        relevant = False
         c = Changeset(repo, r)
-        for o in c.options:
-            if o not in new_options:
-                new_options.add(o)
-                relevant = True
-
-        if relevant:
+        if len(c.added_options) or len(c.removed_options):
             changes.append(c)
 
     for c in changes:
         print('{} ({})'.format(c.date, c.sha))
-        for o in c.options:
-            print('  {}'.format(o))
+        for o in c.added_options:
+            print('  Added   : {}'.format(o))
+        for o in c.removed_options:
+            print('  Removed : {}'.format(o))
 
     return 0
 
