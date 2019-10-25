@@ -31,7 +31,6 @@ struct CharTable
       {
          return(chars[ch]);
       }
-
       /*
        * HACK: If the top bit is set, then we are likely dealing with UTF-8,
        * and since that is only allowed in identifiers, then assume that is
