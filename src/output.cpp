@@ -452,7 +452,7 @@ void output_parsed(FILE *pfile)
               get_token_name(pc->parent_type),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
-      fprintf(pfile, "[%10llx]",
+      fprintf(pfile, "[%11llx]",
               static_cast<pcf_flags_t::int_t>(pc->flags));
       fprintf(pfile, "[%zu-%d]",
               pc->nl_count, pc->after_tab);

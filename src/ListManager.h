@@ -18,7 +18,8 @@
  * A simple list manager for a double-linked list.
  * Class T must define 'next' and 'prev', which must be pointers to type T.
  */
-template<class T> class ListManager
+template<class T>
+class ListManager
 {
 protected:
    T *first; //! pointer to the head of list

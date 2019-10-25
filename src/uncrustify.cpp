@@ -1553,7 +1553,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
             && ref->next)
          {
             ref = ref->next;
-            if (chunk_is_token(ref, CT_SEMICOLON) && ref->parent_type == CT_NONE)
+            if (chunk_is_token(ref, CT_SEMICOLON) && ref->level == pc->level)
             {
                continue;
             }

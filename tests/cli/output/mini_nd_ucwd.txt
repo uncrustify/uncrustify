@@ -1491,8 +1491,62 @@ nl_before_throw                 = ignore   # ignore/add/remove/force
 # Add or remove newline between 'namespace' and '{'.
 nl_namespace_brace              = ignore   # ignore/add/remove/force
 
-# Add or remove newline between 'template<>' and whatever follows.
+# Add or remove newline after 'template<...>' of a template class.
 nl_template_class               = ignore   # ignore/add/remove/force
+
+# Add or remove newline after 'template<...>' of a template class declaration.
+#
+# Overrides nl_template_class.
+nl_template_class_decl          = ignore   # ignore/add/remove/force
+
+# Add or remove newline after 'template<>' of a specialized class declaration.
+#
+# Overrides nl_template_class_decl.
+nl_template_class_decl_special  = ignore   # ignore/add/remove/force
+
+# Add or remove newline after 'template<...>' of a template class definition.
+#
+# Overrides nl_template_class.
+nl_template_class_def           = ignore   # ignore/add/remove/force
+
+# Add or remove newline after 'template<>' of a specialized class definition.
+#
+# Overrides nl_template_class_def.
+nl_template_class_def_special   = ignore   # ignore/add/remove/force
+
+# Add or remove newline after 'template<...>' of a template function.
+nl_template_func                = ignore   # ignore/add/remove/force
+
+# Add or remove newline after 'template<...>' of a template function
+# declaration.
+#
+# Overrides nl_template_func.
+nl_template_func_decl           = ignore   # ignore/add/remove/force
+
+# Add or remove newline after 'template<>' of a specialized function
+# declaration.
+#
+# Overrides nl_template_func_decl.
+nl_template_func_decl_special   = ignore   # ignore/add/remove/force
+
+# Add or remove newline after 'template<...>' of a template function
+# definition.
+#
+# Overrides nl_template_func.
+nl_template_func_def            = ignore   # ignore/add/remove/force
+
+# Add or remove newline after 'template<>' of a specialized function
+# definition.
+#
+# Overrides nl_template_func_def.
+nl_template_func_def_special    = ignore   # ignore/add/remove/force
+
+# Add or remove newline after 'template<...>' of a template variable.
+nl_template_var                 = ignore   # ignore/add/remove/force
+
+# Add or remove newline between 'template<...>' and 'using' of a templated
+# type alias.
+nl_template_using               = ignore   # ignore/add/remove/force
 
 # Add or remove newline between 'class' and '{'.
 nl_class_brace                  = ignore   # ignore/add/remove/force

@@ -1,9 +1,9 @@
 indent_text : orig_line is 1, orig_col is 1, column is 1, for 'struct'
-   [0x10070002:IN_STRUCT,FORCE_SPACE,STMT_START,EXPR_START,LVALUE]
+   [0x10070000:FORCE_SPACE,STMT_START,EXPR_START,LVALUE]
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : orig_line is 1, orig_col is 8, column is 8, for 'TelegramIndex'
-   [0x10000002:IN_STRUCT,LVALUE]
+   [0x10000000:LVALUE]
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : orig_line is 1, <Newline>
@@ -12,7 +12,7 @@ indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 0, ...indent is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : orig_line is 2, orig_col is 1, column is 1, for '{'
-   [0x100000402:IN_STRUCT,IN_CLASS,PUNCTUATOR]
+   [0x100000400:IN_CLASS,PUNCTUATOR]
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 1, ... indent is 9
@@ -293,11 +293,11 @@ indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text :
 indent_text :
 indent_text : orig_line is 1, orig_col is 1, column is 1, for 'struct'
-   [0x10070002:IN_STRUCT,FORCE_SPACE,STMT_START,EXPR_START,LVALUE]
+   [0x10070000:FORCE_SPACE,STMT_START,EXPR_START,LVALUE]
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : orig_line is 1, orig_col is 8, column is 8, for 'TelegramIndex'
-   [0x10000002:IN_STRUCT,LVALUE]
+   [0x10000000:LVALUE]
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : orig_line is 1, <Newline>
@@ -306,7 +306,7 @@ indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 0, ...indent is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : orig_line is 2, orig_col is 1, column is 1, for '{'
-   [0x100000402:IN_STRUCT,IN_CLASS,PUNCTUATOR]
+   [0x100000400:IN_CLASS,PUNCTUATOR]
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 1, ... indent is 9

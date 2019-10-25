@@ -165,6 +165,7 @@ enum pcf_flag_e : decltype(0ULL)
    PCF_IN_QT_MACRO    = pcf_bit(40),   //! in a QT-macro, i.e. SIGNAL, SLOT
    PCF_IN_FCN_CTOR    = pcf_bit(41),   //! inside function constructor
    PCF_IN_TRY_BLOCK   = pcf_bit(42),   //! inside Function-try-block
+   PCF_INCOMPLETE     = pcf_bit(43),   //! class/struct forward declaration
 };
 
 UNC_DECLARE_FLAGS(pcf_flags_t, pcf_flag_e);
@@ -216,6 +217,7 @@ static const char *pcf_names[] =
    "IN_QT_MACRO",       // 40
    "IN_FCN_CTOR",       // 41                    Issue #2152
    "IN_TRY_BLOCK",      // 42                    Issue #1734
+   "INCOMPLETE",        // 43
 };
 #endif
 

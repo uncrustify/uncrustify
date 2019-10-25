@@ -300,6 +300,9 @@ static void newline_after_return(chunk_t *start);
 static void blank_line_max(chunk_t *pc, Option<unsigned> &opt);
 
 
+static iarf_e newline_template_option(chunk_t *pc, iarf_e special, iarf_e base, iarf_e fallback);
+
+
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
 
 
@@ -3773,7 +3776,55 @@ void newlines_cleanup_braces(bool first)
                tmp = chunk_get_prev_ncnlni(chunk_get_prev_type(pc, CT_ANGLE_OPEN, pc->level));   // Issue #2279
                if (chunk_is_token(tmp, CT_TEMPLATE))
                {
-                  newline_iarf(pc, options::nl_template_class());
+                  if (chunk_is_token(next, CT_USING))
+                  {
+                     newline_iarf(pc, options::nl_template_using());
+                  }
+                  else if (next->parent_type == CT_FUNC_DEF) // function definition
+                  {
+                     auto const action =
+                        newline_template_option(
+                           pc,
+                           options::nl_template_func_def_special(),
+                           options::nl_template_func_def(),
+                           options::nl_template_func());
+                     newline_iarf(pc, action);
+                  }
+                  else if (next->parent_type == CT_FUNC_PROTO) // function declaration
+                  {
+                     auto const action =
+                        newline_template_option(
+                           pc,
+                           options::nl_template_func_decl_special(),
+                           options::nl_template_func_decl(),
+                           options::nl_template_func());
+                     newline_iarf(pc, action);
+                  }
+                  else if (  chunk_is_token(next, CT_TYPE)
+                          || chunk_is_token(next, CT_QUALIFIER)) // variable
+                  {
+                     newline_iarf(pc, options::nl_template_var());
+                  }
+                  else if (next->flags.test(PCF_INCOMPLETE)) // class declaration
+                  {
+                     auto const action =
+                        newline_template_option(
+                           pc,
+                           options::nl_template_class_decl_special(),
+                           options::nl_template_class_decl(),
+                           options::nl_template_class());
+                     newline_iarf(pc, action);
+                  }
+                  else // class definition
+                  {
+                     auto const action =
+                        newline_template_option(
+                           pc,
+                           options::nl_template_class_def_special(),
+                           options::nl_template_class_def(),
+                           options::nl_template_class());
+                     newline_iarf(pc, action);
+                  }
                }
             }
          }
@@ -4669,6 +4720,25 @@ static void blank_line_max(chunk_t *pc, Option<unsigned> &opt)
 }
 
 
+iarf_e newline_template_option(chunk_t *pc, iarf_e special, iarf_e base, iarf_e fallback)
+{
+   auto *const prev = chunk_get_prev_ncnl(pc);
+
+   if (chunk_is_token(prev, CT_ANGLE_OPEN) && special != IARF_IGNORE)
+   {
+      return(special);
+   }
+   else if (base != IARF_IGNORE)
+   {
+      return(base);
+   }
+   else
+   {
+      return(fallback);
+   }
+}
+
+
 bool is_func_proto_group(chunk_t *pc, c_token_t one_liner_type)
 {
    if (  pc && options::nl_class_leave_one_liner_groups()
@@ -4948,38 +5018,42 @@ void do_blank_lines(void)
             || prev->parent_type == CT_UNION
             || prev->parent_type == CT_CLASS))
       {
-         if (prev->parent_type == CT_CLASS)
+         auto &opt = (prev->parent_type == CT_CLASS
+         ? options::nl_after_class
+         : options::nl_after_struct);
+         if (opt() > pc->nl_count)
          {
-            if (options::nl_after_class() > pc->nl_count)
+            // Issue #1702
+            // look back if we have a variable
+            auto tmp         = pc;
+            bool is_var_def  = false;
+            bool is_fwd_decl = false;
+            while ((tmp = chunk_get_prev(tmp)) != nullptr)
             {
-               blank_line_set(pc, options::nl_after_class);
+               if (tmp->level > pc->level)
+               {
+                  continue;
+               }
+               LOG_FMT(LBLANK, "%s(%d): %zu:%zu token is '%s'\n",
+                       __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->text());
+               if (tmp->flags.test(PCF_VAR_DEF))
+               {
+                  is_var_def = true;
+                  break;
+               }
+               if (chunk_is_token(tmp, prev->parent_type))
+               {
+                  is_fwd_decl = tmp->flags.test(PCF_INCOMPLETE);
+                  break;
+               }
             }
-         }
-         else
-         {
-            if (options::nl_after_struct() > pc->nl_count)
+            LOG_FMT(LBLANK, "%s(%d): var_def = %s, fwd_decl = %s\n",
+                    __func__, __LINE__,
+                    is_var_def ? "yes" : "no",
+                    is_fwd_decl ? "yes" : "no");
+            if (!is_var_def && !is_fwd_decl)
             {
-               // Issue #1702
-               // look back if we have a variable
-               bool is_var_def = false;
-               for (chunk_t *tmp = chunk_get_prev(pc); tmp != nullptr; tmp = chunk_get_prev(tmp))
-               {
-                  LOG_FMT(LBLANK, "%s(%d): %zu:%zu token is '%s'\n",
-                          __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->text());
-                  if (tmp->flags.test(PCF_VAR_DEF))
-                  {
-                     is_var_def = true;
-                  }
-                  if (chunk_is_token(tmp, CT_STRUCT))
-                  {
-                     break;
-                  }
-               }
-
-               if (!is_var_def)
-               {
-                  blank_line_set(pc, options::nl_after_struct);
-               }
+               blank_line_set(pc, opt);
             }
          }
       }
