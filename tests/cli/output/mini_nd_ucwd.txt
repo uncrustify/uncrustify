@@ -77,9 +77,6 @@ sp_arith_additive               = ignore   # ignore/add/remove/force
 # Add or remove space around assignment operator '=', '+=', etc.
 sp_assign                       = ignore   # ignore/add/remove/force
 
-# Add or remove space around trailing return operator '->'.
-sp_trailing_ret_t               = ignore   # ignore/add/remove/force
-
 # Add or remove space around '=' in C++11 lambda capture specifications.
 #
 # Overrides sp_assign.
@@ -479,6 +476,9 @@ sp_inside_braces                = ignore   # ignore/add/remove/force
 
 # Add or remove space inside '{}'.
 sp_inside_braces_empty          = ignore   # ignore/add/remove/force
+
+# Add or remove space around trailing return operator '->'.
+sp_trailing_return              = ignore   # ignore/add/remove/force
 
 # Add or remove space between return type and function name. A minimum of 1
 # is forced except for pointer return types.

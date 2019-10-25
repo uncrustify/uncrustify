@@ -254,7 +254,7 @@ void tokenize_trailing_return_types(void)
          if (  chunk_is_token(tmp, CT_FPAREN_CLOSE)
             && tmp->parent_type == CT_FUNC_PROTO)
          {
-            set_chunk_type(pc, CT_TRAILING_RET_T);
+            set_chunk_type(pc, CT_TRAILING_RET);
             LOG_FMT(LNOTE, "%s(%d): set trailing return type for text() is '%s'\n",
                     __func__, __LINE__, tmp->text());
          }

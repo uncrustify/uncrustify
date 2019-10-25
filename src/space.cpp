@@ -997,17 +997,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
 
-   if (chunk_is_token(first, CT_TRAILING_RET_T))
+   if (  chunk_is_token(first, CT_TRAILING_RET)
+      || chunk_is_token(first, CT_CPP_LAMBDA_RET)
+      || chunk_is_token(second, CT_TRAILING_RET)
+      || chunk_is_token(second, CT_CPP_LAMBDA_RET))
    {
       // Add or remove space around trailing return operator '->'.
-      log_rule("sp_trailing_ret_t");
-      return(options::sp_trailing_ret_t());
-   }
-
-   if (chunk_is_token(second, CT_TRAILING_RET_T))
-   {
-      log_rule("sp_trailing_ret_t");
-      return(options::sp_trailing_ret_t());
+      log_rule("sp_trailing_return");
+      return(options::sp_trailing_return());
    }
 
    if (chunk_is_token(first, CT_ASSIGN_DEFAULT_ARG))
