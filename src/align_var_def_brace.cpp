@@ -24,7 +24,6 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
    {
       return(nullptr);
    }
-
    chunk_t *next;
    size_t  myspan   = span;
    size_t  mythresh = 0;
@@ -48,9 +47,9 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
       mythresh = options::align_var_def_thresh();
       mygap    = options::align_var_def_gap();
    }
-
    // can't be any variable definitions in a "= {" block
    chunk_t *prev = chunk_get_prev_ncnl(start);
+
    if (chunk_is_token(prev, CT_ASSIGN))
    {
       LOG_FMT(LAVDB, "%s(%d): start->text() '%s', type is %s, on orig_line %zu (abort due to assign)\n",
@@ -59,7 +58,6 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
       chunk_t *pc = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
       return(chunk_get_next_ncnl(pc));
    }
-
    LOG_FMT(LAVDB, "%s(%d): start->text() '%s', type is %s, on orig_line %zu\n",
            __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line);
 
@@ -104,6 +102,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
          LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       }
+
       if (chunk_is_comment(pc))
       {
          if (pc->nl_count > 0)
@@ -128,6 +127,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
 
             chunk_t *toadd;
+
             if (  pc->parent_type == CT_OPERATOR
                && options::align_on_operator())
             {
@@ -156,6 +156,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
          size_t sub_nl_count = 0;
 
          pc = align_var_def_brace(pc, span, &sub_nl_count);
+
          if (sub_nl_count > 0)
          {
             fp_look_bro   = false;
@@ -164,6 +165,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
             as_bc.NewLines(sub_nl_count);
             as_at.NewLines(sub_nl_count);
             as_br.NewLines(sub_nl_count);
+
             if (p_nl_count != nullptr)
             {
                *p_nl_count += sub_nl_count;
@@ -187,24 +189,27 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
          as_bc.NewLines(pc->nl_count);
          as_at.NewLines(pc->nl_count);
          as_br.NewLines(pc->nl_count);
+
          if (p_nl_count != nullptr)
          {
             *p_nl_count += pc->nl_count;
          }
       }
-
       LOG_FMT(LAVDB, "%s(%d): pc->text() is '%s', level is %zu, pc->brace_level is %zu\n",
               __func__, __LINE__, chunk_is_newline(pc) ? "Newline" : pc->text(), pc->level, pc->brace_level);
+
       if (!chunk_is_newline(pc))
       {
          LOG_FMT(LAVDB, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+
          if (!chunk_is_token(pc, CT_IGNORED))
          {
             LOG_FMT(LAVDB, "   ");
             log_pcf_flags(LAVDB, pc->flags);
          }
       }
+
       // don't align stuff inside parenthesis/squares/angles
       if (pc->level > pc->brace_level)
       {
@@ -226,6 +231,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
                  __func__, __LINE__, did_this_line ? "TRUE" : "FALSE");
          LOG_FMT(LAVDB, "%s(%d): text() is '%s', orig_line is %zu, orig_col is %zu, level is %zu\n",
                  __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
+
          if (!did_this_line)
          {
             if (  start->parent_type == CT_STRUCT
@@ -250,11 +256,13 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
             if (options::align_var_def_colon())
             {
                next = chunk_get_next_nc(pc);
+
                if (chunk_is_token(next, CT_BIT_COLON))
                {
                   as_bc.Add(next);
                }
             }
+
             if (options::align_var_def_attribute())
             {
                next = pc;
@@ -265,6 +273,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
                      as_at.Add(next);
                      break;
                   }
+
                   if (chunk_is_token(next, CT_SEMICOLON) || chunk_is_newline(next))
                   {
                      break;

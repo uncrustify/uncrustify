@@ -38,7 +38,6 @@ void align_same_func_call_params(void)
    {
       span = options::align_same_func_call_params_span();
    }
-
    thresh = options::align_same_func_call_params_thresh();
 
    fcn_as.Start(span, thresh);
@@ -75,13 +74,13 @@ void align_same_func_call_params(void)
          }
          continue;
       }
-
       // Only align function calls that are right after a newline
       chunk_t *prev = chunk_get_prev(pc);
       while (  chunk_is_token(prev, CT_MEMBER)
             || chunk_is_token(prev, CT_DC_MEMBER))
       {
          chunk_t *tprev = chunk_get_prev(prev);
+
          if (!chunk_is_token(tprev, CT_TYPE))
          {
             prev = tprev;
@@ -89,6 +88,7 @@ void align_same_func_call_params(void)
          }
          prev = chunk_get_prev(tprev);
       }
+
       if (!chunk_is_newline(prev))
       {
          continue;
@@ -113,6 +113,7 @@ void align_same_func_call_params(void)
               align_fcn_name.c_str());
 
       add_str = nullptr;
+
       if (align_root != nullptr)
       {
          // Issue # 1395
@@ -163,10 +164,12 @@ void align_same_func_call_params(void)
          for (size_t idx = 0; idx < chunks.size(); idx++)
          {
             LOG_FMT(LASFCP, " [%s]", chunks[idx]->text());
+
             if (idx >= as.size())
             {
                as.resize(idx + 1);
                as[idx].Start(span, thresh);
+
                if (!options::align_number_right())
                {
                   if (  chunk_is_token(chunks[idx], CT_NUMBER_FP)
