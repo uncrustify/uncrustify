@@ -36,7 +36,6 @@ void align_oc_decl_colon(void)
          pc = chunk_get_next(pc);
          continue;
       }
-
       nas.Reset();
       cas.Reset();
 

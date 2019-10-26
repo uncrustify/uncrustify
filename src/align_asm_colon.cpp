@@ -29,7 +29,6 @@ void align_asm_colon(void)
          pc = chunk_get_next(pc);
          continue;
       }
-
       cas.Reset();
 
       pc = chunk_get_next_ncnl(pc, scope_e::PREPROC);
