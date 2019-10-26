@@ -17,6 +17,7 @@ Args::Args(int argc, char **argv)
    m_values = argv;
    size_t len = (argc >> 3) + 1;
    m_used = new UINT8[len];
+
    if (m_used != nullptr)
    {
       memset(m_used, 0, len);
@@ -68,7 +69,6 @@ const char *Args::Params(const char *token, size_t &index)
       // can only occur with a call such as: arg.Param(nullptr)
       return(nullptr);
    }
-
    size_t token_len = strlen(token);
 
    for (size_t idx = index; idx < m_count; idx++)
@@ -79,6 +79,7 @@ const char *Args::Params(const char *token, size_t &index)
          && (memcmp(token, m_values[idx], token_len) == 0))
       {
          SetUsed(idx);
+
          if (arg_len > token_len)
          {
             if (m_values[idx][token_len] == '=')
@@ -90,6 +91,7 @@ const char *Args::Params(const char *token, size_t &index)
          }
          idx++;
          index = idx + 1;
+
          if (idx < m_count)
          {
             SetUsed(idx);
@@ -132,7 +134,6 @@ const char *Args::Unused(size_t &index)
    {
       return(nullptr);
    }
-
    for (size_t idx = index; idx < m_count; idx++)
    {
       if (!GetUsed(idx))
@@ -153,7 +154,6 @@ size_t Args::SplitLine(char *text, char *args[], size_t num_args)
    {
       return(0);
    }
-
    char   cur_quote    = 0;
    bool   in_backslash = false;
    bool   in_arg       = false;
@@ -203,6 +203,7 @@ size_t Args::SplitLine(char *text, char *args[], size_t num_args)
             *dest = 0;
             dest++;
             in_arg = false;
+
             if (argc == num_args)
             {
                break; // all arguments found, we can stop
