@@ -224,6 +224,7 @@ protected:
            val, this->name(), static_cast<long>(min));
          return(false);
       }
+
       if (val > static_cast<long>(max))
       {
          OptionWarning w{ this };
