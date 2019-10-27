@@ -30,7 +30,6 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
    {
       return(buf);
    }
-
    int  last_sev = -1;
    bool is_range = false;
    int  len      = 0;
@@ -75,7 +74,6 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
          len--;
       }
    }
-
    buf[len] = 0;
 
    return(buf);
@@ -89,7 +87,6 @@ void logmask_from_string(const char *str, log_mask_t &mask)
    {
       return;
    }
-
    logmask_set_all(mask, false);  // Start with a clean mask
 
    // If the first character is 'a' or 'A', set all severities
@@ -98,7 +95,6 @@ void logmask_from_string(const char *str, log_mask_t &mask)
       logmask_set_all(mask, true);
       str++;
    }
-
    char *ptmp;
    bool was_dash   = false;
    int  last_level = -1;
@@ -116,6 +112,7 @@ void logmask_from_string(const char *str, log_mask_t &mask)
          str = ptmp;
 
          logmask_set_sev(mask, static_cast<log_sev_t>(level), true);
+
          if (was_dash)
          {
             for (int idx = last_level + 1; idx < level; idx++)
@@ -125,7 +122,6 @@ void logmask_from_string(const char *str, log_mask_t &mask)
 
             was_dash = false;
          }
-
          last_level = level;
       }
       else if (*str == '-') // a dash marks all bits until the next number

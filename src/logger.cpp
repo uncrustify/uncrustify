@@ -135,11 +135,11 @@ void log_flush(bool force_nl)
          g_log.bufX[g_log.buf_len]   = 0;
       }
       size_t retlength = fwrite(&g_log.bufX[0], g_log.buf_len, 1, g_log.log_file);
+
       if (retlength != 1)
       {
          // maybe we should log something to complain... =)
       }
-
       g_log.buf_len = 0;
    }
 }
@@ -162,7 +162,6 @@ static size_t log_start(log_sev_t sev)
    {
       g_log.buf_len = static_cast<size_t>(snprintf(&g_log.bufX[0], g_log.bufX.size(), "<%d>", sev));
    }
-
    size_t cap = (g_log.bufX.size() - 2) - g_log.buf_len;
 
    return((cap > 0) ? cap : 0);
@@ -172,6 +171,7 @@ static size_t log_start(log_sev_t sev)
 static void log_end(void)
 {
    g_log.in_log = (g_log.bufX[g_log.buf_len - 1] != '\n');
+
    if (  !g_log.in_log
       || (g_log.buf_len > (g_log.bufX.size() / 2)))
    {
@@ -192,11 +192,11 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
    {
       return;
    }
-
 #define BUFFERLENGTH    200
    char         buf[BUFFERLENGTH];
    // it MUST be a 'unsigned int' variable to be runable under windows
    unsigned int length = strlen(fmt);
+
    if (length >= BUFFERLENGTH)
    {
       fprintf(stderr, "FATAL: The variable 'buf' is not big enought:\n");
@@ -283,6 +283,7 @@ void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, size_
    const char *sep      = "";
    size_t     g_fq_size = g_fq.size();
    size_t     begin_with;
+
    if (g_fq_size > (skip_cnt + 1))
    {
       begin_with = g_fq_size - (skip_cnt + 1);
@@ -297,6 +298,7 @@ void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, size_
 #else
    LOG_FMT(sev, "-DEBUG NOT SET-");
 #endif
+
    if (suffix)
    {
       LOG_FMT(sev, "%s", suffix);
