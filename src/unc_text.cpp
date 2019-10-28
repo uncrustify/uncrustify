@@ -45,6 +45,7 @@ static int getLogTextUtf8Len(unc_text::value_type &c0, size_t start, size_t end)
    for (size_t i = start; i < end; ++i)
    {
       auto ch = c0[i];
+
       if (ch == '\n')
       {
          ch = 0x2424;  // NL symbol
@@ -115,7 +116,6 @@ static size_t fix_len_idx(size_t size, size_t idx, size_t len)
    {
       return(0);
    }
-
    const size_t left = size - idx;
    return((len > left) ? left : len);
 }
@@ -255,7 +255,6 @@ void unc_text::pop_back()
    {
       return;
    }
-
    m_chars.pop_back();
    update_logtext();
 }
@@ -267,7 +266,6 @@ void unc_text::pop_front()
    {
       return;
    }
-
    m_chars.pop_front();
    update_logtext();
 }
@@ -301,8 +299,8 @@ int unc_text::compare(const unc_text &ref1, const unc_text &ref2, size_t len, bo
       {
          continue;
       }
-
       int diff;                                             // Issue #2091
+
       if (tcare)
       {
          diff = ref1.m_chars[idx] - ref2.m_chars[idx];
@@ -311,6 +309,7 @@ int unc_text::compare(const unc_text &ref1, const unc_text &ref2, size_t len, bo
       {
          diff = unc_tolower(ref1.m_chars[idx]) - unc_tolower(ref2.m_chars[idx]);
       }
+
       if (diff == 0)
       {
          /*
@@ -320,7 +319,6 @@ int unc_text::compare(const unc_text &ref1, const unc_text &ref2, size_t len, bo
           */
          return(-(ref1.m_chars[idx] - ref2.m_chars[idx]));
       }
-
       // return the case-insensitive diff to sort alphabetically
       return(diff);
    }
@@ -329,7 +327,6 @@ int unc_text::compare(const unc_text &ref1, const unc_text &ref2, size_t len, bo
    {
       return(0);
    }
-
    // underflow save: return(len1 - len2);
    return((len1 > len2) ? (len1 - len2) : -static_cast<int>(len2 - len1));
 } // unc_text::compare
@@ -343,7 +340,6 @@ bool unc_text::equals(const unc_text &ref) const
    {
       return(false);
    }
-
    for (size_t idx = 0; idx < len; idx++)
    {
       if (m_chars[idx] != ref.m_chars[idx])
@@ -391,7 +387,6 @@ void unc_text::set(const unc_text &ref, size_t idx, size_t len)
       update_logtext();
       return;
    }
-
    m_chars.resize(len);
 
    len = fix_len_idx(ref_size, idx, len);
@@ -456,7 +451,6 @@ void unc_text::resize(size_t new_size)
    {
       return;
    }
-
    const auto log_new_size = getLogTextUtf8Len(m_chars, new_size);
    m_logtext.resize(log_new_size + 1); // one extra for \0
    m_logtext[log_new_size] = '\0';
@@ -483,7 +477,6 @@ void unc_text::insert(size_t idx, int ch)
       throw out_of_range(string(__func__) + ":" + to_string(__LINE__)
                          + " - idx >= m_chars.size()");
    }
-
    log_type utf8converted;
    utf8converted.reserve(UTF8_BLOCKS);
    toLogTextUtf8(ch, utf8converted);
@@ -505,12 +498,12 @@ void unc_text::insert(size_t idx, const unc_text &ref)
    {
       return;
    }
+
    if (idx >= m_chars.size())
    {
       throw out_of_range(string(__func__) + ":" + to_string(__LINE__)
                          + " - idx >= m_chars.size()");
    }
-
    const auto utf8_idx = getLogTextUtf8Len(m_chars, idx);
    // (A+B) remove \0 from both containers, add back a single at the end
    m_logtext.pop_back(); // A
@@ -528,6 +521,7 @@ void unc_text::insert(size_t idx, const unc_text &ref)
 void unc_text::append(int ch)
 {
    m_logtext.pop_back();
+
    if (ch < 0x80 && ch != '\n' && ch != '\r')
    {
       m_logtext.push_back(ch);
@@ -554,7 +548,6 @@ void unc_text::append(const unc_text &ref)
    {
       return;
    }
-
    m_logtext.pop_back();
    m_logtext.insert(std::end(m_logtext),
                     std::begin(ref.m_logtext), std::end(ref.m_logtext));
@@ -630,7 +623,6 @@ int unc_text::find(const char *search_txt, size_t start_idx) const
    {
       return(-1);
    }
-
    const size_t end_idx = s_len - t_len;
    for (size_t idx = start_idx; idx <= end_idx; idx++)
    {
@@ -664,14 +656,12 @@ int unc_text::rfind(const char *search_txt, size_t start_idx) const
    {
       return(-1);
    }
-
    const size_t end_idx = s_len - t_len;
 
    if (start_idx > end_idx)
    {
       start_idx = end_idx;
    }
-
    for (auto idx = static_cast<int>(start_idx); idx >= 0; idx--)
    {
       bool match = true;
@@ -701,12 +691,12 @@ void unc_text::erase(size_t start_idx, size_t len)
       return;
    }
    const size_t end_idx = start_idx + len - 1;
+
    if (end_idx >= m_chars.size())
    {
       throw out_of_range(string(__func__) + ":" + to_string(__LINE__)
                          + " - idx + len >= m_chars.size()");
    }
-
    const auto pos_s = getLogTextUtf8Len(m_chars, start_idx);
    const auto pos_e = pos_s + getLogTextUtf8Len(m_chars, start_idx, end_idx);
 
