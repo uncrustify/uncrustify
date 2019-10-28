@@ -15,6 +15,7 @@ chunk_t *flag_parens(chunk_t *po, pcf_flags_t flags, c_token_t opentype, c_token
    chunk_t *paren_close;
 
    paren_close = chunk_skip_to_match(po, scope_e::PREPROC);
+
    if (paren_close == nullptr)
    {
       LOG_FMT(LERR, "%s(%d): no match for '%s' at [%zu:%zu]",
@@ -23,7 +24,6 @@ chunk_t *flag_parens(chunk_t *po, pcf_flags_t flags, c_token_t opentype, c_token
       cpd.error_count++;
       return(nullptr);
    }
-
    LOG_FMT(LFLPAREN, "%s(%d): between  po is '%s', orig_line is %zu, orig_col is %zu, and\n",
            __func__, __LINE__, po->text(), po->orig_line, po->orig_col);
    LOG_FMT(LFLPAREN, "%s(%d): paren_close is '%s', orig_line is %zu, orig_col is %zu, type is %s, parent_type is %s\n",
@@ -33,6 +33,7 @@ chunk_t *flag_parens(chunk_t *po, pcf_flags_t flags, c_token_t opentype, c_token
 
    // the last chunk must be also modified. Issue #2149
    chunk_t *after_paren_close = chunk_get_next(paren_close);
+
    if (po != paren_close)
    {
       if (  flags != PCF_NONE
@@ -44,6 +45,7 @@ chunk_t *flag_parens(chunk_t *po, pcf_flags_t flags, c_token_t opentype, c_token
               pc = chunk_get_next(pc, scope_e::PREPROC))
          {
             chunk_flags_set(pc, flags);
+
             if (parent_all)
             {
                set_chunk_parent(pc, parenttype);
