@@ -1311,6 +1311,15 @@ nl_oc_mdef_brace                = ignore   # ignore/add/remove/force
 # (OC) Add or remove newline between Objective-C block signature and '{'.
 nl_oc_block_brace               = ignore   # ignore/add/remove/force
 
+# (OC) Add or remove blank line before '@interface' statement.
+nl_oc_before_interface          = ignore   # ignore/add/remove/force
+
+# (OC) Add or remove blank line before '@implementation' statement.
+nl_oc_before_implementation     = ignore   # ignore/add/remove/force
+
+# (OC) Add or remove blank line before '@end' statement.
+nl_oc_before_end                = ignore   # ignore/add/remove/force
+
 # (OC) Add or remove newline between '@interface' and '{'.
 nl_oc_interface_brace           = ignore   # ignore/add/remove/force
 

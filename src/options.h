@@ -1612,6 +1612,18 @@ nl_oc_mdef_brace;
 extern Option<iarf_e>
 nl_oc_block_brace;
 
+// (OC) Add or remove blank line before '@interface' statement.
+extern Option<iarf_e>
+nl_oc_before_interface;
+
+// (OC) Add or remove blank line before '@implementation' statement.
+extern Option<iarf_e>
+nl_oc_before_implementation;
+
+// (OC) Add or remove blank line before '@end' statement.
+extern Option<iarf_e>
+nl_oc_before_end;
+
 // (OC) Add or remove newline between '@interface' and '{'.
 extern Option<iarf_e>
 nl_oc_interface_brace;
