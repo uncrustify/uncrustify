@@ -112,12 +112,14 @@ void MD5::Update(const void *data, UINT32 len)
       UINT8 *p = m_in8 + t;
 
       t = 64 - t;
+
       if (len < t)
       {
          memcpy(p, buf, len);
          return;
       }
       memcpy(p, buf, t);
+
       if (m_need_byteswap)
       {
          reverse_u32(m_in8, 16);
@@ -126,11 +128,11 @@ void MD5::Update(const void *data, UINT32 len)
       buf += t;
       len -= t;
    }
-
    // Process data in 64-byte chunks
    while (len >= 64)
    {
       memcpy(m_in32, buf, 64);
+
       if (m_need_byteswap)
       {
          reverse_u32(m_in8, 16);
@@ -166,6 +168,7 @@ void MD5::Final(UINT8 digest[16])
    {
       // Two lots of padding:  Pad the first block to 64 bytes
       memset(p, 0, count);
+
       if (m_need_byteswap)
       {
          reverse_u32(m_in8, 16);
@@ -180,16 +183,17 @@ void MD5::Final(UINT8 digest[16])
       // Pad block to 56 bytes
       memset(p, 0, count - 8);
    }
+
    if (m_need_byteswap)
    {
       reverse_u32(m_in8, 14);
    }
-
    // Append length in bits and transform
    memcpy(m_in8 + 56, &m_bits[0], 4);
    memcpy(m_in8 + 60, &m_bits[1], 4);
 
    Transform(m_buf, m_in32);
+
    if (m_need_byteswap)
    {
       reverse_u32((UINT8 *)m_buf, 4);

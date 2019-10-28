@@ -112,14 +112,17 @@ public:
          {
             first = obj->next;
          }
+
          if (last == obj)
          {
             last = obj->prev;
          }
+
          if (obj->next != NULL)
          {
             obj->next->prev = obj->prev;
          }
+
          if (obj->prev != NULL)
          {
             obj->prev->next = obj->next;
@@ -173,6 +176,7 @@ public:
          Pop(obj); // TODO: is this necessary?
          obj->next = ref->next;
          obj->prev = ref;
+
          if (ref->next != NULL)
          {
             ref->next->prev = obj;
@@ -199,6 +203,7 @@ public:
          Pop(obj);
          obj->next = ref;
          obj->prev = ref->prev;
+
          if (ref->prev != NULL)
          {
             ref->prev->next = obj;
@@ -221,6 +226,7 @@ public:
    {
       obj->next = NULL;
       obj->prev = last;
+
       if (last == NULL)
       {
          last  = obj;
@@ -243,6 +249,7 @@ public:
    {
       obj->next = first;
       obj->prev = NULL;
+
       if (first == NULL)
       {
          last  = obj;

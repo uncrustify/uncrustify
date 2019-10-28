@@ -373,13 +373,14 @@ void init_keywords()
       {
          int               lang_flags = LANG_OC;
          const chunk_tag_t *probe     = kw_static_match(tag, lang_flags);
+
          if (probe == NULL)
          {
             tag->lang_flags |= lang_flags;
          }
-
          lang_flags = LANG_CPP;
          probe      = kw_static_match(tag, lang_flags);
+
          if (probe == NULL)
          {
             tag->lang_flags |= lang_flags;
@@ -430,7 +431,6 @@ void add_keyword(const std::string &tag, c_token_t type)
       (*it).second = type;
       return;
    }
-
    // Insert the keyword
    dkwm.insert(dkwmap::value_type(tag, type));
    LOG_FMT(LDYNKW, "%s(%d): added '%s' as '%s'\n",
@@ -464,6 +464,7 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag, int lang_flags
         iter++)
    {
       bool pp_iter = (iter->lang_flags & FLAG_PP) != 0; // forcing value to bool
+
       if (  (strcmp(iter->tag, tag->tag) == 0)
          && language_is_set(iter->lang_flags)
          && (lang_flags & iter->lang_flags)
@@ -483,15 +484,14 @@ c_token_t find_keyword_type(const char *word, size_t len)
    {
       return(CT_NONE);
    }
-
    // check the dynamic word list first
    string           ss(word, len);
    dkwmap::iterator it = dkwm.find(ss);
+
    if (it != dkwm.end())
    {
       return((*it).second);
    }
-
    chunk_tag_t key;
    key.tag = ss.c_str();
 
@@ -522,7 +522,6 @@ int load_keyword_file(const char *filename)
       cpd.error_count++;
       return(EX_IOERR);
    }
-
 #define MAXLENGTHOFLINE    256
 #define NUMBEROFARGS       2
    // maximal length of a line in the file
@@ -537,11 +536,11 @@ int load_keyword_file(const char *filename)
 
       // remove comments after '#' sign
       char *ptr;
+
       if ((ptr = strchr(buf, '#')) != nullptr)
       {
          *ptr = 0; // set string end where comment begins
       }
-
       size_t argc = Args::SplitLine(buf, args, NUMBEROFARGS);
 
       if (argc > 0)
@@ -573,6 +572,7 @@ void print_keywords(FILE *pfile)
    for (const auto &keyword_pair : dkwm)
    {
       c_token_t tt = keyword_pair.second;
+
       if (tt == CT_TYPE)
       {
          fprintf(pfile, "type %*.s%s\n",
