@@ -139,6 +139,7 @@
 50900  1927.cfg                             oc/1927.m
 50901  Issue_2172.cfg                       oc/Issue_2172.m
 50902  empty.cfg                            oc/Issue_2289.m
+50903  Issue_681.cfg                        oc/Issue_681.oc
 
 #
 # adopt tests from UT

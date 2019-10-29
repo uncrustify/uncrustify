@@ -919,6 +919,8 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e 
 {
    LOG_FUNC_ENTRY();
 
+   LOG_FMT(LNEWLINE, "%s(%d): start->text() is '%s', type is %s, orig_line is %zu, orig_column is %zu\n",
+           __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line, start->orig_col);
    if (  nl_opt == IARF_IGNORE
       || (  start->flags.test(PCF_IN_PREPROC)
          && !options::nl_define_macro()))
@@ -4155,6 +4157,21 @@ void newlines_insert_blank_lines(void)
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_do());
          newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_do());
+      }
+      else if (chunk_is_token(pc, CT_OC_INTF))
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_oc_before_interface());
+         //newlines_if_for_while_switch_post_blank_lines(pc, options::nl_oc_after_interface());
+      }
+      else if (chunk_is_token(pc, CT_OC_END))
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_oc_before_end());
+         //newlines_if_for_while_switch_post_blank_lines(pc, options::nl_oc_after_end());
+      }
+      else if (chunk_is_token(pc, CT_OC_IMPL))
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_oc_before_implementation());
+         //newlines_if_for_while_switch_post_blank_lines(pc, options::nl_oc_after_end());
       }
       else if (  chunk_is_token(pc, CT_FUNC_CLASS_DEF)
               || chunk_is_token(pc, CT_FUNC_DEF)

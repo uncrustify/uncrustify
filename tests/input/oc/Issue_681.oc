@@ -1,0 +1,15 @@
+int q;
+@interface MyClass ()
+@property (nonatomic, weak) UIView someView;
+@property (nonatomic, weak) UIView anotherView;
+@end
+@implementation MyClass
+- (void)someKindOfFunction
+{
+some code;
+}
+- (void)anotherOfFunction
+{
+some code;
+}
+@end
