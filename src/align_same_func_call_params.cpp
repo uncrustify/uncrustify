@@ -64,6 +64,7 @@ void align_same_func_call_params(void)
 
                // Flush it all!
                fcn_as.Flush();
+
                for (auto &as_v : as)
                {
                   as_v.Flush();
@@ -76,6 +77,7 @@ void align_same_func_call_params(void)
       }
       // Only align function calls that are right after a newline
       chunk_t *prev = chunk_get_prev(pc);
+
       while (  chunk_is_token(prev, CT_MEMBER)
             || chunk_is_token(prev, CT_DC_MEMBER))
       {
@@ -97,6 +99,7 @@ void align_same_func_call_params(void)
       align_fcn = prev;
       align_fcn_name.clear();
       LOG_FMT(LASFCP, "%s(%d): align_fnc_name '%s'\n", __func__, __LINE__, align_fcn_name.c_str());
+
       while (prev != pc)
       {
          LOG_FMT(LASFCP, "%s(%d): align_fnc_name '%s'\n", __func__, __LINE__, align_fcn_name.c_str());
@@ -135,6 +138,7 @@ void align_same_func_call_params(void)
 
             // Flush it all!
             fcn_as.Flush();
+
             for (auto &as_v : as)
             {
                as_v.Flush();
@@ -192,6 +196,7 @@ void align_same_func_call_params(void)
    {
       LOG_FMT(LASFCP, "  ++ Ended with %zu fcns\n", align_len);
       fcn_as.End();
+
       for (auto &as_v : as)
       {
          as_v.End();
@@ -208,6 +213,7 @@ void align_params(chunk_t *start, deque<chunk_t *> &chunks)
 
    bool    hit_comma = true;
    chunk_t *pc       = chunk_get_next_type(start, CT_FPAREN_OPEN, start->level);
+
    while ((pc = chunk_get_next(pc)) != nullptr)
    {
       if (  chunk_is_newline(pc)

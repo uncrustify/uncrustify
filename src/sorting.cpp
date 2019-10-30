@@ -131,6 +131,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
    {
       return(0);
    }
+
    while (pc1 != nullptr && pc2 != nullptr)
    {
       int ppc1 = get_chunk_priority(pc1);
@@ -219,6 +220,7 @@ static void do_the_sort(chunk_t **chunks, size_t num_chunks)
 
    LOG_FMT(LSORT, "%s(%d): %zu chunks:",
            __func__, __LINE__, num_chunks);
+
    for (size_t idx = 0; idx < num_chunks; idx++)
    {
       LOG_FMT(LSORT, " [%s]", chunks[idx]->text());
@@ -228,10 +230,12 @@ static void do_the_sort(chunk_t **chunks, size_t num_chunks)
 
    size_t start_idx;
    bool   take_care = options::mod_sort_case_sensitive();                  // Issue #2091
+
    for (start_idx = 0; start_idx < (num_chunks - 1); start_idx++)
    {
       // Find the index of the minimum value
       size_t min_idx = start_idx;
+
       for (size_t idx = start_idx + 1; idx < num_chunks; idx++)
       {
          if (compare_chunks(chunks[idx], chunks[min_idx], take_care) < 0)  // Issue #2091
@@ -263,6 +267,7 @@ void sort_imports(void)
    prepare_categories();
 
    chunk_t *pc = chunk_get_head();
+
    while (pc != nullptr)
    {
       chunk_t *next = chunk_get_next(pc);
@@ -334,6 +339,5 @@ void sort_imports(void)
       }
       pc = next;
    }
-
    cleanup_categories();
 } // sort_imports

@@ -40,6 +40,7 @@ chunk_t *flag_parens(chunk_t *po, pcf_flags_t flags, c_token_t opentype, c_token
          || (parent_all && parenttype != CT_NONE))
       {
          chunk_t *pc;
+
          for (pc = chunk_get_next(po, scope_e::PREPROC);
               pc != nullptr && pc != after_paren_close;
               pc = chunk_get_next(pc, scope_e::PREPROC))

@@ -56,6 +56,7 @@ static void fl_log(log_sev_t logsev, const ParseFrame &frm)
            get_token_name(frm.in_ifdef), frm.brace_level, frm.level, frm.size() - 1);
 
    LOG_FMT(logsev, " *");
+
    for (size_t idx = 1; idx < frm.size(); idx++)
    {
       LOG_FMT(logsev, " [%s-%u]", get_token_name(frm.at(idx).type),

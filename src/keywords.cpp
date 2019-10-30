@@ -561,7 +561,6 @@ int load_keyword_file(const char *filename)
          continue; // the line is empty
       }
    }
-
    fclose(pf);
    return(EX_OK);
 } // load_keyword_file

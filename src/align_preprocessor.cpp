@@ -29,6 +29,7 @@ void align_preprocessor(void)
    asf.m_gap = options::align_pp_define_gap();
 
    chunk_t *pc = chunk_get_head();
+
    while (pc != nullptr)
    {
       // Note: not counting back-slash newline combos
@@ -93,7 +94,6 @@ void align_preprocessor(void)
          cur_as->Add(pc);
       }
    }
-
    as.End();
    asf.End();
 } // align_preprocessor

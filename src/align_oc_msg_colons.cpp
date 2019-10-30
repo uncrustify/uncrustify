@@ -65,7 +65,6 @@ void align_oc_msg_colon(chunk_t *so)
       }
       pc = chunk_get_next(pc, scope_e::PREPROC);
    }
-
    nas.m_skip_first = !options::align_oc_msg_colon_first();
    cas.m_skip_first = !options::align_oc_msg_colon_first();
 
@@ -75,6 +74,7 @@ void align_oc_msg_colon(chunk_t *so)
    chunk_t *longest  = nullptr;
 
    size_t  len = nas.m_aligned.Len();
+
    for (size_t idx = 0; idx < len; idx++)
    {
       chunk_t *tmp = nas.m_aligned.GetChunk(idx);

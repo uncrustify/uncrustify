@@ -418,6 +418,7 @@ int main(int argc, char *argv[])
 #ifdef DEBUG
    // make sure we have 'name' not too big
 #define MAXLENGTHOFTHENAME    19
+
    // maxLengthOfTheName must be consider at the format line at the file
    // output.cpp, line 427: fprintf(pfile, "# Line              Tag                Parent...
    // and              430: ... fprintf(pfile, "%s# %3zu>%19.19s[%19.19s] ...
@@ -492,6 +493,7 @@ int main(int argc, char *argv[])
    if (arg.Present("--decode"))
    {
       size_t idx = 1;
+
       while ((p_arg = arg.Unused(idx)) != nullptr)
       {
          log_pcf_flags(LSYS, static_cast<pcf_flag_e>(strtoul(p_arg, nullptr, 16)));
@@ -551,13 +553,14 @@ int main(int argc, char *argv[])
    }
    // Load type files
    size_t idx = 0;
+
    while ((p_arg = arg.Params("-t", idx)) != nullptr)
    {
       load_keyword_file(p_arg);
    }
-
    // add types
    idx = 0;
+
    while ((p_arg = arg.Params("--type", idx)) != nullptr)
    {
       add_keyword(p_arg, CT_TYPE);
@@ -690,6 +693,7 @@ int main(int argc, char *argv[])
    }
    // Set config options using command line arguments.
    idx = 0;
+
    while ((p_arg = arg.Params("--set", idx)) != nullptr)
    {
       size_t argLength = strlen(p_arg);
@@ -910,6 +914,7 @@ int main(int argc, char *argv[])
       }
       // Do the files on the command line first
       idx = 1;
+
       while ((p_arg = arg.Unused(idx)) != nullptr)
       {
          char outbuf[1024];
@@ -960,16 +965,19 @@ static void process_source_list(const char *source_list,
       line++;
       char *fname = linebuf;
       int  len    = strlen(fname);
+
       while (len > 0 && unc_isspace(*fname))
       {
          fname++;
          len--;
       }
+
       while (len > 0 && unc_isspace(fname[len - 1]))
       {
          len--;
       }
       fname[len] = 0;
+
       while (len-- > 0)
       {
          if (fname[len] == '\\')
@@ -977,7 +985,6 @@ static void process_source_list(const char *source_list,
             fname[len] = '/';
          }
       }
-
       LOG_FMT(LFILELIST, "%3d] %s\n", line, fname);
 
       if (fname[0] != '#')
@@ -1008,12 +1015,12 @@ static bool read_stdin(file_mem &fm)
    while (!feof(stdin))
    {
       int len = fread(buf, 1, sizeof(buf), stdin);
+
       for (int idx = 0; idx < len; idx++)
       {
          dq.push_back(buf[idx]);
       }
    }
-
    // Copy the raw data from the deque to the vector
    fm.raw.insert(fm.raw.end(), dq.begin(), dq.end());
    return(decode_unicode(fm.raw, fm.data, fm.enc, fm.bom));
@@ -1243,6 +1250,7 @@ static bool file_content_matches(const string &filename1, const string &filename
    UINT8 buf2[1024];
    memset(buf1, 0, sizeof(buf1));
    memset(buf2, 0, sizeof(buf2));
+
    while (len1 >= 0 && len2 >= 0)
    {
       if (len1 == 0)
@@ -1269,7 +1277,6 @@ static bool file_content_matches(const string &filename1, const string &filename
       len1 -= minlen;
       len2 -= minlen;
    }
-
    close(fd1);
    close(fd2);
 
@@ -1582,6 +1589,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
          && ref->next)
       {
          int found_brace = 0;                                 // Set if a close brace is found before a newline
+
          while (ref->type != CT_NEWLINE && (ref = ref->next)) // TODO: is the assignment of ref wanted here?, better move it to the loop
          {
             if (chunk_is_token(ref, CT_BRACE_CLOSE))
@@ -1603,6 +1611,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
        * the same level
        */
       ref = pc;
+
       while ((ref = chunk_get_prev(ref)) != nullptr)
       {
          // Bail if we change level or find an access specifier colon
@@ -1657,6 +1666,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
          // Insert between after and ref
          chunk_t *after = chunk_get_next_ncnl(ref);
          tokenize(fm.data, after);
+
          for (tmp = chunk_get_next(ref); tmp != after; tmp = chunk_get_next(tmp))
          {
             tmp->level = after->level;
@@ -1686,6 +1696,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
        * the same level
        */
       ref = pc;
+
       while ((ref = chunk_get_prev(ref)) != nullptr)
       {
          // ignore the CT_TYPE token that is the result type
@@ -1742,6 +1753,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
          // Insert between after and ref
          chunk_t *after = chunk_get_next_ncnl(ref);
          tokenize(fm.data, after);
+
          for (tmp = chunk_get_next(ref); tmp != after; tmp = chunk_get_next(tmp))
          {
             tmp->level = after->level;
@@ -1825,6 +1837,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       cpd.enc = char_encoding_e::e_UTF8;
    }
    iarf_e av;
+
    switch (cpd.enc)
    {
    case char_encoding_e::e_UTF8:
@@ -1852,6 +1865,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
    // Check for embedded 0's (represents a decoding failure or corrupt file)
    size_t count_line   = 1;
    size_t count_column = 1;
+
    for (int idx = 0; idx < static_cast<int>(data.size()) - 1; idx++)
    {
       if (data[idx] == 0)
@@ -1926,6 +1940,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          newlines_remove_newlines();
       }
       cpd.pass_count = 3;
+
       do
       {
          old_changes = cpd.changes;
@@ -2048,6 +2063,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       }
       // Align everything else, reindent and break at code_width
       first = true;
+
       do
       {
          align_all();
@@ -2336,6 +2352,7 @@ void print_extensions(FILE *pfile)
    for (auto &language : language_names)
    {
       bool did_one = false;
+
       for (auto &extension_val : g_ext_map)
       {
          if (strcmp(extension_val.second.c_str(), language.name) == 0)
@@ -2408,6 +2425,7 @@ std::string pcf_flags_str(pcf_flags_t flags)
    // Add human-readable names
    auto out   = std::string{ buffer };
    auto first = true;
+
    for (size_t i = 0; i < ARRAY_SIZE(pcf_names); ++i)
    {
       if (flags & static_cast<pcf_flag_e>(pcf_bit(i)))

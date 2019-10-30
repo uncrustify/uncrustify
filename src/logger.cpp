@@ -244,7 +244,6 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
          }
       }
    }
-
    log_end();
 } // log_fmt
 
@@ -287,6 +286,7 @@ void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, size_
    if (g_fq_size > (skip_cnt + 1))
    {
       begin_with = g_fq_size - (skip_cnt + 1);
+
       for (size_t idx = begin_with; idx != 0; idx--)
       {
          LOG_FMT(sev, "%s %s:%d", sep, g_fq[idx].name, g_fq[idx].line);

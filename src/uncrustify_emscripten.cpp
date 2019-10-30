@@ -460,6 +460,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    fm.raw = vector<UINT8>();
 
    char c;
+
    for (auto idx = 0; (c = file[idx]) != 0; ++idx)
    {
       fm.raw.push_back(c);

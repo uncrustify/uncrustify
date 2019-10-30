@@ -26,6 +26,7 @@ void enum_cleanup(void)
       return;
    }
    chunk_t *pc = chunk_get_head();  // Issue #858
+
    while (pc != nullptr)
    {
       if (  pc->parent_type == CT_ENUM

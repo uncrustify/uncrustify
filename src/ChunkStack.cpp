@@ -13,6 +13,7 @@
 void ChunkStack::Set(const ChunkStack &cs)
 {
    m_cse.resize(cs.m_cse.size());
+
    for (size_t idx = 0; idx < m_cse.size(); idx++)
    {
       m_cse[idx].m_pc     = cs.m_cse[idx].m_pc;

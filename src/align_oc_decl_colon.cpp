@@ -29,6 +29,7 @@ void align_oc_decl_colon(void)
    nas.m_right_align = !options::align_on_tabstop();
 
    chunk_t *pc = chunk_get_head();
+
    while (pc != nullptr)
    {
       if (pc->type != CT_OC_SCOPE)

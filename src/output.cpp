@@ -272,6 +272,7 @@ static void add_char(UINT32 ch, bool is_literal)
    else if ((ch == '\t') && cpd.output_tab_as_space)
    {
       size_t endcol = next_tab_column(cpd.column);
+
       while (cpd.column < endcol)
       {
          add_char(' ');
@@ -286,6 +287,7 @@ static void add_char(UINT32 ch, bool is_literal)
          if (options::indent_with_tabs() == 0)
          {
             size_t endcol = next_tab_column(cpd.column);
+
             while (cpd.column < endcol)
             {
                add_char(' ');
@@ -383,12 +385,14 @@ static void output_to_column(size_t column, bool allow_tabs)
    {
       // tab out as far as possible and then use spaces
       size_t next_column = next_tab_column(cpd.column);
+
       while (next_column <= column)
       {
          add_text("\t");
          next_column = next_tab_column(cpd.column);
       }
    }
+
    // space out the final bit
    while (cpd.column < column)
    {
@@ -418,6 +422,7 @@ static void cmt_output_indent(size_t brace_col, size_t base_col, size_t column)
          add_text("\t");
       }
    }
+
    // space out the rest
    while (cpd.column < column)
    {
@@ -442,6 +447,7 @@ void output_parsed(FILE *pfile)
 #else // not WIN32
    fprintf(pfile, "# Line                Tag              Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
 #endif // ifdef WIN32
+
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
 #ifdef WIN32
@@ -509,6 +515,7 @@ void output_text(FILE *pfile)
 
       cpd.frag_cols = 0;
    }
+
    // loop over the whole chunk list
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
@@ -741,6 +748,7 @@ static size_t cmt_parse_lead(const unc_text &line, bool is_last)
       {
          // ignore combined comments
          size_t tmp = len + 1;
+
          while (tmp < line.size() && unc_isspace(line[tmp]))
          {
             tmp++;
@@ -803,6 +811,7 @@ static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str)
          if (str[idx] == '\n' || str[idx] == '\r')
          {
             idx++;
+
             while (  idx < len
                   && (str[idx] == ' ' || str[idx] == '\t'))
             {
@@ -815,11 +824,13 @@ static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str)
    }
    // find the first line length
    size_t first_len = 0;
+
    for (idx = 0; idx < len; idx++)
    {
       if (str[idx] == '\n' || str[idx] == '\r')
       {
          first_len = idx;
+
          while (str[first_len - 1] == ' ' || str[first_len - 1] == '\t')
          {
             if (first_len == 0)
@@ -844,6 +855,7 @@ static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str)
 
    // Scan the second line
    size_t width = 0;
+
    for ( ; idx < len - 1; idx++)
    {
       if (str[idx] == ' ' || str[idx] == '\t')
@@ -973,11 +985,13 @@ static void add_comment_text(const unc_text &text,
    {
       add_text("//");
       idx += 2;
+
       while (unc_isspace(text[idx]))
       {
          add_char(text[idx++]);
       }
    }
+
    for ( ; idx < len; idx++)  // TODO: avoid modifying idx in loop
    {
       // Split the comment
@@ -1160,6 +1174,7 @@ static chunk_t *output_comment_c(chunk_t *first)
    }
    chunk_t  *pc = first;
    unc_text tmp;
+
    while (can_combine_comment(pc, cmt))
    {
       LOG_FMT(LCONTTEXT, "%s(%d): text() is '%s'\n",
@@ -1398,6 +1413,7 @@ static void cmt_trim_whitespace(unc_text &line, bool in_preproc)
 
       // If there was any space before the backslash, change it to 1 space
       line.pop_back();
+
       while (  line.size() > 0
             && (line.back() == ' ' || line.back() == '\t'))
       {
@@ -1441,6 +1457,7 @@ static void output_comment_multi(chunk_t *pc)
    bool     nl_end     = false;
    unc_text line;
    line.clear();
+
    while (cmt_idx < pc->len())
    {
       int ch = pc->str[cmt_idx++];
@@ -1506,8 +1523,8 @@ static void output_comment_multi(chunk_t *pc)
                prev_nonempty_line = nwidx; // last non-whitespace char in the previous line
             }
          }
-
          size_t remaining = pc->len() - cmt_idx;
+
          for (size_t nxt_len = 0;
               (  nxt_len <= remaining
               && pc->str[nxt_len] != 'r'  // TODO: should this be \r ?
@@ -1768,6 +1785,7 @@ static bool kw_fcn_class(chunk_t *cmt, unc_text &out_txt)
    if (tmp != nullptr)
    {
       out_txt.append(tmp->str);
+
       while ((tmp = chunk_get_next(tmp)) != nullptr)
       {
          if (tmp->type != CT_DC_MEMBER)
@@ -1800,6 +1818,7 @@ static bool kw_fcn_message(chunk_t *cmt, unc_text &out_txt)
 
    chunk_t *tmp  = chunk_get_next_ncnl(fcn);
    chunk_t *word = nullptr;
+
    while (tmp != nullptr)
    {
       if (chunk_is_token(tmp, CT_BRACE_OPEN) || chunk_is_token(tmp, CT_SEMICOLON))
@@ -1893,6 +1912,7 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
    {
       chunk_t *tmp = chunk_get_next_ncnl(fcn);
       has_param = false;
+
       while (tmp != nullptr)
       {
          if (chunk_is_token(tmp, CT_BRACE_OPEN) || chunk_is_token(tmp, CT_SEMICOLON))
@@ -1958,6 +1978,7 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
    {
       chunk_t *prev = nullptr;
       tmp = fpo;
+
       while ((tmp = chunk_get_next(tmp)) != nullptr)
       {
          if (chunk_is_token(tmp, CT_COMMA) || tmp == fpc)
@@ -2025,6 +2046,7 @@ static bool kw_fcn_fclass(chunk_t *cmt, unc_text &out_txt)
       chunk_t *tmp = chunk_get_prev_type(fcn, CT_BRACE_OPEN, fcn->level - 1);
       tmp = chunk_get_prev_type(tmp, CT_CLASS, tmp->level);
       tmp = chunk_get_next_ncnl(tmp);
+
       while (chunk_is_token(chunk_get_next_ncnl(tmp), CT_DC_MEMBER))
       {
          tmp = chunk_get_next_ncnl(tmp);
@@ -2105,6 +2127,7 @@ static void do_kw_subst(chunk_t *pc)
                unc_text nl_txt;
                nl_txt.append("\n");
                nl_idx++;
+
                while (  (nl_idx < static_cast<size_t>(idx))
                      && !unc_isalnum(pc->str[nl_idx]))
                {
@@ -2147,6 +2170,7 @@ static void output_comment_multi_simple(chunk_t *pc)
    size_t   line_count  = 0;
    size_t   line_column = pc->column;
    size_t   cmt_idx     = 0;
+
    while (cmt_idx < pc->len())
    {
       int ch = pc->str[cmt_idx];
@@ -2227,6 +2251,7 @@ static void generate_if_conditional_as_text(unc_text &dst, chunk_t *ifdef)
    int column = -1;
 
    dst.clear();
+
    for (chunk_t *pc = ifdef; pc != nullptr; pc = chunk_get_next(pc))
    {
       if (column == -1)
@@ -2292,6 +2317,7 @@ void add_long_preprocessor_conditional_block_comment(void)
       size_t  nl_count = 0;
 
       chunk_t *tmp = pc;
+
       while ((tmp = chunk_get_next(tmp)) != nullptr)
       {
          // just track the preproc level:

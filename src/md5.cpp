@@ -128,6 +128,7 @@ void MD5::Update(const void *data, UINT32 len)
       buf += t;
       len -= t;
    }
+
    // Process data in 64-byte chunks
    while (len >= 64)
    {
@@ -141,7 +142,6 @@ void MD5::Update(const void *data, UINT32 len)
       buf += 64;  // TODO: possible creation of out-of-bounds pointer 64 beyond end of data
       len -= 64;
    }
-
    // Save off any remaining bytes of data
    memcpy(m_in32, buf, len); // TODO: possible access beyond array
 } // MD5::Update

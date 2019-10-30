@@ -89,6 +89,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
    bool    did_this_line = false;
    bool    fp_active     = options::align_mix_var_proto();
    chunk_t *pc           = chunk_get_next(start);
+
    while (  pc != nullptr
          && (pc->level >= start->level || pc->level == 0))
    {
@@ -239,6 +240,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
             {
                // we must look after the previous token
                chunk_t *prev_local = pc->prev;
+
                while (  chunk_is_token(prev_local, CT_PTR_TYPE)
                      || chunk_is_token(prev_local, CT_ADDR))
                {
@@ -266,6 +268,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
             if (options::align_var_def_attribute())
             {
                next = pc;
+
                while ((next = chunk_get_next_nc(next)) != nullptr)
                {
                   if (chunk_is_token(next, CT_ATTRIBUTE))
@@ -293,7 +296,6 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
       }
       pc = chunk_get_next(pc);
    }
-
    as.End();
    as_bc.End();
    as_at.End();

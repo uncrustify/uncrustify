@@ -53,6 +53,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    size_t  fcn_idx     = 0;
    size_t  tmp;
    chunk_t *pc = first;
+
    while (pc != nullptr)
    {
       LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->text() '%s', type is %s, parent_type is %s\n",
@@ -77,6 +78,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
             if (pc->orig_line != tmp)
             {
                fcn_idx = 0;
+
                for (auto &fcn : fcnDefault)
                {
                   fcn.NewLines(pc->orig_line - tmp);
@@ -112,6 +114,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
             as.NewLines(sub_nl_count);
             vdas.NewLines(sub_nl_count);
             fcn_idx = 0;
+
             for (auto &fcn : fcnDefault)
             {
                fcn.NewLines(sub_nl_count);
@@ -139,6 +142,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          as.NewLines(pc->nl_count);
          vdas.NewLines(pc->nl_count);
          fcn_idx = 0;
+
          for (auto &fcn : fcnDefault)
          {
             fcn.NewLines(pc->nl_count);
@@ -250,9 +254,9 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       }
       pc = chunk_get_next(pc);
    }
-
    as.End();
    vdas.End();
+
    for (auto &fcn : fcnDefault)
    {
       fcn.End();

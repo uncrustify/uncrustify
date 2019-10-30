@@ -134,6 +134,7 @@ const char *Args::Unused(size_t &index)
    {
       return(nullptr);
    }
+
    for (size_t idx = index; idx < m_count; idx++)
    {
       if (!GetUsed(idx))

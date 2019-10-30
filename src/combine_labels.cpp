@@ -303,6 +303,7 @@ void combine_labels(void)
                   {
                      return;
                   }
+
                   while ((tmp = chunk_get_next(tmp)) != nullptr)
                   {
                      if (chunk_is_token(tmp, CT_SEMICOLON))

@@ -52,6 +52,7 @@ void do_parens(void)
    if (options::mod_full_paren_if_bool())
    {
       chunk_t *pc = chunk_get_head();
+
       while ((pc = chunk_get_next_ncnl(pc)) != nullptr)
       {
          if (  pc->type != CT_SPAREN_OPEN
@@ -139,6 +140,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
            popen->level);
 
    chunk_t *pc = popen;
+
    while ((pc = chunk_get_next_ncnl(pc)) != nullptr && pc != pclose)
    {
       if (pc->flags.test(PCF_IN_PREPROC))
