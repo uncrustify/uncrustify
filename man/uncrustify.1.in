@@ -95,6 +95,9 @@ Print this message and exit
 \fB\-\-version\fR
 Print the version and exit
 .TP
+\fB\-\-count\-options\fR
+Print the number of available options and exit
+.TP
 \fB\-\-show\-config\fR
 Print out option documentation and exit
 .TP

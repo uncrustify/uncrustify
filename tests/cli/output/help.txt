@@ -41,6 +41,7 @@ Basic Options:
 Config/Help Options:
  -h -? --help --usage     : Print this message and exit.
  --version                : Print the version and exit.
+ --count-options          : Print the number of available options and exit.
  --show-config            : Print out option documentation and exit.
  --update-config          : Output a new config file. Use with -o FILE.
  --update-config-with-doc : Output a new config file. Use with -o FILE.
@@ -71,4 +72,3 @@ Note: Use comments containing ' *INDENT-OFF*' and ' *INDENT-ON*' to disable
 
 There are currently x options and minimal documentation.
 Try UniversalIndentGUI and good luck.
-
