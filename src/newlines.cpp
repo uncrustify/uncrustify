@@ -921,6 +921,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e 
 
    LOG_FMT(LNEWLINE, "%s(%d): start->text() is '%s', type is %s, orig_line is %zu, orig_column is %zu\n",
            __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line, start->orig_col);
+
    if (  nl_opt == IARF_IGNORE
       || (  start->flags.test(PCF_IN_PREPROC)
          && !options::nl_define_macro()))
