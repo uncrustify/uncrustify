@@ -276,6 +276,7 @@ void unc_text::update_logtext()
    // make a pessimistic guess at the size
    m_logtext.clear();
    m_logtext.reserve(m_chars.size() * 3);
+
    for (int m_char : m_chars)
    {
       toLogTextUtf8(m_char, m_logtext);
@@ -340,6 +341,7 @@ bool unc_text::equals(const unc_text &ref) const
    {
       return(false);
    }
+
    for (size_t idx = 0; idx < len; idx++)
    {
       if (m_chars[idx] != ref.m_chars[idx])
@@ -390,6 +392,7 @@ void unc_text::set(const unc_text &ref, size_t idx, size_t len)
    m_chars.resize(len);
 
    len = fix_len_idx(ref_size, idx, len);
+
    for (size_t di = 0;
         len > 0;
         di++, idx++, len--)
@@ -406,6 +409,7 @@ void unc_text::set(const string &ascii_text)
    const size_t len = ascii_text.size();
 
    m_chars.resize(len);
+
    for (size_t idx = 0; idx < len; idx++)
    {
       m_chars[idx] = ascii_text[idx];
@@ -420,6 +424,7 @@ void unc_text::set(const char *ascii_text)
    const size_t len = strlen(ascii_text);
 
    m_chars.resize(len);
+
    for (size_t idx = 0; idx < len; idx++)
    {
       m_chars[idx] = *ascii_text++;
@@ -434,6 +439,7 @@ void unc_text::set(const value_type &data, size_t idx, size_t len)
    m_chars.resize(len);
 
    len = fix_len_idx(data.size(), idx, len);
+
    for (size_t di = 0;
         len > 0;
         di++, idx++, len--)
@@ -624,9 +630,11 @@ int unc_text::find(const char *search_txt, size_t start_idx) const
       return(-1);
    }
    const size_t end_idx = s_len - t_len;
+
    for (size_t idx = start_idx; idx <= end_idx; idx++)
    {
       bool match = true;
+
       for (size_t ii = 0; ii < t_len; ii++)
       {
          if (m_chars[idx + ii] != search_txt[ii])
@@ -662,9 +670,11 @@ int unc_text::rfind(const char *search_txt, size_t start_idx) const
    {
       start_idx = end_idx;
    }
+
    for (auto idx = static_cast<int>(start_idx); idx >= 0; idx--)
    {
       bool match = true;
+
       for (size_t ii = 0; ii < t_len; ii++)
       {
          if (m_chars[idx + ii] != search_txt[ii])

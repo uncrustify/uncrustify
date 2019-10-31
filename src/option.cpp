@@ -135,12 +135,12 @@ std::string to_lower(const char *in, std::string::size_type size = 0)
    {
       out.reserve(size);
    }
+
    while (*in)
    {
       out += static_cast<char>(std::tolower(*in));
       ++in;
    }
-
    return(out);
 }
 
@@ -193,6 +193,7 @@ std::vector<std::string> split_args(std::string in, const char *filename,
       if (const auto *quote = strchr("\'\"`", in[n]))
       {
          const auto start = ++n;
+
          for ((void)n; in[n] != *quote; ++n)
          {
             if (n < k && in[n] == '\\')
@@ -221,6 +222,7 @@ std::vector<std::string> split_args(std::string in, const char *filename,
       }
       // Extract anything else
       const auto start = n;
+
       for ((void)n; n < k && !is_sep(in[n]); ++n)
       {
          if (in[n] == '\\')
@@ -239,7 +241,6 @@ std::vector<std::string> split_args(std::string in, const char *filename,
 
       out.push_back(in.substr(start, n - start));
    }
-
    return(out);
 } // split_args
 
@@ -383,6 +384,7 @@ void GenericOption::warnUnexpectedValue(const char *actual) const
    else
    {
       w("Expected one of ");
+
       while (*values)
       {
          w("'%s'", *values);
@@ -880,6 +882,7 @@ void process_option_line(const std::string &config_line, const char *filename,
       {
          LOG_FMT(LNOTE, "%s:%d set '%s':",
                  filename, cpd.line_number, args[1].c_str());
+
          for (size_t i = 2; i < args.size(); ++i)
          {
             LOG_FMT(LNOTE, " '%s'", args[i].c_str());
@@ -924,6 +927,7 @@ void process_option_line(const std::string &config_line, const char *filename,
    else if (cmd == "file_ext")
    {
       auto *const lang_arg = args[1].c_str();
+
       for (size_t i = 2; i < args.size(); ++i)
       {
          auto *const lang_name = extension_add(args[i].c_str(), lang_arg);
@@ -1012,6 +1016,7 @@ bool load_option_file(const char *filename, int compat_level)
    }
    // Read in the file line by line
    std::string line;
+
    while (std::getline(in, line))
    {
       ++cpd.line_number;
@@ -1107,6 +1112,7 @@ void save_option_file(FILE *pfile, bool with_doc, bool minimal)
          {
             const int val_len = static_cast<int>(val.length());
             fprintf(pfile, "%*.s # ", 8 - val_len, " ");
+
             for (auto pv = option->possibleValues(); *pv; ++pv)
             {
                fprintf(pfile, "%s%s", *pv, pv[1] ? "/" : "");

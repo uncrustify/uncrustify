@@ -152,6 +152,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    }
    // Find ref. Back up to the real item that is aligned.
    chunk_t *prev = start;
+
    while (  (prev = chunk_get_prev(prev)) != nullptr
          && (chunk_is_ptr_operator(prev) || chunk_is_token(prev, CT_TPAREN_OPEN)))
    {
@@ -175,6 +176,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    {
       // back up to the first '*' or '^' preceding the token
       chunk_t *tmp_prev = chunk_get_prev(ali);
+
       while (chunk_is_star(tmp_prev) || chunk_is_msref(tmp_prev))
       {
          ali      = tmp_prev;
@@ -195,6 +197,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    {
       // back up to the first '&' preceding the token
       chunk_t *tmp_prev = chunk_get_prev(ali);
+
       while (chunk_is_addr(tmp_prev))
       {
          ali      = tmp_prev;
@@ -209,6 +212,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       chunk_t *tmp    = ref;
       LOG_FMT(LAS, "AlignStack::%s(%d): tmp_col is %zu\n",
               __func__, __LINE__, tmp_col);
+
       while (tmp != nullptr && tmp != start)
       {
          chunk_t *next = chunk_get_next(tmp);
@@ -427,6 +431,7 @@ void AlignStack::Flush()
            __func__, __LINE__, m_aligned.Len());
 
    const ChunkStack::Entry *ce = nullptr;
+
    for (size_t idx = 0; idx < m_aligned.Len(); idx++)
    {
       ce = m_aligned.Get(idx);

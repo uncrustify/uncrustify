@@ -91,6 +91,7 @@ void save_set_options_for_QT(size_t level)
    LOG_FMT(LGUY, "save values, level=%zu\n", level);
    // save the values
    QT_SIGNAL_SLOT_level = level;
+
    for (auto &opt : for_qt_options)
    {
       opt.save_and_override();
@@ -108,6 +109,7 @@ void restore_options_for_QT(void)
    LOG_FMT(LGUY, "restore values\n");
    // restore the values we had before SIGNAL/SLOT
    QT_SIGNAL_SLOT_level = 0;
+
    for (auto &opt : for_qt_options)
    {
       opt.restore();

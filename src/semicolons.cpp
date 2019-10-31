@@ -48,6 +48,7 @@ void remove_extra_semicolons(void)
    LOG_FUNC_ENTRY();
 
    chunk_t *pc = chunk_get_head();
+
    while (pc != nullptr)
    {
       chunk_t *next = chunk_get_next_ncnl(pc);

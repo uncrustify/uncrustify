@@ -2352,6 +2352,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          // Find the next non-'*' chunk
          chunk_t *next = second;
+
          do
          {
             next = chunk_get_next(next);
@@ -2369,6 +2370,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (options::sp_before_unnamed_ptr_star() != IARF_IGNORE)
       {
          chunk_t *next = chunk_get_next_nc(second);
+
          while (chunk_is_token(next, CT_PTR_TYPE))
          {
             next = chunk_get_next_nc(next);
@@ -2760,6 +2762,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("FORCE");
       return(IARF_FORCE);  /* TODO: make this configurable? */
    }
+
    // this table lists out all combos where a space should NOT be present
    // CT_UNKNOWN is a wildcard.
    for (auto it : no_space_table)
@@ -2855,6 +2858,7 @@ void space_text(void)
    chunk_t *next;
    size_t  prev_column;
    size_t  column = pc->column;
+
    while (pc != nullptr)
    {
       if (chunk_is_token(pc, CT_NEWLINE))
@@ -2885,6 +2889,7 @@ void space_text(void)
       if (options::sp_skip_vbrace_tokens())
       {
          next = chunk_get_next(pc);
+
          while (  chunk_is_blank(next)
                && !chunk_is_newline(next)
                && (chunk_is_token(next, CT_VBRACE_OPEN) || chunk_is_token(next, CT_VBRACE_CLOSE)))
@@ -2957,6 +2962,7 @@ void space_text(void)
          {
             // Find the next non-empty chunk on this line
             chunk_t *tmp = next;
+
             // TODO: better use chunk_search here
             while (  tmp != nullptr
                   && (tmp->len() == 0)
@@ -3029,6 +3035,7 @@ void space_text(void)
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
          iarf_e av = do_space_ensured(pc, next, min_sp);
          min_sp = max(1, min_sp);
+
          switch (av)
          {
          case IARF_FORCE:
@@ -3150,6 +3157,7 @@ void space_text_balance_nested_parens(void)
    LOG_FUNC_ENTRY();
 
    chunk_t *first = chunk_get_head();
+
    while (first != nullptr)
    {
       chunk_t *next = chunk_get_next(first);
@@ -3197,6 +3205,7 @@ size_t space_needed(chunk_t *first, chunk_t *second)
    LOG_FMT(LSPACE, "%s(%d)\n", __func__, __LINE__);
 
    int min_sp;
+
    switch (do_space_ensured(first, second, min_sp))
    {
    case IARF_ADD:
@@ -3249,6 +3258,7 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
            (av == IARF_IGNORE) ? "IGNORE" :
            (av == IARF_ADD) ? "ADD" :
            (av == IARF_REMOVE) ? "REMOVE" : "FORCE");
+
    switch (av)
    {
    case IARF_ADD:

@@ -536,6 +536,7 @@ static void split_for_stmt(chunk_t *start)
 
    // Find the open paren so we know the level and count newlines
    chunk_t *pc = start;
+
    while ((pc = chunk_get_prev(pc)) != nullptr)
    {
       if (chunk_is_token(pc, CT_SPAREN_OPEN))
@@ -564,6 +565,7 @@ static void split_for_stmt(chunk_t *start)
    {
       st[count++] = pc;
    }
+
    // first scan backwards for the semicolons
    while (  (count < static_cast<int>(max_cnt))
          && ((pc = chunk_get_prev(pc)) != nullptr)
@@ -574,9 +576,9 @@ static void split_for_stmt(chunk_t *start)
          st[count++] = pc;
       }
    }
-
    // And now scan forward
    pc = start;
+
    while (  (count < static_cast<int>(max_cnt))
          && ((pc = chunk_get_next(pc)) != nullptr)
          && pc->flags.test(PCF_IN_SPAREN))
@@ -600,6 +602,7 @@ static void split_for_stmt(chunk_t *start)
    }
    // Still past width, check for commas at parenthese level
    pc = open_paren;
+
    while ((pc = chunk_get_next(pc)) != start)
    {
       if (chunk_is_token(pc, CT_COMMA) && (pc->level == (open_paren->level + 1)))
@@ -612,9 +615,9 @@ static void split_for_stmt(chunk_t *start)
          }
       }
    }
-
    // Still past width, check for a assignments at parenthese level
    pc = open_paren;
+
    while ((pc = chunk_get_next(pc)) != start)
    {
       if (chunk_is_token(pc, CT_ASSIGN) && (pc->level == (open_paren->level + 1)))
@@ -639,6 +642,7 @@ static void split_fcn_params_full(chunk_t *start)
    // Find the opening function parenthesis
    chunk_t *fpo = start;
    LOG_FMT(LSPLIT, "  %s(%d): Find the opening function parenthesis\n", __func__, __LINE__);
+
    while ((fpo = chunk_get_prev(fpo)) != nullptr)
    {
       LOG_FMT(LSPLIT, "%s(%d): %s, orig_col is %zu, level is %zu\n",
@@ -649,9 +653,9 @@ static void split_fcn_params_full(chunk_t *start)
          break;  // opening parenthesis found. Issue #1020
       }
    }
-
    // Now break after every comma
    chunk_t *pc = fpo;
+
    while ((pc = chunk_get_next_ncnl(pc)) != nullptr)
    {
       if (pc->level <= fpo->level)
@@ -677,6 +681,7 @@ static void split_fcn_params(chunk_t *start)
    {
       // Find the opening function parenthesis
       LOG_FMT(LSPLIT, "%s(%d): Find the opening function parenthesis\n", __func__, __LINE__);
+
       while (  ((fpo = chunk_get_prev(fpo)) != nullptr)
             && chunk_is_not_token(fpo, CT_FPAREN_OPEN))
       {
@@ -694,6 +699,7 @@ static void split_fcn_params(chunk_t *start)
    int cur_width = 0;
    int last_col  = -1;
    LOG_FMT(LSPLIT, "%s(%d):look forward until CT_COMMA or CT_FPAREN_CLOSE\n", __func__, __LINE__);
+
    while (pc != nullptr)
    {
       LOG_FMT(LSPLIT, "%s(%d): pc->text() '%s', type is %s\n",
@@ -740,10 +746,10 @@ static void split_fcn_params(chunk_t *start)
       }
       pc = chunk_get_next(pc);
    }
-
    // back up until the prev is a comma
    chunk_t *prev = pc;
    LOG_FMT(LSPLIT, "  %s(%d): back up until the prev is a comma\n", __func__, __LINE__);
+
    while ((prev = chunk_get_prev(prev)) != nullptr)
    {
       LOG_FMT(LSPLIT, "%s(%d): pc '%s', pc->level is %zu, prev '%s', prev->type is %s\n",
@@ -813,6 +819,7 @@ static void split_template(chunk_t *start)
 
    // back up until the prev is a comma
    chunk_t *prev = start;
+
    while ((prev = chunk_get_prev(prev)) != nullptr)
    {
       LOG_FMT(LSPLIT, "  %s(%d): prev '%s'\n", __func__, __LINE__, prev->text());

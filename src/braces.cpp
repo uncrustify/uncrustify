@@ -166,6 +166,7 @@ void do_braces(void)
    // Mark one-liners
    // Issue #2232 put this at the beginning
    chunk_t *pc = chunk_get_head();
+
    while ((pc = chunk_get_next_ncnl(pc)) != nullptr)
    {
       if (pc->type != CT_BRACE_OPEN && pc->type != CT_VBRACE_OPEN)
@@ -184,6 +185,7 @@ void do_braces(void)
       }
       // Scan for the brace close or a newline
       tmp = br_open;
+
       while ((tmp = chunk_get_next_nc(tmp)) != nullptr)
       {
          if (chunk_is_newline(tmp))
@@ -289,6 +291,7 @@ static bool should_add_braces(chunk_t *vbopen)
    size_t  nl_count = 0;
 
    chunk_t *pc = nullptr;
+
    for (pc = chunk_get_next_nc(vbopen, scope_e::PREPROC);
         pc != nullptr && pc->level > vbopen->level;
         pc = chunk_get_next_nc(pc, scope_e::PREPROC))
@@ -342,6 +345,7 @@ static bool can_remove_braces(chunk_t *bopen)
    pc = chunk_get_next_nc(bopen, scope_e::ALL);
    LOG_FMT(LBRDEL, "%s(%d):  - begin with token '%s', orig_line is %zu, orig_col is %zu\n",
            __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+
    while (pc != nullptr && pc->level >= level)
    {
       LOG_FMT(LBRDEL, "%s(%d): test token '%s', orig_line is %zu, orig_col is %zu\n",
@@ -483,6 +487,7 @@ static void examine_brace(chunk_t *bopen)
    int          br_count   = 0;
 
    chunk_t      *pc = chunk_get_next_nc(bopen);
+
    while (pc != nullptr && pc->level >= level)
    {
       if (chunk_is_token(pc, CT_NEWLINE))
@@ -879,6 +884,7 @@ static void convert_vbrace_to_brace(void)
          // Find the matching vbrace close
          chunk_t *vbc = nullptr;
          chunk_t *tmp = pc;
+
          while ((tmp = chunk_get_next(tmp)) != nullptr)
          {
             if (in_preproc && !tmp->flags.test(PCF_IN_PREPROC))
@@ -1022,6 +1028,7 @@ void add_long_closebrace_comment(void)
       size_t  nl_count = 0;
 
       chunk_t *tmp = pc;
+
       while ((tmp = chunk_get_next(tmp, scope_e::PREPROC)) != nullptr)
       {
          if (chunk_is_newline(tmp))
@@ -1176,6 +1183,7 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
               __func__, __LINE__, (pc == nullptr) ? "<null>" : get_token_name(pc->type));
       return(next);
    }
+
    // scan to make sure there are no definitions at brace level between braces
    for (chunk_t *tmp_pc = br_open;
         tmp_pc != br_close;
@@ -1295,6 +1303,7 @@ static void mod_case_brace(void)
    LOG_FUNC_ENTRY();
 
    chunk_t *pc = chunk_get_head();
+
    while (pc != nullptr)
    {
       chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
@@ -1338,6 +1347,7 @@ static void process_if_chain(chunk_t *br_start)
    bool    must_have_braces = false;
 
    chunk_t *pc = br_start;
+
    while (pc != nullptr)
    {
       LOG_FMT(LBRCH, "%s(%d): pc->text() is '%s', orig_line is %zu, orig_col is %zu.\n",
@@ -1417,6 +1427,7 @@ static void process_if_chain(chunk_t *br_start)
               __func__, __LINE__, braces.size());
 
       const auto ite = braces.rend();
+
       for (auto itc = braces.rbegin(); itc != ite; ++itc)
       {
          const auto brace = *itc;
@@ -1455,6 +1466,7 @@ static void process_if_chain(chunk_t *br_start)
 
       // Issue #2229
       const auto ite = braces.end();
+
       for (auto itc = braces.begin(); itc != ite; ++itc)
       {
          const auto brace = *itc;

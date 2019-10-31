@@ -255,6 +255,7 @@ bool are_chunks_in_same_line(chunk_t *start, chunk_t *end)
    {
       return(false);
    }
+
    while (tmp != nullptr && tmp != end)
    {
       if (chunk_is_token(tmp, CT_NEWLINE))
@@ -376,7 +377,6 @@ static chunk_t *chunk_ppa_search(chunk_t *cur, const check_t check_fct, const bo
          return(pc);
       }
    }
-
    // Ran out of tokens
    return(nullptr);
 }
@@ -408,6 +408,7 @@ chunk_t *chunk_get_next(chunk_t *cur, scope_e scope)
       }
       return(pc);
    }
+
    // Not in a preproc, skip any preproc
    while (pc != nullptr && pc->flags.test(PCF_IN_PREPROC))
    {
@@ -439,6 +440,7 @@ chunk_t *chunk_get_prev(chunk_t *cur, scope_e scope)
       }
       return(pc);
    }
+
    // Not in a preproc, skip any preproc
    while (pc != nullptr && pc->flags.test(PCF_IN_PREPROC))
    {
@@ -700,7 +702,6 @@ chunk_t *chunk_first_on_line(chunk_t *pc)
    {
       first = pc;
    }
-
    return(first);
 }
 
@@ -753,7 +754,6 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
       g_cl.AddBefore(pc2, pc1);
       pc2 = tmp;
    }
-
    /*
     * Should now be:
     * ? - start2 - a2 - b2 - start1 - a1 - b1 - nl1 - ? - ref2 - nl2 - ?
@@ -777,7 +777,6 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
       ref2 = pc1;
       pc1  = tmp;
    }
-
    /*
     * Should now be:
     * ? - start2 - a2 - b2 - nl1 - ? - ref2 - start1 - a1 - b1 - nl2 - ?
@@ -991,6 +990,7 @@ static chunk_t *chunk_skip_dc_member(chunk_t *start, scope_e scope, direction_e 
 
    chunk_t *pc   = start;
    chunk_t *next = chunk_is_token(pc, CT_DC_MEMBER) ? pc : step_fcn(pc, scope);
+
    while (chunk_is_token(next, CT_DC_MEMBER))
    {
       pc = step_fcn(next, scope);

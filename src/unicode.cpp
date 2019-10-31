@@ -75,6 +75,7 @@ static bool is_ascii(const vector<UINT8> &data, size_t &non_ascii_cnt, size_t &z
 {
    non_ascii_cnt = 0;
    zero_cnt      = 0;
+
    for (unsigned char value : data)
    {
       if (value & 0x80)
@@ -95,6 +96,7 @@ static bool is_ascii(const vector<UINT8> &data, size_t &non_ascii_cnt, size_t &z
 static bool decode_bytes(const vector<UINT8> &in_data, deque<int> &out_data)
 {
    out_data.resize(in_data.size());
+
    for (size_t idx = 0; idx < in_data.size(); idx++)
    {
       out_data[idx] = in_data[idx];
@@ -175,6 +177,7 @@ static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
          idx = 3;  // skip it
       }
    }
+
    while (idx < in_data.size())
    {
       int ch = in_data[idx++];
@@ -214,6 +217,7 @@ static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
          // invalid UTF-8 sequence
          return(false);
       }
+
       while (cnt-- > 0 && idx < in_data.size())
       {
          int tmp = in_data[idx++];
@@ -454,6 +458,7 @@ static void write_utf8(int ch)
    vv.reserve(6);
 
    encode_utf8(ch, vv);
+
    for (unsigned char char_val : vv)
    {
       write_byte(char_val);

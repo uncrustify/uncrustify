@@ -96,6 +96,7 @@ void pawn_scrub_vsemi(void)
    {
       return;
    }
+
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       if (pc->type != CT_VSEMICOLON)
@@ -174,6 +175,7 @@ void pawn_prescan(void)
     */
    bool    did_nl = true;
    chunk_t *pc    = chunk_get_head();
+
    while (pc != nullptr)
    {
       if (  did_nl
@@ -214,6 +216,7 @@ static chunk_t *pawn_process_line(chunk_t *start)
       fcn = start;
    }
    chunk_t *pc = start;
+
    while (  ((pc = chunk_get_next_nc(pc)) != nullptr)
          && !chunk_is_str(pc, "(", 1)
          && pc->type != CT_ASSIGN
@@ -285,6 +288,7 @@ void pawn_add_virtual_semicolons(void)
    {
       chunk_t *prev = nullptr;
       chunk_t *pc   = chunk_get_head();
+
       while ((pc = chunk_get_next(pc)) != nullptr)
       {
          if (  !chunk_is_comment(pc)
@@ -384,6 +388,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
 
       set_chunk_type(last, CT_ANGLE_OPEN);
       set_chunk_parent(last, CT_FUNC_DEF);
+
       while (  ((last = chunk_get_next(last)) != nullptr)
             && !chunk_is_str(last, ">", 1))
       {
@@ -435,6 +440,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
 
       // find the next newline at level 0
       prev = chunk_get_next_ncnl(prev);
+
       do
       {
          LOG_FMT(LPFUNC, "%s:%zu] check %s, level %zu\n",

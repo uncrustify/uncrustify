@@ -98,6 +98,7 @@ void logmask_from_string(const char *str, log_mask_t &mask)
    char *ptmp;
    bool was_dash   = false;
    int  last_level = -1;
+
    while (*str != 0)         // check string until termination character
    {
       if (unc_isspace(*str)) // ignore spaces and go on with next character

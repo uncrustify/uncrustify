@@ -190,6 +190,7 @@ void brace_cleanup(void)
 
    ParseFrame frm{};
    chunk_t    *pc = chunk_get_head();
+
    while (pc != nullptr)
    {
       // Check for leaving a #define body
@@ -259,6 +260,7 @@ static bool maybe_while_of_do(chunk_t *pc)
    {
       return(false);
    }
+
    // Find the chunk before the preprocessor
    while (prev != nullptr && prev->flags.test(PCF_IN_PREPROC))
    {
@@ -799,6 +801,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
                         ? brace_stage_e::BRACE2
                         : brace_stage_e::PAREN1;
    }
+
    // Check for CT_ELSE after CT_IF
    while (frm.top().stage == brace_stage_e::ELSE)
    {
@@ -839,6 +842,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
       // Jump to the 'expecting brace' stage
       frm.top().stage = brace_stage_e::BRACE2;
    }
+
    // Check for CT_CATCH or CT_FINALLY after CT_TRY or CT_CATCH
    while (frm.top().stage == brace_stage_e::CATCH)
    {
@@ -1120,6 +1124,7 @@ static void mark_namespace(chunk_t *pns)
       set_chunk_parent(pns, CT_USING);
    }
    pc = chunk_get_next_ncnl(pns);
+
    while (pc != nullptr)
    {
       set_chunk_parent(pc, CT_NAMESPACE);
@@ -1190,6 +1195,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
    {
       chunk.flags &= ~PCF_IN_PREPROC;
    }
+
    while (chunk_is_newline(ref) || chunk_is_comment(ref))
    {
       ref->level++;

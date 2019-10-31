@@ -44,6 +44,7 @@ void prot_the_line(const char *func_name, int theLine, unsigned int actual_line,
    counter++;
    tokenCounter = 0;
    LOG_FMT(LGUY, "Prot_the_line:(%s:%d)(%zu)\n", func_name, theLine, counter);
+
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = pc->next)
    {
       if (pc->orig_line == actual_line)
@@ -118,9 +119,11 @@ void examine_Data(const char *func_name, int theLine, int what)
    LOG_FMT(LGUY, "\n%s:", func_name);
 
    chunk_t *pc;
+
    switch (what)
    {
    case 1:
+
       for (pc = chunk_get_head(); pc != nullptr; pc = pc->next)
       {
          if (chunk_is_token(pc, CT_SQUARE_CLOSE) || chunk_is_token(pc, CT_TSQUARE))
@@ -135,6 +138,7 @@ void examine_Data(const char *func_name, int theLine, int what)
 
    case 2:
       LOG_FMT(LGUY, "2:(%d)\n", theLine);
+
       for (pc = chunk_get_head(); pc != nullptr; pc = pc->next)
       {
          if (pc->orig_line == 7)
@@ -154,6 +158,7 @@ void examine_Data(const char *func_name, int theLine, int what)
 
    case 3:
       LOG_FMT(LGUY, "3:(%d)\n", theLine);
+
       for (pc = chunk_get_head(); pc != nullptr; pc = pc->next)
       {
          if (chunk_is_token(pc, CT_NEWLINE))
@@ -170,6 +175,7 @@ void examine_Data(const char *func_name, int theLine, int what)
 
    case 4:
       LOG_FMT(LGUY, "4:(%d)\n", theLine);
+
       for (pc = chunk_get_head(); pc != nullptr; pc = pc->next)
       {
          if (pc->orig_line == 6)
@@ -293,6 +299,7 @@ void dump_in(unsigned int type)
    if (D_file != nullptr)
    {
       unsigned int lineNumber = 0;
+
       while (fgets(buffer, sizeof(buffer), D_file) != nullptr)
       {
          ++lineNumber;

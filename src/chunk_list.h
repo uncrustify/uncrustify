@@ -837,6 +837,7 @@ static inline bool chunk_is_forin(chunk_t *pc)
       if (chunk_is_token(prev, CT_FOR))
       {
          chunk_t *next = pc;
+
          while (  next != nullptr
                && next->type != CT_SPAREN_CLOSE
                && next->type != CT_IN)

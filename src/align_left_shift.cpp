@@ -27,6 +27,7 @@ void align_left_shift(void)
    as.Start(255);
 
    chunk_t *pc = chunk_get_head();
+
    while (pc != nullptr)
    {
       if (chunk_is_newline(pc))

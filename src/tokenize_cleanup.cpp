@@ -284,6 +284,7 @@ void tokenize_cleanup(void)
     * this change in the first pass.
     */
    chunk_t *pc;
+
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
       if (chunk_is_token(pc, CT_SQUARE_OPEN))
@@ -335,6 +336,7 @@ void tokenize_cleanup(void)
    // We can handle everything else in the second pass
    pc   = chunk_get_head();
    next = chunk_get_next_ncnl(pc);
+
    while (pc != nullptr && next != nullptr)
    {
       if (chunk_is_token(pc, CT_DOT) && language_is_set(LANG_ALLC))
@@ -643,6 +645,7 @@ void tokenize_cleanup(void)
              */
             tmp2 = next;
             chunk_t *tmp;
+
             while ((tmp = chunk_get_next(tmp2)) != nullptr)
             {
                if (  tmp->type != CT_WORD
@@ -658,6 +661,7 @@ void tokenize_cleanup(void)
                // Change tmp into a type so that space_needed() works right
                make_type(tmp);
                size_t num_sp = space_needed(tmp2, tmp);
+
                while (num_sp-- > 0)
                {
                   next->str.append(" ");
@@ -670,7 +674,6 @@ void tokenize_cleanup(void)
             {
                chunk_del(tmp2);
             }
-
             set_chunk_type(next, CT_OPERATOR_VAL);
 
             next->orig_col_end = next->orig_col + next->len();
@@ -760,6 +763,7 @@ void tokenize_cleanup(void)
             {
                set_chunk_type(pc, CT_SQL_EXEC);
             }
+
             // Change words into CT_SQL_WORD until CT_SEMICOLON
             while (tmp != nullptr)
             {
@@ -795,6 +799,7 @@ void tokenize_cleanup(void)
          if (chunk_is_token(next, CT_PAREN_OPEN))
          {
             chunk_t *tmp = chunk_get_next_ncnl(next);
+
             while (tmp && tmp->type != CT_PAREN_CLOSE)
             {
                if (chunk_is_str(tmp, "in", 2))
@@ -879,6 +884,7 @@ void tokenize_cleanup(void)
       if (chunk_is_token(pc, CT_OC_INTF))
       {
          chunk_t *tmp = chunk_get_next_ncnl(pc, scope_e::PREPROC);
+
          while (tmp != nullptr && tmp->type != CT_OC_END)
          {
             if (get_token_pattern_class(tmp->type) != pattern_class_e::NONE)
@@ -1090,6 +1096,7 @@ static void check_template(chunk_t *start)
       // We have: "template< ... >", which is a template declaration
       size_t level  = 1;
       size_t parens = 0;
+
       for (pc = chunk_get_next_ncnl(start, scope_e::PREPROC);
            pc != nullptr;
            pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
@@ -1170,6 +1177,7 @@ static void check_template(chunk_t *start)
       bool in_if         = false;
       bool hit_semicolon = false;
       pc = start;
+
       while ((pc = chunk_get_prev_ncnl(pc, scope_e::PREPROC)) != nullptr)
       {
          if (  (chunk_is_token(pc, CT_SEMICOLON) && hit_semicolon)
@@ -1195,7 +1203,6 @@ static void check_template(chunk_t *start)
             break;
          }
       }
-
       /*
        * Scan forward to the angle close
        * If we have a comparison in there, then it can't be a template.
@@ -1205,6 +1212,7 @@ static void check_template(chunk_t *start)
       size_t    num_tokens = 1;
 
       tokens[0] = CT_ANGLE_OPEN;
+
       for (pc = chunk_get_next_ncnl(start, scope_e::PREPROC);
            pc != nullptr;
            pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
@@ -1332,6 +1340,7 @@ static void check_template_arg(chunk_t *start, chunk_t *end)
    // 1. run to test if expression is numeric
    bool    expressionIsNumeric = false;
    chunk_t *pc                 = start;
+
    while (pc != end)
    {
       chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
@@ -1362,6 +1371,7 @@ static void check_template_arg(chunk_t *start, chunk_t *end)
    if (!expressionIsNumeric)
    {
       pc = start;
+
       while (pc != end)
       {
          chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
@@ -1481,6 +1491,7 @@ static void mark_selectors_in_property_with_open_paren(chunk_t *open_paren)
          && (chunk_is_str(tmp, "setter", 6) || chunk_is_str(tmp, "getter", 6)))
       {
          tmp = tmp->next;
+
          while (  tmp
                && tmp->type != CT_COMMA
                && tmp->type != CT_PAREN_CLOSE)

@@ -31,6 +31,7 @@ void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev)
    {
       LOG_FMT(sev, "%s(%d): max_col=%zu\n", __func__, __LINE__, col);
       chunk_t *pc;
+
       while ((pc = cs.Pop_Back()) != nullptr)
       {
          align_to_column(pc, col);
@@ -96,7 +97,6 @@ chunk_t *align_trailing_comments(chunk_t *start)
       }
       pc = chunk_get_next(pc);
    }
-
    // Start with the minimum original column
    col = min_orig;
 
@@ -200,6 +200,7 @@ void align_right_comments(void)
    }
 
    chunk_t *pc = chunk_get_head();
+
    while (pc != nullptr)
    {
       if (pc->flags.test(PCF_RIGHT_COMMENT))

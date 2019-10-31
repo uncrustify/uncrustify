@@ -40,6 +40,7 @@ chunk_t *align_func_param(chunk_t *start)
    size_t  chunk_count   = 0;
 
    chunk_t *pc = start;
+
    while ((pc = chunk_get_next(pc)) != nullptr)
    {
       chunk_count++;
@@ -94,6 +95,7 @@ void align_func_params(void)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc = chunk_get_head();
+
    while ((pc = chunk_get_next(pc)) != nullptr)
    {
       if (  pc->type != CT_FPAREN_OPEN

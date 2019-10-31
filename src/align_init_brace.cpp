@@ -68,6 +68,7 @@ void align_init_brace(chunk_t *start)
    }
    pc = chunk_get_next(start);
    size_t idx = 0;
+
    do
    {
       chunk_t *tmp;
