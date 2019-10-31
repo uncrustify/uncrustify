@@ -67,9 +67,7 @@ def cmd_init(repo, args):
     if v is None:
         c = get_version_info(repo, required=False)
         if c:
-            n = list(c)
-            n[1] += 1
-            n = '.'.join(map(str, n))
+            n = '.'.join(map(str, (c[0], c[1] + 1, 0)))
             v = input('Version to be created? [{}] '.format(n))
             if len(v) == 0:
                 v = n
