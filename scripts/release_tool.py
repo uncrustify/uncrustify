@@ -62,6 +62,16 @@ def alter(repo, path, old, new):
 
 
 # -----------------------------------------------------------------------------
+def generate(repo, path, *args):
+    import subprocess
+
+    p = os.path.join(repo.working_tree_dir, path)
+    with open(p, 'w') as f:
+        c = subprocess.check_call(args, stdout=f)
+    print(path)
+
+
+# -----------------------------------------------------------------------------
 def cmd_init(repo, args):
     v = args.version
     if v is None:
@@ -85,10 +95,7 @@ def cmd_init(repo, args):
 # -----------------------------------------------------------------------------
 def cmd_update(repo, args):
     v = get_version_str(repo)
-    if hasattr(args, 'count'):
-        c = args.count
-    else:
-        c = get_option_count(args.executable)
+    c = get_option_count(args.executable)
 
     alter(repo, 'CMakeLists.txt',
           r'(set *[(] *CURRENT_VERSION +"Uncrustify)[-][0-9.]+',
@@ -102,6 +109,15 @@ def cmd_update(repo, args):
     alter(repo, 'documentation/htdocs/index.html',
           r'[0-9]+ configurable options',
           r'{} configurable options'.format(c))
+
+    generate(repo, 'etc/defaults.cfg',
+             args.executable, '--show-config')
+    generate(repo, 'documentation/htdocs/default.cfg',
+             args.executable, '--show-config')
+    generate(repo, 'documentation/htdocs/config.txt',
+             args.executable, '--show-config')
+    generate(repo, 'etc/uigui_uncrustify.ini',
+             args.executable, '--universalindent')
 
 
 # -----------------------------------------------------------------------------
@@ -156,11 +172,8 @@ def main():
     parser_update = subparsers.add_parser(
         'update', help='update version information')
     parser_update.set_defaults(func=cmd_update)
-    group_update = parser_update.add_mutually_exclusive_group(required=True)
-    group_update.add_argument('-c', '--options', type=int,
-                              help='number of available options')
-    group_update.add_argument('-x', '--executable',
-                              help='path to uncrustify executable')
+    parser_update.add_argument('executable',
+                               help='path to uncrustify executable')
 
     parser_commit = subparsers.add_parser(
         'commit', help='commit changes for new version')
