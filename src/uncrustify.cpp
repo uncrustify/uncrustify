@@ -230,6 +230,14 @@ void usage_error(const char *msg)
 }
 
 
+static void tease()
+{
+   fprintf(stdout,
+           "There are currently %zu options and minimal documentation.\n"
+           "Try UniversalIndentGUI and good luck.\n", get_option_count());
+}
+
+
 void usage(const char *argv0)
 {
    fprintf(stdout,
@@ -279,6 +287,7 @@ void usage(const char *argv0)
            "Config/Help Options:\n"
            " -h -? --help --usage     : Print this message and exit.\n"
            " --version                : Print the version and exit.\n"
+           " --count-options          : Print the number of available options and exit.\n"
            " --show-config            : Print out option documentation and exit.\n"
            " --update-config          : Output a new config file. Use with -o FILE.\n"
            " --update-config-with-doc : Output a new config file. Use with -o FILE.\n"
@@ -307,11 +316,9 @@ void usage(const char *argv0)
            "      processing of parts of the source file (these can be overridden with\n"
            "      enable_processing_cmt and disable_processing_cmt).\n"
            "\n"
-           "There are currently %d options and minimal documentation.\n"
-           "Try UniversalIndentGUI and good luck.\n"
-           "\n"
            ,
-           path_basename(argv0), (int)get_option_count());
+           path_basename(argv0));
+   tease();
 } // usage
 
 
@@ -455,6 +462,12 @@ int main(int argc, char *argv[])
       || arg.Present("-?"))
    {
       usage(argv[0]);
+      return(EXIT_SUCCESS);
+   }
+
+   if (arg.Present("--count-options"))
+   {
+      tease();
       return(EXIT_SUCCESS);
    }
 
