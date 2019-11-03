@@ -2,7 +2,15 @@ cmake_minimum_required(VERSION 3.0.0)
 
 # ------------------------------------------------------------------------------
 
-SET(emscripten_root_path "$ENV{EMSCRIPTEN}")
+
+if(DEFINED ENV{EMSCRIPTEN})
+    SET(emscripten_root_path "$ENV{EMSCRIPTEN}")
+else()
+    find_file(EMCC_EXECUTABLE emcc HINTS "/usr/lib/emscripten")
+    if(EXISTS ${EMCC_EXECUTABLE})
+        get_filename_component(emscripten_root_path ${EMCC_EXECUTABLE} DIRECTORY)
+    endif()
+endif()
 
 # Abort if not found.
 if ("${emscripten_root_path}" STREQUAL "")
@@ -30,6 +38,7 @@ include(CheckSymbolExists)
 include(CheckCXXSymbolExists)
 include(CheckTypeSize)
 
+find_package(PythonInterp REQUIRED)
 
 #
 # Determine config
@@ -91,67 +100,117 @@ else()
   configure_file("${unc_projdir}/src/config.h.in" config.h @ONLY)
 endif()
 
-
 #
 # Generate uncrustify_version.h
 #
 
-# FIXME: checking for CMAKE_BUILD_TYPE and passing it to make_version.py
-# does not work with VS .sln projects
-if( NOT CMAKE_BUILD_TYPE )
-  set( CMAKE_BUILD_TYPE Release )
-endif()
-set( FALLBACK_VERSION "Uncrustify-0.66.1_f" )
+set(CURRENT_VERSION "Uncrustify-0.69.0_f")
 
-find_package(PythonInterp REQUIRED)
-execute_process(
-  COMMAND ${PYTHON_EXECUTABLE} "${unc_projdir}/scripts/make_version.py" ${CMAKE_BUILD_TYPE}
-  WORKING_DIRECTORY ${unc_projdir}
-  RESULT_VARIABLE make_version_error
-  OUTPUT_VARIABLE make_version_output
-)
-
-if (make_version_error)
-    message(WARNING "${make_version_error}: ${make_version_output}, ../scripts/make_version.py doesn't work properly")
-    set( CURRENT_VERSION ${FALLBACK_VERSION} )
+option(NoGitVersionString "Do not use make_version.py and git to build a version string" OFF)
+if(NoGitVersionString)
+  configure_file("${unc_projdir}/src/uncrustify_version.h.in" "${PROJECT_BINARY_DIR}/uncrustify_version.h" @ONLY)
 else()
-    string(STRIP ${make_version_output} CURRENT_VERSION)
+  # Add target to generate version header;
+  # do this every build to ensure git SHA is up to date
+  add_custom_target(generate_version_header
+    ${CMAKE_COMMAND}
+    -D PYTHON_EXECUTABLE:STRING=${PYTHON_EXECUTABLE}
+    -D SOURCE_DIR:PATH="${unc_projdir}"
+    -D INPUT:PATH="${unc_projdir}/src/uncrustify_version.h.in"
+    -D OUTPUT:PATH="${PROJECT_BINARY_DIR}/uncrustify_version.h"
+    -D CURRENT_VERSION:STRING="CURRENT_VERSION"
+    -P ${unc_projdir}/cmake/GenerateVersionHeader.cmake
+    COMMENT "Generating version header"
+  )
+  set_source_files_properties(
+    "${PROJECT_BINARY_DIR}/uncrustify_version.h"
+    PROPERTIES GENERATED TRUE
+  )
 endif()
-
-configure_file("${unc_projdir}/src/uncrustify_version.h.in" uncrustify_version.h @ONLY)
-
 
 #
 # Generate token_names.h
 #
 add_custom_command(
-  OUTPUT "token_names.h"
+  OUTPUT "${PROJECT_BINARY_DIR}/token_names.h"
   COMMAND ${CMAKE_COMMAND}
     "-Dsrc_file=${unc_projdir}/src/token_enum.h"
-    "-Ddst_file=token_names.h"
+    "-Ddst_file=${PROJECT_BINARY_DIR}/token_names.h"
     -P "${unc_projdir}/cmake/GenerateTokenNames.cmake"
   MAIN_DEPENDENCY "${unc_projdir}/src/token_enum.h"
   COMMENT "Generating token_names.h"
 )
 
+# Set up commands for generated source files
+function(py_gen OUTPUT SCRIPT INPUT)
+  set(out "${PROJECT_BINARY_DIR}/src/${OUTPUT}")
+  set(deps "${unc_projdir}/src/${INPUT}")
+  get_filename_component(outdir "${out}" DIRECTORY)
+  foreach(arg IN LISTS ARGN)
+    list(APPEND deps "${unc_projdir}/src/${arg}")
+  endforeach()
 
-#
-# Generate punctuator_table.h
-#
-add_custom_command(
-  OUTPUT "punctuator_table.h"
-  COMMAND ${PYTHON_EXECUTABLE}
-    "${unc_projdir}/scripts/punc.py"
-    "punctuator_table.h"
-  MAIN_DEPENDENCY "${unc_projdir}/src/symbols_table.h"
-  COMMENT "Generating punctuator_table.h"
+  add_custom_command(
+    OUTPUT "${out}"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${outdir}"
+    COMMAND ${PYTHON_EXECUTABLE}
+      "${unc_projdir}/scripts/${SCRIPT}"
+      "${out}"
+      ${deps}
+    DEPENDS ${deps} "${unc_projdir}/scripts/${SCRIPT}"
+    MAIN_DEPENDENCY ${unc_projdir}/src/${INPUT}
+    COMMENT "Generating ${OUTPUT}"
+  )
+endfunction()
+
+py_gen(punctuator_table.h
+  make_punctuator_table.py
+  symbols_table.h
+)
+
+py_gen(options.cpp
+  make_options.py
+  options.h
+  options.cpp.in
+)
+
+py_gen(option_enum.h
+  make_option_enum.py
+  option.h
+  option_enum.h.in
+)
+
+py_gen(option_enum.cpp
+  make_option_enum.py
+  option.h
+  option_enum.cpp.in
 )
 
 # ------------------------------------------------------------------------------
 
 FILE(GLOB unc_infiles "${unc_projdir}/src/*.cpp")
 
-ADD_EXECUTABLE(${project_name} ${unc_infiles} ${unc_projdir}/src/token_enum.h ${unc_projdir}/src/symbols_table.h)
+ADD_EXECUTABLE(${project_name}
+  ${unc_infiles} 
+  ${unc_projdir}/src/token_enum.h 
+  ${unc_projdir}/src/symbols_table.h 
+  ${unc_projdir}/src/options.h
+  ${unc_projdir}/src/option.h
+  ${PROJECT_BINARY_DIR}/src/options.cpp
+  ${PROJECT_BINARY_DIR}/src/option_enum.cpp
+  ${PROJECT_BINARY_DIR}/src/option_enum.h
+  ${PROJECT_BINARY_DIR}/uncrustify_version.h
+  ${unc_projdir}/src/option_enum.cpp.in
+  ${unc_projdir}/src/option_enum.h.in
+  ${unc_projdir}/src/options.cpp.in
+)
+add_dependencies(${project_name} generate_version_header)
+
+include_directories(
+  ${PROJECT_BINARY_DIR}
+  ${PROJECT_BINARY_DIR}/src
+  ${unc_projdir}/src
+)
 
 SET(unc_compile_flags "--bind -O3")
 SET_TARGET_PROPERTIES(${project_name}
