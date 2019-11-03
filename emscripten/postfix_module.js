@@ -110,7 +110,7 @@
      * in a config) and passes it to the actual _loadConfig function while
      * also managing the memory on the emscripten heap.
      */
-    Module.loadConfig = function(str)
+    Module.load_config = function(str)
     {
         // UTF8 functions return on empty string but they have to be accepted too
         // to reset the current config
@@ -124,7 +124,7 @@
         Module.writeAsciiToMemory(str, stringInputPtr);
 
 
-        var retStringPointer = Module["_loadConfig"](stringInputPtr);
+        var retStringPointer = Module["_load_config"](stringInputPtr);
         Module._free(stringInputPtr);
 
 
