@@ -610,6 +610,53 @@ intptr_t _debug(intptr_t _file, lang_flag_e langIDX)
 }
 
 
+//template<typename MapType>
+//struct MapAccess
+//{
+//   static val get(const MapType &m, const typename MapType::key_type &k)
+//   {
+//      auto i = m.find(k);
+//
+//      return((i == m.end())
+//             ? val::undefined()
+//             : val(i->second));
+//   }
+//
+//
+//   static void set(MapType                             &map,
+//                   const typename MapType::key_type    &key,
+//                   const typename MapType::mapped_type &value)
+//   {
+//      map[key] = value;
+//   }
+//
+//
+//   static std::vector<typename MapType::key_type> keys(const MapType &map)
+//   {
+//      std::vector<typename MapType::key_type> keys;
+//
+//      keys.reserve(map.size());
+//
+//      for (const auto &pair : map)
+//      {
+//         keys.push_back(pair.first);
+//      }
+//      return(keys);
+//   }
+//};
+//
+//
+//template<typename K, typename V>
+//class_<std::unordered_map<K, V> > register_unordered_mapmap(const char *name)
+//{
+//   using MapType = std::unordered_map<K, V>;
+//
+//   return(class_<MapType>(name).template constructor<>()
+//             .function("size", &MapType::size)
+//             .function("get", MapAccess<MapType>::get)
+//             .function("set", MapAccess<MapType>::set)
+//             .function("keys", MapAccess<MapType>::keys));
+//}
 EMSCRIPTEN_BINDINGS(MainModule)
 {
    // region enum bindings
@@ -1111,8 +1158,12 @@ EMSCRIPTEN_BINDINGS(MainModule)
    class_<Option<unsigned>, base<GenericOption> >("OptionUnsigned")
       .function("value", &Option<unsigned>::operator());
 
+   //class_<BoundedOption<unsigned, unsigned, unsigned>, base<Option>>("BoundedOption");
+
    class_<Option<signed>, base<GenericOption> >("OptionSigned")
       .function("value", &Option<signed>::operator());
+
+   //class_<BoundedOption<signed, signed, signed>, base<Option>>("BoundedOption");
 
    class_<Option<std::string>, base<GenericOption> >("OptionString")
       .function("value", &Option<std::string>::operator());
