@@ -17,7 +17,7 @@ The '-f' and '-o' options may not be used with '-F' or '--replace'.
 The '--prefix' and '--suffix' options may not be used with '--replace'.
 
 Basic Options:
- -c CFG       : Use the config file CFG.
+ -c CFG       : Use the config file CFG, or defaults if CFG is set to '-'.
  -f FILE      : Process the single file FILE (output to stdout, use with -o).
  -o FILE      : Redirect stdout to FILE.
  -F FILE      : Read files to process from FILE, one filename per line (- is stdin).
@@ -51,7 +51,8 @@ Config/Help Options:
  --set <option>=<value>   : Sets a new value to a config option.
 
 Debug Options:
- -p FILE      : Dump debug info to a file. Must be used with the option -f FILE.
+ -p FILE      : Dump debug info into FILE, or to stdout if FILE is set to '-'.
+                Must be used in combination with '-f FILE'
  -L SEV       : Set the log severity (see log_levels.h; note 'A' = 'all')
  -s           : Show the log severity in the logs.
  --decode     : Decode remaining args (chunk flags) and exit.
