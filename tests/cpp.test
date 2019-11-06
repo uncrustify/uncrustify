@@ -90,6 +90,7 @@
 
 30080  nl_brace_brace-a.cfg                 cpp/nl_brace_brace.cpp
 30081  Issue_2383.cfg                       cpp/Issue_2383.cpp
+30082  Issue_931.cfg                        cpp/Issue_931.cpp
 
 30085  nSolve.cfg                           cpp/align_class.cpp
 30086  align_class-constr.cfg               cpp/align_class-constr.cpp

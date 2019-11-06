@@ -1293,6 +1293,13 @@ indent_func_call_param;
 extern Option<bool>
 indent_func_def_param;
 
+// for function definitions, only if indent_func_def_param is false
+// Allows to align params when appropriate and indent them when not
+// behave as if it was true if paren position is more than this value
+// if paren position is more than the option value
+extern BoundedOption<unsigned, 0, 160>
+indent_func_def_param_paren_pos_threshold;
+
 // Same as indent_func_call_param, but for function prototypes.
 extern Option<bool>
 indent_func_proto_param;
