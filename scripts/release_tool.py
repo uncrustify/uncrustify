@@ -1,20 +1,5 @@
 #!/usr/bin/env python
 
-'''
-This script attempts to extract what options have been added since the
-specified revision (usually a tag, but any revision that git recognizes may be
-provided). It accepts an optional second revision to use as the cut-off. The
-default is your LOCAL "master". Thus, you should ensure that this is up to date
-before running this script.
-
-This script works by extracting the set of options before and after every
-commit that affected ':src/options.h' and computing the differences. It should,
-therefore, be fairly robust (for example, options that moved around won't show
-up). However, if an option is removed and subsequently re-added, or if an
-option was added and subsequently removed, the resulting records will need to
-be reconciled manually.
-'''
-
 import argparse
 import git
 import os
