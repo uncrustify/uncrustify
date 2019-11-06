@@ -682,7 +682,7 @@ int main(int argc, char *argv[])
     * It is optional for "--universalindent", "--parsed" and "--detect", but
     * required for everything else.
     */
-   if (!cfg_file.empty())
+   if (!cfg_file.empty() && cfg_file[0] != '-')
    {
       cpd.filename = cfg_file;
 
