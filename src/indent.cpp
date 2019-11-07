@@ -180,10 +180,6 @@ static size_t calc_indent_continue(const ParseFrame &frm, size_t pse_tos);
 static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace, bool from_caret, bool from_colon, bool from_keyword);
 
 
-//! We are on a '{' that has parent = OC_BLOCK_EXPR
-static chunk_t *oc_msg_prev_colon(chunk_t *pc);
-
-
 /**
  * returns true if forward scan reveals only single newlines or comments
  * stops when hits code
@@ -449,14 +445,41 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace,
       return(pc);
    }
 
+   // Skip to open paren in ':^TYPE *(ARGS) {'
    if (chunk_is_paren_close(tmp))
    {
       tmp = chunk_get_prev_nc(chunk_skip_to_match_rev(tmp));
    }
 
+   // // Check for star in ':^TYPE *(ARGS) {'. Issue 2477
+   if (chunk_is_token(tmp, CT_PTR_TYPE))
+   {
+      tmp = chunk_get_prev_nc(tmp);
+   }
+
+   // Check for type in ':^TYPE *(ARGS) {'. Issue 2482
+   if (chunk_is_token(tmp, CT_TYPE))
+   {
+      tmp = chunk_get_prev_nc(tmp);
+   }
+   // Check for caret in ':^TYPE *(ARGS) {'
+   // Store the caret position
+   chunk_t *caret_tmp = nullptr;
+
+   if (tmp != nullptr && tmp->type == CT_OC_BLOCK_CARET)
+   {
+      caret_tmp = tmp;
+   }
+   else
+   {
+      caret_tmp = chunk_get_prev_type(tmp, CT_OC_BLOCK_CARET, -1);
+      tmp       = caret_tmp;
+   }
+
+   // If we still cannot find caret then return first chunk on the line
    if (tmp == nullptr || tmp->type != CT_OC_BLOCK_CARET)
    {
-      return(nullptr);
+      return(chunk_first_on_line(pc));
    }
 
    if (from_caret)
@@ -465,11 +488,12 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace,
    }
    tmp = chunk_get_prev_nc(tmp);
 
+   // Check for colon in ':^TYPE *(ARGS) {'
    if (from_colon)
    {
       if (tmp == nullptr || tmp->type != CT_OC_COLON)
       {
-         return(nullptr);
+         return(chunk_first_on_line(pc));
       }
       else
       {
@@ -483,22 +507,17 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace,
       if (  tmp == nullptr
          || (tmp->type != CT_OC_MSG_NAME && tmp->type != CT_OC_MSG_FUNC))
       {
-         return(nullptr);
+         return(chunk_first_on_line(pc));
       }
       else
       {
          return(tmp);
       }
    }
-   tmp = chunk_first_on_line(tmp);
+   // In almost all the cases, its better to return the first chunk on the line than not indenting at all.
+   tmp = chunk_first_on_line(pc);
    return(tmp);
 } // oc_msg_block_indent
-
-
-static chunk_t *oc_msg_prev_colon(chunk_t *pc)
-{
-   return(chunk_get_prev_type(pc, CT_OC_COLON, pc->level, scope_e::ALL));
-}
 
 
 #define log_indent()                          \
@@ -1638,16 +1657,15 @@ void indent_text(void)
 
                   if (options::indent_oc_block_msg_xcode_style())
                   {
-                     chunk_t *colon        = oc_msg_prev_colon(pc);
-                     chunk_t *param_name   = chunk_get_prev(colon);
-                     chunk_t *before_param = chunk_get_prev(param_name);
+                     chunk_t *bbc           = chunk_skip_to_match(pc); // block brace close '}'
+                     chunk_t *bbc_next_ncnl = chunk_get_next_ncnl(bbc);
 
-                     if (chunk_is_token(before_param, CT_NEWLINE))
+                     if (bbc_next_ncnl->type == CT_OC_MSG_NAME || bbc_next_ncnl->type == CT_OC_MSG_FUNC)
                      {
-                        indent_from_keyword = true;
+                        indent_from_brace   = false;
                         indent_from_colon   = false;
                         indent_from_caret   = false;
-                        indent_from_brace   = false;
+                        indent_from_keyword = true;
                      }
                      else
                      {

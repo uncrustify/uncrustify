@@ -7,13 +7,13 @@
 
 - (void)drawSomething:(id<MTLCommandBuffer>)commandBuffer {
     [renderPass performDrawBlock:^(id<MTLRenderCommandEncoder> renderCommandEncoder) {
-        screenBlitObject.texture = src;
+                    screenBlitObject.texture = src;
 
-        // Make sure the pipeline state pixelformat is the same as destination pixel format
-        [screenBlitObject updatePipelineState:dst.pixelFormat];
+                    // Make sure the pipeline state pixelformat is the same as destination pixel format
+                    [screenBlitObject updatePipelineState:dst.pixelFormat];
 
-        [screenBlitObject drawWithRenderCommandEncoder:renderCommandEncoder];
-    } withTargetTexture:dst andCommandBuffer:commandBuffer];
+                    [screenBlitObject drawWithRenderCommandEncoder:renderCommandEncoder];
+                } withTargetTexture:dst andCommandBuffer:commandBuffer];
 }
 
 @end
