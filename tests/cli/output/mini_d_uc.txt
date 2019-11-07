@@ -268,6 +268,7 @@ indent_shift                    = false
 indent_func_def_force_col1      = false
 indent_func_call_param          = false
 indent_func_def_param           = false
+indent_func_def_param_paren_pos_threshold = 0
 indent_func_proto_param         = false
 indent_func_class_param         = false
 indent_func_ctor_var_param      = false

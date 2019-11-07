@@ -2154,7 +2154,11 @@ void indent_text(void)
                || (  options::indent_func_ctor_var_param()
                   && pc->parent_type == CT_FUNC_CTOR_VAR)
                || (  options::indent_func_def_param()
-                  && pc->parent_type == CT_FUNC_DEF)))
+                  && pc->parent_type == CT_FUNC_DEF)
+               || (  !options::indent_func_def_param()               // Issue #931
+                  && pc->parent_type == CT_FUNC_DEF
+                  && options::indent_func_def_param_paren_pos_threshold() > 0
+                  && pc->orig_col > options::indent_func_def_param_paren_pos_threshold())))
          {
             // Skip any continuation indents
             size_t idx = (!frm.empty()) ? frm.size() - 2 : 0;
