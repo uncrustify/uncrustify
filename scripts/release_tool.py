@@ -104,11 +104,11 @@ def cmd_update(repo, args):
           r'("version" *): *"[0-9.]+"',
           r'\g<1>: "{}"'.format(v))
     alter(repo, 'README.md',
-          r'[0-9]+ configurable options',
-          r'{} configurable options'.format(c))
+          r'[0-9]+ configurable options as of version [0-9.]+',
+          r'{} configurable options as of version {}'.format(c, v))
     alter(repo, 'documentation/htdocs/index.html',
-          r'[0-9]+ configurable options',
-          r'{} configurable options'.format(c))
+          r'[0-9]+ configurable options as of version [0-9.]+',
+          r'{} configurable options as of version {}'.format(c, v))
 
     generate(repo, 'etc/defaults.cfg',
              args.executable, '--show-config')
