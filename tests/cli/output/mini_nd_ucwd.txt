@@ -1049,7 +1049,8 @@ indent_func_def_force_col1      = false    # true/false
 # rather than aligning parameters under the open parenthesis.
 indent_func_call_param          = false    # true/false
 
-# Same as indent_func_call_param, but for function definitions.
+# Whether to indent continued function definition parameters one indent level,
+# rather than aligning parameters under the open parenthesis.
 indent_func_def_param           = false    # true/false
 
 # for function definitions, only if indent_func_def_param is false
@@ -1058,16 +1059,20 @@ indent_func_def_param           = false    # true/false
 # if paren position is more than the option value
 indent_func_def_param_paren_pos_threshold = 0        # unsigned number
 
-# Same as indent_func_call_param, but for function prototypes.
+# Whether to indent continued function call prototype one indent level,
+# rather than aligning parameters under the open parenthesis.
 indent_func_proto_param         = false    # true/false
 
-# Same as indent_func_call_param, but for class declarations.
+# Whether to indent continued function call declaration one indent level,
+# rather than aligning parameters under the open parenthesis.
 indent_func_class_param         = false    # true/false
 
-# Same as indent_func_call_param, but for class variable constructors.
+# Whether to indent continued class variable constructors one indent level,
+# rather than aligning parameters under the open parenthesis.
 indent_func_ctor_var_param      = false    # true/false
 
-# Same as indent_func_call_param, but for template parameter lists.
+# Whether to indent continued template parameter list one indent level,
+# rather than aligning parameters under the open parenthesis.
 indent_template_param           = false    # true/false
 
 # Double the indent for indent_func_xxx_param options.
@@ -1127,8 +1132,11 @@ indent_col1_multi_string_literal = false    # true/false
 # Default: 1
 indent_label                    = 1        # number
 
-# Same as indent_label, but for access specifiers that are followed by a
+# How to indent access specifiers that are followed by a
 # colon.
+#
+#  >0: Absolute column where 1 is the leftmost column
+# <=0: Subtract from brace indent
 #
 # Default: 1
 indent_access_spec              = 1        # number
