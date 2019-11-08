@@ -101,6 +101,18 @@ utf8_byte;
 extern Option<bool>
 utf8_force;
 
+// Add or remove space between 'do' and '{'.
+extern Option<iarf_e>
+sp_do_brace_open;
+
+// Add or remove space between '}' and 'while'.
+extern Option<iarf_e>
+sp_brace_close_while;
+
+// Add or remove space between 'while' and '('.
+extern Option<iarf_e>
+sp_while_paren_open;
+
 //END
 
 ///////////////////////////////////////////////////////////////////////////////

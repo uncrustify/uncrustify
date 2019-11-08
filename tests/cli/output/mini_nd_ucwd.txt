@@ -61,6 +61,15 @@ utf8_byte                       = false    # true/false
 # Force the output encoding to UTF-8.
 utf8_force                      = false    # true/false
 
+# Add or remove space between 'do' and '{'.
+sp_do_brace_open                = ignore   # ignore/add/remove/force
+
+# Add or remove space between '}' and 'while'.
+sp_brace_close_while            = ignore   # ignore/add/remove/force
+
+# Add or remove space between 'while' and '('.
+sp_while_paren_open             = ignore   # ignore/add/remove/force
+
 #
 # Spacing options
 #
