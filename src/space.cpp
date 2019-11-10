@@ -2814,6 +2814,31 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("IGNORE");
       return(IARF_IGNORE);
    }
+
+   // Issue #995
+   if (chunk_is_token(first, CT_DO) && chunk_is_token(second, CT_BRACE_OPEN))
+   {
+      // Add or remove space between 'do' and '{'.
+      log_rule("sp_do_brace_open");
+      return(options::sp_do_brace_open());
+   }
+
+   // Issue #995
+   if (chunk_is_token(first, CT_WHILE_OF_DO) && chunk_is_token(second, CT_PAREN_OPEN))
+   {
+      // Add or remove space between 'while' and '('.
+      log_rule("sp_while_paren_open");
+      return(options::sp_while_paren_open());
+   }
+
+   // Issue #995
+   if (chunk_is_token(first, CT_BRACE_CLOSE) && chunk_is_token(second, CT_WHILE_OF_DO))
+   {
+      // Add or remove space between '}' and 'while.
+      log_rule("sp_brace_close_while");
+      return(options::sp_brace_close_while());
+   }
+   //
    // these lines are only useful for debugging uncrustify itself
    D_LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize do_space:\n",
              __func__, __LINE__);

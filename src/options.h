@@ -101,6 +101,18 @@ utf8_byte;
 extern Option<bool>
 utf8_force;
 
+// Add or remove space between 'do' and '{'.
+extern Option<iarf_e>
+sp_do_brace_open;
+
+// Add or remove space between '}' and 'while'.
+extern Option<iarf_e>
+sp_brace_close_while;
+
+// Add or remove space between 'while' and '('.
+extern Option<iarf_e>
+sp_while_paren_open;
+
 //END
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1289,7 +1301,8 @@ indent_func_def_force_col1;
 extern Option<bool>
 indent_func_call_param;
 
-// Same as indent_func_call_param, but for function definitions.
+// Whether to indent continued function definition parameters one indent level,
+// rather than aligning parameters under the open parenthesis.
 extern Option<bool>
 indent_func_def_param;
 
@@ -1300,19 +1313,23 @@ indent_func_def_param;
 extern BoundedOption<unsigned, 0, 160>
 indent_func_def_param_paren_pos_threshold;
 
-// Same as indent_func_call_param, but for function prototypes.
+// Whether to indent continued function call prototype one indent level,
+// rather than aligning parameters under the open parenthesis.
 extern Option<bool>
 indent_func_proto_param;
 
-// Same as indent_func_call_param, but for class declarations.
+// Whether to indent continued function call declaration one indent level,
+// rather than aligning parameters under the open parenthesis.
 extern Option<bool>
 indent_func_class_param;
 
-// Same as indent_func_call_param, but for class variable constructors.
+// Whether to indent continued class variable constructors one indent level,
+// rather than aligning parameters under the open parenthesis.
 extern Option<bool>
 indent_func_ctor_var_param;
 
-// Same as indent_func_call_param, but for template parameter lists.
+// Whether to indent continued template parameter list one indent level,
+// rather than aligning parameters under the open parenthesis.
 extern Option<bool>
 indent_template_param;
 
@@ -1383,8 +1400,11 @@ indent_col1_multi_string_literal;
 extern BoundedOption<signed, -16, 16>
 indent_label; // = 1
 
-// Same as indent_label, but for access specifiers that are followed by a
+// How to indent access specifiers that are followed by a
 // colon.
+//
+//  >0: Absolute column where 1 is the leftmost column
+// <=0: Subtract from brace indent
 extern BoundedOption<signed, -16, 16>
 indent_access_spec; // = 1
 
