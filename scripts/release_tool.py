@@ -10,18 +10,25 @@ if sys.version_info[0] < 3:
     input = raw_input
 
 re_desc = re.compile(r'^uncrustify[-]([0-9]+[.][0-9]+[.][0-9]+)')
+re_branch = re.compile(r'^uncrustify[-]RC[-]([0-9]+[.][0-9]+[.][0-9]+)')
+re_merge = re.compile(r'^Merge pull request #[0-9]+ from [^/]+/(.*)')
 re_version = re.compile(r'^[0-9]+[.][0-9]+[.][0-9]+$')
 re_option_count = re.compile(r'There are currently ([0-9]+) options')
 
 
 # -----------------------------------------------------------------------------
-def fatal(msg, code=1):
-    sys.stderr.write(msg + '\n')
-    sys.exit(code)
+def fatal(msg):
+    raise Exception(msg)
 
 
 # -----------------------------------------------------------------------------
-def get_version_str(repo, required=True):
+def get_version_str(repo, candidate=True, required=True):
+    if candidate:
+        b = repo.git.branch('--show-current')
+        m = re_branch.match(b)
+        if m:
+            return m.group(1)
+
     d = repo.git.describe('HEAD')
     m = re_desc.match(d)
     if m:
@@ -34,8 +41,9 @@ def get_version_str(repo, required=True):
 
 
 # -----------------------------------------------------------------------------
-def get_version_info(repo, required=True):
-    return tuple(map(int, get_version_str(repo, required).split('.')))
+def get_version_info(repo, candidate=True, required=True):
+    s = get_version_str(repo, candidate, required)
+    return tuple(map(int, s.split('.')))
 
 
 # -----------------------------------------------------------------------------
@@ -62,14 +70,22 @@ def alter(repo, path, old, new):
 
 
 # -----------------------------------------------------------------------------
+def generate(repo, path, *args):
+    import subprocess
+
+    p = os.path.join(repo.working_tree_dir, path)
+    with open(p, 'w') as f:
+        c = subprocess.check_call(args, stdout=f)
+    print(path)
+
+
+# -----------------------------------------------------------------------------
 def cmd_init(repo, args):
     v = args.version
     if v is None:
-        c = get_version_info(repo, required=False)
+        c = get_version_info(repo, candidate=False, required=False)
         if c:
-            n = list(c)
-            n[1] += 1
-            n = '.'.join(map(str, n))
+            n = '.'.join(map(str, (c[0], c[1] + 1, 0)))
             v = input('Version to be created? [{}] '.format(n))
             if len(v) == 0:
                 v = n
@@ -80,17 +96,13 @@ def cmd_init(repo, args):
     if not re_version.match(v):
         fatal('Bad version number, \'{}\''.format(v))
 
-    tag_message = 'Prepare Uncrustify v{} release'.format(v)
-    repo.git.tag('-a', 'uncrustify-{}'.format(v), '-m', tag_message)
+    repo.git.checkout('-b', 'uncrustify-RC-{}'.format(v))
 
 
 # -----------------------------------------------------------------------------
 def cmd_update(repo, args):
     v = get_version_str(repo)
-    if hasattr(args, 'count'):
-        c = args.count
-    else:
-        c = get_option_count(args.executable)
+    c = get_option_count(args.executable)
 
     alter(repo, 'CMakeLists.txt',
           r'(set *[(] *CURRENT_VERSION +"Uncrustify)[-][0-9.]+',
@@ -99,42 +111,76 @@ def cmd_update(repo, args):
           r'("version" *): *"[0-9.]+"',
           r'\g<1>: "{}"'.format(v))
     alter(repo, 'README.md',
-          r'[0-9]+ configurable options',
-          r'{} configurable options'.format(c))
+          r'[0-9]+ configurable options as of version [0-9.]+',
+          r'{} configurable options as of version {}'.format(c, v))
     alter(repo, 'documentation/htdocs/index.html',
-          r'[0-9]+ configurable options',
-          r'{} configurable options'.format(c))
+          r'[0-9]+ configurable options as of version [0-9.]+',
+          r'{} configurable options as of version {}'.format(c, v))
+
+    generate(repo, 'etc/defaults.cfg',
+             args.executable, '--show-config')
+    generate(repo, 'documentation/htdocs/default.cfg',
+             args.executable, '--show-config')
+    generate(repo, 'documentation/htdocs/config.txt',
+             args.executable, '--show-config')
+    generate(repo, 'etc/uigui_uncrustify.ini',
+             args.executable, '--universalindent')
 
 
 # -----------------------------------------------------------------------------
 def cmd_commit(repo, args):
     v = get_version_str(repo)
-    message = 'Create Uncrustify v{} release'.format(v)
+    message = 'Prepare Uncrustify v{} release'.format(v)
 
     extra_args = []
     if args.amend:
         extra_args += ['--amend', '--date=now']
 
     repo.git.commit('-m', message, *extra_args)
-    repo.git.tag('-a', 'uncrustify-{}'.format(v), '-m', message, '--force')
 
 
 # -----------------------------------------------------------------------------
-def cmd_push(repo, args):
-    v = get_version_str(repo)
-    tag = 'uncrustify-{}'.format(v)
+def cmd_tag(repo, args):
+    import uuid
 
+    # Determine location of remote repository
     if args.ssh:
         s = 'git@{}:'.format(args.server)
     else:
         s = 'https://{}/'.format(args.server)
     r = '{}{}/{}.git'.format(s, args.organization, args.project)
 
-    extra_args = []
-    if args.force:
-        extra_args.append('--force-with-lease')
+    # Fetch upstream
+    u = repo.create_remote(str(uuid.uuid4()), r)
+    try:
+        u.fetch(refspec='master')
 
-    repo.git.push(r, 'HEAD:master', tag, *extra_args)
+        # Get log
+        if hasattr(args, 'commit'):
+            c = repo.commit(args.commit)
+        else:
+            c = repo.commit('{}/master'.format(u.name))
+        m = re_merge.match(c.message.split('\n')[0])
+        if m is None:
+            fatal('Last commit is not a merge of a release candidate?')
+
+        m = re_branch.match(m.group(1))
+        if m is None:
+            fatal('Failed to extract version from release candidate merge')
+        v = m.group(1)
+
+        # Create and push tag
+        extra_args = {}
+        if args.force:
+            extra_args['force_with_lease'] = True
+
+        tag = 'uncrustify-{}'.format(v)
+        message = 'Create Uncrustify v{} release'.format(v)
+        repo.git.tag('-a', tag, c, '-m', message, '--force')
+        u.push(refspec=tag, **extra_args)
+
+    finally:
+        repo.delete_remote(u)
 
 
 # -----------------------------------------------------------------------------
@@ -158,31 +204,31 @@ def main():
     parser_update = subparsers.add_parser(
         'update', help='update version information')
     parser_update.set_defaults(func=cmd_update)
-    group_update = parser_update.add_mutually_exclusive_group(required=True)
-    group_update.add_argument('-c', '--options', type=int,
-                              help='number of available options')
-    group_update.add_argument('-x', '--executable',
-                              help='path to uncrustify executable')
+    parser_update.add_argument('executable',
+                               help='path to uncrustify executable')
 
     parser_commit = subparsers.add_parser(
         'commit', help='commit changes for new version')
     parser_commit.set_defaults(func=cmd_commit)
-    parser_commit.add_argument('--amend', action='store_true',
+    parser_commit.add_argument('-a', '--amend', action='store_true',
                                help='amend a previous release commit')
 
-    parser_push = subparsers.add_parser(
-        'push', help='push release to github')
-    parser_push.set_defaults(func=cmd_push)
-    parser_push.add_argument('--ssh', action='store_true',
-                             help='use ssh (instead of HTTPS) to push')
-    parser_push.add_argument('-s', '--server', default='github.com',
-                             help='push to specified server')
-    parser_push.add_argument('-o', '--organization', default='uncrustify',
-                             help='push to specified user or organization')
-    parser_push.add_argument('-p', '--project', default='uncrustify',
-                             help='push to specified project')
-    parser_push.add_argument('-f', '--force', action='store_true',
-                             help='force push')
+    parser_tag = subparsers.add_parser(
+        'tag', help='tag release and push tag to github')
+    parser_tag.set_defaults(func=cmd_tag)
+    parser_tag.add_argument('--ssh', action='store_true',
+                            help='use ssh (instead of HTTPS) to push')
+    parser_tag.add_argument('-s', '--server', default='github.com',
+                            help='push to specified server')
+    parser_tag.add_argument('-o', '--organization', default='uncrustify',
+                            help='push to specified user or organization')
+    parser_tag.add_argument('-p', '--project', default='uncrustify',
+                            help='push to specified project')
+    parser_tag.add_argument('-c', '--commit',
+                            help='tag specified commit '
+                                 '(instead of latest \'master\')')
+    parser_tag.add_argument('-f', '--force', action='store_true',
+                            help='force push the tag')
 
     args = parser.parse_args()
     repo = git.Repo(args.repo)
