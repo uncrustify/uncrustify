@@ -6,11 +6,13 @@ import os
 import re
 
 re_token = re.compile(r'^CT_(\w+),')
+re_version = re.compile(r'.*UNCRUSTIFY_VERSION\s*"Uncrustify-([^"]+)"')
 re_option = re.compile(r'extern (Bounded)?Option<[^>]+>')
 re_enum_decl = re.compile(r'enum class (\w+)( *// *<(\w+)>)?')
 re_enum_value = re.compile(r'(\w+)(?= *([,=]|//|$))')
 re_aliases = re.compile(r'UNC_OPTVAL_ALIAS\(([^)]+)\)')
 
+version = '0.0'
 options = set()
 values = set()
 tokens = set()
@@ -73,6 +75,8 @@ def main():
     parser.add_argument('template', type=str,
                         help='location of uncrustify.xml.in ' +
                              'to use as template')
+    parser.add_argument('version', type=str,
+                        help='location of uncrustify_version.h to read')
     parser.add_argument('options', type=str,
                         help='location of options.h to read')
     parser.add_argument('optvals', type=str,
@@ -80,6 +84,16 @@ def main():
     parser.add_argument('tokens', type=str,
                         help='location of token_enum.h to read')
     args = parser.parse_args()
+
+    # Read version
+    with io.open(args.version, 'rt', encoding='utf-8') as f:
+        global version
+        for line in iter(f.readline, ''):
+            line = line.strip()
+
+            mv = re_version.match(line)
+            if mv:
+                version = mv.group(1)
 
     # Read options
     with io.open(args.options, 'rt', encoding='utf-8') as f:
@@ -132,6 +146,8 @@ def main():
                 if directive in replacements:
                     replacements[directive](out, args)
                 else:
+                    if '##VERSION##' in line:
+                        line = line.replace('##VERSION##', version)
                     out.write(line)
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -172,7 +172,11 @@ function(py_gen OUTPUT SCRIPT INPUT)
   set(deps "${PROJECT_SOURCE_DIR}/src/${INPUT}")
   get_filename_component(outdir "${out}" DIRECTORY)
   foreach(arg IN LISTS ARGN)
-    list(APPEND deps "${PROJECT_SOURCE_DIR}/src/${arg}")
+    if (IS_ABSOLUTE "${arg}")
+      list(APPEND deps "${arg}")
+    else()
+      list(APPEND deps "${PROJECT_SOURCE_DIR}/src/${arg}")
+    endif()
   endforeach()
 
   add_custom_command(
@@ -214,6 +218,7 @@ py_gen(option_enum.cpp
 py_gen(../etc/uncrustify.xml
   make_katehl.py
   ../etc/uncrustify.xml.in
+  "${PROJECT_BINARY_DIR}/uncrustify_version.h"
   options.h
   option.h
   token_enum.h
