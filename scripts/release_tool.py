@@ -24,7 +24,7 @@ def fatal(msg):
 # -----------------------------------------------------------------------------
 def get_version_str(repo, candidate=True, required=True):
     if candidate:
-        b = repo.git.branch('--show-current')
+        b = repo.git.symbolic_ref('-q', '--short', 'HEAD')
         m = re_branch.match(b)
         if m:
             return m.group(1)
