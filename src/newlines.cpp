@@ -97,6 +97,9 @@ static bool one_liner_nl_ok(chunk_t *pc);
 static void nl_create_one_liner(chunk_t *vbrace_open);
 
 
+static void nl_create_list_liner(chunk_t *brace_open);
+
+
 /**
  * Test if a chunk belongs to a one-liner method definition inside a class body
  */
@@ -505,7 +508,7 @@ chunk_t *newline_force_before(chunk_t *pc)
    LOG_FUNC_ENTRY();
    chunk_t *nl = newline_add_before(pc);
 
-   if (nl && nl->nl_count > 1)
+   if (nl != nullptr && nl->nl_count > 1)
    {
       nl->nl_count = 1;
       MARK_CHANGE();
@@ -548,11 +551,11 @@ chunk_t *newline_add_after(chunk_t *pc)
 chunk_t *newline_force_after(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *nl = newline_add_after(pc); // add a newline
+   chunk_t *nl = newline_add_after(pc);   // add a newline
 
-   if (nl && nl->nl_count > 1)          // check if there are more than 1 newline
+   if (nl != nullptr && nl->nl_count > 1) // check if there are more than 1 newline
    {
-      nl->nl_count = 1;                 // if so change the newline count back to 1
+      nl->nl_count = 1;                   // if so change the newline count back to 1
       MARK_CHANGE();
    }
    return(nl);
@@ -620,7 +623,7 @@ static void newline_min_after(chunk_t *ref, size_t count, pcf_flag_e flag)
    }
    chunk_t *next = chunk_get_next(pc);
 
-   if (!next)
+   if (next == nullptr)
    {
       return;
    }
@@ -815,7 +818,7 @@ void newlines_sparens()
    {
       chunk_t *sparen_close = chunk_get_next_type(sparen_open, CT_SPAREN_CLOSE, sparen_open->level);
 
-      if (!sparen_close)
+      if (sparen_close == nullptr)
       {
          continue;
       }
@@ -2868,7 +2871,7 @@ static void newline_oc_msg(chunk_t *start)
 
    chunk_t *sq_c = chunk_skip_to_match(start);
 
-   if (!sq_c)
+   if (sq_c == nullptr)
    {
       return;
    }
@@ -2938,7 +2941,7 @@ static bool one_liner_nl_ok(chunk_t *pc)
    }
    else
    {
-      while (  br_open
+      while (  br_open != nullptr
             && br_open->flags.test(PCF_ONE_LINER)
             && !chunk_is_opening_brace(br_open)
             && !chunk_is_closing_brace(br_open))
@@ -3104,7 +3107,7 @@ static void nl_create_one_liner(chunk_t *vbrace_open)
    chunk_t *tmp   = chunk_get_next_ncnl(vbrace_open);
    chunk_t *first = tmp;
 
-   if (!first || get_token_pattern_class(first->type) != pattern_class_e::NONE)
+   if (first == nullptr || get_token_pattern_class(first->type) != pattern_class_e::NONE)
    {
       return;
    }
@@ -3129,6 +3132,32 @@ static void nl_create_one_liner(chunk_t *vbrace_open)
       newline_del_between(vbrace_open, first);
    }
 }
+
+
+static void nl_create_list_liner(chunk_t *brace_open)
+{
+   LOG_FUNC_ENTRY();
+
+   // See if we get a newline between the next text and the vbrace_close
+   chunk_t *closing = chunk_get_next_type(brace_open, CT_BRACE_CLOSE, brace_open->level);
+   chunk_t *tmp     = brace_open;
+
+   if (brace_open == nullptr)
+   {
+      return;
+   }
+
+   do
+   {
+      if (chunk_is_token(tmp, CT_COMMA))
+      {
+         return;
+      }
+      tmp = chunk_get_next(tmp);
+   } while (tmp != closing);
+
+   newline_del_between(brace_open, closing);
+} // nl_create_list_liner
 
 
 void newlines_remove_newlines(void)
@@ -3391,6 +3420,12 @@ void newlines_cleanup_braces(bool first)
 
          case CT_BRACED_INIT_LIST:
          {
+            // Issue #1052
+            if (options::nl_create_list_one_liner())
+            {
+               nl_create_list_liner(pc);
+               break;
+            }
             newline_iarf_pair(chunk_get_prev_nnl(pc), pc, options::nl_type_brace_init_lst(), true);
             break;
          }
@@ -3973,7 +4008,7 @@ void newlines_cleanup_braces(bool first)
                // Issue #2186
                chunk_t *braceOpen = chunk_get_next_type(pc, CT_BRACE_OPEN, pc->level);
 
-               if (!braceOpen)
+               if (braceOpen == nullptr)
                {
                   // fatal error
                   LOG_FMT(LERR, "%s(%d): Missing BRACE_OPEN after namespace\n   orig_line is %zu, orig_col is %zu\n",
