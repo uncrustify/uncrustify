@@ -9,8 +9,8 @@ import sys
 if sys.version_info[0] < 3:
     input = raw_input
 
-re_desc = re.compile(r'^uncrustify[-]([0-9]+[.][0-9]+[.][0-9]+)')
-re_branch = re.compile(r'^uncrustify[-]RC[-]([0-9]+[.][0-9]+[.][0-9]+)')
+re_desc = re.compile(r'^uncrustify-([0-9]+[.][0-9]+[.][0-9]+)')
+re_branch = re.compile(r'^uncrustify-RC-([0-9]+[.][0-9]+[.][0-9]+)')
 re_merge = re.compile(r'^Merge pull request #[0-9]+ from [^/]+/(.*)')
 re_version = re.compile(r'^[0-9]+[.][0-9]+[.][0-9]+$')
 re_option_count = re.compile(r'There are currently ([0-9]+) options')
@@ -66,17 +66,21 @@ def alter(repo, path, old, new):
         content = re.sub(old, new, content)
     with open(p, 'w') as f:
         f.write(content)
-    print(path)
+    print('Updated: {}'.format(path))
 
 
 # -----------------------------------------------------------------------------
-def generate(repo, path, *args):
+def generate(repo, version, path, *args):
     import subprocess
 
     p = os.path.join(repo.working_tree_dir, path)
     with open(p, 'w') as f:
         c = subprocess.check_call(args, stdout=f)
-    print(path)
+    print('Created: {}'.format(path))
+
+    alter(repo, path,
+          r'Uncrustify-[0-9.]+(-[0-9]+-[0-9a-f]+(-dirty)?)?',
+          r'Uncrustify-{}'.format(version))
 
 
 # -----------------------------------------------------------------------------
@@ -105,7 +109,7 @@ def cmd_update(repo, args):
     c = get_option_count(args.executable)
 
     alter(repo, 'CMakeLists.txt',
-          r'(set *[(] *CURRENT_VERSION +"Uncrustify)[-][0-9.]+',
+          r'(set *[(] *CURRENT_VERSION +"Uncrustify)-[0-9.]+',
           r'\g<1>-{}'.format(v))
     alter(repo, 'package.json',
           r'("version" *): *"[0-9.]+"',
@@ -117,13 +121,13 @@ def cmd_update(repo, args):
           r'[0-9]+ configurable options as of version [0-9.]+',
           r'{} configurable options as of version {}'.format(c, v))
 
-    generate(repo, 'etc/defaults.cfg',
+    generate(repo, v, 'etc/defaults.cfg',
              args.executable, '--show-config')
-    generate(repo, 'documentation/htdocs/default.cfg',
+    generate(repo, v, 'documentation/htdocs/default.cfg',
              args.executable, '--show-config')
-    generate(repo, 'documentation/htdocs/config.txt',
+    generate(repo, v, 'documentation/htdocs/config.txt',
              args.executable, '--show-config')
-    generate(repo, 'etc/uigui_uncrustify.ini',
+    generate(repo, v, 'etc/uigui_uncrustify.ini',
              args.executable, '--universalindent')
 
 
