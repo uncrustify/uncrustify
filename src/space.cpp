@@ -2838,6 +2838,15 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("sp_brace_close_while");
       return(options::sp_brace_close_while());
    }
+
+   // TODO: have a look to Issue #2186, why NEWLINE?
+   // Issue #2524
+   if (  chunk_is_token(first, CT_NEWLINE)
+      && chunk_is_token(second, CT_BRACE_OPEN))
+   {
+      log_rule("IGNORE");
+      return(IARF_IGNORE);
+   }
    //
    // these lines are only useful for debugging uncrustify itself
    D_LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize do_space:\n",
