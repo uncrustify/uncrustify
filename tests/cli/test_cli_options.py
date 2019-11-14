@@ -22,7 +22,6 @@ import difflib
 import argparse
 import pprint
 
-
 if os_name == 'nt':
     EX_OK = 0
     EX_USAGE = 64
@@ -438,7 +437,7 @@ def string_replace(string_target, replacement):
 def s_path_join(path, *paths):
     """
     Wrapper for the os.path.join function, splits every path component to
-    replace it wit a system specific path separator. This is for consistent
+    replace it with a system specific path separator. This is for consistent
     path separators (and also systems that don't use either '\' or '/')
 
 
@@ -462,7 +461,7 @@ def s_path_join(path, *paths):
 
 def main(args):
     # set working dir to script dir
-    sc_dir = dirname(relpath(__file__))
+    script_dir = dirname(relpath(__file__))
 
     parser = argparse.ArgumentParser(description='Test CLI Options')
     parser.add_argument('--diff', action='store_true',
@@ -470,7 +469,7 @@ def main(args):
     parser.add_argument('--apply', action='store_true',
                         help='auto apply the changes from the results folder to the output folder')
     parser.add_argument('--build',
-                        default=s_path_join(sc_dir, '../../build'),
+                        default=s_path_join(script_dir, '../../build'),
                         help='specify location of the build directory')
 
     parsed_args = parser.parse_args()
@@ -499,7 +498,7 @@ def main(args):
         eprint("No Uncrustify binary found")
         sys_exit(EX_USAGE)
 
-    clear_dir(s_path_join(sc_dir, "./results"))
+    clear_dir(s_path_join(script_dir, "./results"))
 
     return_flag = True
 
@@ -509,8 +508,8 @@ def main(args):
     if not check_uncrustify_output(
             uncr_bin,
             parsed_args,
-            out_expected_path=s_path_join(sc_dir, 'output/help.txt'),
-            out_result_path=s_path_join(sc_dir, 'results/help.txt'),
+            out_expected_path=s_path_join(script_dir, 'output/help.txt'),
+            out_result_path=s_path_join(script_dir, 'results/help.txt'),
             out_result_manip=[
                 string_replace(' --mtime      : Preserve mtime on replaced files.\n', ''),
                 string_replace('.exe', ''),
@@ -525,8 +524,8 @@ def main(args):
             uncr_bin,
             parsed_args,
             args_arr=['--xyz'],
-            err_expected_path=s_path_join(sc_dir, 'output/xyz-err.txt'),
-            err_result_path=s_path_join(sc_dir, 'results/xyz-err.txt')
+            err_expected_path=s_path_join(script_dir, 'output/xyz-err.txt'),
+            err_result_path=s_path_join(script_dir, 'results/xyz-err.txt')
             ):
         return_flag = False
 
@@ -537,8 +536,8 @@ def main(args):
             uncr_bin,
             parsed_args,
             args_arr=['-v'],
-            out_expected_path=s_path_join(sc_dir, 'output/v-out.txt'),
-            out_result_path=s_path_join(sc_dir, 'results/v-out.txt'),
+            out_expected_path=s_path_join(script_dir, 'output/v-out.txt'),
+            out_result_path=s_path_join(script_dir, 'results/v-out.txt'),
             out_result_manip=reg_replace(r'Uncrustify.+', 'Uncrustify')
             ):
         return_flag = False
@@ -550,8 +549,8 @@ def main(args):
             uncr_bin,
             parsed_args,
             args_arr=['--show-config'],
-            out_expected_path=s_path_join(sc_dir, 'output/show_config.txt'),
-            out_result_path=s_path_join(sc_dir, 'results/show_config.txt'),
+            out_expected_path=s_path_join(script_dir, 'output/show_config.txt'),
+            out_result_path=s_path_join(script_dir, 'results/show_config.txt'),
             out_result_manip=reg_replace(r'\# Uncrustify.+', '')
             ):
         return_flag = False
@@ -562,13 +561,13 @@ def main(args):
     if not check_uncrustify_output(
             uncr_bin,
             parsed_args,
-            args_arr=['-c', s_path_join(sc_dir, 'config/mini_d.cfg'),
+            args_arr=['-c', s_path_join(script_dir, 'config/mini_d.cfg'),
                       '--update-config'],
-            out_expected_path=s_path_join(sc_dir, 'output/mini_d_uc.txt'),
-            out_result_path=s_path_join(sc_dir, 'results/mini_d_uc.txt'),
+            out_expected_path=s_path_join(script_dir, 'output/mini_d_uc.txt'),
+            out_result_path=s_path_join(script_dir, 'results/mini_d_uc.txt'),
             out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
-            err_expected_path=s_path_join(sc_dir, 'output/mini_d_error.txt'),
-            err_result_path=s_path_join(sc_dir, 'results/mini_d_error0.txt'),
+            err_expected_path=s_path_join(script_dir, 'output/mini_d_error.txt'),
+            err_result_path=s_path_join(script_dir, 'results/mini_d_error0.txt'),
             err_result_manip=string_replace('\\', '/')
             ):
         return_flag = False
@@ -576,13 +575,13 @@ def main(args):
     if not check_uncrustify_output(
             uncr_bin,
             parsed_args,
-            args_arr=['-c', s_path_join(sc_dir, 'config/mini_nd.cfg'),
+            args_arr=['-c', s_path_join(script_dir, 'config/mini_nd.cfg'),
                       '--update-config'],
-            out_expected_path=s_path_join(sc_dir, 'output/mini_nd_uc.txt'),
-            out_result_path=s_path_join(sc_dir, 'results/mini_nd_uc.txt'),
+            out_expected_path=s_path_join(script_dir, 'output/mini_nd_uc.txt'),
+            out_result_path=s_path_join(script_dir, 'results/mini_nd_uc.txt'),
             out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
-            err_expected_path=s_path_join(sc_dir, 'output/mini_d_error.txt'),
-            err_result_path=s_path_join(sc_dir, 'results/mini_d_error1.txt'),
+            err_expected_path=s_path_join(script_dir, 'output/mini_d_error.txt'),
+            err_result_path=s_path_join(script_dir, 'results/mini_d_error1.txt'),
             err_result_manip=string_replace('\\', '/')
             ):
         return_flag = False
@@ -593,13 +592,13 @@ def main(args):
     if not check_uncrustify_output(
             uncr_bin,
             parsed_args,
-            args_arr=['-c', s_path_join(sc_dir, 'config/mini_d.cfg'),
+            args_arr=['-c', s_path_join(script_dir, 'config/mini_d.cfg'),
                       '--update-config-with-doc'],
-            out_expected_path=s_path_join(sc_dir, 'output/mini_d_ucwd.txt'),
-            out_result_path=s_path_join(sc_dir, 'results/mini_d_ucwd.txt'),
+            out_expected_path=s_path_join(script_dir, 'output/mini_d_ucwd.txt'),
+            out_result_path=s_path_join(script_dir, 'results/mini_d_ucwd.txt'),
             out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
-            err_expected_path=s_path_join(sc_dir, 'output/mini_d_error.txt'),
-            err_result_path=s_path_join(sc_dir, 'results/mini_d_error2.txt'),
+            err_expected_path=s_path_join(script_dir, 'output/mini_d_error.txt'),
+            err_result_path=s_path_join(script_dir, 'results/mini_d_error2.txt'),
             err_result_manip=string_replace('\\', '/')
             ):
         return_flag = False
@@ -607,13 +606,13 @@ def main(args):
     if not check_uncrustify_output(
             uncr_bin,
             parsed_args,
-            args_arr=['-c', s_path_join(sc_dir, 'config/mini_nd.cfg'),
+            args_arr=['-c', s_path_join(script_dir, 'config/mini_nd.cfg'),
                       '--update-config-with-doc'],
-            out_expected_path=s_path_join(sc_dir, 'output/mini_nd_ucwd.txt'),
-            out_result_path=s_path_join(sc_dir, 'results/mini_nd_ucwd.txt'),
+            out_expected_path=s_path_join(script_dir, 'output/mini_nd_ucwd.txt'),
+            out_result_path=s_path_join(script_dir, 'results/mini_nd_ucwd.txt'),
             out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
-            err_expected_path=s_path_join(sc_dir, 'output/mini_d_error.txt'),
-            err_result_path=s_path_join(sc_dir, 'results/mini_d_error3.txt'),
+            err_expected_path=s_path_join(script_dir, 'output/mini_d_error.txt'),
+            err_result_path=s_path_join(script_dir, 'results/mini_d_error3.txt'),
             err_result_manip=string_replace('\\', '/')
             ):
         return_flag = False
@@ -625,14 +624,29 @@ def main(args):
         if not check_uncrustify_output(
                 uncr_bin,
                 parsed_args,
-                args_arr=['-c', s_path_join(sc_dir, 'config/mini_nd.cfg'),
-                          '-f', s_path_join(sc_dir, 'input/testSrcP.cpp'),
-                          '-p', s_path_join(sc_dir, 'results/p.txt')],
-                gen_expected_path=s_path_join(sc_dir, 'output/p.txt'),
-                gen_result_path=s_path_join(sc_dir, 'results/p.txt'),
+                args_arr=['-c', s_path_join(script_dir, 'config/mini_nd.cfg'),
+                          '-f', s_path_join(script_dir, 'input/testSrcP.cpp'),
+                          '-p', s_path_join(script_dir, 'results/p.txt')],
+                gen_expected_path=s_path_join(script_dir, 'output/p.txt'),
+                gen_result_path=s_path_join(script_dir, 'results/p.txt'),
                 gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
                 ):
             return_flag = False
+            
+    #
+    # Test -p and -c with '-' input
+    #
+    if os_name != 'nt' and not check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            args_arr=['-c', '-',
+                      '-f', NULL_DEVICE,
+                      '-p', '-'],
+            out_expected_path=s_path_join(script_dir, 'output/pc-.txt'),
+            out_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', ''),
+            out_result_path=s_path_join(script_dir, 'results/pc-.txt')
+            ):
+        return_flag = False
 
     #
     # Test --replace
@@ -641,11 +655,11 @@ def main(args):
     if not check_uncrustify_output(
             uncr_bin,
             parsed_args,
-            args_arr=['-c', s_path_join(sc_dir, 'config/replace.cfg'),
-                      '-F', s_path_join(sc_dir, 'input/replace.list'),
+            args_arr=['-c', s_path_join(script_dir, 'config/replace.cfg'),
+                      '-F', s_path_join(script_dir, 'input/replace.list'),
                       '--replace'],
-            gen_expected_path=s_path_join(sc_dir, 'output/backup.h'),
-            gen_result_path=s_path_join(sc_dir, 'input/backup.h')
+            gen_expected_path=s_path_join(script_dir, 'output/backup.h'),
+            gen_result_path=s_path_join(script_dir, 'input/backup.h')
             ):
         return_flag = False
 
@@ -662,10 +676,10 @@ def main(args):
     if not check_uncrustify_output(
             uncr_bin,
             parsed_args,
-            args_arr=['-o', s_path_join(sc_dir, 'results/universalindent.cfg'),
+            args_arr=['-o', s_path_join(script_dir, 'results/universalindent.cfg'),
                       '--universalindent'],
-            gen_expected_path=s_path_join(sc_dir, 'output/universalindent.cfg'),
-            gen_result_path=s_path_join(sc_dir, 'results/universalindent.cfg'),
+            gen_expected_path=s_path_join(script_dir, 'output/universalindent.cfg'),
+            gen_result_path=s_path_join(script_dir, 'results/universalindent.cfg'),
             gen_result_manip=[reg_replace(r'version=U.+', ''),
                               reg_replace(r'\(\d+\)', ''),
                               reg_replace(r'\r', '')]
@@ -681,9 +695,9 @@ def main(args):
                 uncr_bin,
                 parsed_args,
                 args_arr=['-c', NULL_DEVICE, '-L', L, '-o', NULL_DEVICE,
-                          '-f', s_path_join(sc_dir, 'input/testSrc.cpp')],
-                err_expected_path=s_path_join(sc_dir, 'output/%s.txt' % L),
-                err_result_path=s_path_join(sc_dir, 'results/%s.txt' % L),
+                          '-f', s_path_join(script_dir, 'input/testSrc.cpp')],
+                err_expected_path=s_path_join(script_dir, 'output/%s.txt' % L),
+                err_result_path=s_path_join(script_dir, 'results/%s.txt' % L),
                 err_result_manip=[reg_replace(r'\([0-9]+\)', ' '),
                                   reg_replace(r'\[line [0-9]+', '[ '),
                                   reg_replace(RE_CALLSTACK, '[CallStack]'),
@@ -696,9 +710,9 @@ def main(args):
             uncr_bin,
             parsed_args,
             args_arr=['-c', NULL_DEVICE, '-L', '99', '-o', NULL_DEVICE,
-                      '-f', s_path_join(sc_dir, 'input/logger.cs')],
-            err_expected_path=s_path_join(sc_dir, 'output/logger_cs_L_99.txt'),
-            err_result_path=s_path_join(sc_dir, 'results/logger_cs_L_99.txt'),
+                      '-f', s_path_join(script_dir, 'input/logger.cs')],
+            err_expected_path=s_path_join(script_dir, 'output/logger_cs_L_99.txt'),
+            err_result_path=s_path_join(script_dir, 'results/logger_cs_L_99.txt'),
             err_result_manip=reg_replace(r'[0-9]', '')
             ):
         return_flag = False
@@ -709,11 +723,11 @@ def main(args):
         if not check_uncrustify_output(
                 uncr_bin,
                 parsed_args,
-                args_arr=['-c', s_path_join(sc_dir, 'config/%s.cfg' % test),
-                          '-f', s_path_join(sc_dir, 'input/%s.cpp' % test),
+                args_arr=['-c', s_path_join(script_dir, 'config/%s.cfg' % test),
+                          '-f', s_path_join(script_dir, 'input/%s.cpp' % test),
                           '-o', NULL_DEVICE, '-q'],
-                err_expected_path=s_path_join(sc_dir, 'output/%s.txt' % test),
-                err_result_path=s_path_join(sc_dir, 'results/%s.txt' % test)
+                err_expected_path=s_path_join(script_dir, 'output/%s.txt' % test),
+                err_result_path=s_path_join(script_dir, 'results/%s.txt' % test)
                 ):
             return_flag = False
 

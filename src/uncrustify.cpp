@@ -260,7 +260,7 @@ void usage(const char *argv0)
            "The '--prefix' and '--suffix' options may not be used with '--replace'.\n"
            "\n"
            "Basic Options:\n"
-           " -c CFG       : Use the config file CFG.\n"
+           " -c CFG       : Use the config file CFG, or defaults if CFG is set to '-'.\n"
            " -f FILE      : Process the single file FILE (output to stdout, use with -o).\n"
            " -o FILE      : Redirect stdout to FILE.\n"
            " -F FILE      : Read files to process from FILE, one filename per line (- is stdin).\n"
@@ -297,7 +297,8 @@ void usage(const char *argv0)
            " --set <option>=<value>   : Sets a new value to a config option.\n"
            "\n"
            "Debug Options:\n"
-           " -p FILE      : Dump debug info to a file. Must be used with the option -f FILE.\n"
+           " -p FILE      : Dump debug info into FILE, or to stdout if FILE is set to '-'.\n"
+           "                Must be used in combination with '-f FILE'\n"
            " -L SEV       : Set the log severity (see log_levels.h; note 'A' = 'all')\n"
            " -s           : Show the log severity in the logs.\n"
            " --decode     : Decode remaining args (chunk flags) and exit.\n"
@@ -682,7 +683,7 @@ int main(int argc, char *argv[])
     * It is optional for "--universalindent", "--parsed" and "--detect", but
     * required for everything else.
     */
-   if (!cfg_file.empty())
+   if (!cfg_file.empty() && cfg_file[0] != '-')
    {
       cpd.filename = cfg_file;
 

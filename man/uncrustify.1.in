@@ -24,15 +24,15 @@ Errors are always dumped to stderr
 .SH OPTIONS
 .SS "Basic Options:"
 .TP
-\fB\-c\fI CFG
-Use the config file \fICFG\fR.
+\fB\-c\fI CFG\fR
+Use the config file \fICFG\fR, or defaults if \fICFG\fR is set to '-'.
 .br
 If not specified, uncrustify will use \fB$UNCRUSTIFY_CONFIG\fR or \fB$HOME/.uncrustify.cfg\fR.
 .TP
-\fB\-f\fI FILE
+\fB\-f\fI FILE\fR
 Process the single file \fIFILE\fR, sending output to stdout or the file specified with \fB\-o\fR.
 .TP
-\fB\-o\fI FILE
+\fB\-o\fI FILE\fR
 Redirect output to \fIFILE\fR.
 .br
 Use with \fB\-f\fR, \fB\-\-update\-config\fR, \fB\-\-update\-config\-with\-doc\fR,
@@ -43,7 +43,7 @@ Do not output the new text, instead verify that nothing changes when
 the file(s) are processed. The status of every file is printed to
 stderr. The exit code is EXIT_SUCCESS if there were no changes, EXIT_FAILURE otherwise.
 .TP
-\fB\-F\fI FILE
+\fB\-F\fI FILE\fR
 Read files to process from \fIFILE\fR, one filename per line.  If \fIFILE\fR
 is \'\-\' then read filenames from standard input instead of a file.
 .br
@@ -51,19 +51,19 @@ You can create this file using something like \'\fBfind . \-name "*.c" > list.tx
 .br
 This cannot be combined with \fB\-f\fR.
 .TP
-\fB\-\-prefix\fI PFX
+\fB\-\-prefix\fI PFX\fR
 Prepend \fIPFX\fR to the output filename path.
 .br
 This cannot be combined with \fB\-f\fR, \fB\-\-replace\fR, or \fB\-\-no\-backup\fR.
 .TP
-\fB\-\-suffix\fI SFX
+\fB\-\-suffix\fI SFX\fR
 Append \fISFX\fR to the output filename.
 .br
 The default is '.uncrustify' if neither \fISFX\fR or \fIPFX\fR are specified.
 .br
 This cannot be combined with \fB\-f\fR, \fB\-\-replace\fR, or \fB\-\-no\-backup\fR.
 .TP
-\fB\-\-frag\fI
+\fB\-\-frag\fR
 Assume the input is a code fragment and the first line is properly indented.
 .TP
 \fB\-\-replace\fR
@@ -111,21 +111,23 @@ Output a new config file with embedded usage comments.
 Output a config file for Universal Indent GUI.
 .TP
 \fB\-\-detect\fR
-Detects the config from a source file. Use with '\-f FILE'.
+Detects the config from a source file. Use with '\-f \fIFILE\fR'.
 Detection is currently fairly limited.
 
 .SS "Debug Options:"
 .TP
-\fB\-p\fI FILE
-Dump debug info to a file
+\fB\-p \fIFILE\fR
+Dump debug info into \fIFILE\fR, or to stdout if \fIFILE\fR is set to '-'."
+.br
+Must be used in combination with '-f \fIFILE\fR'."
 .TP
-\fB\-L\fI SEV
+\fB\-L\fI SEV\fR
 Set the log severity (see log_levels.h)
 .TP
 \fB\-s\fR
 Show the log severity in the logs
 .TP
-\fB\-\-decode\fI FLAG
+\fB\-\-decode\fI FLAG\fR
 Print \fIFLAG\fR as text and exit
 
 .SH EXAMPLES
