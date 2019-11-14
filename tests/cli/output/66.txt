@@ -3,7 +3,7 @@ space_text : back-to-back words need a space: pc->text() 'struct', next->text() 
 space_text : orig_line is 1, orig_col is 1, pc-text() 'struct', type is STRUCT
 do_space : orig_line is 1, orig_col is 1, first->text() 'struct', type is STRUCT
 log_rule2 : Spacing: first->orig_line is 1, first->orig_col is 1, first->text() is 'struct', [STRUCT/NONE] <===>
-   second->orig_line is 1, second->orig_col is 8, second->text() 'TelegramIndex', [TYPE/STRUCT] : rule ADD as default value[ ]
+   second->orig_line is 1, second->orig_col is 8, second->text() 'TelegramIndex', [TYPE/STRUCT] : rule ADD[ ]
  <force between 'struct' and 'TelegramIndex'> rule = ADD @ 1 => 8
 space_text : orig_line is 1, orig_col is 8, 'TelegramIndex' type is TYPE
 space_text : orig_line is 1, orig_col is 8, pc-text() 'TelegramIndex', type is TYPE
@@ -82,7 +82,7 @@ space_text : orig_line is 3, orig_col is 47, ')' type is FPAREN_CLOSE
 space_text : orig_line is 3, orig_col is 47, pc-text() ')', type is FPAREN_CLOSE
 do_space : orig_line is 3, orig_col is 47, first->text() ')', type is FPAREN_CLOSE
 log_rule2 : Spacing: first->orig_line is 3, first->orig_col is 47, first->text() is ')', [FPAREN_CLOSE/FUNC_CLASS_DEF] <===>
-   second->orig_line is 3, second->orig_col is 49, second->text() ':', [CONSTR_COLON/NONE] : rule ADD as default value[ ]
+   second->orig_line is 3, second->orig_col is 49, second->text() ':', [CONSTR_COLON/NONE] : rule ADD[ ]
  rule = ADD @ 1 => 49
 space_text : orig_line is 3, orig_col is 49, ':' type is CONSTR_COLON
 space_text : orig_line is 3, orig_col is 49, pc-text() ':', type is CONSTR_COLON
@@ -403,7 +403,7 @@ space_col_align : first->orig_line is 3, orig_col is 47, [FPAREN_CLOSE/FUNC_CLAS
 space_col_align : second->orig_line is 3, orig_col is 49 [CONSTR_COLON/NONE], text() ':', [CallStack]
 do_space : orig_line is 3, orig_col is 47, first->text() ')', type is FPAREN_CLOSE
 log_rule2 : Spacing: first->orig_line is 3, first->orig_col is 47, first->text() is ')', [FPAREN_CLOSE/FUNC_CLASS_DEF] <===>
-   second->orig_line is 3, second->orig_col is 49, second->text() ':', [CONSTR_COLON/NONE] : rule ADD as default value[ ]
+   second->orig_line is 3, second->orig_col is 49, second->text() ':', [CONSTR_COLON/NONE] : rule ADD[ ]
 space_col_align : av is add
 space_col_align :    len is 1
 space_col_align :    => coldiff is 1
