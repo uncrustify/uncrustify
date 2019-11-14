@@ -25,40 +25,66 @@ REGION_END = "endregion enum bindings"
 ''' Enums which values need to be updated in the binding code '''
 ENUMS_INFO = [
     {
-        'name': 'uncrustify_options',
-        'substitute_name': 'Option',
-        'filepath': '%s/src/options.h' % ROOT_DIR,
-        'extra_arg': []
+        'name': 'option_type_e',
+        'substitute_name': 'OptionType',
+        'filepath': '%s/src/option.h' % ROOT_DIR,
+        'extra_arg': [],
+        'filter_values': [],
+        'suffix_chars': 0,
     },
     {
-        'name': 'uncrustify_groups',
-        'substitute_name': 'Group',
-        'filepath': '%s/src/options.h' % ROOT_DIR,
-        'extra_arg': []
+        'name': 'iarf_e',
+        'substitute_name': 'IARF',
+        'filepath': '%s/src/option.h' % ROOT_DIR,
+        'extra_arg': [],
+        'filter_values': ['NOT_DEFINED'],
+        'suffix_chars': 0,
     },
     {
-        'name': 'argtype_e',
-        'substitute_name': 'Argtype',
-        'filepath': '%s/src/options.h' % ROOT_DIR,
-        'extra_arg': []
+        'name': 'line_end_e',
+        'substitute_name': 'LineEnd',
+        'filepath': '%s/src/option.h' % ROOT_DIR,
+        'extra_arg': [],
+        'filter_values': [],
+        'suffix_chars': 0,
+    },
+    {
+        'name': 'token_pos_e',
+        'substitute_name': 'TokenPos',
+        'filepath': '%s/src/option.h' % ROOT_DIR,
+        'extra_arg': [],
+        'filter_values': [],
+        'suffix_chars': 0,
     },
     {
         'name': 'log_sev_t',
-        'substitute_name': 'LogSev',
+        'substitute_name': 'LogType',
         'filepath': '%s/src/log_levels.h' % ROOT_DIR,
-        'extra_arg': []
+        'extra_arg': [],
+        'filter_values': [],
+        'suffix_chars': 1,
     },
     {
         'name': 'c_token_t',
-        'substitute_name': 'Token',
+        'substitute_name': 'TokenType',
         'filepath': '%s/src/token_enum.h' % ROOT_DIR,
-        'extra_arg': []
+        'extra_arg': [],
+        'filter_values': ['CT_TOKEN_COUNT_'],
+        'suffix_chars': 3,
     },
     {
         'name': 'lang_flag_e',
-        'substitute_name': 'LangFlag',
+        'substitute_name': 'Language',
         'filepath': '%s/src/uncrustify_types.h' % ROOT_DIR,
-        'extra_arg': ["-extra-arg=-std=c++1z", "-extra-arg=-DEMSCRIPTEN"]
+        'extra_arg': ["-extra-arg=-std=c++1z", "-extra-arg=-DEMSCRIPTEN"],
+        'filter_values': [
+            'LANG_ALLC',
+            'LANG_ALL',
+            'FLAG_HDR',
+            'FLAG_DIG',
+            'FLAG_PP',
+        ],
+        'suffix_chars': 5,
     },
 ]
 
@@ -136,8 +162,8 @@ def get_enum_lines(enum_info):
     """
     cut_len = len(enum_info['name'])
 
-    proc_args = ["clang-check", "-p=%s" % NULL_DEV, enum_info['filepath'],
-                 "-ast-dump", '-ast-dump-filter=%s' % enum_info['name']]
+    proc_args = ["clang-check", enum_info['filepath'], "-ast-dump",
+                 '-ast-dump-filter=%s' % enum_info['name']]
     proc_args += enum_info['extra_arg']
 
     output = proc_output(proc_args)
@@ -146,10 +172,12 @@ def get_enum_lines(enum_info):
               file=stderr)
         return ()
 
-    reg_obj = re.compile("col:\d+ (\w+)")
+    reg_obj = re.compile("EnumConstantDecl.+col:\d+ (referenced )?(\w+)")
 
-    lines = [m.group(1) for l in output.splitlines()
+    lines = [m.group(2) for l in output.splitlines()
              for m in [re.search(reg_obj, l)] if m]
+    lines = [line for line in lines if line not in enum_info['filter_values']]
+
     if len(lines) == 0:
         print("ScriptError: %s - no enum_info names found" % get_enum_lines.__name__,
               file=stderr)
@@ -173,12 +201,20 @@ def write_ts(opened_file_obj, enum_info):
     if len(lines) == 0:
         return False
 
-    opened_file_obj.write('    export interface %s extends EmscriptenEnumType\n'
-                          '    {\n'
-                          % enum_info['substitute_name'])
+    opened_file_obj.write(
+        '    export interface %sValue extends EmscriptenEnumTypeObject {}\n'
+        '    export interface %s extends EmscriptenEnumType\n'
+        '    {\n'
+        % (enum_info['substitute_name'], enum_info['substitute_name'])
+    )
     for line in lines:
-        opened_file_obj.write('        %s : EmscriptenEnumTypeObject;\n' % line)
-    opened_file_obj.write('    }\n\n')
+        opened_file_obj.write(
+            '        %s : %sValue;\n'
+            % (line[enum_info['suffix_chars']:], enum_info['substitute_name'])
+        )
+    opened_file_obj.write(
+        '    }\n\n'
+    )
     return True
 
 
@@ -197,12 +233,17 @@ def write_bindings(opened_file_obj, enum_info):
     if len(lines) == 0:
         return False
 
-    opened_file_obj.write('   enum_<%s>(STRINGIFY(%s))'
-                          % (enum_info['name'], enum_info['name']))
+    opened_file_obj.write(
+        '   enum_<%s>("%s")' % (enum_info['name'], enum_info['substitute_name'])
+    )
     for line in lines:
-        opened_file_obj.write('\n      .value(STRINGIFY(%s), %s)'
-                              % (line, line))
-    opened_file_obj.write(';\n\n')
+        opened_file_obj.write(
+            '\n      .value("%s", %s::%s)'
+            % (line[enum_info['suffix_chars']:], enum_info['name'], line)
+        )
+    opened_file_obj.write(
+        ';\n\n'
+    )
     return True
 
 

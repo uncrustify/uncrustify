@@ -125,6 +125,7 @@ public:
 
    virtual bool isDefault() const = 0;
 
+   virtual void reset() = 0;
    virtual bool read(const char *s) = 0;
    virtual std::string str() const = 0;
 
@@ -181,6 +182,10 @@ public:
    std::string defaultStr() const override;
 
    bool isDefault() const override { return(m_val == m_default); }
+
+   //! resets option to its default value
+   //- currently only used by the emscripten interface
+   virtual void reset() override;
 
    bool read(const char *s) override;
    std::string str() const override;

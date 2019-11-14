@@ -498,6 +498,14 @@ bool read_number(const char *in, Option<T> &out)
 
 //-----------------------------------------------------------------------------
 template<typename T>
+void Option<T>::reset()
+{
+   m_val = m_default;
+}
+
+
+//-----------------------------------------------------------------------------
+template<typename T>
 std::string Option<T>::str() const
 {
    return(to_string(m_val));
