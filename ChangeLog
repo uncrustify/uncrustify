@@ -1,3 +1,54 @@
+Change highlights in uncrustify-0.70.0 (November 2019)
+-------------------------------------------------------------------------------
+
+  710b9b90d063e1fac853b77ad9509bed37ff31ee
+    Added   : mod_sort_case_sensitive              May 12 2019
+  40c028454904f4fc87bd93b9703eaeb58fa57dd0
+    Added   : sp_before_square_asm_block           Jul 29 2019
+  b9b7f2fffb2c73925906ca7e5c8536d03c93c4bc
+    Added   : nl_multi_line_sparen_open            Aug  3 2019
+    Added   : nl_multi_line_sparen_close           Aug  3 2019
+  83a014197001ea815f92d977fc30aa36dec39e1b
+    Added   : sp_cpp_lambda_square_paren           Aug 20 2019
+    Added   : sp_cpp_lambda_square_brace           Aug 20 2019
+    Added   : sp_cpp_lambda_paren_brace            Aug 20 2019
+    Removed : sp_cpp_lambda_paren                  Aug 20 2019
+  8b6455c08c4f70b04b03b48c32fa14b9014354b4
+    Added   : use_sp_after_angle_always            Sep 13 2019
+  264ec3c988b5667c971b0d6508b17d0c9337c82c
+    Added   : sp_cpp_lambda_fparen                 Sep 13 2019
+  883ccefc3bf8c8cdf6b159f280e22c2d72ce83f5
+    Added   : sp_func_type_paren                   Oct 11 2019
+  8284db41edbb777829f26d247470c75d3d317641
+    Added   : nl_before_namespace                  Oct  8 2019
+    Added   : nl_after_namespace                   Oct  8 2019
+  3af190ceda3f8025028b5f8aae7541d35bda39c7
+    Added   : nl_template_class_def                Oct  2 2019
+    Added   : nl_template_func_def_special         Oct  2 2019
+    Added   : nl_template_using                    Oct  2 2019
+    Added   : nl_template_func_def                 Oct  2 2019
+    Added   : nl_template_class_decl               Oct  2 2019
+    Added   : nl_template_var                      Oct  2 2019
+    Added   : nl_template_class_decl_special       Oct  2 2019
+    Added   : nl_template_func                     Oct  2 2019
+    Added   : nl_template_func_decl_special        Oct  2 2019
+    Added   : nl_template_func_decl                Oct  2 2019
+    Added   : nl_template_class_def_special        Oct  2 2019
+  e9bc08c3baa3b7545a592b5e1d0d23e530c58b7f
+    Added   : sp_trailing_return                   Oct 23 2019
+  d783ecfe7f08b525eb882ff3a7c6525d8866d54b
+    Added   : nl_oc_before_interface               Oct 28 2019
+    Added   : nl_oc_before_implementation          Oct 28 2019
+    Added   : nl_oc_before_end                     Oct 28 2019
+  3741e59342c5741020b84eba147b0c1dfde0154b
+    Added   : indent_func_def_param_paren_pos_threshold Nov  6 2019
+  829b4124c02e36156489d06a8b33e3552e58d30b
+    Added   : sp_brace_close_while                 Nov  8 2019
+    Added   : sp_while_paren_open                  Nov  8 2019
+    Added   : sp_do_brace_open                     Nov  8 2019
+  ea6f4ac515c0ad5651be020a3295dcae01c3baf9
+    Added   : nl_create_list_one_liner             Nov 11 2019
+
 Change highlights in uncrustify-0.69.0 (May 2019)
 -------------------------------------------------------------------------------
 

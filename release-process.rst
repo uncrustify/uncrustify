@@ -4,7 +4,7 @@
 
 .. Update the date in the next line when editing this document!
 
-*This document was last updated on 2019-11-08, for Uncrustify 0.70.0.*
+*This document was last updated on 2019-11-15, for Uncrustify 0.70.0.*
 
 This document uses "0.1.2" throughout as an example version number.
 Whenever you see this, you should substitute the version number
@@ -59,6 +59,7 @@ To start the release process, first check that:
 - Your local clone is up to date
 - ``CMAKE_BUILD_TYPE`` is set to ``Release`` (or ``RelWithDebInfo``)
 - Your build is up to date
+- check the list of authors with scripts/prepare_list_of_authors.sh
 
 Then, run::
 

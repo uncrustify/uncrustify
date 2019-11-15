@@ -129,7 +129,7 @@ endif()
 # Generate uncrustify_version.h
 #
 
-set(CURRENT_VERSION "Uncrustify-0.69.0_f")
+set(CURRENT_VERSION "Uncrustify-0.70.0_f")
 
 option(NoGitVersionString "Do not use make_version.py and git to build a version string" OFF)
 if(NoGitVersionString)
