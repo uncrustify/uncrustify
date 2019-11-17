@@ -4105,6 +4105,13 @@ void newlines_cleanup_braces(bool first)
       {
          newline_iarf(pc, IARF_REMOVE);
       }
+      else if (  chunk_is_token(pc, CT_MEMBER)
+              && language_is_set(LANG_JAVA))
+      {
+         // Issue #1124
+         newline_iarf(chunk_get_prev_nnl(pc), options::nl_before_member());
+         newline_iarf(pc, options::nl_after_member());
+      }
       else
       {
          // ignore it
@@ -4240,17 +4247,14 @@ void newlines_insert_blank_lines(void)
       else if (chunk_is_token(pc, CT_OC_INTF))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_oc_before_interface());
-         //newlines_if_for_while_switch_post_blank_lines(pc, options::nl_oc_after_interface());
       }
       else if (chunk_is_token(pc, CT_OC_END))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_oc_before_end());
-         //newlines_if_for_while_switch_post_blank_lines(pc, options::nl_oc_after_end());
       }
       else if (chunk_is_token(pc, CT_OC_IMPL))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_oc_before_implementation());
-         //newlines_if_for_while_switch_post_blank_lines(pc, options::nl_oc_after_end());
       }
       else if (  chunk_is_token(pc, CT_FUNC_CLASS_DEF)
               || chunk_is_token(pc, CT_FUNC_DEF)

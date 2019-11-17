@@ -1842,6 +1842,12 @@ nl_before_return                = false    # true/false
 # close brace.
 nl_after_return                 = false    # true/false
 
+# (Java) Whether to put a blank line before a member '.' or '->' operators.
+nl_before_member                = ignore   # ignore/add/remove/force
+
+# (Java) Whether to put a blank line after a member '.' or '->' operators.
+nl_after_member                 = ignore   # ignore/add/remove/force
+
 # Whether to double-space commented-entries in 'struct'/'union'/'enum'.
 nl_ds_struct_enum_cmt           = false    # true/false
 
