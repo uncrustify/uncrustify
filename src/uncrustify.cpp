@@ -1965,6 +1965,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          newlines_cleanup_dup();
          newlines_sparens();
          newlines_cleanup_braces(first);
+         newlines_cleanup_angles();                           // Issue #1167
 
          if (options::nl_after_multiline_comment())
          {

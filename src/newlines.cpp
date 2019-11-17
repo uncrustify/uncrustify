@@ -138,6 +138,9 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av, bool c
 static void newline_func_multi_line(chunk_t *start);
 
 
+static void newline_template_multi_line(chunk_t *start);
+
+
 /**
  * Formats a function declaration
  * Start points to the open paren
@@ -2607,6 +2610,69 @@ static void newline_func_multi_line(chunk_t *start)
 } // newline_func_multi_line
 
 
+static void newline_template_multi_line(chunk_t *start)
+{
+   LOG_FUNC_ENTRY();
+
+   LOG_FMT(LNFD, "%s(%d): called on %zu:%zu '%s' [%s/%s]\n",
+           __func__, __LINE__, start->orig_line, start->orig_col,
+           start->text(), get_token_name(start->type), get_token_name(start->parent_type));
+
+   bool add_start = options::nl_template_start_multi_line();
+   bool add_args  = options::nl_template_args_multi_line();
+   bool add_end   = options::nl_template_end_multi_line();
+
+   if (  !add_start
+      && !add_args
+      && !add_end)
+   {
+      return;
+   }
+   chunk_t *pc = chunk_get_next_ncnl(start);
+
+   while (pc != nullptr && pc->level > start->level)
+   {
+      pc = chunk_get_next_ncnl(pc);
+   }
+
+   if (chunk_is_token(pc, CT_ANGLE_CLOSE))
+   {
+      if (add_start)
+      {
+         newline_iarf(start, IARF_ADD);
+      }
+
+      if (add_end)
+      {
+         newline_iarf(chunk_get_prev(pc), IARF_ADD);
+      }
+
+      if (add_args)
+      {
+         for (pc = chunk_get_next_ncnl(start);
+              pc != nullptr && pc->level > start->level;
+              pc = chunk_get_next_ncnl(pc))
+         {
+            if (chunk_is_token(pc, CT_COMMA) && (pc->level == (start->level + 1)))
+            {
+               chunk_t *tmp = chunk_get_next(pc);
+
+               if (chunk_is_comment(tmp))
+               {
+                  pc = tmp;
+               }
+
+               if (!chunk_is_newline(chunk_get_next(pc)))
+               {
+                  newline_iarf(pc, IARF_ADD);
+               }
+            }
+         }
+      }
+   }
+} // newline_template_multi_line
+
+
 static void newline_func_def_or_call(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -3193,6 +3259,24 @@ void newlines_remove_newlines(void)
          }
       }
       pc = chunk_get_next_nl(pc);
+   }
+}
+
+
+void newlines_cleanup_angles()
+{
+   // Issue #1167
+   LOG_FUNC_ENTRY();
+
+   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
+   {
+      LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+
+      if (chunk_is_token(pc, CT_ANGLE_OPEN))
+      {
+         newline_template_multi_line(pc);
+      }
    }
 }
 

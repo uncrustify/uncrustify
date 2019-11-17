@@ -305,7 +305,7 @@
 30824  empty.cfg                            cpp/pp_indent_extern.cpp
 30825  Issue_1966.cfg                       cpp/Issue_1966.cpp
 30826  Issue_2319.cfg                       cpp/Issue_2319.cpp
-
+30827  Issue_1167.cfg                       cpp/Issue_1167.cpp
 30828  bug_1691.cfg                         cpp/bug_1691.cpp
 
 30830  kw_subst2.cfg                        cpp/kw_subst.cpp

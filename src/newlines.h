@@ -28,6 +28,9 @@ void newlines_sparens();
 void newlines_cleanup_braces(bool first);
 
 
+void newlines_cleanup_angles();
+
+
 //! Handle insertion/removal of blank lines before if/for/while/do and functions
 void newlines_insert_blank_lines(void);
 
