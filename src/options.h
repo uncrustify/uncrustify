@@ -448,6 +448,10 @@ sp_after_semi_for_empty;
 extern Option<iarf_e>
 sp_before_square;
 
+// Add or remove space before '[' for a variable definition.
+extern Option<iarf_e>
+sp_before_vardef_square; // = IARF_REMOVE
+
 // Add or remove space before '[' for asm block.
 extern Option<iarf_e>
 sp_before_square_asm_block;

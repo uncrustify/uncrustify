@@ -157,7 +157,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_IGNORED) || chunk_is_token(second, CT_IGNORED))
    {
-      log_rule("IGNORED");
+      log_rule("REMOVE");
       return(IARF_REMOVE);
    }
 
@@ -201,7 +201,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_DECLSPEC))  // Issue 1289
    {
-      log_rule("Remove");
+      log_rule("REMOVE");
       return(IARF_REMOVE);
    }
 
@@ -680,6 +680,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       // Don't add extra space after comma immediately followed by Angle close
       if (chunk_is_token(second, CT_ANGLE_CLOSE))
       {
+         log_rule("IGNORE");
          return(IARF_IGNORE);
       }
       // Add or remove space after ',', i.e. 'a,b' vs. 'a, b'.
@@ -1112,6 +1113,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
             && (first->type != CT_FPAREN_CLOSE)
             && (first->type != CT_PAREN_CLOSE)))
       {
+         log_rule("FORCE");
          return(IARF_FORCE);
       }
       // (OC) Add or remove space between the receiver and selector in a message,
@@ -1142,6 +1144,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (second->flags.test(PCF_IN_SPAREN) && (chunk_is_token(first, CT_IN)))
       {
+         log_rule("FORCE");
          return(IARF_FORCE);
       }
 
@@ -1150,6 +1153,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          // Add or remove space before '[' for asm block.
          log_rule("sp_before_square_asm_block");
          return(options::sp_before_square_asm_block());
+      }
+
+      if (first->flags.test(PCF_VAR_DEF))
+      {
+         // Add or remove space before '[' for a variable definition.
+         log_rule("sp_before_vardef_square");
+         return(options::sp_before_vardef_square());
       }
       // Add or remove space before '[' (except '[]').
       log_rule("sp_before_square");
@@ -1196,6 +1206,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          op = IARF_IGNORE;
       }
+      // TODO log_rule??
       return(op);
    }
 
@@ -1634,6 +1645,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
          if (chunk_is_token(tmp, CT_ASSIGN))
          {
+            log_rule("IGNORE");
             return(IARF_IGNORE);
          }
          // Add or remove space inside struct/union '{' and '}'.
@@ -2246,6 +2258,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          arg = arg | IARF_ADD;
       }
+      // TODO check it
       log_rule("sp_bool");
       return(arg);
    }
@@ -2343,6 +2356,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (language_is_set(LANG_CS) && chunk_is_nullable(second))
       {
          min_sp = 0;
+         log_rule("REMOVE");
          return(IARF_REMOVE);
       }
 
@@ -2471,6 +2485,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
          if (chunk_is_token(tmp, CT_ASSIGN))
          {
+            log_rule("IGNORE");
             return(IARF_IGNORE);
          }
          // Add or remove space inside struct/union '{' and '}'.
