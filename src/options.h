@@ -1352,6 +1352,15 @@ indent_func_const;
 extern BoundedOption<unsigned, 0, 41>
 indent_func_throw;
 
+// How to indent within a macro followed by a brace on the same line
+// This allows reducing the indent in macros that have (for example)
+// `do { ... } while (0)` blocks bracketing them.
+//
+// true:  add an indent for the brace on the same line as the macro
+// false: do not add an indent for the brace on the same line as the macro
+extern Option<bool>
+indent_macro_brace; // = true
+
 // The number of spaces to indent a continued '->' or '.'.
 // Usually set to 0, 1, or indent_columns.
 extern BoundedOption<unsigned, 0, 16>
