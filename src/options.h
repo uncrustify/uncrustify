@@ -2289,6 +2289,14 @@ nl_before_return;
 extern Option<bool>
 nl_after_return;
 
+// (Java) Whether to put a blank line before a member '.' or '->' operators.
+extern Option<iarf_e>
+nl_before_member;
+
+// (Java) Whether to put a blank line after a member '.' or '->' operators.
+extern Option<iarf_e>
+nl_after_member;
+
 // Whether to double-space commented-entries in 'struct'/'union'/'enum'.
 extern Option<bool>
 nl_ds_struct_enum_cmt;

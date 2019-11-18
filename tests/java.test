@@ -36,3 +36,5 @@
 80301  issue_672.cfg                        java/issue_672.java
 80302  Issue_1845.cfg                       java/Issue_1845.java
 80303  Issue_1122.cfg                       java/Issue_1122.java
+80304  Issue_1124-f.cfg                     java/Issue_1124.java
+80305  Issue_1124-r.cfg                     java/Issue_1124.java
