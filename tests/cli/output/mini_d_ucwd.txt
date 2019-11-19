@@ -345,6 +345,11 @@ sp_after_semi_for_empty         = ignore   # ignore/add/remove/force
 # Add or remove space before '[' (except '[]').
 sp_before_square                = ignore   # ignore/add/remove/force
 
+# Add or remove space before '[' for a variable definition.
+#
+# Default: remove
+sp_before_vardef_square         = remove   # ignore/add/remove/force
+
 # Add or remove space before '[' for asm block.
 sp_before_square_asm_block      = ignore   # ignore/add/remove/force
 
