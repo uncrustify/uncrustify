@@ -1375,6 +1375,11 @@ indent_member_single;
 extern BoundedOption<unsigned, 0, 16>
 indent_sing_line_comments;
 
+// When opening a paren for a control statement (if, for, while, etc), increase
+// the indent level by this value. Negative values decrease the indent level.
+extern BoundedOption<signed, -16, 16>
+indent_sparen_extra;
+
 // Whether to indent trailing single line ('//') comments relative to the code
 // instead of trying to keep the same absolute column.
 extern Option<bool>

@@ -2398,6 +2398,13 @@ void indent_text(void)
                   frm.top().indent = calc_indent_continue(frm);
                   log_indent();
                   frm.top().indent_cont = true;
+
+                  if (  chunk_is_token(pc, CT_SPAREN_OPEN)
+                     && options::indent_sparen_extra() != 0)
+                  {
+                     frm.top().indent += options::indent_sparen_extra();
+                     log_indent();
+                  }
                }
             }
          }
