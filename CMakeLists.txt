@@ -129,7 +129,7 @@ endif()
 # Generate uncrustify_version.h
 #
 
-set(CURRENT_VERSION "Uncrustify-0.70.0_f")
+set(UNCRUSTIFY_VERSION "0.70.0_f")
 
 option(NoGitVersionString "Do not use make_version.py and git to build a version string" OFF)
 if(NoGitVersionString)
@@ -143,7 +143,7 @@ else()
     -D SOURCE_DIR:PATH="${PROJECT_SOURCE_DIR}"
     -D INPUT:PATH="${PROJECT_SOURCE_DIR}/src/uncrustify_version.h.in"
     -D OUTPUT:PATH="${PROJECT_BINARY_DIR}/uncrustify_version.h"
-    -D CURRENT_VERSION:STRING="${CURRENT_VERSION}"
+    -D UNCRUSTIFY_VERSION:STRING="${UNCRUSTIFY_VERSION}"
     -P ${PROJECT_SOURCE_DIR}/cmake/GenerateVersionHeader.cmake
     COMMENT "Generating version header"
   )
@@ -424,7 +424,7 @@ endforeach()
 # Package
 #
 set(CPACK_PACKAGE_NAME "uncrustify")
-set(CPACK_PACKAGE_VERSION "${CURRENT_VERSION}")
+set(CPACK_PACKAGE_VERSION "${UNCRUSTIFY_VERSION}")
 set(CPACK_PACKAGE_VENDOR "Ben Gardner")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Code beautifier")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/README.md")

@@ -109,8 +109,8 @@ def cmd_update(repo, args):
     c = get_option_count(args.executable)
 
     alter(repo, 'CMakeLists.txt',
-          r'(set *[(] *CURRENT_VERSION +"Uncrustify)-[0-9.]+',
-          r'\g<1>-{}'.format(v))
+          r'(set *[(] *UNCRUSTIFY_VERSION +")[0-9.]+',
+          r'\g<1>{}'.format(v))
     alter(repo, 'package.json',
           r'("version" *): *"[0-9.]+"',
           r'\g<1>: "{}"'.format(v))

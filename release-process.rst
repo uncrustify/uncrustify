@@ -79,7 +79,7 @@ The ``--version`` argument may also be used to specify the version
 After, you should check that the following files
 show the correct version number and option count:
 
-- ``:/CMakeLists.txt`` (version number only; look for ``CURRENT_VERSION``)
+- ``:/CMakeLists.txt`` (version number only; look for ``UNCRUSTIFY_VERSION``)
 - ``:/package.json`` (version number only; you'll see it, the file is tiny)
 - ``:/README.md`` (look for "options as of version")
 - ``:/documentation/htdocs/index.html`` (look for "options as of version")
@@ -211,7 +211,6 @@ Next, build the 32- and 64-bit Windows binaries:
            ..
    $ ninja
    $ cpack
-   $ mv uncrustify-Uncrustify-0.1.2_f-win32.zip uncrustify-0.1.2-win32.zip
 
 .. code::
 
@@ -225,7 +224,6 @@ Next, build the 32- and 64-bit Windows binaries:
            ..
    $ ninja
    $ cpack
-   $ mv uncrustify-Uncrustify-0.1.2_f-win64.zip uncrustify-0.1.2-win64.zip
 
 (If you don't have Ninja_, or just don't want to use it for whatever reason,
 omit ``-G Ninja`` and run ``make`` instead of ``ninja``.)
