@@ -1284,6 +1284,15 @@ indent_token_after_brace        = true     # true/false
 # Whether to indent the body of a C++11 lambda.
 indent_cpp_lambda_body          = false    # true/false
 
+# How to indent compound literals that are being returned.
+# true: add both the indent from return & the compound literal open brace (ie:
+#       2 indent levels)
+# false: only indent 1 level, don't add the indent for the open brace, only add
+#        the indent for the return.
+#
+# Default: true
+indent_compound_literal_return  = true     # true/false
+
 # (C#) Whether to indent a 'using' block if no braces are used.
 #
 # Default: true

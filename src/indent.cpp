@@ -1666,9 +1666,12 @@ void indent_text(void)
             }
             log_indent();
          }
-         else if (  pc->parent_type == CT_BRACED_INIT_LIST
+         else if (  (  pc->parent_type == CT_BRACED_INIT_LIST
+                    || (!options::indent_compound_literal_return() && pc->parent_type == CT_C_CAST))
                  && frm.prev().type == CT_RETURN)
          {
+            // we're returning either a c compound literal (CT_C_CAST) or a
+            // C++11 initialization list (CT_BRACED_INIT_LIST), use indent from the return.
             if (frm.prev().indent_cont)
             {
                frm.top().indent = frm.prev().indent_tmp;

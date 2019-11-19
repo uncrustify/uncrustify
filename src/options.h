@@ -1570,6 +1570,14 @@ indent_token_after_brace; // = true
 extern Option<bool>
 indent_cpp_lambda_body;
 
+// How to indent compound literals that are being returned.
+// true: add both the indent from return & the compound literal open brace (ie:
+//       2 indent levels)
+// false: only indent 1 level, don't add the indent for the open brace, only add
+//        the indent for the return.
+extern Option<bool>
+indent_compound_literal_return; // = true
+
 // (C#) Whether to indent a 'using' block if no braces are used.
 extern Option<bool>
 indent_using_block; // = true

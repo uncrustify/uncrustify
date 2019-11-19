@@ -385,3 +385,7 @@
 
 10007  indent_macro_brace-true.cfg          c/indent-macro-brace.c
 10008  indent_macro_brace-false.cfg         c/indent-macro-brace.c
+
+10009  empty.cfg                            c/return-compound-literal.c
+10010  indent_compound_literal_return-false.cfg c/return-compound-literal.c
+10011  indent_compound_literal_return-true.cfg c/return-compound-literal.c
