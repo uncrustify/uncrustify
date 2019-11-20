@@ -132,7 +132,6 @@ endif()
 set(CURRENT_VERSION "Uncrustify-0.70.0_f")
 
 if(EXISTS "../.git")
-  message(WARNING "../.git is present")
   # Add target to generate version header;
   # do this every build to ensure git SHA is up to date
   add_custom_target(generate_version_header
@@ -145,14 +144,13 @@ if(EXISTS "../.git")
     -P ${PROJECT_SOURCE_DIR}/cmake/GenerateVersionHeader.cmake
     COMMENT "Generating version header"
   )
-  set_source_files_properties(
-    "${CMAKE_CURRENT_BINARY_DIR}/uncrustify_version.h"
-    PROPERTIES GENERATED TRUE
-  )
 else()
-  message(WARNING "../.git is NOT present")
   configure_file(src/uncrustify_version.h.in uncrustify_version.h @ONLY)
 endif()
+set_source_files_properties(
+  "${CMAKE_CURRENT_BINARY_DIR}/uncrustify_version.h"
+  PROPERTIES GENERATED TRUE
+)
 
 #
 # Generate token_names.h
@@ -356,7 +354,9 @@ set(uncrustify_headers
 )
 
 add_executable(uncrustify ${uncrustify_sources} ${uncrustify_headers})
-add_dependencies(uncrustify generate_version_header)
+if(EXISTS "../.git")
+  add_dependencies(uncrustify generate_version_header)
+endif()
 
 if(CMAKE_VERSION VERSION_LESS 2.8.10)
   if(CMAKE_CONFIGURATION_TYPES OR CMAKE_BUILD_TYPE)
