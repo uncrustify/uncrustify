@@ -5,7 +5,7 @@ matrix:
   include:
     - os: linux
       dist: trusty
-      env: BADGE=linux BUILD_TYPE=debug
+      env: BADGE=linux BUILD_TYPE=Non-Git-Sources
       addons:
         apt:
           update: true
@@ -157,6 +157,8 @@ script:
   - if [ "x${BUILD_TYPE}" != "xcross" ]; then ../scripts/run_ctest.py; fi
   # collect coverage (needs to be after running tests)
   - if [ "x${BUILD_TYPE}" == "xcoverage" ]; then make coverage; fi
+  - if [ "x${BUILD_TYPE}" == "xNon-Git-Sources" ]; then uncrustify --version; fi
+      
 
   # DO NOT REMOVE (debugging purposes)
   #- /home/travis/build/uncrustify/uncrustify/build/uncrustify -l cs -c /home/travis/build/uncrustify/uncrustify/tests/config/U10-Cpp.cfg -f /home/travis/build/uncrustify/uncrustify/tests/input/cs/newlines.mm -L A
