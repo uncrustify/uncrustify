@@ -5,7 +5,7 @@ matrix:
   include:
     - os: linux
       dist: trusty
-      env: BADGE=linux BUILD_TYPE=Non-Git-Sources
+      env: BADGE=linux BUILD_TYPE=NonGitSources
       addons:
         apt:
           update: true
@@ -121,33 +121,42 @@ before_script:
   # 2. Redefine shell_session_update as a dummy function to avoid travis error:
   # /Users/travis/.rvm/scripts/functions/support: line 57: shell_session_update: command not found.
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then shell_session_update() { :; }; fi
+  - echo "BUILD_TYPE is ${BUILD_TYPE}"
   # prepare make files with cmake
   - |-
     case "${BUILD_TYPE}" in
-      "Non-Git-Sources")
-        # test for Non-Git-Sources
+      "NonGitSources")
+        # test for NonGitSources
         rm -rf .git
+        echo "NonGitSources"
         cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Debug -DENABLE_CODECOVERAGE=ON ..
         ;;
       "coverage")
+        echo "coverage"
         cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Debug -DENABLE_CODECOVERAGE=ON ..
         ;;
       "asan")
+        echo "asan"
         cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZER=address ..
         ;;
       "ubsan")
+        echo "ubsan"
         cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZER=undefined ..
         ;;
       "cross")
+        echo "cross"
         cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw64.cmake -DCMAKE_EXE_LINKER_FLAGS="-static -s" ..
         ;;
       "release")
+        echo "release"
         cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Release ..
         ;;
       *)
+        echo "other"
         cmake ${GENERATOR} ..
         ;;
     esac
+    echo "GENERATOR is ${GENERATOR}" 
 
 
 script:
@@ -157,7 +166,7 @@ script:
   - if [ "x${BUILD_TYPE}" != "xcross" ]; then ../scripts/run_ctest.py; fi
   # collect coverage (needs to be after running tests)
   - if [ "x${BUILD_TYPE}" == "xcoverage" ]; then make coverage; fi
-  - if [ "x${BUILD_TYPE}" == "xNon-Git-Sources" ]; then uncrustify --version; fi
+  - if [ "x${BUILD_TYPE}" == "xNonGitSources" ]; then uncrustify --version; fi
       
 
   # DO NOT REMOVE (debugging purposes)
