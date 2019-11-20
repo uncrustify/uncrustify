@@ -127,7 +127,6 @@ before_script:
       "NonGitSources")
         # test for NonGitSources
         rm -rf ../.git
-        ls -a ../
         cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Debug -DENABLE_CODECOVERAGE=ON ..
         ;;
       "coverage")
@@ -157,6 +156,8 @@ script:
   - if [ "x${BUILD_TYPE}" != "xcross" ]; then ../scripts/run_ctest.py; fi
   # collect coverage (needs to be after running tests)
   - if [ "x${BUILD_TYPE}" == "xcoverage" ]; then make coverage; fi
+  # test for NonGitSources is OK
+  - if [ "x${BUILD_TYPE}" == "xNonGitSources" ]; then exit; fi
 
   # DO NOT REMOVE (debugging purposes)
   #- /home/travis/build/uncrustify/uncrustify/build/uncrustify -l cs -c /home/travis/build/uncrustify/uncrustify/tests/config/U10-Cpp.cfg -f /home/travis/build/uncrustify/uncrustify/tests/input/cs/newlines.mm -L A
