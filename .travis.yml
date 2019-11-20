@@ -127,8 +127,8 @@ before_script:
     case "${BUILD_TYPE}" in
       "NonGitSources")
         # test for NonGitSources
-        rm -rf .git
-        ls -a
+        rm -rf ../.git
+        ls -a ../
         echo "NonGitSources"
         cmake ${GENERATOR} -DCMAKE_BUILD_TYPE=Debug -DENABLE_CODECOVERAGE=ON ..
         ;;
