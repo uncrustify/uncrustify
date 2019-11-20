@@ -109,7 +109,7 @@ before_install:
   - cmake --version
   - mkdir build
   - cd build
-#  - type -p ninja && export GENERATOR=-GNinja || true
+  - type -p ninja && export GENERATOR=-GNinja || true
 
 before_script:
   # to stop the script after an error/warning
