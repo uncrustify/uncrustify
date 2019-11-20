@@ -134,6 +134,7 @@ set(CURRENT_VERSION "Uncrustify-0.70.0_f")
 option(NoGitVersionString "Do not use make_version.py and git to build a version string" OFF)
 if(NoGitVersionString)
   configure_file(src/uncrustify_version.h.in uncrustify_version.h @ONLY)
+  add_custom_target(generate_version_header) # Dummy target
 else()
   # Add target to generate version header;
   # do this every build to ensure git SHA is up to date
