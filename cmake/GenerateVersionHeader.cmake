@@ -3,7 +3,7 @@
 #
 # This script is meant to be executed with `cmake -P` from a custom target,
 # and expects the variables `PYTHON_EXECUTABLE`, `SOURCE_DIR`, `INPUT`,
-# `OUTPUT` and `CURRENT_VERSION` to be set.
+# `OUTPUT` and `UNCRUSTIFY_VERSION` to be set.
 #
 
 
@@ -16,10 +16,10 @@ execute_process(
 
 if (make_version_error)
   message(STATUS "scripts/make_version.py exited with code ${make_version_error}: ${make_version_output}\n"
-                  "As a fallback, version '${CURRENT_VERSION}' will be used.")
+                  "As a fallback, version '${UNCRUSTIFY_VERSION}' will be used.")
 else()
-  string(STRIP ${make_version_output} CURRENT_VERSION)
-  message(STATUS "Version: '${CURRENT_VERSION}'")
+  string(STRIP ${make_version_output} UNCRUSTIFY_VERSION)
+  message(STATUS "Version: '${UNCRUSTIFY_VERSION}'")
 endif()
 
 configure_file("${INPUT}" "${OUTPUT}" @ONLY)
