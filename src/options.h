@@ -2123,27 +2123,27 @@ nl_func_call_start;
 extern Option<bool>
 nl_func_call_start_multi_line;
 
-// Whether to add a newline after '(' in a template.
-extern Option<bool>
-nl_template_start_multi_line;
-
 // Whether to add a newline after each ',' in a function call if '(' and ')'
 // are in different lines.
 extern Option<bool>
 nl_func_call_args_multi_line;
-
-// Whether to add a newline after each ',' in a template.
-extern Option<bool>
-nl_template_args_multi_line;
 
 // Whether to add a newline before ')' in a function call if '(' and ')' are in
 // different lines.
 extern Option<bool>
 nl_func_call_end_multi_line;
 
-// Whether to add a newline before ')' in a template.
+// Whether to add a newline after '<' of a template parameter list.
 extern Option<bool>
-nl_template_end_multi_line;
+nl_template_start;
+
+// Whether to add a newline after each ',' in a template parameter list.
+extern Option<bool>
+nl_template_args;
+
+// Whether to add a newline before '>' of a template parameter list.
+extern Option<bool>
+nl_template_end;
 
 // (OC) Whether to put each Objective-C message parameter on a separate line.
 // See nl_oc_msg_leave_one_liner.

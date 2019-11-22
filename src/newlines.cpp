@@ -138,7 +138,7 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av, bool c
 static void newline_func_multi_line(chunk_t *start);
 
 
-static void newline_template_multi_line(chunk_t *start);
+static void newline_template(chunk_t *start);
 
 
 /**
@@ -2610,7 +2610,7 @@ static void newline_func_multi_line(chunk_t *start)
 } // newline_func_multi_line
 
 
-static void newline_template_multi_line(chunk_t *start)
+static void newline_template(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
 
@@ -2618,9 +2618,9 @@ static void newline_template_multi_line(chunk_t *start)
            __func__, __LINE__, start->orig_line, start->orig_col,
            start->text(), get_token_name(start->type), get_token_name(start->parent_type));
 
-   bool add_start = options::nl_template_start_multi_line();
-   bool add_args  = options::nl_template_args_multi_line();
-   bool add_end   = options::nl_template_end_multi_line();
+   bool add_start = options::nl_template_start();
+   bool add_args  = options::nl_template_args();
+   bool add_end   = options::nl_template_end();
 
    if (  !add_start
       && !add_args
@@ -2670,7 +2670,7 @@ static void newline_template_multi_line(chunk_t *start)
          }
       }
    }
-} // newline_template_multi_line
+} // newline_template
 
 
 static void newline_func_def_or_call(chunk_t *start)
@@ -3275,7 +3275,7 @@ void newlines_cleanup_angles()
 
       if (chunk_is_token(pc, CT_ANGLE_OPEN))
       {
-         newline_template_multi_line(pc);
+         newline_template(pc);
       }
    }
 }
