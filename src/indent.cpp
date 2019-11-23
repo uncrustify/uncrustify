@@ -1412,8 +1412,14 @@ void indent_text(void)
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
          frm.push(pc);
 
-         if (  options::indent_cpp_lambda_body()
-            && pc->parent_type == CT_CPP_LAMBDA)
+         if (  !options::indent_macro_brace()
+            && frm.prev().type == CT_PP_DEFINE
+            && frm.prev().open_line == frm.top().open_line)
+         {
+            LOG_FMT(LINDENT2, "%s(%d): indent_macro_brace\n", __func__, __LINE__);
+         }
+         else if (  options::indent_cpp_lambda_body()
+                 && pc->parent_type == CT_CPP_LAMBDA)
          {
             frm.top().brace_indent = frm.prev().indent;
             indent_column_set(frm.top().brace_indent);

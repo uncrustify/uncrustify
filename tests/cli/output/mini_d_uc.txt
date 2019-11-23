@@ -280,6 +280,7 @@ indent_template_param           = false
 indent_func_param_double        = false
 indent_func_const               = 0
 indent_func_throw               = 0
+indent_macro_brace              = true
 indent_member                   = 0
 indent_member_single            = false
 indent_sing_line_comments       = 0
