@@ -1621,6 +1621,7 @@ extern Option<bool>
 nl_cs_property_leave_one_liners;
 
 // Don't split one-line function definitions, as in 'int foo() { return 0; }'.
+// night modify nl_func_type_name
 extern Option<bool>
 nl_func_leave_one_liners;
 
@@ -1989,6 +1990,7 @@ nl_enum_own_lines;
 
 // Add or remove newline between return type and function name in a function
 // definition.
+// might be modified by nl_func_leave_one_liners
 extern Option<iarf_e>
 nl_func_type_name;
 

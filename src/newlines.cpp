@@ -2786,7 +2786,8 @@ static void newline_func_def_or_call(chunk_t *start)
                               || tmp->parent_type == CT_FUNC_CLASS_PROTO);
             iarf_e a = (is_proto) ?
                        options::nl_func_proto_type_name() :
-                       options::nl_func_type_name();
+                       (options::nl_func_leave_one_liners()) ?                 // Issue #1511
+                       IARF_IGNORE : options::nl_func_type_name();
 
             if (  tmp->flags.test(PCF_IN_CLASS)
                && (options::nl_func_type_name_class() != IARF_IGNORE))
