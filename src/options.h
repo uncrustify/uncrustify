@@ -1384,6 +1384,10 @@ indent_relative_single_line_comments;
 extern BoundedOption<unsigned, 0, 16>
 indent_switch_case;
 
+// indent 'break' with 'case' from 'switch'.
+extern Option<bool>
+indent_switch_break_with_case; // = false
+
 // Whether to indent preprocessor statements inside of switch statements.
 extern Option<bool>
 indent_switch_pp; // = true

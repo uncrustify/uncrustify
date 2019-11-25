@@ -3181,6 +3181,22 @@ void indent_text(void)
                      LOG_FMT(LINDENT, "%s(%d): %zu] don't indent this line\n",
                              __func__, __LINE__, pc->orig_line);
                   }
+                  else if (chunk_is_token(pc, CT_BREAK))
+                  {
+                     // Issue #1692
+                     if (options::indent_switch_break_with_case())
+                     {
+                        LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, indent_switch_break_with_case, for '%s'\n",
+                                __func__, __LINE__, pc->orig_line, pc->text());
+                        reindent_line(pc, indent_column - options::indent_columns());
+                     }
+                     else
+                     {
+                        LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, indent set to %zu, for '%s'\n",
+                                __func__, __LINE__, pc->orig_line, indent_column, pc->text());
+                        reindent_line(pc, indent_column);
+                     }
+                  }
                   else
                   {
                      LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, indent set to %zu, for '%s'\n",
