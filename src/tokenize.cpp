@@ -1536,6 +1536,7 @@ static bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
       else
       {
          // Turn it into a keyword now
+         // Issue #1460 will return "COMMENT_CPP"
          pc.type = find_keyword_type(pc.text(), pc.str.size());
 
          /* Special pattern: if we're trying to redirect a preprocessor directive to PP_IGNORE,
@@ -1546,6 +1547,60 @@ static bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
          if (pc.type == CT_PP_IGNORE && !cpd.in_preproc)
          {
             pc.type = find_keyword_type(pc.text(), pc.str.size());
+         }
+         else if (pc.type == CT_COMMENT_CPP)   // Issue #1460
+         {
+            size_t ch;
+            bool   is_cs = language_is_set(LANG_CS);
+
+            // read until EOL
+            while (true)
+            {
+               int bs_cnt = 0;
+
+               while (ctx.more())
+               {
+                  ch = ctx.peek();
+
+                  if ((ch == '\r') || (ch == '\n'))
+                  {
+                     break;
+                  }
+
+                  if ((ch == '\\') && !is_cs) // backslashes aren't special in comments in C#
+                  {
+                     bs_cnt++;
+                  }
+                  else
+                  {
+                     bs_cnt = 0;
+                  }
+                  pc.str.append(ctx.get());
+               }
+
+               /*
+                * If we hit an odd number of backslashes right before the newline,
+                * then we keep going.
+                */
+               if (((bs_cnt & 1) == 0) || !ctx.more())
+               {
+                  break;
+               }
+
+               if (ctx.peek() == '\r')
+               {
+                  pc.str.append(ctx.get());
+               }
+
+               if (ctx.peek() == '\n')
+               {
+                  pc.str.append(ctx.get());
+               }
+               pc.nl_count++;
+               cpd.did_newline = true;
+            }
+            // Store off the end column
+            pc.orig_col_end = ctx.c.col;
          }
       }
    }
@@ -2300,7 +2355,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       if (  (  chunk.type == CT_COMMENT_MULTI                  // Issue #1966
             || chunk.type == CT_COMMENT
             || chunk.type == CT_COMMENT_CPP)
-         && pc && pc->type == CT_PP_IGNORE)
+         && (pc != nullptr) && chunk_is_token(pc, CT_PP_IGNORE))
       {
          chunk.orig_col_end -= num_stripped;
       }
@@ -2375,10 +2430,10 @@ void tokenize(const deque<int> &data, chunk_t *ref)
          else if (cpd.in_preproc == CT_PP_IGNORE)
          {
             // ASSERT(options::pp_ignore_define_body());
-            if (  pc->type != CT_NL_CONT
-               && pc->type != CT_COMMENT_CPP
-               && pc->type != CT_COMMENT
-               && pc->type != CT_COMMENT_MULTI)     // Issue #1966
+            if (  !chunk_is_token(pc, CT_NL_CONT)
+               && !chunk_is_token(pc, CT_COMMENT_CPP)
+               && !chunk_is_token(pc, CT_COMMENT)
+               && !chunk_is_token(pc, CT_COMMENT_MULTI))     // Issue #1966
             {
                set_chunk_type(pc, CT_PP_IGNORE);
             }
