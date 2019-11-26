@@ -582,10 +582,28 @@ void tokenize_cleanup(void)
        * likewise, 'class' may be a member name in Java.
        */
       if (  chunk_is_token(pc, CT_CLASS)
-         && !CharTable::IsKw1(next->str[0])
-         && pc->next->type != CT_DC_MEMBER)
+         && !CharTable::IsKw1(next->str[0]))
       {
-         set_chunk_type(pc, CT_WORD);
+         if (chunk_is_not_token(next, CT_DC_MEMBER))
+         {
+            set_chunk_type(pc, CT_WORD);
+         }
+         else if (  chunk_is_token(prev, CT_DC_MEMBER)
+                 || chunk_is_token(prev, CT_TYPE))
+         {
+            set_chunk_type(pc, CT_TYPE);
+         }
+         else if (chunk_is_token(next, CT_DC_MEMBER))
+         {
+            chunk_t *next2 = chunk_get_next_nblank(next);
+
+            if (  chunk_is_token(next2, CT_INV)      // CT_INV hasn't turned into CT_DESTRUCTOR just yet
+               || (  chunk_is_token(next2, CT_CLASS) // constructor isn't turned into CT_FUNC* just yet
+                  && !strcmp(pc->text(), next2->text())))
+            {
+               set_chunk_type(pc, CT_TYPE);
+            }
+         }
       }
 
       /*
