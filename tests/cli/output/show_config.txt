@@ -1120,6 +1120,9 @@ indent_relative_single_line_comments = false    # true/false
 # Spaces to indent 'case' from 'switch'. Usually 0 or indent_columns.
 indent_switch_case              = 0        # unsigned number
 
+# indent 'break' with 'case' from 'switch'.
+indent_switch_break_with_case   = false    # true/false
+
 # Whether to indent preprocessor statements inside of switch statements.
 #
 # Default: true

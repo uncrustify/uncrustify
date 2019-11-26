@@ -286,6 +286,7 @@ indent_member_single            = false
 indent_sing_line_comments       = 0
 indent_relative_single_line_comments = false
 indent_switch_case              = 0
+indent_switch_break_with_case   = false
 indent_switch_pp                = true
 indent_case_shift               = 0
 indent_case_brace               = 0
