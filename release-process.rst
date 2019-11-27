@@ -233,7 +233,7 @@ This is also a good time to test the tagged build on Linux:
 .. code::
 
    $ wget https://github.com/uncrustify/uncrustify/archive/uncrustify-0.1.2.tar.gz
-   $ tar xzf -e uncrustify-0.1.2.tar.gz
+   $ tar xzf uncrustify-0.1.2.tar.gz
    $ cd uncrustify-uncrustify-0.1.2
    $ mkdir build
    $ cd build
@@ -246,10 +246,10 @@ Upload to SourceForge
 =====================
 
 - Login as admin under https://sourceforge.net/projects/uncrustify/
-- Change to https://sourceforge.net/projects/uncrustify/files/uncrustify/
+- Change to https://sourceforge.net/projects/uncrustify/files/
 - "Add Folder"; the name should be e.g. "uncrustify-0.1.2"
 - Navigate to the new folder
-  (e.g. https://sourceforge.net/projects/uncrustify/files/uncrustify/uncrustify-0.1.2/)
+  (e.g. https://sourceforge.net/projects/uncrustify/files/uncrustify-0.1.2/)
 - "Add File"; upload the following files
   (adjusting for the actual version number):
 
