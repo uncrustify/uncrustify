@@ -11,7 +11,7 @@
 A source code beautifier for C, C++, C#, ObjectiveC, D, Java, Pawn and VALA
 
 ## Features
-* Highly configurable - 702 configurable options as of version 0.70.0
+* Highly configurable - 710 configurable options as of version 0.70.1
 - <details><summary>add/remove spaces</summary>
 
   - `sp_before_sparen`: _Add or remove space before '(' of 'if', 'for', 'switch', 'while', etc._
