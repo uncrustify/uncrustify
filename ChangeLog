@@ -1,4 +1,28 @@
-Change highlights in uncrustify-0.70.0 (November 2019)
+Change highlights in uncrustify-0.70.1 (November 2019)
+-------------------------------------------------------------------------------
+
+  5114ea856acd79cbf52fd4261b83d423fafd98da
+    Added   : nl_before_member                     Nov 17 2019
+    Added   : nl_after_member                      Nov 17 2019
+  1e911250996a7138e33006af1b664362b255f4b5
+    Added   : nl_template_end_multi_line           Nov 17 2019
+    Added   : nl_template_start_multi_line         Nov 17 2019
+    Added   : nl_template_args_multi_line          Nov 17 2019
+  948bc227c46f89207346ad596e6199acb12d162f
+    Added   : sp_before_vardef_square              Nov 18 2019
+  1ff6fc2da0b1cdef35089a2d6ac3364fbba304be
+    Added   : nl_template_start                    Nov 21 2019
+    Added   : nl_template_args                     Nov 21 2019
+    Added   : nl_template_end                      Nov 21 2019
+    Removed : nl_template_end_multi_line           Nov 21 2019
+    Removed : nl_template_start_multi_line         Nov 21 2019
+    Removed : nl_template_args_multi_line          Nov 21 2019
+  2df82073bb1e3bc85f75c2165a541ba906f76b8d
+    Added   : indent_macro_brace                   Nov 18 2019
+  8cb5f1be52bcbcca4148cf0514b103dec5313c55
+    Added   : indent_switch_break_with_case        Nov 25 2019
+
+Change highlights in uncrustify-0.70.0 (is not released)
 -------------------------------------------------------------------------------
 
   710b9b90d063e1fac853b77ad9509bed37ff31ee

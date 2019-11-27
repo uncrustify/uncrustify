@@ -4,7 +4,7 @@
 
 .. Update the date in the next line when editing this document!
 
-*This document was last updated on 2019-11-15, for Uncrustify 0.70.0.*
+*This document was last updated on 2019-11-27, for Uncrustify 0.70.1.*
 
 This document uses "0.1.2" throughout as an example version number.
 Whenever you see this, you should substitute the version number
