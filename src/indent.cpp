@@ -1661,7 +1661,8 @@ void indent_text(void)
             }
             else
             {
-               frm.top().indent = frm.prev().indent_tmp + indent_size;
+               frm.top().indent     = frm.prev().indent_tmp + indent_size;
+               frm.top().indent_tab = frm.top().indent;
             }
             log_indent();
          }
@@ -3387,8 +3388,7 @@ static bool is_end_of_assignment(chunk_t *pc, const ParseFrame &frm)
             || frm.top().type == CT_ASSIGN)
          && (  chunk_is_semicolon(pc)
             || chunk_is_token(pc, CT_COMMA)
-            || (  chunk_is_token(pc, CT_BRACE_OPEN)
-               && pc->parent_type != CT_OC_AT)
+            || chunk_is_token(pc, CT_BRACE_OPEN)
             || chunk_is_token(pc, CT_SPAREN_CLOSE)
             || (  chunk_is_token(pc, CT_SQUARE_OPEN)
                && pc->parent_type == CT_ASSIGN))
