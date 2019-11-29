@@ -3093,6 +3093,12 @@ align_oc_msg_colon_first;
 extern Option<bool>
 align_oc_decl_colon;
 
+// (OC) Whether to not align parameters in an Objectve-C message call if first
+// colon is not on next line of the message call (the same way Xcode does
+// aligment)
+extern Option<bool>
+align_oc_msg_colon_xcode_like;
+
 //END
 
 ///////////////////////////////////////////////////////////////////////////////
