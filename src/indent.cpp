@@ -1449,7 +1449,7 @@ void indent_text(void)
             frm.prev().indent_tmp = frm.top().indent_tmp;
             log_indent_tmp();
          }
-         else if (  language_is_set(LANG_CS)
+         else if (  language_is_set(LANG_CS | LANG_JAVA)
                  && options::indent_cs_delegate_brace()
                  && (  pc->parent_type == CT_LAMBDA
                     || pc->parent_type == CT_DELEGATE))
@@ -1465,7 +1465,7 @@ void indent_text(void)
             frm.prev().indent_tmp = frm.top().indent_tmp;
             log_indent_tmp();
          }
-         else if (  language_is_set(LANG_CS)
+         else if (  language_is_set(LANG_CS | LANG_JAVA)
                  && !options::indent_cs_delegate_brace()
                  && !options::indent_align_paren()
                  && (  pc->parent_type == CT_LAMBDA
@@ -1648,6 +1648,11 @@ void indent_text(void)
             {
                // We are inside ({ ... }) -- indent one tab from the paren
                frm.top().indent = frm.prev().indent_tmp + indent_size;
+
+               if (!chunk_is_paren_open(frm.prev().pc))
+               {
+                  frm.top().indent_tab = frm.top().indent;
+               }
                log_indent();
             }
          }
@@ -2639,7 +2644,8 @@ void indent_text(void)
             indent_column_set(frm.top().indent + 4);
          }
       }
-      else if (  chunk_is_token(pc, CT_LAMBDA) && language_is_set(LANG_CS)
+      else if (  chunk_is_token(pc, CT_LAMBDA)
+              && (language_is_set(LANG_CS | LANG_JAVA))
               && chunk_get_next_ncnlnp(pc)->type != CT_BRACE_OPEN
               && options::indent_cs_delegate_body())
       {
