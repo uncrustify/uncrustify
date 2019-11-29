@@ -229,9 +229,8 @@ Create a tarball:
 
 .. code::
 
-  $ git archive -o uncrustify-0.1.2.tar.gz `git rev-parse HEAD`
-Test it somewhere else
-
+  $ git archive -o uncrustify-0.1.2.tar.gz uncrustify-0.1.2
+TODO: find the best strategie...
 
 (If you don't have Ninja_, or just don't want to use it for whatever reason,
 omit ``-G Ninja`` and run ``make`` instead of ``ninja``.)
