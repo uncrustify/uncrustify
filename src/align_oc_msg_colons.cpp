@@ -28,9 +28,10 @@ void align_oc_msg_colon(chunk_t *so)
    size_t  level = so->level;
    chunk_t *pc   = chunk_get_next_ncnl(so, scope_e::PREPROC);
 
-   bool    did_line  = false;
-   bool    has_colon = false;
-   size_t  lcnt      = 0; // line count with no colon for span
+   bool    did_line   = false;
+   bool    has_colon  = false;
+   size_t  lcnt       = 0; // line count with no colon for span
+   bool    first_line = true;
 
    while (pc != nullptr && pc->level > level)
    {
@@ -44,8 +45,14 @@ void align_oc_msg_colon(chunk_t *so)
          {
             ++lcnt;
          }
-         did_line  = false;
-         has_colon = !has_colon;
+         did_line = false;
+
+         if (options::align_oc_msg_colon_xcode_like() && first_line && !has_colon)
+         {
+            span = 0;
+         }
+         has_colon  = !has_colon;
+         first_line = false;
       }
       else if (  !did_line
               && (lcnt < span + 1)

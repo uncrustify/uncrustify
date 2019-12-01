@@ -625,6 +625,7 @@ align_asm_colon                 = false
 align_oc_msg_colon_span         = 0
 align_oc_msg_colon_first        = false
 align_oc_decl_colon             = false
+align_oc_msg_colon_xcode_like   = false
 cmt_width                       = 0
 cmt_reflow_mode                 = 0
 cmt_convert_tab_to_spaces       = false

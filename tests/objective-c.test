@@ -145,3 +145,4 @@
 # adopt tests from UT
 10018  empty.cfg                            oc/delete-space-oc.mm
 10019  empty.cfg                            oc/func-param-wrap-oc.mm
+10020  align-objc-like-xcode.cfg            oc/align-objc-like-xcode.m
