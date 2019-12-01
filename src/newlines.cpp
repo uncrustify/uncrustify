@@ -2782,12 +2782,30 @@ static void newline_func_def_or_call(chunk_t *start)
 
          if (tmp_next != nullptr && tmp_next->type != CT_FUNC_CLASS_DEF)
          {
-            bool   is_proto = (  tmp->parent_type == CT_FUNC_PROTO
-                              || tmp->parent_type == CT_FUNC_CLASS_PROTO);
-            iarf_e a = (is_proto) ?
-                       options::nl_func_proto_type_name() :
-                       (options::nl_func_leave_one_liners()) ?                 // Issue #1511
-                       IARF_IGNORE : options::nl_func_type_name();
+            chunk_t *closing = chunk_skip_to_match(tmp);
+            chunk_t *brace   = chunk_get_next_ncnl(closing);
+            iarf_e  a;                                           // Issue #2561
+
+            if (  tmp->parent_type == CT_FUNC_PROTO
+               || tmp->parent_type == CT_FUNC_CLASS_PROTO)
+            {
+               // proto
+               a = options::nl_func_proto_type_name();
+            }
+            else
+            {
+               // def
+
+               if (  options::nl_func_leave_one_liners()
+                  && brace->flags.test(PCF_ONE_LINER))                 // Issue #1511
+               {
+                  a = IARF_IGNORE;
+               }
+               else
+               {
+                  a = options::nl_func_type_name();
+               }
+            }
 
             if (  tmp->flags.test(PCF_IN_CLASS)
                && (options::nl_func_type_name_class() != IARF_IGNORE))
