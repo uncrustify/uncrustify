@@ -322,6 +322,7 @@ indent_min_vbrace_open          = 0
 indent_vbrace_open_on_tabstop   = false
 indent_token_after_brace        = true
 indent_cpp_lambda_body          = false
+indent_compound_literal_return  = true
 indent_using_block              = true
 indent_ternary_operator         = 0
 indent_off_after_return_new     = false
