@@ -811,18 +811,6 @@ chunk_t *chunk_get_prev_nvb(chunk_t *cur, const scope_e scope)
 }
 
 
-void set_chunk_type_real(chunk_t *pc, c_token_t tt)
-{
-   set_chunk_real(pc, tt, LSETTYP);
-}
-
-
-void set_chunk_parent_real(chunk_t *pc, c_token_t pt)
-{
-   set_chunk_real(pc, pt, LSETPAR);
-}
-
-
 void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits)
 {
    if (pc != nullptr)
@@ -848,6 +836,60 @@ void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bit
       }
    }
 }
+
+
+void set_chunk_type(chunk_t *pc, c_token_t token)
+{
+   LOG_FUNC_ENTRY();
+
+   if (  pc == nullptr
+      || pc->type == token)
+   {
+      return;
+   }
+   LOG_FMT(LSETTYP, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() ",
+           __func__, __LINE__, pc->orig_line, pc->orig_col);
+
+   if (token == CT_NEWLINE)
+   {
+      LOG_FMT(LSETTYP, "<Newline>\n");
+   }
+   else
+   {
+      LOG_FMT(LSETTYP, "'%s'\n", pc->text());
+   }
+   LOG_FMT(LSETTYP, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s\n",
+           get_token_name(pc->type), get_token_name(pc->parent_type),
+           get_token_name(token), get_token_name(pc->parent_type));
+   pc->type = token;
+} // set_chunk_type
+
+
+void set_chunk_parent(chunk_t *pc, c_token_t token)
+{
+   LOG_FUNC_ENTRY();
+
+   if (  pc == nullptr
+      || pc->parent_type == token)
+   {
+      return;
+   }
+   LOG_FMT(LSETPAR, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() ",
+           __func__, __LINE__, pc->orig_line, pc->orig_col);
+
+   if (token == CT_NEWLINE)
+   {
+      LOG_FMT(LSETPAR, "<Newline>\n");
+   }
+   else
+   {
+      LOG_FMT(LSETPAR, "'%s'\n", pc->text());
+   }
+   LOG_FMT(LSETPAR, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s\n",
+           get_token_name(pc->type), get_token_name(pc->parent_type),
+           get_token_name(token), get_token_name(pc->parent_type));
+   pc->parent_type = token;
+} // set_chunk_parent
 
 
 void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what)

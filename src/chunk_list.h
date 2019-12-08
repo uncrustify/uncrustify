@@ -42,9 +42,6 @@ enum class scope_e : unsigned int
 };
 
 
-void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what);
-
-
 /**
  * duplicate a chunk in a chunk list
  *
@@ -855,21 +852,10 @@ static inline bool chunk_is_forin(chunk_t *pc)
 }
 
 
-void set_chunk_type_real(chunk_t *pc, c_token_t tt);
+void set_chunk_type(chunk_t *pc, c_token_t tt);
 
 
-void set_chunk_parent_real(chunk_t *pc, c_token_t tt);
-
-
-#define set_chunk_type(pc, tt)      do { \
-      LOG_FUNC_CALL();                   \
-      set_chunk_type_real((pc), (tt));   \
-} while (false)
-
-#define set_chunk_parent(pc, tt)    do { \
-      LOG_FUNC_CALL();                   \
-      set_chunk_parent_real((pc), (tt)); \
-} while (false)
+void set_chunk_parent(chunk_t *pc, c_token_t tt);
 
 
 void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits);
