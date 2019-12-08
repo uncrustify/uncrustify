@@ -618,7 +618,7 @@ static void flag_asm(chunk_t *pc)
             tmp->orig_col_end = tmp->orig_col + 1;
             set_chunk_type(tmp, CT_ASM_COLON);
 
-            nc.type = tmp->type;
+            set_chunk_type(&nc, tmp->type);                    // Issue #2567
             nc.str.pop_front();
             nc.orig_col++;
             nc.column++;
@@ -5821,7 +5821,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
       nc.orig_col_end    = sq_o->orig_col_end;
       sq_o->orig_col_end = sq_o->orig_col + 1;
 
-      nc.type = CT_SQUARE_CLOSE;
+      set_chunk_type(&nc, CT_SQUARE_CLOSE);                    // Issue #2567
       nc.str.pop_front();
       sq_c = chunk_add_after(&nc, sq_o);
    }

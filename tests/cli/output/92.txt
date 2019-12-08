@@ -1,3 +1,65 @@
+set_chunk_type : orig_line is 1, orig_col is 1, pc->text() 'struct'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 1, orig_col is 1, pc->text() 'struct'
+   pc->type is WORD, pc->parent_type is NONE => *type is STRUCT, *parent_type is NONE
+set_chunk_type : orig_line is 1, orig_col is 8, pc->text() 'TelegramIndex'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 3, orig_col is 1, pc->text() 'TelegramIndex'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 3, orig_col is 15, pc->text() 'const'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 3, orig_col is 15, pc->text() 'const'
+   pc->type is WORD, pc->parent_type is NONE => *type is QUALIFIER, *parent_type is NONE
+set_chunk_type : orig_line is 3, orig_col is 21, pc->text() 'char'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 3, orig_col is 21, pc->text() 'char'
+   pc->type is WORD, pc->parent_type is NONE => *type is TYPE, *parent_type is NONE
+set_chunk_type : orig_line is 3, orig_col is 27, pc->text() 'pN'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 3, orig_col is 31, pc->text() 'unsigned'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 3, orig_col is 31, pc->text() 'unsigned'
+   pc->type is WORD, pc->parent_type is NONE => *type is TYPE, *parent_type is NONE
+set_chunk_type : orig_line is 3, orig_col is 40, pc->text() 'long'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 3, orig_col is 40, pc->text() 'long'
+   pc->type is WORD, pc->parent_type is NONE => *type is TYPE, *parent_type is NONE
+set_chunk_type : orig_line is 3, orig_col is 45, pc->text() 'nI'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 4, orig_col is 1, pc->text() 'pTelName'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 4, orig_col is 10, pc->text() 'pN'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 5, orig_col is 1, pc->text() 'nTelIndex'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 5, orig_col is 11, pc->text() 'n'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 9, orig_col is 2, pc->text() 'TelegramIndex'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 13, orig_col is 1, pc->text() 'const'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 13, orig_col is 1, pc->text() 'const'
+   pc->type is WORD, pc->parent_type is NONE => *type is QUALIFIER, *parent_type is NONE
+set_chunk_type : orig_line is 13, orig_col is 7, pc->text() 'char'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 13, orig_col is 7, pc->text() 'char'
+   pc->type is WORD, pc->parent_type is NONE => *type is TYPE, *parent_type is NONE
+set_chunk_type : orig_line is 13, orig_col is 13, pc->text() 'const'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 13, orig_col is 13, pc->text() 'const'
+   pc->type is WORD, pc->parent_type is NONE => *type is QUALIFIER, *parent_type is NONE
+set_chunk_type : orig_line is 13, orig_col is 19, pc->text() 'pTelName'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 14, orig_col is 1, pc->text() 'unsigned'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 14, orig_col is 1, pc->text() 'unsigned'
+   pc->type is WORD, pc->parent_type is NONE => *type is TYPE, *parent_type is NONE
+set_chunk_type : orig_line is 14, orig_col is 10, pc->text() 'long'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+set_chunk_type : orig_line is 14, orig_col is 10, pc->text() 'long'
+   pc->type is WORD, pc->parent_type is NONE => *type is TYPE, *parent_type is NONE
+set_chunk_type : orig_line is 14, orig_col is 15, pc->text() 'nTelIndex'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
 set_chunk_type : orig_line is 1, orig_col is 8, pc->text() 'TelegramIndex'
    pc->type is WORD, pc->parent_type is NONE => *type is TYPE, *parent_type is NONE
 set_chunk_type : orig_line is 3, orig_col is 25, pc->text() '*'

@@ -133,7 +133,7 @@ void split_off_angle_close(chunk_t *pc)
    pc->orig_col_end = pc->orig_col + 1;
    set_chunk_type(pc, CT_ANGLE_CLOSE);
 
-   nc.type = ct->type;
+   set_chunk_type(&nc, ct->type);                    // Issue #2567
    nc.str.pop_front();
    nc.orig_col++;
    nc.column++;
@@ -758,7 +758,7 @@ void tokenize_cleanup(void)
                   pc->str.resize(1);
                   pc->orig_col_end = pc->orig_col + 1;
 
-                  nc.type = CT_SQL_WORD;
+                  set_chunk_type(&nc, CT_SQL_WORD);                    // Issue #2567
                   nc.str.pop_front();
                   nc.orig_col++;
                   nc.column++;
@@ -1516,7 +1516,7 @@ static void mark_selectors_in_property_with_open_paren(chunk_t *open_paren)
          {
             if (chunk_is_token(tmp, CT_WORD) || chunk_is_str(tmp, ":", 1))
             {
-               tmp->type = CT_OC_SEL_NAME;
+               set_chunk_type(tmp, CT_OC_SEL_NAME);                    // Issue #2567
             }
             tmp = tmp->next;
          }
@@ -1540,7 +1540,7 @@ static void mark_attributes_in_property_with_open_paren(chunk_t *open_paren)
       if (  (chunk_is_token(tmp, CT_COMMA) || chunk_is_token(tmp, CT_PAREN_OPEN))
          && (chunk_is_token(tmp->next, CT_WORD) || chunk_is_token(tmp->next, CT_TYPE)))
       {
-         tmp->next->type = CT_OC_PROPERTY_ATTR;
+         set_chunk_type(tmp->next, CT_OC_PROPERTY_ATTR);                    // Issue #2567
       }
       tmp = tmp->next;
    }

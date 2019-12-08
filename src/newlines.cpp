@@ -587,13 +587,13 @@ static void newline_end_newline(chunk_t *br_close)
 
       if (nl.flags.test(PCF_IN_PREPROC))
       {
-         nl.type = CT_NL_CONT;
-         nl.str  = "\\\n";
+         set_chunk_type(&nl, CT_NL_CONT);                    // Issue #2567
+         nl.str = "\\\n";
       }
       else
       {
-         nl.type = CT_NEWLINE;
-         nl.str  = "\n";
+         set_chunk_type(&nl, CT_NEWLINE);                    // Issue #2567
+         nl.str = "\n";
       }
       MARK_CHANGE();
       LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline after '%s'\n",
