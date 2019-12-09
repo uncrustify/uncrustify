@@ -3892,8 +3892,8 @@ void space_add_after(chunk_t *pc, size_t count)
    }
    chunk_t sp;
 
+   set_chunk_type(&sp, CT_SPACE);       // Issue #2567
    sp.flags = pc->flags & PCF_COPY_FLAGS;
-   sp.type  = CT_SPACE;
    sp.str   = "                ";       // 16 spaces
    sp.str.resize(count);
    sp.level       = pc->level;

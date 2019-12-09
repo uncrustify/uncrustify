@@ -2890,17 +2890,17 @@ static chunk_t *process_return(chunk_t *pc)
    if (semi)
    {
       // add the parenthesis
-      chunk.type        = CT_PAREN_OPEN;
+      set_chunk_type(&chunk, CT_PAREN_OPEN);                  // Issue #2567
+      set_chunk_parent(&chunk, CT_RETURN);                    // Issue #2567
       chunk.str         = "(";
       chunk.level       = pc->level;
       chunk.brace_level = pc->brace_level;
       chunk.orig_line   = pc->orig_line;
       chunk.orig_col    = next->orig_col - 1;
-      chunk.parent_type = CT_RETURN;
       chunk.flags       = pc->flags & PCF_COPY_FLAGS;
       chunk_add_before(&chunk, next);
 
-      chunk.type      = CT_PAREN_CLOSE;
+      set_chunk_type(&chunk, CT_PAREN_CLOSE);                 // Issue #2567
       chunk.str       = ")";
       chunk.orig_line = semi->orig_line;
       chunk.orig_col  = semi->orig_col - 1;
@@ -7014,14 +7014,14 @@ static void handle_oc_property_decl(chunk_t *os)
 
                // add the parenthesis
                chunk_t endchunk;
-               endchunk.type        = CT_COMMA;
+               set_chunk_type(&endchunk, CT_COMMA);                      // Issue #2567
+               set_chunk_parent(&endchunk, curr_chunk->parent_type);     // Issue #2567
                endchunk.str         = ",";
                endchunk.level       = curr_chunk->level;
                endchunk.brace_level = curr_chunk->brace_level;
                endchunk.orig_line   = curr_chunk->orig_line;
                endchunk.orig_col    = curr_chunk->orig_col;
                endchunk.column      = curr_chunk->orig_col_end + 1;
-               endchunk.parent_type = curr_chunk->parent_type;
                endchunk.flags       = curr_chunk->flags & PCF_COPY_FLAGS;
                chunk_add_after(&endchunk, curr_chunk);
                curr_chunk = curr_chunk->next;

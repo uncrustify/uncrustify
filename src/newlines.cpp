@@ -4589,9 +4589,9 @@ void newlines_eat_start_end(void)
                  && (options::nl_start_of_file_min() > 0))
          {
             chunk_t chunk;
+            set_chunk_type(&chunk, CT_NEWLINE);                    // Issue #2567
             chunk.orig_line = pc->orig_line;
             chunk.orig_col  = pc->orig_col;
-            chunk.type      = CT_NEWLINE;
             chunk.nl_count  = options::nl_start_of_file_min();
             chunk_add_before(&chunk, pc);
             LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline before '%s'\n",
@@ -4636,9 +4636,9 @@ void newlines_eat_start_end(void)
                  && (options::nl_end_of_file_min() > 0))
          {
             chunk_t chunk;
+            set_chunk_type(&chunk, CT_NEWLINE);                    // Issue #2567
             chunk.orig_line = pc->orig_line;
             chunk.orig_col  = pc->orig_col;
-            chunk.type      = CT_NEWLINE;
             chunk.nl_count  = options::nl_end_of_file_min();
             chunk_add_before(&chunk, nullptr);
             LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline before '%s'\n",

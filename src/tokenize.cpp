@@ -1745,8 +1745,8 @@ static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc)
    if (ch != 0)
    {
       pc.str.clear();
+      set_chunk_type(&pc, nl_count ? CT_NEWLINE : CT_WHITESPACE);                    // Issue #2567
       pc.nl_count  = nl_count;
-      pc.type      = nl_count ? CT_NEWLINE : CT_WHITESPACE;
       pc.after_tab = (ctx.c.last_ch == '\t');
       return(true);
    }
@@ -1771,8 +1771,8 @@ static bool parse_bs_newline(tok_ctx &ctx, chunk_t &pc)
          {
             ctx.expect('\n');
          }
+         set_chunk_type(&pc, CT_NL_CONT);                    // Issue #2567
          pc.str      = "\\";
-         pc.type     = CT_NL_CONT;
          pc.nl_count = 1;
          return(true);
       }
@@ -1841,7 +1841,7 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
    if (nl_count > 0)
    {
       pc.nl_count = nl_count;
-      pc.type     = CT_NEWLINE;
+      set_chunk_type(&pc, CT_NEWLINE);                    // Issue #2567
       return(true);
    }
    // See if the UO_enable_processing_cmt or #pragma endasm / #endasm text is on this line
@@ -1919,10 +1919,10 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       return(false);
    }
    // Save off the current column
+   set_chunk_type(&pc, CT_NONE);                    // Issue #2567
    pc.orig_line = ctx.c.row;
    pc.column    = ctx.c.col;
    pc.orig_col  = ctx.c.col;
-   pc.type      = CT_NONE;
    pc.nl_count  = 0;
    pc.flags     = PCF_NONE;
 
@@ -2235,7 +2235,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       {
          pc.str.append(ctx.get());
       }
-      pc.type   = punc->type;
+      set_chunk_type(&pc, punc->type);                    // Issue #2567
       pc.flags |= PCF_PUNCTUATOR;
       return(true);
    }
@@ -2261,7 +2261,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
          {
             pc.str.append(ctx.get());
          }
-         pc.type   = punc->type;
+         set_chunk_type(&pc, punc->type);                    // Issue #2567
          pc.flags |= PCF_PUNCTUATOR;
          return(true);
       }

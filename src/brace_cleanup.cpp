@@ -1171,8 +1171,8 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
    LOG_FUNC_ENTRY();
 
    chunk_t chunk;
+   set_chunk_parent(&chunk, frm.top().type);                    // Issue #2567
    chunk.orig_line   = pc->orig_line;
-   chunk.parent_type = frm.top().type;
    chunk.level       = frm.level;
    chunk.brace_level = frm.brace_level;
    chunk.flags       = pc->flags & PCF_COPY_FLAGS;
@@ -1181,7 +1181,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
    if (after)
    {
       chunk.orig_col = pc->orig_col;
-      chunk.type     = CT_VBRACE_CLOSE;
+      set_chunk_type(&chunk, CT_VBRACE_CLOSE);                  // Issue #2567
       return(chunk_add_after(&chunk, pc));
    }
    chunk_t *ref = chunk_get_prev(pc);
@@ -1232,7 +1232,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
    chunk.orig_line = ref->orig_line;
    chunk.orig_col  = ref->orig_col;
    chunk.column    = ref->column + ref->len() + 1;
-   chunk.type      = CT_VBRACE_OPEN;
+   set_chunk_type(&chunk, CT_VBRACE_OPEN);                  // Issue #2567
 
    return(chunk_add_after(&chunk, ref));
 } // insert_vbrace

@@ -924,7 +924,7 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
    new_cmt.prev  = nullptr;
    new_cmt.next  = nullptr;
    new_cmt.flags = (ref->flags & PCF_COPY_FLAGS);
-   new_cmt.type  = cmt_type;
+   set_chunk_type(&new_cmt, cmt_type);                    // Issue #2567
    new_cmt.str.clear();
 
    if (cmt_type == CT_COMMENT_CPP)
@@ -1267,10 +1267,10 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
            __func__, __LINE__, last->text(), last->orig_line);
 
    chunk_t chunk;
-   chunk.type        = CT_BRACE_OPEN;
+   set_chunk_type(&chunk, CT_BRACE_OPEN);                // Issue #2567
+   set_chunk_parent(&chunk, CT_CASE);                    // Issue #2567
    chunk.orig_line   = cl_colon->orig_line;
    chunk.orig_col    = cl_colon->orig_col;
-   chunk.parent_type = CT_CASE;
    chunk.level       = cl_colon->level;
    chunk.brace_level = cl_colon->brace_level;
    chunk.flags       = pc->flags & PCF_COPY_FLAGS;
@@ -1278,7 +1278,7 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
 
    chunk_t *br_open = chunk_add_after(&chunk, cl_colon);
 
-   chunk.type      = CT_BRACE_CLOSE;
+   set_chunk_type(&chunk, CT_BRACE_CLOSE);               // Issue #2567
    chunk.orig_line = last->orig_line;
    chunk.orig_col  = last->orig_col;
    chunk.str       = "}";

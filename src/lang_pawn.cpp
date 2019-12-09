@@ -75,10 +75,10 @@ chunk_t *pawn_add_vsemi_after(chunk_t *pc)
       return(pc);
    }
    chunk_t chunk = *pc;
-   chunk.type        = CT_VSEMICOLON;
-   chunk.str         = options::mod_pawn_semicolon() ? ";" : "";
-   chunk.column     += pc->len();
-   chunk.parent_type = CT_NONE;
+   set_chunk_type(&chunk, CT_VSEMICOLON);                // Issue #2567
+   set_chunk_parent(&chunk, CT_NONE);                    // Issue #2567
+   chunk.str     = options::mod_pawn_semicolon() ? ";" : "";
+   chunk.column += pc->len();
 
    LOG_FMT(LPVSEMI, "%s: Added VSEMI on line %zu, prev='%s' [%s]\n",
            __func__, pc->orig_line, pc->text(),
@@ -432,8 +432,8 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       }
       chunk_t chunk = *last;
       chunk.str.clear();
-      chunk.type        = CT_VBRACE_OPEN;
-      chunk.parent_type = CT_FUNC_DEF;
+      set_chunk_type(&chunk, CT_VBRACE_OPEN);                   // Issue #2567
+      set_chunk_parent(&chunk, CT_FUNC_DEF);                    // Issue #2567
 
       chunk_t *prev = chunk_add_before(&chunk, last);
       last = prev;
@@ -469,11 +469,11 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       }
       chunk = *last;
       chunk.str.clear();
+      set_chunk_type(&chunk, CT_VBRACE_CLOSE);                  // Issue #2567
+      set_chunk_parent(&chunk, CT_FUNC_DEF);                    // Issue #2567
       chunk.column     += last->len();
-      chunk.type        = CT_VBRACE_CLOSE;
       chunk.level       = 0;
       chunk.brace_level = 0;
-      chunk.parent_type = CT_FUNC_DEF;
       last              = chunk_add_after(&chunk, last);
    }
    return(last);
