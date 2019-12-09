@@ -852,10 +852,21 @@ static inline bool chunk_is_forin(chunk_t *pc)
 }
 
 
-void set_chunk_type(chunk_t *pc, c_token_t tt);
+void set_chunk_type_real(chunk_t *pc, c_token_t tt, const char *func, int line);
 
 
-void set_chunk_parent(chunk_t *pc, c_token_t tt);
+void set_chunk_parent_real(chunk_t *pc, c_token_t tt, const char *func, int line);
+
+
+#define set_chunk_type(pc, tt)      do {                   \
+      LOG_FUNC_CALL();                                     \
+      set_chunk_type_real((pc), (tt), __func__, __LINE__); \
+} while (false)
+
+#define set_chunk_parent(pc, tt)    do {                     \
+      LOG_FUNC_CALL();                                       \
+      set_chunk_parent_real((pc), (tt), __func__, __LINE__); \
+} while (false)
 
 
 void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits);

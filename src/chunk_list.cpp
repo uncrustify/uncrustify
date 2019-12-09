@@ -838,7 +838,7 @@ void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bit
 }
 
 
-void set_chunk_type(chunk_t *pc, c_token_t token)
+void set_chunk_type_real(chunk_t *pc, c_token_t token, const char *func, int line)
 {
    LOG_FUNC_ENTRY();
 
@@ -848,7 +848,7 @@ void set_chunk_type(chunk_t *pc, c_token_t token)
       return;
    }
    LOG_FMT(LSETTYP, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() ",
-           __func__, __LINE__, pc->orig_line, pc->orig_col);
+           func, line, pc->orig_line, pc->orig_col);
 
    if (token == CT_NEWLINE)
    {
@@ -862,10 +862,10 @@ void set_chunk_type(chunk_t *pc, c_token_t token)
            get_token_name(pc->type), get_token_name(pc->parent_type),
            get_token_name(token), get_token_name(pc->parent_type));
    pc->type = token;
-} // set_chunk_type
+} // set_chunk_type_real
 
 
-void set_chunk_parent(chunk_t *pc, c_token_t token)
+void set_chunk_parent_real(chunk_t *pc, c_token_t token, const char *func, int line)
 {
    LOG_FUNC_ENTRY();
 
@@ -875,7 +875,7 @@ void set_chunk_parent(chunk_t *pc, c_token_t token)
       return;
    }
    LOG_FMT(LSETPAR, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() ",
-           __func__, __LINE__, pc->orig_line, pc->orig_col);
+           func, line, pc->orig_line, pc->orig_col);
 
    if (token == CT_NEWLINE)
    {
@@ -889,7 +889,7 @@ void set_chunk_parent(chunk_t *pc, c_token_t token)
            get_token_name(pc->type), get_token_name(pc->parent_type),
            get_token_name(token), get_token_name(pc->parent_type));
    pc->parent_type = token;
-} // set_chunk_parent
+} // set_chunk_parent_real
 
 
 void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what)
