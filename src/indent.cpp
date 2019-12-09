@@ -1042,6 +1042,22 @@ void indent_text(void)
                frm.pop(__func__, __LINE__);
             }
 
+            // Pop Colon from stack in ternary operator
+            // a
+            // ? b
+            // : e/*top*/;/*pc*/
+            if (  options::indent_inside_ternary_operator()
+               && (frm.top().type == CT_COND_COLON)
+               && (  chunk_is_semicolon(pc)
+                  || chunk_is_token(pc, CT_COMMA)
+                  || chunk_is_token(pc, CT_OC_MSG_NAME)
+                  || chunk_is_token(pc, CT_SPAREN_CLOSE))) // Issue #1130, #1715
+            {
+               LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+               frm.pop(__func__, __LINE__);
+            }
+
             // End any assign operations with a semicolon on the same level
             if (  chunk_is_semicolon(pc)
                && (  (frm.top().type == CT_IMPORT)
@@ -2294,26 +2310,38 @@ void indent_text(void)
          }
          bool skipped = false;
 
-         if (  (chunk_is_token(pc, CT_FPAREN_OPEN) || chunk_is_token(pc, CT_ANGLE_OPEN))
-            && (  (  options::indent_func_call_param()
-                  && (  get_chunk_parent_type(pc) == CT_FUNC_CALL
-                     || get_chunk_parent_type(pc) == CT_FUNC_CALL_USER))
-               || (  options::indent_func_proto_param()
-                  && (  get_chunk_parent_type(pc) == CT_FUNC_PROTO
-                     || get_chunk_parent_type(pc) == CT_FUNC_CLASS_PROTO))
-               || (  options::indent_func_class_param()
-                  && (  get_chunk_parent_type(pc) == CT_FUNC_CLASS_DEF
-                     || get_chunk_parent_type(pc) == CT_FUNC_CLASS_PROTO))
-               || (  options::indent_template_param()
-                  && get_chunk_parent_type(pc) == CT_TEMPLATE)
-               || (  options::indent_func_ctor_var_param()
-                  && get_chunk_parent_type(pc) == CT_FUNC_CTOR_VAR)
-               || (  options::indent_func_def_param()
-                  && get_chunk_parent_type(pc) == CT_FUNC_DEF)
-               || (  !options::indent_func_def_param()               // Issue #931
-                  && get_chunk_parent_type(pc) == CT_FUNC_DEF
-                  && options::indent_func_def_param_paren_pos_threshold() > 0
-                  && pc->orig_col > options::indent_func_def_param_paren_pos_threshold())))
+         if (  options::indent_inside_ternary_operator()
+            && (chunk_is_token(pc, CT_FPAREN_OPEN) || chunk_is_token(pc, CT_PAREN_OPEN))
+            && frm.size() > 2
+            && (frm.prev().type == CT_QUESTION || frm.prev().type == CT_COND_COLON)
+            && !options::indent_align_paren())
+         {
+            frm.top().indent = frm.prev().indent_tmp + indent_size;
+            log_indent();
+            frm.top().indent_tab = frm.top().indent;
+            frm.top().indent_tmp = frm.top().indent;
+            log_indent_tmp();
+         }
+         else if (  (chunk_is_token(pc, CT_FPAREN_OPEN) || chunk_is_token(pc, CT_ANGLE_OPEN))
+                 && (  (  options::indent_func_call_param()
+                       && (  get_chunk_parent_type(pc) == CT_FUNC_CALL
+                          || get_chunk_parent_type(pc) == CT_FUNC_CALL_USER))
+                    || (  options::indent_func_proto_param()
+                       && (  get_chunk_parent_type(pc) == CT_FUNC_PROTO
+                          || get_chunk_parent_type(pc) == CT_FUNC_CLASS_PROTO))
+                    || (  options::indent_func_class_param()
+                       && (  get_chunk_parent_type(pc) == CT_FUNC_CLASS_DEF
+                          || get_chunk_parent_type(pc) == CT_FUNC_CLASS_PROTO))
+                    || (  options::indent_template_param()
+                       && get_chunk_parent_type(pc) == CT_TEMPLATE)
+                    || (  options::indent_func_ctor_var_param()
+                       && get_chunk_parent_type(pc) == CT_FUNC_CTOR_VAR)
+                    || (  options::indent_func_def_param()
+                       && get_chunk_parent_type(pc) == CT_FUNC_DEF)
+                    || (  !options::indent_func_def_param()          // Issue #931
+                       && get_chunk_parent_type(pc) == CT_FUNC_DEF
+                       && options::indent_func_def_param_paren_pos_threshold() > 0
+                       && pc->orig_col > options::indent_func_def_param_paren_pos_threshold())))
          {
             log_rule_B("indent_func_call_param");
             log_rule_B("indent_func_proto_param");
@@ -2335,6 +2363,8 @@ void indent_text(void)
                         && frm.at(idx).type != CT_ANGLE_OPEN
                         && frm.at(idx).type != CT_CASE
                         && frm.at(idx).type != CT_MEMBER
+                        && frm.at(idx).type != CT_QUESTION
+                        && frm.at(idx).type != CT_COND_COLON
                         && frm.at(idx).type != CT_LAMBDA
                         && frm.at(idx).type != CT_ASSIGN_NL)
                      || are_chunks_in_same_line(frm.at(idx).pc, frm.top().pc))
@@ -2860,6 +2890,33 @@ void indent_text(void)
             indent_column_set(frm.top().indent + 4);
          }
       }
+      else if (  options::indent_inside_ternary_operator()
+              && (chunk_is_token(pc, CT_QUESTION) || chunk_is_token(pc, CT_COND_COLON))) // Issue #1130, #1715
+      {
+         // Pop any colons before because they should already be processed
+         while (chunk_is_token(pc, CT_COND_COLON) && frm.top().type == CT_COND_COLON)
+         {
+            frm.pop(__func__, __LINE__);
+         }
+
+         // Pop Question from stack in ternary operator
+         if (  options::indent_inside_ternary_operator()
+            && chunk_is_token(pc, CT_COND_COLON)
+            && frm.top().type == CT_QUESTION)
+         {
+            LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+            frm.pop(__func__, __LINE__);
+            indent_column_set(frm.top().indent_tmp);
+         }
+         frm.push(pc, __func__, __LINE__);
+
+         frm.top().indent     = frm.prev().indent + indent_size;
+         frm.top().indent_tab = frm.top().indent;
+         log_indent();
+         frm.top().indent_tmp = frm.top().indent;
+         log_indent_tmp();
+      }
       else if (  chunk_is_token(pc, CT_LAMBDA)
               && (language_is_set(LANG_CS | LANG_JAVA))
               && chunk_get_next_ncnlnp(pc)->type != CT_BRACE_OPEN
@@ -3295,6 +3352,11 @@ void indent_text(void)
                            {
                               // [Class Message:(...)<here>
                               indent_column_set(frm.top().pc->column);
+                           }
+                           else if (  options::indent_inside_ternary_operator()
+                                   && (frm.top().type == CT_QUESTION || frm.top().type == CT_COND_COLON)) // Issue #1130, #1715
+                           {
+                              indent_column_set(frm.top().indent);
                            }
                            else
                            {

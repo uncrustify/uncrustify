@@ -1611,6 +1611,10 @@ indent_using_block; // = true
 extern BoundedOption<unsigned, 0, 2>
 indent_ternary_operator;
 
+// Whether to indent the statments inside ternary operator.
+extern Option<bool>
+indent_inside_ternary_operator; // false
+
 // If true, the indentation of the chunks after a `return` sequence will be set at return indentation column.
 extern Option<bool>
 indent_off_after_return;
