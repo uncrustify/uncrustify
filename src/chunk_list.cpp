@@ -892,55 +892,6 @@ void set_chunk_parent_real(chunk_t *pc, c_token_t token, const char *func, int l
 } // set_chunk_parent_real
 
 
-void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what)
-{
-   LOG_FUNC_ENTRY();
-
-   c_token_t *where;
-   c_token_t *type;
-   c_token_t *parent_type;
-
-   switch (what)
-   {
-   case (LSETTYP):
-      where       = &pc->type;
-      type        = &token;
-      parent_type = &pc->parent_type;
-      break;
-
-   case (LSETPAR):
-      where       = &pc->parent_type;
-      type        = &pc->type;
-      parent_type = &token;
-      break;
-
-   default:
-      return;
-   }
-
-   if (pc != nullptr && *where != token)
-   {
-      LOG_FMT(what, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() ",
-              __func__, __LINE__, pc->orig_line, pc->orig_col);
-
-      if (*type == CT_NEWLINE)
-      {
-         LOG_FMT(what, "<Newline>\n");
-      }
-      else
-      {
-         LOG_FMT(what, "'%s'\n",
-                 pc->text());
-      }
-      LOG_FMT(what, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s",
-              get_token_name(pc->type), get_token_name(pc->parent_type),
-              get_token_name(*type), get_token_name(*parent_type));
-      log_func_stack_inline(what);
-      *where = token;
-   }
-} // set_chunk_real
-
-
 static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope, const direction_e dir)
 {
    chunk_t *pc = cur;
