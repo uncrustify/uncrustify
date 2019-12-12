@@ -160,15 +160,15 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
       return(cpd.pp_level);
    }
 
-   if (pc->parent_type != next->type)
+   if (get_chunk_parent_type(pc) != next->type)
    {
       LOG_FMT(LNOTE, "%s(%d): Preproc parent not set correctly on orig_line %zu: got %s expected %s\n",
-              __func__, __LINE__, pc->orig_line, get_token_name(pc->parent_type),
+              __func__, __LINE__, pc->orig_line, get_token_name(get_chunk_parent_type(pc)),
               get_token_name(next->type));
       set_chunk_parent(pc, next->type);
    }
    LOG_FMT(LPFCHK, "%s(%d): %zu] %s\n",
-           __func__, __LINE__, pc->orig_line, get_token_name(pc->parent_type));
+           __func__, __LINE__, pc->orig_line, get_token_name(get_chunk_parent_type(pc)));
    fl_log_frms(LPFCHK, "TOP", frm);
 
 
@@ -183,7 +183,7 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
       LOG_FMT(LPF, " <In> ");
       fl_log(LPF, frm);
 
-      if (pc->parent_type == CT_PP_IF)
+      if (get_chunk_parent_type(pc) == CT_PP_IF)
       {
          // An #if pushes a copy of the current frame on the stack
          cpd.pp_level++;
@@ -191,7 +191,7 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
          frm.in_ifdef = CT_PP_IF;
          txt          = "if-push";
       }
-      else if (pc->parent_type == CT_PP_ELSE)
+      else if (get_chunk_parent_type(pc) == CT_PP_ELSE)
       {
          if (pp_level == 0)
          {
@@ -220,7 +220,7 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
          frm.in_ifdef = CT_PP_ELSE;
          txt          = "else-push";
       }
-      else if (pc->parent_type == CT_PP_ENDIF)
+      else if (get_chunk_parent_type(pc) == CT_PP_ENDIF)
       {
          /*
           * we may have [...] [base] [if]-[else] or [...] [base]-[if].
@@ -286,7 +286,7 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
    {
       LOG_FMT(LPF, "%s(%d): orig_line is %zu, type is %s: %s in_ifdef is %d/%d, counts is %zu, frame_count is %zu\n",
               __func__, __LINE__, pc->orig_line,
-              get_token_name(pc->parent_type), txt, static_cast<int>(in_ifdef),
+              get_token_name(get_chunk_parent_type(pc)), txt, static_cast<int>(in_ifdef),
               static_cast<int>(frm.in_ifdef), b4_cnt, cpd.frames.size());
       fl_log_all(LPF);
       LOG_FMT(LPF, " <Out>");

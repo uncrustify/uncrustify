@@ -124,8 +124,8 @@ void align_oc_msg_colon(chunk_t *so)
    {
       chunk_t chunk;
 
-      set_chunk_type(&chunk, CT_SPACE);                    // Issue #2567
-      set_chunk_parent(&chunk, CT_NONE);                   // Issue #2567
+      set_chunk_type(&chunk, CT_SPACE);
+      set_chunk_parent(&chunk, CT_NONE);
       chunk.orig_line   = longest->orig_line;
       chunk.orig_col    = longest->orig_col;
       chunk.level       = longest->level;

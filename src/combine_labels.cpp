@@ -111,11 +111,11 @@ void combine_labels(void)
          hit_class = false;
       }
 
-      if (chunk_is_token(prev, CT_SQUARE_OPEN) && prev->parent_type == CT_OC_MSG)
+      if (chunk_is_token(prev, CT_SQUARE_OPEN) && get_chunk_parent_type(prev) == CT_OC_MSG)
       {
          cs.Push_Back(prev);
       }
-      else if (chunk_is_token(next, CT_SQUARE_CLOSE) && next->parent_type == CT_OC_MSG)
+      else if (chunk_is_token(next, CT_SQUARE_CLOSE) && get_chunk_parent_type(next) == CT_OC_MSG)
       {
          // pop until we hit '['
          while (!cs.Empty())
@@ -260,7 +260,7 @@ void combine_labels(void)
                        || (  tmp->type != CT_NUMBER
                           && tmp->type != CT_DECLTYPE
                           && tmp->type != CT_SIZEOF
-                          && tmp->parent_type != CT_SIZEOF
+                          && get_chunk_parent_type(tmp) != CT_SIZEOF
                           && !tmp->flags.test_any(PCF_IN_STRUCT | PCF_IN_CLASS))
                        || chunk_is_token(tmp, CT_NEWLINE))
                {
@@ -328,7 +328,7 @@ void combine_labels(void)
                        get_token_name(next->type));
 
                // Issue #2172
-               if (next->parent_type == CT_FUNC_DEF)
+               if (get_chunk_parent_type(next) == CT_FUNC_DEF)
                {
                   LOG_FMT(LFCN, "%s(%d): it's a construct colon\n", __func__, __LINE__);
                   // it's a construct colon
@@ -356,7 +356,7 @@ void combine_labels(void)
             else if (  chunk_is_token(cur, CT_ENUM)
                     || chunk_is_token(cur, CT_ACCESS)
                     || chunk_is_token(cur, CT_QUALIFIER)
-                    || cur->parent_type == CT_ALIGN)
+                    || get_chunk_parent_type(cur) == CT_ALIGN)
             {
                // ignore it - bit field, align or public/private, etc
             }
@@ -364,11 +364,11 @@ void combine_labels(void)
             {
                // ignore it - template thingy
             }
-            else if (cur->parent_type == CT_SQL_EXEC)
+            else if (get_chunk_parent_type(cur) == CT_SQL_EXEC)
             {
                // ignore it - SQL variable name
             }
-            else if (next->parent_type == CT_ASSERT)
+            else if (get_chunk_parent_type(next) == CT_ASSERT)
             {
                // ignore it - Java assert thing
             }
@@ -397,8 +397,8 @@ void combine_labels(void)
                      LOG_FMT(LWARN, "%s(%d): %s:%zu unexpected colon in col %zu n-parent=%s c-parent=%s l=%zu bl=%zu\n",
                              __func__, __LINE__,
                              cpd.filename.c_str(), next->orig_line, next->orig_col,
-                             get_token_name(next->parent_type),
-                             get_token_name(cur->parent_type),
+                             get_token_name(get_chunk_parent_type(next)),
+                             get_token_name(get_chunk_parent_type(cur)),
                              next->level, next->brace_level);
                      cpd.error_count++;
                   }

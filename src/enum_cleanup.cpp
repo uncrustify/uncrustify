@@ -29,7 +29,7 @@ void enum_cleanup(void)
 
    while (pc != nullptr)
    {
-      if (  pc->parent_type == CT_ENUM
+      if (  get_chunk_parent_type(pc) == CT_ENUM
          && chunk_is_token(pc, CT_BRACE_CLOSE))
       {
          LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s\n",
@@ -51,7 +51,7 @@ void enum_cleanup(void)
             {
                // create a comma
                chunk_t comma;
-               set_chunk_type(&comma, CT_COMMA);                    // Issue #2567
+               set_chunk_type(&comma, CT_COMMA);
                comma.orig_line = prev->orig_line;
                comma.orig_col  = prev->orig_col + 1;
                comma.nl_count  = 0;

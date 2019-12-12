@@ -98,9 +98,9 @@ static chunk_t *handle_double_angle_close(chunk_t *pc)
    {
       if (  chunk_is_token(pc, CT_ANGLE_CLOSE)
          && chunk_is_token(next, CT_ANGLE_CLOSE)
-         && pc->parent_type == CT_NONE
+         && get_chunk_parent_type(pc) == CT_NONE
          && (pc->orig_col_end + 1) == next->orig_col
-         && next->parent_type == CT_NONE)
+         && get_chunk_parent_type(next) == CT_NONE)
       {
          pc->str.append('>');
          set_chunk_type(pc, CT_ARITH);
@@ -133,7 +133,7 @@ void split_off_angle_close(chunk_t *pc)
    pc->orig_col_end = pc->orig_col + 1;
    set_chunk_type(pc, CT_ANGLE_CLOSE);
 
-   set_chunk_type(&nc, ct->type);                    // Issue #2567
+   set_chunk_type(&nc, ct->type);
    nc.str.pop_front();
    nc.orig_col++;
    nc.column++;
@@ -258,7 +258,7 @@ void tokenize_trailing_return_types(void)
          }
 
          if (  chunk_is_token(tmp, CT_FPAREN_CLOSE)
-            && tmp->parent_type == CT_FUNC_PROTO)
+            && get_chunk_parent_type(tmp) == CT_FUNC_PROTO)
          {
             set_chunk_type(pc, CT_TRAILING_RET);
             LOG_FMT(LNOTE, "%s(%d): set trailing return type for text() is '%s'\n",
@@ -471,7 +471,7 @@ void tokenize_cleanup(void)
       }
 
       // Change angle open/close to CT_COMPARE, if not a template thingy
-      if (chunk_is_token(pc, CT_ANGLE_OPEN) && pc->parent_type != CT_TYPE_CAST)
+      if (chunk_is_token(pc, CT_ANGLE_OPEN) && get_chunk_parent_type(pc) != CT_TYPE_CAST)
       {
          /*
           * pretty much all languages except C use <> for something other than
@@ -489,7 +489,7 @@ void tokenize_cleanup(void)
          }
       }
 
-      if (chunk_is_token(pc, CT_ANGLE_CLOSE) && pc->parent_type != CT_TEMPLATE)
+      if (chunk_is_token(pc, CT_ANGLE_CLOSE) && get_chunk_parent_type(pc) != CT_TEMPLATE)
       {
          if (in_type_cast)
          {
@@ -758,7 +758,7 @@ void tokenize_cleanup(void)
                   pc->str.resize(1);
                   pc->orig_col_end = pc->orig_col + 1;
 
-                  set_chunk_type(&nc, CT_SQL_WORD);                    // Issue #2567
+                  set_chunk_type(&nc, CT_SQL_WORD);
                   nc.str.pop_front();
                   nc.orig_col++;
                   nc.column++;
@@ -923,12 +923,12 @@ void tokenize_cleanup(void)
        *   @interface ClassName ()
        *   @implementation ClassName ()
        */
-      if (  (  pc->parent_type == CT_OC_IMPL
-            || pc->parent_type == CT_OC_INTF
+      if (  (  get_chunk_parent_type(pc) == CT_OC_IMPL
+            || get_chunk_parent_type(pc) == CT_OC_INTF
             || chunk_is_token(pc, CT_OC_CLASS))
          && chunk_is_token(next, CT_PAREN_OPEN))
       {
-         set_chunk_parent(next, pc->parent_type);
+         set_chunk_parent(next, get_chunk_parent_type(pc));
 
          chunk_t *tmp = chunk_get_next(next);
 
@@ -937,19 +937,19 @@ void tokenize_cleanup(void)
             if (chunk_is_token(tmp, CT_PAREN_CLOSE))
             {
                //set_chunk_type(tmp, CT_OC_CLASS_EXT);
-               set_chunk_parent(tmp, pc->parent_type);
+               set_chunk_parent(tmp, get_chunk_parent_type(pc));
             }
             else
             {
                set_chunk_type(tmp, CT_OC_CATEGORY);
-               set_chunk_parent(tmp, pc->parent_type);
+               set_chunk_parent(tmp, get_chunk_parent_type(pc));
             }
          }
          tmp = chunk_get_next_type(pc, CT_PAREN_CLOSE, pc->level);
 
          if (tmp != nullptr)
          {
-            set_chunk_parent(tmp, pc->parent_type);
+            set_chunk_parent(tmp, get_chunk_parent_type(pc));
          }
       }
 
@@ -1181,7 +1181,7 @@ static void check_template(chunk_t *start)
          && prev->type != CT_COMMA
          && prev->type != CT_QUALIFIER
          && prev->type != CT_OPERATOR_VAL
-         && prev->parent_type != CT_OPERATOR)
+         && get_chunk_parent_type(prev) != CT_OPERATOR)
       {
          LOG_FMT(LTEMPL, "%s(%d): - after type %s + ( - Not a template\n",
                  __func__, __LINE__, get_token_name(prev->type));
@@ -1516,7 +1516,7 @@ static void mark_selectors_in_property_with_open_paren(chunk_t *open_paren)
          {
             if (chunk_is_token(tmp, CT_WORD) || chunk_is_str(tmp, ":", 1))
             {
-               set_chunk_type(tmp, CT_OC_SEL_NAME);                    // Issue #2567
+               set_chunk_type(tmp, CT_OC_SEL_NAME);
             }
             tmp = tmp->next;
          }
@@ -1540,7 +1540,7 @@ static void mark_attributes_in_property_with_open_paren(chunk_t *open_paren)
       if (  (chunk_is_token(tmp, CT_COMMA) || chunk_is_token(tmp, CT_PAREN_OPEN))
          && (chunk_is_token(tmp->next, CT_WORD) || chunk_is_token(tmp->next, CT_TYPE)))
       {
-         set_chunk_type(tmp->next, CT_OC_PROPERTY_ATTR);                    // Issue #2567
+         set_chunk_type(tmp->next, CT_OC_PROPERTY_ATTR);
       }
       tmp = tmp->next;
    }

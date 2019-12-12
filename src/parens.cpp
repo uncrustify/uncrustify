@@ -56,9 +56,9 @@ void do_parens(void)
       while ((pc = chunk_get_next_ncnl(pc)) != nullptr)
       {
          if (  pc->type != CT_SPAREN_OPEN
-            || (  pc->parent_type != CT_IF
-               && pc->parent_type != CT_ELSEIF
-               && pc->parent_type != CT_SWITCH))
+            || (  get_chunk_parent_type(pc) != CT_IF
+               && get_chunk_parent_type(pc) != CT_ELSEIF
+               && get_chunk_parent_type(pc) != CT_SWITCH))
          {
             continue;
          }
@@ -92,7 +92,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
       return;
    }
    chunk_t pc;
-   set_chunk_type(&pc, CT_PAREN_OPEN);                    // Issue #2567
+   set_chunk_type(&pc, CT_PAREN_OPEN);
    pc.orig_line   = first_n->orig_line;
    pc.orig_col    = first_n->orig_col;
    pc.str         = "(";
@@ -104,7 +104,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
    chunk_add_before(&pc, first_n);
 
    chunk_t *last_p = chunk_get_prev_ncnl(last, scope_e::PREPROC);
-   set_chunk_type(&pc, CT_PAREN_CLOSE);                   // Issue #2567
+   set_chunk_type(&pc, CT_PAREN_CLOSE);
    pc.orig_line   = last_p->orig_line;
    pc.orig_col    = last_p->orig_col;
    pc.str         = ")";

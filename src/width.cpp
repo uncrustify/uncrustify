@@ -336,7 +336,7 @@ static bool split_line(chunk_t *start)
    LOG_FMT(LSPLIT, "   start->flags ");
    log_pcf_flags(LSPLIT, start->flags);
    LOG_FMT(LSPLIT, "   start->parent_type %s, (PCF_IN_FCN_DEF is %s), (PCF_IN_FCN_CALL is %s)\n",
-           get_token_name(start->parent_type),
+           get_token_name(get_chunk_parent_type(start)),
            start->flags.test((PCF_IN_FCN_DEF)) ? "TRUE" : "FALSE",
            start->flags.test((PCF_IN_FCN_CALL)) ? "TRUE" : "FALSE");
 
@@ -373,7 +373,7 @@ static bool split_line(chunk_t *start)
     * after the open parenthesis
     */
    else if (  start->flags.test(PCF_IN_FCN_DEF)
-           || start->parent_type == CT_FUNC_PROTO            // Issue #1169
+           || get_chunk_parent_type(start) == CT_FUNC_PROTO            // Issue #1169
            || (  (start->level == (start->brace_level + 1))
               && start->flags.test(PCF_IN_FCN_CALL)))
    {
@@ -561,7 +561,7 @@ static void split_for_stmt(chunk_t *start)
    chunk_t *st[2];
    pc = start;
 
-   if (chunk_is_token(pc, CT_SEMICOLON) && pc->parent_type == CT_FOR)
+   if (chunk_is_token(pc, CT_SEMICOLON) && get_chunk_parent_type(pc) == CT_FOR)
    {
       st[count++] = pc;
    }
@@ -571,7 +571,7 @@ static void split_for_stmt(chunk_t *start)
          && ((pc = chunk_get_prev(pc)) != nullptr)
          && pc->flags.test(PCF_IN_SPAREN))
    {
-      if (chunk_is_token(pc, CT_SEMICOLON) && pc->parent_type == CT_FOR)
+      if (chunk_is_token(pc, CT_SEMICOLON) && get_chunk_parent_type(pc) == CT_FOR)
       {
          st[count++] = pc;
       }
@@ -583,7 +583,7 @@ static void split_for_stmt(chunk_t *start)
          && ((pc = chunk_get_next(pc)) != nullptr)
          && pc->flags.test(PCF_IN_SPAREN))
    {
-      if (chunk_is_token(pc, CT_SEMICOLON) && pc->parent_type == CT_FOR)
+      if (chunk_is_token(pc, CT_SEMICOLON) && get_chunk_parent_type(pc) == CT_FOR)
       {
          st[count++] = pc;
       }

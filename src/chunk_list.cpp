@@ -830,7 +830,7 @@ void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bit
                  pc->orig_line, pc->orig_col, pc->text(),
                  get_token_name(pc->type));
          LOG_FMT(LSETFLG, "parent_type is %s",
-                 get_token_name(pc->parent_type));
+                 get_token_name(get_chunk_parent_type(pc)));
          log_func_stack_inline(LSETFLG);
          pc->flags = nflags;
       }
@@ -859,8 +859,8 @@ void set_chunk_type_real(chunk_t *pc, c_token_t token, const char *func, int lin
       LOG_FMT(LSETTYP, "'%s'\n", pc->text());
    }
    LOG_FMT(LSETTYP, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s\n",
-           get_token_name(pc->type), get_token_name(pc->parent_type),
-           get_token_name(token), get_token_name(pc->parent_type));
+           get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)),
+           get_token_name(token), get_token_name(get_chunk_parent_type(pc)));
    pc->type = token;
 } // set_chunk_type_real
 
@@ -870,7 +870,7 @@ void set_chunk_parent_real(chunk_t *pc, c_token_t token, const char *func, int l
    LOG_FUNC_ENTRY();
 
    if (  pc == nullptr
-      || pc->parent_type == token)
+      || get_chunk_parent_type(pc) == token)
    {
       return;
    }
@@ -886,10 +886,22 @@ void set_chunk_parent_real(chunk_t *pc, c_token_t token, const char *func, int l
       LOG_FMT(LSETPAR, "'%s'\n", pc->text());
    }
    LOG_FMT(LSETPAR, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s\n",
-           get_token_name(pc->type), get_token_name(pc->parent_type),
-           get_token_name(token), get_token_name(pc->parent_type));
+           get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)),
+           get_token_name(token), get_token_name(get_chunk_parent_type(pc)));
    pc->parent_type = token;
 } // set_chunk_parent_real
+
+
+c_token_t get_chunk_parent_type(chunk_t *pc)
+{
+   LOG_FUNC_ENTRY();
+
+   if (pc == nullptr)
+   {
+      return(CT_NONE);
+   }
+   return(pc->parent_type);
+} // get_chunk_parent_type
 
 
 static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope, const direction_e dir)

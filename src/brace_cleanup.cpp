@@ -268,7 +268,7 @@ static bool maybe_while_of_do(chunk_t *pc)
    }
 
    if (  (chunk_is_token(prev, CT_VBRACE_CLOSE) || chunk_is_token(prev, CT_BRACE_CLOSE))
-      && prev->parent_type == CT_DO)
+      && get_chunk_parent_type(prev) == CT_DO)
    {
       return(true);
    }
@@ -535,7 +535,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
       }
    }
    // Get the parent type for brace and parenthesis open
-   c_token_t parent = pc->parent_type;
+   c_token_t parent = get_chunk_parent_type(pc);
 
    if (  chunk_is_token(pc, CT_PAREN_OPEN)
       || chunk_is_token(pc, CT_FPAREN_OPEN)
@@ -604,7 +604,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
             // Carry through CT_ENUM parent in NS_ENUM (type, name) {
             else if (  chunk_is_token(prev, CT_FPAREN_CLOSE)
                     && language_is_set(LANG_OC)
-                    && prev->parent_type == CT_ENUM)
+                    && get_chunk_parent_type(prev) == CT_ENUM)
             {
                parent = CT_ENUM;
             }
@@ -636,13 +636,13 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
          // Issue #1813
          bool single = false;
 
-         if (pc->parent_type == CT_NAMESPACE)
+         if (get_chunk_parent_type(pc) == CT_NAMESPACE)
          {
             LOG_FMT(LBCSPOP, "%s(%d): parent_type is NAMESPACE\n",
                     __func__, __LINE__);
             chunk_t *tmp = frm.top().pc;
 
-            if (tmp != nullptr && tmp->parent_type == CT_NAMESPACE)
+            if (tmp != nullptr && get_chunk_parent_type(tmp) == CT_NAMESPACE)
             {
                LOG_FMT(LBCSPOP, "%s(%d): tmp->parent_type is NAMESPACE\n",
                        __func__, __LINE__);
@@ -657,7 +657,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
             }
          }
          LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type));
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)));
 
          if (!single)
          {
@@ -713,10 +713,10 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
     *  - after '(' that has a parent type of CT_FOR
     */
    if (  chunk_is_token(pc, CT_SQUARE_OPEN)
-      || (chunk_is_token(pc, CT_BRACE_OPEN) && pc->parent_type != CT_ASSIGN)
+      || (chunk_is_token(pc, CT_BRACE_OPEN) && get_chunk_parent_type(pc) != CT_ASSIGN)
       || chunk_is_token(pc, CT_BRACE_CLOSE)
       || chunk_is_token(pc, CT_VBRACE_CLOSE)
-      || (chunk_is_token(pc, CT_SPAREN_OPEN) && pc->parent_type == CT_FOR)
+      || (chunk_is_token(pc, CT_SPAREN_OPEN) && get_chunk_parent_type(pc) == CT_FOR)
       || chunk_is_token(pc, CT_COLON)
       || chunk_is_token(pc, CT_OC_END)
       || (  chunk_is_semicolon(pc)
@@ -1171,7 +1171,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
    LOG_FUNC_ENTRY();
 
    chunk_t chunk;
-   set_chunk_parent(&chunk, frm.top().type);                    // Issue #2567
+   set_chunk_parent(&chunk, frm.top().type);
    chunk.orig_line   = pc->orig_line;
    chunk.level       = frm.level;
    chunk.brace_level = frm.brace_level;
@@ -1181,7 +1181,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
    if (after)
    {
       chunk.orig_col = pc->orig_col;
-      set_chunk_type(&chunk, CT_VBRACE_CLOSE);                  // Issue #2567
+      set_chunk_type(&chunk, CT_VBRACE_CLOSE);
       return(chunk_add_after(&chunk, pc));
    }
    chunk_t *ref = chunk_get_prev(pc);
@@ -1232,7 +1232,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
    chunk.orig_line = ref->orig_line;
    chunk.orig_col  = ref->orig_col;
    chunk.column    = ref->column + ref->len() + 1;
-   set_chunk_type(&chunk, CT_VBRACE_OPEN);                  // Issue #2567
+   set_chunk_type(&chunk, CT_VBRACE_OPEN);
 
    return(chunk_add_after(&chunk, ref));
 } // insert_vbrace

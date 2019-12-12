@@ -59,57 +59,52 @@ void remove_extra_semicolons(void)
          && (prev = chunk_get_prev_ncnl(pc)) != nullptr)
       {
          LOG_FMT(LSCANSEMI, "%s(%d): Semi orig_line is %zu, orig_col is %zu, parent is %s, prev = '%s' [%s/%s]\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->parent_type),
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(get_chunk_parent_type(pc)),
                  prev->text(),
-                 get_token_name(prev->type), get_token_name(prev->parent_type));
+                 get_token_name(prev->type), get_token_name(get_chunk_parent_type(prev)));
 
-         if (pc->parent_type == CT_TYPEDEF)
+         if (get_chunk_parent_type(pc) == CT_TYPEDEF)
          {
             // keep it
          }
          else if (  chunk_is_token(prev, CT_BRACE_CLOSE)
-                 && (  prev->parent_type == CT_IF
-                    || prev->parent_type == CT_ELSEIF
-                    || prev->parent_type == CT_ELSE
-                    || prev->parent_type == CT_SWITCH
-                    || prev->parent_type == CT_WHILE
-                    || prev->parent_type == CT_USING_STMT
-                    || prev->parent_type == CT_FOR
-                    || prev->parent_type == CT_FUNC_DEF
-                    || prev->parent_type == CT_OC_MSG_DECL
-                    || prev->parent_type == CT_FUNC_CLASS_DEF
-                    || prev->parent_type == CT_NAMESPACE))
+                 && (  get_chunk_parent_type(prev) == CT_IF
+                    || get_chunk_parent_type(prev) == CT_ELSEIF
+                    || get_chunk_parent_type(prev) == CT_ELSE
+                    || get_chunk_parent_type(prev) == CT_SWITCH
+                    || get_chunk_parent_type(prev) == CT_WHILE
+                    || get_chunk_parent_type(prev) == CT_USING_STMT
+                    || get_chunk_parent_type(prev) == CT_FOR
+                    || get_chunk_parent_type(prev) == CT_FUNC_DEF
+                    || get_chunk_parent_type(prev) == CT_OC_MSG_DECL
+                    || get_chunk_parent_type(prev) == CT_FUNC_CLASS_DEF
+                    || get_chunk_parent_type(prev) == CT_NAMESPACE))
          {
-            LOG_FUNC_CALL();
             remove_semicolon(pc);
          }
          else if (  chunk_is_token(prev, CT_BRACE_CLOSE)
-                 && prev->parent_type == CT_NONE)
+                 && get_chunk_parent_type(prev) == CT_NONE)
          {
             check_unknown_brace_close(pc, prev);
          }
-         else if (chunk_is_token(prev, CT_SEMICOLON) && prev->parent_type != CT_FOR)
+         else if (chunk_is_token(prev, CT_SEMICOLON) && get_chunk_parent_type(prev) != CT_FOR)
          {
-            LOG_FUNC_CALL();
             remove_semicolon(pc);
          }
          else if (  language_is_set(LANG_D)
-                 && (  prev->parent_type == CT_ENUM
-                    || prev->parent_type == CT_UNION
-                    || prev->parent_type == CT_STRUCT))
+                 && (  get_chunk_parent_type(prev) == CT_ENUM
+                    || get_chunk_parent_type(prev) == CT_UNION
+                    || get_chunk_parent_type(prev) == CT_STRUCT))
          {
-            LOG_FUNC_CALL();
             remove_semicolon(pc);
          }
          else if (  language_is_set(LANG_JAVA)
-                 && prev->parent_type == CT_SYNCHRONIZED)
+                 && get_chunk_parent_type(prev) == CT_SYNCHRONIZED)
          {
-            LOG_FUNC_CALL();
             remove_semicolon(pc);
          }
          else if (chunk_is_token(prev, CT_BRACE_OPEN))
          {
-            LOG_FUNC_CALL();
             remove_semicolon(pc);
          }
       }

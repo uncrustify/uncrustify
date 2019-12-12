@@ -75,8 +75,8 @@ chunk_t *pawn_add_vsemi_after(chunk_t *pc)
       return(pc);
    }
    chunk_t chunk = *pc;
-   set_chunk_type(&chunk, CT_VSEMICOLON);                // Issue #2567
-   set_chunk_parent(&chunk, CT_NONE);                    // Issue #2567
+   set_chunk_type(&chunk, CT_VSEMICOLON);
+   set_chunk_parent(&chunk, CT_NONE);
    chunk.str     = options::mod_pawn_semicolon() ? ";" : "";
    chunk.column += pc->len();
 
@@ -107,11 +107,11 @@ void pawn_scrub_vsemi(void)
 
       if (chunk_is_token(prev, CT_BRACE_CLOSE))
       {
-         if (  prev->parent_type == CT_IF
-            || prev->parent_type == CT_ELSE
-            || prev->parent_type == CT_SWITCH
-            || prev->parent_type == CT_CASE
-            || prev->parent_type == CT_WHILE_OF_DO)
+         if (  get_chunk_parent_type(prev) == CT_IF
+            || get_chunk_parent_type(prev) == CT_ELSE
+            || get_chunk_parent_type(prev) == CT_SWITCH
+            || get_chunk_parent_type(prev) == CT_CASE
+            || get_chunk_parent_type(prev) == CT_WHILE_OF_DO)
          {
             pc->str.clear();
          }
@@ -145,15 +145,15 @@ static bool pawn_continued(chunk_t *pc, size_t br_level)
       || chunk_is_token(pc, CT_BRACE_OPEN)
       || chunk_is_token(pc, CT_VBRACE_OPEN)
       || chunk_is_token(pc, CT_FPAREN_OPEN)
-      || pc->parent_type == CT_IF
-      || pc->parent_type == CT_ELSE
-      || pc->parent_type == CT_ELSEIF
-      || pc->parent_type == CT_DO
-      || pc->parent_type == CT_FOR
-      || pc->parent_type == CT_SWITCH
-      || pc->parent_type == CT_WHILE
-      || pc->parent_type == CT_FUNC_DEF
-      || pc->parent_type == CT_ENUM
+      || get_chunk_parent_type(pc) == CT_IF
+      || get_chunk_parent_type(pc) == CT_ELSE
+      || get_chunk_parent_type(pc) == CT_ELSEIF
+      || get_chunk_parent_type(pc) == CT_DO
+      || get_chunk_parent_type(pc) == CT_FOR
+      || get_chunk_parent_type(pc) == CT_SWITCH
+      || get_chunk_parent_type(pc) == CT_WHILE
+      || get_chunk_parent_type(pc) == CT_FUNC_DEF
+      || get_chunk_parent_type(pc) == CT_ENUM
       || pc->flags.test_any(PCF_IN_ENUM | PCF_IN_STRUCT)
       || chunk_is_str(pc, ":", 1)
       || chunk_is_str(pc, "+", 1)
@@ -432,8 +432,8 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       }
       chunk_t chunk = *last;
       chunk.str.clear();
-      set_chunk_type(&chunk, CT_VBRACE_OPEN);                   // Issue #2567
-      set_chunk_parent(&chunk, CT_FUNC_DEF);                    // Issue #2567
+      set_chunk_type(&chunk, CT_VBRACE_OPEN);
+      set_chunk_parent(&chunk, CT_FUNC_DEF);
 
       chunk_t *prev = chunk_add_before(&chunk, last);
       last = prev;
@@ -469,8 +469,8 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       }
       chunk = *last;
       chunk.str.clear();
-      set_chunk_type(&chunk, CT_VBRACE_CLOSE);                  // Issue #2567
-      set_chunk_parent(&chunk, CT_FUNC_DEF);                    // Issue #2567
+      set_chunk_type(&chunk, CT_VBRACE_CLOSE);
+      set_chunk_parent(&chunk, CT_FUNC_DEF);
       chunk.column     += last->len();
       chunk.level       = 0;
       chunk.brace_level = 0;
