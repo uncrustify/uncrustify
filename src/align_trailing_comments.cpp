@@ -164,7 +164,7 @@ void align_right_comments(void)
          || chunk_is_token(pc, CT_COMMENT_CPP)
          || chunk_is_token(pc, CT_COMMENT_MULTI))
       {
-         if (pc->parent_type == CT_COMMENT_END)
+         if (get_chunk_parent_type(pc) == CT_COMMENT_END)
          {
             chunk_t *prev = chunk_get_prev(pc);
 
@@ -183,7 +183,7 @@ void align_right_comments(void)
          }
 
          // Change certain WHOLE comments into RIGHT-alignable comments
-         if (pc->parent_type == CT_COMMENT_WHOLE)
+         if (get_chunk_parent_type(pc) == CT_COMMENT_WHOLE)
          {
             size_t max_col = pc->column_indent + options::input_tab_size();
 

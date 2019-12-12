@@ -34,7 +34,7 @@ void align_init_brace(chunk_t *start)
    chunk_t *pcSingle = scan_ib_line(pc, true);
 
    if (  pcSingle == nullptr
-      || (chunk_is_token(pcSingle, CT_BRACE_CLOSE) && pcSingle->parent_type == CT_ASSIGN))
+      || (chunk_is_token(pcSingle, CT_BRACE_CLOSE) && get_chunk_parent_type(pcSingle) == CT_ASSIGN))
    {
       // single line - nothing to do
       LOG_FMT(LALBR, "%s(%d): single line - nothing to do\n", __func__, __LINE__);

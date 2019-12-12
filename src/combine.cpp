@@ -957,7 +957,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
          if (ts != nullptr)
          {
-            ts->parent_type = pc->type;
+            set_chunk_parent(ts, pc->type);
          }
       }
    }
@@ -1482,7 +1482,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
          if (found_status)
          {
-            pc->parent_type = pprev->type;
+            set_chunk_parent(pc, pprev->type);
          }
       }
 

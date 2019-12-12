@@ -47,7 +47,7 @@ void align_func_proto(size_t span)
               || (  chunk_is_token(pc, CT_FUNC_DEF)
                  && options::align_single_line_func()))
       {
-         if (  pc->parent_type == CT_OPERATOR
+         if (  get_chunk_parent_type(pc) == CT_OPERATOR
             && options::align_on_operator())
          {
             toadd = chunk_get_prev_ncnl(pc);

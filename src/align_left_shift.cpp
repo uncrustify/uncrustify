@@ -71,7 +71,7 @@ void align_left_shift(void)
               && !pc->flags.test(PCF_IN_TYPEDEF)
               && chunk_is_str(pc, "<<", 2))
       {
-         if (pc->parent_type == CT_OPERATOR)
+         if (get_chunk_parent_type(pc) == CT_OPERATOR)
          {
             // Ignore operator<<
          }

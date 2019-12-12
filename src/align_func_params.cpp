@@ -99,11 +99,11 @@ void align_func_params(void)
    while ((pc = chunk_get_next(pc)) != nullptr)
    {
       if (  pc->type != CT_FPAREN_OPEN
-         || (  pc->parent_type != CT_FUNC_PROTO
-            && pc->parent_type != CT_FUNC_DEF
-            && pc->parent_type != CT_FUNC_CLASS_PROTO
-            && pc->parent_type != CT_FUNC_CLASS_DEF
-            && pc->parent_type != CT_TYPEDEF))
+         || (  get_chunk_parent_type(pc) != CT_FUNC_PROTO
+            && get_chunk_parent_type(pc) != CT_FUNC_DEF
+            && get_chunk_parent_type(pc) != CT_FUNC_CLASS_PROTO
+            && get_chunk_parent_type(pc) != CT_FUNC_CLASS_DEF
+            && get_chunk_parent_type(pc) != CT_TYPEDEF))
       {
          continue;
       }
