@@ -4209,7 +4209,8 @@ void newlines_cleanup_braces(bool first)
          newline_iarf(pc, IARF_REMOVE);
       }
       else if (  chunk_is_token(pc, CT_MEMBER)
-              && language_is_set(LANG_JAVA))
+              && (  language_is_set(LANG_JAVA)
+                 || language_is_set(LANG_CPP)))                 // Issue #2574
       {
          // Issue #1124
          newline_iarf(chunk_get_prev_nnl(pc), options::nl_before_member());

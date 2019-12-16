@@ -2328,7 +2328,7 @@ nl_before_return;
 extern Option<bool>
 nl_after_return;
 
-// (Java) Whether to put a blank line before a member '.' or '->' operators.
+// Whether to put a blank line before a member '.' or '->' operators.
 extern Option<iarf_e>
 nl_before_member;
 
