@@ -27,14 +27,14 @@ int foo()
                      duration: 0.3
                       options: UIViewAnimationOptionTransitionCrossDissolve
                    animations:^{
-      BOOL oldState = [UIView areAnimationsEnabled];
-      [UIView setAnimationsEnabled: NO];
-      self.window.rootViewController = self.viewController;
-      [UIView setAnimationsEnabled: oldState];
-   }
+                      BOOL oldState = [UIView areAnimationsEnabled];
+                      [UIView setAnimationsEnabled: NO];
+                      self.window.rootViewController = self.viewController;
+                      [UIView setAnimationsEnabled: oldState];
+                   }
                    completion:^(BOOL finished) {
-      BOOL foo;
-   }];
+                      BOOL foo;
+                   }];
 }
 
 int foo2()
@@ -43,19 +43,19 @@ int foo2()
                      duration: 0.3
                       options: UIViewAnimationOptionTransitionCrossDissolve
                    animations:^{
-      BOOL oldState = [UIView areAnimationsEnabled];
-      [UIView setAnimationsEnabled: NO];
-      self.window.rootViewController = self.viewController;
-      [UIView setAnimationsEnabled: oldState];
-   }
+                      BOOL oldState = [UIView areAnimationsEnabled];
+                      [UIView setAnimationsEnabled: NO];
+                      self.window.rootViewController = self.viewController;
+                      [UIView setAnimationsEnabled: oldState];
+                   }
                    completion:^(BOOL finished) {
-      BOOL foo;
-   }];
+                      BOOL foo;
+                   }];
 
    [[HRNewsService sharedInstance] registerPushToken: deviceToken
                                              success:^{
-      DLog(@"Finished Registering Push Token!");
-      self.notificationsEnabled = YES;
-   }
+                                                DLog(@"Finished Registering Push Token!");
+                                                self.notificationsEnabled = YES;
+                                             }
                                                 fail: nil];
 }

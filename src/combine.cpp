@@ -940,6 +940,13 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
    }
 
+   if (  language_is_set(LANG_JAVA)
+      && chunk_is_token(pc, CT_LAMBDA)
+      && chunk_is_token(next, CT_BRACE_OPEN))
+   {
+      set_paren_parent(next, pc->type);
+   }
+
    if (chunk_is_token(pc, CT_NEW))
    {
       chunk_t *ts = nullptr;

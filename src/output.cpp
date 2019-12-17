@@ -408,7 +408,7 @@ static void cmt_output_indent(size_t brace_col, size_t base_col, size_t column)
 
    size_t tab_col = (iwt == 0) ? 0 : ((iwt == 1) ? brace_col : base_col);
 
-   // LOG_FMT(LSYS, "%s(brace=%d base=%d col=%d iwt=%d) tab=%d cur=%d\n",
+   // LOG_FMT(LSYS, "%s(brace=%zd base=%zd col=%zd iwt=%zd) tab=%zd cur=%zd\n",
    //        __func__, brace_col, base_col, column, iwt, tab_col, cpd.column);
 
    cpd.did_newline = 0;
@@ -1083,7 +1083,7 @@ static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc)
    {
       cmt.brace_col = 1 + (pc->brace_level * options::output_tab_size());
    }
-   // LOG_FMT(LSYS, "%s: line %d, brace=%d base=%d col=%d orig=%d aligned=%x\n",
+   // LOG_FMT(LSYS, "%s: line %zd, brace=%zd base=%zd col=%zd orig=%zd aligned=%x\n",
    //        __func__, pc->orig_line, cmt.brace_col, cmt.base_col, cmt.column, pc->orig_col,
    //        pc->flags & (PCF_WAS_ALIGNED | PCF_RIGHT_COMMENT));
 

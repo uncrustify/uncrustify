@@ -461,34 +461,33 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace,
    }
    tmp = chunk_get_prev_nc(tmp);
 
-   if (tmp == nullptr || tmp->type != CT_OC_COLON)
-   {
-      return(nullptr);
-   }
-
    if (from_colon)
    {
-      return(tmp);
+      if (tmp == nullptr || tmp->type != CT_OC_COLON)
+      {
+         return(nullptr);
+      }
+      else
+      {
+         return(tmp);
+      }
    }
    tmp = chunk_get_prev_nc(tmp);
 
-   if (  tmp == nullptr
-      || (tmp->type != CT_OC_MSG_NAME && tmp->type != CT_OC_MSG_FUNC))
-   {
-      return(nullptr);
-   }
-
    if (from_keyword)
    {
-      return(tmp);
+      if (  tmp == nullptr
+         || (tmp->type != CT_OC_MSG_NAME && tmp->type != CT_OC_MSG_FUNC))
+      {
+         return(nullptr);
+      }
+      else
+      {
+         return(tmp);
+      }
    }
    tmp = chunk_first_on_line(tmp);
-
-   if (chunk_is_token(tmp, CT_SQUARE_OPEN))
-   {
-      return(tmp);
-   }
-   return(nullptr);
+   return(tmp);
 } // oc_msg_block_indent
 
 
@@ -1450,7 +1449,7 @@ void indent_text(void)
             frm.prev().indent_tmp = frm.top().indent_tmp;
             log_indent_tmp();
          }
-         else if (  language_is_set(LANG_CS)
+         else if (  language_is_set(LANG_CS | LANG_JAVA)
                  && options::indent_cs_delegate_brace()
                  && (  get_chunk_parent_type(pc) == CT_LAMBDA
                     || get_chunk_parent_type(pc) == CT_DELEGATE))
@@ -1466,7 +1465,7 @@ void indent_text(void)
             frm.prev().indent_tmp = frm.top().indent_tmp;
             log_indent_tmp();
          }
-         else if (  language_is_set(LANG_CS)
+         else if (  language_is_set(LANG_CS | LANG_JAVA)
                  && !options::indent_cs_delegate_brace()
                  && !options::indent_align_paren()
                  && (  get_chunk_parent_type(pc) == CT_LAMBDA
@@ -1649,6 +1648,11 @@ void indent_text(void)
             {
                // We are inside ({ ... }) -- indent one tab from the paren
                frm.top().indent = frm.prev().indent_tmp + indent_size;
+
+               if (!chunk_is_paren_open(frm.prev().pc))
+               {
+                  frm.top().indent_tab = frm.top().indent;
+               }
                log_indent();
             }
          }
@@ -2643,7 +2647,8 @@ void indent_text(void)
             indent_column_set(frm.top().indent + 4);
          }
       }
-      else if (  chunk_is_token(pc, CT_LAMBDA) && language_is_set(LANG_CS)
+      else if (  chunk_is_token(pc, CT_LAMBDA)
+              && (language_is_set(LANG_CS | LANG_JAVA))
               && chunk_get_next_ncnlnp(pc)->type != CT_BRACE_OPEN
               && options::indent_cs_delegate_body())
       {

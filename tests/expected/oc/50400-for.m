@@ -1,13 +1,13 @@
 [[HRNewsService sharedInstance] fetchBreakingNewsItemWithId: self.breakingNewsId
                                                     success:^(id responseObject) {
-   NSDictionary *thing;
-   for (NSArray *dictionary in photos)
-   {
-   }
-}
+                                                       NSDictionary *thing;
+                                                       for (NSArray *dictionary in photos)
+                                                       {
+                                                       }
+                                                    }
                                                     failure:^(NSError *error) {
-   // Failure?
-}];
+                                                       // Failure?
+                                                    }];
 
 // We also need to consider cases where a non-pointer type (or, a pointer without the star) is declared in ObjC.
 for (id obj in someDictionary)

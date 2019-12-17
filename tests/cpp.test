@@ -225,6 +225,7 @@
 30325  mod_paren_on_return-r.cfg            cpp/returns.cpp
 
 30400  attribute_specifier_seqs.cfg         cpp/attribute_specifier_seqs.cpp
+30401  Issue_2570.cfg                       cpp/Issue_2570.cpp
 
 # function def newlines
 30701  func-def-1.cfg                       cpp/function-def.cpp

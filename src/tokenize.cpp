@@ -2301,6 +2301,13 @@ void tokenize(const deque<int> &data, chunk_t *ref)
          break;
       }
 
+      if (  language_is_set(LANG_JAVA)
+         && chunk.type == CT_MEMBER
+         && !memcmp(chunk.text(), "->", 2))
+      {
+         chunk.type = CT_LAMBDA;
+      }
+
       // Don't create an entry for whitespace
       if (chunk.type == CT_WHITESPACE)
       {

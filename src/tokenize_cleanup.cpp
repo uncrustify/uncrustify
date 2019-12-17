@@ -471,7 +471,8 @@ void tokenize_cleanup(void)
       }
 
       // Change angle open/close to CT_COMPARE, if not a template thingy
-      if (chunk_is_token(pc, CT_ANGLE_OPEN) && get_chunk_parent_type(pc) != CT_TYPE_CAST)
+      if (  chunk_is_token(pc, CT_ANGLE_OPEN)
+         && pc->parent_type != CT_TYPE_CAST)
       {
          /*
           * pretty much all languages except C use <> for something other than
@@ -489,7 +490,8 @@ void tokenize_cleanup(void)
          }
       }
 
-      if (chunk_is_token(pc, CT_ANGLE_CLOSE) && get_chunk_parent_type(pc) != CT_TEMPLATE)
+      if (  chunk_is_token(pc, CT_ANGLE_CLOSE)
+         && pc->parent_type != CT_TEMPLATE)
       {
          if (in_type_cast)
          {
@@ -584,7 +586,8 @@ void tokenize_cleanup(void)
       if (  chunk_is_token(pc, CT_CLASS)
          && !CharTable::IsKw1(next->str[0]))
       {
-         if (chunk_is_not_token(next, CT_DC_MEMBER))
+         if (  chunk_is_not_token(next, CT_DC_MEMBER)
+            && chunk_is_not_token(next, CT_ATTRIBUTE))                       // Issue #2570
          {
             set_chunk_type(pc, CT_WORD);
          }
