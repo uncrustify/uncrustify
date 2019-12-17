@@ -2683,18 +2683,50 @@ static void newline_func_multi_line(chunk_t *start)
    if (  chunk_is_token(pc, CT_FPAREN_CLOSE)
       && chunk_is_newline_between(start, pc))
    {
+      chunk_t *start_next         = chunk_get_next_ncnl(start);
+      bool    has_leading_closure = (  start_next->parent_type == CT_OC_BLOCK_EXPR
+                                    || start_next->parent_type == CT_CPP_LAMBDA
+                                    || start_next->type == CT_BRACE_OPEN);
+
+      chunk_t *prev_end            = chunk_get_prev_ncnl(pc);
+      bool    has_trailing_closure = (  prev_end->parent_type == CT_OC_BLOCK_EXPR
+                                     || prev_end->parent_type == CT_CPP_LAMBDA
+                                     || prev_end->type == CT_BRACE_OPEN);
+
       if (add_start && !chunk_is_newline(chunk_get_next(start)))
       {
-         newline_iarf(start, IARF_ADD);
+         if (options::nl_func_call_args_multi_line_ignore_closures())
+         {
+            if (!has_leading_closure && !has_trailing_closure)
+            {
+               newline_iarf(start, IARF_ADD);
+            }
+         }
+         else
+         {
+            newline_iarf(start, IARF_ADD);
+         }
       }
 
       if (add_end && !chunk_is_newline(chunk_get_prev(pc)))
       {
-         newline_iarf(chunk_get_prev(pc), IARF_ADD);
+         if (options::nl_func_call_args_multi_line_ignore_closures())
+         {
+            if (!has_leading_closure && !has_trailing_closure)
+            {
+               newline_iarf(chunk_get_prev(pc), IARF_ADD);
+            }
+         }
+         else
+         {
+            newline_iarf(chunk_get_prev(pc), IARF_ADD);
+         }
       }
 
       if (add_args)
       {
+         // process the function in reverse and leave the first comma if the option to leave trailing closure
+         // is on. nl_func_call_args_multi_line_ignore_trailing_closure
          for (pc = chunk_get_next_ncnl(start);
               pc != nullptr && pc->level > start->level;
               pc = chunk_get_next_ncnl(pc))
@@ -2710,7 +2742,25 @@ static void newline_func_multi_line(chunk_t *start)
 
                if (!chunk_is_newline(chunk_get_next(pc)))
                {
-                  newline_iarf(pc, IARF_ADD);
+                  if (options::nl_func_call_args_multi_line_ignore_closures())
+                  {
+                     chunk_t *prev_comma  = chunk_get_prev_ncnl(pc);
+                     chunk_t *after_comma = chunk_get_next_ncnl(pc);
+
+                     if (!(  (  prev_comma->parent_type == CT_OC_BLOCK_EXPR
+                             || prev_comma->parent_type == CT_CPP_LAMBDA
+                             || prev_comma->type == CT_BRACE_OPEN)
+                          || (  after_comma->parent_type == CT_OC_BLOCK_EXPR
+                             || after_comma->parent_type == CT_CPP_LAMBDA
+                             || after_comma->type == CT_BRACE_OPEN)))
+                     {
+                        newline_iarf(pc, IARF_ADD);
+                     }
+                  }
+                  else
+                  {
+                     newline_iarf(pc, IARF_ADD);
+                  }
                }
             }
          }
