@@ -452,13 +452,13 @@ void output_parsed(FILE *pfile)
    {
 #ifdef WIN32
       fprintf(pfile, "%s# %3d>%19.19s[%19.19s][%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
-              eol_marker, (int)pc->orig_line, get_token_name(pc->type), get_token_name(pc->parent_type),
+              eol_marker, (int)pc->orig_line, get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)),
               (int)pc->column, (int)pc->orig_col, (int)pc->orig_col_end, (int)pc->orig_prev_sp,
               (int)pc->brace_level, (int)pc->level, (int)pc->pp_level, (int)pc->nl_count, pc->after_tab);
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s[%19.19s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu]",
               eol_marker, pc->orig_line, get_token_name(pc->type),
-              get_token_name(pc->parent_type),
+              get_token_name(get_chunk_parent_type(pc)),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
       fprintf(pfile, "[%11llx]",
@@ -1087,8 +1087,8 @@ static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc)
    //        __func__, pc->orig_line, cmt.brace_col, cmt.base_col, cmt.column, pc->orig_col,
    //        pc->flags & (PCF_WAS_ALIGNED | PCF_RIGHT_COMMENT));
 
-   if (  pc->parent_type == CT_COMMENT_START
-      || pc->parent_type == CT_COMMENT_WHOLE)
+   if (  get_chunk_parent_type(pc) == CT_COMMENT_START
+      || get_chunk_parent_type(pc) == CT_COMMENT_WHOLE)
    {
       if (  !options::indent_col1_comment()
          && pc->orig_col == 1
@@ -1102,8 +1102,8 @@ static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc)
 
    // tab aligning code
    if (  options::indent_cmt_with_tabs()
-      && (  pc->parent_type == CT_COMMENT_END
-         || pc->parent_type == CT_COMMENT_WHOLE))
+      && (  get_chunk_parent_type(pc) == CT_COMMENT_END
+         || get_chunk_parent_type(pc) == CT_COMMENT_WHOLE))
    {
       cmt.column = align_tab_column(cmt.column - 1);
       // LOG_FMT(LSYS, "%s: line %d, orig:%d new:%d\n",
@@ -1123,7 +1123,7 @@ static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc)
 static bool can_combine_comment(chunk_t *pc, cmt_reflow &cmt)
 {
    // We can't combine if there is something other than a newline next
-   if (pc->parent_type == CT_COMMENT_START)
+   if (get_chunk_parent_type(pc) == CT_COMMENT_START)
    {
       return(false);
    }
@@ -1138,7 +1138,7 @@ static bool can_combine_comment(chunk_t *pc, cmt_reflow &cmt)
       if (  chunk_is_token(next, pc->type)
          && (  (next->column == 1 && pc->column == 1)
             || (next->column == cmt.base_col && pc->column == cmt.base_col)
-            || (next->column > cmt.base_col && pc->parent_type == CT_COMMENT_END)))
+            || (next->column > cmt.base_col && get_chunk_parent_type(pc) == CT_COMMENT_END)))
       {
          return(true);
       }
@@ -1879,7 +1879,7 @@ static bool kw_fcn_function(chunk_t *cmt, unc_text &out_txt)
 
    if (fcn)
    {
-      if (fcn->parent_type == CT_OPERATOR)
+      if (get_chunk_parent_type(fcn) == CT_OPERATOR)
       {
          out_txt.append("operator ");
       }
@@ -2014,7 +2014,7 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
    tmp = chunk_get_prev_ncnl(fcn);
 
    // For Objective-C we need to go to the previous chunk
-   if (tmp != nullptr && tmp->parent_type == CT_OC_MSG_DECL && chunk_is_token(tmp, CT_PAREN_CLOSE))
+   if (tmp != nullptr && get_chunk_parent_type(tmp) == CT_OC_MSG_DECL && chunk_is_token(tmp, CT_PAREN_CLOSE))
    {
       tmp = chunk_get_prev_ncnl(tmp);
    }

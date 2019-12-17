@@ -811,18 +811,6 @@ chunk_t *chunk_get_prev_nvb(chunk_t *cur, const scope_e scope)
 }
 
 
-void set_chunk_type_real(chunk_t *pc, c_token_t tt)
-{
-   set_chunk_real(pc, tt, LSETTYP);
-}
-
-
-void set_chunk_parent_real(chunk_t *pc, c_token_t pt)
-{
-   set_chunk_real(pc, pt, LSETPAR);
-}
-
-
 void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits)
 {
    if (pc != nullptr)
@@ -842,7 +830,7 @@ void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bit
                  pc->orig_line, pc->orig_col, pc->text(),
                  get_token_name(pc->type));
          LOG_FMT(LSETFLG, "parent_type is %s",
-                 get_token_name(pc->parent_type));
+                 get_token_name(get_chunk_parent_type(pc)));
          log_func_stack_inline(LSETFLG);
          pc->flags = nflags;
       }
@@ -850,53 +838,70 @@ void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bit
 }
 
 
-void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what)
+void set_chunk_type_real(chunk_t *pc, c_token_t token, const char *func, int line)
 {
    LOG_FUNC_ENTRY();
 
-   c_token_t *where;
-   c_token_t *type;
-   c_token_t *parent_type;
-
-   switch (what)
+   if (  pc == nullptr
+      || pc->type == token)
    {
-   case (LSETTYP):
-      where       = &pc->type;
-      type        = &token;
-      parent_type = &pc->parent_type;
-      break;
-
-   case (LSETPAR):
-      where       = &pc->parent_type;
-      type        = &pc->type;
-      parent_type = &token;
-      break;
-
-   default:
       return;
    }
+   LOG_FMT(LSETTYP, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() ",
+           func, line, pc->orig_line, pc->orig_col);
 
-   if (pc != nullptr && *where != token)
+   if (token == CT_NEWLINE)
    {
-      LOG_FMT(what, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() ",
-              __func__, __LINE__, pc->orig_line, pc->orig_col);
-
-      if (*type == CT_NEWLINE)
-      {
-         LOG_FMT(what, "<Newline>\n");
-      }
-      else
-      {
-         LOG_FMT(what, "'%s'\n",
-                 pc->text());
-      }
-      LOG_FMT(what, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s",
-              get_token_name(pc->type), get_token_name(pc->parent_type),
-              get_token_name(*type), get_token_name(*parent_type));
-      log_func_stack_inline(what);
-      *where = token;
+      LOG_FMT(LSETTYP, "<Newline>\n");
    }
-} // set_chunk_real
+   else
+   {
+      LOG_FMT(LSETTYP, "'%s'\n", pc->text());
+   }
+   LOG_FMT(LSETTYP, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s\n",
+           get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)),
+           get_token_name(token), get_token_name(get_chunk_parent_type(pc)));
+   pc->type = token;
+} // set_chunk_type_real
+
+
+void set_chunk_parent_real(chunk_t *pc, c_token_t token, const char *func, int line)
+{
+   LOG_FUNC_ENTRY();
+
+   if (  pc == nullptr
+      || get_chunk_parent_type(pc) == token)
+   {
+      return;
+   }
+   LOG_FMT(LSETPAR, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() ",
+           func, line, pc->orig_line, pc->orig_col);
+
+   if (token == CT_NEWLINE)
+   {
+      LOG_FMT(LSETPAR, "<Newline>\n");
+   }
+   else
+   {
+      LOG_FMT(LSETPAR, "'%s'\n", pc->text());
+   }
+   LOG_FMT(LSETPAR, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s\n",
+           get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)),
+           get_token_name(token), get_token_name(get_chunk_parent_type(pc)));
+   pc->parent_type = token;
+} // set_chunk_parent_real
+
+
+c_token_t get_chunk_parent_type(chunk_t *pc)
+{
+   LOG_FUNC_ENTRY();
+
+   if (pc == nullptr)
+   {
+      return(CT_NONE);
+   }
+   return(pc->parent_type);
+} // get_chunk_parent_type
 
 
 static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope, const direction_e dir)

@@ -1,34 +1,192 @@
-set_chunk_real : orig_line is 1, orig_col is 8, pc->text() 'TelegramIndex'
-   pc->type is WORD, pc->parent_type is NONE => *type is TYPE, *parent_type is NONE [CallStack]
-set_chunk_real : orig_line is 3, orig_col is 25, pc->text() '*'
-   pc->type is STAR, pc->parent_type is NONE => *type is PTR_TYPE, *parent_type is NONE [CallStack]
-set_chunk_real : orig_line is 13, orig_col is 11, pc->text() '*'
-   pc->type is STAR, pc->parent_type is NONE => *type is PTR_TYPE, *parent_type is NONE [CallStack]
-set_chunk_real : orig_line is 3, orig_col is 1, pc->text() 'TelegramIndex'
-   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CLASS_DEF, *parent_type is NONE [CallStack]
-set_chunk_real : orig_line is 3, orig_col is 14, pc->text() '('
-   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE [CallStack]
-set_chunk_real : orig_line is 3, orig_col is 47, pc->text() ')'
-   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE [CallStack]
-set_chunk_real : orig_line is 3, orig_col is 49, pc->text() ':'
-   pc->type is COLON, pc->parent_type is NONE => *type is CONSTR_COLON, *parent_type is NONE [CallStack]
-set_chunk_real : orig_line is 4, orig_col is 1, pc->text() 'pTelName'
-   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CTOR_VAR, *parent_type is NONE [CallStack]
-set_chunk_real : orig_line is 4, orig_col is 9, pc->text() '('
-   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE [CallStack]
-set_chunk_real : orig_line is 4, orig_col is 12, pc->text() ')'
-   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE [CallStack]
-set_chunk_real : orig_line is 5, orig_col is 1, pc->text() 'nTelIndex'
-   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CTOR_VAR, *parent_type is NONE [CallStack]
-set_chunk_real : orig_line is 5, orig_col is 10, pc->text() '('
-   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE [CallStack]
-set_chunk_real : orig_line is 5, orig_col is 12, pc->text() ')'
-   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE [CallStack]
-set_chunk_real : orig_line is 9, orig_col is 2, pc->text() 'TelegramIndex'
-   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CLASS_DEF, *parent_type is NONE [CallStack]
-set_chunk_real : orig_line is 9, orig_col is 1, pc->text() '~'
-   pc->type is INV, pc->parent_type is NONE => *type is DESTRUCTOR, *parent_type is NONE [CallStack]
-set_chunk_real : orig_line is 9, orig_col is 15, pc->text() '('
-   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE [CallStack]
-set_chunk_real : orig_line is 9, orig_col is 16, pc->text() ')'
-   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE [CallStack]
+parse_word : orig_line is 1, orig_col is 1, pc->text() 'struct'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_word : orig_line is 1, orig_col is 1, pc->text() 'struct'
+   pc->type is WORD, pc->parent_type is NONE => *type is STRUCT, *parent_type is NONE
+parse_whitespace : orig_line is 1, orig_col is 7, pc->text() ''
+   pc->type is NONE, pc->parent_type is NONE => *type is WHITESPACE, *parent_type is NONE
+parse_word : orig_line is 1, orig_col is 8, pc->text() 'TelegramIndex'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_whitespace : orig_line is 1, orig_col is 21, pc->text() <Newline>
+   pc->type is NONE, pc->parent_type is NONE => *type is NEWLINE, *parent_type is NONE
+parse_next : orig_line is 2, orig_col is 1, pc->text() '{'
+   pc->type is NONE, pc->parent_type is NONE => *type is BRACE_OPEN, *parent_type is NONE
+parse_whitespace : orig_line is 2, orig_col is 2, pc->text() <Newline>
+   pc->type is NONE, pc->parent_type is NONE => *type is NEWLINE, *parent_type is NONE
+parse_word : orig_line is 3, orig_col is 1, pc->text() 'TelegramIndex'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_next : orig_line is 3, orig_col is 14, pc->text() '('
+   pc->type is NONE, pc->parent_type is NONE => *type is PAREN_OPEN, *parent_type is NONE
+parse_word : orig_line is 3, orig_col is 15, pc->text() 'const'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_word : orig_line is 3, orig_col is 15, pc->text() 'const'
+   pc->type is WORD, pc->parent_type is NONE => *type is QUALIFIER, *parent_type is NONE
+parse_whitespace : orig_line is 3, orig_col is 20, pc->text() ''
+   pc->type is NONE, pc->parent_type is NONE => *type is WHITESPACE, *parent_type is NONE
+parse_word : orig_line is 3, orig_col is 21, pc->text() 'char'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_word : orig_line is 3, orig_col is 21, pc->text() 'char'
+   pc->type is WORD, pc->parent_type is NONE => *type is TYPE, *parent_type is NONE
+parse_next : orig_line is 3, orig_col is 25, pc->text() '*'
+   pc->type is NONE, pc->parent_type is NONE => *type is STAR, *parent_type is NONE
+parse_whitespace : orig_line is 3, orig_col is 26, pc->text() ''
+   pc->type is NONE, pc->parent_type is NONE => *type is WHITESPACE, *parent_type is NONE
+parse_word : orig_line is 3, orig_col is 27, pc->text() 'pN'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_next : orig_line is 3, orig_col is 29, pc->text() ','
+   pc->type is NONE, pc->parent_type is NONE => *type is COMMA, *parent_type is NONE
+parse_whitespace : orig_line is 3, orig_col is 30, pc->text() ''
+   pc->type is NONE, pc->parent_type is NONE => *type is WHITESPACE, *parent_type is NONE
+parse_word : orig_line is 3, orig_col is 31, pc->text() 'unsigned'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_word : orig_line is 3, orig_col is 31, pc->text() 'unsigned'
+   pc->type is WORD, pc->parent_type is NONE => *type is TYPE, *parent_type is NONE
+parse_whitespace : orig_line is 3, orig_col is 39, pc->text() ''
+   pc->type is NONE, pc->parent_type is NONE => *type is WHITESPACE, *parent_type is NONE
+parse_word : orig_line is 3, orig_col is 40, pc->text() 'long'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_word : orig_line is 3, orig_col is 40, pc->text() 'long'
+   pc->type is WORD, pc->parent_type is NONE => *type is TYPE, *parent_type is NONE
+parse_whitespace : orig_line is 3, orig_col is 44, pc->text() ''
+   pc->type is NONE, pc->parent_type is NONE => *type is WHITESPACE, *parent_type is NONE
+parse_word : orig_line is 3, orig_col is 45, pc->text() 'nI'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_next : orig_line is 3, orig_col is 47, pc->text() ')'
+   pc->type is NONE, pc->parent_type is NONE => *type is PAREN_CLOSE, *parent_type is NONE
+parse_whitespace : orig_line is 3, orig_col is 48, pc->text() ''
+   pc->type is NONE, pc->parent_type is NONE => *type is WHITESPACE, *parent_type is NONE
+parse_next : orig_line is 3, orig_col is 49, pc->text() ':'
+   pc->type is NONE, pc->parent_type is NONE => *type is COLON, *parent_type is NONE
+parse_whitespace : orig_line is 3, orig_col is 50, pc->text() <Newline>
+   pc->type is NONE, pc->parent_type is NONE => *type is NEWLINE, *parent_type is NONE
+parse_word : orig_line is 4, orig_col is 1, pc->text() 'pTelName'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_next : orig_line is 4, orig_col is 9, pc->text() '('
+   pc->type is NONE, pc->parent_type is NONE => *type is PAREN_OPEN, *parent_type is NONE
+parse_word : orig_line is 4, orig_col is 10, pc->text() 'pN'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_next : orig_line is 4, orig_col is 12, pc->text() ')'
+   pc->type is NONE, pc->parent_type is NONE => *type is PAREN_CLOSE, *parent_type is NONE
+parse_next : orig_line is 4, orig_col is 13, pc->text() ','
+   pc->type is NONE, pc->parent_type is NONE => *type is COMMA, *parent_type is NONE
+parse_whitespace : orig_line is 4, orig_col is 14, pc->text() <Newline>
+   pc->type is NONE, pc->parent_type is NONE => *type is NEWLINE, *parent_type is NONE
+parse_word : orig_line is 5, orig_col is 1, pc->text() 'nTelIndex'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_next : orig_line is 5, orig_col is 10, pc->text() '('
+   pc->type is NONE, pc->parent_type is NONE => *type is PAREN_OPEN, *parent_type is NONE
+parse_word : orig_line is 5, orig_col is 11, pc->text() 'n'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_next : orig_line is 5, orig_col is 12, pc->text() ')'
+   pc->type is NONE, pc->parent_type is NONE => *type is PAREN_CLOSE, *parent_type is NONE
+parse_whitespace : orig_line is 5, orig_col is 13, pc->text() <Newline>
+   pc->type is NONE, pc->parent_type is NONE => *type is NEWLINE, *parent_type is NONE
+parse_next : orig_line is 6, orig_col is 1, pc->text() '{'
+   pc->type is NONE, pc->parent_type is NONE => *type is BRACE_OPEN, *parent_type is NONE
+parse_whitespace : orig_line is 6, orig_col is 2, pc->text() <Newline>
+   pc->type is NONE, pc->parent_type is NONE => *type is NEWLINE, *parent_type is NONE
+parse_next : orig_line is 7, orig_col is 1, pc->text() '}'
+   pc->type is NONE, pc->parent_type is NONE => *type is BRACE_CLOSE, *parent_type is NONE
+parse_whitespace : orig_line is 7, orig_col is 2, pc->text() <Newline>
+   pc->type is NONE, pc->parent_type is NONE => *type is NEWLINE, *parent_type is NONE
+parse_next : orig_line is 9, orig_col is 1, pc->text() '~'
+   pc->type is NONE, pc->parent_type is NONE => *type is INV, *parent_type is NONE
+parse_word : orig_line is 9, orig_col is 2, pc->text() 'TelegramIndex'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_next : orig_line is 9, orig_col is 15, pc->text() '('
+   pc->type is NONE, pc->parent_type is NONE => *type is PAREN_OPEN, *parent_type is NONE
+parse_next : orig_line is 9, orig_col is 16, pc->text() ')'
+   pc->type is NONE, pc->parent_type is NONE => *type is PAREN_CLOSE, *parent_type is NONE
+parse_whitespace : orig_line is 9, orig_col is 17, pc->text() <Newline>
+   pc->type is NONE, pc->parent_type is NONE => *type is NEWLINE, *parent_type is NONE
+parse_next : orig_line is 10, orig_col is 1, pc->text() '{'
+   pc->type is NONE, pc->parent_type is NONE => *type is BRACE_OPEN, *parent_type is NONE
+parse_whitespace : orig_line is 10, orig_col is 2, pc->text() <Newline>
+   pc->type is NONE, pc->parent_type is NONE => *type is NEWLINE, *parent_type is NONE
+parse_next : orig_line is 11, orig_col is 1, pc->text() '}'
+   pc->type is NONE, pc->parent_type is NONE => *type is BRACE_CLOSE, *parent_type is NONE
+parse_whitespace : orig_line is 11, orig_col is 2, pc->text() <Newline>
+   pc->type is NONE, pc->parent_type is NONE => *type is NEWLINE, *parent_type is NONE
+parse_word : orig_line is 13, orig_col is 1, pc->text() 'const'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_word : orig_line is 13, orig_col is 1, pc->text() 'const'
+   pc->type is WORD, pc->parent_type is NONE => *type is QUALIFIER, *parent_type is NONE
+parse_whitespace : orig_line is 13, orig_col is 6, pc->text() ''
+   pc->type is NONE, pc->parent_type is NONE => *type is WHITESPACE, *parent_type is NONE
+parse_word : orig_line is 13, orig_col is 7, pc->text() 'char'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_word : orig_line is 13, orig_col is 7, pc->text() 'char'
+   pc->type is WORD, pc->parent_type is NONE => *type is TYPE, *parent_type is NONE
+parse_next : orig_line is 13, orig_col is 11, pc->text() '*'
+   pc->type is NONE, pc->parent_type is NONE => *type is STAR, *parent_type is NONE
+parse_whitespace : orig_line is 13, orig_col is 12, pc->text() ''
+   pc->type is NONE, pc->parent_type is NONE => *type is WHITESPACE, *parent_type is NONE
+parse_word : orig_line is 13, orig_col is 13, pc->text() 'const'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_word : orig_line is 13, orig_col is 13, pc->text() 'const'
+   pc->type is WORD, pc->parent_type is NONE => *type is QUALIFIER, *parent_type is NONE
+parse_whitespace : orig_line is 13, orig_col is 18, pc->text() ''
+   pc->type is NONE, pc->parent_type is NONE => *type is WHITESPACE, *parent_type is NONE
+parse_word : orig_line is 13, orig_col is 19, pc->text() 'pTelName'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_next : orig_line is 13, orig_col is 27, pc->text() ';'
+   pc->type is NONE, pc->parent_type is NONE => *type is SEMICOLON, *parent_type is NONE
+parse_whitespace : orig_line is 13, orig_col is 28, pc->text() <Newline>
+   pc->type is NONE, pc->parent_type is NONE => *type is NEWLINE, *parent_type is NONE
+parse_word : orig_line is 14, orig_col is 1, pc->text() 'unsigned'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_word : orig_line is 14, orig_col is 1, pc->text() 'unsigned'
+   pc->type is WORD, pc->parent_type is NONE => *type is TYPE, *parent_type is NONE
+parse_whitespace : orig_line is 14, orig_col is 9, pc->text() ''
+   pc->type is NONE, pc->parent_type is NONE => *type is WHITESPACE, *parent_type is NONE
+parse_word : orig_line is 14, orig_col is 10, pc->text() 'long'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_word : orig_line is 14, orig_col is 10, pc->text() 'long'
+   pc->type is WORD, pc->parent_type is NONE => *type is TYPE, *parent_type is NONE
+parse_whitespace : orig_line is 14, orig_col is 14, pc->text() ''
+   pc->type is NONE, pc->parent_type is NONE => *type is WHITESPACE, *parent_type is NONE
+parse_word : orig_line is 14, orig_col is 15, pc->text() 'nTelIndex'
+   pc->type is NONE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+parse_next : orig_line is 14, orig_col is 24, pc->text() ';'
+   pc->type is NONE, pc->parent_type is NONE => *type is SEMICOLON, *parent_type is NONE
+parse_whitespace : orig_line is 14, orig_col is 25, pc->text() <Newline>
+   pc->type is NONE, pc->parent_type is NONE => *type is NEWLINE, *parent_type is NONE
+parse_next : orig_line is 15, orig_col is 1, pc->text() '}'
+   pc->type is NONE, pc->parent_type is NONE => *type is BRACE_CLOSE, *parent_type is NONE
+parse_next : orig_line is 15, orig_col is 2, pc->text() ';'
+   pc->type is NONE, pc->parent_type is NONE => *type is SEMICOLON, *parent_type is NONE
+parse_whitespace : orig_line is 15, orig_col is 3, pc->text() <Newline>
+   pc->type is NONE, pc->parent_type is NONE => *type is NEWLINE, *parent_type is NONE
+tokenize_cleanup : orig_line is 1, orig_col is 8, pc->text() 'TelegramIndex'
+   pc->type is WORD, pc->parent_type is NONE => *type is TYPE, *parent_type is NONE
+tokenize_cleanup : orig_line is 3, orig_col is 25, pc->text() '*'
+   pc->type is STAR, pc->parent_type is NONE => *type is PTR_TYPE, *parent_type is NONE
+tokenize_cleanup : orig_line is 13, orig_col is 11, pc->text() '*'
+   pc->type is STAR, pc->parent_type is NONE => *type is PTR_TYPE, *parent_type is NONE
+mark_class_ctor : orig_line is 3, orig_col is 1, pc->text() 'TelegramIndex'
+   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CLASS_DEF, *parent_type is NONE
+flag_parens : orig_line is 3, orig_col is 14, pc->text() '('
+   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE
+flag_parens : orig_line is 3, orig_col is 47, pc->text() ')'
+   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE
+mark_cpp_constructor : orig_line is 3, orig_col is 49, pc->text() ':'
+   pc->type is COLON, pc->parent_type is NONE => *type is CONSTR_COLON, *parent_type is NONE
+mark_cpp_constructor : orig_line is 4, orig_col is 1, pc->text() 'pTelName'
+   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CTOR_VAR, *parent_type is NONE
+flag_parens : orig_line is 4, orig_col is 9, pc->text() '('
+   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE
+flag_parens : orig_line is 4, orig_col is 12, pc->text() ')'
+   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE
+mark_cpp_constructor : orig_line is 5, orig_col is 1, pc->text() 'nTelIndex'
+   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CTOR_VAR, *parent_type is NONE
+flag_parens : orig_line is 5, orig_col is 10, pc->text() '('
+   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE
+flag_parens : orig_line is 5, orig_col is 12, pc->text() ')'
+   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE
+mark_class_ctor : orig_line is 9, orig_col is 2, pc->text() 'TelegramIndex'
+   pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CLASS_DEF, *parent_type is NONE
+mark_cpp_constructor : orig_line is 9, orig_col is 1, pc->text() '~'
+   pc->type is INV, pc->parent_type is NONE => *type is DESTRUCTOR, *parent_type is NONE
+flag_parens : orig_line is 9, orig_col is 15, pc->text() '('
+   pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE
+flag_parens : orig_line is 9, orig_col is 16, pc->text() ')'
+   pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE

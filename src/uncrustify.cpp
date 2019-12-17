@@ -1578,13 +1578,13 @@ static void add_func_header(c_token_t type, file_mem &fm)
       ref = pc;
 
       if (  chunk_is_token(ref, CT_CLASS)
-         && ref->parent_type == CT_NONE
+         && get_chunk_parent_type(ref) == CT_NONE
          && ref->next)
       {
          ref = ref->next;
 
          if (  chunk_is_token(ref, CT_TYPE)
-            && ref->parent_type == type
+            && get_chunk_parent_type(ref) == type
             && ref->next)
          {
             ref = ref->next;
@@ -1599,7 +1599,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
       ref = pc;
 
       if (  chunk_is_token(ref, CT_FUNC_DEF)
-         && ref->parent_type == CT_NONE
+         && get_chunk_parent_type(ref) == CT_NONE
          && ref->next)
       {
          int found_brace = 0;                                 // Set if a close brace is found before a newline
@@ -1647,7 +1647,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
          {
             tmp = chunk_get_prev_type(ref, CT_PREPROC, ref->level);
 
-            if (tmp != nullptr && tmp->parent_type == CT_PP_IF)
+            if (tmp != nullptr && get_chunk_parent_type(tmp) == CT_PP_IF)
             {
                tmp = chunk_get_prev_nnl(tmp);
 
@@ -1732,7 +1732,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
          {
             tmp = chunk_get_prev_type(ref, CT_PREPROC, ref->level);
 
-            if (tmp != nullptr && tmp->parent_type == CT_PP_IF)
+            if (tmp != nullptr && get_chunk_parent_type(tmp) == CT_PP_IF)
             {
                tmp = chunk_get_prev_nnl(tmp);
 

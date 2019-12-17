@@ -124,10 +124,10 @@ void align_oc_msg_colon(chunk_t *so)
    {
       chunk_t chunk;
 
-      chunk.type        = CT_SPACE;
+      set_chunk_type(&chunk, CT_SPACE);
+      set_chunk_parent(&chunk, CT_NONE);
       chunk.orig_line   = longest->orig_line;
       chunk.orig_col    = longest->orig_col;
-      chunk.parent_type = CT_NONE;
       chunk.level       = longest->level;
       chunk.brace_level = longest->brace_level;
       chunk.flags       = longest->flags & PCF_COPY_FLAGS;
@@ -151,7 +151,7 @@ void align_oc_msg_colons(void)
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
-      if (chunk_is_token(pc, CT_SQUARE_OPEN) && pc->parent_type == CT_OC_MSG)
+      if (chunk_is_token(pc, CT_SQUARE_OPEN) && get_chunk_parent_type(pc) == CT_OC_MSG)
       {
          align_oc_msg_colon(pc);
       }

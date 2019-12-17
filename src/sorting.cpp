@@ -110,7 +110,7 @@ static int get_chunk_priority(chunk_t *pc)
 
 static unc_text chunk_sort_str(chunk_t *pc)
 {
-   if (pc->parent_type == CT_PP_INCLUDE)
+   if (get_chunk_parent_type(pc) == CT_PP_INCLUDE)
    {
       return(unc_text{ pc->str, 0, pc->len() - 1 });
    }

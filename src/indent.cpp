@@ -250,7 +250,7 @@ void align_to_column(chunk_t *pc, size_t column)
 
       auto almod = align_mode_e::SHIFT;
 
-      if (chunk_is_comment(pc) && pc->parent_type != CT_COMMENT_EMBED)
+      if (chunk_is_comment(pc) && get_chunk_parent_type(pc) != CT_COMMENT_EMBED)
       {
          almod = (  chunk_is_single_line_comment(pc)
                  && options::indent_relative_single_line_comments())
@@ -292,7 +292,7 @@ void reindent_line(chunk_t *pc, size_t column)
    LOG_FUNC_ENTRY();
    LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, on '%s' [%s/%s] => %zu\n",
            __func__, __LINE__, pc->orig_line, pc->column, pc->text(),
-           get_token_name(pc->type), get_token_name(pc->parent_type),
+           get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)),
            column);
    log_func_stack_inline(LINDLINE);
 
@@ -348,7 +348,7 @@ void reindent_line(chunk_t *pc, size_t column)
                               && options::indent_relative_single_line_comments());
 
       if (  is_comment
-         && pc->parent_type != CT_COMMENT_EMBED
+         && get_chunk_parent_type(pc) != CT_COMMENT_EMBED
          && !keep)
       {
          pc->column = max(pc->orig_col, min_col);
@@ -623,7 +623,7 @@ void indent_text(void)
       }
       // Handle preprocessor transitions
       const size_t parent_token_indent = (options::indent_brace_parent())
-                                         ? token_indent(pc->parent_type) : 0;
+                                         ? token_indent(get_chunk_parent_type(pc)) : 0;
 
       // Handle "force indentation of function definition to start in column 1"
       if (options::indent_func_def_force_col1())
@@ -632,10 +632,10 @@ void indent_text(void)
          {
             chunk_t *next = chunk_get_next_ncnl(pc);
 
-            if (  pc->parent_type == CT_FUNC_DEF
+            if (  get_chunk_parent_type(pc) == CT_FUNC_DEF
                || (  chunk_is_token(pc, CT_COMMENT)
                   && next != nullptr
-                  && next->parent_type == CT_FUNC_DEF))
+                  && get_chunk_parent_type(next) == CT_FUNC_DEF))
             {
                in_func_def = true;
                frm.push(pc);
@@ -649,7 +649,7 @@ void indent_text(void)
             chunk_t *prev = chunk_get_prev(pc);
 
             if (  chunk_is_token(prev, CT_BRACE_CLOSE)
-               && prev->parent_type == CT_FUNC_DEF)
+               && get_chunk_parent_type(prev) == CT_FUNC_DEF)
             {
                in_func_def = false;
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
@@ -687,7 +687,7 @@ void indent_text(void)
       {
          // Close out PP_IF_INDENT before playing with the parse frames
          if (  frm.top().type == CT_PP_IF_INDENT
-            && (pc->parent_type == CT_PP_ENDIF || pc->parent_type == CT_PP_ELSE))
+            && (get_chunk_parent_type(pc) == CT_PP_ENDIF || get_chunk_parent_type(pc) == CT_PP_ELSE))
          {
             LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -698,7 +698,7 @@ void indent_text(void)
 
          // Indent the body of a #region here
          if (  options::pp_region_indent_code()
-            && pc->parent_type == CT_PP_REGION)
+            && get_chunk_parent_type(pc) == CT_PP_REGION)
          {
             chunk_t *next = chunk_get_next(pc);
 
@@ -738,8 +738,8 @@ void indent_text(void)
 
          // Indent the body of a #if here
          if (  options::pp_if_indent_code()
-            && (  pc->parent_type == CT_PP_IF
-               || pc->parent_type == CT_PP_ELSE))
+            && (  get_chunk_parent_type(pc) == CT_PP_IF
+               || get_chunk_parent_type(pc) == CT_PP_ELSE))
          {
             chunk_t *next = chunk_get_next(pc);
 
@@ -795,11 +795,11 @@ void indent_text(void)
 
          if (options::indent_member_single())
          {
-            if (pc->parent_type == CT_PP_IF)
+            if (get_chunk_parent_type(pc) == CT_PP_IF)
             {
                // do nothing
             }
-            else if (pc->parent_type == CT_PP_ELSE)
+            else if (get_chunk_parent_type(pc) == CT_PP_ELSE)
             {
                if (  frm.top().type == CT_MEMBER
                   && frm.top().pop_pc
@@ -830,7 +830,7 @@ void indent_text(void)
                   }
                }
             }
-            else if (pc->parent_type == CT_PP_ENDIF)
+            else if (get_chunk_parent_type(pc) == CT_PP_ENDIF)
             {
                if (  frmbkup.top().type == CT_MEMBER
                   && frm.top().type == CT_MEMBER)
@@ -848,7 +848,8 @@ void indent_text(void)
          }
          frm.push(pp_next);
 
-         if (pc->parent_type == CT_PP_DEFINE || pc->parent_type == CT_PP_UNDEF)
+         if (  get_chunk_parent_type(pc) == CT_PP_DEFINE
+            || get_chunk_parent_type(pc) == CT_PP_UNDEF)
          {
             frm.top().indent_tmp = options::pp_define_at_level()
                                    ? frm.prev().indent_tmp : 1;
@@ -858,7 +859,7 @@ void indent_text(void)
             frm.top().indent_tab = frm.top().indent;
             log_indent_tmp();
          }
-         else if (  pc->parent_type == CT_PP_PRAGMA
+         else if (  get_chunk_parent_type(pc) == CT_PP_PRAGMA
                  && options::pp_define_at_level())
          {
             frm.top().indent_tmp = frm.prev().indent_tmp;
@@ -887,15 +888,15 @@ void indent_text(void)
 
             auto val = 0;
 
-            if (  pc->parent_type == CT_PP_REGION
-               || pc->parent_type == CT_PP_ENDREGION)
+            if (  get_chunk_parent_type(pc) == CT_PP_REGION
+               || get_chunk_parent_type(pc) == CT_PP_ENDREGION)
             {
                val = options::pp_indent_region();
                log_indent();
             }
-            else if (  pc->parent_type == CT_PP_IF
-                    || pc->parent_type == CT_PP_ELSE
-                    || pc->parent_type == CT_PP_ENDIF)
+            else if (  get_chunk_parent_type(pc) == CT_PP_IF
+                    || get_chunk_parent_type(pc) == CT_PP_ELSE
+                    || get_chunk_parent_type(pc) == CT_PP_ENDIF)
             {
                val = options::pp_indent_if();
                log_indent();
@@ -971,7 +972,7 @@ void indent_text(void)
             }
 
             if (  chunk_is_token(pc, CT_BRACE_CLOSE)
-               && pc->parent_type == CT_ENUM)
+               && get_chunk_parent_type(pc) == CT_ENUM)
             {
                chunk_t *prev_ncnl = chunk_get_prev_ncnl(pc);
                LOG_FMT(LINDLINE, "%s(%d): prev_ncnl is '%s', prev_ncnl->orig_line is %zu, prev_ncnl->orig_col is %zu\n",
@@ -1033,7 +1034,7 @@ void indent_text(void)
             // End ObjC class colon stuff inside of generic definition (like Test<T1: id<T3>>)
             if (  (frm.top().type == CT_CLASS_COLON)
                && chunk_is_token(pc, CT_ANGLE_CLOSE)
-               && pc->parent_type == CT_OC_GENERIC_SPEC)
+               && get_chunk_parent_type(pc) == CT_OC_GENERIC_SPEC)
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -1044,16 +1045,16 @@ void indent_text(void)
             // TODO: ideally formatting would know which opens occurred on a line and group closes in the same manor
             if (  language_is_set(LANG_OC)
                && chunk_is_token(pc, CT_SQUARE_CLOSE)
-               && pc->parent_type == CT_OC_AT
+               && get_chunk_parent_type(pc) == CT_OC_AT
                && frm.top().level >= pc->level)
             {
                size_t  count = 1;
                chunk_t *next = chunk_get_next_nc(pc);
 
                while (  next
-                     && (  (chunk_is_token(next, CT_BRACE_CLOSE) && next->parent_type == CT_OC_AT)
-                        || (chunk_is_token(next, CT_SQUARE_CLOSE) && next->parent_type == CT_OC_AT)
-                        || (chunk_is_token(next, CT_SQUARE_CLOSE) && next->parent_type == CT_OC_MSG)))
+                     && (  (chunk_is_token(next, CT_BRACE_CLOSE) && get_chunk_parent_type(next) == CT_OC_AT)
+                        || (chunk_is_token(next, CT_SQUARE_CLOSE) && get_chunk_parent_type(next) == CT_OC_AT)
+                        || (chunk_is_token(next, CT_SQUARE_CLOSE) && get_chunk_parent_type(next) == CT_OC_MSG)))
                {
                   count++;
                   next = chunk_get_next_nc(next);
@@ -1283,13 +1284,13 @@ void indent_text(void)
                                    || chunk_is_token(pc, CT_BRACE_OPEN))
                                 && options::indent_braces()
                                 && (  !options::indent_braces_no_func()
-                                   || pc->parent_type != CT_FUNC_DEF)
+                                   || get_chunk_parent_type(pc) != CT_FUNC_DEF)
                                 && (  !options::indent_braces_no_func()
-                                   || pc->parent_type != CT_FUNC_CLASS_DEF)
+                                   || get_chunk_parent_type(pc) != CT_FUNC_CLASS_DEF)
                                 && (  !options::indent_braces_no_class()
-                                   || pc->parent_type != CT_CLASS)
+                                   || get_chunk_parent_type(pc) != CT_CLASS)
                                 && (  !options::indent_braces_no_struct()
-                                   || pc->parent_type != CT_STRUCT));
+                                   || get_chunk_parent_type(pc) != CT_STRUCT));
 
       if (chunk_is_token(pc, CT_BRACE_CLOSE))
       {
@@ -1301,9 +1302,9 @@ void indent_text(void)
                chunk_t *next = chunk_get_next_nc(pc);
 
                while (  next
-                     && (  (chunk_is_token(next, CT_BRACE_CLOSE) && next->parent_type == CT_OC_AT)
-                        || (chunk_is_token(next, CT_SQUARE_CLOSE) && next->parent_type == CT_OC_AT)
-                        || (chunk_is_token(next, CT_SQUARE_CLOSE) && next->parent_type == CT_OC_MSG)))
+                     && (  (chunk_is_token(next, CT_BRACE_CLOSE) && get_chunk_parent_type(next) == CT_OC_AT)
+                        || (chunk_is_token(next, CT_SQUARE_CLOSE) && get_chunk_parent_type(next) == CT_OC_AT)
+                        || (chunk_is_token(next, CT_SQUARE_CLOSE) && get_chunk_parent_type(next) == CT_OC_MSG)))
                {
                   count++;
                   next = chunk_get_next_nc(next);
@@ -1312,7 +1313,7 @@ void indent_text(void)
 
                // End Objc nested boxed dictionary
                // TODO: ideally formatting would know which opens occurred on a line and group closes in the same manor
-               if (count > 0 && chunk_is_token(pc, CT_BRACE_CLOSE) && pc->parent_type == CT_OC_AT)
+               if (count > 0 && chunk_is_token(pc, CT_BRACE_CLOSE) && get_chunk_parent_type(pc) == CT_OC_AT)
                {
                   if (frm.top().ip.ref)
                   {
@@ -1418,7 +1419,7 @@ void indent_text(void)
             LOG_FMT(LINDENT2, "%s(%d): indent_macro_brace\n", __func__, __LINE__);
          }
          else if (  options::indent_cpp_lambda_body()
-                 && pc->parent_type == CT_CPP_LAMBDA)
+                 && get_chunk_parent_type(pc) == CT_CPP_LAMBDA)
          {
             frm.top().brace_indent = frm.prev().indent;
             indent_column_set(frm.top().brace_indent);
@@ -1434,7 +1435,7 @@ void indent_text(void)
          }
          else if (  language_is_set(LANG_CPP)
                  && options::indent_cpp_lambda_only_once()
-                 && (pc->parent_type == CT_CPP_LAMBDA))
+                 && (get_chunk_parent_type(pc) == CT_CPP_LAMBDA))
          {
             // Issue # 1296
             frm.top().brace_indent = 1 + (pc->brace_level * indent_size);
@@ -1450,8 +1451,8 @@ void indent_text(void)
          }
          else if (  language_is_set(LANG_CS | LANG_JAVA)
                  && options::indent_cs_delegate_brace()
-                 && (  pc->parent_type == CT_LAMBDA
-                    || pc->parent_type == CT_DELEGATE))
+                 && (  get_chunk_parent_type(pc) == CT_LAMBDA
+                    || get_chunk_parent_type(pc) == CT_DELEGATE))
          {
             frm.top().brace_indent = 1 + ((pc->brace_level + 1) * indent_size);
             indent_column_set(frm.top().brace_indent);
@@ -1467,8 +1468,8 @@ void indent_text(void)
          else if (  language_is_set(LANG_CS | LANG_JAVA)
                  && !options::indent_cs_delegate_brace()
                  && !options::indent_align_paren()
-                 && (  pc->parent_type == CT_LAMBDA
-                    || pc->parent_type == CT_DELEGATE))
+                 && (  get_chunk_parent_type(pc) == CT_LAMBDA
+                    || get_chunk_parent_type(pc) == CT_DELEGATE))
          {
             frm.top().brace_indent = frm.prev().indent;
 
@@ -1488,7 +1489,7 @@ void indent_text(void)
          }
          else if (  !options::indent_paren_open_brace()
                  && !language_is_set(LANG_CS)
-                 && pc->parent_type == CT_CPP_LAMBDA
+                 && get_chunk_parent_type(pc) == CT_CPP_LAMBDA
                  && (  pc->flags.test(PCF_IN_FCN_DEF)
                     || pc->flags.test(PCF_IN_FCN_CTOR)) // Issue #2152
                  && chunk_is_newline(chunk_get_next_nc(pc)))
@@ -1517,7 +1518,7 @@ void indent_text(void)
             frm.top().indent = indent_column + indent_size;
             log_indent();
 
-            if ((pc->parent_type == CT_OC_BLOCK_EXPR) && pc->flags.test(PCF_IN_OC_MSG))
+            if ((get_chunk_parent_type(pc) == CT_OC_BLOCK_EXPR) && pc->flags.test(PCF_IN_OC_MSG))
             {
                frm.top().indent = frm.prev().indent_tmp + indent_size;
                log_indent();
@@ -1670,8 +1671,8 @@ void indent_text(void)
             }
             log_indent();
          }
-         else if (  (  pc->parent_type == CT_BRACED_INIT_LIST
-                    || (!options::indent_compound_literal_return() && pc->parent_type == CT_C_CAST))
+         else if (  (  get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST
+                    || (!options::indent_compound_literal_return() && get_chunk_parent_type(pc) == CT_C_CAST))
                  && frm.prev().type == CT_RETURN)
          {
             // we're returning either a c compound literal (CT_C_CAST) or a
@@ -1693,20 +1694,21 @@ void indent_text(void)
             LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos is %zu, ... indent is %zu\n",
                     __func__, __LINE__, frm.size() - 1, frm.top().indent);
             LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', parent_type is %s\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->parent_type));
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
+                    get_token_name(get_chunk_parent_type(pc)));
 
             // If this brace is part of a statement, bump it out by indent_brace
-            if (  pc->parent_type == CT_IF
-               || pc->parent_type == CT_ELSE
-               || pc->parent_type == CT_ELSEIF
-               || pc->parent_type == CT_TRY
-               || pc->parent_type == CT_CATCH
-               || pc->parent_type == CT_DO
-               || pc->parent_type == CT_WHILE
-               || pc->parent_type == CT_USING_STMT
-               || pc->parent_type == CT_SWITCH
-               || pc->parent_type == CT_SYNCHRONIZED
-               || pc->parent_type == CT_FOR)
+            if (  get_chunk_parent_type(pc) == CT_IF
+               || get_chunk_parent_type(pc) == CT_ELSE
+               || get_chunk_parent_type(pc) == CT_ELSEIF
+               || get_chunk_parent_type(pc) == CT_TRY
+               || get_chunk_parent_type(pc) == CT_CATCH
+               || get_chunk_parent_type(pc) == CT_DO
+               || get_chunk_parent_type(pc) == CT_WHILE
+               || get_chunk_parent_type(pc) == CT_USING_STMT
+               || get_chunk_parent_type(pc) == CT_SWITCH
+               || get_chunk_parent_type(pc) == CT_SYNCHRONIZED
+               || get_chunk_parent_type(pc) == CT_FOR)
             {
                if (parent_token_indent != 0)
                {
@@ -1720,7 +1722,7 @@ void indent_text(void)
                   indent_column_set(indent_column + options::indent_brace());
                }
             }
-            else if (pc->parent_type == CT_CASE)
+            else if (get_chunk_parent_type(pc) == CT_CASE)
             {
                const auto tmp_indent = static_cast<int>(frm.prev().indent)
                                        - static_cast<int>(indent_size)
@@ -1742,7 +1744,7 @@ void indent_text(void)
                frm.top().indent_tmp = frm.top().indent;
                log_indent_tmp();
             }
-            else if (  pc->parent_type == CT_CLASS
+            else if (  get_chunk_parent_type(pc) == CT_CLASS
                     && !options::indent_class())
             {
                LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, orig_col is %zu, text is %s\n",
@@ -1750,7 +1752,7 @@ void indent_text(void)
                frm.top().indent -= indent_size;
                log_indent();
             }
-            else if (pc->parent_type == CT_NAMESPACE)
+            else if (get_chunk_parent_type(pc) == CT_NAMESPACE)
             {
                frm.top().ns_cnt = frm.prev().ns_cnt + 1;
 
@@ -1785,7 +1787,7 @@ void indent_text(void)
                   }
                }
             }
-            else if (  pc->parent_type == CT_EXTERN
+            else if (  get_chunk_parent_type(pc) == CT_EXTERN
                     && !options::indent_extern())
             {
                frm.top().indent -= indent_size;
@@ -1818,14 +1820,16 @@ void indent_text(void)
             }
             chunk_t *prev = chunk_get_prev(pc);
 
-            if (pc->parent_type == CT_BRACED_INIT_LIST && chunk_is_token(prev, CT_BRACE_OPEN) && prev->parent_type == CT_BRACED_INIT_LIST)
+            if (  get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST
+               && chunk_is_token(prev, CT_BRACE_OPEN)
+               && get_chunk_parent_type(prev) == CT_BRACED_INIT_LIST)
             {
                indent_column = frm.prev().brace_indent;
                frm.top().indent = frm.prev().indent;
                log_indent();
             }
             else if (  !chunk_is_newline_between(pc, next)
-                    && next->parent_type != CT_BRACED_INIT_LIST
+                    && get_chunk_parent_type(next) != CT_BRACED_INIT_LIST
                     && options::indent_token_after_brace()
                     && !pc->flags.test(PCF_ONE_LINER)) // Issue #1108
             {
@@ -1924,7 +1928,7 @@ void indent_text(void)
          chunk_t *prev = chunk_get_prev_ncnl(pc);
 
          if (  chunk_is_token(prev, CT_BRACE_CLOSE)
-            && prev->parent_type == CT_CASE)
+            && get_chunk_parent_type(prev) == CT_CASE)
          {
             // issue #663 + issue #1366
             chunk_t *prev_newline = chunk_get_prev_nl(pc);
@@ -2098,7 +2102,7 @@ void indent_text(void)
          }
       }
       else if (  chunk_is_token(pc, CT_PAREN_OPEN)
-              && (  pc->parent_type == CT_ASM
+              && (  get_chunk_parent_type(pc) == CT_ASM
                  || (chunk_get_prev_ncnl(pc) != nullptr && chunk_get_prev_ncnl(pc)->type == CT_ASM))
               && options::indent_ignore_asm_block())
       {
@@ -2155,22 +2159,22 @@ void indent_text(void)
 
          if (  (chunk_is_token(pc, CT_FPAREN_OPEN) || chunk_is_token(pc, CT_ANGLE_OPEN))
             && (  (  options::indent_func_call_param()
-                  && (  pc->parent_type == CT_FUNC_CALL
-                     || pc->parent_type == CT_FUNC_CALL_USER))
+                  && (  get_chunk_parent_type(pc) == CT_FUNC_CALL
+                     || get_chunk_parent_type(pc) == CT_FUNC_CALL_USER))
                || (  options::indent_func_proto_param()
-                  && (  pc->parent_type == CT_FUNC_PROTO
-                     || pc->parent_type == CT_FUNC_CLASS_PROTO))
+                  && (  get_chunk_parent_type(pc) == CT_FUNC_PROTO
+                     || get_chunk_parent_type(pc) == CT_FUNC_CLASS_PROTO))
                || (  options::indent_func_class_param()
-                  && (  pc->parent_type == CT_FUNC_CLASS_DEF
-                     || pc->parent_type == CT_FUNC_CLASS_PROTO))
+                  && (  get_chunk_parent_type(pc) == CT_FUNC_CLASS_DEF
+                     || get_chunk_parent_type(pc) == CT_FUNC_CLASS_PROTO))
                || (  options::indent_template_param()
-                  && pc->parent_type == CT_TEMPLATE)
+                  && get_chunk_parent_type(pc) == CT_TEMPLATE)
                || (  options::indent_func_ctor_var_param()
-                  && pc->parent_type == CT_FUNC_CTOR_VAR)
+                  && get_chunk_parent_type(pc) == CT_FUNC_CTOR_VAR)
                || (  options::indent_func_def_param()
-                  && pc->parent_type == CT_FUNC_DEF)
+                  && get_chunk_parent_type(pc) == CT_FUNC_DEF)
                || (  !options::indent_func_def_param()               // Issue #931
-                  && pc->parent_type == CT_FUNC_DEF
+                  && get_chunk_parent_type(pc) == CT_FUNC_DEF
                   && options::indent_func_def_param_paren_pos_threshold() > 0
                   && pc->orig_col > options::indent_func_def_param_paren_pos_threshold())))
          {
@@ -2338,13 +2342,13 @@ void indent_text(void)
          if (  !options::use_indent_continue_only_once() // Issue #1160
             && (  chunk_is_token(pc, CT_FPAREN_OPEN)
                && chunk_is_newline(chunk_get_prev(pc)))
-            && (  (  (  pc->parent_type == CT_FUNC_PROTO
-                     || pc->parent_type == CT_FUNC_CLASS_PROTO)
+            && (  (  (  get_chunk_parent_type(pc) == CT_FUNC_PROTO
+                     || get_chunk_parent_type(pc) == CT_FUNC_CLASS_PROTO)
                   && options::indent_paren_after_func_decl())
-               || (  pc->parent_type == CT_FUNC_DEF
+               || (  get_chunk_parent_type(pc) == CT_FUNC_DEF
                   && options::indent_paren_after_func_def())
-               || (  (  pc->parent_type == CT_FUNC_CALL
-                     || pc->parent_type == CT_FUNC_CALL_USER)
+               || (  (  get_chunk_parent_type(pc) == CT_FUNC_CALL
+                     || get_chunk_parent_type(pc) == CT_FUNC_CALL_USER)
                   && options::indent_paren_after_func_call())
                || !chunk_is_newline(chunk_get_next(pc))))
          {
@@ -2354,7 +2358,7 @@ void indent_text(void)
             indent_column_set(frm.top().indent);
          }
 
-         if (  pc->parent_type != CT_OC_AT
+         if (  get_chunk_parent_type(pc) != CT_OC_AT
             && options::indent_continue() != 0
             && !skipped)
          {
@@ -2364,7 +2368,7 @@ void indent_text(void)
             if (  pc->level == pc->brace_level
                && (  chunk_is_token(pc, CT_FPAREN_OPEN)
                   || chunk_is_token(pc, CT_SPAREN_OPEN)
-                  || (chunk_is_token(pc, CT_SQUARE_OPEN) && pc->parent_type != CT_OC_MSG)
+                  || (chunk_is_token(pc, CT_SQUARE_OPEN) && get_chunk_parent_type(pc) != CT_OC_MSG)
                   || chunk_is_token(pc, CT_ANGLE_OPEN)))     // Issue #1170
             {
                //frm.top().indent += abs(options::indent_continue());
@@ -2526,8 +2530,8 @@ void indent_text(void)
 
                if (  pc->level == pc->brace_level
                   && (  pc->type != CT_ASSIGN
-                     || (  pc->parent_type != CT_FUNC_PROTO
-                        && pc->parent_type != CT_FUNC_DEF)))
+                     || (  get_chunk_parent_type(pc) != CT_FUNC_PROTO
+                        && get_chunk_parent_type(pc) != CT_FUNC_DEF)))
                {
                   if (  (options::use_indent_continue_only_once())
                      && (frm.top().indent_cont)
@@ -2569,7 +2573,7 @@ void indent_text(void)
          }
       }
       else if (  chunk_is_token(pc, CT_RETURN)
-              || (chunk_is_token(pc, CT_THROW) && pc->parent_type == CT_NONE))
+              || (chunk_is_token(pc, CT_THROW) && get_chunk_parent_type(pc) == CT_NONE))
       {
          // don't count returns inside a () or []
          if (pc->level == pc->brace_level)
@@ -2636,9 +2640,9 @@ void indent_text(void)
       {
          /* class indentation is ok already, just need to adjust func */
          /* TODO: make this configurable, obviously.. */
-         if (  pc->parent_type == CT_FUNC_DEF
-            || pc->parent_type == CT_FUNC_PROTO
-            || (pc->parent_type == CT_STRUCT && frm.top().type != CT_CLASS_COLON))
+         if (  get_chunk_parent_type(pc) == CT_FUNC_DEF
+            || get_chunk_parent_type(pc) == CT_FUNC_PROTO
+            || (get_chunk_parent_type(pc) == CT_STRUCT && frm.top().type != CT_CLASS_COLON))
          {
             indent_column_set(frm.top().indent + 4);
          }
@@ -2676,7 +2680,7 @@ void indent_text(void)
 
       if (  options::indent_shift()
          && !pc->flags.test(PCF_IN_ENUM)
-         && pc->parent_type != CT_OPERATOR
+         && get_chunk_parent_type(pc) != CT_OPERATOR
          && pc->type != CT_COMMENT
          && pc->type != CT_COMMENT_CPP
          && pc->type != CT_COMMENT_MULTI
@@ -2830,7 +2834,7 @@ void indent_text(void)
       }
 
       if (  chunk_is_semicolon(pc)
-         || (chunk_is_token(pc, CT_BRACE_OPEN) && pc->parent_type == CT_FUNCTION))
+         || (chunk_is_token(pc, CT_BRACE_OPEN) && get_chunk_parent_type(pc) == CT_FUNCTION))
       {
          vardefcol = 0;
       }
@@ -2887,7 +2891,7 @@ void indent_text(void)
          {
             // no change
          }
-         else if (  pc->parent_type == CT_SQL_EXEC
+         else if (  get_chunk_parent_type(pc) == CT_SQL_EXEC
                  && options::indent_preserve_sql())
          {
             reindent_line(pc, sql_col + (pc->orig_col - sql_orig_col));
@@ -3075,7 +3079,7 @@ void indent_text(void)
          }
          else if (  options::indent_func_throw()
                  && chunk_is_token(pc, CT_THROW)
-                 && pc->parent_type != CT_NONE)
+                 && get_chunk_parent_type(pc) != CT_NONE)
          {
             // indent throw - void GetFoo(void)\n throw()\n { return (m_Foo); }
             indent_column_set(options::indent_func_throw());
@@ -3399,8 +3403,8 @@ static bool is_end_of_assignment(chunk_t *pc, const ParseFrame &frm)
             || chunk_is_token(pc, CT_BRACE_OPEN)
             || chunk_is_token(pc, CT_SPAREN_CLOSE)
             || (  chunk_is_token(pc, CT_SQUARE_OPEN)
-               && pc->parent_type == CT_ASSIGN))
-         && pc->parent_type != CT_CPP_LAMBDA);
+               && get_chunk_parent_type(pc) == CT_ASSIGN))
+         && get_chunk_parent_type(pc) != CT_CPP_LAMBDA);
 }
 
 
@@ -3662,12 +3666,12 @@ void indent_preproc(void)
 
       // Mark as already handled if not region stuff or in column 1
       if (  (  !options::pp_indent_at_level()
-            || (pc->brace_level <= ((pc->parent_type == CT_PP_DEFINE) ? 1 : 0)))
-         && pc->parent_type != CT_PP_REGION
-         && pc->parent_type != CT_PP_ENDREGION)
+            || (pc->brace_level <= ((get_chunk_parent_type(pc) == CT_PP_DEFINE) ? 1 : 0)))
+         && get_chunk_parent_type(pc) != CT_PP_REGION
+         && get_chunk_parent_type(pc) != CT_PP_ENDREGION)
       {
          if (  !options::pp_define_at_level()
-            || pc->parent_type != CT_PP_DEFINE)
+            || get_chunk_parent_type(pc) != CT_PP_DEFINE)
          {
             chunk_flags_set(pc, PCF_DONT_INDENT);
          }

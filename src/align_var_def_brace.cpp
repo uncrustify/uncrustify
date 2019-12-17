@@ -30,13 +30,13 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
    size_t  mygap    = 0;
 
    // Override the span, if this is a struct/union
-   if (start->parent_type == CT_STRUCT || start->parent_type == CT_UNION)
+   if (get_chunk_parent_type(start) == CT_STRUCT || get_chunk_parent_type(start) == CT_UNION)
    {
       myspan   = options::align_var_struct_span();
       mythresh = options::align_var_struct_thresh();
       mygap    = options::align_var_struct_gap();
    }
-   else if (start->parent_type == CT_CLASS)
+   else if (get_chunk_parent_type(start) == CT_CLASS)
    {
       myspan   = options::align_var_class_span();
       mythresh = options::align_var_class_thresh();
@@ -129,7 +129,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
 
             chunk_t *toadd;
 
-            if (  pc->parent_type == CT_OPERATOR
+            if (  get_chunk_parent_type(pc) == CT_OPERATOR
                && options::align_on_operator())
             {
                toadd = chunk_get_prev_ncnl(pc);
@@ -235,7 +235,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
 
          if (!did_this_line)
          {
-            if (  start->parent_type == CT_STRUCT
+            if (  get_chunk_parent_type(start) == CT_STRUCT
                && (as.m_star_style == AlignStack::SS_INCLUDE))
             {
                // we must look after the previous token
