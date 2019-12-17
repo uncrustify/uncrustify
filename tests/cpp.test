@@ -682,6 +682,8 @@
 34165  sp_before_type_brace_init_lst_close-f.cfg  cpp/type_brace_init_lst.cpp
 34166  sp_before_type_brace_init_lst_close-r.cfg  cpp/type_brace_init_lst.cpp
 
+34167 nl_func_call_args_multi_line_ignore_closures.cfg cpp/nl_func_call_args_multi_line_ignore_closures.cpp
+
 34170  empty.cfg                            cpp/i1082.cpp
 34171  empty.cfg                            cpp/i1181.cpp
 34172  space_indent_columns-4.cfg           cpp/i1165.cpp
