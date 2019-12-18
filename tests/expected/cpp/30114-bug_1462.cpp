@@ -2,7 +2,7 @@
 
 template <
 	typename ... Args,
-	typename E = typename std::enable_if<(sizeof...(Args) > = 1), bool>::type
+	typename E = typename std::enable_if<(sizeof...(Args) >= 1), bool>::type
 	>
 void fun1(Args&& ... args)
 {

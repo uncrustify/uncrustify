@@ -1127,9 +1127,17 @@ static void check_template(chunk_t *start)
 
          if ((pc->str[0] == '>') && (pc->len() > 1))
          {
-            LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}\n",
-                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
-            split_off_angle_close(pc);
+            if (pc->str[1] == '=')                         // Issue #1462 and #2565
+            {
+               LOG_FMT(LTEMPL, "%s(%d): do not split '%s' at orig_line %zu, orig_col %zu\n",
+                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+            }
+            else
+            {
+               LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}\n",
+                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+               split_off_angle_close(pc);
+            }
          }
 
          if (pc->type == CT_PAREN_OPEN)
