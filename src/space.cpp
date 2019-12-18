@@ -131,8 +131,8 @@ static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *se
 
    if (second->type != CT_NEWLINE)
    {
-      LOG_FMT(LSPACE, "%s(%d): Spacing: first->orig_line is %zu, first->orig_col is %zu, first->text() is '%s', [%s/%s] <===>\n",
-              __func__, __LINE__, first->orig_line, first->orig_col, first->text(),
+      LOG_FMT(LSPACE, "log_rule(Spacing [line %zu]): first->orig_line is %zu, first->orig_col is %zu, first->text() is '%s', [%s/%s] <===>\n",
+              line, first->orig_line, first->orig_col, first->text(),
               get_token_name(first->type), get_token_name(get_chunk_parent_type(first)));
       LOG_FMT(LSPACE, "   second->orig_line is %zu, second->orig_col is %zu, second->text() '%s', [%s/%s] : rule %s[line %zu]\n",
               second->orig_line, second->orig_col, second->text(),
