@@ -389,3 +389,7 @@
 10009  empty.cfg                            c/return-compound-literal.c
 10010  indent_compound_literal_return-false.cfg c/return-compound-literal.c
 10011  indent_compound_literal_return-true.cfg c/return-compound-literal.c
+
+10012  indent_sparen_extra-8.cfg            c/sparen-indent.c
+10013  empty.cfg                            c/sparen-indent.c
+10014  indent_continue-8.cfg                c/sparen-indent.c

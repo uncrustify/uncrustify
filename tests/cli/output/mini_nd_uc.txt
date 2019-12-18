@@ -284,6 +284,7 @@ indent_macro_brace              = true
 indent_member                   = 0
 indent_member_single            = false
 indent_sing_line_comments       = 0
+indent_sparen_extra             = 0
 indent_relative_single_line_comments = false
 indent_switch_case              = 0
 indent_switch_break_with_case   = false
