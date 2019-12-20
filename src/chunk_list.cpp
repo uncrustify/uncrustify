@@ -541,8 +541,11 @@ chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref)
 void chunk_del(chunk_t *pc)
 {
    chunk_log(pc, "chunk_del(B):");
+   chunk_log(pc, "chunk_del(B-2):");
    g_cl.Pop(pc);
+   chunk_log(pc, "chunk_del(B-3):");
    delete pc;
+   LOG_FMT(LCHUNK, "GUY\n");
 }
 
 
