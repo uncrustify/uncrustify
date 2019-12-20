@@ -11,6 +11,7 @@
 #include "chunk_list.h"
 #include "error_types.h"
 #include "indent.h"
+#include "log_rules.h"
 #include "newlines.h"
 #include "prototypes.h"
 #include "uncrustify.h"
@@ -132,6 +133,7 @@ static void split_for_stmt(chunk_t *start);
 static inline bool is_past_width(chunk_t *pc)
 {
    // allow char to sit at last column by subtracting 1
+   log_rule_B("code_width");
    return((pc->column + pc->len() - 1) > options::code_width());
 }
 
@@ -145,6 +147,8 @@ static void split_before_chunk(chunk_t *pc)
    {
       newline_add_before(pc);
       // reindent needs to include the indent_continue value and was off by one
+      log_rule_B("indent_columns");
+      log_rule_B("indent_continue");
       reindent_line(pc, pc->brace_level * options::indent_columns() +
                     abs(options::indent_continue()) + 1);
       cpd.changes++;
@@ -282,6 +286,8 @@ static void try_split_here(cw_entry &ent, chunk_t *pc)
    LOG_FMT(LSPLIT, "%s(%d):\n", __func__, __LINE__);
 
    // keep common groupings unless ls_code_width
+   log_rule_B("ls_code_width");
+
    if (!options::ls_code_width() && pc_pri >= 20)
    {
       LOG_FMT(LSPLIT, "%s(%d): keep common groupings unless ls_code_width, return\n", __func__, __LINE__);
@@ -352,6 +358,8 @@ static bool split_line(chunk_t *start)
    }
    LOG_FMT(LSPLIT, "%s(%d):\n", __func__, __LINE__);
 
+   log_rule_B("ls_code_width");
+
    if (options::ls_code_width())
    {
    }
@@ -378,6 +386,8 @@ static bool split_line(chunk_t *start)
               && start->flags.test(PCF_IN_FCN_CALL)))
    {
       LOG_FMT(LSPLIT, " ** FUNC SPLIT **\n");
+
+      log_rule_B("ls_func_split_full");
 
       if (options::ls_func_split_full())
       {
@@ -419,6 +429,8 @@ static bool split_line(chunk_t *start)
          try_split_here(ent, pc);
 
          // break at maximum line length
+         log_rule_B("ls_code_width");
+
          if (ent.pc != nullptr && (options::ls_code_width()))
          {
             break;
@@ -446,6 +458,12 @@ static bool split_line(chunk_t *start)
    }
    else
    {
+      log_rule_B("pos_arith");
+      log_rule_B("pos_assign");
+      log_rule_B("pos_compare");
+      log_rule_B("pos_conditional");
+      log_rule_B("pos_bool");
+
       if (  (  (  chunk_is_token(ent.pc, CT_ARITH)
                || chunk_is_token(ent.pc, CT_CARET))
             && (options::pos_arith() & TP_LEAD))
@@ -527,6 +545,7 @@ static void split_for_stmt(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
    // how many semicolons (1 or 2) do we need to find
+   log_rule_B("ls_for_split_full");
    size_t  max_cnt     = options::ls_for_split_full() ? 2 : 1;
    chunk_t *open_paren = nullptr;
    size_t  nl_cnt      = 0;
@@ -737,6 +756,8 @@ static void split_fcn_params(chunk_t *start)
             LOG_FMT(LSPLIT, "%s(%d): cur_width is %d\n",
                     __func__, __LINE__, cur_width);
 
+            log_rule_B("code_width");
+
             if (  ((last_col - 1) > static_cast<int>(options::code_width()))
                || chunk_is_token(pc, CT_FPAREN_CLOSE))
             {
@@ -771,11 +792,16 @@ static void split_fcn_params(chunk_t *start)
       {
          pc = chunk_get_next(prev);
 
+         log_rule_B("indent_paren_nl");
+
          if (!options::indent_paren_nl())
          {
+            log_rule_B("indent_columns");
             min_col = pc->brace_level * options::indent_columns() + 1;
             LOG_FMT(LSPLIT, "%s(%d): min_col is %zu\n",
                     __func__, __LINE__, min_col);
+
+            log_rule_B("indent_continue");
 
             if (options::indent_continue() == 0)
             {
@@ -838,8 +864,11 @@ static void split_template(chunk_t *start)
       newline_add_before(pc);
       size_t  min_col = 1;
 
+      log_rule_B("indent_continue");
+
       if (options::indent_continue() == 0)
       {
+         log_rule_B("indent_columns");
          min_col += options::indent_columns();
       }
       else

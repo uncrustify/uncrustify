@@ -14,6 +14,7 @@
 #include "chunk_list.h"
 #include "keywords.h"
 #include "language_tools.h"
+#include "log_rules.h"
 #include "prototypes.h"
 #include "punctuators.h"
 #include "unc_ctype.h"
@@ -111,6 +112,7 @@ struct tok_ctx
          switch (ch)
          {
          case '\t':
+            log_rule_B("input_tab_size");
             c.col = calc_next_tab_column(c.col, options::input_tab_size());
             break;
 
@@ -675,6 +677,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 
    if (cpd.unc_off)
    {
+      log_rule_B("enable_processing_cmt");
       const auto &ontext = options::enable_processing_cmt();
 
       if (!ontext.empty() && pc.str.find(ontext.c_str()) >= 0)
@@ -686,6 +689,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
    }
    else
    {
+      log_rule_B("disable_processing_cmt");
       const auto &offtext = options::disable_processing_cmt();
 
       if (!offtext.empty() && pc.str.find(offtext.c_str()) >= 0)
@@ -1062,8 +1066,11 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
 
 static bool parse_string(tok_ctx &ctx, chunk_t &pc, size_t quote_idx, bool allow_escape)
 {
-   size_t escape_char        = options::string_escape_char();
-   size_t escape_char2       = options::string_escape_char2();
+   log_rule_B("string_escape_char");
+   size_t escape_char = options::string_escape_char();
+   log_rule_B("string_escape_char2");
+   size_t escape_char2 = options::string_escape_char2();
+   log_rule_B("string_replace_tab_chars");
    bool   should_escape_tabs = (  options::string_replace_tab_chars()
                                && language_is_set(LANG_ALLC));
 
@@ -1216,6 +1223,7 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
    std::stack<CsStringParseState> parseState; // each entry is a nested string
    parseState.push(CsStringParseState(stringType));
 
+   log_rule_B("string_replace_tab_chars");
    bool should_escape_tabs = options::string_replace_tab_chars();
 
    while (ctx.more())
@@ -1274,6 +1282,7 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
             {
                cpd.warned_unable_string_replace_tab_chars = true;
 
+               log_rule_B("warn_level_tabs_found_in_verbatim_string_literals");
                log_sev_t warnlevel = (log_sev_t)options::warn_level_tabs_found_in_verbatim_string_literals();
 
                /*
@@ -1514,6 +1523,8 @@ static bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
       {
          set_chunk_type(&pc, CT_MACRO);
 
+         log_rule_B("pp_ignore_define_body");
+
          if (options::pp_ignore_define_body())
          {
             /*
@@ -1730,6 +1741,7 @@ static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc)
          break;
 
       case '\t':
+         log_rule_B("input_tab_size");
          pc.orig_prev_sp += calc_next_tab_column(cpd.column, options::input_tab_size()) - cpd.column;
          break;
 
@@ -1872,6 +1884,7 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
       return(false);
    }
    // Note that we aren't actually making sure this is in a comment, yet
+   log_rule_B("enable_processing_cmt");
    const auto &ontext = options::enable_processing_cmt();
 
    if (!ontext.empty() && pc.str.find(ontext.c_str()) < 0)
@@ -2449,6 +2462,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
                  && chunk_is_token(pc, CT_PAREN_CLOSE)
                  && options::pp_ignore_define_body())
          {
+            log_rule_B("pp_ignore_define_body");
             // When we have a PAREN_CLOSE in a PP_DEFINE we should be terminating a MACRO_FUNC
             // arguments list. Therefore we can enter the PP_IGNORE state and ignore next chunks.
             cpd.in_preproc = CT_PP_IGNORE;
@@ -2482,8 +2496,9 @@ void tokenize(const deque<int> &data, chunk_t *ref)
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type), pc->orig_col_end);
       }
    }
-
    // Set the cpd.newline string for this file
+   log_rule_B("newlines");
+
    if (  options::newlines() == LE_LF
       || (  options::newlines() == LE_AUTO
          && (LE_COUNT(LF) >= LE_COUNT(CRLF))

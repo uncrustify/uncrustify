@@ -11,6 +11,7 @@
 
 #include "align_stack.h"
 #include "chunk_list.h"
+#include "log_rules.h"
 
 using namespace uncrustify;
 
@@ -21,9 +22,12 @@ void align_typedefs(size_t span)
 
    AlignStack as;
    as.Start(span);
-   as.m_gap        = options::align_typedef_gap();
+   log_rule_B("align_typedef_gap");
+   as.m_gap = options::align_typedef_gap();
+   log_rule_B("align_typedef_star_style");
    as.m_star_style = static_cast<AlignStack::StarStyle>(options::align_typedef_star_style());
-   as.m_amp_style  = static_cast<AlignStack::StarStyle>(options::align_typedef_amp_style());
+   log_rule_B("align_typedef_amp_style");
+   as.m_amp_style = static_cast<AlignStack::StarStyle>(options::align_typedef_amp_style());
 
    chunk_t *c_typedef = nullptr;
    chunk_t *pc        = chunk_get_head();

@@ -27,6 +27,7 @@
 #include "indent.h"
 #include "keywords.h"
 #include "language_tools.h"
+#include "log_rules.h"
 #include "options.h"
 #include "prototypes.h"
 #include "space.h"
@@ -39,18 +40,6 @@
 #include <cstdlib>
 #include <cstring>
 
-
-#define log_rule(rule)                    \
-   do { if (log_sev_on(LSPACE)) {         \
-           log_rule2(__LINE__, (rule)); } \
-   } while (0)
-
-
-static void log_rule2(size_t line, const char *rule)
-{
-   LOG_FMT(LSPACE, "log_rule(Newline): rule is '%s' at line %zu\n",
-           rule, line);
-}
 
 using namespace std;
 using namespace uncrustify;
@@ -346,13 +335,13 @@ static bool can_increase_nl(chunk_t *nl)
 
    if (options::nl_squeeze_ifdef())
    {
-      log_rule("nl_squeeze_ifdef");
+      log_rule_B("nl_squeeze_ifdef");
 
       if (  chunk_is_token(prev, CT_PREPROC)
          && get_chunk_parent_type(prev) == CT_PP_ENDIF
          && (prev->level > 0 || options::nl_squeeze_ifdef_top_level()))
       {
-         log_rule("nl_squeeze_ifdef_top_level");
+         log_rule_B("nl_squeeze_ifdef_top_level");
          LOG_FMT(LBLANKD, "%s(%d): nl_squeeze_ifdef %zu (prev) pp_lvl=%zu rv=0\n",
                  __func__, __LINE__, nl->orig_line, nl->pp_level);
          return(false);
@@ -362,7 +351,6 @@ static bool can_increase_nl(chunk_t *nl)
          && get_chunk_parent_type(next) == CT_PP_ENDIF
          && (next->level > 0 || options::nl_squeeze_ifdef_top_level()))
       {
-         log_rule("nl_squeeze_ifdef_top_level");
          bool rv = ifdef_over_whole_file() && next->flags.test(PCF_WF_ENDIF);
          LOG_FMT(LBLANKD, "%s(%d): nl_squeeze_ifdef %zu (next) pp_lvl=%zu rv=%d\n",
                  __func__, __LINE__, nl->orig_line, nl->pp_level, rv);
@@ -374,7 +362,7 @@ static bool can_increase_nl(chunk_t *nl)
    {
       if (options::nl_inside_namespace() && get_chunk_parent_type(next) == CT_NAMESPACE)
       {
-         log_rule("nl_inside_namespace");
+         log_rule_B("nl_inside_namespace");
          LOG_FMT(LBLANKD, "%s(%d): nl_inside_namespace %zu\n",
                  __func__, __LINE__, nl->orig_line);
          return(true);
@@ -382,6 +370,7 @@ static bool can_increase_nl(chunk_t *nl)
 
       if (options::eat_blanks_before_close_brace())
       {
+         log_rule_B("eat_blanks_before_close_brace");
          LOG_FMT(LBLANKD, "%s(%d): eat_blanks_before_close_brace %zu\n",
                  __func__, __LINE__, nl->orig_line);
          return(false);
@@ -392,7 +381,7 @@ static bool can_increase_nl(chunk_t *nl)
    {
       if (options::nl_inside_namespace() && get_chunk_parent_type(prev) == CT_NAMESPACE)
       {
-         log_rule("nl_inside_namespace");
+         log_rule_B("nl_inside_namespace");
          LOG_FMT(LBLANKD, "%s(%d): nl_inside_namespace %zu\n",
                  __func__, __LINE__, nl->orig_line);
          return(true);
@@ -400,22 +389,23 @@ static bool can_increase_nl(chunk_t *nl)
 
       if (options::eat_blanks_after_open_brace())
       {
+         log_rule_B("eat_blanks_after_open_brace");
          LOG_FMT(LBLANKD, "%s(%d): eat_blanks_after_open_brace %zu\n",
                  __func__, __LINE__, nl->orig_line);
          return(false);
       }
    }
+   log_rule_B("nl_start_of_file");
 
    if (!pcmt && (options::nl_start_of_file() != IARF_IGNORE))
    {
-      log_rule("nl_start_of_file");
       LOG_FMT(LBLANKD, "%s(%d): SOF no prev %zu\n", __func__, __LINE__, nl->orig_line);
       return(false);
    }
+   log_rule_B("nl_end_of_file");
 
    if (!next && (options::nl_end_of_file() != IARF_IGNORE))
    {
-      log_rule("nl_end_of_file");
       LOG_FMT(LBLANKD, "%s(%d): EOF no next %zu\n", __func__, __LINE__, nl->orig_line);
       return(false);
    }
@@ -856,14 +846,14 @@ void newlines_sparens()
       // https://index.ros.org/doc/ros2/Contributing/Developer-Guide/#open-versus-cuddled-braces
       if (is_multiline)
       {
+         log_rule_B("nl_multi_line_sparen_open");
          newline_iarf(sparen_open, options::nl_multi_line_sparen_open());
-         log_rule("nl_multi_line_sparen_open");
       }
 
       // Add a newline before ')' if an if/for/while/switch condition spans multiple lines. Overrides nl_before_if_closing_paren if both are specified.
       if (is_multiline && options::nl_multi_line_sparen_close() != IARF_IGNORE)
       {
-         log_rule("nl_multi_line_sparen_close");
+         log_rule_B("nl_multi_line_sparen_close");
          newline_iarf(sparen_content_end, options::nl_multi_line_sparen_close());
       }
       else
@@ -873,8 +863,8 @@ void newlines_sparens()
 
          if (ctrl_structure->type == CT_IF || ctrl_structure->type == CT_ELSEIF)
          {
+            log_rule_B("nl_before_if_closing_paren");
             newline_iarf_pair(sparen_content_end, sparen_close, options::nl_before_if_closing_paren());
-            log_rule("nl_before_if_closing_paren");
          }
       }
    }
@@ -885,11 +875,12 @@ static bool newlines_if_for_while_switch(chunk_t *start, iarf_e nl_opt)
 {
    LOG_FUNC_ENTRY();
 
+   log_rule_B("nl_define_macro");
+
    if (  nl_opt == IARF_IGNORE
       || (  start->flags.test(PCF_IN_PREPROC)
          && !options::nl_define_macro()))
    {
-      log_rule("nl_define_macro");
       return(false);
    }
    bool    retval = false;
@@ -904,10 +895,10 @@ static bool newlines_if_for_while_switch(chunk_t *start, iarf_e nl_opt)
             || chunk_is_token(brace_open, CT_VBRACE_OPEN))
          && one_liner_nl_ok(brace_open))
       {
+         log_rule_B("nl_multi_line_cond");
+
          if (options::nl_multi_line_cond())
          {
-            log_rule("nl_multi_line_cond");
-
             while ((pc = chunk_get_next(pc)) != close_paren)
             {
                if (chunk_is_newline(pc))
@@ -958,11 +949,12 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e 
    LOG_FMT(LNEWLINE, "%s(%d): start->text() is '%s', type is %s, orig_line is %zu, orig_column is %zu\n",
            __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line, start->orig_col);
 
+   log_rule_B("nl_define_macro");
+
    if (  nl_opt == IARF_IGNORE
       || (  start->flags.test(PCF_IN_PREPROC)
          && !options::nl_define_macro()))
    {
-      log_rule("nl_define_macro");
       return;
    }
    chunk_t *prev;
@@ -1092,14 +1084,15 @@ bool do_it_newlines_func_pre_blank_lines(chunk_t *last_nl, c_token_t start_type)
    {
    case CT_FUNC_CLASS_DEF:
    {
+      log_rule_B("nl_before_func_class_def");
       bool diff = options::nl_before_func_class_def() <= last_nl->nl_count;
-      log_rule("nl_before_func_class_def");
       LOG_FMT(LNLFUNCT, "%s(%d): is %s\n",
               __func__, __LINE__, diff ? "TRUE" : "FALSE");
 
+      log_rule_B("nl_before_func_class_def");
+
       if (options::nl_before_func_class_def() != last_nl->nl_count)
       {
-         log_rule("nl_before_func_class_def");
          LOG_FMT(LNLFUNCT, "%s(%d):   set blank line(s) to %u\n",
                  __func__, __LINE__, options::nl_before_func_class_def());
          blank_line_set(last_nl, options::nl_before_func_class_def);
@@ -1109,14 +1102,15 @@ bool do_it_newlines_func_pre_blank_lines(chunk_t *last_nl, c_token_t start_type)
 
    case CT_FUNC_CLASS_PROTO:
    {
+      log_rule_B("nl_before_func_class_proto");
       bool diff = options::nl_before_func_class_proto() <= last_nl->nl_count;
-      log_rule("nl_before_func_class_proto");
       LOG_FMT(LNLFUNCT, "%s(%d): is %s\n",
               __func__, __LINE__, diff ? "TRUE" : "FALSE");
 
+      log_rule_B("nl_before_func_class_proto");
+
       if (options::nl_before_func_class_proto() != last_nl->nl_count)
       {
-         log_rule("nl_before_func_class_proto");
          LOG_FMT(LNLFUNCT, "%s(%d):   set blank line(s) to %u\n",
                  __func__, __LINE__, options::nl_before_func_class_proto());
          blank_line_set(last_nl, options::nl_before_func_class_proto);
@@ -1128,39 +1122,40 @@ bool do_it_newlines_func_pre_blank_lines(chunk_t *last_nl, c_token_t start_type)
    {
       LOG_FMT(LNLFUNCT, "%s(%d): nl_before_func_body_def() is %u, last_nl->nl_count is %zu\n",
               __func__, __LINE__, options::nl_before_func_body_def(), last_nl->nl_count);
+      log_rule_B("nl_before_func_body_def");
       bool diff = options::nl_before_func_body_def() <= last_nl->nl_count;
-      log_rule("nl_before_func_body_def");
       LOG_FMT(LNLFUNCT, "%s(%d): is %s\n",
               __func__, __LINE__, diff ? "TRUE" : "FALSE");
 
+      log_rule_B("nl_before_func_body_def");
+
       if (options::nl_before_func_body_def() != last_nl->nl_count)
       {
-         log_rule("nl_before_func_body_def");
          LOG_FMT(LNLFUNCT, "%s(%d):    set blank line(s) to %u\n",
                  __func__, __LINE__, options::nl_before_func_body_def());
+         log_rule_B("nl_before_func_body_def");
          blank_line_set(last_nl, options::nl_before_func_body_def);
-         log_rule("nl_before_func_body_def");
       }
       LOG_FMT(LNLFUNCT, "%s(%d): nl_before_func_body_def() is %u, last_nl->nl_count is %zu\n",
               __func__, __LINE__, options::nl_before_func_body_def(), last_nl->nl_count);
-      log_rule("nl_before_func_body_def");
       return(diff);
    }
 
    case CT_FUNC_PROTO:
    {
+      log_rule_B("nl_before_func_body_proto");
       bool diff = options::nl_before_func_body_proto() <= last_nl->nl_count;
-      log_rule("nl_before_func_body_proto");
       LOG_FMT(LNLFUNCT, "%s(%d): is %s\n",
               __func__, __LINE__, diff ? "TRUE" : "FALSE");
 
+      log_rule_B("nl_before_func_body_proto");
+
       if (options::nl_before_func_body_proto() != last_nl->nl_count)
       {
-         log_rule("nl_before_func_body_proto");
          LOG_FMT(LNLFUNCT, "%s(%d):   set blank line(s) to %u\n",
                  __func__, __LINE__, options::nl_before_func_body_proto());
+         log_rule_B("nl_before_func_body_proto");
          blank_line_set(last_nl, options::nl_before_func_body_proto);
-         log_rule("nl_before_func_body_proto");
       }
       return(diff);
    }
@@ -1179,6 +1174,11 @@ static void newlines_func_pre_blank_lines(chunk_t *start, c_token_t start_type)
 {
    LOG_FUNC_ENTRY();
 
+   log_rule_B("nl_before_func_class_def");
+   log_rule_B("nl_before_func_class_proto");
+   log_rule_B("nl_before_func_body_def");
+   log_rule_B("nl_before_func_body_proto");
+
    if (  start == nullptr
       || (  (  start_type != CT_FUNC_CLASS_DEF
             || options::nl_before_func_class_def() == 0)
@@ -1189,10 +1189,6 @@ static void newlines_func_pre_blank_lines(chunk_t *start, c_token_t start_type)
          && (  start_type != CT_FUNC_PROTO
             || options::nl_before_func_body_proto() == 0)))
    {
-      log_rule("nl_before_func_class_def");
-      log_rule("nl_before_func_class_proto");
-      log_rule("nl_before_func_body_def");
-      log_rule("nl_before_func_body_proto");
       return;
    }
    LOG_FMT(LNLFUNCT, "%s(%d):    set blank line(s): for <NL> at line %zu, column %zu, start_type is %s\n",
@@ -1362,11 +1358,12 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
    LOG_FMT(LNEWLINE, "%s(%d): start->text() is '%s', type is %s, orig_line is %zu, orig_column is %zu\n",
            __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line, start->orig_col);
 
+   log_rule_B("nl_define_macro");
+
    if (  nl_opt == IARF_IGNORE
       || (  start->flags.test(PCF_IN_PREPROC)
          && !options::nl_define_macro()))
    {
-      log_rule("nl_define_macro");
       return;
    }
 
@@ -1566,12 +1563,12 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
                {
                   LOG_FMT(LNEWLINE, "%s(%d): no next found: <EOF>\n", __func__, __LINE__);
                }
+               log_rule_B("nl_squeeze_ifdef");
 
                if (  chunk_is_token(pc, CT_PREPROC)
                   && get_chunk_parent_type(pc) == CT_PP_ENDIF
                   && options::nl_squeeze_ifdef())
                {
-                  log_rule("nl_squeeze_ifdef");
                   LOG_FMT(LNEWLINE, "%s(%d): cannot add newline after orig_line %zu due to nl_squeeze_ifdef\n",
                           __func__, __LINE__, prev->orig_line);
                }
@@ -1593,11 +1590,12 @@ static void newlines_struct_union(chunk_t *start, iarf_e nl_opt, bool leave_trai
    LOG_FUNC_ENTRY();
    chunk_t *pc;
 
+   log_rule_B("nl_define_macro");
+
    if (  nl_opt == IARF_IGNORE
       || (  start->flags.test(PCF_IN_PREPROC)
          && !options::nl_define_macro()))
    {
-      log_rule("nl_define_macro");
       return;
    }
    /*
@@ -1660,9 +1658,10 @@ static void newlines_enum(chunk_t *start)
    chunk_t *pcType2;
    iarf_e  nl_opt;
 
+   log_rule_B("nl_define_macro");
+
    if (start->flags.test(PCF_IN_PREPROC) && !options::nl_define_macro())
    {
-      log_rule("nl_define_macro");
       return;
    }
    // look for 'enum class'
@@ -1670,36 +1669,36 @@ static void newlines_enum(chunk_t *start)
 
    if (chunk_is_token(pcClass, CT_ENUM_CLASS))
    {
+      log_rule_B("nl_enum_class");
       newline_iarf_pair(start, pcClass, options::nl_enum_class());
-      log_rule("nl_enum_class");
       // look for 'identifier'/ 'type'
       pcType = chunk_get_next_ncnl(pcClass);
 
       if (chunk_is_token(pcType, CT_TYPE))
       {
+         log_rule_B("nl_enum_class_identifier");
          newline_iarf_pair(pcClass, pcType, options::nl_enum_class_identifier());
-         log_rule("nl_enum_class_identifier");
          // look for ':'
          pcColon = chunk_get_next_ncnl(pcType);
 
          if (chunk_is_token(pcColon, CT_BIT_COLON))
          {
+            log_rule_B("nl_enum_identifier_colon");
             newline_iarf_pair(pcType, pcColon, options::nl_enum_identifier_colon());
-            log_rule("nl_enum_identifier_colon");
             // look for 'type' i.e. unsigned
             pcType1 = chunk_get_next_ncnl(pcColon);
 
             if (chunk_is_token(pcType1, CT_TYPE))
             {
+               log_rule_B("nl_enum_colon_type");
                newline_iarf_pair(pcColon, pcType1, options::nl_enum_colon_type());
-               log_rule("nl_enum_colon_type");
                // look for 'type' i.e. int
                pcType2 = chunk_get_next_ncnl(pcType1);
 
                if (chunk_is_token(pcType2, CT_TYPE))
                {
+                  log_rule_B("nl_enum_colon_type");
                   newline_iarf_pair(pcType1, pcType2, options::nl_enum_colon_type());
-                  log_rule("nl_enum_colon_type");
                }
             }
          }
@@ -1741,8 +1740,8 @@ static void newlines_enum(chunk_t *start)
       }
       else
       {
+         log_rule_B("nl_enum_brace");
          nl_opt = options::nl_enum_brace();
-         log_rule("nl_enum_brace");
       }
       newline_iarf_pair(start, pc, nl_opt);
    }
@@ -1755,15 +1754,16 @@ static void newlines_enum(chunk_t *start)
 static void newlines_namespace(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
+   log_rule_B("nl_namespace_brace");
    iarf_e nl_opt = options::nl_namespace_brace();
-   log_rule("nl_namespace_brace");
    // Add or remove newline between 'namespace' and '{'.
+
+   log_rule_B("nl_define_macro");
 
    if (  nl_opt == IARF_IGNORE
       || (  start->flags.test(PCF_IN_PREPROC)
          && !options::nl_define_macro()))
    {
-      log_rule("nl_define_macro");
       return;
    }
    chunk_t *braceOpen = chunk_get_next_type(start, CT_BRACE_OPEN, start->level);
@@ -1790,9 +1790,10 @@ static void newlines_cuddle_uncuddle(chunk_t *start, iarf_e nl_opt)
    LOG_FUNC_ENTRY();
    chunk_t *br_close;
 
+   log_rule_B("nl_define_macro");
+
    if (start->flags.test(PCF_IN_PREPROC) && !options::nl_define_macro())
    {
-      log_rule("nl_define_macro");
       return;
    }
    br_close = chunk_get_prev_ncnlni(start);   // Issue #2279
@@ -1809,11 +1810,12 @@ static void newlines_do_else(chunk_t *start, iarf_e nl_opt)
    LOG_FUNC_ENTRY();
    chunk_t *next;
 
+   log_rule_B("nl_define_macro");
+
    if (  nl_opt == IARF_IGNORE
       || (  start->flags.test(PCF_IN_PREPROC)
          && !options::nl_define_macro()))
    {
-      log_rule("nl_define_macro");
       return;
    }
    next = chunk_get_next_ncnl(start);
@@ -1970,38 +1972,40 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
          if (chunk_is_token(pc, CT_TYPEDEF))
          {
             // set newlines before typedef block
+            log_rule_B("nl_typedef_blk_start");
+
             if (  !typedef_blk
                && prev != nullptr
                && options::nl_typedef_blk_start() > 0)
             {
-               log_rule("nl_typedef_blk_start");
                newline_min_after(prev, options::nl_typedef_blk_start(), PCF_VAR_DEF);
             }
             // set newlines within typedef block
             else if (  typedef_blk
                     && (options::nl_typedef_blk_in() > 0))
             {
-               log_rule("nl_typedef_blk_in");
+               log_rule_B("nl_typedef_blk_in");
                prev = chunk_get_prev(pc);
 
                if (chunk_is_newline(prev))
                {
+                  log_rule_B("nl_typedef_blk_in");
+
                   if (prev->nl_count > options::nl_typedef_blk_in())
                   {
-                     log_rule("nl_typedef_blk_in");
                      prev->nl_count = options::nl_typedef_blk_in();
                      MARK_CHANGE();
                   }
                }
             }
-
             // set blank lines after first var def block
+            log_rule_B("nl_func_var_def_blk");
+
             if (  var_blk
                && first_var_blk
                && fn_top
                && (options::nl_func_var_def_blk() > 0))
             {
-               log_rule("nl_func_var_def_blk");
                LOG_FMT(LBLANKD, "%s(%d): nl_func_var_def_blk %zu\n",
                        __func__, __LINE__, prev->orig_line);
                newline_min_after(prev, 1 + options::nl_func_var_def_blk(), PCF_VAR_DEF);
@@ -2010,7 +2014,7 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
             else if (  var_blk
                     && options::nl_var_def_blk_end() > 0)
             {
-               log_rule("nl_var_def_blk_end");
+               log_rule_B("nl_var_def_blk_end");
                newline_min_after(prev, options::nl_var_def_blk_end(), PCF_VAR_DEF);
             }
             pc            = chunk_get_next_type(pc, CT_SEMICOLON, pc->level);
@@ -2021,24 +2025,26 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
          else if (is_var_def(pc, next))
          {
             // set newlines before var def block
+            log_rule_B("nl_var_def_blk_start");
+
             if (  !var_blk
                && !first_var_blk
                && options::nl_var_def_blk_start() > 0)
             {
-               log_rule("nl_var_def_blk_start");
                newline_min_after(prev, options::nl_var_def_blk_start(), PCF_VAR_DEF);
             }
             // set newlines within var def block
             else if (var_blk && (options::nl_var_def_blk_in() > 0))
             {
-               log_rule("nl_var_def_blk_in");
+               log_rule_B("nl_var_def_blk_in");
                prev = chunk_get_prev(pc);
 
                if (chunk_is_newline(prev))
                {
+                  log_rule_B("nl_var_def_blk_in");
+
                   if (prev->nl_count > options::nl_var_def_blk_in())
                   {
-                     log_rule("nl_var_def_blk_in");
                      prev->nl_count = options::nl_var_def_blk_in();
                      MARK_CHANGE();
                   }
@@ -2048,7 +2054,7 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
             else if (  typedef_blk
                     && (options::nl_typedef_blk_end() > 0))
             {
-               log_rule("nl_typedef_blk_end");
+               log_rule_B("nl_typedef_blk_end");
                newline_min_after(prev, options::nl_typedef_blk_end(), PCF_VAR_DEF);
             }
             pc          = chunk_get_next_type(pc, CT_SEMICOLON, pc->level);
@@ -2058,28 +2064,29 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
          else
          {
             // set newlines after typedef block
+            log_rule_B("nl_var_def_blk_end");
+
             if (typedef_blk && (options::nl_var_def_blk_end() > 0))
             {
-               log_rule("nl_var_def_blk_end");
                newline_min_after(prev, options::nl_var_def_blk_end(), PCF_VAR_DEF);
             }
-
             // set blank lines after first var def block
+            log_rule_B("nl_func_var_def_blk");
+
             if (  var_blk
                && first_var_blk
                && fn_top
                && (options::nl_func_var_def_blk() > 0))
             {
-               log_rule("nl_func_var_def_blk");
                LOG_FMT(LBLANKD, "%s(%d): nl_func_var_def_blk %zu\n",
                        __func__, __LINE__, prev->orig_line);
+               log_rule_B("nl_func_var_def_blk");
                newline_min_after(prev, 1 + options::nl_func_var_def_blk(), PCF_VAR_DEF);
-               log_rule("nl_func_var_def_blk");
             }
             // set newlines after var def block
             else if (var_blk && (options::nl_var_def_blk_end() > 0))
             {
-               log_rule("nl_var_def_blk_end");
+               log_rule_B("nl_var_def_blk_end");
                newline_min_after(prev, options::nl_var_def_blk_end(), PCF_VAR_DEF);
             }
             typedef_blk   = false;
@@ -2096,10 +2103,11 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
 
 static bool collapse_empty_body(chunk_t *br_open)
 {
+   log_rule_B("nl_collapse_empty_body");
+
    if (  !options::nl_collapse_empty_body()
       || !chunk_is_token(chunk_get_next_nnl(br_open), CT_BRACE_CLOSE))
    {
-      log_rule("nl_collapse_empty_body");
       return(false);
    }
 
@@ -2123,9 +2131,10 @@ static void newlines_brace_pair(chunk_t *br_open)
 {
    LOG_FUNC_ENTRY();
 
+   log_rule_B("nl_define_macro");
+
    if (br_open->flags.test(PCF_IN_PREPROC) && !options::nl_define_macro())
    {
-      log_rule("nl_define_macro");
       return;
    }
 
@@ -2140,9 +2149,10 @@ static void newlines_brace_pair(chunk_t *br_open)
       {
          if (are_chunks_in_same_line(br_open, chunk_brace_close))
          {
+            log_rule_B("nl_namespace_two_to_one_liner");
+
             if (options::nl_namespace_two_to_one_liner())
             {
-               log_rule("nl_namespace_two_to_one_liner");
                chunk_t *prev = chunk_get_prev_nnl(br_open);
                newline_del_between(prev, br_open);
             }
@@ -2155,12 +2165,12 @@ static void newlines_brace_pair(chunk_t *br_open)
          }
       }
    }
-
    // fix 1247 oneliner function support - converts 4,3,2  liners to oneliner
+   log_rule_B("nl_create_func_def_one_liner");
+
    if (  get_chunk_parent_type(br_open) == CT_FUNC_DEF
       && options::nl_create_func_def_one_liner())
    {
-      log_rule("nl_create_func_def_one_liner");
       chunk_t *br_close = chunk_skip_to_match(br_open, scope_e::ALL);
       chunk_t *tmp      = chunk_get_prev_ncnlni(br_open);                                 // Issue #2279
 
@@ -2229,8 +2239,8 @@ static void newlines_brace_pair(chunk_t *br_open)
       if (chunk_is_newline(next))
       {
          chunk_t *prev = chunk_get_prev_ncnlni(br_open);   // Issue #2279
+         log_rule_B("nl_assign_brace");
          newline_iarf_pair(prev, br_open, options::nl_assign_brace());
-         log_rule("nl_assign_brace");
       }
    }
 
@@ -2248,8 +2258,8 @@ static void newlines_brace_pair(chunk_t *br_open)
 
       if (get_chunk_parent_type(br_open) == CT_OC_MSG_DECL)
       {
+         log_rule_B("nl_oc_mdef_brace");
          val = options::nl_oc_mdef_brace();
-         log_rule("nl_oc_mdef_brace");
       }
       else
       {
@@ -2258,8 +2268,8 @@ static void newlines_brace_pair(chunk_t *br_open)
             || get_chunk_parent_type(br_open) == CT_OC_CLASS)
          {
             val = iarf_e::NOT_DEFINED;
+            log_rule_B("nl_fdef_brace_cond");
             const iarf_e nl_fdef_brace_cond_v = options::nl_fdef_brace_cond();
-            log_rule("nl_fdef_brace_cond");
 
             if (nl_fdef_brace_cond_v != IARF_IGNORE)
             {
@@ -2273,20 +2283,20 @@ static void newlines_brace_pair(chunk_t *br_open)
 
             if (val == iarf_e::NOT_DEFINED)
             {
+               log_rule_B("nl_fdef_brace");
                val = options::nl_fdef_brace();
-               log_rule("nl_fdef_brace");
             }
          }
          else
          {
+            log_rule_B("nl_property_brace");
+            log_rule_B("nl_cpp_ldef_brace");
+            log_rule_B("nl_fcall_brace");
             val = ((get_chunk_parent_type(br_open) == CT_CS_PROPERTY) ?
                    options::nl_property_brace() :
                    ((get_chunk_parent_type(br_open) == CT_CPP_LAMBDA) ?
                     options::nl_cpp_ldef_brace() :
                     options::nl_fcall_brace()));
-            log_rule("nl_property_brace");
-            log_rule("nl_cpp_ldef_brace");
-            log_rule("nl_fcall_brace");
          }
       }
 
@@ -2320,21 +2330,23 @@ static void newlines_brace_pair(chunk_t *br_open)
             if (  chunk_is_token(prev, CT_TSQUARE)
                && chunk_is_newline(next))
             {
+               log_rule_B("nl_tsquare_brace");
                newline_iarf_pair(prev, br_open, options::nl_tsquare_brace());
-               log_rule("nl_tsquare_brace");
             }
          }
       }
    }
-
    // Eat any extra newlines after the brace open
+   log_rule_B("eat_blanks_after_open_brace");
+
    if (options::eat_blanks_after_open_brace())
    {
       if (chunk_is_newline(next))
       {
+         log_rule_B("nl_inside_namespace");
+
          if (options::nl_inside_namespace() && get_chunk_parent_type(br_open) == CT_NAMESPACE)
          {
-            log_rule("nl_inside_namespace");
             blank_line_set(next, options::nl_inside_namespace);
          }
          else if (next->nl_count > 1)
@@ -2576,11 +2588,12 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av, bool c
 
    if (av & IARF_ADD)
    {
+      log_rule_B("nl_assign_leave_one_liners");
+
       if (  check_nl_assign_leave_one_liners
          && options::nl_assign_leave_one_liners()
          && after->flags.test(PCF_ONE_LINER))
       {
-         log_rule("nl_assign_leave_one_liners");
          return;
       }
       chunk_t *nl = newline_add_between(before, after);
@@ -2624,31 +2637,31 @@ static void newline_func_multi_line(chunk_t *start)
    if (  get_chunk_parent_type(start) == CT_FUNC_DEF
       || get_chunk_parent_type(start) == CT_FUNC_CLASS_DEF)
    {
+      log_rule_B("nl_func_def_start_multi_line");
       add_start = options::nl_func_def_start_multi_line();
-      add_args  = options::nl_func_def_args_multi_line();
-      add_end   = options::nl_func_def_end_multi_line();
-      log_rule("nl_func_def_start_multi_line");
-      log_rule("nl_func_def_args_multi_line");
-      log_rule("nl_func_def_end_multi_line");
+      log_rule_B("nl_func_def_args_multi_line");
+      add_args = options::nl_func_def_args_multi_line();
+      log_rule_B("nl_func_def_end_multi_line");
+      add_end = options::nl_func_def_end_multi_line();
    }
    else if (  get_chunk_parent_type(start) == CT_FUNC_CALL
            || get_chunk_parent_type(start) == CT_FUNC_CALL_USER)
    {
+      log_rule_B("nl_func_call_start_multi_line");
       add_start = options::nl_func_call_start_multi_line();
-      add_args  = options::nl_func_call_args_multi_line();
-      add_end   = options::nl_func_call_end_multi_line();
-      log_rule("nl_func_call_start_multi_line");
-      log_rule("nl_func_call_args_multi_line");
-      log_rule("nl_func_call_end_multi_line");
+      log_rule_B("nl_func_call_args_multi_line");
+      add_args = options::nl_func_call_args_multi_line();
+      log_rule_B("nl_func_call_end_multi_line");
+      add_end = options::nl_func_call_end_multi_line();
    }
    else
    {
+      log_rule_B("nl_func_decl_start_multi_line");
       add_start = options::nl_func_decl_start_multi_line();
-      add_args  = options::nl_func_decl_args_multi_line();
-      add_end   = options::nl_func_decl_end_multi_line();
-      log_rule("nl_func_decl_start_multi_line");
-      log_rule("nl_func_decl_args_multi_line");
-      log_rule("nl_func_decl_end_multi_line");
+      log_rule_B("nl_func_decl_args_multi_line");
+      add_args = options::nl_func_decl_args_multi_line();
+      log_rule_B("nl_func_decl_end_multi_line");
+      add_end = options::nl_func_decl_end_multi_line();
    }
 
    if (  !add_start
@@ -2711,12 +2724,12 @@ static void newline_template(chunk_t *start)
            __func__, __LINE__, start->orig_line, start->orig_col,
            start->text(), get_token_name(start->type), get_token_name(get_chunk_parent_type(start)));
 
+   log_rule_B("nl_template_start");
    bool add_start = options::nl_template_start();
-   log_rule("nl_template_start");
+   log_rule_B("nl_template_args");
    bool add_args = options::nl_template_args();
-   log_rule("nl_template_args");
+   log_rule_B("nl_template_end");
    bool add_end = options::nl_template_end();
-   log_rule("nl_template_end");
 
    if (  !add_start
       && !add_args
@@ -2787,8 +2800,8 @@ static void newline_func_def_or_call(chunk_t *start)
 
    if (is_call)
    {
+      log_rule_B("nl_func_call_paren");
       iarf_e atmp = options::nl_func_call_paren();
-      log_rule("nl_func_call_paren");
 
       if (atmp != IARF_IGNORE)
       {
@@ -2803,8 +2816,8 @@ static void newline_func_def_or_call(chunk_t *start)
 
       if (chunk_is_str(pc, ")", 1))
       {
+         log_rule_B("nl_func_call_paren_empty");
          atmp = options::nl_func_call_paren_empty();
-         log_rule("nl_func_call_paren_empty");
 
          if (atmp != IARF_IGNORE)
          {
@@ -2815,8 +2828,8 @@ static void newline_func_def_or_call(chunk_t *start)
                newline_iarf(prev, atmp);
             }
          }
+         log_rule_B("nl_func_call_empty");
          atmp = options::nl_func_call_empty();
-         log_rule("nl_func_call_empty");
 
          if (atmp != IARF_IGNORE)
          {
@@ -2827,10 +2840,10 @@ static void newline_func_def_or_call(chunk_t *start)
    }
    else
    {
+      log_rule_B("nl_func_def_paren");
+      log_rule_B("nl_func_paren");
       auto atmp = is_def ? options::nl_func_def_paren()
                   : options::nl_func_paren();
-      log_rule("nl_func_def_paren");
-      log_rule("nl_func_paren");
       LOG_FMT(LSPACE, "%s(%d): atmp is %s\n",
               __func__, __LINE__,
               (atmp == IARF_IGNORE) ? "IGNORE" :
@@ -2852,10 +2865,11 @@ static void newline_func_def_or_call(chunk_t *start)
       // Don't split up a function variable
       prev = chunk_is_paren_close(prev) ? nullptr : chunk_get_prev_ncnlni(prev);   // Issue #2279
 
+      log_rule_B("nl_func_class_scope");
+
       if (  chunk_is_token(prev, CT_DC_MEMBER)
          && (options::nl_func_class_scope() != IARF_IGNORE))
       {
-         log_rule("nl_func_class_scope");
          newline_iarf(chunk_get_prev_ncnlni(prev), options::nl_func_class_scope());   // Issue #2279
       }
 
@@ -2875,9 +2889,10 @@ static void newline_func_def_or_call(chunk_t *start)
 
          if (chunk_is_token(prev, CT_DC_MEMBER))
          {
+            log_rule_B("nl_func_scope_name");
+
             if (options::nl_func_scope_name() != IARF_IGNORE)
             {
-               log_rule("nl_func_scope_name");
                newline_iarf(prev, options::nl_func_scope_name());
             }
          }
@@ -2893,30 +2908,31 @@ static void newline_func_def_or_call(chunk_t *start)
                || get_chunk_parent_type(tmp) == CT_FUNC_CLASS_PROTO)
             {
                // proto
+               log_rule_B("nl_func_proto_type_name");
                a = options::nl_func_proto_type_name();
-               log_rule("nl_func_proto_type_name");
             }
             else
             {
                // def
 
+               log_rule_B("nl_func_leave_one_liners");
+
                if (  options::nl_func_leave_one_liners()
                   && brace->flags.test(PCF_ONE_LINER))                 // Issue #1511
                {
-                  log_rule("nl_func_leave_one_liners");
                   a = IARF_IGNORE;
                }
                else
                {
+                  log_rule_B("nl_func_type_name");
                   a = options::nl_func_type_name();
-                  log_rule("nl_func_type_name");
                }
             }
+            log_rule_B("nl_func_type_name_class");
 
             if (  tmp->flags.test(PCF_IN_CLASS)
                && (options::nl_func_type_name_class() != IARF_IGNORE))
             {
-               log_rule("nl_func_type_name_class");
                a = options::nl_func_type_name_class();
             }
 
@@ -2964,19 +2980,19 @@ static void newline_func_def_or_call(chunk_t *start)
 
       if (chunk_is_str(pc, ")", 1))
       {
+         log_rule_B("nl_func_def_empty");
+         log_rule_B("nl_func_decl_empty");
          atmp = is_def ? options::nl_func_def_empty()
                 : options::nl_func_decl_empty();
-         log_rule("nl_func_def_empty");
-         log_rule("nl_func_decl_empty");
 
          if (atmp != IARF_IGNORE)
          {
             newline_iarf(start, atmp);
          }
+         log_rule_B("nl_func_def_paren_empty");
+         log_rule_B("nl_func_paren_empty");
          atmp = is_def ? options::nl_func_def_paren_empty()
                 : options::nl_func_paren_empty();
-         log_rule("nl_func_def_paren_empty");
-         log_rule("nl_func_paren_empty");
 
          if (atmp != IARF_IGNORE)
          {
@@ -3013,38 +3029,38 @@ static void newline_func_def_or_call(chunk_t *start)
          {
             continue;
          } // else:
+         log_rule_B("nl_func_def_args");
+         log_rule_B("nl_func_decl_args");
          newline_iarf(pc, (  get_chunk_parent_type(start) == CT_FUNC_DEF
                           || get_chunk_parent_type(start) == CT_FUNC_CLASS_DEF) ?
                       options::nl_func_def_args() :
                       options::nl_func_decl_args());
-         log_rule("nl_func_def_args");
-         log_rule("nl_func_decl_args");
       }
    }
 
+   log_rule_B("nl_func_def_start");
+   log_rule_B("nl_func_decl_start");
    iarf_e as = is_def ? options::nl_func_def_start() : options::nl_func_decl_start();
-   log_rule("nl_func_def_start");
-   log_rule("nl_func_decl_start");
+   log_rule_B("nl_func_def_end");
+   log_rule_B("nl_func_decl_end");
    iarf_e ae = is_def ? options::nl_func_def_end() : options::nl_func_decl_end();
-   log_rule("nl_func_def_end");
-   log_rule("nl_func_decl_end");
 
    if (comma_count == 0)
    {
       iarf_e atmp;
+      log_rule_B("nl_func_def_start_single");
+      log_rule_B("nl_func_decl_start_single");
       atmp = is_def ? options::nl_func_def_start_single() :
              options::nl_func_decl_start_single();
-      log_rule("nl_func_def_start_single");
-      log_rule("nl_func_decl_start_single");
 
       if (atmp != IARF_IGNORE)
       {
          as = atmp;
       }
+      log_rule_B("nl_func_def_end_single");
+      log_rule_B("nl_func_decl_end_single");
       atmp = is_def ? options::nl_func_def_end_single() :
              options::nl_func_decl_end_single();
-      log_rule("nl_func_def_end_single");
-      log_rule("nl_func_decl_end_single");
 
       if (atmp != IARF_IGNORE)
       {
@@ -3104,9 +3120,10 @@ static void newline_oc_msg(chunk_t *start)
    auto const flags = one_liner ? PCF_ONE_LINER : PCF_NONE;
    flag_series(start, sq_c, flags, PCF_ONE_LINER);
 
+   log_rule_B("nl_oc_msg_leave_one_liner");
+
    if (options::nl_oc_msg_leave_one_liner() && one_liner)
    {
-      log_rule("nl_oc_msg_leave_one_liner");
       return;
    }
 
@@ -3165,102 +3182,103 @@ static bool one_liner_nl_ok(chunk_t *pc)
          || chunk_is_token(pc, CT_VBRACE_OPEN)
          || chunk_is_token(pc, CT_VBRACE_CLOSE)))
    {
+      log_rule_B("nl_class_leave_one_liners");
+
       if (  options::nl_class_leave_one_liners()
          && pc->flags.test(PCF_IN_CLASS))
       {
-         log_rule("nl_class_leave_one_liners");
          LOG_FMT(LNL1LINE, "%s(%d): false (class)\n", __func__, __LINE__);
          return(false);
       }
+      log_rule_B("nl_assign_leave_one_liners");
 
       if (  options::nl_assign_leave_one_liners()
          && get_chunk_parent_type(pc) == CT_ASSIGN)
       {
-         log_rule("nl_assign_leave_one_liners");
          LOG_FMT(LNL1LINE, "%s(%d): false (assign)\n", __func__, __LINE__);
          return(false);
       }
+      log_rule_B("nl_enum_leave_one_liners");
 
       if (  options::nl_enum_leave_one_liners()
          && get_chunk_parent_type(pc) == CT_ENUM)
       {
-         log_rule("nl_enum_leave_one_liners");
          LOG_FMT(LNL1LINE, "%s(%d): false (enum)\n", __func__, __LINE__);
          return(false);
       }
+      log_rule_B("nl_getset_leave_one_liners");
 
       if (  options::nl_getset_leave_one_liners()
          && get_chunk_parent_type(pc) == CT_GETSET)
       {
-         log_rule("nl_getset_leave_one_liners");
          LOG_FMT(LNL1LINE, "%s(%d): false (get/set), a new line may NOT be added\n", __func__, __LINE__);
          return(false);
       }
-
       // Issue #UT-98
+      log_rule_B("nl_cs_property_leave_one_liners");
+
       if (  options::nl_cs_property_leave_one_liners()
          && get_chunk_parent_type(pc) == CT_CS_PROPERTY)
       {
-         log_rule("nl_cs_property_leave_one_liners");
          LOG_FMT(LNL1LINE, "%s(%d): false (c# property), a new line may NOT be added\n", __func__, __LINE__);
          return(false);
       }
+      log_rule_B("nl_func_leave_one_liners");
 
       if (  options::nl_func_leave_one_liners()
          && (  get_chunk_parent_type(pc) == CT_FUNC_DEF
             || get_chunk_parent_type(pc) == CT_FUNC_CLASS_DEF))
       {
-         log_rule("nl_func_leave_one_liners");
          LOG_FMT(LNL1LINE, "%s(%d): false (func def)\n", __func__, __LINE__);
          return(false);
       }
+      log_rule_B("nl_func_leave_one_liners");
 
       if (  options::nl_func_leave_one_liners()
          && get_chunk_parent_type(pc) == CT_OC_MSG_DECL)
       {
-         log_rule("nl_func_leave_one_liners");
          LOG_FMT(LNL1LINE, "%s(%d): false (method def)\n", __func__, __LINE__);
          return(false);
       }
+      log_rule_B("nl_cpp_lambda_leave_one_liners");
 
       if (  options::nl_cpp_lambda_leave_one_liners()
          && ((get_chunk_parent_type(pc) == CT_CPP_LAMBDA)))
       {
-         log_rule("nl_cpp_lambda_leave_one_liners");
          LOG_FMT(LNL1LINE, "%s(%d): false (lambda)\n", __func__, __LINE__);
          return(false);
       }
+      log_rule_B("nl_oc_msg_leave_one_liner");
 
       if (  options::nl_oc_msg_leave_one_liner()
          && pc->flags.test(PCF_IN_OC_MSG))
       {
-         log_rule("nl_oc_msg_leave_one_liner");
          LOG_FMT(LNL1LINE, "%s(%d): false (message)\n", __func__, __LINE__);
          return(false);
       }
+      log_rule_B("nl_if_leave_one_liners");
 
       if (  options::nl_if_leave_one_liners()
          && (  get_chunk_parent_type(pc) == CT_IF
             || get_chunk_parent_type(pc) == CT_ELSEIF
             || get_chunk_parent_type(pc) == CT_ELSE))
       {
-         log_rule("nl_if_leave_one_liners");
          LOG_FMT(LNL1LINE, "%s(%d): false (if/else)\n", __func__, __LINE__);
          return(false);
       }
+      log_rule_B("nl_while_leave_one_liners");
 
       if (  options::nl_while_leave_one_liners()
          && get_chunk_parent_type(pc) == CT_WHILE)
       {
-         log_rule("nl_while_leave_one_liners");
          LOG_FMT(LNL1LINE, "%s(%d): false (while)\n", __func__, __LINE__);
          return(false);
       }
+      log_rule_B("nl_for_leave_one_liners");
 
       if (  options::nl_for_leave_one_liners()
          && get_chunk_parent_type(pc) == CT_FOR)
       {
-         log_rule("nl_for_leave_one_liners");
          LOG_FMT(LNL1LINE, "%s(%d): false (for)\n", __func__, __LINE__);
          return(false);
       }
@@ -3457,146 +3475,149 @@ void newlines_cleanup_braces(bool first)
 
       if (chunk_is_token(pc, CT_IF))
       {
+         log_rule_B("nl_if_brace");
          newlines_if_for_while_switch(pc, options::nl_if_brace());
-         log_rule("nl_if_brace");
       }
       else if (chunk_is_token(pc, CT_ELSEIF))
       {
+         log_rule_B("nl_elseif_brace");
          iarf_e arg = options::nl_elseif_brace();
-         log_rule("nl_elseif_brace");
+         log_rule_B("nl_if_brace");
          newlines_if_for_while_switch(
             pc, (arg != IARF_IGNORE) ? arg : options::nl_if_brace());
-         log_rule("nl_if_brace");
       }
       else if (chunk_is_token(pc, CT_FOR))
       {
+         log_rule_B("nl_for_brace");
          newlines_if_for_while_switch(pc, options::nl_for_brace());
-         log_rule("nl_for_brace");
       }
       else if (chunk_is_token(pc, CT_CATCH))
       {
+         log_rule_B("nl_oc_brace_catch");
+
          if (  language_is_set(LANG_OC)
             && (pc->str[0] == '@')
             && (options::nl_oc_brace_catch() != IARF_IGNORE))
          {
-            log_rule("nl_oc_brace_catch");
             newlines_cuddle_uncuddle(pc, options::nl_oc_brace_catch());
          }
          else
          {
+            log_rule_B("nl_brace_catch");
             newlines_cuddle_uncuddle(pc, options::nl_brace_catch());
-            log_rule("nl_brace_catch");
          }
          next = chunk_get_next_ncnl(pc);
 
          if (chunk_is_token(next, CT_BRACE_OPEN))
          {
+            log_rule_B("nl_oc_catch_brace");
+
             if (  language_is_set(LANG_OC)
                && (options::nl_oc_catch_brace() != IARF_IGNORE))
             {
-               log_rule("nl_oc_catch_brace");
+               log_rule_B("nl_oc_catch_brace");
                newlines_do_else(pc, options::nl_oc_catch_brace());
-               log_rule("nl_oc_catch_brace");
             }
             else
             {
+               log_rule_B("nl_catch_brace");
                newlines_do_else(pc, options::nl_catch_brace());
-               log_rule("nl_catch_brace");
             }
          }
          else
          {
+            log_rule_B("nl_oc_catch_brace");
+
             if (  language_is_set(LANG_OC)
                && (options::nl_oc_catch_brace() != IARF_IGNORE))
             {
-               log_rule("nl_oc_catch_brace");
                newlines_if_for_while_switch(pc, options::nl_oc_catch_brace());
             }
             else
             {
-               log_rule("nl_oc_catch_brace");
+               log_rule_B("nl_oc_catch_brace");
                newlines_if_for_while_switch(pc, options::nl_catch_brace());
             }
          }
       }
       else if (chunk_is_token(pc, CT_WHILE))
       {
+         log_rule_B("nl_while_brace");
          newlines_if_for_while_switch(pc, options::nl_while_brace());
-         log_rule("nl_while_brace");
       }
       else if (chunk_is_token(pc, CT_USING_STMT))
       {
+         log_rule_B("nl_using_brace");
          newlines_if_for_while_switch(pc, options::nl_using_brace());
-         log_rule("nl_using_brace");
       }
       else if (chunk_is_token(pc, CT_D_SCOPE_IF))
       {
+         log_rule_B("nl_scope_brace");
          newlines_if_for_while_switch(pc, options::nl_scope_brace());
-         log_rule("nl_scope_brace");
       }
       else if (chunk_is_token(pc, CT_UNITTEST))
       {
+         log_rule_B("nl_unittest_brace");
          newlines_do_else(pc, options::nl_unittest_brace());
-         log_rule("nl_unittest_brace");
       }
       else if (chunk_is_token(pc, CT_D_VERSION_IF))
       {
+         log_rule_B("nl_version_brace");
          newlines_if_for_while_switch(pc, options::nl_version_brace());
-         log_rule("nl_version_brace");
       }
       else if (chunk_is_token(pc, CT_SWITCH))
       {
+         log_rule_B("nl_switch_brace");
          newlines_if_for_while_switch(pc, options::nl_switch_brace());
-         log_rule("nl_switch_brace");
       }
       else if (chunk_is_token(pc, CT_SYNCHRONIZED))
       {
+         log_rule_B("nl_synchronized_brace");
          newlines_if_for_while_switch(pc, options::nl_synchronized_brace());
-         log_rule("nl_synchronized_brace");
       }
       else if (chunk_is_token(pc, CT_DO))
       {
+         log_rule_B("nl_do_brace");
          newlines_do_else(pc, options::nl_do_brace());
-         log_rule("nl_do_brace");
       }
       else if (chunk_is_token(pc, CT_ELSE))
       {
+         log_rule_B("nl_brace_else");
          newlines_cuddle_uncuddle(pc, options::nl_brace_else());
-         log_rule("nl_brace_else");
          next = chunk_get_next_ncnl(pc);
 
          if (chunk_is_token(next, CT_ELSEIF))
          {
+            log_rule_B("nl_else_if");
             newline_iarf_pair(pc, next, options::nl_else_if());
-            log_rule("nl_else_if");
          }
+         log_rule_B("nl_else_brace");
          newlines_do_else(pc, options::nl_else_brace());
-         log_rule("nl_else_brace");
       }
       else if (chunk_is_token(pc, CT_TRY))
       {
+         log_rule_B("nl_try_brace");
          newlines_do_else(pc, options::nl_try_brace());
-         log_rule("nl_try_brace");
          // Issue #1734
          chunk_t *po = chunk_get_next_ncnl(pc);
          flag_parens(po, PCF_IN_TRY_BLOCK, po->type, CT_NONE, false);
       }
       else if (chunk_is_token(pc, CT_GETSET))
       {
+         log_rule_B("nl_getset_brace");
          newlines_do_else(pc, options::nl_getset_brace());
-         log_rule("nl_getset_brace");
       }
       else if (chunk_is_token(pc, CT_FINALLY))
       {
+         log_rule_B("nl_brace_finally");
          newlines_cuddle_uncuddle(pc, options::nl_brace_finally());
-         log_rule("nl_brace_finally");
+         log_rule_B("nl_finally_brace");
          newlines_do_else(pc, options::nl_finally_brace());
-         log_rule("nl_finally_brace");
       }
       else if (chunk_is_token(pc, CT_WHILE_OF_DO))
       {
+         log_rule_B("nl_brace_while");
          newlines_cuddle_uncuddle(pc, options::nl_brace_while());
-         log_rule("nl_brace_while");
       }
       else if (chunk_is_token(pc, CT_BRACE_OPEN))
       {
@@ -3604,15 +3625,16 @@ void newlines_cleanup_braces(bool first)
          {
          case CT_DOUBLE_BRACE:
          {
+            log_rule_B("nl_paren_dbrace_open");
+
             if (options::nl_paren_dbrace_open() != IARF_IGNORE)
             {
-               log_rule("nl_paren_dbrace_open");
                prev = chunk_get_prev_ncnlni(pc, scope_e::PREPROC);   // Issue #2279
 
                if (chunk_is_paren_close(prev))
                {
+                  log_rule_B("nl_paren_dbrace_open");
                   newline_iarf_pair(prev, pc, options::nl_paren_dbrace_open());
-                  log_rule("nl_paren_dbrace_open");
                }
             }
             break;
@@ -3620,15 +3642,16 @@ void newlines_cleanup_braces(bool first)
 
          case CT_ENUM:
          {
+            log_rule_B("nl_enum_own_lines");
+
             if (options::nl_enum_own_lines() != IARF_IGNORE)
             {
-               log_rule("nl_enum_own_lines");
                newlines_enum_entries(pc, options::nl_enum_own_lines());
             }
+            log_rule_B("nl_ds_struct_enum_cmt");
 
             if (options::nl_ds_struct_enum_cmt())
             {
-               log_rule("nl_ds_struct_enum_cmt");
                newlines_double_space_struct_enum_union(pc);
             }
             break;
@@ -3637,9 +3660,10 @@ void newlines_cleanup_braces(bool first)
          case CT_STRUCT:
          case CT_UNION:
          {
+            log_rule_B("nl_ds_struct_enum_cmt");
+
             if (options::nl_ds_struct_enum_cmt())
             {
-               log_rule("nl_ds_struct_enum_cmt");
                newlines_double_space_struct_enum_union(pc);
             }
             break;
@@ -3649,8 +3673,8 @@ void newlines_cleanup_braces(bool first)
          {
             if (pc->level == pc->brace_level)
             {
+               log_rule_B("nl_class_brace");
                newlines_do_else(chunk_get_prev_nnl(pc), options::nl_class_brace());
-               log_rule("nl_class_brace");
             }
             break;
          }
@@ -3675,13 +3699,13 @@ void newlines_cleanup_braces(bool first)
 
                      if (chunk_is_token(tmp, CT_OC_INTF))
                      {
+                        log_rule_B("nl_oc_interface_brace");
                         newlines_do_else(chunk_get_prev_nnl(pc), options::nl_oc_interface_brace());
-                        log_rule("nl_oc_interface_brace");
                      }
                      else
                      {
+                        log_rule_B("nl_oc_implementation_brace");
                         newlines_do_else(chunk_get_prev_nnl(pc), options::nl_oc_implementation_brace());
-                        log_rule("nl_oc_implementation_brace");
                      }
                      break;
                   }
@@ -3693,22 +3717,23 @@ void newlines_cleanup_braces(bool first)
          case CT_BRACED_INIT_LIST:
          {
             // Issue #1052
+            log_rule_B("nl_create_list_one_liner");
+
             if (options::nl_create_list_one_liner())
             {
-               log_rule("nl_create_list_one_liner");
                nl_create_list_liner(pc);
                break;
             }
+            log_rule_B("nl_type_brace_init_lst");
             newline_iarf_pair(chunk_get_prev_nnl(pc), pc, options::nl_type_brace_init_lst(), true);
-            log_rule("nl_type_brace_init_lst");
             break;
          }
 
          case CT_OC_BLOCK_EXPR:
          {
             // issue # 477
+            log_rule_B("nl_oc_block_brace");
             newline_iarf_pair(chunk_get_prev(pc), pc, options::nl_oc_block_brace());
-            log_rule("nl_oc_block_brace");
             break;
          }
 
@@ -3718,9 +3743,10 @@ void newlines_cleanup_braces(bool first)
          }
          } // switch
 
+         log_rule_B("nl_brace_brace");
+
          if (options::nl_brace_brace() != IARF_IGNORE)
          {
-            log_rule("nl_brace_brace");
             next = chunk_get_next_nc(pc, scope_e::PREPROC);
 
             if (chunk_is_token(next, CT_BRACE_OPEN))
@@ -3749,16 +3775,16 @@ void newlines_cleanup_braces(bool first)
             // Handle unnamed temporary direct-list-initialization
             if (get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST)
             {
+               log_rule_B("nl_type_brace_init_lst_open");
                newline_iarf_pair(pc, chunk_get_next_nnl(pc),
                                  options::nl_type_brace_init_lst_open(), true);
-               log_rule("nl_type_brace_init_lst_open");
             }
             // Handle nl_after_brace_open
             else if (  (  get_chunk_parent_type(pc) == CT_CPP_LAMBDA
                        || pc->level == pc->brace_level)
                     && options::nl_after_brace_open())
             {
-               log_rule("nl_after_brace_open");
+               log_rule_B("nl_after_brace_open");
 
                if (!one_liner_nl_ok(pc))
                {
@@ -3779,10 +3805,11 @@ void newlines_cleanup_braces(bool first)
                   {
                      if (chunk_is_comment(tmp))
                      {
+                        log_rule_B("nl_after_brace_open_cmt");
+
                         if (  !options::nl_after_brace_open_cmt()
                            && tmp->type != CT_COMMENT_MULTI)
                         {
-                           log_rule("nl_after_brace_open_cmt");
                            break;
                         }
                      }
@@ -3793,70 +3820,72 @@ void newlines_cleanup_braces(bool first)
                }
             }
          }
-
          // braced-init-list is more like a function call with arguments,
          // than curly braces that determine a structure of a source code,
          // so, don't add a newline before a closing brace. Issue #1405.
+         log_rule_B("nl_type_brace_init_lst_open");
+         log_rule_B("nl_type_brace_init_lst_close");
+
          if (!(  get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST
               && options::nl_type_brace_init_lst_open() == IARF_IGNORE
               && options::nl_type_brace_init_lst_close() == IARF_IGNORE))
          {
-            log_rule("nl_type_brace_init_lst_open");
-            log_rule("nl_type_brace_init_lst_close");
             newlines_brace_pair(pc);
          }
       }
       else if (chunk_is_token(pc, CT_BRACE_CLOSE))
       {
          // newline between a close brace and x
+         log_rule_B("nl_brace_brace");
+
          if (options::nl_brace_brace() != IARF_IGNORE)
          {
-            log_rule("nl_brace_brace");
             next = chunk_get_next_nc(pc, scope_e::PREPROC);
 
             if (chunk_is_token(next, CT_BRACE_CLOSE))
             {
+               log_rule_B("nl_brace_brace");
                newline_iarf_pair(pc, next, options::nl_brace_brace());
-               log_rule("nl_brace_brace");
             }
          }
+         log_rule_B("nl_brace_square");
 
          if (options::nl_brace_square() != IARF_IGNORE)
          {
-            log_rule("nl_brace_square");
             next = chunk_get_next_nc(pc, scope_e::PREPROC);
 
             if (chunk_is_token(next, CT_SQUARE_CLOSE))
             {
+               log_rule_B("nl_brace_square");
                newline_iarf_pair(pc, next, options::nl_brace_square());
-               log_rule("nl_brace_square");
             }
          }
+         log_rule_B("nl_brace_fparen");
 
          if (options::nl_brace_fparen() != IARF_IGNORE)
          {
-            log_rule("nl_brace_fparen");
             next = chunk_get_next_nc(pc, scope_e::PREPROC);
+
+            log_rule_B("nl_brace_fparen");
 
             if (  chunk_is_token(next, CT_NEWLINE)
                && (options::nl_brace_fparen() == IARF_REMOVE))
             {
-               log_rule("nl_brace_fparen");
                next = chunk_get_next_nc(next, scope_e::PREPROC);  // Issue #1000
             }
 
             if (chunk_is_token(next, CT_FPAREN_CLOSE))
             {
+               log_rule_B("nl_brace_fparen");
                newline_iarf_pair(pc, next, options::nl_brace_fparen());
-               log_rule("nl_brace_fparen");
             }
          }
-
          // newline before a close brace
+         log_rule_B("nl_type_brace_init_lst_close");
+
          if (  get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST
             && options::nl_type_brace_init_lst_close() != IARF_IGNORE)
          {
-            log_rule("nl_type_brace_init_lst_close");
             // Handle unnamed temporary direct-list-initialization
             newline_iarf_pair(chunk_get_prev_nnl(pc), pc,
                               options::nl_type_brace_init_lst_close(), true);
@@ -3870,9 +3899,10 @@ void newlines_cleanup_braces(bool first)
 
             if (chunk_is_newline(prev))
             {
+               log_rule_B("nl_inside_namespace");
+
                if (options::nl_inside_namespace() && get_chunk_parent_type(pc) == CT_NAMESPACE)
                {
-                  log_rule("nl_inside_namespace");
                   blank_line_set(prev, options::nl_inside_namespace);
                }
                else if (prev->nl_count != 1)
@@ -3889,7 +3919,7 @@ void newlines_cleanup_braces(bool first)
                     || get_chunk_parent_type(pc) == CT_STRUCT
                     || get_chunk_parent_type(pc) == CT_UNION))
          {
-            log_rule("nl_ds_struct_enum_close_brace");
+            log_rule_B("nl_ds_struct_enum_close_brace");
 
             if (!pc->flags.test(PCF_ONE_LINER))
             {
@@ -3907,22 +3937,22 @@ void newlines_cleanup_braces(bool first)
                }
             }
          }
-
          // Force a newline after a close brace
+         log_rule_B("nl_brace_struct_var");
+
          if (  (options::nl_brace_struct_var() != IARF_IGNORE)
             && (  get_chunk_parent_type(pc) == CT_STRUCT
                || get_chunk_parent_type(pc) == CT_ENUM
                || get_chunk_parent_type(pc) == CT_UNION))
          {
-            log_rule("nl_brace_struct_var");
             next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
 
-            if (  next
+            if (  next != nullptr
                && next->type != CT_SEMICOLON
                && next->type != CT_COMMA)
             {
+               log_rule_B("nl_brace_struct_var");
                newline_iarf(pc, options::nl_brace_struct_var());
-               log_rule("nl_brace_struct_var");
             }
          }
          else if (  get_chunk_parent_type(pc) != CT_OC_AT
@@ -3932,7 +3962,7 @@ void newlines_cleanup_braces(bool first)
                     || get_chunk_parent_type(pc) == CT_FUNC_DEF
                     || get_chunk_parent_type(pc) == CT_OC_MSG_DECL))
          {
-            log_rule("nl_after_brace_close");
+            log_rule_B("nl_after_brace_close");
             next = chunk_get_next(pc);
 
             if (  next != nullptr
@@ -3957,9 +3987,10 @@ void newlines_cleanup_braces(bool first)
          }
          else if (get_chunk_parent_type(pc) == CT_NAMESPACE)
          {
+            log_rule_B("nl_after_namespace");
+
             if (options::nl_after_namespace() > 0)
             {
-               log_rule("nl_after_namespace");
                next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
 
                if (next)
@@ -3972,25 +4003,27 @@ void newlines_cleanup_braces(bool first)
       }
       else if (chunk_is_token(pc, CT_VBRACE_OPEN))
       {
+         log_rule_B("nl_after_vbrace_open");
+         log_rule_B("nl_after_vbrace_open_empty");
+
          if (  options::nl_after_vbrace_open()
             || options::nl_after_vbrace_open_empty())
          {
-            log_rule("nl_after_vbrace_open");
             next = chunk_get_next(pc, scope_e::PREPROC);
             bool add_it;
 
             if (chunk_is_semicolon(next))
             {
+               log_rule_B("nl_after_vbrace_open_empty");
                add_it = options::nl_after_vbrace_open_empty();
-               log_rule("nl_after_vbrace_open_empty");
             }
             else
             {
+               log_rule_B("nl_after_vbrace_open");
                add_it = (  options::nl_after_vbrace_open()
                         && next->type != CT_VBRACE_CLOSE
                         && !chunk_is_comment(next)
                         && !chunk_is_newline(next));
-               log_rule("nl_after_vbrace_open");
             }
 
             if (add_it)
@@ -3998,6 +4031,9 @@ void newlines_cleanup_braces(bool first)
                newline_iarf(pc, IARF_ADD);
             }
          }
+         log_rule_B("nl_create_if_one_liner");
+         log_rule_B("nl_create_for_one_liner");
+         log_rule_B("nl_create_while_one_liner");
 
          if (  (  (  get_chunk_parent_type(pc) == CT_IF
                   || get_chunk_parent_type(pc) == CT_ELSEIF
@@ -4008,11 +4044,11 @@ void newlines_cleanup_braces(bool first)
             || (  get_chunk_parent_type(pc) == CT_WHILE
                && options::nl_create_while_one_liner()))
          {
-            log_rule("nl_create_if_one_liner");
-            log_rule("nl_create_for_one_liner");
-            log_rule("nl_create_while_one_liner");
             nl_create_one_liner(pc);
          }
+         log_rule_B("nl_split_if_one_liner");
+         log_rule_B("nl_split_for_one_liner");
+         log_rule_B("nl_split_while_one_liner");
 
          if (  (  (  get_chunk_parent_type(pc) == CT_IF
                   || get_chunk_parent_type(pc) == CT_ELSEIF
@@ -4023,10 +4059,6 @@ void newlines_cleanup_braces(bool first)
             || (  get_chunk_parent_type(pc) == CT_WHILE
                && options::nl_split_while_one_liner()))
          {
-            log_rule("nl_split_if_one_liner");
-            log_rule("nl_split_for_one_liner");
-            log_rule("nl_split_while_one_liner");
-
             if (pc->flags.test(PCF_ONE_LINER))
             {
                // split one-liner
@@ -4050,10 +4082,10 @@ void newlines_cleanup_braces(bool first)
       }
       else if (chunk_is_token(pc, CT_VBRACE_CLOSE))
       {
+         log_rule_B("nl_after_vbrace_close");
+
          if (options::nl_after_vbrace_close())
          {
-            log_rule("nl_after_vbrace_close");
-
             if (!chunk_is_newline(chunk_get_next_nc(pc)))
             {
                newline_iarf(pc, IARF_ADD);
@@ -4062,21 +4094,22 @@ void newlines_cleanup_braces(bool first)
       }
       else if (chunk_is_token(pc, CT_SQUARE_OPEN) && get_chunk_parent_type(pc) == CT_OC_MSG)
       {
+         log_rule_B("nl_oc_msg_args");
+
          if (options::nl_oc_msg_args())
          {
-            log_rule("nl_oc_msg_args");
             newline_oc_msg(pc);
          }
       }
       else if (chunk_is_token(pc, CT_STRUCT))
       {
+         log_rule_B("nl_struct_brace");
          newlines_struct_union(pc, options::nl_struct_brace(), true);
-         log_rule("nl_struct_brace");
       }
       else if (chunk_is_token(pc, CT_UNION))
       {
+         log_rule_B("nl_union_brace");
          newlines_struct_union(pc, options::nl_union_brace(), true);
-         log_rule("nl_union_brace");
       }
       else if (chunk_is_token(pc, CT_ENUM))
       {
@@ -4085,9 +4118,10 @@ void newlines_cleanup_braces(bool first)
       else if (chunk_is_token(pc, CT_CASE))
       {
          // Note: 'default' also maps to CT_CASE
+         log_rule_B("nl_before_case");
+
          if (options::nl_before_case())
          {
-            log_rule("nl_before_case");
             newline_case(pc);
          }
       }
@@ -4098,8 +4132,8 @@ void newlines_cleanup_braces(bool first)
          if (  chunk_is_token(prev, CT_PAREN_CLOSE)
             || chunk_is_token(prev, CT_FPAREN_CLOSE))         // Issue #1122
          {
+            log_rule_B("nl_before_throw");
             newline_iarf(chunk_get_prev_ncnlni(pc), options::nl_before_throw());   // Issue #2279
-            log_rule("nl_before_throw");
          }
       }
       else if (  chunk_is_token(pc, CT_QUALIFIER)
@@ -4110,23 +4144,24 @@ void newlines_cleanup_braces(bool first)
          if (  chunk_is_token(prev, CT_PAREN_CLOSE)
             || chunk_is_token(prev, CT_FPAREN_CLOSE))         // Issue #1122
          {
+            log_rule_B("nl_before_throw");
             newline_iarf(chunk_get_prev_ncnlni(pc), options::nl_before_throw());   // Issue #2279
-            log_rule("nl_before_throw");
          }
       }
       else if (chunk_is_token(pc, CT_CASE_COLON))
       {
          next = chunk_get_next_nnl(pc);
 
+         log_rule_B("nl_case_colon_brace");
+
          if (  chunk_is_token(next, CT_BRACE_OPEN)
             && options::nl_case_colon_brace() != IARF_IGNORE)
          {
-            log_rule("nl_case_colon_brace");
             newline_iarf(pc, options::nl_case_colon_brace());
          }
          else if (options::nl_after_case())
          {
-            log_rule("nl_after_case");
+            log_rule_B("nl_after_case");
             newline_case_colon(pc);
          }
       }
@@ -4145,26 +4180,27 @@ void newlines_cleanup_braces(bool first)
       }
       else if (chunk_is_token(pc, CT_RETURN))
       {
+         log_rule_B("nl_before_return");
+
          if (options::nl_before_return())
          {
-            log_rule("nl_before_return");
             newline_before_return(pc);
          }
+         log_rule_B("nl_after_return");
 
          if (options::nl_after_return())
          {
-            log_rule("nl_after_return");
             newline_after_return(pc);
          }
       }
       else if (chunk_is_token(pc, CT_SEMICOLON))
       {
+         log_rule_B("nl_after_semicolon");
+
          if (  !pc->flags.test(PCF_IN_SPAREN)
             && !pc->flags.test(PCF_IN_PREPROC)
             && options::nl_after_semicolon())
          {
-            log_rule("nl_after_semicolon");
-            log_rule("nl_after_semicolon");
             next = chunk_get_next(pc);
 
             while (chunk_is_token(next, CT_VBRACE_CLOSE))
@@ -4189,15 +4225,44 @@ void newlines_cleanup_braces(bool first)
          }
          else if (get_chunk_parent_type(pc) == CT_CLASS)
          {
+            log_rule_B("nl_after_class");
+
             if (options::nl_after_class() > 0)
             {
-               log_rule("nl_after_class");
                newline_iarf(pc, IARF_ADD);
             }
          }
       }
       else if (chunk_is_token(pc, CT_FPAREN_OPEN))
       {
+         log_rule_B("nl_func_decl_start");
+         log_rule_B("nl_func_def_start");
+         log_rule_B("nl_func_decl_start_single");
+         log_rule_B("nl_func_def_start_single");
+         log_rule_B("nl_func_decl_start_multi_line");
+         log_rule_B("nl_func_def_start_multi_line");
+         log_rule_B("nl_func_decl_args");
+         log_rule_B("nl_func_def_args");
+         log_rule_B("nl_func_decl_args_multi_line");
+         log_rule_B("nl_func_def_args_multi_line");
+         log_rule_B("nl_func_decl_end");
+         log_rule_B("nl_func_def_end");
+         log_rule_B("nl_func_decl_end_single");
+         log_rule_B("nl_func_def_end_single");
+         log_rule_B("nl_func_decl_end_multi_line");
+         log_rule_B("nl_func_def_end_multi_line");
+         log_rule_B("nl_func_decl_empty");
+         log_rule_B("nl_func_def_empty");
+         log_rule_B("nl_func_type_name");
+         log_rule_B("nl_func_type_name_class");
+         log_rule_B("nl_func_class_scope");
+         log_rule_B("nl_func_scope_name");
+         log_rule_B("nl_func_proto_type_name");
+         log_rule_B("nl_func_paren");
+         log_rule_B("nl_func_def_paren");
+         log_rule_B("nl_func_def_paren_empty");
+         log_rule_B("nl_func_paren_empty");
+
          if (  (  get_chunk_parent_type(pc) == CT_FUNC_DEF
                || get_chunk_parent_type(pc) == CT_FUNC_PROTO
                || get_chunk_parent_type(pc) == CT_FUNC_CLASS_DEF
@@ -4231,40 +4296,13 @@ void newlines_cleanup_braces(bool first)
                || options::nl_func_def_paren_empty() != IARF_IGNORE
                || options::nl_func_paren_empty() != IARF_IGNORE))
          {
-            log_rule("nl_func_decl_start");
-            log_rule("nl_func_def_start");
-            log_rule("nl_func_decl_start_single");
-            log_rule("nl_func_def_start_single");
-            log_rule("nl_func_decl_start_multi_line");
-            log_rule("nl_func_def_start_multi_line");
-            log_rule("nl_func_decl_args");
-            log_rule("nl_func_def_args");
-            log_rule("nl_func_decl_args_multi_line");
-            log_rule("nl_func_def_args_multi_line");
-            log_rule("nl_func_decl_end");
-            log_rule("nl_func_def_end");
-            log_rule("nl_func_decl_end_single");
-            log_rule("nl_func_def_end_single");
-            log_rule("nl_func_decl_end_multi_line");
-            log_rule("nl_func_def_end_multi_line");
-            log_rule("nl_func_decl_empty");
-            log_rule("nl_func_def_empty");
-            log_rule("nl_func_type_name");
-            log_rule("nl_func_type_name_class");
-            log_rule("nl_func_class_scope");
-            log_rule("nl_func_scope_name");
-            log_rule("nl_func_proto_type_name");
-            log_rule("nl_func_paren");
-            log_rule("nl_func_def_paren");
-            log_rule("nl_func_def_paren_empty");
-            log_rule("nl_func_paren_empty");
             newline_func_def_or_call(pc);
          }
          else if (  (  get_chunk_parent_type(pc) == CT_FUNC_CALL                // Issue #2020
                     || get_chunk_parent_type(pc) == CT_FUNC_CALL_USER)
                  && options::nl_func_call_start() != IARF_IGNORE)
          {
-            log_rule("nl_func_call_start");
+            log_rule_B("nl_func_call_start");
             newline_iarf(pc, options::nl_func_call_start());
          }
          else if (  (  get_chunk_parent_type(pc) == CT_FUNC_CALL
@@ -4276,27 +4314,24 @@ void newlines_cleanup_braces(bool first)
                     || (options::nl_func_call_paren_empty() != IARF_IGNORE)
                     || (options::nl_func_call_empty() != IARF_IGNORE)))
          {
-            log_rule("nl_func_call_start_multi_line");
-            log_rule("nl_func_call_args_multi_line");
-            log_rule("nl_func_call_end_multi_line");
-            log_rule("nl_func_call_paren");
-            log_rule("nl_func_call_paren_empty");
-            log_rule("nl_func_call_empty");
+            log_rule_B("nl_func_call_start_multi_line");
+            log_rule_B("nl_func_call_args_multi_line");
+            log_rule_B("nl_func_call_end_multi_line");
+            log_rule_B("nl_func_call_paren");
+            log_rule_B("nl_func_call_paren_empty");
+            log_rule_B("nl_func_call_empty");
 
             if (  options::nl_func_call_paren() != IARF_IGNORE
                || options::nl_func_call_paren_empty() != IARF_IGNORE
                || options::nl_func_call_empty() != IARF_IGNORE)
             {
-               log_rule("nl_func_call_paren");
-               log_rule("nl_func_call_paren_empty");
-               log_rule("nl_func_call_empty");
                newline_func_def_or_call(pc);
             }
             newline_func_multi_line(pc);
          }
          else if (first && (options::nl_remove_extra_newlines() == 1))
          {
-            log_rule("nl_remove_extra_newlines");
+            log_rule_B("nl_remove_extra_newlines");
             newline_iarf(pc, IARF_REMOVE);
          }
       }
@@ -4315,7 +4350,7 @@ void newlines_cleanup_braces(bool first)
                   if (chunk_is_token(next, CT_USING))
                   {
                      newline_iarf(pc, options::nl_template_using());
-                     log_rule("nl_template_using");
+                     log_rule_B("nl_template_using");
                   }
                   else if (get_chunk_parent_type(next) == CT_FUNC_DEF) // function definition
                   {
@@ -4325,9 +4360,9 @@ void newlines_cleanup_braces(bool first)
                            options::nl_template_func_def_special(),
                            options::nl_template_func_def(),
                            options::nl_template_func());
-                     log_rule("nl_template_func_def_special");
-                     log_rule("nl_template_func_def");
-                     log_rule("nl_template_func");
+                     log_rule_B("nl_template_func_def_special");
+                     log_rule_B("nl_template_func_def");
+                     log_rule_B("nl_template_func");
                      newline_iarf(pc, action);
                   }
                   else if (get_chunk_parent_type(next) == CT_FUNC_PROTO) // function declaration
@@ -4338,16 +4373,16 @@ void newlines_cleanup_braces(bool first)
                            options::nl_template_func_decl_special(),
                            options::nl_template_func_decl(),
                            options::nl_template_func());
-                     log_rule("nl_template_func_decl_special");
-                     log_rule("nl_template_func_decl");
-                     log_rule("nl_template_func");
+                     log_rule_B("nl_template_func_decl_special");
+                     log_rule_B("nl_template_func_decl");
+                     log_rule_B("nl_template_func");
                      newline_iarf(pc, action);
                   }
                   else if (  chunk_is_token(next, CT_TYPE)
                           || chunk_is_token(next, CT_QUALIFIER)) // variable
                   {
                      newline_iarf(pc, options::nl_template_var());
-                     log_rule("nl_template_var");
+                     log_rule_B("nl_template_var");
                   }
                   else if (next->flags.test(PCF_INCOMPLETE)) // class declaration
                   {
@@ -4357,9 +4392,9 @@ void newlines_cleanup_braces(bool first)
                            options::nl_template_class_decl_special(),
                            options::nl_template_class_decl(),
                            options::nl_template_class());
-                     log_rule("nl_template_class_decl_special");
-                     log_rule("nl_template_class_decl");
-                     log_rule("nl_template_class");
+                     log_rule_B("nl_template_class_decl_special");
+                     log_rule_B("nl_template_class_decl");
+                     log_rule_B("nl_template_class");
                      newline_iarf(pc, action);
                   }
                   else // class definition
@@ -4370,9 +4405,9 @@ void newlines_cleanup_braces(bool first)
                            options::nl_template_class_def_special(),
                            options::nl_template_class_def(),
                            options::nl_template_class());
-                     log_rule("nl_template_class_def_special");
-                     log_rule("nl_template_class_def");
-                     log_rule("nl_template_class");
+                     log_rule_B("nl_template_class_def_special");
+                     log_rule_B("nl_template_class_def");
+                     log_rule_B("nl_template_class");
                      newline_iarf(pc, action);
                   }
                }
@@ -4415,14 +4450,14 @@ void newlines_cleanup_braces(bool first)
          {
             tmp = chunk_get_prev_ncnlni(pc);   // Issue #2279
             newline_iarf(tmp, options::nl_assign_square());
-            log_rule("nl_assign_square");
+            log_rule_B("nl_assign_square");
 
             iarf_e arg = options::nl_after_square_assign();
-            log_rule("nl_after_square_assign");
+            log_rule_B("nl_after_square_assign");
 
             if (options::nl_assign_square() & IARF_ADD)
             {
-               log_rule("nl_assign_square");
+               log_rule_B("nl_assign_square");
                arg = IARF_ADD;
             }
             newline_iarf(pc, arg);
@@ -4449,7 +4484,7 @@ void newlines_cleanup_braces(bool first)
          // Make sure there is a newline before an access spec
          if (options::nl_before_access_spec() > 0)
          {
-            log_rule("nl_before_access_spec");
+            log_rule_B("nl_before_access_spec");
             prev = chunk_get_prev(pc);
 
             if (!chunk_is_newline(prev))
@@ -4463,7 +4498,7 @@ void newlines_cleanup_braces(bool first)
          // Make sure there is a newline after an access spec
          if (options::nl_after_access_spec() > 0)
          {
-            log_rule("nl_after_access_spec");
+            log_rule_B("nl_after_access_spec");
             next = chunk_get_next(pc);
 
             if (!chunk_is_newline(next))
@@ -4476,7 +4511,7 @@ void newlines_cleanup_braces(bool first)
       {
          if (options::nl_multi_line_define())
          {
-            log_rule("nl_multi_line_define");
+            log_rule_B("nl_multi_line_define");
             nl_handle_define(pc);
          }
       }
@@ -4484,7 +4519,7 @@ void newlines_cleanup_braces(bool first)
               && (options::nl_remove_extra_newlines() == 1)
               && !pc->flags.test(PCF_IN_PREPROC))
       {
-         log_rule("nl_remove_extra_newlines");
+         log_rule_B("nl_remove_extra_newlines");
          newline_iarf(pc, IARF_REMOVE);
       }
       else if (  chunk_is_token(pc, CT_MEMBER)
@@ -4492,9 +4527,9 @@ void newlines_cleanup_braces(bool first)
       {
          // Issue #1124
          newline_iarf(chunk_get_prev_nnl(pc), options::nl_before_member());
-         log_rule("nl_before_member");
+         log_rule_B("nl_before_member");
          newline_iarf(pc, options::nl_after_member());
-         log_rule("nl_after_member");
+         log_rule_B("nl_after_member");
       }
       else
       {
@@ -4601,59 +4636,59 @@ void newlines_insert_blank_lines(void)
       if (chunk_is_token(pc, CT_IF))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_if());
-         log_rule("nl_before_if");
+         log_rule_B("nl_before_if");
          newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_if());
-         log_rule("nl_after_if");
+         log_rule_B("nl_after_if");
       }
       else if (chunk_is_token(pc, CT_FOR))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_for());
-         log_rule("nl_before_for");
+         log_rule_B("nl_before_for");
          newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_for());
-         log_rule("nl_after_for");
+         log_rule_B("nl_after_for");
       }
       else if (chunk_is_token(pc, CT_WHILE))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_while());
-         log_rule("nl_before_while");
+         log_rule_B("nl_before_while");
          newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_while());
-         log_rule("nl_after_while");
+         log_rule_B("nl_after_while");
       }
       else if (chunk_is_token(pc, CT_SWITCH))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_switch());
-         log_rule("nl_before_switch");
+         log_rule_B("nl_before_switch");
          newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_switch());
-         log_rule("nl_after_switch");
+         log_rule_B("nl_after_switch");
       }
       else if (chunk_is_token(pc, CT_SYNCHRONIZED))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_synchronized());
-         log_rule("nl_before_synchronized");
+         log_rule_B("nl_before_synchronized");
          newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_synchronized());
-         log_rule("nl_after_synchronized");
+         log_rule_B("nl_after_synchronized");
       }
       else if (chunk_is_token(pc, CT_DO))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_do());
-         log_rule("nl_before_do");
+         log_rule_B("nl_before_do");
          newlines_if_for_while_switch_post_blank_lines(pc, options::nl_after_do());
-         log_rule("nl_after_do");
+         log_rule_B("nl_after_do");
       }
       else if (chunk_is_token(pc, CT_OC_INTF))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_oc_before_interface());
-         log_rule("nl_oc_before_interface");
+         log_rule_B("nl_oc_before_interface");
       }
       else if (chunk_is_token(pc, CT_OC_END))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_oc_before_end());
-         log_rule("nl_oc_before_end");
+         log_rule_B("nl_oc_before_end");
       }
       else if (chunk_is_token(pc, CT_OC_IMPL))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_oc_before_implementation());
-         log_rule("nl_oc_before_implementation");
+         log_rule_B("nl_oc_before_implementation");
       }
       else if (  chunk_is_token(pc, CT_FUNC_CLASS_DEF)
               || chunk_is_token(pc, CT_FUNC_DEF)
@@ -4663,7 +4698,7 @@ void newlines_insert_blank_lines(void)
          if (  options::nl_class_leave_one_liner_groups()
             && is_class_one_liner(pc))
          {
-            log_rule("nl_class_leave_one_liner_groups");
+            log_rule_B("nl_class_leave_one_liner_groups");
             newlines_func_pre_blank_lines(pc, CT_FUNC_PROTO);
          }
          else
@@ -4685,7 +4720,7 @@ void newlines_functions_remove_extra_blank_lines(void)
    LOG_FUNC_ENTRY();
 
    const size_t nl_max_blank_in_func = options::nl_max_blank_in_func();
-   log_rule("nl_max_blank_in_func");
+   log_rule_B("nl_max_blank_in_func");
 
    if (nl_max_blank_in_func == 0)
    {
@@ -4736,7 +4771,7 @@ void newlines_squeeze_ifdef(void)
       if (  chunk_is_token(pc, CT_PREPROC)
          && (pc->level > 0 || options::nl_squeeze_ifdef_top_level()))
       {
-         log_rule("nl_squeeze_ifdef_top_level");
+         log_rule_B("nl_squeeze_ifdef_top_level");
          chunk_t *ppr = chunk_get_next(pc);
 
          if (  chunk_is_token(ppr, CT_PP_IF)
@@ -4862,8 +4897,8 @@ void newlines_eat_start_end(void)
          || (  (options::nl_start_of_file() & IARF_ADD)
             && (options::nl_start_of_file_min() > 0))))
    {
-      log_rule("nl_start_of_file");
-      log_rule("nl_start_of_file_min");
+      log_rule_B("nl_start_of_file");
+      log_rule_B("nl_start_of_file_min");
       pc = chunk_get_head();
 
       if (pc != nullptr)
@@ -4872,7 +4907,7 @@ void newlines_eat_start_end(void)
          {
             if (options::nl_start_of_file() == IARF_REMOVE)
             {
-               log_rule("nl_start_of_file");
+               log_rule_B("nl_start_of_file");
                LOG_FMT(LBLANKD, "%s(%d): eat_blanks_start_of_file %zu\n",
                        __func__, __LINE__, pc->orig_line);
                chunk_del(pc);
@@ -4881,27 +4916,27 @@ void newlines_eat_start_end(void)
             else if (  options::nl_start_of_file() == IARF_FORCE
                     || (pc->nl_count < options::nl_start_of_file_min()))
             {
-               log_rule("nl_start_of_file");
+               log_rule_B("nl_start_of_file");
             }
             {
                LOG_FMT(LBLANKD, "%s(%d): set_blanks_start_of_file %zu\n",
                        __func__, __LINE__, pc->orig_line);
                pc->nl_count = options::nl_start_of_file_min();
-               log_rule("nl_start_of_file_min");
+               log_rule_B("nl_start_of_file_min");
                MARK_CHANGE();
             }
          }
          else if (  (options::nl_start_of_file() & IARF_ADD)
                  && (options::nl_start_of_file_min() > 0))
          {
-            log_rule("nl_start_of_file");
-            log_rule("nl_start_of_file_min");
+            log_rule_B("nl_start_of_file");
+            log_rule_B("nl_start_of_file_min");
             chunk_t chunk;
             set_chunk_type(&chunk, CT_NEWLINE);
             chunk.orig_line = pc->orig_line;
             chunk.orig_col  = pc->orig_col;
             chunk.nl_count  = options::nl_start_of_file_min();
-            log_rule("nl_start_of_file_min");
+            log_rule_B("nl_start_of_file_min");
             chunk_add_before(&chunk, pc);
             LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline before '%s'\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
@@ -4916,8 +4951,8 @@ void newlines_eat_start_end(void)
          || (  (options::nl_end_of_file() & IARF_ADD)
             && (options::nl_end_of_file_min() > 0))))
    {
-      log_rule("nl_end_of_file");
-      log_rule("nl_end_of_file_min");
+      log_rule_B("nl_end_of_file");
+      log_rule_B("nl_end_of_file_min");
       pc = chunk_get_tail();
 
       if (pc != nullptr)
@@ -4926,7 +4961,7 @@ void newlines_eat_start_end(void)
          {
             if (options::nl_end_of_file() == IARF_REMOVE)
             {
-               log_rule("nl_end_of_file");
+               log_rule_B("nl_end_of_file");
                LOG_FMT(LBLANKD, "%s(%d): eat_blanks_end_of_file %zu\n",
                        __func__, __LINE__, pc->orig_line);
                chunk_del(pc);
@@ -4935,16 +4970,16 @@ void newlines_eat_start_end(void)
             else if (  options::nl_end_of_file() == IARF_FORCE
                     || (pc->nl_count < options::nl_end_of_file_min()))
             {
-               log_rule("nl_end_of_file");
-               log_rule("nl_end_of_file_min");
+               log_rule_B("nl_end_of_file");
+               log_rule_B("nl_end_of_file_min");
 
                if (pc->nl_count != options::nl_end_of_file_min())
                {
-                  log_rule("nl_end_of_file_min");
+                  log_rule_B("nl_end_of_file_min");
                   LOG_FMT(LBLANKD, "%s(%d): set_blanks_end_of_file %zu\n",
                           __func__, __LINE__, pc->orig_line);
                   pc->nl_count = options::nl_end_of_file_min();
-                  log_rule("nl_end_of_file_min");
+                  log_rule_B("nl_end_of_file_min");
                   MARK_CHANGE();
                }
             }
@@ -4952,14 +4987,14 @@ void newlines_eat_start_end(void)
          else if (  (options::nl_end_of_file() & IARF_ADD)
                  && (options::nl_end_of_file_min() > 0))
          {
-            log_rule("nl_end_of_file");
-            log_rule("nl_end_of_file_min");
+            log_rule_B("nl_end_of_file");
+            log_rule_B("nl_end_of_file_min");
             chunk_t chunk;
             set_chunk_type(&chunk, CT_NEWLINE);
             chunk.orig_line = pc->orig_line;
             chunk.orig_col  = pc->orig_col;
             chunk.nl_count  = options::nl_end_of_file_min();
-            log_rule("nl_end_of_file_min");
+            log_rule_B("nl_end_of_file_min");
             chunk_add_before(&chunk, nullptr);
             LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline before '%s'\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
@@ -5169,37 +5204,41 @@ void newlines_class_colon_pos(c_token_t tok)
    if (tok == CT_CLASS_COLON)
    {
       tpc = options::pos_class_colon();
-      log_rule("pos_class_colon");
+      log_rule_B("pos_class_colon");
       anc = options::nl_class_colon();
-      log_rule("nl_class_colon");
+      log_rule_B("nl_class_colon");
       ncia = options::nl_class_init_args();
-      log_rule("nl_class_init_args");
+      log_rule_B("nl_class_init_args");
       pcc = options::pos_class_comma();
-      log_rule("pos_class_comma");
+      log_rule_B("pos_class_comma");
    }
    else // tok == CT_CONSTR_COLON
    {
       tpc = options::pos_constr_colon();
-      log_rule("pos_constr_colon");
+      log_rule_B("pos_constr_colon");
       anc = options::nl_constr_colon();
-      log_rule("nl_constr_colon");
+      log_rule_B("nl_constr_colon");
       ncia = options::nl_constr_init_args();
-      log_rule("nl_constr_init_args");
+      log_rule_B("nl_constr_init_args");
       pcc = options::pos_constr_comma();
-      log_rule("pos_constr_comma");
+      log_rule_B("pos_constr_comma");
    }
    chunk_t    *ccolon  = nullptr;
    size_t     acv_span = options::align_constr_value_span();
+   log_rule_B("align_constr_value_span");
    bool       with_acv = (acv_span > 0) && language_is_set(LANG_CPP);
    AlignStack constructorValue;    // ABC_Member(abc_value)
 
    if (with_acv)
    {
       int    acv_thresh = options::align_constr_value_thresh();
-      size_t acv_gap    = options::align_constr_value_gap();
+      log_rule_B("align_constr_value_thresh");
+      size_t acv_gap = options::align_constr_value_gap();
+      log_rule_B("align_constr_value_gap");
       constructorValue.Start(acv_span, acv_thresh);
       constructorValue.m_gap         = acv_gap;
       constructorValue.m_right_align = !options::align_on_tabstop();
+      log_rule_B("align_on_tabstop");
    }
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
@@ -5408,7 +5447,7 @@ bool is_func_proto_group(chunk_t *pc, c_token_t one_liner_type)
       && (pc->type == one_liner_type || get_chunk_parent_type(pc) == one_liner_type)
       && pc->flags.test(PCF_IN_CLASS))
    {
-      log_rule("nl_class_leave_one_liner_groups");
+      log_rule_B("nl_class_leave_one_liner_groups");
 
       if (pc->type == CT_BRACE_CLOSE)
       {
@@ -5478,7 +5517,7 @@ void do_blank_lines(void)
       if (  (options::nl_max() > 0)
          && (pc->nl_count > options::nl_max()))
       {
-         log_rule("nl_max");
+         log_rule_B("nl_max");
          blank_line_max(pc, options::nl_max);
       }
 
@@ -5499,7 +5538,7 @@ void do_blank_lines(void)
       if (  (options::nl_before_block_comment() > pc->nl_count)
          && chunk_is_token(next, CT_COMMENT_MULTI))
       {
-         log_rule("nl_before_block_comment");
+         log_rule_B("nl_before_block_comment");
 
          // Don't add blanks after a open brace
          if (  (  prev == nullptr
@@ -5509,7 +5548,7 @@ void do_blank_lines(void)
             && pcmt->type != CT_COMMENT_MULTI)
          {
             blank_line_set(pc, options::nl_before_block_comment);
-            log_rule("nl_before_block_comment");
+            log_rule_B("nl_before_block_comment");
          }
       }
 
@@ -5517,7 +5556,7 @@ void do_blank_lines(void)
       if (  (options::nl_before_c_comment() > pc->nl_count)
          && chunk_is_token(next, CT_COMMENT))
       {
-         log_rule("nl_before_c_comment");
+         log_rule_B("nl_before_c_comment");
 
          // Don't add blanks after a open brace or a comment
          if (  (  prev == nullptr
@@ -5527,7 +5566,7 @@ void do_blank_lines(void)
             && pcmt->type != CT_COMMENT)
          {
             blank_line_set(pc, options::nl_before_c_comment);
-            log_rule("nl_before_c_comment");
+            log_rule_B("nl_before_c_comment");
          }
       }
 
@@ -5535,7 +5574,7 @@ void do_blank_lines(void)
       if (  (options::nl_before_cpp_comment() > pc->nl_count)
          && chunk_is_token(next, CT_COMMENT_CPP))
       {
-         log_rule("nl_before_cpp_comment");
+         log_rule_B("nl_before_cpp_comment");
 
          // Don't add blanks after a open brace
          if (  (  prev == nullptr
@@ -5545,7 +5584,7 @@ void do_blank_lines(void)
             && pcmt->type != CT_COMMENT_CPP)
          {
             blank_line_set(pc, options::nl_before_cpp_comment);
-            log_rule("nl_before_cpp_comment");
+            log_rule_B("nl_before_cpp_comment");
          }
       }
 
@@ -5554,14 +5593,14 @@ void do_blank_lines(void)
          && (options::nl_before_access_spec() != pc->nl_count)
          && chunk_is_token(next, CT_ACCESS))
       {
-         log_rule("nl_before_access_spec");
+         log_rule_B("nl_before_access_spec");
 
          // Don't add blanks after a open brace
          if (  prev == nullptr
             || (prev->type != CT_BRACE_OPEN && prev->type != CT_VBRACE_OPEN))
          {
             blank_line_set(pc, options::nl_before_access_spec);
-            log_rule("nl_before_access_spec");
+            log_rule_B("nl_before_access_spec");
          }
       }
 
@@ -5580,7 +5619,7 @@ void do_blank_lines(void)
 
          if (tmp != nullptr && options::nl_before_class() > tmp->nl_count)
          {
-            log_rule("nl_before_class");
+            log_rule_B("nl_before_class");
             blank_line_set(tmp, options::nl_before_class);
          }
       }
@@ -5600,14 +5639,14 @@ void do_blank_lines(void)
 
          if (tmp != nullptr && options::nl_before_namespace() > tmp->nl_count)
          {
-            log_rule("nl_before_namespace");
+            log_rule_B("nl_before_namespace");
             blank_line_set(tmp, options::nl_before_namespace);
          }
 
          // Add blanks after namespace
          if (options::nl_after_namespace() > pc->nl_count)
          {
-            log_rule("nl_after_namespace");
+            log_rule_B("nl_after_namespace");
             blank_line_set(pc, options::nl_after_namespace);
          }
       }
@@ -5617,7 +5656,7 @@ void do_blank_lines(void)
          && (options::nl_after_access_spec() != pc->nl_count)
          && chunk_is_token(prev, CT_ACCESS_COLON))
       {
-         log_rule("nl_after_access_spec");
+         log_rule_B("nl_after_access_spec");
          blank_line_set(pc, options::nl_after_access_spec);
       }
 
@@ -5632,7 +5671,7 @@ void do_blank_lines(void)
          {
             if (options::nl_after_func_body_one_liner() > pc->nl_count)
             {
-               log_rule("nl_after_func_body_one_liner");
+               log_rule_B("nl_after_func_body_one_liner");
                blank_line_set(pc, options::nl_after_func_body_one_liner);
             }
          }
@@ -5641,24 +5680,24 @@ void do_blank_lines(void)
             if (  prev->flags.test(PCF_IN_CLASS)
                && (options::nl_after_func_body_class() > 0))
             {
-               log_rule("nl_after_func_body_class");
+               log_rule_B("nl_after_func_body_class");
 
                if (options::nl_after_func_body_class() != pc->nl_count)
                {
-                  log_rule("nl_after_func_body_class");
+                  log_rule_B("nl_after_func_body_class");
                   blank_line_set(pc, options::nl_after_func_body_class);
                }
             }
             else if (options::nl_after_func_body() > 0)
             {
-               log_rule("nl_after_func_body");
+               log_rule_B("nl_after_func_body");
 
                // Issue #1734
                if (!(pc->prev->flags.test(PCF_IN_TRY_BLOCK)))
                {
                   if (options::nl_after_func_body() != pc->nl_count)
                   {
-                     log_rule("nl_after_func_body");
+                     log_rule_B("nl_after_func_body");
                      blank_line_set(pc, options::nl_after_func_body);
                   }
                }
@@ -5673,7 +5712,7 @@ void do_blank_lines(void)
       {
          if (options::nl_after_func_proto() > pc->nl_count)
          {
-            log_rule("nl_after_func_proto");
+            log_rule_B("nl_after_func_proto");
             pc->nl_count = options::nl_after_func_proto();
             MARK_CHANGE();
          }
@@ -5683,7 +5722,7 @@ void do_blank_lines(void)
             && get_chunk_parent_type(next) != CT_FUNC_PROTO
             && !is_func_proto_group(next, CT_FUNC_DEF))
          {
-            log_rule("nl_after_func_proto_group");
+            log_rule_B("nl_after_func_proto_group");
             blank_line_set(pc, options::nl_after_func_proto_group);
          }
       }
@@ -5695,7 +5734,7 @@ void do_blank_lines(void)
       {
          if (options::nl_after_func_class_proto() > pc->nl_count)
          {
-            log_rule("nl_after_func_class_proto");
+            log_rule_B("nl_after_func_class_proto");
             pc->nl_count = options::nl_after_func_class_proto();
             MARK_CHANGE();
          }
@@ -5706,7 +5745,7 @@ void do_blank_lines(void)
             && get_chunk_parent_type(next) != CT_FUNC_CLASS_PROTO
             && !is_func_proto_group(next, CT_FUNC_CLASS_DEF))
          {
-            log_rule("nl_after_func_class_proto_group");
+            log_rule_B("nl_after_func_class_proto_group");
             blank_line_set(pc, options::nl_after_func_class_proto_group);
          }
       }
@@ -5721,8 +5760,8 @@ void do_blank_lines(void)
          auto &opt = (get_chunk_parent_type(prev) == CT_CLASS
          ? options::nl_after_class
          : options::nl_after_struct);
-         log_rule("nl_after_class");
-         log_rule("nl_after_struct");
+         log_rule_B("nl_after_class");
+         log_rule_B("nl_after_struct");
 
          if (opt() > pc->nl_count)
          {
@@ -5773,11 +5812,11 @@ void do_blank_lines(void)
          && (  get_chunk_parent_type(next) == CT_FUNC_DEF
             || get_chunk_parent_type(next) == CT_FUNC_CLASS_DEF))
       {
-         log_rule("nl_comment_func_def");
+         log_rule_B("nl_comment_func_def");
 
          if (options::nl_comment_func_def() != pc->nl_count)
          {
-            log_rule("nl_comment_func_def");
+            log_rule_B("nl_comment_func_def");
             blank_line_set(pc, options::nl_comment_func_def);
          }
       }
@@ -5788,7 +5827,7 @@ void do_blank_lines(void)
          && prev != nullptr
          && next != nullptr)
       {
-         log_rule("nl_after_try_catch_finally");
+         log_rule_B("nl_after_try_catch_finally");
 
          if (  chunk_is_token(prev, CT_BRACE_CLOSE)
             && (  get_chunk_parent_type(prev) == CT_CATCH
@@ -5799,7 +5838,7 @@ void do_blank_lines(void)
                && next->type != CT_FINALLY)
             {
                blank_line_set(pc, options::nl_after_try_catch_finally);
-               log_rule("nl_after_try_catch_finally");
+               log_rule_B("nl_after_try_catch_finally");
             }
          }
       }
@@ -5810,14 +5849,14 @@ void do_blank_lines(void)
          && prev != nullptr
          && next != nullptr)
       {
-         log_rule("nl_between_get_set");
+         log_rule_B("nl_between_get_set");
 
          if (  get_chunk_parent_type(prev) == CT_GETSET
             && next->type != CT_BRACE_CLOSE
             && (chunk_is_token(prev, CT_BRACE_CLOSE) || chunk_is_token(prev, CT_SEMICOLON)))
          {
             blank_line_set(pc, options::nl_between_get_set);
-            log_rule("nl_between_get_set");
+            log_rule_B("nl_between_get_set");
          }
       }
 
@@ -5827,20 +5866,20 @@ void do_blank_lines(void)
          && prev != nullptr
          && next != nullptr)
       {
-         log_rule("nl_around_cs_property");
+         log_rule_B("nl_around_cs_property");
 
          if (  chunk_is_token(prev, CT_BRACE_CLOSE)
             && get_chunk_parent_type(prev) == CT_CS_PROPERTY
             && next->type != CT_BRACE_CLOSE)
          {
             blank_line_set(pc, options::nl_around_cs_property);
-            log_rule("nl_around_cs_property");
+            log_rule_B("nl_around_cs_property");
          }
          else if (  get_chunk_parent_type(next) == CT_CS_PROPERTY
                  && next->flags.test(PCF_STMT_START))
          {
             blank_line_set(pc, options::nl_around_cs_property);
-            log_rule("nl_around_cs_property");
+            log_rule_B("nl_around_cs_property");
          }
       }
 
@@ -5852,7 +5891,7 @@ void do_blank_lines(void)
             || (  chunk_is_token(next, CT_BRACE_CLOSE)
                && get_chunk_parent_type(next) == CT_NAMESPACE)))
       {
-         log_rule("nl_inside_namespace");
+         log_rule_B("nl_inside_namespace");
          blank_line_set(pc, options::nl_inside_namespace);
       }
 
@@ -5986,7 +6025,7 @@ void annotations_newlines(void)
          LOG_FMT(LANNOT, "%s(%d):  -- nl_between_annotation\n",
                  __func__, __LINE__);
          newline_iarf(ae, options::nl_between_annotation());
-         log_rule("nl_between_annotation");
+         log_rule_B("nl_between_annotation");
       }
 
       if (chunk_is_token(next, CT_NEWLINE))
@@ -5996,7 +6035,7 @@ void annotations_newlines(void)
             LOG_FMT(LANNOT, "%s(%d):  -- nl_after_annotation\n",
                     __func__, __LINE__);
             newline_iarf(ae, options::nl_after_annotation());
-            log_rule("nl_after_annotation");
+            log_rule_B("nl_after_annotation");
          }
       }
    }

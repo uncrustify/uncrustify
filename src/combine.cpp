@@ -17,6 +17,7 @@
 #include "flag_parens.h"
 #include "lang_pawn.h"
 #include "language_tools.h"
+#include "log_rules.h"
 #include "newlines.h"
 #include "prototypes.h"
 #include "tokenize_cleanup.h"
@@ -2766,6 +2767,7 @@ static chunk_t *process_return(chunk_t *pc)
    {
       return(next);
    }
+   log_rule_B("nl_return_expr");
 
    if (  options::nl_return_expr() != IARF_IGNORE
       && !pc->flags.test(PCF_IN_PREPROC))
@@ -2791,6 +2793,8 @@ static chunk_t *process_return(chunk_t *pc)
 
       if (chunk_is_token(semi, CT_NEWLINE) || chunk_is_semicolon(semi))
       {
+         log_rule_B("mod_paren_on_return");
+
          if (options::mod_paren_on_return() == IARF_REMOVE)
          {
             LOG_FMT(LRETURN, "%s(%d): removing parens on orig_line %zu\n",
@@ -2836,8 +2840,9 @@ static chunk_t *process_return(chunk_t *pc)
          return(semi);
       }
    }
-
    // We don't have a fully paren'd return. Should we add some?
+   log_rule_B("mod_paren_on_return");
+
    if (!(options::mod_paren_on_return() & IARF_ADD))
    {
       return(next);
@@ -3554,10 +3559,13 @@ static void fix_typedef(chunk_t *start)
               __func__, __LINE__, the_type->text(), the_type->orig_line);
 
       // If we are aligning on the open parenthesis, grab that instead
+      log_rule_B("align_typedef_func");
+
       if (open_paren != nullptr && options::align_typedef_func() == 1)
       {
          the_type = open_paren;
       }
+      log_rule_B("align_typedef_func");
 
       if (options::align_typedef_func() != 0)
       {
@@ -6862,6 +6870,8 @@ static void handle_oc_available(chunk_t *os)
 
 static void handle_oc_property_decl(chunk_t *os)
 {
+   log_rule_B("mod_sort_oc_properties");
+
    if (options::mod_sort_oc_properties())
    {
       typedef std::vector<chunk_t *> ChunkGroup;
@@ -6977,12 +6987,19 @@ static void handle_oc_property_decl(chunk_t *os)
             }
             next = chunk_get_next(next);
          }
-         int class_w       = options::mod_sort_oc_property_class_weight();
-         int thread_w      = options::mod_sort_oc_property_thread_safe_weight();
-         int readwrite_w   = options::mod_sort_oc_property_readwrite_weight();
-         int ref_w         = options::mod_sort_oc_property_reference_weight();
-         int getter_w      = options::mod_sort_oc_property_getter_weight();
-         int setter_w      = options::mod_sort_oc_property_setter_weight();
+         log_rule_B("mod_sort_oc_property_class_weight");
+         int class_w = options::mod_sort_oc_property_class_weight();
+         log_rule_B("mod_sort_oc_property_thread_safe_weight");
+         int thread_w = options::mod_sort_oc_property_thread_safe_weight();
+         log_rule_B("mod_sort_oc_property_readwrite_weight");
+         int readwrite_w = options::mod_sort_oc_property_readwrite_weight();
+         log_rule_B("mod_sort_oc_property_reference_weight");
+         int ref_w = options::mod_sort_oc_property_reference_weight();
+         log_rule_B("mod_sort_oc_property_getter_weight");
+         int getter_w = options::mod_sort_oc_property_getter_weight();
+         log_rule_B("mod_sort_oc_property_setter_weight");
+         int setter_w = options::mod_sort_oc_property_setter_weight();
+         log_rule_B("mod_sort_oc_property_nullability_weight");
          int nullability_w = options::mod_sort_oc_property_nullability_weight();
 
          //
@@ -7193,10 +7210,14 @@ static void handle_wrap(chunk_t *pc)
    chunk_t *name = chunk_get_next(opp);
    chunk_t *clp  = chunk_get_next(name);
 
-   iarf_e  pav = (pc->type == CT_FUNC_WRAP) ?
-                 options::sp_func_call_paren() :
-                 options::sp_cpp_cast_paren();
+   log_rule_B("sp_func_call_paren");
+   log_rule_B("sp_cpp_cast_paren");
+   iarf_e pav = (pc->type == CT_FUNC_WRAP) ?
+                options::sp_func_call_paren() :
+                options::sp_cpp_cast_paren();
 
+   log_rule_B("sp_inside_fparen");
+   log_rule_B("sp_inside_paren_cast");
    iarf_e av = (pc->type == CT_FUNC_WRAP) ?
                options::sp_inside_fparen() :
                options::sp_inside_paren_cast();
@@ -7223,7 +7244,7 @@ static void handle_wrap(chunk_t *pc)
       chunk_del(name);
       chunk_del(clp);
    }
-}
+} // handle_wrap
 
 
 static void handle_proto_wrap(chunk_t *pc)

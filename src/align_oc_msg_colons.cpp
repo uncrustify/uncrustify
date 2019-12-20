@@ -8,6 +8,7 @@
 #include "align_oc_msg_colons.h"
 #include "align_stack.h"
 #include "chunk_list.h"
+#include "log_rules.h"
 #include "uncrustify_types.h"
 
 using namespace uncrustify;
@@ -19,9 +20,11 @@ void align_oc_msg_colon(chunk_t *so)
 
    AlignStack nas;   // for the parameter tag
    nas.Reset();
+   log_rule_B("align_on_tabstop");
    nas.m_right_align = !options::align_on_tabstop();
 
    AlignStack cas;   // for the colons
+   log_rule_B("align_oc_msg_colon_span");
    size_t     span = options::align_oc_msg_colon_span();
    cas.Start(span);
 
@@ -46,6 +49,8 @@ void align_oc_msg_colon(chunk_t *so)
             ++lcnt;
          }
          did_line = false;
+
+         log_rule_B("align_oc_msg_colon_xcode_like");
 
          if (options::align_oc_msg_colon_xcode_like() && first_line && !has_colon)
          {
@@ -72,6 +77,7 @@ void align_oc_msg_colon(chunk_t *so)
       }
       pc = chunk_get_next(pc, scope_e::PREPROC);
    }
+   log_rule_B("align_oc_msg_colon_first");
    nas.m_skip_first = !options::align_oc_msg_colon_first();
    cas.m_skip_first = !options::align_oc_msg_colon_first();
 
@@ -108,12 +114,16 @@ void align_oc_msg_colon(chunk_t *so)
    }
 
    // add spaces before the longest arg
+   log_rule_B("indent_oc_msg_colon");
    len = options::indent_oc_msg_colon();
-   size_t len_diff    = mlen - first_len;
+   size_t len_diff = mlen - first_len;
+   log_rule_B("indent_columns");
    size_t indent_size = options::indent_columns();
 
    // Align with first colon if possible by removing spaces
-   if (  longest
+   log_rule_B("indent_oc_msg_prioritize_first_colon");
+
+   if (  longest != nullptr
       && options::indent_oc_msg_prioritize_first_colon()
       && len_diff > 0
       && ((longest->column >= len_diff) && (longest->column - len_diff) > (longest->brace_level * indent_size)))

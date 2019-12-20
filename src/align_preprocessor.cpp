@@ -11,6 +11,7 @@
 
 #include "align_assign.h"
 #include "align_stack.h"
+#include "log_rules.h"
 
 using namespace uncrustify;
 
@@ -20,12 +21,16 @@ void align_preprocessor(void)
    LOG_FUNC_ENTRY();
 
    AlignStack as;    // value macros
+   log_rule_B("align_pp_define_span");
    as.Start(options::align_pp_define_span());
+   log_rule_B("align_pp_define_gap");
    as.m_gap = options::align_pp_define_gap();
    AlignStack *cur_as = &as;
 
    AlignStack asf;   // function macros
+   log_rule_B("align_pp_define_span");
    asf.Start(options::align_pp_define_span());
+   log_rule_B("align_pp_define_gap");
    asf.m_gap = options::align_pp_define_gap();
 
    chunk_t *pc = chunk_get_head();
@@ -61,6 +66,8 @@ void align_preprocessor(void)
 
       if (chunk_is_token(pc, CT_MACRO_FUNC))
       {
+         log_rule_B("align_pp_define_together");
+
          if (!options::align_pp_define_together())
          {
             cur_as = &asf;

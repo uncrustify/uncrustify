@@ -11,6 +11,7 @@
 
 #include "align_stack.h"
 #include "align_tools.h"
+#include "log_rules.h"
 #include "uncrustify.h"
 
 using namespace uncrustify;
@@ -32,20 +33,28 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
    // Override the span, if this is a struct/union
    if (get_chunk_parent_type(start) == CT_STRUCT || get_chunk_parent_type(start) == CT_UNION)
    {
-      myspan   = options::align_var_struct_span();
+      log_rule_B("align_var_struct_span");
+      myspan = options::align_var_struct_span();
+      log_rule_B("align_var_struct_thresh");
       mythresh = options::align_var_struct_thresh();
-      mygap    = options::align_var_struct_gap();
+      log_rule_B("align_var_struct_gap");
+      mygap = options::align_var_struct_gap();
    }
    else if (get_chunk_parent_type(start) == CT_CLASS)
    {
-      myspan   = options::align_var_class_span();
+      log_rule_B("align_var_class_span");
+      myspan = options::align_var_class_span();
+      log_rule_B("align_var_class_thresh");
       mythresh = options::align_var_class_thresh();
-      mygap    = options::align_var_class_gap();
+      log_rule_B("align_var_class_gap");
+      mygap = options::align_var_class_gap();
    }
    else
    {
+      log_rule_B("align_var_def_thresh");
       mythresh = options::align_var_def_thresh();
-      mygap    = options::align_var_def_gap();
+      log_rule_B("align_var_def_gap");
+      mygap = options::align_var_def_gap();
    }
    // can't be any variable definitions in a "= {" block
    chunk_t *prev = chunk_get_prev_ncnl(start);
@@ -61,6 +70,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
    LOG_FMT(LAVDB, "%s(%d): start->text() '%s', type is %s, on orig_line %zu\n",
            __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line);
 
+   log_rule_B("align_var_def_inline");
    auto const align_mask =
       PCF_IN_FCN_DEF | PCF_VAR_1ST |
       (options::align_var_def_inline() ? PCF_NONE : PCF_VAR_INLINE);
@@ -68,13 +78,16 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
    // Set up the variable/prototype/definition aligner
    AlignStack as;
    as.Start(myspan, mythresh);
-   as.m_gap        = mygap;
+   as.m_gap = mygap;
+   log_rule_B("align_var_def_star_style");
    as.m_star_style = static_cast<AlignStack::StarStyle>(options::align_var_def_star_style());
-   as.m_amp_style  = static_cast<AlignStack::StarStyle>(options::align_var_def_amp_style());
+   log_rule_B("align_var_def_amp_style");
+   as.m_amp_style = static_cast<AlignStack::StarStyle>(options::align_var_def_amp_style());
 
    // Set up the bit colon aligner
    AlignStack as_bc;
    as_bc.Start(myspan, 0);
+   log_rule_B("align_var_def_colon_gap");
    as_bc.m_gap = options::align_var_def_colon_gap();
 
    AlignStack as_at; // attribute
@@ -83,12 +96,14 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
    // Set up the brace open aligner
    AlignStack as_br;
    as_br.Start(myspan, mythresh);
+   log_rule_B("align_single_line_brace_gap");
    as_br.m_gap = options::align_single_line_brace_gap();
 
    bool    fp_look_bro   = false;
    bool    did_this_line = false;
-   bool    fp_active     = options::align_mix_var_proto();
-   chunk_t *pc           = chunk_get_next(start);
+   log_rule_B("align_mix_var_proto");
+   bool    fp_active = options::align_mix_var_proto();
+   chunk_t *pc       = chunk_get_next(start);
 
    while (  pc != nullptr
          && (pc->level >= start->level || pc->level == 0))
@@ -120,6 +135,8 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
       if (fp_active && !pc->flags.test(PCF_IN_CLASS_BASE))
       {
          // WARNING: Duplicate from the align_func_proto()
+         log_rule_B("align_single_line_func");
+
          if (  chunk_is_token(pc, CT_FUNC_PROTO)
             || (  chunk_is_token(pc, CT_FUNC_DEF)
                && options::align_single_line_func()))
@@ -128,6 +145,8 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
 
             chunk_t *toadd;
+
+            log_rule_B("align_on_operator");
 
             if (  get_chunk_parent_type(pc) == CT_OPERATOR
                && options::align_on_operator())
@@ -139,6 +158,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
                toadd = pc;
             }
             as.Add(step_back_over_member(toadd));
+            log_rule_B("align_single_line_brace");
             fp_look_bro = (chunk_is_token(pc, CT_FUNC_DEF))
                           && options::align_single_line_brace();
          }
@@ -255,6 +275,8 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
 
             as.Add(step_back_over_member(pc));
 
+            log_rule_B("align_var_def_colon");
+
             if (options::align_var_def_colon())
             {
                next = chunk_get_next_nc(pc);
@@ -264,6 +286,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
                   as_bc.Add(next);
                }
             }
+            log_rule_B("align_var_def_attribute");
 
             if (options::align_var_def_attribute())
             {

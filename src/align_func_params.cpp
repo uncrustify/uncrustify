@@ -9,6 +9,7 @@
 
 #include "align_func_params.h"
 #include "align_stack.h"
+#include "log_rules.h"
 
 using namespace uncrustify;
 
@@ -23,17 +24,23 @@ chunk_t *align_func_param(chunk_t *start)
    size_t mygap    = 0;
 
    // Override, if the align_func_params_span > 0
+   log_rule_B("align_func_params_span");
+
    if (options::align_func_params_span() > 0)
    {
-      myspan   = options::align_func_params_span();
+      myspan = options::align_func_params_span();
+      log_rule_B("align_func_params_thresh");
       mythresh = options::align_func_params_thresh();
-      mygap    = options::align_func_params_gap();
+      log_rule_B("align_func_params_gap");
+      mygap = options::align_func_params_gap();
    }
    AlignStack as;
    as.Start(myspan, mythresh);
-   as.m_gap        = mygap;
+   as.m_gap = mygap;
+   log_rule_B("align_var_def_star_style");
    as.m_star_style = static_cast<AlignStack::StarStyle>(options::align_var_def_star_style());
-   as.m_amp_style  = static_cast<AlignStack::StarStyle>(options::align_var_def_amp_style());
+   log_rule_B("align_var_def_amp_style");
+   as.m_amp_style = static_cast<AlignStack::StarStyle>(options::align_var_def_amp_style());
 
    bool    did_this_line = false;
    size_t  comma_count   = 0;

@@ -12,6 +12,7 @@
 #include "align_add.h"
 #include "align_tab_column.h"
 #include "indent.h"
+#include "log_rules.h"
 #include "uncrustify.h"
 
 using namespace uncrustify;
@@ -20,6 +21,8 @@ using namespace uncrustify;
 void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev)
 {
    LOG_FUNC_ENTRY();
+
+   log_rule_B("align_on_tabstop");
 
    if (options::align_on_tabstop())
    {
@@ -55,8 +58,10 @@ chunk_t *align_trailing_comments(chunk_t *start)
    size_t          nl_count = 0;
    ChunkStack      cs;
    size_t          col;
+   log_rule_B("align_right_cmt_at_col");
    size_t          intended_col = options::align_right_cmt_at_col();
-   const bool      same_level   = options::align_right_cmt_same_level();
+   log_rule_B("align_right_cmt_same_level");
+   const bool      same_level = options::align_right_cmt_same_level();
    comment_align_e cmt_type_cur;
    comment_align_e cmt_type_start = get_comment_align_type(pc);
 
@@ -64,6 +69,8 @@ chunk_t *align_trailing_comments(chunk_t *start)
            __func__, __LINE__, pc->orig_line);
 
    // Find the max column
+   log_rule_B("align_right_cmt_span");
+
    while (  pc != nullptr
          && (nl_count < options::align_right_cmt_span()))
    {
@@ -135,6 +142,8 @@ comment_align_e get_comment_align_type(chunk_t *cmt)
    chunk_t         *prev;
    comment_align_e cmt_type = comment_align_e::REGULAR;
 
+   log_rule_B("align_right_cmt_mix");
+
    if (  !options::align_right_cmt_mix()
       && ((prev = chunk_get_prev(cmt)) != nullptr))
    {
@@ -168,6 +177,8 @@ void align_right_comments(void)
          {
             chunk_t *prev = chunk_get_prev(pc);
 
+            log_rule_B("align_right_cmt_gap");
+
             if (pc->orig_col < prev->orig_col_end + options::align_right_cmt_gap())
             {
                LOG_FMT(LALTC, "NOT changing END comment on line %zu (%zu <= %zu + %u)\n",
@@ -185,6 +196,7 @@ void align_right_comments(void)
          // Change certain WHOLE comments into RIGHT-alignable comments
          if (get_chunk_parent_type(pc) == CT_COMMENT_WHOLE)
          {
+            log_rule_B("input_tab_size");
             size_t max_col = pc->column_indent + options::input_tab_size();
 
             // If the comment is further right than the brace level...

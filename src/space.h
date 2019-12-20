@@ -1,6 +1,6 @@
 /**
  * @file space.h
- * prototypes for space.c
+ * prototypes for space.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+

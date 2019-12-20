@@ -23,6 +23,7 @@
 #include "char_table.h"
 #include "chunk_list.h"
 #include "language_tools.h"
+#include "log_rules.h"
 #include "options_for_QT.h"
 #include "prototypes.h"
 #include "punctuators.h"
@@ -38,9 +39,6 @@
 
 using namespace std;
 using namespace uncrustify;
-
-
-static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *second);
 
 
 /**
@@ -118,28 +116,6 @@ const no_space_table_t no_space_table[] =
    { CT_OC_SEL_NAME,    CT_OC_SEL_NAME  },
    { CT_TYPENAME,       CT_TYPE         },
 };
-
-#define log_rule(rule)                                   \
-   do { if (log_sev_on(LSPACE)) {                        \
-           log_rule2(__LINE__, (rule), first, second); } \
-   } while (0)
-
-
-static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *second)
-{
-   LOG_FUNC_ENTRY();
-
-   if (second->type != CT_NEWLINE)
-   {
-      LOG_FMT(LSPACE, "log_rule(Spacing [line %zu]): first->orig_line is %zu, first->orig_col is %zu, first->text() is '%s', [%s/%s] <===>\n",
-              line, first->orig_line, first->orig_col, first->text(),
-              get_token_name(first->type), get_token_name(get_chunk_parent_type(first)));
-      LOG_FMT(LSPACE, "   second->orig_line is %zu, second->orig_col is %zu, second->text() '%s', [%s/%s] : rule %s[line %zu]\n",
-              second->orig_line, second->orig_col, second->text(),
-              get_token_name(second->type), get_token_name(get_chunk_parent_type(second)),
-              rule, line);
-   }
-}
 
 
 /*
@@ -381,6 +357,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       // Remove spaces, unless we are ignoring. See indent_preproc()
       if (options::pp_space() == IARF_IGNORE)
       {
+         log_rule("pp_space");
          log_rule("IGNORE");
          return(IARF_IGNORE);
       }

@@ -271,6 +271,7 @@ set(uncrustify_sources
   src/language_tools.cpp
   src/logger.cpp
   src/logmask.cpp
+  src/log_rules.cpp
   src/md5.cpp
   src/newlines.cpp
   src/option.cpp
@@ -337,6 +338,7 @@ set(uncrustify_headers
   src/logger.h
   src/logmask.h
   src/log_levels.h
+  src/log_rules.h
   src/md5.h
   src/option.h
   src/options.h

@@ -17,6 +17,7 @@
 #include "keywords.h"
 #include "lang_pawn.h"
 #include "language_tools.h"
+#include "log_rules.h"
 #include "logger.h"
 #include "prototypes.h"
 #include "unc_ctype.h"
@@ -647,6 +648,9 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
                LOG_FMT(LBCSPOP, "%s(%d): tmp->parent_type is NAMESPACE\n",
                        __func__, __LINE__);
 
+               log_rule_B("indent_namespace");
+               log_rule_B("indent_namespace_single_indent");
+
                if (  options::indent_namespace()
                   && options::indent_namespace_single_indent())
                {
@@ -779,6 +783,8 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
          LOG_FMT(LERR, "%s(%d): Unmatched BRACE_CLOSE\n   orig_line is %zu, orig_col is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
 
+         log_rule_B("tok_split_gte");
+
          if (!options::tok_split_gte())
          {
             LOG_FMT(LERR, "%s(%d): Try the option 'tok_split_gte = true'\n",
@@ -829,6 +835,8 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
    // Check for CT_IF after CT_ELSE
    if (frm.top().stage == brace_stage_e::ELSEIF)
    {
+      log_rule_B("indent_else_if");
+
       if (  chunk_is_token(pc, CT_IF)
          && (  !options::indent_else_if()
             || !chunk_is_newline(chunk_get_prev_nc(pc))))
@@ -935,6 +943,8 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
       && (  (frm.top().stage == brace_stage_e::BRACE2)
          || (frm.top().stage == brace_stage_e::BRACE_DO)))
    {
+      log_rule_B("indent_using_block");
+
       if (  language_is_set(LANG_CS)
          && chunk_is_token(pc, CT_USING_STMT)
          && (!options::indent_using_block()))
@@ -1142,6 +1152,7 @@ static void mark_namespace(chunk_t *pns)
          pc = chunk_get_next_ncnl(pc);
          continue;
       }
+      log_rule_B("indent_namespace_limit");
 
       if (  (options::indent_namespace_limit() > 0)
          && ((br_close = chunk_skip_to_match(pc)) != nullptr))
@@ -1152,6 +1163,8 @@ static void mark_namespace(chunk_t *pns)
                  __func__, __LINE__, br_close->orig_line, pc->orig_line);
          LOG_FMT(LTOK, "%s(%d): numberOfLines is %zu, indent_namespace_limit() is %d\n",
                  __func__, __LINE__, numberOfLines, options::indent_namespace_limit());
+
+         log_rule_B("indent_namespace_limit");
 
          if (numberOfLines > options::indent_namespace_limit())
          {

@@ -11,6 +11,8 @@
 
 #include "options_for_QT.h"
 
+#include "log_rules.h"
+
 using namespace uncrustify;
 
 // for the modification of options within the SIGNAL/SLOT call.
@@ -86,6 +88,7 @@ temporary_iarf_option for_qt_options[] =
 //-----------------------------------------------------------------------------
 void save_set_options_for_QT(size_t level)
 {
+   log_rule_B("use_options_overriding_for_qt_macros");
    assert(options::use_options_overriding_for_qt_macros());
 
    LOG_FMT(LGUY, "save values, level=%zu\n", level);
@@ -104,6 +107,7 @@ void save_set_options_for_QT(size_t level)
 //-----------------------------------------------------------------------------
 void restore_options_for_QT(void)
 {
+   log_rule_B("use_options_overriding_for_qt_macros");
    assert(options::use_options_overriding_for_qt_macros());
 
    LOG_FMT(LGUY, "restore values\n");

@@ -8,6 +8,7 @@
 
 #include "punctuators.h"
 
+#include "log_rules.h"
 #include "prototypes.h"
 
 #include <algorithm>
@@ -59,6 +60,7 @@ const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
       {
          break; // no nodes found with the searched char
       }
+      log_rule_B("enable_digraphs");
 
       if (  parent->tag != nullptr
          && (parent->tag->lang_flags & lang_flags) != 0  // punctuator lang and processing lang match

@@ -11,6 +11,7 @@
 
 #include "align_stack.h"
 #include "chunk_list.h"
+#include "log_rules.h"
 
 using namespace uncrustify;
 
@@ -34,10 +35,13 @@ void align_same_func_call_params(void)
    const char        *add_str;
 
    // Default span is 3 if align_same_func_call_params is true
+   log_rule_B("align_same_func_call_params_span");
+
    if (options::align_same_func_call_params_span() > 0)
    {
       span = options::align_same_func_call_params_span();
    }
+   log_rule_B("align_same_func_call_params_thresh");
    thresh = options::align_same_func_call_params_thresh();
 
    fcn_as.Start(span, thresh);
@@ -174,6 +178,8 @@ void align_same_func_call_params(void)
                as.resize(idx + 1);
                as[idx].Start(span, thresh);
 
+               log_rule_B("align_number_right");
+
                if (!options::align_number_right())
                {
                   if (  chunk_is_token(chunks[idx], CT_NUMBER_FP)
@@ -181,6 +187,7 @@ void align_same_func_call_params(void)
                      || chunk_is_token(chunks[idx], CT_POS)
                      || chunk_is_token(chunks[idx], CT_NEG))
                   {
+                     log_rule_B("align_on_tabstop");
                      as[idx].m_right_align = !options::align_on_tabstop();
                   }
                }

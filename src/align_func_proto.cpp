@@ -11,6 +11,7 @@
 
 #include "align_stack.h"
 #include "align_tools.h"
+#include "log_rules.h"
 
 using namespace uncrustify;
 
@@ -20,16 +21,21 @@ void align_func_proto(size_t span)
    LOG_FUNC_ENTRY();
 
    size_t mythresh = 0;
+   log_rule_B("align_func_proto_thresh");
    mythresh = options::align_func_proto_thresh();
 
    AlignStack as;
    as.Start(span, mythresh);
-   as.m_gap        = options::align_func_proto_gap();
+   log_rule_B("align_func_proto_gap");
+   as.m_gap = options::align_func_proto_gap();
+   log_rule_B("align_var_def_star_style");
    as.m_star_style = static_cast<AlignStack::StarStyle>(options::align_var_def_star_style());
-   as.m_amp_style  = static_cast<AlignStack::StarStyle>(options::align_var_def_amp_style());
+   log_rule_B("align_var_def_amp_style");
+   as.m_amp_style = static_cast<AlignStack::StarStyle>(options::align_var_def_amp_style());
 
    AlignStack as_br;
    as_br.Start(span, 0);
+   log_rule_B("align_single_line_brace_gap");
    as_br.m_gap = options::align_single_line_brace_gap();
 
    bool    look_bro = false;
@@ -47,6 +53,9 @@ void align_func_proto(size_t span)
               || (  chunk_is_token(pc, CT_FUNC_DEF)
                  && options::align_single_line_func()))
       {
+         log_rule_B("align_single_line_func");
+         log_rule_B("align_on_operator");
+
          if (  get_chunk_parent_type(pc) == CT_OPERATOR
             && options::align_on_operator())
          {
@@ -57,6 +66,7 @@ void align_func_proto(size_t span)
             toadd = pc;
          }
          as.Add(step_back_over_member(toadd));
+         log_rule_B("align_single_line_brace");
          look_bro = (chunk_is_token(pc, CT_FUNC_DEF))
                     && options::align_single_line_brace();
       }
