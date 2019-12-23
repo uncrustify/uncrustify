@@ -4917,8 +4917,6 @@ void newlines_eat_start_end(void)
                     || (pc->nl_count < options::nl_start_of_file_min()))
             {
                log_rule_B("nl_start_of_file");
-            }
-            {
                LOG_FMT(LBLANKD, "%s(%d): set_blanks_start_of_file %zu\n",
                        __func__, __LINE__, pc->orig_line);
                pc->nl_count = options::nl_start_of_file_min();
