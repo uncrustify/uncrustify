@@ -87,7 +87,12 @@ chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref);
  *
  * @param pc  chunk to delete
  */
-void chunk_del(chunk_t *pc);
+#define chunk_del(pc)    do { \
+      chunk_del_2((pc));      \
+      (pc) = nullptr;         \
+} while (false)
+
+void chunk_del_2(chunk_t *pc);
 
 
 /**

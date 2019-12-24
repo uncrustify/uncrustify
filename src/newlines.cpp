@@ -2040,7 +2040,8 @@ static bool collapse_empty_body(chunk_t *br_open)
       if (chunk_is_token(pc, CT_NEWLINE) && chunk_safe_to_del_nl(pc))
       {
          pc = pc->prev;
-         chunk_del(pc->next);
+         chunk_t *next = pc->next;
+         chunk_del(next);
          MARK_CHANGE();
       }
    }
