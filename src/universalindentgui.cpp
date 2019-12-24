@@ -10,6 +10,7 @@
 #include "universalindentgui.h"
 
 #include "error_types.h"
+#include "log_rules.h"
 #include "prototypes.h"
 #include "unc_ctype.h"
 #include "uncrustify.h"
@@ -234,6 +235,8 @@ void print_universal_indent_cfg(FILE *pfile)
          fprintf(pfile, "</html>\"\n");
 
          // Handle some options independent of their type and most by their type.
+         log_rule_B("indent_with_tabs");
+
          if (option == &uncrustify::options::indent_with_tabs)
          {
             // Indenting with tabs selector becomes a multiple selector and not

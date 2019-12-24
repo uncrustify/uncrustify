@@ -9,6 +9,7 @@
 #include "parens.h"
 
 #include "chunk_list.h"
+#include "log_rules.h"
 #include "unc_ctype.h"
 #include "uncrustify.h"
 #include "uncrustify_types.h"
@@ -48,6 +49,8 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest);
 void do_parens(void)
 {
    LOG_FUNC_ENTRY();
+
+   log_rule_B("mod_full_paren_if_bool");
 
    if (options::mod_full_paren_if_bool())
    {

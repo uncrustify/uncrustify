@@ -19,6 +19,7 @@
 #include "error_types.h"
 #include "keywords.h"
 #include "language_tools.h"
+#include "log_rules.h"
 #include "prototypes.h"
 #include "punctuators.h"
 #include "space.h"
@@ -1248,6 +1249,8 @@ static void check_template(chunk_t *start)
       {
          LOG_FMT(LTEMPL, "%s(%d): type is %s, num_tokens is %zu\n",
                  __func__, __LINE__, get_token_name(pc->type), num_tokens);
+
+         log_rule_B("tok_split_gte");
 
          if (  (tokens[num_tokens - 1] == CT_ANGLE_OPEN)
             && (pc->str[0] == '>')

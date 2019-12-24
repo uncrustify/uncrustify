@@ -10,6 +10,7 @@
 #define C_PARSE_PROTOTYPES_H_INCLUDED
 
 #include "chunk_list.h"
+#include "log_rules.h"
 #include "uncrustify_types.h"
 
 #include <deque>
@@ -53,6 +54,7 @@ static inline size_t calc_next_tab_column(size_t col, size_t tabsize)
  */
 static inline size_t next_tab_column(size_t col)
 {
+   log_rule_B("output_tab_size");
    return(calc_next_tab_column(col, uncrustify::options::output_tab_size()));
 }
 

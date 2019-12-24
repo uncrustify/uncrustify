@@ -10,6 +10,7 @@
 #include "align_tab_column.h"
 
 #include "chunk_list.h"
+#include "log_rules.h"
 #include "prototypes.h"
 #include "uncrustify_types.h"
 
@@ -29,6 +30,7 @@ size_t align_tab_column(size_t col)
    {
       col = 1;
    }
+   log_rule_B("output_tab_size");
 
    if ((col % uncrustify::options::output_tab_size()) != 1)
    {

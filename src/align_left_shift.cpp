@@ -13,6 +13,7 @@
 #include "chunk_list.h"
 #include "ChunkStack.h"
 #include "indent.h"
+#include "log_rules.h"
 #include "uncrustify.h"
 
 using namespace uncrustify;
@@ -88,6 +89,7 @@ void align_left_shift(void)
 
             if (prev != nullptr && chunk_is_newline(prev))
             {
+               log_rule_B("indent_columns");
                indent_to_column(pc, pc->column_indent + options::indent_columns());
                pc->column_indent = pc->column;
                chunk_flags_set(pc, PCF_DONT_INDENT);
@@ -115,6 +117,7 @@ void align_left_shift(void)
 
          if (prev != nullptr && chunk_is_newline(prev))
          {
+            log_rule_B("indent_columns");
             indent_to_column(pc, pc->column_indent + options::indent_columns());
             pc->column_indent = pc->column;
             chunk_flags_set(pc, PCF_DONT_INDENT);

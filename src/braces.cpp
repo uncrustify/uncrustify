@@ -12,6 +12,7 @@
 #include "combine.h"
 #include "error_types.h"
 #include "language_tools.h"
+#include "log_rules.h"
 #include "newlines.h"
 #include "prototypes.h"
 #include "unc_ctype.h"
@@ -200,12 +201,19 @@ void do_braces(void)
          }
       }
    }
+   log_rule_B("mod_full_brace_if_chain");
+   log_rule_B("mod_full_brace_if_chain_only");
 
    if (  options::mod_full_brace_if_chain()
       || options::mod_full_brace_if_chain_only())
    {
       mod_full_brace_if_chain();
    }
+   log_rule_B("mod_full_brace_if");
+   log_rule_B("mod_full_brace_do");
+   log_rule_B("mod_full_brace_for");
+   log_rule_B("mod_full_brace_using");
+   log_rule_B("mod_full_brace_while");
 
    if ((options::mod_full_brace_if() |
         options::mod_full_brace_do() |
@@ -215,8 +223,14 @@ void do_braces(void)
    {
       examine_braces();
    }
-
    // convert vbraces if needed
+   log_rule_B("mod_full_brace_if");
+   log_rule_B("mod_full_brace_do");
+   log_rule_B("mod_full_brace_for");
+   log_rule_B("mod_full_brace_function");
+   log_rule_B("mod_full_brace_using");
+   log_rule_B("mod_full_brace_while");
+
    if ((options::mod_full_brace_if() |
         options::mod_full_brace_do() |
         options::mod_full_brace_for() |
@@ -226,11 +240,13 @@ void do_braces(void)
    {
       convert_vbrace_to_brace();
    }
+   log_rule_B("mod_case_brace");
 
    if (options::mod_case_brace() != IARF_IGNORE)
    {
       mod_case_brace();
    }
+   log_rule_B("mod_move_case_break");
 
    if (options::mod_move_case_break())
    {
@@ -243,7 +259,14 @@ static void examine_braces(void)
 {
    LOG_FUNC_ENTRY();
 
+   log_rule_B("mod_full_brace_nl_block_rem_mlcond");
    const auto multiline_block = options::mod_full_brace_nl_block_rem_mlcond();
+
+   log_rule_B("mod_full_brace_if");
+   log_rule_B("mod_full_brace_do");
+   log_rule_B("mod_full_brace_for");
+   log_rule_B("mod_full_brace_using");
+   log_rule_B("mod_full_brace_while");
 
    for (auto pc = chunk_get_tail(); pc != nullptr;)
    {
@@ -273,12 +296,13 @@ static void examine_braces(void)
       }
       pc = prev;
    }
-}
+} // examine_braces
 
 
 static bool should_add_braces(chunk_t *vbopen)
 {
    LOG_FUNC_ENTRY();
+   log_rule_B("mod_full_brace_nl");
    const size_t nl_max = options::mod_full_brace_nl();
 
    if (nl_max == 0)
@@ -332,7 +356,8 @@ static bool can_remove_braces(chunk_t *bopen)
       // Can't remove empty statement
       return(false);
    }
-   const size_t level  = bopen->level + 1;
+   const size_t level = bopen->level + 1;
+   log_rule_B("mod_full_brace_nl");
    const size_t nl_max = options::mod_full_brace_nl();
    chunk_t      *prev  = nullptr;
 
@@ -476,7 +501,8 @@ static void examine_brace(chunk_t *bopen)
    LOG_FMT(LBRDEL, "%s(%d): start on orig_line %zu, bopen->level is %zu\n",
            __func__, __LINE__, bopen->orig_line, bopen->level);
 
-   const size_t level  = bopen->level + 1;
+   const size_t level = bopen->level + 1;
+   log_rule_B("mod_full_brace_nl");
    const size_t nl_max = options::mod_full_brace_nl();
 
    chunk_t      *prev      = nullptr;
@@ -681,6 +707,8 @@ static void examine_brace(chunk_t *bopen)
                chunk_del(pc);
                newline_del_between(tmp_prev, tmp_next);
 
+               log_rule_B("nl_else_if");
+
                if (options::nl_else_if() & IARF_ADD)
                {
                   newline_add_between(tmp_prev, tmp_next);
@@ -857,6 +885,14 @@ static void convert_vbrace_to_brace(void)
    LOG_FUNC_ENTRY();
 
    // Find every vbrace open
+   log_rule_B("mod_full_brace_if");
+   log_rule_B("mod_full_brace_if_chain");
+   log_rule_B("mod_full_brace_for");
+   log_rule_B("mod_full_brace_do");
+   log_rule_B("mod_full_brace_while");
+   log_rule_B("mod_full_brace_using");
+   log_rule_B("mod_full_brace_function");
+
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
       if (pc->type != CT_VBRACE_OPEN)
@@ -1068,6 +1104,7 @@ void add_long_closebrace_comment(void)
          if (  get_chunk_parent_type(br_open) == CT_FUNC_DEF
             || get_chunk_parent_type(br_open) == CT_OC_MSG_DECL)
          {
+            log_rule_B("mod_add_long_function_closebrace_comment");
             nl_min = options::mod_add_long_function_closebrace_comment();
             tag_pc = fcn_pc;
 
@@ -1078,12 +1115,14 @@ void add_long_closebrace_comment(void)
          }
          else if (get_chunk_parent_type(br_open) == CT_SWITCH && sw_pc != nullptr)
          {
+            log_rule_B("mod_add_long_switch_closebrace_comment");
             nl_min = options::mod_add_long_switch_closebrace_comment();
             tag_pc = sw_pc;
             xstr   = sw_pc->str;
          }
          else if (get_chunk_parent_type(br_open) == CT_NAMESPACE && ns_pc != nullptr)
          {
+            log_rule_B("mod_add_long_namespace_closebrace_comment");
             nl_min = options::mod_add_long_namespace_closebrace_comment();
             tag_pc = ns_pc;
             xstr   = tag_pc->str;    // add 'namespace' to the string
@@ -1104,6 +1143,7 @@ void add_long_closebrace_comment(void)
                  && (  !language_is_set(LANG_CPP)                 // proceed if not C++
                     || (chunk_is_token(br_close, CT_SEMICOLON)))) // else a C++ class needs to end with a semicolon
          {
+            log_rule_B("mod_add_long_class_closebrace_comment");
             nl_min = options::mod_add_long_class_closebrace_comment();
             tag_pc = cl_pc;
             xstr   = tag_pc->str;
@@ -1312,6 +1352,7 @@ static void mod_case_brace(void)
       {
          return;
       }
+      log_rule_B("mod_case_brace");
 
       if (  options::mod_case_brace() == IARF_REMOVE
          && chunk_is_token(pc, CT_BRACE_OPEN)
@@ -1325,6 +1366,7 @@ static void mod_case_brace(void)
               && next->type != CT_BRACE_CLOSE
               && next->type != CT_CASE)
       {
+         log_rule_B("mod_case_brace");
          pc = mod_case_brace_add(pc);
       }
       else
@@ -1392,6 +1434,7 @@ static void process_if_chain(chunk_t *br_start)
       {
          break;
       }
+      log_rule_B("mod_full_brace_if_chain_only");
 
       if (options::mod_full_brace_if_chain_only())
       {
@@ -1451,6 +1494,7 @@ static void process_if_chain(chunk_t *br_start)
    }
    else if (options::mod_full_brace_if_chain())
    {
+      log_rule_B("mod_full_brace_if_chain");
       LOG_FMT(LBRCH, "%s(%d): remove braces on lines[%zu]:\n",
               __func__, __LINE__, braces.size());
 
@@ -1460,6 +1504,7 @@ static void process_if_chain(chunk_t *br_start)
        * is used.
        * We only want to remove braces if the first one is active.
        */
+      log_rule_B("mod_full_brace_nl_block_rem_mlcond");
       const auto multiline_block = options::mod_full_brace_nl_block_rem_mlcond();
 
       LOG_FMT(LBRCH, "%s(%d): remove braces on lines:\n", __func__, __LINE__);

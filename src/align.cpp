@@ -27,6 +27,7 @@
 #include "align_typedefs.h"
 #include "align_var_def_brace.h"
 #include "language_tools.h"
+#include "log_rules.h"
 #include "quick_align_again.h"
 #include "uncrustify.h"
 
@@ -116,30 +117,39 @@ void align_all(void)
 {
    LOG_FUNC_ENTRY();
 
+   log_rule_B("align_typedef_span");
+
    if (options::align_typedef_span() > 0)
    {
       align_typedefs(options::align_typedef_span());
    }
+   log_rule_B("align_left_shift");
 
    if (options::align_left_shift())
    {
       align_left_shift();
    }
+   log_rule_B("align_oc_msg_colon_span");
 
    if (options::align_oc_msg_colon_span() > 0)
    {
       align_oc_msg_colons();
    }
-
    // Align variable definitions
+   log_rule_B("align_var_def_span");
+   log_rule_B("align_var_struct_span");
+   log_rule_B("align_var_class_span");
+
    if (  (options::align_var_def_span() > 0)
       || (options::align_var_struct_span() > 0)
       || (options::align_var_class_span() > 0))
    {
       align_var_def_brace(chunk_get_head(), options::align_var_def_span(), nullptr);
    }
-
    // Align assignments
+   log_rule_B("align_enum_equ_span");
+   log_rule_B("align_assign_span");
+
    if (  (options::align_enum_equ_span() > 0)
       || (options::align_assign_span() > 0))
    {
@@ -148,43 +158,52 @@ void align_all(void)
                    options::align_assign_thresh(),
                    nullptr);
    }
-
    // Align structure initializers
+   log_rule_B("align_struct_init_span");
+
    if (options::align_struct_init_span() > 0)
    {
       align_struct_initializers();
    }
-
    // Align function prototypes
+   log_rule_B("align_func_proto_span");
+   log_rule_B("align_mix_var_proto");
+
    if (  (options::align_func_proto_span() > 0)
       && !options::align_mix_var_proto())
    {
       align_func_proto(options::align_func_proto_span());
    }
-
    // Align function prototypes
+   log_rule_B("align_oc_msg_spec_span");
+
    if (options::align_oc_msg_spec_span() > 0)
    {
       align_oc_msg_spec(options::align_oc_msg_spec_span());
    }
-
    // Align OC colons
+   log_rule_B("align_oc_decl_colon");
+
    if (options::align_oc_decl_colon())
    {
       align_oc_decl_colon();
    }
+   log_rule_B("align_asm_colon");
 
    if (options::align_asm_colon())
    {
       align_asm_colon();
    }
-
    // Align variable definitions in function prototypes
+   log_rule_B("align_func_params");
+   log_rule_B("align_func_params_span");
+
    if (  options::align_func_params()
       || options::align_func_params_span() > 0)
    {
       align_func_params();
    }
+   log_rule_B("align_same_func_call_params");
 
    if (options::align_same_func_call_params())
    {

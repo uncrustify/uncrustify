@@ -9,6 +9,7 @@
 #include "sorting.h"
 
 #include "chunk_list.h"
+#include "log_rules.h"
 #include "prototypes.h"
 
 #include <regex>
@@ -229,6 +230,7 @@ static void do_the_sort(chunk_t **chunks, size_t num_chunks)
    LOG_FMT(LSORT, "\n");
 
    size_t start_idx;
+   log_rule_B("mod_sort_case_sensitive");
    bool   take_care = options::mod_sort_case_sensitive();                  // Issue #2091
 
    for (start_idx = 0; start_idx < (num_chunks - 1); start_idx++)
@@ -313,6 +315,8 @@ void sort_imports(void)
       }
       else if (chunk_is_token(pc, CT_IMPORT))
       {
+         log_rule_B("mod_sort_import");
+
          if (options::mod_sort_import())
          {
             p_imp = chunk_get_next(pc);
@@ -320,6 +324,8 @@ void sort_imports(void)
       }
       else if (chunk_is_token(pc, CT_USING))
       {
+         log_rule_B("mod_sort_using");
+
          if (options::mod_sort_using())
          {
             p_imp = chunk_get_next(pc);
@@ -327,6 +333,8 @@ void sort_imports(void)
       }
       else if (chunk_is_token(pc, CT_PP_INCLUDE))
       {
+         log_rule_B("mod_sort_include");
+
          if (options::mod_sort_include())
          {
             p_imp  = chunk_get_next(pc);

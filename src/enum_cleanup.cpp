@@ -9,6 +9,7 @@
 #include "enum_cleanup.h"
 
 #include "chunk_list.h"
+#include "log_rules.h"
 #include "logger.h"
 #include "uncrustify.h"
 #include "uncrustify_types.h"
@@ -19,6 +20,8 @@ using namespace uncrustify;
 void enum_cleanup(void)
 {
    LOG_FUNC_ENTRY();
+
+   log_rule_B("mod_enum_last_comma");
 
    if (options::mod_enum_last_comma() == IARF_IGNORE)
    {
@@ -39,6 +42,8 @@ void enum_cleanup(void)
          // test of (prev == nullptr) is not necessary
          if (chunk_is_token(prev, CT_COMMA))
          {
+            log_rule_B("mod_enum_last_comma");
+
             if (options::mod_enum_last_comma() == IARF_REMOVE)
             {
                chunk_del(prev);
@@ -46,6 +51,8 @@ void enum_cleanup(void)
          }
          else
          {
+            log_rule_B("mod_enum_last_comma");
+
             if (  options::mod_enum_last_comma() == IARF_ADD
                || options::mod_enum_last_comma() == IARF_FORCE)
             {
