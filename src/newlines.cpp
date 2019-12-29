@@ -4528,10 +4528,13 @@ void newlines_cleanup_braces(bool first)
                  || language_is_set(LANG_CPP)))                 // Issue #2574
       {
          // Issue #1124
-         newline_iarf(chunk_get_prev_nnl(pc), options::nl_before_member());
-         log_rule_B("nl_before_member");
-         newline_iarf(pc, options::nl_after_member());
-         log_rule_B("nl_after_member");
+         if (pc->parent_type != CT_FUNC_DEF)
+         {
+            newline_iarf(chunk_get_prev_nnl(pc), options::nl_before_member());
+            log_rule_B("nl_before_member");
+            newline_iarf(pc, options::nl_after_member());
+            log_rule_B("nl_after_member");
+         }
       }
       else
       {
