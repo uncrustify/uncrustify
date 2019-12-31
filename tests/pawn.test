@@ -20,3 +20,5 @@
 60040  amxmodx.cfg                          pawn/preproc.pawn
 
 60050  mod_full_brace_function-f.cfg        pawn/gh419.pawn
+
+60100  Issue_2586.cfg                       pawn/Issue_2586.pawn
