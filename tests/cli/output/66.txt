@@ -565,8 +565,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -580,8 +580,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -595,8 +595,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -611,8 +611,8 @@ log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_macro_brace' at line 1453
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -625,8 +625,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -639,7 +639,7 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'pos_conditional' at line 3351
+log_rule(Newline): rule is 'pos_conditional' at line 3377
 space_col_align : first->orig_line is 3, orig_col is 1, [FUNC_CLASS_DEF/NONE], text() 'TelegramIndex' <==>
 space_col_align : second->orig_line is 3, orig_col is 14 [FPAREN_OPEN/FUNC_CLASS_DEF], text() '(', [CallStack]
 do_space : orig_line is 3, orig_col is 1, first->text() 'TelegramIndex', type is FUNC_CLASS_DEF
@@ -812,8 +812,8 @@ space_col_align :    => coldiff is 1
 space_col_align :    => av is REMOVE
 space_col_align :    => coldiff is 1
 log_rule(Newline): rule is 'indent_relative_single_line_comments' at line 348
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -837,8 +837,8 @@ log_rule(Newline): rule is 'indent_paren_after_func_def' at line 2447
 log_rule(Newline): rule is 'indent_paren_after_func_call' at line 2448
 log_rule(Newline): rule is 'indent_continue' at line 2468
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -851,8 +851,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -865,8 +865,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -879,8 +879,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -893,8 +893,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -907,8 +907,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -921,8 +921,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -935,8 +935,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -949,8 +949,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -964,8 +964,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -979,8 +979,8 @@ log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_class_colon' at line 2120
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -994,8 +994,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1009,7 +1009,7 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'pos_conditional' at line 3351
+log_rule(Newline): rule is 'pos_conditional' at line 3377
 space_col_align : first->orig_line is 4, orig_col is 1, [FUNC_CTOR_VAR/NONE], text() 'pTelName' <==>
 space_col_align : second->orig_line is 4, orig_col is 9 [FPAREN_OPEN/FUNC_CTOR_VAR], text() '(', [CallStack]
 do_space : orig_line is 4, orig_col is 1, first->text() 'pTelName', type is FUNC_CTOR_VAR
@@ -1084,8 +1084,8 @@ space_col_align :    => coldiff is 1
 space_col_align :    => av is REMOVE
 space_col_align :    => coldiff is 1
 log_rule(Newline): rule is 'indent_relative_single_line_comments' at line 348
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1110,8 +1110,8 @@ log_rule(Newline): rule is 'indent_paren_after_func_def' at line 2447
 log_rule(Newline): rule is 'indent_paren_after_func_call' at line 2448
 log_rule(Newline): rule is 'indent_continue' at line 2468
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1124,8 +1124,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1140,23 +1140,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
-log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
-log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
-log_rule(Newline): rule is 'indent_brace_parent' at line 633
-log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
-log_rule(Newline): rule is 'indent_xml_string' at line 943
-log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
-log_rule(Newline): rule is 'indent_single_newlines' at line 1246
-log_rule(Newline): rule is 'indent_braces' at line 1313
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
-log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
-log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
-log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1170,8 +1155,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1185,7 +1170,22 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'pos_conditional' at line 3351
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
+log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
+log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
+log_rule(Newline): rule is 'indent_brace_parent' at line 633
+log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
+log_rule(Newline): rule is 'indent_xml_string' at line 943
+log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
+log_rule(Newline): rule is 'indent_single_newlines' at line 1246
+log_rule(Newline): rule is 'indent_braces' at line 1313
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
+log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
+log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
+log_rule(Newline): rule is 'indent_shift' at line 2815
+log_rule(Newline): rule is 'pos_conditional' at line 3377
 space_col_align : first->orig_line is 5, orig_col is 1, [FUNC_CTOR_VAR/NONE], text() 'nTelIndex' <==>
 space_col_align : second->orig_line is 5, orig_col is 10 [FPAREN_OPEN/FUNC_CTOR_VAR], text() '(', [CallStack]
 do_space : orig_line is 5, orig_col is 1, first->text() 'nTelIndex', type is FUNC_CTOR_VAR
@@ -1249,8 +1249,8 @@ space_col_align :    => coldiff is 1
 space_col_align :    => av is REMOVE
 space_col_align :    => coldiff is 1
 log_rule(Newline): rule is 'indent_relative_single_line_comments' at line 348
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1275,8 +1275,8 @@ log_rule(Newline): rule is 'indent_paren_after_func_def' at line 2447
 log_rule(Newline): rule is 'indent_paren_after_func_call' at line 2448
 log_rule(Newline): rule is 'indent_continue' at line 2468
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1289,8 +1289,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1305,8 +1305,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1320,8 +1320,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1336,7 +1336,7 @@ log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_macro_brace' at line 1453
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'pos_conditional' at line 3351
+log_rule(Newline): rule is 'pos_conditional' at line 3377
 space_col_align : first->orig_line is 6, orig_col is 1, [BRACE_OPEN/FUNC_CLASS_DEF], text() '{' <==>
 space_col_align : second->orig_line is 6, orig_col is 2 [NEWLINE/NONE], text() '', [CallStack]
 do_space : orig_line is 6, orig_col is 1, first->text() '{', type is BRACE_OPEN
@@ -1346,8 +1346,8 @@ space_col_align :    => coldiff is 1
 space_col_align :    => av is REMOVE
 space_col_align :    => coldiff is 1
 log_rule(Newline): rule is 'indent_relative_single_line_comments' at line 348
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1360,8 +1360,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1375,7 +1375,7 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'pos_conditional' at line 3351
+log_rule(Newline): rule is 'pos_conditional' at line 3377
 space_col_align : first->orig_line is 7, orig_col is 1, [BRACE_CLOSE/FUNC_CLASS_DEF], text() '}' <==>
 space_col_align : second->orig_line is 7, orig_col is 2 [NEWLINE/NONE], text() '', [CallStack]
 do_space : orig_line is 7, orig_col is 1, first->text() '}', type is BRACE_CLOSE
@@ -1385,8 +1385,8 @@ space_col_align :    => coldiff is 1
 space_col_align :    => av is REMOVE
 space_col_align :    => coldiff is 1
 log_rule(Newline): rule is 'indent_relative_single_line_comments' at line 348
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1399,8 +1399,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1413,7 +1413,7 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'pos_conditional' at line 3351
+log_rule(Newline): rule is 'pos_conditional' at line 3377
 space_col_align : first->orig_line is 9, orig_col is 1, [DESTRUCTOR/NONE], text() '~' <==>
 space_col_align : second->orig_line is 9, orig_col is 2 [FUNC_CLASS_DEF/DESTRUCTOR], text() 'TelegramIndex', [CallStack]
 do_space : orig_line is 9, orig_col is 1, first->text() '~', type is DESTRUCTOR
@@ -1470,8 +1470,8 @@ space_col_align :    => coldiff is 1
 space_col_align :    => av is REMOVE
 space_col_align :    => coldiff is 1
 log_rule(Newline): rule is 'indent_relative_single_line_comments' at line 348
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1484,8 +1484,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1509,8 +1509,8 @@ log_rule(Newline): rule is 'indent_paren_after_func_def' at line 2447
 log_rule(Newline): rule is 'indent_paren_after_func_call' at line 2448
 log_rule(Newline): rule is 'indent_continue' at line 2468
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1524,8 +1524,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1538,8 +1538,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1553,7 +1553,7 @@ log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_macro_brace' at line 1453
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'pos_conditional' at line 3351
+log_rule(Newline): rule is 'pos_conditional' at line 3377
 space_col_align : first->orig_line is 10, orig_col is 1, [BRACE_OPEN/FUNC_CLASS_DEF], text() '{' <==>
 space_col_align : second->orig_line is 10, orig_col is 2 [NEWLINE/NONE], text() '', [CallStack]
 do_space : orig_line is 10, orig_col is 1, first->text() '{', type is BRACE_OPEN
@@ -1563,8 +1563,8 @@ space_col_align :    => coldiff is 1
 space_col_align :    => av is REMOVE
 space_col_align :    => coldiff is 1
 log_rule(Newline): rule is 'indent_relative_single_line_comments' at line 348
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1577,8 +1577,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1592,7 +1592,7 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'pos_conditional' at line 3351
+log_rule(Newline): rule is 'pos_conditional' at line 3377
 space_col_align : first->orig_line is 11, orig_col is 1, [BRACE_CLOSE/FUNC_CLASS_DEF], text() '}' <==>
 space_col_align : second->orig_line is 11, orig_col is 2 [NEWLINE/NONE], text() '', [CallStack]
 do_space : orig_line is 11, orig_col is 1, first->text() '}', type is BRACE_CLOSE
@@ -1602,8 +1602,8 @@ space_col_align :    => coldiff is 1
 space_col_align :    => av is REMOVE
 space_col_align :    => coldiff is 1
 log_rule(Newline): rule is 'indent_relative_single_line_comments' at line 348
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1616,8 +1616,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1630,7 +1630,7 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'pos_conditional' at line 3351
+log_rule(Newline): rule is 'pos_conditional' at line 3377
 space_col_align : first->orig_line is 13, orig_col is 1, [QUALIFIER/NONE], text() 'const' <==>
 space_col_align : second->orig_line is 13, orig_col is 7 [TYPE/NONE], text() 'char', [CallStack]
 do_space : orig_line is 13, orig_col is 1, first->text() 'const', type is QUALIFIER
@@ -1709,8 +1709,8 @@ space_col_align :    => coldiff is 1
 space_col_align :    => av is REMOVE
 space_col_align :    => coldiff is 1
 log_rule(Newline): rule is 'indent_relative_single_line_comments' at line 348
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1723,8 +1723,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1737,8 +1737,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1751,8 +1751,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1766,8 +1766,8 @@ log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
 log_rule(Newline): rule is 'indent_continue' at line 2945
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1780,8 +1780,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1794,8 +1794,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1808,7 +1808,7 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'pos_conditional' at line 3351
+log_rule(Newline): rule is 'pos_conditional' at line 3377
 space_col_align : first->orig_line is 14, orig_col is 1, [TYPE/NONE], text() 'unsigned' <==>
 space_col_align : second->orig_line is 14, orig_col is 10 [TYPE/NONE], text() 'long', [CallStack]
 do_space : orig_line is 14, orig_col is 1, first->text() 'unsigned', type is TYPE
@@ -1851,8 +1851,8 @@ space_col_align :    => coldiff is 1
 space_col_align :    => av is REMOVE
 space_col_align :    => coldiff is 1
 log_rule(Newline): rule is 'indent_relative_single_line_comments' at line 348
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1865,8 +1865,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1880,8 +1880,8 @@ log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
 log_rule(Newline): rule is 'indent_continue' at line 2945
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1894,8 +1894,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1908,23 +1908,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
-log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
-log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
-log_rule(Newline): rule is 'indent_brace_parent' at line 633
-log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
-log_rule(Newline): rule is 'indent_xml_string' at line 943
-log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
-log_rule(Newline): rule is 'indent_single_newlines' at line 1246
-log_rule(Newline): rule is 'indent_braces' at line 1313
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
-log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
-log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
-log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1938,8 +1923,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -1953,8 +1938,23 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
+log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
+log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
+log_rule(Newline): rule is 'indent_brace_parent' at line 633
+log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
+log_rule(Newline): rule is 'indent_xml_string' at line 943
+log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
+log_rule(Newline): rule is 'indent_single_newlines' at line 1246
+log_rule(Newline): rule is 'indent_braces' at line 1313
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
+log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
+log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
+log_rule(Newline): rule is 'indent_shift' at line 2815
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'mod_add_long_switch_closebrace_comment' at line 2113
 log_rule(Newline): rule is 'mod_add_long_function_closebrace_comment' at line 2114
 log_rule(Newline): rule is 'mod_add_long_class_closebrace_comment' at line 2115
@@ -1992,8 +1992,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2007,8 +2007,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2022,8 +2022,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2038,8 +2038,8 @@ log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_macro_brace' at line 1453
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2052,8 +2052,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2066,8 +2066,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2091,8 +2091,8 @@ log_rule(Newline): rule is 'indent_paren_after_func_def' at line 2447
 log_rule(Newline): rule is 'indent_paren_after_func_call' at line 2448
 log_rule(Newline): rule is 'indent_continue' at line 2468
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2105,8 +2105,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2119,8 +2119,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2133,8 +2133,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2147,8 +2147,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2161,8 +2161,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2175,8 +2175,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2189,8 +2189,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2203,8 +2203,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2218,8 +2218,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2233,8 +2233,8 @@ log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_class_colon' at line 2120
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2248,8 +2248,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2263,109 +2263,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
-log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
-log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
-log_rule(Newline): rule is 'indent_brace_parent' at line 633
-log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
-log_rule(Newline): rule is 'indent_xml_string' at line 943
-log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
-log_rule(Newline): rule is 'indent_single_newlines' at line 1246
-log_rule(Newline): rule is 'indent_braces' at line 1313
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
-log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
-log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
-log_rule(Newline): rule is 'indent_paren_nl' at line 2360
-log_rule(Newline): rule is 'indent_paren_nl' at line 2361
-log_rule(Newline): rule is 'indent_square_nl' at line 2362
-log_rule(Newline): rule is 'indent_paren_after_func_def' at line 2369
-log_rule(Newline): rule is 'indent_paren_after_func_decl' at line 2370
-log_rule(Newline): rule is 'indent_paren_after_func_call' at line 2371
-log_rule(Newline): rule is 'use_indent_continue_only_once' at line 2445
-log_rule(Newline): rule is 'indent_paren_after_func_decl' at line 2446
-log_rule(Newline): rule is 'indent_paren_after_func_def' at line 2447
-log_rule(Newline): rule is 'indent_paren_after_func_call' at line 2448
-log_rule(Newline): rule is 'indent_continue' at line 2468
-log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
-log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
-log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
-log_rule(Newline): rule is 'indent_brace_parent' at line 633
-log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
-log_rule(Newline): rule is 'indent_xml_string' at line 943
-log_rule(Newline): rule is 'indent_single_newlines' at line 1246
-log_rule(Newline): rule is 'indent_braces' at line 1313
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
-log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
-log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
-log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
-log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
-log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
-log_rule(Newline): rule is 'indent_brace_parent' at line 633
-log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
-log_rule(Newline): rule is 'indent_xml_string' at line 943
-log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
-log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
-log_rule(Newline): rule is 'indent_single_newlines' at line 1246
-log_rule(Newline): rule is 'indent_braces' at line 1313
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
-log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
-log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
-log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
-log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
-log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
-log_rule(Newline): rule is 'indent_brace_parent' at line 633
-log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
-log_rule(Newline): rule is 'indent_xml_string' at line 943
-log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
-log_rule(Newline): rule is 'indent_single_newlines' at line 1246
-log_rule(Newline): rule is 'indent_braces' at line 1313
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
-log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
-log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
-log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
-log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
-log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
-log_rule(Newline): rule is 'indent_brace_parent' at line 633
-log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
-log_rule(Newline): rule is 'indent_xml_string' at line 943
-log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
-log_rule(Newline): rule is 'indent_single_newlines' at line 1246
-log_rule(Newline): rule is 'indent_braces' at line 1313
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
-log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
-log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
-log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
-log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
-log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
-log_rule(Newline): rule is 'indent_brace_parent' at line 633
-log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
-log_rule(Newline): rule is 'indent_xml_string' at line 943
-log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
-log_rule(Newline): rule is 'indent_single_newlines' at line 1246
-log_rule(Newline): rule is 'indent_braces' at line 1313
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
-log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
-log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
-log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2390,8 +2289,8 @@ log_rule(Newline): rule is 'indent_paren_after_func_def' at line 2447
 log_rule(Newline): rule is 'indent_paren_after_func_call' at line 2448
 log_rule(Newline): rule is 'indent_continue' at line 2468
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2404,8 +2303,109 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
+log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
+log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
+log_rule(Newline): rule is 'indent_brace_parent' at line 633
+log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
+log_rule(Newline): rule is 'indent_xml_string' at line 943
+log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
+log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
+log_rule(Newline): rule is 'indent_single_newlines' at line 1246
+log_rule(Newline): rule is 'indent_braces' at line 1313
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
+log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
+log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
+log_rule(Newline): rule is 'indent_shift' at line 2815
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
+log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
+log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
+log_rule(Newline): rule is 'indent_brace_parent' at line 633
+log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
+log_rule(Newline): rule is 'indent_xml_string' at line 943
+log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
+log_rule(Newline): rule is 'indent_single_newlines' at line 1246
+log_rule(Newline): rule is 'indent_braces' at line 1313
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
+log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
+log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
+log_rule(Newline): rule is 'indent_shift' at line 2815
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
+log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
+log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
+log_rule(Newline): rule is 'indent_brace_parent' at line 633
+log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
+log_rule(Newline): rule is 'indent_xml_string' at line 943
+log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
+log_rule(Newline): rule is 'indent_single_newlines' at line 1246
+log_rule(Newline): rule is 'indent_braces' at line 1313
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
+log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
+log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
+log_rule(Newline): rule is 'indent_shift' at line 2815
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
+log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
+log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
+log_rule(Newline): rule is 'indent_brace_parent' at line 633
+log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
+log_rule(Newline): rule is 'indent_xml_string' at line 943
+log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
+log_rule(Newline): rule is 'indent_single_newlines' at line 1246
+log_rule(Newline): rule is 'indent_braces' at line 1313
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
+log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
+log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
+log_rule(Newline): rule is 'indent_shift' at line 2815
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
+log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
+log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
+log_rule(Newline): rule is 'indent_brace_parent' at line 633
+log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
+log_rule(Newline): rule is 'indent_xml_string' at line 943
+log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
+log_rule(Newline): rule is 'indent_single_newlines' at line 1246
+log_rule(Newline): rule is 'indent_braces' at line 1313
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
+log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
+log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
+log_rule(Newline): rule is 'indent_paren_nl' at line 2360
+log_rule(Newline): rule is 'indent_paren_nl' at line 2361
+log_rule(Newline): rule is 'indent_square_nl' at line 2362
+log_rule(Newline): rule is 'indent_paren_after_func_def' at line 2369
+log_rule(Newline): rule is 'indent_paren_after_func_decl' at line 2370
+log_rule(Newline): rule is 'indent_paren_after_func_call' at line 2371
+log_rule(Newline): rule is 'use_indent_continue_only_once' at line 2445
+log_rule(Newline): rule is 'indent_paren_after_func_decl' at line 2446
+log_rule(Newline): rule is 'indent_paren_after_func_def' at line 2447
+log_rule(Newline): rule is 'indent_paren_after_func_call' at line 2448
+log_rule(Newline): rule is 'indent_continue' at line 2468
+log_rule(Newline): rule is 'indent_shift' at line 2815
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
+log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
+log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
+log_rule(Newline): rule is 'indent_brace_parent' at line 633
+log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
+log_rule(Newline): rule is 'indent_xml_string' at line 943
+log_rule(Newline): rule is 'indent_single_newlines' at line 1246
+log_rule(Newline): rule is 'indent_braces' at line 1313
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
+log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
+log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
+log_rule(Newline): rule is 'indent_shift' at line 2815
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2420,8 +2420,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2435,8 +2435,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2451,8 +2451,8 @@ log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_macro_brace' at line 1453
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2465,8 +2465,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2480,8 +2480,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2494,8 +2494,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2508,8 +2508,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2522,8 +2522,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2547,8 +2547,8 @@ log_rule(Newline): rule is 'indent_paren_after_func_def' at line 2447
 log_rule(Newline): rule is 'indent_paren_after_func_call' at line 2448
 log_rule(Newline): rule is 'indent_continue' at line 2468
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2562,8 +2562,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2576,8 +2576,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2591,8 +2591,8 @@ log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_macro_brace' at line 1453
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2605,8 +2605,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2620,8 +2620,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2634,8 +2634,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2648,8 +2648,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2662,8 +2662,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2676,8 +2676,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2690,8 +2690,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2705,8 +2705,8 @@ log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
 log_rule(Newline): rule is 'indent_continue' at line 2945
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2719,8 +2719,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2733,8 +2733,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2747,8 +2747,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2761,8 +2761,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2776,8 +2776,8 @@ log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
 log_rule(Newline): rule is 'indent_continue' at line 2945
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2790,8 +2790,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2804,23 +2804,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
-log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
-log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
-log_rule(Newline): rule is 'indent_brace_parent' at line 633
-log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
-log_rule(Newline): rule is 'indent_xml_string' at line 943
-log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
-log_rule(Newline): rule is 'indent_single_newlines' at line 1246
-log_rule(Newline): rule is 'indent_braces' at line 1313
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
-log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
-log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
-log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
-log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2834,8 +2819,8 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
 log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
 log_rule(Newline): rule is 'indent_brace_parent' at line 633
@@ -2849,8 +2834,23 @@ log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
 log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
 log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
 log_rule(Newline): rule is 'indent_shift' at line 2815
-log_rule(Newline): rule is 'indent_xml_string' at line 3456
-log_rule(Newline): rule is 'indent_continue_class_head' at line 3473
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
+log_rule(Newline): rule is 'indent_col1_multi_string_literal' at line 590
+log_rule(Newline): rule is 'use_options_overriding_for_qt_macros' at line 623
+log_rule(Newline): rule is 'indent_brace_parent' at line 633
+log_rule(Newline): rule is 'indent_func_def_force_col1' at line 638
+log_rule(Newline): rule is 'indent_xml_string' at line 943
+log_rule(Newline): rule is 'indent_access_spec_body' at line 1154
+log_rule(Newline): rule is 'indent_single_newlines' at line 1246
+log_rule(Newline): rule is 'indent_braces' at line 1313
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1314
+log_rule(Newline): rule is 'indent_braces_no_func' at line 1315
+log_rule(Newline): rule is 'indent_braces_no_class' at line 1316
+log_rule(Newline): rule is 'indent_braces_no_struct' at line 1317
+log_rule(Newline): rule is 'indent_shift' at line 2815
+log_rule(Newline): rule is 'indent_xml_string' at line 3482
+log_rule(Newline): rule is 'indent_continue_class_head' at line 3499
 log_rule(Newline): rule is 'code_width' at line 2143
 log_rule(Newline): rule is 'align_nl_cont' at line 2164
 log_rule(Newline): rule is 'cmt_convert_tab_to_spaces' at line 530

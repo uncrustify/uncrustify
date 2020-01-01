@@ -3111,10 +3111,14 @@ void indent_text(void)
             if (frm.poped().type == c_token_t(pc->type - 1))
             {
                // Issue # 405
-               LOG_FMT(LINDLINE, "%s(%d): [%zu:%zu] [%s:%s]\n",
+               LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
                chunk_t *ck1 = frm.poped().pc;
+               LOG_FMT(LINDLINE, "%s(%d): ck1->orig_line is %zu, ck1->orig_col is %zu, ck1->text() is '%s', ck1->type is %s\n",
+                       __func__, __LINE__, ck1->orig_line, ck1->orig_col, ck1->text(), get_token_name(ck1->type));
                chunk_t *ck2 = chunk_get_prev(ck1);
+               LOG_FMT(LINDLINE, "%s(%d): ck2->orig_line is %zu, ck2->orig_col is %zu, ck2->text() is '%s', ck2->type is %s\n",
+                       __func__, __LINE__, ck2->orig_line, ck2->orig_col, ck2->text(), get_token_name(ck2->type));
 
                /*
                 * If the open parenthesis was the first thing on the line or we
@@ -3136,7 +3140,7 @@ void indent_text(void)
                {
                   if (options::indent_paren_close() != 2)
                   {
-                     // 0 or 1
+                     // indent_paren_close is 0 or 1
                      LOG_FMT(LINDLINE, "%s(%d): [%zu:%zu] indent_paren_close is 0 or 1\n",
                              __func__, __LINE__, ck2->orig_line, ck2->orig_col);
                      indent_column_set(frm.poped().indent_tmp);
@@ -3163,22 +3167,31 @@ void indent_text(void)
                   }
                   else
                   {
-                     // 2
-                     LOG_FMT(LINDLINE, "%s(%d): [%zu:%zu] indent_paren_close is 2\n",
-                             __func__, __LINE__, ck2->orig_line, ck2->orig_col);
+                     // indent_paren_close is 2: Indent to the brace level
+                     LOG_FMT(LINDLINE, "%s(%d): indent_paren_close is 2\n",
+                             __func__, __LINE__);
+                     LOG_FMT(LINDLINE, "%s(%d): ck2->orig_line is %zu, ck2->orig_col is %zu, ck2->text() is '%s'\n",
+                             __func__, __LINE__, ck2->orig_line, ck2->orig_col, ck2->text());
 
                      if (chunk_get_prev(pc)->type == CT_NEWLINE)
                      {
+                        LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+                                __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+                        LOG_FMT(LINDLINE, "%s(%d): prev is <newline>\n",
+                                __func__, __LINE__);
                         chunk_t *search = pc;
 
                         while (chunk_is_paren_close(chunk_get_next(search)))
                         {
                            search = chunk_get_next(search);
                         }
+                        chunk_t *searchNext = chunk_get_next(search);
 
-                        if (  chunk_get_next(search)->type == CT_SEMICOLON
-                           || chunk_get_next(search)->type == CT_NEWLINE)
+                        if (  searchNext->type == CT_SEMICOLON
+                           || searchNext->type == CT_MEMBER            // Issue #2582
+                           || searchNext->type == CT_NEWLINE)
                         {
+                           LOG_FMT(LINDLINE, "%s(%d):\n", __func__, __LINE__);
                            search = chunk_skip_to_match_rev(search);
                            search = chunk_get_next(chunk_get_prev_nl(search));
 
@@ -3192,7 +3205,7 @@ void indent_text(void)
                   }
                }
             }
-            LOG_FMT(LINDENT, "%s(%d): %zu] cl paren => %zu [%s]\n",
+            LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, closing parenthesis => %zu, text is '%s'\n",
                     __func__, __LINE__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, indent_column);
          }
