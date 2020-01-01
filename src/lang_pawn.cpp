@@ -265,6 +265,7 @@ static chunk_t *pawn_process_variable(chunk_t *start)
    while ((pc = chunk_get_next_nc(pc)) != nullptr)
    {
       if (  chunk_is_token(pc, CT_NEWLINE)
+         && prev != nullptr                          // Issue 2586
          && !pawn_continued(prev, start->level))
       {
          if (prev->type != CT_VSEMICOLON && prev->type != CT_SEMICOLON)
