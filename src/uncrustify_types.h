@@ -290,10 +290,12 @@ struct chunk_t
 
    chunk_t      *next;            //! pointer to next chunk in list
    chunk_t      *prev;            //! pointer to previous chunk in list
+   chunk_t      *parent;          //! pointer to parent chunk(not always set)
    align_ptr_t  align;
    indent_ptr_t indent;
    c_token_t    type;             //! type of the chunk itself
    c_token_t    parent_type;      //! type of the parent chunk usually CT_NONE
+                                  //! might be different from parent->parent_type (above)
    size_t       orig_line;        //! line number of chunk in input file
    size_t       orig_col;         //! column where chunk started in the input file, is always > 0
    size_t       orig_col_end;     //! column where chunk ended in the input file, is always > 1
