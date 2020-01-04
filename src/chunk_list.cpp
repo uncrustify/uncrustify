@@ -1028,10 +1028,12 @@ void chunk_set_parent(chunk_t *pc, chunk_t *parent)
    {
       return;
    }
+
    if (parent == nullptr)
    {
       return;
    }
+
    if (pc == parent)
    {
       return;
