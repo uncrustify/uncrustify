@@ -2173,9 +2173,11 @@ static void newlines_brace_pair(chunk_t *br_open)
       && options::nl_create_func_def_one_liner())
    {
       chunk_t *br_close = chunk_skip_to_match(br_open, scope_e::ALL);
-      chunk_t *tmp      = chunk_get_prev_ncnlni(br_open);                                 // Issue #2279
+      chunk_t *tmp      = chunk_get_prev_ncnlni(br_open); // Issue #2279
 
-      if (((br_close->orig_line - br_open->orig_line) <= 2) && chunk_is_paren_close(tmp)) // need to check the conditions.
+      if (  br_close != nullptr                           // Issue #2594
+         && ((br_close->orig_line - br_open->orig_line) <= 2)
+         && chunk_is_paren_close(tmp))                    // need to check the conditions.
       {
          // Issue #1825
          bool is_it_possible = true;
