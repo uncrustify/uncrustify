@@ -1,5 +1,5 @@
 /**
- * @file ParseFrame.cpp
+ * @file ParseFrame.h
  *
  * Container that holds data needed for indenting and brace parsing
  *
@@ -23,6 +23,7 @@ struct paren_stack_entry_t
    c_token_t     type;         //! the type that opened the entry
    size_t        level;        //! Level of opening type
    size_t        open_line;    //! line that open symbol is on, only for logging purposes
+   size_t        open_colu;    //! column that open symbol is on, only for logging purposes
    chunk_t       *pc;          //! Chunk that opened the level, TODO: make const
    size_t        brace_indent; //! indent for braces - may not relate to indent
    size_t        indent;       //! indent level (depends on use)
@@ -74,9 +75,9 @@ public:
 
    const paren_stack_entry_t &poped() const;
 
-   void push(chunk_t *pc, brace_stage_e stage = brace_stage_e::NONE);
+   void push(chunk_t *pc, const char *func, int line, brace_stage_e stage = brace_stage_e::NONE);
    void push(std::nullptr_t, brace_stage_e stage = brace_stage_e::NONE);
-   void pop();
+   void pop(const char *func, int line);
 
    size_t size() const;
 
