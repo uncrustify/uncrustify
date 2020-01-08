@@ -480,7 +480,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
          // Pop the entry
          LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-         frm.pop();
+         frm.pop(__func__, __LINE__);
          print_stack(LBCSPOP, "-Close  ", frm);
 
          // See if we are in a complex statement
@@ -632,7 +632,8 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
    {
       frm.level++;
 
-      if (chunk_is_token(pc, CT_BRACE_OPEN) || chunk_is_token(pc, CT_MACRO_OPEN))
+      if (  chunk_is_token(pc, CT_BRACE_OPEN)
+         || chunk_is_token(pc, CT_MACRO_OPEN))
       {
          // Issue #1813
          bool single = false;
@@ -670,7 +671,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
                     __func__, __LINE__, frm.brace_level);
          }
       }
-      frm.push(pc);
+      frm.push(pc, __func__, __LINE__);
       frm.top().parent = parent;
       set_chunk_parent(pc, parent);
    }
@@ -683,7 +684,7 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
     */
    if (patcls == pattern_class_e::BRACED)
    {
-      frm.push(pc, (chunk_is_token(pc, CT_DO) ? brace_stage_e::BRACE_DO
+      frm.push(pc, __func__, __LINE__, (chunk_is_token(pc, CT_DO) ? brace_stage_e::BRACE_DO
                     : brace_stage_e::BRACE2));
       // "+ComplexBraced"
    }
@@ -696,17 +697,17 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
          set_chunk_type(pc, CT_WHILE_OF_DO);
          bs = brace_stage_e::WOD_PAREN;
       }
-      frm.push(pc, bs);
+      frm.push(pc, __func__, __LINE__, bs);
       // "+ComplexParenBraced"
    }
    else if (patcls == pattern_class_e::OPBRACED)
    {
-      frm.push(pc, brace_stage_e::OP_PAREN1);
+      frm.push(pc, __func__, __LINE__, brace_stage_e::OP_PAREN1);
       // "+ComplexOpParenBraced");
    }
    else if (patcls == pattern_class_e::ELSE)
    {
-      frm.push(pc, brace_stage_e::ELSEIF);
+      frm.push(pc, __func__, __LINE__, brace_stage_e::ELSEIF);
       // "+ComplexElse");
    }
 
@@ -823,7 +824,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
       // Remove the CT_IF and close the statement
       LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-      frm.pop();
+      frm.pop(__func__, __LINE__);
       print_stack(LBCSPOP, "-IF-CCS ", frm);
 
       if (close_statement(frm, pc))
@@ -877,7 +878,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
       // Remove the CT_TRY and close the statement
       LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-      frm.pop();
+      frm.pop(__func__, __LINE__);
       print_stack(LBCSPOP, "-TRY-CCS ", frm);
 
       if (close_statement(frm, pc))
@@ -931,7 +932,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
               pc->text());
       LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-      frm.pop();
+      frm.pop(__func__, __LINE__);
       print_stack(LBCSPOP, "-Error  ", frm);
       cpd.error_count++;
    }
@@ -964,7 +965,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
                  __func__, __LINE__, frm.brace_level);
          log_pcf_flags(LBCSPOP, pc->flags);
 
-         frm.push(vbrace, brace_stage_e::NONE);
+         frm.push(vbrace, __func__, __LINE__, brace_stage_e::NONE);
          // "+VBrace");
 
          frm.top().parent = parent;
@@ -1007,7 +1008,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc)
       // Throw out the complex statement
       LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-      frm.pop();
+      frm.pop(__func__, __LINE__);
       print_stack(LBCSPOP, "-Error  ", frm);
       cpd.error_count++;
    }
@@ -1046,7 +1047,7 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc)
          {
             LOG_FMT(LBCSPOP, "%s(%d): no CT_ELSE, pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-            frm.pop();
+            frm.pop(__func__, __LINE__);
             print_stack(LBCSPOP, "-IF-HCS ", frm);
 
             return(close_statement(frm, pc));
@@ -1066,7 +1067,7 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc)
          {
             LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-            frm.pop();
+            frm.pop(__func__, __LINE__);
             print_stack(LBCSPOP, "-TRY-HCS ", frm);
 
             return(close_statement(frm, pc));
@@ -1078,7 +1079,7 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc)
                  __func__, __LINE__, get_token_name(frm.top().type));
          LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-         frm.pop();
+         frm.pop(__func__, __LINE__);
          print_stack(LBCSPOP, "-HCC B2 ", frm);
 
          return(close_statement(frm, pc));
@@ -1101,7 +1102,7 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc)
               __func__, __LINE__, get_token_name(frm.top().type));
       LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-      frm.pop();
+      frm.pop(__func__, __LINE__);
       print_stack(LBCSPOP, "-HCC WoDS ", frm);
 
       return(close_statement(frm, pc));
@@ -1300,7 +1301,7 @@ bool close_statement(ParseFrame &frm, chunk_t *pc)
          log_pcf_flags(LBCSPOP, pc->flags);
          LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-         frm.pop();
+         frm.pop(__func__, __LINE__);
 
          // Update the token level
          pc->level       = frm.level;
