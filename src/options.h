@@ -77,10 +77,12 @@ tok_split_gte;
 
 // Specify the marker used in comments to disable processing of part of the
 // file.
+// The comment should be used alone in one line.
 extern Option<string>
 disable_processing_cmt; // = UNCRUSTIFY_OFF_TEXT
 
 // Specify the marker used in comments to (re)enable processing in a file.
+// The comment should be used alone in one line.
 extern Option<string>
 enable_processing_cmt; // = UNCRUSTIFY_ON_TEXT
 
