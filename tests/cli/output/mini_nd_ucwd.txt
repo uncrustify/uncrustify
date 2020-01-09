@@ -39,11 +39,13 @@ tok_split_gte                   = false    # true/false
 
 # Specify the marker used in comments to disable processing of part of the
 # file.
+# The comment should be used alone in one line.
 #
 # Default:  *INDENT-OFF*
 disable_processing_cmt          = " *INDENT-OFF*"      # string
 
 # Specify the marker used in comments to (re)enable processing in a file.
+# The comment should be used alone in one line.
 #
 # Default:  *INDENT-ON*
 enable_processing_cmt           = " *INDENT-ON*"     # string
