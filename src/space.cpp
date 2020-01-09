@@ -285,13 +285,11 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_cond_question_after");
          return(options::sp_cond_question_after());
       }
-
-      if (options::sp_cond_question() != IARF_IGNORE)
-      {
-         // Add or remove space around the '?' in 'b ? t : f'.
-         log_rule("sp_cond_question");
-         return(options::sp_cond_question());
-      }
+      // Issue #2596
+      // Add or remove space around the '?' in 'b ? t : f'.
+      // replace "if (chunk_is_token(first, CT_PAREN_CLOSE) && chunk_is_token(second, CT_QUESTION))"
+      log_rule("sp_cond_question");
+      return(options::sp_cond_question());
    }
 
    if (chunk_is_token(first, CT_COND_COLON) || chunk_is_token(second, CT_COND_COLON))
@@ -313,13 +311,11 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_cond_colon_after");
          return(options::sp_cond_colon_after());
       }
-
-      if (options::sp_cond_colon() != IARF_IGNORE)
-      {
-         // Add or remove space around the ':' in 'b ? t : f'.
-         log_rule("sp_cond_colon");
-         return(options::sp_cond_colon());
-      }
+      // Issue #2596
+      // replace "if (chunk_is_token(first, CT_WORD) && chunk_is_token(second, CT_COND_COLON))"
+      // Add or remove space around the ':' in 'b ? t : f'.
+      log_rule("sp_cond_colon");
+      return(options::sp_cond_colon());
    }
 
    if (chunk_is_token(first, CT_RANGE) || chunk_is_token(second, CT_RANGE))
@@ -3119,13 +3115,9 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("ADD");
       return(IARF_ADD);
    }
-
-   // TODO: if necessary create a new option
-   if (chunk_is_token(first, CT_PAREN_CLOSE) && chunk_is_token(second, CT_QUESTION))
-   {
-      log_rule("ADD");
-      return(IARF_ADD);
-   }
+   // if (chunk_is_token(first, CT_PAREN_CLOSE) && chunk_is_token(second, CT_QUESTION))
+   // Issue #2596
+   // look at "sp_cond_question"
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_PAREN_CLOSE) && chunk_is_token(second, CT_TYPE))
@@ -3322,13 +3314,9 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("ADD");
       return(IARF_ADD);
    }
-
-   // TODO: if necessary create a new option
-   if (chunk_is_token(first, CT_WORD) && chunk_is_token(second, CT_COND_COLON))
-   {
-      log_rule("ADD");
-      return(IARF_ADD);
-   }
+   // if (chunk_is_token(first, CT_WORD) && chunk_is_token(second, CT_COND_COLON))
+   // Issue #2596
+   // look at "sp_cond_colon"
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_WORD) && chunk_is_token(second, CT_NUMBER))
