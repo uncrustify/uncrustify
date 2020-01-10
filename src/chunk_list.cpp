@@ -540,12 +540,8 @@ chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref)
 
 void chunk_del_2(chunk_t *pc)
 {
-   chunk_log(pc, "chunk_del(B):");
-   chunk_log(pc, "chunk_del(B-2):");
    g_cl.Pop(pc);
-   chunk_log(pc, "chunk_del(B-3):");
    delete pc;
-   LOG_FMT(LCHUNK, "GUY\n");
 }
 
 
@@ -1022,4 +1018,25 @@ chunk_t *chunk_skip_dc_member(chunk_t *start, scope_e scope)
 chunk_t *chunk_skip_dc_member_rev(chunk_t *start, scope_e scope)
 {
    return(chunk_skip_dc_member(start, scope, direction_e::BACKWARD));
+}
+
+
+// set parent member
+void chunk_set_parent(chunk_t *pc, chunk_t *parent)
+{
+   if (pc == nullptr)
+   {
+      return;
+   }
+
+   if (parent == nullptr)
+   {
+      return;
+   }
+
+   if (pc == parent)
+   {
+      return;
+   }
+   pc->parent = parent;
 }

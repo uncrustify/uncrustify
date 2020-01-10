@@ -254,8 +254,9 @@ struct chunk_t
    {
       memset(&align, 0, sizeof(align));
       memset(&indent, 0, sizeof(indent));
-      next          = 0;
-      prev          = 0;
+      next          = nullptr;
+      prev          = nullptr;
+      parent        = nullptr;
       type          = CT_NONE;
       parent_type   = CT_NONE;
       orig_line     = 0;
