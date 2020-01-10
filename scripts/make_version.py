@@ -41,7 +41,7 @@ def main(args):
             node = node_b.decode("UTF-8")
             error_txt = "%d: %s" % (proc0.returncode, error_txt_b.decode("UTF-8").strip().lower())
 
-            proc1 = Popen(['git', '--git-dir=.hg/git', 'describe', '--long', '--tags','--always', node], stdout=PIPE, stderr=PIPE, cwd=root)
+            proc1 = Popen(['git', '--git-dir=.hg/git', 'describe', '--long', '--tags', '--always', node], stdout=PIPE, stderr=PIPE, cwd=root)
             txt_b, error_txt_b = proc1.communicate()
             txt = txt_b.decode("UTF-8").lower()
             error_txt += ", %d: %s" % (proc1.returncode, error_txt_b.decode("UTF-8").strip().lower())
