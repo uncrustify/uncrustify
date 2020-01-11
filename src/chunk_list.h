@@ -894,4 +894,7 @@ void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bit
 void chunk_set_parent(chunk_t *pc, chunk_t *parent);
 
 
+c_token_t get_type_of_the_parent(chunk_t *pc);
+
+
 #endif /* CHUNK_LIST_H_INCLUDED */

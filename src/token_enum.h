@@ -27,6 +27,7 @@
 enum c_token_t
 {
    CT_NONE,
+   CT_PARENT_NOT_SET,
    CT_EOF,
    CT_UNKNOWN,
 

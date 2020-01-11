@@ -449,22 +449,23 @@ void output_parsed(FILE *pfile)
    // and              430: ... fprintf(pfile, "%s# %3zu>%19.19s[%19.19s] ...
    // here                                                xx xx   xx xx
 #ifdef WIN32
-   fprintf(pfile, "# Line                Tag              Parent          Columns Br/Lvl/pp     Nl  Text");
+   fprintf(pfile, "# Line                Tag         Parent_type   Type of the paren         Columns Br/Lvl/pp     Nl  Text");
 #else // not WIN32
-   fprintf(pfile, "# Line                Tag              Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
+   fprintf(pfile, "# Line                Tag         Parent_type   Type of the parent        Columns Br/Lvl/pp     Flag   Nl  Text");
 #endif // ifdef WIN32
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
 #ifdef WIN32
-      fprintf(pfile, "%s# %3d>%19.19s[%19.19s][%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
-              eol_marker, (int)pc->orig_line, get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)),
+      fprintf(pfile, "%s# %3d>%19.19s[%19.19s][%19.19s][%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
+              eol_marker, (int)pc->orig_line, get_token_name(pc->type),
+              get_token_name(get_chunk_parent_type(pc)), get_token_name(get_type_of_the_parent(pc)),
               (int)pc->column, (int)pc->orig_col, (int)pc->orig_col_end, (int)pc->orig_prev_sp,
               (int)pc->brace_level, (int)pc->level, (int)pc->pp_level, (int)pc->nl_count, pc->after_tab);
 #else // not WIN32
-      fprintf(pfile, "%s# %3zu>%19.19s[%19.19s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu]",
+      fprintf(pfile, "%s# %3zu>%19.19s[%19.19s][%19.19s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu]",
               eol_marker, pc->orig_line, get_token_name(pc->type),
-              get_token_name(get_chunk_parent_type(pc)),
+              get_token_name(get_chunk_parent_type(pc)), get_token_name(get_type_of_the_parent(pc)),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
       fprintf(pfile, "[%11llx]",

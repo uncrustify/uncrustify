@@ -1040,3 +1040,18 @@ void chunk_set_parent(chunk_t *pc, chunk_t *parent)
    }
    pc->parent = parent;
 }
+
+
+c_token_t get_type_of_the_parent(chunk_t *pc)
+{
+   if (pc == nullptr)
+   {
+      return(CT_UNKNOWN);
+   }
+
+   if (pc->parent == nullptr)
+   {
+      return(CT_PARENT_NOT_SET);
+   }
+   return(pc->parent->type);
+}
