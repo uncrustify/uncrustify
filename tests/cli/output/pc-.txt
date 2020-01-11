@@ -2,5 +2,5 @@
 # option(s) with 'not default' value: 0
 #
 # -=====-
-# Line                Tag              Parent          Columns Br/Lvl/pp     Flag   Nl  Text
+# Line                Tag         Parent_type   Type of the parent        Columns Br/Lvl/pp     Flag   Nl  Text
 # -=====-
