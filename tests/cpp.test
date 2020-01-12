@@ -98,6 +98,7 @@
 30086  align_class-constr.cfg               cpp/align_class-constr.cpp
 30087  Issue_1511.cfg                       cpp/Issue_1511.cpp
 30088  Issue_2561.cfg                       cpp/Issue_2561.cpp
+30089  Issue_2281.cfg                       cpp/Issue_2281.cpp
 
 30090  bug_488.cfg                          cpp/bug_488.cpp
 30091  bug_472.cfg                          cpp/bug_472.cpp

@@ -3376,7 +3376,9 @@ void indent_text(void)
                      // Issue #1692
                      log_rule_B("indent_switch_break_with_case");
 
-                     if (options::indent_switch_break_with_case())
+                     // Issue #2281
+                     if (  options::indent_switch_break_with_case()
+                        && get_type_of_the_parent(pc) == CT_SWITCH)
                      {
                         LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, indent_switch_break_with_case, for '%s'\n",
                                 __func__, __LINE__, pc->orig_line, pc->text());

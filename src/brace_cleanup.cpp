@@ -673,7 +673,58 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
       }
       frm.push(pc, __func__, __LINE__);
       frm.top().parent = parent;
+      // set parent type
       set_chunk_parent(pc, parent);
+   }
+   // Issue #2281
+   LOG_FMT(LBCSPOP, "%s(%d):\n", __func__, __LINE__);
+
+   if (  chunk_is_token(pc, CT_BRACE_OPEN)
+      && pc->parent_type == CT_SWITCH)
+   {
+      size_t idx = frm.size();
+      LOG_FMT(LBCSPOP, "%s(%d): idx is %zu\n",
+              __func__, __LINE__, idx);
+      chunk_t *saved = frm.at(idx - 2).pc;
+
+      if (saved != nullptr)
+      {
+         // set parent member
+         chunk_set_parent(pc, saved);
+      }
+   }
+
+   if (chunk_is_token(pc, CT_CASE))
+   {
+      LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col);
+      set_chunk_parent(pc, CT_SWITCH);
+      size_t idx = frm.size();
+      LOG_FMT(LBCSPOP, "%s(%d): idx is %zu\n",
+              __func__, __LINE__, idx);
+      chunk_t *saved = frm.at(idx - 2).pc;
+
+      if (saved != nullptr)
+      {
+         // set parent member
+         chunk_set_parent(pc, saved);
+      }
+   }
+
+   if (chunk_is_token(pc, CT_BREAK))
+   {
+      LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col);
+      size_t idx = frm.size();
+      LOG_FMT(LBCSPOP, "%s(%d): idx is %zu\n",
+              __func__, __LINE__, idx);
+      chunk_t *saved = frm.at(idx - 2).pc;
+
+      if (saved != nullptr)
+      {
+         // set parent member
+         chunk_set_parent(pc, saved);
+      }
    }
    const pattern_class_e patcls = get_token_pattern_class(pc->type);
 
