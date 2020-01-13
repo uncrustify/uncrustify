@@ -449,7 +449,7 @@ void output_parsed(FILE *pfile)
    // and              430: ... fprintf(pfile, "%s# %3zu>%19.19s[%19.19s] ...
    // here                                                xx xx   xx xx
 #ifdef WIN32
-   fprintf(pfile, "# Line                Tag         Parent_type  Type of the paren          Columns Br/Lvl/pp     Nl  Text");
+   fprintf(pfile, "# Line                Tag         Parent_type  Type of the parent         Columns Br/Lvl/pp     Nl  Text");
 #else // not WIN32
    fprintf(pfile, "# Line                Tag         Parent_type  Type of the parent         Columns Br/Lvl/pp      Flag   Nl  Text");
 #endif // ifdef WIN32
