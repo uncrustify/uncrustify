@@ -175,19 +175,21 @@ void ParseFrame::push(chunk_t *pc, const char *func, int line, brace_stage_e sta
 
    pse.push_back(new_entry);
 
-#ifdef DEBUG
-   LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d)Add is %zu: orig_line is %zu, orig_col is %zu, type is %s, "
+// un comment the line below to get the address of the pse
+// #define DEBUG_PUSH_POP
+#ifdef DEBUG_PUSH_POP
+   LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d) Add is %zu: orig_line is %zu, orig_col is %zu, type is %s, "
            "brace_level is %zu, level is %zu, pse_tos: %zu -> %zu\n",
            func, line, (size_t)this, pc->orig_line, pc->orig_col,
            get_token_name(pc->type), pc->brace_level, pc->level,
            (pse.size() - 2), (pse.size() - 1));
-#else /* DEBUG */
+#else /* DEBUG_PUSH_POP */
    LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d): orig_line is %zu, orig_col is %zu, type is %s, "
            "brace_level is %zu, level is %zu, pse_tos: %zu -> %zu\n",
            func, line, pc->orig_line, pc->orig_col,
            get_token_name(pc->type), pc->brace_level, pc->level,
            (pse.size() - 2), (pse.size() - 1));
-#endif /* DEBUG */
+#endif /* DEBUG_PUSH_POP */
 }
 
 
@@ -202,19 +204,19 @@ void ParseFrame::pop(const char *func, int line)
 //                        + "the stack index is already zero");
 //   }
 
-#ifdef DEBUG
-   LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d)Add is %zu: open_line is %zu, clos_col is %zu, type is %s, "
+#ifdef DEBUG_PUSH_POP
+   LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d) Add is %zu: open_line is %zu, clos_col is %zu, type is %s, "
            "cpd.level   is %d, level is %zu, pse_tos: %zu -> %zu\n",
            func, line, (size_t)this, pse.back().open_line, pse.back().open_colu,
            get_token_name(pse.back().type), cpd.pp_level, pse.back().level,
            (pse.size() - 1), (pse.size() - 2));
-#else /* DEBUG */
+#else /* DEBUG_PUSH_POP */
    LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): open_line is %zu, clos_col is %zu, type is %s, "
            "cpd.level   is %d, level is %zu, pse_tos: %zu -> %zu\n",
            func, line, pse.back().open_line, pse.back().open_colu,
            get_token_name(pse.back().type), cpd.pp_level, pse.back().level,
            (pse.size() - 1), (pse.size() - 2));
-#endif /* DEBUG */
+#endif /* DEBUG_PUSH_POP */
 
    last_poped = *std::prev(std::end(pse));
 
