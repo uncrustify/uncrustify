@@ -186,6 +186,7 @@
 00511  bool-pos-sol-break.cfg               c/bool-pos.c
 00512  bool-pos-eol-force.cfg               c/bool-pos.c
 00513  bool-pos-sol-force.cfg               c/bool-pos.c
+00514  my_conf.cfg                          c/my_infile.c
 
 00600  indent_columns-3.cfg                 c/dos.c
 00601  indent_columns-3.cfg                 c/mac.c
