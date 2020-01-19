@@ -409,7 +409,8 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
          cpd.consumed = true;
          close_statement(frm, pc);
       }
-      else if (language_is_set(LANG_PAWN) && chunk_is_token(pc, CT_BRACE_CLOSE))
+      else if (  language_is_set(LANG_PAWN)
+              && chunk_is_token(pc, CT_BRACE_CLOSE))
       {
          close_statement(frm, pc);
       }

@@ -2173,7 +2173,8 @@ void fix_symbols(void)
 
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
-      if (chunk_is_token(pc, CT_FUNC_WRAP) || chunk_is_token(pc, CT_TYPE_WRAP))
+      if (  chunk_is_token(pc, CT_FUNC_WRAP)
+         || chunk_is_token(pc, CT_TYPE_WRAP))
       {
          handle_wrap(pc);
       }
@@ -2189,12 +2190,14 @@ void fix_symbols(void)
 
       if (  is_cpp
          && chunk_is_token(pc, CT_BRACE_OPEN)
-         && (chunk_is_token(prev, CT_WORD) || chunk_is_token(prev, CT_TYPE)))
+         && (  chunk_is_token(prev, CT_WORD)
+            || chunk_is_token(prev, CT_TYPE)))
       {
          mark_lvalue(pc);
       }
 
-      if (is_java && chunk_is_token(pc, CT_BRACE_OPEN))
+      if (  is_java
+         && chunk_is_token(pc, CT_BRACE_OPEN))
       {
          check_double_brace_init(pc);
       }
@@ -2203,7 +2206,8 @@ void fix_symbols(void)
       {
          chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
 
-         if (next != nullptr && chunk_is_token(next, CT_PAREN_OPEN))
+         if (  next != nullptr
+            && chunk_is_token(next, CT_PAREN_OPEN))
          {
             flag_parens(next, PCF_NONE, CT_FPAREN_OPEN, CT_ATTRIBUTE, false);
          }
@@ -2217,7 +2221,8 @@ void fix_symbols(void)
       return;
    }
 
-   if (chunk_is_newline(pc) || chunk_is_comment(pc))
+   if (  chunk_is_newline(pc)
+      || chunk_is_comment(pc))
    {
       pc = chunk_get_next_ncnl(pc);
    }
@@ -2288,7 +2293,8 @@ void fix_symbols(void)
          }
       }
 
-      if ((chunk_is_token(pc, CT_EXTERN)) && language_is_set(LANG_ALLC))
+      if (  chunk_is_token(pc, CT_EXTERN)
+         && language_is_set(LANG_ALLC))
       {
          chunk_t *next = chunk_get_next_ncnl(pc);
 
@@ -2315,7 +2321,8 @@ void fix_symbols(void)
          }
       }
 
-      if ((chunk_is_token(pc, CT_ATTRIBUTE)) && language_is_set(LANG_ALLC))
+      if (  chunk_is_token(pc, CT_ATTRIBUTE)
+         && language_is_set(LANG_ALLC))
       {
          chunk_t *tmp = skip_attribute_next(pc);
 
@@ -2326,18 +2333,20 @@ void fix_symbols(void)
       }
       /*
        * A variable definition is possible after at the start of a statement
-       * that starts with: QUALIFIER, TYPE, or WORD
+       * that starts with: DC_MEMBER, QUALIFIER, TYPE, or WORD
        */
       // Issue #2279
-      LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n   ",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+      // Issue #2478
+      LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type));
       log_pcf_flags(LFCNR, pc->flags);
 
-      if (  square_level < 0
+      if (  (square_level < 0)
          && pc->flags.test(PCF_STMT_START)
          && (  chunk_is_token(pc, CT_QUALIFIER)
             || chunk_is_token(pc, CT_TYPE)
             || chunk_is_token(pc, CT_TYPENAME)
+            || chunk_is_token(pc, CT_DC_MEMBER)                         // Issue #2478
             || chunk_is_token(pc, CT_WORD))
          && get_chunk_parent_type(pc) != CT_ENUM
          && !pc->flags.test(PCF_IN_ENUM))
@@ -3685,7 +3694,7 @@ static void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
 
       if (chunk_is_token(var_name, CT_WORD))
       {
-         if (word_cnt)
+         if (word_cnt > 0)
          {
             LOG_FMT(LFCNP, "%s(%d): parameter on orig_line %zu, orig_col %zu: <%s> as VAR\n",
                     __func__, __LINE__, var_name->orig_line, var_name->orig_col, var_name->text());
@@ -3867,7 +3876,8 @@ static chunk_t *fix_var_def(chunk_t *start)
    LOG_FMT(LFVD, "\n%s(%d): end->type is %s\n", __func__, __LINE__, get_token_name(end->type));
 
    if (  cs.Len() == 1
-      && chunk_is_token(end, CT_BRACE_OPEN) && get_chunk_parent_type(end) == CT_BRACED_INIT_LIST)
+      && chunk_is_token(end, CT_BRACE_OPEN)
+      && get_chunk_parent_type(end) == CT_BRACED_INIT_LIST)
    {
       set_chunk_type(cs.Get(0)->m_pc, CT_TYPE);
    }
@@ -3935,12 +3945,14 @@ static chunk_t *fix_var_def(chunk_t *start)
       tmp_pc = cs.Get(idxForCs)->m_pc;
       make_type(tmp_pc);
       chunk_flags_set(tmp_pc, PCF_VAR_TYPE);
-      LOG_FMT(LFVD2, " '%s'[%s]", tmp_pc->text(), get_token_name(tmp_pc->type));
+      LOG_FMT(LFVD2, " text() is '%s', type is %s", tmp_pc->text(), get_token_name(tmp_pc->type));
    }
 
    LOG_FMT(LFVD2, "\n");
 
    // OK we have two or more items, mark types up to the end.
+   LOG_FMT(LFVD, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu\n",
+           __func__, __LINE__, pc->orig_line, pc->orig_col);
    mark_variable_definition(cs.Get(cs.Len() - 1)->m_pc);
 
    if (chunk_is_token(end, CT_COMMA))
