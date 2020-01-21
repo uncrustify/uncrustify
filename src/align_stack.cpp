@@ -341,7 +341,7 @@ void AlignStack::NewLines(size_t cnt)
 
    if (m_seqnum > (m_nl_seqnum + m_span))
    {
-      LOG_FMT(LAS, "AlignStack::Newlines(%d): cnt is %zu, >\n", __LINE__, cnt);
+      LOG_FMT(LAS, "AlignStack::Newlines(%d): cnt is %zu\n", __LINE__, cnt);
       Flush();
    }
 }

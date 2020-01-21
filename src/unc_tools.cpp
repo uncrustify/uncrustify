@@ -228,11 +228,6 @@ void dump_out(unsigned int type)
             fprintf(D_file, "  orig_prev_sp %u\n", pc->orig_prev_sp);
          }
 
-         if (pc->flags != 0)
-         {
-            fprintf(D_file, "  flags %" PRIu64 "\n", pc->flags);
-         }
-
          if (pc->column != 0)
          {
             fprintf(D_file, "  column %zu\n", pc->column);
@@ -350,10 +345,6 @@ void dump_in(unsigned int type)
             else if (strcasecmp(parts[0], "orig_prev_sp") == 0)
             {
                chunk.orig_prev_sp = strtol(parts[1], nullptr, 0);
-            }
-            else if (strcasecmp(parts[0], "flags") == 0)
-            {
-               chunk.flags = strtol(parts[1], nullptr, 0);
             }
             else if (strcasecmp(parts[0], "column") == 0)
             {
