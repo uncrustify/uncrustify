@@ -856,7 +856,7 @@ sp_getset_brace;
 // Add or remove space between a variable and '{' for C++ uniform
 // initialization.
 extern Option<iarf_e>
-sp_word_brace; // = IARF_ADD
+sp_word_brace_init_lst;
 
 // Add or remove space between a variable and '{' for a namespace.
 extern Option<iarf_e>
