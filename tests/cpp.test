@@ -214,7 +214,7 @@
 30302  bug_1315.cfg                         cpp/bug_1315.cpp
 
 # TODO: Make a tests for a braced_init_list. See also 34153-34166.
-30310  sp_word_brace_force.cfg              cpp/braced_init_list.cpp 
+30310  sp_word_brace_force.cfg              cpp/braced_init_list.cpp
 30311  sp_word_brace_remove.cfg             cpp/uniform_initialization.cpp
 30312  sp_inside_type_brace_init_lst-f.cfg  cpp/return_init_list.cpp
 30313  sp_brace_brace-r.cfg                 cpp/sp_brace_brace.cpp
