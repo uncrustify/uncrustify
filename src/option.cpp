@@ -313,6 +313,22 @@ bool process_option_line_compat_0_68(const std::string              &cmd,
    return(false);
 } // process_option_line_compat_0_68
 
+
+bool process_option_line_compat_0_70(const std::string &cmd,
+                                     const char        *filename)
+{
+   if (cmd == "sp_word_brace")                     // Issue #2428
+   {
+      OptionWarning w{ filename, OptionWarning::MINOR };
+      w("option '%s' is deprecated; did you want to use '%s' instead?",
+        cmd.c_str(), options::sp_type_brace_init_lst.name());
+
+      //UNUSED(options::sp_type_brace_init_lst.read(args[1].c_str()));
+      return(true);
+   }
+   return(false);
+} // process_option_line_compat_0_70
+
 } // namespace
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -980,6 +996,14 @@ void process_option_line(const std::string &config_line, const char *filename,
       if (compat_level < option_level(0, 69))
       {
          if (process_option_line_compat_0_68(cmd, args, filename))
+         {
+            return;
+         }
+      }
+
+      if (compat_level < option_level(0, 71))
+      {
+         if (process_option_line_compat_0_70(cmd, filename))
          {
             return;
          }

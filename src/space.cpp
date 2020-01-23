@@ -1579,19 +1579,39 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_inside_braces_empty());
    }
 
-   if (  !chunk_is_token(first, CT_BRACE_OPEN)
-      && !chunk_is_token(first, CT_FPAREN_OPEN)
+   if (  (  chunk_is_token(first, CT_TYPE)                           // Issue #2428
+         || chunk_is_token(first, CT_ANGLE_CLOSE))
       && chunk_is_token(second, CT_BRACE_OPEN)
       && get_chunk_parent_type(second) == CT_BRACED_INIT_LIST)
    {
       auto arg = iarf_flags_t{ options::sp_type_brace_init_lst() };
 
-      if (arg || get_chunk_parent_type(first) != CT_DECLTYPE)
+      if (  arg != iarf_e::IGNORE
+         || get_chunk_parent_type(first) != CT_DECLTYPE)
       {
          // 'int{9}' vs 'int {9}'
          // Add or remove space between type and open brace of an unnamed temporary
          // direct-list-initialization.
          log_rule("sp_type_brace_init_lst");
+         return(arg);
+      }
+   }
+
+   if (  (  chunk_is_token(first, CT_WORD)                           // Issue #2428
+         || chunk_is_token(first, CT_SQUARE_CLOSE)
+         || chunk_is_token(first, CT_TSQUARE))
+      && chunk_is_token(second, CT_BRACE_OPEN)
+      && get_chunk_parent_type(second) == CT_BRACED_INIT_LIST)
+   {
+      auto arg = iarf_flags_t{ options::sp_word_brace_init_lst() };
+
+      if (  arg != iarf_e::IGNORE
+         || get_chunk_parent_type(first) != CT_DECLTYPE)
+      {
+         // 'a{9}' vs 'a {9}'
+         // Add or remove space between variable/word and open brace of an unnamed
+         // temporary direct-list-initialization.
+         log_rule("sp_word_brace_init_lst");
          return(arg);
       }
    }
@@ -1795,7 +1815,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_getset_brace());
    }
 
-   if (chunk_is_token(first, CT_WORD) && chunk_is_token(second, CT_BRACE_OPEN))
+   if (  chunk_is_token(first, CT_WORD)
+      && chunk_is_token(second, CT_BRACE_OPEN))
    {
       if (get_chunk_parent_type(first) == CT_NAMESPACE)
       {
@@ -1804,12 +1825,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(options::sp_word_brace_ns());
       }
 
-      if (get_chunk_parent_type(first) == CT_NONE && get_chunk_parent_type(second) == CT_NONE)
+      if (  get_chunk_parent_type(first) == CT_NONE
+         && get_chunk_parent_type(second) == CT_BRACED_INIT_LIST)
       {
          // Add or remove space between a variable and '{' for C++ uniform
          // initialization.
-         log_rule("sp_word_brace");
-         return(options::sp_word_brace());
+         log_rule("sp_word_brace_init_lst");
+         return(options::sp_word_brace_init_lst());
       }
    }
 

@@ -673,9 +673,7 @@ sp_getset_brace                 = ignore   # ignore/add/remove/force
 
 # Add or remove space between a variable and '{' for C++ uniform
 # initialization.
-#
-# Default: add
-sp_word_brace                   = add      # ignore/add/remove/force
+sp_word_brace_init_lst          = ignore   # ignore/add/remove/force
 
 # Add or remove space between a variable and '{' for a namespace.
 #
