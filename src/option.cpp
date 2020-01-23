@@ -314,8 +314,8 @@ bool process_option_line_compat_0_68(const std::string              &cmd,
 } // process_option_line_compat_0_68
 
 
-bool process_option_line_compat_0_70(const std::string              &cmd,
-                                     const char                     *filename)
+bool process_option_line_compat_0_70(const std::string &cmd,
+                                     const char        *filename)
 {
    if (cmd == "sp_word_brace")                     // Issue #2428
    {
@@ -328,7 +328,6 @@ bool process_option_line_compat_0_70(const std::string              &cmd,
    }
    return(false);
 } // process_option_line_compat_0_70
-
 
 } // namespace
 
@@ -1009,7 +1008,6 @@ void process_option_line(const std::string &config_line, const char *filename,
             return;
          }
       }
-
       const auto oi = option_map.find(cmd);
 
       if (oi == option_map.end())
