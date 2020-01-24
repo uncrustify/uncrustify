@@ -753,7 +753,7 @@
 34311  Issue_2250.cfg                       cpp/Issue_2250.cpp
 34312  Issue_2101.cfg                       cpp/Issue_2101.cpp
 34313  Issue_2437.cfg                       cpp/Issue_2437.cpp
-
+34314  Issue_2604.cfg                       cpp/Issue_2604.cpp
 34315  align_func_proto_thresh_1.cfg        cpp/align_func_proto_thresh.cpp
 34316  align_func_proto_thresh_2.cfg        cpp/align_func_proto_thresh.cpp
 34317  align_func_proto_thresh_3.cfg        cpp/align_func_proto_thresh.cpp

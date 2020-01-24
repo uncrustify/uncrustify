@@ -1640,7 +1640,7 @@ extern Option<bool>
 nl_cs_property_leave_one_liners;
 
 // Don't split one-line function definitions, as in 'int foo() { return 0; }'.
-// night modify nl_func_type_name
+// might modify nl_func_type_name
 extern Option<bool>
 nl_func_leave_one_liners;
 
@@ -2094,6 +2094,10 @@ nl_func_decl_args;
 // Add or remove newline after each ',' in a function definition.
 extern Option<iarf_e>
 nl_func_def_args;
+
+// Add or remove newline after each ',' in a function call.
+extern Option<iarf_e>
+nl_func_call_args;
 
 // Whether to add a newline after each ',' in a function declaration if '('
 // and ')' are in different lines. If false, nl_func_decl_args is used instead.
