@@ -3027,17 +3027,13 @@ static void newline_func_def_or_call(chunk_t *start)
          {
             pc = tmp;
          }
-         log_rule_B("nl_func_def_args");
-         log_rule_B("nl_func_decl_args");
-         log_rule_B("nl_func_call_args");
 
-         if (  get_chunk_parent_type(start) == CT_FUNC_DEF
-            || get_chunk_parent_type(start) == CT_FUNC_CLASS_DEF)
+         if (is_def)
          {
             log_rule_B("nl_func_def_args");
             newline_iarf(pc, options::nl_func_def_args());
          }
-         else if (get_chunk_parent_type(start) == CT_FUNC_CALL)
+         else if (is_call)
          {
             // Issue #2604
             log_rule_B("nl_func_call_args");
