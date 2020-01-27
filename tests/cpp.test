@@ -628,6 +628,8 @@
 
 34120  align_assign_span-1.cfg              cpp/bug_i_999.cpp
 34121  bug_1717.cfg                         cpp/bug_1717.cpp
+34122  Issue_2440.cfg                       cpp/Issue_2440.cpp
+34123  Issue_2440_nl.cfg                    cpp/Issue_2440_nl.cpp
 
 34130  nl_brace_fparen-f.cfg                cpp/bug_i_1000.cpp
 34131  nl_brace_fparen-r.cfg                cpp/bug_i_1000.cpp
