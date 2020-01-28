@@ -3028,16 +3028,22 @@ static void newline_func_def_or_call(chunk_t *start)
             pc = tmp;
          }
 
-         if (is_call)
+         if (is_def)
          {
-            continue;
-         } // else:
-         log_rule_B("nl_func_def_args");
-         log_rule_B("nl_func_decl_args");
-         newline_iarf(pc, (  get_chunk_parent_type(start) == CT_FUNC_DEF
-                          || get_chunk_parent_type(start) == CT_FUNC_CLASS_DEF) ?
-                      options::nl_func_def_args() :
-                      options::nl_func_decl_args());
+            log_rule_B("nl_func_def_args");
+            newline_iarf(pc, options::nl_func_def_args());
+         }
+         else if (is_call)
+         {
+            // Issue #2604
+            log_rule_B("nl_func_call_args");
+            newline_iarf(pc, options::nl_func_call_args());
+         }
+         else // get_chunk_parent_type(start) == CT_FUNC_DECL
+         {
+            log_rule_B("nl_func_decl_args");
+            newline_iarf(pc, options::nl_func_decl_args());
+         }
       }
    }
 
@@ -4266,38 +4272,41 @@ void newlines_cleanup_braces(bool first)
          log_rule_B("nl_func_def_paren_empty");
          log_rule_B("nl_func_paren_empty");
 
-         if (  (  get_chunk_parent_type(pc) == CT_FUNC_DEF
-               || get_chunk_parent_type(pc) == CT_FUNC_PROTO
-               || get_chunk_parent_type(pc) == CT_FUNC_CLASS_DEF
-               || get_chunk_parent_type(pc) == CT_FUNC_CLASS_PROTO
-               || get_chunk_parent_type(pc) == CT_OPERATOR)
-            && (  options::nl_func_decl_start() != IARF_IGNORE
-               || options::nl_func_def_start() != IARF_IGNORE
-               || options::nl_func_decl_start_single() != IARF_IGNORE
-               || options::nl_func_def_start_single() != IARF_IGNORE
-               || options::nl_func_decl_start_multi_line()
-               || options::nl_func_def_start_multi_line()
-               || options::nl_func_decl_args() != IARF_IGNORE
-               || options::nl_func_def_args() != IARF_IGNORE
-               || options::nl_func_decl_args_multi_line()
-               || options::nl_func_def_args_multi_line()
-               || options::nl_func_decl_end() != IARF_IGNORE
-               || options::nl_func_def_end() != IARF_IGNORE
-               || options::nl_func_decl_end_single() != IARF_IGNORE
-               || options::nl_func_def_end_single() != IARF_IGNORE
-               || options::nl_func_decl_end_multi_line()
-               || options::nl_func_def_end_multi_line()
-               || options::nl_func_decl_empty() != IARF_IGNORE
-               || options::nl_func_def_empty() != IARF_IGNORE
-               || options::nl_func_type_name() != IARF_IGNORE
-               || options::nl_func_type_name_class() != IARF_IGNORE
-               || options::nl_func_class_scope() != IARF_IGNORE
-               || options::nl_func_scope_name() != IARF_IGNORE
-               || options::nl_func_proto_type_name() != IARF_IGNORE
-               || options::nl_func_paren() != IARF_IGNORE
-               || options::nl_func_def_paren() != IARF_IGNORE
-               || options::nl_func_def_paren_empty() != IARF_IGNORE
-               || options::nl_func_paren_empty() != IARF_IGNORE))
+         if (  (  (  get_chunk_parent_type(pc) == CT_FUNC_DEF
+                  || get_chunk_parent_type(pc) == CT_FUNC_PROTO
+                  || get_chunk_parent_type(pc) == CT_FUNC_CLASS_DEF
+                  || get_chunk_parent_type(pc) == CT_FUNC_CLASS_PROTO
+                  || get_chunk_parent_type(pc) == CT_OPERATOR)
+               && (  options::nl_func_decl_start() != IARF_IGNORE
+                  || options::nl_func_def_start() != IARF_IGNORE
+                  || options::nl_func_decl_start_single() != IARF_IGNORE
+                  || options::nl_func_def_start_single() != IARF_IGNORE
+                  || options::nl_func_decl_start_multi_line()
+                  || options::nl_func_def_start_multi_line()
+                  || options::nl_func_decl_args() != IARF_IGNORE
+                  || options::nl_func_def_args() != IARF_IGNORE
+                  || options::nl_func_decl_args_multi_line()
+                  || options::nl_func_def_args_multi_line()
+                  || options::nl_func_decl_end() != IARF_IGNORE
+                  || options::nl_func_def_end() != IARF_IGNORE
+                  || options::nl_func_decl_end_single() != IARF_IGNORE
+                  || options::nl_func_def_end_single() != IARF_IGNORE
+                  || options::nl_func_decl_end_multi_line()
+                  || options::nl_func_def_end_multi_line()
+                  || options::nl_func_decl_empty() != IARF_IGNORE
+                  || options::nl_func_def_empty() != IARF_IGNORE
+                  || options::nl_func_type_name() != IARF_IGNORE
+                  || options::nl_func_type_name_class() != IARF_IGNORE
+                  || options::nl_func_class_scope() != IARF_IGNORE
+                  || options::nl_func_scope_name() != IARF_IGNORE
+                  || options::nl_func_proto_type_name() != IARF_IGNORE
+                  || options::nl_func_paren() != IARF_IGNORE
+                  || options::nl_func_def_paren() != IARF_IGNORE
+                  || options::nl_func_def_paren_empty() != IARF_IGNORE
+                  || options::nl_func_paren_empty() != IARF_IGNORE))
+
+            || (  get_chunk_parent_type(pc) == CT_FUNC_CALL                // Issue #2604
+               && options::nl_func_call_args() != IARF_IGNORE))
          {
             newline_func_def_or_call(pc);
          }

@@ -1342,7 +1342,7 @@ nl_getset_leave_one_liners      = false    # true/false
 nl_cs_property_leave_one_liners = false    # true/false
 
 # Don't split one-line function definitions, as in 'int foo() { return 0; }'.
-# night modify nl_func_type_name
+# might modify nl_func_type_name
 nl_func_leave_one_liners        = false    # true/false
 
 # Don't split one-line C++11 lambdas, as in '[]() { return 0; }'.
@@ -1696,6 +1696,9 @@ nl_func_decl_args               = ignore   # ignore/add/remove/force
 
 # Add or remove newline after each ',' in a function definition.
 nl_func_def_args                = ignore   # ignore/add/remove/force
+
+# Add or remove newline after each ',' in a function call.
+nl_func_call_args               = ignore   # ignore/add/remove/force
 
 # Whether to add a newline after each ',' in a function declaration if '('
 # and ')' are in different lines. If false, nl_func_decl_args is used instead.
