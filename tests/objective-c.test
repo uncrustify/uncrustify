@@ -141,6 +141,10 @@
 50902  empty.cfg                            oc/Issue_2289.m
 50903  Issue_681.cfg                        oc/Issue_681.oc
 
+50904  double_angle_space_1.cfg             oc/double_angle_space.m
+50905  double_angle_space_2.cfg             oc/double_angle_space.m
+50906  double_angle_space_3.cfg             oc/double_angle_space.m
+
 #
 # adopt tests from UT
 10018  empty.cfg                            oc/delete-space-oc.mm
