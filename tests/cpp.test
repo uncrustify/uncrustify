@@ -346,6 +346,7 @@
 30902  region-2.cfg                         cpp/region.cpp
 30903  region-3.cfg                         cpp/region.cpp
 
+30907  Issue_1813.cfg                       cpp/Issue_1813.cpp
 30908  Issue_1813.cfg                       cpp/Issue_1813-2.cpp
 30909  Issue_1813.cfg                       cpp/Issue_1813-3.cpp
 30910  indent_namespace-t.cfg               cpp/indent_namespace.h
