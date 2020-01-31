@@ -1087,10 +1087,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       fix_typedef(pc);
    }
 
-   if (  chunk_is_token(pc, CT_ENUM)
-      || chunk_is_token(pc, CT_STRUCT)
-      || chunk_is_token(pc, CT_UNION)
-      || (chunk_is_token(pc, CT_CLASS) && !language_is_set(LANG_D)))
+   if (  !pc->flags.test(PCF_IN_FCN_DEF)                                 // Issue #2616
+      && (  chunk_is_token(pc, CT_ENUM)
+         || chunk_is_token(pc, CT_STRUCT)
+         || chunk_is_token(pc, CT_UNION)
+         || (chunk_is_token(pc, CT_CLASS) && !language_is_set(LANG_D))))
    {
       if (prev->type != CT_TYPEDEF)
       {
@@ -2234,8 +2235,10 @@ void fix_symbols(void)
          pc = chunk_get_next_ncnl(pc);
          continue;
       }
-      LOG_FMT(LFCNR, "%s(%d): pc->orig_line       is %zu, orig_col is %zu, text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+      LOG_FMT(LFCNR, "%s(%d): pc->orig_line       is %zu, orig_col is %zu, text() is '%s',",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+      LOG_FMT(LFCNR, " type is %s, parent_type is %s\n",
+              get_token_name(pc->type), get_token_name(pc->parent_type));
       chunk_t *prev = chunk_get_prev_ncnlni(pc, scope_e::PREPROC);   // Issue #2279
 
       if (prev == nullptr)
@@ -2245,8 +2248,10 @@ void fix_symbols(void)
       else
       {
          // Issue #2279
-         LOG_FMT(LFCNR, "%s(%d): prev(ni)->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
-                 __func__, __LINE__, prev->orig_line, prev->orig_col, prev->text(), get_token_name(prev->type));
+         LOG_FMT(LFCNR, "%s(%d): prev(ni)->orig_line is %zu, orig_col is %zu, text() is '%s',",
+                 __func__, __LINE__, prev->orig_line, prev->orig_col, prev->text());
+         LOG_FMT(LFCNR, " type is %s, parent_type is %s\n",
+                 get_token_name(prev->type), get_token_name(prev->parent_type));
       }
       chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
 

@@ -490,6 +490,10 @@ void output_parsed(FILE *pfile)
             fprintf(pfile, "\\");
          }
       }
+//#define DEBUG_FLAGS
+#ifdef DEBUG_FLAGS
+      fprintf(pfile, "\n                           %s", pcf_flags_str(pc->flags).c_str());
+#endif // DEBUG_FLAGS
    }
 
    fprintf(pfile, "%s# -=====-%s", eol_marker, eol_marker);
