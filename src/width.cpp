@@ -748,7 +748,7 @@ static void split_fcn_params(chunk_t *start)
             if (cur_width == 0)
             {
                fprintf(stderr, "%s(%d): cur_width is ZERO, cannot be decremented, at line %u, column %u\n",
-                       __func__, __LINE__, static_cast<int>pc->orig_line, static_cast<int>pc->orig_col);
+                       __func__, __LINE__, (int)pc->orig_line, (int)pc->orig_col);
                log_flush(true);
                exit(EX_SOFTWARE);
             }
