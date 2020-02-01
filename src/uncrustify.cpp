@@ -2494,7 +2494,7 @@ std::string pcf_flags_str(pcf_flags_t flags)
    char buffer[64];
 
    // Generate hex representation first
-   snprintf(buffer, 63, "[0x%I64u:", (long long unsigned int)(flags));
+   snprintf(buffer, 63, "[0x%I64u:", (unsigned int)(flags));
 
    // Add human-readable names
    auto out   = std::string{ buffer };
