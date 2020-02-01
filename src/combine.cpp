@@ -1795,7 +1795,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          {
             // more pointers are NOT yet possible
             fprintf(stderr, "Too many pointers\n");
-            fprintf(stderr, "at line %zu, column %zu.\n", pc->orig_line, pc->orig_col);
+            fprintf(stderr, "at line %d, column %d.\n", (int)pc->orig_line, (int)pc->orig_col);
             fprintf(stderr, "Please make a report.\n");
             log_flush(true);
             exit(EX_SOFTWARE);
@@ -2819,8 +2819,8 @@ static chunk_t *process_return(chunk_t *pc)
             {
                if (temp->level == 0)
                {
-                  fprintf(stderr, "%s(%d): temp->level is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                          __func__, __LINE__, temp->orig_line, temp->orig_col);
+                  fprintf(stderr, "%s(%d): temp->level is ZERO, cannot be decremented, at line %d, column %d\n",
+                          __func__, __LINE__, (int)temp->orig_line, (int)temp->orig_col);
                   log_flush(true);
                   exit(EX_SOFTWARE);
                }
@@ -3918,8 +3918,8 @@ static chunk_t *fix_var_def(chunk_t *start)
 
          if (idx == 0)
          {
-            fprintf(stderr, "%s(%d): idx is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                    __func__, __LINE__, tmp_pc->orig_line, tmp_pc->orig_col);
+            fprintf(stderr, "%s(%d): idx is ZERO, cannot be decremented, at line %d, column %d\n",
+                    __func__, __LINE__, (int)tmp_pc->orig_line, (int)tmp_pc->orig_col);
             log_flush(true);
             exit(EX_SOFTWARE);
          }
@@ -6232,8 +6232,8 @@ static void handle_oc_class(chunk_t *pc)
 
             if (generic_level == 0)
             {
-               fprintf(stderr, "%s(%d): generic_level is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                       __func__, __LINE__, tmp->orig_line, tmp->orig_col);
+               fprintf(stderr, "%s(%d): generic_level is ZERO, cannot be decremented, at line %d, column %d\n",
+                       __func__, __LINE__, (int)tmp->orig_line, (int)tmp->orig_col);
                log_flush(true);
                exit(EX_SOFTWARE);
             }
