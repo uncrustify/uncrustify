@@ -403,8 +403,8 @@ static bool can_remove_braces(chunk_t *bopen)
          {
             if (br_count == 0)
             {
-               fprintf(stderr, "%s(%d): br_count is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col);
+               fprintf(stderr, "%s(%d): br_count is ZERO, cannot be decremented, at line %d, column %d\n",
+                       __func__, __LINE__, (int)pc->orig_line, (int)pc->orig_col);
                log_flush(true);
                exit(EX_SOFTWARE);
             }
@@ -562,8 +562,8 @@ static void examine_brace(chunk_t *bopen)
          {
             if (br_count == 0)
             {
-               fprintf(stderr, "%s(%d): br_count is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col);
+               fprintf(stderr, "%s(%d): br_count is ZERO, cannot be decremented, at line %d, column %d\n",
+                       __func__, __LINE__, (int)pc->orig_line, (int)pc->orig_col);
                log_flush(true);
                exit(EX_SOFTWARE);
             }
@@ -783,8 +783,8 @@ static void convert_brace(chunk_t *br)
          {
             if (tmp->nl_count == 0)
             {
-               fprintf(stderr, "%s(%d): tmp->nl_count is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                       __func__, __LINE__, tmp->orig_line, tmp->orig_col);
+               fprintf(stderr, "%s(%d): tmp->nl_count is ZERO, cannot be decremented, at line %d, column %d\n",
+                       __func__, __LINE__, (int)tmp->orig_line, (int)tmp->orig_col);
                log_flush(true);
                exit(EX_SOFTWARE);
             }
@@ -1246,8 +1246,8 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
    {
       if (tmp_pc->brace_level == 0)
       {
-         fprintf(stderr, "%s(%d): tmp_pc->brace_level is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                 __func__, __LINE__, tmp_pc->orig_line, tmp_pc->orig_col);
+         fprintf(stderr, "%s(%d): tmp_pc->brace_level is ZERO, cannot be decremented, at line %d, column %d\n",
+                 __func__, __LINE__, (int)tmp_pc->orig_line, (int)tmp_pc->orig_col);
          log_flush(true);
          exit(EX_SOFTWARE);
       }
@@ -1255,8 +1255,8 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
 
       if (tmp_pc->level == 0)
       {
-         fprintf(stderr, "%s(%d): tmp_pc->level is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                 __func__, __LINE__, tmp_pc->orig_line, tmp_pc->orig_col);
+         fprintf(stderr, "%s(%d): tmp_pc->level is ZERO, cannot be decremented, at line %d, column %d\n",
+                 __func__, __LINE__, (int)tmp_pc->orig_line, (int)tmp_pc->orig_col);
          log_flush(true);
          exit(EX_SOFTWARE);
       }

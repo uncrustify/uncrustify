@@ -234,8 +234,8 @@ void usage_error(const char *msg)
 static void tease()
 {
    fprintf(stdout,
-           "There are currently %zu options and minimal documentation.\n"
-           "Try UniversalIndentGUI and good luck.\n", get_option_count());
+           "There are currently %d options and minimal documentation.\n"
+           "Try UniversalIndentGUI and good luck.\n", static_cast<int>get_option_count());
 }
 
 
@@ -438,7 +438,7 @@ int main(int argc, char *argv[])
 
       if (lengthOfTheName > MAXLENGTHOFTHENAME)
       {
-         fprintf(stderr, "%s(%d): The token name '%s' is too long (%zu)\n",
+         fprintf(stderr, "%s(%d): The token name '%s' is too long (%d)\n",
                  __func__, __LINE__, token_names[token], lengthOfTheName);
          fprintf(stderr, "%s(%d): the max token name length is %d\n",
                  __func__, __LINE__, MAXLENGTHOFTHENAME);
