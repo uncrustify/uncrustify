@@ -235,7 +235,7 @@ static void tease()
 {
    fprintf(stdout,
            "There are currently %d options and minimal documentation.\n"
-           "Try UniversalIndentGUI and good luck.\n", static_cast<int>get_option_count());
+           "Try UniversalIndentGUI and good luck.\n", (int)get_option_count());
 }
 
 
@@ -2494,7 +2494,7 @@ std::string pcf_flags_str(pcf_flags_t flags)
    char buffer[64];
 
    // Generate hex representation first
-   snprintf(buffer, 63, "[0x%llx:", static_cast<pcf_flags_t::int_t>(flags));
+   snprintf(buffer, 63, "[0x%I64u:", static_cast<pcf_flags_t::int_t>(flags));
 
    // Add human-readable names
    auto out   = std::string{ buffer };
