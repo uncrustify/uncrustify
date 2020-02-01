@@ -439,7 +439,7 @@ int main(int argc, char *argv[])
       if (lengthOfTheName > MAXLENGTHOFTHENAME)
       {
          fprintf(stderr, "%s(%d): The token name '%s' is too long (%d)\n",
-                 __func__, __LINE__, token_names[token], lengthOfTheName);
+                 __func__, __LINE__, token_names[token], (int)lengthOfTheName);
          fprintf(stderr, "%s(%d): the max token name length is %d\n",
                  __func__, __LINE__, MAXLENGTHOFTHENAME);
          log_flush(true);
@@ -2494,7 +2494,7 @@ std::string pcf_flags_str(pcf_flags_t flags)
    char buffer[64];
 
    // Generate hex representation first
-   snprintf(buffer, 63, "[0x%I64u:", static_cast<pcf_flags_t::int_t>(flags));
+   snprintf(buffer, 63, "[0x%I64u:", (int)(flags));
 
    // Add human-readable names
    auto out   = std::string{ buffer };
