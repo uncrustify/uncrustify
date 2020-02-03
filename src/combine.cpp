@@ -19,6 +19,7 @@
 #include "language_tools.h"
 #include "log_rules.h"
 #include "newlines.h"
+#include "pcf_flags.h"
 #include "prototypes.h"
 #include "tokenize_cleanup.h"
 #include "unc_ctype.h"
