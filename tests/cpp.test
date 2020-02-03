@@ -763,6 +763,9 @@
 34319  align_func_proto_thresh_4.cfg        cpp/align_func_proto_thresh2.cpp
 34320  align_func_proto_thresh_5.cfg        cpp/align_func_proto_thresh2.cpp
 34321  bug_2285.cfg                         cpp/bug_2285.cpp
+34322  issue_2623_1.cfg                     cpp/issue_2623.cpp
+34323  issue_2623_2.cfg                     cpp/issue_2623.cpp
+34324  issue_2623_3.cfg                     cpp/issue_2623.cpp
 
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
