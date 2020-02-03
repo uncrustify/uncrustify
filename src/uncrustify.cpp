@@ -19,7 +19,6 @@
 #include "backup.h"
 #include "brace_cleanup.h"
 #include "braces.h"
-#include "char_table.h"
 #include "chunk_list.h"
 #include "combine.h"
 #include "compat.h"
@@ -37,10 +36,12 @@
 #include "options.h"
 #include "output.h"
 #include "parens.h"
+#include "pcf_flags.h"
 #include "prototypes.h"
 #include "semicolons.h"
 #include "sorting.h"
 #include "space.h"
+#include "token_enum.h"
 #include "token_names.h"
 #include "tokenize.h"
 #include "tokenize_cleanup.h"
@@ -2486,46 +2487,4 @@ static size_t language_flags_from_filename(const char *filename)
    }
 
    return(LANG_C);
-}
-
-
-std::string pcf_flags_str(pcf_flags_t flags)
-{
-   char buffer[64];
-
-   // Generate hex representation first
-   snprintf(buffer, 63, "[0x%I62d:", (int)(flags));
-
-   // Add human-readable names
-   auto out   = std::string{ buffer };
-   auto first = true;
-
-   for (size_t i = 0; i < ARRAY_SIZE(pcf_names); ++i)
-   {
-      if (flags & static_cast<pcf_flag_e>(pcf_bit(i)))
-      {
-         if (first)
-         {
-            first = false;
-         }
-         else
-         {
-            out += ',';
-         }
-         out += pcf_names[i];
-      }
-   }
-
-   out += ']';
-   return(out);
-}
-
-
-void log_pcf_flags(log_sev_t sev, pcf_flags_t flags)
-{
-   if (!log_sev_on(sev))
-   {
-      return;
-   }
-   log_fmt(sev, "%s\n", pcf_flags_str(flags).c_str());
 }

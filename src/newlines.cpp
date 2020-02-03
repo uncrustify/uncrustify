@@ -29,6 +29,7 @@
 #include "language_tools.h"
 #include "log_rules.h"
 #include "options.h"
+#include "pcf_flags.h"
 #include "prototypes.h"
 #include "space.h"
 #include "unc_ctype.h"

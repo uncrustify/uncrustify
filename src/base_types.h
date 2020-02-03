@@ -44,10 +44,4 @@ typedef uint32_t   UINT32;
 typedef uint64_t   UINT64;
 #endif /* ifdef WIN32 */
 
-// and the ever-so-important array size macro
-#ifndef ARRAY_SIZE
-#define ARRAY_SIZE(x)    (sizeof(x) / sizeof((x)[0]))
-#endif
-
-
 #endif /* BASE_TYPES_H_INCLUDED */

@@ -6,8 +6,16 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #ifndef CHAR_TABLE_H_INCLUDED
 #define CHAR_TABLE_H_INCLUDED
+
+#include <vector>      // do get the definition of size_t
+
+// and the ever-so-important array size macro
+#ifndef ARRAY_SIZE
+#define ARRAY_SIZE(x)    (sizeof(x) / sizeof((x)[0]))
+#endif
 
 /**
  * bit0-7 = paired char

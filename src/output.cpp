@@ -17,6 +17,7 @@
 #include "indent.h"
 #include "language_tools.h"
 #include "log_rules.h"
+#include "pcf_flags.h"
 #include "prototypes.h"
 #include "unc_ctype.h"
 #include "uncrustify.h"
