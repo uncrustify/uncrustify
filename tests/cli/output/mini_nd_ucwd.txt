@@ -606,6 +606,10 @@ sp_catch_paren                  = ignore   # ignore/add/remove/force
 # in '@catch (something) { }'. If set to ignore, sp_catch_paren is used.
 sp_oc_catch_paren               = ignore   # ignore/add/remove/force
 
+# (OC) Add or remove space before Objective-C protocol list
+# as in '@protocol Protocol<here><Protocol_A>' or '@interface MyClass : NSObject<here><MyProtocol>'.
+sp_before_oc_proto_list         = ignore   # ignore/add/remove/force
+
 # (OC) Add or remove space between class name and '('
 # in '@interface className(categoryName)<ProtocolName>:BaseClass'
 sp_oc_classname_paren           = ignore   # ignore/add/remove/force

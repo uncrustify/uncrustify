@@ -774,6 +774,11 @@ sp_catch_paren;
 extern Option<iarf_e>
 sp_oc_catch_paren;
 
+// (OC) Add or remove space before Objective-C protocol list
+// as in '@protocol Protocol<here><Protocol_A>' or '@interface MyClass : NSObject<here><MyProtocol>'.
+extern Option<iarf_e>
+sp_before_oc_proto_list;
+
 // (OC) Add or remove space between class name and '('
 // in '@interface className(categoryName)<ProtocolName>:BaseClass'
 extern Option<iarf_e>

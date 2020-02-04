@@ -140,6 +140,10 @@
 50811  oc_bug_1674.cfg                      oc/bug_1674.m
 50812  oc_bug_1683.cfg                      oc/bug_1683.m
 
+50813  sp_before_oc_proto_list_add.cfg      oc/sp_before_oc_proto_list.m
+50814  sp_before_oc_proto_list_force.cfg    oc/sp_before_oc_proto_list.m
+50815  sp_before_oc_proto_list_remove.cfg   oc/sp_before_oc_proto_list.m
+
 50900  1927.cfg                             oc/1927.m
 50901  Issue_2172.cfg                       oc/Issue_2172.m
 50902  empty.cfg                            oc/Issue_2289.m
