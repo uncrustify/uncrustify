@@ -691,7 +691,7 @@ def main(args):
     # look at src/log_levels.h
     # TODO: restore the test 28
     # Ls_A = ['9', '21', '25', '28', '31', '36', '66', '92']
-    Ls_A = ['9', '21', '25', '31', '36', '66', '92']
+    Ls_A = ['9', '21', '25', '36', '66', '92']
     for L in Ls_A:
         if not check_uncrustify_output(
                 uncr_bin,
