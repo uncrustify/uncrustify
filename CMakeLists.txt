@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.2)
 
 project(uncrustify)
 
@@ -139,17 +139,19 @@ else()
   # Add target to generate version header;
   # do this every build to ensure git SHA is up to date
   add_custom_target(generate_version_header
-    ${CMAKE_COMMAND}
-    -D PYTHON_EXECUTABLE:STRING=${PYTHON_EXECUTABLE}
-    -D SOURCE_DIR:PATH="${PROJECT_SOURCE_DIR}"
-    -D INPUT:PATH="${PROJECT_SOURCE_DIR}/src/uncrustify_version.h.in"
-    -D OUTPUT:PATH="${PROJECT_BINARY_DIR}/uncrustify_version.h"
-    -D UNCRUSTIFY_VERSION:STRING="${UNCRUSTIFY_VERSION}"
-    -P ${PROJECT_SOURCE_DIR}/cmake/GenerateVersionHeader.cmake
+    BYPRODUCTS "${PROJECT_BINARY_DIR}/uncrustify_version.h"
+    COMMAND
+      ${CMAKE_COMMAND}
+      -D PYTHON_EXECUTABLE:STRING=${PYTHON_EXECUTABLE}
+      -D SOURCE_DIR:PATH="${PROJECT_SOURCE_DIR}"
+      -D INPUT:PATH="${PROJECT_SOURCE_DIR}/src/uncrustify_version.h.in"
+      -D OUTPUT:PATH="${PROJECT_BINARY_DIR}/uncrustify_version.h"
+      -D UNCRUSTIFY_VERSION:STRING="${UNCRUSTIFY_VERSION}"
+      -P ${PROJECT_SOURCE_DIR}/cmake/GenerateVersionHeader.cmake
     COMMENT "Generating version header"
   )
   set_source_files_properties(
-    "${CMAKE_CURRENT_BINARY_DIR}/uncrustify_version.h"
+    "${PROJECT_BINARY_DIR}/uncrustify_version.h"
     PROPERTIES GENERATED TRUE
   )
 endif()
