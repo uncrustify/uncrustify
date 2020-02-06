@@ -1479,8 +1479,22 @@ void indent_text(void)
                  && (get_chunk_parent_type(pc) == CT_CPP_LAMBDA))
          {
             log_rule_B("indent_cpp_lambda_only_once");
+
+            size_t namespace_indent_to_ignore = 0;                   // Issue #1813
+
+            if (!options::indent_namespace())
+            {
+               for (auto i = frm.rbegin(); i != frm.rend(); ++i)
+               {
+                  if (i->ns_cnt)
+                  {
+                     namespace_indent_to_ignore = i->ns_cnt;
+                     break;
+                  }
+               }
+            }
             // Issue # 1296
-            frm.top().brace_indent = 1 + (pc->brace_level * indent_size);
+            frm.top().brace_indent = 1 + ((pc->brace_level - namespace_indent_to_ignore) * indent_size);
             indent_column_set(frm.top().brace_indent);
             frm.top().indent = indent_column + indent_size;
             log_indent();
