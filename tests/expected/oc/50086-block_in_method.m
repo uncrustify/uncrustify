@@ -8,7 +8,6 @@
 	return result;
 }
 
-
 - (NSArray *)collect:(BOOL ( ^ )(id))predicate {
 	id result = [NSMutableArray array];
 	for (id elem in self)
@@ -17,46 +16,44 @@
 	return result;
 }
 
-
 - (void)each:(void (^)(id object))block {
-	[self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-	     block(obj);
-	 }];
+	[self enumerateObjectsUsingBlock:^ (id obj, NSUInteger idx, BOOL *stop) {
+	                                         block(obj);
+					 }];
 }
 
+// corner case: block literal in use with return type
+id longLines = [allLines collect:^ BOOL (id item) {
+        return [item length] > 20;
+}];
 
 // corner case: block literal in use with return type
-id longLines = [allLines collect: ^ BOOL (id item) {
-                    return [item length] > 20;
-				}];
-
-// corner case: block literal in use with return type
-id longLines = [allLines collect: ^ BOOL* (id item) {
-                    return [item length] > 20;
-				}];
+id longLines = [allLines collect:^ BOOL* (id item) {
+        return [item length] > 20;
+}];
 
 @end
 
-nestedMethodCall(methodCall( ^ BOOL * (id item) {
+nestedMethodCall(methodCall(^ BOOL * (id item) {
 	NSLog(@"methodCall")
 }));
 
 nestedMethodCall(
 	arg1,
-	methodCall(  ^ NSString * (id item) {
+	methodCall(^ NSString * (id item) {
 	NSLog(@"methodCall")
 }));
 
 nestedMethodCall(
 	arg1,
-	methodCall(  ^ {
+	methodCall(^ {
 	NSLog(@"methodCall")
 },
-	             arg2)
+	           arg2)
 	);
 
 nestedMethodCall(
-	methodCall(  ^ {
+	methodCall(^ {
 	NSLog(@"methodCall")
 })
 	);

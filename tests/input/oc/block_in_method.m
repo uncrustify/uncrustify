@@ -34,6 +34,30 @@ id longLines = [allLines collect: ^ BOOL* (id item) {
 
 @end
 
+nestedMethodCall(methodCall( ^ BOOL * (id item) {
+  NSLog(@"methodCall")
+}));
+
+nestedMethodCall(
+    arg1,
+    methodCall(  ^ NSString * (id item) {
+        NSLog(@"methodCall")
+    }));
+
+nestedMethodCall(
+    arg1,
+    methodCall(  ^ {
+        NSLog(@"methodCall")
+    },
+    arg2)
+);
+
+nestedMethodCall(
+    methodCall(  ^ {
+        NSLog(@"methodCall")
+    })
+);
+
 // 1. block literal: ^{ ... };
 // 2. block declaration: return_t (^name) (int arg1, int arg2, ...) NB: return_t is optional and name is also optional
 // 3. block inline call ^ return_t (int arg) { ... }; NB: return_t is optional
