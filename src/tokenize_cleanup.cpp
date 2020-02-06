@@ -1160,8 +1160,8 @@ static void check_template(chunk_t *start)
             {
                if (level == 0)
                {
-                  fprintf(stderr, "%s(%d): level is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                          __func__, __LINE__, pc->orig_line, pc->orig_col);
+                  fprintf(stderr, "%s(%d): level is ZERO, cannot be decremented, at line %d, column %d\n",
+                          __func__, __LINE__, (int)pc->orig_line, (int)pc->orig_col);
                   log_flush(true);
                   exit(EX_SOFTWARE);
                }
@@ -1309,8 +1309,8 @@ static void check_template(chunk_t *start)
          {
             if (num_tokens == 0)
             {
-               fprintf(stderr, "%s(%d): num_tokens is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col);
+               fprintf(stderr, "%s(%d): num_tokens is ZERO, cannot be decremented, at line %d, column %d\n",
+                       __func__, __LINE__, (int)pc->orig_line, (int)pc->orig_col);
                log_flush(true);
                exit(EX_SOFTWARE);
             }

@@ -1,42 +1,9 @@
-# 1 "/usr/include/directfb/directfb.h"
-# 1 "<built-in>"
-# 1 "<command line>"
-# 1 "/usr/include/directfb/directfb.h"
-# 31 "/usr/include/directfb/directfb.h"
-# 1 "/usr/include/directfb/dfb_types.h" 1
-
-
-
-# 1 "/usr/include/sys/types.h" 1 3 4
-# 27 "/usr/include/sys/types.h" 3 4
-# 1 "/usr/include/features.h" 1 3 4
-# 308 "/usr/include/features.h" 3 4
-# 1 "/usr/include/sys/cdefs.h" 1 3 4
-# 309 "/usr/include/features.h" 2 3 4
-# 331 "/usr/include/features.h" 3 4
-# 1 "/usr/include/gnu/stubs.h" 1 3 4
-# 332 "/usr/include/features.h" 2 3 4
-# 28 "/usr/include/sys/types.h" 2 3 4
-
-
-
-# 1 "/usr/include/bits/types.h" 1 3 4
-# 28 "/usr/include/bits/types.h" 3 4
-# 1 "/usr/include/bits/wordsize.h" 1 3 4
-# 29 "/usr/include/bits/types.h" 2 3 4
-
-
-# 1 "/usr/lib/gcc/i486-linux-gnu/4.0.3/include/stddef.h" 1 3 4
-# 214 "/usr/lib/gcc/i486-linux-gnu/4.0.3/include/stddef.h" 3 4
 typedef unsigned int size_t;
-# 32 "/usr/include/bits/types.h" 2 3 4
-
 
 typedef unsigned char __u_char;
 typedef unsigned short int __u_short;
 typedef unsigned int __u_int;
 typedef unsigned long int __u_long;
-
 
 typedef signed char __int8_t;
 typedef unsigned char __uint8_t;
@@ -45,28 +12,11 @@ typedef unsigned short int __uint16_t;
 typedef signed int __int32_t;
 typedef unsigned int __uint32_t;
 
-
-
-
 __extension__ typedef signed long long int __int64_t;
 __extension__ typedef unsigned long long int __uint64_t;
 
-
-
-
-
-
-
 __extension__ typedef long long int __quad_t;
 __extension__ typedef unsigned long long int __u_quad_t;
-# 129 "/usr/include/bits/types.h" 3 4
-# 1 "/usr/include/bits/typesizes.h" 1 3 4
-# 130 "/usr/include/bits/types.h" 2 3 4
-
-
-
-
-
 
 __extension__ typedef __u_quad_t __dev_t;
 __extension__ typedef unsigned int __uid_t;
@@ -91,45 +41,30 @@ __extension__ typedef int __daddr_t;
 __extension__ typedef long int __swblk_t;
 __extension__ typedef int __key_t;
 
-
 __extension__ typedef int __clockid_t;
-
 
 __extension__ typedef int __timer_t;
 
-
 __extension__ typedef long int __blksize_t;
-
-
-
 
 __extension__ typedef long int __blkcnt_t;
 __extension__ typedef __quad_t __blkcnt64_t;
 
-
 __extension__ typedef unsigned long int __fsblkcnt_t;
 __extension__ typedef __u_quad_t __fsblkcnt64_t;
-
 
 __extension__ typedef unsigned long int __fsfilcnt_t;
 __extension__ typedef __u_quad_t __fsfilcnt64_t;
 
 __extension__ typedef int __ssize_t;
 
-
-
 typedef __off64_t __loff_t;
 typedef __quad_t *__qaddr_t;
 typedef char *__caddr_t;
 
-
 __extension__ typedef int __intptr_t;
 
-
 __extension__ typedef unsigned int __socklen_t;
-# 32 "/usr/include/sys/types.h" 2 3 4
-
-
 
 typedef __u_char u_char;
 typedef __u_short u_short;
@@ -139,96 +74,43 @@ typedef __quad_t quad_t;
 typedef __u_quad_t u_quad_t;
 typedef __fsid_t fsid_t;
 
-
-
-
 typedef __loff_t loff_t;
 
-
-
 typedef __ino_t ino_t;
-# 62 "/usr/include/sys/types.h" 3 4
 typedef __dev_t dev_t;
-
-
-
 
 typedef __gid_t gid_t;
 
-
-
-
 typedef __mode_t mode_t;
-
-
-
 
 typedef __nlink_t nlink_t;
 
-
-
-
 typedef __uid_t uid_t;
 
-
-
-
-
 typedef __off_t off_t;
-# 100 "/usr/include/sys/types.h" 3 4
 typedef __pid_t pid_t;
-
-
-
 
 typedef __id_t id_t;
 
-
-
-
 typedef __ssize_t ssize_t;
-
-
-
-
 
 typedef __daddr_t daddr_t;
 typedef __caddr_t caddr_t;
 
-
-
-
-
 typedef __key_t key_t;
-# 133 "/usr/include/sys/types.h" 3 4
-# 1 "/usr/include/time.h" 1 3 4
-# 74 "/usr/include/time.h" 3 4
-
 
 typedef __time_t time_t;
 
-
-
-# 92 "/usr/include/time.h" 3 4
 typedef __clockid_t clockid_t;
-# 104 "/usr/include/time.h" 3 4
 typedef __timer_t timer_t;
-# 134 "/usr/include/sys/types.h" 2 3 4
-# 147 "/usr/include/sys/types.h" 3 4
-# 1 "/usr/lib/gcc/i486-linux-gnu/4.0.3/include/stddef.h" 1 3 4
-# 148 "/usr/include/sys/types.h" 2 3 4
-
-
 
 typedef unsigned long int ulong;
 typedef unsigned short int ushort;
 typedef unsigned int uint;
-# 191 "/usr/include/sys/types.h" 3 4
 typedef int int8_t __attribute__ ((__mode__ (__QI__)));
 typedef int int16_t __attribute__ ((__mode__ (__HI__)));
 typedef int int32_t __attribute__ ((__mode__ (__SI__)));
 typedef int int64_t __attribute__ ((__mode__ (__DI__)));
-
 
 typedef unsigned int u_int8_t __attribute__ ((__mode__ (__QI__)));
 typedef unsigned int u_int16_t __attribute__ ((__mode__ (__HI__)));
@@ -236,101 +118,43 @@ typedef unsigned int u_int32_t __attribute__ ((__mode__ (__SI__)));
 typedef unsigned int u_int64_t __attribute__ ((__mode__ (__DI__)));
 
 typedef int register_t __attribute__ ((__mode__ (__word__)));
-# 213 "/usr/include/sys/types.h" 3 4
-# 1 "/usr/include/endian.h" 1 3 4
-# 37 "/usr/include/endian.h" 3 4
-# 1 "/usr/include/bits/endian.h" 1 3 4
-# 38 "/usr/include/endian.h" 2 3 4
-# 214 "/usr/include/sys/types.h" 2 3 4
 
-
-# 1 "/usr/include/sys/select.h" 1 3 4
-# 31 "/usr/include/sys/select.h" 3 4
-# 1 "/usr/include/bits/select.h" 1 3 4
-# 32 "/usr/include/sys/select.h" 2 3 4
-
-
-# 1 "/usr/include/bits/sigset.h" 1 3 4
-# 23 "/usr/include/bits/sigset.h" 3 4
 typedef int __sig_atomic_t;
-
-
-
 
 typedef struct
   {
     unsigned long int __val[(1024 / (8 * sizeof (unsigned long int)))];
   } __sigset_t;
-# 35 "/usr/include/sys/select.h" 2 3 4
-
-
 
 typedef __sigset_t sigset_t;
 
-
-
-
-
-# 1 "/usr/include/time.h" 1 3 4
-# 118 "/usr/include/time.h" 3 4
 struct timespec
   {
     __time_t tv_sec;
     long int tv_nsec;
   };
-# 45 "/usr/include/sys/select.h" 2 3 4
 
-# 1 "/usr/include/bits/time.h" 1 3 4
-# 69 "/usr/include/bits/time.h" 3 4
 struct timeval
   {
     __time_t tv_sec;
     __suseconds_t tv_usec;
   };
-# 47 "/usr/include/sys/select.h" 2 3 4
-
 
 typedef __suseconds_t suseconds_t;
 
-
-
-
-
 typedef long int __fd_mask;
-# 67 "/usr/include/sys/select.h" 3 4
 typedef struct
   {
-
-
-
-
-
-
     __fd_mask __fds_bits[1024 / (8 * sizeof (__fd_mask))];
-
-
   } fd_set;
 
-
-
-
-
-
 typedef __fd_mask fd_mask;
-# 99 "/usr/include/sys/select.h" 3 4
 
-# 109 "/usr/include/sys/select.h" 3 4
 extern int select (int __nfds, fd_set *__restrict __readfds,
      fd_set *__restrict __writefds,
      fd_set *__restrict __exceptfds,
      struct timeval *__restrict __timeout);
-# 128 "/usr/include/sys/select.h" 3 4
 
-# 217 "/usr/include/sys/types.h" 2 3 4
-
-
-# 1 "/usr/include/sys/sysmacros.h" 1 3 4
-# 29 "/usr/include/sys/sysmacros.h" 3 4
 __extension__
 extern __inline unsigned int gnu_dev_major (unsigned long long int __dev)
      __attribute__ ((__nothrow__));
@@ -341,7 +165,6 @@ __extension__
 extern __inline unsigned long long int gnu_dev_makedev (unsigned int __major,
        unsigned int __minor)
      __attribute__ ((__nothrow__));
-
 
 __extension__ extern __inline unsigned int
 __attribute__ ((__nothrow__)) gnu_dev_major (unsigned long long int __dev)
@@ -362,45 +185,25 @@ __attribute__ ((__nothrow__)) gnu_dev_makedev (unsigned int __major, unsigned in
    | (((unsigned long long int) (__minor & ~0xff)) << 12)
    | (((unsigned long long int) (__major & ~0xfff)) << 32));
 }
-# 220 "/usr/include/sys/types.h" 2 3 4
-# 231 "/usr/include/sys/types.h" 3 4
 typedef __blkcnt_t blkcnt_t;
-
-
 
 typedef __fsblkcnt_t fsblkcnt_t;
 
-
-
 typedef __fsfilcnt_t fsfilcnt_t;
-# 266 "/usr/include/sys/types.h" 3 4
-# 1 "/usr/include/bits/pthreadtypes.h" 1 3 4
-# 23 "/usr/include/bits/pthreadtypes.h" 3 4
-# 1 "/usr/include/bits/sched.h" 1 3 4
-# 83 "/usr/include/bits/sched.h" 3 4
 struct __sched_param
   {
     int __sched_priority;
   };
-# 24 "/usr/include/bits/pthreadtypes.h" 2 3 4
 
 typedef int __atomic_lock_t;
-
 
 struct _pthread_fastlock
 {
   long int __status;
   __atomic_lock_t __spinlock;
-
 };
 
-
-
 typedef struct _pthread_descr_struct *_pthread_descr;
-
-
-
-
 
 typedef struct __pthread_attr_s
 {
@@ -415,14 +218,7 @@ typedef struct __pthread_attr_s
   size_t __stacksize;
 } pthread_attr_t;
 
-
-
-
-
 __extension__ typedef long long __pthread_cond_align_t;
-
-
-
 
 typedef struct
 {
@@ -433,19 +229,12 @@ typedef struct
   __pthread_cond_align_t __align;
 } pthread_cond_t;
 
-
-
 typedef struct
 {
   int __dummy;
 } pthread_condattr_t;
 
-
 typedef unsigned int pthread_key_t;
-
-
-
-
 
 typedef struct
 {
@@ -456,52 +245,23 @@ typedef struct
   struct _pthread_fastlock __m_lock;
 } pthread_mutex_t;
 
-
-
 typedef struct
 {
   int __mutexkind;
 } pthread_mutexattr_t;
 
-
-
 typedef int pthread_once_t;
-# 152 "/usr/include/bits/pthreadtypes.h" 3 4
 typedef unsigned long int pthread_t;
-# 267 "/usr/include/sys/types.h" 2 3 4
 
-
-
-# 5 "/usr/include/directfb/dfb_types.h" 2
-# 1 "/usr/include/linux/types.h" 1 3 4
-
-
-
-
-# 1 "/usr/include/linux/posix_types.h" 1 3 4
-
-
-
-# 1 "/usr/include/linux/stddef.h" 1 3 4
-# 5 "/usr/include/linux/posix_types.h" 2 3 4
-# 36 "/usr/include/linux/posix_types.h" 3 4
 typedef struct {
  unsigned long fds_bits [(1024/(8 * sizeof(unsigned long)))];
 } __kernel_fd_set;
 
-
 typedef void (*__kernel_sighandler_t)(int);
-
 
 typedef int __kernel_key_t;
 typedef int __kernel_mqd_t;
 
-# 1 "/usr/lib/gcc/i486-linux-gnu/4.0.3/include/asm/posix_types.h" 1 3 4
-# 14 "/usr/lib/gcc/i486-linux-gnu/4.0.3/include/asm/posix_types.h" 3 4
-# 1 "/usr/include/asm/posix_types.h" 1 3 4
-# 11 "/usr/include/asm/posix_types.h" 3 4
-# 1 "/usr/include/asm-i386/posix_types.h" 1 3 4
-# 10 "/usr/include/asm-i386/posix_types.h" 3 4
 typedef unsigned long __kernel_ino_t;
 typedef unsigned short __kernel_mode_t;
 typedef unsigned short __kernel_nlink_t;
@@ -529,35 +289,15 @@ typedef unsigned short __kernel_old_uid_t;
 typedef unsigned short __kernel_old_gid_t;
 typedef unsigned short __kernel_old_dev_t;
 
-
 typedef long long __kernel_loff_t;
 
-
 typedef struct {
-
-
 
  int __val[2];
 
 } __kernel_fsid_t;
-# 12 "/usr/include/asm/posix_types.h" 2 3 4
-# 15 "/usr/lib/gcc/i486-linux-gnu/4.0.3/include/asm/posix_types.h" 2 3 4
-# 48 "/usr/include/linux/posix_types.h" 2 3 4
-# 6 "/usr/include/linux/types.h" 2 3 4
-# 1 "/usr/include/asm/types.h" 1 3 4
-# 11 "/usr/include/asm/types.h" 3 4
-# 1 "/usr/include/asm-i386/types.h" 1 3 4
-
-
-
-
 
 typedef unsigned short umode_t;
-
-
-
-
-
 
 typedef __signed__ char __s8;
 typedef unsigned char __u8;
@@ -568,33 +308,16 @@ typedef unsigned short __u16;
 typedef __signed__ int __s32;
 typedef unsigned int __u32;
 
-
 typedef __signed__ long long __s64;
 typedef unsigned long long __u64;
-# 12 "/usr/include/asm/types.h" 2 3 4
-# 7 "/usr/include/linux/types.h" 2 3 4
-# 133 "/usr/include/linux/types.h" 3 4
 typedef __u16 __le16;
 typedef __u16 __be16;
 typedef __u32 __le32;
 typedef __u32 __be32;
 
-
-
 typedef __u64 __le64;
 typedef __u64 __be64;
-# 6 "/usr/include/directfb/dfb_types.h" 2
-# 32 "/usr/include/directfb/directfb.h" 2
-# 1 "/usr/include/sys/time.h" 1 3 4
-# 26 "/usr/include/sys/time.h" 3 4
-# 1 "/usr/include/time.h" 1 3 4
-# 27 "/usr/include/sys/time.h" 2 3 4
 
-# 1 "/usr/include/bits/time.h" 1 3 4
-# 29 "/usr/include/sys/time.h" 2 3 4
-# 38 "/usr/include/sys/time.h" 3 4
-
-# 56 "/usr/include/sys/time.h" 3 4
 struct timezone
   {
     int tz_minuteswest;
@@ -602,89 +325,44 @@ struct timezone
   };
 
 typedef struct timezone *__restrict __timezone_ptr_t;
-# 72 "/usr/include/sys/time.h" 3 4
 extern int gettimeofday (struct timeval *__restrict __tv,
     __timezone_ptr_t __tz) __attribute__ ((__nothrow__));
-
-
-
 
 extern int settimeofday (__const struct timeval *__tv,
     __const struct timezone *__tz) __attribute__ ((__nothrow__));
 
-
-
-
-
 extern int adjtime (__const struct timeval *__delta,
       struct timeval *__olddelta) __attribute__ ((__nothrow__));
-
-
-
-
 enum __itimer_which
   {
-
     ITIMER_REAL = 0,
-
-
     ITIMER_VIRTUAL = 1,
-
-
-
     ITIMER_PROF = 2
-
   };
-
-
 
 struct itimerval
   {
-
     struct timeval it_interval;
-
     struct timeval it_value;
   };
 
-
-
-
-
-
 typedef int __itimer_which_t;
-
-
-
 
 extern int getitimer (__itimer_which_t __which,
         struct itimerval *__value) __attribute__ ((__nothrow__));
-
-
-
 
 extern int setitimer (__itimer_which_t __which,
         __const struct itimerval *__restrict __new,
         struct itimerval *__restrict __old) __attribute__ ((__nothrow__));
 
-
-
-
 extern int utimes (__const char *__file, __const struct timeval __tvp[2])
      __attribute__ ((__nothrow__));
-
-
 
 extern int lutimes (__const char *__file, __const struct timeval __tvp[2])
      __attribute__ ((__nothrow__));
 
-
 extern int futimes (int __fd, __const struct timeval __tvp[2]) __attribute__ ((__nothrow__));
-# 181 "/usr/include/sys/time.h" 3 4
 
-# 33 "/usr/include/directfb/directfb.h" 2
-
-# 1 "/usr/include/directfb/directfb_keyboard.h" 1
-# 40 "/usr/include/directfb/directfb_keyboard.h"
 typedef enum {
      DIKT_UNICODE = 0x0000,
 
@@ -696,7 +374,6 @@ typedef enum {
      DIKT_CUSTOM = 0xF500,
      DIKT_IDENTIFIER = 0xF600
 } DFBInputDeviceKeyType;
-# 71 "/usr/include/directfb/directfb_keyboard.h"
 typedef enum {
      DIMKI_SHIFT,
      DIMKI_CONTROL,
@@ -705,17 +382,12 @@ typedef enum {
      DIMKI_META,
      DIMKI_SUPER,
      DIMKI_HYPER,
-
      DIMKI_FIRST = DIMKI_SHIFT,
      DIMKI_LAST = DIMKI_HYPER
 } DFBInputDeviceModifierKeyIdentifier;
 
-
-
-
 typedef enum {
      DIKI_UNKNOWN = ((DIKT_IDENTIFIER) | (0)),
-
      DIKI_A,
      DIKI_B,
      DIKI_C,
@@ -803,10 +475,6 @@ typedef enum {
      DIKI_PRINT,
      DIKI_PAUSE,
 
-
-
-
-
      DIKI_QUOTE_LEFT,
      DIKI_MINUS_SIGN,
      DIKI_EQUALS_SIGN,
@@ -852,16 +520,7 @@ typedef enum {
 
 } DFBInputDeviceKeyIdentifier;
 
-
-
-
 typedef enum {
-
-
-
-
-
-
      DIKS_NULL = ((DIKT_UNICODE) | (0x00)),
      DIKS_BACKSPACE = ((DIKT_UNICODE) | (0x08)),
      DIKS_TAB = ((DIKT_UNICODE) | (0x09)),
@@ -966,9 +625,6 @@ typedef enum {
      DIKS_DELETE = ((DIKT_UNICODE) | (0x7F)),
 
      DIKS_ENTER = DIKS_RETURN,
-
-
-
 
      DIKS_CURSOR_LEFT = ((DIKT_SPECIAL) | (0x00)),
      DIKS_CURSOR_RIGHT = ((DIKT_SPECIAL) | (0x01)),
@@ -1083,11 +739,6 @@ typedef enum {
      DIKS_CURSOR_UP_RIGHT = ((DIKT_SPECIAL) | (0x66)),
      DIKS_CURSOR_DOWN_RIGHT = ((DIKT_SPECIAL) | (0x67)),
 
-
-
-
-
-
      DIKS_F1 = (((DIKT_FUNCTION) | (1))),
      DIKS_F2 = (((DIKT_FUNCTION) | (2))),
      DIKS_F3 = (((DIKT_FUNCTION) | (3))),
@@ -1101,9 +752,6 @@ typedef enum {
      DIKS_F11 = (((DIKT_FUNCTION) | (11))),
      DIKS_F12 = (((DIKT_FUNCTION) | (12))),
 
-
-
-
      DIKS_SHIFT = (((DIKT_MODIFIER) | ((1 << DIMKI_SHIFT)))),
      DIKS_CONTROL = (((DIKT_MODIFIER) | ((1 << DIMKI_CONTROL)))),
      DIKS_ALT = (((DIKT_MODIFIER) | ((1 << DIMKI_ALT)))),
@@ -1112,15 +760,9 @@ typedef enum {
      DIKS_SUPER = (((DIKT_MODIFIER) | ((1 << DIMKI_SUPER)))),
      DIKS_HYPER = (((DIKT_MODIFIER) | ((1 << DIMKI_HYPER)))),
 
-
-
-
      DIKS_CAPS_LOCK = ((DIKT_LOCK) | (0x00)),
      DIKS_NUM_LOCK = ((DIKT_LOCK) | (0x01)),
      DIKS_SCROLL_LOCK = ((DIKT_LOCK) | (0x02)),
-
-
-
 
      DIKS_DEAD_ABOVEDOT = ((DIKT_DEAD) | (0x00)),
      DIKS_DEAD_ABOVERING = ((DIKT_DEAD) | (0x01)),
@@ -1139,11 +781,6 @@ typedef enum {
      DIKS_DEAD_TILDE = ((DIKT_DEAD) | (0x0E)),
      DIKS_DEAD_VOICED_SOUND = ((DIKT_DEAD) | (0x0F)),
 
-
-
-
-
-
      DIKS_CUSTOM0 = (((DIKT_CUSTOM) | (0))),
      DIKS_CUSTOM1 = (((DIKT_CUSTOM) | (1))),
      DIKS_CUSTOM2 = (((DIKT_CUSTOM) | (2))),
@@ -1156,137 +793,63 @@ typedef enum {
      DIKS_CUSTOM9 = (((DIKT_CUSTOM) | (9)))
 } DFBInputDeviceKeySymbol;
 
-
-
-
 typedef enum {
      DILS_SCROLL = 0x00000001,
      DILS_NUM = 0x00000002,
      DILS_CAPS = 0x00000004
 } DFBInputDeviceLockState;
 
-
-
-
 typedef enum {
      DIKSI_BASE = 0x00,
-
      DIKSI_BASE_SHIFT = 0x01,
-
      DIKSI_ALT = 0x02,
-
      DIKSI_ALT_SHIFT = 0x03,
-
-
      DIKSI_LAST = DIKSI_ALT_SHIFT
 } DFBInputDeviceKeymapSymbolIndex;
-
-
-
 
 typedef struct {
      int code;
 
      DFBInputDeviceLockState locks;
-
      DFBInputDeviceKeyIdentifier identifier;
      DFBInputDeviceKeySymbol symbols[DIKSI_LAST+1];
 
 } DFBInputDeviceKeymapEntry;
-# 35 "/usr/include/directfb/directfb.h" 2
-# 68 "/usr/include/directfb/directfb.h"
 extern const unsigned int directfb_major_version;
 extern const unsigned int directfb_minor_version;
 extern const unsigned int directfb_micro_version;
 extern const unsigned int directfb_binary_age;
 extern const unsigned int directfb_interface_age;
 
-
-
-
-
 const char * DirectFBCheckVersion( unsigned int required_major,
                                    unsigned int required_minor,
                                    unsigned int required_micro );
 
-
-
-
-
-
 typedef struct _IDirectFB IDirectFB;
-
-
-
-
-
 
 typedef struct _IDirectFBScreen IDirectFBScreen;
 
-
-
-
-
 typedef struct _IDirectFBDisplayLayer IDirectFBDisplayLayer;
-
-
-
-
 
 typedef struct _IDirectFBSurface IDirectFBSurface;
 
-
-
-
 typedef struct _IDirectFBPalette IDirectFBPalette;
-
-
-
-
-
 
 typedef struct _IDirectFBWindow IDirectFBWindow;
 
-
-
-
 typedef struct _IDirectFBInputDevice IDirectFBInputDevice;
-
-
-
 
 typedef struct _IDirectFBEventBuffer IDirectFBEventBuffer;
 
-
-
-
 typedef struct _IDirectFBFont IDirectFBFont;
-
-
-
 
 typedef struct _IDirectFBImageProvider IDirectFBImageProvider;
 
-
-
-
 typedef struct _IDirectFBVideoProvider IDirectFBVideoProvider;
-
-
-
 
 typedef struct _IDirectFBDataBuffer IDirectFBDataBuffer;
 
-
-
-
 typedef struct _IDirectFBGL IDirectFBGL;
-
-
-
-
-
-
 
 typedef enum {
      DFB_OK,
@@ -1326,40 +889,25 @@ typedef enum {
      DFB_NOSHAREDMEMORY
 } DFBResult;
 
-
-
-
 typedef enum {
      DFB_FALSE = 0,
      DFB_TRUE = !DFB_FALSE
 } DFBBoolean;
-
-
-
 
 typedef struct {
      int x;
      int y;
 } DFBPoint;
 
-
-
-
 typedef struct {
      int x;
      int w;
 } DFBSpan;
 
-
-
-
 typedef struct {
      int w;
      int h;
 } DFBDimension;
-
-
-
 
 typedef struct {
      int x;
@@ -1368,22 +916,12 @@ typedef struct {
      int h;
 } DFBRectangle;
 
-
-
-
-
-
 typedef struct {
      float x;
      float y;
      float w;
      float h;
 } DFBLocation;
-
-
-
-
-
 
 typedef struct {
      int x1;
@@ -1392,20 +930,12 @@ typedef struct {
      int y2;
 } DFBRegion;
 
-
-
-
-
-
 typedef struct {
      int l;
      int t;
      int r;
      int b;
 } DFBInsets;
-
-
-
 
 typedef struct {
      int x1;
@@ -1416,71 +946,42 @@ typedef struct {
      int y3;
 } DFBTriangle;
 
-
-
-
 typedef struct {
      __u8 a;
      __u8 r;
      __u8 g;
      __u8 b;
 } DFBColor;
-# 335 "/usr/include/directfb/directfb.h"
 DFBResult DirectFBError(
                              const char *msg,
                              DFBResult result
                        );
-
-
-
 
 DFBResult DirectFBErrorFatal(
                              const char *msg,
                              DFBResult result
                             );
 
-
-
-
 const char *DirectFBErrorString(
                          DFBResult result
                       );
 
-
-
-
-
-
 const char *DirectFBUsageString( void );
-
-
-
-
-
 
 DFBResult DirectFBInit(
                          int *argc,
                          char **argv[]
                       );
 
-
-
-
-
-
 DFBResult DirectFBSetOption(
                          const char *name,
                          const char *value
                       );
 
-
-
-
 DFBResult DirectFBCreate(
                           IDirectFB **interface
 
                         );
-
 
 typedef unsigned int DFBScreenID;
 typedef unsigned int DFBDisplayLayerID;
@@ -1489,52 +990,22 @@ typedef unsigned int DFBWindowID;
 typedef unsigned int DFBInputDeviceID;
 
 typedef __u32 DFBDisplayLayerIDs;
-# 428 "/usr/include/directfb/directfb.h"
 typedef enum {
      DFSCL_NORMAL = 0x00000000,
-
-
-
-
      DFSCL_FULLSCREEN,
-
-
-
      DFSCL_EXCLUSIVE
-
-
-
-
-
-
 } DFBCooperativeLevel;
-
-
-
 
 typedef enum {
      DLCAPS_NONE = 0x00000000,
-
      DLCAPS_SURFACE = 0x00000001,
-
-
-
      DLCAPS_OPACITY = 0x00000002,
-
      DLCAPS_ALPHACHANNEL = 0x00000004,
-
      DLCAPS_SCREEN_LOCATION = 0x00000008,
-
-
      DLCAPS_FLICKER_FILTERING = 0x00000010,
-
      DLCAPS_DEINTERLACING = 0x00000020,
-
-
      DLCAPS_SRC_COLORKEY = 0x00000040,
      DLCAPS_DST_COLORKEY = 0x00000080,
-
-
      DLCAPS_BRIGHTNESS = 0x00000100,
      DLCAPS_CONTRAST = 0x00000200,
      DLCAPS_HUE = 0x00000400,
@@ -1546,10 +1017,6 @@ typedef enum {
      DLCAPS_SOURCES = 0x00008000,
      DLCAPS_ALPHA_RAMP = 0x00010000,
 
-
-
-
-
      DLCAPS_PREMULTIPLIED = 0x00020000,
 
      DLCAPS_SCREEN_POSITION = 0x00100000,
@@ -1557,9 +1024,6 @@ typedef enum {
 
      DLCAPS_ALL = 0x0033FFFF
 } DFBDisplayLayerCapabilities;
-
-
-
 
 typedef enum {
      DSCCAPS_NONE = 0x00000000,
@@ -1575,13 +1039,9 @@ typedef enum {
      DSCCAPS_ALL = 0x00000073
 } DFBScreenCapabilities;
 
-
-
-
 typedef enum {
      DLOP_NONE = 0x00000000,
      DLOP_ALPHACHANNEL = 0x00000001,
-
 
      DLOP_FLICKER_FILTERING = 0x00000002,
      DLOP_DEINTERLACING = 0x00000004,
@@ -1592,9 +1052,6 @@ typedef enum {
 
      DLOP_FIELD_PARITY = 0x00000040
 } DFBDisplayLayerOptions;
-
-
-
 
 typedef enum {
      DLBM_UNKNOWN = 0x00000000,
@@ -1607,39 +1064,20 @@ typedef enum {
 
 } DFBDisplayLayerBufferMode;
 
-
-
-
 typedef enum {
      DSDESC_CAPS = 0x00000001,
      DSDESC_WIDTH = 0x00000002,
      DSDESC_HEIGHT = 0x00000004,
      DSDESC_PIXELFORMAT = 0x00000008,
      DSDESC_PREALLOCATED = 0x00000010,
-
-
-
-
-
-
      DSDESC_PALETTE = 0x00000020
-
-
 } DFBSurfaceDescriptionFlags;
-
-
-
 
 typedef enum {
      DPDESC_CAPS = 0x00000001,
      DPDESC_SIZE = 0x00000002,
      DPDESC_ENTRIES = 0x00000004
-
-
 } DFBPaletteDescriptionFlags;
-
-
-
 
 typedef enum {
      DSCAPS_NONE = 0x00000000,
@@ -1654,17 +1092,9 @@ typedef enum {
 
      DSCAPS_INTERLACED = 0x00000040,
 
-
-
      DSCAPS_SEPARATED = 0x00000080,
 
-
-
      DSCAPS_STATIC_ALLOC = 0x00000100,
-
-
-
-
 
      DSCAPS_TRIPLE = 0x00000200,
 
@@ -1674,20 +1104,13 @@ typedef enum {
 
      DSCAPS_ALL = 0x000113F7,
 
-
      DSCAPS_FLIPPING = DSCAPS_DOUBLE | DSCAPS_TRIPLE
 
 } DFBSurfaceCapabilities;
 
-
-
-
 typedef enum {
      DPCAPS_NONE = 0x00000000
 } DFBPaletteCapabilities;
-
-
-
 
 typedef enum {
      DSDRAW_NOFX = 0x00000000,
@@ -1702,9 +1125,6 @@ typedef enum {
      DSDRAW_XOR = 0x00000020
 
 } DFBSurfaceDrawingFlags;
-
-
-
 
 typedef enum {
      DSBLIT_NOFX = 0x00000000,
@@ -1723,12 +1143,7 @@ typedef enum {
      DSBLIT_DEMULTIPLY = 0x00000080,
 
      DSBLIT_DEINTERLACE = 0x00000100
-
-
 } DFBSurfaceBlittingFlags;
-
-
-
 
 typedef enum {
      DFXL_NONE = 0x00000000,
@@ -1746,17 +1161,12 @@ typedef enum {
 
      DFXL_ALL = 0x0107000F
 } DFBAccelerationMask;
-# 699 "/usr/include/directfb/directfb.h"
 typedef struct {
      DFBAccelerationMask acceleration_mask;
      DFBSurfaceDrawingFlags drawing_flags;
      DFBSurfaceBlittingFlags blitting_flags;
      unsigned int video_memory;
 } DFBCardCapabilities;
-
-
-
-
 
 typedef enum {
      DLTF_NONE = 0x00000000,
@@ -1768,10 +1178,6 @@ typedef enum {
 
      DLTF_ALL = 0x0000000F
 } DFBDisplayLayerTypeFlags;
-
-
-
-
 
 typedef enum {
      DIDTF_NONE = 0x00000000,
@@ -1785,9 +1191,6 @@ typedef enum {
      DIDTF_ALL = 0x0000001F
 } DFBInputDeviceTypeFlags;
 
-
-
-
 typedef enum {
      DICAPS_KEYS = 0x00000001,
      DICAPS_AXES = 0x00000002,
@@ -1795,9 +1198,6 @@ typedef enum {
 
      DICAPS_ALL = 0x00000007
 } DFBInputDeviceCapabilities;
-
-
-
 
 typedef enum {
      DIBI_LEFT = 0x00000000,
@@ -1808,7 +1208,6 @@ typedef enum {
 
      DIBI_LAST = 0x0000001F
 } DFBInputDeviceButtonIdentifier;
-# 768 "/usr/include/directfb/directfb.h"
 typedef enum {
      DIAI_X = 0x00000000,
      DIAI_Y = 0x00000001,
@@ -1818,9 +1217,6 @@ typedef enum {
 
      DIAI_LAST = 0x0000001F
 } DFBInputDeviceAxisIdentifier;
-
-
-
 
 typedef enum {
      DWDESC_CAPS = 0x00000001,
@@ -1833,18 +1229,11 @@ typedef enum {
 
 } DFBWindowDescriptionFlags;
 
-
-
-
 typedef enum {
      DBDESC_FILE = 0x00000001,
 
      DBDESC_MEMORY = 0x00000002
-
 } DFBDataBufferDescriptionFlags;
-
-
-
 
 typedef enum {
      DWCAPS_NONE = 0x00000000,
@@ -1852,30 +1241,18 @@ typedef enum {
 
      DWCAPS_DOUBLEBUFFER = 0x00000002,
 
-
-
-
-
-
-
      DWCAPS_INPUTONLY = 0x00000004,
-
 
      DWCAPS_NODECORATION = 0x00000008,
      DWCAPS_ALL = 0x0000000F
 } DFBWindowCapabilities;
-# 834 "/usr/include/directfb/directfb.h"
 typedef enum {
      DFFA_NONE = 0x00000000,
      DFFA_NOKERNING = 0x00000001,
      DFFA_NOHINTING = 0x00000002,
      DFFA_MONOCHROME = 0x00000004,
      DFFA_NOCHARMAP = 0x00000008
-
 } DFBFontAttributes;
-
-
-
 
 typedef enum {
      DFDESC_ATTRIBUTES = 0x00000001,
@@ -1883,10 +1260,7 @@ typedef enum {
      DFDESC_WIDTH = 0x00000004,
      DFDESC_INDEX = 0x00000008,
      DFDESC_FIXEDADVANCE = 0x00000010
-
-
 } DFBFontDescriptionFlags;
-# 869 "/usr/include/directfb/directfb.h"
 typedef struct {
      DFBFontDescriptionFlags flags;
 
@@ -1896,71 +1270,49 @@ typedef struct {
      unsigned int index;
      int fixed_advance;
 } DFBFontDescription;
-# 916 "/usr/include/directfb/directfb.h"
 typedef enum {
      DSPF_UNKNOWN = 0x00000000,
 
-
      DSPF_ARGB1555 = ( (((0 ) & 0x7F) ) | (((15) & 0x1F) << 7) | (((1) & 0x0F) << 12) | (((1 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((2 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((0 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
-
 
      DSPF_RGB16 = ( (((1 ) & 0x7F) ) | (((16) & 0x1F) << 7) | (((0) & 0x0F) << 12) | (((0 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((2 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((0 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
 
-
      DSPF_RGB24 = ( (((2 ) & 0x7F) ) | (((24) & 0x1F) << 7) | (((0) & 0x0F) << 12) | (((0 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((3 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((0 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
-
 
      DSPF_RGB32 = ( (((3 ) & 0x7F) ) | (((24) & 0x1F) << 7) | (((0) & 0x0F) << 12) | (((0 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((4 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((0 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
 
-
      DSPF_ARGB = ( (((4 ) & 0x7F) ) | (((24) & 0x1F) << 7) | (((8) & 0x0F) << 12) | (((1 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((4 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((0 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
-
 
      DSPF_A8 = ( (((5 ) & 0x7F) ) | (((0) & 0x1F) << 7) | (((8) & 0x0F) << 12) | (((1 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((1 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((0 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
 
-
      DSPF_YUY2 = ( (((6 ) & 0x7F) ) | (((16) & 0x1F) << 7) | (((0) & 0x0F) << 12) | (((0 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((2 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((0 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
-
 
      DSPF_RGB332 = ( (((7 ) & 0x7F) ) | (((8) & 0x1F) << 7) | (((0) & 0x0F) << 12) | (((0 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((1 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((0 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
 
-
      DSPF_UYVY = ( (((8 ) & 0x7F) ) | (((16) & 0x1F) << 7) | (((0) & 0x0F) << 12) | (((0 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((2 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((0 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
-
 
      DSPF_I420 = ( (((9 ) & 0x7F) ) | (((12) & 0x1F) << 7) | (((0) & 0x0F) << 12) | (((0 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((1 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((2 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
 
-
      DSPF_YV12 = ( (((10 ) & 0x7F) ) | (((12) & 0x1F) << 7) | (((0) & 0x0F) << 12) | (((0 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((1 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((2 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
-
 
      DSPF_LUT8 = ( (((11 ) & 0x7F) ) | (((8) & 0x1F) << 7) | (((0) & 0x0F) << 12) | (((1 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((1 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((0 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((1 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
 
-
      DSPF_ALUT44 = ( (((12 ) & 0x7F) ) | (((4) & 0x1F) << 7) | (((4) & 0x0F) << 12) | (((1 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((1 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((0 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((1 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
-
 
      DSPF_AiRGB = ( (((13 ) & 0x7F) ) | (((24) & 0x1F) << 7) | (((8) & 0x0F) << 12) | (((1 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((4 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((0 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((1 ) ? 1 :0) << 31) ),
 
-
      DSPF_A1 = ( (((14 ) & 0x7F) ) | (((0) & 0x1F) << 7) | (((1) & 0x0F) << 12) | (((1 ) ? 1 :0) << 16) | (((1 ) & 0x07) << 17) | (((0 ) & 0x07) << 20) | (((7 ) & 0x07) << 23) | (((0 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
-
 
      DSPF_NV12 = ( (((15 ) & 0x7F) ) | (((12) & 0x1F) << 7) | (((0) & 0x0F) << 12) | (((0 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((1 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((2 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
 
-
      DSPF_NV16 = ( (((16 ) & 0x7F) ) | (((24) & 0x1F) << 7) | (((0) & 0x0F) << 12) | (((0 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((1 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((0 ) & 0x03) << 26) | (((2 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
-
 
      DSPF_ARGB2554 = ( (((17 ) & 0x7F) ) | (((14) & 0x1F) << 7) | (((2) & 0x0F) << 12) | (((1 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((2 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((0 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
 
-
      DSPF_ARGB4444 = ( (((18 ) & 0x7F) ) | (((12) & 0x1F) << 7) | (((4) & 0x0F) << 12) | (((1 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((2 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((0 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) ),
-
 
      DSPF_NV21 = ( (((19 ) & 0x7F) ) | (((12) & 0x1F) << 7) | (((0) & 0x0F) << 12) | (((0 ) ? 1 :0) << 16) | (((0 ) & 0x07) << 17) | (((1 ) & 0x07) << 20) | (((0 ) & 0x07) << 23) | (((2 ) & 0x03) << 26) | (((0 ) & 0x03) << 28) | (((0 ) ? 1 :0) << 30) | (((0 ) ? 1 :0) << 31) )
 } DFBSurfacePixelFormat;
-# 1012 "/usr/include/directfb/directfb.h"
 typedef struct {
      DFBSurfaceDescriptionFlags flags;
 
@@ -1980,45 +1332,25 @@ typedef struct {
      } palette;
 } DFBSurfaceDescription;
 
-
-
-
 typedef struct {
      DFBPaletteDescriptionFlags flags;
 
      DFBPaletteCapabilities caps;
      unsigned int size;
      DFBColor *entries;
-
 } DFBPaletteDescription;
-
-
-
-
-
-
 
 typedef struct {
      DFBDisplayLayerTypeFlags type;
 
      DFBDisplayLayerCapabilities caps;
 
-
      char name[32];
 
      int level;
      int regions;
-
-
-
      int sources;
 } DFBDisplayLayerDescription;
-
-
-
-
-
-
 
 typedef struct {
      DFBDisplayLayerSourceID source_id;
@@ -2026,15 +1358,8 @@ typedef struct {
      char name[24];
 } DFBDisplayLayerSourceDescription;
 
-
-
-
-
-
-
 typedef struct {
      DFBScreenCapabilities caps;
-
 
      char name[32];
 
@@ -2045,36 +1370,23 @@ typedef struct {
      int outputs;
 
 } DFBScreenDescription;
-# 1104 "/usr/include/directfb/directfb.h"
 typedef struct {
      DFBInputDeviceTypeFlags type;
 
      DFBInputDeviceCapabilities caps;
 
-
-
      int min_keycode;
 
-
-
-
      int max_keycode;
-
-
-
 
      DFBInputDeviceAxisIdentifier max_axis;
 
      DFBInputDeviceButtonIdentifier max_button;
 
-
      char name[32];
 
      char vendor[40];
 } DFBInputDeviceDescription;
-
-
-
 
 typedef struct {
      DFBWindowDescriptionFlags flags;
@@ -2088,9 +1400,6 @@ typedef struct {
      DFBSurfaceCapabilities surface_caps;
 } DFBWindowDescription;
 
-
-
-
 typedef struct {
      DFBDataBufferDescriptionFlags flags;
 
@@ -2102,16 +1411,10 @@ typedef struct {
      } memory;
 } DFBDataBufferDescription;
 
-
-
-
 typedef enum {
      DFENUM_OK = 0x00000000,
      DFENUM_CANCEL = 0x00000001
 } DFBEnumerationResult;
-
-
-
 
 typedef DFBEnumerationResult (*DFBVideoModeCallback) (
      int width,
@@ -2120,19 +1423,11 @@ typedef DFBEnumerationResult (*DFBVideoModeCallback) (
      void *callbackdata
 );
 
-
-
-
-
 typedef DFBEnumerationResult (*DFBScreenCallback) (
      DFBScreenID screen_id,
      DFBScreenDescription desc,
      void *callbackdata
 );
-
-
-
-
 
 typedef DFBEnumerationResult (*DFBDisplayLayerCallback) (
      DFBDisplayLayerID layer_id,
@@ -2140,30 +1435,17 @@ typedef DFBEnumerationResult (*DFBDisplayLayerCallback) (
      void *callbackdata
 );
 
-
-
-
-
 typedef DFBEnumerationResult (*DFBInputDeviceCallback) (
      DFBInputDeviceID device_id,
      DFBInputDeviceDescription desc,
      void *callbackdata
 );
 
-
-
-
-
-
-
 typedef int (*DFBGetDataCallback) (
      void *buffer,
      unsigned int length,
      void *callbackdata
 );
-
-
-
 
 typedef enum {
      DVCAPS_BASIC = 0x00000000,
@@ -2176,9 +1458,6 @@ typedef enum {
      DVCAPS_SATURATION = 0x00000080
 } DFBVideoProviderCapabilities;
 
-
-
-
 typedef enum {
      DCAF_NONE = 0x00000000,
      DCAF_BRIGHTNESS = 0x00000001,
@@ -2186,12 +1465,6 @@ typedef enum {
      DCAF_HUE = 0x00000004,
      DCAF_SATURATION = 0x00000008
 } DFBColorAdjustmentFlags;
-
-
-
-
-
-
 
 typedef struct {
      DFBColorAdjustmentFlags flags;
@@ -2201,9 +1474,7 @@ typedef struct {
      __u16 hue;
      __u16 saturation;
 } DFBColorAdjustment;
-# 1319 "/usr/include/directfb/directfb.h"
 struct _IDirectFB { void *priv; int magic; DFBResult (*AddRef)( IDirectFB *thiz ); DFBResult (*Release)( IDirectFB *thiz ); DFBResult (*SetCooperativeLevel) ( IDirectFB *thiz, DFBCooperativeLevel level ); DFBResult (*SetVideoMode) ( IDirectFB *thiz, int width, int height, int bpp ); DFBResult (*GetCardCapabilities) ( IDirectFB *thiz, DFBCardCapabilities *ret_caps ); DFBResult (*EnumVideoModes) ( IDirectFB *thiz, DFBVideoModeCallback callback, void *callbackdata ); DFBResult (*CreateSurface) ( IDirectFB *thiz, const DFBSurfaceDescription *desc, IDirectFBSurface **ret_interface ); DFBResult (*CreatePalette) ( IDirectFB *thiz, const DFBPaletteDescription *desc, IDirectFBPalette **ret_interface ); DFBResult (*EnumScreens) ( IDirectFB *thiz, DFBScreenCallback callback, void *callbackdata ); DFBResult (*GetScreen) ( IDirectFB *thiz, DFBScreenID screen_id, IDirectFBScreen **ret_interface ); DFBResult (*EnumDisplayLayers) ( IDirectFB *thiz, DFBDisplayLayerCallback callback, void *callbackdata ); DFBResult (*GetDisplayLayer) ( IDirectFB *thiz, DFBDisplayLayerID layer_id, IDirectFBDisplayLayer **ret_interface ); DFBResult (*EnumInputDevices) ( IDirectFB *thiz, DFBInputDeviceCallback callback, void *callbackdata ); DFBResult (*GetInputDevice) ( IDirectFB *thiz, DFBInputDeviceID device_id, IDirectFBInputDevice **ret_interface ); DFBResult (*CreateEventBuffer) ( IDirectFB *thiz, IDirectFBEventBuffer **ret_buffer ); DFBResult (*CreateInputEventBuffer) ( IDirectFB *thiz, DFBInputDeviceCapabilities caps, DFBBoolean global, IDirectFBEventBuffer **ret_buffer ); DFBResult (*CreateImageProvider) ( IDirectFB *thiz, const char *filename, IDirectFBImageProvider **ret_interface ); DFBResult (*CreateVideoProvider) ( IDirectFB *thiz, const char *filename, IDirectFBVideoProvider **ret_interface ); DFBResult (*CreateFont) ( IDirectFB *thiz, const char *filename, const DFBFontDescription *desc, IDirectFBFont **ret_interface ); DFBResult (*CreateDataBuffer) ( IDirectFB *thiz, const DFBDataBufferDescription *desc, IDirectFBDataBuffer **ret_interface ); DFBResult (*SetClipboardData) ( IDirectFB *thiz, const char *mime_type, const void *data, unsigned int size, struct timeval *ret_timestamp ); DFBResult (*GetClipboardData) ( IDirectFB *thiz, char **ret_mimetype, void **ret_data, unsigned int *ret_size ); DFBResult (*GetClipboardTimeStamp) ( IDirectFB *thiz, struct timeval *ret_timestamp ); DFBResult (*Suspend) ( IDirectFB *thiz ); DFBResult (*Resume) ( IDirectFB *thiz ); DFBResult (*WaitIdle) ( IDirectFB *thiz ); DFBResult (*WaitForSync) ( IDirectFB *thiz ); DFBResult (*GetInterface) ( IDirectFB *thiz, const char *type, const char *implementation, void *arg, void **ret_interface ); };
-# 1681 "/usr/include/directfb/directfb.h"
 typedef enum {
      DLSCL_SHARED = 0,
      DLSCL_EXCLUSIVE,
@@ -2211,10 +1482,6 @@ typedef enum {
      DLSCL_ADMINISTRATIVE
 
 } DFBDisplayLayerCooperativeLevel;
-
-
-
-
 
 typedef enum {
      DLBM_DONTCARE = 0,
@@ -2224,9 +1491,6 @@ typedef enum {
      DLBM_IMAGE,
      DLBM_TILE
 } DFBDisplayLayerBackgroundMode;
-
-
-
 
 typedef enum {
      DLCONF_NONE = 0x00000000,
@@ -2241,9 +1505,6 @@ typedef enum {
 
      DLCONF_ALL = 0x0000007F
 } DFBDisplayLayerConfigFlags;
-
-
-
 
 typedef struct {
      DFBDisplayLayerConfigFlags flags;
@@ -2260,18 +1521,12 @@ typedef struct {
 } DFBDisplayLayerConfig;
 
 
-
-
 typedef enum {
      DSPM_ON = 0,
      DSPM_STANDBY,
      DSPM_SUSPEND,
      DSPM_OFF
 } DFBScreenPowerMode;
-
-
-
-
 
 typedef enum {
      DSMCAPS_NONE = 0x00000000,
@@ -2284,28 +1539,17 @@ typedef enum {
      DSMCAPS_BACKGROUND = 0x00000008
 } DFBScreenMixerCapabilities;
 
-
-
-
-
-
-
 typedef struct {
      DFBScreenMixerCapabilities caps;
 
      DFBDisplayLayerIDs layers;
 
-
      int sub_num;
 
      DFBDisplayLayerIDs sub_layers;
 
-
      char name[24];
 } DFBScreenMixerDescription;
-
-
-
 
 typedef enum {
      DSMCONF_NONE = 0x00000000,
@@ -2319,9 +1563,6 @@ typedef enum {
      DSMCONF_ALL = 0x00000017
 } DFBScreenMixerConfigFlags;
 
-
-
-
 typedef enum {
      DSMT_UNKNOWN = 0x00000000,
 
@@ -2329,9 +1570,6 @@ typedef enum {
      DSMT_SUB_LEVEL = 0x00000002,
      DSMT_SUB_LAYERS = 0x00000003
 } DFBScreenMixerTree;
-
-
-
 
 typedef struct {
      DFBScreenMixerConfigFlags flags;
@@ -2343,10 +1581,6 @@ typedef struct {
 
      DFBColor background;
 } DFBScreenMixerConfig;
-
-
-
-
 
 typedef enum {
      DSOCAPS_NONE = 0x00000000,
@@ -2360,9 +1594,6 @@ typedef enum {
      DSOCAPS_ALL = 0x00000071
 } DFBScreenOutputCapabilities;
 
-
-
-
 typedef enum {
      DSOC_UNKNOWN = 0x00000000,
 
@@ -2371,9 +1602,6 @@ typedef enum {
      DSOC_YC = 0x00000004,
      DSOC_CVBS = 0x00000008
 } DFBScreenOutputConnectors;
-
-
-
 
 typedef enum {
      DSOS_NONE = 0x00000000,
@@ -2385,12 +1613,6 @@ typedef enum {
      DSOS_YCBCR = 0x00000010
 } DFBScreenOutputSignals;
 
-
-
-
-
-
-
 typedef struct {
      DFBScreenOutputCapabilities caps;
 
@@ -2399,9 +1621,6 @@ typedef struct {
 
      char name[24];
 } DFBScreenOutputDescription;
-
-
-
 
 typedef enum {
      DSOCONF_NONE = 0x00000000,
@@ -2413,9 +1632,6 @@ typedef enum {
      DSOCONF_ALL = 0x00000007
 } DFBScreenOutputConfigFlags;
 
-
-
-
 typedef struct {
      DFBScreenOutputConfigFlags flags;
 
@@ -2423,10 +1639,6 @@ typedef struct {
      DFBScreenOutputSignals out_signals;
      DFBScreenOutputConnectors out_connectors;
 } DFBScreenOutputConfig;
-
-
-
-
 
 typedef enum {
      DSECAPS_NONE = 0x00000000,
@@ -2445,18 +1657,12 @@ typedef enum {
      DSECAPS_ALL = 0x00000f1f
 } DFBScreenEncoderCapabilities;
 
-
-
-
 typedef enum {
      DSET_UNKNOWN = 0x00000000,
 
      DSET_CRTC = 0x00000001,
      DSET_TV = 0x00000002
 } DFBScreenEncoderType;
-
-
-
 
 typedef enum {
      DSETV_UNKNOWN = 0x00000000,
@@ -2466,21 +1672,12 @@ typedef enum {
      DSETV_SECAM = 0x00000004
 } DFBScreenEncoderTVStandards;
 
-
-
-
 typedef enum {
      DSESM_UNKNOWN = 0x00000000,
 
      DSESM_INTERLACED = 0x00000001,
      DSESM_PROGRESSIVE = 0x00000002
 } DFBScreenEncoderScanMode;
-
-
-
-
-
-
 
 typedef struct {
      DFBScreenEncoderCapabilities caps;
@@ -2491,9 +1688,6 @@ typedef struct {
 
      char name[24];
 } DFBScreenEncoderDescription;
-
-
-
 
 typedef enum {
      DSECONF_NONE = 0x00000000,
@@ -2508,9 +1702,6 @@ typedef enum {
 
      DSECONF_ALL = 0x0000007F
 } DFBScreenEncoderConfigFlags;
-
-
-
 
 typedef enum {
      DSETP_OFF = 0x00000000,
@@ -2528,9 +1719,6 @@ typedef enum {
      DSETP_BLACK = 0x00000080
 } DFBScreenEncoderTestPicture;
 
-
-
-
 typedef struct {
      DFBScreenEncoderConfigFlags flags;
 
@@ -2544,11 +1732,8 @@ typedef struct {
 
      DFBColorAdjustment adjustment;
 } DFBScreenEncoderConfig;
-# 2030 "/usr/include/directfb/directfb.h"
 struct _IDirectFBScreen { void *priv; int magic; DFBResult (*AddRef)( IDirectFBScreen *thiz ); DFBResult (*Release)( IDirectFBScreen *thiz ); DFBResult (*GetID) ( IDirectFBScreen *thiz, DFBScreenID *ret_screen_id ); DFBResult (*GetDescription) ( IDirectFBScreen *thiz, DFBScreenDescription *ret_desc ); DFBResult (*EnumDisplayLayers) ( IDirectFBScreen *thiz, DFBDisplayLayerCallback callback, void *callbackdata ); DFBResult (*SetPowerMode) ( IDirectFBScreen *thiz, DFBScreenPowerMode mode ); DFBResult (*WaitForSync) ( IDirectFBScreen *thiz ); DFBResult (*GetMixerDescriptions) ( IDirectFBScreen *thiz, DFBScreenMixerDescription *ret_descriptions ); DFBResult (*GetMixerConfiguration) ( IDirectFBScreen *thiz, int mixer, DFBScreenMixerConfig *ret_config ); DFBResult (*TestMixerConfiguration) ( IDirectFBScreen *thiz, int mixer, const DFBScreenMixerConfig *config, DFBScreenMixerConfigFlags *ret_failed ); DFBResult (*SetMixerConfiguration) ( IDirectFBScreen *thiz, int mixer, const DFBScreenMixerConfig *config ); DFBResult (*GetEncoderDescriptions) ( IDirectFBScreen *thiz, DFBScreenEncoderDescription *ret_descriptions ); DFBResult (*GetEncoderConfiguration) ( IDirectFBScreen *thiz, int encoder, DFBScreenEncoderConfig *ret_config ); DFBResult (*TestEncoderConfiguration) ( IDirectFBScreen *thiz, int encoder, const DFBScreenEncoderConfig *config, DFBScreenEncoderConfigFlags *ret_failed ); DFBResult (*SetEncoderConfiguration) ( IDirectFBScreen *thiz, int encoder, const DFBScreenEncoderConfig *config ); DFBResult (*GetOutputDescriptions) ( IDirectFBScreen *thiz, DFBScreenOutputDescription *ret_descriptions ); DFBResult (*GetOutputConfiguration) ( IDirectFBScreen *thiz, int output, DFBScreenOutputConfig *ret_config ); DFBResult (*TestOutputConfiguration) ( IDirectFBScreen *thiz, int output, const DFBScreenOutputConfig *config, DFBScreenOutputConfigFlags *ret_failed ); DFBResult (*SetOutputConfiguration) ( IDirectFBScreen *thiz, int output, const DFBScreenOutputConfig *config ); };
-# 2236 "/usr/include/directfb/directfb.h"
 struct _IDirectFBDisplayLayer { void *priv; int magic; DFBResult (*AddRef)( IDirectFBDisplayLayer *thiz ); DFBResult (*Release)( IDirectFBDisplayLayer *thiz ); DFBResult (*GetID) ( IDirectFBDisplayLayer *thiz, DFBDisplayLayerID *ret_layer_id ); DFBResult (*GetDescription) ( IDirectFBDisplayLayer *thiz, DFBDisplayLayerDescription *ret_desc ); DFBResult (*GetSourceDescriptions) ( IDirectFBDisplayLayer *thiz, DFBDisplayLayerSourceDescription *ret_descriptions ); DFBResult (*GetCurrentOutputField) ( IDirectFBDisplayLayer *thiz, int *ret_field ); DFBResult (*GetSurface) ( IDirectFBDisplayLayer *thiz, IDirectFBSurface **ret_interface ); DFBResult (*GetScreen) ( IDirectFBDisplayLayer *thiz, IDirectFBScreen **ret_interface ); DFBResult (*SetCooperativeLevel) ( IDirectFBDisplayLayer *thiz, DFBDisplayLayerCooperativeLevel level ); DFBResult (*GetConfiguration) ( IDirectFBDisplayLayer *thiz, DFBDisplayLayerConfig *ret_config ); DFBResult (*TestConfiguration) ( IDirectFBDisplayLayer *thiz, const DFBDisplayLayerConfig *config, DFBDisplayLayerConfigFlags *ret_failed ); DFBResult (*SetConfiguration) ( IDirectFBDisplayLayer *thiz, const DFBDisplayLayerConfig *config ); DFBResult (*SetScreenLocation) ( IDirectFBDisplayLayer *thiz, float x, float y, float width, float height ); DFBResult (*SetScreenPosition) ( IDirectFBDisplayLayer *thiz, int x, int y ); DFBResult (*SetScreenRectangle) ( IDirectFBDisplayLayer *thiz, int x, int y, int width, int height ); DFBResult (*SetOpacity) ( IDirectFBDisplayLayer *thiz, __u8 opacity ); DFBResult (*SetSourceRectangle) ( IDirectFBDisplayLayer *thiz, int x, int y, int width, int height ); DFBResult (*SetFieldParity) ( IDirectFBDisplayLayer *thiz, int field ); DFBResult (*SetSrcColorKey) ( IDirectFBDisplayLayer *thiz, __u8 r, __u8 g, __u8 b ); DFBResult (*SetDstColorKey) ( IDirectFBDisplayLayer *thiz, __u8 r, __u8 g, __u8 b ); DFBResult (*GetLevel) ( IDirectFBDisplayLayer *thiz, int *ret_level ); DFBResult (*SetLevel) ( IDirectFBDisplayLayer *thiz, int level ); DFBResult (*SetBackgroundMode) ( IDirectFBDisplayLayer *thiz, DFBDisplayLayerBackgroundMode mode ); DFBResult (*SetBackgroundImage) ( IDirectFBDisplayLayer *thiz, IDirectFBSurface *surface ); DFBResult (*SetBackgroundColor) ( IDirectFBDisplayLayer *thiz, __u8 r, __u8 g, __u8 b, __u8 a ); DFBResult (*GetColorAdjustment) ( IDirectFBDisplayLayer *thiz, DFBColorAdjustment *ret_adj ); DFBResult (*SetColorAdjustment) ( IDirectFBDisplayLayer *thiz, const DFBColorAdjustment *adj ); DFBResult (*CreateWindow) ( IDirectFBDisplayLayer *thiz, const DFBWindowDescription *desc, IDirectFBWindow **ret_interface ); DFBResult (*GetWindow) ( IDirectFBDisplayLayer *thiz, DFBWindowID window_id, IDirectFBWindow **ret_interface ); DFBResult (*EnableCursor) ( IDirectFBDisplayLayer *thiz, int enable ); DFBResult (*GetCursorPosition) ( IDirectFBDisplayLayer *thiz, int *ret_x, int *ret_y ); DFBResult (*WarpCursor) ( IDirectFBDisplayLayer *thiz, int x, int y ); DFBResult (*SetCursorAcceleration) ( IDirectFBDisplayLayer *thiz, int numerator, int denominator, int threshold ); DFBResult (*SetCursorShape) ( IDirectFBDisplayLayer *thiz, IDirectFBSurface *shape, int hot_x, int hot_y ); DFBResult (*SetCursorOpacity) ( IDirectFBDisplayLayer *thiz, __u8 opacity ); DFBResult (*WaitForSync) ( IDirectFBDisplayLayer *thiz ); };
-# 2649 "/usr/include/directfb/directfb.h"
 typedef enum {
      DSFLIP_NONE = 0x00000000,
 
@@ -2556,19 +1741,12 @@ typedef enum {
 
      DSFLIP_BLIT = 0x00000002,
 
-
-
      DSFLIP_ONSYNC = 0x00000004,
-
-
 
      DSFLIP_PIPELINE = 0x00000008,
 
      DSFLIP_WAITFORSYNC = DSFLIP_WAIT | DSFLIP_ONSYNC
 } DFBSurfaceFlipFlags;
-
-
-
 
 typedef enum {
      DSTF_LEFT = 0x00000000,
@@ -2579,7 +1757,6 @@ typedef enum {
 
      DSTF_BOTTOM = 0x00000008,
 
-
      DSTF_TOPLEFT = DSTF_TOP | DSTF_LEFT,
      DSTF_TOPCENTER = DSTF_TOP | DSTF_CENTER,
      DSTF_TOPRIGHT = DSTF_TOP | DSTF_RIGHT,
@@ -2589,23 +1766,13 @@ typedef enum {
      DSTF_BOTTOMRIGHT = DSTF_BOTTOM | DSTF_RIGHT
 } DFBSurfaceTextFlags;
 
-
-
-
-
 typedef enum {
      DSLF_READ = 0x00000001,
 
      DSLF_WRITE = 0x00000002
 } DFBSurfaceLockFlags;
 
-
-
-
 typedef enum {
-
-
-
      DSPD_NONE = 0,
      DSPD_CLEAR = 1,
      DSPD_SRC = 2,
@@ -2616,9 +1783,6 @@ typedef enum {
      DSPD_SRC_OUT = 7,
      DSPD_DST_OUT = 8
 } DFBSurfacePorterDuffRule;
-
-
-
 
 typedef enum {
      DSBF_ZERO = 1,
@@ -2634,9 +1798,6 @@ typedef enum {
      DSBF_SRCALPHASAT = 11
 } DFBSurfaceBlendFunction;
 
-
-
-
 typedef struct {
      float x;
      float y;
@@ -2647,43 +1808,28 @@ typedef struct {
      float t;
 } DFBVertex;
 
-
-
-
 typedef enum {
      DTTF_LIST,
      DTTF_STRIP,
      DTTF_FAN
 } DFBTriangleFormation;
-# 2763 "/usr/include/directfb/directfb.h"
 struct _IDirectFBSurface { void *priv; int magic; DFBResult (*AddRef)( IDirectFBSurface *thiz ); DFBResult (*Release)( IDirectFBSurface *thiz ); DFBResult (*GetCapabilities) ( IDirectFBSurface *thiz, DFBSurfaceCapabilities *ret_caps ); DFBResult (*GetSize) ( IDirectFBSurface *thiz, int *ret_width, int *ret_height ); DFBResult (*GetVisibleRectangle) ( IDirectFBSurface *thiz, DFBRectangle *ret_rect ); DFBResult (*GetPixelFormat) ( IDirectFBSurface *thiz, DFBSurfacePixelFormat *ret_format ); DFBResult (*GetAccelerationMask) ( IDirectFBSurface *thiz, IDirectFBSurface *source, DFBAccelerationMask *ret_mask ); DFBResult (*GetPalette) ( IDirectFBSurface *thiz, IDirectFBPalette **ret_interface ); DFBResult (*SetPalette) ( IDirectFBSurface *thiz, IDirectFBPalette *palette ); DFBResult (*SetAlphaRamp) ( IDirectFBSurface *thiz, __u8 a0, __u8 a1, __u8 a2, __u8 a3 ); DFBResult (*Lock) ( IDirectFBSurface *thiz, DFBSurfaceLockFlags flags, void **ret_ptr, int *ret_pitch ); DFBResult (*Unlock) ( IDirectFBSurface *thiz ); DFBResult (*Flip) ( IDirectFBSurface *thiz, const DFBRegion *region, DFBSurfaceFlipFlags flags ); DFBResult (*SetField) ( IDirectFBSurface *thiz, int field ); DFBResult (*Clear) ( IDirectFBSurface *thiz, __u8 r, __u8 g, __u8 b, __u8 a ); DFBResult (*SetClip) ( IDirectFBSurface *thiz, const DFBRegion *clip ); DFBResult (*SetColor) ( IDirectFBSurface *thiz, __u8 r, __u8 g, __u8 b, __u8 a ); DFBResult (*SetColorIndex) ( IDirectFBSurface *thiz, unsigned int index ); DFBResult (*SetSrcBlendFunction) ( IDirectFBSurface *thiz, DFBSurfaceBlendFunction function ); DFBResult (*SetDstBlendFunction) ( IDirectFBSurface *thiz, DFBSurfaceBlendFunction function ); DFBResult (*SetPorterDuff) ( IDirectFBSurface *thiz, DFBSurfacePorterDuffRule rule ); DFBResult (*SetSrcColorKey) ( IDirectFBSurface *thiz, __u8 r, __u8 g, __u8 b ); DFBResult (*SetSrcColorKeyIndex) ( IDirectFBSurface *thiz, unsigned int index ); DFBResult (*SetDstColorKey) ( IDirectFBSurface *thiz, __u8 r, __u8 g, __u8 b ); DFBResult (*SetDstColorKeyIndex) ( IDirectFBSurface *thiz, unsigned int index ); DFBResult (*SetBlittingFlags) ( IDirectFBSurface *thiz, DFBSurfaceBlittingFlags flags ); DFBResult (*Blit) ( IDirectFBSurface *thiz, IDirectFBSurface *source, const DFBRectangle *source_rect, int x, int y ); DFBResult (*TileBlit) ( IDirectFBSurface *thiz, IDirectFBSurface *source, const DFBRectangle *source_rect, int x, int y ); DFBResult (*BatchBlit) ( IDirectFBSurface *thiz, IDirectFBSurface *source, const DFBRectangle *source_rects, const DFBPoint *dest_points, int num ); DFBResult (*StretchBlit) ( IDirectFBSurface *thiz, IDirectFBSurface *source, const DFBRectangle *source_rect, const DFBRectangle *destination_rect ); DFBResult (*TextureTriangles) ( IDirectFBSurface *thiz, IDirectFBSurface *texture, const DFBVertex *vertices, const int *indices, int num, DFBTriangleFormation formation ); DFBResult (*SetDrawingFlags) ( IDirectFBSurface *thiz, DFBSurfaceDrawingFlags flags ); DFBResult (*FillRectangle) ( IDirectFBSurface *thiz, int x, int y, int w, int h ); DFBResult (*DrawRectangle) ( IDirectFBSurface *thiz, int x, int y, int w, int h ); DFBResult (*DrawLine) ( IDirectFBSurface *thiz, int x1, int y1, int x2, int y2 ); DFBResult (*DrawLines) ( IDirectFBSurface *thiz, const DFBRegion *lines, unsigned int num_lines ); DFBResult (*FillTriangle) ( IDirectFBSurface *thiz, int x1, int y1, int x2, int y2, int x3, int y3 ); DFBResult (*FillRectangles) ( IDirectFBSurface *thiz, const DFBRectangle *rects, unsigned int num ); DFBResult (*FillSpans) ( IDirectFBSurface *thiz, int y, const DFBSpan *spans, unsigned int num ); DFBResult (*SetFont) ( IDirectFBSurface *thiz, IDirectFBFont *font ); DFBResult (*GetFont) ( IDirectFBSurface *thiz, IDirectFBFont **ret_font ); DFBResult (*DrawString) ( IDirectFBSurface *thiz, const char *text, int bytes, int x, int y, DFBSurfaceTextFlags flags ); DFBResult (*DrawGlyph) ( IDirectFBSurface *thiz, unsigned int index, int x, int y, DFBSurfaceTextFlags flags ); DFBResult (*GetSubSurface) ( IDirectFBSurface *thiz, const DFBRectangle *rect, IDirectFBSurface **ret_interface ); DFBResult (*GetGL) ( IDirectFBSurface *thiz, IDirectFBGL **ret_interface ); DFBResult (*Dump) ( IDirectFBSurface *thiz, const char *directory, const char *prefix ); };
-# 3354 "/usr/include/directfb/directfb.h"
 struct _IDirectFBPalette { void *priv; int magic; DFBResult (*AddRef)( IDirectFBPalette *thiz ); DFBResult (*Release)( IDirectFBPalette *thiz ); DFBResult (*GetCapabilities) ( IDirectFBPalette *thiz, DFBPaletteCapabilities *ret_caps ); DFBResult (*GetSize) ( IDirectFBPalette *thiz, unsigned int *ret_size ); DFBResult (*SetEntries) ( IDirectFBPalette *thiz, const DFBColor *entries, unsigned int num_entries, unsigned int offset ); DFBResult (*GetEntries) ( IDirectFBPalette *thiz, DFBColor *ret_entries, unsigned int num_entries, unsigned int offset ); DFBResult (*FindBestMatch) ( IDirectFBPalette *thiz, __u8 r, __u8 g, __u8 b, __u8 a, unsigned int *ret_index ); DFBResult (*CreateCopy) ( IDirectFBPalette *thiz, IDirectFBPalette **ret_interface ); };
-# 3433 "/usr/include/directfb/directfb.h"
 typedef enum {
      DIKS_UP = 0x00000000,
      DIKS_DOWN = 0x00000001
 } DFBInputDeviceKeyState;
-
-
-
 
 typedef enum {
      DIBS_UP = 0x00000000,
      DIBS_DOWN = 0x00000001
 } DFBInputDeviceButtonState;
 
-
-
-
 typedef enum {
      DIBM_LEFT = 0x00000001,
      DIBM_RIGHT = 0x00000002,
      DIBM_MIDDLE = 0x00000004
 } DFBInputDeviceButtonMask;
-
-
-
 
 typedef enum {
      DIMM_SHIFT = (1 << DIMKI_SHIFT),
@@ -2694,9 +1840,7 @@ typedef enum {
      DIMM_SUPER = (1 << DIMKI_SUPER),
      DIMM_HYPER = (1 << DIMKI_HYPER)
 } DFBInputDeviceModifierMask;
-# 3476 "/usr/include/directfb/directfb.h"
 struct _IDirectFBInputDevice { void *priv; int magic; DFBResult (*AddRef)( IDirectFBInputDevice *thiz ); DFBResult (*Release)( IDirectFBInputDevice *thiz ); DFBResult (*GetID) ( IDirectFBInputDevice *thiz, DFBInputDeviceID *ret_device_id ); DFBResult (*GetDescription) ( IDirectFBInputDevice *thiz, DFBInputDeviceDescription *ret_desc ); DFBResult (*GetKeymapEntry) ( IDirectFBInputDevice *thiz, int keycode, DFBInputDeviceKeymapEntry *ret_entry ); DFBResult (*CreateEventBuffer) ( IDirectFBInputDevice *thiz, IDirectFBEventBuffer **ret_buffer ); DFBResult (*AttachEventBuffer) ( IDirectFBInputDevice *thiz, IDirectFBEventBuffer *buffer ); DFBResult (*GetKeyState) ( IDirectFBInputDevice *thiz, DFBInputDeviceKeyIdentifier key_id, DFBInputDeviceKeyState *ret_state ); DFBResult (*GetModifiers) ( IDirectFBInputDevice *thiz, DFBInputDeviceModifierMask *ret_modifiers ); DFBResult (*GetLockState) ( IDirectFBInputDevice *thiz, DFBInputDeviceLockState *ret_locks ); DFBResult (*GetButtons) ( IDirectFBInputDevice *thiz, DFBInputDeviceButtonMask *ret_buttons ); DFBResult (*GetButtonState) ( IDirectFBInputDevice *thiz, DFBInputDeviceButtonIdentifier button, DFBInputDeviceButtonState *ret_state ); DFBResult (*GetAxis) ( IDirectFBInputDevice *thiz, DFBInputDeviceAxisIdentifier axis, int *ret_pos ); DFBResult (*GetXY) ( IDirectFBInputDevice *thiz, int *ret_x, int *ret_y ); };
-# 3605 "/usr/include/directfb/directfb.h"
 typedef enum {
      DFEC_NONE = 0x00,
      DFEC_INPUT = 0x01,
@@ -2704,9 +1848,6 @@ typedef enum {
      DFEC_USER = 0x03
 
 } DFBEventClass;
-
-
-
 
 typedef enum {
      DIET_UNKNOWN = 0,
@@ -2716,9 +1857,6 @@ typedef enum {
      DIET_BUTTONRELEASE,
      DIET_AXISMOTION
 } DFBInputEventType;
-
-
-
 
 typedef enum {
      DIEF_NONE = 0x000,
@@ -2739,15 +1877,7 @@ typedef enum {
      DIEF_BUTTONS = 0x100,
 
      DIEF_GLOBAL = 0x200
-
-
-
-
-
 } DFBInputEventFlags;
-
-
-
 
 typedef struct {
      DFBEventClass clazz;
@@ -2756,35 +1886,23 @@ typedef struct {
      DFBInputDeviceID device_id;
      DFBInputEventFlags flags;
 
-
-
      struct timeval timestamp;
 
-
      int key_code;
-
-
 
      DFBInputDeviceKeyIdentifier key_id;
 
      DFBInputDeviceKeySymbol key_symbol;
 
-
-
      DFBInputDeviceModifierMask modifiers;
 
      DFBInputDeviceLockState locks;
-
-
 
      DFBInputDeviceButtonIdentifier button;
 
      DFBInputDeviceButtonMask buttons;
 
-
-
      DFBInputDeviceAxisIdentifier axis;
-
 
      int axisabs;
 
@@ -2792,22 +1910,16 @@ typedef struct {
 
 } DFBInputEvent;
 
-
-
-
 typedef enum {
      DWET_NONE = 0x00000000,
 
      DWET_POSITION = 0x00000001,
 
-
      DWET_SIZE = 0x00000002,
-
 
      DWET_CLOSE = 0x00000004,
 
      DWET_DESTROYED = 0x00000008,
-
 
      DWET_GOTFOCUS = 0x00000010,
      DWET_LOSTFOCUS = 0x00000020,
@@ -2815,7 +1927,6 @@ typedef enum {
      DWET_KEYDOWN = 0x00000100,
 
      DWET_KEYUP = 0x00000200,
-
 
      DWET_BUTTONDOWN = 0x00010000,
 
@@ -2829,16 +1940,10 @@ typedef enum {
 
      DWET_WHEEL = 0x00200000,
 
-
      DWET_POSITION_SIZE = DWET_POSITION | DWET_SIZE,
-
-
 
      DWET_ALL = 0x003F033F
 } DFBWindowEventType;
-
-
-
 
 typedef struct {
      DFBEventClass clazz;
@@ -2846,52 +1951,33 @@ typedef struct {
      DFBWindowEventType type;
      DFBWindowID window_id;
 
-
-
      int x;
 
-
      int y;
-
-
-
-
 
      int cx;
      int cy;
 
-
      int step;
-
 
      int w;
      int h;
 
-
      int key_code;
-
-
 
      DFBInputDeviceKeyIdentifier key_id;
 
      DFBInputDeviceKeySymbol key_symbol;
 
-
      DFBInputDeviceModifierMask modifiers;
      DFBInputDeviceLockState locks;
 
-
      DFBInputDeviceButtonIdentifier button;
-
 
      DFBInputDeviceButtonMask buttons;
 
-
      struct timeval timestamp;
 } DFBWindowEvent;
-
-
-
 
 typedef struct {
      DFBEventClass clazz;
@@ -2900,18 +1986,13 @@ typedef struct {
      void *data;
 } DFBUserEvent;
 
-
-
-
 typedef union {
      DFBEventClass clazz;
      DFBInputEvent input;
      DFBWindowEvent window;
      DFBUserEvent user;
 } DFBEvent;
-# 3827 "/usr/include/directfb/directfb.h"
 struct _IDirectFBEventBuffer { void *priv; int magic; DFBResult (*AddRef)( IDirectFBEventBuffer *thiz ); DFBResult (*Release)( IDirectFBEventBuffer *thiz ); DFBResult (*Reset) ( IDirectFBEventBuffer *thiz ); DFBResult (*WaitForEvent) ( IDirectFBEventBuffer *thiz ); DFBResult (*WaitForEventWithTimeout) ( IDirectFBEventBuffer *thiz, unsigned int seconds, unsigned int milli_seconds ); DFBResult (*GetEvent) ( IDirectFBEventBuffer *thiz, DFBEvent *ret_event ); DFBResult (*PeekEvent) ( IDirectFBEventBuffer *thiz, DFBEvent *ret_event ); DFBResult (*HasEvent) ( IDirectFBEventBuffer *thiz ); DFBResult (*PostEvent) ( IDirectFBEventBuffer *thiz, const DFBEvent *event ); DFBResult (*WakeUp) ( IDirectFBEventBuffer *thiz ); DFBResult (*CreateFileDescriptor) ( IDirectFBEventBuffer *thiz, int *ret_fd ); };
-# 3939 "/usr/include/directfb/directfb.h"
 typedef enum {
      DWOP_NONE = 0x00000000,
      DWOP_COLORKEYING = 0x00000001,
@@ -2921,7 +2002,6 @@ typedef enum {
 
      DWOP_SHAPED = 0x00000008,
 
-
      DWOP_KEEP_POSITION = 0x00000010,
 
      DWOP_KEEP_SIZE = 0x00000020,
@@ -2930,46 +2010,28 @@ typedef enum {
 
      DWOP_GHOST = 0x00001000,
 
-
      DWOP_INDESTRUCTIBLE = 0x00002000,
 
      DWOP_ALL = 0x0000307F
 } DFBWindowOptions;
-
-
-
 
 typedef enum {
      DWSC_MIDDLE = 0x00000000,
 
      DWSC_UPPER = 0x00000001,
 
-
-
-
      DWSC_LOWER = 0x00000002
 
-
-
-
 } DFBWindowStackingClass;
-# 3988 "/usr/include/directfb/directfb.h"
 struct _IDirectFBWindow { void *priv; int magic; DFBResult (*AddRef)( IDirectFBWindow *thiz ); DFBResult (*Release)( IDirectFBWindow *thiz ); DFBResult (*GetID) ( IDirectFBWindow *thiz, DFBWindowID *ret_window_id ); DFBResult (*GetPosition) ( IDirectFBWindow *thiz, int *ret_x, int *ret_y ); DFBResult (*GetSize) ( IDirectFBWindow *thiz, int *ret_width, int *ret_height ); DFBResult (*CreateEventBuffer) ( IDirectFBWindow *thiz, IDirectFBEventBuffer **ret_buffer ); DFBResult (*AttachEventBuffer) ( IDirectFBWindow *thiz, IDirectFBEventBuffer *buffer ); DFBResult (*EnableEvents) ( IDirectFBWindow *thiz, DFBWindowEventType mask ); DFBResult (*DisableEvents) ( IDirectFBWindow *thiz, DFBWindowEventType mask ); DFBResult (*GetSurface) ( IDirectFBWindow *thiz, IDirectFBSurface **ret_surface ); DFBResult (*SetOptions) ( IDirectFBWindow *thiz, DFBWindowOptions options ); DFBResult (*GetOptions) ( IDirectFBWindow *thiz, DFBWindowOptions *ret_options ); DFBResult (*SetColorKey) ( IDirectFBWindow *thiz, __u8 r, __u8 g, __u8 b ); DFBResult (*SetColorKeyIndex) ( IDirectFBWindow *thiz, unsigned int index ); DFBResult (*SetOpacity) ( IDirectFBWindow *thiz, __u8 opacity ); DFBResult (*SetOpaqueRegion) ( IDirectFBWindow *thiz, int x1, int y1, int x2, int y2 ); DFBResult (*GetOpacity) ( IDirectFBWindow *thiz, __u8 *ret_opacity ); DFBResult (*SetCursorShape) ( IDirectFBWindow *thiz, IDirectFBSurface *shape, int hot_x, int hot_y ); DFBResult (*RequestFocus) ( IDirectFBWindow *thiz ); DFBResult (*GrabKeyboard) ( IDirectFBWindow *thiz ); DFBResult (*UngrabKeyboard) ( IDirectFBWindow *thiz ); DFBResult (*GrabPointer) ( IDirectFBWindow *thiz ); DFBResult (*UngrabPointer) ( IDirectFBWindow *thiz ); DFBResult (*GrabKey) ( IDirectFBWindow *thiz, DFBInputDeviceKeySymbol symbol, DFBInputDeviceModifierMask modifiers ); DFBResult (*UngrabKey) ( IDirectFBWindow *thiz, DFBInputDeviceKeySymbol symbol, DFBInputDeviceModifierMask modifiers ); DFBResult (*Move) ( IDirectFBWindow *thiz, int dx, int dy ); DFBResult (*MoveTo) ( IDirectFBWindow *thiz, int x, int y ); DFBResult (*Resize) ( IDirectFBWindow *thiz, int width, int height ); DFBResult (*SetStackingClass) ( IDirectFBWindow *thiz, DFBWindowStackingClass stacking_class ); DFBResult (*Raise) ( IDirectFBWindow *thiz ); DFBResult (*Lower) ( IDirectFBWindow *thiz ); DFBResult (*RaiseToTop) ( IDirectFBWindow *thiz ); DFBResult (*LowerToBottom) ( IDirectFBWindow *thiz ); DFBResult (*PutAtop) ( IDirectFBWindow *thiz, IDirectFBWindow *lower ); DFBResult (*PutBelow) ( IDirectFBWindow *thiz, IDirectFBWindow *upper ); DFBResult (*Close) ( IDirectFBWindow *thiz ); DFBResult (*Destroy) ( IDirectFBWindow *thiz ); };
-# 4356 "/usr/include/directfb/directfb.h"
 struct _IDirectFBFont { void *priv; int magic; DFBResult (*AddRef)( IDirectFBFont *thiz ); DFBResult (*Release)( IDirectFBFont *thiz ); DFBResult (*GetAscender) ( IDirectFBFont *thiz, int *ret_ascender ); DFBResult (*GetDescender) ( IDirectFBFont *thiz, int *ret_descender ); DFBResult (*GetHeight) ( IDirectFBFont *thiz, int *ret_height ); DFBResult (*GetMaxAdvance) ( IDirectFBFont *thiz, int *ret_maxadvance ); DFBResult (*GetKerning) ( IDirectFBFont *thiz, unsigned int prev_index, unsigned int current_index, int *ret_kern_x, int *ret_kern_y ); DFBResult (*GetStringWidth) ( IDirectFBFont *thiz, const char *text, int bytes, int *ret_width ); DFBResult (*GetStringExtents) ( IDirectFBFont *thiz, const char *text, int bytes, DFBRectangle *ret_logical_rect, DFBRectangle *ret_ink_rect ); DFBResult (*GetGlyphExtents) ( IDirectFBFont *thiz, unsigned int index, DFBRectangle *ret_rect, int *ret_advance ); };
-# 4492 "/usr/include/directfb/directfb.h"
 typedef enum {
      DICAPS_NONE = 0x00000000,
      DICAPS_ALPHACHANNEL = 0x00000001,
 
      DICAPS_COLORKEY = 0x00000002
 
-
 } DFBImageCapabilities;
-
-
-
-
 
 typedef struct {
      DFBImageCapabilities caps;
@@ -2979,16 +2041,8 @@ typedef struct {
      __u8 colorkey_b;
 } DFBImageDescription;
 
-
-
-
-
 typedef void (*DIRenderCallback)(DFBRectangle *rect, void *ctx);
-# 4526 "/usr/include/directfb/directfb.h"
 struct _IDirectFBImageProvider { void *priv; int magic; DFBResult (*AddRef)( IDirectFBImageProvider *thiz ); DFBResult (*Release)( IDirectFBImageProvider *thiz ); DFBResult (*GetSurfaceDescription) ( IDirectFBImageProvider *thiz, DFBSurfaceDescription *ret_dsc ); DFBResult (*GetImageDescription) ( IDirectFBImageProvider *thiz, DFBImageDescription *ret_dsc ); DFBResult (*RenderTo) ( IDirectFBImageProvider *thiz, IDirectFBSurface *destination, const DFBRectangle *destination_rect ); DFBResult (*SetRenderCallback) ( IDirectFBImageProvider *thiz, DIRenderCallback callback, void *callback_data ); };
-# 4592 "/usr/include/directfb/directfb.h"
 typedef int (*DVFrameCallback)(void *ctx);
-# 4602 "/usr/include/directfb/directfb.h"
 struct _IDirectFBVideoProvider { void *priv; int magic; DFBResult (*AddRef)( IDirectFBVideoProvider *thiz ); DFBResult (*Release)( IDirectFBVideoProvider *thiz ); DFBResult (*GetCapabilities) ( IDirectFBVideoProvider *thiz, DFBVideoProviderCapabilities *ret_caps ); DFBResult (*GetSurfaceDescription) ( IDirectFBVideoProvider *thiz, DFBSurfaceDescription *ret_dsc ); DFBResult (*PlayTo) ( IDirectFBVideoProvider *thiz, IDirectFBSurface *destination, const DFBRectangle *destination_rect, DVFrameCallback callback, void *ctx ); DFBResult (*Stop) ( IDirectFBVideoProvider *thiz ); DFBResult (*SeekTo) ( IDirectFBVideoProvider *thiz, double seconds ); DFBResult (*GetPos) ( IDirectFBVideoProvider *thiz, double *ret_seconds ); DFBResult (*GetLength) ( IDirectFBVideoProvider *thiz, double *ret_seconds ); DFBResult (*GetColorAdjustment) ( IDirectFBVideoProvider *thiz, DFBColorAdjustment *ret_adj ); DFBResult (*SetColorAdjustment) ( IDirectFBVideoProvider *thiz, const DFBColorAdjustment *adj ); };
-# 4708 "/usr/include/directfb/directfb.h"
 struct _IDirectFBDataBuffer { void *priv; int magic; DFBResult (*AddRef)( IDirectFBDataBuffer *thiz ); DFBResult (*Release)( IDirectFBDataBuffer *thiz ); DFBResult (*Flush) ( IDirectFBDataBuffer *thiz ); DFBResult (*SeekTo) ( IDirectFBDataBuffer *thiz, unsigned int offset ); DFBResult (*GetPosition) ( IDirectFBDataBuffer *thiz, unsigned int *ret_offset ); DFBResult (*GetLength) ( IDirectFBDataBuffer *thiz, unsigned int *ret_length ); DFBResult (*WaitForData) ( IDirectFBDataBuffer *thiz, unsigned int length ); DFBResult (*WaitForDataWithTimeout) ( IDirectFBDataBuffer *thiz, unsigned int length, unsigned int seconds, unsigned int milli_seconds ); DFBResult (*GetData) ( IDirectFBDataBuffer *thiz, unsigned int length, void *ret_data, unsigned int *ret_read ); DFBResult (*PeekData) ( IDirectFBDataBuffer *thiz, unsigned int length, int offset, void *ret_data, unsigned int *ret_read ); DFBResult (*HasData) ( IDirectFBDataBuffer *thiz ); DFBResult (*PutData) ( IDirectFBDataBuffer *thiz, const void *data, unsigned int length ); DFBResult (*CreateImageProvider) ( IDirectFBDataBuffer *thiz, IDirectFBImageProvider **interface ); };

@@ -19,6 +19,7 @@
 #include "language_tools.h"
 #include "log_rules.h"
 #include "newlines.h"
+#include "pcf_flags.h"
 #include "prototypes.h"
 #include "tokenize_cleanup.h"
 #include "unc_ctype.h"
@@ -1087,10 +1088,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       fix_typedef(pc);
    }
 
-   if (  chunk_is_token(pc, CT_ENUM)
-      || chunk_is_token(pc, CT_STRUCT)
-      || chunk_is_token(pc, CT_UNION)
-      || (chunk_is_token(pc, CT_CLASS) && !language_is_set(LANG_D)))
+   if (  !pc->flags.test(PCF_IN_FCN_DEF)                                 // Issue #2616
+      && (  chunk_is_token(pc, CT_ENUM)
+         || chunk_is_token(pc, CT_STRUCT)
+         || chunk_is_token(pc, CT_UNION)
+         || (chunk_is_token(pc, CT_CLASS) && !language_is_set(LANG_D))))
    {
       if (prev->type != CT_TYPEDEF)
       {
@@ -1794,7 +1796,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          {
             // more pointers are NOT yet possible
             fprintf(stderr, "Too many pointers\n");
-            fprintf(stderr, "at line %zu, column %zu.\n", pc->orig_line, pc->orig_col);
+            fprintf(stderr, "at line %d, column %d.\n", (int)pc->orig_line, (int)pc->orig_col);
             fprintf(stderr, "Please make a report.\n");
             log_flush(true);
             exit(EX_SOFTWARE);
@@ -2234,8 +2236,10 @@ void fix_symbols(void)
          pc = chunk_get_next_ncnl(pc);
          continue;
       }
-      LOG_FMT(LFCNR, "%s(%d): pc->orig_line       is %zu, orig_col is %zu, text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+      LOG_FMT(LFCNR, "%s(%d): pc->orig_line       is %zu, orig_col is %zu, text() is '%s',",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+      LOG_FMT(LFCNR, " type is %s, parent_type is %s\n",
+              get_token_name(pc->type), get_token_name(pc->parent_type));
       chunk_t *prev = chunk_get_prev_ncnlni(pc, scope_e::PREPROC);   // Issue #2279
 
       if (prev == nullptr)
@@ -2245,8 +2249,10 @@ void fix_symbols(void)
       else
       {
          // Issue #2279
-         LOG_FMT(LFCNR, "%s(%d): prev(ni)->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
-                 __func__, __LINE__, prev->orig_line, prev->orig_col, prev->text(), get_token_name(prev->type));
+         LOG_FMT(LFCNR, "%s(%d): prev(ni)->orig_line is %zu, orig_col is %zu, text() is '%s',",
+                 __func__, __LINE__, prev->orig_line, prev->orig_col, prev->text());
+         LOG_FMT(LFCNR, " type is %s, parent_type is %s\n",
+                 get_token_name(prev->type), get_token_name(prev->parent_type));
       }
       chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
 
@@ -2814,8 +2820,8 @@ static chunk_t *process_return(chunk_t *pc)
             {
                if (temp->level == 0)
                {
-                  fprintf(stderr, "%s(%d): temp->level is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                          __func__, __LINE__, temp->orig_line, temp->orig_col);
+                  fprintf(stderr, "%s(%d): temp->level is ZERO, cannot be decremented, at line %d, column %d\n",
+                          __func__, __LINE__, (int)temp->orig_line, (int)temp->orig_col);
                   log_flush(true);
                   exit(EX_SOFTWARE);
                }
@@ -3913,8 +3919,8 @@ static chunk_t *fix_var_def(chunk_t *start)
 
          if (idx == 0)
          {
-            fprintf(stderr, "%s(%d): idx is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                    __func__, __LINE__, tmp_pc->orig_line, tmp_pc->orig_col);
+            fprintf(stderr, "%s(%d): idx is ZERO, cannot be decremented, at line %d, column %d\n",
+                    __func__, __LINE__, (int)tmp_pc->orig_line, (int)tmp_pc->orig_col);
             log_flush(true);
             exit(EX_SOFTWARE);
          }
@@ -6227,8 +6233,8 @@ static void handle_oc_class(chunk_t *pc)
 
             if (generic_level == 0)
             {
-               fprintf(stderr, "%s(%d): generic_level is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                       __func__, __LINE__, tmp->orig_line, tmp->orig_col);
+               fprintf(stderr, "%s(%d): generic_level is ZERO, cannot be decremented, at line %d, column %d\n",
+                       __func__, __LINE__, (int)tmp->orig_line, (int)tmp->orig_col);
                log_flush(true);
                exit(EX_SOFTWARE);
             }
