@@ -58,7 +58,7 @@ static void check_template_args(chunk_t *start, chunk_t *end);
  *
  * @param start  chunk to start check at
  */
-static void check_template(chunk_t *start);
+static void check_template(chunk_t *start, bool in_type_cast);
 
 
 /**
@@ -482,7 +482,7 @@ void tokenize_cleanup(void)
          if (language_is_set(LANG_OC | LANG_CPP | LANG_CS | LANG_JAVA | LANG_VALA))
          {
             // bug #663
-            check_template(pc);
+            check_template(pc, in_type_cast);
          }
          else
          {
@@ -1097,7 +1097,7 @@ void tokenize_cleanup(void)
 } // tokenize_cleanup
 
 
-static void check_template(chunk_t *start)
+static void check_template(chunk_t *start, bool in_type_cast)
 {
    LOG_FMT(LTEMPL, "%s(%d): orig_line %zu, orig_col %zu:\n",
            __func__, __LINE__, start->orig_line, start->orig_col);
@@ -1257,7 +1257,7 @@ static void check_template(chunk_t *start)
             && (pc->len() > 1)
             && (  options::tok_split_gte()
                || (  (chunk_is_str(pc, ">>", 2) || chunk_is_str(pc, ">>>", 3))
-                  && num_tokens >= 2)))
+                  && (num_tokens >= 2 || (num_tokens >= 1 && in_type_cast)))))
          {
             LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}\n",
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
