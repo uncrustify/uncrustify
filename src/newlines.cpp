@@ -29,7 +29,6 @@
 #include "language_tools.h"
 #include "log_rules.h"
 #include "options.h"
-#include "pcf_flags.h"
 #include "prototypes.h"
 #include "space.h"
 #include "unc_ctype.h"
@@ -5492,9 +5491,8 @@ void do_blank_lines(void)
       }
       else
       {
-         LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s, parent_type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
-                 get_token_name(pc->type), get_token_name(pc->parent_type));
+         LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       }
       bool line_added = false;
 
@@ -5767,8 +5765,7 @@ void do_blank_lines(void)
       }
 
       // Add blanks after struct/enum/union/class
-      if (  (  chunk_is_token(prev, CT_SEMICOLON)
-            || chunk_is_token(prev, CT_BRACE_CLOSE))
+      if (  (chunk_is_token(prev, CT_SEMICOLON) || chunk_is_token(prev, CT_BRACE_CLOSE))
          && (  get_chunk_parent_type(prev) == CT_STRUCT
             || get_chunk_parent_type(prev) == CT_ENUM
             || get_chunk_parent_type(prev) == CT_UNION

@@ -16,7 +16,6 @@
 #include "logger.h"
 #include "option_enum.h"
 #include "options.h"
-#include "pcf_flags.h"
 #include "token_enum.h"    // c_token_t
 #include "unc_text.h"
 
@@ -107,6 +106,120 @@ struct indent_ptr_t
    int     delta;
 };
 
+
+constexpr auto pcf_bit(size_t b)->decltype(0ULL)
+{
+   return(1ULL << b);
+}
+
+
+enum pcf_flag_e : decltype(0ULL)
+{
+// Copy flags are in the lower 16 bits
+   PCF_NONE            = 0ULL,
+   PCF_COPY_FLAGS      = 0x0000ffffULL,
+   PCF_IN_PREPROC      = pcf_bit(0),  //! in a preprocessor
+   PCF_IN_STRUCT       = pcf_bit(1),  //! in a struct
+   PCF_IN_ENUM         = pcf_bit(2),  //! in enum
+   PCF_IN_FCN_DEF      = pcf_bit(3),  //! inside function def parens
+   PCF_IN_FCN_CALL     = pcf_bit(4),  //! inside function call parens
+   PCF_IN_SPAREN       = pcf_bit(5),  //! inside for/if/while/switch parens
+   PCF_IN_TEMPLATE     = pcf_bit(6),
+   PCF_IN_TYPEDEF      = pcf_bit(7),
+   PCF_IN_CONST_ARGS   = pcf_bit(8),
+   PCF_IN_ARRAY_ASSIGN = pcf_bit(9),
+   PCF_IN_CLASS        = pcf_bit(10),
+   PCF_IN_CLASS_BASE   = pcf_bit(11),
+   PCF_IN_NAMESPACE    = pcf_bit(12),
+   PCF_IN_FOR          = pcf_bit(13),
+   PCF_IN_OC_MSG       = pcf_bit(14),
+   PCF_IN_WHERE_SPEC   = pcf_bit(15),  /* inside C# 'where' constraint clause on class or function def */
+
+// Non-Copy flags are in the upper 48 bits
+   PCF_FORCE_SPACE    = pcf_bit(16),   //! must have a space after this token
+   PCF_STMT_START     = pcf_bit(17),   //! marks the start of a statement
+   PCF_EXPR_START     = pcf_bit(18),
+   PCF_DONT_INDENT    = pcf_bit(19),   //! already aligned!
+   PCF_ALIGN_START    = pcf_bit(20),
+   PCF_WAS_ALIGNED    = pcf_bit(21),
+   PCF_VAR_TYPE       = pcf_bit(22),   //! part of a variable def type
+   PCF_VAR_DEF        = pcf_bit(23),   //! variable name in a variable def
+   PCF_VAR_1ST        = pcf_bit(24),   //! 1st variable def in a statement
+   PCF_VAR_1ST_DEF    = (PCF_VAR_DEF | PCF_VAR_1ST),
+   PCF_VAR_INLINE     = pcf_bit(25),   //! type was an inline struct/enum/union
+   PCF_RIGHT_COMMENT  = pcf_bit(26),
+   PCF_OLD_FCN_PARAMS = pcf_bit(27),
+   PCF_LVALUE         = pcf_bit(28),   //! left of assignment
+   PCF_ONE_LINER      = pcf_bit(29),
+   PCF_ONE_CLASS      = (PCF_ONE_LINER | PCF_IN_CLASS),
+   PCF_EMPTY_BODY     = pcf_bit(30),
+   PCF_ANCHOR         = pcf_bit(31),   //! aligning anchor
+   PCF_PUNCTUATOR     = pcf_bit(32),
+   PCF_INSERTED       = pcf_bit(33),   //! chunk was inserted from another file
+   PCF_LONG_BLOCK     = pcf_bit(34),   //! the block is 'long' by some measure
+   PCF_OC_BOXED       = pcf_bit(35),   //! inside OC boxed expression
+   PCF_KEEP_BRACE     = pcf_bit(36),   //! do not remove brace
+   PCF_OC_RTYPE       = pcf_bit(37),   //! inside OC return type
+   PCF_OC_ATYPE       = pcf_bit(38),   //! inside OC arg type
+   PCF_WF_ENDIF       = pcf_bit(39),   //! #endif for whole file ifdef
+   PCF_IN_QT_MACRO    = pcf_bit(40),   //! in a QT-macro, i.e. SIGNAL, SLOT
+   PCF_IN_FCN_CTOR    = pcf_bit(41),   //! inside function constructor
+   PCF_IN_TRY_BLOCK   = pcf_bit(42),   //! inside Function-try-block
+   PCF_INCOMPLETE     = pcf_bit(43),   //! class/struct forward declaration
+};
+
+UNC_DECLARE_FLAGS(pcf_flags_t, pcf_flag_e);
+UNC_DECLARE_OPERATORS_FOR_FLAGS(pcf_flags_t);
+
+#ifdef DEFINE_PCF_NAMES
+static const char *pcf_names[] =
+{
+   "IN_PREPROC",        // 0
+   "IN_STRUCT",         // 1
+   "IN_ENUM",           // 2
+   "IN_FCN_DEF",        // 3
+   "IN_FCN_CALL",       // 4
+   "IN_SPAREN",         // 5
+   "IN_TEMPLATE",       // 6
+   "IN_TYPEDEF",        // 7
+   "IN_CONST_ARGS",     // 8
+   "IN_ARRAY_ASSIGN",   // 9
+   "IN_CLASS",          // 10
+   "IN_CLASS_BASE",     // 11
+   "IN_NAMESPACE",      // 12
+   "IN_FOR",            // 13
+   "IN_OC_MSG",         // 14
+   "IN_WHERE_SPEC",     // 15
+   "FORCE_SPACE",       // 16
+   "STMT_START",        // 17
+   "EXPR_START",        // 18
+   "DONT_INDENT",       // 19
+   "ALIGN_START",       // 20
+   "WAS_ALIGNED",       // 21
+   "VAR_TYPE",          // 22
+   "VAR_DEF",           // 23
+   "VAR_1ST",           // 24
+   "VAR_INLINE",        // 25
+   "RIGHT_COMMENT",     // 26
+   "OLD_FCN_PARAMS",    // 27
+   "LVALUE",            // 28
+   "ONE_LINER",         // 29
+   "EMPTY_BODY",        // 30
+   "ANCHOR",            // 31
+   "PUNCTUATOR",        // 32
+   "INSERTED",          // 33
+   "LONG_BLOCK",        // 34
+   "OC_BOXED",          // 35
+   "KEEP_BRACE",        // 36
+   "OC_RTYPE",          // 37
+   "OC_ATYPE",          // 38
+   "WF_ENDIF",          // 39
+   "IN_QT_MACRO",       // 40
+   "IN_FCN_CTOR",       // 41                    Issue #2152
+   "IN_TRY_BLOCK",      // 42                    Issue #1734
+   "INCOMPLETE",        // 43
+};
+#endif
 
 struct align_ptr_t
 {

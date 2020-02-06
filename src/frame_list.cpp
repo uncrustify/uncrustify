@@ -195,8 +195,8 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
       {
          if (pp_level == 0)
          {
-            fprintf(stderr, "%s(%d): pp_level is ZERO, cannot be decremented, at line %d, column %d\n",
-                    __func__, __LINE__, (int)pc->orig_line, (int)pc->orig_col);
+            fprintf(stderr, "%s(%d): pp_level is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col);
             log_flush(true);
             exit(EX_SOFTWARE);
          }
@@ -229,8 +229,8 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
          if (cpd.pp_level == 0)
          {
             // cpd.pp_level is ZERO, cannot be decremented.
-            fprintf(stderr, "%s(%d): #endif found, at line %d, column %d, without corresponding #if\n",
-                    __func__, __LINE__, (int)pc->orig_line, (int)pc->orig_col);
+            fprintf(stderr, "%s(%d): #endif found, at line %zu, column %zu, without corresponding #if\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col);
             log_flush(true);
             exit(EX_SOFTWARE);
          }
@@ -238,8 +238,8 @@ int fl_check(ParseFrame &frm, chunk_t *pc)
 
          if (pp_level == 0)
          {
-            fprintf(stderr, "%s(%d): pp_level is ZERO, cannot be decremented, at line %d, column %d\n",
-                    __func__, __LINE__, (int)pc->orig_line, (int)pc->orig_col);
+            fprintf(stderr, "%s(%d): pp_level is ZERO, cannot be decremented, at line %zu, column %zu\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col);
             log_flush(true);
             exit(EX_SOFTWARE);
          }

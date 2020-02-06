@@ -278,7 +278,6 @@ set(uncrustify_sources
   src/options_for_QT.cpp
   src/output.cpp
   src/parens.cpp
-  src/pcf_flags.cpp
   src/quick_align_again.cpp
   src/frame_list.cpp
   src/ParseFrame.cpp
@@ -345,7 +344,6 @@ set(uncrustify_headers
   src/options.h
   src/options_for_QT.h
   src/ParseFrame.h
-  src/pcf_flags.h
   src/prototypes.h
   src/punctuators.h
   src/quick_align_again.h
