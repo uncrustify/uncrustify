@@ -3557,7 +3557,7 @@ void space_text(void)
                      // that sp_angle_shift cannot remove the space without this option.
                      if (  (  (  language_is_set(LANG_CPP)
                               && options::sp_permit_cpp11_shift())
-                           || (language_is_set(LANG_JAVA | LANG_CS | LANG_VALA)))
+                           || (language_is_set(LANG_JAVA | LANG_CS | LANG_VALA | LANG_OC)))
                         && chunk_is_token(pc, CT_ANGLE_CLOSE)
                         && chunk_is_token(next, CT_ANGLE_CLOSE))
                      {
