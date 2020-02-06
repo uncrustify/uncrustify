@@ -1176,7 +1176,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          handle_oc_block_type(tmp);
 
          // This is the case where a block literal is passed as the first argument of a C-style method invocation.
-         if (chunk_is_token(tmp, CT_OC_BLOCK_CARET) && chunk_is_token(pc, CT_WORD))
+         if ((chunk_is_token(tmp, CT_OC_BLOCK_CARET) || chunk_is_token(tmp, CT_CARET)) && chunk_is_token(pc, CT_WORD))
          {
             set_chunk_type(pc, CT_FUNC_CALL);
          }
