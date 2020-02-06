@@ -94,8 +94,10 @@ void combine_labels(void)
       }
       else
       {
-         LOG_FMT(LFCN, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, text() '%s'\n",
+         LOG_FMT(LFCN, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, text() '%s',",
                  __func__, __LINE__, next->orig_line, next->orig_col, next->text());
+         LOG_FMT(LFCN, " type is %s, parent_type is %s\n",
+                 get_token_name(next->type), get_token_name(next->parent_type));
       }
 
       if (  !next->flags.test(PCF_IN_OC_MSG) // filter OC case of [self class] msg send

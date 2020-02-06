@@ -1096,8 +1096,8 @@ void indent_text(void)
                      {
                         if (frm.paren_count == 0)
                         {
-                           fprintf(stderr, "%s(%d): frm.paren_count is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                                   __func__, __LINE__, pc->orig_line, pc->orig_col);
+                           fprintf(stderr, "%s(%d): frm.paren_count is ZERO, cannot be decremented, at line %d, column %d\n",
+                                   __func__, __LINE__, (int)pc->orig_line, (int)pc->orig_col);
                            log_flush(true);
                            exit(EX_SOFTWARE);
                         }
@@ -1229,8 +1229,8 @@ void indent_text(void)
 
                if (frm.paren_count == 0)
                {
-                  fprintf(stderr, "%s(%d): frm.paren_count is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                          __func__, __LINE__, pc->orig_line, pc->orig_col);
+                  fprintf(stderr, "%s(%d): frm.paren_count is ZERO, cannot be decremented, at line %d, column %d\n",
+                          __func__, __LINE__, (int)pc->orig_line, (int)pc->orig_col);
                   log_flush(true);
                   exit(EX_SOFTWARE);
                }
@@ -2307,8 +2307,8 @@ void indent_text(void)
             {
                if (idx == 0)
                {
-                  fprintf(stderr, "%s(%d): idx is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                          __func__, __LINE__, pc->orig_line, pc->orig_col);
+                  fprintf(stderr, "%s(%d): idx is ZERO, cannot be decremented, at line %d, column %d\n",
+                          __func__, __LINE__, (int)pc->orig_line, (int)pc->orig_col);
                   log_flush(true);
                   exit(EX_SOFTWARE);
                }
@@ -2350,8 +2350,8 @@ void indent_text(void)
             {
                if (idx == 0)
                {
-                  fprintf(stderr, "%s(%d): idx is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                          __func__, __LINE__, pc->orig_line, pc->orig_col);
+                  fprintf(stderr, "%s(%d): idx is ZERO, cannot be decremented, at line %d, column %d\n",
+                          __func__, __LINE__, (int)pc->orig_line, (int)pc->orig_col);
                   log_flush(true);
                   exit(EX_SOFTWARE);
                }
@@ -2408,8 +2408,8 @@ void indent_text(void)
                   {
                      if (sub == 0)
                      {
-                        fprintf(stderr, "%s(%d): sub is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                                __func__, __LINE__, pc->orig_line, pc->orig_col);
+                        fprintf(stderr, "%s(%d): sub is ZERO, cannot be decremented, at line %d, column %d\n",
+                                __func__, __LINE__, (int)pc->orig_line, (int)pc->orig_col);
                         log_flush(true);
                         exit(EX_SOFTWARE);
                      }
@@ -3170,8 +3170,8 @@ void indent_text(void)
 
                         if (indent_column == 0)
                         {
-                           fprintf(stderr, "%s(%d): indent_column is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                                   __func__, __LINE__, pc->orig_line, pc->orig_col);
+                           fprintf(stderr, "%s(%d): indent_column is ZERO, cannot be decremented, at line %d, column %d\n",
+                                   __func__, __LINE__, (int)pc->orig_line, (int)pc->orig_col);
                            log_flush(true);
                            exit(EX_SOFTWARE);
                         }

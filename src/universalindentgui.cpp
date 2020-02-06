@@ -188,9 +188,9 @@ void print_universal_indent_cfg(FILE *pfile)
          }
 
          fprintf(pfile, "\n[%s]\n", optionNameReadable);
-         fprintf(pfile, "Category=%zu\n", idx);
+         fprintf(pfile, "Category=%u\n", (int)idx);
 #if defined (DEBUG) && !defined (WIN32)
-         fprintf(pfile, "Description=\"<html>(%zu)", optionNumber);
+         fprintf(pfile, "Description=\"<html>(%u)", (int)optionNumber);
 #else // DEBUG
          fprintf(pfile, "Description=\"<html>");
 #endif // DEBUG
