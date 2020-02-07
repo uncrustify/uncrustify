@@ -6254,13 +6254,15 @@ static void handle_oc_class(chunk_t *pc)
          }
       }
 
-      if (chunk_is_token(tmp, CT_BRACE_OPEN))
+      if (  chunk_is_token(tmp, CT_BRACE_OPEN)
+         && get_chunk_parent_type(tmp) != CT_ASSIGN)
       {
          as = angle_state_e::CLOSE;
          set_chunk_parent(tmp, CT_OC_CLASS);
          tmp = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
 
-         if (tmp != nullptr)
+         if (  tmp != nullptr
+            && get_chunk_parent_type(tmp) != CT_ASSIGN)
          {
             set_chunk_parent(tmp, CT_OC_CLASS);
          }
