@@ -2721,13 +2721,19 @@ void indent_text(void)
          {
             chunk_t *next = chunk_get_next(pc);
 
+            // Avoid indentation on return token set by the option.
+            log_rule_B("indent_off_after_return");
+
             // Avoid indentation on return token if the next token is a new token
             // to properly indent object initializers returned by functions.
             log_rule_B("indent_off_after_return_new");
+            bool indent_after_return = (  next != nullptr
+                                       && next->type == CT_NEW)
+                                       ? !options::indent_off_after_return_new()
+                                       : !options::indent_off_after_return();
 
-            if (  !options::indent_off_after_return_new()
-               || next == nullptr
-               || next->type != CT_NEW)
+            if (  indent_after_return
+               || next == nullptr)
             {
                frm.push(pc, __func__, __LINE__);
 
