@@ -202,6 +202,7 @@
 
 00620  ben_083.cfg                          c/indent-assign.c
 00621  nl_endif.cfg                         c/nl_endif.c
+00622  indent_assign.cfg                    c/indent-off-after-assign.c
 
 00631  nl_assign1.cfg                       c/nl_assign.c
 00632  nl_assign2.cfg                       c/nl_assign.c
