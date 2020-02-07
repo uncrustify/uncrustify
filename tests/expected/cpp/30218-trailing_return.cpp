@@ -40,3 +40,11 @@ void foo()
 		return n + 5;
 	});
 }
+
+static auto f25() -> bool {
+	return true;
+}
+
+static auto f26() const noexcept(true) -> bool {
+	return true;
+}

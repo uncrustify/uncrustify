@@ -107,7 +107,7 @@ struct indent_ptr_t
 };
 
 
-constexpr auto pcf_bit(size_t b)->decltype(0ULL)
+constexpr auto pcf_bit(size_t b) -> decltype(0ULL)
 {
    return(1ULL << b);
 }
