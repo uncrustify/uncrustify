@@ -28,8 +28,8 @@
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>
+#include <limits>
 #include <map>
-
 
 using namespace std;
 using namespace uncrustify;
@@ -6900,6 +6900,7 @@ static void handle_oc_property_decl(chunk_t *os)
       std::vector<ChunkGroup> getter_chunks;      // getter
       std::vector<ChunkGroup> setter_chunks;      // setter
       std::vector<ChunkGroup> nullability_chunks; // nonnull, nullable, null_unspecified, null_resettable
+      std::vector<ChunkGroup> other_chunks;       // any words other than above
 
       if (chunk_is_token(next, CT_PAREN_OPEN))
       {
@@ -6998,6 +6999,27 @@ static void handle_oc_property_decl(chunk_t *os)
                   chunkGroup.push_back(next);
                   class_chunks.push_back(chunkGroup);
                }
+               else
+               {
+                  ChunkGroup chunkGroup;
+                  chunkGroup.push_back(next);
+                  other_chunks.push_back(chunkGroup);
+               }
+            }
+            else if (chunk_is_word(next))
+            {
+               if (chunk_is_str(next, "class", 5))
+               {
+                  ChunkGroup chunkGroup;
+                  chunkGroup.push_back(next);
+                  class_chunks.push_back(chunkGroup);
+               }
+               else
+               {
+                  ChunkGroup chunkGroup;
+                  chunkGroup.push_back(next);
+                  other_chunks.push_back(chunkGroup);
+               }
             }
             next = chunk_get_next(next);
          }
@@ -7025,6 +7047,7 @@ static void handle_oc_property_decl(chunk_t *os)
          sorted_chunk_map.insert(pair<int, std::vector<ChunkGroup> >(getter_w, getter_chunks));
          sorted_chunk_map.insert(pair<int, std::vector<ChunkGroup> >(setter_w, setter_chunks));
          sorted_chunk_map.insert(pair<int, std::vector<ChunkGroup> >(nullability_w, nullability_chunks));
+         sorted_chunk_map.insert(pair<int, std::vector<ChunkGroup> >(std::numeric_limits<int>::min(), other_chunks));
 
          chunk_t *curr_chunk = open_paren;
 
