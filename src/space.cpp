@@ -785,6 +785,18 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    if (  language_is_set(LANG_OC)
+      && (chunk_is_token(first, CT_PAREN_CLOSE) || chunk_is_token(first, CT_OC_CLASS) || chunk_is_token(first, CT_WORD))
+      && chunk_is_token(second, CT_ANGLE_OPEN)
+      && (get_chunk_parent_type(second) == CT_OC_PROTO_LIST || get_chunk_parent_type(second) == CT_OC_GENERIC_SPEC)
+      && (options::sp_before_oc_proto_list() != IARF_IGNORE))
+   {
+      // (OC) Add or remove space before Objective-C protocol list
+      // as in '@protocol Protocol<here><Protocol_A>' or '@interface MyClass : NSObject<here><MyProtocol>'.
+      log_rule("sp_before_oc_proto_list");
+      return(options::sp_before_oc_proto_list());
+   }
+
+   if (  language_is_set(LANG_OC)
       && chunk_is_token(first, CT_OC_CLASS)
       && chunk_is_token(second, CT_PAREN_OPEN)
       && (options::sp_oc_classname_paren() != IARF_IGNORE))
