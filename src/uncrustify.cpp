@@ -6,7 +6,6 @@
  * @license GPL v2+
  */
 
-#define DEFINE_PCF_NAMES
 #define DEFINE_CHAR_TABLE
 
 #include "uncrustify.h"
@@ -19,7 +18,6 @@
 #include "backup.h"
 #include "brace_cleanup.h"
 #include "braces.h"
-#include "char_table.h"
 #include "chunk_list.h"
 #include "combine.h"
 #include "compat.h"
@@ -37,10 +35,12 @@
 #include "options.h"
 #include "output.h"
 #include "parens.h"
+#include "pcf_flags.h"
 #include "prototypes.h"
 #include "semicolons.h"
 #include "sorting.h"
 #include "space.h"
+#include "token_enum.h"
 #include "token_names.h"
 #include "tokenize.h"
 #include "tokenize_cleanup.h"
@@ -234,8 +234,8 @@ void usage_error(const char *msg)
 static void tease()
 {
    fprintf(stdout,
-           "There are currently %zu options and minimal documentation.\n"
-           "Try UniversalIndentGUI and good luck.\n", get_option_count());
+           "There are currently %d options and minimal documentation.\n"
+           "Try UniversalIndentGUI and good luck.\n", (int)get_option_count());
 }
 
 
@@ -438,8 +438,8 @@ int main(int argc, char *argv[])
 
       if (lengthOfTheName > MAXLENGTHOFTHENAME)
       {
-         fprintf(stderr, "%s(%d): The token name '%s' is too long (%zu)\n",
-                 __func__, __LINE__, token_names[token], lengthOfTheName);
+         fprintf(stderr, "%s(%d): The token name '%s' is too long (%d)\n",
+                 __func__, __LINE__, token_names[token], (int)lengthOfTheName);
          fprintf(stderr, "%s(%d): the max token name length is %d\n",
                  __func__, __LINE__, MAXLENGTHOFTHENAME);
          log_flush(true);
@@ -2486,46 +2486,4 @@ static size_t language_flags_from_filename(const char *filename)
    }
 
    return(LANG_C);
-}
-
-
-std::string pcf_flags_str(pcf_flags_t flags)
-{
-   char buffer[64];
-
-   // Generate hex representation first
-   snprintf(buffer, 63, "[0x%llx:", static_cast<pcf_flags_t::int_t>(flags));
-
-   // Add human-readable names
-   auto out   = std::string{ buffer };
-   auto first = true;
-
-   for (size_t i = 0; i < ARRAY_SIZE(pcf_names); ++i)
-   {
-      if (flags & static_cast<pcf_flag_e>(pcf_bit(i)))
-      {
-         if (first)
-         {
-            first = false;
-         }
-         else
-         {
-            out += ',';
-         }
-         out += pcf_names[i];
-      }
-   }
-
-   out += ']';
-   return(out);
-}
-
-
-void log_pcf_flags(log_sev_t sev, pcf_flags_t flags)
-{
-   if (!log_sev_on(sev))
-   {
-      return;
-   }
-   log_fmt(sev, "%s\n", pcf_flags_str(flags).c_str());
 }
