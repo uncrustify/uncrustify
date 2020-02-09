@@ -2695,7 +2695,17 @@ void indent_text(void)
                     || !options::indent_align_assign())
             {
                log_rule_B("indent_align_assign");
-               frm.top().indent = frm.prev().indent_tmp + indent_size;
+               chunk_t *L_next = chunk_get_next(pc); // Issue #2591
+
+               if (  chunk_is_token(L_next, CT_SQUARE_OPEN)
+                  && L_next->parent_type == CT_CPP_LAMBDA)
+               {
+                  frm.top().indent = frm.prev().indent_tmp;
+               }
+               else
+               {
+                  frm.top().indent = frm.prev().indent_tmp + indent_size;
+               }
                log_indent();
 
                if (chunk_is_token(pc, CT_ASSIGN) && chunk_is_newline(next))

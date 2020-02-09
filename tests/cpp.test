@@ -272,6 +272,7 @@
 30761  out-668-F.cfg                        cpp/out-668.cpp
 30762  out-668-T.cfg                        cpp/out-668.cpp
 30763  Issue_2166.cfg                       cpp/Issue_2166.cpp
+30764  Issue_2591.cfg                       cpp/Issue_2591.cpp
 
 30770 sp_cpp_lambda_square_paren-r.cfg      cpp/lambda.cpp
 30771 sp_cpp_lambda_square_paren-f.cfg      cpp/lambda.cpp
