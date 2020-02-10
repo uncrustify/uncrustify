@@ -1788,6 +1788,16 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             //    using AbstractLinkPtrPtr = AbstractLink**;
             set_chunk_type(pc, CT_PTR_TYPE);
          }
+         else if (  (  get_chunk_parent_type(pc) == CT_FUNC_DEF
+                    && (chunk_is_opening_brace(next) || chunk_is_star(pc->next)))
+                 || (next->type == CT_QUALIFIER))               // Issue #2648
+         {
+            // example:
+            // auto getComponent(Color *color) -> Component * {
+            // auto getComponent(Color *color) -> Component ** {
+            // auto getComponent(Color *color) -> Component * _Nonnull
+            set_chunk_type(pc, CT_PTR_TYPE);
+         }
          else if (  chunk_is_token(pc->next, CT_SEMICOLON)      // Issue #2319
                  || (  chunk_is_token(pc->next, CT_STAR)
                     && chunk_is_token(pc->next->next, CT_STAR)))
