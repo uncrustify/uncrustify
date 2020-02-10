@@ -42,8 +42,8 @@
                     }];
 
     [UIView transitionWithView:self.view.window duration:0.75 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
-        [self presentViewController:viewController animated:NO completion:nil];
-    } complete:^{}];
+                                                                                                                       [self presentViewController:viewController animated:NO completion:nil];
+                                                                                                                   } complete:^{}];
 }
 
 - (void)closeEditor {
