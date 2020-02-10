@@ -48,3 +48,23 @@ struct X
 
 int*const i;
 int*static i;
+
+static auto Func1(Model *model) -> Color*;
+static auto Func1(Model *model) -> Color* {
+	return nullptr;
+}
+
+auto Func2(Model *model) -> Color*const;
+auto Func2(Model *model) -> Color* const {
+	return nullptr;
+}
+
+auto Func3(Model *model) -> Color**;
+auto Func3(Model *model) -> Color** {
+	return nullptr;
+}
+
+auto Func4(Model *model) -> Color**const;
+auto Func4(Model *model) -> Color** const {
+	return nullptr;
+}
