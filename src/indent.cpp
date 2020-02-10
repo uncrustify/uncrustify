@@ -1234,6 +1234,17 @@ void indent_text(void)
                frm.pop(__func__, __LINE__);
             }
 
+            // Pop OC msg selector stack
+            if (  options::indent_oc_inside_msg_sel()
+               && (frm.top().type != CT_SQUARE_OPEN)
+               && frm.top().level >= pc->level
+               && (chunk_is_token(pc, CT_OC_MSG_FUNC) || chunk_is_token(pc, CT_OC_MSG_NAME))) // Issue #2658
+            {
+               LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+               frm.pop(__func__, __LINE__);
+            }
+
             // Close out parenthesis and squares
             if (  (frm.top().type == (pc->type - 1))
                && (  chunk_is_token(pc, CT_PAREN_CLOSE)
@@ -1735,6 +1746,14 @@ void indent_text(void)
                indent_column_set(frm.top().brace_indent);
                frm.top().indent = frm.prev().indent_tmp;
                log_indent();
+            }
+            else if (  options::indent_oc_inside_msg_sel()
+                    && (frm.prev().type == CT_OC_MSG_FUNC || frm.prev().type == CT_OC_MSG_NAME)) // Issue #2658
+            {
+               // [Class Message:{<here>
+               frm.top().indent = frm.prev().pc->column + indent_size;
+               log_indent();
+               indent_column_set(frm.prev().pc->column);
             }
             else
             {
@@ -2356,6 +2375,20 @@ void indent_text(void)
             }
             frm.top().indent_tab = frm.top().indent;
          }
+         else if (  options::indent_oc_inside_msg_sel()
+                 && chunk_is_token(pc, CT_PAREN_OPEN)
+                 && frm.size() > 2
+                 && (frm.prev().type == CT_OC_MSG_FUNC || frm.prev().type == CT_OC_MSG_NAME)
+                 && !options::indent_align_paren()) // Issue #2658
+         {
+            // When parens are inside OC messages, push on the parse frame stack
+            // [Class Message:(<here>
+            frm.top().indent = frm.prev().pc->column + indent_size;
+            log_indent();
+            frm.top().indent_tab = frm.top().indent;
+            frm.top().indent_tmp = frm.top().indent;
+            log_indent_tmp();
+         }
          else if (  chunk_is_token(pc, CT_PAREN_OPEN)
                  && !chunk_is_newline(chunk_get_next(pc))
                  && !options::indent_align_paren()
@@ -2851,6 +2884,20 @@ void indent_text(void)
          frm.top().indent_tmp = frm.top().indent;
          log_indent_tmp();
       }
+      else if (  options::indent_oc_inside_msg_sel()
+              && (chunk_is_token(pc, CT_OC_MSG_FUNC) || chunk_is_token(pc, CT_OC_MSG_NAME))
+              && chunk_is_token(chunk_get_next_ncnl(pc), CT_OC_COLON)) // Issue #2658
+      {
+         // Pop the OC msg name that is on the top of the stack
+         // [Class Message:<here>
+         frm.push(pc, __func__, __LINE__);
+
+         frm.top().indent     = frm.prev().indent;
+         frm.top().indent_tab = frm.prev().indent_tab;
+         log_indent();
+         frm.top().indent_tmp = frm.prev().indent_tmp;
+         log_indent_tmp();
+      }
       else
       {
          // anything else?
@@ -3240,13 +3287,24 @@ void indent_text(void)
                         {
                            LOG_FMT(LINDLINE, "%s(%d):\n", __func__, __LINE__);
                            search = chunk_skip_to_match_rev(search);
-                           search = chunk_get_next(chunk_get_prev_nl(search));
 
-                           if (search == nullptr)
+                           if (  options::indent_oc_inside_msg_sel()
+                              && chunk_is_token(chunk_get_prev_ncnl(search), CT_OC_COLON)
+                              && (frm.top().type == CT_OC_MSG_FUNC || frm.top().type == CT_OC_MSG_NAME)) // Issue #2658
                            {
-                              search = chunk_get_head();
+                              // [Class Message:(...)<here>
+                              indent_column_set(frm.top().pc->column);
                            }
-                           indent_column_set(search->column);
+                           else
+                           {
+                              search = chunk_get_next(chunk_get_prev_nl(search));
+
+                              if (search == nullptr)
+                              {
+                                 search = chunk_get_head();
+                              }
+                              indent_column_set(search->column);
+                           }
                         }
                      }
                   }
@@ -3373,6 +3431,11 @@ void indent_text(void)
                        __func__, pc->orig_line, tmp->column, pc->text());
                reindent_line(pc, tmp->column);
             }
+         }
+         else if (  options::indent_oc_inside_msg_sel()
+                 && (chunk_is_token(pc, CT_OC_MSG_FUNC) || chunk_is_token(pc, CT_OC_MSG_NAME))) // Issue #2658
+         {
+            reindent_line(pc, frm.top().indent);
          }
          else
          {
