@@ -6491,6 +6491,12 @@ static void handle_oc_block_type(chunk_t *pc)
          return(handle_oc_block_literal(pc));
       }
 
+      // Check apo is '(' or else this might be a block literal. Issue 2643.
+      if (!chunk_is_paren_open(apo))
+      {
+         return(handle_oc_block_literal(pc));
+      }
+
       if (chunk_is_paren_close(apc))
       {
          chunk_t   *aft = chunk_get_next_ncnl(apc);
