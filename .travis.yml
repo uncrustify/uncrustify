@@ -51,23 +51,23 @@ matrix:
           packages:
             - clang-3.8
 
-#    # mingw-w64 Win64 cross-compile
-#    - os: linux
-#      dist: xenial
-#      env: BADGE=linux BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
-#      addons:
-#        apt:
-#          packages:
-#            - mingw-w64
-#            - binutils-mingw-w64
-#            - binutils-mingw-w64-i686
-#            - binutils-mingw-w64-x86-64
-#            - gcc-mingw-w64
-#            - gcc-mingw-w64-i686
-#            - gcc-mingw-w64-x86-64
-#            - g++-mingw-w64
-#            - g++-mingw-w64-i686
-#            - g++-mingw-w64-x86-64
+    # mingw-w64 Win64 cross-compile
+    - os: linux
+      dist: xenial
+      env: BADGE=linux BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
+      addons:
+        apt:
+          packages:
+            - mingw-w64
+            - binutils-mingw-w64
+            - binutils-mingw-w64-i686
+            - binutils-mingw-w64-x86-64
+            - gcc-mingw-w64
+            - gcc-mingw-w64-i686
+            - gcc-mingw-w64-x86-64
+            - g++-mingw-w64
+            - g++-mingw-w64-i686
+            - g++-mingw-w64-x86-64
 
     # OSX
     - os: osx
