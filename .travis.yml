@@ -53,7 +53,7 @@ matrix:
 
     # mingw-w64 Win64 cross-compile
     - os: linux
-      dist: xenial
+      dist: Zesty
       env: BADGE=linux BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
       addons:
         apt:
