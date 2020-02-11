@@ -4,7 +4,7 @@ sudo: false
 matrix:
   include:
     - os: linux
-      dist: Zesty
+#      dist: Zesty
       env: BADGE=linux BUILD_TYPE=debug
       addons:
         apt:
