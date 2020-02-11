@@ -2713,10 +2713,8 @@ void indent_text(void)
                     || !options::indent_align_assign())
             {
                log_rule_B("indent_align_assign");
-               chunk_t *L_next = chunk_get_next(pc); // Issue #2591
 
-               if (  chunk_is_token(L_next, CT_SQUARE_OPEN)
-                  && L_next->parent_type == CT_CPP_LAMBDA)
+               if (options::indent_off_after_assign())
                {
                   frm.top().indent = frm.prev().indent_tmp;
                }
