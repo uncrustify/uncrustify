@@ -24,13 +24,13 @@
 
 // corner case: block literal in use with return type
 id longLines = [allLines collect:^ BOOL (id item) {
-        return [item length] > 20;
-}];
+                                         return [item length] > 20;
+				 }];
 
 // corner case: block literal in use with return type
 id longLines = [allLines collect:^ BOOL* (id item) {
-        return [item length] > 20;
-}];
+                                         return [item length] > 20;
+				 }];
 
 @end
 
