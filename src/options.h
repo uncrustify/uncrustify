@@ -1509,6 +1509,11 @@ indent_preserve_sql;
 extern Option<bool>
 indent_align_assign; // = true
 
+// If true, the indentation of the chunks after a '=' sequence will be set at
+// LHS token indentation column before '='.
+extern Option<bool>
+indent_off_after_assign; // = false
+
 // Whether to align continued statements at the '('. If false or the '(' is
 // followed by a newline, the next line indent is one tab.
 extern Option<bool>
