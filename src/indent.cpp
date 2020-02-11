@@ -2713,7 +2713,15 @@ void indent_text(void)
                     || !options::indent_align_assign())
             {
                log_rule_B("indent_align_assign");
-               frm.top().indent = frm.prev().indent_tmp + indent_size;
+
+               if (options::indent_off_after_assign())
+               {
+                  frm.top().indent = frm.prev().indent_tmp;
+               }
+               else
+               {
+                  frm.top().indent = frm.prev().indent_tmp + indent_size;
+               }
                log_indent();
 
                if (chunk_is_token(pc, CT_ASSIGN) && chunk_is_newline(next))

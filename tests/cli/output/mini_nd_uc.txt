@@ -310,6 +310,7 @@ indent_first_for_expr           = false
 indent_square_nl                = false
 indent_preserve_sql             = false
 indent_align_assign             = true
+indent_off_after_assign         = false
 indent_align_paren              = true
 indent_oc_block                 = false
 indent_oc_block_msg             = 0
