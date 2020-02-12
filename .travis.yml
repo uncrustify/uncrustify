@@ -39,17 +39,17 @@ matrix:
             - g++-6
             - ninja-build
 
-    # Clang 3.8 address sanitizer
+    # Clang 4.0 address sanitizer
     - os: linux
       dist: Bionic
-      env: BADGE=linux BUILD_TYPE=asan C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8
+      env: BADGE=linux BUILD_TYPE=asan C_COMPILER=clang-4.0 CXX_COMPILER=clang++-4.0
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
+            - llvm-toolchain-precise-4.0
           packages:
-            - clang-3.8
+            - clang-4.0
 
     # mingw-w64 Win64 cross-compile
     - os: linux
