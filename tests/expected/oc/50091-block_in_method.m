@@ -1,7 +1,7 @@
 
-void Events1(NSString *    identifier, void (^handler)());
+void Events1(NSString *identifier, void (^handler)());
 
-void Events2(NSString *    identifier, void (^)());
+void Events2(NSString *identifier, void (^)());
 
 @implementation NSArray (WWDC)
 - (NSArray *)map:(id (^)(id))xform {
@@ -11,7 +11,6 @@ void Events2(NSString *    identifier, void (^)());
 	return result;
 }
 
-
 - (NSArray *)collect:(BOOL ( ^ )(id))predicate {
 	id result = [NSMutableArray array];
 	for (id elem in self)
@@ -20,23 +19,21 @@ void Events2(NSString *    identifier, void (^)());
 	return result;
 }
 
-
 - (void)each:(void (^)(id object))block {
 	[self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-	     block(obj);
+	         block(obj);
 	 }];
 }
 
-
 // corner case: block literal in use with return type
 id longLines = [allLines collect: ^ BOOL (id item) {
-                    return [item length] > 20;
-				}];
+                        return [item length] > 20;
+		}];
 
 // corner case: block literal in use with return type
-id longLines = [allLines collect: ^ BOOL* (id item) {
-                    return [item length] > 20;
-				}];
+id longLines = [allLines collect: ^ BOOL * (id item) {
+                        return [item length] > 20;
+		}];
 
 @end
 

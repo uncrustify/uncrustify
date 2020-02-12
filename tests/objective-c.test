@@ -62,6 +62,7 @@
 50086  issue_2643.cfg                       oc/block_in_method.m
 
 50090  oc12.cfg                             oc/kw.m
+50091  issue_2656.cfg                       oc/block_in_method.m
 
 50095  oc13.cfg                             oc/box.m
 50100  bug_340.cfg                          oc/bug_340.m

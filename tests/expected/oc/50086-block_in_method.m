@@ -1,4 +1,7 @@
 
+void Events1(NSString *    identifier, void (^handler)());
+
+void Events2(NSString *    identifier, void (^)());
 
 @implementation NSArray (WWDC)
 - (NSArray *)map:(id (^)(id))xform {
