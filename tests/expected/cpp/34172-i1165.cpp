@@ -4,11 +4,11 @@ int main()
 {
     typedef std::function<void ()> C;
     C callback =
-        [] ()
-        {
-            C f([]()
+    [] ()
+    {
+        C f([]()
             {
-                int i;
+            int i;
             });
-        };
+    };
 }
