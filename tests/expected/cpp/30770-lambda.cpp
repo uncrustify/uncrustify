@@ -1,10 +1,10 @@
 void f1()
 {
 	auto a =
-	[=](int *a, Something & b)
-	{
-		std::cout << "blah: " << *a;
-	};
+		[=](int *a, Something & b)
+		{
+			std::cout << "blah: " << *a;
+		};
 }
 
 void f1a()
