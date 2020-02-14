@@ -76,3 +76,27 @@ flag1
 :  (
 		flag5
 		);
+
+
+
+showButton ? Action<>::actionFromBlock(^(Component *component) {
+	return nil;
+}) : nil;
+
+showButton
+? Action<>::actionFromBlock(^(Component *component) {
+	return nil;
+})
+: nil;
+
+showButton
+? Action<>::actionFromBlock(^(Component *component) {
+	return nil;
+}) : nil;
+
+
+showButton
+? Action<>::actionFromBlock([] (Component *component) {
+	return nil;
+})
+: nil;

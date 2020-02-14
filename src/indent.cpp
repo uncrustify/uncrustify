@@ -172,6 +172,10 @@ static size_t token_indent(c_token_t type);
 
 static size_t calc_indent_continue(const ParseFrame &frm, size_t pse_tos);
 
+/**
+ * Get candidate chunk first on line to which OC blocks can be indented against.
+ */
+static chunk_t *candidate_chunk_first_on_line(chunk_t *pc);
 
 /**
  * We are on a '{' that has parent = OC_BLOCK_EXPR
@@ -433,6 +437,22 @@ static size_t calc_indent_continue(const ParseFrame &frm)
 }
 
 
+static chunk_t *candidate_chunk_first_on_line(chunk_t *pc)
+{
+   chunk_t *first = chunk_first_on_line(pc);
+
+   if (  options::indent_inside_ternary_operator()
+      && (chunk_is_token(first, CT_QUESTION) || chunk_is_token(first, CT_COND_COLON)))
+   {
+      return(chunk_get_next_ncnl(first));
+   }
+   else
+   {
+      return(first);
+   }
+}
+
+
 static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace,
                                     bool from_caret, bool from_colon,
                                     bool from_keyword)
@@ -479,7 +499,7 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace,
    // If we still cannot find caret then return first chunk on the line
    if (tmp == nullptr || tmp->type != CT_OC_BLOCK_CARET)
    {
-      return(chunk_first_on_line(pc));
+      return(candidate_chunk_first_on_line(pc));
    }
 
    if (from_caret)
@@ -493,7 +513,7 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace,
    {
       if (tmp == nullptr || tmp->type != CT_OC_COLON)
       {
-         return(chunk_first_on_line(pc));
+         return(candidate_chunk_first_on_line(pc));
       }
       else
       {
@@ -507,7 +527,7 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace,
       if (  tmp == nullptr
          || (tmp->type != CT_OC_MSG_NAME && tmp->type != CT_OC_MSG_FUNC))
       {
-         return(chunk_first_on_line(pc));
+         return(candidate_chunk_first_on_line(pc));
       }
       else
       {
@@ -515,7 +535,7 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace,
       }
    }
    // In almost all the cases, its better to return the first chunk on the line than not indenting at all.
-   tmp = chunk_first_on_line(pc);
+   tmp = candidate_chunk_first_on_line(pc);
    return(tmp);
 } // oc_msg_block_indent
 
