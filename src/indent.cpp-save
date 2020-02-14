@@ -2713,9 +2713,15 @@ void indent_text(void)
                     || !options::indent_align_assign())
             {
                log_rule_B("indent_align_assign");
-               log_rule_B("indent_off_after_assign");
+<<<<<<< HEAD
 
-               if (options::indent_off_after_assign())             // Issue #2591
+               if (options::indent_off_after_assign())
+=======
+               chunk_t *L_next = chunk_get_next(pc); // Issue #2591
+
+               if (  chunk_is_token(L_next, CT_SQUARE_OPEN)
+                  && L_next->parent_type == CT_CPP_LAMBDA)
+>>>>>>> When an assignment continuation contains a lambda, it should be possible to remove the extra level of indentation.
                {
                   frm.top().indent = frm.prev().indent_tmp;
                }
