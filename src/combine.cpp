@@ -4167,7 +4167,8 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
       else if (  (word_count == 1 || (word_count == type_count))
               && chunk_is_token(pc, CT_PAREN_OPEN))
       {
-         // Check for func proto param 'void (*name)' or 'void (*name)(params)'
+         // Check for func proto param 'void (*name)' or 'void (*name)(params)' or 'void (^name)(params)'
+         // <name> can be optional
          chunk_t *tmp1 = chunk_get_next_ncnl(pc, scope_e::PREPROC);
 
          if (tmp1 == nullptr)
@@ -4180,7 +4181,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          {
             return(false);
          }
-         chunk_t *tmp3 = chunk_get_next_ncnl(tmp2, scope_e::PREPROC);
+         chunk_t *tmp3 = (chunk_is_str(tmp2, ")", 1)) ? tmp2 : chunk_get_next_ncnl(tmp2, scope_e::PREPROC);
 
          if (tmp3 == nullptr)
          {
@@ -4188,8 +4189,8 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          }
 
          if (  !chunk_is_str(tmp3, ")", 1)
-            || !chunk_is_str(tmp1, "*", 1)
-            || tmp2->type != CT_WORD)
+            || !(chunk_is_str(tmp1, "*", 1) || chunk_is_str(tmp1, "^", 1)) // Issue #2656
+            || !(tmp2->type == CT_WORD || chunk_is_str(tmp2, ")", 1)))
          {
             LOG_FMT(LFPARAM, " <== [%s] not fcn type!\n", get_token_name(pc->type));
             return(false);
