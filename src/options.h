@@ -2185,6 +2185,10 @@ nl_func_call_args_multi_line;
 extern Option<bool>
 nl_func_call_end_multi_line;
 
+// Whether to respect nl_func_call_XXX option incase of closure args.
+extern Option<bool>
+nl_func_call_args_multi_line_ignore_closures; // false
+
 // Whether to add a newline after '<' of a template parameter list.
 extern Option<bool>
 nl_template_start;
