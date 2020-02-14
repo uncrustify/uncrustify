@@ -1519,6 +1519,10 @@ indent_off_after_assign; // = false
 extern Option<bool>
 indent_align_paren; // = true
 
+// (OC) Whether to indent Objective-C code inside message selectors.
+extern Option<bool>
+indent_oc_inside_msg_sel; // = false
+
 // (OC) Whether to indent Objective-C blocks at brace level instead of usual
 // rules.
 extern Option<bool>
