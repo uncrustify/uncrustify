@@ -514,7 +514,8 @@ void make_type(chunk_t *pc)
       {
          set_chunk_type(pc, CT_TYPE);
       }
-      else if (chunk_is_star(pc) || chunk_is_msref(pc) || chunk_is_nullable(pc))
+      else if (  (chunk_is_star(pc) || chunk_is_msref(pc) || chunk_is_nullable(pc))
+              && chunk_is_type(pc->prev))             // Issue # 2640
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
