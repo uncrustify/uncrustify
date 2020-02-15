@@ -1879,10 +1879,11 @@ static bool is_var_def(chunk_t *pc, chunk_t *next)
       next = chunk_skip_to_match(next);
       next = chunk_get_next_ncnl(next);
    }
-   return(  chunk_is_type(next)
+   return(  (  chunk_is_type(next)
+            && get_chunk_parent_type(next) != CT_FUNC_DEF)           // Issue #2639
          || chunk_is_token(next, CT_WORD)
          || chunk_is_token(next, CT_FUNC_CTOR_VAR));
-}
+} // is_var_def
 
 
 static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
