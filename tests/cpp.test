@@ -203,6 +203,8 @@
 30275  empty.cfg                            cpp/bug_1321.cpp
 30278  bug_1439.cfg                         cpp/bug_1439.cpp
 
+30279  indent_inside_ternary_operator.cfg   cpp/indent-inside-ternary-operator.cpp
+
 30280  sp_dc.cfg                            cpp/sf557.cpp
 30281  Issue_2478.cfg                       cpp/Issue_2478.cpp
 

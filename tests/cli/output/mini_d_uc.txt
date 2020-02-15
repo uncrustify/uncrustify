@@ -329,6 +329,7 @@ indent_cpp_lambda_body          = false
 indent_compound_literal_return  = true
 indent_using_block              = true
 indent_ternary_operator         = 0
+indent_inside_ternary_operator  = false
 indent_off_after_return         = false
 indent_off_after_return_new     = false
 indent_single_after_return      = false
