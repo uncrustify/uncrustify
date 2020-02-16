@@ -16,8 +16,22 @@ enum Enum2 : int {
   E33 = 2
 };
 
-enum : int {
+enum Enum3
+: int {
   E41 = 0,
   E42 = 1,
   E43 = 2
+};
+
+enum : int {
+  E51 = 0,
+  E52 = 1,
+  E53 = 2
+};
+
+enum
+: int {
+  E61 = 0,
+  E62 = 1,
+  E63 = 2
 };
