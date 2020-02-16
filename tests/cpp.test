@@ -726,6 +726,8 @@
 # TODO: Find relevant test cases for 'override'.
 34210  empty.cfg                            cpp/override_virtual.cpp
 
+34211  anonymous_enum.cfg                   cpp/anonymous_enum.cpp
+
 34250  empty.cfg                            cpp/bug_1607.cpp
 34251  bug_1649.cfg                         cpp/bug_1649.cpp
 34252  nl_after_func_proto_group-3.cfg      cpp/issue_2001.cpp

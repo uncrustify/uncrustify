@@ -3311,14 +3311,20 @@ static void fix_enum_struct_union(chunk_t *pc)
    }
 
    // the next item is either a type, an attribute (TODO), an identifier, a colon or open brace
-   if (chunk_is_token(next, CT_TYPE) || chunk_is_token(next, CT_WORD))
+   if (chunk_is_token(next, CT_TYPE) || chunk_is_token(next, CT_WORD) || chunk_is_token(next, CT_COLON))
    {
       // i.e. "enum xyz : unsigned int { ... };"
       // i.e. "enum class xyz : unsigned int { ... };"
+      // i.e. "enum : unsigned int { ... };"
       // xyz is a type
-      set_chunk_parent(next, pc->type);
-      prev = next;                                               // save xyz
-      next = chunk_get_next_ncnl(next);
+
+      // save the type if it exists
+      if (!chunk_is_token(next, CT_COLON))
+      {
+         set_chunk_parent(next, pc->type);
+         prev = next;
+         next = chunk_get_next_ncnl(next);
+      }
 
       if (next == nullptr)
       {
