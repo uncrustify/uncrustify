@@ -718,6 +718,7 @@ use_indent_continue_only_once   = false
 indent_cpp_lambda_only_once     = false
 use_sp_after_angle_always       = false
 use_options_overriding_for_qt_macros = true
+use_form_feed_no_more_as_whitespace_character = false
 warn_level_tabs_found_in_verbatim_string_literals = 2
 # option(s) with 'not default' value: 0
 #

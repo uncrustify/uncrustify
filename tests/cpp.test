@@ -250,6 +250,7 @@
 30714  empty.cfg                            cpp/Issue_1733.cpp
 
 30720  wessex.cfg                           cpp/custom-open-2.cpp
+30721  Issue_2386.cfg                       cpp/Issue_2386.cpp
 
 30730  qt-1.cfg                             cpp/qt-1.cpp
 30731  nl_access_spec.cfg                   cpp/qt-1.cpp
