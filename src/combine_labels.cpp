@@ -346,11 +346,9 @@ void combine_labels(void)
                // ignore it, as it is inside a paren
             }
             else if (  chunk_is_token(cur, CT_TYPE)
-                    || chunk_is_token(cur, CT_ENUM))   // Issue #2584
-            {
-               set_chunk_type(next, CT_BIT_COLON);
-            }
-            else if (chunk_is_token(nextprev, CT_TYPE))
+                    || chunk_is_token(cur, CT_ENUM)       // Issue #2584
+                    || chunk_is_token(nextprev, CT_TYPE)
+                    || chunk_is_token(nextprev, CT_ENUM)) // Issue #2584
             {
                set_chunk_type(next, CT_BIT_COLON);
             }
