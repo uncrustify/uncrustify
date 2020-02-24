@@ -281,7 +281,8 @@ void combine_labels(void)
                         labelPrev = chunk_get_prev_ncnlni(prev);   // Issue #2279
                      }
 
-                     if (labelPrev->type != CT_FPAREN_CLOSE)
+                     if (  labelPrev != nullptr
+                        && labelPrev->type != CT_FPAREN_CLOSE)
                      {
                         set_chunk_type(cur, CT_LABEL);
                         set_chunk_type(next, CT_LABEL_COLON);

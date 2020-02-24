@@ -3640,6 +3640,12 @@ use_sp_after_angle_always;
 extern Option<bool>
 use_options_overriding_for_qt_macros; // = true
 
+// If true: the form feed character is removed from the list
+// of whitespace characters.
+// See https://en.cppreference.com/w/cpp/string/byte/isspace
+extern Option<bool>
+use_form_feed_no_more_as_whitespace_character;
+
 //END
 
 ///////////////////////////////////////////////////////////////////////////////

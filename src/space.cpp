@@ -3372,6 +3372,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("ADD");
       return(IARF_ADD);
    }
+
+   // Issue #2386
+   if (  chunk_is_token(first, CT_FORM_FEED)
+      || chunk_is_token(second, CT_FORM_FEED))
+   {
+      log_rule("IGNORE");
+      return(IARF_IGNORE);
+   }
    //
    // these lines are only useful for debugging uncrustify itself
    D_LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize do_space:\n",

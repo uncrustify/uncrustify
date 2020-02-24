@@ -11,6 +11,8 @@
 #ifndef UNC_CTYPE_H_INCLUDED
 #define UNC_CTYPE_H_INCLUDED
 
+#include "options.h"
+
 #include <cctype>
 
 // TODO: better avoid inline and move implementation to cpp file
@@ -26,7 +28,15 @@ static inline int unc_fix_ctype(int ch)
 //! check if a character is a space
 static inline int unc_isspace(int ch)
 {
-   return(isspace(unc_fix_ctype(ch)));
+   if (  (ch == 12)                          // Issue #2386
+      && uncrustify::options::use_form_feed_no_more_as_whitespace_character())
+   {
+      return(0);
+   }
+   else
+   {
+      return(isspace(unc_fix_ctype(ch)));
+   }
 }
 
 

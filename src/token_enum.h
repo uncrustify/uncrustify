@@ -37,6 +37,7 @@ enum c_token_t
    CT_SPACE,         // a fixed number of spaces to support weird spacing rules
    CT_NEWLINE,       // CRA, one or more newlines
    CT_NL_CONT,       // CRA, backslash-newline
+   CT_FORM_FEED,     // character 12
    CT_COMMENT_CPP,   // C++ comment (always followed by CT_NEWLINE)
    CT_COMMENT,       // C-comment, single line
    CT_COMMENT_MULTI, // Multi-lined comment
