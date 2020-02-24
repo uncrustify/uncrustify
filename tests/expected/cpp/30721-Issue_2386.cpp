@@ -1,7 +1,7 @@
 // A
 
 
-std::sting getText()
+std::string getText()
 {
 	return "Hello World";
 }
