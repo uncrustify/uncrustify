@@ -1193,7 +1193,7 @@ static void newlines_func_pre_blank_lines(chunk_t *start, c_token_t start_type)
    }
    LOG_FMT(LNLFUNCT, "%s(%d):    set blank line(s): for <NL> at line %zu, column %zu, start_type is %s\n",
            __func__, __LINE__, start->orig_line, start->orig_col, get_token_name(start_type));
-   LOG_FMT(LNLFUNCT, "\n%s(%d): BEGIN set blank line(s) for '%s' at line %zu\n",
+   LOG_FMT(LNLFUNCT, "%s(%d): BEGIN set blank line(s) for '%s' at line %zu\n",
            __func__, __LINE__, start->text(), start->orig_line);
    /*
     * look backwards until we find:

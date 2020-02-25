@@ -3890,7 +3890,7 @@ static chunk_t *fix_var_def(chunk_t *start)
       LOG_FMT(LFVD, "%s(%d): end is nullptr\n", __func__, __LINE__);
       return(nullptr);
    }
-   LOG_FMT(LFVD, "\n%s(%d): end->type is %s\n", __func__, __LINE__, get_token_name(end->type));
+   LOG_FMT(LFVD, "%s(%d): end->type is %s\n", __func__, __LINE__, get_token_name(end->type));
 
    if (  cs.Len() == 1
       && chunk_is_token(end, CT_BRACE_OPEN)
