@@ -3157,37 +3157,14 @@ static void newline_oc_msg(chunk_t *start)
    {
       return;
    }
-   // mark one-liner
-   bool    one_liner = true;
-   chunk_t *pc;
-
-   for (pc = chunk_get_next(start);
-        pc && pc != sq_c;
-        pc = chunk_get_next(pc))
-   {
-      if (pc->level <= start->level)
-      {
-         break;
-      }
-
-      if (chunk_is_newline(pc))
-      {
-         one_liner = false;
-      }
-   }
-
-   // we don't use the 1-liner flag, but set it anyway
-   auto const flags = one_liner ? PCF_ONE_LINER : PCF_NONE;
-   flag_series(start, sq_c, flags, PCF_ONE_LINER);
-
    log_rule_B("nl_oc_msg_leave_one_liner");
 
-   if (options::nl_oc_msg_leave_one_liner() && one_liner)
+   if (options::nl_oc_msg_leave_one_liner())
    {
       return;
    }
 
-   for (pc = chunk_get_next_ncnl(start); pc; pc = chunk_get_next_ncnl(pc))
+   for (chunk_t *pc = chunk_get_next_ncnl(start); pc; pc = chunk_get_next_ncnl(pc))
    {
       if (pc->level <= start->level)
       {

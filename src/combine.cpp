@@ -979,25 +979,29 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
 
    // FIXME: which language does this apply to?
-   if (chunk_is_token(pc, CT_ASSIGN) && chunk_is_token(next, CT_SQUARE_OPEN))
+   // Issue #2432
+   if (!language_is_set(LANG_OC))
    {
-      set_paren_parent(next, CT_ASSIGN);
-
-      // Mark one-liner assignment
-      tmp = next;
-
-      while ((tmp = chunk_get_next_nc(tmp)) != nullptr)
+      if (chunk_is_token(pc, CT_ASSIGN) && chunk_is_token(next, CT_SQUARE_OPEN))
       {
-         if (chunk_is_newline(tmp))
-         {
-            break;
-         }
+         set_paren_parent(next, CT_ASSIGN);
 
-         if (chunk_is_token(tmp, CT_SQUARE_CLOSE) && next->level == tmp->level)
+         // Mark one-liner assignment
+         tmp = next;
+
+         while ((tmp = chunk_get_next_nc(tmp)) != nullptr)
          {
-            chunk_flags_set(tmp, PCF_ONE_LINER);
-            chunk_flags_set(next, PCF_ONE_LINER);
-            break;
+            if (chunk_is_newline(tmp))
+            {
+               break;
+            }
+
+            if (chunk_is_token(tmp, CT_SQUARE_CLOSE) && next->level == tmp->level)
+            {
+               chunk_flags_set(tmp, PCF_ONE_LINER);
+               chunk_flags_set(next, PCF_ONE_LINER);
+               break;
+            }
          }
       }
    }
