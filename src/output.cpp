@@ -444,6 +444,8 @@ void output_parsed(FILE *pfile)
    save_option_file(pfile, false, true);
 
    fprintf(pfile, "# -=====-%s", eol_marker);
+   fprintf(pfile, "# number of loops               = %d\n", cpd.changes);
+   fprintf(pfile, "# -=====-%s", eol_marker);
    // MAXLENGTHOFTHENAME must be consider at the format line at the file
    // output.cpp, line 427: fprintf(pfile, "# Line              Tag                Parent...
    // and              430: ... fprintf(pfile, "%s# %3zu>%19.19s[%19.19s] ...

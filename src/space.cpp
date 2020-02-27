@@ -3387,7 +3387,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    LOG_FMT(LSPACE, "   first->orig_line  is %zu, first->orig_col  is %zu, first->text()  '%s', first->type is  %s\n",
            first->orig_line, first->orig_col, first->text(), get_token_name(first->type));
    LOG_FMT(LSPACE, "   second->orig_line is %zu, second->orig_col is %zu, second->text() '%s', second->type is %s\n",
-             second->orig_line, second->orig_col, second->text(), get_token_name(second->type));
+           second->orig_line, second->orig_col, second->text(), get_token_name(second->type));
 
    log_rule("ADD as default value");
    return(IARF_ADD);
