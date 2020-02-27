@@ -48,3 +48,19 @@ SOME_MACRO_CLOSE
 /// here
 - (instancetype)init;
 @end
+
+
+@interface YetOneMoreExample : NSObject
+
+/* Different comment pattern */
+- (instancetype)init;
+@end
+
+
+@interface YetOneMoreOtherExample : NSObject
+
+/* Multiline
+   Comments
+ */
+- (instancetype)init;
+@end
