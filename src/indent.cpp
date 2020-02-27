@@ -3728,10 +3728,10 @@ null_pc:
       cpd.error_count++;
    }
 
-   LOG_FMT(LINDLINE, "%s(%d):\n", __func__, __LINE__);
+   LOG_FMT(LINDLINE, "%s(%d): before quick_align_again\n", __func__, __LINE__);
    quick_align_again();
    quick_indent_again();
-   LOG_FMT(LINDLINE, "%s(%d):\n", __func__, __LINE__);
+   LOG_FMT(LINDLINE, "%s(%d): after quick_align_again\n", __func__, __LINE__);
 } // indent_text
 
 

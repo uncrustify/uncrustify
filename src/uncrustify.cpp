@@ -2146,6 +2146,17 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          {
             LOG_FMT(LNEWLINE, "%s(%d): Code_width loop start: %d\n",
                     __func__, __LINE__, cpd.changes);
+
+            if (options::debug_max_number_of_loops() > 0)
+            {
+               if (cpd.changes > options::debug_max_number_of_loops())                 // Issue #2432
+               {
+                  LOG_FMT(LNEWLINE, "%s(%d): too many loop. Make a report, please.\n",
+                          __func__, __LINE__);
+                  log_flush(true);
+                  exit(EX_SOFTWARE);
+               }
+            }
             do_code_width();
 
             if (old_changes != cpd.changes && first)

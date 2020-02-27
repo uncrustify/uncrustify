@@ -3382,12 +3382,12 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
    //
    // these lines are only useful for debugging uncrustify itself
-   D_LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize do_space:\n",
-             __func__, __LINE__);
-   D_LOG_FMT(LSPACE, "   first->orig_line  is %zu, first->orig_col  is %zu, first->text()  '%s', first->type is  %s\n",
-             first->orig_line, first->orig_col, first->text(), get_token_name(first->type));
-   D_LOG_FMT(LSPACE, "   second->orig_line is %zu, second->orig_col is %zu, second->text() '%s', second->type is %s\n",
-             second->orig_line, second->orig_col, second->text(), get_token_name(second->type));
+   LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize do_space:\n",
+           __func__, __LINE__);
+   LOG_FMT(LSPACE, "   first->orig_line  is %zu, first->orig_col  is %zu, first->text()  '%s', first->type is  %s\n",
+           first->orig_line, first->orig_col, first->text(), get_token_name(first->type));
+   LOG_FMT(LSPACE, "   second->orig_line is %zu, second->orig_col is %zu, second->text() '%s', second->type is %s\n",
+           second->orig_line, second->orig_col, second->text(), get_token_name(second->type));
 
    log_rule("ADD as default value");
    return(IARF_ADD);

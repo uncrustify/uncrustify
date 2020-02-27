@@ -2976,6 +2976,11 @@ use_form_feed_no_more_as_whitespace_character = false    # true/false
 # Default: 2
 warn_level_tabs_found_in_verbatim_string_literals = 2        # unsigned number
 
+# For debugging purpose only. Limit the number of loops.
+# Used by uncrustify.cpp to exit from infinite loop.
+# 0: no limit.
+debug_max_number_of_loops       = 0        # number
+
 # Meaning of the settings:
 #   Ignore - do not do any changes
 #   Add    - makes sure there is 1 or more space/brace/newline/etc

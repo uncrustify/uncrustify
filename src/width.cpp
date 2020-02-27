@@ -133,6 +133,8 @@ static void split_for_stmt(chunk_t *start);
 static inline bool is_past_width(chunk_t *pc)
 {
    // allow char to sit at last column by subtracting 1
+   LOG_FMT(LSPLIT, "%s(%d): orig_line is %zu, orig_col is %zu, for %s\n",
+           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
    log_rule_B("code_width");
    return((pc->column + pc->len() - 1) > options::code_width());
 }
@@ -177,12 +179,12 @@ void do_code_width(void)
 
          if (split_OK)
          {
-            LOG_FMT(LSPLIT, "%s(%d): on orig_line=%zu, orig_col=%zu, for %s\n",
+            LOG_FMT(LSPLIT, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
          }
          else
          {
-            LOG_FMT(LSPLIT, "%s(%d): Bailed on orig_line=%zu, orig_col=%zu, for %s\n",
+            LOG_FMT(LSPLIT, "%s(%d): Bailed! orig_line is %zu, orig_col is %zu, text() '%s'\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
             break;
          }
@@ -347,6 +349,7 @@ static bool split_line(chunk_t *start)
            start->flags.test((PCF_IN_FCN_CALL)) ? "TRUE" : "FALSE");
 
    // break at maximum line length if ls_code_width is true
+   // Issue #2432
    if (start->flags.test(PCF_ONE_LINER))
    {
       LOG_FMT(LSPLIT, "%s(%d): ** ONCE LINER SPLIT **\n", __func__, __LINE__);
@@ -356,7 +359,7 @@ static bool split_line(chunk_t *start)
       cpd.changes++;
       return(false);
    }
-   LOG_FMT(LSPLIT, "%s(%d):\n", __func__, __LINE__);
+   LOG_FMT(LSPLIT, "%s(%d): before ls_code_width\n", __func__, __LINE__);
 
    log_rule_B("ls_code_width");
 
@@ -440,12 +443,12 @@ static bool split_line(chunk_t *start)
 
    if (ent.pc == nullptr)
    {
-      LOG_FMT(LSPLIT, "\n%s(%d):    TRY_SPLIT yielded NO SOLUTION for orig_line %zu at '%s' [%s]\n",
+      LOG_FMT(LSPLIT, "%s(%d):    TRY_SPLIT yielded NO SOLUTION for orig_line %zu at '%s' [%s]\n",
               __func__, __LINE__, start->orig_line, start->text(), get_token_name(start->type));
    }
    else
    {
-      LOG_FMT(LSPLIT, "\n%s(%d):    TRY_SPLIT yielded '%s' [%s] on orig_line %zu\n",
+      LOG_FMT(LSPLIT, "%s(%d):    TRY_SPLIT yielded '%s' [%s] on orig_line %zu\n",
               __func__, __LINE__, ent.pc->text(), get_token_name(ent.pc->type), ent.pc->orig_line);
       LOG_FMT(LSPLIT, "%s(%d): ent at '%s', orig_col is %zu\n",
               __func__, __LINE__, ent.pc->text(), ent.pc->orig_col);

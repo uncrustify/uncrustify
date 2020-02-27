@@ -3656,6 +3656,12 @@ use_form_feed_no_more_as_whitespace_character;
 extern BoundedOption<unsigned, 1, 3>
 warn_level_tabs_found_in_verbatim_string_literals; // = LWARN
 
+// For debugging purpose only. Limit the number of loops.
+// Used by uncrustify.cpp to exit from infinite loop.
+// 0: no limit.
+extern Option<signed>
+debug_max_number_of_loops;
+
 //END
 
 } // namespace options

@@ -3,6 +3,8 @@ newlines                        = crlf
 # option(s) with 'not default' value: 1
 #
 # -=====-
+# number of loops               = 0
+# -=====-
 # Line                Tag         Parent_type  Type of the parent         Columns Br/Lvl/pp      Flag   Nl  Text
 #   1>            PREPROC|          PP_DEFINE|     PARENT_NOT_SET[  1/  1/  2/  0][1/1/0][  1000e0001][0-0] #
 #   1>          PP_DEFINE|               NONE|     PARENT_NOT_SET[  2/  2/  8/  0][1/1/0][      10001][0-0]  define

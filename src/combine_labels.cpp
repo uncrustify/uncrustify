@@ -184,11 +184,11 @@ void combine_labels(void)
          }
          else
          {
-            LOG_FMT(LFCN, "\n%s(%d): prev->text() is '%s', orig_line is %zu, orig_col is %zu\n",
+            LOG_FMT(LFCN, "%s(%d): prev->text() is '%s', orig_line is %zu, orig_col is %zu\n",
                     __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col);
             LOG_FMT(LFCN, "%s(%d): cur->text() is '%s', orig_line is %zu, orig_col is %zu\n",
                     __func__, __LINE__, cur->text(), cur->orig_line, cur->orig_col);
-            LOG_FMT(LFCN, "%s(%d): next->text() is '%s', orig_line is %zu, orig_col is %zu\n\n",
+            LOG_FMT(LFCN, "%s(%d): next->text() is '%s', orig_line is %zu, orig_col is %zu\n",
                     __func__, __LINE__, next->text(), next->orig_line, next->orig_col);
             chunk_t *nextprev = chunk_get_prev_local(next);   // Issue #2279
 
