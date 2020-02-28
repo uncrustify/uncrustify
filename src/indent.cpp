@@ -1110,7 +1110,7 @@ void indent_text(void)
                   || chunk_is_token(pc, CT_MACRO_OPEN)
                   || chunk_is_token(pc, CT_MACRO_CLOSE)
                   || (  language_is_set(LANG_OC)
-                     && chunk_is_token(pc, CT_COMMENT_CPP)
+                     && chunk_is_comment(pc)
                      && get_chunk_parent_type(pc) == CT_COMMENT_WHOLE) // Issue #2675
                   || chunk_is_semicolon(pc)))
             {
