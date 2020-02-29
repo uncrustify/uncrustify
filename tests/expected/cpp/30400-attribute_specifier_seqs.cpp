@@ -61,6 +61,23 @@ int k() [[expects: x > 0]];
 int x;
 };
 
+class [[foo, bar("baz")]] /**/ Y : private Foo, Bar {
+public:
+int v(int &x) {
+	return x;
+}
+};
+
+class
+	[[foo]]
+	[[bar("baz")]]
+	Z : Foo, public Bar {
+public:
+int v(int * x) {
+	return *x;
+}
+};
+
 int g(int* p) [[ensures: p != nullptr]]
 {
 	*p = 42;
@@ -73,3 +90,40 @@ void i(int& x) [[ensures: meow(x)]]
 {
 	++x;
 }
+
+enum Enum {
+	a, b
+};
+enum class [[foo]] Enum {
+	a, b
+};
+enum struct [[foo]] /**/ [[bar("baz")]] Enum {
+	a, b
+};
+enum [[foo]]
+Enum {
+	a, b
+};
+enum class [[foo]] //
+[[bar("baz")]] Enum {
+	a, b
+};
+enum struct //
+[[bar("baz")]] Enum {
+	a, b
+};
+enum
+[[foo]] [[bar("baz")]] /**/ Enum {
+	a, b
+};
+enum class /**/ [[foo]] [[bar("baz")]]
+Enum {
+	a, b
+};
+enum //
+struct
+[[foo]]
+[[bar("baz")]]
+Enum {
+	a, b
+};

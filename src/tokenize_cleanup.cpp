@@ -395,23 +395,25 @@ void tokenize_cleanup(void)
       }
 
       if (  chunk_is_token(pc, CT_ENUM)
-         && chunk_is_token(next, CT_CLASS))
+         && (chunk_is_token(next, CT_STRUCT) || chunk_is_token(next, CT_CLASS)))
       {
          set_chunk_type(next, CT_ENUM_CLASS);
       }
+      chunk_t *next_non_attr = language_is_set(LANG_CPP) ? skip_attribute_next(next) : next;
 
       /*
-       * Change CT_WORD after CT_ENUM, CT_UNION, or CT_STRUCT to CT_TYPE
+       * Change CT_WORD after CT_ENUM, CT_UNION, CT_STRUCT, or CT_CLASS to CT_TYPE
        * Change CT_WORD before CT_WORD to CT_TYPE
        */
-      if (chunk_is_token(next, CT_WORD))
+      if (chunk_is_token(next_non_attr, CT_WORD))
       {
          if (  chunk_is_token(pc, CT_ENUM)
             || chunk_is_token(pc, CT_ENUM_CLASS)
             || chunk_is_token(pc, CT_UNION)
-            || chunk_is_token(pc, CT_STRUCT))
+            || chunk_is_token(pc, CT_STRUCT)
+            || chunk_is_token(pc, CT_CLASS))
          {
-            set_chunk_type(next, CT_TYPE);
+            set_chunk_type(next_non_attr, CT_TYPE);
          }
 
          if (chunk_is_token(pc, CT_WORD))
