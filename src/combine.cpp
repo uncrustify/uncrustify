@@ -3314,6 +3314,11 @@ static void fix_enum_struct_union(chunk_t *pc)
       next = chunk_get_next_ncnl(next); // get the next one
    }
 
+   if (language_is_set(LANG_CPP))
+   {
+      next = skip_attribute_next(next); // get the next one
+   }
+
    // the next item is either a type, an attribute (TODO), an identifier, a colon or open brace
    if (chunk_is_token(next, CT_TYPE) || chunk_is_token(next, CT_WORD) || chunk_is_token(next, CT_COLON))
    {
@@ -5301,6 +5306,13 @@ static void mark_class_ctor(chunk_t *start)
            __func__, __LINE__, pclass->text());
    log_pcf_flags(LFTOR, pclass->flags);
 
+   if (language_is_set(LANG_CPP))
+   {
+      pclass = skip_attribute_next(pclass);
+      LOG_FMT(LFTOR, "%s(%d): pclass is '%s'\n",
+              __func__, __LINE__, pclass->text());
+   }
+
    if (get_chunk_parent_type(start) == CT_TEMPLATE)
    {
       // look after the class name
@@ -6144,30 +6156,40 @@ chunk_t *skip_tsquare_next(chunk_t *ary_def)
 
 chunk_t *skip_attribute_next(chunk_t *attr)
 {
-   if (chunk_is_token(attr, CT_ATTRIBUTE))
+   chunk_t *pc = attr;
+
+   while (chunk_is_token(pc, CT_ATTRIBUTE))
    {
-      chunk_t *pc = chunk_get_next(attr);
+      pc = chunk_get_next_ncnl(pc);
 
       if (chunk_is_token(pc, CT_FPAREN_OPEN))
       {
-         pc = chunk_get_next_type(attr, CT_FPAREN_CLOSE, attr->level);
-         return(chunk_get_next_ncnl(pc));
+         pc = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
+         pc = chunk_get_next_ncnl(pc);
       }
-      return(pc);
    }
-   return(attr);
+   return(pc);
 }
 
 
 chunk_t *skip_attribute_prev(chunk_t *fp_close)
 {
-   if (  chunk_is_token(fp_close, CT_FPAREN_CLOSE)
-      && get_chunk_parent_type(fp_close) == CT_ATTRIBUTE)
+   chunk_t *pc = fp_close;
+
+   while (true)
    {
-      chunk_t *pc = chunk_get_prev_type(fp_close, CT_ATTRIBUTE, fp_close->level);
-      return(chunk_get_prev_ncnlni(pc));   // Issue #2279
+      if (  chunk_is_token(pc, CT_FPAREN_CLOSE)
+         && get_chunk_parent_type(pc) == CT_ATTRIBUTE)
+      {
+         pc = chunk_get_prev_type(pc, CT_ATTRIBUTE, pc->level);
+      }
+      else if (chunk_is_not_token(pc, CT_ATTRIBUTE))
+      {
+         break;
+      }
+      pc = chunk_get_prev_ncnlni(pc);   // Issue #2279
    }
-   return(fp_close);
+   return(pc);
 }
 
 
