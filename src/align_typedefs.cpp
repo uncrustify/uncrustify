@@ -21,6 +21,7 @@ void align_typedefs(size_t span)
    LOG_FUNC_ENTRY();
 
    AlignStack as;
+
    as.Start(span);
    log_rule_B("align_typedef_gap");
    as.m_gap = options::align_typedef_gap();

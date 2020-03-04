@@ -493,6 +493,7 @@ c_token_t find_keyword_type(const char *word, size_t len)
       return((*it).second);
    }
    chunk_tag_t key;
+
    key.tag = ss.c_str();
 
    // check the static word list

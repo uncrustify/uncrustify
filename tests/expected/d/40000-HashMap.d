@@ -524,6 +524,7 @@ class HashMap
                 e = e.next;
 
             V oldValue = null;
+
             if (e)
                 volatile
                 {
@@ -552,6 +553,7 @@ class HashMap
                 e = e.next;
 
             V oldValue;
+
             if (e)
             {
                 volatile oldValue = e.value;
@@ -576,6 +578,7 @@ class HashMap
 
             volatile oldTable = table;
             int oldCapacity = oldTable.length;
+
             if (oldCapacity >= MAXIMUM_CAPACITY)
                 return;
 
@@ -660,6 +663,7 @@ class HashMap
                 e = e.next;
 
             V oldValue = null;
+
             if (e)
             {
                 V v;
@@ -830,6 +834,7 @@ class HashMap
         assert(value);
 
         uint hash = hash(key);
+
         return segmentFor(hash).put(key, hash, value, false);
     }
 
@@ -856,6 +861,7 @@ class HashMap
         assert(value);
 
         uint hash = hash(key);
+
         return segmentFor(hash).put(key, hash, value, true);
     }
 
@@ -922,6 +928,7 @@ class HashMap
         assert(value);
 
         uint hash = hash(key);
+
         return segmentFor(hash).replace(key, hash, value);
     }
 

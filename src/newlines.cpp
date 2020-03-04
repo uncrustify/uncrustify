@@ -252,7 +252,7 @@ static void newlines_do_else(chunk_t *start, iarf_e nl_opt);
 static bool is_var_def(chunk_t *pc, chunk_t *next);
 
 
-//! Put a newline before and after a block of variable definitions
+//! Put newline(s) before and/or after a block of variable definitions
 static chunk_t *newline_def_blk(chunk_t *start, bool fn_top);
 
 
@@ -550,6 +550,7 @@ chunk_t *newline_add_after(chunk_t *pc)
    log_func_stack_inline(LNEWLINE);
 
    chunk_t nl;
+
    nl.orig_line = pc->orig_line;
    nl.orig_col  = pc->orig_col;
    setup_newline_add(pc, &nl, next);
@@ -617,7 +618,7 @@ static void newline_min_after(chunk_t *ref, size_t count, pcf_flag_e flag)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LNEWLINE, "%s(%d): '%s' line %zu - count=%zu flg=%s:",
+   LOG_FMT(LNEWLINE, "%s(%d): for '%s', at orig_line %zu, count is %zu, flag is %s:",
            __func__, __LINE__, ref->text(), ref->orig_line, count,
            pcf_flags_str(flag).c_str());
    log_func_stack_inline(LNEWLINE);
@@ -631,7 +632,7 @@ static void newline_min_after(chunk_t *ref, size_t count, pcf_flag_e flag)
 
    if (pc != nullptr)                 // Coverity CID 76002
    {
-      LOG_FMT(LNEWLINE, "%s(%d): on %s, line %zu, col %zu\n",
+      LOG_FMT(LNEWLINE, "%s(%d): type is %s, orig_line %zu, orig_col %zu\n",
               __func__, __LINE__, get_token_name(pc->type), pc->orig_line, pc->orig_col);
    }
    chunk_t *next = chunk_get_next(pc);
@@ -745,6 +746,7 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
       LOG_FMT(LNEWLINE, "%s(%d):\n", __func__, __LINE__);
    }
    chunk_t *tmp = newline_add_before(end);
+
    return(tmp);
 } // newline_add_between
 
@@ -1603,6 +1605,7 @@ static void newlines_struct_union(chunk_t *start, iarf_e nl_opt, bool leave_trai
     * Quit if we hit a semicolon or '=', which are not expected.
     */
    size_t level = start->level;
+
    pc = start;
 
    while (((pc = chunk_get_next_ncnl(pc)) != nullptr) && pc->level >= level)
@@ -1709,6 +1712,7 @@ static void newlines_enum(chunk_t *start)
     * Quit if we hit a semicolon or '=', which are not expected.
     */
    size_t level = start->level;
+
    pc = start;
 
    while (((pc = chunk_get_next_ncnl(pc)) != nullptr) && pc->level >= level)
@@ -1756,6 +1760,7 @@ static void newlines_namespace(chunk_t *start)
    LOG_FUNC_ENTRY();
    log_rule_B("nl_namespace_brace");
    iarf_e nl_opt = options::nl_namespace_brace();
+
    // Add or remove newline between 'namespace' and '{'.
 
    log_rule_B("nl_define_macro");
@@ -1767,6 +1772,7 @@ static void newlines_namespace(chunk_t *start)
       return;
    }
    chunk_t *braceOpen = chunk_get_next_type(start, CT_BRACE_OPEN, start->level);
+
    LOG_FMT(LNEWLINE, "%s(%d): braceOpen->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
            __func__, __LINE__, braceOpen->orig_line, braceOpen->orig_col, braceOpen->text());
    log_pcf_flags(LNEWLINE, braceOpen->flags);
@@ -1778,6 +1784,7 @@ static void newlines_namespace(chunk_t *start)
       return;
    }
    chunk_t *beforeBrace = chunk_get_prev(braceOpen);
+
    LOG_FMT(LNEWLINE, "%s(%d): beforeBrace->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
            __func__, __LINE__, beforeBrace->orig_line, beforeBrace->orig_col, beforeBrace->text());
    // namespace {
@@ -1879,19 +1886,21 @@ static bool is_var_def(chunk_t *pc, chunk_t *next)
       next = chunk_skip_to_match(next);
       next = chunk_get_next_ncnl(next);
    }
-   return(  (  chunk_is_type(next)
-            && get_chunk_parent_type(next) != CT_FUNC_DEF)           // Issue #2639
-         || chunk_is_token(next, CT_WORD)
-         || chunk_is_token(next, CT_FUNC_CTOR_VAR));
+   bool is = (  (  chunk_is_type(next)
+                && get_chunk_parent_type(next) != CT_FUNC_DEF)           // Issue #2639
+             || chunk_is_token(next, CT_WORD)
+             || chunk_is_token(next, CT_FUNC_CTOR_VAR));
+
+   return(is);
 } // is_var_def
 
 
+// Put newline(s) before and/or after a block of variable definitions
 static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
 {
    LOG_FUNC_ENTRY();
    bool    did_this_line = false;
    bool    first_var_blk = true;
-   bool    typedef_blk   = false;
    bool    var_blk       = false;
 
    chunk_t *prev = chunk_get_prev_ncnlni(start);   // Issue #2279
@@ -1907,6 +1916,17 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
    while (  pc != nullptr
          && (pc->level >= start->level || pc->level == 0))
    {
+      LOG_FMT(LNL1LINE, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, text() is '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+
+      chunk_t *next_pc = chunk_get_next(pc);
+
+      if (chunk_is_token(next_pc, CT_DC_MEMBER))
+      {
+         // If next_pc token is CT_DC_MEMBER, skip it
+         pc = chunk_skip_dc_member(pc);
+      }
+
       if (chunk_is_comment(pc))
       {
          pc = chunk_get_next(pc);
@@ -1925,6 +1945,15 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
       {
          pc = chunk_get_next(pc);
          break;
+      }
+
+      if (chunk_is_preproc(pc))
+      {
+         if (!var_blk)
+         {
+            pc = chunk_get_next(pc);
+            break;
+         }
       }
 
       // skip vbraces
@@ -1949,7 +1978,7 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
          continue;
       }
 
-      // Determine if this is a variable def or code
+      // Determine if this is a variable definition or code
       if (  !did_this_line
          && pc->type != CT_FUNC_CLASS_DEF
          && pc->type != CT_FUNC_CLASS_PROTO
@@ -1961,7 +1990,15 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
          {
             break;
          }
-         prev = chunk_get_prev_ncnlni(pc);   // Issue #2279
+         LOG_FMT(LNL1LINE, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, text() is '%s'\n",
+                 __func__, __LINE__, next->orig_line, next->orig_col, next->text());
+         //prev = chunk_get_prev_ncnlni(pc);   // Issue #2279
+         prev = chunk_get_prev_type(pc, CT_SEMICOLON, pc->level);
+
+         if (prev == nullptr)
+         {
+            prev = chunk_get_prev_ncnlni(pc);   // Issue #2279
+         }
 
          if (  chunk_is_token(prev, CT_STRING)
             && get_chunk_parent_type(prev) == CT_EXTERN
@@ -1970,66 +2007,15 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
             prev = chunk_get_prev_ncnlni(prev->prev);   // Issue #2279
          }
 
-         if (chunk_is_token(pc, CT_TYPEDEF))
+         if (is_var_def(pc, next))
          {
-            // set newlines before typedef block
-            log_rule_B("nl_typedef_blk_start");
-
-            if (  !typedef_blk
-               && prev != nullptr
-               && options::nl_typedef_blk_start() > 0)
-            {
-               newline_min_after(prev, options::nl_typedef_blk_start(), PCF_VAR_DEF);
-            }
-            // set newlines within typedef block
-            else if (  typedef_blk
-                    && (options::nl_typedef_blk_in() > 0))
-            {
-               log_rule_B("nl_typedef_blk_in");
-               prev = chunk_get_prev(pc);
-
-               if (chunk_is_newline(prev))
-               {
-                  log_rule_B("nl_typedef_blk_in");
-
-                  if (prev->nl_count > options::nl_typedef_blk_in())
-                  {
-                     prev->nl_count = options::nl_typedef_blk_in();
-                     MARK_CHANGE();
-                  }
-               }
-            }
-            // set blank lines after first var def block
-            log_rule_B("nl_func_var_def_blk");
-
-            if (  var_blk
-               && first_var_blk
-               && fn_top
-               && (options::nl_func_var_def_blk() > 0))
-            {
-               LOG_FMT(LBLANKD, "%s(%d): nl_func_var_def_blk %zu\n",
-                       __func__, __LINE__, prev->orig_line);
-               newline_min_after(prev, 1 + options::nl_func_var_def_blk(), PCF_VAR_DEF);
-            }
-            // set newlines after var def block
-            else if (  var_blk
-                    && options::nl_var_def_blk_end() > 0)
-            {
-               log_rule_B("nl_var_def_blk_end");
-               newline_min_after(prev, options::nl_var_def_blk_end(), PCF_VAR_DEF);
-            }
-            pc            = chunk_get_next_type(pc, CT_SEMICOLON, pc->level);
-            typedef_blk   = true;
-            first_var_blk = false;
-            var_blk       = false;
-         }
-         else if (is_var_def(pc, next))
-         {
-            // set newlines before var def block
+            LOG_FMT(LBLANKD, "%s(%d): 'typ==var' found: '%s %s' at line %zu\n",
+                    __func__, __LINE__, pc->text(), next->text(), pc->orig_line);
+            // Put newline(s) before a block of variable definitions
             log_rule_B("nl_var_def_blk_start");
 
             if (  !var_blk
-               && !first_var_blk
+               && first_var_blk
                && options::nl_var_def_blk_start() > 0)
             {
                newline_min_after(prev, options::nl_var_def_blk_start(), PCF_VAR_DEF);
@@ -2039,6 +2025,8 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
             {
                log_rule_B("nl_var_def_blk_in");
                prev = chunk_get_prev(pc);
+               LOG_FMT(LNL1LINE, "%s(%d): prev->orig_line is %zu, prev->orig_col is %zu, text() is '%s'\n",
+                       __func__, __LINE__, prev->orig_line, prev->orig_col, prev->text());
 
                if (chunk_is_newline(prev))
                {
@@ -2051,23 +2039,14 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
                   }
                }
             }
-            // set newlines after typedef block
-            else if (  typedef_blk
-                    && (options::nl_typedef_blk_end() > 0))
-            {
-               log_rule_B("nl_typedef_blk_end");
-               newline_min_after(prev, options::nl_typedef_blk_end(), PCF_VAR_DEF);
-            }
-            pc          = chunk_get_next_type(pc, CT_SEMICOLON, pc->level);
-            typedef_blk = false;
-            var_blk     = true;
+            pc      = chunk_get_next_type(pc, CT_SEMICOLON, pc->level);
+            var_blk = true;
          }
-         else
+         else if (var_blk)
          {
-            // set newlines after typedef block
             log_rule_B("nl_var_def_blk_end");
 
-            if (typedef_blk && (options::nl_var_def_blk_end() > 0))
+            if (options::nl_var_def_blk_end() > 0)
             {
                newline_min_after(prev, options::nl_var_def_blk_end(), PCF_VAR_DEF);
             }
@@ -2079,20 +2058,32 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
                && fn_top
                && (options::nl_func_var_def_blk() > 0))
             {
-               LOG_FMT(LBLANKD, "%s(%d): nl_func_var_def_blk %zu\n",
+               LOG_FMT(LBLANKD, "%s(%d): nl_func_var_def_blk at line %zu\n",
                        __func__, __LINE__, prev->orig_line);
                log_rule_B("nl_func_var_def_blk");
                newline_min_after(prev, 1 + options::nl_func_var_def_blk(), PCF_VAR_DEF);
             }
-            // set newlines after var def block
-            else if (var_blk && (options::nl_var_def_blk_end() > 0))
-            {
-               log_rule_B("nl_var_def_blk_end");
-               newline_min_after(prev, options::nl_var_def_blk_end(), PCF_VAR_DEF);
-            }
-            typedef_blk   = false;
-            first_var_blk = false;
+            // reset the variables for the next block
+            first_var_blk = true;
             var_blk       = false;
+         }
+      }
+      else
+      {
+         //if (pc->type == CT_FUNC_CLASS_DEF)
+         if (chunk_is_token(pc, CT_FUNC_CLASS_DEF))
+         {
+            if (  var_blk
+               && options::nl_var_def_blk_end() > 0)
+            {
+               prev = chunk_get_prev(pc);
+               prev = chunk_get_prev(prev);
+               newline_min_after(prev, options::nl_var_def_blk_end(), PCF_VAR_DEF);
+               pc = chunk_get_next(pc);
+               //typedef_blk   = false;
+               first_var_blk = false;
+               var_blk       = false;
+            }
          }
       }
       did_this_line = true;
@@ -2232,6 +2223,7 @@ static void newlines_brace_pair(chunk_t *br_open)
    LOG_FMT(LNL1LINE, "%s(%d): a new line may be added\n", __func__, __LINE__);
 
    chunk_t *next = chunk_get_next_nc(br_open);
+
    // Insert a newline between the '=' and open brace, if needed
    LOG_FMT(LNL1LINE, "%s(%d): br_open->text() '%s', br_open->type [%s], br_open->parent_type [%s]\n",
            __func__, __LINE__, br_open->text(), get_token_name(br_open->type),
@@ -2393,6 +2385,7 @@ static void newlines_brace_pair(chunk_t *br_open)
    }
    // Grab the matching brace close
    chunk_t *br_close;
+
    br_close = chunk_get_next_type(br_open, CT_BRACE_CLOSE, br_open->level);
 
    if (br_close == nullptr)
@@ -2780,8 +2773,10 @@ static void newline_template(chunk_t *start)
 
    log_rule_B("nl_template_start");
    bool add_start = options::nl_template_start();
+
    log_rule_B("nl_template_args");
    bool add_args = options::nl_template_args();
+
    log_rule_B("nl_template_end");
    bool add_end = options::nl_template_end();
 
@@ -2849,6 +2844,7 @@ static void newline_func_def_or_call(chunk_t *start)
                     || get_chunk_parent_type(start) == CT_FUNC_CLASS_DEF;
    bool    is_call = (get_chunk_parent_type(start) == CT_FUNC_CALL)
                      || get_chunk_parent_type(start) == CT_FUNC_CALL_USER;
+
    LOG_FMT(LNFD, "%s(%d): is_def is %s, is_call is %s\n",
            __func__, __LINE__, is_def ? "TRUE" : "FALSE", is_call ? "TRUE" : "FALSE");
 
@@ -3101,6 +3097,7 @@ static void newline_func_def_or_call(chunk_t *start)
    log_rule_B("nl_func_def_start");
    log_rule_B("nl_func_decl_start");
    iarf_e as = is_def ? options::nl_func_def_start() : options::nl_func_decl_start();
+
    log_rule_B("nl_func_def_end");
    log_rule_B("nl_func_decl_end");
    iarf_e ae = is_def ? options::nl_func_def_end() : options::nl_func_decl_end();
@@ -4764,6 +4761,7 @@ void newlines_functions_remove_extra_blank_lines(void)
    LOG_FUNC_ENTRY();
 
    const size_t nl_max_blank_in_func = options::nl_max_blank_in_func();
+
    log_rule_B("nl_max_blank_in_func");
 
    if (nl_max_blank_in_func == 0)
@@ -5265,8 +5263,9 @@ void newlines_class_colon_pos(c_token_t tok)
       pcc = options::pos_constr_comma();
       log_rule_B("pos_constr_comma");
    }
-   chunk_t    *ccolon  = nullptr;
-   size_t     acv_span = options::align_constr_value_span();
+   chunk_t *ccolon  = nullptr;
+   size_t  acv_span = options::align_constr_value_span();
+
    log_rule_B("align_constr_value_span");
    bool       with_acv = (acv_span > 0) && language_is_set(LANG_CPP);
    AlignStack constructorValue;    // ABC_Member(abc_value)

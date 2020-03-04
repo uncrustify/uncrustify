@@ -19,13 +19,16 @@ void align_oc_msg_colon(chunk_t *so)
    LOG_FUNC_ENTRY();
 
    AlignStack nas;   // for the parameter tag
+
    nas.Reset();
    log_rule_B("align_on_tabstop");
    nas.m_right_align = !options::align_on_tabstop();
 
    AlignStack cas;   // for the colons
+
    log_rule_B("align_oc_msg_colon_span");
-   size_t     span = options::align_oc_msg_colon_span();
+   size_t span = options::align_oc_msg_colon_span();
+
    cas.Start(span);
 
    size_t  level = so->level;
@@ -117,6 +120,7 @@ void align_oc_msg_colon(chunk_t *so)
    log_rule_B("indent_oc_msg_colon");
    len = options::indent_oc_msg_colon();
    size_t len_diff = mlen - first_len;
+
    log_rule_B("indent_columns");
    size_t indent_size = options::indent_columns();
 

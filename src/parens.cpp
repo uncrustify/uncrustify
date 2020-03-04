@@ -95,6 +95,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
       return;
    }
    chunk_t pc;
+
    set_chunk_type(&pc, CT_PAREN_OPEN);
    pc.orig_line   = first_n->orig_line;
    pc.orig_col    = first_n->orig_col;
@@ -107,6 +108,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
    chunk_add_before(&pc, first_n);
 
    chunk_t *last_p = chunk_get_prev_ncnl(last, scope_e::PREPROC);
+
    set_chunk_type(&pc, CT_PAREN_CLOSE);
    pc.orig_line   = last_p->orig_line;
    pc.orig_col    = last_p->orig_col;

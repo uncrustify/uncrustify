@@ -511,6 +511,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
    // account for opening two chars
    pc.str = ctx.get();   // opening '/'
    size_t ch = ctx.get();
+
    pc.str.append(ch);    // second char
 
    if (ch == '/')
@@ -1068,11 +1069,13 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, size_t quote_idx, bool allow
 {
    log_rule_B("string_escape_char");
    size_t escape_char = options::string_escape_char();
+
    log_rule_B("string_escape_char2");
    size_t escape_char2 = options::string_escape_char2();
+
    log_rule_B("string_replace_tab_chars");
-   bool   should_escape_tabs = (  options::string_replace_tab_chars()
-                               && language_is_set(LANG_ALLC));
+   bool should_escape_tabs = (  options::string_replace_tab_chars()
+                             && language_is_set(LANG_ALLC));
 
    pc.str.clear();
 
@@ -1082,6 +1085,7 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, size_t quote_idx, bool allow
    }
    set_chunk_type(&pc, CT_STRING);
    size_t end_ch = CharTable::Get(ctx.peek()) & 0xff;
+
    pc.str.append(ctx.get());                          // store the "
 
    bool escaped = false;
@@ -1221,6 +1225,7 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
    // parse the outermost string.
 
    std::stack<CsStringParseState> parseState; // each entry is a nested string
+
    parseState.push(CsStringParseState(stringType));
 
    log_rule_B("string_replace_tab_chars");
@@ -2231,6 +2236,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    }
    // see if we have a punctuator
    char punc_txt[7];
+
    punc_txt[0] = ctx.peek();
    punc_txt[1] = ctx.peek(1);
    punc_txt[2] = ctx.peek(2);

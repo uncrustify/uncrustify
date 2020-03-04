@@ -2560,6 +2560,7 @@ static bool mark_function_type(chunk_t *pc)
 
    // Scan backwards across the name, which can only be a word and single star
    chunk_t *varcnk = chunk_get_prev_ncnlni(pc);   // Issue #2279
+
    varcnk = chunk_get_prev_ssq(varcnk);
 
    if (varcnk != nullptr && !chunk_is_word(varcnk))
@@ -5302,6 +5303,7 @@ static void mark_class_ctor(chunk_t *start)
    log_pcf_flags(LFTOR, start->flags);
 
    chunk_t *pclass = chunk_get_next_ncnl(start, scope_e::PREPROC);
+
    LOG_FMT(LFTOR, "%s(%d): pclass is '%s'\n",
            __func__, __LINE__, pclass->text());
    log_pcf_flags(LFTOR, pclass->flags);
@@ -5386,6 +5388,7 @@ static void mark_class_ctor(chunk_t *start)
    }
    // Add the class name
    ChunkStack cs;
+
    cs.Push_Back(pclass);
 
    LOG_FMT(LFTOR, "%s(%d): Called on %s on orig_line %zu (next is '%s')\n",
@@ -6659,6 +6662,7 @@ static void handle_oc_message_decl(chunk_t *pc)
    }  // expect the method name/label
 
    chunk_t *label = tmp;
+
    set_chunk_type(tmp, pt);
    set_chunk_parent(tmp, pt);
    pc = chunk_get_next_ncnl(tmp);

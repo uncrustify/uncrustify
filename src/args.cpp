@@ -16,6 +16,7 @@ Args::Args(int argc, char **argv)
    m_count  = argc;
    m_values = argv;
    size_t len = (argc >> 3) + 1;
+
    m_used = new UINT8[len];
 
    if (m_used != nullptr)

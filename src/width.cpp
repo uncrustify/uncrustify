@@ -238,6 +238,7 @@ static void try_split_here(cw_entry &ent, chunk_t *pc)
 
    LOG_FMT(LSPLIT, "%s(%d): at %s, orig_col=%zu\n", __func__, __LINE__, pc->text(), pc->orig_col);
    size_t pc_pri = get_split_pri(pc->type);
+
    LOG_FMT(LSPLIT, "%s(%d): pc_pri is %zu\n", __func__, __LINE__, pc_pri);
 
    if (pc_pri == 0)
@@ -581,6 +582,7 @@ static void split_for_stmt(chunk_t *start)
    // see if we started on the semicolon
    int     count = 0;
    chunk_t *st[2];
+
    pc = start;
 
    if (chunk_is_token(pc, CT_SEMICOLON) && get_chunk_parent_type(pc) == CT_FOR)
@@ -663,6 +665,7 @@ static void split_fcn_params_full(chunk_t *start)
 
    // Find the opening function parenthesis
    chunk_t *fpo = start;
+
    LOG_FMT(LSPLIT, "  %s(%d): Find the opening function parenthesis\n", __func__, __LINE__);
 
    while ((fpo = chunk_get_prev(fpo)) != nullptr)
@@ -720,6 +723,7 @@ static void split_fcn_params(chunk_t *start)
 
    int cur_width = 0;
    int last_col  = -1;
+
    LOG_FMT(LSPLIT, "%s(%d):look forward until CT_COMMA or CT_FPAREN_CLOSE\n", __func__, __LINE__);
 
    while (pc != nullptr)
@@ -772,6 +776,7 @@ static void split_fcn_params(chunk_t *start)
    }
    // back up until the prev is a comma
    chunk_t *prev = pc;
+
    LOG_FMT(LSPLIT, "  %s(%d): back up until the prev is a comma\n", __func__, __LINE__);
 
    while ((prev = chunk_get_prev(prev)) != nullptr)

@@ -19,6 +19,7 @@ void align_asm_colon(void)
 
    bool       did_nl;
    AlignStack cas; // for the colons
+
    cas.Start(4);
 
    chunk_t *pc = chunk_get_head();

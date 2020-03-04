@@ -77,6 +77,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
 
    // Set up the variable/prototype/definition aligner
    AlignStack as;
+
    as.Start(myspan, mythresh);
    as.m_gap = mygap;
    log_rule_B("align_var_def_star_style");
@@ -86,21 +87,25 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
 
    // Set up the bit colon aligner
    AlignStack as_bc;
+
    as_bc.Start(myspan, 0);
    log_rule_B("align_var_def_colon_gap");
    as_bc.m_gap = options::align_var_def_colon_gap();
 
    AlignStack as_at; // attribute
+
    as_at.Start(myspan, 0);
 
    // Set up the brace open aligner
    AlignStack as_br;
+
    as_br.Start(myspan, mythresh);
    log_rule_B("align_single_line_brace_gap");
    as_br.m_gap = options::align_single_line_brace_gap();
 
-   bool    fp_look_bro   = false;
-   bool    did_this_line = false;
+   bool fp_look_bro   = false;
+   bool did_this_line = false;
+
    log_rule_B("align_mix_var_proto");
    bool    fp_active = options::align_mix_var_proto();
    chunk_t *pc       = chunk_get_next(start);

@@ -1529,6 +1529,7 @@ static void output_comment_multi(chunk_t *pc)
    size_t   cmt_idx    = 0;
    bool     nl_end     = false;
    unc_text line;
+
    line.clear();
 
    while (cmt_idx < pc->len())
@@ -2233,6 +2234,7 @@ static void output_comment_multi_simple(chunk_t *pc)
       return;
    }
    cmt_reflow cmt;
+
    output_cmt_start(cmt, pc);
 
    // The multiline comment is saved inside one chunk. If the comment is

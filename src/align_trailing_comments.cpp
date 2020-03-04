@@ -51,15 +51,17 @@ void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev)
 chunk_t *align_trailing_comments(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   size_t          min_col  = 0;
-   size_t          min_orig = 0;
-   chunk_t         *pc      = start;
-   const size_t    lvl      = start->brace_level;
-   size_t          nl_count = 0;
-   ChunkStack      cs;
-   size_t          col;
+   size_t       min_col  = 0;
+   size_t       min_orig = 0;
+   chunk_t      *pc      = start;
+   const size_t lvl      = start->brace_level;
+   size_t       nl_count = 0;
+   ChunkStack   cs;
+   size_t       col;
+
    log_rule_B("align_right_cmt_at_col");
-   size_t          intended_col = options::align_right_cmt_at_col();
+   size_t intended_col = options::align_right_cmt_at_col();
+
    log_rule_B("align_right_cmt_same_level");
    const bool      same_level = options::align_right_cmt_same_level();
    comment_align_e cmt_type_cur;

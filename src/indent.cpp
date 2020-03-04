@@ -606,8 +606,9 @@ static void quick_indent_again(void)
 void indent_text(void)
 {
    LOG_FUNC_ENTRY();
-   bool         did_newline = true;
-   size_t       vardefcol   = 0;
+   bool   did_newline = true;
+   size_t vardefcol   = 0;
+
    log_rule_B("indent_columns");
    const size_t indent_size   = options::indent_columns();
    size_t       indent_column = 0;

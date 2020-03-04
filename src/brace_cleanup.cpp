@@ -1237,6 +1237,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
    LOG_FUNC_ENTRY();
 
    chunk_t chunk;
+
    set_chunk_parent(&chunk, frm.top().type);
    chunk.orig_line   = pc->orig_line;
    chunk.level       = frm.level;

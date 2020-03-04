@@ -2038,6 +2038,7 @@ done:
 
 //	#if _WIN32 && __DMC__
         char *save = __locale_decpoint;
+
         __locale_decpoint = ".";
 //	#endif
         t.float80value = strtold(cast(char *)stringbuffer.data.ptr, null);

@@ -18,6 +18,7 @@ void align_oc_msg_spec(size_t span)
    LOG_FUNC_ENTRY();
 
    AlignStack as;
+
    as.Start(span, 0);
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))

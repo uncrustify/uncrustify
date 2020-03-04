@@ -159,6 +159,7 @@ void ParseFrame::push(chunk_t *pc, const char *func, int line, brace_stage_e sta
    LOG_FUNC_ENTRY();
 
    ContainerType new_entry = {};
+
    new_entry.type      = pc->type;
    new_entry.level     = pc->level;
    new_entry.open_line = pc->orig_line;
