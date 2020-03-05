@@ -296,8 +296,8 @@ indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 0, ...indent is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
-indent_text :
-indent_text :
+indent_text : before quick_align_again
+indent_text : after quick_align_again
 indent_text : orig_line is 1, orig_col is 1, column is 1, for 'struct'
    [0x10070000:FORCE_SPACE,STMT_START,EXPR_START,LVALUE]
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
@@ -596,5 +596,5 @@ indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 0, ...indent is 1
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
-indent_text :
-indent_text :
+indent_text : before quick_align_again
+indent_text : after quick_align_again
