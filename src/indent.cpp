@@ -1658,7 +1658,6 @@ void indent_text(void)
                frm.top().brace_indent = frm.prev().indent_tmp;
                indent_column_set(frm.top().brace_indent);
             }
-
             frm.top().indent_tab = frm.top().indent;
             frm.top().indent_tmp = frm.top().indent;
             log_indent_tmp();
