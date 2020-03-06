@@ -67,6 +67,8 @@ There are lots of ways to contribute to Uncrustify:
       by running `ctest` in your build directory.
       (Changes that fail CI will _not_ be merged.
       Running the tests locally will help to avoid this.)
+      You can change the level of logging by changing the line 104 and 109
+      of the file tests/test_uncrustify/test.py to another value.
     - The PR title should represent _what_ is being changed
       (a rephrasing of the branch name if set correctly).
     - The PR description should document the _why_ the change needed to be done
