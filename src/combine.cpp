@@ -4907,7 +4907,7 @@ static void mark_function(chunk_t *pc)
          }
 
          for (  tmp = prev; (tmp != nullptr)
-             && tmp != pc; tmp = chunk_get_next_ncnl(tmp))
+             && tmp != pc; tmp = chunk_get_next_ncnlnp(tmp))
          {
             LOG_FMT(LFCN, "%s(%d): text() is '%s', type is %s\n",
                     __func__, __LINE__, tmp->text(), get_token_name(tmp->type));
