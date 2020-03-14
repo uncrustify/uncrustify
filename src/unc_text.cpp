@@ -117,6 +117,7 @@ static size_t fix_len_idx(size_t size, size_t idx, size_t len)
       return(0);
    }
    const size_t left = size - idx;
+
    return((len > left) ? left : len);
 }
 
@@ -458,6 +459,7 @@ void unc_text::resize(size_t new_size)
       return;
    }
    const auto log_new_size = getLogTextUtf8Len(m_chars, new_size);
+
    m_logtext.resize(log_new_size + 1); // one extra for \0
    m_logtext[log_new_size] = '\0';
 
@@ -484,10 +486,12 @@ void unc_text::insert(size_t idx, int ch)
                          + " - idx >= m_chars.size()");
    }
    log_type utf8converted;
+
    utf8converted.reserve(UTF8_BLOCKS);
    toLogTextUtf8(ch, utf8converted);
 
    const auto utf8_idx = getLogTextUtf8Len(m_chars, idx);
+
    m_logtext.pop_back(); // remove '\0'
    m_logtext.insert(std::next(std::begin(m_logtext), utf8_idx),
                     std::begin(utf8converted), std::end(utf8converted));
@@ -511,6 +515,7 @@ void unc_text::insert(size_t idx, const unc_text &ref)
                          + " - idx >= m_chars.size()");
    }
    const auto utf8_idx = getLogTextUtf8Len(m_chars, idx);
+
    // (A+B) remove \0 from both containers, add back a single at the end
    m_logtext.pop_back(); // A
    m_logtext.insert(std::next(std::begin(m_logtext), utf8_idx),

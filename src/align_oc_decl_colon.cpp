@@ -24,6 +24,7 @@ void align_oc_decl_colon(void)
    bool       did_line;
    AlignStack cas;   // for the colons
    AlignStack nas;   // for the parameter label
+
    cas.Start(4);
    nas.Start(4);
    nas.m_right_align = !options::align_on_tabstop();

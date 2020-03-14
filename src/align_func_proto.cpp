@@ -21,10 +21,12 @@ void align_func_proto(size_t span)
    LOG_FUNC_ENTRY();
 
    size_t mythresh = 0;
+
    log_rule_B("align_func_proto_thresh");
    mythresh = options::align_func_proto_thresh();
 
    AlignStack as;
+
    as.Start(span, mythresh);
    log_rule_B("align_func_proto_gap");
    as.m_gap = options::align_func_proto_gap();
@@ -34,6 +36,7 @@ void align_func_proto(size_t span)
    as.m_amp_style = static_cast<AlignStack::StarStyle>(options::align_var_def_amp_style());
 
    AlignStack as_br;
+
    as_br.Start(span, 0);
    log_rule_B("align_single_line_brace_gap");
    as_br.m_gap = options::align_single_line_brace_gap();

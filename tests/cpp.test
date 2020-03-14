@@ -192,7 +192,7 @@
 30261  align_var_def_thresh_1.cfg           cpp/align_var_def_thresh.cpp
 30262  align_var_def_thresh_2.cfg           cpp/align_var_def_thresh.cpp
 30263  align_var_def_thresh_3.cfg           cpp/align_var_def_thresh.cpp
-
+30264  Issue_2668.cfg                       cpp/Issue_2668.cpp
 30265  long_br_cmt.cfg                      cpp/long_br_cmt.cpp
 
 30270  const_throw.cfg                      cpp/const_throw.cpp

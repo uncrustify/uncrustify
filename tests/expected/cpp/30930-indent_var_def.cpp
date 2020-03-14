@@ -5,5 +5,6 @@ float f;
 
    anotherFunction();
    char foo;
+
    somethingelse();
 }

@@ -21,6 +21,7 @@ void align_preprocessor(void)
    LOG_FUNC_ENTRY();
 
    AlignStack as;    // value macros
+
    log_rule_B("align_pp_define_span");
    as.Start(options::align_pp_define_span());
    log_rule_B("align_pp_define_gap");
@@ -28,6 +29,7 @@ void align_preprocessor(void)
    AlignStack *cur_as = &as;
 
    AlignStack asf;   // function macros
+
    log_rule_B("align_pp_define_span");
    asf.Start(options::align_pp_define_span());
    log_rule_B("align_pp_define_gap");

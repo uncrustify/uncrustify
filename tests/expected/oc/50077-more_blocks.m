@@ -22,6 +22,7 @@ void AllLinesInFile(char *f, vstr_t block)
         return;
     }
     char line[1024];
+
     while (fgets(line, 1024, fp))
     {
         block(line);

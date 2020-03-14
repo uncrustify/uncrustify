@@ -130,6 +130,7 @@ void split_off_angle_close(chunk_t *pc)
       return;
    }
    chunk_t nc = *pc;
+
    pc->str.resize(1);
    pc->orig_col_end = pc->orig_col + 1;
    set_chunk_type(pc, CT_ANGLE_CLOSE);

@@ -230,8 +230,9 @@ static void do_the_sort(chunk_t **chunks, size_t num_chunks)
    LOG_FMT(LSORT, "\n");
 
    size_t start_idx;
+
    log_rule_B("mod_sort_case_sensitive");
-   bool   take_care = options::mod_sort_case_sensitive();                  // Issue #2091
+   bool take_care = options::mod_sort_case_sensitive();                    // Issue #2091
 
    for (start_idx = 0; start_idx < (num_chunks - 1); start_idx++)
    {
@@ -255,7 +256,7 @@ static void do_the_sort(chunk_t **chunks, size_t num_chunks)
          chunks[min_idx] = chunks[start_idx];
       }
    }
-}
+} // do_the_sort
 
 
 void sort_imports(void)

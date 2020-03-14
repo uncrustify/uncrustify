@@ -1272,6 +1272,7 @@ static bool file_content_matches(const string &filename1, const string &filename
    int   len2 = 0;
    UINT8 buf1[1024];
    UINT8 buf2[1024];
+
    memset(buf1, 0, sizeof(buf1));
    memset(buf2, 0, sizeof(buf2));
 

@@ -287,6 +287,7 @@ string show_config(bool withDoc, bool only_not_default)
    fclose(stream);
 
    string out(buf);
+
    free(buf);
 
    return(out);
@@ -452,6 +453,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    char     *file = reinterpret_cast<char *>(_file);
 
    file_mem fm;
+
    fm.raw.clear();
    fm.data.clear();
    fm.enc = char_encoding_e::e_ASCII;

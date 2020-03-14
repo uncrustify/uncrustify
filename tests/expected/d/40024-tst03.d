@@ -9,11 +9,14 @@ void foo()
     result = (x < y);    // false if x or y is nan
     assert(e == 0);
     int array[17];
+
     array[] = value;
     int array[17];
+
     for (i = 0; i < array.length; i++)
         func(array[i]);
     int array[17];
+
     foreach (int value; array)
         func(value);
     int[] array;
@@ -45,6 +48,7 @@ void foo()
     typedef int    iHandle = -1;
     typedef void   *Handle = cast(void *)(-1);
     Handle h;
+
     h = func();
     if (h != Handle.init)
         ;

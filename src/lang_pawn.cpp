@@ -75,6 +75,7 @@ chunk_t *pawn_add_vsemi_after(chunk_t *pc)
       return(pc);
    }
    chunk_t chunk = *pc;
+
    set_chunk_type(&chunk, CT_VSEMICOLON);
    set_chunk_parent(&chunk, CT_NONE);
    chunk.str     = options::mod_pawn_semicolon() ? ";" : "";

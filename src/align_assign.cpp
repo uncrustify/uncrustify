@@ -34,19 +34,23 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
 
    // If we are aligning on a tabstop, we shouldn't right-align
    AlignStack as;    // regular assigns
+
    as.Start(span, thresh);
    log_rule_B("align_on_tabstop");
    as.m_right_align = !options::align_on_tabstop();
 
    AlignStack vdas;  // variable def assigns
+
    vdas.Start(span, thresh);
    vdas.m_right_align = as.m_right_align;
 
    std::deque<AlignStack> fcnDefault(1);
+
    fcnDefault.back().Start(span, thresh);
    fcnDefault.back().m_right_align = as.m_right_align;
 
    AlignStack fcnProto;
+
    fcnProto.Start(span, thresh);
    fcnProto.m_right_align = as.m_right_align;
 

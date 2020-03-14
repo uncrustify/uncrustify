@@ -35,6 +35,7 @@ chunk_t *align_func_param(chunk_t *start)
       mygap = options::align_func_params_gap();
    }
    AlignStack as;
+
    as.Start(myspan, mythresh);
    as.m_gap = mygap;
    log_rule_B("align_var_def_star_style");

@@ -167,6 +167,7 @@
     [self _selectColor:color];
     NSPoint origin = rect.origin;
     NSRect windowFrame = [_window frame];
+
     // The origin is the lower left; subtract the window's height
     origin.y -= NSHeight(windowFrame);
     // Center the popup window under the rect

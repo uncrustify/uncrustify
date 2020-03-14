@@ -357,6 +357,7 @@ static bool can_remove_braces(chunk_t *bopen)
       return(false);
    }
    const size_t level = bopen->level + 1;
+
    log_rule_B("mod_full_brace_nl");
    const size_t nl_max = options::mod_full_brace_nl();
    chunk_t      *prev  = nullptr;
@@ -502,6 +503,7 @@ static void examine_brace(chunk_t *bopen)
            __func__, __LINE__, bopen->orig_line, bopen->level);
 
    const size_t level = bopen->level + 1;
+
    log_rule_B("mod_full_brace_nl");
    const size_t nl_max = options::mod_full_brace_nl();
 
@@ -957,6 +959,7 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
    LOG_FUNC_ENTRY();
 
    chunk_t new_cmt = *ref;
+
    new_cmt.prev  = nullptr;
    new_cmt.next  = nullptr;
    new_cmt.flags = (ref->flags & PCF_COPY_FLAGS);
@@ -1307,6 +1310,7 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
            __func__, __LINE__, last->text(), last->orig_line);
 
    chunk_t chunk;
+
    set_chunk_type(&chunk, CT_BRACE_OPEN);
    set_chunk_parent(&chunk, CT_CASE);
    chunk.orig_line   = cl_colon->orig_line;
@@ -1324,6 +1328,7 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
    chunk.str       = "}";
 
    chunk_t *br_close = chunk_add_before(&chunk, last);
+
    newline_add_before(last);
 
    for (pc = chunk_get_next(br_open, scope_e::PREPROC);
@@ -1384,6 +1389,7 @@ static void process_if_chain(chunk_t *br_start)
            __func__, __LINE__, br_start->orig_line, br_start->orig_col);
 
    vector<chunk_t *> braces;
+
    braces.reserve(16);
 
    bool    must_have_braces = false;

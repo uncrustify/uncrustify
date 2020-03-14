@@ -25,6 +25,7 @@ void align_left_shift(void)
 
    chunk_t    *start = nullptr;
    AlignStack as;
+
    as.Start(255);
 
    chunk_t *pc = chunk_get_head();
