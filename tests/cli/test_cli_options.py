@@ -700,7 +700,10 @@ def main(args):
                 err_result_path=s_path_join(script_dir, 'results/%s.txt' % L),
                 err_result_manip=[reg_replace(r'\([0-9]+\)', ' '),
                                   reg_replace(r'\[line [0-9]+', '[ '),
-                                  reg_replace(r'\[0x[0-9]+:[_|,|1|A-Z]*', '['),
+                                  reg_replace(r'   \[[_|,|1|A-Z]*\]', '   []'),
+                                  reg_replace(r', \[[_|,|1|A-Z]*\]', ', []'),
+                                  reg_replace(r', \[0x[0-9]+:[_|,|1|A-Z]*\]', ', []'),
+                                  reg_replace(r'   \[0x[0-9]+:[_|,|1|A-Z]*\]', '   []'),
                                   reg_replace(RE_CALLSTACK, '[CallStack]'),
                                   reg_replace(RE_DO_SPACE, '')]
             ):
