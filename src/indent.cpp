@@ -1329,12 +1329,12 @@ void indent_text(void)
          && log_sev_on(LINDPC))
       {
          LOG_FMT(LINDPC, "%s(%d):\n", __func__, __LINE__);
-         LOG_FMT(LINDPC, "   -=[ pc->orig_line is %zu, orig_col is %zu %s ]=-, frm.size() is %zu\n",
+         LOG_FMT(LINDPC, "   -=[ pc->orig_line is %zu, orig_col is %zu, text() is '%s' ]=-, frm.size() is %zu\n",
                  pc->orig_line, pc->orig_col, pc->text(), frm.size());
 
          for (size_t ttidx = frm.size() - 1; ttidx > 0; ttidx--)
          {
-            LOG_FMT(LINDPC, "     [%zu %zu:%zu %s %s/%s tmp=%zu ind=%zu bri=%zu tab=%zu cont=%d lvl=%zu blvl=%zu]\n",
+            LOG_FMT(LINDPC, "     [%zu %zu:%zu '%s' %s/%s tmp=%zu indent=%zu brace_indent=%zu indent_tab=%zu indent_cont=%d level=%zu pc->brace_level=%zu]\n",
                     ttidx,
                     frm.at(ttidx).pc->orig_line,
                     frm.at(ttidx).pc->orig_col,
@@ -1659,14 +1659,11 @@ void indent_text(void)
                frm.top().brace_indent = frm.prev().indent_tmp;
                indent_column_set(frm.top().brace_indent);
             }
-            log_indent();
-
             frm.top().indent_tab = frm.top().indent;
             frm.top().indent_tmp = frm.top().indent;
             log_indent_tmp();
 
             frm.prev().indent_tmp = frm.top().indent_tmp;
-            log_indent_tmp();
          }
          else if (frm.paren_count != 0)
          {
