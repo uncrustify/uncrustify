@@ -1,185 +1,185 @@
-parse_cleanup : orig_line is 1, type is STRUCT, tos is 0, TOS.type is EOF, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 1, type is STRUCT, tos is 0, TOS.type is EOF, TOS.stage is NONE, []
 parse_cleanup : orig_line is 1, type is STRUCT, text() is 'struct'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
-parse_cleanup : orig_line is 1, type is TYPE, tos is 0, TOS.type is EOF, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 1, type is TYPE, tos is 0, TOS.type is EOF, TOS.stage is NONE, []
 parse_cleanup : orig_line is 1, type is TYPE, text() is 'TelegramIndex'
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 2
-parse_cleanup : orig_line is 2, type is BRACE_OPEN, tos is 0, TOS.type is EOF, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 2, type is BRACE_OPEN, tos is 0, TOS.type is EOF, TOS.stage is NONE, []
 parse_cleanup : orig_line is 2, type is BRACE_OPEN, text() is '{'
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 2
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 3
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-parse_cleanup : orig_line is 3, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 3, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 3, type is WORD, text() is 'TelegramIndex'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
-parse_cleanup : orig_line is 3, type is PAREN_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 3, type is PAREN_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 3, type is PAREN_OPEN, text() is '('
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 2
-parse_cleanup : orig_line is 3, type is QUALIFIER, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 3, type is QUALIFIER, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 3, type is QUALIFIER, text() is 'const'
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 1
-parse_cleanup : orig_line is 3, type is TYPE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 3, type is TYPE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 3, type is TYPE, text() is 'char'
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 2
-parse_cleanup : orig_line is 3, type is PTR_TYPE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 3, type is PTR_TYPE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 3, type is PTR_TYPE, text() is '*'
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 2
 parse_cleanup : frm.stmt_count is 5, frm.expr_count is 3
-parse_cleanup : orig_line is 3, type is WORD, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 3, type is WORD, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 3, type is WORD, text() is 'pN'
 parse_cleanup : frm.stmt_count is 5, frm.expr_count is 3
 parse_cleanup : frm.stmt_count is 6, frm.expr_count is 4
-parse_cleanup : orig_line is 3, type is COMMA, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 3, type is COMMA, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 3, type is COMMA, text() is ','
 parse_cleanup : frm.stmt_count is 6, frm.expr_count is 4
 parse_cleanup : frm.stmt_count is 7, frm.expr_count is 5
-parse_cleanup : orig_line is 3, type is TYPE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 3, type is TYPE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 3, type is TYPE, text() is 'unsigned'
 parse_cleanup : frm.stmt_count is 7, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 8, frm.expr_count is 1
-parse_cleanup : orig_line is 3, type is TYPE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 3, type is TYPE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 3, type is TYPE, text() is 'long'
 parse_cleanup : frm.stmt_count is 8, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 9, frm.expr_count is 2
-parse_cleanup : orig_line is 3, type is WORD, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 3, type is WORD, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 3, type is WORD, text() is 'nI'
 parse_cleanup : frm.stmt_count is 9, frm.expr_count is 2
 parse_cleanup : frm.stmt_count is 10, frm.expr_count is 3
-parse_cleanup : orig_line is 3, type is PAREN_CLOSE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 3, type is PAREN_CLOSE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 3, type is PAREN_CLOSE, text() is ')'
 parse_cleanup : frm.stmt_count is 10, frm.expr_count is 3
 parse_cleanup : frm.stmt_count is 11, frm.expr_count is 4
-parse_cleanup : orig_line is 3, type is COLON, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 3, type is COLON, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 3, type is COLON, text() is ':'
 parse_cleanup : frm.stmt_count is 11, frm.expr_count is 4
 parse_cleanup : frm.stmt_count is 12, frm.expr_count is 5
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-parse_cleanup : orig_line is 4, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 4, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 4, type is WORD, text() is 'pTelName'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
-parse_cleanup : orig_line is 4, type is PAREN_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 4, type is PAREN_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 4, type is PAREN_OPEN, text() is '('
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 2
-parse_cleanup : orig_line is 4, type is WORD, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 4, type is WORD, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 4, type is WORD, text() is 'pN'
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 1
-parse_cleanup : orig_line is 4, type is PAREN_CLOSE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 4, type is PAREN_CLOSE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 4, type is PAREN_CLOSE, text() is ')'
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 2
-parse_cleanup : orig_line is 4, type is COMMA, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 4, type is COMMA, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 4, type is COMMA, text() is ','
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 2
 parse_cleanup : frm.stmt_count is 5, frm.expr_count is 3
-parse_cleanup : orig_line is 5, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 5, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 5, type is WORD, text() is 'nTelIndex'
 parse_cleanup : frm.stmt_count is 5, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 6, frm.expr_count is 1
-parse_cleanup : orig_line is 5, type is PAREN_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 5, type is PAREN_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 5, type is PAREN_OPEN, text() is '('
 parse_cleanup : frm.stmt_count is 6, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 7, frm.expr_count is 2
-parse_cleanup : orig_line is 5, type is WORD, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 5, type is WORD, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 5, type is WORD, text() is 'n'
 parse_cleanup : frm.stmt_count is 7, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 8, frm.expr_count is 1
-parse_cleanup : orig_line is 5, type is PAREN_CLOSE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 5, type is PAREN_CLOSE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 5, type is PAREN_CLOSE, text() is ')'
 parse_cleanup : frm.stmt_count is 8, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 9, frm.expr_count is 2
-parse_cleanup : orig_line is 6, type is BRACE_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 6, type is BRACE_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 6, type is BRACE_OPEN, text() is '{'
 parse_cleanup : frm.stmt_count is 9, frm.expr_count is 2
 parse_cleanup : frm.stmt_count is 10, frm.expr_count is 3
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-parse_cleanup : orig_line is 7, type is BRACE_CLOSE, tos is 2, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 7, type is BRACE_CLOSE, tos is 2, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 7, type is BRACE_CLOSE, text() is '}'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-parse_cleanup : orig_line is 9, type is INV, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 9, type is INV, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 9, type is INV, text() is '~'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
-parse_cleanup : orig_line is 9, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 9, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 9, type is WORD, text() is 'TelegramIndex'
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 1
-parse_cleanup : orig_line is 9, type is PAREN_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 9, type is PAREN_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 9, type is PAREN_OPEN, text() is '('
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 2
-parse_cleanup : orig_line is 9, type is PAREN_CLOSE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 9, type is PAREN_CLOSE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 9, type is PAREN_CLOSE, text() is ')'
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 1
-parse_cleanup : orig_line is 10, type is BRACE_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 10, type is BRACE_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 10, type is BRACE_OPEN, text() is '{'
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 5, frm.expr_count is 2
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-parse_cleanup : orig_line is 11, type is BRACE_CLOSE, tos is 2, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 11, type is BRACE_CLOSE, tos is 2, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 11, type is BRACE_CLOSE, text() is '}'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-parse_cleanup : orig_line is 13, type is QUALIFIER, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 13, type is QUALIFIER, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 13, type is QUALIFIER, text() is 'const'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
-parse_cleanup : orig_line is 13, type is TYPE, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 13, type is TYPE, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 13, type is TYPE, text() is 'char'
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 2
-parse_cleanup : orig_line is 13, type is PTR_TYPE, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 13, type is PTR_TYPE, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 13, type is PTR_TYPE, text() is '*'
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 2
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 3
-parse_cleanup : orig_line is 13, type is QUALIFIER, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 13, type is QUALIFIER, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 13, type is QUALIFIER, text() is 'const'
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 3
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 4
-parse_cleanup : orig_line is 13, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 13, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 13, type is WORD, text() is 'pTelName'
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 4
 parse_cleanup : frm.stmt_count is 5, frm.expr_count is 5
-parse_cleanup : orig_line is 13, type is SEMICOLON, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 13, type is SEMICOLON, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 13, type is SEMICOLON, text() is ';'
 parse_cleanup : frm.stmt_count is 5, frm.expr_count is 5
 parse_cleanup : frm.stmt_count is 6, frm.expr_count is 6
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-parse_cleanup : orig_line is 14, type is TYPE, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 14, type is TYPE, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 14, type is TYPE, text() is 'unsigned'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
-parse_cleanup : orig_line is 14, type is TYPE, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 14, type is TYPE, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 14, type is TYPE, text() is 'long'
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 2
-parse_cleanup : orig_line is 14, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x0:]
+parse_cleanup : orig_line is 14, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 14, type is WORD, text() is 'nTelIndex'
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 2
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 3
-parse_cleanup : orig_line is 14, type is SEMICOLON, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 14, type is SEMICOLON, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 14, type is SEMICOLON, text() is ';'
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 3
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 4
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-parse_cleanup : orig_line is 15, type is BRACE_CLOSE, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 15, type is BRACE_CLOSE, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig_line is 15, type is BRACE_CLOSE, text() is '}'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-parse_cleanup : orig_line is 15, type is SEMICOLON, tos is 0, TOS.type is EOF, TOS.stage is NONE, [0x100000000:PUNCTUATOR]
+parse_cleanup : orig_line is 15, type is SEMICOLON, tos is 0, TOS.type is EOF, TOS.stage is NONE, []
 parse_cleanup : orig_line is 15, type is SEMICOLON, text() is ';'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1

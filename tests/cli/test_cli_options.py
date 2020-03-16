@@ -689,8 +689,7 @@ def main(args):
     # Debug Options:
     #   -L
     # look at src/log_levels.h
-    # TODO: restore the tests (later): Ls_A = ['9', '21', '25', '28', '31', '36', '66', '92']
-    Ls_A = ['9', '21', '25', '36', '66', '92']
+    Ls_A = ['9', '21', '25', '28', '31', '36', '66', '92']
     for L in Ls_A:
         if not check_uncrustify_output(
                 uncr_bin,
@@ -701,6 +700,10 @@ def main(args):
                 err_result_path=s_path_join(script_dir, 'results/%s.txt' % L),
                 err_result_manip=[reg_replace(r'\([0-9]+\)', ' '),
                                   reg_replace(r'\[line [0-9]+', '[ '),
+                                  reg_replace(r'   \[[_|,|1|A-Z]*\]', '   []'),
+                                  reg_replace(r', \[[_|,|1|A-Z]*\]', ', []'),
+                                  reg_replace(r', \[0x[0-9]+:[_|,|1|A-Z]*\]', ', []'),
+                                  reg_replace(r'   \[0x[0-9]+:[_|,|1|A-Z]*\]', '   []'),
                                   reg_replace(RE_CALLSTACK, '[CallStack]'),
                                   reg_replace(RE_DO_SPACE, '')]
             ):
