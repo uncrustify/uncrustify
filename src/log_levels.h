@@ -17,6 +17,7 @@
  *
  * The user defines which log level is active using the
  * -L or -log option.
+ * use -L A to set all the levels
  * All messages which have a level that is active will be stored to the log
  * file.
  * All other log messages will be discarded.
