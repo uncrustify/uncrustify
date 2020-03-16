@@ -381,6 +381,7 @@
 09618  Issue_2360-b.cfg                     c/Issue_2360.c
 09619  Issue_2411.cfg                       c/Issue_2411.c
 09620  Issue_2640.cfg                       c/Issue_2640.c
+09621  preproc-cleanup.cfg                  c/pp-before-func-def.c
 
 10005  empty.cfg                            c/i1270.c
 
