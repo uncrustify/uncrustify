@@ -45,6 +45,7 @@
 #include "tokenize.h"
 #include "tokenize_cleanup.h"
 #include "unc_ctype.h"
+#include "unc_tools.h"
 #include "uncrustify_types.h"
 #include "uncrustify_version.h"
 #include "unicode.h"
@@ -1797,6 +1798,7 @@ static void uncrustify_start(const deque<int> &data)
 {
    // Parse the text into chunks
    tokenize(data, nullptr);
+   prot_the_line(__func__, __LINE__, 0, 0);
 
    cpd.unc_stage = unc_stage_e::HEADER;
 
