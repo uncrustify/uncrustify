@@ -50,6 +50,7 @@ void prot_the_line(const char *func_name, int theLine, unsigned int actual_line,
    {
       // use the option debug_line_number_to_protocol.
       actual_line = options::debug_line_number_to_protocol();
+
       if (actual_line == 0)
       {
          // don't make any protocol.
