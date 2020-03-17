@@ -1,0 +1,2 @@
+struct BaseStruct {};
+struct : BaseStruct {};
