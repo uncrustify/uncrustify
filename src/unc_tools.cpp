@@ -37,10 +37,10 @@ static size_t tokenCounter;
  *   prot_the_line(__func__, __LINE__, 6, 5);
  *   prot_the_source(__LINE__);
  *   log_pcf_flags(LSYS, pc->flags);
-
+ *
  * if actual_line is zero, use the option debug_line_number_to_protocol.
  * if the value is zero, don't make any protocol and return.
-
+ *
  * if partNumber is zero, all the tokens of the line are shown,
  * if partNumber is NOT zero, only the token with this partNumber is shown.
  */
