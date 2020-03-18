@@ -1798,7 +1798,7 @@ static void uncrustify_start(const deque<int> &data)
 {
    // Parse the text into chunks
    tokenize(data, nullptr);
-   prot_the_line(__func__, __LINE__, 0, 0);
+   PROT_THE_LINE
 
    cpd.unc_stage = unc_stage_e::HEADER;
 

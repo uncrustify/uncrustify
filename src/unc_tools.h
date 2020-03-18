@@ -13,6 +13,12 @@
 #include "prototypes.h"
 #include "uncrustify_types.h"
 
+#if defined DEBUG
+#define PROT_THE_LINE    prot_the_line(__func__, __LINE__, 0, 0);
+#else
+#define PROT_THE_LINE    /* do nothing */;
+#endif
+
 
 void prot_the_line(const char *func_name, int theLine, unsigned int actual_line, size_t partNumber);
 
