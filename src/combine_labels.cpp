@@ -372,6 +372,10 @@ void combine_labels(void)
             {
                // ignore it - Java assert thing
             }
+            else if (get_chunk_parent_type(next) == CT_STRUCT)
+            {
+               // ignore it
+            }
             else
             {
                tmp = chunk_get_next_ncnl(next);

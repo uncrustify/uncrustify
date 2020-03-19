@@ -89,6 +89,8 @@
 30075  empty.cfg                            cpp/goto.cpp
 30076  Issue_2594.cfg                       cpp/Issue_2594.cpp
 30077  Issue_2596.cfg                       cpp/Issue_2596.cpp
+30078  empty.cfg                            cpp/Issue_2672-a.cpp
+30079  empty.cfg                            cpp/Issue_2672-b.cpp
 
 30080  nl_brace_brace-a.cfg                 cpp/nl_brace_brace.cpp
 30081  Issue_2383.cfg                       cpp/Issue_2383.cpp
