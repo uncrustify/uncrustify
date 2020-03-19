@@ -124,6 +124,8 @@
 00202  case-2.cfg                           c/case.c
 00203  case-3.cfg                           c/case.c
 00204  bug_1718.cfg                         c/bug_1718.c
+00205  nl_before_return_false.cfg           c/case-nl_before_return.c
+00206  nl_before_return_true.cfg            c/case-nl_before_return.c
 
 
 # structure initializers
