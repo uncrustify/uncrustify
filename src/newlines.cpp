@@ -1986,18 +1986,22 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
       {
          chunk_t *next = chunk_get_next_ncnl(pc);
 
+         if (chunk_is_token(next, CT_PTR_TYPE))               // Issue #2692
+         {
+            next = chunk_get_next_ncnl(next);
+         }
+
          if (next == nullptr)
          {
             break;
          }
          LOG_FMT(LNL1LINE, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, text() is '%s'\n",
                  __func__, __LINE__, next->orig_line, next->orig_col, next->text());
-         //prev = chunk_get_prev_ncnlni(pc);   // Issue #2279
          prev = chunk_get_prev_type(pc, CT_SEMICOLON, pc->level);
 
          if (prev == nullptr)
          {
-            prev = chunk_get_prev_ncnlni(pc);   // Issue #2279
+            prev = chunk_get_prev_type(pc, CT_BRACE_OPEN, pc->level - 1);      // Issue #2692
          }
 
          if (  chunk_is_token(prev, CT_STRING)
