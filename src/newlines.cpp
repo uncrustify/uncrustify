@@ -2515,7 +2515,7 @@ static void newline_before_return(chunk_t *start)
    if (  pc == nullptr
       || (  chunk_is_token(pc, CT_BRACE_OPEN)
          || chunk_is_token(pc, CT_VBRACE_OPEN)
-         || get_chunk_parent_type(start) == CT_CASE)) // Issue #1257
+         || chunk_is_token(pc, CT_CASE_COLON)))
    {
       return;
    }

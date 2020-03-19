@@ -5,10 +5,12 @@ switch (sometext)
         return 0;
     case "b":
         Console.WrieLine("hello world\n");
+
         return 0;
     case "c":
     {
         Console.WrieLine("hello world\n");
+
         return 0;
     }
     case "d":
@@ -26,6 +28,7 @@ switch (sometext)
         {
             int a;
             int b;
+
             return 0;
         }
 
@@ -41,6 +44,7 @@ switch (sometext)
         for (i = 0; i < 10 i++)
         {
             a += i;
+
             return 0;
         }
     case "i":
@@ -49,8 +53,11 @@ switch (sometext)
         {
             int a;
             int b;
+
             return 0;
         }
 
         return 1;
+    default:
+        return 0;
 }
