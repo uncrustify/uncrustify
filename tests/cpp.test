@@ -111,6 +111,7 @@
 30095  ben_017.cfg                          cpp/bug_485.cpp
 30096  bug_1854.cfg                         cpp/bug_1854.cpp
 30097  align-1.cfg                          cpp/issue_1946.cpp
+30098  Issue_2692.cfg                       cpp/Issue_2692.cpp
 30099  sp_arith-f.cfg                       cpp/bug_1127.cpp
 
 30100  nl_template-f.cfg                    cpp/templates.cpp
