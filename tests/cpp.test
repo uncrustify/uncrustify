@@ -474,6 +474,8 @@
 31711  string_replace_tab_chars-t.cfg       cpp/string_replace_tab_chars.cpp
 
 31720  ben_031.cfg                          cpp/bit-colon.cpp
+31721  Issue_2689.cfg                       cpp/Issue_2689.cpp
+
 31730  sp_arith-a.cfg                       cpp/ms-style-ref.cpp
 31740  empty.cfg                            cpp/I2102.cpp
 

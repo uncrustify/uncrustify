@@ -4037,12 +4037,13 @@ static chunk_t *mark_variable_definition(chunk_t *start)
            __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
            get_token_name(pc->type));
 
-   pc = start;
+   // Issue #596
+   bool bit_field_colon_is_present = false;
 
-   // issue #596
    while (go_on(pc, start))
    {
-      if (chunk_is_token(pc, CT_WORD) || chunk_is_token(pc, CT_FUNC_CTOR_VAR))
+      if (  chunk_is_token(pc, CT_WORD)
+         || chunk_is_token(pc, CT_FUNC_CTOR_VAR))
       {
          auto const orig_flags = pc->flags;
 
@@ -4062,7 +4063,9 @@ static chunk_t *mark_variable_definition(chunk_t *start)
                  pcf_flags_str(orig_flags).c_str(),
                  pcf_flags_str(pc->flags).c_str());
       }
-      else if (chunk_is_star(pc) || chunk_is_msref(pc))
+      else if (  !bit_field_colon_is_present                      // Issue #2689
+              && (  chunk_is_star(pc)
+                 || chunk_is_msref(pc)))
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
@@ -4070,10 +4073,15 @@ static chunk_t *mark_variable_definition(chunk_t *start)
       {
          set_chunk_type(pc, CT_BYREF);
       }
-      else if (chunk_is_token(pc, CT_SQUARE_OPEN) || chunk_is_token(pc, CT_ASSIGN))
+      else if (  chunk_is_token(pc, CT_SQUARE_OPEN)
+              || chunk_is_token(pc, CT_ASSIGN))
       {
          pc = skip_expression(pc);
          continue;
+      }
+      else if (chunk_is_token(pc, CT_COLON))
+      {
+         bit_field_colon_is_present = true;                    // Issue #2689
       }
       pc = chunk_get_next_ncnl(pc);
    }
