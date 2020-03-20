@@ -297,6 +297,7 @@ static chunk_tag_t keywords[] =
    { "signal",                          CT_ACCESS,           LANG_VALA                                                                   },
    { "signals",                         CT_ACCESS,           LANG_CPP                                                                    },
    { "signed",                          CT_TYPE,             LANG_C                                                                      },
+   { "size_t",                          CT_TYPE,             LANG_ALLC                                                                   },
    { "sizeof",                          CT_SIZEOF,           LANG_C | LANG_CS | LANG_VALA | LANG_PAWN                                    }, // PAWN
    { "sleep",                           CT_SIZEOF,           LANG_PAWN                                                                   }, // PAWN
    { "stackalloc",                      CT_NEW,              LANG_CS                                                                     },
