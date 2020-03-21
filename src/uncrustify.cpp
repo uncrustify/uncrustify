@@ -1031,6 +1031,13 @@ static bool read_stdin(file_mem &fm)
    fm.data.clear();
    fm.enc = char_encoding_e::e_ASCII;
 
+   // Re-open stdin in binary mode to preserve newline characters
+#ifdef WIN32
+   _setmode(_fileno(stdin), _O_BINARY);
+#else
+   freopen(NULL, "rb", stdin);
+#endif
+
    while (!feof(stdin))
    {
       int len = fread(buf, 1, sizeof(buf), stdin);
