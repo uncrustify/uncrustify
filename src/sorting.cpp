@@ -226,6 +226,20 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
             return(-1);
          }
       }
+
+      if (options::mod_sort_incl_import_prioritize_angle_over_quotes())
+      {
+         log_rule_B("mod_sort_incl_import_prioritize_angle_over_quotes");
+
+         if (s1.startswith("<") && s2.startswith("\""))
+         {
+            return(-1);
+         }
+         else if (s1.startswith("\"") && s2.startswith("<"))
+         {
+            return(1);
+         }
+      }
       int ppc1 = get_chunk_priority(pc1);
       int ppc2 = get_chunk_priority(pc2);
 
