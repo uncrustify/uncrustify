@@ -683,6 +683,7 @@ mod_sort_case_sensitive         = false
 mod_sort_import                 = false
 mod_sort_using                  = false
 mod_sort_include                = false
+mod_sort_incl_import_prioritize_filename = false
 mod_move_case_break             = false
 mod_case_brace                  = ignore
 mod_remove_empty_return         = false
