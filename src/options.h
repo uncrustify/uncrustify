@@ -3435,6 +3435,11 @@ mod_sort_incl_import_prioritize_filename;
 extern Option<bool>
 mod_sort_incl_import_prioritize_extensionless;
 
+// Whether to prioritize '#include' and '#import' statements that contain
+// angle over quotes when sorting is enabled.
+extern Option<bool>
+mod_sort_incl_import_prioritize_angle_over_quotes;
+
 // Whether to ignore file extension in '#include' and '#import' statements
 // for sorting comparison.
 extern Option<bool>
