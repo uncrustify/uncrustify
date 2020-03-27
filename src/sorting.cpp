@@ -150,6 +150,17 @@ static unc_text get_text_without_ext(const unc_text &chunk_text)
 
 
 /**
+ * Returns true if unc_text has "." which implies extension.
+ */
+static bool has_dot(const unc_text &chunk_text)
+{
+   int idx = chunk_text.rfind(".", chunk_text.size() - 1);
+
+   return(idx != -1);
+}
+
+
+/**
  * Returns chunk string required for sorting.
  */
 static unc_text chunk_sort_str(chunk_t *pc)
@@ -197,6 +208,22 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
          else if (!s1_contains_filename && s2_contains_filename)
          {
             return(1);
+         }
+      }
+
+      if (options::mod_sort_incl_import_prioritize_extensionless())
+      {
+         log_rule_B("mod_sort_incl_import_prioritize_extensionless");
+         const bool s1_has_dot = has_dot(s1_ext);
+         const bool s2_has_dot = has_dot(s2_ext);
+
+         if (s1_has_dot && !s2_has_dot)
+         {
+            return(1);
+         }
+         else if (!s1_has_dot && s2_has_dot)
+         {
+            return(-1);
          }
       }
       int ppc1 = get_chunk_priority(pc1);

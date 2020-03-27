@@ -2779,6 +2779,10 @@ mod_sort_include                = false    # true/false
 # filename without extension when sorting is enabled.
 mod_sort_incl_import_prioritize_filename = false    # true/false
 
+# Whether to prioritize '#include' and '#import' statements that does not
+# contain extensions when sorting is enabled.
+mod_sort_incl_import_prioritize_extensionless = false    # true/false
+
 # Whether to ignore file extension in '#include' and '#import' statements
 # for sorting comparison.
 mod_sort_incl_import_ignore_extension = false    # true/false
