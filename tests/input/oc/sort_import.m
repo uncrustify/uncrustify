@@ -3,9 +3,11 @@
 #import "fff"
 #import "eee"
 
-// should be aaa, ccc
 #import "ccc"
 #import "aaa"
 // should be just bbb
 #import "bbb"
 
+#import "sort_import.h"
+#import "sort_import+internal.h"
+#import "sort_import+public.h"

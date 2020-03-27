@@ -109,6 +109,32 @@ static int get_chunk_priority(chunk_t *pc)
 }
 
 
+/**
+ * Returns true if the text contains filename without extension.
+ */
+static bool text_contains_filename_without_ext(const char *text)
+{
+   std::string filepath             = cpd.filename;
+   size_t      slash_idx            = filepath.find_last_of("/\\");
+   std::string filename_without_ext = filepath;
+
+   if (slash_idx != std::string::npos && slash_idx < (filepath.size() - 1))
+   {
+      std::string filename = filepath.substr(slash_idx + 1);
+      size_t      dot_idx  = filename.find_last_of('.');
+      filename_without_ext = filename.substr(0, dot_idx);
+   }
+   const std::regex  special_chars      = std::regex(R"([-[\]{}()*+?.,\^$|#\s])");
+   const std::string sanitized_filename = std::regex_replace(filename_without_ext, special_chars, R"(\$&)");
+   const std::regex  filename_pattern   = std::regex("\\S?" + sanitized_filename + "\\b.*");
+
+   return(std::regex_match(text, filename_pattern));
+}
+
+
+/**
+ * Returns chunk string required for sorting.
+ */
 static unc_text chunk_sort_str(chunk_t *pc)
 {
    if (get_chunk_parent_type(pc) == CT_PP_INCLUDE)
@@ -135,6 +161,24 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
 
    while (pc1 != nullptr && pc2 != nullptr)
    {
+      auto const &s1 = chunk_sort_str(pc1);
+      auto const &s2 = chunk_sort_str(pc2);
+
+      if (options::mod_sort_incl_import_prioritize_filename())
+      {
+         log_rule_B("mod_sort_incl_import_prioritize_filename");
+         bool s1_contains_filename = text_contains_filename_without_ext(s1.c_str());
+         bool s2_contains_filename = text_contains_filename_without_ext(s2.c_str());
+
+         if (s1_contains_filename && !s2_contains_filename)
+         {
+            return(-1);
+         }
+         else if (!s1_contains_filename && s2_contains_filename)
+         {
+            return(1);
+         }
+      }
       int ppc1 = get_chunk_priority(pc1);
       int ppc2 = get_chunk_priority(pc2);
 
@@ -146,9 +190,8 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
               __func__, __LINE__, pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
               __func__, __LINE__, pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
-      auto const &s1     = chunk_sort_str(pc1);
-      auto const &s2     = chunk_sort_str(pc2);
-      int        ret_val = unc_text::compare(s1, s2, std::min(s1.size(), s2.size()), tcare);
+
+      int ret_val = unc_text::compare(s1, s2, std::min(s1.size(), s2.size()), tcare);
       LOG_FMT(LSORT, "%s(%d): ret_val is %d\n",
               __func__, __LINE__, ret_val);
 
