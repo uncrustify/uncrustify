@@ -11,3 +11,15 @@
 #import "sort_import+internal.h"
 #import "sort_import+public.h"
 #import "sort_import.h"
+
+#import "Action+Internal.h"
+#import "Action+Public.h"
+#import "Action.h"
+#import <UIKit/UIKit.h>
+
+#include "Test+Internal.h"
+#include "Test.h"
+
+#import "Something.h"
+#import "Something_Internal.h"
+#import "Something_Public.h"
