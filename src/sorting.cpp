@@ -133,6 +133,23 @@ static bool text_contains_filename_without_ext(const char *text)
 
 
 /**
+ * Get chunk text without the extension.
+ */
+static unc_text get_text_without_ext(const unc_text &chunk_text)
+{
+   unc_text result = chunk_text;
+   int      idx    = result.rfind(".", result.size() - 1);
+
+   if (idx == -1)
+   {
+      return(result);
+   }
+   result.erase(idx, result.size() - idx);
+   return(result);
+}
+
+
+/**
  * Returns chunk string required for sorting.
  */
 static unc_text chunk_sort_str(chunk_t *pc)
@@ -161,8 +178,11 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
 
    while (pc1 != nullptr && pc2 != nullptr)
    {
-      auto const &s1 = chunk_sort_str(pc1);
-      auto const &s2 = chunk_sort_str(pc2);
+      auto const &s1_ext = chunk_sort_str(pc1);
+      auto const &s2_ext = chunk_sort_str(pc2);
+
+      auto const &s1 = (options::mod_sort_incl_import_ignore_extension()) ? get_text_without_ext(s1_ext) : s1_ext;
+      auto const &s2 = (options::mod_sort_incl_import_ignore_extension()) ? get_text_without_ext(s2_ext) : s2_ext;
 
       if (options::mod_sort_incl_import_prioritize_filename())
       {

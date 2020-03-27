@@ -35,6 +35,7 @@
 
 50030  sort_imports.cfg                     oc/sort_import.m
 50031  mod_sort_incl_import_prioritize_filename.cfg oc/sort_import.m
+50032  mod_sort_incl_import_ignore_extension.cfg oc/sort_import.m
 
 50040  objc_complex_method.cfg              oc/complex_method.m
 

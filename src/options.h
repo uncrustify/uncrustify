@@ -3430,6 +3430,11 @@ mod_sort_include;
 extern Option<bool>
 mod_sort_incl_import_prioritize_filename;
 
+// Whether to ignore file extension in '#include' and '#import' statements
+// for sorting comparison.
+extern Option<bool>
+mod_sort_incl_import_ignore_extension;
+
 // Whether to move a 'break' that appears after a fully braced 'case' before
 // the close brace, as in 'case X: { ... } break;' => 'case X: { ... break; }'.
 extern Option<bool>
