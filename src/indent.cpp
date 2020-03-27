@@ -2158,12 +2158,14 @@ void indent_text(void)
              * indented at brace level
              */
             indent_column_set(frm.top().indent_tmp);
-            // Issue 1161
+            // Issues 1161 + 2704
             // comments before 'access specifier' need to be aligned with the 'access specifier'
+            // unless it is a Doxygen comment
             chunk_t *pct = pc;
 
             while (  ((pct = chunk_get_prev_nnl(pct)) != nullptr)
-                  && chunk_is_comment(pct))
+                  && chunk_is_comment(pct)
+                  && !chunk_is_Doxygen_comment(pct))
             {
                chunk_t *t2 = chunk_get_prev(pct);
 
