@@ -10,6 +10,7 @@
 
 #include "chunk_list.h"
 #include "log_rules.h"
+#include "newlines.h"
 #include "prototypes.h"
 
 #include <regex>
@@ -58,6 +59,22 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare = false);
  * So, we do a min sort.
  */
 static void do_the_sort(chunk_t **chunks, size_t num_chunks);
+
+
+#define MARK_CHANGE()    mark_change(__func__, __LINE__)
+
+
+static void mark_change(const char *func, size_t line)
+{
+   LOG_FUNC_ENTRY();
+   cpd.changes++;
+
+   if (cpd.pass_count == 0)
+   {
+      LOG_FMT(LCHANGE, "%s(%d): change %d on %s:%zu\n",
+              __func__, __LINE__, cpd.changes, func, line);
+   }
+}
 
 
 static void prepare_categories()
@@ -356,20 +373,142 @@ static void do_the_sort(chunk_t **chunks, size_t num_chunks)
       {
          chunk_swap_lines(chunks[start_idx], chunks[min_idx]);
 
-         // Don't need to swap, since we only want the side-effects
-         chunks[min_idx] = chunks[start_idx];
+         if (options::mod_sort_incl_import_grouping_enabled())
+         {
+            chunk_t *pc = chunks[min_idx];
+            chunks[min_idx]   = chunks[start_idx];
+            chunks[start_idx] = pc;
+         }
+         else
+         {
+            // Don't need to swap, since we only want the side-effects
+            chunks[min_idx] = chunks[start_idx];
+         }
       }
    }
 } // do_the_sort
+
+
+/**
+ * Remove blank lines between chunks.
+ */
+static void remove_blank_lines_between_imports(chunk_t **chunks, size_t num_chunks)
+{
+   LOG_FUNC_ENTRY();
+
+   if (num_chunks < 2)
+   {
+      return;
+   }
+
+   for (size_t idx = 0; idx < (num_chunks - 1); idx++)
+   {
+      chunk_t *chunk1 = chunk_get_next_nl(chunks[idx]);
+      chunk1->nl_count = 1;
+      MARK_CHANGE();
+   }
+}
+
+
+/**
+ * Add blank line before the chunk.
+ */
+static void blankline_add_before(chunk_t *pc)
+{
+   chunk_t *newline = newline_add_before(chunk_first_on_line(pc));
+
+   if (newline->nl_count < 2)
+   {
+      double_newline(newline);
+   }
+}
+
+
+/**
+ * Group imports.
+ */
+static void group_imports_by_adding_newlines(chunk_t **chunks, size_t num_chunks)
+{
+   LOG_FUNC_ENTRY();
+
+   // Group imports based on first character, typically quote or angle.
+   int c_idx      = -1;
+   int c_idx_last = -1;
+
+   for (size_t idx = 0; idx < num_chunks; idx++)
+   {
+      if (chunks[idx]->str.size() > 0)
+      {
+         c_idx = chunks[idx]->str.at(0);
+      }
+      else
+      {
+         c_idx = -1;
+      }
+
+      if (c_idx_last != c_idx && idx > 0)
+      {
+         blankline_add_before(chunks[idx]);
+      }
+      c_idx_last = c_idx;
+   }
+
+   // Group imports based on having extension.
+   bool chunk_has_dot      = false;
+   bool chunk_last_has_dot = false;
+
+   for (size_t idx = 0; idx < num_chunks; idx++)
+   {
+      chunk_has_dot = has_dot(chunks[idx]->str);
+
+      if (chunk_last_has_dot != chunk_has_dot && idx > 0)
+      {
+         blankline_add_before(chunks[idx]);
+      }
+      chunk_last_has_dot = chunk_has_dot;
+   }
+
+   // Group imports based on priority defined by config.
+   int chunk_pri      = -1;
+   int chunk_pri_last = -1;
+
+   for (size_t idx = 0; idx < num_chunks; idx++)
+   {
+      chunk_pri = get_chunk_priority(chunks[idx]);
+
+      if (chunk_pri_last != chunk_pri && idx > 0)
+      {
+         blankline_add_before(chunks[idx]);
+      }
+      chunk_pri_last = chunk_pri;
+   }
+
+   // Group imports that contain filename pattern.
+   bool chunk_has_filename      = false;
+   bool last_chunk_has_filename = false;
+
+   for (size_t idx = 0; idx < num_chunks; idx++)
+   {
+      auto const &chunk_text = chunk_sort_str(chunks[idx]);
+      chunk_has_filename = text_contains_filename_without_ext(chunk_text.c_str());
+
+      if (!chunk_has_filename && last_chunk_has_filename)
+      {
+         blankline_add_before(chunks[idx]);
+      }
+      last_chunk_has_filename = chunk_has_filename;
+   }
+} // group_imports_by_adding_newlines
 
 
 void sort_imports(void)
 {
    LOG_FUNC_ENTRY();
    chunk_t *chunks[MAX_NUMBER_TO_SORT];  // MAX_NUMBER_TO_SORT should be enough, right?
-   size_t  num_chunks = 0;
-   chunk_t *p_last    = nullptr;
-   chunk_t *p_imp     = nullptr;
+   size_t  num_chunks  = 0;
+   chunk_t *p_last     = nullptr;
+   chunk_t *p_imp      = nullptr;
+   chunk_t *p_imp_last = nullptr;
 
    prepare_categories();
 
@@ -377,6 +516,14 @@ void sort_imports(void)
 
    while (pc != nullptr)
    {
+      // Simple optimization to limit the sorting. Any MAX_LINES_TO_CHECK_AFTER_INCLUDE lines after last
+      // import is seen are ignore from sorting.
+      if (  options::mod_sort_incl_import_grouping_enabled()
+         && p_imp_last != nullptr
+         && (pc->orig_line - p_imp_last->orig_line) > MAX_LINES_TO_CHECK_FOR_SORT_AFTER_INCLUDE)
+      {
+         break;
+      }
       chunk_t *next = chunk_get_next(pc);
 
       if (chunk_is_newline(pc))
@@ -406,17 +553,31 @@ void sort_imports(void)
          }
 
          if (  !did_import
-            || pc->nl_count > 1
+            || (  !options::mod_sort_incl_import_grouping_enabled()
+               && pc->nl_count > 1)
+            || (  options::mod_sort_incl_import_grouping_enabled()
+               && p_imp_last != nullptr
+               && (pc->orig_line - p_imp_last->orig_line) > MAX_GAP_THRESHOLD_BETWEEN_INCLUDE_TO_SORT)
             || next == nullptr)
          {
             if (num_chunks > 1)
             {
-               do_the_sort(chunks, num_chunks);
+               if (options::mod_sort_incl_import_grouping_enabled())
+               {
+                  remove_blank_lines_between_imports(chunks, num_chunks);
+                  do_the_sort(chunks, num_chunks);
+                  group_imports_by_adding_newlines(chunks, num_chunks);
+               }
+               else
+               {
+                  do_the_sort(chunks, num_chunks);
+               }
             }
             num_chunks = 0;
          }
-         p_imp  = nullptr;
-         p_last = nullptr;
+         p_imp_last = p_imp;
+         p_imp      = nullptr;
+         p_last     = nullptr;
       }
       else if (chunk_is_token(pc, CT_IMPORT))
       {

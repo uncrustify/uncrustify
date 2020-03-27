@@ -11,8 +11,9 @@
 #include "uncrustify_types.h"
 #include <stdlib.h>
 
-#define MAX_NUMBER_TO_SORT    256
-
+#define MAX_NUMBER_TO_SORT                           256
+#define MAX_LINES_TO_CHECK_FOR_SORT_AFTER_INCLUDE    128
+#define MAX_GAP_THRESHOLD_BETWEEN_INCLUDE_TO_SORT    32
 
 /**
  * alphabetically sort the #include or #import
