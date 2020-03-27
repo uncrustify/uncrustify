@@ -23,3 +23,10 @@
 #import "Something.h"
 #import "Something_Internal.h"
 #import "Something_Public.h"
+
+#import "AAA"
+#import "BBB.h"
+#include "CCC.h"
+#include "DDD"
+#import "EEE.h"
+#import <KKK>
