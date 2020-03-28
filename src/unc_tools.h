@@ -37,4 +37,6 @@ void dump_out(unsigned int type);
 void dump_in(unsigned int type);
 
 
+size_t get_A_Number();
+
 #endif /* UNC_TOOLS_H_INCLUDED */

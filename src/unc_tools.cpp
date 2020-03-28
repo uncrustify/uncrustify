@@ -112,6 +112,7 @@ void prot_the_line(const char *func_name, int theLine, unsigned int actual_line,
                LOG_FMT(LGUY, " pc->flags: ");
                log_pcf_flags(LGUY, pc->flags);
             }
+            LOG_FMT(LALAGAIN, "   align.right_align is %s\n", pc->align.right_align ? "TRUE" : "FALSE");
          }
       }
    }
@@ -407,3 +408,13 @@ void dump_in(unsigned int type)
       exit(EX_SOFTWARE);
    }
 } // dump_in
+
+
+size_t number = 0;
+
+
+size_t get_A_Number()
+{
+   number = number + 1;
+   return(number);
+}
