@@ -5,3 +5,7 @@
 # CI
 .travis.yml     @mihaipopescu
 appveyor.yml    @mihaipopescu
+
+# emscripten
+/emscripten/    @CDanU
+/src/uncrustify_emscripten.cpp @CDanU
