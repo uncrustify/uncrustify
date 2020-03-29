@@ -193,6 +193,11 @@ void align_same_func_call_params(void)
          {
             LOG_FMT(LASFCP, "%s(%d): chunks[%zu] is [%s]\n", __func__, __LINE__, idx, chunks[idx]->text());
             // Issue #2368
+            if (array_of_AlignStack.size() == 0)
+            {
+               LOG_FMT(LASFCP, "%s(%d): resize to 1\n", __func__, __LINE__);
+               array_of_AlignStack.resize(1);
+            }
             array_of_AlignStack[idx].m_right_align = false;
 
             if (idx >= array_of_AlignStack.size())
