@@ -197,7 +197,9 @@ void align_same_func_call_params(void)
 
             if (idx >= array_of_AlignStack.size())
             {
+               LOG_FMT(LASFCP, "%s(%d): resize with %zu\n", __func__, __LINE__, idx + 1);
                array_of_AlignStack.resize(idx + 1);
+               LOG_FMT(LASFCP, "%s(%d): Start for the new\n", __func__, __LINE__);
                array_of_AlignStack[idx].Start(span, thresh);
 
                log_rule_B("align_number_right");
