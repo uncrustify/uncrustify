@@ -114,7 +114,7 @@ void align_same_func_call_params(void)
       prev      = chunk_get_next(prev);
       align_fcn = prev;
       align_fcn_name.clear();
-      LOG_FMT(LASFCP, "%s(%d): align_fnc_name '%s'\n", __func__, __LINE__, align_fcn_name.c_str());
+      LOG_FMT(LASFCP, "%s(%d):\n", __func__, __LINE__);
 
       while (prev != pc)
       {
@@ -134,6 +134,7 @@ void align_same_func_call_params(void)
          // Issue # 1395
          // can only align functions on the same brace level
          // and on the same level
+         LOG_FMT(LASFCP, "%s(%d):align_root is not nullptr\n", __func__, __LINE__);
          if (  align_root->brace_level == pc->brace_level
             && align_root->level == pc->level
             && align_fcn_name.equals(align_root_name))
@@ -159,9 +160,11 @@ void align_same_func_call_params(void)
             align_root = nullptr;
          }
       }
+      LOG_FMT(LASFCP, "%s(%d):\n", __func__, __LINE__);
 
       if (align_root == nullptr)
       {
+         LOG_FMT(LASFCP, "%s(%d):align_root is nullptr, Add pc '%s'\n", __func__, __LINE__, pc->text());
          fcn_as.Add(pc);
          align_root      = align_fcn;
          align_root_name = align_fcn_name;
@@ -169,6 +172,7 @@ void align_same_func_call_params(void)
          align_len       = 1;
          add_str         = "Start";
       }
+      LOG_FMT(LASFCP, "%s(%d):\n", __func__, __LINE__);
 
       if (add_str != nullptr)
       {
@@ -179,6 +183,7 @@ void align_same_func_call_params(void)
 
          for (size_t idx = 0; idx < chunks.size(); idx++)
          {
+            // show the chunk(s)
             LOG_FMT(LASFCP, " [%s]", chunks[idx]->text());
 
             if (idx < chunks.size() - 1)
@@ -193,11 +198,13 @@ void align_same_func_call_params(void)
          {
             LOG_FMT(LASFCP, "%s(%d): chunks[%zu] is [%s]\n", __func__, __LINE__, idx, chunks[idx]->text());
             // Issue #2368
-            if (array_of_AlignStack.size() == 0)
-            {
-               LOG_FMT(LASFCP, "%s(%d): resize to 1\n", __func__, __LINE__);
-               array_of_AlignStack.resize(1);
-            }
+
+            //            if (array_of_AlignStack.size() == 0)
+            //            {
+            //               LOG_FMT(LASFCP, "%s(%d): resize to 1\n", __func__, __LINE__);
+            //               array_of_AlignStack.resize(1);
+            //            }
+            // Issue #2368
             array_of_AlignStack[idx].m_right_align = false;
 
             if (idx >= array_of_AlignStack.size())
