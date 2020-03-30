@@ -1,1 +1,11 @@
-*        @mihaipopescu @CDanU @gmaurel @mwoehlke-kitware
+*               @CDanU @gmaurel @mwoehlke-kitware
+
+.editorconfig   @mihaipopescu
+
+# CI
+.travis.yml     @mihaipopescu
+appveyor.yml    @mihaipopescu
+
+# emscripten
+/emscripten/    @CDanU
+/src/uncrustify_emscripten.cpp @CDanU
