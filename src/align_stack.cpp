@@ -27,6 +27,8 @@ using std::numeric_limits;
 
 void AlignStack::Start(size_t span, int thresh)
 {
+   //stackID = get_A_Number();   // for debugging purpose only
+   //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu, ", __func__, __LINE__, stackID);
    LOG_FMT(LAS, "AlignStack::Start(%d): span is %zu, thresh is %d\n", __LINE__, span, thresh);
 
    m_aligned.Reset();
@@ -56,6 +58,8 @@ void AlignStack::Start(size_t span, int thresh)
 
 void AlignStack::ReAddSkipped()
 {
+   //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu\n", __func__, __LINE__, stackID);
+
    if (m_skipped.Empty())
    {
       return;
@@ -78,6 +82,7 @@ void AlignStack::ReAddSkipped()
 
 void AlignStack::Add(chunk_t *start, size_t seqnum)
 {
+   //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu, for '%s', ", __func__, __LINE__, stackID, start->text());
    LOG_FUNC_ENTRY();
 
    // Assign a seqnum if needed
@@ -150,6 +155,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    {
       m_star_style = SS_INCLUDE;
    }
+   LOG_FMT(LAS, "AlignStack::%s(%d): m_star_style is %s\n",
+           __func__, __LINE__, get_StarStyle_name(m_star_style));
    // Find ref. Back up to the real item that is aligned.
    chunk_t *prev = start;
 
@@ -325,14 +332,17 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
               seqnum, m_nl_seqnum, m_seqnum,
               start->orig_line, start->column, m_max_col, m_thresh);
    }
+   //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu, ", __func__, __LINE__, stackID);
 } // AlignStack::Add
 
 
 void AlignStack::NewLines(size_t cnt)
 {
+   //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu\n", __func__, __LINE__, stackID);
+
    if (m_aligned.Empty())
    {
-      LOG_FMT(LAS, "AlignStack::Newlines(%d): is empty\n", __LINE__);
+      LOG_FMT(LAS, "AlignStack::Newlines(%d): nothing to do, is empty\n", __LINE__);
       return;
    }
    m_seqnum += cnt;
@@ -349,6 +359,7 @@ void AlignStack::NewLines(size_t cnt)
 
 void AlignStack::Flush()
 {
+   //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu\n", __func__, __LINE__, stackID);
    LOG_FMT(LAS, "AlignStack::%s(%d): m_aligned.Len() is %zu\n", __func__, __LINE__, m_aligned.Len());
    LOG_FMT(LAS, "   (min is %zu, max is %zu)\n", m_min_col, m_max_col);
 
@@ -369,6 +380,13 @@ void AlignStack::Flush()
    }
    m_last_added = 0;
    m_max_col    = 0;
+
+   for (size_t idx = 0; idx < m_aligned.Len(); idx++)
+   {
+      chunk_t *pc = m_aligned.Get(idx)->m_pc;
+      LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, pc->text() is '%s', pc->align.col_adj is %d\n",
+              __func__, __LINE__, idx, pc->text(), pc->align.col_adj);
+   }
 
    // Recalculate the max_col - it may have shifted since the last Add()
    for (size_t idx = 0; idx < m_aligned.Len(); idx++)
@@ -431,6 +449,13 @@ void AlignStack::Flush()
            __func__, __LINE__, m_aligned.Len());
 
    const ChunkStack::Entry *ce = nullptr;
+
+   for (size_t idx = 0; idx < m_aligned.Len(); idx++)
+   {
+      ce = m_aligned.Get(idx);
+      LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, ce->m_pc->text() is '%s', ce->m_pc->align.col_adj is %d\n",
+              __func__, __LINE__, idx, ce->m_pc->text(), ce->m_pc->align.col_adj);
+   }
 
    for (size_t idx = 0; idx < m_aligned.Len(); idx++)
    {
@@ -501,6 +526,7 @@ void AlignStack::Flush()
 
 void AlignStack::Reset()
 {
+   //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu\n", __func__, __LINE__, stackID);
    m_aligned.Reset();
    m_skipped.Reset();
 }
@@ -508,6 +534,8 @@ void AlignStack::Reset()
 
 void AlignStack::End()
 {
+   //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu\n", __func__, __LINE__, stackID);
+
    if (!m_aligned.Empty())
    {
       LOG_FMT(LAS, "AlignStack::End(%d):\n", __LINE__);
@@ -516,3 +544,20 @@ void AlignStack::End()
    m_aligned.Reset();
    m_skipped.Reset();
 }
+
+
+const char *AlignStack::get_StarStyle_name(StarStyle star_style)
+{
+   switch (star_style)
+   {
+   case StarStyle::SS_IGNORE:
+      return("SS_IGNORE");
+
+   case StarStyle::SS_INCLUDE:
+      return("SS_INCLUDE");
+
+   case StarStyle::SS_DANGLE:
+      return("SS_DANGLE");
+   }
+   return("?????");
+} // get_StarStyle_name
