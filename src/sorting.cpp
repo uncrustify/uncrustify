@@ -411,6 +411,56 @@ static void remove_blank_lines_between_imports(chunk_t **chunks, size_t num_chun
 
 
 /**
+ * Delete chunks on line having chunk.
+ */
+static void delete_chunks_on_line_having_chunk(chunk_t *chunk)
+{
+   LOG_FUNC_ENTRY();
+
+   chunk_t *pc = chunk_first_on_line(chunk);
+
+   while (pc != nullptr && !chunk_is_comment(pc))
+   {
+      chunk_t *next_pc = chunk_get_next(pc);
+      LOG_FMT(LCHUNK, "%s(%d): Removed '%s' on orig_line %zu\n",
+              __func__, __LINE__, pc->text(), pc->orig_line);
+
+      if (chunk_is_newline(pc))
+      {
+         chunk_del(pc);
+         break;
+      }
+      else
+      {
+         chunk_del(pc);
+      }
+      pc = next_pc;
+   }
+}
+
+
+/**
+ * Dedupe import/include directives.
+ */
+static void dedupe_imports(chunk_t **chunks, size_t num_chunks)
+{
+   LOG_FUNC_ENTRY();
+
+   for (size_t idx = 1; idx < num_chunks; idx++)
+   {
+      auto const &s1     = chunk_sort_str(chunks[idx - 1]);
+      auto const &s2     = chunk_sort_str(chunks[idx]);
+      int        ret_val = unc_text::compare(s1, s2, std::min(s1.size(), s2.size()), options::mod_sort_case_sensitive());
+
+      if (ret_val == 0)
+      {
+         delete_chunks_on_line_having_chunk(chunks[idx - 1]);
+      }
+   }
+}
+
+
+/**
  * Add blank line before the chunk.
  */
 static void blankline_add_before(chunk_t *pc)
@@ -567,6 +617,7 @@ void sort_imports(void)
                   remove_blank_lines_between_imports(chunks, num_chunks);
                   do_the_sort(chunks, num_chunks);
                   group_imports_by_adding_newlines(chunks, num_chunks);
+                  dedupe_imports(chunks, num_chunks);
                }
                else
                {
