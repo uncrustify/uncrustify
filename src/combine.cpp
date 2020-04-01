@@ -5862,8 +5862,15 @@ static void handle_cpp_lambda(chunk_t *sq_o)
          return;
       }
    }
-   // lambda-declarator '( params )' is optional
    chunk_t *pa_o = chunk_get_next_ncnl(sq_c);
+
+   // check to see if there is a lambda-specifier in the pa_o chunk
+   // assuming chunk is CT_EXECUTION_CONTEXT, ignore lambda-specifier
+   while (pa_o->type == CT_EXECUTION_CONTEXT)
+   {
+      // set pa_o to next chunk after this specifier
+      pa_o = chunk_get_next_ncnl(pa_o);
+   }
 
    if (pa_o == nullptr)
    {
@@ -5871,6 +5878,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
    }
    chunk_t *pa_c = nullptr;
 
+   // lambda-declarator '( params )' is optional
    if (chunk_is_token(pa_o, CT_PAREN_OPEN))
    {
       // and now find the ')'
