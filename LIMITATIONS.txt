@@ -13,7 +13,7 @@ uncrustify.cpp:680:
 #define MAXLENGTHFORARG        256
 
 sorting.h:14:
-#define MAX_NUMBER_TO_SORT     256
+#define MAX_NUMBER_TO_SORT     1024
 
 keywords.cpp:524:
 #define MAXLENGTHOFLINE        256

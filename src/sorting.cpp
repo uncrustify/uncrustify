@@ -554,7 +554,7 @@ static void group_imports_by_adding_newlines(chunk_t **chunks, size_t num_chunks
 void sort_imports(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *chunks[MAX_NUMBER_TO_SORT];  // MAX_NUMBER_TO_SORT should be enough, right?
+   chunk_t *chunks[MAX_NUMBER_TO_SORT];
    size_t  num_chunks  = 0;
    chunk_t *p_last     = nullptr;
    chunk_t *p_imp      = nullptr;
