@@ -12,6 +12,10 @@
 #include "chunk_list.h"
 #include "uncrustify_types.h"
 
+/**
+ * Double the newline, if allowed.
+ */
+void double_newline(chunk_t *nl);
 
 /**
  * Remove all extra newlines.

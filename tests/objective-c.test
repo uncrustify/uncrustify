@@ -34,6 +34,11 @@
 50026  sp_after_throw_remove.cfg            oc/exceptions.m
 
 50030  sort_imports.cfg                     oc/sort_import.m
+50031  mod_sort_incl_import_prioritize_filename.cfg oc/sort_import.m
+50032  mod_sort_incl_import_ignore_extension.cfg oc/sort_import.m
+50033  mod_sort_incl_import_prioritize_extensionless.cfg oc/sort_import.m
+50034  mod_sort_incl_import_prioritize_angle_over_quotes.cfg oc/sort_import.m
+50035  mod_sort_incl_import_grouping_enabled.cfg oc/sort_import_group.m
 
 50040  objc_complex_method.cfg              oc/complex_method.m
 

@@ -3425,6 +3425,30 @@ mod_sort_using;
 extern Option<bool>
 mod_sort_include;
 
+// Whether to prioritize '#include' and '#import' statements that contain
+// filename without extension when sorting is enabled.
+extern Option<bool>
+mod_sort_incl_import_prioritize_filename;
+
+// Whether to prioritize '#include' and '#import' statements that does not
+// contain extensions when sorting is enabled.
+extern Option<bool>
+mod_sort_incl_import_prioritize_extensionless;
+
+// Whether to prioritize '#include' and '#import' statements that contain
+// angle over quotes when sorting is enabled.
+extern Option<bool>
+mod_sort_incl_import_prioritize_angle_over_quotes;
+
+// Whether to ignore file extension in '#include' and '#import' statements
+// for sorting comparison.
+extern Option<bool>
+mod_sort_incl_import_ignore_extension;
+
+// Whether to group '#include' and '#import' statements when sorting is enabled.
+extern Option<bool>
+mod_sort_incl_import_grouping_enabled;
+
 // Whether to move a 'break' that appears after a fully braced 'case' before
 // the close brace, as in 'case X: { ... } break;' => 'case X: { ... break; }'.
 extern Option<bool>

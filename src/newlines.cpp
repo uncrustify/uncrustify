@@ -60,10 +60,6 @@ static void mark_change(const char *func, size_t line);
 static bool can_increase_nl(chunk_t *nl);
 
 
-//! Double the newline, if allowed.
-static void double_newline(chunk_t *nl);
-
-
 /**
  * Basic approach:
  * 1. Find next open brace
@@ -413,42 +409,6 @@ static bool can_increase_nl(chunk_t *nl)
 } // can_increase_nl
 
 
-static void double_newline(chunk_t *nl)
-{
-   LOG_FUNC_ENTRY();
-   chunk_t *prev = chunk_get_prev(nl);
-
-   if (prev == nullptr)
-   {
-      return;
-   }
-   LOG_FMT(LNEWLINE, "%s(%d): add newline after ", __func__, __LINE__);
-
-   if (chunk_is_token(prev, CT_VBRACE_CLOSE))
-   {
-      LOG_FMT(LNEWLINE, "VBRACE_CLOSE ");
-   }
-   else
-   {
-      LOG_FMT(LNEWLINE, "'%s' ", prev->text());
-   }
-   LOG_FMT(LNEWLINE, "on line %zu", prev->orig_line);
-
-   if (!can_increase_nl(nl))
-   {
-      LOG_FMT(LNEWLINE, " - denied\n");
-      return;
-   }
-   LOG_FMT(LNEWLINE, " - done\n");
-
-   if (nl->nl_count != 2)
-   {
-      nl->nl_count = 2;
-      MARK_CHANGE();
-   }
-}
-
-
 static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
 {
    LOG_FUNC_ENTRY();
@@ -485,6 +445,42 @@ static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
    {
       set_chunk_type(nl, CT_NEWLINE);
       nl->str = "\n";
+   }
+}
+
+
+void double_newline(chunk_t *nl)
+{
+   LOG_FUNC_ENTRY();
+   chunk_t *prev = chunk_get_prev(nl);
+
+   if (prev == nullptr)
+   {
+      return;
+   }
+   LOG_FMT(LNEWLINE, "%s(%d): add newline after ", __func__, __LINE__);
+
+   if (chunk_is_token(prev, CT_VBRACE_CLOSE))
+   {
+      LOG_FMT(LNEWLINE, "VBRACE_CLOSE ");
+   }
+   else
+   {
+      LOG_FMT(LNEWLINE, "'%s' ", prev->text());
+   }
+   LOG_FMT(LNEWLINE, "on line %zu", prev->orig_line);
+
+   if (!can_increase_nl(nl))
+   {
+      LOG_FMT(LNEWLINE, " - denied\n");
+      return;
+   }
+   LOG_FMT(LNEWLINE, " - done\n");
+
+   if (nl->nl_count != 2)
+   {
+      nl->nl_count = 2;
+      MARK_CHANGE();
    }
 }
 
