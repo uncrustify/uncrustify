@@ -29,6 +29,9 @@ void main(int argc, const char *argv[])
    NSNumber *yesNumber = @YES;          // equivalent to [NSNumber numberWithBool:YES]
    NSNumber *noNumber  = @NO;           // equivalent to [NSNumber numberWithBool:NO]
 
+   // Raw string literals
+   NSString *rawString = [NSString stringWithFormat:@R"(embedded "quotes ")"];
+
 #ifdef __cplusplus
    NSNumber *trueNumber  = @true;       // equivalent to [NSNumber numberWithBool:(BOOL)true]
    NSNumber *falseNumber = @false;      // equivalent to [NSNumber numberWithBool:(BOOL)false]
