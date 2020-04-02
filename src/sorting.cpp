@@ -448,9 +448,14 @@ static void dedupe_imports(chunk_t **chunks, size_t num_chunks)
 
    for (size_t idx = 1; idx < num_chunks; idx++)
    {
-      auto const &s1     = chunk_sort_str(chunks[idx - 1]);
-      auto const &s2     = chunk_sort_str(chunks[idx]);
-      int        ret_val = unc_text::compare(s1, s2, std::min(s1.size(), s2.size()), options::mod_sort_case_sensitive());
+      auto const &s1 = chunk_sort_str(chunks[idx - 1]);
+      auto const &s2 = chunk_sort_str(chunks[idx]);
+
+      if (s1.size() != s2.size())
+      {
+         continue;
+      }
+      int ret_val = unc_text::compare(s1, s2, std::min(s1.size(), s2.size()), options::mod_sort_case_sensitive());
 
       if (ret_val == 0)
       {

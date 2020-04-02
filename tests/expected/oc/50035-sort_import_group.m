@@ -1,8 +1,9 @@
-#import <KKK>
+#import <KKK> // Duplicate with comment
 #import <SSS>
 
 #import "aaa"
 #import "AAA"
+#import "AAABBB"
 #import "bbb"
 #import "ccc"
 #import "ddd"
@@ -15,9 +16,11 @@
 
 #import "Action.h"
 #import "Action+Internal.h"
+#import "Action+Internal.hpp"
 #import "Action+Public.h"
 #import "BBB.h"
 #include "CCC.h"
+#import "DDD.h"
 #import "EEE.h"
 #import "sort_import.h"
 #import "sort_import+internal.h"
