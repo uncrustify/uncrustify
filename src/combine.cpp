@@ -6791,6 +6791,7 @@ static void handle_oc_message_send(chunk_t *os)
    else if (  tmp->type != CT_WORD
            && tmp->type != CT_TYPE
            && tmp->type != CT_THIS
+           && tmp->type != CT_STAR
            && tmp->type != CT_STRING)
    {
       LOG_FMT(LOCMSG, "%s(%d): orig_line is %zu, orig_col is %zu, expected identifier, not '%s' [%s]\n",
@@ -6800,6 +6801,11 @@ static void handle_oc_message_send(chunk_t *os)
    }
    else
    {
+      if (chunk_is_star(tmp)) // Issue #2722
+      {
+         set_chunk_type(tmp, CT_PTR_TYPE);
+         tmp = chunk_get_next_ncnl(tmp);
+      }
       chunk_t *tt = chunk_get_next_ncnl(tmp);
 
       if (chunk_is_paren_open(tt))
