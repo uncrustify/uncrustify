@@ -254,10 +254,11 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc);
  * pc.column is output column
  *
  * @param pc  The structure to update, str is an input.
+ * @param prev_pc  The previous structure
  *
  * @return true/false - whether anything was parsed
  */
-static bool parse_next(tok_ctx &ctx, chunk_t &pc);
+static bool parse_next(tok_ctx &ctx, chunk_t &pc, const chunk_t *prev_pc);
 
 
 /**
@@ -1930,7 +1931,7 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
 } // parse_ignored
 
 
-static bool parse_next(tok_ctx &ctx, chunk_t &pc)
+static bool parse_next(tok_ctx &ctx, chunk_t &pc, const chunk_t *prev_pc)
 {
    if (!ctx.more())
    {
@@ -2228,10 +2229,13 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    // Check for C++11/14/17/20 attribute specifier sequences
    if (language_is_set(LANG_CPP) && ctx.peek() == '[')
    {
-      if (auto length = parse_attribute_specifier_sequence(ctx))
+      if (!language_is_set(LANG_OC) || !chunk_is_token(prev_pc, CT_OC_AT))
       {
-         extract_attribute_specifier_sequence(ctx, pc, length);
-         return(true);
+         if (auto length = parse_attribute_specifier_sequence(ctx))
+         {
+            extract_attribute_specifier_sequence(ctx, pc, length);
+            return(true);
+         }
       }
    }
    // see if we have a punctuator
@@ -2312,7 +2316,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
    {
       chunk.reset();
 
-      if (!parse_next(ctx, chunk))
+      if (!parse_next(ctx, chunk, pc))
       {
          LOG_FMT(LERR, "%s:%zu Bailed before the end?\n",
                  cpd.filename.c_str(), ctx.c.row);

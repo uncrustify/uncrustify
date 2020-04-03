@@ -147,6 +147,7 @@
 50803  indent_single_newline.cfg            oc/indent_single_newline.m
 
 50804  aet.cfg                              oc/issue_2629.m
+50805  aet.cfg                              oc/issue_2724.m
 
 50810  bug_841.cfg                          oc/bug_841.m
 50811  oc_bug_1674.cfg                      oc/bug_1674.m
