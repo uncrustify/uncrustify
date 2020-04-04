@@ -2200,6 +2200,16 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    {
       size_t nc = ctx.peek(1);
 
+      if (nc == 'R') // Issue #2720
+      {
+         if (ctx.peek(2) == '"')
+         {
+            // parse string without escaping
+            parse_string(ctx, pc, 2, false);
+            return(true);
+         }
+      }
+
       if ((nc == '"') || (nc == '\''))
       {
          // literal string

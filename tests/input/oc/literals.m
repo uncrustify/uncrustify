@@ -4,7 +4,7 @@ NSDictionary *dictionary = @{@0: @"red",  @1: @"green",  @2: @"blue"};
 NSArray *array = @[@0, @1, @2, @YES, @'Z', @42U];
 
 NSArray *multilineArray = @[
-@0, @1, @2, @YES, 
+@0, @1, @2, @YES,
 @'Z', @42U
 ];
 
@@ -25,6 +25,9 @@ void main(int argc, const char *argv[]) {
   // BOOL literals.
   NSNumber *yesNumber = @YES;           // equivalent to [NSNumber numberWithBool:YES]
   NSNumber *noNumber = @NO;             // equivalent to [NSNumber numberWithBool:NO]
+
+  // Raw string literals
+  NSString *rawString = [NSString stringWithFormat:@R"(embedded "quotes")"];
 
 #ifdef __cplusplus
   NSNumber *trueNumber = @true;         // equivalent to [NSNumber numberWithBool:(BOOL)true]
