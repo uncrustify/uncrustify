@@ -662,10 +662,14 @@ static bool chunk_ends_type(chunk_t *start)
       if (  chunk_is_token(pc, CT_WORD)
          || chunk_is_token(pc, CT_TYPE)
          || chunk_is_token(pc, CT_PTR_TYPE)
+         || chunk_is_token(pc, CT_STAR)
          || chunk_is_token(pc, CT_STRUCT)
          || chunk_is_token(pc, CT_DC_MEMBER)
          || chunk_is_token(pc, CT_PP)
          || chunk_is_token(pc, CT_QUALIFIER)
+         || (  language_is_set(LANG_CPP | LANG_OC) // Issue #2727
+            && get_chunk_parent_type(pc) == CT_TEMPLATE
+            && (chunk_is_token(pc, CT_ANGLE_OPEN) || chunk_is_token(pc, CT_ANGLE_CLOSE)))
          || (language_is_set(LANG_CS) && (chunk_is_token(pc, CT_MEMBER))))
       {
          cnt++;
