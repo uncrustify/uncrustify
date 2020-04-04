@@ -7,6 +7,7 @@
  *          October 2015
  * @license GPL v2+
  */
+
 #ifndef TOKEN_ENUM_H_INCLUDED
 #define TOKEN_ENUM_H_INCLUDED
 
