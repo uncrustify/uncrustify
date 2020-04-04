@@ -4872,7 +4872,10 @@ static void mark_function(chunk_t *pc)
 
       if (  isa_def
          && prev != nullptr
-         && (  (chunk_is_paren_close(prev) && get_chunk_parent_type(prev) != CT_D_CAST)
+         && (  (  chunk_is_paren_close(prev)
+               && get_chunk_parent_type(prev) != CT_D_CAST
+               && get_chunk_parent_type(prev) != CT_MACRO_OPEN  // Issue #2726
+               && get_chunk_parent_type(prev) != CT_MACRO_CLOSE)
             || prev->type == CT_ASSIGN
             || prev->type == CT_RETURN))
       {
