@@ -142,12 +142,12 @@ static void fix_type_cast(chunk_t *pc);
 
 
 /**
- * We are on the start of a sequence that could be a var def
+ * We are on the start of a sequence that could be a variable definition
  *  - FPAREN_OPEN (parent == CT_FOR)
  *  - BRACE_OPEN
  *  - SEMICOLON
  */
-static chunk_t *fix_var_def(chunk_t *pc);
+static chunk_t *fix_variable_definition(chunk_t *pc);
 
 
 /**
@@ -1502,6 +1502,22 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             set_chunk_parent(pc, pprev->type);
          }
       }
+      // Issue #2332
+      bool we_have_a_case_before = false;
+
+      if (chunk_is_token(pc, CT_COLON))
+      {
+         // check if we have a case before
+         chunk_t *switch_before = chunk_get_prev_type(pc, CT_CASE, pc->level);
+
+         if (switch_before != nullptr)
+         {
+            LOG_FMT(LFCNR, "%s(%d): switch_before->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+                    __func__, __LINE__, switch_before->orig_line, switch_before->orig_col,
+                    switch_before->text(), get_token_name(switch_before->type));
+            we_have_a_case_before = true;
+         }
+      }
 
       // Detect a braced-init-list
       if (  chunk_is_token(pc, CT_WORD)
@@ -1514,11 +1530,13 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          || chunk_is_token(pc, CT_TSQUARE)
          || chunk_is_token(pc, CT_FPAREN_OPEN)
          || chunk_is_token(pc, CT_QUESTION)
-         || chunk_is_token(pc, CT_COLON)
+         || (  chunk_is_token(pc, CT_COLON)
+            && !we_have_a_case_before)
          || (  chunk_is_token(pc, CT_BRACE_OPEN)
             && (  get_chunk_parent_type(pc) == CT_NONE
                || get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST)))
       {
+         log_pcf_flags(LFCNR, pc->flags);
          auto brace_open = chunk_get_next_ncnl(pc);
 
          if (  chunk_is_token(brace_open, CT_BRACE_OPEN)
@@ -1527,6 +1545,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                || get_chunk_parent_type(brace_open) == CT_RETURN
                || get_chunk_parent_type(brace_open) == CT_BRACED_INIT_LIST))
          {
+            log_pcf_flags(LFCNR, brace_open->flags);
             auto brace_close = chunk_skip_to_match(next);
 
             if (chunk_is_token(brace_close, CT_BRACE_CLOSE))
@@ -2296,6 +2315,9 @@ void fix_symbols(void)
 
    while (pc != nullptr)
    {
+      LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type));
+
       // Can't have a variable definition inside [ ]
       if (square_level < 0)
       {
@@ -2350,13 +2372,21 @@ void fix_symbols(void)
             chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
          }
       }
+
+      if (  chunk_is_token(pc, CT_BRACE_OPEN)                       // Issue #2332
+         && get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST)
+      {
+         LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', look for CT_BRACE_OPEN\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+         pc = chunk_get_next_type(pc, CT_BRACE_CLOSE, pc->level);
+      }
       /*
        * A variable definition is possible after at the start of a statement
        * that starts with: DC_MEMBER, QUALIFIER, TYPE, or WORD
        */
       // Issue #2279
       // Issue #2478
-      LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n",
+      LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n   ",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type));
       log_pcf_flags(LFCNR, pc->flags);
 
@@ -2370,7 +2400,7 @@ void fix_symbols(void)
          && get_chunk_parent_type(pc) != CT_ENUM
          && !pc->flags.test(PCF_IN_ENUM))
       {
-         pc = fix_var_def(pc);
+         pc = fix_variable_definition(pc);
       }
       else
       {
@@ -2488,7 +2518,8 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
          }
          chunk_t *prev = chunk_get_prev_ncnlni(pc);   // Issue #2279
 
-         if (  !is_return_tuple || pc->type != CT_WORD
+         if (  !is_return_tuple
+            || pc->type != CT_WORD
             || (prev != nullptr && prev->type != CT_TYPE))
          {
             make_type(pc);
@@ -3835,7 +3866,7 @@ static chunk_t *skip_to_next_statement(chunk_t *pc)
 }
 
 
-static chunk_t *fix_var_def(chunk_t *start)
+static chunk_t *fix_variable_definition(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
    chunk_t    *pc = start;
@@ -3923,7 +3954,7 @@ static chunk_t *fix_var_def(chunk_t *start)
    {
       return(skip_to_next_statement(end));
    }
-   // ref_idx points to the alignable part of the var def
+   // ref_idx points to the alignable part of the variable definition
    ref_idx = cs.Len() - 1;
 
    // Check for the '::' stuff: "char *Engine::name"
@@ -3937,7 +3968,8 @@ static chunk_t *fix_var_def(chunk_t *start)
       {
          tmp_pc = cs.Get(idx)->m_pc;
 
-         if (tmp_pc->type != CT_DC_MEMBER && tmp_pc->type != CT_MEMBER)
+         if (  tmp_pc->type != CT_DC_MEMBER
+            && tmp_pc->type != CT_MEMBER)
          {
             break;
          }
@@ -3952,7 +3984,8 @@ static chunk_t *fix_var_def(chunk_t *start)
          idx--;
          tmp_pc = cs.Get(idx)->m_pc;
 
-         if (tmp_pc->type != CT_WORD && tmp_pc->type != CT_TYPE)
+         if (  tmp_pc->type != CT_WORD
+            && tmp_pc->type != CT_TYPE)
          {
             break;
          }
@@ -3962,7 +3995,7 @@ static chunk_t *fix_var_def(chunk_t *start)
       ref_idx = idx + 1;
    }
    tmp_pc = cs.Get(ref_idx)->m_pc;
-   LOG_FMT(LFVD, " ref_idx(%d) => %s\n", ref_idx, tmp_pc->text());
+   LOG_FMT(LFVD, "%s(%d): ref_idx(%d) is '%s'\n", __func__, __LINE__, ref_idx, tmp_pc->text());
 
    // No type part found!
    if (ref_idx <= 0)
@@ -3991,7 +4024,7 @@ static chunk_t *fix_var_def(chunk_t *start)
       return(chunk_get_next_ncnl(end));
    }
    return(skip_to_next_statement(end));
-} // fix_var_def
+} // fix_variable_definition
 
 
 static chunk_t *skip_expression(chunk_t *start)
@@ -5641,7 +5674,7 @@ static void mark_struct_union_body(chunk_t *start)
       }
       else
       {
-         pc = fix_var_def(pc);
+         pc = fix_variable_definition(pc);
 
          if (pc == nullptr)
          {
@@ -5906,7 +5939,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
    set_chunk_parent(sq_o, CT_CPP_LAMBDA);
    set_chunk_parent(sq_c, CT_CPP_LAMBDA);
 
-   if (pa_c)
+   if (pa_c != nullptr)
    {
       set_chunk_type(pa_o, CT_FPAREN_OPEN);
       set_chunk_parent(pa_o, CT_CPP_LAMBDA);
@@ -5916,7 +5949,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
    set_chunk_parent(br_o, CT_CPP_LAMBDA);
    set_chunk_parent(br_c, CT_CPP_LAMBDA);
 
-   if (ret)
+   if (ret != nullptr)
    {
       set_chunk_type(ret, CT_CPP_LAMBDA_RET);
       ret = chunk_get_next_ncnl(ret);
@@ -5928,7 +5961,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
       }
    }
 
-   if (pa_c)
+   if (pa_c != nullptr)
    {
       fix_fcn_def_params(pa_o);
    }
@@ -7178,7 +7211,7 @@ static void handle_oc_property_decl(chunk_t *os)
    {
       tmp = chunk_get_next_ncnl(chunk_skip_to_match(tmp));
    }
-   fix_var_def(tmp);
+   fix_variable_definition(tmp);
 } // handle_oc_property_decl
 
 

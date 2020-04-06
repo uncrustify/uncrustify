@@ -22,6 +22,7 @@
 #include "quick_align_again.h"
 #include "space.h"
 #include "unc_ctype.h"
+#include "unc_tools.h"
 #include "uncrustify.h"
 #include "uncrustify_types.h"
 
@@ -3195,6 +3196,12 @@ void indent_text(void)
             {
                tmp = chunk_get_next_ncnl(tmp);
             }
+            LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, for '%s'",
+                    __func__, __LINE__, tmp->orig_line, tmp->text());
+            LOG_FMT(LINDENT2, " tmp->flags: ");
+            log_pcf_flags(LINDENT2, tmp->flags);                   // Issue #2332
+            prot_the_line(__func__, __LINE__, 3, 0);
+            prot_the_line(__func__, __LINE__, 4, 0);
 
             if (  tmp->flags.test(PCF_VAR_DEF)
                && (chunk_is_token(tmp, CT_WORD) || chunk_is_token(tmp, CT_FUNC_CTOR_VAR)))

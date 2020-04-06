@@ -180,6 +180,7 @@
 30244  align_func_params_thresh_2.cfg       cpp/align_func_params.cpp
 30245  align_func_params_thresh_3.cfg       cpp/align_func_params.cpp
 30246  align_func_params_thresh_4.cfg       cpp/align_func_params.cpp
+30247  empty.cfg                            cpp/Issue_2332.cpp
 
 30249  align-330.cfg                        cpp/align-330.cpp
 30250  align_fcall.cfg                      cpp/align_fcall.cpp
