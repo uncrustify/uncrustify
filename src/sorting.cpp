@@ -448,9 +448,14 @@ static void dedupe_imports(chunk_t **chunks, size_t num_chunks)
 
    for (size_t idx = 1; idx < num_chunks; idx++)
    {
-      auto const &s1     = chunk_sort_str(chunks[idx - 1]);
-      auto const &s2     = chunk_sort_str(chunks[idx]);
-      int        ret_val = unc_text::compare(s1, s2, std::min(s1.size(), s2.size()), options::mod_sort_case_sensitive());
+      auto const &s1 = chunk_sort_str(chunks[idx - 1]);
+      auto const &s2 = chunk_sort_str(chunks[idx]);
+
+      if (s1.size() != s2.size())
+      {
+         continue;
+      }
+      int ret_val = unc_text::compare(s1, s2, std::min(s1.size(), s2.size()), options::mod_sort_case_sensitive());
 
       if (ret_val == 0)
       {
@@ -554,7 +559,7 @@ static void group_imports_by_adding_newlines(chunk_t **chunks, size_t num_chunks
 void sort_imports(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *chunks[MAX_NUMBER_TO_SORT];  // MAX_NUMBER_TO_SORT should be enough, right?
+   chunk_t *chunks[MAX_NUMBER_TO_SORT];
    size_t  num_chunks  = 0;
    chunk_t *p_last     = nullptr;
    chunk_t *p_imp      = nullptr;
