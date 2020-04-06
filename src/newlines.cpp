@@ -333,9 +333,12 @@ static bool can_increase_nl(chunk_t *nl)
    {
       log_rule_B("nl_squeeze_ifdef");
 
-      if (  chunk_is_token(prev, CT_PREPROC)
-         && get_chunk_parent_type(prev) == CT_PP_ENDIF
-         && (prev->level > 0 || options::nl_squeeze_ifdef_top_level()))
+      chunk_t *pp_start = chunk_get_pp_start(prev);
+
+      if (  pp_start != nullptr
+         && (  get_chunk_parent_type(pp_start) == CT_PP_IF
+            || get_chunk_parent_type(pp_start) == CT_PP_ELSE)
+         && (pp_start->level > 0 || options::nl_squeeze_ifdef_top_level()))
       {
          log_rule_B("nl_squeeze_ifdef_top_level");
          LOG_FMT(LBLANKD, "%s(%d): nl_squeeze_ifdef %zu (prev) pp_lvl=%zu rv=0\n",

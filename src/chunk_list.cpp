@@ -980,6 +980,21 @@ chunk_t *chunk_get_prev_ssq(chunk_t *cur)
 }
 
 
+chunk_t *chunk_get_pp_start(chunk_t *cur)
+{
+   if (!chunk_is_preproc(cur))
+   {
+      return(nullptr);
+   }
+
+   while (!chunk_is_token(cur, CT_PREPROC))
+   {
+      cur = chunk_get_prev(cur, scope_e::PREPROC);
+   }
+   return(cur);
+}
+
+
 //! skip to the final word/type in a :: chain
 static chunk_t *chunk_skip_dc_member(chunk_t *start, scope_e scope, direction_e dir)
 {

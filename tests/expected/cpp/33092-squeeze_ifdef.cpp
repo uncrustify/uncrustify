@@ -19,7 +19,6 @@ int foo()
 #if defined(A)
 	int a = ax;
 #elif defined(B)
-
 	// Comment
 	int b = bx;
 #else
@@ -30,7 +29,6 @@ int foo()
 #elif defined(B)
 	return b;
 #else
-
 	// Comment
 	return c;
 #endif
