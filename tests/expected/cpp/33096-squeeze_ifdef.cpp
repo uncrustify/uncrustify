@@ -1,19 +1,32 @@
 
 #if defined(A)
-extern int a;
+
+// Comment
+extern int ax;
 #elif defined(B)
-extern int b;
+extern int bx;
 #else
-extern int c;
+extern int cx;
 #endif
 
 int foo()
 {
 #if defined(A)
+	int a = ax;
+#elif defined(B)
+
+	// Comment
+	int b = bx;
+#else
+	int c = cx;
+#endif
+#if defined(A)
 	return a;
 #elif defined(B)
 	return b;
 #else
+
+	// Comment
 	return c;
 #endif
 }
