@@ -421,6 +421,16 @@ chunk_t *chunk_get_next_ssq(chunk_t *cur);
 chunk_t *chunk_get_prev_ssq(chunk_t *cur);
 
 /**
+ * Gets the corresponding start chunk if the given chunk is within a
+ * preprocessor directive, or nullptr otherwise.
+ *
+ * @param  cur    chunk to use as start point
+ *
+ * @return nullptr or start chunk of the preprocessor directive
+ */
+chunk_t *chunk_get_pp_start(chunk_t *cur);
+
+/**
  * @brief reverse search a chunk of a given category in a chunk list
  *
  * @param  pc   chunk list to search in
