@@ -7318,36 +7318,6 @@ static void handle_cs_array_type(chunk_t *pc)
 }
 
 
-void remove_extra_returns(void)
-{
-   LOG_FUNC_ENTRY();
-
-   chunk_t *pc = chunk_get_head();
-
-   while (pc != nullptr)
-   {
-      if (chunk_is_token(pc, CT_RETURN) && !pc->flags.test(PCF_IN_PREPROC))
-      {
-         chunk_t *semi  = chunk_get_next_ncnl(pc);
-         chunk_t *cl_br = chunk_get_next_ncnl(semi);
-
-         if (  chunk_is_token(semi, CT_SEMICOLON)
-            && chunk_is_token(cl_br, CT_BRACE_CLOSE)
-            && (  get_chunk_parent_type(cl_br) == CT_FUNC_DEF
-               || get_chunk_parent_type(cl_br) == CT_FUNC_CLASS_DEF))
-         {
-            LOG_FMT(LRMRETURN, "%s(%d): Removed 'return;' on orig_line %zu\n",
-                    __func__, __LINE__, pc->orig_line);
-            chunk_del(pc);
-            chunk_del(semi);
-            pc = cl_br;
-         }
-      }
-      pc = chunk_get_next(pc);
-   }
-}
-
-
 static void handle_wrap(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();

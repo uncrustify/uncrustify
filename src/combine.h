@@ -5,6 +5,7 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #ifndef COMBINE_H_INCLUDED
 #define COMBINE_H_INCLUDED
 
@@ -113,13 +114,6 @@ chunk_t *skip_attribute_next(chunk_t *attr);
  * Otherwise return fp_close.
  */
 chunk_t *skip_attribute_prev(chunk_t *fp_close);
-
-
-/**
- * @brief Remove unnecessary returns
- * that is remove 'return;' that appears as the last statement in a function
- */
-void remove_extra_returns(void);
 
 
 #endif /* COMBINE_H_INCLUDED */

@@ -37,6 +37,7 @@
 #include "parens.h"
 #include "pcf_flags.h"
 #include "prototypes.h"
+#include "remove_extra_returns.h"
 #include "semicolons.h"
 #include "sorting.h"
 #include "space.h"
