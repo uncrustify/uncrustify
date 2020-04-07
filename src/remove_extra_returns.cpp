@@ -9,29 +9,7 @@
 
 #include "remove_extra_returns.h"
 
-#include "chunk_list.h"
-#include "combine_labels.h"
-#include "ChunkStack.h"
-#include "error_types.h"
-#include "flag_parens.h"
-#include "lang_pawn.h"
-#include "language_tools.h"
-#include "log_rules.h"
-#include "newlines.h"
-#include "prototypes.h"
-#include "tokenize_cleanup.h"
-#include "unc_ctype.h"
 #include "uncrustify.h"
-#include "uncrustify_types.h"
-
-#include <cassert>
-#include <cstdio>
-#include <cstdlib>
-#include <limits>
-#include <map>
-
-using namespace std;
-using namespace uncrustify;
 
 
 void remove_extra_returns(void)
@@ -82,7 +60,6 @@ void remove_extra_returns(void)
 
          if (remove_it)
          {
-            //chunk_t *semicolon = chunk_get_next_type(pc, CT_SEMICOLON, pc->level);
             chunk_t *semicolon = chunk_get_next_ncnl(pc);
 
             if (  semicolon != nullptr

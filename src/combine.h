@@ -1,6 +1,6 @@
 /**
  * @file combine.h
- * prototypes for combine.c
+ * prototypes for combine.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+

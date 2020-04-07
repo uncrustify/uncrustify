@@ -11,7 +11,6 @@
 #define REMOVE_EXTRA_RETURNS_H_INCLUDED
 
 #include "chunk_list.h"
-#include "uncrustify_types.h"
 
 
 /**
