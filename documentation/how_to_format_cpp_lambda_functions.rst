@@ -4,7 +4,7 @@ Formatting C++ Lambda Expressions
 
 Uncrustify supports some formatting of c++ lambda expressions, although the support is incomplete.
 A complete description of the c++ lambda expressions 
-The parts of c++ lambda expressions that is currently recognized by Uncrusitify is:
+The parts of c++ lambda expressions that are currently recognized by Uncrusitify are:
 
 .. code-block:: c++
 
@@ -13,11 +13,11 @@ The parts of c++ lambda expressions that is currently recognized by Uncrusitify 
 Explanations for all the tokens in the above lambda expression (except for execution_context) are found `here <https://en.cppreference.com/w/cpp/language/lambda>`_.
 The `execution_context` token is a non-standard addition to allow for specification of the execution space (e.g. host or device in CUDA).
 The native specifiers for the `execution_context` for lambda expression in CUDA are ``__device__`` and ``__host__ __device__``.
-However it is common for codes to use a preprocessor variable in place of the native specifiers.
+However, it is common for code to use a preprocessor variable in place of the native specifiers.
 
 The Uncrustify options for formatting of c++ lambda expressions are as follows:
 
-.. code-block:: c++
+.. code-block::
 
   # Add or remove space around '=' in C++11 lambda capture specifications.
   #
@@ -61,16 +61,19 @@ The Uncrustify options for formatting of c++ lambda expressions are as follows:
   indent_cpp_lambda_only_once     = false    # true/false
 
   
-Additionally, a multiple number of  "execution_context" token may be set in the configuration file using the ``EXECUTION_CONTEXT`` token.
-Each specification of the ``EXECTION_CONTEXT`` populate a list of allowable keywords to be used at the "execution_context" location.
-For example, the following shows setting 4 values (2 default, and 2 custom) for the execution_context.
+Additionally, a multiple number of ``execution_context`` tokens may be set in the configuration file:
 
-.. code-block:: c++
+.. code-block::
 
-  set EXECUTION_CONTEXT __device__
   set EXECUTION_CONTEXT __host__ __device__
-  set EXECUTION_CONTEXT DEVICE_LAMBDA_CONTEXT
-  set EXECUTION_CONTEXT HOST_DEVICE_LAMBDA_CONTEXT
+  set EXECUTION_CONTEXT DEVICE_LAMBDA_CONTEXT HOST_DEVICE_LAMBDA_CONTEXT
 
-The effect of these lines in the confiuration file is that any of the strings (__device__, __host__ __device__, DEVICE_LAMBDA_CONTEXT, HOST_DEVICE_LAMBDA_CONTEXT) will be recognized by uncrusitfy and will allow the lambda to be properly identified.
-
+The effect of these lines in the configuration file is that any of the strings
+(``__host__``, ``__device__``,
+``DEVICE_LAMBDA_CONTEXT``, ``HOST_DEVICE_LAMBDA_CONTEXT``)
+will be recognized by uncrusitfy
+and will allow the lambda to be properly identified.
+Note that each word after the token name
+(``EXECUTION_CONTEXT`` in this instance) is a separate token.
+This means that uncrustify will parse ``__host__`` and ``__device__``
+as separate tokens, and there is no need to specify ``__device__`` twice.

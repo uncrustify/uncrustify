@@ -5864,7 +5864,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
    }
    chunk_t *pa_o = chunk_get_next_ncnl(sq_c);
 
-   // check to see if there is a lambda-specifier in the pa_o chunk
+   // check to see if there is a lambda-specifier in the pa_o chunk;
    // assuming chunk is CT_EXECUTION_CONTEXT, ignore lambda-specifier
    while (pa_o->type == CT_EXECUTION_CONTEXT)
    {
