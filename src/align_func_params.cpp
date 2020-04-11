@@ -106,6 +106,9 @@ void align_func_params(void)
 
    while ((pc = chunk_get_next(pc)) != nullptr)
    {
+      LOG_FMT(LFLPAREN, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', parent_type is %s, parent_type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type));
+
       if (  pc->type != CT_FPAREN_OPEN
          || (  get_chunk_parent_type(pc) != CT_FUNC_PROTO
             && get_chunk_parent_type(pc) != CT_FUNC_DEF

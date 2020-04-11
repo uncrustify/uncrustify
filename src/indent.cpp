@@ -1351,8 +1351,8 @@ void indent_text(void)
                     frm.at(ttidx).pc->brace_level);
          }
       }
-      LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+      LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, orig_col is %zu, column is %zu, text() is '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->text());
 
       // Issue #672
       if (  chunk_is_token(pc, CT_BRACE_OPEN)
