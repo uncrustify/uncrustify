@@ -285,6 +285,7 @@ set(uncrustify_sources
   src/frame_list.cpp
   src/ParseFrame.cpp
   src/punctuators.cpp
+  src/remove_extra_returns.cpp
   src/semicolons.cpp
   src/sorting.cpp
   src/space.cpp
@@ -331,6 +332,7 @@ set(uncrustify_headers
   src/char_table.h
   src/ChunkStack.h
   src/chunk_list.h
+  src/combine.h
   src/combine_labels.h
   src/cs_top_is_question.h
   src/enum_cleanup.h
@@ -351,6 +353,7 @@ set(uncrustify_headers
   src/prototypes.h
   src/punctuators.h
   src/quick_align_again.h
+  src/remove_extra_returns.h
   src/symbols_table.h
   src/token_enum.h
   src/uncrustify_types.h

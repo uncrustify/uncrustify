@@ -76,6 +76,7 @@
 12105  bug_1650.cfg                         cs/bug_1650.cs
 12106  bug_1650.cfg                         cs/UNI-40685.cs
 12107  mod_full_paren_if_bool.cfg           cs/mod_full_paren_if_bool.cs
+12108  Issue_2705.cfg                       cs/Issue_2705.cs
 
 # Adopt some UT tests
 10012  empty.cfg                            cs/621_this-spacing.cs

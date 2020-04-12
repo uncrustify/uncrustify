@@ -446,6 +446,8 @@ void output_parsed(FILE *pfile)
    fprintf(pfile, "# -=====-%s", eol_marker);
    fprintf(pfile, "# number of loops               = %d\n", cpd.changes);
    fprintf(pfile, "# -=====-%s", eol_marker);
+   fprintf(pfile, "# language                      = %s\n", language_name_from_flags(cpd.lang_flags));
+   fprintf(pfile, "# -=====-%s", eol_marker);
    // MAXLENGTHOFTHENAME must be consider at the format line at the file
    // output.cpp, line 427: fprintf(pfile, "# Line              Tag                Parent...
    // and              430: ... fprintf(pfile, "%s# %3zu>%19.19s[%19.19s] ...
