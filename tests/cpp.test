@@ -622,6 +622,9 @@
 33203  Issue_2574.cfg                       cpp/Issue_2574.cpp
 33204  Issue_2582.cfg                       cpp/Issue_2582.cpp
 
+33210  disable_nl_cont.cfg                  cpp/templates4.cpp
+33211  disable_nl_cont.cfg                  cpp/pp_multi_comment.cpp
+
 34001  nl_before_after.cfg                  cpp/nl_before_after.h
 34002  indent_columns-3.cfg                 cpp/bug_i_793.cpp
 
