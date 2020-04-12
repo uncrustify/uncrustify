@@ -24,6 +24,7 @@ bool operator>(const Type1& a, const Type1& b);            // a > b
 bool operator>=(const Type1& a, const Type1& b);           // a >= b
 bool operator!=(const Type1& a, const Type1& b);           // a != b
 bool operator==(const Type1& a, const Type1& b);           // a == b
+bool operator<=>(const Type1& a, const Type1& b);          // a <=> b
 
 // logical operators
 bool operator!(const Type1& a);                            // !a

@@ -1,6 +1,7 @@
 struct bar;
 struct foo {
   operator bar*();
+  auto operator <=>(const foo& rhs) const = default;
 };
 
 class Foo {
