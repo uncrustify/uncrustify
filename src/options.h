@@ -75,6 +75,10 @@ string_replace_tab_chars;
 extern Option<bool>
 tok_split_gte;
 
+// Disable formatting of NL_CONT ('\\n') ended lines (e.g. multiline macros)
+extern Option<bool>
+disable_processing_nl_cont;
+
 // Specify the marker used in comments to disable processing of part of the
 // file.
 // The comment should be used alone in one line.

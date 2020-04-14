@@ -1907,6 +1907,12 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
       return(true);
    }
 
+   if (options::disable_processing_nl_cont() && pc.str.back() == '\\')
+   {
+      pc.type = CT_IGNORED;
+      return(true);
+   }
+
    // Look for the ending comment and let it pass
    if (parse_comment(ctx, pc) && !cpd.unc_off)
    {
@@ -1946,7 +1952,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc, const chunk_t *prev_pc)
    pc.flags     = PCF_NONE;
 
    // If it is turned off, we put everything except newlines into CT_UNKNOWN
-   if (cpd.unc_off)
+   if (cpd.unc_off || options::disable_processing_nl_cont())
    {
       if (parse_ignored(ctx, pc))
       {

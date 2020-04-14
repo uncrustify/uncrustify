@@ -37,6 +37,9 @@ string_replace_tab_chars        = false    # true/false
 # Improvements to template detection may make this option obsolete.
 tok_split_gte                   = false    # true/false
 
+# Disable formatting of NL_CONT ('\\n') ended lines (e.g. multiline macros)
+disable_processing_nl_cont      = false    # true/false
+
 # Specify the marker used in comments to disable processing of part of the
 # file.
 # The comment should be used alone in one line.

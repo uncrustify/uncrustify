@@ -6,6 +6,7 @@ string_escape_char              = 92
 string_escape_char2             = 0
 string_replace_tab_chars        = false
 tok_split_gte                   = false
+disable_processing_nl_cont      = false
 disable_processing_cmt          = " *INDENT-OFF*"
 enable_processing_cmt           = " *INDENT-ON*"
 enable_digraphs                 = false
