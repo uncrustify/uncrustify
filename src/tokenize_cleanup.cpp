@@ -16,6 +16,7 @@
 #include "char_table.h"
 #include "chunk_list.h"
 #include "combine.h"
+#include "combine_tools.h"
 #include "error_types.h"
 #include "keywords.h"
 #include "language_tools.h"

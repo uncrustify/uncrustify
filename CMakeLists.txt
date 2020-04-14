@@ -231,10 +231,10 @@ py_gen(../etc/uncrustify.xml
 # Uncrustify
 #
 set(uncrustify_sources
-  src/align.cpp
   src/align_add.cpp
-  src/align_assign.cpp
   src/align_asm_colon.cpp
+  src/align_assign.cpp
+  src/align.cpp
   src/align_func_params.cpp
   src/align_func_proto.cpp
   src/align_init_brace.cpp
@@ -242,8 +242,8 @@ set(uncrustify_sources
   src/align_log_al.cpp
   src/align_nl_cont.cpp
   src/align_oc_decl_colon.cpp
-  src/align_oc_msg_spec.cpp
   src/align_oc_msg_colons.cpp
+  src/align_oc_msg_spec.cpp
   src/align_preprocessor.cpp
   src/align_same_func_call_params.cpp
   src/align_stack.cpp
@@ -255,18 +255,24 @@ set(uncrustify_sources
   src/align_var_def_brace.cpp
   src/args.cpp
   src/backup.cpp
-  src/braces.cpp
   src/brace_cleanup.cpp
-  src/ChunkStack.cpp
+  src/braces.cpp
   src/chunk_list.cpp
+  src/ChunkStack.cpp
   src/combine.cpp
+  src/combine_fix.cpp
   src/combine_labels.cpp
+  src/combine_mark.cpp
+  src/combine_tools.cpp
+  src/combine_skip.cpp
   src/compat_posix.cpp
   src/compat_win32.cpp
   src/cs_top_is_question.cpp
   src/detect.cpp
   src/enum_cleanup.cpp
   src/flag_parens.cpp
+  src/frame_list.cpp
+  src/handle_oc.cpp
   src/indent.cpp
   src/keywords.cpp
   src/lang_pawn.cpp
@@ -280,17 +286,16 @@ set(uncrustify_sources
   src/options_for_QT.cpp
   src/output.cpp
   src/parens.cpp
-  src/pcf_flags.cpp
-  src/quick_align_again.cpp
-  src/frame_list.cpp
   src/ParseFrame.cpp
+  src/pcf_flags.cpp
   src/punctuators.cpp
+  src/quick_align_again.cpp
   src/remove_extra_returns.cpp
   src/semicolons.cpp
   src/sorting.cpp
   src/space.cpp
-  src/tokenize.cpp
   src/tokenize_cleanup.cpp
+  src/tokenize.cpp
   src/uncrustify.cpp
   src/uncrustify_emscripten.cpp
   src/uncrustify_types.cpp
@@ -304,12 +309,12 @@ set(uncrustify_sources
 )
 
 set(uncrustify_headers
-  src/align.h
   src/align_add.h
-  src/align_assign.h
   src/align_asm_colon.h
+  src/align_assign.h
   src/align_func_params.h
   src/align_func_proto.h
+  src/align.h
   src/align_init_brace.h
   src/align_left_shift.h
   src/align_log_al.h
@@ -329,37 +334,64 @@ set(uncrustify_headers
   src/args.h
   src/backup.h
   src/base_types.h
+  src/brace_cleanup.h
+  src/braces.h
   src/char_table.h
-  src/ChunkStack.h
   src/chunk_list.h
+  src/ChunkStack.h
   src/combine.h
+  src/combine_fix.h
   src/combine_labels.h
+  src/combine_mark.h
+  src/combine_tools.h
+  src/combine_skip.h
+  src/compat.h
   src/cs_top_is_question.h
+  src/detect.h
   src/enum_cleanup.h
   src/enum_flags.h
+  src/error_types.h
   src/flag_parens.h
+  src/frame_list.h
+  src/handle_oc.h
+  src/indent.h
+  src/keywords.h
+  src/lang_pawn.h
   src/language_tools.h
   src/ListManager.h
   src/logger.h
-  src/logmask.h
   src/log_levels.h
+  src/logmask.h
   src/log_rules.h
   src/md5.h
+  src/newlines.h
   src/option.h
-  src/options.h
   src/options_for_QT.h
+  src/options.h
+  src/output.h
+  src/parens.h
   src/ParseFrame.h
   src/pcf_flags.h
   src/prototypes.h
   src/punctuators.h
   src/quick_align_again.h
   src/remove_extra_returns.h
+  src/semicolons.h
+  src/sorting.h
+  src/space.h
   src/symbols_table.h
   src/token_enum.h
-  src/uncrustify_types.h
+  src/tokenize_cleanup.h
+  src/tokenize.h
   src/unc_ctype.h
+  src/uncrustify.h
+  src/uncrustify_types.h
   src/unc_text.h
   src/unc_tools.h
+  src/unicode.h
+  src/universalindentgui.h
+  src/width.h
+  src/windows_compat.h
   ${PROJECT_BINARY_DIR}/src/option_enum.h
   ${PROJECT_BINARY_DIR}/uncrustify_version.h
 )

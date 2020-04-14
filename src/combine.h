@@ -39,17 +39,6 @@ void fix_symbols(void);
 void combine_labels(void);
 
 
-//! help function for mark_variable_definition...
-bool go_on(chunk_t *pc, chunk_t *start);
-
-
-//! Sets the parent for comments.
-void mark_comments(void);
-
-
-void make_type(chunk_t *pc);
-
-
 void flag_series(chunk_t *start, chunk_t *end, pcf_flags_t set_flags, pcf_flags_t clr_flags = {}, scope_e nav = scope_e::ALL);
 
 
@@ -83,21 +72,6 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next);
  * If the chunk isn't an CT_ANGLE_OPEN, then it is returned.
  */
 chunk_t *skip_template_next(chunk_t *ang_open);
-
-
-/**
- * Skips over the rest of the template if ang_close is indeed a CT_ANGLE_CLOSE.
- * Points to the chunk before the CT_ANGLE_OPEN
- * If the chunk isn't an CT_ANGLE_CLOSE, then it is returned.
- */
-chunk_t *skip_template_prev(chunk_t *ang_close);
-
-
-/**
- * Skips the rest of the array definitions if ary_def is indeed a
- * CT_TSQUARE or CT_SQUARE_OPEN
- */
-chunk_t *skip_tsquare_next(chunk_t *ary_def);
 
 
 /**

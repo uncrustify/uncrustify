@@ -20,6 +20,7 @@
 #include "braces.h"
 #include "chunk_list.h"
 #include "combine.h"
+#include "combine_mark.h"
 #include "compat.h"
 #include "detect.h"
 #include "enum_cleanup.h"
