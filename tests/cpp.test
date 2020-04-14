@@ -206,11 +206,11 @@
 30274  sp_cparen_oparen-r.cfg               cpp/sp_cparen_oparen.cpp
 30275  empty.cfg                            cpp/bug_1321.cpp
 30278  bug_1439.cfg                         cpp/bug_1439.cpp
-
 30279  indent_inside_ternary_operator.cfg   cpp/indent-inside-ternary-operator.cpp
 
 30280  sp_dc.cfg                            cpp/sf557.cpp
 30281  Issue_2478.cfg                       cpp/Issue_2478.cpp
+30282  Issue_2703.cfg                       cpp/Issue_2703.cpp
 
 30290  indent_shift.cfg                     cpp/align_left_shift.cpp
 30291  indent_shift.cfg                     cpp/indent_shift.cpp
