@@ -4439,7 +4439,8 @@ static void mark_function(chunk_t *pc)
                break;
             }
 
-            if (chunk_is_paren_open(tmp))
+            if (  chunk_is_paren_open(tmp)
+               && !pc->flags.test(PCF_IN_PREPROC))               // Issue #2703
             {
                LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
                        __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->text());
