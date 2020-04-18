@@ -10,6 +10,7 @@
 
 #include "chunk_list.h"
 #include "combine.h"
+#include "combine_tools.h"
 #include "error_types.h"
 #include "language_tools.h"
 #include "log_rules.h"
