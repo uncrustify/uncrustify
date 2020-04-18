@@ -23,6 +23,7 @@
 #include "align_stack.h"
 #include "chunk_list.h"
 #include "combine.h"
+#include "combine_skip.h"
 #include "flag_parens.h"
 #include "indent.h"
 #include "keywords.h"
