@@ -50,9 +50,6 @@ void mark_comments(void);
 void make_type(chunk_t *pc);
 
 
-void flag_series(chunk_t *start, chunk_t *end, pcf_flags_t set_flags, pcf_flags_t clr_flags = {}, scope_e nav = scope_e::ALL);
-
-
 /**
  * Sets the parent of the open paren/brace/square/angle and the closing.
  * Note - it is assumed that pc really does point to an open item and the

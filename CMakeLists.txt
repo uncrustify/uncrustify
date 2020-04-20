@@ -260,10 +260,10 @@ set(uncrustify_sources
   src/chunk_list.cpp
   src/ChunkStack.cpp
   src/combine.cpp
-#  src/combine_fix.cpp
+  src/combine_fix_mark.cpp
   src/combine_labels.cpp
 #  src/combine_mark.cpp
-#  src/combine_tools.cpp
+  src/combine_tools.cpp
   src/combine_skip.cpp
   src/compat_posix.cpp
   src/compat_win32.cpp
@@ -340,11 +340,11 @@ set(uncrustify_headers
   src/chunk_list.h
   src/ChunkStack.h
   src/combine.h
-#  src/combine_fix.h
+  src/combine_fix_mark.h
   src/combine_labels.h
 #  src/combine_mark.h
   src/combine_skip.h
-#  src/combine_tools.h
+  src/combine_tools.h
   src/compat.h
   src/cs_top_is_question.h
   src/detect.h

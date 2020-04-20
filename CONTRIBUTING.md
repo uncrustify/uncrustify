@@ -43,6 +43,14 @@ There are lots of ways to contribute to Uncrustify:
         + Include motivation for the change
           and contrast its implementation with previous behavior.
           Explain the _what_ and _why_ instead of _how_.
+    - If the git diff command, or the diff part of the git gui,
+      don't produce accurate output, it might be necessary to add
+      some lines to the ~/.gitconfig file:
+         [diff]
+                 algorithm = patience
+         [gui]
+                 diffopts = --patience
+
 
 * Add or update unit tests:
     - All behavioral changes should come with a unit test that verifies
