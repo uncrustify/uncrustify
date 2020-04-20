@@ -5585,10 +5585,11 @@ void do_blank_lines(void)
       {
          log_rule_B("nl_before_block_comment");
 
-         // Don't add blanks after a open brace
+         // Don't add blanks after an open brace or a case statement
          if (  (  prev == nullptr
                || (  prev->type != CT_BRACE_OPEN
-                  && prev->type != CT_VBRACE_OPEN))
+                  && prev->type != CT_VBRACE_OPEN
+                  && prev->type != CT_CASE_COLON))
             && pcmt != nullptr                          // Issue #2383
             && pcmt->type != CT_COMMENT_MULTI)
          {
@@ -5603,10 +5604,11 @@ void do_blank_lines(void)
       {
          log_rule_B("nl_before_c_comment");
 
-         // Don't add blanks after a open brace or a comment
+         // Don't add blanks after an open brace, a case stamement, or a comment
          if (  (  prev == nullptr
                || (  prev->type != CT_BRACE_OPEN
-                  && prev->type != CT_VBRACE_OPEN))
+                  && prev->type != CT_VBRACE_OPEN
+                  && prev->type != CT_CASE_COLON))
             && pcmt != nullptr                          // Issue #2383
             && pcmt->type != CT_COMMENT)
          {
@@ -5621,10 +5623,11 @@ void do_blank_lines(void)
       {
          log_rule_B("nl_before_cpp_comment");
 
-         // Don't add blanks after a open brace
+         // Don't add blanks after an open brace or a case statement
          if (  (  prev == nullptr
                || (  prev->type != CT_BRACE_OPEN
-                  && prev->type != CT_VBRACE_OPEN))
+                  && prev->type != CT_VBRACE_OPEN
+                  && prev->type != CT_CASE_COLON))
             && pcmt != nullptr                          // Issue #2383
             && pcmt->type != CT_COMMENT_CPP)
          {
