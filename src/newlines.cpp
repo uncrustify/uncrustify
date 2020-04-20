@@ -5686,7 +5686,15 @@ void do_blank_lines(void)
          && chunk_is_token(prev, CT_ACCESS_COLON))
       {
          log_rule_B("nl_after_access_spec");
-         blank_line_set(pc, options::nl_after_access_spec);
+
+         // Don't add blanks before a closing brace
+         if (  next == nullptr
+            || (  chunk_is_not_token(next, CT_BRACE_CLOSE)
+               && chunk_is_not_token(next, CT_VBRACE_CLOSE)))
+         {
+            log_rule_B("nl_after_access_spec");
+            blank_line_set(pc, options::nl_after_access_spec);
+         }
       }
 
       // Add blanks after function bodies
