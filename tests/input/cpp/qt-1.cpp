@@ -3,7 +3,7 @@ class Foo: public QObject
 Q_OBJECT
 
 private slots:
-void mySlot();
+void mySlot() {}
 
 public slots:
 void publicSlot();
@@ -14,7 +14,7 @@ void somesignal();
 };
 
 class foo{bool b;public:int i;};class bar:public
-foo{void*p;protected:double d;};
+foo{void*p;protected:double d;enum e{A,B};private:};
 
 class Foo1: public QObject
 {

@@ -3,7 +3,8 @@ class Foo : public QObject
     Q_OBJECT
 
 private slots:
-    void mySlot( );
+    void mySlot( ) {
+    }
 
 public slots:
     void publicSlot( );
@@ -27,6 +28,9 @@ class bar : public
 
 protected:
     double d;
+    enum e {A,B};
+
+private:
 };
 
 class Foo1 : public QObject
