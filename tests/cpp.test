@@ -258,6 +258,7 @@
 
 30730  qt-1.cfg                             cpp/qt-1.cpp
 30731  nl_access_spec.cfg                   cpp/qt-1.cpp
+30732  Issue_2734.cfg                       cpp/Issue_2734.cpp
 
 30740  sef.cfg                              cpp/sef.cpp
 30741  al.cfg                               cpp/al.cpp

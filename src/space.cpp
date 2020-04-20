@@ -3480,11 +3480,15 @@ void space_text(void)
 
       // Issue # 481
       // Whether to balance spaces inside nested parentheses.
-      if ((QT_SIGNAL_SLOT_found) && (options::sp_balance_nested_parens()))
+      if (  QT_SIGNAL_SLOT_found
+         && options::sp_balance_nested_parens())
       {
-         if (next->next != nullptr && next->next->type == CT_SPACE)
+         chunk_t *nn = next->next;                                          // Issue #2734
+
+         if (  nn != nullptr
+            && chunk_is_token(nn, CT_SPACE))
          {
-            chunk_del(next->next); // remove the space
+            chunk_del(nn); // remove the space
          }
       }
 
