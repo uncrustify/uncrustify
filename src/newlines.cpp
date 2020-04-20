@@ -5919,12 +5919,13 @@ void do_blank_lines(void)
       {
          log_rule_B("nl_before_access_spec");
 
-         // Don't add blanks after a open brace
+         // Don't add blanks after an open brace
          if (  prev == nullptr
-            || (prev->type != CT_BRACE_OPEN && prev->type != CT_VBRACE_OPEN))
+            || (  chunk_is_not_token(prev, CT_BRACE_OPEN)
+               && chunk_is_not_token(prev, CT_VBRACE_OPEN)))
          {
-            blank_line_set(pc, options::nl_before_access_spec);
             log_rule_B("nl_before_access_spec");
+            blank_line_set(pc, options::nl_before_access_spec);
          }
       }
 
