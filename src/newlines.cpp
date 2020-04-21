@@ -5587,11 +5587,10 @@ void do_blank_lines(void)
 
          // Don't add blanks after an open brace or a case statement
          if (  (  prev == nullptr
-               || (  prev->type != CT_BRACE_OPEN
-                  && prev->type != CT_VBRACE_OPEN
-                  && prev->type != CT_CASE_COLON))
-            && pcmt != nullptr                          // Issue #2383
-            && pcmt->type != CT_COMMENT_MULTI)
+               || (  chunk_is_not_token(prev, CT_BRACE_OPEN)
+                  && chunk_is_not_token(prev, CT_VBRACE_OPEN)
+                  && chunk_is_not_token(prev, CT_CASE_COLON)))
+            && chunk_is_not_token(pcmt, CT_COMMENT_MULTI))    // Issue #2383
          {
             blank_line_set(pc, options::nl_before_block_comment);
             log_rule_B("nl_before_block_comment");
@@ -5606,11 +5605,10 @@ void do_blank_lines(void)
 
          // Don't add blanks after an open brace, a case stamement, or a comment
          if (  (  prev == nullptr
-               || (  prev->type != CT_BRACE_OPEN
-                  && prev->type != CT_VBRACE_OPEN
-                  && prev->type != CT_CASE_COLON))
-            && pcmt != nullptr                          // Issue #2383
-            && pcmt->type != CT_COMMENT)
+               || (  chunk_is_not_token(prev, CT_BRACE_OPEN)
+                  && chunk_is_not_token(prev, CT_VBRACE_OPEN)
+                  && chunk_is_not_token(prev, CT_CASE_COLON)))
+            && chunk_is_not_token(pcmt, CT_COMMENT))    // Issue #2383
          {
             blank_line_set(pc, options::nl_before_c_comment);
             log_rule_B("nl_before_c_comment");
@@ -5625,11 +5623,10 @@ void do_blank_lines(void)
 
          // Don't add blanks after an open brace or a case statement
          if (  (  prev == nullptr
-               || (  prev->type != CT_BRACE_OPEN
-                  && prev->type != CT_VBRACE_OPEN
-                  && prev->type != CT_CASE_COLON))
-            && pcmt != nullptr                          // Issue #2383
-            && pcmt->type != CT_COMMENT_CPP)
+               || (  chunk_is_not_token(prev, CT_BRACE_OPEN)
+                  && chunk_is_not_token(prev, CT_VBRACE_OPEN)
+                  && chunk_is_not_token(prev, CT_CASE_COLON)))
+            && chunk_is_not_token(pcmt, CT_COMMENT_CPP))    // Issue #2383
          {
             blank_line_set(pc, options::nl_before_cpp_comment);
             log_rule_B("nl_before_cpp_comment");
