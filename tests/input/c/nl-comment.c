@@ -13,6 +13,38 @@
     for (idx = 1; idx < bar; idx++)
        /* comment in virtual braces */
        res += idx;
+    switch (res)
+    {
+        case 1:
+            // C++-style comment
+            res++;
+            break;
+        case 2:
+            /* C-style comment */
+            res--;
+            break;
+        case 3:
+            /* Multi-line comment
+            */
+            res = 0;
+            break;
+        case 4:
+
+            // C++-style comment
+            res++;
+            break;
+        case 5:
+
+            /* C-style comment */
+            res--;
+            break;
+        default:
+
+            /* Multi-line comment
+            */
+            res = 0;
+            break;
+    }
 
     res *= idx;       // some comment
 
