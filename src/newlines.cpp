@@ -5633,22 +5633,6 @@ void do_blank_lines(void)
          }
       }
 
-      // Control blanks before an access spec
-      if (  (options::nl_before_access_spec() > 0)
-         && (options::nl_before_access_spec() != pc->nl_count)
-         && chunk_is_token(next, CT_ACCESS))
-      {
-         log_rule_B("nl_before_access_spec");
-
-         // Don't add blanks after a open brace
-         if (  prev == nullptr
-            || (prev->type != CT_BRACE_OPEN && prev->type != CT_VBRACE_OPEN))
-         {
-            blank_line_set(pc, options::nl_before_access_spec);
-            log_rule_B("nl_before_access_spec");
-         }
-      }
-
       // Control blanks before a class
       if (  (chunk_is_token(prev, CT_SEMICOLON) || chunk_is_token(prev, CT_BRACE_CLOSE))
          && get_chunk_parent_type(prev) == CT_CLASS)
@@ -5702,7 +5686,15 @@ void do_blank_lines(void)
          && chunk_is_token(prev, CT_ACCESS_COLON))
       {
          log_rule_B("nl_after_access_spec");
-         blank_line_set(pc, options::nl_after_access_spec);
+
+         // Don't add blanks before a closing brace
+         if (  next == nullptr
+            || (  chunk_is_not_token(next, CT_BRACE_CLOSE)
+               && chunk_is_not_token(next, CT_VBRACE_CLOSE)))
+         {
+            log_rule_B("nl_after_access_spec");
+            blank_line_set(pc, options::nl_after_access_spec);
+         }
       }
 
       // Add blanks after function bodies
@@ -5925,6 +5917,23 @@ void do_blank_lines(void)
          {
             blank_line_set(pc, options::nl_around_cs_property);
             log_rule_B("nl_around_cs_property");
+         }
+      }
+
+      // Control blanks before an access spec
+      if (  (options::nl_before_access_spec() > 0)
+         && (options::nl_before_access_spec() != pc->nl_count)
+         && chunk_is_token(next, CT_ACCESS))
+      {
+         log_rule_B("nl_before_access_spec");
+
+         // Don't add blanks after an open brace
+         if (  prev == nullptr
+            || (  chunk_is_not_token(prev, CT_BRACE_OPEN)
+               && chunk_is_not_token(prev, CT_VBRACE_OPEN)))
+         {
+            log_rule_B("nl_before_access_spec");
+            blank_line_set(pc, options::nl_before_access_spec);
          }
       }
 
