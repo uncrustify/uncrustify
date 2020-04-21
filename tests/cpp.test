@@ -397,7 +397,7 @@
 30940  mod_case_brace_rm.cfg                cpp/case-brace-remove.cpp
 30941  Issue_2150.cfg                       cpp/Issue_2150.cpp
 30942  Issue_1692.cfg                       cpp/Issue_1692.cpp
-
+30943  Issue_2735.cfg                       cpp/Issue_2735.cpp
 30944  sp_paren_comma.cfg                   cpp/sp_paren_comma.cpp
 30945  sp_before_byref-r.cfg                cpp/sf.3266678.cpp
 30946  sf.3315874.cfg                       cpp/sf.3315874.h
