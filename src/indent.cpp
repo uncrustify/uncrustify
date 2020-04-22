@@ -3584,12 +3584,17 @@ void indent_text(void)
                   if (  options::indent_switch_break_with_case()
                      && get_type_of_the_parent(pc) == CT_SWITCH)
                   {
-                     LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, indent_switch_break_with_case, for '%s'\n",
-                             __func__, __LINE__, pc->orig_line, pc->text());
-                     LOG_FMT(LINDENT, "%s(%d): indent_column is %zu, options::indent_columns() is '%d'\n",
-                             __func__, __LINE__, indent_column, options::indent_columns());
-                     log_rule_B("indent_columns");
-                     reindent_line(pc, indent_column - options::indent_columns());
+                     // look for a case before Issue #2735
+                     chunk_t *whereIsCase = chunk_get_prev_type(pc, CT_CASE, pc->level);
+
+                     if (whereIsCase != nullptr)
+                     {
+                        LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+                                __func__, __LINE__, whereIsCase->orig_line, whereIsCase->orig_col, whereIsCase->text());
+                        LOG_FMT(LINDENT, "%s(%d): column is %zu\n",
+                                __func__, __LINE__, whereIsCase->column);
+                        reindent_line(pc, whereIsCase->column);
+                     }
                   }
                   else
                   {
