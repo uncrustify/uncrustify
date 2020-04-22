@@ -1846,7 +1846,7 @@ static void parse_pawn_pattern(tok_ctx &ctx, chunk_t &pc, c_token_t tt)
 }
 
 
-static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
+static bool parse_off_newlines(tok_ctx &ctx, chunk_t &pc)
 {
    size_t nl_count = 0;
 
@@ -1860,6 +1860,55 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
    {
       pc.nl_count = nl_count;
       set_chunk_type(&pc, CT_NEWLINE);
+      return(true);
+   }
+   return(false);
+}
+
+
+static bool parse_macro(tok_ctx &ctx, chunk_t &pc, const chunk_t *prev_pc)
+{
+   if (parse_off_newlines(ctx, pc))
+   {
+      return(true);
+   }
+
+   if (parse_comment(ctx, pc))  // allow CT_COMMENT_MULTI within macros
+   {
+      return(true);
+   }
+   ctx.save();
+   pc.str.clear();
+
+   bool continued = chunk_is_token(prev_pc, CT_NL_CONT) || chunk_is_token(prev_pc, CT_COMMENT_MULTI);
+
+   while (ctx.more())
+   {
+      size_t pk = ctx.peek(), pk1 = ctx.peek(1);
+      bool   nl      = (pk == '\n' || pk == '\r');
+      bool   nl_cont = (pk == '\\' && (pk1 == '\n' || pk1 == '\r'));
+
+      if ((nl_cont || (continued && nl)) && pc.str.size() > 0)
+      {
+         set_chunk_type(&pc, CT_IGNORED);
+         return(true);
+      }
+      else if (nl)
+      {
+         break;
+      }
+      pc.str.append(ctx.get());
+   }
+   pc.str.clear();
+   ctx.restore();
+   return(false);
+}
+
+
+static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
+{
+   if (parse_off_newlines(ctx, pc))
+   {
       return(true);
    }
    // See if the UO_enable_processing_cmt or #pragma endasm / #endasm text is on this line
@@ -1907,12 +1956,6 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
       return(true);
    }
 
-   if (options::disable_processing_nl_cont() && pc.str.back() == '\\')
-   {
-      pc.type = CT_IGNORED;
-      return(true);
-   }
-
    // Look for the ending comment and let it pass
    if (parse_comment(ctx, pc) && !cpd.unc_off)
    {
@@ -1952,9 +1995,18 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc, const chunk_t *prev_pc)
    pc.flags     = PCF_NONE;
 
    // If it is turned off, we put everything except newlines into CT_UNKNOWN
-   if (cpd.unc_off || options::disable_processing_nl_cont())
+   if (cpd.unc_off)
    {
       if (parse_ignored(ctx, pc))
+      {
+         return(true);
+      }
+   }
+
+   // Parse macro blocks
+   if (options::disable_processing_nl_cont())
+   {
+      if (parse_macro(ctx, pc, prev_pc))
       {
          return(true);
       }
