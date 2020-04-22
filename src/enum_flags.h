@@ -47,7 +47,8 @@ public:
 
    inline flags() = default;
    inline flags(Enum flag)
-      : m_i{static_cast<int_t>(flag)} {}
+      : m_i{static_cast<int_t>(flag)}
+   {}
 
    inline bool operator==(Enum const &other)
    { return(m_i == static_cast<int_t>(other)); }

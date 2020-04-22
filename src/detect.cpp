@@ -35,7 +35,8 @@ protected:
 
 public:
    sp_votes(Option<iarf_e> &opt)
-      : m_option(opt) {}
+      : m_option(opt)
+   {}
 
    //! Figure out the result of the vote and maybe update *m_av
    ~sp_votes();

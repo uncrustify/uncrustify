@@ -1469,6 +1469,9 @@ nl_else_brace                   = ignore   # ignore/add/remove/force
 # Add or remove newline between 'else' and 'if'.
 nl_else_if                      = ignore   # ignore/add/remove/force
 
+# Add or remove newline before '{' opening brace
+nl_before_opening_brace_func_class_def = ignore   # ignore/add/remove/force
+
 # Add or remove newline before 'if'/'else if' closing parenthesis.
 nl_before_if_closing_paren      = ignore   # ignore/add/remove/force
 
