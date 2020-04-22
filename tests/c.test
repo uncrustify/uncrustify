@@ -337,6 +337,7 @@
 
 02455  mod_paren_on_return-a.cfg            c/macro-returns.c
 02456  mod_paren_on_return-r.cfg            c/macro-returns.c
+02457  nl_before_return_true.cfg            c/nl_before_return.c
 
 02460  freebsd.cfg                          c/freebsd.c
 
