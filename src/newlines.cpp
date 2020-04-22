@@ -2501,30 +2501,26 @@ static void newline_before_return(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *nl = chunk_get_prev(start);
+   chunk_t *pc = chunk_get_prev(start);
+   chunk_t *nl = pc;
 
-   if (!chunk_is_newline(nl))
+   // Skip over single preceding newline
+   if (chunk_is_newline(pc))
    {
-      // Don't mess with lines that don't start with 'return'
-      return;
+      // Do we already have a blank line?
+      if (nl->nl_count > 1)
+      {
+         return;
+      }
+      pc = chunk_get_prev(nl);
    }
 
-   // Do we already have a blank line?
-   if (nl->nl_count > 1)
-   {
-      return;
-   }
-   chunk_t *pc = chunk_get_prev(nl);
-
-   if (  pc == nullptr
-      || (  chunk_is_token(pc, CT_BRACE_OPEN)
-         || chunk_is_token(pc, CT_VBRACE_OPEN)
-         || chunk_is_token(pc, CT_CASE_COLON)))
-   {
-      return;
-   }
-
-   if (chunk_is_comment(pc))
+   // Skip over preceding comments that are not a trailing comment, taking
+   // into account that comment blocks may span multiple lines.
+   // Trailing comments are considered part of the previous token, not the
+   // return statement.  They are handled below.
+   while (  chunk_is_comment(pc)
+         && get_chunk_parent_type(pc) != CT_COMMENT_END)
    {
       pc = chunk_get_prev(pc);
 
@@ -2533,9 +2529,28 @@ static void newline_before_return(chunk_t *start)
          return;
       }
       nl = pc;
+      pc = chunk_get_prev(pc);
+   }
+   pc = chunk_get_prev(nl);
+
+   // Peek over trailing comment of previous token
+   if (  chunk_is_comment(pc)
+      && get_chunk_parent_type(pc) == CT_COMMENT_END)
+   {
+      pc = chunk_get_prev(pc);
    }
 
-   if (nl->nl_count < 2)
+   // Don't add extra blanks after an opening brace or a case statement
+   if (  pc == nullptr
+      || (  chunk_is_token(pc, CT_BRACE_OPEN)
+         || chunk_is_token(pc, CT_VBRACE_OPEN)
+         || chunk_is_token(pc, CT_CASE_COLON)))
+   {
+      return;
+   }
+
+   if (  chunk_is_newline(nl)
+      && nl->nl_count < 2)
    {
       nl->nl_count++;
       MARK_CHANGE();
