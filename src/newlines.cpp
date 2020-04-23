@@ -360,7 +360,8 @@ static bool can_increase_nl(chunk_t *nl)
 
    if (chunk_is_token(next, CT_BRACE_CLOSE))
    {
-      if (options::nl_inside_namespace() && get_chunk_parent_type(next) == CT_NAMESPACE)
+      if (  options::nl_inside_namespace()
+         && get_chunk_parent_type(next) == CT_NAMESPACE)
       {
          log_rule_B("nl_inside_namespace");
          LOG_FMT(LBLANKD, "%s(%d): nl_inside_namespace %zu\n",
@@ -379,7 +380,8 @@ static bool can_increase_nl(chunk_t *nl)
 
    if (chunk_is_token(prev, CT_BRACE_OPEN))
    {
-      if (options::nl_inside_namespace() && get_chunk_parent_type(prev) == CT_NAMESPACE)
+      if (  options::nl_inside_namespace()
+         && get_chunk_parent_type(prev) == CT_NAMESPACE)
       {
          log_rule_B("nl_inside_namespace");
          LOG_FMT(LBLANKD, "%s(%d): nl_inside_namespace %zu\n",
@@ -397,14 +399,16 @@ static bool can_increase_nl(chunk_t *nl)
    }
    log_rule_B("nl_start_of_file");
 
-   if (!pcmt && (options::nl_start_of_file() != IARF_IGNORE))
+   if (  !pcmt
+      && (options::nl_start_of_file() != IARF_IGNORE))
    {
       LOG_FMT(LBLANKD, "%s(%d): SOF no prev %zu\n", __func__, __LINE__, nl->orig_line);
       return(false);
    }
    log_rule_B("nl_end_of_file");
 
-   if (!next && (options::nl_end_of_file() != IARF_IGNORE))
+   if (  !next
+      && (options::nl_end_of_file() != IARF_IGNORE))
    {
       LOG_FMT(LBLANKD, "%s(%d): EOF no next %zu\n", __func__, __LINE__, nl->orig_line);
       return(false);
@@ -567,7 +571,8 @@ chunk_t *newline_force_after(chunk_t *pc)
    LOG_FUNC_ENTRY();
    chunk_t *nl = newline_add_after(pc);   // add a newline
 
-   if (nl != nullptr && nl->nl_count > 1) // check if there are more than 1 newline
+   if (  nl != nullptr
+      && nl->nl_count > 1) // check if there are more than 1 newline
    {
       nl->nl_count = 1;                   // if so change the newline count back to 1
       MARK_CHANGE();
@@ -582,7 +587,8 @@ static void newline_end_newline(chunk_t *br_close)
    chunk_t *next = chunk_get_next(br_close);
    chunk_t nl;
 
-   if (!chunk_is_newline(next) && !chunk_is_comment(next))
+   if (  !chunk_is_newline(next)
+      && !chunk_is_comment(next))
    {
       nl.orig_line = br_close->orig_line;
       nl.orig_col  = br_close->orig_col;
@@ -628,7 +634,8 @@ static void newline_min_after(chunk_t *ref, size_t count, pcf_flag_e flag)
    do
    {
       pc = chunk_get_next(pc);
-   } while (pc != nullptr && !chunk_is_newline(pc));
+   } while (  pc != nullptr
+           && !chunk_is_newline(pc));
 
    if (pc != nullptr)                 // Coverity CID 76002
    {
@@ -651,7 +658,8 @@ static void newline_min_after(chunk_t *ref, size_t count, pcf_flag_e flag)
    }
    chunk_flags_set(pc, flag);
 
-   if (chunk_is_newline(pc) && can_increase_nl(pc))
+   if (  chunk_is_newline(pc)
+      && can_increase_nl(pc))
    {
       if (pc->nl_count < count)
       {
@@ -863,7 +871,8 @@ void newlines_sparens()
          // add/remove trailing newline in an if condition
          chunk_t *ctrl_structure = chunk_get_prev_ncnl(sparen_open);
 
-         if (ctrl_structure->type == CT_IF || ctrl_structure->type == CT_ELSEIF)
+         if (  chunk_is_token(ctrl_structure, CT_IF)
+            || chunk_is_token(ctrl_structure, CT_ELSEIF))
          {
             log_rule_B("nl_before_if_closing_paren");
             newline_iarf_pair(sparen_content_end, sparen_close, options::nl_before_if_closing_paren());
@@ -2074,7 +2083,6 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
       }
       else
       {
-         //if (pc->type == CT_FUNC_CLASS_DEF)
          if (chunk_is_token(pc, CT_FUNC_CLASS_DEF))
          {
             if (  var_blk
@@ -2083,8 +2091,7 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
                prev = chunk_get_prev(pc);
                prev = chunk_get_prev(prev);
                newline_min_after(prev, options::nl_var_def_blk_end(), PCF_VAR_DEF);
-               pc = chunk_get_next(pc);
-               //typedef_blk   = false;
+               pc            = chunk_get_next(pc);
                first_var_blk = false;
                var_blk       = false;
             }
@@ -2684,12 +2691,12 @@ static void newline_func_multi_line(chunk_t *start)
       chunk_t *start_next         = chunk_get_next_ncnl(start);
       bool    has_leading_closure = (  start_next->parent_type == CT_OC_BLOCK_EXPR
                                     || start_next->parent_type == CT_CPP_LAMBDA
-                                    || start_next->type == CT_BRACE_OPEN);
+                                    || chunk_is_token(start_next, CT_BRACE_OPEN));
 
       chunk_t *prev_end            = chunk_get_prev_ncnl(pc);
       bool    has_trailing_closure = (  prev_end->parent_type == CT_OC_BLOCK_EXPR
                                      || prev_end->parent_type == CT_CPP_LAMBDA
-                                     || prev_end->type == CT_BRACE_OPEN);
+                                     || chunk_is_token(prev_end, CT_BRACE_OPEN));
 
       if (add_start && !chunk_is_newline(chunk_get_next(start)))
       {
@@ -2747,10 +2754,10 @@ static void newline_func_multi_line(chunk_t *start)
 
                      if (!(  (  prev_comma->parent_type == CT_OC_BLOCK_EXPR
                              || prev_comma->parent_type == CT_CPP_LAMBDA
-                             || prev_comma->type == CT_BRACE_OPEN)
+                             || chunk_is_token(prev_comma, CT_BRACE_OPEN))
                           || (  after_comma->parent_type == CT_OC_BLOCK_EXPR
                              || after_comma->parent_type == CT_CPP_LAMBDA
-                             || after_comma->type == CT_BRACE_OPEN)))
+                             || chunk_is_token(after_comma, CT_BRACE_OPEN))))
                      {
                         newline_iarf(pc, IARF_ADD);
                      }
@@ -3773,6 +3780,14 @@ void newlines_cleanup_braces(bool first)
             log_rule_B("nl_oc_block_brace");
             newline_iarf_pair(chunk_get_prev(pc), pc, options::nl_oc_block_brace());
             break;
+         }
+
+         case CT_FUNC_CLASS_DEF:                             // Issue #2343
+         {
+            if (options::nl_before_opening_brace_func_class_def() != IARF_IGNORE)
+            {
+               newline_iarf_pair(chunk_get_prev(pc), pc, options::nl_before_opening_brace_func_class_def());
+            }
          }
 
          default:
@@ -5494,7 +5509,7 @@ bool is_func_proto_group(chunk_t *pc, c_token_t one_liner_type)
    {
       log_rule_B("nl_class_leave_one_liner_groups");
 
-      if (pc->type == CT_BRACE_CLOSE)
+      if (chunk_is_token(pc, CT_BRACE_CLOSE))
       {
          return(pc->flags.test(PCF_ONE_LINER));
       }
@@ -5994,7 +6009,7 @@ static void newlines_enum_entries(chunk_t *open_brace, iarf_e av)
    {
       if (  (pc->level != (open_brace->level + 1))
          || pc->type != CT_COMMA
-         || (  pc->type == CT_COMMA && pc->next
+         || (  chunk_is_token(pc, CT_COMMA) && pc->next != nullptr
             && (  pc->next->type == CT_COMMENT_CPP
                || pc->next->type == CT_COMMENT)))
       {

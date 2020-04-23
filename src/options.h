@@ -8,6 +8,7 @@
  * @author  Matthew Woehlke
  * @license GPL v2+
  */
+
 #ifndef OPTIONS_H_INCLUDED
 #define OPTIONS_H_INCLUDED
 
@@ -1806,6 +1807,10 @@ nl_else_brace;
 // Add or remove newline between 'else' and 'if'.
 extern Option<iarf_e>
 nl_else_if;
+
+// Add or remove newline before '{' opening brace
+extern Option<iarf_e>
+nl_before_opening_brace_func_class_def;
 
 // Add or remove newline before 'if'/'else if' closing parenthesis.
 extern Option<iarf_e>

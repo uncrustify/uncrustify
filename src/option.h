@@ -110,7 +110,8 @@ class GenericOption
 public:
    GenericOption(const char *opt_name, const char *opt_desc)
       : m_name{opt_name}
-      , m_desc{opt_desc} {}
+      , m_desc{opt_desc}
+   {}
 
    virtual ~GenericOption() = default;
 
@@ -174,7 +175,8 @@ public:
    Option(const char *opt_name, const char *opt_desc, T opt_val = T{})
       : GenericOption{opt_name, opt_desc}
       , m_val{opt_val}
-      , m_default{opt_val} {}
+      , m_default{opt_val}
+   {}
 
    option_type_e type() const override;
    const char *const *possibleValues() const override;
