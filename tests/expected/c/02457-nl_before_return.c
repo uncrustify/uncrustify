@@ -3,31 +3,25 @@ int foo1(int arg)
 	if (arg == 0) return 1;
 	if (arg == 1) /* comment */ return 2;
 	if (arg == 2)
-
 		/* C-style comment */
 		return 3;
 	if (arg == 3) /* trailing comment */
 		return 4;
 	if (arg == 4) /* trailing comment */
-
 		/* C-style comment */
 		return 5;
 	if (arg == 5)
-
 		// C++-style comment
 		return 6;
 	if (arg == 6)
 		// Multi-line
-
 		// C++-style comment
 		return 7;
 	if (arg == 7) // trailing comment
 		// Multi-line
-
 		// C++-style comment
 		return 8;
 	if (arg == 8)
-
 		/*
 		 * Multi-line C-style comment
 		 */
@@ -35,7 +29,6 @@ int foo1(int arg)
 	if (arg == 9)
 		/*--------------------*/
 		/* Multi-part comment */
-
 		/*--------------------*/
 		return 10;
 	if (arg == 10)
@@ -43,7 +36,6 @@ int foo1(int arg)
 		/*
 		 * Mixed-style comment
 		 */
-
 		//-----------------------
 		return 11;
 	if (arg == 11)
@@ -61,7 +53,6 @@ int foo2(int arg)
 	if (arg == 0) { return 1; }
 	if (arg == 1) { /* comment */ return 2; }
 	if (arg == 2) {
-
 		/* C-style comment */
 		return 3;
 	}
@@ -69,29 +60,24 @@ int foo2(int arg)
 		return 4;
 	}
 	if (arg == 4) { /* trailing comment */
-
 		/* C-style comment */
 		return 5;
 	}
 	if (arg == 5) {
-
 		// C++-style comment
 		return 6;
 	}
 	if (arg == 6) {
 		// Multi-line
-
 		// C++-style comment
 		return 7;
 	}
 	if (arg == 7) { // trailing comment
 		// Multi-line
-
 		// C++-style comment
 		return 8;
 	}
 	if (arg == 8) {
-
 		/*
 		 * Multi-line C-style comment
 		 */
@@ -101,7 +87,6 @@ int foo2(int arg)
 	{
 		/*--------------------*/
 		/* Multi-part comment */
-
 		/*--------------------*/
 		return 10;
 	}
@@ -109,7 +94,6 @@ int foo2(int arg)
 	{
 		//-----------------------
 		/* Mixed-style comment */
-
 		//-----------------------
 		return 11;
 	}
@@ -138,6 +122,7 @@ int foo2(int arg)
 	}
 	if (arg == 3) {
 		int a = 4; /* trailing comment */
+
 		return a;
 	}
 	if (arg == 4) {
@@ -154,37 +139,38 @@ int foo2(int arg)
 	}
 	if (arg == 6) {
 		int a = 7;
-		// Multi-line
 
+		// Multi-line
 		// C++-style comment
 		return a;
 	}
 	if (arg == 7) {
 		int a = 8; // trailing comment
-		// Multi-line
 
+		// Multi-line
 		// C++-style comment
 		return a;
 	}
 	if (arg == 8) {
 		int a = 9;
+
 		/*--------------------*/
 		/* Multi-part comment */
-
 		/*--------------------*/
 		return a;
 	}
 	if (arg == 9) {
 		int a = 10;
+
 		/*---------------------*/
 		// Mixed-style comment
-
 		/*---------------------*/
 		return a;
 	}
 	if (arg == 11)
 	{
 		int a = 12;
+
 		/* comment */ return a;
 	}
 	if (arg == 12) {
