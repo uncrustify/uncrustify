@@ -3959,8 +3959,9 @@ bool ifdef_over_whole_file(void)
    {
       return(cpd.ifdef_over_whole_file > 0);
    }
-   chunk_t *end_pp = nullptr;
-   size_t  stage   = 0;
+   chunk_t *start_pp = nullptr;
+   chunk_t *end_pp   = nullptr;
+   size_t  stage     = 0;
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
@@ -3982,7 +3983,8 @@ bool ifdef_over_whole_file(void)
          {
             break;
          }
-         stage = 1;
+         stage    = 1;
+         start_pp = pc;
       }
       else if (stage == 1)
       {
@@ -4009,6 +4011,7 @@ bool ifdef_over_whole_file(void)
 
    if (cpd.ifdef_over_whole_file > 0)
    {
+      chunk_flags_set(start_pp, PCF_WF_IF);
       chunk_flags_set(end_pp, PCF_WF_ENDIF);
    }
    LOG_FMT(LNOTE, "The whole file is%s covered by a #IF\n",
