@@ -342,15 +342,17 @@ static bool can_increase_nl(chunk_t *nl)
          && (pp_start->level > 0 || options::nl_squeeze_ifdef_top_level()))
       {
          log_rule_B("nl_squeeze_ifdef_top_level");
-         LOG_FMT(LBLANKD, "%s(%d): nl_squeeze_ifdef %zu (prev) pp_lvl=%zu rv=0\n",
-                 __func__, __LINE__, nl->orig_line, nl->pp_level);
-         return(false);
+         bool rv = ifdef_over_whole_file() && pp_start->flags.test(PCF_WF_IF);
+         LOG_FMT(LBLANKD, "%s(%d): nl_squeeze_ifdef %zu (prev) pp_lvl=%zu rv=%d\n",
+                 __func__, __LINE__, nl->orig_line, nl->pp_level, rv);
+         return(rv);
       }
 
       if (  chunk_is_token(next, CT_PREPROC)
          && get_chunk_parent_type(next) == CT_PP_ENDIF
          && (next->level > 0 || options::nl_squeeze_ifdef_top_level()))
       {
+         log_rule_B("nl_squeeze_ifdef_top_level");
          bool rv = ifdef_over_whole_file() && next->flags.test(PCF_WF_ENDIF);
          LOG_FMT(LBLANKD, "%s(%d): nl_squeeze_ifdef %zu (next) pp_lvl=%zu rv=%d\n",
                  __func__, __LINE__, nl->orig_line, nl->pp_level, rv);
@@ -5962,6 +5964,62 @@ void do_blank_lines(void)
       {
          log_rule_B("nl_inside_namespace");
          blank_line_set(pc, options::nl_inside_namespace);
+      }
+
+      // Control blanks before a whole-file #ifdef
+      if (  options::nl_before_whole_file_ifdef() != 0
+         && options::nl_before_whole_file_ifdef() != pc->nl_count
+         && chunk_is_token(next, CT_PREPROC)
+         && get_chunk_parent_type(next) == CT_PP_IF
+         && ifdef_over_whole_file()
+         && next->flags.test(PCF_WF_IF))
+      {
+         log_rule_B("nl_before_whole_file_ifdef");
+         blank_line_set(pc, options::nl_before_whole_file_ifdef);
+      }
+
+      // Control blanks after a whole-file #ifdef
+      if (  options::nl_after_whole_file_ifdef() != 0
+         && options::nl_after_whole_file_ifdef() != pc->nl_count)
+      {
+         chunk_t *pp_start = chunk_get_pp_start(prev);
+
+         if (  pp_start != nullptr
+            && get_chunk_parent_type(pp_start) == CT_PP_IF
+            && ifdef_over_whole_file()
+            && pp_start->flags.test(PCF_WF_IF))
+         {
+            log_rule_B("nl_after_whole_file_ifdef");
+            blank_line_set(pc, options::nl_after_whole_file_ifdef);
+         }
+      }
+
+      // Control blanks before a whole-file #endif
+      if (  options::nl_before_whole_file_endif() != 0
+         && options::nl_before_whole_file_endif() != pc->nl_count
+         && chunk_is_token(next, CT_PREPROC)
+         && get_chunk_parent_type(next) == CT_PP_ENDIF
+         && ifdef_over_whole_file()
+         && next->flags.test(PCF_WF_ENDIF))
+      {
+         log_rule_B("nl_before_whole_file_endif");
+         blank_line_set(pc, options::nl_before_whole_file_endif);
+      }
+
+      // Control blanks after a whole-file #endif
+      if (  options::nl_after_whole_file_endif() != 0
+         && options::nl_after_whole_file_endif() != pc->nl_count)
+      {
+         chunk_t *pp_start = chunk_get_pp_start(prev);
+
+         if (  pp_start != nullptr
+            && get_chunk_parent_type(pp_start) == CT_PP_ENDIF
+            && ifdef_over_whole_file()
+            && pp_start->flags.test(PCF_WF_ENDIF))
+         {
+            log_rule_B("nl_after_whole_file_endif");
+            blank_line_set(pc, options::nl_after_whole_file_endif);
+         }
       }
 
       if (line_added && pc->nl_count > 1)

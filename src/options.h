@@ -2697,6 +2697,30 @@ nl_after_annotation;
 extern Option<iarf_e>
 nl_between_annotation;
 
+// The number of newlines before a whole-file #ifdef.
+//
+// 0: No change (default).
+extern BoundedOption<unsigned, 0, 16>
+nl_before_whole_file_ifdef;
+
+// The number of newlines after a whole-file #ifdef.
+//
+// 0: No change (default).
+extern BoundedOption<unsigned, 0, 16>
+nl_after_whole_file_ifdef;
+
+// The number of newlines before a whole-file #endif.
+//
+// 0: No change (default).
+extern BoundedOption<unsigned, 0, 16>
+nl_before_whole_file_endif;
+
+// The number of newlines after a whole-file #endif.
+//
+// 0: No change (default).
+extern BoundedOption<unsigned, 0, 16>
+nl_after_whole_file_endif;
+
 //END
 
 ///////////////////////////////////////////////////////////////////////////////
