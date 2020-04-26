@@ -82,6 +82,7 @@ enum pcf_flag_e : decltype(0ULL)
    PCF_IN_FCN_CTOR    = pcf_bit(41),   //! inside function constructor
    PCF_IN_TRY_BLOCK   = pcf_bit(42),   //! inside Function-try-block
    PCF_INCOMPLETE     = pcf_bit(43),   //! class/struct forward declaration
+   PCF_WF_IF          = pcf_bit(44),   //! #if for a whole file ifdef
 };
 
 UNC_DECLARE_FLAGS(pcf_flags_t, pcf_flag_e);

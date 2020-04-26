@@ -316,6 +316,7 @@
 02411  pp_if_indent-1.cfg                   c/ifdef-indent.c
 02412  pp_if_indent-2.cfg                   c/ifdef-indent.c
 02413  pp_if_indent-3.cfg                   c/ifdef-indent.c
+02414  nl_whole_file_ifdef.cfg              c/whole_file_ifdef.c
 
 02415  endif.cfg                            c/endif.c
 02416  cmt_nl_end.cfg                       c/cmt_nl_end.c

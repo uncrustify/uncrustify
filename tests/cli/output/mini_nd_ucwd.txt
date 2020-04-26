@@ -2176,6 +2176,26 @@ nl_after_annotation             = ignore   # ignore/add/remove/force
 # (Java) Add or remove newline between two annotations.
 nl_between_annotation           = ignore   # ignore/add/remove/force
 
+# The number of newlines before a whole-file #ifdef.
+#
+# 0: No change (default).
+nl_before_whole_file_ifdef      = 0        # unsigned number
+
+# The number of newlines after a whole-file #ifdef.
+#
+# 0: No change (default).
+nl_after_whole_file_ifdef       = 0        # unsigned number
+
+# The number of newlines before a whole-file #endif.
+#
+# 0: No change (default).
+nl_before_whole_file_endif      = 0        # unsigned number
+
+# The number of newlines after a whole-file #endif.
+#
+# 0: No change (default).
+nl_after_whole_file_endif       = 0        # unsigned number
+
 #
 # Positioning options
 #

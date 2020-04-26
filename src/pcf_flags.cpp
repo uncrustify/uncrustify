@@ -53,6 +53,7 @@ static const char *pcf_names[] =
    "IN_FCN_CTOR",       // 41                    Issue #2152
    "IN_TRY_BLOCK",      // 42                    Issue #1734
    "INCOMPLETE",        // 43
+   "WF_IF",             // 44
 };
 
 
