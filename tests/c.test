@@ -159,6 +159,7 @@
 00417  align_sf_call_thresh_417.cfg         c/align_sf_call_thresh_417.c
 00418  align_sf_call_span_418.cfg           c/align_sf_call_span_418.c
 00419  align_sf_call_span_419.cfg           c/align_sf_call_span_419.c
+00420  Issue-2278.cfg                       c/Issue-2278.c
 
 00421  nl_ds_struct_enum_cmt-t.cfg          c/nl_ds_struct_enum.c
 00422  nl_ds_struct_enum-2.cfg              c/nl_ds_struct_enum.c
