@@ -942,7 +942,13 @@ void indent_text(void)
                frm.top().indent = frm.prev(2).indent;
                log_indent();
             }
-            else
+            else if (  (frm.prev().type == CT_CASE)
+                    && (frm.top().type == CT_PP_ENDIF))
+            {
+               frm.pop(__func__, __LINE__);
+               frm.top().indent = frm.prev(2).indent;
+               log_indent();
+            }else
             {
                frm.top().indent = frm.prev().indent;
                log_indent();
