@@ -11,6 +11,10 @@
 #include "align_stack.h"
 #include "log_rules.h"
 
+#ifdef WIN32
+#include <algorithm>                           // to get max
+#endif /* ifdef WIN32 */
+
 using namespace uncrustify;
 
 
