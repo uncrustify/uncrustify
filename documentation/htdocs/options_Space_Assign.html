@@ -13,57 +13,21 @@ Where do the options work?</h1>
 <tr>
 <td>
 <pre>
-<a name="sp_assign"></a><a name="sp_before_assign"></a><a name="sp_after_assign"></a>
+int a = 5;
+<a title="sp_assign"><strong><font color="red">     █ █</font></strong></a>
+<a title="sp_before_assign"><strong><font color="red">     █ </a><a title="sp_after_assign">█</font></strong></a>
 int decimal<a title="sp_assign"><font color="red">█</font></a>=<a title="sp_assign"><font color="red">█</font></a>1;
 normal<a title="sp_assign"><font color="red">█</font></a>+=<a title="sp_assign"><font color="red">█</font></a>2;
-<a name="sp_assign_default"></a>
+
 int find(size_t idx<a title="sp_assign_default"><font color="red">█</font></a>=<a title="sp_assign_default"><font color="red">█</font></a>0);
 
-enum FLAGS {<a name="sp_enum_assign"></a><a name="sp_enum_before_assign"></a><a name="sp_enum_after_assign"></a>
+enum FLAGS {
     FLAGS_decimal<a title="sp_enum_assign, sp_enum_before_assign"><font color="red">█</font></a>=<a title="sp_enum_assign, sp_enum_after_assign"><font color="red">█</font></a>1,
-<a name="sp_cpp_lambda_assign"></a>
+
 return [<a title="sp_cpp_lambda_assign"><font color="red">█</font></a>=<a title="sp_cpp_lambda_assign"><font color="red">█</font></a>](T* t) {  };
 </pre>
 </td>
 </tr>
 </table>
-<p></p>
-<h1>Register</h1>
-<table border="0", width="100%">
-<tr>
-   <td> <a href="#sp_assign">sp_assign</a></td>
-   <td>Add or remove space around assignment operator '=', '+=', etc.
-</tr>
-<tr>
-   <td> <a href="#sp_cpp_lambda_assign">sp_cpp_lambda_assign</a></td>
-   <td>Add or remove space around '=' in C++11 lambda capture specifications. Overrides sp_assign.
-</tr>
-<tr>
-   <td> <a href="#sp_assign_default">sp_assign_default</a></td>
-   <td>Add or remove space around assignment operator '=' in a prototype.
-</tr>
-<tr>
-   <td> <a href="#sp_before_assign">sp_before_assign</a></td>
-   <td>Add or remove space before assignment operator '=', '+=', etc. Overrides sp_assign.
-</tr>
-<tr>
-   <td> <a href="#sp_after_assign">sp_after_assign</a></td>
-   <td>Add or remove space after assignment operator '=', '+=', etc. Overrides sp_assign.
-</tr>
-<tr>
-   <td> <a href="#sp_enum_assign">sp_enum_assign</a> </td>
-   <td>Add or remove space around assignment '=' in enum.</td>
-</tr>
-<tr>
-   <td> <a href="#sp_enum_before_assign">sp_enum_before_assign</a> </td>
-   <td>Add or remove space before assignment '=' in enum. Overrides sp_enum_assign.</td>
-</tr>
-<tr>
-   <td> <a href="#sp_enum_after_assign">sp_enum_after_assign</a> </td>
-   <td>Add or remove space after assignment '=' in enum. Overrides sp_enum_assign.</td>
-</tr>
-</table>
-</body>
-</html>
 </body>
 </html>
