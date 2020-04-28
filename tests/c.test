@@ -399,3 +399,5 @@
 10012  indent_sparen_extra-8.cfg            c/sparen-indent.c
 10013  empty.cfg                            c/sparen-indent.c
 10014  indent_continue-8.cfg                c/sparen-indent.c
+
+10015  pp_if_case.cfg                       c/pp_if_case.c
