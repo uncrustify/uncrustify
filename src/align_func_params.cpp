@@ -61,8 +61,8 @@ chunk_t *align_func_param(chunk_t *start)
       chunk_count++;
       LOG_FMT(LFLPAREN, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-      LOG_FMT(LFLPAREN, "   pc->flags: ");
-      log_pcf_flags(LFLPAREN, pc->flags);
+      //LOG_FMT(LFLPAREN, "   pc->flags: ");
+      //log_pcf_flags(LFLPAREN, pc->flags);
 
       if (chunk_is_token(pc, CT_FUNC_VAR))                    // Issue #2278
       {
@@ -98,10 +98,11 @@ chunk_t *align_func_param(chunk_t *start)
       }
       else if (pc->level <= start->level)
       {
-         for (size_t idx = 1; idx <= max_level_is; idx++)
-         {
-            many_as[idx].Debug();
-         }
+         // for debuging purpose only
+         //for (size_t idx = 1; idx <= max_level_is; idx++)
+         //{
+         //   many_as[idx].Debug();
+         //}
 
          break;
       }
