@@ -40,7 +40,7 @@ chunk_t *align_func_param(chunk_t *start)
       log_rule_B("align_func_params_gap");
       mygap = options::align_func_params_gap();
    }
-#define HOW_MANY_AS    16
+#define HOW_MANY_AS    8
    size_t     max_level_is = 0;
    AlignStack many_as[HOW_MANY_AS + 1];
    // NOTE: many_as[0] is not used
