@@ -207,6 +207,9 @@ enum c_token_t
    CT_SPAREN_OPEN,      // 'special' paren after if/for/switch/while/synchronized/catch
    CT_SPAREN_CLOSE,
 
+   CT_PPAREN_OPEN,      // 'protect' paren to protect a type such as (*int)
+   CT_PPAREN_CLOSE,     // used at align_func_param
+
    CT_FPAREN_OPEN,      // 'function' paren after fcn/macro fcn
    CT_FPAREN_CLOSE,
 

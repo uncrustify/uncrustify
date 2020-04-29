@@ -16,6 +16,7 @@
 #include "prototypes.h"
 #include "space.h"
 #include "uncrustify.h"
+//#include "unc_tools.h"                   // to get stackID and get_A_Number()
 
 #include <limits>
 
@@ -84,6 +85,9 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
 {
    //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu, for '%s', ", __func__, __LINE__, stackID, start->text());
    LOG_FUNC_ENTRY();
+
+   LOG_FMT(LAS, "AlignStack::%s(%d): Candidate is '%s': orig_line is %zu, column is %zu, type is %s, level is %zu\n",
+           __func__, __LINE__, start->text(), start->orig_line, start->column, get_token_name(start->type), start->level);
 
    // Assign a seqnum if needed
    if (seqnum == 0)
@@ -287,8 +291,17 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       m_aligned.Push_Back(ali, seqnum);
       m_last_added = 1;
 
-      LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s]: ali->orig_line is %zu, ali->column is %zu, type is %s\n",
-              __func__, __LINE__, ali->text(), ali->orig_line, ali->column, get_token_name(ali->type));
+      // Issue #2278
+      if (chunk_is_token(ali, CT_PTR_TYPE))
+      {
+         LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s][%s]: ali->orig_line is %zu, column is %zu, type is %s, level is %zu\n",
+                 __func__, __LINE__, ali->text(), start->text(), ali->orig_line, ali->column, get_token_name(ali->type), ali->level);
+      }
+      else
+      {
+         LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s]: ali->orig_line is %zu, column is %zu, type is %s, level is %zu\n",
+                 __func__, __LINE__, ali->text(), ali->orig_line, ali->column, get_token_name(ali->type), ali->level);
+      }
       LOG_FMT(LAS, "AlignStack::%s(%d):    ali->align.col_adj is %d, ref '%s', endcol is %zu\n",
               __func__, __LINE__, ali->align.col_adj, ref->text(), endcol);
 
@@ -360,10 +373,16 @@ void AlignStack::NewLines(size_t cnt)
 void AlignStack::Flush()
 {
    //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu\n", __func__, __LINE__, stackID);
-   LOG_FMT(LAS, "AlignStack::%s(%d): m_aligned.Len() is %zu\n", __func__, __LINE__, m_aligned.Len());
-   LOG_FMT(LAS, "   (min is %zu, max is %zu)\n", m_min_col, m_max_col);
+   LOG_FMT(LAS, "AlignStack::%s(%d): Len() is %zu\n",
+           __func__, __LINE__, Len());
 
-   if (m_aligned.Len() == 1)
+   if (Len() > 0)
+   {
+      LOG_FMT(LAS, "   (min is %zu, max is %zu)\n",
+              m_min_col, m_max_col);
+   }
+
+   if (Len() == 1)
    {
       // check if we have *one* typedef in the line
       chunk_t *pc   = m_aligned.Get(0)->m_pc;
@@ -381,7 +400,7 @@ void AlignStack::Flush()
    m_last_added = 0;
    m_max_col    = 0;
 
-   for (size_t idx = 0; idx < m_aligned.Len(); idx++)
+   for (size_t idx = 0; idx < Len(); idx++)
    {
       chunk_t *pc = m_aligned.Get(idx)->m_pc;
       LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, pc->text() is '%s', pc->align.col_adj is %d\n",
@@ -389,7 +408,7 @@ void AlignStack::Flush()
    }
 
    // Recalculate the max_col - it may have shifted since the last Add()
-   for (size_t idx = 0; idx < m_aligned.Len(); idx++)
+   for (size_t idx = 0; idx < Len(); idx++)
    {
       chunk_t *pc = m_aligned.Get(idx)->m_pc;
 
@@ -441,23 +460,24 @@ void AlignStack::Flush()
       }
    }
 
-   if (options::align_on_tabstop() && m_aligned.Len() > 1)
+   if (  options::align_on_tabstop()
+      && Len() > 1)
    {
       m_max_col = align_tab_column(m_max_col);
    }
-   LOG_FMT(LAS, "AlignStack::%s(%d): m_aligned.Len() is %zu\n",
-           __func__, __LINE__, m_aligned.Len());
+   LOG_FMT(LAS, "AlignStack::%s(%d): Len() is %zu\n",
+           __func__, __LINE__, Len());
 
    const ChunkStack::Entry *ce = nullptr;
 
-   for (size_t idx = 0; idx < m_aligned.Len(); idx++)
+   for (size_t idx = 0; idx < Len(); idx++)
    {
       ce = m_aligned.Get(idx);
       LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, ce->m_pc->text() is '%s', ce->m_pc->align.col_adj is %d\n",
               __func__, __LINE__, idx, ce->m_pc->text(), ce->m_pc->align.col_adj);
    }
 
-   for (size_t idx = 0; idx < m_aligned.Len(); idx++)
+   for (size_t idx = 0; idx < Len(); idx++)
    {
       ce = m_aligned.Get(idx);
       chunk_t      *pc = ce->m_pc;
@@ -466,7 +486,8 @@ void AlignStack::Flush()
 
       if (idx == 0)
       {
-         if (m_skip_first && pc->column != tmp_col)
+         if (  m_skip_first
+            && pc->column != tmp_col)
          {
             LOG_FMT(LAS, "AlignStack::%s(%d): orig_line is %zu, orig_col is %zu, dropping first item due to skip_first\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col);
@@ -543,6 +564,32 @@ void AlignStack::End()
    }
    m_aligned.Reset();
    m_skipped.Reset();
+}
+
+
+size_t AlignStack::Len()
+{
+   return(m_aligned.Len());
+}
+
+
+void AlignStack::Debug()
+{
+   for (size_t idx = 0; idx < Len(); idx++)
+   {
+      chunk_t *pc = m_aligned.Get(idx)->m_pc;
+
+      if (chunk_is_token(pc, CT_PTR_TYPE))
+      {
+         LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s][%s]: orig_line is %zu, type is %s, level is %zu\n",
+                 __func__, __LINE__, idx, pc->text(), pc->next->text(), pc->orig_line, get_token_name(pc->type), pc->level);
+      }
+      else
+      {
+         LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s]: orig_line is %zu, type is %s, level is %zu\n",
+                 __func__, __LINE__, idx, pc->text(), pc->orig_line, get_token_name(pc->type), pc->level);
+      }
+   }
 }
 
 

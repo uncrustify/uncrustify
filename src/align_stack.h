@@ -52,6 +52,7 @@ public:
       , m_star_style(SS_IGNORE)
       , m_amp_style(SS_IGNORE)
       , m_skip_first(false)
+      //, stackID(1234)
       , m_last_added(0)
    {
    }
@@ -118,18 +119,22 @@ public:
    void End();
 
 
+   //! the size of the lists.
+   size_t Len();
+
+
+   //! for debuging purpose only
+   void Debug();
+
+
    const char *get_StarStyle_name(StarStyle star_style);
 
 protected:
    size_t     m_last_added; //! 0=none, 1=aligned, 2=skipped
    ChunkStack m_scratch;    //! used in ReAddSkipped()
-//   size_t     StackNumber = 0;
 
    //! Calls Add on all the skipped items
    void ReAddSkipped();
-
-
-//   static size_t getStackNumber();
 };
 
 
