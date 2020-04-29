@@ -948,7 +948,8 @@ void indent_text(void)
                frm.pop(__func__, __LINE__);
                frm.top().indent = frm.prev(2).indent;
                log_indent();
-            }else
+            }
+            else
             {
                frm.top().indent = frm.prev().indent;
                log_indent();
