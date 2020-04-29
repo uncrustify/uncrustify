@@ -1764,6 +1764,9 @@ nl_func_call_empty              = ignore   # ignore/add/remove/force
 # has preference over nl_func_call_start_multi_line.
 nl_func_call_start              = ignore   # ignore/add/remove/force
 
+# Whether to add a newline before ')' in a function call.
+nl_func_call_end                = ignore   # ignore/add/remove/force
+
 # Whether to add a newline after '(' in a function call if '(' and ')' are in
 # different lines.
 nl_func_call_start_multi_line   = false    # true/false

@@ -4408,6 +4408,16 @@ void newlines_cleanup_braces(bool first)
             newline_iarf(pc, IARF_REMOVE);
          }
       }
+      else if (chunk_is_token(pc, CT_FPAREN_CLOSE))                          // Issue #2758
+      {
+         if (  (  get_chunk_parent_type(pc) == CT_FUNC_CALL
+               || get_chunk_parent_type(pc) == CT_FUNC_CALL_USER)
+            && options::nl_func_call_end() != IARF_IGNORE)
+         {
+            log_rule_B("nl_func_call_end");
+            newline_iarf(pc->prev, options::nl_func_call_end());
+         }
+      }
       else if (chunk_is_token(pc, CT_ANGLE_CLOSE))
       {
          if (get_chunk_parent_type(pc) == CT_TEMPLATE)
