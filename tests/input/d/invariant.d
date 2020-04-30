@@ -1,0 +1,1 @@
+invariant (C) c;

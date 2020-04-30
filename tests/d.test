@@ -43,3 +43,5 @@
 40090  libd.cfg                             d/square_indent_tab.d
 
 40100  1438.cfg                             d/1438.d
+
+40201  invariant.cfg                        d/invariant.d
