@@ -349,7 +349,8 @@ static bool can_increase_nl(chunk_t *nl)
       }
 
       if (  chunk_is_token(next, CT_PREPROC)
-         && get_chunk_parent_type(next) == CT_PP_ENDIF
+         && (  get_chunk_parent_type(next) == CT_PP_ELSE
+            || get_chunk_parent_type(next) == CT_PP_ENDIF)
          && (next->level > 0 || options::nl_squeeze_ifdef_top_level()))
       {
          log_rule_B("nl_squeeze_ifdef_top_level");

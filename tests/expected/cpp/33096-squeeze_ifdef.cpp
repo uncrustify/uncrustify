@@ -2,10 +2,13 @@
 #if defined(A)
 // Comment
 extern int ax;
+void fa();
 #elif defined(B)
 extern int bx;
+void fb();
 #else
 extern int cx;
+void fc();
 #endif
 
 int foo()
