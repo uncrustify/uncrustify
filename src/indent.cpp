@@ -3870,17 +3870,6 @@ static void indent_comment(chunk_t *pc, size_t col)
       LOG_FMT(LCMTIND, "%s(%d): nl->text() is '%s', orig_line %zu, orig_col %zu, level %zu\n",
               __func__, __LINE__, nl->text(), nl->orig_line, nl->orig_col, nl->level);
    }
-
-   // outside of any expression or statement?
-   if (pc->level == 0)
-   {
-      if (nl != nullptr && nl->nl_count > 1)
-      {
-         LOG_FMT(LCMTIND, "%s(%d): rule 2 - level 0, nl before\n", __func__, __LINE__);
-         reindent_line(pc, 1);
-         return;
-      }
-   }
    // TODO: Add an indent_comment_align_thresh option?
    const size_t indent_comment_align_thresh = 3;
 

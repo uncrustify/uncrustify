@@ -4,6 +4,14 @@
 #include <foo2.h>
 #endif
 
+#ifdef foo
+/* Commentary for func1() */
+void func1();
+
+/* Commentary for func2() */
+void func2();
+#endif
+
 int
 show_interrupts(struct seq_file *p, void *v)
 {
