@@ -3274,13 +3274,15 @@ cmt_multi_first_len_minimum; // = 4
 
 // Path to a file that contains text to insert at the beginning of a file if
 // the file doesn't start with a C/C++ comment. If the inserted text contains
-// '$(filename)', that will be replaced with the current file's name.
+// 'dollar sign(filename)', that will be replaced with the current file's name.
+// (Change "dollar sign" to "$")
 extern Option<string>
 cmt_insert_file_header;
 
 // Path to a file that contains text to insert at the end of a file if the
 // file doesn't end with a C/C++ comment. If the inserted text contains
-// '$(filename)', that will be replaced with the current file's name.
+// 'dollar sign(filename)', that will be replaced with the current file's name.
+// (Change "dollar sign" to "$")
 extern Option<string>
 cmt_insert_file_footer;
 

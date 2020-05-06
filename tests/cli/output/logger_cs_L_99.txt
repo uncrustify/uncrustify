@@ -6,3 +6,7 @@ tokenize(): orig_line is , orig_col is , text() '// with the use of option -L A'
 tokenize(): orig_line is , orig_col is , <Newline>, nl is 
 tokenize(): orig_line is , orig_col is , text() '// in such a case, the output of the log will be cut.', type is COMMENT_CPP, orig_col_end is 
 tokenize(): orig_line is , orig_col is , <Newline>, nl is 
+ pc->flags: [x:]
+ pc->flags: [x:]
+ pc->flags: [x:]
+ pc->flags: [x:]

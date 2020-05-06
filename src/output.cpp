@@ -1111,10 +1111,11 @@ static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc)
    cmt.cont_text.clear();
    cmt.reflow = false;
 
-   if (pc->flags.test(PCF_INSERTED))
-   {
-      do_kw_subst(pc);
-   }
+   //if (pc->flags.test(PCF_INSERTED))                   // Issue #2752
+   // TODO: why do we need PCF_INSERTED ?
+   //{
+   do_kw_subst(pc);
+   //}
 
    if (cmt.brace_col == 0)
    {
