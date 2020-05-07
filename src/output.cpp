@@ -1111,9 +1111,19 @@ static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc)
    cmt.cont_text.clear();
    cmt.reflow = false;
 
-   if (pc->flags.test(PCF_INSERTED))
+   // Issue #2752
+   if (  options::cmt_insert_file_header().size() > 0
+      || options::cmt_insert_file_footer().size() > 0
+      || options::cmt_insert_func_header().size() > 0
+      || options::cmt_insert_class_header().size() > 0
+      || options::cmt_insert_oc_msg_header().size() > 0)
    {
+      LOG_FMT(LCONTTEXT, "%s(%d): cmt_insert_file\n", __func__, __LINE__);
       do_kw_subst(pc);
+   }
+   else
+   {
+      LOG_FMT(LCONTTEXT, "%s(%d): no cmt_insert_file\n", __func__, __LINE__);
    }
 
    if (cmt.brace_col == 0)
