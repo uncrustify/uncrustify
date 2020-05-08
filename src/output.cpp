@@ -1112,6 +1112,12 @@ static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc)
    cmt.reflow = false;
 
    // Issue #2752
+   log_rule_B("options::cmt_insert_file_header().size()");
+   log_rule_B("options::cmt_insert_file_footer().size()");
+   log_rule_B("options::cmt_insert_func_header().size()");
+   log_rule_B("options::cmt_insert_class_header().size()");
+   log_rule_B("options::cmt_insert_oc_msg_header().size()");
+
    if (  options::cmt_insert_file_header().size() > 0
       || options::cmt_insert_file_footer().size() > 0
       || options::cmt_insert_func_header().size() > 0
