@@ -627,6 +627,7 @@ int main(int argc, char *argv[])
    // Grab the output override
    const char *output_file = arg.Param("-o");
 
+   LOG_FMT(LDATA, "%s\n", UNCRUSTIFY_VERSION);
    LOG_FMT(LDATA, "config_file = %s\n", cfg_file.c_str());
    LOG_FMT(LDATA, "output_file = %s\n", (output_file != NULL) ? output_file : "null");
    LOG_FMT(LDATA, "source_file = %s\n", (source_file != NULL) ? source_file : "null");
