@@ -351,6 +351,8 @@
 
 30870  cmt_insert-0.cfg                     cpp/cmt_insert.cpp
 30871  cmt_insert-1.cfg                     cpp/cmt_insert.cpp
+30872  Issue_2752.cfg                       cpp/Issue_2752.cpp
+#      will also use the file footer.txt
 
 30880  empty.cfg                            cpp/bug_1758.cpp
 30881  bug_1758-f.cfg                       cpp/bug_1758-f.cpp
