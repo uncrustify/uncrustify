@@ -10,6 +10,7 @@ echo "2005 - 2016 : Ben Gardner" >> ${LIST_1}
 echo ""                          >> ${LIST_1}
 echo "Maintenance:"              >> ${LIST_1}
 echo "Guy Maurel"                >> ${LIST_1}
+echo "Matthew Woehlke"           >> ${LIST_1}
 echo ""                          >> ${LIST_1}
 echo "Other collaborators:"      >> ${LIST_1}
 git log --format='%aN' \

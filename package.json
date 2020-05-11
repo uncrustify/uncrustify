@@ -1,6 +1,6 @@
 {
   "name": "uncrustify",
-  "version": "0.70.1",
+  "version": "0.71.0",
   "description": "A highly configurable, easily modifiable source code beautifier for C, C++, C#, ObjectiveC, D, Java, Pawn and VALA",
   "main": "uncrustify",
   "scripts": {
@@ -16,5 +16,6 @@
     "source code beautifier"
   ],
   "author": "Ben Gardner",
+  "author": "Guy Maurel",
   "license": "GPL-2.0-or-later"
 }
