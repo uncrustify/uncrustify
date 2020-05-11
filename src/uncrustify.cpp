@@ -1037,7 +1037,16 @@ static bool read_stdin(file_mem &fm)
 #ifdef WIN32
    _setmode(_fileno(stdin), _O_BINARY);
 #else
-   freopen(NULL, "rb", stdin);
+   FILE *my_stdin = stdin;  // Reopen stdin
+
+   my_stdin = freopen(NULL, "rb", stdin);
+
+   if (my_stdin == nullptr)
+   {
+      cpd.error_count++;
+      usage_error();
+      return(EX_IOERR);
+   }
 #endif
 
    while (!feof(stdin))
