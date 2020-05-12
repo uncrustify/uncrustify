@@ -4,7 +4,7 @@
 
 .. Update the date in the next line when editing this document!
 
-*This document was last updated on 2019-11-27, for Uncrustify 0.70.1.*
+*This document was last updated on 2020-05-11, for Uncrustify 0.71.0.*
 
 This document uses "0.1.2" throughout as an example version number.
 Whenever you see this, you should substitute the version number
@@ -229,7 +229,8 @@ Create a tarball:
 
 .. code::
 
-  $ git archive -o uncrustify-0.1.2.tar.gz uncrustify-0.1.2
+   $ cd /path/to/uncrustify
+   $ git archive -o uncrustify-0.1.2.tar.gz uncrustify-0.1.2
 TODO: find the best strategie...
 
 (If you don't have Ninja_, or just don't want to use it for whatever reason,
@@ -262,8 +263,8 @@ Upload to SourceForge
 
   - README.md
   - uncrustify-0.1.2.tar.gz
-  - buildwin-32/uncrustify-0.1.2-win32.zip
-  - buildwin-64/uncrustify-0.1.2-win64.zip
+  - buildwin-32/uncrustify-0.1.2_f-win32.zip
+  - buildwin-64/uncrustify-0.1.2_f-win64.zip
 
 - "Done"
 - Upload the documentation:
