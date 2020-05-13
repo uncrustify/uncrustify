@@ -98,7 +98,7 @@ public:
    inline int_t operator~() const
    { return(~m_i); }
 
-   inline operator bool() const { return(m_i); }
+   inline operator bool() const { return(!!m_i); }
    inline bool operator!() const { return(!m_i); }
 
    inline bool test(flags f) const { return((*this & f) == f); }
