@@ -25,6 +25,8 @@ You want to "add/ force/ ignore/ remove" a
   <li><a href="options_Space_Paren.html">space for parenthesis</a></li>
   <li><a href="options_Space_Template.html">space for template</a></li>
   <li><a href="options_Java.html">options_Java</a></li>
+  <li><a href="options_C_sharp.html">options_C#</a></li>
+  <li><a href="options_CLI_NET.html">options_CLI .NET</a></li>
 </ul>
 at some places.
 <p>
@@ -128,6 +130,10 @@ void * bar()
     <a title="sp_brace_catch"><strong><font color="red"> █</a><a title="sp_catch_brace">     █</font></strong></a>
     auto x1 = decltype(x) {0};
     <a title="sp_after_decltype"><strong><font color="red">                     █</font></strong></a>
+    Foo() noexcept () {}
+    <a title="sp_after_noexcept"><strong><font color="red">              █</font></strong></a>
+    void operator ++ ( );
+    <a title="sp_after_operator"><strong><font color="red">             █</font></strong></a><a title="sp_after_operator_sym"><strong><font color="red">  █</font></strong></a><a title="sp_after_operator_sym_empty"><strong><font color="red"> █</font></strong></a>
 </pre>
 </td>
 </tr>

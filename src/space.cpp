@@ -2320,7 +2320,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(options::sp_deref());
       }
 
-      if (  (get_chunk_parent_type(first) == CT_FUNC_VAR || get_chunk_parent_type(first) == CT_FUNC_TYPE)
+      if (  (  get_chunk_parent_type(first) == CT_FUNC_VAR
+            || get_chunk_parent_type(first) == CT_FUNC_TYPE)
          && options::sp_after_ptr_block_caret() != IARF_IGNORE)
       {
          // Add or remove space after pointer caret '^', if followed by a word.
