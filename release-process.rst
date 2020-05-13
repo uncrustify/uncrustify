@@ -175,6 +175,9 @@ Submit and Tag the Release
 
 Push the release candidate branch to GitHub, and create a pull request.
 Once the pull request is merged, tag the release using:
+Make sure, the file .git/config has the right value:
+[remote "origin"]
+        url = https://github.com/uncrustify/uncrustify.git
 
 .. code::
 
