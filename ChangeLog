@@ -1,3 +1,57 @@
+Change highlights in uncrustify-0.71.0 (May 2020)
+-------------------------------------------------------------------------------
+
+  6bcfb640d908038402869cb3be7bd80adcdb4708
+    Added   : align_oc_msg_colon_xcode_like        Nov 29 2019
+  2fd5aaf255e1d0369842f54ae8d444bcbc079c7b
+    Added   : indent_compound_literal_return       Nov 19 2019
+  4b74315b6cf8e91801b663c4171c1e0a9e12ea5b
+    Added   : indent_sparen_extra                  Nov 19 2019
+  f012dd24e2d116d867404667ce15c3309466046f
+    Added   : sp_word_brace_init_lst               Jan 21 2020
+    Removed : sp_word_brace                        Jan 21 2020
+  466b8bcf5f8ee04686d2d7af62b5ce76241c777d
+    Added   : nl_func_call_args                    Jan 24 2020
+  807e27e81112f28ae71b21f43718a1b859ad473a
+    Added   : sp_before_oc_proto_list              Feb  4 2020
+  94f18ac9c0c7c7fab64f14425aea69f0f49bb240
+    Added   : indent_off_after_assign              Feb  7 2020
+  25e20f9e4ab389c06fc76bcf0dcb3fe07ab91aea
+    Added   : indent_off_after_return              Feb  7 2020
+  cee950462787ab3b7725c5fb77fa38b992527e99
+    Added   : indent_oc_inside_msg_sel             Feb 10 2020
+  2d04118314be95654f29fb32ae50b8cd46af8682
+    Added   : nl_func_call_args_multi_line_ignore_closures Dec 17 2019
+  369192830c01beedcfe87c432f9c26637c1e6587
+    Added   : indent_inside_ternary_operator       Dec  9 2019
+  100db726b938d263c6c7f07530385dec0cdd711e
+    Added   : use_form_feed_no_more_as_whitespace_character Feb 21 2020
+  24e27fe8cdda55e422b1db659f255da353b3022c
+    Added   : debug_max_number_of_loops            Feb 27 2020
+  30da6cafa6b0819c48a02513cadbc256a5b450c5
+    Added   : debug_line_number_to_protocol        Mar 17 2020
+  f5d8ee093eb521ecc0c57060b0009dd5f05e039e
+    Added   : mod_sort_incl_import_prioritize_filename Mar 27 2020
+  8d595cb0721b299db8f1169c22d38d45df899a51
+    Added   : mod_sort_incl_import_ignore_extension Mar 27 2020
+  9f8b7754f03aa970ede730a5cd4e2cbd94f139cc
+    Added   : mod_sort_incl_import_prioritize_extensionless Mar 27 2020
+  6d5829551886ee9e643e5d6019c5389dfa738c3b
+    Added   : mod_sort_incl_import_prioritize_angle_over_quotes Mar 27 2020
+  27b33d779e7aa33c1ebc39a52e54c3a95bc153d4
+    Added   : mod_sort_incl_import_grouping_enabled Mar 27 2020
+  ac62be9498fa195a54c0e2c76c438c641d68a917
+    Added   : disable_processing_nl_cont           Apr 12 2020
+  e2b17b724e00c6180c6bd6cb5b592e969c47b6a9
+    Added   : nl_before_opening_brace_func_class_def Apr 22 2020
+  981c761da5a4a71b059361a883c4bfff69148c49
+    Added   : nl_before_whole_file_endif           Apr 24 2020
+    Added   : nl_after_whole_file_endif            Apr 24 2020
+    Added   : nl_after_whole_file_ifdef            Apr 24 2020
+    Added   : nl_before_whole_file_ifdef           Apr 24 2020
+  d55e9d21cd6377a38f741854baf1a561b984de36
+    Added   : nl_func_call_end                     Apr 29 2020
+
 Change highlights in uncrustify-0.70.1 (November 2019)
 -------------------------------------------------------------------------------
 
