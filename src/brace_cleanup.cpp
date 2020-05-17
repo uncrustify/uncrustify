@@ -335,8 +335,8 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s, tos is %zu, TOS.type is %s, TOS.stage is %s, ",
-           __func__, __LINE__, pc->orig_line, get_token_name(pc->type),
+   LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s, tos is %zu, TOS.type is %s, TOS.stage is %s, ",
+           __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type),
            frm.size() - 1, get_token_name(frm.top().type),
            get_brace_stage_name(frm.top().stage));
    log_pcf_flags(LTOK, pc->flags);
