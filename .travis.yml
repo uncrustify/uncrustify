@@ -12,6 +12,15 @@ matrix:
           packages:
             - ninja-build
 
+    - os: linux
+      dist: Xenial
+      env: BADGE=linux BUILD_TYPE=debug
+      addons:
+        apt:
+          update: true
+          packages:
+            - ninja-build
+
     #- os: linux
     #  dist: Bionic
     #  env: BADGE=linux BUILD_TYPE=release
