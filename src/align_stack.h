@@ -156,6 +156,8 @@ protected:
    { \
       LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu\n", __func__, __LINE__, stackID); \
    }
+#else
+#define WITH_STACKID_DEBUG ;
 #endif
 
 #endif /* ALIGN_STACK_H_INCLUDED */
