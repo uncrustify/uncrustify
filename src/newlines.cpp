@@ -4135,7 +4135,7 @@ void newlines_cleanup_braces(bool first)
                // split one-liner
                chunk_t *end = chunk_get_next(chunk_get_next_type(pc->next, CT_SEMICOLON, -1));
                // Scan for clear flag
-               D_LOG_FMT(LNEWLINE, "(%d) ", __LINE__);
+               LOG_FMT(LNEWLINE, "(%d) ", __LINE__);
                LOG_FMT(LNEWLINE, "\n");
 
                for (chunk_t *temp = pc; temp != end; temp = chunk_get_next(temp))

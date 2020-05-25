@@ -109,13 +109,6 @@ void log_flush(bool force_nl);
 
 
 #ifdef DEBUG
-#define D_LOG_FMT    LOG_FMT
-#else
-#define D_LOG_FMT(sev, ...)    ((void)0) //forces semicolon after macro
-#endif
-
-
-#ifdef DEBUG
 /**
  * This should be called as the first thing in a function.
  * It uses the log_func class to add an entry to the function log stack.

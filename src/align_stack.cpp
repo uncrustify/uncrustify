@@ -16,7 +16,9 @@
 #include "prototypes.h"
 #include "space.h"
 #include "uncrustify.h"
-//#include "unc_tools.h"                   // to get stackID and get_A_Number()
+#if defined WITH_STACKID
+#include "unc_tools.h"                   // to get stackID and get_A_Number()
+#endif
 
 #include <limits>
 
@@ -28,9 +30,10 @@ using std::numeric_limits;
 
 void AlignStack::Start(size_t span, int thresh)
 {
-   //stackID = get_A_Number();   // for debugging purpose only
-   //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu, ", __func__, __LINE__, stackID);
-   LOG_FMT(LAS, "AlignStack::Start(%d): span is %zu, thresh is %d\n", __LINE__, span, thresh);
+#if defined WITH_STACKID
+   stackID = get_A_Number();   // for debugging purpose only
+#endif
+   WITH_STACKID_DEBUG
 
    m_aligned.Reset();
    m_skipped.Reset();
@@ -59,7 +62,7 @@ void AlignStack::Start(size_t span, int thresh)
 
 void AlignStack::ReAddSkipped()
 {
-   //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu\n", __func__, __LINE__, stackID);
+   WITH_STACKID_DEBUG
 
    if (m_skipped.Empty())
    {
@@ -83,7 +86,7 @@ void AlignStack::ReAddSkipped()
 
 void AlignStack::Add(chunk_t *start, size_t seqnum)
 {
-   //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu, for '%s', ", __func__, __LINE__, stackID, start->text());
+   WITH_STACKID_DEBUG
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LAS, "AlignStack::%s(%d): Candidate is '%s': orig_line is %zu, column is %zu, type is %s, level is %zu\n",
@@ -345,13 +348,13 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
               seqnum, m_nl_seqnum, m_seqnum,
               start->orig_line, start->column, m_max_col, m_thresh);
    }
-   //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu, ", __func__, __LINE__, stackID);
+   WITH_STACKID_DEBUG
 } // AlignStack::Add
 
 
 void AlignStack::NewLines(size_t cnt)
 {
-   //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu\n", __func__, __LINE__, stackID);
+   WITH_STACKID_DEBUG
 
    if (m_aligned.Empty())
    {
@@ -359,7 +362,7 @@ void AlignStack::NewLines(size_t cnt)
       return;
    }
    m_seqnum += cnt;
-   LOG_FMT(LAS, "AlignStack::Newlines(%d): m_seqnum is %zu, m_nl_seqnum is %zu, m_span is %zu, \n",
+   LOG_FMT(LAS, "AlignStack::Newlines(%d): m_seqnum is %zu, m_nl_seqnum is %zu, m_span is %zu\n",
            __LINE__, m_seqnum, m_nl_seqnum, m_span);
 
    if (m_seqnum > (m_nl_seqnum + m_span))
@@ -372,7 +375,7 @@ void AlignStack::NewLines(size_t cnt)
 
 void AlignStack::Flush()
 {
-   //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu\n", __func__, __LINE__, stackID);
+   WITH_STACKID_DEBUG
    LOG_FMT(LAS, "AlignStack::%s(%d): Len() is %zu\n",
            __func__, __LINE__, Len());
 
@@ -473,8 +476,8 @@ void AlignStack::Flush()
    for (size_t idx = 0; idx < Len(); idx++)
    {
       ce = m_aligned.Get(idx);
-      LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, ce->m_pc->text() is '%s', ce->m_pc->align.col_adj is %d\n",
-              __func__, __LINE__, idx, ce->m_pc->text(), ce->m_pc->align.col_adj);
+      LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, ce->m_pc->text() is '%s', orig_line is %zu, orig_col is %zu, align.col_adj is %d\n",
+              __func__, __LINE__, idx, ce->m_pc->text(), ce->m_pc->orig_line, ce->m_pc->orig_col, ce->m_pc->align.col_adj);
    }
 
    for (size_t idx = 0; idx < Len(); idx++)
@@ -507,8 +510,8 @@ void AlignStack::Flush()
       pc->align.next = m_aligned.GetChunk(idx + 1);
 
       // Indent the token, taking col_adj into account
-      LOG_FMT(LAS, "AlignStack::%s(%d): orig_line is %zu, text() '%s', to col %zu (adj is %d)\n",
-              __func__, __LINE__, pc->orig_line, pc->text(), tmp_col, pc->align.col_adj);
+      LOG_FMT(LAS, "AlignStack::%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', set to col %zu (adj is %d)\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), tmp_col, pc->align.col_adj);
       align_to_column(pc, tmp_col);
    }
 
@@ -547,7 +550,7 @@ void AlignStack::Flush()
 
 void AlignStack::Reset()
 {
-   //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu\n", __func__, __LINE__, stackID);
+   WITH_STACKID_DEBUG
    m_aligned.Reset();
    m_skipped.Reset();
 }
@@ -555,7 +558,7 @@ void AlignStack::Reset()
 
 void AlignStack::End()
 {
-   //LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu\n", __func__, __LINE__, stackID);
+   WITH_STACKID_DEBUG
 
    if (!m_aligned.Empty())
    {
@@ -575,19 +578,24 @@ size_t AlignStack::Len()
 
 void AlignStack::Debug()
 {
-   for (size_t idx = 0; idx < Len(); idx++)
-   {
-      chunk_t *pc = m_aligned.Get(idx)->m_pc;
+   size_t length = Len();
 
-      if (chunk_is_token(pc, CT_PTR_TYPE))
+   if (length > 0)
+   {
+      for (size_t idx = 0; idx < length; idx++)
       {
-         LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s][%s]: orig_line is %zu, type is %s, level is %zu\n",
-                 __func__, __LINE__, idx, pc->text(), pc->next->text(), pc->orig_line, get_token_name(pc->type), pc->level);
-      }
-      else
-      {
-         LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s]: orig_line is %zu, type is %s, level is %zu\n",
-                 __func__, __LINE__, idx, pc->text(), pc->orig_line, get_token_name(pc->type), pc->level);
+         chunk_t *pc = m_aligned.Get(idx)->m_pc;
+
+         if (chunk_is_token(pc, CT_PTR_TYPE))
+         {
+            LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s][%s]: orig_line is %zu, orig_col is %zu, type is %s, level is %zu, brace_level is %zu\n",
+                    __func__, __LINE__, idx, pc->text(), pc->next->text(), pc->orig_line, pc->orig_col, get_token_name(pc->type), pc->level, pc->brace_level);
+         }
+         else
+         {
+            LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s]: orig_line is %zu, orig_col is %zu, type is %s, level is %zu, brace_level is %zu\n",
+                    __func__, __LINE__, idx, pc->text(), pc->orig_line, pc->orig_col, get_token_name(pc->type), pc->level, pc->brace_level);
+         }
       }
    }
 }

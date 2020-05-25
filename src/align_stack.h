@@ -12,6 +12,8 @@
 
 #include "ChunkStack.h"
 
+#include <limits>
+
 class AlignStack
 {
 public:
@@ -36,7 +38,10 @@ public:
    StarStyle  m_star_style;
    StarStyle  m_amp_style;  //! do not include the first item if it causes it to be indented
    bool       m_skip_first; //! do not include the first item if it causes it to be indented
-   //size_t     stackID;      // for debugging purpose only
+//#define WITH_STACKID    1
+#if defined WITH_STACKID
+   size_t stackID;      // for debugging purpose only
+#endif
 
 
    AlignStack()
@@ -52,7 +57,9 @@ public:
       , m_star_style(SS_IGNORE)
       , m_amp_style(SS_IGNORE)
       , m_skip_first(false)
-      //, stackID(1234)
+#if defined WITH_STACKID
+      , stackID(std::numeric_limits<std::size_t>::max()) // under linux 64 bits: 18446744073709551615
+#endif
       , m_last_added(0)
    {
    }
@@ -137,5 +144,18 @@ protected:
    void ReAddSkipped();
 };
 
+#if defined WITH_STACKID
+#define WITH_STACKID_DEBUG \
+   if (stackID == std::numeric_limits<std::size_t>::max()) \
+   { \
+      fprintf(stderr, "AlignStack::%s(%d): the stack is not ready, Start is missed\n", __func__, __LINE__); \
+      log_flush(true); \
+      exit(EX_SOFTWARE); \
+   } \
+   else \
+   { \
+      LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %2zu\n", __func__, __LINE__, stackID); \
+   }
+#endif
 
 #endif /* ALIGN_STACK_H_INCLUDED */
