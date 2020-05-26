@@ -86,7 +86,7 @@ void AlignStack::ReAddSkipped()
 
 void AlignStack::Add(chunk_t *start, size_t seqnum)
 {
-   WITH_STACKID_DEBUG
+   WITH_STACKID_DEBUG;
 
    LOG_FUNC_ENTRY();
 
@@ -376,7 +376,7 @@ void AlignStack::NewLines(size_t cnt)
 
 void AlignStack::Flush()
 {
-   WITH_STACKID_DEBUG
+   WITH_STACKID_DEBUG;
 
    LOG_FMT(LAS, "AlignStack::%s(%d): Len() is %zu\n",
            __func__, __LINE__, Len());
@@ -552,7 +552,7 @@ void AlignStack::Flush()
 
 void AlignStack::Reset()
 {
-   WITH_STACKID_DEBUG
+   WITH_STACKID_DEBUG;
 
    m_aligned.Reset();
    m_skipped.Reset();
