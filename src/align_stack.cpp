@@ -33,9 +33,11 @@ void AlignStack::Start(size_t span, int thresh)
 #if defined WITH_STACKID
    stackID = get_A_Number();   // for debugging purpose only
 #endif
-   WITH_STACKID_DEBUG
+   WITH_STACKID_DEBUG;
 
+   LOG_FMT(LAS, "AlignStack::Start(%d):m_aligned.Reset()\n", __LINE__);
    m_aligned.Reset();
+   LOG_FMT(LAS, "AlignStack::Start(%d):m_skipped.Reset()\n", __LINE__);
    m_skipped.Reset();
 
    if (thresh > 0)
@@ -62,7 +64,7 @@ void AlignStack::Start(size_t span, int thresh)
 
 void AlignStack::ReAddSkipped()
 {
-   WITH_STACKID_DEBUG
+   WITH_STACKID_DEBUG;
 
    if (m_skipped.Empty())
    {
@@ -70,6 +72,7 @@ void AlignStack::ReAddSkipped()
    }
    // Make a copy of the ChunkStack and clear m_skipped
    m_scratch.Set(m_skipped);
+   LOG_FMT(LAS, "AlignStack::ReAddSkipped(%d):m_skipped.Reset()\n", __LINE__);
    m_skipped.Reset();
 
    // Need to add them in order so that m_nl_seqnum is correct
@@ -87,7 +90,6 @@ void AlignStack::ReAddSkipped()
 void AlignStack::Add(chunk_t *start, size_t seqnum)
 {
    WITH_STACKID_DEBUG;
-
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LAS, "AlignStack::%s(%d): Candidate is '%s': orig_line is %zu, column is %zu, type is %s, level is %zu\n",
@@ -349,13 +351,13 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
               seqnum, m_nl_seqnum, m_seqnum,
               start->orig_line, start->column, m_max_col, m_thresh);
    }
-   WITH_STACKID_DEBUG
+   WITH_STACKID_DEBUG;
 } // AlignStack::Add
 
 
 void AlignStack::NewLines(size_t cnt)
 {
-   WITH_STACKID_DEBUG
+   WITH_STACKID_DEBUG;
 
    if (m_aligned.Empty())
    {
@@ -522,6 +524,7 @@ void AlignStack::Flush()
    if (ce != nullptr)
    {
       last_seqnum = ce->m_seqnum;
+      LOG_FMT(LAS, "AlignStack::Flush(%d):m_aligned.Reset()\n", __LINE__);
       m_aligned.Reset();
    }
    m_min_col = numeric_limits<size_t>::max(); // use unrealistic high numbers
@@ -553,22 +556,25 @@ void AlignStack::Flush()
 void AlignStack::Reset()
 {
    WITH_STACKID_DEBUG;
-
+   LOG_FMT(LAS, "AlignStack::Reset(%d):m_aligned.Reset()\n", __LINE__);
    m_aligned.Reset();
+   LOG_FMT(LAS, "AlignStack::Reset(%d):m_skipped.Reset()\n", __LINE__);
    m_skipped.Reset();
 }
 
 
 void AlignStack::End()
 {
-   WITH_STACKID_DEBUG
+   WITH_STACKID_DEBUG;
 
    if (!m_aligned.Empty())
    {
       LOG_FMT(LAS, "AlignStack::End(%d):\n", __LINE__);
       Flush();
    }
+   LOG_FMT(LAS, "AlignStack::End(%d):m_aligned.Reset()\n", __LINE__);
    m_aligned.Reset();
+   LOG_FMT(LAS, "AlignStack::End(%d):m_skipped.Reset()\n", __LINE__);
    m_skipped.Reset();
 }
 
@@ -581,6 +587,8 @@ size_t AlignStack::Len()
 
 void AlignStack::Debug()
 {
+   WITH_STACKID_DEBUG;
+
    size_t length = Len();
 
    if (length > 0)
