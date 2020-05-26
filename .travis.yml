@@ -3,6 +3,17 @@ sudo: false
 
 matrix:
   include:
+    # keep a test with old ubuntu version
+    - os: linux
+      dist: Xenial
+      env: BADGE=linux BUILD_TYPE=debug
+      addons:
+        apt:
+          update: true
+          packages:
+            - ninja-build
+
+    # current version
     - os: linux
       dist: Bionic
       env: BADGE=linux BUILD_TYPE=debug
