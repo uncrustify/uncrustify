@@ -20,6 +20,7 @@ void align_oc_msg_colon(chunk_t *so)
 
    AlignStack nas;   // for the parameter tag
 
+   nas.Start(1);
    nas.Reset();
    log_rule_B("align_on_tabstop");
    nas.m_right_align = !options::align_on_tabstop();

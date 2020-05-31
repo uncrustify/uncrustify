@@ -4,7 +4,7 @@
 //  two
 //   three
 void
-                              foo(void);
+foo(void);
 
 struct A
 {

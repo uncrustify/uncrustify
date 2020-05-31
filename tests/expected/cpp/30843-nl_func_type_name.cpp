@@ -3,7 +3,7 @@
 // one
 //  two
 //   three
-void                          foo(void);
+void foo(void);
 
 struct A
 {

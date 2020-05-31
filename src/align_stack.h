@@ -38,7 +38,7 @@ public:
    StarStyle  m_star_style;
    StarStyle  m_amp_style;  //! do not include the first item if it causes it to be indented
    bool       m_skip_first; //! do not include the first item if it causes it to be indented
-//#define WITH_STACKID    1
+#define WITH_STACKID    1
 #if defined WITH_STACKID
    size_t stackID;      // for debugging purpose only
 #endif

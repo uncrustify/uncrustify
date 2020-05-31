@@ -10,6 +10,7 @@
 #include "align_func_params.h"
 #include "align_stack.h"
 #include "log_rules.h"
+#include "LIMITATIONS.h"
 
 #ifdef WIN32
 #include <algorithm>                           // to get max
@@ -40,15 +41,14 @@ chunk_t *align_func_param(chunk_t *start)
       log_rule_B("align_func_params_gap");
       mygap = options::align_func_params_gap();
    }
-#define HOW_MANY_AS    8
+//#define HOW_MANY_AS    8
    size_t     max_level_is = 0;
    AlignStack many_as[HOW_MANY_AS + 1];
-   // NOTE: many_as[0] is not used
 
    log_rule_B("align_var_def_star_style");
    log_rule_B("align_var_def_amp_style");
 
-   for (size_t idx = 1; idx <= HOW_MANY_AS; idx++)
+   for (size_t idx = 0; idx <= HOW_MANY_AS; idx++)
    {
       many_as[idx].Start(myspan, mythresh);
       many_as[idx].m_gap        = mygap;

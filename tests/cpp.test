@@ -338,7 +338,7 @@
 30841  nl_func_type_name_force.cfg          cpp/nl_func_type_name.cpp
 30842  nl_func_type_name_class.cfg          cpp/nl_func_type_name.cpp
 30843  nl_func_type_name_mixed.cfg          cpp/nl_func_type_name.cpp
-
+30844  Issue_2771.cfg                       cpp/Issue_2771.cpp
 30845  ben_026.cfg                          cpp/deref.cpp
 
 30850  sp_cmt_cpp_start_force.cfg           cpp/sp_cmt_cpp_start.cc
