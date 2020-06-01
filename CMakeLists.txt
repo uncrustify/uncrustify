@@ -310,6 +310,7 @@ set(uncrustify_sources
 )
 
 set(uncrustify_headers
+  src/LIMITATIONS.h
   src/align_add.h
   src/align_asm_colon.h
   src/align_assign.h

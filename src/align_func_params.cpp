@@ -41,7 +41,6 @@ chunk_t *align_func_param(chunk_t *start)
       log_rule_B("align_func_params_gap");
       mygap = options::align_func_params_gap();
    }
-//#define HOW_MANY_AS    8
    size_t     max_level_is = 0;
    AlignStack many_as[HOW_MANY_AS + 1];
 
@@ -65,8 +64,6 @@ chunk_t *align_func_param(chunk_t *start)
       chunk_count++;
       LOG_FMT(LFLPAREN, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-      //LOG_FMT(LFLPAREN, "   pc->flags: ");
-      //log_pcf_flags(LFLPAREN, pc->flags);
 
       if (chunk_is_token(pc, CT_FUNC_VAR))                    // Issue #2278
       {
@@ -102,12 +99,6 @@ chunk_t *align_func_param(chunk_t *start)
       }
       else if (pc->level <= start->level)
       {
-         // for debuging purpose only
-         //for (size_t idx = 1; idx <= max_level_is; idx++)
-         //{
-         //   many_as[idx].Debug();
-         //}
-
          break;
       }
       else if (pc->flags.test(PCF_VAR_DEF))
