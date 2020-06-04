@@ -25,9 +25,9 @@
 #define MAX_NUMBER_OF_TOKEN    1024
 
 // align_func_params.cpp:43
-#define HOW_MANY_AS            8
+constexpr static size_t HOW_MANY_AS = 8;
 
 // align_func_params.cpp
 // align_func_proto.cpp
-#define HOW_MANY_AS_LEVEL          4
-#define HOW_MANY_AS_BRACE_LEVEL    4
+constexpr static size_t HOW_MANY_AS_LEVEL       = 4;
+constexpr static size_t HOW_MANY_AS_BRACE_LEVEL = 4;

@@ -111,7 +111,7 @@ void align_func_proto(size_t span)
          {
             fprintf(stderr, "%s(%d): Not enought memory for Stack\n",
                     __func__, __LINE__);
-            fprintf(stderr, "%s(%d): the current maximum for level is %d\n",
+            fprintf(stderr, "%s(%d): the current maximum for level is %zu\n",
                     __func__, __LINE__, HOW_MANY_AS_LEVEL);
             log_flush(true);
          }
@@ -120,7 +120,7 @@ void align_func_proto(size_t span)
          {
             fprintf(stderr, "%s(%d): Not enought memory for Stack\n",
                     __func__, __LINE__);
-            fprintf(stderr, "%s(%d): the current maximum for brace_level is %d\n",
+            fprintf(stderr, "%s(%d): the current maximum for brace_level is %zu\n",
                     __func__, __LINE__, HOW_MANY_AS_BRACE_LEVEL);
             log_flush(true);
             exit(EX_SOFTWARE);
