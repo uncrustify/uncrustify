@@ -10,11 +10,9 @@
 #include "align_func_params.h"
 #include "align_stack.h"
 #include "log_rules.h"
-#include "LIMITATIONS.h"
+#include "uncrustify_limits.h"
 
-#ifdef WIN32
 #include <algorithm>                           // to get max
-#endif /* ifdef WIN32 */
 
 using namespace uncrustify;
 
@@ -42,12 +40,12 @@ chunk_t *align_func_param(chunk_t *start)
       mygap = options::align_func_params_gap();
    }
    size_t     max_level_is = 0;
-   AlignStack many_as[HOW_MANY_AS + 1];
+   AlignStack many_as[HOW_MANY_AS_LEVEL + 1];
 
    log_rule_B("align_var_def_star_style");
    log_rule_B("align_var_def_amp_style");
 
-   for (size_t idx = 0; idx <= HOW_MANY_AS; idx++)
+   for (size_t idx = 0; idx <= HOW_MANY_AS_LEVEL; idx++)
    {
       many_as[idx].Start(myspan, mythresh);
       many_as[idx].m_gap        = mygap;
@@ -105,12 +103,12 @@ chunk_t *align_func_param(chunk_t *start)
       {
          if (chunk_count > 1)
          {
-            if (pc->level > HOW_MANY_AS)
+            if (pc->level > HOW_MANY_AS_LEVEL)
             {
                fprintf(stderr, "%s(%d): Not enought memory for Stack\n",
                        __func__, __LINE__);
                fprintf(stderr, "%s(%d): the current maximum is %d\n",
-                       __func__, __LINE__, HOW_MANY_AS);
+                       __func__, __LINE__, HOW_MANY_AS_LEVEL);
                log_flush(true);
                exit(EX_SOFTWARE);
             }

@@ -12,11 +12,9 @@
 #include "align_stack.h"
 #include "align_tools.h"
 #include "log_rules.h"
-#include "LIMITATIONS.h"
+#include "uncrustify_limits.h"
 
-#ifdef WIN32
 #include <algorithm>                           // to get max
-#endif /* ifdef WIN32 */
 
 using namespace uncrustify;
 
@@ -27,12 +25,11 @@ void align_func_proto(size_t span)
 
    size_t myspan   = span;
    size_t mythresh = 0;
-   size_t mygap    = 0;
+   size_t mygap    = options::align_func_proto_gap();
 
    log_rule_B("align_func_proto_thresh");
    mythresh = options::align_func_proto_thresh();
 
-   //AlignStack as;
    // Issue #2771
    // we align token-1 and token-2 if:
    //   token-1->level == token-2->level
@@ -41,14 +38,13 @@ void align_func_proto(size_t span)
    // we don't check if token-1 and token-2 are in the same block
    size_t     max_level_is       = 0;
    size_t     max_brace_level_is = 0;
+   size_t     mystar_style       = options::align_var_def_star_style();
+   size_t     myamp_style        = options::align_var_def_amp_style();
    AlignStack many_as[HOW_MANY_AS_LEVEL + 1][HOW_MANY_AS_BRACE_LEVEL + 1];
 
    log_rule_B("align_func_proto_gap");
-   mygap = options::align_func_proto_gap();
    log_rule_B("align_var_def_star_style");
    log_rule_B("align_var_def_amp_style");
-   size_t mystar_style = options::align_var_def_star_style();
-   size_t myamp_style  = options::align_var_def_amp_style();
 
    // Issue #2771
    AlignStack many_as_brace[HOW_MANY_AS_LEVEL + 1][HOW_MANY_AS_BRACE_LEVEL + 1];
@@ -150,7 +146,6 @@ void align_func_proto(size_t span)
 
    LOG_FMT(LAS, "%s(%d):  as\n", __func__, __LINE__);
 
-   //as.Debug();
    for (size_t idx = 0; idx <= HOW_MANY_AS_LEVEL; idx++)
    {
       for (size_t idx_brace = 0; idx_brace <= HOW_MANY_AS_BRACE_LEVEL; idx_brace++)
