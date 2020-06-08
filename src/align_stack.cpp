@@ -94,11 +94,14 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
 
    LOG_FMT(LAS, "AlignStack::%s(%d): Candidate is '%s': orig_line is %zu, column is %zu, type is %s, level is %zu\n",
            __func__, __LINE__, start->text(), start->orig_line, start->column, get_token_name(start->type), start->level);
+   LOG_FMT(LAS, "AlignStack::%s(%d): seqnum is %zu\n", __func__, __LINE__, seqnum);
 
    // Assign a seqnum if needed
    if (seqnum == 0)
    {
+      LOG_FMT(LAS, "AlignStack::%s(%d): m_seqnum is %zu\n", __func__, __LINE__, m_seqnum);
       seqnum = m_seqnum;
+      LOG_FMT(LAS, "AlignStack::%s(%d): seqnum is %zu\n", __func__, __LINE__, seqnum);
    }
    m_last_added = 0;
 
@@ -364,6 +367,7 @@ void AlignStack::NewLines(size_t cnt)
       LOG_FMT(LAS, "AlignStack::Newlines(%d): nothing to do, is empty\n", __LINE__);
       return;
    }
+   LOG_FMT(LAS, "AlignStack::Newlines(%d): cnt is %zu\n", __LINE__, cnt);
    m_seqnum += cnt;
    LOG_FMT(LAS, "AlignStack::Newlines(%d): m_seqnum is %zu, m_nl_seqnum is %zu, m_span is %zu\n",
            __LINE__, m_seqnum, m_nl_seqnum, m_span);
@@ -406,6 +410,10 @@ void AlignStack::Flush()
    }
    m_last_added = 0;
    m_max_col    = 0;
+
+   WITH_STACKID_DEBUG;
+   LOG_FMT(LAS, "AlignStack::%s(%d): Debug the stack, Len is %zu\n",
+           __func__, __LINE__, Len());
 
    for (size_t idx = 0; idx < Len(); idx++)
    {
@@ -593,6 +601,9 @@ void AlignStack::Debug()
 
    if (length > 0)
    {
+      LOG_FMT(LAS, "AlignStack::%s(%d): Debug the stack, Len is %zu\n",
+              __func__, __LINE__, Len());
+
       for (size_t idx = 0; idx < length; idx++)
       {
          chunk_t *pc = m_aligned.Get(idx)->m_pc;
