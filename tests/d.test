@@ -45,3 +45,5 @@
 40100  1438.cfg                             d/1438.d
 
 40201  invariant.cfg                        d/invariant.d
+
+40300  d.cfg                                d/extern_.d
