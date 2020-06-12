@@ -18,6 +18,7 @@ The '--prefix' and '--suffix' options may not be used with '--replace'.
 
 Basic Options:
  -c CFG       : Use the config file CFG, or defaults if CFG is set to '-'.
+ -C CFGS      : Read configuration files to process from CFGS, one filename per line
  -f FILE      : Process the single file FILE (output to stdout, use with -o).
  -o FILE      : Redirect stdout to FILE.
  -F FILE      : Read files to process from FILE, one filename per line (- is stdin).
@@ -66,6 +67,7 @@ uncrustify -c my.cfg foo.d
 uncrustify -c my.cfg --replace foo.d
 uncrustify -c my.cfg --no-backup foo.d
 uncrustify -c my.cfg --prefix=out -F files.txt
+uncrustify -C several_configs.txt -f foo.d
 
 Note: Use comments containing ' *INDENT-OFF*' and ' *INDENT-ON*' to disable
       processing of parts of the source file (these can be overridden with

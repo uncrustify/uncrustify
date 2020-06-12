@@ -264,6 +264,7 @@ void usage(const char *argv0)
            "\n"
            "Basic Options:\n"
            " -c CFG       : Use the config file CFG, or defaults if CFG is set to '-'.\n"
+           " -C CFGS      : Read configuration files to process from CFGS, one filename per line\n"
            " -f FILE      : Process the single file FILE (output to stdout, use with -o).\n"
            " -o FILE      : Redirect stdout to FILE.\n"
            " -F FILE      : Read files to process from FILE, one filename per line (- is stdin).\n"
@@ -315,6 +316,7 @@ void usage(const char *argv0)
            "uncrustify -c my.cfg --replace foo.d\n"
            "uncrustify -c my.cfg --no-backup foo.d\n"
            "uncrustify -c my.cfg --prefix=out -F files.txt\n"
+           "uncrustify -C several_configs.txt -f foo.d\n"
            "\n"
            "Note: Use comments containing ' *INDENT-OFF*' and ' *INDENT-ON*' to disable\n"
            "      processing of parts of the source file (these can be overridden with\n"
@@ -525,7 +527,14 @@ int main(int argc, char *argv[])
    {
       cfg_file = p_arg;
    }
-   else if (!unc_getenv("UNCRUSTIFY_CONFIG", cfg_file))
+   const char *cfg_list;
+
+   if (  ((cfg_list = arg.Param("--configs")) != nullptr)
+      || ((cfg_list = arg.Param("-C")) != nullptr))
+   {
+      //not using a single configuration file
+   }
+   else if (cfg_list == nullptr && !unc_getenv("UNCRUSTIFY_CONFIG", cfg_file))
    {
       // Try to find a config file at an alternate location
       string home;
@@ -629,6 +638,7 @@ int main(int argc, char *argv[])
 
    LOG_FMT(LDATA, "%s\n", UNCRUSTIFY_VERSION);
    LOG_FMT(LDATA, "config_file = %s\n", cfg_file.c_str());
+   LOG_FMT(LDATA, "config_list = %s\n", (cfg_list != NULL) ? cfg_list : "null");
    LOG_FMT(LDATA, "output_file = %s\n", (output_file != NULL) ? output_file : "null");
    LOG_FMT(LDATA, "source_file = %s\n", (source_file != NULL) ? source_file : "null");
    LOG_FMT(LDATA, "source_list = %s\n", (source_list != NULL) ? source_list : "null");
@@ -681,12 +691,22 @@ int main(int argc, char *argv[])
          }
       }
    }
-
    /*
     * Try to load the config file, if available.
     * It is optional for "--universalindent", "--parsed" and "--detect", but
     * required for everything else.
     */
+
+   if (cfg_list != nullptr)
+   {
+      if (!cfg_file.empty())
+      {
+         usage_error("Cannot specify both the single configuration file option and a multi-config option");
+         return(EX_NOUSER);
+      }
+   }
+   bool loadedConfig = false;
+
    if (!cfg_file.empty() && cfg_file[0] != '-')
    {
       cpd.filename = cfg_file;
@@ -696,6 +716,65 @@ int main(int argc, char *argv[])
          usage_error("Unable to load the config file");
          return(EX_IOERR);
       }
+      loadedConfig = true;
+   }
+   else if (cfg_list != nullptr)
+   {
+      FILE *cfg_list_file = fopen(cfg_list, "r");
+
+      if (cfg_list_file == nullptr)
+      {
+         LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
+                 __func__, source_list, strerror(errno), errno);
+         cpd.error_count++;
+         return(EX_IOERR);
+      }
+      char linebuf[256];
+      int  line = 0;
+
+      while (fgets(linebuf, sizeof(linebuf), cfg_list_file) != nullptr)
+      {
+         line++;
+         char *fname = linebuf;
+         int  len    = strlen(fname);
+
+         while (len > 0 && unc_isspace(*fname))
+         {
+            fname++;
+            len--;
+         }
+
+         while (len > 0 && unc_isspace(fname[len - 1]))
+         {
+            len--;
+         }
+         fname[len] = 0;
+
+         while (len-- > 0)
+         {
+            if (fname[len] == '\\')
+            {
+               fname[len] = '/';
+            }
+         }
+         LOG_FMT(LFILELIST, "%3d] %s\n", line, fname);
+
+         if (fname[0] != '#')
+         {
+            cpd.filename = fname;
+
+            if (!load_option_file(cpd.filename.c_str()))
+            {
+               usage_error("Unable to load the config file");
+               return(EX_IOERR);
+            }
+         }
+      }
+      loadedConfig = true;
+   }
+
+   if (loadedConfig)
+   {
       // test if all options are compatible to each other
       log_rule_B("nl_max");
 
@@ -831,14 +910,14 @@ int main(int argc, char *argv[])
       save_option_file(stdout, update_config_wd);
       return(EXIT_SUCCESS);
    }
-
    /*
     * Everything beyond this point aside from dumping the parse tree is silly
     * without a config file, so complain and bail if we don't have one.
     */
-   if (cfg_file.empty() && !parsed_file)
+
+   if ((cfg_file.empty() && cfg_list == nullptr) && !parsed_file)
    {
-      usage_error("Specify the config file with '-c file' or set UNCRUSTIFY_CONFIG");
+      usage_error("Specify the config file with '-c file', multi-config with '-C file' or set UNCRUSTIFY_CONFIG");
       return(EX_IOERR);
    }
    // Done parsing args

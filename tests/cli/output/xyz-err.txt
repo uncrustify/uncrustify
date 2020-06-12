@@ -1,2 +1,2 @@
-Specify the config file with '-c file' or set UNCRUSTIFY_CONFIG
+Specify the config file with '-c file', multi-config with '-C file' or set UNCRUSTIFY_CONFIG
 Try running with -h for usage information
