@@ -2,8 +2,8 @@
  * @file unc_tools.cpp
  * This file contains lot of tools for debugging
  *
- * @author  Guy Maurel since version 0.62 for uncrustify4Qt
- *          October 2015, 2016
+ * @author  Guy Maurel
+ *          October 2015- 2020
  * @license GPL v2+
  */
 
@@ -43,8 +43,17 @@ static size_t tokenCounter;
  *
  * if partNumber is zero, all the tokens of the line are shown,
  * if partNumber is NOT zero, only the token with this partNumber is shown.
+ *
+ *   prot_the_line_pc(pc_sub, __func__, __LINE__, 6, 5);
+ * to get a protocol of a sub branch, which begins with pc_sub
  */
 void prot_the_line(const char *func_name, int theLine, unsigned int actual_line, size_t partNumber)
+{
+   prot_the_line_pc(chunk_get_head(), func_name, theLine, actual_line, partNumber);
+}
+
+
+void prot_the_line_pc(chunk_t *pc_sub, const char *func_name, int theLine, unsigned int actual_line, size_t partNumber)
 {
    if (actual_line == 0)
    {
@@ -61,7 +70,7 @@ void prot_the_line(const char *func_name, int theLine, unsigned int actual_line,
    tokenCounter = 0;
    LOG_FMT(LGUY, "Prot_the_line:(%s:%d)(%zu)\n", func_name, theLine, counter);
 
-   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = pc->next)
+   for (chunk_t *pc = pc_sub; pc != nullptr; pc = pc->next)
    {
       if (pc->orig_line == actual_line)
       {
@@ -112,7 +121,7 @@ void prot_the_line(const char *func_name, int theLine, unsigned int actual_line,
                LOG_FMT(LGUY, " pc->flags: ");
                log_pcf_flags(LGUY, pc->flags);
             }
-            LOG_FMT(LALAGAIN, "   align.right_align is %s\n", pc->align.right_align ? "TRUE" : "FALSE");
+            //LOG_FMT(LALAGAIN, "   align.right_align is %s\n", pc->align.right_align ? "TRUE" : "FALSE");
          }
       }
    }
