@@ -414,6 +414,11 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
       {
          close_statement(frm, pc);
       }
+      else if (  language_is_set(LANG_D)
+              && chunk_is_token(pc, CT_BRACE_CLOSE))
+      {
+         close_statement(frm, pc);
+      }
    }
 
    // Handle close parenthesis, vbrace, brace, and square
@@ -1095,7 +1100,7 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc)
          // If the next chunk isn't CT_ELSE, close the statement
          chunk_t *next = chunk_get_next_ncnl(pc);
 
-         if (next != nullptr && next->type != CT_ELSE)
+         if (next == nullptr || next->type != CT_ELSE)
          {
             LOG_FMT(LBCSPOP, "%s(%d): no CT_ELSE, pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
