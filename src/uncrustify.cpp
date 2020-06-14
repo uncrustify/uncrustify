@@ -1036,17 +1036,6 @@ static bool read_stdin(file_mem &fm)
    // Re-open stdin in binary mode to preserve newline characters
 #ifdef WIN32
    _setmode(_fileno(stdin), _O_BINARY);
-#else
-   FILE *my_stdin = stdin;  // Reopen stdin
-
-   my_stdin = freopen(NULL, "rb", stdin);
-
-   if (my_stdin == nullptr)
-   {
-      cpd.error_count++;
-      usage_error();
-      return(EX_IOERR);
-   }
 #endif
 
    while (!feof(stdin))
