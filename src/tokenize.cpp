@@ -363,112 +363,112 @@ static bool d_parse_string(tok_ctx &ctx, chunk_t &pc)
 {
    size_t ch = ctx.peek();
 
-   if (  (ch == '"')
-      || (ch == '\'')
-      || (ch == '`'))
+   if (ch == '"' || ch == '\'' || ch == '`')
    {
       return(parse_string(ctx, pc, 0, true));
    }
 
-   if (ch == '\\')
+   if ((ch == 'r' || ch == 'x') && ctx.peek(1) == '"')
    {
-      ctx.save();
-      int cnt;
-      pc.str.clear();
+      return(parse_string(ctx, pc, 1, false));
+   }
 
-      while (ctx.peek() == '\\')
+   if (ch != '\\')
+   {
+      return(false);
+   }
+   ctx.save();
+   int cnt;
+
+   pc.str.clear();
+
+   while (ctx.peek() == '\\')
+   {
+      pc.str.append(ctx.get());
+
+      // Check for end of file
+      switch (ctx.peek())
       {
-         pc.str.append(ctx.get());
+      case 'x':  // \x HexDigit HexDigit
+         cnt = 3;
 
-         // Check for end of file
-         switch (ctx.peek())
+         while (cnt--)
          {
-         case 'x':  // \x HexDigit HexDigit
-            cnt = 3;
+            pc.str.append(ctx.get());
+         }
+         break;
 
-            while (cnt--)
-            {
-               pc.str.append(ctx.get());
-            }
-            break;
+      case 'u':  // \u HexDigit (x4)
+         cnt = 5;
 
-         case 'u':  // \u HexDigit (x4)
-            cnt = 5;
+         while (cnt--)
+         {
+            pc.str.append(ctx.get());
+         }
+         break;
 
-            while (cnt--)
-            {
-               pc.str.append(ctx.get());
-            }
-            break;
+      case 'U':  // \U HexDigit (x8)
+         cnt = 9;
 
-         case 'U':  // \U HexDigit (x8)
-            cnt = 9;
+         while (cnt--)
+         {
+            pc.str.append(ctx.get());
+         }
+         break;
 
-            while (cnt--)
-            {
-               pc.str.append(ctx.get());
-            }
-            break;
+      case '0':
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+         // handle up to 3 octal digits
+         pc.str.append(ctx.get());
+         ch = ctx.peek();
 
-         case '0':
-         case '1':
-         case '2':
-         case '3':
-         case '4':
-         case '5':
-         case '6':
-         case '7':
-            // handle up to 3 octal digits
+         if ((ch >= '0') && (ch <= '7'))
+         {
             pc.str.append(ctx.get());
             ch = ctx.peek();
 
             if ((ch >= '0') && (ch <= '7'))
             {
                pc.str.append(ctx.get());
-               ch = ctx.peek();
-
-               if ((ch >= '0') && (ch <= '7'))
-               {
-                  pc.str.append(ctx.get());
-               }
             }
-            break;
+         }
+         break;
 
-         case '&':
-            // \& NamedCharacterEntity ;
+      case '&':
+         // \& NamedCharacterEntity ;
+         pc.str.append(ctx.get());
+
+         while (unc_isalpha(ctx.peek()))
+         {
             pc.str.append(ctx.get());
+         }
 
-            while (unc_isalpha(ctx.peek()))
-            {
-               pc.str.append(ctx.get());
-            }
-
-            if (ctx.peek() == ';')
-            {
-               pc.str.append(ctx.get());
-            }
-            break;
-
-         default:
-            // Everything else is a single character
+         if (ctx.peek() == ';')
+         {
             pc.str.append(ctx.get());
-            break;
-         } // switch
-      }
+         }
+         break;
 
-      if (pc.str.size() > 1)
-      {
-         set_chunk_type(&pc, CT_STRING);
-         return(true);
-      }
-      ctx.restore();
+      default:
+         // Everything else is a single character
+         pc.str.append(ctx.get());
+         break;
+      } // switch
    }
-   else if (  ((ch == 'r') || (ch == 'x'))
-           && (ctx.peek(1) == '"'))
+
+   if (pc.str.size() < 1)
    {
-      return(parse_string(ctx, pc, 1, false));
+      ctx.restore();
+      return(false);
    }
-   return(false);
+   set_chunk_type(&pc, CT_STRING);
+   return(true);
 } // d_parse_string
 
 
@@ -1069,10 +1069,10 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
 static bool parse_string(tok_ctx &ctx, chunk_t &pc, size_t quote_idx, bool allow_escape)
 {
    log_rule_B("string_escape_char");
-   size_t escape_char = options::string_escape_char();
+   const size_t escape_char = options::string_escape_char();
 
    log_rule_B("string_escape_char2");
-   size_t escape_char2 = options::string_escape_char2();
+   const size_t escape_char2 = options::string_escape_char2();
 
    log_rule_B("string_replace_tab_chars");
    bool should_escape_tabs = (  options::string_replace_tab_chars()
@@ -1085,7 +1085,7 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, size_t quote_idx, bool allow
       pc.str.append(ctx.get());
    }
    set_chunk_type(&pc, CT_STRING);
-   size_t end_ch = CharTable::Get(ctx.peek()) & 0xff;
+   const size_t termination_character = CharTable::Get(ctx.peek()) & 0xff;
 
    pc.str.append(ctx.get());                          // store the "
 
@@ -1093,11 +1093,12 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, size_t quote_idx, bool allow
 
    while (ctx.more())
    {
-      size_t lastcol = ctx.c.col;
-      size_t ch      = ctx.get();
+      const size_t ch = ctx.get();
 
+      // convert char 9 (\t) to chars \t
       if ((ch == '\t') && should_escape_tabs)
       {
+         const size_t lastcol = ctx.c.col - 1;
          ctx.c.col = lastcol + 2;
          pc.str.append(escape_char);
          pc.str.append('t');
@@ -1109,37 +1110,37 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, size_t quote_idx, bool allow
       {
          pc.nl_count++;
          set_chunk_type(&pc, CT_STRING_MULTI);
-         escaped = false;
-         continue;
       }
-
-      if ((ch == '\r') && (ctx.peek() != '\n'))
+      else if (ch == '\r' && ctx.peek() != '\n')
       {
          pc.str.append(ctx.get());
          pc.nl_count++;
          set_chunk_type(&pc, CT_STRING_MULTI);
+      }
+
+      // if last char in prev loop was escaped the one in the current loop isn't
+      if (escaped)
+      {
          escaped = false;
          continue;
       }
 
-      if (!escaped)
+      // see if the current char is a escape char
+      if (ch == escape_char)
       {
-         if (ch == escape_char)
-         {
-            escaped = (escape_char != 0);
-         }
-         else if (ch == escape_char2 && (ctx.peek() == end_ch))
-         {
-            escaped = allow_escape;
-         }
-         else if (ch == end_ch)
-         {
-            break;
-         }
+         escaped = (escape_char != 0);
+         continue;
       }
-      else
+
+      if (ch == escape_char2 && (ctx.peek() == termination_character))
       {
-         escaped = false;
+         escaped = allow_escape;
+         continue;
+      }
+
+      if (ch == termination_character)
+      {
+         break;
       }
    }
    parse_suffix(ctx, pc, true);
