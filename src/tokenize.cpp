@@ -363,9 +363,14 @@ static bool d_parse_string(tok_ctx &ctx, chunk_t &pc)
 {
    size_t ch = ctx.peek();
 
-   if (ch == '"' || ch == '\'' || ch == '`')
+   if (ch == '"' || ch == '\'')
    {
       return(parse_string(ctx, pc, 0, true));
+   }
+
+   if (ch == '`')
+   {
+      return(parse_string(ctx, pc, 0, false));
    }
 
    if ((ch == 'r' || ch == 'x') && ctx.peek(1) == '"')
@@ -1075,8 +1080,9 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, size_t quote_idx, bool allow
    const size_t escape_char2 = options::string_escape_char2();
 
    log_rule_B("string_replace_tab_chars");
-   bool should_escape_tabs = (  options::string_replace_tab_chars()
-                             && language_is_set(LANG_ALLC));
+   const bool should_escape_tabs = (  allow_escape
+                                   && options::string_replace_tab_chars()
+                                   && language_is_set(LANG_ALLC));
 
    pc.str.clear();
 
@@ -1126,16 +1132,19 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, size_t quote_idx, bool allow
       }
 
       // see if the current char is a escape char
-      if (ch == escape_char)
-      {
-         escaped = (escape_char != 0);
-         continue;
-      }
-
-      if (ch == escape_char2 && (ctx.peek() == termination_character))
-      {
-         escaped = allow_escape;
-         continue;
+      if (allow_escape)
+      {//
+         if (ch == escape_char)
+         {
+            escaped = (escape_char != 0);
+            continue;
+         }
+//
+         if (ch == escape_char2 && (ctx.peek() == termination_character))
+         {
+            escaped = allow_escape;
+            continue;
+         }
       }
 
       if (ch == termination_character)
