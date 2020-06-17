@@ -26,7 +26,6 @@
 40026  empty.cfg                            d/wysiwyg_strings.d
 40027  empty.cfg                            d/static_if_in_struct.d
 
-
 40030  d.cfg                                d/delegate.d
 40035  d.cfg                                d/enum.d
 
@@ -50,3 +49,6 @@
 40201  invariant.cfg                        d/invariant.d
 
 40300  d.cfg                                d/extern_.d
+
+
+40400  mod_full_brace_if_chain_only-t.cfg   d/vbraces000.d

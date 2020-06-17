@@ -1349,11 +1349,12 @@ bool close_statement(ParseFrame &frm, chunk_t *pc)
       {
          // otherwise, add before it and consume the vbrace
          vbc = chunk_get_prev_ncnl(pc);
-         vbc = insert_vbrace_close_after(vbc, frm);
-         set_chunk_parent(vbc, frm.top().parent);
 
          frm.level--;
          frm.brace_level--;
+         vbc = insert_vbrace_close_after(vbc, frm);
+         set_chunk_parent(vbc, frm.top().parent);
+
          LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level decreased to %zu\n",
                  __func__, __LINE__, frm.brace_level);
          log_pcf_flags(LBCSPOP, pc->flags);
