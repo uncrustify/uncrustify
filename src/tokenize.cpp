@@ -1133,13 +1133,13 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, size_t quote_idx, bool allow
 
       // see if the current char is a escape char
       if (allow_escape)
-      {//
+      {
          if (ch == escape_char)
          {
             escaped = (escape_char != 0);
             continue;
          }
-//
+
          if (ch == escape_char2 && (ctx.peek() == termination_character))
          {
             escaped = allow_escape;

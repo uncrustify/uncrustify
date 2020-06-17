@@ -23,6 +23,7 @@
 40023  d.cfg                                d/bug-indent.d
 40024  d3.cfg                               d/tst03.d
 40025  d3a.cfg                              d/tst03.d
+40026  empty.cfg                            d/wysiwyg_strings.d
 
 40030  d.cfg                                d/delegate.d
 40035  d.cfg                                d/enum.d
