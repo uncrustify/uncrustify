@@ -40,6 +40,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <vector>
 
 
 using namespace std;
@@ -2176,7 +2177,8 @@ static void newlines_brace_pair(chunk_t *br_open)
    log_rule_B("nl_create_func_def_one_liner");
 
    if (  get_chunk_parent_type(br_open) == CT_FUNC_DEF
-      && options::nl_create_func_def_one_liner())
+      && options::nl_create_func_def_one_liner()
+      && !br_open->flags.test(PCF_NOT_POSSIBLE))          // Issue #2795
    {
       chunk_t *br_close = chunk_skip_to_match(br_open, scope_e::ALL);
       chunk_t *tmp      = chunk_get_prev_ncnlni(br_open); // Issue #2279
@@ -2205,6 +2207,30 @@ static void newlines_brace_pair(chunk_t *br_open)
 
          if (is_it_possible)
          {
+            // Issue 2795
+            // we have to check if it could be too long for code_width
+            // make a vector to save the chunk
+            vector<chunk_t> saved_chunk;
+
+            saved_chunk.reserve(16);
+            chunk_t *current       = chunk_get_prev_ncnlni(br_open);
+            chunk_t *next_br_close = chunk_get_next(br_close);
+            current = chunk_get_next(current);
+
+            while (current != nullptr)
+            {
+               LOG_FMT(LNL1LINE, "%s(%d): zu  kopieren: current->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+                       __func__, __LINE__, current->orig_line, current->orig_col, current->text());
+               saved_chunk.push_back(*current);
+               chunk_t *the_next = chunk_get_next(current);
+
+               if (  the_next == nullptr
+                  || the_next == next_br_close)
+               {
+                  break;
+               }
+               current = the_next;
+            }
             tmp = chunk_get_prev_ncnlni(br_open);
 
             while (  tmp != nullptr
@@ -2223,6 +2249,41 @@ static void newlines_brace_pair(chunk_t *br_open)
             }
             chunk_flags_set(br_open, PCF_ONE_LINER);         // set the one liner flag if needed
             chunk_flags_set(br_close, PCF_ONE_LINER);
+
+            if (  options::code_width() > 0
+               && br_close->column > options::code_width())
+            {
+               // is too long
+               // it is not possible to make an one_liner
+               // because the line would be too long
+               chunk_flags_set(br_open, PCF_NOT_POSSIBLE);
+               // restore the code
+               size_t  count;
+               chunk_t tmp;
+               chunk_t *current = br_open;
+
+               for (count = 0; count < saved_chunk.size(); count++)
+               {
+                  tmp = saved_chunk.at(count);
+
+                  if (tmp.orig_line != current->orig_line)
+                  {
+                     // restore the newline
+                     chunk_t chunk;
+                     set_chunk_type(&chunk, CT_NEWLINE);
+                     chunk.orig_line = current->orig_line;
+                     chunk.orig_col  = current->orig_col;
+                     chunk.nl_count  = 1;
+                     chunk_add_before(&chunk, current);
+                     LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline before '%s'\n",
+                             __func__, __LINE__, current->orig_line, current->orig_col, current->text());
+                  }
+                  else
+                  {
+                     current = chunk_get_next(current);
+                  }
+               }
+            }
          }
       }
    }
@@ -4813,11 +4874,15 @@ void newlines_functions_remove_extra_blank_lines(void)
 
    if (nl_max_blank_in_func == 0)
    {
+      LOG_FMT(LNEWLINE, "%s(%d): nl_max_blank_in_func is zero\n", __func__, __LINE__);
       return;
    }
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
+      LOG_FMT(LNEWLINE, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+
       if (  pc->type != CT_BRACE_OPEN
          || (get_chunk_parent_type(pc) != CT_FUNC_DEF && get_chunk_parent_type(pc) != CT_CPP_LAMBDA))
       {
@@ -4836,6 +4901,8 @@ void newlines_functions_remove_extra_blank_lines(void)
          if (  !chunk_is_token(pc, CT_COMMENT_MULTI)   // Issue #2195
             && pc->nl_count > nl_max_blank_in_func)
          {
+            LOG_FMT(LNEWLINE, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
             pc->nl_count = nl_max_blank_in_func;
             MARK_CHANGE();
             remove_next_newlines(pc);
@@ -4883,7 +4950,6 @@ void newlines_squeeze_ifdef(void)
                {
                   if (pnl->nl_count > 1)
                   {
-                     //nnl->nl_count += pnl->nl_count - 1;
                      pnl->nl_count = 1;
                      MARK_CHANGE();
 
@@ -5083,7 +5149,7 @@ void newlines_eat_start_end(void)
             chunk.nl_count  = options::nl_end_of_file_min();
             log_rule_B("nl_end_of_file_min");
             chunk_add_before(&chunk, nullptr);
-            LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline before '%s'\n",
+            LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline after '%s'\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
             MARK_CHANGE();
          }

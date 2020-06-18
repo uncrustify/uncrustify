@@ -83,6 +83,8 @@ enum pcf_flag_e : decltype(0ULL)
    PCF_IN_TRY_BLOCK   = pcf_bit(42),   //! inside Function-try-block
    PCF_INCOMPLETE     = pcf_bit(43),   //! class/struct forward declaration
    PCF_WF_IF          = pcf_bit(44),   //! #if for a whole file ifdef
+   PCF_NOT_POSSIBLE   = pcf_bit(45),   //! it is not possible to make an one_liner
+                                       //! because the line would be too long
 };
 
 UNC_DECLARE_FLAGS(pcf_flags_t, pcf_flag_e);

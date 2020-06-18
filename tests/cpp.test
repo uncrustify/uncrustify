@@ -297,6 +297,8 @@
 
 30780 lambda_in_one_liner.cfg               cpp/lambda_in_one_liner.cpp
 
+30790 Issue_2795.cfg                        cpp/Issue_2795.cpp
+
 30800  star_pos-0.cfg                       cpp/align-star-amp-pos.cpp
 30801  star_pos-1.cfg                       cpp/align-star-amp-pos.cpp
 30802  star_pos-2.cfg                       cpp/align-star-amp-pos.cpp
