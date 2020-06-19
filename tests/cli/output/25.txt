@@ -14,5 +14,4 @@ newline_add_between : and end->text() is '}', orig_line is 11, orig_col is 1
 newline_add_between : start->text() is '{', type is BRACE_OPEN, orig_line is 10, orig_col is 1
 newline_add_between : and end->text() is '}', orig_line is 11, orig_col is 1
    [CallStack]
-newlines_functions_remove_extra_blank_lines :
 newlines_functions_remove_extra_blank_lines : nl_max_blank_in_func is zero
