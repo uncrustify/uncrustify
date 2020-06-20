@@ -2253,7 +2253,7 @@ static void newlines_brace_pair(chunk_t *br_open)
             if (  options::code_width() > 0
                && br_close->column > options::code_width())
             {
-               // is too long
+               // the created line is too long
                // it is not possible to make an one_liner
                // because the line would be too long
                chunk_flags_set(br_open, PCF_NOT_POSSIBLE);
