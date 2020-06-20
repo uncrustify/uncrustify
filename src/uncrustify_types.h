@@ -313,7 +313,7 @@ struct cp_data_t
    bool                    lang_forced; //! overwrites automatic language detection
 
    bool                    unc_off;
-   bool                    unc_off_used; //! to check if "unc_off" is used
+   bool                    unc_off_used; //! true if the `disable_processing_cmt` option was actively used in the processed file
    UINT32                  line_number;
    size_t                  column;       //! column for parsing
    UINT16                  spaces;       //! space count on output
