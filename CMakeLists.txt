@@ -398,6 +398,15 @@ set(uncrustify_headers
   ${PROJECT_BINARY_DIR}/uncrustify_version.h
 )
 
+set(uncrustify_docs
+  "${PROJECT_SOURCE_DIR}/AUTHORS"
+  "${PROJECT_SOURCE_DIR}/BUGS"
+  "${PROJECT_SOURCE_DIR}/ChangeLog"
+  "${PROJECT_SOURCE_DIR}/COPYING"
+  "${PROJECT_SOURCE_DIR}/HELP"
+  "${PROJECT_SOURCE_DIR}/README.md"
+)
+
 add_executable(uncrustify ${uncrustify_sources} ${uncrustify_headers})
 add_dependencies(uncrustify generate_version_header)
 
@@ -486,11 +495,7 @@ include(CPack)
 #
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   install(TARGETS uncrustify DESTINATION ".")
-  install(
-    FILES
-      "${PROJECT_SOURCE_DIR}/README.md"
-      "${PROJECT_SOURCE_DIR}/BUGS"
-      "${PROJECT_SOURCE_DIR}/ChangeLog"
+  install(FILES ${uncrustify_docs}
     DESTINATION "."
   )
   install(FILES "${PROJECT_SOURCE_DIR}/documentation/htdocs/index.html"
@@ -511,6 +516,9 @@ else()
   install(DIRECTORY "${PROJECT_SOURCE_DIR}/etc/"
     DESTINATION "${CMAKE_INSTALL_DOCDIR}/examples"
     FILES_MATCHING PATTERN "*.cfg"
+  )
+  install(FILES ${uncrustify_docs}
+    DESTINATION "${CMAKE_INSTALL_DOCDIR}"
   )
 endif()
 
