@@ -194,7 +194,6 @@ void brace_cleanup(void)
 
    BraceState braceState;
 
-   cpd.unc_stage = unc_stage_e::BRACE_CLEANUP;
    cpd.frames.clear();
    cpd.in_preproc = CT_NONE;
    cpd.pp_level   = 0;
