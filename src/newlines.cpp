@@ -2212,24 +2212,27 @@ static void newlines_brace_pair(chunk_t *br_open)
             // make a vector to save the chunk
             vector<chunk_t> saved_chunk;
 
-            saved_chunk.reserve(16);
-            chunk_t *current       = chunk_get_prev_ncnlni(br_open);
-            chunk_t *next_br_close = chunk_get_next(br_close);
-            current = chunk_get_next(current);
-
-            while (current != nullptr)
+            if (options::code_width() > 0)
             {
-               LOG_FMT(LNL1LINE, "%s(%d): zu  kopieren: current->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
-                       __func__, __LINE__, current->orig_line, current->orig_col, current->text());
-               saved_chunk.push_back(*current);
-               chunk_t *the_next = chunk_get_next(current);
+               saved_chunk.reserve(16);
+               chunk_t *current       = chunk_get_prev_ncnlni(br_open);
+               chunk_t *next_br_close = chunk_get_next(br_close);
+               current = chunk_get_next(current);
 
-               if (  the_next == nullptr
-                  || the_next == next_br_close)
+               while (current != nullptr)
                {
-                  break;
+                  LOG_FMT(LNL1LINE, "%s(%d): zu  kopieren: current->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+                          __func__, __LINE__, current->orig_line, current->orig_col, current->text());
+                  saved_chunk.push_back(*current);
+                  chunk_t *the_next = chunk_get_next(current);
+
+                  if (  the_next == nullptr
+                     || the_next == next_br_close)
+                  {
+                     break;
+                  }
+                  current = the_next;
                }
-               current = the_next;
             }
             tmp = chunk_get_prev_ncnlni(br_open);
 
