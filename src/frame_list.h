@@ -17,6 +17,7 @@
  * Push a copy of a ParseFrame onto the frames list.
  * This is called on #if and #ifdef.
  */
+void fl_push(std::vector<ParseFrame> &frames, ParseFrame &frm);
 void fl_push(ParseFrame &pf);
 
 
@@ -27,10 +28,12 @@ void fl_push(ParseFrame &pf);
  *
  * This is called on #endif
  */
+void fl_pop(std::vector<ParseFrame> &frames, ParseFrame &pf);
 void fl_pop(ParseFrame &pf);
 
 
 //! Returns the pp_indent to use for this line
+int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, chunk_t *pc);
 int fl_check(ParseFrame &frm, chunk_t *pc);
 
 
