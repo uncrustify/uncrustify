@@ -126,11 +126,21 @@ chunk_t *align_func_param(chunk_t *start)
       }
       else if (chunk_is_token(pc, CT_COMMA))
       {
-         chunk_t *tmp_prev = chunk_get_prev_nc(pc);
-
-         if (!chunk_is_newline(tmp_prev))  // don't count leading commas
+         if (pc->flags.test(PCF_IN_TEMPLATE))            // Issue #2757
          {
-            comma_count++;
+            LOG_FMT(LFLPAREN, "%s(%d): comma is in template\n",
+                    __func__, __LINE__);
+         }
+         else
+         {
+            chunk_t *tmp_prev = chunk_get_prev_nc(pc);
+
+            if (!chunk_is_newline(tmp_prev))  // don't count leading commas
+            {
+               comma_count++;
+               LOG_FMT(LFLPAREN, "%s(%d): comma_count is %zu\n",
+                       __func__, __LINE__, comma_count);
+            }
          }
       }
    }
