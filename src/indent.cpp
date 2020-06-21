@@ -618,12 +618,13 @@ void indent_text(void)
    size_t       sql_orig_col  = 0;
    bool         in_func_def   = false;
 
-   cpd.frames.clear();
 
-   ParseFrame frm{};
+   std::vector<ParseFrame> frames;
+   ParseFrame              frm{};
 
-   chunk_t    *pc        = chunk_get_head();
-   bool       classFound = false; // Issue #672
+
+   chunk_t *pc        = chunk_get_head();
+   bool    classFound = false;                               // Issue #672
 
    while (pc != nullptr)
    {
@@ -746,7 +747,7 @@ void indent_text(void)
             frm.pop(__func__, __LINE__);
          }
          ParseFrame frmbkup = frm;
-         fl_check(frm, pc);
+         fl_check(frames, frm, cpd.pp_level, pc);
 
          // Indent the body of a #region here
          log_rule_B("pp_region_indent_code");

@@ -292,66 +292,65 @@ enum class unc_stage_e : unsigned int
 
 struct cp_data_t
 {
-   std::deque<UINT8>       *bout;
-   FILE                    *fout;
-   int                     last_char;
-   bool                    do_check;
-   unc_stage_e             unc_stage;
-   int                     check_fail_cnt; //! total failure count
-   bool                    if_changed;
+   std::deque<UINT8> *bout;
+   FILE              *fout;
+   int               last_char;
+   bool              do_check;
+   unc_stage_e       unc_stage;
+   int               check_fail_cnt;       //! total failure count
+   bool              if_changed;
 
-   UINT32                  error_count; //! counts how many errors occurred so far
-   std::string             filename;
+   UINT32            error_count;       //! counts how many errors occurred so far
+   std::string       filename;
 
-   file_mem                file_hdr;    // for cmt_insert_file_header
-   file_mem                file_ftr;    // for cmt_insert_file_footer
-   file_mem                func_hdr;    // for cmt_insert_func_header
-   file_mem                oc_msg_hdr;  // for cmt_insert_oc_msg_header
-   file_mem                class_hdr;   // for cmt_insert_class_header
+   file_mem          file_hdr;          // for cmt_insert_file_header
+   file_mem          file_ftr;          // for cmt_insert_file_footer
+   file_mem          func_hdr;          // for cmt_insert_func_header
+   file_mem          oc_msg_hdr;        // for cmt_insert_oc_msg_header
+   file_mem          class_hdr;         // for cmt_insert_class_header
 
-   size_t                  lang_flags;  //! defines the language of the source input
-   bool                    lang_forced; //! overwrites automatic language detection
+   size_t            lang_flags;        //! defines the language of the source input
+   bool              lang_forced;       //! overwrites automatic language detection
 
-   bool                    unc_off;
-   bool                    unc_off_used; //! true if the `disable_processing_cmt` option was actively used in the processed file
-   UINT32                  line_number;
-   size_t                  column;       //! column for parsing
-   UINT16                  spaces;       //! space count on output
+   bool              unc_off;
+   bool              unc_off_used;       //! true if the `disable_processing_cmt` option was actively used in the processed file
+   UINT32            line_number;
+   size_t            column;             //! column for parsing
+   UINT16            spaces;             //! space count on output
 
-   int                     ifdef_over_whole_file;
+   int               ifdef_over_whole_file;
 
-   bool                    frag;    //! activates code fragment option
-   UINT32                  frag_cols;
+   bool              frag;          //! activates code fragment option
+   UINT32            frag_cols;
 
    // stuff to auto-detect line endings
-   UINT32                  le_counts[uncrustify::line_end_styles];
-   unc_text                newline;
+   UINT32            le_counts[uncrustify::line_end_styles];
+   unc_text          newline;
 
-   int                     did_newline; //! flag indicates if a newline was added or converted
-   c_token_t               in_preproc;
-   int                     preproc_ncnl_count;
-   bool                    output_trailspace;
-   bool                    output_tab_as_space;
+   int               did_newline;       //! flag indicates if a newline was added or converted
+   c_token_t         in_preproc;
+   int               preproc_ncnl_count;
+   bool              output_trailspace;
+   bool              output_tab_as_space;
 
-   bool                    bom;
-   char_encoding_e         enc;
+   bool              bom;
+   char_encoding_e   enc;
 
    // bumped up when a line is split or indented
-   int                     changes;
-   int                     pass_count; //! indicates how often the chunk list shall be processed
+   int               changes;
+   int               pass_count;       //! indicates how often the chunk list shall be processed
 
 #define AL_SIZE    8000
-   align_t                 al[AL_SIZE];
-   size_t                  al_cnt;
-   bool                    al_c99_array;
+   align_t           al[AL_SIZE];
+   size_t            al_cnt;
+   bool              al_c99_array;
 
-   bool                    warned_unable_string_replace_tab_chars;
+   bool              warned_unable_string_replace_tab_chars;
 
-   std::vector<ParseFrame> frames;
-   int                     pp_level; // TODO: can this ever be -1?
+   int               pp_level;       // TODO: can this ever be -1?
 
-   const char              *phase_name;
-   const char              *dumped_file;
+   const char        *phase_name;
+   const char        *dumped_file;
 };
 
 extern cp_data_t cpd;  // TODO: can we avoid this external variable?

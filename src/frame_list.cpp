@@ -1,6 +1,6 @@
 /**
  * @file frame_list.cpp
- * Functions for the cpd.frames var, mainly used to handle preprocessor stuff
+ * mainly used to handle preprocessor stuff
  *
  * @author  Ben Gardner
  * @license GPL v2+
@@ -144,12 +144,6 @@ void fl_push(std::vector<ParseFrame> &frames, ParseFrame &frm)
 }
 
 
-void fl_push(ParseFrame &frm)
-{
-   fl_push(cpd.frames, frm);
-}
-
-
 void fl_pop(std::vector<ParseFrame> &frames, ParseFrame &pf)
 {
    if (frames.empty())
@@ -158,12 +152,6 @@ void fl_pop(std::vector<ParseFrame> &frames, ParseFrame &pf)
    }
    fl_copy_tos(pf, frames);
    fl_trash_tos(frames);
-}
-
-
-void fl_pop(ParseFrame &pf)
-{
-   fl_pop(cpd.frames, pf);
 }
 
 
@@ -316,9 +304,3 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, ch
 
    return(out_pp_level);
 } // fl_check
-
-
-int fl_check(ParseFrame &frm, chunk_t *pc)
-{
-   return(fl_check(cpd.frames, frm, cpd.pp_level, pc));
-}
