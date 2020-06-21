@@ -248,7 +248,7 @@ void brace_cleanup(void)
          && !chunk_is_token(pc, CT_IGNORED)            // Issue #2279
          && (braceState.in_preproc == CT_PP_DEFINE || braceState.in_preproc == CT_NONE))
       {
-         cpd.consumed = false;
+         braceState.consumed = false;
          parse_cleanup(braceState, frm, pc);
          print_stack(LBCSAFTER, (chunk_is_token(pc, CT_VBRACE_CLOSE)) ? "Virt-}" : pc->str.c_str(), frm);
       }
@@ -412,7 +412,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
    {
       if (chunk_is_semicolon(pc))
       {
-         cpd.consumed = true;
+         braceState.consumed = true;
          close_statement(frm, pc, braceState);
       }
       else if (  language_is_set(LANG_PAWN)
@@ -466,7 +466,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
       }
       else
       {
-         cpd.consumed = true;
+         braceState.consumed = true;
 
          // Copy the parent, update the parenthesis/brace levels
          set_chunk_parent(pc, frm.top().parent);
@@ -500,12 +500,12 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
 
    /*
     * In this state, we expect a semicolon, but we'll also hit the closing
-    * sparen, so we need to check cpd.consumed to see if the close sparen was
-    * aleady handled.
+    * sparen, so we need to check braceState.consumed to see if the close sparen
+    * was aleady handled.
     */
    if (frm.top().stage == brace_stage_e::WOD_SEMI)
    {
-      if (cpd.consumed)
+      if (braceState.consumed)
       {
          /*
           * If consumed, then we are on the close sparen.
@@ -529,7 +529,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
          // Complain if this ISN'T a semicolon, but close out WHILE_OF_DO anyway
          if (chunk_is_token(pc, CT_SEMICOLON) || chunk_is_token(pc, CT_VSEMICOLON))
          {
-            cpd.consumed = true;
+            braceState.consumed = true;
             set_chunk_parent(pc, CT_WHILE_OF_DO);
          }
          else
@@ -831,7 +831,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
    }
    else if (  chunk_is_token(pc, CT_BRACE_CLOSE)
-           && !cpd.consumed
+           && !braceState.consumed
            && braceState.in_preproc != CT_PP_DEFINE)
    {
       size_t file_pp_level = ifdef_over_whole_file() ? 1 : 0;
@@ -1326,7 +1326,7 @@ bool close_statement(ParseFrame &frm, chunk_t *pc, const BraceState &braceState)
            get_token_name(frm.top().type),
            (unsigned int)frm.top().stage);
 
-   if (cpd.consumed)
+   if (braceState.consumed)
    {
       frm.stmt_count = 0;
       frm.expr_count = 0;
@@ -1342,7 +1342,7 @@ bool close_statement(ParseFrame &frm, chunk_t *pc, const BraceState &braceState)
    if (frm.top().type == CT_VBRACE_OPEN)
    {
       // If the current token has already been consumed, then add after it
-      if (cpd.consumed)
+      if (braceState.consumed)
       {
          insert_vbrace_close_after(pc, frm);
       }
