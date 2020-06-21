@@ -127,7 +127,7 @@ static void mark_namespace(chunk_t *pns);
 static size_t preproc_start(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   const size_t pp_level = cpd.pp_level;
+   const size_t pp_level = braceState.pp_level;
 
    chunk_t      *next = chunk_get_next_ncnl(pc);
 
@@ -141,10 +141,10 @@ static size_t preproc_start(BraceState &braceState, ParseFrame &frm, chunk_t *pc
    // If we are not in a define, check for #if, #else, #endif, etc
    if (braceState.in_preproc != CT_PP_DEFINE)
    {
-      return(fl_check(frm, pc));
+      return(fl_check(braceState.frames, frm, braceState.pp_level, pc));
    }
    // else push the frame stack
-   fl_push(frm);
+   fl_push(braceState.frames, frm);
 
    // a preproc body starts a new, blank frame
    frm             = {};
@@ -193,8 +193,6 @@ void brace_cleanup(void)
    LOG_FUNC_ENTRY();
 
    BraceState braceState;
-   cpd.frames.clear();
-   cpd.pp_level          = 0;
    ParseFrame frm{};
    chunk_t    *pc = chunk_get_head();
 
@@ -206,14 +204,14 @@ void brace_cleanup(void)
          if (braceState.in_preproc == CT_PP_DEFINE)
          {
             // out of the #define body, restore the frame
-            fl_pop(frm);
+            fl_pop(braceState.frames, frm);
          }
          braceState.in_preproc = CT_NONE;
       }
       // Check for a preprocessor start
       const size_t pp_level = (chunk_is_token(pc, CT_PREPROC))
                               ? preproc_start(braceState, frm, pc)
-                              : cpd.pp_level;
+                              : braceState.pp_level;
 
       // Do before assigning stuff from the frame
       if (  language_is_set(LANG_PAWN)
