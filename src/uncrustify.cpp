@@ -2259,7 +2259,6 @@ void uncrustify_end()
    cpd.pp_level   = 0;
    cpd.changes    = 0;
    cpd.in_preproc = CT_NONE;
-   cpd.consumed   = false;
    memset(cpd.le_counts, 0, sizeof(cpd.le_counts));
    cpd.preproc_ncnl_count                     = 0;
    cpd.ifdef_over_whole_file                  = 0;

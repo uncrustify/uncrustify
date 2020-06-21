@@ -327,8 +327,6 @@ struct cp_data_t
    UINT32                  le_counts[uncrustify::line_end_styles];
    unc_text                newline;
 
-   bool                    consumed;
-
    int                     did_newline; //! flag indicates if a newline was added or converted
    c_token_t               in_preproc;
    int                     preproc_ncnl_count;
