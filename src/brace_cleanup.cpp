@@ -136,10 +136,10 @@ static size_t preproc_start(BraceState &braceState, ParseFrame &frm, chunk_t *pc
       return(pp_level);
    }
    // Get the type of preprocessor and handle it
-   cpd.in_preproc = next->type;
+   braceState.in_preproc = next->type;
 
    // If we are not in a define, check for #if, #else, #endif, etc
-   if (cpd.in_preproc != CT_PP_DEFINE)
+   if (braceState.in_preproc != CT_PP_DEFINE)
    {
       return(fl_check(frm, pc));
    }
@@ -193,25 +193,22 @@ void brace_cleanup(void)
    LOG_FUNC_ENTRY();
 
    BraceState braceState;
-
    cpd.frames.clear();
-   cpd.in_preproc = CT_NONE;
-   cpd.pp_level   = 0;
-
+   cpd.pp_level          = 0;
    ParseFrame frm{};
    chunk_t    *pc = chunk_get_head();
 
    while (pc != nullptr)
    {
       // Check for leaving a #define body
-      if (cpd.in_preproc != CT_NONE && !pc->flags.test(PCF_IN_PREPROC))
+      if (braceState.in_preproc != CT_NONE && !pc->flags.test(PCF_IN_PREPROC))
       {
-         if (cpd.in_preproc == CT_PP_DEFINE)
+         if (braceState.in_preproc == CT_PP_DEFINE)
          {
             // out of the #define body, restore the frame
             fl_pop(frm);
          }
-         cpd.in_preproc = CT_NONE;
+         braceState.in_preproc = CT_NONE;
       }
       // Check for a preprocessor start
       const size_t pp_level = (chunk_is_token(pc, CT_PREPROC))
@@ -249,7 +246,7 @@ void brace_cleanup(void)
          && !chunk_is_newline(pc)
          && !chunk_is_token(pc, CT_ATTRIBUTE)
          && !chunk_is_token(pc, CT_IGNORED)            // Issue #2279
-         && (cpd.in_preproc == CT_PP_DEFINE || cpd.in_preproc == CT_NONE))
+         && (braceState.in_preproc == CT_PP_DEFINE || braceState.in_preproc == CT_NONE))
       {
          cpd.consumed = false;
          parse_cleanup(braceState, frm, pc);
@@ -835,7 +832,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
    }
    else if (  chunk_is_token(pc, CT_BRACE_CLOSE)
            && !cpd.consumed
-           && cpd.in_preproc != CT_PP_DEFINE)
+           && braceState.in_preproc != CT_PP_DEFINE)
    {
       size_t file_pp_level = ifdef_over_whole_file() ? 1 : 0;
 
