@@ -1812,7 +1812,8 @@ static void newlines_cuddle_uncuddle(chunk_t *start, iarf_e nl_opt)
 
    log_rule_B("nl_define_macro");
 
-   if (start->flags.test(PCF_IN_PREPROC) && !options::nl_define_macro())
+   if (  start->flags.test(PCF_IN_PREPROC)
+      && !options::nl_define_macro())
    {
       return;
    }
@@ -2667,7 +2668,7 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av, bool c
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LNEWLINE, "%s(%d): ", __func__, __LINE__);
-   log_func_stack(LNEWLINE, " CallStack:");
+   log_func_stack(LNEWLINE, "CallStack:");
 
    if (  before == nullptr
       || after == nullptr
@@ -2687,6 +2688,8 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av, bool c
          return;
       }
       chunk_t *nl = newline_add_between(before, after);
+      LOG_FMT(LNEWLINE, "%s(%d): newline_add_between '%s' and '%s'\n",
+              __func__, __LINE__, before->text(), after->text());
 
       if (  nl != nullptr
          && av == IARF_FORCE
@@ -2698,6 +2701,8 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av, bool c
    else if (av & IARF_REMOVE)
    {
       newline_del_between(before, after);
+      LOG_FMT(LNEWLINE, "%s(%d): newline_remove_between '%s' and '%s'\n",
+              __func__, __LINE__, before->text(), after->text());
    }
 }
 
@@ -5658,13 +5663,13 @@ void do_blank_lines(void)
       }
       chunk_t *next  = chunk_get_next(pc);
       chunk_t *pcmt  = chunk_get_prev(pc);
-      size_t  old_nl = pc->nl_count;
 
       /*
        * If this is the first or the last token, pretend that there is an extra
        * line. It will be removed at the end.
        */
-      if (pc == chunk_get_head() || next == nullptr)
+      if (  pc == chunk_get_head()
+         || next == nullptr)
       {
          line_added = true;
          ++pc->nl_count;
@@ -6117,15 +6122,16 @@ void do_blank_lines(void)
          }
       }
 
-      if (line_added && pc->nl_count > 1)
+      if (  line_added
+         && pc->nl_count > 1)
       {
          --pc->nl_count;
       }
 
-      if (old_nl != pc->nl_count)
-      {
-         LOG_FMT(LBLANK, "   -=> changed to %zu\n", pc->nl_count);
-      }
+
+      LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, text is '%s', nl_count changed to %zu\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), pc->nl_count);
+      //}
    }
 } // do_blank_lines
 
