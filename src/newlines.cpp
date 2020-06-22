@@ -5661,8 +5661,8 @@ void do_blank_lines(void)
             continue;
          }
       }
-      chunk_t *next  = chunk_get_next(pc);
-      chunk_t *pcmt  = chunk_get_prev(pc);
+      chunk_t *next = chunk_get_next(pc);
+      chunk_t *pcmt = chunk_get_prev(pc);
 
       /*
        * If this is the first or the last token, pretend that there is an extra
@@ -6127,11 +6127,8 @@ void do_blank_lines(void)
       {
          --pc->nl_count;
       }
-
-
       LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, text is '%s', nl_count changed to %zu\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), pc->nl_count);
-      //}
    }
 } // do_blank_lines
 
