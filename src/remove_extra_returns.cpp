@@ -31,6 +31,8 @@ void remove_extra_returns(void)
          // look for a closing brace
          bool    remove_it      = false;
          chunk_t *closing_brace = chunk_get_next_type(pc, CT_BRACE_CLOSE, 1);
+         LOG_FMT(LRMRETURN, "%s(%d): on orig_line %zu, level is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->level);
 
          if (closing_brace != nullptr)
          {
@@ -38,7 +40,8 @@ void remove_extra_returns(void)
             {
                // we have a class. Do nothing
             }
-            else if (get_chunk_parent_type(closing_brace) == CT_FUNC_DEF)
+            else if (  get_chunk_parent_type(closing_brace) == CT_FUNC_DEF
+                    && pc->level < 2)
             {
                remove_it = true;
             }
@@ -48,6 +51,8 @@ void remove_extra_returns(void)
             // it is not a class
             // look for a closing brace
             closing_brace = chunk_get_next_type(pc, CT_BRACE_CLOSE, 0);
+            LOG_FMT(LRMRETURN, "%s(%d): on orig_line %zu, level is %zu\n",
+                    __func__, __LINE__, pc->orig_line, pc->level);
 
             if (closing_brace != nullptr)
             {

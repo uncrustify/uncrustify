@@ -563,6 +563,7 @@
 33056  empty.cfg                            cpp/bug_33056.cpp
 33057  bug_1349.cfg                         cpp/bug_1349.cpp
 #33058  sp_arith-a.cfg                       cpp/stdcall.cpp
+33059  mod_remove_empty_return-t.cfg        cpp/mod_remove_empty_return-2.cpp
 
 33060  empty.cfg                            cpp/if_constexpr.cpp
 33061  empty.cfg                            cpp/if_chain_braces.cpp
