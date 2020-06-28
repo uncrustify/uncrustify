@@ -52,3 +52,5 @@
 
 
 40400  mod_full_brace_if_chain_only-t.cfg   d/vbraces000.d
+40401  empty.cfg                            d/vbraces001.d
+40402  mod_full_brace_if_chain_only-t.cfg   d/vbraces002.d

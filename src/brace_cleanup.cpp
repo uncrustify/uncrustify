@@ -489,6 +489,19 @@ static void parse_cleanup(ParseFrame &frm, chunk_t *pc)
          frm.pop(__func__, __LINE__);
          print_stack(LBCSPOP, "-Close  ", frm);
 
+         if (  frm.top().stage == brace_stage_e::NONE
+            && (  chunk_is_token(pc, CT_VBRACE_CLOSE)
+               || chunk_is_token(pc, CT_BRACE_CLOSE)
+               || chunk_is_token(pc, CT_SEMICOLON))
+            && chunk_is_token(frm.top().pc, CT_VBRACE_OPEN))
+         {
+            // frames for functions are not created as they are for an if
+            // this here is a hackish solution to close a vbrace of a block that
+            // contains the function
+            frm.push(nullptr); // <- dummy frame for the function
+            frm.top().stage = brace_stage_e::BRACE2;
+         }
+
          // See if we are in a complex statement
          if (frm.top().stage != brace_stage_e::NONE)
          {
