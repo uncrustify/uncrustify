@@ -91,8 +91,10 @@ chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
 
             if (cpd.al_cnt == uncrustify::limits::AL_SIZE)
             {
-               fprintf(stderr, "Number of 'entry' to be aligned is too big for the current value %d,\n", uncrustify::limits::AL_SIZE);
-               fprintf(stderr, "at line %zu, column %zu.\n", pc->orig_line, pc->orig_col);
+               fprintf(stderr, "Number of 'entry' to be aligned is too big for the current value %d,\n",
+                       uncrustify::limits::AL_SIZE);
+               fprintf(stderr, "at line %zu, column %zu.\n",
+                       pc->orig_line, pc->orig_col);
                fprintf(stderr, "Please make a report.\n");
                log_flush(true);
                exit(EX_SOFTWARE);

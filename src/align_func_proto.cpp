@@ -78,7 +78,8 @@ void align_func_proto(size_t span)
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       LOG_FMT(LAS, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, level is %zu, brace_level is %zu\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type), pc->level, pc->brace_level);
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
+              get_token_name(pc->type), pc->level, pc->brace_level);
 
       if (chunk_is_newline(pc))
       {
@@ -133,7 +134,8 @@ void align_func_proto(size_t span)
          }
          chunk_t *tmp = step_back_over_member(toadd);
          LOG_FMT(LAS, "%s(%d): tmp->text() is '%s', orig_line is %zu, orig_col is %zu, level is %zu, brace_level is %zu\n",
-                 __func__, __LINE__, tmp->text(), tmp->orig_line, tmp->orig_col, tmp->level, tmp->brace_level);
+                 __func__, __LINE__, tmp->text(), tmp->orig_line, tmp->orig_col,
+                 tmp->level, tmp->brace_level);
          max_level_is       = max(max_level_is, pc->level);
          max_brace_level_is = max(max_brace_level_is, pc->level);
          many_as[pc->level][pc->brace_level].Add(tmp);

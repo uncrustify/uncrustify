@@ -580,29 +580,35 @@ void print_keywords(FILE *pfile)
       if (tt == CT_TYPE)
       {
          fprintf(pfile, "type %*.s%s\n",
-                 uncrustify::limits::MAX_OPTION_NAME_LEN - 4, " ", keyword_pair.first.c_str());
+                 uncrustify::limits::MAX_OPTION_NAME_LEN - 4, " ",
+                 keyword_pair.first.c_str());
       }
       else if (tt == CT_MACRO_OPEN)
       {
          fprintf(pfile, "macro-open %*.s%s\n",
-                 uncrustify::limits::MAX_OPTION_NAME_LEN - 11, " ", keyword_pair.first.c_str());
+                 uncrustify::limits::MAX_OPTION_NAME_LEN - 11, " ",
+                 keyword_pair.first.c_str());
       }
       else if (tt == CT_MACRO_CLOSE)
       {
          fprintf(pfile, "macro-close %*.s%s\n",
-                 uncrustify::limits::MAX_OPTION_NAME_LEN - 12, " ", keyword_pair.first.c_str());
+                 uncrustify::limits::MAX_OPTION_NAME_LEN - 12, " ",
+                 keyword_pair.first.c_str());
       }
       else if (tt == CT_MACRO_ELSE)
       {
          fprintf(pfile, "macro-else %*.s%s\n",
-                 uncrustify::limits::MAX_OPTION_NAME_LEN - 11, " ", keyword_pair.first.c_str());
+                 uncrustify::limits::MAX_OPTION_NAME_LEN - 11, " ",
+                 keyword_pair.first.c_str());
       }
       else
       {
          const char *tn = get_token_name(tt);
 
-         fprintf(pfile, "set %s %*.s%s\n", tn,
-                 uncrustify::limits::MAX_OPTION_NAME_LEN - (4 + static_cast<int>(strlen(tn))), " ", keyword_pair.first.c_str());
+         fprintf(pfile, "set %s %*.s%s\n",
+                 tn,
+                 uncrustify::limits::MAX_OPTION_NAME_LEN - (4 + static_cast<int>(strlen(tn))),
+                 " ", keyword_pair.first.c_str());
       }
    }
 }
