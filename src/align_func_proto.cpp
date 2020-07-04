@@ -36,25 +36,31 @@ void align_func_proto(size_t span)
    //   and
    //   token-1->brace_level == token-2->brace_level
    // we don't check if token-1 and token-2 are in the same block
-   size_t     max_level_is       = 0;
-   size_t     max_brace_level_is = 0;
-   size_t     mystar_style       = options::align_var_def_star_style();
-   size_t     myamp_style        = options::align_var_def_amp_style();
-   AlignStack many_as[HOW_MANY_AS_LEVEL + 1][HOW_MANY_AS_BRACE_LEVEL + 1];
+   size_t max_level_is       = 0;
+   size_t max_brace_level_is = 0;
+   size_t mystar_style       = options::align_var_def_star_style();
+   size_t myamp_style        = options::align_var_def_amp_style();
+
+
+   const size_t max_level_count = 4;
+   const size_t max_brace_level = 4;
+
+
+   AlignStack many_as[max_level_count + 1][max_brace_level + 1];
 
    log_rule_B("align_func_proto_gap");
    log_rule_B("align_var_def_star_style");
    log_rule_B("align_var_def_amp_style");
 
    // Issue #2771
-   AlignStack many_as_brace[HOW_MANY_AS_LEVEL + 1][HOW_MANY_AS_BRACE_LEVEL + 1];
+   AlignStack many_as_brace[max_level_count + 1][max_brace_level + 1];
 
    log_rule_B("align_single_line_brace_gap");
    size_t mybr_gap = options::align_single_line_brace_gap();
 
-   for (size_t idx = 0; idx <= HOW_MANY_AS_LEVEL; idx++)
+   for (size_t idx = 0; idx <= max_level_count; idx++)
    {
-      for (size_t idx_brace = 0; idx_brace <= HOW_MANY_AS_BRACE_LEVEL; idx_brace++)
+      for (size_t idx_brace = 0; idx_brace <= max_brace_level; idx_brace++)
       {
          many_as[idx][idx_brace].Start(myspan, mythresh);
          many_as[idx][idx_brace].m_gap        = mygap;
@@ -80,9 +86,9 @@ void align_func_proto(size_t span)
          many_as[pc->level][pc->brace_level].Debug();
          many_as_brace[pc->level][pc->brace_level].Debug();
 
-         for (size_t idx = 0; idx <= HOW_MANY_AS_LEVEL; idx++)
+         for (size_t idx = 0; idx <= max_level_count; idx++)
          {
-            for (size_t idx_brace = 0; idx_brace <= HOW_MANY_AS_BRACE_LEVEL; idx_brace++)
+            for (size_t idx_brace = 0; idx_brace <= max_brace_level; idx_brace++)
             {
                many_as[idx][idx_brace].NewLines(pc->nl_count);
             }
@@ -107,21 +113,21 @@ void align_func_proto(size_t span)
             toadd = pc;
          }
 
-         if (pc->level > HOW_MANY_AS_LEVEL)
+         if (pc->level > max_level_count)
          {
             fprintf(stderr, "%s(%d): Not enought memory for Stack\n",
                     __func__, __LINE__);
             fprintf(stderr, "%s(%d): the current maximum for level is %zu\n",
-                    __func__, __LINE__, HOW_MANY_AS_LEVEL);
+                    __func__, __LINE__, max_level_count);
             log_flush(true);
          }
 
-         if (pc->level > HOW_MANY_AS_BRACE_LEVEL)
+         if (pc->level > max_brace_level)
          {
             fprintf(stderr, "%s(%d): Not enought memory for Stack\n",
                     __func__, __LINE__);
             fprintf(stderr, "%s(%d): the current maximum for brace_level is %zu\n",
-                    __func__, __LINE__, HOW_MANY_AS_BRACE_LEVEL);
+                    __func__, __LINE__, max_brace_level);
             log_flush(true);
             exit(EX_SOFTWARE);
          }
@@ -146,9 +152,9 @@ void align_func_proto(size_t span)
 
    LOG_FMT(LAS, "%s(%d):  as\n", __func__, __LINE__);
 
-   for (size_t idx = 0; idx <= HOW_MANY_AS_LEVEL; idx++)
+   for (size_t idx = 0; idx <= max_level_count; idx++)
    {
-      for (size_t idx_brace = 0; idx_brace <= HOW_MANY_AS_BRACE_LEVEL; idx_brace++)
+      for (size_t idx_brace = 0; idx_brace <= max_brace_level; idx_brace++)
       {
          many_as[idx][idx_brace].End();
          many_as_brace[idx][idx_brace].End();

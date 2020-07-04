@@ -19,11 +19,13 @@
 #include "pcf_flags.h"
 #include "token_enum.h"    // c_token_t
 #include "unc_text.h"
+#include "uncrustify_limits.h"
 
 #include <assert.h>
 #include <cstdio>
 #include <deque>
 #include <vector>
+
 #ifdef HAVE_UTIME_H
 #include <utime.h>
 #endif
@@ -288,8 +290,6 @@ enum class unc_stage_e : unsigned int
    CLEANUP
 };
 
-#define MAX_OPTION_NAME_LEN    32  // sets a limit to the name padding
-
 struct cp_data_t
 {
    std::deque<UINT8> *bout;
@@ -340,8 +340,7 @@ struct cp_data_t
    int               changes;
    int               pass_count;       //! indicates how often the chunk list shall be processed
 
-#define AL_SIZE    8000
-   align_t           al[AL_SIZE];
+   align_t           al[uncrustify::limits::AL_SIZE];
    size_t            al_cnt;
    bool              al_c99_array;
 

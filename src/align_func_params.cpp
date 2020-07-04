@@ -10,7 +10,6 @@
 #include "align_func_params.h"
 #include "align_stack.h"
 #include "log_rules.h"
-#include "uncrustify_limits.h"
 
 #include <algorithm>                           // to get max
 
@@ -39,8 +38,10 @@ chunk_t *align_func_param(chunk_t *start)
       log_rule_B("align_func_params_gap");
       mygap = options::align_func_params_gap();
    }
-   size_t     max_level_is = 0;
-   AlignStack many_as[HOW_MANY_AS + 1];
+   const size_t HOW_MANY_AS = 8;
+   AlignStack   many_as[HOW_MANY_AS + 1];
+
+   size_t       max_level_is = 0;
 
    log_rule_B("align_var_def_star_style");
    log_rule_B("align_var_def_amp_style");

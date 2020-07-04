@@ -17,7 +17,6 @@
 
 using namespace uncrustify;
 
-
 Option<std::string>  *include_category_options[] =
 {
    &options::include_category_0,
@@ -559,11 +558,15 @@ static void group_imports_by_adding_newlines(chunk_t **chunks, size_t num_chunks
 void sort_imports(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *chunks[MAX_NUMBER_TO_SORT];
-   size_t  num_chunks  = 0;
-   chunk_t *p_last     = nullptr;
-   chunk_t *p_imp      = nullptr;
-   chunk_t *p_imp_last = nullptr;
+   const int max_number_to_sort                        = 1024;
+   const int max_lines_to_check_for_sort_after_include = 128;
+   const int max_gap_threshold_between_include_to_sort = 32;
+
+   chunk_t   *chunks[max_number_to_sort];
+   size_t    num_chunks  = 0;
+   chunk_t   *p_last     = nullptr;
+   chunk_t   *p_imp      = nullptr;
+   chunk_t   *p_imp_last = nullptr;
 
    prepare_categories();
 
@@ -575,7 +578,7 @@ void sort_imports(void)
       // import is seen are ignore from sorting.
       if (  options::mod_sort_incl_import_grouping_enabled()
          && p_imp_last != nullptr
-         && (pc->orig_line - p_imp_last->orig_line) > MAX_LINES_TO_CHECK_FOR_SORT_AFTER_INCLUDE)
+         && (pc->orig_line - p_imp_last->orig_line) > max_lines_to_check_for_sort_after_include)
       {
          break;
       }
@@ -590,7 +593,7 @@ void sort_imports(void)
             && (  chunk_is_token(p_last, CT_SEMICOLON)
                || p_imp->flags.test(PCF_IN_PREPROC)))
          {
-            if (num_chunks < MAX_NUMBER_TO_SORT)
+            if (num_chunks < max_number_to_sort)
             {
                LOG_FMT(LSORT, "%s(%d): p_imp is %s\n",
                        __func__, __LINE__, p_imp->text());
@@ -598,7 +601,7 @@ void sort_imports(void)
             }
             else
             {
-               fprintf(stderr, "Number of 'import' to be sorted is too big for the current value %d.\n", MAX_NUMBER_TO_SORT);
+               fprintf(stderr, "Number of 'import' to be sorted is too big for the current value %d.\n", max_number_to_sort);
                fprintf(stderr, "Please make a report.\n");
                log_flush(true);
                cpd.error_count++;
@@ -612,7 +615,7 @@ void sort_imports(void)
                && pc->nl_count > 1)
             || (  options::mod_sort_incl_import_grouping_enabled()
                && p_imp_last != nullptr
-               && (pc->orig_line - p_imp_last->orig_line) > MAX_GAP_THRESHOLD_BETWEEN_INCLUDE_TO_SORT)
+               && (pc->orig_line - p_imp_last->orig_line) > max_gap_threshold_between_include_to_sort)
             || next == nullptr)
          {
             if (num_chunks > 1)

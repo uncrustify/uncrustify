@@ -16,12 +16,14 @@
 #include "prototypes.h"
 #include "unc_ctype.h"
 #include "uncrustify.h"
+#include "uncrustify_limits.h"
 #include "uncrustify_types.h"
 
 #include <cerrno>
 #include <cstdlib>
 #include <cstring>
 #include <map>
+
 
 using namespace std;
 
@@ -524,15 +526,16 @@ int load_keyword_file(const char *filename)
       cpd.error_count++;
       return(EX_IOERR);
    }
-#define MAXLENGTHOFLINE    256
-#define NUMBEROFARGS       2
+   const int max_line_length = 256;
+   const int max_arg_count   = 2;
+
    // maximal length of a line in the file
-   char   buf[MAXLENGTHOFLINE];
-   char   *args[NUMBEROFARGS];
+   char   buf[max_line_length];
+   char   *args[max_arg_count];
    size_t line_no = 0;
 
    // read file line by line
-   while (fgets(buf, MAXLENGTHOFLINE, pf) != nullptr)
+   while (fgets(buf, max_line_length, pf) != nullptr)
    {
       line_no++;
 
@@ -543,7 +546,7 @@ int load_keyword_file(const char *filename)
       {
          *ptr = 0; // set string end where comment begins
       }
-      size_t argc = Args::SplitLine(buf, args, NUMBEROFARGS);
+      size_t argc = Args::SplitLine(buf, args, max_arg_count);
 
       if (argc > 0)
       {
@@ -577,29 +580,29 @@ void print_keywords(FILE *pfile)
       if (tt == CT_TYPE)
       {
          fprintf(pfile, "type %*.s%s\n",
-                 MAX_OPTION_NAME_LEN - 4, " ", keyword_pair.first.c_str());
+                 uncrustify::limits::MAX_OPTION_NAME_LEN - 4, " ", keyword_pair.first.c_str());
       }
       else if (tt == CT_MACRO_OPEN)
       {
          fprintf(pfile, "macro-open %*.s%s\n",
-                 MAX_OPTION_NAME_LEN - 11, " ", keyword_pair.first.c_str());
+                 uncrustify::limits::MAX_OPTION_NAME_LEN - 11, " ", keyword_pair.first.c_str());
       }
       else if (tt == CT_MACRO_CLOSE)
       {
          fprintf(pfile, "macro-close %*.s%s\n",
-                 MAX_OPTION_NAME_LEN - 12, " ", keyword_pair.first.c_str());
+                 uncrustify::limits::MAX_OPTION_NAME_LEN - 12, " ", keyword_pair.first.c_str());
       }
       else if (tt == CT_MACRO_ELSE)
       {
          fprintf(pfile, "macro-else %*.s%s\n",
-                 MAX_OPTION_NAME_LEN - 11, " ", keyword_pair.first.c_str());
+                 uncrustify::limits::MAX_OPTION_NAME_LEN - 11, " ", keyword_pair.first.c_str());
       }
       else
       {
          const char *tn = get_token_name(tt);
 
          fprintf(pfile, "set %s %*.s%s\n", tn,
-                 int(MAX_OPTION_NAME_LEN - (4 + strlen(tn))), " ", keyword_pair.first.c_str());
+                 uncrustify::limits::MAX_OPTION_NAME_LEN - (4 + static_cast<int>(strlen(tn))), " ", keyword_pair.first.c_str());
       }
    }
 }
