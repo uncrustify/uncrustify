@@ -1071,9 +1071,14 @@ static void add_comment_text(const unc_text &text,
          add_text(cmt.cont_text);
          // The number of spaces to insert after the star on subsequent comment lines.
          log_rule_B("cmt_sp_after_star_cont");
-         output_to_column(cmt.column + options::cmt_sp_after_star_cont(),
-                          false);
-         ch_cnt = 0;
+
+         const int sp_after_continuation = unc_text::compare(cmt.cont_text, " * ") == 0
+            ? (options::cmt_sp_after_star_cont())
+            : 0;
+
+         const int first_char_col = cmt.column + cmt.cont_text.size()
+                                    + sp_after_continuation + cmt.xtra_indent;
+         output_to_column(first_char_col, false);
       }
       else
       {
