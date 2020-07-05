@@ -74,6 +74,16 @@ void log_set_mask(const log_mask_t &mask);
 void log_get_mask(log_mask_t &mask);
 
 
+#ifdef __MINGW_PRINTF_FORMAT
+// On MinGW, the printf functions can be provided by a number of different
+// implementations, with different format string support. Annontate log_fmt
+// below with the same format attribute as the currently chosen default printf
+// function.
+#define PRINTF_FORMAT    __MINGW_PRINTF_FORMAT
+#else
+#define PRINTF_FORMAT    printf
+#endif
+
 /**
  * Logs a formatted string -- similar to printf()
  *
@@ -81,7 +91,7 @@ void log_get_mask(log_mask_t &mask);
  * @param fmt  The format string
  * @param ...  Additional arguments
  */
-void log_fmt(log_sev_t sev, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
+void log_fmt(log_sev_t sev, const char *fmt, ...) __attribute__((format(PRINTF_FORMAT, 2, 3)));
 
 
 /**
