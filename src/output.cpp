@@ -1072,12 +1072,17 @@ static void add_comment_text(const unc_text &text,
          // The number of spaces to insert after the star on subsequent comment lines.
          log_rule_B("cmt_sp_after_star_cont");
 
-         const int sp_after_continuation = unc_text::compare(cmt.cont_text, " * ") == 0
-            ? (options::cmt_sp_after_star_cont())
+         int sp_after_continuation = cmt.cont_text.find("*") != -1
+            ? (cmt.cont_text.size() + cmt.xtra_indent + options::cmt_sp_after_star_cont())
             : 0;
 
-         const int first_char_col = cmt.column + cmt.cont_text.size()
-                                    + sp_after_continuation + cmt.xtra_indent;
+         if (cmt.cont_text.size() > 0
+             && cmt.cont_text[cmt.cont_text.size() - 1] == ' ')
+         {
+             --sp_after_continuation;
+         }
+
+         const int first_char_col = cmt.column + sp_after_continuation;
          output_to_column(first_char_col, false);
       }
       else
@@ -1792,7 +1797,8 @@ static void output_comment_multi(chunk_t *pc)
                      add_text(cmt.cont_text);
                      // The number of spaces to insert after the star on subsequent comment lines.
                      log_rule_B("cmt_sp_after_star_cont");
-                     output_to_column(ccol + options::cmt_sp_after_star_cont(), false);
+                     const int first_char_col = ccol + options::cmt_sp_after_star_cont();
+                     output_to_column(first_char_col, false);
                   }
                   else
                   {
@@ -1827,7 +1833,10 @@ static void output_comment_multi(chunk_t *pc)
                         && (line[0] == '*')
                         && unc_isalnum(line[1]))
                      {
-                        line.insert(1, ' ');
+                        for (size_t i = 0; i < options::cmt_sp_after_star_cont(); i++)
+                        {
+                           line.insert(1, ' ');
+                        }
                      }
                   }
                   else

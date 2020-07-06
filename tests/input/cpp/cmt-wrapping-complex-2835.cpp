@@ -1,6 +1,9 @@
 /* Short
- * Very long statement, needs wrapping */
+ * Very long statement, needs much wrapping */
 
+// Make sure C++ comments are properly wrapped,
+// we do not want anything
+// strange
 class Test : public Beta
 {
     /* Short
@@ -8,7 +11,11 @@ class Test : public Beta
     void func()
     {
         /** Make sure
-         * not to break anything */
+         * not to break anything, even in longer cases. */
+
+        // Make sure C++ comments are properly wrapped,
+        // we do not want anything
+        // strange
     }
 
     /**

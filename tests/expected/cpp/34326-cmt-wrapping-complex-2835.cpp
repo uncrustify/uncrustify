@@ -1,6 +1,6 @@
 /* Short
  * Very long statement, needs
- * much wrapping */
+ *     much wrapping */
 
 // Make sure C++ comments are
 // properly wrapped,
@@ -10,13 +10,14 @@ class Test : public Beta
 {
 /* Short
  * Very long statement, needs
- * wrapping */
+ *     wrapping */
 void func()
 {
 	/** Make sure
 	 * not to break
-	 * anything, even in
-	 * longer cases. */
+	 *     anything, even
+	 *     in longer
+	 *     cases. */
 
 	// Make sure C++
 	// comments are
@@ -28,7 +29,7 @@ void func()
 
 /**
  * The quick brown fox jumps
- * over
+ *     over
  * the lazy dog
  */
 };
