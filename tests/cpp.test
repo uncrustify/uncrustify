@@ -409,6 +409,7 @@
 30946  sf.3315874.cfg                       cpp/sf.3315874.h
 30947  bug_1689.cfg                         cpp/bug_1689.cpp
 30948  sp_before_byref_func.cfg             cpp/sp_before_byref_func.cpp
+30949  Issue_2757.cfg                       cpp/Issue_2757.cpp
 
 30950  sp_before_tr_emb_cmt-f.cfg           cpp/sp_before_tr_emb_cmt_input.cpp
 30951  sp_before_tr_emb_cmt-a.cfg           cpp/sp_before_tr_emb_cmt_input.cpp
@@ -599,10 +600,10 @@
 33094  sp_angle_paren_empty.cfg             cpp/sp_angle_paren.cpp
 33095  bug_i_322.cfg                        cpp/bug_i_322.cpp
 33096  squeeze_ifdef_top.cfg                cpp/squeeze_ifdef.cpp
-
 33097  pos_enum_comma-tf.cfg                cpp/enum_comma.h
 33098  pos_comma-lf.cfg                     cpp/enum_comma.h
 33099  enum_comma-3.cfg                     cpp/enum_comma.h
+
 33100  enum_comma-4.cfg                     cpp/enum_comma.h
 33101  pos_comma-tb.cfg                     cpp/enum_comma.h
 33102  enum_comma-6.cfg                     cpp/enum_comma.h
