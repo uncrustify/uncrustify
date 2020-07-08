@@ -2262,14 +2262,14 @@ static void newlines_brace_pair(chunk_t *br_open)
                chunk_flags_set(br_open, PCF_NOT_POSSIBLE);
                // restore the code
                size_t  count;
-               chunk_t tmp;
+               chunk_t tmp_2;
                chunk_t *current = br_open;
 
                for (count = 0; count < saved_chunk.size(); count++)
                {
-                  tmp = saved_chunk.at(count);
+                  tmp_2 = saved_chunk.at(count);
 
-                  if (tmp.orig_line != current->orig_line)
+                  if (tmp_2.orig_line != current->orig_line)
                   {
                      // restore the newline
                      chunk_t chunk;
