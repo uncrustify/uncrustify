@@ -2700,9 +2700,9 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av, bool c
    }
    else if (av & IARF_REMOVE)
    {
-      newline_del_between(before, after);
       LOG_FMT(LNEWLINE, "%s(%d): newline_remove_between '%s' and '%s'\n",
               __func__, __LINE__, before->text(), after->text());
+      newline_del_between(before, after);
    }
 }
 
