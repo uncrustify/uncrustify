@@ -38,8 +38,14 @@ typedef unsigned long long   UINT64;
 #define PRIu64    "llu"
 #endif
 
+// Make sure to keep GNU style attributes if they are supported; other
+// included headers may have chosen to rely on them. This is essential
+// if building with libc++ headers, where attributes are relied upon
+// if they are supported (see _LIBCPP_EXCLUDE_FROM_EXPLICIT_INSTANTIATION).
+#ifndef __GNUC__
 // eliminate GNU's attribute
 #define __attribute__(x)
+#endif
 
 /*
  * MSVC compilers before VC7 don't have __func__ at all; later ones call it
