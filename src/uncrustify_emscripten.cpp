@@ -44,7 +44,9 @@
  *   --parsed, -p  ( use debug() )
  */
 
-#ifdef EMSCRIPTEN
+
+#if defined (__linux__)
+
 
 #include "keywords.h"
 #include "log_levels.h"
@@ -65,13 +67,62 @@
 #include <unordered_map>
 #include <vector>
 
+
+#ifdef EMSCRIPTEN
 #include <emscripten/bind.h>
 #include <emscripten/val.h>
+using namespace emscripten;
+#else
+#define EMSCRIPTEN_BINDINGS(module)    void dummyFcn()
+template<class T>
+struct base {};
+struct emscripten
+{
+   template<class... Args>
+   emscripten value(Args...) { return{}; }
+
+   template<class... Args>
+   static emscripten function(Args...) { return{}; }
+
+   template<class... Args>
+   emscripten property(Args...) { return{}; }
+};
+using Dummy = emscripten;
+
+
+template<class T>
+Dummy enum_(char const *const)
+{
+   return(Dummy{});
+}
+
+
+template<class T>
+Dummy register_vector(char const *const)
+{
+   return(Dummy{});
+}
+
+
+template<class... Args>
+Dummy class_(char const *const)
+{
+   return(Dummy{});
+}
+
+
+template<class T>
+Dummy select_overload(T)
+{
+   return(Dummy{});
+}
+#endif
 
 using namespace std;
-using namespace emscripten;
 using namespace uncrustify;
 
+namespace
+{
 
 /**
  * Loads options from a file represented as a single char array.
@@ -611,6 +662,7 @@ intptr_t _debug(intptr_t _file, lang_flag_e langIDX)
    return(_debug(_file, langIDX, false));
 }
 
+} // namespace
 
 EMSCRIPTEN_BINDINGS(MainModule)
 {
