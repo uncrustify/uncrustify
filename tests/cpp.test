@@ -820,6 +820,7 @@
 10023  U05-Cpp.cfg                          cpp/for_auto.cpp
 10024  U06-Cpp.cfg                          cpp/ifcomment.cpp
 10025  U07-Cpp.cfg                          cpp/qtargs.cpp
+10026  sp_before_ellipsis-r.cfg             cpp/gcc_case_ellipsis.cpp
 10047  U16-Cpp.cfg                          cpp/UNI-1334.cpp
 10048  empty.cfg                            cpp/UNI-1335.cpp
 10050  U18-Cpp.cfg                          cpp/UNI-1337.cpp

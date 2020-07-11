@@ -21,9 +21,6 @@
  * This is an enum of all the different chunks/tokens/elements that the
  * program can work with.  The parser and scanner assigns one of these to
  * each chunk/token.
- *
- * The script 'make_token_names.sh' creates token_names.h, so be sure to run
- * that after adding or removing an entry.
  */
 enum c_token_t
 {
@@ -141,6 +138,7 @@ enum c_token_t
    CT_COLON,
    CT_ASM_COLON,
    CT_CASE_COLON,
+   CT_CASE_ELLIPSIS,       // '...' in `case 1 ... 5`:
    CT_CLASS_COLON,         // colon after a class def
    CT_CONSTR_COLON,        // colon after a constructor
    CT_D_ARRAY_COLON,       // D named array initializer colon

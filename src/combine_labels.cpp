@@ -177,6 +177,16 @@ void combine_labels(void)
                   set_chunk_parent(tmp, CT_CASE);
                }
             }
+
+            if (chunk_is_token(cur, CT_NUMBER) && chunk_is_token(prev, CT_ELLIPSIS))
+            {
+               chunk_t *pre_elipsis = chunk_get_prev_ncnlnp(prev);
+
+               if (chunk_is_token(pre_elipsis, CT_NUMBER))
+               {
+                  set_chunk_type(prev, CT_CASE_ELLIPSIS);
+               }
+            }
          }
          else if (cur->flags.test(PCF_IN_WHERE_SPEC))
          {
