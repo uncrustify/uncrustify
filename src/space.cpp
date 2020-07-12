@@ -1856,12 +1856,6 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_PAREN_CLOSE) && get_chunk_parent_type(first) != CT_DECLTYPE)
    {
-      if (get_chunk_parent_type(first) == CT_D_TEMPLATE)
-      {
-         log_rule("FORCE");
-         return(IARF_FORCE);
-      }
-
       if (get_chunk_parent_type(first) == CT_INVARIANT)
       {
          // (D) Add or remove space after the ')' in 'invariant (C) c'.
@@ -2578,6 +2572,22 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       // (D) Add or remove space between a type and '?'.
       log_rule("sp_type_question");
       return(options::sp_type_question());
+   }
+
+   // see if the D template expression is used as a type
+   if (  language_is_set(LANG_D)
+      && chunk_is_token(second, CT_WORD)
+      && chunk_is_token(first, CT_PAREN_CLOSE)
+      && get_chunk_parent_type(first) == CT_D_TEMPLATE)
+   {
+      chunk_t *open_paren = chunk_skip_to_match_rev(first);
+      chunk_t *type       = chunk_get_prev(chunk_get_prev(open_paren));
+
+      if (chunk_is_token(type, CT_TYPE))
+      {
+         log_rule("sp_after_type");
+         return(options::sp_after_type());
+      }
    }
 
    if (  !chunk_is_token(second, CT_PTR_TYPE)

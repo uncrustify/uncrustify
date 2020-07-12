@@ -13,16 +13,15 @@
 40005  d.cfg                                d/volatile-3.d
 40006  d.cfg                                d/Lexer.d
 40007  d2.cfg                               d/Lexer.d
-
 40010  d.cfg                                d/template.d
 40011  d2.cfg                               d/template.d
 40020  d.cfg                                d/funcfunc.d
-
 40021  d.cfg                                d/tst01.d
 40022  d-tst2.cfg                           d/tst02.d
 40023  d.cfg                                d/bug-indent.d
 40024  d3.cfg                               d/tst03.d
 40025  d3a.cfg                              d/tst03.d
+
 40026  empty.cfg                            d/wysiwyg_strings.d
 40027  empty.cfg                            d/static_if_in_struct.d
 
@@ -50,7 +49,8 @@
 
 40300  d.cfg                                d/extern_.d
 
-
 40400  mod_full_brace_if_chain_only-t.cfg   d/vbraces000.d
 40401  empty.cfg                            d/vbraces001.d
 40402  mod_full_brace_if_chain_only-t.cfg   d/vbraces002.d
+
+40500  empty.cfg                            d/template_spacing000.d
