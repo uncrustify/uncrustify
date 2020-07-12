@@ -421,7 +421,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
       else if (  language_is_set(LANG_D)
               && chunk_is_token(pc, CT_BRACE_CLOSE))
       {
-         close_statement(frm, pc);
+         close_statement(frm, pc, braceState);
       }
    }
 
