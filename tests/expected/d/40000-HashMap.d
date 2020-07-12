@@ -114,7 +114,7 @@ class HashMap
 {
     alias void[] K;
     alias Object V;
-    alias jhash  hash;          // jhash, fnv, or walter
+    alias jhash hash;           // jhash, fnv, or walter
 
     /*
      * The basic strategy is to subdivide the table among Segments,

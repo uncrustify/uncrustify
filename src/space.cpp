@@ -2576,17 +2576,25 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    // see if the D template expression is used as a type
    if (  language_is_set(LANG_D)
-      && chunk_is_token(second, CT_WORD)
       && chunk_is_token(first, CT_PAREN_CLOSE)
       && get_chunk_parent_type(first) == CT_D_TEMPLATE)
    {
-      chunk_t *open_paren = chunk_skip_to_match_rev(first);
-      chunk_t *type       = chunk_get_prev(chunk_get_prev(open_paren));
-
-      if (chunk_is_token(type, CT_TYPE))
+      if (get_chunk_parent_type(second) == CT_USING_ALIAS)
       {
-         log_rule("sp_after_type");
-         return(options::sp_after_type());
+         log_rule("sp_after_type | ADD");
+         return(options::sp_after_type() | IARF_ADD);
+      }
+
+      if (chunk_is_token(second, CT_WORD))
+      {
+         chunk_t *open_paren = chunk_skip_to_match_rev(first);
+         chunk_t *type       = chunk_get_prev(chunk_get_prev(open_paren));
+
+         if (chunk_is_token(type, CT_TYPE))
+         {
+            log_rule("sp_after_type");
+            return(options::sp_after_type());
+         }
       }
    }
 

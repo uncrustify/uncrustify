@@ -140,7 +140,7 @@ static chunk_tag_t keywords[] =
    { "__word__",                        CT_WORD_,            LANG_C                                                                      },
    { "abstract",                        CT_QUALIFIER,        LANG_CS | LANG_D | LANG_JAVA | LANG_VALA | LANG_ECMA                        },
    { "add",                             CT_GETSET,           LANG_CS                                                                     },
-   { "alias",                           CT_QUALIFIER,        LANG_D                                                                      },
+   { "alias",                           CT_USING,            LANG_D                                                                      },
    { "align",                           CT_ALIGN,            LANG_D                                                                      },
    { "alignof",                         CT_SIZEOF,           LANG_CPP                                                                    },
    { "and",                             CT_SBOOL,            LANG_CPP                                                                    },

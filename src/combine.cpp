@@ -1723,34 +1723,40 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    if (chunk_is_token(pc, CT_USING))
    {
       // look for CT_ASSIGN before CT_SEMICOLON at the end of the statement
-      bool    assign_found = false;
-      bool    is_preproc   = pc->flags.test(PCF_IN_PREPROC);
-      chunk_t *temp;
 
-      for (temp = pc; temp != nullptr; temp = chunk_get_next_ncnl(temp))
+      bool       is_preproc = pc->flags.test(PCF_IN_PREPROC);
+
+      auto const search_assign = [&pc, &is_preproc]()
       {
-         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
-                 __func__, __LINE__, temp->orig_line, temp->orig_col, temp->text(), get_token_name(temp->type));
-
-         if (chunk_is_token(temp, CT_ASSIGN))
+         for (chunk_t *temp = pc; temp != nullptr; temp = chunk_get_next_ncnl(temp))
          {
-            assign_found = true;
-            break;
+            LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+                    __func__, __LINE__, temp->orig_line, temp->orig_col,
+                    temp->text(), get_token_name(temp->type));
+
+            if (chunk_is_token(temp, CT_ASSIGN))
+            {
+               return(true);
+            }
+
+            if (  chunk_is_token(temp, CT_SEMICOLON)
+               || (  is_preproc
+                  && (  !temp->flags.test(PCF_IN_PREPROC)
+                     || chunk_is_token(temp, CT_PREPROC))))
+            {
+               return(false);
+            }
          }
 
-         if (  chunk_is_token(temp, CT_SEMICOLON)
-            || (  is_preproc
-               && (  !temp->flags.test(PCF_IN_PREPROC)
-                  || chunk_is_token(temp, CT_PREPROC))))
-         {
-            break;
-         }
-      }
+         return(false);
+      };
+
+      const bool assign_found = language_is_set(LANG_D) || search_assign();
 
       if (assign_found)
       {
          // it is a Type alias, alias template
-         for (temp = pc; temp != nullptr; temp = chunk_get_next_ncnl(temp))
+         for (chunk_t *temp = pc; temp != nullptr; temp = chunk_get_next_ncnl(temp))
          {
             if (get_chunk_parent_type(temp) == CT_NONE)
             {

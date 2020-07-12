@@ -54,3 +54,13 @@
 40402  mod_full_brace_if_chain_only-t.cfg   d/vbraces002.d
 
 40500  empty.cfg                            d/template_spacing000.d
+40501  sp_after_type-r.cfg                  d/template_spacing001.d
+40502  sp_after_type-f.cfg                  d/template_spacing001.d
+40503  sp_after_type-a.cfg                  d/template_spacing001.d
+40504  sp_after_type-r.cfg                  d/type_spacing000.d
+40505  sp_after_type-f.cfg                  d/type_spacing000.d
+40506  sp_after_type-a.cfg                  d/type_spacing000.d
+
+
+
+
