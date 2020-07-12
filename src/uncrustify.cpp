@@ -428,7 +428,7 @@ int main(int argc, char *argv[])
    }
 #ifdef DEBUG
    // make sure we have 'name' not too big
-#define MAXLENGTHOFTHENAME    19
+   const int max_name_length = 19;
 
    // maxLengthOfTheName must be consider at the format line at the file
    // output.cpp, line 427: fprintf(pfile, "# Line              Tag                Parent...
@@ -436,14 +436,14 @@ int main(int argc, char *argv[])
    // here                                                xx xx   xx xx
    for (size_t token = 0; token < ARRAY_SIZE(token_names); token++)
    {
-      size_t lengthOfTheName = strlen(token_names[token]);
+      const size_t name_length = strlen(token_names[token]);
 
-      if (lengthOfTheName > MAXLENGTHOFTHENAME)
+      if (name_length > max_name_length)
       {
          fprintf(stderr, "%s(%d): The token name '%s' is too long (%d)\n",
-                 __func__, __LINE__, token_names[token], (int)lengthOfTheName);
+                 __func__, __LINE__, token_names[token], static_cast<int>(name_length));
          fprintf(stderr, "%s(%d): the max token name length is %d\n",
-                 __func__, __LINE__, MAXLENGTHOFTHENAME);
+                 __func__, __LINE__, max_name_length);
          log_flush(true);
          exit(EX_SOFTWARE);
       }
@@ -715,17 +715,19 @@ int main(int argc, char *argv[])
    // Set config options using command line arguments.
    idx = 0;
 
+   const size_t max_args_length = 256;
+
    while ((p_arg = arg.Params("--set", idx)) != nullptr)
    {
       size_t argLength = strlen(p_arg);
-#define MAXLENGTHFORARG    256
-      if (argLength > MAXLENGTHFORARG)
+
+      if (argLength > max_args_length)
       {
          fprintf(stderr, "The buffer is to short for the set argument '%s'\n", p_arg);
          log_flush(true);
          exit(EX_SOFTWARE);
       }
-      char buffer[MAXLENGTHFORARG];
+      char buffer[max_args_length];
       strcpy(buffer, p_arg);
 
       // Tokenize and extract key and value

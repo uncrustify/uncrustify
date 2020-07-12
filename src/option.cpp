@@ -13,6 +13,7 @@
 #include "keywords.h"
 #include "option_enum.h"
 #include "uncrustify.h"
+#include "uncrustify_limits.h"
 #include "uncrustify_types.h"
 #include "uncrustify_version.h"
 
@@ -1126,8 +1127,9 @@ void save_option_file(FILE *pfile, bool with_doc, bool minimal)
          first = false;
 
          const int name_len = static_cast<int>(strlen(option->name()));
-         const int pad      = (name_len < MAX_OPTION_NAME_LEN)
-                              ? (MAX_OPTION_NAME_LEN - name_len) : 1;
+         const int pad      = name_len < uncrustify::limits::MAX_OPTION_NAME_LEN
+                              ? (uncrustify::limits::MAX_OPTION_NAME_LEN - name_len)
+                              : 1;
 
          fprintf(pfile, "%s%*.s= ", option->name(), pad, " ");
 

@@ -1241,8 +1241,8 @@ static void check_template(chunk_t *start, bool in_type_cast)
        * Scan forward to the angle close
        * If we have a comparison in there, then it can't be a template.
        */
-#define MAX_NUMBER_OF_TOKEN    1024
-      c_token_t tokens[MAX_NUMBER_OF_TOKEN];
+      const int max_token_count = 1024;
+      c_token_t tokens[max_token_count];
       size_t    num_tokens = 1;
 
       tokens[0] = CT_ANGLE_OPEN;
@@ -1302,7 +1302,7 @@ static void check_template(chunk_t *start, bool in_type_cast)
          }
          else if (chunk_is_token(pc, CT_PAREN_OPEN))
          {
-            if (num_tokens >= MAX_NUMBER_OF_TOKEN - 1)
+            if (num_tokens >= max_token_count - 1)
             {
                break;
             }

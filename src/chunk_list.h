@@ -16,15 +16,14 @@
 
 
 /*
- * TODO: better use a class for all chunk related operations,
- * then the following functions can be changed into member
- * functions. The function "chunk_is_comment(chunk)" would for instance
- * become "chunk.is_comment()". This makes the usage of the chunks easier
+ * TODO: better use a namespace for all chunk related operations.
+ * The function "chunk_is_comment()" would for instance
+ * become "chunk::is_comment()". This makes the usage of the chunks easier
  * and more intuitive.
  */
 
 
-#define ANY_LEVEL    -1
+static constexpr int ANY_LEVEL = -1;
 
 
 /**

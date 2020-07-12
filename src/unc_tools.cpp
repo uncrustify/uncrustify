@@ -342,11 +342,11 @@ void dump_in(unsigned int type)
             // the line as the form
             // part value
             // Split the line
-#define NUMBER_OF_PARTS    3
-            char *parts[NUMBER_OF_PARTS];
-            int partCount = Args::SplitLine(buffer, parts, NUMBER_OF_PARTS - 1);
+            const int max_parts_count = 3;
+            char      *parts[max_parts_count];
+            int       parts_count = Args::SplitLine(buffer, parts, max_parts_count - 1);
 
-            if (partCount != 2)
+            if (parts_count != 2)
             {
                exit(EX_SOFTWARE);
             }
