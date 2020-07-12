@@ -418,6 +418,11 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
       {
          close_statement(frm, pc, braceState);
       }
+      else if (  language_is_set(LANG_D)
+              && chunk_is_token(pc, CT_BRACE_CLOSE))
+      {
+         close_statement(frm, pc);
+      }
    }
 
    // Handle close parenthesis, vbrace, brace, and square
@@ -487,6 +492,19 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
          frm.pop(__func__, __LINE__);
          print_stack(LBCSPOP, "-Close  ", frm);
+
+         if (  frm.top().stage == brace_stage_e::NONE
+            && (  chunk_is_token(pc, CT_VBRACE_CLOSE)
+               || chunk_is_token(pc, CT_BRACE_CLOSE)
+               || chunk_is_token(pc, CT_SEMICOLON))
+            && chunk_is_token(frm.top().pc, CT_VBRACE_OPEN))
+         {
+            // frames for functions are not created as they are for an if
+            // this here is a hackish solution to close a vbrace of a block that
+            // contains the function
+            frm.push(nullptr); // <- dummy frame for the function
+            frm.top().stage = brace_stage_e::BRACE2;
+         }
 
          // See if we are in a complex statement
          if (frm.top().stage != brace_stage_e::NONE)
@@ -1099,7 +1117,7 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc, const BraceState 
          // If the next chunk isn't CT_ELSE, close the statement
          chunk_t *next = chunk_get_next_ncnl(pc);
 
-         if (next != nullptr && next->type != CT_ELSE)
+         if (next == nullptr || next->type != CT_ELSE)
          {
             LOG_FMT(LBCSPOP, "%s(%d): no CT_ELSE, pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -1348,11 +1366,12 @@ bool close_statement(ParseFrame &frm, chunk_t *pc, const BraceState &braceState)
       {
          // otherwise, add before it and consume the vbrace
          vbc = chunk_get_prev_ncnl(pc);
-         vbc = insert_vbrace_close_after(vbc, frm);
-         set_chunk_parent(vbc, frm.top().parent);
 
          frm.level--;
          frm.brace_level--;
+         vbc = insert_vbrace_close_after(vbc, frm);
+         set_chunk_parent(vbc, frm.top().parent);
+
          LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level decreased to %zu\n",
                  __func__, __LINE__, frm.brace_level);
          log_pcf_flags(LBCSPOP, pc->flags);
