@@ -11,11 +11,8 @@
 00001  cpp_to_c-1.cfg                       c/comment-indent.c
 00002  cpp_to_c-2.cfg                       c/comment-indent.c
 00003  cpp_to_c-3.cfg                       c/comment-indent.c
-
 00004  indent-1.cfg                         c/switch.c
-
 00005  ben_047.cfg                          c/cmt-align.c
-
 00006  indent_columns-3.cfg                 c/comment-convert.c
 00007  cpp_to_c-1.cfg                       c/comment-convert.c
 00008  cpp_to_c-2.cfg                       c/comment-convert.c
@@ -197,7 +194,6 @@
 00612  pp-indent-2.cfg                      c/pp-space.c
 00613  pp_indent-a.cfg                      c/pp-space.c
 00614  pp-space.cfg                         c/pp-space.c
-
 00615  pp-indent-2.cfg                      c/pp-nest.c
 00616  pp_if_indent-1.cfg                   c/pp-if-indent.c
 00617  rdan.cfg                             c/pp-if-indent.c
@@ -217,11 +213,9 @@
 
 00710  add_long_closebrace_comment_1.cfg    c/add_long_comment.c
 
-
 # nl_after_semicolon and nl_after_open_brace
 
 00721  nl_semicolon.cfg                     c/nl-semicolon.c
-
 
 # function types
 
@@ -229,13 +223,11 @@
 00802  ben_085.cfg                          c/funcfunc.c
 00803  sf537.cfg                            c/fcn_type.c
 
-
 # code width
 
 00901  width.cfg                            c/code_width.c
 00902  width-2.cfg                          c/code_width.c
 00903  width-3.cfg                          c/code_width.c
-
 
 # pascal ptr_type
 
@@ -283,7 +275,6 @@
 02001  preproc-cleanup.cfg                  c/directfb.h
 02002  ben2.cfg                             c/i2c-core.c
 
-
 # clark's style - blank lines before and after flow control, indented comments
 
 02100  clark.cfg                            c/i2c-core.c
@@ -312,13 +303,11 @@
 02401  ben_092.cfg                          sql/sta-select.sqc              C
 02402  issue_527.cfg                        sql/issue_527.sqc               C
 
-
 02410  pp_if_indent-0.cfg                   c/ifdef-indent.c
 02411  pp_if_indent-1.cfg                   c/ifdef-indent.c
 02412  pp_if_indent-2.cfg                   c/ifdef-indent.c
 02413  pp_if_indent-3.cfg                   c/ifdef-indent.c
 02414  nl_whole_file_ifdef.cfg              c/whole_file_ifdef.c
-
 02415  endif.cfg                            c/endif.c
 02416  cmt_nl_end.cfg                       c/cmt_nl_end.c
 
@@ -402,3 +391,4 @@
 10012  indent_sparen_extra-8.cfg            c/sparen-indent.c
 10013  empty.cfg                            c/sparen-indent.c
 10014  indent_continue-8.cfg                c/sparen-indent.c
+10015  empty.cfg                            c/Issue_2845.h

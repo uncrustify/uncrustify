@@ -970,6 +970,10 @@ void mark_class_ctor(chunk_t *start)
 
    chunk_t *pclass = chunk_get_next_ncnl(start, scope_e::PREPROC);
 
+   if (pclass == nullptr)
+   {
+      return;
+   }
    LOG_FMT(LFTOR, "%s(%d): pclass is '%s'\n",
            __func__, __LINE__, pclass->text());
    log_pcf_flags(LFTOR, pclass->flags);
