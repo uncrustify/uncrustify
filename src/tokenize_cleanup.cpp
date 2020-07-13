@@ -525,7 +525,11 @@ void tokenize_cleanup(void)
             && chunk_is_token(prev, CT_WORD)
             && (  chunk_is_token(next, CT_PAREN_OPEN)
                || chunk_is_token(next, CT_WORD)
-               || chunk_is_token(next, CT_TYPE)))
+               || chunk_is_token(next, CT_TYPE)
+               || chunk_is_token(next, CT_NUMBER)
+               || chunk_is_token(next, CT_NUMBER_FP)
+               || chunk_is_token(next, CT_STRING)
+               || chunk_is_token(next, CT_STRING_MULTI)))
          {
             set_chunk_type(pc, CT_D_TEMPLATE);
          }
