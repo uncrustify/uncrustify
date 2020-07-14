@@ -50,7 +50,6 @@ void combine_labels(void)
    chunk_t *cur;
    chunk_t *prev;
    chunk_t *next;
-   chunk_t *tmp;
    bool    hit_case  = false;
    bool    hit_class = false;
 
@@ -165,7 +164,7 @@ void combine_labels(void)
          {
             hit_case = false;
             set_chunk_type(next, CT_CASE_COLON);
-            tmp = chunk_get_next_ncnlnp(next);                // Issue #2150
+            chunk_t *tmp = chunk_get_next_ncnlnp(next);                // Issue #2150
 
             if (chunk_is_token(tmp, CT_BRACE_OPEN))
             {
@@ -175,6 +174,16 @@ void combine_labels(void)
                if (tmp != nullptr)
                {
                   set_chunk_parent(tmp, CT_CASE);
+               }
+            }
+
+            if (chunk_is_token(cur, CT_NUMBER) && chunk_is_token(prev, CT_ELLIPSIS))
+            {
+               chunk_t *pre_elipsis = chunk_get_prev_ncnlnp(prev);
+
+               if (chunk_is_token(pre_elipsis, CT_NUMBER))
+               {
+                  set_chunk_type(prev, CT_CASE_ELLIPSIS);
                }
             }
          }
@@ -203,7 +212,7 @@ void combine_labels(void)
                {
                   c_token_t new_type = CT_TAG;
 
-                  tmp = chunk_get_next_nc(next);
+                  chunk_t   *tmp = chunk_get_next_nc(next);
 
                   if (tmp == nullptr)
                   {
@@ -240,7 +249,7 @@ void combine_labels(void)
             }
             else if (chunk_is_token(cur, CT_WORD))
             {
-               tmp = chunk_get_next_nc(next, scope_e::PREPROC);
+               chunk_t *tmp = chunk_get_next_nc(next, scope_e::PREPROC);
 
                // Issue #1187
                if (tmp == nullptr)
@@ -298,23 +307,23 @@ void combine_labels(void)
                {
                   set_chunk_type(next, CT_BIT_COLON);
 
-                  tmp = chunk_get_next(next);
+                  chunk_t *nnext = chunk_get_next(next);
 
-                  if (tmp == nullptr)
+                  if (nnext == nullptr)
                   {
                      return;
                   }
 
-                  while ((tmp = chunk_get_next(tmp)) != nullptr)
+                  while ((nnext = chunk_get_next(nnext)) != nullptr)
                   {
-                     if (chunk_is_token(tmp, CT_SEMICOLON))
+                     if (chunk_is_token(nnext, CT_SEMICOLON))
                      {
                         break;
                      }
 
-                     if (chunk_is_token(tmp, CT_COLON))
+                     if (chunk_is_token(nnext, CT_COLON))
                      {
-                        set_chunk_type(tmp, CT_BIT_COLON);
+                        set_chunk_type(nnext, CT_BIT_COLON);
                      }
                   }
                }
@@ -378,7 +387,7 @@ void combine_labels(void)
             }
             else
             {
-               tmp = chunk_get_next_ncnl(next);
+               chunk_t *tmp = chunk_get_next_ncnl(next);
 
                //tmp = chunk_get_next_local(next);
                if (tmp != nullptr)
