@@ -81,7 +81,8 @@ void align_func_proto(size_t span)
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
               get_token_name(pc->type), pc->level, pc->brace_level);
 
-      if (chunk_is_newline(pc))
+      if (  chunk_is_newline(pc)
+         && !pc->flags.test(PCF_IN_FCN_CALL))                 // Issue #2831
       {
          look_bro = false;
          many_as[pc->level][pc->brace_level].Debug();
