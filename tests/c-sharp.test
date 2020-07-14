@@ -55,6 +55,8 @@
 10140  ben_044.cfg                          cs/remove_semi.cs
 
 10150  ben_045.cfg                          cs/operator-null-conditional.cs
+10151  sp_assign-a.cfg                      cs/operator_null-coalescing-assignment.cs
+
 10200  empty.cfg                            cs/logger.cs
 
 10300  empty.cfg                            cs/1822.cs
