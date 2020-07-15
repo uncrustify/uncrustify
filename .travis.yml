@@ -3,7 +3,7 @@ sudo: false
 
 matrix:
   include:
-    # keep a test with old ubuntu version
+    # keep a test with old ubuntu version, xenial 16
     - os: linux
       dist: Xenial
       env: BADGE=linux BUILD_TYPE=debug
@@ -13,7 +13,17 @@ matrix:
           packages:
             - ninja-build
 
-    # current version
+    # TEST: try with version focal 20
+    - os: linux
+      dist: focal
+      env: BADGE=linux BUILD_TYPE=debug
+      addons:
+        apt:
+          update: true
+          packages:
+            - ninja-build
+
+    # current version bionic 18
     - os: linux
       dist: Bionic
       env: BADGE=linux BUILD_TYPE=debug
