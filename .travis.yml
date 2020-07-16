@@ -13,16 +13,6 @@ matrix:
           packages:
             - ninja-build
 
-    # TEST: try with version focal 20
-    - os: linux
-      dist: focal
-      env: BADGE=linux BUILD_TYPE=debug
-      addons:
-        apt:
-          update: true
-          packages:
-            - ninja-build
-
     # current version bionic 18
     - os: linux
       dist: Bionic
@@ -100,6 +90,16 @@ matrix:
       dist: Bionic
       env: BUILD_TYPE=coverage COVERALLS_TOKEN="Dy94SOU3ajc1VbIy1wnWaNaeIUzfgdtEg"
       compiler: gcc
+
+    # TEST: try with version focal 20
+    - os: linux
+      dist: focal
+      env: BADGE=linux BUILD_TYPE=debug
+      addons:
+        apt:
+          update: true
+          packages:
+            - ninja-build
 
 branches:
   only:
