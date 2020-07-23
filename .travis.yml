@@ -4,6 +4,7 @@ sudo: false
 matrix:
   include:
     # keep a test with old ubuntu version, xenial 16
+    # 1
     - os: linux
       dist: Xenial
       env: BADGE=linux BUILD_TYPE=debug
@@ -14,6 +15,7 @@ matrix:
             - ninja-build
 
     # current version bionic 18
+    # 2
     - os: linux
       dist: Bionic
       env: BADGE=linux BUILD_TYPE=debug
@@ -23,6 +25,7 @@ matrix:
           packages:
             - ninja-build
 
+    # 3
     - os: linux
       dist: Bionic
       env: BADGE=linux BUILD_TYPE=release
@@ -32,11 +35,13 @@ matrix:
           packages:
             - ninja-build
 
+    # 4
     - os: linux
       dist: Bionic
       env: BADGE=linux BUILD_TYPE=release NO_MACRO_VARARG=1
 
     # GCC 6
+    # 5
     - os: linux
       dist: Bionic
       env: BADGE=linux C_COMPILER=gcc-6 CXX_COMPILER=g++-6
@@ -51,6 +56,7 @@ matrix:
             - ninja-build
 
     # Clang 4.0 address sanitizer
+    # 6
     - os: linux
       dist: Bionic
       env: BADGE=linux BUILD_TYPE=asan C_COMPILER=clang-4.0 CXX_COMPILER=clang++-4.0
@@ -63,6 +69,7 @@ matrix:
             - clang-4.0
 
     # mingw-w64 Win64 cross-compile
+    # 7
     - os: linux
       dist: Bionic
       env: BADGE=linux BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
@@ -81,17 +88,21 @@ matrix:
             - g++-mingw-w64-x86-64
 
     # OSX
+    # 8
     - os: osx
       env: BADGE=osx BUILD_TYPE=debug
+    # 9
     - os: osx
       env: BADGE=osx BUILD_TYPE=release
 
+    # 10
     - os: linux
       dist: Bionic
       env: BUILD_TYPE=coverage COVERALLS_TOKEN="Dy94SOU3ajc1VbIy1wnWaNaeIUzfgdtEg"
       compiler: gcc
 
     # TEST: try with version focal 20
+    # 11
     - os: linux
       dist: focal
       env: BADGE=linux BUILD_TYPE=debug
@@ -101,6 +112,7 @@ matrix:
           packages:
             - ninja-build
 
+    # 12
     - os: linux
       dist: focal
       env: BADGE=linux BUILD_TYPE=release
@@ -110,25 +122,29 @@ matrix:
           packages:
             - ninja-build
 
+    # 13
     - os: linux
       dist: focal
       env: BADGE=linux BUILD_TYPE=release NO_MACRO_VARARG=1
 
-    # GCC 6
+    # GCC 6 ???
+    # 14
     - os: linux
       dist: focal
-      env: BADGE=linux C_COMPILER=gcc-6 CXX_COMPILER=g++-6
+      #env: BADGE=linux C_COMPILER=gcc-6 CXX_COMPILER=g++-6
+      env: BADGE=linux
       addons:
         apt:
           update: true
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - gcc-6
-            - g++-6
+            #- gcc-6
+            #- g++-6
             - ninja-build
 
     # Clang 4.0 address sanitizer
+    # 15
     - os: linux
       dist: focal
       env: BADGE=linux BUILD_TYPE=asan C_COMPILER=clang-4.0 CXX_COMPILER=clang++-4.0
@@ -141,6 +157,7 @@ matrix:
             - clang-4.0
 
     # mingw-w64 Win64 cross-compile
+    # 16
     - os: linux
       dist: focal
       env: BADGE=linux BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
@@ -158,6 +175,7 @@ matrix:
             - g++-mingw-w64-i686
             - g++-mingw-w64-x86-64
 
+    # 17
     - os: linux
       dist: focal
       env: BUILD_TYPE=coverage COVERALLS_TOKEN="Dy94SOU3ajc1VbIy1wnWaNaeIUzfgdtEg"
