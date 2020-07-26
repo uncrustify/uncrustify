@@ -14,7 +14,7 @@ matrix:
           packages:
             - ninja-build
 
-    # current version bionic 18
+    # bionic 18
     # 2
     - os: linux
       dist: Bionic
@@ -25,23 +25,8 @@ matrix:
           packages:
             - ninja-build
 
-    # 3
-    - os: linux
-      dist: Bionic
-      env: BADGE=linux BUILD_TYPE=release
-      addons:
-        apt:
-          update: true
-          packages:
-            - ninja-build
-
-    # 4
-    - os: linux
-      dist: Bionic
-      env: BADGE=linux BUILD_TYPE=release NO_MACRO_VARARG=1
-
     # GCC 6
-    # 5
+    # 3
     - os: linux
       dist: Bionic
       env: BADGE=linux C_COMPILER=gcc-6 CXX_COMPILER=g++-6
@@ -55,54 +40,17 @@ matrix:
             - g++-6
             - ninja-build
 
-    # Clang 4.0 address sanitizer
-    # 6
-    - os: linux
-      dist: Bionic
-      env: BADGE=linux BUILD_TYPE=asan C_COMPILER=clang-4.0 CXX_COMPILER=clang++-4.0
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-4.0
-          packages:
-            - clang-4.0
-
-    # mingw-w64 Win64 cross-compile
-    # 7
-    - os: linux
-      dist: Bionic
-      env: BADGE=linux BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
-      addons:
-        apt:
-          packages:
-            - mingw-w64
-            - binutils-mingw-w64
-            - binutils-mingw-w64-i686
-            - binutils-mingw-w64-x86-64
-            - gcc-mingw-w64
-            - gcc-mingw-w64-i686
-            - gcc-mingw-w64-x86-64
-            - g++-mingw-w64
-            - g++-mingw-w64-i686
-            - g++-mingw-w64-x86-64
-
     # OSX
-    # 8
+    # 4
     - os: osx
       env: BADGE=osx BUILD_TYPE=debug
-    # 9
+
+    # 5
     - os: osx
       env: BADGE=osx BUILD_TYPE=release
 
-    # 10
-    - os: linux
-      dist: Bionic
-      env: BUILD_TYPE=coverage COVERALLS_TOKEN="Dy94SOU3ajc1VbIy1wnWaNaeIUzfgdtEg"
-      compiler: gcc
-
-    # TEST: try with version focal 20
-    # 11
+    # focal 20
+    # 6
     - os: linux
       dist: focal
       env: BADGE=linux BUILD_TYPE=debug
@@ -112,7 +60,7 @@ matrix:
           packages:
             - ninja-build
 
-    # 12
+    # 7
     - os: linux
       dist: focal
       env: BADGE=linux BUILD_TYPE=release
@@ -122,29 +70,13 @@ matrix:
           packages:
             - ninja-build
 
-    # 13
+    # 8
     - os: linux
       dist: focal
       env: BADGE=linux BUILD_TYPE=release NO_MACRO_VARARG=1
 
-    # GCC 6 ???
-    # 14
-    - os: linux
-      dist: focal
-      #env: BADGE=linux C_COMPILER=gcc-6 CXX_COMPILER=g++-6
-      env: BADGE=linux
-      addons:
-        apt:
-          update: true
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            #- gcc-6
-            #- g++-6
-            - ninja-build
-
     # Clang 4.0 address sanitizer
-    # 15
+    # 9
     - os: linux
       dist: focal
       env: BADGE=linux BUILD_TYPE=asan C_COMPILER=clang-4.0 CXX_COMPILER=clang++-4.0
@@ -157,7 +89,7 @@ matrix:
             - clang-4.0
 
     # mingw-w64 Win64 cross-compile
-    # 16
+    # 10
     - os: linux
       dist: focal
       env: BADGE=linux BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
@@ -175,7 +107,7 @@ matrix:
             - g++-mingw-w64-i686
             - g++-mingw-w64-x86-64
 
-    # 17
+    # 11
     - os: linux
       dist: focal
       env: BUILD_TYPE=coverage COVERALLS_TOKEN="Dy94SOU3ajc1VbIy1wnWaNaeIUzfgdtEg"
