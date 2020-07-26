@@ -1529,7 +1529,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_ADDR);
       }
-      else if (chunk_is_token(prev, CT_TYPE))
+      else if (  chunk_is_token(prev, CT_TYPE)
+              || chunk_is_token(prev, CT_QUALIFIER))
       {
          set_chunk_type(pc, CT_BYREF);
       }

@@ -621,6 +621,7 @@
 33152  bug_1004.cfg                         cpp/bug_1004.cpp
 
 33160  sp_before_byref-r.cfg                cpp/bug_1112.cpp
+33161  sp_before_byref-r.cfg                cpp/byref-3.cpp
 
 33180  pp_multi_comment.cfg                 cpp/pp_multi_comment.cpp
 
