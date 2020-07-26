@@ -25,8 +25,21 @@ matrix:
           packages:
             - ninja-build
 
-    # GCC 6
+    # Clang 4.0 address sanitizer
     # 3
+    - os: linux
+      dist: Bionic
+      env: BADGE=linux BUILD_TYPE=asan C_COMPILER=clang-4.0 CXX_COMPILER=clang++-4.0
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-4.0
+          packages:
+            - clang-4.0
+
+    # GCC 6
+    # 4
     - os: linux
       dist: Bionic
       env: BADGE=linux C_COMPILER=gcc-6 CXX_COMPILER=g++-6
@@ -41,16 +54,16 @@ matrix:
             - ninja-build
 
     # OSX
-    # 4
+    # 5
     - os: osx
       env: BADGE=osx BUILD_TYPE=debug
 
-    # 5
+    # 6
     - os: osx
       env: BADGE=osx BUILD_TYPE=release
 
     # focal 20
-    # 6
+    # 7
     - os: linux
       dist: focal
       env: BADGE=linux BUILD_TYPE=debug
@@ -60,7 +73,7 @@ matrix:
           packages:
             - ninja-build
 
-    # 7
+    # 8
     - os: linux
       dist: focal
       env: BADGE=linux BUILD_TYPE=release
@@ -70,26 +83,26 @@ matrix:
           packages:
             - ninja-build
 
-    # 8
+    # 9
     - os: linux
       dist: focal
       env: BADGE=linux BUILD_TYPE=release NO_MACRO_VARARG=1
 
-    # Clang 4.0 address sanitizer
-    # 9
+    # Clang address sanitizer
+    # 10
     - os: linux
       dist: focal
-      env: BADGE=linux BUILD_TYPE=asan C_COMPILER=clang-4.0 CXX_COMPILER=clang++-4.0
+      env: BADGE=linux BUILD_TYPE=asan C_COMPILER=clang-12.0 CXX_COMPILER=clang++-12.0
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-4.0
+            - llvm-toolchain-precise-12.0
           packages:
-            - clang-4.0
+            - clang-12.0
 
     # mingw-w64 Win64 cross-compile
-    # 10
+    # 11
     - os: linux
       dist: focal
       env: BADGE=linux BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
@@ -107,7 +120,7 @@ matrix:
             - g++-mingw-w64-i686
             - g++-mingw-w64-x86-64
 
-    # 11
+    # 12
     - os: linux
       dist: focal
       env: BUILD_TYPE=coverage COVERALLS_TOKEN="Dy94SOU3ajc1VbIy1wnWaNaeIUzfgdtEg"
