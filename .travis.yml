@@ -88,18 +88,18 @@ matrix:
       dist: focal
       env: BADGE=linux BUILD_TYPE=release NO_MACRO_VARARG=1
 
-    # Clang address sanitizer
-    # 10
-    - os: linux
-      dist: focal
-      env: BADGE=linux BUILD_TYPE=asan C_COMPILER=clang-12.0 CXX_COMPILER=clang++-12.0
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-12.0
-          packages:
-            - clang-12.0
+    ### Clang address sanitizer
+    ### 10
+    ##- os: linux
+    ##  dist: focal
+    ##  env: BADGE=linux BUILD_TYPE=asan C_COMPILER=clang-12.0 CXX_COMPILER=clang++-12.0
+    ##  addons:
+    ##    apt:
+    ##      sources:
+    ##        - ubuntu-toolchain-r-test
+    ##        - llvm-toolchain-precise-12.0
+    ##      packages:
+    ##        - clang-12.0
 
     # mingw-w64 Win64 cross-compile
     # 11
