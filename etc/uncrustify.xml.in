@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE language SYSTEM "language.dtd">
-<language name="Uncrustify Configuration" section="Configuration" extensions="uncrustify.cfg;uncrustify.conf;.uncrustify.cfg;.uncrustify.conf" mimetype="" version="##VERSION##" kateversion="2.0" author="Matthew Woehlke (mwoehlke.floss@gmail.com)" license="LGPL">
+<language name="Uncrustify Configuration"
+          section="Configuration"
+          extensions="uncrustify.cfg;uncrustify.conf;.uncrustify.cfg;.uncrustify.conf"
+          mimetype=""
+          version="##VERSION##"
+          kateversion="2.0"
+          author="Matthew Woehlke (mwoehlke.floss@gmail.com)"
+          license="LGPL"
+          priority="5">
 
   <highlighting>
     <list name="options">
