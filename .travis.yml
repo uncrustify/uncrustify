@@ -3,7 +3,8 @@ sudo: false
 
 matrix:
   include:
-    # keep a test with old ubuntu version
+    # keep a test with old ubuntu version, xenial 16
+    # 1
     - os: linux
       dist: Xenial
       env: BADGE=linux BUILD_TYPE=debug
@@ -13,7 +14,8 @@ matrix:
           packages:
             - ninja-build
 
-    # current version
+    # bionic 18
+    # 2
     - os: linux
       dist: Bionic
       env: BADGE=linux BUILD_TYPE=debug
@@ -23,20 +25,21 @@ matrix:
           packages:
             - ninja-build
 
+    # Clang 4.0 address sanitizer
+    # 3
     - os: linux
       dist: Bionic
-      env: BADGE=linux BUILD_TYPE=release
+      env: BADGE=linux BUILD_TYPE=asan C_COMPILER=clang-4.0 CXX_COMPILER=clang++-4.0
       addons:
         apt:
-          update: true
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-4.0
           packages:
-            - ninja-build
-
-    - os: linux
-      dist: Bionic
-      env: BADGE=linux BUILD_TYPE=release NO_MACRO_VARARG=1
+            - clang-4.0
 
     # GCC 6
+    # 4
     - os: linux
       dist: Bionic
       env: BADGE=linux C_COMPILER=gcc-6 CXX_COMPILER=g++-6
@@ -50,21 +53,58 @@ matrix:
             - g++-6
             - ninja-build
 
-    # Clang 4.0 address sanitizer
+    # OSX
+    # 5
+    - os: osx
+      env: BADGE=osx BUILD_TYPE=debug
+
+    # 6
+    - os: osx
+      env: BADGE=osx BUILD_TYPE=release
+
+    # focal 20
+    # 7
     - os: linux
-      dist: Bionic
-      env: BADGE=linux BUILD_TYPE=asan C_COMPILER=clang-4.0 CXX_COMPILER=clang++-4.0
+      dist: focal
+      env: BADGE=linux BUILD_TYPE=debug
       addons:
         apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-4.0
+          update: true
           packages:
-            - clang-4.0
+            - ninja-build
+
+    # 8
+    - os: linux
+      dist: focal
+      env: BADGE=linux BUILD_TYPE=release
+      addons:
+        apt:
+          update: true
+          packages:
+            - ninja-build
+
+    # 9
+    - os: linux
+      dist: focal
+      env: BADGE=linux BUILD_TYPE=release NO_MACRO_VARARG=1
+
+    ### Clang address sanitizer
+    ### 10
+    ##- os: linux
+    ##  dist: focal
+    ##  env: BADGE=linux BUILD_TYPE=asan C_COMPILER=clang-12.0 CXX_COMPILER=clang++-12.0
+    ##  addons:
+    ##    apt:
+    ##      sources:
+    ##        - ubuntu-toolchain-r-test
+    ##        - llvm-toolchain-precise-12.0
+    ##      packages:
+    ##        - clang-12.0
 
     # mingw-w64 Win64 cross-compile
+    # 11
     - os: linux
-      dist: Bionic
+      dist: focal
       env: BADGE=linux BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
       addons:
         apt:
@@ -80,14 +120,9 @@ matrix:
             - g++-mingw-w64-i686
             - g++-mingw-w64-x86-64
 
-    # OSX
-    - os: osx
-      env: BADGE=osx BUILD_TYPE=debug
-    - os: osx
-      env: BADGE=osx BUILD_TYPE=release
-
+    # 12
     - os: linux
-      dist: Bionic
+      dist: focal
       env: BUILD_TYPE=coverage COVERALLS_TOKEN="Dy94SOU3ajc1VbIy1wnWaNaeIUzfgdtEg"
       compiler: gcc
 
