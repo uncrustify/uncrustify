@@ -13,8 +13,7 @@
  *   Rmk: spaces = space + nl
  *
  * @author  Ben Gardner
- * @author  Guy Maurel since version 0.62 for uncrustify4Qt
- *          October 2015, 2016
+ * @author  Guy Maurel
  * @license GPL v2+
  */
 
@@ -5405,7 +5404,8 @@ void newlines_class_colon_pos(c_token_t tok)
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
-      if (!ccolon && pc->type != tok)
+      if (  ccolon == nullptr
+         && pc->type != tok)
       {
          continue;
       }
@@ -5438,23 +5438,26 @@ void newlines_class_colon_pos(c_token_t tok)
 
          if (  !chunk_is_newline(prev)
             && !chunk_is_newline(next)
-            && (anc & IARF_ADD))
+            && (anc & IARF_ADD))                   // nl_class_colon, nl_constr_colon: 1
+
          {
             newline_add_after(pc);
             prev = chunk_get_prev_nc(pc);
             next = chunk_get_next_nc(pc);
          }
 
-         if (anc == IARF_REMOVE)
+         if (anc == IARF_REMOVE)                   // nl_class_colon, nl_constr_colon: 2
          {
-            if (chunk_is_newline(prev) && chunk_safe_to_del_nl(prev))
+            if (  chunk_is_newline(prev)
+               && chunk_safe_to_del_nl(prev))
             {
                chunk_del(prev);
                MARK_CHANGE();
                prev = chunk_get_prev_nc(pc);
             }
 
-            if (chunk_is_newline(next) && chunk_safe_to_del_nl(next))
+            if (  chunk_is_newline(next)
+               && chunk_safe_to_del_nl(next))
             {
                chunk_del(next);
                MARK_CHANGE();
@@ -5462,7 +5465,7 @@ void newlines_class_colon_pos(c_token_t tok)
             }
          }
 
-         if (tpc & TP_TRAIL)
+         if (tpc & TP_TRAIL)                       // pos_class_colon, pos_constr_colon: 4
          {
             if (  chunk_is_newline(prev)
                && prev->nl_count == 1
@@ -5471,7 +5474,7 @@ void newlines_class_colon_pos(c_token_t tok)
                chunk_swap(pc, prev);
             }
          }
-         else if (tpc & TP_LEAD)
+         else if (tpc & TP_LEAD)                   // pos_class_colon, pos_constr_colon: 3
          {
             if (  chunk_is_newline(next)
                && next->nl_count == 1
@@ -5483,7 +5486,9 @@ void newlines_class_colon_pos(c_token_t tok)
       }
       else
       {
-         if (chunk_is_token(pc, CT_BRACE_OPEN) || chunk_is_token(pc, CT_SEMICOLON))
+         // (pc->type != tok)
+         if (  chunk_is_token(pc, CT_BRACE_OPEN)
+            || chunk_is_token(pc, CT_SEMICOLON))
          {
             ccolon = nullptr;
 
@@ -5494,13 +5499,15 @@ void newlines_class_colon_pos(c_token_t tok)
             continue;
          }
 
-         if (chunk_is_token(pc, CT_COMMA) && pc->level == ccolon->level)
+         if (  chunk_is_token(pc, CT_COMMA)
+            && pc->level == ccolon->level)
          {
             LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
             chunk_t *paren_vor_value = chunk_get_next_type(pc, CT_FPAREN_OPEN, pc->level);
 
-            if (with_acv && paren_vor_value != nullptr)
+            if (  with_acv
+               && paren_vor_value != nullptr)
             {
                LOG_FMT(LBLANKD, "%s(%d): paren_vor_value->orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
                        __func__, __LINE__, paren_vor_value->orig_line, paren_vor_value->orig_col,
@@ -5509,53 +5516,71 @@ void newlines_class_colon_pos(c_token_t tok)
                constructorValue.Add(paren_vor_value);
             }
 
-            if (ncia & IARF_ADD)
+            if (ncia & IARF_ADD)                   // nl_class_init_args, nl_constr_init_args:
             {
-               if (pcc & TP_TRAIL)
+               if (pcc & TP_TRAIL)                 // pos_class_comma, pos_constr_comma
                {
-                  if (ncia == IARF_FORCE)
+                  if (ncia == IARF_FORCE)          // nl_class_init_args, nl_constr_init_args: 5
                   {
                      newline_force_after(pc);
                   }
                   else
                   {
+                     // (ncia == IARF_ADD)         // nl_class_init_args, nl_constr_init_args: 8
                      newline_add_after(pc);
                   }
                   prev = chunk_get_prev_nc(pc);
 
-                  if (chunk_is_newline(prev) && chunk_safe_to_del_nl(prev))
+                  if (  chunk_is_newline(prev)
+                     && chunk_safe_to_del_nl(prev))
                   {
                      chunk_del(prev);
                      MARK_CHANGE();
                   }
                }
-               else if (pcc & TP_LEAD)
+               else if (pcc & TP_LEAD)             // pos_class_comma, pos_constr_comma
                {
-                  if (ncia == IARF_FORCE)
+                  if (ncia == IARF_FORCE)          // nl_class_init_args, nl_constr_init_args: 7
                   {
                      newline_force_before(pc);
                   }
                   else
                   {
+                     // (ncia == IARF_ADD)         // nl_class_init_args, nl_constr_init_args: 9
                      newline_add_before(pc);
                   }
                   next = chunk_get_next_nc(pc);
 
-                  if (chunk_is_newline(next) && chunk_safe_to_del_nl(next))
+                  if (  chunk_is_newline(next)
+                     && chunk_safe_to_del_nl(next))
                   {
                      chunk_del(next);
                      MARK_CHANGE();
                   }
                }
             }
-            else if (ncia == IARF_REMOVE)
+            else if (ncia == IARF_REMOVE)          // nl_class_init_args, nl_constr_init_args: 6
             {
                next = chunk_get_next(pc);
 
-               if (chunk_is_newline(next) && chunk_safe_to_del_nl(next))
+               if (  chunk_is_newline(next)
+                  && chunk_safe_to_del_nl(next))
                {
+                  // comma is after
                   chunk_del(next);
                   MARK_CHANGE();
+               }
+               else
+               {
+                  prev = chunk_get_prev(pc);
+
+                  if (  chunk_is_newline(prev)
+                     && chunk_safe_to_del_nl(prev))
+                  {
+                     // comma is before
+                     chunk_del(prev);
+                     MARK_CHANGE();
+                  }
                }
             }
          }
