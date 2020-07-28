@@ -1,5 +1,7 @@
 namespace A {
+
 namespace S {
+
 class C
 {
 public:
@@ -11,16 +13,20 @@ public:
 
     virtual void removeSearch(int id) = 0;
 };
+
 } // namespace S
+
 } // namespace A
 
 namespace B {
+
 // This is a comment!
 class D
 {
 public:
     D();
 };
+
 } // namespace B
 
 // This is also a comment!
@@ -29,21 +35,28 @@ class E
 public:
     E();
 };
+
 namespace F {
 }
+
 void foo();
+
 class G
 {
 };
+
 void bar();
 
 void foo2();
+
 namespace E
 {
 }
+
 void bar2();
 
 void foo3();
+
 namespace F
 {
 }
@@ -51,8 +64,17 @@ namespace F
 void bar3();
 
 void foo4();
+
 class I
 {
 };
 
 void bar4();
+
+class H
+{
+template<typename ...>
+friend class I;
+friend class J;
+class K;
+};

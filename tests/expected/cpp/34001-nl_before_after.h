@@ -70,3 +70,14 @@ class I
 };
 
 void bar4();
+
+class H
+{
+
+    template<typename ...>
+    friend class I;
+
+    friend class J;
+
+    class K;
+};

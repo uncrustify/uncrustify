@@ -2352,6 +2352,14 @@ static void handle_cpp_template(chunk_t *pc)
    {
       tmp = chunk_get_next_ncnl(tmp);
 
+      if (chunk_is_token(tmp, CT_FRIEND))
+      {
+         // Account for a template friend declaration
+         set_chunk_parent(tmp, CT_TEMPLATE);
+
+         tmp = chunk_get_next_ncnl(tmp);
+      }
+
       if (chunk_is_token(tmp, CT_CLASS) || chunk_is_token(tmp, CT_STRUCT))
       {
          set_chunk_parent(tmp, CT_TEMPLATE);
