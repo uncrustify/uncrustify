@@ -22,7 +22,7 @@
 #endif
 
 
-#ifdef WIN32
+#if defined (WIN32) || defined (__QNXNTO__)
 // Windows does not know sysexists.h. Thus define the error codes
 
 #define EX_OK             0    //! successful termination
@@ -44,7 +44,7 @@
 #define EX_CONFIG         78   //! configuration error
 #define EX__MAX           78   //! maximum listed value
 
-#else // not WIN32
+#else // not WIN32 or not __QNXNTO__
 // TODO: do all non windows systems know sysexits.h, Linux probably not?
 #include "sysexits.h"      // comes from BSD
 #endif
