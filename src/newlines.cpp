@@ -2089,6 +2089,8 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
       {
          if (chunk_is_token(pc, CT_FUNC_CLASS_DEF))
          {
+            log_rule_B("nl_var_def_blk_end");
+
             if (  var_blk
                && options::nl_var_def_blk_end() > 0)
             {
@@ -2211,6 +2213,7 @@ static void newlines_brace_pair(chunk_t *br_open)
             // we have to check if it could be too long for code_width
             // make a vector to save the chunk
             vector<chunk_t> saved_chunk;
+            log_rule_B("code_width");
 
             if (options::code_width() > 0)
             {
@@ -2252,6 +2255,7 @@ static void newlines_brace_pair(chunk_t *br_open)
             }
             chunk_flags_set(br_open, PCF_ONE_LINER);         // set the one liner flag if needed
             chunk_flags_set(br_close, PCF_ONE_LINER);
+            log_rule_B("code_width");
 
             if (  options::code_width() > 0
                && br_close->column > options::code_width())
@@ -2786,6 +2790,8 @@ static void newline_func_multi_line(chunk_t *start)
 
       if (add_start && !chunk_is_newline(chunk_get_next(start)))
       {
+         log_rule_B("nl_func_call_args_multi_line_ignore_closures");
+
          if (options::nl_func_call_args_multi_line_ignore_closures())
          {
             if (!has_leading_closure && !has_trailing_closure)
@@ -2801,6 +2807,8 @@ static void newline_func_multi_line(chunk_t *start)
 
       if (add_end && !chunk_is_newline(chunk_get_prev(pc)))
       {
+         log_rule_B("nl_func_call_args_multi_line_ignore_closures");
+
          if (options::nl_func_call_args_multi_line_ignore_closures())
          {
             if (!has_leading_closure && !has_trailing_closure)
@@ -2833,6 +2841,8 @@ static void newline_func_multi_line(chunk_t *start)
 
                if (!chunk_is_newline(chunk_get_next(pc)))
                {
+                  log_rule_B("nl_func_call_args_multi_line_ignore_closures");
+
                   if (options::nl_func_call_args_multi_line_ignore_closures())
                   {
                      chunk_t *prev_comma  = chunk_get_prev_ncnl(pc);
@@ -3666,7 +3676,7 @@ void newlines_cleanup_braces(bool first)
             }
             else
             {
-               log_rule_B("nl_oc_catch_brace");
+               log_rule_B("nl_catch_brace");
                newlines_if_for_while_switch(pc, options::nl_catch_brace());
             }
          }
@@ -3870,6 +3880,8 @@ void newlines_cleanup_braces(bool first)
 
          case CT_FUNC_CLASS_DEF:                             // Issue #2343
          {
+            log_rule_B("nl_before_opening_brace_func_class_def");
+
             if (options::nl_before_opening_brace_func_class_def() != IARF_IGNORE)
             {
                newline_iarf_pair(chunk_get_prev(pc), pc, options::nl_before_opening_brace_func_class_def());
@@ -4029,8 +4041,9 @@ void newlines_cleanup_braces(bool first)
             newline_iarf_pair(chunk_get_prev_nnl(pc), pc,
                               options::nl_type_brace_init_lst_close(), true);
          }
-
          // blanks before a close brace
+         log_rule_B("eat_blanks_before_close_brace");
+
          if (options::eat_blanks_before_close_brace())
          {
             // Limit the newlines before the close brace to 1
@@ -4401,6 +4414,7 @@ void newlines_cleanup_braces(bool first)
          log_rule_B("nl_func_def_paren");
          log_rule_B("nl_func_def_paren_empty");
          log_rule_B("nl_func_paren_empty");
+         log_rule_B("nl_func_call_args");
 
          if (  (  (  get_chunk_parent_type(pc) == CT_FUNC_DEF
                   || get_chunk_parent_type(pc) == CT_FUNC_PROTO
@@ -5208,10 +5222,12 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
             if (pc->flags.test(PCF_IN_CLASS_BASE))
             {
                // change mode
+               log_rule_B("pos_class_comma");
                mode_local = options::pos_class_comma();
             }
             else if (pc->flags.test(PCF_IN_ENUM))
             {
+               log_rule_B("pos_enum_comma");
                mode_local = options::pos_enum_comma();
             }
             else
