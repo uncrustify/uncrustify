@@ -70,22 +70,20 @@ class I
 };
 
 void bar4();
-
 /* multiline test comment
    before class */
 template<typename ... Args>
+
 // test comment between template specification and associated class
 class H
 {
-
     // nested class
     template<typename ...>
-    friend class I;
-
-    friend class J;
-
+    friendclass I;
+    friendclass J;
     // nested class K
     template<typename T>
+
     class K
     {
 
