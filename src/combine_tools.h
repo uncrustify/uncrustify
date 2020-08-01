@@ -54,7 +54,13 @@ void fix_fcn_def_params(chunk_t *pc);
 void flag_series(chunk_t *start, chunk_t *end, pcf_flags_t set_flags, pcf_flags_t clr_flags = {}, scope_e nav = scope_e::ALL);
 
 
-chunk_t *get_d_template_types(ChunkStack &cs, chunk_t *open_paren);
+/*
+ * Checks whether or not a given chunk has a parent cpp template,
+ * and if so returns the associated angle bracket nest level
+ * with respect to the root parent template; returns 0 if
+ * the chunk is not part of a template parameter list
+ */
+size_t get_cpp_template_angle_nest_level(chunk_t *pc);
 
 
 /**
