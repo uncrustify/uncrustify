@@ -270,6 +270,10 @@ bool chunk_ends_type(chunk_t *start)
          last_lval = pc->flags.test(PCF_LVALUE);
          continue;
       }
+      /* If a comma is encountered within a template, it must be
+       * considered within the context of its immediate parent
+       * template (i.e. argument list nest level)
+       */
 
       if (  (  chunk_is_semicolon(pc)
             && !pc->flags.test(PCF_IN_FOR))
@@ -284,7 +288,9 @@ bool chunk_ends_type(chunk_t *start)
          || chunk_is_token(pc, CT_PP_ELSE)
          || chunk_is_token(pc, CT_PP_ENDIF)
          || (  (  chunk_is_token(pc, CT_COMMA)
-               && !pc->flags.test(PCF_IN_FCN_CALL))
+               && !pc->flags.test(PCF_IN_FCN_CALL)
+               && get_cpp_template_angle_nest_level(start) ==
+                  get_cpp_template_angle_nest_level(pc))
             && last_expr)
          || (  chunk_is_token(pc, CT_SPAREN_OPEN)
             && last_lval))
@@ -343,6 +349,29 @@ void flag_series(chunk_t *start, chunk_t *end, pcf_flags_t set_flags, pcf_flags_
       chunk_flags_upd(end, clr_flags, set_flags);
    }
 } // flag_series
+
+
+size_t get_cpp_template_angle_nest_level(chunk_t *pc)
+{
+   LOG_FUNC_ENTRY();
+   int nestLevel = 0;
+
+   while (pc != nullptr && pc->flags.test(PCF_IN_TEMPLATE))
+   {
+      if (  chunk_is_token(pc, CT_ANGLE_CLOSE)
+         && get_chunk_parent_type(pc) == CT_TEMPLATE)
+      {
+         --nestLevel;
+      }
+      else if (  chunk_is_token(pc, CT_ANGLE_OPEN)
+              && get_chunk_parent_type(pc) == CT_TEMPLATE)
+      {
+         ++nestLevel;
+      }
+      pc = chunk_get_prev_ncnlni(pc);
+   }
+   return(nestLevel <= 0 ? 0 : size_t(nestLevel));
+}
 
 
 chunk_t *get_d_template_types(ChunkStack &cs, chunk_t *open_paren)
