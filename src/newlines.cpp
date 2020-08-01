@@ -5780,7 +5780,29 @@ void do_blank_lines(void)
          && get_chunk_parent_type(prev) == CT_CLASS)
       {
          chunk_t *tmp = chunk_get_prev_type(prev, CT_CLASS, prev->level);
-         tmp = chunk_get_prev_nc(tmp);
+
+         // Is this a class template?
+         if (get_chunk_parent_type(tmp) == CT_TEMPLATE)
+         {
+            tmp = chunk_get_prev_type(tmp, CT_TEMPLATE, prev->level);
+            tmp = chunk_get_prev_nc(tmp);
+         }
+         else
+         {
+            tmp = chunk_get_prev_nc(tmp);
+
+            while (  chunk_is_token(tmp, CT_NEWLINE)
+                  && chunk_is_comment(tmp->prev))
+            {
+               tmp = chunk_get_prev_nc(tmp->prev);
+            }
+
+            if (chunk_is_token(tmp, CT_FRIEND))
+            {
+               // Account for a friend declaration
+               tmp = chunk_get_prev_nc(tmp);
+            }
+         }
 
          while (  chunk_is_token(tmp, CT_NEWLINE)
                && chunk_is_comment(tmp->prev))
