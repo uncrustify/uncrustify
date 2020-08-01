@@ -18,6 +18,8 @@
 #include "combine.h"
 #include "combine_skip.h"
 #include "error_types.h"
+#include "flag_braced_init_list.h"
+#include "flag_decltype.h"
 #include "keywords.h"
 #include "language_tools.h"
 #include "log_rules.h"
@@ -473,6 +475,11 @@ void tokenize_cleanup(void)
       {
          set_chunk_parent(next, CT_TYPE_CAST);
          in_type_cast = true;
+      }
+
+      if (chunk_is_token(pc, CT_DECLTYPE))
+      {
+         flag_cpp_decltype(pc);
       }
 
       // Change angle open/close to CT_COMPARE, if not a template thingy
@@ -1149,11 +1156,15 @@ static void check_template(chunk_t *start, bool in_type_cast)
             }
          }
 
-         if (pc->type == CT_PAREN_OPEN)
+         if (chunk_is_token(pc, CT_DECLTYPE))
+         {
+            flag_cpp_decltype(pc);
+         }
+         else if (chunk_is_token(pc, CT_PAREN_OPEN))
          {
             ++parens;
          }
-         else if (pc->type == CT_PAREN_CLOSE)
+         else if (chunk_is_token(pc, CT_PAREN_CLOSE))
          {
             --parens;
          }
@@ -1189,10 +1200,23 @@ static void check_template(chunk_t *start, bool in_type_cast)
    {
       /*
        * We may have something like "a< ... >", which is a template where
-       * '...' may consist of anything except braces {}, a semicolon, and
-       * unbalanced parens.
-       * if we are inside an 'if' statement and hit a CT_BOOL, then it isn't a
-       * template.
+       * '...' may consist of anything except a semicolon, unbalanced
+       * parens, or braces (with one exception being braced initializers
+       * embedded within decltypes).
+       *
+       * For example, braces may be encountered as such in the following
+       * snippet of valid C++ code:
+       *
+       * template<typename T,
+       *          typename = enable_if_t<is_same<typename decay<T>::type,
+       *                                          decltype (make_index_sequence<5> { })>::value>>
+       * void foo(T &&arg)
+       * {
+       *
+       * }
+       *
+       * Finally, if we are inside an 'if' statement and hit a CT_BOOL,
+       * then it isn't a template.
        */
 
       // A template requires a word/type right before the open angle
@@ -1219,9 +1243,29 @@ static void check_template(chunk_t *start, bool in_type_cast)
       while ((pc = chunk_get_prev_ncnl(pc, scope_e::PREPROC)) != nullptr)
       {
          if (  (chunk_is_token(pc, CT_SEMICOLON) && hit_semicolon)
-            || chunk_is_token(pc, CT_BRACE_OPEN)
-            || chunk_is_token(pc, CT_BRACE_CLOSE)
             || chunk_is_token(pc, CT_SQUARE_CLOSE))
+         {
+            break;
+         }
+
+         if (chunk_is_token(pc, CT_DECLTYPE))
+         {
+            flag_cpp_decltype(pc);
+         }
+
+         if (chunk_is_token(pc, CT_BRACE_OPEN))
+         {
+            if (  !pc->flags.test(PCF_IN_DECLTYPE)
+               || !detect_cpp_braced_init_list(pc->prev, pc))
+            {
+               break;
+            }
+            flag_cpp_braced_init_list(pc->prev, pc);
+         }
+
+         if (  chunk_is_token(pc, CT_BRACE_CLOSE)
+            && get_chunk_parent_type(pc) != CT_BRACED_INIT_LIST
+            && !pc->flags.test(PCF_IN_DECLTYPE))
          {
             break;
          }
@@ -1298,9 +1342,26 @@ static void check_template(chunk_t *start, bool in_type_cast)
          {
             break;
          }
-         else if (  chunk_is_token(pc, CT_BRACE_OPEN)
-                 || chunk_is_token(pc, CT_BRACE_CLOSE)
-                 || chunk_is_token(pc, CT_SEMICOLON))
+         else if (chunk_is_token(pc, CT_BRACE_OPEN))
+         {
+            if (  !pc->flags.test(PCF_IN_DECLTYPE)
+               || !detect_cpp_braced_init_list(pc->prev, pc))
+            {
+               break;
+            }
+            auto brace_open  = chunk_get_next_ncnl(pc);
+            auto brace_close = chunk_skip_to_match(brace_open);
+
+            set_chunk_parent(brace_open, CT_BRACED_INIT_LIST);
+            set_chunk_parent(brace_close, CT_BRACED_INIT_LIST);
+         }
+         else if (  chunk_is_token(pc, CT_BRACE_CLOSE)
+                 && get_chunk_parent_type(pc) != CT_BRACED_INIT_LIST
+                 && !pc->flags.test(PCF_IN_DECLTYPE))
+         {
+            break;
+         }
+         else if (chunk_is_token(pc, CT_SEMICOLON))
          {
             break;
          }

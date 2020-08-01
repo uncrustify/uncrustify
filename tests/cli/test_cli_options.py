@@ -702,8 +702,8 @@ def main(args):
                                   reg_replace(r'\[line [0-9]+', '[ '),
                                   reg_replace(r'   \[[_|,|1|A-Z]*\]', '   []'),
                                   reg_replace(r', \[[_|,|1|A-Z]*\]', ', []'),
-                                  reg_replace(r', \[0x[0-9]+:[_|,|1|A-Z]*\]', ', []'),
-                                  reg_replace(r'   \[0x[0-9]+:[_|,|1|A-Z]*\]', '   []'),
+                                  reg_replace(r', \[0[xX][0-9a-fA-F]+:[_|,|1|A-Z]*\]', ', []'),
+                                  reg_replace(r'   \[0[xX][0-9a-fA-F]+:[_|,|1|A-Z]*\]', '   []'),
                                   reg_replace(RE_CALLSTACK, '[CallStack]'),
                                   reg_replace(RE_DO_SPACE, '')]
             ):
