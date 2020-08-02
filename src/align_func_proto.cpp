@@ -25,7 +25,9 @@ void align_func_proto(size_t span)
 
    size_t myspan   = span;
    size_t mythresh = 0;
-   size_t mygap    = options::align_func_proto_gap();
+
+   log_rule_B("align_func_proto_gap");
+   size_t mygap = options::align_func_proto_gap();
 
    log_rule_B("align_func_proto_thresh");
    mythresh = options::align_func_proto_thresh();
@@ -38,19 +40,17 @@ void align_func_proto(size_t span)
    // we don't check if token-1 and token-2 are in the same block
    size_t max_level_is       = 0;
    size_t max_brace_level_is = 0;
-   size_t mystar_style       = options::align_var_def_star_style();
-   size_t myamp_style        = options::align_var_def_amp_style();
 
+   log_rule_B("align_var_def_star_style");
+   size_t mystar_style = options::align_var_def_star_style();
+
+   log_rule_B("align_var_def_amp_style");
+   size_t       myamp_style = options::align_var_def_amp_style();
 
    const size_t max_level_count = 4;
    const size_t max_brace_level = 4;
 
-
-   AlignStack many_as[max_level_count + 1][max_brace_level + 1];
-
-   log_rule_B("align_func_proto_gap");
-   log_rule_B("align_var_def_star_style");
-   log_rule_B("align_var_def_amp_style");
+   AlignStack   many_as[max_level_count + 1][max_brace_level + 1];
 
    // Issue #2771
    AlignStack many_as_brace[max_level_count + 1][max_brace_level + 1];

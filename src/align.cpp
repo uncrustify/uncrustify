@@ -149,6 +149,7 @@ void align_all(void)
    // Align assignments
    log_rule_B("align_enum_equ_span");
    log_rule_B("align_assign_span");
+   log_rule_B("align_assign_thresh");
 
    if (  (options::align_enum_equ_span() > 0)
       || (options::align_assign_span() > 0))

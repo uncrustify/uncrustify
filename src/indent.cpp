@@ -442,6 +442,8 @@ static chunk_t *candidate_chunk_first_on_line(chunk_t *pc)
 {
    chunk_t *first = chunk_first_on_line(pc);
 
+   log_rule_B("indent_inside_ternary_operator");
+
    if (  options::indent_inside_ternary_operator()
       && (chunk_is_token(first, CT_QUESTION) || chunk_is_token(first, CT_COND_COLON)))
    {
@@ -1064,11 +1066,12 @@ void indent_text(void)
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
                frm.pop(__func__, __LINE__);
             }
-
             // Pop Colon from stack in ternary operator
             // a
             // ? b
             // : e/*top*/;/*pc*/
+            log_rule_B("indent_inside_ternary_operator");
+
             if (  options::indent_inside_ternary_operator()
                && (frm.top().type == CT_COND_COLON)
                && (  chunk_is_semicolon(pc)
@@ -1278,6 +1281,7 @@ void indent_text(void)
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
                frm.pop(__func__, __LINE__);
             }
+            log_rule_B("indent_oc_inside_msg_sel");
 
             // Pop OC msg selector stack
             if (  options::indent_oc_inside_msg_sel()
@@ -1386,7 +1390,6 @@ void indent_text(void)
        *  - return
        */
       log_rule_B("indent_braces");
-      log_rule_B("indent_braces_no_func");
       log_rule_B("indent_braces_no_func");
       log_rule_B("indent_braces_no_class");
       log_rule_B("indent_braces_no_struct");
@@ -1556,6 +1559,7 @@ void indent_text(void)
             log_rule_B("indent_cpp_lambda_only_once");
 
             size_t namespace_indent_to_ignore = 0;                   // Issue #1813
+            log_rule_B("indent_namespace");
 
             if (!options::indent_namespace())
             {
@@ -1792,6 +1796,7 @@ void indent_text(void)
             else if (  options::indent_oc_inside_msg_sel()
                     && (frm.prev().type == CT_OC_MSG_FUNC || frm.prev().type == CT_OC_MSG_NAME)) // Issue #2658
             {
+               log_rule_B("indent_oc_inside_msg_sel");
                // [Class Message:{<here>
                frm.top().indent = frm.prev().pc->column + indent_size;
                log_indent();
@@ -2217,6 +2222,8 @@ void indent_text(void)
          if (  options::indent_class_colon()
             && chunk_is_token(pc, CT_CLASS_COLON))
          {
+            log_rule_B("indent_class_on_colon");
+
             if (options::indent_class_on_colon())
             {
                frm.top().indent = pc->column;
@@ -2337,6 +2344,8 @@ void indent_text(void)
             frm.top().indent_tab = frm.top().indent;
          }
          bool skipped = false;
+         log_rule_B("indent_inside_ternary_operator");
+         log_rule_B("indent_align_paren");
 
          if (  options::indent_inside_ternary_operator()
             && (chunk_is_token(pc, CT_FPAREN_OPEN) || chunk_is_token(pc, CT_PAREN_OPEN))
@@ -2439,6 +2448,8 @@ void indent_text(void)
                  && (frm.prev().type == CT_OC_MSG_FUNC || frm.prev().type == CT_OC_MSG_NAME)
                  && !options::indent_align_paren()) // Issue #2658
          {
+            log_rule_B("indent_oc_inside_msg_sel");
+            log_rule_B("indent_align_paren");
             // When parens are inside OC messages, push on the parse frame stack
             // [Class Message:(<here>
             frm.top().indent = frm.prev().pc->column + indent_size;
@@ -2480,7 +2491,6 @@ void indent_text(void)
                  || (  chunk_is_str(pc, "[", 1)
                     && !options::indent_square_nl()))
          {
-            log_rule_B("indent_paren_nl");
             log_rule_B("indent_paren_nl");
             log_rule_B("indent_square_nl");
             chunk_t *next = chunk_get_next_nc(pc);
@@ -2921,11 +2931,14 @@ void indent_text(void)
       else if (  options::indent_inside_ternary_operator()
               && (chunk_is_token(pc, CT_QUESTION) || chunk_is_token(pc, CT_COND_COLON))) // Issue #1130, #1715
       {
+         log_rule_B("indent_inside_ternary_operator");
+
          // Pop any colons before because they should already be processed
          while (chunk_is_token(pc, CT_COND_COLON) && frm.top().type == CT_COND_COLON)
          {
             frm.pop(__func__, __LINE__);
          }
+         log_rule_B("indent_inside_ternary_operator");
 
          // Pop Question from stack in ternary operator
          if (  options::indent_inside_ternary_operator()
@@ -2974,6 +2987,7 @@ void indent_text(void)
               && (chunk_is_token(pc, CT_OC_MSG_FUNC) || chunk_is_token(pc, CT_OC_MSG_NAME))
               && chunk_is_token(chunk_get_next_ncnl(pc), CT_OC_COLON)) // Issue #2658
       {
+         log_rule_B("indent_oc_inside_msg_sel");
          // Pop the OC msg name that is on the top of the stack
          // [Class Message:<here>
          frm.push(pc, __func__, __LINE__);
@@ -3324,6 +3338,8 @@ void indent_text(void)
                }
                else
                {
+                  log_rule_B("indent_paren_close");
+
                   if (options::indent_paren_close() != 2)
                   {
                      // indent_paren_close is 0 or 1
@@ -3333,6 +3349,7 @@ void indent_text(void)
                      LOG_FMT(LINDLINE, "%s(%d): [%zu:%zu] indent_column set to %zu\n",
                              __func__, __LINE__, ck2->orig_line, ck2->orig_col, indent_column);
                      pc->column_indent = frm.poped().indent_tab;
+                     log_rule_B("indent_paren_close");
 
                      if (options::indent_paren_close() == 1)
                      {
@@ -3384,12 +3401,14 @@ void indent_text(void)
                               && chunk_is_token(chunk_get_prev_ncnl(search), CT_OC_COLON)
                               && (frm.top().type == CT_OC_MSG_FUNC || frm.top().type == CT_OC_MSG_NAME)) // Issue #2658
                            {
+                              log_rule_B("indent_oc_inside_msg_sel");
                               // [Class Message:(...)<here>
                               indent_column_set(frm.top().pc->column);
                            }
                            else if (  options::indent_inside_ternary_operator()
                                    && (frm.top().type == CT_QUESTION || frm.top().type == CT_COND_COLON)) // Issue #1130, #1715
                            {
+                              log_rule_B("indent_inside_ternary_operator");
                               indent_column_set(frm.top().indent);
                            }
                            else
@@ -3532,6 +3551,7 @@ void indent_text(void)
          else if (  options::indent_oc_inside_msg_sel()
                  && (chunk_is_token(pc, CT_OC_MSG_FUNC) || chunk_is_token(pc, CT_OC_MSG_NAME))) // Issue #2658
          {
+            log_rule_B("indent_oc_inside_msg_sel");
             reindent_line(pc, frm.top().indent);
          }
          else
@@ -4042,6 +4062,7 @@ void indent_preproc(void)
       }
       else if (options::pp_indent() & IARF_REMOVE)
       {
+         log_rule_B("pp_indent");
          reindent_line(pc, 1);
       }
       // Add spacing by adjusting the length
@@ -4057,6 +4078,7 @@ void indent_preproc(void)
          }
          else if (options::pp_space() & IARF_REMOVE)
          {
+            log_rule_B("pp_space");
             reindent_line(next, pc->column + pc->len());
          }
       }
