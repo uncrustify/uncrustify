@@ -1582,7 +1582,7 @@ extern BoundedOption<unsigned, 0, 16>
 indent_min_vbrace_open;
 
 // Whether to add further spaces after regular indent to reach next tabstop
-// when identing after virtual brace open and newline.
+// when indenting after virtual brace open and newline.
 extern Option<bool>
 indent_vbrace_open_on_tabstop;
 
@@ -1643,6 +1643,7 @@ indent_ignore_asm_block;
 //BEGIN Newline adding and removing options
 
 // Whether to collapse empty blocks between '{' and '}'.
+// If true, overrides nl_inside_empty_func
 extern Option<bool>
 nl_collapse_empty_body;
 
@@ -2465,6 +2466,11 @@ nl_max;
 // The maximum number of consecutive newlines in a function.
 extern BoundedOption<unsigned, 0, 16>
 nl_max_blank_in_func;
+
+// The number of newlines inside an empty function body.
+// This option is overridden by nl_collapse_empty_body=true
+extern BoundedOption<unsigned, 0, 16>
+nl_inside_empty_func;
 
 // The number of newlines before a function prototype.
 extern BoundedOption<unsigned, 0, 16>
