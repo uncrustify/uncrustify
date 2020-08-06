@@ -3880,8 +3880,7 @@ void newlines_cleanup_braces(bool first)
 
          case CT_FUNC_CLASS_DEF:                             // Issue #2343
          {
-            //log_rule_B("nl_before_opening_brace_func_class_def");
-            log_rule_B("guy test");
+            log_rule_B("nl_before_opening_brace_func_class_def");
 
             if (options::nl_before_opening_brace_func_class_def() != IARF_IGNORE)
             {
