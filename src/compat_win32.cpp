@@ -67,7 +67,7 @@ bool unc_homedir(std::string &home)
 
 void convert_log_zu2lu(char *fmt)
 {
-   for (size_t i = 0; i < strlen(fmt); i++)
+   for (size_t i = 0; i < strlen(fmt) - 2; i++)
    {
       if (  (fmt[i] == '%')
          && (fmt[i + 1] == 'z')
