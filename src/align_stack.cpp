@@ -163,6 +163,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
     *
     * If align_on_tabstop=true, then SS_DANGLE is changed to SS_INCLUDE.
     */
+   log_rule_B("align_on_tabstop");
 
    if (options::align_on_tabstop() && m_star_style == SS_DANGLE)
    {
@@ -224,6 +225,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
          tmp_prev = chunk_get_prev(ali);
       }
    }
+   log_rule_B("align_keep_extra_space");
 
    // Tighten down the spacing between ref and start
    if (!options::align_keep_extra_space())
@@ -474,6 +476,8 @@ void AlignStack::Flush()
          m_max_col = endcol;
       }
    }
+
+   log_rule_B("align_on_tabstop");
 
    if (  options::align_on_tabstop()
       && Len() > 1)

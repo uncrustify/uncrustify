@@ -93,6 +93,8 @@ void pawn_scrub_vsemi(void)
 {
    LOG_FUNC_ENTRY();
 
+   log_rule_B("mod_pawn_semicolon");
+
    if (!options::mod_pawn_semicolon())
    {
       return;

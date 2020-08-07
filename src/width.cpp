@@ -718,6 +718,7 @@ static void split_fcn_params(chunk_t *start)
    chunk_t *pc     = chunk_get_next_ncnl(fpo);
    size_t  min_col = pc->column;
 
+   log_rule_B("code_width");
    LOG_FMT(LSPLIT, "    mincol is %zu, max_width is %zu\n",
            min_col, options::code_width() - min_col);
 
@@ -813,6 +814,7 @@ static void split_fcn_params(chunk_t *start)
 
             if (options::indent_continue() == 0)
             {
+               log_rule_B("indent_columns");
                min_col += options::indent_columns();
             }
             else

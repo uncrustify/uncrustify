@@ -15,11 +15,6 @@
 
 using namespace uncrustify;
 
-void log_rule(const char *rule);
-
-
-void log_rule_B(const char *rule);
-
 
 #define log_rule(rule)                                             \
    do { if (log_sev_on(LSPACE)) {                                  \
