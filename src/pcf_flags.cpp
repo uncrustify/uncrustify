@@ -25,35 +25,36 @@ static const char *pcf_names[] =
    "IN_FOR",            // 13
    "IN_OC_MSG",         // 14
    "IN_WHERE_SPEC",     // 15
-   "FORCE_SPACE",       // 16
-   "STMT_START",        // 17
-   "EXPR_START",        // 18
-   "DONT_INDENT",       // 19
-   "ALIGN_START",       // 20
-   "WAS_ALIGNED",       // 21
-   "VAR_TYPE",          // 22
-   "VAR_DEF",           // 23
-   "VAR_1ST",           // 24
-   "VAR_INLINE",        // 25
-   "RIGHT_COMMENT",     // 26
-   "OLD_FCN_PARAMS",    // 27
-   "LVALUE",            // 28
-   "ONE_LINER",         // 29
-   "EMPTY_BODY",        // 30
-   "ANCHOR",            // 31
-   "PUNCTUATOR",        // 32
-   "INSERTED",          // 33
-   "LONG_BLOCK",        // 34
-   "OC_BOXED",          // 35
-   "KEEP_BRACE",        // 36
-   "OC_RTYPE",          // 37
-   "OC_ATYPE",          // 38
-   "WF_ENDIF",          // 39
-   "IN_QT_MACRO",       // 40
-   "IN_FCN_CTOR",       // 41                    Issue #2152
-   "IN_TRY_BLOCK",      // 42                    Issue #1734
-   "INCOMPLETE",        // 43
-   "WF_IF",             // 44
+   "IN_DECLTYPE",       // 16
+   "FORCE_SPACE",       // 17
+   "STMT_START",        // 18
+   "EXPR_START",        // 19
+   "DONT_INDENT",       // 20
+   "ALIGN_START",       // 21
+   "WAS_ALIGNED",       // 22
+   "VAR_TYPE",          // 23
+   "VAR_DEF",           // 24
+   "VAR_1ST",           // 25
+   "VAR_INLINE",        // 26
+   "RIGHT_COMMENT",     // 27
+   "OLD_FCN_PARAMS",    // 28
+   "LVALUE",            // 29
+   "ONE_LINER",         // 30
+   "EMPTY_BODY",        // 31
+   "ANCHOR",            // 32
+   "PUNCTUATOR",        // 33
+   "INSERTED",          // 34
+   "LONG_BLOCK",        // 35
+   "OC_BOXED",          // 36
+   "KEEP_BRACE",        // 37
+   "OC_RTYPE",          // 38
+   "OC_ATYPE",          // 39
+   "WF_ENDIF",          // 40
+   "IN_QT_MACRO",       // 41
+   "IN_FCN_CTOR",       // 42                    Issue #2152
+   "IN_TRY_BLOCK",      // 43                    Issue #1734
+   "INCOMPLETE",        // 44
+   "WF_IF",             // 45
 };
 
 

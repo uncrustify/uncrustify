@@ -271,6 +271,8 @@ set(uncrustify_sources
   src/cs_top_is_question.cpp
   src/detect.cpp
   src/enum_cleanup.cpp
+  src/flag_braced_init_list.cpp
+  src/flag_decltype.cpp
   src/flag_parens.cpp
   src/frame_list.cpp
 #  src/handle_oc.cpp
@@ -352,6 +354,8 @@ set(uncrustify_headers
   src/enum_cleanup.h
   src/enum_flags.h
   src/error_types.h
+  src/flag_braced_init_list.h
+  src/flag_decltype.h
   src/flag_parens.h
   src/frame_list.h
 #  src/handle_oc.h

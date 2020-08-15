@@ -230,6 +230,7 @@
 30314  sp_brace_brace-f.cfg                 cpp/sp_brace_brace.cpp
 30315  issue_1997.cfg                       cpp/return_braced_init.cpp
 30316  Issue_2428.cfg                       cpp/Issue_2428.cpp
+30317  pos_comma-tb.cfg                     cpp/braced_init_template_decltype.cpp
 
 30320  sp_return_paren-r.cfg                cpp/returns.cpp
 30321  sp_return_paren-f.cfg                cpp/returns.cpp
