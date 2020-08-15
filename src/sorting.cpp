@@ -208,12 +208,13 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
       auto const &s1_ext = chunk_sort_str(pc1);
       auto const &s2_ext = chunk_sort_str(pc2);
 
+      log_rule_B("mod_sort_incl_import_ignore_extension");
       auto const &s1 = (options::mod_sort_incl_import_ignore_extension()) ? get_text_without_ext(s1_ext) : s1_ext;
       auto const &s2 = (options::mod_sort_incl_import_ignore_extension()) ? get_text_without_ext(s2_ext) : s2_ext;
+      log_rule_B("mod_sort_incl_import_prioritize_filename");
 
       if (options::mod_sort_incl_import_prioritize_filename())
       {
-         log_rule_B("mod_sort_incl_import_prioritize_filename");
          bool s1_contains_filename = text_contains_filename_without_ext(s1.c_str());
          bool s2_contains_filename = text_contains_filename_without_ext(s2.c_str());
 
@@ -371,6 +372,7 @@ static void do_the_sort(chunk_t **chunks, size_t num_chunks)
       if (min_idx != start_idx)
       {
          chunk_swap_lines(chunks[start_idx], chunks[min_idx]);
+         log_rule_B("mod_sort_incl_import_grouping_enabled");
 
          if (options::mod_sort_incl_import_grouping_enabled())
          {
@@ -444,6 +446,7 @@ static void delete_chunks_on_line_having_chunk(chunk_t *chunk)
 static void dedupe_imports(chunk_t **chunks, size_t num_chunks)
 {
    LOG_FUNC_ENTRY();
+   log_rule_B("mod_sort_case_sensitive");
 
    for (size_t idx = 1; idx < num_chunks; idx++)
    {
@@ -572,6 +575,8 @@ void sort_imports(void)
 
    chunk_t *pc = chunk_get_head();
 
+   log_rule_B("mod_sort_incl_import_grouping_enabled");
+
    while (pc != nullptr)
    {
       // Simple optimization to limit the sorting. Any MAX_LINES_TO_CHECK_AFTER_INCLUDE lines after last
@@ -609,6 +614,7 @@ void sort_imports(void)
             }
             did_import = true;
          }
+         log_rule_B("mod_sort_incl_import_grouping_enabled");
 
          if (  !did_import
             || (  !options::mod_sort_incl_import_grouping_enabled()
@@ -620,6 +626,8 @@ void sort_imports(void)
          {
             if (num_chunks > 1)
             {
+               log_rule_B("mod_sort_incl_import_grouping_enabled");
+
                if (options::mod_sort_incl_import_grouping_enabled())
                {
                   remove_blank_lines_between_imports(chunks, num_chunks);

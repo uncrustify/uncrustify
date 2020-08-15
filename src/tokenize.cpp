@@ -2012,6 +2012,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc, const chunk_t *prev_pc)
          return(true);
       }
    }
+   log_rule_B("disable_processing_nl_cont");
 
    // Parse macro blocks
    if (options::disable_processing_nl_cont())
