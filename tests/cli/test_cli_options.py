@@ -479,6 +479,7 @@ def main(args):
     uncr_bin = ''
     bd_dir = parsed_args.build
     bin_paths = [s_path_join(bd_dir, 'uncrustify'),
+                 s_path_join(bd_dir, 'uncrustify.exe'),
                  s_path_join(bd_dir, 'Debug/uncrustify'),
                  s_path_join(bd_dir, 'Debug/uncrustify.exe'),
                  s_path_join(bd_dir, 'Release/uncrustify'),
