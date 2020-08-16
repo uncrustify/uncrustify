@@ -219,7 +219,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
       size_t  cap = log_start(sev);
       // Add on the variable log parameters to the log string
       va_list args;        // determine list of arguments ...
-      va_start(args, fmt); //  ... that follow after parameter fmt
+      va_start(args, buf); //  ... that follow after parameter buf
       size_t  lenX = static_cast<size_t>(vsnprintf(&g_log.bufX[g_log.buf_len], cap, buf, args));
       va_end(args);
 
