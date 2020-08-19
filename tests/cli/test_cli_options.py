@@ -690,8 +690,8 @@ def main(args):
     # Debug Options:
     #   -L
     # look at src/log_levels.h
-    #Ls_A = ['9', '21', '25', '28', '31', '36', '66', '92']
-    Ls_A = ['9', '21', '25', '28', '31', '36', '92']
+    Ls_A = ['9', '21', '25', '28', '31', '36', '66', '92']
+    #Ls_A = ['9', '21', '25', '28', '31', '36', '92']
     #Ls_A = ['66']
     for L in Ls_A:
         if not check_uncrustify_output(
