@@ -6,7 +6,7 @@
  */
 
 #include "log_rules.h"
-
+size_t Zaehler = 0;
 
 // is an extract from space.cpp
 void log_rule2(const char *func, size_t line, const char *rule, chunk_t *first, chunk_t *second)
@@ -28,6 +28,26 @@ void log_rule2(const char *func, size_t line, const char *rule, chunk_t *first, 
 
 void log_rule3(const char *func, size_t line, const char *rule)
 {
-   LOG_FMT(LSPACE, "%s(%zu): rule is '%s'\n",
-           func, line, rule);
+    Zaehler++;
+    if (strcmp(rule, "mod_add_long_switch_closebrace_comment") == 0)
+    {
+        int guy = 13;
+        //LOG_FMT(LSPACE, "YYYYYYYYYYYYYYYYYYYYYYYY\n");
+    }
+    if (strcmp(rule, "nl_max_blank_in_func") == 0)
+        // newlines_functions_remove_extra_blank_lines
+    {
+        int guy = 14;
+        //LOG_FMT(LSPACE, "YYYYYYYYYYYYYYYYYYYYYYYY\n");
+    }
+    if (   Zaehler == 1216
+       // || Zaehler == 1218
+       // || Zaehler == 2119
+       // || Zaehler == 2300
+        )
+    {
+        LOG_FMT(LSPACE, "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG: %zu\n", Zaehler);
+    }
+   LOG_FMT(LSPACE, "log_rule(Newline): rule is '%s' at line %zu\n",
+           rule, line);
 }
