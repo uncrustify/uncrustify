@@ -216,18 +216,13 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
        *
        * this gets the number of characters that fit into the log buffer
        */
-      //size_t  cap = 0;
-      //size_t  oldCap = cap;
-      size_t cap = log_start(sev);
+      size_t  cap = log_start(sev);
       // Add on the variable log parameters to the log string
       va_list args;        // determine list of arguments ...
       va_start(args, fmt);
-      //va_start(args, buf); //  ... that follow after parameter fmt
-      //size_t  lenX = static_cast<size_t>(vsnprintf(&g_log.bufX[g_log.buf_len], cap, fmt, args));
-      size_t which = g_log.buf_len;
-      char *where = &g_log.bufX[which];
-      //size_t  lenX = static_cast<size_t>(vsnprintf(&(g_log.bufX[g_log.buf_len]), cap - g_log.buf_len, buf, args));
-      size_t  lenX = static_cast<size_t>(vsnprintf(where, cap, buf, args));
+      size_t  which  = g_log.buf_len;
+      char    *where = &g_log.bufX[which];
+      size_t  lenX   = static_cast<size_t>(vsnprintf(where, cap, buf, args));
       va_end(args);
 
       if (lenX > 0)
@@ -241,7 +236,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
          if (lenX > cap)
          {
             size_t bufXLength = g_log.bufX.size();
-            size_t X = bufXLength * 2;
+            size_t X          = bufXLength * 2;
 
             if (X >= buffer_length)
             {
