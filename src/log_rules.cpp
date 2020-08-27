@@ -6,7 +6,7 @@
  */
 
 #include "log_rules.h"
-size_t Zaehler = 0;
+#include <string.h>
 
 
 // is an extract from space.cpp
@@ -29,16 +29,18 @@ void log_rule2(const char *func, size_t line, const char *rule, chunk_t *first, 
 
 void log_rule3(const char *func, size_t line, const char *rule)
 {
-   Zaehler++;
+   // some Windows provide "ABC::function_Name" as __func__
+   // we look for the last ':' character
+   const char *where = rindex(func, ':');
 
-   if (Zaehler == 1216
-       // || Zaehler == 1218
-       // || Zaehler == 2119
-       // || Zaehler == 2300
-       )
+   if (where == nullptr)
    {
-      LOG_FMT(LSPACE, "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG: %zu\n", Zaehler);
+      LOG_FMT(LSPACE, "log_rule(%s): rule is '%s' at line %zu\n",
+              func, rule, line);
    }
-   LOG_FMT(LSPACE, "log_rule(%s): rule is '%s' at line %zu\n",
-           func, rule, line);
+   else
+   {
+      LOG_FMT(LSPACE, "log_rule(%s): rule is '%s' at line %zu\n",
+              where + 1, rule, line);
+   }
 }

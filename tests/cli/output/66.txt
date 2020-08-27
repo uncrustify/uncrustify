@@ -1954,7 +1954,6 @@ log_rule(indent_text): rule is 'indent_xml_string' at line 987
 log_rule(indent_text): rule is 'indent_single_newlines' at line 1325
 log_rule(indent_text): rule is 'indent_braces' at line 1392
 log_rule(indent_text): rule is 'indent_braces_no_func' at line 1393
-GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG: 1216
 log_rule(indent_text): rule is 'indent_braces_no_class' at line 1394
 log_rule(indent_text): rule is 'indent_braces_no_struct' at line 1395
 log_rule(indent_text): rule is 'indent_shift' at line 3008
