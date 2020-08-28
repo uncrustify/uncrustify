@@ -29,9 +29,26 @@ void log_rule2(const char *func, size_t line, const char *rule, chunk_t *first, 
 
 void log_rule3(const char *func, size_t line, const char *rule)
 {
-   // some Windows provide "ABC::function_Name" as __func__
+   const char *where = nullptr;
+
+#ifdef WIN32
+   // some Windows provide "ABC::XYZ::function_Name" as __func__
    // we look for the last ':' character
-   const char *where = rindex(func, ':');
+   size_t length_of_string = strlen(func);
+
+   for (int which = length_of_string - 1; which > 0; which--)
+   {
+      char oneChar = func[which];
+
+      if (oneChar == ':')
+      {
+         where = func + which;
+         break;
+      }
+   }
+#else // not WIN32
+   where = rindex(func, ':');
+#endif /* ifdef WIN32 */
 
    if (where == nullptr)
    {
