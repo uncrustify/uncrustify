@@ -192,7 +192,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
    {
       return;
    }
-   const int    buffer_length = 200;
+   const int    buffer_length = 4100;
    char         buf[buffer_length];
    // it MUST be a 'unsigned int' variable to be runable under windows
    unsigned int length = strlen(fmt);
@@ -219,8 +219,10 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
       size_t  cap = log_start(sev);
       // Add on the variable log parameters to the log string
       va_list args;        // determine list of arguments ...
-      va_start(args, fmt); //  ... that follow after parameter fmt
-      size_t  lenX = static_cast<size_t>(vsnprintf(&g_log.bufX[g_log.buf_len], cap, buf, args));
+      va_start(args, fmt);
+      size_t  which  = g_log.buf_len;
+      char    *where = &g_log.bufX[which];
+      size_t  lenX   = static_cast<size_t>(vsnprintf(where, cap, buf, args));
       va_end(args);
 
       if (lenX > 0)
@@ -233,7 +235,16 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
          // that the output was truncated.
          if (lenX > cap)
          {
-            size_t X = g_log.bufX.size() * 2;
+            size_t bufXLength = g_log.bufX.size();
+            size_t X          = bufXLength * 2;
+
+            if (X >= buffer_length)
+            {
+               fprintf(stderr, "FATAL: The variable 'buf' is not big enought:\n");
+               fprintf(stderr, "   it should be bigger as = %zu\n", X);
+               fprintf(stderr, "Please make a report.\n");
+               exit(EX_SOFTWARE);
+            }
             g_log.bufX.resize(X);
          }
          else
