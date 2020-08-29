@@ -1,3 +1,4 @@
+GGGG
 log_rule(main): rule is 'nl_max'
 log_rule(load_header_files): rule is 'cmt_insert_file_header'
 log_rule(load_header_files): rule is 'cmt_insert_file_footer'

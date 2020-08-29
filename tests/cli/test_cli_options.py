@@ -192,8 +192,13 @@ def check_generated_output(gen_expected_path, gen_result_path,
             print("Problem with %s" % gen_result_path)
             print("************************************")
 
+            """
+            it might be usefull to choose the parameter False
             file_diff = difflib.ndiff(gen_res_txt.splitlines(True),
                                       gen_exp_txt.splitlines(True))
+            """
+            file_diff = difflib.ndiff(gen_res_txt.splitlines(False),
+                                      gen_exp_txt.splitlines(False))
 
             for line in file_diff:
                 pprint.PrettyPrinter(indent=4).pprint(line)
@@ -263,8 +268,13 @@ def check_std_output(expected_path, result_path, result_str, result_manip=None,
             print("Problem with %s" % result_path)
             print("************************************")
 
+            """
+            it might be usefull to choose the parameter False
             file_diff = difflib.ndiff(result_str.splitlines(True),
                                       exp_txt.splitlines(True))
+            """
+            file_diff = difflib.ndiff(result_str.splitlines(False),
+                                      exp_txt.splitlines(False))
 
             for line in file_diff:
                 pprint.PrettyPrinter(indent=4).pprint(line)
