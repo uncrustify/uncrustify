@@ -1289,7 +1289,7 @@ indent_oc_block_msg_from_brace  = false    # true/false
 indent_min_vbrace_open          = 0        # unsigned number
 
 # Whether to add further spaces after regular indent to reach next tabstop
-# when identing after virtual brace open and newline.
+# when indenting after virtual brace open and newline.
 indent_vbrace_open_on_tabstop   = false    # true/false
 
 # How to indent after a brace followed by another token (not a newline).
@@ -1344,6 +1344,7 @@ indent_ignore_asm_block         = false    # true/false
 #
 
 # Whether to collapse empty blocks between '{' and '}'.
+# If true, overrides nl_inside_empty_func
 nl_collapse_empty_body          = false    # true/false
 
 # Don't split one-line braced assignments, as in 'foo_t f = { 1, 2 };'.
@@ -1985,6 +1986,10 @@ nl_max                          = 0        # unsigned number
 
 # The maximum number of consecutive newlines in a function.
 nl_max_blank_in_func            = 0        # unsigned number
+
+# The number of newlines inside an empty function body.
+# This option is overridden by nl_collapse_empty_body=true
+nl_inside_empty_func            = 0        # unsigned number
 
 # The number of newlines before a function prototype.
 nl_before_func_body_proto       = 0        # unsigned number

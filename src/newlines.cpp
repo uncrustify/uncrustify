@@ -54,6 +54,8 @@ static void mark_change(const char *func, size_t line);
  * We can't increase the newline count:
  *  - if nl_squeeze_ifdef and a preproc is after the newline.
  *  - if eat_blanks_before_close_brace and the next is '}'
+ *    - unless function contains an empty body and
+ *      nl_inside_empty_func is non-zero
  *  - if eat_blanks_after_open_brace and the prev is '{'
  *    - unless the brace belongs to a namespace
  *      and nl_inside_namespace is non-zero
@@ -372,6 +374,17 @@ static bool can_increase_nl(chunk_t *nl)
          return(true);
       }
 
+      if (  options::nl_inside_empty_func() > 0
+         && chunk_is_token(prev, CT_BRACE_OPEN)
+         && (  get_chunk_parent_type(next) == CT_FUNC_DEF
+            || get_chunk_parent_type(next) == CT_FUNC_CLASS_DEF))
+      {
+         log_rule_B("nl_inside_empty_func");
+         LOG_FMT(LBLANKD, "%s(%d): nl_inside_empty_func %zu\n",
+                 __func__, __LINE__, nl->orig_line);
+         return(true);
+      }
+
       if (options::eat_blanks_before_close_brace())
       {
          log_rule_B("eat_blanks_before_close_brace");
@@ -388,6 +401,17 @@ static bool can_increase_nl(chunk_t *nl)
       {
          log_rule_B("nl_inside_namespace");
          LOG_FMT(LBLANKD, "%s(%d): nl_inside_namespace %zu\n",
+                 __func__, __LINE__, nl->orig_line);
+         return(true);
+      }
+
+      if (  options::nl_inside_empty_func() > 0
+         && chunk_is_token(next, CT_BRACE_CLOSE)
+         && (  get_chunk_parent_type(prev) == CT_FUNC_DEF
+            || get_chunk_parent_type(prev) == CT_FUNC_CLASS_DEF))
+      {
+         log_rule_B("nl_inside_empty_func");
+         LOG_FMT(LBLANKD, "%s(%d): nl_inside_empty_func %zu\n",
                  __func__, __LINE__, nl->orig_line);
          return(true);
       }
@@ -5858,6 +5882,18 @@ void do_blank_lines(void)
             log_rule_B("nl_after_namespace");
             blank_line_set(pc, options::nl_after_namespace);
          }
+      }
+
+      // Control blanks inside empty function body
+      if (  chunk_is_token(prev, CT_BRACE_OPEN)
+         && chunk_is_token(next, CT_BRACE_CLOSE)
+         && (  get_chunk_parent_type(prev) == CT_FUNC_DEF
+            || get_chunk_parent_type(prev) == CT_FUNC_CLASS_DEF)
+         && options::nl_inside_empty_func() > pc->nl_count
+         && prev->flags.test(PCF_EMPTY_BODY))
+      {
+         blank_line_set(pc, options::nl_inside_empty_func);
+         log_rule_B("nl_inside_empty_func");
       }
 
       // Control blanks after an access spec
