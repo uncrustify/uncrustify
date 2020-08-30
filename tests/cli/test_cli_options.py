@@ -189,7 +189,7 @@ def check_generated_output(gen_expected_path, gen_result_path,
                 return True
         elif program_args.diff:
             print("\n************************************")
-            print("Problem with %s" % gen_result_path)
+            print("Problem (1) with %s" % gen_result_path)
             print("************************************")
 
             """
@@ -205,7 +205,7 @@ def check_generated_output(gen_expected_path, gen_result_path,
 
             return False
         else:
-            print("\nProblem with %s" % gen_result_path)
+            print("\nProblem (1) with %s" % gen_result_path)
             print("use(gen): '--diff' to find out why %s %s are different"
                   % (gen_result_path, gen_expected_path))
             return False
@@ -265,21 +265,23 @@ def check_std_output(expected_path, result_path, result_str, result_manip=None,
 
         if program_args.diff:
             print("\n************************************")
-            print("Problem with %s" % result_path)
+            print("Problem (2) with %s" % result_path)
             print("************************************")
 
             """
             it might be usefull to choose the parameter False
             file_diff = difflib.ndiff(result_str.splitlines(True),
                                       exp_txt.splitlines(True))
+            and change the value of width
+             If compact is false (the default)...
             """
             file_diff = difflib.ndiff(result_str.splitlines(False),
                                       exp_txt.splitlines(False))
 
             for line in file_diff:
-                pprint.PrettyPrinter(indent=4).pprint(line)
+                pprint.PrettyPrinter(indent=4, width=280).pprint(line)
         else:
-            print("\nProblem with %s" % result_path)
+            print("\nProblem (2) with %s" % result_path)
             print("use: '--diff' to find out why %s %s are different"
                   % (result_path, expected_path))
         return False
