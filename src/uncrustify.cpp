@@ -785,6 +785,12 @@ int main(int argc, char *argv[])
       return(EXIT_SUCCESS);
    }
 
+   // Set the number of second(s) before terminating formatting the current file.
+   if (options::debug_timeout() > 0)
+   {
+      alarm(options::debug_timeout());
+   }
+
    if (detect)
    {
       file_mem fm;

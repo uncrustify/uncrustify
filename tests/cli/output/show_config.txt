@@ -3039,6 +3039,10 @@ debug_max_number_of_loops       = 0        # number
 # 0: nothing protocol.
 debug_line_number_to_protocol   = 0        # number
 
+# Set the number of second(s) before terminating formatting the current file,
+# 0: no timeout.
+debug_timeout                   = 0        # number
+
 # Meaning of the settings:
 #   Ignore - do not do any changes
 #   Add    - makes sure there is 1 or more space/brace/newline/etc

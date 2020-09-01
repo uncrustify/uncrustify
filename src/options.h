@@ -2,9 +2,9 @@
  * @file options.h
  * Declarations of all the options.
  *
+ * September 2020
  * @author  Ben Gardner
- * @author  Guy Maurel since version 0.62 for uncrustify4Qt
- *          October 2015, 2016
+ * @author  Guy Maurel
  * @author  Matthew Woehlke
  * @license GPL v2+
  */
@@ -3736,6 +3736,11 @@ debug_max_number_of_loops;
 // 0: nothing protocol.
 extern Option<signed>
 debug_line_number_to_protocol;
+
+// Set the number of second(s) before terminating formatting the current file,
+// 0: no timeout.
+extern Option<signed>
+debug_timeout;
 
 //END
 
