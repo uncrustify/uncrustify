@@ -786,10 +786,13 @@ int main(int argc, char *argv[])
    }
 
    // Set the number of second(s) before terminating formatting the current file.
+#ifdef WIN32
+#else
    if (options::debug_timeout() > 0)
    {
       alarm(options::debug_timeout());
    }
+#endif // ifdef WIN32
 
    if (detect)
    {

@@ -3739,6 +3739,7 @@ debug_line_number_to_protocol;
 
 // Set the number of second(s) before terminating formatting the current file,
 // 0: no timeout.
+// only for linux
 extern Option<signed>
 debug_timeout;
 
