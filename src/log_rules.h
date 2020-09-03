@@ -22,15 +22,15 @@ using namespace uncrustify;
    } while (0)
 
 
-#define log_rule_B(rule)                            \
-   do { if (log_sev_on(LSPACE)) {                   \
-           log_rule3(__func__, __LINE__, (rule)); } \
+#define log_rule_B(rule)                  \
+   do { if (log_sev_on(LSPACE)) {         \
+           log_rule3(__func__, (rule)); } \
    } while (0)
 
 
 void log_rule2(const char *func, size_t line, const char *rule, chunk_t *first, chunk_t *second);
 
 
-void log_rule3(const char *func, size_t line, const char *rule);
+void log_rule3(const char *func, const char *rule);
 
 #endif /* LOG_RULES_H_INCLUDED */
