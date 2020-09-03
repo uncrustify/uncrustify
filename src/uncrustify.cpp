@@ -784,7 +784,6 @@ int main(int argc, char *argv[])
 
       return(EXIT_SUCCESS);
    }
-
    // Set the number of second(s) before terminating formatting the current file.
 #ifdef WIN32
 #else
