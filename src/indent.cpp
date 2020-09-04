@@ -364,7 +364,7 @@ void reindent_line(chunk_t *pc, size_t column)
          const auto tmp_col = static_cast<int>(pc->column) + col_delta;
          pc->column = max(tmp_col, static_cast<int>(min_col));
 
-         LOG_FMT(LINDLINED, "   set column of ");
+         LOG_FMT(LINDLINED, "%s(%d): set column of ", __func__, __LINE__);
 
          if (chunk_is_token(pc, CT_NEWLINE))
          {
