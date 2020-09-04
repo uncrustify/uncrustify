@@ -735,5 +735,6 @@ use_form_feed_no_more_as_whitespace_character = false
 warn_level_tabs_found_in_verbatim_string_literals = 2
 debug_max_number_of_loops       = 0
 debug_line_number_to_protocol   = 0
+debug_timeout                   = 0
 # option(s) with 'not default' value: 1
 #

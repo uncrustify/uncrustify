@@ -784,6 +784,20 @@ int main(int argc, char *argv[])
 
       return(EXIT_SUCCESS);
    }
+   // Set the number of second(s) before terminating formatting the current file.
+#ifdef WIN32
+   if (options::debug_timeout() > 0)
+   {
+      fprintf(stderr, "The option 'debug_timeout' is not avaiable under Windows.\n");
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+#else
+   if (options::debug_timeout() > 0)
+   {
+      alarm(options::debug_timeout());
+   }
+#endif // ifdef WIN32
 
    if (detect)
    {

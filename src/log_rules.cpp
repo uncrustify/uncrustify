@@ -27,7 +27,7 @@ void log_rule2(const char *func, size_t line, const char *rule, chunk_t *first, 
 }
 
 
-void log_rule3(const char *func, size_t line, const char *rule)
+void log_rule3(const char *func, const char *rule)
 {
    const char *where = nullptr;
 
