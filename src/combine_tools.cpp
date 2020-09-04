@@ -242,6 +242,13 @@ bool chunk_ends_type(chunk_t *start)
    bool    last_expr = false;
    bool    last_lval = false;
 
+   bool    a = pc->flags.test(PCF_IN_FCN_CTOR);
+
+   if (a)
+   {
+      return(false);
+   }
+
    for ( ; pc != nullptr; pc = chunk_get_prev_ncnlni(pc)) // Issue #2279
    {
       LOG_FMT(LFTYPE, "%s(%d): type is %s, text() '%s', orig_line %zu, orig_col %zu\n   ",
