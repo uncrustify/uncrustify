@@ -3215,8 +3215,6 @@ void indent_text(void)
                     __func__, __LINE__, tmp->orig_line, tmp->text());
             LOG_FMT(LINDENT2, " tmp->flags: ");
             log_pcf_flags(LINDENT2, tmp->flags);                   // Issue #2332
-            prot_the_line(__func__, __LINE__, 3, 0);
-            prot_the_line(__func__, __LINE__, 4, 0);
 
             if (  tmp->flags.test(PCF_VAR_DEF)
                && (chunk_is_token(tmp, CT_WORD) || chunk_is_token(tmp, CT_FUNC_CTOR_VAR)))
