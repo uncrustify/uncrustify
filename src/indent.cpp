@@ -2692,7 +2692,7 @@ void indent_text(void)
          if (chunk_is_newline(chunk_get_prev(pc)))
          {
             if (  chunk_is_token(pc, CT_MEMBER)                           // Issue #2890
-                && language_is_set(LANG_CPP))
+               && language_is_set(LANG_CPP))
             {
                // will be done at another place
                // look at the comment: XXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -3644,22 +3644,25 @@ void indent_text(void)
                   LOG_FMT(LINDPC, "%s(%d): text() is '%s', (frm.at(frm_size - 1).pc)->type is %s\n",
                           __func__, __LINE__, (frm.at(frm_size - 1).pc)->text(), get_token_name((frm.at(frm_size - 1).pc)->type));
                   // get the token before
-                  const size_t ttidx = frm_size - 2;
-                  if (ttidx == 0)
+                  const size_t temp_ttidx = frm_size - 2;
+
+                  if (temp_ttidx == 0)
                   {
                      indent_column = 1 + indent_size;
                      reindent_line(pc, indent_column);
                   }
-                  else if (ttidx > 0)
+                  else if (temp_ttidx > 0)
                   {
-                     chunk_t *token_before = frm.at(ttidx).pc;
+                     chunk_t *token_before = frm.at(temp_ttidx).pc;
                      LOG_FMT(LINDPC, "%s(%d): text() is '%s', token_before->type is %s\n",
                              __func__, __LINE__, token_before->text(), get_token_name(token_before->type));
 
                      size_t vor_col = 0;
+
                      if (chunk_is_token(token_before, CT_ASSIGN))
                      {
-                        chunk_t *before_Assign = frm.at(ttidx - 1).pc;
+                        chunk_t *before_Assign = frm.at(temp_ttidx - 1).pc;
+
                         if (before_Assign == nullptr)
                         {
                            indent_column = 1 + indent_size;
@@ -3681,7 +3684,7 @@ void indent_text(void)
                      }
                      else if (chunk_is_token(token_before, CT_RETURN))
                      {
-                        chunk_t *before_Return = frm.at(ttidx - 1).pc;
+                        chunk_t *before_Return = frm.at(temp_ttidx - 1).pc;
                         vor_col = before_Return->column;
                         LOG_FMT(LINDPC, "%s(%d): text() is '%s', before_Return->type is %s, column is %zu\n",
                                 __func__, __LINE__, before_Return->text(), get_token_name(before_Return->type), vor_col);
@@ -3695,10 +3698,9 @@ void indent_text(void)
                   }
                   else
                   {
-                     LOG_FMT(LINDPC, "%s(%d): ttidx is zero\n",
+                     LOG_FMT(LINDPC, "%s(%d): temp_ttidx is zero\n",
                              __func__, __LINE__);
                   }
-
                   reindent_line(pc, indent_column);
                }
                else
