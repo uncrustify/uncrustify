@@ -2073,6 +2073,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_inside_paren());
    }
 
+   if (  chunk_is_token(first, CT_SQUARE_OPEN)
+      && chunk_is_token(second, CT_SQUARE_CLOSE))
+   {
+      // Add or remove space inside '[]'.
+      log_rule("sp_inside_square_empty");
+      return(options::sp_inside_square_empty());
+   }
+
    // "[3]" vs "[ 3 ]" or for objective-c "@[@3]" vs "@[ @3 ]"
    if (chunk_is_token(first, CT_SQUARE_OPEN) || chunk_is_token(second, CT_SQUARE_CLOSE))
    {
