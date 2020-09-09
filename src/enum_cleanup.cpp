@@ -51,20 +51,27 @@ void enum_cleanup(void)
          }
          else
          {
-            log_rule_B("mod_enum_last_comma");
-
-            if (  options::mod_enum_last_comma() == IARF_ADD
-               || options::mod_enum_last_comma() == IARF_FORCE)
+            if (chunk_is_token(prev, CT_BRACE_OPEN))                // Issue #2902
             {
-               // create a comma
-               chunk_t comma;
-               set_chunk_type(&comma, CT_COMMA);
-               comma.orig_line = prev->orig_line;
-               comma.orig_col  = prev->orig_col + 1;
-               comma.nl_count  = 0;
-               comma.flags     = PCF_NONE;
-               comma.str       = ",";
-               chunk_add_after(&comma, prev);
+               // nothing betwen CT_BRACE_OPEN and CT_BRACE_CLOSE
+            }
+            else
+            {
+               log_rule_B("mod_enum_last_comma");
+
+               if (  options::mod_enum_last_comma() == IARF_ADD
+                  || options::mod_enum_last_comma() == IARF_FORCE)
+               {
+                  // create a comma
+                  chunk_t comma;
+                  set_chunk_type(&comma, CT_COMMA);
+                  comma.orig_line = prev->orig_line;
+                  comma.orig_col  = prev->orig_col + 1;
+                  comma.nl_count  = 0;
+                  comma.flags     = PCF_NONE;
+                  comma.str       = ",";
+                  chunk_add_after(&comma, prev);
+               }
             }
          }
       }
