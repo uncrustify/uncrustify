@@ -639,6 +639,7 @@ align_pp_define_together        = false
 align_pp_define_span            = 0
 align_pp_define_gap             = 0
 align_left_shift                = true
+align_eigen_comma_init          = false
 align_asm_colon                 = false
 align_oc_msg_colon_span         = 0
 align_oc_msg_colon_first        = false

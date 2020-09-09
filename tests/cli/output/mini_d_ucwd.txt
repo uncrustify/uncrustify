@@ -2559,6 +2559,10 @@ align_pp_define_gap             = 0        # unsigned number
 # Default: true
 align_left_shift                = true     # true/false
 
+# Whether to align comma-separated statements following '<<' (as used to
+# initialize Eigen matrices).
+align_eigen_comma_init          = false    # true/false
+
 # Whether to align text after 'asm volatile ()' colons.
 align_asm_colon                 = false    # true/false
 

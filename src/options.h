@@ -3164,6 +3164,11 @@ align_pp_define_gap;
 extern Option<bool>
 align_left_shift; // = true
 
+// Whether to align comma-separated statements following '<<' (as used to
+// initialize Eigen matrices).
+extern Option<bool>
+align_eigen_comma_init;
+
 // Whether to align text after 'asm volatile ()' colons.
 extern Option<bool>
 align_asm_colon;
