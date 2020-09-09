@@ -475,6 +475,10 @@ sp_cpp_before_struct_binding;
 extern Option<iarf_e>
 sp_inside_square;
 
+// Add or remove space inside '[]'.
+extern Option<iarf_e>
+sp_inside_square_empty;
+
 // (OC) Add or remove space inside a non-empty Objective-C boxed array '@[' and
 // ']'. If set to ignore, sp_inside_square is used.
 extern Option<iarf_e>

@@ -92,6 +92,7 @@ sp_before_square_asm_block      = ignore
 sp_before_squares               = ignore
 sp_cpp_before_struct_binding    = ignore
 sp_inside_square                = ignore
+sp_inside_square_empty          = ignore
 sp_inside_square_oc_array       = ignore
 sp_after_comma                  = ignore
 sp_before_comma                 = remove

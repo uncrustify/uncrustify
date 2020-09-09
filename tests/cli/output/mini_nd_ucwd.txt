@@ -367,6 +367,9 @@ sp_cpp_before_struct_binding    = ignore   # ignore/add/remove/force
 # Add or remove space inside a non-empty '[' and ']'.
 sp_inside_square                = ignore   # ignore/add/remove/force
 
+# Add or remove space inside '[]'.
+sp_inside_square_empty          = ignore   # ignore/add/remove/force
+
 # (OC) Add or remove space inside a non-empty Objective-C boxed array '@[' and
 # ']'. If set to ignore, sp_inside_square is used.
 sp_inside_square_oc_array       = ignore   # ignore/add/remove/force
