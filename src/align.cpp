@@ -12,6 +12,7 @@
 
 #include "align_asm_colon.h"
 #include "align_assign.h"
+#include "align_eigen_comma_init.h"
 #include "align_func_params.h"
 #include "align_func_proto.h"
 #include "align_init_brace.h"
@@ -128,6 +129,12 @@ void align_all(void)
    if (options::align_left_shift())
    {
       align_left_shift();
+   }
+   log_rule_B("align_eigen_comma_init");
+
+   if (options::align_eigen_comma_init())
+   {
+      align_eigen_comma_init();
    }
    log_rule_B("align_oc_msg_colon_span");
 

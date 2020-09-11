@@ -236,6 +236,7 @@ set(uncrustify_sources
   src/align_asm_colon.cpp
   src/align_assign.cpp
   src/align.cpp
+  src/align_eigen_comma_init.cpp
   src/align_func_params.cpp
   src/align_func_proto.cpp
   src/align_init_brace.cpp
@@ -318,6 +319,7 @@ set(uncrustify_headers
   src/align_func_params.h
   src/align_func_proto.h
   src/align.h
+  src/align_eigen_comma_init.h
   src/align_init_brace.h
   src/align_left_shift.h
   src/align_log_al.h
