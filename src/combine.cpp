@@ -671,7 +671,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
    }
 
-   if (chunk_is_token(pc, CT_DECLTYPE))
+   if (chunk_is_token(pc, CT_DECLTYPE) && pc->parent_type != CT_FUNC_DEF)
    {
       tmp = chunk_get_next_ncnl(pc);
 
