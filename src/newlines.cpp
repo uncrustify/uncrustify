@@ -3904,11 +3904,19 @@ void newlines_cleanup_braces(bool first)
 
          case CT_FUNC_CLASS_DEF:                             // Issue #2343
          {
-            log_rule_B("nl_before_opening_brace_func_class_def");
-
-            if (options::nl_before_opening_brace_func_class_def() != IARF_IGNORE)
+            if (!one_liner_nl_ok(pc))
             {
-               newline_iarf_pair(chunk_get_prev(pc), pc, options::nl_before_opening_brace_func_class_def());
+               LOG_FMT(LNL1LINE, "a new line may NOT be added\n");
+               // no change - preserve one liner body
+            }
+            else
+            {
+               log_rule_B("nl_before_opening_brace_func_class_def");
+
+               if (options::nl_before_opening_brace_func_class_def() != IARF_IGNORE)
+               {
+                  newline_iarf_pair(chunk_get_prev(pc), pc, options::nl_before_opening_brace_func_class_def());
+               }
             }
          }
 

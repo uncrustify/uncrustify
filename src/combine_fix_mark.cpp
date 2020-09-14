@@ -1279,6 +1279,19 @@ void mark_cpp_constructor(chunk_t *pc)
       LOG_FMT(LFCN, "%s(%d):  Marked '%s' as FUNC_CLASS_PROTO on orig_line %zu, orig_col %zu\n",
               __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
    }
+   tmp = chunk_get_prev_ncnlni(pc); // Issue #2907
+
+   if (chunk_is_token(tmp, CT_DESTRUCTOR))
+   {
+      set_chunk_parent(tmp, pc->type);
+      tmp = chunk_get_prev_ncnlni(tmp);
+   }
+
+   while (chunk_is_token(tmp, CT_QUALIFIER))
+   {
+      set_chunk_parent(tmp, pc->type);
+      tmp = chunk_get_prev_ncnlni(tmp);
+   }
 } // mark_cpp_constructor
 
 

@@ -52,7 +52,7 @@ newlines                        = crlf
 #   9>            NEWLINE|               NONE|     PARENT_NOT_SET[ 10/  2/  1/  0][2/2/0][          2][1-0]
 #  10>        BRACE_CLOSE|     FUNC_CLASS_DEF|     PARENT_NOT_SET[  9/  1/  2/  0][1/1/0][  280000402][0-0]         }
 #  10>            NEWLINE|               NONE|     PARENT_NOT_SET[ 10/  2/  1/  0][1/1/0][          2][2-0]
-#  12>         DESTRUCTOR|               NONE|     PARENT_NOT_SET[  9/  1/  2/  0][1/1/0][  2000c0402][0-0]         ~
+#  12>         DESTRUCTOR|     FUNC_CLASS_DEF|     PARENT_NOT_SET[  9/  1/  2/  0][1/1/0][  2000c0402][0-0]         ~
 #  12>     FUNC_CLASS_DEF|         DESTRUCTOR|     PARENT_NOT_SET[ 10/  2/ 15/  0][1/1/0][      80402][0-0]          TelegramIndex
 #  12>        FPAREN_OPEN|     FUNC_CLASS_DEF|     PARENT_NOT_SET[ 23/ 15/ 16/  0][1/1/0][  200000502][0-0]                       (
 #  12>       FPAREN_CLOSE|     FUNC_CLASS_DEF|     PARENT_NOT_SET[ 24/ 16/ 17/  0][1/1/0][  200000512][0-0]                        )

@@ -12,8 +12,7 @@ class Capteur_CO2
     : public Capteur {
 public:
     Capteur_CO2() :
-                  un_membre_en_plus ( 0 )
-    {}
+                  un_membre_en_plus ( 0 ) {}
 public:
     int un_membre_en_plus;
 };
@@ -44,8 +43,7 @@ struct Exterieur {  // Structure qui regroupe toutes les variables de la station
                  humidite_prec ( 0 ),
                  temp_tendance ( "up" ),
                  temp_texte ( "" ),
-                 humidite_texte ( "" )
-    {}
+                 humidite_texte ( "" ) {}
 };
 
 

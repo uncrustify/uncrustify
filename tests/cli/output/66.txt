@@ -513,7 +513,7 @@ space_text : orig_line is 7, orig_col is 2, <Newline>, nl is 2
 space_text : orig_line is 9, orig_col is 1, '~' type is DESTRUCTOR
 space_text : orig_line is 9, orig_col is 1, pc-text() '~', type is DESTRUCTOR
 do_space : orig_line is 9, orig_col is 1, first->text() '~', type is DESTRUCTOR
-do_space : first->orig_line is 9, first->orig_col is 1, first->text() is '~', [DESTRUCTOR/NONE] <===>
+do_space : first->orig_line is 9, first->orig_col is 1, first->text() is '~', [DESTRUCTOR/FUNC_CLASS_DEF] <===>
    second->orig_line is 9, second->orig_col is 2, second->text() 'TelegramIndex', [FUNC_CLASS_DEF/DESTRUCTOR] : rule REMOVE[ ]
  rule = REMOVE @ 0 => 2
 space_text : orig_line is 9, orig_col is 2, 'TelegramIndex' type is FUNC_CLASS_DEF
@@ -1491,10 +1491,10 @@ log_rule(indent_text): rule is 'indent_braces_no_class'
 log_rule(indent_text): rule is 'indent_braces_no_struct'
 log_rule(indent_text): rule is 'indent_shift'
 log_rule(indent_text): rule is 'pos_conditional'
-space_col_align : first->orig_line is 9, orig_col is 1, [DESTRUCTOR/NONE], text() '~' <==>
+space_col_align : first->orig_line is 9, orig_col is 1, [DESTRUCTOR/FUNC_CLASS_DEF], text() '~' <==>
 space_col_align : second->orig_line is 9, orig_col is 2 [FUNC_CLASS_DEF/DESTRUCTOR], text() 'TelegramIndex', [CallStack]
 do_space : orig_line is 9, orig_col is 1, first->text() '~', type is DESTRUCTOR
-do_space : first->orig_line is 9, first->orig_col is 1, first->text() is '~', [DESTRUCTOR/NONE] <===>
+do_space : first->orig_line is 9, first->orig_col is 1, first->text() is '~', [DESTRUCTOR/FUNC_CLASS_DEF] <===>
    second->orig_line is 9, second->orig_col is 2, second->text() 'TelegramIndex', [FUNC_CLASS_DEF/DESTRUCTOR] : rule REMOVE[ ]
 space_col_align : av is remove
 space_col_align :    len is 1
