@@ -722,6 +722,8 @@
 
 34167 nl_func_call_args_multi_line_ignore_closures.cfg cpp/nl_func_call_args_multi_line_ignore_closures.cpp
 
+34168  nl_type_brace_init_lst-r.cfg         cpp/Issue_2910.cpp
+
 34170  empty.cfg                            cpp/i1082.cpp
 34171  empty.cfg                            cpp/i1181.cpp
 34172  space_indent_columns-4.cfg           cpp/i1165.cpp
