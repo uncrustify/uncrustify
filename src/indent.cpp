@@ -3034,8 +3034,7 @@ void indent_text(void)
 
          do
          {
-            if (  tmp != nullptr
-               && (chunk_is_str(tmp, "<<", 2) || chunk_is_str(tmp, ">>", 2)))
+            if (chunk_is_token(tmp, CT_SHIFT))
             {
                in_shift = true;
                LOG_FMT(LINDENT2, "%s(%d): in_shift set to TRUE\n",
@@ -3065,8 +3064,7 @@ void indent_text(void)
          {
             tmp = chunk_get_next_ncnl(tmp);
 
-            if (  tmp != nullptr
-               && (chunk_is_str(tmp, "<<", 2) || chunk_is_str(tmp, ">>", 2)))
+            if (tmp != nullptr && chunk_is_token(tmp, CT_SHIFT))
             {
                in_shift = true;
                LOG_FMT(LINDENT2, "%s(%d): in_shift set to TRUE\n",

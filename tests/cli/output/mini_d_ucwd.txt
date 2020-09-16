@@ -2250,6 +2250,9 @@ pos_class_colon                 = ignore   # ignore/break/force/lead/trail/join/
 # Related to nl_constr_colon, nl_constr_init_args and pos_constr_comma.
 pos_constr_colon                = ignore   # ignore/break/force/lead/trail/join/lead_break/lead_force/trail_break/trail_force
 
+# The position of shift operators in wrapped expressions.
+pos_shift                       = ignore   # ignore/break/force/lead/trail/join/lead_break/lead_force/trail_break/trail_force
+
 #
 # Line splitting options
 #

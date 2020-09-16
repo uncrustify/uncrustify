@@ -107,7 +107,7 @@ static chunk_t *handle_double_angle_close(chunk_t *pc)
          && get_chunk_parent_type(next) == CT_NONE)
       {
          pc->str.append('>');
-         set_chunk_type(pc, CT_ARITH);
+         set_chunk_type(pc, CT_SHIFT);
          pc->orig_col_end = next->orig_col_end;
 
          chunk_t *tmp = chunk_get_next_ncnl(next);
@@ -1457,7 +1457,8 @@ static void check_template_arg(chunk_t *start, chunk_t *end)
       if (next->type != CT_PAREN_OPEN)
       {
          if (  chunk_is_token(pc, CT_NUMBER)
-            || chunk_is_token(pc, CT_ARITH))
+            || chunk_is_token(pc, CT_ARITH)
+            || chunk_is_token(pc, CT_SHIFT))
          {
             expressionIsNumeric = true;
             break;

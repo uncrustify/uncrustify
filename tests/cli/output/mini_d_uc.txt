@@ -574,6 +574,7 @@ pos_class_comma                 = ignore
 pos_constr_comma                = ignore
 pos_class_colon                 = ignore
 pos_constr_colon                = ignore
+pos_shift                       = ignore
 code_width                      = 0
 ls_for_split_full               = false
 ls_func_split_full              = false

@@ -220,6 +220,9 @@
 30290  indent_shift.cfg                     cpp/align_left_shift.cpp
 30291  indent_shift.cfg                     cpp/indent_shift.cpp
 30292  align_eigen_comma_init.cfg           cpp/eigen.cpp
+30293  pos_shift-lead.cfg                   cpp/pos_shift.cpp
+30294  pos_shift-trail.cfg                  cpp/pos_shift.cpp
+30295  pos_shift-join.cfg                   cpp/pos_shift.cpp
 
 30300  ben_020.cfg                          cpp/enum_shr.cpp
 30301  al.cfg                               cpp/enum_class.h
