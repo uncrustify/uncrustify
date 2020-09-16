@@ -3638,7 +3638,7 @@ void newlines_cleanup_braces(bool first)
       LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
 
-      if (chunk_is_token(pc, CT_IF))
+      if (chunk_is_token(pc, CT_IF) || chunk_is_token(pc, CT_CONSTEXPR))
       {
          log_rule_B("nl_if_brace");
          newlines_if_for_while_switch(pc, options::nl_if_brace());

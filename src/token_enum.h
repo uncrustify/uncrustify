@@ -55,6 +55,7 @@ enum c_token_t
    CT_IF,            // built-in keywords
    CT_ELSE,
    CT_ELSEIF,
+   CT_CONSTEXPR,     // only when preceded by 'if' (otherwise CT_QUALIFIER)
    CT_FOR,
    CT_WHILE,
    CT_WHILE_OF_DO,
