@@ -2790,6 +2790,10 @@ pos_class_colon;
 extern Option<token_pos_e>
 pos_constr_colon;
 
+// The position of shift operators in wrapped expressions.
+extern Option<token_pos_e>
+pos_shift;
+
 //END
 
 ///////////////////////////////////////////////////////////////////////////////

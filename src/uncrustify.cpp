@@ -2072,6 +2072,12 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
             newlines_chunk_pos(CT_ARITH, options::pos_arith());
             newlines_chunk_pos(CT_CARET, options::pos_arith());
          }
+         log_rule_B("pos_shift");
+
+         if (options::pos_shift() != TP_IGNORE)
+         {
+            newlines_chunk_pos(CT_SHIFT, options::pos_shift());
+         }
          newlines_class_colon_pos(CT_CLASS_COLON);
          newlines_class_colon_pos(CT_CONSTR_COLON);
 

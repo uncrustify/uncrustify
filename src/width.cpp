@@ -199,13 +199,14 @@ static const token_pri pri_table[] =
    { CT_COMMA,        2 },
    { CT_BOOL,         3 },
    { CT_COMPARE,      4 },
-   { CT_ARITH,        5 },
-   { CT_CARET,        6 },
-   { CT_ASSIGN,       7 },
-   { CT_STRING,       8 },
-   { CT_FOR_COLON,    9 },
-   //{ CT_DC_MEMBER, 10 },
-   //{ CT_MEMBER,    10 },
+   { CT_SHIFT,        5 },
+   { CT_ARITH,        6 },
+   { CT_CARET,        7 },
+   { CT_ASSIGN,       8 },
+   { CT_STRING,       9 },
+   { CT_FOR_COLON,   10 },
+   //{ CT_DC_MEMBER, 11 },
+   //{ CT_MEMBER,    11 },
    { CT_QUESTION,    20 }, // allow break in ? : for ls_code_width
    { CT_COND_COLON,  20 },
    { CT_FPAREN_OPEN, 21 }, // break after function open paren not followed by close paren
@@ -466,9 +467,12 @@ static bool split_line(chunk_t *start)
       log_rule_B("pos_assign");
       log_rule_B("pos_compare");
       log_rule_B("pos_conditional");
+      log_rule_B("pos_shift");
       log_rule_B("pos_bool");
 
-      if (  (  (  chunk_is_token(ent.pc, CT_ARITH)
+      if (  (  chunk_is_token(ent.pc, CT_SHIFT)
+            && (options::pos_shift() & TP_LEAD))
+         || (  (  chunk_is_token(ent.pc, CT_ARITH)
                || chunk_is_token(ent.pc, CT_CARET))
             && (options::pos_arith() & TP_LEAD))
          || (  chunk_is_token(ent.pc, CT_ASSIGN)

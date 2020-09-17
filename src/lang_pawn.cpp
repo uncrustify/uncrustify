@@ -134,6 +134,7 @@ static bool pawn_continued(chunk_t *pc, size_t br_level)
 
    if (  pc->level > br_level
       || chunk_is_token(pc, CT_ARITH)
+      || chunk_is_token(pc, CT_SHIFT)
       || chunk_is_token(pc, CT_CARET)
       || chunk_is_token(pc, CT_QUESTION)
       || chunk_is_token(pc, CT_BOOL)

@@ -816,6 +816,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
    chunk_t *tmp = chunk_get_next_ncnl(pc);
 
    if (  chunk_is_token(pc, CT_ARITH)
+      || chunk_is_token(pc, CT_SHIFT)
       || chunk_is_token(pc, CT_ASSIGN)
       || chunk_is_token(pc, CT_CASE)
       || chunk_is_token(pc, CT_COMPARE)

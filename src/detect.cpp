@@ -167,7 +167,7 @@ static void detect_space_options(void)
          break;
       }
 
-      if (chunk_is_token(pc, CT_ARITH))
+      if (chunk_is_token(pc, CT_ARITH) || chunk_is_token(pc, CT_SHIFT))
       {
          vote_sp_arith.vote(pc, next);
          vote_sp_arith.vote(prev, pc);

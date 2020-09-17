@@ -480,10 +480,12 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    // puts a space in the rare '+-' or '-+'
    if (  (  chunk_is_token(first, CT_NEG)
          || chunk_is_token(first, CT_POS)
-         || chunk_is_token(first, CT_ARITH))
+         || chunk_is_token(first, CT_ARITH)
+         || chunk_is_token(first, CT_SHIFT))
       && (  chunk_is_token(second, CT_NEG)
          || chunk_is_token(second, CT_POS)
-         || chunk_is_token(second, CT_ARITH)))
+         || chunk_is_token(second, CT_ARITH)
+         || chunk_is_token(second, CT_SHIFT)))
    {
       log_rule("ADD");
       return(IARF_ADD);
@@ -573,6 +575,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       case CT_SBOOL:
       case CT_SASSIGN:
       case CT_ARITH:
+      case CT_SHIFT:
       case CT_CASE:
       case CT_CLASS:
       case CT_DELETE:
@@ -2227,15 +2230,19 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    if (  chunk_is_token(first, CT_ARITH)
+      || chunk_is_token(first, CT_SHIFT)
       || chunk_is_token(first, CT_CARET)
       || chunk_is_token(second, CT_ARITH)
+      || chunk_is_token(second, CT_SHIFT)
       || chunk_is_token(second, CT_CARET))
    {
       // Add or remove space around arithmetic operators '+' and '-'.
       // Overrides sp_arith.
       if (options::sp_arith_additive() != IARF_IGNORE)
       {
-         auto arith_char = (chunk_is_token(first, CT_ARITH) || chunk_is_token(first, CT_CARET))
+         auto arith_char = (  chunk_is_token(first, CT_ARITH)
+                           || chunk_is_token(first, CT_SHIFT)
+                           || chunk_is_token(first, CT_CARET))
                            ? first->str[0] : second->str[0];
 
          if (arith_char == '+' || arith_char == '-')

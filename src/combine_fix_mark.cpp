@@ -1328,6 +1328,7 @@ void mark_define_expressions(void)
                && (  first
                   || chunk_is_token(prev, CT_PAREN_OPEN)
                   || chunk_is_token(prev, CT_ARITH)
+                  || chunk_is_token(prev, CT_SHIFT)
                   || chunk_is_token(prev, CT_CARET)
                   || chunk_is_token(prev, CT_ASSIGN)
                   || chunk_is_token(prev, CT_COMPARE)
@@ -2057,6 +2058,7 @@ void mark_function(chunk_t *pc)
 
             // certain tokens are unlikely to precede a prototype or definition
             if (  chunk_is_token(prev, CT_ARITH)
+               || chunk_is_token(prev, CT_SHIFT)
                || chunk_is_token(prev, CT_ASSIGN)
                || chunk_is_token(prev, CT_COMMA)
                || (chunk_is_token(prev, CT_STRING) && get_chunk_parent_type(prev) != CT_EXTERN)  // fixes issue 1259

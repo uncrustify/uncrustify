@@ -97,8 +97,9 @@ enum c_token_t
    CT_SCOMPARE,            // compare op that is a string 'is', 'neq'
    CT_BOOL,                // || or &&
    CT_SBOOL,               // or, and
-   CT_ARITH,               // +, -, /, <<, etc
+   CT_ARITH,               // +, -, /, etc
    CT_SARITH,              // 'not', 'xor'
+   CT_SHIFT,               // <<, >>
    CT_CARET,               // ^
    CT_DEREF,               // * dereference
    CT_INCDEC_BEFORE,       // ++a or --a

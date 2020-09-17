@@ -1543,7 +1543,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    {
       if (  chunk_is_token(prev, CT_POS)
          || chunk_is_token(prev, CT_NEG)
-         || chunk_is_token(prev, CT_ARITH))
+         || chunk_is_token(prev, CT_ARITH)
+         || chunk_is_token(prev, CT_SHIFT))
       {
          set_chunk_type(pc, (pc->type == CT_MINUS) ? CT_NEG : CT_POS);
       }
@@ -3267,6 +3268,7 @@ static void handle_oc_message_send(chunk_t *os)
                if (  pp != nullptr
                   && pp->type != CT_OC_COLON
                   && pp->type != CT_ARITH
+                  && pp->type != CT_SHIFT
                   && pp->type != CT_CARET)
                {
                   set_chunk_type(prev, CT_OC_MSG_NAME);
