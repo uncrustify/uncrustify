@@ -14,7 +14,9 @@ Where do the options work?</h1>
 <td>
 <pre>
 {
-    Foo* foo = new<a title="sp_after_new, does'nt work at every place"><font color="red">█</font></a>Foo(a,v);
+    Foo* foo = new<a title="sp_after_new"><font color="red">█</font></a>Foo(a,v);
+    // does'nt work at every place
+
     delete[]<a title="sp_after_new"><font color="red">█</font></a>m_used;
 
     Foo* foo = new<a title="sp_between_new_paren"><font color="red">█</font></a>(<a title="sp_inside_newop_paren, sp_inside_newop_paren_open"><font color="red">█</font></a>ptr,std::nothrow<a title="sp_inside_newop_paren"><font color="red">█</font></a>)<a title="sp_after_newop_paren, sp_inside_newop_paren_close"><font color="red">█</font></a>Foo[];
