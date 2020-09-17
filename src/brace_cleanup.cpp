@@ -576,6 +576,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
          {
             // Set the parent for parenthesis and change parenthesis type
             if (  chunk_is_token(prev, CT_IF)
+               || chunk_is_token(prev, CT_CONSTEXPR)
                || chunk_is_token(prev, CT_ELSEIF)
                || chunk_is_token(prev, CT_WHILE)
                || chunk_is_token(prev, CT_DO)
@@ -1066,7 +1067,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc, const BraceSt
    if (  frm.top().stage == brace_stage_e::PAREN1
       && (  frm.top().type == CT_IF
          || frm.top().type == CT_ELSEIF)
-      && pc->str.equals("constexpr")) // FIXME: Take care of the "constexpr" const string.
+      && chunk_is_token(pc, CT_CONSTEXPR))
    {
       return(false);
    }

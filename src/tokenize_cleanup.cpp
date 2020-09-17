@@ -575,6 +575,14 @@ void tokenize_cleanup(void)
          {
             set_chunk_type(pc, CT_TYPE);
          }
+
+         // Set parent type for 'if constexpr'
+         if (  chunk_is_token(prev, CT_IF)
+            && chunk_is_token(pc, CT_QUALIFIER)
+            && chunk_is_str(pc, "constexpr", 9))
+         {
+            set_chunk_type(pc, CT_CONSTEXPR);
+         }
       }
 
       // Change get/set to CT_WORD if not followed by a brace open
