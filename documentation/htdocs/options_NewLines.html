@@ -31,20 +31,20 @@ void bar_3(int x,
 {
     int a = 5;<a title="nl_after_semicolon"><strong><font color="red"> █</font></strong></a>
     int b = 7;
-    <a title="nl_func_var_def_blk "><strong><font color="red">    █</font></strong></a>
+    <a title="nl_func_var_def_blk"><strong><font color="red">    █</font></strong></a>
     a = 135;
     list_for_each(item, list) {
 <a title="nl_fcall_brace"><strong><font color="red">                             █</font></strong></a>
     }
-<a title="nl_before_block_comment "><strong><font color="red">    █</font></strong></a>
+<a title="nl_before_block_comment"><strong><font color="red">    █</font></strong></a>
     /* c1
      * c2
      */
-<a title="nl_max "><strong><font color="red">    █</font></strong></a>
+<a title="nl_max"><strong><font color="red">    █</font></strong></a>
     int x2;
-<a title="nl_before_c_comment "><strong><font color="red">    █</font></strong></a>
+<a title="nl_before_c_comment"><strong><font color="red">    █</font></strong></a>
     /* single comment */
-<a title="nl_before_cpp_comment "><strong><font color="red">    █</font></strong></a>
+<a title="nl_before_cpp_comment"><strong><font color="red">    █</font></strong></a>
     // cpp comment
     std::for_each(a, b, [] (int& b) -> foo {
 <a title="nl_cpp_ldef_brace"><strong><font color="red">                                            █</font></strong></a>
@@ -64,13 +64,13 @@ class foo : public my_Class<a title="nl_class_brace"><strong><font color="red"> 
         , u(88)
 <a title="nl_constr_init_args, pos_constr_comma"><strong><font color="red">        █</font></strong></a>
     {
-<a title="nl_typedef_blk_start "><strong><font color="red">        █</font></strong></a>
+<a title="nl_typedef_blk_start"><strong><font color="red">        █</font></strong></a>
         typedef char CHAR;
-<a title="nl_typedef_blk_end "><strong><font color="red">        █</a><a title="nl_var_def_blk_start "> █</font></strong></a>
+<a title="nl_typedef_blk_end"><strong><font color="red">        █</a><a title="nl_var_def_blk_start"> █</font></strong></a>
         CHAR c;
         int a;
         int b;
-<a title="nl_var_def_blk_end "><strong><font color="red">        █</font></strong></a>
+<a title="nl_var_def_blk_end"><strong><font color="red">        █</font></strong></a>
         c = 'a';
 <a title="nl_before_switch"><strong><font color="red">        █</font></strong></a>
         switch (a) {
@@ -148,7 +148,7 @@ class foo : public my_Class<a title="nl_class_brace"><strong><font color="red"> 
 <a title="nl_ds_struct_enum_close_brace"><strong><font color="red">        █</font></strong></a>
     } ipt;
 <a title="nl_brace_struct_var"><strong><font color="red">     █</font></strong></a>
-<a title="nl_after_struct "><strong><font color="red">    █</font></strong></a>
+<a title="nl_after_struct"><strong><font color="red">    █</font></strong></a>
     union UnionOfOne {
 <a title="nl_union_brace"><strong><font color="red">                    █</font></strong></a>
         a1,
@@ -158,12 +158,12 @@ class foo : public my_Class<a title="nl_class_brace"><strong><font color="red"> 
         c1,
 <a title="nl_ds_struct_enum_close_brace"><strong><font color="red">        █</font></strong></a>
     };
-<a title="nl_before_access_spec "><strong><font color="red">    █</a><a title="nl_after_func_body_class"> █</font></strong></a>
+<a title="nl_before_access_spec"><strong><font color="red">    █</a><a title="nl_after_func_body_class"> █</font></strong></a>
     private: // same for protected:, signal: or slots: label
-<a title="nl_after_access_spec "><strong><font color="red">    █</font></strong></a>
+<a title="nl_after_access_spec"><strong><font color="red">    █</font></strong></a>
         int ap;
 };
-<a title="nl_after_class "><strong><font color="red">█</font></strong></a>
+<a title="nl_after_class"><strong><font color="red">█</font></strong></a>
 <hr>
 namespace foo {
 <a title="nl_namespace_brace"><strong><font color="red">             █</font></strong></a>
@@ -193,9 +193,9 @@ l123: <a title="nl_after_label_colon"><strong><font color="red">█</font></stro
 /* c1
  *
  */
-<a title="nl_comment_func_def "><strong><font color="red">█</font></strong></a>
+<a title="nl_comment_func_def"><strong><font color="red">█</font></strong></a>
 void b();
-<a title="nl_after_func_proto "><strong><font color="red">█</font></strong></a>
+<a title="nl_after_func_proto"><strong><font color="red">█</font></strong></a>
 void d();
 #define LOG_CONTTEXT() \
 <a title="nl_multi_line_define"><strong><font color="red">                      █</font></strong></a>
@@ -208,7 +208,7 @@ ItemJob<T>::ItemJob(PlatformDependent *internals, const QNetworkRequest &request
     : GetJob(internals, request)
 typedef int ia;
 typedef int ib;
-<a title="nl_typedef_blk_in "><strong><font color="red">█</font></strong></a>
+<a title="nl_typedef_blk_in"><strong><font color="red">█</font></strong></a>
 typedef int ic;
 typedef int id;
 </pre>
