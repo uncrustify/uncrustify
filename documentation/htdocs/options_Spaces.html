@@ -18,13 +18,16 @@ You want to "add/ force/ ignore/ remove" a
   <li><a href="options_Space_Cast.html">space for cast</a></li>
   <li><a href="options_Space_Class.html">space for class</a></li>
   <li><a href="options_Space_Comma.html">space for comma</a></li>
+  <li><a href="options_Space_D.html">space for D</a></li>
   <li><a href="options_Space_Enum.html">space for enum</a></li>
   <li><a href="options_Space_For.html">space for for loop</a></li>
   <li><a href="options_Space_New.html">space for new/ delete</a></li>
   <li><a href="options_Space_Operator.html">space for operator</a></li>
   <li><a href="options_Space_Paren.html">space for parenthesis</a></li>
+  <li><a href="options_Preprocessor.html">space for preprocessor</a></li>
   <li><a href="options_Space_Template.html">space for template</a></li>
   <li><a href="options_Java.html">options_Java</a></li>
+  <li><a href="options_Objectiv-C.html">options_Objectiv-C</a></li>
   <li><a href="options_C_sharp.html">options_C#</a></li>
   <li><a href="options_CLI_NET.html">options_CLI .NET</a></li>
   <li><a href="options_ASM.html">options_ASM</a></li>
@@ -141,7 +144,19 @@ void * bar()
     <a title="sp_after_type_brace_init_lst_open"><strong><font color="red">              █ █</font></strong></a><a title="sp_before_type_brace_init_lst_close"><strong><font color="red"> █ █</font></strong></a>
     char m_array [256];
     <a title="sp_before_vardef_square"><strong><font color="red">            █</font></strong></a>
-
+    return { {crypt(_Nums, inSeed)} };
+    <a title="sp_brace_brace"><strong><font color="red">        █                      █</font></strong></a>
+    do {
+        xxx = _error;
+    } while(0)
+    <a title="sp_brace_close_while"><strong><font color="red"> █</font></strong></a>
+    bool CompareGenomeByFeatureResults::clickOnLink(std::string const& inLink) {
+        auto const [sequence, type, firstPosition, lastPosition] = parseLink(inLink);
+    <a title="sp_cpp_before_struct_binding"><strong><font color="red">              █</font></strong></a>
+    decltype (x)  y;
+    <a title="sp_decltype_paren"><strong><font color="red">        █</font></strong></a>
+    using x_t = decltype (x);
+    <a title="sp_decltype_paren"><strong><font color="red">                    █</font></strong></a>
 </pre>
 </td>
 </tr>
