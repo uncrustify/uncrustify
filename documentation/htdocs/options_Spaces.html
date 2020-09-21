@@ -147,6 +147,7 @@ void * bar()
     return { {crypt(_Nums, inSeed)} };
     <a title="sp_brace_brace"><strong><font color="red">        █                      █</font></strong></a>
     do {
+    <a title="sp_do_brace_open"><strong><font color="red">  █</font></strong></a>
         xxx = _error;
     } while(0)
     <a title="sp_brace_close_while"><strong><font color="red"> █</font></strong></a>
@@ -157,6 +158,12 @@ void * bar()
     <a title="sp_decltype_paren"><strong><font color="red">        █</font></strong></a>
     using x_t = decltype (x);
     <a title="sp_decltype_paren"><strong><font color="red">                    █</font></strong></a>
+    foo( ABC );
+    <a title="sp_func_call_user_inside_fparen"><strong><font color="red">    █   █</font></strong></a>
+    foo( ( ABC ) )
+    <a title="sp_func_call_user_paren_paren"><strong><font color="red">    █       █</font></strong></a>
+    typedef void timer_cb (struct timer_node *n);
+    <a title="sp_func_type_paren"><strong><font color="red">                     █</font></strong></a>
 </pre>
 </td>
 </tr>
@@ -185,10 +192,12 @@ int main(int argc , char *argv [])
 	<a title="sp_return_paren"><strong><font color="red">      █</font></strong></a>
 
 
-int a ( );
-<a title="sp_func_proto_paren"><strong><font color="red">     █</a><a title="sp_inside_fparens"> █</font></strong></a>
-int a (int b) {}
-<a title="sp_func_def_paren"><strong><font color="red">     █</a><a title="sp_fparen_brace">       █</font></strong></a>
+    int a ( );
+    <a title="sp_func_proto_paren"><strong><font color="red">     █</a><a title="sp_inside_fparens"> █</font></strong></a>
+    int a (int b) {};
+    <a title="sp_func_def_paren"><strong><font color="red">     █</a><a title="sp_fparen_brace">       █</font></strong></a>
+    int foo () {};
+    <a title="sp_func_def_paren_empty"><strong><font color="red">       █</font></strong></a>
 void ( int a ) ( int b );
 <a title="sp_inside_tparen"><strong><font color="red">      █     █</a><a title="sp_after_tparen_close"> █</a><a title="sp_inside_fparen"> █     █</font></strong></a>
 static void sockaddr_unmapped(
