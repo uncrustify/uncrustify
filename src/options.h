@@ -712,7 +712,7 @@ sp_square_fparen;
 extern Option<iarf_e>
 sp_fparen_brace;
 
-// Add or remove space between ')' and '{' of s function call in object
+// Add or remove space between ')' and '{' of a function call in object
 // initialization.
 //
 // Overrides sp_fparen_brace.

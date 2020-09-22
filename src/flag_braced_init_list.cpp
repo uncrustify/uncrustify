@@ -81,6 +81,18 @@ void flag_cpp_braced_init_list(chunk_t *pc, chunk_t *next)
    if (tmp != nullptr)
    {
       chunk_flags_clr(tmp, PCF_EXPR_START | PCF_STMT_START);
+
+      // Flag call operator
+      if (chunk_is_token(tmp, CT_PAREN_OPEN))
+      {
+         if (auto *const c = chunk_skip_to_match(tmp))
+         {
+            set_chunk_type(tmp, CT_FPAREN_OPEN);
+            set_chunk_parent(tmp, CT_FUNC_CALL);
+            set_chunk_type(c, CT_FPAREN_CLOSE);
+            set_chunk_parent(c, CT_FUNC_CALL);
+         }
+      }
    }
    // TODO: Change pc->type CT_WORD -> CT_TYPE
    // for the case CT_ASSIGN (and others).
