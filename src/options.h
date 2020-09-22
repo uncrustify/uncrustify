@@ -325,11 +325,21 @@ sp_after_byref_func;
 extern Option<iarf_e>
 sp_before_byref_func;
 
-// Add or remove space between type and word.
+// Add or remove space between type and word. In cases where total removal of
+// whitespace would be a syntax error, a value of 'remove' is treated the same
+// as 'force'.
+//
+// This also affects some other instances of space following a type that are
+// not covered by other options; for example, between the return type and
+// parenthesis of a function type template argument, between the type and
+// parenthesis of an array parameter, or between 'decltype(...)' and the
+// following word.
 extern Option<iarf_e>
 sp_after_type; // = IARF_FORCE
 
 // Add or remove space between 'decltype(...)' and word.
+//
+// Overrides sp_after_type.
 extern Option<iarf_e>
 sp_after_decltype;
 
