@@ -137,7 +137,7 @@
 50628  aet.cfg                              oc/macro-close-brace.m
 50629  aet.cfg                              oc/pp_bool.m
 
-50630 nl_func_call_args_multi_line_ignore_closures.cfg oc/nl_func_call_args_multi_line_ignore_closures.m
+50630  nl_func_call_args_multi_line_ignore_closures.cfg oc/nl_func_call_args_multi_line_ignore_closures.m
 
 50700  cmt_insert-0.cfg                     oc/cmt_insert.m
 50701  cmt_insert-0.cfg                     oc/cmt_insert2.m
