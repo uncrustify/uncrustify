@@ -2575,6 +2575,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (auto arg = iarf_flags_t{ options::sp_after_decltype() })
       {
          // Add or remove space between 'decltype(...)' and word.
+         //
+         // Overrides sp_after_type.
          log_rule("sp_after_decltype");
          return(arg);
       }
@@ -2619,7 +2621,15 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  !chunk_is_token(second, CT_PTR_TYPE)
       && (chunk_is_token(first, CT_QUALIFIER) || chunk_is_token(first, CT_TYPE)))
    {
-      // Add or remove space between type and word.
+      // Add or remove space between type and word. In cases where total removal of
+      // whitespace would be a syntax error, a value of 'remove' is treated the same
+      // as 'force'.
+      //
+      // This also affects some other instances of space following a type that are
+      // not covered by other options; for example, between the return type and
+      // parenthesis of a function type template argument, between the type and
+      // parenthesis of an array parameter, or between 'decltype(...)' and the
+      // following word.
       iarf_e arg = options::sp_after_type();
       log_rule("sp_after_type");
       return(arg);
