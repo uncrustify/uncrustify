@@ -1352,6 +1352,10 @@ indent_single_after_return      = false    # true/false
 # have their own indentation).
 indent_ignore_asm_block         = false    # true/false
 
+# Don't indent the close parenthesis of a function definition,
+# if the parenthesis is on its own line.
+donot_indent_func_def_close_paren = false    # true/false
+
 #
 # Newline adding and removing options
 #

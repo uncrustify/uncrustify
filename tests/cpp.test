@@ -208,6 +208,7 @@
 30264  Issue_2668.cfg                       cpp/Issue_2668.cpp
 30265  long_br_cmt.cfg                      cpp/long_br_cmt.cpp
 30266  Issue_2921.cfg                       cpp/Issue_2921.cpp
+30267  Issue_2930.cfg                       cpp/Issue_2930.cpp
 
 30270  const_throw.cfg                      cpp/const_throw.cpp
 30271  sp_throw_paren-r.cfg                 cpp/sp_throw_paren.cpp
