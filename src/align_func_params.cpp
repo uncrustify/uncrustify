@@ -39,7 +39,7 @@ chunk_t *align_func_param(chunk_t *start)
       log_rule_B("align_func_params_gap");
       mygap = options::align_func_params_gap();
    }
-   const size_t HOW_MANY_AS = 8;
+   const size_t HOW_MANY_AS = 16;                         // Issue #2921
    AlignStack   many_as[HOW_MANY_AS + 1];
 
    size_t       max_level_is = 0;

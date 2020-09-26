@@ -190,6 +190,7 @@
 30247  empty.cfg                            cpp/Issue_2332.cpp
 30248  Issue_2831.cfg                       cpp/Issue_2831.cpp
 30249  align-330.cfg                        cpp/align-330.cpp
+
 30250  align_fcall.cfg                      cpp/align_fcall.cpp
 30251  align_fcall-2.cfg                    cpp/align_fcall.cpp
 30253  empty.cfg                            cpp/align_left_shift.cpp
@@ -199,12 +200,14 @@
 30257  indent_columns-4.cfg                 cpp/func_call_chain.cpp
 30258  indent_columns-3.cfg                 cpp/casts.cpp
 30259  sp_after_constr_colon.cfg            cpp/sp_after_constr_colon.cpp
+
 30260  var_def_gap.cfg                      cpp/var_def_gap.cpp
 30261  align_var_def_thresh_1.cfg           cpp/align_var_def_thresh.cpp
 30262  align_var_def_thresh_2.cfg           cpp/align_var_def_thresh.cpp
 30263  align_var_def_thresh_3.cfg           cpp/align_var_def_thresh.cpp
 30264  Issue_2668.cfg                       cpp/Issue_2668.cpp
 30265  long_br_cmt.cfg                      cpp/long_br_cmt.cpp
+30266  Issue_2921.cfg                       cpp/Issue_2921.cpp
 
 30270  const_throw.cfg                      cpp/const_throw.cpp
 30271  sp_throw_paren-r.cfg                 cpp/sp_throw_paren.cpp
