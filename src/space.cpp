@@ -388,11 +388,12 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
       iarf_e arg = options::sp_before_semi();
 
-      if (  chunk_is_token(first, CT_SPAREN_CLOSE)
+      if (  chunk_is_token(first, CT_VBRACE_OPEN)                  // Issue #2942
+         && chunk_is_token(first->prev, CT_SPAREN_CLOSE)
          && get_chunk_parent_type(first) != CT_WHILE_OF_DO)
       {
          // Add or remove space before empty statement ';' on 'if', 'for' and 'while'.
-         log_rule("sp_before_semi | sp_special_semi");
+         log_rule("sp_special_semi");
          arg = arg | options::sp_special_semi();
       }
       else
