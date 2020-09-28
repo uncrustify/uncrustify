@@ -269,6 +269,7 @@
 30712  empty.cfg                            cpp/bug_1158.cpp
 30713  empty.cfg                            cpp/fix_for_relational_operators.cpp
 30714  empty.cfg                            cpp/Issue_1733.cpp
+30715  Issue_2942.cfg                       cpp/Issue_2942.cpp
 
 30720  wessex.cfg                           cpp/custom-open-2.cpp
 30721  Issue_2386.cfg                       cpp/Issue_2386.cpp
