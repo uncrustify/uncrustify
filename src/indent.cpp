@@ -3431,9 +3431,38 @@ void indent_text(void)
                   }
                }
             }
+            size_t indent_value = 0;
             LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, closing parenthesis => %zu, text is '%s'\n",
                     __func__, __LINE__, pc->orig_line, indent_column, pc->text());
-            reindent_line(pc, indent_column);
+            LOG_FMT(LINDENT, "%s(%d): [%s/%s]\n",
+                    __func__, __LINE__,
+                    get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)));
+            chunk_t *prev = chunk_get_prev(pc);                  // Issue #2930
+            LOG_FMT(LINDENT, "%s(%d): prev is orig_line is %zu, text is '%s'\n",
+                    __func__, __LINE__, prev->orig_line, prev->text());
+            chunk_t *next = chunk_get_next(pc);
+            LOG_FMT(LINDENT, "%s(%d): next is orig_line is %zu, text is '%s'\n",
+                    __func__, __LINE__, next->orig_line, next->text());
+
+            if (  get_chunk_parent_type(pc) == CT_FUNC_DEF
+               && chunk_is_newline(prev)
+               && chunk_is_newline(next))
+            {
+               if (options::donot_indent_func_def_close_paren())
+               {
+                  indent_value = 1;
+               }
+               else
+               {
+                  reindent_line(pc, indent_column);
+                  indent_value = indent_column;
+               }
+            }
+            else
+            {
+               indent_value = indent_column;
+            }
+            reindent_line(pc, indent_value);
          }
          else if (chunk_is_token(pc, CT_COMMA))
          {

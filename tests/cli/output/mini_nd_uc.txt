@@ -336,6 +336,7 @@ indent_off_after_return         = false
 indent_off_after_return_new     = false
 indent_single_after_return      = false
 indent_ignore_asm_block         = false
+donot_indent_func_def_close_paren = false
 nl_collapse_empty_body          = false
 nl_assign_leave_one_liners      = false
 nl_class_leave_one_liners       = false

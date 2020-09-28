@@ -1651,6 +1651,11 @@ indent_single_after_return;
 extern Option<bool>
 indent_ignore_asm_block;
 
+// Don't indent the close parenthesis of a function definition,
+// if the parenthesis is on its own line.
+extern Option<bool>
+donot_indent_func_def_close_paren;
+
 //END
 
 ///////////////////////////////////////////////////////////////////////////////
