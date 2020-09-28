@@ -170,6 +170,8 @@
 50905  double_angle_space_2.cfg             oc/double_angle_space.m
 50906  double_angle_space_3.cfg             oc/double_angle_space.m
 
+51000M multiple_configs.cfg					oc/multiple_configs.mm
+
 #
 # adopt tests from UT
 10018  empty.cfg                            oc/delete-space-oc.mm

@@ -56,6 +56,7 @@ class SourceTest(object):
         self.test_config = test_config
         self.test_expected = test_expected
         self.test_xfail = False
+        self.multiple_configs = False
 
     # -------------------------------------------------------------------------
     def _check(self):
@@ -91,11 +92,15 @@ class SourceTest(object):
                 if e.errno != errno.EEXIST:
                     raise
 
+        config_param = "-c"
+        if self.multiple_configs:
+            config_param = "-C"
+
         cmd = [
             config.uncrustify_exe,
             '-q',
             '-l', self.test_lang,
-            '-c', self.test_config,
+            config_param, self.test_config,
             '-f', self.test_input,
             '-o', _result
         ]
@@ -154,7 +159,8 @@ class FormatTest(SourceTest):
     pass_input = ['test_input', 'test_expected']
     pass_expected = ['test_expected', 'test_rerun_expected']
 
-    re_test_declaration = re.compile(r'^(?P<num>\d+)(?P<mark>[~!]*)\s+'
+    re_test_declaration = re.compile(r'^(?P<num>\d+)(?P<mark>[~!]*)'
+                          r'(?P<multiple_configs>[M]*)\s+'
                           r'(?P<config>\S+)\s+(?P<input>\S+)'
                           r'(?:\s+(?P<lang>\S+))?$')
 
@@ -168,6 +174,7 @@ class FormatTest(SourceTest):
         p.test_input = getattr(self, self.pass_input[i])
         p.test_expected = getattr(self, self.pass_expected[i])
         p.test_xfail = self.test_xfail
+        p.multiple_configs = self.multiple_configs
         if i == 1 and not os.path.exists(p.test_expected):
             p.test_expected = getattr(self, self.pass_expected[0])
 
@@ -206,7 +213,7 @@ class FormatTest(SourceTest):
         is_xfail = ('~' in match.group('mark'))
 
         self.test_xfail = is_xfail
-
+        self.multiple_configs = ('M' in match.group("multiple_configs"))
         self.test_config = match.group('config')
         self.test_input = match.group('input')
 
