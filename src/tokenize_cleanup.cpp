@@ -1382,6 +1382,11 @@ static void check_template(chunk_t *start, bool in_type_cast)
             tokens[num_tokens] = CT_PAREN_OPEN;
             num_tokens++;
          }
+         else if (  chunk_is_token(pc, CT_QUESTION)                    // Issue #2949
+                 && language_is_set(LANG_CPP))
+         {
+            break;
+         }
          else if (chunk_is_token(pc, CT_PAREN_CLOSE))
          {
             if (num_tokens == 0)
