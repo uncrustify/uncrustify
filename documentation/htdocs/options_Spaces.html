@@ -166,6 +166,28 @@ void * bar()
     <a title="sp_func_type_paren"><strong><font color="red">                     █</font></strong></a>
     if (n) ;
     <a title="sp_special_semi"><strong><font color="red">      █</font></strong></a>
+    a( , 1);
+    <a title="sp_paren_comma"><strong><font color="red">  █</font></strong></a>
+    foo() noexcept;
+    <a title="sp_paren_noexcept"><strong><font color="red">     █</font></strong></a>
+    return {x};
+    <a title="sp_return_brace"><strong><font color="red">      █</font></strong></a>
+    void funcName() const;
+    <a title="sp_paren_qualifier"><strong><font color="red">               █</font></strong></a>
+    void ncName() override;
+    <a title="sp_paren_qualifier"><strong><font color="red">             █</font></strong></a>
+template  <  int  ...  X  > int bar2()
+{
+        auto s = sizeof ... (  X  );
+    <a title="sp_sizeof_ellipsis"><strong><font color="red">                   █</font></strong></a><a title="sp_sizeof_ellipsis_paren"><strong><font color="red">   █</font></strong></a>
+        chomp(  X  ) ...;
+    <a title="sp_paren_ellipsis"><strong><font color="red">                █</font></strong></a>
+        return X  +  ...;
+}
+    if (data)   go = new ClassA();
+    <a title="sp_skip_vbrace_tokens"><strong><font color="red">          █</font></strong></a>
+    else        go = new ClassB();
+    <a title="sp_skip_vbrace_tokens"><strong><font color="red">          █</font></strong></a>
 </pre>
 </td>
 </tr>
