@@ -69,40 +69,40 @@ static const chunk_tag_t symbols3[] =
 // 2-char symbols
 static const chunk_tag_t symbols2[] =
 {
-   { "!<",      CT_COMPARE,      LANG_D                                 },
-   { "!=",      CT_COMPARE,      LANG_ALL                               },
-   { "!>",      CT_COMPARE,      LANG_D                                 },
-   { "!~",      CT_COMPARE,      LANG_D                                 },
-   { "##",      CT_PP,           LANG_C | LANG_CPP | LANG_OC            },
+   { "!<",      CT_COMPARE,      LANG_D                                 },                     // 0
+   { "!=",      CT_COMPARE,      LANG_ALL                               },                     // 1
+   { "!>",      CT_COMPARE,      LANG_D                                 },                     // 2
+   { "!~",      CT_COMPARE,      LANG_D                                 },                     // 3
+   { "##",      CT_PP,           LANG_C | LANG_CPP | LANG_OC            },                     // 4
    { "#@",      CT_POUND,        LANG_C | LANG_CPP | LANG_OC            },                     // MS extension
-   { "%=",      CT_ASSIGN,       LANG_ALL                               },
-   { "&&",      CT_BOOL,         LANG_ALL                               },
-   { "&=",      CT_ASSIGN,       LANG_ALL                               },
-   { "*=",      CT_ASSIGN,       LANG_ALL                               },
-   { "++",      CT_INCDEC_AFTER, LANG_ALL                               },
-   { "+=",      CT_ASSIGN,       LANG_ALL                               },
-   { "--",      CT_INCDEC_AFTER, LANG_ALL                               },
-   { "-=",      CT_ASSIGN,       LANG_ALL                               },
-   { "->",      CT_MEMBER,       LANG_ALLC                              },
-   { ".*",      CT_MEMBER,       LANG_C | LANG_CPP | LANG_OC | LANG_D   },
-   { "..",      CT_RANGE,        LANG_D                                 },
+   { "%=",      CT_ASSIGN,       LANG_ALL                               },                     // 6
+   { "&&",      CT_BOOL,         LANG_ALL                               },                     // 7
+   { "&=",      CT_ASSIGN,       LANG_ALL                               },                     // 8
+   { "*=",      CT_ASSIGN,       LANG_ALL                               },                     // 9
+   { "++",      CT_INCDEC_AFTER, LANG_ALL                               },                     // 10
+   { "+=",      CT_ASSIGN,       LANG_ALL                               },                     // 11
+   { "--",      CT_INCDEC_AFTER, LANG_ALL                               },                     // 12
+   { "-=",      CT_ASSIGN,       LANG_ALL                               },                     // 13
+   { "->",      CT_MEMBER,       LANG_ALLC                              },                     // 14
+   { ".*",      CT_MEMBER,       LANG_C | LANG_CPP | LANG_OC | LANG_D   },                     // 15
+   { "..",      CT_RANGE,        LANG_D                                 },                     // 16
    { "?.",      CT_NULLCOND,     LANG_CS                                },                     // null conditional operator
-   { "/=",      CT_ASSIGN,       LANG_ALL                               },
-   { "::",      CT_DC_MEMBER,    LANG_ALLC                              },
-   { "<<",      CT_SHIFT,        LANG_ALL                               },
-   { "<=",      CT_COMPARE,      LANG_ALL                               },
-   { "<>",      CT_COMPARE,      LANG_D                                 },
-   { "==",      CT_COMPARE,      LANG_ALL                               },
-   { ">=",      CT_COMPARE,      LANG_ALL                               },
-   { ">>",      CT_SHIFT,        LANG_ALL                               },
-   { "[]",      CT_TSQUARE,      LANG_ALL                               },
-   { "^=",      CT_ASSIGN,       LANG_ALL                               },
-   { "|=",      CT_ASSIGN,       LANG_ALL                               },
-   { "||",      CT_BOOL,         LANG_ALL                               },
-   { "~=",      CT_COMPARE,      LANG_D                                 },
-   { "~~",      CT_COMPARE,      LANG_D                                 },
-   { "=>",      CT_LAMBDA,       LANG_VALA | LANG_CS | LANG_D           },
-   { "??",      CT_COMPARE,      LANG_CS | LANG_VALA                    },
+   { "/=",      CT_ASSIGN,       LANG_ALL                               },                     // 18
+   { "::",      CT_DC_MEMBER,    LANG_ALLC                              },                     // 19
+   { "<<",      CT_SHIFT,        LANG_ALL                               },                     // 20
+   { "<=",      CT_COMPARE,      LANG_ALL                               },                     // 21
+   { "<>",      CT_COMPARE,      LANG_D                                 },                     // 22
+   { "==",      CT_COMPARE,      LANG_ALL                               },                     // 23
+   { ">=",      CT_COMPARE,      LANG_ALL                               },                     // 24
+   { ">>",      CT_SHIFT,        LANG_ALL                               },                     // 25
+   { "[]",      CT_TSQUARE,      LANG_ALL                               },                     // 26
+   { "^=",      CT_ASSIGN,       LANG_ALL                               },                     // 27
+   { "|=",      CT_ASSIGN,       LANG_ALL                               },                     // 28
+   { "||",      CT_BOOL,         LANG_ALL                               },                     // 29
+   { "~=",      CT_COMPARE,      LANG_D                                 },                     // 30
+   { "~~",      CT_COMPARE,      LANG_D                                 },                     // 31
+   { "=>",      CT_LAMBDA,       LANG_VALA | LANG_CS | LANG_D           },                     // 32
+   { "??",      CT_COMPARE,      LANG_CS | LANG_VALA                    },                     // 33
    { R"_(<%)_", CT_BRACE_OPEN,   LANG_C | LANG_CPP | LANG_OC | FLAG_DIG },                     // digraph {
    { R"_(%>)_", CT_BRACE_CLOSE,  LANG_C | LANG_CPP | LANG_OC | FLAG_DIG },                     // digraph }
    { R"_(<:)_", CT_SQUARE_OPEN,  LANG_C | LANG_CPP | LANG_OC | FLAG_DIG },                     // digraph [
