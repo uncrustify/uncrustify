@@ -172,6 +172,7 @@
 30219  sp_trailing_return-r.cfg             cpp/trailing_return.cpp
 
 30220  bug_1340.cfg                         cpp/bug_1340.cpp
+30221  Issue_2914.cfg                       cpp/Issue_2914.cpp
 
 30230  sp_type_func-r.cfg                   cpp/sp_type_func.cpp
 30231  sp_type_func-f.cfg                   cpp/sp_type_func.cpp

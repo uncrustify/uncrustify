@@ -2473,6 +2473,11 @@ nl_split_for_one_liner;
 extern Option<bool>
 nl_split_while_one_liner;
 
+// Don't add a newline before a cpp-comment in a parameter list of a function
+// call.
+extern Option<bool>
+donot_add_nl_before_cpp_comment;
+
 //END
 
 ///////////////////////////////////////////////////////////////////////////////

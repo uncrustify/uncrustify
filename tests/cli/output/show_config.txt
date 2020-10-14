@@ -1994,6 +1994,10 @@ nl_split_for_one_liner          = false    # true/false
 # adding a newline, as in 'while (expr) <here> stmt;'.
 nl_split_while_one_liner        = false    # true/false
 
+# Don't add a newline before a cpp-comment in a parameter list of a function
+# call.
+donot_add_nl_before_cpp_comment = false    # true/false
+
 #
 # Blank line options
 #
