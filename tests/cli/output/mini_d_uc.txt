@@ -515,6 +515,7 @@ nl_create_list_one_liner        = false
 nl_split_if_one_liner           = false
 nl_split_for_one_liner          = false
 nl_split_while_one_liner        = false
+donot_add_nl_before_cpp_comment = false
 nl_max                          = 0
 nl_max_blank_in_func            = 0
 nl_inside_empty_func            = 0

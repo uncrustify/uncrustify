@@ -2738,9 +2738,17 @@ void newline_iarf(chunk_t *pc, iarf_e av)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LNFD, "%s(%d): ", __func__, __LINE__);
-   log_func_stack(LNFD, " CallStack:");
+   log_func_stack(LNFD, "CallStack:");
+   chunk_t *after = chunk_get_next_nnl(pc);
 
-   newline_iarf_pair(pc, chunk_get_next_nnl(pc), av);
+   if (  chunk_is_token(pc, CT_FPAREN_OPEN)                         // Issue #2914
+      && get_chunk_parent_type(pc) == CT_FUNC_CALL
+      && chunk_is_token(after, CT_COMMENT_CPP)
+      && options::donot_add_nl_before_cpp_comment())
+   {
+      return;
+   }
+   newline_iarf_pair(pc, after, av);
 }
 
 
