@@ -47,8 +47,8 @@ void align_func_proto(size_t span)
    log_rule_B("align_var_def_amp_style");
    size_t       myamp_style = options::align_var_def_amp_style();
 
-   const size_t max_level_count = 4;
-   const size_t max_brace_level = 4;
+   const size_t max_level_count = 8;
+   const size_t max_brace_level = 8;
 
    AlignStack   many_as[max_level_count + 1][max_brace_level + 1];
 
@@ -80,6 +80,22 @@ void align_func_proto(size_t span)
       LOG_FMT(LAS, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, level is %zu, brace_level is %zu\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
               get_token_name(pc->type), pc->level, pc->brace_level);
+
+      if (pc->level > max_level_count)                             // Issue #2960
+      {
+         fprintf(stderr, "%s(%d): pc->level is %zu. This is too big, at line %zu, column %zu. Make a report, please.\n",
+                 __func__, __LINE__, pc->level, pc->orig_line, pc->orig_col);
+         log_flush(true);
+         exit(EX_SOFTWARE);
+      }
+
+      if (pc->brace_level > max_brace_level)
+      {
+         fprintf(stderr, "%s(%d): pc->brace_level is %zu. This is too big, at line %zu, column %zu. Make a report, please.\n",
+                 __func__, __LINE__, pc->level, pc->orig_line, pc->orig_col);
+         log_flush(true);
+         exit(EX_SOFTWARE);
+      }
 
       if (  chunk_is_newline(pc)
          && !pc->flags.test(PCF_IN_FCN_CALL))                 // Issue #2831
