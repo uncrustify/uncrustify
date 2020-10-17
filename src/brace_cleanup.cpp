@@ -465,6 +465,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
                     frm.top().pc->orig_line);
             print_stack(LBCSPOP, "=Error  ", frm);
             cpd.error_count++;
+            exit(EXIT_FAILURE);
          }
       }
       else
