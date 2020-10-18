@@ -1284,8 +1284,8 @@ static void newlines_func_pre_blank_lines(chunk_t *start, c_token_t start_type)
                && ((first_line - pc->orig_line
                     - (chunk_is_token(pc, CT_COMMENT_MULTI) ? pc->nl_count : 0))) < 2)
             || (  last_comment != nullptr
-               && chunk_is_token(pc, CT_COMMENT_CPP) // combine only cpp comments
-               && last_comment->type == pc->type     // don't mix comment types
+               && chunk_is_token(pc, CT_COMMENT_CPP)         // combine only cpp comments
+               && chunk_is_token(last_comment, pc->type)     // don't mix comment types
                && last_comment->orig_line > pc->orig_line
                && (last_comment->orig_line - pc->orig_line) < 2))
          {
@@ -1519,7 +1519,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
             return;
          }
 
-         if (nextNNL->type != CT_VBRACE_CLOSE)
+         if (chunk_is_not_token(nextNNL, CT_VBRACE_CLOSE))
          {
             next = nextNNL;
             break;
@@ -1530,7 +1530,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
       LOG_FMT(LNEWLINE, "%s(%d): next->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
               __func__, __LINE__, next->text(), get_token_name(next->type), next->orig_line, next->orig_col);
 
-      if (next->type != CT_BRACE_CLOSE)
+      if (chunk_is_not_token(next, CT_BRACE_CLOSE))
       {
          // if vbrace, have to check before and after
          // if chunk before vbrace, check its count
@@ -2017,8 +2017,8 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
 
       // Determine if this is a variable definition or code
       if (  !did_this_line
-         && pc->type != CT_FUNC_CLASS_DEF
-         && pc->type != CT_FUNC_CLASS_PROTO
+         && chunk_is_not_token(pc, CT_FUNC_CLASS_DEF)
+         && chunk_is_not_token(pc, CT_FUNC_CLASS_PROTO)
          && ((pc->level == (start->level + 1)) || pc->level == 0))
       {
          chunk_t *next = chunk_get_next_ncnl(pc);
@@ -2145,10 +2145,11 @@ static bool collapse_empty_body(chunk_t *br_open)
    }
 
    for (chunk_t *pc = chunk_get_next(br_open)
-        ; pc != nullptr && pc->type != CT_BRACE_CLOSE
+        ; pc != nullptr && chunk_is_not_token(pc, CT_BRACE_CLOSE)
         ; pc = chunk_get_next(pc))
    {
-      if (chunk_is_token(pc, CT_NEWLINE) && chunk_safe_to_del_nl(pc))
+      if (  chunk_is_token(pc, CT_NEWLINE)
+         && chunk_safe_to_del_nl(pc))
       {
          pc = pc->prev;
          chunk_t *next = pc->next;
@@ -2553,10 +2554,10 @@ static void newline_case(chunk_t *start)
          return;
       }
    } while (  prev != nullptr
-           && prev->type != CT_BRACE_OPEN
-           && prev->type != CT_BRACE_CLOSE
-           && prev->type != CT_SEMICOLON
-           && prev->type != CT_CASE_COLON);
+           && chunk_is_not_token(prev, CT_BRACE_OPEN)
+           && chunk_is_not_token(prev, CT_BRACE_CLOSE)
+           && chunk_is_not_token(prev, CT_SEMICOLON)
+           && chunk_is_not_token(prev, CT_CASE_COLON));
 
    if (prev == nullptr)
    {
@@ -3062,7 +3063,8 @@ static void newline_func_def_or_call(chunk_t *start)
          newline_iarf(chunk_get_prev_ncnlni(prev), options::nl_func_class_scope());   // Issue #2279
       }
 
-      if (prev != nullptr && prev->type != CT_ACCESS_COLON)
+      if (  prev != nullptr
+         && chunk_is_not_token(prev, CT_ACCESS_COLON))
       {
          chunk_t *tmp;
 
@@ -3087,7 +3089,8 @@ static void newline_func_def_or_call(chunk_t *start)
          }
          const chunk_t *tmp_next = chunk_get_next_ncnl(prev);
 
-         if (tmp_next != nullptr && tmp_next->type != CT_FUNC_CLASS_DEF)
+         if (  tmp_next != nullptr
+            && chunk_is_not_token(tmp_next, CT_FUNC_CLASS_DEF))
          {
             chunk_t *closing = chunk_skip_to_match(tmp);
             chunk_t *brace   = chunk_get_next_ncnl(closing);
@@ -3149,11 +3152,11 @@ static void newline_func_def_or_call(chunk_t *start)
                }
 
                if (  prev != nullptr
-                  && prev->type != CT_BRACE_CLOSE
-                  && prev->type != CT_VBRACE_CLOSE
-                  && prev->type != CT_BRACE_OPEN
-                  && prev->type != CT_SEMICOLON
-                  && prev->type != CT_ACCESS_COLON
+                  && chunk_is_not_token(prev, CT_BRACE_CLOSE)
+                  && chunk_is_not_token(prev, CT_VBRACE_CLOSE)
+                  && chunk_is_not_token(prev, CT_BRACE_OPEN)
+                  && chunk_is_not_token(prev, CT_SEMICOLON)
+                  && chunk_is_not_token(prev, CT_ACCESS_COLON)
                      // #1008: if we landed on an operator check that it is having
                      // a type before it, in order to not apply nl_func_type_name
                      // on conversion operators as they don't have a normal
@@ -5725,7 +5728,8 @@ void do_blank_lines(void)
       }
       bool line_added = false;
 
-      if (pc->type != CT_NEWLINE)
+      //if (pc->type != CT_NEWLINE)
+      if (chunk_is_not_token(pc, CT_NEWLINE))
       {
          continue;
       }
