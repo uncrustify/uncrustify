@@ -1797,7 +1797,7 @@ static void newlines_namespace(chunk_t *start)
    log_rule_B("nl_namespace_brace");
    iarf_e nl_opt = options::nl_namespace_brace();
 
-   // Add or remove newline between 'namespace' and '{'.
+   // Add or remove newline between 'namespace' and 'BRACE_OPEN'
 
    log_rule_B("nl_define_macro");
 
@@ -1823,7 +1823,7 @@ static void newlines_namespace(chunk_t *start)
 
    LOG_FMT(LNEWLINE, "%s(%d): beforeBrace->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
            __func__, __LINE__, beforeBrace->orig_line, beforeBrace->orig_col, beforeBrace->text());
-   // namespace {
+   // 'namespace' 'BRACE_OPEN'
    newline_iarf_pair(beforeBrace, braceOpen, nl_opt);
 } // newlines_namespace
 
