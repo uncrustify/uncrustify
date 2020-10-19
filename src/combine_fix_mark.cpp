@@ -97,7 +97,7 @@ void fix_casts(chunk_t *start)
    }
 
    if (  pc == nullptr
-      || pc->type != CT_PAREN_CLOSE
+      || chunk_is_not_token(pc, CT_PAREN_CLOSE)
       || chunk_is_token(prev, CT_OC_CLASS))
    {
       LOG_FMT(LCASTS, "%s(%d):  -- not a cast, hit type is %s\n",
@@ -207,26 +207,27 @@ void fix_casts(chunk_t *start)
       else if (chunk_is_token(pc, CT_PLUS))
       {
          // (UINT8)+1 or (foo)+1
-         if (  (after->type != CT_NUMBER && after->type != CT_NUMBER_FP)
+         if (  (  chunk_is_not_token(after, CT_NUMBER)
+               && chunk_is_not_token(after, CT_NUMBER_FP))
             || doubtful_cast)
          {
             nope = true;
          }
       }
-      else if (  pc->type != CT_NUMBER_FP
-              && pc->type != CT_NUMBER
-              && pc->type != CT_WORD
-              && pc->type != CT_THIS
-              && pc->type != CT_TYPE
-              && pc->type != CT_PAREN_OPEN
-              && pc->type != CT_STRING
-              && pc->type != CT_DECLTYPE
-              && pc->type != CT_SIZEOF
+      else if (  chunk_is_not_token(pc, CT_NUMBER_FP)
+              && chunk_is_not_token(pc, CT_NUMBER)
+              && chunk_is_not_token(pc, CT_WORD)
+              && chunk_is_not_token(pc, CT_THIS)
+              && chunk_is_not_token(pc, CT_TYPE)
+              && chunk_is_not_token(pc, CT_PAREN_OPEN)
+              && chunk_is_not_token(pc, CT_STRING)
+              && chunk_is_not_token(pc, CT_DECLTYPE)
+              && chunk_is_not_token(pc, CT_SIZEOF)
               && get_chunk_parent_type(pc) != CT_SIZEOF
-              && pc->type != CT_FUNC_CALL
-              && pc->type != CT_FUNC_CALL_USER
-              && pc->type != CT_FUNCTION
-              && pc->type != CT_BRACE_OPEN
+              && chunk_is_not_token(pc, CT_FUNC_CALL)
+              && chunk_is_not_token(pc, CT_FUNC_CALL_USER)
+              && chunk_is_not_token(pc, CT_FUNCTION)
+              && chunk_is_not_token(pc, CT_BRACE_OPEN)
               && (!(  chunk_is_token(pc, CT_SQUARE_OPEN)
                    && language_is_set(LANG_OC))))
       {
@@ -462,7 +463,7 @@ void fix_enum_struct_union(chunk_t *pc)
    // We are either pointing to a ';' or a variable
    while (  next != nullptr
          && !chunk_is_semicolon(next)
-         && next->type != CT_ASSIGN
+         && chunk_is_not_token(next, CT_ASSIGN)
          && !(in_fcn_paren ^ (next->flags & PCF_IN_FCN_DEF)).test_any())
    {
       if (next->level == pc->level)
@@ -585,7 +586,8 @@ void fix_type_cast(chunk_t *start)
 
    pc = chunk_get_next_ncnl(start);
 
-   if (pc == nullptr || pc->type != CT_ANGLE_OPEN)
+   if (  pc == nullptr
+      || chunk_is_not_token(pc, CT_ANGLE_OPEN))
    {
       return;
    }
@@ -735,9 +737,9 @@ void fix_typedef(chunk_t *start)
       return;
    }
 
-   if (  after->type != CT_ENUM
-      && after->type != CT_STRUCT
-      && after->type != CT_UNION)
+   if (  chunk_is_not_token(after, CT_ENUM)
+      && chunk_is_not_token(after, CT_STRUCT)
+      && chunk_is_not_token(after, CT_UNION))
    {
       if (the_type != nullptr)
       {
@@ -900,8 +902,8 @@ chunk_t *fix_variable_definition(chunk_t *start)
       {
          tmp_pc = cs.Get(idx)->m_pc;
 
-         if (  tmp_pc->type != CT_DC_MEMBER
-            && tmp_pc->type != CT_MEMBER)
+         if (  chunk_is_not_token(tmp_pc, CT_DC_MEMBER)
+            && chunk_is_not_token(tmp_pc, CT_MEMBER))
          {
             break;
          }
@@ -916,8 +918,8 @@ chunk_t *fix_variable_definition(chunk_t *start)
          idx--;
          tmp_pc = cs.Get(idx)->m_pc;
 
-         if (  tmp_pc->type != CT_WORD
-            && tmp_pc->type != CT_TYPE)
+         if (  chunk_is_not_token(tmp_pc, CT_WORD)
+            && chunk_is_not_token(tmp_pc, CT_TYPE))
          {
             break;
          }
@@ -1032,7 +1034,8 @@ void mark_class_ctor(chunk_t *start)
    }
 
    if (  pclass == nullptr
-      || (pclass->type != CT_TYPE && pclass->type != CT_WORD))
+      || (  chunk_is_not_token(pclass, CT_TYPE)
+         && chunk_is_not_token(pclass, CT_WORD)))
    {
       return;
    }
@@ -1079,7 +1082,8 @@ void mark_class_ctor(chunk_t *start)
    // Find the open brace, abort on semicolon
    pcf_flags_t flags = PCF_NONE;
 
-   while (pc != nullptr && pc->type != CT_BRACE_OPEN)
+   while (  pc != nullptr
+         && chunk_is_not_token(pc, CT_BRACE_OPEN))
    {
       LOG_FMT(LFTOR, " [%s]", pc->text());
 
@@ -1155,7 +1159,7 @@ void mark_class_ctor(chunk_t *start)
 
          // Issue #1003, next->type should not be CT_FPAREN_OPEN
          if (  prev != nullptr
-            && (prev->type != CT_NEW))
+            && chunk_is_not_token(prev, CT_NEW))
          {
             bool is_func_class_def = false;
 
@@ -1237,7 +1241,8 @@ void mark_cpp_constructor(chunk_t *pc)
    bool hit_colon = false;
 
    while (  tmp != nullptr
-         && (tmp->type != CT_BRACE_OPEN || tmp->level != paren_open->level)
+         && (  chunk_is_not_token(tmp, CT_BRACE_OPEN)
+            || tmp->level != paren_open->level)
          && !chunk_is_semicolon(tmp))
    {
       LOG_FMT(LFTOR, "%s(%d): tmp is '%s', orig_line is %zu, orig_col is %zu\n",
@@ -1324,7 +1329,7 @@ void mark_define_expressions(void)
          }
          else
          {
-            if (  pc->type != CT_MACRO
+            if (  chunk_is_not_token(pc, CT_MACRO)
                && (  first
                   || chunk_is_token(prev, CT_PAREN_OPEN)
                   || chunk_is_token(prev, CT_ARITH)
@@ -1375,15 +1380,15 @@ void mark_exec_sql(chunk_t *pc)
       }
    }
 
-   if (  pc->type != CT_SQL_BEGIN
+   if (  chunk_is_not_token(pc, CT_SQL_BEGIN)
       || tmp == nullptr
-      || tmp->type != CT_SEMICOLON)
+      || chunk_is_not_token(tmp, CT_SEMICOLON))
    {
       return;
    }
 
    for (tmp = chunk_get_next(tmp);
-        tmp != nullptr && tmp->type != CT_SQL_END;
+        tmp != nullptr && chunk_is_not_token(tmp, CT_SQL_END);
         tmp = chunk_get_next(tmp))
    {
       tmp->level++;
@@ -1427,9 +1432,9 @@ void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t parent_
          }
 
          if (  (  !chunk_is_type(pc)
-               && pc->type != CT_OPERATOR
-               && pc->type != CT_WORD
-               && pc->type != CT_ADDR)
+               && chunk_is_not_token(pc, CT_OPERATOR)
+               && chunk_is_not_token(pc, CT_WORD)
+               && chunk_is_not_token(pc, CT_ADDR))
             || pc->flags.test(PCF_IN_PREPROC))
          {
             break;
@@ -1464,8 +1469,9 @@ void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t parent_
          chunk_t *prev = chunk_get_prev_ncnlni(pc);   // Issue #2279
 
          if (  !is_return_tuple
-            || pc->type != CT_WORD
-            || (prev != nullptr && prev->type != CT_TYPE))
+            || chunk_is_not_token(pc, CT_WORD)
+            || (  prev != nullptr
+               && chunk_is_not_token(prev, CT_TYPE)))
          {
             make_type(pc);
          }
@@ -1620,7 +1626,7 @@ void mark_function(chunk_t *pc)
          }
 
          if (  tmp != nullptr
-            && pc->type != CT_FUNC_CALL)
+            && chunk_is_not_token(pc, CT_FUNC_CALL))
          {
             // Mark the return type
             while (  (tmp = chunk_get_next_ncnl(tmp)) != pc
@@ -1979,9 +1985,9 @@ void mark_function(chunk_t *pc)
                prev = chunk_get_prev_ncnlnp(prev);
 
                if (  prev == nullptr
-                  || (  prev->type != CT_WORD
-                     && prev->type != CT_TYPE
-                     && prev->type != CT_THIS))
+                  || (  chunk_is_not_token(prev, CT_WORD)
+                     && chunk_is_not_token(prev, CT_TYPE)
+                     && chunk_is_not_token(prev, CT_THIS)))
                {
                   LOG_FMT(LFCN, "%s(%d): --? skipped MEMBER and landed on %s\n",
                           __func__, __LINE__, (prev == nullptr) ? "<null>" : get_token_name(prev->type));
@@ -2045,12 +2051,12 @@ void mark_function(chunk_t *pc)
             hit_star = true;
          }
 
-         if (  prev->type != CT_OPERATOR
-            && prev->type != CT_TSQUARE
-            && prev->type != CT_ANGLE_CLOSE
-            && prev->type != CT_QUALIFIER
-            && prev->type != CT_TYPE
-            && prev->type != CT_WORD
+         if (  chunk_is_not_token(prev, CT_OPERATOR)
+            && chunk_is_not_token(prev, CT_TSQUARE)
+            && chunk_is_not_token(prev, CT_ANGLE_CLOSE)
+            && chunk_is_not_token(prev, CT_QUALIFIER)
+            && chunk_is_not_token(prev, CT_TYPE)
+            && chunk_is_not_token(prev, CT_WORD)
             && !chunk_is_ptr_operator(prev))
          {
             LOG_FMT(LFCN, "%s(%d):  --> Stopping on prev is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
@@ -2121,8 +2127,8 @@ void mark_function(chunk_t *pc)
                && get_chunk_parent_type(prev) != CT_D_CAST
                && get_chunk_parent_type(prev) != CT_MACRO_OPEN  // Issue #2726
                && get_chunk_parent_type(prev) != CT_MACRO_CLOSE)
-            || prev->type == CT_ASSIGN
-            || prev->type == CT_RETURN))
+            || chunk_is_token(prev, CT_ASSIGN)
+            || chunk_is_token(prev, CT_RETURN)))
       {
          LOG_FMT(LFCN, "%s(%d): -- overriding DEF due to prev is '%s', type is %s\n",
                  __func__, __LINE__, prev->text(), get_token_name(prev->type));
@@ -2173,7 +2179,7 @@ void mark_function(chunk_t *pc)
       }
    }
 
-   if (pc->type != CT_FUNC_DEF)
+   if (chunk_is_not_token(pc, CT_FUNC_DEF))
    {
       LOG_FMT(LFCN, "%s(%d):  Detected type %s, text() is '%s', on orig_line %zu, orig_col %zu\n",
               __func__, __LINE__, get_token_name(pc->type),
@@ -2390,9 +2396,9 @@ void mark_function(chunk_t *pc)
       tmp = chunk_get_next_ncnl(paren_close);
       pcf_flags_t in_where_spec_flags = PCF_NONE;
 
-      while (  (tmp != nullptr)
-            && (tmp->type != CT_BRACE_OPEN)
-            && (tmp->type != CT_SEMICOLON))
+      while (  tmp != nullptr
+            && chunk_is_not_token(tmp, CT_BRACE_OPEN)
+            && chunk_is_not_token(tmp, CT_SEMICOLON))
       {
          mark_where_chunk(tmp, pc->type, tmp->flags | in_where_spec_flags);
          in_where_spec_flags = tmp->flags & PCF_IN_WHERE_SPEC;
@@ -2407,7 +2413,7 @@ void mark_function(chunk_t *pc)
       tmp = chunk_get_next_ncnl(paren_close);
 
       while (  tmp != nullptr
-            && tmp->type != CT_BRACE_OPEN)
+            && chunk_is_not_token(tmp, CT_BRACE_OPEN))
       {
          LOG_FMT(LFCN, "%s(%d): (13) SET TO CT_FUNC_DEF: orig_line is %zu, orig_col is %zu, text() '%s'\n",
                  __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->text());
@@ -2858,7 +2864,9 @@ void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
    // throw out the last word and mark the rest
    chunk_t *var_name = cs.Pop_Back();
 
-   if (var_name && var_name->prev->type == CT_DC_MEMBER)
+   if (  var_name != nullptr
+      && var_name->prev != nullptr
+      && var_name->prev->type == CT_DC_MEMBER)
    {
       cs.Push_Back(var_name);
    }

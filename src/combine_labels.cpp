@@ -257,7 +257,8 @@ void combine_labels(void)
                   return;
                }
                LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, tmp '%s': ",
-                       __func__, __LINE__, tmp->orig_line, tmp->orig_col, (tmp->type == CT_NEWLINE) ? "<Newline>" : tmp->text());
+                       __func__, __LINE__, tmp->orig_line, tmp->orig_col,
+                       (chunk_is_token(tmp, CT_NEWLINE)) ? "<Newline>" : tmp->text());
                log_pcf_flags(LGUY, tmp->flags);
 
                if (next->flags.test(PCF_IN_FCN_CALL))
@@ -266,9 +267,9 @@ void combine_labels(void)
                   set_chunk_type(next, CT_LABEL_COLON);
                }
                else if (  tmp == nullptr
-                       || (  tmp->type != CT_NUMBER
-                          && tmp->type != CT_DECLTYPE
-                          && tmp->type != CT_SIZEOF
+                       || (  chunk_is_not_token(tmp, CT_NUMBER)
+                          && chunk_is_not_token(tmp, CT_DECLTYPE)
+                          && chunk_is_not_token(tmp, CT_SIZEOF)
                           && get_chunk_parent_type(tmp) != CT_SIZEOF
                           && !tmp->flags.test_any(PCF_IN_STRUCT | PCF_IN_CLASS))
                        || chunk_is_token(tmp, CT_NEWLINE))
@@ -291,7 +292,7 @@ void combine_labels(void)
                      }
 
                      if (  labelPrev != nullptr
-                        && labelPrev->type != CT_FPAREN_CLOSE)
+                        && chunk_is_not_token(labelPrev, CT_FPAREN_CLOSE))
                      {
                         set_chunk_type(cur, CT_LABEL);
                         set_chunk_type(next, CT_LABEL_COLON);
