@@ -124,7 +124,8 @@ static void process_if_chain(chunk_t *br_start);
 static bool paren_multiline_before_brace(chunk_t *brace)
 {
    if (  brace == nullptr
-      || (brace->type != CT_BRACE_OPEN && brace->type != CT_BRACE_CLOSE)
+      || (  chunk_is_not_token(brace, CT_BRACE_OPEN)
+         && chunk_is_not_token(brace, CT_BRACE_CLOSE))
       || (  get_chunk_parent_type(brace) != CT_IF
          && get_chunk_parent_type(brace) != CT_ELSEIF
          && get_chunk_parent_type(brace) != CT_FOR
@@ -171,7 +172,8 @@ void do_braces(void)
 
    while ((pc = chunk_get_next_ncnl(pc)) != nullptr)
    {
-      if (pc->type != CT_BRACE_OPEN && pc->type != CT_VBRACE_OPEN)
+      if (  chunk_is_not_token(pc, CT_BRACE_OPEN)
+         && chunk_is_not_token(pc, CT_VBRACE_OPEN))
       {
          continue;
       }
@@ -195,7 +197,8 @@ void do_braces(void)
             break;
          }
 
-         if (tmp->type == brc_type && br_open->level == tmp->level)
+         if (  chunk_is_token(tmp, brc_type)
+            && br_open->level == tmp->level)
          {
             flag_series(br_open, tmp, PCF_ONE_LINER);
             break;
@@ -578,7 +581,8 @@ static void examine_brace(chunk_t *bopen)
             {
                chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
 
-               if (next == nullptr || next->type != CT_BRACE_CLOSE)
+               if (  next == nullptr
+                  || chunk_is_not_token(next, CT_BRACE_CLOSE))
                {
                   LOG_FMT(LBRDEL, "%s(%d):  junk after close brace\n", __func__, __LINE__);
                   return;
@@ -898,7 +902,7 @@ static void convert_vbrace_to_brace(void)
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
-      if (pc->type != CT_VBRACE_OPEN)
+      if (chunk_is_not_token(pc, CT_VBRACE_OPEN))
       {
          continue;
       }
@@ -1060,7 +1064,8 @@ void add_long_closebrace_comment(void)
          cl_pc = pc;
       }
 
-      if (pc->type != CT_BRACE_OPEN || pc->flags.test(PCF_IN_PREPROC))
+      if (  chunk_is_not_token(pc, CT_BRACE_OPEN)
+         || pc->flags.test(PCF_IN_PREPROC))
       {
          continue;
       }
@@ -1078,7 +1083,8 @@ void add_long_closebrace_comment(void)
          }
 
          // handle only matching closing braces, skip other chunks
-         if (tmp->level != br_open->level || tmp->type != CT_BRACE_CLOSE)
+         if (  tmp->level != br_open->level
+            || chunk_is_not_token(tmp, CT_BRACE_CLOSE))
          {
             continue;
          }
@@ -1136,7 +1142,7 @@ void add_long_closebrace_comment(void)
             chunk_t *tmp_next = chunk_get_next_ncnl(tag_pc);
 
             if (  tmp_next != nullptr
-               && tmp_next->type != CT_BRACE_OPEN) // anonymous namespace -> ignore
+               && chunk_is_not_token(tmp_next, CT_BRACE_OPEN)) // anonymous namespace -> ignore
             {
                xstr.append(" ");
                append_tag_name(xstr, tmp_next);
@@ -1217,11 +1223,11 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
    chunk_t *pc = chunk_get_next_ncnl(br_close, scope_e::PREPROC);
 
    if (  pc == nullptr
-      || (  pc->type != CT_BREAK
-         && pc->type != CT_RETURN
-         && pc->type != CT_CASE
-         && pc->type != CT_GOTO
-         && pc->type != CT_BRACE_CLOSE))
+      || (  chunk_is_not_token(pc, CT_BREAK)
+         && chunk_is_not_token(pc, CT_RETURN)
+         && chunk_is_not_token(pc, CT_CASE)
+         && chunk_is_not_token(pc, CT_GOTO)
+         && chunk_is_not_token(pc, CT_BRACE_CLOSE)))
    {
       LOG_FMT(LMCB, "%s(%d):  - after '%s'\n",
               __func__, __LINE__, (pc == nullptr) ? "<null>" : get_token_name(pc->type));
@@ -1368,9 +1374,9 @@ static void mod_case_brace(void)
       }
       else if (  (options::mod_case_brace() & IARF_ADD)
               && chunk_is_token(pc, CT_CASE_COLON)
-              && next->type != CT_BRACE_OPEN
-              && next->type != CT_BRACE_CLOSE
-              && next->type != CT_CASE)
+              && chunk_is_not_token(next, CT_BRACE_OPEN)
+              && chunk_is_not_token(next, CT_BRACE_CLOSE)
+              && chunk_is_not_token(next, CT_CASE))
       {
          log_rule_B("mod_case_brace");
          pc = mod_case_brace_add(pc);
@@ -1437,7 +1443,8 @@ static void process_if_chain(chunk_t *br_start)
 
       pc = chunk_get_next_ncnl(br_close, scope_e::PREPROC);
 
-      if (pc == nullptr || pc->type != CT_ELSE)
+      if (  pc == nullptr
+         || chunk_is_not_token(pc, CT_ELSE))
       {
          break;
       }
@@ -1453,8 +1460,8 @@ static void process_if_chain(chunk_t *br_start)
       if (chunk_is_token(pc, CT_ELSEIF))
       {
          while (  pc != nullptr
-               && pc->type != CT_VBRACE_OPEN
-               && pc->type != CT_BRACE_OPEN)
+               && chunk_is_not_token(pc, CT_VBRACE_OPEN)
+               && chunk_is_not_token(pc, CT_BRACE_OPEN))
          {
             pc = chunk_get_next_ncnl(pc, scope_e::PREPROC);
          }
@@ -1465,7 +1472,8 @@ static void process_if_chain(chunk_t *br_start)
          break;
       }
 
-      if (pc->type != CT_BRACE_OPEN && pc->type != CT_VBRACE_OPEN)
+      if (  chunk_is_not_token(pc, CT_BRACE_OPEN)
+         && chunk_is_not_token(pc, CT_VBRACE_OPEN))
       {
          break;
       }
