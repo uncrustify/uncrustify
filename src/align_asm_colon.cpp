@@ -26,7 +26,7 @@ void align_asm_colon(void)
 
    while (pc != nullptr)
    {
-      if (pc->type != CT_ASM_COLON)
+      if (chunk_is_not_token(pc, CT_ASM_COLON))
       {
          pc = chunk_get_next(pc);
          continue;
@@ -37,7 +37,8 @@ void align_asm_colon(void)
       size_t level = pc ? pc->level : 0;
       did_nl = true;
 
-      while (pc && pc->level >= level)
+      while (  pc != nullptr
+            && pc->level >= level)
       {
          if (chunk_is_newline(pc))
          {

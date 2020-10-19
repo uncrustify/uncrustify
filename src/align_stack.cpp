@@ -452,18 +452,21 @@ void AlignStack::Flush()
       if (m_right_align)
       {
          // Adjust the width for signed numbers
-         size_t start_len = pc->align.start->len();
-
-         if (pc->align.start->type == CT_NEG)
+         if (pc->align.start != nullptr)
          {
-            chunk_t *next = chunk_get_next(pc->align.start);
+            size_t start_len = pc->align.start->len();
 
-            if (chunk_is_token(next, CT_NUMBER))
+            if (pc->align.start->type == CT_NEG)
             {
-               start_len += next->len();
+               chunk_t *next = chunk_get_next(pc->align.start);
+
+               if (chunk_is_token(next, CT_NUMBER))
+               {
+                  start_len += next->len();
+               }
             }
+            col_adj += start_len;
          }
-         col_adj += start_len;
       }
       pc->align.col_adj = col_adj;
 

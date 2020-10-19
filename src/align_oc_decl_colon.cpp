@@ -33,7 +33,7 @@ void align_oc_decl_colon(void)
 
    while (pc != nullptr)
    {
-      if (pc->type != CT_OC_SCOPE)
+      if (chunk_is_not_token(pc, CT_OC_SCOPE))
       {
          pc = chunk_get_next(pc);
          continue;

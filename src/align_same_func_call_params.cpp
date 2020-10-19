@@ -60,7 +60,7 @@ void align_same_func_call_params(void)
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
       }
 
-      if (pc->type != CT_FUNC_CALL)
+      if (chunk_is_not_token(pc, CT_FUNC_CALL))
       {
          if (chunk_is_newline(pc))
          {

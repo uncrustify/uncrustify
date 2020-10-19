@@ -94,9 +94,10 @@ void align_init_brace(chunk_t *start)
          LOG_FMT(LALBR, " (%zu) check %s vs %s -- ",
                  idx, get_token_name(pc->type), get_token_name(cpd.al[idx].type));
 
-         if (pc->type == cpd.al[idx].type)
+         if (chunk_is_token(pc, cpd.al[idx].type))
          {
-            if (idx == 0 && cpd.al_c99_array)
+            if (  idx == 0
+               && cpd.al_c99_array)
             {
                chunk_t *prev = chunk_get_prev(pc);
 
@@ -188,10 +189,12 @@ void align_init_brace(chunk_t *start)
          }
       }
 
-      if (chunk_is_newline(pc) || chunk_is_newline(next))
+      if (  chunk_is_newline(pc)
+         || chunk_is_newline(next))
       {
          idx = 0;
       }
       pc = chunk_get_next(pc);
-   } while (pc != nullptr && pc->level > start->level);
+   } while (  pc != nullptr
+           && pc->level > start->level);
 } // align_init_brace

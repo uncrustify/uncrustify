@@ -170,7 +170,7 @@ void align_func_params(void)
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
               get_token_name(pc->type), get_token_name(pc->parent_type));
 
-      if (  pc->type != CT_FPAREN_OPEN
+      if (  chunk_is_not_token(pc, CT_FPAREN_OPEN)
          || (  get_chunk_parent_type(pc) != CT_FUNC_PROTO
             && get_chunk_parent_type(pc) != CT_FUNC_DEF
             && get_chunk_parent_type(pc) != CT_FUNC_CLASS_PROTO

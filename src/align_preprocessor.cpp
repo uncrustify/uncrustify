@@ -47,7 +47,7 @@ void align_preprocessor(void)
       }
 
       // If we aren't on a 'define', then skip to the next non-comment
-      if (pc->type != CT_PP_DEFINE)
+      if (chunk_is_not_token(pc, CT_PP_DEFINE))
       {
          pc = chunk_get_next_nc(pc);
          continue;
