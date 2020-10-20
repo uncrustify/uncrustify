@@ -1155,7 +1155,7 @@ void add_long_closebrace_comment(void)
          }
          else if (  get_chunk_parent_type(br_open) == CT_CLASS
                  && cl_pc != nullptr
-                 && (  !language_is_set(LANG_CPP)                 // proceed if not C++
+                 && (  !language_is_set(LANG_CPP)               // proceed if not C++
                     || chunk_is_token(br_close, CT_SEMICOLON))) // else a C++ class needs to end with a semicolon
          {
             log_rule_B("mod_add_long_class_closebrace_comment");

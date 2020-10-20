@@ -3437,16 +3437,16 @@ void indent_text(void)
             LOG_FMT(LINDENT, "%s(%d): [%s/%s]\n",
                     __func__, __LINE__,
                     get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)));
-            chunk_t *prev = chunk_get_prev(pc);                  // Issue #2930
-            LOG_FMT(LINDENT, "%s(%d): prev is orig_line is %zu, text is '%s'\n",
-                    __func__, __LINE__, prev->orig_line, prev->text());
-            chunk_t *next = chunk_get_next(pc);
-            LOG_FMT(LINDENT, "%s(%d): next is orig_line is %zu, text is '%s'\n",
-                    __func__, __LINE__, next->orig_line, next->text());
+            chunk_t *prev2 = chunk_get_prev(pc);                  // Issue #2930
+            LOG_FMT(LINDENT, "%s(%d): prev2 is orig_line is %zu, text is '%s'\n",
+                    __func__, __LINE__, prev2->orig_line, prev2->text());
+            chunk_t *next2 = chunk_get_next(pc);
+            LOG_FMT(LINDENT, "%s(%d): next2 is orig_line is %zu, text is '%s'\n",
+                    __func__, __LINE__, next2->orig_line, next2->text());
 
             if (  get_chunk_parent_type(pc) == CT_FUNC_DEF
-               && chunk_is_newline(prev)
-               && chunk_is_newline(next))
+               && chunk_is_newline(prev2)
+               && chunk_is_newline(next2))
             {
                if (options::donot_indent_func_def_close_paren())
                {
