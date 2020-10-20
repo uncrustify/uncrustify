@@ -33,7 +33,7 @@ void align_oc_decl_colon(void)
 
    while (pc != nullptr)
    {
-      if (pc->type != CT_OC_SCOPE)
+      if (chunk_is_not_token(pc, CT_OC_SCOPE))
       {
          pc = chunk_get_next(pc);
          continue;
@@ -49,7 +49,8 @@ void align_oc_decl_colon(void)
       while (pc != nullptr && pc->level >= level)
       {
          // The declaration ends with an open brace or semicolon
-         if (chunk_is_token(pc, CT_BRACE_OPEN) || chunk_is_semicolon(pc))
+         if (  chunk_is_token(pc, CT_BRACE_OPEN)
+            || chunk_is_semicolon(pc))
          {
             break;
          }
@@ -60,7 +61,8 @@ void align_oc_decl_colon(void)
             cas.NewLines(pc->nl_count);
             did_line = false;
          }
-         else if (!did_line && chunk_is_token(pc, CT_OC_COLON))
+         else if (  !did_line
+                 && chunk_is_token(pc, CT_OC_COLON))
          {
             cas.Add(pc);
 
@@ -68,9 +70,7 @@ void align_oc_decl_colon(void)
             chunk_t *tmp2 = chunk_get_prev_ncnl(tmp, scope_e::PREPROC);
 
             // Check for an un-labeled parameter
-            if (  tmp != nullptr
-               && tmp2 != nullptr
-               && (  chunk_is_token(tmp, CT_WORD)
+            if (  (  chunk_is_token(tmp, CT_WORD)
                   || chunk_is_token(tmp, CT_TYPE)
                   || chunk_is_token(tmp, CT_OC_MSG_DECL)
                   || chunk_is_token(tmp, CT_OC_MSG_SPEC))

@@ -229,7 +229,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
          LOG_FMT(LAVDB, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
 
-         if (!chunk_is_token(pc, CT_IGNORED))
+         if (chunk_is_not_token(pc, CT_IGNORED))
          {
             LOG_FMT(LAVDB, "   ");
             log_pcf_flags(LAVDB, pc->flags);
@@ -245,10 +245,10 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
 
       // If this is a variable def, update the max_col
       if (  !pc->flags.test(PCF_IN_CLASS_BASE)
-         && pc->type != CT_FUNC_CLASS_DEF
-         && pc->type != CT_FUNC_CLASS_PROTO
+         && chunk_is_not_token(pc, CT_FUNC_CLASS_DEF)
+         && chunk_is_not_token(pc, CT_FUNC_CLASS_PROTO)
          && ((pc->flags & align_mask) == PCF_VAR_1ST)
-         && pc->type != CT_FUNC_DEF                                   // Issue 1452
+         && chunk_is_not_token(pc, CT_FUNC_DEF)                                   // Issue 1452
          && ((pc->level == (start->level + 1)) || pc->level == 0)
          && pc->prev != nullptr
          && pc->prev->type != CT_MEMBER)
@@ -305,7 +305,8 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
                      break;
                   }
 
-                  if (chunk_is_token(next, CT_SEMICOLON) || chunk_is_newline(next))
+                  if (  chunk_is_token(next, CT_SEMICOLON)
+                     || chunk_is_newline(next))
                   {
                      break;
                   }
