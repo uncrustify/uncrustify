@@ -35,7 +35,8 @@ void align_init_brace(chunk_t *start)
    chunk_t *pcSingle = scan_ib_line(pc, true);
 
    if (  pcSingle == nullptr
-      || (chunk_is_token(pcSingle, CT_BRACE_CLOSE) && get_chunk_parent_type(pcSingle) == CT_ASSIGN))
+      || (  chunk_is_token(pcSingle, CT_BRACE_CLOSE)
+         && get_chunk_parent_type(pcSingle) == CT_ASSIGN))
    {
       // single line - nothing to do
       LOG_FMT(LALBR, "%s(%d): single line - nothing to do\n", __func__, __LINE__);
@@ -126,7 +127,7 @@ void align_init_brace(chunk_t *start)
             {
                next = chunk_get_next(pc);
 
-               if (next != nullptr && !chunk_is_newline(next))
+               if (!chunk_is_newline(next))
                {
                   //LOG_FMT(LSYS, "-= %zu =- indent [%s] col=%d len=%d\n",
                   //        next->orig_line,
@@ -169,8 +170,7 @@ void align_init_brace(chunk_t *start)
                {
                   next = chunk_get_next(pc);
 
-                  if (  next != nullptr
-                     && !chunk_is_newline(next)
+                  if (  !chunk_is_newline(next)
                      && (  chunk_is_token(next, CT_NUMBER_FP)
                         || chunk_is_token(next, CT_NUMBER)
                         || chunk_is_token(next, CT_POS)

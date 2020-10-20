@@ -229,7 +229,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
          LOG_FMT(LAVDB, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
 
-         if (!chunk_is_token(pc, CT_IGNORED))
+         if (chunk_is_not_token(pc, CT_IGNORED))
          {
             LOG_FMT(LAVDB, "   ");
             log_pcf_flags(LAVDB, pc->flags);
@@ -305,7 +305,8 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
                      break;
                   }
 
-                  if (chunk_is_token(next, CT_SEMICOLON) || chunk_is_newline(next))
+                  if (  chunk_is_token(next, CT_SEMICOLON)
+                     || chunk_is_newline(next))
                   {
                      break;
                   }

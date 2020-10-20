@@ -99,7 +99,7 @@ void align_same_func_call_params(void)
       {
          chunk_t *tprev = chunk_get_prev(prev);
 
-         if (!chunk_is_token(tprev, CT_TYPE))
+         if (chunk_is_not_token(tprev, CT_TYPE))
          {
             prev = tprev;
             break;

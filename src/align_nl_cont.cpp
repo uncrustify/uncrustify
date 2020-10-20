@@ -26,8 +26,7 @@ chunk_t *align_nl_cont(chunk_t *start)
    size_t     max_col = 0;
    chunk_t    *pc     = start;
 
-   while (  pc != nullptr
-         && chunk_is_not_token(pc, CT_NEWLINE)
+   while (  chunk_is_not_token(pc, CT_NEWLINE)
          && chunk_is_not_token(pc, CT_COMMENT_MULTI))
    {
       if (chunk_is_token(pc, CT_NL_CONT))
