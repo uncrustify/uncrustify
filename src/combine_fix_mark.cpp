@@ -81,11 +81,15 @@ void fix_casts(chunk_t *start)
       LOG_FMT(LCASTS, "%s(%d): pc->text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
               __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, get_token_name(pc->type));
 
-      if (chunk_is_token(pc, CT_WORD) || (chunk_is_token(last, CT_ANGLE_CLOSE) && chunk_is_token(pc, CT_DC_MEMBER)))
+      if (  chunk_is_token(pc, CT_WORD)
+         || (  chunk_is_token(last, CT_ANGLE_CLOSE)
+            && chunk_is_token(pc, CT_DC_MEMBER)))
       {
          word_count++;
       }
-      else if (chunk_is_token(pc, CT_DC_MEMBER) || chunk_is_token(pc, CT_MEMBER) || chunk_is_token(pc, CT_PP))
+      else if (  chunk_is_token(pc, CT_DC_MEMBER)
+              || chunk_is_token(pc, CT_MEMBER)
+              || chunk_is_token(pc, CT_PP))
       {
          // might be negativ, such as with:
          // a = val + (CFoo::bar_t)7;
@@ -118,7 +122,8 @@ void fix_casts(chunk_t *start)
       || chunk_is_token(last, CT_CARET)
       || chunk_is_token(last, CT_PTR_TYPE)
       || chunk_is_token(last, CT_TYPE)
-      || (chunk_is_token(last, CT_ANGLE_CLOSE) && language_is_set(LANG_OC | LANG_JAVA)))
+      || (  chunk_is_token(last, CT_ANGLE_CLOSE)
+         && language_is_set(LANG_OC | LANG_JAVA)))
    {
       verb = "for sure";
    }
@@ -199,7 +204,8 @@ void fix_casts(chunk_t *start)
       else if (chunk_is_token(pc, CT_MINUS))
       {
          // (UINT8)-1 or (foo)-1 or (FOO)-'a'
-         if (chunk_is_token(after, CT_STRING) || doubtful_cast)
+         if (  chunk_is_token(after, CT_STRING)
+            || doubtful_cast)
          {
             nope = true;
          }
@@ -320,7 +326,9 @@ void fix_enum_struct_union(chunk_t *pc)
    }
 
    // the next item is either a type, an attribute (TODO), an identifier, a colon or open brace
-   if (chunk_is_token(next, CT_TYPE) || chunk_is_token(next, CT_WORD) || chunk_is_token(next, CT_COLON))
+   if (  chunk_is_token(next, CT_TYPE)
+      || chunk_is_token(next, CT_WORD)
+      || chunk_is_token(next, CT_COLON))
    {
       // i.e. "enum xyz : unsigned int { ... };"
       // i.e. "enum class xyz : unsigned int { ... };"
@@ -328,7 +336,7 @@ void fix_enum_struct_union(chunk_t *pc)
       // xyz is a type
 
       // save the type if it exists
-      if (!chunk_is_token(next, CT_COLON))
+      if (chunk_is_not_token(next, CT_COLON))
       {
          set_chunk_parent(next, pc->type);
          prev = next;
@@ -341,10 +349,12 @@ void fix_enum_struct_union(chunk_t *pc)
       }
       set_chunk_parent(next, pc->type);
       auto const is_struct_or_class =
-         (chunk_is_token(pc, CT_STRUCT) || chunk_is_token(pc, CT_CLASS));
+         (  chunk_is_token(pc, CT_STRUCT)
+         || chunk_is_token(pc, CT_CLASS));
 
       // next up is either a colon, open brace, or open parenthesis (pawn)
-      if (language_is_set(LANG_PAWN) && chunk_is_token(next, CT_PAREN_OPEN))
+      if (  language_is_set(LANG_PAWN)
+         && chunk_is_token(next, CT_PAREN_OPEN))
       {
          next = set_paren_parent(next, CT_ENUM);
       }
@@ -373,7 +383,8 @@ void fix_enum_struct_union(chunk_t *pc)
             next = skip_parent_types(next);
          }
       }
-      else if (is_struct_or_class && chunk_is_token(next, CT_PAREN_OPEN))
+      else if (  is_struct_or_class
+              && chunk_is_token(next, CT_PAREN_OPEN))
       {
          // Fix #1267 structure attributes
          // struct __attribute__(align(x)) struct_name;
@@ -437,7 +448,8 @@ void fix_enum_struct_union(chunk_t *pc)
       set_chunk_parent(prev, CT_NONE);
    }
 
-   if (next == nullptr || chunk_is_token(next, CT_PAREN_CLOSE))
+   if (  next == nullptr
+      || chunk_is_token(next, CT_PAREN_CLOSE))
    {
       return;
    }
@@ -477,13 +489,15 @@ void fix_enum_struct_union(chunk_t *pc)
          }
 
          if (  chunk_is_token(next, CT_STAR)
-            || (language_is_set(LANG_CPP) && chunk_is_token(next, CT_CARET)))
+            || (  language_is_set(LANG_CPP)
+               && chunk_is_token(next, CT_CARET)))
          {
             set_chunk_type(next, CT_PTR_TYPE);
          }
 
          // If we hit a comma in a function param, we are done
-         if (  (chunk_is_token(next, CT_COMMA) || chunk_is_token(next, CT_FPAREN_CLOSE))
+         if (  (  chunk_is_token(next, CT_COMMA)
+               || chunk_is_token(next, CT_FPAREN_CLOSE))
             && (next->flags.test_any(PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)))
          {
             return;
@@ -492,8 +506,7 @@ void fix_enum_struct_union(chunk_t *pc)
       next = chunk_get_next_ncnl(next);
    }
 
-   if (  next != nullptr
-      && chunk_is_token(next, CT_SEMICOLON))
+   if (chunk_is_token(next, CT_SEMICOLON))
    {
       set_chunk_parent(next, pc->type);
    }
@@ -551,7 +564,8 @@ void fix_fcn_def_params(chunk_t *start)
          cs.Push_Back(pc);
       }
       else if (  chunk_is_token(pc, CT_AMP)
-              || (language_is_set(LANG_CPP) && chunk_is_str(pc, "&&", 2)))
+              || (  language_is_set(LANG_CPP)
+                 && chunk_is_str(pc, "&&", 2)))
       {
          set_chunk_type(pc, CT_BYREF);
          cs.Push_Back(pc);
@@ -560,11 +574,13 @@ void fix_fcn_def_params(chunk_t *start)
       {
          cs.Push_Back(pc);
       }
-      else if (chunk_is_token(pc, CT_WORD) || chunk_is_token(pc, CT_TYPE))
+      else if (  chunk_is_token(pc, CT_WORD)
+              || chunk_is_token(pc, CT_TYPE))
       {
          cs.Push_Back(pc);
       }
-      else if (chunk_is_token(pc, CT_COMMA) || chunk_is_token(pc, CT_ASSIGN))
+      else if (  chunk_is_token(pc, CT_COMMA)
+              || chunk_is_token(pc, CT_ASSIGN))
       {
          mark_variable_stack(cs, LFCNP);
 
@@ -595,7 +611,8 @@ void fix_type_cast(chunk_t *start)
    while (  ((pc = chunk_get_next_ncnl(pc)) != nullptr)
          && pc->level >= start->level)
    {
-      if (pc->level == start->level && chunk_is_token(pc, CT_ANGLE_CLOSE))
+      if (  pc->level == start->level
+         && chunk_is_token(pc, CT_ANGLE_CLOSE))
       {
          pc = chunk_get_next_ncnl(pc);
 
@@ -652,7 +669,8 @@ void fix_typedef(chunk_t *start)
             break;
          }
 
-         if (language_is_set(LANG_D) && chunk_is_token(next, CT_ASSIGN))
+         if (  language_is_set(LANG_D)
+            && chunk_is_token(next, CT_ASSIGN))
          {
             set_chunk_parent(next, CT_TYPEDEF);
             break;
@@ -1068,7 +1086,8 @@ void mark_class_ctor(chunk_t *start)
            __func__, __LINE__, pclass->text(), pclass->orig_line, pc->text());
 
    // detect D template class: "class foo(x) { ... }"
-   if (language_is_set(LANG_D) && chunk_is_token(next, CT_PAREN_OPEN))              // Coverity CID 76004
+   if (  language_is_set(LANG_D)
+      && chunk_is_token(next, CT_PAREN_OPEN))              // Coverity CID 76004
    {
       set_chunk_parent(next, CT_TEMPLATE);
 
@@ -1133,7 +1152,8 @@ void mark_class_ctor(chunk_t *start)
          continue;
       }
 
-      if (chunk_is_token(pc, CT_BRACE_CLOSE) && pc->brace_level < level)
+      if (  chunk_is_token(pc, CT_BRACE_CLOSE)
+         && pc->brace_level < level)
       {
          LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, Hit brace close\n",
                  __func__, __LINE__, pc->orig_line);
@@ -1158,8 +1178,7 @@ void mark_class_ctor(chunk_t *start)
                  __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col, get_token_name(prev->type));
 
          // Issue #1003, next->type should not be CT_FPAREN_OPEN
-         if (  prev != nullptr
-            && chunk_is_not_token(prev, CT_NEW))
+         if (chunk_is_not_token(prev, CT_NEW))
          {
             bool is_func_class_def = false;
 
@@ -1209,7 +1228,8 @@ void mark_cpp_constructor(chunk_t *pc)
 
    tmp = chunk_get_prev_ncnlni(pc);   // Issue #2279
 
-   if (chunk_is_token(tmp, CT_INV) || chunk_is_token(tmp, CT_DESTRUCTOR))
+   if (  chunk_is_token(tmp, CT_INV)
+      || chunk_is_token(tmp, CT_DESTRUCTOR))
    {
       set_chunk_type(tmp, CT_DESTRUCTOR);
       set_chunk_parent(pc, CT_DESTRUCTOR);
@@ -1262,7 +1282,8 @@ void mark_cpp_constructor(chunk_t *pc)
       {
          var = skip_template_prev(chunk_get_prev_ncnlni(tmp));   // Issue #2279
 
-         if (chunk_is_token(var, CT_TYPE) || chunk_is_token(var, CT_WORD))
+         if (  chunk_is_token(var, CT_TYPE)
+            || chunk_is_token(var, CT_WORD))
          {
             set_chunk_type(var, CT_FUNC_CTOR_VAR);
             flag_parens(tmp, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CTOR_VAR, false);
@@ -1323,7 +1344,8 @@ void mark_define_expressions(void)
       }
       else
       {
-         if (!pc->flags.test(PCF_IN_PREPROC) || chunk_is_token(pc, CT_PREPROC))
+         if (  !pc->flags.test(PCF_IN_PREPROC)
+            || chunk_is_token(pc, CT_PREPROC))
          {
             in_define = false;
          }
@@ -1419,7 +1441,8 @@ void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t parent_
          {
             pc = skip_template_prev(pc);
 
-            if (pc == nullptr || chunk_is_token(pc, CT_TEMPLATE))
+            if (  pc == nullptr
+               || chunk_is_token(pc, CT_TEMPLATE))
             {
                //either expression is not complete or this is smth like 'template<T> void func()'
                //  - we are not interested in 'template<T>' part
@@ -1451,7 +1474,8 @@ void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t parent_
       // Changing words to types into tuple return types in CS.
       bool is_return_tuple = false;
 
-      if (chunk_is_token(pc, CT_PAREN_CLOSE) && !pc->flags.test(PCF_IN_PREPROC))
+      if (  chunk_is_token(pc, CT_PAREN_CLOSE)
+         && !pc->flags.test(PCF_IN_PREPROC))
       {
          first           = chunk_skip_to_match_rev(pc);
          is_return_tuple = true;
@@ -1718,7 +1742,8 @@ void mark_function(chunk_t *pc)
       {
          tmp2 = chunk_get_next_ncnl(tmp1);
 
-         if (!chunk_is_word(tmp1) || !chunk_is_token(tmp2, CT_DC_MEMBER))
+         if (  !chunk_is_word(tmp1)
+            || chunk_is_not_token(tmp2, CT_DC_MEMBER))
          {
             break;
          }
@@ -1849,7 +1874,8 @@ void mark_function(chunk_t *pc)
                  __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col,
                  get_token_name(prev->type));
 
-         if (chunk_is_token(prev, CT_WORD) || chunk_is_token(prev, CT_TYPE))
+         if (  chunk_is_token(prev, CT_WORD)
+            || chunk_is_token(prev, CT_TYPE))
          {
             if (pc->str.equals(prev->str))
             {
@@ -2067,7 +2093,8 @@ void mark_function(chunk_t *pc)
                || chunk_is_token(prev, CT_SHIFT)
                || chunk_is_token(prev, CT_ASSIGN)
                || chunk_is_token(prev, CT_COMMA)
-               || (chunk_is_token(prev, CT_STRING) && get_chunk_parent_type(prev) != CT_EXTERN)  // fixes issue 1259
+               || (  chunk_is_token(prev, CT_STRING)
+                  && get_chunk_parent_type(prev) != CT_EXTERN)  // fixes issue 1259
                || chunk_is_token(prev, CT_STRING_MULTI)
                || chunk_is_token(prev, CT_NUMBER)
                || chunk_is_token(prev, CT_NUMBER_FP)
@@ -2145,7 +2172,8 @@ void mark_function(chunk_t *pc)
          while (  tmp != nullptr                     // Issue #2315
                && tmp != prev)
          {
-            if (chunk_is_token(tmp, CT_COMMA) && tmp->level == prev->level + 1)
+            if (  chunk_is_token(tmp, CT_COMMA)
+               && tmp->level == prev->level + 1)
             {
                LOG_FMT(LFCN, "%s(%d): -- overriding call due to tuple return type -- prev is '%s', type is %s\n",
                        __func__, __LINE__, prev->text(), get_token_name(prev->type));
@@ -2504,7 +2532,8 @@ bool mark_function_type(chunk_t *pc)
    {
       pt = CT_FUNC_DEF;
    }
-   else if (chunk_is_token(aft, CT_SEMICOLON) || chunk_is_token(aft, CT_ASSIGN))
+   else if (  chunk_is_token(aft, CT_SEMICOLON)
+           || chunk_is_token(aft, CT_ASSIGN))
    {
       pt = CT_FUNC_PROTO;
    }
@@ -2702,7 +2731,8 @@ void mark_struct_union_body(chunk_t *start)
 
    while (  pc != nullptr
          && pc->level >= start->level
-         && !(pc->level == start->level && chunk_is_token(pc, CT_BRACE_CLOSE)))
+         && !(  pc->level == start->level
+             && chunk_is_token(pc, CT_BRACE_CLOSE)))
    {
       if (  chunk_is_token(pc, CT_BRACE_OPEN)
          || chunk_is_token(pc, CT_BRACE_CLOSE)
@@ -2881,7 +2911,8 @@ void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
 
       while ((word_type = cs.Pop_Back()) != nullptr)
       {
-         if (chunk_is_token(word_type, CT_WORD) || chunk_is_token(word_type, CT_TYPE))
+         if (  chunk_is_token(word_type, CT_WORD)
+            || chunk_is_token(word_type, CT_TYPE))
          {
             LOG_FMT(LFCNP, "%s(%d): parameter on orig_line %zu, orig_col %zu: <%s> as TYPE\n",
                     __func__, __LINE__, var_name->orig_line, var_name->orig_col, word_type->text());
