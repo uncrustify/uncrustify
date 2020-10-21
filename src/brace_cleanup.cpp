@@ -272,7 +272,8 @@ static bool maybe_while_of_do(chunk_t *pc)
       prev = chunk_get_prev_ncnl(prev);
    }
 
-   if (  (chunk_is_token(prev, CT_VBRACE_CLOSE) || chunk_is_token(prev, CT_BRACE_CLOSE))
+   if (  (  chunk_is_token(prev, CT_VBRACE_CLOSE)
+         || chunk_is_token(prev, CT_BRACE_CLOSE))
       && get_chunk_parent_type(prev) == CT_DO)
    {
       return(true);
@@ -353,8 +354,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
 
    if (  (frm.stmt_count == 0 || frm.expr_count == 0)
       && !chunk_is_semicolon(pc)
-      && pc->type != CT_BRACE_CLOSE
-      && pc->type != CT_VBRACE_CLOSE
+      && chunk_is_not_token(pc, CT_BRACE_CLOSE)
+      && chunk_is_not_token(pc, CT_VBRACE_CLOSE)
       && !chunk_is_str(pc, ")", 1)
       && !chunk_is_str(pc, "]", 1))
    {
@@ -449,7 +450,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
       }
 
       // Make sure the open / close match
-      if (pc->type != (frm.top().type + 1))
+      if (chunk_is_not_token(pc, (c_token_t)(frm.top().type + 1)))
       {
          LOG_FMT(LWARN, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -533,9 +534,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
          {
             chunk_t *tmp = chunk_get_next_ncnl(pc);
 
-            if (  tmp != nullptr
-               && tmp->type != CT_SEMICOLON
-               && tmp->type != CT_VSEMICOLON)
+            if (  chunk_is_not_token(tmp, CT_SEMICOLON)
+               && chunk_is_not_token(tmp, CT_VSEMICOLON))
             {
                pawn_add_vsemi_after(pc);
             }
@@ -544,7 +544,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
       else
       {
          // Complain if this ISN'T a semicolon, but close out WHILE_OF_DO anyway
-         if (chunk_is_token(pc, CT_SEMICOLON) || chunk_is_token(pc, CT_VSEMICOLON))
+         if (  chunk_is_token(pc, CT_SEMICOLON)
+            || chunk_is_token(pc, CT_VSEMICOLON))
          {
             braceState.consumed = true;
             set_chunk_parent(pc, CT_WHILE_OF_DO);
@@ -600,7 +601,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
                parent = CT_FUNCTION;
             }
             // NS_ENUM and NS_OPTIONS are followed by a (type, name) pair
-            else if (chunk_is_token(prev, CT_ENUM) && language_is_set(LANG_OC))
+            else if (  chunk_is_token(prev, CT_ENUM)
+                    && language_is_set(LANG_OC))
             {
                // Treat both as CT_ENUM since the syntax is identical
                set_chunk_type(pc, CT_FPAREN_OPEN);
@@ -619,11 +621,13 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
             {
                parent = frm.top().type;
             }
-            else if (chunk_is_token(prev, CT_ASSIGN) && (prev->str[0] == '='))
+            else if (  chunk_is_token(prev, CT_ASSIGN)
+                    && (prev->str[0] == '='))
             {
                parent = CT_ASSIGN;
             }
-            else if (chunk_is_token(prev, CT_RETURN) && language_is_set(LANG_CPP))
+            else if (  chunk_is_token(prev, CT_RETURN)
+                    && language_is_set(LANG_CPP))
             {
                parent = CT_RETURN;
             }
@@ -768,7 +772,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
    {
       brace_stage_e bs = brace_stage_e::PAREN1;
 
-      if (chunk_is_token(pc, CT_WHILE) && maybe_while_of_do(pc))
+      if (  chunk_is_token(pc, CT_WHILE)
+         && maybe_while_of_do(pc))
       {
          set_chunk_type(pc, CT_WHILE_OF_DO);
          bs = brace_stage_e::WOD_PAREN;
@@ -794,10 +799,12 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
     *  - after '(' that has a parent type of CT_FOR
     */
    if (  chunk_is_token(pc, CT_SQUARE_OPEN)
-      || (chunk_is_token(pc, CT_BRACE_OPEN) && get_chunk_parent_type(pc) != CT_ASSIGN)
+      || (  chunk_is_token(pc, CT_BRACE_OPEN)
+         && get_chunk_parent_type(pc) != CT_ASSIGN)
       || chunk_is_token(pc, CT_BRACE_CLOSE)
       || chunk_is_token(pc, CT_VBRACE_CLOSE)
-      || (chunk_is_token(pc, CT_SPAREN_OPEN) && get_chunk_parent_type(pc) == CT_FOR)
+      || (  chunk_is_token(pc, CT_SPAREN_OPEN)
+         && get_chunk_parent_type(pc) == CT_FOR)
       || chunk_is_token(pc, CT_COLON)
       || chunk_is_token(pc, CT_OC_END)
       || (  chunk_is_semicolon(pc)
@@ -823,7 +830,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
       || chunk_is_token(pc, CT_CASE)
       || chunk_is_token(pc, CT_COMPARE)
       || (  chunk_is_token(pc, CT_STAR)
-         && tmp != nullptr && tmp->type != CT_STAR)
+         && chunk_is_not_token(tmp, CT_STAR))
       || chunk_is_token(pc, CT_BOOL)
       || chunk_is_token(pc, CT_MINUS)
       || chunk_is_token(pc, CT_PLUS)
@@ -881,7 +888,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc, const BraceSt
    // Turn an optional parenthesis into either a real parenthesis or a brace
    if (frm.top().stage == brace_stage_e::OP_PAREN1)
    {
-      frm.top().stage = (pc->type != CT_PAREN_OPEN)
+      frm.top().stage = (chunk_is_not_token(pc, CT_PAREN_OPEN))
                         ? brace_stage_e::BRACE2
                         : brace_stage_e::PAREN1;
    }
@@ -932,7 +939,8 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc, const BraceSt
    // Check for CT_CATCH or CT_FINALLY after CT_TRY or CT_CATCH
    while (frm.top().stage == brace_stage_e::CATCH)
    {
-      if (chunk_is_token(pc, CT_CATCH) || chunk_is_token(pc, CT_FINALLY))
+      if (  chunk_is_token(pc, CT_CATCH)
+         || chunk_is_token(pc, CT_FINALLY))
       {
          // Replace CT_TRY with CT_CATCH or CT_FINALLY on the stack & we are done
          frm.top().type = pc->type;
@@ -1016,7 +1024,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc, const BraceSt
 
    // Insert a CT_VBRACE_OPEN, if needed
    // but not in a preprocessor
-   if (  pc->type != CT_BRACE_OPEN
+   if (  chunk_is_not_token(pc, CT_BRACE_OPEN)
       && !pc->flags.test(PCF_IN_PREPROC)
       && (  (frm.top().stage == brace_stage_e::BRACE2)
          || (frm.top().stage == brace_stage_e::BRACE_DO)))
@@ -1074,7 +1082,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc, const BraceSt
    }
 
    // Verify open parenthesis in complex statement
-   if (  pc->type != CT_PAREN_OPEN
+   if (  chunk_is_not_token(pc, CT_PAREN_OPEN)
       && (  (frm.top().stage == brace_stage_e::PAREN1)
          || (frm.top().stage == brace_stage_e::WOD_PAREN)))
    {
@@ -1099,7 +1107,8 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc, const BraceState 
 
    if (frm.top().stage == brace_stage_e::PAREN1)
    {
-      if (pc->next != nullptr && pc->next->type == CT_WHEN)
+      if (  pc->next != nullptr
+         && pc->next->type == CT_WHEN)
       {
          frm.top().type  = pc->type;
          frm.top().stage = brace_stage_e::CATCH_WHEN;
@@ -1120,7 +1129,8 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc, const BraceState 
          // If the next chunk isn't CT_ELSE, close the statement
          chunk_t *next = chunk_get_next_ncnl(pc);
 
-         if (next == nullptr || next->type != CT_ELSE)
+         if (  next == nullptr
+            || chunk_is_not_token(next, CT_ELSE))
          {
             LOG_FMT(LBCSPOP, "%s(%d): no CT_ELSE, pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -1138,9 +1148,8 @@ static bool handle_complex_close(ParseFrame &frm, chunk_t *pc, const BraceState 
          // If the next chunk isn't CT_CATCH or CT_FINALLY, close the statement
          chunk_t *next = chunk_get_next_ncnl(pc);
 
-         if (  next != nullptr
-            && next->type != CT_CATCH
-            && next->type != CT_FINALLY)
+         if (  chunk_is_not_token(next, CT_CATCH)
+            && chunk_is_not_token(next, CT_FINALLY))
          {
             LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -1217,7 +1226,7 @@ static void mark_namespace(chunk_t *pns)
    {
       set_chunk_parent(pc, CT_NAMESPACE);
 
-      if (pc->type != CT_BRACE_OPEN)
+      if (chunk_is_not_token(pc, CT_BRACE_OPEN))
       {
          if (chunk_is_token(pc, CT_SEMICOLON))
          {
