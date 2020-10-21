@@ -501,6 +501,74 @@ void output_parsed(FILE *pfile)
 } // output_parsed
 
 
+void output_parsed_csv(FILE *pfile)
+{
+   const char *eol_marker = get_eol_marker();
+
+   fprintf(pfile, "number of loops,%d,\n", cpd.changes);
+   fprintf(pfile, "language,%s,\n", language_name_from_flags(cpd.lang_flags));
+   fprintf(pfile, "Line,Tag,Parent_type,Type of the parent,Column,Orig Col Strt,"
+           "Orig Col End,Orig Sp Before,Br,Lvl,pp,Flags,Nl Before,Nl After,Text,");
+
+   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   {
+      fprintf(pfile, "%s%zu,%s,%s,%s,%zu,%zu,%zu,%d,%zu,%zu,%zu,",
+              eol_marker, pc->orig_line, get_token_name(pc->type),
+              get_token_name(get_chunk_parent_type(pc)), get_token_name(get_type_of_the_parent(pc)),
+              pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
+              pc->brace_level, pc->level, pc->pp_level);
+
+      auto pcf_flag_str = pcf_flags_str(pcf_flag_e(pc->flags));
+#ifdef WIN32
+      auto pcf_flag_str_start = pcf_flag_str.find("[") + 1;
+#else // not WIN32
+      auto pcf_flag_str_start = pcf_flag_str.find(":") + 1;
+#endif // ifdef WIN32
+      auto pcf_flag_str_end = pcf_flag_str.find("]");
+      auto pcf_names        = pcf_flag_str.substr(pcf_flag_str_start,
+                                                  pcf_flag_str_end - pcf_flag_str_start);
+      fprintf(pfile, "\"%s\",", pcf_names.c_str());
+      fprintf(pfile, "%zu,%d,",
+              pc->nl_count, pc->after_tab);
+
+      if (pc->type != CT_NEWLINE && (pc->len() != 0))
+      {
+         fprintf(pfile, "\"");
+
+         for (size_t cnt = 0; cnt < pc->column; cnt++)
+         {
+            fprintf(pfile, " ");
+         }
+
+         if (pc->type != CT_NL_CONT)
+         {
+            for (auto *ch = pc->text(); *ch != '\0'; ++ch)
+            {
+               if (  *ch > 0
+                  || !chunk_is_token(pc, CT_COMMENT_MULTI))
+               {
+                  fprintf(pfile, "%c", *ch);
+               }
+
+               if (*ch == '"')
+               {
+                  // need to escape the double-quote for csv-format
+                  fprintf(pfile, "\"");
+               }
+            }
+         }
+         else
+         {
+            fprintf(pfile, "\\");
+         }
+         fprintf(pfile, "\"");
+      }
+   }
+
+   fflush(pfile);
+} // output_parsed_csv
+
+
 void output_text(FILE *pfile)
 {
    cpd.fout        = pfile;

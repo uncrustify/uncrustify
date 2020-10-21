@@ -18,6 +18,10 @@
 void output_parsed(FILE *pfile);
 
 
+//! This renders the chunk list to a file formatted as csv.
+void output_parsed_csv(FILE *pfile);
+
+
 //! This renders the chunk list to a file.
 void output_text(FILE *pfile);
 

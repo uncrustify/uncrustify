@@ -654,6 +654,21 @@ def main(args):
         return_flag = False
 
     #
+    # Test -p and --debug-csv-format option
+    #
+    if os_name != 'nt' and not check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            args_arr=['-c', '-',
+                      '-f', s_path_join(script_dir, 'input/class_enum_struct_union.cpp'),
+                      '-p', s_path_join(script_dir, 'results/class_enum_struct_union.csv'),
+                      '--debug-csv-format'],
+            gen_expected_path=s_path_join(script_dir, 'output/class_enum_struct_union.csv'),
+            gen_result_path=s_path_join(script_dir, 'results/class_enum_struct_union.csv'),
+            ):
+        return_flag = False
+
+    #
     # Test --replace
     #
     copyfile("input/backup.h-save", "input/backup.h")
