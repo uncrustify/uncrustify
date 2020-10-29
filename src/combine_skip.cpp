@@ -53,8 +53,8 @@ chunk_t *skip_to_next_statement(chunk_t *pc)
 {
    while (  pc != nullptr
          && !chunk_is_semicolon(pc)
-         && pc->type != CT_BRACE_OPEN
-         && pc->type != CT_BRACE_CLOSE)
+         && chunk_is_not_token(pc, CT_BRACE_OPEN)
+         && chunk_is_not_token(pc, CT_BRACE_CLOSE))
    {
       pc = chunk_get_next_ncnl(pc);
    }
