@@ -300,11 +300,13 @@ void usage(const char *argv0)
            " --set <option>=<value>   : Sets a new value to a config option.\n"
            "\n"
            "Debug Options:\n"
-           " -p FILE      : Dump debug info into FILE, or to stdout if FILE is set to '-'.\n"
-           "                Must be used in combination with '-f FILE'\n"
-           " -L SEV       : Set the log severity (see log_levels.h; note 'A' = 'all')\n"
-           " -s           : Show the log severity in the logs.\n"
-           " --decode     : Decode remaining args (chunk flags) and exit.\n"
+           " -p FILE            : Dump debug info into FILE, or to stdout if FILE is set to '-'.\n"
+           "                      Must be used in combination with '-f FILE'.\n"
+           " --debug-csv-format : Dump debug info to file in csv-delimited format.\n"
+           "                      Must be used in combination with '-p FILE', where FILE is not set to '-'\n"
+           " -L SEV             : Set the log severity (see log_levels.h; note 'A' = 'all')\n"
+           " -s                 : Show the log severity in the logs.\n"
+           " --decode           : Decode remaining args (chunk flags) and exit.\n"
            "\n"
            "Usage Examples\n"
            "cat foo.d | uncrustify -q -c my.cfg -l d\n"
@@ -613,17 +615,41 @@ int main(int argc, char *argv[])
    {
       // not using a file list, source_list is nullptr
    }
-   const char *prefix = arg.Param("--prefix");
-   const char *suffix = arg.Param("--suffix");
-   const char *assume = arg.Param("--assume");
+   const char  *prefix = arg.Param("--prefix");
+   const char  *suffix = arg.Param("--suffix");
+   const char  *assume = arg.Param("--assume");
 
-   bool       no_backup        = arg.Present("--no-backup");
-   bool       replace          = arg.Present("--replace");
-   bool       keep_mtime       = arg.Present("--mtime");
-   bool       update_config    = arg.Present("--update-config");
-   bool       update_config_wd = arg.Present("--update-config-with-doc");
-   bool       detect           = arg.Present("--detect");
+   bool        no_backup        = arg.Present("--no-backup");
+   bool        replace          = arg.Present("--replace");
+   bool        keep_mtime       = arg.Present("--mtime");
+   bool        update_config    = arg.Present("--update-config");
+   bool        update_config_wd = arg.Present("--update-config-with-doc");
+   bool        detect           = arg.Present("--detect");
+   bool        pfile_csv        = arg.Present("--debug-csv-format");
 
+   std::string parsed_file_csv;
+
+   if (pfile_csv)
+   {
+      if (  parsed_file == nullptr
+         || (  parsed_file[0] == '-'
+            && !parsed_file[1]))
+      {
+         fprintf(stderr,
+                 "FAIL: --debug-csv-format option must be used in combination with '-p FILE', where FILE\n"
+                 "      is not set to '-'\n");
+         log_flush(true);
+         exit(EX_CONFIG);
+      }
+      else if (!ends_with(parsed_file, ".csv", false))
+      {
+         parsed_file_csv = parsed_file;
+
+         // user-specified parsed filename does not end in a ".csv" extension, so add it
+         parsed_file_csv += ".csv";
+         parsed_file      = parsed_file_csv.c_str();
+      }
+   }
    // Grab the output override
    const char *output_file = arg.Param("-o");
 
@@ -788,7 +814,7 @@ int main(int argc, char *argv[])
 #ifdef WIN32
    if (options::debug_timeout() > 0)
    {
-      fprintf(stderr, "The option 'debug_timeout' is not avaiable under Windows.\n");
+      fprintf(stderr, "The option 'debug_timeout' is not available under Windows.\n");
       log_flush(true);
       exit(EX_SOFTWARE);
    }
@@ -2231,7 +2257,14 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
 
       if (p_file != nullptr)
       {
-         output_parsed(p_file);
+         if (ends_with(parsed_file, ".csv", false))
+         {
+            output_parsed_csv(p_file);
+         }
+         else
+         {
+            output_parsed(p_file);
+         }
 
          if (p_file != stdout)
          {
