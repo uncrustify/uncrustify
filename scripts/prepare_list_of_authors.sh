@@ -2,7 +2,7 @@
 #
 # Prepare the list of authors
 # guy maurel
-# 2017-11-02
+# 2020-11-05
 #
 LIST_1="TheListOfAuthors.txt"
 echo "Author:"                    > ${LIST_1}
@@ -12,6 +12,7 @@ echo "Maintenance:"              >> ${LIST_1}
 echo "Guy Maurel"                >> ${LIST_1}
 echo "Matthew Woehlke"           >> ${LIST_1}
 echo ""                          >> ${LIST_1}
+echo "until 2020-11-05:"         >> ${LIST_1}
 echo "Other collaborators:"      >> ${LIST_1}
 git log --format='%aN' \
    | sort -u \
