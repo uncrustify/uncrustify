@@ -22,7 +22,6 @@
 #include "quick_align_again.h"
 #include "space.h"
 #include "unc_ctype.h"
-#include "unc_tools.h"
 #include "uncrustify.h"
 #include "uncrustify_types.h"
 
@@ -376,7 +375,8 @@ void reindent_line(chunk_t *pc, size_t column)
          }
          LOG_FMT(LINDLINED, " to %zu (orig %zu)\n", pc->column, pc->orig_col);
       }
-   } while (pc != nullptr && pc->nl_count == 0);
+   } while (  pc != nullptr
+           && pc->nl_count == 0);
 } // reindent_line
 
 

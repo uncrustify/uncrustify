@@ -133,14 +133,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_IGNORED) || chunk_is_token(second, CT_IGNORED))
    {
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
    if (chunk_is_token(first, CT_PP_IGNORE) && chunk_is_token(second, CT_PP_IGNORE))
    {
       // Leave spacing alone between PP_IGNORE tokens as we don't want the default behavior (which is ADD).
-      log_rule("PP_IGNORE");
+      log_rule_short("PP_IGNORE");
       return(IARF_IGNORE);
    }
 
@@ -171,19 +171,19 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_SPACE) || chunk_is_token(second, CT_SPACE))
    {
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
    if (chunk_is_token(first, CT_DECLSPEC))  // Issue 1289
    {
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
    if (chunk_is_token(second, CT_NEWLINE) || chunk_is_token(second, CT_VBRACE_OPEN))
    {
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
@@ -191,25 +191,25 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && second->type != CT_NL_CONT
       && second->type != CT_SEMICOLON) // # Issue 1158
    {
-      log_rule("FORCE");
+      log_rule_short("FORCE");
       return(IARF_FORCE);
    }
 
    if (chunk_is_token(first, CT_VBRACE_CLOSE) && second->type != CT_NL_CONT)
    {
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
    if (chunk_is_token(second, CT_VSEMICOLON))
    {
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
    if (chunk_is_token(first, CT_MACRO_FUNC))
    {
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
@@ -327,7 +327,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_COLON) && get_chunk_parent_type(first) == CT_SQL_EXEC)
    {
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
@@ -354,10 +354,10 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (options::pp_space() == IARF_IGNORE)
       {
          log_rule("pp_space");
-         log_rule("IGNORE");
+         log_rule_short("IGNORE");
          return(IARF_IGNORE);
       }
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
@@ -434,15 +434,15 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       switch (second->orig_prev_sp)
       {
       case 0:
-         log_rule("orig_prev_sp-REMOVE");
+         log_rule_short("orig_prev_sp-REMOVE");
          return(IARF_REMOVE);
 
       case 1:
-         log_rule("orig_prev_sp-FORCE");
+         log_rule_short("orig_prev_sp-FORCE");
          return(IARF_FORCE);
 
       default:
-         log_rule("orig_prev_sp-ADD");
+         log_rule_short("orig_prev_sp-ADD");
          return(IARF_ADD);
       }
    }
@@ -488,7 +488,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          || chunk_is_token(second, CT_ARITH)
          || chunk_is_token(second, CT_SHIFT)))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
@@ -510,7 +510,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(options::sp_return_brace());
       }
       // everything else requires a space
-      log_rule("FORCE");
+      log_rule_short("FORCE");
       return(IARF_FORCE);
    }
 
@@ -530,7 +530,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_sizeof_ellipsis");
          return(options::sp_sizeof_ellipsis());
       }
-      log_rule("FORCE");
+      log_rule_short("FORCE");
       return(IARF_FORCE);
    }
 
@@ -543,7 +543,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_decltype_paren");
          return(options::sp_decltype_paren());
       }
-      log_rule("FORCE");
+      log_rule_short("FORCE");
       return(IARF_FORCE);
    }
 
@@ -597,7 +597,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       case CT_TYPENAME:
       case CT_UNION:
       case CT_USING:
-         log_rule("FORCE");
+         log_rule_short("FORCE");
          return(IARF_FORCE);
 
       default:
@@ -612,7 +612,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          && first->prev != nullptr
          && (first->prev->type == CT_FRIEND && first->next->type != CT_DC_MEMBER))
       {
-         log_rule("FORCE");
+         log_rule_short("FORCE");
          return(IARF_FORCE);
       }
 
@@ -651,7 +651,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       // Don't add extra space after comma immediately followed by Angle close
       if (chunk_is_token(second, CT_ANGLE_CLOSE))
       {
-         log_rule("IGNORE");
+         log_rule_short("IGNORE");
          return(IARF_IGNORE);
       }
       // Add or remove space after ',', i.e. 'a,b' vs. 'a, b'.
@@ -735,7 +735,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
       if (chunk_is_token(first, CT_TAG_COLON))
       {
-         log_rule("FORCE");
+         log_rule_short("FORCE");
          return(IARF_FORCE);
       }
    }
@@ -744,7 +744,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (CharTable::IsKw1(second->str[0]))
       {
-         log_rule("FORCE");
+         log_rule_short("FORCE");
          return(IARF_FORCE);
       }
 
@@ -766,14 +766,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(second, CT_TAG_COLON))
    {
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
    // handle '~'
    if (chunk_is_token(first, CT_DESTRUCTOR))
    {
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
@@ -1069,7 +1069,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_OC_AVAILABLE_VALUE) || chunk_is_token(second, CT_OC_AVAILABLE_VALUE))
    {
-      log_rule("IGNORE");
+      log_rule_short("IGNORE");
       return(IARF_IGNORE);
    }
 
@@ -1096,7 +1096,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
             && (first->type != CT_FPAREN_CLOSE)
             && (first->type != CT_PAREN_CLOSE)))
       {
-         log_rule("FORCE");
+         log_rule_short("FORCE");
          return(IARF_FORCE);
       }
       // (OC) Add or remove space between the receiver and selector in a message,
@@ -1127,7 +1127,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (second->flags.test(PCF_IN_SPAREN) && (chunk_is_token(first, CT_IN)))
       {
-         log_rule("FORCE");
+         log_rule_short("FORCE");
          return(IARF_FORCE);
       }
 
@@ -1344,6 +1344,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
                // (OC) Add or remove space before the '{' of a '@catch' statement, if the '{'
                // and '@catch' are on the same line, as in '@catch (decl) <here> {'.
                // If set to ignore, sp_catch_brace is used.
+               // only to help the vim command }}
                log_rule("sp_oc_catch_brace");
                return(options::sp_oc_catch_brace());
             }
@@ -1494,7 +1495,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_SPAREN_CLOSE) && chunk_is_token(second, CT_WHEN))
    {
-      log_rule("FORCE");
+      log_rule_short("FORCE");
       return(IARF_FORCE); // TODO: make this configurable?
    }
 
@@ -1510,7 +1511,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(options::sp_after_cast());
       }
       // Must be an indirect/chained function call?
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);  // TODO: make this configurable?
    }
 
@@ -1587,7 +1588,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_CLASS) && !first->flags.test(PCF_IN_OC_MSG))
    {
-      log_rule("FORCE");
+      log_rule_short("FORCE");
       return(IARF_FORCE);
    }
 
@@ -1651,7 +1652,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
          if (chunk_is_token(tmp, CT_ASSIGN))
          {
-            log_rule("IGNORE");
+            log_rule_short("IGNORE");
             return(IARF_IGNORE);
          }
          // Add or remove space inside struct/union '{' and '}'.
@@ -1669,6 +1670,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (get_chunk_parent_type(second) == CT_BRACED_INIT_LIST)
       {
          // Add or remove space between nested braces, i.e. '{{' vs '{ {'.
+         // only to help the vim command }}}}
          if (  options::sp_brace_brace() != IARF_IGNORE
             && chunk_is_token(first, CT_BRACE_CLOSE)
             && get_chunk_parent_type(first) == CT_BRACED_INIT_LIST)
@@ -1699,7 +1701,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_D_CAST))
    {
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
@@ -1733,13 +1735,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_STATE) && chunk_is_token(second, CT_PAREN_OPEN))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    if (chunk_is_token(first, CT_DELEGATE) && chunk_is_token(second, CT_PAREN_OPEN))
    {
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
@@ -1753,7 +1755,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_C99_MEMBER))
    {
       // always remove space(s) after then '.' of a C99-member
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
@@ -1769,6 +1771,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (get_chunk_parent_type(second) == CT_DOUBLE_BRACE)
       {
          // (Java) Add or remove space between ')' and '{{' of double brace initializer.
+         // only to help the vim command }}
          log_rule("sp_fparen_dbrace");
          return(options::sp_fparen_dbrace());
       }
@@ -1796,7 +1799,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_D_TEMPLATE) || chunk_is_token(second, CT_D_TEMPLATE))
    {
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
@@ -1809,7 +1812,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_ELSE) && chunk_is_token(second, CT_ELSEIF))
    {
-      log_rule("FORCE");
+      log_rule_short("FORCE");
       return(IARF_FORCE);
    }
 
@@ -1881,14 +1884,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       // D-specific: "delegate(some thing) dg
       if (get_chunk_parent_type(first) == CT_DELEGATE)
       {
-         log_rule("ADD");
+         log_rule_short("ADD");
          return(IARF_ADD);
       }
 
       // PAWN-specific: "state (condition) next"
       if (get_chunk_parent_type(first) == CT_STATE)
       {
-         log_rule("ADD");
+         log_rule_short("ADD");
          return(IARF_ADD);
       }
 
@@ -2216,13 +2219,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_DOT))
    {
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
    if (chunk_is_token(second, CT_DOT))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
@@ -2286,7 +2289,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_PAREN_OPEN) && chunk_is_token(second, CT_PTR_TYPE))
    {
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
@@ -2371,7 +2374,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (language_is_set(LANG_CS) && chunk_is_nullable(second))
       {
          min_sp = 0;
-         log_rule("REMOVE");
+         log_rule_short("REMOVE");
          return(IARF_REMOVE);
       }
 
@@ -2500,7 +2503,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
          if (chunk_is_token(tmp, CT_ASSIGN))
          {
-            log_rule("IGNORE");
+            log_rule_short("IGNORE");
             return(IARF_IGNORE);
          }
          // Add or remove space inside struct/union '{' and '}'.
@@ -2518,6 +2521,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (get_chunk_parent_type(first) == CT_BRACED_INIT_LIST)
       {
          // Add or remove space between nested braces, i.e. '{{' vs '{ {'.
+         // only to help the vim command }}}}
          if (  options::sp_brace_brace() != IARF_IGNORE
             && chunk_is_token(second, CT_BRACE_OPEN)
             && get_chunk_parent_type(second) == CT_BRACED_INIT_LIST)
@@ -2646,14 +2650,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_func_call_paren");
          return(options::sp_func_call_paren());
       }
-      log_rule("IGNORE");
+      log_rule_short("IGNORE");
       return(IARF_IGNORE);
    }
 
    // If nothing claimed the PTR_TYPE, then return ignore
    if (chunk_is_token(first, CT_PTR_TYPE) || chunk_is_token(second, CT_PTR_TYPE))
    {
-      log_rule("IGNORE");
+      log_rule_short("IGNORE");
       return(IARF_IGNORE);
    }
 
@@ -2704,13 +2708,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(second, CT_CS_SQ_COLON))
    {
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
    if (chunk_is_token(first, CT_CS_SQ_COLON))
    {
-      log_rule("FORCE");
+      log_rule_short("FORCE");
       return(IARF_FORCE);
    }
 
@@ -2771,13 +2775,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(second, CT_COMMENT) && get_chunk_parent_type(second) == CT_COMMENT_EMBED)
    {
-      log_rule("FORCE");
+      log_rule_short("FORCE");
       return(IARF_FORCE);
    }
 
    if (chunk_is_token(first, CT_COMMENT))
    {
-      log_rule("FORCE");
+      log_rule_short("FORCE");
       return(IARF_FORCE);
    }
 
@@ -2823,7 +2827,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && (  (chunk_is_token(first, CT_STRING) && get_chunk_parent_type(first) == CT_EXTERN)
          || (chunk_is_token(first, CT_FPAREN_CLOSE) && get_chunk_parent_type(first) == CT_ATTRIBUTE)))
    {
-      log_rule("FORCE");
+      log_rule_short("FORCE");
       return(IARF_FORCE);  /* TODO: make this configurable? */
    }
 
@@ -2834,7 +2838,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  (it.first == CT_UNKNOWN || it.first == first->type)
          && (it.second == CT_UNKNOWN || it.second == second->type))
       {
-         log_rule("REMOVE from no_space_table");
+         log_rule_short("REMOVE from no_space_table");
          return(IARF_REMOVE);
       }
    }
@@ -2867,7 +2871,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(first, CT_PP_PRAGMA)
       && chunk_is_token(second, CT_PREPROC_BODY))
    {
-      log_rule("REMOVE");
+      log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
 
@@ -2875,7 +2879,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(first, CT_OPERATOR_VAL)
       && chunk_is_token(second, CT_TYPE))
    {
-      log_rule("IGNORE");
+      log_rule_short("IGNORE");
       return(IARF_IGNORE);
    }
 
@@ -2907,294 +2911,294 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    // Issue #2524
    if (chunk_is_token(first, CT_NEWLINE) && chunk_is_token(second, CT_BRACE_OPEN))
    {
-      log_rule("IGNORE");
+      log_rule_short("IGNORE");
       return(IARF_IGNORE);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_AMP) && chunk_is_token(second, CT_WORD))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_ANGLE_CLOSE) && chunk_is_token(second, CT_BRACE_OPEN))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_ANNOTATION) && chunk_is_token(second, CT_TYPE))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_ASSIGN_FUNC_PROTO) && chunk_is_token(second, CT_DEFAULT))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_ASSIGN_FUNC_PROTO) && chunk_is_token(second, CT_DELETE))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_ASSIGN_FUNC_PROTO) && chunk_is_token(second, CT_NUMBER))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_BIT_COLON) && chunk_is_token(second, CT_TYPE))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_BRACE_CLOSE) && chunk_is_token(second, CT_PAREN_OPEN))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_CLASS_COLON) && chunk_is_token(second, CT_QUALIFIER))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_CLASS_COLON) && chunk_is_token(second, CT_WORD))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_COLON) && chunk_is_token(second, CT_NUMBER))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_COND_COLON) && chunk_is_token(second, CT_FUNC_CALL))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_COND_COLON) && chunk_is_token(second, CT_STRING))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_COND_COLON) && chunk_is_token(second, CT_WORD))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_CONSTR_COLON) && chunk_is_token(second, CT_FUNC_CTOR_VAR))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_CS_PROPERTY) && chunk_is_token(second, CT_BRACE_OPEN))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_ENUM) && chunk_is_token(second, CT_BRACE_OPEN))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_ENUM) && chunk_is_token(second, CT_ENUM_CLASS))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_ENUM) && chunk_is_token(second, CT_TYPE))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_ENUM_CLASS) && chunk_is_token(second, CT_TYPE))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_FPAREN_CLOSE) && chunk_is_token(second, CT_ASSIGN_FUNC_PROTO))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_FPAREN_CLOSE) && chunk_is_token(second, CT_COND_COLON))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_FPAREN_CLOSE) && chunk_is_token(second, CT_CONSTR_COLON))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_FPAREN_CLOSE) && chunk_is_token(second, CT_QUESTION))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_FRIEND) && chunk_is_token(second, CT_CLASS))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_FRIEND) && chunk_is_token(second, CT_TYPE))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_LABEL_COLON) && chunk_is_token(second, CT_NEW))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_LABEL_COLON) && chunk_is_token(second, CT_STRING))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_LABEL_COLON) && chunk_is_token(second, CT_WORD))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_NAMESPACE) && chunk_is_token(second, CT_TYPE))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_NAMESPACE) && chunk_is_token(second, CT_WORD))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_NUMBER) && chunk_is_token(second, CT_COLON))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_NUMBER) && chunk_is_token(second, CT_WORD))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_NUMBER_FP) && chunk_is_token(second, CT_NUMBER))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_NUMBER_FP) && chunk_is_token(second, CT_WORD))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_OC_CLASS) && chunk_is_token(second, CT_CLASS_COLON))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_OC_CLASS) && chunk_is_token(second, CT_PAREN_OPEN))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_OC_IMPL) && chunk_is_token(second, CT_OC_CLASS))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_OC_INTF) && chunk_is_token(second, CT_OC_CLASS))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_OC_MSG_DECL) && chunk_is_token(second, CT_BRACE_OPEN))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_PAREN_CLOSE) && chunk_is_token(second, CT_COND_COLON))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
    // if (chunk_is_token(first, CT_PAREN_CLOSE) && chunk_is_token(second, CT_QUESTION))
@@ -3204,196 +3208,196 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_PAREN_CLOSE) && chunk_is_token(second, CT_TYPE))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_PP_DEFINE) && chunk_is_token(second, CT_MACRO))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_PP_DEFINE) && chunk_is_token(second, CT_MACRO_FUNC))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_PP_ELSE) && chunk_is_token(second, CT_PAREN_OPEN))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_PP_IF) && chunk_is_token(second, CT_PAREN_OPEN))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_PP_IF) && chunk_is_token(second, CT_PP_DEFINE))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_PP_IF) && chunk_is_token(second, CT_PP_DEFINED))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_PP_IF) && chunk_is_token(second, CT_TYPE))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_PP_IF) && chunk_is_token(second, CT_WORD))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_PP_INCLUDE) && chunk_is_token(second, CT_STRING))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_PP_OTHER) && chunk_is_token(second, CT_PREPROC_BODY))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_QUESTION) && chunk_is_token(second, CT_FUNC_CALL))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_QUESTION) && chunk_is_token(second, CT_PAREN_OPEN))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_QUESTION) && chunk_is_token(second, CT_STRING))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_QUESTION) && chunk_is_token(second, CT_WORD))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_SPAREN_CLOSE) && chunk_is_token(second, CT_BRACE_OPEN))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_SQL_EXEC) && chunk_is_token(second, CT_SQL_WORD))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_SQL_WORD) && chunk_is_token(second, CT_PAREN_OPEN))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_STRUCT) && chunk_is_token(second, CT_TYPE))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_TSQUARE) && chunk_is_token(second, CT_BRACE_OPEN))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_TSQUARE) && chunk_is_token(second, CT_WORD))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_TYPEDEF) && chunk_is_token(second, CT_ENUM))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_TYPEDEF) && chunk_is_token(second, CT_STRUCT))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_TYPEDEF) && chunk_is_token(second, CT_TYPE))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_TYPENAME) && chunk_is_token(second, CT_ELLIPSIS))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_USING) && chunk_is_token(second, CT_NAMESPACE))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_USING) && chunk_is_token(second, CT_WORD))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_WORD) && chunk_is_token(second, CT_BRACE_OPEN))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
    // if (chunk_is_token(first, CT_WORD) && chunk_is_token(second, CT_COND_COLON))
@@ -3403,21 +3407,21 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_WORD) && chunk_is_token(second, CT_NUMBER))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_WORD) && chunk_is_token(second, CT_NUMBER_FP))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
    // TODO: if necessary create a new option
    if (chunk_is_token(first, CT_WORD) && chunk_is_token(second, CT_QUESTION))
    {
-      log_rule("ADD");
+      log_rule_short("ADD");
       return(IARF_ADD);
    }
 
@@ -3425,7 +3429,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(first, CT_FORM_FEED)
       || chunk_is_token(second, CT_FORM_FEED))
    {
-      log_rule("IGNORE");
+      log_rule_short("IGNORE");
       return(IARF_IGNORE);
    }
    //
@@ -3437,7 +3441,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    LOG_FMT(LSPACE, "   second->orig_line is %zu, second->orig_col is %zu, second->text() '%s', second->type is %s\n",
            second->orig_line, second->orig_col, second->text(), get_token_name(second->type));
 
-   log_rule("ADD as default value");
+   log_rule_short("ADD as default value");
    return(IARF_ADD);
 } // do_space
 
@@ -3456,7 +3460,9 @@ static iarf_e ensure_force_space(chunk_t *first, chunk_t *second, iarf_e av)
 
 static iarf_e do_space_ensured(chunk_t *first, chunk_t *second, int &min_sp)
 {
-   return(ensure_force_space(first, second, do_space(first, second, min_sp)));
+   iarf_e aa = ensure_force_space(first, second, do_space(first, second, min_sp));
+
+   return(aa);
 }
 
 
