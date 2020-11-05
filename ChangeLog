@@ -1,3 +1,23 @@
+Change highlights in uncrustify-0.72.0 (November 2020)
+-------------------------------------------------------------------------------
+  new command option:
+  --debug-csv-format : Dump debug info to file in csv-delimited format.
+
+  b29dfb58d6bebb79a961d0e709543a152d260dbc
+    Added   : nl_inside_empty_func                 Aug  4 2020
+  5068a4a78d7770a7292ea7a016ab7ca0bf49cbf7
+    Added   : debug_timeout                        Sep  1 2020
+  cf3e5acfb4d55b47b25b7e7daa2844e2998b47cc
+    Added   : sp_inside_square_empty               Sep  8 2020
+  b66c26c669bf9752f468115f1e6444481c0b9e6d
+    Added   : align_eigen_comma_init               Sep  9 2020
+  7b5fd82fa5d6fc035ddfb7c087c5aeb7cf6f4bd7
+    Added   : pos_shift                            Sep 16 2020
+  b61b7952835be3451cd1131baeda7b54cb61a50e
+    Added   : donot_indent_func_def_close_paren    Sep 26 2020
+  85001632261196dc1c2f3760dc9180e4c443f9ba
+    Added   : donot_add_nl_before_cpp_comment      Oct 14 2020
+
 Change highlights in uncrustify-0.71.0 (May 2020)
 -------------------------------------------------------------------------------
 

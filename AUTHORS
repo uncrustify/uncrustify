@@ -5,10 +5,12 @@ Maintenance:
 Guy Maurel
 Matthew Woehlke
 
+until 2020-11-05:
 Other collaborators:
 Alan Fineberg
 Alexander GQ Gerasiov
 André Berg
+Andrei Alexandrescu
 Andrey Starodubtsev
 Anirban Pramanick
 Antti Tapaninen
@@ -49,14 +51,13 @@ Ger Hobbelt
 Hackerpilot
 Hannes Schmidt
 Huang-Ming Huang
-Husk3r
 Ilya Lyubimov
 Ingo Brückl
 Ivan Nazarenko
+Ivan Romanov
 Jakub Schmidtke
 Jan Weiß
 Jason
-JavDevGames
 Jeremy H
 Jeremy T Hilliker
 Jim Meyering
@@ -66,10 +67,12 @@ Joergen Ibsen
 Johnny Oskarsson
 Jonas Hurrelmann
 Joshua Gross
+Joshua Parker
 Julian Picht
 Kalle Raiskila
 Keepun
 krys
+Laurent Tréguier
 Lauri Kasanen
 lbmaian
 Leon Breedt
@@ -81,11 +84,11 @@ Marius Zwicker
 Mark Stegeman
 Markus Geimer
 Martin Simonovsky
+Martin Storsjo
 Matthew McDole
 Matthew Woehlke
 Maxim Mikityanskiy
 Max Smolens
-MeXx
 Michaël Peeters
 Mihai Popescu
 Mike
@@ -93,7 +96,6 @@ Mike Gelfand
 Mirko König
 MrTheMake
 Nate
-neok-m4700
 Nico Decker
 Oleg Liatte
 Oleg Smolsky
@@ -103,7 +105,6 @@ Patrick Rohr
 Paul Smith
 Pavel Geiger
 Pawel Benetkiewicz
-Paweł Benetkiewicz
 PerfectCarl
 Peter Bruin
 Peter Hartley
@@ -121,7 +122,7 @@ Scott Bilas
 S. Gilles
 Shazron Abdullah
 Siddharth Kannan
-Spark-NF
+Stefan Koch
 Stefan Nunninger
 Stephen Gilles
 Steven Lee
