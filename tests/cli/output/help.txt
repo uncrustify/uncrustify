@@ -51,13 +51,13 @@ Config/Help Options:
  --set <option>=<value>   : Sets a new value to a config option.
 
 Debug Options:
- -p FILE            : Dump debug info into FILE, or to stdout if FILE is set to '-'.
-                      Must be used in combination with '-f FILE'.
- --debug-csv-format : Dump debug info to file in csv-delimited format.
-                      Must be used in combination with '-p FILE', where FILE is not set to '-'
- -L SEV             : Set the log severity (see log_levels.h; note 'A' = 'all')
- -s                 : Show the log severity in the logs.
- --decode           : Decode remaining args (chunk flags) and exit.
+ -p FILE               : Dump debug info into FILE, or to stdout if FILE is set to '-'.
+                         Must be used in combination with '-f FILE'
+ -L SEV                : Set the log severity (see log_levels.h; note 'A' = 'all')
+ -s                    : Show the log severity in the logs.
+ --decode              : Decode remaining args (chunk flags) and exit.
+ --tracking_space FILE : Prepare tracking informations for debugging.
+                         Cannot be used with the -o option'
 
 Usage Examples
 cat foo.d | uncrustify -q -c my.cfg -l d

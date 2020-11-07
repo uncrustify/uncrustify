@@ -19,7 +19,7 @@
 
 /**
  * This is an enum of all the different chunks/tokens/elements that the
- * program can work with.  The parser and scanner assigns one of these to
+ * program can work with. The parser and scanner assigns one of these to
  * each chunk/token.
  */
 enum c_token_t

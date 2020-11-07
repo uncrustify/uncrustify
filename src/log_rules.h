@@ -15,12 +15,24 @@
 
 using namespace uncrustify;
 
-
+#if defined DEBUG
+#define log_rule(rule)                                           \
+   do { if (log_sev_on(LSPACE)) {                                \
+           log_rule2(__func__, __LINE__, (rule), first, second); \
+           log_rule4(__func__, __LINE__, (rule), first, second); \
+        }                                                        \
+   } while (0)
+#else
 #define log_rule(rule)                                             \
    do { if (log_sev_on(LSPACE)) {                                  \
            log_rule2(__func__, __LINE__, (rule), first, second); } \
    } while (0)
+#endif
 
+#define log_rule_short(rule)                                       \
+   do { if (log_sev_on(LSPACE)) {                                  \
+           log_rule2(__func__, __LINE__, (rule), first, second); } \
+   } while (0)
 
 #define log_rule_B(rule)                  \
    do { if (log_sev_on(LSPACE)) {         \
@@ -32,5 +44,7 @@ void log_rule2(const char *func, size_t line, const char *rule, chunk_t *first, 
 
 
 void log_rule3(const char *func, const char *rule);
+
+void log_rule4(const char *func, size_t line, const char *rule, chunk_t *first, chunk_t *second);
 
 #endif /* LOG_RULES_H_INCLUDED */

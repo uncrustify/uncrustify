@@ -300,13 +300,13 @@ void usage(const char *argv0)
            " --set <option>=<value>   : Sets a new value to a config option.\n"
            "\n"
            "Debug Options:\n"
-           " -p FILE            : Dump debug info into FILE, or to stdout if FILE is set to '-'.\n"
-           "                      Must be used in combination with '-f FILE'.\n"
-           " --debug-csv-format : Dump debug info to file in csv-delimited format.\n"
-           "                      Must be used in combination with '-p FILE', where FILE is not set to '-'\n"
-           " -L SEV             : Set the log severity (see log_levels.h; note 'A' = 'all')\n"
-           " -s                 : Show the log severity in the logs.\n"
-           " --decode           : Decode remaining args (chunk flags) and exit.\n"
+           " -p FILE               : Dump debug info into FILE, or to stdout if FILE is set to '-'.\n"
+           "                         Must be used in combination with '-f FILE'\n"
+           " -L SEV                : Set the log severity (see log_levels.h; note 'A' = 'all')\n"
+           " -s                    : Show the log severity in the logs.\n"
+           " --decode              : Decode remaining args (chunk flags) and exit.\n"
+           " --tracking_space FILE : Prepare tracking informations for debugging.\n"
+           "                         Cannot be used with the -o option'\n"
            "\n"
            "Usage Examples\n"
            "cat foo.d | uncrustify -q -c my.cfg -l d\n"
@@ -457,7 +457,8 @@ int main(int argc, char *argv[])
 
    Args arg(argc, argv);
 
-   if (arg.Present("--version") || arg.Present("-v"))
+   if (  arg.Present("--version")
+      || arg.Present("-v"))
    {
       version_exit();
    }
@@ -566,7 +567,8 @@ int main(int argc, char *argv[])
    }
 
    // Enable log severities
-   if (arg.Present("-s") || arg.Present("--show"))
+   if (  arg.Present("-s")
+      || arg.Present("--show"))
    {
       log_show_sev(true);
    }
@@ -653,11 +655,15 @@ int main(int argc, char *argv[])
    // Grab the output override
    const char *output_file = arg.Param("-o");
 
+   // for debugging tracking
+   cpd.html_file = arg.Param("--tracking_space");
+
    LOG_FMT(LDATA, "%s\n", UNCRUSTIFY_VERSION);
    LOG_FMT(LDATA, "config_file = %s\n", cfg_file.c_str());
    LOG_FMT(LDATA, "output_file = %s\n", (output_file != NULL) ? output_file : "null");
    LOG_FMT(LDATA, "source_file = %s\n", (source_file != NULL) ? source_file : "null");
    LOG_FMT(LDATA, "source_list = %s\n", (source_list != NULL) ? source_list : "null");
+   LOG_FMT(LDATA, "tracking    = %s\n", (cpd.html_file != NULL) ? cpd.html_file : "null");
    LOG_FMT(LDATA, "prefix      = %s\n", (prefix != NULL) ? prefix : "null");
    LOG_FMT(LDATA, "suffix      = %s\n", (suffix != NULL) ? suffix : "null");
    LOG_FMT(LDATA, "assume      = %s\n", (assume != NULL) ? assume : "null");
@@ -888,7 +894,8 @@ int main(int argc, char *argv[])
    p_arg = arg.Unused(idx);
 
    // Check args - for multifile options
-   if (source_list != nullptr || p_arg != nullptr)
+   if (  source_list != nullptr
+      || p_arg != nullptr)
    {
       if (source_file != nullptr)
       {
@@ -2237,8 +2244,22 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       {
          align_backslash_newline();
       }
-      // Now render it all to the output file
-      output_text(pfout);
+      // which output is to be done?
+
+      if (cpd.html_file == nullptr)
+      {
+         // Now render it all to the output file
+         output_text(pfout);
+      }
+      else
+      {
+         // create the tracking file
+         FILE *t_file;
+         t_file = fopen(cpd.html_file, "wb");
+         output_text(t_file);
+         fclose(t_file);
+         exit(EX_OK);
+      }
    }
 
    // Special hook for dumping parsed data for debugging

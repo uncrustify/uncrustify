@@ -121,7 +121,23 @@ void prot_the_line_pc(chunk_t *pc_sub, const char *func_name, int theLine, unsig
                LOG_FMT(LGUY, " pc->flags: ");
                log_pcf_flags(LGUY, pc->flags);
             }
-            //LOG_FMT(LALAGAIN, "   align.right_align is %s\n", pc->align.right_align ? "TRUE" : "FALSE");
+
+            if (pc->tracking != nullptr)
+            {
+               LOG_FMT(LGUY, " Tracking info are: \n");
+               LOG_FMT(LGUY, "  number of track(s) %zu\n", pc->tracking->size());
+
+               for (size_t track = 0; track < pc->tracking->size(); track++)
+               {
+                  track_list *A       = pc->tracking;
+                  Track_nr   B        = A->at(track);
+                  size_t     Bfirst   = B.first;
+                  char       *Bsecond = B.second;
+
+                  LOG_FMT(LGUY, "  %zu, tracking number is %zu\n", track, Bfirst);
+                  LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
+               }
+            }
          }
       }
    }

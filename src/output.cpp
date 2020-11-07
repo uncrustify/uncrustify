@@ -571,6 +571,8 @@ void output_parsed_csv(FILE *pfile)
 
 void output_text(FILE *pfile)
 {
+   bool tracking = cpd.html_file != nullptr;                 // special for debugging
+
    cpd.fout        = pfile;
    cpd.did_newline = 1;
    cpd.column      = 1;
@@ -593,6 +595,19 @@ void output_text(FILE *pfile)
       }
 
       cpd.frag_cols = 0;
+   }
+
+   if (tracking)
+   {
+      add_text("<html>\n");
+      add_text("<head>\n");
+      add_text("   <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>\n");
+      add_text("   <title>Uncrustify: where do the Spaces options work</title>\n");
+      add_text("</head>\n");
+      add_text("<body lang=\"en-US\">\n");
+      add_text("<p>\n");
+      add_text("</p>\n");
+      add_text("<pre>\n");
    }
 
    // loop over the whole chunk list
@@ -831,6 +846,43 @@ void output_text(FILE *pfile)
          cpd.did_newline       = chunk_is_newline(pc);
          cpd.output_trailspace = false;
       }
+
+      if (pc->tracking != nullptr)
+      {
+         LOG_FMT(LGUY, " Tracking info are: \n");
+         LOG_FMT(LGUY, "  number of track(s) %zu\n", pc->tracking->size());
+         add_text("<a title=\"");
+         char tempText[80];
+
+         for (size_t track = 0; track < pc->tracking->size(); track++)
+         {
+            track_list *A       = pc->tracking;
+            Track_nr   B        = A->at(track);
+            size_t     Bfirst   = B.first;
+            char       *Bsecond = B.second;
+
+            sprintf(tempText, "%zu", Bfirst);
+            add_text(tempText);
+            add_text(",");
+
+            if (track == pc->tracking->size() - 1)
+            {
+               sprintf(tempText, "%s", Bsecond);
+               add_text(tempText);
+            }
+            LOG_FMT(LGUY, "  %zu, tracking number is %zu\n", track, Bfirst);
+            LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
+         }
+
+         add_text("\"><font color=\"red\">M</font></a>");
+      }
+   }
+
+   if (tracking)
+   {
+      add_text("</pre>\n");
+      add_text("</body>\n");
+      add_text("</html>\n");
    }
 } // output_text
 
