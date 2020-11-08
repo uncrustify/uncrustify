@@ -57,6 +57,8 @@ struct log_buf
    log_mask_t        mask;
    bool              show_hdr;  //! flag determine if a header gets added to log message
 };
+
+
 static struct log_buf g_log;
 
 
@@ -129,7 +131,8 @@ void log_flush(bool force_nl)
 {
    if (g_log.buf_len > 0)
    {
-      if (force_nl && g_log.bufX[g_log.buf_len - 1] != '\n')
+      if (  force_nl
+         && g_log.bufX[g_log.buf_len - 1] != '\n')
       {
          g_log.bufX[g_log.buf_len++] = '\n';
          g_log.bufX[g_log.buf_len]   = 0;

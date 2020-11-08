@@ -264,7 +264,6 @@ set(uncrustify_sources
   src/combine.cpp
   src/combine_fix_mark.cpp
   src/combine_labels.cpp
-#  src/combine_mark.cpp
   src/combine_tools.cpp
   src/combine_skip.cpp
   src/compat_posix.cpp
@@ -276,7 +275,6 @@ set(uncrustify_sources
   src/flag_decltype.cpp
   src/flag_parens.cpp
   src/frame_list.cpp
-#  src/handle_oc.cpp
   src/indent.cpp
   src/keywords.cpp
   src/lang_pawn.cpp
@@ -347,7 +345,6 @@ set(uncrustify_headers
   src/combine.h
   src/combine_fix_mark.h
   src/combine_labels.h
-#  src/combine_mark.h
   src/combine_skip.h
   src/combine_tools.h
   src/compat.h
@@ -360,7 +357,6 @@ set(uncrustify_headers
   src/flag_decltype.h
   src/flag_parens.h
   src/frame_list.h
-#  src/handle_oc.h
   src/indent.h
   src/keywords.h
   src/lang_pawn.h

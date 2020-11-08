@@ -129,6 +129,10 @@ struct align_ptr_t
 };
 
 
+// for debugging purpose only
+typedef std::pair<size_t, char *>   Track_nr;         // track for "trackNumber" and "rule"
+typedef std::vector<Track_nr>       track_list;       // liste for many tracks
+
 // This is the main type of this program
 struct chunk_t
 {
@@ -161,6 +165,8 @@ struct chunk_t
       brace_level   = 0;
       pp_level      = 0;
       after_tab     = false;
+      // for debugging purpose only
+      tracking = nullptr;
       str.clear();
    }
 
@@ -197,11 +203,15 @@ struct chunk_t
                                    * column used to indent with tabs          */
    size_t       nl_count;         //! number of newlines in CT_NEWLINE
    size_t       nl_column;        //! column of the subsequent newline entries(all of them should have the same column)
-   size_t       level;            //! nest level in {, (, or [
+   size_t       level;            /** nest level in {, (, or [
+                                   * only to help vim command } */
    size_t       brace_level;      //! nest level in braces only
    size_t       pp_level;         //! nest level in preprocessor
    bool         after_tab;        //! whether this token was after a tab
    unc_text     str;              //! the token text
+
+   // for debugging purpose only
+   track_list   *tracking;
 };
 
 
@@ -350,6 +360,7 @@ struct cp_data_t
 
    const char        *phase_name;
    const char        *dumped_file;
+   const char        *html_file = nullptr; // for debugging purpose only
 };
 
 extern cp_data_t cpd;  // TODO: can we avoid this external variable?
