@@ -542,18 +542,40 @@ void output_parsed_csv(FILE *pfile)
 
          if (pc->type != CT_NL_CONT)
          {
-            for (auto *ch = pc->text(); *ch != '\0'; ++ch)
+            if (chunk_is_token(pc, CT_COMMENT_MULTI))
             {
-               if (  *ch > 0
-                  || !chunk_is_token(pc, CT_COMMENT_MULTI))
+               /**
+                * if dealing with a multi-line c-style comment, use the non-encoded
+                * character string and don't print carriage return or newline characters
+                */
+               auto &&str = pc->str.get();
+
+               for (std::size_t i = 0; i < str.size(); ++i)
+               {
+                  if (  str[i] != '\n'
+                     && str[i] != '\r')
+                  {
+                     fprintf(pfile, "%c", str[i]);
+                  }
+
+                  if (str[i] == '"')
+                  {
+                     // need to escape the double-quote for csv-format
+                     fprintf(pfile, "\"");
+                  }
+               }
+            }
+            else
+            {
+               for (auto *ch = pc->text(); *ch != '\0'; ++ch)
                {
                   fprintf(pfile, "%c", *ch);
-               }
 
-               if (*ch == '"')
-               {
-                  // need to escape the double-quote for csv-format
-                  fprintf(pfile, "\"");
+                  if (*ch == '"')
+                  {
+                     // need to escape the double-quote for csv-format
+                     fprintf(pfile, "\"");
+                  }
                }
             }
          }
