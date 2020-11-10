@@ -809,7 +809,7 @@ static void convert_brace(chunk_t *br)
       {
          // Issue #2219
          // look for opening brace
-         chunk_t *brace;
+         chunk_t *brace = nullptr;
 
          if (chunk_is_token(br, CT_VBRACE_OPEN))
          {
