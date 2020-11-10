@@ -544,11 +544,7 @@ void output_parsed_csv(FILE *pfile)
          {
             for (auto *ch = pc->text(); *ch != '\0'; ++ch)
             {
-               if (  *ch > 0
-                  || !chunk_is_token(pc, CT_COMMENT_MULTI))
-               {
-                  fprintf(pfile, "%c", *ch);
-               }
+               fprintf(pfile, "%c", *ch);
 
                if (*ch == '"')
                {
