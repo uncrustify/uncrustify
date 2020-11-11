@@ -16,27 +16,27 @@
 using namespace uncrustify;
 
 #if defined DEBUG
-#define log_rule(rule)                                           \
-   do { if (log_sev_on(LSPACE)) {                                \
-           log_rule2(__func__, __LINE__, (rule), first, second); \
-           log_rule4(__func__, __LINE__, (rule), first, second); \
-        }                                                        \
+#define log_rule(rule)                                      \
+   do {                                                     \
+      log_rule2(__func__, __LINE__, (rule), first, second); \
+      log_rule4(__func__, __LINE__, (rule), first, second); \
+                                                            \
    } while (0)
 #else
-#define log_rule(rule)                                             \
-   do { if (log_sev_on(LSPACE)) {                                  \
-           log_rule2(__func__, __LINE__, (rule), first, second); } \
+#define log_rule(rule)                                      \
+   do {                                                     \
+      log_rule2(__func__, __LINE__, (rule), first, second); \
    } while (0)
 #endif
 
-#define log_rule_short(rule)                                       \
-   do { if (log_sev_on(LSPACE)) {                                  \
-           log_rule2(__func__, __LINE__, (rule), first, second); } \
+#define log_rule_short(rule)                                \
+   do {                                                     \
+      log_rule2(__func__, __LINE__, (rule), first, second); \
    } while (0)
 
-#define log_rule_B(rule)                  \
-   do { if (log_sev_on(LSPACE)) {         \
-           log_rule3(__func__, (rule)); } \
+#define log_rule_B(rule)           \
+   do {                            \
+      log_rule3(__func__, (rule)); \
    } while (0)
 
 
