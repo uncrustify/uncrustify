@@ -31,36 +31,12 @@ void log_rule2(const char *func, size_t line, const char *rule, chunk_t *first, 
 
 void log_rule3(const char *func, const char *rule)
 {
-   const char *where = nullptr;
+   // some Windows platforms provide a qualified function name ("ABC::XYZ::function_Name")
+   // as __func__; call get_unqualified_func_name() to return an unqualified function name
 
-#ifdef WIN32
-   // some Windows provide "ABC::XYZ::function_Name" as __func__
-   // we look for the last ':' character
-   // a function rindex cannot be found
-   size_t length_of_string = strlen(func);
+   func = get_unqualified_func_name(func);
 
-   for (int which = length_of_string - 1; which > 0; which--)
-   {
-      char oneChar = func[which];
-
-      if (oneChar == ':')
-      {
-         where = func + which;
-         break;
-      }
-   }
-#else // not WIN32
-   where = rindex(func, ':');
-#endif /* ifdef WIN32 */
-
-   if (where == nullptr)
-   {
-      LOG_FMT(LSPACE, "log_rule(%s): rule is '%s'\n", func, rule);
-   }
-   else
-   {
-      LOG_FMT(LSPACE, "log_rule(%s): rule is '%s'\n", where + 1, rule);
-   }
+   LOG_FMT(LSPACE, "log_rule(%s): rule is '%s'\n", func, rule);
 }
 
 

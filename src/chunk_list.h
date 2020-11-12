@@ -567,6 +567,41 @@ static inline bool chunk_is_comment(chunk_t *pc)
 }
 
 
+/**
+ * Returns true if the chunk under test is an inheritance access specifier
+ */
+static inline bool chunk_is_cpp_inheritance_access_specifier(chunk_t *pc)
+{
+   return(  language_is_set(LANG_CPP)
+         && (  chunk_is_token(pc, CT_ACCESS)
+            || chunk_is_token(pc, CT_QUALIFIER))
+         && (  std::strncmp(pc->str.c_str(), "private", 7) == 0
+            || std::strncmp(pc->str.c_str(), "protected", 9) == 0
+            || std::strncmp(pc->str.c_str(), "public", 6) == 0));
+} // chunk_is_cpp_inheritance_access_specifier
+
+
+static inline bool chunk_is_colon(chunk_t *pc)
+{
+   return(  chunk_is_token(pc, CT_ACCESS_COLON)
+         || chunk_is_token(pc, CT_ASM_COLON)
+         || chunk_is_token(pc, CT_BIT_COLON)
+         || chunk_is_token(pc, CT_CASE_COLON)
+         || chunk_is_token(pc, CT_CLASS_COLON)
+         || chunk_is_token(pc, CT_COLON)
+         || chunk_is_token(pc, CT_COND_COLON)
+         || chunk_is_token(pc, CT_CONSTR_COLON)
+         || chunk_is_token(pc, CT_CS_SQ_COLON)
+         || chunk_is_token(pc, CT_D_ARRAY_COLON)
+         || chunk_is_token(pc, CT_FOR_COLON)
+         || chunk_is_token(pc, CT_LABEL_COLON)
+         || chunk_is_token(pc, CT_OC_COLON)
+         || chunk_is_token(pc, CT_OC_DICT_COLON)
+         || chunk_is_token(pc, CT_TAG_COLON)
+         || chunk_is_token(pc, CT_WHERE_COLON));
+}
+
+
 static inline bool chunk_is_single_line_comment(chunk_t *pc)
 {
    return(chunk_is_token(pc, CT_COMMENT) || chunk_is_token(pc, CT_COMMENT_CPP));
@@ -764,6 +799,13 @@ static inline bool chunk_is_ptr_operator(chunk_t *pc)
 }
 
 
+static inline bool chunk_is_pointer_or_reference(chunk_t *pc)
+{
+   return(  chunk_is_ptr_operator(pc)
+         || chunk_is_token(pc, CT_BYREF));
+}
+
+
 //! Check to see if there is a newline between the two chunks
 bool chunk_is_newline_between(chunk_t *start, chunk_t *end);
 
@@ -867,18 +909,48 @@ static inline bool chunk_is_forin(chunk_t *pc)
 }
 
 
+/**
+ * Returns true if pc is an CT_ATTRIBUTE or CT_DECLSPEC
+ */
+bool chunk_is_attribute_or_declspec(chunk_t *pc);
+
+
+/**
+ * Returns true if pc is one of CT_CLASS, CT_ENUM, CT_ENUM_CLASS, CT_STRUCT or CT_UNION
+ */
+bool chunk_is_class_enum_struct_union(chunk_t *pc);
+
+
+/**
+ * Returns true if pc is a CT_CLASS or CT_STRUCT
+ */
+bool chunk_is_class_or_struct(chunk_t *pc);
+
+
+/**
+ * Returns true if pc is one of CT_CLASS, CT_STRUCT or CT_UNION
+ */
+bool chunk_is_class_struct_union(chunk_t *pc);
+
+
+/**
+ * Returns true if pc is a CT_ENUM or CT_ENUM_CLASS
+ */
+bool chunk_is_enum(chunk_t *pc);
+
+
 void set_chunk_type_real(chunk_t *pc, c_token_t tt, const char *func, int line);
 
 
 void set_chunk_parent_real(chunk_t *pc, c_token_t tt, const char *func, int line);
 
 
-#define set_chunk_type(pc, tt)      do {                   \
-      set_chunk_type_real((pc), (tt), __func__, __LINE__); \
+#define set_chunk_type(pc, tt)      do {                               \
+      set_chunk_type_real((pc), (tt), __unqualified_func__, __LINE__); \
 } while (false)
 
-#define set_chunk_parent(pc, tt)    do {                     \
-      set_chunk_parent_real((pc), (tt), __func__, __LINE__); \
+#define set_chunk_parent(pc, tt)    do {                                 \
+      set_chunk_parent_real((pc), (tt), __unqualified_func__, __LINE__); \
 } while (false)
 
 

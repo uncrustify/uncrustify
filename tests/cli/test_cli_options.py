@@ -640,7 +640,18 @@ def main(args):
                 gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
                 ):
             return_flag = False
-            
+
+        if not check_uncrustify_output(
+                uncr_bin,
+                parsed_args,
+                args_arr=['-f', s_path_join(script_dir, 'input/class_enum_struct_union.cpp'),
+                          '-p', s_path_join(script_dir, 'results/class_enum_struct_union.txt')],
+                gen_expected_path=s_path_join(script_dir, 'output/class_enum_struct_union.txt'),
+                gen_result_path=s_path_join(script_dir, 'results/class_enum_struct_union.txt'),
+                gen_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', '')
+                ):
+            return_flag = False
+
     #
     # Test -p and -c with '-' input
     #
@@ -757,6 +768,7 @@ def main(args):
                                   reg_replace(r', \[[_|,|1|A-Z]*\]', ', []'),
                                   reg_replace(r', \[0[xX][0-9a-fA-F]+:[_|,|1|A-Z]*\]', ', []'),
                                   reg_replace(r'   \[0[xX][0-9a-fA-F]+:[_|,|1|A-Z]*\]', '   []'),
+                                  reg_replace(r'^[ \t]*[_A-Za-z][_A-Za-z0-9]*::', ''),
                                   reg_replace(RE_CALLSTACK, '[CallStack]'),
                                   reg_replace(RE_DO_SPACE, '')]
             ):

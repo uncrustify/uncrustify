@@ -312,3 +312,28 @@ void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, size_
       LOG_FMT(sev, "%s", suffix);
    }
 }
+
+
+const char *get_unqualified_func_name(const char *func)
+{
+   /**
+    * we look for the last ':' character;
+    */
+   for (auto i = strlen(func); i > 0; --i)
+   {
+      if (func[i - 1] == ':')
+      {
+         /**
+          * function name is qualified, so return the
+          * unqualified portion
+          */
+         return(func + i);
+      }
+   }
+
+   /**
+    * input function name is unqualified
+    */
+
+   return(func);
+}

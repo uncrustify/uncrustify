@@ -16,6 +16,7 @@
 #include "combine_tools.h"
 #include "ChunkStack.h"
 #include "error_types.h"
+#include "EnumStructUnionParser.h"
 #include "flag_braced_init_list.h"
 #include "flag_parens.h"
 #include "lang_pawn.h"
@@ -737,16 +738,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       fix_typedef(pc);
    }
 
-   if (  chunk_is_token(pc, CT_ENUM)
-      || chunk_is_token(pc, CT_STRUCT)
-      || chunk_is_token(pc, CT_UNION)
-      || (  chunk_is_token(pc, CT_CLASS)
-         && !language_is_set(LANG_D)))
+   if (  chunk_is_class_enum_struct_union(pc)
+      && chunk_is_not_token(prev, CT_TYPEDEF))
    {
-      if (chunk_is_not_token(prev, CT_TYPEDEF))
-      {
-         fix_enum_struct_union(pc);
-      }
+      EnumStructUnionParser parser;
+      parser.parse(pc);
    }
 
    if (chunk_is_token(pc, CT_EXTERN))
@@ -1068,17 +1064,6 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
    }
 
-   if (  (  chunk_is_token(pc, CT_CLASS)
-         || chunk_is_token(pc, CT_STRUCT))
-      && pc->level == pc->brace_level)
-   {
-      if (  chunk_is_not_token(pc, CT_STRUCT)
-         || !language_is_set(LANG_C))
-      {
-         mark_class_ctor(pc);
-      }
-   }
-
    if (chunk_is_token(pc, CT_OC_CLASS))
    {
       handle_oc_class(pc);
@@ -1246,44 +1231,6 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             // This is likely the start of a block literal
             handle_oc_block_literal(pc);
          }
-      }
-   }
-
-   // Detect a variable definition that starts with struct/enum/union/class
-   if (  !pc->flags.test(PCF_IN_TYPEDEF)
-      && get_chunk_parent_type(prev) != CT_CPP_CAST
-      && !prev->flags.test(PCF_IN_FCN_DEF)
-      && (  chunk_is_token(pc, CT_STRUCT)
-         || chunk_is_token(pc, CT_UNION)
-         || chunk_is_token(pc, CT_CLASS)
-         || chunk_is_token(pc, CT_ENUM)))
-   {
-      tmp = chunk_skip_dc_member(next);
-
-      if (  chunk_is_token(tmp, CT_TYPE)
-         || chunk_is_token(tmp, CT_WORD))
-      {
-         set_chunk_parent(tmp, pc->type);
-         set_chunk_type(tmp, CT_TYPE);
-
-         tmp = chunk_get_next_ncnl(tmp);
-      }
-
-      if (chunk_is_token(tmp, CT_BRACE_OPEN))
-      {
-         tmp = chunk_skip_to_match(tmp);
-
-         if (tmp != nullptr)
-         {
-            tmp = chunk_get_next_ncnl(tmp);
-         }
-      }
-
-      if (  tmp != nullptr
-         && (  chunk_is_ptr_operator(tmp)
-            || chunk_is_token(tmp, CT_WORD)))
-      {
-         mark_variable_definition(tmp);
       }
    }
 
@@ -1841,9 +1788,9 @@ void fix_symbols(void)
       {
          mark_lvalue(pc);
       }
-      // a brace immediately preceeded by word in C++11 is an initializer list though it may also
-      // by a type casting initializer list if the word is really a type; sadly unucustify knows
-      // only builtin types and knows nothing of user-defined types
+      // a brace immediately preceded by word in C++11 is an initializer list though it may also
+      // by a type casting initializer list if the word is really a type; sadly uncrustify knows
+      // only built-in types and knows nothing of user-defined types
       chunk_t *prev = chunk_get_prev_ncnlni(pc);   // Issue #2279
 
       if (  is_cpp
@@ -2017,7 +1964,9 @@ void fix_symbols(void)
             || chunk_is_token(pc, CT_TYPENAME)
             || chunk_is_token(pc, CT_DC_MEMBER)                         // Issue #2478
             || chunk_is_token(pc, CT_WORD))
+         && get_chunk_parent_type(pc) != CT_BIT_COLON
          && get_chunk_parent_type(pc) != CT_ENUM
+         && !pc->flags.test(PCF_IN_CLASS_BASE)
          && !pc->flags.test(PCF_IN_ENUM))
       {
          pc = fix_variable_definition(pc);

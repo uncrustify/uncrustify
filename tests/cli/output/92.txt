@@ -162,7 +162,11 @@ tokenize_cleanup : orig_line is 3, orig_col is 25, pc->text() '*'
    pc->type is STAR, pc->parent_type is NONE => *type is PTR_TYPE, *parent_type is NONE
 tokenize_cleanup : orig_line is 13, orig_col is 11, pc->text() '*'
    pc->type is STAR, pc->parent_type is NONE => *type is PTR_TYPE, *parent_type is NONE
-mark_class_ctor : orig_line is 3, orig_col is 1, pc->text() 'TelegramIndex'
+try_find_end_chunk : orig_line is 1, orig_col is 8, pc->text() 'TelegramIndex'
+   pc->type is TYPE, pc->parent_type is NONE => *type is WORD, *parent_type is NONE
+make_type : orig_line is 1, orig_col is 8, pc->text() 'TelegramIndex'
+   pc->type is WORD, pc->parent_type is NONE => *type is TYPE, *parent_type is NONE
+mark_constructors : orig_line is 3, orig_col is 1, pc->text() 'TelegramIndex'
    pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CLASS_DEF, *parent_type is NONE
 flag_parens : orig_line is 3, orig_col is 14, pc->text() '('
    pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE
@@ -182,7 +186,7 @@ flag_parens : orig_line is 5, orig_col is 10, pc->text() '('
    pc->type is PAREN_OPEN, pc->parent_type is NONE => *type is FPAREN_OPEN, *parent_type is NONE
 flag_parens : orig_line is 5, orig_col is 12, pc->text() ')'
    pc->type is PAREN_CLOSE, pc->parent_type is NONE => *type is FPAREN_CLOSE, *parent_type is NONE
-mark_class_ctor : orig_line is 9, orig_col is 2, pc->text() 'TelegramIndex'
+mark_constructors : orig_line is 9, orig_col is 2, pc->text() 'TelegramIndex'
    pc->type is WORD, pc->parent_type is NONE => *type is FUNC_CLASS_DEF, *parent_type is NONE
 mark_cpp_constructor : orig_line is 9, orig_col is 1, pc->text() '~'
    pc->type is INV, pc->parent_type is NONE => *type is DESTRUCTOR, *parent_type is NONE
