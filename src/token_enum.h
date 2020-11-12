@@ -248,6 +248,7 @@ enum c_token_t
    CT_FUNC_WRAP,          // macro that wraps the function name
    CT_PROTO_WRAP,         // macro: "RETVAL PROTO_WRAP( fcn_name, (PARAMS))". Parens for PARAMS are optional.
    CT_MACRO_FUNC,         // function-like macro
+   CT_MACRO_FUNC_CALL,    // function-like macro call
    CT_MACRO,              // a macro def
    CT_QUALIFIER,          // static, const, etc
    CT_EXTERN,             // extern

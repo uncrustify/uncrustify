@@ -150,6 +150,14 @@ public:
 void log_func_stack(log_sev_t sev, const char *prefix = 0, const char *suffix = "\n", size_t skip_cnt = 0);
 
 
+/**
+ * Return the unqualified function name from the input argument
+ * @param  the qualified function name, usually provided by __func__ macro
+ * @return the corresponding unqualified name
+ */
+const char *get_unqualified_func_name(const char *func);
+
+
 #define log_func_stack_inline(_sev)    log_func_stack((_sev), " [CallStack:", "]\n", 0)
 
 

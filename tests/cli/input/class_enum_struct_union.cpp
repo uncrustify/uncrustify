@@ -86,7 +86,7 @@ public:
 } c31, *c32 = nullptr, *c33[] = { nullptr, nullptr }, c34{ 0, 1, 2}, * const c35(nullptr), c16(0, 1, 2);
 
 // class/struct [macros/attributes ...] type x, ...
-class __attribute__((__deprecated__)) API_EXPORT ALIGNAS(4) c3 c41, *c42 = nullptr, *c43[] = { nullptr, nullptr }, c44{ 0, 1, 2}, * const c45(nullptr), c46(0, 1, 2);
+class __attribute__((__deprecated__)) API_EXPORT ALIGNAS(4) c3 c41, *c42 = c32 ? c32 : nullptr, *c43[] = { nullptr, nullptr }, c44{ 0, 1, 2}, * const c45(nullptr), c46(0, 1, 2);
 
 // class/struct [macros/attributes ...] type : bases ... { } x, ...
 class ALIGNAS(4) API_EXPORT __attribute__((__deprecated__))
