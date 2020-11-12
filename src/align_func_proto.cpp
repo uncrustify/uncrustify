@@ -47,8 +47,8 @@ void align_func_proto(size_t span)
    log_rule_B("align_var_def_amp_style");
    size_t       myamp_style = options::align_var_def_amp_style();
 
-   const size_t max_level_count = 8;
-   const size_t max_brace_level = 8;
+   const size_t max_level_count = 16;
+   const size_t max_brace_level = 16;
 
    AlignStack   many_as[max_level_count + 1][max_brace_level + 1];
 
