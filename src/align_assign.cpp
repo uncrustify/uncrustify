@@ -172,8 +172,9 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
               && !pc->flags.test(PCF_IN_FCN_DEF)    // Issue #1717
               && !pc->flags.test(PCF_IN_FCN_CALL))  // Issue #1717
       {
-         LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->flags:\n   ", __func__, __LINE__);
-         log_pcf_flags(LALASS, pc->flags);
+         // produces much more log output. Use it only debugging purpose
+         //LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->flags:\n   ", __func__, __LINE__);
+         //log_pcf_flags(LALASS, pc->flags);
          var_def_cnt++;
       }
       else if (var_def_cnt > 1)
@@ -193,8 +194,9 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          }
          LOG_FMT(LALASS, "%s(%d): align_assign_decl_func() is %d\n",
                  __func__, __LINE__, options::align_assign_decl_func());
-         LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->flags: ", __func__, __LINE__);
-         log_pcf_flags(LALASS, pc->flags);
+         // produces much more log output. Use it only debugging purpose
+         //LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->flags: ", __func__, __LINE__);
+         //log_pcf_flags(LALASS, pc->flags);
 
          log_rule_B("align_assign_decl_func");
 
