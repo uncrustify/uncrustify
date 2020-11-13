@@ -197,7 +197,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
       return;
    }
    // the value of buffer_length is experimental
-   const int buffer_length = 4100;
+   const int buffer_length = 40000;
    char      buf[buffer_length];
 
    // it MUST be a 'unsigned int' variable to be runable under windows
