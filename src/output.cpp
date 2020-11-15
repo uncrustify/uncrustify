@@ -605,6 +605,7 @@ void output_text(FILE *pfile)
       add_text("</p>\n");
       add_text("<pre>\n");
    }
+   bool write_in_tracking = false;
 
    // loop over the whole chunk list
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
@@ -828,7 +829,27 @@ void output_text(FILE *pfile)
                     __func__, __LINE__, pc->column, (allow_tabs ? "true" : "FALSE"));
          }
          output_to_column(pc->column, allow_tabs);
-         add_text(pc->str, false, chunk_is_token(pc, CT_STRING));
+
+         if (write_in_tracking)
+         {
+            if (chunk_is_token(pc, CT_ANGLE_OPEN))
+            {
+               add_text("&lt;", false, false);
+            }
+            else if (chunk_is_token(pc, CT_ANGLE_CLOSE))
+            {
+               add_text("&gt;", false, false);
+            }
+            else
+            {
+               add_text(pc->str, false, chunk_is_token(pc, CT_STRING));
+            }
+            write_in_tracking = false;
+         }
+         else
+         {
+            add_text(pc->str, false, chunk_is_token(pc, CT_STRING));
+         }
 
          if (chunk_is_token(pc, CT_PP_DEFINE))  // Issue #876
          {
@@ -871,6 +892,7 @@ void output_text(FILE *pfile)
          }
 
          add_text("\"><font color=\"red\">M</font></a>");
+         write_in_tracking = true;
       }
    }
 
