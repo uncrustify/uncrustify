@@ -1,5 +1,6 @@
-struct MyClass : public Foo,
-                 private Bar {
+struct MyClass
+: public Foo,
+  private Bar {
   MyClass(
       int a,
       int b,
@@ -13,5 +14,5 @@ struct MyClass : public Foo,
 };
 
 struct TheirClass
-  : public Foo,
-    private Bar {};
+: public Foo,
+  private Bar {};
