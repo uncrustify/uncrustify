@@ -1,6 +1,9 @@
 # "Default" build tree
 /build/
 
+# PyCharm help directory
+venv/
+
 # Compiled Python code
 *.pyc
 
