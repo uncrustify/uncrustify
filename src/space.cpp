@@ -3432,6 +3432,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule_short("IGNORE");
       return(IARF_IGNORE);
    }
+
+   // TODO: if necessary create a new option
+   if (chunk_is_token(first, CT_MACRO_FUNC_CALL) && chunk_is_token(second, CT_FPAREN_OPEN))
+   {
+      log_rule("IGNORE");
+      return(IARF_IGNORE);
+   }
    //
    // these lines are only useful for debugging uncrustify itself
    LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize do_space:\n",

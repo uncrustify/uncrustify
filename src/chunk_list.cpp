@@ -1070,3 +1070,40 @@ c_token_t get_type_of_the_parent(chunk_t *pc)
    }
    return(pc->parent->type);
 }
+
+
+bool chunk_is_attribute_or_declspec(chunk_t *pc)
+{
+   return(  language_is_set(LANG_CPP)
+         && (  chunk_is_token(pc, CT_ATTRIBUTE)
+            || chunk_is_token(pc, CT_DECLSPEC)));
+}
+
+
+bool chunk_is_class_enum_struct_union(chunk_t *pc)
+{
+   return(  chunk_is_class_or_struct(pc)
+         || chunk_is_enum(pc)
+         || chunk_is_token(pc, CT_UNION));
+}
+
+
+bool chunk_is_class_or_struct(chunk_t *pc)
+{
+   return(  chunk_is_token(pc, CT_CLASS)
+         || chunk_is_token(pc, CT_STRUCT));
+}
+
+
+bool chunk_is_class_struct_union(chunk_t *pc)
+{
+   return(  chunk_is_class_or_struct(pc)
+         || chunk_is_token(pc, CT_UNION));
+}
+
+
+bool chunk_is_enum(chunk_t *pc)
+{
+   return(  chunk_is_token(pc, CT_ENUM)
+         || chunk_is_token(pc, CT_ENUM_CLASS));
+}

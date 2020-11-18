@@ -271,6 +271,8 @@ set(uncrustify_sources
   src/cs_top_is_question.cpp
   src/detect.cpp
   src/enum_cleanup.cpp
+  src/EnumStructUnionParser.cpp
+  src/EnumStructUnionParser.h
   src/flag_braced_init_list.cpp
   src/flag_decltype.cpp
   src/flag_parens.cpp

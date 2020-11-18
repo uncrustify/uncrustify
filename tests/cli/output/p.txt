@@ -19,8 +19,8 @@ newlines                        = crlf
 #   2>               WORD|               NONE|     PARENT_NOT_SET[ 18/ 10/ 17/  1][1/1/0][      80001][0-0]                  s16_bar
 #   2>          SEMICOLON|               NONE|     PARENT_NOT_SET[ 25/ 17/ 18/  0][1/1/0][  200000001][0-0]                         ;
 #   2>            NEWLINE|               NONE|     PARENT_NOT_SET[ 26/ 18/  1/  0][0/0/0][          0][2-0]
-#   4>             STRUCT|               NONE|     PARENT_NOT_SET[  1/  1/  7/  0][0/0/0][   200e0000][0-0] struct
-#   4>               TYPE|             STRUCT|     PARENT_NOT_SET[  8/  8/ 21/  1][0/0/0][   20000000][0-0]        TelegramIndex
+#   4>             STRUCT|               NONE|     PARENT_NOT_SET[  1/  1/  7/  0][0/0/0][      e0000][0-0] struct
+#   4>               TYPE|             STRUCT|     PARENT_NOT_SET[  8/  8/ 21/  1][0/0/0][          0][0-0]        TelegramIndex
 #   4>            NEWLINE|               NONE|     PARENT_NOT_SET[ 21/ 21/  1/  0][0/0/0][          0][1-0]
 #   5>         BRACE_OPEN|             STRUCT|     PARENT_NOT_SET[  1/  1/  2/  0][0/0/0][  200000400][0-0] {
 #   5>            NEWLINE|               NONE|     PARENT_NOT_SET[  2/  2/  1/  0][1/1/0][          2][1-0]
