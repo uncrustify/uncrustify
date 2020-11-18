@@ -36,7 +36,7 @@ if (UNCRUSTIFY_SEPARATE_TESTS)
       --git ${GIT_EXECUTABLE}
       --python ${PYTHON_EXECUTABLE}
       --write-ctest ${tests_ctest_file}
-      --cmake-config "$<CONFIGURATION>"
+      --cmake-config "$<CONFIG>"
     VERBATIM
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     DEPENDS ${test_suites}
@@ -71,6 +71,7 @@ add_test(
   NAME cli_options
   COMMAND ${PYTHON_EXECUTABLE}
     test_cli_options.py
+    --config $<CONFIG>
     --build ${uncrustify_BINARY_DIR}
     --diff
   ${_configs}
@@ -80,6 +81,7 @@ add_test(
 add_custom_target(update-cli-options
   COMMAND ${PYTHON_EXECUTABLE}
     test_cli_options.py
+    --config $<CONFIG>
     --build ${uncrustify_BINARY_DIR}
     --apply
   DEPENDS uncrustify
