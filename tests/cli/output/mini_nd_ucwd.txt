@@ -1031,6 +1031,12 @@ indent_extern                   = false    # true/false
 # Whether the 'class' body is indented.
 indent_class                    = false    # true/false
 
+# Additional indent before the leading base class colon.
+# Negative values decrease indent down to the first column.
+# Requires a newline break before colon (see pos_class_colon
+# and nl_class_colon)
+indent_before_class_colon       = 0        # number
+
 # Whether to indent the stuff after a leading base class colon.
 indent_class_colon              = false    # true/false
 

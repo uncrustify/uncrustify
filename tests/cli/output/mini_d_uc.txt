@@ -263,6 +263,7 @@ indent_namespace_level          = 0
 indent_namespace_limit          = 0
 indent_extern                   = false
 indent_class                    = false
+indent_before_class_colon       = 0
 indent_class_colon              = false
 indent_class_on_colon           = false
 indent_constr_colon             = false
