@@ -176,14 +176,19 @@ void * bar()
     <a title="sp_paren_qualifier"><strong><font color="red">               █</font></strong></a>
     void ncName() override;
     <a title="sp_paren_qualifier"><strong><font color="red">             █</font></strong></a>
-template  <  int  ...  X  > int bar2()
-{
-        auto s = sizeof ... (  X  );
-    <a title="sp_sizeof_ellipsis"><strong><font color="red">                   █</font></strong></a><a title="sp_sizeof_ellipsis_paren"><strong><font color="red">   █</font></strong></a>
-        chomp(  X  ) ...;
-    <a title="sp_paren_ellipsis"><strong><font color="red">                █</font></strong></a>
-        return X  +  ...;
-}
+    template < int ... X > int bar2()
+    <a title="sp_type_ellipsis"><strong><font color="red">              █</font></strong></a>
+    {
+            auto s = sizeof ... (  X  );
+        <a title="sp_sizeof_ellipsis"><strong><font color="red">                   █</font></strong></a><a title="sp_sizeof_ellipsis_paren"><strong><font color="red">   █</font></strong></a>
+            chomp(  X  ) ...;
+        <a title="sp_paren_ellipsis"><strong><font color="red">                    █</font></strong></a>
+            return X  +  ...;
+    }
+    do amime3(); while (false);
+    <a title="sp_while_paren_open"><strong><font color="red">                  █</font></strong></a>
+    auto b0 = unknown_kw { 2 };
+    <a title="sp_word_brace_init_lst"><strong><font color="red">                    █</font></strong></a>
     if (data)   go = new ClassA();
     <a title="sp_skip_vbrace_tokens"><strong><font color="red">          █</font></strong></a>
     else        go = new ClassB();
