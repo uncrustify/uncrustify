@@ -1,0 +1,23 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+   <title>Uncrustify: where do the Spaces options work</title>
+</head>
+<body lang="en-US">
+<p>
+</p>
+<pre>
+{
+   a<a title="1,sp_assign"><font color="red">M</font></a>=<a title="2,66,sp_assign"><font color="red">M</font></a>b<a title="3,67,72,sp_arith"><font color="red">M</font></a>+<a title="4,68,73,77,sp_arith"><font color="red">M</font></a>111<a title="5,69,74,78,81,sp_arith"><font color="red">M</font></a>-<a title="6,70,75,79,82,84,sp_arith"><font color="red">M</font></a>55<a title="7,71,76,80,83,85,86,sp_before_semi"><font color="red">M</font></a>;
+}
+template<a title="8,sp_before_angle"><font color="red">M</font></a>&lt;<a title="9,87,sp_inside_angle"><font color="red">M</font></a>typename ... A<a title="10,88,92,sp_before_comma"><font color="red">M</font></a>,<a title="11,89,93,96,sp_after_comma"><font color="red">M</font></a>int<a title="12,90,94,97,99,sp_type_ellipsis"><font color="red">M</font></a>... B<a title="13,91,95,98,100,101,sp_inside_angle"><font color="red">M</font></a>&gt;
+struct foo1<a title="14,sp_after_type"><font color="red">M</font></a>: foo1<a title="15,102,sp_before_angle"><font color="red">M</font></a>&lt;<a title="16,103,117,sp_inside_angle"><font color="red">M</font></a>A<a title="17,104,118,131,sp_type_ellipsis"><font color="red">M</font></a>...<a title="18,105,119,132,144,sp_before_comma"><font color="red">M</font></a>,<a title="19,106,120,133,145,156,sp_after_comma"><font color="red">M</font></a>(<a title="20,107,121,134,146,157,167,sp_inside_paren"><font color="red">M</font></a>sizeof<a title="21,108,122,135,147,158,168,177,sp_sizeof_ellipsis"><font color="red">M</font></a>...<a title="22,109,123,136,148,159,169,178,186,sp_sizeof_ellipsis_paren"><font color="red">M</font></a>(<a title="23,110,124,137,149,160,170,179,187,194,sp_inside_paren"><font color="red">M</font></a>A<a title="24,111,125,138,150,161,171,180,188,195,201,sp_inside_paren"><font color="red">M</font></a>)<a title="25,112,126,139,151,162,172,181,189,196,202,207,sp_arith"><font color="red">M</font></a>+<a title="26,113,127,140,152,163,173,182,190,197,203,208,212,sp_arith"><font color="red">M</font></a>B<a title="27,114,128,141,153,164,174,183,191,198,204,209,213,216,sp_inside_paren"><font color="red">M</font></a>)<a title="28,115,129,142,154,165,175,184,192,199,205,210,214,217,219,sp_paren_ellipsis"><font color="red">M</font></a>...<a title="29,116,130,143,155,166,176,185,193,200,206,211,215,218,220,221,sp_inside_angle"><font color="red">M</font></a>&gt;
+{
+   foo1<a title="30,48,sp_func_class_paren"><font color="red">M</font></a>(<a title="31,49,222,sp_inside_fparens"><font color="red">M</font></a>)<a title="32,50,223,224,sp_fparen_brace"><font color="red">M</font></a>{
+      int<a title="33,51,sp_after_type"><font color="red">M</font></a>x<a title="34,52,225,sp_assign"><font color="red">M</font></a>=<a title="35,53,226,232,sp_assign"><font color="red">M</font></a>sizeof<a title="36,54,227,233,238,sp_sizeof_ellipsis"><font color="red">M</font></a>...<a title="37,55,228,234,239,243,sp_sizeof_ellipsis_paren"><font color="red">M</font></a>(<a title="38,56,229,235,240,244,247,sp_inside_paren"><font color="red">M</font></a>A<a title="39,57,230,236,241,245,248,250,sp_inside_paren"><font color="red">M</font></a>)<a title="40,58,231,237,242,246,249,251,252,sp_before_semi"><font color="red">M</font></a>;
+      bool<a title="41,59,sp_after_type"><font color="red">M</font></a>b<a title="42,60,253,sp_assign"><font color="red">M</font></a>=<a title="43,61,254,258,sp_assign"><font color="red">M</font></a>x<a title="44,62,255,259,262,sp_compare"><font color="red">M</font></a>><a title="45,63,256,260,263,265,sp_compare"><font color="red">M</font></a>1<a title="46,64,257,261,264,266,267,sp_before_semi"><font color="red">M</font></a>;
+   }
+}<a title="47,sp_before_semi"><font color="red">M</font></a>;
+</pre>
+</body>
+</html>
