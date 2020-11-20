@@ -118,13 +118,16 @@ void log_flush(bool force_nl);
 #endif
 
 
+#define __unqualified_func__    get_unqualified_func_name(__func__)
+
+
 #ifdef DEBUG
 /**
  * This should be called as the first thing in a function.
  * It uses the log_func class to add an entry to the function log stack.
  * It is automatically removed when the function returns.
  */
-#define LOG_FUNC_ENTRY()    log_func log_fe = log_func(__func__, __LINE__)
+#define LOG_FUNC_ENTRY()    log_func log_fe = log_func(__unqualified_func__, __LINE__)
 
 
 #else
@@ -148,6 +151,14 @@ public:
 
 
 void log_func_stack(log_sev_t sev, const char *prefix = 0, const char *suffix = "\n", size_t skip_cnt = 0);
+
+
+/**
+ * Return the unqualified function name from the input argument
+ * @param  the qualified function name, usually provided by __func__ macro
+ * @return the corresponding unqualified name
+ */
+const char *get_unqualified_func_name(const char *func);
 
 
 #define log_func_stack_inline(_sev)    log_func_stack((_sev), " [CallStack:", "]\n", 0)

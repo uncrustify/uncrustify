@@ -23,22 +23,6 @@ void fix_casts(chunk_t *start);
 
 
 /**
- * We are on an enum/struct/union tag that is NOT inside a typedef.
- * If there is a {...} and words before the ';', then they are variables.
- *
- * tag { ... } [*] word [, [*]word] ;
- * tag [word/type] { ... } [*] word [, [*]word] ;
- * enum [word/type [: int_type]] { ... } [*] word [, [*]word] ;
- * tag [word/type] [word]; -- this gets caught later.
- * fcn(tag [word/type] [word])
- * a = (tag [word/type] [*])&b;
- *
- * REVISIT: should this be consolidated with the typedef code?
- */
-void fix_enum_struct_union(chunk_t *pc);
-
-
-/**
  * Simply change any STAR to PTR_TYPE and WORD to TYPE
  *
  * @param start  points to the open paren
@@ -79,13 +63,6 @@ void fix_typedef(chunk_t *start);
  *  - SEMICOLON
  */
 chunk_t *fix_variable_definition(chunk_t *start);
-
-
-/**
- * We're on a 'class' or 'struct'.
- * Scan for CT_FUNCTION with a string that matches pclass->str
- */
-void mark_class_ctor(chunk_t *start);
 
 
 void mark_cpp_constructor(chunk_t *pc);
