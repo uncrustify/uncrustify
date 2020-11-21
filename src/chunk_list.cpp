@@ -820,15 +820,15 @@ void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bit
       if (pc->flags != nflags)
       {
          LOG_FMT(LSETFLG,
-                 "%s(%d): %016llx^%016llx=%016llx "
-                 "orig_line is %zu, orig_col is %zu, text() '%s', type is %s, ",
+                 "%s(%d): %016llx^%016llx=%016llx\n"
+                 "   orig_line is %zu, orig_col is %zu, text() '%s', type is %s,",
                  __func__, __LINE__,
                  static_cast<pcf_flags_t::int_t>(pc->flags),
                  static_cast<pcf_flags_t::int_t>(pc->flags ^ nflags),
                  static_cast<pcf_flags_t::int_t>(nflags),
                  pc->orig_line, pc->orig_col, pc->text(),
                  get_token_name(pc->type));
-         LOG_FMT(LSETFLG, "parent_type is %s",
+         LOG_FMT(LSETFLG, " parent_type is %s,\n  ",
                  get_token_name(get_chunk_parent_type(pc)));
          log_func_stack_inline(LSETFLG);
          pc->flags = nflags;
