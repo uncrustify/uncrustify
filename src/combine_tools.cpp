@@ -290,7 +290,7 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
    {
       LOG_FMT(LFPARAM, "Yup!\n");
 
-      if (!chunk_is_token(tmp, CT_TYPE))
+      if (!chunk_is_token(first_word, CT_TYPE))
       {
          set_chunk_type(first_word, CT_TYPE);
       }
