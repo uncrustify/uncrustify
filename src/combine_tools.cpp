@@ -275,7 +275,7 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
    if (first_word != nullptr)
    {
       LOG_FMT(LFPARAM, "%s(%d): first_word->text() is '%s'\n",
-           __func__, __LINE__, first_word->text());
+              __func__, __LINE__, first_word->text());
    }
    bool ret = (  word_count >= 2
               || (  word_count == 1
@@ -289,7 +289,11 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
    if (ret)
    {
       LOG_FMT(LFPARAM, "Yup!\n");
-      set_chunk_type(first_word, CT_TYPE);
+
+      if (!chunk_is_token(tmp, CT_TYPE))
+      {
+         set_chunk_type(first_word, CT_TYPE);
+      }
       chunk_t *tmp = chunk_get_prev_ncnl(first_word);
 
       if (chunk_is_token(tmp, CT_STAR))
