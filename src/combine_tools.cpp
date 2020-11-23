@@ -17,17 +17,23 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LFPARAM, "%s:", __func__);
+   LOG_FMT(LFPARAM, "%s(%d): start->text() is '%s', type is %s\n",
+           __func__, __LINE__, start->text(), get_token_name(start->type));
+   LOG_FMT(LFPARAM, "%s(%d): end->text()   is '%s', type is %s\n",
+           __func__, __LINE__, end->text(), get_token_name(end->type));
 
-   int     word_count = 0;
-   int     type_count = 0;
-   chunk_t *pc;
+   int     word_count     = 0;
+   int     type_count     = 0;
+   chunk_t *pc            = nullptr;
+   chunk_t *first_word    = nullptr;
+   bool    first_word_set = false;
 
    for (pc = start;
         pc != nullptr && pc != end;
         pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
    {
-      LOG_FMT(LFPARAM, " [%s]", pc->text());
+      LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->text(), get_token_name(pc->type));
 
       if (  chunk_is_token(pc, CT_QUALIFIER)
          || chunk_is_token(pc, CT_STRUCT)
@@ -35,27 +41,37 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
          || chunk_is_token(pc, CT_UNION)
          || chunk_is_token(pc, CT_TYPENAME))
       {
-         LOG_FMT(LFPARAM, " <== %s! (yes)\n", get_token_name(pc->type));
+         LOG_FMT(LFPARAM, "%s(%d): <== %s! (yes)\n",
+                 __func__, __LINE__, get_token_name(pc->type));
          return(true);
       }
 
-      if (chunk_is_token(pc, CT_WORD) || chunk_is_token(pc, CT_TYPE))
+      if (  chunk_is_token(pc, CT_WORD)
+         || chunk_is_token(pc, CT_TYPE))
       {
          ++word_count;
+
+         if (!first_word_set)
+         {
+            first_word     = pc;
+            first_word_set = true;
+         }
 
          if (chunk_is_token(pc, CT_TYPE))
          {
             ++type_count;
          }
       }
-      else if (chunk_is_token(pc, CT_MEMBER) || chunk_is_token(pc, CT_DC_MEMBER))
+      else if (  chunk_is_token(pc, CT_MEMBER)
+              || chunk_is_token(pc, CT_DC_MEMBER))
       {
          if (word_count > 0)
          {
             --word_count;
          }
       }
-      else if (pc != start && chunk_is_ptr_operator(pc))
+      else if (  pc != start
+              && chunk_is_ptr_operator(pc))
       {
          // chunk is OK
       }
@@ -66,15 +82,20 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
       }
       else if (chunk_is_token(pc, CT_ANGLE_OPEN))
       {
-         LOG_FMT(LFPARAM, " <== template\n");
+         LOG_FMT(LFPARAM, "%s(%d): <== template\n",
+                 __func__, __LINE__);
+
          return(true);
       }
       else if (chunk_is_token(pc, CT_ELLIPSIS))
       {
-         LOG_FMT(LFPARAM, " <== elipses\n");
+         LOG_FMT(LFPARAM, "%s(%d): <== elipses\n",
+                 __func__, __LINE__);
+
          return(true);
       }
-      else if (word_count == 0 && chunk_is_token(pc, CT_PAREN_OPEN))
+      else if (  word_count == 0
+              && chunk_is_token(pc, CT_PAREN_OPEN))
       {
          // Check for old-school func proto param '(type)'
          chunk_t *tmp1 = chunk_skip_to_match(pc, scope_e::PREPROC);
@@ -90,7 +111,8 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
             return(false);
          }
 
-         if (chunk_is_token(tmp2, CT_COMMA) || chunk_is_paren_close(tmp2))
+         if (  chunk_is_token(tmp2, CT_COMMA)
+            || chunk_is_paren_close(tmp2))
          {
             do
             {
@@ -100,7 +122,8 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
                {
                   return(false);
                }
-               LOG_FMT(LFPARAM, " [%s]", pc->text());
+               LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', type is %s\n",
+                       __func__, __LINE__, pc->text(), get_token_name(pc->type));
             } while (pc != tmp1);
 
             // reset some vars to allow [] after parens
@@ -109,11 +132,13 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
          }
          else
          {
-            LOG_FMT(LFPARAM, " <== [%s] not fcn type!\n", get_token_name(pc->type));
+            LOG_FMT(LFPARAM, "%s(%d): <== '%s' not fcn type!\n",
+                    __func__, __LINE__, get_token_name(pc->type));
             return(false);
          }
       }
-      else if (  (word_count == 1 || (word_count == type_count))
+      else if (  (  word_count == 1
+                 || (word_count == type_count))
               && chunk_is_token(pc, CT_PAREN_OPEN))
       {
          // Check for func proto param 'void (*name)' or 'void (*name)(params)' or 'void (^name)(params)'
@@ -138,13 +163,17 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
          }
 
          if (  !chunk_is_str(tmp3, ")", 1)
-            || !(chunk_is_str(tmp1, "*", 1) || chunk_is_str(tmp1, "^", 1)) // Issue #2656
-            || !(tmp2->type == CT_WORD || chunk_is_str(tmp2, ")", 1)))
+            || !(  chunk_is_str(tmp1, "*", 1)
+                || chunk_is_str(tmp1, "^", 1)) // Issue #2656
+            || !(  tmp2->type == CT_WORD
+                || chunk_is_str(tmp2, ")", 1)))
          {
-            LOG_FMT(LFPARAM, " <== [%s] not fcn type!\n", get_token_name(pc->type));
+            LOG_FMT(LFPARAM, "%s(%d): <== '%s' not fcn type!\n",
+                    __func__, __LINE__, get_token_name(pc->type));
             return(false);
          }
-         LOG_FMT(LFPARAM, " <skip fcn type>");
+         LOG_FMT(LFPARAM, "%s(%d): <skip fcn type>\n",
+                 __func__, __LINE__);
          tmp1 = chunk_get_next_ncnl(tmp3, scope_e::PREPROC);
 
          if (tmp1 == nullptr)
@@ -157,6 +186,8 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
             tmp3 = chunk_skip_to_match(tmp1, scope_e::PREPROC);
          }
          pc = tmp3;
+         LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', type is %s\n",
+                 __func__, __LINE__, pc->text(), get_token_name(pc->type));
 
          // reset some vars to allow [] after parens
          word_count = 1;
@@ -166,15 +197,21 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
       {
          // ignore it
       }
-      else if (word_count == 1 && chunk_is_token(pc, CT_SQUARE_OPEN))
+      else if (  word_count == 1
+              && chunk_is_token(pc, CT_SQUARE_OPEN))
       {
          // skip over any array stuff
          pc = chunk_skip_to_match(pc, scope_e::PREPROC);
+         LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', type is %s\n",
+                 __func__, __LINE__, pc->text(), get_token_name(pc->type));
       }
-      else if (word_count == 2 && chunk_is_token(pc, CT_SQUARE_OPEN))
+      else if (  word_count == 2
+              && chunk_is_token(pc, CT_SQUARE_OPEN))
       {
          // Bug #671: is it such as: bool foo[FOO_MAX]
          pc = chunk_skip_to_match(pc, scope_e::PREPROC);
+         LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', type is %s\n",
+                 __func__, __LINE__, pc->text(), get_token_name(pc->type));
       }
       else if (  word_count == 1
               && language_is_set(LANG_CPP)
@@ -184,51 +221,90 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
       }
       else
       {
-         LOG_FMT(LFPARAM, " <== [%s] no way! tc=%d wc=%d\n",
-                 get_token_name(pc->type), type_count, word_count);
+         LOG_FMT(LFPARAM, "%s(%d): <== type is %s, no way!, type count is %d, word count is %d\n",
+                 __func__, __LINE__, get_token_name(pc->type), type_count, word_count);
          return(false);
       }
+      LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->text(), get_token_name(pc->type));
    }
 
    chunk_t *last = chunk_get_prev_ncnlni(pc);   // Issue #2279
 
+   LOG_FMT(LFPARAM, "%s(%d): last->text() is '%s', type is %s\n",
+           __func__, __LINE__, last->text(), get_token_name(last->type));
+
    if (chunk_is_ptr_operator(last))
    {
-      LOG_FMT(LFPARAM, " <== [%s] sure!\n", get_token_name(pc->type));
+      LOG_FMT(LFPARAM, "%s(%d): <== type is %s, sure!\n",
+              __func__, __LINE__, get_token_name(last->type));
       return(true);
    }
 
-   if (word_count < 2 && type_count < 1 && start->brace_level > 0)
+   if (  word_count < 2
+      && type_count < 1
+      && start->brace_level > 0)
    {
-      LOG_FMT(LFPARAM, " !MVP!");
+      LOG_FMT(LFPARAM, "%s(%d): !MVP!\n",
+              __func__, __LINE__);
       // Oh, joy, we are in Most Vexing Parse territory
       auto const brace =
          chunk_get_prev_type(start, CT_BRACE_OPEN, start->brace_level - 1);
 
-      if (brace)
+      if (brace != nullptr)
       {
-         LOG_FMT(LFPARAM, " (matching %s brace at %zu:%zu)",
-                 get_token_name(get_chunk_parent_type(brace)),
-                 brace->orig_line, brace->orig_col);
+         LOG_FMT(LFPARAM, "%s(%d): (matching %s brace at orig_line %zu, orig_col is %zu)",
+                 __func__, __LINE__,
+                 get_token_name(get_chunk_parent_type(brace)), brace->orig_line, brace->orig_col);
       }
 
-      if (  brace
+      if (  brace != nullptr
          && (  get_chunk_parent_type(brace) == CT_CLASS
             || get_chunk_parent_type(brace) == CT_STRUCT))
       {
          // A Most Vexing Parse variable declaration cannot occur in the body
          // of a struct/class, so we probably have a function prototype
-         LOG_FMT(LFPARAM, " <== [%s] Likely!\n",
-                 (pc == nullptr ? "nullptr" : get_token_name(pc->type)));
+         LOG_FMT(LFPARAM, "%s(%d): <== type is %s, Likely!\n",
+                 __func__, __LINE__, (pc == nullptr ? "nullptr" : get_token_name(pc->type)));
          return(true);
       }
    }
-   bool ret = (  word_count >= 2
-              || (word_count == 1 && type_count == 1));
+   LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', word_count is %d, type_count is %d\n",
+           __func__, __LINE__, pc->text(), word_count, type_count);
 
-   LOG_FMT(LFPARAM, " <== [%s] %s!\n",
-           (pc == nullptr ? "nullptr" : get_token_name(pc->type)),
-           ret ? "Yup" : "Unlikely");
+   if (first_word != nullptr)
+   {
+      LOG_FMT(LFPARAM, "%s(%d): first_word->text() is '%s'\n",
+              __func__, __LINE__, first_word->text());
+   }
+   bool ret = (  word_count >= 2
+              || (  word_count == 1
+                 && type_count == 1));
+
+   LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', ",
+           __func__, __LINE__, pc->text());
+   LOG_FMT(LFPARAM, "<== type is %s, ",
+           (pc == nullptr ? "nullptr" : get_token_name(pc->type)));
+
+   if (ret)
+   {
+      LOG_FMT(LFPARAM, "Yup!\n");
+
+      if (!chunk_is_token(first_word, CT_TYPE))
+      {
+         set_chunk_type(first_word, CT_TYPE);
+      }
+      chunk_t *tmp = chunk_get_prev_ncnl(first_word);
+
+      if (chunk_is_token(tmp, CT_STAR))
+      {
+         set_chunk_type(tmp, CT_PTR_TYPE);
+      }
+   }
+   else
+   {
+      LOG_FMT(LFPARAM, "Unlikely!\n");
+   }
    return(ret);
 } // can_be_full_param
 
