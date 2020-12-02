@@ -1688,7 +1688,41 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       && chunk_is_str(pc, "&&", 2)
       && chunk_ends_type(pc->prev))
    {
-      set_chunk_type(pc, CT_BYREF);
+      chunk_t *tmp = chunk_get_prev(pc);                // Issue #2688
+      LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+              __func__, __LINE__, tmp->orig_line, tmp->orig_col,
+              tmp->text(), get_token_name(tmp->type));
+      log_pcf_flags(LFCNR, tmp->flags);
+      // look for a type
+
+      if (chunk_is_token(tmp, CT_TYPE))
+      {
+         log_pcf_flags(LFCNR, pc->flags);
+         set_chunk_type(pc, CT_BYREF);
+      }
+      // look next, is there a "assign" before the ";"
+      chunk_t *semi = chunk_get_next_type(pc, CT_SEMICOLON, pc->level);                // Issue #2688
+
+      if (semi != nullptr)
+      {
+         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+                 __func__, __LINE__, semi->orig_line, semi->orig_col,
+                 semi->text(), get_token_name(semi->type));
+
+         for (chunk_t *test_it = pc; test_it != semi; test_it = chunk_get_next(test_it))
+         {
+            LOG_FMT(LFCNR, "%s(%d): test_it->orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+                    __func__, __LINE__, test_it->orig_line, test_it->orig_col,
+                    test_it->text(), get_token_name(test_it->type));
+
+            if (chunk_is_token(test_it, CT_ASSIGN))
+            {
+               // the statement is an assigment
+               set_chunk_type(pc, CT_BYREF);
+               break;
+            }
+         }
+      }
    }
 
    // Issue #1704
