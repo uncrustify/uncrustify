@@ -1718,6 +1718,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             if (chunk_is_token(test_it, CT_ASSIGN))
             {
                // the statement is an assigment
+               // && is before assign
                set_chunk_type(pc, CT_BYREF);
                break;
             }

@@ -25,7 +25,7 @@ before_build:
   - cd c:\projects\uncrustify
   - mkdir build
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DUNCRUSTIFY_SEPARATE_TESTS=ON -G "%GENERATOR%" ..
+  - cmake -DUNCRUSTIFY_SEPARATE_TESTS=ON -G "%GENERATOR%" ..
 build_script:
   - cmake --build . --config %CONFIGURATION%
 test_script:
