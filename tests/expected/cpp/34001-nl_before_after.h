@@ -69,6 +69,10 @@ class I
 {
 };
 
+using namespace F;
+
+namespace M
+{
 void bar4();
 
 /* multiline test comment
@@ -95,3 +99,5 @@ class H
     };
 
 };
+
+}

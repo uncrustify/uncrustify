@@ -394,6 +394,18 @@ static bool can_increase_nl(chunk_t *nl)
       }
    }
 
+   if (chunk_is_token(prev, CT_BRACE_CLOSE))
+   {
+      if (  options::nl_before_namespace()
+         && get_chunk_parent_type(prev) == CT_NAMESPACE)
+      {
+         log_rule_B("nl_before_namespace");
+         LOG_FMT(LBLANKD, "%s(%d): nl_before_namespace %zu\n",
+                 __func__, __LINE__, nl->orig_line);
+         return(true);
+      }
+   }
+
    if (chunk_is_token(prev, CT_BRACE_OPEN))
    {
       if (  options::nl_inside_namespace()
