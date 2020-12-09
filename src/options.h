@@ -1085,6 +1085,15 @@ sp_extern_paren;
 extern Option<iarf_e>
 sp_cmt_cpp_start;
 
+// Add or remove space in a C++ region marker comment, as in '// <here> BEGIN'.
+// A region marker is defined as a comment which is not preceded by other text
+// (i.e. the comment is the first non-whitespace on the line), and which starts
+// with either 'BEGIN' or 'END'.
+//
+// Overrides sp_cmt_cpp_start.
+extern Option<iarf_e>
+sp_cmt_cpp_region;
+
 // If true, space added with sp_cmt_cpp_start will be added after Doxygen
 // sequences like '///', '///<', '//!' and '//!<'.
 extern Option<bool>
