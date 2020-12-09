@@ -656,6 +656,7 @@
 33211  disable_nl_cont.cfg                  cpp/pp_multi_comment.cpp
 33212  disable_nl_cont.cfg                  cpp/pp-define-indent.cpp
 33213  disable_nl_cont.cfg                  cpp/disable_macro.cpp
+33214  Issue_2742.cfg                       cpp/Issue_2742.cpp
 
 34001  nl_before_after.cfg                  cpp/nl_before_after.h
 34002  indent_columns-3.cfg                 cpp/bug_i_793.cpp
