@@ -861,26 +861,25 @@ sp_case_label                   = ignore   # ignore/add/remove/force
 sp_range                        = ignore   # ignore/add/remove/force
 
 # Add or remove space after ':' in a Java/C++11 range-based 'for',
-# as in 'for (Type var : expr)'.
+# as in 'for (Type var : <here> expr)'.
 sp_after_for_colon              = ignore   # ignore/add/remove/force
 
 # Add or remove space before ':' in a Java/C++11 range-based 'for',
-# as in 'for (Type var : expr)'.
+# as in 'for (Type var <here> : expr)'.
 sp_before_for_colon             = ignore   # ignore/add/remove/force
 
-# (D) Add or remove space between 'extern' and '(' as in 'extern (C)'.
+# (D) Add or remove space between 'extern' and '(' as in 'extern <here> (C)'.
 sp_extern_paren                 = ignore   # ignore/add/remove/force
 
-# Add or remove space after the opening of a C++ comment,
-# i.e. '// A' vs. '//A'.
+# Add or remove space after the opening of a C++ comment, as in '// <here> A'.
 sp_cmt_cpp_start                = ignore   # ignore/add/remove/force
 
-# If true, space is added with sp_cmt_cpp_start will be added after doxygen
+# If true, space added with sp_cmt_cpp_start will be added after Doxygen
 # sequences like '///', '///<', '//!' and '//!<'.
 sp_cmt_cpp_doxygen              = false    # true/false
 
-# If true, space is added with sp_cmt_cpp_start will be added after Qt
-# translator or meta-data comments like '//:', '//=', and '//~'.
+# If true, space added with sp_cmt_cpp_start will be added after Qt translator
+# or meta-data comments like '//:', '//=', and '//~'.
 sp_cmt_cpp_qttr                 = false    # true/false
 
 # Add or remove space between #else or #endif and a trailing comment.
