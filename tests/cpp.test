@@ -366,6 +366,8 @@
 30853  sp_paren_noexcept-f.cfg              cpp/noexcept.cpp
 30854  Issue_1703.cfg                       cpp/Issue_1703.cpp
 30855  empty.cfg                            cpp/cpp_move.cpp
+30856  sp_cmt_cpp_region-f.cfg              cpp/sp_cmt_cpp_region.cpp
+30857  sp_cmt_cpp_region-r.cfg              cpp/sp_cmt_cpp_region.cpp
 
 30860  sf574.cfg                            cpp/sf574.cpp
 

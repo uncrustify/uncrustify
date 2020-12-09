@@ -223,6 +223,7 @@ sp_after_for_colon              = ignore
 sp_before_for_colon             = ignore
 sp_extern_paren                 = ignore
 sp_cmt_cpp_start                = ignore
+sp_cmt_cpp_region               = ignore
 sp_cmt_cpp_doxygen              = false
 sp_cmt_cpp_qttr                 = false
 sp_endif_cmt                    = ignore

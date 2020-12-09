@@ -874,6 +874,14 @@ sp_extern_paren                 = ignore   # ignore/add/remove/force
 # Add or remove space after the opening of a C++ comment, as in '// <here> A'.
 sp_cmt_cpp_start                = ignore   # ignore/add/remove/force
 
+# Add or remove space in a C++ region marker comment, as in '// <here> BEGIN'.
+# A region marker is defined as a comment which is not preceded by other text
+# (i.e. the comment is the first non-whitespace on the line), and which starts
+# with either 'BEGIN' or 'END'.
+#
+# Overrides sp_cmt_cpp_start.
+sp_cmt_cpp_region               = ignore   # ignore/add/remove/force
+
 # If true, space added with sp_cmt_cpp_start will be added after Doxygen
 # sequences like '///', '///<', '//!' and '//!<'.
 sp_cmt_cpp_doxygen              = false    # true/false
