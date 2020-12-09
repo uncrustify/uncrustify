@@ -2499,7 +2499,9 @@ extern BoundedOption<unsigned, 0, 16>
 nl_max_blank_in_func;
 
 // The number of newlines inside an empty function body.
-// This option is overridden by nl_collapse_empty_body=true
+// This option overrides eat_blanks_after_open_brace and
+// eat_blanks_before_close_brace, but is ignored when
+// nl_collapse_empty_body=true
 extern BoundedOption<unsigned, 0, 16>
 nl_inside_empty_func;
 
