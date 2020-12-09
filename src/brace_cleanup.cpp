@@ -810,7 +810,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
       || (  chunk_is_semicolon(pc)
          && frm.top().type != CT_PAREN_OPEN
          && frm.top().type != CT_FPAREN_OPEN
-         && frm.top().type != CT_SPAREN_OPEN))
+         && frm.top().type != CT_SPAREN_OPEN)
+      || chunk_is_token(pc, CT_MACRO))                         // Issue #2742
    {
       LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, reset1 stmt on '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->text());

@@ -11,7 +11,7 @@ newlines                        = crlf
 #   1>            PREPROC|          PP_DEFINE|     PARENT_NOT_SET[  1/  1/  2/  0][1/1/0][  2001c0001][0-0] #
 #   1>          PP_DEFINE|               NONE|     PARENT_NOT_SET[  2/  2/  8/  0][1/1/0][      20001][0-0]  define
 #   1>              MACRO|               NONE|     PARENT_NOT_SET[  9/  9/ 10/  1][1/1/0][      20001][0-0]         x
-#   1>               WORD|               NONE|     PARENT_NOT_SET[ 11/ 11/ 18/  1][1/1/0][      80001][0-0]           s23_foo
+#   1>               WORD|               NONE|     PARENT_NOT_SET[ 11/ 11/ 18/  1][1/1/0][      c0001][0-0]           s23_foo
 #   1>             ASSIGN|               NONE|     PARENT_NOT_SET[ 19/ 19/ 21/  1][1/1/0][  200000001][0-0]                   +=
 #   1>            NL_CONT|               NONE|     PARENT_NOT_SET[ 22/ 22/  1/  1][1/1/0][      80001][1-0]                      \
 #   2>               WORD|               NONE|     PARENT_NOT_SET[  9/  1/  7/  0][1/1/0][      80001][0-0]         s8_foo
