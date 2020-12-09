@@ -2230,6 +2230,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
                // retry line breaks caused by splitting 1-liners
                newlines_cleanup_braces(false);
                newlines_insert_blank_lines();
+               newlines_functions_remove_extra_blank_lines();
                first = false;
             }
          }
