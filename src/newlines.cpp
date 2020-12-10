@@ -365,7 +365,7 @@ static bool can_increase_nl(chunk_t *nl)
 
    if (chunk_is_token(next, CT_BRACE_CLOSE))
    {
-      if (  options::nl_inside_namespace()
+      if (  options::nl_inside_namespace() > 0
          && get_chunk_parent_type(next) == CT_NAMESPACE)
       {
          log_rule_B("nl_inside_namespace");
@@ -408,7 +408,7 @@ static bool can_increase_nl(chunk_t *nl)
 
    if (chunk_is_token(prev, CT_BRACE_OPEN))
    {
-      if (  options::nl_inside_namespace()
+      if (  options::nl_inside_namespace() > 0
          && get_chunk_parent_type(prev) == CT_NAMESPACE)
       {
          log_rule_B("nl_inside_namespace");
@@ -2459,9 +2459,18 @@ static void newlines_brace_pair(chunk_t *br_open)
    {
       if (chunk_is_newline(next))
       {
+         log_rule_B("nl_inside_empty_func");
          log_rule_B("nl_inside_namespace");
 
-         if (options::nl_inside_namespace() && get_chunk_parent_type(br_open) == CT_NAMESPACE)
+         if (  options::nl_inside_empty_func() > 0
+            && chunk_is_token(chunk_get_next_ncnl(br_open), CT_BRACE_CLOSE)
+            && (  get_chunk_parent_type(br_open) == CT_FUNC_CLASS_DEF
+               || get_chunk_parent_type(br_open) == CT_FUNC_DEF))
+         {
+            blank_line_set(next, options::nl_inside_empty_func);
+         }
+         else if (  options::nl_inside_namespace() > 0
+                 && get_chunk_parent_type(br_open) == CT_NAMESPACE)
          {
             blank_line_set(next, options::nl_inside_namespace);
          }
@@ -4105,8 +4114,17 @@ void newlines_cleanup_braces(bool first)
             if (chunk_is_newline(prev))
             {
                log_rule_B("nl_inside_namespace");
+               log_rule_B("nl_inside_empty_func");
 
-               if (options::nl_inside_namespace() && get_chunk_parent_type(pc) == CT_NAMESPACE)
+               if (  options::nl_inside_empty_func() > 0
+                  && chunk_is_token(chunk_get_prev_ncnlni(pc), CT_BRACE_OPEN)
+                  && (  get_chunk_parent_type(pc) == CT_FUNC_CLASS_DEF
+                     || get_chunk_parent_type(pc) == CT_FUNC_DEF))
+               {
+                  blank_line_set(prev, options::nl_inside_empty_func);
+               }
+               else if (  options::nl_inside_namespace() > 0
+                       && get_chunk_parent_type(pc) == CT_NAMESPACE)
                {
                   blank_line_set(prev, options::nl_inside_namespace);
                }
