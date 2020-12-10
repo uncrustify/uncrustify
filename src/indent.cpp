@@ -2861,7 +2861,8 @@ void indent_text(void)
               || (chunk_is_token(pc, CT_THROW) && get_chunk_parent_type(pc) == CT_NONE))
       {
          // don't count returns inside a () or []
-         if (pc->level == pc->brace_level)
+         if (  pc->level == pc->brace_level
+            || pc->flags.test(PCF_IN_LAMBDA))
          {
             chunk_t *next = chunk_get_next(pc);
 

@@ -868,6 +868,24 @@ void mark_cpp_constructor(chunk_t *pc)
 } // mark_cpp_constructor
 
 
+void mark_cpp_lambda(chunk_t *square_open)
+{
+   if (  chunk_is_token(square_open, CT_SQUARE_OPEN)
+      && get_chunk_parent_type(square_open) == CT_CPP_LAMBDA)
+   {
+      auto *brace_close = chunk_get_next_type(square_open, CT_BRACE_CLOSE, square_open->level);
+
+      if (get_chunk_parent_type(brace_close) == CT_CPP_LAMBDA)
+      {
+         for (auto *pc = square_open; pc != brace_close; pc = chunk_get_next_ncnl(pc))
+         {
+            chunk_flags_set(pc, PCF_IN_LAMBDA);
+         }
+      }
+   }
+} // mark_cpp_lambda
+
+
 void mark_define_expressions(void)
 {
    LOG_FUNC_ENTRY();
