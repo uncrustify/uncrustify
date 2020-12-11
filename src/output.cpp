@@ -1488,13 +1488,34 @@ static chunk_t *output_comment_cpp(chunk_t *first)
 
    if (!options::cmt_cpp_to_c())
    {
+      auto const *cmt_text = first->str.c_str() + 2;
+      auto       *sp_cmt   = &options::sp_cmt_cpp_start;
+
       cmt.cont_text = leadin;
 
+      // Get start of comment text
+      while (*cmt_text && unc_isspace(*cmt_text))
+      {
+         ++cmt_text;
+      }
+
+      // Determine if we are dealing with a region marker
+      if (  (!first->prev || first->prev->orig_line != first->orig_line)
+         && (  strncmp(cmt_text, "BEGIN", 5) == 0
+            || strncmp(cmt_text, "END", 3) == 0))
+      {
+         // If sp_cmt_cpp_region is not ignore, use that instead of
+         // sp_cmt_cpp_start
+         if (options::sp_cmt_cpp_region() != IARF_IGNORE)
+         {
+            sp_cmt = &options::sp_cmt_cpp_region;
+         }
+      }
       // Add or remove space after the opening of a C++ comment,
       // i.e. '// A' vs. '//A'.
-      log_rule_B("sp_cmt_cpp_start");
+      log_rule_B(sp_cmt->name());
 
-      if (options::sp_cmt_cpp_start() != IARF_REMOVE)
+      if ((*sp_cmt)() != IARF_REMOVE)
       {
          cmt.cont_text += ' ';
       }
@@ -1502,9 +1523,9 @@ static chunk_t *output_comment_cpp(chunk_t *first)
 
       // Add or remove space after the opening of a C++ comment,
       // i.e. '// A' vs. '//A'.
-      log_rule_B("sp_cmt_cpp_start");
+      log_rule_B(sp_cmt->name());
 
-      if (options::sp_cmt_cpp_start() == IARF_IGNORE)
+      if ((*sp_cmt)() == IARF_IGNORE)
       {
          add_comment_text(first->str, cmt, false);
       }
@@ -1520,7 +1541,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
          // i.e. '// A' vs. '//A'.
          log_rule_B("sp_cmt_cpp_start");
 
-         if (options::sp_cmt_cpp_start() & IARF_REMOVE)
+         if ((*sp_cmt)() & IARF_REMOVE)
          {
             while ((tmp.size() > 0) && unc_isspace(tmp[0]))
             {
@@ -1534,7 +1555,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
             // i.e. '// A' vs. '//A'.
             log_rule_B("sp_cmt_cpp_start");
 
-            if (options::sp_cmt_cpp_start() & IARF_ADD)
+            if ((*sp_cmt)() & IARF_ADD)
             {
                if (!unc_isspace(tmp[0]) && (tmp[0] != '/'))
                {

@@ -1068,31 +1068,39 @@ extern Option<iarf_e>
 sp_range;
 
 // Add or remove space after ':' in a Java/C++11 range-based 'for',
-// as in 'for (Type var : expr)'.
+// as in 'for (Type var : <here> expr)'.
 extern Option<iarf_e>
 sp_after_for_colon;
 
 // Add or remove space before ':' in a Java/C++11 range-based 'for',
-// as in 'for (Type var : expr)'.
+// as in 'for (Type var <here> : expr)'.
 extern Option<iarf_e>
 sp_before_for_colon;
 
-// (D) Add or remove space between 'extern' and '(' as in 'extern (C)'.
+// (D) Add or remove space between 'extern' and '(' as in 'extern <here> (C)'.
 extern Option<iarf_e>
 sp_extern_paren;
 
-// Add or remove space after the opening of a C++ comment,
-// i.e. '// A' vs. '//A'.
+// Add or remove space after the opening of a C++ comment, as in '// <here> A'.
 extern Option<iarf_e>
 sp_cmt_cpp_start;
 
-// If true, space is added with sp_cmt_cpp_start will be added after doxygen
+// Add or remove space in a C++ region marker comment, as in '// <here> BEGIN'.
+// A region marker is defined as a comment which is not preceded by other text
+// (i.e. the comment is the first non-whitespace on the line), and which starts
+// with either 'BEGIN' or 'END'.
+//
+// Overrides sp_cmt_cpp_start.
+extern Option<iarf_e>
+sp_cmt_cpp_region;
+
+// If true, space added with sp_cmt_cpp_start will be added after Doxygen
 // sequences like '///', '///<', '//!' and '//!<'.
 extern Option<bool>
 sp_cmt_cpp_doxygen;
 
-// If true, space is added with sp_cmt_cpp_start will be added after Qt
-// translator or meta-data comments like '//:', '//=', and '//~'.
+// If true, space added with sp_cmt_cpp_start will be added after Qt translator
+// or meta-data comments like '//:', '//=', and '//~'.
 extern Option<bool>
 sp_cmt_cpp_qttr;
 
