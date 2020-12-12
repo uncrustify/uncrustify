@@ -647,6 +647,7 @@
 33161  sp_before_byref-r.cfg                cpp/byref-3.cpp
 
 33180  pp_multi_comment.cfg                 cpp/pp_multi_comment.cpp
+33181  Issue_2759.cfg                       cpp/Issue_2759.cpp
 
 33200  cmt_multi_first_len_minimum-1.cfg    cpp/first_len_minimum.cpp
 

@@ -5613,7 +5613,12 @@ void newlines_class_colon_pos(c_token_t tok)
                {
                   if (ncia == IARF_FORCE)          // nl_class_init_args, nl_constr_init_args: 5
                   {
-                     newline_force_after(pc);
+                     chunk_t *after = chunk_get_next(pc);   // Issue #2759
+
+                     if (chunk_is_not_token(after, CT_COMMENT_CPP))
+                     {
+                        newline_force_after(pc);
+                     }
                   }
                   else
                   {
@@ -5759,6 +5764,8 @@ void do_blank_lines(void)
          LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       }
+      LOG_FMT(LBLANK, "%s(%d): nl_count is %zu\n",
+              __func__, __LINE__, pc->nl_count);
       bool line_added = false;
 
       //if (pc->type != CT_NEWLINE)
@@ -6278,7 +6285,7 @@ void do_blank_lines(void)
       {
          --pc->nl_count;
       }
-      LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, text is '%s', nl_count changed to %zu\n",
+      LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, text is '%s', nl_count is now %zu\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), pc->nl_count);
    }
 } // do_blank_lines
