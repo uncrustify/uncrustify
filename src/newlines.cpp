@@ -2463,7 +2463,7 @@ static void newlines_brace_pair(chunk_t *br_open)
          log_rule_B("nl_inside_namespace");
 
          if (  options::nl_inside_empty_func() > 0
-            && chunk_is_token(chunk_get_next_ncnl(br_open), CT_BRACE_CLOSE)
+            && chunk_is_token(chunk_get_next_nnl(br_open), CT_BRACE_CLOSE)
             && (  get_chunk_parent_type(br_open) == CT_FUNC_CLASS_DEF
                || get_chunk_parent_type(br_open) == CT_FUNC_DEF))
          {
@@ -3630,6 +3630,32 @@ void newlines_remove_newlines(void)
 }
 
 
+void newlines_remove_disallowed()
+{
+   LOG_FUNC_ENTRY();
+
+   auto *pc = chunk_get_head();
+
+   while ((pc = chunk_get_next_nl(pc)) != nullptr)
+   {
+      LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>, nl is %zu\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->nl_count);
+
+      if (!can_increase_nl(pc))
+      {
+         LOG_FMT(LBLANKD, "%s(%d): force to 1 orig_line is %zu, orig_col is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col);
+
+         if (pc->nl_count != 1)
+         {
+            pc->nl_count = 1;
+            MARK_CHANGE();
+         }
+      }
+   }
+}
+
+
 void newlines_cleanup_angles()
 {
    // Issue #1167
@@ -4117,7 +4143,7 @@ void newlines_cleanup_braces(bool first)
                log_rule_B("nl_inside_empty_func");
 
                if (  options::nl_inside_empty_func() > 0
-                  && chunk_is_token(chunk_get_prev_ncnlni(pc), CT_BRACE_OPEN)
+                  && chunk_is_token(chunk_get_prev_nnl(pc), CT_BRACE_OPEN)
                   && (  get_chunk_parent_type(pc) == CT_FUNC_CLASS_DEF
                      || get_chunk_parent_type(pc) == CT_FUNC_DEF))
                {
