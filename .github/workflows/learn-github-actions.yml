@@ -8,3 +8,7 @@ jobs:
       - uses: actions/setup-node@v1
       - run: npm install -g bats
       - run: bats -v
+      - name: cmake-part
+        env:
+          BADGE: linux
+        run: cmake -DCMAKE_BUILD_TYPE=Release .
