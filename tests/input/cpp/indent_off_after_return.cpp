@@ -36,3 +36,25 @@ int foo5()
 		)
 	);
 }
+
+int foo6()
+{
+   auto my_lambda = [] ()
+   {
+      return 1 +
+             2 +
+             3;
+
+   };
+}
+
+template<typename U>
+U *
+find(const std::string &name = "") const
+{
+    return find<U>([&name] (auto *pComposite)
+                   {
+                       return name.empty() ||
+                              pComposite->getName() == name;
+                   });
+}

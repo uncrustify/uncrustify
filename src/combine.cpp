@@ -2488,6 +2488,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
          set_chunk_parent(call_pa_c, CT_FUNC_CALL);
       }
    }
+   mark_cpp_lambda(sq_o);
 } // handle_cpp_lambda
 
 

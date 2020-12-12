@@ -69,6 +69,18 @@ void mark_cpp_constructor(chunk_t *pc);
 
 
 /**
+ * Mark all chunks belonging to a C++ lambda expression
+ *
+ * @param square_open points to a chunk of type CT_SQUARE_OPEN, and the parent type is
+ *                    assumed to have already been assigned the value CT_CPP_LAMBDA;
+ *                    under this assumption, the function marks all chunks as PCF_IN_LAMBDA
+ *                    until the corresponding closing CT_BRACE_CLOSE (with parent type
+ *                    CT_CPP_LAMBDA) is encountered
+ */
+void mark_cpp_lambda(chunk_t *square_open);
+
+
+/**
  * Marks statement starts in a macro body.
  * REVISIT: this may already be done
  */
