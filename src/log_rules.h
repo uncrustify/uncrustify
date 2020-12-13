@@ -19,7 +19,7 @@ using namespace uncrustify;
 #define log_rule(rule)                                      \
    do {                                                     \
       log_rule2(__func__, __LINE__, (rule), first, second); \
-      log_rule4(__func__, __LINE__, (rule), first, second); \
+      log_rule4(__LINE__, (rule), first, second);           \
                                                             \
    } while (0)
 #else
@@ -45,6 +45,6 @@ void log_rule2(const char *func, size_t line, const char *rule, chunk_t *first, 
 
 void log_rule3(const char *func, const char *rule);
 
-void log_rule4(const char *func, size_t line, const char *rule, chunk_t *first, chunk_t *second);
+void log_rule4(size_t line, const char *rule, chunk_t *first, chunk_t *second);
 
 #endif /* LOG_RULES_H_INCLUDED */

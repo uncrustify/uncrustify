@@ -1688,7 +1688,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       && chunk_is_str(pc, "&&", 2)
       && chunk_ends_type(pc->prev))
    {
-      chunk_t *tmp = chunk_get_prev(pc);                // Issue #2688
+      tmp = chunk_get_prev(pc);                 // Issue #2688
       LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
               __func__, __LINE__, tmp->orig_line, tmp->orig_col,
               tmp->text(), get_token_name(tmp->type));
