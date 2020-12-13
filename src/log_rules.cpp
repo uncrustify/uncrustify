@@ -40,7 +40,7 @@ void log_rule3(const char *func, const char *rule)
 }
 
 
-void log_rule4(size_t line, const char *rule, chunk_t *first, chunk_t *second)
+void log_rule4(const char *rule, chunk_t *first)
 {
    if (cpd.html_file == nullptr)
    {
