@@ -5,7 +5,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-#      - uses: actions/setup-node@v1
       - name: cmake-part-and-tests
         env:
           BADGE: linux
