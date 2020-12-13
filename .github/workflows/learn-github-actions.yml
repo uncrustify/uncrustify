@@ -11,4 +11,4 @@ jobs:
       - name: cmake-part
         env:
           BADGE: linux
-        run: cmake -DCMAKE_BUILD_TYPE=Release .
+        run: mkdir build; cd build; cmake -DCMAKE_BUILD_TYPE=Release ..
