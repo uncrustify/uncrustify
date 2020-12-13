@@ -1,14 +1,12 @@
-name: learn-github-actions
+name: uncrustify_test
 on: [push]
 jobs:
   check-bats-version:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-#      - run: npm install -g bats
-#      - run: bats -v
-      - name: cmake-part
+#      - uses: actions/setup-node@v1
+      - name: cmake-part-and-tests
         env:
           BADGE: linux
         run: mkdir build;
