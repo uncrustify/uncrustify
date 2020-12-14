@@ -2517,7 +2517,8 @@ nl_inside_empty_func;
 extern BoundedOption<unsigned, 0, 16>
 nl_before_func_body_proto;
 
-// The number of newlines before a multi-line function definition.
+// The number of newlines before a multi-line function definition. Where
+// applicable, this option is overridden with eat_blanks_after_open_brace=true
 extern BoundedOption<unsigned, 0, 16>
 nl_before_func_body_def;
 

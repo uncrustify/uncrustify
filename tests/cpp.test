@@ -789,6 +789,7 @@
 34252  nl_after_func_proto_group-3.cfg      cpp/issue_2001.cpp
 34253  nl_after_func_proto_group-3.cfg      cpp/friends.cpp
 34254  issue_1985.cfg                       cpp/issue_1985.cpp
+34255  eat_blanks_after_codewidth.cfg       cpp/eat_blanks_after_codewidth.cpp
 
 34280  UNI-29935.cfg                        cpp/UNI-29935.cpp
 

@@ -2030,7 +2030,8 @@ nl_inside_empty_func            = 0        # unsigned number
 # The number of newlines before a function prototype.
 nl_before_func_body_proto       = 0        # unsigned number
 
-# The number of newlines before a multi-line function definition.
+# The number of newlines before a multi-line function definition. Where
+# applicable, this option is overridden with eat_blanks_after_open_brace=true
 nl_before_func_body_def         = 0        # unsigned number
 
 # The number of newlines before a class constructor/destructor prototype.
