@@ -4,7 +4,8 @@ jobs:
   check-uncrustify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@master
+      - uses: seanmiddleditch/gha-setup-ninja@master
       - name: cmake-part-and-tests
         env:
           BADGE: linux

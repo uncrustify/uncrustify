@@ -1319,8 +1319,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             && language_is_set(LANG_CPP))
          {
             // Issue 1402
-            bool assign_found = false;
-            chunk_t *tmp      = pc;
+            bool    assign_found = false;
+            chunk_t *tmp         = pc;
 
             while (tmp != nullptr)
             {
