@@ -1,0 +1,15 @@
+name: uncrustify_test
+on: [push]
+jobs:
+  check-uncrustify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: cmake-part-and-tests
+        env:
+          BADGE: linux
+        run: mkdir build;
+          cd build;
+          cmake -GNinja -DCMAKE_BUILD_TYPE=Debug ..;
+          make;
+          ../scripts/run_ctest.py
