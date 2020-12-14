@@ -1,7 +1,7 @@
 name: uncrustify_test
 on: [push]
 jobs:
-  check-uncrustify:
+  ninja-uncrustify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -12,5 +12,5 @@ jobs:
         run: mkdir build;
           cd build;
           cmake -GNinja -DCMAKE_BUILD_TYPE=Debug ..;
-          make;
+          ninja;
           ../scripts/run_ctest.py
