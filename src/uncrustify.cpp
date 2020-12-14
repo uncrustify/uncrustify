@@ -2217,7 +2217,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
             {
                if (cpd.changes > options::debug_max_number_of_loops())                 // Issue #2432
                {
-                  LOG_FMT(LNEWLINE, "%s(%d): too many loop. Make a report, please.\n",
+                  LOG_FMT(LNEWLINE, "%s(%d): too many loops. Make a report, please.\n",
                           __func__, __LINE__);
                   log_flush(true);
                   exit(EX_SOFTWARE);
@@ -2231,6 +2231,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
                newlines_cleanup_braces(false);
                newlines_insert_blank_lines();
                newlines_functions_remove_extra_blank_lines();
+               newlines_remove_disallowed();
                first = false;
             }
          }
