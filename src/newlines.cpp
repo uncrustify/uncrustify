@@ -2036,7 +2036,8 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
       {
          chunk_t *next = chunk_get_next_ncnl(pc);
 
-         if (chunk_is_token(next, CT_PTR_TYPE))               // Issue #2692
+         if (  chunk_is_token(next, CT_PTR_TYPE) // Issue #2692
+            || chunk_is_token(next, CT_BYREF))   // Issue #3018
          {
             next = chunk_get_next_ncnl(next);
          }
