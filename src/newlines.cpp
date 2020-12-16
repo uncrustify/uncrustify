@@ -5905,7 +5905,8 @@ void do_blank_lines(void)
       if (  (chunk_is_token(prev, CT_SEMICOLON) || chunk_is_token(prev, CT_BRACE_CLOSE))
          && get_chunk_parent_type(prev) == CT_CLASS)
       {
-         chunk_t *tmp = chunk_get_prev_type(prev, CT_CLASS, prev->level);
+         chunk_t *start = chunk_get_prev_type(prev, CT_CLASS, prev->level);
+         chunk_t *tmp   = start;
 
          // Is this a class template?
          if (get_chunk_parent_type(tmp) == CT_TEMPLATE)
@@ -5936,7 +5937,8 @@ void do_blank_lines(void)
             tmp = chunk_get_prev_nc(tmp->prev);
          }
 
-         if (tmp != nullptr && options::nl_before_class() > tmp->nl_count)
+         if (  tmp != nullptr && !start->flags.test(PCF_INCOMPLETE)
+            && options::nl_before_class() > tmp->nl_count)
          {
             log_rule_B("nl_before_class");
             blank_line_set(tmp, options::nl_before_class);

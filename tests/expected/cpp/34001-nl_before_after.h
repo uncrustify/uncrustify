@@ -81,11 +81,9 @@ template<typename ... Args>
 // test comment between template specification and associated class
 class H
 {
-
     // nested class
     template<typename ...>
     friend class I;
-
     friend class J;
 
     // nested class K
@@ -98,6 +96,23 @@ class H
 
     };
 
+};
+
+}
+
+class AA;
+class AB;
+
+namespace BA
+{
+class BB;
+class BC;
+
+class BD
+{
+public:
+    friend class BE;
+    BD();
 };
 
 }
