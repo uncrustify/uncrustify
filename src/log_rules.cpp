@@ -29,14 +29,26 @@ void log_rule2(const char *func, size_t line, const char *rule, chunk_t *first, 
 }
 
 
+#ifdef SUPER_LOG
+
+
+void log_rule3(const char *func, size_t line, const char *rule)
+#else
+
+
 void log_rule3(const char *func, const char *rule)
+#endif
 {
    // some Windows platforms provide a qualified function name ("ABC::XYZ::function_Name")
    // as __func__; call get_unqualified_func_name() to return an unqualified function name
 
    func = get_unqualified_func_name(func);
 
+#ifdef SUPER_LOG
+   LOG_FMT(LSPACE, "log_rule(%s:%zu): rule is '%s'\n", func, line, rule);
+#else
    LOG_FMT(LSPACE, "log_rule(%s): rule is '%s'\n", func, rule);
+#endif
 }
 
 
