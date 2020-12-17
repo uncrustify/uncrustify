@@ -1,3 +1,5 @@
+---
+
 name: uncrustify_test
 on: [push]
 jobs:
@@ -18,7 +20,7 @@ jobs:
   debug-ninja-uncrustify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
       - uses: seanmiddleditch/gha-setup-ninja@master
       - name: cmake-part-and-tests
         env:
