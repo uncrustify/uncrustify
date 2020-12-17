@@ -34,16 +34,30 @@ using namespace uncrustify;
       log_rule2(__func__, __LINE__, (rule), first, second); \
    } while (0)
 
+// if you need more debug informations, remove the comment at the next line
+//#define SUPER_LOG 1
+#ifdef SUPER_LOG
+#define log_rule_B(rule)                     \
+   do {                                      \
+      log_rule3(__func__, __LINE__, (rule)); \
+   } while (0)
+#else
 #define log_rule_B(rule)           \
    do {                            \
       log_rule3(__func__, (rule)); \
    } while (0)
-
+#endif
 
 void log_rule2(const char *func, size_t line, const char *rule, chunk_t *first, chunk_t *second);
 
 
+#ifdef SUPER_LOG
+void log_rule3(const char *func, size_t line, const char *rule);
+
+#else
 void log_rule3(const char *func, const char *rule);
+
+#endif
 
 void log_rule4(const char *rule, chunk_t *first);
 

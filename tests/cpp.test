@@ -648,6 +648,7 @@
 
 33180  pp_multi_comment.cfg                 cpp/pp_multi_comment.cpp
 33181  Issue_2759.cfg                       cpp/Issue_2759.cpp
+33182  Issue_2794.cfg                       cpp/Issue_2794.cpp
 
 33200  cmt_multi_first_len_minimum-1.cfg    cpp/first_len_minimum.cpp
 
