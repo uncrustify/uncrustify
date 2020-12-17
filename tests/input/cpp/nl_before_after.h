@@ -77,3 +77,19 @@ class L { };
 };
 };
 }
+
+class AA;
+class AB;
+
+namespace BA
+{
+class BB;
+class BC;
+
+class BD
+{
+public:
+  friend class BE;
+  BD();
+};
+}
