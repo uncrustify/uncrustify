@@ -291,7 +291,8 @@ static void examine_braces(void)
             || (  get_chunk_parent_type(pc) == CT_WHILE
                && options::mod_full_brace_while() == IARF_REMOVE)))
       {
-         if (multiline_block && paren_multiline_before_brace(pc))
+         if (  multiline_block
+            && paren_multiline_before_brace(pc))
          {
             pc = prev;
             continue;
@@ -376,7 +377,8 @@ static bool can_remove_braces(chunk_t *bopen)
    LOG_FMT(LBRDEL, "%s(%d):  - begin with token '%s', orig_line is %zu, orig_col is %zu\n",
            __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
 
-   while (pc != nullptr && pc->level >= level)
+   while (  pc != nullptr
+         && pc->level >= level)
    {
       LOG_FMT(LBRDEL, "%s(%d): test token '%s', orig_line is %zu, orig_col is %zu\n",
               __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
@@ -391,7 +393,8 @@ static bool can_remove_braces(chunk_t *bopen)
       {
          nl_count += pc->nl_count;
 
-         if (nl_max > 0 && nl_count > nl_max)
+         if (  nl_max > 0
+            && nl_count > nl_max)
          {
             LOG_FMT(LBRDEL, "%s(%d):  exceeded %zu newlines\n",
                     __func__, __LINE__, nl_max);
@@ -423,7 +426,8 @@ static bool can_remove_braces(chunk_t *bopen)
                hit_semi = true;
             }
          }
-         else if (  (chunk_is_token(pc, CT_IF) || chunk_is_token(pc, CT_ELSEIF))
+         else if (  (  chunk_is_token(pc, CT_IF)
+                    || chunk_is_token(pc, CT_ELSEIF))
                  && br_count == 0)
          {
             if_count++;
@@ -431,7 +435,8 @@ static bool can_remove_braces(chunk_t *bopen)
 
          if (pc->level == level)
          {
-            if (semi_count > 0 && hit_semi)
+            if (  semi_count > 0
+               && hit_semi)
             {
                // should have bailed due to close brace level drop
                LOG_FMT(LBRDEL, "%s(%d):  no close brace\n", __func__, __LINE__);
@@ -523,7 +528,8 @@ static void examine_brace(chunk_t *bopen)
 
    chunk_t      *pc = chunk_get_next_nc(bopen);
 
-   while (pc != nullptr && pc->level >= level)
+   while (  pc != nullptr
+         && pc->level >= level)
    {
       if (chunk_is_token(pc, CT_NEWLINE))
       {
@@ -547,7 +553,8 @@ static void examine_brace(chunk_t *bopen)
       {
          nl_count += pc->nl_count;
 
-         if (nl_max > 0 && nl_count > nl_max)
+         if (  nl_max > 0
+            && nl_count > nl_max)
          {
             LOG_FMT(LBRDEL, "%s(%d):  exceeded %zu newlines\n",
                     __func__, __LINE__, nl_max);
@@ -603,7 +610,8 @@ static void examine_brace(chunk_t *bopen)
 
          if (pc->level == level)
          {
-            if (semi_count > 0 && hit_semi)
+            if (  semi_count > 0
+               && hit_semi)
             {
                // should have bailed due to close brace level drop
                LOG_FMT(LBRDEL, "%s(%d):  no close brace\n", __func__, __LINE__);
@@ -935,7 +943,8 @@ static void convert_vbrace_to_brace(void)
 
          while ((tmp = chunk_get_next(tmp)) != nullptr)
          {
-            if (in_preproc && !tmp->flags.test(PCF_IN_PREPROC))
+            if (  in_preproc
+               && !tmp->flags.test(PCF_IN_PREPROC))
             {
                // Can't leave a preprocessor
                break;
@@ -1003,40 +1012,49 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
 static void append_tag_name(unc_text &txt, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *cur = pc;
+   chunk_t *tmp = pc;
+
+   LOG_FMT(LMCB, "%s(%d): txt is '%s'\n",
+           __func__, __LINE__, txt.c_str());
 
    // step backwards over all a::b stuff
-   for (chunk_t *tmp = chunk_get_prev_ncnl(pc)
-        ; (chunk_is_token(tmp, CT_DC_MEMBER) || chunk_is_token(tmp, CT_MEMBER))
-        ; tmp = chunk_get_prev_ncnl(tmp))
+   while ((tmp = chunk_get_prev_ncnl(tmp)) != nullptr)
    {
+      if (  chunk_is_not_token(tmp, CT_DC_MEMBER)
+         && chunk_is_not_token(tmp, CT_MEMBER))
+      {
+         break;
+      }
       tmp = chunk_get_prev_ncnl(tmp);
-      cur = tmp;
+      pc  = tmp;
 
       if (!chunk_is_word(tmp))
       {
          break;
       }
    }
+   txt += pc->str;
+   LOG_FMT(LMCB, "%s(%d): txt is '%s'\n",
+           __func__, __LINE__, txt.c_str());
 
-   if (cur == nullptr)
+   while ((pc = chunk_get_next_ncnl(pc)) != nullptr)
    {
-      return;
-   }
-   txt += cur->str;
-   cur  = chunk_get_next_ncnl(cur);
-
-   for (chunk_t *tmp = cur, *tmp_next = chunk_get_next_ncnl(cur)
-        ; (chunk_is_token(tmp, CT_DC_MEMBER) || chunk_is_token(tmp, CT_MEMBER))
-        ; tmp = chunk_get_next_ncnl(tmp), tmp_next = chunk_get_next_ncnl(tmp))
-   {
-      txt += tmp->str;
-
-      if (tmp_next == nullptr)
+      if (  chunk_is_not_token(pc, CT_DC_MEMBER)
+         && chunk_is_not_token(pc, CT_MEMBER))
       {
          break;
       }
-      txt += tmp_next->str;
+      txt += pc->str;
+      LOG_FMT(LMCB, "%s(%d): txt is '%s'\n",
+              __func__, __LINE__, txt.c_str());
+      pc = chunk_get_next_ncnl(pc);
+
+      if (pc != nullptr)
+      {
+         txt += pc->str;
+         LOG_FMT(LMCB, "%s(%d): txt is '%s'\n",
+                 __func__, __LINE__, txt.c_str());
+      }
    }
 } // append_tag_name
 
@@ -1109,7 +1127,8 @@ void add_long_closebrace_comment(void)
 
          // make sure a newline follows in order to not overwrite an already
          // existring comment
-         if (tmp != nullptr && !chunk_is_newline(tmp))
+         if (  tmp != nullptr
+            && !chunk_is_newline(tmp))
          {
             break;
          }
@@ -1127,21 +1146,29 @@ void add_long_closebrace_comment(void)
             if (tag_pc != nullptr)
             {
                append_tag_name(xstr, tag_pc);
+               LOG_FMT(LMCB, "%s(%d): xstr is '%s'\n",
+                       __func__, __LINE__, xstr.c_str());
             }
          }
-         else if (get_chunk_parent_type(br_open) == CT_SWITCH && sw_pc != nullptr)
+         else if (  get_chunk_parent_type(br_open) == CT_SWITCH
+                 && sw_pc != nullptr)
          {
             log_rule_B("mod_add_long_switch_closebrace_comment");
             nl_min = options::mod_add_long_switch_closebrace_comment();
             tag_pc = sw_pc;
             xstr   = sw_pc->str;
+            LOG_FMT(LMCB, "%s(%d): xstr is '%s'\n",
+                    __func__, __LINE__, xstr.c_str());
          }
-         else if (get_chunk_parent_type(br_open) == CT_NAMESPACE && ns_pc != nullptr)
+         else if (  get_chunk_parent_type(br_open) == CT_NAMESPACE
+                 && ns_pc != nullptr)
          {
             log_rule_B("mod_add_long_namespace_closebrace_comment");
             nl_min = options::mod_add_long_namespace_closebrace_comment();
             tag_pc = ns_pc;
             xstr   = tag_pc->str;    // add 'namespace' to the string
+            LOG_FMT(LMCB, "%s(%d): xstr is '%s'\n",
+                    __func__, __LINE__, xstr.c_str());
 
             // next chunk, normally is going to be the namespace name
             // append it with a space to generate "namespace xyz"
@@ -1150,7 +1177,11 @@ void add_long_closebrace_comment(void)
             if (chunk_is_not_token(tmp_next, CT_BRACE_OPEN)) // anonymous namespace -> ignore
             {
                xstr.append(" ");
+               LOG_FMT(LMCB, "%s(%d): xstr is '%s'\n",
+                       __func__, __LINE__, xstr.c_str());
                append_tag_name(xstr, tmp_next);
+               LOG_FMT(LMCB, "%s(%d): xstr is '%s'\n",
+                       __func__, __LINE__, xstr.c_str());
             }
          }
          else if (  get_chunk_parent_type(br_open) == CT_CLASS
@@ -1162,13 +1193,19 @@ void add_long_closebrace_comment(void)
             nl_min = options::mod_add_long_class_closebrace_comment();
             tag_pc = cl_pc;
             xstr   = tag_pc->str;
+            LOG_FMT(LMCB, "%s(%d): xstr is '%s'\n",
+                    __func__, __LINE__, xstr.c_str());
 
             chunk_t *tmp_next = chunk_get_next(cl_pc);
 
             if (tag_pc != nullptr)
             {
                xstr.append(" ");
+               LOG_FMT(LMCB, "%s(%d): xstr is '%s'\n",
+                       __func__, __LINE__, xstr.c_str());
                append_tag_name(xstr, tmp_next);
+               LOG_FMT(LMCB, "%s(%d): xstr is '%s'\n",
+                       __func__, __LINE__, xstr.c_str());
             }
          }
 
@@ -1181,6 +1218,8 @@ void add_long_closebrace_comment(void)
                                     ? CT_COMMENT_CPP : CT_COMMENT;
 
             // Add a comment after the close brace
+            LOG_FMT(LMCB, "%s(%d): xstr is '%s'\n",
+                    __func__, __LINE__, xstr.c_str());
             insert_comment_after(br_close, style, xstr);
          }
          break;
@@ -1244,7 +1283,8 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
         tmp_pc != br_close;
         tmp_pc = chunk_get_next_ncnl(tmp_pc, scope_e::PREPROC))
    {
-      if (tmp_pc->level == (br_open->level + 1) && tmp_pc->flags.test(PCF_VAR_DEF))
+      if (  tmp_pc->level == (br_open->level + 1)
+         && tmp_pc->flags.test(PCF_VAR_DEF))
       {
          LOG_FMT(LMCB, "%s(%d):  - vardef on line %zu: '%s'\n",
                  __func__, __LINE__, tmp_pc->orig_line, pc->text());
