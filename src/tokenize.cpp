@@ -2274,6 +2274,10 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc, const chunk_t *prev_pc)
       {
          if (ctx.peek(2) == '"')
          {
+            if (parse_cr_string(ctx, pc, 2)) // Issue #3027
+            {
+               return(true);
+            }
             // parse string without escaping
             parse_string(ctx, pc, 2, false);
             return(true);
