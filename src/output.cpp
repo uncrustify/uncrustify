@@ -360,14 +360,16 @@ static bool next_word_exceeds_limit(const unc_text &text, size_t idx)
    size_t length = 0;
 
    // Count any whitespace
-   while ((idx < text.size()) && unc_isspace(text[idx]))
+   while (  (idx < text.size())
+         && unc_isspace(text[idx]))
    {
       idx++;
       length++;
    }
 
    // Count non-whitespace
-   while ((idx < text.size()) && !unc_isspace(text[idx]))
+   while (  (idx < text.size())
+         && !unc_isspace(text[idx]))
    {
       idx++;
       length++;
@@ -917,7 +919,8 @@ static size_t cmt_parse_lead(const unc_text &line, bool is_last)
          // ignore combined comments
          size_t tmp = len + 1;
 
-         while (tmp < line.size() && unc_isspace(line[tmp]))
+         while (  tmp < line.size()
+               && unc_isspace(line[tmp]))
          {
             tmp++;
          }
@@ -941,7 +944,8 @@ static size_t cmt_parse_lead(const unc_text &line, bool is_last)
    }
 
    if (  len > 0
-      && (len >= line.size() || unc_isspace(line[len])))
+      && (  len >= line.size()
+         || unc_isspace(line[len])))
    {
       return(len);
    }
@@ -1129,7 +1133,8 @@ static int next_up(const unc_text &text, size_t idx, unc_text &tag)
 {
    size_t offs = 0;
 
-   while (idx < text.size() && unc_isspace(text[idx]))
+   while (  idx < text.size()
+         && unc_isspace(text[idx]))
    {
       idx++;
       offs++;
@@ -1234,7 +1239,8 @@ static void add_comment_text(const unc_text &text,
             add_char(' ');
          }
 
-         if (!in_word && !unc_isspace(text[idx]))
+         if (  !in_word
+            && !unc_isspace(text[idx]))
          {
             cmt.word_count++;
          }
@@ -1280,7 +1286,6 @@ static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc)
    {
       LOG_FMT(LCONTTEXT, "%s(%d): no cmt_insert_file\n", __func__, __LINE__);
    }
-   LOG_FMT(LCONTTEXT, "%s(%d):here\n", __func__, __LINE__);
 
    if (cmt.brace_col == 0)
    {
@@ -1312,22 +1317,18 @@ static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc)
       && (  get_chunk_parent_type(pc) == CT_COMMENT_END
          || get_chunk_parent_type(pc) == CT_COMMENT_WHOLE))
    {
-      LOG_FMT(LCONTTEXT, "%s(%d):here\n", __func__, __LINE__);
       cmt.column = align_tab_column(cmt.column - 1);
       // LOG_FMT(LSYS, "%s: line %d, orig:%d new:%d\n",
       //        __func__, pc->orig_line, pc->column, cmt.column);
       pc->column = cmt.column;
    }
-   LOG_FMT(LCONTTEXT, "%s(%d):here\n", __func__, __LINE__);
    cmt.base_col = cmt.column;
 
    // LOG_FMT(LSYS, "%s: -- brace=%d base=%d col=%d\n",
    //        __func__, cmt.brace_col, cmt.base_col, cmt.column);
 
    // Bump out to the column
-   LOG_FMT(LCONTTEXT, "%s(%d):here\n", __func__, __LINE__);
    cmt_output_indent(cmt.brace_col, cmt.base_col, cmt.column);
-   LOG_FMT(LCONTTEXT, "%s(%d):here\n", __func__, __LINE__);
 } // output_cmt_start
 
 
@@ -1510,7 +1511,8 @@ static chunk_t *output_comment_cpp(chunk_t *first)
       cmt.cont_text = leadin;
 
       // Get start of comment text
-      while (*cmt_text && unc_isspace(*cmt_text))
+      while (  *cmt_text != '\0'
+            && unc_isspace(*cmt_text))
       {
          ++cmt_text;
       }
@@ -1559,7 +1561,8 @@ static chunk_t *output_comment_cpp(chunk_t *first)
 
          if ((*sp_cmt)() & IARF_REMOVE)
          {
-            while ((tmp.size() > 0) && unc_isspace(tmp[0]))
+            while (  (tmp.size() > 0)
+                  && unc_isspace(tmp[0]))
             {
                tmp.pop_front();
             }
@@ -1573,7 +1576,8 @@ static chunk_t *output_comment_cpp(chunk_t *first)
 
             if ((*sp_cmt)() & IARF_ADD)
             {
-               if (!unc_isspace(tmp[0]) && (tmp[0] != '/'))
+               if (  !unc_isspace(tmp[0])
+                  && (tmp[0] != '/'))
                {
                   add_comment_text(" ", cmt, false);
                }
@@ -1766,7 +1770,6 @@ static void output_comment_multi(chunk_t *pc)
          else
          {
             LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, char(ch));
-            LOG_FMT(LCONTTEXT, "%s(%d):here\n", __func__, __LINE__);
          }
       }
       /*
@@ -1784,8 +1787,6 @@ static void output_comment_multi(chunk_t *pc)
          size_t nwidx              = line.size();
          bool   star_is_bullet     = false;
 
-         LOG_FMT(LCONTTEXT, "%s(%d):here\n", __func__, __LINE__);
-
          // strip trailing whitespace from the line collected so far
          while (nwidx > 0)
          {
@@ -1796,7 +1797,8 @@ static void output_comment_multi(chunk_t *pc)
                && line[nwidx] != '*'    // block comment: skip '*' at end of line
                && (pc->flags.test(PCF_IN_PREPROC)
                    ? (  line[nwidx] != '\\'
-                     || (line[nwidx + 1] != 'r' && line[nwidx + 1] != '\n'))
+                     || (  line[nwidx + 1] != 'r'
+                        && line[nwidx + 1] != '\n'))
                    : true))
             {
                prev_nonempty_line = nwidx; // last non-whitespace char in the previous line
@@ -1872,7 +1874,6 @@ static void output_comment_multi(chunk_t *pc)
             ch = ' ';
          }
       }
-      LOG_FMT(LCONTTEXT, "%s(%d):here\n", __func__, __LINE__);
 
       if (ch == 10)
       {
@@ -1882,16 +1883,12 @@ static void output_comment_multi(chunk_t *pc)
       {
          LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, char(ch));
       }
-      LOG_FMT(LCONTTEXT, "%s(%d):Line is %s\n", __func__, __LINE__, line.c_str());
       line.append(ch);
-      LOG_FMT(LCONTTEXT, "%s(%d):Line is %s\n", __func__, __LINE__, line.c_str());
 
       // If we just hit an end of line OR we just hit end-of-comment...
       if (  ch == '\n'
          || cmt_idx == pc->len())
       {
-         LOG_FMT(LCONTTEXT, "%s(%d):here\n", __func__, __LINE__);
-
          if (ch == 10)
          {
             LOG_FMT(LCONTTEXT, "%s(%d):ch is newline\n", __func__, __LINE__);
@@ -1923,8 +1920,6 @@ static void output_comment_multi(chunk_t *pc)
          }
          else
          {
-            LOG_FMT(LCONTTEXT, "%s(%d):here\n", __func__, __LINE__);
-
             /*
              * This is not the first line, so we need to indent to the
              * correct column. Each line is indented 0 or more spaces.
@@ -1963,7 +1958,6 @@ static void output_comment_multi(chunk_t *pc)
                   add_text(tmp);
                }
                add_char('\n');
-               LOG_FMT(LCONTTEXT, "%s(%d):here\n", __func__, __LINE__);
             }
             else
             {
@@ -2051,7 +2045,6 @@ static void output_comment_multi(chunk_t *pc)
                if (nl_end)
                {
                   add_text("\n");
-                  LOG_FMT(LCONTTEXT, "%s(%d):here\n", __func__, __LINE__);
                }
             }
          }
@@ -2059,7 +2052,6 @@ static void output_comment_multi(chunk_t *pc)
          ccol = 1;
       }
    }
-   LOG_FMT(LCONTTEXT, "%s(%d):here\n", __func__, __LINE__);
 } // output_comment_multi
 
 
@@ -2516,7 +2508,6 @@ static void output_comment_multi_simple(chunk_t *pc)
          else
          {
             LOG_FMT(LCONTTEXT, "%s(%d):ch is %d, %c\n", __func__, __LINE__, ch, char(ch));
-            LOG_FMT(LCONTTEXT, "%s(%d):here\n", __func__, __LINE__);
          }
       }
 
