@@ -978,9 +978,12 @@ static bool newlines_if_for_while_switch(chunk_t *start, iarf_e nl_opt)
          else
          {
             newline_iarf_pair(close_paren, brace_open, nl_opt);
+            chunk_t *next = chunk_get_next_ncnl(brace_open);
 
-            newline_add_between(brace_open, chunk_get_next_ncnl(brace_open));
-
+            if (brace_open->type != next->type)                       // Issue #2836
+            {
+               newline_add_between(brace_open, chunk_get_next_ncnl(brace_open));
+            }
             // Make sure nothing is cuddled with the closing brace
             pc = chunk_get_next_type(brace_open, CT_BRACE_CLOSE, brace_open->level);
             newline_add_between(pc, chunk_get_next_nblank(pc));
