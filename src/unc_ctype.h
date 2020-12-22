@@ -103,7 +103,7 @@ static inline int unc_isdigit(int ch)
 static inline int unc_isupper(int ch)
 {
    return(  isalpha(unc_fix_ctype(ch))
-   //&& (unc_toupper(unc_fix_ctype(ch)) == ch));
+         && (unc_toupper(unc_fix_ctype(ch)) == ch));
    //return(  isalpha(ch)
    //      && (unc_toupper(ch) == ch));
 }
