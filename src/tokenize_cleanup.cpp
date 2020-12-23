@@ -896,7 +896,10 @@ void tokenize_cleanup(void)
 
       // Another hack to clean up more keyword abuse
       if (  chunk_is_token(pc, CT_CLASS)
-         && (chunk_is_token(prev, CT_DOT) || chunk_is_token(next, CT_DOT)))
+         && (  chunk_is_token(prev, CT_DOT)
+            || chunk_is_token(next, CT_DOT)
+            || chunk_is_token(prev, CT_MEMBER)  // Issue #3031
+            || chunk_is_token(next, CT_MEMBER)))
       {
          set_chunk_type(pc, CT_WORD);
       }
