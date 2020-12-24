@@ -2646,6 +2646,22 @@ cmt_convert_tab_to_spaces       = false    # true/false
 # Default: true
 cmt_indent_multi                = true     # true/false
 
+# Whether to align doxygen javadoc-style tags ('@param', '@return', etc.)
+# and corresponding fields such that groups of consecutive block tags,
+# parameter names, and descriptions align with one another. Overrides that
+# which is specified by the cmt_sp_after_star_cont. If cmt_width > 0, it may
+# be necessary to enable cmt_indent_multi and set cmt_reflow_mode = 2
+# in order to achieve the desired alignment for line-wrapping.
+cmt_align_doxygen_javadoc_tags  = false    # true/false
+
+# The number of spaces to insert after the star and before doxygen
+# javadoc-style tags (@param, @return, etc). Requires enabling
+# cmt_align_doxygen_javadoc_tags. Overrides that which is specified by the
+# cmt_sp_after_star_cont.
+#
+# Default: 1
+cmt_sp_before_doxygen_javadoc_tags = 1        # unsigned number
+
 # Whether to group c-comments that look like they are in a block.
 cmt_c_group                     = false    # true/false
 
