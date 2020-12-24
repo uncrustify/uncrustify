@@ -3255,6 +3255,33 @@ cmt_width;
 extern BoundedOption<unsigned, 0, 2>
 cmt_reflow_mode;
 
+// Path to a file that contains regular expressions describing patterns for which the
+// end of one line and the beginning of the next will be folded into the same sentence
+// or paragraph during full comment reflow. The regular expressions are described using
+// ECMAScript syntax. The syntax for this specification is as follows, where "..." indicates
+// the custom regular expression and "n" indicates the nth end_of_prev_line_regex
+// and beg_of_next_line_regex regular expression pair:
+//
+// end_of_prev_line_regex[1] = "...$"
+// beg_of_next_line_regex[1] = "^..."
+// end_of_prev_line_regex[2] = "...$"
+// beg_of_next_line_regex[2] = "^..."
+//             .
+//             .
+//             .
+// end_of_prev_line_regex[n] = "...$"
+// beg_of_next_line_regex[n] = "^..."
+//
+// Note that use of this option overrides the default reflow fold regular expressions,
+// which are internally defined as follows:
+//
+// end_of_prev_line_regex[1] = "[\w,\]\)]$"
+// beg_of_next_line_regex[1] = "^[\w,\[\(]"
+// end_of_prev_line_regex[2] = "\.$"
+// beg_of_next_line_regex[2] = "^[A-Z]"
+extern Option<string>
+cmt_reflow_fold_regex_file;
+
 // Whether to convert all tabs to spaces in comments. If false, tabs in
 // comments are left alone, unless used for indenting.
 extern Option<bool>

@@ -318,6 +318,7 @@ struct cp_data_t
    file_mem          func_hdr;          // for cmt_insert_func_header
    file_mem          oc_msg_hdr;        // for cmt_insert_oc_msg_header
    file_mem          class_hdr;         // for cmt_insert_class_header
+   file_mem          reflow_fold_regex; // for cmt_reflow_fold_regex_file
 
    size_t            lang_flags;        //! defines the language of the source input
    bool              lang_forced;       //! overwrites automatic language detection

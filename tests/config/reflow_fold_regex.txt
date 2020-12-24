@@ -1,0 +1,4 @@
+end_of_prev_line_regex[0] = "(?:[\w,\]\)]|\.\.\.|;|\})$"
+beg_of_next_line_regex[0] = "^(?:[\w,\[\(]|\.\.\.|\{)"
+end_of_prev_line_regex[1] = "[^\.]\.$"
+beg_of_next_line_regex[1] = "^[A-Z]"

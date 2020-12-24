@@ -24,6 +24,7 @@
 #include "unicode.h"
 
 #include <cstdlib>
+#include <map>
 #include <regex>
 #include <set>
 
@@ -1862,6 +1863,57 @@ static void cmt_trim_whitespace(unc_text &line, bool in_preproc)
 } // cmt_trim_whitespace
 
 
+/**
+ * Return an indexed-map of reflow fold end of line/beginning of line regex pairs read
+ * from file
+ */
+static std::map<std::size_t, std::pair<std::wregex, std::wregex> > get_reflow_fold_regex_map()
+{
+   /**
+    * TODO: should the following be static to prevent initializing it multiple times?
+    */
+   static std::map<std::size_t, std::pair<std::wregex, std::wregex> > regex_map;
+
+   if (regex_map.empty())
+   {
+      if (!options::cmt_reflow_fold_regex_file().empty())
+      {
+         std::wstring raw_wstring(cpd.reflow_fold_regex.raw.begin(),
+                                  cpd.reflow_fold_regex.raw.end());
+
+         std::wregex criteria(L"\\s*(?:(?:(beg_of_next)|(end_of_prev))_line_regex)"
+                              "\\s*\\[\\s*([0-9]+)\\s*\\]\\s*=\\s*\"(.*)\"\\s*"
+                              "(?=\\r\\n|\\r|\\n|$)");
+         std::wsregex_iterator it_regex(raw_wstring.cbegin(), raw_wstring.cend(), criteria);
+         std::wsregex_iterator it_regex_end = std::wsregex_iterator();
+
+         while (it_regex != it_regex_end)
+         {
+            std::wsmatch match = *it_regex;
+
+            if (  ((  match[1].matched
+                   || match[2].matched))
+               && match[3].matched
+               && match[4].matched)
+            {
+               auto        &&index   = std::stoi(match[3].str());
+               std::wregex *p_wregex = match[1].matched ? &regex_map[index].second
+                                                        : &regex_map[index].first;
+               *p_wregex = match[4].str();
+            }
+            ++it_regex;
+         }
+      }
+      else
+      {
+         regex_map.emplace(0L, std::make_pair(L"[\\w,\\]\\)]$", L"^[\\w,\\[\\(]"));
+         regex_map.emplace(1L, std::make_pair(L"\\.$", L"^[A-Z]"));
+      }
+   }
+   return(regex_map);
+} // get_reflow_fold_regex_map
+
+
 static void output_comment_multi(chunk_t *pc)
 {
    if (pc == nullptr)
@@ -1904,6 +1956,12 @@ static void output_comment_multi(chunk_t *pc)
    bool     nl_end                       = false;
    bool     doxygen_javadoc_indent_align = false;
    unc_text line;
+
+   /*
+    * Get a map of regex pairs that define expressions to match at both the end
+    * of the previous line and the beginning of the next line
+    */
+   auto &&cmt_reflow_regex_map = get_reflow_fold_regex_map();
 
    line.clear();
    LOG_FMT(LCONTTEXT, "%s(%d): pc->len() is %zu\n",
@@ -2070,7 +2128,6 @@ static void output_comment_multi(chunk_t *pc)
          int    next_nonempty_line = -1;
          int    prev_nonempty_line = -1;
          size_t nwidx              = line.size();
-         bool   star_is_bullet     = false;
 
          // strip trailing whitespace from the line collected so far
          while (nwidx > 0)
@@ -2140,21 +2197,35 @@ static void output_comment_multi(chunk_t *pc)
           * (the ambiguous '*'-for-bullet case!)
           */
          if (  prev_nonempty_line >= 0
-            && next_nonempty_line >= int(cmt_idx)
-            && (  (  (  unc_isalnum(line[prev_nonempty_line])
-                     || strchr(",)];", line[prev_nonempty_line]))
-                  && (  unc_isalnum(pc->str[next_nonempty_line])
-                     || strchr("([;", pc->str[next_nonempty_line])))
-               || (  '.' == line[prev_nonempty_line] // dot followed by non-capital is NOT a new sentence start
-                  && unc_isupper(pc->str[next_nonempty_line])))
-            && !star_is_bullet)
+            && next_nonempty_line >= int(cmt_idx))
          {
-            // rewind the line to the last non-alpha:
-            line.resize(prev_nonempty_line + 1);
-            // roll the current line forward to the first non-alpha:
-            cmt_idx = next_nonempty_line;
-            // override the NL and make it a single whitespace:
-            ch = ' ';
+            std::wstring prev_line(line.get().cbegin(),
+                                   line.get().cend());
+            std::wstring next_line(pc->str.get().cbegin() + next_nonempty_line,
+                                   pc->str.get().cend());
+
+            for (auto &&cmt_reflow_regex_map_entry : cmt_reflow_regex_map)
+            {
+               auto         &&cmt_reflow_regex_pair  = cmt_reflow_regex_map_entry.second;
+               auto         &&end_of_prev_line_regex = cmt_reflow_regex_pair.first;
+               auto         &&beg_of_next_line_regex = cmt_reflow_regex_pair.second;
+               std::wsmatch match[2];
+
+               if (  std::regex_search(prev_line, match[0], end_of_prev_line_regex)
+                  && match[0].position(0) + match[0].length(0) == std::wsmatch::difference_type(line.size())
+                  && std::regex_search(next_line, match[1], beg_of_next_line_regex)
+                  && match[1].position(0) == 0)
+               {
+                  // rewind the line to the last non-alpha:
+                  line.resize(prev_nonempty_line + 1);
+                  // roll the current line forward to the first non-alpha:
+                  cmt_idx = next_nonempty_line;
+                  // override the NL and make it a single whitespace:
+                  ch = ' ';
+
+                  break;
+               }
+            }
          }
       }
 
