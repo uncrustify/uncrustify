@@ -19,10 +19,20 @@
 
 
 //! Truncate anything except EOF (-1) to 0-255
-// check if is no nore used                                      Issue #3025
 static inline int unc_fix_ctype(int ch)
 {
-   return((ch == -1) ? -1 : (ch & 0xff));
+   if (ch == -1)
+   {
+      return(ch);
+   }
+
+   if (ch > 255)
+   {
+      return(0);                                  // Issue #3025
+   }
+   return(ch);
+
+   //return((ch == -1) ? -1 : (ch & 0xff));
    //return(ch);
 }
 
