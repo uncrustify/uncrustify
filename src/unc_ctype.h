@@ -30,6 +30,11 @@ static inline int unc_fix_ctype(int ch)
    {
       return(0);                                  // Issue #3025
    }
+
+   if (ch < -1)
+   {
+      return(0);                                  // Issue #3025
+   }
    return(ch);
 
    //return((ch == -1) ? -1 : (ch & 0xff));
