@@ -82,18 +82,23 @@ disable_processing_nl_cont;
 
 // Specify the marker used in comments to disable processing of part of the
 // file.
-// The comment should be used alone in one line.
 extern Option<string>
 disable_processing_cmt; // = UNCRUSTIFY_OFF_TEXT
 
 // Specify the marker used in comments to (re)enable processing in a file.
-// The comment should be used alone in one line.
 extern Option<string>
 enable_processing_cmt; // = UNCRUSTIFY_ON_TEXT
 
 // Enable parsing of digraphs.
 extern Option<bool>
 enable_digraphs;
+
+// Option to allow both disable_processing_cmt and enable_processing_cmt strings,
+// if specified, to be interpreted as ECMAScript regular expressions. If true,
+// a regex search will be performed within comments according to the specified
+// patterns in order to disable/enable processing
+extern Option<bool>
+processing_cmt_as_regex; // = false
 
 // Add or remove the UTF-8 BOM (recommend 'remove').
 extern Option<iarf_e>

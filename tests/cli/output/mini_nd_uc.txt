@@ -10,6 +10,7 @@ disable_processing_nl_cont      = false
 disable_processing_cmt          = " *INDENT-OFF*"
 enable_processing_cmt           = " *INDENT-ON*"
 enable_digraphs                 = false
+processing_cmt_as_regex         = false
 utf8_bom                        = ignore
 utf8_byte                       = false
 utf8_force                      = false

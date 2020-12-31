@@ -24,6 +24,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <regex>
 #include <stack>
 
 
@@ -684,11 +685,12 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 
    if (cpd.unc_off)
    {
-      log_rule_B("enable_processing_cmt");
-      const auto &ontext = options::enable_processing_cmt();
+      bool found_enable_marker = (find_enable_processing_comment_marker(pc.str) >= 0);
 
-      if (!ontext.empty() && pc.str.find(ontext.c_str()) >= 0)
+      if (found_enable_marker)
       {
+         const auto &ontext = options::enable_processing_cmt();
+
          LOG_FMT(LBCTRL, "%s(%d): Found '%s' on line %zu\n",
                  __func__, __LINE__, ontext.c_str(), pc.orig_line);
          cpd.unc_off = false;
@@ -696,16 +698,28 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
    }
    else
    {
-      log_rule_B("disable_processing_cmt");
-      const auto &offtext = options::disable_processing_cmt();
+      auto position_disable_processing_cmt = find_disable_processing_comment_marker(pc.str);
+      bool found_disable_marker            = (position_disable_processing_cmt >= 0);
 
-      if (!offtext.empty() && pc.str.find(offtext.c_str()) >= 0)
+      if (found_disable_marker)
       {
-         LOG_FMT(LBCTRL, "%s(%d): Found '%s' on line %zu\n",
-                 __func__, __LINE__, offtext.c_str(), pc.orig_line);
-         cpd.unc_off = true;
-         // Issue #842
-         cpd.unc_off_used = true;
+         /**
+          * the user may wish to disable processing part of a multiline comment,
+          * in which case we'll handle at a late time. Check to see if processing
+          * is re-enabled elsewhere in this comment
+          */
+         auto position_enable_processing_cmt = find_enable_processing_comment_marker(pc.str);
+
+         if (position_enable_processing_cmt < position_disable_processing_cmt)
+         {
+            const auto &offtext = options::disable_processing_cmt();
+
+            LOG_FMT(LBCTRL, "%s(%d): Found '%s' on line %zu\n",
+                    __func__, __LINE__, offtext.c_str(), pc.orig_line);
+            cpd.unc_off = true;
+            // Issue #842
+            cpd.unc_off_used = true;
+         }
       }
    }
    return(true);
@@ -1952,10 +1966,32 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
    log_rule_B("enable_processing_cmt");
    const auto &ontext = options::enable_processing_cmt();
 
-   if (!ontext.empty() && pc.str.find(ontext.c_str()) < 0)
+   if (!ontext.empty())
    {
-      set_chunk_type(&pc, CT_IGNORED);
-      return(true);
+      bool found_enable_pattern = false;
+
+      if (  ontext != UNCRUSTIFY_ON_TEXT
+         && options::processing_cmt_as_regex())
+      {
+         std::wstring pc_wstring(pc.str.get().cbegin(),
+                                 pc.str.get().cend());
+         std::wregex  criteria(std::wstring(ontext.cbegin(),
+                                            ontext.cend()));
+
+         found_enable_pattern = std::regex_search(pc_wstring.cbegin(),
+                                                  pc_wstring.cend(),
+                                                  criteria);
+      }
+      else
+      {
+         found_enable_pattern = (pc.str.find(ontext.c_str()) >= 0);
+      }
+
+      if (!found_enable_pattern)
+      {
+         set_chunk_type(&pc, CT_IGNORED);
+         return(true);
+      }
    }
    ctx.restore();
 
@@ -2381,6 +2417,115 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc, const chunk_t *prev_pc)
    cpd.error_count++;
    return(true);
 } // parse_next
+
+
+int find_disable_processing_comment_marker(const unc_text &text,
+                                           std::size_t    start_idx)
+{
+   log_rule_B("disable_processing_cmt");
+   const auto &offtext = options::disable_processing_cmt();
+   int        idx      = -1;
+
+   if (  !offtext.empty()
+      && start_idx < text.size())
+   {
+      if (  offtext != UNCRUSTIFY_OFF_TEXT
+         && options::processing_cmt_as_regex())
+      {
+         std::wsmatch match;
+         std::wstring pc_wstring(text.get().cbegin() + start_idx,
+                                 text.get().cend());
+         std::wregex  criteria(std::wstring(offtext.cbegin(),
+                                            offtext.cend()));
+
+         std::regex_search(pc_wstring.cbegin(),
+                           pc_wstring.cend(),
+                           match,
+                           criteria);
+
+         if (!match.empty())
+         {
+            idx = int(match.position() + start_idx);
+         }
+      }
+      else
+      {
+         idx = text.find(offtext.c_str(),
+                         start_idx);
+
+         if (idx >= 0)
+         {
+            idx += int(offtext.size());
+         }
+      }
+
+      /**
+       *  update the position to the start of the current line
+       */
+      while (  idx > 0
+            && text[idx - 1] != '\n')
+      {
+         --idx;
+      }
+   }
+   return(idx);
+} // find_disable_processing_comment_marker
+
+
+int find_enable_processing_comment_marker(const unc_text &text,
+                                          std::size_t    start_idx)
+{
+   log_rule_B("enable_processing_cmt");
+   const auto &ontext = options::enable_processing_cmt();
+   int        idx     = -1;
+
+   if (  !ontext.empty()
+      && start_idx < text.size())
+   {
+      if (  ontext != UNCRUSTIFY_ON_TEXT
+         && options::processing_cmt_as_regex())
+      {
+         std::wsmatch match;
+         std::wstring pc_wstring(text.get().cbegin() + start_idx,
+                                 text.get().cend());
+         std::wregex  criteria(std::wstring(ontext.cbegin(),
+                                            ontext.cend()));
+
+         std::regex_search(pc_wstring.cbegin(),
+                           pc_wstring.cend(),
+                           match,
+                           criteria);
+
+         if (!match.empty())
+         {
+            idx = int(start_idx + match.position() + match.size());
+         }
+      }
+      else
+      {
+         idx = text.find(ontext.c_str(),
+                         start_idx);
+
+         if (idx >= 0)
+         {
+            idx += int(ontext.size());
+         }
+      }
+
+      /**
+       * update the position to the end of the current line
+       */
+      if (idx >= 0)
+      {
+         while (  idx < int(text.size())
+               && text[idx] != '\n')
+         {
+            ++idx;
+         }
+      }
+   }
+   return(idx);
+} // find_enable_processing_comment_marker
 
 
 void tokenize(const deque<int> &data, chunk_t *ref)
