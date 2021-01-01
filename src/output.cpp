@@ -1207,20 +1207,39 @@ static void add_comment_text(const unc_text &text,
          {
             add_char(' ');
          }
+         // The number of spaces to insert after the star on subsequent comment lines.
+         log_rule_B("cmt_sp_after_star_cont");
+
+         /**
+          * calculate the output column
+          */
+         size_t column = options::cmt_sp_after_star_cont();
 
          if (  text[idx + 1] == 42                 // this is star *
             && text[idx + 2] == 47)                // this is      /
          {
             LOG_FMT(LCONTTEXT, "%s(%d): we have a comment end\n",
                     __func__, __LINE__);
+
+            column += cmt.column;
          }
          else
          {
             add_text(cmt.cont_text);
+
+            /**
+             * count the number trailing spaces in the comment continuation text
+             */
+            size_t num_trailing_sp = 0;
+
+            while (  num_trailing_sp < cmt.cont_text.size()
+                  && unc_isspace(cmt.cont_text[cmt.cont_text.size() - 1 - num_trailing_sp]))
+            {
+               ++num_trailing_sp;
+            }
+            column += cpd.column - num_trailing_sp;
          }
-         // The number of spaces to insert after the star on subsequent comment lines.
-         log_rule_B("cmt_sp_after_star_cont");
-         output_to_column(cmt.column + options::cmt_sp_after_star_cont(),
+         output_to_column(column,
                           false);
          ch_cnt = 0;
       }
@@ -1802,25 +1821,23 @@ static void output_comment_multi(chunk_t *pc)
                prev_nonempty_line = nwidx; // last non-whitespace char in the previous line
             }
          }
-         size_t remaining = pc->len() - cmt_idx;
 
-         for (size_t nxt_len = 0;
-              (  nxt_len <= remaining
-              && pc->str[nxt_len] != 'r'  // TODO: should this be \r ?
-              && pc->str[nxt_len] != '\n');
-              nxt_len++)
+         for (size_t nxt_idx = cmt_idx;
+              (  nxt_idx < pc->len()
+              && pc->str[nxt_idx] != '\r'
+              && pc->str[nxt_idx] != '\n');
+              nxt_idx++)
          {
             if (  next_nonempty_line < 0
-               && !unc_isspace(pc->str[nxt_len])
-               && pc->str[nxt_len] != '*'
-               && (  nxt_len == remaining
-                  || (pc->flags.test(PCF_IN_PREPROC)
-                      ? (  pc->str[nxt_len] != '\\'
-                        || (  pc->str[nxt_len + 1] != 'r'  // TODO: should this be \r ?
-                           && pc->str[nxt_len + 1] != '\n'))
-                      : true)))
+               && !unc_isspace(pc->str[nxt_idx])
+               && pc->str[nxt_idx] != '*'
+               && (pc->flags.test(PCF_IN_PREPROC)
+                   ? (  pc->str[nxt_idx] != '\\'
+                     || (  pc->str[nxt_idx + 1] != '\r'
+                        && pc->str[nxt_idx + 1] != '\n'))
+                   : true))
             {
-               next_nonempty_line = nxt_len;  // first non-whitespace char in the next line
+               next_nonempty_line = nxt_idx;  // first non-whitespace char in the next line
             }
          }
 
@@ -1855,7 +1872,7 @@ static void output_comment_multi(chunk_t *pc)
           * (the ambiguous '*'-for-bullet case!)
           */
          if (  prev_nonempty_line >= 0
-            && next_nonempty_line >= 0
+            && next_nonempty_line >= int(cmt_idx)
             && (  (  (  unc_isalnum(line[prev_nonempty_line])
                      || strchr(",)]", line[prev_nonempty_line]))
                   && (  unc_isalnum(pc->str[next_nonempty_line])
@@ -1867,7 +1884,7 @@ static void output_comment_multi(chunk_t *pc)
             // rewind the line to the last non-alpha:
             line.resize(prev_nonempty_line + 1);
             // roll the current line forward to the first non-alpha:
-            cmt_idx += next_nonempty_line;
+            cmt_idx = next_nonempty_line;
             // override the NL and make it a single whitespace:
             ch = ' ';
          }

@@ -3251,7 +3251,7 @@ cmt_width;
 //
 // 0: No reflowing (apart from the line wrapping due to cmt_width) (default)
 // 1: No touching at all
-// 2: Full reflow
+// 2: Full reflow (enable cmt_indent_multi for indent with line wrapping due to cmt_width)
 extern BoundedOption<unsigned, 0, 2>
 cmt_reflow_mode;
 
