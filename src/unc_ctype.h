@@ -42,7 +42,6 @@ static inline int unc_isspace(int ch)
    else
    {
       return(isspace(unc_fix_ctype(ch)));
-      //return(isspace(ch));                   // Issue #3025
    }
 }
 
