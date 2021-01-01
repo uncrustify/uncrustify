@@ -89,6 +89,7 @@
 50204  sp_block_as_argument4.cfg            oc/blocks_align.m
 50205  sp_block_as_argument5.cfg            oc/msg_align.m
 50206  aet.cfg                              oc/issue_2727.m
+50207  issue_3031.cfg                       oc/issue_3031.mm
 
 50300  sp_after_send_oc_colon-f.cfg         oc/msg.m
 
