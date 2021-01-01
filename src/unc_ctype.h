@@ -8,6 +8,7 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #ifndef UNC_CTYPE_H_INCLUDED
 #define UNC_CTYPE_H_INCLUDED
 
@@ -18,10 +19,15 @@
 // TODO: better avoid inline and move implementation to cpp file
 
 
-//! Truncate anything except EOF (-1) to 0-255
+//! Test anything EOF (-1) to 0-255
 static inline int unc_fix_ctype(int ch)
 {
-   return((ch == -1) ? -1 : (ch & 0xff));
+   if (  ch >= -1
+      && ch <= 255)
+   {
+      return(ch);
+   }
+   return(0);                                // Issue #3025
 }
 
 
