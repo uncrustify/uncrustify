@@ -12,7 +12,7 @@
 50006  oc6.cfg                              oc/exceptions.m
 50007  oc7.cfg                              oc/misc.m
 50008  oc8.cfg                              oc/protocol.m
-50009  oc9.cfg                              oc/literals.m
+50009  oc9.cfg                              oc/literals.mm
 
 50010  sp_after_oc_return_type_add.cfg      oc/return_type.m
 50011  sp_after_oc_return_type_force.cfg    oc/return_type.m

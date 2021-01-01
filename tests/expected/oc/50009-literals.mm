@@ -30,7 +30,15 @@ void main(int argc, const char *argv[])
    NSNumber *noNumber  = @NO;           // equivalent to [NSNumber numberWithBool:NO]
 
    // Raw string literals
-   NSString *rawString = [NSString stringWithFormat:@R"(embedded "quotes ")"];
+   NSString *rawString          = [NSString stringWithFormat:@R"(embedded " quotes " )"];
+   NSString *delimiterRawString = [NSString stringWithFormat:@R"<<<(embedded "quotes ')<<<"];
+   NSString *groupIDString      = [NSString stringWithFormat:@R"({"group_id " : " % @",})", groupID];
+   NSString *config             = @R"({"config_v1" : [
+  {"op1" : {"type":{"unsupported1":{}}},"markers":[123]},
+  {"op2" : {"type":{"jobs":{"suspend":true,"resume":false}}},"markers":[1]},
+  {"op3" : {"type":{"Good Format":{}}},"markers":[123]}
+  ]})";
+
 
 #ifdef __cplusplus
    NSNumber *trueNumber  = @true;       // equivalent to [NSNumber numberWithBool:(BOOL)true]
