@@ -8,6 +8,7 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #ifndef UNC_CTYPE_H_INCLUDED
 #define UNC_CTYPE_H_INCLUDED
 
@@ -18,27 +19,15 @@
 // TODO: better avoid inline and move implementation to cpp file
 
 
-//! Truncate anything except EOF (-1) to 0-255
+//! Test anything EOF (-1) to 0-255
 static inline int unc_fix_ctype(int ch)
 {
-   if (ch == -1)
+   if (  ch >= -1
+      && ch <= 255)
    {
       return(ch);
    }
-
-   if (ch > 255)
-   {
-      return(0);                                  // Issue #3025
-   }
-
-   if (ch < -1)
-   {
-      return(0);                                  // Issue #3025
-   }
-   return(ch);
-
-   //return((ch == -1) ? -1 : (ch & 0xff));
-   //return(ch);
+   return(0);                                // Issue #3025
 }
 
 
@@ -62,7 +51,6 @@ static inline int unc_isspace(int ch)
 static inline int unc_isprint(int ch)
 {
    return(isprint(unc_fix_ctype(ch)));
-   //return(isprint(ch));
 }
 
 
@@ -70,7 +58,6 @@ static inline int unc_isprint(int ch)
 static inline int unc_isalpha(int ch)
 {
    return(isalpha(unc_fix_ctype(ch)));
-   //return(isalpha(ch));
 }
 
 
@@ -78,7 +65,6 @@ static inline int unc_isalpha(int ch)
 static inline int unc_isalnum(int ch)
 {
    return(isalnum(unc_fix_ctype(ch)));
-   //return(isalnum(ch));
 }
 
 
@@ -86,7 +72,6 @@ static inline int unc_isalnum(int ch)
 static inline int unc_toupper(int ch)
 {
    return(toupper(unc_fix_ctype(ch)));
-   //return(toupper(ch));
 }
 
 
@@ -94,7 +79,6 @@ static inline int unc_toupper(int ch)
 static inline int unc_tolower(int ch)
 {
    return(tolower(unc_fix_ctype(ch)));
-   //return(tolower(ch));
 }
 
 
@@ -102,7 +86,6 @@ static inline int unc_tolower(int ch)
 static inline int unc_isxdigit(int ch)
 {
    return(isxdigit(unc_fix_ctype(ch)));
-   //return(isxdigit(ch));
 }
 
 
@@ -110,7 +93,6 @@ static inline int unc_isxdigit(int ch)
 static inline int unc_isdigit(int ch)
 {
    return(isdigit(unc_fix_ctype(ch)));
-   //return(isdigit(ch));
 }
 
 
@@ -119,8 +101,6 @@ static inline int unc_isupper(int ch)
 {
    return(  isalpha(unc_fix_ctype(ch))
          && (unc_toupper(unc_fix_ctype(ch)) == ch));
-   //return(  isalpha(ch)
-   //      && (unc_toupper(ch) == ch));
 }
 
 
