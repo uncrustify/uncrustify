@@ -1330,7 +1330,7 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
 static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LMCB, "%s(%d): line %zu",
+   LOG_FMT(LMCB, "%s(%d): line %zu\n",
            __func__, __LINE__, cl_colon->orig_line);
 
    chunk_t *pc   = cl_colon;
@@ -1349,7 +1349,27 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
          && (  chunk_is_token(pc, CT_CASE)
             || chunk_is_token(pc, CT_BREAK)))
       {
-         last = pc;
+         // check if previous line is a preprocessor
+         chunk_t *prev = chunk_get_prev_ncnl(pc);
+         LOG_FMT(LMCB, "%s(%d): prev->text() is '%s', orig_line %zu\n",
+                 __func__, __LINE__, prev->text(), prev->orig_line);
+
+         if (chunk_is_preproc(prev))
+         {
+            // previous line is a preprocessor
+            while (chunk_is_preproc(prev))
+            {
+               prev = chunk_get_prev_ncnl(prev);
+            }
+            chunk_t *next_prev = chunk_get_next_ncnl(prev);
+            LOG_FMT(LMCB, "%s(%d): next_prev->text() is '%s', orig_line %zu\n",
+                    __func__, __LINE__, next_prev->text(), next_prev->orig_line);
+            last = next_prev;
+         }
+         else
+         {
+            last = pc;
+         }
          break;
       }
    }
