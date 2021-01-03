@@ -1349,14 +1349,15 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
          && (  chunk_is_token(pc, CT_CASE)
             || chunk_is_token(pc, CT_BREAK)))
       {
-         // check if previous line is a preprocessor
+         // check if previous line is a preprocessor                     Issue #3040
          chunk_t *prev = chunk_get_prev_ncnl(pc);
          LOG_FMT(LMCB, "%s(%d): prev->text() is '%s', orig_line %zu\n",
                  __func__, __LINE__, prev->text(), prev->orig_line);
 
-         if (chunk_is_preproc(prev))
+         if (  chunk_is_preproc(prev)
+            && chunk_is_not_token(prev, CT_PP_ENDIF))
          {
-            // previous line is a preprocessor
+            // previous line is a preprocessor, but NOT #endif
             while (chunk_is_preproc(prev))
             {
                prev = chunk_get_prev_ncnl(prev);
