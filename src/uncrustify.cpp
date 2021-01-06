@@ -1280,6 +1280,13 @@ int load_header_files()
       retval |= load_mem_file_config(options::cmt_insert_oc_msg_header(),
                                      cpd.oc_msg_hdr);
    }
+   log_rule_B("cmt_reflow_fold_regex_file");
+
+   if (!options::cmt_reflow_fold_regex_file().empty())
+   {
+      retval |= load_mem_file_config(options::cmt_reflow_fold_regex_file(),
+                                     cpd.reflow_fold_regex);
+   }
    return(retval);
 } // load_header_files
 

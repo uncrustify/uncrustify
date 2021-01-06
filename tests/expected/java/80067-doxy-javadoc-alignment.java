@@ -11,7 +11,7 @@
  * Longer description. If there were any, it would be    (2) here.
  *
  * And even more explanations to follow in consecutive paragraphs
- * separated by HTML paragraph breaks.
+ * separated by HTML paragraph breaks... or so we think, haha.
  *
  * @param  variable Description text text text.          (3)
  * @return          Description text text text.
@@ -39,9 +39,8 @@
  * current output device.
  *
  * If the current output representation is not yet complete then the
- * method will return false and the indicated
- * {@link ImageObserver} object will be notified as the conversion
- * process progresses.
+ * method will return false and the indicated {@link ImageObserver}
+ * object will be notified as the conversion process progresses.
  *
  * @param  img      the image to be drawn
  * @param  x, y     the x- and y-coordinates of the northwest corner
