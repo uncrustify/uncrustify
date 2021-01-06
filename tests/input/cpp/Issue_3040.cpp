@@ -1,52 +1,38 @@
-void main()
+int main()
 {
-  switch (opcode ) {
-
-    case LocaleCompare:
-      return Number(localeCompare(s, a0.toString(exec)));
-
-#ifndef KJS_PURE_ECMA
-    case Big:
-      result = String("<big>" + s + "</big>");
+  int af;
+  int A;
+  int B;
+  switch (af)
+    {
+    case 1:
+      B = 2;
+    case 2:
+      return 1;
+    case 3:
+      A = 1;
       break;
+#ifdef ALL_THE_CASE
+    case 4:
+      return 2;
 #endif
-
-  }
-
-  switch (ev->command)
-  {
-    case (MIDI_NOTEON):
-      ev->note = *ptrdata; ptrdata++; currentpos++;
-      ev->vel  = *ptrdata; ptrdata++; currentpos++;
-      if (ev->vel==0)
-	note[ev->chn][ev->note]=FALSE;
-      else
-	note[ev->chn][ev->note]=TRUE;
-
-#ifdef TRACKDEBUG2
-      if (ev->chn==6) {
-	if (ev->vel==0) printfdebug("Note Onf\n");
-	else printfdebug("Note On\n");
-      };
+#ifdef ALL_THE_CASE
+    case 5:
+      B = 2;
+#endif
+    case (6):
+      B=13;
+#ifdef PART_OF_THE_CASE_UNDER
+      A=1;
 #endif
       break;
-    case (MIDI_NOTEOFF) :
-#ifdef TRACKDEBUG2
-      if (ev->chn==6) printfdebug("Note Off\n");
+    case (7) :
+#ifdef PART_OF_THE_CASE_ABOVE
+      A=5;
 #endif
-      ev->note = *ptrdata;ptrdata++;currentpos++; 
-      ev->vel  = *ptrdata;ptrdata++;currentpos++;
-      note[ev->chn][ev->note]=FALSE;
-
+      B=7;
       break;
-    case (MIDI_KEY_PRESSURE) :
-#ifdef TRACKDEBUG2
-      if (ev->chn==6) printfdebug ("Key press\n");
-#endif
-      ev->note = *ptrdata;ptrdata++;currentpos++; 
-      ev->vel  = *ptrdata;ptrdata++;currentpos++;
-      break;
-
-		}
+    default:
+      B= 50;
+    }
 }
-
