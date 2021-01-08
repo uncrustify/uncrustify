@@ -1330,58 +1330,57 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
 static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LMCB, "%s(%d): line %zu\n",
-           __func__, __LINE__, cl_colon->orig_line);
+   LOG_FMT(LMCB, "%s(%d): orig_line %zu, orig_col is %zu\n",
+           __func__, __LINE__, cl_colon->orig_line, cl_colon->orig_col);
 
    chunk_t *pc   = cl_colon;
    chunk_t *last = nullptr;
-   chunk_t *next = chunk_get_next_ncnl(cl_colon, scope_e::PREPROC);
+   // look for the case token to the colon
+   chunk_t *cas_ = chunk_get_prev_type(cl_colon, CT_CASE, cl_colon->level);
+   // look for the parent
+   chunk_t *swit = cas_->parent;
+   // look for the opening brace of the switch
+   chunk_t *open = chunk_get_next_type(swit, CT_BRACE_OPEN, swit->level);
+   // look for the closing brace of the switch
+   chunk_t *clos = chunk_skip_to_match(open);
 
+   // find the end of the case-block
    while ((pc = chunk_get_next_ncnl(pc, scope_e::PREPROC)) != nullptr)
    {
-      if (pc->level < cl_colon->level)
+      LOG_FMT(LMCB, "%s(%d): text() is '%s', orig_line %zu, orig_col is %zu\n",
+              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+
+      if (pc->level == cl_colon->level)
       {
-         LOG_FMT(LMCB, "%s(%d):  - level drop\n", __func__, __LINE__);
-         return(next);
+         if (chunk_is_token(pc, CT_CASE))
+         {
+            LOG_FMT(LMCB, "%s(%d): text() is CASE, orig_line %zu, orig_col is %zu\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col);
+            last = chunk_get_prev_nnl(pc);
+            break;
+         }
       }
-
-      if (  pc->level == cl_colon->level
-         && (  chunk_is_token(pc, CT_CASE)
-            || chunk_is_token(pc, CT_BREAK)))
+      else if (pc->level == cl_colon->level - 1)
       {
-         // check if previous line is a preprocessor                     Issue #3040
-         chunk_t *prev = chunk_get_prev_ncnl(pc);
-         LOG_FMT(LMCB, "%s(%d): prev->text() is '%s', orig_line %zu\n",
-                 __func__, __LINE__, prev->text(), prev->orig_line);
-
-         if (  chunk_is_preproc(prev)
-            && chunk_is_not_token(prev, CT_PP_ENDIF))
+         if (pc == clos)
          {
-            // previous line is a preprocessor, but NOT #endif
-            while (chunk_is_preproc(prev))
-            {
-               prev = chunk_get_prev_ncnl(prev);
-            }
-            chunk_t *next_prev = chunk_get_next_ncnl(prev);
-            LOG_FMT(LMCB, "%s(%d): next_prev->text() is '%s', orig_line %zu\n",
-                    __func__, __LINE__, next_prev->text(), next_prev->orig_line);
-            last = next_prev;
+            last = chunk_get_prev_nnl(clos);
+            // end of switch is reached
+            break;
          }
-         else
-         {
-            last = pc;
-         }
-         break;
       }
    }
 
    if (last == nullptr)
    {
       LOG_FMT(LMCB, "%s(%d):  - last is nullptr\n", __func__, __LINE__);
+      chunk_t *next = chunk_get_next_ncnl(cl_colon, scope_e::PREPROC);
       return(next);
    }
-   LOG_FMT(LMCB, "%s(%d):  - adding before '%s' on line %zu\n",
-           __func__, __LINE__, last->text(), last->orig_line);
+   LOG_FMT(LMCB, "%s(%d): text() is '%s', orig_line %zu, orig_col is %zu\n",
+           __func__, __LINE__, last->text(), last->orig_line, last->orig_col);
+   LOG_FMT(LMCB, "%s(%d): adding braces after '%s' on line %zu\n",
+           __func__, __LINE__, cl_colon->text(), cl_colon->orig_line);
 
    chunk_t chunk;
 
@@ -1393,17 +1392,13 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
    chunk.brace_level = cl_colon->brace_level;
    chunk.flags       = pc->flags & PCF_COPY_FLAGS;
    chunk.str         = "{";
-
    chunk_t *br_open = chunk_add_after(&chunk, cl_colon);
 
    set_chunk_type(&chunk, CT_BRACE_CLOSE);
    chunk.orig_line = last->orig_line;
    chunk.orig_col  = last->orig_col;
    chunk.str       = "}";
-
-   chunk_t *br_close = chunk_add_before(&chunk, last);
-
-   newline_add_before(last);
+   chunk_t *br_close = chunk_add_after(&chunk, last);
 
    for (pc = chunk_get_next(br_open, scope_e::PREPROC);
         pc != br_close;
