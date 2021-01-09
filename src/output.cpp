@@ -217,7 +217,7 @@ static void cmt_trim_whitespace(unc_text &line, bool in_preproc);
  * If the last char on a line is a ':' or '.', then the next line won't be
  * combined.
  */
-static void add_comment_text(const unc_text &text, cmt_reflow &cmt, bool esc_close, size_t doxygen_javadoc_continuation_indent = 0);
+static void add_comment_text(const unc_text &text, cmt_reflow &cmt, bool esc_close, size_t continuation_indent = 0);
 
 
 static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc);
@@ -1290,7 +1290,7 @@ static int next_up(const unc_text &text, size_t idx, unc_text &tag)
 static void add_comment_text(const unc_text &text,
                              cmt_reflow     &cmt,
                              bool           esc_close,
-                             size_t         doxygen_javadoc_continuation_indent)
+                             size_t         continuation_indent)
 {
    bool   was_star  = false;
    bool   was_slash = false;
@@ -1373,12 +1373,17 @@ static void add_comment_text(const unc_text &text,
          {
             add_text(cmt.cont_text);
 
-            if (  options::cmt_align_doxygen_javadoc_tags()
-               && doxygen_javadoc_continuation_indent > 0)
+            if (continuation_indent > 0)
             {
-               log_rule_B("cmt_align_doxygen_javadoc_tags");
-
-               column += doxygen_javadoc_continuation_indent - options::cmt_sp_after_star_cont();
+               if (options::cmt_align_doxygen_javadoc_tags())
+               {
+                  log_rule_B("cmt_align_doxygen_javadoc_tags");
+               }
+               else if (options::cmt_reflow_indent_to_paragraph_start())
+               {
+                  log_rule_B("cmt_reflow_indent_to_paragraph_start");
+               }
+               column += continuation_indent - options::cmt_sp_after_star_cont();
             }
             /**
              * count the number trailing spaces in the comment continuation text
@@ -1944,8 +1949,9 @@ static void output_comment_multi(chunk_t *pc)
    std::wstring pc_wstring(pc->str.get().cbegin(),
                            pc->str.get().cend());
 
-   size_t doxygen_javadoc_param_name_indent   = 0;
-   size_t doxygen_javadoc_continuation_indent = 0;
+   size_t doxygen_javadoc_param_name_indent    = 0;
+   size_t doxygen_javadoc_continuation_indent  = 0;
+   size_t reflow_paragraph_continuation_indent = 0;
 
    calculate_doxygen_javadoc_indent_alignment(pc_wstring,
                                               doxygen_javadoc_param_name_indent,
@@ -1981,7 +1987,6 @@ static void output_comment_multi(chunk_t *pc)
       }
       return(idx);
    };
-
    /**
     * check for enable/disable processing comment strings that may
     * both be embedded within the same multi-line comment
@@ -2202,6 +2207,23 @@ static void output_comment_multi(chunk_t *pc)
             }
          }
 
+         if (  options::cmt_reflow_indent_to_paragraph_start()
+            && next_nonempty_line >= 0
+            && (  prev_nonempty_line <= 0
+               || doxygen_javadoc_indent_align))
+         {
+            log_rule_B("cmt_reflow_indent_to_paragraph_start");
+
+            int cmt_star_indent = 0;
+
+            while (  next_nonempty_line > cmt_star_indent
+                  && pc->str[next_nonempty_line - cmt_star_indent - 1] != '*')
+            {
+               ++cmt_star_indent;
+            }
+            reflow_paragraph_continuation_indent = size_t(cmt_star_indent);
+         }
+
          /*
           * see if we should fold up; usually that'd be a YES, but there are a few
           * situations where folding/reflowing by merging lines is frowned upon:
@@ -2254,6 +2276,7 @@ static void output_comment_multi(chunk_t *pc)
                {
                   // rewind the line to the last non-alpha:
                   line.resize(prev_nonempty_line + 1);
+
                   // roll the current line forward to the first non-alpha:
                   cmt_idx = next_nonempty_line;
                   // override the NL and make it a single whitespace:
@@ -2430,10 +2453,20 @@ static void output_comment_multi(chunk_t *pc)
                      }
                   }
                }
+               size_t continuation_indent = 0;
+
+               if (doxygen_javadoc_indent_align)
+               {
+                  continuation_indent = doxygen_javadoc_continuation_indent;
+               }
+               else if (reflow_paragraph_continuation_indent > 0)
+               {
+                  continuation_indent = reflow_paragraph_continuation_indent;
+               }
                add_comment_text(line,
                                 cmt,
                                 false,
-                                doxygen_javadoc_indent_align ? doxygen_javadoc_continuation_indent : 0);
+                                continuation_indent);
 
                if (nl_end)
                {

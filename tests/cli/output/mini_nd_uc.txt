@@ -654,6 +654,7 @@ align_oc_msg_colon_xcode_like   = false
 cmt_width                       = 0
 cmt_reflow_mode                 = 0
 cmt_reflow_fold_regex_file      = ""
+cmt_reflow_indent_to_paragraph_start = false
 cmt_convert_tab_to_spaces       = false
 cmt_indent_multi                = true
 cmt_align_doxygen_javadoc_tags  = false
