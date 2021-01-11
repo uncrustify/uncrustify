@@ -508,6 +508,8 @@
 
 31700  toggle_processing_cmt.cfg            cpp/toggle_processing_cmt.cpp
 31701  toggle_processing_cmt2.cfg           cpp/toggle_processing_cmt2.cpp
+31702  toggle_processing_cmt3.cfg           cpp/toggle_processing_cmt.cpp
+31703  toggle_processing_cmt4.cfg           cpp/toggle_processing_cmt.cpp
 
 31710  empty.cfg                            cpp/string_replace_tab_chars.cpp
 31711  string_replace_tab_chars-t.cfg       cpp/string_replace_tab_chars.cpp

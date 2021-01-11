@@ -13,6 +13,30 @@
 
 
 /**
+ * Test the input string to see if it satisfies the criteria
+ * specified by the disable_processing_cmt option
+ * @param  text      the string to which a match will be attempted
+ * @param  start_idx the starting index within the string from which the
+ *                   search will be performed
+ * @return           returns a non-negative position index that points to the beginning
+ *                   of the line containing the marker, if found
+ */
+int find_disable_processing_comment_marker(const unc_text &text, std::size_t start_idx = 0);
+
+
+/**
+ * Test the input string to see if it satisfies the criteria
+ * specified by the enable_processing_cmt option
+ * @param  text      the string to which a match will be attempted
+ * @param  start_idx the starting index within the string from which the
+ *                   search will be performed
+ * @return           returns a non-negative position index that points to the end
+ *                   of the line containing the marker, if found
+ */
+int find_enable_processing_comment_marker(const unc_text &text, std::size_t start_idx = 0);
+
+
+/**
  * @brief Parse the text into chunks
  *
  * This function parses or tokenizes the whole buffer into a list.

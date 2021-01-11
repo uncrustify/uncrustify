@@ -42,19 +42,23 @@ disable_processing_nl_cont      = false    # true/false
 
 # Specify the marker used in comments to disable processing of part of the
 # file.
-# The comment should be used alone in one line.
 #
 # Default:  *INDENT-OFF*
 disable_processing_cmt          = " *INDENT-OFF*"      # string
 
 # Specify the marker used in comments to (re)enable processing in a file.
-# The comment should be used alone in one line.
 #
 # Default:  *INDENT-ON*
 enable_processing_cmt           = " *INDENT-ON*"     # string
 
 # Enable parsing of digraphs.
 enable_digraphs                 = false    # true/false
+
+# Option to allow both disable_processing_cmt and enable_processing_cmt strings,
+# if specified, to be interpreted as ECMAScript regular expressions. If true,
+# a regex search will be performed within comments according to the specified
+# patterns in order to disable/enable processing
+processing_cmt_as_regex         = false    # true/false
 
 # Add or remove the UTF-8 BOM (recommend 'remove').
 utf8_bom                        = ignore   # ignore/add/remove/force

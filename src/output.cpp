@@ -18,6 +18,7 @@
 #include "language_tools.h"
 #include "log_rules.h"
 #include "prototypes.h"
+#include "tokenize.h"
 #include "unc_ctype.h"
 #include "uncrustify.h"
 #include "uncrustify_types.h"
@@ -1981,10 +1982,45 @@ static void output_comment_multi(chunk_t *pc)
       return(idx);
    };
 
+   /**
+    * check for enable/disable processing comment strings that may
+    * both be embedded within the same multi-line comment
+    */
+   auto disable_processing_cmt_idx = find_disable_processing_comment_marker(pc->str);
+   auto enable_processing_cmt_idx  = find_enable_processing_comment_marker(pc->str);
+
    while (cmt_idx < pc->len())
    {
       int ch = pc->str[cmt_idx];
       cmt_idx++;
+
+      if (  cmt_idx > std::size_t(disable_processing_cmt_idx)
+         && enable_processing_cmt_idx > disable_processing_cmt_idx)
+      {
+         auto     length = enable_processing_cmt_idx - disable_processing_cmt_idx;
+         unc_text verbatim_text(pc->str,
+                                disable_processing_cmt_idx,
+                                length);
+
+         add_text(verbatim_text);
+
+         cmt_idx = enable_processing_cmt_idx;
+
+         /**
+          * check for additional enable/disable processing comment strings that may
+          * both be embedded within the same multi-line comment
+          */
+         disable_processing_cmt_idx = find_disable_processing_comment_marker(pc->str,
+                                                                             enable_processing_cmt_idx);
+         enable_processing_cmt_idx = find_enable_processing_comment_marker(pc->str,
+                                                                           enable_processing_cmt_idx);
+
+         /**
+          * it's probably necessary to reset the line count to prevent line
+          * continuation characters from being added to the end of the current line
+          */
+         line_count = 0;
+      }
 
       // handle the CRLF and CR endings. convert both to LF
       if (ch == '\r')
@@ -2229,7 +2265,7 @@ static void output_comment_multi(chunk_t *pc)
          }
       }
 
-      if (ch == 10)
+      if (ch == '\n')
       {
          LOG_FMT(LCONTTEXT, "%s(%d):ch is newline\n", __func__, __LINE__);
       }
@@ -2243,7 +2279,7 @@ static void output_comment_multi(chunk_t *pc)
       if (  ch == '\n'
          || cmt_idx == pc->len())
       {
-         if (ch == 10)
+         if (ch == '\n')
          {
             LOG_FMT(LCONTTEXT, "%s(%d):ch is newline\n", __func__, __LINE__);
          }
@@ -2825,7 +2861,8 @@ static void output_comment_multi_simple(chunk_t *pc)
    // shifted all lines of the comment need to be shifted by the same amount.
    // Save the difference of initial and current position to apply it on every
    // line_column
-   const int col_diff = [pc]() {
+   const int col_diff = [pc]()
+   {
       int diff = 0;
 
       if (chunk_is_newline(chunk_get_prev(pc)))
@@ -2835,6 +2872,13 @@ static void output_comment_multi_simple(chunk_t *pc)
       }
       return(diff);
    }();
+
+   /**
+    * check for enable/disable processing comment strings that may
+    * both be embedded within the same multi-line comment
+    */
+   auto     disable_processing_cmt_idx = find_disable_processing_comment_marker(pc->str);
+   auto     enable_processing_cmt_idx  = find_enable_processing_comment_marker(pc->str);
 
    unc_text line;
    size_t   line_count  = 0;
@@ -2846,6 +2890,31 @@ static void output_comment_multi_simple(chunk_t *pc)
       int ch = pc->str[cmt_idx];
       cmt_idx++;
 
+      if (  cmt_idx > std::size_t(disable_processing_cmt_idx)
+         && enable_processing_cmt_idx > disable_processing_cmt_idx)
+      {
+         auto     length = enable_processing_cmt_idx - disable_processing_cmt_idx;
+         unc_text verbatim_text(pc->str,
+                                disable_processing_cmt_idx,
+                                length);
+
+         add_text(verbatim_text);
+
+         cmt_idx = enable_processing_cmt_idx;
+
+         /**
+          * check for additional enable/disable processing comment strings that may
+          * both be embedded within the same multi-line comment
+          */
+         disable_processing_cmt_idx = find_disable_processing_comment_marker(pc->str,
+                                                                             enable_processing_cmt_idx);
+         enable_processing_cmt_idx = find_enable_processing_comment_marker(pc->str,
+                                                                           enable_processing_cmt_idx);
+
+         line.clear();
+
+         continue;
+      }
       // 1: step through leading tabs and spaces to find the start column
       log_rule_B("cmt_convert_tab_to_spaces");
 

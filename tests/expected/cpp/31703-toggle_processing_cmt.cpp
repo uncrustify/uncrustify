@@ -9,7 +9,8 @@ void func() {
 }
 
 /**
- * Function to solve for roots of a generic quartic polynomial of the following form:
+ * Function to solve for roots of a generic quartic polynomial of the
+ * following form:
  * \verbatim
 
    p(x) = a * x^4 + b * x^3 + c * x^2 + d * x + e,
@@ -18,7 +19,9 @@ void func() {
 
  * \endverbatim
  *
- * This object's tolerance defines a threshold for root solutions above which iterative methods will be employed to achieve the desired accuracy
+ * This object's tolerance defines a threshold for root solutions
+ * above which iterative methods will be employed to achieve the
+ * desired accuracy
  *
  * \verbatim - this should cause the following line to not wrap due to cmt_width
  * Upon success, the roots array contains the solution to the polynomial p(x) = 0
@@ -37,13 +40,15 @@ int solve(double a,
           std::complex<double> roots[4]);
 
 /**
- * Function to solve for roots of a generic quartic polynomial of the following form:
+ * Function to solve for roots of a generic quartic polynomial of the
+ * following form:
  *
 
    p(x) = a * x^4 + b * x^3 + c * x^2 + d * x + e,
    where a, b, c, d, and e are real coefficients
  *
- * Upon success, root1, root2, root3, and root4 contain the solution to the polynomial p(x) = 0
+ * Upon success, root1, root2, root3, and root4 contain the solution
+ * to the polynomial p(x) = 0
  * + Return value on output:
  * - 0, if an error occurs (invalid coefficients)
  * - 1, if all roots are real
