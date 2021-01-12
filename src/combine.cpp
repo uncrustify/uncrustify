@@ -1310,7 +1310,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          // Add check for CT_DC_MEMBER CT_WORD CT_STAR sequence
          // to convert CT_WORD into CT_TYPE
          // and CT_STAR into CT_PTR_TYPE
-         // look for an assign backward to distinguish between
+         // look for an assign backward, fuction call, return to distinguish between
          //    double result = Constants::PI * factor;
          // and
          //    ::some::name * foo;
@@ -1319,24 +1319,27 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             && language_is_set(LANG_CPP))
          {
             // Issue 1402
-            bool    assign_found = false;
-            chunk_t *tmp         = pc;
+            bool    is_multiplication = false;
+            chunk_t *tmp              = pc;
 
             while (tmp != nullptr)
             {
-               if (chunk_is_token(tmp, CT_SEMICOLON))
+               if (  chunk_is_token(tmp, CT_SEMICOLON)
+                  || get_chunk_parent_type(tmp) == CT_CLASS)
                {
                   break;
                }
-               else if (chunk_is_token(tmp, CT_ASSIGN))
+               else if (  chunk_is_token(tmp, CT_ASSIGN)
+                       || chunk_is_token(tmp, CT_FUNC_CALL)
+                       || chunk_is_token(tmp, CT_RETURN))
                {
-                  assign_found = true;
+                  is_multiplication = true;
                   break;
                }
                tmp = chunk_get_prev_ncnlni(tmp); // Issue #2279
             }
 
-            if (assign_found)
+            if (is_multiplication)
             {
                // double result = Constants::PI * factor;
                set_chunk_type(pc, CT_ARITH);
