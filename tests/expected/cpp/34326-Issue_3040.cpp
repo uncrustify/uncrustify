@@ -1,14 +1,14 @@
-void main()
+int main()
 {
-  switch (opcode ) {
-
-    case LocaleCompare:
+  switch (opcode)
+  {
+    case 1:
     {
       return Number(localeCompare(s, a0.toString(exec)));
     }
 
-#ifndef KJS_PURE_ECMA
-    case Big:
+#ifndef A
+    case 2:
     {
       result = String("<big>" + s + "</big>");
       break;
@@ -18,7 +18,7 @@ void main()
 
   switch (ev->command)
   {
-    case (MIDI_NOTEON):
+    case (3):
     {
       ev->note = *ptrdata; ptrdata++; currentpos++;
       ev->vel  = *ptrdata; ptrdata++; currentpos++;
@@ -27,7 +27,7 @@ void main()
       else
 	note[ev->chn][ev->note]=TRUE;
 
-#ifdef TRACKDEBUG2
+#ifdef B
       if (ev->chn==6) {
 	if (ev->vel==0) printfdebug("Note Onf\n");
 	else printfdebug("Note On\n");
@@ -36,9 +36,9 @@ void main()
       break;
     }
 
-    case (MIDI_NOTEOFF):
+    case (4):
     {
-#ifdef TRACKDEBUG2
+#ifdef C
       if (ev->chn==6) printfdebug("Note Off\n");
 #endif
       ev->note = *ptrdata; ptrdata++; currentpos++;
@@ -48,15 +48,23 @@ void main()
       break;
     }
 
-    case (MIDI_KEY_PRESSURE):
+    case (5):
     {
-#ifdef TRACKDEBUG2
+#ifdef D
       if (ev->chn==6) printfdebug ("Key press\n");
 #endif
       ev->note = *ptrdata; ptrdata++; currentpos++;
       ev->vel  = *ptrdata; ptrdata++; currentpos++;
       break;
     }
+
+#ifndef E
+    case 6:
+    {
+      result = String("<big>" + s + "</big>");
+      break;
+    }
+#endif
   }
 }
 

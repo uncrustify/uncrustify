@@ -907,7 +907,7 @@ static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope, const direct
 {
    chunk_t *pc = cur;
 
-   pc = (chunk_is_preproc(pc) == true) ?
+   pc = chunk_is_preproc(pc) ?
         chunk_search(pc, chunk_is_comment_or_newline_in_preproc, scope, dir, false) :
         chunk_search(pc, chunk_is_comment_newline_or_preproc, scope, dir, false);
    return(pc);
@@ -1106,4 +1106,35 @@ bool chunk_is_enum(chunk_t *pc)
 {
    return(  chunk_is_token(pc, CT_ENUM)
          || chunk_is_token(pc, CT_ENUM_CLASS));
+}
+
+
+int chunk_compare_position(const chunk_t *A_token, const chunk_t *B_token)
+{
+   if (A_token == nullptr)
+   {
+      assert(A_token);
+   }
+
+   if (B_token == nullptr)
+   {
+      assert(B_token);
+   }
+
+   if (A_token->orig_line < B_token->orig_line)
+   {
+      return(-1);
+   }
+   else if (A_token->orig_line == B_token->orig_line)
+   {
+      if (A_token->orig_col < B_token->orig_col)
+      {
+         return(-1);
+      }
+      else if (A_token->orig_col == B_token->orig_col)
+      {
+         return(0);
+      }
+   }
+   return(1);
 }

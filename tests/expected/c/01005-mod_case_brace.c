@@ -17,8 +17,8 @@ int foo(int bar)
 
    case 2:
       {
+         break;
       }
-      break;
 
    case 3:
       {
@@ -59,8 +59,8 @@ int foo(int bar)
             }
             break;
          }
+         break;
       }
-      break;
 
    default:
       {

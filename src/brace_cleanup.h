@@ -1,10 +1,11 @@
 /**
  * @file brace_cleanup.h
- * prototypes for brace_cleanup.c
+ * prototypes for brace_cleanup.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #ifndef BRACE_CLEANUP_H_INCLUDED
 #define BRACE_CLEANUP_H_INCLUDED
 

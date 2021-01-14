@@ -830,6 +830,8 @@
 34324  issue_2623_3.cfg                     cpp/issue_2623.cpp
 34325  Issue_3025.cfg                       cpp/Issue_3025.cpp
 34326  Issue_3040.cfg                       cpp/Issue_3040.cpp
+34327  Issue_3044.cfg                       cpp/Issue_3044.cpp
+34328  Issue_3048.cfg                       cpp/Issue_3048.cpp
 
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp

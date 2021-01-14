@@ -35,6 +35,7 @@
 #include "options.h"
 #include "output.h"
 #include "parens.h"
+#include "parent_for_pp.h"
 #include "pcf_flags.h"
 #include "prototypes.h"
 #include "remove_extra_returns.h"
@@ -2016,6 +2017,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       {
          add_msg_header(CT_OC_MSG_DECL, cpd.oc_msg_hdr);
       }
+      do_parent_for_pp();
       do_braces();  // Change virtual braces into real braces...
 
       // Scrub extra semicolons
