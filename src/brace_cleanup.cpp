@@ -723,7 +723,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
       }
    }
 
-   if (chunk_is_token(pc, CT_CASE))
+   if (  chunk_is_token(pc, CT_CASE)
+      || chunk_is_token(pc, CT_DEFAULT))
    {
       LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col);

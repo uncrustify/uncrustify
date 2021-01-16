@@ -1,10 +1,11 @@
 /**
  * @file braces.h
- * prototypes for braces.c
+ * prototypes for braces.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #ifndef BRACES_H_INCLUDED
 #define BRACES_H_INCLUDED
 

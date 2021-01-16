@@ -979,4 +979,19 @@ void chunk_set_parent(chunk_t *pc, chunk_t *parent);
 c_token_t get_type_of_the_parent(chunk_t *pc);
 
 
+/**
+ * @brief compare the positions of two tokens in a file.
+ *
+ * The function compares the two positions of two tokens.
+ *
+ * @param A_token
+ * @param B_token
+ *
+ * @return returns an integer less than, equal to, or greater than zero
+ *         if A_token is found, respectively, to be less/before than, to
+ *         match, or be greater/after than B_token.
+ */
+int chunk_compare_position(const chunk_t *A_token, const chunk_t *B_token);
+
+
 #endif /* CHUNK_LIST_H_INCLUDED */
