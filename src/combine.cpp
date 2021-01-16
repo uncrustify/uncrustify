@@ -3715,11 +3715,11 @@ static void handle_proto_wrap(chunk_t *pc)
    chunk_t *clp  = chunk_skip_to_match(opp);
    chunk_t *cma  = chunk_get_next_ncnl(clp);
 
-   if (  opp != nullptr
-      || name != nullptr
-      || tmp != nullptr
-      || clp != nullptr
-      || cma != nullptr
+   if (  opp == nullptr
+      || name == nullptr
+      || tmp == nullptr
+      || clp == nullptr
+      || cma == nullptr
       || (  chunk_is_not_token(name, CT_WORD)
          && chunk_is_not_token(name, CT_TYPE))
       || chunk_is_not_token(opp, CT_PAREN_OPEN))

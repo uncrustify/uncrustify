@@ -528,6 +528,7 @@
 32004  empty.cfg                            cpp/issue_624_angle.cpp
 32005  align_var_class_span-1.cfg           cpp/issue_633_typename.cpp
 32006  space_indent_columns-4.cfg           cpp/bug_i_687.cpp
+32007  Issue_3052.cfg                       cpp/Issue_3052.cpp
 
 32100  cpp17.cfg                            cpp/cpp17.cpp
 32105  I2103.cfg                            cpp/I2103.cpp
