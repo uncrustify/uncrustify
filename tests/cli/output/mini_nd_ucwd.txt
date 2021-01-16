@@ -2666,6 +2666,12 @@ cmt_reflow_mode                 = 0        # unsigned number
 # beg_of_next_line_regex[2] = "^[A-Z]"
 cmt_reflow_fold_regex_file      = ""         # string
 
+# Whether to indent wrapped lines to the start of the encompassing paragraph
+# during full comment reflow (cmt_reflow_mode = 2). Overrides the value
+# specified by cmt_sp_after_star_cont. Note that cmt_align_doxygen_javadoc_tags
+# overrides this option for paragraphs associated with javadoc tags
+cmt_reflow_indent_to_paragraph_start = false    # true/false
+
 # Whether to convert all tabs to spaces in comments. If false, tabs in
 # comments are left alone, unless used for indenting.
 cmt_convert_tab_to_spaces       = false    # true/false

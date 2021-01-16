@@ -3287,6 +3287,13 @@ cmt_reflow_mode;
 extern Option<string>
 cmt_reflow_fold_regex_file;
 
+// Whether to indent wrapped lines to the start of the encompassing paragraph
+// during full comment reflow (cmt_reflow_mode = 2). Overrides the value
+// specified by cmt_sp_after_star_cont. Note that cmt_align_doxygen_javadoc_tags
+// overrides this option for paragraphs associated with javadoc tags
+extern Option<bool>
+cmt_reflow_indent_to_paragraph_start;
+
 // Whether to convert all tabs to spaces in comments. If false, tabs in
 // comments are left alone, unless used for indenting.
 extern Option<bool>
