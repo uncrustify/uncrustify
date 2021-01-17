@@ -2388,10 +2388,32 @@ static void newlines_brace_pair(chunk_t *br_open)
             || get_chunk_parent_type(br_open) == CT_OC_CLASS)
          {
             val = iarf_e::NOT_DEFINED;
+            log_rule_B("nl_ctor_brace_cond");
+            const iarf_e nl_ctor_brace_cond_v = options::nl_ctor_brace_cond();
+
+            if (  nl_ctor_brace_cond_v != IARF_IGNORE
+               && val == iarf_e::NOT_DEFINED
+               && get_chunk_parent_type(br_open) == CT_FUNC_CLASS_DEF)
+            {
+               chunk_t *tmp = chunk_get_prev_ncnlni(br_open);
+
+               if (  tmp != nullptr
+                  && get_chunk_parent_type(tmp) == CT_FUNC_CTOR_VAR)
+               {
+                  chunk_t *start = chunk_get_prev_type(br_open, CT_CONSTR_COLON, br_open->level);
+
+                  if (  start != nullptr
+                     && start->orig_line != tmp->orig_line)
+                  {
+                     prev = tmp;
+                     val  = nl_ctor_brace_cond_v;
+                  }
+               }
+            }
             log_rule_B("nl_fdef_brace_cond");
             const iarf_e nl_fdef_brace_cond_v = options::nl_fdef_brace_cond();
 
-            if (nl_fdef_brace_cond_v != IARF_IGNORE)
+            if (nl_fdef_brace_cond_v != IARF_IGNORE && val == iarf_e::NOT_DEFINED)
             {
                prev = chunk_get_prev_ncnlni(br_open);   // Issue #2279
 

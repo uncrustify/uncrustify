@@ -2272,6 +2272,11 @@ nl_fdef_brace;
 extern Option<iarf_e>
 nl_fdef_brace_cond;
 
+// Add or remove newline between last constructor initializer list argument
+// and '{'. Overrides nl_fdef_brace and nl_fdev_brace_cond.
+extern Option<iarf_e>
+nl_ctor_brace_cond;
+
 // Add or remove newline between C++11 lambda signature and '{'.
 extern Option<iarf_e>
 nl_cpp_ldef_brace;
