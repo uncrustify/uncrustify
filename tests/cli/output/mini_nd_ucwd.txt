@@ -1837,6 +1837,10 @@ nl_fdef_brace                   = ignore   # ignore/add/remove/force
 # if signature ends with ')'. Overrides nl_fdef_brace.
 nl_fdef_brace_cond              = ignore   # ignore/add/remove/force
 
+# Add or remove newline between last constructor initializer list argument
+# and '{'. Overrides nl_fdef_brace and nl_fdev_brace_cond.
+nl_ctor_brace_cond              = ignore   # ignore/add/remove/force
+
 # Add or remove newline between C++11 lambda signature and '{'.
 nl_cpp_ldef_brace               = ignore   # ignore/add/remove/force
 
