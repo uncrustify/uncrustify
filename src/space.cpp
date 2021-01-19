@@ -886,19 +886,45 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       // Handle the special lambda case for C++11:
       //    [](Something arg){.....}
-      // Add or remove space after the capture specification in C++11 lambda.
-      if (  (options::sp_cpp_lambda_square_paren() != IARF_IGNORE)
-         && chunk_is_token(second, CT_FPAREN_OPEN))
+      // Add or remove space after the capture specification of a C++11 lambda when
+      // an argument list is present, as in '[] <here> (int x){ ... }'.
+      if (chunk_is_token(second, CT_LPAREN_OPEN))
       {
          log_rule("sp_cpp_lambda_square_paren");
          return(options::sp_cpp_lambda_square_paren());
       }
-      else if (  (options::sp_cpp_lambda_square_brace() != IARF_IGNORE)
-              && chunk_is_token(second, CT_BRACE_OPEN))
+      else if (chunk_is_token(second, CT_BRACE_OPEN))
       {
          log_rule("sp_cpp_lambda_square_brace");
          return(options::sp_cpp_lambda_square_brace());
       }
+   }
+
+   if (chunk_is_token(first, CT_LPAREN_OPEN))
+   {
+      // Add or remove space after the opening parenthesis and before the closing
+      // parenthesis of a argument list of a C++11 lambda, as in
+      // '[]( <here> int x <here> ){ ... }'.
+      log_rule("sp_cpp_lambda_argument_list");
+      return(options::sp_cpp_lambda_argument_list());
+   }
+
+   if (chunk_is_token(first, CT_LPAREN_CLOSE))
+   {
+      if (chunk_is_token(second, CT_BRACE_OPEN))
+      {
+         log_rule("sp_cpp_lambda_paren_brace");
+         return(options::sp_cpp_lambda_paren_brace());
+      }
+   }
+
+   if (chunk_is_token(second, CT_LPAREN_CLOSE))
+   {
+      // Add or remove space after the opening parenthesis and before the closing
+      // parenthesis of a argument list of a C++11 lambda, as in
+      // '[]( <here> int x <here> ){ ... }'.
+      log_rule("sp_cpp_lambda_argument_list");
+      return(options::sp_cpp_lambda_argument_list());
    }
 
    if (  chunk_is_token(first, CT_BRACE_CLOSE)
@@ -918,7 +944,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_cpp_lambda_paren_brace());
    }
 
-   if (chunk_is_token(first, CT_ENUM) && chunk_is_token(second, CT_FPAREN_OPEN))
+   if (  chunk_is_token(first, CT_ENUM)
+      && chunk_is_token(second, CT_FPAREN_OPEN))
    {
       // Add or remove space in 'NS_ENUM ('.
       if (options::sp_enum_paren() != IARF_IGNORE)
@@ -2092,7 +2119,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // "[3]" vs "[ 3 ]" or for objective-c "@[@3]" vs "@[ @3 ]"
-   if (chunk_is_token(first, CT_SQUARE_OPEN) || chunk_is_token(second, CT_SQUARE_CLOSE))
+   if (  chunk_is_token(first, CT_SQUARE_OPEN)
+      || chunk_is_token(second, CT_SQUARE_CLOSE))
    {
       if (  language_is_set(LANG_OC)
          && (  (get_chunk_parent_type(first) == CT_OC_AT && chunk_is_token(first, CT_SQUARE_OPEN))
@@ -2624,7 +2652,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    if (  !chunk_is_token(second, CT_PTR_TYPE)
-      && (chunk_is_token(first, CT_QUALIFIER) || chunk_is_token(first, CT_TYPE)))
+      && (  chunk_is_token(first, CT_QUALIFIER)
+         || chunk_is_token(first, CT_TYPE)))
    {
       // Add or remove space between type and word. In cases where total removal of
       // whitespace would be a syntax error, a value of 'remove' is treated the same
