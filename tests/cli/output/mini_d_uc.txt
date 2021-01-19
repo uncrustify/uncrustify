@@ -23,7 +23,6 @@ sp_assign                       = ignore
 sp_cpp_lambda_assign            = ignore
 sp_cpp_lambda_square_paren      = ignore
 sp_cpp_lambda_square_brace      = ignore
-sp_cpp_lambda_argument_list     = ignore
 sp_cpp_lambda_paren_brace       = ignore
 sp_cpp_lambda_fparen            = ignore
 sp_assign_default               = ignore

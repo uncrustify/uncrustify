@@ -108,11 +108,6 @@ sp_cpp_lambda_square_paren      = ignore   # ignore/add/remove/force
 # no argument list is present, as in '[] <here> { ... }'.
 sp_cpp_lambda_square_brace      = ignore   # ignore/add/remove/force
 
-# Add or remove space after the opening parenthesis and before the closing
-# parenthesis of a argument list of a C++11 lambda, as in
-# '[]( <here> int x <here> ){ ... }'.
-sp_cpp_lambda_argument_list     = ignore   # ignore/add/remove/force
-
 # Add or remove space after the argument list of a C++11 lambda, as in
 # '[](int x) <here> { ... }'.
 sp_cpp_lambda_paren_brace       = ignore   # ignore/add/remove/force
