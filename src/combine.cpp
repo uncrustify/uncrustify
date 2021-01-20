@@ -2453,8 +2453,12 @@ static void handle_cpp_lambda(chunk_t *sq_o)
    {
       set_chunk_type(pa_o, CT_LPAREN_OPEN);                    // Issue #3054
       set_chunk_parent(pa_o, CT_CPP_LAMBDA);
+      chunk_set_parent(pa_o, sq_o);
+      chunk_set_parent(br_o, sq_o);
       set_chunk_type(pa_c, CT_LPAREN_CLOSE);
       set_chunk_parent(pa_c, CT_CPP_LAMBDA);
+      chunk_set_parent(pa_c, sq_o);
+      chunk_set_parent(br_c, sq_o);
    }
    set_chunk_parent(br_o, CT_CPP_LAMBDA);
    set_chunk_parent(br_c, CT_CPP_LAMBDA);

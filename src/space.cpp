@@ -3486,8 +3486,8 @@ static iarf_e ensure_force_space(chunk_t *first, chunk_t *second, iarf_e av)
 {
    if (first->flags.test(PCF_FORCE_SPACE))
    {
-      LOG_FMT(LSPACE, " <force between '%s' and '%s'>",
-              first->text(), second->text());
+      LOG_FMT(LSPACE, "%s(%d): <force between '%s' and '%s'>",
+              __func__, __LINE__, first->text(), second->text());
       return(av | IARF_ADD);
    }
    return(av);
