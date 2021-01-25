@@ -303,6 +303,7 @@
 30755  empty.cfg                            cpp/bug_i_938.h
 30756  bug_1296.cfg                         cpp/bug_1296.cpp
 30757  Issue_3054.cfg                       cpp/Issue_3054.cpp
+30758  Issue_3054-2.cfg                     cpp/Issue_3054-2.cpp
 
 30761  out-668-F.cfg                        cpp/out-668.cpp
 30762  out-668-T.cfg                        cpp/out-668.cpp
