@@ -315,6 +315,7 @@ set(uncrustify_sources
 )
 
 set(uncrustify_headers
+  src/add_space_table.h
   src/align_add.h
   src/align_asm_colon.h
   src/align_assign.h
@@ -372,7 +373,6 @@ set(uncrustify_headers
   src/logmask.h
   src/log_rules.h
   src/md5.h
-  src/add_space_table.h
   src/newlines.h
   src/option.h
   src/options_for_QT.h
