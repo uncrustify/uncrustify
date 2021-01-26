@@ -12,7 +12,11 @@
  *
  * And even more explanations to follow in consecutive
  * paragraphs separated by HTML paragraph breaks...
- * or so we think, haha.
+ * or so we think, haha. After this paragraph, add a
+ * reference to an @param to verify that it is ignored
+ * since it does not occur at the beginning of the line.
+ * Let's also throw in an @return to verify that it passes
+ * the test as well.
  *
  * @param variable Description text text text.          (3)
  * @return Description text text text.

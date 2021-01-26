@@ -967,6 +967,91 @@ static size_t cmt_parse_lead(const unc_text &line, bool is_last)
 } // cmt_parse_lead
 
 
+/**
+ * Eat whitespace characters starting at the specified index in the forward or reverse direction
+ * within a single line
+ * @param  str     the input string containing the comment text
+ * @param  idx     the starting index
+ * @param  forward if true, searches in the forward direction;
+ *                 if false, searches in the reverse direction
+ * @return         the first index at which a non-whitespace character is encountered, including
+ *                 a newline character
+ */
+template<typename String>
+static int eat_line_whitespace(const String &str,
+                               int idx, bool
+                               forward = true)
+{
+   auto advance_index = [&](int i)
+   {
+      return(forward ? i + 1 : i - 1);
+   };
+
+   auto index_in_range = [&](int i)
+   {
+      // TODO: the following BREAKS with source code formatting; uncrustify seems to
+      //       think that the following is a template. This will NEED to be fixed!!!
+      //       For now, reformulate the statement
+      //return(forward ? i<int(str.size()) : i> = 0);
+      return(forward ? (i < int(str.size())) : (i >= 0));
+   };
+
+   while (  index_in_range(idx)
+         && str[idx] != '\n'
+         && str[idx] != '\r'
+         && unc_isspace(str[idx]))
+   {
+      idx = advance_index(idx);
+   }
+   return(idx);
+} // eat_line_whitespace
+
+
+/**
+ * Returns whether or not a javaparam tag is the leading
+ * text in a comment line, with only a sequence of whitespace
+ * and/or '*' characters preceding it
+ * @param  str the input string containing the comment text
+ * @param  idx the starting index
+ * @return     true/false
+ */
+template<typename String>
+static bool javaparam_tag_is_start_of_line(const String &str, int idx)
+{
+   idx = eat_line_whitespace(str,
+                             str[idx] == '@' ? idx - 1 : idx,
+                             false);
+
+   while (true)
+   {
+      if (  idx < 0
+         || str[idx] == '\n'
+         || str[idx] == '\r')
+      {
+         return(true);
+      }
+
+      if (str[idx] == '*')
+      {
+         idx = eat_line_whitespace(str,
+                                   idx - 1,
+                                   false);
+      }
+      else
+      {
+         return(false);
+      }
+   }
+} // javaparam_tag_is_start_of_line
+
+
+/**
+ * Attempts to match a doxygen/javadoc-style comment tag
+ * @param  str the input string containing the comment text
+ * @param  idx the starting index
+ * @return     the index of the character immediately following the matched tag,
+ *             or -1 if no match is found
+ */
 static int match_doxygen_javadoc_tag(const std::wstring &str, size_t idx)
 {
    std::wsmatch match;
@@ -981,7 +1066,7 @@ static int match_doxygen_javadoc_tag(const std::wstring &str, size_t idx)
                            L"see|"
                            L"since|"
                            L"throws|"
-                           L"version))");
+                           L"version)\\b)");
 
       if (  std::regex_search(str.cbegin() + idx, str.cend(), match, criteria)
          && match[1].matched
@@ -1006,7 +1091,8 @@ static int match_doxygen_javadoc_tag(const std::wstring &str, size_t idx)
          result.erase(std::remove_if(result.begin(), result.end(), ::isspace), result.end());
          auto                   &&it_block_tag = block_tags.find(result);
 
-         if (it_block_tag != block_tags.end())
+         if (  it_block_tag != block_tags.end()
+            && javaparam_tag_is_start_of_line(str, idx))
          {
             return(int(idx + match[1].length()));
          }
@@ -1029,17 +1115,6 @@ static void calculate_doxygen_javadoc_indent_alignment(const std::wstring &str,
    {
       return;
    }
-   auto &&eat_whitespace = [&](size_t idx)
-   {
-      while (  idx < str.size()
-            && str[idx] != '\n'
-            && str[idx] != '\r'
-            && std::isspace(str[idx]))
-      {
-         ++idx;
-      }
-      return(idx);
-   };
 
    for (size_t idx = 0; idx < str.size(); ++idx)
    {
@@ -1051,14 +1126,14 @@ static void calculate_doxygen_javadoc_indent_alignment(const std::wstring &str,
          size_t block_tag_width = 1 + std::count_if(str.begin() + start_idx,
                                                     str.begin() + end_idx,
                                                     [](wchar_t ch) {
-            return(!std::isspace(ch));
+            return(!unc_isspace(ch));
          });
 
          if (block_tag_width > doxygen_javadoc_param_name_indent)
          {
             doxygen_javadoc_param_name_indent = block_tag_width;
          }
-         idx = eat_whitespace(end_idx);
+         idx = eat_line_whitespace(str, end_idx);
 
          size_t param_name_width = 0;
 
@@ -1068,20 +1143,20 @@ static void calculate_doxygen_javadoc_indent_alignment(const std::wstring &str,
 
             while (true)
             {
-               while (  !std::isspace(str[idx])
+               while (  !unc_isspace(str[idx])
                      && str[idx] != ',')
                {
                   ++param_name_width;
                   ++idx;
                }
-               idx = eat_whitespace(idx);
+               idx = eat_line_whitespace(str, idx);
 
                if (str[idx] != ',')
                {
                   break;
                }
                param_name_width += 2;
-               idx               = eat_whitespace(idx + 1);
+               idx               = eat_line_whitespace(str, idx + 1);
             }
          }
 
@@ -1383,7 +1458,14 @@ static void add_comment_text(const unc_text &text,
                {
                   log_rule_B("cmt_reflow_indent_to_paragraph_start");
                }
-               column += continuation_indent - options::cmt_sp_after_star_cont();
+               column += continuation_indent;
+
+               log_rule_B("cmt_sp_after_star_cont");
+
+               if (column >= options::cmt_sp_after_star_cont())
+               {
+                  column -= options::cmt_sp_after_star_cont();
+               }
             }
             /**
              * count the number trailing spaces in the comment continuation text
@@ -1395,7 +1477,12 @@ static void add_comment_text(const unc_text &text,
             {
                ++num_trailing_sp;
             }
-            column += cpd.column - num_trailing_sp;
+            column += cpd.column;
+
+            if (column >= num_trailing_sp)
+            {
+               column -= num_trailing_sp;
+            }
          }
          output_to_column(column,
                           false);
@@ -1976,17 +2063,6 @@ static void output_comment_multi(chunk_t *pc)
    LOG_FMT(LCONTTEXT, "%s(%d): pc->str is %s\n",
            __func__, __LINE__, pc->str.c_str());
 
-   auto &&eat_whitespace = [&](size_t idx)
-   {
-      while (  idx < pc->str.size()
-            && pc->str[idx] != '\n'
-            && pc->str[idx] != '\r'
-            && unc_isspace(pc->str[idx]))
-      {
-         ++idx;
-      }
-      return(idx);
-   };
    /**
     * check for enable/disable processing comment strings that may
     * both be embedded within the same multi-line comment
@@ -2081,14 +2157,17 @@ static void output_comment_multi(chunk_t *pc)
             /**
              * remove whitespace before the '@'
              */
-            while (unc_isspace(line.back()))
+            int line_size_before_indent = line.size();
+
+            while (  line_size_before_indent > 0
+                  && unc_isspace(line.back()))
             {
                line.pop_back();
+               --line_size_before_indent;
             }
             log_rule_B("cmt_sp_before_doxygen_javadoc_tags");
 
-            int line_size_before_indent = line.size();
-            int indent                  = options::cmt_sp_before_doxygen_javadoc_tags();
+            int indent = options::cmt_sp_before_doxygen_javadoc_tags();
 
             while (indent-- > 0)
             {
@@ -2114,7 +2193,8 @@ static void output_comment_multi(chunk_t *pc)
 
                while (true)
                {
-                  cmt_idx = eat_whitespace(cmt_idx);
+                  cmt_idx = eat_line_whitespace(pc->str,
+                                                cmt_idx);
 
                   while (  cmt_idx < pc->len()
                         && !unc_isspace(pc->str[cmt_idx])
@@ -2130,7 +2210,8 @@ static void output_comment_multi(chunk_t *pc)
                   /**
                    * check for the possibility that comma-separated parameter names are present
                    */
-                  cmt_idx = eat_whitespace(cmt_idx);
+                  cmt_idx = eat_line_whitespace(pc->str,
+                                                cmt_idx);
 
                   if (pc->str[cmt_idx] != ',')
                   {
@@ -2140,8 +2221,9 @@ static void output_comment_multi(chunk_t *pc)
                   line.append(", ");
                }
             }
-            cmt_idx = eat_whitespace(cmt_idx);
-            indent  = int(doxygen_javadoc_continuation_indent) - int(line.size());
+            cmt_idx = eat_line_whitespace(pc->str,
+                                          cmt_idx);
+            indent = int(doxygen_javadoc_continuation_indent) - int(line.size());
 
             while (indent-- > -line_size_before_indent)
             {
