@@ -161,6 +161,12 @@ sp_cpp_lambda_square_paren;
 extern Option<iarf_e>
 sp_cpp_lambda_square_brace;
 
+// Add or remove space after the opening parenthesis and before the closing
+// parenthesis of a argument list of a C++11 lambda, as in
+// '[]( <here> int x <here> ){ ... }'.
+extern Option<iarf_e>
+sp_cpp_lambda_argument_list;
+
 // Add or remove space after the argument list of a C++11 lambda, as in
 // '[](int x) <here> { ... }'.
 extern Option<iarf_e>

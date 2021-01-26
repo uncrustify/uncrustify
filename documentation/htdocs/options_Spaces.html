@@ -382,11 +382,13 @@ void Initialize( BYTE nDelay = 100 );
 <a title="sp_assign_default"><strong><font color="red">                            █ █</font></strong></a>
 void f1()
 {
-      auto a = [ = ] (int *a, Something & b)
-      <a title="sp_cpp_lambda_assign"><strong><font color="red">          █ █</a><a title="sp_square_fparen"> █</font></strong></a>
+      auto a = [<a title="sp_inside_square"><font color="red">█</font></a>=<a title="sp_inside_square"><font color="red">█</font></a>]<a title="sp_cpp_lambda_square_paren"><font color="red">█</font></a>(<a title="sp_cpp_lambda_argument_list"><font color="red">█</font></a>int *a, Something & b<a title="sp_cpp_lambda_argument_list"><font color="red">█</font></a>);
+
+      parallel_for(0, 100, [<a title="sp_inside_square"><font color="red">█</font></a>&<a title="sp_inside_square"><font color="red">█</font></a>]<a title="sp_cpp_lambda_square_paren"><font color="red">█</font></a>(<a title="sp_cpp_lambda_argument_list"><font color="red">█</font></a>const int i<a title="sp_cpp_lambda_argument_list"><font color="red">█</font></a>)<a title="sp_cpp_lambda_paren_brace"><font color="red">█</font></a>{
+          const std::vector<int> values = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
 
       list[idx] (param);
-      <a title="sp_square_fparen"><strong><font color="red">         █</font></strong></a>
+      <a title="sp_square_fparen"><font color="red">         █</font></a>
 
 double foo()
 {

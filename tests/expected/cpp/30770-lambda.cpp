@@ -39,7 +39,7 @@ void f3a()
 {
 	auto a = []  {
 		 };
-	auto b = [] {
+	auto b = []{
 			 return true;
 		 };
 }
