@@ -252,7 +252,7 @@ void braced_init_list_lambda()
         std::vector<some_type> a {1, 2};
         some_type b {2};
 
-        auto c = [] {
+        auto c = []{
                          return true;
                  };
         auto d = [](){

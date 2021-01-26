@@ -833,7 +833,8 @@ static inline bool chunk_is_paren_open(chunk_t *pc)
    return(  chunk_is_token(pc, CT_PAREN_OPEN)
          || chunk_is_token(pc, CT_SPAREN_OPEN)
          || chunk_is_token(pc, CT_TPAREN_OPEN)
-         || chunk_is_token(pc, CT_FPAREN_OPEN));
+         || chunk_is_token(pc, CT_FPAREN_OPEN)
+         || chunk_is_token(pc, CT_LPAREN_OPEN));
 }
 
 

@@ -177,7 +177,7 @@ enum c_token_t
    CT_USING,
    CT_USING_STMT,       // using (xxx) ...
    CT_USING_ALIAS,      // using identifier attr(optional) = type-id
-   CT_D_WITH,           // D: paren+braced
+   CT_D_WITH,           // D: parenthetis+braced
    CT_D_MODULE,
    CT_SUPER,
    CT_DELEGATE,
@@ -197,23 +197,26 @@ enum c_token_t
    CT_D_VERSION,        // turns into CT_D_VERSION_IF if not followed by '='
    CT_D_VERSION_IF,     // version(x) { }
 
-   // note for paren/brace/square pairs: close MUST be open + 1
+   // note for parenthetis/brace/square pairs: close MUST be open + 1
    CT_PAREN_OPEN,
    CT_PAREN_CLOSE,
 
    CT_ANGLE_OPEN,       // template<T*>
    CT_ANGLE_CLOSE,
 
-   CT_SPAREN_OPEN,      // 'special' paren after if/for/switch/while/synchronized/catch
+   CT_SPAREN_OPEN,      // 'special' parenthetis after if/for/switch/while/synchronized/catch
    CT_SPAREN_CLOSE,
 
-   CT_PPAREN_OPEN,      // 'protect' paren to protect a type such as (*int)
+   CT_PPAREN_OPEN,      // 'protect' parenthetis to protect a type such as (*int)
    CT_PPAREN_CLOSE,     // used at align_func_param
 
-   CT_FPAREN_OPEN,      // 'function' paren after fcn/macro fcn
+   CT_FPAREN_OPEN,      // 'function' parenthetis after fcn/macro fcn
    CT_FPAREN_CLOSE,
 
-   CT_TPAREN_OPEN,      // 'type' paren used in function types
+   CT_LPAREN_OPEN,      // lambda-declarator parenthetis
+   CT_LPAREN_CLOSE,
+
+   CT_TPAREN_OPEN,      // 'type' parenthetis used in function types
    CT_TPAREN_CLOSE,
 
    CT_BRACE_OPEN,       // {...}

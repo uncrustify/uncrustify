@@ -4,7 +4,7 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel since version 0.62 for uncrustify4Qt
- *          October 2015, 2016
+ *          October 2015, 2021
  * @license GPL v2+
  */
 
@@ -1297,6 +1297,7 @@ void indent_text(void)
             // Close out parenthesis and squares
             if (  (frm.top().type == (pc->type - 1))
                && (  chunk_is_token(pc, CT_PAREN_CLOSE)
+                  || chunk_is_token(pc, CT_LPAREN_CLOSE)                     // Issue #3054
                   || chunk_is_token(pc, CT_SPAREN_CLOSE)
                   || chunk_is_token(pc, CT_FPAREN_CLOSE)
                   || chunk_is_token(pc, CT_SQUARE_CLOSE)
@@ -2324,6 +2325,7 @@ void indent_text(void)
          reindent_line(pc, indent_column);
       }
       else if (  chunk_is_token(pc, CT_PAREN_OPEN)
+              || chunk_is_token(pc, CT_LPAREN_OPEN)                     // Issue #3054
               || chunk_is_token(pc, CT_SPAREN_OPEN)
               || chunk_is_token(pc, CT_FPAREN_OPEN)
               || chunk_is_token(pc, CT_SQUARE_OPEN)

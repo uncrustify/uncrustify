@@ -703,7 +703,8 @@ static void split_fcn_params_full(chunk_t *start)
 static void split_fcn_params(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "%s(%d): '%s'\n", __func__, __LINE__, start->text());
+   LOG_FMT(LSPLIT, "%s(%d): start->text() is '%s', orig_line is %zu, orig_col is %zu\n",
+           __func__, __LINE__, start->text(), start->orig_line, start->orig_col);
    chunk_t *fpo = start;
 
    if (!chunk_is_token(start, CT_FPAREN_OPEN))
@@ -782,22 +783,26 @@ static void split_fcn_params(chunk_t *start)
    // back up until the prev is a comma
    chunk_t *prev = pc;
 
-   LOG_FMT(LSPLIT, "  %s(%d): back up until the prev is a comma\n", __func__, __LINE__);
+   LOG_FMT(LSPLIT, "%s(%d): back up until the prev is a comma, begin is '%s', level is %zu\n",
+           __func__, __LINE__, prev->text(), prev->level);
 
    while ((prev = chunk_get_prev(prev)) != nullptr)
    {
-      LOG_FMT(LSPLIT, "%s(%d): pc '%s', pc->level is %zu, prev '%s', prev->type is %s\n",
-              __func__, __LINE__, pc->text(), pc->level, prev->text(), get_token_name(prev->type));
+      LOG_FMT(LSPLIT, "%s(%d): prev->text() is '%s', prev->orig_line is %zu, prev->orig_col is %zu\n",
+              __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col);
+      LOG_FMT(LSPLIT, "%s(%d): prev->level is %zu, prev '%s', prev->type is %s\n",
+              __func__, __LINE__, prev->level, prev->text(), get_token_name(prev->type));
 
-      if (chunk_is_newline(prev) || chunk_is_token(prev, CT_COMMA))
+      if (  chunk_is_newline(prev)
+         || chunk_is_token(prev, CT_COMMA))
       {
          LOG_FMT(LSPLIT, "%s(%d): found at %zu\n",
                  __func__, __LINE__, prev->orig_col);
          break;
       }
-      LOG_FMT(LSPLIT, "%s(%d): last_col is %d\n",
-              __func__, __LINE__, last_col);
-      last_col -= pc->len();
+      LOG_FMT(LSPLIT, "%s(%d): last_col is %d, prev->len() is %zu\n",
+              __func__, __LINE__, last_col, prev->len());
+      last_col -= prev->len();
       LOG_FMT(LSPLIT, "%s(%d): last_col is %d\n",
               __func__, __LINE__, last_col);
 
