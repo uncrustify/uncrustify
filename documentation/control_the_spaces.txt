@@ -1,0 +1,22 @@
+2021-01-23
+
+Guy Maurel
+
+The do_space function within the file space.cpp controls the space between every two tokens.
+
+There are three categories of actions.
+The first one is the most important.
+Options control what is to do with the interval between the two token:
+ *   "Ignore" means do not change it.
+ *   "Add" in the context of spaces means make sure there is at least 1.
+ *   "Add" elsewhere means make sure one is present.
+ *   "Remove" mean remove the space/brace/newline/etc.
+ *   "Force" in the context of spaces means ensure that there is exactly 1.
+ *   "Force" in other contexts means the same as "add".
+For example the option "sp_before_assign":
+Add or remove space before assignment operator '=', '+=', etc.
+in such a statement:
+  a =5;
+
+The second categorie is used for all positions where no option is coded.
+The third categorie is a debug for the developer, who still have something to do.
