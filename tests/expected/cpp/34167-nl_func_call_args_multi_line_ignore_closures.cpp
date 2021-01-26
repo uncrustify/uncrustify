@@ -51,7 +51,7 @@ methodCall(
 methodCall(arg1, arg2, arg3);
 
 methodCall(
-	arg1, [] {
+	arg1, []{
 	variant.action.send(Cmpnt);
 }, arg3
 	);

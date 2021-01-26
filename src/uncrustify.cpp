@@ -1754,7 +1754,18 @@ static void add_func_header(c_token_t type, file_mem &fm)
          }
       }
 
-      if (do_insert)
+      if (  ref == nullptr
+         && !chunk_is_comment(chunk_get_head())
+         && get_chunk_parent_type(chunk_get_head()) == type)
+      {
+         /**
+          * In addition to testing for preceding semicolons, closing braces, etc.,
+          * we need to also account for the possibility that the function declaration
+          * or definition occurs at the very beginning of the file
+          */
+         tokenize(fm.data, chunk_get_head());
+      }
+      else if (do_insert)
       {
          // Insert between after and ref
          chunk_t *after = chunk_get_next_ncnl(ref);
