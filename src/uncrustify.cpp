@@ -587,10 +587,12 @@ int main(int argc, char *argv[])
    {
       add_keyword(p_arg, CT_TYPE);
    }
+   bool arg_l_is_set = false;
 
    // Check for a language override
    if ((p_arg = arg.Param("-l")) != nullptr)
    {
+      arg_l_is_set   = true;
       cpd.lang_flags = language_flags_from_name(p_arg);
 
       if (cpd.lang_flags == 0)
@@ -919,10 +921,18 @@ int main(int argc, char *argv[])
    }
 
    if (  source_file == nullptr
-      && source_list == nullptr
-      && p_arg == nullptr)
+      && source_list == nullptr)
    {
-      // no input specified, so use stdin
+      if (!arg_l_is_set)                     // Issue #3064
+      {
+         if (assume == nullptr)
+         {
+            LOG_FMT(LERR, "If reading from stdin, you should specify the language using -l\n");
+            LOG_FMT(LERR, "or specify a filename using --assume for automatic language detection.\n");
+            return(EXIT_FAILURE);
+         }
+      }
+
       if (cpd.lang_flags == 0)
       {
          if (assume != nullptr)
@@ -1018,7 +1028,7 @@ static void process_source_list(const char *source_list,
                                 const char *prefix, const char *suffix,
                                 bool no_backup, bool keep_mtime)
 {
-   int  from_stdin = strcmp(source_list, "-") == 0;
+   bool from_stdin = strcmp(source_list, "-") == 0;
    FILE *p_file    = from_stdin ? stdin : fopen(source_list, "r");
 
    if (p_file == nullptr)

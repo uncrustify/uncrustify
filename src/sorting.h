@@ -1,10 +1,11 @@
 /**
  * @file sorting.h
- * prototypes for sorting.c
+ * prototypes for sorting.cpp
  *
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #ifndef SORTING_H_INCLUDED
 #define SORTING_H_INCLUDED
 
