@@ -199,7 +199,8 @@ void brace_cleanup(void)
    while (pc != nullptr)
    {
       // Check for leaving a #define body
-      if (braceState.in_preproc != CT_NONE && !pc->flags.test(PCF_IN_PREPROC))
+      if (  braceState.in_preproc != CT_NONE
+         && !pc->flags.test(PCF_IN_PREPROC))
       {
          if (braceState.in_preproc == CT_PP_DEFINE)
          {
@@ -244,7 +245,8 @@ void brace_cleanup(void)
          && !chunk_is_newline(pc)
          && !chunk_is_token(pc, CT_ATTRIBUTE)
          && !chunk_is_token(pc, CT_IGNORED)            // Issue #2279
-         && (braceState.in_preproc == CT_PP_DEFINE || braceState.in_preproc == CT_NONE))
+         && (  braceState.in_preproc == CT_PP_DEFINE
+            || braceState.in_preproc == CT_NONE))
       {
          braceState.consumed = false;
          parse_cleanup(braceState, frm, pc);
@@ -261,13 +263,15 @@ static bool maybe_while_of_do(chunk_t *pc)
 
    chunk_t *prev = chunk_get_prev_ncnl(pc);
 
-   if (prev == nullptr || !prev->flags.test(PCF_IN_PREPROC))
+   if (  prev == nullptr
+      || !prev->flags.test(PCF_IN_PREPROC))
    {
       return(false);
    }
 
    // Find the chunk before the preprocessor
-   while (prev != nullptr && prev->flags.test(PCF_IN_PREPROC))
+   while (  prev != nullptr
+         && prev->flags.test(PCF_IN_PREPROC))
    {
       prev = chunk_get_prev_ncnl(prev);
    }
@@ -352,7 +356,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
    LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
            __func__, __LINE__, frm.stmt_count, frm.expr_count);
 
-   if (  (frm.stmt_count == 0 || frm.expr_count == 0)
+   if (  (  frm.stmt_count == 0
+         || frm.expr_count == 0)
       && !chunk_is_semicolon(pc)
       && chunk_is_not_token(pc, CT_BRACE_CLOSE)
       && chunk_is_not_token(pc, CT_VBRACE_CLOSE)
@@ -673,7 +678,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
                     __func__, __LINE__);
             chunk_t *tmp = frm.top().pc;
 
-            if (tmp != nullptr && get_chunk_parent_type(tmp) == CT_NAMESPACE)
+            if (  tmp != nullptr
+               && get_chunk_parent_type(tmp) == CT_NAMESPACE)
             {
                LOG_FMT(LBCSPOP, "%s(%d): tmp->parent_type is NAMESPACE\n",
                        __func__, __LINE__);
@@ -864,7 +870,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
    {
       size_t file_pp_level = ifdef_over_whole_file() ? 1 : 0;
 
-      if (!cpd.unc_off_used && pc->pp_level == file_pp_level)
+      if (  !cpd.unc_off_used
+         && pc->pp_level == file_pp_level)
       {
          // fatal error
          LOG_FMT(LERR, "%s(%d): Unmatched BRACE_CLOSE\n   orig_line is %zu, orig_col is %zu\n",
@@ -887,12 +894,19 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc, const BraceSt
 {
    LOG_FUNC_ENTRY();
 
+   brace_stage_e atest = frm.top().stage;
+
+   LOG_FMT(LBCSPOP, "%s(%d): atest is %s\n",
+           __func__, __LINE__, get_brace_stage_name(atest));
+
    // Turn an optional parenthesis into either a real parenthesis or a brace
    if (frm.top().stage == brace_stage_e::OP_PAREN1)
    {
       frm.top().stage = (chunk_is_not_token(pc, CT_PAREN_OPEN))
                         ? brace_stage_e::BRACE2
                         : brace_stage_e::PAREN1;
+      LOG_FMT(LBCSPOP, "%s(%d): frm.top().stage is now %s\n",
+              __func__, __LINE__, get_brace_stage_name(frm.top().stage));
    }
 
    // Check for CT_ELSE after CT_IF
@@ -1023,9 +1037,10 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc, const BraceSt
       print_stack(LBCSPOP, "-Error  ", frm);
       cpd.error_count++;
    }
-
    // Insert a CT_VBRACE_OPEN, if needed
    // but not in a preprocessor
+   atest = frm.top().stage;
+
    if (  chunk_is_not_token(pc, CT_BRACE_OPEN)
       && !pc->flags.test(PCF_IN_PREPROC)
       && (  (frm.top().stage == brace_stage_e::BRACE2)
@@ -1299,7 +1314,8 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
       chunk.flags &= ~PCF_IN_PREPROC;
    }
 
-   while (chunk_is_newline(ref) || chunk_is_comment(ref))
+   while (  chunk_is_newline(ref)
+         || chunk_is_comment(ref))
    {
       ref->level++;
       ref->brace_level++;
@@ -1317,7 +1333,8 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
    {
       if (chunk_is_token(ref, CT_PREPROC_BODY))
       {
-         while (ref != nullptr && ref->flags.test(PCF_IN_PREPROC))
+         while (  ref != nullptr
+               && ref->flags.test(PCF_IN_PREPROC))
          {
             ref = chunk_get_prev(ref);
          }
