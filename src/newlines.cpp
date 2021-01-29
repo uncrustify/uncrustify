@@ -3473,6 +3473,14 @@ static bool one_liner_nl_ok(chunk_t *pc)
          LOG_FMT(LNL1LINE, "%s(%d): false (while)\n", __func__, __LINE__);
          return(false);
       }
+      log_rule_B("nl_do_leave_one_liners");
+
+      if (  options::nl_do_leave_one_liners()
+         && get_chunk_parent_type(pc) == CT_DO)
+      {
+         LOG_FMT(LNL1LINE, "%s(%d): false (do)\n", __func__, __LINE__);
+         return(false);
+      }
       log_rule_B("nl_for_leave_one_liners");
 
       if (  options::nl_for_leave_one_liners()

@@ -1414,6 +1414,9 @@ nl_if_leave_one_liners          = false    # true/false
 # Don't split one-line while statements, as in 'while(...) b++;'.
 nl_while_leave_one_liners       = false    # true/false
 
+# Don't split one-line do statements, as in 'do { b++; } while(...);'.
+nl_do_leave_one_liners          = false    # true/false
+
 # Don't split one-line for statements, as in 'for(...) b++;'.
 nl_for_leave_one_liners         = false    # true/false
 

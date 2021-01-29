@@ -1729,6 +1729,10 @@ nl_if_leave_one_liners;
 extern Option<bool>
 nl_while_leave_one_liners;
 
+// Don't split one-line do statements, as in 'do { b++; } while(...);'.
+extern Option<bool>
+nl_do_leave_one_liners;
+
 // Don't split one-line for statements, as in 'for(...) b++;'.
 extern Option<bool>
 nl_for_leave_one_liners;

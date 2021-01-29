@@ -297,6 +297,7 @@
 02320  nl_create_one_liner.cfg              c/nl_create_one_liner.c
 02325  sort_imports.cfg                     c/sort_include.c
 
+02330  leave_one_liners.cfg                 c/one_liners.c
 
 # some embedded sql stuff
 
