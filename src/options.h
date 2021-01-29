@@ -431,7 +431,7 @@ sp_do_brace_open;
 extern Option<iarf_e>
 sp_brace_close_while;
 
-// Add or remove space between 'while' and '('.
+// Add or remove space between 'while' and '('. Overrides sp_before_sparen.
 extern Option<iarf_e>
 sp_while_paren_open;
 
