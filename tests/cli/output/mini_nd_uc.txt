@@ -351,6 +351,7 @@ nl_func_leave_one_liners        = false
 nl_cpp_lambda_leave_one_liners  = false
 nl_if_leave_one_liners          = false
 nl_while_leave_one_liners       = false
+nl_do_leave_one_liners          = false
 nl_for_leave_one_liners         = false
 nl_oc_msg_leave_one_liner       = false
 nl_oc_mdef_brace                = ignore
