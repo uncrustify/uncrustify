@@ -637,6 +637,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
                parent = CT_RETURN;
             }
             // Carry through CT_ENUM parent in NS_ENUM (type, name) {
+            // for the vim editor }
             else if (  chunk_is_token(prev, CT_FPAREN_CLOSE)
                     && language_is_set(LANG_OC)
                     && get_chunk_parent_type(prev) == CT_ENUM)
