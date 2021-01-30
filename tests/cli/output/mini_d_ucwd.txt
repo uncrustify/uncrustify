@@ -37,7 +37,7 @@ string_replace_tab_chars        = false    # true/false
 # Improvements to template detection may make this option obsolete.
 tok_split_gte                   = false    # true/false
 
-# Disable formatting of NL_CONT ('\\n') ended lines (e.g. multiline macros)
+# Disable formatting of NL_CONT ('\\n') ended lines (e.g. multi-line macros).
 disable_processing_nl_cont      = false    # true/false
 
 # Specify the marker used in comments to disable processing of part of the
@@ -54,10 +54,10 @@ enable_processing_cmt           = " *INDENT-ON*"     # string
 # Enable parsing of digraphs.
 enable_digraphs                 = false    # true/false
 
-# Option to allow both disable_processing_cmt and enable_processing_cmt strings,
-# if specified, to be interpreted as ECMAScript regular expressions. If true,
-# a regex search will be performed within comments according to the specified
-# patterns in order to disable/enable processing
+# Option to allow both disable_processing_cmt and enable_processing_cmt
+# strings, if specified, to be interpreted as ECMAScript regular expressions.
+# If true, a regex search will be performed within comments according to the
+# specified patterns in order to disable/enable processing.
 processing_cmt_as_regex         = false    # true/false
 
 # Add or remove the UTF-8 BOM (recommend 'remove').
@@ -69,15 +69,6 @@ utf8_byte                       = false    # true/false
 
 # Force the output encoding to UTF-8.
 utf8_force                      = false    # true/false
-
-# Add or remove space between 'do' and '{'.
-sp_do_brace_open                = ignore   # ignore/add/remove/force
-
-# Add or remove space between '}' and 'while'.
-sp_brace_close_while            = ignore   # ignore/add/remove/force
-
-# Add or remove space between 'while' and '('.
-sp_while_paren_open             = ignore   # ignore/add/remove/force
 
 #
 # Spacing options
@@ -331,6 +322,15 @@ sp_after_sparen                 = ignore   # ignore/add/remove/force
 
 # Add or remove space between ')' and '{' of of control statements.
 sp_sparen_brace                 = ignore   # ignore/add/remove/force
+
+# Add or remove space between 'do' and '{'.
+sp_do_brace_open                = ignore   # ignore/add/remove/force
+
+# Add or remove space between '}' and 'while'.
+sp_brace_close_while            = ignore   # ignore/add/remove/force
+
+# Add or remove space between 'while' and '('. Overrides sp_before_sparen.
+sp_while_paren_open             = ignore   # ignore/add/remove/force
 
 # (D) Add or remove space between 'invariant' and '('.
 sp_invariant_paren              = ignore   # ignore/add/remove/force
@@ -1338,10 +1338,10 @@ indent_token_after_brace        = true     # true/false
 indent_cpp_lambda_body          = false    # true/false
 
 # How to indent compound literals that are being returned.
-# true: add both the indent from return & the compound literal open brace (ie:
-#       2 indent levels)
-# false: only indent 1 level, don't add the indent for the open brace, only add
-#        the indent for the return.
+# true: add both the indent from return & the compound literal open brace
+#       (i.e. 2 indent levels)
+# false: only indent 1 level, don't add the indent for the open brace, only
+#        add the indent for the return.
 #
 # Default: true
 indent_compound_literal_return  = true     # true/false
@@ -1358,7 +1358,7 @@ indent_using_block              = true     # true/false
 # 2: When the `:` is a continuation, indent it under `?`
 indent_ternary_operator         = 0        # unsigned number
 
-# Whether to indent the statments inside ternary operator.
+# Whether to indent the statements inside ternary operator.
 indent_inside_ternary_operator  = false    # true/false
 
 # If true, the indentation of the chunks after a `return` sequence will be set at return indentation column.
@@ -1822,7 +1822,7 @@ nl_func_call_args_multi_line    = false    # true/false
 # different lines.
 nl_func_call_end_multi_line     = false    # true/false
 
-# Whether to respect nl_func_call_XXX option incase of closure args.
+# Whether to respect nl_func_call_XXX option in case of closure args.
 nl_func_call_args_multi_line_ignore_closures = false    # true/false
 
 # Whether to add a newline after '<' of a template parameter list.
@@ -2648,12 +2648,13 @@ cmt_width                       = 0        # unsigned number
 # 2: Full reflow (enable cmt_indent_multi for indent with line wrapping due to cmt_width)
 cmt_reflow_mode                 = 0        # unsigned number
 
-# Path to a file that contains regular expressions describing patterns for which the
-# end of one line and the beginning of the next will be folded into the same sentence
-# or paragraph during full comment reflow. The regular expressions are described using
-# ECMAScript syntax. The syntax for this specification is as follows, where "..." indicates
-# the custom regular expression and "n" indicates the nth end_of_prev_line_regex
-# and beg_of_next_line_regex regular expression pair:
+# Path to a file that contains regular expressions describing patterns for
+# which the end of one line and the beginning of the next will be folded into
+# the same sentence or paragraph during full comment reflow. The regular
+# expressions are described using ECMAScript syntax. The syntax for this
+# specification is as follows, where "..." indicates the custom regular
+# expression and "n" indicates the nth end_of_prev_line_regex and
+# beg_of_next_line_regex regular expression pair:
 #
 # end_of_prev_line_regex[1] = "...$"
 # beg_of_next_line_regex[1] = "^..."
@@ -2665,8 +2666,8 @@ cmt_reflow_mode                 = 0        # unsigned number
 # end_of_prev_line_regex[n] = "...$"
 # beg_of_next_line_regex[n] = "^..."
 #
-# Note that use of this option overrides the default reflow fold regular expressions,
-# which are internally defined as follows:
+# Note that use of this option overrides the default reflow fold regular
+# expressions, which are internally defined as follows:
 #
 # end_of_prev_line_regex[1] = "[\w,\]\)]$"
 # beg_of_next_line_regex[1] = "^[\w,\[\(]"
@@ -2676,8 +2677,10 @@ cmt_reflow_fold_regex_file      = ""         # string
 
 # Whether to indent wrapped lines to the start of the encompassing paragraph
 # during full comment reflow (cmt_reflow_mode = 2). Overrides the value
-# specified by cmt_sp_after_star_cont. Note that cmt_align_doxygen_javadoc_tags
-# overrides this option for paragraphs associated with javadoc tags
+# specified by cmt_sp_after_star_cont.
+#
+# Note that cmt_align_doxygen_javadoc_tags overrides this option for
+# paragraphs associated with javadoc tags
 cmt_reflow_indent_to_paragraph_start = false    # true/false
 
 # Whether to convert all tabs to spaces in comments. If false, tabs in
@@ -3118,9 +3121,8 @@ use_sp_after_angle_always       = false    # true/false
 # Default: true
 use_options_overriding_for_qt_macros = true     # true/false
 
-# If true: the form feed character is removed from the list
-# of whitespace characters.
-# See https://en.cppreference.com/w/cpp/string/byte/isspace
+# If true: the form feed character is removed from the list of whitespace
+# characters. See https://en.cppreference.com/w/cpp/string/byte/isspace.
 use_form_feed_no_more_as_whitespace_character = false    # true/false
 
 #

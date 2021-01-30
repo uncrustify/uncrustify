@@ -2935,8 +2935,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_WHILE_OF_DO) && chunk_is_token(second, CT_PAREN_OPEN))
    {
       // Add or remove space between 'while' and '('.
-      log_rule("sp_while_paren_open");
-      return(options::sp_while_paren_open());
+      if (options::sp_while_paren_open() != IARF_IGNORE)
+      {
+         log_rule("sp_while_paren_open");
+         return(options::sp_while_paren_open());
+      }
+      log_rule("sp_before_sparen");
+      return(options::sp_before_sparen());
    }
 
    // Issue #995

@@ -76,7 +76,7 @@ string_replace_tab_chars;
 extern Option<bool>
 tok_split_gte;
 
-// Disable formatting of NL_CONT ('\\n') ended lines (e.g. multiline macros)
+// Disable formatting of NL_CONT ('\\n') ended lines (e.g. multi-line macros).
 extern Option<bool>
 disable_processing_nl_cont;
 
@@ -93,12 +93,12 @@ enable_processing_cmt; // = UNCRUSTIFY_ON_TEXT
 extern Option<bool>
 enable_digraphs;
 
-// Option to allow both disable_processing_cmt and enable_processing_cmt strings,
-// if specified, to be interpreted as ECMAScript regular expressions. If true,
-// a regex search will be performed within comments according to the specified
-// patterns in order to disable/enable processing
+// Option to allow both disable_processing_cmt and enable_processing_cmt
+// strings, if specified, to be interpreted as ECMAScript regular expressions.
+// If true, a regex search will be performed within comments according to the
+// specified patterns in order to disable/enable processing.
 extern Option<bool>
-processing_cmt_as_regex; // = false
+processing_cmt_as_regex;
 
 // Add or remove the UTF-8 BOM (recommend 'remove').
 extern Option<iarf_e>
@@ -112,18 +112,6 @@ utf8_byte;
 // Force the output encoding to UTF-8.
 extern Option<bool>
 utf8_force;
-
-// Add or remove space between 'do' and '{'.
-extern Option<iarf_e>
-sp_do_brace_open;
-
-// Add or remove space between '}' and 'while'.
-extern Option<iarf_e>
-sp_brace_close_while;
-
-// Add or remove space between 'while' and '('.
-extern Option<iarf_e>
-sp_while_paren_open;
 
 //END
 
@@ -434,6 +422,18 @@ sp_after_sparen;
 // Add or remove space between ')' and '{' of of control statements.
 extern Option<iarf_e>
 sp_sparen_brace;
+
+// Add or remove space between 'do' and '{'.
+extern Option<iarf_e>
+sp_do_brace_open;
+
+// Add or remove space between '}' and 'while'.
+extern Option<iarf_e>
+sp_brace_close_while;
+
+// Add or remove space between 'while' and '('. Overrides sp_before_sparen.
+extern Option<iarf_e>
+sp_while_paren_open;
 
 // (D) Add or remove space between 'invariant' and '('.
 extern Option<iarf_e>
@@ -1443,7 +1443,7 @@ indent_switch_case;
 
 // indent 'break' with 'case' from 'switch'.
 extern Option<bool>
-indent_switch_break_with_case; // = false
+indent_switch_break_with_case;
 
 // Whether to indent preprocessor statements inside of switch statements.
 extern Option<bool>
@@ -1557,7 +1557,7 @@ indent_align_assign; // = true
 // If true, the indentation of the chunks after a '=' sequence will be set at
 // LHS token indentation column before '='.
 extern Option<bool>
-indent_off_after_assign; // = false
+indent_off_after_assign;
 
 // Whether to align continued statements at the '('. If false or the '(' is
 // followed by a newline, the next line indent is one tab.
@@ -1566,7 +1566,7 @@ indent_align_paren; // = true
 
 // (OC) Whether to indent Objective-C code inside message selectors.
 extern Option<bool>
-indent_oc_inside_msg_sel; // = false
+indent_oc_inside_msg_sel;
 
 // (OC) Whether to indent Objective-C blocks at brace level instead of usual
 // rules.
@@ -1637,10 +1637,10 @@ extern Option<bool>
 indent_cpp_lambda_body;
 
 // How to indent compound literals that are being returned.
-// true: add both the indent from return & the compound literal open brace (ie:
-//       2 indent levels)
-// false: only indent 1 level, don't add the indent for the open brace, only add
-//        the indent for the return.
+// true: add both the indent from return & the compound literal open brace
+//       (i.e. 2 indent levels)
+// false: only indent 1 level, don't add the indent for the open brace, only
+//        add the indent for the return.
 extern Option<bool>
 indent_compound_literal_return; // = true
 
@@ -1656,9 +1656,9 @@ indent_using_block; // = true
 extern BoundedOption<unsigned, 0, 2>
 indent_ternary_operator;
 
-// Whether to indent the statments inside ternary operator.
+// Whether to indent the statements inside ternary operator.
 extern Option<bool>
-indent_inside_ternary_operator; // false
+indent_inside_ternary_operator;
 
 // If true, the indentation of the chunks after a `return` sequence will be set at return indentation column.
 extern Option<bool>
@@ -2252,7 +2252,7 @@ nl_func_call_args_multi_line;
 extern Option<bool>
 nl_func_call_end_multi_line;
 
-// Whether to respect nl_func_call_XXX option incase of closure args.
+// Whether to respect nl_func_call_XXX option in case of closure args.
 extern Option<bool>
 nl_func_call_args_multi_line_ignore_closures; // false
 
@@ -3270,12 +3270,13 @@ cmt_width;
 extern BoundedOption<unsigned, 0, 2>
 cmt_reflow_mode;
 
-// Path to a file that contains regular expressions describing patterns for which the
-// end of one line and the beginning of the next will be folded into the same sentence
-// or paragraph during full comment reflow. The regular expressions are described using
-// ECMAScript syntax. The syntax for this specification is as follows, where "..." indicates
-// the custom regular expression and "n" indicates the nth end_of_prev_line_regex
-// and beg_of_next_line_regex regular expression pair:
+// Path to a file that contains regular expressions describing patterns for
+// which the end of one line and the beginning of the next will be folded into
+// the same sentence or paragraph during full comment reflow. The regular
+// expressions are described using ECMAScript syntax. The syntax for this
+// specification is as follows, where "..." indicates the custom regular
+// expression and "n" indicates the nth end_of_prev_line_regex and
+// beg_of_next_line_regex regular expression pair:
 //
 // end_of_prev_line_regex[1] = "...$"
 // beg_of_next_line_regex[1] = "^..."
@@ -3287,8 +3288,8 @@ cmt_reflow_mode;
 // end_of_prev_line_regex[n] = "...$"
 // beg_of_next_line_regex[n] = "^..."
 //
-// Note that use of this option overrides the default reflow fold regular expressions,
-// which are internally defined as follows:
+// Note that use of this option overrides the default reflow fold regular
+// expressions, which are internally defined as follows:
 //
 // end_of_prev_line_regex[1] = "[\w,\]\)]$"
 // beg_of_next_line_regex[1] = "^[\w,\[\(]"
@@ -3299,8 +3300,10 @@ cmt_reflow_fold_regex_file;
 
 // Whether to indent wrapped lines to the start of the encompassing paragraph
 // during full comment reflow (cmt_reflow_mode = 2). Overrides the value
-// specified by cmt_sp_after_star_cont. Note that cmt_align_doxygen_javadoc_tags
-// overrides this option for paragraphs associated with javadoc tags
+// specified by cmt_sp_after_star_cont.
+//
+// Note that cmt_align_doxygen_javadoc_tags overrides this option for
+// paragraphs associated with javadoc tags
 extern Option<bool>
 cmt_reflow_indent_to_paragraph_start;
 
@@ -3823,9 +3826,8 @@ use_sp_after_angle_always;
 extern Option<bool>
 use_options_overriding_for_qt_macros; // = true
 
-// If true: the form feed character is removed from the list
-// of whitespace characters.
-// See https://en.cppreference.com/w/cpp/string/byte/isspace
+// If true: the form feed character is removed from the list of whitespace
+// characters. See https://en.cppreference.com/w/cpp/string/byte/isspace.
 extern Option<bool>
 use_form_feed_no_more_as_whitespace_character;
 
