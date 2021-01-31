@@ -16,7 +16,7 @@ bool unc_getenv(const char *name, std::string &str)
 {
    const char *val = getenv(name);
 
-   if (val)
+   if (val != nullptr)
    {
       str = val;
       return(true);
