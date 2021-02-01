@@ -91,6 +91,7 @@
 #define NODISCARD
 #endif
 
+constexpr static auto LCURRENT = LUNC;
 
 using namespace std;
 using namespace uncrustify;

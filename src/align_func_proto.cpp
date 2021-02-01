@@ -16,6 +16,8 @@
 
 #include <algorithm>                           // to get max
 
+constexpr static auto LCURRENT = LALPROTO;
+
 using namespace uncrustify;
 
 

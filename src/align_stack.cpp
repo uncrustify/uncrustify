@@ -22,6 +22,7 @@
 
 #include <limits>
 
+constexpr static auto LCURRENT = LAS;
 
 using namespace uncrustify;
 

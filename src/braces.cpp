@@ -26,6 +26,7 @@
 #include <cstring>
 #include <vector>
 
+constexpr static auto LCURRENT = LBR;
 
 using namespace uncrustify;
 

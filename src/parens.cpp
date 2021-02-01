@@ -48,6 +48,8 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest);
 
 void do_parens(void)
 {
+   constexpr static auto LCURRENT = LPARADD;
+
    LOG_FUNC_ENTRY();
 
    log_rule_B("mod_full_paren_if_bool");

@@ -30,6 +30,8 @@
 #include <iostream>
 #include <stdexcept>
 
+constexpr static auto LCURRENT = LBC;
+
 using namespace uncrustify;
 
 using std::invalid_argument;

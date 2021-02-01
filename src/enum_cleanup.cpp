@@ -14,6 +14,8 @@
 #include "uncrustify.h"
 #include "uncrustify_types.h"
 
+constexpr static auto LCURRENT = LTOK;
+
 using namespace uncrustify;
 
 

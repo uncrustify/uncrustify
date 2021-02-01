@@ -41,6 +41,7 @@
 #include <cstring>
 #include <vector>
 
+constexpr static auto LCURRENT = LNEWLINE;
 
 using namespace std;
 using namespace uncrustify;

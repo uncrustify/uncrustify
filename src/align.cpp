@@ -32,6 +32,7 @@
 #include "quick_align_again.h"
 #include "uncrustify.h"
 
+constexpr static auto LCURRENT = LALIGN;
 
 using namespace uncrustify;
 

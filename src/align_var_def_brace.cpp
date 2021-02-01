@@ -14,6 +14,8 @@
 #include "log_rules.h"
 #include "uncrustify.h"
 
+constexpr static auto LCURRENT = LAVDB;
+
 using namespace uncrustify;
 
 

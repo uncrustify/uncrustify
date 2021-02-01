@@ -15,6 +15,8 @@
 
 #include <regex>
 
+constexpr static auto LCURRENT = LSORT;
+
 using namespace uncrustify;
 
 Option<std::string>  *include_category_options[] =

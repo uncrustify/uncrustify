@@ -15,6 +15,8 @@
 #include "log_rules.h"
 #include "uncrustify.h"
 
+constexpr static auto LCURRENT = LALTC;
+
 using namespace uncrustify;
 
 

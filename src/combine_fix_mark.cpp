@@ -14,6 +14,8 @@
 #include "lang_pawn.h"
 #include "log_rules.h"
 
+constexpr static auto LCURRENT = LCOMBINE;
+
 
 void fix_casts(chunk_t *start)
 {

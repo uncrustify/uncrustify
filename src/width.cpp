@@ -19,6 +19,8 @@
 
 #include <cstdlib>
 
+constexpr static auto LCURRENT = LSPLIT;
+
 using namespace uncrustify;
 
 
