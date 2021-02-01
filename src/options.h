@@ -1438,8 +1438,15 @@ extern Option<bool>
 indent_relative_single_line_comments;
 
 // Spaces to indent 'case' from 'switch'. Usually 0 or indent_columns.
+// It might wise to choose the same value for the option indent_case_brace.
 extern BoundedOption<unsigned, 0, 16>
 indent_switch_case;
+
+// Spaces to indent '{' from 'case'. By default, the brace will appear under
+// the 'c' in case. Usually set to 0 or indent_columns. Negative values are OK.
+// It might wise to choose the same value for the option indent_switch_case.
+extern BoundedOption<signed, -16, 16>
+indent_case_brace;
 
 // indent 'break' with 'case' from 'switch'.
 extern Option<bool>
@@ -1453,11 +1460,6 @@ indent_switch_pp; // = true
 // Usually 0.
 extern BoundedOption<unsigned, 0, 16>
 indent_case_shift;
-
-// Spaces to indent '{' from 'case'. By default, the brace will appear under
-// the 'c' in case. Usually set to 0 or indent_columns. Negative values are OK.
-extern BoundedOption<signed, -16, 16>
-indent_case_brace;
 
 // Whether to indent comments found in first column.
 extern Option<bool>
