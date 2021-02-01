@@ -528,14 +528,26 @@ def main(args):
     #
     # Test false parameter
     #   --xyz
-    if not check_uncrustify_output(
-            uncr_bin,
-            parsed_args,
-            args_arr=['--xyz'],
-            err_expected_path=s_path_join(script_dir, 'output/xyz-err.txt'),
-            err_result_path=s_path_join(script_dir, 'results/xyz-err.txt')
-            ):
-        return_flag = False
+    if parsed_args.config == 'Release':
+        eprint("Release")
+        if not check_uncrustify_output(
+                uncr_bin,
+                parsed_args,
+                args_arr=['--xyz'],
+                err_expected_path=s_path_join(script_dir, 'output/xyz-err.txt'),
+                err_result_path=s_path_join(script_dir, 'results/xyz-err.txt')
+                ):
+            return_flag = False
+    else:
+        eprint("Debug")
+        if not check_uncrustify_output(
+                uncr_bin,
+                parsed_args,
+                args_arr=['--xyz'],
+                err_expected_path=s_path_join(script_dir, 'output/xyz-err-Debug.txt'),
+                err_result_path=s_path_join(script_dir, 'results/xyz-err.txt')
+                ):
+            return_flag = False
 
     #
     # Test Version
@@ -705,7 +717,7 @@ def main(args):
                 args_arr=['-c', s_path_join(script_dir, 'config/tracking_space.cfg'),
                           '-f', s_path_join(script_dir, 'input/tracking_space.cpp'),
                           '--tracking_space', s_path_join(script_dir, 'results/tracking_space.html')],
-                gen_expected_path=s_path_join(script_dir, 'output/Debug_tracking_space.html'),
+                gen_expected_path=s_path_join(script_dir, 'output/tracking_space-Debug.html'),
                 gen_result_path=s_path_join(script_dir, 'results/tracking_space.html'),
                 ):
             return_flag = False
