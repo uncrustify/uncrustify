@@ -1,2 +1,0 @@
-If reading from stdin, you should specify the language using -l
-or specify a filename using --assume for automatic language detection.
