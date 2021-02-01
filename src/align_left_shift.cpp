@@ -34,11 +34,11 @@ void align_left_shift(void)
    {
       if (chunk_is_newline(pc))
       {
-         LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, <Newline>\n", __func__, __LINE__, pc->orig_line);
+         LOG_FMT(LALIGN, "%s(%d): orig_line is %zu, <Newline>\n", __func__, __LINE__, pc->orig_line);
       }
       else
       {
-         LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
+         LOG_FMT(LALIGN, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
       }
 
