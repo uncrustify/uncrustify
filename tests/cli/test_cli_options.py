@@ -260,7 +260,8 @@ def check_std_output(expected_path, result_path, result_str, result_manip=None,
 
         if program_args.diff:
             print("\n************************************")
-            print("Problem (3) with %s" % result_path)
+            print("Problem (3) with result_path   is %s" % result_path)
+            print("                 expected_path is %s" % expected_path)
             print("************************************")
 
             file_diff = difflib.ndiff(result_str.splitlines(False),
