@@ -837,6 +837,11 @@
 34327  Issue_3044.cfg                       cpp/Issue_3044.cpp
 34328  Issue_3048.cfg                       cpp/Issue_3048.cpp
 
+34329  nl_ctor_brace_cond-f.cfg             cpp/nl_ctor_brace_cond.cpp
+34330  nl_ctor_brace_cond-r.cfg             cpp/nl_ctor_brace_cond.cpp
+34331  nl_ctor_brace_cond-ffr.cfg           cpp/nl_ctor_brace_cond.cpp
+34332  nl_ctor_brace_cond-rrf.cfg           cpp/nl_ctor_brace_cond.cpp
+
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
 10001  empty.cfg                            cpp/622_ifdef-indentation.cpp
