@@ -13,6 +13,8 @@
 #include "align_stack.h"
 #include "log_rules.h"
 
+constexpr static auto LCURRENT = LALPP;
+
 using namespace uncrustify;
 
 

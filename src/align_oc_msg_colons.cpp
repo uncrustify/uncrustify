@@ -11,6 +11,8 @@
 #include "log_rules.h"
 #include "uncrustify_types.h"
 
+constexpr static auto LCURRENT = LOCMSG;
+
 using namespace uncrustify;
 
 

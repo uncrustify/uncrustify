@@ -35,6 +35,8 @@
 #include <limits>
 #include <map>
 
+constexpr static auto LCURRENT = LCOMBINE;
+
 using namespace std;
 using namespace uncrustify;
 

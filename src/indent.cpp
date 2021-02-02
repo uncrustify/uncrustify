@@ -30,6 +30,8 @@
 #include <cstdlib>
 #include <cstring>
 
+constexpr static auto LCURRENT = LINDENT;
+
 using namespace std;
 using namespace uncrustify;
 

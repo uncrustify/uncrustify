@@ -20,6 +20,7 @@
 
 #include <cstdio>
 
+constexpr static auto LCURRENT = LOTHER;
 
 using namespace std;
 

@@ -13,6 +13,8 @@
 #include "chunk_list.h"
 #include "log_rules.h"
 
+constexpr static auto LCURRENT = LALTD;
+
 using namespace uncrustify;
 
 
