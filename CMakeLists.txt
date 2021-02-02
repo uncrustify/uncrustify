@@ -502,7 +502,7 @@ include(CPack)
 #
 # Install
 #
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(MSVC)
   install(TARGETS uncrustify DESTINATION ".")
   install(FILES ${uncrustify_docs}
     DESTINATION "."
