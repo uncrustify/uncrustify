@@ -1310,6 +1310,8 @@ static void check_template(chunk_t *start, bool in_type_cast)
            pc != nullptr;
            pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
       {
+         constexpr static auto LCURRENT = LTEMPL;
+
          LOG_FMT(LTEMPL, "%s(%d): type is %s, num_tokens is %zu\n",
                  __func__, __LINE__, get_token_name(pc->type), num_tokens);
 

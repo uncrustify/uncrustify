@@ -91,6 +91,8 @@ chunk_t *pawn_add_vsemi_after(chunk_t *pc)
 
 void pawn_scrub_vsemi(void)
 {
+   constexpr static auto LCURRENT = LPVSEMI;
+
    LOG_FUNC_ENTRY();
 
    log_rule_B("mod_pawn_semicolon");

@@ -29,6 +29,7 @@
 #include <regex>
 #include <set>
 
+constexpr static auto LCURRENT = LOUTPUT;
 
 using namespace uncrustify;
 
