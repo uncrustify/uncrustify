@@ -919,9 +919,11 @@ int main(int argc, char *argv[])
    {
       cpd.bout = new deque<UINT8>();
    }
+   idx = 1;
 
    if (  source_file == nullptr
-      && source_list == nullptr)
+      && source_list == nullptr
+      && arg.Unused(idx) == nullptr)
    {
       if (!arg_l_is_set)                     // Issue #3064
       {
