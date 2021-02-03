@@ -322,7 +322,7 @@ $ uncrustify -h
 Uncrustify usually reads configuration files that are passed via the `-c`
 flag. If the flag is not provided Uncrustify will try to find a
 configuration file via the `UNCRUSTIFY_CONFIG` environment variable or a
-file with the name `uncrustify` or `.uncrustify` in your home folder.
+file with the name `.uncrustify.cfg` or `uncrustify.cfg` in your home folder.
 
 To get a list of:
 - all available options use:
