@@ -171,7 +171,7 @@ The configuration file `testConfigFileName` has to be located inside `tests/conf
 the input file `testInputFileName` inside `tests/input/<testSetName>/`,
 and expected results file inside the `tests/expected/<testSetName>/`
 directory.
-Expected results have the following naming convention: `testNr-testConfigFileName`.
+Expected results have the following naming convention: `testNr-testInputFileName`.
 
 Optionally a `!` can follow the `testNr` to enable a custom rerun
 configuration.
