@@ -161,7 +161,8 @@ static size_t log_start(log_sev_t sev)
    }
 
    // If not in a log, the buffer is empty. Add the header, if enabled.
-   if (!g_log.in_log && g_log.show_hdr)
+   if (  !g_log.in_log
+      && g_log.show_hdr)
    {
       g_log.buf_len = static_cast<size_t>(snprintf(&g_log.bufX[0], g_log.bufX.size(), "<%d>", sev));
    }
@@ -185,7 +186,8 @@ static void log_end(void)
 
 void log_fmt(log_sev_t sev, const char *fmt, ...)
 {
-   if (fmt == nullptr || !log_sev_on(sev))
+   if (  fmt == nullptr
+      || !log_sev_on(sev))
    {
       return;
    }

@@ -533,7 +533,9 @@ void unc_text::append(int ch)
 {
    m_logtext.pop_back();
 
-   if (ch < 0x80 && ch != '\n' && ch != '\r')
+   if (  ch < 0x80
+      && ch != '\n'
+      && ch != '\r')
    {
       m_logtext.push_back(ch);
    }
@@ -595,7 +597,10 @@ bool unc_text::startswith(const char *text, size_t idx) const
 {
    const auto orig_idx = idx;
 
-   for ( ; idx < size() && *text; idx++, text++)
+   for ( ;
+         (  idx < size()
+         && *text);
+         idx++, text++)
    {
       if (*text != m_chars[idx])
       {
@@ -603,7 +608,8 @@ bool unc_text::startswith(const char *text, size_t idx) const
       }
    }
 
-   return(idx != orig_idx && (*text == 0));
+   return(  idx != orig_idx
+         && (*text == 0));
 }
 
 
@@ -612,7 +618,10 @@ bool unc_text::startswith(const unc_text &text, size_t idx) const
    size_t     si       = 0;
    const auto orig_idx = idx;
 
-   for ( ; idx < size() && si < text.size(); idx++, si++)
+   for ( ;
+         (  idx < size()
+         && si < text.size());
+         idx++, si++)
    {
       if (text.m_chars[si] != m_chars[idx])
       {
@@ -620,7 +629,8 @@ bool unc_text::startswith(const unc_text &text, size_t idx) const
       }
    }
 
-   return(idx != orig_idx && (si == text.size()));
+   return(  idx != orig_idx
+         && (si == text.size()));
 }
 
 

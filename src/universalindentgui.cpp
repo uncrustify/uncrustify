@@ -202,7 +202,8 @@ void print_universal_indent_cfg(FILE *pfile)
 
          // Output the description which may contain forbidden chars, skipping
          // the last character which is always an extra newline
-         while (*tmp != 0 && *(tmp + 1) != 0)
+         while (  *tmp != 0
+               && *(tmp + 1) != 0)
          {
             switch (*tmp)
             {
