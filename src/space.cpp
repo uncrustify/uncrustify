@@ -3060,7 +3060,7 @@ void space_text(void)
       else
       {
          LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, '%s' type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text_first_999(), get_token_name(pc->type));
       }
 
       if (  (options::use_options_overriding_for_qt_macros())

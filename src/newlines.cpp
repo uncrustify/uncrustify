@@ -3677,7 +3677,7 @@ void newlines_cleanup_angles()
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
       LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text_first_999());
 
       if (chunk_is_token(pc, CT_ANGLE_OPEN))
       {
@@ -3705,7 +3705,7 @@ void newlines_cleanup_braces(bool first)
    for ( ; pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
       LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text_first_999());
 
       if (chunk_is_token(pc, CT_IF) || chunk_is_token(pc, CT_CONSTEXPR))
       {
@@ -5307,7 +5307,7 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
       LOG_FMT(LNEWLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text_first_999());
       // produces much more log output. Use it only debugging purpose
       //log_pcf_flags(LNEWLINE, pc->flags);
 
@@ -5801,7 +5801,7 @@ void do_blank_lines(void)
       else
       {
          LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text_first_999(), get_token_name(pc->type));
       }
       LOG_FMT(LBLANK, "%s(%d): nl_count is %zu\n",
               __func__, __LINE__, pc->nl_count);

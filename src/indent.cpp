@@ -295,7 +295,7 @@ void reindent_line(chunk_t *pc, size_t column)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, on '%s' [%s/%s] => %zu\n",
-           __func__, __LINE__, pc->orig_line, pc->column, pc->text(),
+           __func__, __LINE__, pc->orig_line, pc->column, pc->text_first_999(),
            get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)),
            column);
    log_func_stack_inline(LINDLINE);
@@ -663,7 +663,7 @@ void indent_text(void)
       else
       {
          LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, column is %zu, for '%s'\n   ",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->text());
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->text_first_999());
          log_pcf_flags(LINDLINE, pc->flags);
       }
       log_rule_B("use_options_overriding_for_qt_macros");
@@ -1360,7 +1360,7 @@ void indent_text(void)
          }
       }
       LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, orig_col is %zu, column is %zu, text() is '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->text());
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->text_first_999());
 
       // Issue #672
       if (  chunk_is_token(pc, CT_BRACE_OPEN)
@@ -3203,7 +3203,7 @@ void indent_text(void)
             pc->indent.delta = frm.top().ip.delta;
          }
          LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, pc->column_indent is %zu, indent_column is %zu, for '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->column_indent, indent_column, pc->text());
+                 __func__, __LINE__, pc->orig_line, pc->column_indent, indent_column, pc->text_first_999());
 
          /*
           * Check for special continuations.
@@ -3989,7 +3989,7 @@ static void indent_comment(chunk_t *pc, size_t col)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LCMTIND, "%s(%d): pc->text() is '%s', orig_line %zu, orig_col %zu, level %zu\n",
-           __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
+           __func__, __LINE__, pc->text_first_999(), pc->orig_line, pc->orig_col, pc->level);
 
    // force column 1 comment to column 1 if not changing them
    log_rule_B("indent_col1_comment");

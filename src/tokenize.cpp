@@ -2733,7 +2733,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       else
       {
          LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s, orig_col_end is %zu\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type), pc->orig_col_end);
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text_first_999(), get_token_name(pc->type), pc->orig_col_end);
       }
    }
    // Set the cpd.newline string for this file

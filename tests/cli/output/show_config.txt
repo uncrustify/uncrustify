@@ -3152,6 +3152,10 @@ debug_line_number_to_protocol   = 0        # number
 # only for linux
 debug_timeout                   = 0        # number
 
+# Set the number of characters to be printed if the text is too long,
+# 0: do not truncate.
+debug_truncate                  = 0        # unsigned number
+
 # Meaning of the settings:
 #   Ignore - do not do any changes
 #   Add    - makes sure there is 1 or more space/brace/newline/etc

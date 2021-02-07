@@ -1922,7 +1922,7 @@ void fix_symbols(void)
    while (pc != nullptr)
    {
       LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type));
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text_first_999(), get_token_name(pc->type), get_token_name(pc->parent_type));
 
       // Can't have a variable definition inside [ ]
       if (square_level < 0)
@@ -1993,7 +1993,7 @@ void fix_symbols(void)
       // Issue #2279
       // Issue #2478
       LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n   ",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type));
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text_first_999(), get_token_name(pc->type), get_token_name(pc->parent_type));
       log_pcf_flags(LFCNR, pc->flags);
 
       if (  (square_level < 0)

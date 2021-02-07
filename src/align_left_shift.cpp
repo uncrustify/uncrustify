@@ -41,7 +41,7 @@ void align_left_shift(void)
       else
       {
          LOG_FMT(LALIGN, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text_first_999());
       }
 
       if (  start != nullptr
