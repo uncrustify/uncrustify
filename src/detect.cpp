@@ -86,7 +86,8 @@ sp_votes::~sp_votes()
    {
       m_option = (m_force > m_add) ? IARF_FORCE : IARF_ADD;
    }
-   else if (m_force == 0 && m_add == 0)
+   else if (  m_force == 0
+           && m_add == 0)
    {
       m_option = IARF_REMOVE;
    }
@@ -167,7 +168,8 @@ static void detect_space_options(void)
          break;
       }
 
-      if (chunk_is_token(pc, CT_ARITH) || chunk_is_token(pc, CT_SHIFT))
+      if (  chunk_is_token(pc, CT_ARITH)
+         || chunk_is_token(pc, CT_SHIFT))
       {
          vote_sp_arith.vote(pc, next);
          vote_sp_arith.vote(prev, pc);
@@ -225,13 +227,16 @@ static void detect_space_options(void)
          vote_sp_inside_paren.vote(pc, next);
       }
 
-      if (  (chunk_is_paren_open(pc) && chunk_is_paren_open(next))
-         || (chunk_is_paren_close(pc) && chunk_is_paren_close(next)))
+      if (  (  chunk_is_paren_open(pc)
+            && chunk_is_paren_open(next))
+         || (  chunk_is_paren_close(pc)
+            && chunk_is_paren_close(next)))
       {
          vote_sp_paren_paren.vote(pc, next);
       }
 
-      if (chunk_is_paren_close(pc) && chunk_is_token(next, CT_BRACE_OPEN))
+      if (  chunk_is_paren_close(pc)
+         && chunk_is_token(next, CT_BRACE_OPEN))
       {
          vote_sp_paren_brace.vote(pc, next);
       }
@@ -271,7 +276,8 @@ static void detect_space_options(void)
       }
 
       if (  pc->type != CT_PTR_TYPE
-         && (chunk_is_token(prev, CT_QUALIFIER) || chunk_is_token(prev, CT_TYPE)))
+         && (  chunk_is_token(prev, CT_QUALIFIER)
+            || chunk_is_token(prev, CT_TYPE)))
       {
          vote_sp_after_type.vote(prev, pc);
       }
@@ -298,7 +304,8 @@ static void detect_space_options(void)
          {
             vote_sp_angle_paren.vote(prev, pc);
          }
-         else if (chunk_is_token(next, CT_WORD) || CharTable::IsKw1(next->str[0]))
+         else if (  chunk_is_token(next, CT_WORD)
+                 || CharTable::IsKw1(next->str[0]))
          {
             vote_sp_angle_word.vote(prev, pc);
          }

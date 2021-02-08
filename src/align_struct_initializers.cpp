@@ -24,7 +24,8 @@ void align_struct_initializers(void)
 
       if (  chunk_is_token(prev, CT_ASSIGN)
          && (  chunk_is_token(pc, CT_BRACE_OPEN)
-            || (language_is_set(LANG_D) && chunk_is_token(pc, CT_SQUARE_OPEN))))
+            || (  language_is_set(LANG_D)
+               && chunk_is_token(pc, CT_SQUARE_OPEN))))
       {
          align_init_brace(pc);
       }

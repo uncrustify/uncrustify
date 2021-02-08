@@ -76,7 +76,8 @@ void align_same_func_call_params(void)
          else
          {
             // if we drop below the brace level that started it, we are done
-            if (align_root && align_root->brace_level > pc->brace_level)
+            if (  align_root != nullptr
+               && align_root->brace_level > pc->brace_level)
             {
                LOG_FMT(LASFCP, "  ++ (drop) Ended with %zu fcns\n", align_len);
 

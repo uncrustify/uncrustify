@@ -127,7 +127,8 @@ chunk_t *skip_parent_types(chunk_t *colon)
       }
 
       // Check for a type name
-      if (!(chunk_is_token(pc, CT_WORD) || chunk_is_token(pc, CT_TYPE)))
+      if (!(  chunk_is_token(pc, CT_WORD)
+           || chunk_is_token(pc, CT_TYPE)))
       {
          LOG_FMT(LPCU,
                  "%s is confused; expected a word at %zu:%zu "
@@ -139,7 +140,8 @@ chunk_t *skip_parent_types(chunk_t *colon)
       // Get next token
       auto next = skip_template_next(chunk_get_next_ncnlnp(pc));
 
-      if (chunk_is_token(next, CT_DC_MEMBER) || chunk_is_token(next, CT_COMMA))
+      if (  chunk_is_token(next, CT_DC_MEMBER)
+         || chunk_is_token(next, CT_COMMA))
       {
          pc = chunk_get_next_ncnlnp(next);
       }
@@ -173,7 +175,8 @@ chunk_t *skip_template_prev(chunk_t *ang_close)
 
 chunk_t *skip_tsquare_next(chunk_t *ary_def)
 {
-   if (chunk_is_token(ary_def, CT_SQUARE_OPEN) || chunk_is_token(ary_def, CT_TSQUARE))
+   if (  chunk_is_token(ary_def, CT_SQUARE_OPEN)
+      || chunk_is_token(ary_def, CT_TSQUARE))
    {
       return(chunk_get_next_nisq(ary_def));
    }

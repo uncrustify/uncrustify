@@ -56,7 +56,8 @@ bool unc_homedir(std::string &home)
    }
    std::string hd, hp;
 
-   if (unc_getenv("HOMEDRIVE", hd) && unc_getenv("HOMEPATH", hp))
+   if (  unc_getenv("HOMEDRIVE", hd)
+      && unc_getenv("HOMEPATH", hp))
    {
       home = hd + hp;
       return(true);

@@ -151,7 +151,8 @@ void fix_casts(chunk_t *start)
       {
          detail = " -- upper case";
       }
-      else if (language_is_set(LANG_OC) && chunk_is_str(last, "id", 2))
+      else if (  language_is_set(LANG_OC)
+              && chunk_is_str(last, "id", 2))
       {
          detail = " -- Objective-C id";
       }
@@ -311,7 +312,8 @@ void fix_fcn_def_params(chunk_t *start)
    LOG_FMT(LFCNP, "%s(%d): text() '%s', type is %s, on orig_line %zu, level is %zu\n",
            __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line, start->level);
 
-   while (start != nullptr && !chunk_is_paren_open(start))
+   while (  start != nullptr
+         && !chunk_is_paren_open(start))
    {
       start = chunk_get_next_ncnl(start);
    }
@@ -321,7 +323,8 @@ void fix_fcn_def_params(chunk_t *start)
       return;
    }
    // ensure start chunk holds a single '(' character
-   assert((start->len() == 1) && (start->str[0] == '('));
+   assert(  (start->len() == 1)
+         && (start->str[0] == '('));
 
    ChunkStack cs;
    size_t     level = start->level + 1;
@@ -329,7 +332,8 @@ void fix_fcn_def_params(chunk_t *start)
 
    while ((pc = chunk_get_next_ncnl(pc)) != nullptr)
    {
-      if (  ((start->len() == 1) && (start->str[0] == ')'))
+      if (  (  (start->len() == 1)
+            && (start->str[0] == ')'))
          || pc->level < level)
       {
          LOG_FMT(LFCNP, "%s(%d): bailed on text() '%s', on orig_line %zu\n",
@@ -345,7 +349,9 @@ void fix_fcn_def_params(chunk_t *start)
          continue;
       }
 
-      if (chunk_is_star(pc) || chunk_is_msref(pc) || chunk_is_nullable(pc))
+      if (  chunk_is_star(pc)
+         || chunk_is_msref(pc)
+         || chunk_is_nullable(pc))
       {
          set_chunk_type(pc, CT_PTR_TYPE);
          cs.Push_Back(pc);
@@ -479,7 +485,8 @@ void fix_typedef(chunk_t *start)
 
    // avoid interpreting typedef NS_ENUM (NSInteger, MyEnum) as a function def
    if (  last_op != nullptr
-      && !(language_is_set(LANG_OC) && get_chunk_parent_type(last_op) == CT_ENUM))
+      && !(  language_is_set(LANG_OC)
+          && get_chunk_parent_type(last_op) == CT_ENUM))
    {
       flag_parens(last_op, PCF_NONE, CT_FPAREN_OPEN, CT_TYPEDEF, false);
       fix_fcn_def_params(last_op);
@@ -516,7 +523,8 @@ void fix_typedef(chunk_t *start)
       // If we are aligning on the open parenthesis, grab that instead
       log_rule_B("align_typedef_func");
 
-      if (open_paren != nullptr && options::align_typedef_func() == 1)
+      if (  open_paren != nullptr
+         && options::align_typedef_func() == 1)
       {
          the_type = open_paren;
       }
@@ -819,14 +827,16 @@ void mark_cpp_constructor(chunk_t *pc)
       chunk_flags_set(tmp, PCF_IN_CONST_ARGS);
       tmp = chunk_get_next_ncnl(tmp);
 
-      if (chunk_is_str(tmp, ":", 1) && tmp->level == paren_open->level)
+      if (  chunk_is_str(tmp, ":", 1)
+         && tmp->level == paren_open->level)
       {
          set_chunk_type(tmp, CT_CONSTR_COLON);
          hit_colon = true;
       }
 
       if (  hit_colon
-         && (chunk_is_paren_open(tmp) || chunk_is_opening_brace(tmp))
+         && (  chunk_is_paren_open(tmp)
+            || chunk_is_opening_brace(tmp))
          && tmp->level == paren_open->level)
       {
          var = skip_template_prev(chunk_get_prev_ncnlni(tmp));   // Issue #2279
@@ -1088,7 +1098,9 @@ void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t parent_
       LOG_FMT(LFCNR, "\n");
 
       // Back up and mark parent type on friend declarations
-      if (parent_type != CT_NONE && first && first->flags.test(PCF_IN_CLASS))
+      if (  parent_type != CT_NONE
+         && first
+         && first->flags.test(PCF_IN_CLASS))
       {
          pc = chunk_get_prev_ncnlni(first);   // Issue #2279
 
@@ -1332,8 +1344,10 @@ void mark_function(chunk_t *pc)
       if (  chunk_is_str(tmp3, ")", 1)
          && (  chunk_is_star(tmp1)
             || chunk_is_msref(tmp1)
-            || (language_is_set(LANG_OC) && chunk_is_token(tmp1, CT_CARET)))
-         && (tmp2 == nullptr || chunk_is_token(tmp2, CT_WORD)))
+            || (  language_is_set(LANG_OC)
+               && chunk_is_token(tmp1, CT_CARET)))
+         && (  tmp2 == nullptr
+            || chunk_is_token(tmp2, CT_WORD)))
       {
          if (tmp2)
          {
@@ -1903,7 +1917,8 @@ void mark_function(chunk_t *pc)
       }
 
       if (  !is_extern
-         && is_param && ref != tmp)
+         && is_param
+         && ref != tmp)
       {
          if (!can_be_full_param(ref, tmp))
          {
@@ -2061,7 +2076,8 @@ bool mark_function_type(chunk_t *pc)
 
    varcnk = chunk_get_prev_ssq(varcnk);
 
-   if (varcnk != nullptr && !chunk_is_word(varcnk))
+   if (  varcnk != nullptr
+      && !chunk_is_word(varcnk))
    {
       if (  language_is_set(LANG_OC)
          && chunk_is_str(varcnk, "^", 1)
@@ -2159,7 +2175,9 @@ bool mark_function_type(chunk_t *pc)
    // Allow word count 2 incase of function pointer declaration.
    // Ex: bool (__stdcall* funcptr)(int, int);
    if (  star_count > 1
-      || (word_count > 1 && !(word_count == 2 && ptp == CT_FUNC_VAR))
+      || (  word_count > 1
+         && !(  word_count == 2
+             && ptp == CT_FUNC_VAR))
       || ((star_count + word_count) == 0))
    {
       LOG_FMT(LFTYPE, "%s(%d): bad counts word: %zu, star: %zu\n",
@@ -2287,7 +2305,8 @@ void mark_lvalue(chunk_t *pc)
       }
       chunk_flags_set(prev, PCF_LVALUE);
 
-      if (prev->level == pc->level && chunk_is_str(prev, "&", 1))
+      if (  prev->level == pc->level
+         && chunk_is_str(prev, "&", 1))
       {
          make_type(prev);
       }
@@ -2534,7 +2553,8 @@ pcf_flags_t mark_where_chunk(chunk_t *pc, c_token_t parent_type, pcf_flags_t fla
          LOG_FMT(LFTOR, "%s: where-spec colon on line %zu\n",
                  __func__, pc->orig_line);
       }
-      else if ((chunk_is_token(pc, CT_STRUCT)) || (chunk_is_token(pc, CT_CLASS)))
+      else if (  (chunk_is_token(pc, CT_STRUCT))
+              || (chunk_is_token(pc, CT_CLASS)))
       {
          /* class/struct inside of a where-clause confuses parser for indentation; set it as a word so it looks like the rest */
          set_chunk_type(pc, CT_WORD);

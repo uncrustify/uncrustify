@@ -112,7 +112,8 @@ const ContainerType &ParseFrame::prev(size_t idx) const
 {
    LOG_FUNC_ENTRY();
 
-   if (idx == 0 || idx >= pse.size())
+   if (  idx == 0
+      || idx >= pse.size())
    {
       throw invalid_argument(string(__FILE__) + ":" + to_string(__LINE__)
                              + " idx can't be zero or >= size()");
