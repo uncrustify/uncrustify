@@ -136,7 +136,8 @@ static bool text_contains_filename_without_ext(const char *text)
    size_t      slash_idx            = filepath.find_last_of("/\\");
    std::string filename_without_ext = filepath;
 
-   if (slash_idx != std::string::npos && slash_idx < (filepath.size() - 1))
+   if (  slash_idx != std::string::npos
+      && slash_idx < (filepath.size() - 1))
    {
       std::string filename = filepath.substr(slash_idx + 1);
       size_t      dot_idx  = filename.find_last_of('.');
@@ -205,7 +206,8 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
       return(0);
    }
 
-   while (pc1 != nullptr && pc2 != nullptr)
+   while (  pc1 != nullptr
+         && pc2 != nullptr)
    {
       auto const &s1_ext = chunk_sort_str(pc1);
       auto const &s2_ext = chunk_sort_str(pc2);
@@ -220,11 +222,13 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
          bool s1_contains_filename = text_contains_filename_without_ext(s1.c_str());
          bool s2_contains_filename = text_contains_filename_without_ext(s2.c_str());
 
-         if (s1_contains_filename && !s2_contains_filename)
+         if (  s1_contains_filename
+            && !s2_contains_filename)
          {
             return(-1);
          }
-         else if (!s1_contains_filename && s2_contains_filename)
+         else if (  !s1_contains_filename
+                 && s2_contains_filename)
          {
             return(1);
          }
@@ -236,11 +240,13 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
          const bool s1_has_dot = has_dot(s1_ext);
          const bool s2_has_dot = has_dot(s2_ext);
 
-         if (s1_has_dot && !s2_has_dot)
+         if (  s1_has_dot
+            && !s2_has_dot)
          {
             return(1);
          }
-         else if (!s1_has_dot && s2_has_dot)
+         else if (  !s1_has_dot
+                 && s2_has_dot)
          {
             return(-1);
          }
@@ -250,11 +256,13 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
       {
          log_rule_B("mod_sort_incl_import_prioritize_angle_over_quotes");
 
-         if (s1.startswith("<") && s2.startswith("\""))
+         if (  s1.startswith("<")
+            && s2.startswith("\""))
          {
             return(-1);
          }
-         else if (s1.startswith("\"") && s2.startswith("<"))
+         else if (  s1.startswith("\"")
+                 && s2.startswith("<"))
          {
             return(1);
          }
@@ -320,7 +328,8 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
       }
    }
 
-   if (pc1 == nullptr || !chunk_is_newline(pc2))
+   if (  pc1 == nullptr
+      || !chunk_is_newline(pc2))
    {
       return(-1);
    }
@@ -422,7 +431,8 @@ static void delete_chunks_on_line_having_chunk(chunk_t *chunk)
 
    chunk_t *pc = chunk_first_on_line(chunk);
 
-   while (pc != nullptr && !chunk_is_comment(pc))
+   while (  pc != nullptr
+         && !chunk_is_comment(pc))
    {
       chunk_t *next_pc = chunk_get_next(pc);
       LOG_FMT(LCHUNK, "%s(%d): Removed '%s' on orig_line %zu\n",
@@ -505,7 +515,8 @@ static void group_imports_by_adding_newlines(chunk_t **chunks, size_t num_chunks
          c_idx = -1;
       }
 
-      if (c_idx_last != c_idx && idx > 0)
+      if (  c_idx_last != c_idx
+         && idx > 0)
       {
          blankline_add_before(chunks[idx]);
       }
@@ -520,7 +531,8 @@ static void group_imports_by_adding_newlines(chunk_t **chunks, size_t num_chunks
    {
       chunk_has_dot = has_dot(chunks[idx]->str);
 
-      if (chunk_last_has_dot != chunk_has_dot && idx > 0)
+      if (  chunk_last_has_dot != chunk_has_dot
+         && idx > 0)
       {
          blankline_add_before(chunks[idx]);
       }
@@ -535,7 +547,8 @@ static void group_imports_by_adding_newlines(chunk_t **chunks, size_t num_chunks
    {
       chunk_pri = get_chunk_priority(chunks[idx]);
 
-      if (chunk_pri_last != chunk_pri && idx > 0)
+      if (  chunk_pri_last != chunk_pri
+         && idx > 0)
       {
          blankline_add_before(chunks[idx]);
       }
@@ -551,7 +564,8 @@ static void group_imports_by_adding_newlines(chunk_t **chunks, size_t num_chunks
       auto const &chunk_text = chunk_sort_str(chunks[idx]);
       chunk_has_filename = text_contains_filename_without_ext(chunk_text.c_str());
 
-      if (!chunk_has_filename && last_chunk_has_filename)
+      if (  !chunk_has_filename
+         && last_chunk_has_filename)
       {
          blankline_add_before(chunks[idx]);
       }

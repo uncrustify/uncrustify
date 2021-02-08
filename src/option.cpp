@@ -3,11 +3,11 @@
  * Parses the options from the config file.
  *
  * @author  Ben Gardner
- * @author  Guy Maurel since version 0.62 for uncrustify4Qt
- *          October 2015, 2016
+ * @author  Guy Maurel October 2015, 2021
  * @author  Matthew Woehlke since version 0.67
  * @license GPL v2+
  */
+
 #include "option.h"
 
 #include "keywords.h"
@@ -156,7 +156,9 @@ std::string to_lower(const std::string &in)
 //-----------------------------------------------------------------------------
 bool is_arg_sep(int ch)
 {
-   return(isspace(ch) || ch == ',' || ch == '=');
+   return(  isspace(ch)
+         || ch == ','
+         || ch == '=');
 }
 
 
@@ -179,13 +181,15 @@ std::vector<std::string> split_args(std::string in, const char *filename,
    while (n < k)
    {
       // Skip leading space
-      while (n < k && is_sep(in[n]))
+      while (  n < k
+            && is_sep(in[n]))
       {
          ++n;
       }
 
       // Detect comments or trailing space
-      if (n >= k || in[n] == '#')
+      if (  n >= k
+         || in[n] == '#')
       {
          break;
       }
@@ -197,7 +201,8 @@ std::vector<std::string> split_args(std::string in, const char *filename,
 
          for ((void)n; in[n] != *quote; ++n)
          {
-            if (n < k && in[n] == '\\')
+            if (  n < k
+               && in[n] == '\\')
             {
                in.erase(n, 1);
                --k;
@@ -213,7 +218,8 @@ std::vector<std::string> split_args(std::string in, const char *filename,
 
          out.push_back(in.substr(start, n - start));
 
-         if (++n < k && !is_sep(in[n]))
+         if (  ++n < k
+            && !is_sep(in[n]))
          {
             OptionWarning w{ filename };
             w("unexpected text following quoted-string");
@@ -224,7 +230,10 @@ std::vector<std::string> split_args(std::string in, const char *filename,
       // Extract anything else
       const auto start = n;
 
-      for ((void)n; n < k && !is_sep(in[n]); ++n)
+      for ((void)n;
+           (  n < k
+           && !is_sep(in[n]));
+           ++n)
       {
          if (in[n] == '\\')
          {
@@ -254,14 +263,18 @@ bool is_path_relative(const std::string &path)
 #ifdef WIN32
    // Check for partition labels as indication for an absolute path
    // 'X:\path\to\file' style absolute disk path
-   if (path.size() > 1 && isalpha(path[0]) && path[1] == ':')
+   if (  path.size() > 1
+      && isalpha(path[0])
+      && path[1] == ':')
    {
       return(false);
    }
 
    // Check for double backslashs as indication for a network path
    // '\\server\path\to\file style' absolute UNC path
-   if (path.size() > 1 && path[0] == '\\' && path[1] == '\\')
+   if (  path.size() > 1
+      && path[0] == '\\'
+      && path[1] == '\\')
    {
       return(false);
    }
@@ -279,7 +292,9 @@ void print_description(FILE *pfile, std::string description,
 {
    // Descriptions always start with a '\n', so skip the first character
    for (std::string::size_type start = 1, length = description.length();
-        start != std::string::npos && start < length; ++start)
+        (  start != std::string::npos
+        && start < length);
+        ++start)
    {
       // Check for empty line so we can squelch trailing whitespace
       if (description[start] == '\n')
@@ -462,7 +477,8 @@ bool read_number(const char *in, Option<T> &out)
    char       *c;
    const auto val = std::strtol(in, &c, 10);
 
-   if (*c == 0 && out.validate(val))
+   if (  *c == 0
+      && out.validate(val))
    {
       out.m_val = static_cast<T>(val);
       return(true);
@@ -861,7 +877,8 @@ void process_option_line(const std::string &config_line, const char *filename,
    // Check for necessary arguments
    const auto &cmd = to_lower(args.front());
 
-   if (cmd == "set" || cmd == "file_ext")
+   if (  cmd == "set"
+      || cmd == "file_ext")
    {
       if (args.size() < 3)
       {

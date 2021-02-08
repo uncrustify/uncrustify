@@ -63,14 +63,16 @@ chunk_t *pawn_add_vsemi_after(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(pc, CT_VSEMICOLON) || chunk_is_token(pc, CT_SEMICOLON))
+   if (  chunk_is_token(pc, CT_VSEMICOLON)
+      || chunk_is_token(pc, CT_SEMICOLON))
    {
       return(pc);
    }
    chunk_t *next = chunk_get_next_nc(pc);
 
    if (  next != nullptr
-      && (chunk_is_token(next, CT_VSEMICOLON) || chunk_is_token(next, CT_SEMICOLON)))
+      && (  chunk_is_token(next, CT_VSEMICOLON)
+         || chunk_is_token(next, CT_SEMICOLON)))
    {
       return(pc);
    }
@@ -210,7 +212,8 @@ static chunk_t *pawn_process_line(chunk_t *start)
    //LOG_FMT(LSYS, "%s: %d - %s\n", __func__,
    //        start->orig_line, start->text());
 
-   if (chunk_is_token(start, CT_NEW) || chunk_is_str(start, "const", 5))
+   if (  chunk_is_token(start, CT_NEW)
+      || chunk_is_str(start, "const", 5))
    {
       return(pawn_process_variable(start));
    }
@@ -274,7 +277,8 @@ static chunk_t *pawn_process_variable(chunk_t *start)
          && prev != nullptr                          // Issue 2586
          && !pawn_continued(prev, start->level))
       {
-         if (prev->type != CT_VSEMICOLON && prev->type != CT_SEMICOLON)
+         if (  prev->type != CT_VSEMICOLON
+            && prev->type != CT_SEMICOLON)
          {
             pawn_add_vsemi_after(prev);
          }
@@ -349,7 +353,8 @@ static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
    }
    else
    {
-      if (chunk_is_token(start, CT_FORWARD) || chunk_is_token(start, CT_NATIVE))
+      if (  chunk_is_token(start, CT_FORWARD)
+         || chunk_is_token(start, CT_NATIVE))
       {
          LOG_FMT(LPFUNC, "%s: %zu] '%s' [%s] proto due to %s\n",
                  __func__, fcn->orig_line, fcn->text(),
@@ -388,7 +393,8 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
    }
 
    // See if there is a state clause after the function
-   if (last != nullptr && chunk_is_str(last, "<", 1))
+   if (  last != nullptr
+      && chunk_is_str(last, "<", 1))
    {
       LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle open %s\n",
               __func__, pc->orig_line, pc->text(), get_token_name(last->type));
@@ -453,7 +459,8 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
          LOG_FMT(LPFUNC, "%s:%zu] check %s, level %zu\n",
                  __func__, prev->orig_line, get_token_name(prev->type), prev->level);
 
-         if (chunk_is_token(prev, CT_NEWLINE) && prev->level == 0)
+         if (  chunk_is_token(prev, CT_NEWLINE)
+            && prev->level == 0)
          {
             chunk_t *next = chunk_get_next_ncnl(prev);
 

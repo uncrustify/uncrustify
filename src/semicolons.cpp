@@ -87,7 +87,8 @@ void remove_extra_semicolons(void)
          {
             check_unknown_brace_close(pc, prev);
          }
-         else if (chunk_is_token(prev, CT_SEMICOLON) && get_chunk_parent_type(prev) != CT_FOR)
+         else if (  chunk_is_token(prev, CT_SEMICOLON)
+                 && get_chunk_parent_type(prev) != CT_FOR)
          {
             remove_semicolon(pc);
          }

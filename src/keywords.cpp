@@ -367,7 +367,8 @@ void init_keywords()
    {
       chunk_tag_t *tag = &keywords[idx];
 
-      if ((tag->lang_flags == LANG_ALL) || (tag->lang_flags == LANG_ALLC))
+      if (  (tag->lang_flags == LANG_ALL)
+         || (tag->lang_flags == LANG_ALLC))
       {
          continue;
       }
@@ -505,7 +506,8 @@ c_token_t find_keyword_type(const char *word, size_t len)
 
    if (p_ret != nullptr)
    {
-      if (strcmp(p_ret->tag, "__pragma") == 0 || strcmp(p_ret->tag, "_Pragma") == 0)
+      if (  strcmp(p_ret->tag, "__pragma") == 0
+         || strcmp(p_ret->tag, "_Pragma") == 0)
       {
          cpd.in_preproc = CT_PREPROC;
       }
@@ -550,7 +552,8 @@ int load_keyword_file(const char *filename)
 
       if (argc > 0)
       {
-         if (argc == 1 && CharTable::IsKw1(*args[0]))
+         if (  argc == 1
+            && CharTable::IsKw1(*args[0]))
          {
             add_keyword(args[0], CT_TYPE);
          }
