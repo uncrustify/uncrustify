@@ -40,8 +40,9 @@ void align_left_shift(void)
       }
       else
       {
+         char *copy = (char *)malloc(1000);
          LOG_FMT(LALIGN, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text_first_999());
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text_first_999(copy));
       }
 
       if (  start != nullptr

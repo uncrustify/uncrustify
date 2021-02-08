@@ -882,7 +882,8 @@ void set_chunk_parent_real(chunk_t *pc, c_token_t token, const char *func, int l
    }
    else
    {
-      LOG_FMT(LSETPAR, "'%s'\n", pc->text_first_999());
+      char *copy = (char *)malloc(1000);
+      LOG_FMT(LSETPAR, "'%s'\n", pc->text_first_999(copy));
    }
    LOG_FMT(LSETPAR, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s\n",
            get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)),

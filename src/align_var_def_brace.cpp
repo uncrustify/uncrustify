@@ -69,8 +69,10 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
       chunk_t *pc = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
       return(chunk_get_next_ncnl(pc));
    }
+   char *copy = (char *)malloc(1000);
+
    LOG_FMT(LAVDB, "%s(%d): start->text() '%s', type is %s, on orig_line %zu\n",
-           __func__, __LINE__, start->text_first_999(), get_token_name(start->type), start->orig_line);
+           __func__, __LINE__, start->text_first_999(copy), get_token_name(start->type), start->orig_line);
 
    log_rule_B("align_var_def_inline");
    auto const align_mask =

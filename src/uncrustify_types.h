@@ -185,10 +185,9 @@ struct chunk_t
    }
 
 
-   // Issue #2984, provides a copie of the first chars of the text() string
-   const char *text_first_999()
+   // Issue #2984, fill up, if necessary, a copie of the first chars of the text() string
+   const char *text_first_999(char *for_the_copy)
    {
-      char       t999[1000];
       const char *test_it       = str.c_str();
       size_t     test_it_length = strlen(test_it);
 
@@ -198,9 +197,9 @@ struct chunk_t
       {
          if (test_it_length > truncate_value)
          {
-            memset(t999, 0, 1000);
-            strncpy(t999, test_it, truncate_value);
-            char *message = strcat(t999, " ... <The string is truncate>");
+            memset(for_the_copy, 0, 1000);
+            strncpy(for_the_copy, test_it, truncate_value);
+            char *message = strcat(for_the_copy, " ... <The string is truncate>");
 
             return(message);
          }
