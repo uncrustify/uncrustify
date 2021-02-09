@@ -2732,9 +2732,9 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       }
       else
       {
-         char *copy = (char *)malloc(1000);
+         char copy[1000];
          LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s, orig_col_end is %zu\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text_first_999(copy), get_token_name(pc->type), pc->orig_col_end);
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->elided_text(copy), get_token_name(pc->type), pc->orig_col_end);
       }
    }
    // Set the cpd.newline string for this file

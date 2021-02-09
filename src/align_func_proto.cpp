@@ -79,9 +79,9 @@ void align_func_proto(size_t span)
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
-      char *copy = (char *)malloc(1000);
+      char copy[1000];
       LOG_FMT(LAS, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, level is %zu, brace_level is %zu\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text_first_999(copy),
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->elided_text(copy),
               get_token_name(pc->type), pc->level, pc->brace_level);
 
       if (pc->level > max_level_count)                             // Issue #2960

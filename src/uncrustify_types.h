@@ -186,7 +186,7 @@ struct chunk_t
 
 
    // Issue #2984, fill up, if necessary, a copie of the first chars of the text() string
-   const char *text_first_999(char *for_the_copy)
+   const char *elided_text(char *for_the_copy)
    {
       const char *test_it       = str.c_str();
       size_t     test_it_length = strlen(test_it);

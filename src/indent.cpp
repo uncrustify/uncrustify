@@ -294,10 +294,10 @@ void align_to_column(chunk_t *pc, size_t column)
 void reindent_line(chunk_t *pc, size_t column)
 {
    LOG_FUNC_ENTRY();
-   char *copy = (char *)malloc(1000);
+   char copy[1000];
 
    LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, on '%s' [%s/%s] => %zu\n",
-           __func__, __LINE__, pc->orig_line, pc->column, pc->text_first_999(copy),
+           __func__, __LINE__, pc->orig_line, pc->column, pc->elided_text(copy),
            get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)),
            column);
    log_func_stack_inline(LINDLINE);
@@ -664,9 +664,9 @@ void indent_text(void)
       }
       else
       {
-         char *copy = (char *)malloc(1000);
+         char copy[1000];
          LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, column is %zu, for '%s'\n   ",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->text_first_999(copy));
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->elided_text(copy));
          log_pcf_flags(LINDLINE, pc->flags);
       }
       log_rule_B("use_options_overriding_for_qt_macros");
@@ -1362,9 +1362,9 @@ void indent_text(void)
                     frm.at(ttidx).pc->brace_level);
          }
       }
-      char *copy = (char *)malloc(1000);
+      char copy[1000];
       LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, orig_col is %zu, column is %zu, text() is '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->text_first_999(copy));
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->elided_text(copy));
 
       // Issue #672
       if (  chunk_is_token(pc, CT_BRACE_OPEN)
@@ -3206,9 +3206,9 @@ void indent_text(void)
             pc->indent.ref   = frm.top().ip.ref;
             pc->indent.delta = frm.top().ip.delta;
          }
-         char *copy = (char *)malloc(1000);
+         char copy[1000];
          LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, pc->column_indent is %zu, indent_column is %zu, for '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->column_indent, indent_column, pc->text_first_999(copy));
+                 __func__, __LINE__, pc->orig_line, pc->column_indent, indent_column, pc->elided_text(copy));
 
          /*
           * Check for special continuations.
@@ -3993,10 +3993,10 @@ static size_t calc_comment_next_col_diff(chunk_t *pc)
 static void indent_comment(chunk_t *pc, size_t col)
 {
    LOG_FUNC_ENTRY();
-   char *copy = (char *)malloc(1000);
+   char copy[1000];
 
    LOG_FMT(LCMTIND, "%s(%d): pc->text() is '%s', orig_line %zu, orig_col %zu, level %zu\n",
-           __func__, __LINE__, pc->text_first_999(copy), pc->orig_line, pc->orig_col, pc->level);
+           __func__, __LINE__, pc->elided_text(copy), pc->orig_line, pc->orig_col, pc->level);
 
    // force column 1 comment to column 1 if not changing them
    log_rule_B("indent_col1_comment");
