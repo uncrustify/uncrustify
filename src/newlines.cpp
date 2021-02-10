@@ -3647,14 +3647,19 @@ void newlines_remove_disallowed()
 {
    LOG_FUNC_ENTRY();
 
-   auto *pc = chunk_get_head();
+   chunk_t *pc = chunk_get_head();
+   chunk_t *next;
 
    while ((pc = chunk_get_next_nl(pc)) != nullptr)
    {
       LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>, nl is %zu\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->nl_count);
 
-      if (!can_increase_nl(pc))
+      next = chunk_get_next(pc);
+
+      if (  next != nullptr
+         && !chunk_is_token(next, CT_NEWLINE)
+         && !can_increase_nl(pc))
       {
          LOG_FMT(LBLANKD, "%s(%d): force to 1 orig_line is %zu, orig_col is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
