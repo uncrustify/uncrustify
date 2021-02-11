@@ -188,7 +188,7 @@ struct chunk_t
    // Issue #2984, fill up, if necessary, a copie of the first chars of the text() string
    const char *elided_text(char *for_the_copy)
    {
-      const char *test_it       = str.c_str();
+      const char *test_it       = text();
       size_t     test_it_length = strlen(test_it);
 
       size_t     truncate_value = uncrustify::options::debug_truncate();
@@ -198,17 +198,25 @@ struct chunk_t
          if (test_it_length > truncate_value)
          {
             memset(for_the_copy, 0, 1000);
-            strncpy(for_the_copy, test_it, truncate_value);
-            char *message = strcat(for_the_copy, " ... <The string is truncate>");
+
+            if (test_it_length < truncate_value + 30)
+            {
+               strncpy(for_the_copy, test_it, truncate_value - 30);
+            }
+            else
+            {
+               strncpy(for_the_copy, test_it, truncate_value);
+            }
+            char *message = strcat(for_the_copy, " ... <The string is truncated>");
 
             return(message);
          }
          else
          {
-            return(str.c_str());
+            return(test_it);
          }
       }
-      return(str.c_str());
+      return(test_it);
    }
 
    chunk_t      *next;            //! pointer to next chunk in list

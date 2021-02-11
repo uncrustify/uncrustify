@@ -618,8 +618,8 @@ void output_text(FILE *pfile)
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       char copy[1000];
-      LOG_FMT(LCONTTEXT, "%s(%d): text() is '%s', type is %s, orig_col is %zu, column is %zu, nl is %zu\n",
-              __func__, __LINE__, pc->elided_text(copy), get_token_name(pc->type), pc->orig_col, pc->column, pc->nl_count);
+      LOG_FMT(LCONTTEXT, "%s(%d): text() is '%s', type is %s, orig_line is %zu, column is %zu, nl is %zu\n",
+              __func__, __LINE__, pc->elided_text(copy), get_token_name(pc->type), pc->orig_line, pc->column, pc->nl_count);
       log_rule_B("cmt_convert_tab_to_spaces");
       cpd.output_tab_as_space = (  options::cmt_convert_tab_to_spaces()
                                 && chunk_is_comment(pc));
