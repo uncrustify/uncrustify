@@ -565,6 +565,23 @@ def main(args):
         return_flag = False
 
     #
+    # Test the truncate option
+    #
+    if not check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            args_arr=['-c', s_path_join(script_dir, 'config/truncate.cfg'),
+                      '-f', s_path_join(script_dir, 'input/truncate.cpp'),
+                      '-o', NULL_DEVICE,
+                      '-L', '83'],
+            err_expected_path=s_path_join(script_dir, 'output/truncate.txt'),
+            err_result_path=s_path_join(script_dir, 'results/truncate.txt'),
+            err_result_manip=[reg_replace(r'\([0-9]+\)', ' '),
+                              reg_replace(RE_DO_SPACE, '')]
+            ):
+        return_flag = False
+
+    #
     # Test --update-config
     #
     if not check_uncrustify_output(
@@ -653,10 +670,7 @@ def main(args):
                 ):
             return_flag = False
 
-    #
-    # Test -p and -c with '-' input
-    #
-    if os_name != 'nt' and not check_uncrustify_output(
+    if os_name == 'nt' or check_uncrustify_output(
             uncr_bin,
             parsed_args,
             args_arr=['-c', '-',
@@ -665,7 +679,12 @@ def main(args):
             out_expected_path=s_path_join(script_dir, 'output/pc-.txt'),
             out_result_manip=reg_replace(r'\# Uncrustify.+[^\n\r]', ''),
             out_result_path=s_path_join(script_dir, 'results/pc-.txt')
-            ):
+    ):
+        pass
+    #
+    # Test -p and -c with '-' input
+    #
+    else:
         return_flag = False
 
     #
@@ -753,8 +772,6 @@ def main(args):
     #   -L
     # look at src/log_levels.h
     Ls_A = ['9', '21', '25', '28', '31', '36', '66', '92']
-    #Ls_A = ['9', '21', '25', '28', '31', '36', '92']
-    #Ls_A = ['66']
     for L in Ls_A:
         if not check_uncrustify_output(
                 uncr_bin,

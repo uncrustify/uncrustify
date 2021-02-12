@@ -1,0 +1,16 @@
+output_text : text() is '// 1 6789A123456789B123456789c12345678 ... <The string is truncated>', type is COMMENT_CPP, orig_line is 1, column is 1, nl is 0
+output_cmt_start : no cmt_insert_file
+output_comment_cpp : set cont_text to '// '
+output_text : text() is '', type is NEWLINE, orig_line is 1, column is 74, nl is 1
+output_text : text() is '// 2 678 ... <The string is truncated>', type is COMMENT_CPP, orig_line is 2, column is 1, nl is 0
+output_cmt_start : no cmt_insert_file
+output_comment_cpp : set cont_text to '// '
+output_text : text() is '', type is NEWLINE, orig_line is 2, column is 40, nl is 1
+output_text : text() is '// 3 6789A123456789B123456789c12345678', type is COMMENT_CPP, orig_line is 3, column is 1, nl is 0
+output_cmt_start : no cmt_insert_file
+output_comment_cpp : set cont_text to '// '
+output_text : text() is '', type is NEWLINE, orig_line is 3, column is 39, nl is 1
+output_text : text() is '// 4 6789A123456789B123456789c1234567', type is COMMENT_CPP, orig_line is 4, column is 1, nl is 0
+output_cmt_start : no cmt_insert_file
+output_comment_cpp : set cont_text to '// '
+output_text : text() is '', type is NEWLINE, orig_line is 4, column is 38, nl is 1

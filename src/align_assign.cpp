@@ -31,8 +31,10 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    }
    size_t my_level = first->level;
 
+   char   copy[1000];
+
    LOG_FMT(LALASS, "%s(%d): [my_level is %zu]: start checking with '%s', on orig_line %zu, span is %zu, thresh is %zu\n",
-           __func__, __LINE__, my_level, first->text(), first->orig_line, span, thresh);
+           __func__, __LINE__, my_level, first->elided_text(copy), first->orig_line, span, thresh);
 
    // If we are aligning on a tabstop, we shouldn't right-align
    AlignStack as;    // regular assigns
@@ -64,8 +66,9 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
 
    while (pc != nullptr)
    {
+      char copy[1000];
       LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->text() '%s', type is %s, parent_type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->text(), get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)));
+              __func__, __LINE__, pc->orig_line, pc->elided_text(copy), get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)));
 
       // Don't check inside SPAREN, PAREN or SQUARE groups
       if (  chunk_is_token(pc, CT_SPAREN_OPEN)

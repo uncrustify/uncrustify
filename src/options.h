@@ -3863,6 +3863,11 @@ debug_line_number_to_protocol;
 extern Option<signed>
 debug_timeout;
 
+// Set the number of characters to be printed if the text is too long,
+// 0: do not truncate.
+extern BoundedOption<unsigned, 0, 960>
+debug_truncate;
+
 //END
 
 } // namespace options

@@ -3,8 +3,7 @@
  * Does all the output & comment formatting.
  *
  * @author  Ben Gardner
- * @author  Guy Maurel since version 0.62 for uncrustify4Qt
- *          October 2015, 2016
+ * @author  Guy Maurel October 2015, 2021
  * @license GPL v2+
  */
 
@@ -618,8 +617,9 @@ void output_text(FILE *pfile)
    // loop over the whole chunk list
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
-      LOG_FMT(LCONTTEXT, "%s(%d): text() is '%s', type is %s, orig_col is %zu, column is %zu, nl is %zu\n",
-              __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_col, pc->column, pc->nl_count);
+      char copy[1000];
+      LOG_FMT(LCONTTEXT, "%s(%d): text() is '%s', type is %s, orig_line is %zu, column is %zu, nl is %zu\n",
+              __func__, __LINE__, pc->elided_text(copy), get_token_name(pc->type), pc->orig_line, pc->column, pc->nl_count);
       log_rule_B("cmt_convert_tab_to_spaces");
       cpd.output_tab_as_space = (  options::cmt_convert_tab_to_spaces()
                                 && chunk_is_comment(pc));
@@ -2016,8 +2016,10 @@ static void output_comment_multi(chunk_t *pc)
    }
    cmt_reflow cmt;
 
+   char       copy[1000];
+
    LOG_FMT(LCONTTEXT, "%s(%d): text() is '%s', type is %s, orig_col is %zu, column is %zu\n",
-           __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_col, pc->column);
+           __func__, __LINE__, pc->elided_text(copy), get_token_name(pc->type), pc->orig_col, pc->column);
 
    output_cmt_start(cmt, pc);
    log_rule_B("cmt_reflow_mode");
@@ -2061,8 +2063,8 @@ static void output_comment_multi(chunk_t *pc)
    line.clear();
    LOG_FMT(LCONTTEXT, "%s(%d): pc->len() is %zu\n",
            __func__, __LINE__, pc->len());
-   LOG_FMT(LCONTTEXT, "%s(%d): pc->str is %s\n",
-           __func__, __LINE__, pc->str.c_str());
+   //LOG_FMT(LCONTTEXT, "%s(%d): pc->str is %s\n",
+   //        __func__, __LINE__, pc->str.c_str());
 
    /**
     * check for enable/disable processing comment strings that may
