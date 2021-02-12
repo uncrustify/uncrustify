@@ -538,10 +538,11 @@ chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref)
 }
 
 
-void chunk_del_2(chunk_t *pc)
+void chunk_del(chunk_t * &pc)
 {
    g_cl.Pop(pc);
    delete pc;
+   pc = nullptr;
 }
 
 
