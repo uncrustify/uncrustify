@@ -415,7 +415,8 @@ void flag_series(chunk_t *start, chunk_t *end, pcf_flags_t set_flags, pcf_flags_
 {
    LOG_FUNC_ENTRY();
 
-   while (start != nullptr && start != end)
+   while (  start != nullptr
+         && start != end)
    {
       chunk_flags_upd(start, clr_flags, set_flags);
 
@@ -439,7 +440,8 @@ size_t get_cpp_template_angle_nest_level(chunk_t *pc)
    LOG_FUNC_ENTRY();
    int nestLevel = 0;
 
-   while (pc != nullptr && pc->flags.test(PCF_IN_TEMPLATE))
+   while (  pc != nullptr
+         && pc->flags.test(PCF_IN_TEMPLATE))
    {
       if (  chunk_is_token(pc, CT_ANGLE_CLOSE)
          && get_chunk_parent_type(pc) == CT_TEMPLATE)
@@ -466,7 +468,8 @@ chunk_t *get_d_template_types(ChunkStack &cs, chunk_t *open_paren)
    while (  ((tmp = chunk_get_next_ncnl(tmp)) != nullptr)
          && tmp->level > open_paren->level)
    {
-      if (chunk_is_token(tmp, CT_TYPE) || chunk_is_token(tmp, CT_WORD))
+      if (  chunk_is_token(tmp, CT_TYPE)
+         || chunk_is_token(tmp, CT_WORD))
       {
          if (maybe_type)
          {
@@ -486,14 +489,16 @@ chunk_t *get_d_template_types(ChunkStack &cs, chunk_t *open_paren)
 
 bool go_on(chunk_t *pc, chunk_t *start)
 {
-   if (pc == nullptr || pc->level != start->level)
+   if (  pc == nullptr
+      || pc->level != start->level)
    {
       return(false);
    }
 
    if (pc->flags.test(PCF_IN_FOR))
    {
-      return((!chunk_is_semicolon(pc)) && (!(chunk_is_token(pc, CT_COLON))));
+      return(  (!chunk_is_semicolon(pc))
+            && (!(chunk_is_token(pc, CT_COLON))));
    }
    return(!chunk_is_semicolon(pc));
 } // go_on

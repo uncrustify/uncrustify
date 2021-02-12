@@ -59,7 +59,8 @@ void align_init_brace(chunk_t *start)
       {
          pc = chunk_get_next(pc);
       }
-   } while (pc != nullptr && pc->level > start->level);
+   } while (  pc != nullptr
+           && pc->level > start->level);
 
    // debug dump the current frame
    align_log_al(LALBR, start->orig_line);
@@ -79,7 +80,8 @@ void align_init_brace(chunk_t *start)
    {
       chunk_t *tmp;
 
-      if (idx == 0 && ((tmp = skip_c99_array(pc)) != nullptr))
+      if (  idx == 0
+         && ((tmp = skip_c99_array(pc)) != nullptr))
       {
          pc = tmp;
 

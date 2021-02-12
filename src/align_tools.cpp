@@ -62,7 +62,8 @@ chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
 
       chunk_t *next = chunk_get_next(pc);
 
-      if (next == nullptr || chunk_is_comment(next))
+      if (  next == nullptr
+         || chunk_is_comment(next))
       {
          // do nothing
       }

@@ -214,7 +214,8 @@ public:
    BoundedOption(const char *opt_name, const char *opt_desc, T opt_val = T{})
       : Option<T>{opt_name, opt_desc, opt_val}
    {
-      assert(opt_val >= min && opt_val <= max);
+      assert(  opt_val >= min
+            && opt_val <= max);
    }
 
    std::string minStr() const override { return(std::to_string(min)); }

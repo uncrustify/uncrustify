@@ -37,7 +37,8 @@ chunk_t *flag_parens(chunk_t *po, pcf_flags_t flags, c_token_t opentype, c_token
    if (po != paren_close)
    {
       if (  flags != PCF_NONE
-         || (parent_all && parenttype != CT_NONE))
+         || (  parent_all
+            && parenttype != CT_NONE))
       {
          chunk_t *pc;
 

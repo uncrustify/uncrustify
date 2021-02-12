@@ -46,7 +46,8 @@ void align_oc_decl_colon(void)
 
       did_line = false;
 
-      while (pc != nullptr && pc->level >= level)
+      while (  pc != nullptr
+            && pc->level >= level)
       {
          // The declaration ends with an open brace or semicolon
          if (  chunk_is_token(pc, CT_BRACE_OPEN)

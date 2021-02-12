@@ -324,7 +324,7 @@ static bool should_add_braces(chunk_t *vbopen)
    chunk_t *pc = nullptr;
 
    for (pc = chunk_get_next_nc(vbopen, scope_e::PREPROC);
-        pc != nullptr && pc->level > vbopen->level;
+        (pc != nullptr && pc->level > vbopen->level);
         pc = chunk_get_next_nc(pc, scope_e::PREPROC))
    {
       if (chunk_is_newline(pc))

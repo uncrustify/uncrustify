@@ -98,7 +98,8 @@ void flag_cpp_braced_init_list(chunk_t *pc, chunk_t *next)
    // for the case CT_ASSIGN (and others).
 
    // TODO: Move this block to the fix_fcn_call_args function.
-   if (chunk_is_token(pc, CT_WORD) && pc->flags.test(PCF_IN_FCN_CALL))
+   if (  chunk_is_token(pc, CT_WORD)
+      && pc->flags.test(PCF_IN_FCN_CALL))
    {
       set_chunk_type(pc, CT_TYPE);
    }

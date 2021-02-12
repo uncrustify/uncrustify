@@ -169,7 +169,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
     */
    log_rule_B("align_on_tabstop");
 
-   if (options::align_on_tabstop() && m_star_style == SS_DANGLE)
+   if (  options::align_on_tabstop()
+      && m_star_style == SS_DANGLE)
    {
       m_star_style = SS_INCLUDE;
    }
@@ -179,7 +180,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    chunk_t *prev = start;
 
    while (  (prev = chunk_get_prev(prev)) != nullptr
-         && (chunk_is_ptr_operator(prev) || chunk_is_token(prev, CT_TPAREN_OPEN)))
+         && (  chunk_is_ptr_operator(prev)
+            || chunk_is_token(prev, CT_TPAREN_OPEN)))
    {
       // do nothing - we want prev when this exits
    }
@@ -202,7 +204,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       // back up to the first '*' or '^' preceding the token
       chunk_t *tmp_prev = chunk_get_prev(ali);
 
-      while (chunk_is_star(tmp_prev) || chunk_is_msref(tmp_prev))
+      while (  chunk_is_star(tmp_prev)
+            || chunk_is_msref(tmp_prev))
       {
          ali      = tmp_prev;
          tmp_prev = chunk_get_prev(ali);
@@ -239,7 +242,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       LOG_FMT(LAS, "AlignStack::%s(%d): tmp_col is %zu\n",
               __func__, __LINE__, tmp_col);
 
-      while (tmp != nullptr && tmp != start)
+      while (  tmp != nullptr
+            && tmp != start)
       {
          chunk_t *next = chunk_get_next(tmp);
 
@@ -288,10 +292,14 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
          tmp = chunk_get_next(tmp);
       }
 
-      if (  (chunk_is_star(tmp) && m_star_style == SS_DANGLE)
-         || (chunk_is_addr(tmp) && m_amp_style == SS_DANGLE)
-         || (chunk_is_nullable(tmp) && (m_star_style == SS_DANGLE))
-         || (chunk_is_msref(tmp) && m_star_style == SS_DANGLE))  // TODO: add m_msref_style
+      if (  (  chunk_is_star(tmp)
+            && m_star_style == SS_DANGLE)
+         || (  chunk_is_addr(tmp)
+            && m_amp_style == SS_DANGLE)
+         || (  chunk_is_nullable(tmp)
+            && (m_star_style == SS_DANGLE))
+         || (  chunk_is_msref(tmp)
+            && m_star_style == SS_DANGLE)) // TODO: add m_msref_style
       {
          col_adj = start->column - ali->column;
          gap     = start->column - (ref->column + ref->len());

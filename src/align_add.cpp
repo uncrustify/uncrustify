@@ -18,7 +18,8 @@ void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col)
    size_t  min_col;
    chunk_t *prev = chunk_get_prev(pc);
 
-   if (prev == nullptr || chunk_is_newline(prev))
+   if (  prev == nullptr
+      || chunk_is_newline(prev))
    {
       min_col = 1;
       LOG_FMT(LALADD, "%s(%d): pc->orig_line=%zu, pc->col=%zu max_col=%zu min_col=%zu\n",

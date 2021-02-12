@@ -74,7 +74,8 @@ void align_oc_msg_colon(chunk_t *so)
          chunk_t *tmp = chunk_get_prev(pc);
 
          if (  tmp != nullptr
-            && (chunk_is_token(tmp, CT_OC_MSG_FUNC) || chunk_is_token(tmp, CT_OC_MSG_NAME)))
+            && (  chunk_is_token(tmp, CT_OC_MSG_FUNC)
+               || chunk_is_token(tmp, CT_OC_MSG_NAME)))
          {
             nas.Add(tmp);
             chunk_flags_set(tmp, PCF_DONT_INDENT);
