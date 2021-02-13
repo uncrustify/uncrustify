@@ -838,6 +838,19 @@
 34327  Issue_3044.cfg                       cpp/Issue_3044.cpp
 34328  Issue_3048.cfg                       cpp/Issue_3048.cpp
 
+34330  Issue_3061_0nl.cfg                   cpp/Issue_3061_0nl.cpp
+34331  Issue_3061_0nl.cfg                   cpp/Issue_3061_1nl.cpp
+34332  Issue_3061_0nl.cfg                   cpp/Issue_3061_2nl.cpp
+34333  Issue_3061_1nl.cfg                   cpp/Issue_3061_0nl.cpp
+34334  Issue_3061_1nl.cfg                   cpp/Issue_3061_1nl.cpp
+34335  Issue_3061_1nl.cfg                   cpp/Issue_3061_2nl.cpp
+34336  Issue_3061_2nl.cfg                   cpp/Issue_3061_0nl.cpp
+34337  Issue_3061_2nl.cfg                   cpp/Issue_3061_1nl.cpp
+34338  Issue_3061_2nl.cfg                   cpp/Issue_3061_2nl.cpp
+34339  Issue_3061_3nl.cfg                   cpp/Issue_3061_0nl.cpp
+34340  Issue_3061_3nl.cfg                   cpp/Issue_3061_1nl.cpp
+34341  Issue_3061_3nl.cfg                   cpp/Issue_3061_2nl.cpp
+
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
 10001  empty.cfg                            cpp/622_ifdef-indentation.cpp
