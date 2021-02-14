@@ -860,7 +860,8 @@ void tokenize_cleanup(void)
          {
             chunk_t *tmp = chunk_get_next_ncnl(next);
 
-            while (tmp && tmp->type != CT_PAREN_CLOSE)
+            while (  tmp != nullptr
+                  && tmp->type != CT_PAREN_CLOSE)
             {
                if (chunk_is_str(tmp, "in", 2))
                {
@@ -896,7 +897,8 @@ void tokenize_cleanup(void)
          // Fix self keyword back to word when mixing c++/objective-c
          if (  chunk_is_token(pc, CT_THIS)
             && !strcmp(pc->text(), "self")
-            && (chunk_is_token(next, CT_COMMA) || chunk_is_token(next, CT_PAREN_CLOSE)))
+            && (  chunk_is_token(next, CT_COMMA)
+               || chunk_is_token(next, CT_PAREN_CLOSE)))
          {
             set_chunk_type(pc, CT_WORD);
          }
@@ -1649,7 +1651,8 @@ static void mark_selectors_in_property_with_open_paren(chunk_t *open_paren)
 
    chunk_t *tmp = open_paren;
 
-   while (tmp && tmp->type != CT_PAREN_CLOSE)
+   while (  tmp != nullptr
+         && tmp->type != CT_PAREN_CLOSE)
    {
       if (  chunk_is_token(tmp, CT_WORD)
          && (  chunk_is_str(tmp, "setter", 6)
@@ -1657,7 +1660,7 @@ static void mark_selectors_in_property_with_open_paren(chunk_t *open_paren)
       {
          tmp = tmp->next;
 
-         while (  tmp
+         while (  tmp != nullptr
                && tmp->type != CT_COMMA
                && tmp->type != CT_PAREN_CLOSE)
          {
@@ -1683,7 +1686,8 @@ static void mark_attributes_in_property_with_open_paren(chunk_t *open_paren)
 
    chunk_t *tmp = open_paren;
 
-   while (tmp && tmp->type != CT_PAREN_CLOSE)
+   while (  tmp != nullptr
+         && tmp->type != CT_PAREN_CLOSE)
    {
       if (  (  chunk_is_token(tmp, CT_COMMA)
             || chunk_is_token(tmp, CT_PAREN_OPEN))

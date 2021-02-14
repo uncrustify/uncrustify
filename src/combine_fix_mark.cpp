@@ -1885,7 +1885,8 @@ void mark_function(chunk_t *pc)
       {
          tmp = chunk_get_prev_ncnlni(tmp);   // Issue #2279
       }
-      const bool is_extern = (tmp && tmp->str.equals("extern"));
+      const bool is_extern = (  tmp != nullptr
+                             && tmp->str.equals("extern"));
 
       /*
        * Scan the parameters looking for:

@@ -978,7 +978,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          tmp = set_paren_parent(tmp, pc->type);
       }
-      else if (chunk_is_token(tmp, CT_TSQUARE) || get_chunk_parent_type(tmp) == CT_OPERATOR)
+      else if (  chunk_is_token(tmp, CT_TSQUARE)
+              || get_chunk_parent_type(tmp) == CT_OPERATOR)
       {
          tmp = chunk_get_next_ncnl(tmp);
       }
@@ -1162,7 +1163,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
    // Check for stuff that can only occur at the start of an expression
    if (  pc->flags.test(PCF_EXPR_START)
-      || (prev->flags.test(PCF_EXPR_START) && get_chunk_parent_type(pc) == CT_OC_AT))
+      || (  prev->flags.test(PCF_EXPR_START)
+         && get_chunk_parent_type(pc) == CT_OC_AT))
    {
       // Change STAR, MINUS, and PLUS in the easy cases
       if (chunk_is_token(pc, CT_STAR))
@@ -2169,7 +2171,8 @@ static chunk_t *process_return(chunk_t *pc)
             return(semi);
          }
 
-         if (chunk_is_semicolon(semi) && pc->level == semi->level)
+         if (  chunk_is_semicolon(semi)
+            && pc->level == semi->level)
          {
             break;
          }
@@ -2184,7 +2187,8 @@ static chunk_t *process_return(chunk_t *pc)
             return(semi);
          }
 
-         if (chunk_is_semicolon(semi) && pc->level == semi->level)
+         if (  chunk_is_semicolon(semi)
+            && pc->level == semi->level)
          {
             break;
          }
@@ -2253,7 +2257,8 @@ void mark_comments(void)
 
       if (chunk_is_comment(cur))
       {
-         if (next_nl && prev_nl)
+         if (  next_nl
+            && prev_nl)
          {
             set_chunk_parent(cur, CT_COMMENT_WHOLE);
          }
@@ -2708,7 +2713,8 @@ static void handle_oc_class(chunk_t *pc)
             set_chunk_parent(tmp, CT_OC_CLASS);
          }
       }
-      else if (chunk_is_str(tmp, "-", 1) || chunk_is_str(tmp, "+", 1))
+      else if (  chunk_is_str(tmp, "-", 1)
+              || chunk_is_str(tmp, "+", 1))
       {
          as = angle_state_e::CLOSE;
 
@@ -3121,7 +3127,8 @@ static void handle_oc_message_send(chunk_t *os)
 
    chunk_t *cs = chunk_get_next(os);
 
-   while (cs != nullptr && cs->level > os->level)
+   while (  cs != nullptr
+         && cs->level > os->level)
    {
       cs = chunk_get_next(cs);
    }
@@ -3251,7 +3258,8 @@ static void handle_oc_message_send(chunk_t *os)
          {
             chunk_t *tcs = chunk_get_next_ncnl(tmp);
 
-            while (tcs != nullptr && tcs->level > tmp->level)
+            while (  tcs != nullptr
+                  && tcs->level > tmp->level)
             {
                tcs = chunk_get_next_ncnl(tcs);
             }
@@ -3569,7 +3577,8 @@ static void handle_cs_square_stmt(chunk_t *os)
 
    chunk_t *cs = chunk_get_next(os);
 
-   while (cs != nullptr && cs->level > os->level)
+   while (  cs != nullptr
+         && cs->level > os->level)
    {
       cs = chunk_get_next(cs);
    }
