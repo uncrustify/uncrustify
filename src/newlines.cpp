@@ -3965,8 +3965,17 @@ void newlines_cleanup_braces(bool first)
                nl_create_list_liner(pc);
                break;
             }
-            log_rule_B("nl_type_brace_init_lst");
-            newline_iarf_pair(chunk_get_prev_nnl(pc), pc, options::nl_type_brace_init_lst(), true);
+            prev = chunk_get_prev_nnl(pc);
+
+            if (  prev
+               && (  prev->type == CT_TYPE
+                  || prev->type == CT_WORD
+                  || prev->parent_type == CT_TEMPLATE
+                  || prev->parent_type == CT_DECLTYPE))
+            {
+               log_rule_B("nl_type_brace_init_lst");
+               newline_iarf_pair(prev, pc, options::nl_type_brace_init_lst(), true);
+            }
             break;
          }
 
