@@ -256,7 +256,8 @@ bool are_chunks_in_same_line(chunk_t *start, chunk_t *end)
       return(false);
    }
 
-   while (tmp != nullptr && tmp != end)
+   while (  tmp != nullptr
+         && tmp != end)
    {
       if (chunk_is_token(tmp, CT_NEWLINE))
       {
@@ -346,7 +347,8 @@ static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_
 
 static chunk_t *chunk_ppa_search(chunk_t *cur, const check_t check_fct, const bool cond)
 {
-   if (cur && !cur->flags.test(PCF_IN_PREPROC))
+   if (  cur != nullptr
+      && !cur->flags.test(PCF_IN_PREPROC))
    {
       // if not in preprocessor, do a regular search
       return(chunk_search(cur, check_fct, scope_e::ALL,
@@ -354,7 +356,8 @@ static chunk_t *chunk_ppa_search(chunk_t *cur, const check_t check_fct, const bo
    }
    chunk_t *pc = cur;
 
-   while (pc != nullptr && (pc = pc->next) != nullptr)
+   while (  pc != nullptr
+         && (pc = pc->next) != nullptr)
    {
       if (!pc->flags.test(PCF_IN_PREPROC))
       {
@@ -394,7 +397,8 @@ chunk_t *chunk_get_next(chunk_t *cur, scope_e scope)
    }
    chunk_t *pc = g_cl.GetNext(cur);
 
-   if (pc == nullptr || scope == scope_e::ALL)
+   if (  pc == nullptr
+      || scope == scope_e::ALL)
    {
       return(pc);
    }
@@ -410,7 +414,8 @@ chunk_t *chunk_get_next(chunk_t *cur, scope_e scope)
    }
 
    // Not in a preproc, skip any preproc
-   while (pc != nullptr && pc->flags.test(PCF_IN_PREPROC))
+   while (  pc != nullptr
+         && pc->flags.test(PCF_IN_PREPROC))
    {
       pc = g_cl.GetNext(pc);
    }
@@ -426,7 +431,8 @@ chunk_t *chunk_get_prev(chunk_t *cur, scope_e scope)
    }
    chunk_t *pc = g_cl.GetPrev(cur);
 
-   if (pc == nullptr || scope == scope_e::ALL)
+   if (  pc == nullptr
+      || scope == scope_e::ALL)
    {
       return(pc);
    }
@@ -442,7 +448,8 @@ chunk_t *chunk_get_prev(chunk_t *cur, scope_e scope)
    }
 
    // Not in a preproc, skip any preproc
-   while (pc != nullptr && pc->flags.test(PCF_IN_PREPROC))
+   while (  pc != nullptr
+         && pc->flags.test(PCF_IN_PREPROC))
    {
       pc = g_cl.GetPrev(pc);
    }
@@ -506,7 +513,8 @@ static void chunk_log(chunk_t *pc, const char *text)
 
       chunk_log_msg(pc, log, text);
 
-      if (prev != nullptr && next != nullptr)
+      if (  prev != nullptr
+         && next != nullptr)
       {
          chunk_log_msg(prev, log, " @ between");
          chunk_log_msg(next, log, " and");
@@ -698,7 +706,8 @@ chunk_t *chunk_first_on_line(chunk_t *pc)
 {
    chunk_t *first = pc;
 
-   while ((pc = chunk_get_prev(pc)) != nullptr && !chunk_is_newline(pc))
+   while (  (pc = chunk_get_prev(pc)) != nullptr
+         && !chunk_is_newline(pc))
    {
       first = pc;
    }
@@ -747,7 +756,8 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
    chunk_t *ref2 = chunk_get_prev(pc2);
 
    // Move the line started at pc2 before pc1
-   while (pc2 != nullptr && !chunk_is_newline(pc2))
+   while (  pc2 != nullptr
+         && !chunk_is_newline(pc2))
    {
       chunk_t *tmp = chunk_get_next(pc2);
       g_cl.Pop(pc2);
@@ -761,7 +771,8 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
     */
 
    // Now move the line started at pc1 after ref2
-   while (pc1 != nullptr && !chunk_is_newline(pc1))
+   while (  pc1 != nullptr
+         && !chunk_is_newline(pc1))
    {
       chunk_t *tmp = chunk_get_next(pc1);
       g_cl.Pop(pc1);
@@ -787,7 +798,8 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
     * pc1 and pc2 should be the newlines for their lines.
     * swap the chunks and the nl_count so that the spacing remains the same.
     */
-   if (pc1 != nullptr && pc2 != nullptr)
+   if (  pc1 != nullptr
+      && pc2 != nullptr)
    {
       size_t nl_count = pc1->nl_count;
 
@@ -956,7 +968,8 @@ static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const direction_e 
 
 chunk_t *chunk_get_next_ssq(chunk_t *cur)
 {
-   while (chunk_is_token(cur, CT_TSQUARE) || chunk_is_token(cur, CT_SQUARE_OPEN))
+   while (  chunk_is_token(cur, CT_TSQUARE)
+         || chunk_is_token(cur, CT_SQUARE_OPEN))
    {
       if (chunk_is_token(cur, CT_SQUARE_OPEN))
       {
@@ -970,7 +983,8 @@ chunk_t *chunk_get_next_ssq(chunk_t *cur)
 
 chunk_t *chunk_get_prev_ssq(chunk_t *cur)
 {
-   while (chunk_is_token(cur, CT_TSQUARE) || chunk_is_token(cur, CT_SQUARE_CLOSE))
+   while (  chunk_is_token(cur, CT_TSQUARE)
+         || chunk_is_token(cur, CT_SQUARE_CLOSE))
    {
       if (chunk_is_token(cur, CT_SQUARE_CLOSE))
       {

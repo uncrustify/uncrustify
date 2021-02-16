@@ -101,7 +101,8 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       }
 
       // Recurse if a brace set is found
-      if (chunk_is_token(pc, CT_BRACE_OPEN) || chunk_is_token(pc, CT_VBRACE_OPEN))
+      if (  chunk_is_token(pc, CT_BRACE_OPEN)
+         || chunk_is_token(pc, CT_VBRACE_OPEN))
       {
          size_t myspan;
          size_t mythresh;
@@ -146,7 +147,8 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       }
 
       // Done with this brace set?
-      if (chunk_is_token(pc, CT_BRACE_CLOSE) || chunk_is_token(pc, CT_VBRACE_CLOSE))
+      if (  chunk_is_token(pc, CT_BRACE_CLOSE)
+         || chunk_is_token(pc, CT_VBRACE_CLOSE))
       {
          pc = chunk_get_next(pc);
          break;

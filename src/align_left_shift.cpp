@@ -56,13 +56,15 @@ void align_left_shift(void)
       {
          as.NewLines(pc->nl_count);
       }
-      else if (start != nullptr && pc->level < start->level)
+      else if (  start != nullptr
+              && pc->level < start->level)
       {
          // A drop in level restarts the aligning
          as.Flush();
          start = nullptr;
       }
-      else if (start != nullptr && pc->level > start->level)
+      else if (  start != nullptr
+              && pc->level > start->level)
       {
          // Ignore any deeper levels when aligning
       }
@@ -91,7 +93,8 @@ void align_left_shift(void)
              */
             chunk_t *prev = chunk_get_prev(pc);
 
-            if (prev != nullptr && chunk_is_newline(prev))
+            if (  prev != nullptr
+               && chunk_is_newline(prev))
             {
                log_rule_B("indent_columns");
                indent_to_column(pc, pc->column_indent + options::indent_columns());
@@ -119,7 +122,8 @@ void align_left_shift(void)
           */
          chunk_t *prev = chunk_get_prev(pc);
 
-         if (prev != nullptr && chunk_is_newline(prev))
+         if (  prev != nullptr
+            && chunk_is_newline(prev))
          {
             log_rule_B("indent_columns");
             indent_to_column(pc, pc->column_indent + options::indent_columns());
