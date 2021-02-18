@@ -1678,7 +1678,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
    chunk_t *tmp;
    bool    do_insert;
 
-   for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnlnp(pc))
+   for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnnlnp(pc))
    {
       if (pc->type != type)
       {
@@ -1813,7 +1813,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
       else if (do_insert)
       {
          // Insert between after and ref
-         chunk_t *after = chunk_get_next_ncnl(ref);
+         chunk_t *after = chunk_get_next_ncnnl(ref);
          tokenize(fm.data, after);
 
          for (tmp = chunk_get_next(ref); tmp != after; tmp = chunk_get_next(tmp))
@@ -1832,7 +1832,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
    chunk_t *tmp;
    bool    do_insert;
 
-   for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnlnp(pc))
+   for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnnlnp(pc))
    {
       if (pc->type != type)
       {
@@ -1906,7 +1906,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
       if (do_insert)
       {
          // Insert between after and ref
-         chunk_t *after = chunk_get_next_ncnl(ref);
+         chunk_t *after = chunk_get_next_ncnnl(ref);
          tokenize(fm.data, after);
 
          for (tmp = chunk_get_next(ref); tmp != after; tmp = chunk_get_next(tmp))

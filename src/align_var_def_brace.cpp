@@ -60,7 +60,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
       mygap = options::align_var_def_gap();
    }
    // can't be any variable definitions in a "= {" block
-   chunk_t *prev = chunk_get_prev_ncnl(start);
+   chunk_t *prev = chunk_get_prev_ncnnl(start);
 
    if (chunk_is_token(prev, CT_ASSIGN))
    {
@@ -68,7 +68,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
               __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line);
 
       chunk_t *pc = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
-      return(chunk_get_next_ncnl(pc));
+      return(chunk_get_next_ncnnl(pc));
    }
    char copy[1000];
 
@@ -163,7 +163,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
             if (  get_chunk_parent_type(pc) == CT_OPERATOR
                && options::align_on_operator())
             {
-               toadd = chunk_get_prev_ncnl(pc);
+               toadd = chunk_get_prev_ncnnl(pc);
             }
             else
             {

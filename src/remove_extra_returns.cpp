@@ -65,7 +65,7 @@ void remove_extra_returns(void)
 
          if (remove_it)
          {
-            chunk_t *semicolon = chunk_get_next_ncnl(pc);
+            chunk_t *semicolon = chunk_get_next_ncnnl(pc);
 
             if (  semicolon != nullptr
                && chunk_is_token(semicolon, CT_SEMICOLON))

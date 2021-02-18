@@ -27,7 +27,7 @@ void do_parent_for_pp(void)
 
    chunk_t           *pc = chunk_get_head();
 
-   while ((pc = chunk_get_next_ncnl(pc)) != nullptr)
+   while ((pc = chunk_get_next_ncnnl(pc)) != nullptr)
    {
       // CT_PP_IF,            // #if, #ifdef, or #ifndef
       // CT_PP_ELSE,          // #else or #elif

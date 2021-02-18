@@ -17,16 +17,16 @@ chunk_t *skip_align(chunk_t *start)
 
    if (chunk_is_token(pc, CT_ALIGN))
    {
-      pc = chunk_get_next_ncnl(pc);
+      pc = chunk_get_next_ncnnl(pc);
 
       if (chunk_is_token(pc, CT_PAREN_OPEN))
       {
          pc = chunk_get_next_type(pc, CT_PAREN_CLOSE, pc->level);
-         pc = chunk_get_next_ncnl(pc);
+         pc = chunk_get_next_ncnnl(pc);
 
          if (chunk_is_token(pc, CT_COLON))
          {
-            pc = chunk_get_next_ncnl(pc);
+            pc = chunk_get_next_ncnnl(pc);
          }
       }
    }
@@ -36,13 +36,13 @@ chunk_t *skip_align(chunk_t *start)
 
 chunk_t *skip_expression(chunk_t *pc)
 {
-   return(chunk_get_next_ncnl(skip_to_expression_end(pc)));
+   return(chunk_get_next_ncnnl(skip_to_expression_end(pc)));
 }
 
 
 chunk_t *skip_expression_rev(chunk_t *pc)
 {
-   return(chunk_get_prev_ncnlni(skip_to_expression_start(pc)));
+   return(chunk_get_prev_ncnnlni(skip_to_expression_start(pc)));
 }
 
 
@@ -90,13 +90,13 @@ static chunk_t *skip_to_expression_edge(chunk_t *pc, chunk_t *(*chunk_get_next)(
 
 chunk_t *skip_to_expression_end(chunk_t *pc)
 {
-   return(skip_to_expression_edge(pc, chunk_get_next_ncnl));
+   return(skip_to_expression_edge(pc, chunk_get_next_ncnnl));
 }
 
 
 chunk_t *skip_to_expression_start(chunk_t *pc)
 {
-   return(skip_to_expression_edge(pc, chunk_get_prev_ncnlni));
+   return(skip_to_expression_edge(pc, chunk_get_prev_ncnnlni));
 }
 
 
@@ -107,7 +107,7 @@ chunk_t *skip_to_next_statement(chunk_t *pc)
          && chunk_is_not_token(pc, CT_BRACE_OPEN)
          && chunk_is_not_token(pc, CT_BRACE_CLOSE))
    {
-      pc = chunk_get_next_ncnl(pc);
+      pc = chunk_get_next_ncnnl(pc);
    }
    return(pc);
 }
@@ -115,14 +115,14 @@ chunk_t *skip_to_next_statement(chunk_t *pc)
 
 chunk_t *skip_parent_types(chunk_t *colon)
 {
-   auto pc = chunk_get_next_ncnlnp(colon);
+   auto pc = chunk_get_next_ncnnlnp(colon);
 
    while (pc)
    {
       // Skip access specifier
       if (chunk_is_token(pc, CT_ACCESS))
       {
-         pc = chunk_get_next_ncnlnp(pc);
+         pc = chunk_get_next_ncnnlnp(pc);
          continue;
       }
 
@@ -138,12 +138,12 @@ chunk_t *skip_parent_types(chunk_t *colon)
          return(colon);
       }
       // Get next token
-      auto next = skip_template_next(chunk_get_next_ncnlnp(pc));
+      auto next = skip_template_next(chunk_get_next_ncnnlnp(pc));
 
       if (  chunk_is_token(next, CT_DC_MEMBER)
          || chunk_is_token(next, CT_COMMA))
       {
-         pc = chunk_get_next_ncnlnp(next);
+         pc = chunk_get_next_ncnnlnp(next);
       }
       else if (next)
       {
@@ -167,7 +167,7 @@ chunk_t *skip_template_prev(chunk_t *ang_close)
    if (chunk_is_token(ang_close, CT_ANGLE_CLOSE))
    {
       chunk_t *pc = chunk_get_prev_type(ang_close, CT_ANGLE_OPEN, ang_close->level);
-      return(chunk_get_prev_ncnlni(pc));   // Issue #2279
+      return(chunk_get_prev_ncnnlni(pc));   // Issue #2279
    }
    return(ang_close);
 }
@@ -190,7 +190,7 @@ chunk_t *skip_attribute(chunk_t *attr)
 
    while (chunk_is_token(pc, CT_ATTRIBUTE))
    {
-      pc = chunk_get_next_ncnl(pc);
+      pc = chunk_get_next_ncnnl(pc);
 
       if (chunk_is_token(pc, CT_FPAREN_OPEN))
       {
@@ -208,7 +208,7 @@ chunk_t *skip_attribute_next(chunk_t *attr)
    if (  next != attr
       && chunk_is_token(next, CT_FPAREN_CLOSE))
    {
-      attr = chunk_get_next_ncnl(next);
+      attr = chunk_get_next_ncnnl(next);
    }
    return(attr);
 }
@@ -229,7 +229,7 @@ chunk_t *skip_attribute_prev(chunk_t *fp_close)
       {
          break;
       }
-      pc = chunk_get_prev_ncnlni(pc);   // Issue #2279
+      pc = chunk_get_prev_ncnnlni(pc);   // Issue #2279
    }
    return(pc);
 }
@@ -239,7 +239,7 @@ chunk_t *skip_declspec(chunk_t *pc)
 {
    if (chunk_is_token(pc, CT_DECLSPEC))
    {
-      pc = chunk_get_next_ncnl(pc);
+      pc = chunk_get_next_ncnnl(pc);
 
       if (chunk_is_token(pc, CT_PAREN_OPEN))
       {
@@ -257,7 +257,7 @@ chunk_t *skip_declspec_next(chunk_t *pc)
    if (  next != pc
       && chunk_is_token(next, CT_PAREN_CLOSE))
    {
-      pc = chunk_get_next_ncnl(next);
+      pc = chunk_get_next_ncnnl(next);
    }
    return(pc);
 }
@@ -269,11 +269,11 @@ chunk_t *skip_declspec_prev(chunk_t *pc)
       && get_chunk_parent_type(pc) == CT_DECLSPEC)
    {
       pc = chunk_skip_to_match_rev(pc);
-      pc = chunk_get_prev_ncnlni(pc);
+      pc = chunk_get_prev_ncnnlni(pc);
 
       if (chunk_is_token(pc, CT_DECLSPEC))
       {
-         pc = chunk_get_prev_ncnlni(pc);
+         pc = chunk_get_prev_ncnnlni(pc);
       }
    }
    return(pc);
@@ -295,7 +295,7 @@ chunk_t *skip_matching_brace_bracket_paren_next(chunk_t *pc)
           * retrieve the subsequent chunk
           */
 
-         pc = chunk_get_next_ncnl(pc);
+         pc = chunk_get_next_ncnnl(pc);
       }
    }
    return(pc);
@@ -317,7 +317,7 @@ chunk_t *skip_to_chunk_before_matching_brace_bracket_paren_rev(chunk_t *pc)
           * retrieve the preceding chunk
           */
 
-         pc = chunk_get_prev_ncnlni(pc);
+         pc = chunk_get_prev_ncnnlni(pc);
       }
    }
    return(pc);

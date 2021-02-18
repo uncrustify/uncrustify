@@ -733,7 +733,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  chunk_is_token(tmp, CT_PTR_TYPE)
          || chunk_is_token(tmp, CT_BYREF))
       {
-         tmp = chunk_get_prev_ncnl(tmp);
+         tmp = chunk_get_prev_ncnnl(tmp);
       }
 
       if (  chunk_is_token(tmp, CT_TYPE)
@@ -1293,7 +1293,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  chunk_is_token(second, CT_FPAREN_OPEN)
          || chunk_is_token(second, CT_PAREN_OPEN))
       {
-         chunk_t *next = chunk_get_next_ncnl(second);
+         chunk_t *next = chunk_get_next_ncnnl(second);
 
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
@@ -1458,7 +1458,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  (options::sp_after_operator_sym_empty() != IARF_IGNORE)
          && chunk_is_token(second, CT_FPAREN_OPEN))
       {
-         chunk_t *next = chunk_get_next_ncnl(second);
+         chunk_t *next = chunk_get_next_ncnnl(second);
 
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
@@ -1501,7 +1501,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  (options::sp_func_call_paren_empty() != IARF_IGNORE)
          && chunk_is_token(second, CT_FPAREN_OPEN))
       {
-         chunk_t *next = chunk_get_next_ncnl(second);
+         chunk_t *next = chunk_get_next_ncnnl(second);
 
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
@@ -1539,7 +1539,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  (options::sp_func_def_paren_empty() != IARF_IGNORE)
          && chunk_is_token(second, CT_FPAREN_OPEN))
       {
-         chunk_t *next = chunk_get_next_ncnl(second);
+         chunk_t *next = chunk_get_next_ncnnl(second);
 
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
@@ -1615,7 +1615,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  (options::sp_func_proto_paren_empty() != IARF_IGNORE)
          && chunk_is_token(second, CT_FPAREN_OPEN))
       {
-         chunk_t *next = chunk_get_next_ncnl(second);
+         chunk_t *next = chunk_get_next_ncnnl(second);
 
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
@@ -1645,7 +1645,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  (options::sp_func_class_paren_empty() != IARF_IGNORE)
          && chunk_is_token(second, CT_FPAREN_OPEN))
       {
-         chunk_t *next = chunk_get_next_ncnl(second);
+         chunk_t *next = chunk_get_next_ncnnl(second);
 
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
@@ -1726,7 +1726,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          || get_chunk_parent_type(second) == CT_UNION)
       {
          // Fix for issue #1240  adding space in struct initializers
-         chunk_t *tmp = chunk_get_prev_ncnl(chunk_skip_to_match_rev(second));
+         chunk_t *tmp = chunk_get_prev_ncnnl(chunk_skip_to_match_rev(second));
 
          if (chunk_is_token(tmp, CT_ASSIGN))
          {
@@ -1866,7 +1866,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (get_chunk_parent_type(first) == CT_FUNC_CALL)
       {
          chunk_t *tmp = chunk_get_prev_type(first, get_chunk_parent_type(first), first->level);
-         tmp = chunk_get_prev_ncnl(tmp);
+         tmp = chunk_get_prev_ncnnl(tmp);
 
          if (chunk_is_token(tmp, CT_NEW))
          {
@@ -2622,7 +2622,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          || get_chunk_parent_type(first) == CT_UNION)
       {
          // Fix for issue #1240  adding space in struct initializers
-         chunk_t *tmp = chunk_get_prev_ncnl(first);
+         chunk_t *tmp = chunk_get_prev_ncnnl(first);
 
          if (chunk_is_token(tmp, CT_ASSIGN))
          {
