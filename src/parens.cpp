@@ -58,7 +58,7 @@ void do_parens(void)
    {
       chunk_t *pc = chunk_get_head();
 
-      while ((pc = chunk_get_next_ncnl(pc)) != nullptr)
+      while ((pc = chunk_get_next_ncnnl(pc)) != nullptr)
       {
          if (  pc->type != CT_SPAREN_OPEN
             || (  get_chunk_parent_type(pc) != CT_IF
@@ -90,7 +90,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
            last->text(), last->level);
 
    // Don't do anything if we have a bad sequence, ie "&& )"
-   chunk_t *first_n = chunk_get_next_ncnl(first);
+   chunk_t *first_n = chunk_get_next_ncnnl(first);
 
    if (first_n == last)
    {
@@ -109,7 +109,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
 
    chunk_add_before(&pc, first_n);
 
-   chunk_t *last_p = chunk_get_prev_ncnl(last, scope_e::PREPROC);
+   chunk_t *last_p = chunk_get_prev_ncnnl(last, scope_e::PREPROC);
 
    set_chunk_type(&pc, CT_PAREN_CLOSE);
    pc.orig_line   = last_p->orig_line;
@@ -124,7 +124,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
 
    for (chunk_t *tmp = first_n;
         tmp != last_p;
-        tmp = chunk_get_next_ncnl(tmp))
+        tmp = chunk_get_next_ncnnl(tmp))
    {
       tmp->level++;
    }
@@ -148,7 +148,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
 
    chunk_t *pc = popen;
 
-   while (  (pc = chunk_get_next_ncnl(pc)) != nullptr
+   while (  (pc = chunk_get_next_ncnnl(pc)) != nullptr
          && pc != pclose)
    {
       if (pc->flags.test(PCF_IN_PREPROC))

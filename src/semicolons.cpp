@@ -51,12 +51,12 @@ void remove_extra_semicolons(void)
 
    while (pc != nullptr)
    {
-      chunk_t *next = chunk_get_next_ncnl(pc);
+      chunk_t *next = chunk_get_next_ncnnl(pc);
       chunk_t *prev;
 
       if (  chunk_is_token(pc, CT_SEMICOLON)
          && !pc->flags.test(PCF_IN_PREPROC)
-         && (prev = chunk_get_prev_ncnl(pc)) != nullptr)
+         && (prev = chunk_get_prev_ncnnl(pc)) != nullptr)
       {
          LOG_FMT(LSCANSEMI, "%s(%d): Semi orig_line is %zu, orig_col is %zu, parent is %s, prev = '%s' [%s/%s]\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(get_chunk_parent_type(pc)),
@@ -119,7 +119,7 @@ static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close)
    LOG_FUNC_ENTRY();
    chunk_t *pc = chunk_get_prev_type(brace_close, CT_BRACE_OPEN, brace_close->level);
 
-   pc = chunk_get_prev_ncnl(pc);
+   pc = chunk_get_prev_ncnnl(pc);
 
    if (  pc != nullptr
       && pc->type != CT_RETURN

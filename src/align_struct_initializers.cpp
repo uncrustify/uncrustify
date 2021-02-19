@@ -20,7 +20,7 @@ void align_struct_initializers(void)
 
    while (pc != nullptr)
    {
-      chunk_t *prev = chunk_get_prev_ncnl(pc);
+      chunk_t *prev = chunk_get_prev_ncnnl(pc);
 
       if (  chunk_is_token(prev, CT_ASSIGN)
          && (  chunk_is_token(pc, CT_BRACE_OPEN)

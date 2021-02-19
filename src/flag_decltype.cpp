@@ -14,7 +14,7 @@ bool flag_cpp_decltype(chunk_t *pc)
 
    if (chunk_is_token(pc, CT_DECLTYPE))
    {
-      auto paren_open = chunk_get_next_ncnl(pc);
+      auto paren_open = chunk_get_next_ncnnl(pc);
 
       if (chunk_is_token(paren_open, CT_PAREN_OPEN))
       {

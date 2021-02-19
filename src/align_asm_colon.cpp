@@ -33,7 +33,7 @@ void align_asm_colon(void)
       }
       cas.Reset();
 
-      pc = chunk_get_next_ncnl(pc, scope_e::PREPROC);
+      pc = chunk_get_next_ncnnl(pc, scope_e::PREPROC);
       size_t level = pc ? pc->level : 0;
       did_nl = true;
 

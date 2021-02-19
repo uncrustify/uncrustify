@@ -516,7 +516,7 @@ static std::tuple<chunk_t *, chunk_t *, chunk_t *> match_variable(chunk_t *pc, s
    if (  identifier != nullptr
       && start != nullptr
       && (  end != nullptr
-         || chunk_is_token(chunk_get_prev_ncnlni(identifier), CT_WORD)))
+         || chunk_is_token(chunk_get_prev_ncnnlni(identifier), CT_WORD)))
    {
       return(std::make_tuple(start, identifier, end));
    }
@@ -568,7 +568,7 @@ static std::pair<chunk_t *, chunk_t *> match_variable_end(chunk_t *pc, std::size
       while (  pc != nullptr
             && pc->level > level)
       {
-         pc = chunk_get_next_ncnl(pc);
+         pc = chunk_get_next_ncnnl(pc);
       }
 
       /**
@@ -587,7 +587,7 @@ static std::pair<chunk_t *, chunk_t *> match_variable_end(chunk_t *pc, std::size
        * matching a variable declaration/definition
        */
 
-      chunk_t *next = chunk_get_next_ncnl(pc);
+      chunk_t *next = chunk_get_next_ncnnl(pc);
 
       if (  chunk_is_not_token(next, CT_COMMA)
          && chunk_is_not_token(next, CT_FPAREN_CLOSE)
@@ -662,7 +662,7 @@ static std::pair<chunk_t *, chunk_t *> match_variable_start(chunk_t *pc, std::si
             && pc != prev)
       {
          next = prev;
-         prev = chunk_get_prev_ncnlni(next);
+         prev = chunk_get_prev_ncnnlni(next);
 
          if (chunk_is_token(next, CT_ASSIGN))
          {
@@ -676,7 +676,7 @@ static std::pair<chunk_t *, chunk_t *> match_variable_start(chunk_t *pc, std::si
       while (  pc != nullptr
             && pc->level > level)
       {
-         pc = chunk_get_prev_ncnlni(pc);
+         pc = chunk_get_prev_ncnnlni(pc);
       }
 
       /**
@@ -695,7 +695,7 @@ static std::pair<chunk_t *, chunk_t *> match_variable_start(chunk_t *pc, std::si
        * matching a variable declaration/definition
        */
 
-      prev = chunk_get_prev_ncnlni(pc);
+      prev = chunk_get_prev_ncnnlni(pc);
 
       if (!adj_tokens_match_var_def_pattern(prev, pc))
       {
@@ -769,7 +769,7 @@ static chunk_t *skip_scope_resolution_and_nested_name_specifiers(chunk_t *pc)
          {
             pc = chunk_skip_to_match(pc, scope_e::PREPROC);
          }
-         auto *next = chunk_get_next_ncnl(pc);
+         auto *next = chunk_get_next_ncnnl(pc);
 
          /**
           * call a separate function to validate adjacent tokens as potentially
@@ -810,7 +810,7 @@ static chunk_t *skip_scope_resolution_and_nested_name_specifiers_rev(chunk_t *pc
          {
             pc = chunk_skip_to_match_rev(pc, scope_e::PREPROC);
          }
-         auto *prev = chunk_get_prev_ncnlni(pc);
+         auto *prev = chunk_get_prev_ncnnlni(pc);
 
          /**
           * call a separate function to validate adjacent tokens as potentially
@@ -897,14 +897,14 @@ void EnumStructUnionParser::analyze_identifiers()
       }
    }
 
-   if (chunk_get_next_ncnl(pc) == m_end)
+   if (chunk_get_next_ncnnl(pc) == m_end)
    {
       /**
        * we're likely at the end of a class/enum/struct/union body which lacks
        * any trailing inline definitions
        */
 
-      pc = chunk_get_next_ncnl(m_end);
+      pc = chunk_get_next_ncnnl(m_end);
    }
 
    if (  type_identified()
@@ -916,7 +916,7 @@ void EnumStructUnionParser::analyze_identifiers()
        * by one more so that we don't perform a variable identifier search
        * below
        */
-      pc = chunk_get_next_ncnl(pc);
+      pc = chunk_get_next_ncnnl(pc);
    }
 
    if (body_end != nullptr)
@@ -973,7 +973,7 @@ void EnumStructUnionParser::analyze_identifiers()
       {
          pc = end;
       }
-      pc = chunk_get_next_ncnl(pc);
+      pc = chunk_get_next_ncnnl(pc);
 
       /**
        * skip any right-hand side assignments
@@ -991,7 +991,7 @@ void EnumStructUnionParser::analyze_identifiers()
             && !pc->flags.test_any(PCF_IN_FCN_DEF | PCF_IN_FCN_CALL | PCF_IN_TEMPLATE)
             && !chunk_is_between(pc, inheritance_start, body_start)))
       {
-         pc = chunk_get_next_ncnl(pc);
+         pc = chunk_get_next_ncnnl(pc);
       }
    }
    /**
@@ -1436,7 +1436,7 @@ void EnumStructUnionParser::mark_base_classes(chunk_t *pc)
        */
       pc->flags &= ~PCF_VAR_TYPE;
 
-      chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
+      chunk_t *next = chunk_get_next_ncnnl(pc, scope_e::PREPROC);
 
       if (chunk_is_token(next, CT_DC_MEMBER))
       {
@@ -1613,7 +1613,7 @@ void EnumStructUnionParser::mark_constructors()
       {
          chunk_flags_set(prev, PCF_IN_CLASS);
 
-         next = chunk_get_next_ncnl(prev, scope_e::PREPROC);
+         next = chunk_get_next_ncnnl(prev, scope_e::PREPROC);
 
          /**
           * find a chunk within the class/struct body that
@@ -1651,7 +1651,7 @@ void EnumStructUnionParser::mark_enum_integral_type(chunk_t *colon)
    set_chunk_parent(colon, m_start->type);
 
    auto *body_start = get_body_start();
-   auto *pc         = chunk_get_next_ncnl(colon);
+   auto *pc         = chunk_get_next_ncnnl(colon);
 
    /**
     * the chunk(s) between the colon and opening
@@ -1674,7 +1674,7 @@ void EnumStructUnionParser::mark_enum_integral_type(chunk_t *colon)
       set_chunk_type(pc, CT_TYPE);
       set_chunk_parent(pc, colon->type);
 
-      pc = chunk_get_next_ncnl(pc);
+      pc = chunk_get_next_ncnnl(pc);
    }
 } // EnumStructUnionParser::mark_enum_integral_type
 
@@ -1699,7 +1699,7 @@ void EnumStructUnionParser::mark_extracorporeal_lvalues()
    {
       while (true)
       {
-         prev = chunk_get_prev_ncnlni(next);
+         prev = chunk_get_prev_ncnnlni(next);
 
          if (  prev == nullptr
             || (  !prev->flags.test(PCF_IN_TEMPLATE)
@@ -1728,7 +1728,7 @@ void EnumStructUnionParser::mark_extracorporeal_lvalues()
          chunk_flags_set(prev, PCF_LVALUE);
       }
       prev = next;
-      next = chunk_get_next_ncnl(next);
+      next = chunk_get_next_ncnnl(next);
    }
 } // EnumStructUnionParser::mark_extracorporeal_lavlues
 
@@ -1741,7 +1741,7 @@ void EnumStructUnionParser::mark_nested_name_specifiers(chunk_t *pc)
    auto start          = start_end_pair.first;
    auto end            = start_end_pair.second;
 
-   for (pc = start; chunk_is_between(pc, start, end); pc = chunk_get_next_ncnl(pc))
+   for (pc = start; chunk_is_between(pc, start, end); pc = chunk_get_next_ncnnl(pc))
    {
       if (chunk_is_token(pc, CT_WORD))
       {
@@ -1749,7 +1749,7 @@ void EnumStructUnionParser::mark_nested_name_specifiers(chunk_t *pc)
           * if the next token is an opening angle, then we can safely
           * mark the current identifier as a type
           */
-         auto *next = chunk_get_next_ncnl(pc);
+         auto *next = chunk_get_next_ncnnl(pc);
 
          if (chunk_is_token(next, CT_ANGLE_OPEN))
          {
@@ -1798,7 +1798,7 @@ void EnumStructUnionParser::mark_pointer_types(chunk_t *pc)
       do
       {
          // TODO: should there be a CT_BYREF_TYPE?
-         pc = chunk_get_prev_ncnlni(pc);
+         pc = chunk_get_prev_ncnnlni(pc);
 
          if (chunk_is_ptr_operator(pc))
          {
@@ -1863,7 +1863,7 @@ void EnumStructUnionParser::mark_template_args(chunk_t *start, chunk_t *end) con
 
       while (true)
       {
-         next = chunk_get_next_ncnl(next);
+         next = chunk_get_next_ncnnl(next);
 
          if (next == end)
          {
@@ -1894,7 +1894,7 @@ void EnumStructUnionParser::mark_type(chunk_t *pc)
       {
          make_type(pc);
          set_chunk_parent(pc, m_start->type);
-         pc = chunk_get_next_ncnl(pc, scope_e::PREPROC);
+         pc = chunk_get_next_ncnnl(pc, scope_e::PREPROC);
       } while (chunk_is_pointer_or_reference(pc));
    }
 } // EnumStructUnionParser::mark_type
@@ -1944,7 +1944,7 @@ void EnumStructUnionParser::mark_where_clause(chunk_t *where)
 
    pcf_flags_t flags;
 
-   for (auto *pc = where_start; pc != where_end; pc = chunk_get_next_ncnl(pc))
+   for (auto *pc = where_start; pc != where_end; pc = chunk_get_next_ncnnl(pc))
    {
       flags = mark_where_chunk(pc, m_start->type, flags);
    }
@@ -1985,7 +1985,7 @@ void EnumStructUnionParser::parse(chunk_t *pc)
       return;
    }
    chunk_t *prev = m_start;
-   chunk_t *next = chunk_get_next_ncnl(prev);
+   chunk_t *next = chunk_get_next_ncnnl(prev);
 
    /**
     * the enum-key might be enum, enum class or enum struct
@@ -1993,11 +1993,11 @@ void EnumStructUnionParser::parse(chunk_t *pc)
    if (chunk_is_enum(next))
    {
       prev = next;
-      next = chunk_get_next_ncnl(prev);
+      next = chunk_get_next_ncnnl(prev);
    }
    else if (chunk_is_enum(prev))
    {
-      auto *prev_prev = chunk_get_prev_ncnlni(prev);
+      auto *prev_prev = chunk_get_prev_ncnnlni(prev);
 
       if (  chunk_is_enum(prev_prev)
          && chunk_is_enum(prev))
@@ -2085,7 +2085,7 @@ void EnumStructUnionParser::parse(chunk_t *pc)
 
       do
       {
-         next = chunk_get_next_ncnl(next);
+         next = chunk_get_next_ncnnl(next);
       } while (  next != nullptr
               && next->level > m_start->level);
    }
@@ -2144,7 +2144,7 @@ chunk_t *EnumStructUnionParser::parse_angles(chunk_t *angle_open)
           * check to make sure that the template is the final chunk in a list
           * of scope-resolution qualifications
           */
-         auto *next = chunk_get_next_ncnl(angle_close);
+         auto *next = chunk_get_next_ncnnl(angle_close);
 
          if (chunk_is_not_token(next, CT_DC_MEMBER))
          {
@@ -2155,7 +2155,7 @@ chunk_t *EnumStructUnionParser::parse_angles(chunk_t *angle_open)
              * bracket should be preceded by a CT_WORD token and we should have
              * found a closing angle bracket
              */
-            auto *prev = chunk_get_prev_ncnlni(angle_open);
+            auto *prev = chunk_get_prev_ncnnlni(angle_open);
 
             if (chunk_is_not_token(prev, CT_WORD))
             {
@@ -2222,7 +2222,7 @@ chunk_t *EnumStructUnionParser::parse_braces(chunk_t *brace_open)
 
       auto *enum_base_start   = get_enum_base_start();
       auto *inheritance_start = get_inheritance_start();
-      auto *prev              = chunk_get_prev_ncnlni(pc);
+      auto *prev              = chunk_get_prev_ncnnlni(pc);
 
       /**
        * check to see if the open brace was preceded by a closing paren;
@@ -2395,7 +2395,7 @@ chunk_t *EnumStructUnionParser::refine_end_chunk(chunk_t *pc)
        * the terminating chunk is located. For instance, see operator.cpp and
        * enum_comma.h for examples of offenders
        */
-      auto *next = chunk_get_next_ncnl(pc);
+      auto *next = chunk_get_next_ncnnl(pc);
 
       while (true)
       {
@@ -2412,7 +2412,7 @@ chunk_t *EnumStructUnionParser::refine_end_chunk(chunk_t *pc)
              */
             if (chunk_is_token(next, CT_COMMA))
             {
-               next = chunk_get_next_ncnl(next);
+               next = chunk_get_next_ncnnl(next);
             }
             auto match       = match_variable(next, m_start->level);
             auto *start      = std::get<0>(match);
@@ -2427,7 +2427,7 @@ chunk_t *EnumStructUnionParser::refine_end_chunk(chunk_t *pc)
             }
             else
             {
-               pc = chunk_get_next_ncnl(end);
+               pc = chunk_get_next_ncnnl(end);
 
                /**
                 * skip any right-hand side assignments
@@ -2566,7 +2566,7 @@ chunk_t *EnumStructUnionParser::try_find_end_chunk(chunk_t *pc)
 
       do
       {
-         pc = chunk_get_next_ncnl(pc, scope_e::PREPROC);
+         pc = chunk_get_next_ncnnl(pc, scope_e::PREPROC);
       } while (  pc != nullptr
               && pc->level > m_start->level);
    } while (!is_potential_end_chunk(pc));
@@ -2623,7 +2623,7 @@ void EnumStructUnionParser::try_post_identify_macro_calls()
             }
          }
          prev = pc;
-         pc   = chunk_get_next_ncnl(prev);
+         pc   = chunk_get_next_ncnnl(prev);
       } while (chunk_is_between(pc, m_start, m_end));
    }
 } // EnumStructUnionParser::try_post_identify_macro_calls
@@ -2667,7 +2667,7 @@ void EnumStructUnionParser::try_post_identify_type()
          {
             type = skip_template_prev(pc);
          }
-         pc = chunk_get_next_ncnl(pc);
+         pc = chunk_get_next_ncnnl(pc);
       } while (chunk_is_between(pc, m_start, m_end));
 
       if (type != nullptr)
@@ -2723,7 +2723,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
 
    if (pc == nullptr)
    {
-      chunk_t *next = chunk_get_next_ncnl(m_start);
+      chunk_t *next = chunk_get_next_ncnnl(m_start);
 
       /**
        * in case it's a qualified identifier, skip scope-resolution and
@@ -2731,7 +2731,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
        */
       next = skip_scope_resolution_and_nested_name_specifiers(next);
 
-      chunk_t *next_next = chunk_get_next_ncnl(next);
+      chunk_t *next_next = chunk_get_next_ncnnl(next);
 
       /**
        * in case it's a qualified identifier, skip scope-resolution and
@@ -2753,7 +2753,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
       else if (  next != nullptr
               && chunk_is_token(next, CT_WORD)
               && chunk_is_token(next_next, CT_WORD)
-              && chunk_get_prev_ncnlni(m_end) == next_next)
+              && chunk_get_prev_ncnnlni(m_end) == next_next)
       {
          /**
           * check to see if we've got a macro reference preceding the last word chunk;
@@ -2785,7 +2785,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
                && !chunk_is_semicolon(next))
          {
             prev = next;
-            next = chunk_get_next_ncnl(next);
+            next = chunk_get_next_ncnnl(next);
 
             /**
              * in case it's a qualified identifier, skip scope-resolution and
@@ -2810,19 +2810,19 @@ bool EnumStructUnionParser::try_pre_identify_type()
        * the chunk preceding the previously selected chunk should indicate the type
        */
 
-      pc = chunk_get_prev_ncnlni(pc, scope_e::PREPROC);
+      pc = chunk_get_prev_ncnnlni(pc, scope_e::PREPROC);
 
       if (  chunk_is_token(pc, CT_QUALIFIER)
          && std::strncmp(pc->str.c_str(), "final", 5) == 0)
       {
-         pc = chunk_get_prev_ncnlni(pc, scope_e::PREPROC);
+         pc = chunk_get_prev_ncnnlni(pc, scope_e::PREPROC);
       }
 
       if (  language_is_set(LANG_D)
          && chunk_is_paren_close(pc))
       {
          pc = chunk_skip_to_match_rev(pc);
-         pc = chunk_get_prev_ncnlni(pc);
+         pc = chunk_get_prev_ncnnlni(pc);
       }
 
       if (chunk_is_token(pc, CT_WORD))

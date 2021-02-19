@@ -151,7 +151,7 @@ void align_func_proto(size_t span)
          if (  get_chunk_parent_type(pc) == CT_OPERATOR
             && options::align_on_operator())
          {
-            toadd = chunk_get_prev_ncnl(pc);
+            toadd = chunk_get_prev_ncnnl(pc);
          }
          else
          {

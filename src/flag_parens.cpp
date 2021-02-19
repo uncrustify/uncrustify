@@ -67,5 +67,5 @@ chunk_t *flag_parens(chunk_t *po, pcf_flags_t flags, c_token_t opentype, c_token
          set_chunk_parent(paren_close, parenttype);
       }
    }
-   return(chunk_get_next_ncnl(paren_close, scope_e::PREPROC));
+   return(chunk_get_next_ncnnl(paren_close, scope_e::PREPROC));
 } // flag_parens

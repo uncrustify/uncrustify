@@ -591,25 +591,25 @@ chunk_t *chunk_get_prev_nnl(chunk_t *cur, scope_e scope)
 }
 
 
-chunk_t *chunk_get_next_ncnl(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_next_ncnnl(chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_comment_or_newline, scope, direction_e::FORWARD, false));
 }
 
 
-chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_next_ncnnlnp(chunk_t *cur, scope_e scope)
 {
    return(chunk_get_ncnlnp(cur, scope, direction_e::FORWARD));
 }
 
 
-chunk_t *chunk_ppa_get_next_ncnl(chunk_t *cur)
+chunk_t *chunk_ppa_get_next_ncnnl(chunk_t *cur)
 {
    return(chunk_ppa_search(cur, chunk_is_comment_or_newline, false));
 }
 
 
-chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_prev_ncnnlnp(chunk_t *cur, scope_e scope)
 {
    return(chunk_get_ncnlnp(cur, scope, direction_e::BACKWARD));
 }
@@ -639,13 +639,13 @@ chunk_t *chunk_get_next_nisq(chunk_t *cur, scope_e scope)
 }
 
 
-chunk_t *chunk_get_prev_ncnl(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_prev_ncnnl(chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_comment_or_newline, scope, direction_e::BACKWARD, false));
 }
 
 
-chunk_t *chunk_get_prev_ncnlni(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_prev_ncnnlni(chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_comment_or_newline_or_ignored, scope, direction_e::BACKWARD, false));
 }
@@ -975,7 +975,7 @@ chunk_t *chunk_get_next_ssq(chunk_t *cur)
       {
          cur = chunk_skip_to_match(cur);
       }
-      cur = chunk_get_next_ncnl(cur);
+      cur = chunk_get_next_ncnnl(cur);
    }
    return(cur);
 }
@@ -990,7 +990,7 @@ chunk_t *chunk_get_prev_ssq(chunk_t *cur)
       {
          cur = chunk_skip_to_match_rev(cur);
       }
-      cur = chunk_get_prev_ncnl(cur);
+      cur = chunk_get_prev_ncnnl(cur);
    }
    return(cur);
 }
@@ -1021,7 +1021,7 @@ static chunk_t *chunk_skip_dc_member(chunk_t *start, scope_e scope, direction_e 
       return(nullptr);
    }
    const auto step_fcn = (dir == direction_e::FORWARD)
-                         ? chunk_get_next_ncnl : chunk_get_prev_ncnl;
+                         ? chunk_get_next_ncnnl : chunk_get_prev_ncnnl;
 
    chunk_t *pc   = start;
    chunk_t *next = chunk_is_token(pc, CT_DC_MEMBER) ? pc : step_fcn(pc, scope);

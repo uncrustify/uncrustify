@@ -123,7 +123,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
             log_rule_B("align_assign_thresh");
             mythresh = options::align_assign_thresh();
          }
-         pc = align_assign(chunk_get_next_ncnl(pc), myspan, mythresh, &sub_nl_count);
+         pc = align_assign(chunk_get_next_ncnnl(pc), myspan, mythresh, &sub_nl_count);
 
          if (sub_nl_count > 0)
          {
