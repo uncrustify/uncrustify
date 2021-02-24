@@ -33,7 +33,7 @@ void log_rule2(const char *func, size_t line, const char *rule, chunk_t *first, 
 #ifdef SUPER_LOG
 
 
-void log_rule3(const char *func, size_t line, const char *rule)
+void log_rule3(log_sev_t sev, const char *func, size_t line, const char *rule)
 #else
 
 
