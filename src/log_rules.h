@@ -35,7 +35,7 @@ using namespace uncrustify;
    } while (0)
 
 // if you need more debug informations, remove the comment at the next line
-//#define SUPER_LOG 1
+#define SUPER_LOG    1
 #ifdef SUPER_LOG
 #define log_rule_B(rule)                               \
    do {                                                \
