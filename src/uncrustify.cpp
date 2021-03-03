@@ -673,11 +673,11 @@ int main(int argc, char *argv[])
    LOG_FMT(LDATA, "prefix      = %s\n", (prefix != NULL) ? prefix : "null");
    LOG_FMT(LDATA, "suffix      = %s\n", (suffix != NULL) ? suffix : "null");
    LOG_FMT(LDATA, "assume      = %s\n", (assume != NULL) ? assume : "null");
-   LOG_FMT(LDATA, "replace     = %d\n", replace);
-   LOG_FMT(LDATA, "no_backup   = %d\n", no_backup);
-   LOG_FMT(LDATA, "detect      = %d\n", detect);
-   LOG_FMT(LDATA, "check       = %d\n", cpd.do_check);
-   LOG_FMT(LDATA, "if_changed  = %d\n", cpd.if_changed);
+   LOG_FMT(LDATA, "replace     = %s\n", replace ? "true" : "false");
+   LOG_FMT(LDATA, "no_backup   = %s\n", no_backup ? "true" : "false");
+   LOG_FMT(LDATA, "detect      = %s\n", detect ? "true" : "false");
+   LOG_FMT(LDATA, "check       = %s\n", cpd.do_check ? "true" : "false");
+   LOG_FMT(LDATA, "if_changed  = %s\n", cpd.if_changed ? "true" : "false");
 
    if (  cpd.do_check
       && (  output_file
