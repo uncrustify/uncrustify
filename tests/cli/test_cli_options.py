@@ -781,6 +781,7 @@ def main(args):
                 err_expected_path=s_path_join(script_dir, 'output/%s.txt' % L),
                 err_result_path=s_path_join(script_dir, 'results/%s.txt' % L),
                 err_result_manip=[reg_replace(r'\([0-9]+\)', ' '),
+                                  reg_replace(r'\:[0-9]+\)', ' '),
                                   reg_replace(r'\[line [0-9]+', '[ '),
                                   reg_replace(r'   \[[_|,|1|A-Z]*\]', '   []'),
                                   reg_replace(r', \[[_|,|1|A-Z]*\]', ', []'),
