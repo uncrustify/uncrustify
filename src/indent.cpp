@@ -3277,7 +3277,6 @@ void indent_text(void)
             pc->indent.ref   = frm.top().ip.ref;
             pc->indent.delta = frm.top().ip.delta;
          }
-         char copy[1000];
          LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, pc->column_indent is %zu, indent_column is %zu, for '%s'\n",
                  __func__, __LINE__, pc->orig_line, pc->column_indent, indent_column, pc->elided_text(copy));
 

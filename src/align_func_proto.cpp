@@ -117,7 +117,7 @@ void align_func_proto(size_t span)
          {
             for (size_t idx_brace = 0; idx_brace < num_of_row; idx_brace++)
             {
-               AlignStack *stack_at_l_bl = many_as.at(idx).at(idx_brace);
+               stack_at_l_bl = many_as.at(idx).at(idx_brace);
 
                if (stack_at_l_bl != nullptr)
                {
