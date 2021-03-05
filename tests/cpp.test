@@ -149,6 +149,7 @@
 30129  Issue_2890.cfg                       cpp/Issue_2890.cpp
 
 30130  brace-allman.cfg                     cpp/if-constexpr.cpp
+30131  Issue_3010.cfg                       cpp/Issue_3010.cpp
 
 30200  bug_1862.cfg                         cpp/bug_1862.cpp
 30201  cmt_indent-1.cfg                     cpp/cmt_indent.cpp
