@@ -684,6 +684,11 @@ chunk_t *fix_variable_definition(chunk_t *start)
    }
    LOG_FMT(LFVD, "%s(%d): end->type is %s\n", __func__, __LINE__, get_token_name(end->type));
 
+   if (chunk_is_token(end, CT_FUNC_CTOR_VAR))                // Issue #3010
+   {
+      return(end);
+   }
+
    if (  cs.Len() == 1
       && chunk_is_token(end, CT_BRACE_OPEN)
       && get_chunk_parent_type(end) == CT_BRACED_INIT_LIST)
@@ -2444,8 +2449,8 @@ chunk_t *mark_variable_definition(chunk_t *start)
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
 
          LOG_FMT(LVARDEF,
-                 "%s(%d): orig_line is %zu, marked text() '%s'[%s] "
-                 "in orig_col %zu, flags: %s -> %s\n",
+                 "%s(%d): orig_line is %zu, marked text() '%s'[%s]\n"
+                 "   in orig_col %zu, flags: %s -> %s\n",
                  __func__, __LINE__, pc->orig_line, pc->text(),
                  get_token_name(pc->type), pc->orig_col,
                  pcf_flags_str(orig_flags).c_str(),

@@ -583,7 +583,23 @@ void tokenize_cleanup(void)
          if (  chunk_is_token(pc, CT_WORD)
             && chunk_is_token(next, CT_DC_MEMBER))
          {
-            set_chunk_type(pc, CT_TYPE);
+            chunk_t *prev = chunk_get_prev(pc);
+
+            if (prev == nullptr)                  // Issue #3010
+            {
+               set_chunk_type(pc, CT_TYPE);
+            }
+            else
+            {
+               if (chunk_is_token(prev, CT_COLON))
+               {
+                  // nothing to do
+               }
+               else
+               {
+                  set_chunk_type(pc, CT_TYPE);
+               }
+            }
          }
 
          // Set parent type for 'if constexpr'
