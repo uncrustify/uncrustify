@@ -66,7 +66,6 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
 
    while (pc != nullptr)
    {
-      char copy[1000];
       LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->text() '%s', type is %s, parent_type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->elided_text(copy), get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)));
 
