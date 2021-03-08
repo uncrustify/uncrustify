@@ -3,8 +3,7 @@
  * Does all the indenting stuff.
  *
  * @author  Ben Gardner
- * @author  Guy Maurel since version 0.62 for uncrustify4Qt
- *          October 2015, 2021
+ * @author  Guy Maurel October 2015- 2021
  * @license GPL v2+
  */
 
@@ -3246,8 +3245,9 @@ void indent_text(void)
          }
          else
          {
+            // Issue #3010
             vardefcol = pc->column;
-            // need to skip backward over any '*'
+            // BUT, we need to skip backward over any '*'
             chunk_t *tmp = chunk_get_prev_nc(pc);
 
             while (chunk_is_token(tmp, CT_PTR_TYPE))
@@ -3255,6 +3255,21 @@ void indent_text(void)
                vardefcol = tmp->column;
                tmp       = chunk_get_prev_nc(tmp);
             }
+            // BUT, we need to skip backward over any '::' or TYPE
+            //tmp = chunk_get_prev_nc(pc);
+
+            //if (chunk_is_token(tmp, CT_DC_MEMBER))
+            //{
+            //   // look for a type
+            //   chunk_t *tmp2 = chunk_get_prev_nc(tmp);
+            //   if (chunk_is_token(tmp2, CT_TYPE))
+            //   {
+            //      // we have something like "SomeLongNamespaceName::Foo()"
+            //      vardefcol = tmp2->column;
+            //      LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, vardefcol is %zu\n",
+            //              __func__, __LINE__, pc->orig_line, vardefcol);
+            //   }
+            //}
          }
       }
 
@@ -3317,6 +3332,7 @@ void indent_text(void)
                do_vardefcol = true;
             }
          }
+         //LOG_FMT(LINDENT2, "%s(%d): GUY 2:\n", __func__, __LINE__);
 
          if (pc->flags.test(PCF_DONT_INDENT))
          {
