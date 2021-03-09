@@ -308,6 +308,7 @@ indent_paren_close              = 0
 indent_paren_after_func_def     = false
 indent_paren_after_func_decl    = false
 indent_paren_after_func_call    = false
+indent_comma_brace              = false
 indent_comma_paren              = false
 indent_bool_paren               = false
 indent_semicolon_for_paren      = false
