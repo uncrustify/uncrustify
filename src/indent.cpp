@@ -3574,9 +3574,13 @@ void indent_text(void)
          else if (chunk_is_token(pc, CT_COMMA))
          {
             log_rule_B("indent_comma_paren");
+            bool comma_paren = options::indent_comma_paren()
+                               && chunk_is_paren_open(frm.top().pc);
+            log_rule_B("indent_comma_brace");
+            bool comma_brace = options::indent_comma_brace()
+                               && chunk_is_opening_brace(frm.top().pc);
 
-            if (  options::indent_comma_paren()
-               && chunk_is_paren_open(frm.top().pc))
+            if (comma_paren || comma_brace)
             {
                indent_column_set(frm.top().pc->column);
             }
