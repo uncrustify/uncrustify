@@ -2664,6 +2664,10 @@ nl_after_multiline_comment;
 extern Option<bool>
 nl_after_label_colon;
 
+// The number of newlines before a struct definition.
+extern BoundedOption<unsigned, 0, 16>
+nl_before_struct;
+
 // The number of newlines after '}' or ';' of a struct/enum/union definition.
 extern BoundedOption<unsigned, 0, 16>
 nl_after_struct;

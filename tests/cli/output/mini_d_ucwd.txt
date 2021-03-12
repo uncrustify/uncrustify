@@ -2151,6 +2151,9 @@ nl_after_multiline_comment      = false    # true/false
 # Whether to force a newline after a label's colon.
 nl_after_label_colon            = false    # true/false
 
+# The number of newlines before a struct definition.
+nl_before_struct                = 0        # unsigned number
+
 # The number of newlines after '}' or ';' of a struct/enum/union definition.
 nl_after_struct                 = 0        # unsigned number
 
