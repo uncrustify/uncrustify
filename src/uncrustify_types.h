@@ -163,7 +163,7 @@ struct chunk_t
       nl_column     = 0;
       level         = 0;
       brace_level   = 0;
-      pp_level      = 0;
+      pp_level      = 999;                           // use a big value to find some errors
       after_tab     = false;
       // for debugging purpose only
       tracking = nullptr;

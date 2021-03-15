@@ -200,6 +200,9 @@ void brace_cleanup(void)
 
    while (pc != nullptr)
    {
+      LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+
       // Check for leaving a #define body
       if (  braceState.in_preproc != CT_NONE
          && !pc->flags.test(PCF_IN_PREPROC))
@@ -215,6 +218,8 @@ void brace_cleanup(void)
       const size_t pp_level = (chunk_is_token(pc, CT_PREPROC))
                               ? preproc_start(braceState, frm, pc)
                               : braceState.pp_level;
+      LOG_FMT(LTOK, "%s(%d): pp_level is %zu\n",
+              __func__, __LINE__, pp_level);
 
       // Do before assigning stuff from the frame
       if (  language_is_set(LANG_PAWN)
@@ -252,7 +257,7 @@ void brace_cleanup(void)
       {
          braceState.consumed = false;
          parse_cleanup(braceState, frm, pc);
-         print_stack(LBCSAFTER, (chunk_is_token(pc, CT_VBRACE_CLOSE)) ? "Virt-}" : pc->str.c_str(), frm);
+         print_stack(LBCSAFTER, (chunk_is_token(pc, CT_VBRACE_CLOSE)) ? "Virt-}\n" : pc->str.c_str(), frm);
       }
       pc = chunk_get_next(pc);
    }
@@ -461,8 +466,13 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
       {
          LOG_FMT(LWARN, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-         LOG_FMT(LWARN, "%s(%d): (frm.top().type + 1) is %s\n",
-                 __func__, __LINE__, get_token_name((c_token_t)(frm.top().type + 1)));
+         paren_stack_entry_t AA = frm.top();                // Issue #3055
+
+         if (AA.type != CT_EOF)
+         {
+            LOG_FMT(LWARN, "%s(%d): (frm.top().type + 1) is %s\n",
+                    __func__, __LINE__, get_token_name((c_token_t)(frm.top().type + 1)));
+         }
 
          if (  frm.top().type != CT_EOF
             && frm.top().type != CT_PP_DEFINE)
@@ -867,29 +877,31 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
       LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, orig_col is %zu, reset expr on '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
    }
-   else if (  chunk_is_token(pc, CT_BRACE_CLOSE)
-           && !braceState.consumed
-           && braceState.in_preproc != CT_PP_DEFINE)
-   {
-      size_t file_pp_level = ifdef_over_whole_file() ? 1 : 0;
+   // This part of code is not necessary, Issue #3055
+   //else if (  chunk_is_token(pc, CT_BRACE_CLOSE)
+   //        && !braceState.consumed
+   //        && braceState.in_preproc != CT_PP_DEFINE)
+   //{
+   //prot_all_lines(__func__, __LINE__);
+   //size_t file_pp_level = ifdef_over_whole_file() ? 1 : 0;
 
-      if (  !cpd.unc_off_used
-         && pc->pp_level == file_pp_level)
-      {
-         // fatal error
-         LOG_FMT(LERR, "%s(%d): Unmatched BRACE_CLOSE\n   orig_line is %zu, orig_col is %zu\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col);
+   //if (  !cpd.unc_off_used
+   //   && pc->pp_level == file_pp_level)
+   //{
+   //   // fatal error
+   //   LOG_FMT(LERR, "%s(%d): Unmatched BRACE_CLOSE\n   orig_line is %zu, orig_col is %zu\n",
+   //           __func__, __LINE__, pc->orig_line, pc->orig_col);
 
-         log_rule_B("tok_split_gte");
+   //   log_rule_B("tok_split_gte");
 
-         if (!options::tok_split_gte())
-         {
-            LOG_FMT(LERR, "%s(%d): Try the option 'tok_split_gte = true'\n",
-                    __func__, __LINE__);
-         }
-         exit(EXIT_FAILURE);
-      }
-   }
+   //   if (!options::tok_split_gte())
+   //   {
+   //      LOG_FMT(LERR, "%s(%d): Try the option 'tok_split_gte = true'\n",
+   //              __func__, __LINE__);
+   //   }
+   //   exit(EXIT_FAILURE);
+   //}
+   //}
 } // parse_cleanup
 
 
@@ -1355,6 +1367,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
    chunk.orig_line = ref->orig_line;
    chunk.orig_col  = ref->orig_col;
    chunk.column    = ref->column + ref->len() + 1;
+   chunk.pp_level  = ref->pp_level;                         // Issue #3055
    set_chunk_type(&chunk, CT_VBRACE_OPEN);
 
    return(chunk_add_after(&chunk, ref));

@@ -331,7 +331,7 @@ indent_text : orig_line is 3, orig_col is 1, column is 9, for 'TelegramIndex'
    []
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
-reindent_line : orig_line is 3, orig_col is 9, on 'TelegramIndex' [FUNC_CLASS_DEF/NONE] => 9
+reindent_line : orig_line is 3, orig_col is 1, on 'TelegramIndex' [FUNC_CLASS_DEF/NONE] => 9
  [CallStack]
 indent_text : orig_line is 3, orig_col is 14, column is 22, for '('
    []
@@ -392,7 +392,7 @@ indent_text : orig_line is 4, orig_col is 1, column is 17, for 'pTelName'
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-reindent_line : orig_line is 4, orig_col is 17, on 'pTelName' [FUNC_CTOR_VAR/NONE] => 17
+reindent_line : orig_line is 4, orig_col is 1, on 'pTelName' [FUNC_CTOR_VAR/NONE] => 17
  [CallStack]
 indent_text : orig_line is 4, orig_col is 9, column is 25, for '('
    []
@@ -423,7 +423,7 @@ indent_text : orig_line is 5, orig_col is 1, column is 17, for 'nTelIndex'
    []
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-reindent_line : orig_line is 5, orig_col is 17, on 'nTelIndex' [FUNC_CTOR_VAR/NONE] => 17
+reindent_line : orig_line is 5, orig_col is 1, on 'nTelIndex' [FUNC_CTOR_VAR/NONE] => 17
  [CallStack]
 indent_text : orig_line is 5, orig_col is 10, column is 26, for '('
    []
@@ -454,7 +454,7 @@ indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : frm.pse_tos is 2, ... indent is 17
 indent_text : orig_line is 6, orig_col is 1, text() is '{', parent_type is FUNC_CLASS_DEF
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-reindent_line : orig_line is 6, orig_col is 9, on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9
+reindent_line : orig_line is 6, orig_col is 1, on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9
  [CallStack]
 indent_text : orig_line is 6, <Newline>
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
@@ -466,7 +466,7 @@ indent_text : orig_line is 7, orig_col is 1, column is 9, for '}'
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : pc->orig_line is 7, orig_col is 1, text() is '}', type is BRACE_CLOSE
-reindent_line : orig_line is 7, orig_col is 9, on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9
+reindent_line : orig_line is 7, orig_col is 1, on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9
  [CallStack]
 indent_text : orig_line is 7, <Newline>
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
@@ -477,7 +477,7 @@ indent_text : orig_line is 9, orig_col is 1, column is 9, for '~'
    []
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
-reindent_line : orig_line is 9, orig_col is 9, on '~' [DESTRUCTOR/FUNC_CLASS_DEF] => 9
+reindent_line : orig_line is 9, orig_col is 1, on '~' [DESTRUCTOR/FUNC_CLASS_DEF] => 9
  [CallStack]
 indent_text : orig_line is 9, orig_col is 2, column is 10, for 'TelegramIndex'
    []
@@ -507,7 +507,7 @@ indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : frm.pse_tos is 2, ... indent is 17
 indent_text : orig_line is 10, orig_col is 1, text() is '{', parent_type is FUNC_CLASS_DEF
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
-reindent_line : orig_line is 10, orig_col is 9, on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9
+reindent_line : orig_line is 10, orig_col is 1, on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9
  [CallStack]
 indent_text : orig_line is 10, <Newline>
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
@@ -519,7 +519,7 @@ indent_text : orig_line is 11, orig_col is 1, column is 9, for '}'
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 indent_text : pc->orig_line is 11, orig_col is 1, text() is '}', type is BRACE_CLOSE
-reindent_line : orig_line is 11, orig_col is 9, on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9
+reindent_line : orig_line is 11, orig_col is 1, on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9
  [CallStack]
 indent_text : orig_line is 11, <Newline>
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
@@ -530,7 +530,7 @@ indent_text : orig_line is 13, orig_col is 1, column is 9, for 'const'
    []
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
-reindent_line : orig_line is 13, orig_col is 9, on 'const' [QUALIFIER/NONE] => 9
+reindent_line : orig_line is 13, orig_col is 1, on 'const' [QUALIFIER/NONE] => 9
  [CallStack]
 indent_text : orig_line is 13, orig_col is 7, column is 15, for 'char'
    []
@@ -561,7 +561,7 @@ indent_text : orig_line is 14, orig_col is 1, column is 9, for 'unsigned'
    []
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
-reindent_line : orig_line is 14, orig_col is 9, on 'unsigned' [TYPE/NONE] => 9
+reindent_line : orig_line is 14, orig_col is 1, on 'unsigned' [TYPE/NONE] => 9
  [CallStack]
 indent_text : orig_line is 14, orig_col is 10, column is 18, for 'long'
    []

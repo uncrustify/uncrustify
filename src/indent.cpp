@@ -299,7 +299,7 @@ void reindent_line(chunk_t *pc, size_t column)
    char copy[1000];
 
    LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, on '%s' [%s/%s] => %zu\n",
-           __func__, __LINE__, pc->orig_line, pc->column, pc->elided_text(copy),
+           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->elided_text(copy),
            get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)),
            column);
    log_func_stack_inline(LINDLINE);
@@ -4194,17 +4194,20 @@ bool ifdef_over_whole_file(void)
    }
    chunk_t *start_pp = nullptr;
    chunk_t *end_pp   = nullptr;
-   size_t  stage     = 0;
+   size_t  IFstage   = 0;
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
+      LOG_FMT(LNOTE, "%s(%d): pc->pp_level is %zu, pc->orig_line is %zu, pc->orig_col is %zu, pc->text() is '%s'\n",
+              __func__, __LINE__, pc->pp_level, pc->orig_line, pc->orig_col, pc->text());
+
       if (  chunk_is_comment(pc)
          || chunk_is_newline(pc))
       {
          continue;
       }
 
-      if (stage == 0)
+      if (IFstage == 0)                   // 0 is BEGIN
       {
          // Check the first preprocessor, make sure it is an #if type
          if (pc->type != CT_PREPROC)
@@ -4218,33 +4221,35 @@ bool ifdef_over_whole_file(void)
          {
             break;
          }
-         stage    = 1;
+         IFstage  = 1;                      // 1 is CT_PP_IF found
          start_pp = pc;
       }
-      else if (stage == 1)
+      else if (IFstage == 1)                // 1 is CT_PP_IF found
       {
          // Scan until a preprocessor at level 0 is found - the close to the #if
-         if (  chunk_is_token(pc, CT_PREPROC)
-            && pc->pp_level == 0)
+         if (chunk_is_token(pc, CT_PREPROC))
          {
-            stage  = 2;
-            end_pp = pc;
+            if (pc->pp_level == 0)
+            {
+               IFstage = 2;
+               end_pp  = pc;
+            }
          }
          continue;
       }
-      else if (stage == 2)
+      else if (IFstage == 2)
       {
          // We should only see the rest of the preprocessor
          if (  chunk_is_token(pc, CT_PREPROC)
             || !pc->flags.test(PCF_IN_PREPROC))
          {
-            stage = 0;
+            IFstage = 0;
             break;
          }
       }
    }
 
-   cpd.ifdef_over_whole_file = (stage == 2) ? 1 : -1;
+   cpd.ifdef_over_whole_file = (IFstage == 2) ? 1 : -1;
 
    if (cpd.ifdef_over_whole_file > 0)
    {
@@ -4266,6 +4271,9 @@ void indent_preproc(void)
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
+      LOG_FMT(LPPIS, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() is '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+
       if (pc->type != CT_PREPROC)
       {
          continue;
@@ -4301,7 +4309,8 @@ void indent_preproc(void)
          if (options::pp_space() & IARF_ADD)
          {
             log_rule_B("pp_space_count");
-            const auto mult = max<size_t>(options::pp_space_count(), 1);
+            // Issue #3055
+            const size_t mult = max<size_t>(options::pp_space_count(), 1);
             reindent_line(next, pc->column + pc->len() + (pp_level * mult));
          }
          else if (options::pp_space() & IARF_REMOVE)

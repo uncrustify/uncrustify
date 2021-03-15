@@ -2,7 +2,7 @@
  * @file unc_tools.h
  *
  * @author  Guy Maurel
- *          October 2015, 2016, 2017, 2018, 2019
+ *          October 2015, 2016, 2017, 2018, 2019, 2020, 2021
  * @license GPL v2+
  */
 
@@ -24,6 +24,9 @@ void prot_the_line(const char *func_name, int theLine, unsigned int actual_line,
 
 
 void prot_the_line_pc(chunk_t *pc_sub, const char *func_name, int theLine, unsigned int actual_line, size_t partNumber);
+
+
+void prot_all_lines(const char *func_name, int theLine);
 
 
 void prot_the_source(int theLine);

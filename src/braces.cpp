@@ -316,7 +316,7 @@ static bool should_add_braces(chunk_t *vbopen)
    {
       return(false);
    }
-   LOG_FMT(LBRDEL, "%s(%d): start on %zu : ",
+   LOG_FMT(LBRDEL, "%s(%d): start on %zu:\n",
            __func__, __LINE__, vbopen->orig_line);
 
    size_t  nl_count = 0;
