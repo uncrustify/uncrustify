@@ -583,7 +583,7 @@ void tokenize_cleanup(void)
          if (  chunk_is_token(pc, CT_WORD)
             && chunk_is_token(next, CT_DC_MEMBER))
          {
-            chunk_t *prev = chunk_get_prev(pc);
+            prev = chunk_get_prev(pc);
 
             if (prev == nullptr)                  // Issue #3010
             {
