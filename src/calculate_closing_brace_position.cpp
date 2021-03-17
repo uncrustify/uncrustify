@@ -15,8 +15,8 @@ using namespace uncrustify;
 chunk_t *calculate_closing_brace_position(const chunk_t *cl_colon, chunk_t *pc)
 {
    // end of block is reached
-   // look back over comment, newline, preprocessor BUT NOT #endif
-   chunk_t *last = chunk_get_prev_ncnnl(pc);
+   // look back over newline, preprocessor BUT NOT #endif
+   chunk_t *last = chunk_get_prev_nnl(pc);                    // Issue #3058
 
    LOG_FMT(LMCB, "%s(%d): text() is '%s', orig_line %zu, orig_col is %zu\n",
            __func__, __LINE__, last->text(), last->orig_line, last->orig_col);
