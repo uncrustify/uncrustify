@@ -2484,9 +2484,8 @@ nl_create_while_one_liner;
 extern Option<bool>
 nl_create_func_def_one_liner;
 
-// Whether to collapse a function definition whose body (not counting braces)
-// is only one line so that the entire definition (prototype, braces, body) is
-// a single line.
+// Whether to split one-line simple unbraced if statements into three lines by
+// adding newlines, as in 'int a[12] = { <here> 0 <here> };'.
 extern Option<bool>
 nl_create_list_one_liner;
 
