@@ -4012,7 +4012,7 @@ void newlines_cleanup_braces(bool first)
             }
             prev = chunk_get_prev_nnl(pc);
 
-            if (  prev
+            if (  prev != nullptr
                && (  prev->type == CT_TYPE
                   || prev->type == CT_WORD
                   || prev->parent_type == CT_TEMPLATE
