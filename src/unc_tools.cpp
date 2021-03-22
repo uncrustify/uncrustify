@@ -3,7 +3,7 @@
  * This file contains lot of tools for debugging
  *
  * @author  Guy Maurel
- *          October 2015- 2020
+ *          October 2015- 2021
  * @license GPL v2+
  */
 
@@ -109,8 +109,9 @@ void prot_the_line_pc(chunk_t *pc_sub, const char *func_name, int theLine, unsig
             {
                LOG_FMT(LGUY, "text() '%s', ", pc->text());
             }
-            LOG_FMT(LGUY, " column is %zu, type is %s, parent_type is %s, orig_col is %zu,",
-                    pc->column, get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)), pc->orig_col);
+            LOG_FMT(LGUY, " column is %zu, pp_level is %zu, type is %s, parent_type is %s, orig_col is %zu,",
+                    pc->column, pc->pp_level, get_token_name(pc->type),
+                    get_token_name(get_chunk_parent_type(pc)), pc->orig_col);
 
             if (chunk_is_token(pc, CT_IGNORED))
             {
@@ -143,7 +144,57 @@ void prot_the_line_pc(chunk_t *pc_sub, const char *func_name, int theLine, unsig
    }
 
    LOG_FMT(LGUY, "\n");
-} // prot_the_line
+} // prot_the_line_pc
+
+
+void prot_all_lines(const char *func_name, int theLine)
+{
+   counter++;
+   tokenCounter = 0;
+   size_t lineNumber = 1;
+
+   LOG_FMT(LGUY, "Prot_all_lines:(%s:%d)(%zu)\n", func_name, theLine, counter);
+
+   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = pc->next)
+   {
+      tokenCounter++;
+
+      LOG_FMT(LGUY, " orig_line is %zu,%zu, pp_level is %zu, ", lineNumber, tokenCounter, pc->pp_level);
+
+      if (chunk_is_token(pc, CT_VBRACE_OPEN))
+      {
+         LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
+      }
+      else if (chunk_is_token(pc, CT_NEWLINE))
+      {
+         LOG_FMT(LGUY, "<NL>(nl_count is %zu), ", pc->nl_count);
+         tokenCounter = 0;
+         lineNumber   = lineNumber + pc->nl_count;
+      }
+      else if (chunk_is_token(pc, CT_VBRACE_CLOSE))
+      {
+         LOG_FMT(LGUY, "<CT_VBRACE_CLOSE>, ");
+      }
+      else if (chunk_is_token(pc, CT_VBRACE_OPEN))
+      {
+         LOG_FMT(LGUY, "<CT_VBRACE_OPEN>, ");
+      }
+      else if (chunk_is_token(pc, CT_SPACE))
+      {
+         LOG_FMT(LGUY, "<CT_SPACE>, ");
+      }
+      else if (chunk_is_token(pc, CT_IGNORED))
+      {
+         LOG_FMT(LGUY, "<IGNORED> ");
+      }
+      else
+      {
+         LOG_FMT(LGUY, "text() '%s', ", pc->text());
+      }
+      LOG_FMT(LGUY, " column is %zu, type is %s\n",
+              pc->column, get_token_name(pc->type));
+   }
+} // prot_all_lines
 
 
 void prot_the_source(int theLine)
