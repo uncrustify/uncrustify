@@ -257,10 +257,8 @@
 30323  sp_return_brace-f.cfg                cpp/returns.cpp
 30324  mod_paren_on_return-a.cfg            cpp/returns.cpp
 30325  mod_paren_on_return-r.cfg            cpp/returns.cpp
-
 30326  indent_off_after_return.cfg          cpp/indent_off_after_return.cpp
 30327  empty.cfg                            cpp/indent_off_after_return.cpp
-
 30328  nl_type_brace_init_lst-f.cfg         cpp/call_brace_init_lst.cpp
 30329  nl_type_brace_init_lst-r.cfg         cpp/call_brace_init_lst.cpp
 
