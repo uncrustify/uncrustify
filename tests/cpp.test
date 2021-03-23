@@ -257,10 +257,8 @@
 30323  sp_return_brace-f.cfg                cpp/returns.cpp
 30324  mod_paren_on_return-a.cfg            cpp/returns.cpp
 30325  mod_paren_on_return-r.cfg            cpp/returns.cpp
-
 30326  indent_off_after_return.cfg          cpp/indent_off_after_return.cpp
 30327  empty.cfg                            cpp/indent_off_after_return.cpp
-
 30328  nl_type_brace_init_lst-f.cfg         cpp/call_brace_init_lst.cpp
 30329  nl_type_brace_init_lst-r.cfg         cpp/call_brace_init_lst.cpp
 
@@ -876,6 +874,7 @@
 10024  U06-Cpp.cfg                          cpp/ifcomment.cpp
 10025  U07-Cpp.cfg                          cpp/qtargs.cpp
 10026  sp_before_ellipsis-r.cfg             cpp/gcc_case_ellipsis.cpp
+10027  Issue_3058.cfg                       cpp/Issue_3058.cpp
 
 10047  U16-Cpp.cfg                          cpp/UNI-1334.cpp
 10048  empty.cfg                            cpp/UNI-1335.cpp
