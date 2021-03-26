@@ -336,8 +336,9 @@ sp_before_byref_func;
 extern Option<iarf_e>
 sp_after_type; // = IARF_FORCE
 
-// Add or remove space between 'decltype(...)' and word,
-// brace or function call.
+// Add or remove space between 'decltype(...)' and word.
+//
+// Overrides sp_after_type.
 extern Option<iarf_e>
 sp_after_decltype;
 
