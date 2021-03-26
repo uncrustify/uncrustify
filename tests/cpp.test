@@ -258,9 +258,11 @@
 30324  mod_paren_on_return-a.cfg            cpp/returns.cpp
 30325  mod_paren_on_return-r.cfg            cpp/returns.cpp
 30326  indent_off_after_return.cfg          cpp/indent_off_after_return.cpp
-30327  empty.cfg                            cpp/indent_off_after_return.cpp
+30327  indent_off_after_return-A.cfg        cpp/indent_off_after_return.cpp
 30328  nl_type_brace_init_lst-f.cfg         cpp/call_brace_init_lst.cpp
 30329  nl_type_brace_init_lst-r.cfg         cpp/call_brace_init_lst.cpp
+
+30330  Issue_3080.cfg                       cpp/Issue_3080.cpp
 
 30400  attribute_specifier_seqs.cfg         cpp/attribute_specifier_seqs.cpp
 30401  Issue_2570.cfg                       cpp/Issue_2570.cpp
