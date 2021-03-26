@@ -2697,18 +2697,24 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_before_template_paren());
    }
 
-   if (  !chunk_is_token(second, CT_PTR_TYPE)
-      && chunk_is_token(first, CT_PAREN_CLOSE)
-      && get_chunk_parent_type(first) == CT_DECLTYPE)
+   // Issue #3080
+   if (  chunk_is_token(first, CT_PAREN_CLOSE)
+      && get_chunk_parent_type(first) == CT_DECLTYPE
+      && (  chunk_is_token(second, CT_WORD)
+         || chunk_is_token(second, CT_BRACE_OPEN)
+         || chunk_is_token(second, CT_FUNC_CALL)))
    {
-      if (auto arg = iarf_flags_t{ options::sp_after_decltype() })
-      {
-         // Add or remove space between 'decltype(...)' and word.
-         //
-         // Overrides sp_after_type.
-         log_rule("sp_after_decltype");
-         return(arg);
-      }
+      iarf_e arg = options::sp_after_decltype();
+      // Add or remove space between 'decltype(...)' and word, brace or function call.
+      log_rule("sp_after_decltype");
+      return(arg);
+   }
+
+   // Issue #3080
+   if (  !language_is_set(LANG_D)
+      && chunk_is_token(first, CT_PAREN_CLOSE)
+      && chunk_is_token(second, CT_WORD))
+   {
       // Add or remove space between type and word.
       log_rule("sp_after_type");
       return(options::sp_after_type());
@@ -2967,20 +2973,6 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(IARF_FORCE);  /* TODO: make this configurable? */
    }
 
-   // this table lists out all combos where a space should NOT be present
-   // CT_UNKNOWN is a wildcard.
-   for (auto it : no_space_table)
-   {
-      if (  (  it.first == CT_UNKNOWN
-            || it.first == first->type)
-         && (  it.second == CT_UNKNOWN
-            || it.second == second->type))
-      {
-         log_rule_short("REMOVE from no_space_table");
-         return(IARF_REMOVE);
-      }
-   }
-
    if (chunk_is_token(first, CT_NOEXCEPT))
    {
       // Add or remove space after 'noexcept'.
@@ -3063,6 +3055,22 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // =============================================================
+   // categorie 1
+   // this table lists out all combos where a space should NOT be present
+   // CT_UNKNOWN is a wildcard.
+   for (auto it : no_space_table)
+   {
+      if (  (  it.first == CT_UNKNOWN
+            || it.first == first->type)
+         && (  it.second == CT_UNKNOWN
+            || it.second == second->type))
+      {
+         log_rule("REMOVE from no_space_table");
+         return(IARF_REMOVE);
+      }
+   }
+
+   // =============================================================
    // categorie 2
    // this table lists out all combos where a space MUST be present
    for (auto it : add_space_table)
@@ -3075,14 +3083,6 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(IARF_ADD);
       }
    }
-
-   // if (chunk_is_token(first, CT_PAREN_CLOSE) && chunk_is_token(second, CT_QUESTION))
-   // Issue #2596
-   // look at "sp_cond_question"
-
-   // if (chunk_is_token(first, CT_WORD) && chunk_is_token(second, CT_COND_COLON))
-   // Issue #2596
-   // look at "sp_cond_colon"
 
    // Issue #2386
    if (  chunk_is_token(first, CT_FORM_FEED)

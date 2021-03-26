@@ -1,33 +1,33 @@
 int foo1()
 {
 	return std::pair<int, int>{
-	        1, 2
+		1, 2
 	}.first;
 }
 
 int foo2()
 {
 	return
-	        int{3} & 2;
+	int{3} & 2;
 }
 
 int foo3()
 {
 	constexpr static int x = 3;
 	return
-	        decltype(x) {x} & 2;
+	decltype(x) {x} & 2;
 }
 
 int foo4()
 {
 	return
-	        new Type();
+	new Type();
 }
 
 int foo5()
 {
 	return
-	        veryLongMethodCall(
+	veryLongMethodCall(
 		arg1,
 		longMethodCall(
 			methodCall(
@@ -42,8 +42,8 @@ int foo6()
 	auto my_lambda = [] ()
 			 {
 				 return 1 +
-				        2 +
-				        3;
+				 2 +
+				 3;
 
 			 };
 }
@@ -55,6 +55,6 @@ find(const std::string &name = "") const
 	return find<U>([&name] (auto *pComposite)
 	{
 		return name.empty() ||
-		       pComposite->getName() == name;
+		pComposite->getName() == name;
 	});
 }
