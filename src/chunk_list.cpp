@@ -931,6 +931,15 @@ static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope, const direct
 static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const direction_e pos)
 {
 #ifdef DEBUG
+   // test if the pc_in chunk is properly set
+   if (pc_in->pp_level == 999)
+   {
+      fprintf(stderr, "%s(%d): pp_level is not set\n", __func__, __LINE__);
+      log_func_stack_inline(LSETFLG);
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
+
    if (pc_in->orig_line == 0)
    {
       fprintf(stderr, "%s(%d): no line number\n", __func__, __LINE__);
@@ -963,7 +972,7 @@ static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const direction_e 
       chunk_log(pc, "chunk_add(A):");
    }
    return(pc);
-}
+} // chunk_add
 
 
 chunk_t *chunk_get_next_ssq(chunk_t *cur)

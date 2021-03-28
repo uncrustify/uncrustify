@@ -473,6 +473,7 @@ static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
 
    nl->orig_line   = prev->orig_line;
    nl->level       = prev->level;
+   nl->pp_level    = prev->pp_level;
    nl->brace_level = prev->brace_level;
    nl->pp_level    = prev->pp_level;
    nl->nl_count    = 1;
@@ -554,6 +555,7 @@ chunk_t *newline_add_before(chunk_t *pc)
 
    setup_newline_add(prev, &nl, pc);
    nl.orig_col = pc->orig_col;
+   nl.pp_level = pc->pp_level;
    LOG_FMT(LNEWLINE, "%s(%d): nl.column is %zu\n",
            __func__, __LINE__, nl.column);
 
@@ -605,6 +607,7 @@ chunk_t *newline_add_after(chunk_t *pc)
    MARK_CHANGE();
    // TO DO: check why the next statement is necessary
    nl.orig_col = pc->orig_col;
+   nl.pp_level = pc->pp_level;
    return(chunk_add_after(&nl, pc));
 }
 
@@ -636,6 +639,7 @@ static void newline_end_newline(chunk_t *br_close)
       nl.orig_line = br_close->orig_line;
       nl.orig_col  = br_close->orig_col;
       nl.nl_count  = 1;
+      nl.pp_level  = 0;
       nl.flags     = (br_close->flags & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC;
 
       if (  br_close->flags.test(PCF_IN_PREPROC)
@@ -2348,6 +2352,7 @@ static void newlines_brace_pair(chunk_t *br_open)
                      set_chunk_type(&chunk, CT_NEWLINE);
                      chunk.orig_line = current->orig_line;
                      chunk.orig_col  = current->orig_col;
+                     chunk.pp_level  = current->pp_level;
                      chunk.nl_count  = 1;
                      chunk_add_before(&chunk, current);
                      LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline before '%s'\n",
@@ -5296,6 +5301,7 @@ void newlines_eat_start_end(void)
             set_chunk_type(&chunk, CT_NEWLINE);
             chunk.orig_line = pc->orig_line;
             chunk.orig_col  = pc->orig_col;
+            chunk.pp_level  = pc->pp_level;
             chunk.nl_count  = options::nl_start_of_file_min();
             log_rule_B("nl_start_of_file_min");
             chunk_add_before(&chunk, pc);
@@ -5354,6 +5360,7 @@ void newlines_eat_start_end(void)
             set_chunk_type(&chunk, CT_NEWLINE);
             chunk.orig_line = pc->orig_line;
             chunk.orig_col  = pc->orig_col;
+            chunk.pp_level  = pc->pp_level;
             chunk.nl_count  = options::nl_end_of_file_min();
             log_rule_B("nl_end_of_file_min");
             chunk_add_before(&chunk, nullptr);

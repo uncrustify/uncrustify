@@ -1370,6 +1370,8 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
             // end of switch is reached
             last = calculate_closing_brace_position(cl_colon, pc);
+            LOG_FMT(LMCB, "%s(%d): last->text() is '%s', orig_line %zu, orig_col is %zu\n",
+                    __func__, __LINE__, last->text(), last->orig_line, last->orig_col);
             break;
          }
       }
@@ -1381,7 +1383,7 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
       chunk_t *next = chunk_get_next_ncnnl(cl_colon, scope_e::PREPROC);
       return(next);
    }
-   LOG_FMT(LMCB, "%s(%d): text() is '%s', orig_line %zu, orig_col is %zu\n",
+   LOG_FMT(LMCB, "%s(%d): last->text() is '%s', orig_line %zu, orig_col is %zu\n",
            __func__, __LINE__, last->text(), last->orig_line, last->orig_col);
    LOG_FMT(LMCB, "%s(%d): adding braces after '%s' on line %zu\n",
            __func__, __LINE__, cl_colon->text(), cl_colon->orig_line);
@@ -1393,6 +1395,7 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
    chunk.orig_line   = cl_colon->orig_line;
    chunk.orig_col    = cl_colon->orig_col;
    chunk.level       = cl_colon->level;
+   chunk.pp_level    = cl_colon->pp_level;
    chunk.brace_level = cl_colon->brace_level;
    chunk.flags       = pc->flags & PCF_COPY_FLAGS;
    chunk.str         = "{";

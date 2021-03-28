@@ -1307,6 +1307,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
    set_chunk_parent(&chunk, frm.top().type);
    chunk.orig_line   = pc->orig_line;
    chunk.level       = frm.level;
+   chunk.pp_level    = frm.pp_level;
    chunk.brace_level = frm.brace_level;
    chunk.flags       = pc->flags & PCF_COPY_FLAGS;
    chunk.str         = "";

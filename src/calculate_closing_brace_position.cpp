@@ -142,6 +142,11 @@ chunk_t *calculate_closing_brace_position(const chunk_t *cl_colon, chunk_t *pc)
       fprintf(stderr, "Please make a report.\n");
       exit(EX_SOFTWARE);
    }
+
+   if (chunk_is_token(last, CT_COMMENT_CPP))         // Issue #3058
+   {
+      last = chunk_get_next(last);
+   }
    LOG_FMT(LMCB, "%s(%d): last->text()     is '%s', orig_line %zu, orig_col is %zu\n",
            __func__, __LINE__, last->text(), last->orig_line, last->orig_col);
 

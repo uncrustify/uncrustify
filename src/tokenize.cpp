@@ -2644,6 +2644,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
    while (ctx.more())
    {
       chunk.reset();
+      chunk.pp_level = 0;
 
       if (!parse_next(ctx, chunk, pc))
       {

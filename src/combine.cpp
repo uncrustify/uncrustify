@@ -2202,6 +2202,7 @@ static chunk_t *process_return(chunk_t *pc)
       set_chunk_parent(&chunk, CT_RETURN);
       chunk.str         = "(";
       chunk.level       = pc->level;
+      chunk.pp_level    = pc->pp_level;
       chunk.brace_level = pc->brace_level;
       chunk.orig_line   = pc->orig_line;
       chunk.orig_col    = next->orig_col - 1;
@@ -3541,6 +3542,7 @@ static void handle_oc_property_decl(chunk_t *os)
                set_chunk_parent(&endchunk, get_chunk_parent_type(curr_chunk));
                endchunk.str         = ",";
                endchunk.level       = curr_chunk->level;
+               endchunk.pp_level    = curr_chunk->pp_level;
                endchunk.brace_level = curr_chunk->brace_level;
                endchunk.orig_line   = curr_chunk->orig_line;
                endchunk.orig_col    = curr_chunk->orig_col;
