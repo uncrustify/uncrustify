@@ -2104,7 +2104,22 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
                && first_var_blk
                && options::nl_var_def_blk_start() > 0)
             {
-               newline_min_after(prev, options::nl_var_def_blk_start(), PCF_VAR_DEF);
+               chunk_t *prev_2 = chunk_get_prev_nnl(pc);                  // Issue #3097
+
+               // std::mutex* a;                                             Issue #2692
+               while (  chunk_is_token(prev_2, CT_DC_MEMBER)
+                     || chunk_is_token(prev_2, CT_TYPE))
+               {
+                  prev_2 = chunk_get_prev(prev_2);
+               }
+
+               if (chunk_is_token(prev_2, CT_NEWLINE))
+               {
+                  prev_2 = chunk_get_prev_nnl(prev_2);
+               }
+               LOG_FMT(LBLANKD, "%s(%d): prev_2 is '%s', orig_line is %zu\n",
+                       __func__, __LINE__, prev_2->text(), prev_2->orig_line);
+               newline_min_after(prev_2, options::nl_var_def_blk_start(), PCF_VAR_DEF);
             }
             // set newlines within var def block
             else if (  var_blk
