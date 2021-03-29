@@ -323,7 +323,7 @@ static void mark_change(const char *func, size_t line)
       LOG_FMT(LCHANGE, "%s(%d): change %d on %s:%zu\n",
               __func__, __LINE__, cpd.changes, func, line);
    }
-}
+} // mark_change
 
 
 static bool can_increase_nl(chunk_t *nl)
@@ -497,7 +497,7 @@ static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
       set_chunk_type(nl, CT_NEWLINE);
       nl->str = "\n";
    }
-}
+} // setup_newline_add
 
 
 void double_newline(chunk_t *nl)
@@ -533,16 +533,14 @@ void double_newline(chunk_t *nl)
       nl->nl_count = 2;
       MARK_CHANGE();
    }
-}
+} // double_newline
 
 
 chunk_t *newline_add_before(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    chunk_t nl;
-   chunk_t *prev;
-
-   prev = chunk_get_prev_nvb(pc);
+   chunk_t *prev = chunk_get_prev_nvb(pc);
 
    if (chunk_is_newline(prev))
    {
@@ -561,7 +559,7 @@ chunk_t *newline_add_before(chunk_t *pc)
 
    MARK_CHANGE();
    return(chunk_add_before(&nl, pc));
-}
+} // newline_add_before
 
 
 chunk_t *newline_force_before(chunk_t *pc)
@@ -576,7 +574,7 @@ chunk_t *newline_force_before(chunk_t *pc)
       MARK_CHANGE();
    }
    return(nl);
-}
+} // newline_force_before
 
 
 chunk_t *newline_add_after(chunk_t *pc)
@@ -609,7 +607,7 @@ chunk_t *newline_add_after(chunk_t *pc)
    nl.orig_col = pc->orig_col;
    nl.pp_level = pc->pp_level;
    return(chunk_add_after(&nl, pc));
-}
+} // newline_add_after
 
 
 chunk_t *newline_force_after(chunk_t *pc)
@@ -624,7 +622,7 @@ chunk_t *newline_force_after(chunk_t *pc)
       MARK_CHANGE();
    }
    return(nl);
-}
+} // newline_force_after
 
 
 static void newline_end_newline(chunk_t *br_close)
@@ -664,7 +662,7 @@ static void newline_end_newline(chunk_t *br_close)
               __func__, __LINE__, br_close->orig_line, br_close->orig_col, br_close->text());
       chunk_add_after(&nl, br_close);
    }
-}
+} // newline_end_newline
 
 
 static void newline_min_after(chunk_t *ref, size_t count, pcf_flag_e flag)
@@ -881,9 +879,9 @@ void newlines_sparens()
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *sparen_open;
+   //chunk_t *sparen_open;
 
-   for (sparen_open = chunk_get_next_type(chunk_get_head(), CT_SPAREN_OPEN, ANY_LEVEL);
+   for (chunk_t *sparen_open = chunk_get_next_type(chunk_get_head(), CT_SPAREN_OPEN, ANY_LEVEL);
         sparen_open != nullptr; sparen_open = chunk_get_next_type(
            sparen_open, CT_SPAREN_OPEN, ANY_LEVEL))
    {
@@ -1020,11 +1018,6 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e 
    {
       return;
    }
-   chunk_t *prev;
-   chunk_t *next;
-   chunk_t *last_nl = nullptr;
-   size_t  level    = start->level;
-   bool    do_add   = (nl_opt & IARF_ADD) != IARF_IGNORE; // forcing value to bool
 
    /*
     * look backwards until we find
@@ -1034,6 +1027,10 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e 
     */
    for (chunk_t *pc = chunk_get_prev(start); pc != nullptr; pc = chunk_get_prev(pc))
    {
+      size_t  level    = start->level;
+      bool    do_add   = (nl_opt & IARF_ADD) != IARF_IGNORE; // forcing value to bool
+      chunk_t *last_nl = nullptr;
+
       if (chunk_is_newline(pc))
       {
          last_nl = pc;
@@ -1054,6 +1051,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e 
                   pc->nl_count = nl_count;
                   MARK_CHANGE();
                }
+               chunk_t *prev;
 
                // can keep using pc because anything other than newline stops loop, and we delete if newline
                while (chunk_is_newline(prev = chunk_get_prev_nvb(pc)))
@@ -1095,6 +1093,8 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e 
             }
             else
             {
+               chunk_t *next;
+
                // we didn't run into a newline, so we need to add one
                if (  ((next = chunk_get_next(pc)) != nullptr)
                   && chunk_is_comment(next))
@@ -1122,7 +1122,7 @@ static void blank_line_set(chunk_t *pc, Option<unsigned> &opt)
    {
       return;
    }
-   const auto optval = opt();
+   const unsigned optval = opt();
 
    if (  (optval > 0)
       && (pc->nl_count != optval))
@@ -1132,7 +1132,7 @@ static void blank_line_set(chunk_t *pc, Option<unsigned> &opt)
       pc->nl_count = optval;
       MARK_CHANGE();
    }
-}
+} // blank_line_set
 
 
 bool do_it_newlines_func_pre_blank_lines(chunk_t *last_nl, c_token_t start_type)
@@ -1392,7 +1392,7 @@ static chunk_t *get_closing_brace(chunk_t *start)
    }
 
    return(nullptr);
-}
+} // get_closing_brace
 
 
 static void remove_next_newlines(chunk_t *start)
@@ -1417,7 +1417,7 @@ static void remove_next_newlines(chunk_t *start)
          break;
       }
    }
-}
+} // remove_next_newlines
 
 
 static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e nl_opt)
@@ -1886,7 +1886,7 @@ static void newlines_cuddle_uncuddle(chunk_t *start, iarf_e nl_opt)
    {
       newline_iarf_pair(br_close, start, nl_opt);
    }
-}
+} // newlines_cuddle_uncuddle
 
 
 static void newlines_do_else(chunk_t *start, iarf_e nl_opt)
@@ -2205,7 +2205,7 @@ static bool collapse_empty_body(chunk_t *br_open)
    }
 
    return(true);
-}
+} // collapse_empty_body
 
 
 static void newlines_brace_pair(chunk_t *br_open)
@@ -2658,7 +2658,7 @@ static void newline_case_colon(chunk_t *start)
    {
       newline_add_before(pc);
    }
-}
+} // newline_case_colon
 
 
 static void newline_before_return(chunk_t *start)
@@ -2750,7 +2750,7 @@ static void newline_after_return(chunk_t *start)
          return;
       }
    }
-}
+} // newline_after_return
 
 
 static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av, bool check_nl_assign_leave_one_liners)
@@ -2793,7 +2793,7 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av, bool c
               __func__, __LINE__, before->text(), after->text());
       newline_del_between(before, after);
    }
-}
+} // newline_iarf_pair
 
 
 void newline_iarf(chunk_t *pc, iarf_e av)
@@ -2811,7 +2811,7 @@ void newline_iarf(chunk_t *pc, iarf_e av)
       return;
    }
    newline_iarf_pair(pc, after, av);
-}
+} // newline_iarf
 
 
 static void newline_func_multi_line(chunk_t *start)
@@ -3624,7 +3624,7 @@ static void nl_create_one_liner(chunk_t *vbrace_open)
    {
       newline_del_between(vbrace_open, first);
    }
-}
+} // nl_create_one_liner
 
 
 static void nl_create_list_liner(chunk_t *brace_open)
@@ -3689,7 +3689,7 @@ void newlines_remove_newlines(void)
       }
       pc = chunk_get_next_nl(pc);
    }
-}
+} // newlines_remove_newlines
 
 
 void newlines_remove_disallowed()
@@ -3720,7 +3720,7 @@ void newlines_remove_disallowed()
          }
       }
    }
-}
+} // newlines_remove_disallowed
 
 
 void newlines_cleanup_angles()
@@ -3739,7 +3739,7 @@ void newlines_cleanup_angles()
          newline_template(pc);
       }
    }
-}
+} // newlines_cleanup_angles
 
 
 void newlines_cleanup_braces(bool first)
@@ -4921,7 +4921,7 @@ static void nl_handle_define(chunk_t *pc)
          return;
       }
    }
-}
+} // nl_handle_define
 
 
 void newline_after_multiline_comment(void)
@@ -4946,7 +4946,7 @@ void newline_after_multiline_comment(void)
          }
       }
    }
-}
+} // newline_after_multiline_comment
 
 
 void newline_after_label_colon(void)
@@ -4961,7 +4961,7 @@ void newline_after_label_colon(void)
       }
       newline_add_after(pc);
    }
-}
+} // newline_after_label_colon
 
 
 static bool is_class_one_liner(chunk_t *pc)
@@ -4976,7 +4976,7 @@ static bool is_class_one_liner(chunk_t *pc)
             && pc->flags.test(PCF_ONE_LINER));
    }
    return(false);
-}
+} // is_class_one_liner
 
 
 void newlines_insert_blank_lines(void)
@@ -5832,7 +5832,7 @@ static void blank_line_max(chunk_t *pc, Option<unsigned> &opt)
       pc->nl_count = optval;
       MARK_CHANGE();
    }
-}
+} // blank_line_max
 
 
 iarf_e newline_template_option(chunk_t *pc, iarf_e special, iarf_e base, iarf_e fallback)
@@ -5852,7 +5852,7 @@ iarf_e newline_template_option(chunk_t *pc, iarf_e special, iarf_e base, iarf_e 
    {
       return(fallback);
    }
-}
+} // newline_template_option
 
 
 bool is_func_proto_group(chunk_t *pc, c_token_t one_liner_type)
@@ -5878,7 +5878,7 @@ bool is_func_proto_group(chunk_t *pc, c_token_t one_liner_type)
       }
    }
    return(false);
-}
+} // is_func_proto_group
 
 
 void do_blank_lines(void)
@@ -6453,7 +6453,7 @@ void newlines_cleanup_dup(void)
       }
       pc = next;
    }
-}
+} // newlines_cleanup_dup
 
 
 static void newlines_enum_entries(chunk_t *open_brace, iarf_e av)
@@ -6476,7 +6476,7 @@ static void newlines_enum_entries(chunk_t *open_brace, iarf_e av)
       newline_iarf(pc, av);
    }
    newline_iarf(open_brace, av);
-}
+} // newlines_enum_entries
 
 
 static void newlines_double_space_struct_enum_union(chunk_t *open_brace)
@@ -6509,7 +6509,7 @@ static void newlines_double_space_struct_enum_union(chunk_t *open_brace)
          }
       }
    }
-}
+} // newlines_double_space_struct_enum_union
 
 
 void annotations_newlines(void)
@@ -6588,4 +6588,4 @@ bool newlines_between(chunk_t *pc_start, chunk_t *pc_end, size_t &newlines, scop
 
    // newline count is valid if search stopped on expected chunk
    return(it == pc_end);
-}
+} // newlines_between
