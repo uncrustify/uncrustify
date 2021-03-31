@@ -1578,6 +1578,10 @@ void indent_text(void)
          {
             log_rule_B("indent_cpp_lambda_body");
             frm.top().brace_indent = frm.prev().indent;
+            if (are_chunks_in_same_line(frm.prev().pc, chunk_get_prev_ncnnlnp(frm.top().pc)))
+            {
+               frm.top().brace_indent -= indent_size;
+            }
             indent_column_set(frm.top().brace_indent);
             frm.top().indent = indent_column + indent_size;
             log_indent();
