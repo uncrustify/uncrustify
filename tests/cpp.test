@@ -513,6 +513,7 @@
 31636  Issue_1923.cfg                       cpp/Issue_1923.cpp
 
 31660  nl_func_var_def_blk-1.cfg            cpp/issue_1919.cpp
+31661  Issue_3097.cfg                       cpp/Issue_3097.cpp
 
 31700  toggle_processing_cmt.cfg            cpp/toggle_processing_cmt.cpp
 31701  toggle_processing_cmt2.cfg           cpp/toggle_processing_cmt2.cpp
