@@ -1162,6 +1162,22 @@ void tokenize_cleanup(void)
 } // tokenize_cleanup
 
 
+bool invalid_open_angle_template(chunk_t *prev)
+{
+   if (prev == nullptr)
+   {
+      return(false);
+   }
+   // A template requires a word/type right before the open angle
+   return(  prev->type != CT_WORD
+         && prev->type != CT_TYPE
+         && prev->type != CT_COMMA
+         && prev->type != CT_QUALIFIER
+         && prev->type != CT_OPERATOR_VAL
+         && get_chunk_parent_type(prev) != CT_OPERATOR);
+}
+
+
 static void check_template(chunk_t *start, bool in_type_cast)
 {
    LOG_FMT(LTEMPL, "%s(%d): orig_line %zu, orig_col %zu:\n",
@@ -1270,13 +1286,7 @@ static void check_template(chunk_t *start, bool in_type_cast)
        * then it isn't a template.
        */
 
-      // A template requires a word/type right before the open angle
-      if (  prev->type != CT_WORD
-         && prev->type != CT_TYPE
-         && prev->type != CT_COMMA
-         && prev->type != CT_QUALIFIER
-         && prev->type != CT_OPERATOR_VAL
-         && get_chunk_parent_type(prev) != CT_OPERATOR)
+      if (invalid_open_angle_template(prev))
       {
          LOG_FMT(LTEMPL, "%s(%d): - after type %s + ( - Not a template\n",
                  __func__, __LINE__, get_token_name(prev->type));
@@ -1388,13 +1398,20 @@ static void check_template(chunk_t *start, bool in_type_cast)
 
          if (chunk_is_str(pc, "<", 1))
          {
-            tokens[num_tokens] = CT_ANGLE_OPEN;
-            num_tokens++;
+            if (  num_tokens > 0 && (tokens[num_tokens - 1] == CT_PAREN_OPEN)
+               && invalid_open_angle_template(pc->prev))
+            {
+               set_chunk_type(pc, CT_COMPARE); // Issue #3127
+            }
+            else
+            {
+               tokens[num_tokens] = CT_ANGLE_OPEN;
+               num_tokens++;
+            }
          }
          else if (chunk_is_str(pc, ">", 1))
          {
-            if (  num_tokens > 0
-               && (tokens[num_tokens - 1] == CT_PAREN_OPEN))
+            if (num_tokens > 0 && (tokens[num_tokens - 1] == CT_PAREN_OPEN))
             {
                handle_double_angle_close(pc);
             }
