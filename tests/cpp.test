@@ -325,6 +325,7 @@
 30777 sp_cpp_lambda_fparen-f.cfg            cpp/sp_cpp_lambda_fparen.cpp
 
 30780 lambda_in_one_liner.cfg               cpp/lambda_in_one_liner.cpp
+30781 lambda_in_one_liner.cfg               cpp/lambda_brace_list.cpp
 
 30790 Issue_2795.cfg                        cpp/Issue_2795.cpp
 
