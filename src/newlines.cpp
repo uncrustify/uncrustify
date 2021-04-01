@@ -3053,7 +3053,6 @@ static void newline_func_def_or_call(chunk_t *start)
            __func__, __LINE__, start->text(), start->orig_line, start->orig_col,
            get_token_name(start->type), get_token_name(get_chunk_parent_type(start)));
 
-   //chunk_t *prev  = nullptr;
    bool is_def = (get_chunk_parent_type(start) == CT_FUNC_DEF)
                  || get_chunk_parent_type(start) == CT_FUNC_CLASS_DEF;
    bool is_call = (get_chunk_parent_type(start) == CT_FUNC_CALL)
