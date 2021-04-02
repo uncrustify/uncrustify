@@ -1619,7 +1619,8 @@ void indent_text(void)
             // 2a. If it's an assignment, check that both sides of the assignment operator are on the same line
             // 2b. If it's inside some closure, check that all the frames are on the same line
             if (  are_chunks_in_same_line(chunk_skip_to_match(frm.top().pc), tail)
-               && (  (  !enclosure && are_chunks_in_same_line(chunk_get_prev_ncnnlnp(frm.prev().pc), frm.prev().pc)
+               && (  (  !enclosure && options::align_assign_span() == 0
+                     && are_chunks_in_same_line(chunk_get_prev_ncnnlnp(frm.prev().pc), frm.prev().pc)
                      && are_chunks_in_same_line(frm.prev().pc, chunk_get_next_ncnnlnp(frm.prev().pc)))
                   || (enclosure && linematch)))
             {
