@@ -1597,7 +1597,7 @@ void indent_text(void)
                }
                chunk_t *target = chunk_get_next_ncnnlnp(match);
 
-               while (tail == nullptr)
+               while (tail == nullptr && target != nullptr)
                {
                   if (chunk_is_semicolon(target) && target->level == match->level)
                   {
