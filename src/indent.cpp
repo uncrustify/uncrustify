@@ -1579,7 +1579,45 @@ void indent_text(void)
             log_rule_B("indent_cpp_lambda_body");
             frm.top().brace_indent = frm.prev().indent;
 
-            if (are_chunks_in_same_line(frm.prev().pc, frm.top().pc))
+            chunk_t *tail = nullptr;
+            bool enclosure = frm.prev().pc != chunk_skip_to_match(frm.prev().pc);
+            bool linematch = true;
+
+            for (auto it = frm.rbegin(); it != frm.rend(); ++it)
+            {
+               if (it->pc && it->pc != frm.top().pc)
+               {
+                  linematch &= are_chunks_in_same_line(it->pc, frm.top().pc);
+               }
+               chunk_t *match = chunk_skip_to_match(it->pc);
+
+               if (match == nullptr)
+               {
+                  continue;
+               }
+
+               chunk_t *target = chunk_get_next_ncnnlnp(match);
+
+               while (tail == nullptr)
+               {
+                  if (chunk_is_semicolon(target) && target->level == match->level) {
+                     tail = target;
+                  }
+                  else if (target->level < match->level)
+                  {
+                     break;
+                  }
+                  else
+                  {
+                     target = chunk_get_next_ncnnlnp(target);
+                  }
+               };
+            }
+
+            if (  are_chunks_in_same_line(chunk_skip_to_match(frm.top().pc), tail)
+               && (  (  !enclosure && are_chunks_in_same_line(chunk_get_prev_ncnnlnp(frm.prev().pc), frm.prev().pc)
+                     && are_chunks_in_same_line(frm.prev().pc, chunk_get_next_ncnnlnp(frm.prev().pc)))
+                  || (enclosure && linematch)))
             {
                frm.top().brace_indent -= indent_size;
             }
