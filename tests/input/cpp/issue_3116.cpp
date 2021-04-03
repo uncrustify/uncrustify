@@ -106,9 +106,27 @@ A(
             ), 1
         );
 
-std::thread([](const char *c) {
-    std::cout << c << std::endl;
-}).detach();
+// Inside scope
+{
+    std::thread([](const char *c) {
+            std::cout << c << std::endl;
+        }).detach();
+
+    std::thread(
+            [](const char *c) {
+            std::cout << c << std::endl;
+        }
+        ).detach();
+
+    auto f = [&](int a) {
+            return b;
+        };
+
+    auto f = [&](int a)
+    {
+            return b;
+        };
+}
 
 Func(std::count_if(v.begin(), v.end(), [&](const auto &a) {
             return a == 3;
