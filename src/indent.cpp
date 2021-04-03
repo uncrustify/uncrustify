@@ -1579,6 +1579,7 @@ void indent_text(void)
             log_rule_B("indent_cpp_lambda_body");
             frm.top().brace_indent = frm.prev().indent;
 
+            chunk_t *head     = chunk_get_prev_ncnnlnp(frm.top().pc);
             chunk_t *tail     = nullptr;
             bool    enclosure = frm.prev().pc != chunk_skip_to_match(frm.prev().pc);
             bool    linematch = true;
@@ -1587,7 +1588,7 @@ void indent_text(void)
             {
                if (it->pc && it->pc != frm.top().pc)
                {
-                  linematch &= are_chunks_in_same_line(it->pc, frm.top().pc);
+                  linematch &= are_chunks_in_same_line(it->pc, head);
                }
                chunk_t *match = chunk_skip_to_match(it->pc);
 

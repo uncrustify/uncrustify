@@ -169,3 +169,27 @@ else
             }
             );
 }
+
+// Test case from issue 1296 and some variants
+obj->Func([&](int a)
+        {
+        return b;
+        });
+
+obj->Func([] -> int
+        {
+        return b;
+        });
+
+obj->Func([]
+        {
+        return b;
+        }
+        );
+
+obj->Func(
+        Func([]
+        {
+        return b;
+        })
+        );
