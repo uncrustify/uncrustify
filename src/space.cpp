@@ -19,14 +19,10 @@
 
 #include "space.h"
 
-#include "char_table.h"
 #include "chunk_list.h"
-#include "language_tools.h"
 #include "log_rules.h"
 #include "options_for_QT.h"
-#include "prototypes.h"
 #include "punctuators.h"
-#include "unc_ctype.h"
 #include "uncrustify.h"
 #include "uncrustify_types.h"
 
