@@ -2312,20 +2312,20 @@ static void newlines_brace_pair(chunk_t *br_open)
                   current = the_next;
                }
             }
-            chunk_t *tmp = chunk_get_prev_ncnnlni(br_open);
+            chunk_t *tmp_1 = chunk_get_prev_ncnnlni(br_open);
 
-            while (  tmp != nullptr
-                  && (tmp = chunk_get_next(tmp)) != nullptr
-                  && !chunk_is_closing_brace(tmp)
-                  && (chunk_get_next(tmp) != nullptr))
+            while (  tmp_1 != nullptr
+                  && (tmp_1 = chunk_get_next(tmp_1)) != nullptr
+                  && !chunk_is_closing_brace(tmp_1)
+                  && (chunk_get_next(tmp_1) != nullptr))
             {
-               LOG_FMT(LNL1LINE, "%s(%d): tmp->orig_line is %zu, tmp->orig_col is %zu, text() is '%s'\n",
-                       __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->text());
+               LOG_FMT(LNL1LINE, "%s(%d): tmp_1->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+                       __func__, __LINE__, tmp_1->orig_line, tmp_1->orig_col, tmp_1->text());
 
-               if (chunk_is_newline(tmp))
+               if (chunk_is_newline(tmp_1))
                {
-                  tmp = chunk_get_prev(tmp);                 // Issue #1825
-                  newline_iarf_pair(tmp, chunk_get_next_ncnnl(tmp), IARF_REMOVE);
+                  tmp_1 = chunk_get_prev(tmp_1);                 // Issue #1825
+                  newline_iarf_pair(tmp_1, chunk_get_next_ncnnl(tmp_1), IARF_REMOVE);
                }
             }
             chunk_flags_set(br_open, PCF_ONE_LINER);         // set the one liner flag if needed
@@ -3018,25 +3018,25 @@ static void newline_template(chunk_t *start)
 
       if (add_args)
       {
-         chunk_t *pc;
+         chunk_t *pc_1;
 
-         for (pc = chunk_get_next_ncnnl(start);
-              pc != nullptr && pc->level > start->level;
-              pc = chunk_get_next_ncnnl(pc))
+         for (pc_1 = chunk_get_next_ncnnl(start);
+              pc_1 != nullptr && pc_1->level > start->level;
+              pc_1 = chunk_get_next_ncnnl(pc_1))
          {
-            if (  chunk_is_token(pc, CT_COMMA)
-               && (pc->level == (start->level + 1)))
+            if (  chunk_is_token(pc_1, CT_COMMA)
+               && (pc_1->level == (start->level + 1)))
             {
-               chunk_t *tmp = chunk_get_next(pc);
+               chunk_t *tmp = chunk_get_next(pc_1);
 
                if (chunk_is_comment(tmp))
                {
-                  pc = tmp;
+                  pc_1 = tmp;
                }
 
-               if (!chunk_is_newline(chunk_get_next(pc)))
+               if (!chunk_is_newline(chunk_get_next(pc_1)))
                {
-                  newline_iarf(pc, IARF_ADD);
+                  newline_iarf(pc_1, IARF_ADD);
                }
             }
          }
