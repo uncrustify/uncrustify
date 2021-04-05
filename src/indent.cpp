@@ -1578,6 +1578,54 @@ void indent_text(void)
          {
             log_rule_B("indent_cpp_lambda_body");
             frm.top().brace_indent = frm.prev().indent;
+
+            chunk_t *head     = chunk_get_prev_ncnnlnp(frm.top().pc);
+            chunk_t *tail     = nullptr;
+            bool    enclosure = frm.prev().pc != chunk_skip_to_match(frm.prev().pc);
+            bool    linematch = true;
+
+            for (auto it = frm.rbegin(); it != frm.rend() && tail == nullptr; ++it)
+            {
+               if (it->pc && it->pc != frm.top().pc)
+               {
+                  linematch &= are_chunks_in_same_line(it->pc, head);
+               }
+               chunk_t *match = chunk_skip_to_match(it->pc);
+
+               if (match == nullptr)
+               {
+                  continue;
+               }
+               chunk_t *target = chunk_get_next_ncnnlnp(match);
+
+               while (tail == nullptr && target != nullptr)
+               {
+                  if (chunk_is_semicolon(target) && target->level == match->level)
+                  {
+                     tail = target;
+                  }
+                  else if (target->level < match->level)
+                  {
+                     break;
+                  }
+                  else
+                  {
+                     target = chunk_get_next_ncnnlnp(target);
+                  }
+               }
+            }
+
+            // A few things to check:
+            // 1. The matching brace is on the same line as the ending semicolon
+            // 2a. If it's an assignment, check that both sides of the assignment operator are on the same line
+            // 2b. If it's inside some closure, check that all the frames are on the same line
+            if (  options::align_assign_span() == 0 && are_chunks_in_same_line(chunk_skip_to_match(frm.top().pc), tail)
+               && (  (  !enclosure && are_chunks_in_same_line(chunk_get_prev_ncnnlnp(frm.prev().pc), frm.prev().pc)
+                     && are_chunks_in_same_line(frm.prev().pc, chunk_get_next_ncnnlnp(frm.prev().pc)))
+                  || (enclosure && linematch)))
+            {
+               frm.top().brace_indent -= indent_size;
+            }
             indent_column_set(frm.top().brace_indent);
             frm.top().indent = indent_column + indent_size;
             log_indent();
