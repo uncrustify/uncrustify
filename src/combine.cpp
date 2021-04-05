@@ -687,7 +687,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          // decltype may be followed by a braced-init-list
          tmp = set_paren_parent(tmp, CT_DECLTYPE);
 
-         if (chunk_is_opening_brace(tmp))
+         if (chunk_is_opening_brace(tmp) && !pc->flags.test(PCF_IN_LAMBDA))
          {
             tmp = set_paren_parent(tmp, CT_BRACED_INIT_LIST);
 
