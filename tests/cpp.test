@@ -130,7 +130,7 @@
 30111  indent_columns-4.cfg                 cpp/bug_1346.h
 30112  bug_1432.cfg                         cpp/bug_1432.cpp
 30113  bug_1452.cfg                         cpp/bug_1452.cpp
-30114  empty.cfg                            cpp/bug_1462.cpp
+30114  template_sp-remove.cfg               cpp/bug_1462.cpp
 30115  empty.cfg                            cpp/Issue_1704.cpp
 30116  Issue_1052.cfg                       cpp/Issue_1052.cpp
 30117  Issue_2343.cfg                       cpp/Issue_2343.cpp
