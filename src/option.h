@@ -66,7 +66,6 @@ enum class iarf_e // <IARF>
    ADD         = (1u << 0),      //! option adds a given feature
    REMOVE      = (1u << 1),      //! option removes a given feature
    FORCE       = (ADD | REMOVE), //! option forces the usage of a given feature
-   // UNC_INTERNAL
    NOT_DEFINED = (1u << 2)       //! for debugging
 };
 
