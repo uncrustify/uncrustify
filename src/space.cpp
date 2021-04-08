@@ -1683,7 +1683,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       auto arg = iarf_flags_t{ options::sp_type_brace_init_lst() };
 
-      if (  arg != iarf_e::IGNORE
+      if (  arg != IARF_IGNORE
          || get_chunk_parent_type(first) != CT_DECLTYPE)
       {
          // 'int{9}' vs 'int {9}'
@@ -1702,7 +1702,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       auto arg = iarf_flags_t{ options::sp_word_brace_init_lst() };
 
-      if (  arg != iarf_e::IGNORE
+      if (  arg != IARF_IGNORE
          || get_chunk_parent_type(first) != CT_DECLTYPE)
       {
          // 'a{9}' vs 'a {9}'

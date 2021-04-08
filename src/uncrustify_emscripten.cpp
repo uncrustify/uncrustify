@@ -677,10 +677,10 @@ EMSCRIPTEN_BINDINGS(MainModule)
       .value("STRING", option_type_e::STRING);
 
    enum_<iarf_e>("IARF")
-      .value("IGNORE", iarf_e::IGNORE)
-      .value("ADD", iarf_e::ADD)
-      .value("REMOVE", iarf_e::REMOVE)
-      .value("FORCE", iarf_e::FORCE);
+      .value("IGNORE", IARF_IGNORE)
+      .value("ADD", IARF_ADD)
+      .value("REMOVE", IARF_REMOVE)
+      .value("FORCE", IARF_FORCE);
 
    enum_<line_end_e>("LineEnd")
       .value("LF", line_end_e::LF)

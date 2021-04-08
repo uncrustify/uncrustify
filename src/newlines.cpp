@@ -2436,7 +2436,7 @@ static void newlines_brace_pair(chunk_t *br_open)
             || get_chunk_parent_type(br_open) == CT_FUNC_CLASS_DEF
             || get_chunk_parent_type(br_open) == CT_OC_CLASS)
          {
-            val = iarf_e::NOT_DEFINED;
+            val = IARF_NOT_DEFINED;
             log_rule_B("nl_fdef_brace_cond");
             const iarf_e nl_fdef_brace_cond_v = options::nl_fdef_brace_cond();
 
@@ -2450,7 +2450,7 @@ static void newlines_brace_pair(chunk_t *br_open)
                }
             }
 
-            if (val == iarf_e::NOT_DEFINED)
+            if (val == IARF_NOT_DEFINED)
             {
                log_rule_B("nl_fdef_brace");
                val = options::nl_fdef_brace();
