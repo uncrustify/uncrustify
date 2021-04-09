@@ -949,3 +949,4 @@
 60053  bug_2433_2.cfg                       cpp/bug_2433_2.cpp
 60054  interface-keyword-in-cpp.cfg         cpp/interface-keyword-in-cpp.cpp
 60055  issue_3116.cfg                       cpp/issue_3116.cpp
+60056  issue_3116.cfg                       cpp/issue_3116-2.cpp
