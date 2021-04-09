@@ -1615,14 +1615,30 @@ void indent_text(void)
                }
             }
 
+            bool toplevel = true;
+
+            for (auto it = frm.rbegin(); it != frm.rend() && tail != nullptr; ++it)
+            {
+               if (!chunk_is_token(it->pc, CT_FPAREN_OPEN))
+               {
+                  continue;
+               }
+
+               if (it->pc->level < tail->level)
+               {
+                  toplevel = false;
+                  break;
+               }
+            }
+
             // A few things to check:
             // 1. The matching brace is on the same line as the ending semicolon
             // 2a. If it's an assignment, check that both sides of the assignment operator are on the same line
-            // 2b. If it's inside some closure, check that all the frames are on the same line
+            // 2b. If it's inside some closure, check that all the frames are on the same line, and it is in the top level closure
             if (  options::align_assign_span() == 0 && are_chunks_in_same_line(chunk_skip_to_match(frm.top().pc), tail)
                && (  (  !enclosure && are_chunks_in_same_line(chunk_get_prev_ncnnlnp(frm.prev().pc), frm.prev().pc)
                      && are_chunks_in_same_line(frm.prev().pc, chunk_get_next_ncnnlnp(frm.prev().pc)))
-                  || (enclosure && linematch)))
+                  || (enclosure && linematch && toplevel)))
             {
                frm.top().brace_indent -= indent_size;
             }
