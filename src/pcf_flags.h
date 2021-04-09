@@ -8,10 +8,7 @@
 #ifndef PCF_FLAGS_STR_INCLUDED
 #define PCF_FLAGS_STR_INCLUDED
 
-#include "base_types.h"
-
 #include "enum_flags.h"
-#include "log_levels.h"
 #include "logger.h"
 
 #include <cstddef>      // do get the definition of size_t

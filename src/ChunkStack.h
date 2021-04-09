@@ -9,7 +9,6 @@
 #define CHUNKSTACK_H_INCLUDED
 
 #include "uncrustify_types.h"
-#include <deque>
 
 class ChunkStack
 {

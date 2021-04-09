@@ -30,7 +30,6 @@
  * instantiation. Note also that the line break, as shown, is required.
  */
 
-#include "option.h"
 #include "option_enum.h"
 
 namespace uncrustify

@@ -19,14 +19,10 @@
 
 #include "space.h"
 
-#include "char_table.h"
 #include "chunk_list.h"
-#include "language_tools.h"
 #include "log_rules.h"
 #include "options_for_QT.h"
-#include "prototypes.h"
 #include "punctuators.h"
-#include "unc_ctype.h"
 #include "uncrustify.h"
 #include "uncrustify_types.h"
 
@@ -1681,7 +1677,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && chunk_is_token(second, CT_BRACE_OPEN)
       && get_chunk_parent_type(second) == CT_BRACED_INIT_LIST)
    {
-      auto arg = iarf_flags_t{ options::sp_type_brace_init_lst() };
+      iarf_flags_t arg = iarf_flags_t{ options::sp_type_brace_init_lst() };
 
       if (  arg != IARF_IGNORE
          || get_chunk_parent_type(first) != CT_DECLTYPE)

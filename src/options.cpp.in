@@ -1,5 +1,4 @@
 ##BANNER##
-#include "options.h"
 
 #include "uncrustify_types.h"
 
