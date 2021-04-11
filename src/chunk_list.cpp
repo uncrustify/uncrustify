@@ -11,11 +11,8 @@
 #include "ListManager.h"
 #include "prototypes.h"
 #include "space.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
 
 #include <cstdlib>
-#include <cstring>
 
 
 typedef ListManager<chunk_t> ChunkList_t;

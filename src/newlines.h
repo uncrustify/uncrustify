@@ -10,7 +10,6 @@
 #define NEWLINES_H_INCLUDED
 
 #include "chunk_list.h"
-#include "uncrustify_types.h"
 
 /**
  * Double the newline, if allowed.

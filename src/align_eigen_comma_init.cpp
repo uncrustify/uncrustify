@@ -11,11 +11,8 @@
 #include "align_eigen_comma_init.h"
 
 #include "align_stack.h"
-#include "chunk_list.h"
-#include "ChunkStack.h"
 #include "indent.h"
 #include "log_rules.h"
-#include "uncrustify.h"
 
 constexpr static auto LCURRENT = LALIGN;
 

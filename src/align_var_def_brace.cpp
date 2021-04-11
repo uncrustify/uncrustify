@@ -12,7 +12,6 @@
 #include "align_stack.h"
 #include "align_tools.h"
 #include "log_rules.h"
-#include "uncrustify.h"
 
 constexpr static auto LCURRENT = LAVDB;
 

@@ -8,13 +8,12 @@
  */
 
 #include "align_init_brace.h"
+
 #include "align_log_al.h"
 #include "align_tab_column.h"
 #include "align_tools.h"
-#include "chunk_list.h"
 #include "indent.h"
 #include "log_rules.h"
-#include "uncrustify.h"
 
 constexpr static auto LCURRENT = LALBR;
 

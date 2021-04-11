@@ -26,14 +26,10 @@
 #include "prototypes.h"
 
 #include "backup.h"
-#include "logger.h"
 #include "md5.h"
 #include "unc_ctype.h"
-#include "uncrustify.h"
 
 #include <cerrno>
-#include <cstdio>
-#include <cstring>
 
 
 using namespace std;

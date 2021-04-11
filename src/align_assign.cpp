@@ -7,12 +7,9 @@
  * @license GPL v2+
  */
 
-#include <deque>
-
 #include "align_assign.h"
 #include "align_stack.h"
 #include "log_rules.h"
-#include "uncrustify.h"
 
 constexpr static auto LCURRENT = LALASS;
 

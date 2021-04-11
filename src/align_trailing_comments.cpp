@@ -13,7 +13,6 @@
 #include "align_tab_column.h"
 #include "indent.h"
 #include "log_rules.h"
-#include "uncrustify.h"
 
 constexpr static auto LCURRENT = LALTC;
 

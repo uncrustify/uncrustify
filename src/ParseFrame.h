@@ -10,11 +10,9 @@
 #ifndef SRC_PARSEFRAME_H_
 #define SRC_PARSEFRAME_H_
 
-#include "token_enum.h"
 #include "uncrustify_types.h"
 
 #include <memory>
-#include <vector>
 
 
 //! Structure for counting nested level

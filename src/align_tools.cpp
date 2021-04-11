@@ -11,7 +11,6 @@
 
 #include "space.h"
 #include "uncrustify.h"
-#include "uncrustify_limits.h"
 
 
 chunk_t *skip_c99_array(chunk_t *sq_open)
