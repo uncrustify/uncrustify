@@ -17,6 +17,8 @@
 #include <fstream>
 #include <unordered_map>
 
+#include <ctype.h>                       // to get lower
+
 
 namespace uncrustify
 {
