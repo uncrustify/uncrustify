@@ -23,6 +23,9 @@
 #include "options_for_QT.h"
 #include "punctuators.h"
 
+#ifdef WIN32
+#include <algorithm>                   // to get max
+#endif // ifdef WIN32
 
 using namespace std;
 using namespace uncrustify;

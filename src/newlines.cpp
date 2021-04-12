@@ -27,6 +27,10 @@
 #include "prototypes.h"
 #include "space.h"
 
+#ifdef WIN32
+#include <algorithm>                   // to get max
+#endif // ifdef WIN32
+
 
 constexpr static auto LCURRENT = LNEWLINE;
 
