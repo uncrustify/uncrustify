@@ -8,11 +8,7 @@
 
 #include "enum_cleanup.h"
 
-#include "chunk_list.h"
 #include "log_rules.h"
-#include "logger.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
 
 constexpr static auto LCURRENT = LTOK;
 

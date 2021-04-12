@@ -9,7 +9,6 @@
 
 #include "align_oc_decl_colon.h"
 
-#include "align_oc_msg_colons.h"
 #include "align_stack.h"
 #include "chunk_list.h"
 

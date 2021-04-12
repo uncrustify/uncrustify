@@ -12,15 +12,9 @@
 
 #include "flag_parens.h"
 #include "frame_list.h"
-#include "indent.h"
 #include "keywords.h"
 #include "lang_pawn.h"
 #include "prototypes.h"
-#include "unc_ctype.h"
-
-#include <cstdlib>
-#include <iostream>
-#include <stdexcept>
 
 constexpr static auto LCURRENT = LBC;
 

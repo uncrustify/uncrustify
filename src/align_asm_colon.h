@@ -6,6 +6,7 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #ifndef ALIGN_ASM_COLON_H_INCLUDED
 #define ALIGN_ASM_COLON_H_INCLUDED
 

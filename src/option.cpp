@@ -11,18 +11,12 @@
 #include "option.h"
 
 #include "keywords.h"
-#include "option_enum.h"
 #include "uncrustify.h"
-#include "uncrustify_limits.h"
-#include "uncrustify_types.h"
 #include "uncrustify_version.h"
 
 #include <fstream>
 #include <unordered_map>
 
-#include <cctype>
-#include <cstdarg>
-#include <cstring>
 
 namespace uncrustify
 {

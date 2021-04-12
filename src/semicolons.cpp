@@ -8,17 +8,7 @@
 
 #include "semicolons.h"
 
-#include "chunk_list.h"
-#include "ChunkStack.h"
-#include "language_tools.h"
 #include "prototypes.h"
-#include "unc_ctype.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
-
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
 
 
 static void remove_semicolon(chunk_t *pc);

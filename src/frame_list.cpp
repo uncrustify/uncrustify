@@ -8,15 +8,8 @@
 
 #include "frame_list.h"
 
-#include "chunk_list.h"
-#include "error_types.h"
 #include "prototypes.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
 
 namespace
 {

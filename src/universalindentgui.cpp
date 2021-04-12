@@ -17,8 +17,8 @@
 #include "uncrustify_version.h"
 
 #include <vector>
-
 #include <cstdio>
+
 
 constexpr static auto LCURRENT = LOTHER;
 

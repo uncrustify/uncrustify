@@ -12,9 +12,6 @@
 #include "prototypes.h"
 #include "space.h"
 
-#include <cstdlib>
-
-
 typedef ListManager<chunk_t> ChunkList_t;
 
 

@@ -9,14 +9,9 @@
 #include "braces.h"
 
 #include "calculate_closing_brace_position.h"
-#include "combine.h"
 #include "combine_tools.h"
 #include "newlines.h"
 #include "prototypes.h"
-#include "unc_ctype.h"
-
-#include <cstdlib>
-#include <vector>
 
 constexpr static auto LCURRENT = LBR;
 

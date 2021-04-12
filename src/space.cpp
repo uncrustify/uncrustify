@@ -19,17 +19,9 @@
 
 #include "space.h"
 
-#include "chunk_list.h"
 #include "log_rules.h"
 #include "options_for_QT.h"
 #include "punctuators.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
-
-#include <algorithm>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
 
 
 using namespace std;

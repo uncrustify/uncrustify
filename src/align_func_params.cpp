@@ -8,6 +8,7 @@
  */
 
 #include "align_func_params.h"
+
 #include "align_stack.h"
 #include "log_rules.h"
 

@@ -10,9 +10,6 @@
 #include "ParseFrame.h"
 
 #include "uncrustify.h"
-#include "uncrustify_types.h"
-#include <stdexcept>
-#include <string>
 
 
 using std::string;

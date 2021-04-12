@@ -10,22 +10,12 @@
 
 #include "tokenize.h"
 
-#include "char_table.h"
-#include "chunk_list.h"
 #include "keywords.h"
-#include "language_tools.h"
-#include "log_rules.h"
 #include "prototypes.h"
 #include "punctuators.h"
 #include "unc_ctype.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
 #include <regex>
-#include <stack>
 
 
 #define LE_COUNT(x)    cpd.le_counts[static_cast<size_t>(LE_ ## x)]

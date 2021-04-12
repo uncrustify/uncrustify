@@ -8,7 +8,6 @@
 
 #include "combine_tools.h"
 
-#include "combine_fix_mark.h"
 #include "unc_ctype.h"
 #include "uncrustify.h"
 

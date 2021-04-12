@@ -11,17 +11,8 @@
 #include "keywords.h"
 
 #include "args.h"
-#include "char_table.h"
-#include "language_tools.h"
 #include "prototypes.h"
-#include "unc_ctype.h"
-#include "uncrustify.h"
-#include "uncrustify_limits.h"
-#include "uncrustify_types.h"
 
-#include <cerrno>
-#include <cstdlib>
-#include <cstring>
 #include <map>
 
 

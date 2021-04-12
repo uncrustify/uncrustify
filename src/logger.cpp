@@ -10,16 +10,9 @@
  * @license GPL v2+
  */
 
-#include "compat.h"
-#include "log_levels.h"
 #include "logger.h"
-#include "unc_ctype.h"
-#include "uncrustify_types.h"
 
-#include <cstdio>
-#include <deque>
-#include <stdarg.h>
-#include <vector>
+#include "compat.h"
 
 
 struct log_fcn_info

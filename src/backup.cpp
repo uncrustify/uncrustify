@@ -29,9 +29,6 @@
 #include "md5.h"
 #include "unc_ctype.h"
 
-#include <cerrno>
-
-
 using namespace std;
 
 

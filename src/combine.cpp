@@ -9,31 +9,18 @@
 
 #include "combine.h"
 
-#include "chunk_list.h"
 #include "combine_fix_mark.h"
-#include "combine_labels.h"
 #include "combine_skip.h"
 #include "combine_tools.h"
-#include "ChunkStack.h"
-#include "error_types.h"
 #include "EnumStructUnionParser.h"
 #include "flag_braced_init_list.h"
 #include "flag_parens.h"
 #include "lang_pawn.h"
-#include "language_tools.h"
-#include "log_rules.h"
 #include "newlines.h"
 #include "prototypes.h"
 #include "tokenize_cleanup.h"
-#include "unc_ctype.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
 
-#include <cassert>
-#include <cstdio>
-#include <cstdlib>
 #include <limits>
-#include <map>
 
 constexpr static auto LCURRENT = LCOMBINE;
 

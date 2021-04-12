@@ -11,22 +11,15 @@
 
 #include "align_tab_column.h"
 #include "braces.h"
-#include "chunk_list.h"
-#include "error_types.h"
 #include "indent.h"
-#include "language_tools.h"
-#include "log_rules.h"
 #include "prototypes.h"
 #include "tokenize.h"
 #include "unc_ctype.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
 #include "unicode.h"
 
-#include <cstdlib>
-#include <map>
 #include <regex>
 #include <set>
+
 
 constexpr static auto LCURRENT = LOUTPUT;
 

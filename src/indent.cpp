@@ -10,24 +10,12 @@
 #include "indent.h"
 
 #include "align.h"
-#include "chunk_list.h"
-#include "error_types.h"
 #include "frame_list.h"
-#include "language_tools.h"
-#include "log_rules.h"
 #include "options_for_QT.h"
 #include "prototypes.h"
-#include "ParseFrame.h"
 #include "quick_align_again.h"
 #include "space.h"
-#include "unc_ctype.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
 
-#include <algorithm>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
 
 constexpr static auto LCURRENT = LINDENT;
 

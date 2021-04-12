@@ -12,26 +12,16 @@
 
 #include "tokenize_cleanup.h"
 
-#include "char_table.h"
-#include "chunk_list.h"
 #include "combine.h"
 #include "combine_skip.h"
-#include "error_types.h"
 #include "flag_braced_init_list.h"
 #include "flag_decltype.h"
 #include "keywords.h"
-#include "language_tools.h"
-#include "log_rules.h"
 #include "prototypes.h"
 #include "punctuators.h"
 #include "space.h"
 #include "unc_ctype.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
 
-#include <vector>
-
-#include <cstring>
 
 using namespace uncrustify;
 
