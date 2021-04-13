@@ -17,11 +17,6 @@
 #include <fstream>
 #include <unordered_map>
 
-//#include <ctype.h>                       // to get lower
-#include <cctype>
-#include <cstdarg>
-#include <cstring>
-
 
 namespace uncrustify
 {

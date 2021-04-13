@@ -20,6 +20,10 @@
 #include <regex>
 #include <set>
 
+#ifdef WIN32
+#include <map>                    // to get std::map
+#endif // WIN32
+
 
 constexpr static auto LCURRENT = LOUTPUT;
 
@@ -28,14 +32,14 @@ using namespace uncrustify;
 
 struct cmt_reflow
 {
-   chunk_t  *pc;
-   size_t   column;        //! Column of the comment start
-   size_t   brace_col;     //! Brace column (for indenting with tabs)
-   size_t   base_col;      //! Base column (for indenting with tabs)
-   size_t   word_count;    //! number of words on this line
-   size_t   xtra_indent;   //! extra indent of non-first lines (0 or 1)
-   unc_text cont_text;     //! fixed text to output at the start of a line (0 to 3 chars)
-   bool     reflow;        //! reflow the current line
+   chunk_t  *pc         = nullptr;
+   size_t   column      = 0;   //! Column of the comment start
+   size_t   brace_col   = 0;   //! Brace column (for indenting with tabs)
+   size_t   base_col    = 0;   //! Base column (for indenting with tabs)
+   size_t   word_count  = 0;   //! number of words on this line
+   size_t   xtra_indent = 0;   //! extra indent of non-first lines (0 or 1)
+   unc_text cont_text;         //! fixed text to output at the start of a line (0 to 3 chars)
+   bool     reflow = false;    //! reflow the current line
 };
 
 

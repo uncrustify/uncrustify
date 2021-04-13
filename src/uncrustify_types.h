@@ -194,10 +194,12 @@ struct chunk_t
             if (test_it_length < truncate_value + 30)
             {
                strncpy(for_the_copy, test_it, truncate_value - 30);
+               for_the_copy[truncate_value - 30] = 0;
             }
             else
             {
                strncpy(for_the_copy, test_it, truncate_value);
+               for_the_copy[truncate_value] = 0;
             }
             char *message = strcat(for_the_copy, " ... <The string is truncated>");
 

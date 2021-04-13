@@ -17,6 +17,10 @@
 
 #include <regex>
 
+#ifdef WIN32
+#include <stack>            // to get std::stack
+#endif // WIN32
+
 
 #define LE_COUNT(x)    cpd.le_counts[static_cast<size_t>(LE_ ## x)]
 
