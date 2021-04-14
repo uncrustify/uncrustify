@@ -14,6 +14,8 @@
 
 #include "compat.h"
 
+#include <cstdarg>                   // to get va_start, va_end
+
 
 struct log_fcn_info
 {

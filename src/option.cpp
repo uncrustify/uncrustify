@@ -17,6 +17,9 @@
 #include <fstream>
 #include <unordered_map>
 
+#include <cctype>                    // to get std::tolower
+#include <cstdarg>                   // to get va_start, va_end
+
 
 namespace uncrustify
 {
