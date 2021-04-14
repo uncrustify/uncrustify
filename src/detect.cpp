@@ -8,15 +8,8 @@
 
 #include "detect.h"
 
-#include "chunk_list.h"
-#include "ChunkStack.h"
 #include "prototypes.h"
-#include "unc_ctype.h"
-#include "uncrustify_types.h"
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
 
 using namespace uncrustify;
 

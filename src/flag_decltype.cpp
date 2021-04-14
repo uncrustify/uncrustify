@@ -5,7 +5,6 @@
  */
 
 #include "chunk_list.h"
-#include "flag_decltype.h"
 
 
 bool flag_cpp_decltype(chunk_t *pc)

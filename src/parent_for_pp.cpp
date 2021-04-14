@@ -8,15 +8,6 @@
 #include "parent_for_pp.h"
 
 #include "chunk_list.h"
-#include "logger.h"
-#include "uncrustify_types.h"
-
-#include <vector>
-
-
-//using namespace uncrustify;
-
-//using std::vector;
 
 
 void do_parent_for_pp(void)

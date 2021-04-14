@@ -9,7 +9,6 @@
 #ifndef UNICODE_H_INCLUDED
 #define UNICODE_H_INCLUDED
 
-#include "unc_text.h"
 #include "uncrustify_types.h"
 
 

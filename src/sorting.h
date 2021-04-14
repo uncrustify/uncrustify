@@ -10,7 +10,6 @@
 #define SORTING_H_INCLUDED
 
 #include "uncrustify_types.h"
-#include <stdlib.h>
 
 /**
  * alphabetically sort the #include or #import

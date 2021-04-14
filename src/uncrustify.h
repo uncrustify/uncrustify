@@ -9,9 +9,6 @@
 #ifndef UNCRUSTIFY_H_INCLUDED
 #define UNCRUSTIFY_H_INCLUDED
 
-#include "base_types.h"
-#include "log_levels.h"
-#include "token_enum.h"
 #include "uncrustify_types.h"
 
 #include <stdio.h>

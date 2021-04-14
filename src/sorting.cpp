@@ -8,8 +8,6 @@
 
 #include "sorting.h"
 
-#include "chunk_list.h"
-#include "log_rules.h"
 #include "newlines.h"
 #include "prototypes.h"
 

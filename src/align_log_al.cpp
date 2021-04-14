@@ -8,6 +8,7 @@
  */
 
 #include "align_log_al.h"
+
 #include "uncrustify.h"
 
 

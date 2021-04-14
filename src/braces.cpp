@@ -9,22 +9,9 @@
 #include "braces.h"
 
 #include "calculate_closing_brace_position.h"
-#include "chunk_list.h"
-#include "combine.h"
 #include "combine_tools.h"
-#include "error_types.h"
-#include "language_tools.h"
-#include "log_rules.h"
 #include "newlines.h"
 #include "prototypes.h"
-#include "unc_ctype.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
-
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <vector>
 
 constexpr static auto LCURRENT = LBR;
 

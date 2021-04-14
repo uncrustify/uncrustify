@@ -20,26 +20,17 @@
 #include "newlines.h"
 
 #include "align_stack.h"
-#include "chunk_list.h"
-#include "combine.h"
 #include "combine_skip.h"
 #include "flag_parens.h"
 #include "indent.h"
 #include "keywords.h"
-#include "language_tools.h"
-#include "log_rules.h"
-#include "options.h"
 #include "prototypes.h"
 #include "space.h"
-#include "unc_ctype.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
 
-#include <algorithm>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <vector>
+#ifdef WIN32
+#include <algorithm>                   // to get max
+#endif // ifdef WIN32
+
 
 constexpr static auto LCURRENT = LNEWLINE;
 

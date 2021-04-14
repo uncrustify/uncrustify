@@ -8,12 +8,7 @@
 
 #include "lang_pawn.h"
 
-#include "chunk_list.h"
-#include "ChunkStack.h"
-#include "language_tools.h"
 #include "prototypes.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
 
 using namespace uncrustify;
 

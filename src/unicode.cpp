@@ -8,14 +8,6 @@
 
 #include "unicode.h"
 
-#include "prototypes.h"
-#include "unc_ctype.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
-
-#include <cstdlib>
-#include <cstring>
-
 
 using namespace std;
 

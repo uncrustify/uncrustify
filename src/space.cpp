@@ -19,18 +19,13 @@
 
 #include "space.h"
 
-#include "chunk_list.h"
 #include "log_rules.h"
 #include "options_for_QT.h"
 #include "punctuators.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
 
-#include <algorithm>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-
+#ifdef WIN32
+#include <algorithm>                   // to get max
+#endif // ifdef WIN32
 
 using namespace std;
 using namespace uncrustify;

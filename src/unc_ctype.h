@@ -14,7 +14,7 @@
 
 #include "options.h"
 
-#include <cctype>
+#include <cctype>                    // to get std::tolower
 
 // TODO: better avoid inline and move implementation to cpp file
 

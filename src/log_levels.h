@@ -5,10 +5,10 @@
  * Use these for the log severities in LOG_FMT(), etc.
  *
  * @author  Ben Gardner
- * @author  Guy Maurel since version 0.62 for uncrustify4Qt
- *          October 2015, 2016
+ * @author  Guy Maurel October 2015- 2021
  * @license GPL v2+
  */
+
 #ifndef LOG_LEVELS_H_INCLUDED
 #define LOG_LEVELS_H_INCLUDED
 
