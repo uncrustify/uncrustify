@@ -8,6 +8,7 @@
 
 #include "ChunkStack.h"
 
+
 void ChunkStack::Set(const ChunkStack &cs)
 {
    m_cse.resize(cs.m_cse.size());
