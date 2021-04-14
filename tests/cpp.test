@@ -688,6 +688,7 @@
 33214  Issue_2742.cfg                       cpp/Issue_2742.cpp
 33215  Issue_3055.cfg                       cpp/Issue_3055.cpp
 33216  Issue_3055.cfg                       cpp/Issue_3055-a.cpp
+33217  empty.cfg                            cpp/Issue_3113.cpp
 
 34001  nl_before_after.cfg                  cpp/nl_before_after.h
 34002  indent_columns-3.cfg                 cpp/bug_i_793.cpp

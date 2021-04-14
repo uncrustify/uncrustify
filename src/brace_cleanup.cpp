@@ -474,16 +474,23 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
                     __func__, __LINE__, get_token_name((c_token_t)(frm.top().type + 1)));
          }
 
-         if (  frm.top().type != CT_EOF
-            && frm.top().type != CT_PP_DEFINE)
+         if (pc->flags.test(PCF_IN_PREPROC))                // Issue #3113
          {
-            LOG_FMT(LWARN, "%s(%d): File: %s, orig_line is %zu, orig_col is %zu, Error: Unexpected '%s' for '%s', which was on line %zu\n",
-                    __func__, __LINE__, cpd.filename.c_str(), pc->orig_line, pc->orig_col,
-                    pc->text(), get_token_name(frm.top().pc->type),
-                    frm.top().pc->orig_line);
-            print_stack(LBCSPOP, "=Error  ", frm);
-            cpd.error_count++;
-            exit(EXIT_FAILURE);
+            // do nothing
+         }
+         else
+         {
+            if (  frm.top().type != CT_EOF
+               && frm.top().type != CT_PP_DEFINE)
+            {
+               LOG_FMT(LWARN, "%s(%d): File: %s, orig_line is %zu, orig_col is %zu, Error: Unexpected '%s' for '%s', which was on line %zu\n",
+                       __func__, __LINE__, cpd.filename.c_str(), pc->orig_line, pc->orig_col,
+                       pc->text(), get_token_name(frm.top().pc->type),
+                       frm.top().pc->orig_line);
+               print_stack(LBCSPOP, "=Error  ", frm);
+               cpd.error_count++;
+               exit(EXIT_FAILURE);
+            }
          }
       }
       else
