@@ -9,7 +9,6 @@
 
 #include "align_preprocessor.h"
 
-#include "align_assign.h"
 #include "align_stack.h"
 #include "log_rules.h"
 

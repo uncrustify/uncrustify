@@ -27,10 +27,8 @@
 #include "align_trailing_comments.h"
 #include "align_typedefs.h"
 #include "align_var_def_brace.h"
-#include "language_tools.h"
 #include "log_rules.h"
 #include "quick_align_again.h"
-#include "uncrustify.h"
 
 constexpr static auto LCURRENT = LALIGN;
 

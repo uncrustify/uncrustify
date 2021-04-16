@@ -8,7 +8,7 @@
 
 #include "punctuators.h"
 
-#include "log_rules.h"
+//#include "log_rules.h"
 #include "prototypes.h"
 
 #include <algorithm>

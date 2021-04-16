@@ -8,15 +8,7 @@
 
 #include "parens.h"
 
-#include "chunk_list.h"
 #include "log_rules.h"
-#include "unc_ctype.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
-
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
 
 using namespace uncrustify;
 

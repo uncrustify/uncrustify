@@ -11,7 +11,6 @@
 
 #include "chunk_list.h"
 #include "uncrustify.h"
-#include "uncrustify_types.h"
 
 using namespace uncrustify;
 

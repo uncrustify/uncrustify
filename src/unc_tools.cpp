@@ -11,7 +11,6 @@
 
 #include "args.h"
 #include "output.h"
-#include "uncrustify.h"
 
 
 /*

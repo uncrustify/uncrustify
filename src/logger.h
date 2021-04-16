@@ -18,7 +18,6 @@
 #include "logmask.h"
 
 #include <cstdio>      // FILE
-//#include <cstring>     // strlen()
 
 
 /**

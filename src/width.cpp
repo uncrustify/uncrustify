@@ -8,16 +8,10 @@
 
 #include "width.h"
 
-#include "chunk_list.h"
-#include "error_types.h"
 #include "indent.h"
-#include "log_rules.h"
 #include "newlines.h"
 #include "prototypes.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
 
-#include <cstdlib>
 
 constexpr static auto LCURRENT = LSPLIT;
 

@@ -10,9 +10,10 @@
 #include "ParseFrame.h"
 
 #include "uncrustify.h"
-#include "uncrustify_types.h"
-#include <stdexcept>
-#include <string>
+
+#ifdef WIN32
+#include <stdexcept>            // to get std::logic_error
+#endif // WIN32
 
 
 using std::string;

@@ -11,7 +11,6 @@
 #include "combine_skip.h"
 #include "combine_tools.h"
 #include "flag_parens.h"
-#include "lang_pawn.h"
 #include "log_rules.h"
 
 constexpr static auto LCURRENT = LCOMBINE;

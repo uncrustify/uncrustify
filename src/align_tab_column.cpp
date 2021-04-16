@@ -9,10 +9,7 @@
 
 #include "align_tab_column.h"
 
-#include "chunk_list.h"
-#include "log_rules.h"
 #include "prototypes.h"
-#include "uncrustify_types.h"
 
 constexpr static auto LCURRENT = LALIGN;
 

@@ -11,16 +11,12 @@
 #include "align_stack.h"
 
 #include "align_tab_column.h"
-#include "chunk_list.h"
 #include "indent.h"
-#include "prototypes.h"
 #include "space.h"
-#include "uncrustify.h"
 #if defined WITH_STACKID
 #include "unc_tools.h"                   // to get stackID and get_A_Number()
 #endif
 
-#include <limits>
 
 constexpr static auto LCURRENT = LAS;
 

@@ -5,9 +5,8 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #include "ChunkStack.h"
-#include <cstdio>
-#include <cstdlib>
 
 
 void ChunkStack::Set(const ChunkStack &cs)

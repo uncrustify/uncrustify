@@ -10,25 +10,15 @@
 
 #include "brace_cleanup.h"
 
-#include "chunk_list.h"
 #include "flag_parens.h"
 #include "frame_list.h"
-#include "indent.h"
 #include "keywords.h"
 #include "lang_pawn.h"
-#include "language_tools.h"
-#include "log_rules.h"
-#include "logger.h"
 #include "prototypes.h"
-#include "unc_ctype.h"
-#include "uncrustify.h"
-#include "uncrustify_types.h"
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <iostream>
-#include <stdexcept>
+#ifdef WIN32
+#include <stdexcept>            // to get std::invalid_argument
+#endif // WIN32
 
 constexpr static auto LCURRENT = LBC;
 
