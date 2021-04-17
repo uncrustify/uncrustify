@@ -874,31 +874,6 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
       LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, orig_col is %zu, reset expr on '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
    }
-   // This part of code is not necessary, Issue #3055
-   //else if (  chunk_is_token(pc, CT_BRACE_CLOSE)
-   //        && !braceState.consumed
-   //        && braceState.in_preproc != CT_PP_DEFINE)
-   //{
-   //prot_all_lines(__func__, __LINE__);
-   //size_t file_pp_level = ifdef_over_whole_file() ? 1 : 0;
-
-   //if (  !cpd.unc_off_used
-   //   && pc->pp_level == file_pp_level)
-   //{
-   //   // fatal error
-   //   LOG_FMT(LERR, "%s(%d): Unmatched BRACE_CLOSE\n   orig_line is %zu, orig_col is %zu\n",
-   //           __func__, __LINE__, pc->orig_line, pc->orig_col);
-
-   //   log_rule_B("tok_split_gte");
-
-   //   if (!options::tok_split_gte())
-   //   {
-   //      LOG_FMT(LERR, "%s(%d): Try the option 'tok_split_gte = true'\n",
-   //              __func__, __LINE__);
-   //   }
-   //   exit(EXIT_FAILURE);
-   //}
-   //}
 } // parse_cleanup
 
 
@@ -1355,6 +1330,11 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
       else
       {
          ref = chunk_get_next(ref);
+
+         if (chunk_is_token(ref, CT_COMMENT)) // Issue #3034
+         {
+            ref = chunk_get_next_nc(ref);
+         }
       }
    }
 

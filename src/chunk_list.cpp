@@ -478,15 +478,15 @@ static void chunk_log_msg(chunk_t *chunk, const log_sev_t log, const char *str)
 
    if (chunk_is_token(chunk, CT_NEWLINE))
    {
-      LOG_FMT(log, "<Newline>,");
+      LOG_FMT(log, "<Newline>,\n");
    }
    else if (chunk_is_token(chunk, CT_VBRACE_OPEN))
    {
-      LOG_FMT(log, "<VBRACE_OPEN>,");
+      LOG_FMT(log, "<VBRACE_OPEN>,\n");
    }
    else if (chunk_is_token(chunk, CT_VBRACE_CLOSE))
    {
-      LOG_FMT(log, "<VBRACE_CLOSE>,");
+      LOG_FMT(log, "<VBRACE_CLOSE>,\n");
    }
    else
    {
@@ -510,18 +510,18 @@ static void chunk_log(chunk_t *pc, const char *text)
       if (  prev != nullptr
          && next != nullptr)
       {
-         chunk_log_msg(prev, log, " @ between");
-         chunk_log_msg(next, log, " and");
+         chunk_log_msg(prev, log, "   @ between");
+         chunk_log_msg(next, log, "   and");
       }
       else if (next != nullptr)
       {
-         chunk_log_msg(next, log, " @ before");
+         chunk_log_msg(next, log, "   @ before");
       }
       else if (prev != nullptr)
       {
-         chunk_log_msg(prev, log, " @ after");
+         chunk_log_msg(prev, log, "   @ after");
       }
-      LOG_FMT(log, " stage is %s",
+      LOG_FMT(log, "   stage is %s",                             // Issue #3034
               get_unc_stage_name(cpd.unc_stage));
       log_func_stack_inline(log);
    }
