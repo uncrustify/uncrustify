@@ -16,9 +16,7 @@
 #include "lang_pawn.h"
 #include "prototypes.h"
 
-#ifdef WIN32
 #include <stdexcept>            // to get std::invalid_argument
-#endif // WIN32
 
 constexpr static auto LCURRENT = LBC;
 

@@ -11,9 +11,7 @@
 
 #include "uncrustify.h"
 
-#ifdef WIN32
 #include <stdexcept>            // to get std::logic_error
-#endif // WIN32
 
 
 using std::string;
