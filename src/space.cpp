@@ -621,19 +621,6 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          break;
       }
 
-      // Issue #1005
-      /* '::' at the start of an identifier is not member access, but global scope operator.
-       * Detect if previous chunk is a type and previous-previous is "friend"
-       */
-      if (  chunk_is_token(first, CT_TYPE)
-         && first->prev != nullptr
-         && (  first->prev->type == CT_FRIEND
-            && first->next->type != CT_DC_MEMBER))
-      {
-         log_rule_short("FORCE");
-         return(IARF_FORCE);
-      }
-
       if (  (  chunk_is_token(first, CT_WORD)
             || chunk_is_token(first, CT_TYPE)
             || chunk_is_token(first, CT_PAREN_CLOSE)
