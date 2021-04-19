@@ -915,9 +915,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_LPAREN_OPEN))
    {
-      // Add or remove space after the opening parenthesis and before the closing
-      // parenthesis of a argument list of a C++11 lambda, as in
-      // '[]( <here> int x <here> ){ ... }'.
+      // Add or remove space after the opening parenthesis of a argument list
+      // of a C++11 lambda, as in '[]( <here> int x ){ ... }'.
       log_rule("sp_cpp_lambda_argument_list");
       return(options::sp_cpp_lambda_argument_list());
    }
@@ -933,9 +932,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(second, CT_LPAREN_CLOSE))
    {
-      // Add or remove space after the opening parenthesis and before the closing
-      // parenthesis of a argument list of a C++11 lambda, as in
-      // '[]( <here> int x <here> ){ ... }'.
+      // Add or remove space before the closing parenthesis of a argument list
+      // of a C++11 lambda, as in '[]( int x <here> ){ ... }'.
       log_rule("sp_cpp_lambda_argument_list");
       return(options::sp_cpp_lambda_argument_list());
    }
@@ -946,15 +944,6 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       log_rule("sp_cpp_lambda_fparen");
       return(options::sp_cpp_lambda_fparen());
-   }
-
-   if (  (options::sp_cpp_lambda_paren_brace() != IARF_IGNORE)
-      && chunk_is_token(first, CT_FPAREN_CLOSE)
-      && get_chunk_parent_type(first) == CT_CPP_LAMBDA
-      && chunk_is_token(second, CT_BRACE_OPEN))
-   {
-      log_rule("sp_cpp_lambda_paren_brace");
-      return(options::sp_cpp_lambda_paren_brace());
    }
 
    if (  chunk_is_token(first, CT_ENUM)
