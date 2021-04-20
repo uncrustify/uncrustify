@@ -29,6 +29,8 @@
 #include "md5.h"
 #include "unc_ctype.h"
 
+#include <cerrno>                // is needed under OSX
+
 using namespace std;
 
 
