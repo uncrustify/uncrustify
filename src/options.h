@@ -248,7 +248,7 @@ sp_balance_nested_parens;
 extern Option<iarf_e>
 sp_paren_brace;
 
-// Add or remove space between nested braces, i.e. '{{' vs '{ {'.
+// Add or remove space between nested braces, i.e. '{{' vs. '{ {'.
 extern Option<iarf_e>
 sp_brace_brace;
 

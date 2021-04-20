@@ -463,7 +463,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   // "for (;;)" vs "for (;; )" and "for (a;b;c)" vs "for (a; b; c)"
+   // "for (;;)" vs. "for (;; )" and "for (a;b;c)" vs. "for (a; b; c)"
    if (chunk_is_token(first, CT_SEMICOLON))
    {
       if (get_chunk_parent_type(first) == CT_FOR)
@@ -509,7 +509,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(IARF_ADD);
    }
 
-   // "return(a);" vs "return (foo_t)a + 3;" vs "return a;" vs "return;"
+   // "return(a);" vs. "return (foo_t)a + 3;" vs. "return a;" vs. "return;"
    if (chunk_is_token(first, CT_RETURN))
    {
       if (  chunk_is_token(second, CT_PAREN_OPEN)
@@ -531,7 +531,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(IARF_FORCE);
    }
 
-   // "sizeof(foo_t)" vs "sizeof (foo_t)"
+   // "sizeof(foo_t)" vs. "sizeof (foo_t)"
    if (chunk_is_token(first, CT_SIZEOF))
    {
       if (chunk_is_token(second, CT_PAREN_OPEN))
@@ -551,7 +551,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(IARF_FORCE);
    }
 
-   // "decltype(foo_t)" vs "decltype (foo_t)"
+   // "decltype(foo_t)" vs. "decltype (foo_t)"
    if (chunk_is_token(first, CT_DECLTYPE))
    {
       if (chunk_is_token(second, CT_PAREN_OPEN))
@@ -633,12 +633,12 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   // "a,b" vs "a, b"
+   // "a,b" vs. "a, b"
    if (chunk_is_token(first, CT_COMMA))
    {
       if (get_chunk_parent_type(first) == CT_TYPE)
       {
-         // C# multidimensional array type: ',,' vs ', ,' or ',]' vs ', ]'
+         // C# multidimensional array type: ',,' vs. ', ,' or ',]' vs. ', ]'
          if (chunk_is_token(second, CT_COMMA))
          {
             // (C#) Add or remove space between ',' in multidimensional array type
@@ -690,8 +690,9 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(options::sp_before_mdatype_commas());
       }
 
-      if (  chunk_is_token(first, CT_PAREN_OPEN)
-         && (options::sp_paren_comma() != IARF_IGNORE))
+      if (  options::sp_paren_comma() != IARF_IGNORE
+         && (  chunk_is_token(first, CT_PAREN_OPEN)
+            || chunk_is_token(first, CT_FPAREN_OPEN)))
       {
          // Add or remove space between an open parenthesis and comma,
          // i.e. '(,' vs. '( ,'.
@@ -862,7 +863,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_after_oc_synchronized());
    }
 
-   // "if (" vs "if("
+   // "if (" vs. "if("
    if (chunk_is_token(second, CT_SPAREN_OPEN))
    {
       // Add or remove space before '(' of control statements ('if', 'for', 'switch',
@@ -1135,7 +1136,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_after_oc_msg_receiver());
    }
 
-   // c++17 structured bindings e.g., "auto [x, y, z]" vs a[x, y, z]" or "auto const [x, y, z]" vs "auto const[x, y, z]"
+   // c++17 structured bindings e.g., "auto [x, y, z]" vs. a[x, y, z]" or "auto const [x, y, z]" vs. "auto const[x, y, z]"
    if (  language_is_set(LANG_CPP)
       && (  chunk_is_token(first, CT_BYREF)
          || chunk_is_token(first, CT_QUALIFIER)
@@ -1149,7 +1150,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_cpp_before_struct_binding());
    }
 
-   // "a [x]" vs "a[x]"
+   // "a [x]" vs. "a[x]"
    if (  chunk_is_token(second, CT_SQUARE_OPEN)
       && (  get_chunk_parent_type(second) != CT_OC_MSG
          && get_chunk_parent_type(second) != CT_CS_SQ_STMT
@@ -1180,7 +1181,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_before_square());
    }
 
-   // "byte[]" vs "byte []"
+   // "byte[]" vs. "byte []"
    if (chunk_is_token(second, CT_TSQUARE))
    {
       // Add or remove space before '[]'.
@@ -1541,7 +1542,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && (  chunk_is_token(second, CT_PAREN_OPEN)
          || chunk_is_token(second, CT_FPAREN_OPEN)))
    {
-      // "(int)a" vs "(int) a" or "cast(int)a" vs "cast(int) a"
+      // "(int)a" vs. "(int) a" or "cast(int)a" vs. "cast(int) a"
       if (  get_chunk_parent_type(first) == CT_C_CAST
          || get_chunk_parent_type(first) == CT_D_CAST)
       {
@@ -1564,7 +1565,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_after_tparen_close());
    }
 
-   // ")(" vs ") ("
+   // ")(" vs. ") ("
    if (  (  chunk_is_str(first, ")", 1)
          && chunk_is_str(second, "(", 1))
       || (  chunk_is_paren_close(first)
@@ -1653,7 +1654,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  arg != IARF_IGNORE
          || get_chunk_parent_type(first) != CT_DECLTYPE)
       {
-         // 'int{9}' vs 'int {9}'
+         // 'int{9}' vs. 'int {9}'
          // Add or remove space between type and open brace of an unnamed temporary
          // direct-list-initialization.
          log_rule("sp_type_brace_init_lst");
@@ -1672,7 +1673,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  arg != IARF_IGNORE
          || get_chunk_parent_type(first) != CT_DECLTYPE)
       {
-         // 'a{9}' vs 'a {9}'
+         // 'a{9}' vs. 'a {9}'
          // Add or remove space between variable/word and open brace of an unnamed
          // temporary direct-list-initialization.
          log_rule("sp_word_brace_init_lst");
@@ -1714,7 +1715,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
       if (get_chunk_parent_type(second) == CT_BRACED_INIT_LIST)
       {
-         // Add or remove space between nested braces, i.e. '{{' vs '{ {'.
+         // Add or remove space between nested braces, i.e. '{{' vs. '{ {'.
          // only to help the vim command }}}}
          if (  options::sp_brace_brace() != IARF_IGNORE
             && chunk_is_token(first, CT_BRACE_CLOSE)
@@ -1933,7 +1934,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(options::sp_after_invariant_paren());
       }
 
-      // "(struct foo) {...}" vs "(struct foo){...}"
+      // "(struct foo) {...}" vs. "(struct foo){...}"
       if (chunk_is_token(second, CT_BRACE_OPEN))
       {
          // Add or remove space between ')' and '{'.
@@ -1964,7 +1965,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   /* "((" vs "( (" or "))" vs ") )" */
+   /* "((" vs. "( (" or "))" vs. ") )" */
    // Issue #1342
    if (  (  chunk_is_str(first, "(", 1)
          && chunk_is_str(second, "(", 1))
@@ -1983,7 +1984,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_paren_paren());
    }
 
-   // "foo(...)" vs "foo( ... )"
+   // "foo(...)" vs. "foo( ... )"
    if (  chunk_is_token(first, CT_FPAREN_OPEN)
       || chunk_is_token(second, CT_FPAREN_CLOSE))
    {
@@ -2009,7 +2010,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_inside_fparen());
    }
 
-   // "foo(...)" vs "foo( ... )"
+   // "foo(...)" vs. "foo( ... )"
    if (  chunk_is_token(first, CT_TPAREN_OPEN)
       || chunk_is_token(second, CT_TPAREN_CLOSE))
    {
@@ -2079,9 +2080,9 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    /*
-    * C cast:   "(int)"      vs "( int )"
-    * D cast:   "cast(int)"  vs "cast( int )"
-    * CPP cast: "int(a + 3)" vs "int( a + 3 )"
+    * C cast:   "(int)"      vs. "( int )"
+    * D cast:   "cast(int)"  vs. "cast( int )"
+    * CPP cast: "int(a + 3)" vs. "int( a + 3 )"
     */
    if (chunk_is_token(first, CT_PAREN_OPEN))
    {
@@ -2160,7 +2161,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_inside_square_empty());
    }
 
-   // "[3]" vs "[ 3 ]" or for objective-c "@[@3]" vs "@[ @3 ]"
+   // "[3]" vs. "[ 3 ]" or for objective-c "@[@3]" vs. "@[ @3 ]"
    if (  chunk_is_token(first, CT_SQUARE_OPEN)
       || chunk_is_token(second, CT_SQUARE_CLOSE))
    {
@@ -2189,7 +2190,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_square_fparen());
    }
 
-   // "if(...)" vs "if( ... )"
+   // "if(...)" vs. "if( ... )"
    if (  chunk_is_token(second, CT_SPAREN_CLOSE)
       && (options::sp_inside_sparen_close() != IARF_IGNORE))
    {
@@ -2533,7 +2534,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_type_func());
    }
 
-   // "(int)a" vs "(int) a" or "cast(int)a" vs "cast(int) a"
+   // "(int)a" vs. "(int) a" or "cast(int)a" vs. "cast(int) a"
    if (  (  get_chunk_parent_type(first) == CT_C_CAST
          || get_chunk_parent_type(first) == CT_D_CAST)
       && chunk_is_token(first, CT_PAREN_CLOSE))
@@ -2610,7 +2611,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
       if (get_chunk_parent_type(first) == CT_BRACED_INIT_LIST)
       {
-         // Add or remove space between nested braces, i.e. '{{' vs '{ {'.
+         // Add or remove space between nested braces, i.e. '{{' vs. '{ {'.
          // only to help the vim command }}}}
          if (  options::sp_brace_brace() != IARF_IGNORE
             && chunk_is_token(second, CT_BRACE_OPEN)
