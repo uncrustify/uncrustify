@@ -3,16 +3,6 @@ sudo: false
 
 matrix:
   include:
-    # keep a test with old ubuntu version, xenial 16
-    # 1abc
-    - os: linux
-      dist: Xenial
-      env: BADGE=linux BUILD_TYPE=debug
-      addons:
-        apt:
-          update: true
-          packages:
-            - ninja-build
 
     # bionic 18
     # 2
