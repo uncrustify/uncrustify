@@ -908,6 +908,8 @@
 
 10100  issue_564.cfg                        cpp/issue_564.cpp
 10101  issue_574.cfg                        cpp/issue_574.cpp
+10102  issue_574-i-a.cfg                    cpp/issue_574.cpp
+10103  issue_574-i-b.cfg                    cpp/issue_574.cpp
 
 10566  empty.cfg                            cpp/issue_1752.cpp
 
