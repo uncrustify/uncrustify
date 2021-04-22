@@ -29,6 +29,10 @@
 #include "md5.h"
 #include "unc_ctype.h"
 
+#ifdef __APPLE__
+#include <cerrno>                // is needed under OSX
+#endif
+
 using namespace std;
 
 
