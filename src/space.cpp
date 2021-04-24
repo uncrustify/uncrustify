@@ -1004,6 +1004,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(options::sp_assign_default());
       }
 
+      // Add or remove space before assignment operator '=', '+=', etc.
+      // Overrides sp_assign.
       if (options::sp_before_assign() != IARF_IGNORE)
       {
          log_rule("sp_before_assign");
