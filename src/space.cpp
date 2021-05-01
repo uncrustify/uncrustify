@@ -1296,9 +1296,12 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
             return(options::sp_angle_colon());
          }
 
+         // Whether sp_after_angle takes precedence over sp_inside_fparen. This was the
+         // historic behavior, but is probably not the desired behavior, so this is off
+         // by default.
          if (  chunk_is_token(second, CT_FPAREN_CLOSE)
             && options::sp_inside_fparen() != IARF_IGNORE
-            && options::use_sp_after_angle_always() == false)
+            && !options::use_sp_after_angle_always())
          {
             // Add or remove space between '>' and ')'.
             log_rule("sp_inside_fparen");
