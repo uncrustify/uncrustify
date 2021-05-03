@@ -379,6 +379,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(second, CT_SEMICOLON))
    {
+      if (chunk_is_token(first, CT_VBRACE_OPEN))
+      {
+         // Add or remove space before ';'.
+         log_rule("sp_before_semi");
+         return(options::sp_before_semi());
+      }
+
       if (get_chunk_parent_type(second) == CT_FOR)
       {
          if (  chunk_is_token(first, CT_SPAREN_OPEN) // a
@@ -1430,14 +1437,6 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_after_sparen");
          return(options::sp_after_sparen());
       }
-   }
-
-   if (  chunk_is_token(first, CT_VBRACE_OPEN)
-      && chunk_is_token(second, CT_SEMICOLON)) // Issue # 1158
-   {
-      // Add or remove space before ';'.
-      log_rule("sp_before_semi");
-      return(options::sp_before_semi());
    }
 
    if (  chunk_is_token(second, CT_FPAREN_OPEN)
