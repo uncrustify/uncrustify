@@ -875,6 +875,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(first, CT_LAMBDA)
       || chunk_is_token(second, CT_LAMBDA))
    {
+      // Add or remove space around assignment operator '=', '+=', etc.
       log_rule("sp_assign (lambda)");
       return(options::sp_assign());
    }
@@ -909,6 +910,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
       else if (chunk_is_token(second, CT_BRACE_OPEN))
       {
+         // Add or remove space after the capture specification of a C++11 lambda with
+         // no argument list is present, as in '[] <here> { ... }'.
          log_rule("sp_cpp_lambda_square_brace");
          return(options::sp_cpp_lambda_square_brace());
       }
@@ -926,6 +929,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (chunk_is_token(second, CT_BRACE_OPEN))
       {
+         // Add or remove space after the argument list of a C++11 lambda, as in
+         // '[](int x) <here> { ... }'.
          log_rule("sp_cpp_lambda_paren_brace");
          return(options::sp_cpp_lambda_paren_brace());
       }
@@ -943,6 +948,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && get_chunk_parent_type(first) == CT_CPP_LAMBDA
       && chunk_is_token(second, CT_FPAREN_OPEN))
    {
+      // Add or remove space between a lambda body and its call operator of an
+      // immediately invoked lambda, as in '[]( ... ){ ... } <here> ( ... )'.
       log_rule("sp_cpp_lambda_fparen");
       return(options::sp_cpp_lambda_fparen());
    }
@@ -997,6 +1004,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(second, CT_ASSIGN_DEFAULT_ARG))
    {
+      // Add or remove space around assignment operator '=' in a prototype.
+      // If set to ignore, use sp_assign.
       if (  (options::sp_assign_default() != IARF_IGNORE)
          && get_chunk_parent_type(second) == CT_FUNC_PROTO)
       {
@@ -1011,6 +1020,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_before_assign");
          return(options::sp_before_assign());
       }
+      // Add or remove space around assignment operator '=', '+=', etc.
       log_rule("sp_assign");
       return(options::sp_assign());
    }
@@ -1031,6 +1041,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(options::sp_enum_assign());
       }
 
+      // Add or remove space around assignment operator '=' in a prototype.
+      // If set to ignore, use sp_assign.
       if (  (options::sp_assign_default() != IARF_IGNORE)
          && get_chunk_parent_type(first) == CT_FUNC_PROTO)
       {
@@ -1045,6 +1057,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_after_assign");
          return(options::sp_after_assign());
       }
+      // Add or remove space around assignment operator '=', '+=', etc.
       log_rule("sp_assign");
       return(options::sp_assign());
    }
@@ -1061,6 +1074,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_ASSIGN_DEFAULT_ARG))
    {
+      // Add or remove space around assignment operator '=' in a prototype.
+      // If set to ignore, use sp_assign.
       if (  (options::sp_assign_default() != IARF_IGNORE)
          && get_chunk_parent_type(first) == CT_FUNC_PROTO)
       {
@@ -1075,6 +1090,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_after_assign");
          return(options::sp_after_assign());
       }
+      // Add or remove space around assignment operator '=', '+=', etc.
       log_rule("sp_assign");
       return(options::sp_assign());
    }
@@ -1670,6 +1686,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && chunk_is_token(second, CT_BRACE_OPEN)
       && get_chunk_parent_type(second) == CT_BRACED_INIT_LIST)
    {
+      // Add or remove space between a variable and '{' for C++ uniform
+      // initialization.
       auto arg = iarf_flags_t{ options::sp_word_brace_init_lst() };
 
       if (  arg != IARF_IGNORE
@@ -3370,6 +3388,7 @@ void space_text(void)
              * do some comment adjustments if sp_before_tr_emb_cmt and
              * sp_endif_cmt did not apply.
              */
+            // Add or remove space between #else or #endif and a trailing comment.
             if (  (  options::sp_before_tr_emb_cmt() == IARF_IGNORE
                   || (  get_chunk_parent_type(next) != CT_COMMENT_END
                      && get_chunk_parent_type(next) != CT_COMMENT_EMBED))

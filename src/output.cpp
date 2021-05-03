@@ -869,6 +869,7 @@ void output_text(FILE *pfile)
 
          if (chunk_is_token(pc, CT_PP_DEFINE))  // Issue #876
          {
+            // If true, a <TAB> is inserted after #define.
             log_rule_B("force_tab_after_define");
 
             if (options::force_tab_after_define())
@@ -1798,7 +1799,9 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    if (!options::cmt_cpp_to_c())
    {
       auto const *cmt_text = first->str.c_str() + 2;
-      auto       *sp_cmt   = &options::sp_cmt_cpp_start;
+      // Add or remove space after the opening of a C++ comment,
+      // i.e. '// A' vs. '//A'.
+      auto *sp_cmt = &options::sp_cmt_cpp_start;
 
       cmt.cont_text = leadin;
 
