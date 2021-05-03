@@ -1332,9 +1332,9 @@ static void check_template(chunk_t *start, bool in_type_cast)
                   || chunk_is_token(pc, CT_RETURN)
                   || chunk_is_token(pc, CT_WHILE)
                   || chunk_is_token(pc, CT_WHILE_OF_DO))
-               && hit_semicolon == false)
+               && !hit_semicolon)
             || (  chunk_is_token(pc, CT_FOR)
-               && hit_semicolon == true))
+               && hit_semicolon))
          {
             in_if = true;
             break;

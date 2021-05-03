@@ -296,7 +296,7 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
    {
       pc = search_function(pc, scope); // in either direction while
    } while (  pc != nullptr            // the end of the list was not reached yet
-           && (is_expected_type_and_level(pc, type, level) == false));
+           && (!is_expected_type_and_level(pc, type, level)));
 
    return(pc);                         // the latest chunk is the searched one
 }
@@ -314,7 +314,7 @@ static chunk_t *chunk_search_str(chunk_t *cur, const char *str, size_t len, scop
    {
       pc = search_function(pc, scope); // in either direction while
    } while (  pc != nullptr            // the end of the list was not reached yet
-           && (is_expected_string_and_level(pc, str, level, len) == false));
+           && (!is_expected_string_and_level(pc, str, level, len)));
 
    return(pc);                         // the latest chunk is the searched one
 }
