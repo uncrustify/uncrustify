@@ -36,7 +36,7 @@ if (UNCRUSTIFY_SEPARATE_TESTS)
       --git ${GIT_EXECUTABLE}
       --python ${PYTHON_EXECUTABLE}
       --write-ctest ${tests_ctest_file}
-      --cmake-config "$<CONFIG>"
+      --cmake-config "$<CONFIGURATION>"
     VERBATIM
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     DEPENDS ${test_suites}
