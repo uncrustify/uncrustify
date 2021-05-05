@@ -206,6 +206,7 @@
 
 00631  nl_assign1.cfg                       c/nl_assign.c
 00632  nl_assign2.cfg                       c/nl_assign.c
+00633  nl_assign1.cfg                       c/bug_3156.c
 
 # function def newlines
 00701  func-def-1.cfg                       c/function-def.c
