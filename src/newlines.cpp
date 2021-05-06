@@ -5552,8 +5552,12 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
 
             if (next->nl_count == 1)
             {
-               // move the CT_BOOL to after the newline
-               chunk_move_after(pc, next);
+               if (  prev != nullptr
+                  && !prev->flags.test(PCF_IN_PREPROC))
+               {
+                  // move the CT_BOOL to after the newline
+                  chunk_move_after(pc, next);
+               }
             }
          }
          else
