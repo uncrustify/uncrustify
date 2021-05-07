@@ -1104,7 +1104,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_BIT_COLON))
    {
-      if (first->flags.test(PCF_IN_ENUM))
+      if (  first->flags.test(PCF_IN_ENUM)
+         || first->parent_type == CT_ENUM)
       {
          // Add or remove space around assignment ':' in enum.
          log_rule("sp_enum_colon");
@@ -1114,7 +1115,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(second, CT_BIT_COLON))
    {
-      if (second->flags.test(PCF_IN_ENUM))
+      if (  second->flags.test(PCF_IN_ENUM)
+         || second->parent_type == CT_ENUM)
       {
          // Add or remove space around assignment ':' in enum.
          log_rule("sp_enum_colon");
@@ -3069,7 +3071,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          && it.second == second->type)
       {
          // TODO: if necessary create a new option
-         log_rule_short("ADD from add_space_table");
+         log_rule("ADD from add_space_table");
          return(IARF_ADD);
       }
    }
