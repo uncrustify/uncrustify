@@ -1556,6 +1556,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(first, CT_SPAREN_CLOSE)
       && chunk_is_token(second, CT_WHEN))
    {
+      // TODO: provide some test data to check this block
       log_rule_short("FORCE");
       return(IARF_FORCE); // TODO: make this configurable?
    }
@@ -1722,6 +1723,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
          if (chunk_is_token(tmp, CT_ASSIGN))
          {
+            // TODO: provide some test data to check this block
             log_rule_short("IGNORE");
             return(IARF_IGNORE);
          }
@@ -1933,6 +1935,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       if (  get_chunk_parent_type(first) == CT_NONE
          && get_chunk_parent_type(second) == CT_BRACED_INIT_LIST)
       {
+         // TODO: provide some test data to check this block
          // Add or remove space between a variable and '{' for C++ uniform
          // initialization.
          log_rule("sp_word_brace_init_lst");
@@ -2249,6 +2252,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          if (options::sp_after_oc_colon() != IARF_IGNORE)
          {
+            // TODO: provide some test data to check this block
             // (OC) Add or remove space after the colon in message specs,
             // i.e. '-(int) f:(int) x;' vs. '-(int) f: (int) x;'.
             log_rule("sp_after_oc_colon");
@@ -2275,6 +2279,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          {
             if (options::sp_before_oc_colon() != IARF_IGNORE)
             {
+               // TODO: provide some test data to check this block
                // (OC) Add or remove space before the colon in message specs,
                // i.e. '-(int) f: (int) x;' vs. '-(int) f : (int) x;'.
                log_rule("sp_before_oc_colon");
@@ -2332,6 +2337,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(first, CT_NULLCOND)
       || chunk_is_token(second, CT_NULLCOND))
    {
+      // TODO: provide some test data to check this block
       // Add or remove space around the '.' or '->' operators.
       log_rule("sp_member");
       return(options::sp_member());
@@ -2394,6 +2400,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(first, CT_PAREN_OPEN)
       && chunk_is_token(second, CT_PTR_TYPE))
    {
+      // TODO: provide some test data to check this block
       log_rule_short("REMOVE");
       return(IARF_REMOVE);
    }
@@ -2580,6 +2587,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          && chunk_is_token(second, CT_CATCH)
          && (options::sp_oc_brace_catch() != IARF_IGNORE))
       {
+         // TODO: provide some test data to check this block
          // (OC) Add or remove space between '}' and '@catch' if on the same line.
          // If set to ignore, sp_brace_catch is used.
          log_rule("sp_oc_brace_catch");
@@ -2588,6 +2596,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
       if (chunk_is_token(second, CT_CATCH))
       {
+         // TODO: provide some test data to check this block
          // Add or remove space between '}' and 'catch' if on the same line.
          log_rule("sp_brace_catch");
          return(options::sp_brace_catch());
@@ -2618,6 +2627,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
          if (chunk_is_token(tmp, CT_ASSIGN))
          {
+            // TODO: provide some test data to check this block
             log_rule_short("IGNORE");
             return(IARF_IGNORE);
          }
@@ -2715,6 +2725,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  language_is_set(LANG_VALA)
       && chunk_is_token(second, CT_QUESTION))
    {
+      // TODO: provide some test data to check this block
       // Issue #2090
       // (D) Add or remove space between a type and '?'.
       log_rule("sp_type_question");
@@ -2769,6 +2780,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       if (chunk_is_token(second, CT_PAREN_OPEN))
       {
+         // TODO: provide some test data to check this block
          // Add or remove space between function name and '(' on function calls.
          log_rule("sp_func_call_paren");
          return(options::sp_func_call_paren());
