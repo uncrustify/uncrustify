@@ -1931,16 +1931,6 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_word_brace_ns");
          return(options::sp_word_brace_ns());
       }
-
-      if (  get_chunk_parent_type(first) == CT_NONE
-         && get_chunk_parent_type(second) == CT_BRACED_INIT_LIST)
-      {
-         // TODO: provide some test data to check this block
-         // Add or remove space between a variable and '{' for C++ uniform
-         // initialization.
-         log_rule("sp_word_brace_init_lst");
-         return(options::sp_word_brace_init_lst());
-      }
    }
 
    if (  chunk_is_token(second, CT_PAREN_OPEN)
