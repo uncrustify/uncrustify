@@ -17,7 +17,8 @@ include(CheckCXXSymbolExists)
 include(CheckTypeSize)
 include(CTest)
 
-find_package(PythonInterp REQUIRED)
+find_package(Python3 REQUIRED)
+set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
 
 #
 # Check compiler flags
