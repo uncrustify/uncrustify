@@ -150,6 +150,7 @@
 
 30130  brace-allman.cfg                     cpp/if-constexpr.cpp
 30131  Issue_3010.cfg                       cpp/Issue_3010.cpp
+30132  sp_brace_catch.cfg                   cpp/sp_brace_catch.cpp
 
 30200  bug_1862.cfg                         cpp/bug_1862.cpp
 30201  cmt_indent-1.cfg                     cpp/cmt_indent.cpp
@@ -768,6 +769,7 @@
 34174  arith-vs-ptr.cfg                     cpp/i1466.cpp
 34175  align_assign_span-1.cfg              cpp/i1509.cpp
 34176  align_assign_span-1.cfg              cpp/i1509_bug_1112_correction.cpp
+34177  sp_func_call_paren.cfg               cpp/sp_func_call_paren.cpp
 
 34180  bug_1402.cfg                         cpp/bug_1402.cpp
 
