@@ -1479,6 +1479,21 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
+   if (  chunk_is_token(first, CT_MACRO_OPEN)
+      || chunk_is_token(first, CT_MACRO_CLOSE)
+      || chunk_is_token(first, CT_MACRO_ELSE))
+   {
+      if (chunk_is_token(second, CT_FPAREN_OPEN))
+      {
+         // TODO: provide some test data to check this block
+         // Add or remove space between function name and '(' on function calls.
+         log_rule("sp_func_call_paren");
+         return(options::sp_func_call_paren());
+      }
+      log_rule_short("IGNORE");
+      return(IARF_IGNORE);
+   }
+
    // spaces between function and open paren
    if (  chunk_is_token(first, CT_FUNC_CALL)
       || chunk_is_token(first, CT_FUNC_CTOR_VAR)
@@ -2236,6 +2251,10 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_CLASS_COLON))
    {
+      //chunk_t *a = chunk_get_prev_type(first, CT_OC_INTF, first->level, scope_e::ALL);
+      //chunk_t *b = chunk_get_prev_type(first, CT_OC_IMPL, first->level, scope_e::ALL);
+      //bool B_a = a != nullptr;
+      //bool B_b = b != nullptr;
       if (  get_chunk_parent_type(first) == CT_OC_CLASS
          && (  !chunk_get_prev_type(first, CT_OC_INTF, first->level, scope_e::ALL)
             && !chunk_get_prev_type(first, CT_OC_IMPL, first->level, scope_e::ALL)))
@@ -2328,6 +2347,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       || chunk_is_token(second, CT_NULLCOND))
    {
       // TODO: provide some test data to check this block
+      // LANG_CS  null conditional operator
       // Add or remove space around the '.' or '->' operators.
       log_rule("sp_member");
       return(options::sp_member());
@@ -2762,21 +2782,6 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       iarf_e arg = options::sp_after_type();
       log_rule("sp_after_type");
       return(arg);
-   }
-
-   if (  chunk_is_token(first, CT_MACRO_OPEN)
-      || chunk_is_token(first, CT_MACRO_CLOSE)
-      || chunk_is_token(first, CT_MACRO_ELSE))
-   {
-      if (chunk_is_token(second, CT_PAREN_OPEN))
-      {
-         // TODO: provide some test data to check this block
-         // Add or remove space between function name and '(' on function calls.
-         log_rule("sp_func_call_paren");
-         return(options::sp_func_call_paren());
-      }
-      log_rule_short("IGNORE");
-      return(IARF_IGNORE);
    }
 
    // If nothing claimed the PTR_TYPE, then return ignore
