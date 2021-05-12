@@ -11,7 +11,7 @@
 A source code beautifier for C, C++, C#, ObjectiveC, D, Java, Pawn and VALA
 
 ## Features
-* Highly configurable - 742 configurable options as of version 0.72.0
+* Highly configurable - 753 configurable options as of version 0.73.0
 - <details><summary>add/remove spaces</summary>
 
   - `sp_before_sparen`: _Add or remove space before '(' of 'if', 'for', 'switch', 'while', etc._
@@ -372,3 +372,6 @@ as uncrustify exits.
 You can open the command prompt (which is an interactive terminal
 window that allows you to run commands without it closing as soon as
 they exit) and run uncrustify.exe there.
+
+## Using uncrustify with vim
+Have a look [here]https://github.com/cofyc/vim-uncrustify

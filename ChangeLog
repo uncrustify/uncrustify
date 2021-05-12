@@ -1,3 +1,28 @@
+Change highlights in uncrustify-0.73.0 (May 2021)
+-------------------------------------------------------------------------------
+
+  b514f25120b12db7b1ca57cdb93dd929a5bf43c4
+    Added   : indent_before_class_colon            Nov 16 2020
+  39c969b69663f6e6cee9673e23d349a308edc44a
+    Added   : sp_cmt_cpp_region                    Dec  9 2020
+  9ca37d0c32729570de2e51c97338bc567e124ae3
+    Added   : cmt_sp_before_doxygen_javadoc_tags   Dec 24 2020
+    Added   : cmt_align_doxygen_javadoc_tags       Dec 24 2020
+  84e2c750d19b47bbe2547141b092855ec1f64424
+    Added   : cmt_reflow_fold_regex_file           Dec 24 2020
+  3a8e33a12839ca3bac2e1e0b49eb279362a2ab89
+    Added   : processing_cmt_as_regex              Dec 31 2020
+  c622135751824705979d37681fe16d9a60e3d77a
+    Added   : cmt_reflow_indent_to_paragraph_start Jan  9 2021
+  9c0799aa096b68550507980a32a529099caf97c5
+    Added   : sp_cpp_lambda_argument_list          Jan 19 2021
+  02054b1085166903e8c1384308ac7922cb57bd59
+    Added   : nl_do_leave_one_liners               Jan 29 2021
+  6a4d27914fca0c64273fad979355e16021626f8a
+    Added   : debug_truncate                       Feb  7 2021
+  a711e96ef7be6afc9f014c4c7e1e5ea5347aad0d
+    Added   : indent_comma_brace                   Mar  9 2021
+
 Change highlights in uncrustify-0.72.0 (November 2020)
 -------------------------------------------------------------------------------
   new command option:
