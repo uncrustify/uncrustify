@@ -13,6 +13,7 @@
 #include "args.h"
 #include "prototypes.h"
 
+#include <cerrno>
 #include <map>
 
 
