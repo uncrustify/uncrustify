@@ -720,7 +720,6 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
       set_chunk_parent(pc, parent);
    }
    // Issue #2281
-   LOG_FMT(LBCSPOP, "%s(%d):\n", __func__, __LINE__);
 
    if (  chunk_is_token(pc, CT_BRACE_OPEN)
       && pc->parent_type == CT_SWITCH)
@@ -740,18 +739,26 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
    if (  chunk_is_token(pc, CT_CASE)
       || chunk_is_token(pc, CT_DEFAULT))
    {
-      LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col);
-      set_chunk_parent(pc, CT_SWITCH);
-      size_t idx = frm.size();
-      LOG_FMT(LBCSPOP, "%s(%d): idx is %zu\n",
-              __func__, __LINE__, idx);
-      chunk_t *saved = frm.at(idx - 2).pc;
+      chunk_t *prev = chunk_get_prev_ncnnl(pc);         // Issue #3176
 
-      if (saved != nullptr)
+      if (  chunk_is_token(pc, CT_CASE)
+         || (  chunk_is_token(pc, CT_DEFAULT)
+            && chunk_is_not_token(prev, CT_ASSIGN)))
       {
-         // set parent member
-         chunk_set_parent(pc, saved);
+         // it is a CT_DEFAULT from a switch
+         LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col);
+         set_chunk_parent(pc, CT_SWITCH);
+         size_t idx = frm.size();
+         LOG_FMT(LBCSPOP, "%s(%d): idx is %zu\n",
+                 __func__, __LINE__, idx);
+         chunk_t *saved = frm.at(idx - 2).pc;
+
+         if (saved != nullptr)
+         {
+            // set parent member
+            chunk_set_parent(pc, saved);
+         }
       }
    }
 
