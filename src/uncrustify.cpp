@@ -43,6 +43,7 @@
 #include "universalindentgui.h"
 #include "width.h"
 
+#include <cerrno>
 #include <fcntl.h>
 #include <map>
 #ifdef HAVE_UNISTD_H
