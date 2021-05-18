@@ -2323,8 +2323,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_before_constr_colon());
    }
 
-   if (  (options::sp_before_case_colon() != IARF_IGNORE)
-      && chunk_is_token(second, CT_CASE_COLON))
+   if (chunk_is_token(second, CT_CASE_COLON))
    {
       // Add or remove space before case ':'.
       log_rule("sp_before_case_colon");
