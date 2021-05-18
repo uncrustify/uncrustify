@@ -171,6 +171,9 @@
 50905  double_angle_space_2.cfg             oc/double_angle_space.m
 50906  double_angle_space_3.cfg             oc/double_angle_space.m
 
+# test the options sp_ with the value "ignore"
+51000  sp_cond_ternary_short.cfg            oc/sp_cond_ternary_short.m
+
 #
 # adopt tests from UT
 10018  delete-space-oc.cfg                  oc/delete-space-oc.mm

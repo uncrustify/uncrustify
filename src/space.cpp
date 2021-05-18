@@ -267,14 +267,11 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(first, CT_QUESTION)
       && chunk_is_token(second, CT_COND_COLON))
    {
-      if (options::sp_cond_ternary_short() != IARF_IGNORE)
-      {
-         // In the abbreviated ternary form '(a ?: b)', add or remove space between '?'
-         // and ':'.
-         // Overrides all other sp_cond_* options.
-         log_rule("sp_cond_ternary_short");
-         return(options::sp_cond_ternary_short());
-      }
+      // In the abbreviated ternary form '(a ?: b)', add or remove space between '?'
+      // and ':'.
+      // Overrides all other sp_cond_* options.
+      log_rule("sp_cond_ternary_short");
+      return(options::sp_cond_ternary_short());
    }
 
    if (  chunk_is_token(first, CT_QUESTION)
