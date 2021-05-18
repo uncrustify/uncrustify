@@ -870,6 +870,10 @@
 34350  indent_comma_brace.cfg               cpp/indent_comma_brace_glob.cpp
 34351  indent_comma_brace.cfg               cpp/indent_comma_brace_func.cpp
 
+
+34501  sp_endif_cmt.cfg                     cpp/sp_endif_cmt.cpp
+
+
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
 10001  empty.cfg                            cpp/622_ifdef-indentation.cpp
