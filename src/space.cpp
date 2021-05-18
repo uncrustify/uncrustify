@@ -429,13 +429,10 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && (  chunk_is_token(first, CT_PP_ELSE)
          || chunk_is_token(first, CT_PP_ENDIF)))
    {
-      if (options::sp_endif_cmt() != IARF_IGNORE)
-      {
-         set_chunk_type(second, CT_COMMENT_ENDIF);
-         // Add or remove space between #else or #endif and a trailing comment.
-         log_rule("sp_endif_cmt");
-         return(options::sp_endif_cmt());
-      }
+      set_chunk_type(second, CT_COMMENT_ENDIF);
+      // Add or remove space between #else or #endif and a trailing comment.
+      log_rule("sp_endif_cmt");
+      return(options::sp_endif_cmt());
    }
 
    if (  (options::sp_before_tr_emb_cmt() != IARF_IGNORE)
