@@ -705,8 +705,8 @@ def main(args):
     #
     # Test --tracking_space FILE
     #
-    if parsed_args.config == 'Release':
-        eprint("Release")
+    if parsed_args.config == 'Release' or parsed_args.config == 'RelWithDebInfo':
+        eprint(parsed_args.config)
         if not check_uncrustify_output(
                 uncr_bin,
                 parsed_args,
