@@ -28,11 +28,6 @@ using namespace uncrustify;
    } while (0)
 #endif
 
-#define log_rule_short(rule)                                \
-   do {                                                     \
-      log_rule2(__func__, __LINE__, (rule), first, second); \
-   } while (0)
-
 // if you need more debug informations, remove the comment at the next line
 #define SUPER_LOG    1
 #ifdef SUPER_LOG

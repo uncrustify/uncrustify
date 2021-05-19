@@ -7,8 +7,8 @@ void foo(void)
       return(foo);          /* comment */
    }                        /* if (bar) */
 }
-#endif                      /* HAVE_FOO */
-#ifndef HAVE_BAR            /* bar isn't available on all HW */
+#endif /* HAVE_FOO */
+#ifndef HAVE_BAR /* bar isn't available on all HW */
 void bar(void)
 {
    if (foo)
