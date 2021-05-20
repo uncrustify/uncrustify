@@ -872,6 +872,7 @@
 
 # test the options sp_ with the value "ignore"
 34500  sp_before_case_colon.cfg             cpp/sp_before_case_colon.cpp
+34501  sp_endif_cmt.cfg                     cpp/sp_endif_cmt.cpp
 
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
