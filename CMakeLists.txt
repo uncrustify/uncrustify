@@ -17,8 +17,15 @@ include(CheckCXXSymbolExists)
 include(CheckTypeSize)
 include(CTest)
 
-find_package(Python3 REQUIRED)
-set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
+if( ${CMAKE_VERSION} VERSION_LESS "3.12" )
+    find_package( PythonInterp )
+    if( NOT PYTHON_EXECUTABLE )
+        message( FATAL_ERROR "Python is required, but was not found on your system" )
+    endif()
+ else( )
+    find_package(Python3 REQUIRED)
+    set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
+endif()
 
 #
 # Check compiler flags
