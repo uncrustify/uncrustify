@@ -1272,11 +1272,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          // Add or remove space between '>' and a word as in 'List<byte> m;' or
          // 'template <typename T> static ...'.
-         if (options::sp_angle_word() != IARF_IGNORE)
-         {
-            log_rule("sp_angle_word");
-            return(options::sp_angle_word());
-         }
+         log_rule("sp_angle_word");
+         return(options::sp_angle_word());
       }
 
       if (  chunk_is_token(second, CT_FPAREN_OPEN)
