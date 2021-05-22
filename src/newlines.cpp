@@ -2776,12 +2776,11 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av, bool c
 
    if (av & IARF_ADD)
    {
-      log_rule_B("nl_assign_leave_one_liners");
-
       if (  check_nl_assign_leave_one_liners
          && options::nl_assign_leave_one_liners()
          && after->flags.test(PCF_ONE_LINER))
       {
+         log_rule_B("nl_assign_leave_one_liners");
          return;
       }
       chunk_t *nl = newline_add_between(before, after);
