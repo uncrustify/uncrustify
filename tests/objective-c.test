@@ -173,6 +173,7 @@
 
 # test the options sp_ with the value "ignore"
 51000  sp_cond_ternary_short.cfg            oc/sp_cond_ternary_short.m
+51001  sp_enum_paren-i.cfg                  oc/ns_enum-i.m
 
 #
 # adopt tests from UT
