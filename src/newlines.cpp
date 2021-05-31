@@ -6024,15 +6024,17 @@ void do_blank_lines(void)
          }
       }
 
-      // Control blanks before a class
+      // Control blanks before a class/struct
       if (  (  chunk_is_token(prev, CT_SEMICOLON)
             || chunk_is_token(prev, CT_BRACE_CLOSE))
-         && get_chunk_parent_type(prev) == CT_CLASS)
+         && (  get_chunk_parent_type(prev) == CT_CLASS
+            || get_chunk_parent_type(prev) == CT_STRUCT))
       {
-         chunk_t *start = chunk_get_prev_type(prev, CT_CLASS, prev->level);
-         chunk_t *tmp   = start;
+         c_token_t parent_type = get_chunk_parent_type(prev);
+         chunk_t   *start      = chunk_get_prev_type(prev, parent_type, prev->level);
+         chunk_t   *tmp        = start;
 
-         // Is this a class template?
+         // Is this a class/struct template?
          if (get_chunk_parent_type(tmp) == CT_TEMPLATE)
          {
             tmp = chunk_get_prev_type(tmp, CT_TEMPLATE, prev->level);
@@ -6062,11 +6064,18 @@ void do_blank_lines(void)
          }
 
          if (  tmp != nullptr
-            && !start->flags.test(PCF_INCOMPLETE)
-            && options::nl_before_class() > tmp->nl_count)
+            && !start->flags.test(PCF_INCOMPLETE))
          {
-            log_rule_B("nl_before_class");
-            blank_line_set(tmp, options::nl_before_class);
+            if (parent_type == CT_CLASS && options::nl_before_class() > tmp->nl_count)
+            {
+               log_rule_B("nl_before_class");
+               blank_line_set(tmp, options::nl_before_class);
+            }
+            else if (parent_type == CT_STRUCT && options::nl_before_struct() > tmp->nl_count)
+            {
+               log_rule_B("nl_before_struct");
+               blank_line_set(tmp, options::nl_before_struct);
+            }
          }
       }
 

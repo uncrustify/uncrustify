@@ -870,6 +870,9 @@
 34350  indent_comma_brace.cfg               cpp/indent_comma_brace_glob.cpp
 34351  indent_comma_brace.cfg               cpp/indent_comma_brace_func.cpp
 
+34360  nl_before_struct.cfg                 cpp/nl_before_struct_struct.cpp
+34361  nl_before_struct.cfg                 cpp/nl_before_struct_scoped_enum.cpp
+
 # test the options sp_ with the value "ignore"
 34500  sp_before_case_colon.cfg             cpp/sp_before_case_colon.cpp
 34501  sp_endif_cmt.cfg                     cpp/sp_endif_cmt.cpp
