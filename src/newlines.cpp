@@ -2073,7 +2073,15 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
          }
          LOG_FMT(LNL1LINE, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, text() is '%s'\n",
                  __func__, __LINE__, next->orig_line, next->orig_col, next->text());
+
          prev = chunk_get_prev_ncnnl(pc);
+
+         while (  chunk_is_token(prev, CT_DC_MEMBER)
+               || chunk_is_token(prev, CT_TYPE))
+         {
+            prev = chunk_get_prev_ncnnl(prev);
+         }
+
          if (!(chunk_is_opening_brace(prev) || chunk_is_closing_brace(prev)))
          {
             prev = chunk_get_prev_type(pc, CT_SEMICOLON, pc->level);
@@ -2102,6 +2110,11 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
                && first_var_blk
                && options::nl_var_def_blk_start() > 0)
             {
+               LOG_FMT(LBLANKD, "%s(%d): pc is '%s', orig_line is %zu\n",
+                       __func__, __LINE__, pc->text(), pc->orig_line);
+               LOG_FMT(LBLANKD, "%s(%d): prev is '%s', orig_line is %zu\n",
+                       __func__, __LINE__, prev->text(), prev->orig_line);
+
                if (!chunk_is_opening_brace(prev))
                {
                   newline_min_after(prev, options::nl_var_def_blk_start(), PCF_VAR_DEF);
