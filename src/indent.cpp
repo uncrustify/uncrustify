@@ -1627,7 +1627,7 @@ void indent_text(void)
             // 1. The matching brace is on the same line as the ending semicolon
             // 2a. If it's an assignment, check that both sides of the assignment operator are on the same line
             // 2b. If it's inside some closure, check that all the frames are on the same line, and it is in the top level closure
-            if (  options::align_assign_span() == 0 && are_chunks_in_same_line(chunk_skip_to_match(frm.top().pc), tail)
+            if (  options::align_assign_span() == 0 && !options::indent_align_assign() && are_chunks_in_same_line(chunk_skip_to_match(frm.top().pc), tail)
                && (  (  !enclosure && are_chunks_in_same_line(chunk_get_prev_ncnnlnp(frm.prev().pc), frm.prev().pc)
                      && are_chunks_in_same_line(frm.prev().pc, chunk_get_next_ncnnlnp(frm.prev().pc)))
                   || (enclosure && linematch && toplevel)))

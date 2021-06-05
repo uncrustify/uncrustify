@@ -62,3 +62,4 @@ cmake-build-*/
 
 # Vim
 *.swp
+tags
