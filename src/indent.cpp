@@ -1593,7 +1593,8 @@ void indent_text(void)
                while (  tail == nullptr
                      && target != nullptr)
                {
-                  if (chunk_is_semicolon(target) && target->level == match->level)
+                  if (  chunk_is_semicolon(target)
+                     && target->level == match->level)
                   {
                      tail = target;
                   }
