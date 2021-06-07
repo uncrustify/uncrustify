@@ -2073,7 +2073,19 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
          }
          LOG_FMT(LNL1LINE, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, text() is '%s'\n",
                  __func__, __LINE__, next->orig_line, next->orig_col, next->text());
-         prev = chunk_get_prev_type(pc, CT_SEMICOLON, pc->level);
+
+         prev = chunk_get_prev_ncnnl(pc);
+
+         while (  chunk_is_token(prev, CT_DC_MEMBER)
+               || chunk_is_token(prev, CT_TYPE))
+         {
+            prev = chunk_get_prev_ncnnl(prev);
+         }
+
+         if (!(chunk_is_opening_brace(prev) || chunk_is_closing_brace(prev)))
+         {
+            prev = chunk_get_prev_type(pc, CT_SEMICOLON, pc->level);
+         }
 
          if (prev == nullptr)
          {
@@ -2098,26 +2110,19 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
                && first_var_blk
                && options::nl_var_def_blk_start() > 0)
             {
-               chunk_t *prev_2 = chunk_get_prev_nnl(pc);                  // Issue #3097
+               LOG_FMT(LBLANKD, "%s(%d): pc is '%s', orig_line is %zu\n",
+                       __func__, __LINE__, pc->text(), pc->orig_line);
+               LOG_FMT(LBLANKD, "%s(%d): prev is '%s', orig_line is %zu\n",
+                       __func__, __LINE__, prev->text(), prev->orig_line);
 
-               // std::mutex* a;                                             Issue #2692
-               while (  chunk_is_token(prev_2, CT_DC_MEMBER)
-                     || chunk_is_token(prev_2, CT_TYPE))
+               if (!chunk_is_opening_brace(prev))
                {
-                  prev_2 = chunk_get_prev(prev_2);
+                  newline_min_after(prev, options::nl_var_def_blk_start(), PCF_VAR_DEF);
                }
-
-               if (chunk_is_token(prev_2, CT_NEWLINE))
-               {
-                  prev_2 = chunk_get_prev_nnl(prev_2);
-               }
-               LOG_FMT(LBLANKD, "%s(%d): prev_2 is '%s', orig_line is %zu\n",
-                       __func__, __LINE__, prev_2->text(), prev_2->orig_line);
-               newline_min_after(prev_2, options::nl_var_def_blk_start(), PCF_VAR_DEF);
             }
+
             // set newlines within var def block
-            else if (  var_blk
-                    && (options::nl_var_def_blk_in() > 0))
+            if (var_blk && (options::nl_var_def_blk_in() > 0))
             {
                log_rule_B("nl_var_def_blk_in");
                prev = chunk_get_prev(pc);

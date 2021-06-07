@@ -1,5 +1,4 @@
 void myClass::foo() {
-
 	int bar;
 	std::string str;
 
