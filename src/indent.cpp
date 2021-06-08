@@ -444,7 +444,7 @@ static chunk_t *candidate_chunk_first_on_line(chunk_t *pc)
    log_rule_B("indent_inside_ternary_operator");
 
    if (  options::indent_inside_ternary_operator()
-      && (  chunk_is_token(first, CT_QUESTION)
+      && (  chunk_is_question_token(first)
          || chunk_is_token(first, CT_COND_COLON)))
    {
       return(chunk_get_next_ncnnl(first));
@@ -469,7 +469,7 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace,
    }
 
    // Skip to open paren in ':^TYPE *(ARGS) {'
-   if (chunk_is_paren_close(tmp))
+   if (chunk_is_paren_close_token(tmp))
    {
       tmp = chunk_get_prev_nc(chunk_skip_to_match_rev(tmp));
    }
@@ -709,7 +709,7 @@ void indent_text(void)
          {
             chunk_t *prev = chunk_get_prev(pc);
 
-            if (  chunk_is_token(prev, CT_BRACE_CLOSE)
+            if (  chunk_is_brace_close_token(prev)
                && get_chunk_parent_type(prev) == CT_FUNC_DEF)
             {
                in_func_def = false;
@@ -827,8 +827,8 @@ void indent_text(void)
             while (  preproc_next != nullptr
                   && preproc_next->type != CT_NEWLINE)
             {
-               if (  (  (  (chunk_is_token(preproc_next, CT_BRACE_OPEN))
-                        || (chunk_is_token(preproc_next, CT_BRACE_CLOSE)))
+               if (  (  (  (chunk_is_brace_open_token(preproc_next))
+                        || (chunk_is_brace_close_token(preproc_next)))
                      && !options::pp_indent_brace())
                   || (  chunk_is_token(preproc_next, CT_FUNC_DEF)
                      && !options::pp_indent_func_def())
@@ -1000,7 +1000,7 @@ void indent_text(void)
 
       if (options::indent_xml_string() > 0)
       {
-         if (chunk_is_token(pc, CT_STRING))
+         if (chunk_is_string_token(pc))
          {
             if (  pc->len() > 4
                && xml_indent > 0
@@ -1055,14 +1055,14 @@ void indent_text(void)
                }
             }
 
-            if (  chunk_is_token(pc, CT_BRACE_CLOSE)
+            if (  chunk_is_brace_close_token(pc)
                && get_chunk_parent_type(pc) == CT_ENUM)
             {
                chunk_t *prev_ncnl = chunk_get_prev_ncnnl(pc);
                LOG_FMT(LINDLINE, "%s(%d): prev_ncnl is '%s', prev_ncnl->orig_line is %zu, prev_ncnl->orig_col is %zu\n",
                        __func__, __LINE__, prev_ncnl->text(), prev_ncnl->orig_line, prev_ncnl->orig_col);
 
-               if (chunk_is_token(prev_ncnl, CT_COMMA))
+               if (chunk_is_comma_token(prev_ncnl))
                {
                   LOG_FMT(LINDLINE, "%s(%d): prev_ncnl is comma\n", __func__, __LINE__);
                }
@@ -1087,8 +1087,8 @@ void indent_text(void)
 
             if (  options::indent_inside_ternary_operator()
                && (frm.top().type == CT_COND_COLON)
-               && (  chunk_is_semicolon(pc)
-                  || chunk_is_token(pc, CT_COMMA)
+               && (  chunk_is_semicolon_token(pc)
+                  || chunk_is_comma_token(pc)
                   || chunk_is_token(pc, CT_OC_MSG_NAME)
                   || chunk_is_token(pc, CT_SPAREN_CLOSE))) // Issue #1130, #1715
             {
@@ -1098,7 +1098,7 @@ void indent_text(void)
             }
 
             // End any assign operations with a semicolon on the same level
-            if (  chunk_is_semicolon(pc)
+            if (  chunk_is_semicolon_token(pc)
                && (  (frm.top().type == CT_IMPORT)
                   || (frm.top().type == CT_USING)))
             {
@@ -1121,7 +1121,7 @@ void indent_text(void)
             // End any CPP/ObjC class colon stuff
             if (  (  (frm.top().type == CT_CLASS_COLON)
                   || (frm.top().type == CT_CONSTR_COLON))
-               && (  chunk_is_token(pc, CT_BRACE_OPEN)
+               && (  chunk_is_brace_open_token(pc)
                   || chunk_is_token(pc, CT_OC_END)
                   || chunk_is_token(pc, CT_OC_SCOPE)
                   || chunk_is_token(pc, CT_OC_PROPERTY)
@@ -1131,7 +1131,7 @@ void indent_text(void)
                   || (  language_is_set(LANG_OC)
                      && chunk_is_comment(pc)
                      && get_chunk_parent_type(pc) == CT_COMMENT_WHOLE) // Issue #2675
-                  || chunk_is_semicolon(pc)))
+                  || chunk_is_semicolon_token(pc)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -1140,7 +1140,7 @@ void indent_text(void)
 
             // End ObjC class colon stuff inside of generic definition (like Test<T1: id<T3>>)
             if (  (frm.top().type == CT_CLASS_COLON)
-               && chunk_is_token(pc, CT_ANGLE_CLOSE)
+               && chunk_is_angle_close_token(pc)
                && get_chunk_parent_type(pc) == CT_OC_GENERIC_SPEC)
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
@@ -1151,7 +1151,7 @@ void indent_text(void)
             // End Objc nested message and boxed array
             // TODO: ideally formatting would know which opens occurred on a line and group closes in the same manor
             if (  language_is_set(LANG_OC)
-               && chunk_is_token(pc, CT_SQUARE_CLOSE)
+               && chunk_is_square_close_token(pc)
                && get_chunk_parent_type(pc) == CT_OC_AT
                && frm.top().level >= pc->level)
             {
@@ -1159,11 +1159,11 @@ void indent_text(void)
                chunk_t *next = chunk_get_next_nc(pc);
 
                while (  next != nullptr
-                     && (  (  chunk_is_token(next, CT_BRACE_CLOSE)
+                     && (  (  chunk_is_brace_close_token(next)
                            && get_chunk_parent_type(next) == CT_OC_AT)
-                        || (  chunk_is_token(next, CT_SQUARE_CLOSE)
+                        || (  chunk_is_square_close_token(next)
                            && get_chunk_parent_type(next) == CT_OC_AT)
-                        || (  chunk_is_token(next, CT_SQUARE_CLOSE)
+                        || (  chunk_is_square_close_token(next)
                            && get_chunk_parent_type(next) == CT_OC_MSG)))
                {
                   count++;
@@ -1209,7 +1209,7 @@ void indent_text(void)
 
             // a case is ended with another case or a close brace
             if (  (frm.top().type == CT_CASE)
-               && (  chunk_is_token(pc, CT_BRACE_CLOSE)
+               && (  chunk_is_brace_close_token(pc)
                   || chunk_is_token(pc, CT_CASE)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
@@ -1227,8 +1227,8 @@ void indent_text(void)
 
             if (  (frm.top().type == CT_LAMBDA)
                && (  chunk_is_token(pc, CT_SEMICOLON)
-                  || chunk_is_token(pc, CT_COMMA)
-                  || chunk_is_token(pc, CT_BRACE_OPEN)))
+                  || chunk_is_comma_token(pc)
+                  || chunk_is_brace_open_token(pc)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -1239,7 +1239,7 @@ void indent_text(void)
 
             if (  options::indent_access_spec_body()
                && (frm.top().type == CT_ACCESS)
-               && (  chunk_is_token(pc, CT_BRACE_CLOSE)
+               && (  chunk_is_brace_close_token(pc)
                   || chunk_is_token(pc, CT_ACCESS)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
@@ -1248,7 +1248,7 @@ void indent_text(void)
             }
 
             // return & throw are ended with a semicolon
-            if (  chunk_is_semicolon(pc)
+            if (  chunk_is_semicolon_token(pc)
                && (  (frm.top().type == CT_RETURN)
                   || (frm.top().type == CT_THROW)))
             {
@@ -1259,8 +1259,8 @@ void indent_text(void)
 
             // an OC SCOPE ('-' or '+') ends with a semicolon or brace open
             if (  (frm.top().type == CT_OC_SCOPE)
-               && (  chunk_is_semicolon(pc)
-                  || chunk_is_token(pc, CT_BRACE_OPEN)))
+               && (  chunk_is_semicolon_token(pc)
+                  || chunk_is_brace_open_token(pc)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -1272,9 +1272,9 @@ void indent_text(void)
              * brace open
              */
             if (  (frm.top().type == CT_TYPEDEF)
-               && (  chunk_is_semicolon(pc)
-                  || chunk_is_paren_open(pc)
-                  || chunk_is_token(pc, CT_BRACE_OPEN)))
+               && (  chunk_is_semicolon_token(pc)
+                  || chunk_is_paren_open_token(pc)
+                  || chunk_is_brace_open_token(pc)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -1283,7 +1283,7 @@ void indent_text(void)
 
             // an SQL EXEC is ended with a semicolon
             if (  (frm.top().type == CT_SQL_EXEC)
-               && chunk_is_semicolon(pc))
+               && chunk_is_semicolon_token(pc))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -1293,8 +1293,8 @@ void indent_text(void)
             // an CLASS is ended with a semicolon or brace open
             if (  (frm.top().type == CT_CLASS)
                && (  chunk_is_token(pc, CT_CLASS_COLON)
-                  || chunk_is_token(pc, CT_BRACE_OPEN)
-                  || chunk_is_semicolon(pc)))
+                  || chunk_is_brace_open_token(pc)
+                  || chunk_is_semicolon_token(pc)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -1320,8 +1320,8 @@ void indent_text(void)
                   || chunk_is_token(pc, CT_LPAREN_CLOSE)                     // Issue #3054
                   || chunk_is_token(pc, CT_SPAREN_CLOSE)
                   || chunk_is_token(pc, CT_FPAREN_CLOSE)
-                  || chunk_is_token(pc, CT_SQUARE_CLOSE)
-                  || chunk_is_token(pc, CT_ANGLE_CLOSE)))
+                  || chunk_is_square_close_token(pc)
+                  || chunk_is_angle_close_token(pc)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -1382,7 +1382,7 @@ void indent_text(void)
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->elided_text(copy));
 
       // Issue #672
-      if (  chunk_is_token(pc, CT_BRACE_OPEN)
+      if (  chunk_is_brace_open_token(pc)
          && classFound)
       {
          LOG_FMT(LINDENT, "%s(%d): CT_BRACE_OPEN found, CLOSE IT\n",
@@ -1415,8 +1415,8 @@ void indent_text(void)
       log_rule_B("indent_braces_no_func");
       log_rule_B("indent_braces_no_class");
       log_rule_B("indent_braces_no_struct");
-      const bool brace_indent = (  (  chunk_is_token(pc, CT_BRACE_CLOSE)
-                                   || chunk_is_token(pc, CT_BRACE_OPEN))
+      const bool brace_indent = (  (  chunk_is_brace_close_token(pc)
+                                   || chunk_is_brace_open_token(pc))
                                 && options::indent_braces()
                                 && (  !options::indent_braces_no_func()
                                    || get_chunk_parent_type(pc) != CT_FUNC_DEF)
@@ -1427,7 +1427,7 @@ void indent_text(void)
                                 && (  !options::indent_braces_no_struct()
                                    || get_chunk_parent_type(pc) != CT_STRUCT));
 
-      if (chunk_is_token(pc, CT_BRACE_CLOSE))
+      if (chunk_is_brace_close_token(pc))
       {
          if (language_is_set(LANG_OC))
          {
@@ -1438,11 +1438,11 @@ void indent_text(void)
                chunk_t *next = chunk_get_next_nc(pc);
 
                while (  next != nullptr
-                     && (  (  chunk_is_token(next, CT_BRACE_CLOSE)
+                     && (  (  chunk_is_brace_close_token(next)
                            && get_chunk_parent_type(next) == CT_OC_AT)
-                        || (  chunk_is_token(next, CT_SQUARE_CLOSE)
+                        || (  chunk_is_square_close_token(next)
                            && get_chunk_parent_type(next) == CT_OC_AT)
-                        || (  chunk_is_token(next, CT_SQUARE_CLOSE)
+                        || (  chunk_is_square_close_token(next)
                            && get_chunk_parent_type(next) == CT_OC_MSG)))
                {
                   count++;
@@ -1453,7 +1453,7 @@ void indent_text(void)
                // End Objc nested boxed dictionary
                // TODO: ideally formatting would know which opens occurred on a line and group closes in the same manor
                if (  count > 0
-                  && chunk_is_token(pc, CT_BRACE_CLOSE)
+                  && chunk_is_brace_close_token(pc)
                   && get_chunk_parent_type(pc) == CT_OC_AT)
                {
                   if (frm.top().ip.ref)
@@ -1549,7 +1549,7 @@ void indent_text(void)
          // Always indent on virtual braces
          indent_column_set(frm.top().indent_tmp);
       }
-      else if (  chunk_is_token(pc, CT_BRACE_OPEN)
+      else if (  chunk_is_brace_open_token(pc)
               && (  pc->next != nullptr
                  && pc->next->type != CT_NAMESPACE))
       {
@@ -1593,7 +1593,7 @@ void indent_text(void)
                while (  tail == nullptr
                      && target != nullptr)
                {
-                  if (  chunk_is_semicolon(target)
+                  if (  chunk_is_semicolon_token(target)
                      && target->level == match->level)
                   {
                      tail = target;
@@ -1747,7 +1747,7 @@ void indent_text(void)
          }
          // any '{' that is inside of a '(' overrides the '(' indent
          else if (  !options::indent_paren_open_brace()
-                 && chunk_is_paren_open(frm.prev().pc)
+                 && chunk_is_paren_open_token(frm.prev().pc)
                  && chunk_is_newline(chunk_get_next_nc(pc)))
          {
             log_rule_B("indent_paren_open_brace");
@@ -1874,7 +1874,7 @@ void indent_text(void)
             // Issue # 1620, UNI-24090.cs
             else if (  are_chunks_in_same_line(frm.prev().pc, frm.top().pc)
                     && !options::indent_align_paren()
-                    && chunk_is_paren_open(frm.prev().pc)
+                    && chunk_is_paren_open_token(frm.prev().pc)
                     && !pc->flags.test(PCF_ONE_LINER))
             {
                log_rule_B("indent_align_paren");
@@ -1886,7 +1886,7 @@ void indent_text(void)
             }
             else if (  are_chunks_in_same_line(frm.prev().pc, chunk_get_prev_ncnnlnp(frm.top().pc))
                     && !options::indent_align_paren()
-                    && chunk_is_paren_open(frm.prev().pc)
+                    && chunk_is_paren_open_token(frm.prev().pc)
                     && !pc->flags.test(PCF_ONE_LINER))
             {
                log_rule_B("indent_align_paren");
@@ -1911,7 +1911,7 @@ void indent_text(void)
                // We are inside ({ ... }) -- indent one tab from the paren
                frm.top().indent = frm.prev().indent_tmp + indent_size;
 
-               if (!chunk_is_paren_open(frm.prev().pc))
+               if (!chunk_is_paren_open_token(frm.prev().pc))
                {
                   frm.top().indent_tab = frm.top().indent;
                }
@@ -2096,7 +2096,7 @@ void indent_text(void)
             chunk_t *prev = chunk_get_prev(pc);
 
             if (  get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST
-               && chunk_is_token(prev, CT_BRACE_OPEN)
+               && chunk_is_brace_open_token(prev)
                && get_chunk_parent_type(prev) == CT_BRACED_INIT_LIST)
             {
                indent_column = frm.prev().brace_indent;
@@ -2206,7 +2206,7 @@ void indent_text(void)
       {
          chunk_t *prev = chunk_get_prev_ncnnl(pc);
 
-         if (  chunk_is_token(prev, CT_BRACE_CLOSE)
+         if (  chunk_is_brace_close_token(prev)
             && get_chunk_parent_type(prev) == CT_CASE)
          {
             // issue #663 + issue #1366
@@ -2437,8 +2437,8 @@ void indent_text(void)
               || chunk_is_token(pc, CT_LPAREN_OPEN)                     // Issue #3054
               || chunk_is_token(pc, CT_SPAREN_OPEN)
               || chunk_is_token(pc, CT_FPAREN_OPEN)
-              || chunk_is_token(pc, CT_SQUARE_OPEN)
-              || chunk_is_token(pc, CT_ANGLE_OPEN))
+              || chunk_is_square_open_token(pc)
+              || chunk_is_angle_open_token(pc))
       {
          /*
           * Open parenthesis and squares - never update indent_column,
@@ -2457,7 +2457,7 @@ void indent_text(void)
          frm.top().indent = pc->column + pc->len();
          log_indent();
 
-         if (  chunk_is_token(pc, CT_SQUARE_OPEN)
+         if (  chunk_is_square_open_token(pc)
             && language_is_set(LANG_D))
          {
             frm.top().indent_tab = frm.top().indent;
@@ -2481,7 +2481,7 @@ void indent_text(void)
             log_indent_tmp();
          }
          else if (  (  chunk_is_token(pc, CT_FPAREN_OPEN)
-                    || chunk_is_token(pc, CT_ANGLE_OPEN))
+                    || chunk_is_angle_open_token(pc))
                  && (  (  options::indent_func_call_param()
                        && (  get_chunk_parent_type(pc) == CT_FUNC_CALL
                           || get_chunk_parent_type(pc) == CT_FUNC_CALL_USER))
@@ -2609,11 +2609,11 @@ void indent_text(void)
             frm.top().indent_tab = frm.top().indent;
             skipped = true;
          }
-         else if (  (  chunk_is_str(pc, "(", 1)
+         else if (  (  chunk_is_paren_open_str(pc)
                     && !options::indent_paren_nl())
-                 || (  chunk_is_str(pc, "<", 1)
+                 || (  chunk_is_angle_open_str(pc)
                     && !options::indent_paren_nl())    // TODO: add indent_angle_nl?
-                 || (  chunk_is_str(pc, "[", 1)
+                 || (  chunk_is_square_open_str(pc)
                     && !options::indent_square_nl()))
          {
             log_rule_B("indent_paren_nl");
@@ -2738,9 +2738,9 @@ void indent_text(void)
             if (  pc->level == pc->brace_level
                && (  chunk_is_token(pc, CT_FPAREN_OPEN)
                   || chunk_is_token(pc, CT_SPAREN_OPEN)
-                  || (  chunk_is_token(pc, CT_SQUARE_OPEN)
+                  || (  chunk_is_square_open_token(pc)
                      && get_chunk_parent_type(pc) != CT_OC_MSG)
-                  || chunk_is_token(pc, CT_ANGLE_OPEN)))     // Issue #1170
+                  || chunk_is_angle_open_token(pc)))     // Issue #1170
             {
                //log_rule_B("indent_continue");
                //frm.top().indent += abs(options::indent_continue());
@@ -2794,7 +2794,7 @@ void indent_text(void)
          frm.paren_count++;
       }
       else if (  options::indent_member_single()
-              && chunk_is_token(pc, CT_MEMBER)
+              && chunk_is_member_token(pc)
               && (strcmp(pc->text(), ".") == 0)
               && language_is_set(LANG_CS | LANG_CPP))
       {
@@ -2820,7 +2820,7 @@ void indent_text(void)
 
          if (chunk_is_newline(chunk_get_prev(pc)))
          {
-            if (  chunk_is_token(pc, CT_MEMBER)                           // Issue #2890
+            if (  chunk_is_member_token(pc)                           // Issue #2890
                && language_is_set(LANG_CPP))
             {
                // will be done at another place
@@ -2853,7 +2853,7 @@ void indent_text(void)
             && (  (strcmp(tmp->text(), ".") != 0)
                || tmp->type != CT_MEMBER))
          {
-            if (chunk_is_paren_close(tmp))
+            if (chunk_is_paren_close_token(tmp))
             {
                tmp = chunk_get_prev_ncnnlnp(tmp);
             }
@@ -2870,7 +2870,7 @@ void indent_text(void)
             }
          }
       }
-      else if (  chunk_is_token(pc, CT_ASSIGN)
+      else if (  chunk_is_assign_token(pc)
               || chunk_is_token(pc, CT_IMPORT)
               || (  chunk_is_token(pc, CT_USING)
                  && language_is_set(LANG_CS)))
@@ -2880,7 +2880,7 @@ void indent_text(void)
           * just indent one level,
           * otherwise align on the '='.
           */
-         if (  chunk_is_token(pc, CT_ASSIGN)
+         if (  chunk_is_assign_token(pc)
             && chunk_is_newline(chunk_get_prev(pc)))
          {
             if (frm.top().type == CT_ASSIGN_NL)
@@ -2909,7 +2909,7 @@ void indent_text(void)
              * so poping the previous assign and pushing the new one
              */
             if (  frm.top().type == CT_ASSIGN
-               && chunk_is_token(pc, CT_ASSIGN))
+               && chunk_is_assign_token(pc))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -2917,7 +2917,7 @@ void indent_text(void)
             }
             frm.push(pc, __func__, __LINE__);
 
-            if (  chunk_is_token(pc, CT_ASSIGN)
+            if (  chunk_is_assign_token(pc)
                && chunk_is_newline(chunk_get_prev(pc)))
             {
                frm.top().type = CT_ASSIGN_NL;
@@ -2970,7 +2970,7 @@ void indent_text(void)
                }
                log_indent();
 
-               if (  chunk_is_token(pc, CT_ASSIGN)
+               if (  chunk_is_assign_token(pc)
                   && chunk_is_newline(next))
                {
                   frm.top().type       = CT_ASSIGN_NL;
@@ -2987,7 +2987,7 @@ void indent_text(void)
          }
       }
       else if (  chunk_is_token(pc, CT_RETURN)
-              || (  chunk_is_token(pc, CT_THROW)
+              || (  chunk_is_throw_token(pc)
                  && get_chunk_parent_type(pc) == CT_NONE))
       {
          // don't count returns inside a () or []
@@ -3077,7 +3077,7 @@ void indent_text(void)
          }
       }
       else if (  options::indent_inside_ternary_operator()
-              && (  chunk_is_token(pc, CT_QUESTION)
+              && (  chunk_is_question_token(pc)
                  || chunk_is_token(pc, CT_COND_COLON))) // Issue #1130, #1715
       {
          log_rule_B("indent_inside_ternary_operator");
@@ -3178,7 +3178,7 @@ void indent_text(void)
 
          do
          {
-            if (chunk_is_token(tmp, CT_SHIFT))
+            if (chunk_is_shift_token(tmp))
             {
                in_shift = true;
                LOG_FMT(LINDENT2, "%s(%d): in_shift set to TRUE\n",
@@ -3209,7 +3209,7 @@ void indent_text(void)
             tmp = chunk_get_next_ncnnl(tmp);
 
             if (  tmp != nullptr
-               && chunk_is_token(tmp, CT_SHIFT))
+               && chunk_is_shift_token(tmp))
             {
                in_shift = true;
                LOG_FMT(LINDENT2, "%s(%d): in_shift set to TRUE\n",
@@ -3237,15 +3237,15 @@ void indent_text(void)
          chunk_t *prev_nonl = chunk_get_prev_ncnnl(pc);
          chunk_t *prev2     = chunk_get_prev_nc(pc);
 
-         if ((  chunk_is_semicolon(prev_nonl)
-             || chunk_is_token(prev_nonl, CT_BRACE_OPEN)
-             || chunk_is_token(prev_nonl, CT_BRACE_CLOSE)
+         if ((  chunk_is_semicolon_token(prev_nonl)
+             || chunk_is_brace_open_token(prev_nonl)
+             || chunk_is_brace_close_token(prev_nonl)
              || chunk_is_token(prev_nonl, CT_VBRACE_CLOSE)
              || chunk_is_token(prev_nonl, CT_VBRACE_OPEN)
              || chunk_is_token(prev_nonl, CT_CASE_COLON)
              || (  prev_nonl != nullptr
                 && prev_nonl->flags.test(PCF_IN_PREPROC)) != pc->flags.test(PCF_IN_PREPROC)
-             || chunk_is_token(prev_nonl, CT_COMMA)
+             || chunk_is_comma_token(prev_nonl)
              || is_operator))
          {
             in_shift = false;
@@ -3322,7 +3322,7 @@ void indent_text(void)
             // BUT, we need to skip backward over any '::' or TYPE
             //tmp = chunk_get_prev_nc(pc);
 
-            //if (chunk_is_token(tmp, CT_DC_MEMBER))
+            //if (chunk_is_double_colon_token(tmp))
             //{
             //   // look for a type
             //   chunk_t *tmp2 = chunk_get_prev_nc(tmp);
@@ -3337,8 +3337,8 @@ void indent_text(void)
          }
       }
 
-      if (  chunk_is_semicolon(pc)
-         || (  chunk_is_token(pc, CT_BRACE_OPEN)
+      if (  chunk_is_semicolon_token(pc)
+         || (  chunk_is_brace_open_token(pc)
             && get_chunk_parent_type(pc) == CT_FUNCTION))
       {
          vardefcol = 0;
@@ -3373,7 +3373,7 @@ void indent_text(void)
 
          if (  vardefcol > 0
             && pc->level == pc->brace_level
-            && (  chunk_is_token(prev, CT_COMMA)
+            && (  chunk_is_comma_token(prev)
                || chunk_is_token(prev, CT_TYPE)
                || chunk_is_token(prev, CT_PTR_TYPE)
                || chunk_is_token(prev, CT_WORD)))
@@ -3412,11 +3412,11 @@ void indent_text(void)
          }
          else if (  !options::indent_member_single()
                  && !pc->flags.test(PCF_STMT_START)
-                 && (  chunk_is_token(pc, CT_MEMBER)
-                    || (  chunk_is_token(pc, CT_DC_MEMBER)
+                 && (  chunk_is_member_token(pc)
+                    || (  chunk_is_double_colon_token(pc)
                        && chunk_is_token(prev, CT_TYPE))
-                    || (  chunk_is_token(prev, CT_MEMBER)
-                       || (  chunk_is_token(prev, CT_DC_MEMBER)
+                    || (  chunk_is_member_token(prev)
+                       || (  chunk_is_double_colon_token(prev)
                           && chunk_is_token(prevv, CT_TYPE)))))
          {
             log_rule_B("indent_member_single");
@@ -3449,8 +3449,8 @@ void indent_text(void)
                     __func__, __LINE__, pc->orig_line, frm.top().brace_indent);
             reindent_line(pc, frm.top().brace_indent);
          }
-         else if (  chunk_is_token(pc, CT_STRING)
-                 && chunk_is_token(prev, CT_STRING)
+         else if (  chunk_is_string_token(pc)
+                 && chunk_is_string_token(prev)
                  && options::indent_align_string())
          {
             log_rule_B("indent_align_string");
@@ -3472,8 +3472,8 @@ void indent_text(void)
                     __func__, __LINE__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, indent_column);
          }
-         else if (  chunk_is_paren_close(pc)
-                 || chunk_is_token(pc, CT_ANGLE_CLOSE))
+         else if (  chunk_is_paren_close_token(pc)
+                 || chunk_is_angle_close_token(pc))
          {
             /*
              * This is a big hack. We assume that since we hit a paren close,
@@ -3558,7 +3558,7 @@ void indent_text(void)
                                 __func__, __LINE__);
                         chunk_t *search = pc;
 
-                        while (chunk_is_paren_close(chunk_get_next(search)))
+                        while (chunk_is_paren_close_token(chunk_get_next(search)))
                         {
                            search = chunk_get_next(search);
                         }
@@ -3635,11 +3635,11 @@ void indent_text(void)
             }
             reindent_line(pc, indent_value);
          }
-         else if (chunk_is_token(pc, CT_COMMA))
+         else if (chunk_is_comma_token(pc))
          {
             log_rule_B("indent_comma_paren");
             bool comma_paren = options::indent_comma_paren()
-                               && chunk_is_paren_open(frm.top().pc);
+                               && chunk_is_paren_open_token(frm.top().pc);
             log_rule_B("indent_comma_brace");
             bool comma_brace = options::indent_comma_brace()
                                && chunk_is_opening_brace(frm.top().pc);
@@ -3653,14 +3653,13 @@ void indent_text(void)
             reindent_line(pc, indent_column);
          }
          else if (  options::indent_func_const()
-                 && chunk_is_token(pc, CT_QUALIFIER)
-                 && strncasecmp(pc->text(), "const", pc->len()) == 0
+                 && chunk_is_const_token(pc)
                  && (  next == nullptr
                     || chunk_is_token(next, CT_BRACED)
-                    || chunk_is_token(next, CT_BRACE_OPEN)
+                    || chunk_is_brace_open_token(next)
                     || chunk_is_token(next, CT_NEWLINE)
                     || chunk_is_token(next, CT_SEMICOLON)
-                    || chunk_is_token(next, CT_THROW)
+                    || chunk_is_throw_token(next)
                     || chunk_is_token(next, CT_VBRACE_OPEN)))
          {
             // indent const - void GetFoo(void)\n const\n { return (m_Foo); }
@@ -3671,7 +3670,7 @@ void indent_text(void)
             reindent_line(pc, indent_column);
          }
          else if (  options::indent_func_throw()
-                 && chunk_is_token(pc, CT_THROW)
+                 && chunk_is_throw_token(pc)
                  && get_chunk_parent_type(pc) != CT_NONE)
          {
             // indent throw - void GetFoo(void)\n throw()\n { return (m_Foo); }
@@ -3704,7 +3703,7 @@ void indent_text(void)
             log_rule_B("indent_bool_paren");
 
             if (  options::indent_bool_paren()
-               && chunk_is_paren_open(frm.top().pc))
+               && chunk_is_paren_open_token(frm.top().pc))
             {
                indent_column_set(frm.top().pc->column);
 
@@ -3725,8 +3724,8 @@ void indent_text(void)
                  && (  chunk_is_token(pc, CT_ADDR)
                     || chunk_is_token(pc, CT_WORD)
                     || chunk_is_token(pc, CT_DEREF)
-                    || chunk_is_token(pc, CT_NUMBER)
-                    || chunk_is_token(pc, CT_STRING)
+                    || chunk_is_integral_number_token(pc)
+                    || chunk_is_string_token(pc)
                     || chunk_is_token(pc, CT_PAREN_OPEN)))
          {
             log_rule_B("indent_ternary_operator");
@@ -3799,8 +3798,8 @@ void indent_text(void)
             {
                log_rule_B("pos_conditional");
 
-               if (  (  chunk_is_token(pc, CT_QUESTION)      // Issue #2101
-                     || chunk_is_token(pc, CT_COND_COLON))   // Issue #2101
+               if (  (  chunk_is_question_token(pc)        // Issue #2101
+                     || chunk_is_token(pc, CT_COND_COLON)) // Issue #2101
                   && options::pos_conditional() == TP_IGNORE)
                {
                   // do not indent this line
@@ -3835,7 +3834,7 @@ void indent_text(void)
                      reindent_line(pc, indent_column);
                   }
                }
-               else if (  chunk_is_token(pc, CT_MEMBER)                      // Issue #2890
+               else if (  chunk_is_member_token(pc)                      // Issue #2890
                        && language_is_set(LANG_CPP))
                {
                   // comment name: XXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -3863,7 +3862,7 @@ void indent_text(void)
 
                      size_t vor_col = 0;
 
-                     if (chunk_is_token(token_before, CT_ASSIGN))
+                     if (chunk_is_assign_token(token_before))
                      {
                         chunk_t *before_Assign = frm.at(temp_ttidx - 1).pc;
 
@@ -3879,7 +3878,7 @@ void indent_text(void)
                            indent_column = vor_col + 2 * indent_size;
                         }
                      }
-                     else if (chunk_is_token(token_before, CT_BRACE_OPEN))
+                     else if (chunk_is_brace_open_token(token_before))
                      {
                         vor_col = token_before->column;
                         LOG_FMT(LINDPC, "%s(%d): text() is '%s', token_before->type is %s, column is %zu\n",
@@ -3985,7 +3984,7 @@ void indent_text(void)
       log_rule_B("indent_xml_string");
 
       if (  options::indent_xml_string() > 0
-         && chunk_is_token(pc, CT_STRING)
+         && chunk_is_string_token(pc)
          && pc->len() > 4
          && pc->str[1] == '<'
          && pc->str[2] != '/'
@@ -4102,11 +4101,11 @@ static bool is_end_of_assignment(chunk_t *pc, const ParseFrame &frm)
    return(  (  frm.top().type == CT_ASSIGN_NL
             || frm.top().type == CT_MEMBER
             || frm.top().type == CT_ASSIGN)
-         && (  chunk_is_semicolon(pc)
-            || chunk_is_token(pc, CT_COMMA)
-            || chunk_is_token(pc, CT_BRACE_OPEN)
+         && (  chunk_is_semicolon_token(pc)
+            || chunk_is_comma_token(pc)
+            || chunk_is_brace_open_token(pc)
             || chunk_is_token(pc, CT_SPAREN_CLOSE)
-            || (  chunk_is_token(pc, CT_SQUARE_OPEN)
+            || (  chunk_is_square_open_token(pc)
                && get_chunk_parent_type(pc) == CT_ASSIGN))
          && get_chunk_parent_type(pc) != CT_CPP_LAMBDA);
 }

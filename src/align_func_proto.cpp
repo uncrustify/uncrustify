@@ -181,7 +181,7 @@ void align_func_proto(size_t span)
                     && options::align_single_line_brace();
       }
       else if (  look_bro
-              && chunk_is_token(pc, CT_BRACE_OPEN)
+              && chunk_is_brace_open_token(pc)
               && pc->flags.test(PCF_ONE_LINER))
       {
          AlignStack *stack_at_l_bl_brace = many_as_brace.at(pc->level).at(pc->brace_level);

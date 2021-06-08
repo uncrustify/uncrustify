@@ -130,7 +130,7 @@ chunk_t *align_func_param(chunk_t *start)
             break;
          }
       }
-      else if (chunk_is_token(pc, CT_COMMA))
+      else if (chunk_is_comma_token(pc))
       {
          if (pc->flags.test(PCF_IN_TEMPLATE))            // Issue #2757
          {

@@ -152,9 +152,9 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
       }
 
       if (  chunk_is_token(pc, CT_BOOL)
-         || chunk_is_token(pc, CT_QUESTION)
+         || chunk_is_question_token(pc)
          || chunk_is_token(pc, CT_COND_COLON)
-         || chunk_is_token(pc, CT_COMMA))
+         || chunk_is_comma_token(pc))
       {
          LOG_FMT(LPARADD2, " -- %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->type),
@@ -171,13 +171,13 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
          }
          ref = pc;
       }
-      else if (chunk_is_token(pc, CT_COMPARE))
+      else if (chunk_is_comparison_token(pc))
       {
          LOG_FMT(LPARADD2, " -- compare [%s] at line %zu col %zu, level %zu\n",
                  pc->text(), pc->orig_line, pc->orig_col, pc->level);
          hit_compare = true;
       }
-      else if (chunk_is_paren_open(pc))
+      else if (chunk_is_paren_open_token(pc))
       {
          chunk_t *next = chunk_skip_to_match(pc);
 
@@ -187,9 +187,9 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
             pc = next;
          }
       }
-      else if (  chunk_is_token(pc, CT_BRACE_OPEN)
-              || chunk_is_token(pc, CT_SQUARE_OPEN)
-              || chunk_is_token(pc, CT_ANGLE_OPEN))
+      else if (  chunk_is_brace_open_token(pc)
+              || chunk_is_square_open_token(pc)
+              || chunk_is_angle_open_token(pc))
       {
          // Skip [], {}, and <>
          pc = chunk_skip_to_match(pc);

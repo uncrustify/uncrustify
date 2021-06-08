@@ -200,7 +200,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       // back up to the first '*' or '^' preceding the token
       chunk_t *tmp_prev = chunk_get_prev(ali);
 
-      while (  chunk_is_star(tmp_prev)
+      while (  chunk_is_star_token(tmp_prev)
             || chunk_is_msref(tmp_prev))
       {
          ali      = tmp_prev;
@@ -288,7 +288,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
          tmp = chunk_get_next(tmp);
       }
 
-      if (  (  chunk_is_star(tmp)
+      if (  (  chunk_is_star_token(tmp)
             && m_star_style == SS_DANGLE)
          || (  chunk_is_addr(tmp)
             && m_amp_style == SS_DANGLE)
@@ -472,7 +472,7 @@ void AlignStack::Flush()
             {
                chunk_t *next = chunk_get_next(pc->align.start);
 
-               if (chunk_is_token(next, CT_NUMBER))
+               if (chunk_is_integral_number_token(next))
                {
                   start_len += next->len();
                }

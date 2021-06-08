@@ -8,6 +8,7 @@
 
 #include "combine_skip.h"
 
+#include "chunk_tests.h"
 #include "combine_tools.h"
 
 
@@ -15,7 +16,7 @@ chunk_t *skip_align(chunk_t *start)
 {
    chunk_t *pc = start;
 
-   if (chunk_is_token(pc, CT_ALIGN))
+   if (chunk_is_alignof_token(pc))
    {
       pc = chunk_get_next_ncnnl(pc);
 
@@ -65,8 +66,8 @@ static chunk_t *skip_to_expression_edge(chunk_t *pc, chunk_t *(*chunk_get_next)(
           * return the current chunk
           */
          if (  next->level == level
-            && (  chunk_is_token(next, CT_COMMA)
-               || chunk_is_semicolon(next)))
+            && (  chunk_is_comma_token(next)
+               || chunk_is_semicolon_token(next)))
          {
             break;
          }
@@ -103,7 +104,7 @@ chunk_t *skip_to_expression_start(chunk_t *pc)
 chunk_t *skip_to_next_statement(chunk_t *pc)
 {
    while (  pc != nullptr
-         && !chunk_is_semicolon(pc)
+         && !chunk_is_semicolon_token(pc)
          && chunk_is_not_token(pc, CT_BRACE_OPEN)
          && chunk_is_not_token(pc, CT_BRACE_CLOSE))
    {
@@ -140,8 +141,8 @@ chunk_t *skip_parent_types(chunk_t *colon)
       // Get next token
       auto next = skip_template_next(chunk_get_next_ncnnlnp(pc));
 
-      if (  chunk_is_token(next, CT_DC_MEMBER)
-         || chunk_is_token(next, CT_COMMA))
+      if (  chunk_is_double_colon_token(next)
+         || chunk_is_comma_token(next))
       {
          pc = chunk_get_next_ncnnlnp(next);
       }
@@ -164,7 +165,7 @@ chunk_t *skip_parent_types(chunk_t *colon)
 
 chunk_t *skip_template_prev(chunk_t *ang_close)
 {
-   if (chunk_is_token(ang_close, CT_ANGLE_CLOSE))
+   if (chunk_is_angle_close_token(ang_close))
    {
       chunk_t *pc = chunk_get_prev_type(ang_close, CT_ANGLE_OPEN, ang_close->level);
       return(chunk_get_prev_ncnnlni(pc));   // Issue #2279
@@ -175,8 +176,8 @@ chunk_t *skip_template_prev(chunk_t *ang_close)
 
 chunk_t *skip_tsquare_next(chunk_t *ary_def)
 {
-   if (  chunk_is_token(ary_def, CT_SQUARE_OPEN)
-      || chunk_is_token(ary_def, CT_TSQUARE))
+   if (  chunk_is_square_open_token(ary_def)
+      || chunk_is_subscript_token(ary_def))
    {
       return(chunk_get_next_nisq(ary_def));
    }
@@ -282,9 +283,9 @@ chunk_t *skip_declspec_prev(chunk_t *pc)
 
 chunk_t *skip_matching_brace_bracket_paren_next(chunk_t *pc)
 {
-   if (  chunk_is_token(pc, CT_BRACE_OPEN)
+   if (  chunk_is_brace_open_token(pc)
       || chunk_is_token(pc, CT_PAREN_OPEN)
-      || chunk_is_token(pc, CT_SQUARE_OPEN))
+      || chunk_is_square_open_token(pc))
    {
       pc = chunk_skip_to_match(pc);
 
@@ -304,9 +305,9 @@ chunk_t *skip_matching_brace_bracket_paren_next(chunk_t *pc)
 
 chunk_t *skip_to_chunk_before_matching_brace_bracket_paren_rev(chunk_t *pc)
 {
-   if (  chunk_is_token(pc, CT_BRACE_CLOSE)
+   if (  chunk_is_brace_close_token(pc)
       || chunk_is_token(pc, CT_PAREN_CLOSE)
-      || chunk_is_token(pc, CT_SQUARE_CLOSE))
+      || chunk_is_square_close_token(pc))
    {
       pc = chunk_skip_to_match_rev(pc);
 

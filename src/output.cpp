@@ -784,7 +784,7 @@ void output_text(FILE *pfile)
                 * FIXME: it would be better to properly set column_indent in
                 * indent_text(), but this hack for '}' and '#' seems to work.
                 */
-               if (  chunk_is_token(pc, CT_BRACE_CLOSE)
+               if (  chunk_is_brace_close_token(pc)
                   || chunk_is_token(pc, CT_CASE_COLON)
                   || chunk_is_token(pc, CT_PREPROC))
                {
@@ -845,23 +845,23 @@ void output_text(FILE *pfile)
 
          if (write_in_tracking)
          {
-            if (chunk_is_token(pc, CT_ANGLE_OPEN))
+            if (chunk_is_angle_open_token(pc))
             {
                add_text("&lt;", false, false);
             }
-            else if (chunk_is_token(pc, CT_ANGLE_CLOSE))
+            else if (chunk_is_angle_close_token(pc))
             {
                add_text("&gt;", false, false);
             }
             else
             {
-               add_text(pc->str, false, chunk_is_token(pc, CT_STRING));
+               add_text(pc->str, false, chunk_is_string_token(pc));
             }
             write_in_tracking = false;
          }
          else
          {
-            add_text(pc->str, false, chunk_is_token(pc, CT_STRING));
+            add_text(pc->str, false, chunk_is_string_token(pc));
          }
 
          if (chunk_is_token(pc, CT_PP_DEFINE))  // Issue #876
@@ -2680,7 +2680,7 @@ static bool kw_fcn_message(chunk_t *cmt, unc_text &out_txt)
 
    while (tmp != nullptr)
    {
-      if (  chunk_is_token(tmp, CT_BRACE_OPEN)
+      if (  chunk_is_brace_open_token(tmp)
          || chunk_is_token(tmp, CT_SEMICOLON))
       {
          break;
@@ -2776,7 +2776,7 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
 
       while (tmp != nullptr)
       {
-         if (  chunk_is_token(tmp, CT_BRACE_OPEN)
+         if (  chunk_is_brace_open_token(tmp)
             || chunk_is_token(tmp, CT_SEMICOLON))
          {
             break;
@@ -2844,7 +2844,7 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
 
       while ((tmp = chunk_get_next(tmp)) != nullptr)
       {
-         if (  chunk_is_token(tmp, CT_COMMA)
+         if (  chunk_is_comma_token(tmp)
             || tmp == fpc)
          {
             if (need_nl)
@@ -2914,7 +2914,7 @@ static bool kw_fcn_fclass(chunk_t *cmt, unc_text &out_txt)
       tmp = chunk_get_prev_type(tmp, CT_CLASS, tmp->level);
       tmp = chunk_get_next_ncnnl(tmp);
 
-      while (chunk_is_token(chunk_get_next_ncnnl(tmp), CT_DC_MEMBER))
+      while (chunk_is_double_colon_token(chunk_get_next_ncnnl(tmp)))
       {
          tmp = chunk_get_next_ncnnl(tmp);
          tmp = chunk_get_next_ncnnl(tmp);
@@ -2937,8 +2937,8 @@ static bool kw_fcn_fclass(chunk_t *cmt, unc_text &out_txt)
       }
 
       if (  tmp != nullptr
-         && (  chunk_is_token(tmp, CT_DC_MEMBER)
-            || chunk_is_token(tmp, CT_MEMBER)))
+         && (  chunk_is_double_colon_token(tmp)
+            || chunk_is_member_token(tmp)))
       {
          tmp = chunk_get_prev_ncnnl(tmp);
          out_txt.append(tmp->str);

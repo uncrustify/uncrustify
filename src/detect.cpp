@@ -162,13 +162,13 @@ static void detect_space_options(void)
       }
 
       if (  chunk_is_token(pc, CT_ARITH)
-         || chunk_is_token(pc, CT_SHIFT))
+         || chunk_is_shift_token(pc))
       {
          vote_sp_arith.vote(pc, next);
          vote_sp_arith.vote(prev, pc);
       }
 
-      if (chunk_is_token(pc, CT_ASSIGN))
+      if (chunk_is_assign_token(pc))
       {
          if (!pc->flags.test(PCF_IN_ENUM))
          {
@@ -182,18 +182,18 @@ static void detect_space_options(void)
          }
       }
 
-      if (chunk_is_token(pc, CT_SQUARE_OPEN))
+      if (chunk_is_square_open_token(pc))
       {
          vote_sp_before_square.vote(prev, pc);
          vote_sp_inside_square.vote(pc, next);
       }
 
-      if (chunk_is_token(pc, CT_SQUARE_CLOSE))
+      if (chunk_is_square_close_token(pc))
       {
          vote_sp_inside_square.vote(prev, pc);
       }
 
-      if (chunk_is_token(pc, CT_TSQUARE))
+      if (chunk_is_subscript_token(pc))
       {
          vote_sp_before_squares.vote(prev, pc);
       }
@@ -204,7 +204,7 @@ static void detect_space_options(void)
          vote_sp_bool.vote(pc, next);
       }
 
-      if (chunk_is_token(pc, CT_COMPARE))
+      if (chunk_is_comparison_token(pc))
       {
          vote_sp_compare.vote(prev, pc);
          vote_sp_compare.vote(pc, next);
@@ -220,16 +220,16 @@ static void detect_space_options(void)
          vote_sp_inside_paren.vote(pc, next);
       }
 
-      if (  (  chunk_is_paren_open(pc)
-            && chunk_is_paren_open(next))
-         || (  chunk_is_paren_close(pc)
-            && chunk_is_paren_close(next)))
+      if (  (  chunk_is_paren_open_token(pc)
+            && chunk_is_paren_open_token(next))
+         || (  chunk_is_paren_close_token(pc)
+            && chunk_is_paren_close_token(next)))
       {
          vote_sp_paren_paren.vote(pc, next);
       }
 
-      if (  chunk_is_paren_close(pc)
-         && chunk_is_token(next, CT_BRACE_OPEN))
+      if (  chunk_is_paren_close_token(pc)
+         && chunk_is_brace_open_token(next))
       {
          vote_sp_paren_brace.vote(pc, next);
       }
@@ -275,11 +275,11 @@ static void detect_space_options(void)
          vote_sp_after_type.vote(prev, pc);
       }
 
-      if (chunk_is_token(pc, CT_ANGLE_OPEN))
+      if (chunk_is_angle_open_token(pc))
       {
          vote_sp_inside_angle.vote(pc, next);
 
-         if (chunk_is_token(prev, CT_TEMPLATE))
+         if (chunk_is_template_token(prev))
          {
             vote_sp_template_angle.vote(prev, pc);
          }
@@ -289,11 +289,11 @@ static void detect_space_options(void)
          }
       }
 
-      if (chunk_is_token(pc, CT_ANGLE_CLOSE))
+      if (chunk_is_angle_close_token(pc))
       {
          vote_sp_inside_angle.vote(prev, pc);
 
-         if (chunk_is_paren_open(next))
+         if (chunk_is_paren_open_token(next))
          {
             vote_sp_angle_paren.vote(prev, pc);
          }
@@ -318,7 +318,7 @@ static void detect_space_options(void)
       {
          vote_sp_inside_sparen.vote(prev, pc);
 
-         if (chunk_is_token(next, CT_BRACE_OPEN))
+         if (chunk_is_brace_open_token(next))
          {
             vote_sp_sparen_brace.vote(pc, next);
          }
@@ -365,7 +365,7 @@ static void detect_space_options(void)
          }
       }
 
-      if (chunk_is_token(pc, CT_COMMA))
+      if (chunk_is_comma_token(pc))
       {
          vote_sp_before_comma.vote(prev, pc);
          vote_sp_after_comma.vote(pc, next);
@@ -377,13 +377,13 @@ static void detect_space_options(void)
          vote_sp_after_class_colon.vote(pc, next);
       }
 
-      if (chunk_is_token(pc, CT_BRACE_OPEN))
+      if (chunk_is_brace_open_token(pc))
       {
          if (chunk_is_token(prev, CT_ELSE))
          {
             vote_sp_else_brace.vote(prev, pc);
          }
-         else if (chunk_is_token(prev, CT_CATCH))
+         else if (chunk_is_catch_token(prev))
          {
             vote_sp_catch_brace.vote(prev, pc);
          }
@@ -400,7 +400,7 @@ static void detect_space_options(void)
             vote_sp_catch_brace.vote(prev, pc);
          }
 
-         if (chunk_is_token(next, CT_BRACE_CLOSE))
+         if (chunk_is_brace_close_token(next))
          {
             vote_sp_inside_braces_empty.vote(pc, next);
          }
@@ -410,7 +410,7 @@ static void detect_space_options(void)
          }
       }
 
-      if (chunk_is_token(pc, CT_BRACE_CLOSE))
+      if (chunk_is_brace_close_token(pc))
       {
          vote_sp_inside_braces.vote(prev, pc);
 
@@ -418,7 +418,7 @@ static void detect_space_options(void)
          {
             vote_sp_brace_else.vote(pc, next);
          }
-         else if (chunk_is_token(next, CT_CATCH))
+         else if (chunk_is_catch_token(next))
          {
             vote_sp_brace_catch.vote(pc, next);
          }

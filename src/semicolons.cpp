@@ -57,7 +57,7 @@ void remove_extra_semicolons(void)
          {
             // keep it
          }
-         else if (  chunk_is_token(prev, CT_BRACE_CLOSE)
+         else if (  chunk_is_brace_close_token(prev)
                  && (  get_chunk_parent_type(prev) == CT_IF
                     || get_chunk_parent_type(prev) == CT_ELSEIF
                     || get_chunk_parent_type(prev) == CT_ELSE
@@ -72,7 +72,7 @@ void remove_extra_semicolons(void)
          {
             remove_semicolon(pc);
          }
-         else if (  chunk_is_token(prev, CT_BRACE_CLOSE)
+         else if (  chunk_is_brace_close_token(prev)
                  && get_chunk_parent_type(prev) == CT_NONE)
          {
             check_unknown_brace_close(pc, prev);
@@ -94,7 +94,7 @@ void remove_extra_semicolons(void)
          {
             remove_semicolon(pc);
          }
-         else if (chunk_is_token(prev, CT_BRACE_OPEN))
+         else if (chunk_is_brace_open_token(prev))
          {
             remove_semicolon(pc);
          }
@@ -118,7 +118,7 @@ static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close)
       && pc->type != CT_SQUARE_CLOSE
       && pc->type != CT_ANGLE_CLOSE
       && pc->type != CT_TSQUARE
-      && !chunk_is_paren_close(pc))
+      && !chunk_is_paren_close_token(pc))
    {
       remove_semicolon(semi);
    }

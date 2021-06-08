@@ -218,8 +218,8 @@ void examine_Data(const char *func_name, int theLine, int what)
 
       for (pc = chunk_get_head(); pc != nullptr; pc = pc->next)
       {
-         if (  chunk_is_token(pc, CT_SQUARE_CLOSE)
-            || chunk_is_token(pc, CT_TSQUARE))
+         if (  chunk_is_square_close_token(pc)
+            || chunk_is_subscript_token(pc))
          {
             LOG_FMT(LGUY, "\n");
             LOG_FMT(LGUY, "1:(%d),", theLine);

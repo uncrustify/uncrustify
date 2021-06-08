@@ -11,7 +11,7 @@ bool flag_cpp_decltype(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(pc, CT_DECLTYPE))
+   if (chunk_is_decltype_token(pc))
    {
       auto paren_open = chunk_get_next_ncnnl(pc);
 

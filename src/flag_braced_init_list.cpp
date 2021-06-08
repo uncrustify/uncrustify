@@ -34,24 +34,24 @@ bool detect_cpp_braced_init_list(chunk_t *pc, chunk_t *next)
    // Detect a braced-init-list
    if (  chunk_is_token(pc, CT_WORD)
       || chunk_is_token(pc, CT_TYPE)
-      || chunk_is_token(pc, CT_ASSIGN)
+      || chunk_is_assign_token(pc)
       || chunk_is_token(pc, CT_RETURN)
-      || chunk_is_token(pc, CT_COMMA)
-      || chunk_is_token(pc, CT_ANGLE_CLOSE)
-      || chunk_is_token(pc, CT_SQUARE_CLOSE)
-      || chunk_is_token(pc, CT_TSQUARE)
+      || chunk_is_comma_token(pc)
+      || chunk_is_angle_close_token(pc)
+      || chunk_is_square_close_token(pc)
+      || chunk_is_subscript_token(pc)
       || chunk_is_token(pc, CT_FPAREN_OPEN)
-      || chunk_is_token(pc, CT_QUESTION)
+      || chunk_is_question_token(pc)
       || (  chunk_is_token(pc, CT_COLON)
          && !we_have_a_case_before)
-      || (  chunk_is_token(pc, CT_BRACE_OPEN)
+      || (  chunk_is_brace_open_token(pc)
          && (  get_chunk_parent_type(pc) == CT_NONE
             || get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST)))
    {
       log_pcf_flags(LFCNR, pc->flags);
       auto brace_open = chunk_get_next_ncnnl(pc);
 
-      if (  chunk_is_token(brace_open, CT_BRACE_OPEN)
+      if (  chunk_is_brace_open_token(brace_open)
          && (  get_chunk_parent_type(brace_open) == CT_NONE
             || get_chunk_parent_type(brace_open) == CT_ASSIGN
             || get_chunk_parent_type(brace_open) == CT_RETURN
@@ -60,7 +60,7 @@ bool detect_cpp_braced_init_list(chunk_t *pc, chunk_t *next)
          log_pcf_flags(LFCNR, brace_open->flags);
          auto brace_close = chunk_skip_to_match(next);
 
-         if (chunk_is_token(brace_close, CT_BRACE_CLOSE))
+         if (chunk_is_brace_close_token(brace_close))
          {
             return(true);
          }

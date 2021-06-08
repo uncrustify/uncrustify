@@ -159,7 +159,7 @@ comment_align_e get_comment_align_type(chunk_t *cmt)
       if (  chunk_is_token(prev, CT_PP_ENDIF)
          || chunk_is_token(prev, CT_PP_ELSE)
          || chunk_is_token(prev, CT_ELSE)
-         || chunk_is_token(prev, CT_BRACE_CLOSE))
+         || chunk_is_brace_close_token(prev))
       {
          // TODO: make the magic 3 configurable
          if ((cmt->column - (prev->column + prev->len())) < 3)

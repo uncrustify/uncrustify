@@ -28,7 +28,7 @@ chunk_t *calculate_closing_brace_position(const chunk_t *cl_colon, chunk_t *pc)
 
    size_t check_level = 0;
 
-   if (chunk_is_token(pc, CT_BRACE_CLOSE))
+   if (chunk_is_brace_close_token(pc))
    {
       check_level = pc->level + 1;
    }
@@ -56,7 +56,7 @@ chunk_t *calculate_closing_brace_position(const chunk_t *cl_colon, chunk_t *pc)
 
       if (back->level == check_level)
       {
-         if (  chunk_is_token(back, CT_BRACE_CLOSE)
+         if (  chunk_is_brace_close_token(back)
             || chunk_is_token(back, CT_VBRACE_CLOSE))
          {
             // brace_close found

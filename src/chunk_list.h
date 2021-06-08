@@ -12,7 +12,9 @@
 #include "uncrustify_types.h"
 // necessary to not sort it
 #include "char_table.h"
+#include "chunk_tests.h"
 #include "language_tools.h"
+#include "scope_enum.h"
 
 
 /*
@@ -24,22 +26,6 @@
 
 
 static constexpr int ANY_LEVEL = -1;
-
-
-/**
- * Specifies which chunks should/should not be found.
- * ALL (default)
- *  - return the true next/prev
- *
- * PREPROC
- *  - If not in a preprocessor, skip over any encountered preprocessor stuff
- *  - If in a preprocessor, fail to leave (return nullptr)
- */
-enum class scope_e : unsigned int
-{
-   ALL,      //! search in all kind of chunks
-   PREPROC,  //! search only in preprocessor chunks
-};
 
 
 /**
@@ -516,10 +502,10 @@ static inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e
       || chunk_is_token(cur, CT_SPAREN_OPEN)
       || chunk_is_token(cur, CT_FPAREN_OPEN)
       || chunk_is_token(cur, CT_TPAREN_OPEN)
-      || chunk_is_token(cur, CT_BRACE_OPEN)
+      || chunk_is_brace_open_token(cur)
       || chunk_is_token(cur, CT_VBRACE_OPEN)
-      || chunk_is_token(cur, CT_ANGLE_OPEN)
-      || chunk_is_token(cur, CT_SQUARE_OPEN))
+      || chunk_is_angle_open_token(cur)
+      || chunk_is_square_open_token(cur))
    {
       return(chunk_get_next_type(cur, (c_token_t)(cur->type + 1), cur->level, scope));
    }
@@ -533,10 +519,10 @@ static inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, scope_e scope = sco
       || chunk_is_token(cur, CT_SPAREN_CLOSE)
       || chunk_is_token(cur, CT_FPAREN_CLOSE)
       || chunk_is_token(cur, CT_TPAREN_CLOSE)
-      || chunk_is_token(cur, CT_BRACE_CLOSE)
+      || chunk_is_brace_close_token(cur)
       || chunk_is_token(cur, CT_VBRACE_CLOSE)
-      || chunk_is_token(cur, CT_ANGLE_CLOSE)
-      || chunk_is_token(cur, CT_SQUARE_CLOSE))
+      || chunk_is_angle_close_token(cur)
+      || chunk_is_square_close_token(cur))
    {
       return(chunk_get_prev_type(cur, (c_token_t)(cur->type - 1), cur->level, scope));
    }
@@ -580,27 +566,6 @@ static inline bool chunk_is_cpp_inheritance_access_specifier(chunk_t *pc)
 } // chunk_is_cpp_inheritance_access_specifier
 
 
-static inline bool chunk_is_colon(chunk_t *pc)
-{
-   return(  chunk_is_token(pc, CT_ACCESS_COLON)
-         || chunk_is_token(pc, CT_ASM_COLON)
-         || chunk_is_token(pc, CT_BIT_COLON)
-         || chunk_is_token(pc, CT_CASE_COLON)
-         || chunk_is_token(pc, CT_CLASS_COLON)
-         || chunk_is_token(pc, CT_COLON)
-         || chunk_is_token(pc, CT_COND_COLON)
-         || chunk_is_token(pc, CT_CONSTR_COLON)
-         || chunk_is_token(pc, CT_CS_SQ_COLON)
-         || chunk_is_token(pc, CT_D_ARRAY_COLON)
-         || chunk_is_token(pc, CT_FOR_COLON)
-         || chunk_is_token(pc, CT_LABEL_COLON)
-         || chunk_is_token(pc, CT_OC_COLON)
-         || chunk_is_token(pc, CT_OC_DICT_COLON)
-         || chunk_is_token(pc, CT_TAG_COLON)
-         || chunk_is_token(pc, CT_WHERE_COLON));
-}
-
-
 static inline bool chunk_is_single_line_comment(chunk_t *pc)
 {
    return(  chunk_is_token(pc, CT_COMMENT)
@@ -612,13 +577,6 @@ static inline bool chunk_is_newline(chunk_t *pc)
 {
    return(  chunk_is_token(pc, CT_NEWLINE)
          || chunk_is_token(pc, CT_NL_CONT));
-}
-
-
-static inline bool chunk_is_semicolon(chunk_t *pc)
-{
-   return(  chunk_is_token(pc, CT_SEMICOLON)
-         || chunk_is_token(pc, CT_VSEMICOLON));
 }
 
 
@@ -655,9 +613,9 @@ static inline bool chunk_is_comment_or_newline_or_ignored(chunk_t *pc)
 
 static inline bool chunk_is_balanced_square(chunk_t *pc)
 {
-   return(  chunk_is_token(pc, CT_SQUARE_OPEN)
-         || chunk_is_token(pc, CT_TSQUARE)
-         || chunk_is_token(pc, CT_SQUARE_CLOSE));
+   return(  chunk_is_square_open_token(pc)
+         || chunk_is_subscript_token(pc)
+         || chunk_is_square_close_token(pc));
 }
 
 
@@ -717,7 +675,7 @@ static inline bool chunk_is_type(chunk_t *pc)
    return(  chunk_is_token(pc, CT_TYPE)
          || chunk_is_token(pc, CT_PTR_TYPE)
          || chunk_is_token(pc, CT_BYREF)
-         || chunk_is_token(pc, CT_DC_MEMBER)
+         || chunk_is_double_colon_token(pc)
          || chunk_is_token(pc, CT_QUALIFIER)
          || chunk_is_token(pc, CT_STRUCT)
          || chunk_is_token(pc, CT_ENUM)
@@ -754,15 +712,6 @@ static inline bool chunk_is_word(chunk_t *pc)
 }
 
 
-static inline bool chunk_is_star(chunk_t *pc)
-{
-   return(  pc != nullptr
-         && (pc->len() == 1)
-         && (pc->str[0] == '*')
-         && pc->type != CT_OPERATOR_VAL);
-}
-
-
 static inline bool chunk_is_nullable(chunk_t *pc)
 {
    return(  language_is_set(LANG_CS)
@@ -782,8 +731,8 @@ static inline bool chunk_is_addr(chunk_t *pc)
       chunk_t *prev = chunk_get_prev(pc);
 
       if (  pc->flags.test(PCF_IN_TEMPLATE)
-         && (  chunk_is_token(prev, CT_COMMA)
-            || chunk_is_token(prev, CT_ANGLE_OPEN)))
+         && (  chunk_is_comma_token(prev)
+            || chunk_is_angle_open_token(prev)))
       {
          return(false);
       }
@@ -805,7 +754,7 @@ static inline bool chunk_is_msref(chunk_t *pc) // ms compilers for C++/CLI and W
 
 static inline bool chunk_is_ptr_operator(chunk_t *pc)
 {
-   return(  (  chunk_is_star(pc)
+   return(  (  chunk_is_star_token(pc)
             || chunk_is_addr(pc)
             || chunk_is_msref(pc))
          || chunk_is_nullable(pc));
@@ -825,14 +774,14 @@ bool chunk_is_newline_between(chunk_t *start, chunk_t *end);
 
 static inline bool chunk_is_closing_brace(chunk_t *pc)
 {
-   return(  chunk_is_token(pc, CT_BRACE_CLOSE)
+   return(  chunk_is_brace_close_token(pc)
          || chunk_is_token(pc, CT_VBRACE_CLOSE));
 }
 
 
 static inline bool chunk_is_opening_brace(chunk_t *pc)
 {
-   return(  chunk_is_token(pc, CT_BRACE_OPEN)
+   return(  chunk_is_brace_open_token(pc)
          || chunk_is_token(pc, CT_VBRACE_OPEN));
 }
 
@@ -841,25 +790,6 @@ static inline bool chunk_is_vbrace(chunk_t *pc)
 {
    return(  chunk_is_token(pc, CT_VBRACE_CLOSE)
          || chunk_is_token(pc, CT_VBRACE_OPEN));
-}
-
-
-static inline bool chunk_is_paren_open(chunk_t *pc)
-{
-   return(  chunk_is_token(pc, CT_PAREN_OPEN)
-         || chunk_is_token(pc, CT_SPAREN_OPEN)
-         || chunk_is_token(pc, CT_TPAREN_OPEN)
-         || chunk_is_token(pc, CT_FPAREN_OPEN)
-         || chunk_is_token(pc, CT_LPAREN_OPEN));
-}
-
-
-static inline bool chunk_is_paren_close(chunk_t *pc)
-{
-   return(  chunk_is_token(pc, CT_PAREN_CLOSE)
-         || chunk_is_token(pc, CT_SPAREN_CLOSE)
-         || chunk_is_token(pc, CT_TPAREN_CLOSE)
-         || chunk_is_token(pc, CT_FPAREN_CLOSE));
 }
 
 

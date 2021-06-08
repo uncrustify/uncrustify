@@ -15,11 +15,11 @@
 
 chunk_t *skip_c99_array(chunk_t *sq_open)
 {
-   if (chunk_is_token(sq_open, CT_SQUARE_OPEN))
+   if (chunk_is_square_open_token(sq_open))
    {
       chunk_t *tmp = chunk_get_next_nc(chunk_skip_to_match(sq_open));
 
-      if (chunk_is_token(tmp, CT_ASSIGN))
+      if (chunk_is_assign_token(tmp))
       {
          return(chunk_get_next_nc(tmp));
       }
@@ -66,10 +66,10 @@ chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
       {
          // do nothing
       }
-      else if (  chunk_is_token(pc, CT_ASSIGN)
-              || chunk_is_token(pc, CT_BRACE_OPEN)
-              || chunk_is_token(pc, CT_BRACE_CLOSE)
-              || chunk_is_token(pc, CT_COMMA))
+      else if (  chunk_is_assign_token(pc)
+              || chunk_is_brace_open_token(pc)
+              || chunk_is_brace_close_token(pc)
+              || chunk_is_comma_token(pc))
       {
          size_t token_width = space_col_align(pc, next);
 
@@ -164,7 +164,7 @@ chunk_t *step_back_over_member(chunk_t *pc)
 
    // Skip over any class stuff: bool CFoo::bar()
    while (  ((tmp = chunk_get_prev_ncnnl(pc)) != nullptr)
-         && chunk_is_token(tmp, CT_DC_MEMBER))
+         && chunk_is_double_colon_token(tmp))
    {
       // TODO: verify that we are pointing at something sane?
       pc = chunk_get_prev_ncnnl(tmp);

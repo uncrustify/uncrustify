@@ -272,7 +272,7 @@ static bool maybe_while_of_do(chunk_t *pc)
    }
 
    if (  (  chunk_is_token(prev, CT_VBRACE_CLOSE)
-         || chunk_is_token(prev, CT_BRACE_CLOSE))
+         || chunk_is_brace_close_token(prev))
       && get_chunk_parent_type(prev) == CT_DO)
    {
       return(true);
@@ -353,11 +353,11 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
 
    if (  (  frm.stmt_count == 0
          || frm.expr_count == 0)
-      && !chunk_is_semicolon(pc)
+      && !chunk_is_semicolon_token(pc)
       && chunk_is_not_token(pc, CT_BRACE_CLOSE)
       && chunk_is_not_token(pc, CT_VBRACE_CLOSE)
-      && !chunk_is_str(pc, ")", 1)
-      && !chunk_is_str(pc, "]", 1))
+      && !chunk_is_paren_close_str(pc)
+      && !chunk_is_square_close_str(pc))
    {
       chunk_flags_set(pc, PCF_EXPR_START | ((frm.stmt_count == 0) ? PCF_STMT_START : PCF_NONE));
       LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 1.marked '%s' as %s, start stmt_count is %zu, expr_count is %zu\n",
@@ -409,18 +409,18 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
     */
    if (frm.top().type == CT_VBRACE_OPEN)
    {
-      if (chunk_is_semicolon(pc))
+      if (chunk_is_semicolon_token(pc))
       {
          braceState.consumed = true;
          close_statement(frm, pc, braceState);
       }
       else if (  language_is_set(LANG_PAWN)
-              && chunk_is_token(pc, CT_BRACE_CLOSE))
+              && chunk_is_brace_close_token(pc))
       {
          close_statement(frm, pc, braceState);
       }
       else if (  language_is_set(LANG_D)
-              && chunk_is_token(pc, CT_BRACE_CLOSE))
+              && chunk_is_brace_close_token(pc))
       {
          close_statement(frm, pc, braceState);
       }
@@ -428,11 +428,11 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
 
    // Handle close parenthesis, vbrace, brace, and square
    if (  chunk_is_token(pc, CT_PAREN_CLOSE)
-      || chunk_is_token(pc, CT_BRACE_CLOSE)
+      || chunk_is_brace_close_token(pc)
       || chunk_is_token(pc, CT_VBRACE_CLOSE)
-      || chunk_is_token(pc, CT_ANGLE_CLOSE)
+      || chunk_is_angle_close_token(pc)
       || chunk_is_token(pc, CT_MACRO_CLOSE)
-      || chunk_is_token(pc, CT_SQUARE_CLOSE))
+      || chunk_is_square_close_token(pc))
    {
       // Change CT_PAREN_CLOSE into CT_SPAREN_CLOSE or CT_FPAREN_CLOSE
       if (  chunk_is_token(pc, CT_PAREN_CLOSE)
@@ -489,7 +489,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
          set_chunk_parent(pc, frm.top().parent);
          frm.level--;
 
-         if (  chunk_is_token(pc, CT_BRACE_CLOSE)
+         if (  chunk_is_brace_close_token(pc)
             || chunk_is_token(pc, CT_VBRACE_CLOSE)
             || chunk_is_token(pc, CT_MACRO_CLOSE))
          {
@@ -509,7 +509,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
 
          if (  frm.top().stage == brace_stage_e::NONE
             && (  chunk_is_token(pc, CT_VBRACE_CLOSE)
-               || chunk_is_token(pc, CT_BRACE_CLOSE)
+               || chunk_is_brace_close_token(pc)
                || chunk_is_token(pc, CT_SEMICOLON))
             && chunk_is_token(frm.top().pc, CT_VBRACE_OPEN))
          {
@@ -578,7 +578,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
    if (  chunk_is_token(pc, CT_PAREN_OPEN)
       || chunk_is_token(pc, CT_FPAREN_OPEN)
       || chunk_is_token(pc, CT_SPAREN_OPEN)
-      || chunk_is_token(pc, CT_BRACE_OPEN))
+      || chunk_is_brace_open_token(pc))
    {
       chunk_t *prev = chunk_get_prev_ncnnl(pc);
 
@@ -596,7 +596,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
                || chunk_is_token(prev, CT_DO)
                || chunk_is_token(prev, CT_FOR)
                || chunk_is_token(prev, CT_SWITCH)
-               || chunk_is_token(prev, CT_CATCH)
+               || chunk_is_catch_token(prev)
                || chunk_is_token(prev, CT_SYNCHRONIZED)
                || chunk_is_token(prev, CT_D_VERSION)
                || chunk_is_token(prev, CT_D_VERSION_IF)
@@ -633,7 +633,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
             {
                parent = frm.top().type;
             }
-            else if (  chunk_is_token(prev, CT_ASSIGN)
+            else if (  chunk_is_assign_token(prev)
                     && (prev->str[0] == '='))
             {
                parent = CT_ASSIGN;
@@ -664,17 +664,17 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
     * Adjust the level for opens & create a stack entry
     * Note that CT_VBRACE_OPEN has already been handled.
     */
-   if (  chunk_is_token(pc, CT_BRACE_OPEN)
+   if (  chunk_is_brace_open_token(pc)
       || chunk_is_token(pc, CT_PAREN_OPEN)
       || chunk_is_token(pc, CT_FPAREN_OPEN)
       || chunk_is_token(pc, CT_SPAREN_OPEN)
-      || chunk_is_token(pc, CT_ANGLE_OPEN)
+      || chunk_is_angle_open_token(pc)
       || chunk_is_token(pc, CT_MACRO_OPEN)
-      || chunk_is_token(pc, CT_SQUARE_OPEN))
+      || chunk_is_square_open_token(pc))
    {
       frm.level++;
 
-      if (  chunk_is_token(pc, CT_BRACE_OPEN)
+      if (  chunk_is_brace_open_token(pc)
          || chunk_is_token(pc, CT_MACRO_OPEN))
       {
          // Issue #1813
@@ -721,7 +721,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
    }
    // Issue #2281
 
-   if (  chunk_is_token(pc, CT_BRACE_OPEN)
+   if (  chunk_is_brace_open_token(pc)
       && pc->parent_type == CT_SWITCH)
    {
       size_t idx = frm.size();
@@ -820,16 +820,16 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
     *  - after ';', but not if the paren stack top is a paren
     *  - after '(' that has a parent type of CT_FOR
     */
-   if (  chunk_is_token(pc, CT_SQUARE_OPEN)
-      || (  chunk_is_token(pc, CT_BRACE_OPEN)
+   if (  chunk_is_square_open_token(pc)
+      || (  chunk_is_brace_open_token(pc)
          && get_chunk_parent_type(pc) != CT_ASSIGN)
-      || chunk_is_token(pc, CT_BRACE_CLOSE)
+      || chunk_is_brace_close_token(pc)
       || chunk_is_token(pc, CT_VBRACE_CLOSE)
       || (  chunk_is_token(pc, CT_SPAREN_OPEN)
          && get_chunk_parent_type(pc) == CT_FOR)
       || chunk_is_token(pc, CT_COLON)
       || chunk_is_token(pc, CT_OC_END)
-      || (  chunk_is_semicolon(pc)
+      || (  chunk_is_semicolon_token(pc)
          && frm.top().type != CT_PAREN_OPEN
          && frm.top().type != CT_FPAREN_OPEN
          && frm.top().type != CT_SPAREN_OPEN)
@@ -848,32 +848,32 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
    chunk_t *tmp = chunk_get_next_ncnnl(pc);
 
    if (  chunk_is_token(pc, CT_ARITH)
-      || chunk_is_token(pc, CT_SHIFT)
-      || chunk_is_token(pc, CT_ASSIGN)
+      || chunk_is_shift_token(pc)
+      || chunk_is_assign_token(pc)
       || chunk_is_token(pc, CT_CASE)
-      || chunk_is_token(pc, CT_COMPARE)
+      || chunk_is_comparison_token(pc)
       || (  chunk_is_token(pc, CT_STAR)
          && chunk_is_not_token(tmp, CT_STAR))
       || chunk_is_token(pc, CT_BOOL)
-      || chunk_is_token(pc, CT_MINUS)
+      || chunk_is_minus_token(pc)
       || chunk_is_token(pc, CT_PLUS)
-      || chunk_is_token(pc, CT_CARET)
-      || chunk_is_token(pc, CT_ANGLE_OPEN)
-      || chunk_is_token(pc, CT_ANGLE_CLOSE)
+      || chunk_is_caret_token(pc)
+      || chunk_is_angle_open_token(pc)
+      || chunk_is_angle_close_token(pc)
       || chunk_is_token(pc, CT_RETURN)
-      || chunk_is_token(pc, CT_THROW)
+      || chunk_is_throw_token(pc)
       || chunk_is_token(pc, CT_GOTO)
       || chunk_is_token(pc, CT_CONTINUE)
       || chunk_is_token(pc, CT_PAREN_OPEN)
       || chunk_is_token(pc, CT_FPAREN_OPEN)
       || chunk_is_token(pc, CT_SPAREN_OPEN)
-      || chunk_is_token(pc, CT_BRACE_OPEN)
-      || chunk_is_semicolon(pc)
-      || chunk_is_token(pc, CT_COMMA)
-      || chunk_is_token(pc, CT_NOT)
-      || chunk_is_token(pc, CT_INV)
+      || chunk_is_brace_open_token(pc)
+      || chunk_is_semicolon_token(pc)
+      || chunk_is_comma_token(pc)
+      || chunk_is_unary_not_token(pc)
+      || chunk_is_tilde_token(pc)
       || chunk_is_token(pc, CT_COLON)
-      || chunk_is_token(pc, CT_QUESTION))
+      || chunk_is_question_token(pc))
    {
       frm.expr_count = 0;
       LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, orig_col is %zu, reset expr on '%s'\n",
@@ -947,7 +947,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc, const BraceSt
    // Check for CT_CATCH or CT_FINALLY after CT_TRY or CT_CATCH
    while (frm.top().stage == brace_stage_e::CATCH)
    {
-      if (  chunk_is_token(pc, CT_CATCH)
+      if (  chunk_is_catch_token(pc)
          || chunk_is_token(pc, CT_FINALLY))
       {
          // Replace CT_TRY with CT_CATCH or CT_FINALLY on the stack & we are done
@@ -955,14 +955,14 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc, const BraceSt
 
          if (language_is_set(LANG_CS))
          {
-            frm.top().stage = (chunk_is_token(pc, CT_CATCH)) ? brace_stage_e::CATCH_WHEN : brace_stage_e::BRACE2;
+            frm.top().stage = (chunk_is_catch_token(pc)) ? brace_stage_e::CATCH_WHEN : brace_stage_e::BRACE2;
          }
          else
          {
             // historically this used OP_PAREN1; however, to my knowledge the expression after a catch clause
             // is only optional for C# which has been handled above; therefore, this should now always expect
             // a parenthetical expression after the catch keyword and brace after the finally keyword
-            frm.top().stage = (chunk_is_token(pc, CT_CATCH)) ? brace_stage_e::PAREN1 : brace_stage_e::BRACE2;
+            frm.top().stage = (chunk_is_catch_token(pc)) ? brace_stage_e::PAREN1 : brace_stage_e::BRACE2;
          }
          print_stack(LBCSSWAP, "=Swap   ", frm);
 
@@ -1001,7 +1001,7 @@ static bool check_complex_statements(ParseFrame &frm, chunk_t *pc, const BraceSt
          return(true);
       }
 
-      if (chunk_is_token(pc, CT_BRACE_OPEN))
+      if (chunk_is_brace_open_token(pc))
       {
          frm.top().stage = brace_stage_e::BRACE2;
 

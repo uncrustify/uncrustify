@@ -269,6 +269,8 @@ set(uncrustify_sources
   src/braces.cpp
   src/calculate_closing_brace_position.cpp
   src/chunk_list.cpp
+  src/chunk_tests.cpp
+  src/chunk_tools.cpp
   src/ChunkStack.cpp
   src/combine.cpp
   src/combine_fix_mark.cpp
@@ -293,6 +295,7 @@ set(uncrustify_sources
   src/logger.cpp
   src/logmask.cpp
   src/log_rules.cpp
+  src/match_tools.cpp
   src/md5.cpp
   src/newlines.cpp
   src/option.cpp
@@ -355,6 +358,8 @@ set(uncrustify_headers
   src/calculate_closing_brace_position.h
   src/char_table.h
   src/chunk_list.h
+  src/chunk_tests.h
+  src/chunk_tools.h
   src/ChunkStack.h
   src/combine.h
   src/combine_fix_mark.h
@@ -380,6 +385,7 @@ set(uncrustify_headers
   src/log_levels.h
   src/logmask.h
   src/log_rules.h
+  src/match_tools.h
   src/md5.h
   src/newlines.h
   src/option.h
@@ -394,6 +400,7 @@ set(uncrustify_headers
   src/punctuators.h
   src/quick_align_again.h
   src/remove_extra_returns.h
+  src/scope_enum.h
   src/semicolons.h
   src/sorting.h
   src/space.h

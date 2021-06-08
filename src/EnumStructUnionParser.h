@@ -1,5 +1,5 @@
 /**
- * @file combine_fix_mark_enum_struct_union.h
+ * @file EnumStructUnionParser.h
  *
  * @author
  * @license GPL v2+
@@ -11,19 +11,17 @@
 
 #include "pcf_flags.h"
 #include "token_enum.h"
+
 #include <map>
 
 
 /**
- * Class EnumStructUnionParser : This class facilitates the parsing and interpretation
- *                               of ALL instances of the class, enum, union, and
- *                               struct keywords, including user-defined types with
- *                               a body {} and any trailing inline variable declarations
- *                               that may follow the definition (as permitted by
- *                               the coding language in question). The class also
- *                               interprets variable declarations preceded by one
- *                               of those keywords, as well as any C/C++ forward
- *                               declarations
+ * Class EnumStructUnionParser
+ *
+ * This class facilitates the parsing and interpretation of ALL instances of the class, enum, union, and
+ * struct keywords, including user-defined types with a body {} and any trailing inline variable declarations
+ * that may follow the definition (as permitted by the coding language in question). The class also interprets
+ * variable declarations preceded by one of those keywords, as well as any C/C++ forward declarations
  */
 class EnumStructUnionParser
 {
@@ -493,4 +491,4 @@ private:
 };
 
 
-#endif
+#endif /* ENUM_STRUCT_UNION_PARSER_H_INCLUDED */

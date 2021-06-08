@@ -22,10 +22,10 @@ void align_struct_initializers(void)
    {
       chunk_t *prev = chunk_get_prev_ncnnl(pc);
 
-      if (  chunk_is_token(prev, CT_ASSIGN)
-         && (  chunk_is_token(pc, CT_BRACE_OPEN)
+      if (  chunk_is_assign_token(prev)
+         && (  chunk_is_brace_open_token(pc)
             || (  language_is_set(LANG_D)
-               && chunk_is_token(pc, CT_SQUARE_OPEN))))
+               && chunk_is_square_open_token(pc))))
       {
          align_init_brace(pc);
       }

@@ -96,8 +96,8 @@ void align_same_func_call_params(void)
       // Only align function calls that are right after a newline
       chunk_t *prev = chunk_get_prev(pc);
 
-      while (  chunk_is_token(prev, CT_MEMBER)
-            || chunk_is_token(prev, CT_DC_MEMBER))
+      while (  chunk_is_member_token(prev)
+            || chunk_is_double_colon_token(prev))
       {
          chunk_t *tprev = chunk_get_prev(prev);
 
@@ -219,8 +219,7 @@ void align_same_func_call_params(void)
 
                if (!options::align_number_right())
                {
-                  if (  chunk_is_token(chunks[idx], CT_NUMBER_FP)
-                     || chunk_is_token(chunks[idx], CT_NUMBER)
+                  if (  chunk_is_number_token(chunks[idx])
                      || chunk_is_token(chunks[idx], CT_POS)
                      || chunk_is_token(chunks[idx], CT_NEG))
                   {
@@ -274,7 +273,7 @@ void align_params(chunk_t *start, deque<chunk_t *> &chunks)
             chunks.push_back(pc);
             hit_comma = false;
          }
-         else if (chunk_is_token(pc, CT_COMMA))
+         else if (chunk_is_comma_token(pc))
          {
             hit_comma = true;
          }

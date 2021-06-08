@@ -49,8 +49,8 @@ void align_oc_decl_colon(void)
             && pc->level >= level)
       {
          // The declaration ends with an open brace or semicolon
-         if (  chunk_is_token(pc, CT_BRACE_OPEN)
-            || chunk_is_semicolon(pc))
+         if (  chunk_is_brace_open_token(pc)
+            || chunk_is_semicolon_token(pc))
          {
             break;
          }

@@ -70,7 +70,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       // Don't check inside SPAREN, PAREN or SQUARE groups
       if (  chunk_is_token(pc, CT_SPAREN_OPEN)
             // || chunk_is_token(pc, CT_FPAREN_OPEN) Issue #1340
-         || chunk_is_token(pc, CT_SQUARE_OPEN)
+         || chunk_is_square_open_token(pc)
          || chunk_is_token(pc, CT_PAREN_OPEN))
       {
          LOG_FMT(LALASS, "%s(%d): Don't check inside SPAREN, PAREN or SQUARE groups, type is %s\n",
@@ -98,7 +98,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       }
 
       // Recurse if a brace set is found
-      if (  chunk_is_token(pc, CT_BRACE_OPEN)
+      if (  chunk_is_brace_open_token(pc)
          || chunk_is_token(pc, CT_VBRACE_OPEN))
       {
          size_t myspan;
@@ -144,7 +144,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       }
 
       // Done with this brace set?
-      if (  chunk_is_token(pc, CT_BRACE_CLOSE)
+      if (  chunk_is_brace_close_token(pc)
          || chunk_is_token(pc, CT_VBRACE_CLOSE))
       {
          pc = chunk_get_next(pc);
@@ -188,11 +188,11 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       }
       else if (  equ_count == 0                      // indent only if first '=' in line
               && !pc->flags.test(PCF_IN_TEMPLATE)    // and it is not inside a template #999
-              && (  chunk_is_token(pc, CT_ASSIGN)
+              && (  chunk_is_assign_token(pc)
                  || chunk_is_token(pc, CT_ASSIGN_DEFAULT_ARG)
                  || chunk_is_token(pc, CT_ASSIGN_FUNC_PROTO)))
       {
-         if (chunk_is_token(pc, CT_ASSIGN))               // Issue #2236
+         if (chunk_is_assign_token(pc))               // Issue #2236
          {
             equ_count++;
          }
@@ -242,7 +242,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
                        __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
                fcnProto.Add(pc);
             }
-            else if (chunk_is_token(pc, CT_ASSIGN)) // Issue #2197
+            else if (chunk_is_assign_token(pc)) // Issue #2197
             {
                LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig_line %zu, orig_col is %zu\n",
                        __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
@@ -265,7 +265,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          }
          else
          {
-            if (chunk_is_token(pc, CT_ASSIGN))
+            if (chunk_is_assign_token(pc))
             {
                LOG_FMT(LALASS, "%s(%d): as.Add on '%s' on orig_line %zu, orig_col is %zu\n",
                        __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);

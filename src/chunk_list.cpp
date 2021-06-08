@@ -971,10 +971,10 @@ static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const direction_e 
 
 chunk_t *chunk_get_next_ssq(chunk_t *cur)
 {
-   while (  chunk_is_token(cur, CT_TSQUARE)
-         || chunk_is_token(cur, CT_SQUARE_OPEN))
+   while (  chunk_is_subscript_token(cur)
+         || chunk_is_square_open_token(cur))
    {
-      if (chunk_is_token(cur, CT_SQUARE_OPEN))
+      if (chunk_is_square_open_token(cur))
       {
          cur = chunk_skip_to_match(cur);
       }
@@ -986,10 +986,10 @@ chunk_t *chunk_get_next_ssq(chunk_t *cur)
 
 chunk_t *chunk_get_prev_ssq(chunk_t *cur)
 {
-   while (  chunk_is_token(cur, CT_TSQUARE)
-         || chunk_is_token(cur, CT_SQUARE_CLOSE))
+   while (  chunk_is_subscript_token(cur)
+         || chunk_is_square_close_token(cur))
    {
-      if (chunk_is_token(cur, CT_SQUARE_CLOSE))
+      if (chunk_is_square_close_token(cur))
       {
          cur = chunk_skip_to_match_rev(cur);
       }
@@ -1027,9 +1027,9 @@ static chunk_t *chunk_skip_dc_member(chunk_t *start, scope_e scope, direction_e 
                          ? chunk_get_next_ncnnl : chunk_get_prev_ncnnl;
 
    chunk_t *pc   = start;
-   chunk_t *next = chunk_is_token(pc, CT_DC_MEMBER) ? pc : step_fcn(pc, scope);
+   chunk_t *next = chunk_is_double_colon_token(pc) ? pc : step_fcn(pc, scope);
 
-   while (chunk_is_token(next, CT_DC_MEMBER))
+   while (chunk_is_double_colon_token(next))
    {
       pc = step_fcn(next, scope);
 

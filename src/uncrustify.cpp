@@ -1709,7 +1709,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
          while (  ref->type != CT_NEWLINE
                && (ref = ref->next)) // TODO: is the assignment of ref wanted here?, better move it to the loop
          {
-            if (chunk_is_token(ref, CT_BRACE_CLOSE))
+            if (chunk_is_brace_close_token(ref))
             {
                found_brace = 1;
                break;
@@ -1740,7 +1740,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
          }
 
          // If we hit an angle close, back up to the angle open
-         if (chunk_is_token(ref, CT_ANGLE_CLOSE))
+         if (chunk_is_angle_close_token(ref))
          {
             ref = chunk_get_prev_type(ref, CT_ANGLE_OPEN, ref->level, scope_e::PREPROC);
             continue;
@@ -1776,7 +1776,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
          if (  ref->level == pc->level
             && (  ref->flags.test(PCF_IN_PREPROC)
                || chunk_is_token(ref, CT_SEMICOLON)
-               || chunk_is_token(ref, CT_BRACE_CLOSE)))
+               || chunk_is_brace_close_token(ref)))
          {
             do_insert = true;
             break;

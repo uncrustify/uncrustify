@@ -61,7 +61,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
    // can't be any variable definitions in a "= {" block
    chunk_t *prev = chunk_get_prev_ncnnl(start);
 
-   if (chunk_is_token(prev, CT_ASSIGN))
+   if (chunk_is_assign_token(prev))
    {
       LOG_FMT(LAVDB, "%s(%d): start->text() '%s', type is %s, on orig_line %zu (abort due to assign)\n",
               __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line);
@@ -174,7 +174,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
                           && options::align_single_line_brace();
          }
          else if (  fp_look_bro
-                 && chunk_is_token(pc, CT_BRACE_OPEN)
+                 && chunk_is_brace_open_token(pc)
                  && pc->flags.test(PCF_ONE_LINER))
          {
             as_br.Add(pc);
@@ -183,7 +183,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
       }
 
       // process nested braces
-      if (chunk_is_token(pc, CT_BRACE_OPEN))
+      if (chunk_is_brace_open_token(pc))
       {
          size_t sub_nl_count = 0;
 
@@ -207,7 +207,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
       }
 
       // Done with this brace set?
-      if (chunk_is_token(pc, CT_BRACE_CLOSE))
+      if (chunk_is_brace_close_token(pc))
       {
          pc = chunk_get_next(pc);
          break;

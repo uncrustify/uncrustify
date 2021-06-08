@@ -107,7 +107,7 @@ void pawn_scrub_vsemi(void)
       }
       chunk_t *prev = chunk_get_prev_ncnnl(pc);
 
-      if (chunk_is_token(prev, CT_BRACE_CLOSE))
+      if (chunk_is_brace_close_token(prev))
       {
          if (  get_chunk_parent_type(prev) == CT_IF
             || get_chunk_parent_type(prev) == CT_ELSE
@@ -133,19 +133,19 @@ static bool pawn_continued(chunk_t *pc, size_t br_level)
 
    if (  pc->level > br_level
       || chunk_is_token(pc, CT_ARITH)
-      || chunk_is_token(pc, CT_SHIFT)
-      || chunk_is_token(pc, CT_CARET)
-      || chunk_is_token(pc, CT_QUESTION)
+      || chunk_is_shift_token(pc)
+      || chunk_is_caret_token(pc)
+      || chunk_is_question_token(pc)
       || chunk_is_token(pc, CT_BOOL)
-      || chunk_is_token(pc, CT_ASSIGN)
-      || chunk_is_token(pc, CT_COMMA)
-      || chunk_is_token(pc, CT_COMPARE)
+      || chunk_is_assign_token(pc)
+      || chunk_is_comma_token(pc)
+      || chunk_is_comparison_token(pc)
       || chunk_is_token(pc, CT_IF)
       || chunk_is_token(pc, CT_ELSE)
       || chunk_is_token(pc, CT_DO)
       || chunk_is_token(pc, CT_SWITCH)
       || chunk_is_token(pc, CT_WHILE)
-      || chunk_is_token(pc, CT_BRACE_OPEN)
+      || chunk_is_brace_open_token(pc)
       || chunk_is_token(pc, CT_VBRACE_OPEN)
       || chunk_is_token(pc, CT_FPAREN_OPEN)
       || get_chunk_parent_type(pc) == CT_IF
@@ -158,9 +158,9 @@ static bool pawn_continued(chunk_t *pc, size_t br_level)
       || get_chunk_parent_type(pc) == CT_FUNC_DEF
       || get_chunk_parent_type(pc) == CT_ENUM
       || pc->flags.test_any(PCF_IN_ENUM | PCF_IN_STRUCT)
-      || chunk_is_str(pc, ":", 1)
-      || chunk_is_str(pc, "+", 1)
-      || chunk_is_str(pc, "-", 1))
+      || chunk_is_colon_str(pc)
+      || chunk_is_plus_str(pc)
+      || chunk_is_minus_str(pc))
    {
       return(true);
    }
@@ -207,8 +207,8 @@ static chunk_t *pawn_process_line(chunk_t *start)
    //LOG_FMT(LSYS, "%s: %d - %s\n", __func__,
    //        start->orig_line, start->text());
 
-   if (  chunk_is_token(start, CT_NEW)
-      || chunk_is_str(start, "const", 5))
+   if (  chunk_is_new_token(start)
+      || chunk_is_const_str(start))
    {
       return(pawn_process_variable(start));
    }
@@ -222,14 +222,14 @@ static chunk_t *pawn_process_line(chunk_t *start)
    chunk_t *pc = start;
 
    while (  ((pc = chunk_get_next_nc(pc)) != nullptr)
-         && !chunk_is_str(pc, "(", 1)
+         && !chunk_is_paren_open_str(pc)
          && pc->type != CT_ASSIGN
          && pc->type != CT_NEWLINE)
    {
       if (  pc->level == 0
          && (  chunk_is_token(pc, CT_FUNCTION)
             || chunk_is_token(pc, CT_WORD)
-            || chunk_is_token(pc, CT_OPERATOR_VAL)))
+            || chunk_is_overloaded_token(pc)))
       {
          fcn = pc;
       }
@@ -237,7 +237,7 @@ static chunk_t *pawn_process_line(chunk_t *start)
 
    if (pc != nullptr)
    {
-      if (chunk_is_token(pc, CT_ASSIGN))
+      if (chunk_is_assign_token(pc))
       {
          return(pawn_process_variable(pc));
       }
@@ -389,7 +389,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
 
    // See if there is a state clause after the function
    if (  last != nullptr
-      && chunk_is_str(last, "<", 1))
+      && chunk_is_angle_open_str(last))
    {
       LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle open %s\n",
               __func__, pc->orig_line, pc->text(), get_token_name(last->type));
@@ -398,7 +398,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       set_chunk_parent(last, CT_FUNC_DEF);
 
       while (  ((last = chunk_get_next(last)) != nullptr)
-            && !chunk_is_str(last, ">", 1))
+            && !chunk_is_angle_close_str(last))
       {
          // do nothing just search, TODO: use search_chunk
       }
@@ -418,7 +418,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       return(last);
    }
 
-   if (chunk_is_token(last, CT_BRACE_OPEN))
+   if (chunk_is_brace_open_token(last))
    {
       set_chunk_parent(last, CT_FUNC_DEF);
       last = chunk_get_next_type(last, CT_BRACE_CLOSE, last->level);

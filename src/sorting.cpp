@@ -295,7 +295,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
       LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
               __func__, __LINE__, pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
 
-      if (chunk_is_token(pc1, CT_MEMBER))
+      if (chunk_is_member_token(pc1))
       {
          pc1 = chunk_get_next(pc1);
          LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
@@ -305,7 +305,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
               __func__, __LINE__, pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
 
-      if (chunk_is_token(pc2, CT_MEMBER))
+      if (chunk_is_member_token(pc2))
       {
          pc2 = chunk_get_next(pc2);
          LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",

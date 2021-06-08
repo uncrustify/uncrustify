@@ -7,11 +7,14 @@
 
 #include "EnumStructUnionParser.h"
 
+#include "chunk_tests.h"
+#include "chunk_tools.h"
 #include "combine_fix_mark.h"
 #include "combine_skip.h"
 #include "combine_tools.h"
 #include "flag_parens.h"
 #include "lang_pawn.h"
+#include "match_tools.h"
 
 
 /**
@@ -19,811 +22,6 @@
  */
 extern const char *get_token_name(c_token_t);
 extern void log_pcf_flags(log_sev_t, pcf_flags_t);
-
-
-/**
- * Forward declarations
- */
-static std::pair<chunk_t *, chunk_t *> match_variable_end(chunk_t *, std::size_t);
-static std::pair<chunk_t *, chunk_t *> match_variable_start(chunk_t *, std::size_t);
-static chunk_t *skip_scope_resolution_and_nested_name_specifiers(chunk_t *);
-static chunk_t *skip_scope_resolution_and_nested_name_specifiers_rev(chunk_t *);
-
-
-/**
- * Returns true if two adjacent chunks potentially match a pattern consistent
- * with that of a qualified identifier
- */
-static bool adj_tokens_match_qualified_identifier_pattern(chunk_t *prev, chunk_t *next)
-{
-   LOG_FUNC_ENTRY();
-
-   if (  prev != nullptr
-      && next != nullptr)
-   {
-      auto prev_token_type = prev->type;
-      auto next_token_type = next->type;
-
-      switch (prev_token_type)
-      {
-      case CT_ANGLE_CLOSE:
-         /**
-          * assuming the previous token is possibly the closing angle of a
-          * templated type, the next token may be a scope resolution operator ("::")
-          */
-         return(next_token_type == CT_DC_MEMBER);
-
-      case CT_ANGLE_OPEN:
-         /**
-          * assuming the previous token is possibly the opening angle of a
-          * templated type, just check to see if there's a matching closing
-          * angle
-          */
-         return(chunk_skip_to_match(prev, scope_e::PREPROC) != nullptr);
-
-      case CT_DC_MEMBER:
-         /**
-          * if the previous token is a double colon ("::"), it is likely part
-          * of a chain of scope-resolution qualifications preceding a word or
-          * type
-          */
-         return(  next_token_type == CT_TYPE
-               || next_token_type == CT_WORD);
-
-      case CT_TYPE:
-      case CT_WORD:
-         /**
-          * if the previous token is an identifier, the next token may be
-          * one of the following:
-          * - an opening angle, which may indicate a templated type as part of a
-          *   scope resolution preceding the actual variable identifier
-          * - a double colon ("::")
-          */
-         return(  next_token_type == CT_ANGLE_OPEN
-               || next_token_type == CT_DC_MEMBER);
-
-      default:
-         // do nothing
-         break;
-      } // switch
-   }
-   return(false);
-} // adj_tokens_match_qualified_identifier_pattern
-
-
-/**
- * Returns true if two adjacent chunks potentially match a pattern consistent
- * with that of a variable definition
- */
-static bool adj_tokens_match_var_def_pattern(chunk_t *prev, chunk_t *next)
-{
-   LOG_FUNC_ENTRY();
-
-   if (  prev != nullptr
-      && next != nullptr)
-   {
-      auto prev_token_type = prev->type;
-      auto next_token_type = next->type;
-
-      switch (prev_token_type)
-      {
-      case CT_ANGLE_CLOSE:
-         /**
-          * assuming the previous token is possibly the closing angle of a
-          * templated type, the next token may be one of the following:
-          * - a pointer symbol ('*', '^')
-          * - a double colon ("::")
-          * - a reference symbol ('&')
-          * - a qualifier (const, etc.)
-          * - an identifier
-          */
-         return(  chunk_is_pointer_or_reference(next)
-               || next_token_type == CT_DC_MEMBER
-               || next_token_type == CT_QUALIFIER
-               || next_token_type == CT_WORD);
-
-
-      case CT_ANGLE_OPEN:
-         /**
-          * assuming the previous token is possibly the opening angle of a
-          * templated type, just check to see if there's a matching closing
-          * angle
-          */
-         return(chunk_skip_to_match(prev, scope_e::PREPROC) != nullptr);
-
-      case CT_BRACE_CLOSE:
-         /**
-          * assuming the previous token is possibly the closing brace of a
-          * class/enum/struct/union definition, one or more inline variable
-          * definitions may follow; in that case, the next token may be one of
-          * the following:
-          * - a pointer symbol ('*', '^')
-          * - a reference symbol ('&')
-          * - a qualifier (const, etc.)
-          * - an identifier
-          */
-         return(  chunk_is_pointer_or_reference(next)
-               || next_token_type == CT_QUALIFIER
-               || next_token_type == CT_WORD);
-
-      case CT_BRACE_OPEN:
-         /**
-          * if the previous token is an opening brace, it may indicate the
-          * start of a braced initializer list - skip ahead to find a matching
-          * closing brace
-          */
-         return(chunk_skip_to_match(prev, scope_e::PREPROC) != nullptr);
-
-      case CT_BYREF:
-         /**
-          * if the previous token is a reference symbol ('&'), the next token
-          * may be an identifier
-          */
-         return(next_token_type == CT_WORD);
-
-      case CT_CARET:
-         /**
-          * if the previous token is a managed C++/CLI pointer symbol ('^'),
-          * the next token may be one of the following:
-          * - a pointer symbol ('*', '^')
-          * - a reference symbol ('&')
-          * - a qualifier (const, etc.)
-          * - an identifier
-          */
-         return(  language_is_set(LANG_CPP)
-               && (  chunk_is_pointer_or_reference(next)
-                  || next_token_type == CT_QUALIFIER
-                  || next_token_type == CT_WORD));
-
-      case CT_COMMA:
-         /**
-          * if the previous token is a comma, this may indicate a variable
-          * declaration trailing a prior declaration; in that case, the next
-          * token may be one of the following:
-          * - a pointer symbol ('*', '^')
-          * - a reference symbol ('&')
-          * - an identifier
-          */
-         return(  chunk_is_pointer_or_reference(next)
-               || next_token_type == CT_WORD);
-
-      case CT_DC_MEMBER:
-         /**
-          * if the previous token is a double colon ("::"), it is likely part
-          * of a chain of scope-resolution qualifications preceding a word or
-          * type
-          */
-         return(  next_token_type == CT_TYPE
-               || next_token_type == CT_WORD);
-
-      case CT_PAREN_OPEN:
-         /**
-          * if the previous token is an opening paren, it may indicate the
-          * start of a constructor call parameter list - skip ahead to find a
-          * matching closing paren
-          */
-         next = chunk_skip_to_match(prev, scope_e::PREPROC);
-
-         if (next != nullptr)
-         {
-            next_token_type = next->type;
-         }
-         return(next_token_type == CT_PAREN_CLOSE);
-
-      case CT_PTR_TYPE:
-         /**
-          * if the previous token is a pointer type, ('*', '^'), the next token
-          * may be one of the following:
-          * - another pointer symbol ('*', '^')
-          * - a reference symbol ('&')
-          * - a qualifier (const, etc.)
-          * - an identifier
-          */
-         return(  chunk_is_pointer_or_reference(next)
-               || next_token_type == CT_QUALIFIER
-               || next_token_type == CT_WORD);
-
-      case CT_QUALIFIER:
-         /**
-          * if the previous token is a qualifier (const, etc.), the next token
-          * may be one of the following:
-          * - a pointer symbol ('*', '^')
-          * - a reference symbol ('&')
-          * - another qualifier
-          * - an identifier
-          */
-         return(  chunk_is_pointer_or_reference(next)
-               || next_token_type == CT_QUALIFIER
-               || next_token_type == CT_WORD);
-
-      case CT_SQUARE_CLOSE:
-         /**
-          * if the previous token is a closing bracket, the next token may be
-          * an assignment following an array variable declaration
-          */
-         return(next_token_type == CT_ASSIGN);
-
-      case CT_SQUARE_OPEN:
-         /**
-          * if the previous token is an opening bracket, it may indicate an
-          * array declaration - skip ahead to find a matching closing bracket
-          */
-         return(chunk_skip_to_match(prev, scope_e::PREPROC) != nullptr);
-
-      case CT_STAR:
-         /**
-          * if the previous token is a pointer symbol, ('*'), the next token
-          * may be one of the following:
-          * - another pointer symbol ('*', '^')
-          * - a reference symbol ('&')
-          * - a qualifier (const, etc.)
-          * - an identifier
-          */
-         return(  chunk_is_pointer_or_reference(next)
-               || next_token_type == CT_QUALIFIER
-               || next_token_type == CT_WORD);
-
-      case CT_TSQUARE:
-         /**
-          * if the previous token is a set of brackets, the next token may be
-          * an assignment following an array variable declaration
-          */
-         return(next_token_type == CT_ASSIGN);
-
-      case CT_TYPE:
-         /**
-          * if the previous token is marked as a type, the next token may be
-          * one of the following:
-          * - a pointer symbol ('*', '^')
-          * - a reference symbol ('&')
-          * - an opening angle, which may indicate a templated type as part of a
-          *   scope resolution preceding the actual variable identifier
-          * - a double colon ("::")
-          * - a qualifier (const, etc.)
-          * - an identifier
-          */
-         return(  chunk_is_pointer_or_reference(next)
-               || next_token_type == CT_ANGLE_OPEN
-               || next_token_type == CT_DC_MEMBER
-               || next_token_type == CT_QUALIFIER
-               || next_token_type == CT_WORD);
-
-      case CT_WORD:
-         /**
-          * if the previous token is an identifier, the next token may be one
-          * of the following:
-          * - an assignment symbol ('=')
-          * - an opening angle, which may indicate a templated type as part of a
-          *   scope resolution preceding the actual variable identifier
-          * - an opening brace, which may indicate a braced-initializer list
-          * - a double colon ("::")
-          * - an opening paren, which may indicate a constructor call parameter
-          *   list
-          * - an opening square bracket, which may indicate an array variable
-          * - an set of empty square brackets, which also may indicate an array
-          *   variable
-          */
-         return(  next_token_type == CT_ANGLE_OPEN
-               || next_token_type == CT_ASSIGN
-               || next_token_type == CT_BRACE_OPEN
-               || next_token_type == CT_DC_MEMBER
-               || next_token_type == CT_PAREN_OPEN
-               || next_token_type == CT_SQUARE_OPEN
-               || next_token_type == CT_TSQUARE);
-
-      default:
-         // do nothing
-         break;
-      } // switch
-   }
-   return(false);
-} // adj_tokens_match_var_def_pattern
-
-
-/**
- * Returns true if the first chunk occurs AFTER the second chunk in the argument
- * list
- * @param pc         points to the first chunk
- * @param after      points to the second chunk
- * @param test_equal if true, returns true when both chunks refer to the same chunk
- */
-static bool chunk_is_after(chunk_t *pc, chunk_t *after, bool test_equal = true)
-{
-   LOG_FUNC_ENTRY();
-
-   if (pc != nullptr)
-   {
-      if (  test_equal
-         && pc == after)
-      {
-         return(true);
-      }
-      else if (after != nullptr)
-      {
-         auto pc_column    = pc->orig_col;
-         auto pc_line      = pc->orig_line;
-         auto after_column = after->orig_col;
-         auto after_line   = after->orig_line;
-
-         return(  pc_line > after_line
-               || (  pc_line == after_line
-                  && pc_column > after_column));
-      }
-   }
-   return(false);
-} // chunk_is_after
-
-
-/**
- * Returns true if the first chunk occurs BEFORE the second chunk in the argument
- * list
- * @param pc         points to the first chunk
- * @param before     points to the second chunk
- * @param test_equal if true, returns true when both chunks refer to the same chunk
- */
-static bool chunk_is_before(chunk_t *pc, chunk_t *before, bool test_equal = true)
-{
-   LOG_FUNC_ENTRY();
-
-   if (pc != nullptr)
-   {
-      if (  test_equal
-         && pc == before)
-      {
-         return(true);
-      }
-      else if (before != nullptr)
-      {
-         auto pc_column     = pc->orig_col;
-         auto pc_line       = pc->orig_line;
-         auto before_column = before->orig_col;
-         auto before_line   = before->orig_line;
-
-         return(  pc_line < before_line
-               || (  pc_line == before_line
-                  && pc_column < before_column));
-      }
-   }
-   return(false);
-} // chunk_is_before
-
-
-/**
- * Returns true if the first chunk occurs both AFTER and BEFORE
- * the second and third chunks, respectively, in the argument list
- * @param pc         points to the first chunk
- * @param after      points to the second chunk
- * @param before     points to the third chunk
- * @param test_equal if true, returns true when the first chunk tests equal to
- *                   either the second or third chunk
- */
-static bool chunk_is_between(chunk_t *pc, chunk_t *after, chunk_t *before, bool test_equal = true)
-{
-   LOG_FUNC_ENTRY();
-
-   return(  chunk_is_before(pc, before, test_equal)
-         && chunk_is_after(pc, after, test_equal));
-} // chunk_is_between
-
-
-/**
- * Returns true if the chunk under test is a reference to a macro defined elsewhere in
- * the source file currently being processed. Note that a macro may be defined in
- * another source or header file, for which this function does not currently account
- */
-static bool chunk_is_macro_reference(chunk_t *pc)
-{
-   LOG_FUNC_ENTRY();
-
-   auto *next = chunk_get_head();
-
-   if (  (  language_is_set(LANG_CPP)
-         || language_is_set(LANG_C))
-      && chunk_is_token(pc, CT_WORD)
-      && !pc->flags.test(PCF_IN_PREPROC))
-   {
-      while (next != nullptr)
-      {
-         if (  next->flags.test(PCF_IN_PREPROC)
-            && std::strcmp(pc->str.c_str(), next->str.c_str()) == 0)
-         {
-            return(true);
-         }
-         next = chunk_search_next_cat(next, CT_MACRO);
-      }
-   }
-   return(false);
-} // chunk_is_macro_reference
-
-
-/**
- * Returns true if the input chunk is a pointer/reference operator or a
- * qualifier
- */
-static bool chunk_is_pointer_reference_or_qualifier(chunk_t *pc)
-{
-   LOG_FUNC_ENTRY();
-
-   return(  chunk_is_pointer_or_reference(pc)
-         || (  chunk_is_token(pc, CT_QUALIFIER)
-            && !chunk_is_cpp_inheritance_access_specifier(pc)));
-} // chunk_is_pointer_reference_or_qualifier
-
-
-/**
- * This function attempts to match the starting and ending chunks of a qualified
- * identifier, which consists of one or more scope resolution operator(s) and
- * zero or more nested name specifiers
- * specifiers
- * @param pc the starting chunk
- * @return   an std::pair, where the first chunk indicates the starting chunk of the
- *           match and second indicates the ending chunk. Upon finding a successful
- *           match, the starting chunk may consist of an identifier or a scope
- *           resolution operator, while the ending chunk may consist of identifier
- *           or the closing angle bracket of a template. If no match is found, a
- *           pair of null chunks is returned
- */
-static std::pair<chunk_t *, chunk_t *> match_qualified_identifier(chunk_t *pc)
-{
-   LOG_FUNC_ENTRY();
-
-   auto *end   = skip_scope_resolution_and_nested_name_specifiers(pc);
-   auto *start = skip_scope_resolution_and_nested_name_specifiers_rev(pc);
-
-   if (  end != nullptr
-      && start != nullptr)
-   {
-      auto *double_colon = chunk_search_next_cat(start, CT_DC_MEMBER);
-
-      if (  double_colon != nullptr
-         && chunk_is_between(double_colon, start, end))
-      {
-         return(std::make_pair(start, end));
-      }
-   }
-   return(std::make_pair(nullptr, nullptr));
-} // match_qualified_identifier
-
-
-/**
- * Starting from the input chunk, this function attempts to match a variable
- * declaration/definition in both the forward and reverse directions; each pair of
- * consecutive chunks is tested to determine if a potential match is satisfied.
- * @param pc    the starting chunk
- * @param level the brace level
- * @return      upon successful match, function returns an std::tuple, where the
- *              first chunk indicates the starting chunk, the second chunk indicates
- *              the identifier name, and the third chunk indicates the end associated
- *              with the variable declaration/definition
- */
-static std::tuple<chunk_t *, chunk_t *, chunk_t *> match_variable(chunk_t *pc, std::size_t level)
-{
-   LOG_FUNC_ENTRY();
-
-   auto identifier_end_pair   = match_variable_end(pc, level);
-   auto start_identifier_pair = match_variable_start(pc, level);
-   auto *end                  = identifier_end_pair.second;
-   auto *identifier           = identifier_end_pair.first != nullptr ? identifier_end_pair.first : start_identifier_pair.second;
-   auto *start                = start_identifier_pair.first;
-
-   /**
-    * a forward search starting at the chunk under test will fail if two consecutive chunks marked as CT_WORD
-    * are encountered; in that case, it's likely that the preceding chunk indicates a type and the subsequent
-    * chunk indicates a variable declaration/definition
-    */
-
-   if (  identifier != nullptr
-      && start != nullptr
-      && (  end != nullptr
-         || chunk_is_token(chunk_get_prev_ncnnlni(identifier), CT_WORD)))
-   {
-      return(std::make_tuple(start, identifier, end));
-   }
-   return(std::make_tuple(nullptr, nullptr, nullptr));
-} // match_variable
-
-
-/**
- * Starting from the input chunk, this function attempts to match a variable in the
- * forward direction, and tests each pair of consecutive chunks to determine if a
- * potential variable declaration/definition match is satisfied. Secondly, the
- * function attempts to identify the end chunk associated with the candidate variable
- * match. For scalar variables (simply declared and not defined), both the end chunk
- * and identifier chunk should be one in the same
- * @param pc    the starting chunk
- * @param level the brace level
- * @return      an std::pair, where the first chunk indicates the identifier
- *              (if non-null) and the second chunk indicates the end associated with
- *              the variable declaration/definition; assuming a valid match, the first
- *              chunk may be null if the function is called with a starting chunk
- *              that occurs after the identifier
- */
-static std::pair<chunk_t *, chunk_t *> match_variable_end(chunk_t *pc, std::size_t level)
-{
-   LOG_FUNC_ENTRY();
-
-   chunk_t *identifier = nullptr;
-
-   while (pc != nullptr)
-   {
-      /**
-       * skip any right-hand side assignments
-       */
-      chunk_t *rhs_exp_end = nullptr;
-
-      if (chunk_is_token(pc, CT_ASSIGN))
-      {
-         /**
-          * store a pointer to the end chunk of the rhs expression;
-          * use it later to test against setting the identifier
-          */
-         rhs_exp_end = skip_to_expression_end(pc);
-         pc          = rhs_exp_end;
-      }
-
-      /**
-       * skip current and preceding chunks if at a higher brace level
-       */
-      while (  pc != nullptr
-            && pc->level > level)
-      {
-         pc = chunk_get_next_ncnnl(pc);
-      }
-
-      /**
-       * skip to any following match for angle brackets, braces, parens,
-       * or square brackets
-       */
-      if (  chunk_is_token(pc, CT_ANGLE_OPEN)
-         || chunk_is_token(pc, CT_BRACE_OPEN)
-         || chunk_is_paren_open(pc)
-         || chunk_is_token(pc, CT_SQUARE_OPEN))
-      {
-         pc = chunk_skip_to_match(pc, scope_e::PREPROC);
-      }
-      /**
-       * call a separate function to validate adjacent tokens as potentially
-       * matching a variable declaration/definition
-       */
-
-      chunk_t *next = chunk_get_next_ncnnl(pc);
-
-      if (  chunk_is_not_token(next, CT_COMMA)
-         && chunk_is_not_token(next, CT_FPAREN_CLOSE)
-         && !chunk_is_semicolon(next)
-         && !adj_tokens_match_var_def_pattern(pc, next))
-      {
-         /**
-          * error, pattern is not consistent with a variable declaration/definition
-          */
-
-         break;
-      }
-
-      if (  chunk_is_token(pc, CT_WORD)
-         && pc != rhs_exp_end)
-      {
-         /**
-          * we've encountered a candidate for the variable name
-          */
-
-         identifier = pc;
-      }
-
-      /**
-       * we're done searching if we've previously identified a variable name
-       * and then encounter a comma or semicolon
-       */
-      if (  chunk_is_token(next, CT_COMMA)
-         || chunk_is_token(next, CT_FPAREN_CLOSE)
-         || chunk_is_semicolon(next))
-      {
-         return(std::make_pair(identifier, pc));
-      }
-      pc = next;
-   }
-   return(std::make_pair(nullptr, nullptr));
-} // match_variable_end
-
-
-/**
- * Starting from the input chunk, this function attempts to match a variable in the
- * reverse direction, and tests each pair of consecutive chunks to determine if a
- * potential variable declaration/definition match is satisfied. Secondly, the
- * function attempts to identify the starting chunk associated with the candidate
- * variable match. The start and identifier chunks may refer to each other in cases
- * where the identifier is not preceded by pointer or reference operators or qualifiers,
- * etc.
- * @param pc    the starting chunk
- * @param level the brace level
- * @return      an std::pair, where the first chunk indicates the starting chunk and
- *              the second chunk indicates the identifier associated with the variable
- *              match; assuming a valid match, the second chunk may be null if the
- *              function is called with a starting chunk that occurs before the
- *              identifier
- */
-static std::pair<chunk_t *, chunk_t *> match_variable_start(chunk_t *pc, std::size_t level)
-{
-   LOG_FUNC_ENTRY();
-
-   chunk_t *identifier = nullptr;
-
-   while (pc != nullptr)
-   {
-      /**
-       * skip any right-hand side assignments
-       */
-      chunk_t *before_rhs_exp_start = skip_expression_rev(pc);
-      chunk_t *prev                 = nullptr;
-      chunk_t *next                 = pc;
-
-      while (  chunk_is_after(next, before_rhs_exp_start)
-            && pc != prev)
-      {
-         next = prev;
-         prev = chunk_get_prev_ncnnlni(next);
-
-         if (chunk_is_token(next, CT_ASSIGN))
-         {
-            pc = prev;
-         }
-      }
-      /**
-       * skip current and preceding chunks if at a higher brace level
-       */
-
-      while (  pc != nullptr
-            && pc->level > level)
-      {
-         pc = chunk_get_prev_ncnnlni(pc);
-      }
-
-      /**
-       * skip to any preceding match for angle brackets, braces, parens,
-       * or square brackets
-       */
-      if (  chunk_is_token(pc, CT_ANGLE_CLOSE)
-         || chunk_is_token(pc, CT_BRACE_CLOSE)
-         || chunk_is_paren_close(pc)
-         || chunk_is_token(pc, CT_SQUARE_CLOSE))
-      {
-         pc = chunk_skip_to_match_rev(pc, scope_e::PREPROC);
-      }
-      /**
-       * call a separate function to validate adjacent tokens as potentially
-       * matching a variable declaration/definition
-       */
-
-      prev = chunk_get_prev_ncnnlni(pc);
-
-      if (!adj_tokens_match_var_def_pattern(prev, pc))
-      {
-         /**
-          * perhaps the previous chunk possibly indicates a type that yet to be
-          * marked? if not, then break
-          */
-         if (  chunk_is_not_token(prev, CT_WORD)
-            || (  !chunk_is_pointer_or_reference(pc)
-               && chunk_is_not_token(pc, CT_WORD)))
-         {
-            /**
-             * error, pattern is not consistent with a variable declaration/definition
-             */
-
-            break;
-         }
-      }
-
-      if (  identifier == nullptr
-         && chunk_is_token(pc, CT_WORD))
-      {
-         /**
-          * we've encountered a candidate for the variable name
-          */
-
-         identifier = pc;
-      }
-
-      /**
-       * we're done searching if we've previously identified a variable name
-       * and then encounter another identifier, or we encounter a closing
-       * brace (which would likely indicate an inline variable definition)
-       */
-      if (  chunk_is_token(prev, CT_ANGLE_CLOSE)
-         || chunk_is_token(prev, CT_BRACE_CLOSE)
-         || chunk_is_token(prev, CT_COMMA)
-         || chunk_is_token(prev, CT_TYPE)
-         || chunk_is_token(prev, CT_WORD))
-      {
-         return(std::make_pair(pc, identifier));
-      }
-      pc = prev;
-   }
-   return(std::make_pair(nullptr, nullptr));
-} // match_variable_start
-
-
-/**
- * Skip forward past any scope resolution operators and nested name specifiers and return
- * just the qualified identifier name; while similar to the existing skip_dc_member()
- * function, this function also takes into account templates that may comprise any
- * nested name specifiers
- */
-static chunk_t *skip_scope_resolution_and_nested_name_specifiers(chunk_t *pc)
-{
-   LOG_FUNC_ENTRY();
-
-   if (  (  pc != nullptr
-         && pc->flags.test(PCF_IN_TEMPLATE))
-      || chunk_is_token(pc, CT_DC_MEMBER)
-      || chunk_is_token(pc, CT_TYPE)
-      || chunk_is_token(pc, CT_WORD))
-   {
-      while (pc != nullptr)
-      {
-         /**
-          * skip to any following match for angle brackets
-          */
-         if (chunk_is_token(pc, CT_ANGLE_OPEN))
-         {
-            pc = chunk_skip_to_match(pc, scope_e::PREPROC);
-         }
-         auto *next = chunk_get_next_ncnnl(pc);
-
-         /**
-          * call a separate function to validate adjacent tokens as potentially
-          * matching a qualified identifier
-          */
-         if (!adj_tokens_match_qualified_identifier_pattern(pc, next))
-         {
-            break;
-         }
-         pc = next;
-      }
-   }
-   return(pc);
-} // skip_scope_resolution_and_nested_name_specifiers
-
-
-/**
- * Skip in reverse to the beginning chunk of a qualified identifier; while similar to
- * the existing skip_dc_member_rev() function, this function also takes into account
- * templates that may comprise any nested name specifiers
- */
-static chunk_t *skip_scope_resolution_and_nested_name_specifiers_rev(chunk_t *pc)
-{
-   LOG_FUNC_ENTRY();
-
-   if (  (  pc != nullptr
-         && pc->flags.test(PCF_IN_TEMPLATE))
-      || chunk_is_token(pc, CT_DC_MEMBER)
-      || chunk_is_token(pc, CT_TYPE)
-      || chunk_is_token(pc, CT_WORD))
-   {
-      while (pc != nullptr)
-      {
-         /**
-          * skip to any preceding match for angle brackets
-          */
-         if (chunk_is_token(pc, CT_ANGLE_CLOSE))
-         {
-            pc = chunk_skip_to_match_rev(pc, scope_e::PREPROC);
-         }
-         auto *prev = chunk_get_prev_ncnnlni(pc);
-
-         /**
-          * call a separate function to validate adjacent tokens as potentially
-          * matching a qualified identifier
-          */
-         if (!adj_tokens_match_qualified_identifier_pattern(prev, pc))
-         {
-            break;
-         }
-         pc = prev;
-      }
-   }
-   return(pc);
-} // skip_scope_resolution_and_nested_name_specifiers_rev
 
 
 EnumStructUnionParser::EnumStructUnionParser()
@@ -977,7 +175,7 @@ void EnumStructUnionParser::analyze_identifiers()
       /**
        * skip any right-hand side assignments
        */
-      if (chunk_is_token(pc, CT_ASSIGN))
+      if (chunk_is_assign_token(pc))
       {
          pc = skip_to_expression_end(pc);
       }
@@ -985,8 +183,8 @@ void EnumStructUnionParser::analyze_identifiers()
       /**
        * if we're sitting at a comma or semicolon, skip it
        */
-      if (  chunk_is_semicolon(pc)
-         || (  chunk_is_token(pc, CT_COMMA)
+      if (  chunk_is_semicolon_token(pc)
+         || (  chunk_is_comma_token(pc)
             && !pc->flags.test_any(PCF_IN_FCN_DEF | PCF_IN_FCN_CALL | PCF_IN_TEMPLATE)
             && !chunk_is_between(pc, inheritance_start, body_start)))
       {
@@ -1283,8 +481,8 @@ bool EnumStructUnionParser::is_potential_end_chunk(chunk_t *pc) const
     */
    if (  pc == nullptr
       || parse_error_detected()
-      || (  (  chunk_is_semicolon(pc)
-            || chunk_is_token(pc, CT_BRACE_CLOSE))
+      || (  (  chunk_is_semicolon_token(pc)
+            || chunk_is_brace_close_token(pc))
          && pc->level == m_start->level))
    {
       return(true);
@@ -1335,13 +533,13 @@ bool EnumStructUnionParser::is_potential_end_chunk(chunk_t *pc) const
 
    if (  (  pc_in_funccall.test_any()
          && start_in_funccall.test_any()
-         && chunk_is_token(pc, CT_COMMA)
+         && chunk_is_comma_token(pc)
          && pc->level == m_start->level)
       || (  pc_in_funcdef.test_any()
          && (  (  chunk_is_token(pc, CT_FPAREN_CLOSE)
                && pc->level < m_start->level)
-            || (  (  chunk_is_token(pc, CT_ASSIGN)
-                  || chunk_is_token(pc, CT_COMMA))
+            || (  (  chunk_is_assign_token(pc)
+                  || chunk_is_comma_token(pc))
                && pc->level == m_start->level))))
    {
       return(true);
@@ -1437,7 +635,7 @@ void EnumStructUnionParser::mark_base_classes(chunk_t *pc)
 
       chunk_t *next = chunk_get_next_ncnnl(pc, scope_e::PREPROC);
 
-      if (chunk_is_token(next, CT_DC_MEMBER))
+      if (chunk_is_double_colon_token(next))
       {
          /**
           * just in case it's a templated type
@@ -1458,8 +656,8 @@ void EnumStructUnionParser::mark_base_classes(chunk_t *pc)
             set_chunk_type(pc, CT_TYPE);
          }
       }
-      else if (  (  chunk_is_token(next, CT_BRACE_OPEN)
-                 || (  chunk_is_token(next, CT_COMMA)
+      else if (  (  chunk_is_brace_open_token(next)
+                 || (  chunk_is_comma_token(next)
                     && !is_within_where_clause(next)))
               && next->level == m_start->level)
       {
@@ -1478,7 +676,7 @@ void EnumStructUnionParser::mark_base_classes(chunk_t *pc)
             }
          }
 
-         if (chunk_is_token(next, CT_BRACE_OPEN))
+         if (chunk_is_brace_open_token(next))
          {
             break;
          }
@@ -1620,7 +818,7 @@ void EnumStructUnionParser::mark_constructors()
          if (  prev != nullptr
             && std::strcmp(prev->text(), name) == 0
             && prev->level == level
-            && chunk_is_paren_open(next))
+            && chunk_is_paren_open_token(next))
          {
             set_chunk_type(prev, CT_FUNC_CLASS_DEF);
 
@@ -1661,7 +859,7 @@ void EnumStructUnionParser::mark_enum_integral_type(chunk_t *colon)
    while (  chunk_is_between(pc, m_start, m_end)
          && pc != body_start
          && chunk_is_not_token(pc, CT_BRACE_OPEN)
-         && !chunk_is_semicolon(pc))
+         && !chunk_is_semicolon_token(pc))
    {
       /**
        * clear the PCF_VAR_TYPE flag for all chunks within the enum integral base
@@ -1719,8 +917,8 @@ void EnumStructUnionParser::mark_extracorporeal_lvalues()
       {
          next->flags &= ~PCF_LVALUE;
       }
-      else if (  (  chunk_is_token(next, CT_ASSIGN)
-                 || chunk_is_token(next, CT_BRACE_OPEN))
+      else if (  (  chunk_is_assign_token(next)
+                 || chunk_is_brace_open_token(next))
               && chunk_is_token(prev, CT_WORD)
               && prev->flags.test_any(PCF_VAR_DEF | PCF_VAR_1ST | PCF_VAR_INLINE))
       {
@@ -1750,7 +948,7 @@ void EnumStructUnionParser::mark_nested_name_specifiers(chunk_t *pc)
           */
          auto *next = chunk_get_next_ncnnl(pc);
 
-         if (chunk_is_token(next, CT_ANGLE_OPEN))
+         if (chunk_is_angle_open_token(next))
          {
             /**
              * the template may have already been previously marked elsewhere...
@@ -1778,8 +976,8 @@ void EnumStructUnionParser::mark_nested_name_specifiers(chunk_t *pc)
             pc = angle_close;
          }
          else if (  is_within_inheritance_list(pc)
-                 && (  chunk_is_token(next, CT_COMMA)
-                    || chunk_is_token(next, CT_BRACE_OPEN)))
+                 && (  chunk_is_comma_token(next)
+                    || chunk_is_brace_open_token(next)))
          {
             set_chunk_type(pc, CT_TYPE);
          }
@@ -1804,7 +1002,7 @@ void EnumStructUnionParser::mark_pointer_types(chunk_t *pc)
             set_chunk_parent(pc, m_start->type);
             set_chunk_type(pc, CT_PTR_TYPE);
          }
-      } while (chunk_is_pointer_reference_or_qualifier(pc));
+      } while (chunk_is_pointer_reference_or_cv_qualifier(pc));
    }
 } // EnumStructUnionParser::mark_pointer_types
 
@@ -2024,34 +1222,34 @@ void EnumStructUnionParser::parse(chunk_t *pc)
       /**
        * skip any right-hand side assignments
        */
-      if (chunk_is_token(next, CT_ASSIGN))
+      if (chunk_is_assign_token(next))
       {
          next = skip_to_expression_end(next);
       }
 
-      if (  chunk_is_token(next, CT_ANGLE_OPEN)
+      if (  chunk_is_angle_open_token(next)
          && !template_detected())
       {
          next = parse_angles(next);
       }
-      else if (  chunk_is_token(next, CT_BRACE_OPEN)
+      else if (  chunk_is_brace_open_token(next)
               && !body_detected())
       {
          next = parse_braces(next);
       }
-      else if (chunk_is_colon(next))
+      else if (chunk_is_colon_token(next))
       {
          parse_colon(next);
       }
-      else if (chunk_is_token(next, CT_COMMA))
+      else if (chunk_is_comma_token(next))
       {
          record_top_level_comma(next);
       }
-      else if (chunk_is_token(next, CT_DC_MEMBER))
+      else if (chunk_is_double_colon_token(next))
       {
          next = parse_double_colon(next);
       }
-      else if (  chunk_is_paren_open(next)
+      else if (  chunk_is_paren_open_token(next)
               && (  language_is_set(LANG_D)
                  || (  language_is_set(LANG_PAWN)
                     && chunk_is_enum(m_start))))
@@ -2071,7 +1269,7 @@ void EnumStructUnionParser::parse(chunk_t *pc)
       {
          mark_base_classes(next);
       }
-      else if (chunk_is_token(next, CT_QUESTION))
+      else if (chunk_is_question_token(next))
       {
          record_question_operator(next);
       }
@@ -2099,7 +1297,7 @@ void EnumStructUnionParser::parse(chunk_t *pc)
    mark_extracorporeal_lvalues();
 
    if (  prev != nullptr
-      && chunk_is_semicolon(prev)
+      && chunk_is_semicolon_token(prev)
       && prev->level == m_start->level
       && !prev->flags.test(PCF_IN_FOR))
    {
@@ -2232,7 +1430,7 @@ chunk_t *EnumStructUnionParser::parse_braces(chunk_t *brace_open)
 
       if (  language_is_set(LANG_D)
          || language_is_set(LANG_PAWN)
-         || !chunk_is_paren_close(prev)
+         || !chunk_is_paren_close_token(prev)
          || chunk_is_between(prev, enum_base_start, brace_open)
          || chunk_is_between(prev, inheritance_start, brace_open))
       {
@@ -2324,7 +1522,7 @@ chunk_t *EnumStructUnionParser::parse_double_colon(chunk_t *double_colon)
    auto *pc = double_colon;
 
    if (  language_is_set(LANG_CPP)
-      && chunk_is_token(pc, CT_DC_MEMBER))
+      && chunk_is_double_colon_token(pc))
    {
       mark_nested_name_specifiers(pc);
       pc = skip_scope_resolution_and_nested_name_specifiers(pc);
@@ -2353,7 +1551,7 @@ void EnumStructUnionParser::record_question_operator(chunk_t *question)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(question, CT_QUESTION))
+   if (chunk_is_question_token(question))
    {
       std::size_t index = m_chunk_map[CT_QUESTION].size();
 
@@ -2382,7 +1580,7 @@ chunk_t *EnumStructUnionParser::refine_end_chunk(chunk_t *pc)
 
    if (  (  language_is_set(LANG_C)
          || language_is_set(LANG_CPP))
-      && chunk_is_token(pc, CT_BRACE_CLOSE))
+      && chunk_is_brace_close_token(pc))
    {
       /**
        * if dealing with C/C++, one or more trailing variable definitions may
@@ -2398,7 +1596,7 @@ chunk_t *EnumStructUnionParser::refine_end_chunk(chunk_t *pc)
 
       while (true)
       {
-         if (chunk_is_semicolon(next))
+         if (chunk_is_semicolon_token(next))
          {
             pc = next;
 
@@ -2409,7 +1607,7 @@ chunk_t *EnumStructUnionParser::refine_end_chunk(chunk_t *pc)
             /**
              * if we're sitting at a comma, skip it
              */
-            if (chunk_is_token(next, CT_COMMA))
+            if (chunk_is_comma_token(next))
             {
                next = chunk_get_next_ncnnl(next);
             }
@@ -2431,7 +1629,7 @@ chunk_t *EnumStructUnionParser::refine_end_chunk(chunk_t *pc)
                /**
                 * skip any right-hand side assignments
                 */
-               if (chunk_is_token(pc, CT_ASSIGN))
+               if (chunk_is_assign_token(pc))
                {
                   pc = skip_to_expression_end(pc);
                }
@@ -2448,7 +1646,7 @@ void EnumStructUnionParser::set_body_end(chunk_t *body_end)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(body_end, CT_BRACE_CLOSE))
+   if (chunk_is_brace_close_token(body_end))
    {
       m_chunk_map[CT_BRACE_CLOSE][0] = body_end;
    }
@@ -2459,7 +1657,7 @@ void EnumStructUnionParser::set_body_start(chunk_t *body_start)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(body_start, CT_BRACE_OPEN))
+   if (chunk_is_brace_open_token(body_start))
    {
       m_chunk_map[CT_BRACE_OPEN][0] = body_start;
    }
@@ -2470,7 +1668,7 @@ void EnumStructUnionParser::set_enum_base_start(chunk_t *enum_base_start)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_colon(enum_base_start))
+   if (chunk_is_colon_token(enum_base_start))
    {
       m_chunk_map[CT_BIT_COLON][0] = enum_base_start;
    }
@@ -2481,7 +1679,7 @@ void EnumStructUnionParser::set_inheritance_start(chunk_t *inheritance_start)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_colon(inheritance_start))
+   if (chunk_is_colon_token(inheritance_start))
    {
       m_chunk_map[CT_COLON][0] = inheritance_start;
    }
@@ -2492,7 +1690,7 @@ void EnumStructUnionParser::set_template_end(chunk_t *template_end)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(template_end, CT_ANGLE_CLOSE))
+   if (chunk_is_angle_close_token(template_end))
    {
       m_chunk_map[CT_ANGLE_CLOSE][0] = template_end;
    }
@@ -2503,7 +1701,7 @@ void EnumStructUnionParser::set_template_start(chunk_t *template_start)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(template_start, CT_ANGLE_OPEN))
+   if (chunk_is_angle_open_token(template_start))
    {
       m_chunk_map[CT_ANGLE_OPEN][0] = template_start;
    }
@@ -2514,7 +1712,7 @@ void EnumStructUnionParser::set_where_end(chunk_t *where_end)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(where_end, CT_BRACE_OPEN))
+   if (chunk_is_brace_open_token(where_end))
    {
       m_chunk_map[CT_WHERE][0] = where_end;
    }
@@ -2606,7 +1804,7 @@ void EnumStructUnionParser::try_post_identify_macro_calls()
             && !prev->flags.test_any(PCF_VAR_DEF | PCF_VAR_1ST | PCF_VAR_INLINE)
             && prev->level == m_start->level)
          {
-            if (chunk_is_paren_open(pc))
+            if (chunk_is_paren_open_token(pc))
             {
                auto *paren_open  = pc;
                auto *paren_close = chunk_skip_to_match(paren_open, scope_e::PREPROC);
@@ -2662,7 +1860,7 @@ void EnumStructUnionParser::try_post_identify_type()
             break;
          }
          else if (  chunk_is_token(pc, CT_WORD)
-                 || chunk_is_token(pc, CT_ANGLE_CLOSE))
+                 || chunk_is_angle_close_token(pc))
          {
             type = skip_template_prev(pc);
          }
@@ -2781,7 +1979,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
                && (  (  chunk_is_not_token(next, CT_ASSIGN)
                      && chunk_is_not_token(next, CT_COMMA))
                   || next->level != m_start->level)
-               && !chunk_is_semicolon(next))
+               && !chunk_is_semicolon_token(next))
          {
             prev = next;
             next = chunk_get_next_ncnnl(next);
@@ -2818,7 +2016,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
       }
 
       if (  language_is_set(LANG_D)
-         && chunk_is_paren_close(pc))
+         && chunk_is_paren_close_token(pc))
       {
          pc = chunk_skip_to_match_rev(pc);
          pc = chunk_get_prev_ncnnlni(pc);

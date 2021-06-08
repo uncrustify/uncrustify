@@ -36,7 +36,7 @@ void align_init_brace(chunk_t *start)
    chunk_t *pcSingle = scan_ib_line(pc, true);
 
    if (  pcSingle == nullptr
-      || (  chunk_is_token(pcSingle, CT_BRACE_CLOSE)
+      || (  chunk_is_brace_close_token(pcSingle)
          && get_chunk_parent_type(pcSingle) == CT_ASSIGN))
    {
       // single line - nothing to do
@@ -126,7 +126,7 @@ void align_init_brace(chunk_t *start)
             }
 
             // Comma's need to 'fall back' to the previous token
-            if (chunk_is_token(pc, CT_COMMA))
+            if (chunk_is_comma_token(pc))
             {
                next = chunk_get_next(pc);
 
@@ -140,8 +140,7 @@ void align_init_brace(chunk_t *start)
 
                   if (  (idx < (cpd.al_cnt - 1))
                      && options::align_number_right()
-                     && (  chunk_is_token(next, CT_NUMBER_FP)
-                        || chunk_is_token(next, CT_NUMBER)
+                     && (  chunk_is_number_token(next)
                         || chunk_is_token(next, CT_POS)
                         || chunk_is_token(next, CT_NEG)))
                   {
@@ -174,8 +173,7 @@ void align_init_brace(chunk_t *start)
                   next = chunk_get_next(pc);
 
                   if (  !chunk_is_newline(next)
-                     && (  chunk_is_token(next, CT_NUMBER_FP)
-                        || chunk_is_token(next, CT_NUMBER)
+                     && (  chunk_is_number_token(next)
                         || chunk_is_token(next, CT_POS)
                         || chunk_is_token(next, CT_NEG)))
                   {

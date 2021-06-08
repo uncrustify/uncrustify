@@ -73,7 +73,7 @@ void align_eigen_comma_init(void)
       }
       else if (  !pc->flags.test(PCF_IN_ENUM)
               && !pc->flags.test(PCF_IN_TYPEDEF)
-              && chunk_is_str(pc, "<<", 2))
+              && chunk_is_lshift_str(pc))
       {
          if (get_chunk_parent_type(pc) == CT_OPERATOR)
          {
@@ -109,7 +109,7 @@ void align_eigen_comma_init(void)
          auto *const prev = chunk_get_prev(pc);
 
          if (  chunk_is_newline(prev)
-            && chunk_is_token(chunk_get_prev_ncnnl(pc), CT_COMMA))
+            && chunk_is_comma_token(chunk_get_prev_ncnnl(pc)))
          {
             log_rule_B("align_eigen_comma_init");
             as.Add(pc);
