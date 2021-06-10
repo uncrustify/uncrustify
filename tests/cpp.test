@@ -665,6 +665,7 @@
 33106  bool-pos-eol-force.cfg               cpp/pos_bool_in_template.h
 33107  Issue_2688.cfg                       cpp/Issue_2688.cpp
 33108  Issue_2045.cfg                       cpp/Issue_2045.cpp
+33109  empty.cfg                            cpp/Issue_3205.cpp
 
 33110  enum.cfg                             cpp/enum.cpp
 33120  Issue_2149.cfg                       cpp/Issue_2149.cpp
