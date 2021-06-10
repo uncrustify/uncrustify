@@ -123,7 +123,7 @@ A(
         };
 
     auto f = [&](int a)
-    {
+        {
             return b;
         };
 }
