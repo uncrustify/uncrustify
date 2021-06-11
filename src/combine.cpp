@@ -1431,6 +1431,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_BYREF);
       }
+      else if (  chunk_is_token(prev, CT_WORD)             // Issue #3204
+              && chunk_is_token(next, CT_OPERATOR))
+      {
+         set_chunk_type(pc, CT_BYREF);
+      }
       else if (  chunk_is_token(next, CT_FPAREN_CLOSE)
               || chunk_is_token(next, CT_COMMA))
       {
