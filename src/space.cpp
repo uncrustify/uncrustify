@@ -1331,9 +1331,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_BYREF))
    {
-      if (  options::sp_after_byref_func() != IARF_IGNORE
-         && (  get_chunk_parent_type(first) == CT_FUNC_DEF
-            || get_chunk_parent_type(first) == CT_FUNC_PROTO))
+      if (  get_chunk_parent_type(first) == CT_FUNC_DEF             // Issue #3197, #3210
+         || get_chunk_parent_type(first) == CT_FUNC_PROTO)
       {
          // Add or remove space after a reference sign '&', if followed by a function
          // prototype or function definition.
@@ -1354,11 +1353,11 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    if (  chunk_is_token(second, CT_BYREF)
-      && !chunk_is_token(first, CT_PAREN_OPEN))            // Issue #1804
+      && !chunk_is_token(first, CT_PAREN_OPEN))              // Issue #1804
    {
       // Add or remove space before a reference sign '&', if followed by a function
       // prototype or function definition.
-      if (  get_chunk_parent_type(second) == CT_FUNC_DEF
+      if (  get_chunk_parent_type(second) == CT_FUNC_DEF     // Issue #3197, #3210
          || get_chunk_parent_type(second) == CT_FUNC_PROTO)
       {
          log_rule("sp_before_byref_func");

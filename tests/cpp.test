@@ -377,6 +377,7 @@
 30843  nl_func_type_name_mixed.cfg          cpp/nl_func_type_name.cpp
 30844  Issue_2771.cfg                       cpp/Issue_2771.cpp
 30845  ben_026.cfg                          cpp/deref.cpp
+30846  Issue_3197.cfg                       cpp/Issue_3197.h
 
 30850  sp_cmt_cpp_start_force.cfg           cpp/sp_cmt_cpp_start.cc
 30852  sp_paren_qualifier-f.cfg             cpp/Issue_2138.cpp
