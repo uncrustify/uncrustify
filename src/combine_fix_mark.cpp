@@ -2350,6 +2350,10 @@ void mark_struct_union_body(chunk_t *start)
             break;
          }
       }
+      else if (chunk_is_token(pc, CT_AMP))
+      {
+         pc = skip_expression(pc);
+      }
       else
       {
          pc = fix_variable_definition(pc);
