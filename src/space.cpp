@@ -1331,9 +1331,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_BYREF))
    {
-      if (  options::sp_after_byref_func() != IARF_IGNORE
-         && (  get_chunk_parent_type(first) == CT_FUNC_DEF
-            || get_chunk_parent_type(first) == CT_FUNC_PROTO))
+      if (  get_chunk_parent_type(first) == CT_FUNC_DEF             // Issue #3197, #3210
+         || get_chunk_parent_type(first) == CT_FUNC_PROTO)
       {
          // Add or remove space after a reference sign '&', if followed by a function
          // prototype or function definition.
@@ -1354,37 +1353,31 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    if (  chunk_is_token(second, CT_BYREF)
-      && !chunk_is_token(first, CT_PAREN_OPEN))
+      && !chunk_is_token(first, CT_PAREN_OPEN))              // Issue #1804
    {
       // Add or remove space before a reference sign '&', if followed by a function
       // prototype or function definition.
-      if (options::sp_before_byref_func() != IARF_IGNORE)
+      if (  get_chunk_parent_type(second) == CT_FUNC_DEF     // Issue #3197, #3210
+         || get_chunk_parent_type(second) == CT_FUNC_PROTO)
       {
-         chunk_t *next = chunk_get_next(second);
-
-         if (  next != nullptr
-            && (  get_chunk_parent_type(next) == CT_FUNC_DEF
-               || get_chunk_parent_type(next) == CT_FUNC_PROTO))
-         {
-            log_rule("sp_before_byref_func");
-            return(options::sp_before_byref_func());
-         }
+         log_rule("sp_before_byref_func");
+         return(options::sp_before_byref_func());
       }
+      chunk_t *next = chunk_get_next(second);
 
       // Add or remove space before a reference sign '&' that isn't followed by a
       // variable name. If set to 'ignore', sp_before_byref is used instead.
-      if (options::sp_before_unnamed_byref() != IARF_IGNORE)
+      if (  next != nullptr
+         && (  chunk_is_token(next, CT_COMMA)
+            || chunk_is_token(next, CT_FPAREN_CLOSE)
+            || chunk_is_token(next, CT_SEMICOLON)))
       {
-         chunk_t *next = chunk_get_next_nc(second);
-
-         if (  next != nullptr
-            && next->type != CT_WORD)
+         if (options::sp_before_unnamed_byref() != IARF_IGNORE)
          {
             log_rule("sp_before_unnamed_byref");
             return(options::sp_before_unnamed_byref());
          }
       }
-      // Add or remove space before a reference sign '&'.
       log_rule("sp_before_byref");
       return(options::sp_before_byref());
    }
