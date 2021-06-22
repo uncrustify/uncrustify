@@ -504,6 +504,7 @@ nl_before_synchronized          = ignore
 nl_after_synchronized           = ignore
 nl_before_do                    = ignore
 nl_after_do                     = ignore
+nl_before_ignore_after_case     = false
 nl_before_return                = false
 nl_after_return                 = false
 nl_before_member                = ignore

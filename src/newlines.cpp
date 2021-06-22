@@ -1080,6 +1080,12 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e 
       }
       else
       {
+         if (  chunk_is_token(pc, CT_CASE_COLON)
+            && options::nl_before_ignore_after_case())
+         {
+            return;
+         }
+
          if (do_add) // we found something previously besides a comment or a new line
          {
             // if we have run across a newline

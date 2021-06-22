@@ -124,6 +124,7 @@
 00204  bug_1718.cfg                         c/bug_1718.c
 00205  nl_before_return_false.cfg           c/case-nl_before_return.c
 00206  nl_before_return_true.cfg            c/case-nl_before_return.c
+00207  nl_before_ignore_after_case.cfg      c/nl_before_ignore_after_case.c
 
 
 # structure initializers
