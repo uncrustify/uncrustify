@@ -50,7 +50,7 @@ int *const i;
 int *static i;
 
 static auto Func1(Model *model) -> Color *;
-static auto Func1(Model *model) -> Color * {
+static auto Func1(Model *model) -> Color *{
 	return nullptr;
 }
 
@@ -60,7 +60,7 @@ auto Func2(Model *model) -> Color *const {
 }
 
 auto Func3(Model *model) -> Color **;
-auto Func3(Model *model) -> Color ** {
+auto Func3(Model *model) -> Color **{
 	return nullptr;
 }
 

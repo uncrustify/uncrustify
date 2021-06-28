@@ -44,7 +44,7 @@ space_text : orig_line is 3, orig_col is 25, '*' type is PTR_TYPE
 space_text : orig_line is 3, orig_col is 25, pc-text() '*', type is PTR_TYPE
 do_space : orig_line is 3, orig_col is 25, first->text() '*', type is PTR_TYPE
 do_space : first->orig_line is 3, first->orig_col is 25, first->text() is '*', [PTR_TYPE/NONE] <===>
-           second->orig_line is 3, second->orig_col is 27, second->text() is 'pN', [WORD/NONE] : rule IGNORE[ ]
+           second->orig_line is 3, second->orig_col is 27, second->text() is 'pN', [WORD/NONE] : rule sp_after_ptr_star[ ]
  rule = IGNORE @ 1 => 27
 space_text : orig_line is 3, orig_col is 27, 'pN' type is WORD
 space_text : orig_line is 3, orig_col is 27, pc-text() 'pN', type is WORD
@@ -201,7 +201,7 @@ space_text : orig_line is 13, orig_col is 11, '*' type is PTR_TYPE
 space_text : orig_line is 13, orig_col is 11, pc-text() '*', type is PTR_TYPE
 do_space : orig_line is 13, orig_col is 11, first->text() '*', type is PTR_TYPE
 do_space : first->orig_line is 13, first->orig_col is 11, first->text() is '*', [PTR_TYPE/NONE] <===>
-           second->orig_line is 13, second->orig_col is 13, second->text() is 'const', [QUALIFIER/NONE] : rule IGNORE[ ]
+           second->orig_line is 13, second->orig_col is 13, second->text() is 'const', [QUALIFIER/NONE] : rule sp_after_ptr_star_qualifier[ ]
  rule = IGNORE @ 1 => 13
 space_text : orig_line is 13, orig_col is 13, 'const' type is QUALIFIER
 space_text : back-to-back words need a space: pc->text() 'const', next->text() 'pTelName'
@@ -322,7 +322,7 @@ space_col_align : first->orig_line is 3, orig_col is 25, [PTR_TYPE/NONE], text()
 space_col_align : second->orig_line is 3, orig_col is 27 [WORD/NONE], text() 'pN', [CallStack]
 do_space : orig_line is 3, orig_col is 25, first->text() '*', type is PTR_TYPE
 do_space : first->orig_line is 3, first->orig_col is 25, first->text() is '*', [PTR_TYPE/NONE] <===>
-           second->orig_line is 3, second->orig_col is 27, second->text() is 'pN', [WORD/NONE] : rule IGNORE[ ]
+           second->orig_line is 3, second->orig_col is 27, second->text() is 'pN', [WORD/NONE] : rule sp_after_ptr_star[ ]
 space_col_align : av is ignore
 space_col_align :    len is 1
 space_col_align :    => coldiff is 1
@@ -660,7 +660,7 @@ space_col_align : first->orig_line is 13, orig_col is 11, [PTR_TYPE/NONE], text(
 space_col_align : second->orig_line is 13, orig_col is 13 [QUALIFIER/NONE], text() 'const', [CallStack]
 do_space : orig_line is 13, orig_col is 11, first->text() '*', type is PTR_TYPE
 do_space : first->orig_line is 13, first->orig_col is 11, first->text() is '*', [PTR_TYPE/NONE] <===>
-           second->orig_line is 13, second->orig_col is 13, second->text() is 'const', [QUALIFIER/NONE] : rule IGNORE[ ]
+           second->orig_line is 13, second->orig_col is 13, second->text() is 'const', [QUALIFIER/NONE] : rule sp_after_ptr_star_qualifier[ ]
 space_col_align : av is ignore
 space_col_align :    len is 1
 space_col_align :    => coldiff is 1
