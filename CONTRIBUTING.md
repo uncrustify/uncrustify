@@ -81,12 +81,7 @@ There are lots of ways to contribute to Uncrustify:
       (a rephrasing of the branch name if set correctly).
     - The PR description should document the _why_ the change needed to be done
       and not _how_, which should be obvious by doing the code review.
-    - After commiting a new PR, one may have a look to the results, running under other OS:
-        https://travis-ci.com/
-          Sign in
-            SIGN IN WITH GITHUB
-            you get a view of  <your github account> / uncrustify
-
+    - After commiting a new PR, one may have a look to the results:
         https://coveralls.io/github/uncrustify/uncrustify
 
 
