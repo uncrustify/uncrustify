@@ -120,6 +120,33 @@ const no_space_table_t no_space_table[] =
 };
 
 
+bool token_is_within_Trailing_Return(chunk_t *pc)
+{
+   // look back for '->' type is TRAILING_RET
+   // until CT_FPAREN_CLOSE
+   //   or  CT_FPAREN_OPEN is found
+   chunk_t *prev = pc;
+
+   while (prev != nullptr)
+   {
+      if (chunk_is_token(prev, CT_TRAILING_RET))
+      {
+         return(true);
+      }
+      else if (  chunk_is_token(prev, CT_FPAREN_CLOSE)
+              || chunk_is_token(prev, CT_FPAREN_OPEN))
+      {
+         return(false);
+      }
+      else
+      {
+         prev = chunk_get_prev(prev);
+      }
+   }
+   return(false);
+} // token_is_within_Trailing_Return
+
+
 /*
  * this function is called for every chunk in the input file.
  * Thus it is important to keep this function efficient
@@ -2398,87 +2425,96 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(IARF_REMOVE);
    }
 
-   if (  chunk_is_token(first, CT_PTR_TYPE)
-      && (options::sp_ptr_star_paren() != IARF_IGNORE)
-      && (  chunk_is_token(second, CT_FPAREN_OPEN)
-         || chunk_is_token(second, CT_TPAREN_OPEN)))
+   if (chunk_is_token(first, CT_PTR_TYPE))
    {
-      // Add or remove space after a pointer star '*', if followed by an open
-      // parenthesis, as in 'void* (*)().
-      log_rule("sp_ptr_star_paren");
-      return(options::sp_ptr_star_paren());
-   }
-
-   if (  chunk_is_token(first, CT_PTR_TYPE)
-      && chunk_is_token(second, CT_PTR_TYPE)
-      && (options::sp_between_ptr_star() != IARF_IGNORE))
-   {
-      // Add or remove space between pointer stars '*'.
-      log_rule("sp_between_ptr_star");
-      return(options::sp_between_ptr_star());
-   }
-
-   if (  chunk_is_token(first, CT_PTR_TYPE)
-      && (options::sp_after_ptr_star_func() != IARF_IGNORE)
-      && (  get_chunk_parent_type(first) == CT_FUNC_DEF
-         || get_chunk_parent_type(first) == CT_FUNC_PROTO
-         || get_chunk_parent_type(first) == CT_FUNC_VAR))
-   {
-      // Add or remove space after a pointer star '*', if followed by a function
-      // prototype or function definition.
-      log_rule("sp_after_ptr_star_func");
-      return(options::sp_after_ptr_star_func());
-   }
-
-   if (  chunk_is_token(first, CT_PTR_TYPE)
-      && CharTable::IsKw1(second->str[0]))
-   {
-      chunk_t *prev = chunk_get_prev(first);
-
-      if (chunk_is_token(prev, CT_IN))
+      if (  chunk_is_token(second, CT_FPAREN_OPEN)
+         || chunk_is_token(second, CT_TPAREN_OPEN))
       {
-         // Add or remove space after the '*' (dereference) unary operator. This does
-         // not affect the spacing after a '*' that is part of a type.
-         log_rule("sp_deref");
-         return(options::sp_deref());
+         // Add or remove space after a pointer star '*', if followed by an open
+         // parenthesis, as in 'void* (*)()'.
+         log_rule("sp_ptr_star_paren");                               // ptr_star 10
+         return(options::sp_ptr_star_paren());
       }
-
-      if (  (  get_chunk_parent_type(first) == CT_FUNC_VAR
-            || get_chunk_parent_type(first) == CT_FUNC_TYPE)
-         && options::sp_after_ptr_block_caret() != IARF_IGNORE)
+      else if (chunk_is_token(second, CT_PTR_TYPE))
       {
-         // Add or remove space after pointer caret '^', if followed by a word.
-         log_rule("sp_after_ptr_block_caret");
-         return(options::sp_after_ptr_block_caret());
+         // Add or remove space between pointer stars '*'.
+         // as in 'int ***a;'.
+         log_rule("sp_between_ptr_star");                             // ptr_star 9
+         return(options::sp_between_ptr_star());
       }
-
-      if (  chunk_is_token(second, CT_QUALIFIER)
-         && (options::sp_after_ptr_star_qualifier() != IARF_IGNORE))
+      else if (  get_chunk_parent_type(first) == CT_FUNC_DEF
+              || get_chunk_parent_type(first) == CT_FUNC_PROTO
+              || get_chunk_parent_type(first) == CT_FUNC_VAR)
       {
-         // Add or remove space after pointer star '*', if followed by a qualifier.
-         log_rule("sp_after_ptr_star_qualifier");
-         return(options::sp_after_ptr_star_qualifier());
+         if (token_is_within_Trailing_Return(first))
+         {
+            // Add or remove space after a pointer star '*', in the trailing return
+            // a function prototype or function definition.
+            log_rule("sp_after_ptr_star_trailing");                   // ptr_star 3
+            return(options::sp_after_ptr_star_trailing());
+         }
+         else
+         {
+            // Add or remove space after a pointer star '*', if followed by a function
+            // prototype or function definition.
+            log_rule("sp_after_ptr_star_func");                       // ptr_star 2
+            return(options::sp_after_ptr_star_func());
+         }
       }
-
-      // Add or remove space after pointer star '*', if followed by a word.
-      if (options::sp_after_ptr_star() != IARF_IGNORE)
+      else if (CharTable::IsKw1(second->str[0]))
       {
-         log_rule("sp_after_ptr_star");
+         chunk_t *prev = chunk_get_prev(first);
+
+         if (chunk_is_token(prev, CT_IN))
+         {
+            // Add or remove space after the '*' (dereference) unary operator. This does
+            // not affect the spacing after a '*' that is part of a type.
+            log_rule("sp_deref");
+            return(options::sp_deref());
+         }
+         else if (  get_chunk_parent_type(first) == CT_FUNC_VAR
+                 || get_chunk_parent_type(first) == CT_FUNC_TYPE)
+         {
+            // Add or remove space after pointer caret '^', if followed by a word.
+            log_rule("sp_after_ptr_block_caret");
+            return(options::sp_after_ptr_block_caret());
+         }
+         else if (chunk_is_token(second, CT_QUALIFIER))
+         {
+            // Add or remove space after pointer star '*', if followed by a qualifier.
+            log_rule("sp_after_ptr_star_qualifier");                  // ptr_star 4
+            return(options::sp_after_ptr_star_qualifier());
+         }
+         // Add or remove space after pointer star '*', if followed by a word.
+         log_rule("sp_after_ptr_star");                               // ptr_star 1
          return(options::sp_after_ptr_star());
       }
-   }
+      else if (chunk_is_token(second, CT_PAREN_OPEN))
+      {
+         // Add or remove space after pointer star '*', if followed by a word.
+         log_rule("sp_after_ptr_star");                               // ptr_star 1
+         return(options::sp_after_ptr_star());
+      }
 
-   if (  chunk_is_token(first, CT_PTR_TYPE)
-      && chunk_is_token(second, CT_PAREN_OPEN))
-   {
-      // Add or remove space after pointer star '*', if followed by a word.
-      log_rule("sp_after_ptr_star");
-      return(options::sp_after_ptr_star());
+      // must be placed at the end of the block
+      // look back for '->' type is TRAILING_RET
+      if (token_is_within_Trailing_Return(first))
+      {
+         log_rule("sp_after_ptr_star_trailing");                      // ptr_star 3
+         return(options::sp_after_ptr_star_trailing());
+      }
    }
 
    if (  chunk_is_token(second, CT_PTR_TYPE)
       && first->type != CT_IN)
    {
+      // look back for '->' type is TRAILING_RET
+      if (token_is_within_Trailing_Return(second))
+      {
+         log_rule("sp_before_ptr_star_trailing");                     // ptr_star 7
+         return(options::sp_before_ptr_star_trailing());
+      }
+
       if (  language_is_set(LANG_CS)
          && chunk_is_nullable(second))
       {
@@ -2502,7 +2538,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          if (  chunk_is_token(next, CT_FUNC_DEF)
             || chunk_is_token(next, CT_FUNC_PROTO))
          {
-            log_rule("sp_before_ptr_star_func");
+            log_rule("sp_before_ptr_star_func");                      // ptr_star 6
             return(options::sp_before_ptr_star_func());
          }
       }
@@ -2521,7 +2557,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          if (  next != nullptr
             && next->type != CT_WORD)
          {
-            log_rule("sp_before_unnamed_ptr_star");
+            log_rule("sp_before_unnamed_ptr_star");                   // ptr_star 8
             return(options::sp_before_unnamed_ptr_star());
          }
       }
@@ -2529,7 +2565,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       // Add or remove space before pointer star '*'.
       if (options::sp_before_ptr_star() != IARF_IGNORE)
       {
-         log_rule("sp_before_ptr_star");
+         log_rule("sp_before_ptr_star");                              // ptr_star 5
          return(options::sp_before_ptr_star());
       }
    }

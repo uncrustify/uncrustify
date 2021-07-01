@@ -264,11 +264,11 @@ void tokenize_trailing_return_types(void)
             // noptr-declarator ( parameter-list ) cv(optional) ref(optional) except(optional) attr(optional) -> trailing
             chunk_t *next = chunk_get_next_ncnnl(pc);
 
-            if (chunk_is_token(tmp, CT_DECLTYPE))
+            if (chunk_is_token(next, CT_DECLTYPE))
             {
                // TODO
             }
-            else if (chunk_is_token(tmp, CT_WORD))
+            else if (chunk_is_token(next, CT_WORD))
             {
                set_chunk_type(next, CT_TYPE);                         // Issue #3222
                next = chunk_get_next_ncnnl(next);

@@ -1,8 +1,8 @@
-int *(^blkReturningPointer)(int) = ^ int *(int a) {
+int *(^  blkReturningPointer)(int) = ^ int *(int a) {
     return a + 1;
 };
 
-void (^blk2)(int *) = ^ (int *b) {
+void (^ blk2)(int *) = ^ (int *b) {
     *b = 1;
 };
 

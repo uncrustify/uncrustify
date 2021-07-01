@@ -882,6 +882,9 @@
 34502  sp_enum_assign-f.cfg                 cpp/sp_enum_assign.cpp
 34503  sp_enum_assign-i.cfg                 cpp/sp_enum_assign.cpp
 34504  issue_574-i-i.cfg                    cpp/issue_574-i.cpp
+34505  Issue_3220-f.cfg                     cpp/Issue_3220.cpp
+34506  Issue_3220-i.cfg                     cpp/Issue_3220.cpp
+34507  Issue_3220-r.cfg                     cpp/Issue_3220.cpp
 
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
