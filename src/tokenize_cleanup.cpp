@@ -258,7 +258,31 @@ void tokenize_trailing_return_types(void)
          {
             set_chunk_type(pc, CT_TRAILING_RET);
             LOG_FMT(LNOTE, "%s(%d): set trailing return type for text() is '%s'\n",
-                    __func__, __LINE__, tmp->text());
+                    __func__, __LINE__, pc->text());                  // Issue #3222
+            // TODO
+            // https://en.cppreference.com/w/cpp/language/function
+            // noptr-declarator ( parameter-list ) cv(optional) ref(optional) except(optional) attr(optional) -> trailing
+            chunk_t *next = chunk_get_next_ncnnl(pc);
+
+            if (chunk_is_token(tmp, CT_DECLTYPE))
+            {
+               // TODO
+            }
+            else if (chunk_is_token(tmp, CT_WORD))
+            {
+               set_chunk_type(next, CT_TYPE);                         // Issue #3222
+               next = chunk_get_next_ncnnl(next);
+
+               if (  chunk_is_token(next, CT_ARITH)
+                  && (next->str[0] == '*'))
+               {
+                  set_chunk_type(next, CT_PTR_TYPE);
+               }
+            }
+            else
+            {
+               // TODO
+            }
          }
       }
    }
