@@ -885,6 +885,7 @@
 34505  Issue_3220-f.cfg                     cpp/Issue_3220.cpp
 34506  Issue_3220-i.cfg                     cpp/Issue_3220.cpp
 34507  Issue_3220-r.cfg                     cpp/Issue_3220.cpp
+34508  Issue_3220-ir.cfg                    cpp/Issue_3220.cpp
 
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
