@@ -190,7 +190,7 @@ sp_before_ptr_star              = ignore   # ignore/add/remove/force/not_defined
 # variable name. If set to ignore, sp_before_ptr_star is used instead.
 sp_before_unnamed_ptr_star      = ignore   # ignore/add/remove/force/not_defined
 
-# Add or remove space between pointer stars '*'.
+# Add or remove space between pointer stars '*', as in 'int ***a;'.
 sp_between_ptr_star             = ignore   # ignore/add/remove/force/not_defined
 
 # Add or remove space after pointer star '*', if followed by a word.
@@ -210,13 +210,21 @@ sp_after_ptr_star_qualifier     = ignore   # ignore/add/remove/force/not_defined
 # Overrides sp_after_ptr_star and sp_type_func.
 sp_after_ptr_star_func          = ignore   # ignore/add/remove/force/not_defined
 
+# Add or remove space after a pointer star '*' in the trailing return of a
+# function prototype or function definition.
+sp_after_ptr_star_trailing      = ignore   # ignore/add/remove/force/not_defined
+
 # Add or remove space after a pointer star '*', if followed by an open
-# parenthesis, as in 'void* (*)().
+# parenthesis, as in 'void* (*)()'.
 sp_ptr_star_paren               = ignore   # ignore/add/remove/force/not_defined
 
 # Add or remove space before a pointer star '*', if followed by a function
 # prototype or function definition.
 sp_before_ptr_star_func         = ignore   # ignore/add/remove/force/not_defined
+
+# Add or remove space before a pointer star '*' in the trailing return of a
+# function prototype or function definition.
+sp_before_ptr_star_trailing     = ignore   # ignore/add/remove/force/not_defined
 
 # Add or remove space before a reference sign '&'.
 sp_before_byref                 = ignore   # ignore/add/remove/force/not_defined
