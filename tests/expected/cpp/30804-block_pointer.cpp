@@ -1,5 +1,5 @@
-__block __weak void (^weak_recurseTreeNodes)(int a);
-void (^strong_recurseTreeNodes)(int a) = ^(int a) {
+__block __weak void (^ weak_recurseTreeNodes)(int a);
+void (^ strong_recurseTreeNodes)(int a) = ^(int a) {
 };
 
 the result file:

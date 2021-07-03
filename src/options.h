@@ -261,7 +261,7 @@ sp_before_ptr_star;
 extern Option<iarf_e>
 sp_before_unnamed_ptr_star;
 
-// Add or remove space between pointer stars '*'.
+// Add or remove space between pointer stars '*', as in 'int ***a;'.
 extern Option<iarf_e>
 sp_between_ptr_star;
 
@@ -286,8 +286,13 @@ sp_after_ptr_star_qualifier;
 extern Option<iarf_e>
 sp_after_ptr_star_func;
 
+// Add or remove space after a pointer star '*' in the trailing return of a
+// function prototype or function definition.
+extern Option<iarf_e>
+sp_after_ptr_star_trailing;
+
 // Add or remove space after a pointer star '*', if followed by an open
-// parenthesis, as in 'void* (*)().
+// parenthesis, as in 'void* (*)()'.
 extern Option<iarf_e>
 sp_ptr_star_paren;
 
@@ -295,6 +300,11 @@ sp_ptr_star_paren;
 // prototype or function definition.
 extern Option<iarf_e>
 sp_before_ptr_star_func;
+
+// Add or remove space before a pointer star '*' in the trailing return of a
+// function prototype or function definition.
+extern Option<iarf_e>
+sp_before_ptr_star_trailing;
 
 // Add or remove space before a reference sign '&'.
 extern Option<iarf_e>

@@ -69,7 +69,7 @@ auto Func3(Model *model) -> Color **
    return(nullptr);
 }
 
-auto Func4(Model *model) -> Color**const;
+auto Func4(Model *model) -> Color **const;
 auto Func4(Model *model) -> Color **const
 {
    return(nullptr);

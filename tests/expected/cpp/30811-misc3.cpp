@@ -18,4 +18,4 @@ MyClass& myInst = static_cast<MyClass&>(otherInst);
 
 connect(&mapper, SIGNAL(mapped(QWidget*)), this, SLOT(onSomeEvent(QWidget*)));
 
-extern int select(int __nfds, fd_set* __restrict __readfds, fd_set* __restrict __writefds, fd_set* __restrict __exceptfds, struct  timeval* __restrict __timeout);
+extern int select(int __nfds, fd_set*__restrict __readfds, fd_set*__restrict __writefds, fd_set*__restrict __exceptfds, struct  timeval*__restrict __timeout);
