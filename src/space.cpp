@@ -1363,7 +1363,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          // Add or remove space after a reference sign '&', if followed by a function
          // prototype or function definition.
-         log_rule("sp_after_byref_func");
+         log_rule("sp_after_byref_func");                          // byref 2
          return(options::sp_after_byref_func());
       }
 
@@ -1374,7 +1374,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          || chunk_is_token(second, CT_PAREN_OPEN))
       {
          // Add or remove space after reference sign '&', if followed by a word.
-         log_rule("sp_after_byref");
+         log_rule("sp_after_byref");                               // byref 1
          return(options::sp_after_byref());
       }
    }
@@ -1382,18 +1382,16 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(second, CT_BYREF)
       && !chunk_is_token(first, CT_PAREN_OPEN))              // Issue #1804
    {
-      // Add or remove space before a reference sign '&', if followed by a function
-      // prototype or function definition.
       if (  get_chunk_parent_type(second) == CT_FUNC_DEF     // Issue #3197, #3210
          || get_chunk_parent_type(second) == CT_FUNC_PROTO)
       {
-         log_rule("sp_before_byref_func");
+         // Add or remove space before a reference sign '&', if followed by a function
+         // prototype or function definition.
+         log_rule("sp_before_byref_func");                         // byref 4
          return(options::sp_before_byref_func());
       }
       chunk_t *next = chunk_get_next(second);
 
-      // Add or remove space before a reference sign '&' that isn't followed by a
-      // variable name. If set to 'ignore', sp_before_byref is used instead.
       if (  next != nullptr
          && (  chunk_is_token(next, CT_COMMA)
             || chunk_is_token(next, CT_FPAREN_CLOSE)
@@ -1401,11 +1399,20 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          if (options::sp_before_unnamed_byref() != IARF_IGNORE)
          {
-            log_rule("sp_before_unnamed_byref");
+            // Add or remove space before a reference sign '&' that isn't followed by a
+            // variable name. If set to 'ignore', sp_before_byref is used instead.
+            log_rule("sp_before_unnamed_byref");                   // byref 5
             return(options::sp_before_unnamed_byref());
          }
+         else
+         {
+            // Add or remove space before a reference sign '&'.
+            log_rule("sp_before_byref");                           // byref 3
+            return(options::sp_before_byref());
+         }
       }
-      log_rule("sp_before_byref");
+      // Add or remove space before a reference sign '&'.
+      log_rule("sp_before_byref");                                 // byref 3
       return(options::sp_before_byref());
    }
 

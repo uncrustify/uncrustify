@@ -572,7 +572,7 @@
 33015  kdepim5.cfg                          cpp/Q_FOREACH.cpp
 33016  indent_once.cfg                      cpp/indent.cpp
 33017  bug_1160.cfg                         cpp/bug_1160.cpp
-33018  byref-2-S-f.cfg                      cpp/byref-2.cpp
+#33018
 33019  bug_657.cfg                          cpp/bug_657.cpp
 
 33020  sp_cmt.cfg                           cpp/bug_662.cpp
@@ -886,6 +886,10 @@
 34506  Issue_3220-i.cfg                     cpp/Issue_3220.cpp
 34507  Issue_3220-r.cfg                     cpp/Issue_3220.cpp
 34508  Issue_3220-ir.cfg                    cpp/Issue_3220.cpp
+34509  byref-ir.cfg                         cpp/byref-2.cpp
+34510  byref-i.cfg                          cpp/byref-2.cpp
+34511  byref-f.cfg                          cpp/byref-2.cpp
+34512  byref-r.cfg                          cpp/byref-2.cpp
 
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
