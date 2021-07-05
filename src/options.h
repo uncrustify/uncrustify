@@ -2504,7 +2504,7 @@ nl_create_while_one_liner;
 extern Option<bool>
 nl_create_func_def_one_liner;
 
-// Whether to split one-line simple unbraced list definitions into three lines by
+// Whether to split one-line simple list definitions into three lines by
 // adding newlines, as in 'int a[12] = { <here> 0 <here> };'.
 extern Option<bool>
 nl_create_list_one_liner;
