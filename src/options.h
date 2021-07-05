@@ -2433,6 +2433,13 @@ nl_before_do;
 extern Option<iarf_e>
 nl_after_do;
 
+// Ignore nl_before_{if,for,switch,do,synchronized} if the control
+// statement is immediately after a case statement.
+// if nl_before_{if,for,switch,do} is set to remove, this option
+// does nothing.
+extern Option<bool>
+nl_before_ignore_after_case;
+
 // Whether to put a blank line before 'return' statements, unless after an open
 // brace.
 extern Option<bool>

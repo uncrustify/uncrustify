@@ -1964,6 +1964,12 @@ nl_before_do                    = ignore   # ignore/add/remove/force/not_defined
 # Add or remove blank line after 'do/while' statement.
 nl_after_do                     = ignore   # ignore/add/remove/force/not_defined
 
+# Ignore nl_before_{if,for,switch,do,synchronized} if the control
+# statement is immediately after a case statement.
+# if nl_before_{if,for,switch,do} is set to remove, this option
+# does nothing.
+nl_before_ignore_after_case     = false    # true/false
+
 # Whether to put a blank line before 'return' statements, unless after an open
 # brace.
 nl_before_return                = false    # true/false
