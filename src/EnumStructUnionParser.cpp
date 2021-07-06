@@ -1668,11 +1668,12 @@ void EnumStructUnionParser::mark_enum_integral_type(chunk_t *colon)
        * TODO: this may not be necessary in the future once code outside this
        *       class is improved such that PCF_VAR_TYPE is not set for these chunks
        */
-      pc->flags &= ~PCF_VAR_TYPE;
-
-      set_chunk_type(pc, CT_TYPE);
-      set_chunk_parent(pc, colon->type);
-
+      if (chunk_is_not_token(pc, CT_DC_MEMBER))                             // Issue #3198
+      {
+         pc->flags &= ~PCF_VAR_TYPE;
+         set_chunk_type(pc, CT_TYPE);
+         set_chunk_parent(pc, colon->type);
+      }
       pc = chunk_get_next_ncnnl(pc);
    }
 } // EnumStructUnionParser::mark_enum_integral_type
