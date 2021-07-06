@@ -891,6 +891,10 @@
 34510  byref-i.cfg                          cpp/byref-2.cpp
 34511  byref-f.cfg                          cpp/byref-2.cpp
 34512  byref-r.cfg                          cpp/byref-2.cpp
+34513  sp_cond_question-ir.cfg              cpp/sp_cond_question.cpp
+34514  sp_cond_question-i.cfg               cpp/sp_cond_question.cpp
+34515  sp_cond_question-f.cfg               cpp/sp_cond_question.cpp
+34516  sp_cond_question-r.cfg               cpp/sp_cond_question.cpp
 
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
