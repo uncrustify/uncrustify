@@ -301,7 +301,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_cond_ternary_short());
    }
 
-   if (  chunk_is_token(first, CT_QUESTION)
+   if (  chunk_is_token(first, CT_QUESTION)                  // see the tests cpp:34513-34516
       || chunk_is_token(second, CT_QUESTION))
    {
       if (  chunk_is_token(second, CT_QUESTION)
@@ -1356,7 +1356,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (chunk_is_token(first, CT_BYREF))
+   if (chunk_is_token(first, CT_BYREF))                             // see the tests cpp:34509-34512
    {
       if (  get_chunk_parent_type(first) == CT_FUNC_DEF             // Issue #3197, #3210
          || get_chunk_parent_type(first) == CT_FUNC_PROTO)
@@ -2432,7 +2432,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(IARF_REMOVE);
    }
 
-   if (chunk_is_token(first, CT_PTR_TYPE))
+   if (chunk_is_token(first, CT_PTR_TYPE))                            // see the tests cpp:34505-34508
    {
       if (  chunk_is_token(second, CT_FPAREN_OPEN)
          || chunk_is_token(second, CT_TPAREN_OPEN))
