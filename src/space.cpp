@@ -401,7 +401,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(IARF_REMOVE);
    }
 
-   if (chunk_is_token(second, CT_SEMICOLON))
+   if (chunk_is_token(second, CT_SEMICOLON))                       // see the tests cpp:34517-34519
    {
       if (chunk_is_token(first, CT_VBRACE_OPEN))
       {
@@ -425,15 +425,11 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
             log_rule("sp_before_semi_for_empty");
             return(options::sp_before_semi_for_empty());
          }
-
-         if (options::sp_before_semi_for() != IARF_IGNORE)
-         {
-            // Add or remove space before ';' in non-empty 'for' statements.
-            log_rule("sp_before_semi_for");
-            return(options::sp_before_semi_for());
-         }
+         // Add or remove space before ';' in non-empty 'for' statements.
+         log_rule("sp_before_semi_for");
+         return(options::sp_before_semi_for());
       }
-      iarf_e arg = options::sp_before_semi();
+      iarf_e arg = options::sp_before_semi();                      // see the tests cpp:34517-34519
 
       if (  chunk_is_token(first, CT_VBRACE_OPEN)                  // Issue #2942
          && chunk_is_token(first->prev, CT_SPAREN_CLOSE)
@@ -492,12 +488,11 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // "for (;;)" vs. "for (;; )" and "for (a;b;c)" vs. "for (a; b; c)"
-   if (chunk_is_token(first, CT_SEMICOLON))
+   if (chunk_is_token(first, CT_SEMICOLON))                        // see the tests cpp:34517-34519
    {
       if (get_chunk_parent_type(first) == CT_FOR)
       {
-         if (  (options::sp_after_semi_for_empty() != IARF_IGNORE)
-            && chunk_is_token(second, CT_SPAREN_CLOSE))
+         if (chunk_is_token(second, CT_SPAREN_CLOSE))
          {
             // Add or remove space after the final semicolon of an empty part of a for
             // statement, as in 'for ( ; ; <here> )'.
@@ -505,8 +500,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
             return(options::sp_after_semi_for_empty());
          }
 
-         if (  (options::sp_after_semi_for() != IARF_IGNORE)
-            && second->type != CT_SPAREN_CLOSE)  // Issue 1324
+         if (second->type != CT_SPAREN_CLOSE)  // Issue 1324
          {
             // Add or remove space after ';' in non-empty 'for' statements.
             log_rule("sp_after_semi_for");
@@ -517,6 +511,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
               && second->type != CT_BRACE_CLOSE) // issue #197
       {
          // Add or remove space after ';', except when followed by a comment.
+         // see the tests cpp:34517-34519
          log_rule("sp_after_semi");
          return(options::sp_after_semi());
       }
