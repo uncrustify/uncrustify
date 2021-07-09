@@ -895,6 +895,9 @@
 34514  sp_cond_question-i.cfg               cpp/sp_cond_question.cpp
 34515  sp_cond_question-f.cfg               cpp/sp_cond_question.cpp
 34516  sp_cond_question-r.cfg               cpp/sp_cond_question.cpp
+34517  semi-f.cfg                           cpp/semi.cpp
+34518  semi-i.cfg                           cpp/semi.cpp
+34519  semi-r.cfg                           cpp/semi.cpp
 
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
