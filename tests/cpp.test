@@ -443,7 +443,7 @@
 30941  Issue_2150.cfg                       cpp/Issue_2150.cpp
 30942  Issue_1692.cfg                       cpp/Issue_1692.cpp
 30943  Issue_2735.cfg                       cpp/Issue_2735.cpp
-30944  sp_paren_comma.cfg                   cpp/sp_paren_comma.cpp
+#30944
 30945  sp_before_byref-r.cfg                cpp/sf.3266678.cpp
 30946  sf.3315874.cfg                       cpp/sf.3315874.h
 30947  bug_1689.cfg                         cpp/bug_1689.cpp
@@ -898,6 +898,9 @@
 34517  semi-f.cfg                           cpp/semi.cpp
 34518  semi-i.cfg                           cpp/semi.cpp
 34519  semi-r.cfg                           cpp/semi.cpp
+34520  comma-f.cfg                          cpp/comma.cpp
+34521  comma-i.cfg                          cpp/comma.cpp
+34522  comma-r.cfg                          cpp/comma.cpp
 
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
