@@ -993,3 +993,5 @@
 60055  issue_3116.cfg                       cpp/issue_3116.cpp
 60056  issue_3116.cfg                       cpp/issue_3116-2.cpp
 60057  issue_3116-2.cfg                     cpp/issue_3116.cpp
+
+60100  mod_full_paren_if_bool.cfg           cpp/if_init_statement.cpp
