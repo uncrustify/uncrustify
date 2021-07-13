@@ -657,7 +657,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // "a,b" vs. "a, b"
-   if (chunk_is_token(first, CT_COMMA))
+   if (chunk_is_token(first, CT_COMMA))                         // see the tests cpp:34520-34524
+                                                                // see the tests c-sharp:12200-12202
    {
       if (get_chunk_parent_type(first) == CT_TYPE)
       {
@@ -713,16 +714,15 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(options::sp_before_mdatype_commas());
       }
 
-      if (  options::sp_paren_comma() != IARF_IGNORE
-         && (  chunk_is_token(first, CT_PAREN_OPEN)
-            || chunk_is_token(first, CT_FPAREN_OPEN)))
+      if (  chunk_is_token(first, CT_PAREN_OPEN)
+         || chunk_is_token(first, CT_FPAREN_OPEN))
       {
          // Add or remove space between an open parenthesis and comma,
          // i.e. '(,' vs. '( ,'.
          log_rule("sp_paren_comma");
          return(options::sp_paren_comma());
       }
-      // Add or remove space before ','.
+      // Add or remove space before ',', i.e. 'a,b' vs. 'a ,b'.
       log_rule("sp_before_comma");
       return(options::sp_before_comma());
    }

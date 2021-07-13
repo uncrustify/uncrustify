@@ -517,7 +517,7 @@ sp_inside_square_oc_array;
 extern Option<iarf_e>
 sp_after_comma;
 
-// Add or remove space before ','.
+// Add or remove space before ',', i.e. 'a,b' vs. 'a ,b'.
 extern Option<iarf_e>
 sp_before_comma; // = IARF_REMOVE
 

@@ -403,7 +403,7 @@ sp_inside_square_oc_array       = ignore   # ignore/add/remove/force/not_defined
 # Add or remove space after ',', i.e. 'a,b' vs. 'a, b'.
 sp_after_comma                  = ignore   # ignore/add/remove/force/not_defined
 
-# Add or remove space before ','.
+# Add or remove space before ',', i.e. 'a,b' vs. 'a ,b'.
 #
 # Default: remove
 sp_before_comma                 = remove   # ignore/add/remove/force/not_defined
