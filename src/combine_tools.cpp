@@ -369,6 +369,7 @@ bool chunk_ends_type(chunk_t *start)
          || chunk_is_token(pc, CT_PP_IF)
          || chunk_is_token(pc, CT_PP_ELSE)
          || chunk_is_token(pc, CT_PP_ENDIF)
+         || get_chunk_parent_type(pc) == CT_PP_INCLUDE                       // Issue #3233
          || (  (  chunk_is_token(pc, CT_COMMA)
                && !pc->flags.test(PCF_IN_FCN_CALL)
                && get_cpp_template_angle_nest_level(start) ==
