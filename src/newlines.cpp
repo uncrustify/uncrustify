@@ -2160,7 +2160,7 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
                newline_min_after(prev, 1 + options::nl_func_var_def_blk(), PCF_VAR_DEF);
             }
             // reset the variables for the next block
-            first_var_blk = true;
+            first_var_blk = false;
             var_blk       = false;
          }
       }
