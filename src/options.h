@@ -427,7 +427,7 @@ sp_inside_sparen_close;
 extern Option<iarf_e>
 sp_after_sparen;
 
-// Add or remove space between ')' and '{' of of control statements.
+// Add or remove space between ')' and '{' of control statements.
 extern Option<iarf_e>
 sp_sparen_brace;
 
