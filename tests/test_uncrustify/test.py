@@ -285,6 +285,10 @@ class FormatTest(SourceTest):
             ('set_tests_properties({}\n' +
              '  PROPERTIES LABELS "{}"\n)\n').format(
                  self.test_name, self.test_name.split(':')[0]))
+        out_file.write(
+            ('set_tests_properties({}\n' +
+             '  PROPERTIES DEPENDS "sources_format"\n)\n').format(
+                 self.test_name))
 
     # -------------------------------------------------------------------------
     def run(self, args):
