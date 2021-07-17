@@ -1640,7 +1640,14 @@ void indent_text(void)
                      && linematch
                      && toplevel)))
             {
-               frm.top().brace_indent -= indent_size;
+               if (indent_size > frm.top().brace_indent)       // if options::indent_indent_columns() is too big
+               {
+                  frm.top().brace_indent = 1;
+               }
+               else
+               {
+                  frm.top().brace_indent -= indent_size;
+               }
             }
             indent_column_set(frm.top().brace_indent);
             frm.top().indent = indent_column + indent_size;

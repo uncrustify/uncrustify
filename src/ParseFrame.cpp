@@ -176,7 +176,7 @@ void ParseFrame::push(chunk_t *pc, const char *func, int line, brace_stage_e sta
 
    pse.push_back(new_entry);
 
-// un comment the line below to get the address of the pse
+// uncomment the line below to get the address of the pse
 // #define DEBUG_PUSH_POP
 #ifdef DEBUG_PUSH_POP
    LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d) Add is %zu: orig_line is %zu, orig_col is %zu, type is %s, "
