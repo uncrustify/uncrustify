@@ -1439,7 +1439,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
          if (options::sp_sparen_brace() != IARF_IGNORE)
          {
-            // Add or remove space between ')' and '{' of of control statements.
+            // Add or remove space between ')' and '{' of control statements.
             log_rule("sp_sparen_brace");
             return(options::sp_sparen_brace());
          }
