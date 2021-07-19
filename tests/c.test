@@ -394,3 +394,5 @@
 10014  indent_continue-8.cfg                c/sparen-indent.c
 10015  empty.cfg                            c/Issue_2845.h
 10016  Issue_3233.cfg                       c/Issue_3233.c
+10017  sp_sparen_paren-a.cfg                c/double-sparen.c
+10018  sp_sparen_paren-i.cfg                c/double-sparen.c

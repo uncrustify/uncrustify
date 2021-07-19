@@ -76,6 +76,7 @@ sp_before_sparen                = ignore
 sp_inside_sparen                = ignore
 sp_inside_sparen_open           = ignore
 sp_inside_sparen_close          = ignore
+sp_sparen_paren                 = ignore
 sp_after_sparen                 = ignore
 sp_sparen_brace                 = ignore
 sp_do_brace_open                = ignore

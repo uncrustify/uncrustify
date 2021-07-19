@@ -324,6 +324,9 @@ sp_inside_sparen_open           = ignore   # ignore/add/remove/force/not_defined
 # Overrides sp_inside_sparen.
 sp_inside_sparen_close          = ignore   # ignore/add/remove/force/not_defined
 
+# Add or remove space between '((' or '))' of control statements.
+sp_sparen_paren                 = ignore   # ignore/add/remove/force/not_defined
+
 # Add or remove space after ')' of control statements.
 sp_after_sparen                 = ignore   # ignore/add/remove/force/not_defined
 
