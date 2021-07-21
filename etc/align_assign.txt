@@ -1,0 +1,19 @@
+The alignment at the sign '=' must be divided in different cases.
+Case  CT_ASSIGN
+        The most common case such as:
+        a = 1;
+
+Case  CT_ASSIGN_DEFAULT_ARG
+        The default value for an argument such as:
+        Foo( int Foo = 5 );
+
+Case  CT_ASSIGN_FUNC_PROTO
+        The function prototype modifier such as:
+        void* operator new(std::size_t) = delete;
+        Foo( const Foo & ) = default;
+        Foo( const Foo & ) = 0;
+
+Introduce the new option align_assign_func_proto
+
+Ref. #2170:
+  https://github.com/uncrustify/uncrustify/issues/2170
