@@ -423,6 +423,10 @@ sp_inside_sparen_open;
 extern Option<iarf_e>
 sp_inside_sparen_close;
 
+// Add or remove space between '((' or '))' of control statements.
+extern Option<iarf_e>
+sp_sparen_paren;
+
 // Add or remove space after ')' of control statements.
 extern Option<iarf_e>
 sp_after_sparen;

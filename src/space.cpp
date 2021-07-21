@@ -2024,6 +2024,16 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_func_call_user_paren_paren");
          return(options::sp_func_call_user_paren_paren());
       }
+
+      if (  options::sp_sparen_paren() != IARF_IGNORE
+         && (  chunk_is_token(first, CT_SPAREN_OPEN)
+            || chunk_is_token(second, CT_SPAREN_CLOSE)))
+      {
+         // Add or remove space between nested parentheses with control
+         // statements, i.e. 'if ((' vs. 'if ( ('. Issue #3209
+         log_rule("sp_sparen_paren");
+         return(options::sp_sparen_paren());
+      }
       // Add or remove space between nested parentheses, i.e. '((' vs. ') )'.
       log_rule("sp_paren_paren");
       return(options::sp_paren_paren());
