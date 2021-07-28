@@ -173,6 +173,7 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
          }
          LOG_FMT(LFPARAM, "%s(%d): <skip fcn type>\n",
                  __func__, __LINE__);
+
          tmp1 = chunk_get_next_ncnnl(tmp3, scope_e::PREPROC);
 
          if (tmp1 == nullptr)
@@ -280,6 +281,9 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
               || (  word_count == 1
                  && type_count == 1));
 
+   LOG_FMT(LFPARAM, "%s(%d): ret is %s\n",
+           __func__, __LINE__, ret ? "TRUE" : "FALSE");
+
    LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', ",
            __func__, __LINE__, pc->text());
    LOG_FMT(LFPARAM, "<== type is %s, ",
@@ -288,17 +292,6 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
    if (ret)
    {
       LOG_FMT(LFPARAM, "Yup!\n");
-
-      if (!chunk_is_token(first_word, CT_TYPE))
-      {
-         set_chunk_type(first_word, CT_TYPE);
-      }
-      chunk_t *tmp = chunk_get_prev_ncnnl(first_word);
-
-      if (chunk_is_token(tmp, CT_STAR))
-      {
-         set_chunk_type(tmp, CT_PTR_TYPE);
-      }
    }
    else
    {

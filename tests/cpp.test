@@ -775,6 +775,7 @@
 34175  align_assign_span-1.cfg              cpp/i1509.cpp
 34176  align_assign_span-1.cfg              cpp/i1509_bug_1112_correction.cpp
 34177  sp_func_call_paren.cfg               cpp/sp_func_call_paren.cpp
+34178  Issue_3237.cfg                       cpp/Issue_3237.cpp
 
 34180  bug_1402.cfg                         cpp/bug_1402.cpp
 
