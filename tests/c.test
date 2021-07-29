@@ -396,3 +396,4 @@
 10016  Issue_3233.cfg                       c/Issue_3233.c
 10017  sp_sparen_paren-a.cfg                c/double-sparen.c
 10018  sp_sparen_paren-i.cfg                c/double-sparen.c
+10019  pp_indent_in_guard.cfg               c/include-guard.h

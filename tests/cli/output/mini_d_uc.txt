@@ -737,6 +737,7 @@ pp_indent_region                = 0
 pp_region_indent_code           = false
 pp_indent_if                    = 0
 pp_if_indent_code               = false
+pp_indent_in_guard              = false
 pp_define_at_level              = false
 pp_ignore_define_body           = false
 pp_indent_case                  = true

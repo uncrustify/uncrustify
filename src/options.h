@@ -3745,6 +3745,10 @@ pp_indent_if;
 extern Option<bool>
 pp_if_indent_code;
 
+// Whether to indent the body of an #if that encompasses all the code in the file.
+extern Option<bool>
+pp_indent_in_guard;
+
 // Whether to indent '#define' at the brace level. If false, these are
 // indented from column 1.
 extern Option<bool>

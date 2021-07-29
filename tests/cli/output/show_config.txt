@@ -3044,6 +3044,9 @@ pp_indent_if                    = 0        # number
 # Whether to indent the code between #if, #else and #endif.
 pp_if_indent_code               = false    # true/false
 
+# Whether to indent the body of an #if that encompasses all the code in the file.
+pp_indent_in_guard              = false    # true/false
+
 # Whether to indent '#define' at the brace level. If false, these are
 # indented from column 1.
 pp_define_at_level              = false    # true/false

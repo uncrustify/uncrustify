@@ -4262,6 +4262,12 @@ bool ifdef_over_whole_file(void)
 {
    LOG_FUNC_ENTRY();
 
+   // if requested, treat an #if that guards the entire file the same as any other #if
+   if (options::pp_indent_in_guard())
+   {
+      return(false);
+   }
+
    // the results for this file are cached
    if (cpd.ifdef_over_whole_file)
    {
