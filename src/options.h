@@ -545,8 +545,15 @@ sp_between_mdatype_commas;
 extern Option<iarf_e>
 sp_paren_comma; // = IARF_FORCE
 
+// Add or remove space after the variadic '...' when preceded by a
+// non-punctuator.
+// The value REMOVE will be overriden with FORCE
+extern Option<iarf_e>
+sp_after_ellipsis;
+
 // Add or remove space before the variadic '...' when preceded by a
 // non-punctuator.
+// The value REMOVE will be overriden with FORCE
 extern Option<iarf_e>
 sp_before_ellipsis;
 
