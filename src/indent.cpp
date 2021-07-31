@@ -178,11 +178,11 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace, bool from_care
 
 
 /**
- * returns true if forward scan reveals only single newlines or comments
+ * returns true if forward or reverse scan reveals only single newlines or comments
  * stops when hits code
  * false if next thing hit is a closing brace, also if 2 newlines in a row
  */
-static bool single_line_comment_indent_rule_applies(chunk_t *start);
+static bool single_line_comment_indent_rule_applies(chunk_t *start, bool forward);
 
 /**
  * returns true if semicolon on the same level ends any assign operations
@@ -4060,7 +4060,7 @@ null_pc:
 } // indent_text
 
 
-static bool single_line_comment_indent_rule_applies(chunk_t *start)
+static bool single_line_comment_indent_rule_applies(chunk_t *start, bool forward)
 {
    LOG_FUNC_ENTRY();
 
@@ -4071,7 +4071,7 @@ static bool single_line_comment_indent_rule_applies(chunk_t *start)
    chunk_t *pc      = start;
    size_t  nl_count = 0;
 
-   while ((pc = chunk_get_next(pc)) != nullptr)
+   while ((pc = forward ? chunk_get_next(pc) : chunk_get_prev(pc)) != nullptr)
    {
       if (chunk_is_newline(pc))
       {
@@ -4087,7 +4087,8 @@ static bool single_line_comment_indent_rule_applies(chunk_t *start)
          nl_count = 0;
       }
       else if (  chunk_is_token(pc, CT_COMMENT_MULTI)
-              || chunk_is_closing_brace(pc))
+              || (forward && chunk_is_closing_brace(pc))
+              || (!forward && chunk_is_opening_brace(pc)))
       {
          /*
           * check for things we wouldn't want to indent the comment for
@@ -4241,15 +4242,26 @@ static void indent_comment(chunk_t *pc, size_t col)
          }
       }
    }
-   // check if special single line comment rule applies
-   log_rule_B("indent_sing_line_comments");
+   // check if special single-line-comment-before-code rule applies
+   log_rule_B("indent_single_line_comments_before");
 
-   if (  (options::indent_sing_line_comments() > 0)
-      && single_line_comment_indent_rule_applies(pc))
+   if (  (options::indent_single_line_comments_before() > 0)
+      && single_line_comment_indent_rule_applies(pc, true))
    {
-      LOG_FMT(LCMTIND, "%s(%d): rule 4 - single line comment indent, now in %zu\n",
+      LOG_FMT(LCMTIND, "%s(%d): rule 4 - indent single line comments before code, now in %zu\n",
               __func__, __LINE__, pc->column);
-      reindent_line(pc, col + options::indent_sing_line_comments());
+      reindent_line(pc, col + options::indent_single_line_comments_before());
+      return;
+   }
+   // check if special single-line-comment-after-code rule applies
+   log_rule_B("indent_single_line_comments_after");
+
+   if (  (options::indent_single_line_comments_after() > 0)
+      && single_line_comment_indent_rule_applies(pc, false))
+   {
+      LOG_FMT(LCMTIND, "%s(%d): rule 4 - indent single line comments after code, now in %zu\n",
+              __func__, __LINE__, pc->column);
+      reindent_line(pc, col + options::indent_single_line_comments_after());
       return;
    }
    LOG_FMT(LCMTIND, "%s(%d): rule 5 - fall-through, stay in %zu\n",
