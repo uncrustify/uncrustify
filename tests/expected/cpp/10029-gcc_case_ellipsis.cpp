@@ -6,7 +6,7 @@ void f(int i)
 	{
 		break;
 	}
-	case 3 ...       5:
+	case 3 ... 5:
 		break;
 
 	default:
