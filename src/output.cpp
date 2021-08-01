@@ -17,6 +17,7 @@
 #include "unc_ctype.h"
 #include "unicode.h"
 
+#include <ctime>
 #include <map>
 #include <regex>
 #include <set>
@@ -76,6 +77,9 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt);
 
 
 static bool kw_fcn_fclass(chunk_t *cmt, unc_text &out_txt);
+
+
+static bool kw_fcn_year(chunk_t *cmt, unc_text &out_txt);
 
 
 /**
@@ -2949,6 +2953,16 @@ static bool kw_fcn_fclass(chunk_t *cmt, unc_text &out_txt)
 } // kw_fcn_fclass
 
 
+static bool kw_fcn_year(chunk_t *cmt, unc_text &out_txt)
+{
+   UNUSED(cmt);
+   time_t now = time(nullptr);
+
+   out_txt.append(std::to_string(1900 + localtime(&now)->tm_year));
+   return(true);
+}
+
+
 struct kw_subst_t
 {
    const char *tag;
@@ -2966,6 +2980,7 @@ static const kw_subst_t kw_subst_table[] =
    { "$(function)",  kw_fcn_function  },
    { "$(javaparam)", kw_fcn_javaparam },
    { "$(fclass)",    kw_fcn_fclass    },
+   { "$(year)",      kw_fcn_year      },
 };
 
 

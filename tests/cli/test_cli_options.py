@@ -17,6 +17,7 @@ from os.path import dirname, relpath, isdir, isfile, join as path_join, split as
 from shutil import rmtree, copyfile
 from subprocess import Popen, PIPE
 from io import open
+from datetime import date
 import re
 import difflib
 import argparse
@@ -818,6 +819,18 @@ def main(args):
                 err_result_path=s_path_join(script_dir, 'results/%s.txt' % test)
                 ):
             return_flag = False
+
+    # Test $(year) keyword (issue #3251)
+    if not check_uncrustify_output(
+            uncr_bin,
+            parsed_args,
+            args_arr=['-c', s_path_join(script_dir, 'config/copyright-header.cfg'),
+                      '-f', s_path_join(script_dir, 'input/testSrc.cpp')],
+            out_expected_path=s_path_join(script_dir, 'output/copyright-header.cpp'),
+            out_result_path=s_path_join(script_dir, 'results/copyright-header.cpp'),
+            out_result_manip=string_replace(str(date.today().year), 'this year'),
+            ):
+        return_flag = False
 
     if return_flag:
         print("all tests are OK")
