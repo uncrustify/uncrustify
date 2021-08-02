@@ -889,6 +889,7 @@
 34507  Issue_3220-r.cfg                     cpp/Issue_3220.cpp
 34508  Issue_3220-ir.cfg                    cpp/Issue_3220.cpp
 34509  byref-ir.cfg                         cpp/byref-2.cpp
+
 34510  byref-i.cfg                          cpp/byref-2.cpp
 34511  byref-f.cfg                          cpp/byref-2.cpp
 34512  byref-r.cfg                          cpp/byref-2.cpp
@@ -899,9 +900,11 @@
 34517  semi-f.cfg                           cpp/semi.cpp
 34518  semi-i.cfg                           cpp/semi.cpp
 34519  semi-r.cfg                           cpp/semi.cpp
+
 34520  comma-f.cfg                          cpp/comma.cpp
 34521  comma-i.cfg                          cpp/comma.cpp
 34522  comma-r.cfg                          cpp/comma.cpp
+34523  ellipsis-i.cfg                       cpp/gcc_case_ellipsis.cpp
 
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
@@ -923,6 +926,8 @@
 10025  U07-Cpp.cfg                          cpp/qtargs.cpp
 10026  sp_before_ellipsis-r.cfg             cpp/gcc_case_ellipsis.cpp
 10027  Issue_3058.cfg                       cpp/Issue_3058.cpp
+10028  sp_before_ellipsis-f.cfg             cpp/gcc_case_ellipsis.cpp
+10029  sp_after_ellipsis-f.cfg              cpp/gcc_case_ellipsis.cpp
 
 10047  U16-Cpp.cfg                          cpp/UNI-1334.cpp
 10048  empty.cfg                            cpp/UNI-1335.cpp

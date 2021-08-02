@@ -3129,6 +3129,42 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       log_rule("IGNORE");
       return(IARF_IGNORE);
    }
+
+   if (  chunk_is_token(first, CT_CASE_ELLIPSIS)
+      && chunk_is_token(second, CT_NUMBER))
+   {
+      // Add or remove space after the variadic '...' when preceded by a
+      // non-punctuator.
+      // The value REMOVE will be overriden with FORCE
+      if (options::sp_after_ellipsis() == IARF_REMOVE)
+      {
+         log_rule("sp_after_ellipsis/FORCE");
+         return(IARF_FORCE);
+      }
+      else
+      {
+         log_rule("sp_after_ellipsis");
+         return(options::sp_after_ellipsis());
+      }
+   }
+
+   if (  chunk_is_token(first, CT_NUMBER)
+      && chunk_is_token(second, CT_CASE_ELLIPSIS))
+   {
+      // Add or remove space before the variadic '...' when preceded by a
+      // non-punctuator.
+      // The value REMOVE will be overriden with FORCE
+      if (options::sp_before_ellipsis() == IARF_REMOVE)
+      {
+         log_rule("sp_before_ellipsis/FORCE");
+         return(IARF_FORCE);
+      }
+      else
+      {
+         log_rule("sp_before_ellipsis");
+         return(options::sp_before_ellipsis());
+      }
+   }
    // =============================================================
    // categorie 3
    // these lines are only useful for debugging uncrustify itself

@@ -429,8 +429,14 @@ sp_between_mdatype_commas       = ignore   # ignore/add/remove/force/not_defined
 # Default: force
 sp_paren_comma                  = force    # ignore/add/remove/force/not_defined
 
+# Add or remove space after the variadic '...' when preceded by a
+# non-punctuator.
+# The value REMOVE will be overriden with FORCE
+sp_after_ellipsis               = ignore   # ignore/add/remove/force/not_defined
+
 # Add or remove space before the variadic '...' when preceded by a
 # non-punctuator.
+# The value REMOVE will be overriden with FORCE
 sp_before_ellipsis              = ignore   # ignore/add/remove/force/not_defined
 
 # Add or remove space between a type and '...'.
