@@ -342,6 +342,22 @@ bool process_option_line_compat_0_70(const std::string &cmd,
    return(false);
 } // process_option_line_compat_0_70
 
+
+bool process_option_line_compat_0_73(const std::string &cmd,
+                                     const char        *filename)
+{
+   if (cmd == "indent_sing_line_comments")         // Issue #3249
+   {
+      OptionWarning w{ filename, OptionWarning::MINOR };
+      w("option '%s' is deprecated; did you want to use '%s' instead?",
+        cmd.c_str(), options::indent_single_line_comments_before.name());
+
+      //UNUSED(options::indent_single_line_comments_before.read(args[1].c_str()));
+      return(true);
+   }
+   return(false);
+} // process_option_line_compat_0_73
+
 } // namespace
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1019,6 +1035,14 @@ void process_option_line(const std::string &config_line, const char *filename,
       if (compat_level < option_level(0, 71))
       {
          if (process_option_line_compat_0_70(cmd, filename))
+         {
+            return;
+         }
+      }
+
+      if (compat_level < option_level(0, 74))
+      {
+         if (process_option_line_compat_0_73(cmd, filename))
          {
             return;
          }

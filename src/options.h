@@ -1437,7 +1437,11 @@ indent_member_single;
 
 // Spaces to indent single line ('//') comments on lines before code.
 extern BoundedOption<unsigned, 0, 16>
-indent_sing_line_comments;
+indent_single_line_comments_before;
+
+// Spaces to indent single line ('//') comments on lines after code.
+extern BoundedOption<unsigned, 0, 16>
+indent_single_line_comments_after;
 
 // When opening a paren for a control statement (if, for, while, etc), increase
 // the indent level by this value. Negative values decrease the indent level.
