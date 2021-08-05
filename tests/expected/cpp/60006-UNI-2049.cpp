@@ -1,5 +1,5 @@
 // Pointer mark should be formatted (WINAPI* SetXX)
-typedef DWORD (WINAPI* SetDllDirectory)(LPCSTR);
+typedef DWORD (WINAPI* SetDllDirectory) (LPCSTR);
 // Pointer mark should be formatted (EXCEPTION_POINTERS* pExt)
 static LONG WINAPI CustomUnhandledExceptionFilter(EXCEPTION_POINTERS* pExInfo)
 {
