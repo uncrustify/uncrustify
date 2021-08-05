@@ -324,6 +324,18 @@ static void flag_asm(chunk_t *pc)
 void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 {
    LOG_FUNC_ENTRY();
+   LOG_FMT(LFCNR, "%s(%d): prev is '%s'/%s\n",
+           __func__, __LINE__,
+           prev->text(), get_token_name(prev->type));
+   log_pcf_flags(LFCNR, prev->flags);
+   LOG_FMT(LFCNR, "%s(%d): pc is '%s'/%s\n",
+           __func__, __LINE__,
+           pc->text(), get_token_name(pc->type));
+   log_pcf_flags(LFCNR, pc->flags);
+   LOG_FMT(LFCNR, "%s(%d): next is '%s'/%s\n",
+           __func__, __LINE__,
+           next->text(), get_token_name(next->type));
+   log_pcf_flags(LFCNR, next->flags);
 
    // separate the uses of CT_ASSIGN sign '='
    // into CT_ASSIGN_DEFAULT_ARG, CT_ASSIGN_FUNC_PROTO
@@ -1033,7 +1045,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
     * which means that we are on a function type declaration (C/C++ only?).
     * Note that typedefs are already taken care of.
     */
-   if (  !pc->flags.test_any(PCF_IN_TYPEDEF | PCF_IN_TEMPLATE)
+   if (  !pc->flags.test(PCF_IN_TEMPLATE)                         // Issue #3252
       && get_chunk_parent_type(pc) != CT_CPP_CAST
       && get_chunk_parent_type(pc) != CT_C_CAST
       && !pc->flags.test(PCF_IN_PREPROC)
@@ -1374,6 +1386,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             // auto getComponent(Color *color) -> Component * {
             // auto getComponent(Color *color) -> Component ** {
             // auto getComponent(Color *color) -> Component * _Nonnull
+            // only to help the vim command }}
             set_chunk_type(pc, CT_PTR_TYPE);
          }
          else if (  chunk_is_token(pc->next, CT_SEMICOLON)      // Issue #2319
