@@ -68,7 +68,7 @@ class MyClass
 
 static int max_value()
 {
-   return (std :: numeric_limits  <int >:: max )();
+   return (std :: numeric_limits  <int >:: max ) ();
 }
 
 template < class Config_    >

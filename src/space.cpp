@@ -1602,9 +1602,9 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_after_cast");
          return(options::sp_after_cast());
       }
-      // Must be an indirect/chained function call?
-      log_rule("REMOVE");
-      return(IARF_REMOVE);  // TODO: make this configurable?
+      // Probably a parenthesized indirect function call or similar (issue #3260)
+      log_rule("sp_cparen_oparen");
+      return(options::sp_cparen_oparen());
    }
 
    // handle the space between parens in fcn type 'void (*f)(void)'

@@ -6,5 +6,5 @@ void f(){
 
 	const auto l = ([](int k){
 		return k+2;
-	})(i);
+	})                     (i);
 }

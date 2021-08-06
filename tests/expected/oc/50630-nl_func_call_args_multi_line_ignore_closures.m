@@ -20,7 +20,7 @@ mapToPtr(arg1, ^ ( NSString *) (const Props &addOnProps) {
 	FSTheme *const theme = AK::getTheme();
 });
 
-mapToPtr( ^()(const Props &addOnProps) {
+mapToPtr( ^() (const Props &addOnProps) {
 	FSTheme *const theme = AK::getTheme();
 }, arg2);
 
