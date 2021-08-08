@@ -502,6 +502,8 @@
 31609  sp_sizeof_ellipsis_paren-r.cfg       cpp/parameter-packs.cpp
 
 31610  Issue_2085.cfg                       cpp/Issue_2085.cpp
+31611  sp_sizeof_ellipsis-i.cfg             cpp/parameter-packs.cpp
+31612  sp_sizeof_ellipsis_paren-i.cfg       cpp/parameter-packs.cpp
 
 31620  sp_after_type-f.cfg                  cpp/sp_after_type.cpp
 31621  sp_after_type-i.cfg                  cpp/sp_after_type.cpp
