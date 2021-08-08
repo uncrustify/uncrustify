@@ -488,6 +488,7 @@
 31596  issue_1782.cfg                       cpp/issue_1782.cpp
 31597  issue_1804.cfg                       cpp/issue_1804.cpp
 31598  Issue_1753.cfg                       cpp/Issue_1753.cpp
+31599  sp_paren_ellipsis-i.cfg              cpp/parameter-packs.cpp
 
 31600  sp_paren_ellipsis-f.cfg              cpp/parameter-packs.cpp
 31601  sp_paren_ellipsis-r.cfg              cpp/parameter-packs.cpp
