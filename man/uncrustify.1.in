@@ -117,9 +117,9 @@ Detection is currently fairly limited.
 .SS "Debug Options:"
 .TP
 \fB\-p \fIFILE\fR
-Dump debug info into \fIFILE\fR, or to stdout if \fIFILE\fR is set to '-'."
+Dump debug info into \fIFILE\fR, or to stdout if \fIFILE\fR is set to '-'.
 .br
-Must be used in combination with '-f \fIFILE\fR'."
+Must be used in combination with '-f \fIFILE\fR'.
 .TP
 \fB\-L\fI SEV\fR
 Set the log severity (see log_levels.h)

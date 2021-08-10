@@ -215,7 +215,7 @@ tokenize(2351): orig_line is 1, orig_col is 7, text() 'Capteur', type is WORD, o
 tokenize(2351): orig_line is 1, orig_col is 15, text() '{', type is BRACE_OPEN, orig_col_end is 16
 ```
 
-It might be usefull to add some code lines to see where something is happening.
+It might be useful to add some code lines to see where something is happening.
 Use the package `unc_tools`.
 Remove the comment at line:
 ```.cpp
