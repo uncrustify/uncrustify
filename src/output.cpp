@@ -448,12 +448,14 @@ static void cmt_output_indent(size_t brace_col, size_t base_col, size_t column)
 } // cmt_output_indent
 
 
-void output_parsed(FILE *pfile)
+void output_parsed(FILE *pfile, bool withOptions)
 {
    const char *eol_marker = get_eol_marker();
 
-   save_option_file(pfile, false, true);
-
+   if (withOptions)
+   {
+      save_option_file(pfile, false, true);
+   }
    fprintf(pfile, "# -=====-%s", eol_marker);
    fprintf(pfile, "# number of loops               = %d\n", cpd.changes);
    fprintf(pfile, "# -=====-%s", eol_marker);
@@ -921,6 +923,46 @@ void output_text(FILE *pfile)
       add_text("</html>\n");
    }
 } // output_text
+
+
+void dump_step(const char *filename, const char *step_description)
+{
+   static int file_num = 0;
+   char       dump_filename[256];
+   FILE       *dump_file;
+
+   if (  filename == nullptr
+      || strlen(filename) == 0)
+   {
+      return;
+   }
+
+   // On the first call, also save the options in use
+   if (file_num == 0)
+   {
+      sprintf(dump_filename, "%s_%03d.log", filename, file_num);
+      ++file_num;
+
+      dump_file = fopen(dump_filename, "wb");
+
+      if (dump_file != nullptr)
+      {
+         save_option_file(dump_file, false, true);
+         fclose(dump_file);
+      }
+   }
+   sprintf(dump_filename, "%s_%03d.log", filename, file_num);
+   ++file_num;
+
+   dump_file = fopen(dump_filename, "wb");
+
+   if (dump_file != nullptr)
+   {
+      fprintf(dump_file, "STEP: %s\n--------------\n", step_description);
+      output_parsed(dump_file, false);
+      fclose(dump_file);
+   }
+} // dump_step
 
 
 static size_t cmt_parse_lead(const unc_text &line, bool is_last)

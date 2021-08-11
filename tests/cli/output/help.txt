@@ -53,6 +53,11 @@ Config/Help Options:
 Debug Options:
  -p FILE               : Dump debug info into FILE, or to stdout if FILE is set to '-'.
                          Must be used in combination with '-f FILE'
+ -ds FILE              : Dump parsing info at various moments of the formatting process.
+ --dump-steps FILE       This creates a series of files named 'FILE_nnn.log', each
+                         corresponding to a formatting step in uncrustify.
+                         The file 'FILE_000.log' lists the formatting options in use.
+                         Must be used in combination with '-f FILE'
  -L SEV                : Set the log severity (see log_levels.h; note 'A' = 'all')
  -s                    : Show the log severity in the logs.
  --decode              : Decode remaining args (chunk flags) and exit.
@@ -64,6 +69,7 @@ cat foo.d | uncrustify -q -c my.cfg -l d
 uncrustify -c my.cfg -f foo.d
 uncrustify -c my.cfg -f foo.d -L0-2,20-23,51
 uncrustify -c my.cfg -f foo.d -o foo.d
+uncrustify -c my.cfg -f foo.d -o foo.d -ds dump
 uncrustify -c my.cfg foo.d
 uncrustify -c my.cfg --replace foo.d
 uncrustify -c my.cfg --no-backup foo.d

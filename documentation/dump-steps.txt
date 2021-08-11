@@ -1,0 +1,53 @@
+
+This file describes the purpose of the 'dump steps' command line option.
+
+
+OVERVIEW
+--------
+The '-ds/--dump-steps' option instructs uncrustify to log a lot of debug information 
+throughout the formatting process, which can be very useful when trying to understand
+why something is being formatted in the way it is. This is usually the case when the
+expected results do not match with the actual ones.
+
+
+COMPARISON WITH '-p' OPTION
+---------------------------
+While the '-p' option only prints the parsing information at the end of the process,
+the '-ds' option will print the same information at many points in time, providing 
+extra depth to users and developers when troubleshooting an issue.
+
+
+GENERATED FILES
+---------------
+Add '-ds FILE' to the command line options to enable the functionality.
+This will create a number of files as follow:
+
+- FILE_000.log:   this file contains the list of the options used by uncrustify
+- FILE_001.log:   this file lists the parsing status after uncrustify has read the input file
+                  and before starting the formatting process.
+- FILE_002.log:   this file lists the parsing status before uncrustify enters its first internal
+                  while loop
+- FILE_AAA.log - FILE_BBB.log: a variable number of files, depending on the progress of the
+                  formatting process. Each file is printed at the end of one iteration of the
+								  first internal while loop.
+- FILE_BBB+1.log: this file lists the parsing status before uncrustify enters its second internal
+                  while loop
+- FILE_BBB+2.log - FILE_CCC.log: a variable number of files, depending on the progress of the
+                  formatting process. Each file is printed at the end of one iteration of the
+								  second internal while loop.
+- FILE_CCC+1.log: this file lists the parsing status at the end of the process.
+
+NOTE: by combining FILE_000.log and FILE_CCC+1.log, you will get the same content of the parsing
+      file obtained with the '-p' option.
+
+
+USAGE
+-----
+Comparing each file with the previous one will help understanding why something is being formatted
+the way it is. When debugging a formatting issue, this provides a quick way to restrict the
+section of the code that should be investigated.
+
+The first line of each file contains a brief descriptive string which can be used to quickly find the
+point in the code where the file was created. Look for 'dump_step(dump_file, <descriptive string>)' in
+src/uncrustify.cpp.
+

@@ -113,10 +113,11 @@ static bool ends_with(const char *filename, const char *tag, bool case_sensitive
  * @param filename_in  the file to read
  * @param filename_out nullptr (stdout) or the file to write
  * @param parsed_file  nullptr or the filename for the parsed debug info
+ * @param dump_file    nullptr or the filename prefix for dumping formatting steps debug info
  * @param no_backup    don't create a backup, if filename_out == filename_in
  * @param keep_mtime   don't change the mtime (dangerous)
  */
-static void do_source_file(const char *filename_in, const char *filename_out, const char *parsed_file, bool no_backup, bool keep_mtime);
+static void do_source_file(const char *filename_in, const char *filename_out, const char *parsed_file, const char *dump_file, bool no_backup, bool keep_mtime);
 
 
 static void add_file_header();
@@ -289,6 +290,11 @@ void usage(const char *argv0)
            "Debug Options:\n"
            " -p FILE               : Dump debug info into FILE, or to stdout if FILE is set to '-'.\n"
            "                         Must be used in combination with '-f FILE'\n"
+           " -ds FILE              : Dump parsing info at various moments of the formatting process.\n"
+           " --dump-steps FILE       This creates a series of files named 'FILE_nnn.log', each\n"
+           "                         corresponding to a formatting step in uncrustify.\n"
+           "                         The file 'FILE_000.log' lists the formatting options in use.\n"
+           "                         Must be used in combination with '-f FILE'\n"
            " -L SEV                : Set the log severity (see log_levels.h; note 'A' = 'all')\n"
            " -s                    : Show the log severity in the logs.\n"
            " --decode              : Decode remaining args (chunk flags) and exit.\n"
@@ -300,6 +306,7 @@ void usage(const char *argv0)
            "uncrustify -c my.cfg -f foo.d\n"
            "uncrustify -c my.cfg -f foo.d -L0-2,20-23,51\n"
            "uncrustify -c my.cfg -f foo.d -o foo.d\n"
+           "uncrustify -c my.cfg -f foo.d -o foo.d -ds dump\n"
            "uncrustify -c my.cfg foo.d\n"
            "uncrustify -c my.cfg --replace foo.d\n"
            "uncrustify -c my.cfg --no-backup foo.d\n"
@@ -552,6 +559,14 @@ int main(int argc, char *argv[])
       {
          LOG_FMT(LNOTE, "Will export parsed data to: %s\n", parsed_file);
       }
+   }
+   // Get the dump file name prefix
+   const char *dump_file;
+
+   if (  ((dump_file = arg.Param("--dump-steps")) != nullptr)
+      || ((dump_file = arg.Param("-ds")) != nullptr))
+   {
+      LOG_FMT(LNOTE, "Will export formatting steps data to '%s_nnn.log' files\n", dump_file);
    }
 
    // Enable log severities
@@ -965,18 +980,25 @@ int main(int argc, char *argv[])
               (int)fm.raw.size(), (int)fm.data.size(),
               language_name_from_flags(cpd.lang_flags));
 
-      uncrustify_file(fm, stdout, parsed_file);
+      uncrustify_file(fm, stdout, parsed_file, dump_file);
    }
    else if (source_file != nullptr)
    {
       // Doing a single file
-      do_source_file(source_file, output_file, parsed_file, no_backup, keep_mtime);
+      do_source_file(source_file, output_file, parsed_file, dump_file, no_backup, keep_mtime);
    }
    else
    {
-      if (parsed_file != nullptr)  // Issue #930
+      if (parsed_file != nullptr)   // Issue #930
       {
          fprintf(stderr, "FAIL: -p option must be used with the -f option\n");
+         log_flush(true);
+         exit(EX_CONFIG);
+      }
+
+      if (dump_file != nullptr)
+      {
+         fprintf(stderr, "FAIL: -ds/--dump-steps option must be used with the -f option\n");
          log_flush(true);
          exit(EX_CONFIG);
       }
@@ -999,7 +1021,7 @@ int main(int argc, char *argv[])
          char outbuf[1024];
          do_source_file(p_arg,
                         make_output_filename(outbuf, sizeof(outbuf), p_arg, prefix, suffix),
-                        nullptr, no_backup, keep_mtime);
+                        nullptr, nullptr, no_backup, keep_mtime);
       }
 
       if (source_list != nullptr)
@@ -1074,7 +1096,7 @@ static void process_source_list(const char *source_list,
          char outbuf[1024];
          do_source_file(fname,
                         make_output_filename(outbuf, sizeof(outbuf), fname, prefix, suffix),
-                        nullptr, no_backup, keep_mtime);
+                        nullptr, nullptr, no_backup, keep_mtime);
       }
    }
 
@@ -1458,6 +1480,7 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
 static void do_source_file(const char *filename_in,
                            const char *filename_out,
                            const char *parsed_file,
+                           const char *dump_file,
                            bool       no_backup,
                            bool       keep_mtime)
 {
@@ -1500,7 +1523,7 @@ static void do_source_file(const char *filename_in,
        * Cleanup is deferred because we need 'bout' preserved long enough
        * to write it to a file (if it changed).
        */
-      uncrustify_file(fm, nullptr, parsed_file, true);
+      uncrustify_file(fm, nullptr, parsed_file, dump_file, true);
 
       if (bout_content_matches(fm, false))
       {
@@ -1564,7 +1587,7 @@ static void do_source_file(const char *filename_in,
    }
    else
    {
-      uncrustify_file(fm, pfout, parsed_file);
+      uncrustify_file(fm, pfout, parsed_file, dump_file);
    }
 
    if (did_open)
@@ -1962,8 +1985,8 @@ static void uncrustify_start(const deque<int> &data)
 } // uncrustify_start
 
 
-void uncrustify_file(const file_mem &fm, FILE *pfout,
-                     const char *parsed_file, bool defer_uncrustify_end)
+void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
+                     const char *dump_file, bool defer_uncrustify_end)
 {
    const deque<int> &data = fm.data;
 
@@ -2032,6 +2055,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
    }
 
    uncrustify_start(data);
+   dump_step(dump_file, "After uncrustify_start()");
 
    cpd.unc_stage = unc_stage_e::OTHER;
 
@@ -2093,6 +2117,8 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          newlines_remove_newlines();
       }
       cpd.pass_count = 3;
+
+      dump_step(dump_file, "Before first while loop");
 
       do
       {
@@ -2186,6 +2212,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          newlines_functions_remove_extra_blank_lines();
          newlines_cleanup_dup();
          first = false;
+         dump_step(dump_file, "Inside first while loop");
       } while (  old_changes != cpd.changes
               && cpd.pass_count-- > 0);
 
@@ -2256,6 +2283,8 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       // Align everything else, reindent and break at code_width
       first = true;
 
+      dump_step(dump_file, "Before second while loop");
+
       do
       {
          align_all();
@@ -2293,6 +2322,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
                first = false;
             }
          }
+         dump_step(dump_file, "Inside second while loop");
       } while (old_changes != cpd.changes);
 
       // And finally, align the backslash newline stuff
@@ -2304,8 +2334,9 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       {
          align_backslash_newline();
       }
-      // which output is to be done?
+      dump_step(dump_file, "Final version");
 
+      // which output is to be done?
       if (cpd.html_file == nullptr)
       {
          // Now render it all to the output file

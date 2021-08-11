@@ -215,6 +215,18 @@ tokenize(2351): orig_line is 1, orig_col is 7, text() 'Capteur', type is WORD, o
 tokenize(2351): orig_line is 1, orig_col is 15, text() '{', type is BRACE_OPEN, orig_col_end is 16
 ```
 
+You can also dump the parsing information of each formatting step using the 'dump steps' option.
+```.txt
+   uncrustify -c myExample.cfg -f myExample.cpp -ds dump
+```
+This will create a series of 'dump_nnn.log' files, each containing the parsing information at
+specific points of the formatting process ('dump_000.log' will list the formatting options in use).
+
+You can combine this option with -p and -L to get a lot of detailed debugging information.
+```.txt
+   uncrustify -c myExample.cfg -f myExample.cpp -p myExample.p -L A 2>myExample.A -ds dump
+```
+
 It might be useful to add some code lines to see where something is happening.
 Use the package `unc_tools`.
 Remove the comment at line:

@@ -15,7 +15,7 @@
 
 
 //! This renders the chunk list to a file.
-void output_parsed(FILE *pfile);
+void output_parsed(FILE *pfile, bool withOptions = true);
 
 
 //! This renders the chunk list to a file formatted as csv.
@@ -24,6 +24,10 @@ void output_parsed_csv(FILE *pfile);
 
 //! This renders the chunk list to a file.
 void output_text(FILE *pfile);
+
+
+//! This save the next formatting step to a file
+void dump_step(const char *filename, const char *description);
 
 
 /**

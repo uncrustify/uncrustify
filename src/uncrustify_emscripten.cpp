@@ -25,6 +25,7 @@
  *   --replace
  *   --mtime
  *   --universalindent
+ *   --ds/--dump-steps
  *   -help, -h, --usage, -?
  *
  *
@@ -557,7 +558,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    // function which passes the debug output into a dedicated output js target.
    // This therefore would introduce the dependency on the user to always have
    // the output js target available.
-   uncrustify_file(fm, stream, nullptr, defer);
+   uncrustify_file(fm, stream, nullptr, nullptr, defer);
 
    fflush(stream);
    fclose(stream);
