@@ -889,8 +889,15 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    // "if (" vs. "if("
    if (chunk_is_token(second, CT_SPAREN_OPEN))
    {
-      // Add or remove space before '(' of control statements ('if', 'for', 'switch',
-      // 'while', etc.).
+      // Add or remove space after 'do' between 'while' and '('. Issue #995
+      if (  chunk_is_token(first, CT_WHILE_OF_DO)
+         && options::sp_while_paren_open() != IARF_IGNORE)
+      {
+         log_rule("sp_while_paren_open");
+         return(options::sp_while_paren_open());
+      }
+      // Add or remove space before '(' of other control statements ('if', 'for',
+      // 'switch', 'while', etc.).
       log_rule("sp_before_sparen");
       return(options::sp_before_sparen());
    }
@@ -3050,20 +3057,6 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       // Add or remove space between 'do' and '{'.
       log_rule("sp_do_brace_open");
       return(options::sp_do_brace_open());
-   }
-
-   // Issue #995
-   if (  chunk_is_token(first, CT_WHILE_OF_DO)
-      && chunk_is_token(second, CT_PAREN_OPEN))
-   {
-      // Add or remove space between 'while' and '('.
-      if (options::sp_while_paren_open() != IARF_IGNORE)
-      {
-         log_rule("sp_while_paren_open");
-         return(options::sp_while_paren_open());
-      }
-      log_rule("sp_before_sparen");
-      return(options::sp_before_sparen());
    }
 
    // Issue #995
