@@ -13,7 +13,7 @@ const error:fatal= 1
 const error:nonfatal = 2
 error:errno = fatal
 
-native printf(const format[], {Float, _}: ...);
+native printf(const format[], {Float, _}:    ...);
 
 	new Float:chance_to_avoid = (p_resists[id][RESISTIDX_FIRE] >= RESIST_MAX_VALUE) ?
 	  1.00 : (float( p_resists[id][RESISTIDX_FIRE] ) / float( RESIST_MAX_VALUE ))
