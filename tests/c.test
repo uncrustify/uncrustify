@@ -400,3 +400,4 @@
 10020  indent_single_line_comments_after.cfg c/single_line_comment_after.c
 10021  sp_cparen_oparen-f.cfg               c/parenthesized_indirect_call.c
 10022  Issue_3269.cfg                       c/Issue_3269.c
+10023  Issue_3272.cfg                       c/Issue_3272.h
