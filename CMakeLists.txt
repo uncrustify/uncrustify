@@ -304,6 +304,7 @@ set(uncrustify_sources
   src/pcf_flags.cpp
   src/punctuators.cpp
   src/quick_align_again.cpp
+  src/remove_duplicate_include.cpp
   src/remove_extra_returns.cpp
   src/semicolons.cpp
   src/sorting.cpp
@@ -393,6 +394,7 @@ set(uncrustify_headers
   src/prototypes.h
   src/punctuators.h
   src/quick_align_again.h
+  src/remove_duplicate_include.h
   src/remove_extra_returns.h
   src/semicolons.h
   src/sorting.h

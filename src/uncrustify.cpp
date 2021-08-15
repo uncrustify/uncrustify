@@ -29,6 +29,7 @@
 #include "output.h"
 #include "parens.h"
 #include "parent_for_pp.h"
+#include "remove_duplicate_include.h"
 #include "remove_extra_returns.h"
 #include "semicolons.h"
 #include "sorting.h"
@@ -2078,6 +2079,13 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       if (options::mod_remove_empty_return())
       {
          remove_extra_returns();
+      }
+      // Remove duplicate include
+      log_rule_B("mod_duplicate_include");
+
+      if (options::mod_remove_duplicate_include())
+      {
+         remove_duplicate_include();
       }
       // Add parens
       do_parens();

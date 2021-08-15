@@ -9,6 +9,7 @@
 
 #include "remove_extra_returns.h"
 
+#include "chunk_list.h"
 #include "uncrustify.h"
 
 
