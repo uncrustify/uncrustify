@@ -179,7 +179,7 @@ static size_t cmt_parse_lead(const unc_text &line, bool is_last);
 static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str);
 
 
-static int next_up(const unc_text &text, size_t idx, unc_text &tag);
+static int next_up(const unc_text &text, size_t idx, const unc_text &tag);
 
 
 /**
@@ -1367,7 +1367,7 @@ static chunk_t *get_prev_oc_class(chunk_t *pc)
 }
 
 
-static int next_up(const unc_text &text, size_t idx, unc_text &tag)
+static int next_up(const unc_text &text, size_t idx, const unc_text &tag)
 {
    size_t offs = 0;
 
@@ -1425,7 +1425,7 @@ static void add_comment_text(const unc_text &text,
             add_char(' ');
          }
          // hack to get escaped newlines to align and not duplicate the leading '//'
-         int tmp = next_up(text, idx + 1, cmt.cont_text);
+         int tmp = next_up(text, idx + 1, "//");
 
          if (tmp < 0)
          {
