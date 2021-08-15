@@ -401,3 +401,4 @@
 10021  sp_cparen_oparen-f.cfg               c/parenthesized_indirect_call.c
 10022  Issue_3269.cfg                       c/Issue_3269.c
 10023  Issue_3272.cfg                       c/Issue_3272.h
+10024  Issue_3274.cfg                       c/Issue_3274.c
