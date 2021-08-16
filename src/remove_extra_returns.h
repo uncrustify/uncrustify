@@ -10,8 +10,6 @@
 #ifndef REMOVE_EXTRA_RETURNS_H_INCLUDED
 #define REMOVE_EXTRA_RETURNS_H_INCLUDED
 
-#include "chunk_list.h"
-
 
 /**
  * @brief Remove unnecessary returns

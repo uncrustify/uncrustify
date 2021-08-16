@@ -31,7 +31,7 @@ static size_t tokenCounter;
 
 /* protocol of the line
  * examples:
- *   prot_the_line(__func__, __LINE__, pc->orig_line);
+ *   prot_the_line(__func__, __LINE__, pc->orig_line, 0);
  *   prot_the_line(__func__, __LINE__, 0, 0);
  *   prot_the_line(__func__, __LINE__, 6, 5);
  *   prot_the_source(__LINE__);

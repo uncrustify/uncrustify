@@ -3579,6 +3579,10 @@ mod_full_paren_if_bool;
 extern Option<bool>
 mod_remove_extra_semicolon;
 
+// Whether to remove duplicate include.
+extern Option<bool>
+mod_remove_duplicate_include;
+
 // If a function body exceeds the specified number of newlines and doesn't have
 // a comment after the close brace, a comment will be added.
 extern BoundedOption<unsigned, 0, 255>

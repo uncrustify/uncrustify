@@ -620,7 +620,8 @@
 33054  indent_columns-3.cfg                 cpp/bug_i_825.cpp
 33056  empty.cfg                            cpp/bug_33056.cpp
 33057  bug_1349.cfg                         cpp/bug_1349.cpp
-#33058  sp_arith-a.cfg                       cpp/stdcall.cpp
+33058  Issue_3164.cfg                       cpp/Issue_3164.cpp
+33039  mod_remove_empty_return-t.cfg        cpp/mod_remove_empty_return.cpp
 33059  mod_remove_empty_return-t.cfg        cpp/mod_remove_empty_return-2.cpp
 
 33060  empty.cfg                            cpp/if_constexpr.cpp
