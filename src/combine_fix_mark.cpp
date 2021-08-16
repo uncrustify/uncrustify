@@ -632,6 +632,7 @@ chunk_t *fix_variable_definition(chunk_t *start)
          || chunk_is_token(pc, CT_TYPENAME)
          || chunk_is_token(pc, CT_DC_MEMBER)
          || chunk_is_token(pc, CT_MEMBER)
+         || chunk_is_token(pc, CT_PP)                       // Issue #3169
          || chunk_is_ptr_operator(pc))
    {
       LOG_FMT(LFVD, "%s(%d):   1:pc->text() '%s', type is %s\n",
