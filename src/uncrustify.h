@@ -16,7 +16,7 @@
 int load_header_files(void);
 
 
-void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file, bool defer_uncrustify_end = false);
+void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file, const char *dump_filename, bool defer_uncrustify_end = false);
 
 
 void uncrustify_end();

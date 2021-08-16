@@ -121,6 +121,17 @@ Dump debug info into \fIFILE\fR, or to stdout if \fIFILE\fR is set to '-'.
 .br
 Must be used in combination with '-f \fIFILE\fR'.
 .TP
+\fB\-ds \fIFILE\fR \fB\-\-dump\-steps \fIFILE\fR
+Dump parsing info at various moments of the formatting process.
+.br
+This creates a series of files named '\fIFILE\fR_nnn.log', each
+.br
+corresponding to a formatting step in uncrustify.
+.br
+The file '\fIFILE\fR_000.log' lists the formatting options in use.
+.br
+Must be used in combination with '-f \fIFILE\fR'.
+.TP
 \fB\-L\fI SEV\fR
 Set the log severity (see log_levels.h)
 .TP
