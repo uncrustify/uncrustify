@@ -962,13 +962,10 @@ void set_chunk_type_real(chunk_t *pc, c_token_t tt, const char *func, int line);
 void set_chunk_parent_real(chunk_t *pc, c_token_t tt, const char *func, int line);
 
 
-#define set_chunk_type(pc, tt)      do {                               \
-      set_chunk_type_real((pc), (tt), __unqualified_func__, __LINE__); \
-} while (false)
+#define set_chunk_type(pc, tt)      set_chunk_type_real((pc), (tt), __unqualified_func__, __LINE__)
 
-#define set_chunk_parent(pc, tt)    do {                                 \
-      set_chunk_parent_real((pc), (tt), __unqualified_func__, __LINE__); \
-} while (false)
+
+#define set_chunk_parent(pc, tt)    set_chunk_parent_real((pc), (tt), __unqualified_func__, __LINE__)
 
 
 c_token_t get_chunk_parent_type(chunk_t *pc);
@@ -977,17 +974,13 @@ c_token_t get_chunk_parent_type(chunk_t *pc);
 void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits);
 
 
-#define chunk_flags_upd(pc, cc, ss)    do {   \
-      chunk_flags_set_real((pc), (cc), (ss)); \
-} while (false)
+#define chunk_flags_upd(pc, cc, ss)    chunk_flags_set_real((pc), (cc), (ss))
 
-#define chunk_flags_set(pc, ss)        do { \
-      chunk_flags_set_real((pc), {}, (ss)); \
-} while (false)
 
-#define chunk_flags_clr(pc, cc)        do { \
-      chunk_flags_set_real((pc), (cc), {}); \
-} while (false)
+#define chunk_flags_set(pc, ss)        chunk_flags_set_real((pc), {}, (ss))
+
+
+#define chunk_flags_clr(pc, cc)        chunk_flags_set_real((pc), (cc), {})
 
 
 void chunk_set_parent(chunk_t *pc, chunk_t *parent);
