@@ -470,21 +470,23 @@ bool are_chunks_in_same_line(chunk_t *start, chunk_t *end);
  */
 static inline bool is_expected_type_and_level(chunk_t *pc, c_token_t type, int level)
 {
-   // we don't care about the level (if it is negative) or it is as expected
-   // and the type is as expected
-   return(  (  level < 0
-            || pc->level == static_cast<size_t>(level))
-         && pc->type == type);
+   // we don't care if the pointer is invalid or about the level (if it is negative),
+   // or it is as expected and the type is as expected
+   return(  pc == nullptr
+         || (  (  level < 0
+               || pc->level == static_cast<size_t>(level))
+            && pc->type == type));
 }
 
 
 static inline bool is_expected_string_and_level(chunk_t *pc, const char *str, int level, size_t len)
 {
-   // we don't care about the level (if it is negative) or it is as expected
-   return(  (  level < 0
-            || pc->level == static_cast<size_t>(level))
-         && pc->len() == len                       // and the length is as expected
-         && memcmp(str, pc->text(), len) == 0);    // and the strings are equal
+   // we don't care if the pointer is invalid or about the level (if it is negative) or it is as expected
+   return(  pc == nullptr
+         || (  (  level < 0
+               || pc->level == static_cast<size_t>(level))
+            && pc->len() == len                        // and the length is as expected
+            && memcmp(str, pc->text(), len) == 0));    // and the strings are equal
 }
 
 
@@ -512,14 +514,15 @@ static inline bool chunk_is_not_token(const chunk_t *pc, c_token_t c_token)
  */
 static inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e::ALL)
 {
-   if (  chunk_is_token(cur, CT_PAREN_OPEN)
-      || chunk_is_token(cur, CT_SPAREN_OPEN)
-      || chunk_is_token(cur, CT_FPAREN_OPEN)
-      || chunk_is_token(cur, CT_TPAREN_OPEN)
-      || chunk_is_token(cur, CT_BRACE_OPEN)
-      || chunk_is_token(cur, CT_VBRACE_OPEN)
-      || chunk_is_token(cur, CT_ANGLE_OPEN)
-      || chunk_is_token(cur, CT_SQUARE_OPEN))
+   if (  cur != nullptr
+      && (  chunk_is_token(cur, CT_PAREN_OPEN)
+         || chunk_is_token(cur, CT_SPAREN_OPEN)
+         || chunk_is_token(cur, CT_FPAREN_OPEN)
+         || chunk_is_token(cur, CT_TPAREN_OPEN)
+         || chunk_is_token(cur, CT_BRACE_OPEN)
+         || chunk_is_token(cur, CT_VBRACE_OPEN)
+         || chunk_is_token(cur, CT_ANGLE_OPEN)
+         || chunk_is_token(cur, CT_SQUARE_OPEN)))
    {
       return(chunk_get_next_type(cur, (c_token_t)(cur->type + 1), cur->level, scope));
    }
@@ -529,14 +532,15 @@ static inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e
 
 static inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, scope_e scope = scope_e::ALL)
 {
-   if (  chunk_is_token(cur, CT_PAREN_CLOSE)
-      || chunk_is_token(cur, CT_SPAREN_CLOSE)
-      || chunk_is_token(cur, CT_FPAREN_CLOSE)
-      || chunk_is_token(cur, CT_TPAREN_CLOSE)
-      || chunk_is_token(cur, CT_BRACE_CLOSE)
-      || chunk_is_token(cur, CT_VBRACE_CLOSE)
-      || chunk_is_token(cur, CT_ANGLE_CLOSE)
-      || chunk_is_token(cur, CT_SQUARE_CLOSE))
+   if (  cur != nullptr
+      && (  chunk_is_token(cur, CT_PAREN_CLOSE)
+         || chunk_is_token(cur, CT_SPAREN_CLOSE)
+         || chunk_is_token(cur, CT_FPAREN_CLOSE)
+         || chunk_is_token(cur, CT_TPAREN_CLOSE)
+         || chunk_is_token(cur, CT_BRACE_CLOSE)
+         || chunk_is_token(cur, CT_VBRACE_CLOSE)
+         || chunk_is_token(cur, CT_ANGLE_CLOSE)
+         || chunk_is_token(cur, CT_SQUARE_CLOSE)))
    {
       return(chunk_get_prev_type(cur, (c_token_t)(cur->type - 1), cur->level, scope));
    }
@@ -572,6 +576,7 @@ static inline bool chunk_is_comment(chunk_t *pc)
 static inline bool chunk_is_cpp_inheritance_access_specifier(chunk_t *pc)
 {
    return(  language_is_set(LANG_CPP)
+         && pc != nullptr
          && (  chunk_is_token(pc, CT_ACCESS)
             || chunk_is_token(pc, CT_QUALIFIER))
          && (  std::strncmp(pc->str.c_str(), "private", 7) == 0
@@ -694,7 +699,8 @@ static inline bool chunk_is_comment_newline_or_blank(chunk_t *pc)
 
 static inline bool chunk_is_Doxygen_comment(chunk_t *pc)
 {
-   if (!chunk_is_comment(pc))
+   if (  pc == nullptr
+      || !chunk_is_comment(pc))
    {
       return(false);
    }
@@ -774,10 +780,11 @@ static inline bool chunk_is_nullable(chunk_t *pc)
 
 static inline bool chunk_is_addr(chunk_t *pc)
 {
-   if (  chunk_is_token(pc, CT_BYREF)
-      || (  (pc->len() == 1)
-         && (pc->str[0] == '&')
-         && pc->type != CT_OPERATOR_VAL))
+   if (  pc != nullptr
+      && (  chunk_is_token(pc, CT_BYREF)
+         || (  (pc->len() == 1)
+            && (pc->str[0] == '&')
+            && pc->type != CT_OPERATOR_VAL)))
    {
       chunk_t *prev = chunk_get_prev(pc);
 
