@@ -1516,6 +1516,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    // spaces between function and open paren
    if (  chunk_is_token(first, CT_FUNC_CALL)
+      || chunk_is_token(first, CT_FUNCTION)                        // Issue #2665
       || chunk_is_token(first, CT_FUNC_CTOR_VAR)
       || chunk_is_token(first, CT_CNG_HASINC)
       || chunk_is_token(first, CT_CNG_HASINCN)
