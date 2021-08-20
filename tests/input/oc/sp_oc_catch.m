@@ -11,7 +11,7 @@
 {
    @try {
    }
-   @catch (NSException* const inException){
+   @catch                 (NSException* const inException){
    }
    @finally {
    }
