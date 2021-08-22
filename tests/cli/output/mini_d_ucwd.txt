@@ -359,8 +359,13 @@ sp_before_semi                  = remove   # ignore/add/remove/force/not_defined
 # Add or remove space before ';' in non-empty 'for' statements.
 sp_before_semi_for              = ignore   # ignore/add/remove/force/not_defined
 
-# Add or remove space before a semicolon of an empty part of a for statement.
+# Add or remove space before a semicolon of an empty left part of a for
+# statement, as in 'for ( <here> ; ; )'.
 sp_before_semi_for_empty        = ignore   # ignore/add/remove/force/not_defined
+
+# Add or remove space between the semicolons of an empty middle part of a for
+# statement, as in 'for ( ; <here> ; )'.
+sp_between_semi_for_empty       = ignore   # ignore/add/remove/force/not_defined
 
 # Add or remove space after ';', except when followed by a comment.
 #

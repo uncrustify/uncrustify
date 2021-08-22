@@ -412,18 +412,24 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
       if (get_chunk_parent_type(second) == CT_FOR)
       {
-         if (  chunk_is_token(first, CT_SPAREN_OPEN) // a
-            || chunk_is_token(first, CT_SEMICOLON))  // b
+         if (chunk_is_token(first, CT_SPAREN_OPEN))
          {
-            // empty, ie for (;;)
-            //               ^ is first    // a
-            //                ^ is second  // a
-            // or
-            //                ^ is first   // b
-            //                 ^ is second // b
-            // Add or remove space before a semicolon of an empty part of a for statement.
+            // empty, e.g. for (;;)
+            //                 ^ is first
+            //                  ^ is second
+            // Add or remove space before a semicolon of an empty left part of a for statement.
             log_rule("sp_before_semi_for_empty");
             return(options::sp_before_semi_for_empty());
+         }
+
+         if (chunk_is_token(first, CT_SEMICOLON))
+         {
+            // empty, e.g. for (;;)
+            //                  ^ is first
+            //                   ^ is second
+            // Add or remove space between semicolons of an empty middle part of a for statement.
+            log_rule("sp_between_semi_for_empty");
+            return(options::sp_between_semi_for_empty());
          }
          // Add or remove space before ';' in non-empty 'for' statements.
          log_rule("sp_before_semi_for");

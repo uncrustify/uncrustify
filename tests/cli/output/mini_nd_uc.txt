@@ -88,6 +88,7 @@ sp_special_semi                 = ignore
 sp_before_semi                  = remove
 sp_before_semi_for              = ignore
 sp_before_semi_for_empty        = ignore
+sp_between_semi_for_empty       = ignore
 sp_after_semi                   = add
 sp_after_semi_for               = force
 sp_after_semi_for_empty         = ignore
