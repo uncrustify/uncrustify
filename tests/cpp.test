@@ -320,6 +320,10 @@
 30762  out-668-T.cfg                        cpp/out-668.cpp
 30763  Issue_2166.cfg                       cpp/Issue_2166.cpp
 30764  Issue_2591.cfg                       cpp/Issue_2591.cpp
+30765 sp_cpp_lambda_square_paren-i.cfg      cpp/lambda.cpp
+30766 sp_cpp_lambda_square_brace-i.cfg      cpp/lambda.cpp
+30767 sp_cpp_lambda_paren_brace-i.cfg       cpp/lambda.cpp
+30768 sp_cpp_lambda_fparen-i.cfg            cpp/sp_cpp_lambda_fparen.cpp
 
 30770 sp_cpp_lambda_square_paren-r.cfg      cpp/lambda.cpp
 30771 sp_cpp_lambda_square_paren-f.cfg      cpp/lambda.cpp
