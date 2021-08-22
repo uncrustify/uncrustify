@@ -467,9 +467,15 @@ sp_before_semi; // = IARF_REMOVE
 extern Option<iarf_e>
 sp_before_semi_for;
 
-// Add or remove space before a semicolon of an empty part of a for statement.
+// Add or remove space before a semicolon of an empty left part of a for
+// statement, as in 'for ( <here> ; ; )'.
 extern Option<iarf_e>
 sp_before_semi_for_empty;
+
+// Add or remove space between the semicolons of an empty middle part of a for
+// statement, as in 'for ( ; <here> ; )'.
+extern Option<iarf_e>
+sp_between_semi_for_empty;
 
 // Add or remove space after ';', except when followed by a comment.
 extern Option<iarf_e>
