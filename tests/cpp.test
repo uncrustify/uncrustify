@@ -320,25 +320,25 @@
 30762  out-668-T.cfg                        cpp/out-668.cpp
 30763  Issue_2166.cfg                       cpp/Issue_2166.cpp
 30764  Issue_2591.cfg                       cpp/Issue_2591.cpp
-30765 sp_cpp_lambda_square_paren-i.cfg      cpp/lambda.cpp
-30766 sp_cpp_lambda_square_brace-i.cfg      cpp/lambda.cpp
-30767 sp_cpp_lambda_paren_brace-i.cfg       cpp/lambda.cpp
-30768 sp_cpp_lambda_fparen-i.cfg            cpp/sp_cpp_lambda_fparen.cpp
+30765  sp_cpp_lambda_square_paren-i.cfg     cpp/lambda.cpp
+30766  sp_cpp_lambda_square_brace-i.cfg     cpp/lambda.cpp
+30767  sp_cpp_lambda_paren_brace-i.cfg      cpp/lambda.cpp
+30768  sp_cpp_lambda_fparen-i.cfg           cpp/sp_cpp_lambda_fparen.cpp
 
-30770 sp_cpp_lambda_square_paren-r.cfg      cpp/lambda.cpp
-30771 sp_cpp_lambda_square_paren-f.cfg      cpp/lambda.cpp
-30772 sp_cpp_lambda_square_brace-r.cfg      cpp/lambda.cpp
-30773 sp_cpp_lambda_square_brace-f.cfg      cpp/lambda.cpp
-30774 sp_cpp_lambda_paren_brace-r.cfg       cpp/lambda.cpp
-30775 sp_cpp_lambda_paren_brace-f.cfg       cpp/lambda.cpp
-30776 sp_cpp_lambda_fparen-r.cfg            cpp/sp_cpp_lambda_fparen.cpp
-30777 sp_cpp_lambda_fparen-f.cfg            cpp/sp_cpp_lambda_fparen.cpp
+30770  sp_cpp_lambda_square_paren-r.cfg     cpp/lambda.cpp
+30771  sp_cpp_lambda_square_paren-f.cfg     cpp/lambda.cpp
+30772  sp_cpp_lambda_square_brace-r.cfg     cpp/lambda.cpp
+30773  sp_cpp_lambda_square_brace-f.cfg     cpp/lambda.cpp
+30774  sp_cpp_lambda_paren_brace-r.cfg      cpp/lambda.cpp
+30775  sp_cpp_lambda_paren_brace-f.cfg      cpp/lambda.cpp
+30776  sp_cpp_lambda_fparen-r.cfg           cpp/sp_cpp_lambda_fparen.cpp
+30777  sp_cpp_lambda_fparen-f.cfg           cpp/sp_cpp_lambda_fparen.cpp
 
-30780 lambda_in_one_liner.cfg               cpp/lambda_in_one_liner.cpp
-30781 lambda_in_one_liner.cfg               cpp/lambda_brace_list.cpp
+30780  lambda_in_one_liner.cfg              cpp/lambda_in_one_liner.cpp
+30781  lambda_in_one_liner.cfg              cpp/lambda_brace_list.cpp
 
-30790 Issue_2795.cfg                        cpp/Issue_2795.cpp
-30791 Issue_3203.cfg                        cpp/Issue_3203.cpp
+30790  Issue_2795.cfg                       cpp/Issue_2795.cpp
+30791  Issue_3203.cfg                       cpp/Issue_3203.cpp
 
 30800  star_pos-0.cfg                       cpp/align-star-amp-pos.cpp
 30801  star_pos-1.cfg                       cpp/align-star-amp-pos.cpp
