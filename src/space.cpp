@@ -994,11 +994,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       && chunk_is_token(second, CT_FPAREN_OPEN))
    {
       // Add or remove space in 'NS_ENUM ('.
-      if (options::sp_enum_paren() != IARF_IGNORE)
-      {
-         log_rule("sp_enum_paren");
-         return(options::sp_enum_paren());
-      }
+      log_rule("sp_enum_paren");
+      return(options::sp_enum_paren());
    }
 
    if (chunk_is_token(second, CT_ASSIGN))
