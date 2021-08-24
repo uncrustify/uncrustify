@@ -75,6 +75,6 @@ void log_rule4(const char *rule, chunk_t *first)
    first->tracking->push_back(A);
    size_t sizeOfTrack = first->tracking->size();
 
-   LOG_FMT(LSPACE, "log_rule4(%d): rule is '%s', after '%s'', at line %zu, tracking number is %zu, size is %zu\n",
+   LOG_FMT(LSPACE, "log_rule4(%d): rule is '%s', after '%s', at line %zu, tracking number is %zu, size is %zu\n",
            __LINE__, rule, first->text(), first->orig_line, a_number, sizeOfTrack);
 }

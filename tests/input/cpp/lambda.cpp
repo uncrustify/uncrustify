@@ -1,7 +1,7 @@
 void f1()
 {
     auto a =
-    [=](int *a, Something & b)
+    [=]   (int *a, Something & b)
     {
         std::cout << "blah: " << *a;
     };
@@ -37,7 +37,7 @@ void f2()
 
 void f3a()
 {
-   auto a = []  {};
+   auto a = []    {};
    auto b = []{return true;};
 }
 
@@ -57,7 +57,7 @@ void f3c()
 
 void g1()
 {
-   auto a = [ = ](int* a, Something &b)  { std::cout << "blah: " << *a; };
+   auto a = [   =     ](int* a, Something &b)    { std::cout << "blah: " << *a; };
 }
 
 void g1a()
