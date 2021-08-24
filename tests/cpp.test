@@ -181,6 +181,10 @@
 30223  sp_enum_colon.cfg                    cpp/sp_enum_colon.cpp
 30224  sp_enum_colon-r.cfg                  cpp/sp_enum_colon.cpp
 30225  empty.cfg                            cpp/Issue_3176.cpp
+30226  sp_enum_colon-i.cfg                  cpp/sp_enum_colon.cpp
+30227  sp_inside_braces_enum-i.cfg          cpp/sp_inside_braces_enum.cpp
+30228  sp_inside_braces_enum-f.cfg          cpp/sp_inside_braces_enum.cpp
+30229  sp_inside_braces_enum-r.cfg          cpp/sp_inside_braces_enum.cpp
 
 30230  sp_type_func-r.cfg                   cpp/sp_type_func.cpp
 30231  sp_type_func-f.cfg                   cpp/sp_type_func.cpp
