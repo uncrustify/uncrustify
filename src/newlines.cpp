@@ -5491,11 +5491,12 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
 
             if (nl_flag & 2)
             {
-               // remove newline if not followed by a comment
+               // remove newline if not followed by a comment or by '{'
                chunk_t *next2 = chunk_get_next(next);
 
                if (  next2 != nullptr
-                  && !(chunk_is_comment(next2)))
+                  && !(chunk_is_comment(next2))
+                  && !(chunk_is_token(next2, CT_BRACE_OPEN)))
                {
                   remove_next_newlines(pc);
                }
