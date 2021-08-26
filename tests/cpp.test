@@ -485,6 +485,9 @@
 31000  empty.cfg                            cpp/digraph.cpp
 31001  ben_030.cfg                          cpp/digraph.cpp
 
+31050  empty.cfg                            cpp/pos_assign.cpp
+31051  pos_assign.cfg                       cpp/pos_assign.cpp
+
 31562  space_indent_class-t_columns-4.cfg   cpp/sf562.cpp
 31567  align_same_func_call_params-t.cfg    cpp/sf567.cpp
 31568  Issue_2368.cfg                       cpp/Issue_2368.cpp
