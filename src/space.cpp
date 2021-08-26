@@ -2422,12 +2422,10 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       iarf_e arg = options::sp_bool();
 
       if (  (options::pos_bool() != TP_IGNORE)
-         && first->orig_line != second->orig_line
-         && arg != IARF_REMOVE)
+         && first->orig_line != second->orig_line)
       {
          arg = arg | IARF_ADD;
       }
-      // TODO check it
       log_rule("sp_bool");
       return(arg);
    }
