@@ -1886,6 +1886,9 @@ nl_type_brace_init_lst_open     = ignore   # ignore/add/remove/force/not_defined
 # direct-list-initialization.
 nl_type_brace_init_lst_close    = ignore   # ignore/add/remove/force/not_defined
 
+# Whether to add a newline before '{'.
+nl_before_brace_open            = false    # true/false
+
 # Whether to add a newline after '{'.
 nl_after_brace_open             = false    # true/false
 
