@@ -15,31 +15,22 @@
 using namespace uncrustify;
 
 #if defined DEBUG
-#define log_rule(rule)                                      \
-   do {                                                     \
-      log_rule2(__func__, __LINE__, (rule), first, second); \
-      log_rule4((rule), first);                             \
-                                                            \
-   } while (0)
+#define log_rule(rule)                                   \
+   log_rule2(__func__, __LINE__, (rule), first, second); \
+   log_rule4((rule), first)
 #else
-#define log_rule(rule)                                      \
-   do {                                                     \
-      log_rule2(__func__, __LINE__, (rule), first, second); \
-   } while (0)
+#define log_rule(rule) \
+   log_rule2(__func__, __LINE__, (rule), first, second)
 #endif
 
 // if you need more debug informations, remove the comment at the next line
 #define SUPER_LOG    1
 #ifdef SUPER_LOG
-#define log_rule_B(rule)                               \
-   do {                                                \
-      log_rule3(LCURRENT, __func__, __LINE__, (rule)); \
-   } while (0)
+#define log_rule_B(rule) \
+   log_rule3(LCURRENT, __func__, __LINE__, (rule))
 #else
-#define log_rule_B(rule)                     \
-   do {                                      \
-      log_rule3(LCURRENT, __func__, (rule)); \
-   } while (0)
+#define log_rule_B(rule) \
+   log_rule3(LCURRENT, __func__, (rule))
 #endif
 
 void log_rule2(const char *func, size_t line, const char *rule, chunk_t *first, chunk_t *second);
