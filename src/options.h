@@ -2350,6 +2350,10 @@ nl_type_brace_init_lst_open;
 extern Option<iarf_e>
 nl_type_brace_init_lst_close;
 
+// Whether to add a newline before '{'.
+extern Option<bool>
+nl_before_brace_open;
+
 // Whether to add a newline after '{'.
 extern Option<bool>
 nl_after_brace_open;

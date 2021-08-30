@@ -4126,7 +4126,7 @@ void newlines_cleanup_braces(bool first)
 
                if (!one_liner_nl_ok(pc))
                {
-                  LOG_FMT(LNL1LINE, "a new line may NOT be added\n");
+                  LOG_FMT(LNL1LINE, "a new line may NOT be added (nl_after_brace_open)\n");
                   // no change - preserve one liner body
                }
                else if (  pc->flags.test(PCF_IN_ARRAY_ASSIGN)
@@ -4169,6 +4169,35 @@ void newlines_cleanup_braces(bool first)
               && options::nl_type_brace_init_lst_close() == IARF_IGNORE))
          {
             newlines_brace_pair(pc);
+         }
+
+         // Handle nl_before_brace_open
+         if (  chunk_is_token(pc, CT_BRACE_OPEN)
+            && pc->level == pc->brace_level
+            && options::nl_before_brace_open())
+         {
+            log_rule_B("nl_before_brace_open");
+
+            if (!one_liner_nl_ok(pc))
+            {
+               LOG_FMT(LNL1LINE, "a new line may NOT be added (nl_before_brace_open)\n");
+               // no change - preserve one liner body
+            }
+            else if (  pc->flags.test(PCF_IN_PREPROC)
+                    || pc->flags.test(PCF_IN_ARRAY_ASSIGN))
+            {
+               // no change - don't break up array assignments or preprocessors
+            }
+            else
+            {
+               // Step back to previous non-newline item
+               chunk_t *tmp = chunk_get_prev(pc);
+
+               if (!chunk_is_token(tmp, CT_NEWLINE))
+               {
+                  newline_iarf(tmp, IARF_ADD);
+               }
+            }
          }
       }
       else if (chunk_is_token(pc, CT_BRACE_CLOSE))

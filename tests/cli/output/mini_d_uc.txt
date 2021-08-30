@@ -487,6 +487,7 @@ nl_paren_dbrace_open            = ignore
 nl_type_brace_init_lst          = ignore
 nl_type_brace_init_lst_open     = ignore
 nl_type_brace_init_lst_close    = ignore
+nl_before_brace_open            = false
 nl_after_brace_open             = false
 nl_after_brace_open_cmt         = false
 nl_after_vbrace_open            = false
