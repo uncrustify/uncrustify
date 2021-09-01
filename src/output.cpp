@@ -1715,7 +1715,22 @@ static chunk_t *output_comment_c(chunk_t *first)
       log_rule_B("cmt_star_cont");
       cmt.cont_text = options::cmt_star_cont() ? " * " : "   ";
       LOG_CONTTEXT();
-      add_comment_text(first->str, cmt, false);
+
+      log_rule_B("cmt_trailing_single_line_c_to_cpp");
+
+      if (options::cmt_trailing_single_line_c_to_cpp() && chunk_is_last_on_line(*first))
+      {
+         add_text("//");
+
+         unc_text tmp;
+         tmp.set(first->str, 2, first->len() - 4);
+         cmt_trim_whitespace(tmp, false);
+         add_comment_text(tmp, cmt, false);
+      }
+      else
+      {
+         add_comment_text(first->str, cmt, false);
+      }
       return(first);
    }
    log_rule_B("cmt_star_cont");

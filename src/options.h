@@ -3384,6 +3384,10 @@ cmt_align_doxygen_javadoc_tags;
 extern BoundedOption<unsigned, 0, 16>
 cmt_sp_before_doxygen_javadoc_tags; // = 1
 
+// Whether to change trailing, single-line c-comments into cpp-comments.
+extern Option<bool>
+cmt_trailing_single_line_c_to_cpp;
+
 // Whether to group c-comments that look like they are in a block.
 extern Option<bool>
 cmt_c_group;
