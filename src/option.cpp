@@ -1090,11 +1090,30 @@ bool load_option_file(const char *filename, int compat_level)
 
    while (std::getline(in, line))
    {
+      // check all characters of the line
+      size_t howmany = line.length();
+      int    ch;
+
+      for (int n = 0; n < howmany; n++)
+      {
+         ch = line[n];
+
+         // ch >= 0 && ch <= 255
+         if (  ch < 0
+            || ch > 255)
+         {
+            // error
+            // related to PR #3298
+            fprintf(stderr, "%s: line %u: Character at position %d, is not printable.\n", filename, cpd.line_number + 1, n + 1);
+            return(false);
+         }
+      }
+
       ++cpd.line_number;
       process_option_line(line, filename, compat_level);
    }
    return(true);
-}
+} // load_option_file
 
 
 //-----------------------------------------------------------------------------
