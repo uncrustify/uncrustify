@@ -671,6 +671,7 @@ cmt_convert_tab_to_spaces       = false
 cmt_indent_multi                = true
 cmt_align_doxygen_javadoc_tags  = false
 cmt_sp_before_doxygen_javadoc_tags = 1
+cmt_trailing_single_line_c_to_cpp = false
 cmt_c_group                     = false
 cmt_c_nl_start                  = false
 cmt_c_nl_end                    = false
