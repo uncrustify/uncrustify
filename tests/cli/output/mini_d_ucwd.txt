@@ -2749,6 +2749,9 @@ cmt_align_doxygen_javadoc_tags  = false    # true/false
 # Default: 1
 cmt_sp_before_doxygen_javadoc_tags = 1        # unsigned number
 
+# Whether to change trailing, single-line c-comments into cpp-comments.
+cmt_trailing_single_line_c_to_cpp = false    # true/false
+
 # Whether to group c-comments that look like they are in a block.
 cmt_c_group                     = false    # true/false
 
