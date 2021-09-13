@@ -742,7 +742,9 @@ def main(args):
                       '-F', s_path_join(script_dir, 'input/replace.list'),
                       '--replace'],
             gen_expected_path=s_path_join(script_dir, 'output/backup.h'),
-            gen_result_path=s_path_join(script_dir, 'input/backup.h')
+            gen_result_path=s_path_join(script_dir, 'input/backup.h'),
+            err_expected_path=s_path_join(script_dir, 'output/replace.txt'),
+            err_result_path=s_path_join(script_dir, 'results/replace.txt'),
             ):
         return_flag = False
 
