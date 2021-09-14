@@ -43,7 +43,7 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
 
    md5_str_in[0] = 0;
 
-   MD5::Calc(&data[0], data.size(), dig);
+   MD5::Calc(data.data(), data.size(), dig);
    snprintf(md5_str, sizeof(md5_str),
             "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x\n",
             dig[0], dig[1], dig[2], dig[3],
@@ -93,12 +93,13 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
 
    if (thefile != nullptr)
    {
-      size_t retval   = fwrite(&data[0], data.size(), 1, thefile);
+      size_t retval   = fwrite(data.data(), data.size(), 1, thefile);
       int    my_errno = errno;
 
       fclose(thefile);
 
-      if (retval == 1)
+      if (  retval == 1
+         || data.empty())
       {
          return(EX_OK);
       }
