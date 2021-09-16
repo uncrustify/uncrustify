@@ -298,6 +298,7 @@ set(uncrustify_sources
   src/option.cpp
   src/options_for_QT.cpp
   src/output.cpp
+  src/parameter_pack_cleanup.cpp
   src/parens.cpp
   src/parent_for_pp.cpp
   src/ParseFrame.cpp
@@ -388,6 +389,7 @@ set(uncrustify_headers
   src/options_for_QT.h
   src/options.h
   src/output.h
+  src/parameter_pack_cleanup.h
   src/parens.h
   src/parent_for_pp.h
   src/ParseFrame.h

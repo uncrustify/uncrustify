@@ -27,6 +27,7 @@
 #include "lang_pawn.h"
 #include "newlines.h"
 #include "output.h"
+#include "parameter_pack_cleanup.h"
 #include "parens.h"
 #include "parent_for_pp.h"
 #include "remove_duplicate_include.h"
@@ -1966,6 +1967,8 @@ static void uncrustify_start(const deque<int> &data)
     * This handles all that nasty preprocessor stuff
     */
    brace_cleanup();
+
+   parameter_pack_cleanup();
 
    // At this point, the level information is available and accurate.
 

@@ -507,6 +507,12 @@ sp_sizeof_ellipsis              = ignore   # ignore/add/remove/force/not_defined
 # Add or remove space between 'sizeof...' and '('.
 sp_sizeof_ellipsis_paren        = ignore   # ignore/add/remove/force/not_defined
 
+# Add or remove space between '...' and a parameter pack.
+sp_ellipsis_parameter_pack      = ignore   # ignore/add/remove/force/not_defined
+
+# Add or remove space between a parameter pack and '...'.
+sp_parameter_pack_ellipsis      = ignore   # ignore/add/remove/force/not_defined
+
 # Add or remove space between 'decltype' and '('.
 sp_decltype_paren               = ignore   # ignore/add/remove/force/not_defined
 
