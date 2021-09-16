@@ -775,10 +775,22 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("FORCE");
          return(IARF_FORCE);
       }
+
+      if (chunk_is_token(first, CT_PARAMETER_PACK))                // Issue #3309
+      {
+         log_rule("sp_parameter_pack_ellipsis");
+         return(options::sp_parameter_pack_ellipsis());
+      }
    }
 
    if (chunk_is_token(first, CT_ELLIPSIS))
    {
+      if (chunk_is_token(second, CT_PARAMETER_PACK))                // Issue #3309
+      {
+         log_rule("sp_ellipsis_parameter_pack");
+         return(options::sp_ellipsis_parameter_pack());
+      }
+
       if (CharTable::IsKw1(second->str[0]))
       {
          log_rule("FORCE");
