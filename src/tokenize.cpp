@@ -14,7 +14,6 @@
 #include "prototypes.h"
 #include "punctuators.h"
 #include "unc_ctype.h"
-#include "using_type_alias.h"
 
 #include <regex>
 #include <stack>
@@ -2645,10 +2644,6 @@ void tokenize(const deque<int> &data, chunk_t *ref)
          cpd.error_count++;
          break;
       }
-      // Issue #3291
-      LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
-              __func__, __LINE__, chunk.orig_line, chunk.orig_col, get_token_name(chunk.type));
-      using_type_alias(chunk);
 
       if (  language_is_set(LANG_JAVA)
          && chunk.type == CT_MEMBER

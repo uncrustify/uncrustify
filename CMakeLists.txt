@@ -318,7 +318,6 @@ set(uncrustify_sources
   src/unc_tools.cpp
   src/unicode.cpp
   src/universalindentgui.cpp
-  src/using_type_alias.cpp
   src/width.cpp
   ${PROJECT_BINARY_DIR}/src/options.cpp
   ${PROJECT_BINARY_DIR}/src/option_enum.cpp
@@ -412,7 +411,6 @@ set(uncrustify_headers
   src/unc_tools.h
   src/unicode.h
   src/universalindentgui.h
-  src/using_type_alias.h
   src/width.h
   src/windows_compat.h
   ${PROJECT_BINARY_DIR}/src/option_enum.h

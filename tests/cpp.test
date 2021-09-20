@@ -481,7 +481,6 @@
 30972  Issue_2229.cfg                       cpp/Issue_2229.cpp
 30973  Issue_2236.cfg                       cpp/Issue_2236.cpp
 30974  empty.cfg                            cpp/using-alias-in-define.cpp
-30975  empty.cfg                            cpp/Issue_3291.cpp
 
 31000  empty.cfg                            cpp/digraph.cpp
 31001  ben_030.cfg                          cpp/digraph.cpp
