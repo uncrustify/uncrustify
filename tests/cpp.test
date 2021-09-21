@@ -520,6 +520,9 @@
 31611  sp_sizeof_ellipsis-i.cfg             cpp/parameter-packs.cpp
 31612  sp_sizeof_ellipsis_paren-i.cfg       cpp/parameter-packs.cpp
 31613  sp_type_ellipsis-i.cfg               cpp/parameter-packs.cpp
+31614  Issue_3309-i.cfg                     cpp/Issue_3309.cpp
+31615  Issue_3309-f.cfg                     cpp/Issue_3309.cpp
+31616  Issue_3309-r.cfg                     cpp/Issue_3309.cpp
 
 31620  sp_after_type-f.cfg                  cpp/sp_after_type.cpp
 31621  sp_after_type-i.cfg                  cpp/sp_after_type.cpp
