@@ -447,11 +447,17 @@ sp_before_ellipsis              = ignore   # ignore/add/remove/force/not_defined
 # Add or remove space between a type and '...'.
 sp_type_ellipsis                = ignore   # ignore/add/remove/force/not_defined
 
+# Add or remove space between a '*' and '...'.
+sp_ptr_type_ellipsis            = ignore   # ignore/add/remove/force/not_defined
+
 # (D) Add or remove space between a type and '?'.
 sp_type_question                = ignore   # ignore/add/remove/force/not_defined
 
 # Add or remove space between ')' and '...'.
 sp_paren_ellipsis               = ignore   # ignore/add/remove/force/not_defined
+
+# Add or remove space between '&&' and '...'.
+sp_byref_ellipsis               = ignore   # ignore/add/remove/force/not_defined
 
 # Add or remove space between ')' and a qualifier such as 'const'.
 sp_paren_qualifier              = ignore   # ignore/add/remove/force/not_defined
