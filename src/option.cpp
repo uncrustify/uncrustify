@@ -1094,7 +1094,7 @@ bool load_option_file(const char *filename, int compat_level)
       size_t howmany = line.length();
       int    ch;
 
-      for (int n = 0; n < howmany; n++)
+      for (size_t n = 0; n < howmany; n++)
       {
          ch = line[n];
 
@@ -1104,7 +1104,7 @@ bool load_option_file(const char *filename, int compat_level)
          {
             // error
             // related to PR #3298
-            fprintf(stderr, "%s: line %u: Character at position %d, is not printable.\n", filename, cpd.line_number + 1, n + 1);
+            fprintf(stderr, "%s: line %u: Character at position %lu, is not printable.\n", filename, cpd.line_number + 1, n + 1);
             return(false);
          }
       }
