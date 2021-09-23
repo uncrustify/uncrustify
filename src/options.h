@@ -2503,7 +2503,7 @@ nl_constr_colon;
 
 // Whether to collapse a two-line namespace, like 'namespace foo\n{ decl; }'
 // into a single line. If true, prevents other brace newline rules from turning
-// such code into four lines.
+// such code into four lines. If true, it also preserves one-liner namespaces.
 extern Option<bool>
 nl_namespace_two_to_one_liner;
 

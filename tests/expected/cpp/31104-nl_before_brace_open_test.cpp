@@ -1,6 +1,7 @@
 int foo1() { int i; if (true) { i=2; }}
 
-namespace { int foo1() { int i; if (true) { i=2; }}}
+namespace
+{ int foo1() { int i; if (true) { i=2; }}}
 
 class bar
 {

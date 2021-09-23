@@ -2251,7 +2251,7 @@ static void newlines_brace_pair(chunk_t *br_open)
       {
          if (are_chunks_in_same_line(br_open, chunk_brace_close))
          {
-            log_rule_B("nl_namespace_two_to_one_liner");
+            log_rule_B("nl_namespace_two_to_one_liner - 1");
 
             if (options::nl_namespace_two_to_one_liner())
             {
@@ -3555,6 +3555,14 @@ static bool one_liner_nl_ok(chunk_t *pc)
          && get_chunk_parent_type(pc) == CT_FOR)
       {
          LOG_FMT(LNL1LINE, "%s(%d): false (for)\n", __func__, __LINE__);
+         return(false);
+      }
+      log_rule_B("nl_namespace_two_to_one_liner - 2");
+
+      if (  options::nl_namespace_two_to_one_liner()
+         && get_chunk_parent_type(pc) == CT_NAMESPACE)
+      {
+         LOG_FMT(LNL1LINE, "%s(%d): false (namespace)\n", __func__, __LINE__);
          return(false);
       }
    }
