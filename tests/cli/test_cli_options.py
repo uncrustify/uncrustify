@@ -713,9 +713,9 @@ def main(args):
                 parsed_args,
                 args_arr=['-c', s_path_join(script_dir, 'config/tracking_space.cfg'),
                           '-f', s_path_join(script_dir, 'input/tracking_space.cpp'),
-                          '--tracking_space', s_path_join(script_dir, 'results/tracking_space.html')],
+                          '--tracking_space', s_path_join(script_dir, 'results/Debug_tracking_space.html')],
                 gen_expected_path=s_path_join(script_dir, 'output/Debug_tracking_space.html'),
-                gen_result_path=s_path_join(script_dir, 'results/tracking_space.html'),
+                gen_result_path=s_path_join(script_dir, 'results/Debug_tracking_space.html'),
                 ):
             return_flag = False
     else:

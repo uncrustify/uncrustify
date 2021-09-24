@@ -1589,7 +1589,15 @@ static void check_template_arg(chunk_t *start, chunk_t *end)
          // a test "if (next == nullptr)" is not necessary
          chunk_flags_set(pc, PCF_IN_TEMPLATE);
 
-         if (next->type != CT_PAREN_OPEN)
+         chunk_t *prev  = chunk_get_prev_ncnnl(pc, scope_e::PREPROC);
+         chunk_t *prev2 = chunk_get_prev_ncnnl(prev, scope_e::PREPROC);
+
+         if (  chunk_is_token(prev, CT_ELLIPSIS)                 // Issue #3309
+            && chunk_is_token(prev2, CT_TYPENAME))
+         {
+            set_chunk_type(pc, CT_PARAMETER_PACK);
+         }
+         else
          {
             make_type(pc);
          }

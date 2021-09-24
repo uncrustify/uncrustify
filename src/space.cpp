@@ -775,10 +775,28 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("FORCE");
          return(IARF_FORCE);
       }
+
+      if (chunk_is_token(first, CT_BYREF))                         // Issue #3309
+      {
+         log_rule("sp_byref_ellipsis");
+         return(options::sp_byref_ellipsis());
+      }
+
+      if (chunk_is_token(first, CT_PARAMETER_PACK))                // Issue #3309
+      {
+         log_rule("sp_parameter_pack_ellipsis");
+         return(options::sp_parameter_pack_ellipsis());
+      }
    }
 
    if (chunk_is_token(first, CT_ELLIPSIS))
    {
+      if (chunk_is_token(second, CT_PARAMETER_PACK))                // Issue #3309
+      {
+         log_rule("sp_ellipsis_parameter_pack");
+         return(options::sp_ellipsis_parameter_pack());
+      }
+
       if (CharTable::IsKw1(second->str[0]))
       {
          log_rule("FORCE");
@@ -2822,6 +2840,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       iarf_e arg = options::sp_after_type();
       log_rule("sp_after_type");
       return(arg);
+   }
+
+   if (  chunk_is_token(first, CT_PTR_TYPE)
+      && chunk_is_token(second, CT_ELLIPSIS))
+   {
+      log_rule("sp_ptr_type_ellipsis");
+      return(options::sp_ptr_type_ellipsis());
    }
 
    // If nothing claimed the PTR_TYPE, then return ignore

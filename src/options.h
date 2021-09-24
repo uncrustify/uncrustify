@@ -567,6 +567,10 @@ sp_before_ellipsis;
 extern Option<iarf_e>
 sp_type_ellipsis;
 
+// Add or remove space between a '*' and '...'.
+extern Option<iarf_e>
+sp_ptr_type_ellipsis;
+
 // (D) Add or remove space between a type and '?'.
 extern Option<iarf_e>
 sp_type_question;
@@ -574,6 +578,10 @@ sp_type_question;
 // Add or remove space between ')' and '...'.
 extern Option<iarf_e>
 sp_paren_ellipsis;
+
+// Add or remove space between '&&' and '...'.
+extern Option<iarf_e>
+sp_byref_ellipsis;
 
 // Add or remove space between ')' and a qualifier such as 'const'.
 extern Option<iarf_e>
@@ -642,6 +650,14 @@ sp_sizeof_ellipsis;
 // Add or remove space between 'sizeof...' and '('.
 extern Option<iarf_e>
 sp_sizeof_ellipsis_paren;
+
+// Add or remove space between '...' and a parameter pack.
+extern Option<iarf_e>
+sp_ellipsis_parameter_pack;
+
+// Add or remove space between a parameter pack and '...'.
+extern Option<iarf_e>
+sp_parameter_pack_ellipsis;
 
 // Add or remove space between 'decltype' and '('.
 extern Option<iarf_e>

@@ -81,6 +81,7 @@ enum c_token_t
    CT_TYPE_CAST,           // static_cast<type>(exp)
    CT_TYPENAME,            // typename type
    CT_TEMPLATE,            // template<...>
+   CT_PARAMETER_PACK,      // template<typename ... ARGS>
    CT_WHERE_SPEC,          // 'where' : used in C# generic constraint
 
    CT_ASSIGN,              // =, +=, /=, etc
