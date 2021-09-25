@@ -934,8 +934,7 @@
 34525  sp_paren_brace-f.cfg                 cpp/sp_paren_brace.cpp
 34526  sp_paren_brace-i.cfg                 cpp/sp_paren_brace.cpp
 34527  sp_paren_brace-r.cfg                 cpp/sp_paren_brace.cpp
-
-34525  cmt_trailing_single_line_c_to_cpp.cfg cpp/cmt_trailing_single_line_c_to_cpp.cpp
+34528  cmt_trailing_single_line_c_to_cpp.cfg cpp/cmt_trailing_single_line_c_to_cpp.cpp
 
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp
