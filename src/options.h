@@ -680,16 +680,23 @@ extern Option<iarf_e>
 sp_inside_braces_oc_dict;
 
 // Add or remove space after open brace in an unnamed temporary
-// direct-list-initialization.
+// direct-list-initialization
+// if statement is a brace_init_lst
+// works only if sp_brace_brace is set to ignore.
 extern Option<iarf_e>
 sp_after_type_brace_init_lst_open;
 
 // Add or remove space before close brace in an unnamed temporary
-// direct-list-initialization.
+// direct-list-initialization
+// if statement is a brace_init_lst
+// works only if sp_brace_brace is set to ignore.
 extern Option<iarf_e>
 sp_before_type_brace_init_lst_close;
 
-// Add or remove space inside an unnamed temporary direct-list-initialization.
+// Add or remove space inside an unnamed temporary direct-list-initialization
+// if statement is a brace_init_lst
+// works only if sp_brace_brace is set to ignore
+// works only if sp_before_type_brace_init_lst_close is set to ignore.
 extern Option<iarf_e>
 sp_inside_type_brace_init_lst;
 

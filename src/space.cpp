@@ -1811,7 +1811,9 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          if (options::sp_before_type_brace_init_lst_close() != IARF_IGNORE)
          {
             // Add or remove space before close brace in an unnamed temporary
-            // direct-list-initialization.
+            // direct-list-initialization
+            // if statement is a brace_init_lst
+            // works only if sp_brace_brace is set to ignore.
             log_rule("sp_before_type_brace_init_lst_close");
             return(options::sp_before_type_brace_init_lst_close());
          }
@@ -1819,6 +1821,9 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          if (options::sp_inside_type_brace_init_lst() != IARF_IGNORE)
          {
             // Add or remove space inside an unnamed temporary direct-list-initialization.
+            // if statement is a brace_init_lst
+            // works only if sp_brace_brace is set to ignore
+            // works only if sp_before_type_brace_init_lst_close is set to ignore.
             log_rule("sp_inside_type_brace_init_lst");
             return(options::sp_inside_type_brace_init_lst());
          }
@@ -2726,14 +2731,19 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          if (options::sp_after_type_brace_init_lst_open() != IARF_IGNORE)
          {
             // Add or remove space after open brace in an unnamed temporary
-            // direct-list-initialization.
+            // direct-list-initialization
+            // if statement is a brace_init_lst
+            // works only if sp_brace_brace is set to ignore.
             log_rule("sp_after_type_brace_init_lst_open");
             return(options::sp_after_type_brace_init_lst_open());
          }
 
          if (options::sp_inside_type_brace_init_lst() != IARF_IGNORE)
          {
-            // Add or remove space inside an unnamed temporary direct-list-initialization.
+            // Add or remove space inside an unnamed temporary direct-list-initialization
+            // if statement is a brace_init_lst
+            // works only if sp_brace_brace is set to ignore
+            // works only if sp_after_type_brace_init_lst_close is set to ignore.
             log_rule("sp_inside_type_brace_init_lst");
             return(options::sp_inside_type_brace_init_lst());
          }
