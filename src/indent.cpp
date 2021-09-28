@@ -937,7 +937,8 @@ void indent_text(void)
             frm.top().indent_tab = frm.top().indent;
             log_indent_tmp();
          }
-         else if (  get_chunk_parent_type(pc) == CT_PP_PRAGMA
+         else if (  (  get_chunk_parent_type(pc) == CT_PP_PRAGMA
+                    || get_chunk_parent_type(pc) == CT_PP_OTHER)
                  && options::pp_define_at_level())
          {
             log_rule_B("pp_define_at_level");
