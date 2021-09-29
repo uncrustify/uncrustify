@@ -405,3 +405,4 @@
 10024  Issue_3274.cfg                       c/Issue_3274.c
 10025  sp_between_semi_for_empty-r.cfg      c/forever.c
 10026  sp_between_semi_for_empty-i.cfg      c/forever.c
+10027  Issue_3327.cfg                       c/Issue_3327.c
