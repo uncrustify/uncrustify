@@ -384,3 +384,6 @@ they exit) and run uncrustify.exe there.
 
 ## Using uncrustify with vim
 Have a look [here]https://github.com/cofyc/vim-uncrustify
+  
+## Using uncrustify with IntelliJ
+Have a look at https://plugins.jetbrains.com/plugin/17528-uncrustify
