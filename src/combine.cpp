@@ -611,6 +611,9 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          }
       }
    }
+   LOG_FMT(LFCNR, "%s(%d): pc is '%s'/%s\n",
+           __func__, __LINE__,
+           pc->text(), get_token_name(pc->type));
 
    // C++11 Lambda stuff
    if (  language_is_set(LANG_CPP)
@@ -2349,10 +2352,24 @@ static void handle_cpp_lambda(chunk_t *sq_o)
 {
    LOG_FUNC_ENTRY();
 
+   LOG_FMT(LFCNR, "%s(%d): sq_o is '%s'/%s\n",
+           __func__, __LINE__,
+           sq_o->text(), get_token_name(sq_o->type));
    chunk_t *ret = nullptr;
 
    // abort if type of the previous token is not contained in this whitelist
    chunk_t *prev = chunk_get_prev_ncnnlni(sq_o);   // Issue #2279
+
+   if (prev == nullptr)
+   {
+      LOG_FMT(LFCNR, "%s(%d): prev is nullptr\n", __func__, __LINE__);
+   }
+   else
+   {
+      LOG_FMT(LFCNR, "%s(%d): prev is '%s'/%s\n",
+              __func__, __LINE__,
+              prev->text(), get_token_name(prev->type));
+   }
 
    if (  prev == nullptr
       || (  chunk_is_not_token(prev, CT_ASSIGN)
@@ -2364,6 +2381,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
          && chunk_is_not_token(prev, CT_SEMICOLON)
          && chunk_is_not_token(prev, CT_RETURN)))
    {
+      LOG_FMT(LFCNR, "%s(%d): return\n", __func__, __LINE__);
       return;
    }
    chunk_t *sq_c = sq_o; // assuming '[]'
@@ -2375,6 +2393,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
 
       if (sq_c == nullptr)
       {
+         LOG_FMT(LFCNR, "%s(%d): return\n", __func__, __LINE__);
          return;
       }
    }
@@ -2390,6 +2409,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
 
    if (pa_o == nullptr)
    {
+      LOG_FMT(LFCNR, "%s(%d): return\n", __func__, __LINE__);
       return;
    }
    chunk_t *pa_c = nullptr;
@@ -2402,6 +2422,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
 
       if (pa_c == nullptr)
       {
+         LOG_FMT(LFCNR, "%s(%d): return\n", __func__, __LINE__);
          return;
       }
    }
@@ -2422,9 +2443,21 @@ static void handle_cpp_lambda(chunk_t *sq_o)
       br_o = chunk_get_next_type(br_o, CT_BRACE_OPEN, br_o->level);
    }
 
+   // skip possible CT_NOEXCEPT
+   if (chunk_is_token(br_o, CT_NOEXCEPT)) // Issue #3321
+   {
+      ret = br_o;
+      // REVISIT: really should check the stuff we are skipping
+      br_o = chunk_get_next_type(br_o, CT_BRACE_OPEN, br_o->level);
+   }
+
    if (  br_o == nullptr
       || chunk_is_not_token(br_o, CT_BRACE_OPEN))
    {
+      LOG_FMT(LFCNR, "%s(%d): br_o is '%s'/%s\n",
+              __func__, __LINE__,
+              br_o->text(), get_token_name(br_o->type));
+      LOG_FMT(LFCNR, "%s(%d): return\n", __func__, __LINE__);
       return;
    }
    // and now find the '}'
@@ -2432,6 +2465,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
 
    if (br_c == nullptr)
    {
+      LOG_FMT(LFCNR, "%s(%d): return\n", __func__, __LINE__);
       return;
    }
 
