@@ -2371,8 +2371,8 @@ void indent_text(void)
 
             if (chunk_is_newline(prev))
             {
-               log_rule_B("indent_ctor_init_leading");
-               frm.top().indent += options::indent_ctor_init_leading();
+               log_rule_B("indent_ctor_init_following");
+               frm.top().indent += options::indent_ctor_init_following();
                log_indent();
             }
             // TODO: Create a dedicated indent_constr_on_colon?

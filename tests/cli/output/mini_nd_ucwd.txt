@@ -472,10 +472,14 @@ sp_after_class_colon            = ignore   # ignore/add/remove/force/not_defined
 sp_before_class_colon           = ignore   # ignore/add/remove/force/not_defined
 
 # Add or remove space after class constructor ':'.
-sp_after_constr_colon           = ignore   # ignore/add/remove/force/not_defined
+#
+# Default: add
+sp_after_constr_colon           = add      # ignore/add/remove/force/not_defined
 
 # Add or remove space before class constructor ':'.
-sp_before_constr_colon          = ignore   # ignore/add/remove/force/not_defined
+#
+# Default: add
+sp_before_constr_colon          = add      # ignore/add/remove/force/not_defined
 
 # Add or remove space before case ':'.
 #
@@ -1096,10 +1100,15 @@ indent_class_on_colon           = false    # true/false
 # Whether to indent the stuff after a leading class initializer colon.
 indent_constr_colon             = false    # true/false
 
-# Virtual indent from the ':' for member initializers.
+# Virtual indent from the ':' for leading member initializers.
 #
 # Default: 2
 indent_ctor_init_leading        = 2        # unsigned number
+
+# Virtual indent from the ':' for following member initializers.
+#
+# Default: 2
+indent_ctor_init_following      = 2        # unsigned number
 
 # Additional indent for constructor initializer list.
 # Negative values decrease indent down to the first column.

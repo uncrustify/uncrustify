@@ -465,7 +465,7 @@
 30953  constr_colon.cfg                     cpp/constr_colon.cpp
 30954  Issue_2305.cfg                       cpp/Issue_2305.cpp
 30955  indent_ctor_init.cfg                 cpp/indent_ctor_init.cpp
-30956  indent_ctor_init_leading.cfg         cpp/indent_ctor_init.cpp
+30956  indent_ctor_init_following.cfg       cpp/indent_ctor_init.cpp
 30957  negative_indent.cfg                  cpp/class-init.cpp
 30958  nl_for_leave_one_liners-f.cfg        cpp/nl_for_leave_one_liners.cpp
 30959  nl_for_leave_one_liners-t.cfg        cpp/nl_for_leave_one_liners.cpp
@@ -1029,3 +1029,5 @@
 60055  issue_3116.cfg                       cpp/issue_3116.cpp
 60056  issue_3116.cfg                       cpp/issue_3116-2.cpp
 60057  issue_3116-2.cfg                     cpp/issue_3116.cpp
+60058  issue_3330.cfg                       cpp/issue_3330.cpp
+60059  indent_ctor_init_leading.cfg         cpp/indent_ctor_init.cpp

@@ -601,11 +601,11 @@ sp_before_class_colon;
 
 // Add or remove space after class constructor ':'.
 extern Option<iarf_e>
-sp_after_constr_colon;
+sp_after_constr_colon; // = IARF_ADD
 
 // Add or remove space before class constructor ':'.
 extern Option<iarf_e>
-sp_before_constr_colon;
+sp_before_constr_colon; // = IARF_ADD
 
 // Add or remove space before case ':'.
 extern Option<iarf_e>
@@ -1359,9 +1359,13 @@ indent_class_on_colon;
 extern Option<bool>
 indent_constr_colon;
 
-// Virtual indent from the ':' for member initializers.
+// Virtual indent from the ':' for leading member initializers.
 extern BoundedOption<unsigned, 0, 16>
 indent_ctor_init_leading; // = 2
+
+// Virtual indent from the ':' for following member initializers.
+extern BoundedOption<unsigned, 0, 16>
+indent_ctor_init_following; // = 2
 
 // Additional indent for constructor initializer list.
 // Negative values decrease indent down to the first column.
