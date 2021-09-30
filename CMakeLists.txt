@@ -544,6 +544,11 @@ else()
 endif()
 
 #
+# Uninstall
+#
+add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${PROJECT_SOURCE_DIR}/cmake/uninstall.cmake")
+
+#
 # add to build the compile_commands.json file, to be used by clang-tidy
 #
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON" CACHE BOOL "to create the compile_commands.json file" FORCE)
