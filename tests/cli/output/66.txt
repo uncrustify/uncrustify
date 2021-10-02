@@ -82,7 +82,7 @@ space_text : orig_line is 3, orig_col is 47, ')' type is FPAREN_CLOSE
 space_text : orig_line is 3, orig_col is 47, pc-text() ')', type is FPAREN_CLOSE
 do_space : orig_line is 3, orig_col is 47, first->text() ')', type is FPAREN_CLOSE
 do_space : first->orig_line is 3, first->orig_col is 47, first->text() is ')', [FPAREN_CLOSE/FUNC_CLASS_DEF] <===>
-           second->orig_line is 3, second->orig_col is 49, second->text() is ':', [CONSTR_COLON/NONE] : rule ADD from add_space_table[ ]
+           second->orig_line is 3, second->orig_col is 49, second->text() is ':', [CONSTR_COLON/NONE] : rule sp_before_constr_colon[ ]
  rule = ADD @ 1 => 49
 space_text : orig_line is 3, orig_col is 49, ':' type is CONSTR_COLON
 space_text : orig_line is 3, orig_col is 49, pc-text() ':', type is CONSTR_COLON
@@ -403,7 +403,7 @@ space_col_align : first->orig_line is 3, orig_col is 47, [FPAREN_CLOSE/FUNC_CLAS
 space_col_align : second->orig_line is 3, orig_col is 49 [CONSTR_COLON/NONE], text() ':', [CallStack]
 do_space : orig_line is 3, orig_col is 47, first->text() ')', type is FPAREN_CLOSE
 do_space : first->orig_line is 3, first->orig_col is 47, first->text() is ')', [FPAREN_CLOSE/FUNC_CLASS_DEF] <===>
-           second->orig_line is 3, second->orig_col is 49, second->text() is ':', [CONSTR_COLON/NONE] : rule ADD from add_space_table[ ]
+           second->orig_line is 3, second->orig_col is 49, second->text() is ':', [CONSTR_COLON/NONE] : rule sp_before_constr_colon[ ]
 space_col_align : av is add
 space_col_align :    len is 1
 space_col_align :    => coldiff is 1

@@ -2362,18 +2362,15 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (  (options::sp_after_constr_colon() != IARF_IGNORE)
-      && chunk_is_token(first, CT_CONSTR_COLON))
+   if (chunk_is_token(first, CT_CONSTR_COLON))
    {
       min_sp = options::indent_ctor_init_leading() - 1; // default indent is 1 space
-
       // Add or remove space after class constructor ':'.
       log_rule("sp_after_constr_colon");
       return(options::sp_after_constr_colon());
    }
 
-   if (  (options::sp_before_constr_colon() != IARF_IGNORE)
-      && chunk_is_token(second, CT_CONSTR_COLON))
+   if (chunk_is_token(second, CT_CONSTR_COLON))
    {
       // Add or remove space before class constructor ':'.
       log_rule("sp_before_constr_colon");
