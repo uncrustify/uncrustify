@@ -1,5 +1,4 @@
-
-template Foo(T, U)
+template Foo                (T, U)
 {
 class Bar { }
 
@@ -21,7 +20,7 @@ f.abc = 3;
    to!string(10.0);
    TFoo!int.t x;
 
-class Abc(T)
+class Abc                                (T)
 {
    T t;
 }

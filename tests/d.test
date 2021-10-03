@@ -15,6 +15,8 @@
 40007  d2.cfg                               d/Lexer.d
 40010  d.cfg                                d/template.d
 40011  d2.cfg                               d/template.d
+40012  d2-i.cfg                             d/template.d
+40013  d2-r.cfg                             d/template.d
 40020  d.cfg                                d/funcfunc.d
 40021  d.cfg                                d/tst01.d
 40022  d-tst2.cfg                           d/tst02.d
