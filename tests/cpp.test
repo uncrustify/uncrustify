@@ -349,7 +349,6 @@
 30801  star_pos-1.cfg                       cpp/align-star-amp-pos.cpp
 30802  star_pos-2.cfg                       cpp/align-star-amp-pos.cpp
 30803  bug_1403.cfg                         cpp/bug_1403.cpp
-30804  block_pointer.cfg                    cpp/block_pointer.cpp
 30805  ptr_star-1.cfg                       cpp/ptr-star.cpp
 30806  ptr_star-2.cfg                       cpp/ptr-star.cpp
 30807  ptr_star-3.cfg                       cpp/ptr-star.cpp
@@ -789,7 +788,6 @@
 34164  sp_after_type_brace_init_lst_open-r.cfg  cpp/type_brace_init_lst.cpp
 34165  sp_before_type_brace_init_lst_close-f.cfg  cpp/type_brace_init_lst.cpp
 34166  sp_before_type_brace_init_lst_close-r.cfg  cpp/type_brace_init_lst.cpp
-34167  nl_func_call_args_multi_line_ignore_closures.cfg cpp/nl_func_call_args_multi_line_ignore_closures.cpp
 34168  nl_type_brace_init_lst-r.cfg         cpp/Issue_2910.cpp
 34169  sp_inside_fparens-f.cfg              cpp/init-list-call.cpp
 
