@@ -2765,7 +2765,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_brace_typedef());
    }
 
-   if (  chunk_is_token(second, CT_PAREN_OPEN)
+   if (  language_is_set(LANG_D)
+      && chunk_is_token(second, CT_PAREN_OPEN)
       && get_chunk_parent_type(second) == CT_TEMPLATE)
    {
       // (D) Add or remove space before the parenthesis in the D constructs
