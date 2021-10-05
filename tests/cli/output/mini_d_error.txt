@@ -1,1 +1,0 @@
-config/mini_d.cfg:2: unknown option 'not_existing_option'
