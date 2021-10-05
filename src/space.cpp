@@ -255,8 +255,9 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_before_nl_cont());
    }
 
-   if (  chunk_is_token(first, CT_D_ARRAY_COLON)
-      || chunk_is_token(second, CT_D_ARRAY_COLON))
+   if (  language_is_set(LANG_D)
+      && (  chunk_is_token(first, CT_D_ARRAY_COLON)
+         || chunk_is_token(second, CT_D_ARRAY_COLON)))
    {
       // (D) Add or remove around the D named array initializer ':' operator.
       log_rule("sp_d_array_colon");
@@ -355,8 +356,9 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_cond_colon());
    }
 
-   if (  chunk_is_token(first, CT_RANGE)
-      || chunk_is_token(second, CT_RANGE))
+   if (  language_is_set(LANG_D)
+      && (  chunk_is_token(first, CT_RANGE)
+         || chunk_is_token(second, CT_RANGE)))
    {
       // (D) Add or remove space around the D '..' operator.
       log_rule("sp_range");
@@ -666,7 +668,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (chunk_is_token(first, CT_COMMA))                         // see the tests cpp:34520-34524
                                                                 // see the tests c-sharp:12200-12202
    {
-      if (get_chunk_parent_type(first) == CT_TYPE)
+      if (  language_is_set(LANG_CS)
+         && get_chunk_parent_type(first) == CT_TYPE)
       {
          // C# multidimensional array type: ',,' vs. ', ,' or ',]' vs. ', ]'
          if (chunk_is_token(second, CT_COMMA))
@@ -710,7 +713,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(second, CT_COMMA))
    {
-      if (  chunk_is_token(first, CT_SQUARE_OPEN)
+      if (  language_is_set(LANG_CS)
+         && chunk_is_token(first, CT_SQUARE_OPEN)
          && get_chunk_parent_type(first) == CT_TYPE)
       {
          // Only for C#.
@@ -813,7 +817,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (chunk_is_token(first, CT_TAG_COLON))
+   if (  language_is_set(LANG_PAWN)
+      && chunk_is_token(first, CT_TAG_COLON))
    {
       // (Pawn) Add or remove space after the tag keyword.
       log_rule("sp_after_tag");
@@ -880,7 +885,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_catch_paren());
    }
 
-   if (  chunk_is_token(first, CT_D_VERSION_IF)
+   if (  language_is_set(LANG_D)
+      && chunk_is_token(first, CT_D_VERSION_IF)
       && chunk_is_token(second, CT_SPAREN_OPEN)
       && (options::sp_version_paren() != IARF_IGNORE))
    {
@@ -890,7 +896,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_version_paren());
    }
 
-   if (  chunk_is_token(first, CT_D_SCOPE_IF)
+   if (  language_is_set(LANG_D)
+      && chunk_is_token(first, CT_D_SCOPE_IF)
       && chunk_is_token(second, CT_SPAREN_OPEN)
       && (options::sp_scope_paren() != IARF_IGNORE))
    {
@@ -1175,36 +1182,39 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(IARF_IGNORE);
    }
 
-   if (chunk_is_token(second, CT_OC_BLOCK_CARET))
+   if (language_is_set(LANG_OC))
    {
-      // (OC) Add or remove space before a block pointer caret,
-      // i.e. '^int (int arg){...}' vs. ' ^int (int arg){...}'.
-      log_rule("sp_before_oc_block_caret");
-      return(options::sp_before_oc_block_caret());
-   }
-
-   if (chunk_is_token(first, CT_OC_BLOCK_CARET))
-   {
-      // (OC) Add or remove space after a block pointer caret,
-      // i.e. '^int (int arg){...}' vs. '^ int (int arg){...}'.
-      log_rule("sp_after_oc_block_caret");
-      return(options::sp_after_oc_block_caret());
-   }
-
-   if (chunk_is_token(second, CT_OC_MSG_FUNC))
-   {
-      if (  (options::sp_after_oc_msg_receiver() == IARF_REMOVE)
-         && (  (first->type != CT_SQUARE_CLOSE)
-            && (first->type != CT_FPAREN_CLOSE)
-            && (first->type != CT_PAREN_CLOSE)))
+      if (chunk_is_token(second, CT_OC_BLOCK_CARET))
       {
-         log_rule("FORCE");
-         return(IARF_FORCE);
+         // (OC) Add or remove space before a block pointer caret,
+         // i.e. '^int (int arg){...}' vs. ' ^int (int arg){...}'.
+         log_rule("sp_before_oc_block_caret");
+         return(options::sp_before_oc_block_caret());
       }
-      // (OC) Add or remove space between the receiver and selector in a message,
-      // as in '[receiver selector ...]'.
-      log_rule("sp_after_oc_msg_receiver");
-      return(options::sp_after_oc_msg_receiver());
+
+      if (chunk_is_token(first, CT_OC_BLOCK_CARET))
+      {
+         // (OC) Add or remove space after a block pointer caret,
+         // i.e. '^int (int arg){...}' vs. '^ int (int arg){...}'.
+         log_rule("sp_after_oc_block_caret");
+         return(options::sp_after_oc_block_caret());
+      }
+
+      if (chunk_is_token(second, CT_OC_MSG_FUNC))
+      {
+         if (  (options::sp_after_oc_msg_receiver() == IARF_REMOVE)
+            && (  (first->type != CT_SQUARE_CLOSE)
+               && (first->type != CT_FPAREN_CLOSE)
+               && (first->type != CT_PAREN_CLOSE)))
+         {
+            log_rule("FORCE");
+            return(IARF_FORCE);
+         }
+         // (OC) Add or remove space between the receiver and selector in a message,
+         // as in '[receiver selector ...]'.
+         log_rule("sp_after_oc_msg_receiver");
+         return(options::sp_after_oc_msg_receiver());
+      }
    }
 
    // c++17 structured bindings e.g., "auto [x, y, z]" vs. a[x, y, z]" or "auto const [x, y, z]" vs. "auto const[x, y, z]"
@@ -1788,7 +1798,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_inside_braces_struct");
          return(options::sp_inside_braces_struct());
       }
-      else if (  get_chunk_parent_type(second) == CT_OC_AT
+      else if (  language_is_set(LANG_OC)
+              && get_chunk_parent_type(second) == CT_OC_AT
               && options::sp_inside_braces_oc_dict() != IARF_IGNORE)
       {
          // (OC) Add or remove space inside Objective-C boxed dictionary '{' and '}'
@@ -1909,7 +1920,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(first, CT_FPAREN_CLOSE)
       && chunk_is_token(second, CT_BRACE_OPEN))
    {
-      if (get_chunk_parent_type(second) == CT_DOUBLE_BRACE)
+      if (  language_is_set(LANG_JAVA)
+         && get_chunk_parent_type(second) == CT_DOUBLE_BRACE)
       {
          // (Java) Add or remove space between ')' and '{{' of double brace initializer.
          // only to help the vim command }}
@@ -1995,7 +2007,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (  chunk_is_token(second, CT_PAREN_OPEN)
+   if (  language_is_set(LANG_D)
+      && chunk_is_token(second, CT_PAREN_OPEN)
       && get_chunk_parent_type(second) == CT_INVARIANT)
    {
       // (D) Add or remove space between 'invariant' and '('.
@@ -2006,7 +2019,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(first, CT_PAREN_CLOSE)
       && get_chunk_parent_type(first) != CT_DECLTYPE)
    {
-      if (get_chunk_parent_type(first) == CT_INVARIANT)
+      if (  language_is_set(LANG_D)
+         && get_chunk_parent_type(first) == CT_INVARIANT)
       {
          // (D) Add or remove space after the ')' in 'invariant (C) c'.
          log_rule("sp_after_invariant_paren");
@@ -2109,7 +2123,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_inside_tparen());
    }
 
-   if (chunk_is_token(first, CT_PAREN_CLOSE))
+   if (  language_is_set(LANG_OC)
+      && chunk_is_token(first, CT_PAREN_CLOSE))
    {
       if (  first->flags.test(PCF_OC_RTYPE) // == CT_OC_RTYPE)
          && (  get_chunk_parent_type(first) == CT_OC_MSG_DECL
@@ -2140,7 +2155,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
 
-   if (options::sp_inside_oc_at_sel_parens() != IARF_IGNORE)
+   if (  language_is_set(LANG_OC)
+      && options::sp_inside_oc_at_sel_parens() != IARF_IGNORE)
    {
       if (  (  chunk_is_token(first, CT_PAREN_OPEN)
             && (  get_chunk_parent_type(first) == CT_OC_SEL
@@ -2336,7 +2352,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(second, CT_CLASS_COLON))
    {
-      if (  get_chunk_parent_type(second) == CT_OC_CLASS
+      if (  language_is_set(LANG_OC)
+         && get_chunk_parent_type(second) == CT_OC_CLASS
          && (  !chunk_get_prev_type(second, CT_OC_INTF, second->level, scope_e::ALL)
             && !chunk_get_prev_type(second, CT_OC_IMPL, second->level, scope_e::ALL)))
       {
@@ -2924,7 +2941,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(IARF_FORCE);
    }
 
-   if (chunk_is_token(first, CT_OC_SCOPE))
+   if (  language_is_set(LANG_OC)
+      && chunk_is_token(first, CT_OC_SCOPE))
    {
       // (OC) Add or remove space after the scope '+' or '-', as in '-(void) foo;'
       // or '+(int) bar;'.
@@ -2932,7 +2950,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_after_oc_scope());
    }
 
-   if (chunk_is_token(first, CT_OC_DICT_COLON))
+   if (  language_is_set(LANG_OC)
+      && chunk_is_token(first, CT_OC_DICT_COLON))
    {
       // (OC) Add or remove space after the colon in immutable dictionary expression
       // 'NSDictionary *test = @{@"foo" :@"bar"};'.
@@ -2940,7 +2959,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_after_oc_dict_colon());
    }
 
-   if (chunk_is_token(second, CT_OC_DICT_COLON))
+   if (  language_is_set(LANG_OC)
+      && chunk_is_token(second, CT_OC_DICT_COLON))
    {
       // (OC) Add or remove space before the colon in immutable dictionary expression
       // 'NSDictionary *test = @{@"foo" :@"bar"};'.
@@ -2948,7 +2968,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_before_oc_dict_colon());
    }
 
-   if (chunk_is_token(first, CT_OC_COLON))
+   if (  language_is_set(LANG_OC)
+      && chunk_is_token(first, CT_OC_COLON))
    {
       if (first->flags.test(PCF_IN_OC_MSG))
       {
@@ -2963,7 +2984,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_after_oc_colon());
    }
 
-   if (chunk_is_token(second, CT_OC_COLON))
+   if (  language_is_set(LANG_OC)
+      && chunk_is_token(second, CT_OC_COLON))
    {
       if (  first->flags.test(PCF_IN_OC_MSG)
          && (  chunk_is_token(first, CT_OC_MSG_FUNC)
@@ -3012,7 +3034,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_after_new());
    }
 
-   if (  chunk_is_token(first, CT_ANNOTATION)
+   if (  language_is_set(LANG_JAVA)
+      && chunk_is_token(first, CT_ANNOTATION)
       && chunk_is_paren_open(second))
    {
       // (Java) Add or remove space between an annotation and the open parenthesis.
@@ -3020,14 +3043,16 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_annotation_paren());
    }
 
-   if (chunk_is_token(first, CT_OC_PROPERTY))
+   if (  language_is_set(LANG_OC)
+      && chunk_is_token(first, CT_OC_PROPERTY))
    {
       // (OC) Add or remove space after '@property'.
       log_rule("sp_after_oc_property");
       return(options::sp_after_oc_property());
    }
 
-   if (  chunk_is_token(first, CT_EXTERN)
+   if (  language_is_set(LANG_D)
+      && chunk_is_token(first, CT_EXTERN)
       && chunk_is_token(second, CT_PAREN_OPEN))
    {
       // (D) Add or remove space between 'extern' and '(' as in 'extern (C)'.

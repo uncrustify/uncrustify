@@ -176,6 +176,7 @@
 51001  sp_enum_paren-i.cfg                  oc/ns_enum-i.m
 51002  sp_oc_catch-i.cfg                    oc/sp_oc_catch.m
 51003  sp_oc_catch-r.cfg                    oc/sp_oc_catch.m
+51004  block_pointer.cfg                    oc/block_pointer.m
 
 #
 # adopt tests from UT
