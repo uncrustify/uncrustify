@@ -1,6 +1,6 @@
-template <typename T>
+template         <   typename T>
 struct foo {};
 
-Q_DECLARE_METATYPE(foo<int>)
+Q_DECLARE_METATYPE(foo                  <   int>)
 
-int bar(foo<int>);
+int bar(foo                  <int   >);
