@@ -380,7 +380,8 @@ sp_angle_colon;
 extern Option<iarf_e>
 sp_after_angle;
 
-// Add or remove space between '>' and '(' as found in 'new List<byte>(foo);'.
+// Add or remove space between '>' and '(' as found in 'new List<byte>(foo);'
+// or k=test<int>(j);
 extern Option<iarf_e>
 sp_angle_paren;
 

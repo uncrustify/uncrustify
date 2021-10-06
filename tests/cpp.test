@@ -938,6 +938,8 @@
 34530  sp_inside_type_brace_init_lst-irf.cfg cpp/type_brace_init_lst.cpp
 34531  sp_inside_type_brace_init_lst-rf.cfg  cpp/type_brace_init_lst.cpp
 34532  sp_inside_type_brace_init_lst-iii.cfg cpp/type_brace_init_lst.cpp
+34533  templates-i.cfg                      cpp/templates.cpp
+34534  templates-r.cfg                      cpp/templates.cpp
 
 # Adopt some UT tests
 10000  empty.cfg                            cpp/621_this-spacing.cpp

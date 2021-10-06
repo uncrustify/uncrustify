@@ -1347,7 +1347,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
             log_rule("sp_angle_paren_empty");
             return(options::sp_angle_paren_empty());
          }
-         // Add or remove space between '>' and '(' as found in 'new List<byte>(foo);'.
+         // Add or remove space between '>' and '(' as found in 'new List<byte>(foo);'
+         // or k=test<int>(j);
          log_rule("sp_angle_paren");
          return(options::sp_angle_paren());
       }
