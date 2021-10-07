@@ -79,7 +79,8 @@ T test(T a) {
 }
 
 int main() {
-   int k,j;
+   int k;
+   int j;
    h g < int >;
    k=test < int > (j);
    return 0;
