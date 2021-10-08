@@ -1302,7 +1302,6 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       {
          op = IARF_IGNORE;
       }
-      // TODO log_rule??
       return(op);
    }
 
