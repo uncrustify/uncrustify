@@ -355,6 +355,26 @@ bool process_option_line_compat_0_73(const std::string &cmd,
       //UNUSED(options::indent_single_line_comments_before.read(args[1].c_str()));
       return(true);
    }
+
+   if (cmd == "sp_before_tr_emb_cmt")              // Issue #3339
+   {
+      OptionWarning w{ filename, OptionWarning::MINOR };
+      w("option '%s' is deprecated; did you want to use '%s' instead?",
+        cmd.c_str(), options::sp_before_tr_cmt.name());
+
+      //UNUSED(options::sp_before_tr_cmt.read(args[1].c_str()));
+      return(true);
+   }
+
+   if (cmd == "sp_num_before_tr_emb_cmt")          // Issue #3339
+   {
+      OptionWarning w{ filename, OptionWarning::MINOR };
+      w("option '%s' is deprecated; did you want to use '%s' instead?",
+        cmd.c_str(), options::sp_num_before_tr_cmt.name());
+
+      //UNUSED(options::sp_num_before_tr_cmt.read(args[1].c_str()));
+      return(true);
+   }
    return(false);
 } // process_option_line_compat_0_73
 
