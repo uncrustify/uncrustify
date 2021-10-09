@@ -1198,13 +1198,29 @@ sp_inside_newop_paren_open;
 extern Option<iarf_e>
 sp_inside_newop_paren_close;
 
-// Add or remove space before a trailing or embedded comment.
+// Add or remove space before a trailing comment.
 extern Option<iarf_e>
-sp_before_tr_emb_cmt;
+sp_before_tr_cmt;
 
-// Number of spaces before a trailing or embedded comment.
+// Number of spaces before a trailing comment.
 extern BoundedOption<unsigned, 0, 16>
-sp_num_before_tr_emb_cmt;
+sp_num_before_tr_cmt;
+
+// Add or remove space before an embedded comment.
+extern Option<iarf_e>
+sp_before_emb_cmt; // = IARF_FORCE
+
+// Number of spaces before an embedded comment.
+extern BoundedOption<unsigned, 0, 16>
+sp_num_before_emb_cmt; // = 1
+
+// Add or remove space after an embedded comment.
+extern Option<iarf_e>
+sp_after_emb_cmt; // = IARF_FORCE
+
+// Number of spaces after an embedded comment.
+extern BoundedOption<unsigned, 0, 16>
+sp_num_after_emb_cmt; // = 1
 
 // (Java) Add or remove space between an annotation and the open parenthesis.
 extern Option<iarf_e>

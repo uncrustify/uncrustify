@@ -466,15 +466,14 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_endif_cmt());
    }
 
-   if (  (options::sp_before_tr_emb_cmt() != IARF_IGNORE)
-      && (  get_chunk_parent_type(second) == CT_COMMENT_END
-         || get_chunk_parent_type(second) == CT_COMMENT_EMBED))
+   if (  options::sp_before_tr_cmt() != IARF_IGNORE
+      && get_chunk_parent_type(second) == CT_COMMENT_END)
    {
-      // Add or remove space before a trailing or embedded comment.
-      // Number of spaces before a trailing or embedded comment.
-      log_rule("sp_num_before_tr_emb_cmt");
-      min_sp = options::sp_num_before_tr_emb_cmt();
-      return(options::sp_before_tr_emb_cmt());
+      // Add or remove space before a trailing comment.
+      // Number of spaces before a trailing comment.
+      log_rule("sp_num_before_tr_cmt");
+      min_sp = options::sp_num_before_tr_cmt();
+      return(options::sp_before_tr_cmt());
    }
 
    if (get_chunk_parent_type(second) == CT_COMMENT_END)
@@ -3004,14 +3003,20 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    if (  chunk_is_token(second, CT_COMMENT)
       && get_chunk_parent_type(second) == CT_COMMENT_EMBED)
    {
-      log_rule("FORCE");
-      return(IARF_FORCE);
+      // Add or remove space before an embedded comment.
+      // Number of spaces before an embedded comment.
+      log_rule("sp_before_emb_cmt");
+      min_sp = options::sp_num_before_emb_cmt();
+      return(options::sp_before_emb_cmt());
    }
 
    if (chunk_is_token(first, CT_COMMENT))
    {
-      log_rule("FORCE");
-      return(IARF_FORCE);
+      // Add or remove space after an embedded comment.
+      // Number of spaces after an embedded comment.
+      log_rule("sp_after_emb_cmt");
+      min_sp = options::sp_num_after_emb_cmt();
+      return(options::sp_after_emb_cmt());
    }
 
    if (  chunk_is_token(first, CT_NEW)
@@ -3515,13 +3520,12 @@ void space_text(void)
             && column < next->orig_col)
          {
             /*
-             * do some comment adjustments if sp_before_tr_emb_cmt and
-             * sp_endif_cmt did not apply.
+             * do some comment adjustments if sp_before_tr_cmt and sp_endif_cmt
+             * did not apply.
              */
             // Add or remove space between #else or #endif and a trailing comment.
-            if (  (  options::sp_before_tr_emb_cmt() == IARF_IGNORE
-                  || (  get_chunk_parent_type(next) != CT_COMMENT_END
-                     && get_chunk_parent_type(next) != CT_COMMENT_EMBED))
+            if (  (  options::sp_before_tr_cmt() == IARF_IGNORE
+                  || get_chunk_parent_type(next) != CT_COMMENT_END)
                && (  options::sp_endif_cmt() == IARF_IGNORE
                   || (  pc->type != CT_PP_ELSE
                      && pc->type != CT_PP_ENDIF)))
