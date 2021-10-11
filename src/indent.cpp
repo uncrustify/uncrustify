@@ -949,6 +949,17 @@ void indent_text(void)
             frm.top().indent_tab = frm.top().indent;
             log_indent_tmp();
          }
+         else if (  get_chunk_parent_type(pc) == CT_PP_INCLUDE
+                 && options::pp_include_at_level())
+         {
+            log_rule_B("pp_include_at_level");
+            frm.top().indent_tmp = frm.prev().indent_tmp;
+            frm.top().indent     = frm.top().indent_tmp + indent_size;
+            log_indent();
+
+            frm.top().indent_tab = frm.top().indent;
+            log_indent_tmp();
+         }
          else
          {
             if (  (frm.prev().type == CT_PP_REGION_INDENT)

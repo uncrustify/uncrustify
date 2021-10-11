@@ -3825,6 +3825,10 @@ pp_indent_in_guard;
 extern Option<bool>
 pp_define_at_level;
 
+// Whether to indent '#include' at the brace level.
+extern Option<bool>
+pp_include_at_level;
+
 // Whether to ignore the '#define' body while formatting.
 extern Option<bool>
 pp_ignore_define_body;

@@ -3076,6 +3076,9 @@ pp_indent_in_guard              = false    # true/false
 # indented from column 1.
 pp_define_at_level              = false    # true/false
 
+# Whether to indent '#include' at the brace level.
+pp_include_at_level             = false    # true/false
+
 # Whether to ignore the '#define' body while formatting.
 pp_ignore_define_body           = false    # true/false
 
