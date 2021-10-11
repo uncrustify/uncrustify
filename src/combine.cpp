@@ -1297,7 +1297,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
       else if (  (  chunk_is_token(prev, CT_WORD)
                  && chunk_ends_type(prev)
-                 && !prev->flags.test(PCF_IN_FCN_CTOR))
+                 && !prev->flags.test(PCF_IN_FCN_CTOR)
+                 && !prev->flags.test(PCF_IN_ARRAY_ASSIGN)) // Issue #3345
               || chunk_is_token(prev, CT_DC_MEMBER)
               || chunk_is_token(prev, CT_PTR_TYPE))
       {

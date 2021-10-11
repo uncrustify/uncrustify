@@ -410,3 +410,4 @@
 10029  sp_emb_cmt-f.cfg                     c/Issue_3339.c
 10030  sp_emb_cmt-r.cfg                     c/Issue_3339.c
 10031  sp_after_pointer_star-r.cfg          c/Issue_3342.c
+10032  sp_after_pointer_star-r.cfg          c/Issue_3345.c
