@@ -1422,7 +1422,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             while (tmp != nullptr)
             {
                if (  chunk_is_token(tmp, CT_SEMICOLON)
-                  || chunk_is_token(tmp, CT_BRACE_OPEN))
+                  || chunk_is_token(tmp, CT_BRACE_OPEN)
+                  || chunk_is_token(tmp, CT_SQUARE_OPEN)) // Issue #3342
                {
                   break;
                }
