@@ -817,6 +817,10 @@ sp_func_class_paren;
 extern Option<iarf_e>
 sp_func_class_paren_empty;
 
+// Add or remove space after 'return'.
+extern Option<iarf_e>
+sp_return; // = IARF_FORCE
+
 // Add or remove space between 'return' and '('.
 extern Option<iarf_e>
 sp_return_paren;

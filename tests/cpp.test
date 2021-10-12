@@ -1039,3 +1039,7 @@
 60057  issue_3116-2.cfg                     cpp/issue_3116.cpp
 60058  issue_3330.cfg                       cpp/issue_3330.cpp
 60059  indent_ctor_init_leading.cfg         cpp/indent_ctor_init.cpp
+60060  sp_return-a.cfg                      cpp/returns.cpp
+60061  sp_return-f.cfg                      cpp/returns.cpp
+60062  sp_return-i.cfg                      cpp/returns.cpp
+60063  sp_return-r.cfg                      cpp/returns.cpp
