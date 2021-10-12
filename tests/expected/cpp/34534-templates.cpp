@@ -82,7 +82,7 @@ int main() {
    int k;
    int j;
    h g < int >;
-   k=test < int > (j);
+   k=test < int >(j);
    return 0;
 }
 
@@ -115,7 +115,7 @@ template< typename CharT, int N, typename Traits >
 inline std::basic_ostream < CharT,Traits >& FWStreamOut(std::basic_ostream < CharT,Traits >& os,
                                                         const W::S < CharT,N,Traits >& s)
 {
-   return operator << < CharT, N, Traits, char, std::char_traits < char > > ( os, s );
+   return operator << < CharT, N, Traits, char, std::char_traits < char > >( os, s );
 }
 
 struct foo {
@@ -168,7 +168,7 @@ bool X = j < 3 > >1;
 void foo()
 {
    A < (X>Y) > a;
-   a = static_cast < List < B > > (ld);
+   a = static_cast < List < B > >(ld);
 }
 
 template< int i > class X { /* ... */ };

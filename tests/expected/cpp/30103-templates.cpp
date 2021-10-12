@@ -79,9 +79,10 @@ T test(T a) {
 }
 
 int main() {
-   int k,j;
+   int k;
+   int j;
    h g<int>;
-   k=test<int>(j);
+   k=test<int>          (j);
    return 0;
 }
 
@@ -114,7 +115,7 @@ template<typename CharT, int N, typename Traits>
 inline std::basic_ostream<CharT,Traits>& FWStreamOut(std::basic_ostream<CharT,Traits>& os,
                                                      const W::S<CharT,N,Traits>& s)
 {
-   return operator<<<CharT, N, Traits, char, std::char_traits<char> >( os, s );
+   return operator<<<CharT, N, Traits, char, std::char_traits<char> >                ( os, s );
 }
 
 struct foo {
