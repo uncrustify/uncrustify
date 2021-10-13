@@ -4201,8 +4201,6 @@ static void indent_comment(chunk_t *pc, size_t col)
       LOG_FMT(LCMTIND, "%s(%d): nl->text() is '%s', orig_line %zu, orig_col %zu, level %zu\n",
               __func__, __LINE__, nl->text(), nl->orig_line, nl->orig_col, nl->level);
    }
-   // TODO: Add an indent_comment_align_thresh option?
-   const size_t indent_comment_align_thresh = 3;
 
    if (pc->orig_col > 1)
    {
@@ -4228,7 +4226,7 @@ static void indent_comment(chunk_t *pc, size_t col)
           * Here we want to align comments that are relatively close one to
           * another but not when the comment is a Doxygen comment (Issue #1134)
           */
-         if (prev_col_diff <= indent_comment_align_thresh)
+         if (prev_col_diff <= options::indent_comment_align_thresh())
          {
             LOG_FMT(LCMTIND, "%s(%d): prev->text() is '%s', Doxygen_comment(prev) is %s\n",
                     __func__, __LINE__, prev->text(), chunk_is_Doxygen_comment(prev) ? "TRUE" : "FALSE");

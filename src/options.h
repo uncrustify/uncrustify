@@ -1545,6 +1545,10 @@ indent_col1_comment;
 extern Option<bool>
 indent_col1_multi_string_literal;
 
+// Align comments on adjacent lines that are this many columns apart or less.
+extern BoundedOption<unsigned, 0, 16>
+indent_comment_align_thresh; // = 3
+
 // How to indent goto labels.
 //
 //  >0: Absolute column where 1 is the leftmost column
