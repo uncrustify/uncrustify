@@ -556,9 +556,15 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_return_brace");
          return(options::sp_return_brace());
       }
-      // everything else requires a space
-      log_rule("FORCE");
-      return(IARF_FORCE);
+      // Everything else requires a space
+      // The value REMOVE will be overriden with FORCE
+      log_rule("sp_return");
+
+      if (options::sp_return() == IARF_REMOVE)
+      {
+         return(IARF_FORCE);
+      }
+      return(options::sp_return());
    }
 
    // "sizeof(foo_t)" vs. "sizeof (foo_t)"

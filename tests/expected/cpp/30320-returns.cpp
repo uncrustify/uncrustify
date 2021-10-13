@@ -3,12 +3,14 @@
 #define foo3(x) { return(x); }
 #define foo4(x) { return{x}; }
 #define foo5(x) { return  {x}; }
+#define foo6(x) { return /**/ x; }
 
 #define case1(x) return x
 #define case2(x) return(x)
 #define case3(x) return(x)
 #define case4(x) return{x}
 #define case5(x) return  {x}
+#define case6(x) return /**/ x
 
 void foo(int x)
 {
@@ -24,6 +26,8 @@ void foo(int x)
 		return{4};
 	case 5:
 		return  {5};
+	case 6:
+		return /**/ 6;
 	default:
 		return;
 	}
