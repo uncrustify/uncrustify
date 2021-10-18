@@ -4274,7 +4274,16 @@ static void indent_comment(chunk_t *pc, size_t col)
       reindent_line(pc, col + options::indent_single_line_comments_after());
       return;
    }
-   LOG_FMT(LCMTIND, "%s(%d): rule 5 - fall-through, stay in %zu\n",
+   log_rule_B("indent_comment");
+
+   if (  pc->orig_col > 1
+      && !options::indent_comment())
+   {
+      LOG_FMT(LCMTIND, "%s(%d): rule 5 - keep in orig_col\n", __func__, __LINE__);
+      reindent_line(pc, pc->orig_col);
+      return;
+   }
+   LOG_FMT(LCMTIND, "%s(%d): rule 6 - fall-through, stay in %zu\n",
            __func__, __LINE__, col);
    reindent_line(pc, col);
 } // indent_comment
