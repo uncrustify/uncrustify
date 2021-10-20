@@ -413,3 +413,4 @@
 10032  sp_after_pointer_star-r.cfg          c/Issue_3345.c
 10033  pp_include_at_level-true.cfg         c/Issue_3343.c
 10034  pp_include_at_level-false.cfg        c/Issue_3343.c
+10035  Issue_3356.cfg                       c/Issue_3356.c
