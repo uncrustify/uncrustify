@@ -40,11 +40,11 @@ void align_func_proto(size_t span)
    //   token-1->brace_level == token-2->brace_level
    // we don't check if token-1 and token-2 are in the same block
 
-   log_rule_B("align_var_def_star_style");
-   size_t mystar_style = options::align_var_def_star_style();
+   log_rule_B("align_func_proto_star_style");
+   size_t mystar_style = options::align_func_proto_star_style();
 
-   log_rule_B("align_var_def_amp_style");
-   size_t myamp_style = options::align_var_def_amp_style();
+   log_rule_B("align_func_proto_amp_style");
+   size_t myamp_style = options::align_func_proto_amp_style();
 
 
    size_t     num_of_column     = 1;

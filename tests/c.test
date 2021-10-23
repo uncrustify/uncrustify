@@ -175,6 +175,15 @@
 00453! nl_enum_own_lines-3.cfg              c/enum_gallery.c
 00454  nl_enum_own_lines-4.cfg              c/enum_gallery.c
 
+00461  align_func_proto_star_amp-1.cfg      c/align_func_proto_star_amp.h
+00462  align_func_proto_star_amp-2.cfg      c/align_func_proto_star_amp.h
+00463  align_func_proto_star_amp-3.cfg      c/align_func_proto_star_amp.h
+00464  align_func_proto_star_amp-4.cfg      c/align_func_proto_star_amp.h
+00465  align_func_proto_star_amp-5.cfg      c/align_func_proto_star_amp.h
+00466  align_func_proto_star_amp-6.cfg      c/align_func_proto_star_amp.h
+00467  align_func_proto_star_amp-7.cfg      c/align_func_proto_star_amp.h
+00468  align_func_proto_star_amp-8.cfg      c/align_func_proto_star_amp.h
+00469  align_func_proto_star_amp-9.cfg      c/align_func_proto_star_amp.h
 
 # boolean and comma positioning
 
