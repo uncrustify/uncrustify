@@ -230,6 +230,11 @@ chunk_t *skip_attribute_prev(chunk_t *fp_close)
          break;
       }
       pc = chunk_get_prev_ncnnlni(pc);   // Issue #2279
+
+      if (pc == nullptr)                 // Issue #3356
+      {
+         break;
+      }
    }
    return(pc);
 }
