@@ -3260,6 +3260,24 @@ align_right_cmt_at_col;
 extern BoundedOption<unsigned, 0, 5000>
 align_func_proto_span;
 
+// How to consider (or treat) the '*' in the alignment of function prototypes.
+//
+// 0: Part of the type     'void *   foo();' (default)
+// 1: Part of the function 'void     *foo();'
+// 2: Dangling             'void    *foo();'
+// Dangling: the '*' will not be taken into account when aligning.
+extern BoundedOption<unsigned, 0, 2>
+align_func_proto_star_style;
+
+// How to consider (or treat) the '&' in the alignment of function prototypes.
+//
+// 0: Part of the type     'long &   foo();' (default)
+// 1: Part of the function 'long     &foo();'
+// 2: Dangling             'long    &foo();'
+// Dangling: the '&' will not be taken into account when aligning.
+extern BoundedOption<unsigned, 0, 2>
+align_func_proto_amp_style;
+
 // The threshold for aligning function prototypes.
 // Use a negative number for absolute thresholds.
 //
