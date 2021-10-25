@@ -1537,6 +1537,10 @@ indent_switch_pp; // = true
 extern BoundedOption<unsigned, 0, 16>
 indent_case_shift;
 
+// Whether to indent comments not found in first column.
+extern Option<bool>
+indent_comment; // = true
+
 // Whether to indent comments found in first column.
 extern Option<bool>
 indent_col1_comment;
@@ -1544,6 +1548,10 @@ indent_col1_comment;
 // Whether to indent multi string literal in first column.
 extern Option<bool>
 indent_col1_multi_string_literal;
+
+// Align comments on adjacent lines that are this many columns apart or less.
+extern BoundedOption<unsigned, 0, 16>
+indent_comment_align_thresh; // = 3
 
 // How to indent goto labels.
 //
