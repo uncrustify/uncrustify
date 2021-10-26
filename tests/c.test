@@ -423,3 +423,5 @@
 10034  pp_include_at_level-false.cfg        c/Issue_3343.c
 10035  indent_comment_align_thresh-0.cfg    c/comment-indent.c
 10036  Issue_3350.cfg                       c/comment-indent.c
+10037  indent_case_comment-true.cfg         c/Issue_3362.c
+10038  indent_case_comment-false.cfg        c/Issue_3362.c

@@ -1537,6 +1537,10 @@ indent_switch_pp; // = true
 extern BoundedOption<unsigned, 0, 16>
 indent_case_shift;
 
+// Whether to align comments before 'case' with the 'case'.
+extern Option<bool>
+indent_case_comment; // = true
+
 // Whether to indent comments not found in first column.
 extern Option<bool>
 indent_comment; // = true
