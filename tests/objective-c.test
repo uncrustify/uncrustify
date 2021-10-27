@@ -47,7 +47,7 @@
 50060  align_oc_msg_colon_span-1.cfg        oc/oc-split.m
 50061  bug_167.cfg                          oc/bug_167.m
 
-50062  aet.cfg                              oc/issue_2631.m
+50062  common/aet.cfg                       oc/issue_2631.m
 
 50070  blocks.cfg                           oc/blocks.m
 50071  sp_before_oc_block_caret_force.cfg   oc/blocks.m
@@ -77,7 +77,7 @@
 
 50110  oc14.cfg                             oc/msg_align.m
 50111  del_semicolon.cfg                    oc/ns_enum.m
-50112  empty.cfg                            oc/ns_enum.m
+50112  common/empty.cfg                     oc/ns_enum.m
 50113  sp_enum_paren-r.cfg                  oc/ns_enum.m
 
 50120  gh137.cfg                            oc/gh137.m
@@ -88,7 +88,7 @@
 50203  sp_block_as_argument3.cfg            oc/blocks_align.m
 50204  sp_block_as_argument4.cfg            oc/blocks_align.m
 50205  sp_block_as_argument5.cfg            oc/msg_align.m
-50206  aet.cfg                              oc/issue_2727.m
+50206  common/aet.cfg                       oc/issue_2727.m
 50207  issue_3031.cfg                       oc/issue_3031.mm
 
 50300  sp_after_send_oc_colon-f.cfg         oc/msg.m
@@ -108,35 +108,35 @@
 50515  sp_oc_synchronized.cfg               oc/sp_oc_synchronized.m
 
 50600  nl_oc_block_brace-f.cfg              oc/bug_i_477.m
-50601  empty.cfg                            oc/bug_i_408.m
+50601  common/empty.cfg                     oc/bug_i_408.m
 50602  bug_i_125-412.cfg                    oc/bug_i_125-412.m
 50603  oc18.cfg                             oc/gh511.m
 50604  objc_bug_497.cfg                     oc/bug_497.m
-50605  empty.cfg                            oc/bug_404.m
+50605  common/empty.cfg                     oc/bug_404.m
 50606  oc19.cfg                             oc/bug_1366.m
 50607  aet-sp_after_oc_msg_receiver.cfg     oc/sp_after_oc_msg_receiver.m
-50608  aet.cfg                              oc/blocks_align2.m
+50608  common/aet.cfg                       oc/blocks_align2.m
 50609  sp_arith-f.cfg                       oc/negative_value.m
-50610  aet.cfg                              oc/nelem.m
-50611  aet.cfg                              oc/for2.m
-50612  aet.cfg                              oc/chunk_ends_type1.m
-50613  aet.cfg                              oc/chunk_ends_type2.m
-50614  aet.cfg                              oc/chunk_ends_type3.m
-50615  aet.cfg                              oc/block_literal_protocol.m
-50616  aet.cfg                              oc/oc_msg_in_pp.m
-50617  aet.cfg                              oc/boxed_receiver.m
+50610  common/aet.cfg                       oc/nelem.m
+50611  common/aet.cfg                       oc/for2.m
+50612  common/aet.cfg                       oc/chunk_ends_type1.m
+50613  common/aet.cfg                       oc/chunk_ends_type2.m
+50614  common/aet.cfg                       oc/chunk_ends_type3.m
+50615  common/aet.cfg                       oc/block_literal_protocol.m
+50616  common/aet.cfg                       oc/oc_msg_in_pp.m
+50617  common/aet.cfg                       oc/boxed_receiver.m
 50618  aet-func_def.cfg                     oc/func_def.mm
-50619  aet.cfg                              oc/cast.m
-50620  aet.cfg                              oc/sp_after_angle.m
-50621  aet.cfg                              oc/Fraction.h
-50622  aet.cfg                              oc/c-cpp-oc-wrapper.c
-50623  aet.cfg                              oc/extern-c-attribute.m
-50624  aet.cfg                              oc/typeof.m
+50619  common/aet.cfg                       oc/cast.m
+50620  common/aet.cfg                       oc/sp_after_angle.m
+50621  common/aet.cfg                       oc/Fraction.h
+50622  common/aet.cfg                       oc/c-cpp-oc-wrapper.c
+50623  common/aet.cfg                       oc/extern-c-attribute.m
+50624  common/aet.cfg                       oc/typeof.m
 50625  aet-sp_inside_braces_oc_dict.cfg     oc/sp_inside_braces_oc_dict.m
-50626  aet.cfg                              oc/chunk_ends_type4.m
-50627  aet.cfg                              oc/method_ends_semicolon.m
-50628  aet.cfg                              oc/macro-close-brace.m
-50629  aet.cfg                              oc/pp_bool.m
+50626  common/aet.cfg                       oc/chunk_ends_type4.m
+50627  common/aet.cfg                       oc/method_ends_semicolon.m
+50628  common/aet.cfg                       oc/macro-close-brace.m
+50629  common/aet.cfg                       oc/pp_bool.m
 
 50630  nl_func_call_args_multi_line_ignore_closures.cfg oc/nl_func_call_args_multi_line_ignore_closures.m
 
@@ -144,12 +144,12 @@
 50701  cmt_insert-0.cfg                     oc/cmt_insert2.m
 
 50800  obj-c-properties.cfg                 oc/properties.m
-50801  empty.cfg                            oc/i1213.m
+50801  common/empty.cfg                     oc/i1213.m
 50802  obj-c-available.cfg                  oc/available.m
 50803  indent_single_newline.cfg            oc/indent_single_newline.m
 
-50804  aet.cfg                              oc/issue_2629.m
-50805  aet.cfg                              oc/issue_2724.m
+50804  common/aet.cfg                       oc/issue_2629.m
+50805  common/aet.cfg                       oc/issue_2724.m
 
 50810  bug_841.cfg                          oc/bug_841.m
 50811  oc_bug_1674.cfg                      oc/bug_1674.m
@@ -160,11 +160,11 @@
 50815  sp_before_oc_proto_list_remove.cfg   oc/sp_before_oc_proto_list.m
 
 50816  issue_2675.cfg                       oc/issue_2675.m
-50817  aet.cfg                              oc/issue_2722.m
+50817  common/aet.cfg                       oc/issue_2722.m
 
 50900  1927.cfg                             oc/1927.m
 50901  Issue_2172.cfg                       oc/Issue_2172.m
-50902  empty.cfg                            oc/Issue_2289.m
+50902  common/empty.cfg                     oc/Issue_2289.m
 50903  Issue_681.cfg                        oc/Issue_681.oc
 
 50904  double_angle_space_1.cfg             oc/double_angle_space.m
@@ -181,7 +181,7 @@
 #
 # adopt tests from UT
 10018  delete-space-oc.cfg                  oc/delete-space-oc.mm
-10019  empty.cfg                            oc/func-param-wrap-oc.mm
+10019  common/empty.cfg                     oc/func-param-wrap-oc.mm
 10020  align-objc-like-xcode.cfg            oc/align-objc-like-xcode.m
 10021  double-indent-objc-dict.cfg          oc/double-indent-objc-dict.m
 10022  indent-objc-block.cfg                oc/indent-objc-block.m

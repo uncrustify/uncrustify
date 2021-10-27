@@ -54,7 +54,7 @@
 00070  ben_058.cfg                          c/return-multi.c
 00071  ben_042.cfg                          c/include_define.h
 00072  star_pos-0.cfg                       c/align-proto.c
-00073  empty.cfg                            c/nl_proto_endif.c
+00073  common/empty.cfg                     c/nl_proto_endif.c
 00074  clang-has_include.cfg                c/clang-has_include.h
 00076  1225.cfg                             c/1225.c
 
@@ -112,7 +112,7 @@
 00164  rdan.cfg                             c/fcn_indent_func_def_col1.c
 00165  sp_func_call_user_inside_fparen.cfg  c/sp_func_call_user_inside_fparen.c
 
-00170  empty.cfg                            c/beautifier-off.c
+00170  common/empty.cfg                     c/beautifier-off.c
 00180  sf538.cfg                            c/lvalue.c
 
 
@@ -124,7 +124,7 @@
 00204  bug_1718.cfg                         c/bug_1718.c
 00205  nl_before_return_false.cfg           c/case-nl_before_return.c
 00206  nl_before_return_true.cfg            c/case-nl_before_return.c
-00207  nl_before_ignore_after_case.cfg      c/nl_before_ignore_after_case.c
+00207  common/nl_before_ignore_after_case.cfg c/nl_before_ignore_after_case.c
 
 
 # structure initializers
@@ -135,7 +135,7 @@
 00304  1liner-no-split.cfg                  c/one-liner-init.c
 00305  ben_081.cfg                          c/one-liner-define.c
 
-00310  empty.cfg                            c/sp_embed_comment.c
+00310  common/empty.cfg                     c/sp_embed_comment.c
 
 00320  rdan.cfg                             c/indent_first_bool_expr.c
 
@@ -164,7 +164,7 @@
 00422  nl_ds_struct_enum-2.cfg              c/nl_ds_struct_enum.c
 00423  bug_1702.cfg                         c/bug_1702.c
 
-00430  empty.cfg                            c/paren-indent.c
+00430  common/empty.cfg                     c/paren-indent.c
 00431  indent_paren_close-1.cfg             c/paren-indent.c
 00432  indent_paren_close-2.cfg             c/paren-indent.c
 
@@ -201,7 +201,7 @@
 
 00600  indent_columns-3.cfg                 c/dos.c
 00601  indent_columns-3.cfg                 c/mac.c
-00611  empty.cfg                            c/pp-space.c
+00611  common/empty.cfg                     c/pp-space.c
 00612  pp-indent-2.cfg                      c/pp-space.c
 00613  pp_indent-a.cfg                      c/pp-space.c
 00614  pp-space.cfg                         c/pp-space.c
@@ -258,7 +258,7 @@
 01011  del_semicolon.cfg                    c/semicolons.c
 01012  ben_086.cfg                          c/semicolons.c
 
-01015  empty.cfg                            c/paren_indent.c
+01015  common/empty.cfg                     c/paren_indent.c
 01016  align_attr.cfg                       c/align_attr.c
 
 01020  kw_subst.cfg                         c/kw_subst.c
@@ -267,7 +267,7 @@
 
 01030  cmt_indent_multi-f.cfg               c/multi.h
 
-01035  empty.cfg                            c/func_wrap.c
+01035  common/empty.cfg                     c/func_wrap.c
 01036  sp_inside_fparen-f.cfg               c/func_wrap.c
 01037  type_wrap.cfg                        c/type_wrap.c
 
@@ -275,12 +275,12 @@
 
 01050  func_call_user.cfg                   c/func_call_user.c
 
-01060  empty.cfg                            c/backslash-newline-lex.c
+01060  common/empty.cfg                     c/backslash-newline-lex.c
 
 01070  label_colon_nl_1.cfg                 c/various_colons.c
 01071  label_colon_nl_2.cfg                 c/various_colons.c
 
-01080  empty.cfg                            c/bug_1196.c
+01080  common/empty.cfg                     c/bug_1196.c
 
 # big general tests
 
@@ -326,14 +326,14 @@
 02416  cmt_nl_end.cfg                       c/cmt_nl_end.c
 
 02421  cmt_multi_check_last-f.cfg           c/cmt_multi.c
-02422  empty.cfg                            c/cmt_multi.c
-02423  empty.cfg                            c/cmt_multi_utf8.c
+02422  common/empty.cfg                     c/cmt_multi.c
+02423  common/empty.cfg                     c/cmt_multi_utf8.c
 
 02431  align_right_cmt_gap-1.cfg            c/cmt_right_align.c
 02432  space_indent_columns-3.cfg           c/cmt_right_align.c
 
-02440  empty.cfg                            c/string_utf8.c
-02441  empty.cfg                            c/utf8-identifiers.c
+02440  common/empty.cfg                     c/string_utf8.c
+02441  common/empty.cfg                     c/utf8-identifiers.c
 
 02451  return-1.cfg                         c/nl_return_expr.c
 02452  return-2.cfg                         c/nl_return_expr.c
@@ -362,7 +362,7 @@
 08399  ben_095.cfg                          c/gh399.c
 
 09594  indent_columns-3.cfg                 c/sf594.c
-09588  empty.cfg                            c/sf588.c
+09588  common/empty.cfg                     c/sf588.c
 
 09601  sp_after_sparen.cfg                  c/sp_after_sparen.c
 09602  bug_671.cfg                          c/bug_671.c
@@ -376,9 +376,9 @@
 
 09610  force_tab_after_define-t.cfg         c/bug_i_876.c
 09611  space_indent_columns-4.cfg           c/bug_i_222.c
-09612  empty.cfg                            c/bug_1041.c
-09613  empty.cfg                            c/i1413.c
-09614  empty.cfg                            c/string_prefixes.c
+09612  common/empty.cfg                     c/bug_1041.c
+09613  common/empty.cfg                     c/i1413.c
+09614  common/empty.cfg                     c/string_prefixes.c
 09615  i1564.cfg                            c/i1564.c
 09616  enum_comma_ifdef.cfg                 c/enum_comma_ifdef.c
 09617  Issue_2360-a.cfg                     c/Issue_2360.c
@@ -390,18 +390,18 @@
 09622  Issue_3356.cfg                       c/Issue_3356.c
 
 10004  ben_094.cfg                          c/pragma_asm.c
-10005  empty.cfg                            c/i1270.c
+10005  common/empty.cfg                     c/i1270.c
 10006  bug_2331.cfg                         c/bug_2331.c
 10007  indent_macro_brace-true.cfg          c/indent-macro-brace.c
 10008  indent_macro_brace-false.cfg         c/indent-macro-brace.c
-10009  empty.cfg                            c/return-compound-literal.c
+10009  common/empty.cfg                     c/return-compound-literal.c
 
 10010  indent_compound_literal_return-false.cfg c/return-compound-literal.c
 10011  indent_compound_literal_return-true.cfg c/return-compound-literal.c
 10012  indent_sparen_extra-8.cfg            c/sparen-indent.c
-10013  empty.cfg                            c/sparen-indent.c
+10013  common/empty.cfg                     c/sparen-indent.c
 10014  indent_continue-8.cfg                c/sparen-indent.c
-10015  empty.cfg                            c/Issue_2845.h
+10015  common/empty.cfg                     c/Issue_2845.h
 10016  Issue_3233.cfg                       c/Issue_3233.c
 10017  sp_sparen_paren-a.cfg                c/double-sparen.c
 10018  sp_sparen_paren-i.cfg                c/double-sparen.c

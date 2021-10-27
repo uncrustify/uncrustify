@@ -4,41 +4,41 @@
 # Range: 80000 - 89999
 # test.name  config.file  input.file
 
-80000  ben_099.cfg                          java/assert.java
-80010  annotation.cfg                       java/annotation1.java
-80011  empty.cfg                            java/annotation2.java
-80012  nl_after_annotation-f.cfg            java/annotation2.java
-80013  nl_between_annotation-f.cfg          java/annotation2.java
-80014  annotation.cfg                       java/annotation2.java
-80020  java_foreach.cfg                     java/foreach.java
-80030  indent_var_def.cfg                   java/variable_aligns.java
-80040  empty.cfg                            java/try.java
-80050  jdbi-r.cfg                           java/double_brace.java
-80051  jdbi-f.cfg                           java/double_brace.java
-80060  java_synchronized_1.cfg              java/synchronized.java
-80061  java_synchronized_2.cfg              java/synchronized.java
-80062  sp_this_paren.cfg                    java/sp_this_paren.java
-80063  empty.cfg                            java/i1121.java
-80064  mod_add_long_class_closebrace_comment-1.cfg  java/long_cl_cmt.java
-80065  empty.cfg                            java/Java8DoubleColon.java
-80066  sp_after_for_colon.cfg               java/sp_after_for_colon.java
-80067  doxy-javadoc-alignment.cfg           java/doxy-javadoc-alignment.java
-80068  nl_before_ignore_after_case.cfg      java/nl_before_ignore_after_case.java
-
-80100  align_same_func_call_params-t.cfg    java/sf567.java
-
-80200  sp_before_byref-r.cfg                java/sp_before_byref.java
-80201  template_angles.cfg                  java/generics.java
-80202  aet.cfg                              java/generics_wildcard.java
-80203  aet.cfg                              java/generics_return_type.java
-80204  aet.cfg                              java/cast.java
-80205  aet.cfg                              java/sp_after_angle.java
-80206  aet.cfg                              java/annotation3.java
-
-80300  Issue_670.cfg                        java/Issue_670.java
-80301  issue_672.cfg                        java/issue_672.java
-80302  Issue_1845.cfg                       java/Issue_1845.java
-80303  Issue_1122.cfg                       java/Issue_1122.java
-80304  Issue_1124-f.cfg                     java/Issue_1124.java
-80305  Issue_1124-r.cfg                     java/Issue_1124.java
-80306  leading-tabs-for-java-lambda.cfg     java/leading-tabs-for-java-lambda.java
+80000  java/ben_099.cfg                                  java/assert.java
+80010  java/annotation.cfg                               java/annotation1.java
+80011  common/empty.cfg                                  java/annotation2.java
+80012  java/nl_after_annotation-f.cfg                    java/annotation2.java
+80013  java/nl_between_annotation-f.cfg                  java/annotation2.java
+80014  java/annotation.cfg                               java/annotation2.java
+80020  java/java_foreach.cfg                             java/foreach.java
+80030  common/indent_var_def.cfg                         java/variable_aligns.java
+80040  common/empty.cfg                                  java/try.java
+80050  java/jdbi-r.cfg                                   java/double_brace.java
+80051  java/jdbi-f.cfg                                   java/double_brace.java
+80060  java/java_synchronized_1.cfg                      java/synchronized.java
+80061  java/java_synchronized_2.cfg                      java/synchronized.java
+80062  java/sp_this_paren.cfg                            java/sp_this_paren.java
+80063  common/empty.cfg                                  java/i1121.java
+80064  java/mod_add_long_class_closebrace_comment-1.cfg  java/long_cl_cmt.java
+80065  common/empty.cfg                                  java/Java8DoubleColon.java
+80066  java/sp_after_for_colon.cfg                       java/sp_after_for_colon.java
+80067  java/doxy-javadoc-alignment.cfg                   java/doxy-javadoc-alignment.java
+80068  common/nl_before_ignore_after_case.cfg            java/nl_before_ignore_after_case.java
+                                                      
+80100  common/align_same_func_call_params-t.cfg          java/sf567.java
+                                                      
+80200  common/sp_before_byref-r.cfg                      java/sp_before_byref.java
+80201  java/template_angles.cfg                          java/generics.java
+80202  common/aet.cfg                                    java/generics_wildcard.java
+80203  common/aet.cfg                                    java/generics_return_type.java
+80204  common/aet.cfg                                    java/cast.java
+80205  common/aet.cfg                                    java/sp_after_angle.java
+80206  common/aet.cfg                                    java/annotation3.java
+                                                      
+80300  java/Issue_670.cfg                                java/Issue_670.java
+80301  common/issue_672.cfg                              java/issue_672.java
+80302  java/Issue_1845.cfg                               java/Issue_1845.java
+80303  java/Issue_1122.cfg                               java/Issue_1122.java
+80304  java/Issue_1124-f.cfg                             java/Issue_1124.java
+80305  java/Issue_1124-r.cfg                             java/Issue_1124.java
+80306  java/leading-tabs-for-java-lambda.cfg             java/leading-tabs-for-java-lambda.java

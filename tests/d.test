@@ -24,8 +24,8 @@
 40024  d3.cfg                               d/tst03.d
 40025  d3a.cfg                              d/tst03.d
 
-40026  empty.cfg                            d/wysiwyg_strings.d
-40027  empty.cfg                            d/static_if_in_struct.d
+40026  common/empty.cfg                     d/wysiwyg_strings.d
+40027  common/empty.cfg                     d/static_if_in_struct.d
 
 40030  d.cfg                                d/delegate.d
 40035  d.cfg                                d/enum.d
@@ -52,12 +52,12 @@
 40300  d.cfg                                d/extern_.d
 
 40400  mod_full_brace_if_chain_only-t.cfg   d/vbraces000.d
-40401  empty.cfg                            d/vbraces001.d
+40401  common/empty.cfg                     d/vbraces001.d
 40402  mod_full_brace_if_chain_only-t.cfg   d/vbraces002.d
 
-40403  empty.cfg                            d/template_use.d
+40403  common/empty.cfg                     d/template_use.d
 
-40500  empty.cfg                            d/template_spacing000.d
+40500  common/empty.cfg                     d/template_spacing000.d
 40501  sp_after_type-r.cfg                  d/template_spacing001.d
 40502  sp_after_type-f.cfg                  d/template_spacing001.d
 40503  sp_after_type-a.cfg                  d/template_spacing001.d
