@@ -17,7 +17,7 @@
 10022  region-2.cfg                         cs/region.cs
 10023  region-3.cfg                         cs/region.cs
 
-10030  sort_imports.cfg                     cs/sort_using.cs
+10030  common/sort_imports.cfg              cs/sort_using.cs
 10031  mod_sort_using-t.cfg                 cs/bug_i_935.cs
 10032  sort_using_categ.cfg                 cs/sort_using_categ.cs
 

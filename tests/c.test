@@ -297,7 +297,7 @@
 02201  xml-str.cfg                          c/align-string.c
 
 02300  ben_088.cfg                          c/preproc-if.c
-02301  d.cfg                                c/preproc-if.c
+02301  common/d.cfg                         c/preproc-if.c
 02302  cpp_to_c-1.cfg                       c/nl-cont.c
 02303  cpp_to_c-1.cfg                       c/nl-cont2.c
 
@@ -307,7 +307,7 @@
 02315  pp_ret.cfg                           c/pp_ret.c
 
 02320  nl_create_one_liner.cfg              c/nl_create_one_liner.c
-02325  sort_imports.cfg                     c/sort_include.c
+02325  common/sort_imports.cfg              c/sort_include.c
 
 02330  leave_one_liners.cfg                 c/one_liners.c
 

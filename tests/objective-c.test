@@ -33,7 +33,7 @@
 50025  oc6.cfg                              oc/exceptions.m
 50026  sp_after_throw_remove.cfg            oc/exceptions.m
 
-50030  sort_imports.cfg                     oc/sort_import.m
+50030  common/sort_imports.cfg              oc/sort_import.m
 50031  mod_sort_incl_import_prioritize_filename.cfg oc/sort_import.m
 50032  mod_sort_incl_import_ignore_extension.cfg oc/sort_import.m
 50033  mod_sort_incl_import_prioritize_extensionless.cfg oc/sort_import.m

@@ -525,7 +525,7 @@
 31615  Issue_3309-f.cfg                     cpp/Issue_3309.cpp
 31616  Issue_3309-r.cfg                     cpp/Issue_3309.cpp
 
-31620  sp_after_type-f.cfg                  cpp/sp_after_type.cpp
+31620  common/sp_after_type-f.cfg           cpp/sp_after_type.cpp
 31621  sp_after_type-i.cfg                  cpp/sp_after_type.cpp
 31622  sp_after_cast-f.cfg                  cpp/sp_after_type.cpp
 31623  sp_after_cast-r.cfg                  cpp/sp_after_type.cpp
@@ -536,8 +536,8 @@
 31628  sp_after_decltype-f.cfg              cpp/issue_1916.cpp
 31629  sp_after_decltype-r.cfg              cpp/issue_1916.cpp
 
-31630  sp_after_type-f.cfg                  cpp/issue_1916.cpp
-31631  sp_after_type-r.cfg                  cpp/issue_1916.cpp
+31630  common/sp_after_type-f.cfg           cpp/issue_1916.cpp
+31631  common/sp_after_type-r.cfg           cpp/issue_1916.cpp
 31632  issue_1916.cfg                       cpp/issue_1916.cpp
 31633  sp_after_decltype-f.cfg              cpp/sp_after_decltype.cpp
 31634  sp_after_decltype-r.cfg              cpp/sp_after_decltype.cpp
@@ -646,7 +646,7 @@
 33060  common/empty.cfg                     cpp/if_constexpr.cpp
 33061  common/empty.cfg                     cpp/if_chain_braces.cpp
 33062  mod_full_brace_if_chain-t.cfg        cpp/if_chain_braces.cpp
-33063  mod_full_brace_if_chain_only-t.cfg   cpp/if_chain_braces.cpp
+33063  common/mod_full_brace_if_chain_only-t.cfg   cpp/if_chain_braces.cpp
 33064  if_chain_braces_2.cfg                cpp/if_chain_braces.cpp
 33069  Issue_2195.cfg                       cpp/Issue_2195.cpp
 
