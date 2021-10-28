@@ -113,7 +113,7 @@
 30096  bug_1854.cfg                         cpp/bug_1854.cpp
 30097  align-1.cfg                          cpp/issue_1946.cpp
 30098  Issue_2692.cfg                       cpp/Issue_2692.cpp
-30099  sp_arith-f.cfg                       cpp/bug_1127.cpp
+30099  common/sp_arith-f.cfg                cpp/bug_1127.cpp
 
 30100  nl_template-f.cfg                    cpp/templates.cpp
 30101  nl_template-r.cfg                    cpp/templates.cpp
@@ -231,7 +231,7 @@
 30274  sp_cparen_oparen-r.cfg               cpp/sp_cparen_oparen.cpp
 30275  common/empty.cfg                     cpp/bug_1321.cpp
 30278  bug_1439.cfg                         cpp/bug_1439.cpp
-30279  indent_inside_ternary_operator.cfg   cpp/indent-inside-ternary-operator.cpp
+30279  common/indent_inside_ternary_operator.cfg  cpp/indent-inside-ternary-operator.cpp
 
 30280  sp_dc.cfg                            cpp/sf557.cpp
 30281  Issue_2478.cfg                       cpp/Issue_2478.cpp
@@ -275,7 +275,7 @@
 
 30330  Issue_3080.cfg                       cpp/Issue_3080.cpp
 
-30400  attribute_specifier_seqs.cfg         cpp/attribute_specifier_seqs.cpp
+30400  common/attribute_specifier_seqs.cfg  cpp/attribute_specifier_seqs.cpp
 30401  Issue_2570.cfg                       cpp/Issue_2570.cpp
 
 # function def newlines
@@ -286,7 +286,7 @@
 30705  func_param.cfg                       cpp/func_param.cpp
 30706  bug_1020.cfg                         cpp/bug_1020.cpp
 
-30711  del_semicolon.cfg                    cpp/semicolons.cpp
+30711  common/del_semicolon.cfg             cpp/semicolons.cpp
 30712  common/empty.cfg                     cpp/bug_1158.cpp
 30713  common/empty.cfg                     cpp/fix_for_relational_operators.cpp
 30714  common/empty.cfg                     cpp/Issue_1733.cpp
@@ -377,9 +377,9 @@
 30828  bug_1691.cfg                         cpp/bug_1691.cpp
 30829  ptr_star-2.cfg                       cpp/Issue_2726.cpp
 
-30830  kw_subst2.cfg                        cpp/kw_subst.cpp
-30831  kw_subst.cfg                         cpp/kw_subst2.cpp
-30832  kw_subst4.cfg                        cpp/kw_subst.cpp
+30830  common/kw_subst2.cfg                 cpp/kw_subst.cpp
+30831  common/kw_subst.cfg                  cpp/kw_subst2.cpp
+30832  common/kw_subst4.cfg                 cpp/kw_subst.cpp
 
 30840  nl_func_type_name_remove.cfg         cpp/nl_func_type_name.cpp
 30841  nl_func_type_name_force.cfg          cpp/nl_func_type_name.cpp
@@ -399,8 +399,8 @@
 
 30860  sf574.cfg                            cpp/sf574.cpp
 
-30870  cmt_insert-0.cfg                     cpp/cmt_insert.cpp
-30871  cmt_insert-1.cfg                     cpp/cmt_insert.cpp
+30870  common/cmt_insert-0.cfg              cpp/cmt_insert.cpp
+30871  common/cmt_insert-1.cfg              cpp/cmt_insert.cpp
 30872  Issue_2752.cfg                       cpp/Issue_2752.cpp
 #      will also use the file footer.txt
 
