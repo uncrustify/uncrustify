@@ -132,7 +132,7 @@ static size_t preproc_start(BraceState &braceState, ParseFrame &frm, chunk_t *pc
    if (braceState.in_preproc != CT_PP_DEFINE)
    {
       int pp_indent = fl_check(braceState.frames, frm, braceState.pp_level, pc);
-      return pp_indent;
+      return(pp_indent);
    }
    // else push the frame stack
    fl_push(braceState.frames, frm);
@@ -205,6 +205,7 @@ void brace_cleanup(void)
       }
       // Check for a preprocessor start
       size_t pp_level;
+
       if (chunk_is_token(pc, CT_PREPROC))
       {
          pp_level = preproc_start(braceState, frm, pc);
