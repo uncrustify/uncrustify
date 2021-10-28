@@ -24,9 +24,9 @@
 80066  java/sp_after_for_colon.cfg                       java/sp_after_for_colon.java
 80067  java/doxy-javadoc-alignment.cfg                   java/doxy-javadoc-alignment.java
 80068  common/nl_before_ignore_after_case.cfg            java/nl_before_ignore_after_case.java
-                                                      
+
 80100  common/align_same_func_call_params-t.cfg          java/sf567.java
-                                                      
+
 80200  common/sp_before_byref-r.cfg                      java/sp_before_byref.java
 80201  java/template_angles.cfg                          java/generics.java
 80202  common/aet.cfg                                    java/generics_wildcard.java
@@ -34,7 +34,7 @@
 80204  common/aet.cfg                                    java/cast.java
 80205  common/aet.cfg                                    java/sp_after_angle.java
 80206  common/aet.cfg                                    java/annotation3.java
-                                                      
+
 80300  java/Issue_670.cfg                                java/Issue_670.java
 80301  common/issue_672.cfg                              java/issue_672.java
 80302  java/Issue_1845.cfg                               java/Issue_1845.java

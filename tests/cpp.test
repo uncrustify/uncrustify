@@ -6,8 +6,8 @@
 
 # there are additional tests inside imported.test.
 
-02102  clark.cfg                            cpp/indent-c.cpp
-02103  clark.cfg                            cpp/output.cpp
+02102  common/clark.cfg                     cpp/indent-c.cpp
+02103  common/clark.cfg                     cpp/output.cpp
 
 30000  ben_001.cfg                          cpp/cout.cpp
 30001  sp_angle_colon.cfg                   cpp/alt_tokens.cpp
@@ -25,7 +25,7 @@
 30018  ben_009.cfg                          cpp/class-addr.h
 30019  ben_010.cfg                          cpp/wacky-template.cpp
 
-30020  ben_011.cfg                          cpp/bool.cpp
+30020  common/ben_011.cfg                   cpp/bool.cpp
 30021  ben_012.cfg                          cpp/byref.cpp
 30022  ben_013.cfg                          cpp/extern_c.h
 30023  ben_014.cfg                          cpp/templates.cpp
@@ -107,11 +107,11 @@
 30090  bug_488.cfg                          cpp/bug_488.cpp
 30091  bug_472.cfg                          cpp/bug_472.cpp
 30092  ben_016.cfg                          cpp/bug_481.cpp
-30093  sp_after_cast.cfg                    cpp/bug_484.cpp
-30094  align-1.cfg                          cpp/bug_495.cpp
+30093  common/sp_after_cast.cfg             cpp/bug_484.cpp
+30094  common/align-1.cfg                   cpp/bug_495.cpp
 30095  ben_017.cfg                          cpp/bug_485.cpp
 30096  bug_1854.cfg                         cpp/bug_1854.cpp
-30097  align-1.cfg                          cpp/issue_1946.cpp
+30097  common/align-1.cfg                   cpp/issue_1946.cpp
 30098  Issue_2692.cfg                       cpp/Issue_2692.cpp
 30099  common/sp_arith-f.cfg                cpp/bug_1127.cpp
 
@@ -139,7 +139,7 @@
 
 30120  template_sp-force.cfg                cpp/sp_after_angle.cpp
 30121  template_sp-remove.cfg               cpp/sp_after_angle.cpp
-30122  sp_inside_fparen-f.cfg               cpp/sp_after_angle.cpp
+30122  common/sp_inside_fparen-f.cfg        cpp/sp_after_angle.cpp
 30123  sp_inside_fparen-r.cfg               cpp/sp_after_angle.cpp
 30124  sp_after_angle-1.cfg                 cpp/sp_after_angle.cpp
 30125  sp_after_angle-2.cfg                 cpp/sp_after_angle.cpp
@@ -148,7 +148,7 @@
 30128  Issue_2873.cfg                       cpp/Issue_2873.cpp
 30129  Issue_2890.cfg                       cpp/Issue_2890.cpp
 
-30130  brace-allman.cfg                     cpp/if-constexpr.cpp
+30130  common/brace-allman.cfg              cpp/if-constexpr.cpp
 30131  Issue_3010.cfg                       cpp/Issue_3010.cpp
 30132  sp_brace_catch.cfg                   cpp/sp_brace_catch.cpp
 30133  Issue_3252.cfg                       cpp/Issue_3252.cpp
@@ -227,7 +227,7 @@
 30270  const_throw.cfg                      cpp/const_throw.cpp
 30271  sp_throw_paren-r.cfg                 cpp/sp_throw_paren.cpp
 30272  sp_throw_paren-f.cfg                 cpp/sp_throw_paren.cpp
-30273  sp_cparen_oparen-f.cfg               cpp/sp_cparen_oparen.cpp
+30273  common/sp_cparen_oparen-f.cfg        cpp/sp_cparen_oparen.cpp
 30274  sp_cparen_oparen-r.cfg               cpp/sp_cparen_oparen.cpp
 30275  common/empty.cfg                     cpp/bug_1321.cpp
 30278  bug_1439.cfg                         cpp/bug_1439.cpp
@@ -266,8 +266,8 @@
 30321  sp_return_paren-f.cfg                cpp/returns.cpp
 30322  sp_return_brace-r.cfg                cpp/returns.cpp
 30323  sp_return_brace-f.cfg                cpp/returns.cpp
-30324  mod_paren_on_return-a.cfg            cpp/returns.cpp
-30325  mod_paren_on_return-r.cfg            cpp/returns.cpp
+30324  common/mod_paren_on_return-a.cfg     cpp/returns.cpp
+30325  common/mod_paren_on_return-r.cfg     cpp/returns.cpp
 30326  indent_off_after_return.cfg          cpp/indent_off_after_return.cpp
 30327  indent_off_after_return.cfg          cpp/indent_off_after_return.cpp
 30328  nl_type_brace_init_lst-f.cfg         cpp/call_brace_init_lst.cpp
@@ -279,9 +279,9 @@
 30401  Issue_2570.cfg                       cpp/Issue_2570.cpp
 
 # function def newlines
-30701  func-def-1.cfg                       cpp/function-def.cpp
-30702  func-def-2.cfg                       cpp/function-def.cpp
-30703  func-def-3.cfg                       cpp/function-def.cpp
+30701  common/func-def-1.cfg                cpp/function-def.cpp
+30702  common/func-def-2.cfg                cpp/function-def.cpp
+30703  common/func-def-3.cfg                cpp/function-def.cpp
 
 30705  func_param.cfg                       cpp/func_param.cpp
 30706  bug_1020.cfg                         cpp/bug_1020.cpp
@@ -345,7 +345,7 @@
 30790  Issue_2795.cfg                       cpp/Issue_2795.cpp
 30791  Issue_3203.cfg                       cpp/Issue_3203.cpp
 
-30800  star_pos-0.cfg                       cpp/align-star-amp-pos.cpp
+30800  common/star_pos-0.cfg                cpp/align-star-amp-pos.cpp
 30801  star_pos-1.cfg                       cpp/align-star-amp-pos.cpp
 30802  star_pos-2.cfg                       cpp/align-star-amp-pos.cpp
 30803  bug_1403.cfg                         cpp/bug_1403.cpp
@@ -360,7 +360,7 @@
 30812  ben_023.cfg                          cpp/misc4.cpp
 30813  ben_024.cfg                          cpp/misc5.cpp
 30814  common/empty.cfg                     cpp/misc6.cpp
-30815  width-2.cfg                          cpp/cmt-reflow.cpp
+30815  common/width-2.cfg                   cpp/cmt-reflow.cpp
 30816  cu.cfg                               cpp/for_long.cpp
 30817  common/indent_columns-3.cfg          cpp/cmt-cpp-cont.cpp
 30818  bug_1169.cfg                         cpp/bug_1169.cpp
@@ -389,7 +389,7 @@
 30845  ben_026.cfg                          cpp/deref.cpp
 30846  Issue_3197.cfg                       cpp/Issue_3197.h
 
-30850  sp_cmt_cpp_start_force.cfg           cpp/sp_cmt_cpp_start.cc
+30850  common/sp_cmt_cpp_start_force.cfg    cpp/sp_cmt_cpp_start.cc
 30852  sp_paren_qualifier-f.cfg             cpp/Issue_2138.cpp
 30853  sp_paren_noexcept-f.cfg              cpp/noexcept.cpp
 30854  Issue_1703.cfg                       cpp/Issue_1703.cpp
@@ -448,7 +448,7 @@
 30938  common/empty.cfg                     cpp/indent_switch_pp.cpp
 30939  indent_paren_after_func_call-t.cfg   cpp/indent_paren_after_func_call.cpp
 
-30940  mod_case_brace_rm.cfg                cpp/case-brace-remove.cpp
+30940  common/mod_case_brace_rm.cfg         cpp/case-brace-remove.cpp
 30941  Issue_2150.cfg                       cpp/Issue_2150.cpp
 30942  Issue_1692.cfg                       cpp/Issue_1692.cpp
 30943  Issue_2735.cfg                       cpp/Issue_2735.cpp
@@ -498,7 +498,7 @@
 31568  Issue_2368.cfg                       cpp/Issue_2368.cpp
 
 31583  common/empty.cfg                     cpp/sf583.cpp
-31593  indent_continue-8.cfg                cpp/sf593.cpp
+31593  common/indent_continue-8.cfg         cpp/sf593.cpp
 31594  common/issue_672.cfg                 cpp/issue_672.cpp
 31595  issue_1778.cfg                       cpp/issue_1778.cpp
 31596  issue_1782.cfg                       cpp/issue_1782.cpp
@@ -568,7 +568,7 @@
 32003  align_var_class_span-1.cfg           cpp/issue_633_typename.cpp
 32004  common/empty.cfg                     cpp/issue_624_angle.cpp
 32005  align_var_class_span-1.cfg           cpp/issue_633_typename.cpp
-32006  space_indent_columns-4.cfg           cpp/bug_i_687.cpp
+32006  common/space_indent_columns-4.cfg    cpp/bug_i_687.cpp
 32007  Issue_3052.cfg                       cpp/Issue_3052.cpp
 32008  Issue_3034.cfg                       cpp/Issue_3034.cpp
 
@@ -581,7 +581,7 @@
 33001  indent_columns-11.cfg                cpp/tab-1.cpp
 33002  common/empty.cfg                     cpp/cmt_convert_tab_to_spaces.cpp
 33003  cmt_convert_tab_to_spaces-t.cfg      cpp/cmt_convert_tab_to_spaces.cpp
-33004  sp_cmt_cpp_start-a.cfg               cpp/DoxygenComments.cpp
+33004  common/sp_cmt_cpp_start-a.cfg        cpp/DoxygenComments.cpp
 33005  sp_cmt.cfg                           cpp/DoxygenComments.cpp
 33006  common/empty.cfg                     cpp/string_replace_tab_chars.cpp
 33007  common/empty.cfg                     cpp/NewLine.cpp
@@ -610,11 +610,11 @@
 33028  sp_inside_braces_empty-r.cfg         cpp/braces_empty.cpp
 33029  cast.cfg                             cpp/cast.cpp
 
-33030  space_indent_columns-4.cfg           cpp/Q_FOREVER.cpp
+33030  common/space_indent_columns-4.cfg    cpp/Q_FOREVER.cpp
 33031  align_assign_span-1.cfg              cpp/bug_612.cpp
 33032  bug_670.cfg                          cpp/bug_670.cpp
 33033  bug_670.cfg                          cpp/bug_670.h
-33034  bug_671.cfg                          cpp/bug_671.h
+33034  common/bug_671.cfg                   cpp/bug_671.h
 33035  cmt_cpp_to_c-t.cfg                   cpp/patch_32.cpp
 33036  common/empty.cfg                     cpp/bug_663.cpp
 33037  func_class.cfg                       cpp/func_class.cpp
@@ -635,7 +635,7 @@
 33050  common/empty.cfg                     cpp/issue_523.cpp
 33051  common/empty.cfg                     cpp/bug_i_503.cpp
 33052  common/empty.cfg                     cpp/bug_i_512.cpp
-33053  space_indent_columns-4.cfg           cpp/for_auto.cpp
+33053  common/space_indent_columns-4.cfg    cpp/for_auto.cpp
 33054  common/indent_columns-3.cfg          cpp/bug_i_825.cpp
 33056  common/empty.cfg                     cpp/bug_33056.cpp
 33057  bug_1349.cfg                         cpp/bug_1349.cpp
@@ -662,13 +662,13 @@
 33079  multi_line_9.cfg                     cpp/multi_line.cpp
 
 33080  multi_line_10.cfg                    cpp/multi_line.cpp
-33081  space_indent_columns-4.cfg           cpp/bug_i_552.cpp
+33081  common/space_indent_columns-4.cfg    cpp/bug_i_552.cpp
 33082  common/empty.cfg                     cpp/namespace_namespace.cpp
 33083  bug_i_359.cfg                        cpp/bug_i_359.cpp
 33084  op_sym_empty.cfg                     cpp/op_sym_empty.cpp
 33085  indent_with_tabs-0.cfg               cpp/bug_i_323.cpp
 33086  indent_class-t.cfg                   cpp/bug_i_568.cpp
-33087  space_indent_columns-4.cfg           cpp/bug_i_596.cpp
+33087  common/space_indent_columns-4.cfg    cpp/bug_i_596.cpp
 33088  common/empty.cfg                     cpp/bug_i_197.cpp
 33089  indent_class-t_columns-4.cfg         cpp/bug_643.cpp
 
@@ -689,7 +689,7 @@
 33103  bug_858-f.cfg                        cpp/bug_858.cpp
 33104  bug_858-r.cfg                        cpp/bug_858.cpp
 33105  bug_1001.cfg                         cpp/bug_1001.cpp
-33106  bool-pos-eol-force.cfg               cpp/pos_bool_in_template.h
+33106  common/bool-pos-eol-force.cfg        cpp/pos_bool_in_template.h
 33107  Issue_2688.cfg                       cpp/Issue_2688.cpp
 33108  Issue_2045.cfg                       cpp/Issue_2045.cpp
 33109  common/empty.cfg                     cpp/Issue_3205.cpp
@@ -793,7 +793,7 @@
 
 34170  common/empty.cfg                     cpp/i1082.cpp
 34171  common/empty.cfg                     cpp/i1181.cpp
-34172  space_indent_columns-4.cfg           cpp/i1165.cpp
+34172  common/space_indent_columns-4.cfg    cpp/i1165.cpp
 34173  arith-vs-ptr.cfg                     cpp/i1464.cpp
 34174  arith-vs-ptr.cfg                     cpp/i1466.cpp
 34175  align_assign_span-1.cfg              cpp/i1509.cpp

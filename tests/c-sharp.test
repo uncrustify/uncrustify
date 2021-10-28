@@ -11,56 +11,56 @@
 10010  cs/ben_034.cfg                               cs/var-member.cs
 10011  common/indent_columns-3.cfg                  cs/strings.cs
 10013  cs/625_where-constraints.cfg                 cs/625_where-constraints.cs
-                                                    
+
 10020  common/region-0.cfg                          cs/region.cs
 10021  common/region-1.cfg                          cs/region.cs
 10022  common/region-2.cfg                          cs/region.cs
 10023  common/region-3.cfg                          cs/region.cs
-                                                    
+
 10030  common/sort_imports.cfg                      cs/sort_using.cs
 10031  cs/mod_sort_using-t.cfg                      cs/bug_i_935.cs
 10032  cs/sort_using_categ.cfg                      cs/sort_using_categ.cs
-                                                    
+
 10040  cs/tcf.cfg                                   cs/tcf.cs
 10041  cs/tcf.cfg                                   cs/gs.cs
 10042  cs/ben_036.cfg                               cs/exception-filters.cs
-                                                    
+
 10050  cs/cs_generics.cfg                           cs/generics.cs
-                                                    
+
 10060  cs/ben_037.cfg                               cs/unsafe.cs
 10065  cs/UNI-1975.cfg                              cs/UNI-1975.cs
-                                                    
+
 10070  cs/ben_038.cfg                               cs/utf16le.cs
 10071  cs/ben_038.cfg                               cs/utf16be.cs
 10072  cs/ben_038.cfg                               cs/utf16le_no_bom.cs
 10073  cs/ben_038.cfg                               cs/utf16be_no_bom.cs
 10074  cs/UNI-2020.cfg                              cs/UNI-2020.cs
-                                                    
+
 10080  common/ben_042.cfg                           cs/property.cs
-                                                    
+
 10090  cs/ben_043.cfg                               cs/string_multi.cs
-                                                    
+
 10100  common/empty.cfg                             cs/bug_600.cs
 10101  cs/sf607.cfg                                 cs/sf607.cs
-                                                    
+
 10110  cs/mda_space_a.cfg                           cs/mdarray_space.cs
 10111  cs/sp_after_comma-a.cfg                      cs/mdarray_space.cs
 10112  cs/mda_space_c.cfg                           cs/mdarray_space.cs
-                                                    
+
 10119  common/empty.cfg                             cs/preserveTabs.cs
 10120  common/empty.cfg                             cs/cmt_backslash_eol.cs
-                                                    
+
 10130  cs/sp_between_new_paren.cfg                  cs/sp_between_new_paren.cs
-                                                    
+
 10140  cs/ben_044.cfg                               cs/remove_semi.cs
-                                                    
+
 10150  cs/ben_045.cfg                               cs/operator-null-conditional.cs
 10151  cs/sp_assign-a.cfg                           cs/operator_null-coalescing-assignment.cs
-                                                    
+
 10200  common/empty.cfg                             cs/logger.cs
-                                                    
+
 10300  common/empty.cfg                             cs/1822.cs
-                                                    
+
 10628  common/empty.cfg                             cs/sf628.cs
 10160  common/empty.cfg                             cs/delegate.cs
 10161  cs/indent_cs_delegate_brace-t.cfg            cs/delegate.cs
@@ -69,9 +69,9 @@
 12003  cs/ben_043.cfg                               cs/fncall_as_ctor_in_attr.cs
 12004  cs/verbatim_strings.cfg                      cs/verbatim_strings.cs
 12005  common/empty.cfg                             cs/bug_1591.cs
-                                                    
+
 12101  cs/indent_using_block-f.cfg                  cs/bug_i_679.cs
-                                                    
+
 12102  cs/mod_full_brace_nl_block_rem_mlcond-0.cfg  cs/mod_full_brace_nl_block_rem_mlcond.cs
 12103  cs/mod_full_brace_nl_block_rem_mlcond-1.cfg  cs/mod_full_brace_nl_block_rem_mlcond.cs
 12104  cs/bug_1637.cfg                              cs/bug_1637.cs
@@ -79,13 +79,13 @@
 12106  cs/bug_1650.cfg                              cs/UNI-40685.cs
 12107  cs/mod_full_paren_if_bool.cfg                cs/mod_full_paren_if_bool.cs
 12108  cs/Issue_2705.cfg                            cs/Issue_2705.cs
-                                                    
-# test the options sp_ with the value "ignore"      
+
+# test the options sp_ with the value "ignore"
 12200  cs/comma-cs-f.cfg                            cs/comma.cs
 12201  cs/comma-cs-i.cfg                            cs/comma.cs
 12202  cs/comma-cs-r.cfg                            cs/comma.cs
-                                                    
-# Adopt some UT tests                               
+
+# Adopt some UT tests
 10012  common/empty.cfg                             cs/621_this-spacing.cs
 10014  common/empty.cfg                             cs/630_bad-new-init-semicolon-removal.cs
 10015  cs/misc-failures.cfg                         cs/misc-failures.cs
@@ -122,7 +122,7 @@
 11073  cs/U08-Cs.cfg                                cs/UNI-2008.cs
 20010  cs/UNI-32658.cfg                             cs/UNI-32658.cs
 20011  cs/bug_1620.cfg                              cs/bug_1620.cs
-                                                    
+
 60004  cs/UNI-2684.cfg                              cs/UNI-2684.cs
 60005  cs/UNI-2685.cfg                              cs/UNI-2685.cs
 60007  cs/UNI-3083.cfg                              cs/UNI-3083.cs
