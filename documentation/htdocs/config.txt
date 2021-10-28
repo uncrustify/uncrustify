@@ -1223,6 +1223,11 @@ indent_switch_pp                = true     # true/false
 # Usually 0.
 indent_case_shift               = 0        # unsigned number
 
+# Whether to align comments before 'case' with the 'case'.
+#
+# Default: true
+indent_case_comment             = true     # true/false
+
 # Whether to indent comments not found in first column.
 #
 # Default: true

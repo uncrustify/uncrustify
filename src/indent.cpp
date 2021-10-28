@@ -2206,18 +2206,21 @@ void indent_text(void)
          // Always set on case statements
          indent_column_set(frm.top().indent_tmp);
 
-         // comments before 'case' need to be aligned with the 'case'
-         chunk_t *pct = pc;
-
-         while (  ((pct = chunk_get_prev_nnl(pct)) != nullptr)
-               && chunk_is_comment(pct))
+         if (options::indent_case_comment())
          {
-            chunk_t *t2 = chunk_get_prev(pct);
+            // comments before 'case' need to be aligned with the 'case'
+            chunk_t *pct = pc;
 
-            if (chunk_is_newline(t2))
+            while (  ((pct = chunk_get_prev_nnl(pct)) != nullptr)
+                  && chunk_is_comment(pct))
             {
-               pct->column        = frm.top().indent_tmp;
-               pct->column_indent = pct->column;
+               chunk_t *t2 = chunk_get_prev(pct);
+
+               if (chunk_is_newline(t2))
+               {
+                  pct->column        = frm.top().indent_tmp;
+                  pct->column_indent = pct->column;
+               }
             }
          }
       }
