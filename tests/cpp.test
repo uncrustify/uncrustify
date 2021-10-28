@@ -18,7 +18,7 @@
 30011  ben_006.cfg                          cpp/misc.cpp
 30012  avalon2.cfg                          cpp/misc2.cpp
 30013  sim.cfg                              cpp/sim.h
-30014  indent_columns-3.cfg                 cpp/ctor-var.cpp
+30014  common/indent_columns-3.cfg          cpp/ctor-var.cpp
 30015  ben_008.cfg                          cpp/exception.cpp
 30016  custom-open.cfg                      cpp/custom-open.cpp
 30017  custom-open2.cfg                     cpp/custom-open.cpp
@@ -211,7 +211,7 @@
 30255  ben_018.cfg                          cpp/align_constr.cpp
 30256  common/empty.cfg                     cpp/func_call.cpp
 30257  indent_columns-4.cfg                 cpp/func_call_chain.cpp
-30258  indent_columns-3.cfg                 cpp/casts.cpp
+30258  common/indent_columns-3.cfg          cpp/casts.cpp
 30259  sp_after_constr_colon.cfg            cpp/sp_after_constr_colon.cpp
 
 30260  var_def_gap.cfg                      cpp/var_def_gap.cpp
@@ -362,7 +362,7 @@
 30814  common/empty.cfg                     cpp/misc6.cpp
 30815  width-2.cfg                          cpp/cmt-reflow.cpp
 30816  cu.cfg                               cpp/for_long.cpp
-30817  indent_columns-3.cfg                 cpp/cmt-cpp-cont.cpp
+30817  common/indent_columns-3.cfg          cpp/cmt-cpp-cont.cpp
 30818  bug_1169.cfg                         cpp/bug_1169.cpp
 30819  bug_1170.cfg                         cpp/bug_1170.cpp
 
@@ -407,10 +407,10 @@
 30880  common/empty.cfg                     cpp/bug_1758.cpp
 30881  bug_1758-f.cfg                       cpp/bug_1758-f.cpp
 
-30900  region-0.cfg                         cpp/region.cpp
-30901  region-1.cfg                         cpp/region.cpp
-30902  region-2.cfg                         cpp/region.cpp
-30903  region-3.cfg                         cpp/region.cpp
+30900  common/region-0.cfg                  cpp/region.cpp
+30901  common/region-1.cfg                  cpp/region.cpp
+30902  common/region-2.cfg                  cpp/region.cpp
+30903  common/region-3.cfg                  cpp/region.cpp
 30907  Issue_1813.cfg                       cpp/Issue_1813.cpp
 30908  Issue_1813.cfg                       cpp/Issue_1813-2.cpp
 30909  Issue_1813.cfg                       cpp/Issue_1813-3.cpp
@@ -636,7 +636,7 @@
 33051  common/empty.cfg                     cpp/bug_i_503.cpp
 33052  common/empty.cfg                     cpp/bug_i_512.cpp
 33053  space_indent_columns-4.cfg           cpp/for_auto.cpp
-33054  indent_columns-3.cfg                 cpp/bug_i_825.cpp
+33054  common/indent_columns-3.cfg          cpp/bug_i_825.cpp
 33056  common/empty.cfg                     cpp/bug_33056.cpp
 33057  bug_1349.cfg                         cpp/bug_1349.cpp
 33058  Issue_3164.cfg                       cpp/Issue_3164.cpp
@@ -725,8 +725,8 @@
 33216  Issue_3055.cfg                       cpp/Issue_3055-a.cpp
 33217  common/empty.cfg                     cpp/Issue_3113.cpp
 
-34001  nl_before_after.cfg                  cpp/nl_before_after.h
-34002  indent_columns-3.cfg                 cpp/bug_i_793.cpp
+34001  common/nl_before_after.cfg           cpp/nl_before_after.h
+34002  common/indent_columns-3.cfg          cpp/bug_i_793.cpp
 34003  nl_max_blank_in_func-1.cfg           cpp/nl_max_blank_in_func.cpp
 34004  nl_max_blank_in_func-4.cfg           cpp/nl_max_blank_in_func.cpp
 34005  common/empty.cfg                     cpp/nl_max_blank_in_func.cpp
@@ -1020,7 +1020,7 @@
 60038  UNI-30088.cfg                        cpp/UNI-30088.cpp
 60039  U36-Cpp.cfg                          cpp/UNI-30628.cpp
 
-60042  UNI-18777.cfg                        cpp/UNI-18777.cpp
+60042  common/UNI-18777.cfg                 cpp/UNI-18777.cpp
 60043  nl_remove_extra_newlines-1.cfg       cpp/i2033.cpp
 60044  nl_fdef_brace-r__nl_collapse_empty_body-t.cfg  cpp/i2116.cpp
 60045  align_asterisk_after_type_cast.cfg   cpp/align_asterisk_after_type_cast.cpp

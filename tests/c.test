@@ -7,13 +7,13 @@
 
 # little general tests ====================================================
 
-00000  indent_columns-3.cfg                 c/comment-indent.c
+00000  common/indent_columns-3.cfg          c/comment-indent.c
 00001  cpp_to_c-1.cfg                       c/comment-indent.c
 00002  cpp_to_c-2.cfg                       c/comment-indent.c
 00003  cpp_to_c-3.cfg                       c/comment-indent.c
 00004  indent-1.cfg                         c/switch.c
 00005  ben_047.cfg                          c/cmt-align.c
-00006  indent_columns-3.cfg                 c/comment-convert.c
+00006  common/indent_columns-3.cfg          c/comment-convert.c
 00007  cpp_to_c-1.cfg                       c/comment-convert.c
 00008  cpp_to_c-2.cfg                       c/comment-convert.c
 00009  cpp_to_c-3.cfg                       c/comment-convert.c
@@ -52,7 +52,7 @@
 00069  ben_057.cfg                          c/vb-pp.c
 
 00070  ben_058.cfg                          c/return-multi.c
-00071  ben_042.cfg                          c/include_define.h
+00071  common/ben_042.cfg                   c/include_define.h
 00072  star_pos-0.cfg                       c/align-proto.c
 00073  common/empty.cfg                     c/nl_proto_endif.c
 00074  clang-has_include.cfg                c/clang-has_include.h
@@ -62,7 +62,7 @@
 00082  else-if-2.cfg                        c/else-if.c
 
 00091  cond-1.cfg                           c/cond.c
-00092  indent_columns-3.cfg                 c/cond.c
+00092  common/indent_columns-3.cfg          c/cond.c
 00093  sp_cond_colon.cfg                    c/cond.c
 
 00101  ben_061.cfg                          c/bugs-1.c
@@ -72,7 +72,7 @@
 00105  ben_065.cfg                          c/bugs-5.c
 00106  ben_011.cfg                          c/bugs-6.c
 00107  ben_011.cfg                          c/bugs-7.c
-00108  indent_columns-3.cfg                 c/bugs-8.c
+00108  common/indent_columns-3.cfg          c/bugs-8.c
 
 00110  ben_069.cfg                          c/misc.c
 00111  brace-kr-br.cfg                      c/misc.c
@@ -199,8 +199,8 @@
 00513  bool-pos-sol-force.cfg               c/bool-pos.c
 00514  my_conf.cfg                          c/my_infile.c
 
-00600  indent_columns-3.cfg                 c/dos.c
-00601  indent_columns-3.cfg                 c/mac.c
+00600  common/indent_columns-3.cfg          c/dos.c
+00601  common/indent_columns-3.cfg          c/mac.c
 00611  common/empty.cfg                     c/pp-space.c
 00612  pp-indent-2.cfg                      c/pp-space.c
 00613  pp_indent-a.cfg                      c/pp-space.c
@@ -361,7 +361,7 @@
 
 08399  ben_095.cfg                          c/gh399.c
 
-09594  indent_columns-3.cfg                 c/sf594.c
+09594  common/indent_columns-3.cfg          c/sf594.c
 09588  common/empty.cfg                     c/sf588.c
 
 09601  sp_after_sparen.cfg                  c/sp_after_sparen.c
