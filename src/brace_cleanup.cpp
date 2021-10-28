@@ -131,7 +131,8 @@ static size_t preproc_start(BraceState &braceState, ParseFrame &frm, chunk_t *pc
    // If we are not in a define, check for #if, #else, #endif, etc
    if (braceState.in_preproc != CT_PP_DEFINE)
    {
-      return(fl_check(braceState.frames, frm, braceState.pp_level, pc));
+      int pp_indent = fl_check(braceState.frames, frm, braceState.pp_level, pc);
+      return pp_indent;
    }
    // else push the frame stack
    fl_push(braceState.frames, frm);
@@ -203,9 +204,15 @@ void brace_cleanup(void)
          braceState.in_preproc = CT_NONE;
       }
       // Check for a preprocessor start
-      const size_t pp_level = (chunk_is_token(pc, CT_PREPROC))
-                              ? preproc_start(braceState, frm, pc)
-                              : braceState.pp_level;
+      size_t pp_level;
+      if (chunk_is_token(pc, CT_PREPROC))
+      {
+         pp_level = preproc_start(braceState, frm, pc);
+      }
+      else
+      {
+         pp_level = braceState.pp_level;
+      }
       LOG_FMT(LTOK, "%s(%d): pp_level is %zu\n",
               __func__, __LINE__, pp_level);
 
