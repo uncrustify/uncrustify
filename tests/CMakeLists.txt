@@ -74,6 +74,7 @@ add_test(
     --config $<CONFIG>
     --build ${uncrustify_BINARY_DIR}
     --diff
+    --test ${CMAKE_CURRENT_BINARY_DIR}/cli
   ${_configs}
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cli
 )
