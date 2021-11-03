@@ -1974,7 +1974,14 @@ void indent_text(void)
          else
          {
             // Use the prev indent level + indent_size.
-            frm.top().indent = frm.prev().indent + indent_size;
+            if (get_chunk_parent_type(pc) == CT_SWITCH)
+            {
+               frm.top().indent = frm.prev().indent + options::indent_switch_body();
+            }
+            else
+            {
+               frm.top().indent = frm.prev().indent + indent_size;
+            }
             LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos is %zu, ... indent is %zu\n",
                     __func__, __LINE__, frm.size() - 1, frm.top().indent);
             LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', parent_type is %s\n",
@@ -2191,7 +2198,8 @@ void indent_text(void)
       {
          // Start a case - indent UO_indent_switch_case from the switch level
          log_rule_B("indent_switch_case");
-         const size_t tmp = frm.top().indent
+         const size_t tmp = frm.top().indent + indent_size
+                            - options::indent_switch_body()
                             + options::indent_switch_case();
          frm.push(pc, __func__, __LINE__);
 

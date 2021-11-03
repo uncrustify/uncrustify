@@ -1518,6 +1518,11 @@ indent_relative_single_line_comments;
 extern BoundedOption<unsigned, 0, 16>
 indent_switch_case;
 
+// Spaces to indent the body of a 'switch' before any 'case'.
+// Usually the same as indent_columns or indent_switch_case.
+extern BoundedOption<unsigned, 0, 16>
+indent_switch_body;
+
 // Spaces to indent '{' from 'case'. By default, the brace will appear under
 // the 'c' in case. Usually set to 0 or indent_columns. Negative values are OK.
 // It might wise to choose the same value for the option indent_switch_case.
