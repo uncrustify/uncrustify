@@ -54,8 +54,8 @@ void fl_log(log_sev_t logsev, const ParseFrame &frm)
 
    for (size_t idx = 1; idx < frm.size(); idx++)
    {
-      LOG_FMT(logsev, " [%s-%u]", get_token_name(frm.at(idx).type),
-              static_cast<unsigned int>(frm.at(idx).stage));
+      LOG_FMT(logsev, " [%s-%s]", get_token_name(frm.at(idx).type),
+              get_brace_stage_name(frm.at(idx).stage));
    }
 
    LOG_FMT(logsev, "\n");
@@ -168,7 +168,7 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, ch
               get_token_name(next->type));
       set_chunk_parent(pc, next->type);
    }
-   LOG_FMT(LPFCHK, "%s(%d): %zu] %s\n",
+   LOG_FMT(LPFCHK, "%s(%d): orig_line is %zu, %s\n",
            __func__, __LINE__, pc->orig_line, get_token_name(get_chunk_parent_type(pc)));
    fl_log_frms(LPFCHK, "TOP", frm, frames);
 
@@ -285,10 +285,10 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, ch
 
    if (txt != nullptr)
    {
-      LOG_FMT(LPF, "%s(%d): orig_line is %zu, type is %s: %s in_ifdef is %d/%d, counts is %zu, frame_count is %zu\n",
+      LOG_FMT(LPF, "%s(%d): orig_line is %zu, type is %s: %s in_ifdef is %s/%s, counts is %zu, frame_count is %zu\n",
               __func__, __LINE__, pc->orig_line,
-              get_token_name(get_chunk_parent_type(pc)), txt, static_cast<int>(in_ifdef),
-              static_cast<int>(frm.in_ifdef), b4_cnt, frames.size());
+              get_token_name(get_chunk_parent_type(pc)), txt, get_token_name(in_ifdef),
+              get_token_name(frm.in_ifdef), b4_cnt, frames.size());
       fl_log_all(LPF, frames);
       LOG_FMT(LPF, " <Out>");
       fl_log(LPF, frm);
