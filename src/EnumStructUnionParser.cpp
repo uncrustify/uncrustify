@@ -1612,7 +1612,7 @@ void EnumStructUnionParser::mark_constructors()
       {
          chunk_flags_set(prev, PCF_IN_CLASS);
 
-         next = chunk_get_next_ncnnl(prev, scope_e::PREPROC);
+         next = skip_template_next(chunk_get_next_ncnnl(prev, scope_e::PREPROC)); // Issue #3368
 
          /**
           * find a chunk within the class/struct body that
