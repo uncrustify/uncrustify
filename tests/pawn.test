@@ -4,22 +4,22 @@
 # Range: 60000 - 69999
 # test.name  config.file  input.file
 
-60000  pawn.cfg                             pawn/functions.pawn
-60001  pawn.cfg                             pawn/comment.p
-60002  pawn.cfg                             pawn/traffic.p
-60003  pawn.cfg                             pawn/tags.pawn
-60004  pawn.cfg                             pawn/enum.pawn
-60005  pawn.cfg                             pawn/unbraced.p
+60000  pawn/pawn.cfg                        pawn/functions.pawn
+60001  pawn/pawn.cfg                        pawn/comment.p
+60002  pawn/pawn.cfg                        pawn/traffic.p
+60003  pawn/pawn.cfg                        pawn/tags.pawn
+60004  pawn/pawn.cfg                        pawn/enum.pawn
+60005  pawn/pawn.cfg                        pawn/unbraced.p
 
-60010  pawn-escape.cfg                      pawn/str-escape.p
+60010  pawn/pawn-escape.cfg                 pawn/str-escape.p
 
-60020  pawn-escape.cfg                      pawn/switch-vsemi.sma
+60020  pawn/pawn-escape.cfg                 pawn/switch-vsemi.sma
 
-60030  amxmodx.cfg                          pawn/crusty_ex-1.sma
+60030  pawn/amxmodx.cfg                     pawn/crusty_ex-1.sma
 
-60040  amxmodx.cfg                          pawn/preproc.pawn
+60040  pawn/amxmodx.cfg                     pawn/preproc.pawn
 
-60050  mod_full_brace_function-f.cfg        pawn/gh419.pawn
+60050  pawn/mod_full_brace_function-f.cfg   pawn/gh419.pawn
 
-60100  Issue_2586.cfg                       pawn/Issue_2586.pawn
-60101  Issue_2665.cfg                       pawn/Issue_2665.pawn
+60100  pawn/Issue_2586.cfg                  pawn/Issue_2586.pawn
+60101  pawn/Issue_2665.cfg                  pawn/Issue_2665.pawn
