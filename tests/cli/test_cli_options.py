@@ -747,7 +747,7 @@ def main(args):
             parsed_args,
             args_arr=['-c', s_path_join(script_dir, 'config/replace.cfg'),
                       '-F', s_path_join(script_dir, 'input/replace.list'),
-                      '--replace'],
+                      '--replace', '--no-backup'],
             gen_expected_path=s_path_join(script_dir, 'output/backup.h'),
             gen_result_path=s_path_join(script_dir, 'input/backup.h'),
             err_expected_path=s_path_join(script_dir, 'output/replace.txt'),
