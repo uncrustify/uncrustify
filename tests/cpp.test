@@ -1037,9 +1037,10 @@
 60055  cpp/issue_3116.cfg                                   cpp/issue_3116.cpp
 60056  cpp/issue_3116.cfg                                   cpp/issue_3116-2.cpp
 60057  cpp/issue_3116-2.cfg                                 cpp/issue_3116.cpp
-60058  cpp/issue_3330.cfg                                   cpp/issue_3330.cpp
+60058  cpp/sp_constr_colon-i.cfg                            cpp/issue_3330.cpp
 60059  cpp/indent_ctor_init_leading.cfg                     cpp/indent_ctor_init.cpp
 60060  cpp/sp_return-a.cfg                                  cpp/returns.cpp
 60061  cpp/sp_return-f.cfg                                  cpp/returns.cpp
 60062  cpp/sp_return-i.cfg                                  cpp/returns.cpp
 60063  cpp/sp_return-r.cfg                                  cpp/returns.cpp
+60064  cpp/sp_constr_colon-i.cfg                            cpp/issue_3368.cpp
