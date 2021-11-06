@@ -407,21 +407,38 @@ sp_permit_cpp11_shift;
 extern Option<iarf_e>
 sp_before_sparen;
 
-// Add or remove space inside '(' and ')' of control statements.
+// Add or remove space inside '(' and ')' of control statements other than
+// 'for'.
 extern Option<iarf_e>
 sp_inside_sparen;
 
-// Add or remove space after '(' of control statements.
+// Add or remove space after '(' of control statements other than 'for'.
 //
 // Overrides sp_inside_sparen.
 extern Option<iarf_e>
 sp_inside_sparen_open;
 
-// Add or remove space before ')' of control statements.
+// Add or remove space before ')' of control statements other than 'for'.
 //
 // Overrides sp_inside_sparen.
 extern Option<iarf_e>
 sp_inside_sparen_close;
+
+// Add or remove space inside '(' and ')' of 'for' statements.
+extern Option<iarf_e>
+sp_inside_for;
+
+// Add or remove space after '(' of 'for' statements.
+//
+// Overrides sp_inside_for.
+extern Option<iarf_e>
+sp_inside_for_open;
+
+// Add or remove space before ')' of 'for' statements.
+//
+// Overrides sp_inside_for.
+extern Option<iarf_e>
+sp_inside_for_close;
 
 // Add or remove space between '((' or '))' of control statements.
 extern Option<iarf_e>

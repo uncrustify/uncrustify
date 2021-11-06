@@ -67,6 +67,7 @@ sp_inside_braces_enum		= force		# "{ 1 }" vs "{1}"
 sp_inside_paren			= remove
 sp_inside_fparen		= remove
 sp_inside_sparen		= remove
+sp_inside_for			= remove
 sp_inside_square		= remove
 #sp_type_func			= ignore
 sp_assign			= force

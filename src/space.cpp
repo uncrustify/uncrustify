@@ -2299,31 +2299,75 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       return(options::sp_square_fparen());
    }
 
-   // "if(...)" vs. "if( ... )"
-   if (  chunk_is_token(second, CT_SPAREN_CLOSE)
-      && (options::sp_inside_sparen_close() != IARF_IGNORE))
+   // "if(...)" vs. "if( ... )" etc.
+   if (chunk_is_token(second, CT_SPAREN_CLOSE))
    {
-      // Add or remove space before ')' of control statements.
-      // Overrides sp_inside_sparen.
-      log_rule("sp_inside_sparen_close");
-      return(options::sp_inside_sparen_close());
+      if (  get_chunk_parent_type(second) == CT_FOR
+         && options::sp_inside_for_open() != IARF_IGNORE)
+      {
+         // Add or remove space before ')' of 'for' statements.
+         // Overrides sp_inside_for.
+         log_rule("sp_inside_for_close");
+         return(options::sp_inside_for_close());
+      }
+      else if (options::sp_inside_sparen_open() != IARF_IGNORE)
+      {
+         // Add or remove space before ')' of other control statements.
+         // Overrides sp_inside_sparen.
+         log_rule("sp_inside_sparen_close");
+         return(options::sp_inside_sparen_close());
+      }
    }
 
-   if (  chunk_is_token(first, CT_SPAREN_OPEN)
-      && (options::sp_inside_sparen_open() != IARF_IGNORE))
+   if (chunk_is_token(first, CT_SPAREN_OPEN))
    {
-      // Add or remove space after '(' of control statements.
-      // Overrides sp_inside_sparen.
-      log_rule("sp_inside_sparen_open");
-      return(options::sp_inside_sparen_open());
+      if (  get_chunk_parent_type(first) == CT_FOR
+         && options::sp_inside_for_open() != IARF_IGNORE)
+      {
+         // Add or remove space before ')' of 'for' statements.
+         // Overrides sp_inside_for.
+         log_rule("sp_inside_for_close");
+         return(options::sp_inside_for_close());
+      }
+      else if (options::sp_inside_sparen_open() != IARF_IGNORE)
+      {
+         // Add or remove space after '(' of other control statements.
+         // Overrides sp_inside_sparen.
+         log_rule("sp_inside_sparen_open");
+         return(options::sp_inside_sparen_open());
+      }
    }
 
-   if (  chunk_is_token(first, CT_SPAREN_OPEN)
-      || chunk_is_token(second, CT_SPAREN_CLOSE))
+   if (chunk_is_token(first, CT_SPAREN_OPEN))
    {
-      // Add or remove space inside '(' and ')' of control statements.
-      log_rule("sp_inside_sparen");
-      return(options::sp_inside_sparen());
+      if (get_chunk_parent_type(first) == CT_FOR)
+      {
+         // Add or remove space inside '(' and ')' of 'for' statements.
+         log_rule("sp_inside_for");
+         return(options::sp_inside_for());
+      }
+      else
+      {
+         // Add or remove space inside '(' and ')' of other control statements.
+         log_rule("sp_inside_sparen");
+         return(options::sp_inside_sparen());
+      }
+   }
+
+   if (chunk_is_token(second, CT_SPAREN_CLOSE))
+   {
+      if (get_chunk_parent_type(second) == CT_FOR)
+      {
+         // Add or remove space inside '(' and ')' of 'for' statements.
+         log_rule("sp_inside_for");
+         return(options::sp_inside_for());
+      }
+      else
+      {
+         // Add or remove space inside '(' and ')' of other control statements.
+         log_rule("sp_inside_sparen");
+         return(options::sp_inside_sparen());
+      }
    }
 
    if (chunk_is_token(first, CT_CLASS_COLON))
