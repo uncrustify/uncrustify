@@ -85,6 +85,7 @@ add_custom_target(update-cli-options
     --config $<CONFIG>
     --build ${uncrustify_BINARY_DIR}
     --apply
+    --test ${CMAKE_CURRENT_BINARY_DIR}/cli
   DEPENDS uncrustify
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cli
 )
