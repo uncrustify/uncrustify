@@ -2275,10 +2275,14 @@ void indent_text(void)
                reindent_line(next, pse_indent);
             }
          }
-         else
+         else if (val > -17)
          {
             const auto no_underflow = cast_abs(pse_indent, val) < pse_indent;
             indent_column_set(((no_underflow) ? (pse_indent + val) : 0));
+         }
+         else
+         {
+            indent_column_set(pc->orig_col);
          }
       }
       else if (chunk_is_token(pc, CT_ACCESS))

@@ -1566,7 +1566,8 @@ indent_comment_align_thresh; // = 3
 //
 //  >0: Absolute column where 1 is the leftmost column
 // <=0: Subtract from brace indent
-extern BoundedOption<signed, -16, 16>
+// -17: Keep original indentation
+extern BoundedOption<signed, -17, 16>
 indent_label; // = 1
 
 // How to indent access specifiers that are followed by a

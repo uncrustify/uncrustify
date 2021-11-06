@@ -426,3 +426,4 @@
 10037  c/indent_case_comment-true.cfg             c/Issue_3362.c
 10038  c/indent_case_comment-false.cfg            c/Issue_3362.c
 10039  c/Issue_3370.cfg                           c/Issue_3370.c
+10040  c/indent_label--17.cfg                     c/i2c-core.c
