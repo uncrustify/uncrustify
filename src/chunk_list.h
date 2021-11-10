@@ -524,6 +524,10 @@ static inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e
          || chunk_is_token(cur, CT_ANGLE_OPEN)
          || chunk_is_token(cur, CT_SQUARE_OPEN)))
    {
+      //c_token_t type_old = cur->type;
+      //c_token_t type_new = (c_token_t)(type_old + 1);
+      //chunk_t *tmp = chunk_get_next_type(cur, type_new, cur->level, scope);
+      //return tmp;
       return(chunk_get_next_type(cur, (c_token_t)(cur->type + 1), cur->level, scope));
    }
    return(cur);

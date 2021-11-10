@@ -2541,6 +2541,10 @@ static void newlines_brace_pair(chunk_t *br_open)
    bool nl_close_brace = false;
 
    // Handle the cases where the brace is part of a function call or definition
+   LOG_FMT(LNL1LINE, "%s(%d): br_open->orig_line is %zu, br_open->orig_col is %zu\n",
+           __func__, __LINE__, br_open->orig_line, br_open->orig_col);
+   log_pcf_flags(LNL1LINE, br_open->flags);
+
    if (  get_chunk_parent_type(br_open) == CT_FUNC_DEF
       || get_chunk_parent_type(br_open) == CT_FUNC_CALL
       || get_chunk_parent_type(br_open) == CT_FUNC_CALL_USER
@@ -4171,6 +4175,10 @@ void newlines_cleanup_braces(bool first)
          // so, don't add a newline before a closing brace. Issue #1405.
          log_rule_B("nl_type_brace_init_lst_open");
          log_rule_B("nl_type_brace_init_lst_close");
+
+         // Issue #3336
+         LOG_FMT(LNEWLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', parent_type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(get_chunk_parent_type(pc)));
 
          if (!(  get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST
               && options::nl_type_brace_init_lst_open() == IARF_IGNORE

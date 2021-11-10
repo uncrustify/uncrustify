@@ -208,14 +208,29 @@ void brace_cleanup(void)
 
       if (chunk_is_token(pc, CT_PREPROC))
       {
-         pp_level = preproc_start(braceState, frm, pc);
+         chunk_t *next = chunk_get_next(pc);
+
+         if (  next != nullptr
+            && chunk_is_token(next, CT_PP_ENDIF))
+         {
+            size_t save_level = frm.level;
+            LOG_FMT(LTOK, "%s(%d): save_level is %zu\n",
+                    __func__, __LINE__, save_level);
+            pp_level = preproc_start(braceState, frm, pc);
+            // restore level
+            frm.level = save_level;
+         }
+         else
+         {
+            pp_level = preproc_start(braceState, frm, pc);
+         }
       }
       else
       {
          pp_level = braceState.pp_level;
       }
-      LOG_FMT(LTOK, "%s(%d): pp_level is %zu\n",
-              __func__, __LINE__, pp_level);
+      LOG_FMT(LTOK, "%s(%d): pc->level is %zu, pp_level is %zu\n",
+              __func__, __LINE__, pc->level, pp_level);
 
       // Do before assigning stuff from the frame
       if (  language_is_set(LANG_PAWN)
@@ -257,56 +272,17 @@ void brace_cleanup(void)
       }
       pc = chunk_get_next(pc);
    }
-//   pc = chunk_get_head();
-//
-//   while (pc != nullptr)
-//   {
-//      LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
-//              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
-//
-//      // look for template
-//      if (chunk_is_token(pc, CT_TEMPLATE))                 // Issue #3309
-//      {
-//         chunk_t *template_end = chunk_get_next_type(pc, CT_SEMICOLON, pc->level);
-//
-//         // look for a parameter pack
-//         while (pc != nullptr)
-//         {
-//            LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
-//                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
-//
-//            if (chunk_is_token(pc, CT_PARAMETER_PACK))
-//            {
-//               chunk_t *parameter_pack = pc;
-//
-//               // look for a token with the same text
-//               while (pc != nullptr)
-//               {
-//                  LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
-//                          __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
-//                  pc = chunk_get_next(pc);
-//
-//                  if (pc == template_end)
-//                  {
-//                     break;
-//                  }
-//
-//                  if (strcmp(pc->text(), parameter_pack->text()) == 0)
-//                  {
-//                     set_chunk_type(pc, CT_PARAMETER_PACK);
-//                  }
-//               }
-//            }
-//            pc = chunk_get_next(pc);
-//
-//            if (pc == template_end)
-//            {
-//               break;
-//            }
-//         }
-//      }
-//      pc = chunk_get_next(pc);
-//   }
+   // Protokoll
+   //pc = chunk_get_head();
+   //LOG_FMT(LTOK, "%s(%d): PPPPPPPPPPPPP:\n",
+   //        __func__, __LINE__);
+
+   //while (pc != nullptr)
+   //{
+   //   LOG_FMT(LTOK, "%s(%d): PPP: orig_line is %zu, orig_col is %zu, text is '%s', level is %zu\n",
+   //           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), pc->level);
+   //   pc = chunk_get_next(pc);
+   //}
 } // brace_cleanup
 
 

@@ -542,7 +542,7 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
    LOG_FUNC_ENTRY();
    chunk_t *end;
 
-   end = chunk_skip_to_match(start, scope_e::PREPROC);
+   end = chunk_skip_to_match(start);                // Issue #3336
 
    if (end != nullptr)
    {
@@ -553,6 +553,10 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
       log_func_stack_inline(LFLPAREN);
       set_chunk_parent(start, parent);
       set_chunk_parent(end, parent);
+   }
+   else
+   {
+      LOG_FMT(LFLPAREN, "%s(%d): is NULLPTR\n", __func__, __LINE__);
    }
    LOG_FMT(LFLPAREN, "%s(%d):\n", __func__, __LINE__);
    return(chunk_get_next_ncnnl(end, scope_e::PREPROC));

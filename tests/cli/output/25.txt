@@ -5,6 +5,7 @@ log_rule(newlines_cleanup_braces : rule is 'nl_ds_struct_enum_cmt'
 log_rule(newlines_cleanup_braces : rule is 'nl_brace_brace'
 log_rule(newlines_cleanup_braces : rule is 'nl_type_brace_init_lst_open'
 log_rule(newlines_cleanup_braces : rule is 'nl_type_brace_init_lst_close'
+newlines_cleanup_braces : pc->orig_line is 2, orig_col is 1, text() is '{', parent_type is STRUCT
 log_rule(newlines_brace_pair : rule is 'nl_define_macro'
 log_rule(newlines_brace_pair : rule is 'nl_create_func_def_one_liner'
 log_rule(collapse_empty_body : rule is 'nl_collapse_empty_body'
@@ -104,6 +105,7 @@ log_rule(newlines_cleanup_braces : rule is 'nl_before_opening_brace_func_class_d
 log_rule(newlines_cleanup_braces : rule is 'nl_brace_brace'
 log_rule(newlines_cleanup_braces : rule is 'nl_type_brace_init_lst_open'
 log_rule(newlines_cleanup_braces : rule is 'nl_type_brace_init_lst_close'
+newlines_cleanup_braces : pc->orig_line is 6, orig_col is 1, text() is '{', parent_type is FUNC_CLASS_DEF
 log_rule(newlines_brace_pair : rule is 'nl_define_macro'
 log_rule(newlines_brace_pair : rule is 'nl_create_func_def_one_liner'
 log_rule(newlines_brace_pair : rule is 'nl_fdef_brace_cond'
@@ -155,6 +157,7 @@ log_rule(newlines_cleanup_braces : rule is 'nl_before_opening_brace_func_class_d
 log_rule(newlines_cleanup_braces : rule is 'nl_brace_brace'
 log_rule(newlines_cleanup_braces : rule is 'nl_type_brace_init_lst_open'
 log_rule(newlines_cleanup_braces : rule is 'nl_type_brace_init_lst_close'
+newlines_cleanup_braces : pc->orig_line is 10, orig_col is 1, text() is '{', parent_type is FUNC_CLASS_DEF
 log_rule(newlines_brace_pair : rule is 'nl_define_macro'
 log_rule(newlines_brace_pair : rule is 'nl_create_func_def_one_liner'
 log_rule(newlines_brace_pair : rule is 'nl_fdef_brace_cond'
