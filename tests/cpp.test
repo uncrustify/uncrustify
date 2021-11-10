@@ -1044,3 +1044,4 @@
 60062  cpp/sp_return-i.cfg                                  cpp/returns.cpp
 60063  cpp/sp_return-r.cfg                                  cpp/returns.cpp
 60064  cpp/sp_constr_colon-i.cfg                            cpp/issue_3368.cpp
+60065  cpp/issue_3378.cfg                                   cpp/issue_3378.cpp

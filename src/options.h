@@ -1579,7 +1579,11 @@ indent_col1_multi_string_literal;
 extern BoundedOption<unsigned, 0, 16>
 indent_comment_align_thresh; // = 3
 
-// How to indent goto labels.
+// Whether to ignore indent for goto labels.
+extern Option<bool>
+indent_ignore_label;
+
+// How to indent goto labels. Requires indent_ignore_label=false.
 //
 //  >0: Absolute column where 1 is the leftmost column
 // <=0: Subtract from brace indent

@@ -1261,7 +1261,10 @@ indent_col1_multi_string_literal = false    # true/false
 # Default: 3
 indent_comment_align_thresh     = 3        # unsigned number
 
-# How to indent goto labels.
+# Whether to ignore indent for goto labels.
+indent_ignore_label             = false    # true/false
+
+# How to indent goto labels. Requires indent_ignore_label=false.
 #
 #  >0: Absolute column where 1 is the leftmost column
 # <=0: Subtract from brace indent
