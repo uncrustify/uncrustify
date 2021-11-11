@@ -1365,6 +1365,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
    {
       chunk.flags &= ~PCF_IN_PREPROC;
    }
+   bool ref_is_comment = chunk_is_comment(ref);      // Issue #3351
 
    while (  chunk_is_newline(ref)
          || chunk_is_comment(ref))
@@ -1400,6 +1401,11 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, const ParseFrame &frm)
             ref = chunk_get_next_nc(ref);
          }
       }
+   }
+
+   if (ref_is_comment)                                      // Issue #3351
+   {
+      ref = chunk_get_next(ref);
    }
 
    if (ref == nullptr)
