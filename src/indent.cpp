@@ -2256,29 +2256,37 @@ void indent_text(void)
       }
       else if (chunk_is_token(pc, CT_LABEL))
       {
-         log_rule_B("indent_label");
-         const auto val        = options::indent_label();
-         const auto pse_indent = frm.top().indent;
-
-         // Labels get sent to the left or backed up
-         if (val > 0)
+         if (options::indent_ignore_label())
          {
-            indent_column_set(val);
-
-            chunk_t *next = chunk_get_next(chunk_get_next(pc));  // colon + possible statement
-
-            if (  next != nullptr
-               && !chunk_is_newline(next)
-                  // label (+ 2, because there is colon and space after it) must fit into indent
-               && (val + static_cast<int>(pc->len()) + 2 <= static_cast<int>(pse_indent)))
-            {
-               reindent_line(next, pse_indent);
-            }
+            log_rule_B("indent_ignore_label");
+            indent_column_set(pc->orig_col);
          }
          else
          {
-            const auto no_underflow = cast_abs(pse_indent, val) < pse_indent;
-            indent_column_set(((no_underflow) ? (pse_indent + val) : 0));
+            log_rule_B("indent_label");
+            const auto val        = options::indent_label();
+            const auto pse_indent = frm.top().indent;
+
+            // Labels get sent to the left or backed up
+            if (val > 0)
+            {
+               indent_column_set(val);
+
+               chunk_t *next = chunk_get_next(chunk_get_next(pc));  // colon + possible statement
+
+               if (  next != nullptr
+                  && !chunk_is_newline(next)
+                     // label (+ 2, because there is colon and space after it) must fit into indent
+                  && (val + static_cast<int>(pc->len()) + 2 <= static_cast<int>(pse_indent)))
+               {
+                  reindent_line(next, pse_indent);
+               }
+            }
+            else
+            {
+               const auto no_underflow = cast_abs(pse_indent, val) < pse_indent;
+               indent_column_set(((no_underflow) ? (pse_indent + val) : 0));
+            }
          }
       }
       else if (chunk_is_token(pc, CT_ACCESS))
