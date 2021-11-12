@@ -1398,7 +1398,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                     && chunk_is_token(pc->next->next, CT_STAR)))
          {
             // more pointers are NOT yet possible
-            fprintf(stderr, "Too many pointers\n");
+            fprintf(stderr, "Too many pointers: the maximum level of pointer indirection is 3 (i.e., ***p)\n");
             fprintf(stderr, "at line %zu, column %zu.\n", pc->orig_line, pc->orig_col);
             fprintf(stderr, "Please make a report.\n");
             log_flush(true);
