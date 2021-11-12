@@ -481,7 +481,7 @@ def main(args):
                         default='Release',
                         help='the build_type value (Release or Debug)')
     parser.add_argument('--test',
-                        default=None,
+                        default=s_path_join(script_dir, '../../build/tests/cli'),
                         help='specify the location of the test cli build folder')
 
     parsed_args = parser.parse_args()
