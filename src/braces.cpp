@@ -1412,6 +1412,12 @@ static void mod_case_brace(void)
 
    chunk_t *pc = chunk_get_head();
 
+   // Make sure to start outside of a preprocessor line (see issue #3366)
+   while (chunk_is_preproc(pc))
+   {
+      pc = chunk_get_next(pc);
+   }
+
    while (pc != nullptr)
    {
       chunk_t *next = chunk_get_next_ncnnl(pc, scope_e::PREPROC);
@@ -1426,6 +1432,7 @@ static void mod_case_brace(void)
          && chunk_is_token(pc, CT_BRACE_OPEN)
          && get_chunk_parent_type(pc) == CT_CASE)
       {
+         log_rule_B("mod_case_brace - add");
          pc = mod_case_brace_remove(pc);
       }
       else if (  (options::mod_case_brace() & IARF_ADD)
@@ -1434,7 +1441,7 @@ static void mod_case_brace(void)
               && chunk_is_not_token(next, CT_BRACE_CLOSE)
               && chunk_is_not_token(next, CT_CASE))
       {
-         log_rule_B("mod_case_brace");
+         log_rule_B("mod_case_brace - remove");
          pc = mod_case_brace_add(pc);
       }
       else
@@ -1442,7 +1449,7 @@ static void mod_case_brace(void)
          pc = chunk_get_next_ncnnl(pc, scope_e::PREPROC);
       }
    }
-}
+} // mod_case_brace
 
 
 static void process_if_chain(chunk_t *br_start)
