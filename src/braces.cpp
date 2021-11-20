@@ -1413,9 +1413,9 @@ static void mod_case_brace(void)
    chunk_t *pc = chunk_get_head();
 
    // Make sure to start outside of a preprocessor line (see issue #3366)
-   while (chunk_is_preproc(pc))
+   if (chunk_is_preproc(pc))
    {
-      pc = chunk_get_next(pc);
+      pc = chunk_get_next_ncnnlnp(pc);
    }
 
    while (pc != nullptr)
