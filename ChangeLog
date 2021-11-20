@@ -1,3 +1,71 @@
+Change highlights in uncrustify-0.74.0 (November 2021)
+-------------------------------------------------------------------------------
+  4714d5d673d5b9c8f45d70c179f508d60130b18a
+    Added   : nl_before_struct                     Mar 12 2021
+  dbb2903a94668e147b588d3eebc3be917ac4ebca
+    Added   : nl_before_ignore_after_case          Jun 22 2021
+  e97b93418c03cde680d6fd46209d7e43c5e09bfe
+    Added   : sp_before_ptr_star_trailing          Jul  1 2021
+    Added   : sp_after_ptr_star_trailing           Jul  1 2021
+  dd5a7c3b2ab64b903e888a264693a9edb7a98ee5
+    Added   : sp_sparen_paren                      Jul 19 2021
+  94941c2f9aa8952debab1f8257eb0625bc459392
+    Added   : pp_indent_in_guard                   Jul 28 2021
+  84d3b9276c007642c4bb73ff562008253e4fe014
+    Added   : indent_single_line_comments_before   Jul 31 2021
+    Added   : indent_single_line_comments_after    Jul 31 2021
+    Removed : indent_sing_line_comments            Jul 31 2021
+  0d956a006d64fddd4f8131e6a16a23f7e447cca3
+    Added   : sp_after_ellipsis                    Jul 31 2021
+  40bbb979ecf7ad36128150f5540a462c890d5e2c
+    Added   : mod_remove_duplicate_include         Aug 15 2021
+  97d24f3a05a53521ff2ce94928534f4bab0cc0af
+    Added   : sp_between_semi_for_empty            Aug 22 2021
+  63109e6253387480b8bfe7f73a7f2949865fc380
+    Added   : nl_before_brace_open                 Aug 27 2021
+  03c9ac261c9282b3cf5e92d69de70d6b4566d8e9
+    Added   : cmt_trailing_single_line_c_to_cpp    Sep  1 2021
+  1525722486dba45aa053f2c83e3015fa64880443
+    Added   : sp_ellipsis_parameter_pack           Sep 16 2021
+    Added   : sp_parameter_pack_ellipsis           Sep 16 2021
+  2e33ac4314dfbfc18c56ec694b0eba3e6a1318f5
+    Added   : sp_byref_ellipsis                    Sep 21 2021
+    Added   : sp_ptr_type_ellipsis                 Sep 21 2021
+  f19bf09cdce5822cf3d71065cb3900ea52f6e5c7
+    Added   : indent_ctor_init_following           Sep 30 2021
+  b1274c20bea3f8e2a8d6cd05cbb23c8d66f187a7
+    Added   : sp_before_emb_cmt                    Oct  8 2021
+    Added   : sp_num_after_emb_cmt                 Oct  8 2021
+    Added   : sp_before_tr_cmt                     Oct  8 2021
+    Added   : sp_num_before_emb_cmt                Oct  8 2021
+    Added   : sp_num_before_tr_cmt                 Oct  8 2021
+    Added   : sp_after_emb_cmt                     Oct  8 2021
+    Removed : sp_before_tr_emb_cmt                 Oct  8 2021
+    Removed : sp_num_before_tr_emb_cmt             Oct  8 2021
+  563d72fcae6e0aad6e5f0ff998992a48a6767986
+    Added   : pp_include_at_level                  Oct 11 2021
+  28486dbadcc4d0ff9376776eb63f3c3bd800cf2d
+    Added   : sp_return                            Oct 12 2021
+  86105064d13fc60d14cfd134a8c3d402e7d27492
+    Added   : indent_comment_align_thresh          Oct 13 2021
+  964db2ac20372c45621a55313cdfb1eeb8298800
+    Added   : indent_comment                       Oct 18 2021
+  92b9047256ece8d9ace2da5c743be2b9cc2b54d8
+    Added   : align_func_proto_amp_style           Oct 23 2021
+    Added   : align_func_proto_star_style          Oct 23 2021
+  094c79e06f6ec3111684b37b77063cf7af658105
+    Added   : indent_case_comment                  Oct 26 2021
+  7eb595caa38ced024a42ba1602d69e0387b8e3a1
+    Added   : indent_switch_body                   Nov  3 2021
+  cf845deb008b45783ff94a1986131eb180fb54a8
+    Added   : sp_inside_for_close                  Nov  6 2021
+    Added   : sp_inside_for                        Nov  6 2021
+    Added   : sp_inside_for_open                   Nov  6 2021
+  2caaa17866c3b421de7e28670e85c8f8dade5a77
+    Added   : indent_ignore_label                  Nov 10 2021
+  d8436ef370027bcfd289b19037c39ffdaf0ad4ff
+    Added   : sp_ptr_star_func_var                 Nov 15 2021
+
 Change highlights in uncrustify-0.73.0 (May 2021)
 -------------------------------------------------------------------------------
 
