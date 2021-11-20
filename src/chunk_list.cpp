@@ -591,21 +591,27 @@ chunk_t *chunk_get_next_ncnnl(chunk_t *cur, scope_e scope)
 }
 
 
+chunk_t *chunk_get_prev_ncnnl(chunk_t *cur, scope_e scope)
+{
+   return(chunk_search(cur, chunk_is_comment_or_newline, scope, direction_e::BACKWARD, false));
+}
+
+
 chunk_t *chunk_get_next_ncnnlnp(chunk_t *cur, scope_e scope)
 {
    return(chunk_get_ncnlnp(cur, scope, direction_e::FORWARD));
 }
 
 
-chunk_t *chunk_ppa_get_next_ncnnl(chunk_t *cur)
-{
-   return(chunk_ppa_search(cur, chunk_is_comment_or_newline, false));
-}
-
-
 chunk_t *chunk_get_prev_ncnnlnp(chunk_t *cur, scope_e scope)
 {
    return(chunk_get_ncnlnp(cur, scope, direction_e::BACKWARD));
+}
+
+
+chunk_t *chunk_ppa_get_next_ncnnl(chunk_t *cur)
+{
+   return(chunk_ppa_search(cur, chunk_is_comment_or_newline, false));
 }
 
 
@@ -627,15 +633,15 @@ chunk_t *chunk_get_next_nc(chunk_t *cur, scope_e scope)
 }
 
 
-chunk_t *chunk_get_next_nisq(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_prev_nc(chunk_t *cur, scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_balanced_square, scope, direction_e::FORWARD, false));
+   return(chunk_search(cur, chunk_is_comment, scope, direction_e::BACKWARD, false));
 }
 
 
-chunk_t *chunk_get_prev_ncnnl(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_next_nisq(chunk_t *cur, scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_comment_or_newline, scope, direction_e::BACKWARD, false));
+   return(chunk_search(cur, chunk_is_balanced_square, scope, direction_e::FORWARD, false));
 }
 
 
@@ -645,27 +651,21 @@ chunk_t *chunk_get_prev_ncnnlni(chunk_t *cur, scope_e scope)
 }
 
 
-chunk_t *chunk_get_prev_nc(chunk_t *cur, scope_e scope)
-{
-   return(chunk_search(cur, chunk_is_comment, scope, direction_e::BACKWARD, false));
-}
-
-
 chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level, scope_e scope)
 {
    return(chunk_search_typelevel(cur, type, scope, direction_e::FORWARD, level));
 }
 
 
-chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level, scope_e scope)
-{
-   return(chunk_search_str(cur, str, len, scope, direction_e::FORWARD, level));
-}
-
-
 chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type, int level, scope_e scope)
 {
    return(chunk_search_typelevel(cur, type, scope, direction_e::BACKWARD, level));
+}
+
+
+chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level, scope_e scope)
+{
+   return(chunk_search_str(cur, str, len, scope, direction_e::FORWARD, level));
 }
 
 
