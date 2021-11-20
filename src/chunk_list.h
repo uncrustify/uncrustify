@@ -214,6 +214,15 @@ chunk_t *chunk_get_next_ncnnlnp(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
+ * Gets the next non-NEWLINE and non-comment chunk inside a preprocessor block
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
+ */
+chunk_t *chunk_get_next_ncnnl_in_pp(chunk_t *cur, scope_e scope = scope_e::ALL);
+
+
+/**
  * Gets the next non-NEWLINE and non-comment chunk (preprocessor aware).
  * Unlike chunk_get_next_ncnnl, this will also ignore a line continuation if
  * the starting chunk is in a preprocessor directive, and may return a newline
@@ -290,6 +299,15 @@ chunk_t *chunk_get_prev_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param scope  code region to search in
  */
 chunk_t *chunk_get_prev_ncnnl(chunk_t *cur, scope_e scope = scope_e::ALL);
+
+
+/**
+ * Gets the prev non-NEWLINE and non-comment chunk inside a preprocessor block
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
+ */
+chunk_t *chunk_get_prev_ncnnl_in_pp(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
