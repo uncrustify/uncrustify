@@ -1448,17 +1448,20 @@ void mark_function(chunk_t *pc)
       if (chunk_is_token(prev, CT_DC_MEMBER))
       {
          prev = chunk_get_prev_ncnnlnp(prev);
-         LOG_FMT(LFCN, "%s(%d): prev->text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
-                 __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col,
-                 get_token_name(prev->type));
-         prev = skip_template_prev(prev);
-         LOG_FMT(LFCN, "%s(%d): prev->text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
-                 __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col,
-                 get_token_name(prev->type));
-         prev = skip_attribute_prev(prev);
-         LOG_FMT(LFCN, "%s(%d): prev->text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
-                 __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col,
-                 get_token_name(prev->type));
+				 if (prev)
+				 {
+					 LOG_FMT(LFCN, "%s(%d): prev->text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
+									 __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col,
+									 get_token_name(prev->type));
+					 prev = skip_template_prev(prev);
+					 LOG_FMT(LFCN, "%s(%d): prev->text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
+									 __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col,
+									 get_token_name(prev->type));
+					 prev = skip_attribute_prev(prev);
+					 LOG_FMT(LFCN, "%s(%d): prev->text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
+									 __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col,
+									 get_token_name(prev->type));
+				 }
 
          if (  chunk_is_token(prev, CT_WORD)
             || chunk_is_token(prev, CT_TYPE))
