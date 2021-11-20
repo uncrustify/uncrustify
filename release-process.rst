@@ -25,10 +25,11 @@ may be different.
 In addition to the build and test requirements for Uncrustify itself
 (CMake, a C++ compiler, Python, git), you will also need:
 
-- GitPython_
-- mingw32-gcc-c++
-- mingw64-gcc-c++
 - tar
+- python3-git
+- Binutils-mingw-w64
+- Gcc-mingw-w64
+- G++-mingw-w64
 - zip
 - wget (optional)
 - scp (to update documentation on the SourceForge page)
