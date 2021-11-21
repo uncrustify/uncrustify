@@ -611,13 +611,13 @@ chunk_t *chunk_ppa_get_next_ncnnl(chunk_t *cur)
 }
 
 
-chunk_t *chunk_get_next_nblank(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_next_ncnnlnb(chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_comment_newline_or_blank, scope, direction_e::FORWARD, false));
 }
 
 
-chunk_t *chunk_get_prev_nblank(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_prev_ncnnlnb(chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_comment_newline_or_blank, scope, direction_e::BACKWARD, false));
 }
