@@ -524,8 +524,8 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
       return(0);
    }
    // Done reading from stdin
-   LOG_FMT(LSYS, "Parsing: %d bytes (%d chars) from stdin as language %s\n",
-           (int)fm.raw.size(), (int)fm.data.size(),
+   LOG_FMT(LSYS, "Parsing: %zu bytes (%zu chars) from stdin as language %s\n",
+           fm.raw.size(), fm.data.size(),
            language_name_from_flags(cpd.lang_flags));
 
 

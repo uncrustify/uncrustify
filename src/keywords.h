@@ -14,7 +14,7 @@
 /**
  * Initializes keywords table
  */
-void init_keywords(void);
+void init_keywords_for_language(void);
 
 /**
  * Loads the dynamic keywords from a file
@@ -47,7 +47,7 @@ c_token_t find_keyword_type(const char *word, size_t len);
 void add_keyword(const std::string &tag, c_token_t type);
 
 
-void print_keywords(FILE *pfile);
+void print_custom_keywords(FILE *pfile);
 
 
 void clear_keyword_file(void);

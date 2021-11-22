@@ -288,6 +288,7 @@
 02000  c/ben_087.cfg                              c/i2c-core.c
 02001  c/preproc-cleanup.cfg                      c/directfb.h
 02002  common/ben2.cfg                            c/i2c-core.c
+02003  c/Issue_3353.cfg                           c/Issue_3353.h
 
 # clark's style - blank lines before and after flow control, indented comments
 

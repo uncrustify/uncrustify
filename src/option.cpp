@@ -1237,8 +1237,8 @@ void save_option_file(FILE *pfile, bool with_doc, bool minimal)
    {
       fprintf(pfile, "%s", DOC_TEXT_END);
    }
-   print_keywords(pfile);    // Print custom keywords
-   print_extensions(pfile);  // Print custom file extensions
+   print_custom_keywords(pfile);   // Print custom keywords
+   print_extensions(pfile);        // Print custom file extensions
 
    fprintf(pfile, "# option(s) with 'not default' value: %d%s#%s",
            non_default_values, eol_marker, eol_marker);
