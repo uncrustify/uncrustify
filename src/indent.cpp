@@ -816,7 +816,7 @@ void indent_text(void)
             }
             int     should_indent_preproc = true;
             chunk_t *preproc_next         = chunk_get_next_nl(pc);
-            preproc_next = chunk_get_next_nblank(preproc_next);
+            preproc_next = chunk_get_next_ncnnlnb(preproc_next);
 
             /* Look ahead at what's on the line after the #if */
             log_rule_B("pp_indent_brace");

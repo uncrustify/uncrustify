@@ -248,21 +248,21 @@ chunk_t *chunk_get_next_nisq(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
- * Gets the next non-blank chunk
+ * Gets the next non-comment, non-newline, non blank chunk
  *
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_nblank(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_next_ncnnlnb(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
- * Gets the prev non-blank chunk
+ * Gets the prev non-comment, non-newline, non blank chunk
  *
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_nblank(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_prev_ncnnlnb(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -710,7 +710,8 @@ static inline bool chunk_is_comment_newline_or_preproc(chunk_t *pc)
 
 static inline bool chunk_is_comment_newline_or_blank(chunk_t *pc)
 {
-   return(  chunk_is_comment_or_newline(pc)
+   return(  chunk_is_comment(pc)
+         || chunk_is_newline(pc)
          || chunk_is_blank(pc));
 }
 
