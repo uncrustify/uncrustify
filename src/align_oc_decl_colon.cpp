@@ -41,7 +41,7 @@ void align_oc_decl_colon(void)
       cas.Reset();
 
       size_t level = pc->level;
-      pc = chunk_get_next_ncnnl(pc, scope_e::PREPROC);
+      pc = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
 
       did_line = false;
 
@@ -67,7 +67,7 @@ void align_oc_decl_colon(void)
             cas.Add(pc);
 
             chunk_t *tmp  = chunk_get_prev(pc, scope_e::PREPROC);
-            chunk_t *tmp2 = chunk_get_prev_ncnnl(tmp, scope_e::PREPROC);
+            chunk_t *tmp2 = chunk_get_prev_nc_nnl(tmp, scope_e::PREPROC);
 
             // Check for an un-labeled parameter
             if (  (  chunk_is_token(tmp, CT_WORD)

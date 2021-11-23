@@ -2742,7 +2742,7 @@ static bool kw_fcn_message(chunk_t *cmt, unc_text &out_txt)
    }
    out_txt.append(fcn->str);
 
-   chunk_t *tmp  = chunk_get_next_ncnnl(fcn);
+   chunk_t *tmp  = chunk_get_next_nc_nnl(fcn);
    chunk_t *word = nullptr;
 
    while (tmp != nullptr)
@@ -2767,7 +2767,7 @@ static bool kw_fcn_message(chunk_t *cmt, unc_text &out_txt)
       {
          word = tmp;
       }
-      tmp = chunk_get_next_ncnnl(tmp);
+      tmp = chunk_get_next_nc_nnl(tmp);
    }
    return(true);
 } // kw_fcn_message
@@ -2838,7 +2838,7 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
 
    if (chunk_is_token(fcn, CT_OC_MSG_DECL))
    {
-      chunk_t *tmp = chunk_get_next_ncnnl(fcn);
+      chunk_t *tmp = chunk_get_next_nc_nnl(fcn);
       has_param = false;
 
       while (tmp != nullptr)
@@ -2867,7 +2867,7 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
          {
             has_param = true;
          }
-         tmp = chunk_get_next_ncnnl(tmp);
+         tmp = chunk_get_next_nc_nnl(tmp);
       }
       fpo = fpc = nullptr;
    }
@@ -2889,15 +2889,15 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
    chunk_t *tmp;
 
    // Check for 'foo()' and 'foo(void)'
-   if (chunk_get_next_ncnnl(fpo) == fpc)
+   if (chunk_get_next_nc_nnl(fpo) == fpc)
    {
       has_param = false;
    }
    else
    {
-      tmp = chunk_get_next_ncnnl(fpo);
+      tmp = chunk_get_next_nc_nnl(fpo);
 
-      if (  (tmp == chunk_get_prev_ncnnl(fpc))
+      if (  (tmp == chunk_get_prev_nc_nnl(fpc))
          && chunk_is_str(tmp, "void", 4))
       {
          has_param = false;
@@ -2942,14 +2942,14 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
       }
    }
    // Do the return stuff
-   tmp = chunk_get_prev_ncnnl(fcn);
+   tmp = chunk_get_prev_nc_nnl(fcn);
 
    // For Objective-C we need to go to the previous chunk
    if (  tmp != nullptr
       && get_chunk_parent_type(tmp) == CT_OC_MSG_DECL
       && chunk_is_token(tmp, CT_PAREN_CLOSE))
    {
-      tmp = chunk_get_prev_ncnnl(tmp);
+      tmp = chunk_get_prev_nc_nnl(tmp);
    }
 
    if (  tmp != nullptr
@@ -2979,12 +2979,12 @@ static bool kw_fcn_fclass(chunk_t *cmt, unc_text &out_txt)
       // if inside a class, we need to find to the class name
       chunk_t *tmp = chunk_get_prev_type(fcn, CT_BRACE_OPEN, fcn->level - 1);
       tmp = chunk_get_prev_type(tmp, CT_CLASS, tmp->level);
-      tmp = chunk_get_next_ncnnl(tmp);
+      tmp = chunk_get_next_nc_nnl(tmp);
 
-      while (chunk_is_token(chunk_get_next_ncnnl(tmp), CT_DC_MEMBER))
+      while (chunk_is_token(chunk_get_next_nc_nnl(tmp), CT_DC_MEMBER))
       {
-         tmp = chunk_get_next_ncnnl(tmp);
-         tmp = chunk_get_next_ncnnl(tmp);
+         tmp = chunk_get_next_nc_nnl(tmp);
+         tmp = chunk_get_next_nc_nnl(tmp);
       }
 
       if (tmp != nullptr)
@@ -2996,18 +2996,18 @@ static bool kw_fcn_fclass(chunk_t *cmt, unc_text &out_txt)
    else
    {
       // if outside a class, we expect "CLASS::METHOD(...)"
-      chunk_t *tmp = chunk_get_prev_ncnnl(fcn);
+      chunk_t *tmp = chunk_get_prev_nc_nnl(fcn);
 
       if (chunk_is_token(tmp, CT_OPERATOR))
       {
-         tmp = chunk_get_prev_ncnnl(tmp);
+         tmp = chunk_get_prev_nc_nnl(tmp);
       }
 
       if (  tmp != nullptr
          && (  chunk_is_token(tmp, CT_DC_MEMBER)
             || chunk_is_token(tmp, CT_MEMBER)))
       {
-         tmp = chunk_get_prev_ncnnl(tmp);
+         tmp = chunk_get_prev_nc_nnl(tmp);
          out_txt.append(tmp->str);
          return(true);
       }
@@ -3291,7 +3291,7 @@ void add_long_preprocessor_conditional_block_comment(void)
    chunk_t *pp_start = nullptr;
    chunk_t *pp_end   = nullptr;
 
-   for (chunk_t *pc = chunk_get_head(); pc; pc = chunk_get_next_ncnnl(pc))
+   for (chunk_t *pc = chunk_get_head(); pc; pc = chunk_get_next_nc_nnl(pc))
    {
       // just track the preproc level:
       if (chunk_is_token(pc, CT_PREPROC))

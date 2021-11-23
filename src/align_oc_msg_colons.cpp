@@ -34,7 +34,7 @@ void align_oc_msg_colon(chunk_t *so)
    cas.Start(span);
 
    size_t  level = so->level;
-   chunk_t *pc   = chunk_get_next_ncnnl(so, scope_e::PREPROC);
+   chunk_t *pc   = chunk_get_next_nc_nnl(so, scope_e::PREPROC);
 
    bool    did_line   = false;
    bool    has_colon  = false;

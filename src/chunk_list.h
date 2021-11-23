@@ -201,7 +201,7 @@ chunk_t *chunk_get_next_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_ncnnl(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_next_nc_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -210,7 +210,7 @@ chunk_t *chunk_get_next_ncnnl(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_ncnnlnp(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_next_nc_nnl_np(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -219,19 +219,19 @@ chunk_t *chunk_get_next_ncnnlnp(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_ncnnl_in_pp(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_next_nc_nnl_in_pp(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the next non-NEWLINE and non-comment chunk (preprocessor aware).
- * Unlike chunk_get_next_ncnnl, this will also ignore a line continuation if
+ * Unlike chunk_get_next_nc_nnl, this will also ignore a line continuation if
  * the starting chunk is in a preprocessor directive, and may return a newline
  * if the search reaches the end of a preprocessor directive.
  *
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_ppa_get_next_ncnnl(chunk_t *cur);
+chunk_t *chunk_ppa_get_next_nc_nnl(chunk_t *cur);
 
 
 /**
@@ -253,7 +253,7 @@ chunk_t *chunk_get_next_nisq(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_ncnnlnb(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_next_nc_nnl_nb(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -262,7 +262,7 @@ chunk_t *chunk_get_next_ncnnlnb(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_ncnnlnb(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_prev_nc_nnl_nb(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -298,7 +298,7 @@ chunk_t *chunk_get_prev_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_ncnnl(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_prev_nc_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -307,7 +307,7 @@ chunk_t *chunk_get_prev_ncnnl(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_ncnnl_in_pp(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_prev_nc_nnl_in_pp(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -316,7 +316,7 @@ chunk_t *chunk_get_prev_ncnnl_in_pp(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_ncnnlni(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_prev_nc_nnl_ni(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -325,7 +325,7 @@ chunk_t *chunk_get_prev_ncnnlni(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_ncnnlnp(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_prev_nc_nnl_np(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -929,7 +929,7 @@ static inline bool chunk_is_forin(chunk_t *pc)
    if (  language_is_set(LANG_OC)
       && chunk_is_token(pc, CT_SPAREN_OPEN))
    {
-      chunk_t *prev = chunk_get_prev_ncnnl(pc);
+      chunk_t *prev = chunk_get_prev_nc_nnl(pc);
 
       if (chunk_is_token(prev, CT_FOR))
       {
@@ -939,7 +939,7 @@ static inline bool chunk_is_forin(chunk_t *pc)
                && next->type != CT_SPAREN_CLOSE
                && next->type != CT_IN)
          {
-            next = chunk_get_next_ncnnl(next);
+            next = chunk_get_next_nc_nnl(next);
          }
 
          if (chunk_is_token(next, CT_IN))
