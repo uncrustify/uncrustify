@@ -12,9 +12,31 @@
 #include "uncrustify_types.h"
 
 /**
- * Initializes keywords table
+ * Initializes keywords table for a given language.
+ *
+ * Let us have a look on the problem is caused by the tokens "in" and "out",
+ * used by "bofh69" in the file "bofh69.h" under.
+ * The strings representing the tokens ("in" and "out"), are found in the
+ * original table: static chunk_tag_t keywords[] because they are used by
+ * other languages. They are tokenized as CT_IN and CT_OUT.
+ * The correct tokenization is CT_FUNC_VAR.
+ *
+ * It is necessary to create (at run time) a new table with all the keywords
+ * proper to the used language.
+ *
  */
-void init_keywords(void);
+
+/**
+ * The file
+ * "bofh69.h"
+ *    struct A {
+ *        void (*in)(
+ *            void);
+ *        void (*out)(
+ *            void);
+ *    };
+ */
+void init_keywords_for_language(void);
 
 /**
  * Loads the dynamic keywords from a file
@@ -47,7 +69,7 @@ c_token_t find_keyword_type(const char *word, size_t len);
 void add_keyword(const std::string &tag, c_token_t type);
 
 
-void print_keywords(FILE *pfile);
+void print_custom_keywords(FILE *pfile);
 
 
 void clear_keyword_file(void);
