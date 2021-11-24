@@ -35,7 +35,7 @@ void enum_cleanup(void)
       {
          LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s\n",
                  __func__, __LINE__, pc->orig_line, get_token_name(pc->type));
-         chunk_t *prev = chunk_get_prev_ncnnlnp(pc);
+         chunk_t *prev = chunk_get_prev_nc_nnl_np(pc);
 
          // test of (prev == nullptr) is not necessary
          if (chunk_is_token(prev, CT_COMMA))

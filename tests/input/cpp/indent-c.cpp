@@ -546,7 +546,7 @@ void indent_text(void)
              * { a++;
              *   b--; };
              */
-            next = chunk_get_next_ncnnl(pc);
+            next = chunk_get_next_nc_nnl(pc);
             if (!chunk_is_newline_between(pc, next))
             {
                frm.pse[frm.pse_tos].indent = next->column;
@@ -698,7 +698,7 @@ void indent_text(void)
           * everything else
           */
 
-         prev = chunk_get_prev_ncnnl(pc);
+         prev = chunk_get_prev_nc_nnl(pc);
          if ((pc->type == CT_MEMBER) ||
              (pc->type == CT_DC_MEMBER) ||
              ((prev != NULL) &&

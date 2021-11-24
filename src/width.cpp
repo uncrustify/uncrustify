@@ -696,7 +696,7 @@ static void split_fcn_params_full(chunk_t *start)
    // Now break after every comma
    chunk_t *pc = fpo;
 
-   while ((pc = chunk_get_next_ncnnl(pc)) != nullptr)
+   while ((pc = chunk_get_next_nc_nnl(pc)) != nullptr)
    {
       if (pc->level <= fpo->level)
       {
@@ -732,7 +732,7 @@ static void split_fcn_params(chunk_t *start)
                  __func__, __LINE__, fpo->text(), fpo->orig_col, fpo->level);
       }
    }
-   chunk_t *pc     = chunk_get_next_ncnnl(fpo);
+   chunk_t *pc     = chunk_get_next_nc_nnl(fpo);
    size_t  min_col = pc->column;
 
    log_rule_B("code_width");

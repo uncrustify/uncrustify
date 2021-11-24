@@ -138,7 +138,7 @@ static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type, const scop
  * @retval nullptr  no chunk found or invalid parameters provided
  * @retval chunk_t  pointer to the found chunk
  */
-static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e scope = scope_e::ALL, direction_e dir = direction_e::FORWARD, int level = -1);
+static chunk_t *chunk_search_type_level(chunk_t *cur, c_token_t type, scope_e scope = scope_e::ALL, direction_e dir = direction_e::FORWARD, int level = -1);
 
 
 /**
@@ -267,7 +267,7 @@ static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type,
 }
 
 
-static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e scope, direction_e dir, int level)
+static chunk_t *chunk_search_type_level(chunk_t *cur, c_token_t type, scope_e scope, direction_e dir, int level)
 {
    /*
     * Depending on the parameter dir the search function searches
@@ -557,72 +557,6 @@ chunk_t *chunk_get_prev_nl(chunk_t *cur, scope_e scope)
 }
 
 
-chunk_t *chunk_get_next_nnl(chunk_t *cur, scope_e scope)
-{
-   return(chunk_search(cur, chunk_is_newline, scope, direction_e::FORWARD, false));
-}
-
-
-chunk_t *chunk_get_prev_nnl(chunk_t *cur, scope_e scope)
-{
-   return(chunk_search(cur, chunk_is_newline, scope, direction_e::BACKWARD, false));
-}
-
-
-chunk_t *chunk_get_next_ncnnl(chunk_t *cur, scope_e scope)
-{
-   return(chunk_search(cur, chunk_is_comment_or_newline, scope, direction_e::FORWARD, false));
-}
-
-
-chunk_t *chunk_get_prev_ncnnl(chunk_t *cur, scope_e scope)
-{
-   return(chunk_search(cur, chunk_is_comment_or_newline, scope, direction_e::BACKWARD, false));
-}
-
-
-chunk_t *chunk_get_next_ncnnlnp(chunk_t *cur, scope_e scope)
-{
-   return(chunk_search(cur, chunk_is_comment_newline_or_preproc, scope, direction_e::FORWARD, false));
-}
-
-
-chunk_t *chunk_get_prev_ncnnlnp(chunk_t *cur, scope_e scope)
-{
-   return(chunk_search(cur, chunk_is_comment_newline_or_preproc, scope, direction_e::BACKWARD, false));
-}
-
-
-chunk_t *chunk_get_next_ncnnl_in_pp(chunk_t *cur, scope_e scope)
-{
-   return(chunk_search(cur, chunk_is_comment_or_newline_in_preproc, scope, direction_e::FORWARD, false));
-}
-
-
-chunk_t *chunk_get_prev_ncnnl_in_pp(chunk_t *cur, scope_e scope)
-{
-   return(chunk_search(cur, chunk_is_comment_or_newline_in_preproc, scope, direction_e::BACKWARD, false));
-}
-
-
-chunk_t *chunk_ppa_get_next_ncnnl(chunk_t *cur)
-{
-   return(chunk_ppa_search(cur, chunk_is_comment_or_newline, false));
-}
-
-
-chunk_t *chunk_get_next_ncnnlnb(chunk_t *cur, scope_e scope)
-{
-   return(chunk_search(cur, chunk_is_comment_newline_or_blank, scope, direction_e::FORWARD, false));
-}
-
-
-chunk_t *chunk_get_prev_ncnnlnb(chunk_t *cur, scope_e scope)
-{
-   return(chunk_search(cur, chunk_is_comment_newline_or_blank, scope, direction_e::BACKWARD, false));
-}
-
-
 chunk_t *chunk_get_next_nc(chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_comment, scope, direction_e::FORWARD, false));
@@ -635,13 +569,79 @@ chunk_t *chunk_get_prev_nc(chunk_t *cur, scope_e scope)
 }
 
 
+chunk_t *chunk_get_next_nnl(chunk_t *cur, scope_e scope)
+{
+   return(chunk_search(cur, chunk_is_newline, scope, direction_e::FORWARD, false));
+}
+
+
+chunk_t *chunk_get_prev_nnl(chunk_t *cur, scope_e scope)
+{
+   return(chunk_search(cur, chunk_is_newline, scope, direction_e::BACKWARD, false));
+}
+
+
+chunk_t *chunk_get_next_nc_nnl(chunk_t *cur, scope_e scope)
+{
+   return(chunk_search(cur, chunk_is_comment_or_newline, scope, direction_e::FORWARD, false));
+}
+
+
+chunk_t *chunk_get_prev_nc_nnl(chunk_t *cur, scope_e scope)
+{
+   return(chunk_search(cur, chunk_is_comment_or_newline, scope, direction_e::BACKWARD, false));
+}
+
+
+chunk_t *chunk_get_next_nc_nnl_np(chunk_t *cur, scope_e scope)
+{
+   return(chunk_search(cur, chunk_is_comment_newline_or_preproc, scope, direction_e::FORWARD, false));
+}
+
+
+chunk_t *chunk_get_prev_nc_nnl_np(chunk_t *cur, scope_e scope)
+{
+   return(chunk_search(cur, chunk_is_comment_newline_or_preproc, scope, direction_e::BACKWARD, false));
+}
+
+
+chunk_t *chunk_get_next_nc_nnl_in_pp(chunk_t *cur, scope_e scope)
+{
+   return(chunk_search(cur, chunk_is_comment_or_newline_in_preproc, scope, direction_e::FORWARD, false));
+}
+
+
+chunk_t *chunk_get_prev_nc_nnl_in_pp(chunk_t *cur, scope_e scope)
+{
+   return(chunk_search(cur, chunk_is_comment_or_newline_in_preproc, scope, direction_e::BACKWARD, false));
+}
+
+
+chunk_t *chunk_ppa_get_next_nc_nnl(chunk_t *cur)
+{
+   return(chunk_ppa_search(cur, chunk_is_comment_or_newline, false));
+}
+
+
+chunk_t *chunk_get_next_nc_nnl_nb(chunk_t *cur, scope_e scope)
+{
+   return(chunk_search(cur, chunk_is_comment_newline_or_blank, scope, direction_e::FORWARD, false));
+}
+
+
+chunk_t *chunk_get_prev_nc_nnl_nb(chunk_t *cur, scope_e scope)
+{
+   return(chunk_search(cur, chunk_is_comment_newline_or_blank, scope, direction_e::BACKWARD, false));
+}
+
+
 chunk_t *chunk_get_next_nisq(chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_balanced_square, scope, direction_e::FORWARD, false));
 }
 
 
-chunk_t *chunk_get_prev_ncnnlni(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_prev_nc_nnl_ni(chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_comment_or_newline_or_ignored, scope, direction_e::BACKWARD, false));
 }
@@ -649,13 +649,13 @@ chunk_t *chunk_get_prev_ncnnlni(chunk_t *cur, scope_e scope)
 
 chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level, scope_e scope)
 {
-   return(chunk_search_typelevel(cur, type, scope, direction_e::FORWARD, level));
+   return(chunk_search_type_level(cur, type, scope, direction_e::FORWARD, level));
 }
 
 
 chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type, int level, scope_e scope)
 {
-   return(chunk_search_typelevel(cur, type, scope, direction_e::BACKWARD, level));
+   return(chunk_search_type_level(cur, type, scope, direction_e::BACKWARD, level));
 }
 
 
@@ -963,7 +963,7 @@ chunk_t *chunk_get_next_ssq(chunk_t *cur)
       {
          cur = chunk_skip_to_match(cur);
       }
-      cur = chunk_get_next_ncnnl(cur);
+      cur = chunk_get_next_nc_nnl(cur);
    }
    return(cur);
 }
@@ -978,7 +978,7 @@ chunk_t *chunk_get_prev_ssq(chunk_t *cur)
       {
          cur = chunk_skip_to_match_rev(cur);
       }
-      cur = chunk_get_prev_ncnnl(cur);
+      cur = chunk_get_prev_nc_nnl(cur);
    }
    return(cur);
 }
@@ -1009,7 +1009,7 @@ static chunk_t *chunk_skip_dc_member(chunk_t *start, scope_e scope, direction_e 
       return(nullptr);
    }
    const auto step_fcn = (dir == direction_e::FORWARD)
-                         ? chunk_get_next_ncnnl : chunk_get_prev_ncnnl;
+                         ? chunk_get_next_nc_nnl : chunk_get_prev_nc_nnl;
 
    chunk_t *pc   = start;
    chunk_t *next = chunk_is_token(pc, CT_DC_MEMBER) ? pc : step_fcn(pc, scope);

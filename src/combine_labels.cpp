@@ -168,7 +168,7 @@ void combine_labels(void)
          {
             hit_case = false;
             set_chunk_type(next, CT_CASE_COLON);
-            chunk_t *tmp = chunk_get_next_ncnnlnp(next);                // Issue #2150
+            chunk_t *tmp = chunk_get_next_nc_nnl_np(next);                // Issue #2150
 
             if (chunk_is_token(tmp, CT_BRACE_OPEN))
             {
@@ -184,7 +184,7 @@ void combine_labels(void)
             if (  chunk_is_token(cur, CT_NUMBER)
                && chunk_is_token(prev, CT_ELLIPSIS))
             {
-               chunk_t *pre_elipsis = chunk_get_prev_ncnnlnp(prev);
+               chunk_t *pre_elipsis = chunk_get_prev_nc_nnl_np(prev);
 
                if (chunk_is_token(pre_elipsis, CT_NUMBER))
                {
@@ -295,7 +295,7 @@ void combine_labels(void)
 
                      if (chunk_is_token(labelPrev, CT_NEWLINE))
                      {
-                        labelPrev = chunk_get_prev_ncnnlni(prev);   // Issue #2279
+                        labelPrev = chunk_get_prev_nc_nnl_ni(prev);   // Issue #2279
                      }
 
                      if (  labelPrev != nullptr
@@ -396,7 +396,7 @@ void combine_labels(void)
             }
             else
             {
-               chunk_t *tmp = chunk_get_next_ncnnl(next);
+               chunk_t *tmp = chunk_get_next_nc_nnl(next);
 
                //tmp = chunk_get_next_local(next);
                if (tmp != nullptr)

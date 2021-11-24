@@ -119,7 +119,7 @@ chunk_t *calculate_closing_brace_position(const chunk_t *cl_colon, chunk_t *pc)
             }
             else
             {
-               last = chunk_get_prev_ncnnl(pc);
+               last = chunk_get_prev_nc_nnl(pc);
             }
          }
          else
@@ -132,7 +132,7 @@ chunk_t *calculate_closing_brace_position(const chunk_t *cl_colon, chunk_t *pc)
       }
       else
       {
-         last = chunk_get_prev_ncnnl(pc);
+         last = chunk_get_prev_nc_nnl(pc);
       }
    }
    else
@@ -185,7 +185,7 @@ chunk_t *calculate_closing_brace_position(const chunk_t *cl_colon, chunk_t *pc)
             }
             break;
          }
-         last = chunk_get_prev_ncnnl(last);
+         last = chunk_get_prev_nc_nnl(last);
          LOG_FMT(LMCB, "%s(%d): text() is '%s', orig_line %zu, orig_col is %zu\n",
                  __func__, __LINE__, last->text(), last->orig_line, last->orig_col);
 

@@ -105,7 +105,7 @@ void pawn_scrub_vsemi(void)
       {
          continue;
       }
-      chunk_t *prev = chunk_get_prev_ncnnl(pc);
+      chunk_t *prev = chunk_get_prev_nc_nnl(pc);
 
       if (chunk_is_token(prev, CT_BRACE_CLOSE))
       {
@@ -379,7 +379,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
     * we need to add virtual braces around the function body.
     */
    chunk_t *clp  = chunk_get_next_str(pc, ")", 1, 0);
-   chunk_t *last = chunk_get_next_ncnnl(clp);
+   chunk_t *last = chunk_get_next_nc_nnl(clp);
 
    if (last != nullptr)
    {
@@ -410,7 +410,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
          set_chunk_type(last, CT_ANGLE_CLOSE);
          set_chunk_parent(last, CT_FUNC_DEF);
       }
-      last = chunk_get_next_ncnnl(last);
+      last = chunk_get_next_nc_nnl(last);
    }
 
    if (last == nullptr)
@@ -447,7 +447,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       last = prev;
 
       // find the next newline at level 0
-      prev = chunk_get_next_ncnnl(prev);
+      prev = chunk_get_next_nc_nnl(prev);
 
       do
       {
@@ -457,7 +457,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
          if (  chunk_is_token(prev, CT_NEWLINE)
             && prev->level == 0)
          {
-            chunk_t *next = chunk_get_next_ncnnl(prev);
+            chunk_t *next = chunk_get_next_nc_nnl(prev);
 
             if (  next != nullptr
                && next->type != CT_ELSE
@@ -505,7 +505,7 @@ chunk_t *pawn_check_vsemicolon(chunk_t *pc)
     *  - it is something that needs a continuation
     *    + arith, assign, bool, comma, compare
     */
-   chunk_t *prev = chunk_get_prev_ncnnl(pc);
+   chunk_t *prev = chunk_get_prev_nc_nnl(pc);
 
    if (  prev == nullptr
       || prev == vb_open
