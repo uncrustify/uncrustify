@@ -1237,13 +1237,13 @@ static int load_mem_file(const char *filename, file_mem &fm)
       }
       else
       {
-         LOG_FMT(LNOTE, "%s: '%s' encoding looks like %s (%u)\n", __func__, filename,
+         LOG_FMT(LNOTE, "%s: '%s' encoding looks like %s (%d)\n", __func__, filename,
                  fm.enc == char_encoding_e::e_ASCII ? "ASCII" :
                  fm.enc == char_encoding_e::e_BYTE ? "BYTES" :
                  fm.enc == char_encoding_e::e_UTF8 ? "UTF-8" :
                  fm.enc == char_encoding_e::e_UTF16_LE ? "UTF-16-LE" :
                  fm.enc == char_encoding_e::e_UTF16_BE ? "UTF-16-BE" : "Error",
-                 fm.enc);
+                 (int)fm.enc);
          retval = 0;
       }
    }
