@@ -15,7 +15,7 @@
  * Initializes keywords table for a given language.
  *
  * Let us have a look on the problem is caused by the tokens "in" and "out",
- * used by "bofh69" in the file "bofh69.h" under.
+ * used in the file "Issue_3353.h" under.
  * The strings representing the tokens ("in" and "out"), are found in the
  * original table: static chunk_tag_t keywords[] because they are used by
  * other languages. They are tokenized as CT_IN and CT_OUT.
@@ -28,7 +28,7 @@
 
 /**
  * The file
- * "bofh69.h"
+ * "Issue_3353.h"
  *    struct A {
  *        void (*in)(
  *            void);
