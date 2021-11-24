@@ -92,7 +92,7 @@ using namespace uncrustify;
  *     struct foo b[] = {
  *        { AD_NOT_ALLOWED, "Sorry, you failed to guess the password.",
  *          "Try again?", "Yes", "No" },
- *        { AD_SW_ERROR,    "A software error has occured.", "Bye!", NULL, NULL },
+ *        { AD_SW_ERROR,    "A software error has occurred.", "Bye!", NULL, NULL },
  *     };
  *
  *   - Trailing comments

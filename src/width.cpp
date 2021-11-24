@@ -636,7 +636,7 @@ static void split_for_stmt(chunk_t *start)
    {
       return;
    }
-   // Still past width, check for commas at parenthese level
+   // Still past width, check for commas at parentheses level
    pc = open_paren;
 
    while ((pc = chunk_get_next(pc)) != start)
@@ -652,7 +652,7 @@ static void split_for_stmt(chunk_t *start)
          }
       }
    }
-   // Still past width, check for a assignments at parenthese level
+   // Still past width, check for a assignments at parentheses level
    pc = open_paren;
 
    while ((pc = chunk_get_next(pc)) != start)

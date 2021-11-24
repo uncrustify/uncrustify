@@ -404,7 +404,7 @@ bool keywords_are_sorted(void)
          fprintf(stderr, "%s: bad sort order at idx %d, words '%s' and '%s'\n",
                  __func__, idx - 1, keywords[idx - 1].tag, keywords[idx].tag);
          // coveralls will always complain.
-         // these lines are only needed for the developper.
+         // these lines are only needed for the developer.
          log_flush(true);
          cpd.error_count++;
          return(false);
@@ -438,7 +438,7 @@ static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag)
 {
    const chunk_tag_t *prev = tag - 1;
 
-   // TODO: avoid pointer arithmetics
+   // TODO: avoid pointer arithmetic
    // loop over static keyword array
    while (  prev >= &keywords[0]                // not at beginning of keyword array
          && strcmp(prev->tag, tag->tag) == 0)   // tags match

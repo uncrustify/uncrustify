@@ -1,6 +1,6 @@
 /**
  * @file enum_cleanup.cpp
- * works on the last comma withing enum
+ * works on the last comma within enum
  *
  * @author  Guy Maurel Juli 2018
  * @license GPL v2+
@@ -51,7 +51,7 @@ void enum_cleanup(void)
          {
             if (chunk_is_token(prev, CT_BRACE_OPEN))                // Issue #2902
             {
-               // nothing betwen CT_BRACE_OPEN and CT_BRACE_CLOSE
+               // nothing between CT_BRACE_OPEN and CT_BRACE_CLOSE
             }
             else
             {

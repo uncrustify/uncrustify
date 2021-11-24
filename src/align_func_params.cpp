@@ -111,7 +111,7 @@ chunk_t *align_func_param(chunk_t *start)
          {
             if (pc->level > HOW_MANY_AS)
             {
-               fprintf(stderr, "%s(%d): Not enought memory for Stack\n",
+               fprintf(stderr, "%s(%d): Not enough memory for Stack\n",
                        __func__, __LINE__);
                fprintf(stderr, "%s(%d): the current maximum is %zu\n",
                        __func__, __LINE__, HOW_MANY_AS);

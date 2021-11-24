@@ -193,12 +193,12 @@ added, removed or altered. Keep in mind that the version string line
 
 ### Debugging
 
-The first method is to use uncrustify itself to get debug informations.
+The first method is to use uncrustify itself to get debug information.
 Using:
 ```.txt
    uncrustify -c myExample.cfg -f myExample.cpp -p myExample.p -L A 2>myExample.A
 ```
-you get two files for the first informations.
+you get two files for the first information.
 The p-file gives you details of the parsing process and indentation.
 ```.txt
 # Line                Tag              Parent          Columns Br/Lvl/pp     Flag   Nl  Text

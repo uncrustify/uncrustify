@@ -2,7 +2,7 @@
  * @file space.cpp
  * Adds or removes inter-chunk spaces.
  *
- * Informations
+ * Information
  *   "Ignore" means do not change it.
  *   "Add" in the context of spaces means make sure there is at least 1.
  *   "Add" elsewhere means make sure one is present.
@@ -557,7 +557,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          return(options::sp_return_brace());
       }
       // Everything else requires a space
-      // The value REMOVE will be overriden with FORCE
+      // The value REMOVE will be overridden with FORCE
       log_rule("sp_return");
 
       if (options::sp_return() == IARF_REMOVE)
@@ -3199,7 +3199,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // =============================================================
-   // categorie 1
+   // category 1
    // this table lists out all combos where a space should NOT be present
    // CT_UNKNOWN is a wildcard.
    for (auto it : no_space_table)
@@ -3215,7 +3215,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    }
 
    // =============================================================
-   // categorie 2
+   // category 2
    // this table lists out all combos where a space MUST be present
    for (auto it : add_space_table)
    {
@@ -3249,7 +3249,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       // Add or remove space after the variadic '...' when preceded by a
       // non-punctuator.
-      // The value REMOVE will be overriden with FORCE
+      // The value REMOVE will be overridden with FORCE
       if (options::sp_after_ellipsis() == IARF_REMOVE)
       {
          log_rule("sp_after_ellipsis/FORCE");
@@ -3267,7 +3267,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
    {
       // Add or remove space before the variadic '...' when preceded by a
       // non-punctuator.
-      // The value REMOVE will be overriden with FORCE
+      // The value REMOVE will be overridden with FORCE
       if (options::sp_before_ellipsis() == IARF_REMOVE)
       {
          log_rule("sp_before_ellipsis/FORCE");
@@ -3280,7 +3280,7 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
       }
    }
    // =============================================================
-   // categorie 3
+   // category 3
    // these lines are only useful for debugging uncrustify itself
    LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize do_space:\n",
            __func__, __LINE__);

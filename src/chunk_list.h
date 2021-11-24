@@ -466,7 +466,7 @@ chunk_t *chunk_search_prev_cat(chunk_t *pc, const c_token_t cat);
 chunk_t *chunk_search_next_cat(chunk_t *pc, const c_token_t cat);
 
 /**
- * @brief checks wether two chunks are in same line
+ * @brief checks whether two chunks are in same line
  *
  * @param  start
  * @param  end
@@ -919,7 +919,7 @@ static inline bool chunk_safe_to_del_nl(chunk_t *nl)
 
 
 /**
- * Checks if a chunk points to the opening parenthese of a
+ * Checks if a chunk points to the opening parentheses of a
  * for(...in...) loop in Objective-C.
  *
  * @return true  - the chunk is the opening parentheses of a for in loop

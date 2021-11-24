@@ -9,7 +9,7 @@
 
 /**
  * Scans through the whole list and does stuff.
- * works on the last comma withing enum
+ * works on the last comma within enum
  */
 void enum_cleanup(void);
 

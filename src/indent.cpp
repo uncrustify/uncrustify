@@ -2944,7 +2944,7 @@ void indent_text(void)
              * fixes  1260 , 1268 , 1277 (Extra indentation after line with multiple assignments)
              * For multiple consecutive assignments in single line , the indent of all these
              * assignments should be same and one more than this line's indent.
-             * so poping the previous assign and pushing the new one
+             * so popping the previous assign and pushing the new one
              */
             if (  frm.top().type == CT_ASSIGN
                && chunk_is_token(pc, CT_ASSIGN))
@@ -3296,7 +3296,7 @@ void indent_text(void)
          {
             shiftcontcol = calc_indent_continue(frm);
             // Setting frm.top().indent_cont = true in the top context when the indent is not also set
-            // just leads to compications when succeeding statements try to indent based on being
+            // just leads to complications when succeeding statements try to indent based on being
             // embedded in a continuation. In other words setting frm.top().indent_cont = true
             // should only be set if frm.top().indent is also set.
 
@@ -3335,7 +3335,7 @@ void indent_text(void)
          {
             vardefcol = calc_indent_continue(frm);
             // Setting frm.top().indent_cont = true in the top context when the indent is not also set
-            // just leads to compications when succeeding statements try to indent based on being
+            // just leads to complications when succeeding statements try to indent based on being
             // embedded in a continuation. In other words setting frm.top().indent_cont = true
             // should only be set if frm.top().indent is also set.
          }

@@ -2,7 +2,7 @@
  * @file newlines.cpp
  * Adds or removes newlines.
  *
- * Informations
+ * Information
  *   "Ignore" means do not change it.
  *   "Add" in the context of spaces means make sure there is at least 1.
  *   "Add" elsewhere means make sure one is present.
@@ -1619,7 +1619,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
          {
             LOG_FMT(LNEWLINE, "%s(%d): nl_count is 1\n", __func__, __LINE__);
 
-            // if we have a preceeding vbrace, add one after it
+            // if we have a preceding vbrace, add one after it
             if (have_pre_vbrace_nl)
             {
                LOG_FMT(LNEWLINE, "%s(%d): have_pre_vbrace_nl is TRUE\n", __func__, __LINE__);

@@ -575,13 +575,13 @@ sp_paren_comma; // = IARF_FORCE
 
 // Add or remove space after the variadic '...' when preceded by a
 // non-punctuator.
-// The value REMOVE will be overriden with FORCE
+// The value REMOVE will be overridden with FORCE
 extern Option<iarf_e>
 sp_after_ellipsis;
 
 // Add or remove space before the variadic '...' when preceded by a
 // non-punctuator.
-// The value REMOVE will be overriden with FORCE
+// The value REMOVE will be overridden with FORCE
 extern Option<iarf_e>
 sp_before_ellipsis;
 
@@ -3406,7 +3406,7 @@ align_oc_decl_colon;
 
 // (OC) Whether to not align parameters in an Objectve-C message call if first
 // colon is not on next line of the message call (the same way Xcode does
-// aligment)
+// alignment)
 extern Option<bool>
 align_oc_msg_colon_xcode_like;
 

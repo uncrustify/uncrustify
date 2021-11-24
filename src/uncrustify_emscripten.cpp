@@ -486,7 +486,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
 {
    // Problem: uncrustify originally is not a lib and uses global vars such as
    // cpd.error_count for the whole program execution
-   // to know if errors occurred during the formating step we reset this var here
+   // to know if errors occurred during the formatting step we reset this var here
    cpd.error_count = 0;
    cpd.filename    = "stdin";
    cpd.frag        = frag;
@@ -545,7 +545,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
       return(0);
    }
    // TODO One way to implement the --parsed, -p functionality would
-   // be to let the uncrustify_file function run, throw away the formated
+   // be to let the uncrustify_file function run, throw away the formatted
    // output and return the debug as a string. For this uncrustify_file would
    // need to accept a stream, FILE or a char array pointer in which the output
    // will be stored.
@@ -565,7 +565,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
 
    if (cpd.error_count != 0)
    {
-      LOG_FMT(LWARN, "%d errors occurred during formating\n", cpd.error_count);
+      LOG_FMT(LWARN, "%d errors occurred during formatting\n", cpd.error_count);
    }
 
    if (len == 0)
@@ -620,7 +620,7 @@ intptr_t _debug(intptr_t _file, lang_flag_e langIDX, bool frag)
    auto formatted_str_ptr = _uncrustify(_file, langIDX, frag, true);
    char *formatted_str    = reinterpret_cast<char *>(formatted_str_ptr);
 
-   // Lazy solution: Throw away the formated file output.
+   // Lazy solution: Throw away the formatted file output.
    // Maybe later add option to return both formatted file string and debug
    // file string together ... somehow.
    free(formatted_str);

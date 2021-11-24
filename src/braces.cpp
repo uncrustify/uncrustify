@@ -1109,7 +1109,7 @@ void add_long_closebrace_comment(void)
          if (chunk_is_token(tmp, CT_SEMICOLON))
          {
             // set br_close to the semi token,
-            // as br_close is used to add the coment after it
+            // as br_close is used to add the comment after it
             br_close = tmp;
             tmp      = chunk_get_next(tmp);
          }

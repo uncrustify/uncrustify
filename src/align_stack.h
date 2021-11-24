@@ -130,7 +130,7 @@ public:
    size_t Len();
 
 
-   //! for debuging purpose only
+   //! for debugging purpose only
    void Debug();
 
 

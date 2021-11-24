@@ -63,21 +63,21 @@ static chunk_t *handle_double_angle_close(chunk_t *pc);
 
 
 /**
- * Marks ObjC specific chunks in propery declaration, by setting
+ * Marks ObjC specific chunks in property declaration, by setting
  * parent types and chunk types.
  */
 static void cleanup_objc_property(chunk_t *start);
 
 
 /**
- * Marks ObjC specific chunks in propery declaration (getter/setter attribute)
+ * Marks ObjC specific chunks in property declaration (getter/setter attribute)
  * Will mark 'test4Setter'and ':' in '@property (setter=test4Setter:, strong) int test4;' as CT_OC_SEL_NAME
  */
 static void mark_selectors_in_property_with_open_paren(chunk_t *open_paren);
 
 
 /**
- * Marks ObjC specific chunks in propery declaration ( attributes)
+ * Marks ObjC specific chunks in property declaration ( attributes)
  * Changes all the CT_WORD and CT_TYPE to CT_OC_PROPERTY_ATTR
  */
 static void mark_attributes_in_property_with_open_paren(chunk_t *open_paren);
@@ -1671,7 +1671,7 @@ static void cleanup_objc_property(chunk_t *start)
 
    if (open_paren == nullptr)
    {
-      LOG_FMT(LTEMPL, "%s(%d): Property is not followed by openning paren\n", __func__, __LINE__);
+      LOG_FMT(LTEMPL, "%s(%d): Property is not followed by opening paren\n", __func__, __LINE__);
       return;
    }
    set_chunk_parent(open_paren, start->type);
