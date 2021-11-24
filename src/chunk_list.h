@@ -178,6 +178,15 @@ chunk_t *chunk_get_next_nl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
+ * Gets the prev NEWLINE chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
+ */
+chunk_t *chunk_get_prev_nl(chunk_t *cur, scope_e scope = scope_e::ALL);
+
+
+/**
  * Gets the next non-comment chunk
  *
  * @param cur    chunk to use as start point
@@ -187,12 +196,30 @@ chunk_t *chunk_get_next_nc(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
+ * Gets the prev non-comment chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
+ */
+chunk_t *chunk_get_prev_nc(chunk_t *cur, scope_e scope = scope_e::ALL);
+
+
+/**
  * Gets the next non-NEWLINE
  *
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
 chunk_t *chunk_get_next_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
+
+
+/**
+ * Gets the prev non-NEWLINE chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
+ */
+chunk_t *chunk_get_prev_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -214,12 +241,30 @@ chunk_t *chunk_get_next_nc_nnl_np(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
+ * Gets the prev non-NEWLINE and non-comment chunk, non-preprocessor chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
+ */
+chunk_t *chunk_get_prev_nc_nnl_np(chunk_t *cur, scope_e scope = scope_e::ALL);
+
+
+/**
  * Gets the next non-NEWLINE and non-comment chunk inside a preprocessor block
  *
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
 chunk_t *chunk_get_next_nc_nnl_in_pp(chunk_t *cur, scope_e scope = scope_e::ALL);
+
+
+/**
+ * Gets the prev non-NEWLINE and non-comment chunk inside a preprocessor block
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
+ */
+chunk_t *chunk_get_prev_nc_nnl_in_pp(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -235,16 +280,12 @@ chunk_t *chunk_ppa_get_next_nc_nnl(chunk_t *cur);
 
 
 /**
- * Gets the next chunk not in or part of balanced square
- * brackets. This handles stacked [] instances to accommodate
- * multi-dimensional array declarations
+ * Gets the prev non-NEWLINE and non-comment chunk
  *
- * @param  cur    chunk to use as start point
- * @param  scope  code region to search in
- *
- * @return nullptr or the next chunk not in or part of square brackets
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_nisq(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_prev_nc_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -266,48 +307,16 @@ chunk_t *chunk_get_prev_nc_nnl_nb(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
- * Gets the prev NEWLINE chunk
+ * Gets the next chunk not in or part of balanced square
+ * brackets. This handles stacked [] instances to accommodate
+ * multi-dimensional array declarations
  *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-chunk_t *chunk_get_prev_nl(chunk_t *cur, scope_e scope = scope_e::ALL);
-
-
-/**
- * Gets the prev non-comment chunk
+ * @param  cur    chunk to use as start point
+ * @param  scope  code region to search in
  *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
+ * @return nullptr or the next chunk not in or part of square brackets
  */
-chunk_t *chunk_get_prev_nc(chunk_t *cur, scope_e scope = scope_e::ALL);
-
-
-/**
- * Gets the prev non-NEWLINE chunk
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-chunk_t *chunk_get_prev_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
-
-
-/**
- * Gets the prev non-NEWLINE and non-comment chunk
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-chunk_t *chunk_get_prev_nc_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
-
-
-/**
- * Gets the prev non-NEWLINE and non-comment chunk inside a preprocessor block
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-chunk_t *chunk_get_prev_nc_nnl_in_pp(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_next_nisq(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -317,15 +326,6 @@ chunk_t *chunk_get_prev_nc_nnl_in_pp(chunk_t *cur, scope_e scope = scope_e::ALL)
  * @param scope  code region to search in
  */
 chunk_t *chunk_get_prev_nc_nnl_ni(chunk_t *cur, scope_e scope = scope_e::ALL);
-
-
-/**
- * Gets the prev non-NEWLINE and non-comment chunk, non-preprocessor chunk
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-chunk_t *chunk_get_prev_nc_nnl_np(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**

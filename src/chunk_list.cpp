@@ -557,6 +557,18 @@ chunk_t *chunk_get_prev_nl(chunk_t *cur, scope_e scope)
 }
 
 
+chunk_t *chunk_get_next_nc(chunk_t *cur, scope_e scope)
+{
+   return(chunk_search(cur, chunk_is_comment, scope, direction_e::FORWARD, false));
+}
+
+
+chunk_t *chunk_get_prev_nc(chunk_t *cur, scope_e scope)
+{
+   return(chunk_search(cur, chunk_is_comment, scope, direction_e::BACKWARD, false));
+}
+
+
 chunk_t *chunk_get_next_nnl(chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_newline, scope, direction_e::FORWARD, false));
@@ -620,18 +632,6 @@ chunk_t *chunk_get_next_nc_nnl_nb(chunk_t *cur, scope_e scope)
 chunk_t *chunk_get_prev_nc_nnl_nb(chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_comment_newline_or_blank, scope, direction_e::BACKWARD, false));
-}
-
-
-chunk_t *chunk_get_next_nc(chunk_t *cur, scope_e scope)
-{
-   return(chunk_search(cur, chunk_is_comment, scope, direction_e::FORWARD, false));
-}
-
-
-chunk_t *chunk_get_prev_nc(chunk_t *cur, scope_e scope)
-{
-   return(chunk_search(cur, chunk_is_comment, scope, direction_e::BACKWARD, false));
 }
 
 
