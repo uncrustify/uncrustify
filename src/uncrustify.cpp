@@ -226,8 +226,8 @@ void usage_error(const char *msg)
 static void tease()
 {
    fprintf(stdout,
-           "There are currently %d options and minimal documentation.\n"
-           "Try UniversalIndentGUI and good luck.\n", (int)get_option_count());
+           "There are currently %zu options and minimal documentation.\n"
+           "Try UniversalIndentGUI and good luck.\n", get_option_count());
 }
 
 
@@ -409,11 +409,6 @@ int main(int argc, char *argv[])
    cpd.unc_off_used = false;
 
    setup_crash_handling();
-
-   init_keywords();
-
-   // check keyword sort
-   assert(keywords_are_sorted());
 
    // Build options map
    register_options();
@@ -978,8 +973,8 @@ int main(int argc, char *argv[])
       cpd.filename = "stdin";
 
       // Done reading from stdin
-      LOG_FMT(LSYS, "Parsing: %d bytes (%d chars) from stdin as language %s\n",
-              (int)fm.raw.size(), (int)fm.data.size(),
+      LOG_FMT(LSYS, "%s(%d): Parsing: %zu bytes (%zu chars) from stdin as language %s\n",
+              __func__, __LINE__, fm.raw.size(), fm.data.size(),
               language_name_from_flags(cpd.lang_flags));
 
       uncrustify_file(fm, stdout, parsed_file, dump_file);
@@ -1091,7 +1086,7 @@ static void process_source_list(const char *source_list,
             fname[len] = '/';
          }
       }
-      LOG_FMT(LFILELIST, "%3d] %s\n", line, fname);
+      LOG_FMT(LFILELIST, "%3d file to uncrustify: %s\n", line, fname);
 
       if (fname[0] != '#')
       {
@@ -1506,8 +1501,14 @@ static void do_source_file(const char *filename_in,
       cpd.error_count++;
       return;
    }
-   LOG_FMT(LSYS, "Parsing: %s as language %s\n",
-           filename_in, language_name_from_flags(cpd.lang_flags));
+   LOG_FMT(LSYS, "%s(%d): Parsing: %s as language %s\n",
+           __func__, __LINE__, filename_in, language_name_from_flags(cpd.lang_flags));
+
+   // check keyword sort
+   assert(keywords_are_sorted());
+
+   // Issue #3353
+   init_keywords_for_language();
 
    cpd.filename = filename_in;
 
@@ -2496,18 +2497,18 @@ struct lang_name_t
 
 static lang_name_t language_names[] =
 {
-   { "C",        LANG_C                        },
-   { "CPP",      LANG_CPP                      },
-   { "D",        LANG_D                        },
-   { "CS",       LANG_CS                       },
-   { "VALA",     LANG_VALA                     },
-   { "JAVA",     LANG_JAVA                     },
-   { "PAWN",     LANG_PAWN                     },
-   { "OC",       LANG_OC                       },
-   { "OC+",      LANG_OC | LANG_CPP            },
-   { "CS+",      LANG_CS | LANG_CPP            },
-   { "ECMA",     LANG_ECMA                     },
-   { "C-Header", LANG_OC | LANG_CPP | FLAG_HDR },
+   { "C",        LANG_C                       },      // 0x0001
+   { "CPP",      LANG_CPP                     },      // 0x0002
+   { "D",        LANG_D                       },      // 0x0004
+   { "CS",       LANG_CS                      },      // 0x0008
+   { "JAVA",     LANG_JAVA                    },      // 0x0010
+   { "OC",       LANG_OC                      },      // 0x0020
+   { "VALA",     LANG_VALA                    },      // 0x0040
+   { "PAWN",     LANG_PAWN                    },      // 0x0080
+   { "ECMA",     LANG_ECMA                    },      // 0x0100
+   { "OC+",      LANG_OC | LANG_CPP           },      // 0x0020 + 0x0002
+   { "CS+",      LANG_CS | LANG_CPP           },      // 0x0008 + 0x0002
+   { "C-Header", LANG_C | LANG_CPP | FLAG_HDR },      // 0x0001 + 0x0002 + 0x2000 = 0x2022
 };
 
 
@@ -2662,11 +2663,11 @@ static size_t language_flags_from_filename(const char *filename)
       }
    }
 
-   for (auto &lanugage : language_exts)
+   for (auto &language : language_exts)
    {
-      if (ends_with(filename, lanugage.ext))
+      if (ends_with(filename, language.ext))
       {
-         return(language_flags_from_name(lanugage.name));
+         return(language_flags_from_name(language.name));
       }
    }
 
@@ -2679,13 +2680,13 @@ static size_t language_flags_from_filename(const char *filename)
       }
    }
 
-   for (auto &lanugage : language_exts)
+   for (auto &language : language_exts)
    {
-      if (ends_with(filename, lanugage.ext, false))
+      if (ends_with(filename, language.ext, false))
       {
-         return(language_flags_from_name(lanugage.name));
+         return(language_flags_from_name(language.name));
       }
    }
 
    return(LANG_C);
-}
+} // language_flags_from_filename

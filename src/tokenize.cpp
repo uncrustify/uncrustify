@@ -2504,8 +2504,8 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc, const chunk_t *prev_pc)
    set_chunk_type(&pc, CT_UNKNOWN);
    pc.str.append(ctx.get());
 
-   LOG_FMT(LWARN, "%s:%zu Garbage in col %d: %x\n",
-           cpd.filename.c_str(), pc.orig_line, (int)ctx.c.col, pc.str[0]);
+   LOG_FMT(LWARN, "%s:%zu Garbage in col %zu: %x\n",
+           cpd.filename.c_str(), pc.orig_line, ctx.c.col, pc.str[0]);
    cpd.error_count++;
    return(true);
 } // parse_next
