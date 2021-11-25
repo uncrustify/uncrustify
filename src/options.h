@@ -3781,6 +3781,11 @@ mod_sort_incl_import_grouping_enabled;
 extern Option<bool>
 mod_move_case_break;
 
+// Whether to move a 'return' that appears after a fully braced 'case' before
+// the close brace, as in 'case X: { ... } return;' => 'case X: { ... return; }'.
+extern Option<bool>
+mod_move_case_return;
+
 // Add or remove braces around a fully braced case statement. Will only remove
 // braces if there are no variable declarations in the block.
 extern Option<iarf_e>
