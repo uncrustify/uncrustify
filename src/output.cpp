@@ -1122,15 +1122,16 @@ static int match_doxygen_javadoc_tag(const std::wstring &str, size_t idx)
 
    if (str[idx] == L'@')
    {
+      // Issue #3357
       std::wregex criteria(L"(@(?:author|"
                            L"deprecated|"
                            L"exception|"
-                           L"param(?:\\s*\\[\\s*(?:in\\s*,\\s*out|in|out)\\s*\\])?|"
+                           L"param(?:\\s*?\\[\\s*(?:in\\s*,\\s*out|in|out)\\s*?\\])?|"
                            L"return|"
                            L"see|"
                            L"since|"
                            L"throws|"
-                           L"version)\\b)");
+                           L"version)(?=\\s))");
 
       if (  std::regex_search(str.cbegin() + idx, str.cend(), match, criteria)
          && match[1].matched
