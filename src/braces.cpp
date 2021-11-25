@@ -45,6 +45,9 @@ static void examine_brace(chunk_t *bopen);
 static void move_case_break(void);
 
 
+static void move_case_return(void);
+
+
 static void mod_case_brace(void);
 
 
@@ -244,6 +247,12 @@ void do_braces(void)
    if (options::mod_move_case_break())
    {
       move_case_break();
+   }
+   log_rule_B("mod_move_case_return");
+
+   if (options::mod_move_case_return())
+   {
+      move_case_return();
    }
 } // do_braces
 
@@ -1231,6 +1240,46 @@ static void move_case_break(void)
          && chunk_is_newline(chunk_get_prev(prev)))
       {
          chunk_swap_lines(prev, pc);
+      }
+      prev = pc;
+   }
+}
+
+
+static void move_case_return(void)
+{
+   LOG_FUNC_ENTRY();
+   chunk_t *prev = nullptr;
+
+   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_nc_nnl(pc))
+   {
+      if (  chunk_is_token(pc, CT_RETURN)
+         && chunk_is_token(prev, CT_BRACE_CLOSE)
+         && get_chunk_parent_type(prev) == CT_CASE
+         && chunk_is_newline(chunk_get_prev(pc))
+         && chunk_is_newline(chunk_get_prev(prev)))
+      {
+         // Find the end of the return statement
+         while (chunk_is_not_token(pc, CT_SEMICOLON))
+         {
+            pc = chunk_get_next(pc);
+         }
+         pc = chunk_get_next_nl(pc);
+         pc = chunk_get_next_nc_nnl(pc);
+
+         if (pc != nullptr)
+         {
+            // Swap all lines between brace close and current token
+            LOG_FMT(LMCB, "%s(%d): move line %zu before line %zu\n",
+                    __func__, __LINE__, prev->orig_line, pc->orig_line);
+            chunk_t *curr = chunk_get_next_nc_nnl(prev);
+
+            while (curr != pc)
+            {
+               chunk_swap_lines(prev, curr);
+               curr = chunk_get_next_nc_nnl(prev);
+            }
+         }
       }
       prev = pc;
    }
