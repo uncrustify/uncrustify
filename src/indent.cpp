@@ -3603,6 +3603,12 @@ void indent_text(void)
                         }
                         chunk_t *searchNext = chunk_get_next(search);
 
+                        // skip over a possible 'noexcept' keyword before going forward.
+                        if (searchNext->type == CT_NOEXCEPT)
+                        {
+                           searchNext = chunk_get_next(searchNext);
+                        }
+
                         if (  searchNext->type == CT_SEMICOLON
                            || searchNext->type == CT_MEMBER            // Issue #2582
                            || searchNext->type == CT_NEWLINE)
