@@ -1485,7 +1485,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          {
             set_chunk_type(pc, CT_ARITH);
 
-            if (chunk_is_token(prev, CT_WORD))
+            if (chunk_is_token(prev, CT_WORD) && !chunk_is_token(next, CT_NUMBER))
             {
                chunk_t *tmp = chunk_get_prev_nc_nnl_ni(prev); // Issue #2279
 
