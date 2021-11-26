@@ -1262,6 +1262,14 @@ static void move_case_return(void)
          // Find the end of the return statement
          while (chunk_is_not_token(pc, CT_SEMICOLON))
          {
+            if (  chunk_is_token(pc, CT_CASE)
+               || chunk_is_token(pc, CT_BRACE_CLOSE))
+            {
+               // This may indicate a semicolon was missing in the code to format.
+               // Avoid moving the return statement to prevent potential unwanted erros.
+               pc = nullptr;
+               break;
+            }
             pc = chunk_get_next(pc);
          }
          pc = chunk_get_next_nl(pc);
@@ -1283,7 +1291,7 @@ static void move_case_return(void)
       }
       prev = pc;
    }
-}
+} // move_case_return
 
 
 static chunk_t *mod_case_brace_remove(chunk_t *br_open)
