@@ -273,10 +273,16 @@ void tokenize_trailing_return_types(void)
                set_chunk_type(next, CT_TYPE);                         // Issue #3222
                next = chunk_get_next_nc_nnl(next);
 
-               if (  chunk_is_token(next, CT_ARITH)
-                  && (next->str[0] == '*'))
+               if (chunk_is_token(next, CT_ARITH))
                {
-                  set_chunk_type(next, CT_PTR_TYPE);
+                  if (next->str[0] == '*')
+                  {
+                     set_chunk_type(next, CT_PTR_TYPE);
+                  }
+                  else if (next->str[0] == '&')
+                  {
+                     set_chunk_type(next, CT_BYREF);
+                  }
                }
             }
             else
