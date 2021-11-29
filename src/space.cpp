@@ -2548,7 +2548,8 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_between_ptr_star");                             // ptr_star 9
          return(options::sp_between_ptr_star());
       }
-      else if (chunk_is_token(second, CT_FUNC_VAR))
+      else if (  chunk_is_token(second, CT_FUNC_VAR)
+              || chunk_is_token(second, CT_FUNC_TYPE))
       {
          // Add or remove space between the pointer star '*' and the name of the
          // variable in a function pointer definition.
