@@ -1577,6 +1577,38 @@ void indent_text(void)
          {
             LOG_FMT(LINDENT2, "%s(%d): indent_macro_brace\n", __func__, __LINE__);
          }
+         else if (  language_is_set(LANG_CPP)
+                 && options::indent_cpp_lambda_only_once()
+                 && (get_chunk_parent_type(pc) == CT_CPP_LAMBDA))
+         {
+            log_rule_B("indent_cpp_lambda_only_once");
+
+            size_t namespace_indent_to_ignore = 0;                   // Issue #1813
+            log_rule_B("indent_namespace");
+
+            if (!options::indent_namespace())
+            {
+               for (auto i = frm.rbegin(); i != frm.rend(); ++i)
+               {
+                  if (i->ns_cnt)
+                  {
+                     namespace_indent_to_ignore = i->ns_cnt;
+                     break;
+                  }
+               }
+            }
+            // Issue # 1296
+            frm.top().brace_indent = 1 + ((pc->brace_level - namespace_indent_to_ignore) * indent_size);
+            indent_column_set(frm.top().brace_indent);
+            frm.top().indent = indent_column + indent_size;
+            log_indent();
+            frm.top().indent_tab = frm.top().indent;
+            frm.top().indent_tmp = frm.top().indent;
+            log_indent_tmp();
+
+            frm.prev().indent_tmp = frm.top().indent_tmp;
+            log_indent_tmp();
+         }
          else if (  options::indent_cpp_lambda_body()
                  && get_chunk_parent_type(pc) == CT_CPP_LAMBDA)
          {
@@ -1665,38 +1697,6 @@ void indent_text(void)
             frm.top().indent = indent_column + indent_size;
             log_indent();
 
-            frm.top().indent_tab = frm.top().indent;
-            frm.top().indent_tmp = frm.top().indent;
-            log_indent_tmp();
-
-            frm.prev().indent_tmp = frm.top().indent_tmp;
-            log_indent_tmp();
-         }
-         else if (  language_is_set(LANG_CPP)
-                 && options::indent_cpp_lambda_only_once()
-                 && (get_chunk_parent_type(pc) == CT_CPP_LAMBDA))
-         {
-            log_rule_B("indent_cpp_lambda_only_once");
-
-            size_t namespace_indent_to_ignore = 0;                   // Issue #1813
-            log_rule_B("indent_namespace");
-
-            if (!options::indent_namespace())
-            {
-               for (auto i = frm.rbegin(); i != frm.rend(); ++i)
-               {
-                  if (i->ns_cnt)
-                  {
-                     namespace_indent_to_ignore = i->ns_cnt;
-                     break;
-                  }
-               }
-            }
-            // Issue # 1296
-            frm.top().brace_indent = 1 + ((pc->brace_level - namespace_indent_to_ignore) * indent_size);
-            indent_column_set(frm.top().brace_indent);
-            frm.top().indent = indent_column + indent_size;
-            log_indent();
             frm.top().indent_tab = frm.top().indent;
             frm.top().indent_tmp = frm.top().indent;
             log_indent_tmp();
