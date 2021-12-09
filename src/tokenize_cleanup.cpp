@@ -279,7 +279,7 @@ void tokenize_trailing_return_types(void)
                   {
                      set_chunk_type(next, CT_PTR_TYPE);
                   }
-                  else if (next->str[0] == '&')
+                  else if (next->str[0] == '&')                       // Issue #3407
                   {
                      set_chunk_type(next, CT_BYREF);
                   }

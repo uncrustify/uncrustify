@@ -1586,7 +1586,8 @@ void indent_text(void)
             chunk_t *head     = chunk_get_prev_nc_nnl_np(frm.top().pc);
             chunk_t *tail     = nullptr;
             chunk_t *frm_prev = frm.prev().pc;
-            bool    enclosure = frm_prev->parent_type != CT_FUNC_DEF && frm_prev != chunk_skip_to_match(frm_prev);
+            bool    enclosure = (  frm_prev->parent_type != CT_FUNC_DEF         // Issue #3407
+                                && frm_prev != chunk_skip_to_match(frm_prev));
             bool    linematch = true;
 
             for (auto it = frm.rbegin(); it != frm.rend() && tail == nullptr; ++it)
@@ -3603,7 +3604,7 @@ void indent_text(void)
                         }
                         chunk_t *searchNext = chunk_get_next(search);
 
-                        // skip over a possible 'noexcept' keyword before going forward.
+                        // Issue #3407 - Skip over a possible 'noexcept' keyword before going forward.
                         if (searchNext->type == CT_NOEXCEPT)
                         {
                            searchNext = chunk_get_next(searchNext);
