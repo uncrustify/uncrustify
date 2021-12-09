@@ -54,7 +54,7 @@ static const chunk_tag_t *kw_static_match(bool orig_list, const chunk_tag_t *tag
  */
 
 static chunk_tag_t keyword_for_lang[uncrustify::limits::MAX_KEYWORDS];
-static size_t      language_count = 0;
+static size_t      language_count;
 
 /**
  * interesting static keywords - keep sorted.
@@ -364,6 +364,8 @@ void init_keywords_for_language()
 {
    unsigned int local_flags    = cpd.lang_flags;
    size_t       keywords_count = ARRAY_SIZE(keywords);
+
+   language_count = 0;
 
    for (size_t idx = 0; idx < keywords_count; idx++)
    {
