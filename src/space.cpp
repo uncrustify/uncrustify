@@ -2555,6 +2555,13 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
          log_rule("sp_ptr_star_func_var");
          return(options::sp_ptr_star_func_var());
       }
+      else if (chunk_is_token(second, CT_FUNC_TYPE))
+      {
+         // Add or remove space between the pointer star '*' and the name of the
+         // type in a function pointer type definition.
+         log_rule("sp_ptr_star_func_type");
+         return(options::sp_ptr_star_func_type());
+      }
       else if (  get_chunk_parent_type(first) == CT_FUNC_DEF
               || get_chunk_parent_type(first) == CT_FUNC_PROTO
               || get_chunk_parent_type(first) == CT_FUNC_VAR)

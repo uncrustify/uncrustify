@@ -2211,7 +2211,7 @@ bool mark_function_type(chunk_t *pc)
    {
       if (pc->flags.test(PCF_IN_TYPEDEF))
       {
-         set_chunk_type(varcnk, CT_TYPE);
+         set_chunk_type(varcnk, CT_FUNC_TYPE);   // Issue #3402
       }
       else
       {

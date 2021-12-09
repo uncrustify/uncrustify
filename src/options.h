@@ -296,6 +296,11 @@ sp_after_ptr_star_trailing;
 extern Option<iarf_e>
 sp_ptr_star_func_var;
 
+// Add or remove space between the pointer star '*' and the name of the type
+// in a function pointer type definition.
+extern Option<iarf_e>
+sp_ptr_star_func_type;
+
 // Add or remove space after a pointer star '*', if followed by an open
 // parenthesis, as in 'void* (*)()'.
 extern Option<iarf_e>

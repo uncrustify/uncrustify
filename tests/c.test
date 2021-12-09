@@ -436,3 +436,4 @@
 10043  c/sp_ptr_star_func_var-a.cfg               c/Issue_3376.c
 10044  c/sp_ptr_star_func_var-r.cfg               c/Issue_3376.c
 10045  c/sp_ptr_star_func_var-f.cfg               c/Issue_3376.c
+10046  c/Issue_3402.cfg                           c/Issue_3402.c
