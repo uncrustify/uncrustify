@@ -62,7 +62,7 @@ static size_t      language_count;
  */
 static chunk_tag_t keywords[] =
 {
-   // TODO: it might be useful if users could add there custom keywords to this list
+   // TODO: it might be useful if users could add their custom keywords to this list
    { "@autoreleasepool",                CT_AUTORELEASEPOOL,  LANG_OC                                                                     },
    { "@available",                      CT_OC_AVAILABLE,     LANG_OC                                                                     },
    { "@catch",                          CT_CATCH,            LANG_OC                                                                     },
