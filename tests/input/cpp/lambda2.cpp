@@ -80,3 +80,29 @@ void g2()
           [&one, two] (int *a, Something&b){ std::cout << "blah: " << *a; });
 
 }
+
+void h1()
+{
+   []() -> int
+   {
+      return 33;
+   }();
+
+   []() noexcept -> int
+   {
+      return 33;
+   }();
+}
+
+void h2()
+{
+   [](int a) -> int
+   {
+      return a + 33;
+   }(21);
+
+   [](int a) noexcept -> int
+   {
+      return a + 33;
+   }(21);
+}

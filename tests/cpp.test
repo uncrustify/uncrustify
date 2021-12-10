@@ -173,12 +173,9 @@
 30215  common/empty.cfg                                     cpp/Issue_2099.cpp
 30216  cpp/Issue_2302.cfg                                   cpp/Issue_2302.cpp
 30217  common/empty.cfg                                     cpp/2138.cpp
-30218  cpp/sp_trailing_return-f.cfg                         cpp/trailing_return.cpp
-30219  cpp/sp_trailing_return-r.cfg                         cpp/trailing_return.cpp
 
 30220  cpp/bug_1340.cfg                                     cpp/bug_1340.cpp
 30221  cpp/Issue_2914.cfg                                   cpp/Issue_2914.cpp
-30222  cpp/sp_assign_default.cfg                            cpp/trailing_return.cpp
 30223  cpp/sp_enum_colon.cfg                                cpp/sp_enum_colon.cpp
 30224  cpp/sp_enum_colon-r.cfg                              cpp/sp_enum_colon.cpp
 30225  common/empty.cfg                                     cpp/Issue_3176.cpp
@@ -321,6 +318,7 @@
 30756  cpp/bug_1296.cfg                                     cpp/bug_1296.cpp
 30757  cpp/Issue_3054.cfg                                   cpp/Issue_3054.cpp
 30758  cpp/Issue_3054-2.cfg                                 cpp/Issue_3054-2.cpp
+30759  cpp/lambda4.cfg                                      cpp/lambda2.cpp
 
 30761  cpp/out-668-F.cfg                                    cpp/out-668.cpp
 30762  cpp/out-668-T.cfg                                    cpp/out-668.cpp
@@ -493,6 +491,16 @@
 31102  cpp/nl_before_brace_open_1.cfg                       cpp/nl_before_brace_open_test.cpp
 31103  cpp/nl_before_brace_open_2.cfg                       cpp/nl_before_brace_open_test.cpp
 31104  cpp/nl_before_brace_open_3.cfg                       cpp/nl_before_brace_open_test.cpp
+
+31400  cpp/sp_trailing_return-f.cfg                         cpp/trailing_return.cpp
+31401  cpp/sp_trailing_return-r.cfg                         cpp/trailing_return.cpp
+31402  cpp/sp_assign_default.cfg                            cpp/trailing_return.cpp
+31403  cpp/sp_trailing_return_byref_ptr-left.cfg            cpp/trailing_return_byref_ptr.cpp
+31404  cpp/sp_trailing_return_byref_ptr-right.cfg           cpp/trailing_return_byref_ptr.cpp
+
+31450  cpp/indent_paren_close_0.cfg                         cpp/indent_func_alias_prototype.cpp
+31451  cpp/indent_paren_close_1.cfg                         cpp/indent_func_alias_prototype.cpp
+31452  cpp/indent_paren_close_2.cfg                         cpp/indent_func_alias_prototype.cpp
 
 31562  cpp/space_indent_class-t_columns-4.cfg               cpp/sf562.cpp
 31567  common/align_same_func_call_params-t.cfg             cpp/sf567.cpp
@@ -801,6 +809,7 @@
 34176  cpp/align_assign_span-1.cfg                          cpp/i1509_bug_1112_correction.cpp
 34177  cpp/sp_func_call_paren.cfg                           cpp/sp_func_call_paren.cpp
 34178  cpp/Issue_3237.cfg                                   cpp/Issue_3237.cpp
+34179  cpp/arith-vs-byref.cfg                               cpp/arith_vs_byref.cpp
 
 34180  cpp/bug_1402.cfg                                     cpp/bug_1402.cpp
 
