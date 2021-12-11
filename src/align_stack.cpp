@@ -13,9 +13,7 @@
 #include "align_tab_column.h"
 #include "indent.h"
 #include "space.h"
-#if defined WITH_STACKID
 #include "unc_tools.h"                   // to get stackID and get_A_Number()
-#endif
 
 
 constexpr static auto LCURRENT = LAS;
@@ -27,9 +25,8 @@ using std::numeric_limits;
 
 void AlignStack::Start(size_t span, int thresh)
 {
-#if defined WITH_STACKID
    stackID = get_A_Number();   // for debugging purpose only
-#endif
+
    // produces much more log output. Use it only debugging purpose
    //WITH_STACKID_DEBUG;
 

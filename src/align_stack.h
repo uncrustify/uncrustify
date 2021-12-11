@@ -1,6 +1,6 @@
 /**
  * @file align_stack.h
- * Manages a align stack, which is just a pair of chunk stacks with a few
+ * Manages an align stack, which is just a pair of chunk stacks with a few
  * fancy functions.
  *
  * @author  Ben Gardner
@@ -24,7 +24,7 @@ public:
       SS_DANGLE   //! include prev * after add
    };
 
-   ChunkStack m_aligned;      //! contains the token that is aligned
+   ChunkStack m_aligned;      //! contains the tokens that are aligned
    ChunkStack m_skipped;      //! contains the tokens sent to Add()
    size_t     m_max_col;
    size_t     m_min_col;
@@ -36,12 +36,9 @@ public:
    bool       m_right_align;
    bool       m_absolute_thresh;
    StarStyle  m_star_style;
-   StarStyle  m_amp_style;  //! do not include the first item if it causes it to be indented
+   StarStyle  m_amp_style;
    bool       m_skip_first; //! do not include the first item if it causes it to be indented
-#define WITH_STACKID    1
-#if defined WITH_STACKID
-   size_t stackID;      // for debugging purpose only
-#endif
+   size_t     stackID;      //! for debugging purpose only
 
 
    AlignStack()
@@ -57,9 +54,7 @@ public:
       , m_star_style(SS_IGNORE)
       , m_amp_style(SS_IGNORE)
       , m_skip_first(false)
-#if defined WITH_STACKID
       , stackID(std::numeric_limits<std::size_t>::max()) // under linux 64 bits: 18446744073709551615
-#endif
       , m_last_added(0)
    {
    }
@@ -144,7 +139,6 @@ protected:
    void ReAddSkipped();
 };
 
-#if defined WITH_STACKID
 #define WITH_STACKID_DEBUG                                                                                  \
    if (stackID == std::numeric_limits<std::size_t>::max())                                                  \
    {                                                                                                        \
@@ -156,8 +150,5 @@ protected:
    {                                                                                                        \
       LOG_FMT(LAS, "AlignStack::%s(%d): stackID is %zu\n", __func__, __LINE__, stackID);                    \
    }
-#else
-#define WITH_STACKID_DEBUG    ;
-#endif
 
 #endif /* ALIGN_STACK_H_INCLUDED */
