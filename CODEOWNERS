@@ -1,4 +1,4 @@
-*               @CDanU @gmaurel @mwoehlke-kitware
+*               @gmaurel @mwoehlke-kitware
 
 .editorconfig   @mihaipopescu
 
@@ -7,5 +7,5 @@
 appveyor.yml    @mihaipopescu
 
 # emscripten
-/emscripten/    @CDanU
-/src/uncrustify_emscripten.cpp @CDanU
+#/emscripten/    @CDanU
+#/src/uncrustify_emscripten.cpp @CDanU
