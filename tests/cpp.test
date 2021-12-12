@@ -581,6 +581,7 @@
 32006  common/space_indent_columns-4.cfg                    cpp/bug_i_687.cpp
 32007  cpp/Issue_3052.cfg                                   cpp/Issue_3052.cpp
 32008  cpp/Issue_3034.cfg                                   cpp/Issue_3034.cpp
+32009  cpp/Issue_3422.cfg                                   cpp/Issue_3422.cpp
 
 32100  cpp/cpp17.cfg                                        cpp/cpp17.cpp
 32105  cpp/I2103.cfg                                        cpp/I2103.cpp

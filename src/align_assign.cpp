@@ -183,11 +183,6 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          //log_pcf_flags(LALASS, pc->flags);
          var_def_cnt++;
       }
-      else if (var_def_cnt > 1)
-      {
-         // we hit the second variable def - don't look for assigns, don't align
-         vdas.Reset();
-      }
       else if (  equ_count == 0                      // indent only if first '=' in line
               && !pc->flags.test(PCF_IN_TEMPLATE)    // and it is not inside a template #999
               && (  chunk_is_token(pc, CT_ASSIGN)
