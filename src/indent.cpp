@@ -1518,7 +1518,7 @@ void indent_text(void)
                }
             }
          }
-         else
+         else if (frm.top().brace_indent) // Issue #3421
          {
             // Indent the brace to match the open brace
             indent_column_set(frm.top().brace_indent);
