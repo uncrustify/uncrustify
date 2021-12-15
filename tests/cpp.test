@@ -1071,3 +1071,9 @@
 60065  cpp/issue_3378.cfg                                   cpp/issue_3378.cpp
 60066  cpp/Issue_3409.cfg                                   cpp/Issue_3409.cpp
 60067  common/empty.cfg                                     cpp/Issue_3283.cpp
+60068  cpp/Issue_3428.cfg                                   cpp/Issue_3428.cpp
+60069  cpp/Issue_3428_2.cfg                                 cpp/Issue_3428.cpp
+60070  cpp/Issue_3428_3.cfg                                 cpp/Issue_3428.cpp
+60071  cpp/Issue_3428_4.cfg                                 cpp/Issue_3428.cpp
+60072  cpp/Issue_3428_5.cfg                                 cpp/Issue_3428.cpp
+60073  cpp/Issue_3428_6.cfg                                 cpp/Issue_3428.cpp
