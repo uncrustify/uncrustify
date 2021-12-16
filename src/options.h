@@ -3855,6 +3855,11 @@ pp_indent;
 extern Option<bool>
 pp_indent_at_level;
 
+// Whether to indent #if/#else/#endif at the parenthesis level if the brace
+// level is 0. If false, these are indented from column 1.
+extern Option<bool>
+pp_indent_at_level0;
+
 // Specifies the number of columns to indent preprocessors per level
 // at brace level 0 (file-level). If pp_indent_at_level=false, also specifies
 // the number of columns to indent preprocessors per level

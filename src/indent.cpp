@@ -4461,8 +4461,12 @@ void indent_preproc(void)
       // Mark as already handled if not region stuff or in column 1
       log_rule_B("pp_indent_at_level");
 
-      if (  (  !options::pp_indent_at_level()
-            || (pc->brace_level <= ((get_chunk_parent_type(pc) == CT_PP_DEFINE) ? 1 : 0)))
+      bool at_file_level = pc->brace_level <= ((get_chunk_parent_type(pc) == CT_PP_DEFINE) ? 1 : 0);
+
+      if (  (  (  at_file_level
+               && !options::pp_indent_at_level0())
+            || (  !at_file_level
+               && !options::pp_indent_at_level()))
          && get_chunk_parent_type(pc) != CT_PP_REGION
          && get_chunk_parent_type(pc) != CT_PP_ENDREGION)
       {

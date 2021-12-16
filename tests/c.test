@@ -438,3 +438,4 @@
 10045  c/sp_ptr_star_func_var-f.cfg               c/Issue_3376.c
 10046  c/Issue_3402.cfg                           c/Issue_3402.c
 10047  c/pp_if_indent_code-true.cfg               c/Issue_3421.h
+10048  c/Issue_3431.cfg                           c/Issue_3431.c
