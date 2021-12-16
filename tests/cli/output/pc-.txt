@@ -6,5 +6,5 @@
 # -=====-
 # language                      = C
 # -=====-
-# Line                Tag         Parent_type  Type of the parent         Columns Br/Lvl/pp       Flag   Nl  Text
+# Line                Tag         Parent_type  Type of the parent         Columns Br/Lvl/pp         Flag   Nl  Text
 # -=====-
