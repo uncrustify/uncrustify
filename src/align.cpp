@@ -12,6 +12,7 @@
 
 #include "align_asm_colon.h"
 #include "align_assign.h"
+#include "align_braced_init_list.h"
 #include "align_eigen_comma_init.h"
 #include "align_func_params.h"
 #include "align_func_proto.h"
@@ -164,6 +165,15 @@ void align_all(void)
                    options::align_assign_span(),
                    options::align_assign_thresh(),
                    nullptr);
+   }
+
+   if (  (options::align_braced_init_list_span() > 0)                   // Issue #750
+      || (options::align_braced_init_list_thresh() > 0))
+   {
+      align_braced_init_list(chunk_get_head(),
+                             options::align_braced_init_list_span(),
+                             options::align_braced_init_list_thresh(),
+                             nullptr);
    }
    // Align structure initializers
    log_rule_B("align_struct_init_span");
