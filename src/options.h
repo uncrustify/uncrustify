@@ -3154,6 +3154,12 @@ align_var_def_inline;
 extern BoundedOption<unsigned, 0, 5000>
 align_assign_span;
 
+// The span for aligning on '{' in braced init list.
+//
+// 0: Don't align (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_braced_init_list_span;
+
 // The span for aligning on '=' in function prototype modifier.
 //
 // 0: Don't align (default).
@@ -3166,6 +3172,13 @@ align_assign_func_proto_span;
 // 0: No limit (default).
 extern BoundedOption<signed, -1000, 5000>
 align_assign_thresh;
+
+// The threshold for aligning on '{' in braced init list.
+// Use a negative number for absolute thresholds.
+//
+// 0: No limit (default).
+extern BoundedOption<signed, -1000, 5000>
+align_braced_init_list_thresh;
 
 // How to apply align_assign_span to function declaration "assignments", i.e.
 // 'virtual void foo() = 0' or '~foo() = {default|delete}'.
