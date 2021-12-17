@@ -468,7 +468,7 @@ void output_parsed(FILE *pfile, bool withOptions)
 #ifdef WIN32
    fprintf(pfile, "# Line                Tag         Parent_type  Type of the parent         Columns Br/Lvl/pp     Nl  Text");
 #else // not WIN32
-   fprintf(pfile, "# Line                Tag         Parent_type  Type of the parent         Columns Br/Lvl/pp       Flag   Nl  Text");
+   fprintf(pfile, "# Line                Tag         Parent_type  Type of the parent         Columns Br/Lvl/pp         Flag   Nl  Text");
 #endif // ifdef WIN32
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
@@ -485,8 +485,10 @@ void output_parsed(FILE *pfile, bool withOptions)
               get_token_name(get_chunk_parent_type(pc)), get_token_name(get_type_of_the_parent(pc)),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
-      fprintf(pfile, "[%12llx]",
-              static_cast<pcf_flags_t::int_t>(pc->flags));
+      // Print pc flags in groups of 4 hex characters
+      char flag_string[20];
+      sprintf(flag_string, "%12llx", static_cast<pcf_flags_t::int_t>(pc->flags));
+      fprintf(pfile, "[%.4s %.4s %.4s]", flag_string, flag_string + 4, flag_string + 8);
       fprintf(pfile, "[%zu-%d]",
               pc->nl_count, pc->after_tab);
 #endif // ifdef WIN32
