@@ -3173,6 +3173,12 @@ align_assign_func_proto_span;
 extern BoundedOption<signed, -1000, 5000>
 align_assign_thresh;
 
+// Whether to align on the left most assignment when multiple
+// definitions are found on the same line.
+// Depends on 'align_assign_span' and 'align_assign_thresh' settings.
+extern Option<bool>
+align_assign_on_multi_var_defs;
+
 // The threshold for aligning on '{' in braced init list.
 // Use a negative number for absolute thresholds.
 //

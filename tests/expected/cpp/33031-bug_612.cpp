@@ -1,6 +1,6 @@
 void foo(void)
 {
-	int a      = 0, b = 0;
+	int a = 0, b = 0;
 	char chvar = 0, var = 0;
 
 	a     = 0;
