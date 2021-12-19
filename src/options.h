@@ -2431,7 +2431,8 @@ extern Option<iarf_e>
 nl_paren_dbrace_open;
 
 // Whether to add a newline after the type in an unnamed temporary
-// direct-list-initialization.
+// direct-list-initialization, better:
+// before a direct-list-initialization.
 extern Option<iarf_e>
 nl_type_brace_init_lst;
 
