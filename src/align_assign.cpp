@@ -183,9 +183,12 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          //log_pcf_flags(LALASS, pc->flags);
          var_def_cnt++;
       }
-      else if (var_def_cnt > 1)
+      else if (  var_def_cnt > 1
+              && !options::align_assign_on_multi_var_defs())
       {
-         // we hit the second variable def - don't look for assigns, don't align
+         // we hit the second variable def and align was not requested - don't look for assigns, don't align
+         LOG_FMT(LALASS, "%s(%d): multiple var defs found and alignment was not requested\n",
+                 __func__, __LINE__);
          vdas.Reset();
       }
       else if (  equ_count == 0                      // indent only if first '=' in line

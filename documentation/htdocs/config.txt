@@ -2579,6 +2579,11 @@ align_assign_func_proto_span    = 0        # unsigned number
 # 0: No limit (default).
 align_assign_thresh             = 0        # number
 
+# Whether to align on the left most assignment when multiple
+# definitions are found on the same line.
+# Depends on 'align_assign_span' and 'align_assign_thresh' settings.
+align_assign_on_multi_var_defs  = false    # true/false
+
 # How to apply align_assign_span to function declaration "assignments", i.e.
 # 'virtual void foo() = 0' or '~foo() = {default|delete}'.
 #
