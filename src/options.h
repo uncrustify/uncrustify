@@ -1620,10 +1620,11 @@ indent_paren_nl;
 
 // How to indent a close parenthesis after a newline.
 //
-// 0: Indent to body level (default)
-// 1: Align under the open parenthesis
-// 2: Indent to the brace level
-extern BoundedOption<unsigned, 0, 2>
+//  0: Indent to body level (default)
+//  1: Align under the open parenthesis
+//  2: Indent to the brace level
+// -1: Preserve original indentation
+extern BoundedOption<signed, -1, 2>
 indent_paren_close;
 
 // Whether to indent the open parenthesis of a function definition,

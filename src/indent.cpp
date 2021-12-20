@@ -3534,16 +3534,24 @@ void indent_text(void)
                LOG_FMT(LINDLINE, "%s(%d): ck2->orig_line is %zu, ck2->orig_col is %zu, ck2->text() is '%s', ck2->type is %s\n",
                        __func__, __LINE__, ck2->orig_line, ck2->orig_col, ck2->text(), get_token_name(ck2->type));
 
-               /*
-                * If the open parenthesis was the first thing on the line or we
-                * are doing mode 1, then put the close parenthesis in the same
-                * column
-                */
                log_rule_B("indent_paren_close");
 
-               if (  chunk_is_newline(ck2)
-                  || (options::indent_paren_close() == 1))
+               if (options::indent_paren_close() == -1)
                {
+                  LOG_FMT(LINDLINE, "%s(%d): [%zu:%zu] indent_paren_close is -1\n",
+                          __func__, __LINE__, ck2->orig_line, ck2->orig_col);
+                  indent_column_set(pc->orig_col);
+                  LOG_FMT(LINDLINE, "%s(%d): [%zu:%zu] indent_column set to %zu\n",
+                          __func__, __LINE__, ck2->orig_line, ck2->orig_col, indent_column);
+               }
+               else if (  chunk_is_newline(ck2)
+                       || (options::indent_paren_close() == 1))
+               {
+                  /*
+                   * If the open parenthesis was the first thing on the line or we
+                   * are doing mode 1, then put the close parenthesis in the same
+                   * column
+                   */
                   LOG_FMT(LINDLINE, "%s(%d): [%zu:%zu] indent_paren_close is 1\n",
                           __func__, __LINE__, ck2->orig_line, ck2->orig_col);
                   indent_column_set(ck1->column);
@@ -3552,8 +3560,6 @@ void indent_text(void)
                }
                else
                {
-                  log_rule_B("indent_paren_close");
-
                   if (options::indent_paren_close() != 2)
                   {
                      // indent_paren_close is 0 or 1
