@@ -4048,6 +4048,7 @@ void newlines_cleanup_braces(bool first)
             if (  prev != nullptr
                && (  prev->type == CT_TYPE
                   || prev->type == CT_WORD
+                  || prev->type == CT_ASSIGN                      // Issue #2957
                   || prev->parent_type == CT_TEMPLATE
                   || prev->parent_type == CT_DECLTYPE))
             {
