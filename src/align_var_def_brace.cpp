@@ -282,11 +282,16 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
                }
                pc = prev_local->next;
             }
-            LOG_FMT(LAVDB, "%s(%d): add = '%s', orig_line is %zu, orig_col is %zu, level is %zu\n",
-                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
+            // we must look after the previous token
+            chunk_t *prev_local = pc->prev;
 
-            as.Add(step_back_over_member(pc));
+            if (chunk_is_not_token(prev_local, CT_DEREF))                    // Issue #2971
+            {
+               LOG_FMT(LAVDB, "%s(%d): add = '%s', orig_line is %zu, orig_col is %zu, level is %zu\n",
+                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
 
+               as.Add(step_back_over_member(pc));
+            }
             log_rule_B("align_var_def_colon");
 
             if (options::align_var_def_colon())
