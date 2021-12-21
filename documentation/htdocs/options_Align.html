@@ -10,7 +10,7 @@ The minimum space between label and value of a preprocessor define
 align_nl_cont                 = true
 
 #define LOG_STR(sev, str, len)                           \
-   do { if (log_sev_on(sev)) { log_str(sev, str, len); } } while (0)
+   if (log_sev_on(sev)) { log_str(sev, str, len); }
                                                           █
 nl_after_brace_close
 

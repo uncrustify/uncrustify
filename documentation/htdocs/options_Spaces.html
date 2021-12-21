@@ -72,7 +72,7 @@ struct error { };
 
 #define LOG_FMT (sev, args ...) \
 <a title="sp_defined_paren"><strong><font color="red">               █</a><a title="sp_before_ellipsis">          █</font></strong></a>
-   do { if (log_sev_on(sev)) { log_fmt(sev, ## args); } } while (0)
+   if (log_sev_on(sev)) { log_fmt(sev, ## args); }
    <a title="sp_pp_concat"><strong><font color="red">                                        █  </a><a title="sp_pp_concat">█</font></strong></a>
 #endif
 #define FS_NOCOW_FL 0x00800000
