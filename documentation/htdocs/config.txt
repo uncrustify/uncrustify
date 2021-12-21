@@ -1338,9 +1338,10 @@ indent_paren_nl                 = false    # true/false
 
 # How to indent a close parenthesis after a newline.
 #
-# 0: Indent to body level (default)
-# 1: Align under the open parenthesis
-# 2: Indent to the brace level
+#  0: Indent to body level (default)
+#  1: Align under the open parenthesis
+#  2: Indent to the brace level
+# -1: Preserve original indentation
 indent_paren_close              = 0        # unsigned number
 
 # Whether to indent the open parenthesis of a function definition,
