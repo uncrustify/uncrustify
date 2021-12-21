@@ -86,9 +86,8 @@ static const char *DOC_TEXT_END = u8R"___(
 std::vector<OptionGroup>                         option_groups;
 std::unordered_map<std::string, GenericOption *> option_map;
 
-#define LOG_CONFIG(...)                            \
-   do { log_config(); LOG_FMT(LNOTE, __VA_ARGS__); \
-   } while (0)
+#define LOG_CONFIG(...) \
+   log_config(); LOG_FMT(LNOTE, __VA_ARGS__);
 
 
 //-----------------------------------------------------------------------------

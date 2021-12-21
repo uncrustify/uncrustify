@@ -112,9 +112,8 @@ void log_flush(bool force_nl);
 #define LOG_FMT    log_fmt
 // TODO during debugging add source file and line number
 #else
-#define LOG_FMT(sev, ...)                                   \
-   do { if (log_sev_on(sev)) { log_fmt(sev, __VA_ARGS__); } \
-   } while (0)
+#define LOG_FMT(sev, ...) \
+   if (log_sev_on(sev)) { log_fmt(sev, __VA_ARGS__); }
 #endif
 
 
