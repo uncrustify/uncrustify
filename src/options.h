@@ -343,6 +343,11 @@ sp_after_byref_func;
 extern Option<iarf_e>
 sp_before_byref_func;
 
+// Add or remove space after a reference sign '&', if followed by an open
+// parenthesis, as in 'char& (*)()'.
+extern Option<iarf_e>
+sp_byref_paren;
+
 // Add or remove space between type and word. In cases where total removal of
 // whitespace would be a syntax error, a value of 'remove' is treated the same
 // as 'force'.

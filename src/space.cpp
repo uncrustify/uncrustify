@@ -1395,20 +1395,25 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_BYREF))                             // see the tests cpp:34509-34512
    {
-      if (  get_chunk_parent_type(first) == CT_FUNC_DEF             // Issue #3197, #3210
-         || get_chunk_parent_type(first) == CT_FUNC_PROTO)
+      if (chunk_is_token(second, CT_PAREN_OPEN))
+      {
+         // Add or remove space after a reference sign '&', if followed by an open
+         // parenthesis, as in 'char& (*)()'.
+         log_rule("sp_byref_paren");
+         return(options::sp_byref_paren());
+      }
+      else if (  get_chunk_parent_type(first) == CT_FUNC_DEF        // Issue #3197, #3210
+              || get_chunk_parent_type(first) == CT_FUNC_PROTO)
       {
          // Add or remove space after a reference sign '&', if followed by a function
          // prototype or function definition.
          log_rule("sp_after_byref_func");                          // byref 2
          return(options::sp_after_byref_func());
       }
-
-      if (  (  CharTable::IsKw1(second->str[0])
-            && (  options::sp_after_byref() != IARF_IGNORE
-               || (  !chunk_is_token(second, CT_FUNC_PROTO)
-                  && !chunk_is_token(second, CT_FUNC_DEF))))
-         || chunk_is_token(second, CT_PAREN_OPEN))
+      else if (  CharTable::IsKw1(second->str[0])
+              && (  options::sp_after_byref() != IARF_IGNORE
+                 || (  !chunk_is_token(second, CT_FUNC_PROTO)
+                    && !chunk_is_token(second, CT_FUNC_DEF))))
       {
          // Add or remove space after reference sign '&', if followed by a word.
          log_rule("sp_after_byref");                               // byref 1
