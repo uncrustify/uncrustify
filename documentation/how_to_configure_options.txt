@@ -1,0 +1,16 @@
+Here are some suggestions on how to familiarize yourself with the various options that uncrustify offers.
+
+1. Read through default.cfg config file. This lists all the available options and a brief description of what they do.
+2. Create an empty config file or make a copy of the default.cfg file
+3. Looking at the file default.cfg, add or change one or more options in the config file created in 2. and test the result.
+4. Iterate step 3. over and over changing just a few options at a time till the required output is reached. Working on one option at a time will give the best results.
+
+It is recommended to use a backup-update-compare cycle to ease your testing.
+
+1. save a copy of the last configuration and the last output
+2. modify the config file
+3. run uncrustify again on the original unmodified files with the new configuration 
+4. compare the new output with the saved one to see the effects of the changed configuration.
+
+If you discover an issue or you need some extra functionality, please report an issue at https://github.com/uncrustify/uncrustify/issues
+
