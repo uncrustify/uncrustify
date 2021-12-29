@@ -959,6 +959,11 @@
 34535  cpp/template_sp-ignore.cfg                           cpp/sp_after_angle.cpp
 34536  cpp/template_sp-remove.cfg                           cpp/sp_after_angle.cpp
 
+34540  cpp/sp_byref_paren-i.cfg                             cpp/byref-4.cpp
+34541  cpp/sp_byref_paren-a.cfg                             cpp/byref-4.cpp
+34542  cpp/sp_byref_paren-r.cfg                             cpp/byref-4.cpp
+34543  cpp/sp_byref_paren-f.cfg                             cpp/byref-4.cpp
+
 # Adopt some UT tests
 10000  common/empty.cfg                                     cpp/621_this-spacing.cpp
 10001  common/empty.cfg                                     cpp/622_ifdef-indentation.cpp
