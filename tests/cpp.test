@@ -153,6 +153,7 @@
 30132  cpp/sp_brace_catch.cfg                               cpp/sp_brace_catch.cpp
 30133  cpp/Issue_3252.cfg                                   cpp/Issue_3252.cpp
 30134  cpp/Issue_3357.cfg                                   cpp/Issue_3357.cpp
+30135  cpp/Issue_3448.cfg                                   cpp/Issue_3448.cpp
 
 30200  cpp/bug_1862.cfg                                     cpp/bug_1862.cpp
 30201  cpp/cmt_indent-1.cfg                                 cpp/cmt_indent.cpp

@@ -2410,12 +2410,7 @@ void indent_text(void)
             // TODO: Create a dedicated indent_constr_on_colon?
             log_rule_B("indent_class_on_colon");
 
-            if (options::indent_class_on_colon())
-            {
-               frm.top().indent = pc->column;
-               log_indent();
-            }
-            else if (options::indent_ctor_init() != 0)
+            if (options::indent_ctor_init() != 0)
             {
                log_rule_B("indent_ctor_init");
                /*
@@ -2430,6 +2425,11 @@ void indent_text(void)
                frm.top().indent_tab = std::max<ptrdiff_t>(frm.top().indent_tab + options::indent_ctor_init(), 0);
                log_indent_tmp();
                indent_column_set(frm.top().indent_tmp);
+            }
+            else if (options::indent_class_on_colon())
+            {
+               frm.top().indent = pc->column;
+               log_indent();
             }
             else
             {
