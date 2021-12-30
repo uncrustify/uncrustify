@@ -17,20 +17,29 @@ bool flag_cpp_decltype(chunk_t *pc)
 
       if (chunk_is_token(paren_open, CT_PAREN_OPEN))
       {
-         auto close_paren = chunk_skip_to_match(paren_open);
+         // We would like to simply call chunk_skip_to_match(), but it finds
+         // a match based on level, and the level is 0 for all chunks in some
+         // cases, like the following example.
+         //
+         // template <typename T>
+         // decltype(std::declval<T &>().put(foo), std::true_type())
+         // has_something(Tag<2>);
+         //
+         // This means that IN_DECLTYPE is only set for tokens through the
+         // closing parenthesis right before ".put" in the above example.
+         //
+         // So, we will manually look for the matching closing parenthesis.
+         chunk_flags_set(paren_open, PCF_IN_DECLTYPE);
+         pc = chunk_get_next_nc_nnl(paren_open);
 
-         if (close_paren != nullptr)
+         for (int level = 1; pc != nullptr && level > 0; pc = chunk_get_next_nc_nnl(pc))
          {
-            pc = paren_open;
-
-            do
-            {
-               chunk_flags_set(pc, PCF_IN_DECLTYPE);
-               pc = pc->next;
-            } while (pc != close_paren);
-
-            return(true);
+            level += chunk_is_token(pc, CT_PAREN_OPEN);
+            level -= chunk_is_token(pc, CT_PAREN_CLOSE);
+            chunk_flags_set(pc, PCF_IN_DECLTYPE);
          }
+
+         return(pc != nullptr);
       }
    }
    return(false);
