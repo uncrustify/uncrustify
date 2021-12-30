@@ -20,8 +20,7 @@ int foo2() {
 extern "C" {
 #endif
 
-static const kjs_double_t NaN_Bytes = {{0x7f, 0xf8, 0, 0, 0, 0, 0, 0}
-};
+static const kjs_double_t NaN_Bytes = {{0x7f, 0xf8, 0, 0, 0, 0, 0, 0}};
 
 #ifdef __cplusplus
 }

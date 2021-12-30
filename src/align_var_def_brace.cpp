@@ -114,10 +114,23 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
    bool    fp_active = options::align_mix_var_proto();
    chunk_t *pc       = chunk_get_next(start);
 
-   while (  pc != nullptr
-         && (  pc->level >= start->level
-            || pc->level == 0))
+   while (pc != nullptr)
    {
+      LOG_FMT(LAVDB, "%s(%d): VAR_DEF: pc->level is %zu, start->level is %zu\n",
+              __func__, __LINE__, pc->level, start->level);
+
+      if (  pc->level >= start->level
+         || pc->level == 0)
+      {
+         // OK
+      }
+      else
+      {
+         LOG_FMT(LAVDB, "%s(%d): VAR_DEF: break\n",
+                 __func__, __LINE__);
+         break;
+      }
+
       if (chunk_is_newline(pc))
       {
          LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>\n",
