@@ -997,6 +997,11 @@ sp_d_array_colon;
 extern Option<iarf_e>
 sp_not; // = IARF_REMOVE
 
+// Add or remove space between two '!' (not) unary operators.
+// If set to ignore, sp_not will be used.
+extern Option<iarf_e>
+sp_not_not; // = IARF_IGNORE
+
 // Add or remove space after the '~' (invert) unary operator.
 extern Option<iarf_e>
 sp_inv; // = IARF_REMOVE

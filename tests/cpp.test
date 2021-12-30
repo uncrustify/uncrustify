@@ -717,6 +717,7 @@
 
 33160  common/sp_before_byref-r.cfg                         cpp/bug_1112.cpp
 33161  common/sp_before_byref-r.cfg                         cpp/byref-3.cpp
+33162  cpp/sp_not_not.cfg                                   cpp/sp_not_not.cpp
 
 33180  cpp/pp_multi_comment.cfg                             cpp/pp_multi_comment.cpp
 33181  cpp/Issue_2759.cfg                                   cpp/Issue_2759.cpp

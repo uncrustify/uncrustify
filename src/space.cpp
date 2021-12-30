@@ -2951,6 +2951,12 @@ static iarf_e do_space(chunk_t *first, chunk_t *second, int &min_sp)
 
    if (chunk_is_token(first, CT_NOT))
    {
+      if (  chunk_is_token(second, CT_NOT)
+         && (options::sp_not_not() != IARF_IGNORE))
+      {
+         log_rule("sp_not_not");
+         return(options::sp_not_not());
+      }
       // Add or remove space after the '!' (not) unary operator.
       log_rule("sp_not");
       return(options::sp_not());
