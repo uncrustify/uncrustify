@@ -556,6 +556,7 @@
 31634  cpp/sp_after_decltype-r.cfg                          cpp/sp_after_decltype.cpp
 31635  common/empty.cfg                                     cpp/sp_decltype.cpp
 31636  cpp/Issue_1923.cfg                                   cpp/Issue_1923.cpp
+31637  cpp/Issue_3446.cfg                                   cpp/Issue_3446.cpp
 
 31660  cpp/nl_func_var_def_blk-1.cfg                        cpp/issue_1919.cpp
 31661  cpp/Issue_3097.cfg                                   cpp/Issue_3097.cpp

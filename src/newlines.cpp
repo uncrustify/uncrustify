@@ -3170,7 +3170,8 @@ static void newline_func_def_or_call(chunk_t *start)
          {
             log_rule_B("nl_func_scope_name");
 
-            if (options::nl_func_scope_name() != IARF_IGNORE)
+            if (  options::nl_func_scope_name() != IARF_IGNORE
+               && !start->flags.test(PCF_IN_DECLTYPE))
             {
                newline_iarf(prev, options::nl_func_scope_name());
             }
