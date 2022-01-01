@@ -185,6 +185,15 @@ void align_func_proto(size_t span)
               && pc->flags.test(PCF_ONE_LINER))
       {
          AlignStack *stack_at_l_bl_brace = many_as_brace.at(pc->level).at(pc->brace_level);
+
+         if (stack_at_l_bl_brace == nullptr)
+         {
+            stack_at_l_bl_brace = new AlignStack();
+            stack_at_l_bl_brace->Start(myspan, mythresh);
+            stack_at_l_bl_brace->m_gap                      = mybr_gap;
+            many_as_brace.at(pc->level).at(pc->brace_level) = stack_at_l_bl_brace;
+         }
+         stack_at_l_bl_brace->Debug();
          stack_at_l_bl_brace->Add(pc);
          look_bro = false;
       }
