@@ -1652,13 +1652,23 @@ indent_paren_after_func_decl;
 extern Option<bool>
 indent_paren_after_func_call;
 
+// Whether to ignore the indentation of a comma inside braces.
+extern Option<bool>
+indent_ignore_comma_brace;
+
 // Whether to indent a comma when inside a brace.
 // If true, aligns under the open brace.
+// Requires indent_ignore_comma_brace=false.
 extern Option<bool>
 indent_comma_brace;
 
+// Whether to ignore the indentation of a comma inside parentheses.
+extern Option<bool>
+indent_ignore_comma_paren;
+
 // Whether to indent a comma when inside a parenthesis.
 // If true, aligns under the open parenthesis.
+// Requires indent_ignore_comma_paren=false.
 extern Option<bool>
 indent_comma_paren;
 

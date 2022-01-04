@@ -3689,14 +3689,27 @@ void indent_text(void)
          }
          else if (chunk_is_token(pc, CT_COMMA))
          {
-            log_rule_B("indent_comma_paren");
-            bool comma_paren = options::indent_comma_paren()
-                               && chunk_is_paren_open(frm.top().pc);
-            log_rule_B("indent_comma_brace");
-            bool comma_brace = options::indent_comma_brace()
-                               && chunk_is_opening_brace(frm.top().pc);
+            bool indent        = false;
+            bool indent_ignore = false;
 
-            if (comma_paren || comma_brace)
+            if (chunk_is_paren_open(frm.top().pc))
+            {
+               log_rule_B("indent_comma_paren");
+               indent        = options::indent_comma_paren();
+               indent_ignore = options::indent_ignore_comma_paren();
+            }
+            else if (chunk_is_opening_brace(frm.top().pc))
+            {
+               log_rule_B("indent_comma_brace");
+               indent        = options::indent_comma_brace();
+               indent_ignore = options::indent_ignore_comma_brace();
+            }
+
+            if (indent_ignore)
+            {
+               indent_column_set(pc->orig_col);
+            }
+            else if (indent)
             {
                indent_column_set(frm.top().pc->column);
             }

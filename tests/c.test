@@ -441,3 +441,4 @@
 10048  c/Issue_3431.cfg                           c/Issue_3431.c
 10049  c/indent_paren_close--1.cfg                c/Issue_3436.c
 10050  common/empty.cfg                           c/Issue_3192.c
+10051  c/Issue_3454.cfg                           c/Issue_3454.c
