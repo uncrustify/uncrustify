@@ -1009,7 +1009,7 @@ void EnumStructUnionParser::analyze_identifiers()
          || !language_is_set(LANG_C)))
    {
       /**
-       * if a type has been identifies, mark any constructor matching constructor
+       * if a type has been identified, mark any constructor matching constructor
        * declarations/definitions
        */
       mark_constructors();
@@ -2230,10 +2230,42 @@ chunk_t *EnumStructUnionParser::parse_braces(chunk_t *brace_open)
        * open brace, but it's more likely that we're dealing with a
        * signature associated with a function definition
        */
+      bool is_potential_function_definition = false;
+
+      if (  (  language_is_set(LANG_C)
+            || language_is_set(LANG_CPP))
+         && chunk_is_paren_close(prev))
+      {
+         /**
+          * we may be dealing with a c/cpp function definition, where the 'struct'
+          * or 'class' keywords appear as the return type preceding a pair of braces
+          * and therefore may be associated with a function definition body
+          */
+         auto *paren_close = prev;
+
+         // skip in reverse to the matching open paren
+         auto *paren_open = chunk_skip_to_match_rev(paren_close);
+
+         if (paren_open != nullptr)
+         {
+            /**
+             * determine if there's an identifier preceding the open paren;
+             * if so, the identifier is very likely to be associated with
+             * a function definition
+             */
+            auto *type       = chunk_get_next_nc_nnl(m_start);
+            auto *identifier = chunk_get_prev_nc_nnl_ni(paren_open, scope_e::PREPROC);
+            is_potential_function_definition = (  (  chunk_is_token(identifier, CT_FUNCTION)
+                                                  || chunk_is_token(identifier, CT_FUNC_DEF)
+                                                  || chunk_is_token(identifier, CT_WORD))
+                                               && type != identifier);
+         }
+      }
 
       if (  language_is_set(LANG_D)
          || language_is_set(LANG_PAWN)
          || !chunk_is_paren_close(prev)
+         || is_potential_function_definition
          || chunk_is_between(prev, enum_base_start, brace_open)
          || chunk_is_between(prev, inheritance_start, brace_open))
       {
