@@ -13,6 +13,6 @@
 #include "chunk.h"
 #include "ChunkStack.h"
 
-void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col);
+void align_add(ChunkStack &cs, Chunk *pc, size_t &max_col);
 
 #endif /* ALIGN_ADD_H_INCLUDED */

@@ -16,11 +16,11 @@
 void align_struct_initializers(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc = chunk_get_head();
+   Chunk *pc = chunk_get_head();
 
    while (pc != nullptr)
    {
-      chunk_t *prev = chunk_get_prev_nc_nnl(pc);
+      Chunk *prev = chunk_get_prev_nc_nnl(pc);
 
       if (  chunk_is_token(prev, CT_ASSIGN)
          && (  chunk_is_token(pc, CT_BRACE_OPEN)

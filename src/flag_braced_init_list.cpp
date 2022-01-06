@@ -11,7 +11,7 @@
 #include "uncrustify.h"
 
 
-bool detect_cpp_braced_init_list(chunk_t *pc, chunk_t *next)
+bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
 {
    LOG_FUNC_ENTRY();
    // Issue #2332
@@ -20,7 +20,7 @@ bool detect_cpp_braced_init_list(chunk_t *pc, chunk_t *next)
    if (chunk_is_token(pc, CT_COLON))
    {
       // check if we have a case before
-      chunk_t *switch_before = chunk_get_prev_type(pc, CT_CASE, pc->level);
+      Chunk *switch_before = chunk_get_prev_type(pc, CT_CASE, pc->level);
 
       if (switch_before != nullptr)
       {
@@ -70,7 +70,7 @@ bool detect_cpp_braced_init_list(chunk_t *pc, chunk_t *next)
 } // detect_cpp_braced_init_list
 
 
-void flag_cpp_braced_init_list(chunk_t *pc, chunk_t *next)
+void flag_cpp_braced_init_list(Chunk *pc, Chunk *next)
 {
    auto brace_open  = chunk_get_next_nc_nnl(pc);
    auto brace_close = chunk_skip_to_match(next);

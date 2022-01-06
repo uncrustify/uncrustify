@@ -12,7 +12,7 @@
 #include "uncrustify_types.h"
 
 
-chunk_t *calculate_closing_brace_position(const chunk_t *cl_colon, chunk_t *pc);
+Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc);
 
 
 #endif /* CALCULATE_CLOSING_BRACE_POSITION_H_INCLUDED */

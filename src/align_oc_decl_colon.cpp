@@ -28,7 +28,7 @@ void align_oc_decl_colon(void)
    nas.Start(4);
    nas.m_right_align = !options::align_on_tabstop();
 
-   chunk_t *pc = chunk_get_head();
+   Chunk *pc = chunk_get_head();
 
    while (pc != nullptr)
    {
@@ -66,8 +66,8 @@ void align_oc_decl_colon(void)
          {
             cas.Add(pc);
 
-            chunk_t *tmp  = chunk_get_prev(pc, scope_e::PREPROC);
-            chunk_t *tmp2 = chunk_get_prev_nc_nnl(tmp, scope_e::PREPROC);
+            Chunk *tmp  = chunk_get_prev(pc, scope_e::PREPROC);
+            Chunk *tmp2 = chunk_get_prev_nc_nnl(tmp, scope_e::PREPROC);
 
             // Check for an un-labeled parameter
             if (  (  chunk_is_token(tmp, CT_WORD)

@@ -20,6 +20,6 @@
  *
  * @param first  chunk pointing to the first assignment
  */
-chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_count);
+Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count);
 
 #endif /* ALIGN_ASSIGN_H_INCLUDED */

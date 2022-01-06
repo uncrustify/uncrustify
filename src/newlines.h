@@ -14,7 +14,7 @@
 /**
  * Double the newline, if allowed.
  */
-void double_newline(chunk_t *nl);
+void double_newline(Chunk *nl);
 
 /**
  * Remove all extra newlines.
@@ -124,7 +124,7 @@ void do_blank_lines(void);
  * Clears the PCF_ONE_LINER flag on the current line.
  * Done right before inserting a newline.
  */
-void undo_one_liner(chunk_t *pc);
+void undo_one_liner(Chunk *pc);
 
 
 /**
@@ -133,27 +133,27 @@ void undo_one_liner(chunk_t *pc);
  * @param pc  The chunk
  * @param av  The IARF value
  */
-void newline_iarf(chunk_t *pc, uncrustify::iarf_e av);
+void newline_iarf(Chunk *pc, uncrustify::iarf_e av);
 
 
 /**
  * Add a newline before the chunk if there isn't already a newline present.
  * Virtual braces are skipped, as they do not contribute to the output.
  */
-chunk_t *newline_add_before(chunk_t *pc);
+Chunk *newline_add_before(Chunk *pc);
 
 
 /**
  * Add a newline after the chunk if there isn't already a newline present.
  * Virtual braces are skipped, as they do not contribute to the output.
  */
-chunk_t *newline_force_before(chunk_t *pc);
+Chunk *newline_force_before(Chunk *pc);
 
 
-chunk_t *newline_add_after(chunk_t *pc);
+Chunk *newline_add_after(Chunk *pc);
 
 
-chunk_t *newline_force_after(chunk_t *pc);
+Chunk *newline_force_after(Chunk *pc);
 
 
 /**
@@ -167,7 +167,7 @@ chunk_t *newline_force_after(chunk_t *pc);
  *
  * @return true/false - removed something
  */
-void newline_del_between(chunk_t *start, chunk_t *end);
+void newline_del_between(Chunk *start, Chunk *end);
 
 
 /**
@@ -185,7 +185,7 @@ void newline_del_between(chunk_t *start, chunk_t *end);
  *    if (...)   //comment
  *    {
  */
-chunk_t *newline_add_between(chunk_t *start, chunk_t *end);
+Chunk *newline_add_between(Chunk *start, Chunk *end);
 
 
 /**
@@ -200,7 +200,7 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end);
  * @return false  if pc_start or pc_end are nullptr or if pc_end is not reached
  * @return true   if above cases are not met
  */
-bool newlines_between(chunk_t *pc_start, chunk_t *pc_end, size_t &newlines, scope_e scope = scope_e::ALL);
+bool newlines_between(Chunk *pc_start, Chunk *pc_end, size_t &newlines, scope_e scope = scope_e::ALL);
 
 
 #endif /* NEWLINES_H_INCLUDED */

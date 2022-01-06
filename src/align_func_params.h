@@ -14,6 +14,6 @@
 
 void align_func_params(void);
 
-chunk_t *align_func_param(chunk_t *start);
+Chunk *align_func_param(Chunk *start);
 
 #endif /* ALIGN_FUNC_PARAMS_H_INCLUDED */

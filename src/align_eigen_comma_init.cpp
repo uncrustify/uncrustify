@@ -23,7 +23,7 @@ void align_eigen_comma_init(void)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t    *start = nullptr;
+   Chunk      *start = nullptr;
    AlignStack as;
 
    as.Start(255);
@@ -88,7 +88,7 @@ void align_eigen_comma_init(void)
              *      cout
              *          << "something";
              */
-            chunk_t *prev = chunk_get_prev(pc);
+            Chunk *prev = chunk_get_prev(pc);
 
             if (  prev != nullptr
                && chunk_is_newline(prev))

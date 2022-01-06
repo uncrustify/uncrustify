@@ -10,10 +10,10 @@
 #include "uncrustify.h"
 
 
-chunk_t *flag_parens(chunk_t *po, pcf_flags_t flags, c_token_t opentype, c_token_t parenttype, bool parent_all)
+Chunk *flag_parens(Chunk *po, pcf_flags_t flags, c_token_t opentype, c_token_t parenttype, bool parent_all)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *paren_close;
+   Chunk *paren_close;
 
    paren_close = chunk_skip_to_match(po, scope_e::PREPROC);
 
@@ -33,7 +33,7 @@ chunk_t *flag_parens(chunk_t *po, pcf_flags_t flags, c_token_t opentype, c_token
    log_func_stack_inline(LFLPAREN);
 
    // the last chunk must be also modified. Issue #2149
-   chunk_t *after_paren_close = chunk_get_next(paren_close);
+   Chunk *after_paren_close = chunk_get_next(paren_close);
 
    if (po != paren_close)
    {
@@ -41,7 +41,7 @@ chunk_t *flag_parens(chunk_t *po, pcf_flags_t flags, c_token_t opentype, c_token
          || (  parent_all
             && parenttype != CT_NONE))
       {
-         chunk_t *pc;
+         Chunk *pc;
 
          for (pc = chunk_get_next(po, scope_e::PREPROC);
               pc != nullptr && pc != after_paren_close;

@@ -22,7 +22,7 @@ void align_asm_colon(void)
 
    cas.Start(4);
 
-   chunk_t *pc = chunk_get_head();
+   Chunk *pc = chunk_get_head();
 
    while (pc != nullptr)
    {

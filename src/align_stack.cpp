@@ -83,7 +83,7 @@ void AlignStack::ReAddSkipped()
 }
 
 
-void AlignStack::Add(chunk_t *start, size_t seqnum)
+void AlignStack::Add(Chunk *start, size_t seqnum)
 {
    // produces much more log output. Use it only debugging purpose
    //WITH_STACKID_DEBUG;
@@ -170,7 +170,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    LOG_FMT(LAS, "AlignStack::%s(%d): m_star_style is %s\n",
            __func__, __LINE__, get_StarStyle_name(m_star_style));
    // Find ref. Back up to the real item that is aligned.
-   chunk_t *prev = start;
+   Chunk *prev = start;
 
    while (  (prev = chunk_get_prev(prev)) != nullptr
          && (  chunk_is_ptr_operator(prev)
@@ -183,19 +183,19 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    {
       return;
    }
-   chunk_t *ref = prev;
+   Chunk *ref = prev;
 
    if (chunk_is_newline(ref))
    {
       ref = chunk_get_next(ref);
    }
    // Find the item that we are going to align.
-   chunk_t *ali = start;
+   Chunk *ali = start;
 
    if (m_star_style != SS_IGNORE)
    {
       // back up to the first '*' or '^' preceding the token
-      chunk_t *tmp_prev = chunk_get_prev(ali);
+      Chunk *tmp_prev = chunk_get_prev(ali);
 
       while (  chunk_is_star(tmp_prev)
             || chunk_is_msref(tmp_prev))
@@ -217,7 +217,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    if (m_amp_style != SS_IGNORE)
    {
       // back up to the first '&' preceding the token
-      chunk_t *tmp_prev = chunk_get_prev(ali);
+      Chunk *tmp_prev = chunk_get_prev(ali);
 
       while (chunk_is_addr(tmp_prev))
       {
@@ -230,15 +230,15 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    // Tighten down the spacing between ref and start
    if (!options::align_keep_extra_space())
    {
-      size_t  tmp_col = ref->column;
-      chunk_t *tmp    = ref;
+      size_t tmp_col = ref->column;
+      Chunk  *tmp    = ref;
       LOG_FMT(LAS, "AlignStack::%s(%d): tmp_col is %zu\n",
               __func__, __LINE__, tmp_col);
 
       while (  tmp != nullptr
             && tmp != start)
       {
-         chunk_t *next = chunk_get_next(tmp);
+         Chunk *next = chunk_get_next(tmp);
 
          if (next != nullptr)
          {
@@ -278,7 +278,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       {
          gap = ali->column - (ref->column + ref->len());
       }
-      chunk_t *tmp = ali;
+      Chunk *tmp = ali;
 
       if (chunk_is_token(tmp, CT_TPAREN_OPEN))
       {
@@ -406,8 +406,8 @@ void AlignStack::Flush()
    if (Len() == 1)
    {
       // check if we have *one* typedef in the line
-      chunk_t *pc   = m_aligned.Get(0)->m_pc;
-      chunk_t *temp = chunk_get_prev_type(pc, CT_TYPEDEF, pc->level);
+      Chunk *pc   = m_aligned.Get(0)->m_pc;
+      Chunk *temp = chunk_get_prev_type(pc, CT_TYPEDEF, pc->level);
 
       if (temp != nullptr)
       {
@@ -428,7 +428,7 @@ void AlignStack::Flush()
 
    for (size_t idx = 0; idx < Len(); idx++)
    {
-      chunk_t *pc = m_aligned.Get(idx)->m_pc;
+      Chunk *pc = m_aligned.Get(idx)->m_pc;
       LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, pc->text() is '%s', pc->align.col_adj is %d\n",
               __func__, __LINE__, idx, pc->text(), pc->align.col_adj);
    }
@@ -436,7 +436,7 @@ void AlignStack::Flush()
    // Recalculate the max_col - it may have shifted since the last Add()
    for (size_t idx = 0; idx < Len(); idx++)
    {
-      chunk_t *pc = m_aligned.Get(idx)->m_pc;
+      Chunk *pc = m_aligned.Get(idx)->m_pc;
 
       // Set the column adjust and gap
       size_t col_adj = 0;
@@ -449,7 +449,7 @@ void AlignStack::Flush()
 
       if (m_star_style == SS_DANGLE)
       {
-         chunk_t *tmp = (chunk_is_token(pc, CT_TPAREN_OPEN)) ? chunk_get_next(pc) : pc;
+         Chunk *tmp = (chunk_is_token(pc, CT_TPAREN_OPEN)) ? chunk_get_next(pc) : pc;
 
          if (chunk_is_ptr_operator(tmp))
          {
@@ -467,7 +467,7 @@ void AlignStack::Flush()
 
             if (pc->align.start->type == CT_NEG)
             {
-               chunk_t *next = chunk_get_next(pc->align.start);
+               Chunk *next = chunk_get_next(pc->align.start);
 
                if (chunk_is_token(next, CT_NUMBER))
                {
@@ -511,7 +511,7 @@ void AlignStack::Flush()
    for (size_t idx = 0; idx < Len(); idx++)
    {
       ce = m_aligned.Get(idx);
-      chunk_t      *pc = ce->m_pc;
+      Chunk        *pc = ce->m_pc;
 
       const size_t tmp_col = m_max_col - pc->align.col_adj;
 
@@ -622,7 +622,7 @@ void AlignStack::Debug()
 
       for (size_t idx = 0; idx < length; idx++)
       {
-         chunk_t *pc = m_aligned.Get(idx)->m_pc;
+         Chunk *pc = m_aligned.Get(idx)->m_pc;
 
          if (chunk_is_token(pc, CT_PTR_TYPE))
          {

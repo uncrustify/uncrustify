@@ -35,9 +35,9 @@ enum class comment_align_e : unsigned int
  * @param start   Start point
  * @return        pointer the last item looked at
  */
-chunk_t *align_trailing_comments(chunk_t *start);
+Chunk *align_trailing_comments(Chunk *start);
 
-comment_align_e get_comment_align_type(chunk_t *cmt);
+comment_align_e get_comment_align_type(Chunk *cmt);
 
 void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev);
 

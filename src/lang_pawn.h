@@ -32,7 +32,7 @@ void pawn_add_virtual_semicolons(void);
  *
  * @return Either the newline or the newly inserted virtual semicolon
  */
-chunk_t *pawn_check_vsemicolon(chunk_t *pc);
+Chunk *pawn_check_vsemicolon(Chunk *pc);
 
 
 /**
@@ -43,7 +43,7 @@ void pawn_scrub_vsemi(void);
 
 
 //! add a semicolon after ...
-chunk_t *pawn_add_vsemi_after(chunk_t *pc);
+Chunk *pawn_add_vsemi_after(Chunk *pc);
 
 
 #endif /* LONG_PAWN_H_INCLUDED */

@@ -18,7 +18,7 @@ constexpr static auto LCURRENT = LAVDB;
 using namespace uncrustify;
 
 
-chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
+Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 {
    LOG_FUNC_ENTRY();
 
@@ -26,10 +26,10 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
    {
       return(nullptr);
    }
-   chunk_t *next;
-   size_t  myspan   = span;
-   size_t  mythresh = 0;
-   size_t  mygap    = 0;
+   Chunk  *next;
+   size_t myspan   = span;
+   size_t mythresh = 0;
+   size_t mygap    = 0;
 
    // Override the span, if this is a struct/union
    if (  get_chunk_parent_type(start) == CT_STRUCT
@@ -59,14 +59,14 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
       mygap = options::align_var_def_gap();
    }
    // can't be any variable definitions in a "= {" block
-   chunk_t *prev = chunk_get_prev_nc_nnl(start);
+   Chunk *prev = chunk_get_prev_nc_nnl(start);
 
    if (chunk_is_token(prev, CT_ASSIGN))
    {
       LOG_FMT(LAVDB, "%s(%d): start->text() '%s', type is %s, on orig_line %zu (abort due to assign)\n",
               __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line);
 
-      chunk_t *pc = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
+      Chunk *pc = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
       return(chunk_get_next_nc_nnl(pc));
    }
    char copy[1000];
@@ -111,8 +111,8 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
    bool did_this_line = false;
 
    log_rule_B("align_mix_var_proto");
-   bool    fp_active = options::align_mix_var_proto();
-   chunk_t *pc       = chunk_get_next(start);
+   bool  fp_active = options::align_mix_var_proto();
+   Chunk *pc       = chunk_get_next(start);
 
    while (  pc != nullptr
          && (  pc->level >= start->level
@@ -155,7 +155,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
             LOG_FMT(LAVDB, "%s(%d): add = '%s', orig_line is %zu, orig_col is %zu, level is %zu\n",
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
 
-            chunk_t *toadd;
+            Chunk *toadd;
 
             log_rule_B("align_on_operator");
 
@@ -271,7 +271,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
                && (as.m_star_style == AlignStack::SS_INCLUDE))
             {
                // we must look after the previous token
-               chunk_t *prev_local = pc->prev;
+               Chunk *prev_local = pc->prev;
 
                while (  chunk_is_token(prev_local, CT_PTR_TYPE)
                      || chunk_is_token(prev_local, CT_ADDR))
@@ -283,7 +283,7 @@ chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
                pc = prev_local->next;
             }
             // we must look after the previous token
-            chunk_t *prev_local = pc->prev;
+            Chunk *prev_local = pc->prev;
 
             if (chunk_is_not_token(prev_local, CT_DEREF))                    // Issue #2971
             {

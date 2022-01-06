@@ -22,12 +22,12 @@ void align_left_shift(void)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t    *start = nullptr;
+   Chunk      *start = nullptr;
    AlignStack as;
 
    as.Start(255);
 
-   chunk_t *pc = chunk_get_head();
+   Chunk *pc = chunk_get_head();
 
    while (pc != nullptr)
    {
@@ -88,7 +88,7 @@ void align_left_shift(void)
              *      cout
              *          << "something";
              */
-            chunk_t *prev = chunk_get_prev(pc);
+            Chunk *prev = chunk_get_prev(pc);
 
             if (  prev != nullptr
                && chunk_is_newline(prev))
@@ -117,7 +117,7 @@ void align_left_shift(void)
           *      cout <<
           *          "something";
           */
-         chunk_t *prev = chunk_get_prev(pc);
+         Chunk *prev = chunk_get_prev(pc);
 
          if (  prev != nullptr
             && chunk_is_newline(prev))

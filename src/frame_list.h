@@ -34,7 +34,7 @@ void fl_pop(std::vector<ParseFrame> &frames, ParseFrame &pf);
 // - what is it checking?
 // - why does is much more than simple checks, it allters kinds of stuff
 //! Returns the pp_indent to use for this line
-int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, chunk_t *pc);
+int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Chunk *pc);
 
 
 #endif /* PARSE_FRAME_H_INCLUDED */

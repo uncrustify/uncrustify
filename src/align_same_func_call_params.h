@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void align_params(chunk_t *start, deque<chunk_t *> &chunks);
+void align_params(Chunk *start, deque<Chunk *> &chunks);
 
 void align_same_func_call_params(void);
 

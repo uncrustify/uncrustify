@@ -11,7 +11,7 @@
 #include "prototypes.h"
 
 
-static void remove_semicolon(chunk_t *pc);
+static void remove_semicolon(Chunk *pc);
 
 
 /**
@@ -19,10 +19,10 @@ static void remove_semicolon(chunk_t *pc);
  * Check for what is before the brace open.
  * Do not remove if it is a square close, word, type, or paren close.
  */
-static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close);
+static void check_unknown_brace_close(Chunk *semi, Chunk *brace_close);
 
 
-static void remove_semicolon(chunk_t *pc)
+static void remove_semicolon(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LDELSEMI, "%s(%d): Removed semicolon: orig_line is %zu, orig_col is %zu",
@@ -37,12 +37,12 @@ void remove_extra_semicolons(void)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *pc = chunk_get_head();
+   Chunk *pc = chunk_get_head();
 
    while (pc != nullptr)
    {
-      chunk_t *next = chunk_get_next_nc_nnl(pc);
-      chunk_t *prev;
+      Chunk *next = chunk_get_next_nc_nnl(pc);
+      Chunk *prev;
 
       if (  chunk_is_token(pc, CT_SEMICOLON)
          && !pc->flags.test(PCF_IN_PREPROC)
@@ -104,10 +104,10 @@ void remove_extra_semicolons(void)
 } // remove_extra_semicolons
 
 
-static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close)
+static void check_unknown_brace_close(Chunk *semi, Chunk *brace_close)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc = chunk_get_prev_type(brace_close, CT_BRACE_OPEN, brace_close->level);
+   Chunk *pc = chunk_get_prev_type(brace_close, CT_BRACE_OPEN, brace_close->level);
 
    pc = chunk_get_prev_nc_nnl(pc);
 

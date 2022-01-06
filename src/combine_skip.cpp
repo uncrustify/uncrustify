@@ -11,9 +11,9 @@
 #include "combine_tools.h"
 
 
-chunk_t *skip_align(chunk_t *start)
+Chunk *skip_align(Chunk *start)
 {
-   chunk_t *pc = start;
+   Chunk *pc = start;
 
    if (chunk_is_token(pc, CT_ALIGN))
    {
@@ -34,27 +34,27 @@ chunk_t *skip_align(chunk_t *start)
 }
 
 
-chunk_t *skip_expression(chunk_t *pc)
+Chunk *skip_expression(Chunk *pc)
 {
    return(chunk_get_next_nc_nnl(skip_to_expression_end(pc)));
 }
 
 
-chunk_t *skip_expression_rev(chunk_t *pc)
+Chunk *skip_expression_rev(Chunk *pc)
 {
    return(chunk_get_prev_nc_nnl_ni(skip_to_expression_start(pc)));
 }
 
 
-static chunk_t *skip_to_expression_edge(chunk_t *pc, chunk_t *(*chunk_get_next)(chunk_t *cur, scope_e scope))
+static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(*chunk_get_next)(Chunk *cur, scope_e scope))
 {
-   chunk_t *prev = pc;
+   Chunk *prev = pc;
 
    if (  prev != nullptr
       && chunk_get_next != nullptr)
    {
       std::size_t level         = prev->level;
-      chunk_t     *next         = prev;
+      Chunk       *next         = prev;
       std::size_t template_nest = get_cpp_template_angle_nest_level(prev);
 
       while (  next != nullptr
@@ -88,19 +88,19 @@ static chunk_t *skip_to_expression_edge(chunk_t *pc, chunk_t *(*chunk_get_next)(
 }
 
 
-chunk_t *skip_to_expression_end(chunk_t *pc)
+Chunk *skip_to_expression_end(Chunk *pc)
 {
    return(skip_to_expression_edge(pc, chunk_get_next_nc_nnl));
 }
 
 
-chunk_t *skip_to_expression_start(chunk_t *pc)
+Chunk *skip_to_expression_start(Chunk *pc)
 {
    return(skip_to_expression_edge(pc, chunk_get_prev_nc_nnl_ni));
 }
 
 
-chunk_t *skip_to_next_statement(chunk_t *pc)
+Chunk *skip_to_next_statement(Chunk *pc)
 {
    while (  pc != nullptr
          && !chunk_is_semicolon(pc)
@@ -113,7 +113,7 @@ chunk_t *skip_to_next_statement(chunk_t *pc)
 }
 
 
-chunk_t *skip_parent_types(chunk_t *colon)
+Chunk *skip_parent_types(Chunk *colon)
 {
    auto pc = chunk_get_next_nc_nnl_np(colon);
 
@@ -162,18 +162,18 @@ chunk_t *skip_parent_types(chunk_t *colon)
 } // skip_parent_types
 
 
-chunk_t *skip_template_prev(chunk_t *ang_close)
+Chunk *skip_template_prev(Chunk *ang_close)
 {
    if (chunk_is_token(ang_close, CT_ANGLE_CLOSE))
    {
-      chunk_t *pc = chunk_get_prev_type(ang_close, CT_ANGLE_OPEN, ang_close->level);
+      Chunk *pc = chunk_get_prev_type(ang_close, CT_ANGLE_OPEN, ang_close->level);
       return(chunk_get_prev_nc_nnl_ni(pc));   // Issue #2279
    }
    return(ang_close);
 }
 
 
-chunk_t *skip_tsquare_next(chunk_t *ary_def)
+Chunk *skip_tsquare_next(Chunk *ary_def)
 {
    if (  chunk_is_token(ary_def, CT_SQUARE_OPEN)
       || chunk_is_token(ary_def, CT_TSQUARE))
@@ -184,9 +184,9 @@ chunk_t *skip_tsquare_next(chunk_t *ary_def)
 }
 
 
-chunk_t *skip_attribute(chunk_t *attr)
+Chunk *skip_attribute(Chunk *attr)
 {
-   chunk_t *pc = attr;
+   Chunk *pc = attr;
 
    while (chunk_is_token(pc, CT_ATTRIBUTE))
    {
@@ -201,9 +201,9 @@ chunk_t *skip_attribute(chunk_t *attr)
 }
 
 
-chunk_t *skip_attribute_next(chunk_t *attr)
+Chunk *skip_attribute_next(Chunk *attr)
 {
-   chunk_t *next = skip_attribute(attr);
+   Chunk *next = skip_attribute(attr);
 
    if (  next != attr
       && chunk_is_token(next, CT_FPAREN_CLOSE))
@@ -214,9 +214,9 @@ chunk_t *skip_attribute_next(chunk_t *attr)
 }
 
 
-chunk_t *skip_attribute_prev(chunk_t *fp_close)
+Chunk *skip_attribute_prev(Chunk *fp_close)
 {
-   chunk_t *pc = fp_close;
+   Chunk *pc = fp_close;
 
    while (true)
    {
@@ -240,7 +240,7 @@ chunk_t *skip_attribute_prev(chunk_t *fp_close)
 }
 
 
-chunk_t *skip_declspec(chunk_t *pc)
+Chunk *skip_declspec(Chunk *pc)
 {
    if (chunk_is_token(pc, CT_DECLSPEC))
    {
@@ -255,9 +255,9 @@ chunk_t *skip_declspec(chunk_t *pc)
 }
 
 
-chunk_t *skip_declspec_next(chunk_t *pc)
+Chunk *skip_declspec_next(Chunk *pc)
 {
-   chunk_t *next = skip_declspec(pc);
+   Chunk *next = skip_declspec(pc);
 
    if (  next != pc
       && chunk_is_token(next, CT_PAREN_CLOSE))
@@ -268,7 +268,7 @@ chunk_t *skip_declspec_next(chunk_t *pc)
 }
 
 
-chunk_t *skip_declspec_prev(chunk_t *pc)
+Chunk *skip_declspec_prev(Chunk *pc)
 {
    if (  chunk_is_token(pc, CT_PAREN_CLOSE)
       && get_chunk_parent_type(pc) == CT_DECLSPEC)
@@ -285,7 +285,7 @@ chunk_t *skip_declspec_prev(chunk_t *pc)
 }
 
 
-chunk_t *skip_matching_brace_bracket_paren_next(chunk_t *pc)
+Chunk *skip_matching_brace_bracket_paren_next(Chunk *pc)
 {
    if (  chunk_is_token(pc, CT_BRACE_OPEN)
       || chunk_is_token(pc, CT_PAREN_OPEN)
@@ -307,7 +307,7 @@ chunk_t *skip_matching_brace_bracket_paren_next(chunk_t *pc)
 }
 
 
-chunk_t *skip_to_chunk_before_matching_brace_bracket_paren_rev(chunk_t *pc)
+Chunk *skip_to_chunk_before_matching_brace_bracket_paren_rev(Chunk *pc)
 {
    if (  chunk_is_token(pc, CT_BRACE_CLOSE)
       || chunk_is_token(pc, CT_PAREN_CLOSE)

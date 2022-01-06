@@ -65,10 +65,10 @@ void align_func_proto(size_t span)
    size_t mybr_gap = options::align_single_line_brace_gap();
 
 
-   bool    look_bro = false;
-   chunk_t *toadd;
+   bool  look_bro = false;
+   Chunk *toadd;
 
-   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       char copy[1000];
       LOG_FMT(LAS, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, level is %zu, brace_level is %zu\n",
@@ -156,7 +156,7 @@ void align_func_proto(size_t span)
          {
             toadd = pc;
          }
-         chunk_t *tmp = step_back_over_member(toadd);
+         Chunk *tmp = step_back_over_member(toadd);
          LOG_FMT(LAS, "%s(%d): tmp->text() is '%s', orig_line is %zu, orig_col is %zu, level is %zu, brace_level is %zu\n",
                  __func__, __LINE__, tmp->text(), tmp->orig_line, tmp->orig_col,
                  tmp->level, tmp->brace_level);

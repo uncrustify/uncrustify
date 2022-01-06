@@ -99,7 +99,7 @@ public:
     * @param pc      the chunk
     * @param seqnum  optional sequence number (0=assign one)
     */
-   void Add(chunk_t *pc, size_t seqnum = 0);
+   void Add(Chunk *pc, size_t seqnum = 0);
 
 
    //! Adds some newline and calls Flush() if needed

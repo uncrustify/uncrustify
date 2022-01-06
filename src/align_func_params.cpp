@@ -19,7 +19,7 @@ constexpr static auto LCURRENT = LALIGN;
 using namespace uncrustify;
 
 
-chunk_t *align_func_param(chunk_t *start)
+Chunk *align_func_param(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
@@ -58,9 +58,9 @@ chunk_t *align_func_param(chunk_t *start)
       many_as[idx].m_amp_style  = static_cast<AlignStack::StarStyle>(options::align_var_def_amp_style());
    }
 
-   size_t  comma_count = 0;
-   size_t  chunk_count = 0;
-   chunk_t *pc         = start;
+   size_t comma_count = 0;
+   size_t chunk_count = 0;
+   Chunk  *pc         = start;
 
    while ((pc = chunk_get_next(pc)) != nullptr)
    {
@@ -72,11 +72,11 @@ chunk_t *align_func_param(chunk_t *start)
       if (chunk_is_token(pc, CT_FUNC_VAR))                    // Issue #2278
       {
          // look after 'protect parenthesis'
-         chunk_t *after = chunk_get_next_nc(pc);
+         Chunk *after = chunk_get_next_nc(pc);
 
          if (chunk_is_token(after, CT_PAREN_CLOSE))
          {
-            chunk_t *before = chunk_get_prev_type(after, CT_PAREN_OPEN, after->level);
+            Chunk *before = chunk_get_prev_type(after, CT_PAREN_OPEN, after->level);
 
             if (before != nullptr)
             {
@@ -85,7 +85,7 @@ chunk_t *align_func_param(chunk_t *start)
                set_chunk_type(before, CT_PPAREN_OPEN);
                set_chunk_type(after, CT_PPAREN_CLOSE);
                pc->level = before->level;
-               chunk_t *tmp = chunk_get_prev_nc(pc);
+               Chunk *tmp = chunk_get_prev_nc(pc);
 
                if (chunk_is_token(tmp, CT_PTR_TYPE))
                {
@@ -139,7 +139,7 @@ chunk_t *align_func_param(chunk_t *start)
          }
          else
          {
-            chunk_t *tmp_prev = chunk_get_prev_nc(pc);
+            Chunk *tmp_prev = chunk_get_prev_nc(pc);
 
             if (!chunk_is_newline(tmp_prev))  // don't count leading commas
             {
@@ -165,7 +165,7 @@ chunk_t *align_func_param(chunk_t *start)
 void align_func_params(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc = chunk_get_head();
+   Chunk *pc = chunk_get_head();
 
    while ((pc = chunk_get_next(pc)) != nullptr)
    {

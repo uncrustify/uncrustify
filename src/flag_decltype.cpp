@@ -7,7 +7,7 @@
 #include "chunk.h"
 
 
-bool flag_cpp_decltype(chunk_t *pc)
+bool flag_cpp_decltype(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 

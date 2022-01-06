@@ -14,7 +14,7 @@
  *
  * @return Returns true if expression is a valid decltype expression
  */
-bool flag_cpp_decltype(chunk_t *pc);
+bool flag_cpp_decltype(Chunk *pc);
 
 
 #endif

@@ -31,7 +31,7 @@
  * @return the chunk after the '=' if the check succeeds
  * @return nullptr in all other cases
  */
-chunk_t *skip_c99_array(chunk_t *sq_open);
+Chunk *skip_c99_array(Chunk *sq_open);
 
 /**
  * Scans a line for stuff to align on.
@@ -39,10 +39,10 @@ chunk_t *skip_c99_array(chunk_t *sq_open);
  * We trigger on BRACE_OPEN, FPAREN_OPEN, ASSIGN, and COMMA.
  * We want to align the NEXT item.
  */
-chunk_t *scan_ib_line(chunk_t *start, bool first_pass);
+Chunk *scan_ib_line(Chunk *start, bool first_pass);
 
 void ib_shift_out(size_t idx, size_t num);
 
-chunk_t *step_back_over_member(chunk_t *pc);
+Chunk *step_back_over_member(Chunk *pc);
 
 #endif /* ALIGN_TOOLS_H_INCLUDED */

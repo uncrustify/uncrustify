@@ -87,7 +87,7 @@ enum class char_encoding_e : unsigned int
 };
 
 
-class chunk_t; //forward declaration
+class Chunk; //forward declaration
 
 
 /**
@@ -97,27 +97,27 @@ class chunk_t; //forward declaration
  */
 struct indent_ptr_t
 {
-   chunk_t *ref;
-   int     delta;
+   Chunk *ref;
+   int   delta;
 };
 
 
 struct align_ptr_t
 {
-   chunk_t *next;       //! nullptr or the chunk that should be under this one
-   bool    right_align; //! AlignStack.m_right_align
-   size_t  star_style;  //! AlignStack.m_star_style
-   size_t  amp_style;   //! AlignStack.m_amp_style
-   int     gap;         //! AlignStack.m_gap
+   Chunk  *next;       //! nullptr or the chunk that should be under this one
+   bool   right_align; //! AlignStack.m_right_align
+   size_t star_style;  //! AlignStack.m_star_style
+   size_t amp_style;   //! AlignStack.m_amp_style
+   int    gap;         //! AlignStack.m_gap
 
    /*
     * col_adj is the amount to alter the column for the token.
     * For example, a dangling '*' would be set to -1.
     * A right-aligned word would be a positive value.
     */
-   int     col_adj;
-   chunk_t *ref;
-   chunk_t *start;
+   int   col_adj;
+   Chunk *ref;
+   Chunk *start;
 };
 
 

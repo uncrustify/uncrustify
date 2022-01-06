@@ -19,7 +19,7 @@
  *
  * @param start  Pointer to the open paren
  */
-void fix_casts(chunk_t *start);
+void fix_casts(Chunk *start);
 
 
 /**
@@ -27,7 +27,7 @@ void fix_casts(chunk_t *start);
  *
  * @param start  points to the open paren
  */
-void fix_fcn_def_params(chunk_t *start);
+void fix_fcn_def_params(Chunk *start);
 
 
 /**
@@ -36,7 +36,7 @@ void fix_fcn_def_params(chunk_t *start);
  *
  * Mark everything between the <> as a type and set the paren parent
  */
-void fix_type_cast(chunk_t *start);
+void fix_type_cast(Chunk *start);
 
 
 /**
@@ -53,7 +53,7 @@ void fix_type_cast(chunk_t *start);
  * typedef <enum/struct/union> [type] [*] type [, [*]type] ;
  * typedef <enum/struct/union> [type] { ... } [*] type [, [*]type] ;
  */
-void fix_typedef(chunk_t *start);
+void fix_typedef(Chunk *start);
 
 
 /**
@@ -62,10 +62,10 @@ void fix_typedef(chunk_t *start);
  *  - BRACE_OPEN
  *  - SEMICOLON
  */
-chunk_t *fix_variable_definition(chunk_t *start);
+Chunk *fix_variable_definition(Chunk *start);
 
 
-void mark_cpp_constructor(chunk_t *pc);
+void mark_cpp_constructor(Chunk *pc);
 
 
 /**
@@ -77,7 +77,7 @@ void mark_cpp_constructor(chunk_t *pc);
  *                    until the corresponding closing CT_BRACE_CLOSE (with parent type
  *                    CT_CPP_LAMBDA) is encountered
  */
-void mark_cpp_lambda(chunk_t *square_open);
+void mark_cpp_lambda(Chunk *square_open);
 
 
 /**
@@ -91,7 +91,7 @@ void mark_define_expressions(void);
  * Just mark every CT_WORD until a semicolon as CT_SQL_WORD.
  * Adjust the levels if pc is CT_SQL_BEGIN
  */
-void mark_exec_sql(chunk_t *pc);
+void mark_exec_sql(Chunk *pc);
 
 
 /**
@@ -100,7 +100,7 @@ void mark_exec_sql(chunk_t *pc);
  * @param pc           the last chunk of the return type
  * @param parent_type  CT_NONE (no change) or the new parent type
  */
-void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t parent_type);
+void mark_function_return_type(Chunk *fname, Chunk *start, c_token_t parent_type);
 
 
 /**
@@ -124,7 +124,7 @@ void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t parent_
  * Constructor/destructor detection should have already been done when the
  * 'class' token was encountered (see mark_class_ctor).
  */
-void mark_function(chunk_t *pc);
+void mark_function(Chunk *pc);
 
 
 /**
@@ -139,14 +139,14 @@ void mark_function(chunk_t *pc);
  *
  * @return whether a function type was processed
  */
-bool mark_function_type(chunk_t *pc);
+bool mark_function_type(Chunk *pc);
 
 
 /**
  *  Just hit an assign. Go backwards until we hit an open brace/paren/square or
  * semicolon (TODO: other limiter?) and mark as a LValue.
  */
-void mark_lvalue(chunk_t *pc);
+void mark_lvalue(Chunk *pc);
 
 
 /**
@@ -154,7 +154,7 @@ void mark_lvalue(chunk_t *pc);
  * There should only be variable definitions and methods.
  * Skip the methods, as they will get handled elsewhere.
  */
-void mark_struct_union_body(chunk_t *start);
+void mark_struct_union_body(Chunk *start);
 
 
 /**
@@ -165,7 +165,7 @@ void mark_struct_union_body(chunk_t *start);
  * Or we could be on a variable def if it's followed by a word:
  *   Renderer<rgb32> rend;
  */
-void mark_template_func(chunk_t *pc, chunk_t *pc_next);
+void mark_template_func(Chunk *pc, Chunk *pc_next);
 
 
 /**
@@ -180,7 +180,7 @@ void mark_template_func(chunk_t *pc, chunk_t *pc_next);
  * struct {...} *a, *b;                ## called with 'a' or '*'
  * myclass a(4);
  */
-chunk_t *mark_variable_definition(chunk_t *start);
+Chunk *mark_variable_definition(Chunk *start);
 
 
 void mark_variable_stack(ChunkStack &cs, log_sev_t sev);
@@ -190,7 +190,7 @@ void mark_variable_stack(ChunkStack &cs, log_sev_t sev);
  * TODO: add doc cmt
  *
  */
-pcf_flags_t mark_where_chunk(chunk_t *pc, c_token_t parent_type, pcf_flags_t flags);
+pcf_flags_t mark_where_chunk(Chunk *pc, c_token_t parent_type, pcf_flags_t flags);
 
 
 #endif /* COMBINE_FIX_MARK_H_INCLUDED */

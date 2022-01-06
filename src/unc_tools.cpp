@@ -52,7 +52,7 @@ void prot_the_line(const char *func_name, int theLine, unsigned int actual_line,
 }
 
 
-void prot_the_line_pc(chunk_t *pc_sub, const char *func_name, int theLine, unsigned int actual_line, size_t partNumber)
+void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigned int actual_line, size_t partNumber)
 {
    if (actual_line == 0)
    {
@@ -69,7 +69,7 @@ void prot_the_line_pc(chunk_t *pc_sub, const char *func_name, int theLine, unsig
    tokenCounter = 0;
    LOG_FMT(LGUY, "Prot_the_line:(%s:%d)(%zu)\n", func_name, theLine, counter);
 
-   for (chunk_t *pc = pc_sub; pc != nullptr; pc = pc->next)
+   for (Chunk *pc = pc_sub; pc != nullptr; pc = pc->next)
    {
       if (pc->orig_line == actual_line)
       {
@@ -154,7 +154,7 @@ void prot_all_lines(const char *func_name, int theLine)
 
    LOG_FMT(LGUY, "Prot_all_lines:(%s:%d)(%zu)\n", func_name, theLine, counter);
 
-   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = pc->next)
+   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = pc->next)
    {
       tokenCounter++;
 
@@ -210,7 +210,7 @@ void examine_Data(const char *func_name, int theLine, int what)
 {
    LOG_FMT(LGUY, "\n%s:", func_name);
 
-   chunk_t *pc;
+   Chunk *pc;
 
    switch (what)
    {
@@ -308,7 +308,7 @@ void dump_out(unsigned int type)
 
    if (D_file != nullptr)
    {
-      for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = pc->next)
+      for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = pc->next)
       {
          fprintf(D_file, "[%p]\n", pc);
          fprintf(D_file, "  type %s\n", get_token_name(pc->type));
@@ -369,10 +369,10 @@ void dump_out(unsigned int type)
 
 void dump_in(unsigned int type)
 {
-   char    buffer[256];
-   bool    aNewChunkIsFound = false;
-   chunk_t chunk;
-   char    dumpFileName[300];
+   char  buffer[256];
+   bool  aNewChunkIsFound = false;
+   Chunk chunk;
+   char  dumpFileName[300];
 
    if (cpd.dumped_file == nullptr)
    {

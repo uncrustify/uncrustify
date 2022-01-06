@@ -21,7 +21,7 @@
 void prot_the_line(const char *func_name, int theLine, unsigned int actual_line, size_t partNumber);
 
 
-void prot_the_line_pc(chunk_t *pc_sub, const char *func_name, int theLine, unsigned int actual_line, size_t partNumber);
+void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigned int actual_line, size_t partNumber);
 
 
 void prot_all_lines(const char *func_name, int theLine);

@@ -18,7 +18,7 @@
  *    align(4):          -- returns 'int'
  *    int bar;
  */
-chunk_t *skip_align(chunk_t *start);
+Chunk *skip_align(Chunk *start);
 
 
 /**
@@ -29,7 +29,7 @@ chunk_t *skip_align(chunk_t *start);
  * 2) Preceding chunk is at higher template nest level relative to the
  *    current chunk under test
  */
-chunk_t *skip_expression(chunk_t *pc);
+Chunk *skip_expression(Chunk *pc);
 
 
 /**
@@ -40,7 +40,7 @@ chunk_t *skip_expression(chunk_t *pc);
  * 2) Preceding chunk is at lower template nest level relative to the
  *    current chunk under test
  */
-chunk_t *skip_expression_rev(chunk_t *pc);
+Chunk *skip_expression_rev(Chunk *pc);
 
 
 /**
@@ -52,7 +52,7 @@ chunk_t *skip_expression_rev(chunk_t *pc);
  * 2) Preceding chunk is at a higher template nest level relative to the
  *    subsequent chunk
  */
-chunk_t *skip_to_expression_end(chunk_t *pc);
+Chunk *skip_to_expression_end(Chunk *pc);
 
 
 /**
@@ -64,13 +64,13 @@ chunk_t *skip_to_expression_end(chunk_t *pc);
  * 2) Preceding chunk is at a lower template nest level relative to the
  *    subsequent chunk
  */
-chunk_t *skip_to_expression_start(chunk_t *pc);
+Chunk *skip_to_expression_start(Chunk *pc);
 
 
 /**
  * Skips the list of class/struct parent types.
  */
-chunk_t *skip_parent_types(chunk_t *colon);
+Chunk *skip_parent_types(Chunk *colon);
 
 
 /**
@@ -78,7 +78,7 @@ chunk_t *skip_parent_types(chunk_t *colon);
  * Points to the chunk after the CT_ANGLE_CLOSE.
  * If the chunk isn't an CT_ANGLE_OPEN, then it is returned.
  */
-chunk_t *skip_template_next(chunk_t *ang_open);
+Chunk *skip_template_next(Chunk *ang_open);
 
 
 /**
@@ -86,18 +86,18 @@ chunk_t *skip_template_next(chunk_t *ang_open);
  * Points to the chunk before the CT_ANGLE_OPEN
  * If the chunk isn't an CT_ANGLE_CLOSE, then it is returned.
  */
-chunk_t *skip_template_prev(chunk_t *ang_close);
+Chunk *skip_template_prev(Chunk *ang_close);
 
 
 //! Skips to the start of the next statement.
-chunk_t *skip_to_next_statement(chunk_t *pc);
+Chunk *skip_to_next_statement(Chunk *pc);
 
 
 /**
  * Skips the rest of the array definitions if ary_def is indeed a
  * CT_TSQUARE or CT_SQUARE_OPEN
  */
-chunk_t *skip_tsquare_next(chunk_t *ary_def);
+Chunk *skip_tsquare_next(Chunk *ary_def);
 
 
 /**
@@ -105,7 +105,7 @@ chunk_t *skip_tsquare_next(chunk_t *ary_def);
  * paren; return the chunk marked CT_FPAREN_CLOSE
  * If the chunk isn't a CT_ATTRIBUTE, then it is returned.
  */
-chunk_t *skip_attribute(chunk_t *attr);
+Chunk *skip_attribute(Chunk *attr);
 
 
 /**
@@ -113,7 +113,7 @@ chunk_t *skip_attribute(chunk_t *attr);
  * after the CT_FPAREN_CLOSE.
  * If the chunk isn't an CT_ATTRIBUTE, then it is returned.
  */
-chunk_t *skip_attribute_next(chunk_t *attr);
+Chunk *skip_attribute_next(Chunk *attr);
 
 
 /**
@@ -121,7 +121,7 @@ chunk_t *skip_attribute_next(chunk_t *attr);
  * and the '__attribute__' thingy and return the chunk before CT_ATTRIBUTE.
  * Otherwise return fp_close.
  */
-chunk_t *skip_attribute_prev(chunk_t *fp_close);
+Chunk *skip_attribute_prev(Chunk *fp_close);
 
 
 /**
@@ -129,7 +129,7 @@ chunk_t *skip_attribute_prev(chunk_t *fp_close);
  * paren; return the chunk marked CT_FPAREN_CLOSE
  * If the chunk isn't a CT_DECLSPEC, then it is returned.
  */
-chunk_t *skip_declspec(chunk_t *pc);
+Chunk *skip_declspec(Chunk *pc);
 
 
 /**
@@ -137,7 +137,7 @@ chunk_t *skip_declspec(chunk_t *pc);
  * after the CT_FPAREN_CLOSE.
  * If the chunk isn't a CT_DECLSPEC, then it is returned.
  */
-chunk_t *skip_declspec_next(chunk_t *pc);
+Chunk *skip_declspec_next(Chunk *pc);
 
 
 /**
@@ -145,7 +145,7 @@ chunk_t *skip_declspec_next(chunk_t *pc);
  * and the '__declspec' keyword and return the chunk before CT_DECLSPEC.
  * Otherwise return pc.
  */
-chunk_t *skip_declspec_prev(chunk_t *pc);
+Chunk *skip_declspec_prev(Chunk *pc);
 
 
 /**
@@ -154,7 +154,7 @@ chunk_t *skip_declspec_prev(chunk_t *pc);
  * CT_BRACE_CLOSE, CT_PAREN_CLOSE or CT_SQUARE_CLOSE; if pc is none of these
  * upon calling this function, then pc is returned.
  */
-chunk_t *skip_matching_brace_bracket_paren_next(chunk_t *pc);
+Chunk *skip_matching_brace_bracket_paren_next(Chunk *pc);
 
 
 /**
@@ -163,7 +163,7 @@ chunk_t *skip_matching_brace_bracket_paren_next(chunk_t *pc);
  * CT_BRACE_OPEN, CT_PAREN_OPEN or CT_SQUARE_OPEN; if pc is none of these upon
  * calling this function, then pc is returned.
  */
-chunk_t *skip_to_chunk_before_matching_brace_bracket_paren_rev(chunk_t *pc);
+Chunk *skip_to_chunk_before_matching_brace_bracket_paren_rev(Chunk *pc);
 
 
 #endif /* COMBINE_SKIP_H_INCLUDED */

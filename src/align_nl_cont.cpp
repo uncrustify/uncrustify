@@ -13,7 +13,7 @@
 #include "uncrustify.h"
 
 
-chunk_t *align_nl_cont(chunk_t *start)
+Chunk *align_nl_cont(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
@@ -23,7 +23,7 @@ chunk_t *align_nl_cont(chunk_t *start)
    // Find the max column
    ChunkStack cs;
    size_t     max_col = 0;
-   chunk_t    *pc     = start;
+   Chunk      *pc     = start;
 
    while (  chunk_is_not_token(pc, CT_NEWLINE)
          && chunk_is_not_token(pc, CT_COMMENT_MULTI))
@@ -35,7 +35,7 @@ chunk_t *align_nl_cont(chunk_t *start)
       pc = chunk_get_next(pc);
    }
    // NL_CONT is always the last thing on a line
-   chunk_t *tmp;
+   Chunk *tmp;
 
    while ((tmp = cs.Pop_Back()) != nullptr)
    {
@@ -49,7 +49,7 @@ chunk_t *align_nl_cont(chunk_t *start)
 void align_backslash_newline(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc = chunk_get_head();
+   Chunk *pc = chunk_get_head();
 
    while (pc != nullptr)
    {

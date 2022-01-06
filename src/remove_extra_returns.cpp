@@ -17,7 +17,7 @@ void remove_extra_returns(void)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *pc = chunk_get_head();
+   Chunk *pc = chunk_get_head();
 
    while (pc != nullptr)
    {
@@ -30,8 +30,8 @@ void remove_extra_returns(void)
       {
          // we might be in a class, check it                                     Issue #2705
          // look for a closing brace
-         bool    remove_it      = false;
-         chunk_t *closing_brace = chunk_get_next_type(pc, CT_BRACE_CLOSE, 1);
+         bool  remove_it      = false;
+         Chunk *closing_brace = chunk_get_next_type(pc, CT_BRACE_CLOSE, 1);
          LOG_FMT(LRMRETURN, "%s(%d): on orig_line %zu, level is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->level);
 
@@ -66,7 +66,7 @@ void remove_extra_returns(void)
 
          if (remove_it)
          {
-            chunk_t *semicolon = chunk_get_next_nc_nnl(pc);
+            Chunk *semicolon = chunk_get_next_nc_nnl(pc);
 
             if (  semicolon != nullptr
                && chunk_is_token(semicolon, CT_SEMICOLON))

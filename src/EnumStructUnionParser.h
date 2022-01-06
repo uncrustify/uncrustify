@@ -75,84 +75,84 @@ private:
     * Returns the end chunk of a class/enum/struct/union body, if detected
     * during parsing
     */
-   chunk_t *get_body_end() const;
+   Chunk *get_body_end() const;
 
 
    /**
     * Returns the starting chunk of a class/enum/struct/union body, if detected
     * during parsing
     */
-   chunk_t *get_body_start() const;
+   Chunk *get_body_start() const;
 
 
    /**
     * Returns the starting chunk associated with an enumerated type's base
     * specifier statement, if detected during parsing
     */
-   chunk_t *get_enum_base_start() const;
+   Chunk *get_enum_base_start() const;
 
 
    /**
     * Returns the first comma encountered at the level of the starting chunk,
     * if detected during parsing
     */
-   chunk_t *get_first_top_level_comma() const;
+   Chunk *get_first_top_level_comma() const;
 
 
    /**
     * Returns the ending chunk associated with an class/struct inheritance
     * list, if detected during parsing
     */
-   chunk_t *get_inheritance_end() const;
+   Chunk *get_inheritance_end() const;
 
 
    /**
     * Returns the starting chunk associated with an class/struct inheritance
     * list, if detected during parsing
     */
-   chunk_t *get_inheritance_start() const;
+   Chunk *get_inheritance_start() const;
 
 
    /**
     * Returns a numerically-indexed map of all question operators encountered
     * during parsing
     */
-   std::map<std::size_t, chunk_t *> get_question_operators() const;
+   std::map<std::size_t, Chunk *> get_question_operators() const;
 
 
    /**
     * Returns the end chunk associated with a template parameter list, if
     * detected during parsing
     */
-   chunk_t *get_template_end() const;
+   Chunk *get_template_end() const;
 
 
    /**
     * Return the starting chunk associated with a template parameter list, if
     * detected during parsing
     */
-   chunk_t *get_template_start() const;
+   Chunk *get_template_start() const;
 
 
    /**
     * Returns a numerically-indexed map of all top-level commas encountered
     * during parsing
     */
-   std::map<std::size_t, chunk_t *> get_top_level_commas() const;
+   std::map<std::size_t, Chunk *> get_top_level_commas() const;
 
 
    /**
     * Return the starting chunk associated with a where clause, if
     * detected during parsing
     */
-   chunk_t *get_where_end() const;
+   Chunk *get_where_end() const;
 
 
    /**
     * Return the starting chunk associated with a where clause, if
     * detected during parsing
     */
-   chunk_t *get_where_start() const;
+   Chunk *get_where_start() const;
 
 
    /**
@@ -166,7 +166,7 @@ public:
    /**
     * Performs object initialization prior to parsing
     */
-   void initialize(chunk_t *pc);
+   void initialize(Chunk *pc);
 
 
 private:
@@ -174,34 +174,34 @@ private:
     * Returns true if the chunk under test represents a potential end chunk past
     * which further parsing is not likely warranted
     */
-   bool is_potential_end_chunk(chunk_t *pc) const;
+   bool is_potential_end_chunk(Chunk *pc) const;
 
 
    /**
     * Returns true if the chunk under test is deemed to be located within a
     * conditional/ternary statement
     */
-   bool is_within_conditional(chunk_t *pc) const;
+   bool is_within_conditional(Chunk *pc) const;
 
 
    /**
     * Returns true if the chunk under test is deemed to be located within an
     * inheritance list
     */
-   bool is_within_inheritance_list(chunk_t *pc) const;
+   bool is_within_inheritance_list(Chunk *pc) const;
 
 
    /**
     * Returns true if the chunk under test is deemed to be located within a
     * where clause
     */
-   bool is_within_where_clause(chunk_t *pc) const;
+   bool is_within_where_clause(Chunk *pc) const;
 
 
    /**
     * Marks all base classes that appear as part of an inheritance list
     */
-   void mark_base_classes(chunk_t *pc);
+   void mark_base_classes(Chunk *pc);
 
 
    /**
@@ -209,19 +209,19 @@ private:
     * and additionally calls a separate routine to mark any base classes for that
     * may precede the opening brace
     */
-   void mark_braces(chunk_t *start);
+   void mark_braces(Chunk *start);
 
 
    /**
     * Marks the beginning chunk of an inheritance list
     */
-   void mark_class_colon(chunk_t *colon);
+   void mark_class_colon(Chunk *colon);
 
 
    /**
     * Mark a colon as a conditional
     */
-   void mark_conditional_colon(chunk_t *colon);
+   void mark_conditional_colon(Chunk *colon);
 
 
    /**
@@ -233,7 +233,7 @@ private:
    /**
     * Marks the beginning chunk of an enumerated integral type specification
     */
-   void mark_enum_integral_type(chunk_t *colon);
+   void mark_enum_integral_type(Chunk *colon);
 
 
    /**
@@ -245,13 +245,13 @@ private:
    /**
     * Mark nested name specifiers preceding qualified identifiers
     */
-   void mark_nested_name_specifiers(chunk_t *pc);
+   void mark_nested_name_specifiers(Chunk *pc);
 
 
    /**
     * Marks pointer operators preceding a variable identifier
     */
-   void mark_pointer_types(chunk_t *pc);
+   void mark_pointer_types(Chunk *pc);
 
 
    /**
@@ -259,72 +259,72 @@ private:
     * (templates may appear after the identifier type name as part of a class
     * specialization)
     */
-   void mark_template(chunk_t *start) const;
+   void mark_template(Chunk *start) const;
 
 
    /**
     * Marks the arguments within a template argument list bounded by the
     * starting and ending chunks
     */
-   void mark_template_args(chunk_t *start, chunk_t *end) const;
+   void mark_template_args(Chunk *start, Chunk *end) const;
 
 
    /**
     * Marks the type identifier associated with the class/enum/struct/union,
     * if not anonymously defined
     */
-   void mark_type(chunk_t *pc);
+   void mark_type(Chunk *pc);
 
 
    /**
     * Marks all variable identifiers associated with the class/enum/struct/union
     */
-   void mark_variable(chunk_t *variable, pcf_flags_t flags);
+   void mark_variable(Chunk *variable, pcf_flags_t flags);
 
 
    /**
     * Marks all chunks belonging to a c# where clause
     */
-   void mark_where_clause(chunk_t *where);
+   void mark_where_clause(Chunk *where);
 
 
    /**
     * Marks the beginning of a where clause
     */
-   void mark_where_colon(chunk_t *colon);
+   void mark_where_colon(Chunk *colon);
 
 
 public:
    /**
     * Parses the class/enum/struct/union and all associated chunks
     */
-   void parse(chunk_t *pc);
+   void parse(Chunk *pc);
 
 
 private:
    /**
     * Parses closing and opening angle brackets
     */
-   chunk_t *parse_angles(chunk_t *angle_open);
+   Chunk *parse_angles(Chunk *angle_open);
 
 
    /**
     * Parses closing and opening braces
     */
-   chunk_t *parse_braces(chunk_t *brace_open);
+   Chunk *parse_braces(Chunk *brace_open);
 
 
    /**
     * Parses a single colon, which may precede an inheritance list or
     * enumerated integral type specification
     */
-   void parse_colon(chunk_t *colon);
+   void parse_colon(Chunk *colon);
 
 
    /**
     * Parses a double colon, which may indicate a scope resolution chain
     */
-   chunk_t *parse_double_colon(chunk_t *double_colon);
+   Chunk *parse_double_colon(Chunk *double_colon);
 
 
    /**
@@ -342,7 +342,7 @@ private:
    /**
     * Records all question operators encountered during parsing
     */
-   void record_question_operator(chunk_t *question);
+   void record_question_operator(Chunk *question);
 
 
    /**
@@ -352,7 +352,7 @@ private:
     * 3) it is not part of an inheritance list
     * 4) it is not part of a conditional/ternary expression
     */
-   void record_top_level_comma(chunk_t *comma);
+   void record_top_level_comma(Chunk *comma);
 
 
    /**
@@ -360,60 +360,60 @@ private:
     * for any potential trailing inline variable declarations that may follow
     * the body of a class/enum/struct/union definition
     */
-   chunk_t *refine_end_chunk(chunk_t *pc);
+   Chunk *refine_end_chunk(Chunk *pc);
 
 
    /**
     * Sets the chunk associated with the end of a class/enum/struct/union
     * body
     */
-   void set_body_end(chunk_t *body_end);
+   void set_body_end(Chunk *body_end);
 
 
    /**
     * Sets the chunk associated with the start of a class/enum/struct/union
     * body
     */
-   void set_body_start(chunk_t *body_start);
+   void set_body_start(Chunk *body_start);
 
 
    /**
     * Sets the chunk associated with the start of an enumerated integral
     * base type specification
     */
-   void set_enum_base_start(chunk_t *enum_base_start);
+   void set_enum_base_start(Chunk *enum_base_start);
 
 
    /**
     * Sets the chunk associated with the start of an inheritance list
     */
-   void set_inheritance_start(chunk_t *inheritance_start);
+   void set_inheritance_start(Chunk *inheritance_start);
 
 
    /**
     * Sets the chunk associated with the end of a template
     */
-   void set_template_end(chunk_t *template_end);
+   void set_template_end(Chunk *template_end);
 
 
    /**
     * Sets the chunk associated with the start of a template
     */
-   void set_template_start(chunk_t *template_start);
+   void set_template_start(Chunk *template_start);
 
 
    /**
     * Return the ending chunk associated with a where clause, if
     * detected during parsing
     */
-   void set_where_end(chunk_t *where_end);
+   void set_where_end(Chunk *where_end);
 
 
    /**
     * Return the starting chunk associated with a where clause, if
     * detected during parsing
     */
-   void set_where_start(chunk_t *where_start);
+   void set_where_start(Chunk *where_start);
 
 
    /**
@@ -425,7 +425,7 @@ private:
    /**
     * Attempts to find the last chunk associated with the class/enum/struct/union
     */
-   chunk_t *try_find_end_chunk(chunk_t *pc);
+   Chunk *try_find_end_chunk(Chunk *pc);
 
 
    /**
@@ -464,13 +464,13 @@ private:
    /**
     * Map of token-type, chunk pairs
     */
-   std::map<c_token_t, std::map<std::size_t, chunk_t *> > m_chunk_map;
+   std::map<c_token_t, std::map<std::size_t, Chunk *> > m_chunk_map;
 
 
    /**
     * Indicates the last chunk associated with the class/enum/struct/union keyword
     */
-   chunk_t *m_end;
+   Chunk *m_end;
 
 
    /**
@@ -483,14 +483,14 @@ private:
     * Stores a pointer to the class/enum/struct/union keyword chunk with which the
     * parse() routine was invoked
     */
-   chunk_t *m_start;
+   Chunk *m_start;
 
 
    /**
     * Stores a pointer to the type identifier associated with the class/enum/struct/union,
     * if not anonymously defined
     */
-   chunk_t *m_type;
+   Chunk *m_type;
 };
 
 

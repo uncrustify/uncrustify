@@ -40,14 +40,14 @@ void combine_labels(void);
 
 
 //! help function for mark_variable_definition...
-bool go_on(chunk_t *pc, chunk_t *start);
+bool go_on(Chunk *pc, Chunk *start);
 
 
 //! Sets the parent for comments.
 void mark_comments(void);
 
 
-void make_type(chunk_t *pc);
+void make_type(Chunk *pc);
 
 
 /**
@@ -60,7 +60,7 @@ void make_type(chunk_t *pc);
  *
  * @return The chunk after the close paren
  */
-chunk_t *set_paren_parent(chunk_t *start, c_token_t parent);
+Chunk *set_paren_parent(Chunk *start, c_token_t parent);
 
 
 /**
@@ -71,7 +71,7 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent);
  * The three parameters never get the value nullptr.
  * it is not necessary to test.
  */
-void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next);
+void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next);
 
 
 #endif /* COMBINE_H_INCLUDED */

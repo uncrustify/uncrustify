@@ -17,7 +17,7 @@ constexpr static auto LCURRENT = LALASS;
 using namespace uncrustify;
 
 
-chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_count)
+Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count)
 {
    LOG_FUNC_ENTRY();
 
@@ -56,11 +56,11 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    fcnProto.Start(span, thresh);
    fcnProto.m_right_align = as.m_right_align;
 
-   size_t  var_def_cnt = 0;
-   size_t  equ_count   = 0;
-   size_t  fcn_idx     = 0;
-   size_t  tmp;
-   chunk_t *pc = first;
+   size_t var_def_cnt = 0;
+   size_t equ_count   = 0;
+   size_t fcn_idx     = 0;
+   size_t tmp;
+   Chunk  *pc = first;
 
    while (pc != nullptr)
    {

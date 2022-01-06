@@ -34,11 +34,11 @@ public:
    //! Figure out the result of the vote and maybe update *m_av
    ~sp_votes();
 
-   void vote(chunk_t *first, chunk_t *second);
+   void vote(Chunk *first, Chunk *second);
 };
 
 
-void sp_votes::vote(chunk_t *first, chunk_t *second)
+void sp_votes::vote(Chunk *first, Chunk *second)
 {
    if (  first == nullptr
       || chunk_is_newline(first)
@@ -148,9 +148,9 @@ static void detect_space_options(void)
    SP_VOTE_VAR(sp_try_brace);
    SP_VOTE_VAR(sp_getset_brace);
 
-   chunk_t *prev = chunk_get_head();
-   chunk_t *pc   = chunk_get_next(prev);
-   chunk_t *next;
+   Chunk *prev = chunk_get_head();
+   Chunk *pc   = chunk_get_next(prev);
+   Chunk *next;
 
    while (pc != nullptr)
    {

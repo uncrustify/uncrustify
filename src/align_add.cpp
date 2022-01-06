@@ -11,12 +11,12 @@
 #include "uncrustify.h"
 
 
-void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col)
+void align_add(ChunkStack &cs, Chunk *pc, size_t &max_col)
 {
    LOG_FUNC_ENTRY();
 
-   size_t  min_col;
-   chunk_t *prev = chunk_get_prev(pc);
+   size_t min_col;
+   Chunk  *prev = chunk_get_prev(pc);
 
    if (  prev == nullptr
       || chunk_is_newline(prev))

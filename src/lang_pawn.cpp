@@ -18,7 +18,7 @@ using namespace uncrustify;
  * We need to check for 'open' braces/paren/etc because the level doesn't
  * change until the token after the open.
  */
-static bool pawn_continued(chunk_t *pc, size_t br_level);
+static bool pawn_continued(Chunk *pc, size_t br_level);
 
 
 /**
@@ -37,24 +37,24 @@ static bool pawn_continued(chunk_t *pc, size_t br_level);
  *
  * Variable definitions start with 'stock', 'static', 'new', or 'public'.
  */
-static chunk_t *pawn_process_line(chunk_t *start);
+static Chunk *pawn_process_line(Chunk *start);
 
 
 //! We are on a level 0 function proto of def
-static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn);
+static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn);
 
 
 /**
  * follows a variable definition at level 0 until the end.
  * Adds a semicolon at the end, if needed.
  */
-static chunk_t *pawn_process_variable(chunk_t *start);
+static Chunk *pawn_process_variable(Chunk *start);
 
 
-static chunk_t *pawn_process_func_def(chunk_t *pc);
+static Chunk *pawn_process_func_def(Chunk *pc);
 
 
-chunk_t *pawn_add_vsemi_after(chunk_t *pc)
+Chunk *pawn_add_vsemi_after(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
@@ -63,7 +63,7 @@ chunk_t *pawn_add_vsemi_after(chunk_t *pc)
    {
       return(pc);
    }
-   chunk_t *next = chunk_get_next_nc(pc);
+   Chunk *next = chunk_get_next_nc(pc);
 
    if (  next != nullptr
       && (  chunk_is_token(next, CT_VSEMICOLON)
@@ -71,7 +71,7 @@ chunk_t *pawn_add_vsemi_after(chunk_t *pc)
    {
       return(pc);
    }
-   chunk_t chunk = *pc;
+   Chunk chunk = *pc;
 
    set_chunk_type(&chunk, CT_VSEMICOLON);
    set_chunk_parent(&chunk, CT_NONE);
@@ -99,13 +99,13 @@ void pawn_scrub_vsemi(void)
       return;
    }
 
-   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       if (pc->type != CT_VSEMICOLON)
       {
          continue;
       }
-      chunk_t *prev = chunk_get_prev_nc_nnl(pc);
+      Chunk *prev = chunk_get_prev_nc_nnl(pc);
 
       if (chunk_is_token(prev, CT_BRACE_CLOSE))
       {
@@ -122,7 +122,7 @@ void pawn_scrub_vsemi(void)
 }
 
 
-static bool pawn_continued(chunk_t *pc, size_t br_level)
+static bool pawn_continued(Chunk *pc, size_t br_level)
 {
    LOG_FUNC_ENTRY();
 
@@ -176,8 +176,8 @@ void pawn_prescan(void)
     * Start at the beginning and step through the entire file, and clean up
     * any questionable stuff
     */
-   bool    did_nl = true;
-   chunk_t *pc    = chunk_get_head();
+   bool  did_nl = true;
+   Chunk *pc    = chunk_get_head();
 
    while (pc != nullptr)
    {
@@ -200,7 +200,7 @@ void pawn_prescan(void)
 }
 
 
-static chunk_t *pawn_process_line(chunk_t *start)
+static Chunk *pawn_process_line(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
@@ -213,13 +213,13 @@ static chunk_t *pawn_process_line(chunk_t *start)
       return(pawn_process_variable(start));
    }
    // if a open paren is found before an assign, then this is a function
-   chunk_t *fcn = nullptr;
+   Chunk *fcn = nullptr;
 
    if (chunk_is_token(start, CT_WORD))
    {
       fcn = start;
    }
-   chunk_t *pc = start;
+   Chunk *pc = start;
 
    while (  ((pc = chunk_get_next_nc(pc)) != nullptr)
          && !chunk_is_str(pc, "(", 1)
@@ -260,11 +260,11 @@ static chunk_t *pawn_process_line(chunk_t *start)
 } // pawn_process_line
 
 
-static chunk_t *pawn_process_variable(chunk_t *start)
+static Chunk *pawn_process_variable(Chunk *start)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *prev = nullptr;
-   chunk_t *pc   = start;
+   Chunk *prev = nullptr;
+   Chunk *pc   = start;
 
    while ((pc = chunk_get_next_nc(pc)) != nullptr)
    {
@@ -292,8 +292,8 @@ void pawn_add_virtual_semicolons(void)
    // Add Pawn virtual semicolons
    if (language_is_set(LANG_PAWN))
    {
-      chunk_t *prev = nullptr;
-      chunk_t *pc   = chunk_get_head();
+      Chunk *prev = nullptr;
+      Chunk *pc   = chunk_get_head();
 
       while ((pc = chunk_get_next(pc)) != nullptr)
       {
@@ -328,14 +328,14 @@ void pawn_add_virtual_semicolons(void)
 }
 
 
-static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
+static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn)
 {
    LOG_FUNC_ENTRY();
 
    // handle prototypes
    if (start == fcn)
    {
-      chunk_t *last = chunk_get_next_type(fcn, CT_PAREN_CLOSE, fcn->level);
+      Chunk *last = chunk_get_next_type(fcn, CT_PAREN_CLOSE, fcn->level);
       last = chunk_get_next(last);
 
       if (chunk_is_token(last, CT_SEMICOLON))
@@ -364,7 +364,7 @@ static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
 }
 
 
-static chunk_t *pawn_process_func_def(chunk_t *pc)
+static Chunk *pawn_process_func_def(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
@@ -378,8 +378,8 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
     * If we don't have a brace open right after the close fparen, then
     * we need to add virtual braces around the function body.
     */
-   chunk_t *clp  = chunk_get_next_str(pc, ")", 1, 0);
-   chunk_t *last = chunk_get_next_nc_nnl(clp);
+   Chunk *clp  = chunk_get_next_str(pc, ")", 1, 0);
+   Chunk *last = chunk_get_next_nc_nnl(clp);
 
    if (last != nullptr)
    {
@@ -438,12 +438,12 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       {
          return(last);
       }
-      chunk_t chunk = *last;
+      Chunk chunk = *last;
       chunk.str.clear();
       set_chunk_type(&chunk, CT_VBRACE_OPEN);
       set_chunk_parent(&chunk, CT_FUNC_DEF);
 
-      chunk_t *prev = chunk_add_before(&chunk, last);
+      Chunk *prev = chunk_add_before(&chunk, last);
       last = prev;
 
       // find the next newline at level 0
@@ -457,7 +457,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
          if (  chunk_is_token(prev, CT_NEWLINE)
             && prev->level == 0)
          {
-            chunk_t *next = chunk_get_next_nc_nnl(prev);
+            Chunk *next = chunk_get_next_nc_nnl(prev);
 
             if (  next != nullptr
                && next->type != CT_ELSE
@@ -489,12 +489,12 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
 } // pawn_process_func_def
 
 
-chunk_t *pawn_check_vsemicolon(chunk_t *pc)
+Chunk *pawn_check_vsemicolon(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
    // Grab the open VBrace
-   chunk_t *vb_open = chunk_get_prev_type(pc, CT_VBRACE_OPEN, -1);
+   Chunk *vb_open = chunk_get_prev_type(pc, CT_VBRACE_OPEN, -1);
 
    /*
     * Grab the item before the newline
@@ -505,7 +505,7 @@ chunk_t *pawn_check_vsemicolon(chunk_t *pc)
     *  - it is something that needs a continuation
     *    + arith, assign, bool, comma, compare
     */
-   chunk_t *prev = chunk_get_prev_nc_nnl(pc);
+   Chunk *prev = chunk_get_prev_nc_nnl(pc);
 
    if (  prev == nullptr
       || prev == vb_open

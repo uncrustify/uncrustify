@@ -1656,7 +1656,7 @@ static void add_file_header()
 
 static void add_file_footer()
 {
-   chunk_t *pc = chunk_get_tail();
+   Chunk *pc = chunk_get_tail();
 
    // Back up if the file ends with a newline
    if (  pc != nullptr
@@ -1683,10 +1683,10 @@ static void add_file_footer()
 
 static void add_func_header(c_token_t type, file_mem &fm)
 {
-   chunk_t *pc;
-   chunk_t *ref;
-   chunk_t *tmp;
-   bool    do_insert;
+   Chunk *pc;
+   Chunk *ref;
+   Chunk *tmp;
+   bool  do_insert;
 
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_nc_nnl_np(pc))
    {
@@ -1823,7 +1823,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
       else if (do_insert)
       {
          // Insert between after and ref
-         chunk_t *after = chunk_get_next_nc_nnl(ref);
+         Chunk *after = chunk_get_next_nc_nnl(ref);
          tokenize(fm.data, after);
 
          for (tmp = chunk_get_next(ref); tmp != after; tmp = chunk_get_next(tmp))
@@ -1837,10 +1837,10 @@ static void add_func_header(c_token_t type, file_mem &fm)
 
 static void add_msg_header(c_token_t type, file_mem &fm)
 {
-   chunk_t *pc;
-   chunk_t *ref;
-   chunk_t *tmp;
-   bool    do_insert;
+   Chunk *pc;
+   Chunk *ref;
+   Chunk *tmp;
+   bool  do_insert;
 
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_nc_nnl_np(pc))
    {
@@ -1916,7 +1916,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
       if (do_insert)
       {
          // Insert between after and ref
-         chunk_t *after = chunk_get_next_nc_nnl(ref);
+         Chunk *after = chunk_get_next_nc_nnl(ref);
          tokenize(fm.data, after);
 
          for (tmp = chunk_get_next(ref); tmp != after; tmp = chunk_get_next(tmp))
@@ -1939,7 +1939,7 @@ static void uncrustify_start(const deque<int> &data)
    // Get the column for the fragment indent
    if (cpd.frag)
    {
-      chunk_t *pc = chunk_get_head();
+      Chunk *pc = chunk_get_head();
 
       cpd.frag_cols = (pc != nullptr) ? pc->orig_col : 0;
    }
@@ -2420,7 +2420,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
 void uncrustify_end()
 {
    // Free all the memory
-   chunk_t *pc;
+   Chunk *pc;
 
    cpd.unc_stage = unc_stage_e::CLEANUP;
 

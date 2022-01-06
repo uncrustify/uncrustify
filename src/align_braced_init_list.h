@@ -16,6 +16,6 @@
  *
  * @param first  chunk pointing to the first braced init list
  */
-chunk_t *align_braced_init_list(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_count);
+Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count);
 
 #endif /* ALIGN_BRACED_INIT_LIST_H_INCLUDED */

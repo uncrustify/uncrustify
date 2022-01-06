@@ -44,6 +44,6 @@
  *
  * @param start   Points to the open brace chunk
  */
-void align_init_brace(chunk_t *start);
+void align_init_brace(Chunk *start);
 
 #endif /* ALIGN_INIT_BRACE_H_INCLUDED */
