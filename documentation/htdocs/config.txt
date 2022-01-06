@@ -1360,12 +1360,20 @@ indent_paren_after_func_decl    = false    # true/false
 # if the parenthesis is on its own line.
 indent_paren_after_func_call    = false    # true/false
 
+# Whether to ignore the indentation of a comma inside braces.
+indent_ignore_comma_brace       = false    # true/false
+
 # Whether to indent a comma when inside a brace.
 # If true, aligns under the open brace.
+# Requires indent_ignore_comma_brace=false.
 indent_comma_brace              = false    # true/false
+
+# Whether to ignore the indentation of a comma inside parentheses.
+indent_ignore_comma_paren       = false    # true/false
 
 # Whether to indent a comma when inside a parenthesis.
 # If true, aligns under the open parenthesis.
+# Requires indent_ignore_comma_paren=false.
 indent_comma_paren              = false    # true/false
 
 # Whether to indent a Boolean operator when inside a parenthesis.
