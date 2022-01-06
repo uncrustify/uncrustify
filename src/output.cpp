@@ -30,7 +30,7 @@ using namespace uncrustify;
 
 struct cmt_reflow
 {
-   chunk_t  *pc         = nullptr;
+   Chunk    *pc         = nullptr;
    size_t   column      = 0;   //! Column of the comment start
    size_t   brace_col   = 0;   //! Brace column (for indenting with tabs)
    size_t   base_col    = 0;   //! Base column (for indenting with tabs)
@@ -46,25 +46,25 @@ struct cmt_reflow
  * The only trick here is that we have to trim out whitespace characters
  * to get the comment to line up.
  */
-static void output_comment_multi(chunk_t *pc);
+static void output_comment_multi(Chunk *pc);
 
 
-static bool kw_fcn_filename(chunk_t *cmt, unc_text &out_txt);
+static bool kw_fcn_filename(Chunk *cmt, unc_text &out_txt);
 
 
-static bool kw_fcn_class(chunk_t *cmt, unc_text &out_txt);
+static bool kw_fcn_class(Chunk *cmt, unc_text &out_txt);
 
 
-static bool kw_fcn_message(chunk_t *cmt, unc_text &out_txt);
+static bool kw_fcn_message(Chunk *cmt, unc_text &out_txt);
 
 
-static bool kw_fcn_category(chunk_t *cmt, unc_text &out_txt);
+static bool kw_fcn_category(Chunk *cmt, unc_text &out_txt);
 
 
-static bool kw_fcn_scope(chunk_t *cmt, unc_text &out_txt);
+static bool kw_fcn_scope(Chunk *cmt, unc_text &out_txt);
 
 
-static bool kw_fcn_function(chunk_t *cmt, unc_text &out_txt);
+static bool kw_fcn_function(Chunk *cmt, unc_text &out_txt);
 
 
 /**
@@ -73,13 +73,13 @@ static bool kw_fcn_function(chunk_t *cmt, unc_text &out_txt);
  * If the arg list is '()' or '(void)', then no @params are added.
  * Likewise, if the return value is 'void', then no @return is added.
  */
-static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt);
+static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt);
 
 
-static bool kw_fcn_fclass(chunk_t *cmt, unc_text &out_txt);
+static bool kw_fcn_fclass(Chunk *cmt, unc_text &out_txt);
 
 
-static bool kw_fcn_year(chunk_t *cmt, unc_text &out_txt);
+static bool kw_fcn_year(Chunk *cmt, unc_text &out_txt);
 
 
 /**
@@ -88,7 +88,7 @@ static bool kw_fcn_year(chunk_t *cmt, unc_text &out_txt);
  *
  * Trims trailing whitespaces.
  */
-static void output_comment_multi_simple(chunk_t *pc);
+static void output_comment_multi_simple(Chunk *pc);
 
 
 /**
@@ -97,7 +97,7 @@ static void output_comment_multi_simple(chunk_t *pc);
  * @param[out] dst    unc_text buffer to be filled
  * @param[in]  ifdef  if conditional as chunk list
  */
-static void generate_if_conditional_as_text(unc_text &dst, chunk_t *ifdef);
+static void generate_if_conditional_as_text(unc_text &dst, Chunk *ifdef);
 
 
 /**
@@ -105,7 +105,7 @@ static void generate_if_conditional_as_text(unc_text &dst, chunk_t *ifdef);
  * NOTE: it is assumed that a comment will contain at most one of each type
  * of keyword.
  */
-static void do_kw_subst(chunk_t *pc);
+static void do_kw_subst(Chunk *pc);
 
 
 //! All output text is sent here, one char at a time.
@@ -188,7 +188,7 @@ static int next_up(const unc_text &text, size_t idx, const unc_text &tag);
  *
  * @return the last chunk output'd
  */
-static chunk_t *output_comment_c(chunk_t *pc);
+static Chunk *output_comment_c(Chunk *pc);
 
 
 /**
@@ -197,7 +197,7 @@ static chunk_t *output_comment_c(chunk_t *pc);
  *
  * @return the last chunk output'd
  */
-static chunk_t *output_comment_cpp(chunk_t *pc);
+static Chunk *output_comment_cpp(Chunk *pc);
 
 
 static void cmt_trim_whitespace(unc_text &line, bool in_preproc);
@@ -218,7 +218,7 @@ static void cmt_trim_whitespace(unc_text &line, bool in_preproc);
 static void add_comment_text(const unc_text &text, cmt_reflow &cmt, bool esc_close, size_t continuation_indent = 0);
 
 
-static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc);
+static void output_cmt_start(cmt_reflow &cmt, Chunk *pc);
 
 
 /**
@@ -228,7 +228,7 @@ static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc);
  *  2. There is exactly one newline between then
  *  3. They are indented to the same level
  */
-static bool can_combine_comment(chunk_t *pc, cmt_reflow &cmt);
+static bool can_combine_comment(Chunk *pc, cmt_reflow &cmt);
 
 
 #define LOG_CONTTEXT() \
@@ -471,7 +471,7 @@ void output_parsed(FILE *pfile, bool withOptions)
    fprintf(pfile, "# Line                Tag         Parent_type  Type of the parent         Columns Br/Lvl/pp         Flag   Nl  Text");
 #endif // ifdef WIN32
 
-   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
 #ifdef WIN32
       fprintf(pfile, "%s# %3d>%19.19s|%19.19s|%19.19s[%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
@@ -526,7 +526,7 @@ void output_parsed_csv(FILE *pfile)
    fprintf(pfile, "Line,Tag,Parent_type,Type of the parent,Column,Orig Col Strt,"
            "Orig Col End,Orig Sp Before,Br,Lvl,pp,Flags,Nl Before,Nl After,Text,");
 
-   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       fprintf(pfile, "%s%zu,%s,%s,%s,%zu,%zu,%zu,%d,%zu,%zu,%zu,",
               eol_marker, pc->orig_line, get_token_name(pc->type),
@@ -594,7 +594,7 @@ void output_text(FILE *pfile)
    {
       write_bom();
    }
-   chunk_t *pc;
+   Chunk *pc;
 
    if (cpd.frag_cols > 0)
    {
@@ -667,7 +667,7 @@ void output_text(FILE *pfile)
             else
             {
                // Try to keep the same relative spacing
-               chunk_t *prev = chunk_get_prev(pc);
+               Chunk *prev = chunk_get_prev(pc);
 
                if (chunk_is_token(prev, CT_PP_IGNORE))
                {
@@ -834,7 +834,7 @@ void output_text(FILE *pfile)
                reindent_line(pc, cpd.column);
             }
             // not the first item on a line
-            chunk_t *prev = chunk_get_prev(pc);
+            Chunk *prev = chunk_get_prev(pc);
             log_rule_B("align_with_tabs");
             allow_tabs = (  options::align_with_tabs()
                          && pc->flags.test(PCF_WAS_ALIGNED)
@@ -1377,7 +1377,7 @@ static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str)
 
 
 // TODO: can we use search_next_chunk here?
-static chunk_t *get_next_function(chunk_t *pc)
+static Chunk *get_next_function(Chunk *pc)
 {
    while ((pc = chunk_get_next(pc)) != nullptr)
    {
@@ -1394,25 +1394,25 @@ static chunk_t *get_next_function(chunk_t *pc)
 }
 
 
-static chunk_t *get_next_class(chunk_t *pc)
+static Chunk *get_next_class(Chunk *pc)
 {
    return(chunk_get_next(chunk_search_next_cat(pc, CT_CLASS)));
 }
 
 
-static chunk_t *get_prev_category(chunk_t *pc)
+static Chunk *get_prev_category(Chunk *pc)
 {
    return(chunk_search_prev_cat(pc, CT_OC_CATEGORY));
 }
 
 
-static chunk_t *get_next_scope(chunk_t *pc)
+static Chunk *get_next_scope(Chunk *pc)
 {
    return(chunk_search_next_cat(pc, CT_OC_SCOPE));
 }
 
 
-static chunk_t *get_prev_oc_class(chunk_t *pc)
+static Chunk *get_prev_oc_class(Chunk *pc)
 {
    return(chunk_search_prev_cat(pc, CT_OC_CLASS));
 }
@@ -1592,7 +1592,7 @@ static void add_comment_text(const unc_text &text,
 } // add_comment_text
 
 
-static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc)
+static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
 {
    cmt.pc          = pc;
    cmt.column      = pc->column;
@@ -1669,7 +1669,7 @@ static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc)
 } // output_cmt_start
 
 
-static bool can_combine_comment(chunk_t *pc, cmt_reflow &cmt)
+static bool can_combine_comment(Chunk *pc, cmt_reflow &cmt)
 {
    // We can't combine if there is something other than a newline next
    if (get_chunk_parent_type(pc) == CT_COMMENT_START)
@@ -1677,7 +1677,7 @@ static bool can_combine_comment(chunk_t *pc, cmt_reflow &cmt)
       return(false);
    }
    // next is a newline for sure, make sure it is a single newline
-   chunk_t *next = chunk_get_next(pc);
+   Chunk *next = chunk_get_next(pc);
 
    if (  next != nullptr
       && next->nl_count == 1)
@@ -1700,7 +1700,7 @@ static bool can_combine_comment(chunk_t *pc, cmt_reflow &cmt)
 } // can_combine_comment
 
 
-static chunk_t *output_comment_c(chunk_t *first)
+static Chunk *output_comment_c(Chunk *first)
 {
    cmt_reflow cmt;
 
@@ -1748,7 +1748,7 @@ static chunk_t *output_comment_c(chunk_t *first)
    {
       add_comment_text("\n", cmt, false);
    }
-   chunk_t  *pc = first;
+   Chunk    *pc = first;
    unc_text tmp;
 
    while (can_combine_comment(pc, cmt))
@@ -1800,7 +1800,7 @@ static chunk_t *output_comment_c(chunk_t *first)
 } // output_comment_c
 
 
-static chunk_t *output_comment_cpp(chunk_t *first)
+static Chunk *output_comment_cpp(Chunk *first)
 {
    cmt_reflow cmt;
 
@@ -1993,8 +1993,8 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    {
       add_text(" ");
    }
-   chunk_t *pc = first;
-   int     offs;
+   Chunk *pc = first;
+   int   offs;
 
    while (can_combine_comment(pc, cmt))
    {
@@ -2115,7 +2115,7 @@ static std::map<std::size_t, std::pair<std::wregex, std::wregex> > get_reflow_fo
 } // get_reflow_fold_regex_map
 
 
-static void output_comment_multi(chunk_t *pc)
+static void output_comment_multi(Chunk *pc)
 {
    if (pc == nullptr)
    {
@@ -2676,7 +2676,7 @@ static void output_comment_multi(chunk_t *pc)
 } // output_comment_multi
 
 
-static bool kw_fcn_filename(chunk_t *cmt, unc_text &out_txt)
+static bool kw_fcn_filename(Chunk *cmt, unc_text &out_txt)
 {
    UNUSED(cmt);
    out_txt.append(path_basename(cpd.filename.c_str()));
@@ -2684,13 +2684,13 @@ static bool kw_fcn_filename(chunk_t *cmt, unc_text &out_txt)
 }
 
 
-static bool kw_fcn_class(chunk_t *cmt, unc_text &out_txt)
+static bool kw_fcn_class(Chunk *cmt, unc_text &out_txt)
 {
-   chunk_t *tmp = nullptr;
+   Chunk *tmp = nullptr;
 
    if (language_is_set(LANG_CPP | LANG_OC))
    {
-      chunk_t *fcn = get_next_function(cmt);
+      Chunk *fcn = get_next_function(cmt);
 
       if (chunk_is_token(fcn, CT_OC_MSG_DECL))
       {
@@ -2735,9 +2735,9 @@ static bool kw_fcn_class(chunk_t *cmt, unc_text &out_txt)
 } // kw_fcn_class
 
 
-static bool kw_fcn_message(chunk_t *cmt, unc_text &out_txt)
+static bool kw_fcn_message(Chunk *cmt, unc_text &out_txt)
 {
-   chunk_t *fcn = get_next_function(cmt);
+   Chunk *fcn = get_next_function(cmt);
 
    if (!fcn)
    {
@@ -2745,8 +2745,8 @@ static bool kw_fcn_message(chunk_t *cmt, unc_text &out_txt)
    }
    out_txt.append(fcn->str);
 
-   chunk_t *tmp  = chunk_get_next_nc_nnl(fcn);
-   chunk_t *word = nullptr;
+   Chunk *tmp  = chunk_get_next_nc_nnl(fcn);
+   Chunk *word = nullptr;
 
    while (tmp != nullptr)
    {
@@ -2776,9 +2776,9 @@ static bool kw_fcn_message(chunk_t *cmt, unc_text &out_txt)
 } // kw_fcn_message
 
 
-static bool kw_fcn_category(chunk_t *cmt, unc_text &out_txt)
+static bool kw_fcn_category(Chunk *cmt, unc_text &out_txt)
 {
-   chunk_t *category = get_prev_category(cmt);
+   Chunk *category = get_prev_category(cmt);
 
    if (category)
    {
@@ -2790,9 +2790,9 @@ static bool kw_fcn_category(chunk_t *cmt, unc_text &out_txt)
 } // kw_fcn_category
 
 
-static bool kw_fcn_scope(chunk_t *cmt, unc_text &out_txt)
+static bool kw_fcn_scope(Chunk *cmt, unc_text &out_txt)
 {
-   chunk_t *scope = get_next_scope(cmt);
+   Chunk *scope = get_next_scope(cmt);
 
    if (scope)
    {
@@ -2803,9 +2803,9 @@ static bool kw_fcn_scope(chunk_t *cmt, unc_text &out_txt)
 } // kw_fcn_scope
 
 
-static bool kw_fcn_function(chunk_t *cmt, unc_text &out_txt)
+static bool kw_fcn_function(Chunk *cmt, unc_text &out_txt)
 {
-   chunk_t *fcn = get_next_function(cmt);
+   Chunk *fcn = get_next_function(cmt);
 
    if (fcn)
    {
@@ -2826,22 +2826,22 @@ static bool kw_fcn_function(chunk_t *cmt, unc_text &out_txt)
 }
 
 
-static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
+static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
 {
-   chunk_t *fcn = get_next_function(cmt);
+   Chunk *fcn = get_next_function(cmt);
 
    if (!fcn)
    {
       return(false);
    }
-   chunk_t *fpo;
-   chunk_t *fpc;
-   bool    has_param = true;
-   bool    need_nl   = false;
+   Chunk *fpo;
+   Chunk *fpc;
+   bool  has_param = true;
+   bool  need_nl   = false;
 
    if (chunk_is_token(fcn, CT_OC_MSG_DECL))
    {
-      chunk_t *tmp = chunk_get_next_nc_nnl(fcn);
+      Chunk *tmp = chunk_get_next_nc_nnl(fcn);
       has_param = false;
 
       while (tmp != nullptr)
@@ -2889,7 +2889,7 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
          return(true);
       }
    }
-   chunk_t *tmp;
+   Chunk *tmp;
 
    // Check for 'foo()' and 'foo(void)'
    if (chunk_get_next_nc_nnl(fpo) == fpc)
@@ -2909,7 +2909,7 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
 
    if (has_param)
    {
-      chunk_t *prev = nullptr;
+      Chunk *prev = nullptr;
       tmp = fpo;
 
       while ((tmp = chunk_get_next(tmp)) != nullptr)
@@ -2968,9 +2968,9 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
 } // kw_fcn_javaparam
 
 
-static bool kw_fcn_fclass(chunk_t *cmt, unc_text &out_txt)
+static bool kw_fcn_fclass(Chunk *cmt, unc_text &out_txt)
 {
-   chunk_t *fcn = get_next_function(cmt);
+   Chunk *fcn = get_next_function(cmt);
 
    if (!fcn)
    {
@@ -2980,7 +2980,7 @@ static bool kw_fcn_fclass(chunk_t *cmt, unc_text &out_txt)
    if (fcn->flags.test(PCF_IN_CLASS))
    {
       // if inside a class, we need to find to the class name
-      chunk_t *tmp = chunk_get_prev_type(fcn, CT_BRACE_OPEN, fcn->level - 1);
+      Chunk *tmp = chunk_get_prev_type(fcn, CT_BRACE_OPEN, fcn->level - 1);
       tmp = chunk_get_prev_type(tmp, CT_CLASS, tmp->level);
       tmp = chunk_get_next_nc_nnl(tmp);
 
@@ -2999,7 +2999,7 @@ static bool kw_fcn_fclass(chunk_t *cmt, unc_text &out_txt)
    else
    {
       // if outside a class, we expect "CLASS::METHOD(...)"
-      chunk_t *tmp = chunk_get_prev_nc_nnl(fcn);
+      Chunk *tmp = chunk_get_prev_nc_nnl(fcn);
 
       if (chunk_is_token(tmp, CT_OPERATOR))
       {
@@ -3019,7 +3019,7 @@ static bool kw_fcn_fclass(chunk_t *cmt, unc_text &out_txt)
 } // kw_fcn_fclass
 
 
-static bool kw_fcn_year(chunk_t *cmt, unc_text &out_txt)
+static bool kw_fcn_year(Chunk *cmt, unc_text &out_txt)
 {
    UNUSED(cmt);
    time_t now = time(nullptr);
@@ -3032,7 +3032,7 @@ static bool kw_fcn_year(chunk_t *cmt, unc_text &out_txt)
 struct kw_subst_t
 {
    const char *tag;
-   bool       (*func)(chunk_t *cmt, unc_text &out_txt);
+   bool       (*func)(Chunk *cmt, unc_text &out_txt);
 };
 
 
@@ -3050,7 +3050,7 @@ static const kw_subst_t kw_subst_table[] =
 };
 
 
-static void do_kw_subst(chunk_t *pc)
+static void do_kw_subst(Chunk *pc)
 {
    for (const auto &kw : kw_subst_table)
    {
@@ -3091,7 +3091,7 @@ static void do_kw_subst(chunk_t *pc)
 } // do_kw_subst
 
 
-static void output_comment_multi_simple(chunk_t *pc)
+static void output_comment_multi_simple(Chunk *pc)
 {
    if (pc == nullptr)
    {
@@ -3246,13 +3246,13 @@ static void output_comment_multi_simple(chunk_t *pc)
 } // output_comment_multi_simple
 
 
-static void generate_if_conditional_as_text(unc_text &dst, chunk_t *ifdef)
+static void generate_if_conditional_as_text(unc_text &dst, Chunk *ifdef)
 {
    int column = -1;
 
    dst.clear();
 
-   for (chunk_t *pc = ifdef; pc != nullptr; pc = chunk_get_next(pc))
+   for (Chunk *pc = ifdef; pc != nullptr; pc = chunk_get_next(pc))
    {
       if (column == -1)
       {
@@ -3291,10 +3291,10 @@ static void generate_if_conditional_as_text(unc_text &dst, chunk_t *ifdef)
 
 void add_long_preprocessor_conditional_block_comment(void)
 {
-   chunk_t *pp_start = nullptr;
-   chunk_t *pp_end   = nullptr;
+   Chunk *pp_start = nullptr;
+   Chunk *pp_end   = nullptr;
 
-   for (chunk_t *pc = chunk_get_head(); pc; pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = chunk_get_head(); pc; pc = chunk_get_next_nc_nnl(pc))
    {
       // just track the preproc level:
       if (chunk_is_token(pc, CT_PREPROC))
@@ -3314,11 +3314,11 @@ void add_long_preprocessor_conditional_block_comment(void)
       }
 #endif
 
-      chunk_t *br_close;
-      chunk_t *br_open = pc;
-      size_t  nl_count = 0;
+      Chunk  *br_close;
+      Chunk  *br_open = pc;
+      size_t nl_count = 0;
 
-      chunk_t *tmp = pc;
+      Chunk  *tmp = pc;
 
       while ((tmp = chunk_get_next(tmp)) != nullptr)
       {

@@ -16,14 +16,14 @@ enum class comment_align_e : unsigned int
    ENDIF,
 };
 
-// chunk_list.h
+// chunk.h
 enum class scope_e : unsigned int
 {
    ALL,      /**< search in all kind of chunks */
    PREPROC,  /**< search only in preprocessor chunks */
 };
 
-// chunk_list.cpp
+// chunk.cpp
 enum class direction_e : unsigned int
 {
    FORWARD,

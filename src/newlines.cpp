@@ -52,7 +52,7 @@ static void mark_change(const char *func, size_t line);
  *    - unless the brace belongs to a namespace
  *      and nl_inside_namespace is non-zero
  */
-static bool can_increase_nl(chunk_t *nl);
+static bool can_increase_nl(Chunk *nl);
 
 
 /**
@@ -65,15 +65,15 @@ static bool can_increase_nl(chunk_t *nl);
  * b. if/while/switch/for/etc ") {"
  * d. else "} else {"
  */
-static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next);
+static void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next);
 
 
 //! Make sure there is a blank line after a commented group of values
-static void newlines_double_space_struct_enum_union(chunk_t *open_brace);
+static void newlines_double_space_struct_enum_union(Chunk *open_brace);
 
 
 //! If requested, make sure each entry in an enum is on its own line
-static void newlines_enum_entries(chunk_t *open_brace, iarf_e av);
+static void newlines_enum_entries(Chunk *open_brace, iarf_e av);
 
 
 /**
@@ -83,19 +83,19 @@ static void newlines_enum_entries(chunk_t *open_brace, iarf_e av);
  *  true: a new line may be added
  * false: a new line may NOT be added
  */
-static bool one_liner_nl_ok(chunk_t *pc);
+static bool one_liner_nl_ok(Chunk *pc);
 
 
-static void nl_create_one_liner(chunk_t *vbrace_open);
+static void nl_create_one_liner(Chunk *vbrace_open);
 
 
-static void nl_create_list_liner(chunk_t *brace_open);
+static void nl_create_list_liner(Chunk *brace_open);
 
 
 /**
  * Test if a chunk belongs to a one-liner method definition inside a class body
  */
-static bool is_class_one_liner(chunk_t *pc);
+static bool is_class_one_liner(Chunk *pc);
 
 
 /**
@@ -106,11 +106,11 @@ static bool is_class_one_liner(chunk_t *pc);
  * a definition of the same sort as surrounding prototypes. This checks against
  * either the function name, or the function closing brace.
  */
-bool is_func_proto_group(chunk_t *pc, c_token_t one_liner_type);
+bool is_func_proto_group(Chunk *pc, c_token_t one_liner_type);
 
 
 //! Find the next newline or nl_cont
-static void nl_handle_define(chunk_t *pc);
+static void nl_handle_define(Chunk *pc);
 
 
 /**
@@ -120,24 +120,24 @@ static void nl_handle_define(chunk_t *pc);
  * @param after   The second chunk
  * @param av      The IARF value
  */
-static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av, bool check_nl_assign_leave_one_liners = false);
+static void newline_iarf_pair(Chunk *before, Chunk *after, iarf_e av, bool check_nl_assign_leave_one_liners = false);
 
 
 /**
  * Adds newlines to multi-line function call/decl/def
  * Start points to the open paren
  */
-static void newline_func_multi_line(chunk_t *start);
+static void newline_func_multi_line(Chunk *start);
 
 
-static void newline_template(chunk_t *start);
+static void newline_template(Chunk *start);
 
 
 /**
  * Formats a function declaration
  * Start points to the open paren
  */
-static void newline_func_def_or_call(chunk_t *start);
+static void newline_func_def_or_call(Chunk *start);
 
 
 /**
@@ -147,11 +147,11 @@ static void newline_func_def_or_call(chunk_t *start);
  * [myObject doFooWith:arg1 name:arg2  // some lines with >1 arg
  *            error:arg3];
  */
-static void newline_oc_msg(chunk_t *start);
+static void newline_oc_msg(Chunk *start);
 
 
 //! Ensure that the next non-comment token after close brace is a newline
-static void newline_end_newline(chunk_t *br_close);
+static void newline_end_newline(Chunk *br_close);
 
 
 /**
@@ -163,7 +163,7 @@ static void newline_end_newline(chunk_t *br_close);
  * For virtual braces, we can only add a newline after the vbrace open.
  * If we do so, also add a newline after the vbrace close.
  */
-static bool newlines_if_for_while_switch(chunk_t *start, iarf_e nl_opt);
+static bool newlines_if_for_while_switch(Chunk *start, iarf_e nl_opt);
 
 
 /**
@@ -172,10 +172,10 @@ static bool newlines_if_for_while_switch(chunk_t *start, iarf_e nl_opt);
  * Doesn't do anything if open brace before it
  * "code\n\ncomment\nif (...)" or "code\ncomment\nif (...)"
  */
-static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e nl_opt);
+static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl_opt);
 
 
-static void blank_line_set(chunk_t *pc, Option<unsigned> &opt);
+static void blank_line_set(Chunk *pc, Option<unsigned> &opt);
 
 
 /**
@@ -185,17 +185,17 @@ static void blank_line_set(chunk_t *pc, Option<unsigned> &opt);
  * Doesn't do anything if open brace before it
  * "code\n\ncomment\nif (...)" or "code\ncomment\nif (...)"
  */
-static void newlines_func_pre_blank_lines(chunk_t *start, c_token_t start_type);
+static void newlines_func_pre_blank_lines(Chunk *start, c_token_t start_type);
 
 
-static chunk_t *get_closing_brace(chunk_t *start);
+static Chunk *get_closing_brace(Chunk *start);
 
 
 /**
  * remove any consecutive newlines following this chunk
  * skip vbraces
  */
-static void remove_next_newlines(chunk_t *start);
+static void remove_next_newlines(Chunk *start);
 
 
 /**
@@ -205,7 +205,7 @@ static void remove_next_newlines(chunk_t *start);
  * VBraces will stay VBraces, conversion to real ones should have already happened
  * "if (...)\ncode\ncode" or "if (...)\ncode\n\ncode"
  */
-static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e nl_opt);
+static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e nl_opt);
 
 
 /**
@@ -216,9 +216,9 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
  *
  * "struct [name] {" or "struct [name] \n {"
  */
-static void newlines_struct_union(chunk_t *start, iarf_e nl_opt, bool leave_trailing);
-static void newlines_enum(chunk_t *start);
-static void newlines_namespace(chunk_t *start); // Issue #2186
+static void newlines_struct_union(Chunk *start, iarf_e nl_opt, bool leave_trailing);
+static void newlines_enum(Chunk *start);
+static void newlines_namespace(Chunk *start); // Issue #2186
 
 
 /**
@@ -229,22 +229,22 @@ static void newlines_namespace(chunk_t *start); // Issue #2186
  *
  * @param start  The chunk - should be CT_ELSE or CT_WHILE_OF_DO
  */
-static void newlines_cuddle_uncuddle(chunk_t *start, iarf_e nl_opt);
+static void newlines_cuddle_uncuddle(Chunk *start, iarf_e nl_opt);
 
 
 /**
  * Adds/removes a newline between else and '{'.
  * "else {" or "else \n {"
  */
-static void newlines_do_else(chunk_t *start, iarf_e nl_opt);
+static void newlines_do_else(Chunk *start, iarf_e nl_opt);
 
 
 //! Check if token starts a variable declaration
-static bool is_var_def(chunk_t *pc, chunk_t *next);
+static bool is_var_def(Chunk *pc, Chunk *next);
 
 
 //! Put newline(s) before and/or after a block of variable definitions
-static chunk_t *newline_def_blk(chunk_t *start, bool fn_top);
+static Chunk *newline_def_blk(Chunk *start, bool fn_top);
 
 
 /**
@@ -268,7 +268,7 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top);
  * void foo() {
  * }
  */
-static void newlines_brace_pair(chunk_t *br_open);
+static void newlines_brace_pair(Chunk *br_open);
 
 
 /**
@@ -276,14 +276,14 @@ static void newlines_brace_pair(chunk_t *br_open);
  * or semicolon.
  * Does not work with PAWN (?)
  */
-static void newline_case(chunk_t *start);
+static void newline_case(Chunk *start);
 
 
-static void newline_case_colon(chunk_t *start);
+static void newline_case_colon(Chunk *start);
 
 
 //! Put a blank line before a return statement, unless it is after an open brace
-static void newline_before_return(chunk_t *start);
+static void newline_before_return(Chunk *start);
 
 
 /**
@@ -292,13 +292,13 @@ static void newline_before_return(chunk_t *start);
  *
  * May not work with PAWN
  */
-static void newline_after_return(chunk_t *start);
+static void newline_after_return(Chunk *start);
 
 
-static void blank_line_max(chunk_t *pc, Option<unsigned> &opt);
+static void blank_line_max(Chunk *pc, Option<unsigned> &opt);
 
 
-static iarf_e newline_template_option(chunk_t *pc, iarf_e special, iarf_e base, iarf_e fallback);
+static iarf_e newline_template_option(Chunk *pc, iarf_e special, iarf_e base, iarf_e fallback);
 
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
@@ -318,20 +318,20 @@ static void mark_change(const char *func, size_t line)
 } // mark_change
 
 
-static bool can_increase_nl(chunk_t *nl)
+static bool can_increase_nl(Chunk *nl)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *prev = chunk_get_prev_nc(nl);
+   Chunk *prev = chunk_get_prev_nc(nl);
 
-   chunk_t *pcmt = chunk_get_prev(nl);
-   chunk_t *next = chunk_get_next(nl);
+   Chunk *pcmt = chunk_get_prev(nl);
+   Chunk *next = chunk_get_next(nl);
 
    if (options::nl_squeeze_ifdef())
    {
       log_rule_B("nl_squeeze_ifdef");
 
-      chunk_t *pp_start = chunk_get_pp_start(prev);
+      Chunk *pp_start = chunk_get_pp_start(prev);
 
       if (  pp_start != nullptr
          && (  get_chunk_parent_type(pp_start) == CT_PP_IF
@@ -453,7 +453,7 @@ static bool can_increase_nl(chunk_t *nl)
 } // can_increase_nl
 
 
-static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
+static void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next)
 {
    LOG_FUNC_ENTRY();
 
@@ -494,11 +494,11 @@ static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
 } // setup_newline_add
 
 
-void double_newline(chunk_t *nl)
+void double_newline(Chunk *nl)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *prev = chunk_get_prev(nl);
+   Chunk *prev = chunk_get_prev(nl);
 
    if (prev == nullptr)
    {
@@ -531,12 +531,12 @@ void double_newline(chunk_t *nl)
 } // double_newline
 
 
-chunk_t *newline_add_before(chunk_t *pc)
+Chunk *newline_add_before(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t nl;
-   chunk_t *prev = chunk_get_prev_nvb(pc);
+   Chunk nl;
+   Chunk *prev = chunk_get_prev_nvb(pc);
 
    if (chunk_is_newline(prev))
    {
@@ -558,11 +558,11 @@ chunk_t *newline_add_before(chunk_t *pc)
 } // newline_add_before
 
 
-chunk_t *newline_force_before(chunk_t *pc)
+Chunk *newline_force_before(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *nl = newline_add_before(pc);
+   Chunk *nl = newline_add_before(pc);
 
    if (  nl != nullptr
       && nl->nl_count > 1)
@@ -574,7 +574,7 @@ chunk_t *newline_force_before(chunk_t *pc)
 } // newline_force_before
 
 
-chunk_t *newline_add_after(chunk_t *pc)
+Chunk *newline_add_after(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
@@ -582,7 +582,7 @@ chunk_t *newline_add_after(chunk_t *pc)
    {
       return(nullptr);
    }
-   chunk_t *next = chunk_get_next_nvb(pc);
+   Chunk *next = chunk_get_next_nvb(pc);
 
    if (chunk_is_newline(next))
    {
@@ -593,7 +593,7 @@ chunk_t *newline_add_after(chunk_t *pc)
            __func__, __LINE__, pc->text(), pc->orig_line);
    log_func_stack_inline(LNEWLINE);
 
-   chunk_t nl;
+   Chunk nl;
 
    nl.orig_line = pc->orig_line;
    nl.orig_col  = pc->orig_col;
@@ -607,11 +607,11 @@ chunk_t *newline_add_after(chunk_t *pc)
 } // newline_add_after
 
 
-chunk_t *newline_force_after(chunk_t *pc)
+Chunk *newline_force_after(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *nl = newline_add_after(pc);   // add a newline
+   Chunk *nl = newline_add_after(pc);   // add a newline
 
    if (  nl != nullptr
       && nl->nl_count > 1) // check if there are more than 1 newline
@@ -623,12 +623,12 @@ chunk_t *newline_force_after(chunk_t *pc)
 } // newline_force_after
 
 
-static void newline_end_newline(chunk_t *br_close)
+static void newline_end_newline(Chunk *br_close)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *next = chunk_get_next(br_close);
-   chunk_t nl;
+   Chunk *next = chunk_get_next(br_close);
+   Chunk nl;
 
    if (  !chunk_is_newline(next)
       && !chunk_is_comment(next))
@@ -664,7 +664,7 @@ static void newline_end_newline(chunk_t *br_close)
 } // newline_end_newline
 
 
-static void newline_min_after(chunk_t *ref, size_t count, pcf_flag_e flag)
+static void newline_min_after(Chunk *ref, size_t count, pcf_flag_e flag)
 {
    LOG_FUNC_ENTRY();
 
@@ -673,7 +673,7 @@ static void newline_min_after(chunk_t *ref, size_t count, pcf_flag_e flag)
            pcf_flags_str(flag).c_str());
    log_func_stack_inline(LNEWLINE);
 
-   chunk_t *pc = ref;
+   Chunk *pc = ref;
 
    do
    {
@@ -686,7 +686,7 @@ static void newline_min_after(chunk_t *ref, size_t count, pcf_flag_e flag)
       LOG_FMT(LNEWLINE, "%s(%d): type is %s, orig_line %zu, orig_col %zu\n",
               __func__, __LINE__, get_token_name(pc->type), pc->orig_line, pc->orig_col);
    }
-   chunk_t *next = chunk_get_next(pc);
+   Chunk *next = chunk_get_next(pc);
 
    if (next == nullptr)
    {
@@ -714,7 +714,7 @@ static void newline_min_after(chunk_t *ref, size_t count, pcf_flag_e flag)
 } // newline_min_after
 
 
-chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
+Chunk *newline_add_between(Chunk *start, Chunk *end)
 {
    LOG_FUNC_ENTRY();
 
@@ -741,7 +741,7 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
     * Scan for a line break, if there is a line break between start and end
     * we won't add another one
     */
-   for (chunk_t *pc = start; pc != end; pc = chunk_get_next(pc))
+   for (Chunk *pc = start; pc != end; pc = chunk_get_next(pc))
    {
       if (chunk_is_newline(pc))
       {
@@ -755,7 +755,7 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
     */
    if (chunk_is_token(end, CT_BRACE_OPEN))
    {
-      chunk_t *pc = chunk_get_next(end);
+      Chunk *pc = chunk_get_next(end);
 
       if (chunk_is_comment(pc))
       {
@@ -764,12 +764,12 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
          if (chunk_is_newline(pc))
          {
             // are there some more (comment + newline)s ?
-            chunk_t *pc1 = chunk_get_next_nc_nnl(end);
+            Chunk *pc1 = chunk_get_next_nc_nnl(end);
 
             if (!chunk_is_newline(pc1))
             {
                // yes, go back
-               chunk_t *pc2 = chunk_get_prev(pc1);
+               Chunk *pc2 = chunk_get_prev(pc1);
                pc = pc2;
             }
          }
@@ -797,13 +797,13 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
    {
       LOG_FMT(LNEWLINE, "%s(%d):\n", __func__, __LINE__);
    }
-   chunk_t *tmp = newline_add_before(end);
+   Chunk *tmp = newline_add_before(end);
 
    return(tmp);
 } // newline_add_between
 
 
-void newline_del_between(chunk_t *start, chunk_t *end)
+void newline_del_between(Chunk *start, Chunk *end)
 {
    LOG_FUNC_ENTRY();
 
@@ -820,16 +820,16 @@ void newline_del_between(chunk_t *start, chunk_t *end)
    {
       return;
    }
-   chunk_t *pc           = start;
-   bool    start_removed = false;
+   Chunk *pc           = start;
+   bool  start_removed = false;
 
    do
    {
-      chunk_t *next = chunk_get_next(pc);
+      Chunk *next = chunk_get_next(pc);
 
       if (chunk_is_newline(pc))
       {
-         chunk_t *prev = chunk_get_prev(pc);
+         Chunk *prev = chunk_get_prev(pc);
 
          if (  (  !chunk_is_comment(prev)
                && !chunk_is_comment(next))
@@ -878,23 +878,23 @@ void newlines_sparens()
 {
    LOG_FUNC_ENTRY();
 
-   //chunk_t *sparen_open;
+   //Chunk *sparen_open;
 
-   for (chunk_t *sparen_open = chunk_get_next_type(chunk_get_head(), CT_SPAREN_OPEN, ANY_LEVEL);
+   for (Chunk *sparen_open = chunk_get_next_type(chunk_get_head(), CT_SPAREN_OPEN, ANY_LEVEL);
         sparen_open != nullptr; sparen_open = chunk_get_next_type(
            sparen_open, CT_SPAREN_OPEN, ANY_LEVEL))
    {
-      chunk_t *sparen_close = chunk_get_next_type(sparen_open, CT_SPAREN_CLOSE, sparen_open->level);
+      Chunk *sparen_close = chunk_get_next_type(sparen_open, CT_SPAREN_CLOSE, sparen_open->level);
 
       if (sparen_close == nullptr)
       {
          continue;
       }
-      chunk_t *sparen_content_start = chunk_get_next_nnl(sparen_open);
-      chunk_t *sparen_content_end   = chunk_get_prev_nnl(sparen_close);
-      bool    is_multiline          = (
+      Chunk *sparen_content_start = chunk_get_next_nnl(sparen_open);
+      Chunk *sparen_content_end   = chunk_get_prev_nnl(sparen_close);
+      bool  is_multiline          = (
          sparen_content_start != sparen_content_end
-                                      && !are_chunks_in_same_line(sparen_content_start, sparen_content_end));
+                                    && !are_chunks_in_same_line(sparen_content_start, sparen_content_end));
 
       // Add a newline after '(' if an if/for/while/switch condition spans multiple lines,
       // as e.g. required by the ROS 2 development style guidelines:
@@ -915,7 +915,7 @@ void newlines_sparens()
       else
       {
          // add/remove trailing newline in an if condition
-         chunk_t *ctrl_structure = chunk_get_prev_nc_nnl(sparen_open);
+         Chunk *ctrl_structure = chunk_get_prev_nc_nnl(sparen_open);
 
          if (  chunk_is_token(ctrl_structure, CT_IF)
             || chunk_is_token(ctrl_structure, CT_ELSEIF))
@@ -928,7 +928,7 @@ void newlines_sparens()
 } // newlines_sparens
 
 
-static bool newlines_if_for_while_switch(chunk_t *start, iarf_e nl_opt)
+static bool newlines_if_for_while_switch(Chunk *start, iarf_e nl_opt)
 {
    LOG_FUNC_ENTRY();
 
@@ -940,13 +940,13 @@ static bool newlines_if_for_while_switch(chunk_t *start, iarf_e nl_opt)
    {
       return(false);
    }
-   bool    retval = false;
-   chunk_t *pc    = chunk_get_next_nc_nnl(start);
+   bool  retval = false;
+   Chunk *pc    = chunk_get_next_nc_nnl(start);
 
    if (chunk_is_token(pc, CT_SPAREN_OPEN))
    {
-      chunk_t *close_paren = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level);
-      chunk_t *brace_open  = chunk_get_next_nc_nnl(close_paren);
+      Chunk *close_paren = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level);
+      Chunk *brace_open  = chunk_get_next_nc_nnl(close_paren);
 
       if (  (  chunk_is_token(brace_open, CT_BRACE_OPEN)
             || chunk_is_token(brace_open, CT_VBRACE_OPEN))
@@ -985,7 +985,7 @@ static bool newlines_if_for_while_switch(chunk_t *start, iarf_e nl_opt)
          else
          {
             newline_iarf_pair(close_paren, brace_open, nl_opt);
-            chunk_t *next = chunk_get_next_nc_nnl(brace_open);
+            Chunk *next = chunk_get_next_nc_nnl(brace_open);
 
             if (brace_open->type != next->type)                       // Issue #2836
             {
@@ -1002,7 +1002,7 @@ static bool newlines_if_for_while_switch(chunk_t *start, iarf_e nl_opt)
 } // newlines_if_for_while_switch
 
 
-static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e nl_opt)
+static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl_opt)
 {
    LOG_FUNC_ENTRY();
 
@@ -1024,11 +1024,11 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e 
     *   2 newlines in a row (don't add)
     *   something else (don't remove)
     */
-   for (chunk_t *pc = chunk_get_prev(start); pc != nullptr; pc = chunk_get_prev(pc))
+   for (Chunk *pc = chunk_get_prev(start); pc != nullptr; pc = chunk_get_prev(pc))
    {
-      size_t  level    = start->level;
-      bool    do_add   = (nl_opt & IARF_ADD) != IARF_IGNORE; // forcing value to bool
-      chunk_t *last_nl = nullptr;
+      size_t level    = start->level;
+      bool   do_add   = (nl_opt & IARF_ADD) != IARF_IGNORE;  // forcing value to bool
+      Chunk  *last_nl = nullptr;
 
       if (chunk_is_newline(pc))
       {
@@ -1050,7 +1050,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e 
                   pc->nl_count = nl_count;
                   MARK_CHANGE();
                }
-               chunk_t *prev;
+               Chunk *prev;
 
                // can keep using pc because anything other than newline stops loop, and we delete if newline
                while (chunk_is_newline(prev = chunk_get_prev_nvb(pc)))
@@ -1098,7 +1098,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e 
             }
             else
             {
-               chunk_t *next;
+               Chunk *next;
 
                // we didn't run into a newline, so we need to add one
                if (  ((next = chunk_get_next(pc)) != nullptr)
@@ -1119,7 +1119,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, iarf_e 
 } // newlines_if_for_while_switch_pre_blank_lines
 
 
-static void blank_line_set(chunk_t *pc, Option<unsigned> &opt)
+static void blank_line_set(Chunk *pc, Option<unsigned> &opt)
 {
    LOG_FUNC_ENTRY();
 
@@ -1140,7 +1140,7 @@ static void blank_line_set(chunk_t *pc, Option<unsigned> &opt)
 } // blank_line_set
 
 
-bool do_it_newlines_func_pre_blank_lines(chunk_t *last_nl, c_token_t start_type)
+bool do_it_newlines_func_pre_blank_lines(Chunk *last_nl, c_token_t start_type)
 {
    LOG_FUNC_ENTRY();
 
@@ -1242,7 +1242,7 @@ bool do_it_newlines_func_pre_blank_lines(chunk_t *last_nl, c_token_t start_type)
 } // do_it_newlines_func_pre_blank_lines
 
 
-static void newlines_func_pre_blank_lines(chunk_t *start, c_token_t start_type)
+static void newlines_func_pre_blank_lines(Chunk *start, c_token_t start_type)
 {
    LOG_FUNC_ENTRY();
 
@@ -1274,10 +1274,10 @@ static void newlines_func_pre_blank_lines(chunk_t *start, c_token_t start_type)
     *   - a destructor
     *   - something else (don't remove)
     */
-   chunk_t *pc           = nullptr;
-   chunk_t *last_nl      = nullptr;
-   chunk_t *last_comment = nullptr;
-   size_t  first_line    = start->orig_line;
+   Chunk  *pc           = nullptr;
+   Chunk  *last_nl      = nullptr;
+   Chunk  *last_comment = nullptr;
+   size_t first_line    = start->orig_line;
 
    for (pc = chunk_get_prev(start); pc != nullptr; pc = chunk_get_prev(pc))
    {
@@ -1373,12 +1373,12 @@ static void newlines_func_pre_blank_lines(chunk_t *start, c_token_t start_type)
 } // newlines_func_pre_blank_lines
 
 
-static chunk_t *get_closing_brace(chunk_t *start)
+static Chunk *get_closing_brace(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *pc;
-   size_t  level = start->level;
+   Chunk  *pc;
+   size_t level = start->level;
 
    for (pc = start; (pc = chunk_get_next(pc)) != nullptr;)
    {
@@ -1401,11 +1401,11 @@ static chunk_t *get_closing_brace(chunk_t *start)
 } // get_closing_brace
 
 
-static void remove_next_newlines(chunk_t *start)
+static void remove_next_newlines(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *next;
+   Chunk *next;
 
    while ((next = chunk_get_next(start)) != nullptr)
    {
@@ -1427,11 +1427,11 @@ static void remove_next_newlines(chunk_t *start)
 } // remove_next_newlines
 
 
-static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e nl_opt)
+static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e nl_opt)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *prev;
+   Chunk *prev;
 
    LOG_FMT(LNEWLINE, "%s(%d): start->text() is '%s', type is %s, orig_line is %zu, orig_column is %zu\n",
            __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line, start->orig_col);
@@ -1444,7 +1444,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
    {
       return;
    }
-   chunk_t *pc = get_closing_brace(start);
+   Chunk *pc = get_closing_brace(start);
 
    // first find ending brace
    if (pc == nullptr)
@@ -1460,7 +1460,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
     */
    if (chunk_is_token(start, CT_IF))
    {
-      chunk_t *next;
+      Chunk *next;
 
       while (true)
       {
@@ -1527,7 +1527,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
 
    if (nl_opt & IARF_REMOVE)
    {
-      chunk_t *next;
+      Chunk *next;
 
       // if chunk before is a vbrace, remove any newlines after it
       if (have_pre_vbrace_nl)
@@ -1556,8 +1556,8 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
    // don't do anything with it if the next non newline chunk is a closing brace
    if (nl_opt & IARF_ADD)
    {
-      chunk_t *next;
-      chunk_t *nextNNL = chunk_get_next_nnl(pc);
+      Chunk *next;
+      Chunk *nextNNL = chunk_get_next_nnl(pc);
 
       do
       {
@@ -1636,7 +1636,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
                pc = chunk_get_next_nl(next);
                LOG_FMT(LNEWLINE, "%s(%d): pc->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
                        __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
-               chunk_t *pc2 = chunk_get_next(pc);
+               Chunk *pc2 = chunk_get_next(pc);
 
                if (pc2 != nullptr)
                {
@@ -1670,7 +1670,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, iarf_e
 } // newlines_if_for_while_switch_post_blank_lines
 
 
-static void newlines_struct_union(chunk_t *start, iarf_e nl_opt, bool leave_trailing)
+static void newlines_struct_union(Chunk *start, iarf_e nl_opt, bool leave_trailing)
 {
    LOG_FUNC_ENTRY();
 
@@ -1686,8 +1686,8 @@ static void newlines_struct_union(chunk_t *start, iarf_e nl_opt, bool leave_trai
     * step past any junk between the keyword and the open brace
     * Quit if we hit a semicolon or '=', which are not expected.
     */
-   size_t  level = start->level;
-   chunk_t *pc   = start;
+   size_t level = start->level;
+   Chunk  *pc   = start;
 
    while (  ((pc = chunk_get_next_nc_nnl(pc)) != nullptr)
          && pc->level >= level)
@@ -1706,7 +1706,7 @@ static void newlines_struct_union(chunk_t *start, iarf_e nl_opt, bool leave_trai
    if (chunk_is_token(pc, CT_BRACE_OPEN))
    {
       // Skip over embedded C comments
-      chunk_t *next = chunk_get_next(pc);
+      Chunk *next = chunk_get_next(pc);
 
       while (chunk_is_token(next, CT_COMMENT))
       {
@@ -1732,7 +1732,7 @@ static void newlines_struct_union(chunk_t *start, iarf_e nl_opt, bool leave_trai
 // identifier       - the name of the enumeration that's being declared
 // enum-base(C++11) - colon (:), followed by a type-specifier-seq
 // enumerator-list  - comma-separated list of enumerator definitions
-static void newlines_enum(chunk_t *start)
+static void newlines_enum(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
@@ -1744,35 +1744,35 @@ static void newlines_enum(chunk_t *start)
       return;
    }
    // look for 'enum class'
-   chunk_t *pcClass = chunk_get_next_nc_nnl(start);
+   Chunk *pcClass = chunk_get_next_nc_nnl(start);
 
    if (chunk_is_token(pcClass, CT_ENUM_CLASS))
    {
       log_rule_B("nl_enum_class");
       newline_iarf_pair(start, pcClass, options::nl_enum_class());
       // look for 'identifier'/ 'type'
-      chunk_t *pcType = chunk_get_next_nc_nnl(pcClass);
+      Chunk *pcType = chunk_get_next_nc_nnl(pcClass);
 
       if (chunk_is_token(pcType, CT_TYPE))
       {
          log_rule_B("nl_enum_class_identifier");
          newline_iarf_pair(pcClass, pcType, options::nl_enum_class_identifier());
          // look for ':'
-         chunk_t *pcColon = chunk_get_next_nc_nnl(pcType);
+         Chunk *pcColon = chunk_get_next_nc_nnl(pcType);
 
          if (chunk_is_token(pcColon, CT_BIT_COLON))
          {
             log_rule_B("nl_enum_identifier_colon");
             newline_iarf_pair(pcType, pcColon, options::nl_enum_identifier_colon());
             // look for 'type' i.e. unsigned
-            chunk_t *pcType1 = chunk_get_next_nc_nnl(pcColon);
+            Chunk *pcType1 = chunk_get_next_nc_nnl(pcColon);
 
             if (chunk_is_token(pcType1, CT_TYPE))
             {
                log_rule_B("nl_enum_colon_type");
                newline_iarf_pair(pcColon, pcType1, options::nl_enum_colon_type());
                // look for 'type' i.e. int
-               chunk_t *pcType2 = chunk_get_next_nc_nnl(pcType1);
+               Chunk *pcType2 = chunk_get_next_nc_nnl(pcType1);
 
                if (chunk_is_token(pcType2, CT_TYPE))
                {
@@ -1787,8 +1787,8 @@ static void newlines_enum(chunk_t *start)
     * step past any junk between the keyword and the open brace
     * Quit if we hit a semicolon or '=', which are not expected.
     */
-   size_t  level = start->level;
-   chunk_t *pc   = start;
+   size_t level = start->level;
+   Chunk  *pc   = start;
 
    while (  ((pc = chunk_get_next_nc_nnl(pc)) != nullptr)
          && pc->level >= level)
@@ -1807,7 +1807,7 @@ static void newlines_enum(chunk_t *start)
    if (chunk_is_token(pc, CT_BRACE_OPEN))
    {
       // Skip over embedded C comments
-      chunk_t *next = chunk_get_next(pc);
+      Chunk *next = chunk_get_next(pc);
 
       while (chunk_is_token(next, CT_COMMENT))
       {
@@ -1833,7 +1833,7 @@ static void newlines_enum(chunk_t *start)
 // namespace {
 // namespace word {
 // namespace type::word {
-static void newlines_namespace(chunk_t *start)
+static void newlines_namespace(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
@@ -1849,7 +1849,7 @@ static void newlines_namespace(chunk_t *start)
    {
       return;
    }
-   chunk_t *braceOpen = chunk_get_next_type(start, CT_BRACE_OPEN, start->level);
+   Chunk *braceOpen = chunk_get_next_type(start, CT_BRACE_OPEN, start->level);
 
    LOG_FMT(LNEWLINE, "%s(%d): braceOpen->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
            __func__, __LINE__, braceOpen->orig_line, braceOpen->orig_col, braceOpen->text());
@@ -1862,7 +1862,7 @@ static void newlines_namespace(chunk_t *start)
               __func__, __LINE__);
       return;
    }
-   chunk_t *beforeBrace = chunk_get_prev(braceOpen);
+   Chunk *beforeBrace = chunk_get_prev(braceOpen);
 
    LOG_FMT(LNEWLINE, "%s(%d): beforeBrace->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
            __func__, __LINE__, beforeBrace->orig_line, beforeBrace->orig_col, beforeBrace->text());
@@ -1871,7 +1871,7 @@ static void newlines_namespace(chunk_t *start)
 } // newlines_namespace
 
 
-static void newlines_cuddle_uncuddle(chunk_t *start, iarf_e nl_opt)
+static void newlines_cuddle_uncuddle(Chunk *start, iarf_e nl_opt)
 {
    LOG_FUNC_ENTRY();
 
@@ -1882,7 +1882,7 @@ static void newlines_cuddle_uncuddle(chunk_t *start, iarf_e nl_opt)
    {
       return;
    }
-   chunk_t *br_close = chunk_get_prev_nc_nnl_ni(start);   // Issue #2279
+   Chunk *br_close = chunk_get_prev_nc_nnl_ni(start);   // Issue #2279
 
    if (chunk_is_token(br_close, CT_BRACE_CLOSE))
    {
@@ -1891,7 +1891,7 @@ static void newlines_cuddle_uncuddle(chunk_t *start, iarf_e nl_opt)
 } // newlines_cuddle_uncuddle
 
 
-static void newlines_do_else(chunk_t *start, iarf_e nl_opt)
+static void newlines_do_else(Chunk *start, iarf_e nl_opt)
 {
    LOG_FUNC_ENTRY();
 
@@ -1903,7 +1903,7 @@ static void newlines_do_else(chunk_t *start, iarf_e nl_opt)
    {
       return;
    }
-   chunk_t *next = chunk_get_next_nc_nnl(start);
+   Chunk *next = chunk_get_next_nc_nnl(start);
 
    if (  next != nullptr
       && (  chunk_is_token(next, CT_BRACE_OPEN)
@@ -1922,7 +1922,7 @@ static void newlines_do_else(chunk_t *start, iarf_e nl_opt)
          if (nl_opt & IARF_ADD)
          {
             newline_iarf_pair(start, chunk_get_next_nc_nnl(next), nl_opt);
-            chunk_t *tmp = chunk_get_next_type(next, CT_VBRACE_CLOSE, next->level);
+            Chunk *tmp = chunk_get_next_type(next, CT_VBRACE_CLOSE, next->level);
 
             if (  !chunk_is_newline(chunk_get_next_nc(tmp))
                && !chunk_is_newline(chunk_get_prev_nc(tmp)))
@@ -1940,7 +1940,7 @@ static void newlines_do_else(chunk_t *start, iarf_e nl_opt)
 } // newlines_do_else
 
 
-static bool is_var_def(chunk_t *pc, chunk_t *next)
+static bool is_var_def(Chunk *pc, Chunk *next)
 {
    if (  chunk_is_token(pc, CT_DECLTYPE)
       && chunk_is_token(next, CT_PAREN_OPEN))
@@ -1975,22 +1975,22 @@ static bool is_var_def(chunk_t *pc, chunk_t *next)
 
 
 // Put newline(s) before and/or after a block of variable definitions
-static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
+static Chunk *newline_def_blk(Chunk *start, bool fn_top)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *prev = chunk_get_prev_nc_nnl_ni(start);   // Issue #2279
+   Chunk *prev = chunk_get_prev_nc_nnl_ni(start);   // Issue #2279
 
    // can't be any variable definitions in a "= {" block
    if (chunk_is_token(prev, CT_ASSIGN))
    {
-      chunk_t *tmp = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
+      Chunk *tmp = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
       return(chunk_get_next_nc_nnl(tmp));
    }
-   chunk_t *pc           = chunk_get_next(start);
-   bool    did_this_line = false;
-   bool    first_var_blk = true;
-   bool    var_blk       = false;
+   Chunk *pc           = chunk_get_next(start);
+   bool  did_this_line = false;
+   bool  first_var_blk = true;
+   bool  var_blk       = false;
 
    while (  pc != nullptr
          && (  pc->level >= start->level
@@ -1999,7 +1999,7 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
       LOG_FMT(LNL1LINE, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, text() is '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
 
-      chunk_t *next_pc = chunk_get_next(pc);
+      Chunk *next_pc = chunk_get_next(pc);
 
       if (chunk_is_token(next_pc, CT_DC_MEMBER))
       {
@@ -2065,7 +2065,7 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
          && (  (pc->level == (start->level + 1))
             || pc->level == 0))
       {
-         chunk_t *next = chunk_get_next_nc_nnl(pc);
+         Chunk *next = chunk_get_next_nc_nnl(pc);
 
          if (  chunk_is_token(next, CT_PTR_TYPE) // Issue #2692
             || chunk_is_token(next, CT_BYREF))   // Issue #3018
@@ -2200,7 +2200,7 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
 } // newline_def_blk
 
 
-static bool collapse_empty_body(chunk_t *br_open)
+static bool collapse_empty_body(Chunk *br_open)
 {
    log_rule_B("nl_collapse_empty_body");
 
@@ -2210,7 +2210,7 @@ static bool collapse_empty_body(chunk_t *br_open)
       return(false);
    }
 
-   for (chunk_t *pc = chunk_get_next(br_open)
+   for (Chunk *pc = chunk_get_next(br_open)
         ; chunk_is_not_token(pc, CT_BRACE_CLOSE)
         ; pc = chunk_get_next(pc))
    {
@@ -2218,7 +2218,7 @@ static bool collapse_empty_body(chunk_t *br_open)
          && chunk_safe_to_del_nl(pc))
       {
          pc = pc->prev;
-         chunk_t *next = pc->next;
+         Chunk *next = pc->next;
          chunk_del(next);
          MARK_CHANGE();
       }
@@ -2228,7 +2228,7 @@ static bool collapse_empty_body(chunk_t *br_open)
 } // collapse_empty_body
 
 
-static void newlines_brace_pair(chunk_t *br_open)
+static void newlines_brace_pair(Chunk *br_open)
 {
    LOG_FUNC_ENTRY();
 
@@ -2245,7 +2245,7 @@ static void newlines_brace_pair(chunk_t *br_open)
       && (get_chunk_parent_type(br_open) == CT_NAMESPACE)
       && chunk_is_newline(chunk_get_prev(br_open)))
    {
-      chunk_t *chunk_brace_close = chunk_skip_to_match(br_open, scope_e::ALL);
+      Chunk *chunk_brace_close = chunk_skip_to_match(br_open, scope_e::ALL);
 
       if (chunk_brace_close != nullptr)
       {
@@ -2255,13 +2255,13 @@ static void newlines_brace_pair(chunk_t *br_open)
 
             if (options::nl_namespace_two_to_one_liner())
             {
-               chunk_t *prev = chunk_get_prev_nnl(br_open);
+               Chunk *prev = chunk_get_prev_nnl(br_open);
                newline_del_between(prev, br_open);
             }
             /* Below code is to support conversion of 2 liner to 4 liners
              * else
              * {
-             *  chunk_t *nxt = chunk_get_next(br_open);
+             *  Chunk *nxt = chunk_get_next(br_open);
              *  newline_add_between(br_open, nxt);
              * }*/
          }
@@ -2274,12 +2274,12 @@ static void newlines_brace_pair(chunk_t *br_open)
       && options::nl_create_func_def_one_liner()
       && !br_open->flags.test(PCF_NOT_POSSIBLE))          // Issue #2795
    {
-      chunk_t *br_close = chunk_skip_to_match(br_open, scope_e::ALL);
-      chunk_t *tmp      = chunk_get_prev_nc_nnl_ni(br_open); // Issue #2279
+      Chunk *br_close = chunk_skip_to_match(br_open, scope_e::ALL);
+      Chunk *tmp      = chunk_get_prev_nc_nnl_ni(br_open); // Issue #2279
 
-      if (  br_close != nullptr                              // Issue #2594
+      if (  br_close != nullptr                            // Issue #2594
          && ((br_close->orig_line - br_open->orig_line) <= 2)
-         && chunk_is_paren_close(tmp))                       // need to check the conditions.
+         && chunk_is_paren_close(tmp))                     // need to check the conditions.
       {
          // Issue #1825
          bool is_it_possible = true;
@@ -2304,14 +2304,14 @@ static void newlines_brace_pair(chunk_t *br_open)
             // Issue 2795
             // we have to check if it could be too long for code_width
             // make a vector to save the chunk
-            vector<chunk_t> saved_chunk;
+            vector<Chunk> saved_chunk;
             log_rule_B("code_width");
 
             if (options::code_width() > 0)
             {
                saved_chunk.reserve(16);
-               chunk_t *current       = chunk_get_prev_nc_nnl_ni(br_open);
-               chunk_t *next_br_close = chunk_get_next(br_close);
+               Chunk *current       = chunk_get_prev_nc_nnl_ni(br_open);
+               Chunk *next_br_close = chunk_get_next(br_close);
                current = chunk_get_next(current);
 
                while (current != nullptr)
@@ -2319,7 +2319,7 @@ static void newlines_brace_pair(chunk_t *br_open)
                   LOG_FMT(LNL1LINE, "%s(%d): zu  kopieren: current->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
                           __func__, __LINE__, current->orig_line, current->orig_col, current->text());
                   saved_chunk.push_back(*current);
-                  chunk_t *the_next = chunk_get_next(current);
+                  Chunk *the_next = chunk_get_next(current);
 
                   if (  the_next == nullptr
                      || the_next == next_br_close)
@@ -2329,7 +2329,7 @@ static void newlines_brace_pair(chunk_t *br_open)
                   current = the_next;
                }
             }
-            chunk_t *tmp_1 = chunk_get_prev_nc_nnl_ni(br_open);
+            Chunk *tmp_1 = chunk_get_prev_nc_nnl_ni(br_open);
 
             while (  tmp_1 != nullptr
                   && (tmp_1 = chunk_get_next(tmp_1)) != nullptr
@@ -2357,9 +2357,9 @@ static void newlines_brace_pair(chunk_t *br_open)
                // because the line would be too long
                chunk_flags_set(br_open, PCF_NOT_POSSIBLE);
                // restore the code
-               size_t  count;
-               chunk_t tmp_2;
-               chunk_t *current = br_open;
+               size_t count;
+               Chunk  tmp_2;
+               Chunk  *current = br_open;
 
                for (count = 0; count < saved_chunk.size(); count++)
                {
@@ -2368,7 +2368,7 @@ static void newlines_brace_pair(chunk_t *br_open)
                   if (tmp_2.orig_line != current->orig_line)
                   {
                      // restore the newline
-                     chunk_t chunk;
+                     Chunk chunk;
                      set_chunk_type(&chunk, CT_NEWLINE);
                      chunk.orig_line = current->orig_line;
                      chunk.orig_col  = current->orig_col;
@@ -2397,7 +2397,7 @@ static void newlines_brace_pair(chunk_t *br_open)
    }
    LOG_FMT(LNL1LINE, "%s(%d): a new line may be added\n", __func__, __LINE__);
 
-   chunk_t *next = chunk_get_next_nc(br_open);
+   Chunk *next = chunk_get_next_nc(br_open);
 
    // Insert a newline between the '=' and open brace, if needed
    LOG_FMT(LNL1LINE, "%s(%d): br_open->text() '%s', br_open->type [%s], br_open->parent_type [%s]\n",
@@ -2409,7 +2409,7 @@ static void newlines_brace_pair(chunk_t *br_open)
       // Only mess with it if the open brace is followed by a newline
       if (chunk_is_newline(next))
       {
-         chunk_t *prev = chunk_get_prev_nc_nnl_ni(br_open);   // Issue #2279
+         Chunk *prev = chunk_get_prev_nc_nnl_ni(br_open);   // Issue #2279
          log_rule_B("nl_assign_brace");
          newline_iarf_pair(prev, br_open, options::nl_assign_brace());
       }
@@ -2424,8 +2424,8 @@ static void newlines_brace_pair(chunk_t *br_open)
       || get_chunk_parent_type(br_open) == CT_FUNC_CALL
       || get_chunk_parent_type(br_open) == CT_FUNC_CALL_USER)
    {
-      chunk_t *prev = nullptr;
-      iarf_e  val;
+      Chunk  *prev = nullptr;
+      iarf_e val;
 
       if (get_chunk_parent_type(br_open) == CT_OC_MSG_DECL)
       {
@@ -2490,13 +2490,13 @@ static void newlines_brace_pair(chunk_t *br_open)
 
    if (chunk_is_token(br_open, CT_BRACE_OPEN))
    {
-      chunk_t *chunk_closeing_brace = chunk_skip_to_match(br_open, scope_e::ALL);
+      Chunk *chunk_closeing_brace = chunk_skip_to_match(br_open, scope_e::ALL);
 
       if (chunk_closeing_brace != nullptr)
       {
          if (chunk_closeing_brace->orig_line > br_open->orig_line)
          {
-            chunk_t *prev = chunk_get_prev_nc(br_open);
+            Chunk *prev = chunk_get_prev_nc(br_open);
 
             if (  chunk_is_token(prev, CT_TSQUARE)
                && chunk_is_newline(next))
@@ -2556,7 +2556,7 @@ static void newlines_brace_pair(chunk_t *br_open)
          nl_close_brace = true;
       }
       // handle newlines after the open brace
-      chunk_t *pc = chunk_get_next_nc_nnl(br_open);
+      Chunk *pc = chunk_get_next_nc_nnl(br_open);
       newline_add_between(br_open, pc);
 
       newline_def_blk(br_open, true);
@@ -2569,7 +2569,7 @@ static void newlines_brace_pair(chunk_t *br_open)
       newline_def_blk(br_open, false);
    }
    // Grab the matching brace close
-   chunk_t *br_close = chunk_get_next_type(br_open, CT_BRACE_CLOSE, br_open->level);
+   Chunk *br_close = chunk_get_next_type(br_open, CT_BRACE_CLOSE, br_open->level);
 
    if (br_close == nullptr)
    {
@@ -2583,7 +2583,7 @@ static void newlines_brace_pair(chunk_t *br_open)
        * CT_COMMENT_CPP without hitting anything other than CT_COMMENT, then
        * there should be a newline before the close brace.
        */
-      chunk_t *pc = chunk_get_next(br_open);
+      Chunk *pc = chunk_get_next(br_open);
 
       while (chunk_is_token(pc, CT_COMMENT))
       {
@@ -2596,7 +2596,7 @@ static void newlines_brace_pair(chunk_t *br_open)
          nl_close_brace = true;
       }
    }
-   chunk_t *prev = chunk_get_prev_nc_nnl_nb(br_close);
+   Chunk *prev = chunk_get_prev_nc_nnl_nb(br_close);
 
    if (nl_close_brace)
    {
@@ -2609,7 +2609,7 @@ static void newlines_brace_pair(chunk_t *br_open)
 } // newlines_brace_pair
 
 
-static void newline_case(chunk_t *start)
+static void newline_case(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
@@ -2618,7 +2618,7 @@ static void newline_case(chunk_t *start)
    //          start->orig_line, start->orig_col);
 
    // Scan backwards until a '{' or ';' or ':'. Abort if a multi-newline is found
-   chunk_t *prev = start;
+   Chunk *prev = start;
 
    do
    {
@@ -2639,7 +2639,7 @@ static void newline_case(chunk_t *start)
    {
       return;
    }
-   chunk_t *pc = newline_add_between(prev, start);
+   Chunk *pc = newline_add_between(prev, start);
 
    if (pc == nullptr)
    {
@@ -2659,12 +2659,12 @@ static void newline_case(chunk_t *start)
 } // newline_case
 
 
-static void newline_case_colon(chunk_t *start)
+static void newline_case_colon(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
    // Scan forwards until a non-comment is found
-   chunk_t *pc = start;
+   Chunk *pc = start;
 
    do
    {
@@ -2679,12 +2679,12 @@ static void newline_case_colon(chunk_t *start)
 } // newline_case_colon
 
 
-static void newline_before_return(chunk_t *start)
+static void newline_before_return(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *pc = chunk_get_prev(start);
-   chunk_t *nl = pc;
+   Chunk *pc = chunk_get_prev(start);
+   Chunk *nl = pc;
 
    // Skip over single preceding newline
    if (chunk_is_newline(pc))
@@ -2740,12 +2740,12 @@ static void newline_before_return(chunk_t *start)
 } // newline_before_return
 
 
-static void newline_after_return(chunk_t *start)
+static void newline_after_return(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *semi  = chunk_get_next_type(start, CT_SEMICOLON, start->level);
-   chunk_t *after = chunk_get_next_nc_nnl_nb(semi);
+   Chunk *semi  = chunk_get_next_type(start, CT_SEMICOLON, start->level);
+   Chunk *after = chunk_get_next_nc_nnl_nb(semi);
 
    // If we hit a brace or an 'else', then a newline isn't needed
    if (  after == nullptr
@@ -2755,7 +2755,7 @@ static void newline_after_return(chunk_t *start)
    {
       return;
    }
-   chunk_t *pc;
+   Chunk *pc;
 
    for (pc = chunk_get_next(semi); pc != after; pc = chunk_get_next(pc))
    {
@@ -2771,7 +2771,7 @@ static void newline_after_return(chunk_t *start)
 } // newline_after_return
 
 
-static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av, bool check_nl_assign_leave_one_liners)
+static void newline_iarf_pair(Chunk *before, Chunk *after, iarf_e av, bool check_nl_assign_leave_one_liners)
 {
    LOG_FUNC_ENTRY();
 
@@ -2794,7 +2794,7 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av, bool c
          log_rule_B("nl_assign_leave_one_liners");
          return;
       }
-      chunk_t *nl = newline_add_between(before, after);
+      Chunk *nl = newline_add_between(before, after);
       LOG_FMT(LNEWLINE, "%s(%d): newline_add_between '%s' and '%s'\n",
               __func__, __LINE__, before->text(), after->text());
 
@@ -2814,13 +2814,13 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, iarf_e av, bool c
 } // newline_iarf_pair
 
 
-void newline_iarf(chunk_t *pc, iarf_e av)
+void newline_iarf(Chunk *pc, iarf_e av)
 {
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LNFD, "%s(%d): ", __func__, __LINE__);
    log_func_stack(LNFD, "CallStack:");
-   chunk_t *after = chunk_get_next_nnl(pc);
+   Chunk *after = chunk_get_next_nnl(pc);
 
    if (  chunk_is_token(pc, CT_FPAREN_OPEN)                         // Issue #2914
       && get_chunk_parent_type(pc) == CT_FUNC_CALL
@@ -2833,7 +2833,7 @@ void newline_iarf(chunk_t *pc, iarf_e av)
 } // newline_iarf
 
 
-static void newline_func_multi_line(chunk_t *start)
+static void newline_func_multi_line(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
@@ -2881,7 +2881,7 @@ static void newline_func_multi_line(chunk_t *start)
    {
       return;
    }
-   chunk_t *pc = chunk_get_next_nc_nnl(start);
+   Chunk *pc = chunk_get_next_nc_nnl(start);
 
    while (  pc != nullptr
          && pc->level > start->level)
@@ -2892,15 +2892,15 @@ static void newline_func_multi_line(chunk_t *start)
    if (  chunk_is_token(pc, CT_FPAREN_CLOSE)
       && chunk_is_newline_between(start, pc))
    {
-      chunk_t *start_next         = chunk_get_next_nc_nnl(start);
-      bool    has_leading_closure = (  start_next->parent_type == CT_OC_BLOCK_EXPR
-                                    || start_next->parent_type == CT_CPP_LAMBDA
-                                    || chunk_is_token(start_next, CT_BRACE_OPEN));
+      Chunk *start_next         = chunk_get_next_nc_nnl(start);
+      bool  has_leading_closure = (  start_next->parent_type == CT_OC_BLOCK_EXPR
+                                  || start_next->parent_type == CT_CPP_LAMBDA
+                                  || chunk_is_token(start_next, CT_BRACE_OPEN));
 
-      chunk_t *prev_end            = chunk_get_prev_nc_nnl(pc);
-      bool    has_trailing_closure = (  prev_end->parent_type == CT_OC_BLOCK_EXPR
-                                     || prev_end->parent_type == CT_CPP_LAMBDA
-                                     || chunk_is_token(prev_end, CT_BRACE_OPEN));
+      Chunk *prev_end            = chunk_get_prev_nc_nnl(pc);
+      bool  has_trailing_closure = (  prev_end->parent_type == CT_OC_BLOCK_EXPR
+                                   || prev_end->parent_type == CT_CPP_LAMBDA
+                                   || chunk_is_token(prev_end, CT_BRACE_OPEN));
 
       if (  add_start
          && !chunk_is_newline(chunk_get_next(start)))
@@ -2951,7 +2951,7 @@ static void newline_func_multi_line(chunk_t *start)
             if (  chunk_is_token(pc, CT_COMMA)
                && (pc->level == (start->level + 1)))
             {
-               chunk_t *tmp = chunk_get_next(pc);
+               Chunk *tmp = chunk_get_next(pc);
 
                if (chunk_is_comment(tmp))
                {
@@ -2964,8 +2964,8 @@ static void newline_func_multi_line(chunk_t *start)
 
                   if (options::nl_func_call_args_multi_line_ignore_closures())
                   {
-                     chunk_t *prev_comma  = chunk_get_prev_nc_nnl(pc);
-                     chunk_t *after_comma = chunk_get_next_nc_nnl(pc);
+                     Chunk *prev_comma  = chunk_get_prev_nc_nnl(pc);
+                     Chunk *after_comma = chunk_get_next_nc_nnl(pc);
 
                      if (!(  (  prev_comma->parent_type == CT_OC_BLOCK_EXPR
                              || prev_comma->parent_type == CT_CPP_LAMBDA
@@ -2989,7 +2989,7 @@ static void newline_func_multi_line(chunk_t *start)
 } // newline_func_multi_line
 
 
-static void newline_template(chunk_t *start)
+static void newline_template(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
@@ -3012,7 +3012,7 @@ static void newline_template(chunk_t *start)
    {
       return;
    }
-   chunk_t *pc = chunk_get_next_nc_nnl(start);
+   Chunk *pc = chunk_get_next_nc_nnl(start);
 
    while (  pc != nullptr
          && pc->level > start->level)
@@ -3034,7 +3034,7 @@ static void newline_template(chunk_t *start)
 
       if (add_args)
       {
-         chunk_t *pc_1;
+         Chunk *pc_1;
 
          for (pc_1 = chunk_get_next_nc_nnl(start);
               pc_1 != nullptr && pc_1->level > start->level;
@@ -3043,7 +3043,7 @@ static void newline_template(chunk_t *start)
             if (  chunk_is_token(pc_1, CT_COMMA)
                && (pc_1->level == (start->level + 1)))
             {
-               chunk_t *tmp = chunk_get_next(pc_1);
+               Chunk *tmp = chunk_get_next(pc_1);
 
                if (chunk_is_comment(tmp))
                {
@@ -3061,7 +3061,7 @@ static void newline_template(chunk_t *start)
 } // newline_template
 
 
-static void newline_func_def_or_call(chunk_t *start)
+static void newline_func_def_or_call(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
@@ -3084,14 +3084,14 @@ static void newline_func_def_or_call(chunk_t *start)
 
       if (atmp != IARF_IGNORE)
       {
-         chunk_t *prev = chunk_get_prev_nc_nnl_ni(start);   // Issue #2279
+         Chunk *prev = chunk_get_prev_nc_nnl_ni(start);   // Issue #2279
 
          if (prev != nullptr)
          {
             newline_iarf(prev, atmp);
          }
       }
-      chunk_t *pc = chunk_get_next_nc_nnl(start);
+      Chunk *pc = chunk_get_next_nc_nnl(start);
 
       if (chunk_is_str(pc, ")", 1))
       {
@@ -3100,7 +3100,7 @@ static void newline_func_def_or_call(chunk_t *start)
 
          if (atmp != IARF_IGNORE)
          {
-            chunk_t *prev = chunk_get_prev_nc_nnl_ni(start);   // Issue #2279
+            Chunk *prev = chunk_get_prev_nc_nnl_ni(start);   // Issue #2279
 
             if (prev != nullptr)
             {
@@ -3131,7 +3131,7 @@ static void newline_func_def_or_call(chunk_t *start)
 
       if (atmp != IARF_IGNORE)
       {
-         chunk_t *prev = chunk_get_prev_nc_nnl_ni(start);      // Issue #2279
+         Chunk *prev = chunk_get_prev_nc_nnl_ni(start);      // Issue #2279
 
          if (prev != nullptr)
          {
@@ -3139,7 +3139,7 @@ static void newline_func_def_or_call(chunk_t *start)
          }
       }
       // Handle break newlines type and function
-      chunk_t *prev = chunk_get_prev_nc_nnl_ni(start);   // Issue #2279
+      Chunk *prev = chunk_get_prev_nc_nnl_ni(start);   // Issue #2279
       prev = skip_template_prev(prev);
       // Don't split up a function variable
       prev = chunk_is_paren_close(prev) ? nullptr : chunk_get_prev_nc_nnl_ni(prev);   // Issue #2279
@@ -3154,7 +3154,7 @@ static void newline_func_def_or_call(chunk_t *start)
 
       if (chunk_is_not_token(prev, CT_ACCESS_COLON))
       {
-         chunk_t *tmp;
+         Chunk *tmp;
 
          if (chunk_is_token(prev, CT_OPERATOR))
          {
@@ -3176,13 +3176,13 @@ static void newline_func_def_or_call(chunk_t *start)
                newline_iarf(prev, options::nl_func_scope_name());
             }
          }
-         const chunk_t *tmp_next = chunk_get_next_nc_nnl(prev);
+         const Chunk *tmp_next = chunk_get_next_nc_nnl(prev);
 
          if (chunk_is_not_token(tmp_next, CT_FUNC_CLASS_DEF))
          {
-            chunk_t *closing = chunk_skip_to_match(tmp);
-            chunk_t *brace   = chunk_get_next_nc_nnl(closing);
-            iarf_e  a;                                           // Issue #2561
+            Chunk  *closing = chunk_skip_to_match(tmp);
+            Chunk  *brace   = chunk_get_next_nc_nnl(closing);
+            iarf_e a;                                            // Issue #2561
 
             if (  get_chunk_parent_type(tmp) == CT_FUNC_PROTO
                || get_chunk_parent_type(tmp) == CT_FUNC_CLASS_PROTO)
@@ -3257,7 +3257,7 @@ static void newline_func_def_or_call(chunk_t *start)
             }
          }
       }
-      chunk_t *pc = chunk_get_next_nc_nnl(start);
+      Chunk *pc = chunk_get_next_nc_nnl(start);
 
       if (chunk_is_str(pc, ")", 1))
       {
@@ -3288,9 +3288,9 @@ static void newline_func_def_or_call(chunk_t *start)
       }
    }
    // Now scan for commas
-   size_t  comma_count = 0;
-   chunk_t *tmp;
-   chunk_t *pc;
+   size_t comma_count = 0;
+   Chunk  *tmp;
+   Chunk  *pc;
 
    for (pc = chunk_get_next_nc_nnl(start);
         pc != nullptr && pc->level > start->level;
@@ -3365,7 +3365,7 @@ static void newline_func_def_or_call(chunk_t *start)
    // and fix up the close parenthesis
    if (chunk_is_token(pc, CT_FPAREN_CLOSE))
    {
-      chunk_t *prev = chunk_get_prev_nnl(pc);
+      Chunk *prev = chunk_get_prev_nnl(pc);
 
       if (  chunk_is_not_token(prev, CT_FPAREN_OPEN)
          && !is_call)
@@ -3377,11 +3377,11 @@ static void newline_func_def_or_call(chunk_t *start)
 } // newline_func_def_or_call
 
 
-static void newline_oc_msg(chunk_t *start)
+static void newline_oc_msg(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *sq_c = chunk_skip_to_match(start);
+   Chunk *sq_c = chunk_skip_to_match(start);
 
    if (sq_c == nullptr)
    {
@@ -3394,7 +3394,7 @@ static void newline_oc_msg(chunk_t *start)
       return;
    }
 
-   for (chunk_t *pc = chunk_get_next_nc_nnl(start); pc; pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = chunk_get_next_nc_nnl(start); pc; pc = chunk_get_next_nc_nnl(pc))
    {
       if (pc->level <= start->level)
       {
@@ -3409,7 +3409,7 @@ static void newline_oc_msg(chunk_t *start)
 } // newline_oc_msg
 
 
-static bool one_liner_nl_ok(chunk_t *pc)
+static bool one_liner_nl_ok(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
@@ -3423,7 +3423,7 @@ static bool one_liner_nl_ok(chunk_t *pc)
       return(true);
    }
    // Step back to find the opening brace
-   chunk_t *br_open = pc;
+   Chunk *br_open = pc;
 
    if (chunk_is_closing_brace(br_open))
    {
@@ -3572,7 +3572,7 @@ static bool one_liner_nl_ok(chunk_t *pc)
 } // one_liner_nl_ok
 
 
-void undo_one_liner(chunk_t *pc)
+void undo_one_liner(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
@@ -3585,7 +3585,7 @@ void undo_one_liner(chunk_t *pc)
 
       // scan backward
       LOG_FMT(LNL1LINE, "%s(%d): scan backward\n", __func__, __LINE__);
-      chunk_t *tmp = pc;
+      Chunk *tmp = pc;
 
       while ((tmp = chunk_get_prev(tmp)) != nullptr)
       {
@@ -3621,13 +3621,13 @@ void undo_one_liner(chunk_t *pc)
 } // undo_one_liner
 
 
-static void nl_create_one_liner(chunk_t *vbrace_open)
+static void nl_create_one_liner(Chunk *vbrace_open)
 {
    LOG_FUNC_ENTRY();
 
    // See if we get a newline between the next text and the vbrace_close
-   chunk_t *tmp   = chunk_get_next_nc_nnl(vbrace_open);
-   chunk_t *first = tmp;
+   Chunk *tmp   = chunk_get_next_nc_nnl(vbrace_open);
+   Chunk *first = tmp;
 
    if (  first == nullptr
       || get_token_pattern_class(first->type) != pattern_class_e::NONE)
@@ -3658,7 +3658,7 @@ static void nl_create_one_liner(chunk_t *vbrace_open)
 } // nl_create_one_liner
 
 
-static void nl_create_list_liner(chunk_t *brace_open)
+static void nl_create_list_liner(Chunk *brace_open)
 {
    LOG_FUNC_ENTRY();
 
@@ -3667,8 +3667,8 @@ static void nl_create_list_liner(chunk_t *brace_open)
    {
       return;
    }
-   chunk_t *closing = chunk_get_next_type(brace_open, CT_BRACE_CLOSE, brace_open->level);
-   chunk_t *tmp     = brace_open;
+   Chunk *closing = chunk_get_next_type(brace_open, CT_BRACE_CLOSE, brace_open->level);
+   Chunk *tmp     = brace_open;
 
    do
    {
@@ -3688,14 +3688,14 @@ void newlines_remove_newlines(void)
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LBLANK, "%s(%d):\n", __func__, __LINE__);
-   chunk_t *pc = chunk_get_head();
+   Chunk *pc = chunk_get_head();
 
    if (!chunk_is_newline(pc))
    {
       pc = chunk_get_next_nl(pc);
    }
-   chunk_t *next;
-   chunk_t *prev;
+   Chunk *next;
+   Chunk *prev;
 
    while (pc != nullptr)
    {
@@ -3726,8 +3726,8 @@ void newlines_remove_disallowed()
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *pc = chunk_get_head();
-   chunk_t *next;
+   Chunk *pc = chunk_get_head();
+   Chunk *next;
 
    while ((pc = chunk_get_next_nl(pc)) != nullptr)
    {
@@ -3758,7 +3758,7 @@ void newlines_cleanup_angles()
    // Issue #1167
    LOG_FUNC_ENTRY();
 
-   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_nc_nnl(pc))
    {
       char copy[1000];
       LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
@@ -3777,7 +3777,7 @@ void newlines_cleanup_braces(bool first)
    LOG_FUNC_ENTRY();
 
    // Get the first token that's not an empty line:
-   chunk_t *pc;
+   Chunk *pc;
 
    if (chunk_is_newline(pc = chunk_get_head()))
    {
@@ -3824,7 +3824,7 @@ void newlines_cleanup_braces(bool first)
             log_rule_B("nl_brace_catch");
             newlines_cuddle_uncuddle(pc, options::nl_brace_catch());
          }
-         chunk_t *next = chunk_get_next_nc_nnl(pc);
+         Chunk *next = chunk_get_next_nc_nnl(pc);
 
          if (chunk_is_token(next, CT_BRACE_OPEN))
          {
@@ -3902,7 +3902,7 @@ void newlines_cleanup_braces(bool first)
       {
          log_rule_B("nl_brace_else");
          newlines_cuddle_uncuddle(pc, options::nl_brace_else());
-         chunk_t *next = chunk_get_next_nc_nnl(pc);
+         Chunk *next = chunk_get_next_nc_nnl(pc);
 
          if (chunk_is_token(next, CT_ELSEIF))
          {
@@ -3917,7 +3917,7 @@ void newlines_cleanup_braces(bool first)
          log_rule_B("nl_try_brace");
          newlines_do_else(pc, options::nl_try_brace());
          // Issue #1734
-         chunk_t *po = chunk_get_next_nc_nnl(pc);
+         Chunk *po = chunk_get_next_nc_nnl(pc);
          flag_parens(po, PCF_IN_TRY_BLOCK, po->type, CT_NONE, false);
       }
       else if (chunk_is_token(pc, CT_GETSET))
@@ -3947,7 +3947,7 @@ void newlines_cleanup_braces(bool first)
 
             if (options::nl_paren_dbrace_open() != IARF_IGNORE)
             {
-               chunk_t *prev = chunk_get_prev_nc_nnl_ni(pc, scope_e::PREPROC);   // Issue #2279
+               Chunk *prev = chunk_get_prev_nc_nnl_ni(pc, scope_e::PREPROC);   // Issue #2279
 
                if (chunk_is_paren_close(prev))
                {
@@ -4001,7 +4001,7 @@ void newlines_cleanup_braces(bool first)
          {
             if (pc->level == pc->brace_level)
             {
-               chunk_t *tmp = nullptr;
+               Chunk *tmp = nullptr;
 
                // Request #126
                // introduce two new options
@@ -4044,7 +4044,7 @@ void newlines_cleanup_braces(bool first)
                nl_create_list_liner(pc);
                break;
             }
-            chunk_t *prev = chunk_get_prev_nnl(pc);
+            Chunk *prev = chunk_get_prev_nnl(pc);
 
             if (  prev != nullptr
                && (  prev->type == CT_TYPE
@@ -4095,14 +4095,14 @@ void newlines_cleanup_braces(bool first)
 
          if (options::nl_brace_brace() != IARF_IGNORE)
          {
-            chunk_t *next = chunk_get_next_nc(pc, scope_e::PREPROC);
+            Chunk *next = chunk_get_next_nc(pc, scope_e::PREPROC);
 
             if (chunk_is_token(next, CT_BRACE_OPEN))
             {
                newline_iarf_pair(pc, next, options::nl_brace_brace());
             }
          }
-         chunk_t *next = chunk_get_next_nnl(pc);
+         Chunk *next = chunk_get_next_nnl(pc);
 
          if (next == nullptr)
          {
@@ -4147,7 +4147,7 @@ void newlines_cleanup_braces(bool first)
                else
                {
                   // Step back from next to the first non-newline item
-                  chunk_t *tmp = chunk_get_prev(next);
+                  Chunk *tmp = chunk_get_prev(next);
 
                   while (tmp != pc)
                   {
@@ -4201,7 +4201,7 @@ void newlines_cleanup_braces(bool first)
             else
             {
                // Step back to previous non-newline item
-               chunk_t *tmp = chunk_get_prev(pc);
+               Chunk *tmp = chunk_get_prev(pc);
 
                if (!chunk_is_token(tmp, CT_NEWLINE))
                {
@@ -4217,7 +4217,7 @@ void newlines_cleanup_braces(bool first)
 
          if (options::nl_brace_brace() != IARF_IGNORE)
          {
-            chunk_t *next = chunk_get_next_nc(pc, scope_e::PREPROC);
+            Chunk *next = chunk_get_next_nc(pc, scope_e::PREPROC);
 
             if (chunk_is_token(next, CT_BRACE_CLOSE))
             {
@@ -4229,7 +4229,7 @@ void newlines_cleanup_braces(bool first)
 
          if (options::nl_brace_square() != IARF_IGNORE)
          {
-            chunk_t *next = chunk_get_next_nc(pc, scope_e::PREPROC);
+            Chunk *next = chunk_get_next_nc(pc, scope_e::PREPROC);
 
             if (chunk_is_token(next, CT_SQUARE_CLOSE))
             {
@@ -4241,7 +4241,7 @@ void newlines_cleanup_braces(bool first)
 
          if (options::nl_brace_fparen() != IARF_IGNORE)
          {
-            chunk_t *next = chunk_get_next_nc(pc, scope_e::PREPROC);
+            Chunk *next = chunk_get_next_nc(pc, scope_e::PREPROC);
 
             log_rule_B("nl_brace_fparen");
 
@@ -4273,7 +4273,7 @@ void newlines_cleanup_braces(bool first)
          if (options::eat_blanks_before_close_brace())
          {
             // Limit the newlines before the close brace to 1
-            chunk_t *prev = chunk_get_prev(pc);
+            Chunk *prev = chunk_get_prev(pc);
 
             if (chunk_is_newline(prev))
             {
@@ -4311,7 +4311,7 @@ void newlines_cleanup_braces(bool first)
             if (!pc->flags.test(PCF_ONE_LINER))
             {
                // Make sure the brace is preceded by two newlines
-               chunk_t *prev = chunk_get_prev(pc);
+               Chunk *prev = chunk_get_prev(pc);
 
                if (!chunk_is_newline(prev))
                {
@@ -4332,7 +4332,7 @@ void newlines_cleanup_braces(bool first)
                || get_chunk_parent_type(pc) == CT_ENUM
                || get_chunk_parent_type(pc) == CT_UNION))
          {
-            chunk_t *next = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+            Chunk *next = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
 
             if (  chunk_is_not_token(next, CT_SEMICOLON)
                && chunk_is_not_token(next, CT_COMMA))
@@ -4349,7 +4349,7 @@ void newlines_cleanup_braces(bool first)
                     || get_chunk_parent_type(pc) == CT_OC_MSG_DECL))
          {
             log_rule_B("nl_after_brace_close");
-            chunk_t *next = chunk_get_next(pc);
+            Chunk *next = chunk_get_next(pc);
 
             if (  chunk_is_not_token(next, CT_SEMICOLON)
                && chunk_is_not_token(next, CT_COMMA)
@@ -4377,7 +4377,7 @@ void newlines_cleanup_braces(bool first)
 
             if (options::nl_after_namespace() > 0)
             {
-               chunk_t *next = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+               Chunk *next = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
 
                if (next != nullptr)
                {
@@ -4395,8 +4395,8 @@ void newlines_cleanup_braces(bool first)
          if (  options::nl_after_vbrace_open()
             || options::nl_after_vbrace_open_empty())
          {
-            chunk_t *next = chunk_get_next(pc, scope_e::PREPROC);
-            bool    add_it;
+            Chunk *next = chunk_get_next(pc, scope_e::PREPROC);
+            bool  add_it;
 
             if (chunk_is_semicolon(next))
             {
@@ -4448,12 +4448,12 @@ void newlines_cleanup_braces(bool first)
             if (pc->flags.test(PCF_ONE_LINER))
             {
                // split one-liner
-               chunk_t *end = chunk_get_next(chunk_get_next_type(pc->next, CT_SEMICOLON, -1));
+               Chunk *end = chunk_get_next(chunk_get_next_type(pc->next, CT_SEMICOLON, -1));
                // Scan for clear flag
                LOG_FMT(LNEWLINE, "(%d) ", __LINE__);
                LOG_FMT(LNEWLINE, "\n");
 
-               for (chunk_t *temp = pc; temp != end; temp = chunk_get_next(temp))
+               for (Chunk *temp = pc; temp != end; temp = chunk_get_next(temp))
                {
                   LOG_FMT(LNEWLINE, "%s(%d): text() is '%s', type is %s, level is %zu\n",
                           __func__, __LINE__, temp->text(), get_token_name(temp->type), temp->level);
@@ -4515,7 +4515,7 @@ void newlines_cleanup_braces(bool first)
       }
       else if (chunk_is_token(pc, CT_THROW))
       {
-         chunk_t *prev = chunk_get_prev(pc);
+         Chunk *prev = chunk_get_prev(pc);
 
          if (  chunk_is_token(prev, CT_PAREN_CLOSE)
             || chunk_is_token(prev, CT_FPAREN_CLOSE))         // Issue #1122
@@ -4527,7 +4527,7 @@ void newlines_cleanup_braces(bool first)
       else if (  chunk_is_token(pc, CT_QUALIFIER)
               && !strcmp(pc->text(), "throws"))
       {
-         chunk_t *prev = chunk_get_prev(pc);
+         Chunk *prev = chunk_get_prev(pc);
 
          if (  chunk_is_token(prev, CT_PAREN_CLOSE)
             || chunk_is_token(prev, CT_FPAREN_CLOSE))         // Issue #1122
@@ -4538,7 +4538,7 @@ void newlines_cleanup_braces(bool first)
       }
       else if (chunk_is_token(pc, CT_CASE_COLON))
       {
-         chunk_t *next = chunk_get_next_nnl(pc);
+         Chunk *next = chunk_get_next_nnl(pc);
 
          log_rule_B("nl_case_colon_brace");
 
@@ -4555,7 +4555,7 @@ void newlines_cleanup_braces(bool first)
       }
       else if (chunk_is_token(pc, CT_SPAREN_CLOSE))
       {
-         chunk_t *next = chunk_get_next_nc_nnl(pc);
+         Chunk *next = chunk_get_next_nc_nnl(pc);
 
          if (chunk_is_token(next, CT_BRACE_OPEN))
          {
@@ -4589,7 +4589,7 @@ void newlines_cleanup_braces(bool first)
             && !pc->flags.test(PCF_IN_PREPROC)
             && options::nl_after_semicolon())
          {
-            chunk_t *next = chunk_get_next(pc);
+            Chunk *next = chunk_get_next(pc);
 
             while (chunk_is_token(next, CT_VBRACE_CLOSE))
             {
@@ -4742,12 +4742,12 @@ void newlines_cleanup_braces(bool first)
       {
          if (get_chunk_parent_type(pc) == CT_TEMPLATE)
          {
-            chunk_t *next = chunk_get_next_nc_nnl(pc);
+            Chunk *next = chunk_get_next_nc_nnl(pc);
 
             if (  next != nullptr
                && next->level == next->brace_level)
             {
-               chunk_t *tmp = chunk_get_prev_nc_nnl_ni(chunk_get_prev_type(pc, CT_ANGLE_OPEN, pc->level));   // Issue #2279
+               Chunk *tmp = chunk_get_prev_nc_nnl_ni(chunk_get_prev_type(pc, CT_ANGLE_OPEN, pc->level));   // Issue #2279
 
                if (chunk_is_token(tmp, CT_TEMPLATE))
                {
@@ -4822,7 +4822,7 @@ void newlines_cleanup_braces(bool first)
               && get_chunk_parent_type(pc) != CT_USING)
       {
          // Issue #2387
-         chunk_t *next = chunk_get_next_nc_nnl(pc);
+         Chunk *next = chunk_get_next_nc_nnl(pc);
 
          if (next != nullptr)
          {
@@ -4832,7 +4832,7 @@ void newlines_cleanup_braces(bool first)
             {
                // Issue #1235
                // Issue #2186
-               chunk_t *braceOpen = chunk_get_next_type(pc, CT_BRACE_OPEN, pc->level);
+               Chunk *braceOpen = chunk_get_next_type(pc, CT_BRACE_OPEN, pc->level);
 
                if (braceOpen == nullptr)
                {
@@ -4854,7 +4854,7 @@ void newlines_cleanup_braces(bool first)
          if (  get_chunk_parent_type(pc) == CT_ASSIGN
             && !pc->flags.test(PCF_ONE_LINER))
          {
-            chunk_t *tmp = chunk_get_prev_nc_nnl_ni(pc);   // Issue #2279
+            Chunk *tmp = chunk_get_prev_nc_nnl_ni(pc);   // Issue #2279
             newline_iarf(tmp, options::nl_assign_square());
             log_rule_B("nl_assign_square");
 
@@ -4891,7 +4891,7 @@ void newlines_cleanup_braces(bool first)
          if (options::nl_before_access_spec() > 0)
          {
             log_rule_B("nl_before_access_spec");
-            chunk_t *prev = chunk_get_prev(pc);
+            Chunk *prev = chunk_get_prev(pc);
 
             if (!chunk_is_newline(prev))
             {
@@ -4905,7 +4905,7 @@ void newlines_cleanup_braces(bool first)
          if (options::nl_after_access_spec() > 0)
          {
             log_rule_B("nl_after_access_spec");
-            chunk_t *next = chunk_get_next(pc);
+            Chunk *next = chunk_get_next(pc);
 
             if (!chunk_is_newline(next))
             {
@@ -4951,12 +4951,12 @@ void newlines_cleanup_braces(bool first)
 } // newlines_cleanup_braces
 
 
-static void nl_handle_define(chunk_t *pc)
+static void nl_handle_define(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *nl  = pc;
-   chunk_t *ref = nullptr;
+   Chunk *nl  = pc;
+   Chunk *ref = nullptr;
 
    while ((nl = chunk_get_next(nl)) != nullptr)
    {
@@ -4988,13 +4988,13 @@ void newline_after_multiline_comment(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       if (chunk_is_not_token(pc, CT_COMMENT_MULTI))
       {
          continue;
       }
-      chunk_t *tmp = pc;
+      Chunk *tmp = pc;
 
       while (  ((tmp = chunk_get_next(tmp)) != nullptr)
             && !chunk_is_newline(tmp))
@@ -5013,7 +5013,7 @@ void newline_after_label_colon(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       if (chunk_is_not_token(pc, CT_LABEL_COLON))
       {
@@ -5024,7 +5024,7 @@ void newline_after_label_colon(void)
 } // newline_after_label_colon
 
 
-static bool is_class_one_liner(chunk_t *pc)
+static bool is_class_one_liner(Chunk *pc)
 {
    if (  (  chunk_is_token(pc, CT_FUNC_CLASS_DEF)
          || chunk_is_token(pc, CT_FUNC_DEF))
@@ -5043,7 +5043,7 @@ void newlines_insert_blank_lines(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_nc_nnl(pc))
    {
       //LOG_FMT(LNEWLINE, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
       //        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -5143,7 +5143,7 @@ void newlines_functions_remove_extra_blank_lines(void)
       return;
    }
 
-   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       LOG_FMT(LNEWLINE, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -5187,7 +5187,7 @@ void newlines_squeeze_ifdef(void)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *pc;
+   Chunk *pc;
 
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_nc_nnl(pc))
    {
@@ -5196,22 +5196,22 @@ void newlines_squeeze_ifdef(void)
             || options::nl_squeeze_ifdef_top_level()))
       {
          log_rule_B("nl_squeeze_ifdef_top_level");
-         chunk_t *ppr = chunk_get_next(pc);
+         Chunk *ppr = chunk_get_next(pc);
 
          if (  chunk_is_token(ppr, CT_PP_IF)
             || chunk_is_token(ppr, CT_PP_ELSE)
             || chunk_is_token(ppr, CT_PP_ENDIF))
          {
-            chunk_t *pnl = nullptr;
-            chunk_t *nnl = chunk_get_next_nl(ppr);
+            Chunk *pnl = nullptr;
+            Chunk *nnl = chunk_get_next_nl(ppr);
 
             if (  chunk_is_token(ppr, CT_PP_ELSE)
                || chunk_is_token(ppr, CT_PP_ENDIF))
             {
                pnl = chunk_get_prev_nl(pc);
             }
-            chunk_t *tmp1;
-            chunk_t *tmp2;
+            Chunk *tmp1;
+            Chunk *tmp2;
 
             if (nnl != nullptr)
             {
@@ -5253,12 +5253,12 @@ void newlines_squeeze_paren_close(void)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *pc;
+   Chunk *pc;
 
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
-      chunk_t *next;
-      chunk_t *prev;
+      Chunk *next;
+      Chunk *prev;
 
       if (chunk_is_token(pc, CT_NEWLINE))
       {
@@ -5275,13 +5275,13 @@ void newlines_squeeze_paren_close(void)
          && chunk_is_paren_close(next)
          && chunk_is_paren_close(prev))
       {
-         chunk_t *prev_op = chunk_skip_to_match_rev(prev);
-         chunk_t *next_op = chunk_skip_to_match_rev(next);
-         bool    flag     = true;
+         Chunk *prev_op = chunk_skip_to_match_rev(prev);
+         Chunk *next_op = chunk_skip_to_match_rev(next);
+         bool  flag     = true;
 
          if (true)
          {
-            chunk_t *tmp = prev;
+            Chunk *tmp = prev;
 
             while (chunk_is_paren_close(tmp))
             {
@@ -5318,7 +5318,7 @@ void newlines_eat_start_end(void)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *pc;
+   Chunk *pc;
 
    // Process newlines at the start of the file
    if (  cpd.frag_cols == 0
@@ -5358,7 +5358,7 @@ void newlines_eat_start_end(void)
          {
             log_rule_B("nl_start_of_file");
             log_rule_B("nl_start_of_file_min");
-            chunk_t chunk;
+            Chunk chunk;
             set_chunk_type(&chunk, CT_NEWLINE);
             chunk.orig_line = pc->orig_line;
             chunk.orig_col  = pc->orig_col;
@@ -5417,7 +5417,7 @@ void newlines_eat_start_end(void)
          {
             log_rule_B("nl_end_of_file");
             log_rule_B("nl_end_of_file_min");
-            chunk_t chunk;
+            Chunk chunk;
             set_chunk_type(&chunk, CT_NEWLINE);
             chunk.orig_line = pc->orig_line;
             chunk.orig_col  = pc->orig_col;
@@ -5447,7 +5447,7 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
       return;
    }
 
-   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_nc_nnl(pc))
    {
       char copy[1000];
       LOG_FMT(LNEWLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
@@ -5499,8 +5499,8 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
          {
             mode_local = mode;
          }
-         chunk_t *prev = chunk_get_prev_nc(pc);
-         chunk_t *next = chunk_get_next_nc(pc);
+         Chunk *prev = chunk_get_prev_nc(pc);
+         Chunk *next = chunk_get_next_nc(pc);
 
          LOG_FMT(LNEWLINE, "%s(%d): mode_local is %s\n",
                  __func__, __LINE__, to_string(mode_local));
@@ -5519,7 +5519,7 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
             if (nl_flag & 1)
             {
                // remove newline if not preceded by a comment
-               chunk_t *prev2 = chunk_get_prev(prev);
+               Chunk *prev2 = chunk_get_prev(prev);
 
                if (  prev2 != nullptr
                   && !(chunk_is_comment(prev2)))
@@ -5531,7 +5531,7 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
             if (nl_flag & 2)
             {
                // remove newline if not followed by a comment or by '{'
-               chunk_t *next2 = chunk_get_next(next);
+               Chunk *next2 = chunk_get_next(next);
 
                if (  next2 != nullptr
                   && !(chunk_is_comment(next2))
@@ -5592,7 +5592,7 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
          // we need to move the newline
          if (mode_local & TP_LEAD)
          {
-            chunk_t *next2 = chunk_get_next(next);
+            Chunk *next2 = chunk_get_next(next);
 
             if (  chunk_is_token(next2, CT_PREPROC)
                || (  chunk_type == CT_ASSIGN
@@ -5668,8 +5668,8 @@ void newlines_class_colon_pos(c_token_t tok)
       pcc = options::pos_constr_comma();
       log_rule_B("pos_constr_comma");
    }
-   chunk_t *ccolon  = nullptr;
-   size_t  acv_span = options::align_constr_value_span();
+   Chunk  *ccolon  = nullptr;
+   size_t acv_span = options::align_constr_value_span();
 
    log_rule_B("align_constr_value_span");
    bool       with_acv = (acv_span > 0) && language_is_set(LANG_CPP);
@@ -5687,15 +5687,15 @@ void newlines_class_colon_pos(c_token_t tok)
       log_rule_B("align_on_tabstop");
    }
 
-   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_nc_nnl(pc))
    {
       if (  ccolon == nullptr
          && chunk_is_not_token(pc, tok))
       {
          continue;
       }
-      chunk_t *prev;
-      chunk_t *next;
+      Chunk *prev;
+      Chunk *next;
 
       if (chunk_is_token(pc, tok))
       {
@@ -5709,7 +5709,7 @@ void newlines_class_colon_pos(c_token_t tok)
          {
             LOG_FMT(LBLANKD, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-            chunk_t *paren_vor_value = chunk_get_next_type(pc, CT_FPAREN_OPEN, pc->level);
+            Chunk *paren_vor_value = chunk_get_next_type(pc, CT_FPAREN_OPEN, pc->level);
 
             if (  with_acv
                && paren_vor_value != nullptr)
@@ -5790,7 +5790,7 @@ void newlines_class_colon_pos(c_token_t tok)
          {
             LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-            chunk_t *paren_vor_value = chunk_get_next_type(pc, CT_FPAREN_OPEN, pc->level);
+            Chunk *paren_vor_value = chunk_get_next_type(pc, CT_FPAREN_OPEN, pc->level);
 
             if (  with_acv
                && paren_vor_value != nullptr)
@@ -5808,7 +5808,7 @@ void newlines_class_colon_pos(c_token_t tok)
                {
                   if (ncia == IARF_FORCE)          // nl_class_init_args, nl_constr_init_args: 5
                   {
-                     chunk_t *after = chunk_get_next(pc);   // Issue #2759
+                     Chunk *after = chunk_get_next(pc);   // Issue #2759
 
                      if (chunk_is_not_token(after, CT_COMMENT_CPP))
                      {
@@ -5880,7 +5880,7 @@ void newlines_class_colon_pos(c_token_t tok)
 } // newlines_class_colon_pos
 
 
-static void blank_line_max(chunk_t *pc, Option<unsigned> &opt)
+static void blank_line_max(Chunk *pc, Option<unsigned> &opt)
 {
    LOG_FUNC_ENTRY();
 
@@ -5901,9 +5901,9 @@ static void blank_line_max(chunk_t *pc, Option<unsigned> &opt)
 } // blank_line_max
 
 
-iarf_e newline_template_option(chunk_t *pc, iarf_e special, iarf_e base, iarf_e fallback)
+iarf_e newline_template_option(Chunk *pc, iarf_e special, iarf_e base, iarf_e fallback)
 {
-   chunk_t *const prev = chunk_get_prev_nc_nnl(pc);
+   Chunk *const prev = chunk_get_prev_nc_nnl(pc);
 
    if (  chunk_is_token(prev, CT_ANGLE_OPEN)
       && special != IARF_IGNORE)
@@ -5921,7 +5921,7 @@ iarf_e newline_template_option(chunk_t *pc, iarf_e special, iarf_e base, iarf_e 
 } // newline_template_option
 
 
-bool is_func_proto_group(chunk_t *pc, c_token_t one_liner_type)
+bool is_func_proto_group(Chunk *pc, c_token_t one_liner_type)
 {
    if (  pc != nullptr
       && options::nl_class_leave_one_liner_groups()
@@ -5951,7 +5951,7 @@ void do_blank_lines(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       if (chunk_is_token(pc, CT_NEWLINE))
       {
@@ -5972,7 +5972,7 @@ void do_blank_lines(void)
       {
          continue;
       }
-      chunk_t *prev = chunk_get_prev_nc(pc);
+      Chunk *prev = chunk_get_prev_nc(pc);
 
       if (prev != nullptr)
       {
@@ -5985,10 +5985,10 @@ void do_blank_lines(void)
             continue;
          }
       }
-      chunk_t *next = chunk_get_next(pc);
-      chunk_t *pcmt = chunk_get_prev(pc);
+      Chunk *next = chunk_get_next(pc);
+      Chunk *pcmt = chunk_get_prev(pc);
 
-      bool    line_added = false;
+      bool  line_added = false;
 
       /*
        * If this is the first or the last token, pretend that there is an extra
@@ -6083,8 +6083,8 @@ void do_blank_lines(void)
             || get_chunk_parent_type(prev) == CT_STRUCT))
       {
          c_token_t parent_type = get_chunk_parent_type(prev);
-         chunk_t   *start      = chunk_get_prev_type(prev, parent_type, prev->level);
-         chunk_t   *tmp        = start;
+         Chunk     *start      = chunk_get_prev_type(prev, parent_type, prev->level);
+         Chunk     *tmp        = start;
 
          // Is this a class/struct template?
          if (get_chunk_parent_type(tmp) == CT_TEMPLATE)
@@ -6135,7 +6135,7 @@ void do_blank_lines(void)
          && get_chunk_parent_type(prev) == CT_NAMESPACE)
       {
          // Control blanks before a namespace
-         chunk_t *tmp = chunk_get_prev_type(prev, CT_NAMESPACE, prev->level);
+         Chunk *tmp = chunk_get_prev_type(prev, CT_NAMESPACE, prev->level);
          tmp = chunk_get_prev_nc(tmp);
 
          while (  chunk_is_token(tmp, CT_NEWLINE)
@@ -6295,9 +6295,9 @@ void do_blank_lines(void)
          {
             // Issue #1702
             // look back if we have a variable
-            chunk_t *tmp        = pc;
-            bool    is_var_def  = false;
-            bool    is_fwd_decl = false;
+            Chunk *tmp        = pc;
+            bool  is_var_def  = false;
+            bool  is_fwd_decl = false;
 
             while ((tmp = chunk_get_prev(tmp)) != nullptr)
             {
@@ -6458,7 +6458,7 @@ void do_blank_lines(void)
       if (  options::nl_after_whole_file_ifdef() != 0
          && options::nl_after_whole_file_ifdef() != pc->nl_count)
       {
-         chunk_t *pp_start = chunk_get_pp_start(prev);
+         Chunk *pp_start = chunk_get_pp_start(prev);
 
          if (  pp_start != nullptr
             && get_chunk_parent_type(pp_start) == CT_PP_IF
@@ -6486,7 +6486,7 @@ void do_blank_lines(void)
       if (  options::nl_after_whole_file_endif() != 0
          && options::nl_after_whole_file_endif() != pc->nl_count)
       {
-         chunk_t *pp_start = chunk_get_pp_start(prev);
+         Chunk *pp_start = chunk_get_pp_start(prev);
 
          if (  pp_start != nullptr
             && get_chunk_parent_type(pp_start) == CT_PP_ENDIF
@@ -6513,8 +6513,8 @@ void newlines_cleanup_dup(void)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *pc   = chunk_get_head();
-   chunk_t *next = pc;
+   Chunk *pc   = chunk_get_head();
+   Chunk *next = pc;
 
    while (pc != nullptr)
    {
@@ -6532,11 +6532,11 @@ void newlines_cleanup_dup(void)
 } // newlines_cleanup_dup
 
 
-static void newlines_enum_entries(chunk_t *open_brace, iarf_e av)
+static void newlines_enum_entries(Chunk *open_brace, iarf_e av)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *pc = open_brace;
+   Chunk *pc = open_brace;
 
    while (  (pc = chunk_get_next_nc(pc)) != nullptr
          && pc->level > open_brace->level)
@@ -6556,11 +6556,11 @@ static void newlines_enum_entries(chunk_t *open_brace, iarf_e av)
 } // newlines_enum_entries
 
 
-static void newlines_double_space_struct_enum_union(chunk_t *open_brace)
+static void newlines_double_space_struct_enum_union(Chunk *open_brace)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *pc = open_brace;
+   Chunk *pc = open_brace;
 
    while (  (pc = chunk_get_next_nc(pc)) != nullptr
          && pc->level > open_brace->level)
@@ -6575,7 +6575,7 @@ static void newlines_double_space_struct_enum_union(chunk_t *open_brace)
        * it is before a comment, then make sure that the newline is
        * at least doubled
        */
-      chunk_t *prev = chunk_get_prev(pc);
+      Chunk *prev = chunk_get_prev(pc);
 
       if (  !chunk_is_comment(prev)
          && chunk_is_not_token(prev, CT_BRACE_OPEN)
@@ -6594,10 +6594,10 @@ void annotations_newlines(void)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *next;
-   chunk_t *prev;
-   chunk_t *ae;   // last token of the annotation
-   chunk_t *pc = chunk_get_head();
+   Chunk *next;
+   Chunk *prev;
+   Chunk *ae;   // last token of the annotation
+   Chunk *pc = chunk_get_head();
 
    while (  (pc = chunk_get_next_type(pc, CT_ANNOTATION, -1)) != nullptr
          && (next = chunk_get_next_nnl(pc)) != nullptr)
@@ -6648,7 +6648,7 @@ void annotations_newlines(void)
 } // annotations_newlines
 
 
-bool newlines_between(chunk_t *pc_start, chunk_t *pc_end, size_t &newlines, scope_e scope)
+bool newlines_between(Chunk *pc_start, Chunk *pc_end, size_t &newlines, scope_e scope)
 {
    if (  pc_start == nullptr
       || pc_end == nullptr)
@@ -6657,7 +6657,7 @@ bool newlines_between(chunk_t *pc_start, chunk_t *pc_end, size_t &newlines, scop
    }
    newlines = 0;
 
-   chunk_t *it = pc_start;
+   Chunk *it = pc_start;
 
    for ( ; it != nullptr && it != pc_end; it = chunk_get_next(it, scope))
    {

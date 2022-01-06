@@ -12,7 +12,7 @@
 #include "uncrustify.h"
 
 
-bool can_be_full_param(chunk_t *start, chunk_t *end)
+bool can_be_full_param(Chunk *start, Chunk *end)
 {
    LOG_FUNC_ENTRY();
 
@@ -21,11 +21,11 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
    LOG_FMT(LFPARAM, "%s(%d): end->text()   is '%s', type is %s\n",
            __func__, __LINE__, end->text(), get_token_name(end->type));
 
-   int     word_count     = 0;
-   int     type_count     = 0;
-   chunk_t *pc            = nullptr;
-   chunk_t *first_word    = nullptr;
-   bool    first_word_set = false;
+   int   word_count     = 0;
+   int   type_count     = 0;
+   Chunk *pc            = nullptr;
+   Chunk *first_word    = nullptr;
+   bool  first_word_set = false;
 
    for (pc = start;
         pc != nullptr && pc != end;
@@ -97,13 +97,13 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
               && chunk_is_token(pc, CT_PAREN_OPEN))
       {
          // Check for old-school func proto param '(type)'
-         chunk_t *tmp1 = chunk_skip_to_match(pc, scope_e::PREPROC);
+         Chunk *tmp1 = chunk_skip_to_match(pc, scope_e::PREPROC);
 
          if (tmp1 == nullptr)
          {
             return(false);
          }
-         chunk_t *tmp2 = chunk_get_next_nc_nnl(tmp1, scope_e::PREPROC);
+         Chunk *tmp2 = chunk_get_next_nc_nnl(tmp1, scope_e::PREPROC);
 
          if (tmp2 == nullptr)
          {
@@ -142,19 +142,19 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
       {
          // Check for func proto param 'void (*name)' or 'void (*name)(params)' or 'void (^name)(params)'
          // <name> can be optional
-         chunk_t *tmp1 = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+         Chunk *tmp1 = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
 
          if (tmp1 == nullptr)
          {
             return(false);
          }
-         chunk_t *tmp2 = chunk_get_next_nc_nnl(tmp1, scope_e::PREPROC);
+         Chunk *tmp2 = chunk_get_next_nc_nnl(tmp1, scope_e::PREPROC);
 
          if (tmp2 == nullptr)
          {
             return(false);
          }
-         chunk_t *tmp3 = (chunk_is_str(tmp2, ")", 1)) ? tmp2 : chunk_get_next_nc_nnl(tmp2, scope_e::PREPROC);
+         Chunk *tmp3 = (chunk_is_str(tmp2, ")", 1)) ? tmp2 : chunk_get_next_nc_nnl(tmp2, scope_e::PREPROC);
 
          if (tmp3 == nullptr)
          {
@@ -229,7 +229,7 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
               __func__, __LINE__, pc->text(), get_token_name(pc->type));
    }
 
-   chunk_t *last = chunk_get_prev_nc_nnl_ni(pc);   // Issue #2279
+   Chunk *last = chunk_get_prev_nc_nnl_ni(pc);   // Issue #2279
 
    LOG_FMT(LFPARAM, "%s(%d): last->text() is '%s', type is %s\n",
            __func__, __LINE__, last->text(), get_token_name(last->type));
@@ -301,16 +301,16 @@ bool can_be_full_param(chunk_t *start, chunk_t *end)
 } // can_be_full_param
 
 
-bool chunk_ends_type(chunk_t *start)
+bool chunk_ends_type(Chunk *start)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc       = start;
-   bool    ret       = false;
-   size_t  cnt       = 0;
-   bool    last_expr = false;
-   bool    last_lval = false;
+   Chunk  *pc       = start;
+   bool   ret       = false;
+   size_t cnt       = 0;
+   bool   last_expr = false;
+   bool   last_lval = false;
 
-   bool    a = pc->flags.test(PCF_IN_FCN_CTOR);
+   bool   a = pc->flags.test(PCF_IN_FCN_CTOR);
 
    if (a)
    {
@@ -388,11 +388,11 @@ bool chunk_ends_type(chunk_t *start)
 } // chunk_ends_type
 
 
-bool chunkstack_match(ChunkStack &cs, chunk_t *pc)
+bool chunkstack_match(ChunkStack &cs, Chunk *pc)
 {
    for (size_t idx = 0; idx < cs.Len(); idx++)
    {
-      chunk_t *tmp = cs.GetChunk(idx);
+      Chunk *tmp = cs.GetChunk(idx);
 
       if (pc->str.equals(tmp->str))
       {
@@ -404,7 +404,7 @@ bool chunkstack_match(ChunkStack &cs, chunk_t *pc)
 } // chunkstack_match
 
 
-void flag_series(chunk_t *start, chunk_t *end, pcf_flags_t set_flags, pcf_flags_t clr_flags, scope_e nav)
+void flag_series(Chunk *start, Chunk *end, pcf_flags_t set_flags, pcf_flags_t clr_flags, scope_e nav)
 {
    LOG_FUNC_ENTRY();
 
@@ -428,7 +428,7 @@ void flag_series(chunk_t *start, chunk_t *end, pcf_flags_t set_flags, pcf_flags_
 } // flag_series
 
 
-size_t get_cpp_template_angle_nest_level(chunk_t *pc)
+size_t get_cpp_template_angle_nest_level(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
    int nestLevel = 0;
@@ -452,11 +452,11 @@ size_t get_cpp_template_angle_nest_level(chunk_t *pc)
 }
 
 
-chunk_t *get_d_template_types(ChunkStack &cs, chunk_t *open_paren)
+Chunk *get_d_template_types(ChunkStack &cs, Chunk *open_paren)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *tmp       = open_paren;
-   bool    maybe_type = true;
+   Chunk *tmp       = open_paren;
+   bool  maybe_type = true;
 
    while (  ((tmp = chunk_get_next_nc_nnl(tmp)) != nullptr)
          && tmp->level > open_paren->level)
@@ -480,7 +480,7 @@ chunk_t *get_d_template_types(ChunkStack &cs, chunk_t *open_paren)
 } // get_d_template_types
 
 
-bool go_on(chunk_t *pc, chunk_t *start)
+bool go_on(Chunk *pc, Chunk *start)
 {
    if (  pc == nullptr
       || pc->level != start->level)
@@ -511,7 +511,7 @@ bool is_ucase_str(const char *str, size_t len)
 } // is_ucase_str
 
 
-void make_type(chunk_t *pc)
+void make_type(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
@@ -537,10 +537,10 @@ void make_type(chunk_t *pc)
 } // make_type
 
 
-chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
+Chunk *set_paren_parent(Chunk *start, c_token_t parent)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *end;
+   Chunk *end;
 
    end = chunk_skip_to_match(start, scope_e::PREPROC);
 

@@ -8,12 +8,12 @@
 
 #include "cs_top_is_question.h"
 
-#include "chunk_list.h"
+#include "chunk.h"
 
 
 bool cs_top_is_question(ChunkStack &cs, size_t level)
 {
-   chunk_t *pc = cs.Empty() ? nullptr : cs.Top()->m_pc;
+   Chunk *pc = cs.Empty() ? nullptr : cs.Top()->m_pc;
 
    return(  chunk_is_token(pc, CT_QUESTION)
          && pc->level == level);

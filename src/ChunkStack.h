@@ -29,15 +29,15 @@ public:
       }
 
 
-      Entry(size_t sn, chunk_t *pc)
+      Entry(size_t sn, Chunk *pc)
          : m_seqnum(sn)
          , m_pc(pc)
       {
       }
 
 
-      size_t  m_seqnum;
-      chunk_t *m_pc;
+      size_t m_seqnum;
+      Chunk  *m_pc;
    };
 
 protected:
@@ -65,7 +65,7 @@ public:
    void Set(const ChunkStack &cs);
 
 
-   void Push_Back(chunk_t *pc)
+   void Push_Back(Chunk *pc)
    {
       Push_Back(pc, ++m_seqnum);
    }
@@ -89,16 +89,16 @@ public:
    const Entry *Get(size_t idx) const;
 
 
-   chunk_t *GetChunk(size_t idx) const;
+   Chunk *GetChunk(size_t idx) const;
 
 
-   chunk_t *Pop_Back();
+   Chunk *Pop_Back();
 
 
-   void Push_Back(chunk_t *pc, size_t seqnum);
+   void Push_Back(Chunk *pc, size_t seqnum);
 
 
-   chunk_t *Pop_Front();
+   Chunk *Pop_Front();
 
 
    void Reset()

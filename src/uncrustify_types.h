@@ -87,7 +87,7 @@ enum class char_encoding_e : unsigned int
 };
 
 
-struct chunk_t; //forward declaration
+class Chunk; //forward declaration
 
 
 /**
@@ -97,152 +97,33 @@ struct chunk_t; //forward declaration
  */
 struct indent_ptr_t
 {
-   chunk_t *ref;
-   int     delta;
+   Chunk *ref;
+   int   delta;
 };
 
 
 struct align_ptr_t
 {
-   chunk_t *next;       //! nullptr or the chunk that should be under this one
-   bool    right_align; //! AlignStack.m_right_align
-   size_t  star_style;  //! AlignStack.m_star_style
-   size_t  amp_style;   //! AlignStack.m_amp_style
-   int     gap;         //! AlignStack.m_gap
+   Chunk  *next;       //! nullptr or the chunk that should be under this one
+   bool   right_align; //! AlignStack.m_right_align
+   size_t star_style;  //! AlignStack.m_star_style
+   size_t amp_style;   //! AlignStack.m_amp_style
+   int    gap;         //! AlignStack.m_gap
 
    /*
     * col_adj is the amount to alter the column for the token.
     * For example, a dangling '*' would be set to -1.
     * A right-aligned word would be a positive value.
     */
-   int     col_adj;
-   chunk_t *ref;
-   chunk_t *start;
+   int   col_adj;
+   Chunk *ref;
+   Chunk *start;
 };
 
 
 // for debugging purpose only
 typedef std::pair<size_t, char *>   Track_nr;         // track for "trackNumber" and "rule"
 typedef std::vector<Track_nr>       track_list;       // liste for many tracks
-
-// This is the main type of this program
-struct chunk_t
-{
-   chunk_t()
-   {
-      reset();
-   }
-
-
-   //! sets all elements of the struct to their default value
-   void reset()
-   {
-      memset(&align, 0, sizeof(align));
-      memset(&indent, 0, sizeof(indent));
-      next          = nullptr;
-      prev          = nullptr;
-      parent        = nullptr;
-      type          = CT_NONE;
-      parent_type   = CT_NONE;
-      orig_line     = 0;
-      orig_col      = 0;
-      orig_col_end  = 0;
-      orig_prev_sp  = 0;
-      flags         = PCF_NONE;
-      column        = 0;
-      column_indent = 0;
-      nl_count      = 0;
-      nl_column     = 0;
-      level         = 0;
-      brace_level   = 0;
-      pp_level      = 999;                           // use a big value to find some errors
-      after_tab     = false;
-      // for debugging purpose only
-      tracking = nullptr;
-      str.clear();
-   }
-
-
-   //! provides the number of characters of string
-   size_t len() const
-   {
-      return(str.size());
-   }
-
-
-   //! provides the content of a string a zero terminated character pointer
-   const char *text() const
-   {
-      return(str.c_str());
-   }
-
-
-   // Issue #2984, fill up, if necessary, a copie of the first chars of the text() string
-   const char *elided_text(char *for_the_copy)
-   {
-      const char *test_it       = text();
-      size_t     test_it_length = strlen(test_it);
-
-      size_t     truncate_value = uncrustify::options::debug_truncate();
-
-      if (truncate_value != 0)
-      {
-         if (test_it_length > truncate_value)
-         {
-            memset(for_the_copy, 0, 1000);
-
-            if (test_it_length < truncate_value + 30)
-            {
-               strncpy(for_the_copy, test_it, truncate_value - 30);
-               for_the_copy[truncate_value - 30] = 0;
-            }
-            else
-            {
-               strncpy(for_the_copy, test_it, truncate_value);
-               for_the_copy[truncate_value] = 0;
-            }
-            char *message = strcat(for_the_copy, " ... <The string is truncated>");
-
-            return(message);
-         }
-         else
-         {
-            return(test_it);
-         }
-      }
-      return(test_it);
-   }
-
-   chunk_t      *next;            //! pointer to next chunk in list
-   chunk_t      *prev;            //! pointer to previous chunk in list
-   chunk_t      *parent;          //! pointer to parent chunk(not always set)
-   align_ptr_t  align;
-   indent_ptr_t indent;
-   c_token_t    type;             //! type of the chunk itself
-   c_token_t    parent_type;      //! type of the parent chunk usually CT_NONE
-                                  //! might be different from parent->parent_type (above)
-   size_t       orig_line;        //! line number of chunk in input file
-   size_t       orig_col;         //! column where chunk started in the input file, is always > 0
-   size_t       orig_col_end;     //! column where chunk ended in the input file, is always > 1
-   UINT32       orig_prev_sp;     //! whitespace before this token
-   pcf_flags_t  flags;            //! see PCF_xxx
-   size_t       column;           //! column of chunk
-   size_t       column_indent;    /** if 1st on a line, set to the 'indent'
-                                   * column, which may be less than the real
-                                   * column used to indent with tabs          */
-   size_t       nl_count;         //! number of newlines in CT_NEWLINE
-   size_t       nl_column;        //! column of the subsequent newline entries(all of them should have the same column)
-   size_t       level;            /** nest level in {, (, or [
-                                   * only to help vim command } */
-   size_t       brace_level;      //! nest level in braces only
-   size_t       pp_level;         //! nest level in preprocessor
-   bool         after_tab;        //! whether this token was after a tab
-   unc_text     str;              //! the token text
-
-   // for debugging purpose only
-   track_list   *tracking;
-};
-
 
 //! list of all programming languages Uncrustify supports
 enum lang_flag_e

@@ -10,14 +10,14 @@
 #include "quick_align_again.h"
 
 #include "align_stack.h"
-#include "chunk_list.h"
+#include "chunk.h"
 
 
 void quick_align_again(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       char copy[1000];
       LOG_FMT(LALAGAIN, "%s(%d): orig_line is %zu, orig_col is %zu, column is %zu, text() '%s'\n",
@@ -38,7 +38,7 @@ void quick_align_again(void)
          as.Add(pc->align.start);
          chunk_flags_set(pc, PCF_WAS_ALIGNED);
 
-         for (chunk_t *tmp = pc->align.next; tmp != nullptr; tmp = tmp->align.next)
+         for (Chunk *tmp = pc->align.next; tmp != nullptr; tmp = tmp->align.next)
          {
             chunk_flags_set(tmp, PCF_WAS_ALIGNED);
             as.Add(tmp->align.start);

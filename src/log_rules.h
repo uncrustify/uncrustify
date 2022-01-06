@@ -9,7 +9,7 @@
 #ifndef LOG_RULES_H_INCLUDED
 #define LOG_RULES_H_INCLUDED
 
-#include "chunk_list.h"
+#include "chunk.h"
 #include "uncrustify.h"
 
 using namespace uncrustify;
@@ -33,7 +33,7 @@ using namespace uncrustify;
    log_rule3(LCURRENT, __func__, (rule))
 #endif
 
-void log_rule2(const char *func, size_t line, const char *rule, chunk_t *first, chunk_t *second);
+void log_rule2(const char *func, size_t line, const char *rule, Chunk *first, Chunk *second);
 
 
 #ifdef SUPER_LOG
@@ -44,6 +44,6 @@ void log_rule3(log_sev_t sev, const char *func, const char *rule);
 
 #endif
 
-void log_rule4(const char *rule, chunk_t *first);
+void log_rule4(const char *rule, Chunk *first);
 
 #endif /* LOG_RULES_H_INCLUDED */

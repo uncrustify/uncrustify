@@ -11,7 +11,7 @@
 /**
  * Detect a cpp braced init list
  */
-bool detect_cpp_braced_init_list(chunk_t *pc, chunk_t *next);
+bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next);
 
 
 /**
@@ -19,7 +19,7 @@ bool detect_cpp_braced_init_list(chunk_t *pc, chunk_t *next);
  * a cpp braced initializer list; a call to detect_cpp_braced_init_list()
  * should first be made prior to calling this function
  */
-void flag_cpp_braced_init_list(chunk_t *pc, chunk_t *next);
+void flag_cpp_braced_init_list(Chunk *pc, Chunk *next);
 
 
 #endif

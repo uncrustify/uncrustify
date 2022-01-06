@@ -15,7 +15,7 @@ constexpr static auto LCURRENT = LALASS;
 using namespace uncrustify;
 
 
-chunk_t *align_braced_init_list(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_count)
+Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count)
 {
    LOG_FUNC_ENTRY();
 
@@ -39,10 +39,10 @@ chunk_t *align_braced_init_list(chunk_t *first, size_t span, size_t thresh, size
    vdas.Start(span, thresh);
    vdas.m_right_align = !options::align_on_tabstop();
 
-   size_t  var_def_cnt = 0;
-   size_t  equ_count   = 0;
-   size_t  tmp;
-   chunk_t *pc = first;
+   size_t var_def_cnt = 0;
+   size_t equ_count   = 0;
+   size_t tmp;
+   Chunk  *pc = first;
 
    while (pc != nullptr)
    {

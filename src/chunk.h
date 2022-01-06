@@ -1,5 +1,5 @@
 /**
- * @file chunk_list.h
+ * @file chunk.h
  * Manages and navigates the list of chunks.
  *
  * @author  Ben Gardner
@@ -42,12 +42,62 @@ enum class scope_e : unsigned int
 };
 
 
+// This is the main type of this program
+class Chunk
+{
+public:
+   //! default constructor
+   Chunk();
+
+   //! sets all elements of the struct to their default value
+   void reset();
+
+   //! provides the number of characters of string
+   size_t len() const;
+
+   //! provides the content of a string a zero terminated character pointer
+   const char *text() const;
+
+   // Issue #2984, fill up, if necessary, a copy of the first chars of the text() string
+   const char *elided_text(char *for_the_copy);
+
+   Chunk        *next;          //! pointer to next chunk in list
+   Chunk        *prev;          //! pointer to previous chunk in list
+   Chunk        *parent;        //! pointer to parent chunk(not always set)
+   align_ptr_t  align;
+   indent_ptr_t indent;
+   c_token_t    type;             //! type of the chunk itself
+   c_token_t    parent_type;      //! type of the parent chunk usually CT_NONE
+                                  //! might be different from parent->parent_type (above)
+   size_t       orig_line;        //! line number of chunk in input file
+   size_t       orig_col;         //! column where chunk started in the input file, is always > 0
+   size_t       orig_col_end;     //! column where chunk ended in the input file, is always > 1
+   UINT32       orig_prev_sp;     //! whitespace before this token
+   pcf_flags_t  flags;            //! see PCF_xxx
+   size_t       column;           //! column of chunk
+   size_t       column_indent;    /** if 1st on a line, set to the 'indent'
+                                   * column, which may be less than the real
+                                   * column used to indent with tabs          */
+   size_t   nl_count;             //! number of newlines in CT_NEWLINE
+   size_t   nl_column;            //! column of the subsequent newline entries(all of them should have the same column)
+   size_t   level;                /** nest level in {, (, or [
+                                   * only to help vim command } */
+   size_t   brace_level;          //! nest level in braces only
+   size_t   pp_level;             //! nest level in preprocessor
+   bool     after_tab;            //! whether this token was after a tab
+   unc_text str;                  //! the token text
+
+   // for debugging purpose only
+   track_list *tracking;
+};
+
+
 /**
  * duplicate a chunk in a chunk list
  *
  * @param pc_in  chunk to duplicate
  */
-chunk_t *chunk_dup(const chunk_t *pc_in);
+Chunk *chunk_dup(const Chunk *pc_in);
 
 
 /**
@@ -62,7 +112,7 @@ chunk_t *chunk_dup(const chunk_t *pc_in);
  *
  * @return pointer to the added chunk
  */
-chunk_t *chunk_add_after(const chunk_t *pc_in, chunk_t *ref);
+Chunk *chunk_add_after(const Chunk *pc_in, Chunk *ref);
 
 
 /**
@@ -79,7 +129,7 @@ chunk_t *chunk_add_after(const chunk_t *pc_in, chunk_t *ref);
  *
  * @retval pointer to the added chunk
  */
-chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref);
+Chunk *chunk_add_before(const Chunk *pc_in, Chunk *ref);
 
 
 /**
@@ -87,7 +137,7 @@ chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref);
  *
  * @param pc  chunk to delete
  */
-void chunk_del(chunk_t * &pc);
+void chunk_del(Chunk * &pc);
 
 
 /**
@@ -96,7 +146,7 @@ void chunk_del(chunk_t * &pc);
  * @param pc_in  chunk to move
  * @param ref    chunk after which to move
  */
-void chunk_move_after(chunk_t *pc_in, chunk_t *ref);
+void chunk_move_after(Chunk *pc_in, Chunk *ref);
 
 
 /**
@@ -104,11 +154,11 @@ void chunk_move_after(chunk_t *pc_in, chunk_t *ref);
  *
  * @return pointer to the first chunk
  */
-chunk_t *chunk_get_head(void);
+Chunk *chunk_get_head(void);
 
 
 //! get the last chunk in a chunk list
-chunk_t *chunk_get_tail(void);
+Chunk *chunk_get_tail(void);
 
 
 /**
@@ -119,7 +169,7 @@ chunk_t *chunk_get_tail(void);
  *
  * @return pointer to next chunk or nullptr if no chunk was found
  */
-chunk_t *chunk_get_next(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -130,7 +180,7 @@ chunk_t *chunk_get_next(chunk_t *cur, scope_e scope = scope_e::ALL);
  *
  * @return pointer to previous chunk or nullptr if no chunk was found
  */
-chunk_t *chunk_get_prev(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -139,7 +189,7 @@ chunk_t *chunk_get_prev(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param pc1  The first chunk
  * @param pc2  The second chunk
  */
-void chunk_swap(chunk_t *pc1, chunk_t *pc2);
+void chunk_swap(Chunk *pc1, Chunk *pc2);
 
 
 /**
@@ -148,7 +198,7 @@ void chunk_swap(chunk_t *pc1, chunk_t *pc2);
  * @param pc1  The first chunk of line 1
  * @param pc2  The first chunk of line 2
  */
-void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2);
+void chunk_swap_lines(Chunk *pc1, Chunk *pc2);
 
 
 /**
@@ -161,11 +211,11 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2);
  *
  * @param pc  chunk to start with
  */
-chunk_t *chunk_first_on_line(chunk_t *pc);
+Chunk *chunk_first_on_line(Chunk *pc);
 
 
 //! check if a given chunk is the last on its line
-bool chunk_is_last_on_line(chunk_t &pc);
+bool chunk_is_last_on_line(Chunk &pc);
 
 
 /**
@@ -174,7 +224,7 @@ bool chunk_is_last_on_line(chunk_t &pc);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_nl(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nl(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -183,7 +233,7 @@ chunk_t *chunk_get_next_nl(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_nl(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nl(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -192,7 +242,7 @@ chunk_t *chunk_get_prev_nl(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_nc(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nc(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -201,7 +251,7 @@ chunk_t *chunk_get_next_nc(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_nc(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nc(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -210,7 +260,7 @@ chunk_t *chunk_get_prev_nc(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nnl(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -219,7 +269,7 @@ chunk_t *chunk_get_next_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nnl(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -228,7 +278,7 @@ chunk_t *chunk_get_prev_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_nc_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nc_nnl(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -237,7 +287,7 @@ chunk_t *chunk_get_next_nc_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_nc_nnl_np(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nc_nnl_np(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -246,7 +296,7 @@ chunk_t *chunk_get_next_nc_nnl_np(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_nc_nnl_np(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nc_nnl_np(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -255,7 +305,7 @@ chunk_t *chunk_get_prev_nc_nnl_np(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_nc_nnl_in_pp(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nc_nnl_in_pp(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -264,7 +314,7 @@ chunk_t *chunk_get_next_nc_nnl_in_pp(chunk_t *cur, scope_e scope = scope_e::ALL)
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_nc_nnl_in_pp(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nc_nnl_in_pp(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -276,7 +326,7 @@ chunk_t *chunk_get_prev_nc_nnl_in_pp(chunk_t *cur, scope_e scope = scope_e::ALL)
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_ppa_get_next_nc_nnl(chunk_t *cur);
+Chunk *chunk_ppa_get_next_nc_nnl(Chunk *cur);
 
 
 /**
@@ -285,7 +335,7 @@ chunk_t *chunk_ppa_get_next_nc_nnl(chunk_t *cur);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_nc_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nc_nnl(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -294,7 +344,7 @@ chunk_t *chunk_get_prev_nc_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_nc_nnl_nb(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nc_nnl_nb(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -303,7 +353,7 @@ chunk_t *chunk_get_next_nc_nnl_nb(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_nc_nnl_nb(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nc_nnl_nb(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -316,7 +366,7 @@ chunk_t *chunk_get_prev_nc_nnl_nb(chunk_t *cur, scope_e scope = scope_e::ALL);
  *
  * @return nullptr or the next chunk not in or part of square brackets
  */
-chunk_t *chunk_get_next_nisq(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nisq(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -325,7 +375,7 @@ chunk_t *chunk_get_next_nisq(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_nc_nnl_ni(chunk_t *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nc_nnl_ni(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -338,7 +388,7 @@ chunk_t *chunk_get_prev_nc_nnl_ni(chunk_t *cur, scope_e scope = scope_e::ALL);
  *
  * @return nullptr or the match
  */
-chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_type(Chunk *cur, c_token_t type, int level, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -351,7 +401,7 @@ chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level, scope_e sc
  *
  * @return nullptr or the match
  */
-chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type, int level, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_type(Chunk *cur, c_token_t type, int level, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -366,9 +416,9 @@ chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type, int level, scope_e sc
  * @param scope  code region to search in
  *
  * @retval nullptr  no chunk found or invalid parameters provided
- * @retval chunk_t  pointer to the found chunk
+ * @retval Chunk  pointer to the found chunk
  */
-chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_str(Chunk *cur, const char *str, size_t len, int level, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -383,9 +433,9 @@ chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level
  * @param scope  code region to search in
  *
  * @retval nullptr  no chunk found or invalid parameters provided
- * @retval chunk_t  pointer to the found chunk
+ * @retval Chunk  pointer to the found chunk
  */
-chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_str(Chunk *cur, const char *str, size_t len, int level, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -396,7 +446,7 @@ chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level
  *
  * @return pointer to found chunk or nullptr if no chunk was found
  */
-chunk_t *chunk_get_next_nvb(chunk_t *cur, const scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nvb(Chunk *cur, const scope_e scope = scope_e::ALL);
 
 
 /**
@@ -407,7 +457,7 @@ chunk_t *chunk_get_next_nvb(chunk_t *cur, const scope_e scope = scope_e::ALL);
  *
  * @return pointer to found chunk or nullptr if no chunk was found
  */
-chunk_t *chunk_get_prev_nvb(chunk_t *cur, const scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nvb(Chunk *cur, const scope_e scope = scope_e::ALL);
 
 
 /**
@@ -419,7 +469,7 @@ chunk_t *chunk_get_prev_nvb(chunk_t *cur, const scope_e scope = scope_e::ALL);
  *
  * @return nullptr or the next chunk not in or part of square brackets
  */
-chunk_t *chunk_get_next_ssq(chunk_t *cur);
+Chunk *chunk_get_next_ssq(Chunk *cur);
 
 /**
  * Gets the prev chunk not in or part of balanced square
@@ -430,7 +480,7 @@ chunk_t *chunk_get_next_ssq(chunk_t *cur);
  *
  * @return nullptr or the prev chunk not in or part of square brackets
  */
-chunk_t *chunk_get_prev_ssq(chunk_t *cur);
+Chunk *chunk_get_prev_ssq(Chunk *cur);
 
 /**
  * Gets the corresponding start chunk if the given chunk is within a
@@ -440,7 +490,7 @@ chunk_t *chunk_get_prev_ssq(chunk_t *cur);
  *
  * @return nullptr or start chunk of the preprocessor directive
  */
-chunk_t *chunk_get_pp_start(chunk_t *cur);
+Chunk *chunk_get_pp_start(Chunk *cur);
 
 /**
  * @brief reverse search a chunk of a given category in a chunk list
@@ -449,9 +499,9 @@ chunk_t *chunk_get_pp_start(chunk_t *cur);
  * @param  cat  category to search for
  *
  * @retval nullptr  no object found, or invalid parameters provided
- * @retval chunk_t  pointer to the found object
+ * @retval Chunk  pointer to the found object
  */
-chunk_t *chunk_search_prev_cat(chunk_t *pc, const c_token_t cat);
+Chunk *chunk_search_prev_cat(Chunk *pc, const c_token_t cat);
 
 
 /**
@@ -461,9 +511,9 @@ chunk_t *chunk_search_prev_cat(chunk_t *pc, const c_token_t cat);
  * @param  cat  category to search for
  *
  * @retval nullptr  no object found, or invalid parameters provided
- * @retval chunk_t  pointer to the found object
+ * @retval Chunk  pointer to the found object
  */
-chunk_t *chunk_search_next_cat(chunk_t *pc, const c_token_t cat);
+Chunk *chunk_search_next_cat(Chunk *pc, const c_token_t cat);
 
 /**
  * @brief checks wether two chunks are in same line
@@ -473,7 +523,7 @@ chunk_t *chunk_search_next_cat(chunk_t *pc, const c_token_t cat);
  *
  * @return true if there is no newline between start and end chunks
  */
-bool are_chunks_in_same_line(chunk_t *start, chunk_t *end);
+bool are_chunks_in_same_line(Chunk *start, Chunk *end);
 
 /*
  * TODO: better move the function implementations to the source file.
@@ -486,7 +536,7 @@ bool are_chunks_in_same_line(chunk_t *start, chunk_t *end);
  * The compiler should know how to optimize the code itself.
  * To clarify do a profiling run with and without inline
  */
-static inline bool is_expected_type_and_level(chunk_t *pc, c_token_t type, int level)
+static inline bool is_expected_type_and_level(Chunk *pc, c_token_t type, int level)
 {
    // we don't care if the pointer is invalid or about the level (if it is negative),
    // or it is as expected and the type is as expected
@@ -497,7 +547,7 @@ static inline bool is_expected_type_and_level(chunk_t *pc, c_token_t type, int l
 }
 
 
-static inline bool is_expected_string_and_level(chunk_t *pc, const char *str, int level, size_t len)
+static inline bool is_expected_string_and_level(Chunk *pc, const char *str, int level, size_t len)
 {
    // we don't care if the pointer is invalid or about the level (if it is negative) or it is as expected
    return(  pc == nullptr
@@ -508,14 +558,14 @@ static inline bool is_expected_string_and_level(chunk_t *pc, const char *str, in
 }
 
 
-static inline bool chunk_is_token(const chunk_t *pc, c_token_t c_token)
+static inline bool chunk_is_token(const Chunk *pc, c_token_t c_token)
 {
    return(  pc != nullptr
          && pc->type == c_token);
 }
 
 
-static inline bool chunk_is_not_token(const chunk_t *pc, c_token_t c_token)
+static inline bool chunk_is_not_token(const Chunk *pc, c_token_t c_token)
 {
    return(  pc != nullptr
          && pc->type != c_token);
@@ -530,7 +580,7 @@ static inline bool chunk_is_not_token(const chunk_t *pc, c_token_t c_token)
  *
  * @return nullptr or the matching paren/brace/square
  */
-static inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e::ALL)
+static inline Chunk *chunk_skip_to_match(Chunk *cur, scope_e scope = scope_e::ALL)
 {
    if (  cur != nullptr
       && (  chunk_is_token(cur, CT_PAREN_OPEN)
@@ -548,7 +598,7 @@ static inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e
 }
 
 
-static inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, scope_e scope = scope_e::ALL)
+static inline Chunk *chunk_skip_to_match_rev(Chunk *cur, scope_e scope = scope_e::ALL)
 {
    if (  cur != nullptr
       && (  chunk_is_token(cur, CT_PAREN_CLOSE)
@@ -567,8 +617,8 @@ static inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, scope_e scope = sco
 
 
 //! skip to the final word/type in a :: chain
-chunk_t *chunk_skip_dc_member(chunk_t *start, scope_e scope = scope_e::ALL);
-chunk_t *chunk_skip_dc_member_rev(chunk_t *start, scope_e scope = scope_e::ALL);
+Chunk *chunk_skip_dc_member(Chunk *start, scope_e scope = scope_e::ALL);
+Chunk *chunk_skip_dc_member_rev(Chunk *start, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -580,7 +630,7 @@ chunk_t *chunk_skip_dc_member_rev(chunk_t *start, scope_e scope = scope_e::ALL);
  * - C comment
  * - C++ comment
  */
-static inline bool chunk_is_comment(chunk_t *pc)
+static inline bool chunk_is_comment(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_COMMENT)
          || chunk_is_token(pc, CT_COMMENT_MULTI)
@@ -591,7 +641,7 @@ static inline bool chunk_is_comment(chunk_t *pc)
 /**
  * Returns true if the chunk under test is an inheritance access specifier
  */
-static inline bool chunk_is_cpp_inheritance_access_specifier(chunk_t *pc)
+static inline bool chunk_is_cpp_inheritance_access_specifier(Chunk *pc)
 {
    return(  language_is_set(LANG_CPP)
          && pc != nullptr
@@ -603,7 +653,7 @@ static inline bool chunk_is_cpp_inheritance_access_specifier(chunk_t *pc)
 } // chunk_is_cpp_inheritance_access_specifier
 
 
-static inline bool chunk_is_colon(chunk_t *pc)
+static inline bool chunk_is_colon(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_ACCESS_COLON)
          || chunk_is_token(pc, CT_ASM_COLON)
@@ -624,21 +674,21 @@ static inline bool chunk_is_colon(chunk_t *pc)
 }
 
 
-static inline bool chunk_is_single_line_comment(chunk_t *pc)
+static inline bool chunk_is_single_line_comment(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_COMMENT)
          || chunk_is_token(pc, CT_COMMENT_CPP));
 }
 
 
-static inline bool chunk_is_newline(chunk_t *pc)
+static inline bool chunk_is_newline(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_NEWLINE)
          || chunk_is_token(pc, CT_NL_CONT));
 }
 
 
-static inline bool chunk_is_semicolon(chunk_t *pc)
+static inline bool chunk_is_semicolon(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_SEMICOLON)
          || chunk_is_token(pc, CT_VSEMICOLON));
@@ -652,7 +702,7 @@ static inline bool chunk_is_semicolon(chunk_t *pc)
  *
  * @todo rename function: blank is a space not an empty string
  */
-static inline bool chunk_is_blank(chunk_t *pc)
+static inline bool chunk_is_blank(Chunk *pc)
 {
    return(  pc != nullptr
          && (pc->len() == 0));
@@ -660,7 +710,7 @@ static inline bool chunk_is_blank(chunk_t *pc)
 
 
 //! checks if a chunk is valid and either a comment or newline
-static inline bool chunk_is_comment_or_newline(chunk_t *pc)
+static inline bool chunk_is_comment_or_newline(Chunk *pc)
 {
    return(  chunk_is_comment(pc)
          || chunk_is_newline(pc));
@@ -668,7 +718,7 @@ static inline bool chunk_is_comment_or_newline(chunk_t *pc)
 
 
 //! checks if a chunk is valid and either a comment or newline or ignored
-static inline bool chunk_is_comment_or_newline_or_ignored(chunk_t *pc)
+static inline bool chunk_is_comment_or_newline_or_ignored(Chunk *pc)
 {
    return(  chunk_is_comment(pc)
          || chunk_is_newline(pc)
@@ -676,7 +726,7 @@ static inline bool chunk_is_comment_or_newline_or_ignored(chunk_t *pc)
 }
 
 
-static inline bool chunk_is_balanced_square(chunk_t *pc)
+static inline bool chunk_is_balanced_square(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_SQUARE_OPEN)
          || chunk_is_token(pc, CT_TSQUARE)
@@ -684,14 +734,14 @@ static inline bool chunk_is_balanced_square(chunk_t *pc)
 }
 
 
-static inline bool chunk_is_preproc(chunk_t *pc)
+static inline bool chunk_is_preproc(Chunk *pc)
 {
    return(  pc != nullptr
          && pc->flags.test(PCF_IN_PREPROC));
 }
 
 
-static inline bool chunk_is_comment_or_newline_in_preproc(chunk_t *pc)
+static inline bool chunk_is_comment_or_newline_in_preproc(Chunk *pc)
 {
    return(  pc != nullptr
          && chunk_is_preproc(pc)
@@ -700,7 +750,7 @@ static inline bool chunk_is_comment_or_newline_in_preproc(chunk_t *pc)
 }
 
 
-static inline bool chunk_is_comment_newline_or_preproc(chunk_t *pc)
+static inline bool chunk_is_comment_newline_or_preproc(Chunk *pc)
 {
    return(  chunk_is_comment(pc)
          || chunk_is_newline(pc)
@@ -708,7 +758,7 @@ static inline bool chunk_is_comment_newline_or_preproc(chunk_t *pc)
 }
 
 
-static inline bool chunk_is_comment_newline_or_blank(chunk_t *pc)
+static inline bool chunk_is_comment_newline_or_blank(Chunk *pc)
 {
    return(  chunk_is_comment(pc)
          || chunk_is_newline(pc)
@@ -716,7 +766,7 @@ static inline bool chunk_is_comment_newline_or_blank(chunk_t *pc)
 }
 
 
-static inline bool chunk_is_Doxygen_comment(chunk_t *pc)
+static inline bool chunk_is_Doxygen_comment(Chunk *pc)
 {
    if (  pc == nullptr
       || !chunk_is_comment(pc))
@@ -737,7 +787,7 @@ static inline bool chunk_is_Doxygen_comment(chunk_t *pc)
 }
 
 
-static inline bool chunk_is_type(chunk_t *pc)
+static inline bool chunk_is_type(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_TYPE)
          || chunk_is_token(pc, CT_PTR_TYPE)
@@ -750,7 +800,7 @@ static inline bool chunk_is_type(chunk_t *pc)
 }
 
 
-static inline bool chunk_is_str(chunk_t *pc, const char *str, size_t len)
+static inline bool chunk_is_str(Chunk *pc, const char *str, size_t len)
 {
    return(  pc != nullptr                         // valid pc pointer
          && (pc->len() == len)                    // token size equals size parameter
@@ -763,7 +813,7 @@ static inline bool chunk_is_str(chunk_t *pc, const char *str, size_t len)
 }
 
 
-static inline bool chunk_is_str_case(chunk_t *pc, const char *str, size_t len)
+static inline bool chunk_is_str_case(Chunk *pc, const char *str, size_t len)
 {
    return(  pc != nullptr
          && (pc->len() == len)
@@ -771,7 +821,7 @@ static inline bool chunk_is_str_case(chunk_t *pc, const char *str, size_t len)
 }
 
 
-static inline bool chunk_is_word(chunk_t *pc)
+static inline bool chunk_is_word(Chunk *pc)
 {
    return(  pc != nullptr
          && (pc->len() >= 1)
@@ -779,7 +829,7 @@ static inline bool chunk_is_word(chunk_t *pc)
 }
 
 
-static inline bool chunk_is_star(chunk_t *pc)
+static inline bool chunk_is_star(Chunk *pc)
 {
    return(  pc != nullptr
          && (pc->len() == 1)
@@ -788,7 +838,7 @@ static inline bool chunk_is_star(chunk_t *pc)
 }
 
 
-static inline bool chunk_is_nullable(chunk_t *pc)
+static inline bool chunk_is_nullable(Chunk *pc)
 {
    return(  language_is_set(LANG_CS)
          && (pc != nullptr)
@@ -797,7 +847,7 @@ static inline bool chunk_is_nullable(chunk_t *pc)
 }
 
 
-static inline bool chunk_is_addr(chunk_t *pc)
+static inline bool chunk_is_addr(Chunk *pc)
 {
    if (  pc != nullptr
       && (  chunk_is_token(pc, CT_BYREF)
@@ -805,7 +855,7 @@ static inline bool chunk_is_addr(chunk_t *pc)
             && (pc->str[0] == '&')
             && pc->type != CT_OPERATOR_VAL)))
    {
-      chunk_t *prev = chunk_get_prev(pc);
+      Chunk *prev = chunk_get_prev(pc);
 
       if (  pc->flags.test(PCF_IN_TEMPLATE)
          && (  chunk_is_token(prev, CT_COMMA)
@@ -819,7 +869,7 @@ static inline bool chunk_is_addr(chunk_t *pc)
 }
 
 
-static inline bool chunk_is_msref(chunk_t *pc) // ms compilers for C++/CLI and WinRT use '^' instead of '*' for marking up reference types vs pointer types
+static inline bool chunk_is_msref(Chunk *pc) // ms compilers for C++/CLI and WinRT use '^' instead of '*' for marking up reference types vs pointer types
 {
    return(  language_is_set(LANG_CPP)
          && (  pc != nullptr
@@ -829,7 +879,7 @@ static inline bool chunk_is_msref(chunk_t *pc) // ms compilers for C++/CLI and W
 }
 
 
-static inline bool chunk_is_ptr_operator(chunk_t *pc)
+static inline bool chunk_is_ptr_operator(Chunk *pc)
 {
    return(  (  chunk_is_star(pc)
             || chunk_is_addr(pc)
@@ -838,7 +888,7 @@ static inline bool chunk_is_ptr_operator(chunk_t *pc)
 }
 
 
-static inline bool chunk_is_pointer_or_reference(chunk_t *pc)
+static inline bool chunk_is_pointer_or_reference(Chunk *pc)
 {
    return(  chunk_is_ptr_operator(pc)
          || chunk_is_token(pc, CT_BYREF));
@@ -846,31 +896,31 @@ static inline bool chunk_is_pointer_or_reference(chunk_t *pc)
 
 
 //! Check to see if there is a newline between the two chunks
-bool chunk_is_newline_between(chunk_t *start, chunk_t *end);
+bool chunk_is_newline_between(Chunk *start, Chunk *end);
 
 
-static inline bool chunk_is_closing_brace(chunk_t *pc)
+static inline bool chunk_is_closing_brace(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_BRACE_CLOSE)
          || chunk_is_token(pc, CT_VBRACE_CLOSE));
 }
 
 
-static inline bool chunk_is_opening_brace(chunk_t *pc)
+static inline bool chunk_is_opening_brace(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_BRACE_OPEN)
          || chunk_is_token(pc, CT_VBRACE_OPEN));
 }
 
 
-static inline bool chunk_is_vbrace(chunk_t *pc)
+static inline bool chunk_is_vbrace(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_VBRACE_CLOSE)
          || chunk_is_token(pc, CT_VBRACE_OPEN));
 }
 
 
-static inline bool chunk_is_paren_open(chunk_t *pc)
+static inline bool chunk_is_paren_open(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_PAREN_OPEN)
          || chunk_is_token(pc, CT_SPAREN_OPEN)
@@ -880,7 +930,7 @@ static inline bool chunk_is_paren_open(chunk_t *pc)
 }
 
 
-static inline bool chunk_is_paren_close(chunk_t *pc)
+static inline bool chunk_is_paren_close(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_PAREN_CLOSE)
          || chunk_is_token(pc, CT_SPAREN_CLOSE)
@@ -893,7 +943,7 @@ static inline bool chunk_is_paren_close(chunk_t *pc)
  * Returns true if either chunk is null or both have the same preproc flags.
  * If this is true, you can remove a newline/nl_cont between the two.
  */
-static inline bool chunk_same_preproc(chunk_t *pc1, chunk_t *pc2)
+static inline bool chunk_same_preproc(Chunk *pc1, Chunk *pc2)
 {
    return(  pc1 == nullptr
          || pc2 == nullptr
@@ -906,9 +956,9 @@ static inline bool chunk_same_preproc(chunk_t *pc1, chunk_t *pc2)
  * The prev and next chunks must have the same PCF_IN_PREPROC flag AND
  * the newline can't be after a C++ comment.
  */
-static inline bool chunk_safe_to_del_nl(chunk_t *nl)
+static inline bool chunk_safe_to_del_nl(Chunk *nl)
 {
-   chunk_t *tmp = chunk_get_prev(nl);
+   Chunk *tmp = chunk_get_prev(nl);
 
    if (chunk_is_token(tmp, CT_COMMENT_CPP))
    {
@@ -924,16 +974,16 @@ static inline bool chunk_safe_to_del_nl(chunk_t *nl)
  *
  * @return true  - the chunk is the opening parentheses of a for in loop
  */
-static inline bool chunk_is_forin(chunk_t *pc)
+static inline bool chunk_is_forin(Chunk *pc)
 {
    if (  language_is_set(LANG_OC)
       && chunk_is_token(pc, CT_SPAREN_OPEN))
    {
-      chunk_t *prev = chunk_get_prev_nc_nnl(pc);
+      Chunk *prev = chunk_get_prev_nc_nnl(pc);
 
       if (chunk_is_token(prev, CT_FOR))
       {
-         chunk_t *next = pc;
+         Chunk *next = pc;
 
          while (  next != nullptr
                && next->type != CT_SPAREN_CLOSE
@@ -955,37 +1005,37 @@ static inline bool chunk_is_forin(chunk_t *pc)
 /**
  * Returns true if pc is an CT_ATTRIBUTE or CT_DECLSPEC
  */
-bool chunk_is_attribute_or_declspec(chunk_t *pc);
+bool chunk_is_attribute_or_declspec(Chunk *pc);
 
 
 /**
  * Returns true if pc is one of CT_CLASS, CT_ENUM, CT_ENUM_CLASS, CT_STRUCT or CT_UNION
  */
-bool chunk_is_class_enum_struct_union(chunk_t *pc);
+bool chunk_is_class_enum_struct_union(Chunk *pc);
 
 
 /**
  * Returns true if pc is a CT_CLASS or CT_STRUCT
  */
-bool chunk_is_class_or_struct(chunk_t *pc);
+bool chunk_is_class_or_struct(Chunk *pc);
 
 
 /**
  * Returns true if pc is one of CT_CLASS, CT_STRUCT or CT_UNION
  */
-bool chunk_is_class_struct_union(chunk_t *pc);
+bool chunk_is_class_struct_union(Chunk *pc);
 
 
 /**
  * Returns true if pc is a CT_ENUM or CT_ENUM_CLASS
  */
-bool chunk_is_enum(chunk_t *pc);
+bool chunk_is_enum(Chunk *pc);
 
 
-void set_chunk_type_real(chunk_t *pc, c_token_t tt, const char *func, int line);
+void set_chunk_type_real(Chunk *pc, c_token_t tt, const char *func, int line);
 
 
-void set_chunk_parent_real(chunk_t *pc, c_token_t tt, const char *func, int line);
+void set_chunk_parent_real(Chunk *pc, c_token_t tt, const char *func, int line);
 
 
 #define set_chunk_type(pc, tt)      set_chunk_type_real((pc), (tt), __unqualified_func__, __LINE__)
@@ -994,10 +1044,10 @@ void set_chunk_parent_real(chunk_t *pc, c_token_t tt, const char *func, int line
 #define set_chunk_parent(pc, tt)    set_chunk_parent_real((pc), (tt), __unqualified_func__, __LINE__)
 
 
-c_token_t get_chunk_parent_type(chunk_t *pc);
+c_token_t get_chunk_parent_type(Chunk *pc);
 
 
-void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits);
+void chunk_flags_set_real(Chunk *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits);
 
 
 #define chunk_flags_upd(pc, cc, ss)    chunk_flags_set_real((pc), (cc), (ss))
@@ -1009,10 +1059,10 @@ void chunk_flags_set_real(chunk_t *pc, pcf_flags_t clr_bits, pcf_flags_t set_bit
 #define chunk_flags_clr(pc, cc)        chunk_flags_set_real((pc), (cc), {})
 
 
-void chunk_set_parent(chunk_t *pc, chunk_t *parent);
+void chunk_set_parent(Chunk *pc, Chunk *parent);
 
 
-c_token_t get_type_of_the_parent(chunk_t *pc);
+c_token_t get_type_of_the_parent(Chunk *pc);
 
 
 /**
@@ -1027,7 +1077,7 @@ c_token_t get_type_of_the_parent(chunk_t *pc);
  *         if A_token is found, respectively, to be less/before than, to
  *         match, or be greater/after than B_token.
  */
-int chunk_compare_position(const chunk_t *A_token, const chunk_t *B_token);
+int chunk_compare_position(const Chunk *A_token, const Chunk *B_token);
 
 
 #endif /* CHUNK_LIST_H_INCLUDED */

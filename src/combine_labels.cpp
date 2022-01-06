@@ -8,14 +8,14 @@
 
 #include "combine_labels.h"
 
-#include "chunk_list.h"
+#include "chunk.h"
 #include "cs_top_is_question.h"
 #include "uncrustify.h"
 
 
-chunk_t *chunk_get_next_local(chunk_t *pc, scope_e scope = scope_e::ALL)
+Chunk *chunk_get_next_local(Chunk *pc, scope_e scope = scope_e::ALL)
 {
-   chunk_t *tmp = pc;
+   Chunk *tmp = pc;
 
    do
    {
@@ -28,9 +28,9 @@ chunk_t *chunk_get_next_local(chunk_t *pc, scope_e scope = scope_e::ALL)
 }
 
 
-chunk_t *chunk_get_prev_local(chunk_t *pc, scope_e scope = scope_e::ALL)
+Chunk *chunk_get_prev_local(Chunk *pc, scope_e scope = scope_e::ALL)
 {
-   chunk_t *tmp = pc;
+   Chunk *tmp = pc;
 
    do
    {
@@ -47,11 +47,11 @@ chunk_t *chunk_get_prev_local(chunk_t *pc, scope_e scope = scope_e::ALL)
 void combine_labels(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *cur;
-   chunk_t *prev;
-   chunk_t *next;
-   bool    hit_case  = false;
-   bool    hit_class = false;
+   Chunk *cur;
+   Chunk *prev;
+   Chunk *next;
+   bool  hit_case  = false;
+   bool  hit_class = false;
 
    cpd.unc_stage = unc_stage_e::COMBINE_LABELS;
 
@@ -122,7 +122,7 @@ void combine_labels(void)
          // pop until we hit '['
          while (!cs.Empty())
          {
-            chunk_t *t2 = cs.Top()->m_pc;
+            Chunk *t2 = cs.Top()->m_pc;
             cs.Pop_Back();
 
             if (chunk_is_token(t2, CT_SQUARE_OPEN))
@@ -168,7 +168,7 @@ void combine_labels(void)
          {
             hit_case = false;
             set_chunk_type(next, CT_CASE_COLON);
-            chunk_t *tmp = chunk_get_next_nc_nnl_np(next);                // Issue #2150
+            Chunk *tmp = chunk_get_next_nc_nnl_np(next);                // Issue #2150
 
             if (chunk_is_token(tmp, CT_BRACE_OPEN))
             {
@@ -184,7 +184,7 @@ void combine_labels(void)
             if (  chunk_is_token(cur, CT_NUMBER)
                && chunk_is_token(prev, CT_ELLIPSIS))
             {
-               chunk_t *pre_elipsis = chunk_get_prev_nc_nnl_np(prev);
+               Chunk *pre_elipsis = chunk_get_prev_nc_nnl_np(prev);
 
                if (chunk_is_token(pre_elipsis, CT_NUMBER))
                {
@@ -204,7 +204,7 @@ void combine_labels(void)
                     __func__, __LINE__, cur->text(), cur->orig_line, cur->orig_col);
             LOG_FMT(LFCN, "%s(%d): next->text() is '%s', orig_line is %zu, orig_col is %zu\n",
                     __func__, __LINE__, next->text(), next->orig_line, next->orig_col);
-            chunk_t *nextprev = chunk_get_prev_local(next);   // Issue #2279
+            Chunk *nextprev = chunk_get_prev_local(next);   // Issue #2279
 
             if (nextprev == nullptr)
             {
@@ -218,7 +218,7 @@ void combine_labels(void)
                {
                   c_token_t new_type = CT_TAG;
 
-                  chunk_t   *tmp = chunk_get_next_nc(next);
+                  Chunk     *tmp = chunk_get_next_nc(next);
 
                   if (tmp == nullptr)
                   {
@@ -256,7 +256,7 @@ void combine_labels(void)
             }
             else if (chunk_is_token(cur, CT_WORD))
             {
-               chunk_t *tmp = chunk_get_next_nc(next, scope_e::PREPROC);
+               Chunk *tmp = chunk_get_next_nc(next, scope_e::PREPROC);
 
                // Issue #1187
                if (tmp == nullptr)
@@ -291,7 +291,7 @@ void combine_labels(void)
                   if (  language_is_set(LANG_C | LANG_CPP | LANG_CS)
                      && (!language_is_set(LANG_OC)))
                   {
-                     chunk_t *labelPrev = prev;
+                     Chunk *labelPrev = prev;
 
                      if (chunk_is_token(labelPrev, CT_NEWLINE))
                      {
@@ -315,7 +315,7 @@ void combine_labels(void)
                {
                   set_chunk_type(next, CT_BIT_COLON);
 
-                  chunk_t *nnext = chunk_get_next(next);
+                  Chunk *nnext = chunk_get_next(next);
 
                   if (nnext == nullptr)
                   {
@@ -396,7 +396,7 @@ void combine_labels(void)
             }
             else
             {
-               chunk_t *tmp = chunk_get_next_nc_nnl(next);
+               Chunk *tmp = chunk_get_next_nc_nnl(next);
 
                //tmp = chunk_get_next_local(next);
                if (tmp != nullptr)

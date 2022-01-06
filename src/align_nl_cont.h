@@ -12,7 +12,7 @@
 
 #include "uncrustify_types.h"
 
-#include "chunk_list.h"
+#include "chunk.h"
 
 /**
  * For a series of lines ending in backslash-newline, align them.
@@ -22,7 +22,7 @@
  *
  * @return pointer the last item looked at (nullptr/newline/comment)
  */
-chunk_t *align_nl_cont(chunk_t *start);
+Chunk *align_nl_cont(Chunk *start);
 
 /**
  * Aligns all backslash-newline combos in the file.

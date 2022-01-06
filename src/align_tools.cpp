@@ -13,11 +13,11 @@
 #include "uncrustify.h"
 
 
-chunk_t *skip_c99_array(chunk_t *sq_open)
+Chunk *skip_c99_array(Chunk *sq_open)
 {
    if (chunk_is_token(sq_open, CT_SQUARE_OPEN))
    {
-      chunk_t *tmp = chunk_get_next_nc(chunk_skip_to_match(sq_open));
+      Chunk *tmp = chunk_get_next_nc(chunk_skip_to_match(sq_open));
 
       if (chunk_is_token(tmp, CT_ASSIGN))
       {
@@ -28,15 +28,15 @@ chunk_t *skip_c99_array(chunk_t *sq_open)
 } // skip_c99_array
 
 
-chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
+Chunk *scan_ib_line(Chunk *start, bool first_pass)
 {
    UNUSED(first_pass);
    LOG_FUNC_ENTRY();
-   chunk_t *prev_match = nullptr;
-   size_t  idx         = 0;
+   Chunk  *prev_match = nullptr;
+   size_t idx         = 0;
 
    // Skip past C99 "[xx] =" stuff
-   chunk_t *tmp = skip_c99_array(start);
+   Chunk *tmp = skip_c99_array(start);
 
    if (tmp != nullptr)
    {
@@ -44,7 +44,7 @@ chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
       start            = tmp;
       cpd.al_c99_array = true;
    }
-   chunk_t *pc = start;
+   Chunk *pc = start;
 
    if (pc != nullptr)
    {
@@ -59,7 +59,7 @@ chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
       //LOG_FMT(LSIB, "%s:     '%s'   col %d/%d line %zu\n", __func__,
       //        pc->text(), pc->column, pc->orig_col, pc->orig_line);
 
-      chunk_t *next = chunk_get_next(pc);
+      Chunk *next = chunk_get_next(pc);
 
       if (  next == nullptr
          || chunk_is_comment(next))
@@ -158,9 +158,9 @@ void ib_shift_out(size_t idx, size_t num)
 } // ib_shift_out
 
 
-chunk_t *step_back_over_member(chunk_t *pc)
+Chunk *step_back_over_member(Chunk *pc)
 {
-   chunk_t *tmp;
+   Chunk *tmp;
 
    // Skip over any class stuff: bool CFoo::bar()
    while (  ((tmp = chunk_get_prev_nc_nnl(pc)) != nullptr)

@@ -21,16 +21,16 @@ void align_same_func_call_params(void)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t           *pc;
-   chunk_t           *align_root = nullptr;
-   chunk_t           *align_cur  = nullptr;
+   Chunk             *pc;
+   Chunk             *align_root = nullptr;
+   Chunk             *align_cur  = nullptr;
    size_t            align_len   = 0;
    size_t            span        = 3;
    size_t            thresh;
-   chunk_t           *align_fcn;
+   Chunk             *align_fcn;
    unc_text          align_fcn_name;
    unc_text          align_root_name;
-   deque<chunk_t *>  chunks;
+   deque<Chunk *>    chunks;
    deque<AlignStack> array_of_AlignStack;
    AlignStack        fcn_as;
    const char        *add_str;
@@ -94,12 +94,12 @@ void align_same_func_call_params(void)
          continue;
       }
       // Only align function calls that are right after a newline
-      chunk_t *prev = chunk_get_prev(pc);
+      Chunk *prev = chunk_get_prev(pc);
 
       while (  chunk_is_token(prev, CT_MEMBER)
             || chunk_is_token(prev, CT_DC_MEMBER))
       {
-         chunk_t *tprev = chunk_get_prev(prev);
+         Chunk *tprev = chunk_get_prev(prev);
 
          if (chunk_is_not_token(tprev, CT_TYPE))
          {
@@ -248,14 +248,14 @@ void align_same_func_call_params(void)
 } // align_same_func_call_params
 
 
-void align_params(chunk_t *start, deque<chunk_t *> &chunks)
+void align_params(Chunk *start, deque<Chunk *> &chunks)
 {
    LOG_FUNC_ENTRY();
 
    chunks.clear();
 
-   bool    hit_comma = true;
-   chunk_t *pc       = chunk_get_next_type(start, CT_FPAREN_OPEN, start->level);
+   bool  hit_comma = true;
+   Chunk *pc       = chunk_get_next_type(start, CT_FPAREN_OPEN, start->level);
 
    while ((pc = chunk_get_next(pc)) != nullptr)
    {

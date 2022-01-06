@@ -10,7 +10,7 @@
 #include "align_asm_colon.h"
 
 #include "align_stack.h"
-#include "chunk_list.h"
+#include "chunk.h"
 
 
 void align_asm_colon(void)
@@ -22,7 +22,7 @@ void align_asm_colon(void)
 
    cas.Start(4);
 
-   chunk_t *pc = chunk_get_head();
+   Chunk *pc = chunk_get_head();
 
    while (pc != nullptr)
    {

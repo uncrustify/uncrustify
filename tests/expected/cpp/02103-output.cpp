@@ -7,7 +7,7 @@
 
 #include "uncrustify_types.h"
 #include "prototypes.h"
-#include "chunk_list.h"
+#include "chunk.h"
 #include <cstring>
 #include <cstdlib>
 
@@ -98,7 +98,7 @@ void output_indent(int column, int brace_col)
 
 void output_parsed(FILE *pfile)
   {
-  chunk_t *pc;
+  Chunk *pc;
   int cnt;
 
   output_options(pfile);
@@ -178,8 +178,8 @@ void output_options(FILE *pfile)
  */
 void output_text(FILE *pfile)
   {
-  chunk_t *pc;
-  chunk_t *prev;
+  Chunk *pc;
+  Chunk *prev;
   int cnt;
   int lvlcol;
   bool allow_tabs;
@@ -355,7 +355,7 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
  *
  * @return the last chunk output'd
  */
-chunk_t *output_comment_cpp(chunk_t *first)
+Chunk *output_comment_cpp(Chunk *first)
   {
   int col    = first->column;
   int col_br = 1 + (first->brace_level * cpd.settings[UO_indent_columns].n);
@@ -363,7 +363,7 @@ chunk_t *output_comment_cpp(chunk_t *first)
     /* Make sure we have at least one space past the last token */
   if (first->parent_type == CT_COMMENT_END)
     {
-    chunk_t *prev = chunk_get_prev(first);
+    Chunk *prev = chunk_get_prev(first);
 
     if (prev != NULL)
       {
@@ -389,7 +389,7 @@ chunk_t *output_comment_cpp(chunk_t *first)
   if (cpd.settings[UO_cmt_cpp_group].b)
     {
       /* next is a newline by definition */
-    chunk_t *next = chunk_get_next(first);
+    Chunk *next = chunk_get_next(first);
 
     if ((next != NULL) && (next->nl_count == 1))
       {
@@ -424,8 +424,8 @@ chunk_t *output_comment_cpp(chunk_t *first)
     return first;
     }
 
-  chunk_t *pc   = first;
-  chunk_t *last = first;
+  Chunk *pc   = first;
+  Chunk *last = first;
 
     /* Output the first line */
   add_text_len("/*", 2);
@@ -476,13 +476,13 @@ cpp_addline:
   return last;
   }
 
-void output_comment_multi(chunk_t *pc)
+void output_comment_multi(Chunk *pc)
   {
   int cmt_col = pc->column;
   const char *cmt_str;
   int remaining;
   char ch;
-  chunk_t    *prev;
+  Chunk    *prev;
   char line[1024];
   int line_len;
   int line_count = 0;

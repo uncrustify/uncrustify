@@ -14,7 +14,7 @@ using namespace uncrustify;
 
 
 //! Add an open parenthesis after first and add a close parenthesis before the last
-static void add_parens_between(chunk_t *first, chunk_t *last);
+static void add_parens_between(Chunk *first, Chunk *last);
 
 
 /**
@@ -35,7 +35,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last);
  * FIXME: we really should bail if we transition between a preprocessor and
  *        a non-preprocessor
  */
-static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest);
+static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest);
 
 
 void do_parens(void)
@@ -48,7 +48,7 @@ void do_parens(void)
 
    if (options::mod_full_paren_if_bool())
    {
-      chunk_t *pc = chunk_get_head();
+      Chunk *pc = chunk_get_head();
 
       while ((pc = chunk_get_next_nc_nnl(pc)) != nullptr)
       {
@@ -60,7 +60,7 @@ void do_parens(void)
             continue;
          }
          // Grab the close sparen
-         chunk_t *pclose = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level, scope_e::PREPROC);
+         Chunk *pclose = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level, scope_e::PREPROC);
 
          if (pclose != nullptr)
          {
@@ -72,7 +72,7 @@ void do_parens(void)
 }
 
 
-static void add_parens_between(chunk_t *first, chunk_t *last)
+static void add_parens_between(Chunk *first, Chunk *last)
 {
    LOG_FUNC_ENTRY();
 
@@ -82,13 +82,13 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
            last->text(), last->level);
 
    // Don't do anything if we have a bad sequence, ie "&& )"
-   chunk_t *first_n = chunk_get_next_nc_nnl(first);
+   Chunk *first_n = chunk_get_next_nc_nnl(first);
 
    if (first_n == last)
    {
       return;
    }
-   chunk_t pc;
+   Chunk pc;
 
    set_chunk_type(&pc, CT_PAREN_OPEN);
    pc.orig_line   = first_n->orig_line;
@@ -101,7 +101,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
 
    chunk_add_before(&pc, first_n);
 
-   chunk_t *last_p = chunk_get_prev_nc_nnl(last, scope_e::PREPROC);
+   Chunk *last_p = chunk_get_prev_nc_nnl(last, scope_e::PREPROC);
 
    set_chunk_type(&pc, CT_PAREN_CLOSE);
    pc.orig_line   = last_p->orig_line;
@@ -114,7 +114,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
 
    chunk_add_after(&pc, last_p);
 
-   for (chunk_t *tmp = first_n;
+   for (Chunk *tmp = first_n;
         tmp != last_p;
         tmp = chunk_get_next_nc_nnl(tmp))
    {
@@ -125,12 +125,12 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
 } // add_parens_between
 
 
-static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
+static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *ref        = popen;
-   bool    hit_compare = false;
+   Chunk *ref        = popen;
+   bool  hit_compare = false;
 
    LOG_FMT(LPARADD, "%s(%d): popen on %zu, col %zu, pclose on %zu, col %zu, level=%zu\n",
            __func__, nest,
@@ -138,7 +138,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
            pclose->orig_line, pclose->orig_col,
            popen->level);
 
-   chunk_t *pc = popen;
+   Chunk *pc = popen;
 
    while (  (pc = chunk_get_next_nc_nnl(pc)) != nullptr
          && pc != pclose)
@@ -179,7 +179,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
       }
       else if (chunk_is_paren_open(pc))
       {
-         chunk_t *next = chunk_skip_to_match(pc);
+         Chunk *next = chunk_skip_to_match(pc);
 
          if (next != nullptr)
          {

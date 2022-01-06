@@ -8,7 +8,7 @@
 #ifndef FLAG_PARENS_H_INCLUDED
 #define FLAG_PARENS_H_INCLUDED
 
-#include "chunk_list.h"
+#include "chunk.h"
 
 
 /**
@@ -22,7 +22,7 @@
  *
  * @return The token after the close paren
  */
-chunk_t *flag_parens(chunk_t *po, pcf_flags_t flags, c_token_t opentype, c_token_t parenttype, bool parent_all);
+Chunk *flag_parens(Chunk *po, pcf_flags_t flags, c_token_t opentype, c_token_t parenttype, bool parent_all);
 
 
 #endif /* FLAG_PARENS_H_INCLUDED */

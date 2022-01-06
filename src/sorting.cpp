@@ -49,7 +49,7 @@ include_category *include_categories[kIncludeCategoriesCount];
  * @retval  > 0
  * @retval  < 0
  */
-static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare = false);
+static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare = false);
 
 
 /**
@@ -57,7 +57,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare = false);
  * We need to minimize the number of swaps, as those are expensive.
  * So, we do a min sort.
  */
-static void do_the_sort(chunk_t **chunks, size_t num_chunks);
+static void do_the_sort(Chunk **chunks, size_t num_chunks);
 
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
@@ -108,7 +108,7 @@ static void cleanup_categories()
 }
 
 
-static int get_chunk_priority(chunk_t *pc)
+static int get_chunk_priority(Chunk *pc)
 {
    for (int i = 0; i < kIncludeCategoriesCount; i++)
    {
@@ -180,7 +180,7 @@ static bool has_dot(const unc_text &chunk_text)
 /**
  * Returns chunk string required for sorting.
  */
-static unc_text chunk_sort_str(chunk_t *pc)
+static unc_text chunk_sort_str(Chunk *pc)
 {
    if (get_chunk_parent_type(pc) == CT_PP_INCLUDE)
    {
@@ -191,7 +191,7 @@ static unc_text chunk_sort_str(chunk_t *pc)
 
 
 //! Compare two chunks
-static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
+static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LSORT, "%s(%d): @begin pc1->len is %zu, line is %zu, column is %zu\n",
@@ -345,7 +345,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2, bool tcare)
  * We need to minimize the number of swaps, as those are expensive.
  * So, we do a min sort.
  */
-static void do_the_sort(chunk_t **chunks, size_t num_chunks)
+static void do_the_sort(Chunk **chunks, size_t num_chunks)
 {
    LOG_FUNC_ENTRY();
 
@@ -385,7 +385,7 @@ static void do_the_sort(chunk_t **chunks, size_t num_chunks)
 
          if (options::mod_sort_incl_import_grouping_enabled())
          {
-            chunk_t *pc = chunks[min_idx];
+            Chunk *pc = chunks[min_idx];
             chunks[min_idx]   = chunks[start_idx];
             chunks[start_idx] = pc;
          }
@@ -402,7 +402,7 @@ static void do_the_sort(chunk_t **chunks, size_t num_chunks)
 /**
  * Remove blank lines between chunks.
  */
-static void remove_blank_lines_between_imports(chunk_t **chunks, size_t num_chunks)
+static void remove_blank_lines_between_imports(Chunk **chunks, size_t num_chunks)
 {
    LOG_FUNC_ENTRY();
 
@@ -413,7 +413,7 @@ static void remove_blank_lines_between_imports(chunk_t **chunks, size_t num_chun
 
    for (size_t idx = 0; idx < (num_chunks - 1); idx++)
    {
-      chunk_t *chunk1 = chunk_get_next_nl(chunks[idx]);
+      Chunk *chunk1 = chunk_get_next_nl(chunks[idx]);
       chunk1->nl_count = 1;
       MARK_CHANGE();
    }
@@ -423,16 +423,16 @@ static void remove_blank_lines_between_imports(chunk_t **chunks, size_t num_chun
 /**
  * Delete chunks on line having chunk.
  */
-static void delete_chunks_on_line_having_chunk(chunk_t *chunk)
+static void delete_chunks_on_line_having_chunk(Chunk *chunk)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *pc = chunk_first_on_line(chunk);
+   Chunk *pc = chunk_first_on_line(chunk);
 
    while (  pc != nullptr
          && !chunk_is_comment(pc))
    {
-      chunk_t *next_pc = chunk_get_next(pc);
+      Chunk *next_pc = chunk_get_next(pc);
       LOG_FMT(LCHUNK, "%s(%d): Removed '%s' on orig_line %zu\n",
               __func__, __LINE__, pc->text(), pc->orig_line);
 
@@ -453,7 +453,7 @@ static void delete_chunks_on_line_having_chunk(chunk_t *chunk)
 /**
  * Dedupe import/include directives.
  */
-static void dedupe_imports(chunk_t **chunks, size_t num_chunks)
+static void dedupe_imports(Chunk **chunks, size_t num_chunks)
 {
    LOG_FUNC_ENTRY();
    log_rule_B("mod_sort_case_sensitive");
@@ -480,9 +480,9 @@ static void dedupe_imports(chunk_t **chunks, size_t num_chunks)
 /**
  * Add blank line before the chunk.
  */
-static void blankline_add_before(chunk_t *pc)
+static void blankline_add_before(Chunk *pc)
 {
-   chunk_t *newline = newline_add_before(chunk_first_on_line(pc));
+   Chunk *newline = newline_add_before(chunk_first_on_line(pc));
 
    if (newline->nl_count < 2)
    {
@@ -494,7 +494,7 @@ static void blankline_add_before(chunk_t *pc)
 /**
  * Group imports.
  */
-static void group_imports_by_adding_newlines(chunk_t **chunks, size_t num_chunks)
+static void group_imports_by_adding_newlines(Chunk **chunks, size_t num_chunks)
 {
    LOG_FUNC_ENTRY();
 
@@ -579,15 +579,15 @@ void sort_imports(void)
    const int max_lines_to_check_for_sort_after_include = 128;
    const int max_gap_threshold_between_include_to_sort = 32;
 
-   chunk_t   *chunks[max_number_to_sort];
+   Chunk     *chunks[max_number_to_sort];
    size_t    num_chunks  = 0;
-   chunk_t   *p_last     = nullptr;
-   chunk_t   *p_imp      = nullptr;
-   chunk_t   *p_imp_last = nullptr;
+   Chunk     *p_last     = nullptr;
+   Chunk     *p_imp      = nullptr;
+   Chunk     *p_imp_last = nullptr;
 
    prepare_categories();
 
-   chunk_t *pc = chunk_get_head();
+   Chunk *pc = chunk_get_head();
 
    log_rule_B("mod_sort_incl_import_grouping_enabled");
 
@@ -601,7 +601,7 @@ void sort_imports(void)
       {
          break;
       }
-      chunk_t *next = chunk_get_next(pc);
+      Chunk *next = chunk_get_next(pc);
 
       if (chunk_is_newline(pc))
       {

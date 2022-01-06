@@ -31,8 +31,8 @@ void align_typedefs(size_t span)
    log_rule_B("align_typedef_amp_style");
    as.m_amp_style = static_cast<AlignStack::StarStyle>(options::align_typedef_amp_style());
 
-   chunk_t *c_typedef = nullptr;
-   chunk_t *pc        = chunk_get_head();
+   Chunk *c_typedef = nullptr;
+   Chunk *pc        = chunk_get_head();
 
    while (pc != nullptr)
    {

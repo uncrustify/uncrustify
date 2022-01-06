@@ -10,7 +10,7 @@
 #ifndef ALIGN_ASSIGN_H_INCLUDED
 #define ALIGN_ASSIGN_H_INCLUDED
 
-#include "chunk_list.h"
+#include "chunk.h"
 
 /**
  * Aligns all assignment operators on the same level as first, starting with
@@ -20,6 +20,6 @@
  *
  * @param first  chunk pointing to the first assignment
  */
-chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_count);
+Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count);
 
 #endif /* ALIGN_ASSIGN_H_INCLUDED */

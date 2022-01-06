@@ -22,7 +22,7 @@ struct paren_stack_entry_t
    size_t        level;        //! Level of opening type
    size_t        open_line;    //! line that open symbol is on, only for logging purposes
    size_t        open_colu;    //! column that open symbol is on, only for logging purposes
-   chunk_t       *pc;          //! Chunk that opened the level, TODO: make const
+   Chunk         *pc;          //! Chunk that opened the level, TODO: make const
    size_t        brace_indent; //! indent for braces - may not relate to indent
    size_t        indent;       //! indent level (depends on use)
    size_t        indent_tmp;   //! temporary indent level (depends on use)
@@ -34,7 +34,7 @@ struct paren_stack_entry_t
    size_t        ns_cnt;       //! Number of consecutive namespace levels
    bool          non_vardef;   //! Hit a non-vardef line
    indent_ptr_t  ip;
-   chunk_t       *pop_pc;
+   Chunk         *pop_pc;
 };
 
 class ParseFrame
@@ -73,7 +73,7 @@ public:
 
    const paren_stack_entry_t &poped() const;
 
-   void push(chunk_t *pc, const char *func, int line, brace_stage_e stage = brace_stage_e::NONE);
+   void push(Chunk *pc, const char *func, int line, brace_stage_e stage = brace_stage_e::NONE);
    void push(std::nullptr_t, brace_stage_e stage = brace_stage_e::NONE);
    void pop(const char *func, int line);
 

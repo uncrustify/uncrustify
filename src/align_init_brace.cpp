@@ -20,11 +20,11 @@ constexpr static auto LCURRENT = LALBR;
 using namespace uncrustify;
 
 
-void align_init_brace(chunk_t *start)
+void align_init_brace(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *num_token = nullptr;
+   Chunk *num_token = nullptr;
 
    cpd.al_cnt       = 0;
    cpd.al_c99_array = false;
@@ -32,8 +32,8 @@ void align_init_brace(chunk_t *start)
    LOG_FMT(LALBR, "%s(%d): start @ orig_line is %zu, orig_col is %zu\n",
            __func__, __LINE__, start->orig_line, start->orig_col);
 
-   chunk_t *pc       = chunk_get_next_nc_nnl(start);
-   chunk_t *pcSingle = scan_ib_line(pc, true);
+   Chunk *pc       = chunk_get_next_nc_nnl(start);
+   Chunk *pcSingle = scan_ib_line(pc, true);
 
    if (  pcSingle == nullptr
       || (  chunk_is_token(pcSingle, CT_BRACE_CLOSE)
@@ -77,7 +77,7 @@ void align_init_brace(chunk_t *start)
 
    do
    {
-      chunk_t *tmp;
+      Chunk *tmp;
 
       if (  idx == 0
          && ((tmp = skip_c99_array(pc)) != nullptr))
@@ -91,7 +91,7 @@ void align_init_brace(chunk_t *start)
          }
          continue;
       }
-      chunk_t *next = pc;
+      Chunk *next = pc;
 
       if (idx < cpd.al_cnt)
       {
@@ -103,7 +103,7 @@ void align_init_brace(chunk_t *start)
             if (  idx == 0
                && cpd.al_c99_array)
             {
-               chunk_t *prev = chunk_get_prev(pc);
+               Chunk *prev = chunk_get_prev(pc);
 
                if (chunk_is_newline(prev))
                {

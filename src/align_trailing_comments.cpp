@@ -35,7 +35,7 @@ void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev)
          && (cs.Len() == 1)))
    {
       LOG_FMT(sev, "%s(%d): max_col=%zu\n", __func__, __LINE__, col);
-      chunk_t *pc;
+      Chunk *pc;
 
       while ((pc = cs.Pop_Back()) != nullptr)
       {
@@ -50,12 +50,12 @@ void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev)
 } // align_stack
 
 
-chunk_t *align_trailing_comments(chunk_t *start)
+Chunk *align_trailing_comments(Chunk *start)
 {
    LOG_FUNC_ENTRY();
    size_t       min_col  = 0;
    size_t       min_orig = 0;
-   chunk_t      *pc      = start;
+   Chunk        *pc      = start;
    const size_t lvl      = start->brace_level;
    size_t       nl_count = 0;
    ChunkStack   cs;
@@ -146,9 +146,9 @@ chunk_t *align_trailing_comments(chunk_t *start)
 } // align_trailing_comments
 
 
-comment_align_e get_comment_align_type(chunk_t *cmt)
+comment_align_e get_comment_align_type(Chunk *cmt)
 {
-   chunk_t         *prev;
+   Chunk           *prev;
    comment_align_e cmt_type = comment_align_e::REGULAR;
 
    log_rule_B("align_right_cmt_mix");
@@ -176,7 +176,7 @@ void align_right_comments(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       if (  chunk_is_token(pc, CT_COMMENT)
          || chunk_is_token(pc, CT_COMMENT_CPP)
@@ -184,7 +184,7 @@ void align_right_comments(void)
       {
          if (get_chunk_parent_type(pc) == CT_COMMENT_END)
          {
-            chunk_t *prev = chunk_get_prev(pc);
+            Chunk *prev = chunk_get_prev(pc);
 
             log_rule_B("align_right_cmt_gap");
 
@@ -220,7 +220,7 @@ void align_right_comments(void)
       }
    }
 
-   chunk_t *pc = chunk_get_head();
+   Chunk *pc = chunk_get_head();
 
    while (pc != nullptr)
    {

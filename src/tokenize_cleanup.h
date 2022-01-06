@@ -25,7 +25,7 @@ void tokenize_cleanup(void);
 void tokenize_trailing_return_types(void);
 
 
-void split_off_angle_close(chunk_t *pc);
+void split_off_angle_close(Chunk *pc);
 
 
 #endif /* TOKENIZ_CLEANUP_H_INCLUDED */

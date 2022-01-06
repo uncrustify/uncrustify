@@ -38,7 +38,7 @@ rem dir /s/b %SRC_DIR%\args.cpp			> .\%OUT_DIR%\files.lnt
 rem dir /s/b %SRC_DIR%\backup.cpp		> .\%OUT_DIR%\files.lnt
 rem dir /s/b %SRC_DIR%\brace_cleanup.cpp> .\%OUT_DIR%\files.lnt
 rem dir /s/b %SRC_DIR%\braces.cpp		> .\%OUT_DIR%\files.lnt
-rem dir /s/b %SRC_DIR%\chunk_list.cpp	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\chunk.cpp	> .\%OUT_DIR%\files.lnt
 rem dir /s/b %SRC_DIR%\ChunkStack.cpp	> .\%OUT_DIR%\files.lnt
 rem dir /s/b %SRC_DIR%\combine.cpp		> .\%OUT_DIR%\files.lnt
 rem dir /s/b %SRC_DIR%\compat_posix.cpp	> .\%OUT_DIR%\files.lnt

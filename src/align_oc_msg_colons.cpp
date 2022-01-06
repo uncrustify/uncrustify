@@ -15,7 +15,7 @@ constexpr static auto LCURRENT = LOCMSG;
 using namespace uncrustify;
 
 
-void align_oc_msg_colon(chunk_t *so)
+void align_oc_msg_colon(Chunk *so)
 {
    LOG_FUNC_ENTRY();
 
@@ -33,13 +33,13 @@ void align_oc_msg_colon(chunk_t *so)
 
    cas.Start(span);
 
-   size_t  level = so->level;
-   chunk_t *pc   = chunk_get_next_nc_nnl(so, scope_e::PREPROC);
+   size_t level = so->level;
+   Chunk  *pc   = chunk_get_next_nc_nnl(so, scope_e::PREPROC);
 
-   bool    did_line   = false;
-   bool    has_colon  = false;
-   size_t  lcnt       = 0; // line count with no colon for span
-   bool    first_line = true;
+   bool   did_line   = false;
+   bool   has_colon  = false;
+   size_t lcnt       = 0;  // line count with no colon for span
+   bool   first_line = true;
 
    while (  pc != nullptr
          && pc->level > level)
@@ -73,7 +73,7 @@ void align_oc_msg_colon(chunk_t *so)
       {
          has_colon = true;
          cas.Add(pc);
-         chunk_t *tmp = chunk_get_prev(pc);
+         Chunk *tmp = chunk_get_prev(pc);
 
          if (  tmp != nullptr
             && (  chunk_is_token(tmp, CT_OC_MSG_FUNC)
@@ -91,15 +91,15 @@ void align_oc_msg_colon(chunk_t *so)
    cas.m_skip_first = !options::align_oc_msg_colon_first();
 
    // find the longest args that isn't the first one
-   size_t  first_len = 0;
-   size_t  mlen      = 0;
-   chunk_t *longest  = nullptr;
+   size_t first_len = 0;
+   size_t mlen      = 0;
+   Chunk  *longest  = nullptr;
 
-   size_t  len = nas.m_aligned.Len();
+   size_t len = nas.m_aligned.Len();
 
    for (size_t idx = 0; idx < len; idx++)
    {
-      chunk_t *tmp = nas.m_aligned.GetChunk(idx);
+      Chunk *tmp = nas.m_aligned.GetChunk(idx);
 
       if (tmp != nullptr)
       {
@@ -144,7 +144,7 @@ void align_oc_msg_colon(chunk_t *so)
    else if (  longest != nullptr
            && len > 0)
    {
-      chunk_t chunk;
+      Chunk chunk;
 
       set_chunk_type(&chunk, CT_SPACE);
       set_chunk_parent(&chunk, CT_NONE);
@@ -171,7 +171,7 @@ void align_oc_msg_colons(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       if (  chunk_is_token(pc, CT_SQUARE_OPEN)
          && get_chunk_parent_type(pc) == CT_OC_MSG)

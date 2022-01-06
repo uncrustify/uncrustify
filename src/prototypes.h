@@ -9,7 +9,7 @@
 #ifndef C_PARSE_PROTOTYPES_H_INCLUDED
 #define C_PARSE_PROTOTYPES_H_INCLUDED
 
-#include "chunk_list.h"
+#include "chunk.h"
 #include "log_rules.h"
 #include "uncrustify_types.h"
 

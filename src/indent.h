@@ -31,7 +31,7 @@ void indent_preproc(void);
  * @param pc      chunk at the start of the line
  * @param column  desired column
  */
-void indent_to_column(chunk_t *pc, size_t column);
+void indent_to_column(Chunk *pc, size_t column);
 
 
 /**
@@ -40,7 +40,7 @@ void indent_to_column(chunk_t *pc, size_t column);
  * @param pc      chunk at the start of the line
  * @param column  desired column
  */
-void align_to_column(chunk_t *pc, size_t column);
+void align_to_column(Chunk *pc, size_t column);
 
 
 //! Scan to see if the whole file is covered by one #ifdef
@@ -53,7 +53,7 @@ bool ifdef_over_whole_file(void);
  * @param pc      The chunk at the start of the line
  * @param column  The desired column
  */
-void reindent_line(chunk_t *pc, size_t column);
+void reindent_line(Chunk *pc, size_t column);
 
 
 #endif /* INDENT_H_INCLUDED */

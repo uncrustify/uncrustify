@@ -7,14 +7,14 @@
 
 #include "parameter_pack_cleanup.h"
 
-#include "chunk_list.h"
+#include "chunk.h"
 
 
 void parameter_pack_cleanup(void)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *pc = chunk_get_head();
+   Chunk *pc = chunk_get_head();
 
    while (pc != nullptr)
    {
@@ -24,7 +24,7 @@ void parameter_pack_cleanup(void)
       // look for template
       if (chunk_is_token(pc, CT_TEMPLATE))                 // Issue #3309
       {
-         chunk_t *template_end = chunk_get_next_type(pc, CT_SEMICOLON, pc->level);
+         Chunk *template_end = chunk_get_next_type(pc, CT_SEMICOLON, pc->level);
 
          // look for a parameter pack
          while (pc != nullptr)
@@ -34,7 +34,7 @@ void parameter_pack_cleanup(void)
 
             if (chunk_is_token(pc, CT_PARAMETER_PACK))
             {
-               chunk_t *parameter_pack = pc;
+               Chunk *parameter_pack = pc;
 
                // look for a token with the same text
                while (pc != nullptr)

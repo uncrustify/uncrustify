@@ -9,6 +9,7 @@
 
 #include "ParseFrame.h"
 
+#include "chunk.h"
 #include "uncrustify.h"
 
 #include <stdexcept>            // to get std::logic_error
@@ -147,14 +148,14 @@ const ContainerType &ParseFrame::top() const
 
 void ParseFrame::push(std::nullptr_t, brace_stage_e stage)
 {
-   static chunk_t dummy;
+   static Chunk dummy;
 
    push(&dummy, __func__, __LINE__, stage);
    top().pc = nullptr;
 }
 
 
-void ParseFrame::push(chunk_t *pc, const char *func, int line, brace_stage_e stage)
+void ParseFrame::push(Chunk *pc, const char *func, int line, brace_stage_e stage)
 {
    LOG_FUNC_ENTRY();
 

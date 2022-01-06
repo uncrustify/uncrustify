@@ -43,7 +43,7 @@ const ChunkStack::Entry *ChunkStack::Get(size_t idx) const
 }
 
 
-chunk_t *ChunkStack::GetChunk(size_t idx) const
+Chunk *ChunkStack::GetChunk(size_t idx) const
 {
    if (idx < m_cse.size())
    {
@@ -53,9 +53,9 @@ chunk_t *ChunkStack::GetChunk(size_t idx) const
 }
 
 
-chunk_t *ChunkStack::Pop_Front()
+Chunk *ChunkStack::Pop_Front()
 {
-   chunk_t *pc = nullptr;
+   Chunk *pc = nullptr;
 
    if (!m_cse.empty())
    {
@@ -66,9 +66,9 @@ chunk_t *ChunkStack::Pop_Front()
 }
 
 
-chunk_t *ChunkStack::Pop_Back()
+Chunk *ChunkStack::Pop_Back()
 {
-   chunk_t *pc = nullptr;
+   Chunk *pc = nullptr;
 
    if (!m_cse.empty())
    {
@@ -79,7 +79,7 @@ chunk_t *ChunkStack::Pop_Back()
 }
 
 
-void ChunkStack::Push_Back(chunk_t *pc, size_t seqnum)
+void ChunkStack::Push_Back(Chunk *pc, size_t seqnum)
 {
    m_cse.push_back(Entry(seqnum, pc));
 
