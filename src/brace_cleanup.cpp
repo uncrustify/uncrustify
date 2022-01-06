@@ -525,6 +525,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, chunk_t *pc)
                LOG_FMT(LWARN, "%s(%d): (frm.top().type + 1) is %s\n",
                        __func__, __LINE__, get_token_name((c_token_t)(frm.top().type + 1)));
             }
+
             if (  frm.top().type != CT_EOF
                && frm.top().type != CT_PP_DEFINE)
             {
