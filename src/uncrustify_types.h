@@ -87,7 +87,7 @@ enum class char_encoding_e : unsigned int
 };
 
 
-struct chunk_t; //forward declaration
+class chunk_t; //forward declaration
 
 
 /**
@@ -126,8 +126,9 @@ typedef std::pair<size_t, char *>   Track_nr;         // track for "trackNumber"
 typedef std::vector<Track_nr>       track_list;       // liste for many tracks
 
 // This is the main type of this program
-struct chunk_t
+class chunk_t
 {
+public:
    chunk_t()
    {
       reset();
@@ -230,17 +231,17 @@ struct chunk_t
    size_t       column_indent;    /** if 1st on a line, set to the 'indent'
                                    * column, which may be less than the real
                                    * column used to indent with tabs          */
-   size_t       nl_count;         //! number of newlines in CT_NEWLINE
-   size_t       nl_column;        //! column of the subsequent newline entries(all of them should have the same column)
-   size_t       level;            /** nest level in {, (, or [
+   size_t   nl_count;             //! number of newlines in CT_NEWLINE
+   size_t   nl_column;            //! column of the subsequent newline entries(all of them should have the same column)
+   size_t   level;                /** nest level in {, (, or [
                                    * only to help vim command } */
-   size_t       brace_level;      //! nest level in braces only
-   size_t       pp_level;         //! nest level in preprocessor
-   bool         after_tab;        //! whether this token was after a tab
-   unc_text     str;              //! the token text
+   size_t   brace_level;          //! nest level in braces only
+   size_t   pp_level;             //! nest level in preprocessor
+   bool     after_tab;            //! whether this token was after a tab
+   unc_text str;                  //! the token text
 
    // for debugging purpose only
-   track_list   *tracking;
+   track_list *tracking;
 };
 
 
