@@ -12,7 +12,7 @@
 
 #include "uncrustify_types.h"
 
-#include "chunk_list.h"
+#include "chunk.h"
 
 /**
  * For a series of lines ending in backslash-newline, align them.

@@ -4,7 +4,7 @@
  * @license GPL v2+
  */
 
-#include "chunk_list.h"
+#include "chunk.h"
 
 #include "flag_braced_init_list.h"
 

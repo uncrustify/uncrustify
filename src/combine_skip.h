@@ -9,7 +9,7 @@
 #ifndef COMBINE_SKIP_H_INCLUDED
 #define COMBINE_SKIP_H_INCLUDED
 
-#include "chunk_list.h"
+#include "chunk.h"
 
 
 /**

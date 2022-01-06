@@ -1,12 +1,12 @@
 /**
- * @file chunk_list.cpp
+ * @file chunk.cpp
  * Manages and navigates the list of chunks.
  *
  * @author  Ben Gardner
  * @license GPL v2+
  */
 
-#include "chunk_list.h"
+#include "chunk.h"
 
 #include "ListManager.h"
 #include "prototypes.h"
@@ -14,6 +14,92 @@
 
 typedef ListManager<chunk_t> ChunkList_t;
 
+
+/*
+ * chunk_t class methods
+ */
+
+chunk_t::chunk_t()
+{
+   reset();
+}
+
+
+void chunk_t::reset()
+{
+   memset(&align, 0, sizeof(align));
+   memset(&indent, 0, sizeof(indent));
+   next          = nullptr;
+   prev          = nullptr;
+   parent        = nullptr;
+   type          = CT_NONE;
+   parent_type   = CT_NONE;
+   orig_line     = 0;
+   orig_col      = 0;
+   orig_col_end  = 0;
+   orig_prev_sp  = 0;
+   flags         = PCF_NONE;
+   column        = 0;
+   column_indent = 0;
+   nl_count      = 0;
+   nl_column     = 0;
+   level         = 0;
+   brace_level   = 0;
+   pp_level      = 999;                                // use a big value to find some errors
+   after_tab     = false;
+   // for debugging purpose only
+   tracking = nullptr;
+   str.clear();
+}
+
+
+size_t chunk_t::len() const
+{
+   return(str.size());
+}
+
+
+//! provides the content of a string a zero terminated character pointer
+const char *chunk_t::text() const
+{
+   return(str.c_str());
+}
+
+
+const char *chunk_t::elided_text(char *for_the_copy)
+{
+   const char *test_it       = text();
+   size_t     test_it_length = strlen(test_it);
+
+   size_t     truncate_value = uncrustify::options::debug_truncate();
+
+   if (truncate_value != 0)
+   {
+      if (test_it_length > truncate_value)
+      {
+         memset(for_the_copy, 0, 1000);
+
+         if (test_it_length < truncate_value + 30)
+         {
+            strncpy(for_the_copy, test_it, truncate_value - 30);
+            for_the_copy[truncate_value - 30] = 0;
+         }
+         else
+         {
+            strncpy(for_the_copy, test_it, truncate_value);
+            for_the_copy[truncate_value] = 0;
+         }
+         char *message = strcat(for_the_copy, " ... <The string is truncated>");
+
+         return(message);
+      }
+      else
+      {
+         return(test_it);
+      }
+   }
+   return(test_it);
+}
 
 /**
  * use this enum to define in what direction or location an

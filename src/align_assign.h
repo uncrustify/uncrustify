@@ -10,7 +10,7 @@
 #ifndef ALIGN_ASSIGN_H_INCLUDED
 #define ALIGN_ASSIGN_H_INCLUDED
 
-#include "chunk_list.h"
+#include "chunk.h"
 
 /**
  * Aligns all assignment operators on the same level as first, starting with

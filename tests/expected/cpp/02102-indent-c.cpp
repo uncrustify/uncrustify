@@ -5,7 +5,7 @@
  * $Id: indent.cpp 548 2006-10-21 02:31:55Z bengardner $
  */
 #include "uncrustify_types.h"
-#include "chunk_list.h"
+#include "chunk.h"
 #include "prototypes.h"
 #include <cstdio>
 #include <cstdlib>

@@ -8,7 +8,7 @@
 
 #include "remove_duplicate_include.h"
 
-#include "chunk_list.h"
+#include "chunk.h"
 #include "uncrustify.h"
 
 using std::vector;

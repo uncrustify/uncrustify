@@ -9,7 +9,7 @@
 #ifndef COMBINE_H_INCLUDED
 #define COMBINE_H_INCLUDED
 
-#include "chunk_list.h"
+#include "chunk.h"
 #include "uncrustify_types.h"
 
 

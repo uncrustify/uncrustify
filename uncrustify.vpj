@@ -58,7 +58,7 @@
          <F N="src/backup.cpp"/>
          <F N="src/brace_cleanup.cpp"/>
          <F N="src/braces.cpp"/>
-         <F N="src/chunk_list.cpp"/>
+         <F N="src/chunk.cpp"/>
          <F N="src/ChunkStack.cpp"/>
          <F N="src/combine.cpp"/>
          <F N="src/compat_posix.cpp"/>
@@ -96,7 +96,7 @@
          <F N="src/backup.h"/>
          <F N="src/base_types.h"/>
          <F N="src/char_table.h"/>
-         <F N="src/chunk_list.h"/>
+         <F N="src/chunk.h"/>
          <F N="src/ChunkStack.h"/>
          <F N="src/config.h"/>
          <F N="src/ListManager.h"/>

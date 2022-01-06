@@ -9,7 +9,7 @@
 #ifndef COMBINE_TOOLS_H_INCLUDED
 #define COMBINE_TOOLS_H_INCLUDED
 
-#include "chunk_list.h"
+#include "chunk.h"
 #include "ChunkStack.h"
 
 /**

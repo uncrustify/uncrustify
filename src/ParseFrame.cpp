@@ -9,6 +9,7 @@
 
 #include "ParseFrame.h"
 
+#include "chunk.h"
 #include "uncrustify.h"
 
 #include <stdexcept>            // to get std::logic_error

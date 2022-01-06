@@ -10,7 +10,7 @@
 #ifndef ALIGN_FUNC_PARAMS_H_INCLUDED
 #define ALIGN_FUNC_PARAMS_H_INCLUDED
 
-#include "chunk_list.h"
+#include "chunk.h"
 
 void align_func_params(void);
 

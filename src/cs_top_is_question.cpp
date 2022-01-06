@@ -8,7 +8,7 @@
 
 #include "cs_top_is_question.h"
 
-#include "chunk_list.h"
+#include "chunk.h"
 
 
 bool cs_top_is_question(ChunkStack &cs, size_t level)

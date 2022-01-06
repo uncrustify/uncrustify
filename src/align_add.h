@@ -10,7 +10,7 @@
 #ifndef ALIGN_ADD_H_INCLUDED
 #define ALIGN_ADD_H_INCLUDED
 
-#include "chunk_list.h"
+#include "chunk.h"
 #include "ChunkStack.h"
 
 void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col);

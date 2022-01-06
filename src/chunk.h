@@ -1,5 +1,5 @@
 /**
- * @file chunk_list.h
+ * @file chunk.h
  * Manages and navigates the list of chunks.
  *
  * @author  Ben Gardner
@@ -39,6 +39,56 @@ enum class scope_e : unsigned int
 {
    ALL,      //! search in all kind of chunks
    PREPROC,  //! search only in preprocessor chunks
+};
+
+
+// This is the main type of this program
+class chunk_t
+{
+public:
+   //! default constructor
+   chunk_t();
+
+   //! sets all elements of the struct to their default value
+   void reset();
+
+   //! provides the number of characters of string
+   size_t len() const;
+
+   //! provides the content of a string a zero terminated character pointer
+   const char *text() const;
+
+   // Issue #2984, fill up, if necessary, a copy of the first chars of the text() string
+   const char *elided_text(char *for_the_copy);
+
+   chunk_t      *next;            //! pointer to next chunk in list
+   chunk_t      *prev;            //! pointer to previous chunk in list
+   chunk_t      *parent;          //! pointer to parent chunk(not always set)
+   align_ptr_t  align;
+   indent_ptr_t indent;
+   c_token_t    type;             //! type of the chunk itself
+   c_token_t    parent_type;      //! type of the parent chunk usually CT_NONE
+                                  //! might be different from parent->parent_type (above)
+   size_t       orig_line;        //! line number of chunk in input file
+   size_t       orig_col;         //! column where chunk started in the input file, is always > 0
+   size_t       orig_col_end;     //! column where chunk ended in the input file, is always > 1
+   UINT32       orig_prev_sp;     //! whitespace before this token
+   pcf_flags_t  flags;            //! see PCF_xxx
+   size_t       column;           //! column of chunk
+   size_t       column_indent;    /** if 1st on a line, set to the 'indent'
+                                   * column, which may be less than the real
+                                   * column used to indent with tabs          */
+   size_t   nl_count;             //! number of newlines in CT_NEWLINE
+   size_t   nl_column;            //! column of the subsequent newline entries(all of them should have the same column)
+   size_t   level;                /** nest level in {, (, or [
+                                   * only to help vim command } */
+   size_t   brace_level;          //! nest level in braces only
+   size_t   pp_level;             //! nest level in preprocessor
+   bool     after_tab;            //! whether this token was after a tab
+   unc_text str;                  //! the token text
+
+   // for debugging purpose only
+   track_list *tracking;
 };
 
 

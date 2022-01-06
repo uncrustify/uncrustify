@@ -7,7 +7,7 @@
 
 #include "calculate_closing_brace_position.h"
 
-#include "chunk_list.h"
+#include "chunk.h"
 
 using namespace uncrustify;
 

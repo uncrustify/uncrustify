@@ -10,7 +10,7 @@
 #include "align_oc_decl_colon.h"
 
 #include "align_stack.h"
-#include "chunk_list.h"
+#include "chunk.h"
 
 
 using namespace uncrustify;

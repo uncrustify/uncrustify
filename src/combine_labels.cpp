@@ -8,7 +8,7 @@
 
 #include "combine_labels.h"
 
-#include "chunk_list.h"
+#include "chunk.h"
 #include "cs_top_is_question.h"
 #include "uncrustify.h"
 

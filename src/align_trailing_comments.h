@@ -10,7 +10,7 @@
 #ifndef ALIGN_TRAILING_COMMENTS_H_INCLUDED
 #define ALIGN_TRAILING_COMMENTS_H_INCLUDED
 
-#include "chunk_list.h"
+#include "chunk.h"
 #include "ChunkStack.h"
 
 enum class comment_align_e : unsigned int

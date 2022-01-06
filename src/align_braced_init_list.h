@@ -8,7 +8,7 @@
 #ifndef ALIGN_BRACED_INIT_LIST_H_INCLUDED
 #define ALIGN_BRACED_INIT_LIST_H_INCLUDED
 
-#include "chunk_list.h"
+#include "chunk.h"
 
 /**
  * Aligns all braced init list operators on the same level as first, starting with

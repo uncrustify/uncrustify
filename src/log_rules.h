@@ -9,7 +9,7 @@
 #ifndef LOG_RULES_H_INCLUDED
 #define LOG_RULES_H_INCLUDED
 
-#include "chunk_list.h"
+#include "chunk.h"
 #include "uncrustify.h"
 
 using namespace uncrustify;
