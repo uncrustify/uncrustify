@@ -89,16 +89,6 @@ public:
    }
 
 
-   void InitEntry(T *obj) const
-   {
-      if (obj != NULL)
-      {
-         obj->next = NULL;
-         obj->prev = NULL;
-      }
-   }
-
-
    /**
     * @brief remove an element from a linked list
     *
