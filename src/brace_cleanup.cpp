@@ -510,22 +510,22 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       // Make sure the open / close match
       if (chunk_is_not_token(pc, (c_token_t)(frm.top().type + 1)))
       {
-         LOG_FMT(LWARN, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-         paren_stack_entry_t AA = frm.top();                // Issue #3055
-
-         if (AA.type != CT_EOF)
-         {
-            LOG_FMT(LWARN, "%s(%d): (frm.top().type + 1) is %s\n",
-                    __func__, __LINE__, get_token_name((c_token_t)(frm.top().type + 1)));
-         }
-
-         if (pc->flags.test(PCF_IN_PREPROC))                // Issue #3113
+         if (pc->flags.test(PCF_IN_PREPROC))                // Issue #3113, #3283
          {
             // do nothing
          }
          else
          {
+            LOG_FMT(LWARN, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+            paren_stack_entry_t AA = frm.top();                // Issue #3055
+
+            if (AA.type != CT_EOF)
+            {
+               LOG_FMT(LWARN, "%s(%d): (frm.top().type + 1) is %s\n",
+                       __func__, __LINE__, get_token_name((c_token_t)(frm.top().type + 1)));
+            }
+
             if (  frm.top().type != CT_EOF
                && frm.top().type != CT_PP_DEFINE)
             {
