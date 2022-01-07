@@ -46,8 +46,12 @@ enum class scope_e : unsigned int
 class Chunk
 {
 public:
-   //! default constructor
-   Chunk();
+   //! constructors
+   Chunk();                          // default
+   Chunk(const Chunk &o);            // !!! partial copy: chunk is not linked to others
+
+   Chunk &operator=(const Chunk &o); // !!! partial copy: chunk is not linked to others
+
 
    //! sets all elements of the struct to their default value
    void reset();
@@ -64,6 +68,7 @@ public:
    Chunk        *next;          //! pointer to next chunk in list
    Chunk        *prev;          //! pointer to previous chunk in list
    Chunk        *parent;        //! pointer to parent chunk(not always set)
+
    align_ptr_t  align;
    indent_ptr_t indent;
    c_token_t    type;             //! type of the chunk itself
@@ -89,15 +94,10 @@ public:
 
    // for debugging purpose only
    track_list *tracking;
+
+private:
+   void copyFrom(const Chunk &o); // !!! partial copy: chunk is not linked to others
 };
-
-
-/**
- * duplicate a chunk in a chunk list
- *
- * @param pc_in  chunk to duplicate
- */
-Chunk *chunk_dup(const Chunk *pc_in);
 
 
 /**

@@ -25,6 +25,53 @@ Chunk::Chunk()
 }
 
 
+Chunk::Chunk(const Chunk &o)
+{
+   copyFrom(o);
+}
+
+
+Chunk &Chunk::operator=(const Chunk &o)
+{
+   if (this != &o)
+   {
+      copyFrom(o);
+   }
+   return(*this);
+}
+
+
+void Chunk::copyFrom(const Chunk &o)
+{
+   next        = nullptr;
+   prev        = nullptr;
+   parent      = nullptr;
+   align       = o.align;
+   indent      = o.indent;
+   type        = o.type;
+   parent_type = o.parent_type;
+
+   orig_line     = o.orig_line;
+   orig_col      = o.orig_col;
+   orig_col_end  = o.orig_col_end;
+   orig_prev_sp  = o.orig_prev_sp;
+   flags         = o.flags;
+   column        = o.column;
+   column_indent = o.column_indent;
+
+   nl_count  = o.nl_count;
+   nl_column = o.nl_column;
+   level     = o.level;
+
+   brace_level = o.brace_level;
+   pp_level    = o.pp_level;
+   after_tab   = o.after_tab;
+   str         = o.str;
+
+   tracking = o.tracking;
+}
+
+
 void Chunk::reset()
 {
    memset(&align, 0, sizeof(align));
@@ -521,26 +568,6 @@ Chunk *chunk_get_prev(Chunk *cur, scope_e scope)
 }
 
 
-Chunk *chunk_dup(const Chunk *pc_in)
-{
-   Chunk *pc = new Chunk; // Allocate a new chunk
-
-   if (pc == nullptr)
-   {
-      // @todo clean up properly before crashing
-      LOG_FMT(LERR, "Failed to allocate memory\n");
-      log_func_stack_inline(LSETFLG);
-      log_flush(true);
-      exit(EXIT_FAILURE);
-   }
-   // Copy all fields and then init the entry
-   *pc = *pc_in; // TODO: what happens if pc_in == nullptr?
-   g_cl.InitEntry(pc);
-
-   return(pc);
-}
-
-
 static void chunk_log_msg(Chunk *chunk, const log_sev_t log, const char *str)
 {
    LOG_FMT(log, "%s orig_line is %zu, orig_col is %zu, ",
@@ -1022,7 +1049,7 @@ static Chunk *chunk_add(const Chunk *pc_in, Chunk *ref, const direction_e pos)
    }
 #endif /* DEBUG */
 
-   Chunk *pc = chunk_dup(pc_in);
+   Chunk *pc = new Chunk(*pc_in);
 
    if (pc != nullptr)
    {
