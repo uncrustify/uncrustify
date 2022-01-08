@@ -19,13 +19,20 @@ typedef ListManager<Chunk> ChunkList_t;
  * Chunk class methods
  */
 
-Chunk::Chunk()
+// Null Chunk
+Chunk        Chunk::NullChunk(true);
+Chunk *const Chunk::NullChunkPtr(&Chunk::NullChunk);
+
+
+Chunk::Chunk(bool null_c)
+   : null_chunk(null_c)
 {
    reset();
 }
 
 
 Chunk::Chunk(const Chunk &o)
+   : null_chunk(o.null_chunk)
 {
    copyFrom(o);
 }

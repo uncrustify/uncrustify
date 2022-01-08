@@ -46,12 +46,18 @@ enum class scope_e : unsigned int
 class Chunk
 {
 public:
+   static Chunk        NullChunk;          // Null Chunk
+   static Chunk *const NullChunkPtr;       // Pointer to the Null Chunk
+
    //! constructors
-   Chunk();                          // default
+   Chunk(bool null_c = false);       // default
    Chunk(const Chunk &o);            // !!! partial copy: chunk is not linked to others
 
    Chunk &operator=(const Chunk &o); // !!! partial copy: chunk is not linked to others
 
+   //! whether this is a null Chunk or not
+   bool isNullChunk() const { return(null_chunk); }
+   bool isNotNullChunk() const { return(!null_chunk); }
 
    //! sets all elements of the struct to their default value
    void reset();
@@ -97,6 +103,8 @@ public:
 
 private:
    void copyFrom(const Chunk &o); // !!! partial copy: chunk is not linked to others
+
+   const bool null_chunk;         //! true for null chunks
 };
 
 
