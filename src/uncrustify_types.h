@@ -17,6 +17,7 @@
 #include "uncrustify_limits.h"
 
 #include <assert.h>
+#include <cstddef>      // do get the definition of size_t
 
 #ifdef HAVE_UTIME_H
 #include <utime.h>
