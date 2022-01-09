@@ -49,7 +49,7 @@ void align_same_func_call_params(void)
    LOG_FMT(LAS, "%s(%d): (3): span is %zu, thresh is %zu\n",
            __func__, __LINE__, span, thresh);
 
-   for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   for (pc = chunk_get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next(pc))
    {
       if (chunk_is_newline(pc))
       {
@@ -94,19 +94,19 @@ void align_same_func_call_params(void)
          continue;
       }
       // Only align function calls that are right after a newline
-      Chunk *prev = chunk_get_prev(pc);
+      Chunk *prev = pc->get_prev();
 
       while (  chunk_is_token(prev, CT_MEMBER)
             || chunk_is_token(prev, CT_DC_MEMBER))
       {
-         Chunk *tprev = chunk_get_prev(prev);
+         Chunk *tprev = prev->get_prev();
 
          if (chunk_is_not_token(tprev, CT_TYPE))
          {
             prev = tprev;
             break;
          }
-         prev = chunk_get_prev(tprev);
+         prev = tprev->get_prev();
       }
 
       if (!chunk_is_newline(prev))

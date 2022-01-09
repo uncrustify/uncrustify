@@ -83,7 +83,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
                     __func__, __LINE__, back->orig_line, back->orig_col, back->level);
          }
       }
-      back = chunk_get_prev(back);
+      back = back->get_prev();
    }
    LOG_FMT(LMCB, "%s(%d): erst_found is %zu\n",
            __func__, __LINE__, erst_found);

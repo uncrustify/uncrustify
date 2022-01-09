@@ -76,6 +76,7 @@ Chunk *align_trailing_comments(Chunk *start)
    log_rule_B("align_right_cmt_span");
 
    while (  pc != nullptr
+         && pc->isNotNullChunk()
          && (nl_count < options::align_right_cmt_span()))
    {
       if (  pc->flags.test(PCF_RIGHT_COMMENT)
@@ -84,7 +85,7 @@ Chunk *align_trailing_comments(Chunk *start)
          if (  same_level
             && pc->brace_level != lvl)
          {
-            pc = chunk_get_prev(pc);
+            pc = pc->get_prev();
             break;
          }
          cmt_type_cur = get_comment_align_type(pc);
@@ -154,7 +155,8 @@ comment_align_e get_comment_align_type(Chunk *cmt)
    log_rule_B("align_right_cmt_mix");
 
    if (  !options::align_right_cmt_mix()
-      && ((prev = chunk_get_prev(cmt)) != nullptr))
+      && cmt != nullptr
+      && ((prev = cmt->get_prev())->isNotNullChunk()))
    {
       if (  chunk_is_token(prev, CT_PP_ENDIF)
          || chunk_is_token(prev, CT_PP_ELSE)
@@ -184,7 +186,7 @@ void align_right_comments(void)
       {
          if (get_chunk_parent_type(pc) == CT_COMMENT_END)
          {
-            Chunk *prev = chunk_get_prev(pc);
+            Chunk *prev = pc->get_prev();
 
             log_rule_B("align_right_cmt_gap");
 

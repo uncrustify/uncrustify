@@ -29,15 +29,15 @@ private:
    // Hide copy constructor
    ListManager(const ListManager &ref)
    {
-      first = NULL;
-      last  = NULL;
+      first = nullptr;
+      last  = nullptr;
    }
 
 public:
    ListManager()
    {
-      first = NULL;
-      last  = NULL;
+      first = nullptr;
+      last  = nullptr;
    }
 
 
@@ -46,7 +46,7 @@ public:
     *
     * @return pointer to first element or nullptr if list is empty
     */
-   T *GetHead()
+   T *GetHead() const
    {
       return(first);
    }
@@ -57,7 +57,7 @@ public:
     *
     * @return pointer to last element or nullptr if list is empty
     */
-   T *GetTail()
+   T *GetTail() const
    {
       return(last);
    }
@@ -70,9 +70,9 @@ public:
     *
     * @return pointer to next element or nullptr if no next element exists
     */
-   T *GetNext(T *ref)
+   T *GetNext(const T *ref) const
    {
-      return((ref != NULL) ? ref->next : NULL);
+      return((ref != nullptr) ? ref->next : nullptr);
    }
 
 
@@ -83,9 +83,9 @@ public:
     *
     * @return pointer to previous element or nullptr if no previous element exists
     */
-   T *GetPrev(T *ref)
+   T *GetPrev(const T *ref) const
    {
-      return((ref != NULL) ? ref->prev : NULL);
+      return((ref != nullptr) ? ref->prev : nullptr);
    }
 
 
@@ -96,7 +96,7 @@ public:
     */
    void Pop(T *obj)
    {
-      if (obj != NULL)
+      if (obj != nullptr)
       {
          if (first == obj)
          {
@@ -108,17 +108,17 @@ public:
             last = obj->prev;
          }
 
-         if (obj->next != NULL)
+         if (obj->next != nullptr)
          {
             obj->next->prev = obj->prev;
          }
 
-         if (obj->prev != NULL)
+         if (obj->prev != nullptr)
          {
             obj->prev->next = obj->next;
          }
-         obj->next = NULL;
-         obj->prev = NULL;
+         obj->next = nullptr;
+         obj->prev = nullptr;
       }
    }
 
@@ -126,8 +126,8 @@ public:
    //! swap two elements of a list
    void Swap(T *obj1, T *obj2)
    {
-      if (  obj1 != NULL
-         && obj2 != NULL)
+      if (  obj1 != nullptr
+         && obj2 != nullptr)
       {
          if (obj1->prev == obj2)
          {
@@ -162,14 +162,14 @@ public:
     */
    void AddAfter(T *obj, T *ref)
    {
-      if (  obj != NULL
-         && ref != NULL)
+      if (  obj != nullptr
+         && ref != nullptr)
       {
          Pop(obj); // TODO: is this necessary?
          obj->next = ref->next;
          obj->prev = ref;
 
-         if (ref->next != NULL)
+         if (ref->next != nullptr)
          {
             ref->next->prev = obj;
          }
@@ -190,14 +190,14 @@ public:
     */
    void AddBefore(T *obj, T *ref)
    {
-      if (  obj != NULL
-         && ref != NULL)
+      if (  obj != nullptr
+         && ref != nullptr)
       {
          Pop(obj);
          obj->next = ref;
          obj->prev = ref->prev;
 
-         if (ref->prev != NULL)
+         if (ref->prev != nullptr)
          {
             ref->prev->next = obj;
          }
@@ -217,10 +217,10 @@ public:
     */
    void AddTail(T *obj)
    {
-      obj->next = NULL;
+      obj->next = nullptr;
       obj->prev = last;
 
-      if (last == NULL)
+      if (last == nullptr)
       {
          last  = obj;
          first = obj;
@@ -241,9 +241,9 @@ public:
    void AddHead(T *obj)
    {
       obj->next = first;
-      obj->prev = NULL;
+      obj->prev = nullptr;
 
-      if (first == NULL)
+      if (first == nullptr)
       {
          last  = obj;
          first = obj;

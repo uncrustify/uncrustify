@@ -30,12 +30,16 @@ Chunk *chunk_get_next_local(Chunk *pc, scope_e scope = scope_e::ALL)
 
 Chunk *chunk_get_prev_local(Chunk *pc, scope_e scope = scope_e::ALL)
 {
+   if (pc == nullptr)
+   {
+      return(Chunk::NullChunkPtr);
+   }
    Chunk *tmp = pc;
 
    do
    {
-      tmp = chunk_get_prev(tmp, scope);
-   } while (  tmp != nullptr
+      tmp = tmp->get_prev(scope);
+   } while (  tmp->isNotNullChunk()
            && (  chunk_is_comment(tmp)
               || chunk_is_newline(tmp)
               || chunk_is_token(tmp, CT_NOEXCEPT)));

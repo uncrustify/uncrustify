@@ -16,9 +16,14 @@ void align_add(ChunkStack &cs, Chunk *pc, size_t &max_col)
    LOG_FUNC_ENTRY();
 
    size_t min_col;
-   Chunk  *prev = chunk_get_prev(pc);
+   Chunk  *prev = Chunk::NullChunkPtr;
 
-   if (  prev == nullptr
+   if (pc != nullptr)
+   {
+      prev = pc->get_prev();
+   }
+
+   if (  prev->isNullChunk()
       || chunk_is_newline(prev))
    {
       min_col = 1;

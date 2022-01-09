@@ -46,12 +46,18 @@ enum class scope_e : unsigned int
 class Chunk
 {
 public:
+   static Chunk        NullChunk;          // Null Chunk
+   static Chunk *const NullChunkPtr;       // Pointer to the Null Chunk
+
    //! constructors
-   Chunk();                          // default
+   Chunk(bool null_c = false);       // default
    Chunk(const Chunk &o);            // !!! partial copy: chunk is not linked to others
 
    Chunk &operator=(const Chunk &o); // !!! partial copy: chunk is not linked to others
 
+   //! whether this is a null Chunk or not
+   bool isNullChunk() const { return(null_chunk); }
+   bool isNotNullChunk() const { return(!null_chunk); }
 
    //! sets all elements of the struct to their default value
    void reset();
@@ -64,6 +70,16 @@ public:
 
    // Issue #2984, fill up, if necessary, a copy of the first chars of the text() string
    const char *elided_text(char *for_the_copy);
+
+   /**
+    * @brief returns the previous chunk in a list of chunks
+    *
+    * @param scope code region to search in
+    *
+    * @return pointer to previous chunk or null Chunk if no chunk was found
+    */
+   Chunk *get_prev(scope_e scope = scope_e::ALL);
+
 
    Chunk        *next;          //! pointer to next chunk in list
    Chunk        *prev;          //! pointer to previous chunk in list
@@ -97,6 +113,8 @@ public:
 
 private:
    void copyFrom(const Chunk &o); // !!! partial copy: chunk is not linked to others
+
+   const bool null_chunk;         //! true for null chunks
 };
 
 
@@ -170,17 +188,6 @@ Chunk *chunk_get_tail(void);
  * @return pointer to next chunk or nullptr if no chunk was found
  */
 Chunk *chunk_get_next(Chunk *cur, scope_e scope = scope_e::ALL);
-
-
-/**
- * @brief returns the previous chunk in a list of chunks
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- *
- * @return pointer to previous chunk or nullptr if no chunk was found
- */
-Chunk *chunk_get_prev(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -561,6 +568,7 @@ static inline bool is_expected_string_and_level(Chunk *pc, const char *str, int 
 static inline bool chunk_is_token(const Chunk *pc, c_token_t c_token)
 {
    return(  pc != nullptr
+         && pc->isNotNullChunk()
          && pc->type == c_token);
 }
 
@@ -568,6 +576,7 @@ static inline bool chunk_is_token(const Chunk *pc, c_token_t c_token)
 static inline bool chunk_is_not_token(const Chunk *pc, c_token_t c_token)
 {
    return(  pc != nullptr
+         && pc->isNotNullChunk()
          && pc->type != c_token);
 }
 
@@ -645,6 +654,7 @@ static inline bool chunk_is_cpp_inheritance_access_specifier(Chunk *pc)
 {
    return(  language_is_set(LANG_CPP)
          && pc != nullptr
+         && pc->isNotNullChunk()
          && (  chunk_is_token(pc, CT_ACCESS)
             || chunk_is_token(pc, CT_QUALIFIER))
          && (  std::strncmp(pc->str.c_str(), "private", 7) == 0
@@ -705,6 +715,7 @@ static inline bool chunk_is_semicolon(Chunk *pc)
 static inline bool chunk_is_blank(Chunk *pc)
 {
    return(  pc != nullptr
+         && pc->isNotNullChunk()
          && (pc->len() == 0));
 }
 
@@ -737,6 +748,7 @@ static inline bool chunk_is_balanced_square(Chunk *pc)
 static inline bool chunk_is_preproc(Chunk *pc)
 {
    return(  pc != nullptr
+         && pc->isNotNullChunk()
          && pc->flags.test(PCF_IN_PREPROC));
 }
 
@@ -744,6 +756,7 @@ static inline bool chunk_is_preproc(Chunk *pc)
 static inline bool chunk_is_comment_or_newline_in_preproc(Chunk *pc)
 {
    return(  pc != nullptr
+         && pc->isNotNullChunk()
          && chunk_is_preproc(pc)
          && (  chunk_is_comment(pc)
             || chunk_is_newline(pc)));
@@ -850,12 +863,13 @@ static inline bool chunk_is_nullable(Chunk *pc)
 static inline bool chunk_is_addr(Chunk *pc)
 {
    if (  pc != nullptr
+      && pc->isNotNullChunk()
       && (  chunk_is_token(pc, CT_BYREF)
          || (  (pc->len() == 1)
             && (pc->str[0] == '&')
             && pc->type != CT_OPERATOR_VAL)))
    {
-      Chunk *prev = chunk_get_prev(pc);
+      Chunk *prev = pc->get_prev();
 
       if (  pc->flags.test(PCF_IN_TEMPLATE)
          && (  chunk_is_token(prev, CT_COMMA)
@@ -946,7 +960,9 @@ static inline bool chunk_is_paren_close(Chunk *pc)
 static inline bool chunk_same_preproc(Chunk *pc1, Chunk *pc2)
 {
    return(  pc1 == nullptr
+         || pc1->isNullChunk()
          || pc2 == nullptr
+         || pc2->isNullChunk()
          || ((pc1->flags & PCF_IN_PREPROC) == (pc2->flags & PCF_IN_PREPROC)));
 }
 
@@ -958,13 +974,18 @@ static inline bool chunk_same_preproc(Chunk *pc1, Chunk *pc2)
  */
 static inline bool chunk_safe_to_del_nl(Chunk *nl)
 {
-   Chunk *tmp = chunk_get_prev(nl);
+   Chunk *tmp = Chunk::NullChunkPtr;
+
+   if (nl != nullptr)
+   {
+      tmp = nl->get_prev();
+   }
 
    if (chunk_is_token(tmp, CT_COMMENT_CPP))
    {
       return(false);
    }
-   return(chunk_same_preproc(chunk_get_prev(nl), chunk_get_next(nl)));
+   return(chunk_same_preproc(tmp, chunk_get_next(nl)));
 }
 
 

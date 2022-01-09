@@ -88,9 +88,9 @@ void align_left_shift(void)
              *      cout
              *          << "something";
              */
-            Chunk *prev = chunk_get_prev(pc);
+            Chunk *prev = pc->get_prev();
 
-            if (  prev != nullptr
+            if (  prev->isNotNullChunk()
                && chunk_is_newline(prev))
             {
                log_rule_B("indent_columns");
@@ -102,7 +102,7 @@ void align_left_shift(void)
             as.Add(pc);
             start = pc;
          }
-         else if (chunk_is_newline(chunk_get_prev(pc)))
+         else if (chunk_is_newline(pc->get_prev()))
          {
             // subsequent ones must be after a newline
             as.Add(pc);
@@ -117,7 +117,7 @@ void align_left_shift(void)
           *      cout <<
           *          "something";
           */
-         Chunk *prev = chunk_get_prev(pc);
+         Chunk *prev = pc->get_prev();
 
          if (  prev != nullptr
             && chunk_is_newline(prev))

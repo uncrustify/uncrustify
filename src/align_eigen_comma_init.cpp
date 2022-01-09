@@ -30,7 +30,8 @@ void align_eigen_comma_init(void)
 
    auto *pc = chunk_get_head();
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       if (chunk_is_newline(pc))
       {
@@ -88,9 +89,9 @@ void align_eigen_comma_init(void)
              *      cout
              *          << "something";
              */
-            Chunk *prev = chunk_get_prev(pc);
+            Chunk *prev = pc->get_prev();
 
-            if (  prev != nullptr
+            if (  prev->isNotNullChunk()
                && chunk_is_newline(prev))
             {
                log_rule_B("indent_columns");
@@ -106,7 +107,7 @@ void align_eigen_comma_init(void)
       }
       else if (!as.m_aligned.Empty())
       {
-         auto *const prev = chunk_get_prev(pc);
+         Chunk *prev = pc->get_prev();
 
          if (  chunk_is_newline(prev)
             && chunk_is_token(chunk_get_prev_nc_nnl(pc), CT_COMMA))
