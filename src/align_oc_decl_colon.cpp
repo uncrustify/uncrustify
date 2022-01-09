@@ -46,6 +46,7 @@ void align_oc_decl_colon(void)
       did_line = false;
 
       while (  pc != nullptr
+            && pc->isNotNullChunk()
             && pc->level >= level)
       {
          // The declaration ends with an open brace or semicolon
@@ -66,7 +67,7 @@ void align_oc_decl_colon(void)
          {
             cas.Add(pc);
 
-            Chunk *tmp  = chunk_get_prev(pc, scope_e::PREPROC);
+            Chunk *tmp  = pc->get_prev(scope_e::PREPROC);
             Chunk *tmp2 = chunk_get_prev_nc_nnl(tmp, scope_e::PREPROC);
 
             // Check for an un-labeled parameter

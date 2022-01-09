@@ -152,7 +152,8 @@ static void detect_space_options(void)
    Chunk *pc   = chunk_get_next(prev);
    Chunk *next;
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       next = chunk_get_next(pc);
 
@@ -357,7 +358,7 @@ static void detect_space_options(void)
          }
          else if (chunk_is_token(prev, CT_VBRACE_OPEN))
          {
-            vote_sp_special_semi.vote(chunk_get_prev(prev), pc);
+            vote_sp_special_semi.vote(prev->get_prev(), pc);
          }
          else
          {

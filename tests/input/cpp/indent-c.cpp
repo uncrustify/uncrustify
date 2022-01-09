@@ -599,7 +599,7 @@ void indent_text(void)
 
          if (cpd.settings[UO_indent_class_colon].b)
          {
-            prev = chunk_get_prev(pc);
+            prev = pc->get_prev();
             if (chunk_is_newline(prev))
             {
                frm.pse[frm.pse_tos].indent += 2;
@@ -908,7 +908,7 @@ static void indent_comment(Chunk *pc, int col)
       return;
    }
 
-   nl = chunk_get_prev(pc);
+   nl = pc->get_prev();
 
    /* outside of any expression or statement? */
    if (pc->level == 0)
@@ -921,7 +921,7 @@ static void indent_comment(Chunk *pc, int col)
       }
    }
 
-   prev = chunk_get_prev(nl);
+   prev = nl->get_prev();
    if (chunk_is_comment(prev) && (nl->nl_count == 1))
    {
       int coldiff = prev->orig_col - pc->orig_col;

@@ -20,10 +20,11 @@ void remove_duplicate_include(void)
 
    vector<Chunk *> includes;
 
-   Chunk           *preproc = nullptr;
+   Chunk           *preproc = Chunk::NullChunkPtr;
    Chunk           *pc      = chunk_get_head();
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       //LOG_FMT(LRMRETURN, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n",
       //        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
@@ -67,7 +68,7 @@ void remove_duplicate_include(void)
                   Chunk *temp    = pc;
                   Chunk *comment = chunk_get_next(next);
                   Chunk *eol     = chunk_get_next_nl(next);
-                  pc = chunk_get_prev(preproc);
+                  pc = preproc->get_prev();
                   chunk_del(preproc);
                   chunk_del(temp);
                   chunk_del(next);

@@ -103,7 +103,7 @@ void align_init_brace(Chunk *start)
             if (  idx == 0
                && cpd.al_c99_array)
             {
-               Chunk *prev = chunk_get_prev(pc);
+               Chunk *prev = pc->get_prev();
 
                if (chunk_is_newline(prev))
                {

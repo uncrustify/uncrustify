@@ -770,9 +770,9 @@ static void convert_brace(Chunk *br)
    {
       set_chunk_type(br, CT_VBRACE_OPEN);
       br->str.clear();
-      tmp = chunk_get_prev(br);
+      tmp = br->get_prev();
 
-      if (tmp == nullptr)
+      if (tmp->isNullChunk())
       {
          return;
       }
@@ -1229,15 +1229,15 @@ void add_long_closebrace_comment(void)
 static void move_case_break(void)
 {
    LOG_FUNC_ENTRY();
-   Chunk *prev = nullptr;
+   Chunk *prev = Chunk::NullChunkPtr;
 
    for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_nc_nnl(pc))
    {
       if (  chunk_is_token(pc, CT_BREAK)
          && chunk_is_token(prev, CT_BRACE_CLOSE)
          && get_chunk_parent_type(prev) == CT_CASE
-         && chunk_is_newline(chunk_get_prev(pc))
-         && chunk_is_newline(chunk_get_prev(prev)))
+         && chunk_is_newline(pc->get_prev())
+         && chunk_is_newline(prev->get_prev()))
       {
          chunk_swap_lines(prev, pc);
       }
@@ -1249,15 +1249,15 @@ static void move_case_break(void)
 static void move_case_return(void)
 {
    LOG_FUNC_ENTRY();
-   Chunk *prev = nullptr;
+   Chunk *prev = Chunk::NullChunkPtr;
 
    for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_nc_nnl(pc))
    {
       if (  chunk_is_token(pc, CT_RETURN)
          && chunk_is_token(prev, CT_BRACE_CLOSE)
          && get_chunk_parent_type(prev) == CT_CASE
-         && chunk_is_newline(chunk_get_prev(pc))
-         && chunk_is_newline(chunk_get_prev(prev)))
+         && chunk_is_newline(pc->get_prev())
+         && chunk_is_newline(prev->get_prev()))
       {
          // Find the end of the return statement
          while (chunk_is_not_token(pc, CT_SEMICOLON))
@@ -1364,7 +1364,7 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
       tmp_pc->level--;
    }
 
-   next = chunk_get_prev(br_open, scope_e::PREPROC);
+   next = br_open->get_prev(scope_e::PREPROC);
 
    chunk_del(br_open);
    chunk_del(br_close);

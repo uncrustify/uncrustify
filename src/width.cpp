@@ -142,7 +142,7 @@ static void split_before_chunk(Chunk *pc)
    LOG_FMT(LSPLIT, "%s(%d): text() '%s'\n", __func__, __LINE__, pc->text());
 
    if (  !chunk_is_newline(pc)
-      && !chunk_is_newline(chunk_get_prev(pc)))
+      && !chunk_is_newline(pc->get_prev()))
    {
       newline_add_before(pc);
       // reindent needs to include the indent_continue value and was off by one
@@ -246,7 +246,7 @@ static void try_split_here(cw_entry &ent, Chunk *pc)
    }
    LOG_FMT(LSPLIT, "%s(%d):\n", __func__, __LINE__);
    // Can't split after a newline
-   Chunk *prev = chunk_get_prev(pc);
+   Chunk *prev = pc->get_prev();
 
    if (  prev == nullptr
       || (  chunk_is_newline(prev)
@@ -426,7 +426,8 @@ static bool split_line(Chunk *start)
    Chunk *pc = start;
    Chunk *prev;
 
-   while (  ((pc = chunk_get_prev(pc)) != nullptr)
+   while (  ((pc = pc->get_prev()) != nullptr)
+         && pc->isNotNullChunk()
          && !chunk_is_newline(pc))
    {
       LOG_FMT(LSPLIT, "%s(%d): at %s, orig_line is %zu, orig_col is %zu\n",
@@ -524,9 +525,10 @@ static bool split_line(Chunk *start)
       }
    }
    // add a newline before pc
-   prev = chunk_get_prev(pc);
+   prev = pc->get_prev();
 
    if (  prev != nullptr
+      && prev->isNotNullChunk()
       && !chunk_is_newline(pc)
       && !chunk_is_newline(prev))
    {
@@ -568,7 +570,8 @@ static void split_for_stmt(Chunk *start)
    // Find the open paren so we know the level and count newlines
    Chunk *pc = start;
 
-   while ((pc = chunk_get_prev(pc)) != nullptr)
+   while (  ((pc = pc->get_prev()) != nullptr)
+         && pc->isNotNullChunk())
    {
       if (chunk_is_token(pc, CT_SPAREN_OPEN))
       {
@@ -601,7 +604,8 @@ static void split_for_stmt(Chunk *start)
 
    // first scan backwards for the semicolons
    while (  (count < static_cast<int>(max_cnt))
-         && ((pc = chunk_get_prev(pc)) != nullptr)
+         && ((pc = pc->get_prev()) != nullptr)
+         && pc->isNotNullChunk()
          && pc->flags.test(PCF_IN_SPAREN))
    {
       if (  chunk_is_token(pc, CT_SEMICOLON)
@@ -682,7 +686,8 @@ static void split_fcn_params_full(Chunk *start)
 
    LOG_FMT(LSPLIT, "  %s(%d): Find the opening function parenthesis\n", __func__, __LINE__);
 
-   while ((fpo = chunk_get_prev(fpo)) != nullptr)
+   while (  (fpo = fpo->get_prev()) != nullptr
+         && fpo->isNotNullChunk())
    {
       LOG_FMT(LSPLIT, "%s(%d): %s, orig_col is %zu, level is %zu\n",
               __func__, __LINE__, fpo->text(), fpo->orig_col, fpo->level);
@@ -724,7 +729,8 @@ static void split_fcn_params(Chunk *start)
       // Find the opening function parenthesis
       LOG_FMT(LSPLIT, "%s(%d): Find the opening function parenthesis\n", __func__, __LINE__);
 
-      while (  ((fpo = chunk_get_prev(fpo)) != nullptr)
+      while (  ((fpo = fpo->get_prev()) != nullptr)
+            && fpo->isNotNullChunk()
             && chunk_is_not_token(fpo, CT_FPAREN_OPEN))
       {
          // do nothing
@@ -799,7 +805,8 @@ static void split_fcn_params(Chunk *start)
    LOG_FMT(LSPLIT, "%s(%d): back up until the prev is a comma, begin is '%s', level is %zu\n",
            __func__, __LINE__, prev->text(), prev->level);
 
-   while ((prev = chunk_get_prev(prev)) != nullptr)
+   while (  (prev = prev->get_prev()) != nullptr
+         && prev->isNotNullChunk())
    {
       LOG_FMT(LSPLIT, "%s(%d): prev->text() is '%s', prev->orig_line is %zu, prev->orig_col is %zu\n",
               __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col);
@@ -879,7 +886,8 @@ static void split_template(Chunk *start)
    // back up until the prev is a comma
    Chunk *prev = start;
 
-   while ((prev = chunk_get_prev(prev)) != nullptr)
+   while (  (prev = prev->get_prev()) != nullptr
+         && prev->isNotNullChunk())
    {
       LOG_FMT(LSPLIT, "  %s(%d): prev '%s'\n", __func__, __LINE__, prev->text());
 

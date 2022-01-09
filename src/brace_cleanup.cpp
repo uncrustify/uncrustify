@@ -1354,9 +1354,9 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
       set_chunk_type(&chunk, CT_VBRACE_CLOSE);
       return(chunk_add_after(&chunk, pc));
    }
-   Chunk *ref = chunk_get_prev(pc);
+   Chunk *ref = pc->get_prev();
 
-   if (ref == nullptr)
+   if (ref->isNullChunk())
    {
       return(nullptr);
    }
@@ -1372,10 +1372,10 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    {
       ref->level++;
       ref->brace_level++;
-      ref = chunk_get_prev(ref);
+      ref = ref->get_prev();
    }
 
-   if (ref == nullptr)
+   if (ref->isNullChunk())
    {
       return(nullptr);
    }
@@ -1386,10 +1386,10 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    {
       if (chunk_is_token(ref, CT_PREPROC_BODY))
       {
-         while (  ref != nullptr
+         while (  ref->isNotNullChunk()
                && ref->flags.test(PCF_IN_PREPROC))
          {
-            ref = chunk_get_prev(ref);
+            ref = ref->get_prev();
          }
       }
       else
@@ -1408,7 +1408,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
       ref = chunk_get_next(ref);
    }
 
-   if (ref == nullptr)
+   if (ref->isNullChunk())
    {
       return(nullptr);
    }

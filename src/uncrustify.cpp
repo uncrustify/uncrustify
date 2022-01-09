@@ -1660,14 +1660,16 @@ static void add_file_footer()
 
    // Back up if the file ends with a newline
    if (  pc != nullptr
+      && pc->isNotNullChunk()
       && chunk_is_newline(pc))
    {
-      pc = chunk_get_prev(pc);
+      pc = pc->get_prev();
    }
 
    if (  pc != nullptr
+      && pc->isNotNullChunk()
       && (  !chunk_is_comment(pc)
-         || !chunk_is_newline(chunk_get_prev(pc))))
+         || !chunk_is_newline(pc->get_prev())))
    {
       pc = chunk_get_tail();
 
@@ -1755,7 +1757,9 @@ static void add_func_header(c_token_t type, file_mem &fm)
        */
       ref = pc;
 
-      while ((ref = chunk_get_prev(ref)) != nullptr)
+      while (  ref != nullptr
+            && (ref = ref->get_prev()) != nullptr
+            && ref->isNotNullChunk())
       {
          // Bail if we change level or find an access specifier colon
          if (  ref->level != pc->level
@@ -1794,7 +1798,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
 
          // Ignore 'right' comments
          if (  chunk_is_comment(ref)
-            && chunk_is_newline(chunk_get_prev(ref)))
+            && chunk_is_newline(ref->get_prev()))
          {
             break;
          }
@@ -1809,7 +1813,8 @@ static void add_func_header(c_token_t type, file_mem &fm)
          }
       }
 
-      if (  ref == nullptr
+      if (  (  ref == nullptr
+            || ref->isNullChunk())
          && !chunk_is_comment(chunk_get_head())
          && get_chunk_parent_type(chunk_get_head()) == type)
       {
@@ -1856,7 +1861,8 @@ static void add_msg_header(c_token_t type, file_mem &fm)
        */
       ref = pc;
 
-      while ((ref = chunk_get_prev(ref)) != nullptr)
+      while (  (ref = ref->get_prev()) != nullptr
+            && ref->isNotNullChunk())
       {
          // ignore the CT_TYPE token that is the result type
          if (  ref->level != pc->level
@@ -1897,13 +1903,13 @@ static void add_msg_header(c_token_t type, file_mem &fm)
             && (  ref->flags.test(PCF_IN_PREPROC)
                || chunk_is_token(ref, CT_OC_SCOPE)))
          {
-            ref = chunk_get_prev(ref);
+            ref = ref->get_prev();
 
             if (ref != nullptr)
             {
                // Ignore 'right' comments
                if (  chunk_is_newline(ref)
-                  && chunk_is_comment(chunk_get_prev(ref)))
+                  && chunk_is_comment(ref->get_prev()))
                {
                   break;
                }

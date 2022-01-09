@@ -170,9 +170,15 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
    LOG_FMT(LAS, "AlignStack::%s(%d): m_star_style is %s\n",
            __func__, __LINE__, get_StarStyle_name(m_star_style));
    // Find ref. Back up to the real item that is aligned.
-   Chunk *prev = start;
+   Chunk *prev = Chunk::NullChunkPtr;
 
-   while (  (prev = chunk_get_prev(prev)) != nullptr
+   if (start != nullptr)
+   {
+      prev = start;
+   }
+
+   while (  (prev = prev->get_prev()) != nullptr
+         && prev->isNotNullChunk()
          && (  chunk_is_ptr_operator(prev)
             || chunk_is_token(prev, CT_TPAREN_OPEN)))
    {
@@ -190,39 +196,44 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       ref = chunk_get_next(ref);
    }
    // Find the item that we are going to align.
-   Chunk *ali = start;
+   Chunk *ali = Chunk::NullChunkPtr;
+
+   if (start != nullptr)
+   {
+      ali = start;
+   }
 
    if (m_star_style != SS_IGNORE)
    {
       // back up to the first '*' or '^' preceding the token
-      Chunk *tmp_prev = chunk_get_prev(ali);
+      Chunk *tmp_prev = ali->get_prev();
 
       while (  chunk_is_star(tmp_prev)
             || chunk_is_msref(tmp_prev))
       {
          ali      = tmp_prev;
-         tmp_prev = chunk_get_prev(ali);
+         tmp_prev = ali->get_prev();
       }
 
       if (chunk_is_token(tmp_prev, CT_TPAREN_OPEN))
       {
          ali      = tmp_prev;
-         tmp_prev = chunk_get_prev(ali);
+         tmp_prev = ali->get_prev();
          // this is correct, even Coverity says:
          // CID 76021 (#1 of 1): Unused value (UNUSED_VALUE)returned_pointer: Assigning value from
-         // chunk_get_prev(ali, nav_e::ALL) to prev here, but that stored value is overwritten before it can be used.
+         // ali->get_prev(nav_e::ALL) to prev here, but that stored value is overwritten before it can be used.
       }
    }
 
    if (m_amp_style != SS_IGNORE)
    {
       // back up to the first '&' preceding the token
-      Chunk *tmp_prev = chunk_get_prev(ali);
+      Chunk *tmp_prev = ali->get_prev();
 
       while (chunk_is_addr(tmp_prev))
       {
          ali      = tmp_prev;
-         tmp_prev = chunk_get_prev(ali);
+         tmp_prev = ali->get_prev();
       }
    }
    log_rule_B("align_keep_extra_space");

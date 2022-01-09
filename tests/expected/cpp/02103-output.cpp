@@ -230,7 +230,7 @@ void output_text(FILE *pfile)
           allow_tabs = pc->after_tab;
         else
           {
-          prev       = chunk_get_prev(pc);
+          prev       = pc->get_prev();
           allow_tabs = (cpd.settings[UO_align_with_tabs].b &&
                         ((pc->flags & PCF_WAS_ALIGNED) != 0) &&
                         (((pc->column - 1) % cpd.settings[UO_output_tab_size].n) == 0) &&
@@ -363,7 +363,7 @@ Chunk *output_comment_cpp(Chunk *first)
     /* Make sure we have at least one space past the last token */
   if (first->parent_type == CT_COMMENT_END)
     {
-    Chunk *prev = chunk_get_prev(first);
+    Chunk *prev = first->get_prev();
 
     if (prev != NULL)
       {
@@ -490,7 +490,7 @@ void output_comment_multi(Chunk *pc)
   int col_diff = 0;
   int xtra     = 1;
 
-  prev = chunk_get_prev(pc);
+  prev = pc->get_prev();
 
   if ((prev != NULL) && (prev->type != CT_NEWLINE))
     cmt_col = pc->orig_col;

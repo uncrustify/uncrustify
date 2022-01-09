@@ -15,6 +15,9 @@
 typedef ListManager<Chunk> ChunkList_t;
 
 
+ChunkList_t g_cl; //! global chunk list
+
+
 /*
  * Chunk class methods
  */
@@ -154,6 +157,66 @@ const char *Chunk::elided_text(char *for_the_copy)
    }
    return(test_it);
 }
+
+
+Chunk *Chunk::get_prev(scope_e scope)
+{
+   if (this->isNullChunk())
+   {
+      return(NullChunkPtr);
+   }
+   Chunk *pc = g_cl.GetPrev(this);
+
+   if (  pc == nullptr
+      || pc->isNullChunk())
+   {
+      return(NullChunkPtr);
+   }
+
+   if (scope == scope_e::ALL)
+   {
+      return(pc);
+   }
+
+   if (this->flags.test(PCF_IN_PREPROC))
+   {
+      // If in a preproc, return NULL if trying to leave
+      if (!pc->flags.test(PCF_IN_PREPROC))
+      {
+         return(NullChunkPtr);
+      }
+      return(pc);
+   }
+
+   // Not in a preproc, skip any preproc
+   while (  pc != nullptr
+         && pc->isNotNullChunk()
+         && pc->flags.test(PCF_IN_PREPROC))
+   {
+      pc = g_cl.GetPrev(pc);
+   }
+
+   if (  pc == nullptr
+      || pc->isNullChunk())
+   {
+      return(NullChunkPtr);
+   }
+   return(pc);
+} // Chunk::get_prev
+
+
+/**
+ * Temporary internal function
+ *
+ * @brief returns the previous chunk in a list of chunks
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
+ *
+ * @return pointer to previous chunk or nullptr if no chunk was found
+ */
+Chunk *__chunk_get_prev(Chunk *cur, scope_e scope = scope_e::ALL);
+
 
 /**
  * use this enum to define in what direction or location an
@@ -328,9 +391,6 @@ static Chunk *chunk_add(const Chunk *pc_in, Chunk *ref, const direction_e pos = 
 static search_t select_search_fct(const direction_e dir = direction_e::FORWARD);
 
 
-ChunkList_t g_cl; //! global chunk list
-
-
 Chunk *chunk_get_head(void)
 {
    return(g_cl.GetHead());
@@ -345,7 +405,7 @@ Chunk *chunk_get_tail(void)
 
 static search_t select_search_fct(const direction_e dir)
 {
-   return((dir == direction_e::FORWARD) ? chunk_get_next : chunk_get_prev);
+   return((dir == direction_e::FORWARD) ? chunk_get_next : __chunk_get_prev);
 }
 
 
@@ -503,13 +563,14 @@ static Chunk *chunk_ppa_search(Chunk *cur, const check_t check_fct, const bool c
 }
 
 
-/* @todo maybe it is better to combine chunk_get_next and chunk_get_prev
+/* @todo maybe it is better to combine chunk_get_next and get_prev
  * into a common function However this should be done with the preprocessor
  * to avoid addition check conditions that would be evaluated in the
  * while loop of the calling function */
 Chunk *chunk_get_next(Chunk *cur, scope_e scope)
 {
-   if (cur == nullptr)
+   if (  cur == nullptr
+      || cur->isNullChunk())
    {
       return(nullptr);
    }
@@ -541,37 +602,20 @@ Chunk *chunk_get_next(Chunk *cur, scope_e scope)
 }
 
 
-Chunk *chunk_get_prev(Chunk *cur, scope_e scope)
+Chunk *__chunk_get_prev(Chunk *cur, scope_e scope)
 {
-   if (cur == nullptr)
+   if (  cur == nullptr
+      || cur->isNullChunk())
    {
       return(nullptr);
    }
-   Chunk *pc = g_cl.GetPrev(cur);
+   Chunk *ret = cur->get_prev(scope);
 
-   if (  pc == nullptr
-      || scope == scope_e::ALL)
+   if (ret->isNullChunk())
    {
-      return(pc);
+      return(nullptr);
    }
-
-   if (cur->flags.test(PCF_IN_PREPROC))
-   {
-      // If in a preproc, return NULL if trying to leave
-      if (!pc->flags.test(PCF_IN_PREPROC))
-      {
-         return(nullptr);
-      }
-      return(pc);
-   }
-
-   // Not in a preproc, skip any preproc
-   while (  pc != nullptr
-         && pc->flags.test(PCF_IN_PREPROC))
-   {
-      pc = g_cl.GetPrev(pc);
-   }
-   return(pc);
+   return(ret);
 }
 
 
@@ -602,11 +646,12 @@ static void chunk_log_msg(Chunk *chunk, const log_sev_t log, const char *str)
 static void chunk_log(Chunk *pc, const char *text)
 {
    if (  pc != nullptr
+      && pc->isNotNullChunk()
       && (cpd.unc_stage != unc_stage_e::TOKENIZE)
       && (cpd.unc_stage != unc_stage_e::CLEANUP))
    {
       const log_sev_t log   = LCHUNK;
-      Chunk           *prev = chunk_get_prev(pc);
+      Chunk           *prev = pc->get_prev();
       Chunk           *next = chunk_get_next(pc);
 
       chunk_log_msg(pc, log, text);
@@ -814,9 +859,15 @@ void chunk_swap(Chunk *pc1, Chunk *pc2)
 // TODO: the following function shall be made similar to the search functions
 Chunk *chunk_first_on_line(Chunk *pc)
 {
+   if (  pc == nullptr
+      || pc->isNullChunk())
+   {
+      return(Chunk::NullChunkPtr);
+   }
    Chunk *first = pc;
 
-   while (  (pc = chunk_get_prev(pc)) != nullptr
+   while (  (pc = pc->get_prev()) != nullptr
+         && pc->isNotNullChunk()
          && !chunk_is_newline(pc))
    {
       first = pc;
@@ -852,8 +903,8 @@ void chunk_swap_lines(Chunk *pc1, Chunk *pc2)
    pc1 = chunk_first_on_line(pc1);
    pc2 = chunk_first_on_line(pc2);
 
-   if (  pc1 == nullptr
-      || pc2 == nullptr
+   if (  pc1->isNullChunk()
+      || pc2->isNullChunk()
       || pc1 == pc2)
    {
       return;
@@ -863,7 +914,7 @@ void chunk_swap_lines(Chunk *pc1, Chunk *pc2)
     * ? - start1 - a1 - b1 - nl1 - ? - ref2 - start2 - a2 - b2 - nl2 - ?
     *      ^- pc1                              ^- pc2
     */
-   Chunk *ref2 = chunk_get_prev(pc2);
+   Chunk *ref2 = pc2->get_prev();
 
    // Move the line started at pc2 before pc1
    while (  pc2 != nullptr
@@ -1113,7 +1164,7 @@ Chunk *chunk_get_pp_start(Chunk *cur)
 
    while (!chunk_is_token(cur, CT_PREPROC))
    {
-      cur = chunk_get_prev(cur, scope_e::PREPROC);
+      cur = cur->get_prev(scope_e::PREPROC);
    }
    return(cur);
 }

@@ -127,7 +127,12 @@ bool token_is_within_trailing_return(Chunk *pc)
    //   or  CT_FPAREN_OPEN is found
    Chunk *prev = pc;
 
-   while (prev != nullptr)
+   if (prev == nullptr)
+   {
+      prev = Chunk::NullChunkPtr;
+   }
+
+   while (prev->isNotNullChunk())
    {
       if (chunk_is_token(prev, CT_TRAILING_RET))
       {
@@ -140,7 +145,7 @@ bool token_is_within_trailing_return(Chunk *pc)
       }
       else
       {
-         prev = chunk_get_prev(prev);
+         prev = prev->get_prev();
       }
    }
    return(false);
@@ -2588,7 +2593,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
       else if (CharTable::IsKw1(second->str[0]))
       {
-         Chunk *prev = chunk_get_prev(first);
+         Chunk *prev = first->get_prev();
 
          if (chunk_is_token(prev, CT_IN))
          {
@@ -2906,7 +2911,12 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (chunk_is_token(second, CT_WORD))
       {
          Chunk *open_paren = chunk_skip_to_match_rev(first);
-         Chunk *type       = chunk_get_prev(chunk_get_prev(open_paren));
+
+         if (open_paren == nullptr)
+         {
+            open_paren = Chunk::NullChunkPtr;
+         }
+         Chunk *type = open_paren->get_prev()->get_prev();
 
          if (chunk_is_token(type, CT_TYPE))
          {

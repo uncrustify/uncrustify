@@ -667,7 +667,7 @@ void output_text(FILE *pfile)
             else
             {
                // Try to keep the same relative spacing
-               Chunk *prev = chunk_get_prev(pc);
+               Chunk *prev = pc->get_prev();
 
                if (chunk_is_token(prev, CT_PP_IGNORE))
                {
@@ -682,13 +682,15 @@ void output_text(FILE *pfile)
                {
                   // Try to keep the same relative spacing
                   while (  prev != nullptr
+                        && prev->isNotNullChunk()
                         && prev->orig_col == 0
                         && prev->nl_count == 0)
                   {
-                     prev = chunk_get_prev(prev);
+                     prev = prev->get_prev();
                   }
 
                   if (  prev != nullptr
+                     && prev->isNotNullChunk()
                      && prev->nl_count == 0)
                   {
                      int orig_sp = (pc->orig_col - prev->orig_col_end);
@@ -834,7 +836,7 @@ void output_text(FILE *pfile)
                reindent_line(pc, cpd.column);
             }
             // not the first item on a line
-            Chunk *prev = chunk_get_prev(pc);
+            Chunk *prev = pc->get_prev();
             log_rule_B("align_with_tabs");
             allow_tabs = (  options::align_with_tabs()
                          && pc->flags.test(PCF_WAS_ALIGNED)
@@ -3093,7 +3095,8 @@ static void do_kw_subst(Chunk *pc)
 
 static void output_comment_multi_simple(Chunk *pc)
 {
-   if (pc == nullptr)
+   if (  pc == nullptr
+      && pc->isNotNullChunk())
    {
       return;
    }
@@ -3112,7 +3115,7 @@ static void output_comment_multi_simple(Chunk *pc)
    {
       int diff = 0;
 
-      if (chunk_is_newline(chunk_get_prev(pc)))
+      if (chunk_is_newline(pc->get_prev()))
       {
          // The comment should be indented correctly
          diff = pc->column - pc->orig_col;

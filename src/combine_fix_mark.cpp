@@ -1538,7 +1538,8 @@ void mark_function(Chunk *pc)
        * a.y = foo() * bar();              -- fcn call
        * static const char * const fizz(); -- fcn def
        */
-      while (prev != nullptr)
+      while (  prev != nullptr
+            && prev->isNotNullChunk())
       {
          LOG_FMT(LFCN, "%s(%d): next step with: prev->orig_line is %zu, orig_col is %zu, text() '%s'\n",
                  __func__, __LINE__, prev->orig_line, prev->orig_col, prev->text());
@@ -1575,11 +1576,18 @@ void mark_function(Chunk *pc)
          if (get_chunk_parent_type(prev) == CT_DECLSPEC)  // Issue 1289
          {
             prev = chunk_skip_to_match_rev(prev);
-            prev = chunk_get_prev(prev);
+
+            if (prev != nullptr)
+            {
+               prev = prev->get_prev();
+            }
 
             if (chunk_is_token(prev, CT_DECLSPEC))
             {
-               prev = chunk_get_prev(prev);
+               if (prev != nullptr)
+               {
+                  prev = prev->get_prev();
+               }
             }
          }
 

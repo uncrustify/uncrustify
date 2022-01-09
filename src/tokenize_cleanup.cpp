@@ -603,9 +603,9 @@ void tokenize_cleanup(void)
          if (  chunk_is_token(pc, CT_WORD)
             && chunk_is_token(next, CT_DC_MEMBER))
          {
-            prev = chunk_get_prev(pc);
+            prev = pc->get_prev();
 
-            if (prev == nullptr)                  // Issue #3010
+            if (prev->isNullChunk())                  // Issue #3010
             {
                set_chunk_type(pc, CT_TYPE);
             }
@@ -819,7 +819,7 @@ void tokenize_cleanup(void)
                   && (!pc->str.startswith("$\""))
                   && (!pc->str.startswith("$@\""))))))
       {
-         Chunk *tmp = chunk_get_prev(pc);
+         Chunk *tmp = pc->get_prev();
 
          if (chunk_is_newline(tmp))
          {
