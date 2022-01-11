@@ -324,18 +324,27 @@ static void flag_asm(Chunk *pc)
 void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LFCNR, "%s(%d): prev is '%s'/%s\n",
+   LOG_FMT(LFCNR, "%s(%d): prev is '%s' %s\n",
            __func__, __LINE__,
            prev->text(), get_token_name(prev->type));
    log_pcf_flags(LFCNR, prev->flags);
-   LOG_FMT(LFCNR, "%s(%d): pc is '%s'/%s\n",
+   LOG_FMT(LFCNR, "%s(%d): pc is '%s' %s\n",
            __func__, __LINE__,
            pc->text(), get_token_name(pc->type));
    log_pcf_flags(LFCNR, pc->flags);
-   LOG_FMT(LFCNR, "%s(%d): next is '%s'/%s\n",
+   LOG_FMT(LFCNR, "%s(%d): next is '%s' %s\n",
            __func__, __LINE__,
            next->text(), get_token_name(next->type));
    log_pcf_flags(LFCNR, next->flags);
+
+   if (  chunk_is_token(pc, CT_NOEXCEPT)                 // Issue #3284
+      && chunk_is_token(next, CT_ASSIGN))                // skip over noexcept
+   {
+      LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+      pc   = next;
+      next = chunk_get_next(pc);
+   }
 
    // separate the uses of CT_ASSIGN sign '='
    // into CT_ASSIGN_DEFAULT_ARG, CT_ASSIGN_FUNC_PROTO
@@ -348,6 +357,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
       log_pcf_flags(LFCNR, pc->flags);
       set_chunk_type(pc, CT_ASSIGN_DEFAULT_ARG);
+      return;
    }
 
    if (  (  chunk_is_token(prev, CT_FPAREN_CLOSE)

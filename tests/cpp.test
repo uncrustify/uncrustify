@@ -1063,6 +1063,7 @@
 60057  cpp/issue_3116-2.cfg                                 cpp/issue_3116.cpp
 60058  cpp/sp_constr_colon-i.cfg                            cpp/issue_3330.cpp
 60059  cpp/indent_ctor_init_leading.cfg                     cpp/indent_ctor_init.cpp
+
 60060  cpp/sp_return-a.cfg                                  cpp/returns.cpp
 60061  cpp/sp_return-f.cfg                                  cpp/returns.cpp
 60062  cpp/sp_return-i.cfg                                  cpp/returns.cpp
@@ -1073,7 +1074,9 @@
 60067  common/empty.cfg                                     cpp/Issue_3283.cpp
 60068  cpp/Issue_3428.cfg                                   cpp/Issue_3428.cpp
 60069  cpp/Issue_3428_2.cfg                                 cpp/Issue_3428.cpp
+
 60070  cpp/Issue_3428_3.cfg                                 cpp/Issue_3428.cpp
 60071  cpp/Issue_3428_4.cfg                                 cpp/Issue_3428.cpp
 60072  cpp/Issue_3428_5.cfg                                 cpp/Issue_3428.cpp
 60073  cpp/Issue_3428_6.cfg                                 cpp/Issue_3428.cpp
+60074  cpp/Issue_3284.cfg                                   cpp/Issue_3284.cpp
