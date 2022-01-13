@@ -1672,8 +1672,13 @@ indent_ignore_comma_paren;
 extern Option<bool>
 indent_comma_paren;
 
+// Whether to ignore the indentation of a Boolean operator inside parentheses.
+extern Option<bool>
+indent_ignore_bool_paren;
+
 // Whether to indent a Boolean operator when inside a parenthesis.
 // If true, aligns under the open parenthesis.
+// Requires indent_ignore_bool_paren=false.
 extern Option<bool>
 indent_bool_paren;
 
@@ -1683,7 +1688,7 @@ extern Option<bool>
 indent_semicolon_for_paren;
 
 // Whether to align the first expression to following ones
-// if indent_bool_paren=true.
+// if indent_ignore_bool_paren=false and indent_bool_paren=true.
 extern Option<bool>
 indent_first_bool_expr;
 
