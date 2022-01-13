@@ -370,6 +370,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          || chunk_is_str(next, "0", 1)))
    {
       set_chunk_type(pc, CT_ASSIGN_FUNC_PROTO);
+      return;                  // cpp 30031
    }
 
    if (chunk_is_token(pc, CT_OC_AT))
@@ -383,6 +384,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       else
       {
          set_chunk_parent(next, CT_OC_AT);
+         return;                  // objective-c_50095
       }
    }
 
@@ -394,6 +396,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    {
       set_chunk_type(pc, CT_D_CAST);
       set_paren_parent(next, pc->type);
+      return;                  // d_40061
    }
 
    if (  chunk_is_token(next, CT_PAREN_OPEN)
@@ -411,18 +414,22 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          if (chunk_is_token(tmp, CT_STAR))
          {
             set_chunk_type(tmp, CT_DEREF);
+            return;                  // d_40006
          }
          else if (chunk_is_token(tmp, CT_AMP))
          {
             set_chunk_type(tmp, CT_ADDR);
+            return;                  // d_40060
          }
          else if (chunk_is_token(tmp, CT_MINUS))
          {
             set_chunk_type(tmp, CT_NEG);
+            return;                  // d_40060
          }
          else if (chunk_is_token(tmp, CT_PLUS))
          {
             set_chunk_type(tmp, CT_POS);
+            return;                  // d_40060
          }
       }
 
@@ -452,6 +459,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             }
             make_type(tmp);
          }
+
+         return;                  // c-sharp_10160
       }
 
       if (  chunk_is_token(pc, CT_ALIGN)
@@ -460,10 +469,12 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          if (chunk_is_token(tmp, CT_BRACE_OPEN))
          {
             set_paren_parent(tmp, pc->type);
+            return;                  // d_40024
          }
          else if (chunk_is_token(tmp, CT_COLON))
          {
             set_chunk_parent(tmp, pc->type);
+            return;                  // d_40024
          }
       }
    } // paren open + cast/align/delegate
@@ -485,6 +496,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             make_type(tmp);
             tmp = chunk_get_next(tmp);
          }
+         return;                  // d_40100
       }
       else
       {
@@ -538,6 +550,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          if (chunk_is_token(pc, CT_SQUARE_OPEN))
          {
             handle_oc_message_send(pc);
+            return;                  // objective-c_50003
          }
       }
 
@@ -621,7 +634,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          }
       }
    }
-   LOG_FMT(LFCNR, "%s(%d): pc is '%s'/%s\n",
+   LOG_FMT(LFCNR, "%s(%d): pc is '%s' %s\n",
            __func__, __LINE__,
            pc->text(), get_token_name(pc->type));
 
