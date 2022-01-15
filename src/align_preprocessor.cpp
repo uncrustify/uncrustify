@@ -38,7 +38,8 @@ void align_preprocessor(void)
 
    Chunk *pc = chunk_get_head();
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       // Note: not counting back-slash newline combos
       if (chunk_is_token(pc, CT_NEWLINE))   // mind the gap: chunk_is_newline(pc) is NOT the same!
@@ -83,7 +84,7 @@ void align_preprocessor(void)
                  __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
       }
       // step to the value past the close parenthesis or the macro name
-      pc = chunk_get_next(pc);
+      pc = pc->get_next();
 
       if (pc == nullptr)
       {

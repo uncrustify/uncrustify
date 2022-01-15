@@ -99,7 +99,7 @@ void pawn_scrub_vsemi(void)
       return;
    }
 
-   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr && pc->isNotNullChunk(); pc = pc->get_next())
    {
       if (pc->type != CT_VSEMICOLON)
       {
@@ -292,10 +292,15 @@ void pawn_add_virtual_semicolons(void)
    // Add Pawn virtual semicolons
    if (language_is_set(LANG_PAWN))
    {
-      Chunk *prev = nullptr;
+      Chunk *prev = Chunk::NullChunkPtr;
       Chunk *pc   = chunk_get_head();
 
-      while ((pc = chunk_get_next(pc)) != nullptr)
+      if (pc == nullptr)
+      {
+         pc = Chunk::NullChunkPtr;
+      }
+
+      while ((pc = pc->get_next())->isNotNullChunk())
       {
          if (  !chunk_is_comment(pc)
             && !chunk_is_newline(pc)
@@ -305,7 +310,7 @@ void pawn_add_virtual_semicolons(void)
             prev = pc;
          }
 
-         if (  prev == nullptr
+         if (  prev->isNullChunk()
             || (  pc->type != CT_NEWLINE
                && pc->type != CT_BRACE_CLOSE
                && pc->type != CT_VBRACE_CLOSE))
@@ -321,11 +326,11 @@ void pawn_add_virtual_semicolons(void)
             && !pawn_continued(prev, prev->brace_level))
          {
             pawn_add_vsemi_after(prev);
-            prev = nullptr;
+            prev = Chunk::NullChunkPtr;
          }
       }
    }
-}
+} // pawn_add_virtual_semicolons
 
 
 static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn)
@@ -336,7 +341,12 @@ static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn)
    if (start == fcn)
    {
       Chunk *last = chunk_get_next_type(fcn, CT_PAREN_CLOSE, fcn->level);
-      last = chunk_get_next(last);
+
+      if (last == nullptr)
+      {
+         last = Chunk::NullChunkPtr;
+      }
+      last = last->get_next();
 
       if (chunk_is_token(last, CT_SEMICOLON))
       {
@@ -397,13 +407,13 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       set_chunk_type(last, CT_ANGLE_OPEN);
       set_chunk_parent(last, CT_FUNC_DEF);
 
-      while (  ((last = chunk_get_next(last)) != nullptr)
+      while (  ((last = last->get_next())->isNotNullChunk())
             && !chunk_is_str(last, ">", 1))
       {
          // do nothing just search, TODO: use search_chunk
       }
 
-      if (last != nullptr)
+      if (last->isNotNullChunk())
       {
          LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle close %s\n",
                  __func__, pc->orig_line, pc->text(), get_token_name(last->type));
@@ -413,7 +423,8 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       last = chunk_get_next_nc_nnl(last);
    }
 
-   if (last == nullptr)
+   if (  last == nullptr
+      || last->isNullChunk())
    {
       return(last);
    }
@@ -423,7 +434,8 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       set_chunk_parent(last, CT_FUNC_DEF);
       last = chunk_get_next_type(last, CT_BRACE_CLOSE, last->level);
 
-      if (last != nullptr)
+      if (  last != nullptr
+         && last->isNotNullChunk())
       {
          set_chunk_parent(last, CT_FUNC_DEF);
       }
@@ -469,9 +481,10 @@ static Chunk *pawn_process_func_def(Chunk *pc)
          prev->level++;
          prev->brace_level++;
          last = prev;
-      } while ((prev = chunk_get_next(prev)) != nullptr);
+      } while ((prev = prev->get_next())->isNotNullChunk());
 
-      if (last != nullptr)
+      if (  last != nullptr
+         && last->isNotNullChunk())
       {
          LOG_FMT(LPFUNC, "%s:%zu] ended on %s, level %zu\n",
                  __func__, last->orig_line, get_token_name(last->type), last->level);

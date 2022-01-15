@@ -29,7 +29,8 @@ void align_left_shift(void)
 
    Chunk *pc = chunk_get_head();
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       if (chunk_is_newline(pc))
       {
@@ -128,7 +129,7 @@ void align_left_shift(void)
             chunk_flags_set(pc, PCF_DONT_INDENT);
          }
       }
-      pc = chunk_get_next(pc);
+      pc = pc->get_next();
    }
    as.End();
 } // align_left_shift

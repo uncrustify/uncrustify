@@ -49,7 +49,7 @@ void align_same_func_call_params(void)
    LOG_FMT(LAS, "%s(%d): (3): span is %zu, thresh is %zu\n",
            __func__, __LINE__, span, thresh);
 
-   for (pc = chunk_get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next(pc))
+   for (pc = chunk_get_head(); pc != nullptr && pc->isNotNullChunk(); pc = pc->get_next())
    {
       if (chunk_is_newline(pc))
       {
@@ -113,7 +113,7 @@ void align_same_func_call_params(void)
       {
          continue;
       }
-      prev      = chunk_get_next(prev);
+      prev      = prev->get_next();
       align_fcn = prev;
       align_fcn_name.clear();
       LOG_FMT(LASFCP, "%s(%d):\n", __func__, __LINE__);
@@ -121,7 +121,7 @@ void align_same_func_call_params(void)
       while (prev != pc)
       {
          align_fcn_name += prev->str;
-         prev            = chunk_get_next(prev);
+         prev            = prev->get_next();
       }
       align_fcn_name += pc->str;
       LOG_FMT(LASFCP, "%s(%d): Func Call found at orig_line is %zu, orig_col is %zu, c_str() '%s'\n",
@@ -257,7 +257,12 @@ void align_params(Chunk *start, deque<Chunk *> &chunks)
    bool  hit_comma = true;
    Chunk *pc       = chunk_get_next_type(start, CT_FPAREN_OPEN, start->level);
 
-   while ((pc = chunk_get_next(pc)) != nullptr)
+   if (pc == nullptr)
+   {
+      pc = Chunk::NullChunkPtr;
+   }
+
+   while ((pc = pc->get_next())->isNotNullChunk())
    {
       if (  chunk_is_newline(pc)
          || chunk_is_token(pc, CT_SEMICOLON)

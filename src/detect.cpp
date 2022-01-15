@@ -149,15 +149,14 @@ static void detect_space_options(void)
    SP_VOTE_VAR(sp_getset_brace);
 
    Chunk *prev = chunk_get_head();
-   Chunk *pc   = chunk_get_next(prev);
+   Chunk *pc   = prev->get_next();
    Chunk *next;
 
-   while (  pc != nullptr
-         && pc->isNotNullChunk())
+   while (pc->isNotNullChunk())
    {
-      next = chunk_get_next(pc);
+      next = pc->get_next();
 
-      if (next == nullptr)
+      if (next->isNullChunk())
       {
          break;
       }

@@ -159,6 +159,52 @@ const char *Chunk::elided_text(char *for_the_copy)
 }
 
 
+Chunk *Chunk::get_next(scope_e scope)
+{
+   if (this->isNullChunk())
+   {
+      return(NullChunkPtr);
+   }
+   Chunk *pc = g_cl.GetNext(this);
+
+   if (  pc == nullptr
+      || pc->isNullChunk())
+   {
+      return(NullChunkPtr);
+   }
+
+   if (scope == scope_e::ALL)
+   {
+      return(pc);
+   }
+
+   if (this->flags.test(PCF_IN_PREPROC))
+   {
+      // If in a preproc, return a null chunk if trying to leave
+      if (!pc->flags.test(PCF_IN_PREPROC))
+      {
+         return(NullChunkPtr);
+      }
+      return(pc);
+   }
+
+   // Not in a preproc, skip any preproc
+   while (  pc != nullptr
+         && pc->isNotNullChunk()
+         && pc->flags.test(PCF_IN_PREPROC))
+   {
+      pc = g_cl.GetNext(pc);
+   }
+
+   if (  pc == nullptr
+      || pc->isNullChunk())
+   {
+      return(NullChunkPtr);
+   }
+   return(pc);
+} // Chunk::get_next
+
+
 Chunk *Chunk::get_prev(scope_e scope)
 {
    if (this->isNullChunk())
@@ -180,7 +226,7 @@ Chunk *Chunk::get_prev(scope_e scope)
 
    if (this->flags.test(PCF_IN_PREPROC))
    {
-      // If in a preproc, return NULL if trying to leave
+      // If in a preproc, return a null chunk if trying to leave
       if (!pc->flags.test(PCF_IN_PREPROC))
       {
          return(NullChunkPtr);
@@ -203,6 +249,19 @@ Chunk *Chunk::get_prev(scope_e scope)
    }
    return(pc);
 } // Chunk::get_prev
+
+
+/**
+ * Temporary internal function
+ *
+ * @brief returns the next chunk in a list of chunks
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
+ *
+ * @return pointer to next chunk or nullptr if no chunk was found
+ */
+Chunk *__chunk_get_next(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -405,7 +464,7 @@ Chunk *chunk_get_tail(void)
 
 static search_t select_search_fct(const direction_e dir)
 {
-   return((dir == direction_e::FORWARD) ? chunk_get_next : __chunk_get_prev);
+   return((dir == direction_e::FORWARD) ? __chunk_get_next : __chunk_get_prev);
 }
 
 
@@ -423,25 +482,20 @@ Chunk *chunk_search_next_cat(Chunk *pc, const c_token_t cat)
 
 bool are_chunks_in_same_line(Chunk *start, Chunk *end)
 {
-   Chunk *tmp;
-
-   if (start != nullptr)
-   {
-      tmp = chunk_get_next(start);
-   }
-   else
+   if (start == nullptr)
    {
       return(false);
    }
+   Chunk *tmp = start->get_next();
 
-   while (  tmp != nullptr
+   while (  tmp->isNotNullChunk()
          && tmp != end)
    {
       if (chunk_is_token(tmp, CT_NEWLINE))
       {
          return(false);
       }
-      tmp = chunk_get_next(tmp);
+      tmp = tmp->get_next();
    }
    return(true);
 }
@@ -563,11 +617,7 @@ static Chunk *chunk_ppa_search(Chunk *cur, const check_t check_fct, const bool c
 }
 
 
-/* @todo maybe it is better to combine chunk_get_next and get_prev
- * into a common function However this should be done with the preprocessor
- * to avoid addition check conditions that would be evaluated in the
- * while loop of the calling function */
-Chunk *chunk_get_next(Chunk *cur, scope_e scope)
+Chunk *__chunk_get_next(Chunk *cur, scope_e scope)
 {
    if (  cur == nullptr
       || cur->isNullChunk())
@@ -652,21 +702,21 @@ static void chunk_log(Chunk *pc, const char *text)
    {
       const log_sev_t log   = LCHUNK;
       Chunk           *prev = pc->get_prev();
-      Chunk           *next = chunk_get_next(pc);
+      Chunk           *next = pc->get_next();
 
       chunk_log_msg(pc, log, text);
 
-      if (  prev != nullptr
-         && next != nullptr)
+      if (  prev->isNotNullChunk()
+         && next->isNotNullChunk())
       {
          chunk_log_msg(prev, log, "   @ between");
          chunk_log_msg(next, log, "   and");
       }
-      else if (next != nullptr)
+      else if (next->isNotNullChunk())
       {
          chunk_log_msg(next, log, "   @ before");
       }
-      else if (prev != nullptr)
+      else if (prev->isNotNullChunk())
       {
          chunk_log_msg(prev, log, "   @ after");
       }
@@ -838,7 +888,7 @@ Chunk *chunk_get_prev_str(Chunk *cur, const char *str, size_t len, int level, sc
 
 bool chunk_is_newline_between(Chunk *start, Chunk *end)
 {
-   for (Chunk *pc = start; pc != end; pc = chunk_get_next(pc))
+   for (Chunk *pc = start; pc != nullptr && pc != end; pc = pc->get_next())
    {
       if (chunk_is_newline(pc))
       {
@@ -876,17 +926,17 @@ Chunk *chunk_first_on_line(Chunk *pc)
 }
 
 
-bool chunk_is_last_on_line(Chunk &pc)  //TODO: pc should be const here
+bool chunk_is_last_on_line(Chunk *pc)  //TODO: pc should be const here
 {
    // check if pc is the very last chunk of the file
    const auto *end = chunk_get_tail();
 
-   if (&pc == end)
+   if (pc == end)
    {
       return(true);
    }
    // if the next chunk is a newline then pc is the last chunk on its line
-   const auto *next = chunk_get_next(&pc);
+   const auto *next = pc->get_next();
 
    if (chunk_is_token(next, CT_NEWLINE))
    {
@@ -917,10 +967,10 @@ void chunk_swap_lines(Chunk *pc1, Chunk *pc2)
    Chunk *ref2 = pc2->get_prev();
 
    // Move the line started at pc2 before pc1
-   while (  pc2 != nullptr
+   while (  pc2->isNotNullChunk()
          && !chunk_is_newline(pc2))
    {
-      Chunk *tmp = chunk_get_next(pc2);
+      Chunk *tmp = pc2->get_next();
       g_cl.Pop(pc2);
       g_cl.AddBefore(pc2, pc1);
       pc2 = tmp;
@@ -932,13 +982,13 @@ void chunk_swap_lines(Chunk *pc1, Chunk *pc2)
     */
 
    // Now move the line started at pc1 after ref2
-   while (  pc1 != nullptr
+   while (  pc1->isNotNullChunk()
          && !chunk_is_newline(pc1))
    {
-      Chunk *tmp = chunk_get_next(pc1);
+      Chunk *tmp = pc1->get_next();
       g_cl.Pop(pc1);
 
-      if (ref2 != nullptr)
+      if (ref2->isNotNullChunk())
       {
          g_cl.AddAfter(pc1, ref2);
       }
@@ -959,8 +1009,8 @@ void chunk_swap_lines(Chunk *pc1, Chunk *pc2)
     * pc1 and pc2 should be the newlines for their lines.
     * swap the chunks and the nl_count so that the spacing remains the same.
     */
-   if (  pc1 != nullptr
-      && pc2 != nullptr)
+   if (  pc1->isNotNullChunk()
+      && pc2->isNotNullChunk())
    {
       size_t nl_count = pc1->nl_count;
 

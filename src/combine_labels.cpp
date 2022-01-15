@@ -17,10 +17,15 @@ Chunk *chunk_get_next_local(Chunk *pc, scope_e scope = scope_e::ALL)
 {
    Chunk *tmp = pc;
 
+   if (tmp == nullptr)
+   {
+      tmp = Chunk::NullChunkPtr;
+   }
+
    do
    {
-      tmp = chunk_get_next(tmp, scope);
-   } while (  tmp != nullptr
+      tmp = tmp->get_next(scope);
+   } while (  tmp->isNotNullChunk()
            && (  chunk_is_comment(tmp)
               || chunk_is_token(tmp, CT_NOEXCEPT)));
 
@@ -30,11 +35,12 @@ Chunk *chunk_get_next_local(Chunk *pc, scope_e scope = scope_e::ALL)
 
 Chunk *chunk_get_prev_local(Chunk *pc, scope_e scope = scope_e::ALL)
 {
-   if (pc == nullptr)
-   {
-      return(Chunk::NullChunkPtr);
-   }
    Chunk *tmp = pc;
+
+   if (tmp == nullptr)
+   {
+      tmp = Chunk::NullChunkPtr;
+   }
 
    do
    {
@@ -78,7 +84,8 @@ void combine_labels(void)
 
    // unlikely that the file will start with a label...
    // prev cur next
-   while (next != nullptr)
+   while (  next != nullptr
+         && next->isNotNullChunk())
    {
       if (chunk_is_token(next, CT_NEWLINE))
       {
@@ -319,14 +326,14 @@ void combine_labels(void)
                {
                   set_chunk_type(next, CT_BIT_COLON);
 
-                  Chunk *nnext = chunk_get_next(next);
+                  Chunk *nnext = next->get_next();
 
-                  if (nnext == nullptr)
+                  if (nnext->isNullChunk())
                   {
                      return;
                   }
 
-                  while ((nnext = chunk_get_next(nnext)) != nullptr)
+                  while ((nnext = nnext->get_next())->isNotNullChunk())
                   {
                      if (chunk_is_token(nnext, CT_SEMICOLON))
                      {

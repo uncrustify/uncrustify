@@ -187,7 +187,8 @@ void brace_cleanup(void)
    ParseFrame frm{};
    Chunk      *pc = chunk_get_head();
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
@@ -255,7 +256,7 @@ void brace_cleanup(void)
          parse_cleanup(braceState, frm, pc);
          print_stack(LBCSAFTER, (chunk_is_token(pc, CT_VBRACE_CLOSE)) ? "Virt-}\n" : pc->str.c_str(), frm);
       }
-      pc = chunk_get_next(pc);
+      pc = pc->get_next();
    }
 //   pc = chunk_get_head();
 //
@@ -280,11 +281,12 @@ void brace_cleanup(void)
 //               Chunk *parameter_pack = pc;
 //
 //               // look for a token with the same text
-//               while (pc != nullptr)
+//               while (  pc != ullptr)
+//			               && pc->isNotNullChunk())
 //               {
 //                  LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
 //                          __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
-//                  pc = chunk_get_next(pc);
+//                  pc = pc->get_next();
 //
 //                  if (pc == template_end)
 //                  {
@@ -297,7 +299,7 @@ void brace_cleanup(void)
 //                  }
 //               }
 //            }
-//            pc = chunk_get_next(pc);
+//            pc = pc->get_next();
 //
 //            if (pc == template_end)
 //            {
@@ -305,7 +307,7 @@ void brace_cleanup(void)
 //            }
 //         }
 //      }
-//      pc = chunk_get_next(pc);
+//      pc = pc->get_next();
 //   }
 } // brace_cleanup
 
@@ -1394,7 +1396,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
       }
       else
       {
-         ref = chunk_get_next(ref);
+         ref = ref->get_next();
 
          if (chunk_is_token(ref, CT_COMMENT)) // Issue #3034
          {
@@ -1405,7 +1407,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
 
    if (ref_is_comment)                                      // Issue #3351
    {
-      ref = chunk_get_next(ref);
+      ref = ref->get_next();
    }
 
    if (ref->isNullChunk())

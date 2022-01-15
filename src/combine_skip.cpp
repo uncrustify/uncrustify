@@ -46,12 +46,12 @@ Chunk *skip_expression_rev(Chunk *pc)
 }
 
 
-static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(*chunk_get_next)(Chunk *cur, scope_e scope))
+static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(*chunk_get_next_fn)(Chunk *cur, scope_e scope))
 {
    Chunk *prev = pc;
 
    if (  prev != nullptr
-      && chunk_get_next != nullptr)
+      && chunk_get_next_fn != nullptr)
    {
       std::size_t level         = prev->level;
       Chunk       *next         = prev;
@@ -81,7 +81,7 @@ static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(*chunk_get_next)(Chunk 
             break;
          }
          prev = next;
-         next = (*chunk_get_next)(next, scope_e::PREPROC);
+         next = (*chunk_get_next_fn)(next, scope_e::PREPROC);
       }
    }
    return(prev);

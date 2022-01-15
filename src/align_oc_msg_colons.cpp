@@ -85,7 +85,7 @@ void align_oc_msg_colon(Chunk *so)
          }
          did_line = true;
       }
-      pc = chunk_get_next(pc, scope_e::PREPROC);
+      pc = pc->get_next(scope_e::PREPROC);
    }
    log_rule_B("align_oc_msg_colon_first");
    nas.m_skip_first = !options::align_oc_msg_colon_first();
@@ -172,7 +172,7 @@ void align_oc_msg_colons(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr && pc->isNotNullChunk(); pc = pc->get_next())
    {
       if (  chunk_is_token(pc, CT_SQUARE_OPEN)
          && get_chunk_parent_type(pc) == CT_OC_MSG)

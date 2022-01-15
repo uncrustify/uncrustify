@@ -85,9 +85,13 @@ static void mark_attributes_in_property_with_open_paren(Chunk *open_paren);
 
 static Chunk *handle_double_angle_close(Chunk *pc)
 {
-   Chunk *next = chunk_get_next(pc);
+   if (pc == nullptr)
+   {
+      pc = Chunk::NullChunkPtr;
+   }
+   Chunk *next = pc->get_next();
 
-   if (next != nullptr)
+   if (next->isNotNullChunk())
    {
       if (  chunk_is_token(pc, CT_ANGLE_CLOSE)
          && chunk_is_token(next, CT_ANGLE_CLOSE)
@@ -698,12 +702,12 @@ void tokenize_cleanup(void)
        */
       if (chunk_is_token(pc, CT_OPERATOR))
       {
-         Chunk *tmp2 = chunk_get_next(next);
+         Chunk *tmp2 = next->get_next();
 
          // Handle special case of () operator -- [] already handled
          if (chunk_is_token(next, CT_PAREN_OPEN))
          {
-            Chunk *tmp = chunk_get_next(next);
+            Chunk *tmp = next->get_next();
 
             if (chunk_is_token(tmp, CT_PAREN_CLOSE))
             {
@@ -737,7 +741,7 @@ void tokenize_cleanup(void)
             tmp2 = next;
             Chunk *tmp;
 
-            while ((tmp = chunk_get_next(tmp2)) != nullptr)
+            while ((tmp = tmp2->get_next())->isNotNullChunk())
             {
                if (  tmp->type != CT_WORD
                   && tmp->type != CT_TYPE
@@ -761,7 +765,7 @@ void tokenize_cleanup(void)
                tmp2 = tmp;
             }
 
-            while ((tmp2 = chunk_get_next(next)) != tmp)
+            while ((tmp2 = next->get_next()) != tmp)
             {
                chunk_del(tmp2);
             }
@@ -782,7 +786,7 @@ void tokenize_cleanup(void)
          if (  chunk_is_str(next, "slots", 5)
             || chunk_is_str(next, "Q_SLOTS", 7))
          {
-            Chunk *tmp = chunk_get_next(next);
+            Chunk *tmp = next->get_next();
 
             if (chunk_is_token(tmp, CT_COLON))
             {
@@ -842,10 +846,10 @@ void tokenize_cleanup(void)
                   nc.column++;
                   chunk_add_after(&nc, pc);
 
-                  next = chunk_get_next(pc);
+                  next = pc->get_next();
                }
             }
-            tmp = chunk_get_next(next);
+            tmp = next->get_next();
 
             if (chunk_is_str_case(tmp, "BEGIN", 5))
             {
@@ -861,7 +865,8 @@ void tokenize_cleanup(void)
             }
 
             // Change words into CT_SQL_WORD until CT_SEMICOLON
-            while (tmp != nullptr)
+            while (  tmp != nullptr
+                  && tmp->isNotNullChunk())
             {
                if (chunk_is_token(tmp, CT_SEMICOLON))
                {
@@ -882,7 +887,7 @@ void tokenize_cleanup(void)
       // handle MS abomination 'for each'
       if (  chunk_is_token(pc, CT_FOR)
          && chunk_is_str(next, "each", 4)
-         && (next == chunk_get_next(pc)))
+         && (next == pc->get_next()))
       {
          // merge the two with a space between
          pc->str.append(' ');
@@ -1016,10 +1021,10 @@ void tokenize_cleanup(void)
       {
          set_chunk_parent(next, get_chunk_parent_type(pc));
 
-         Chunk *tmp = chunk_get_next(next);
+         Chunk *tmp = next->get_next();
 
-         if (  tmp != nullptr
-            && tmp->next != nullptr)
+         if (  tmp->isNotNullChunk()
+            && tmp->get_next()->isNotNullChunk())
          {
             if (chunk_is_token(tmp, CT_PAREN_CLOSE))
             {
@@ -1068,9 +1073,9 @@ void tokenize_cleanup(void)
       {
          set_chunk_parent(next, pc->type);
 
-         Chunk *tmp = chunk_get_next(next);
+         Chunk *tmp = next->get_next();
 
-         if (tmp != nullptr)
+         if (tmp->isNotNullChunk())
          {
             set_chunk_type(tmp, CT_OC_SEL_NAME);
             set_chunk_parent(tmp, pc->type);
@@ -1397,7 +1402,7 @@ static void check_template(Chunk *start, bool in_type_cast)
             Chunk *A = chunk_skip_to_match(pc);
             LOG_FMT(LTEMPL, "%s(%d): A->orig_line is %zu, A->orig_col is %zu, type is %s\n",
                     __func__, __LINE__, A->orig_line, A->orig_col, get_token_name(A->type));
-            pc = chunk_get_next(A);
+            pc = A->get_next();
          }
 
          if (  (tokens[num_tokens - 1] == CT_ANGLE_OPEN)

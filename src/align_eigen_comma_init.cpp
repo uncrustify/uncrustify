@@ -101,7 +101,7 @@ void align_eigen_comma_init(void)
             }
             // Restart alignment
             as.Flush();
-            as.Add(chunk_get_next(pc));
+            as.Add(pc->get_next());
             start = pc;
          }
       }
@@ -116,7 +116,7 @@ void align_eigen_comma_init(void)
             as.Add(pc);
          }
       }
-      pc = chunk_get_next(pc);
+      pc = pc->get_next();
    }
    as.End();
 } // align_left_shift

@@ -1437,9 +1437,9 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          log_rule("sp_before_byref_func");                         // byref 4
          return(options::sp_before_byref_func());
       }
-      Chunk *next = chunk_get_next(second);
+      Chunk *next = second->get_next();
 
-      if (  next != nullptr
+      if (  next->isNotNullChunk()
          && (  chunk_is_token(next, CT_COMMA)
             || chunk_is_token(next, CT_FPAREN_CLOSE)
             || chunk_is_token(next, CT_SEMICOLON)))
@@ -2662,7 +2662,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
          do
          {
-            next = chunk_get_next(next);
+            next = next->get_next();
          } while (chunk_is_token(next, CT_PTR_TYPE));
 
          if (  chunk_is_token(next, CT_FUNC_DEF)
@@ -3391,7 +3391,7 @@ void space_text(void)
       // If true, vbrace tokens are dropped to the previous token and skipped.
       if (options::sp_skip_vbrace_tokens())
       {
-         next = chunk_get_next(pc);
+         next = pc->get_next();
 
          while (  chunk_is_blank(next)
                && !chunk_is_newline(next)
@@ -3402,15 +3402,15 @@ void space_text(void)
                     __func__, __LINE__, next->orig_line, next->orig_col, get_token_name(next->type),
                     pc->column, pc->str.size());
             next->column = pc->column + pc->str.size();
-            next         = chunk_get_next(next);
+            next         = next->get_next();
          }
       }
       else
       {
-         next = pc->next;
+         next = pc->get_next();
       }
 
-      if (!next)
+      if (next->isNullChunk())
       {
          break;
       }
@@ -3473,10 +3473,11 @@ void space_text(void)
 
             // TODO: better use chunk_search here
             while (  tmp != nullptr
+                  && tmp->isNotNullChunk()
                   && (tmp->len() == 0)
                   && !chunk_is_newline(tmp))
             {
-               tmp = chunk_get_next(tmp);
+               tmp = tmp->get_next();
             }
 
             if (  tmp != nullptr
@@ -3601,7 +3602,7 @@ void space_text(void)
          } // switch
 
          if (  chunk_is_comment(next)
-            && chunk_is_newline(chunk_get_next(next))
+            && chunk_is_newline(next->get_next())
             && column < next->orig_col)
          {
             /*
@@ -3671,11 +3672,12 @@ void space_text_balance_nested_parens(void)
 
    Chunk *first = chunk_get_head();
 
-   while (first != nullptr)
+   while (  first != nullptr
+         && first->isNotNullChunk())
    {
-      Chunk *next = chunk_get_next(first);
+      Chunk *next = first->get_next();
 
-      if (next == nullptr)
+      if (next->isNullChunk())
       {
          break;
       }
@@ -3813,10 +3815,10 @@ void space_add_after(Chunk *pc, size_t count)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *next = chunk_get_next(pc);
+   Chunk *next = pc->get_next();
 
    // don't add at the end of the file or before a newline
-   if (  next == nullptr
+   if (  next->isNullChunk()
       || chunk_is_newline(next))
    {
       return;

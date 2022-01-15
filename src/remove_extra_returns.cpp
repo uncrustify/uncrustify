@@ -19,7 +19,8 @@ void remove_extra_returns(void)
 
    Chunk *pc = chunk_get_head();
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       LOG_FMT(LRMRETURN, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
@@ -79,6 +80,6 @@ void remove_extra_returns(void)
             }
          }
       }
-      pc = chunk_get_next(pc);
+      pc = pc->get_next();
    }
 } // remove_extra_returns

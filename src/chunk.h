@@ -72,6 +72,16 @@ public:
    const char *elided_text(char *for_the_copy);
 
    /**
+    * @brief returns the next chunk in a list of chunks
+    *
+    * @param scope  code region to search in
+    *
+    * @return pointer to next chunk or null Chunk if no chunk was found
+    */
+   Chunk *get_next(scope_e scope = scope_e::ALL);
+
+
+   /**
     * @brief returns the previous chunk in a list of chunks
     *
     * @param scope code region to search in
@@ -180,17 +190,6 @@ Chunk *chunk_get_tail(void);
 
 
 /**
- * @brief returns the next chunk in a list of chunks
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- *
- * @return pointer to next chunk or nullptr if no chunk was found
- */
-Chunk *chunk_get_next(Chunk *cur, scope_e scope = scope_e::ALL);
-
-
-/**
  * Swaps two chunks
  *
  * @param pc1  The first chunk
@@ -222,7 +221,7 @@ Chunk *chunk_first_on_line(Chunk *pc);
 
 
 //! check if a given chunk is the last on its line
-bool chunk_is_last_on_line(Chunk &pc);
+bool chunk_is_last_on_line(Chunk *pc);
 
 
 /**
@@ -974,18 +973,17 @@ static inline bool chunk_same_preproc(Chunk *pc1, Chunk *pc2)
  */
 static inline bool chunk_safe_to_del_nl(Chunk *nl)
 {
-   Chunk *tmp = Chunk::NullChunkPtr;
-
-   if (nl != nullptr)
+   if (nl == nullptr)
    {
-      tmp = nl->get_prev();
+      nl = Chunk::NullChunkPtr;
    }
+   Chunk *tmp = nl->get_prev();
 
    if (chunk_is_token(tmp, CT_COMMENT_CPP))
    {
       return(false);
    }
-   return(chunk_same_preproc(tmp, chunk_get_next(nl)));
+   return(chunk_same_preproc(tmp, nl->get_next()));
 }
 
 

@@ -62,7 +62,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
    size_t tmp;
    Chunk  *pc = first;
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->text() '%s', type is %s, parent_type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->elided_text(copy), get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)));
@@ -149,7 +150,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
             || chunk_is_token(pc, CT_VBRACE_CLOSE))
          && !(get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST))
       {
-         pc = chunk_get_next(pc);
+         pc = pc->get_next();
          break;
       }
 
@@ -278,7 +279,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
             }
          }
       }
-      pc = chunk_get_next(pc);
+      pc = pc->get_next();
    }
    as.End();
    vdas.End();

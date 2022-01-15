@@ -112,9 +112,10 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
    log_rule_B("align_mix_var_proto");
    bool  fp_active = options::align_mix_var_proto();
-   Chunk *pc       = chunk_get_next(start);
+   Chunk *pc       = start->get_next();
 
    while (  pc != nullptr
+         && pc->isNotNullChunk()
          && (  pc->level >= start->level
             || pc->level == 0))
    {
@@ -138,7 +139,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
             as_at.NewLines(pc->nl_count);
             as_br.NewLines(pc->nl_count);
          }
-         pc = chunk_get_next(pc);
+         pc = pc->get_next();
          continue;
       }
 
@@ -209,7 +210,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       // Done with this brace set?
       if (chunk_is_token(pc, CT_BRACE_CLOSE))
       {
-         pc = chunk_get_next(pc);
+         pc = pc->get_next();
          break;
       }
 
@@ -245,7 +246,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       // don't align stuff inside parenthesis/squares/angles
       if (pc->level > pc->brace_level)
       {
-         pc = chunk_get_next(pc);
+         pc = pc->get_next();
          continue;
       }
 
@@ -340,7 +341,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
          LOG_FMT(LAVDB, "%s(%d): b-did_this_line is %s\n",
                  __func__, __LINE__, did_this_line ? "TRUE" : "FALSE");
       }
-      pc = chunk_get_next(pc);
+      pc = pc->get_next();
    }
    as.End();
    as_bc.End();

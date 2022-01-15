@@ -151,7 +151,7 @@ void reindent_line(Chunk *pc, int column)
   do
     {
     min_col += pc->len;
-    pc       = chunk_get_next(pc);
+    pc       = pc->get_next();
 
     if (pc != NULL)
       {
@@ -358,7 +358,7 @@ void indent_text(void)
           {
           indent_pse_pop(frm, pc);
           frm.level--;
-          pc = chunk_get_next(pc);
+          pc = pc->get_next();
           }
 
           /* End any assign operations with a semicolon on the same level */
@@ -615,7 +615,7 @@ void indent_text(void)
        * otherwise align on the '='.
        * Never update indent_column.
        */
-      next = chunk_get_next(pc);
+      next = pc->get_next();
 
       if (next != NULL)
         {
@@ -757,7 +757,7 @@ void indent_text(void)
     if (!chunk_is_comment(pc) && !chunk_is_newline(pc))
       prev = pc;
 
-    pc = chunk_get_next(pc);
+    pc = pc->get_next();
     }
 
     /* Throw out any stuff inside a preprocessor - no need to warn */
@@ -789,7 +789,7 @@ static bool single_line_comment_indent_rule_applies(Chunk *start)
     return false;
 
     /* scan forward, if only single newlines and comments before next line of code, we want to apply */
-  while ((pc = chunk_get_next(pc)) != NULL)
+  while ((pc = pc->get_next()) != NULL)
     {
     if (chunk_is_newline(pc))
       {
@@ -923,7 +923,7 @@ void indent_preproc(void)
     /* Scan to see if the whole file is covered by one #ifdef */
   int stage = 0;
 
-  for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+  for (pc = chunk_get_head(); pc != NULL; pc = pc->get_next())
     {
     if (chunk_is_comment(pc) || chunk_is_newline(pc))
       continue;
@@ -934,7 +934,7 @@ void indent_preproc(void)
       if (pc->type != CT_PREPROC)
         break;
 
-      next = chunk_get_next(pc);
+      next = pc->get_next();
 
       if ((next == NULL) || (next->type != CT_PP_IF))
         break;
@@ -968,7 +968,7 @@ void indent_preproc(void)
     pp_level_sub = 1;
     }
 
-  for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+  for (pc = chunk_get_head(); pc != NULL; pc = pc->get_next())
     {
     if (pc->type != CT_PREPROC)
       continue;
@@ -1013,7 +1013,7 @@ void indent_preproc(void)
     if ((cpd.settings[UO_pp_space].a & AV_ADD) != 0)
       pc->len += pp_level;
 
-    next = chunk_get_next(pc);
+    next = pc->get_next();
 
     if (next != NULL)
       reindent_line(next, pc->len + 1);

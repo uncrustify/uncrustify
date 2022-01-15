@@ -30,11 +30,12 @@ void align_oc_decl_colon(void)
 
    Chunk *pc = chunk_get_head();
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       if (chunk_is_not_token(pc, CT_OC_SCOPE))
       {
-         pc = chunk_get_next(pc);
+         pc = pc->get_next();
          continue;
       }
       nas.Reset();
@@ -83,7 +84,7 @@ void align_oc_decl_colon(void)
             }
             did_line = true;
          }
-         pc = chunk_get_next(pc, scope_e::PREPROC);
+         pc = pc->get_next(scope_e::PREPROC);
       }
       nas.End();
       cas.End();
