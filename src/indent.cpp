@@ -3807,17 +3807,23 @@ void indent_text(void)
          {
             log_rule_B("indent_bool_paren");
 
-            if (  options::indent_bool_paren()
-               && chunk_is_paren_open(frm.top().pc))
+            if (chunk_is_paren_open(frm.top().pc))
             {
-               indent_column_set(frm.top().pc->column);
-
-               log_rule_B("indent_first_bool_expr");
-
-               if (options::indent_first_bool_expr())
+               if (options::indent_ignore_bool_paren())
                {
-                  reindent_line(chunk_get_next(frm.top().pc),
-                                indent_column + pc->len() + 1);
+                  indent_column_set(pc->orig_col);
+               }
+               else if (options::indent_bool_paren())
+               {
+                  indent_column_set(frm.top().pc->column);
+
+                  log_rule_B("indent_first_bool_expr");
+
+                  if (options::indent_first_bool_expr())
+                  {
+                     reindent_line(chunk_get_next(frm.top().pc),
+                                   indent_column + pc->len() + 1);
+                  }
                }
             }
             LOG_FMT(LINDENT, "%s(%d): %zu] bool => %zu [%s]\n",
