@@ -1831,7 +1831,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
          Chunk *after = chunk_get_next_nc_nnl(ref);
          tokenize(fm.data, after);
 
-         for (tmp = chunk_get_next(ref); tmp != after; tmp = chunk_get_next(tmp))
+         for (tmp = ref->get_next(); tmp != after; tmp = tmp->get_next())
          {
             tmp->level = after->level;
          }
@@ -1925,7 +1925,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
          Chunk *after = chunk_get_next_nc_nnl(ref);
          tokenize(fm.data, after);
 
-         for (tmp = chunk_get_next(ref); tmp != after; tmp = chunk_get_next(tmp))
+         for (tmp = ref->get_next(); tmp != after; tmp = tmp->get_next())
          {
             tmp->level = after->level;
          }

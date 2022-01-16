@@ -75,8 +75,7 @@ Chunk *align_trailing_comments(Chunk *start)
    // Find the max column
    log_rule_B("align_right_cmt_span");
 
-   while (  pc != nullptr
-         && pc->isNotNullChunk()
+   while (  pc->isNotNullChunk()
          && (nl_count < options::align_right_cmt_span()))
    {
       if (  pc->flags.test(PCF_RIGHT_COMMENT)
@@ -110,7 +109,7 @@ Chunk *align_trailing_comments(Chunk *start)
       {
          nl_count += pc->nl_count;
       }
-      pc = chunk_get_next(pc);
+      pc = pc->get_next();
    }
    // Start with the minimum original column
    col = min_orig;
@@ -143,7 +142,7 @@ Chunk *align_trailing_comments(Chunk *start)
    }
    align_stack(cs, col, (intended_col != 0), LALTC);
 
-   return(chunk_get_next(pc));
+   return(pc->get_next());
 } // align_trailing_comments
 
 
@@ -178,7 +177,7 @@ void align_right_comments(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
+   for (Chunk *pc = chunk_get_head(); pc != nullptr && pc->isNotNullChunk(); pc = pc->get_next())
    {
       if (  chunk_is_token(pc, CT_COMMENT)
          || chunk_is_token(pc, CT_COMMENT_CPP)
@@ -224,7 +223,8 @@ void align_right_comments(void)
 
    Chunk *pc = chunk_get_head();
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       if (pc->flags.test(PCF_RIGHT_COMMENT))
       {
@@ -232,7 +232,7 @@ void align_right_comments(void)
       }
       else
       {
-         pc = chunk_get_next(pc);
+         pc = pc->get_next();
       }
    }
 } // align_right_comments

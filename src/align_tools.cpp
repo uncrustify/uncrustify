@@ -53,15 +53,16 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
    }
 
    while (  pc != nullptr
+         && pc->isNotNullChunk()
          && !chunk_is_newline(pc)
          && pc->level >= start->level)
    {
       //LOG_FMT(LSIB, "%s:     '%s'   col %d/%d line %zu\n", __func__,
       //        pc->text(), pc->column, pc->orig_col, pc->orig_line);
 
-      Chunk *next = chunk_get_next(pc);
+      Chunk *next = pc->get_next();
 
-      if (  next == nullptr
+      if (  next->isNullChunk()
          || chunk_is_comment(next))
       {
          // do nothing

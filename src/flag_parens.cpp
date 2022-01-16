@@ -33,7 +33,7 @@ Chunk *flag_parens(Chunk *po, pcf_flags_t flags, c_token_t opentype, c_token_t p
    log_func_stack_inline(LFLPAREN);
 
    // the last chunk must be also modified. Issue #2149
-   Chunk *after_paren_close = chunk_get_next(paren_close);
+   Chunk *after_paren_close = paren_close->get_next();
 
    if (po != paren_close)
    {
@@ -43,9 +43,9 @@ Chunk *flag_parens(Chunk *po, pcf_flags_t flags, c_token_t opentype, c_token_t p
       {
          Chunk *pc;
 
-         for (pc = chunk_get_next(po, scope_e::PREPROC);
-              pc != nullptr && pc != after_paren_close;
-              pc = chunk_get_next(pc, scope_e::PREPROC))
+         for (pc = po->get_next(scope_e::PREPROC);
+              pc != nullptr && pc->isNotNullChunk() && pc != after_paren_close;
+              pc = pc->get_next(scope_e::PREPROC))
          {
             chunk_flags_set(pc, flags);
 

@@ -16,7 +16,8 @@ void parameter_pack_cleanup(void)
 
    Chunk *pc = chunk_get_head();
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
@@ -27,7 +28,8 @@ void parameter_pack_cleanup(void)
          Chunk *template_end = chunk_get_next_type(pc, CT_SEMICOLON, pc->level);
 
          // look for a parameter pack
-         while (pc != nullptr)
+         while (  pc != nullptr
+               && pc->isNotNullChunk())
          {
             LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
@@ -37,11 +39,12 @@ void parameter_pack_cleanup(void)
                Chunk *parameter_pack = pc;
 
                // look for a token with the same text
-               while (pc != nullptr)
+               while (  pc != nullptr
+                     && pc->isNotNullChunk())
                {
                   LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
                           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
-                  //pc = chunk_get_next(pc);
+                  //pc = pc->get_next();
 
                   if (pc == template_end)
                   {
@@ -52,10 +55,10 @@ void parameter_pack_cleanup(void)
                   {
                      set_chunk_type(pc, CT_PARAMETER_PACK);
                   }
-                  pc = chunk_get_next(pc);
+                  pc = pc->get_next();
                }
             }
-            pc = chunk_get_next(pc);
+            pc = pc->get_next();
 
             if (pc == template_end)
             {
@@ -63,6 +66,6 @@ void parameter_pack_cleanup(void)
             }
          }
       }
-      pc = chunk_get_next(pc);
+      pc = pc->get_next();
    }
 } // parameter_pack_cleanup

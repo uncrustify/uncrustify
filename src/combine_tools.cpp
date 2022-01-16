@@ -413,7 +413,7 @@ void flag_series(Chunk *start, Chunk *end, pcf_flags_t set_flags, pcf_flags_t cl
    {
       chunk_flags_upd(start, clr_flags, set_flags);
 
-      start = chunk_get_next(start, nav);
+      start = start->get_next(nav);
 
       if (start == nullptr)
       {

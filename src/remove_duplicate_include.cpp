@@ -36,7 +36,7 @@ void remove_duplicate_include(void)
       }
       else if (chunk_is_token(pc, CT_PP_INCLUDE))
       {
-         Chunk *next = chunk_get_next(pc);
+         Chunk *next = pc->get_next();
 
          //LOG_FMT(LRMRETURN, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n",
          //        __func__, __LINE__, next->orig_line, next->orig_col, next->text(),
@@ -66,7 +66,7 @@ void remove_duplicate_include(void)
                {
                   // erase the statement
                   Chunk *temp    = pc;
-                  Chunk *comment = chunk_get_next(next);
+                  Chunk *comment = next->get_next();
                   Chunk *eol     = chunk_get_next_nl(next);
                   pc = preproc->get_prev();
                   chunk_del(preproc);
@@ -90,6 +90,6 @@ void remove_duplicate_include(void)
          } // if (includes.empty())
       } // else if (chunk_is_token(pc, CT_PP_INCLUDE))
       // get the next token
-      pc = chunk_get_next(pc);
+      pc = pc->get_next();
    }
 } // remove_duplicate_include

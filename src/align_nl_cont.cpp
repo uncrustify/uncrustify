@@ -25,14 +25,15 @@ Chunk *align_nl_cont(Chunk *start)
    size_t     max_col = 0;
    Chunk      *pc     = start;
 
-   while (  chunk_is_not_token(pc, CT_NEWLINE)
+   while (  pc->isNotNullChunk()
+         && chunk_is_not_token(pc, CT_NEWLINE)
          && chunk_is_not_token(pc, CT_COMMENT_MULTI))
    {
       if (chunk_is_token(pc, CT_NL_CONT))
       {
          align_add(cs, pc, max_col);
       }
-      pc = chunk_get_next(pc);
+      pc = pc->get_next();
    }
    // NL_CONT is always the last thing on a line
    Chunk *tmp;

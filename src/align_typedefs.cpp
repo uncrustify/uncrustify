@@ -34,7 +34,7 @@ void align_typedefs(size_t span)
    Chunk *c_typedef = nullptr;
    Chunk *pc        = chunk_get_head();
 
-   while (pc != nullptr)
+   while (pc->isNotNullChunk())
    {
       if (chunk_is_newline(pc))
       {
@@ -59,7 +59,7 @@ void align_typedefs(size_t span)
             c_typedef = pc;
          }
       }
-      pc = chunk_get_next(pc);
+      pc = pc->get_next();
    }
    as.End();
 } // align_typedefs

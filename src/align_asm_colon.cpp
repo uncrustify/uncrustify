@@ -24,11 +24,12 @@ void align_asm_colon(void)
 
    Chunk *pc = chunk_get_head();
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       if (chunk_is_not_token(pc, CT_ASM_COLON))
       {
-         pc = chunk_get_next(pc);
+         pc = pc->get_next();
          continue;
       }
       cas.Reset();

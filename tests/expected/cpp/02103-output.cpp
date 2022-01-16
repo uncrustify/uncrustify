@@ -108,7 +108,7 @@ void output_parsed(FILE *pfile)
   fprintf(pfile, "-=====-\n");
   fprintf(pfile, "Line      Tag          Parent     Columns  Br/Lvl/pp Flg Nl  Text");
 
-  for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+  for (pc = chunk_get_head(); pc != NULL; pc = pc->get_next())
     {
     fprintf(pfile, "\n%3d> %13.13s[%13.13s][%2d/%2d/%2d][%d/%d/%d][%6x][%d-%d]",
             pc->orig_line, get_token_name(pc->type),
@@ -186,7 +186,7 @@ void output_text(FILE *pfile)
 
   cpd.fout = pfile;
 
-  for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+  for (pc = chunk_get_head(); pc != NULL; pc = pc->get_next())
     {
     if (pc->type == CT_NEWLINE)
       {
@@ -389,11 +389,11 @@ Chunk *output_comment_cpp(Chunk *first)
   if (cpd.settings[UO_cmt_cpp_group].b)
     {
       /* next is a newline by definition */
-    Chunk *next = chunk_get_next(first);
+    Chunk *next = first->get_next();
 
     if ((next != NULL) && (next->nl_count == 1))
       {
-      next = chunk_get_next(next);
+      next = next->get_next();
 
       /**
        * Only combine the next comment if they are both at indent level or
@@ -439,7 +439,7 @@ Chunk *output_comment_cpp(Chunk *first)
   goto cpp_addline;
 
     /* Output combined lines */
-  while ((pc = chunk_get_next(pc)) != NULL)
+  while ((pc = pc->get_next()) != NULL)
     {
     if ((pc->type == CT_NEWLINE) && (pc->nl_count == 1))
       continue;

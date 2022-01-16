@@ -193,7 +193,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
 
    if (chunk_is_newline(ref))
    {
-      ref = chunk_get_next(ref);
+      ref = ref->get_next();
    }
    // Find the item that we are going to align.
    Chunk *ali = Chunk::NullChunkPtr;
@@ -246,12 +246,12 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       LOG_FMT(LAS, "AlignStack::%s(%d): tmp_col is %zu\n",
               __func__, __LINE__, tmp_col);
 
-      while (  tmp != nullptr
+      while (  tmp->isNotNullChunk()
             && tmp != start)
       {
-         Chunk *next = chunk_get_next(tmp);
+         Chunk *next = tmp->get_next();
 
-         if (next != nullptr)
+         if (next->isNotNullChunk())
          {
             LOG_FMT(LAS, "AlignStack::%s(%d): next->orig_line is %zu, orig_col is %zu, text() '%s', level is %zu, type is %s\n",
                     __func__, __LINE__, next->orig_line, next->orig_col, next->text(), next->level, get_token_name(next->type));
@@ -293,7 +293,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
 
       if (chunk_is_token(tmp, CT_TPAREN_OPEN))
       {
-         tmp = chunk_get_next(tmp);
+         tmp = tmp->get_next();
       }
 
       if (  (  chunk_is_star(tmp)
@@ -460,7 +460,7 @@ void AlignStack::Flush()
 
       if (m_star_style == SS_DANGLE)
       {
-         Chunk *tmp = (chunk_is_token(pc, CT_TPAREN_OPEN)) ? chunk_get_next(pc) : pc;
+         Chunk *tmp = (chunk_is_token(pc, CT_TPAREN_OPEN)) ? pc->get_next() : pc;
 
          if (chunk_is_ptr_operator(tmp))
          {
@@ -478,7 +478,7 @@ void AlignStack::Flush()
 
             if (pc->align.start->type == CT_NEG)
             {
-               Chunk *next = chunk_get_next(pc->align.start);
+               Chunk *next = pc->align.start->get_next();
 
                if (chunk_is_token(next, CT_NUMBER))
                {

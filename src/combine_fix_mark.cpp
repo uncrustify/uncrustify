@@ -912,7 +912,8 @@ void mark_define_expressions(void)
    Chunk *pc       = chunk_get_head();
    Chunk *prev     = pc;
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       if (!in_define)
       {
@@ -958,7 +959,7 @@ void mark_define_expressions(void)
          }
       }
       prev = pc;
-      pc   = chunk_get_next(pc);
+      pc   = pc->get_next();
    }
 } // mark_define_expressions
 
@@ -969,7 +970,7 @@ void mark_exec_sql(Chunk *pc)
    Chunk *tmp;
 
    // Change CT_WORD to CT_SQL_WORD
-   for (tmp = chunk_get_next(pc); tmp != nullptr; tmp = chunk_get_next(tmp))
+   for (tmp = pc->get_next(); tmp != nullptr && tmp->isNotNullChunk(); tmp = tmp->get_next())
    {
       set_chunk_parent(tmp, pc->type);
 
@@ -985,15 +986,15 @@ void mark_exec_sql(Chunk *pc)
    }
 
    if (  chunk_is_not_token(pc, CT_SQL_BEGIN)
-      || tmp == nullptr
+      || tmp->isNullChunk()
       || chunk_is_not_token(tmp, CT_SEMICOLON))
    {
       return;
    }
 
-   for (tmp = chunk_get_next(tmp);
-        tmp != nullptr && chunk_is_not_token(tmp, CT_SQL_END);
-        tmp = chunk_get_next(tmp))
+   for (tmp = tmp->get_next();
+        tmp->isNotNullChunk() && chunk_is_not_token(tmp, CT_SQL_END);
+        tmp = tmp->get_next())
    {
       tmp->level++;
    }

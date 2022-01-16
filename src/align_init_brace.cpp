@@ -56,9 +56,10 @@ void align_init_brace(Chunk *start)
 
       while (chunk_is_newline(pc))
       {
-         pc = chunk_get_next(pc);
+         pc = pc->get_next();
       }
    } while (  pc != nullptr
+           && pc->isNotNullChunk()
            && pc->level > start->level);
 
    // debug dump the current frame
@@ -72,7 +73,7 @@ void align_init_brace(Chunk *start)
    {
       cpd.al[0].col = align_tab_column(cpd.al[0].col);
    }
-   pc = chunk_get_next(start);
+   pc = start->get_next();
    size_t idx = 0;
 
    do
@@ -128,7 +129,7 @@ void align_init_brace(Chunk *start)
             // Comma's need to 'fall back' to the previous token
             if (chunk_is_token(pc, CT_COMMA))
             {
-               next = chunk_get_next(pc);
+               next = pc->get_next();
 
                if (!chunk_is_newline(next))
                {
@@ -171,7 +172,7 @@ void align_init_brace(Chunk *start)
                if (  (idx < (cpd.al_cnt - 1))
                   && options::align_number_right())
                {
-                  next = chunk_get_next(pc);
+                  next = pc->get_next();
 
                   if (  !chunk_is_newline(next)
                      && (  chunk_is_token(next, CT_NUMBER_FP)
@@ -197,7 +198,8 @@ void align_init_brace(Chunk *start)
       {
          idx = 0;
       }
-      pc = chunk_get_next(pc);
+      pc = pc->get_next();
    } while (  pc != nullptr
+           && pc->isNotNullChunk()
            && pc->level > start->level);
 } // align_init_brace

@@ -114,7 +114,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
 
                if (cl_colon->orig_line == is_comment->orig_line)
                {
-                  last = chunk_get_next(is_comment);
+                  last = is_comment->get_next();
                }
             }
             else
@@ -145,7 +145,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
 
    if (chunk_is_token(last, CT_COMMENT_CPP))         // Issue #3058
    {
-      last = chunk_get_next(last);
+      last = last->get_next();
    }
    LOG_FMT(LMCB, "%s(%d): last->text()     is '%s', orig_line %zu, orig_col is %zu\n",
            __func__, __LINE__, last->text(), last->orig_line, last->orig_col);
