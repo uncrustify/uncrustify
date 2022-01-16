@@ -123,7 +123,7 @@ const char *Chunk::text() const
 }
 
 
-const char *Chunk::elided_text(char *for_the_copy)
+const char *Chunk::elided_text(char *for_the_copy) const
 {
    const char *test_it       = text();
    size_t     test_it_length = strlen(test_it);
@@ -159,7 +159,7 @@ const char *Chunk::elided_text(char *for_the_copy)
 }
 
 
-Chunk *Chunk::get_next(scope_e scope)
+Chunk *Chunk::get_next(scope_e scope) const
 {
    if (this->isNullChunk())
    {
@@ -205,7 +205,7 @@ Chunk *Chunk::get_next(scope_e scope)
 } // Chunk::get_next
 
 
-Chunk *Chunk::get_prev(scope_e scope)
+Chunk *Chunk::get_prev(scope_e scope) const
 {
    if (this->isNullChunk())
    {

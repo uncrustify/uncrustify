@@ -69,7 +69,7 @@ public:
    const char *text() const;
 
    // Issue #2984, fill up, if necessary, a copy of the first chars of the text() string
-   const char *elided_text(char *for_the_copy);
+   const char *elided_text(char *for_the_copy) const;
 
    /**
     * @brief returns the next chunk in a list of chunks
@@ -78,7 +78,7 @@ public:
     *
     * @return pointer to next chunk or null Chunk if no chunk was found
     */
-   Chunk *get_next(scope_e scope = scope_e::ALL);
+   Chunk *get_next(scope_e scope = scope_e::ALL) const;
 
 
    /**
@@ -88,7 +88,7 @@ public:
     *
     * @return pointer to previous chunk or null Chunk if no chunk was found
     */
-   Chunk *get_prev(scope_e scope = scope_e::ALL);
+   Chunk *get_prev(scope_e scope = scope_e::ALL) const;
 
 
    Chunk        *next;          //! pointer to next chunk in list
