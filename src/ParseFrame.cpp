@@ -174,8 +174,10 @@ void ParseFrame::push(Chunk *pc, const char *func, int line, brace_stage_e stage
    new_entry.in_preproc = pc->flags.test(PCF_IN_PREPROC);
    new_entry.non_vardef = false;
    new_entry.ip         = top().ip;
+   new_entry.pop_pc     = nullptr;
 
    pse.push_back(new_entry);
+   LOG_FMT(LINDPSE, "pse size is %zu\n", pse.size());
 
 // uncomment the line below to get the address of the pse
 // #define DEBUG_PUSH_POP
