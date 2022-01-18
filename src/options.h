@@ -1682,6 +1682,10 @@ indent_ignore_bool_paren;
 extern Option<bool>
 indent_bool_paren;
 
+// Whether to ignore the indentation of an arithmetic operator.
+extern Option<bool>
+indent_ignore_arith;
+
 // Whether to indent a semicolon when inside a for parenthesis.
 // If true, aligns under the open for parenthesis.
 extern Option<bool>
