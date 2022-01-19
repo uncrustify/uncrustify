@@ -2303,17 +2303,12 @@ void indent_text(void)
             && get_chunk_parent_type(prev) == CT_CASE)
          {
             // issue #663 + issue #1366
-            Chunk *prev_newline = chunk_get_prev_nl(pc);
+            Chunk *prev_prev_newline = pc->get_prev_nl()->get_prev_nl();
 
-            if (prev_newline != nullptr)
+            if (prev_prev_newline->isNotNullChunk())
             {
-               Chunk *prev_prev_newline = chunk_get_prev_nl(prev_newline);
-
-               if (prev_prev_newline != nullptr)
-               {
-                  // This only affects the 'break', so no need for a stack entry
-                  indent_column_set(prev_prev_newline->next->column);
-               }
+               // This only affects the 'break', so no need for a stack entry
+               indent_column_set(prev_prev_newline->get_next()->column);
             }
          }
       }
@@ -3741,13 +3736,7 @@ void indent_text(void)
                            }
                            else
                            {
-                              Chunk *_search = chunk_get_prev_nl(search);
-
-                              if (_search == nullptr)
-                              {
-                                 _search = Chunk::NullChunkPtr;
-                              }
-                              search = _search->get_next();
+                              search = search->get_prev_nl()->get_next();
 
                               if (search->isNullChunk())
                               {

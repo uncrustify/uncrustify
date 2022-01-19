@@ -5229,20 +5229,20 @@ void newlines_squeeze_ifdef(void)
             || chunk_is_token(ppr, CT_PP_ELSE)
             || chunk_is_token(ppr, CT_PP_ENDIF))
          {
-            Chunk *pnl = nullptr;
+            Chunk *pnl = Chunk::NullChunkPtr;
             Chunk *nnl = ppr->get_next_nl();
 
             if (  chunk_is_token(ppr, CT_PP_ELSE)
                || chunk_is_token(ppr, CT_PP_ENDIF))
             {
-               pnl = chunk_get_prev_nl(pc);
+               pnl = pc->get_prev_nl();
             }
             Chunk *tmp1;
             Chunk *tmp2;
 
             if (nnl->isNotNullChunk())
             {
-               if (pnl != nullptr)
+               if (pnl->isNotNullChunk())
                {
                   if (pnl->nl_count > 1)
                   {
