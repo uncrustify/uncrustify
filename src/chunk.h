@@ -74,7 +74,7 @@ public:
    /**
     * @brief returns the next chunk in a list of chunks
     *
-    * @param scope  code region to search in
+    * @param scope code region to search in
     *
     * @return pointer to next chunk or null Chunk if no chunk was found
     */
@@ -89,6 +89,17 @@ public:
     * @return pointer to previous chunk or null Chunk if no chunk was found
     */
    Chunk *get_prev(scope_e scope = scope_e::ALL) const;
+
+
+   /**
+    * @brief returns the next newline chunk
+    *
+    * @param scope code region to search in
+    *
+    * @return pointer to next newline chunk or null Chunk if no chunk was found
+    */
+   // TODO make it a const member
+   Chunk *get_next_nl(scope_e scope = scope_e::ALL);
 
 
    Chunk        *next;          //! pointer to next chunk in list
@@ -222,15 +233,6 @@ Chunk *chunk_first_on_line(Chunk *pc);
 
 //! check if a given chunk is the last on its line
 bool chunk_is_last_on_line(Chunk *pc);
-
-
-/**
- * Gets the next NEWLINE chunk
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-Chunk *chunk_get_next_nl(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**

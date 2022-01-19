@@ -45,7 +45,7 @@ void remove_duplicate_include(void)
          {
             includes.push_back(next);
             // goto next newline
-            pc = chunk_get_next_nl(next);
+            pc = next->get_next_nl();
          }
          else
          {
@@ -67,7 +67,7 @@ void remove_duplicate_include(void)
                   // erase the statement
                   Chunk *temp    = pc;
                   Chunk *comment = next->get_next();
-                  Chunk *eol     = chunk_get_next_nl(next);
+                  Chunk *eol     = next->get_next_nl();
                   pc = preproc->get_prev();
                   chunk_del(preproc);
                   chunk_del(temp);
@@ -83,7 +83,7 @@ void remove_duplicate_include(void)
                else
                {
                   // goto next newline
-                  pc = chunk_get_next_nl(next);
+                  pc = next->get_next_nl();
                   // and still look for duplicate
                }
             } // for (auto itc = includes.begin();

@@ -1270,12 +1270,12 @@ static void move_case_return(void)
             {
                // This may indicate a semicolon was missing in the code to format.
                // Avoid moving the return statement to prevent potential unwanted erros.
-               pc = nullptr;
+               pc = Chunk::NullChunkPtr;
                break;
             }
             pc = pc->get_next();
          }
-         pc = chunk_get_next_nl(pc);
+         pc = pc->get_next_nl();
          pc = chunk_get_next_nc_nnl(pc);
 
          if (  pc != nullptr

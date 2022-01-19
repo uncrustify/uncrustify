@@ -1639,7 +1639,7 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
                prev = chunk_get_prev_nnl(next);
                LOG_FMT(LNEWLINE, "%s(%d): prev->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
                        __func__, __LINE__, prev->text(), get_token_name(prev->type), prev->orig_line, prev->orig_col);
-               pc = chunk_get_next_nl(next);
+               pc = next->get_next_nl();
                LOG_FMT(LNEWLINE, "%s(%d): pc->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
                        __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
                Chunk *pc2 = pc->get_next();
@@ -3714,20 +3714,25 @@ void newlines_remove_newlines(void)
    LOG_FMT(LBLANK, "%s(%d):\n", __func__, __LINE__);
    Chunk *pc = chunk_get_head();
 
+   if (pc == nullptr)
+   {
+      pc = Chunk::NullChunkPtr;
+   }
+
    if (!chunk_is_newline(pc))
    {
-      pc = chunk_get_next_nl(pc);
+      pc = pc->get_next_nl();
    }
    Chunk *next;
    Chunk *prev;
 
-   while (pc != nullptr)
+   while (pc->isNotNullChunk())
    {
       // Remove all newlines not in preproc
       if (!pc->flags.test(PCF_IN_PREPROC))
       {
-         next = pc->next;
-         prev = pc->prev;
+         next = pc->get_next();
+         prev = pc->get_prev();
          newline_iarf(pc, IARF_REMOVE);
 
          if (next == chunk_get_head())
@@ -3735,13 +3740,13 @@ void newlines_remove_newlines(void)
             pc = next;
             continue;
          }
-         else if (  prev != nullptr
-                 && !chunk_is_newline(prev->next))
+         else if (  prev->isNotNullChunk()
+                 && !chunk_is_newline(prev->get_next()))
          {
             pc = prev;
          }
       }
-      pc = chunk_get_next_nl(pc);
+      pc = pc->get_next_nl();
    }
 } // newlines_remove_newlines
 
@@ -3753,7 +3758,7 @@ void newlines_remove_disallowed()
    Chunk *pc = chunk_get_head();
    Chunk *next;
 
-   while ((pc = chunk_get_next_nl(pc)) != nullptr)
+   while ((pc = pc->get_next_nl())->isNotNullChunk())
    {
       LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>, nl is %zu\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->nl_count);
@@ -5225,7 +5230,7 @@ void newlines_squeeze_ifdef(void)
             || chunk_is_token(ppr, CT_PP_ENDIF))
          {
             Chunk *pnl = nullptr;
-            Chunk *nnl = chunk_get_next_nl(ppr);
+            Chunk *nnl = ppr->get_next_nl();
 
             if (  chunk_is_token(ppr, CT_PP_ELSE)
                || chunk_is_token(ppr, CT_PP_ENDIF))
@@ -5235,7 +5240,7 @@ void newlines_squeeze_ifdef(void)
             Chunk *tmp1;
             Chunk *tmp2;
 
-            if (nnl != nullptr)
+            if (nnl->isNotNullChunk())
             {
                if (pnl != nullptr)
                {
