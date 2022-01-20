@@ -818,7 +818,7 @@ void indent_text(void)
                break;
             }
             int   should_indent_preproc = true;
-            Chunk *preproc_next         = chunk_get_next_nl(pc);
+            Chunk *preproc_next         = pc->get_next_nl();
             preproc_next = chunk_get_next_nc_nnl_nb(preproc_next);
 
             /* Look ahead at what's on the line after the #if */
@@ -828,6 +828,7 @@ void indent_text(void)
             log_rule_B("pp_indent_extern");
 
             while (  preproc_next != nullptr
+                  && preproc_next->isNotNullChunk()
                   && preproc_next->type != CT_NEWLINE)
             {
                if (  (  (  (chunk_is_token(preproc_next, CT_BRACE_OPEN))
@@ -2302,17 +2303,12 @@ void indent_text(void)
             && get_chunk_parent_type(prev) == CT_CASE)
          {
             // issue #663 + issue #1366
-            Chunk *prev_newline = chunk_get_prev_nl(pc);
+            Chunk *prev_prev_newline = pc->get_prev_nl()->get_prev_nl();
 
-            if (prev_newline != nullptr)
+            if (prev_prev_newline->isNotNullChunk())
             {
-               Chunk *prev_prev_newline = chunk_get_prev_nl(prev_newline);
-
-               if (prev_prev_newline != nullptr)
-               {
-                  // This only affects the 'break', so no need for a stack entry
-                  indent_column_set(prev_prev_newline->next->column);
-               }
+               // This only affects the 'break', so no need for a stack entry
+               indent_column_set(prev_prev_newline->get_next()->column);
             }
          }
       }
@@ -2968,11 +2964,11 @@ void indent_text(void)
             if (  tmp != nullptr
                && chunk_is_newline(tmp->prev))
             {
-               tmp = chunk_get_prev_nc_nnl_np(tmp);
-               tmp = chunk_get_next_nl(tmp);
+               tmp = chunk_get_prev_nc_nnl_np(tmp)->get_next_nl();
             }
 
-            if (tmp != nullptr)
+            if (  tmp != nullptr
+               && tmp->isNotNullChunk())
             {
                frm.top().pop_pc = tmp;
             }
@@ -3740,13 +3736,7 @@ void indent_text(void)
                            }
                            else
                            {
-                              Chunk *_search = chunk_get_prev_nl(search);
-
-                              if (_search == nullptr)
-                              {
-                                 _search = Chunk::NullChunkPtr;
-                              }
-                              search = _search->get_next();
+                              search = search->get_prev_nl()->get_next();
 
                               if (search->isNullChunk())
                               {

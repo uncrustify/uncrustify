@@ -760,15 +760,27 @@ void chunk_move_after(Chunk *pc_in, Chunk *ref)
 }
 
 
-Chunk *chunk_get_next_nl(Chunk *cur, scope_e scope)
+Chunk *Chunk::get_next_nl(scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_newline, scope, direction_e::FORWARD, true));
+   Chunk *ret = chunk_search(this, chunk_is_newline, scope, direction_e::FORWARD, true);
+
+   if (ret == nullptr)
+   {
+      return(Chunk::NullChunkPtr);
+   }
+   return(ret);
 }
 
 
-Chunk *chunk_get_prev_nl(Chunk *cur, scope_e scope)
+Chunk *Chunk::get_prev_nl(scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_newline, scope, direction_e::BACKWARD, true));
+   Chunk *ret = chunk_search(this, chunk_is_newline, scope, direction_e::BACKWARD, true);
+
+   if (ret == nullptr)
+   {
+      return(Chunk::NullChunkPtr);
+   }
+   return(ret);
 }
 
 
