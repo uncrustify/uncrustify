@@ -69,15 +69,155 @@ void do_parens(void)
          }
       }
    }
-}
+} // do_parens
+
+
+void do_parens_assign(void)                         // Issue #3316
+{
+   constexpr static auto LCURRENT = LPARADD;
+
+   LOG_FUNC_ENTRY();
+
+   log_rule_B("mod_full_paren_assign_bool");
+
+   if (options::mod_full_paren_assign_bool())
+   {
+      Chunk *pc = chunk_get_head();
+
+      while ((pc = chunk_get_next_nc_nnl(pc)) != nullptr)
+      {
+         if (chunk_is_token(pc, CT_ASSIGN))
+         {
+            LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu\n",
+                    __func__, __LINE__, pc->orig_line, pc->text(), pc->level);
+            // look before for a open sparen
+            size_t check_level = pc->level;
+            Chunk  *p          = chunk_get_prev_nc(pc, scope_e::PREPROC);
+
+            while (p != nullptr)
+            {
+               LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
+                       __func__, __LINE__, p->orig_line, p->text(), p->level, get_token_name(p->type));
+
+               //log_pcf_flags(LPARADD, p->flags);
+               if (p->flags.test(PCF_STMT_START))
+               {
+                  break;
+               }
+
+               if (chunk_is_token(p, CT_PAREN_OPEN))
+               {
+                  check_level--;
+               }
+
+               if (chunk_is_token(p, CT_SPAREN_OPEN))
+               {
+                  break;
+               }
+               p = chunk_get_prev_nc(p, scope_e::PREPROC);
+
+               if (p->level < check_level - 1)
+               {
+                  break;
+               }
+            }
+            LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
+                    __func__, __LINE__, p->orig_line, p->text(), p->level, get_token_name(p->type));
+
+            if (get_chunk_parent_type(p) == CT_WHILE)
+            {
+               continue;
+            }
+            // Grab the semicolon
+            Chunk *semicolon = chunk_get_next_type(pc, CT_SEMICOLON, pc->level, scope_e::PREPROC);
+
+            if (semicolon != nullptr)
+            {
+               check_bool_parens(pc, semicolon, 0);
+               pc = semicolon;
+            }
+         }
+      }
+   }
+} // do_parens_assign
+
+
+void do_parens_return(void)                         // Issue #3316
+{
+   constexpr static auto LCURRENT = LPARADD;
+
+   LOG_FUNC_ENTRY();
+
+   log_rule_B("mod_full_paren_return_bool");
+
+   if (options::mod_full_paren_return_bool())
+   {
+      Chunk *pc = chunk_get_head();
+
+      while ((pc = chunk_get_next_nc_nnl(pc)) != nullptr)
+      {
+         if (chunk_is_token(pc, CT_RETURN))
+         {
+            LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu\n",
+                    __func__, __LINE__, pc->orig_line, pc->text(), pc->level);
+            // look before for a open sparen
+            size_t check_level = pc->level;
+            Chunk  *p          = chunk_get_prev_nc(pc, scope_e::PREPROC);
+
+            while (p != nullptr)
+            {
+               LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
+                       __func__, __LINE__, p->orig_line, p->text(), p->level, get_token_name(p->type));
+
+               //log_pcf_flags(LPARADD, p->flags);
+               if (p->flags.test(PCF_STMT_START))
+               {
+                  break;
+               }
+
+               if (chunk_is_token(p, CT_PAREN_OPEN))
+               {
+                  check_level--;
+               }
+
+               if (chunk_is_token(p, CT_SPAREN_OPEN))
+               {
+                  break;
+               }
+               p = chunk_get_prev_nc(p, scope_e::PREPROC);
+
+               if (p->level < check_level - 1)
+               {
+                  break;
+               }
+            }
+            LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
+                    __func__, __LINE__, p->orig_line, p->text(), p->level, get_token_name(p->type));
+
+            if (get_chunk_parent_type(p) == CT_WHILE)
+            {
+               continue;
+            }
+            // Grab the semicolon
+            Chunk *semicolon = chunk_get_next_type(pc, CT_SEMICOLON, pc->level, scope_e::PREPROC);
+
+            if (semicolon != nullptr)
+            {
+               check_bool_parens(pc, semicolon, 0);
+               pc = semicolon;
+            }
+         }
+      }
+   }
+} // do_parens_return
 
 
 static void add_parens_between(Chunk *first, Chunk *last)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LPARADD, "%s: line %zu between %s [lvl=%zu] and %s [lvl=%zu]\n",
-           __func__, first->orig_line,
+   LOG_FMT(LPARADD, "%s(%d): line %zu, between '%s' [lvl is %zu] and '%s' [lvl is %zu]\n",
+           __func__, __LINE__, first->orig_line,
            first->text(), first->level,
            last->text(), last->level);
 
@@ -132,8 +272,8 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
    Chunk *ref        = popen;
    bool  hit_compare = false;
 
-   LOG_FMT(LPARADD, "%s(%d): popen on %zu, col %zu, pclose on %zu, col %zu, level=%zu\n",
-           __func__, nest,
+   LOG_FMT(LPARADD, "%s(%d): nest is %d, popen on line %zu, orig_col is %zu, pclose on line %zu, orig_col is %zu, level is %zu\n",
+           __func__, __LINE__, nest,
            popen->orig_line, popen->orig_col,
            pclose->orig_line, pclose->orig_col,
            popen->level);
@@ -173,7 +313,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       }
       else if (chunk_is_token(pc, CT_COMPARE))
       {
-         LOG_FMT(LPARADD2, " -- compare [%s] at line %zu col %zu, level %zu\n",
+         LOG_FMT(LPARADD2, " -- compare '%s' at line %zu, orig_col is %zu, level is %zu\n",
                  pc->text(), pc->orig_line, pc->orig_col, pc->level);
          hit_compare = true;
       }

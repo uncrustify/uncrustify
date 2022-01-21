@@ -3751,6 +3751,16 @@ mod_pawn_semicolon;
 extern Option<bool>
 mod_full_paren_if_bool;
 
+// Whether to fully parenthesize Boolean expressions after '='
+// statement, as in 'x = a && b > c;' => 'x = (a && (b > c));'.
+extern Option<bool>
+mod_full_paren_assign_bool;
+
+// Whether to fully parenthesize Boolean expressions after '='
+// statement, as in 'return  a && b > c;' => 'return (a && (b > c));'.
+extern Option<bool>
+mod_full_paren_return_bool;
+
 // Whether to remove superfluous semicolons.
 extern Option<bool>
 mod_remove_extra_semicolon;
