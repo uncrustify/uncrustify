@@ -1117,6 +1117,12 @@ bool load_option_file(const char *filename, int compat_level)
       {
          ch = line[n];
 
+         // do not check characters in comment part of line
+         if ('#' == ch)
+         {
+            break;
+         }
+
          // ch >= 0 && ch <= 255
          if (  ch < 0
             || ch > 255)
