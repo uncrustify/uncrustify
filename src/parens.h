@@ -15,4 +15,10 @@
 void do_parens(void);
 
 
+void do_parens_assign(void);
+
+
+void do_parens_return(void);
+
+
 #endif /* PARENS_H_INCLUDED */

@@ -2123,6 +2123,8 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
       }
       // Add parens
       do_parens();
+      do_parens_assign();
+      do_parens_return();
 
       // Modify line breaks as needed
       bool first = true;
