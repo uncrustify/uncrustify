@@ -99,7 +99,7 @@ const char *Args::Params(const char *token, size_t &index)
             SetUsed(idx);
             return(m_values[idx]);
          }
-         return("");
+         return(nullptr);
       }
    }
 
