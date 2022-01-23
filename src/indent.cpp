@@ -1174,9 +1174,9 @@ void indent_text(void)
                && frm.top().level >= pc->level)
             {
                size_t count = 1;
-               Chunk  *next = chunk_get_next_nc(pc);
+               Chunk  *next = pc->get_next_nc();
 
-               while (  next != nullptr
+               while (  next->isNotNullChunk()
                      && (  (  chunk_is_token(next, CT_BRACE_CLOSE)
                            && get_chunk_parent_type(next) == CT_OC_AT)
                         || (  chunk_is_token(next, CT_SQUARE_CLOSE)
@@ -1185,7 +1185,7 @@ void indent_text(void)
                            && get_chunk_parent_type(next) == CT_OC_MSG)))
                {
                   count++;
-                  next = chunk_get_next_nc(next);
+                  next = next->get_next_nc();
                }
                count = std::min(count, frm.size());
 
@@ -1464,9 +1464,9 @@ void indent_text(void)
                && frm.top().level >= pc->level)
             {
                size_t count = 1;
-               Chunk  *next = chunk_get_next_nc(pc);
+               Chunk  *next = pc->get_next_nc();
 
-               while (  next != nullptr
+               while (  next->isNotNullChunk()
                      && (  (  chunk_is_token(next, CT_BRACE_CLOSE)
                            && get_chunk_parent_type(next) == CT_OC_AT)
                         || (  chunk_is_token(next, CT_SQUARE_CLOSE)
@@ -1475,7 +1475,7 @@ void indent_text(void)
                            && get_chunk_parent_type(next) == CT_OC_MSG)))
                {
                   count++;
-                  next = chunk_get_next_nc(next);
+                  next = next->get_next_nc();
                }
                count = std::min(count, frm.size());
 
@@ -1808,7 +1808,7 @@ void indent_text(void)
                  && get_chunk_parent_type(pc) == CT_CPP_LAMBDA
                  && (  pc->flags.test(PCF_IN_FCN_DEF)
                     || pc->flags.test(PCF_IN_FCN_CTOR)) // Issue #2152
-                 && chunk_is_newline(chunk_get_next_nc(pc)))
+                 && chunk_is_newline(pc->get_next_nc()))
          {
             log_rule_B("indent_paren_open_brace");
             // Issue #1165
@@ -1826,7 +1826,7 @@ void indent_text(void)
          // only to help the vim command }
          else if (  !options::indent_paren_open_brace()
                  && chunk_is_paren_open(frm.prev().pc)
-                 && chunk_is_newline(chunk_get_next_nc(pc)))
+                 && chunk_is_newline(pc->get_next_nc()))
          {
             log_rule_B("indent_paren_open_brace");
             LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, pc->brace_level is %zu, for '%s', pc->level is %zu, pc(-1)->level is %zu\n",
@@ -2714,9 +2714,9 @@ void indent_text(void)
          {
             log_rule_B("indent_paren_nl");
             log_rule_B("indent_square_nl");
-            Chunk *next = chunk_get_next_nc(pc);
+            Chunk *next = pc->get_next_nc();
 
-            if (next == nullptr)
+            if (next->isNullChunk())
             {
                break;
             }
@@ -2773,14 +2773,14 @@ void indent_text(void)
             }
             else
             {
-               if (  next != nullptr
+               if (  next->isNotNullChunk()
                   && !chunk_is_comment(next))
                {
                   if (chunk_is_token(next, CT_SPACE))
                   {
-                     next = chunk_get_next_nc(next);
+                     next = next->get_next_nc();
 
-                     if (next == nullptr)
+                     if (next->isNullChunk())
                      {
                         break;
                      }
@@ -3230,7 +3230,7 @@ void indent_text(void)
             reindent_line(pc, (frm.prev().indent + indent_size));
             did_newline = false;
          }
-         else if (  chunk_is_newline(chunk_get_next_nc(pc))
+         else if (  chunk_is_newline(pc->get_next_nc())
                  && !are_chunks_in_same_line(frm.prev().pc, frm.top().pc))
          {
             frm.top().indent = frm.prev().indent + indent_size;

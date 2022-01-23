@@ -1400,7 +1400,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
 
          if (chunk_is_token(ref, CT_COMMENT)) // Issue #3034
          {
-            ref = chunk_get_next_nc(ref);
+            ref = ref->get_next_nc();
          }
       }
    }

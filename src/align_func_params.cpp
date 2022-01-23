@@ -72,7 +72,7 @@ Chunk *align_func_param(Chunk *start)
       if (chunk_is_token(pc, CT_FUNC_VAR))                    // Issue #2278
       {
          // look after 'protect parenthesis'
-         Chunk *after = chunk_get_next_nc(pc);
+         Chunk *after = pc->get_next_nc();
 
          if (chunk_is_token(after, CT_PAREN_CLOSE))
          {

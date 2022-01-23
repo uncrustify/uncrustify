@@ -57,30 +57,27 @@ Chunk *chunk_get_prev_local(Chunk *pc, scope_e scope = scope_e::ALL)
 void combine_labels(void)
 {
    LOG_FUNC_ENTRY();
-   Chunk *cur;
-   Chunk *prev;
-   Chunk *next;
-   bool  hit_case  = false;
-   bool  hit_class = false;
+   bool hit_case  = false;
+   bool hit_class = false;
 
    cpd.unc_stage = unc_stage_e::COMBINE_LABELS;
 
    // stack to handle nesting inside of OC messages, which reset the scope
    ChunkStack cs;
 
-   prev = chunk_get_head();
+   Chunk      *prev = chunk_get_head();
 
    if (prev == nullptr)
    {
       return;
    }
-   cur = chunk_get_next_nc(prev);
+   Chunk *cur = prev->get_next_nc();
 
-   if (cur == nullptr)
+   if (cur->isNullChunk())
    {
       return;
    }
-   next = chunk_get_next_nc(cur);
+   Chunk *next = cur->get_next_nc();
 
    // unlikely that the file will start with a label...
    // prev cur next
@@ -229,9 +226,9 @@ void combine_labels(void)
                {
                   c_token_t new_type = CT_TAG;
 
-                  Chunk     *tmp = chunk_get_next_nc(next);
+                  Chunk     *tmp = next->get_next_nc();
 
-                  if (tmp == nullptr)
+                  if (tmp->isNullChunk())
                   {
                      return;
                   }
@@ -267,10 +264,10 @@ void combine_labels(void)
             }
             else if (chunk_is_token(cur, CT_WORD))
             {
-               Chunk *tmp = chunk_get_next_nc(next, scope_e::PREPROC);
+               Chunk *tmp = next->get_next_nc(scope_e::PREPROC);
 
                // Issue #1187
-               if (tmp == nullptr)
+               if (tmp->isNullChunk())
                {
                   return;
                }
@@ -284,7 +281,7 @@ void combine_labels(void)
                   // Must be a macro thingy, assume some sort of label
                   set_chunk_type(next, CT_LABEL_COLON);
                }
-               else if (  tmp == nullptr
+               else if (  tmp->isNullChunk()
                        || (  chunk_is_not_token(tmp, CT_NUMBER)
                           && chunk_is_not_token(tmp, CT_DECLTYPE)
                           && chunk_is_not_token(tmp, CT_SIZEOF)

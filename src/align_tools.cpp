@@ -17,11 +17,17 @@ Chunk *skip_c99_array(Chunk *sq_open)
 {
    if (chunk_is_token(sq_open, CT_SQUARE_OPEN))
    {
-      Chunk *tmp = chunk_get_next_nc(chunk_skip_to_match(sq_open));
+      Chunk *tmp = chunk_skip_to_match(sq_open);
+
+      if (tmp == nullptr)
+      {
+         tmp = Chunk::NullChunkPtr;
+      }
+      tmp = tmp->get_next_nc();
 
       if (chunk_is_token(tmp, CT_ASSIGN))
       {
-         return(chunk_get_next_nc(tmp));
+         return(tmp->get_next_nc());
       }
    }
    return(nullptr);
@@ -51,9 +57,12 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
       LOG_FMT(LSIB, "%s(%d): start: orig_line is %zu, orig_col is %zu, column is %zu, type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, get_token_name(pc->type));
    }
+   else
+   {
+      pc = Chunk::NullChunkPtr;
+   }
 
-   while (  pc != nullptr
-         && pc->isNotNullChunk()
+   while (  pc->isNotNullChunk()
          && !chunk_is_newline(pc)
          && pc->level >= start->level)
    {
@@ -143,7 +152,7 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
          }
          prev_match = pc;
       }
-      pc = chunk_get_next_nc(pc);
+      pc = pc->get_next_nc();
    }
    return(pc);
 } // scan_ib_line
