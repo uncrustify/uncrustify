@@ -182,7 +182,7 @@ void do_braces(void)
       // Scan for the brace close or a newline
       tmp = br_open;
 
-      while ((tmp = chunk_get_next_nc(tmp)) != nullptr)
+      while ((tmp = tmp->get_next_nc())->isNotNullChunk())
       {
          if (chunk_is_newline(tmp))
          {
@@ -317,11 +317,11 @@ static bool should_add_braces(Chunk *vbopen)
 
    size_t nl_count = 0;
 
-   Chunk  *pc = nullptr;
+   Chunk  *pc = Chunk::NullChunkPtr;
 
-   for (pc = chunk_get_next_nc(vbopen, scope_e::PREPROC);
-        (pc != nullptr && pc->level > vbopen->level);
-        pc = chunk_get_next_nc(pc, scope_e::PREPROC))
+   for (pc = vbopen->get_next_nc(scope_e::PREPROC);
+        (pc->isNotNullChunk() && pc->level > vbopen->level);
+        pc = pc->get_next_nc(scope_e::PREPROC))
    {
       if (chunk_is_newline(pc))
       {
@@ -329,7 +329,7 @@ static bool should_add_braces(Chunk *vbopen)
       }
    }
 
-   if (  pc != nullptr
+   if (  pc->isNotNullChunk()
       && nl_count > nl_max
       && vbopen->pp_level == pc->pp_level)
    {
@@ -363,7 +363,7 @@ static bool can_remove_braces(Chunk *bopen)
 
    log_rule_B("mod_full_brace_nl");
    const size_t nl_max = options::mod_full_brace_nl();
-   Chunk        *prev  = nullptr;
+   Chunk        *prev  = Chunk::NullChunkPtr;
 
    size_t       semi_count = 0;
    bool         hit_semi   = false;
@@ -371,11 +371,11 @@ static bool can_remove_braces(Chunk *bopen)
    size_t       if_count   = 0;
    int          br_count   = 0;
 
-   pc = chunk_get_next_nc(bopen, scope_e::ALL);
+   pc = bopen->get_next_nc(scope_e::ALL);
    LOG_FMT(LBRDEL, "%s(%d):  - begin with token '%s', orig_line is %zu, orig_col is %zu\n",
            __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
 
-   while (  pc != nullptr
+   while (  pc->isNotNullChunk()
          && pc->level >= level)
    {
       LOG_FMT(LBRDEL, "%s(%d): test token '%s', orig_line is %zu, orig_col is %zu\n",
@@ -472,12 +472,12 @@ static bool can_remove_braces(Chunk *bopen)
          }
       }
       prev = pc;
-      pc   = chunk_get_next_nc(pc);
+      pc   = pc->get_next_nc();
    }
 
-   if (pc == nullptr)
+   if (pc->isNullChunk())
    {
-      LOG_FMT(LBRDEL, "%s(%d):  pc is nullptr\n", __func__, __LINE__);
+      LOG_FMT(LBRDEL, "%s(%d):  pc is null chunk\n", __func__, __LINE__);
       return(false);
    }
 
@@ -524,10 +524,9 @@ static void examine_brace(Chunk *bopen)
    size_t       if_count   = 0;
    int          br_count   = 0;
 
-   Chunk        *pc = chunk_get_next_nc(bopen);
+   Chunk        *pc = bopen->get_next_nc();
 
-   while (  pc != nullptr
-         && pc->isNotNullChunk()
+   while (  pc->isNotNullChunk()
          && pc->level >= level)
    {
       if (chunk_is_token(pc, CT_NEWLINE))
@@ -626,8 +625,7 @@ static void examine_brace(Chunk *bopen)
                return;
             }
 
-            if (  prev != nullptr
-               && prev->isNotNullChunk())
+            if (prev->isNotNullChunk())
             {
                LOG_FMT(LBRDEL, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', prev->text '%s', prev->type %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), prev->text(), get_token_name(prev->type));

@@ -39,6 +39,7 @@ void align_asm_colon(void)
       did_nl = true;
 
       while (  pc != nullptr
+            && pc->isNotNullChunk()
             && pc->level >= level)
       {
          if (chunk_is_newline(pc))
@@ -56,7 +57,7 @@ void align_asm_colon(void)
             did_nl = false;
             cas.Add(pc);
          }
-         pc = chunk_get_next_nc(pc, scope_e::PREPROC);
+         pc = pc->get_next_nc(scope_e::PREPROC);
       }
       cas.End();
    }

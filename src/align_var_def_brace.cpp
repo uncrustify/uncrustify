@@ -297,7 +297,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
             if (options::align_var_def_colon())
             {
-               next = chunk_get_next_nc(pc);
+               next = pc->get_next_nc();
 
                if (chunk_is_token(next, CT_BIT_COLON))
                {
@@ -310,7 +310,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
             {
                next = pc;
 
-               while ((next = chunk_get_next_nc(next)) != nullptr)
+               while ((next = next->get_next_nc())->isNotNullChunk())
                {
                   if (chunk_is_token(next, CT_ATTRIBUTE))
                   {

@@ -113,6 +113,28 @@ public:
    Chunk *get_prev_nl(scope_e scope = scope_e::ALL);
 
 
+   /**
+    * @brief returns the next non-comment chunk
+    *
+    * @param scope code region to search in
+    *
+    * @return pointer to next non-comment chunk or null Chunk if no chunk was found
+    */
+   // TODO make it a const member
+   Chunk *get_next_nc(scope_e scope = scope_e::ALL);
+
+
+   /**
+    * @brief returns the prev non-comment chunk
+    *
+    * @param scope code region to search in
+    *
+    * @return pointer to prev non-comment chunk or null Chunk if no chunk was found
+    */
+   // TODO make it a const member
+   Chunk *get_prev_nc(scope_e scope = scope_e::ALL);
+
+
    Chunk        *next;          //! pointer to next chunk in list
    Chunk        *prev;          //! pointer to previous chunk in list
    Chunk        *parent;        //! pointer to parent chunk(not always set)
@@ -244,24 +266,6 @@ Chunk *chunk_first_on_line(Chunk *pc);
 
 //! check if a given chunk is the last on its line
 bool chunk_is_last_on_line(Chunk *pc);
-
-
-/**
- * Gets the next non-comment chunk
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-Chunk *chunk_get_next_nc(Chunk *cur, scope_e scope = scope_e::ALL);
-
-
-/**
- * Gets the prev non-comment chunk
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-Chunk *chunk_get_prev_nc(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**

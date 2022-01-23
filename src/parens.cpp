@@ -92,9 +92,9 @@ void do_parens_assign(void)                         // Issue #3316
                     __func__, __LINE__, pc->orig_line, pc->text(), pc->level);
             // look before for a open sparen
             size_t check_level = pc->level;
-            Chunk  *p          = chunk_get_prev_nc(pc, scope_e::PREPROC);
+            Chunk  *p          = pc->get_prev_nc(scope_e::PREPROC);
 
-            while (p != nullptr)
+            while (p->isNotNullChunk())
             {
                LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
                        __func__, __LINE__, p->orig_line, p->text(), p->level, get_token_name(p->type));
@@ -114,7 +114,7 @@ void do_parens_assign(void)                         // Issue #3316
                {
                   break;
                }
-               p = chunk_get_prev_nc(p, scope_e::PREPROC);
+               p = p->get_prev_nc(scope_e::PREPROC);
 
                if (p->level < check_level - 1)
                {
@@ -162,9 +162,9 @@ void do_parens_return(void)                         // Issue #3316
                     __func__, __LINE__, pc->orig_line, pc->text(), pc->level);
             // look before for a open sparen
             size_t check_level = pc->level;
-            Chunk  *p          = chunk_get_prev_nc(pc, scope_e::PREPROC);
+            Chunk  *p          = pc->get_prev_nc(scope_e::PREPROC);
 
-            while (p != nullptr)
+            while (p->isNotNullChunk())
             {
                LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
                        __func__, __LINE__, p->orig_line, p->text(), p->level, get_token_name(p->type));
@@ -184,7 +184,7 @@ void do_parens_return(void)                         // Issue #3316
                {
                   break;
                }
-               p = chunk_get_prev_nc(p, scope_e::PREPROC);
+               p = p->get_prev_nc(scope_e::PREPROC);
 
                if (p->level < check_level - 1)
                {

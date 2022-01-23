@@ -663,7 +663,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          // Mark one-liner assignment
          Chunk *tmp = next;
 
-         while ((tmp = chunk_get_next_nc(tmp)) != nullptr)
+         while ((tmp = tmp->get_next_nc())->isNotNullChunk())
          {
             if (chunk_is_newline(tmp))
             {

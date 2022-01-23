@@ -627,7 +627,7 @@ void indent_text(void)
          if ((chunk_is_str(pc, "(", 1) && !cpd.settings[UO_indent_paren_nl].b) ||
              (chunk_is_str(pc, "[", 1) && !cpd.settings[UO_indent_square_nl].b))
          {
-            next = chunk_get_next_nc(pc);
+            next = pc->get_next_nc();
             if (chunk_is_newline(next))
             {
                int sub = 1;

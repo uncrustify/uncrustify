@@ -51,13 +51,13 @@ void align_preprocessor(void)
       // If we aren't on a 'define', then skip to the next non-comment
       if (chunk_is_not_token(pc, CT_PP_DEFINE))
       {
-         pc = chunk_get_next_nc(pc);
+         pc = pc->get_next_nc();
          continue;
       }
       // step past the 'define'
-      pc = chunk_get_next_nc(pc);
+      pc = pc->get_next_nc();
 
-      if (pc == nullptr)
+      if (pc->isNullChunk())
       {
          // coveralls will complain here. There are no example for that.
          // see https://en.wikipedia.org/wiki/Robustness_principle
@@ -77,7 +77,7 @@ void align_preprocessor(void)
             cur_as = &asf;
          }
          // Skip to the close parenthesis
-         pc = chunk_get_next_nc(pc); // point to open (
+         pc = pc->get_next_nc(); // point to open (
          pc = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
 
          LOG_FMT(LALPP, "%s(%d): jumped to (%s) on line %zu col %zu\n",
@@ -86,7 +86,7 @@ void align_preprocessor(void)
       // step to the value past the close parenthesis or the macro name
       pc = pc->get_next();
 
-      if (pc == nullptr)
+      if (pc->isNullChunk())
       {
          // coveralls will complain here. There are no example for that.
          // see https://en.wikipedia.org/wiki/Robustness_principle

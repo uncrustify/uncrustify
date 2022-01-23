@@ -63,9 +63,14 @@ Chunk *pawn_add_vsemi_after(Chunk *pc)
    {
       return(pc);
    }
-   Chunk *next = chunk_get_next_nc(pc);
 
-   if (  next != nullptr
+   if (pc == nullptr)
+   {
+      pc = Chunk::NullChunkPtr;
+   }
+   Chunk *next = pc->get_next_nc();
+
+   if (  next->isNotNullChunk()
       && (  chunk_is_token(next, CT_VSEMICOLON)
          || chunk_is_token(next, CT_SEMICOLON)))
    {
@@ -179,7 +184,8 @@ void pawn_prescan(void)
    bool  did_nl = true;
    Chunk *pc    = chunk_get_head();
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       if (  did_nl
          && pc->type != CT_PREPROC
@@ -191,11 +197,12 @@ void pawn_prescan(void)
       }
 
       // note that continued lines are ignored
-      if (pc != nullptr)
+      if (  pc != nullptr
+         && pc->isNotNullChunk())
       {
          did_nl = (chunk_is_token(pc, CT_NEWLINE));
       }
-      pc = chunk_get_next_nc(pc);
+      pc = pc->get_next_nc();
    }
 }
 
@@ -219,9 +226,14 @@ static Chunk *pawn_process_line(Chunk *start)
    {
       fcn = start;
    }
-   Chunk *pc = start;
+   Chunk *pc = Chunk::NullChunkPtr;
 
-   while (  ((pc = chunk_get_next_nc(pc)) != nullptr)
+   if (start != nullptr)
+   {
+      pc = start;
+   }
+
+   while (  ((pc = pc->get_next_nc())->isNotNullChunk())
          && !chunk_is_str(pc, "(", 1)
          && pc->type != CT_ASSIGN
          && pc->type != CT_NEWLINE)
@@ -235,7 +247,7 @@ static Chunk *pawn_process_line(Chunk *start)
       }
    }
 
-   if (pc != nullptr)
+   if (pc->isNotNullChunk())
    {
       if (chunk_is_token(pc, CT_ASSIGN))
       {
@@ -263,13 +275,18 @@ static Chunk *pawn_process_line(Chunk *start)
 static Chunk *pawn_process_variable(Chunk *start)
 {
    LOG_FUNC_ENTRY();
-   Chunk *prev = nullptr;
-   Chunk *pc   = start;
+   Chunk *pc = Chunk::NullChunkPtr;
 
-   while ((pc = chunk_get_next_nc(pc)) != nullptr)
+   if (start != nullptr)
+   {
+      pc = start;
+   }
+   Chunk *prev = Chunk::NullChunkPtr;
+
+   while ((pc = pc->get_next_nc())->isNotNullChunk())
    {
       if (  chunk_is_token(pc, CT_NEWLINE)
-         && prev != nullptr                          // Issue 2586
+         && prev->isNotNullChunk()
          && !pawn_continued(prev, start->level))
       {
          if (  prev->type != CT_VSEMICOLON
@@ -366,7 +383,7 @@ static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn)
                  get_token_name(fcn->type),
                  get_token_name(start->type));
          set_chunk_type(fcn, CT_FUNC_PROTO);
-         return(chunk_get_next_nc(fcn));
+         return(fcn->get_next_nc());
       }
    }
    // Not a prototype, so it must be a function def
