@@ -461,7 +461,12 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
                                   bool from_keyword)
 {
    LOG_FUNC_ENTRY();
-   Chunk *tmp = chunk_get_prev_nc(pc);
+   Chunk *tmp = Chunk::NullChunkPtr;
+
+   if (pc != nullptr)
+   {
+      tmp = pc->get_prev_nc();
+   }
 
    if (from_brace)
    {
@@ -471,25 +476,25 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    // Skip to open paren in ':^TYPE *(ARGS) {'
    if (chunk_is_paren_close(tmp))
    {
-      tmp = chunk_get_prev_nc(chunk_skip_to_match_rev(tmp));
+      tmp = chunk_skip_to_match_rev(tmp)->get_prev_nc();
    }
 
    // // Check for star in ':^TYPE *(ARGS) {'. Issue 2477
    if (chunk_is_token(tmp, CT_PTR_TYPE))
    {
-      tmp = chunk_get_prev_nc(tmp);
+      tmp = tmp->get_prev_nc();
    }
 
    // Check for type in ':^TYPE *(ARGS) {'. Issue 2482
    if (chunk_is_token(tmp, CT_TYPE))
    {
-      tmp = chunk_get_prev_nc(tmp);
+      tmp = tmp->get_prev_nc();
    }
    // Check for caret in ':^TYPE *(ARGS) {'
    // Store the caret position
-   Chunk *caret_tmp = nullptr;
+   Chunk *caret_tmp = Chunk::NullChunkPtr;
 
-   if (  tmp != nullptr
+   if (  tmp->isNotNullChunk()
       && tmp->type == CT_OC_BLOCK_CARET)
    {
       caret_tmp = tmp;
@@ -502,6 +507,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
 
    // If we still cannot find caret then return first chunk on the line
    if (  tmp == nullptr
+      || tmp->isNullChunk()
       || tmp->type != CT_OC_BLOCK_CARET)
    {
       return(candidate_chunk_first_on_line(pc));
@@ -511,12 +517,12 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    {
       return(tmp);
    }
-   tmp = chunk_get_prev_nc(tmp);
+   tmp = tmp->get_prev_nc();
 
    // Check for colon in ':^TYPE *(ARGS) {'
    if (from_colon)
    {
-      if (  tmp == nullptr
+      if (  tmp->isNullChunk()
          || tmp->type != CT_OC_COLON)
       {
          return(candidate_chunk_first_on_line(pc));
@@ -526,11 +532,11 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
          return(tmp);
       }
    }
-   tmp = chunk_get_prev_nc(tmp);
+   tmp = tmp->get_prev_nc();
 
    if (from_keyword)
    {
-      if (  tmp == nullptr
+      if (  tmp->isNullChunk()
          || (  tmp->type != CT_OC_MSG_NAME
             && tmp->type != CT_OC_MSG_FUNC))
       {
@@ -2626,7 +2632,7 @@ void indent_text(void)
                   && (  frm.at(idx).type != CT_CLASS_COLON
                      && frm.at(idx).type != CT_CONSTR_COLON
                      && !(  frm.at(idx).type == CT_LAMBDA
-                         && chunk_get_prev_nc(frm.at(idx).pc)->type == CT_NEWLINE)))
+                         && frm.at(idx).pc->get_prev_nc()->type == CT_NEWLINE)))
             {
                if (idx == 0)
                {
@@ -3222,7 +3228,7 @@ void indent_text(void)
          frm.top().indent = frm.prev().indent;
          log_indent();
 
-         if (  chunk_is_newline(chunk_get_prev_nc(pc))
+         if (  chunk_is_newline(pc->get_prev_nc())
             && !are_chunks_in_same_line(frm.prev().pc, chunk_get_prev_nc_nnl(pc)))
          {
             frm.top().indent = frm.prev().indent + indent_size;
@@ -3370,7 +3376,7 @@ void indent_text(void)
          LOG_FMT(LINDENT2, "%s(%d): in_shift is %s\n",
                  __func__, __LINE__, in_shift ? "TRUE" : "FALSE");
          Chunk *prev_nonl = chunk_get_prev_nc_nnl(pc);
-         Chunk *prev2     = chunk_get_prev_nc(pc);
+         Chunk *prev2     = pc->get_prev_nc();
 
          if ((  chunk_is_semicolon(prev_nonl)
              || chunk_is_token(prev_nonl, CT_BRACE_OPEN)
@@ -3447,20 +3453,20 @@ void indent_text(void)
             // Issue #3010
             vardefcol = pc->column;
             // BUT, we need to skip backward over any '*'
-            Chunk *tmp = chunk_get_prev_nc(pc);
+            Chunk *tmp = pc->get_prev_nc();
 
             while (chunk_is_token(tmp, CT_PTR_TYPE))
             {
                vardefcol = tmp->column;
-               tmp       = chunk_get_prev_nc(tmp);
+               tmp       = tmp->get_prev_nc();
             }
             // BUT, we need to skip backward over any '::' or TYPE
-            //tmp = chunk_get_prev_nc(pc);
+            //tmp = pc->get_prev_nc();
 
             //if (chunk_is_token(tmp, CT_DC_MEMBER))
             //{
             //   // look for a type
-            //   Chunk *tmp2 = chunk_get_prev_nc(tmp);
+            //   Chunk *tmp2 = tmp->get_prev_nc();
             //   if (chunk_is_token(tmp2, CT_TYPE))
             //   {
             //      // we have something like "SomeLongNamespaceName::Foo()"

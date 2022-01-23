@@ -322,7 +322,7 @@ static bool can_increase_nl(Chunk *nl)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *prev = chunk_get_prev_nc(nl);
+   Chunk *prev = nl->get_prev_nc();
 
    Chunk *pcmt = nl->get_prev();
    Chunk *next = nl->get_next();
@@ -980,7 +980,7 @@ static bool newlines_if_for_while_switch(Chunk *start, iarf_e nl_opt)
                newline_iarf_pair(close_paren, chunk_get_next_nc_nnl(brace_open), nl_opt);
                pc = chunk_get_next_type(brace_open, CT_VBRACE_CLOSE, brace_open->level);
 
-               if (  !chunk_is_newline(chunk_get_prev_nc(pc))
+               if (  !chunk_is_newline(pc->get_prev_nc())
                   && !chunk_is_newline(pc->get_next_nc()))
                {
                   newline_add_after(pc);
@@ -1931,7 +1931,7 @@ static void newlines_do_else(Chunk *start, iarf_e nl_opt)
             Chunk *tmp = chunk_get_next_type(next, CT_VBRACE_CLOSE, next->level);
 
             if (  !chunk_is_newline(tmp->get_next_nc())
-               && !chunk_is_newline(chunk_get_prev_nc(tmp)))
+               && !chunk_is_newline(tmp->get_prev_nc()))
             {
                newline_add_after(tmp);
             }
@@ -2514,7 +2514,7 @@ static void newlines_brace_pair(Chunk *br_open)
       {
          if (chunk_closeing_brace->orig_line > br_open->orig_line)
          {
-            Chunk *prev = chunk_get_prev_nc(br_open);
+            Chunk *prev = br_open->get_prev_nc();
 
             if (  chunk_is_token(prev, CT_TSQUARE)
                && chunk_is_newline(next))
@@ -2640,9 +2640,9 @@ static void newline_case(Chunk *start)
 
    do
    {
-      prev = chunk_get_prev_nc(prev);
+      prev = prev->get_prev_nc();
 
-      if (  prev != nullptr
+      if (  prev->isNotNullChunk()
          && chunk_is_newline(prev)
          && prev->nl_count > 1)
       {
@@ -2653,7 +2653,7 @@ static void newline_case(Chunk *start)
            && chunk_is_not_token(prev, CT_SEMICOLON)
            && chunk_is_not_token(prev, CT_CASE_COLON));
 
-   if (prev == nullptr)
+   if (prev->isNullChunk())
    {
       return;
    }
@@ -5527,7 +5527,7 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
          {
             mode_local = mode;
          }
-         Chunk *prev = chunk_get_prev_nc(pc);
+         Chunk *prev = pc->get_prev_nc();
          Chunk *next = pc->get_next_nc();
 
          LOG_FMT(LNEWLINE, "%s(%d): mode_local is %s\n",
@@ -5647,11 +5647,11 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
             if (prev->nl_count == 1)
             {
                // Back up to the next non-comment item
-               prev = chunk_get_prev_nc(prev);
+               prev = prev->get_prev_nc();
                LOG_FMT(LNEWLINE, "%s(%d): prev->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
                        __func__, __LINE__, prev->orig_line, prev->orig_col, prev->text());
 
-               if (  prev != nullptr
+               if (  prev->isNotNullChunk()
                   && !chunk_is_newline(prev)
                   && !prev->flags.test(PCF_IN_PREPROC)
                   && !prev->flags.test(PCF_IN_OC_MSG))
@@ -5730,7 +5730,7 @@ void newlines_class_colon_pos(c_token_t tok)
          LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
          ccolon = pc;
-         prev   = chunk_get_prev_nc(pc);
+         prev   = pc->get_prev_nc();
          next   = pc->get_next_nc();
 
          if (chunk_is_token(pc, CT_CONSTR_COLON))
@@ -5756,7 +5756,7 @@ void newlines_class_colon_pos(c_token_t tok)
 
          {
             newline_add_after(pc);
-            prev = chunk_get_prev_nc(pc);
+            prev = pc->get_prev_nc();
             next = pc->get_next_nc();
          }
 
@@ -5767,7 +5767,7 @@ void newlines_class_colon_pos(c_token_t tok)
             {
                chunk_del(prev);
                MARK_CHANGE();
-               prev = chunk_get_prev_nc(pc);
+               prev = pc->get_prev_nc();
             }
 
             if (  chunk_is_newline(next)
@@ -5848,7 +5848,7 @@ void newlines_class_colon_pos(c_token_t tok)
                      // (ncia == IARF_ADD)         // nl_class_init_args, nl_constr_init_args: 8
                      newline_add_after(pc);
                   }
-                  prev = chunk_get_prev_nc(pc);
+                  prev = pc->get_prev_nc();
 
                   if (  chunk_is_newline(prev)
                      && chunk_safe_to_del_nl(prev))
@@ -6000,9 +6000,9 @@ void do_blank_lines(void)
       {
          continue;
       }
-      Chunk *prev = chunk_get_prev_nc(pc);
+      Chunk *prev = pc->get_prev_nc();
 
-      if (prev != nullptr)
+      if (prev->isNotNullChunk())
       {
          LOG_FMT(LBLANK, "%s(%d): prev->orig_line is %zu, prev->text() '%s', prev->type is %s\n",
                  __func__, __LINE__, pc->orig_line,
@@ -6118,32 +6118,32 @@ void do_blank_lines(void)
          if (get_chunk_parent_type(tmp) == CT_TEMPLATE)
          {
             tmp = chunk_get_prev_type(tmp, CT_TEMPLATE, prev->level);
-            tmp = chunk_get_prev_nc(tmp);
+            tmp = tmp->get_prev_nc();
          }
          else
          {
-            tmp = chunk_get_prev_nc(tmp);
+            tmp = tmp->get_prev_nc();
 
             while (  chunk_is_token(tmp, CT_NEWLINE)
                   && chunk_is_comment(tmp->prev))
             {
-               tmp = chunk_get_prev_nc(tmp->prev);
+               tmp = tmp->get_prev()->get_prev_nc();
             }
 
             if (chunk_is_token(tmp, CT_FRIEND))
             {
                // Account for a friend declaration
-               tmp = chunk_get_prev_nc(tmp);
+               tmp = tmp->get_prev_nc();
             }
          }
 
          while (  chunk_is_token(tmp, CT_NEWLINE)
                && chunk_is_comment(tmp->prev))
          {
-            tmp = chunk_get_prev_nc(tmp->prev);
+            tmp = tmp->get_prev()->get_prev_nc();
          }
 
-         if (  tmp != nullptr
+         if (  tmp->isNotNullChunk()
             && !start->flags.test(PCF_INCOMPLETE))
          {
             if (parent_type == CT_CLASS && options::nl_before_class() > tmp->nl_count)
@@ -6164,15 +6164,15 @@ void do_blank_lines(void)
       {
          // Control blanks before a namespace
          Chunk *tmp = chunk_get_prev_type(prev, CT_NAMESPACE, prev->level);
-         tmp = chunk_get_prev_nc(tmp);
+         tmp = tmp->get_prev_nc();
 
          while (  chunk_is_token(tmp, CT_NEWLINE)
-               && chunk_is_comment(tmp->prev))
+               && chunk_is_comment(tmp->get_prev()))
          {
-            tmp = chunk_get_prev_nc(tmp->prev);
+            tmp = tmp->get_prev()->get_prev_nc();
          }
 
-         if (  tmp != nullptr
+         if (  tmp->isNotNullChunk()
             && options::nl_before_namespace() > tmp->nl_count)
          {
             log_rule_B("nl_before_namespace");

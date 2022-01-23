@@ -85,7 +85,7 @@ Chunk *align_func_param(Chunk *start)
                set_chunk_type(before, CT_PPAREN_OPEN);
                set_chunk_type(after, CT_PPAREN_CLOSE);
                pc->level = before->level;
-               Chunk *tmp = chunk_get_prev_nc(pc);
+               Chunk *tmp = pc->get_prev_nc();
 
                if (chunk_is_token(tmp, CT_PTR_TYPE))
                {
@@ -139,7 +139,7 @@ Chunk *align_func_param(Chunk *start)
          }
          else
          {
-            Chunk *tmp_prev = chunk_get_prev_nc(pc);
+            Chunk *tmp_prev = pc->get_prev_nc();
 
             if (!chunk_is_newline(tmp_prev))  // don't count leading commas
             {

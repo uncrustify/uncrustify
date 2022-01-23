@@ -796,9 +796,15 @@ Chunk *Chunk::get_next_nc(scope_e scope)
 }
 
 
-Chunk *chunk_get_prev_nc(Chunk *cur, scope_e scope)
+Chunk *Chunk::get_prev_nc(scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_comment, scope, direction_e::BACKWARD, false));
+   Chunk *ret = chunk_search(this, chunk_is_comment, scope, direction_e::BACKWARD, false);
+
+   if (ret == nullptr)
+   {
+      return(Chunk::NullChunkPtr);
+   }
+   return(ret);
 }
 
 
