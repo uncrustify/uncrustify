@@ -2367,6 +2367,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
          // create the tracking file
          FILE *t_file;
          t_file = fopen(cpd.html_file, "wb");
+
          if (t_file)
          {
             output_text(t_file);
