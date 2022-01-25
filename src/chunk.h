@@ -71,6 +71,15 @@ public:
    // Issue #2984, fill up, if necessary, a copy of the first chars of the text() string
    const char *elided_text(char *for_the_copy) const;
 
+
+   /**
+    * @brief returns the tail of a chunk list
+    *
+    * @return pointer to the last chunk
+    */
+   static Chunk *get_tail(void);
+
+
    /**
     * @brief returns the next chunk in a list of chunks
     *
@@ -227,10 +236,6 @@ void chunk_move_after(Chunk *pc_in, Chunk *ref);
  * @return pointer to the first chunk
  */
 Chunk *chunk_get_head(void);
-
-
-//! get the last chunk in a chunk list
-Chunk *chunk_get_tail(void);
 
 
 /**

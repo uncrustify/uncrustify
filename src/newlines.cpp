@@ -5409,9 +5409,9 @@ void newlines_eat_start_end(void)
    {
       log_rule_B("nl_end_of_file");
       log_rule_B("nl_end_of_file_min");
-      pc = chunk_get_tail();
+      pc = Chunk::get_tail();
 
-      if (pc != nullptr)
+      if (pc->isNotNullChunk())
       {
          if (chunk_is_token(pc, CT_NEWLINE))
          {

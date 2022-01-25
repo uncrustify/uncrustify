@@ -456,9 +456,15 @@ Chunk *chunk_get_head(void)
 }
 
 
-Chunk *chunk_get_tail(void)
+Chunk *Chunk::get_tail(void)
 {
-   return(g_cl.GetTail());
+   Chunk *ret = g_cl.GetTail();
+
+   if (ret == nullptr)
+   {
+      return(Chunk::NullChunkPtr);
+   }
+   return(ret);
 }
 
 
@@ -953,14 +959,14 @@ Chunk *chunk_first_on_line(Chunk *pc)
 bool chunk_is_last_on_line(Chunk *pc)  //TODO: pc should be const here
 {
    // check if pc is the very last chunk of the file
-   const auto *end = chunk_get_tail();
+   const Chunk *end = Chunk::get_tail();
 
    if (pc == end)
    {
       return(true);
    }
    // if the next chunk is a newline then pc is the last chunk on its line
-   const auto *next = pc->get_next();
+   const Chunk *next = pc->get_next();
 
    if (chunk_is_token(next, CT_NEWLINE))
    {

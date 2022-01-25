@@ -270,9 +270,14 @@ static void examine_braces(void)
    log_rule_B("mod_full_brace_using");
    log_rule_B("mod_full_brace_while");
 
-   for (auto pc = chunk_get_tail(); pc != nullptr;)
+   for (Chunk *pc = Chunk::get_tail(); pc->isNotNullChunk();)
    {
-      auto prev = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1);
+      Chunk *prev = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1);
+
+      if (prev == nullptr)
+      {
+         prev = Chunk::NullChunkPtr;
+      }
 
       if (  chunk_is_token(pc, CT_BRACE_OPEN)
          && !pc->flags.test(PCF_IN_PREPROC)

@@ -1656,22 +1656,20 @@ static void add_file_header()
 
 static void add_file_footer()
 {
-   Chunk *pc = chunk_get_tail();
+   Chunk *pc = Chunk::get_tail();
 
    // Back up if the file ends with a newline
-   if (  pc != nullptr
-      && pc->isNotNullChunk()
+   if (  pc->isNotNullChunk()
       && chunk_is_newline(pc))
    {
       pc = pc->get_prev();
    }
 
-   if (  pc != nullptr
-      && pc->isNotNullChunk()
+   if (  pc->isNotNullChunk()
       && (  !chunk_is_comment(pc)
          || !chunk_is_newline(pc->get_prev())))
    {
-      pc = chunk_get_tail();
+      pc = Chunk::get_tail();
 
       if (!chunk_is_newline(pc))
       {
