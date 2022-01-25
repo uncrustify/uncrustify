@@ -583,6 +583,10 @@ sp_between_mdatype_commas;
 extern Option<iarf_e>
 sp_paren_comma; // = IARF_FORCE
 
+// Add or remove space between a type and ':'.
+extern Option<iarf_e>
+sp_type_colon;
+
 // Add or remove space after the variadic '...' when preceded by a
 // non-punctuator.
 // The value REMOVE will be overriden with FORCE

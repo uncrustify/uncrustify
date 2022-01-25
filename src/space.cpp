@@ -2926,6 +2926,13 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
    }
 
+   if (  chunk_is_token(first, CT_TYPE)                   // Issue #3457
+      && chunk_is_token(second, CT_COLON))
+   {
+      log_rule("sp_type_colon");
+      return(options::sp_type_colon());
+   }
+
    if (  !chunk_is_token(second, CT_PTR_TYPE)
       && (  chunk_is_token(first, CT_QUALIFIER)
          || chunk_is_token(first, CT_TYPE)))
