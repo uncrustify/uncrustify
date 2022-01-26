@@ -64,6 +64,7 @@
 00091  c/cond-1.cfg                               c/cond.c
 00092  common/indent_columns-3.cfg                c/cond.c
 00093  c/sp_cond_colon.cfg                        c/cond.c
+00094  c/Issue_3457.cfg                           c/Issue_3457.c
 
 00101  c/ben_061.cfg                              c/bugs-1.c
 00102  c/space_indent_columns-3.cfg               c/bugs-2.c
