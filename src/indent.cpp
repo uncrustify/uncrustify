@@ -3796,14 +3796,14 @@ void indent_text(void)
             if (chunk_is_paren_open(frm.top().pc))
             {
                log_rule_B("indent_comma_paren");
-               indent        = options::indent_comma_paren();
-               indent_ignore = options::indent_ignore_comma_paren();
+               indent        = options::indent_comma_paren() == 1;
+               indent_ignore = options::indent_comma_paren() == -1;
             }
             else if (chunk_is_opening_brace(frm.top().pc))
             {
                log_rule_B("indent_comma_brace");
-               indent        = options::indent_comma_brace();
-               indent_ignore = options::indent_ignore_comma_brace();
+               indent        = options::indent_comma_brace() == 1;
+               indent_ignore = options::indent_comma_brace() == -1;
             }
 
             if (indent_ignore)
@@ -3871,7 +3871,7 @@ void indent_text(void)
 
             if (chunk_is_paren_open(frm.top().pc))
             {
-               if (options::indent_ignore_bool_paren())
+               if (options::indent_bool_paren() == -1)
                {
                   indent_column_set(pc->orig_col);
                }
