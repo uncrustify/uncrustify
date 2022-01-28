@@ -593,7 +593,7 @@ static void quick_indent_again(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = chunk_get_head(); pc != nullptr && pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
    {
       if (pc->indent.ref == nullptr)
       {
@@ -635,7 +635,7 @@ void indent_text(void)
    ParseFrame              frm{};
 
 
-   Chunk *pc        = chunk_get_head();
+   Chunk *pc        = Chunk::get_head();
    bool  classFound = false;                                 // Issue #672
 
    while (  pc != nullptr
@@ -3746,7 +3746,7 @@ void indent_text(void)
 
                               if (search->isNullChunk())
                               {
-                                 search = chunk_get_head();
+                                 search = Chunk::get_head();
                               }
                               indent_column_set(search->column);
                            }
@@ -4482,11 +4482,11 @@ bool ifdef_over_whole_file(void)
    {
       return(cpd.ifdef_over_whole_file > 0);
    }
-   Chunk  *start_pp = nullptr;
-   Chunk  *end_pp   = nullptr;
+   Chunk  *start_pp = Chunk::NullChunkPtr;
+   Chunk  *end_pp   = Chunk::NullChunkPtr;
    size_t IFstage   = 0;
 
-   for (Chunk *pc = chunk_get_head(); pc != nullptr && pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
    {
       LOG_FMT(LNOTE, "%s(%d): pc->pp_level is %zu, pc->orig_line is %zu, pc->orig_col is %zu, pc->text() is '%s'\n",
               __func__, __LINE__, pc->pp_level, pc->orig_line, pc->orig_col, pc->text());
@@ -4559,7 +4559,7 @@ void indent_preproc(void)
    // Scan to see if the whole file is covered by one #ifdef
    const size_t pp_level_sub = ifdef_over_whole_file() ? 1 : 0;
 
-   for (Chunk *pc = chunk_get_head(); pc != nullptr && pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
    {
       LOG_FMT(LPPIS, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() is '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());

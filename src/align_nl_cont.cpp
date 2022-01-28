@@ -50,9 +50,10 @@ Chunk *align_nl_cont(Chunk *start)
 void align_backslash_newline(void)
 {
    LOG_FUNC_ENTRY();
-   Chunk *pc = chunk_get_head();
+   Chunk *pc = Chunk::get_head();
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       if (chunk_is_not_token(pc, CT_NL_CONT))
       {

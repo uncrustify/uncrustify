@@ -3358,17 +3358,12 @@ void space_text(void)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *pc = chunk_get_head();
-
-   if (pc == nullptr)
-   {
-      return;
-   }
+   Chunk  *pc = Chunk::get_head();
    Chunk  *next;
    size_t prev_column;
    size_t column = pc->column;
 
-   while (pc != nullptr)
+   while (pc->isNotNullChunk())
    {
       if (chunk_is_token(pc, CT_NEWLINE))
       {
@@ -3427,9 +3422,9 @@ void space_text(void)
       if (  QT_SIGNAL_SLOT_found
          && options::sp_balance_nested_parens())
       {
-         Chunk *nn = next->next;                                          // Issue #2734
+         Chunk *nn = next->get_next();                                    // Issue #2734
 
-         if (  nn != nullptr
+         if (  nn->isNotNullChunk()
             && chunk_is_token(nn, CT_SPACE))
          {
             chunk_del(nn); // remove the space
@@ -3479,15 +3474,14 @@ void space_text(void)
             Chunk *tmp = next;
 
             // TODO: better use chunk_search here
-            while (  tmp != nullptr
-                  && tmp->isNotNullChunk()
+            while (  tmp->isNotNullChunk()
                   && (tmp->len() == 0)
                   && !chunk_is_newline(tmp))
             {
                tmp = tmp->get_next();
             }
 
-            if (  tmp != nullptr
+            if (  tmp->isNotNullChunk()
                && tmp->len() > 0)
             {
                bool kw1 = CharTable::IsKw2(pc->str[pc->len() - 1]);
@@ -3677,10 +3671,9 @@ void space_text_balance_nested_parens(void)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *first = chunk_get_head();
+   Chunk *first = Chunk::get_head();
 
-   while (  first != nullptr
-         && first->isNotNullChunk())
+   while (first->isNotNullChunk())
    {
       Chunk *next = first->get_next();
 

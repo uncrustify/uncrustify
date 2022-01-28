@@ -471,7 +471,7 @@ void output_parsed(FILE *pfile, bool withOptions)
    fprintf(pfile, "# Line                Tag         Parent_type  Type of the parent         Columns Br/Lvl/pp         Flag   Nl  Text");
 #endif // ifdef WIN32
 
-   for (Chunk *pc = chunk_get_head(); pc != nullptr && pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
    {
 #ifdef WIN32
       fprintf(pfile, "%s# %3d>%19.19s|%19.19s|%19.19s[%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
@@ -526,7 +526,7 @@ void output_parsed_csv(FILE *pfile)
    fprintf(pfile, "Line,Tag,Parent_type,Type of the parent,Column,Orig Col Strt,"
            "Orig Col End,Orig Sp Before,Br,Lvl,pp,Flags,Nl Before,Nl After,Text,");
 
-   for (Chunk *pc = chunk_get_head(); pc != nullptr && pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
    {
       fprintf(pfile, "%s%zu,%s,%s,%s,%zu,%zu,%zu,%d,%zu,%zu,%zu,",
               eol_marker, pc->orig_line, get_token_name(pc->type),
@@ -601,7 +601,7 @@ void output_text(FILE *pfile)
       size_t indent = cpd.frag_cols - 1;
 
       // loop over the whole chunk list
-      for (pc = chunk_get_head(); pc != nullptr && pc->isNotNullChunk(); pc = pc->get_next())
+      for (pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
       {
          pc->column        += indent;
          pc->column_indent += indent;
@@ -625,7 +625,7 @@ void output_text(FILE *pfile)
    bool write_in_tracking = false;
 
    // loop over the whole chunk list
-   for (pc = chunk_get_head(); pc != nullptr && pc->isNotNullChunk(); pc = pc->get_next())
+   for (pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
    {
       char copy[1000];
       LOG_FMT(LCONTTEXT, "%s(%d): text() is '%s', type is %s, orig_line is %zu, column is %zu, nl is %zu\n",
@@ -3307,7 +3307,7 @@ void add_long_preprocessor_conditional_block_comment(void)
    Chunk *pp_start = nullptr;
    Chunk *pp_end   = nullptr;
 
-   for (Chunk *pc = chunk_get_head(); pc; pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       // just track the preproc level:
       if (chunk_is_token(pc, CT_PREPROC))

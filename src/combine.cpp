@@ -1858,7 +1858,7 @@ void fix_symbols(void)
    bool is_cpp  = language_is_set(LANG_CPP);
    bool is_java = language_is_set(LANG_JAVA);
 
-   for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_nc_nnl(pc))
+   for (pc = Chunk::get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (  chunk_is_token(pc, CT_FUNC_WRAP)
          || chunk_is_token(pc, CT_TYPE_WRAP))
@@ -1901,9 +1901,9 @@ void fix_symbols(void)
       }
    }
 
-   pc = chunk_get_head();
+   pc = Chunk::get_head();
 
-   if (pc == nullptr)
+   if (pc->isNullChunk())
    {
       return;
    }
@@ -1914,7 +1914,8 @@ void fix_symbols(void)
       pc = chunk_get_next_nc_nnl(pc);
    }
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       if (chunk_is_token(pc, CT_IGNORED))
       {
@@ -1959,10 +1960,11 @@ void fix_symbols(void)
     * 2nd pass - handle variable definitions
     * REVISIT: We need function params marked to do this (?)
     */
-   pc = chunk_get_head();
+   pc = Chunk::get_head();
    int square_level = -1;
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       char copy[1000];
       LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n",
@@ -2067,9 +2069,10 @@ static void process_returns(void)
    LOG_FUNC_ENTRY();
    Chunk *pc;
 
-   pc = chunk_get_head();
+   pc = Chunk::get_head();
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       if (chunk_is_not_token(pc, CT_RETURN))
       {
@@ -2291,9 +2294,10 @@ void mark_comments(void)
    cpd.unc_stage = unc_stage_e::MARK_COMMENTS;
 
    bool  prev_nl = true;
-   Chunk *cur    = chunk_get_head();
+   Chunk *cur    = Chunk::get_head();
 
-   while (cur != nullptr)
+   while (  cur != nullptr
+         && cur->isNotNullChunk())
    {
       Chunk *next   = chunk_get_next_nvb(cur);
       bool  next_nl = (next == nullptr) || chunk_is_newline(next);

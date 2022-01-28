@@ -177,7 +177,7 @@ void align_right_comments(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = chunk_get_head(); pc != nullptr && pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
    {
       if (  chunk_is_token(pc, CT_COMMENT)
          || chunk_is_token(pc, CT_COMMENT_CPP)
@@ -221,10 +221,9 @@ void align_right_comments(void)
       }
    }
 
-   Chunk *pc = chunk_get_head();
+   Chunk *pc = Chunk::get_head();
 
-   while (  pc != nullptr
-         && pc->isNotNullChunk())
+   while (pc->isNotNullChunk())
    {
       if (pc->flags.test(PCF_RIGHT_COMMENT))
       {

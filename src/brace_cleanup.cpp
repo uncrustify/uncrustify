@@ -185,10 +185,9 @@ void brace_cleanup(void)
 
    BraceState braceState;
    ParseFrame frm{};
-   Chunk      *pc = chunk_get_head();
+   Chunk      *pc = Chunk::get_head();
 
-   while (  pc != nullptr
-         && pc->isNotNullChunk())
+   while (pc->isNotNullChunk())
    {
       LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
@@ -258,9 +257,9 @@ void brace_cleanup(void)
       }
       pc = pc->get_next();
    }
-//   pc = chunk_get_head();
+//   pc = Chunk::get_head();
 //
-//   while (pc != nullptr)
+//   while (pc->isNotNullChunk())
 //   {
 //      LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
 //              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());

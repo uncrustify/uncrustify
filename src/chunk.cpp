@@ -450,9 +450,15 @@ static Chunk *chunk_add(const Chunk *pc_in, Chunk *ref, const direction_e pos = 
 static search_t select_search_fct(const direction_e dir = direction_e::FORWARD);
 
 
-Chunk *chunk_get_head(void)
+Chunk *Chunk::get_head(void)
 {
-   return(g_cl.GetHead());
+   Chunk *ret = g_cl.GetHead();
+
+   if (ret == nullptr)
+   {
+      return(Chunk::NullChunkPtr);
+   }
+   return(ret);
 }
 
 
@@ -1066,7 +1072,8 @@ Chunk *chunk_get_prev_nvb(Chunk *cur, const scope_e scope)
 
 void chunk_flags_set_real(Chunk *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits)
 {
-   if (pc != nullptr)
+   if (  pc != nullptr
+      && pc->isNotNullChunk())
    {
       LOG_FUNC_ENTRY();
       auto const nflags = (pc->flags & ~clr_bits) | set_bits;

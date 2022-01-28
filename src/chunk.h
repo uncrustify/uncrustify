@@ -73,7 +73,15 @@ public:
 
 
    /**
-    * @brief returns the tail of a chunk list
+    * @brief returns the head of the chunk list
+    *
+    * @return pointer to the first chunk
+    */
+   static Chunk *get_head(void);
+
+
+   /**
+    * @brief returns the tail of the chunk list
     *
     * @return pointer to the last chunk
     */
@@ -228,14 +236,6 @@ void chunk_del(Chunk * &pc);
  * @param ref    chunk after which to move
  */
 void chunk_move_after(Chunk *pc_in, Chunk *ref);
-
-
-/**
- * @brief returns the head of a chunk list
- *
- * @return pointer to the first chunk
- */
-Chunk *chunk_get_head(void);
 
 
 /**

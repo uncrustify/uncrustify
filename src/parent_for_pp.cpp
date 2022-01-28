@@ -16,9 +16,10 @@ void do_parent_for_pp(void)
 
    vector<Chunk *> viz;
 
-   Chunk           *pc = chunk_get_head();
+   Chunk           *pc = Chunk::get_head();
 
-   while ((pc = chunk_get_next_nc_nnl(pc)) != nullptr)
+   while (  (pc = chunk_get_next_nc_nnl(pc)) != nullptr
+         && pc->isNotNullChunk())
    {
       // CT_PP_IF,            // #if, #ifdef, or #ifndef
       // CT_PP_ELSE,          // #else or #elif

@@ -104,7 +104,7 @@ void pawn_scrub_vsemi(void)
       return;
    }
 
-   for (Chunk *pc = chunk_get_head(); pc != nullptr && pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
    {
       if (pc->type != CT_VSEMICOLON)
       {
@@ -182,7 +182,7 @@ void pawn_prescan(void)
     * any questionable stuff
     */
    bool  did_nl = true;
-   Chunk *pc    = chunk_get_head();
+   Chunk *pc    = Chunk::get_head();
 
    while (  pc != nullptr
          && pc->isNotNullChunk())
@@ -310,12 +310,7 @@ void pawn_add_virtual_semicolons(void)
    if (language_is_set(LANG_PAWN))
    {
       Chunk *prev = Chunk::NullChunkPtr;
-      Chunk *pc   = chunk_get_head();
-
-      if (pc == nullptr)
-      {
-         pc = Chunk::NullChunkPtr;
-      }
+      Chunk *pc   = Chunk::get_head();
 
       while ((pc = pc->get_next())->isNotNullChunk())
       {
