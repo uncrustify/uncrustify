@@ -292,7 +292,7 @@ void indent_text(void)
   frm.pse[0].indent_tmp = 1;
   frm.pse[0].type       = CT_EOF;
 
-  pc = chunk_get_head();
+  pc = Chunk::get_head();
 
   while (pc != NULL)
     {
@@ -923,7 +923,7 @@ void indent_preproc(void)
     /* Scan to see if the whole file is covered by one #ifdef */
   int stage = 0;
 
-  for (pc = chunk_get_head(); pc != NULL; pc = pc->get_next())
+  for (pc = Chunk::get_head(); pc != NULL; pc = pc->get_next())
     {
     if (chunk_is_comment(pc) || chunk_is_newline(pc))
       continue;
@@ -968,7 +968,7 @@ void indent_preproc(void)
     pp_level_sub = 1;
     }
 
-  for (pc = chunk_get_head(); pc != NULL; pc = pc->get_next())
+  for (pc = Chunk::get_head(); pc != NULL; pc = pc->get_next())
     {
     if (pc->type != CT_PREPROC)
       continue;

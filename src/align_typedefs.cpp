@@ -31,17 +31,17 @@ void align_typedefs(size_t span)
    log_rule_B("align_typedef_amp_style");
    as.m_amp_style = static_cast<AlignStack::StarStyle>(options::align_typedef_amp_style());
 
-   Chunk *c_typedef = nullptr;
-   Chunk *pc        = chunk_get_head();
+   Chunk *c_typedef = Chunk::NullChunkPtr;
+   Chunk *pc        = Chunk::get_head();
 
    while (pc->isNotNullChunk())
    {
       if (chunk_is_newline(pc))
       {
          as.NewLines(pc->nl_count);
-         c_typedef = nullptr;
+         c_typedef = Chunk::NullChunkPtr;
       }
-      else if (c_typedef != nullptr)
+      else if (c_typedef->isNotNullChunk())
       {
          if (pc->flags.test(PCF_ANCHOR))
          {
@@ -49,7 +49,7 @@ void align_typedefs(size_t span)
             LOG_FMT(LALTD, "%s(%d): typedef @ %zu:%zu, tag '%s' @ %zu:%zu\n",
                     __func__, __LINE__, c_typedef->orig_line, c_typedef->orig_col,
                     pc->text(), pc->orig_line, pc->orig_col);
-            c_typedef = nullptr;
+            c_typedef = Chunk::NullChunkPtr;
          }
       }
       else

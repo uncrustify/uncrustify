@@ -19,7 +19,8 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
 {
    LOG_FUNC_ENTRY();
 
-   if (first == nullptr)
+   if (  first == nullptr
+      && first->isNotNullChunk())
    {
       // coveralls will complain here. There are no example for that.
       // see https://en.wikipedia.org/wiki/Robustness_principle

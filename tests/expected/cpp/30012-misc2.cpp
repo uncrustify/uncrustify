@@ -30,7 +30,7 @@ void foo(void)
   List<byte> bob = new List<byte>();
 
   /* Align assignments */
-  align_assign(chunk_get_head(),
+  align_assign(Chunk::get_head(),
                cpd.settings [UO_align_assign_span].n,
                cpd.settings [UO_align_assign_thresh].n);
 }

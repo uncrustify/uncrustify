@@ -65,9 +65,9 @@ void combine_labels(void)
    // stack to handle nesting inside of OC messages, which reset the scope
    ChunkStack cs;
 
-   Chunk      *prev = chunk_get_head();
+   Chunk      *prev = Chunk::get_head();
 
-   if (prev == nullptr)
+   if (prev->isNullChunk())
    {
       return;
    }

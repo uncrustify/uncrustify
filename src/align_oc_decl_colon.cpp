@@ -28,7 +28,7 @@ void align_oc_decl_colon(void)
    nas.Start(4);
    nas.m_right_align = !options::align_on_tabstop();
 
-   Chunk *pc = chunk_get_head();
+   Chunk *pc = Chunk::get_head();
 
    while (  pc != nullptr
          && pc->isNotNullChunk())

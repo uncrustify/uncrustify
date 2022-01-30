@@ -16,9 +16,10 @@
 void align_struct_initializers(void)
 {
    LOG_FUNC_ENTRY();
-   Chunk *pc = chunk_get_head();
+   Chunk *pc = Chunk::get_head();
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       Chunk *prev = chunk_get_prev_nc_nnl(pc);
 

@@ -22,7 +22,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 {
    LOG_FUNC_ENTRY();
 
-   if (start == nullptr)
+   if (start->isNullChunk())
    {
       return(nullptr);
    }

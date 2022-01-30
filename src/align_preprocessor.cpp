@@ -36,7 +36,7 @@ void align_preprocessor(void)
    log_rule_B("align_pp_define_gap");
    asf.m_gap = options::align_pp_define_gap();
 
-   Chunk *pc = chunk_get_head();
+   Chunk *pc = Chunk::get_head();
 
    while (  pc != nullptr
          && pc->isNotNullChunk())

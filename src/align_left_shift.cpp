@@ -22,15 +22,14 @@ void align_left_shift(void)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk      *start = nullptr;
+   Chunk      *start = Chunk::NullChunkPtr;
    AlignStack as;
 
    as.Start(255);
 
-   Chunk *pc = chunk_get_head();
+   Chunk *pc = Chunk::get_head();
 
-   while (  pc != nullptr
-         && pc->isNotNullChunk())
+   while (pc->isNotNullChunk())
    {
       if (chunk_is_newline(pc))
       {
@@ -43,25 +42,25 @@ void align_left_shift(void)
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->elided_text(copy));
       }
 
-      if (  start != nullptr
+      if (  start->isNotNullChunk()
          && ((pc->flags & PCF_IN_PREPROC) != (start->flags & PCF_IN_PREPROC)))
       {
          // a change in preproc status restarts the aligning
          as.Flush();
-         start = nullptr;
+         start = Chunk::NullChunkPtr;
       }
       else if (chunk_is_newline(pc))
       {
          as.NewLines(pc->nl_count);
       }
-      else if (  start != nullptr
+      else if (  start->isNotNullChunk()
               && pc->level < start->level)
       {
          // A drop in level restarts the aligning
          as.Flush();
-         start = nullptr;
+         start = Chunk::NullChunkPtr;
       }
-      else if (  start != nullptr
+      else if (  start->isNotNullChunk()
               && pc->level > start->level)
       {
          // Ignore any deeper levels when aligning
@@ -70,7 +69,7 @@ void align_left_shift(void)
       {
          // A semicolon at the same level flushes
          as.Flush();
-         start = nullptr;
+         start = Chunk::NullChunkPtr;
       }
       else if (  !pc->flags.test(PCF_IN_ENUM)
               && !pc->flags.test(PCF_IN_TYPEDEF)
@@ -120,7 +119,7 @@ void align_left_shift(void)
           */
          Chunk *prev = pc->get_prev();
 
-         if (  prev != nullptr
+         if (  prev->isNotNullChunk()
             && chunk_is_newline(prev))
          {
             log_rule_B("indent_columns");

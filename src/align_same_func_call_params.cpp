@@ -22,8 +22,8 @@ void align_same_func_call_params(void)
    LOG_FUNC_ENTRY();
 
    Chunk             *pc;
-   Chunk             *align_root = nullptr;
-   Chunk             *align_cur  = nullptr;
+   Chunk             *align_root = Chunk::NullChunkPtr;
+   Chunk             *align_cur  = Chunk::NullChunkPtr;
    size_t            align_len   = 0;
    size_t            span        = 3;
    size_t            thresh;
@@ -49,7 +49,7 @@ void align_same_func_call_params(void)
    LOG_FMT(LAS, "%s(%d): (3): span is %zu, thresh is %zu\n",
            __func__, __LINE__, span, thresh);
 
-   for (pc = chunk_get_head(); pc != nullptr && pc->isNotNullChunk(); pc = pc->get_next())
+   for (pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
    {
       if (chunk_is_newline(pc))
       {
@@ -75,7 +75,7 @@ void align_same_func_call_params(void)
          else
          {
             // if we drop below the brace level that started it, we are done
-            if (  align_root != nullptr
+            if (  align_root->isNotNullChunk()
                && align_root->brace_level > pc->brace_level)
             {
                LOG_FMT(LASFCP, "  ++ (drop) Ended with %zu fcns\n", align_len);
@@ -88,7 +88,7 @@ void align_same_func_call_params(void)
                   as_v.Flush();
                }
 
-               align_root = nullptr;
+               align_root = Chunk::NullChunkPtr;
             }
          }
          continue;
@@ -131,7 +131,7 @@ void align_same_func_call_params(void)
 
       add_str = nullptr;
 
-      if (align_root != nullptr)
+      if (align_root->isNotNullChunk())
       {
          // Issue # 1395
          // can only align functions on the same brace level
@@ -160,14 +160,14 @@ void align_same_func_call_params(void)
                as_v.Flush();
             }
 
-            align_root = nullptr;
+            align_root = Chunk::NullChunkPtr;
          }
       }
       LOG_FMT(LASFCP, "%s(%d):\n", __func__, __LINE__);
 
-      if (align_root == nullptr)
+      if (align_root->isNullChunk())
       {
-         LOG_FMT(LASFCP, "%s(%d):align_root is nullptr, Add pc '%s'\n", __func__, __LINE__, pc->text());
+         LOG_FMT(LASFCP, "%s(%d):align_root is null chunk, Add pc '%s'\n", __func__, __LINE__, pc->text());
          fcn_as.Add(pc);
          align_root      = align_fcn;
          align_root_name = align_fcn_name;

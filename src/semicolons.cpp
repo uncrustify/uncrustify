@@ -37,9 +37,10 @@ void remove_extra_semicolons(void)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *pc = chunk_get_head();
+   Chunk *pc = Chunk::get_head();
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->isNotNullChunk())
    {
       Chunk *next = chunk_get_next_nc_nnl(pc);
       Chunk *prev;

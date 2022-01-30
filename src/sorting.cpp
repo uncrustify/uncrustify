@@ -588,12 +588,11 @@ void sort_imports(void)
 
    prepare_categories();
 
-   Chunk *pc = chunk_get_head();
+   Chunk *pc = Chunk::get_head();
 
    log_rule_B("mod_sort_incl_import_grouping_enabled");
 
-   while (  pc != nullptr
-         && pc->isNotNullChunk())
+   while (pc->isNotNullChunk())
    {
       // Simple optimization to limit the sorting. Any MAX_LINES_TO_CHECK_AFTER_INCLUDE lines after last
       // import is seen are ignore from sorting.

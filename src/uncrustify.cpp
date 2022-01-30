@@ -1646,32 +1646,30 @@ static void do_source_file(const char *filename_in,
 
 static void add_file_header()
 {
-   if (!chunk_is_comment(chunk_get_head()))
+   if (!chunk_is_comment(Chunk::get_head()))
    {
       // TODO: detect the typical #ifndef FOO / #define FOO sequence
-      tokenize(cpd.file_hdr.data, chunk_get_head());
+      tokenize(cpd.file_hdr.data, Chunk::get_head());
    }
 }
 
 
 static void add_file_footer()
 {
-   Chunk *pc = chunk_get_tail();
+   Chunk *pc = Chunk::get_tail();
 
    // Back up if the file ends with a newline
-   if (  pc != nullptr
-      && pc->isNotNullChunk()
+   if (  pc->isNotNullChunk()
       && chunk_is_newline(pc))
    {
       pc = pc->get_prev();
    }
 
-   if (  pc != nullptr
-      && pc->isNotNullChunk()
+   if (  pc->isNotNullChunk()
       && (  !chunk_is_comment(pc)
          || !chunk_is_newline(pc->get_prev())))
    {
-      pc = chunk_get_tail();
+      pc = Chunk::get_tail();
 
       if (!chunk_is_newline(pc))
       {
@@ -1690,7 +1688,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
    Chunk *tmp;
    bool  do_insert;
 
-   for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_nc_nnl_np(pc))
+   for (pc = Chunk::get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next_nc_nnl_np(pc))
    {
       if (pc->type != type)
       {
@@ -1815,15 +1813,15 @@ static void add_func_header(c_token_t type, file_mem &fm)
 
       if (  (  ref == nullptr
             || ref->isNullChunk())
-         && !chunk_is_comment(chunk_get_head())
-         && get_chunk_parent_type(chunk_get_head()) == type)
+         && !chunk_is_comment(Chunk::get_head())
+         && get_chunk_parent_type(Chunk::get_head()) == type)
       {
          /**
           * In addition to testing for preceding semicolons, closing braces, etc.,
           * we need to also account for the possibility that the function declaration
           * or definition occurs at the very beginning of the file
           */
-         tokenize(fm.data, chunk_get_head());
+         tokenize(fm.data, Chunk::get_head());
       }
       else if (do_insert)
       {
@@ -1847,7 +1845,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
    Chunk *tmp;
    bool  do_insert;
 
-   for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_nc_nnl_np(pc))
+   for (pc = Chunk::get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next_nc_nnl_np(pc))
    {
       if (pc->type != type)
       {
@@ -1945,9 +1943,9 @@ static void uncrustify_start(const deque<int> &data)
    // Get the column for the fragment indent
    if (cpd.frag)
    {
-      Chunk *pc = chunk_get_head();
+      Chunk *pc = Chunk::get_head();
 
-      cpd.frag_cols = (pc != nullptr) ? pc->orig_col : 0;
+      cpd.frag_cols = pc->orig_col;
    }
 
    // Add the file header
@@ -2437,7 +2435,7 @@ void uncrustify_end()
 
    cpd.unc_stage = unc_stage_e::CLEANUP;
 
-   while ((pc = chunk_get_head()) != nullptr)
+   while ((pc = Chunk::get_head())->isNotNullChunk())
    {
       chunk_del(pc);
    }

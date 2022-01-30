@@ -415,14 +415,15 @@ static bool chunk_is_macro_reference(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   auto *next = chunk_get_head();
+   Chunk *next = Chunk::get_head();
 
    if (  (  language_is_set(LANG_CPP)
          || language_is_set(LANG_C))
       && chunk_is_token(pc, CT_WORD)
       && !pc->flags.test(PCF_IN_PREPROC))
    {
-      while (next != nullptr)
+      while (  next != nullptr
+            && next->isNotNullChunk())
       {
          if (  next->flags.test(PCF_IN_PREPROC)
             && std::strcmp(pc->str.c_str(), next->str.c_str()) == 0)

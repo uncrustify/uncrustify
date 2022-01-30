@@ -14,7 +14,7 @@ void parameter_pack_cleanup(void)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *pc = chunk_get_head();
+   Chunk *pc = Chunk::get_head();
 
    while (  pc != nullptr
          && pc->isNotNullChunk())
