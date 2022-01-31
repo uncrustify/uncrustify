@@ -1656,34 +1656,25 @@ indent_paren_after_func_decl;
 extern Option<bool>
 indent_paren_after_func_call;
 
-// Whether to ignore the indentation of a comma inside braces.
-extern Option<bool>
-indent_ignore_comma_brace;
-
-// Whether to indent a comma when inside a brace.
-// If true, aligns under the open brace.
-// Requires indent_ignore_comma_brace=false.
-extern Option<bool>
+// How to indent a comma when inside braces.
+//  0: Indent by one level (default)
+//  1: Align under the open brace
+// -1: Preserve original indentation
+extern BoundedOption<signed, -1, 2>
 indent_comma_brace;
 
-// Whether to ignore the indentation of a comma inside parentheses.
-extern Option<bool>
-indent_ignore_comma_paren;
-
-// Whether to indent a comma when inside a parenthesis.
-// If true, aligns under the open parenthesis.
-// Requires indent_ignore_comma_paren=false.
-extern Option<bool>
+// How to indent a comma when inside parentheses.
+//  0: Indent by one level (default)
+//  1: Align under the open parenthesis
+// -1: Preserve original indentation
+extern BoundedOption<signed, -1, 2>
 indent_comma_paren;
 
-// Whether to ignore the indentation of a Boolean operator inside parentheses.
-extern Option<bool>
-indent_ignore_bool_paren;
-
-// Whether to indent a Boolean operator when inside a parenthesis.
-// If true, aligns under the open parenthesis.
-// Requires indent_ignore_bool_paren=false.
-extern Option<bool>
+// How to indent a Boolean operator when inside parentheses.
+//  0: Indent by one level (default)
+//  1: Align under the open parenthesis
+// -1: Preserve original indentation
+extern BoundedOption<signed, -1, 2>
 indent_bool_paren;
 
 // Whether to ignore the indentation of an arithmetic operator.
@@ -1696,7 +1687,7 @@ extern Option<bool>
 indent_semicolon_for_paren;
 
 // Whether to align the first expression to following ones
-// if indent_ignore_bool_paren=false and indent_bool_paren=true.
+// if indent_bool_paren=1.
 extern Option<bool>
 indent_first_bool_expr;
 
