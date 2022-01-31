@@ -1660,21 +1660,21 @@ indent_paren_after_func_call;
 //  0: Indent by one level (default)
 //  1: Align under the open brace
 // -1: Preserve original indentation
-extern BoundedOption<signed, -1, 2>
+extern BoundedOption<signed, -1, 1>
 indent_comma_brace;
 
 // How to indent a comma when inside parentheses.
 //  0: Indent by one level (default)
 //  1: Align under the open parenthesis
 // -1: Preserve original indentation
-extern BoundedOption<signed, -1, 2>
+extern BoundedOption<signed, -1, 1>
 indent_comma_paren;
 
 // How to indent a Boolean operator when inside parentheses.
 //  0: Indent by one level (default)
 //  1: Align under the open parenthesis
 // -1: Preserve original indentation
-extern BoundedOption<signed, -1, 2>
+extern BoundedOption<signed, -1, 1>
 indent_bool_paren;
 
 // Whether to ignore the indentation of an arithmetic operator.
