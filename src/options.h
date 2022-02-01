@@ -1456,9 +1456,12 @@ indent_var_def_blk;
 extern Option<bool>
 indent_var_def_cont;
 
-// Whether to indent continued shift expressions ('<<' and '>>') instead of
-// aligning. Set align_left_shift=false when enabling this.
-extern Option<bool>
+// How to indent continued shift expressions ('<<' and '>>').
+// Set align_left_shift=false when using this.
+//  0: Align shift operators instead of indenting them (default)
+//  1: Indent by one level
+// -1: Preserve original indentation
+extern BoundedOption<signed, -1, 1>
 indent_shift;
 
 // Whether to force indentation of function definitions to start in column 1.

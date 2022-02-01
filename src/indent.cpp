@@ -3301,7 +3301,7 @@ void indent_text(void)
 
       log_rule_B("indent_shift");
 
-      if (  options::indent_shift()
+      if (  options::indent_shift() == 1
          && !pc->flags.test(PCF_IN_ENUM)
          && get_chunk_parent_type(pc) != CT_OPERATOR
          && pc->type != CT_COMMENT
@@ -3902,6 +3902,18 @@ void indent_text(void)
                indent_column_set(pc->orig_col);
             }
             LOG_FMT(LINDENT, "%s(%d): %zu] arith => %zu [%s]\n",
+                    __func__, __LINE__, pc->orig_line, indent_column, pc->text());
+            reindent_line(pc, indent_column);
+         }
+         else if (chunk_is_token(pc, CT_SHIFT))
+         {
+            log_rule_B("indent_shift");
+
+            if (options::indent_shift() == -1)
+            {
+               indent_column_set(pc->orig_col);
+            }
+            LOG_FMT(LINDENT, "%s(%d): %zu] shift => %zu [%s]\n",
                     __func__, __LINE__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, indent_column);
          }
