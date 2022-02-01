@@ -1689,6 +1689,11 @@ indent_ignore_arith;
 extern Option<bool>
 indent_semicolon_for_paren;
 
+// Whether to ignore the indentation of a semicolon outside of a 'for'
+// statement.
+extern Option<bool>
+indent_ignore_semicolon;
+
 // Whether to align the first expression to following ones
 // if indent_bool_paren=1.
 extern Option<bool>
