@@ -506,6 +506,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       else
       {
          set_chunk_type(pc, CT_QUALIFIER);
+         return;
       }
    }
 
@@ -515,11 +516,13 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          || chunk_is_token(pc, CT_GETSET_EMPTY)))
    {
       flag_parens(prev, PCF_NONE, CT_NONE, CT_GETSET, false);
+      return;
    }
 
    if (chunk_is_token(pc, CT_ASM))
    {
       flag_asm(pc);
+      return;
    }
 
    // clang stuff - A new derived type is introduced to C and, by extension, Objective-C, C++, and Objective-C++
@@ -531,6 +534,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             || pc->flags.test(PCF_IN_PREPROC))
          {
             handle_oc_block_literal(pc);
+            return;
          }
       }
    }
@@ -546,6 +550,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             && chunk_is_str(next, "(", 1))
          {
             handle_oc_message_decl(pc);
+            return;
          }
       }
 
@@ -562,11 +567,13 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       if (chunk_is_token(pc, CT_OC_PROPERTY))
       {
          handle_oc_property_decl(pc);
+         return;
       }
 
       if (chunk_is_token(pc, CT_OC_AVAILABLE))
       {
          handle_oc_available(pc);
+         return;
       }
    }
 
@@ -578,6 +585,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          && chunk_is_token(pc, CT_SQUARE_OPEN))
       {
          handle_cs_square_stmt(pc);
+         return;
       }
 
       if (  chunk_is_token(next, CT_BRACE_OPEN)
@@ -587,12 +595,14 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             || chunk_is_token(pc, CT_WORD)))
       {
          handle_cs_property(next);
+         return;
       }
 
       if (  chunk_is_token(pc, CT_SQUARE_CLOSE)
          && chunk_is_token(next, CT_WORD))
       {
          handle_cs_array_type(pc);
+         return;
       }
 
       if (  (  chunk_is_token(pc, CT_LAMBDA)
@@ -600,6 +610,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          && chunk_is_token(next, CT_BRACE_OPEN))
       {
          set_paren_parent(next, pc->type);
+         return;
       }
 
       if (  chunk_is_token(pc, CT_WHEN)
@@ -607,6 +618,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          && pc->get_next()->type != CT_SPAREN_OPEN)
       {
          set_chunk_type(pc, CT_WORD);
+         return;
       }
    }
 
@@ -615,6 +627,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       && chunk_is_token(next, CT_BRACE_OPEN))
    {
       set_paren_parent(next, pc->type);
+      return;
    }
 
    if (chunk_is_token(pc, CT_NEW))
@@ -638,6 +651,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             set_chunk_parent(ts, pc->type);
          }
       }
+      return;
    }
    LOG_FMT(LFCNR, "%s(%d): pc is '%s' %s\n",
            __func__, __LINE__,
@@ -678,12 +692,14 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                break;
             }
          }
+         return;
       }
    }
 
    if (chunk_is_token(pc, CT_ASSERT))
    {
       handle_java_assert(pc);
+      return;
    }
 
    if (chunk_is_token(pc, CT_ANNOTATION))
@@ -694,6 +710,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       {
          set_paren_parent(tmp, CT_ANNOTATION);
       }
+      return;
    }
 
    if (  chunk_is_token(pc, CT_SIZEOF)
@@ -705,6 +722,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       {
          set_chunk_parent(tmp, CT_SIZEOF);
       }
+      return;
    }
 
    if (  chunk_is_token(pc, CT_DECLTYPE)
@@ -734,6 +752,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             }
          }
       }
+      return;
    }
 
    // A [] in C# and D only follows a type
@@ -749,6 +768,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       {
          chunk_flags_set(next, PCF_VAR_1ST_DEF);
       }
+      return;
    }
 
    if (  chunk_is_token(pc, CT_SQL_EXEC)
@@ -756,17 +776,20 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       || chunk_is_token(pc, CT_SQL_END))
    {
       mark_exec_sql(pc);
+      return;
    }
 
    if (chunk_is_token(pc, CT_PROTO_WRAP))
    {
       handle_proto_wrap(pc);
+      return;
    }
 
    // Handle the typedef
    if (chunk_is_token(pc, CT_TYPEDEF))
    {
       fix_typedef(pc);
+      return;
    }
 
    if (  chunk_is_class_enum_struct_union(pc)
@@ -774,6 +797,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    {
       EnumStructUnionParser parser;
       parser.parse(pc);
+      return;
    }
 
    if (chunk_is_token(pc, CT_EXTERN))
@@ -798,6 +822,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             set_paren_parent(tmp, CT_EXTERN);
          }
       }
+      return;
    }
 
    if (chunk_is_token(pc, CT_TEMPLATE))
@@ -810,6 +835,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       {
          handle_cpp_template(pc);
       }
+      return;
    }
 
    if (  chunk_is_token(pc, CT_WORD)
@@ -817,17 +843,20 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       && get_chunk_parent_type(next) == CT_TEMPLATE)
    {
       mark_template_func(pc, next);
+      return;
    }
 
    if (  chunk_is_token(pc, CT_SQUARE_CLOSE)
       && chunk_is_token(next, CT_PAREN_OPEN))
    {
       flag_parens(next, PCF_NONE, CT_FPAREN_OPEN, CT_NONE, false);
+      return;
    }
 
    if (chunk_is_token(pc, CT_TYPE_CAST))
    {
       fix_type_cast(pc);
+      return;
    }
 
    if (  get_chunk_parent_type(pc) == CT_ASSIGN
@@ -836,11 +865,13 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    {
       // Mark everything in here as in assign
       flag_parens(pc, PCF_IN_ARRAY_ASSIGN, pc->type, CT_NONE, false);
+      return;
    }
 
    if (chunk_is_token(pc, CT_D_TEMPLATE))
    {
       set_paren_parent(next, pc->type);
+      return;
    }
 
    /*
@@ -999,6 +1030,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    {
       set_chunk_type(pc, CT_C99_MEMBER);
       set_chunk_parent(next, CT_C99_MEMBER);
+      return;
    }
 
    // Mark function parens and braces
@@ -1043,6 +1075,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             }
          }
       }
+      return;
    }
 
    // Mark the parameters in catch()
@@ -1050,6 +1083,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       && chunk_is_token(next, CT_SPAREN_OPEN))
    {
       fix_fcn_def_params(next);
+      return;
    }
 
    if (  chunk_is_token(pc, CT_THROW)
@@ -1061,6 +1095,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       {
          set_paren_parent(next, CT_THROW);
       }
+      return;
    }
 
    // Mark the braces in: "for_each_entry(xxx) { }"
@@ -1074,6 +1109,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       LOG_FMT(LFCN, "%s(%d): (3) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, text() '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
       set_paren_parent(pc, CT_FUNC_CALL);
+      return;
    }
 
    /*
@@ -1099,6 +1135,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       {
          mark_function_type(pc);
       }
+      return;
    }
 
    if (chunk_is_token(pc, CT_OC_CLASS))
