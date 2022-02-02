@@ -3847,23 +3847,37 @@ void indent_text(void)
                     __func__, __LINE__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, indent_column);
          }
-         else if (  pc->flags.test(PCF_IN_FOR)
-                 && options::indent_semicolon_for_paren()
-                 && chunk_is_token(pc, CT_SEMICOLON))
+         else if (chunk_is_token(pc, CT_SEMICOLON))
          {
-            log_rule_B("indent_semicolon_for_paren");
-            indent_column_set(frm.top().pc->column);
-
-            log_rule_B("indent_first_for_expr");
-
-            if (options::indent_first_for_expr())
+            if (  pc->flags.test(PCF_IN_FOR)
+               && options::indent_semicolon_for_paren())
             {
-               reindent_line(frm.top().pc->get_next(),
-                             indent_column + pc->len() + 1);
+               log_rule_B("indent_semicolon_for_paren");
+               indent_column_set(frm.top().pc->column);
+
+               log_rule_B("indent_first_for_expr");
+
+               if (options::indent_first_for_expr())
+               {
+                  reindent_line(frm.top().pc->get_next(),
+                                indent_column + pc->len() + 1);
+               }
+               LOG_FMT(LINDENT, "%s(%d): %zu] SEMICOLON => %zu [%s]\n",
+                       __func__, __LINE__, pc->orig_line, indent_column, pc->text());
+               reindent_line(pc, indent_column);
             }
-            LOG_FMT(LINDENT, "%s(%d): %zu] SEMICOLON => %zu [%s]\n",
-                    __func__, __LINE__, pc->orig_line, indent_column, pc->text());
-            reindent_line(pc, indent_column);
+            else
+            {
+               log_rule_B("indent_ignore_semicolon");
+
+               if (options::indent_ignore_semicolon())
+               {
+                  indent_column_set(pc->orig_col);
+               }
+               LOG_FMT(LINDENT, "%s(%d): %zu] semicolon => %zu [%s]\n",
+                       __func__, __LINE__, pc->orig_line, indent_column, pc->text());
+               reindent_line(pc, indent_column);
+            }
          }
          else if (chunk_is_token(pc, CT_BOOL))
          {
