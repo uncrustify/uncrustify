@@ -447,3 +447,7 @@
 10053  c/Issue_3476.cfg                           c/Issue_3476.c
 10054  c/Issue_3480.cfg                           c/Issue_3480.c
 10055  c/Issue_3493.cfg                           c/Issue_3493.c
+10056  c/sp_enum_brace-i.cfg                      c/Issue_3496.h
+10057  c/sp_enum_brace-a.cfg                      c/Issue_3496.h
+10058  c/sp_enum_brace-r.cfg                      c/Issue_3496.h
+10059  c/sp_enum_brace-f.cfg                      c/Issue_3496.h
