@@ -2272,8 +2272,9 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_inside_paren());
    }
 
-   if (  chunk_is_token(first, CT_SQUARE_OPEN)
-      && chunk_is_token(second, CT_SQUARE_CLOSE))
+   if (  chunk_is_token(first, CT_TSQUARE)                           // c-sharp_10000
+      || (  chunk_is_token(first, CT_SQUARE_OPEN)                    // cpp_30220
+         && chunk_is_token(second, CT_SQUARE_CLOSE)))
    {
       // Add or remove space inside '[]'.
       log_rule("sp_inside_square_empty");
