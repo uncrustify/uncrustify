@@ -977,6 +977,8 @@ int main(int argc, char *argv[])
               __func__, __LINE__, fm.raw.size(), fm.data.size(),
               language_name_from_flags(cpd.lang_flags));
 
+      // Issue #3427
+      init_keywords_for_language();
       uncrustify_file(fm, stdout, parsed_file, dump_file);
    }
    else if (source_file != nullptr)
