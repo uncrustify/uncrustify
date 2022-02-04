@@ -1084,3 +1084,4 @@
 60074  cpp/Issue_3284.cfg                                   cpp/Issue_3284.cpp
 60075  cpp/Issue_3294.cfg                                   cpp/Issue_3294.cpp
 60076  cpp/indent_ignore_before_class_colon-t.cfg           cpp/indent_ctor_init.cpp
+60077  cpp/indent_ignore_before_constr_colon-t.cfg          cpp/indent_ctor_init.cpp

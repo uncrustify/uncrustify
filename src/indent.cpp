@@ -2465,51 +2465,60 @@ void indent_text(void)
                }
             }
          }
-         else if (  options::indent_constr_colon()
-                 && chunk_is_token(pc, CT_CONSTR_COLON))
+         else if (chunk_is_token(pc, CT_CONSTR_COLON))
          {
-            log_rule_B("indent_constr_colon");
-            Chunk *prev = pc->get_prev();
-
-            if (chunk_is_newline(prev))
+            if (options::indent_ignore_before_constr_colon())
             {
-               log_rule_B("indent_ctor_init_following");
-               frm.top().indent += options::indent_ctor_init_following();
-               log_indent();
-            }
-            // TODO: Create a dedicated indent_constr_on_colon?
-            log_rule_B("indent_class_on_colon");
-
-            if (options::indent_ctor_init() != 0)
-            {
-               log_rule_B("indent_ctor_init");
-               /*
-                * If the std::max() calls were specialized with size_t (the type of the underlying variable),
-                * they would never actually do their job, because size_t is unsigned and therefore even
-                * a "negative" result would be always greater than zero.
-                * Using ptrdiff_t (a standard signed type of the same size as size_t) in order to avoid that.
-                */
-               frm.top().indent = std::max<ptrdiff_t>(frm.top().indent + options::indent_ctor_init(), 0);
-               log_indent();
-               frm.top().indent_tmp = std::max<ptrdiff_t>(frm.top().indent_tmp + options::indent_ctor_init(), 0);
-               frm.top().indent_tab = std::max<ptrdiff_t>(frm.top().indent_tab + options::indent_ctor_init(), 0);
-               log_indent_tmp();
+               log_rule_B("indent_ignore_before_constr_colon");
+               frm.top().indent_tmp = pc->orig_col;
                indent_column_set(frm.top().indent_tmp);
             }
-            else if (options::indent_class_on_colon())
-            {
-               frm.top().indent = pc->column;
-               log_indent();
-            }
-            else
-            {
-               Chunk *next = pc->get_next();
 
-               if (  next->isNotNullChunk()
-                  && !chunk_is_newline(next))
+            if (options::indent_constr_colon())
+            {
+               log_rule_B("indent_constr_colon");
+               Chunk *prev = pc->get_prev();
+
+               if (chunk_is_newline(prev))
                {
-                  frm.top().indent = next->column;
+                  log_rule_B("indent_ctor_init_following");
+                  frm.top().indent += options::indent_ctor_init_following();
                   log_indent();
+               }
+               // TODO: Create a dedicated indent_constr_on_colon?
+               log_rule_B("indent_class_on_colon");
+
+               if (options::indent_ctor_init() != 0)
+               {
+                  log_rule_B("indent_ctor_init");
+                  /*
+                   * If the std::max() calls were specialized with size_t (the type of the underlying variable),
+                   * they would never actually do their job, because size_t is unsigned and therefore even
+                   * a "negative" result would be always greater than zero.
+                   * Using ptrdiff_t (a standard signed type of the same size as size_t) in order to avoid that.
+                   */
+                  frm.top().indent = std::max<ptrdiff_t>(frm.top().indent + options::indent_ctor_init(), 0);
+                  log_indent();
+                  frm.top().indent_tmp = std::max<ptrdiff_t>(frm.top().indent_tmp + options::indent_ctor_init(), 0);
+                  frm.top().indent_tab = std::max<ptrdiff_t>(frm.top().indent_tab + options::indent_ctor_init(), 0);
+                  log_indent_tmp();
+                  indent_column_set(frm.top().indent_tmp);
+               }
+               else if (options::indent_class_on_colon())
+               {
+                  frm.top().indent = pc->column;
+                  log_indent();
+               }
+               else
+               {
+                  Chunk *next = pc->get_next();
+
+                  if (  next->isNotNullChunk()
+                     && !chunk_is_newline(next))
+                  {
+                     frm.top().indent = next->column;
+                     log_indent();
+                  }
                }
             }
          }

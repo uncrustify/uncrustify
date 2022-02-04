@@ -1156,6 +1156,9 @@ indent_ignore_before_class_colon = false        # true/false
 # the colon (see pos_class_colon and nl_class_colon)
 indent_before_class_colon       = 0        # number
 
+# Whether to ignore indent for a leading class initializer colon.
+indent_ignore_before_constr_colon = false        # true/false
+
 # Whether to indent the stuff after a leading base class colon.
 indent_class_colon              = false    # true/false
 

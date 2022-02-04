@@ -1431,6 +1431,10 @@ indent_class_colon;
 extern Option<bool>
 indent_class_on_colon;
 
+// Whether to ignore indent for a leading class initializer colon.
+extern Option<bool>
+indent_ignore_before_constr_colon;
+
 // Whether to indent the stuff after a leading class initializer colon.
 extern Option<bool>
 indent_constr_colon;
