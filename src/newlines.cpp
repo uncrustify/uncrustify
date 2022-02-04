@@ -1634,7 +1634,7 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
             else
             {
                LOG_FMT(LNEWLINE, "%s(%d): have_pre_vbrace_nl is FALSE\n", __func__, __LINE__);
-               prev = chunk_get_prev_nnl(next);
+               prev = next->get_prev_nnl();
                LOG_FMT(LNEWLINE, "%s(%d): prev->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
                        __func__, __LINE__, prev->text(), get_token_name(prev->type), prev->orig_line, prev->orig_col);
                pc = next->get_next_nl();
@@ -2270,7 +2270,7 @@ static void newlines_brace_pair(Chunk *br_open)
 
             if (options::nl_namespace_two_to_one_liner())
             {
-               Chunk *prev = chunk_get_prev_nnl(br_open);
+               Chunk *prev = br_open->get_prev_nnl();
                newline_del_between(prev, br_open);
             }
             /* Below code is to support conversion of 2 liner to 4 liners
@@ -3393,7 +3393,7 @@ static void newline_func_def_or_call(Chunk *start)
    // and fix up the close parenthesis
    if (chunk_is_token(pc, CT_FPAREN_CLOSE))
    {
-      Chunk *prev = chunk_get_prev_nnl(pc);
+      Chunk *prev = pc->get_prev_nnl();
 
       if (  chunk_is_not_token(prev, CT_FPAREN_OPEN)
          && !is_call)
@@ -4021,7 +4021,7 @@ void newlines_cleanup_braces(bool first)
             if (pc->level == pc->brace_level)
             {
                log_rule_B("nl_class_brace");
-               newlines_do_else(chunk_get_prev_nnl(pc), options::nl_class_brace());
+               newlines_do_else(pc->get_prev_nnl(), options::nl_class_brace());
             }
             break;
          }
@@ -4047,12 +4047,12 @@ void newlines_cleanup_braces(bool first)
                      if (chunk_is_token(tmp, CT_OC_INTF))
                      {
                         log_rule_B("nl_oc_interface_brace");
-                        newlines_do_else(chunk_get_prev_nnl(pc), options::nl_oc_interface_brace());
+                        newlines_do_else(pc->get_prev_nnl(), options::nl_oc_interface_brace());
                      }
                      else
                      {
                         log_rule_B("nl_oc_implementation_brace");
-                        newlines_do_else(chunk_get_prev_nnl(pc), options::nl_oc_implementation_brace());
+                        newlines_do_else(pc->get_prev_nnl(), options::nl_oc_implementation_brace());
                      }
                      break;
                   }
@@ -4071,9 +4071,9 @@ void newlines_cleanup_braces(bool first)
                nl_create_list_liner(pc);
                break;
             }
-            Chunk *prev = chunk_get_prev_nnl(pc);
+            Chunk *prev = pc->get_prev_nnl();
 
-            if (  prev != nullptr
+            if (  prev->isNotNullChunk()
                && (  prev->type == CT_TYPE
                   || prev->type == CT_WORD
                   || prev->type == CT_ASSIGN                      // Issue #2957
@@ -4291,7 +4291,7 @@ void newlines_cleanup_braces(bool first)
             && options::nl_type_brace_init_lst_close() != IARF_IGNORE)
          {
             // Handle unnamed temporary direct-list-initialization
-            newline_iarf_pair(chunk_get_prev_nnl(pc), pc,
+            newline_iarf_pair(pc->get_prev_nnl(), pc,
                               options::nl_type_brace_init_lst_close(), true);
          }
          // blanks before a close brace
@@ -4308,7 +4308,7 @@ void newlines_cleanup_braces(bool first)
                log_rule_B("nl_inside_empty_func");
 
                if (  options::nl_inside_empty_func() > 0
-                  && chunk_is_token(chunk_get_prev_nnl(pc), CT_BRACE_OPEN)
+                  && chunk_is_token(pc->get_prev_nnl(), CT_BRACE_OPEN)
                   && (  get_chunk_parent_type(pc) == CT_FUNC_CLASS_DEF
                      || get_chunk_parent_type(pc) == CT_FUNC_DEF))
                {
@@ -4962,7 +4962,7 @@ void newlines_cleanup_braces(bool first)
          // Issue #1124
          if (pc->parent_type != CT_FUNC_DEF)
          {
-            newline_iarf(chunk_get_prev_nnl(pc), options::nl_before_member());
+            newline_iarf(pc->get_prev_nnl(), options::nl_before_member());
             log_rule_B("nl_before_member");
             newline_iarf(pc, options::nl_after_member());
             log_rule_B("nl_after_member");
@@ -5249,8 +5249,8 @@ void newlines_squeeze_ifdef(void)
                      pnl->nl_count = 1;
                      MARK_CHANGE();
 
-                     tmp1 = chunk_get_prev_nnl(pnl);
-                     tmp2 = chunk_get_prev_nnl(nnl);
+                     tmp1 = pnl->get_prev_nnl();
+                     tmp2 = nnl->get_prev_nnl();
 
                      LOG_FMT(LNEWLINE, "%s(%d): moved from after line %zu to after %zu\n",
                              __func__, __LINE__, tmp1->orig_line, tmp2->orig_line);
@@ -5262,7 +5262,7 @@ void newlines_squeeze_ifdef(void)
                {
                   if (nnl->nl_count > 1)
                   {
-                     tmp1 = chunk_get_prev_nnl(nnl);
+                     tmp1 = nnl->get_prev_nnl();
                      LOG_FMT(LNEWLINE, "%s(%d): trimmed newlines after line %zu from %zu\n",
                              __func__, __LINE__, tmp1->orig_line, nnl->nl_count);
                      nnl->nl_count = 1;

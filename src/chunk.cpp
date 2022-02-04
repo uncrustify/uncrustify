@@ -808,6 +808,18 @@ Chunk *Chunk::get_next_nnl(scope_e scope)
 }
 
 
+Chunk *Chunk::get_prev_nnl(scope_e scope)
+{
+   Chunk *ret = chunk_search(this, chunk_is_newline, scope, direction_e::BACKWARD, false);
+
+   if (ret == nullptr)
+   {
+      return(Chunk::NullChunkPtr);
+   }
+   return(ret);
+}
+
+
 Chunk *Chunk::get_next_nc(scope_e scope)
 {
    Chunk *ret = chunk_search(this, chunk_is_comment, scope, direction_e::FORWARD, false);
@@ -829,12 +841,6 @@ Chunk *Chunk::get_prev_nc(scope_e scope)
       return(Chunk::NullChunkPtr);
    }
    return(ret);
-}
-
-
-Chunk *chunk_get_prev_nnl(Chunk *cur, scope_e scope)
-{
-   return(chunk_search(cur, chunk_is_newline, scope, direction_e::BACKWARD, false));
 }
 
 

@@ -2288,7 +2288,7 @@ void indent_text(void)
             // comments before 'case' need to be aligned with the 'case'
             Chunk *pct = pc;
 
-            while (  ((pct = chunk_get_prev_nnl(pct)) != nullptr)
+            while (  ((pct = pct->get_prev_nnl())->isNotNullChunk())
                   && chunk_is_comment(pct))
             {
                Chunk *t2 = pct->get_prev();
@@ -2379,7 +2379,7 @@ void indent_text(void)
             // unless it is a Doxygen comment
             Chunk *pct = pc;
 
-            while (  ((pct = chunk_get_prev_nnl(pct)) != nullptr)
+            while (  ((pct = pct->get_prev_nnl())->isNotNullChunk())
                   && chunk_is_comment(pct)
                   && !chunk_is_Doxygen_comment(pct))
             {
