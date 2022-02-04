@@ -93,7 +93,7 @@ public:
     *
     * @param scope code region to search in
     *
-    * @return pointer to next chunk or null Chunk if no chunk was found
+    * @return pointer to next chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *get_next(scope_e scope = scope_e::ALL) const;
 
@@ -103,7 +103,7 @@ public:
     *
     * @param scope code region to search in
     *
-    * @return pointer to previous chunk or null Chunk if no chunk was found
+    * @return pointer to previous chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *get_prev(scope_e scope = scope_e::ALL) const;
 
@@ -113,7 +113,7 @@ public:
     *
     * @param scope code region to search in
     *
-    * @return pointer to next newline chunk or null Chunk if no chunk was found
+    * @return pointer to next newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
    // TODO make it a const member
    Chunk *get_next_nl(scope_e scope = scope_e::ALL);
@@ -124,10 +124,21 @@ public:
     *
     * @param scope code region to search in
     *
-    * @return pointer to prev newline chunk or null Chunk if no chunk was found
+    * @return pointer to prev newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
    // TODO make it a const member
    Chunk *get_prev_nl(scope_e scope = scope_e::ALL);
+
+
+   /**
+    * @brief returns the next non-newline chunk
+    *
+    * @param scope code region to search in
+    *
+    * @return pointer to next non-newline chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   // TODO make it a const member
+   Chunk *get_next_nnl(scope_e scope = scope_e::ALL);
 
 
    /**
@@ -271,15 +282,6 @@ Chunk *chunk_first_on_line(Chunk *pc);
 
 //! check if a given chunk is the last on its line
 bool chunk_is_last_on_line(Chunk *pc);
-
-
-/**
- * Gets the next non-NEWLINE
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-Chunk *chunk_get_next_nnl(Chunk *cur, scope_e scope = scope_e::ALL);
 
 
 /**

@@ -896,8 +896,8 @@ void newlines_sparens()
       {
          continue;
       }
-      Chunk *sparen_content_start = chunk_get_next_nnl(sparen_open);
-      Chunk *sparen_content_end   = chunk_get_prev_nnl(sparen_close);
+      Chunk *sparen_content_start = sparen_open->get_next_nnl();
+      Chunk *sparen_content_end   = sparen_close->get_prev_nnl();
       bool  is_multiline          = (
          sparen_content_start != sparen_content_end
                                     && !are_chunks_in_same_line(sparen_content_start, sparen_content_end));
@@ -1562,22 +1562,20 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
    // don't do anything with it if the next non newline chunk is a closing brace
    if (nl_opt & IARF_ADD)
    {
-      Chunk *next;
-      Chunk *nextNNL = chunk_get_next_nnl(pc);
+      Chunk *next = pc->get_next_nnl();
 
       do
       {
-         if (nextNNL == nullptr)
+         if (next->isNullChunk())
          {
             return;
          }
 
-         if (chunk_is_not_token(nextNNL, CT_VBRACE_CLOSE))
+         if (chunk_is_not_token(next, CT_VBRACE_CLOSE))
          {
-            next = nextNNL;
             break;
          }
-         nextNNL = chunk_get_next_nnl(nextNNL);
+         next = next->get_next_nnl();
       } while (true);
 
       LOG_FMT(LNEWLINE, "%s(%d): next->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
@@ -2222,7 +2220,7 @@ static bool collapse_empty_body(Chunk *br_open)
    log_rule_B("nl_collapse_empty_body");
 
    if (  !options::nl_collapse_empty_body()
-      || !chunk_is_token(chunk_get_next_nnl(br_open), CT_BRACE_CLOSE))
+      || !chunk_is_token(br_open->get_next_nnl(), CT_BRACE_CLOSE))
    {
       return(false);
    }
@@ -2536,7 +2534,7 @@ static void newlines_brace_pair(Chunk *br_open)
          log_rule_B("nl_inside_namespace");
 
          if (  options::nl_inside_empty_func() > 0
-            && chunk_is_token(chunk_get_next_nnl(br_open), CT_BRACE_CLOSE)
+            && chunk_is_token(br_open->get_next_nnl(), CT_BRACE_CLOSE)
             && (  get_chunk_parent_type(br_open) == CT_FUNC_CLASS_DEF
                || get_chunk_parent_type(br_open) == CT_FUNC_DEF))
          {
@@ -2802,7 +2800,9 @@ static void newline_iarf_pair(Chunk *before, Chunk *after, iarf_e av, bool check
    log_func_stack(LNEWLINE, "CallStack:");
 
    if (  before == nullptr
+      || before == Chunk::NullChunkPtr
       || after == nullptr
+      || after == Chunk::NullChunkPtr
       || chunk_is_token(after, CT_IGNORED))
    {
       return;
@@ -2843,7 +2843,12 @@ void newline_iarf(Chunk *pc, iarf_e av)
 
    LOG_FMT(LNFD, "%s(%d): ", __func__, __LINE__);
    log_func_stack(LNFD, "CallStack:");
-   Chunk *after = chunk_get_next_nnl(pc);
+   Chunk *after = Chunk::NullChunkPtr;
+
+   if (pc != nullptr)
+   {
+      after = pc->get_next_nnl();
+   }
 
    if (  chunk_is_token(pc, CT_FPAREN_OPEN)                         // Issue #2914
       && get_chunk_parent_type(pc) == CT_FUNC_CALL
@@ -4124,10 +4129,9 @@ void newlines_cleanup_braces(bool first)
                newline_iarf_pair(pc, next, options::nl_brace_brace());
             }
          }
-         Chunk *next = chunk_get_next_nnl(pc);
+         Chunk *next = pc->get_next_nnl();
 
-         if (  next == nullptr
-            || next->isNullChunk())
+         if (next->isNullChunk())
          {
             // do nothing
          }
@@ -4147,7 +4151,7 @@ void newlines_cleanup_braces(bool first)
             if (get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST)
             {
                log_rule_B("nl_type_brace_init_lst_open");
-               newline_iarf_pair(pc, chunk_get_next_nnl(pc),
+               newline_iarf_pair(pc, pc->get_next_nnl(),
                                  options::nl_type_brace_init_lst_open(), true);
             }
             // Handle nl_after_brace_open
@@ -4561,7 +4565,7 @@ void newlines_cleanup_braces(bool first)
       }
       else if (chunk_is_token(pc, CT_CASE_COLON))
       {
-         Chunk *next = chunk_get_next_nnl(pc);
+         Chunk *next = pc->get_next_nnl();
 
          log_rule_B("nl_case_colon_brace");
 
@@ -6633,7 +6637,7 @@ void annotations_newlines(void)
    Chunk *pc = Chunk::get_head();
 
    while (  (pc = chunk_get_next_type(pc, CT_ANNOTATION, -1)) != nullptr
-         && (next = chunk_get_next_nnl(pc)) != nullptr)
+         && (next = pc->get_next_nnl())->isNotNullChunk())
    {
       // find the end of this annotation
       if (chunk_is_paren_open(next))
@@ -6657,7 +6661,7 @@ void annotations_newlines(void)
       prev = ae->get_prev();             // Issue #1845
       LOG_FMT(LANNOT, "%s(%d): prev->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
               __func__, __LINE__, prev->orig_line, prev->orig_col, prev->text());
-      next = chunk_get_next_nnl(ae);
+      next = ae->get_next_nnl();
 
       if (chunk_is_token(next, CT_ANNOTATION))
       {
