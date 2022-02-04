@@ -2424,12 +2424,20 @@ void indent_text(void)
          frm.top().indent_tab = frm.top().indent;
          log_indent_tmp();
 
-         if (  options::indent_before_class_colon() != 0
-            && chunk_is_token(pc, CT_CLASS_COLON))
+         if (chunk_is_token(pc, CT_CLASS_COLON))
          {
-            log_rule_B("indent_before_class_colon");
-            frm.top().indent_tmp = std::max<ptrdiff_t>(frm.top().indent_tmp + options::indent_before_class_colon(), 0);
-            log_indent_tmp();
+            if (options::indent_ignore_before_class_colon())
+            {
+               log_rule_B("indent_ignore_before_class_colon");
+               frm.top().indent_tmp = pc->orig_col;
+               log_indent_tmp();
+            }
+            else if (options::indent_before_class_colon() != 0)
+            {
+               log_rule_B("indent_before_class_colon");
+               frm.top().indent_tmp = std::max<ptrdiff_t>(frm.top().indent_tmp + options::indent_before_class_colon(), 0);
+               log_indent_tmp();
+            }
          }
          indent_column_set(frm.top().indent_tmp);
 
