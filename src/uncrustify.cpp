@@ -1784,7 +1784,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
             if (  tmp != nullptr
                && get_chunk_parent_type(tmp) == CT_PP_IF)
             {
-               tmp = chunk_get_prev_nnl(tmp);
+               tmp = tmp->get_prev_nnl();
 
                log_rule_B("cmt_insert_before_preproc");
 
@@ -1887,7 +1887,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
             if (  tmp != nullptr
                && get_chunk_parent_type(tmp) == CT_PP_IF)
             {
-               tmp = chunk_get_prev_nnl(tmp);
+               tmp = tmp->get_prev_nnl();
 
                log_rule_B("cmt_insert_before_preproc");
 

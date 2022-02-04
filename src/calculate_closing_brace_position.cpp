@@ -37,12 +37,12 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
       check_level = pc->level;
    }
    size_t erst_found      = 0;
-   Chunk  *is_brace_close = nullptr;
-   Chunk  *is_semicolon   = nullptr;
-   Chunk  *is_comment     = nullptr;
-   Chunk  *back           = chunk_get_prev_nnl(pc);
+   Chunk  *is_brace_close = Chunk::NullChunkPtr;
+   Chunk  *is_semicolon   = Chunk::NullChunkPtr;
+   Chunk  *is_comment     = Chunk::NullChunkPtr;
+   Chunk  *back           = pc->get_prev_nnl();
 
-   while (back != nullptr)
+   while (back->isNotNullChunk())
    {
       if (back == cl_colon)
       {
@@ -87,14 +87,14 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
    }
    LOG_FMT(LMCB, "%s(%d): erst_found is %zu\n",
            __func__, __LINE__, erst_found);
-   Chunk *last = nullptr;
+   Chunk *last = Chunk::NullChunkPtr;
 
    if (  erst_found == 3
       || erst_found == 4)
    {
-      if (is_comment != nullptr)
+      if (is_comment->isNotNullChunk())
       {
-         Chunk *second = nullptr;
+         Chunk *second = Chunk::NullChunkPtr;
 
          if (erst_found == 3)
          {
@@ -106,7 +106,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
             second = is_semicolon;
          }
 
-         if (second != nullptr)
+         if (second->isNotNullChunk())
          {
             if (is_comment->orig_line == second->orig_line)
             {
@@ -153,7 +153,8 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
    if (chunk_is_preproc(last))
    {
       // we have a preprocessor token
-      while (last != nullptr)
+      while (  last != nullptr
+            && last->isNotNullChunk())
       {
          LOG_FMT(LMCB, "%s(%d): text() is '%s', orig_line %zu, orig_col is %zu\n",
                  __func__, __LINE__, last->text(), last->orig_line, last->orig_col);
@@ -172,7 +173,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
                // cl_colon is after parent_last ==>
                // the closing brace will be set before #endif
                Chunk *pp_start = chunk_get_pp_start(last);
-               last = chunk_get_prev_nnl(pp_start);
+               last = pp_start->get_prev_nnl();
                LOG_FMT(LMCB, "%s(%d): text() is '%s', orig_line %zu, orig_col is %zu\n",
                        __func__, __LINE__, last->text(), last->orig_line, last->orig_col);
             }
