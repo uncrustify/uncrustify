@@ -182,6 +182,10 @@ sp_before_assign;
 extern Option<iarf_e>
 sp_after_assign;
 
+// Add or remove space in 'enum {'.
+extern Option<iarf_e>
+sp_enum_brace; // = IARF_ADD
+
 // Add or remove space in 'NS_ENUM ('.
 extern Option<iarf_e>
 sp_enum_paren;

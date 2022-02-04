@@ -1025,12 +1025,20 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_cpp_lambda_fparen());
    }
 
-   if (  chunk_is_token(first, CT_ENUM)
-      && chunk_is_token(second, CT_FPAREN_OPEN))
+   if (chunk_is_token(first, CT_ENUM))
    {
-      // Add or remove space in 'NS_ENUM ('.
-      log_rule("sp_enum_paren");
-      return(options::sp_enum_paren());
+      if (chunk_is_token(second, CT_BRACE_OPEN))
+      {
+         // Add or remove space in 'enum {'.
+         log_rule("sp_enum_brace");
+         return(options::sp_enum_brace());
+      }
+      else if (chunk_is_token(second, CT_FPAREN_OPEN))
+      {
+         // Add or remove space in 'NS_ENUM ('.
+         log_rule("sp_enum_paren");
+         return(options::sp_enum_paren());
+      }
    }
 
    if (chunk_is_token(second, CT_ASSIGN))

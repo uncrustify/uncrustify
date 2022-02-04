@@ -127,6 +127,11 @@ sp_before_assign                = ignore   # ignore/add/remove/force/not_defined
 # Overrides sp_assign.
 sp_after_assign                 = ignore   # ignore/add/remove/force/not_defined
 
+# Add or remove space in 'enum {'.
+#
+# Default: add
+sp_enum_brace                   = add      # ignore/add/remove/force/not_defined
+
 # Add or remove space in 'NS_ENUM ('.
 sp_enum_paren                   = ignore   # ignore/add/remove/force/not_defined
 
