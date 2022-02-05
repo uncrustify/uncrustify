@@ -252,43 +252,6 @@ Chunk *Chunk::get_prev(scope_e scope) const
 
 
 /**
- * Temporary internal function
- *
- * @brief returns the next chunk in a list of chunks
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- *
- * @return pointer to next chunk or nullptr if no chunk was found
- */
-Chunk *__chunk_get_next(Chunk *cur, scope_e scope = scope_e::ALL);
-
-
-/**
- * Temporary internal function
- *
- * @brief returns the previous chunk in a list of chunks
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- *
- * @return pointer to previous chunk or nullptr if no chunk was found
- */
-Chunk *__chunk_get_prev(Chunk *cur, scope_e scope = scope_e::ALL);
-
-
-/**
- * use this enum to define in what direction or location an
- * operation shall be performed.
- */
-enum class direction_e : unsigned int
-{
-   FORWARD,
-   BACKWARD
-};
-
-
-/**
  * @brief prototype for a function that checks a chunk to have a given type
  *
  * @note this typedef defines the function type "check_t"
@@ -296,16 +259,6 @@ enum class direction_e : unsigned int
  * bool function(Chunk *pc)
  */
 typedef bool (*check_t)(Chunk *pc);
-
-
-/**
- * @brief prototype for a function that searches through a chunk list
- *
- * @note this typedef defines the function type "search_t"
- * for a function pointer of type
- * Chunk *function(Chunk *cur, nav_t scope)
- */
-typedef Chunk * (*search_t)(Chunk *cur, scope_e scope);
 
 
 /**
@@ -437,19 +390,6 @@ static Chunk *chunk_search_str(Chunk *cur, const char *str, size_t len, scope_e 
 static Chunk *chunk_add(const Chunk *pc_in, Chunk *ref, const direction_e pos = direction_e::FORWARD);
 
 
-/**
- * @brief Determines which chunk search function to use
- *
- * Depending on the required search direction return a pointer
- * to the corresponding chunk search function.
- *
- * @param dir  search direction
- *
- * @return pointer to chunk search function
- */
-static search_t select_search_fct(const direction_e dir = direction_e::FORWARD);
-
-
 Chunk *Chunk::get_head(void)
 {
    Chunk *ret = g_cl.GetHead();
@@ -474,9 +414,9 @@ Chunk *Chunk::get_tail(void)
 }
 
 
-static search_t select_search_fct(const direction_e dir)
+Chunk::search_t Chunk::select_search_dir_fct(const direction_e dir)
 {
-   return((dir == direction_e::FORWARD) ? __chunk_get_next : __chunk_get_prev);
+   return((dir == direction_e::FORWARD) ? &Chunk::get_next : &Chunk::get_prev);
 }
 
 
@@ -520,16 +460,25 @@ static Chunk *chunk_search_type(Chunk *cur, const c_token_t type,
     * Depending on the parameter dir the search function searches
     * in forward or backward direction
     */
-   search_t search_function = select_search_fct(dir);
-   Chunk    *pc             = cur;
+   Chunk::search_t search_function = Chunk::select_search_dir_fct(dir);
+   Chunk           *pc             = cur;
 
-   do                                  // loop over the chunk list
+   if (pc == nullptr)
    {
-      pc = search_function(pc, scope); // in either direction while
-   } while (  pc != nullptr            // the end of the list was not reached yet
-           && pc->type != type);       // and the demanded chunk was not found either
+      pc = Chunk::NullChunkPtr;
+   }
 
-   return(pc);                         // the latest chunk is the searched one
+   do                                     // loop over the chunk list
+   {
+      pc = (pc->*search_function)(scope); // in either direction while
+   } while (  pc->isNotNullChunk()        // the end of the list was not reached yet
+           && pc->type != type);          // and the demanded chunk was not found either
+
+   if (pc->isNullChunk())
+   {
+      pc = nullptr;
+   }
+   return(pc);                            // the latest chunk is the searched one
 }
 
 
@@ -539,16 +488,25 @@ static Chunk *chunk_search_type_level(Chunk *cur, c_token_t type, scope_e scope,
     * Depending on the parameter dir the search function searches
     * in forward or backward direction
     */
-   search_t search_function = select_search_fct(dir);
-   Chunk    *pc             = cur;
+   Chunk::search_t search_function = Chunk::select_search_dir_fct(dir);
+   Chunk           *pc             = cur;
 
-   do                                  // loop over the chunk list
+   if (pc == nullptr)
    {
-      pc = search_function(pc, scope); // in either direction while
-   } while (  pc != nullptr            // the end of the list was not reached yet
+      pc = Chunk::NullChunkPtr;
+   }
+
+   do                                     // loop over the chunk list
+   {
+      pc = (pc->*search_function)(scope); // in either direction while
+   } while (  pc->isNotNullChunk()        // the end of the list was not reached yet
            && (!is_expected_type_and_level(pc, type, level)));
 
-   return(pc);                         // the latest chunk is the searched one
+   if (pc->isNullChunk())
+   {
+      pc = nullptr;
+   }
+   return(pc);                            // the latest chunk is the searched one
 }
 
 
@@ -557,16 +515,25 @@ static Chunk *chunk_search_str(Chunk *cur, const char *str, size_t len, scope_e 
    /*
     * Depending on the parameter dir the search function searches
     * in forward or backward direction */
-   search_t search_function = select_search_fct(dir);
-   Chunk    *pc             = cur;
+   Chunk::search_t search_function = Chunk::select_search_dir_fct(dir);
+   Chunk           *pc             = cur;
 
-   do                                  // loop over the chunk list
+   if (pc == nullptr)
    {
-      pc = search_function(pc, scope); // in either direction while
-   } while (  pc != nullptr            // the end of the list was not reached yet
+      pc = Chunk::NullChunkPtr;
+   }
+
+   do                                     // loop over the chunk list
+   {
+      pc = (pc->*search_function)(scope); // in either direction while
+   } while (  pc->isNotNullChunk()        // the end of the list was not reached yet
            && (!is_expected_string_and_level(pc, str, level, len)));
 
-   return(pc);                         // the latest chunk is the searched one
+   if (pc->isNullChunk())
+   {
+      pc = nullptr;
+   }
+   return(pc);                            // the latest chunk is the searched one
 }
 
 
@@ -576,16 +543,25 @@ static Chunk *chunk_search(Chunk *cur, const check_t check_fct, const scope_e sc
    /*
     * Depending on the parameter dir the search function searches
     * in forward or backward direction */
-   search_t search_function = select_search_fct(dir);
-   Chunk    *pc             = cur;
+   Chunk::search_t search_function = Chunk::select_search_dir_fct(dir);
+   Chunk           *pc             = cur;
 
-   do                                   // loop over the chunk list
+   if (pc == nullptr)
    {
-      pc = search_function(pc, scope);  // in either direction while
-   } while (  pc != nullptr             // the end of the list was not reached yet
-           && (check_fct(pc) != cond)); // and the demanded chunk was not found either
+      pc = Chunk::NullChunkPtr;
+   }
 
-   return(pc);                          // the latest chunk is the searched one
+   do                                     // loop over the chunk list
+   {
+      pc = (pc->*search_function)(scope); // in either direction while
+   } while (  pc->isNotNullChunk()        // the end of the list was not reached yet
+           && (check_fct(pc) != cond));   // and the demanded chunk was not found either
+
+   if (pc->isNullChunk())
+   {
+      pc = nullptr;
+   }
+   return(pc);                            // the latest chunk is the searched one
 }
 
 
@@ -626,58 +602,6 @@ static Chunk *chunk_ppa_search(Chunk *cur, const check_t check_fct, const bool c
    }
    // Ran out of tokens
    return(nullptr);
-}
-
-
-Chunk *__chunk_get_next(Chunk *cur, scope_e scope)
-{
-   if (  cur == nullptr
-      || cur->isNullChunk())
-   {
-      return(nullptr);
-   }
-   Chunk *pc = g_cl.GetNext(cur);
-
-   if (  pc == nullptr
-      || scope == scope_e::ALL)
-   {
-      return(pc);
-   }
-
-   if (cur->flags.test(PCF_IN_PREPROC))
-   {
-      // If in a preproc, return nullptr if trying to leave
-      if (!pc->flags.test(PCF_IN_PREPROC))
-      {
-         return(nullptr);
-      }
-      return(pc);
-   }
-
-   // Not in a preproc, skip any preproc
-   while (  pc != nullptr
-         && pc->flags.test(PCF_IN_PREPROC))
-   {
-      pc = g_cl.GetNext(pc);
-   }
-   return(pc);
-}
-
-
-Chunk *__chunk_get_prev(Chunk *cur, scope_e scope)
-{
-   if (  cur == nullptr
-      || cur->isNullChunk())
-   {
-      return(nullptr);
-   }
-   Chunk *ret = cur->get_prev(scope);
-
-   if (ret->isNullChunk())
-   {
-      return(nullptr);
-   }
-   return(ret);
 }
 
 
