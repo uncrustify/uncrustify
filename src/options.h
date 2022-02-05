@@ -1411,10 +1411,14 @@ indent_extern;
 extern Option<bool>
 indent_class;
 
+// Whether to ignore indent for the leading base class colon.
+extern Option<bool>
+indent_ignore_before_class_colon;
+
 // Additional indent before the leading base class colon.
 // Negative values decrease indent down to the first column.
-// Requires a newline break before colon (see pos_class_colon
-// and nl_class_colon)
+// Requires indent_ignore_before_class_colon=false and a newline break before
+// the colon (see pos_class_colon and nl_class_colon)
 extern BoundedOption<signed, -16, 16>
 indent_before_class_colon;
 
@@ -1426,6 +1430,10 @@ indent_class_colon;
 // colon. Requires indent_class_colon=true.
 extern Option<bool>
 indent_class_on_colon;
+
+// Whether to ignore indent for a leading class initializer colon.
+extern Option<bool>
+indent_ignore_before_constr_colon;
 
 // Whether to indent the stuff after a leading class initializer colon.
 extern Option<bool>
