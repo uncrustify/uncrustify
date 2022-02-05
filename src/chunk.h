@@ -42,6 +42,16 @@ enum class scope_e : unsigned int
 };
 
 
+/**
+ * Specifies which direction or location an operation shall be performed.
+ */
+enum class direction_e : unsigned int
+{
+   FORWARD,
+   BACKWARD
+};
+
+
 // This is the main type of this program
 class Chunk
 {
@@ -172,6 +182,23 @@ public:
     */
    // TODO make it a const member
    Chunk *get_prev_nc(scope_e scope = scope_e::ALL);
+
+   /**
+    * @brief defines a member function pointer for a function of type
+    * Chunk *Chunk::function(scope_e scope)
+    */
+   typedef Chunk *(Chunk::*search_t)(scope_e scope) const;
+
+
+   /**
+    * @brief determines the search direction to use and returns a pointer
+    *        to the corresponding search function.
+    *
+    * @param dir search direction
+    *
+    * @return pointer to search function
+    */
+   static search_t select_search_dir_fct(const direction_e dir = direction_e::FORWARD);
 
 
    Chunk        *next;          //! pointer to next chunk in list
