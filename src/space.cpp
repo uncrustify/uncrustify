@@ -327,9 +327,19 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          log_rule("sp_cond_question_after");
          return(options::sp_cond_question_after());
       }
+
       // Issue #2596
       // Add or remove space around the '?' in 'b ? t : f'.
       // replace "if (chunk_is_token(first, CT_PAREN_CLOSE) && chunk_is_token(second, CT_QUESTION))"
+      if (  language_is_set(LANG_VALA)
+         && chunk_is_token(second, CT_QUESTION))
+      {
+         // TODO: provide some test data to check this block
+         // Issue #2090
+         // (vala) Add or remove space between a type and '?'.
+         log_rule("sp_type_question");
+         return(options::sp_type_question());
+      }
       log_rule("sp_cond_question");
       return(options::sp_cond_question());
    }
@@ -2893,16 +2903,6 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       // Add or remove space between type and word.
       log_rule("sp_after_type");
       return(options::sp_after_type());
-   }
-
-   if (  language_is_set(LANG_VALA)
-      && chunk_is_token(second, CT_QUESTION))
-   {
-      // TODO: provide some test data to check this block
-      // Issue #2090
-      // (D) Add or remove space between a type and '?'.
-      log_rule("sp_type_question");
-      return(options::sp_type_question());
    }
 
    // see if the D template expression is used as a type

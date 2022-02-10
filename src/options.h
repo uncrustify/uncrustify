@@ -611,7 +611,7 @@ sp_type_ellipsis;
 extern Option<iarf_e>
 sp_ptr_type_ellipsis;
 
-// (D) Add or remove space between a type and '?'.
+// (vala) Add or remove space between a type and '?'.
 extern Option<iarf_e>
 sp_type_question;
 
