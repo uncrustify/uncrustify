@@ -653,9 +653,6 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       }
       return;
    }
-   LOG_FMT(LFCNR, "%s(%d): pc is '%s' %s\n",
-           __func__, __LINE__,
-           pc->text(), get_token_name(pc->type));
 
    // C++11 Lambda stuff
    if (  language_is_set(LANG_CPP)
@@ -1781,6 +1778,9 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
       if (chunk_is_token(tmp, CT_TYPE))
       {
+         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col,
+                 pc->text(), get_token_name(pc->type));
          log_pcf_flags(LFCNR, pc->flags);
          set_chunk_type(pc, CT_BYREF);
       }
@@ -1815,6 +1815,9 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       && pc->flags.test(PCF_IN_PREPROC))
    {
       Chunk *tmp_2 = pc->get_next();
+      LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col,
+              pc->text(), get_token_name(pc->type));
       log_pcf_flags(LFTYPE, pc->flags);
 
       if (chunk_is_token(tmp_2, CT_WORD))
@@ -2427,9 +2430,6 @@ static void handle_cpp_lambda(Chunk *sq_o)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LFCNR, "%s(%d): sq_o is '%s'/%s\n",
-           __func__, __LINE__,
-           sq_o->text(), get_token_name(sq_o->type));
    Chunk *ret = nullptr;
 
    // abort if type of the previous token is not contained in this whitelist
@@ -2441,9 +2441,9 @@ static void handle_cpp_lambda(Chunk *sq_o)
    }
    else
    {
-      LOG_FMT(LFCNR, "%s(%d): prev is '%s'/%s\n",
-              __func__, __LINE__,
-              prev->text(), get_token_name(prev->type));
+      //LOG_FMT(LFCNR, "%s(%d): prev is '%s'/%s\n",
+      //        __func__, __LINE__,
+      //        prev->text(), get_token_name(prev->type));
    }
 
    if (  prev == nullptr
