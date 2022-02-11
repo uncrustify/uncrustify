@@ -20,6 +20,10 @@
 #include <algorithm>                   // to get max
 #endif // ifdef WIN32
 
+#ifdef IGNORE // WinBase.h
+#undef IGNORE
+#endif
+
 
 constexpr static auto LCURRENT = LINDENT;
 
@@ -208,6 +212,14 @@ enum class align_mode_e : unsigned int
    SHIFT,     //! shift relative to the current column
    KEEP_ABS,  //! try to keep the original absolute column
    KEEP_REL,  //! try to keep the original gap
+};
+
+
+enum class indent_mode_e : int
+{
+   INDENT = 0,   //! indent by one level
+   ALIGN  = 1,   //! align under the open brace/parenthesis
+   IGNORE = -1,  //! preserve original indentation
 };
 
 
@@ -3806,27 +3818,27 @@ void indent_text(void)
          }
          else if (chunk_is_token(pc, CT_COMMA))
          {
-            bool indent        = false;
-            bool indent_ignore = false;
+            bool align  = false;
+            bool ignore = false;
 
             if (chunk_is_paren_open(frm.top().pc))
             {
                log_rule_B("indent_comma_paren");
-               indent        = options::indent_comma_paren() == 1;
-               indent_ignore = options::indent_comma_paren() == -1;
+               align  = options::indent_comma_paren() == (int)indent_mode_e::ALIGN;
+               ignore = options::indent_comma_paren() == (int)indent_mode_e::IGNORE;
             }
             else if (chunk_is_opening_brace(frm.top().pc))
             {
                log_rule_B("indent_comma_brace");
-               indent        = options::indent_comma_brace() == 1;
-               indent_ignore = options::indent_comma_brace() == -1;
+               align  = options::indent_comma_brace() == (int)indent_mode_e::ALIGN;
+               ignore = options::indent_comma_brace() == (int)indent_mode_e::IGNORE;
             }
 
-            if (indent_ignore)
+            if (ignore)
             {
                indent_column_set(pc->orig_col);
             }
-            else if (indent)
+            else if (align)
             {
                indent_column_set(frm.top().pc->column);
             }
@@ -3901,11 +3913,11 @@ void indent_text(void)
 
             if (chunk_is_paren_open(frm.top().pc))
             {
-               if (options::indent_bool_paren() == -1)
+               if (options::indent_bool_paren() == (int)indent_mode_e::IGNORE)
                {
                   indent_column_set(pc->orig_col);
                }
-               else if (options::indent_bool_paren())
+               else if (options::indent_bool_paren() == (int)indent_mode_e::ALIGN)
                {
                   indent_column_set(frm.top().pc->column);
 
