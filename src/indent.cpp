@@ -824,7 +824,7 @@ void indent_text(void)
                break;
             }
             int   should_indent_preproc = true;
-            Chunk *preproc_next         = pc->get_next_nl();
+            Chunk *preproc_next         = pc->GetNextNl();
             preproc_next = chunk_get_next_nc_nnl_nb(preproc_next);
 
             /* Look ahead at what's on the line after the #if */
@@ -2309,7 +2309,7 @@ void indent_text(void)
             && get_chunk_parent_type(prev) == CT_CASE)
          {
             // issue #663 + issue #1366
-            Chunk *prev_prev_newline = pc->get_prev_nl()->get_prev_nl();
+            Chunk *prev_prev_newline = pc->GetPrevNl()->GetPrevNl();
 
             if (prev_prev_newline->IsNotNullChunk())
             {
@@ -2986,7 +2986,7 @@ void indent_text(void)
             if (  tmp != nullptr
                && chunk_is_newline(tmp->prev))
             {
-               tmp = chunk_get_prev_nc_nnl_np(tmp)->get_next_nl();
+               tmp = chunk_get_prev_nc_nnl_np(tmp)->GetNextNl();
             }
 
             if (  tmp != nullptr
@@ -3758,7 +3758,7 @@ void indent_text(void)
                            }
                            else
                            {
-                              search = search->get_prev_nl()->GetNext();
+                              search = search->GetPrevNl()->GetNext();
 
                               if (search->IsNullChunk())
                               {

@@ -413,7 +413,7 @@ static void remove_blank_lines_between_imports(Chunk **chunks, size_t num_chunks
 
    for (size_t idx = 0; idx < (num_chunks - 1); idx++)
    {
-      Chunk *chunk1 = chunks[idx]->get_next_nl();
+      Chunk *chunk1 = chunks[idx]->GetNextNl();
       chunk1->nl_count = 1;
       MARK_CHANGE();
    }

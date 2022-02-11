@@ -1278,7 +1278,7 @@ static void move_case_return(void)
             }
             pc = pc->GetNext();
          }
-         pc = pc->get_next_nl();
+         pc = pc->GetNextNl();
          pc = chunk_get_next_nc_nnl(pc);
 
          if (  pc != nullptr

@@ -139,7 +139,7 @@ public:
     * @return pointer to next newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
    // TODO make it a const member
-   Chunk *get_next_nl(E_Scope scope = E_Scope::ALL);
+   Chunk *GetNextNl(E_Scope scope = E_Scope::ALL);
 
 
    /**
@@ -150,7 +150,7 @@ public:
     * @return pointer to prev newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
    // TODO make it a const member
-   Chunk *get_prev_nl(E_Scope scope = E_Scope::ALL);
+   Chunk *GetPrevNl(E_Scope scope = E_Scope::ALL);
 
 
    /**

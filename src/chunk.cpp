@@ -708,13 +708,13 @@ void chunk_move_after(Chunk *pc_in, Chunk *ref)
 }
 
 
-Chunk *Chunk::get_next_nl(E_Scope scope)
+Chunk *Chunk::GetNextNl(E_Scope scope)
 {
    return(Search(chunk_is_newline, scope, E_Direction::FORWARD, true));
 }
 
 
-Chunk *Chunk::get_prev_nl(E_Scope scope)
+Chunk *Chunk::GetPrevNl(E_Scope scope)
 {
    return(Search(chunk_is_newline, scope, E_Direction::BACKWARD, true));
 }

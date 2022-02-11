@@ -1637,7 +1637,7 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
                prev = next->get_prev_nnl();
                LOG_FMT(LNEWLINE, "%s(%d): prev->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
                        __func__, __LINE__, prev->text(), get_token_name(prev->type), prev->orig_line, prev->orig_col);
-               pc = next->get_next_nl();
+               pc = next->GetNextNl();
                LOG_FMT(LNEWLINE, "%s(%d): pc->text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
                        __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
                Chunk *pc2 = pc->GetNext();
@@ -3721,7 +3721,7 @@ void newlines_remove_newlines(void)
 
    if (!chunk_is_newline(pc))
    {
-      pc = pc->get_next_nl();
+      pc = pc->GetNextNl();
    }
    Chunk *next;
    Chunk *prev;
@@ -3746,7 +3746,7 @@ void newlines_remove_newlines(void)
             pc = prev;
          }
       }
-      pc = pc->get_next_nl();
+      pc = pc->GetNextNl();
    }
 } // newlines_remove_newlines
 
@@ -3758,7 +3758,7 @@ void newlines_remove_disallowed()
    Chunk *pc = Chunk::GetHead();
    Chunk *next;
 
-   while ((pc = pc->get_next_nl())->IsNotNullChunk())
+   while ((pc = pc->GetNextNl())->IsNotNullChunk())
    {
       LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>, nl is %zu\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->nl_count);
@@ -5230,12 +5230,12 @@ void newlines_squeeze_ifdef(void)
             || chunk_is_token(ppr, CT_PP_ENDIF))
          {
             Chunk *pnl = Chunk::NullChunkPtr;
-            Chunk *nnl = ppr->get_next_nl();
+            Chunk *nnl = ppr->GetNextNl();
 
             if (  chunk_is_token(ppr, CT_PP_ELSE)
                || chunk_is_token(ppr, CT_PP_ENDIF))
             {
-               pnl = pc->get_prev_nl();
+               pnl = pc->GetPrevNl();
             }
             Chunk *tmp1;
             Chunk *tmp2;
