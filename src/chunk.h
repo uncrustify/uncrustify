@@ -138,8 +138,7 @@ public:
     *
     * @return pointer to next newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   // TODO make it a const member
-   Chunk *GetNextNl(E_Scope scope = E_Scope::ALL);
+   Chunk *GetNextNl(E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -149,8 +148,7 @@ public:
     *
     * @return pointer to prev newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   // TODO make it a const member
-   Chunk *GetPrevNl(E_Scope scope = E_Scope::ALL);
+   Chunk *GetPrevNl(E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -160,8 +158,7 @@ public:
     *
     * @return pointer to next non-newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   // TODO make it a const member
-   Chunk *GetNextNnl(E_Scope scope = E_Scope::ALL);
+   Chunk *GetNextNnl(E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -171,8 +168,7 @@ public:
     *
     * @return pointer to prev non-newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   // TODO make it a const member
-   Chunk *GetPrevNnl(E_Scope scope = E_Scope::ALL);
+   Chunk *GetPrevNnl(E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -182,8 +178,7 @@ public:
     *
     * @return pointer to next non-comment chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   // TODO make it a const member
-   Chunk *GetNextNc(E_Scope scope = E_Scope::ALL);
+   Chunk *GetNextNc(E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -193,8 +188,7 @@ public:
     *
     * @return pointer to prev non-comment chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   // TODO make it a const member
-   Chunk *GetPrevNc(E_Scope scope = E_Scope::ALL);
+   Chunk *GetPrevNc(E_Scope scope = E_Scope::ALL) const;
 
 
    /**

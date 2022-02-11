@@ -708,37 +708,37 @@ void chunk_move_after(Chunk *pc_in, Chunk *ref)
 }
 
 
-Chunk *Chunk::GetNextNl(E_Scope scope)
+Chunk *Chunk::GetNextNl(E_Scope scope) const
 {
    return(Search(chunk_is_newline, scope, E_Direction::FORWARD, true));
 }
 
 
-Chunk *Chunk::GetPrevNl(E_Scope scope)
+Chunk *Chunk::GetPrevNl(E_Scope scope) const
 {
    return(Search(chunk_is_newline, scope, E_Direction::BACKWARD, true));
 }
 
 
-Chunk *Chunk::GetNextNnl(E_Scope scope)
+Chunk *Chunk::GetNextNnl(E_Scope scope) const
 {
    return(Search(chunk_is_newline, scope, E_Direction::FORWARD, false));
 }
 
 
-Chunk *Chunk::GetPrevNnl(E_Scope scope)
+Chunk *Chunk::GetPrevNnl(E_Scope scope) const
 {
    return(Search(chunk_is_newline, scope, E_Direction::BACKWARD, false));
 }
 
 
-Chunk *Chunk::GetNextNc(E_Scope scope)
+Chunk *Chunk::GetNextNc(E_Scope scope) const
 {
    return(Search(chunk_is_comment, scope, E_Direction::FORWARD, false));
 }
 
 
-Chunk *Chunk::GetPrevNc(E_Scope scope)
+Chunk *Chunk::GetPrevNc(E_Scope scope) const
 {
    return(Search(chunk_is_comment, scope, E_Direction::BACKWARD, false));
 }
