@@ -34,7 +34,7 @@ void align_asm_colon(void)
       }
       cas.Reset();
 
-      pc = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+      pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
       size_t level = pc ? pc->level : 0;
       did_nl = true;
 
@@ -57,7 +57,7 @@ void align_asm_colon(void)
             did_nl = false;
             cas.Add(pc);
          }
-         pc = pc->get_next_nc(scope_e::PREPROC);
+         pc = pc->get_next_nc(E_Scope::PREPROC);
       }
       cas.End();
    }

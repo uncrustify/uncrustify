@@ -13,7 +13,7 @@
 #include "uncrustify.h"
 
 
-Chunk *chunk_get_next_local(Chunk *pc, scope_e scope = scope_e::ALL)
+Chunk *chunk_get_next_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
 {
    Chunk *tmp = pc;
 
@@ -33,7 +33,7 @@ Chunk *chunk_get_next_local(Chunk *pc, scope_e scope = scope_e::ALL)
 }
 
 
-Chunk *chunk_get_prev_local(Chunk *pc, scope_e scope = scope_e::ALL)
+Chunk *chunk_get_prev_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
 {
    Chunk *tmp = pc;
 
@@ -264,7 +264,7 @@ void combine_labels(void)
             }
             else if (chunk_is_token(cur, CT_WORD))
             {
-               Chunk *tmp = next->get_next_nc(scope_e::PREPROC);
+               Chunk *tmp = next->get_next_nc(E_Scope::PREPROC);
 
                // Issue #1187
                if (tmp->isNullChunk())

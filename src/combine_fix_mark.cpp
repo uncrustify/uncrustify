@@ -442,9 +442,9 @@ void fix_typedef(Chunk *start)
     * Mark everything in the typedef and scan for ")(", which makes it a
     * function type
     */
-   for (Chunk *next = chunk_get_next_nc_nnl(start, scope_e::PREPROC)
+   for (Chunk *next = chunk_get_next_nc_nnl(start, E_Scope::PREPROC)
         ; next != nullptr && next->level >= start->level
-        ; next = chunk_get_next_nc_nnl(next, scope_e::PREPROC))
+        ; next = chunk_get_next_nc_nnl(next, E_Scope::PREPROC))
    {
       chunk_flags_set(next, PCF_IN_TYPEDEF);
 
@@ -490,7 +490,7 @@ void fix_typedef(Chunk *start)
       flag_parens(last_op, PCF_NONE, CT_FPAREN_OPEN, CT_TYPEDEF, false);
       fix_fcn_def_params(last_op);
 
-      the_type = chunk_get_prev_nc_nnl_ni(last_op, scope_e::PREPROC);   // Issue #2279
+      the_type = chunk_get_prev_nc_nnl_ni(last_op, E_Scope::PREPROC);   // Issue #2279
 
       if (the_type == nullptr)
       {
@@ -502,7 +502,7 @@ void fix_typedef(Chunk *start)
       {
          open_paren = chunk_skip_to_match_rev(the_type);
          mark_function_type(the_type);
-         the_type = chunk_get_prev_nc_nnl_ni(the_type, scope_e::PREPROC);   // Issue #2279
+         the_type = chunk_get_prev_nc_nnl_ni(the_type, E_Scope::PREPROC);   // Issue #2279
 
          if (the_type == nullptr)
          {
@@ -542,7 +542,7 @@ void fix_typedef(Chunk *start)
     * Skip over enum/struct/union stuff, as we know it isn't a return type
     * for a function type
     */
-   Chunk *after = chunk_get_next_nc_nnl(start, scope_e::PREPROC);
+   Chunk *after = chunk_get_next_nc_nnl(start, E_Scope::PREPROC);
 
    if (after == nullptr)
    {
@@ -563,7 +563,7 @@ void fix_typedef(Chunk *start)
       return;
    }
    // We have a struct/union/enum, next should be either a type or {
-   Chunk *next = chunk_get_next_nc_nnl(after, scope_e::PREPROC);
+   Chunk *next = chunk_get_next_nc_nnl(after, E_Scope::PREPROC);
 
    if (next == nullptr)
    {
@@ -572,7 +572,7 @@ void fix_typedef(Chunk *start)
 
    if (chunk_is_token(next, CT_TYPE))
    {
-      next = chunk_get_next_nc_nnl(next, scope_e::PREPROC);
+      next = chunk_get_next_nc_nnl(next, E_Scope::PREPROC);
 
       if (next == nullptr)
       {
@@ -583,7 +583,7 @@ void fix_typedef(Chunk *start)
    if (chunk_is_token(next, CT_BRACE_OPEN))
    {
       // Skip to the closing brace
-      Chunk *br_c = chunk_get_next_type(next, CT_BRACE_CLOSE, next->level, scope_e::PREPROC);
+      Chunk *br_c = chunk_get_next_type(next, CT_BRACE_CLOSE, next->level, E_Scope::PREPROC);
 
       if (br_c != nullptr)
       {

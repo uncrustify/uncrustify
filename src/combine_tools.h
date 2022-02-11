@@ -51,7 +51,7 @@ bool chunkstack_match(ChunkStack &cs, Chunk *pc);
 void fix_fcn_def_params(Chunk *pc);
 
 
-void flag_series(Chunk *start, Chunk *end, pcf_flags_t set_flags, pcf_flags_t clr_flags = {}, scope_e nav = scope_e::ALL);
+void flag_series(Chunk *start, Chunk *end, pcf_flags_t set_flags, pcf_flags_t clr_flags = {}, E_Scope nav = E_Scope::ALL);
 
 
 /*

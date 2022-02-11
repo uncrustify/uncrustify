@@ -2400,13 +2400,13 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    if (chunk_is_token(first, CT_CLASS_COLON))
    {
-      //Chunk *a = chunk_get_prev_type(first, CT_OC_INTF, first->level, scope_e::ALL);
-      //Chunk *b = chunk_get_prev_type(first, CT_OC_IMPL, first->level, scope_e::ALL);
+      //Chunk *a = chunk_get_prev_type(first, CT_OC_INTF, first->level, E_Scope::ALL);
+      //Chunk *b = chunk_get_prev_type(first, CT_OC_IMPL, first->level, E_Scope::ALL);
       //bool B_a = a != nullptr;
       //bool B_b = b != nullptr;
       if (  get_chunk_parent_type(first) == CT_OC_CLASS
-         && (  !chunk_get_prev_type(first, CT_OC_INTF, first->level, scope_e::ALL)
-            && !chunk_get_prev_type(first, CT_OC_IMPL, first->level, scope_e::ALL)))
+         && (  !chunk_get_prev_type(first, CT_OC_INTF, first->level, E_Scope::ALL)
+            && !chunk_get_prev_type(first, CT_OC_IMPL, first->level, E_Scope::ALL)))
       {
          if (options::sp_after_oc_colon() != IARF_IGNORE)
          {
@@ -2430,11 +2430,11 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    {
       if (  language_is_set(LANG_OC)
          && get_chunk_parent_type(second) == CT_OC_CLASS
-         && (  !chunk_get_prev_type(second, CT_OC_INTF, second->level, scope_e::ALL)
-            && !chunk_get_prev_type(second, CT_OC_IMPL, second->level, scope_e::ALL)))
+         && (  !chunk_get_prev_type(second, CT_OC_INTF, second->level, E_Scope::ALL)
+            && !chunk_get_prev_type(second, CT_OC_IMPL, second->level, E_Scope::ALL)))
       {
          if (  get_chunk_parent_type(second) == CT_OC_CLASS
-            && !chunk_get_prev_type(second, CT_OC_INTF, second->level, scope_e::ALL))
+            && !chunk_get_prev_type(second, CT_OC_INTF, second->level, E_Scope::ALL))
          {
             if (options::sp_before_oc_colon() != IARF_IGNORE)
             {

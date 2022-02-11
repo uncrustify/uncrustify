@@ -254,19 +254,19 @@ static void flag_asm(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *tmp = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+   Chunk *tmp = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
 
    if (chunk_is_not_token(tmp, CT_QUALIFIER))
    {
       return;
    }
-   Chunk *po = chunk_get_next_nc_nnl(tmp, scope_e::PREPROC);
+   Chunk *po = chunk_get_next_nc_nnl(tmp, E_Scope::PREPROC);
 
    if (!chunk_is_paren_open(po))
    {
       return;
    }
-   Chunk *end = chunk_skip_to_match(po, scope_e::PREPROC);
+   Chunk *end = chunk_skip_to_match(po, E_Scope::PREPROC);
 
    if (end == nullptr)
    {
@@ -275,10 +275,10 @@ static void flag_asm(Chunk *pc)
    set_chunk_parent(po, CT_ASM);
    set_chunk_parent(end, CT_ASM);
 
-   for (  tmp = chunk_get_next_nc_nnl(po, scope_e::PREPROC);
+   for (  tmp = chunk_get_next_nc_nnl(po, E_Scope::PREPROC);
           tmp != nullptr
        && tmp != end;
-          tmp = chunk_get_next_nc_nnl(tmp, scope_e::PREPROC))
+          tmp = chunk_get_next_nc_nnl(tmp, E_Scope::PREPROC))
    {
       if (chunk_is_token(tmp, CT_COLON))
       {
@@ -287,8 +287,8 @@ static void flag_asm(Chunk *pc)
       else if (chunk_is_token(tmp, CT_DC_MEMBER))
       {
          // if there is a string on both sides, then this is two ASM_COLONs
-         if (  chunk_is_token(chunk_get_next_nc_nnl(tmp, scope_e::PREPROC), CT_STRING)
-            && chunk_is_token(chunk_get_prev_nc_nnl_ni(tmp, scope_e::PREPROC), CT_STRING)) // Issue #2279
+         if (  chunk_is_token(chunk_get_next_nc_nnl(tmp, E_Scope::PREPROC), CT_STRING)
+            && chunk_is_token(chunk_get_prev_nc_nnl_ni(tmp, E_Scope::PREPROC), CT_STRING)) // Issue #2279
          {
             Chunk nc;
 
@@ -307,7 +307,7 @@ static void flag_asm(Chunk *pc)
       }
    }
 
-   tmp = chunk_get_next_nc_nnl(end, scope_e::PREPROC);
+   tmp = chunk_get_next_nc_nnl(end, E_Scope::PREPROC);
 
    if (tmp == nullptr)
    {
@@ -1931,7 +1931,7 @@ void fix_symbols(void)
 
       if (chunk_is_token(pc, CT_ATTRIBUTE))
       {
-         Chunk *next = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+         Chunk *next = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
 
          if (  next != nullptr
             && chunk_is_token(next, CT_PAREN_OPEN))
@@ -1964,7 +1964,7 @@ void fix_symbols(void)
       }
       LOG_FMT(LFCNR, "%s(%d): pc->orig_line       is %zu, orig_col is %zu, text() is '%s', type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-      Chunk *prev = chunk_get_prev_nc_nnl_ni(pc, scope_e::PREPROC);   // Issue #2279
+      Chunk *prev = chunk_get_prev_nc_nnl_ni(pc, E_Scope::PREPROC);   // Issue #2279
 
       if (prev == nullptr)
       {
@@ -1976,7 +1976,7 @@ void fix_symbols(void)
          LOG_FMT(LFCNR, "%s(%d): prev(ni)->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                  __func__, __LINE__, prev->orig_line, prev->orig_col, prev->text(), get_token_name(prev->type));
       }
-      Chunk *next = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+      Chunk *next = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
 
       if (next == nullptr)
       {

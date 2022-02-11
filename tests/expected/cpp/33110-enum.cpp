@@ -14,7 +14,7 @@ enum class comment_align_e : unsigned int
 };
 
 // chunk.h
-enum class scope_e : unsigned int
+enum class E_Scope : unsigned int
 {
    ALL,      /**< search in all kind of chunks */
    PREPROC,  /**< search only in preprocessor chunks */

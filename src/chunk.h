@@ -35,7 +35,7 @@ static constexpr int ANY_LEVEL = -1;
  *  - If not in a preprocessor, skip over any encountered preprocessor stuff
  *  - If in a preprocessor, fail to leave (return nullptr)
  */
-enum class scope_e : unsigned int
+enum class E_Scope : unsigned int
 {
    ALL,      //! search in all kind of chunks
    PREPROC,  //! search only in preprocessor chunks
@@ -118,7 +118,7 @@ public:
     *
     * @return pointer to next chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *get_next(scope_e scope = scope_e::ALL) const;
+   Chunk *get_next(E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -128,7 +128,7 @@ public:
     *
     * @return pointer to previous chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *get_prev(scope_e scope = scope_e::ALL) const;
+   Chunk *get_prev(E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -139,7 +139,7 @@ public:
     * @return pointer to next newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
    // TODO make it a const member
-   Chunk *get_next_nl(scope_e scope = scope_e::ALL);
+   Chunk *get_next_nl(E_Scope scope = E_Scope::ALL);
 
 
    /**
@@ -150,7 +150,7 @@ public:
     * @return pointer to prev newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
    // TODO make it a const member
-   Chunk *get_prev_nl(scope_e scope = scope_e::ALL);
+   Chunk *get_prev_nl(E_Scope scope = E_Scope::ALL);
 
 
    /**
@@ -161,7 +161,7 @@ public:
     * @return pointer to next non-newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
    // TODO make it a const member
-   Chunk *get_next_nnl(scope_e scope = scope_e::ALL);
+   Chunk *get_next_nnl(E_Scope scope = E_Scope::ALL);
 
 
    /**
@@ -172,7 +172,7 @@ public:
     * @return pointer to prev non-newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
    // TODO make it a const member
-   Chunk *get_prev_nnl(scope_e scope = scope_e::ALL);
+   Chunk *get_prev_nnl(E_Scope scope = E_Scope::ALL);
 
 
    /**
@@ -183,7 +183,7 @@ public:
     * @return pointer to next non-comment chunk or Chunk::NullChunkPtr if no chunk was found
     */
    // TODO make it a const member
-   Chunk *get_next_nc(scope_e scope = scope_e::ALL);
+   Chunk *get_next_nc(E_Scope scope = E_Scope::ALL);
 
 
    /**
@@ -194,14 +194,14 @@ public:
     * @return pointer to prev non-comment chunk or Chunk::NullChunkPtr if no chunk was found
     */
    // TODO make it a const member
-   Chunk *get_prev_nc(scope_e scope = scope_e::ALL);
+   Chunk *get_prev_nc(E_Scope scope = E_Scope::ALL);
 
 
    /**
     * @brief defines a member function pointer for a function of type
-    * Chunk *Chunk::function(scope_e scope)
+    * Chunk *Chunk::function(E_Scope scope)
     */
-   typedef Chunk *(Chunk::*Search_t)(scope_e scope) const;
+   typedef Chunk *(Chunk::*Search_t)(E_Scope scope) const;
 
 
    /**
@@ -232,7 +232,7 @@ public:
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
 // TODO replace ::check_t with Chunk::Check_t when feasible
-   Chunk *Search(const ::check_t check_fct, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD, const bool cond = true);
+   Chunk *Search(const ::check_t check_fct, const E_Scope scope = E_Scope::ALL, const direction_e dir = direction_e::FORWARD, const bool cond = true);
 
 
    Chunk        *next;          //! pointer to next chunk in list
@@ -362,7 +362,7 @@ bool chunk_is_last_on_line(Chunk *pc);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_next_nc_nnl(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nc_nnl(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -371,7 +371,7 @@ Chunk *chunk_get_next_nc_nnl(Chunk *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_next_nc_nnl_np(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nc_nnl_np(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -380,7 +380,7 @@ Chunk *chunk_get_next_nc_nnl_np(Chunk *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_prev_nc_nnl_np(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nc_nnl_np(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -389,7 +389,7 @@ Chunk *chunk_get_prev_nc_nnl_np(Chunk *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_next_nc_nnl_in_pp(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nc_nnl_in_pp(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -398,7 +398,7 @@ Chunk *chunk_get_next_nc_nnl_in_pp(Chunk *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_prev_nc_nnl_in_pp(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nc_nnl_in_pp(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -419,7 +419,7 @@ Chunk *chunk_ppa_get_next_nc_nnl(Chunk *cur);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_prev_nc_nnl(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nc_nnl(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -428,7 +428,7 @@ Chunk *chunk_get_prev_nc_nnl(Chunk *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_next_nc_nnl_nb(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nc_nnl_nb(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -437,7 +437,7 @@ Chunk *chunk_get_next_nc_nnl_nb(Chunk *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_prev_nc_nnl_nb(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nc_nnl_nb(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -450,7 +450,7 @@ Chunk *chunk_get_prev_nc_nnl_nb(Chunk *cur, scope_e scope = scope_e::ALL);
  *
  * @return nullptr or the next chunk not in or part of square brackets
  */
-Chunk *chunk_get_next_nisq(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nisq(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -459,7 +459,7 @@ Chunk *chunk_get_next_nisq(Chunk *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_prev_nc_nnl_ni(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nc_nnl_ni(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -472,7 +472,7 @@ Chunk *chunk_get_prev_nc_nnl_ni(Chunk *cur, scope_e scope = scope_e::ALL);
  *
  * @return nullptr or the match
  */
-Chunk *chunk_get_next_type(Chunk *cur, c_token_t type, int level, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_type(Chunk *cur, c_token_t type, int level, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -485,7 +485,7 @@ Chunk *chunk_get_next_type(Chunk *cur, c_token_t type, int level, scope_e scope 
  *
  * @return nullptr or the match
  */
-Chunk *chunk_get_prev_type(Chunk *cur, c_token_t type, int level, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_type(Chunk *cur, c_token_t type, int level, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -502,7 +502,7 @@ Chunk *chunk_get_prev_type(Chunk *cur, c_token_t type, int level, scope_e scope 
  * @retval nullptr  no chunk found or invalid parameters provided
  * @retval Chunk  pointer to the found chunk
  */
-Chunk *chunk_get_next_str(Chunk *cur, const char *str, size_t len, int level, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_str(Chunk *cur, const char *str, size_t len, int level, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -519,7 +519,7 @@ Chunk *chunk_get_next_str(Chunk *cur, const char *str, size_t len, int level, sc
  * @retval nullptr  no chunk found or invalid parameters provided
  * @retval Chunk  pointer to the found chunk
  */
-Chunk *chunk_get_prev_str(Chunk *cur, const char *str, size_t len, int level, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_str(Chunk *cur, const char *str, size_t len, int level, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -530,7 +530,7 @@ Chunk *chunk_get_prev_str(Chunk *cur, const char *str, size_t len, int level, sc
  *
  * @return pointer to found chunk or nullptr if no chunk was found
  */
-Chunk *chunk_get_next_nvb(Chunk *cur, const scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nvb(Chunk *cur, const E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -541,7 +541,7 @@ Chunk *chunk_get_next_nvb(Chunk *cur, const scope_e scope = scope_e::ALL);
  *
  * @return pointer to found chunk or nullptr if no chunk was found
  */
-Chunk *chunk_get_prev_nvb(Chunk *cur, const scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nvb(Chunk *cur, const E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -666,7 +666,7 @@ static inline bool chunk_is_not_token(const Chunk *pc, c_token_t c_token)
  *
  * @return nullptr or the matching paren/brace/square
  */
-static inline Chunk *chunk_skip_to_match(Chunk *cur, scope_e scope = scope_e::ALL)
+static inline Chunk *chunk_skip_to_match(Chunk *cur, E_Scope scope = E_Scope::ALL)
 {
    if (  cur != nullptr
       && (  chunk_is_token(cur, CT_PAREN_OPEN)
@@ -684,7 +684,7 @@ static inline Chunk *chunk_skip_to_match(Chunk *cur, scope_e scope = scope_e::AL
 }
 
 
-static inline Chunk *chunk_skip_to_match_rev(Chunk *cur, scope_e scope = scope_e::ALL)
+static inline Chunk *chunk_skip_to_match_rev(Chunk *cur, E_Scope scope = E_Scope::ALL)
 {
    if (  cur != nullptr
       && (  chunk_is_token(cur, CT_PAREN_CLOSE)
@@ -703,8 +703,8 @@ static inline Chunk *chunk_skip_to_match_rev(Chunk *cur, scope_e scope = scope_e
 
 
 //! skip to the final word/type in a :: chain
-Chunk *chunk_skip_dc_member(Chunk *start, scope_e scope = scope_e::ALL);
-Chunk *chunk_skip_dc_member_rev(Chunk *start, scope_e scope = scope_e::ALL);
+Chunk *chunk_skip_dc_member(Chunk *start, E_Scope scope = E_Scope::ALL);
+Chunk *chunk_skip_dc_member_rev(Chunk *start, E_Scope scope = E_Scope::ALL);
 
 
 /**

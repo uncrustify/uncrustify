@@ -42,7 +42,7 @@ void align_oc_decl_colon(void)
       cas.Reset();
 
       size_t level = pc->level;
-      pc = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+      pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
 
       did_line = false;
 
@@ -68,8 +68,8 @@ void align_oc_decl_colon(void)
          {
             cas.Add(pc);
 
-            Chunk *tmp  = pc->get_prev(scope_e::PREPROC);
-            Chunk *tmp2 = chunk_get_prev_nc_nnl(tmp, scope_e::PREPROC);
+            Chunk *tmp  = pc->get_prev(E_Scope::PREPROC);
+            Chunk *tmp2 = chunk_get_prev_nc_nnl(tmp, E_Scope::PREPROC);
 
             // Check for an un-labeled parameter
             if (  (  chunk_is_token(tmp, CT_WORD)
@@ -84,7 +84,7 @@ void align_oc_decl_colon(void)
             }
             did_line = true;
          }
-         pc = pc->get_next(scope_e::PREPROC);
+         pc = pc->get_next(E_Scope::PREPROC);
       }
       nas.End();
       cas.End();

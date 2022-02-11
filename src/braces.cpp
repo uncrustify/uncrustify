@@ -131,8 +131,8 @@ static bool paren_multiline_before_brace(Chunk *brace)
    const auto paren_t = CT_SPAREN_CLOSE;
 
    // find parenthesis pair of the if/for/while/...
-   auto paren_close = chunk_get_prev_type(brace, paren_t, brace->level, scope_e::ALL);
-   auto paren_open  = chunk_skip_to_match_rev(paren_close, scope_e::ALL);
+   auto paren_close = chunk_get_prev_type(brace, paren_t, brace->level, E_Scope::ALL);
+   auto paren_open  = chunk_skip_to_match_rev(paren_close, E_Scope::ALL);
 
    if (  paren_close == nullptr
       || paren_open == nullptr
@@ -324,9 +324,9 @@ static bool should_add_braces(Chunk *vbopen)
 
    Chunk  *pc = Chunk::NullChunkPtr;
 
-   for (pc = vbopen->get_next_nc(scope_e::PREPROC);
+   for (pc = vbopen->get_next_nc(E_Scope::PREPROC);
         (pc->isNotNullChunk() && pc->level > vbopen->level);
-        pc = pc->get_next_nc(scope_e::PREPROC))
+        pc = pc->get_next_nc(E_Scope::PREPROC))
    {
       if (chunk_is_newline(pc))
       {
@@ -357,7 +357,7 @@ static bool can_remove_braces(Chunk *bopen)
    {
       return(false);
    }
-   Chunk *pc = chunk_get_next_nc_nnl(bopen, scope_e::PREPROC);
+   Chunk *pc = chunk_get_next_nc_nnl(bopen, E_Scope::PREPROC);
 
    if (chunk_is_token(pc, CT_BRACE_CLOSE))
    {
@@ -376,7 +376,7 @@ static bool can_remove_braces(Chunk *bopen)
    size_t       if_count   = 0;
    int          br_count   = 0;
 
-   pc = bopen->get_next_nc(scope_e::ALL);
+   pc = bopen->get_next_nc(E_Scope::ALL);
    LOG_FMT(LBRDEL, "%s(%d):  - begin with token '%s', orig_line is %zu, orig_col is %zu\n",
            __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
 
@@ -489,8 +489,8 @@ static bool can_remove_braces(Chunk *bopen)
    if (  chunk_is_token(pc, CT_BRACE_CLOSE)
       && get_chunk_parent_type(pc) == CT_IF)
    {
-      Chunk *next     = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
-      Chunk *tmp_prev = chunk_get_prev_nc_nnl(pc, scope_e::PREPROC);
+      Chunk *next     = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
+      Chunk *tmp_prev = chunk_get_prev_nc_nnl(pc, E_Scope::PREPROC);
 
       if (  chunk_is_token(next, CT_ELSE)
          && (  chunk_is_token(tmp_prev, CT_BRACE_CLOSE)
@@ -592,7 +592,7 @@ static void examine_brace(Chunk *bopen)
 
             if (br_count == 0)
             {
-               Chunk *next = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+               Chunk *next = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
 
                if (  next == nullptr
                   || chunk_is_not_token(next, CT_BRACE_CLOSE))
@@ -873,7 +873,7 @@ static void convert_vbrace(Chunk *vbr)
 
       if (chunk_is_token(tmp, CT_PREPROC))
       {
-         tmp = vbr->get_next(scope_e::PREPROC);
+         tmp = vbr->get_next(E_Scope::PREPROC);
          chunk_move_after(vbr, tmp);
          newline_add_after(vbr);
       }
@@ -1102,7 +1102,7 @@ void add_long_closebrace_comment(void)
 
       Chunk  *tmp = pc;
 
-      while ((tmp = tmp->get_next(scope_e::PREPROC))->isNotNullChunk())
+      while ((tmp = tmp->get_next(E_Scope::PREPROC))->isNotNullChunk())
       {
          if (chunk_is_newline(tmp))
          {
@@ -1308,8 +1308,8 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
            __func__, __LINE__, br_open->orig_line);
 
    // Find the matching brace close
-   Chunk *next     = chunk_get_next_nc_nnl(br_open, scope_e::PREPROC);
-   Chunk *br_close = chunk_get_next_type(br_open, CT_BRACE_CLOSE, br_open->level, scope_e::PREPROC);
+   Chunk *next     = chunk_get_next_nc_nnl(br_open, E_Scope::PREPROC);
+   Chunk *br_close = chunk_get_next_type(br_open, CT_BRACE_CLOSE, br_open->level, E_Scope::PREPROC);
 
    if (br_close == nullptr)
    {
@@ -1317,7 +1317,7 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
       return(next);
    }
    // Make sure 'break', 'return', 'goto', 'case' or '}' is after the close brace
-   Chunk *pc = chunk_get_next_nc_nnl(br_close, scope_e::PREPROC);
+   Chunk *pc = chunk_get_next_nc_nnl(br_close, E_Scope::PREPROC);
 
    if (  pc == nullptr
       || (  chunk_is_not_token(pc, CT_BREAK)
@@ -1334,7 +1334,7 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
    // scan to make sure there are no definitions at brace level between braces
    for (Chunk *tmp_pc = br_open;
         tmp_pc != br_close;
-        tmp_pc = chunk_get_next_nc_nnl(tmp_pc, scope_e::PREPROC))
+        tmp_pc = chunk_get_next_nc_nnl(tmp_pc, E_Scope::PREPROC))
    {
       if (  tmp_pc->level == (br_open->level + 1)
          && tmp_pc->flags.test(PCF_VAR_DEF))
@@ -1350,7 +1350,7 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
 
    for (Chunk *tmp_pc = br_open;
         tmp_pc != br_close;
-        tmp_pc = chunk_get_next_nc_nnl(tmp_pc, scope_e::PREPROC))
+        tmp_pc = chunk_get_next_nc_nnl(tmp_pc, E_Scope::PREPROC))
    {
       if (tmp_pc->brace_level == 0)
       {
@@ -1371,12 +1371,12 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
       tmp_pc->level--;
    }
 
-   next = br_open->get_prev(scope_e::PREPROC);
+   next = br_open->get_prev(E_Scope::PREPROC);
 
    chunk_del(br_open);
    chunk_del(br_close);
 
-   return(next->get_next(scope_e::PREPROC));
+   return(next->get_next(E_Scope::PREPROC));
 } // mod_case_brace_remove
 
 
@@ -1398,7 +1398,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    Chunk *clos = chunk_skip_to_match(open);
 
    // find the end of the case-block
-   while ((pc = chunk_get_next_nc_nnl(pc, scope_e::PREPROC)) != nullptr)
+   while ((pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC)) != nullptr)
    {
       LOG_FMT(LMCB, "%s(%d): text() is '%s', orig_line %zu, orig_col is %zu, pp_level is %zu\n",
               __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->pp_level);
@@ -1431,7 +1431,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    if (last == nullptr)
    {
       LOG_FMT(LMCB, "%s(%d):  - last is nullptr\n", __func__, __LINE__);
-      Chunk *next = chunk_get_next_nc_nnl(cl_colon, scope_e::PREPROC);
+      Chunk *next = chunk_get_next_nc_nnl(cl_colon, E_Scope::PREPROC);
       return(next);
    }
    LOG_FMT(LMCB, "%s(%d): last->text() is '%s', orig_line %zu, orig_col is %zu\n",
@@ -1458,9 +1458,9 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    chunk.str       = "}";
    Chunk *br_close = chunk_add_after(&chunk, last);
 
-   for (pc = br_open->get_next(scope_e::PREPROC);
+   for (pc = br_open->get_next(E_Scope::PREPROC);
         pc != br_close;
-        pc = pc->get_next(scope_e::PREPROC))
+        pc = pc->get_next(E_Scope::PREPROC))
    {
       pc->level++;
       pc->brace_level++;
@@ -1485,7 +1485,7 @@ static void mod_case_brace(void)
    while (  pc != nullptr
          && pc->isNotNullChunk())
    {
-      Chunk *next = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+      Chunk *next = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
 
       if (next == nullptr)
       {
@@ -1511,7 +1511,7 @@ static void mod_case_brace(void)
       }
       else
       {
-         pc = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+         pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
       }
    }
 } // mod_case_brace
@@ -1561,7 +1561,7 @@ static void process_if_chain(Chunk *br_start)
                  get_token_name(pc->type));
       }
       braces.push_back(pc);
-      Chunk *br_close = chunk_skip_to_match(pc, scope_e::PREPROC);
+      Chunk *br_close = chunk_skip_to_match(pc, E_Scope::PREPROC);
 
       if (br_close == nullptr)
       {
@@ -1569,7 +1569,7 @@ static void process_if_chain(Chunk *br_start)
       }
       braces.push_back(br_close);
 
-      pc = chunk_get_next_nc_nnl(br_close, scope_e::PREPROC);
+      pc = chunk_get_next_nc_nnl(br_close, E_Scope::PREPROC);
 
       if (  pc == nullptr
          || chunk_is_not_token(pc, CT_ELSE))
@@ -1583,14 +1583,14 @@ static void process_if_chain(Chunk *br_start)
          // There is an 'else' - we want full braces.
          must_have_braces = true;
       }
-      pc = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+      pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
 
       if (chunk_is_token(pc, CT_ELSEIF))
       {
          while (  chunk_is_not_token(pc, CT_VBRACE_OPEN)
                && chunk_is_not_token(pc, CT_BRACE_OPEN))
          {
-            pc = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+            pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
          }
       }
 

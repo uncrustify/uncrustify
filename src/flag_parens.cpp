@@ -15,7 +15,7 @@ Chunk *flag_parens(Chunk *po, pcf_flags_t flags, c_token_t opentype, c_token_t p
    LOG_FUNC_ENTRY();
    Chunk *paren_close;
 
-   paren_close = chunk_skip_to_match(po, scope_e::PREPROC);
+   paren_close = chunk_skip_to_match(po, E_Scope::PREPROC);
 
    if (paren_close == nullptr)
    {
@@ -43,9 +43,9 @@ Chunk *flag_parens(Chunk *po, pcf_flags_t flags, c_token_t opentype, c_token_t p
       {
          Chunk *pc;
 
-         for (pc = po->get_next(scope_e::PREPROC);
+         for (pc = po->get_next(E_Scope::PREPROC);
               pc != nullptr && pc->isNotNullChunk() && pc != after_paren_close;
-              pc = pc->get_next(scope_e::PREPROC))
+              pc = pc->get_next(E_Scope::PREPROC))
          {
             chunk_flags_set(pc, flags);
 
@@ -68,5 +68,5 @@ Chunk *flag_parens(Chunk *po, pcf_flags_t flags, c_token_t opentype, c_token_t p
          set_chunk_parent(paren_close, parenttype);
       }
    }
-   return(chunk_get_next_nc_nnl(paren_close, scope_e::PREPROC));
+   return(chunk_get_next_nc_nnl(paren_close, E_Scope::PREPROC));
 } // flag_parens

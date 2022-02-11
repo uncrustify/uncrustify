@@ -34,7 +34,7 @@ void align_oc_msg_colon(Chunk *so)
    cas.Start(span);
 
    size_t level = so->level;
-   Chunk  *pc   = chunk_get_next_nc_nnl(so, scope_e::PREPROC);
+   Chunk  *pc   = chunk_get_next_nc_nnl(so, E_Scope::PREPROC);
 
    bool   did_line   = false;
    bool   has_colon  = false;
@@ -85,7 +85,7 @@ void align_oc_msg_colon(Chunk *so)
          }
          did_line = true;
       }
-      pc = pc->get_next(scope_e::PREPROC);
+      pc = pc->get_next(E_Scope::PREPROC);
    }
    log_rule_B("align_oc_msg_colon_first");
    nas.m_skip_first = !options::align_oc_msg_colon_first();

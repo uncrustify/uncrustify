@@ -29,7 +29,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
 
    for (pc = start;
         pc != nullptr && pc != end;
-        pc = chunk_get_next_nc_nnl(pc, scope_e::PREPROC))
+        pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC))
    {
       LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', type is %s\n",
               __func__, __LINE__, pc->text(), get_token_name(pc->type));
@@ -97,13 +97,13 @@ bool can_be_full_param(Chunk *start, Chunk *end)
               && chunk_is_token(pc, CT_PAREN_OPEN))
       {
          // Check for old-school func proto param '(type)'
-         Chunk *tmp1 = chunk_skip_to_match(pc, scope_e::PREPROC);
+         Chunk *tmp1 = chunk_skip_to_match(pc, E_Scope::PREPROC);
 
          if (tmp1 == nullptr)
          {
             return(false);
          }
-         Chunk *tmp2 = chunk_get_next_nc_nnl(tmp1, scope_e::PREPROC);
+         Chunk *tmp2 = chunk_get_next_nc_nnl(tmp1, E_Scope::PREPROC);
 
          if (tmp2 == nullptr)
          {
@@ -115,7 +115,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          {
             do
             {
-               pc = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+               pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
 
                if (pc == nullptr)
                {
@@ -142,19 +142,19 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       {
          // Check for func proto param 'void (*name)' or 'void (*name)(params)' or 'void (^name)(params)'
          // <name> can be optional
-         Chunk *tmp1 = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+         Chunk *tmp1 = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
 
          if (tmp1 == nullptr)
          {
             return(false);
          }
-         Chunk *tmp2 = chunk_get_next_nc_nnl(tmp1, scope_e::PREPROC);
+         Chunk *tmp2 = chunk_get_next_nc_nnl(tmp1, E_Scope::PREPROC);
 
          if (tmp2 == nullptr)
          {
             return(false);
          }
-         Chunk *tmp3 = (chunk_is_str(tmp2, ")", 1)) ? tmp2 : chunk_get_next_nc_nnl(tmp2, scope_e::PREPROC);
+         Chunk *tmp3 = (chunk_is_str(tmp2, ")", 1)) ? tmp2 : chunk_get_next_nc_nnl(tmp2, E_Scope::PREPROC);
 
          if (tmp3 == nullptr)
          {
@@ -174,7 +174,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          LOG_FMT(LFPARAM, "%s(%d): <skip fcn type>\n",
                  __func__, __LINE__);
 
-         tmp1 = chunk_get_next_nc_nnl(tmp3, scope_e::PREPROC);
+         tmp1 = chunk_get_next_nc_nnl(tmp3, E_Scope::PREPROC);
 
          if (tmp1 == nullptr)
          {
@@ -183,7 +183,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
 
          if (chunk_is_str(tmp1, "(", 1))
          {
-            tmp3 = chunk_skip_to_match(tmp1, scope_e::PREPROC);
+            tmp3 = chunk_skip_to_match(tmp1, E_Scope::PREPROC);
          }
          pc = tmp3;
          LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', type is %s\n",
@@ -201,7 +201,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
               && chunk_is_token(pc, CT_SQUARE_OPEN))
       {
          // skip over any array stuff
-         pc = chunk_skip_to_match(pc, scope_e::PREPROC);
+         pc = chunk_skip_to_match(pc, E_Scope::PREPROC);
          LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', type is %s\n",
                  __func__, __LINE__, pc->text(), get_token_name(pc->type));
       }
@@ -209,7 +209,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
               && chunk_is_token(pc, CT_SQUARE_OPEN))
       {
          // Bug #671: is it such as: bool foo[FOO_MAX]
-         pc = chunk_skip_to_match(pc, scope_e::PREPROC);
+         pc = chunk_skip_to_match(pc, E_Scope::PREPROC);
          LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', type is %s\n",
                  __func__, __LINE__, pc->text(), get_token_name(pc->type));
       }
@@ -404,7 +404,7 @@ bool chunkstack_match(ChunkStack &cs, Chunk *pc)
 } // chunkstack_match
 
 
-void flag_series(Chunk *start, Chunk *end, pcf_flags_t set_flags, pcf_flags_t clr_flags, scope_e nav)
+void flag_series(Chunk *start, Chunk *end, pcf_flags_t set_flags, pcf_flags_t clr_flags, E_Scope nav)
 {
    LOG_FUNC_ENTRY();
 
@@ -542,7 +542,7 @@ Chunk *set_paren_parent(Chunk *start, c_token_t parent)
    LOG_FUNC_ENTRY();
    Chunk *end;
 
-   end = chunk_skip_to_match(start, scope_e::PREPROC);
+   end = chunk_skip_to_match(start, E_Scope::PREPROC);
 
    if (end != nullptr)
    {
@@ -555,5 +555,5 @@ Chunk *set_paren_parent(Chunk *start, c_token_t parent)
       set_chunk_parent(end, parent);
    }
    LOG_FMT(LFLPAREN, "%s(%d):\n", __func__, __LINE__);
-   return(chunk_get_next_nc_nnl(end, scope_e::PREPROC));
+   return(chunk_get_next_nc_nnl(end, E_Scope::PREPROC));
 } // set_paren_parent

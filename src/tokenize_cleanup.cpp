@@ -337,7 +337,7 @@ void tokenize_cleanup(void)
 
       if (  chunk_is_token(pc, CT_SEMICOLON)
          && pc->flags.test(PCF_IN_PREPROC)
-         && !chunk_get_next_nc_nnl(pc, scope_e::PREPROC))
+         && !chunk_get_next_nc_nnl(pc, E_Scope::PREPROC))
       {
          LOG_FMT(LNOTE, "%s(%d): %s:%zu Detected a macro that ends with a semicolon. Possible failures if used.\n",
                  __func__, __LINE__, cpd.filename.c_str(), pc->orig_line);
@@ -991,7 +991,7 @@ void tokenize_cleanup(void)
 
       if (chunk_is_token(pc, CT_OC_INTF))
       {
-         Chunk *tmp = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+         Chunk *tmp = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
 
          while (  tmp != nullptr
                && tmp->type != CT_OC_END)
@@ -1003,7 +1003,7 @@ void tokenize_cleanup(void)
                        get_token_name(tmp->type));
                set_chunk_type(tmp, CT_WORD);
             }
-            tmp = chunk_get_next_nc_nnl(tmp, scope_e::PREPROC);
+            tmp = chunk_get_next_nc_nnl(tmp, E_Scope::PREPROC);
          }
       }
 
@@ -1208,7 +1208,7 @@ static void check_template(Chunk *start, bool in_type_cast)
    LOG_FMT(LTEMPL, "%s(%d): orig_line %zu, orig_col %zu:\n",
            __func__, __LINE__, start->orig_line, start->orig_col);
 
-   Chunk *prev = chunk_get_prev_nc_nnl(start, scope_e::PREPROC);
+   Chunk *prev = chunk_get_prev_nc_nnl(start, E_Scope::PREPROC);
 
    if (prev == nullptr)
    {
@@ -1225,9 +1225,9 @@ static void check_template(Chunk *start, bool in_type_cast)
       size_t level  = 1;
       size_t parens = 0;
 
-      for (pc = chunk_get_next_nc_nnl(start, scope_e::PREPROC);
+      for (pc = chunk_get_next_nc_nnl(start, E_Scope::PREPROC);
            pc != nullptr;
-           pc = chunk_get_next_nc_nnl(pc, scope_e::PREPROC))
+           pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC))
       {
          LOG_FMT(LTEMPL, "%s(%d): type is %s, level is %zu\n",
                  __func__, __LINE__, get_token_name(pc->type), level);
@@ -1326,7 +1326,7 @@ static void check_template(Chunk *start, bool in_type_cast)
       bool hit_semicolon = false;
       pc = start;
 
-      while ((pc = chunk_get_prev_nc_nnl(pc, scope_e::PREPROC)) != nullptr)
+      while ((pc = chunk_get_prev_nc_nnl(pc, E_Scope::PREPROC)) != nullptr)
       {
          if (  (  chunk_is_token(pc, CT_SEMICOLON)
                && hit_semicolon)
@@ -1385,9 +1385,9 @@ static void check_template(Chunk *start, bool in_type_cast)
 
       tokens[0] = CT_ANGLE_OPEN;
 
-      for (pc = chunk_get_next_nc_nnl(start, scope_e::PREPROC);
+      for (pc = chunk_get_next_nc_nnl(start, E_Scope::PREPROC);
            pc != nullptr;
-           pc = chunk_get_next_nc_nnl(pc, scope_e::PREPROC))
+           pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC))
       {
          constexpr static auto LCURRENT = LTEMPL;
 
@@ -1515,7 +1515,7 @@ static void check_template(Chunk *start, bool in_type_cast)
 
    if (chunk_is_token(end, CT_ANGLE_CLOSE))
    {
-      pc = chunk_get_next_nc_nnl(end, scope_e::PREPROC);
+      pc = chunk_get_next_nc_nnl(end, E_Scope::PREPROC);
 
       if (  pc == nullptr
          || pc->type != CT_NUMBER)
@@ -1563,7 +1563,7 @@ static void check_template_arg(Chunk *start, Chunk *end)
 
    while (pc != end)
    {
-      Chunk *next = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+      Chunk *next = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
       // a test "if (next == nullptr)" is not necessary
       chunk_flags_set(pc, PCF_IN_TEMPLATE);
 
@@ -1596,12 +1596,12 @@ static void check_template_arg(Chunk *start, Chunk *end)
 
       while (pc != end)
       {
-         Chunk *next = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+         Chunk *next = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
          // a test "if (next == nullptr)" is not necessary
          chunk_flags_set(pc, PCF_IN_TEMPLATE);
 
-         Chunk *prev  = chunk_get_prev_nc_nnl(pc, scope_e::PREPROC);
-         Chunk *prev2 = chunk_get_prev_nc_nnl(prev, scope_e::PREPROC);
+         Chunk *prev  = chunk_get_prev_nc_nnl(pc, E_Scope::PREPROC);
+         Chunk *prev2 = chunk_get_prev_nc_nnl(prev, E_Scope::PREPROC);
 
          if (  chunk_is_token(prev, CT_ELLIPSIS)                 // Issue #3309
             && chunk_is_token(prev2, CT_TYPENAME))
@@ -1625,9 +1625,9 @@ static void check_template_args(Chunk *start, Chunk *end)
    // Scan for commas
    Chunk *pc;
 
-   for (pc = chunk_get_next_nc_nnl(start, scope_e::PREPROC);
+   for (pc = chunk_get_next_nc_nnl(start, E_Scope::PREPROC);
         pc != nullptr && pc != end;
-        pc = chunk_get_next_nc_nnl(pc, scope_e::PREPROC))
+        pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC))
    {
       switch (pc->type)
       {

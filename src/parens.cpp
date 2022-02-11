@@ -61,7 +61,7 @@ void do_parens(void)
             continue;
          }
          // Grab the close sparen
-         Chunk *pclose = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level, scope_e::PREPROC);
+         Chunk *pclose = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level, E_Scope::PREPROC);
 
          if (pclose != nullptr)
          {
@@ -94,7 +94,7 @@ void do_parens_assign(void)                         // Issue #3316
                     __func__, __LINE__, pc->orig_line, pc->text(), pc->level);
             // look before for a open sparen
             size_t check_level = pc->level;
-            Chunk  *p          = pc->get_prev_nc(scope_e::PREPROC);
+            Chunk  *p          = pc->get_prev_nc(E_Scope::PREPROC);
 
             while (p->isNotNullChunk())
             {
@@ -116,7 +116,7 @@ void do_parens_assign(void)                         // Issue #3316
                {
                   break;
                }
-               p = p->get_prev_nc(scope_e::PREPROC);
+               p = p->get_prev_nc(E_Scope::PREPROC);
 
                if (p->level < check_level - 1)
                {
@@ -131,7 +131,7 @@ void do_parens_assign(void)                         // Issue #3316
                continue;
             }
             // Grab the semicolon
-            Chunk *semicolon = chunk_get_next_type(pc, CT_SEMICOLON, pc->level, scope_e::PREPROC);
+            Chunk *semicolon = chunk_get_next_type(pc, CT_SEMICOLON, pc->level, E_Scope::PREPROC);
 
             if (semicolon != nullptr)
             {
@@ -165,7 +165,7 @@ void do_parens_return(void)                         // Issue #3316
                     __func__, __LINE__, pc->orig_line, pc->text(), pc->level);
             // look before for a open sparen
             size_t check_level = pc->level;
-            Chunk  *p          = pc->get_prev_nc(scope_e::PREPROC);
+            Chunk  *p          = pc->get_prev_nc(E_Scope::PREPROC);
 
             while (p->isNotNullChunk())
             {
@@ -187,7 +187,7 @@ void do_parens_return(void)                         // Issue #3316
                {
                   break;
                }
-               p = p->get_prev_nc(scope_e::PREPROC);
+               p = p->get_prev_nc(E_Scope::PREPROC);
 
                if (p->level < check_level - 1)
                {
@@ -202,7 +202,7 @@ void do_parens_return(void)                         // Issue #3316
                continue;
             }
             // Grab the semicolon
-            Chunk *semicolon = chunk_get_next_type(pc, CT_SEMICOLON, pc->level, scope_e::PREPROC);
+            Chunk *semicolon = chunk_get_next_type(pc, CT_SEMICOLON, pc->level, E_Scope::PREPROC);
 
             if (semicolon != nullptr)
             {
@@ -244,7 +244,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
 
    chunk_add_before(&pc, first_n);
 
-   Chunk *last_p = chunk_get_prev_nc_nnl(last, scope_e::PREPROC);
+   Chunk *last_p = chunk_get_prev_nc_nnl(last, E_Scope::PREPROC);
 
    set_chunk_type(&pc, CT_PAREN_CLOSE);
    pc.orig_line   = last_p->orig_line;
