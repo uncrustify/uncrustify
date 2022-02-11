@@ -42,7 +42,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
    Chunk  *is_comment     = Chunk::NullChunkPtr;
    Chunk  *back           = pc->get_prev_nnl();
 
-   while (back->isNotNullChunk())
+   while (back->IsNotNullChunk())
    {
       if (back == cl_colon)
       {
@@ -92,7 +92,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
    if (  erst_found == 3
       || erst_found == 4)
    {
-      if (is_comment->isNotNullChunk())
+      if (is_comment->IsNotNullChunk())
       {
          Chunk *second = Chunk::NullChunkPtr;
 
@@ -106,7 +106,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
             second = is_semicolon;
          }
 
-         if (second->isNotNullChunk())
+         if (second->IsNotNullChunk())
          {
             if (is_comment->orig_line == second->orig_line)
             {
@@ -154,7 +154,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
    {
       // we have a preprocessor token
       while (  last != nullptr
-            && last->isNotNullChunk())
+            && last->IsNotNullChunk())
       {
          LOG_FMT(LMCB, "%s(%d): text() is '%s', orig_line %zu, orig_col is %zu\n",
                  __func__, __LINE__, last->text(), last->orig_line, last->orig_col);

@@ -70,7 +70,7 @@ Chunk *pawn_add_vsemi_after(Chunk *pc)
    }
    Chunk *next = pc->get_next_nc();
 
-   if (  next->isNotNullChunk()
+   if (  next->IsNotNullChunk()
       && (  chunk_is_token(next, CT_VSEMICOLON)
          || chunk_is_token(next, CT_SEMICOLON)))
    {
@@ -104,7 +104,7 @@ void pawn_scrub_vsemi(void)
       return;
    }
 
-   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       if (pc->type != CT_VSEMICOLON)
       {
@@ -185,7 +185,7 @@ void pawn_prescan(void)
    Chunk *pc    = Chunk::get_head();
 
    while (  pc != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
    {
       if (  did_nl
          && pc->type != CT_PREPROC
@@ -198,7 +198,7 @@ void pawn_prescan(void)
 
       // note that continued lines are ignored
       if (  pc != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
       {
          did_nl = (chunk_is_token(pc, CT_NEWLINE));
       }
@@ -233,7 +233,7 @@ static Chunk *pawn_process_line(Chunk *start)
       pc = start;
    }
 
-   while (  ((pc = pc->get_next_nc())->isNotNullChunk())
+   while (  ((pc = pc->get_next_nc())->IsNotNullChunk())
          && !chunk_is_str(pc, "(", 1)
          && pc->type != CT_ASSIGN
          && pc->type != CT_NEWLINE)
@@ -247,7 +247,7 @@ static Chunk *pawn_process_line(Chunk *start)
       }
    }
 
-   if (pc->isNotNullChunk())
+   if (pc->IsNotNullChunk())
    {
       if (chunk_is_token(pc, CT_ASSIGN))
       {
@@ -283,10 +283,10 @@ static Chunk *pawn_process_variable(Chunk *start)
    }
    Chunk *prev = Chunk::NullChunkPtr;
 
-   while ((pc = pc->get_next_nc())->isNotNullChunk())
+   while ((pc = pc->get_next_nc())->IsNotNullChunk())
    {
       if (  chunk_is_token(pc, CT_NEWLINE)
-         && prev->isNotNullChunk()
+         && prev->IsNotNullChunk()
          && !pawn_continued(prev, start->level))
       {
          if (  prev->type != CT_VSEMICOLON
@@ -312,7 +312,7 @@ void pawn_add_virtual_semicolons(void)
       Chunk *prev = Chunk::NullChunkPtr;
       Chunk *pc   = Chunk::get_head();
 
-      while ((pc = pc->get_next())->isNotNullChunk())
+      while ((pc = pc->get_next())->IsNotNullChunk())
       {
          if (  !chunk_is_comment(pc)
             && !chunk_is_newline(pc)
@@ -322,7 +322,7 @@ void pawn_add_virtual_semicolons(void)
             prev = pc;
          }
 
-         if (  prev->isNullChunk()
+         if (  prev->IsNullChunk()
             || (  pc->type != CT_NEWLINE
                && pc->type != CT_BRACE_CLOSE
                && pc->type != CT_VBRACE_CLOSE))
@@ -419,13 +419,13 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       set_chunk_type(last, CT_ANGLE_OPEN);
       set_chunk_parent(last, CT_FUNC_DEF);
 
-      while (  ((last = last->get_next())->isNotNullChunk())
+      while (  ((last = last->get_next())->IsNotNullChunk())
             && !chunk_is_str(last, ">", 1))
       {
          // do nothing just search, TODO: use search_chunk
       }
 
-      if (last->isNotNullChunk())
+      if (last->IsNotNullChunk())
       {
          LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle close %s\n",
                  __func__, pc->orig_line, pc->text(), get_token_name(last->type));
@@ -436,7 +436,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
    }
 
    if (  last == nullptr
-      || last->isNullChunk())
+      || last->IsNullChunk())
    {
       return(last);
    }
@@ -447,7 +447,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       last = chunk_get_next_type(last, CT_BRACE_CLOSE, last->level);
 
       if (  last != nullptr
-         && last->isNotNullChunk())
+         && last->IsNotNullChunk())
       {
          set_chunk_parent(last, CT_FUNC_DEF);
       }
@@ -493,10 +493,10 @@ static Chunk *pawn_process_func_def(Chunk *pc)
          prev->level++;
          prev->brace_level++;
          last = prev;
-      } while ((prev = prev->get_next())->isNotNullChunk());
+      } while ((prev = prev->get_next())->IsNotNullChunk());
 
       if (  last != nullptr
-         && last->isNotNullChunk())
+         && last->IsNotNullChunk())
       {
          LOG_FMT(LPFUNC, "%s:%zu] ended on %s, level %zu\n",
                  __func__, last->orig_line, get_token_name(last->type), last->level);

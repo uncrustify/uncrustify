@@ -233,7 +233,7 @@ void align_to_column(Chunk *pc, size_t column)
    {
       auto *next = pc->get_next();
 
-      if (next->isNullChunk())
+      if (next->IsNullChunk())
       {
          break;
       }
@@ -280,7 +280,7 @@ void align_to_column(Chunk *pc, size_t column)
               (almod == align_mode_e::KEEP_ABS) ? "abs" :
               (almod == align_mode_e::KEEP_REL) ? "rel" : "sft",
               pc->text(), get_token_name(pc->type), pc->orig_line, pc->column, pc->orig_col);
-   } while (  pc->isNotNullChunk()
+   } while (  pc->IsNotNullChunk()
            && pc->nl_count == 0);
 } // align_to_column
 
@@ -329,7 +329,7 @@ void reindent_line(Chunk *pc, size_t column)
       }
       Chunk *next = pc->get_next();
 
-      if (next->isNullChunk())
+      if (next->IsNullChunk())
       {
          break;
       }
@@ -373,7 +373,7 @@ void reindent_line(Chunk *pc, size_t column)
          }
          LOG_FMT(LINDLINED, " to %zu (orig %zu)\n", pc->column, pc->orig_col);
       }
-   } while (  pc->isNotNullChunk()
+   } while (  pc->IsNotNullChunk()
            && pc->nl_count == 0);
 } // reindent_line
 
@@ -494,7 +494,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    // Store the caret position
    Chunk *caret_tmp = Chunk::NullChunkPtr;
 
-   if (  tmp->isNotNullChunk()
+   if (  tmp->IsNotNullChunk()
       && tmp->type == CT_OC_BLOCK_CARET)
    {
       caret_tmp = tmp;
@@ -507,7 +507,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
 
    // If we still cannot find caret then return first chunk on the line
    if (  tmp == nullptr
-      || tmp->isNullChunk()
+      || tmp->IsNullChunk()
       || tmp->type != CT_OC_BLOCK_CARET)
    {
       return(candidate_chunk_first_on_line(pc));
@@ -522,7 +522,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    // Check for colon in ':^TYPE *(ARGS) {'
    if (from_colon)
    {
-      if (  tmp->isNullChunk()
+      if (  tmp->IsNullChunk()
          || tmp->type != CT_OC_COLON)
       {
          return(candidate_chunk_first_on_line(pc));
@@ -536,7 +536,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
 
    if (from_keyword)
    {
-      if (  tmp->isNullChunk()
+      if (  tmp->IsNullChunk()
          || (  tmp->type != CT_OC_MSG_NAME
             && tmp->type != CT_OC_MSG_FUNC))
       {
@@ -593,7 +593,7 @@ static void quick_indent_again(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       if (pc->indent.ref == nullptr)
       {
@@ -639,7 +639,7 @@ void indent_text(void)
    bool  classFound = false;                                 // Issue #672
 
    while (  pc != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
    {
       LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, for '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
@@ -776,7 +776,7 @@ void indent_text(void)
          {
             Chunk *next = pc->get_next();
 
-            if (next->isNullChunk())
+            if (next->IsNullChunk())
             {
                break;
             }
@@ -819,7 +819,7 @@ void indent_text(void)
          {
             Chunk *next = pc->get_next();
 
-            if (next->isNullChunk())
+            if (next->IsNullChunk())
             {
                break;
             }
@@ -834,7 +834,7 @@ void indent_text(void)
             log_rule_B("pp_indent_extern");
 
             while (  preproc_next != nullptr
-                  && preproc_next->isNotNullChunk()
+                  && preproc_next->IsNotNullChunk()
                   && preproc_next->type != CT_NEWLINE)
             {
                if (  (  (  (chunk_is_token(preproc_next, CT_BRACE_OPEN))
@@ -929,7 +929,7 @@ void indent_text(void)
          // Transition into a preproc by creating a dummy indent
          Chunk *pp_next = pc->get_next();
 
-         if (pp_next->isNullChunk())
+         if (pp_next->IsNullChunk())
          {
             return;
          }
@@ -1072,7 +1072,7 @@ void indent_text(void)
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
 
-               if (pc->isNullChunk())
+               if (pc->IsNullChunk())
                {
                   // need to break out of both the do and while loops
                   goto null_pc;
@@ -1182,7 +1182,7 @@ void indent_text(void)
                size_t count = 1;
                Chunk  *next = pc->get_next_nc();
 
-               while (  next->isNotNullChunk()
+               while (  next->IsNotNullChunk()
                      && (  (  chunk_is_token(next, CT_BRACE_CLOSE)
                            && get_chunk_parent_type(next) == CT_OC_AT)
                         || (  chunk_is_token(next, CT_SQUARE_CLOSE)
@@ -1472,7 +1472,7 @@ void indent_text(void)
                size_t count = 1;
                Chunk  *next = pc->get_next_nc();
 
-               while (  next->isNotNullChunk()
+               while (  next->IsNotNullChunk()
                      && (  (  chunk_is_token(next, CT_BRACE_CLOSE)
                            && get_chunk_parent_type(next) == CT_OC_AT)
                         || (  chunk_is_token(next, CT_SQUARE_CLOSE)
@@ -2288,7 +2288,7 @@ void indent_text(void)
             // comments before 'case' need to be aligned with the 'case'
             Chunk *pct = pc;
 
-            while (  ((pct = pct->get_prev_nnl())->isNotNullChunk())
+            while (  ((pct = pct->get_prev_nnl())->IsNotNullChunk())
                   && chunk_is_comment(pct))
             {
                Chunk *t2 = pct->get_prev();
@@ -2311,7 +2311,7 @@ void indent_text(void)
             // issue #663 + issue #1366
             Chunk *prev_prev_newline = pc->get_prev_nl()->get_prev_nl();
 
-            if (prev_prev_newline->isNotNullChunk())
+            if (prev_prev_newline->IsNotNullChunk())
             {
                // This only affects the 'break', so no need for a stack entry
                indent_column_set(prev_prev_newline->get_next()->column);
@@ -2338,7 +2338,7 @@ void indent_text(void)
 
                Chunk *next = pc->get_next()->get_next();  // colon + possible statement
 
-               if (  next->isNotNullChunk()
+               if (  next->IsNotNullChunk()
                   && !chunk_is_newline(next)
                      // label (+ 2, because there is colon and space after it) must fit into indent
                   && (val + static_cast<int>(pc->len()) + 2 <= static_cast<int>(pse_indent)))
@@ -2379,7 +2379,7 @@ void indent_text(void)
             // unless it is a Doxygen comment
             Chunk *pct = pc;
 
-            while (  ((pct = pct->get_prev_nnl())->isNotNullChunk())
+            while (  ((pct = pct->get_prev_nnl())->IsNotNullChunk())
                   && chunk_is_comment(pct)
                   && !chunk_is_Doxygen_comment(pct))
             {
@@ -2457,7 +2457,7 @@ void indent_text(void)
             {
                Chunk *next = pc->get_next();
 
-               if (  next->isNotNullChunk()
+               if (  next->IsNotNullChunk()
                   && !chunk_is_newline(next))
                {
                   frm.top().indent = next->column;
@@ -2513,7 +2513,7 @@ void indent_text(void)
                {
                   Chunk *next = pc->get_next();
 
-                  if (  next->isNotNullChunk()
+                  if (  next->IsNotNullChunk()
                      && !chunk_is_newline(next))
                   {
                      frm.top().indent = next->column;
@@ -2738,7 +2738,7 @@ void indent_text(void)
             log_rule_B("indent_square_nl");
             Chunk *next = pc->get_next_nc();
 
-            if (next->isNullChunk())
+            if (next->IsNullChunk())
             {
                break;
             }
@@ -2795,14 +2795,14 @@ void indent_text(void)
             }
             else
             {
-               if (  next->isNotNullChunk()
+               if (  next->IsNotNullChunk()
                   && !chunk_is_comment(next))
                {
                   if (chunk_is_token(next, CT_SPACE))
                   {
                      next = next->get_next_nc();
 
-                     if (next->isNullChunk())
+                     if (next->IsNullChunk())
                      {
                         break;
                      }
@@ -2990,7 +2990,7 @@ void indent_text(void)
             }
 
             if (  tmp != nullptr
-               && tmp->isNotNullChunk())
+               && tmp->IsNotNullChunk())
             {
                frm.top().pop_pc = tmp;
             }
@@ -3026,7 +3026,7 @@ void indent_text(void)
          }
          Chunk *next = pc->get_next();
 
-         if (next->isNotNullChunk())
+         if (next->IsNotNullChunk())
          {
             /*
              * fixes  1260 , 1268 , 1277 (Extra indentation after line with multiple assignments)
@@ -3128,13 +3128,13 @@ void indent_text(void)
             // Avoid indentation on return token if the next token is a new token
             // to properly indent object initializers returned by functions.
             log_rule_B("indent_off_after_return_new");
-            bool indent_after_return = (  next->isNotNullChunk()
+            bool indent_after_return = (  next->IsNotNullChunk()
                                        && next->type == CT_NEW)
                                        ? !options::indent_off_after_return_new()
                                        : !options::indent_off_after_return();
 
             if (  indent_after_return
-               || next->isNullChunk())
+               || next->IsNullChunk())
             {
                frm.push(pc, __func__, __LINE__);
 
@@ -3760,7 +3760,7 @@ void indent_text(void)
                            {
                               search = search->get_prev_nl()->get_next();
 
-                              if (search->isNullChunk())
+                              if (search->IsNullChunk())
                               {
                                  search = Chunk::get_head();
                               }
@@ -4298,7 +4298,7 @@ static bool single_line_comment_indent_rule_applies(Chunk *start, bool forward)
    }
    size_t nl_count = 0;
 
-   while ((pc = forward ? pc->get_next() : pc->get_prev())->isNotNullChunk())
+   while ((pc = forward ? pc->get_next() : pc->get_prev())->IsNotNullChunk())
    {
       if (chunk_is_newline(pc))
       {
@@ -4363,21 +4363,21 @@ static size_t calc_comment_next_col_diff(Chunk *pc)
       LOG_FMT(LCMTIND, "%s(%d): newline_token->text() is '%s', orig_line is %zu, orig_col is %zu\n",
               __func__, __LINE__, newline_token->text(), newline_token->orig_line, newline_token->orig_col);
 
-      if (  newline_token->isNullChunk()
+      if (  newline_token->IsNullChunk()
          || newline_token->nl_count > 1)
       {
          return(5000);  // FIXME: Max thresh magic number 5000
       }
       next = newline_token->get_next();
 
-      if (next->isNotNullChunk())
+      if (next->IsNotNullChunk())
       {
          LOG_FMT(LCMTIND, "%s(%d): next->text() is '%s', orig_line is %zu, orig_col is %zu\n",
                  __func__, __LINE__, next->text(), next->orig_line, next->orig_col);
       }
    } while (chunk_is_comment(next));
 
-   if (next->isNullChunk())
+   if (next->IsNullChunk())
    {
       return(5000);     // FIXME: Max thresh magic number 5000
    }
@@ -4426,7 +4426,7 @@ static void indent_comment(Chunk *pc, size_t col)
          prev = nl->get_prev();
       }
 
-      if (prev->isNotNullChunk())
+      if (prev->IsNotNullChunk())
       {
          LOG_FMT(LCMTIND, "%s(%d): prev->text() is '%s', orig_line %zu, orig_col %zu, level %zu\n",
                  __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col, prev->level);
@@ -4528,7 +4528,7 @@ bool ifdef_over_whole_file(void)
    Chunk  *end_pp   = Chunk::NullChunkPtr;
    size_t IFstage   = 0;
 
-   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       LOG_FMT(LNOTE, "%s(%d): pc->pp_level is %zu, pc->orig_line is %zu, pc->orig_col is %zu, pc->text() is '%s'\n",
               __func__, __LINE__, pc->pp_level, pc->orig_line, pc->orig_col, pc->text());
@@ -4548,7 +4548,7 @@ bool ifdef_over_whole_file(void)
          }
          Chunk *next = pc->get_next();
 
-         if (  next->isNullChunk()
+         if (  next->IsNullChunk()
             || next->type != CT_PP_IF)
          {
             break;
@@ -4601,7 +4601,7 @@ void indent_preproc(void)
    // Scan to see if the whole file is covered by one #ifdef
    const size_t pp_level_sub = ifdef_over_whole_file() ? 1 : 0;
 
-   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       LOG_FMT(LPPIS, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() is '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());

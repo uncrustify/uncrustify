@@ -25,7 +25,7 @@ Chunk *align_nl_cont(Chunk *start)
    size_t     max_col = 0;
    Chunk      *pc     = start;
 
-   while (  pc->isNotNullChunk()
+   while (  pc->IsNotNullChunk()
          && chunk_is_not_token(pc, CT_NEWLINE)
          && chunk_is_not_token(pc, CT_COMMENT_MULTI))
    {
@@ -53,7 +53,7 @@ void align_backslash_newline(void)
    Chunk *pc = Chunk::get_head();
 
    while (  pc != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
    {
       if (chunk_is_not_token(pc, CT_NL_CONT))
       {

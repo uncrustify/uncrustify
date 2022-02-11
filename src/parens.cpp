@@ -51,7 +51,7 @@ void do_parens(void)
       Chunk *pc = Chunk::get_head();
 
       while (  (pc = chunk_get_next_nc_nnl(pc)) != nullptr
-            && pc->isNotNullChunk())
+            && pc->IsNotNullChunk())
       {
          if (  pc->type != CT_SPAREN_OPEN
             || (  get_chunk_parent_type(pc) != CT_IF
@@ -86,7 +86,7 @@ void do_parens_assign(void)                         // Issue #3316
       Chunk *pc = Chunk::get_head();
 
       while (  (pc = chunk_get_next_nc_nnl(pc)) != nullptr
-            && pc->isNotNullChunk())
+            && pc->IsNotNullChunk())
       {
          if (chunk_is_token(pc, CT_ASSIGN))
          {
@@ -96,7 +96,7 @@ void do_parens_assign(void)                         // Issue #3316
             size_t check_level = pc->level;
             Chunk  *p          = pc->get_prev_nc(E_Scope::PREPROC);
 
-            while (p->isNotNullChunk())
+            while (p->IsNotNullChunk())
             {
                LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
                        __func__, __LINE__, p->orig_line, p->text(), p->level, get_token_name(p->type));
@@ -157,7 +157,7 @@ void do_parens_return(void)                         // Issue #3316
       Chunk *pc = Chunk::get_head();
 
       while (  (pc = chunk_get_next_nc_nnl(pc)) != nullptr
-            && pc->isNotNullChunk())
+            && pc->IsNotNullChunk())
       {
          if (chunk_is_token(pc, CT_RETURN))
          {
@@ -167,7 +167,7 @@ void do_parens_return(void)                         // Issue #3316
             size_t check_level = pc->level;
             Chunk  *p          = pc->get_prev_nc(E_Scope::PREPROC);
 
-            while (p->isNotNullChunk())
+            while (p->IsNotNullChunk())
             {
                LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
                        __func__, __LINE__, p->orig_line, p->text(), p->level, get_token_name(p->type));

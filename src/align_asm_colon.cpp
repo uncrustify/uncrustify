@@ -25,7 +25,7 @@ void align_asm_colon(void)
    Chunk *pc = Chunk::get_head();
 
    while (  pc != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
    {
       if (chunk_is_not_token(pc, CT_ASM_COLON))
       {
@@ -39,7 +39,7 @@ void align_asm_colon(void)
       did_nl = true;
 
       while (  pc != nullptr
-            && pc->isNotNullChunk()
+            && pc->IsNotNullChunk()
             && pc->level >= level)
       {
          if (chunk_is_newline(pc))

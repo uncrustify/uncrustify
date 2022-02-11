@@ -19,7 +19,7 @@ void do_parent_for_pp(void)
    Chunk           *pc = Chunk::get_head();
 
    while (  (pc = chunk_get_next_nc_nnl(pc)) != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
    {
       // CT_PP_IF,            // #if, #ifdef, or #ifndef
       // CT_PP_ELSE,          // #else or #elif

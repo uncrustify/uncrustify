@@ -62,7 +62,7 @@ Chunk *align_func_param(Chunk *start)
    size_t chunk_count = 0;
    Chunk  *pc         = start;
 
-   while ((pc = pc->get_next())->isNotNullChunk())
+   while ((pc = pc->get_next())->IsNotNullChunk())
    {
       chunk_count++;
       LOG_FMT(LFLPAREN, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
@@ -167,7 +167,7 @@ void align_func_params(void)
    LOG_FUNC_ENTRY();
    Chunk *pc = Chunk::get_head();
 
-   while ((pc = pc->get_next())->isNotNullChunk())
+   while ((pc = pc->get_next())->IsNotNullChunk())
    {
       LOG_FMT(LFLPAREN, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', parent_type is %s, parent_type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(),

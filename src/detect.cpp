@@ -152,11 +152,11 @@ static void detect_space_options(void)
    Chunk *pc   = prev->get_next();
    Chunk *next;
 
-   while (pc->isNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       next = pc->get_next();
 
-      if (next->isNullChunk())
+      if (next->IsNullChunk())
       {
          break;
       }

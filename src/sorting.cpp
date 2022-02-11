@@ -204,8 +204,8 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
       return(0);
    }
 
-   while (  pc1->isNotNullChunk()
-         && pc2->isNotNullChunk())
+   while (  pc1->IsNotNullChunk()
+         && pc2->IsNotNullChunk())
    {
       auto const &s1_ext = chunk_sort_str(pc1);
       auto const &s2_ext = chunk_sort_str(pc2);
@@ -317,16 +317,16 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
               __func__, __LINE__, pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
 
       // If we hit a newline or nullptr, we are done
-      if (  pc1->isNullChunk()
+      if (  pc1->IsNullChunk()
          || chunk_is_newline(pc1)
-         || pc2->isNullChunk()
+         || pc2->IsNullChunk()
          || chunk_is_newline(pc2))
       {
          break;
       }
    }
 
-   if (  pc1->isNullChunk()
+   if (  pc1->IsNullChunk()
       || !chunk_is_newline(pc2))
    {
       return(-1);
@@ -430,7 +430,7 @@ static void delete_chunks_on_line_having_chunk(Chunk *chunk)
    Chunk *pc = chunk_first_on_line(chunk);
 
    while (  pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && !chunk_is_comment(pc))
    {
       Chunk *next_pc = pc->get_next();
@@ -592,7 +592,7 @@ void sort_imports(void)
 
    log_rule_B("mod_sort_incl_import_grouping_enabled");
 
-   while (pc->isNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       // Simple optimization to limit the sorting. Any MAX_LINES_TO_CHECK_AFTER_INCLUDE lines after last
       // import is seen are ignore from sorting.
@@ -609,7 +609,7 @@ void sort_imports(void)
          bool did_import = false;
 
          if (  p_imp != nullptr
-            && p_imp->isNotNullChunk()
+            && p_imp->IsNotNullChunk()
             && p_last != nullptr
             && (  chunk_is_token(p_last, CT_SEMICOLON)
                || p_imp->flags.test(PCF_IN_PREPROC)))
@@ -638,7 +638,7 @@ void sort_imports(void)
             || (  options::mod_sort_incl_import_grouping_enabled()
                && p_imp_last != nullptr
                && (pc->orig_line - p_imp_last->orig_line) > max_gap_threshold_between_include_to_sort)
-            || next->isNullChunk())
+            || next->IsNullChunk())
          {
             if (num_chunks > 1)
             {

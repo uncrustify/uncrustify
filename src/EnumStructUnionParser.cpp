@@ -423,7 +423,7 @@ static bool chunk_is_macro_reference(Chunk *pc)
       && !pc->flags.test(PCF_IN_PREPROC))
    {
       while (  next != nullptr
-            && next->isNotNullChunk())
+            && next->IsNotNullChunk())
       {
          if (  next->flags.test(PCF_IN_PREPROC)
             && std::strcmp(pc->str.c_str(), next->str.c_str()) == 0)

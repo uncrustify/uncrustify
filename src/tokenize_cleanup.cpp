@@ -91,7 +91,7 @@ static Chunk *handle_double_angle_close(Chunk *pc)
    }
    Chunk *next = pc->get_next();
 
-   if (next->isNotNullChunk())
+   if (next->IsNotNullChunk())
    {
       if (  chunk_is_token(pc, CT_ANGLE_CLOSE)
          && chunk_is_token(next, CT_ANGLE_CLOSE)
@@ -163,7 +163,7 @@ void tokenize_trailing_return_types(void)
    // auto f23() const throw() -> bool;
    // auto f24() const throw() -> bool = delete;
 
-   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       char copy[1000];
       LOG_FMT(LNOTE, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
@@ -314,7 +314,7 @@ void tokenize_cleanup(void)
     */
    Chunk *pc;
 
-   for (pc = Chunk::get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (chunk_is_token(pc, CT_SQUARE_OPEN))
       {
@@ -345,7 +345,7 @@ void tokenize_cleanup(void)
    }
 
    // change := to CT_SQL_ASSIGN Issue #527
-   for (pc = Chunk::get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (chunk_is_token(pc, CT_COLON))
       {
@@ -367,7 +367,7 @@ void tokenize_cleanup(void)
    next = chunk_get_next_nc_nnl(pc);
 
    while (  pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && next != nullptr)
    {
       if (  chunk_is_token(pc, CT_DOT)
@@ -609,7 +609,7 @@ void tokenize_cleanup(void)
          {
             prev = pc->get_prev();
 
-            if (prev->isNullChunk())                  // Issue #3010
+            if (prev->IsNullChunk())                  // Issue #3010
             {
                set_chunk_type(pc, CT_TYPE);
             }
@@ -741,7 +741,7 @@ void tokenize_cleanup(void)
             tmp2 = next;
             Chunk *tmp;
 
-            while ((tmp = tmp2->get_next())->isNotNullChunk())
+            while ((tmp = tmp2->get_next())->IsNotNullChunk())
             {
                if (  tmp->type != CT_WORD
                   && tmp->type != CT_TYPE
@@ -866,7 +866,7 @@ void tokenize_cleanup(void)
 
             // Change words into CT_SQL_WORD until CT_SEMICOLON
             while (  tmp != nullptr
-                  && tmp->isNotNullChunk())
+                  && tmp->IsNotNullChunk())
             {
                if (chunk_is_token(tmp, CT_SEMICOLON))
                {
@@ -1023,8 +1023,8 @@ void tokenize_cleanup(void)
 
          Chunk *tmp = next->get_next();
 
-         if (  tmp->isNotNullChunk()
-            && tmp->get_next()->isNotNullChunk())
+         if (  tmp->IsNotNullChunk()
+            && tmp->get_next()->IsNotNullChunk())
          {
             if (chunk_is_token(tmp, CT_PAREN_CLOSE))
             {
@@ -1075,7 +1075,7 @@ void tokenize_cleanup(void)
 
          Chunk *tmp = next->get_next();
 
-         if (tmp->isNotNullChunk())
+         if (tmp->IsNotNullChunk())
          {
             set_chunk_type(tmp, CT_OC_SEL_NAME);
             set_chunk_parent(tmp, pc->type);

@@ -17,7 +17,7 @@ void parameter_pack_cleanup(void)
    Chunk *pc = Chunk::get_head();
 
    while (  pc != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
    {
       LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
@@ -29,7 +29,7 @@ void parameter_pack_cleanup(void)
 
          // look for a parameter pack
          while (  pc != nullptr
-               && pc->isNotNullChunk())
+               && pc->IsNotNullChunk())
          {
             LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
@@ -40,7 +40,7 @@ void parameter_pack_cleanup(void)
 
                // look for a token with the same text
                while (  pc != nullptr
-                     && pc->isNotNullChunk())
+                     && pc->IsNotNullChunk())
                {
                   LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
                           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());

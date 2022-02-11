@@ -62,7 +62,7 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
       pc = Chunk::NullChunkPtr;
    }
 
-   while (  pc->isNotNullChunk()
+   while (  pc->IsNotNullChunk()
          && !chunk_is_newline(pc)
          && pc->level >= start->level)
    {
@@ -71,7 +71,7 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
 
       Chunk *next = pc->get_next();
 
-      if (  next->isNullChunk()
+      if (  next->IsNullChunk()
          || chunk_is_comment(next))
       {
          // do nothing

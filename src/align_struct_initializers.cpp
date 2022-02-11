@@ -19,7 +19,7 @@ void align_struct_initializers(void)
    Chunk *pc = Chunk::get_head();
 
    while (  pc != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
    {
       Chunk *prev = chunk_get_prev_nc_nnl(pc);
 

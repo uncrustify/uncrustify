@@ -40,7 +40,7 @@ void remove_extra_semicolons(void)
    Chunk *pc = Chunk::get_head();
 
    while (  pc != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
    {
       Chunk *next = chunk_get_next_nc_nnl(pc);
       Chunk *prev;

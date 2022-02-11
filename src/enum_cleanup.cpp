@@ -28,7 +28,7 @@ void enum_cleanup(void)
    }
    Chunk *pc = Chunk::get_head();  // Issue #858
 
-   while (pc->isNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       if (  get_chunk_parent_type(pc) == CT_ENUM
          && chunk_is_token(pc, CT_BRACE_CLOSE))

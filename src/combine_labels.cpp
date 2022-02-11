@@ -25,7 +25,7 @@ Chunk *chunk_get_next_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
    do
    {
       tmp = tmp->get_next(scope);
-   } while (  tmp->isNotNullChunk()
+   } while (  tmp->IsNotNullChunk()
            && (  chunk_is_comment(tmp)
               || chunk_is_token(tmp, CT_NOEXCEPT)));
 
@@ -45,7 +45,7 @@ Chunk *chunk_get_prev_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
    do
    {
       tmp = tmp->get_prev(scope);
-   } while (  tmp->isNotNullChunk()
+   } while (  tmp->IsNotNullChunk()
            && (  chunk_is_comment(tmp)
               || chunk_is_newline(tmp)
               || chunk_is_token(tmp, CT_NOEXCEPT)));
@@ -67,13 +67,13 @@ void combine_labels(void)
 
    Chunk      *prev = Chunk::get_head();
 
-   if (prev->isNullChunk())
+   if (prev->IsNullChunk())
    {
       return;
    }
    Chunk *cur = prev->get_next_nc();
 
-   if (cur->isNullChunk())
+   if (cur->IsNullChunk())
    {
       return;
    }
@@ -82,7 +82,7 @@ void combine_labels(void)
    // unlikely that the file will start with a label...
    // prev cur next
    while (  next != nullptr
-         && next->isNotNullChunk())
+         && next->IsNotNullChunk())
    {
       if (chunk_is_token(next, CT_NEWLINE))
       {
@@ -228,7 +228,7 @@ void combine_labels(void)
 
                   Chunk     *tmp = next->get_next_nc();
 
-                  if (tmp->isNullChunk())
+                  if (tmp->IsNullChunk())
                   {
                      return;
                   }
@@ -267,7 +267,7 @@ void combine_labels(void)
                Chunk *tmp = next->get_next_nc(E_Scope::PREPROC);
 
                // Issue #1187
-               if (tmp->isNullChunk())
+               if (tmp->IsNullChunk())
                {
                   return;
                }
@@ -281,7 +281,7 @@ void combine_labels(void)
                   // Must be a macro thingy, assume some sort of label
                   set_chunk_type(next, CT_LABEL_COLON);
                }
-               else if (  tmp->isNullChunk()
+               else if (  tmp->IsNullChunk()
                        || (  chunk_is_not_token(tmp, CT_NUMBER)
                           && chunk_is_not_token(tmp, CT_DECLTYPE)
                           && chunk_is_not_token(tmp, CT_SIZEOF)
@@ -325,12 +325,12 @@ void combine_labels(void)
 
                   Chunk *nnext = next->get_next();
 
-                  if (nnext->isNullChunk())
+                  if (nnext->IsNullChunk())
                   {
                      return;
                   }
 
-                  while ((nnext = nnext->get_next())->isNotNullChunk())
+                  while ((nnext = nnext->get_next())->IsNotNullChunk())
                   {
                      if (chunk_is_token(nnext, CT_SEMICOLON))
                      {

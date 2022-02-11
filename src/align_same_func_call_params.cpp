@@ -49,7 +49,7 @@ void align_same_func_call_params(void)
    LOG_FMT(LAS, "%s(%d): (3): span is %zu, thresh is %zu\n",
            __func__, __LINE__, span, thresh);
 
-   for (pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+   for (pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       if (chunk_is_newline(pc))
       {
@@ -75,7 +75,7 @@ void align_same_func_call_params(void)
          else
          {
             // if we drop below the brace level that started it, we are done
-            if (  align_root->isNotNullChunk()
+            if (  align_root->IsNotNullChunk()
                && align_root->brace_level > pc->brace_level)
             {
                LOG_FMT(LASFCP, "  ++ (drop) Ended with %zu fcns\n", align_len);
@@ -131,7 +131,7 @@ void align_same_func_call_params(void)
 
       add_str = nullptr;
 
-      if (align_root->isNotNullChunk())
+      if (align_root->IsNotNullChunk())
       {
          // Issue # 1395
          // can only align functions on the same brace level
@@ -165,7 +165,7 @@ void align_same_func_call_params(void)
       }
       LOG_FMT(LASFCP, "%s(%d):\n", __func__, __LINE__);
 
-      if (align_root->isNullChunk())
+      if (align_root->IsNullChunk())
       {
          LOG_FMT(LASFCP, "%s(%d):align_root is null chunk, Add pc '%s'\n", __func__, __LINE__, pc->text());
          fcn_as.Add(pc);
@@ -262,7 +262,7 @@ void align_params(Chunk *start, deque<Chunk *> &chunks)
       pc = Chunk::NullChunkPtr;
    }
 
-   while ((pc = pc->get_next())->isNotNullChunk())
+   while ((pc = pc->get_next())->IsNotNullChunk())
    {
       if (  chunk_is_newline(pc)
          || chunk_is_token(pc, CT_SEMICOLON)

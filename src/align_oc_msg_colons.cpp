@@ -42,7 +42,7 @@ void align_oc_msg_colon(Chunk *so)
    bool   first_line = true;
 
    while (  pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && pc->level > level)
    {
       if (pc->level > (level + 1))
@@ -76,7 +76,7 @@ void align_oc_msg_colon(Chunk *so)
          cas.Add(pc);
          Chunk *tmp = pc->get_prev();
 
-         if (  tmp->isNotNullChunk()
+         if (  tmp->IsNotNullChunk()
             && (  chunk_is_token(tmp, CT_OC_MSG_FUNC)
                || chunk_is_token(tmp, CT_OC_MSG_NAME)))
          {
@@ -172,7 +172,7 @@ void align_oc_msg_colons(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       if (  chunk_is_token(pc, CT_SQUARE_OPEN)
          && get_chunk_parent_type(pc) == CT_OC_MSG)

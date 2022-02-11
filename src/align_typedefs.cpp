@@ -34,14 +34,14 @@ void align_typedefs(size_t span)
    Chunk *c_typedef = Chunk::NullChunkPtr;
    Chunk *pc        = Chunk::get_head();
 
-   while (pc->isNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       if (chunk_is_newline(pc))
       {
          as.NewLines(pc->nl_count);
          c_typedef = Chunk::NullChunkPtr;
       }
-      else if (c_typedef->isNotNullChunk())
+      else if (c_typedef->IsNotNullChunk())
       {
          if (pc->flags.test(PCF_ANCHOR))
          {

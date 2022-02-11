@@ -22,7 +22,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
    LOG_FUNC_ENTRY();
 
    if (  first == nullptr
-      && first->isNotNullChunk())
+      && first->IsNotNullChunk())
    {
       // coveralls will complain here. There are no example for that.
       // see https://en.wikipedia.org/wiki/Robustness_principle
@@ -64,7 +64,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
    Chunk  *pc = first;
 
    while (  pc != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
    {
       LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->text() '%s', type is %s, parent_type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->elided_text(copy), get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)));

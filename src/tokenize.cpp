@@ -2378,7 +2378,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
       Chunk *tail = Chunk::get_tail();
 
       if (  (ch == '(')
-         && (tail->isNotNullChunk())
+         && (tail->IsNotNullChunk())
          && (  chunk_is_token(tail, CT_CNG_HASINC)
             || chunk_is_token(tail, CT_CNG_HASINCN)))
       {

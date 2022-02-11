@@ -132,7 +132,7 @@ bool token_is_within_trailing_return(Chunk *pc)
       prev = Chunk::NullChunkPtr;
    }
 
-   while (prev->isNotNullChunk())
+   while (prev->IsNotNullChunk())
    {
       if (chunk_is_token(prev, CT_TRAILING_RET))
       {
@@ -1457,7 +1457,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
       Chunk *next = second->get_next();
 
-      if (  next->isNotNullChunk()
+      if (  next->IsNotNullChunk()
          && (  chunk_is_token(next, CT_COMMA)
             || chunk_is_token(next, CT_FPAREN_CLOSE)
             || chunk_is_token(next, CT_SEMICOLON)))
@@ -2702,7 +2702,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
             next = next->get_next_nc();
          }
 
-         if (  next->isNotNullChunk()
+         if (  next->IsNotNullChunk()
             && next->type != CT_WORD)
          {
             log_rule("sp_before_unnamed_ptr_star");                   // ptr_star 8
@@ -3371,7 +3371,7 @@ void space_text(void)
    size_t prev_column;
    size_t column = pc->column;
 
-   while (pc->isNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       if (chunk_is_token(pc, CT_NEWLINE))
       {
@@ -3420,7 +3420,7 @@ void space_text(void)
          next = pc->get_next();
       }
 
-      if (next->isNullChunk())
+      if (next->IsNullChunk())
       {
          break;
       }
@@ -3432,7 +3432,7 @@ void space_text(void)
       {
          Chunk *nn = next->get_next();                                    // Issue #2734
 
-         if (  nn->isNotNullChunk()
+         if (  nn->IsNotNullChunk()
             && chunk_is_token(nn, CT_SPACE))
          {
             chunk_del(nn); // remove the space
@@ -3481,14 +3481,14 @@ void space_text(void)
             // Find the next non-empty chunk on this line
             Chunk *tmp = next;
 
-            while (  tmp->isNotNullChunk()
+            while (  tmp->IsNotNullChunk()
                   && (tmp->len() == 0)
                   && !chunk_is_newline(tmp))
             {
                tmp = tmp->get_next();
             }
 
-            if (  tmp->isNotNullChunk()
+            if (  tmp->IsNotNullChunk()
                && tmp->len() > 0)
             {
                bool kw1 = CharTable::IsKw2(pc->str[pc->len() - 1]);
@@ -3680,11 +3680,11 @@ void space_text_balance_nested_parens(void)
 
    Chunk *first = Chunk::get_head();
 
-   while (first->isNotNullChunk())
+   while (first->IsNotNullChunk())
    {
       Chunk *next = first->get_next();
 
-      if (next->isNullChunk())
+      if (next->IsNullChunk())
       {
          break;
       }
@@ -3825,7 +3825,7 @@ void space_add_after(Chunk *pc, size_t count)
    Chunk *next = pc->get_next();
 
    // don't add at the end of the file or before a newline
-   if (  next->isNullChunk()
+   if (  next->IsNullChunk()
       || chunk_is_newline(next))
    {
       return;

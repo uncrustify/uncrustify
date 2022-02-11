@@ -29,7 +29,7 @@ void align_left_shift(void)
 
    Chunk *pc = Chunk::get_head();
 
-   while (pc->isNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       if (chunk_is_newline(pc))
       {
@@ -42,7 +42,7 @@ void align_left_shift(void)
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->elided_text(copy));
       }
 
-      if (  start->isNotNullChunk()
+      if (  start->IsNotNullChunk()
          && ((pc->flags & PCF_IN_PREPROC) != (start->flags & PCF_IN_PREPROC)))
       {
          // a change in preproc status restarts the aligning
@@ -53,14 +53,14 @@ void align_left_shift(void)
       {
          as.NewLines(pc->nl_count);
       }
-      else if (  start->isNotNullChunk()
+      else if (  start->IsNotNullChunk()
               && pc->level < start->level)
       {
          // A drop in level restarts the aligning
          as.Flush();
          start = Chunk::NullChunkPtr;
       }
-      else if (  start->isNotNullChunk()
+      else if (  start->IsNotNullChunk()
               && pc->level > start->level)
       {
          // Ignore any deeper levels when aligning
@@ -90,7 +90,7 @@ void align_left_shift(void)
              */
             Chunk *prev = pc->get_prev();
 
-            if (  prev->isNotNullChunk()
+            if (  prev->IsNotNullChunk()
                && chunk_is_newline(prev))
             {
                log_rule_B("indent_columns");
@@ -119,7 +119,7 @@ void align_left_shift(void)
           */
          Chunk *prev = pc->get_prev();
 
-         if (  prev->isNotNullChunk()
+         if (  prev->IsNotNullChunk()
             && chunk_is_newline(prev))
          {
             log_rule_B("indent_columns");

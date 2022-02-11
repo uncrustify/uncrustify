@@ -79,8 +79,8 @@ public:
    Chunk &operator=(const Chunk &o); // !!! partial copy: chunk is not linked to others
 
    //! whether this is a null Chunk or not
-   bool isNullChunk() const { return(null_chunk); }
-   bool isNotNullChunk() const { return(!null_chunk); }
+   bool IsNullChunk() const { return(null_chunk); }
+   bool IsNotNullChunk() const { return(!null_chunk); }
 
    //! sets all elements of the struct to their default value
    void reset();
@@ -645,7 +645,7 @@ static inline bool is_expected_string_and_level(Chunk *pc, const char *str, int 
 static inline bool chunk_is_token(const Chunk *pc, c_token_t c_token)
 {
    return(  pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && pc->type == c_token);
 }
 
@@ -653,7 +653,7 @@ static inline bool chunk_is_token(const Chunk *pc, c_token_t c_token)
 static inline bool chunk_is_not_token(const Chunk *pc, c_token_t c_token)
 {
    return(  pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && pc->type != c_token);
 }
 
@@ -731,7 +731,7 @@ static inline bool chunk_is_cpp_inheritance_access_specifier(Chunk *pc)
 {
    return(  language_is_set(LANG_CPP)
          && pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && (  chunk_is_token(pc, CT_ACCESS)
             || chunk_is_token(pc, CT_QUALIFIER))
          && (  std::strncmp(pc->str.c_str(), "private", 7) == 0
@@ -792,7 +792,7 @@ static inline bool chunk_is_semicolon(Chunk *pc)
 static inline bool chunk_is_blank(Chunk *pc)
 {
    return(  pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && (pc->len() == 0));
 }
 
@@ -825,7 +825,7 @@ static inline bool chunk_is_balanced_square(Chunk *pc)
 static inline bool chunk_is_preproc(Chunk *pc)
 {
    return(  pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && pc->flags.test(PCF_IN_PREPROC));
 }
 
@@ -833,7 +833,7 @@ static inline bool chunk_is_preproc(Chunk *pc)
 static inline bool chunk_is_comment_or_newline_in_preproc(Chunk *pc)
 {
    return(  pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && chunk_is_preproc(pc)
          && (  chunk_is_comment(pc)
             || chunk_is_newline(pc)));
@@ -940,7 +940,7 @@ static inline bool chunk_is_nullable(Chunk *pc)
 static inline bool chunk_is_addr(Chunk *pc)
 {
    if (  pc != nullptr
-      && pc->isNotNullChunk()
+      && pc->IsNotNullChunk()
       && (  chunk_is_token(pc, CT_BYREF)
          || (  (pc->len() == 1)
             && (pc->str[0] == '&')
@@ -1037,9 +1037,9 @@ static inline bool chunk_is_paren_close(Chunk *pc)
 static inline bool chunk_same_preproc(Chunk *pc1, Chunk *pc2)
 {
    return(  pc1 == nullptr
-         || pc1->isNullChunk()
+         || pc1->IsNullChunk()
          || pc2 == nullptr
-         || pc2->isNullChunk()
+         || pc2->IsNullChunk()
          || ((pc1->flags & PCF_IN_PREPROC) == (pc2->flags & PCF_IN_PREPROC)));
 }
 

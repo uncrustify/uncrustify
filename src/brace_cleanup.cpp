@@ -187,7 +187,7 @@ void brace_cleanup(void)
    ParseFrame frm{};
    Chunk      *pc = Chunk::get_head();
 
-   while (pc->isNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
@@ -259,7 +259,7 @@ void brace_cleanup(void)
    }
 //   pc = Chunk::get_head();
 //
-//   while (pc->isNotNullChunk())
+//   while (pc->IsNotNullChunk())
 //   {
 //      LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
 //              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
@@ -281,7 +281,7 @@ void brace_cleanup(void)
 //
 //               // look for a token with the same text
 //               while (  pc != ullptr)
-//			               && pc->isNotNullChunk())
+//			               && pc->IsNotNullChunk())
 //               {
 //                  LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
 //                          __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
@@ -1357,7 +1357,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    }
    Chunk *ref = pc->get_prev();
 
-   if (ref->isNullChunk())
+   if (ref->IsNullChunk())
    {
       return(nullptr);
    }
@@ -1376,7 +1376,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
       ref = ref->get_prev();
    }
 
-   if (ref->isNullChunk())
+   if (ref->IsNullChunk())
    {
       return(nullptr);
    }
@@ -1387,7 +1387,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    {
       if (chunk_is_token(ref, CT_PREPROC_BODY))
       {
-         while (  ref->isNotNullChunk()
+         while (  ref->IsNotNullChunk()
                && ref->flags.test(PCF_IN_PREPROC))
          {
             ref = ref->get_prev();
@@ -1409,7 +1409,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
       ref = ref->get_next();
    }
 
-   if (ref->isNullChunk())
+   if (ref->IsNullChunk())
    {
       return(nullptr);
    }

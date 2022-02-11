@@ -23,7 +23,7 @@ void align_add(ChunkStack &cs, Chunk *pc, size_t &max_col)
       prev = pc->get_prev();
    }
 
-   if (  prev->isNullChunk()
+   if (  prev->IsNullChunk()
       || chunk_is_newline(prev))
    {
       min_col = 1;

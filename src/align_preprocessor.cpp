@@ -39,7 +39,7 @@ void align_preprocessor(void)
    Chunk *pc = Chunk::get_head();
 
    while (  pc != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
    {
       // Note: not counting back-slash newline combos
       if (chunk_is_token(pc, CT_NEWLINE))   // mind the gap: chunk_is_newline(pc) is NOT the same!
@@ -57,7 +57,7 @@ void align_preprocessor(void)
       // step past the 'define'
       pc = pc->get_next_nc();
 
-      if (pc->isNullChunk())
+      if (pc->IsNullChunk())
       {
          // coveralls will complain here. There are no example for that.
          // see https://en.wikipedia.org/wiki/Robustness_principle
@@ -86,7 +86,7 @@ void align_preprocessor(void)
       // step to the value past the close parenthesis or the macro name
       pc = pc->get_next();
 
-      if (pc->isNullChunk())
+      if (pc->IsNullChunk())
       {
          // coveralls will complain here. There are no example for that.
          // see https://en.wikipedia.org/wiki/Robustness_principle

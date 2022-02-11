@@ -1661,13 +1661,13 @@ static void add_file_footer()
    Chunk *pc = Chunk::get_tail();
 
    // Back up if the file ends with a newline
-   if (  pc->isNotNullChunk()
+   if (  pc->IsNotNullChunk()
       && chunk_is_newline(pc))
    {
       pc = pc->get_prev();
    }
 
-   if (  pc->isNotNullChunk()
+   if (  pc->IsNotNullChunk()
       && (  !chunk_is_comment(pc)
          || !chunk_is_newline(pc->get_prev())))
    {
@@ -1690,7 +1690,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
    Chunk *tmp;
    bool  do_insert;
 
-   for (pc = Chunk::get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next_nc_nnl_np(pc))
+   for (pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl_np(pc))
    {
       if (pc->type != type)
       {
@@ -1759,7 +1759,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
 
       while (  ref != nullptr
             && (ref = ref->get_prev()) != nullptr
-            && ref->isNotNullChunk())
+            && ref->IsNotNullChunk())
       {
          // Bail if we change level or find an access specifier colon
          if (  ref->level != pc->level
@@ -1814,7 +1814,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
       }
 
       if (  (  ref == nullptr
-            || ref->isNullChunk())
+            || ref->IsNullChunk())
          && !chunk_is_comment(Chunk::get_head())
          && get_chunk_parent_type(Chunk::get_head()) == type)
       {
@@ -1847,7 +1847,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
    Chunk *tmp;
    bool  do_insert;
 
-   for (pc = Chunk::get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next_nc_nnl_np(pc))
+   for (pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl_np(pc))
    {
       if (pc->type != type)
       {
@@ -1862,7 +1862,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
       ref = pc;
 
       while (  (ref = ref->get_prev()) != nullptr
-            && ref->isNotNullChunk())
+            && ref->IsNotNullChunk())
       {
          // ignore the CT_TYPE token that is the result type
          if (  ref->level != pc->level
@@ -2437,7 +2437,7 @@ void uncrustify_end()
 
    cpd.unc_stage = unc_stage_e::CLEANUP;
 
-   while ((pc = Chunk::get_head())->isNotNullChunk())
+   while ((pc = Chunk::get_head())->IsNotNullChunk())
    {
       chunk_del(pc);
    }

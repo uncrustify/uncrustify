@@ -178,7 +178,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
    }
 
    while (  (prev = prev->get_prev()) != nullptr
-         && prev->isNotNullChunk()
+         && prev->IsNotNullChunk()
          && (  chunk_is_ptr_operator(prev)
             || chunk_is_token(prev, CT_TPAREN_OPEN)))
    {
@@ -246,12 +246,12 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       LOG_FMT(LAS, "AlignStack::%s(%d): tmp_col is %zu\n",
               __func__, __LINE__, tmp_col);
 
-      while (  tmp->isNotNullChunk()
+      while (  tmp->IsNotNullChunk()
             && tmp != start)
       {
          Chunk *next = tmp->get_next();
 
-         if (next->isNotNullChunk())
+         if (next->IsNotNullChunk())
          {
             LOG_FMT(LAS, "AlignStack::%s(%d): next->orig_line is %zu, orig_col is %zu, text() '%s', level is %zu, type is %s\n",
                     __func__, __LINE__, next->orig_line, next->orig_col, next->text(), next->level, get_token_name(next->type));

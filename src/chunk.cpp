@@ -161,14 +161,14 @@ const char *Chunk::elided_text(char *for_the_copy) const
 
 Chunk *Chunk::get_next(E_Scope scope) const
 {
-   if (this->isNullChunk())
+   if (this->IsNullChunk())
    {
       return(NullChunkPtr);
    }
    Chunk *pc = g_cl.GetNext(this);
 
    if (  pc == nullptr
-      || pc->isNullChunk())
+      || pc->IsNullChunk())
    {
       return(NullChunkPtr);
    }
@@ -190,14 +190,14 @@ Chunk *Chunk::get_next(E_Scope scope) const
 
    // Not in a preproc, skip any preproc
    while (  pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && pc->flags.test(PCF_IN_PREPROC))
    {
       pc = g_cl.GetNext(pc);
    }
 
    if (  pc == nullptr
-      || pc->isNullChunk())
+      || pc->IsNullChunk())
    {
       return(NullChunkPtr);
    }
@@ -207,14 +207,14 @@ Chunk *Chunk::get_next(E_Scope scope) const
 
 Chunk *Chunk::get_prev(E_Scope scope) const
 {
-   if (this->isNullChunk())
+   if (this->IsNullChunk())
    {
       return(NullChunkPtr);
    }
    Chunk *pc = g_cl.GetPrev(this);
 
    if (  pc == nullptr
-      || pc->isNullChunk())
+      || pc->IsNullChunk())
    {
       return(NullChunkPtr);
    }
@@ -236,14 +236,14 @@ Chunk *Chunk::get_prev(E_Scope scope) const
 
    // Not in a preproc, skip any preproc
    while (  pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && pc->flags.test(PCF_IN_PREPROC))
    {
       pc = g_cl.GetPrev(pc);
    }
 
    if (  pc == nullptr
-      || pc->isNullChunk())
+      || pc->IsNullChunk())
    {
       return(NullChunkPtr);
    }
@@ -425,7 +425,7 @@ Chunk *Chunk::Search(const ::check_t check_fct, const E_Scope scope,
    do                                   // loop over the chunk list
    {
       pc = (pc->*dir_fct)(scope);       // in either direction while
-   } while (  pc->isNotNullChunk()      // the end of the list was not reached yet
+   } while (  pc->IsNotNullChunk()      // the end of the list was not reached yet
            && (check_fct(pc) != cond)); // and the demanded chunk was not found either
 
    return(pc);                          // the latest chunk is the searched one
@@ -449,10 +449,10 @@ static Chunk *__internal_chunk_search(Chunk *cur, const check_t check_fct, const
    do                                     // loop over the chunk list
    {
       pc = (pc->*search_function)(scope); // in either direction while
-   } while (  pc->isNotNullChunk()        // the end of the list was not reached yet
+   } while (  pc->IsNotNullChunk()        // the end of the list was not reached yet
            && (check_fct(pc) != cond));   // and the demanded chunk was not found either
 
-   if (pc->isNullChunk())
+   if (pc->IsNullChunk())
    {
       pc = nullptr;
    }
@@ -480,7 +480,7 @@ bool are_chunks_in_same_line(Chunk *start, Chunk *end)
    }
    Chunk *tmp = start->get_next();
 
-   while (  tmp->isNotNullChunk()
+   while (  tmp->IsNotNullChunk()
          && tmp != end)
    {
       if (chunk_is_token(tmp, CT_NEWLINE))
@@ -511,10 +511,10 @@ static Chunk *chunk_search_type(Chunk *cur, const c_token_t type,
    do                                     // loop over the chunk list
    {
       pc = (pc->*search_function)(scope); // in either direction while
-   } while (  pc->isNotNullChunk()        // the end of the list was not reached yet
+   } while (  pc->IsNotNullChunk()        // the end of the list was not reached yet
            && pc->type != type);          // and the demanded chunk was not found either
 
-   if (pc->isNullChunk())
+   if (pc->IsNullChunk())
    {
       pc = nullptr;
    }
@@ -539,10 +539,10 @@ static Chunk *chunk_search_type_level(Chunk *cur, c_token_t type, E_Scope scope,
    do                                     // loop over the chunk list
    {
       pc = (pc->*search_function)(scope); // in either direction while
-   } while (  pc->isNotNullChunk()        // the end of the list was not reached yet
+   } while (  pc->IsNotNullChunk()        // the end of the list was not reached yet
            && (!is_expected_type_and_level(pc, type, level)));
 
-   if (pc->isNullChunk())
+   if (pc->IsNullChunk())
    {
       pc = nullptr;
    }
@@ -566,10 +566,10 @@ static Chunk *chunk_search_str(Chunk *cur, const char *str, size_t len, E_Scope 
    do                                     // loop over the chunk list
    {
       pc = (pc->*search_function)(scope); // in either direction while
-   } while (  pc->isNotNullChunk()        // the end of the list was not reached yet
+   } while (  pc->IsNotNullChunk()        // the end of the list was not reached yet
            && (!is_expected_string_and_level(pc, str, level, len)));
 
-   if (pc->isNullChunk())
+   if (pc->IsNullChunk())
    {
       pc = nullptr;
    }
@@ -644,7 +644,7 @@ static void chunk_log_msg(Chunk *chunk, const log_sev_t log, const char *str)
 static void chunk_log(Chunk *pc, const char *text)
 {
    if (  pc != nullptr
-      && pc->isNotNullChunk()
+      && pc->IsNotNullChunk()
       && (cpd.unc_stage != unc_stage_e::TOKENIZE)
       && (cpd.unc_stage != unc_stage_e::CLEANUP))
    {
@@ -654,17 +654,17 @@ static void chunk_log(Chunk *pc, const char *text)
 
       chunk_log_msg(pc, log, text);
 
-      if (  prev->isNotNullChunk()
-         && next->isNotNullChunk())
+      if (  prev->IsNotNullChunk()
+         && next->IsNotNullChunk())
       {
          chunk_log_msg(prev, log, "   @ between");
          chunk_log_msg(next, log, "   and");
       }
-      else if (next->isNotNullChunk())
+      else if (next->IsNotNullChunk())
       {
          chunk_log_msg(next, log, "   @ before");
       }
-      else if (prev->isNotNullChunk())
+      else if (prev->IsNotNullChunk())
       {
          chunk_log_msg(prev, log, "   @ after");
       }
@@ -858,14 +858,14 @@ void chunk_swap(Chunk *pc1, Chunk *pc2)
 Chunk *chunk_first_on_line(Chunk *pc)
 {
    if (  pc == nullptr
-      || pc->isNullChunk())
+      || pc->IsNullChunk())
    {
       return(Chunk::NullChunkPtr);
    }
    Chunk *first = pc;
 
    while (  (pc = pc->get_prev()) != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && !chunk_is_newline(pc))
    {
       first = pc;
@@ -901,8 +901,8 @@ void chunk_swap_lines(Chunk *pc1, Chunk *pc2)
    pc1 = chunk_first_on_line(pc1);
    pc2 = chunk_first_on_line(pc2);
 
-   if (  pc1->isNullChunk()
-      || pc2->isNullChunk()
+   if (  pc1->IsNullChunk()
+      || pc2->IsNullChunk()
       || pc1 == pc2)
    {
       return;
@@ -915,7 +915,7 @@ void chunk_swap_lines(Chunk *pc1, Chunk *pc2)
    Chunk *ref2 = pc2->get_prev();
 
    // Move the line started at pc2 before pc1
-   while (  pc2->isNotNullChunk()
+   while (  pc2->IsNotNullChunk()
          && !chunk_is_newline(pc2))
    {
       Chunk *tmp = pc2->get_next();
@@ -930,13 +930,13 @@ void chunk_swap_lines(Chunk *pc1, Chunk *pc2)
     */
 
    // Now move the line started at pc1 after ref2
-   while (  pc1->isNotNullChunk()
+   while (  pc1->IsNotNullChunk()
          && !chunk_is_newline(pc1))
    {
       Chunk *tmp = pc1->get_next();
       g_cl.Pop(pc1);
 
-      if (ref2->isNotNullChunk())
+      if (ref2->IsNotNullChunk())
       {
          g_cl.AddAfter(pc1, ref2);
       }
@@ -957,8 +957,8 @@ void chunk_swap_lines(Chunk *pc1, Chunk *pc2)
     * pc1 and pc2 should be the newlines for their lines.
     * swap the chunks and the nl_count so that the spacing remains the same.
     */
-   if (  pc1->isNotNullChunk()
-      && pc2->isNotNullChunk())
+   if (  pc1->IsNotNullChunk()
+      && pc2->IsNotNullChunk())
    {
       size_t nl_count = pc1->nl_count;
 
@@ -985,7 +985,7 @@ Chunk *chunk_get_prev_nvb(Chunk *cur, const E_Scope scope)
 void chunk_flags_set_real(Chunk *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits)
 {
    if (  pc != nullptr
-      && pc->isNotNullChunk())
+      && pc->IsNotNullChunk())
    {
       LOG_FUNC_ENTRY();
       auto const nflags = (pc->flags & ~clr_bits) | set_bits;

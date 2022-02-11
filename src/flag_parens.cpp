@@ -44,7 +44,7 @@ Chunk *flag_parens(Chunk *po, pcf_flags_t flags, c_token_t opentype, c_token_t p
          Chunk *pc;
 
          for (pc = po->get_next(E_Scope::PREPROC);
-              pc != nullptr && pc->isNotNullChunk() && pc != after_paren_close;
+              pc != nullptr && pc->IsNotNullChunk() && pc != after_paren_close;
               pc = pc->get_next(E_Scope::PREPROC))
          {
             chunk_flags_set(pc, flags);

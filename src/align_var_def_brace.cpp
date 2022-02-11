@@ -22,7 +22,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 {
    LOG_FUNC_ENTRY();
 
-   if (start->isNullChunk())
+   if (start->IsNullChunk())
    {
       return(nullptr);
    }
@@ -115,7 +115,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
    Chunk *pc       = start->get_next();
 
    while (  pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && (  pc->level >= start->level
             || pc->level == 0))
    {
@@ -310,7 +310,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
             {
                next = pc;
 
-               while ((next = next->get_next_nc())->isNotNullChunk())
+               while ((next = next->get_next_nc())->IsNotNullChunk())
                {
                   if (chunk_is_token(next, CT_ATTRIBUTE))
                   {

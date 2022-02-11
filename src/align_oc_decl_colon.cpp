@@ -31,7 +31,7 @@ void align_oc_decl_colon(void)
    Chunk *pc = Chunk::get_head();
 
    while (  pc != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
    {
       if (chunk_is_not_token(pc, CT_OC_SCOPE))
       {
@@ -47,7 +47,7 @@ void align_oc_decl_colon(void)
       did_line = false;
 
       while (  pc != nullptr
-            && pc->isNotNullChunk()
+            && pc->IsNotNullChunk()
             && pc->level >= level)
       {
          // The declaration ends with an open brace or semicolon

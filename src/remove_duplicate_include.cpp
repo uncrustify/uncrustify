@@ -23,7 +23,7 @@ void remove_duplicate_include(void)
    Chunk           *preproc = Chunk::NullChunkPtr;
    Chunk           *pc      = Chunk::get_head();
 
-   while (pc->isNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       //LOG_FMT(LRMRETURN, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n",
       //        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(),

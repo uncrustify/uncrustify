@@ -75,7 +75,7 @@ Chunk *align_trailing_comments(Chunk *start)
    // Find the max column
    log_rule_B("align_right_cmt_span");
 
-   while (  pc->isNotNullChunk()
+   while (  pc->IsNotNullChunk()
          && (nl_count < options::align_right_cmt_span()))
    {
       if (  pc->flags.test(PCF_RIGHT_COMMENT)
@@ -155,7 +155,7 @@ comment_align_e get_comment_align_type(Chunk *cmt)
 
    if (  !options::align_right_cmt_mix()
       && cmt != nullptr
-      && ((prev = cmt->get_prev())->isNotNullChunk()))
+      && ((prev = cmt->get_prev())->IsNotNullChunk()))
    {
       if (  chunk_is_token(prev, CT_PP_ENDIF)
          || chunk_is_token(prev, CT_PP_ELSE)
@@ -177,7 +177,7 @@ void align_right_comments(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       if (  chunk_is_token(pc, CT_COMMENT)
          || chunk_is_token(pc, CT_COMMENT_CPP)
@@ -223,7 +223,7 @@ void align_right_comments(void)
 
    Chunk *pc = Chunk::get_head();
 
-   while (pc->isNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       if (pc->flags.test(PCF_RIGHT_COMMENT))
       {

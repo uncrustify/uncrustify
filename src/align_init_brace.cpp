@@ -59,7 +59,7 @@ void align_init_brace(Chunk *start)
          pc = pc->get_next();
       }
    } while (  pc != nullptr
-           && pc->isNotNullChunk()
+           && pc->IsNotNullChunk()
            && pc->level > start->level);
 
    // debug dump the current frame
@@ -200,6 +200,6 @@ void align_init_brace(Chunk *start)
       }
       pc = pc->get_next();
    } while (  pc != nullptr
-           && pc->isNotNullChunk()
+           && pc->IsNotNullChunk()
            && pc->level > start->level);
 } // align_init_brace

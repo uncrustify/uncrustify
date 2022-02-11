@@ -21,7 +21,7 @@ void align_oc_msg_spec(size_t span)
 
    as.Start(span, 0);
 
-   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       if (chunk_is_newline(pc))
       {

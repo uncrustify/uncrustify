@@ -17,7 +17,7 @@ void quick_align_again(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       char copy[1000];
       LOG_FMT(LALAGAIN, "%s(%d): orig_line is %zu, orig_col is %zu, column is %zu, text() '%s'\n",

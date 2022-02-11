@@ -182,7 +182,7 @@ void do_braces(void)
       // Scan for the brace close or a newline
       tmp = br_open;
 
-      while ((tmp = tmp->get_next_nc())->isNotNullChunk())
+      while ((tmp = tmp->get_next_nc())->IsNotNullChunk())
       {
          if (chunk_is_newline(tmp))
          {
@@ -270,7 +270,7 @@ static void examine_braces(void)
    log_rule_B("mod_full_brace_using");
    log_rule_B("mod_full_brace_while");
 
-   for (Chunk *pc = Chunk::get_tail(); pc->isNotNullChunk();)
+   for (Chunk *pc = Chunk::get_tail(); pc->IsNotNullChunk();)
    {
       Chunk *prev = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1);
 
@@ -325,7 +325,7 @@ static bool should_add_braces(Chunk *vbopen)
    Chunk  *pc = Chunk::NullChunkPtr;
 
    for (pc = vbopen->get_next_nc(E_Scope::PREPROC);
-        (pc->isNotNullChunk() && pc->level > vbopen->level);
+        (pc->IsNotNullChunk() && pc->level > vbopen->level);
         pc = pc->get_next_nc(E_Scope::PREPROC))
    {
       if (chunk_is_newline(pc))
@@ -334,7 +334,7 @@ static bool should_add_braces(Chunk *vbopen)
       }
    }
 
-   if (  pc->isNotNullChunk()
+   if (  pc->IsNotNullChunk()
       && nl_count > nl_max
       && vbopen->pp_level == pc->pp_level)
    {
@@ -380,7 +380,7 @@ static bool can_remove_braces(Chunk *bopen)
    LOG_FMT(LBRDEL, "%s(%d):  - begin with token '%s', orig_line is %zu, orig_col is %zu\n",
            __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
 
-   while (  pc->isNotNullChunk()
+   while (  pc->IsNotNullChunk()
          && pc->level >= level)
    {
       LOG_FMT(LBRDEL, "%s(%d): test token '%s', orig_line is %zu, orig_col is %zu\n",
@@ -480,7 +480,7 @@ static bool can_remove_braces(Chunk *bopen)
       pc   = pc->get_next_nc();
    }
 
-   if (pc->isNullChunk())
+   if (pc->IsNullChunk())
    {
       LOG_FMT(LBRDEL, "%s(%d):  pc is null chunk\n", __func__, __LINE__);
       return(false);
@@ -531,7 +531,7 @@ static void examine_brace(Chunk *bopen)
 
    Chunk        *pc = bopen->get_next_nc();
 
-   while (  pc->isNotNullChunk()
+   while (  pc->IsNotNullChunk()
          && pc->level >= level)
    {
       if (chunk_is_token(pc, CT_NEWLINE))
@@ -630,7 +630,7 @@ static void examine_brace(Chunk *bopen)
                return;
             }
 
-            if (prev->isNotNullChunk())
+            if (prev->IsNotNullChunk())
             {
                LOG_FMT(LBRDEL, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', prev->text '%s', prev->type %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), prev->text(), get_token_name(prev->type));
@@ -777,7 +777,7 @@ static void convert_brace(Chunk *br)
       br->str.clear();
       tmp = br->get_prev();
 
-      if (tmp->isNullChunk())
+      if (tmp->IsNullChunk())
       {
          return;
       }
@@ -788,7 +788,7 @@ static void convert_brace(Chunk *br)
       br->str.clear();
       tmp = br->get_next();
 
-      if (tmp->isNullChunk())
+      if (tmp->IsNullChunk())
       {
          return;
       }
@@ -831,7 +831,7 @@ static void convert_brace(Chunk *br)
             brace = chunk_skip_to_match_rev(br);
 
             if (  brace == nullptr
-               || brace->isNullChunk())
+               || brace->IsNullChunk())
             {
                brace = chunk_get_prev_type(br, CT_BRACE_OPEN, br->level);
             }
@@ -917,7 +917,7 @@ static void convert_vbrace_to_brace(void)
    log_rule_B("mod_full_brace_using");
    log_rule_B("mod_full_brace_function");
 
-   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (chunk_is_not_token(pc, CT_VBRACE_OPEN))
       {
@@ -945,7 +945,7 @@ static void convert_vbrace_to_brace(void)
          Chunk *vbc = Chunk::NullChunkPtr;
          Chunk *tmp = pc;
 
-         while ((tmp = tmp->get_next())->isNotNullChunk())
+         while ((tmp = tmp->get_next())->IsNotNullChunk())
          {
             if (  in_preproc
                && !tmp->flags.test(PCF_IN_PREPROC))
@@ -964,7 +964,7 @@ static void convert_vbrace_to_brace(void)
             }
          }
 
-         if (vbc->isNullChunk())
+         if (vbc->IsNullChunk())
          {
             continue;
          }
@@ -1071,7 +1071,7 @@ void add_long_closebrace_comment(void)
    Chunk *ns_pc  = nullptr;
    Chunk *cl_pc  = nullptr;
 
-   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (  chunk_is_token(pc, CT_FUNC_DEF)
          || chunk_is_token(pc, CT_OC_MSG_DECL))
@@ -1102,7 +1102,7 @@ void add_long_closebrace_comment(void)
 
       Chunk  *tmp = pc;
 
-      while ((tmp = tmp->get_next(E_Scope::PREPROC))->isNotNullChunk())
+      while ((tmp = tmp->get_next(E_Scope::PREPROC))->IsNotNullChunk())
       {
          if (chunk_is_newline(tmp))
          {
@@ -1131,7 +1131,7 @@ void add_long_closebrace_comment(void)
 
          // make sure a newline follows in order to not overwrite an already
          // existring comment
-         if (  tmp->isNotNullChunk()
+         if (  tmp->IsNotNullChunk()
             && !chunk_is_newline(tmp))
          {
             break;
@@ -1237,7 +1237,7 @@ static void move_case_break(void)
    LOG_FUNC_ENTRY();
    Chunk *prev = Chunk::NullChunkPtr;
 
-   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (  chunk_is_token(pc, CT_BREAK)
          && chunk_is_token(prev, CT_BRACE_CLOSE)
@@ -1257,7 +1257,7 @@ static void move_case_return(void)
    LOG_FUNC_ENTRY();
    Chunk *prev = Chunk::NullChunkPtr;
 
-   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (  chunk_is_token(pc, CT_RETURN)
          && chunk_is_token(prev, CT_BRACE_CLOSE)
@@ -1282,7 +1282,7 @@ static void move_case_return(void)
          pc = chunk_get_next_nc_nnl(pc);
 
          if (  pc != nullptr
-            && pc->isNotNullChunk())
+            && pc->IsNotNullChunk())
          {
             // Swap all lines between brace close and current token
             LOG_FMT(LMCB, "%s(%d): move line %zu before line %zu\n",
@@ -1483,7 +1483,7 @@ static void mod_case_brace(void)
    }
 
    while (  pc != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
    {
       Chunk *next = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
 
@@ -1682,7 +1682,7 @@ static void mod_full_brace_if_chain(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       if (  (  chunk_is_token(pc, CT_BRACE_OPEN)
             || chunk_is_token(pc, CT_VBRACE_OPEN))

@@ -156,7 +156,7 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
    }
    Chunk *next = pc->get_next();
 
-   if (next->isNullChunk())
+   if (next->IsNullChunk())
    {
       return(pp_level);
    }

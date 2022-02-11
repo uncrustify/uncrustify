@@ -912,7 +912,7 @@ void mark_define_expressions(void)
    Chunk *pc       = Chunk::get_head();
    Chunk *prev     = pc;
 
-   while (pc->isNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       if (!in_define)
       {
@@ -969,7 +969,7 @@ void mark_exec_sql(Chunk *pc)
    Chunk *tmp;
 
    // Change CT_WORD to CT_SQL_WORD
-   for (tmp = pc->get_next(); tmp != nullptr && tmp->isNotNullChunk(); tmp = tmp->get_next())
+   for (tmp = pc->get_next(); tmp != nullptr && tmp->IsNotNullChunk(); tmp = tmp->get_next())
    {
       set_chunk_parent(tmp, pc->type);
 
@@ -985,14 +985,14 @@ void mark_exec_sql(Chunk *pc)
    }
 
    if (  chunk_is_not_token(pc, CT_SQL_BEGIN)
-      || tmp->isNullChunk()
+      || tmp->IsNullChunk()
       || chunk_is_not_token(tmp, CT_SEMICOLON))
    {
       return;
    }
 
    for (tmp = tmp->get_next();
-        tmp->isNotNullChunk() && chunk_is_not_token(tmp, CT_SQL_END);
+        tmp->IsNotNullChunk() && chunk_is_not_token(tmp, CT_SQL_END);
         tmp = tmp->get_next())
    {
       tmp->level++;
@@ -1539,7 +1539,7 @@ void mark_function(Chunk *pc)
        * static const char * const fizz(); -- fcn def
        */
       while (  prev != nullptr
-            && prev->isNotNullChunk())
+            && prev->IsNotNullChunk())
       {
          LOG_FMT(LFCN, "%s(%d): next step with: prev->orig_line is %zu, orig_col is %zu, text() '%s'\n",
                  __func__, __LINE__, prev->orig_line, prev->orig_col, prev->text());
