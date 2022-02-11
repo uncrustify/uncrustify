@@ -2729,7 +2729,7 @@ static void handle_oc_class(Chunk *pc)
    }
    tmp = pc;
 
-   while (  (tmp = tmp->get_next_nnl()) != nullptr
+   while (  (tmp = tmp->GetNextNnl()) != nullptr
          && tmp->IsNotNullChunk())
    {
       LOG_FMT(LOCCLASS, "%s(%d):       orig_line is %zu, [%s]\n",

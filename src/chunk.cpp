@@ -720,13 +720,13 @@ Chunk *Chunk::GetPrevNl(E_Scope scope)
 }
 
 
-Chunk *Chunk::get_next_nnl(E_Scope scope)
+Chunk *Chunk::GetNextNnl(E_Scope scope)
 {
    return(Search(chunk_is_newline, scope, E_Direction::FORWARD, false));
 }
 
 
-Chunk *Chunk::get_prev_nnl(E_Scope scope)
+Chunk *Chunk::GetPrevNnl(E_Scope scope)
 {
    return(Search(chunk_is_newline, scope, E_Direction::BACKWARD, false));
 }

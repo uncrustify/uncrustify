@@ -40,7 +40,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
    Chunk  *is_brace_close = Chunk::NullChunkPtr;
    Chunk  *is_semicolon   = Chunk::NullChunkPtr;
    Chunk  *is_comment     = Chunk::NullChunkPtr;
-   Chunk  *back           = pc->get_prev_nnl();
+   Chunk  *back           = pc->GetPrevNnl();
 
    while (back->IsNotNullChunk())
    {
@@ -173,7 +173,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
                // cl_colon is after parent_last ==>
                // the closing brace will be set before #endif
                Chunk *pp_start = chunk_get_pp_start(last);
-               last = pp_start->get_prev_nnl();
+               last = pp_start->GetPrevNnl();
                LOG_FMT(LMCB, "%s(%d): text() is '%s', orig_line %zu, orig_col is %zu\n",
                        __func__, __LINE__, last->text(), last->orig_line, last->orig_col);
             }
