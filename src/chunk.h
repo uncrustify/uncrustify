@@ -45,7 +45,7 @@ enum class E_Scope : unsigned int
 /**
  * Specifies which direction or location an operation shall be performed.
  */
-enum class direction_e : unsigned int
+enum class E_Direction : unsigned int
 {
    FORWARD,
    BACKWARD
@@ -212,7 +212,7 @@ public:
     *
     * @return pointer to search function
     */
-   static Search_t Search_dir_fct(const direction_e dir = direction_e::FORWARD);
+   static Search_t Search_dir_fct(const E_Direction dir = E_Direction::FORWARD);
 
 
    /**
@@ -232,7 +232,7 @@ public:
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
 // TODO replace ::check_t with Chunk::Check_t when feasible
-   Chunk *Search(const ::check_t check_fct, const E_Scope scope = E_Scope::ALL, const direction_e dir = direction_e::FORWARD, const bool cond = true);
+   Chunk *Search(const ::check_t check_fct, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const bool cond = true);
 
 
    Chunk        *next;          //! pointer to next chunk in list

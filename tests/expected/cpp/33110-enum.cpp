@@ -21,7 +21,7 @@ enum class E_Scope : unsigned int
 };
 
 // chunk.cpp
-enum class direction_e : unsigned int
+enum class E_Direction : unsigned int
 {
    FORWARD,
    BACKWARD
