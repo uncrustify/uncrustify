@@ -52,6 +52,19 @@ enum class direction_e : unsigned int
 };
 
 
+/**
+ * Temporary internal typedef. Will be progressively be replaced by Chunk::Check_t.
+ *
+ * @brief prototype for a function that checks a chunk to have a given type
+ *
+ * @note this typedef defines the function type "check_t"
+ * for a function pointer of type
+ * bool function(Chunk *pc)
+ */
+// TODO remove when finished
+typedef bool (*check_t)(Chunk *pc);
+
+
 // This is the main type of this program
 class Chunk
 {
@@ -167,7 +180,7 @@ public:
     *
     * @param scope code region to search in
     *
-    * @return pointer to next non-comment chunk or null Chunk if no chunk was found
+    * @return pointer to next non-comment chunk or Chunk::NullChunkPtr if no chunk was found
     */
    // TODO make it a const member
    Chunk *get_next_nc(scope_e scope = scope_e::ALL);
@@ -178,16 +191,17 @@ public:
     *
     * @param scope code region to search in
     *
-    * @return pointer to prev non-comment chunk or null Chunk if no chunk was found
+    * @return pointer to prev non-comment chunk or Chunk::NullChunkPtr if no chunk was found
     */
    // TODO make it a const member
    Chunk *get_prev_nc(scope_e scope = scope_e::ALL);
+
 
    /**
     * @brief defines a member function pointer for a function of type
     * Chunk *Chunk::function(scope_e scope)
     */
-   typedef Chunk *(Chunk::*search_t)(scope_e scope) const;
+   typedef Chunk *(Chunk::*Search_t)(scope_e scope) const;
 
 
    /**
@@ -198,7 +212,27 @@ public:
     *
     * @return pointer to search function
     */
-   static search_t select_search_dir_fct(const direction_e dir = direction_e::FORWARD);
+   static Search_t Search_dir_fct(const direction_e dir = direction_e::FORWARD);
+
+
+   /**
+    * @brief search for a chunk that satisfies a condition in a chunk list
+    *
+    * A generic function that traverses a chunks list either
+    * in forward or reverse direction. The traversal continues until a
+    * chunk satisfies the condition defined by the compare function.
+    * Depending on the parameter cond the condition will either be
+    * checked to be true or false.
+    *
+    * @param  check_fct  compare function
+    * @param  scope      code parts to consider for search
+    * @param  dir        search direction (forward or backward)
+    * @param  cond       success condition
+    *
+    * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+// TODO replace ::check_t with Chunk::Check_t when feasible
+   Chunk *Search(const ::check_t check_fct, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD, const bool cond = true);
 
 
    Chunk        *next;          //! pointer to next chunk in list

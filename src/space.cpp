@@ -3481,7 +3481,6 @@ void space_text(void)
             // Find the next non-empty chunk on this line
             Chunk *tmp = next;
 
-            // TODO: better use chunk_search here
             while (  tmp->isNotNullChunk()
                   && (tmp->len() == 0)
                   && !chunk_is_newline(tmp))
