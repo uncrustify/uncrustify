@@ -53,7 +53,7 @@ enum class E_Direction : unsigned int
 
 
 /**
- * Temporary internal typedef. Will be progressively be replaced by Chunk::Check_t.
+ * Temporary internal typedef. Will be progressively be replaced by Chunk::CheckFnPtr.
  *
  * @brief prototype for a function that checks a chunk to have a given type
  *
@@ -200,8 +200,9 @@ public:
    /**
     * @brief defines a member function pointer for a function of type
     * Chunk *Chunk::function(E_Scope scope)
+		* that will search for a new chunk
     */
-   typedef Chunk *(Chunk::*Search_t)(E_Scope scope) const;
+   typedef Chunk *(Chunk::*T_SearchFnPtr)(E_Scope scope) const;
 
 
    /**
@@ -212,7 +213,7 @@ public:
     *
     * @return pointer to search function
     */
-   static Search_t Search_dir_fct(const E_Direction dir = E_Direction::FORWARD);
+   static T_SearchFnPtr GetSearchFn(const E_Direction dir = E_Direction::FORWARD);
 
 
    /**
@@ -231,8 +232,8 @@ public:
     *
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
-// TODO replace ::check_t with Chunk::Check_t when feasible
-   Chunk *Search(const ::check_t check_fct, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const bool cond = true);
+// TODO replace ::check_t with Chunk::CheckFnPtr when feasible
+   Chunk *Search(const ::check_t check_fct, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const bool cond = true) const;
 
 
    Chunk        *next;          //! pointer to next chunk in list

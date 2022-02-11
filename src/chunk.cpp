@@ -409,22 +409,22 @@ Chunk *Chunk::GetTail(void)
 }
 
 
-Chunk::Search_t Chunk::Search_dir_fct(const E_Direction dir)
+Chunk::T_SearchFnPtr Chunk::GetSearchFn(const E_Direction dir)
 {
    return((dir == E_Direction::FORWARD) ? &Chunk::GetNext : &Chunk::GetPrev);
 }
 
 
-// TODO replace ::check_t with Chunk::Check_t when feasible
+// TODO replace ::check_t with Chunk::T_CheckFnPtr when feasible
 Chunk *Chunk::Search(const ::check_t check_fct, const E_Scope scope,
-                     const E_Direction dir, const bool cond)
+                     const E_Direction dir, const bool cond) const
 {
-   Search_t dir_fct = Search_dir_fct(dir);
-   Chunk    *pc     = this;
+   T_SearchFnPtr searchFnPtr = GetSearchFn(dir);
+   Chunk         *pc         = const_cast<Chunk*>(this);
 
    do                                   // loop over the chunk list
    {
-      pc = (pc->*dir_fct)(scope);       // in either direction while
+      pc = (pc->*searchFnPtr)(scope);       // in either direction while
    } while (  pc->IsNotNullChunk()      // the end of the list was not reached yet
            && (check_fct(pc) != cond)); // and the demanded chunk was not found either
 
@@ -438,7 +438,7 @@ static Chunk *__internal_chunk_search(Chunk *cur, const check_t check_fct, const
    /*
     * Depending on the parameter dir the search function searches
     * in forward or backward direction */
-   Chunk::Search_t search_function = Chunk::Search_dir_fct(dir);
+   Chunk::T_SearchFnPtr search_function = Chunk::GetSearchFn(dir);
    Chunk           *pc             = cur;
 
    if (pc == nullptr)
@@ -500,7 +500,7 @@ static Chunk *chunk_search_type(Chunk *cur, const c_token_t type,
     * Depending on the parameter dir the search function searches
     * in forward or backward direction
     */
-   Chunk::Search_t search_function = Chunk::Search_dir_fct(dir);
+   Chunk::T_SearchFnPtr search_function = Chunk::GetSearchFn(dir);
    Chunk           *pc             = cur;
 
    if (pc == nullptr)
@@ -528,7 +528,7 @@ static Chunk *chunk_search_type_level(Chunk *cur, c_token_t type, E_Scope scope,
     * Depending on the parameter dir the search function searches
     * in forward or backward direction
     */
-   Chunk::Search_t search_function = Chunk::Search_dir_fct(dir);
+   Chunk::T_SearchFnPtr search_function = Chunk::GetSearchFn(dir);
    Chunk           *pc             = cur;
 
    if (pc == nullptr)
@@ -555,7 +555,7 @@ static Chunk *chunk_search_str(Chunk *cur, const char *str, size_t len, E_Scope 
    /*
     * Depending on the parameter dir the search function searches
     * in forward or backward direction */
-   Chunk::Search_t search_function = Chunk::Search_dir_fct(dir);
+   Chunk::T_SearchFnPtr search_function = Chunk::GetSearchFn(dir);
    Chunk           *pc             = cur;
 
    if (pc == nullptr)
