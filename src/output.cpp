@@ -494,7 +494,7 @@ void output_parsed(FILE *pfile, bool withOptions)
 #endif // ifdef WIN32
 
       if (  pc->type != CT_NEWLINE
-         && (pc->len() != 0))
+         && (pc->Len() != 0))
       {
          for (size_t cnt = 0; cnt < pc->column; cnt++)
          {
@@ -548,7 +548,7 @@ void output_parsed_csv(FILE *pfile)
               pc->nl_count, pc->after_tab);
 
       if (  pc->type != CT_NEWLINE
-         && (pc->len() != 0))
+         && (pc->Len() != 0))
       {
          fprintf(pfile, "\"");
 
@@ -770,7 +770,7 @@ void output_text(FILE *pfile)
          // do not adjust the column for junk
          add_text(pc->str, true);
       }
-      else if (pc->len() == 0)
+      else if (pc->Len() == 0)
       {
          // don't do anything for non-visible stuff
          LOG_FMT(LOUTIND, "%s(%d): orig_line is %zu, column is %zu, non-visible stuff: type is %s\n",
@@ -840,7 +840,7 @@ void output_text(FILE *pfile)
             log_rule_B("align_with_tabs");
             allow_tabs = (  options::align_with_tabs()
                          && pc->flags.test(PCF_WAS_ALIGNED)
-                         && ((prev->column + prev->len() + 1) != pc->column));
+                         && ((prev->column + prev->Len() + 1) != pc->column));
 
             log_rule_B("align_keep_tabs");
 
@@ -1738,7 +1738,7 @@ static Chunk *output_comment_c(Chunk *first)
          add_text("//");
 
          unc_text tmp;
-         tmp.set(first->str, 2, first->len() - 4);
+         tmp.set(first->str, 2, first->Len() - 4);
          cmt_trim_whitespace(tmp, false);
          add_comment_text(tmp, cmt, false);
       }
@@ -1767,7 +1767,7 @@ static Chunk *output_comment_c(Chunk *first)
    {
       LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s'\n",
               __func__, __LINE__, pc->Text());
-      tmp.set(pc->str, 2, pc->len() - 4);
+      tmp.set(pc->str, 2, pc->Len() - 4);
 
       if (  cpd.last_char == '*'
          && (  tmp[0] == '/'
@@ -1788,7 +1788,7 @@ static Chunk *output_comment_c(Chunk *first)
       pc = pc->GetNext();
       pc = pc->GetNext();
    }
-   tmp.set(pc->str, 2, pc->len() - 4);
+   tmp.set(pc->str, 2, pc->Len() - 4);
 
    if (  cpd.last_char == '*'
       && tmp[0] == '/')
@@ -1928,7 +1928,7 @@ static Chunk *output_comment_cpp(Chunk *first)
          unc_text tmp(first->str, 0, iLISz);
          add_comment_text(tmp, cmt, false);
 
-         tmp.set(first->str, iLISz, first->len() - iLISz);
+         tmp.set(first->str, iLISz, first->Len() - iLISz);
 
          // Add or remove space after the opening of a C++ comment,
          // i.e. '// A' vs. '//A'.
@@ -1988,7 +1988,7 @@ static Chunk *output_comment_cpp(Chunk *first)
       {
          add_char(' ');
       }
-      tmp.set(first->str, 2, first->len() - 2);
+      tmp.set(first->str, 2, first->Len() - 2);
       add_comment_text(tmp, cmt, true);
       add_text(" */");
       return(first);
@@ -2011,7 +2011,7 @@ static Chunk *output_comment_cpp(Chunk *first)
    while (can_combine_comment(pc, cmt))
    {
       offs = unc_isspace(pc->str[2]) ? 1 : 0;
-      tmp.set(pc->str, 2 + offs, pc->len() - (2 + offs));
+      tmp.set(pc->str, 2 + offs, pc->Len() - (2 + offs));
 
       if (  cpd.last_char == '*'
          && tmp[0] == '/')
@@ -2023,7 +2023,7 @@ static Chunk *output_comment_cpp(Chunk *first)
       pc = pc->GetNext()->GetNext();
    }
    offs = unc_isspace(pc->str[2]) ? 1 : 0;
-   tmp.set(pc->str, 2 + offs, pc->len() - (2 + offs));
+   tmp.set(pc->str, 2 + offs, pc->Len() - (2 + offs));
    add_comment_text(tmp, cmt, true);
 
    log_rule_B("cmt_cpp_nl_end");
@@ -2180,8 +2180,8 @@ static void output_comment_multi(Chunk *pc)
    auto &&cmt_reflow_regex_map = get_reflow_fold_regex_map();
 
    line.clear();
-   LOG_FMT(LCONTTEXT, "%s(%d): pc->len() is %zu\n",
-           __func__, __LINE__, pc->len());
+   LOG_FMT(LCONTTEXT, "%s(%d): pc->Len() is %zu\n",
+           __func__, __LINE__, pc->Len());
    //LOG_FMT(LCONTTEXT, "%s(%d): pc->str is %s\n",
    //        __func__, __LINE__, pc->str.c_str());
 
@@ -2192,7 +2192,7 @@ static void output_comment_multi(Chunk *pc)
    auto disable_processing_cmt_idx = find_disable_processing_comment_marker(pc->str);
    auto enable_processing_cmt_idx  = find_enable_processing_comment_marker(pc->str);
 
-   while (cmt_idx < pc->len())
+   while (cmt_idx < pc->Len())
    {
       int ch = pc->str[cmt_idx];
       cmt_idx++;
@@ -2230,7 +2230,7 @@ static void output_comment_multi(Chunk *pc)
       {
          ch = '\n';
 
-         if (  cmt_idx < pc->len()
+         if (  cmt_idx < pc->Len()
             && pc->str[cmt_idx] == '\n')
          {
             cmt_idx++;
@@ -2319,7 +2319,7 @@ static void output_comment_multi(Chunk *pc)
                   cmt_idx = eat_line_whitespace(pc->str,
                                                 cmt_idx);
 
-                  while (  cmt_idx < pc->len()
+                  while (  cmt_idx < pc->Len()
                         && !unc_isspace(pc->str[cmt_idx])
                         && pc->str[cmt_idx] != ',')
                   {
@@ -2353,7 +2353,7 @@ static void output_comment_multi(Chunk *pc)
                line.append(' ');
             }
 
-            while (  cmt_idx < pc->len()
+            while (  cmt_idx < pc->Len()
                   && !unc_isspace(pc->str[cmt_idx]))
             {
                line.append(pc->str[cmt_idx++]);
@@ -2369,7 +2369,7 @@ static void output_comment_multi(Chunk *pc)
 
       if (  options::cmt_reflow_mode() == 2
          && ch == '\n'
-         && cmt_idx < pc->len())
+         && cmt_idx < pc->Len())
       {
          int    next_nonempty_line = -1;
          int    prev_nonempty_line = -1;
@@ -2394,7 +2394,7 @@ static void output_comment_multi(Chunk *pc)
          }
 
          for (size_t nxt_idx = cmt_idx;
-              (  nxt_idx < pc->len()
+              (  nxt_idx < pc->Len()
               && pc->str[nxt_idx] != '\r'
               && pc->str[nxt_idx] != '\n');
               nxt_idx++)
@@ -2505,7 +2505,7 @@ static void output_comment_multi(Chunk *pc)
 
       // If we just hit an end of line OR we just hit end-of-comment...
       if (  ch == '\n'
-         || cmt_idx == pc->len())
+         || cmt_idx == pc->Len())
       {
          if (ch == '\n')
          {
@@ -2634,7 +2634,7 @@ static void output_comment_multi(Chunk *pc)
 
                   // Checks for and updates the lead chars.
                   // @return 0=not present, >0=number of chars that are part of the lead
-                  idx = cmt_parse_lead(line, (cmt_idx == pc->len()));
+                  idx = cmt_parse_lead(line, (cmt_idx == pc->Len()));
 
                   if (idx > 0)
                   {
@@ -3145,7 +3145,7 @@ static void output_comment_multi_simple(Chunk *pc)
    size_t   line_column = pc->column;
    size_t   cmt_idx     = 0;
 
-   while (cmt_idx < pc->len())
+   while (cmt_idx < pc->Len())
    {
       int ch = pc->str[cmt_idx];
       cmt_idx++;
@@ -3204,7 +3204,7 @@ static void output_comment_multi_simple(Chunk *pc)
       {
          ch = '\n';
 
-         if (  (cmt_idx < pc->len())
+         if (  (cmt_idx < pc->Len())
             && (pc->str[cmt_idx] == '\n'))
          {
             cmt_idx++;
@@ -3216,7 +3216,7 @@ static void output_comment_multi_simple(Chunk *pc)
 
       // If we just hit an end of line OR we just hit end-of-comment...
       if (  ch == '\n'
-         || cmt_idx == pc->len())
+         || cmt_idx == pc->Len())
       {
          line_count++;
          LOG_FMT(LCONTTEXT, "%s(%d):line_count is %zu\n", __func__, __LINE__, line_count);
@@ -3296,7 +3296,7 @@ static void generate_if_conditional_as_text(unc_text &dst, Chunk *ifdef)
          }
 
          dst.append(pc->str);
-         column += pc->len();
+         column += pc->Len();
       }
    }
 } // generate_if_conditional_as_text

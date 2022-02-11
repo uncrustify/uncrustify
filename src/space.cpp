@@ -3454,7 +3454,7 @@ void space_text(void)
          // Set to the minimum allowed column
          if (pc->nl_count == 0)
          {
-            column += pc->len();
+            column += pc->Len();
          }
          else
          {
@@ -3471,7 +3471,7 @@ void space_text(void)
           */
          chunk_flags_clr(pc, PCF_FORCE_SPACE);
 
-         if (  (pc->len() > 0)
+         if (  (pc->Len() > 0)
             && !chunk_is_str(pc, "[]", 2)
             && !chunk_is_str(pc, "{{", 2)
             && !chunk_is_str(pc, "}}", 2)
@@ -3482,16 +3482,16 @@ void space_text(void)
             Chunk *tmp = next;
 
             while (  tmp->IsNotNullChunk()
-                  && (tmp->len() == 0)
+                  && (tmp->Len() == 0)
                   && !chunk_is_newline(tmp))
             {
                tmp = tmp->GetNext();
             }
 
             if (  tmp->IsNotNullChunk()
-               && tmp->len() > 0)
+               && tmp->Len() > 0)
             {
-               bool kw1 = CharTable::IsKw2(pc->str[pc->len() - 1]);
+               bool kw1 = CharTable::IsKw2(pc->str[pc->Len() - 1]);
                bool kw2 = CharTable::IsKw1(next->str[0]);
 
                if (  kw1
@@ -3505,20 +3505,20 @@ void space_text(void)
                // TODO:  what is the meaning of 4
                else if (  !kw1
                        && !kw2
-                       && (pc->len() < 4)
-                       && (next->len() < 4))
+                       && (pc->Len() < 4)
+                       && (next->Len() < 4))
                {
                   // We aren't dealing with keywords. concat and try punctuators
                   char buf[9];
-                  memcpy(buf, pc->Text(), pc->len());
-                  memcpy(buf + pc->len(), next->Text(), next->len());
-                  buf[pc->len() + next->len()] = 0;
+                  memcpy(buf, pc->Text(), pc->Len());
+                  memcpy(buf + pc->Len(), next->Text(), next->Len());
+                  buf[pc->Len() + next->Len()] = 0;
 
                   const chunk_tag_t *ct;
                   ct = find_punctuator(buf, cpd.lang_flags);
 
                   if (  ct != nullptr
-                     && (strlen(ct->tag) != pc->len()))
+                     && (strlen(ct->tag) != pc->Len()))
                   {
                      // punctuator parsed to a different size..
 
@@ -3639,7 +3639,7 @@ void space_text(void)
                    * If there was a space, we need to force one, otherwise
                    * try to keep the comment in the same column.
                    */
-                  size_t col_min = pc->column + pc->len() + ((next->orig_prev_sp > 0) ? 1 : 0);
+                  size_t col_min = pc->column + pc->Len() + ((next->orig_prev_sp > 0) ? 1 : 0);
                   column = next->orig_col;
 
                   if (column < col_min)
@@ -3741,7 +3741,7 @@ size_t space_needed(Chunk *first, Chunk *second)
 
    case IARF_IGNORE:
    default:
-      return(second->orig_col > (first->orig_col + first->len()));
+      return(second->orig_col > (first->orig_col + first->Len()));
    }
 }
 
@@ -3773,8 +3773,8 @@ size_t space_col_align(Chunk *first, Chunk *second)
    }
    else
    {
-      LOG_FMT(LSPACE, "%s(%d):    len is %zu\n", __func__, __LINE__, first->len());
-      coldiff = first->len();
+      LOG_FMT(LSPACE, "%s(%d):    Len is %zu\n", __func__, __LINE__, first->Len());
+      coldiff = first->Len();
    }
    LOG_FMT(LSPACE, "%s(%d):    => coldiff is %zu\n", __func__, __LINE__, coldiff);
 
@@ -3800,10 +3800,10 @@ size_t space_col_align(Chunk *first, Chunk *second)
       LOG_FMT(LSPACE, "%s(%d):    => second->Text()    is '%s'\n", __func__, __LINE__, second->Text());
       LOG_FMT(LSPACE, "%s(%d):    => first->orig_col   is %zu\n", __func__, __LINE__, first->orig_col);
       LOG_FMT(LSPACE, "%s(%d):    => second->orig_col  is %zu\n", __func__, __LINE__, second->orig_col);
-      LOG_FMT(LSPACE, "%s(%d):    => first->len()      is %zu\n", __func__, __LINE__, first->len());
+      LOG_FMT(LSPACE, "%s(%d):    => first->Len()      is %zu\n", __func__, __LINE__, first->Len());
 
       if (  first->orig_line == second->orig_line
-         && second->orig_col > (first->orig_col + first->len()))
+         && second->orig_col > (first->orig_col + first->Len()))
       {
          coldiff++;
       }
@@ -3840,9 +3840,9 @@ void space_add_after(Chunk *pc, size_t count)
    // Two CT_SPACE in a row -- use the max of the two
    if (chunk_is_token(next, CT_SPACE))
    {
-      if (next->len() < count)
+      if (next->Len() < count)
       {
-         while (next->len() < count)
+         while (next->Len() < count)
          {
             next->str.append(' ');
          }
@@ -3858,7 +3858,7 @@ void space_add_after(Chunk *pc, size_t count)
    sp.level       = pc->level;
    sp.brace_level = pc->brace_level;
    sp.pp_level    = pc->pp_level;
-   sp.column      = pc->column + pc->len();
+   sp.column      = pc->column + pc->Len();
    sp.orig_line   = pc->orig_line;
    sp.orig_col    = pc->orig_col;
 

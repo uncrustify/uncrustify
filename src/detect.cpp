@@ -47,7 +47,7 @@ void sp_votes::vote(Chunk *first, Chunk *second)
    {
       return;
    }
-   int col_dif = second->column - (first->column + first->len());
+   int col_dif = second->column - (first->column + first->Len());
 
    if (col_dif == 0)
    {

@@ -3870,7 +3870,7 @@ static void handle_wrap(Chunk *pc)
 
       set_chunk_type(pc, chunk_is_token(pc, CT_FUNC_WRAP) ? CT_FUNCTION : CT_TYPE);
 
-      pc->orig_col_end = pc->orig_col + pc->len();
+      pc->orig_col_end = pc->orig_col + pc->Len();
 
       chunk_del(opp);
       chunk_del(name);

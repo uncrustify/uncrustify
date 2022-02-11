@@ -1006,7 +1006,7 @@ Chunk *insert_comment_after(Chunk *ref, c_token_t cmt_type,
    }
    // TODO: expand comment type to cover other comment styles?
 
-   new_cmt.column   = ref->column + ref->len() + 1;
+   new_cmt.column   = ref->column + ref->Len() + 1;
    new_cmt.orig_col = new_cmt.column;
 
    return(chunk_add_after(&new_cmt, ref));

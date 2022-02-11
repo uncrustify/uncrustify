@@ -140,13 +140,13 @@ void fix_casts(Chunk *start)
        */
       verb = "guessed";
 
-      if (  (last->len() > 3)
-         && (last->str[last->len() - 2] == '_')
-         && (last->str[last->len() - 1] == 't'))
+      if (  (last->Len() > 3)
+         && (last->str[last->Len() - 2] == '_')
+         && (last->str[last->Len() - 1] == 't'))
       {
          detail = " -- '_t'";
       }
-      else if (is_ucase_str(last->Text(), last->len()))
+      else if (is_ucase_str(last->Text(), last->Len()))
       {
          detail = " -- upper case";
       }
@@ -322,7 +322,7 @@ void fix_fcn_def_params(Chunk *start)
       return;
    }
    // ensure start chunk holds a single '(' character
-   assert(  (start->len() == 1)
+   assert(  (start->Len() == 1)
          && (start->str[0] == '('));
 
    ChunkStack cs;
@@ -331,7 +331,7 @@ void fix_fcn_def_params(Chunk *start)
 
    while ((pc = chunk_get_next_nc_nnl(pc)) != nullptr)
    {
-      if (  (  (start->len() == 1)
+      if (  (  (start->Len() == 1)
             && (start->str[0] == ')'))
          || pc->level < level)
       {

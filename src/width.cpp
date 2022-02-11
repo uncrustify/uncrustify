@@ -132,7 +132,7 @@ static inline bool is_past_width(Chunk *pc)
    LOG_FMT(LSPLIT, "%s(%d): orig_line is %zu, orig_col is %zu, for %s\n",
            __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
    log_rule_B("code_width");
-   return((pc->column + pc->len() - 1) > options::code_width());
+   return((pc->column + pc->Len() - 1) > options::code_width());
 }
 
 
@@ -517,7 +517,7 @@ static bool split_line(Chunk *start)
          || chunk_is_token(start, CT_COMMA)
          || chunk_is_token(start, CT_SEMICOLON)
          || chunk_is_token(start, CT_VSEMICOLON)
-         || start->len() == 0)
+         || start->Len() == 0)
       {
          LOG_FMT(LSPLIT, " ** NO GO **\n");
 
@@ -533,8 +533,8 @@ static bool split_line(Chunk *start)
       && !chunk_is_newline(pc)
       && !chunk_is_newline(prev))
    {
-      //int plen = (pc->len() < 5) ? pc->len() : 5;
-      //int slen = (start->len() < 5) ? start->len() : 5;
+      //int plen = (pc->Len() < 5) ? pc->Len() : 5;
+      //int slen = (start->Len() < 5) ? start->Len() : 5;
       //LOG_FMT(LSPLIT, " '%.*s' [%s], started on token '%.*s' [%s]\n",
       //        plen, pc->Text(), get_token_name(pc->type),
       //        slen, start->Text(), get_token_name(start->type));
@@ -769,8 +769,8 @@ static void split_fcn_params(Chunk *start)
             LOG_FMT(LSPLIT, "%s(%d): last_col is %d\n",
                     __func__, __LINE__, last_col);
          }
-         cur_width += (pc->column - last_col) + pc->len();
-         last_col   = pc->column + pc->len();
+         cur_width += (pc->column - last_col) + pc->Len();
+         last_col   = pc->column + pc->Len();
 
          LOG_FMT(LSPLIT, "%s(%d): last_col is %d\n",
                  __func__, __LINE__, last_col);
@@ -820,9 +820,9 @@ static void split_fcn_params(Chunk *start)
                  __func__, __LINE__, prev->orig_col);
          break;
       }
-      LOG_FMT(LSPLIT, "%s(%d): last_col is %d, prev->len() is %zu\n",
-              __func__, __LINE__, last_col, prev->len());
-      last_col -= prev->len();
+      LOG_FMT(LSPLIT, "%s(%d): last_col is %d, prev->Len() is %zu\n",
+              __func__, __LINE__, last_col, prev->Len());
+      last_col -= prev->Len();
       LOG_FMT(LSPLIT, "%s(%d): last_col is %d\n",
               __func__, __LINE__, last_col);
 

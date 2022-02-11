@@ -86,7 +86,7 @@ public:
    void Reset();
 
    //! provides the number of characters of string
-   size_t len() const;
+   size_t Len() const;
 
    //! provides the content of a string a zero terminated character pointer
    const char *Text() const;
@@ -638,7 +638,7 @@ static inline bool is_expected_string_and_level(Chunk *pc, const char *str, int 
    return(  pc == nullptr
          || (  (  level < 0
                || pc->level == static_cast<size_t>(level))
-            && pc->len() == len                        // and the length is as expected
+            && pc->Len() == len                        // and the length is as expected
             && memcmp(str, pc->Text(), len) == 0));    // and the strings are equal
 }
 
@@ -794,7 +794,7 @@ static inline bool chunk_is_blank(Chunk *pc)
 {
    return(  pc != nullptr
          && pc->IsNotNullChunk()
-         && (pc->len() == 0));
+         && (pc->Len() == 0));
 }
 
 
@@ -894,7 +894,7 @@ static inline bool chunk_is_type(Chunk *pc)
 static inline bool chunk_is_str(Chunk *pc, const char *str, size_t len)
 {
    return(  pc != nullptr                         // valid pc pointer
-         && (pc->len() == len)                    // token size equals size parameter
+         && (pc->Len() == len)                    // token size equals size parameter
          && (memcmp(pc->Text(), str, len) == 0)); // token name is the same as str parameter
 
    /*
@@ -907,7 +907,7 @@ static inline bool chunk_is_str(Chunk *pc, const char *str, size_t len)
 static inline bool chunk_is_str_case(Chunk *pc, const char *str, size_t len)
 {
    return(  pc != nullptr
-         && (pc->len() == len)
+         && (pc->Len() == len)
          && (strncasecmp(pc->Text(), str, len) == 0));
 }
 
@@ -915,7 +915,7 @@ static inline bool chunk_is_str_case(Chunk *pc, const char *str, size_t len)
 static inline bool chunk_is_word(Chunk *pc)
 {
    return(  pc != nullptr
-         && (pc->len() >= 1)
+         && (pc->Len() >= 1)
          && CharTable::IsKw1(pc->str[0]));
 }
 
@@ -923,7 +923,7 @@ static inline bool chunk_is_word(Chunk *pc)
 static inline bool chunk_is_star(Chunk *pc)
 {
    return(  pc != nullptr
-         && (pc->len() == 1)
+         && (pc->Len() == 1)
          && (pc->str[0] == '*')
          && pc->type != CT_OPERATOR_VAL);
 }
@@ -933,7 +933,7 @@ static inline bool chunk_is_nullable(Chunk *pc)
 {
    return(  language_is_set(LANG_CS)
          && (pc != nullptr)
-         && (pc->len() == 1)
+         && (pc->Len() == 1)
          && (pc->str[0] == '?'));
 }
 
@@ -943,7 +943,7 @@ static inline bool chunk_is_addr(Chunk *pc)
    if (  pc != nullptr
       && pc->IsNotNullChunk()
       && (  chunk_is_token(pc, CT_BYREF)
-         || (  (pc->len() == 1)
+         || (  (pc->Len() == 1)
             && (pc->str[0] == '&')
             && pc->type != CT_OPERATOR_VAL)))
    {
@@ -965,7 +965,7 @@ static inline bool chunk_is_msref(Chunk *pc) // ms compilers for C++/CLI and Win
 {
    return(  language_is_set(LANG_CPP)
          && (  pc != nullptr
-            && (pc->len() == 1)
+            && (pc->Len() == 1)
             && (pc->str[0] == '^')
             && pc->type != CT_OPERATOR_VAL));
 }

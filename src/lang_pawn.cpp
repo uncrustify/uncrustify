@@ -81,7 +81,7 @@ Chunk *pawn_add_vsemi_after(Chunk *pc)
    set_chunk_type(&chunk, CT_VSEMICOLON);
    set_chunk_parent(&chunk, CT_NONE);
    chunk.str     = options::mod_pawn_semicolon() ? ";" : "";
-   chunk.column += pc->len();
+   chunk.column += pc->Len();
 
    LOG_FMT(LPVSEMI, "%s: Added VSEMI on line %zu, prev='%s' [%s]\n",
            __func__, pc->orig_line, pc->Text(),
@@ -505,7 +505,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       chunk.str.clear();
       set_chunk_type(&chunk, CT_VBRACE_CLOSE);
       set_chunk_parent(&chunk, CT_FUNC_DEF);
-      chunk.column     += last->len();
+      chunk.column     += last->Len();
       chunk.level       = 0;
       chunk.brace_level = 0;
       last              = chunk_add_after(&chunk, last);

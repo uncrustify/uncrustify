@@ -922,7 +922,7 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
          ch = ctx.get();
          pc_temp.str.append(ch);
       }
-      ch = pc_temp.str[pc_temp.len() - 1];
+      ch = pc_temp.str[pc_temp.Len() - 1];
       ctx.restore();
       LOG_FMT(LGUY, "%s(%d): pc_temp:%s\n", __func__, __LINE__, pc_temp.Text());
 

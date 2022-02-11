@@ -110,7 +110,7 @@ void Chunk::Reset()
 }
 
 
-size_t Chunk::len() const
+size_t Chunk::Len() const
 {
    return(str.size());
 }
@@ -704,7 +704,7 @@ void chunk_move_after(Chunk *pc_in, Chunk *ref)
    // HACK: Adjust the original column
    pc_in->column       = ref->column + space_col_align(ref, pc_in);
    pc_in->orig_col     = pc_in->column;
-   pc_in->orig_col_end = pc_in->orig_col + pc_in->len();
+   pc_in->orig_col_end = pc_in->orig_col + pc_in->Len();
 }
 
 

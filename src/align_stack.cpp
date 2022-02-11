@@ -287,7 +287,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
 
       if (ref != ali)
       {
-         gap = ali->column - (ref->column + ref->len());
+         gap = ali->column - (ref->column + ref->Len());
       }
       Chunk *tmp = ali;
 
@@ -306,7 +306,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
             && m_star_style == SS_DANGLE)) // TODO: add m_msref_style
       {
          col_adj = start->column - ali->column;
-         gap     = start->column - (ref->column + ref->len());
+         gap     = start->column - (ref->column + ref->Len());
       }
       // See if this pushes out the max_col
       const size_t endcol = ali->column + col_adj
@@ -455,7 +455,7 @@ void AlignStack::Flush()
 
       if (pc != pc->align.ref)
       {
-         gap = pc->column - (pc->align.ref->column + pc->align.ref->len());
+         gap = pc->column - (pc->align.ref->column + pc->align.ref->Len());
       }
 
       if (m_star_style == SS_DANGLE)
@@ -465,7 +465,7 @@ void AlignStack::Flush()
          if (chunk_is_ptr_operator(tmp))
          {
             col_adj = pc->align.start->column - pc->column;
-            gap     = pc->align.start->column - (pc->align.ref->column + pc->align.ref->len());
+            gap     = pc->align.start->column - (pc->align.ref->column + pc->align.ref->Len());
          }
       }
 
@@ -474,7 +474,7 @@ void AlignStack::Flush()
          // Adjust the width for signed numbers
          if (pc->align.start != nullptr)
          {
-            size_t start_len = pc->align.start->len();
+            size_t start_len = pc->align.start->Len();
 
             if (pc->align.start->type == CT_NEG)
             {
@@ -482,7 +482,7 @@ void AlignStack::Flush()
 
                if (chunk_is_token(next, CT_NUMBER))
                {
-                  start_len += next->len();
+                  start_len += next->Len();
                }
             }
             col_adj += start_len;

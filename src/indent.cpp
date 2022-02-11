@@ -1024,7 +1024,7 @@ void indent_text(void)
       {
          if (chunk_is_token(pc, CT_STRING))
          {
-            if (  pc->len() > 4
+            if (  pc->Len() > 4
                && xml_indent > 0
                && pc->str[1] == '<'
                && pc->str[2] == '/')
@@ -2341,7 +2341,7 @@ void indent_text(void)
                if (  next->IsNotNullChunk()
                   && !chunk_is_newline(next)
                      // label (+ 2, because there is colon and space after it) must fit into indent
-                  && (val + static_cast<int>(pc->len()) + 2 <= static_cast<int>(pse_indent)))
+                  && (val + static_cast<int>(pc->Len()) + 2 <= static_cast<int>(pse_indent)))
                {
                   reindent_line(next, pse_indent);
                }
@@ -2573,7 +2573,7 @@ void indent_text(void)
                     __func__, __LINE__, pc->orig_line, indent_column, pc->Text());
             reindent_line(pc, indent_column);
          }
-         frm.top().indent = pc->column + pc->len();
+         frm.top().indent = pc->column + pc->Len();
          log_indent();
 
          if (  chunk_is_token(pc, CT_SQUARE_OPEN)
@@ -3105,7 +3105,7 @@ void indent_text(void)
             }
             else
             {
-               frm.top().indent = pc->column + pc->len() + 1;
+               frm.top().indent = pc->column + pc->Len() + 1;
                log_indent();
             }
             frm.top().indent_tmp = frm.top().indent;
@@ -3150,7 +3150,7 @@ void indent_text(void)
                else
                {
                   // indent after the return token
-                  frm.top().indent = frm.prev().indent + pc->len() + 1;
+                  frm.top().indent = frm.prev().indent + pc->Len() + 1;
                }
                log_indent();
                frm.top().indent_tmp = frm.prev().indent;
@@ -3504,7 +3504,7 @@ void indent_text(void)
       // Indent the line if needed
       if (  did_newline
          && !chunk_is_newline(pc)
-         && (pc->len() != 0))
+         && (pc->Len() != 0))
       {
          pc->column_indent = frm.top().indent_tab;
 
@@ -3836,7 +3836,7 @@ void indent_text(void)
          }
          else if (  options::indent_func_const()
                  && chunk_is_token(pc, CT_QUALIFIER)
-                 && strncasecmp(pc->Text(), "const", pc->len()) == 0
+                 && strncasecmp(pc->Text(), "const", pc->Len()) == 0
                  && (  next == nullptr
                     || chunk_is_token(next, CT_BRACED)
                     || chunk_is_token(next, CT_BRACE_OPEN)
@@ -3876,7 +3876,7 @@ void indent_text(void)
                if (options::indent_first_for_expr())
                {
                   reindent_line(frm.top().pc->GetNext(),
-                                indent_column + pc->len() + 1);
+                                indent_column + pc->Len() + 1);
                }
                LOG_FMT(LINDENT, "%s(%d): %zu] SEMICOLON => %zu [%s]\n",
                        __func__, __LINE__, pc->orig_line, indent_column, pc->Text());
@@ -3914,7 +3914,7 @@ void indent_text(void)
                   if (options::indent_first_bool_expr())
                   {
                      reindent_line(frm.top().pc->GetNext(),
-                                   indent_column + pc->len() + 1);
+                                   indent_column + pc->Len() + 1);
                   }
                }
             }
@@ -4213,10 +4213,10 @@ void indent_text(void)
 
       if (  options::indent_xml_string() > 0
          && chunk_is_token(pc, CT_STRING)
-         && pc->len() > 4
+         && pc->Len() > 4
          && pc->str[1] == '<'
          && pc->str[2] != '/'
-         && pc->str[pc->len() - 3] != '/')
+         && pc->str[pc->Len() - 3] != '/')
       {
          if (xml_indent <= 0)
          {
@@ -4643,12 +4643,12 @@ void indent_preproc(void)
             log_rule_B("pp_space_count");
             // Issue #3055
             const size_t mult = max<size_t>(options::pp_space_count(), 1);
-            reindent_line(next, pc->column + pc->len() + (pp_level * mult));
+            reindent_line(next, pc->column + pc->Len() + (pp_level * mult));
          }
          else if (options::pp_space() & IARF_REMOVE)
          {
             log_rule_B("pp_space");
-            reindent_line(next, pc->column + pc->len());
+            reindent_line(next, pc->column + pc->Len());
          }
       }
       // Mark as already handled if not region stuff or in column 1
@@ -4672,7 +4672,7 @@ void indent_preproc(void)
          }
       }
       LOG_FMT(LPPIS, "%s(%d): orig_line %zu to %zu (len %zu, next->col %zu)\n",
-              __func__, __LINE__, pc->orig_line, 1 + pp_level, pc->len(),
+              __func__, __LINE__, pc->orig_line, 1 + pp_level, pc->Len(),
               next ? next->column : -1);
    }
 } // indent_preproc

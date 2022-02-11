@@ -92,7 +92,7 @@ Chunk *align_trailing_comments(Chunk *start)
          if (cmt_type_cur == cmt_type_start)
          {
             LOG_FMT(LALADD, "%s(%d): line=%zu min_col=%zu pc->col=%zu pc->len=%zu %s\n",
-                    __func__, __LINE__, pc->orig_line, min_col, pc->column, pc->len(),
+                    __func__, __LINE__, pc->orig_line, min_col, pc->column, pc->Len(),
                     get_token_name(pc->type));
 
             if (  min_orig == 0
@@ -163,7 +163,7 @@ comment_align_e get_comment_align_type(Chunk *cmt)
          || chunk_is_token(prev, CT_BRACE_CLOSE))
       {
          // TODO: make the magic 3 configurable
-         if ((cmt->column - (prev->column + prev->len())) < 3)
+         if ((cmt->column - (prev->column + prev->Len())) < 3)
          {
             cmt_type = (chunk_is_token(prev, CT_PP_ENDIF)) ? comment_align_e::ENDIF : comment_align_e::BRACE;
          }

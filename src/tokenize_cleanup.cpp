@@ -771,7 +771,7 @@ void tokenize_cleanup(void)
             }
             set_chunk_type(next, CT_OPERATOR_VAL);
 
-            next->orig_col_end = next->orig_col + next->len();
+            next->orig_col_end = next->orig_col + next->Len();
          }
          set_chunk_parent(next, CT_OPERATOR);
 
@@ -831,7 +831,7 @@ void tokenize_cleanup(void)
             {
                set_chunk_type(pc, CT_SQL_EXEC);
 
-               if (pc->len() > 1)
+               if (pc->Len() > 1)
                {
                   // SPLIT OFF '$'
                   Chunk nc;
@@ -873,7 +873,7 @@ void tokenize_cleanup(void)
                   break;
                }
 
-               if (  (tmp->len() > 0)
+               if (  (tmp->Len() > 0)
                   && (  unc_isalpha(*tmp->str.c_str())
                      || (*tmp->str.c_str() == '$')))
                {
@@ -1233,7 +1233,7 @@ static void check_template(Chunk *start, bool in_type_cast)
                  __func__, __LINE__, get_token_name(pc->type), level);
 
          if (  (pc->str[0] == '>')
-            && (pc->len() > 1))
+            && (pc->Len() > 1))
          {
             if (pc->str[1] == '=')                         // Issue #1462 and #2565
             {
@@ -1407,7 +1407,7 @@ static void check_template(Chunk *start, bool in_type_cast)
 
          if (  (tokens[num_tokens - 1] == CT_ANGLE_OPEN)
             && (pc->str[0] == '>')
-            && (pc->len() > 1)
+            && (pc->Len() > 1)
             && (  options::tok_split_gte()
                || (  (  chunk_is_str(pc, ">>", 2)
                      || chunk_is_str(pc, ">>>", 3))

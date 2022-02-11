@@ -184,7 +184,7 @@ static unc_text chunk_sort_str(Chunk *pc)
 {
    if (get_chunk_parent_type(pc) == CT_PP_INCLUDE)
    {
-      return(unc_text{ pc->str, 0, pc->len() - 1 });
+      return(unc_text{ pc->str, 0, pc->Len() - 1 });
    }
    return(pc->str);
 }
@@ -195,9 +195,9 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LSORT, "%s(%d): @begin pc1->len is %zu, line is %zu, column is %zu\n",
-           __func__, __LINE__, pc1->len(), pc1->orig_line, pc1->orig_col);
+           __func__, __LINE__, pc1->Len(), pc1->orig_line, pc1->orig_col);
    LOG_FMT(LSORT, "%s(%d): @begin pc2->len is %zu, line is %zu, column is %zu\n",
-           __func__, __LINE__, pc2->len(), pc2->orig_line, pc2->orig_col);
+           __func__, __LINE__, pc2->Len(), pc2->orig_line, pc2->orig_col);
 
    if (pc1 == pc2) // same chunk is always identical thus return 0 differences
    {
@@ -273,9 +273,9 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
          return(ppc1 - ppc2);
       }
       LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc1->Text(), pc1->len(), pc1->orig_line, pc1->orig_col);
+              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->orig_line, pc1->orig_col);
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc2->Text(), pc2->len(), pc2->orig_line, pc2->orig_col);
+              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->orig_line, pc2->orig_col);
 
       int ret_val = unc_text::compare(s1, s2, std::min(s1.size(), s2.size()), tcare);
       LOG_FMT(LSORT, "%s(%d): ret_val is %d\n",
@@ -286,35 +286,35 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
          return(ret_val);
       }
 
-      if (pc1->len() != pc2->len())
+      if (pc1->Len() != pc2->Len())
       {
-         return(pc1->len() - pc2->len());
+         return(pc1->Len() - pc2->Len());
       }
       // Same word, same length. Step to the next chunk.
       pc1 = pc1->GetNext();
       LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc1->Text(), pc1->len(), pc1->orig_line, pc1->orig_col);
+              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->orig_line, pc1->orig_col);
 
       if (chunk_is_token(pc1, CT_MEMBER))
       {
          pc1 = pc1->GetNext();
          LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-                 __func__, __LINE__, pc1->Text(), pc1->len(), pc1->orig_line, pc1->orig_col);
+                 __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->orig_line, pc1->orig_col);
       }
       pc2 = pc2->GetNext();
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc2->Text(), pc2->len(), pc2->orig_line, pc2->orig_col);
+              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->orig_line, pc2->orig_col);
 
       if (chunk_is_token(pc2, CT_MEMBER))
       {
          pc2 = pc2->GetNext();
          LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-                 __func__, __LINE__, pc2->Text(), pc2->len(), pc2->orig_line, pc2->orig_col);
+                 __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->orig_line, pc2->orig_col);
       }
       LOG_FMT(LSORT, "%s(%d): >>>text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc1->Text(), pc1->len(), pc1->orig_line, pc1->orig_col);
+              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->orig_line, pc1->orig_col);
       LOG_FMT(LSORT, "%s(%d): >>>text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc2->Text(), pc2->len(), pc2->orig_line, pc2->orig_col);
+              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->orig_line, pc2->orig_col);
 
       // If we hit a newline or nullptr, we are done
       if (  pc1->IsNullChunk()

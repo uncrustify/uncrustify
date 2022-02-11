@@ -1415,7 +1415,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    }
    chunk.orig_line = ref->orig_line;
    chunk.orig_col  = ref->orig_col;
-   chunk.column    = ref->column + ref->len() + 1;
+   chunk.column    = ref->column + ref->Len() + 1;
    chunk.pp_level  = ref->pp_level;                         // Issue #3055
    set_chunk_type(&chunk, CT_VBRACE_OPEN);
 

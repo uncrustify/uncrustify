@@ -38,11 +38,11 @@ void align_add(ChunkStack &cs, Chunk *pc, size_t &max_col)
       }
       else
       {
-         min_col = prev->column + prev->len() + 1;
+         min_col = prev->column + prev->Len() + 1;
       }
-      LOG_FMT(LALADD, "%s(%d): pc->orig_line=%zu, pc->col=%zu max_col=%zu min_col=%zu multi:%s prev->col=%zu prev->len()=%zu %s\n",
+      LOG_FMT(LALADD, "%s(%d): pc->orig_line=%zu, pc->col=%zu max_col=%zu min_col=%zu multi:%s prev->col=%zu prev->Len()=%zu %s\n",
               __func__, __LINE__, pc->orig_line, pc->column, max_col, min_col, (chunk_is_token(prev, CT_COMMENT_MULTI)) ? "Y" : "N",
-              (chunk_is_token(prev, CT_COMMENT_MULTI)) ? prev->orig_col_end : (UINT32)prev->column, prev->len(), get_token_name(prev->type));
+              (chunk_is_token(prev, CT_COMMENT_MULTI)) ? prev->orig_col_end : (UINT32)prev->column, prev->Len(), get_token_name(prev->type));
    }
 
    if (cs.Empty())
