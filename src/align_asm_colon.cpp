@@ -29,7 +29,7 @@ void align_asm_colon(void)
    {
       if (chunk_is_not_token(pc, CT_ASM_COLON))
       {
-         pc = pc->get_next();
+         pc = pc->GetNext();
          continue;
       }
       cas.Reset();

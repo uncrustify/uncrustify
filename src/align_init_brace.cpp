@@ -56,7 +56,7 @@ void align_init_brace(Chunk *start)
 
       while (chunk_is_newline(pc))
       {
-         pc = pc->get_next();
+         pc = pc->GetNext();
       }
    } while (  pc != nullptr
            && pc->IsNotNullChunk()
@@ -73,7 +73,7 @@ void align_init_brace(Chunk *start)
    {
       cpd.al[0].col = align_tab_column(cpd.al[0].col);
    }
-   pc = start->get_next();
+   pc = start->GetNext();
    size_t idx = 0;
 
    do
@@ -104,7 +104,7 @@ void align_init_brace(Chunk *start)
             if (  idx == 0
                && cpd.al_c99_array)
             {
-               Chunk *prev = pc->get_prev();
+               Chunk *prev = pc->GetPrev();
 
                if (chunk_is_newline(prev))
                {
@@ -129,7 +129,7 @@ void align_init_brace(Chunk *start)
             // Comma's need to 'fall back' to the previous token
             if (chunk_is_token(pc, CT_COMMA))
             {
-               next = pc->get_next();
+               next = pc->GetNext();
 
                if (!chunk_is_newline(next))
                {
@@ -172,7 +172,7 @@ void align_init_brace(Chunk *start)
                if (  (idx < (cpd.al_cnt - 1))
                   && options::align_number_right())
                {
-                  next = pc->get_next();
+                  next = pc->GetNext();
 
                   if (  !chunk_is_newline(next)
                      && (  chunk_is_token(next, CT_NUMBER_FP)
@@ -198,7 +198,7 @@ void align_init_brace(Chunk *start)
       {
          idx = 0;
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    } while (  pc != nullptr
            && pc->IsNotNullChunk()
            && pc->level > start->level);

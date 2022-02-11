@@ -255,7 +255,7 @@ void brace_cleanup(void)
          parse_cleanup(braceState, frm, pc);
          print_stack(LBCSAFTER, (chunk_is_token(pc, CT_VBRACE_CLOSE)) ? "Virt-}\n" : pc->str.c_str(), frm);
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
 //   pc = Chunk::GetHead();
 //
@@ -285,7 +285,7 @@ void brace_cleanup(void)
 //               {
 //                  LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
 //                          __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
-//                  pc = pc->get_next();
+//                  pc = pc->GetNext();
 //
 //                  if (pc == template_end)
 //                  {
@@ -298,7 +298,7 @@ void brace_cleanup(void)
 //                  }
 //               }
 //            }
-//            pc = pc->get_next();
+//            pc = pc->GetNext();
 //
 //            if (pc == template_end)
 //            {
@@ -306,7 +306,7 @@ void brace_cleanup(void)
 //            }
 //         }
 //      }
-//      pc = pc->get_next();
+//      pc = pc->GetNext();
 //   }
 } // brace_cleanup
 
@@ -1355,7 +1355,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
       set_chunk_type(&chunk, CT_VBRACE_CLOSE);
       return(chunk_add_after(&chunk, pc));
    }
-   Chunk *ref = pc->get_prev();
+   Chunk *ref = pc->GetPrev();
 
    if (ref->IsNullChunk())
    {
@@ -1373,7 +1373,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    {
       ref->level++;
       ref->brace_level++;
-      ref = ref->get_prev();
+      ref = ref->GetPrev();
    }
 
    if (ref->IsNullChunk())
@@ -1390,12 +1390,12 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
          while (  ref->IsNotNullChunk()
                && ref->flags.test(PCF_IN_PREPROC))
          {
-            ref = ref->get_prev();
+            ref = ref->GetPrev();
          }
       }
       else
       {
-         ref = ref->get_next();
+         ref = ref->GetNext();
 
          if (chunk_is_token(ref, CT_COMMENT)) // Issue #3034
          {
@@ -1406,7 +1406,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
 
    if (ref_is_comment)                                      // Issue #3351
    {
-      ref = ref->get_next();
+      ref = ref->GetNext();
    }
 
    if (ref->IsNullChunk())

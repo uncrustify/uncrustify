@@ -44,7 +44,7 @@ void parameter_pack_cleanup(void)
                {
                   LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
                           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
-                  //pc = pc->get_next();
+                  //pc = pc->GetNext();
 
                   if (pc == template_end)
                   {
@@ -55,10 +55,10 @@ void parameter_pack_cleanup(void)
                   {
                      set_chunk_type(pc, CT_PARAMETER_PACK);
                   }
-                  pc = pc->get_next();
+                  pc = pc->GetNext();
                }
             }
-            pc = pc->get_next();
+            pc = pc->GetNext();
 
             if (pc == template_end)
             {
@@ -66,6 +66,6 @@ void parameter_pack_cleanup(void)
             }
          }
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
 } // parameter_pack_cleanup

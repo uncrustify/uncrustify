@@ -74,7 +74,7 @@ void align_oc_msg_colon(Chunk *so)
       {
          has_colon = true;
          cas.Add(pc);
-         Chunk *tmp = pc->get_prev();
+         Chunk *tmp = pc->GetPrev();
 
          if (  tmp->IsNotNullChunk()
             && (  chunk_is_token(tmp, CT_OC_MSG_FUNC)
@@ -85,7 +85,7 @@ void align_oc_msg_colon(Chunk *so)
          }
          did_line = true;
       }
-      pc = pc->get_next(E_Scope::PREPROC);
+      pc = pc->GetNext(E_Scope::PREPROC);
    }
    log_rule_B("align_oc_msg_colon_first");
    nas.m_skip_first = !options::align_oc_msg_colon_first();
@@ -172,7 +172,7 @@ void align_oc_msg_colons(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (  chunk_is_token(pc, CT_SQUARE_OPEN)
          && get_chunk_parent_type(pc) == CT_OC_MSG)

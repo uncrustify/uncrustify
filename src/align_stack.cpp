@@ -177,7 +177,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       prev = start;
    }
 
-   while (  (prev = prev->get_prev()) != nullptr
+   while (  (prev = prev->GetPrev()) != nullptr
          && prev->IsNotNullChunk()
          && (  chunk_is_ptr_operator(prev)
             || chunk_is_token(prev, CT_TPAREN_OPEN)))
@@ -193,7 +193,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
 
    if (chunk_is_newline(ref))
    {
-      ref = ref->get_next();
+      ref = ref->GetNext();
    }
    // Find the item that we are going to align.
    Chunk *ali = Chunk::NullChunkPtr;
@@ -206,34 +206,34 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
    if (m_star_style != SS_IGNORE)
    {
       // back up to the first '*' or '^' preceding the token
-      Chunk *tmp_prev = ali->get_prev();
+      Chunk *tmp_prev = ali->GetPrev();
 
       while (  chunk_is_star(tmp_prev)
             || chunk_is_msref(tmp_prev))
       {
          ali      = tmp_prev;
-         tmp_prev = ali->get_prev();
+         tmp_prev = ali->GetPrev();
       }
 
       if (chunk_is_token(tmp_prev, CT_TPAREN_OPEN))
       {
          ali      = tmp_prev;
-         tmp_prev = ali->get_prev();
+         tmp_prev = ali->GetPrev();
          // this is correct, even Coverity says:
          // CID 76021 (#1 of 1): Unused value (UNUSED_VALUE)returned_pointer: Assigning value from
-         // ali->get_prev(nav_e::ALL) to prev here, but that stored value is overwritten before it can be used.
+         // ali->GetPrev(nav_e::ALL) to prev here, but that stored value is overwritten before it can be used.
       }
    }
 
    if (m_amp_style != SS_IGNORE)
    {
       // back up to the first '&' preceding the token
-      Chunk *tmp_prev = ali->get_prev();
+      Chunk *tmp_prev = ali->GetPrev();
 
       while (chunk_is_addr(tmp_prev))
       {
          ali      = tmp_prev;
-         tmp_prev = ali->get_prev();
+         tmp_prev = ali->GetPrev();
       }
    }
    log_rule_B("align_keep_extra_space");
@@ -249,7 +249,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       while (  tmp->IsNotNullChunk()
             && tmp != start)
       {
-         Chunk *next = tmp->get_next();
+         Chunk *next = tmp->GetNext();
 
          if (next->IsNotNullChunk())
          {
@@ -293,7 +293,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
 
       if (chunk_is_token(tmp, CT_TPAREN_OPEN))
       {
-         tmp = tmp->get_next();
+         tmp = tmp->GetNext();
       }
 
       if (  (  chunk_is_star(tmp)
@@ -460,7 +460,7 @@ void AlignStack::Flush()
 
       if (m_star_style == SS_DANGLE)
       {
-         Chunk *tmp = (chunk_is_token(pc, CT_TPAREN_OPEN)) ? pc->get_next() : pc;
+         Chunk *tmp = (chunk_is_token(pc, CT_TPAREN_OPEN)) ? pc->GetNext() : pc;
 
          if (chunk_is_ptr_operator(tmp))
          {
@@ -478,7 +478,7 @@ void AlignStack::Flush()
 
             if (pc->align.start->type == CT_NEG)
             {
-               Chunk *next = pc->align.start->get_next();
+               Chunk *next = pc->align.start->GetNext();
 
                if (chunk_is_token(next, CT_NUMBER))
                {

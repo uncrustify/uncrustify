@@ -74,6 +74,6 @@ void enum_cleanup(void)
             }
          }
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
 } // enum_cleanup

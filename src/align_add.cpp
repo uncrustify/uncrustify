@@ -20,7 +20,7 @@ void align_add(ChunkStack &cs, Chunk *pc, size_t &max_col)
 
    if (pc != nullptr)
    {
-      prev = pc->get_prev();
+      prev = pc->GetPrev();
    }
 
    if (  prev->IsNullChunk()

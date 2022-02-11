@@ -59,7 +59,7 @@ void align_typedefs(size_t span)
             c_typedef = pc;
          }
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
    as.End();
 } // align_typedefs

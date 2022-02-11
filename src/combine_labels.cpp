@@ -24,7 +24,7 @@ Chunk *chunk_get_next_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
 
    do
    {
-      tmp = tmp->get_next(scope);
+      tmp = tmp->GetNext(scope);
    } while (  tmp->IsNotNullChunk()
            && (  chunk_is_comment(tmp)
               || chunk_is_token(tmp, CT_NOEXCEPT)));
@@ -44,7 +44,7 @@ Chunk *chunk_get_prev_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
 
    do
    {
-      tmp = tmp->get_prev(scope);
+      tmp = tmp->GetPrev(scope);
    } while (  tmp->IsNotNullChunk()
            && (  chunk_is_comment(tmp)
               || chunk_is_newline(tmp)
@@ -323,14 +323,14 @@ void combine_labels(void)
                {
                   set_chunk_type(next, CT_BIT_COLON);
 
-                  Chunk *nnext = next->get_next();
+                  Chunk *nnext = next->GetNext();
 
                   if (nnext->IsNullChunk())
                   {
                      return;
                   }
 
-                  while ((nnext = nnext->get_next())->IsNotNullChunk())
+                  while ((nnext = nnext->GetNext())->IsNotNullChunk())
                   {
                      if (chunk_is_token(nnext, CT_SEMICOLON))
                      {

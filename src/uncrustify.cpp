@@ -1664,12 +1664,12 @@ static void add_file_footer()
    if (  pc->IsNotNullChunk()
       && chunk_is_newline(pc))
    {
-      pc = pc->get_prev();
+      pc = pc->GetPrev();
    }
 
    if (  pc->IsNotNullChunk()
       && (  !chunk_is_comment(pc)
-         || !chunk_is_newline(pc->get_prev())))
+         || !chunk_is_newline(pc->GetPrev())))
    {
       pc = Chunk::GetTail();
 
@@ -1758,7 +1758,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
       ref = pc;
 
       while (  ref != nullptr
-            && (ref = ref->get_prev()) != nullptr
+            && (ref = ref->GetPrev()) != nullptr
             && ref->IsNotNullChunk())
       {
          // Bail if we change level or find an access specifier colon
@@ -1798,7 +1798,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
 
          // Ignore 'right' comments
          if (  chunk_is_comment(ref)
-            && chunk_is_newline(ref->get_prev()))
+            && chunk_is_newline(ref->GetPrev()))
          {
             break;
          }
@@ -1831,7 +1831,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
          Chunk *after = chunk_get_next_nc_nnl(ref);
          tokenize(fm.data, after);
 
-         for (tmp = ref->get_next(); tmp != after; tmp = tmp->get_next())
+         for (tmp = ref->GetNext(); tmp != after; tmp = tmp->GetNext())
          {
             tmp->level = after->level;
          }
@@ -1861,7 +1861,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
        */
       ref = pc;
 
-      while (  (ref = ref->get_prev()) != nullptr
+      while (  (ref = ref->GetPrev()) != nullptr
             && ref->IsNotNullChunk())
       {
          // ignore the CT_TYPE token that is the result type
@@ -1903,13 +1903,13 @@ static void add_msg_header(c_token_t type, file_mem &fm)
             && (  ref->flags.test(PCF_IN_PREPROC)
                || chunk_is_token(ref, CT_OC_SCOPE)))
          {
-            ref = ref->get_prev();
+            ref = ref->GetPrev();
 
             if (ref != nullptr)
             {
                // Ignore 'right' comments
                if (  chunk_is_newline(ref)
-                  && chunk_is_comment(ref->get_prev()))
+                  && chunk_is_comment(ref->GetPrev()))
                {
                   break;
                }
@@ -1925,7 +1925,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
          Chunk *after = chunk_get_next_nc_nnl(ref);
          tokenize(fm.data, after);
 
-         for (tmp = ref->get_next(); tmp != after; tmp = tmp->get_next())
+         for (tmp = ref->GetNext(); tmp != after; tmp = tmp->GetNext())
          {
             tmp->level = after->level;
          }

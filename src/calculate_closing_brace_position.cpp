@@ -83,7 +83,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
                     __func__, __LINE__, back->orig_line, back->orig_col, back->level);
          }
       }
-      back = back->get_prev();
+      back = back->GetPrev();
    }
    LOG_FMT(LMCB, "%s(%d): erst_found is %zu\n",
            __func__, __LINE__, erst_found);
@@ -114,7 +114,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
 
                if (cl_colon->orig_line == is_comment->orig_line)
                {
-                  last = is_comment->get_next();
+                  last = is_comment->GetNext();
                }
             }
             else
@@ -145,7 +145,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
 
    if (chunk_is_token(last, CT_COMMENT_CPP))         // Issue #3058
    {
-      last = last->get_next();
+      last = last->GetNext();
    }
    LOG_FMT(LMCB, "%s(%d): last->text()     is '%s', orig_line %zu, orig_col is %zu\n",
            __func__, __LINE__, last->text(), last->orig_line, last->orig_col);

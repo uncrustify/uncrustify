@@ -151,7 +151,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
             || chunk_is_token(pc, CT_VBRACE_CLOSE))
          && !(get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST))
       {
-         pc = pc->get_next();
+         pc = pc->GetNext();
          break;
       }
 
@@ -280,7 +280,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
             }
          }
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
    as.End();
    vdas.End();

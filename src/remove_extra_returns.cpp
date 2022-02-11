@@ -79,6 +79,6 @@ void remove_extra_returns(void)
             }
          }
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
 } // remove_extra_returns

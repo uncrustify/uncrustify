@@ -84,7 +84,7 @@ void align_preprocessor(void)
                  __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
       }
       // step to the value past the close parenthesis or the macro name
-      pc = pc->get_next();
+      pc = pc->GetNext();
 
       if (pc->IsNullChunk())
       {

@@ -89,7 +89,7 @@ static Chunk *handle_double_angle_close(Chunk *pc)
    {
       pc = Chunk::NullChunkPtr;
    }
-   Chunk *next = pc->get_next();
+   Chunk *next = pc->GetNext();
 
    if (next->IsNotNullChunk())
    {
@@ -607,7 +607,7 @@ void tokenize_cleanup(void)
          if (  chunk_is_token(pc, CT_WORD)
             && chunk_is_token(next, CT_DC_MEMBER))
          {
-            prev = pc->get_prev();
+            prev = pc->GetPrev();
 
             if (prev->IsNullChunk())                  // Issue #3010
             {
@@ -702,12 +702,12 @@ void tokenize_cleanup(void)
        */
       if (chunk_is_token(pc, CT_OPERATOR))
       {
-         Chunk *tmp2 = next->get_next();
+         Chunk *tmp2 = next->GetNext();
 
          // Handle special case of () operator -- [] already handled
          if (chunk_is_token(next, CT_PAREN_OPEN))
          {
-            Chunk *tmp = next->get_next();
+            Chunk *tmp = next->GetNext();
 
             if (chunk_is_token(tmp, CT_PAREN_CLOSE))
             {
@@ -741,7 +741,7 @@ void tokenize_cleanup(void)
             tmp2 = next;
             Chunk *tmp;
 
-            while ((tmp = tmp2->get_next())->IsNotNullChunk())
+            while ((tmp = tmp2->GetNext())->IsNotNullChunk())
             {
                if (  tmp->type != CT_WORD
                   && tmp->type != CT_TYPE
@@ -765,7 +765,7 @@ void tokenize_cleanup(void)
                tmp2 = tmp;
             }
 
-            while ((tmp2 = next->get_next()) != tmp)
+            while ((tmp2 = next->GetNext()) != tmp)
             {
                chunk_del(tmp2);
             }
@@ -786,7 +786,7 @@ void tokenize_cleanup(void)
          if (  chunk_is_str(next, "slots", 5)
             || chunk_is_str(next, "Q_SLOTS", 7))
          {
-            Chunk *tmp = next->get_next();
+            Chunk *tmp = next->GetNext();
 
             if (chunk_is_token(tmp, CT_COLON))
             {
@@ -823,7 +823,7 @@ void tokenize_cleanup(void)
                   && (!pc->str.startswith("$\""))
                   && (!pc->str.startswith("$@\""))))))
       {
-         Chunk *tmp = pc->get_prev();
+         Chunk *tmp = pc->GetPrev();
 
          if (chunk_is_newline(tmp))
          {
@@ -846,10 +846,10 @@ void tokenize_cleanup(void)
                   nc.column++;
                   chunk_add_after(&nc, pc);
 
-                  next = pc->get_next();
+                  next = pc->GetNext();
                }
             }
-            tmp = next->get_next();
+            tmp = next->GetNext();
 
             if (chunk_is_str_case(tmp, "BEGIN", 5))
             {
@@ -887,7 +887,7 @@ void tokenize_cleanup(void)
       // handle MS abomination 'for each'
       if (  chunk_is_token(pc, CT_FOR)
          && chunk_is_str(next, "each", 4)
-         && (next == pc->get_next()))
+         && (next == pc->GetNext()))
       {
          // merge the two with a space between
          pc->str.append(' ');
@@ -1021,10 +1021,10 @@ void tokenize_cleanup(void)
       {
          set_chunk_parent(next, get_chunk_parent_type(pc));
 
-         Chunk *tmp = next->get_next();
+         Chunk *tmp = next->GetNext();
 
          if (  tmp->IsNotNullChunk()
-            && tmp->get_next()->IsNotNullChunk())
+            && tmp->GetNext()->IsNotNullChunk())
          {
             if (chunk_is_token(tmp, CT_PAREN_CLOSE))
             {
@@ -1073,7 +1073,7 @@ void tokenize_cleanup(void)
       {
          set_chunk_parent(next, pc->type);
 
-         Chunk *tmp = next->get_next();
+         Chunk *tmp = next->GetNext();
 
          if (tmp->IsNotNullChunk())
          {
@@ -1402,7 +1402,7 @@ static void check_template(Chunk *start, bool in_type_cast)
             Chunk *A = chunk_skip_to_match(pc);
             LOG_FMT(LTEMPL, "%s(%d): A->orig_line is %zu, A->orig_col is %zu, type is %s\n",
                     __func__, __LINE__, A->orig_line, A->orig_col, get_token_name(A->type));
-            pc = A->get_next();
+            pc = A->GetNext();
          }
 
          if (  (tokens[num_tokens - 1] == CT_ANGLE_OPEN)

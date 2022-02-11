@@ -88,7 +88,7 @@ void align_left_shift(void)
              *      cout
              *          << "something";
              */
-            Chunk *prev = pc->get_prev();
+            Chunk *prev = pc->GetPrev();
 
             if (  prev->IsNotNullChunk()
                && chunk_is_newline(prev))
@@ -102,7 +102,7 @@ void align_left_shift(void)
             as.Add(pc);
             start = pc;
          }
-         else if (chunk_is_newline(pc->get_prev()))
+         else if (chunk_is_newline(pc->GetPrev()))
          {
             // subsequent ones must be after a newline
             as.Add(pc);
@@ -117,7 +117,7 @@ void align_left_shift(void)
           *      cout <<
           *          "something";
           */
-         Chunk *prev = pc->get_prev();
+         Chunk *prev = pc->GetPrev();
 
          if (  prev->IsNotNullChunk()
             && chunk_is_newline(prev))
@@ -128,7 +128,7 @@ void align_left_shift(void)
             chunk_flags_set(pc, PCF_DONT_INDENT);
          }
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
    as.End();
 } // align_left_shift

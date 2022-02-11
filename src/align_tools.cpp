@@ -69,7 +69,7 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
       //LOG_FMT(LSIB, "%s:     '%s'   col %d/%d line %zu\n", __func__,
       //        pc->text(), pc->column, pc->orig_col, pc->orig_line);
 
-      Chunk *next = pc->get_next();
+      Chunk *next = pc->GetNext();
 
       if (  next->IsNullChunk()
          || chunk_is_comment(next))

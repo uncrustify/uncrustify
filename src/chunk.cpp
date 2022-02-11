@@ -159,7 +159,7 @@ const char *Chunk::elided_text(char *for_the_copy) const
 }
 
 
-Chunk *Chunk::get_next(E_Scope scope) const
+Chunk *Chunk::GetNext(E_Scope scope) const
 {
    if (this->IsNullChunk())
    {
@@ -202,10 +202,10 @@ Chunk *Chunk::get_next(E_Scope scope) const
       return(NullChunkPtr);
    }
    return(pc);
-} // Chunk::get_next
+} // Chunk::GetNext
 
 
-Chunk *Chunk::get_prev(E_Scope scope) const
+Chunk *Chunk::GetPrev(E_Scope scope) const
 {
    if (this->IsNullChunk())
    {
@@ -248,7 +248,7 @@ Chunk *Chunk::get_prev(E_Scope scope) const
       return(NullChunkPtr);
    }
    return(pc);
-} // Chunk::get_prev
+} // Chunk::GetPrev
 
 
 /**
@@ -411,7 +411,7 @@ Chunk *Chunk::GetTail(void)
 
 Chunk::Search_t Chunk::Search_dir_fct(const E_Direction dir)
 {
-   return((dir == E_Direction::FORWARD) ? &Chunk::get_next : &Chunk::get_prev);
+   return((dir == E_Direction::FORWARD) ? &Chunk::GetNext : &Chunk::GetPrev);
 }
 
 
@@ -478,7 +478,7 @@ bool are_chunks_in_same_line(Chunk *start, Chunk *end)
    {
       return(false);
    }
-   Chunk *tmp = start->get_next();
+   Chunk *tmp = start->GetNext();
 
    while (  tmp->IsNotNullChunk()
          && tmp != end)
@@ -487,7 +487,7 @@ bool are_chunks_in_same_line(Chunk *start, Chunk *end)
       {
          return(false);
       }
-      tmp = tmp->get_next();
+      tmp = tmp->GetNext();
    }
    return(true);
 }
@@ -649,8 +649,8 @@ static void chunk_log(Chunk *pc, const char *text)
       && (cpd.unc_stage != unc_stage_e::CLEANUP))
    {
       const log_sev_t log   = LCHUNK;
-      Chunk           *prev = pc->get_prev();
-      Chunk           *next = pc->get_next();
+      Chunk           *prev = pc->GetPrev();
+      Chunk           *next = pc->GetNext();
 
       chunk_log_msg(pc, log, text);
 
@@ -836,7 +836,7 @@ Chunk *chunk_get_prev_str(Chunk *cur, const char *str, size_t len, int level, E_
 
 bool chunk_is_newline_between(Chunk *start, Chunk *end)
 {
-   for (Chunk *pc = start; pc != nullptr && pc != end; pc = pc->get_next())
+   for (Chunk *pc = start; pc != nullptr && pc != end; pc = pc->GetNext())
    {
       if (chunk_is_newline(pc))
       {
@@ -864,7 +864,7 @@ Chunk *chunk_first_on_line(Chunk *pc)
    }
    Chunk *first = pc;
 
-   while (  (pc = pc->get_prev()) != nullptr
+   while (  (pc = pc->GetPrev()) != nullptr
          && pc->IsNotNullChunk()
          && !chunk_is_newline(pc))
    {
@@ -884,7 +884,7 @@ bool chunk_is_last_on_line(Chunk *pc)  //TODO: pc should be const here
       return(true);
    }
    // if the next chunk is a newline then pc is the last chunk on its line
-   const Chunk *next = pc->get_next();
+   const Chunk *next = pc->GetNext();
 
    if (chunk_is_token(next, CT_NEWLINE))
    {
@@ -912,13 +912,13 @@ void chunk_swap_lines(Chunk *pc1, Chunk *pc2)
     * ? - start1 - a1 - b1 - nl1 - ? - ref2 - start2 - a2 - b2 - nl2 - ?
     *      ^- pc1                              ^- pc2
     */
-   Chunk *ref2 = pc2->get_prev();
+   Chunk *ref2 = pc2->GetPrev();
 
    // Move the line started at pc2 before pc1
    while (  pc2->IsNotNullChunk()
          && !chunk_is_newline(pc2))
    {
-      Chunk *tmp = pc2->get_next();
+      Chunk *tmp = pc2->GetNext();
       g_cl.Pop(pc2);
       g_cl.AddBefore(pc2, pc1);
       pc2 = tmp;
@@ -933,7 +933,7 @@ void chunk_swap_lines(Chunk *pc1, Chunk *pc2)
    while (  pc1->IsNotNullChunk()
          && !chunk_is_newline(pc1))
    {
-      Chunk *tmp = pc1->get_next();
+      Chunk *tmp = pc1->GetNext();
       g_cl.Pop(pc1);
 
       if (ref2->IsNotNullChunk())
@@ -1163,7 +1163,7 @@ Chunk *chunk_get_pp_start(Chunk *cur)
 
    while (!chunk_is_token(cur, CT_PREPROC))
    {
-      cur = cur->get_prev(E_Scope::PREPROC);
+      cur = cur->GetPrev(E_Scope::PREPROC);
    }
    return(cur);
 }

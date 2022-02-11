@@ -149,12 +149,12 @@ static void detect_space_options(void)
    SP_VOTE_VAR(sp_getset_brace);
 
    Chunk *prev = Chunk::GetHead();
-   Chunk *pc   = prev->get_next();
+   Chunk *pc   = prev->GetNext();
    Chunk *next;
 
    while (pc->IsNotNullChunk())
    {
-      next = pc->get_next();
+      next = pc->GetNext();
 
       if (next->IsNullChunk())
       {
@@ -357,7 +357,7 @@ static void detect_space_options(void)
          }
          else if (chunk_is_token(prev, CT_VBRACE_OPEN))
          {
-            vote_sp_special_semi.vote(prev->get_prev(), pc);
+            vote_sp_special_semi.vote(prev->GetPrev(), pc);
          }
          else
          {

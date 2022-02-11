@@ -49,7 +49,7 @@ void align_same_func_call_params(void)
    LOG_FMT(LAS, "%s(%d): (3): span is %zu, thresh is %zu\n",
            __func__, __LINE__, span, thresh);
 
-   for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
+   for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (chunk_is_newline(pc))
       {
@@ -94,26 +94,26 @@ void align_same_func_call_params(void)
          continue;
       }
       // Only align function calls that are right after a newline
-      Chunk *prev = pc->get_prev();
+      Chunk *prev = pc->GetPrev();
 
       while (  chunk_is_token(prev, CT_MEMBER)
             || chunk_is_token(prev, CT_DC_MEMBER))
       {
-         Chunk *tprev = prev->get_prev();
+         Chunk *tprev = prev->GetPrev();
 
          if (chunk_is_not_token(tprev, CT_TYPE))
          {
             prev = tprev;
             break;
          }
-         prev = tprev->get_prev();
+         prev = tprev->GetPrev();
       }
 
       if (!chunk_is_newline(prev))
       {
          continue;
       }
-      prev      = prev->get_next();
+      prev      = prev->GetNext();
       align_fcn = prev;
       align_fcn_name.clear();
       LOG_FMT(LASFCP, "%s(%d):\n", __func__, __LINE__);
@@ -121,7 +121,7 @@ void align_same_func_call_params(void)
       while (prev != pc)
       {
          align_fcn_name += prev->str;
-         prev            = prev->get_next();
+         prev            = prev->GetNext();
       }
       align_fcn_name += pc->str;
       LOG_FMT(LASFCP, "%s(%d): Func Call found at orig_line is %zu, orig_col is %zu, c_str() '%s'\n",
@@ -262,7 +262,7 @@ void align_params(Chunk *start, deque<Chunk *> &chunks)
       pc = Chunk::NullChunkPtr;
    }
 
-   while ((pc = pc->get_next())->IsNotNullChunk())
+   while ((pc = pc->GetNext())->IsNotNullChunk())
    {
       if (  chunk_is_newline(pc)
          || chunk_is_token(pc, CT_SEMICOLON)

@@ -88,7 +88,7 @@ void align_eigen_comma_init(void)
              *      cout
              *          << "something";
              */
-            Chunk *prev = pc->get_prev();
+            Chunk *prev = pc->GetPrev();
 
             if (  prev->IsNotNullChunk()
                && chunk_is_newline(prev))
@@ -100,13 +100,13 @@ void align_eigen_comma_init(void)
             }
             // Restart alignment
             as.Flush();
-            as.Add(pc->get_next());
+            as.Add(pc->GetNext());
             start = pc;
          }
       }
       else if (!as.m_aligned.Empty())
       {
-         Chunk *prev = pc->get_prev();
+         Chunk *prev = pc->GetPrev();
 
          if (  chunk_is_newline(prev)
             && chunk_is_token(chunk_get_prev_nc_nnl(pc), CT_COMMA))
@@ -115,7 +115,7 @@ void align_eigen_comma_init(void)
             as.Add(pc);
          }
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
    as.End();
 } // align_left_shift

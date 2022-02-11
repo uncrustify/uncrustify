@@ -33,7 +33,7 @@ Chunk *align_nl_cont(Chunk *start)
       {
          align_add(cs, pc, max_col);
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
    // NL_CONT is always the last thing on a line
    Chunk *tmp;

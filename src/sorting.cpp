@@ -291,23 +291,23 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
          return(pc1->len() - pc2->len());
       }
       // Same word, same length. Step to the next chunk.
-      pc1 = pc1->get_next();
+      pc1 = pc1->GetNext();
       LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
               __func__, __LINE__, pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
 
       if (chunk_is_token(pc1, CT_MEMBER))
       {
-         pc1 = pc1->get_next();
+         pc1 = pc1->GetNext();
          LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
                  __func__, __LINE__, pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
       }
-      pc2 = pc2->get_next();
+      pc2 = pc2->GetNext();
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
               __func__, __LINE__, pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
 
       if (chunk_is_token(pc2, CT_MEMBER))
       {
-         pc2 = pc2->get_next();
+         pc2 = pc2->GetNext();
          LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
                  __func__, __LINE__, pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
       }
@@ -433,7 +433,7 @@ static void delete_chunks_on_line_having_chunk(Chunk *chunk)
          && pc->IsNotNullChunk()
          && !chunk_is_comment(pc))
    {
-      Chunk *next_pc = pc->get_next();
+      Chunk *next_pc = pc->GetNext();
       LOG_FMT(LCHUNK, "%s(%d): Removed '%s' on orig_line %zu\n",
               __func__, __LINE__, pc->text(), pc->orig_line);
 
@@ -602,7 +602,7 @@ void sort_imports(void)
       {
          break;
       }
-      Chunk *next = pc->get_next();
+      Chunk *next = pc->GetNext();
 
       if (chunk_is_newline(pc))
       {
@@ -668,7 +668,7 @@ void sort_imports(void)
 
          if (options::mod_sort_import())
          {
-            p_imp = pc->get_next();
+            p_imp = pc->GetNext();
          }
       }
       else if (chunk_is_token(pc, CT_USING))
@@ -677,7 +677,7 @@ void sort_imports(void)
 
          if (options::mod_sort_using())
          {
-            p_imp = pc->get_next();
+            p_imp = pc->GetNext();
          }
       }
       else if (chunk_is_token(pc, CT_PP_INCLUDE))
@@ -686,7 +686,7 @@ void sort_imports(void)
 
          if (options::mod_sort_include())
          {
-            p_imp  = pc->get_next();
+            p_imp  = pc->GetNext();
             p_last = pc;
          }
       }

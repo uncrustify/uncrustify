@@ -84,7 +84,7 @@ Chunk *align_trailing_comments(Chunk *start)
          if (  same_level
             && pc->brace_level != lvl)
          {
-            pc = pc->get_prev();
+            pc = pc->GetPrev();
             break;
          }
          cmt_type_cur = get_comment_align_type(pc);
@@ -109,7 +109,7 @@ Chunk *align_trailing_comments(Chunk *start)
       {
          nl_count += pc->nl_count;
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
    // Start with the minimum original column
    col = min_orig;
@@ -142,7 +142,7 @@ Chunk *align_trailing_comments(Chunk *start)
    }
    align_stack(cs, col, (intended_col != 0), LALTC);
 
-   return(pc->get_next());
+   return(pc->GetNext());
 } // align_trailing_comments
 
 
@@ -155,7 +155,7 @@ comment_align_e get_comment_align_type(Chunk *cmt)
 
    if (  !options::align_right_cmt_mix()
       && cmt != nullptr
-      && ((prev = cmt->get_prev())->IsNotNullChunk()))
+      && ((prev = cmt->GetPrev())->IsNotNullChunk()))
    {
       if (  chunk_is_token(prev, CT_PP_ENDIF)
          || chunk_is_token(prev, CT_PP_ELSE)
@@ -177,7 +177,7 @@ void align_right_comments(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (  chunk_is_token(pc, CT_COMMENT)
          || chunk_is_token(pc, CT_COMMENT_CPP)
@@ -185,7 +185,7 @@ void align_right_comments(void)
       {
          if (get_chunk_parent_type(pc) == CT_COMMENT_END)
          {
-            Chunk *prev = pc->get_prev();
+            Chunk *prev = pc->GetPrev();
 
             log_rule_B("align_right_cmt_gap");
 
@@ -231,7 +231,7 @@ void align_right_comments(void)
       }
       else
       {
-         pc = pc->get_next();
+         pc = pc->GetNext();
       }
    }
 } // align_right_comments

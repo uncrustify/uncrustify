@@ -104,7 +104,7 @@ void pawn_scrub_vsemi(void)
       return;
    }
 
-   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (pc->type != CT_VSEMICOLON)
       {
@@ -312,7 +312,7 @@ void pawn_add_virtual_semicolons(void)
       Chunk *prev = Chunk::NullChunkPtr;
       Chunk *pc   = Chunk::GetHead();
 
-      while ((pc = pc->get_next())->IsNotNullChunk())
+      while ((pc = pc->GetNext())->IsNotNullChunk())
       {
          if (  !chunk_is_comment(pc)
             && !chunk_is_newline(pc)
@@ -358,7 +358,7 @@ static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn)
       {
          last = Chunk::NullChunkPtr;
       }
-      last = last->get_next();
+      last = last->GetNext();
 
       if (chunk_is_token(last, CT_SEMICOLON))
       {
@@ -419,7 +419,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       set_chunk_type(last, CT_ANGLE_OPEN);
       set_chunk_parent(last, CT_FUNC_DEF);
 
-      while (  ((last = last->get_next())->IsNotNullChunk())
+      while (  ((last = last->GetNext())->IsNotNullChunk())
             && !chunk_is_str(last, ">", 1))
       {
          // do nothing just search, TODO: use search_chunk
@@ -493,7 +493,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
          prev->level++;
          prev->brace_level++;
          last = prev;
-      } while ((prev = prev->get_next())->IsNotNullChunk());
+      } while ((prev = prev->GetNext())->IsNotNullChunk());
 
       if (  last != nullptr
          && last->IsNotNullChunk())

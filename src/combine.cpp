@@ -343,7 +343,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
       pc   = next;
-      next = pc->get_next();
+      next = pc->GetNext();
    }
 
    // separate the uses of CT_ASSIGN sign '='
@@ -484,7 +484,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       if (chunk_is_token(next, CT_PAREN_OPEN))
       {
          set_chunk_parent(next, pc->type);
-         Chunk *tmp = next->get_next();
+         Chunk *tmp = next->GetNext();
 
          if (tmp == nullptr)
          {
@@ -499,7 +499,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                break;
             }
             make_type(tmp);
-            tmp = tmp->get_next();
+            tmp = tmp->GetNext();
          }
          return;                  // d_40100
       }
@@ -614,8 +614,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       }
 
       if (  chunk_is_token(pc, CT_WHEN)
-         && pc->get_next()->IsNotNullChunk()
-         && pc->get_next()->type != CT_SPAREN_OPEN)
+         && pc->GetNext()->IsNotNullChunk()
+         && pc->GetNext()->type != CT_SPAREN_OPEN)
       {
          set_chunk_type(pc, CT_WORD);
          return;
@@ -962,7 +962,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
             if (tmp->IsNotNullChunk())
             {
-               tmp = tmp->get_next();
+               tmp = tmp->GetNext();
 
                if (chunk_is_token(tmp, CT_PAREN_OPEN))
                {
@@ -1185,14 +1185,14 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       {
          const size_t level        = pc->level;
          bool         found_status = false;
-         Chunk        *pprev       = pc->get_prev();
+         Chunk        *pprev       = pc->GetPrev();
 
          for ( ; (  pprev != nullptr
                  && pprev->IsNotNullChunk()
                  && pprev->level >= level
                  && chunk_is_not_token(pprev, CT_SEMICOLON)
                  && chunk_is_not_token(pprev, CT_ACCESS_COLON))
-               ; pprev = pprev->get_prev())
+               ; pprev = pprev->GetPrev())
          {
             if (pprev->level != level)
             {
@@ -1698,7 +1698,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                   // we are at beginning of the line
                   break;
                }
-               tmp = tmp->get_prev();
+               tmp = tmp->GetPrev();
             }
          }
       }
@@ -1769,7 +1769,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       && chunk_is_str(pc, "&&", 2)
       && chunk_ends_type(pc->prev))
    {
-      Chunk *tmp = pc->get_prev();                 // Issue #2688
+      Chunk *tmp = pc->GetPrev();                 // Issue #2688
       LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
               __func__, __LINE__, tmp->orig_line, tmp->orig_col,
               tmp->text(), get_token_name(tmp->type));
@@ -1793,7 +1793,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                  __func__, __LINE__, semi->orig_line, semi->orig_col,
                  semi->text(), get_token_name(semi->type));
 
-         for (Chunk *test_it = pc; test_it != semi; test_it = test_it->get_next())
+         for (Chunk *test_it = pc; test_it != semi; test_it = test_it->GetNext())
          {
             LOG_FMT(LFCNR, "%s(%d): test_it->orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
                     __func__, __LINE__, test_it->orig_line, test_it->orig_col,
@@ -1814,7 +1814,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    if (  chunk_is_token(pc, CT_INCDEC_AFTER)
       && pc->flags.test(PCF_IN_PREPROC))
    {
-      Chunk *tmp_2 = pc->get_next();
+      Chunk *tmp_2 = pc->GetNext();
       LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col,
               pc->text(), get_token_name(pc->type));
@@ -1841,7 +1841,7 @@ static void check_double_brace_init(Chunk *bo1)
 
    if (chunk_is_paren_close(pc))
    {
-      Chunk *bo2 = bo1->get_next();
+      Chunk *bo2 = bo1->GetNext();
 
       if (bo2->IsNullChunk())
       {
@@ -1857,7 +1857,7 @@ static void check_double_brace_init(Chunk *bo1)
          {
             return;
          }
-         Chunk *bc1 = bc2->get_next();
+         Chunk *bc1 = bc2->GetNext();
 
          if (bc1->IsNullChunk())
          {
@@ -2177,7 +2177,7 @@ static Chunk *process_return(Chunk *pc)
                     __func__, __LINE__, pc->orig_line);
 
             // lower the level of everything
-            for (temp = next; temp != cpar; temp = temp->get_next())
+            for (temp = next; temp != cpar; temp = temp->GetNext())
             {
                if (temp->level == 0)
                {
@@ -2203,7 +2203,7 @@ static Chunk *process_return(Chunk *pc)
                temp->column       = temp->column - 2;
                temp->orig_col     = temp->orig_col - 2;
                temp->orig_col_end = temp->orig_col_end - 2;
-               temp               = temp->get_next();
+               temp               = temp->GetNext();
             }
          }
          else
@@ -2244,7 +2244,7 @@ static Chunk *process_return(Chunk *pc)
 
    if (pc->flags.test(PCF_IN_PREPROC))
    {
-      while ((semi = semi->get_next())->IsNotNullChunk())
+      while ((semi = semi->GetNext())->IsNotNullChunk())
       {
          if (!semi->flags.test(PCF_IN_PREPROC))
          {
@@ -2265,7 +2265,7 @@ static Chunk *process_return(Chunk *pc)
    }
    else
    {
-      while ((semi = semi->get_next())->IsNotNullChunk())
+      while ((semi = semi->GetNext())->IsNotNullChunk())
       {
          if (semi->level < pc->level)
          {
@@ -2303,7 +2303,7 @@ static Chunk *process_return(Chunk *pc)
       LOG_FMT(LRETURN, "%s(%d): added parens on orig_line %zu\n",
               __func__, __LINE__, pc->orig_line);
 
-      for (temp = next; temp != cpar; temp = temp->get_next())
+      for (temp = next; temp != cpar; temp = temp->GetNext())
       {
          temp->level++;
       }
@@ -2382,7 +2382,7 @@ static void handle_cpp_template(Chunk *pc)
 
    size_t level = tmp->level;
 
-   while ((tmp = tmp->get_next())->IsNotNullChunk())
+   while ((tmp = tmp->GetNext())->IsNotNullChunk())
    {
       if (  chunk_is_token(tmp, CT_CLASS)
          || chunk_is_token(tmp, CT_STRUCT))
@@ -2834,7 +2834,7 @@ static void handle_oc_class(Chunk *pc)
       {
          as = angle_state_e::CLOSE;
 
-         if (chunk_is_newline(tmp->get_prev()))
+         if (chunk_is_newline(tmp->GetPrev()))
          {
             set_chunk_type(tmp, CT_OC_SCOPE);
             chunk_flags_set(tmp, PCF_STMT_START);
@@ -2908,7 +2908,7 @@ static void handle_oc_block_literal(Chunk *pc)
             set_chunk_type(ac, CT_ANGLE_CLOSE);
             set_chunk_parent(ac, CT_OC_PROTO_LIST);
 
-            for (tmp = ao->get_next(); tmp != ac; tmp = tmp->get_next())
+            for (tmp = ao->GetNext(); tmp != ac; tmp = tmp->GetNext())
             {
                tmp->level += 1;
                set_chunk_parent(tmp, CT_OC_PROTO_LIST);
@@ -3126,7 +3126,7 @@ static void handle_oc_message_decl(Chunk *pc)
       tmp = Chunk::NullChunkPtr;
    }
 
-   while ((tmp = tmp->get_next())->IsNotNullChunk())
+   while ((tmp = tmp->GetNext())->IsNotNullChunk())
    {
       if (tmp->level < pc->level)
       {
@@ -3250,13 +3250,13 @@ static void handle_oc_message_send(Chunk *os)
 
    if (os != nullptr)
    {
-      cs = os->get_next();
+      cs = os->GetNext();
    }
 
    while (  cs->IsNotNullChunk()
          && cs->level > os->level)
    {
-      cs = cs->get_next();
+      cs = cs->GetNext();
    }
 
    if (  cs->IsNullChunk()
@@ -3353,7 +3353,7 @@ static void handle_oc_message_send(Chunk *os)
          set_chunk_type(ac, CT_ANGLE_CLOSE);
          set_chunk_parent(ac, CT_OC_PROTO_LIST);
 
-         for (tmp = ao->get_next(); tmp != ac; tmp = tmp->get_next())
+         for (tmp = ao->GetNext(); tmp != ac; tmp = tmp->GetNext())
          {
             tmp->level += 1;
             set_chunk_parent(tmp, CT_OC_PROTO_LIST);
@@ -3419,7 +3419,7 @@ static void handle_oc_message_send(Chunk *os)
    }
    Chunk *prev = Chunk::NullChunkPtr;
 
-   for (tmp = os->get_next(); tmp != cs; tmp = tmp->get_next())
+   for (tmp = os->GetNext(); tmp != cs; tmp = tmp->GetNext())
    {
       chunk_flags_set(tmp, PCF_IN_OC_MSG);
 
@@ -3433,7 +3433,7 @@ static void handle_oc_message_send(Chunk *os)
                || chunk_is_token(prev, CT_TYPE))
             {
                // Might be a named param, check previous block
-               Chunk *pp = prev->get_prev();
+               Chunk *pp = prev->GetPrev();
 
                if (  pp->IsNotNullChunk()
                   && chunk_is_not_token(pp, CT_OC_COLON)
@@ -3456,7 +3456,7 @@ static void handle_oc_available(Chunk *os)
 {
    if (os != nullptr)
    {
-      os = os->get_next();
+      os = os->GetNext();
    }
    else
    {
@@ -3472,7 +3472,7 @@ static void handle_oc_available(Chunk *os)
       {
          break;
       }
-      os = os->get_next();
+      os = os->GetNext();
    }
 }
 
@@ -3489,7 +3489,7 @@ static void handle_oc_property_decl(Chunk *os)
 
       if (os != nullptr)
       {
-         next = os->get_next();
+         next = os->GetNext();
       }
       Chunk                   *open_paren = nullptr;
 
@@ -3505,7 +3505,7 @@ static void handle_oc_property_decl(Chunk *os)
       if (chunk_is_token(next, CT_PAREN_OPEN))
       {
          open_paren = next;
-         next       = next->get_next();
+         next       = next->GetNext();
 
          /*
           * Determine location of the property attributes
@@ -3551,12 +3551,12 @@ static void handle_oc_property_decl(Chunk *os)
                   do
                   {
                      chunkGroup.push_back(next);
-                     next = next->get_next();
+                     next = next->GetNext();
                   } while (  next->IsNotNullChunk()
                           && chunk_is_not_token(next, CT_COMMA)
                           && chunk_is_not_token(next, CT_PAREN_CLOSE));
 
-                  next = next->get_prev();
+                  next = next->GetPrev();
 
                   // coverity CID 160946
                   if (next->IsNullChunk())
@@ -3572,14 +3572,14 @@ static void handle_oc_property_decl(Chunk *os)
                   do
                   {
                      chunkGroup.push_back(next);
-                     next = next->get_next();
+                     next = next->GetNext();
                   } while (  next->IsNotNullChunk()
                           && chunk_is_not_token(next, CT_COMMA)
                           && chunk_is_not_token(next, CT_PAREN_CLOSE));
 
                   if (next->IsNotNullChunk())
                   {
-                     next = next->get_prev();
+                     next = next->GetPrev();
                   }
 
                   if (next->IsNullChunk())
@@ -3625,7 +3625,7 @@ static void handle_oc_property_decl(Chunk *os)
                   other_chunks.push_back(chunkGroup);
                }
             }
-            next = next->get_next();
+            next = next->GetNext();
          }
          log_rule_B("mod_sort_oc_property_class_weight");
          int class_w = options::mod_sort_oc_property_class_weight();
@@ -3672,7 +3672,7 @@ static void handle_oc_property_decl(Chunk *os)
                   }
                   else
                   {
-                     curr_chunk = curr_chunk->get_next();
+                     curr_chunk = curr_chunk->GetNext();
                   }
                }
 
@@ -3689,7 +3689,7 @@ static void handle_oc_property_decl(Chunk *os)
                endchunk.column      = curr_chunk->orig_col_end + 1;
                endchunk.flags       = curr_chunk->flags & PCF_COPY_FLAGS;
                chunk_add_after(&endchunk, curr_chunk);
-               curr_chunk = curr_chunk->get_next();
+               curr_chunk = curr_chunk->GetNext();
             }
          }
 
@@ -3699,7 +3699,7 @@ static void handle_oc_property_decl(Chunk *os)
                && chunk_is_not_token(curr_chunk, CT_PAREN_CLOSE))
          {
             Chunk *rm_chunk = curr_chunk;
-            curr_chunk = curr_chunk->get_next();
+            curr_chunk = curr_chunk->GetNext();
             chunk_del(rm_chunk);
          }
       }
@@ -3722,12 +3722,12 @@ static void handle_cs_square_stmt(Chunk *os)
    {
       os = Chunk::NullChunkPtr;
    }
-   Chunk *cs = os->get_next();
+   Chunk *cs = os->GetNext();
 
    while (  cs->IsNotNullChunk()
          && cs->level > os->level)
    {
-      cs = cs->get_next();
+      cs = cs->GetNext();
    }
 
    if (  cs->IsNullChunk()
@@ -3740,7 +3740,7 @@ static void handle_cs_square_stmt(Chunk *os)
 
    Chunk *tmp;
 
-   for (tmp = os->get_next(); tmp != cs; tmp = tmp->get_next())
+   for (tmp = os->GetNext(); tmp != cs; tmp = tmp->GetNext())
    {
       set_chunk_parent(tmp, CT_CS_SQ_STMT);
 
@@ -3808,11 +3808,11 @@ static void handle_cs_array_type(Chunk *pc)
    {
       return;
    }
-   Chunk *prev = pc->get_prev();
+   Chunk *prev = pc->GetPrev();
 
    for ( ;
          chunk_is_token(prev, CT_COMMA);
-         prev = prev->get_prev())
+         prev = prev->GetPrev())
    {
       // empty
    }
@@ -3822,7 +3822,7 @@ static void handle_cs_array_type(Chunk *pc)
       while (pc != prev)
       {
          set_chunk_parent(pc, CT_TYPE);
-         pc = pc->get_prev();
+         pc = pc->GetPrev();
       }
       set_chunk_parent(prev, CT_TYPE);
    }
@@ -3836,10 +3836,10 @@ static void handle_wrap(Chunk *pc)
 
    if (pc != nullptr)
    {
-      opp = pc->get_next();
+      opp = pc->GetNext();
    }
-   Chunk *name = opp->get_next();
-   Chunk *clp  = name->get_next();
+   Chunk *name = opp->GetNext();
+   Chunk *clp  = name->GetNext();
 
    log_rule_B("sp_func_call_paren");
    log_rule_B("sp_cpp_cast_paren");
@@ -3967,7 +3967,7 @@ static void handle_java_assert(Chunk *pc)
       tmp = Chunk::NullChunkPtr;
    }
 
-   while ((tmp = tmp->get_next())->IsNotNullChunk())
+   while ((tmp = tmp->GetNext())->IsNotNullChunk())
    {
       if (tmp->level == pc->level)
       {

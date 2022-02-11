@@ -145,7 +145,7 @@ bool token_is_within_trailing_return(Chunk *pc)
       }
       else
       {
-         prev = prev->get_prev();
+         prev = prev->GetPrev();
       }
    }
    return(false);
@@ -1455,7 +1455,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          log_rule("sp_before_byref_func");                         // byref 4
          return(options::sp_before_byref_func());
       }
-      Chunk *next = second->get_next();
+      Chunk *next = second->GetNext();
 
       if (  next->IsNotNullChunk()
          && (  chunk_is_token(next, CT_COMMA)
@@ -2611,7 +2611,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
       else if (CharTable::IsKw1(second->str[0]))
       {
-         Chunk *prev = first->get_prev();
+         Chunk *prev = first->GetPrev();
 
          if (chunk_is_token(prev, CT_IN))
          {
@@ -2680,7 +2680,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
          do
          {
-            next = next->get_next();
+            next = next->GetNext();
          } while (chunk_is_token(next, CT_PTR_TYPE));
 
          if (  chunk_is_token(next, CT_FUNC_DEF)
@@ -2924,7 +2924,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          {
             open_paren = Chunk::NullChunkPtr;
          }
-         Chunk *type = open_paren->get_prev()->get_prev();
+         Chunk *type = open_paren->GetPrev()->GetPrev();
 
          if (chunk_is_token(type, CT_TYPE))
          {
@@ -3401,7 +3401,7 @@ void space_text(void)
       // If true, vbrace tokens are dropped to the previous token and skipped.
       if (options::sp_skip_vbrace_tokens())
       {
-         next = pc->get_next();
+         next = pc->GetNext();
 
          while (  chunk_is_blank(next)
                && !chunk_is_newline(next)
@@ -3412,12 +3412,12 @@ void space_text(void)
                     __func__, __LINE__, next->orig_line, next->orig_col, get_token_name(next->type),
                     pc->column, pc->str.size());
             next->column = pc->column + pc->str.size();
-            next         = next->get_next();
+            next         = next->GetNext();
          }
       }
       else
       {
-         next = pc->get_next();
+         next = pc->GetNext();
       }
 
       if (next->IsNullChunk())
@@ -3430,7 +3430,7 @@ void space_text(void)
       if (  QT_SIGNAL_SLOT_found
          && options::sp_balance_nested_parens())
       {
-         Chunk *nn = next->get_next();                                    // Issue #2734
+         Chunk *nn = next->GetNext();                                    // Issue #2734
 
          if (  nn->IsNotNullChunk()
             && chunk_is_token(nn, CT_SPACE))
@@ -3485,7 +3485,7 @@ void space_text(void)
                   && (tmp->len() == 0)
                   && !chunk_is_newline(tmp))
             {
-               tmp = tmp->get_next();
+               tmp = tmp->GetNext();
             }
 
             if (  tmp->IsNotNullChunk()
@@ -3610,7 +3610,7 @@ void space_text(void)
          } // switch
 
          if (  chunk_is_comment(next)
-            && chunk_is_newline(next->get_next())
+            && chunk_is_newline(next->GetNext())
             && column < next->orig_col)
          {
             /*
@@ -3682,7 +3682,7 @@ void space_text_balance_nested_parens(void)
 
    while (first->IsNotNullChunk())
    {
-      Chunk *next = first->get_next();
+      Chunk *next = first->GetNext();
 
       if (next->IsNullChunk())
       {
@@ -3822,7 +3822,7 @@ void space_add_after(Chunk *pc, size_t count)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *next = pc->get_next();
+   Chunk *next = pc->GetNext();
 
    // don't add at the end of the file or before a newline
    if (  next->IsNullChunk()

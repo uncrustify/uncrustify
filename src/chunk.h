@@ -118,7 +118,7 @@ public:
     *
     * @return pointer to next chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *get_next(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetNext(E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -128,7 +128,7 @@ public:
     *
     * @return pointer to previous chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *get_prev(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetPrev(E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -946,7 +946,7 @@ static inline bool chunk_is_addr(Chunk *pc)
             && (pc->str[0] == '&')
             && pc->type != CT_OPERATOR_VAL)))
    {
-      Chunk *prev = pc->get_prev();
+      Chunk *prev = pc->GetPrev();
 
       if (  pc->flags.test(PCF_IN_TEMPLATE)
          && (  chunk_is_token(prev, CT_COMMA)
@@ -1055,13 +1055,13 @@ static inline bool chunk_safe_to_del_nl(Chunk *nl)
    {
       nl = Chunk::NullChunkPtr;
    }
-   Chunk *tmp = nl->get_prev();
+   Chunk *tmp = nl->GetPrev();
 
    if (chunk_is_token(tmp, CT_COMMENT_CPP))
    {
       return(false);
    }
-   return(chunk_same_preproc(tmp, nl->get_next()));
+   return(chunk_same_preproc(tmp, nl->GetNext()));
 }
 
 

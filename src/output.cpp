@@ -471,7 +471,7 @@ void output_parsed(FILE *pfile, bool withOptions)
    fprintf(pfile, "# Line                Tag         Parent_type  Type of the parent         Columns Br/Lvl/pp         Flag   Nl  Text");
 #endif // ifdef WIN32
 
-   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
 #ifdef WIN32
       fprintf(pfile, "%s# %3d>%19.19s|%19.19s|%19.19s[%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
@@ -526,7 +526,7 @@ void output_parsed_csv(FILE *pfile)
    fprintf(pfile, "Line,Tag,Parent_type,Type of the parent,Column,Orig Col Strt,"
            "Orig Col End,Orig Sp Before,Br,Lvl,pp,Flags,Nl Before,Nl After,Text,");
 
-   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       fprintf(pfile, "%s%zu,%s,%s,%s,%zu,%zu,%zu,%d,%zu,%zu,%zu,",
               eol_marker, pc->orig_line, get_token_name(pc->type),
@@ -601,7 +601,7 @@ void output_text(FILE *pfile)
       size_t indent = cpd.frag_cols - 1;
 
       // loop over the whole chunk list
-      for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
+      for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
          pc->column        += indent;
          pc->column_indent += indent;
@@ -625,7 +625,7 @@ void output_text(FILE *pfile)
    bool write_in_tracking = false;
 
    // loop over the whole chunk list
-   for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
+   for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       char copy[1000];
       LOG_FMT(LCONTTEXT, "%s(%d): text() is '%s', type is %s, orig_line is %zu, column is %zu, nl is %zu\n",
@@ -667,7 +667,7 @@ void output_text(FILE *pfile)
             else
             {
                // Try to keep the same relative spacing
-               Chunk *prev = pc->get_prev();
+               Chunk *prev = pc->GetPrev();
 
                if (chunk_is_token(prev, CT_PP_IGNORE))
                {
@@ -686,7 +686,7 @@ void output_text(FILE *pfile)
                         && prev->orig_col == 0
                         && prev->nl_count == 0)
                   {
-                     prev = prev->get_prev();
+                     prev = prev->GetPrev();
                   }
 
                   if (  prev != nullptr
@@ -836,7 +836,7 @@ void output_text(FILE *pfile)
                reindent_line(pc, cpd.column);
             }
             // not the first item on a line
-            Chunk *prev = pc->get_prev();
+            Chunk *prev = pc->GetPrev();
             log_rule_B("align_with_tabs");
             allow_tabs = (  options::align_with_tabs()
                          && pc->flags.test(PCF_WAS_ALIGNED)
@@ -1386,7 +1386,7 @@ static Chunk *get_next_function(Chunk *pc)
       pc = Chunk::NullChunkPtr;
    }
 
-   while ((pc = pc->get_next())->IsNotNullChunk())
+   while ((pc = pc->GetNext())->IsNotNullChunk())
    {
       if (  chunk_is_token(pc, CT_FUNC_DEF)
          || chunk_is_token(pc, CT_FUNC_PROTO)
@@ -1403,7 +1403,7 @@ static Chunk *get_next_function(Chunk *pc)
 
 static Chunk *get_next_class(Chunk *pc)
 {
-   return(chunk_search_next_cat(pc, CT_CLASS)->get_next());
+   return(chunk_search_next_cat(pc, CT_CLASS)->GetNext());
 }
 
 
@@ -1689,13 +1689,13 @@ static bool can_combine_comment(Chunk *pc, cmt_reflow &cmt)
    {
       pc = Chunk::NullChunkPtr;
    }
-   Chunk *next = pc->get_next();
+   Chunk *next = pc->GetNext();
 
    if (  next->IsNotNullChunk()
       && next->nl_count == 1)
    {
       // Make sure the comment is the same type at the same column
-      next = next->get_next();
+      next = next->GetNext();
 
       if (  chunk_is_token(next, pc->type)
          && (  (  next->column == 1
@@ -1785,8 +1785,8 @@ static Chunk *output_comment_c(Chunk *first)
       LOG_FMT(LCONTTEXT, "%s(%d): add_comment_text(newline)\n",
               __func__, __LINE__);
       add_comment_text("\n", cmt, false);
-      pc = pc->get_next();
-      pc = pc->get_next();
+      pc = pc->GetNext();
+      pc = pc->GetNext();
    }
    tmp.set(pc->str, 2, pc->len() - 4);
 
@@ -2020,7 +2020,7 @@ static Chunk *output_comment_cpp(Chunk *first)
       }
       add_comment_text(tmp, cmt, true);
       add_comment_text("\n", cmt, false);
-      pc = pc->get_next()->get_next();
+      pc = pc->GetNext()->GetNext();
    }
    offs = unc_isspace(pc->str[2]) ? 1 : 0;
    tmp.set(pc->str, 2 + offs, pc->len() - (2 + offs));
@@ -2727,13 +2727,13 @@ static bool kw_fcn_class(Chunk *cmt, unc_text &out_txt)
    {
       out_txt.append(tmp->str);
 
-      while ((tmp = tmp->get_next())->IsNotNullChunk())
+      while ((tmp = tmp->GetNext())->IsNotNullChunk())
       {
          if (tmp->type != CT_DC_MEMBER)
          {
             break;
          }
-         tmp = tmp->get_next();
+         tmp = tmp->GetNext();
 
          if (tmp->IsNotNullChunk())
          {
@@ -2924,7 +2924,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
       Chunk *prev = Chunk::NullChunkPtr;
       tmp = fpo;
 
-      while ((tmp = tmp->get_next())->IsNotNullChunk())
+      while ((tmp = tmp->GetNext())->IsNotNullChunk())
       {
          if (  chunk_is_token(tmp, CT_COMMA)
             || tmp == fpc)
@@ -3125,7 +3125,7 @@ static void output_comment_multi_simple(Chunk *pc)
    {
       int diff = 0;
 
-      if (chunk_is_newline(pc->get_prev()))
+      if (chunk_is_newline(pc->GetPrev()))
       {
          // The comment should be indented correctly
          diff = pc->column - pc->orig_col;
@@ -3265,7 +3265,7 @@ static void generate_if_conditional_as_text(unc_text &dst, Chunk *ifdef)
 
    dst.clear();
 
-   for (Chunk *pc = ifdef; pc != nullptr && pc->IsNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = ifdef; pc != nullptr && pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (column == -1)
       {
@@ -3333,7 +3333,7 @@ void add_long_preprocessor_conditional_block_comment(void)
 
       Chunk  *tmp = pc;
 
-      while ((tmp = tmp->get_next())->IsNotNullChunk())
+      while ((tmp = tmp->GetNext())->IsNotNullChunk())
       {
          // just track the preproc level:
          if (chunk_is_token(tmp, CT_PREPROC))
@@ -3356,7 +3356,7 @@ void add_long_preprocessor_conditional_block_comment(void)
                     br_open->orig_line, br_close->orig_line, nl_count);
 
             // Found the matching #else or #endif - make sure a newline is next
-            tmp = tmp->get_next();
+            tmp = tmp->GetNext();
 
             LOG_FMT(LPPIF, "next item type %d (is %s)\n",
                     (tmp ? tmp->type : -1), (tmp ? chunk_is_newline(tmp) ? "newline"

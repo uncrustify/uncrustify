@@ -958,7 +958,7 @@ void mark_define_expressions(void)
          }
       }
       prev = pc;
-      pc   = pc->get_next();
+      pc   = pc->GetNext();
    }
 } // mark_define_expressions
 
@@ -969,7 +969,7 @@ void mark_exec_sql(Chunk *pc)
    Chunk *tmp;
 
    // Change CT_WORD to CT_SQL_WORD
-   for (tmp = pc->get_next(); tmp != nullptr && tmp->IsNotNullChunk(); tmp = tmp->get_next())
+   for (tmp = pc->GetNext(); tmp != nullptr && tmp->IsNotNullChunk(); tmp = tmp->GetNext())
    {
       set_chunk_parent(tmp, pc->type);
 
@@ -991,9 +991,9 @@ void mark_exec_sql(Chunk *pc)
       return;
    }
 
-   for (tmp = tmp->get_next();
+   for (tmp = tmp->GetNext();
         tmp->IsNotNullChunk() && chunk_is_not_token(tmp, CT_SQL_END);
-        tmp = tmp->get_next())
+        tmp = tmp->GetNext())
    {
       tmp->level++;
    }
@@ -1579,14 +1579,14 @@ void mark_function(Chunk *pc)
 
             if (prev != nullptr)
             {
-               prev = prev->get_prev();
+               prev = prev->GetPrev();
             }
 
             if (chunk_is_token(prev, CT_DECLSPEC))
             {
                if (prev != nullptr)
                {
-                  prev = prev->get_prev();
+                  prev = prev->GetPrev();
                }
             }
          }
