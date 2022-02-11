@@ -16,10 +16,10 @@ bool can_be_full_param(Chunk *start, Chunk *end)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LFPARAM, "%s(%d): start->text() is '%s', type is %s\n",
-           __func__, __LINE__, start->text(), get_token_name(start->type));
-   LOG_FMT(LFPARAM, "%s(%d): end->text()   is '%s', type is %s\n",
-           __func__, __LINE__, end->text(), get_token_name(end->type));
+   LOG_FMT(LFPARAM, "%s(%d): start->Text() is '%s', type is %s\n",
+           __func__, __LINE__, start->Text(), get_token_name(start->type));
+   LOG_FMT(LFPARAM, "%s(%d): end->Text()   is '%s', type is %s\n",
+           __func__, __LINE__, end->Text(), get_token_name(end->type));
 
    int   word_count     = 0;
    int   type_count     = 0;
@@ -31,8 +31,8 @@ bool can_be_full_param(Chunk *start, Chunk *end)
         pc != nullptr && pc != end;
         pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC))
    {
-      LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->text(), get_token_name(pc->type));
+      LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->Text(), get_token_name(pc->type));
 
       if (  chunk_is_token(pc, CT_QUALIFIER)
          || chunk_is_token(pc, CT_STRUCT)
@@ -121,8 +121,8 @@ bool can_be_full_param(Chunk *start, Chunk *end)
                {
                   return(false);
                }
-               LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->text(), get_token_name(pc->type));
+               LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', type is %s\n",
+                       __func__, __LINE__, pc->Text(), get_token_name(pc->type));
             } while (pc != tmp1);
 
             // reset some vars to allow [] after parens
@@ -186,8 +186,8 @@ bool can_be_full_param(Chunk *start, Chunk *end)
             tmp3 = chunk_skip_to_match(tmp1, E_Scope::PREPROC);
          }
          pc = tmp3;
-         LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', type is %s\n",
-                 __func__, __LINE__, pc->text(), get_token_name(pc->type));
+         LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', type is %s\n",
+                 __func__, __LINE__, pc->Text(), get_token_name(pc->type));
 
          // reset some vars to allow [] after parens
          word_count = 1;
@@ -202,16 +202,16 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       {
          // skip over any array stuff
          pc = chunk_skip_to_match(pc, E_Scope::PREPROC);
-         LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', type is %s\n",
-                 __func__, __LINE__, pc->text(), get_token_name(pc->type));
+         LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', type is %s\n",
+                 __func__, __LINE__, pc->Text(), get_token_name(pc->type));
       }
       else if (  word_count == 2
               && chunk_is_token(pc, CT_SQUARE_OPEN))
       {
          // Bug #671: is it such as: bool foo[FOO_MAX]
          pc = chunk_skip_to_match(pc, E_Scope::PREPROC);
-         LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', type is %s\n",
-                 __func__, __LINE__, pc->text(), get_token_name(pc->type));
+         LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', type is %s\n",
+                 __func__, __LINE__, pc->Text(), get_token_name(pc->type));
       }
       else if (  word_count == 1
               && language_is_set(LANG_CPP)
@@ -225,14 +225,14 @@ bool can_be_full_param(Chunk *start, Chunk *end)
                  __func__, __LINE__, get_token_name(pc->type), type_count, word_count);
          return(false);
       }
-      LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->text(), get_token_name(pc->type));
+      LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->Text(), get_token_name(pc->type));
    }
 
    Chunk *last = chunk_get_prev_nc_nnl_ni(pc);   // Issue #2279
 
-   LOG_FMT(LFPARAM, "%s(%d): last->text() is '%s', type is %s\n",
-           __func__, __LINE__, last->text(), get_token_name(last->type));
+   LOG_FMT(LFPARAM, "%s(%d): last->Text() is '%s', type is %s\n",
+           __func__, __LINE__, last->Text(), get_token_name(last->type));
 
    if (chunk_is_ptr_operator(last))
    {
@@ -269,13 +269,13 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          return(true);
       }
    }
-   LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', word_count is %d, type_count is %d\n",
-           __func__, __LINE__, pc->text(), word_count, type_count);
+   LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', word_count is %d, type_count is %d\n",
+           __func__, __LINE__, pc->Text(), word_count, type_count);
 
    if (first_word != nullptr)
    {
-      LOG_FMT(LFPARAM, "%s(%d): first_word->text() is '%s'\n",
-              __func__, __LINE__, first_word->text());
+      LOG_FMT(LFPARAM, "%s(%d): first_word->Text() is '%s'\n",
+              __func__, __LINE__, first_word->Text());
    }
    bool ret = (  word_count >= 2
               || (  word_count == 1
@@ -284,8 +284,8 @@ bool can_be_full_param(Chunk *start, Chunk *end)
    LOG_FMT(LFPARAM, "%s(%d): ret is %s\n",
            __func__, __LINE__, ret ? "TRUE" : "FALSE");
 
-   LOG_FMT(LFPARAM, "%s(%d): pc->text() is '%s', ",
-           __func__, __LINE__, pc->text());
+   LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', ",
+           __func__, __LINE__, pc->Text());
    LOG_FMT(LFPARAM, "<== type is %s, ",
            (pc == nullptr ? "nullptr" : get_token_name(pc->type)));
 
@@ -319,8 +319,8 @@ bool chunk_ends_type(Chunk *start)
 
    for ( ; pc != nullptr; pc = chunk_get_prev_nc_nnl_ni(pc)) // Issue #2279
    {
-      LOG_FMT(LFTYPE, "%s(%d): type is %s, text() '%s', orig_line %zu, orig_col %zu\n   ",
-              __func__, __LINE__, get_token_name(pc->type), pc->text(),
+      LOG_FMT(LFTYPE, "%s(%d): type is %s, Text() '%s', orig_line %zu, orig_col %zu\n   ",
+              __func__, __LINE__, get_token_name(pc->type), pc->Text(),
               pc->orig_line, pc->orig_col);
       log_pcf_flags(LFTYPE, pc->flags);
 
@@ -547,8 +547,8 @@ Chunk *set_paren_parent(Chunk *start, c_token_t parent)
    if (end != nullptr)
    {
       LOG_FMT(LFLPAREN, "%s(%d): %zu:%zu '%s' and %zu:%zu '%s' type is %s, parent_type is %s",
-              __func__, __LINE__, start->orig_line, start->orig_col, start->text(),
-              end->orig_line, end->orig_col, end->text(),
+              __func__, __LINE__, start->orig_line, start->orig_col, start->Text(),
+              end->orig_line, end->orig_col, end->Text(),
               get_token_name(start->type), get_token_name(parent));
       log_func_stack_inline(LFLPAREN);
       set_chunk_parent(start, parent);

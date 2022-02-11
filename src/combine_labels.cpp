@@ -101,8 +101,8 @@ void combine_labels(void)
       }
       else
       {
-         LOG_FMT(LFCN, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, text() '%s'\n",
-                 __func__, __LINE__, next->orig_line, next->orig_col, next->text());
+         LOG_FMT(LFCN, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, Text() '%s'\n",
+                 __func__, __LINE__, next->orig_line, next->orig_col, next->Text());
       }
 
       if (  !next->flags.test(PCF_IN_OC_MSG) // filter OC case of [self class] msg send
@@ -206,12 +206,12 @@ void combine_labels(void)
          }
          else
          {
-            LOG_FMT(LFCN, "%s(%d): prev->text() is '%s', orig_line is %zu, orig_col is %zu\n",
-                    __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col);
-            LOG_FMT(LFCN, "%s(%d): cur->text() is '%s', orig_line is %zu, orig_col is %zu\n",
-                    __func__, __LINE__, cur->text(), cur->orig_line, cur->orig_col);
-            LOG_FMT(LFCN, "%s(%d): next->text() is '%s', orig_line is %zu, orig_col is %zu\n",
-                    __func__, __LINE__, next->text(), next->orig_line, next->orig_col);
+            LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', orig_line is %zu, orig_col is %zu\n",
+                    __func__, __LINE__, prev->Text(), prev->orig_line, prev->orig_col);
+            LOG_FMT(LFCN, "%s(%d): cur->Text() is '%s', orig_line is %zu, orig_col is %zu\n",
+                    __func__, __LINE__, cur->Text(), cur->orig_line, cur->orig_col);
+            LOG_FMT(LFCN, "%s(%d): next->Text() is '%s', orig_line is %zu, orig_col is %zu\n",
+                    __func__, __LINE__, next->Text(), next->orig_line, next->orig_col);
             Chunk *nextprev = chunk_get_prev_local(next);   // Issue #2279
 
             if (nextprev == nullptr)
@@ -273,7 +273,7 @@ void combine_labels(void)
                }
                LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, tmp '%s': ",
                        __func__, __LINE__, tmp->orig_line, tmp->orig_col,
-                       (chunk_is_token(tmp, CT_NEWLINE)) ? "<Newline>" : tmp->text());
+                       (chunk_is_token(tmp, CT_NEWLINE)) ? "<Newline>" : tmp->Text());
                log_pcf_flags(LGUY, tmp->flags);
 
                if (next->flags.test(PCF_IN_FCN_CALL))
@@ -346,11 +346,11 @@ void combine_labels(void)
             }
             else if (chunk_is_token(nextprev, CT_FPAREN_CLOSE))
             {
-               LOG_FMT(LFCN, "%s(%d): nextprev->text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
-                       __func__, __LINE__, nextprev->text(), nextprev->orig_line, nextprev->orig_col,
+               LOG_FMT(LFCN, "%s(%d): nextprev->Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
+                       __func__, __LINE__, nextprev->Text(), nextprev->orig_line, nextprev->orig_col,
                        get_token_name(nextprev->type));
-               LOG_FMT(LFCN, "%s(%d): next->text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
-                       __func__, __LINE__, next->text(), next->orig_line, next->orig_col,
+               LOG_FMT(LFCN, "%s(%d): next->Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
+                       __func__, __LINE__, next->Text(), next->orig_line, next->orig_col,
                        get_token_name(next->type));
 
                // Issue #2172
@@ -410,8 +410,8 @@ void combine_labels(void)
                if (tmp != nullptr)
 
                {
-                  LOG_FMT(LFCN, "%s(%d): tmp->text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
-                          __func__, __LINE__, tmp->text(), tmp->orig_line, tmp->orig_col,
+                  LOG_FMT(LFCN, "%s(%d): tmp->Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
+                          __func__, __LINE__, tmp->Text(), tmp->orig_line, tmp->orig_col,
                           get_token_name(tmp->type));
 
                   if (  chunk_is_token(tmp, CT_BASE)

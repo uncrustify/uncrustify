@@ -89,9 +89,9 @@ public:
    size_t len() const;
 
    //! provides the content of a string a zero terminated character pointer
-   const char *text() const;
+   const char *Text() const;
 
-   // Issue #2984, fill up, if necessary, a copy of the first chars of the text() string
+   // Issue #2984, fill up, if necessary, a copy of the first chars of the Text() string
    const char *ElidedText(char *for_the_copy) const;
 
 
@@ -639,7 +639,7 @@ static inline bool is_expected_string_and_level(Chunk *pc, const char *str, int 
          || (  (  level < 0
                || pc->level == static_cast<size_t>(level))
             && pc->len() == len                        // and the length is as expected
-            && memcmp(str, pc->text(), len) == 0));    // and the strings are equal
+            && memcmp(str, pc->Text(), len) == 0));    // and the strings are equal
 }
 
 
@@ -865,7 +865,7 @@ static inline bool chunk_is_Doxygen_comment(Chunk *pc)
       return(false);
    }
    // check the third character
-   const char   *sComment = pc->text();
+   const char   *sComment = pc->Text();
    const size_t len       = strlen(sComment);
 
    if (len < 3)
@@ -895,7 +895,7 @@ static inline bool chunk_is_str(Chunk *pc, const char *str, size_t len)
 {
    return(  pc != nullptr                         // valid pc pointer
          && (pc->len() == len)                    // token size equals size parameter
-         && (memcmp(pc->text(), str, len) == 0)); // token name is the same as str parameter
+         && (memcmp(pc->Text(), str, len) == 0)); // token name is the same as str parameter
 
    /*
     * TODO: possible access beyond array for memcmp, check this
@@ -908,7 +908,7 @@ static inline bool chunk_is_str_case(Chunk *pc, const char *str, size_t len)
 {
    return(  pc != nullptr
          && (pc->len() == len)
-         && (strncasecmp(pc->text(), str, len) == 0));
+         && (strncasecmp(pc->Text(), str, len) == 0));
 }
 
 

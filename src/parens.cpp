@@ -91,7 +91,7 @@ void do_parens_assign(void)                         // Issue #3316
          if (chunk_is_token(pc, CT_ASSIGN))
          {
             LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu\n",
-                    __func__, __LINE__, pc->orig_line, pc->text(), pc->level);
+                    __func__, __LINE__, pc->orig_line, pc->Text(), pc->level);
             // look before for a open sparen
             size_t check_level = pc->level;
             Chunk  *p          = pc->GetPrevNc(E_Scope::PREPROC);
@@ -99,7 +99,7 @@ void do_parens_assign(void)                         // Issue #3316
             while (p->IsNotNullChunk())
             {
                LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
-                       __func__, __LINE__, p->orig_line, p->text(), p->level, get_token_name(p->type));
+                       __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->type));
 
                //log_pcf_flags(LPARADD, p->flags);
                if (p->flags.test(PCF_STMT_START))
@@ -124,7 +124,7 @@ void do_parens_assign(void)                         // Issue #3316
                }
             }
             LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
-                    __func__, __LINE__, p->orig_line, p->text(), p->level, get_token_name(p->type));
+                    __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->type));
 
             if (get_chunk_parent_type(p) == CT_WHILE)
             {
@@ -162,7 +162,7 @@ void do_parens_return(void)                         // Issue #3316
          if (chunk_is_token(pc, CT_RETURN))
          {
             LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu\n",
-                    __func__, __LINE__, pc->orig_line, pc->text(), pc->level);
+                    __func__, __LINE__, pc->orig_line, pc->Text(), pc->level);
             // look before for a open sparen
             size_t check_level = pc->level;
             Chunk  *p          = pc->GetPrevNc(E_Scope::PREPROC);
@@ -170,7 +170,7 @@ void do_parens_return(void)                         // Issue #3316
             while (p->IsNotNullChunk())
             {
                LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
-                       __func__, __LINE__, p->orig_line, p->text(), p->level, get_token_name(p->type));
+                       __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->type));
 
                //log_pcf_flags(LPARADD, p->flags);
                if (p->flags.test(PCF_STMT_START))
@@ -195,7 +195,7 @@ void do_parens_return(void)                         // Issue #3316
                }
             }
             LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
-                    __func__, __LINE__, p->orig_line, p->text(), p->level, get_token_name(p->type));
+                    __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->type));
 
             if (get_chunk_parent_type(p) == CT_WHILE)
             {
@@ -221,8 +221,8 @@ static void add_parens_between(Chunk *first, Chunk *last)
 
    LOG_FMT(LPARADD, "%s(%d): line %zu, between '%s' [lvl is %zu] and '%s' [lvl is %zu]\n",
            __func__, __LINE__, first->orig_line,
-           first->text(), first->level,
-           last->text(), last->level);
+           first->Text(), first->level,
+           last->Text(), last->level);
 
    // Don't do anything if we have a bad sequence, ie "&& )"
    Chunk *first_n = chunk_get_next_nc_nnl(first);
@@ -290,7 +290,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       {
          LOG_FMT(LPARADD2, " -- bail on PP %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->type),
-                 pc->text(), pc->orig_line, pc->orig_col, pc->level);
+                 pc->Text(), pc->orig_line, pc->orig_col, pc->level);
          return;
       }
 
@@ -301,7 +301,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       {
          LOG_FMT(LPARADD2, " -- %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->type),
-                 pc->text(), pc->orig_line, pc->orig_col, pc->level);
+                 pc->Text(), pc->orig_line, pc->orig_col, pc->level);
 
          if (hit_compare)
          {
@@ -317,7 +317,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       else if (chunk_is_token(pc, CT_COMPARE))
       {
          LOG_FMT(LPARADD2, " -- compare '%s' at line %zu, orig_col is %zu, level is %zu\n",
-                 pc->text(), pc->orig_line, pc->orig_col, pc->level);
+                 pc->Text(), pc->orig_line, pc->orig_col, pc->level);
          hit_compare = true;
       }
       else if (chunk_is_paren_open(pc))

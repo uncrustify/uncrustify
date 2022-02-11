@@ -503,7 +503,7 @@ void output_parsed(FILE *pfile, bool withOptions)
 
          if (pc->type != CT_NL_CONT)
          {
-            fprintf(pfile, "%s", pc->text());
+            fprintf(pfile, "%s", pc->Text());
          }
          else
          {
@@ -559,7 +559,7 @@ void output_parsed_csv(FILE *pfile)
 
          if (pc->type != CT_NL_CONT)
          {
-            for (auto *ch = pc->text(); *ch != '\0'; ++ch)
+            for (auto *ch = pc->Text(); *ch != '\0'; ++ch)
             {
                fprintf(pfile, "%c", *ch);
 
@@ -628,7 +628,7 @@ void output_text(FILE *pfile)
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       char copy[1000];
-      LOG_FMT(LCONTTEXT, "%s(%d): text() is '%s', type is %s, orig_line is %zu, column is %zu, nl is %zu\n",
+      LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig_line is %zu, column is %zu, nl is %zu\n",
               __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->type), pc->orig_line, pc->column, pc->nl_count);
       log_rule_B("cmt_convert_tab_to_spaces");
       cpd.output_tab_as_space = (  options::cmt_convert_tab_to_spaces()
@@ -765,8 +765,8 @@ void output_text(FILE *pfile)
       else if (  chunk_is_token(pc, CT_JUNK)
               || chunk_is_token(pc, CT_IGNORED))
       {
-         LOG_FMT(LOUTIND, "%s(%d): orig_line is %zu, orig_col is %zu,\npc->text() >%s<, pc->str.size() is %zu\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), pc->str.size());
+         LOG_FMT(LOUTIND, "%s(%d): orig_line is %zu, orig_col is %zu,\npc->Text() >%s<, pc->str.size() is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), pc->str.size());
          // do not adjust the column for junk
          add_text(pc->str, true);
       }
@@ -1765,8 +1765,8 @@ static Chunk *output_comment_c(Chunk *first)
 
    while (can_combine_comment(pc, cmt))
    {
-      LOG_FMT(LCONTTEXT, "%s(%d): text() is '%s'\n",
-              __func__, __LINE__, pc->text());
+      LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s'\n",
+              __func__, __LINE__, pc->Text());
       tmp.set(pc->str, 2, pc->len() - 4);
 
       if (  cpd.last_char == '*'
@@ -1828,7 +1828,7 @@ static Chunk *output_comment_cpp(Chunk *first)
 
    if (options::sp_cmt_cpp_doxygen())  // special treatment for doxygen style comments (treat as unity)
    {
-      const char *sComment = first->text();
+      const char *sComment = first->Text();
       bool       grouping  = (sComment[2] == '@');
       size_t     brace     = 3;
 
@@ -2137,7 +2137,7 @@ static void output_comment_multi(Chunk *pc)
 
    char       copy[1000];
 
-   LOG_FMT(LCONTTEXT, "%s(%d): text() is '%s', type is %s, orig_col is %zu, column is %zu\n",
+   LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig_col is %zu, column is %zu\n",
            __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->type), pc->orig_col, pc->column);
 
    output_cmt_start(cmt, pc);
@@ -3112,8 +3112,8 @@ static void output_comment_multi_simple(Chunk *pc)
    }
    cmt_reflow cmt;
 
-   LOG_FMT(LCONTTEXT, "%s(%d): text() is '%s', type is %s, orig_col is %zu, column is %zu\n",
-           __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_col, pc->column);
+   LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig_col is %zu, column is %zu\n",
+           __func__, __LINE__, pc->Text(), get_token_name(pc->type), pc->orig_col, pc->column);
 
    output_cmt_start(cmt, pc);
 

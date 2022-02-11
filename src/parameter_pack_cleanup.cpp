@@ -19,8 +19,8 @@ void parameter_pack_cleanup(void)
    while (  pc != nullptr
          && pc->IsNotNullChunk())
    {
-      LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+      LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
 
       // look for template
       if (chunk_is_token(pc, CT_TEMPLATE))                 // Issue #3309
@@ -31,8 +31,8 @@ void parameter_pack_cleanup(void)
          while (  pc != nullptr
                && pc->IsNotNullChunk())
          {
-            LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+            LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
 
             if (chunk_is_token(pc, CT_PARAMETER_PACK))
             {
@@ -42,8 +42,8 @@ void parameter_pack_cleanup(void)
                while (  pc != nullptr
                      && pc->IsNotNullChunk())
                {
-                  LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
-                          __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+                  LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
+                          __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
                   //pc = pc->GetNext();
 
                   if (pc == template_end)
@@ -51,7 +51,7 @@ void parameter_pack_cleanup(void)
                      break;
                   }
 
-                  if (strcmp(pc->text(), parameter_pack->text()) == 0)
+                  if (strcmp(pc->Text(), parameter_pack->Text()) == 0)
                   {
                      set_chunk_type(pc, CT_PARAMETER_PACK);
                   }

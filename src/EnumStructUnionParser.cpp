@@ -1587,7 +1587,7 @@ void EnumStructUnionParser::mark_constructors()
               __LINE__,
               m_start->orig_line,
               m_start->orig_col,
-              m_start->text(),
+              m_start->Text(),
               get_token_name(get_chunk_parent_type(m_start)));
 
       log_pcf_flags(LFTOR, m_start->flags);
@@ -1597,7 +1597,7 @@ void EnumStructUnionParser::mark_constructors()
        */
       auto *body_end   = get_body_end();
       auto *body_start = get_body_start();
-      auto *name       = m_type->text();
+      auto *name       = m_type->Text();
 
       LOG_FMT(LFTOR,
               "%s(%d): Name of type is '%s'\n",
@@ -1619,7 +1619,7 @@ void EnumStructUnionParser::mark_constructors()
           * find a chunk within the class/struct body that
           */
          if (  prev != nullptr
-            && std::strcmp(prev->text(), name) == 0
+            && std::strcmp(prev->Text(), name) == 0
             && prev->level == level
             && chunk_is_paren_open(next))
          {
@@ -1821,7 +1821,7 @@ void EnumStructUnionParser::mark_template(Chunk *start) const
               "%s(%d): Template detected: '%s' at orig_line %zu, orig_col %zu\n",
               __unqualified_func__,
               __LINE__,
-              start->text(),
+              start->Text(),
               start->orig_line,
               start->orig_col);
    }
@@ -1849,7 +1849,7 @@ void EnumStructUnionParser::mark_template_args(Chunk *start, Chunk *end) const
               "%s(%d): Start of template detected: '%s' at orig_line %zu, orig_col %zu\n",
               __unqualified_func__,
               __LINE__,
-              start->text(),
+              start->Text(),
               start->orig_line,
               start->orig_col);
 
@@ -1876,7 +1876,7 @@ void EnumStructUnionParser::mark_template_args(Chunk *start, Chunk *end) const
               "%s(%d): End of template detected: '%s' at orig_line %zu, orig_col %zu\n",
               __unqualified_func__,
               __LINE__,
-              end->text(),
+              end->Text(),
               end->orig_line,
               end->orig_col);
    }
@@ -1911,7 +1911,7 @@ void EnumStructUnionParser::mark_variable(Chunk *variable, pcf_flags_t flags)
               "%s(%d): Variable definition detected: '%s' at orig_line is %zu, orig_col is %zu, set %s\n",
               __unqualified_func__,
               __LINE__,
-              variable->text(),
+              variable->Text(),
               variable->orig_line,
               variable->orig_col,
               flags & PCF_VAR_1ST_DEF ? "PCF_VAR_1ST_DEF" : "PCF_VAR_1ST");

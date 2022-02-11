@@ -378,13 +378,13 @@ static bool can_remove_braces(Chunk *bopen)
 
    pc = bopen->GetNextNc(E_Scope::ALL);
    LOG_FMT(LBRDEL, "%s(%d):  - begin with token '%s', orig_line is %zu, orig_col is %zu\n",
-           __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+           __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
 
    while (  pc->IsNotNullChunk()
          && pc->level >= level)
    {
       LOG_FMT(LBRDEL, "%s(%d): test token '%s', orig_line is %zu, orig_col is %zu\n",
-              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+              __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
 
       if (pc->flags.test(PCF_IN_PREPROC))
       {
@@ -445,13 +445,13 @@ static bool can_remove_braces(Chunk *bopen)
                LOG_FMT(LBRDEL, "%s(%d):  no close brace\n", __func__, __LINE__);
                return(false);
             }
-            LOG_FMT(LBRDEL, "%s(%d): text() '%s', orig_line is %zu, semi_count is %zu\n",
-                    __func__, __LINE__, pc->text(), pc->orig_line, semi_count);
+            LOG_FMT(LBRDEL, "%s(%d): Text() '%s', orig_line is %zu, semi_count is %zu\n",
+                    __func__, __LINE__, pc->Text(), pc->orig_line, semi_count);
 
             if (chunk_is_token(pc, CT_ELSE))
             {
                LOG_FMT(LBRDEL, "%s(%d):  bailed on '%s' on line %zu\n",
-                       __func__, __LINE__, pc->text(), pc->orig_line);
+                       __func__, __LINE__, pc->Text(), pc->orig_line);
                return(false);
             }
 
@@ -470,7 +470,7 @@ static bool can_remove_braces(Chunk *bopen)
                if (++semi_count > 1)
                {
                   LOG_FMT(LBRDEL, "%s(%d):  bailed on %zu because of '%s' on line %zu\n",
-                          __func__, __LINE__, bopen->orig_line, pc->text(), pc->orig_line);
+                          __func__, __LINE__, bopen->orig_line, pc->Text(), pc->orig_line);
                   return(false);
                }
             }
@@ -541,8 +541,8 @@ static void examine_brace(Chunk *bopen)
       }
       else
       {
-         LOG_FMT(LBRDEL, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+         LOG_FMT(LBRDEL, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s'\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
       }
 
       if (pc->flags.test(PCF_IN_PREPROC))
@@ -566,8 +566,8 @@ static void examine_brace(Chunk *bopen)
       }
       else
       {
-         LOG_FMT(LBRDEL, "%s(%d): for pc->text() '%s', pc->level is %zu,  bopen->level is %zu\n",
-                 __func__, __LINE__, pc->text(), pc->level, bopen->level);
+         LOG_FMT(LBRDEL, "%s(%d): for pc->Text() '%s', pc->level is %zu,  bopen->level is %zu\n",
+                 __func__, __LINE__, pc->Text(), pc->level, bopen->level);
 
          if (  chunk_is_token(pc, CT_BRACE_OPEN)
             && pc->level == bopen->level)
@@ -620,28 +620,28 @@ static void examine_brace(Chunk *bopen)
                LOG_FMT(LBRDEL, "%s(%d):  no close brace\n", __func__, __LINE__);
                return;
             }
-            LOG_FMT(LBRDEL, "%s(%d): text() '%s', orig_line is %zu, semi_count is %zu\n",
-                    __func__, __LINE__, pc->text(), pc->orig_line, semi_count);
+            LOG_FMT(LBRDEL, "%s(%d): Text() '%s', orig_line is %zu, semi_count is %zu\n",
+                    __func__, __LINE__, pc->Text(), pc->orig_line, semi_count);
 
             if (chunk_is_token(pc, CT_ELSE))
             {
                LOG_FMT(LBRDEL, "%s(%d):  bailed on '%s' on line %zu\n",
-                       __func__, __LINE__, pc->text(), pc->orig_line);
+                       __func__, __LINE__, pc->Text(), pc->orig_line);
                return;
             }
 
             if (prev->IsNotNullChunk())
             {
-               LOG_FMT(LBRDEL, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', prev->text '%s', prev->type %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), prev->text(), get_token_name(prev->type));
+               LOG_FMT(LBRDEL, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', prev->Text '%s', prev->type %s\n",
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), prev->Text(), get_token_name(prev->type));
             }
             else
             {
-               LOG_FMT(LBRDEL, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', prev is a null chunk\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+               LOG_FMT(LBRDEL, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', prev is a null chunk\n",
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
             }
-            LOG_FMT(LBRDEL, "%s(%d): for pc->text() '%s', pc->level is %zu,  bopen->level is %zu\n",
-                    __func__, __LINE__, pc->text(), pc->level, bopen->level);
+            LOG_FMT(LBRDEL, "%s(%d): for pc->Text() '%s', pc->level is %zu,  bopen->level is %zu\n",
+                    __func__, __LINE__, pc->Text(), pc->level, bopen->level);
 
             if (  chunk_is_semicolon(pc)
                || chunk_is_token(pc, CT_IF)
@@ -654,8 +654,8 @@ static void examine_brace(Chunk *bopen)
                || (  chunk_is_token(pc, CT_BRACE_OPEN)
                   && pc->level == bopen->level)) // Issue #1758
             {
-               LOG_FMT(LBRDEL, "%s(%d): pc->text() '%s', orig_line is %zu, orig_col is %zu, level is %zu\n",
-                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
+               LOG_FMT(LBRDEL, "%s(%d): pc->Text() '%s', orig_line is %zu, orig_col is %zu, level is %zu\n",
+                       __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col, pc->level);
                hit_semi |= chunk_is_semicolon(pc);
                semi_count++;
                LOG_FMT(LBRDEL, "%s(%d): semi_count is %zu\n",
@@ -664,7 +664,7 @@ static void examine_brace(Chunk *bopen)
                if (semi_count > 1)
                {
                   LOG_FMT(LBRDEL, "%s(%d):  bailed on %zu because of '%s' on line %zu\n",
-                          __func__, __LINE__, bopen->orig_line, pc->text(), pc->orig_line);
+                          __func__, __LINE__, bopen->orig_line, pc->Text(), pc->orig_line);
                   return;
                }
             }
@@ -755,7 +755,7 @@ static void examine_brace(Chunk *bopen)
    else
    {
       LOG_FMT(LBRDEL, "%s(%d):  not a close brace? - '%s'\n",
-              __func__, __LINE__, pc->text());
+              __func__, __LINE__, pc->Text());
    }
 } // examine_brace
 
@@ -1340,7 +1340,7 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
          && tmp_pc->flags.test(PCF_VAR_DEF))
       {
          LOG_FMT(LMCB, "%s(%d):  - vardef on line %zu: '%s'\n",
-                 __func__, __LINE__, tmp_pc->orig_line, pc->text());
+                 __func__, __LINE__, tmp_pc->orig_line, pc->Text());
          return(next);
       }
    }
@@ -1400,15 +1400,15 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    // find the end of the case-block
    while ((pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC)) != nullptr)
    {
-      LOG_FMT(LMCB, "%s(%d): text() is '%s', orig_line %zu, orig_col is %zu, pp_level is %zu\n",
-              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->pp_level);
+      LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig_line %zu, orig_col is %zu, pp_level is %zu\n",
+              __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col, pc->pp_level);
 
       if (pc->level == cl_colon->level)
       {
          if (chunk_is_token(pc, CT_CASE))
          {
-            LOG_FMT(LMCB, "%s(%d): text() is '%s', orig_line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+            LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig_line %zu, orig_col is %zu\n",
+                    __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
             last = calculate_closing_brace_position(cl_colon, pc);
             break;
          }
@@ -1417,12 +1417,12 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
       {
          if (pc == clos)
          {
-            LOG_FMT(LMCB, "%s(%d): text() is '%s', orig_line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+            LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig_line %zu, orig_col is %zu\n",
+                    __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
             // end of switch is reached
             last = calculate_closing_brace_position(cl_colon, pc);
-            LOG_FMT(LMCB, "%s(%d): last->text() is '%s', orig_line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, last->text(), last->orig_line, last->orig_col);
+            LOG_FMT(LMCB, "%s(%d): last->Text() is '%s', orig_line %zu, orig_col is %zu\n",
+                    __func__, __LINE__, last->Text(), last->orig_line, last->orig_col);
             break;
          }
       }
@@ -1434,10 +1434,10 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
       Chunk *next = chunk_get_next_nc_nnl(cl_colon, E_Scope::PREPROC);
       return(next);
    }
-   LOG_FMT(LMCB, "%s(%d): last->text() is '%s', orig_line %zu, orig_col is %zu\n",
-           __func__, __LINE__, last->text(), last->orig_line, last->orig_col);
+   LOG_FMT(LMCB, "%s(%d): last->Text() is '%s', orig_line %zu, orig_col is %zu\n",
+           __func__, __LINE__, last->Text(), last->orig_line, last->orig_col);
    LOG_FMT(LMCB, "%s(%d): adding braces after '%s' on line %zu\n",
-           __func__, __LINE__, cl_colon->text(), cl_colon->orig_line);
+           __func__, __LINE__, cl_colon->Text(), cl_colon->orig_line);
 
    Chunk chunk;
 
@@ -1533,8 +1533,8 @@ static void process_if_chain(Chunk *br_start)
 
    while (pc != nullptr)
    {
-      LOG_FMT(LBRCH, "%s(%d): pc->text() is '%s', orig_line is %zu, orig_col is %zu.\n",
-              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+      LOG_FMT(LBRCH, "%s(%d): pc->Text() is '%s', orig_line is %zu, orig_col is %zu.\n",
+              __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
 
       if (chunk_is_token(pc, CT_BRACE_OPEN))
       {

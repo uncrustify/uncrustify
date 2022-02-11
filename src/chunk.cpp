@@ -117,7 +117,7 @@ size_t Chunk::len() const
 
 
 //! provides the content of a string a zero terminated character pointer
-const char *Chunk::text() const
+const char *Chunk::Text() const
 {
    return(str.c_str());
 }
@@ -125,7 +125,7 @@ const char *Chunk::text() const
 
 const char *Chunk::ElidedText(char *for_the_copy) const
 {
-   const char *test_it       = text();
+   const char *test_it       = Text();
    size_t     test_it_length = strlen(test_it);
 
    size_t     truncate_value = uncrustify::options::debug_truncate();
@@ -636,7 +636,7 @@ static void chunk_log_msg(Chunk *chunk, const log_sev_t log, const char *str)
    }
    else
    {
-      LOG_FMT(log, "text() is '%s', type is %s,\n", chunk->text(), get_token_name(chunk->type));
+      LOG_FMT(log, "Text() is '%s', type is %s,\n", chunk->Text(), get_token_name(chunk->type));
    }
 }
 
@@ -994,12 +994,12 @@ void chunk_flags_set_real(Chunk *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits)
       {
          LOG_FMT(LSETFLG,
                  "%s(%d): %016llx^%016llx=%016llx\n"
-                 "   orig_line is %zu, orig_col is %zu, text() '%s', type is %s,",
+                 "   orig_line is %zu, orig_col is %zu, Text() '%s', type is %s,",
                  __func__, __LINE__,
                  static_cast<pcf_flags_t::int_t>(pc->flags),
                  static_cast<pcf_flags_t::int_t>(pc->flags ^ nflags),
                  static_cast<pcf_flags_t::int_t>(nflags),
-                 pc->orig_line, pc->orig_col, pc->text(),
+                 pc->orig_line, pc->orig_col, pc->Text(),
                  get_token_name(pc->type));
          LOG_FMT(LSETFLG, " parent_type is %s,\n  ",
                  get_token_name(get_chunk_parent_type(pc)));
@@ -1019,7 +1019,7 @@ void set_chunk_type_real(Chunk *pc, c_token_t token, const char *func, int line)
    {
       return;
    }
-   LOG_FMT(LSETTYP, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() ",
+   LOG_FMT(LSETTYP, "%s(%d): orig_line is %zu, orig_col is %zu, pc->Text() ",
            func, line, pc->orig_line, pc->orig_col);
 
    if (token == CT_NEWLINE)
@@ -1028,7 +1028,7 @@ void set_chunk_type_real(Chunk *pc, c_token_t token, const char *func, int line)
    }
    else
    {
-      LOG_FMT(LSETTYP, "'%s'\n", pc->text());
+      LOG_FMT(LSETTYP, "'%s'\n", pc->Text());
    }
    LOG_FMT(LSETTYP, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s\n",
            get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)),
@@ -1046,7 +1046,7 @@ void set_chunk_parent_real(Chunk *pc, c_token_t token, const char *func, int lin
    {
       return;
    }
-   LOG_FMT(LSETPAR, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() ",
+   LOG_FMT(LSETPAR, "%s(%d): orig_line is %zu, orig_col is %zu, pc->Text() ",
            func, line, pc->orig_line, pc->orig_col);
 
    if (token == CT_NEWLINE)

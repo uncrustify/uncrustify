@@ -114,7 +114,7 @@ static int get_chunk_priority(Chunk *pc)
    {
       if (include_categories[i] != nullptr)
       {
-         if (std::regex_match(pc->text(), include_categories[i]->regex))
+         if (std::regex_match(pc->Text(), include_categories[i]->regex))
          {
             return(i);
          }
@@ -273,9 +273,9 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
          return(ppc1 - ppc2);
       }
       LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
+              __func__, __LINE__, pc1->Text(), pc1->len(), pc1->orig_line, pc1->orig_col);
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
+              __func__, __LINE__, pc2->Text(), pc2->len(), pc2->orig_line, pc2->orig_col);
 
       int ret_val = unc_text::compare(s1, s2, std::min(s1.size(), s2.size()), tcare);
       LOG_FMT(LSORT, "%s(%d): ret_val is %d\n",
@@ -293,28 +293,28 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
       // Same word, same length. Step to the next chunk.
       pc1 = pc1->GetNext();
       LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
+              __func__, __LINE__, pc1->Text(), pc1->len(), pc1->orig_line, pc1->orig_col);
 
       if (chunk_is_token(pc1, CT_MEMBER))
       {
          pc1 = pc1->GetNext();
          LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-                 __func__, __LINE__, pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
+                 __func__, __LINE__, pc1->Text(), pc1->len(), pc1->orig_line, pc1->orig_col);
       }
       pc2 = pc2->GetNext();
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
+              __func__, __LINE__, pc2->Text(), pc2->len(), pc2->orig_line, pc2->orig_col);
 
       if (chunk_is_token(pc2, CT_MEMBER))
       {
          pc2 = pc2->GetNext();
          LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-                 __func__, __LINE__, pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
+                 __func__, __LINE__, pc2->Text(), pc2->len(), pc2->orig_line, pc2->orig_col);
       }
       LOG_FMT(LSORT, "%s(%d): >>>text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
+              __func__, __LINE__, pc1->Text(), pc1->len(), pc1->orig_line, pc1->orig_col);
       LOG_FMT(LSORT, "%s(%d): >>>text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
+              __func__, __LINE__, pc2->Text(), pc2->len(), pc2->orig_line, pc2->orig_col);
 
       // If we hit a newline or nullptr, we are done
       if (  pc1->IsNullChunk()
@@ -354,7 +354,7 @@ static void do_the_sort(Chunk **chunks, size_t num_chunks)
 
    for (size_t idx = 0; idx < num_chunks; idx++)
    {
-      LOG_FMT(LSORT, " [%s]", chunks[idx]->text());
+      LOG_FMT(LSORT, " [%s]", chunks[idx]->Text());
    }
 
    LOG_FMT(LSORT, "\n");
@@ -435,7 +435,7 @@ static void delete_chunks_on_line_having_chunk(Chunk *chunk)
    {
       Chunk *next_pc = pc->GetNext();
       LOG_FMT(LCHUNK, "%s(%d): Removed '%s' on orig_line %zu\n",
-              __func__, __LINE__, pc->text(), pc->orig_line);
+              __func__, __LINE__, pc->Text(), pc->orig_line);
 
       if (chunk_is_newline(pc))
       {
@@ -617,7 +617,7 @@ void sort_imports(void)
             if (num_chunks < max_number_to_sort)
             {
                LOG_FMT(LSORT, "%s(%d): p_imp is %s\n",
-                       __func__, __LINE__, p_imp->text());
+                       __func__, __LINE__, p_imp->Text());
                chunks[num_chunks++] = p_imp;
             }
             else

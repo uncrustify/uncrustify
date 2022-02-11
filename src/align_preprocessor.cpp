@@ -64,7 +64,7 @@ void align_preprocessor(void)
          break;
       }
       LOG_FMT(LALPP, "%s(%d): define (%s) on line %zu col %zu\n",
-              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+              __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
 
       cur_as = &as;
 
@@ -81,7 +81,7 @@ void align_preprocessor(void)
          pc = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
 
          LOG_FMT(LALPP, "%s(%d): jumped to (%s) on line %zu col %zu\n",
-                 __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+                 __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
       }
       // step to the value past the close parenthesis or the macro name
       pc = pc->GetNext();
@@ -100,7 +100,7 @@ void align_preprocessor(void)
       if (!chunk_is_newline(pc))
       {
          LOG_FMT(LALPP, "%s(%d): align on '%s', line %zu col %zu\n",
-                 __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+                 __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
 
          cur_as->Add(pc);
       }

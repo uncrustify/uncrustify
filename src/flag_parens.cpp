@@ -20,15 +20,15 @@ Chunk *flag_parens(Chunk *po, pcf_flags_t flags, c_token_t opentype, c_token_t p
    if (paren_close == nullptr)
    {
       LOG_FMT(LERR, "%s(%d): no match for '%s' at [%zu:%zu]",
-              __func__, __LINE__, po->text(), po->orig_line, po->orig_col);
+              __func__, __LINE__, po->Text(), po->orig_line, po->orig_col);
       log_func_stack_inline(LERR);
       cpd.error_count++;
       return(nullptr);
    }
    LOG_FMT(LFLPAREN, "%s(%d): between  po is '%s', orig_line is %zu, orig_col is %zu, and\n",
-           __func__, __LINE__, po->text(), po->orig_line, po->orig_col);
+           __func__, __LINE__, po->Text(), po->orig_line, po->orig_col);
    LOG_FMT(LFLPAREN, "%s(%d): paren_close is '%s', orig_line is %zu, orig_col is %zu, type is %s, parent_type is %s\n",
-           __func__, __LINE__, paren_close->text(), paren_close->orig_line, paren_close->orig_col,
+           __func__, __LINE__, paren_close->Text(), paren_close->orig_line, paren_close->orig_col,
            get_token_name(opentype), get_token_name(parenttype));
    log_func_stack_inline(LFLPAREN);
 

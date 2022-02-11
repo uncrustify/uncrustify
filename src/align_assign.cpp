@@ -66,7 +66,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
    while (  pc != nullptr
          && pc->IsNotNullChunk())
    {
-      LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->text() '%s', type is %s, parent_type is %s\n",
+      LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->Text() '%s', type is %s, parent_type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->ElidedText(copy), get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)));
 
       // Don't check inside SPAREN, PAREN or SQUARE groups
@@ -216,7 +216,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
                || chunk_is_token(pc, CT_ASSIGN_FUNC_PROTO)))  // Foo( const Foo & ) = delete;
          {
             LOG_FMT(LALASS, "%s(%d): fcnDefault[%zu].Add on '%s' on orig_line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, fcn_idx, pc->text(), pc->orig_line, pc->orig_col);
+                    __func__, __LINE__, fcn_idx, pc->Text(), pc->orig_line, pc->orig_col);
 
             if (++fcn_idx == fcnDefault.size())
             {
@@ -233,7 +233,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
             if (chunk_is_token(pc, CT_ASSIGN_DEFAULT_ARG))  // Foo( int bar = 777 );
             {
                LOG_FMT(LALASS, "%s(%d): default: fcnDefault[%zu].Add on '%s' on orig_line %zu, orig_col is %zu\n",
-                       __func__, __LINE__, fcn_idx, pc->text(), pc->orig_line, pc->orig_col);
+                       __func__, __LINE__, fcn_idx, pc->Text(), pc->orig_line, pc->orig_col);
 
                if (++fcn_idx == fcnDefault.size())
                {
@@ -246,13 +246,13 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
             else if (chunk_is_token(pc, CT_ASSIGN_FUNC_PROTO))  // Foo( const Foo & ) = delete;
             {
                LOG_FMT(LALASS, "%s(%d): proto: fcnProto.Add on '%s' on orig_line %zu, orig_col is %zu\n",
-                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+                       __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
                fcnProto.Add(pc);
             }
             else if (chunk_is_token(pc, CT_ASSIGN)) // Issue #2197
             {
                LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig_line %zu, orig_col is %zu\n",
-                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+                       __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
                vdas.Add(pc);
             }
          }
@@ -267,7 +267,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
          else if (var_def_cnt != 0)
          {
             LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig_line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+                    __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
             vdas.Add(pc);
          }
          else
@@ -275,7 +275,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
             if (chunk_is_token(pc, CT_ASSIGN))
             {
                LOG_FMT(LALASS, "%s(%d): as.Add on '%s' on orig_line %zu, orig_col is %zu\n",
-                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+                       __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
                as.Add(pc);
             }
          }
@@ -295,7 +295,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
    if (pc != nullptr)
    {
       LOG_FMT(LALASS, "%s(%d): done on '%s' on orig_line %zu\n",
-              __func__, __LINE__, pc->text(), pc->orig_line);
+              __func__, __LINE__, pc->Text(), pc->orig_line);
    }
    else
    {

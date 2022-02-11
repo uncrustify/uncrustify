@@ -160,8 +160,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, first->text() '%s', type is %s\n",
-           __func__, __LINE__, first->orig_line, first->orig_col, first->text(), get_token_name(first->type));
+   LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, first->Text() '%s', type is %s\n",
+           __func__, __LINE__, first->orig_line, first->orig_col, first->Text(), get_token_name(first->type));
 
    min_sp = 1;
 
@@ -676,7 +676,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
             || chunk_is_token(first, CT_TYPE)
             || chunk_is_token(first, CT_PAREN_CLOSE)
             || CharTable::IsKw1(first->str[0]))
-         && (strcmp(first->text(), "void") != 0)) // Issue 1249
+         && (strcmp(first->Text(), "void") != 0)) // Issue 1249
       {
          // Add or remove space before the '::' operator.
          log_rule("sp_before_dc");
@@ -3327,10 +3327,10 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    // these lines are only useful for debugging uncrustify itself
    LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize do_space:\n",
            __func__, __LINE__);
-   LOG_FMT(LSPACE, "   first->orig_line  is %zu, first->orig_col  is %zu, first->text()  '%s', first->type is  %s\n",
-           first->orig_line, first->orig_col, first->text(), get_token_name(first->type));
-   LOG_FMT(LSPACE, "   second->orig_line is %zu, second->orig_col is %zu, second->text() '%s', second->type is %s\n",
-           second->orig_line, second->orig_col, second->text(), get_token_name(second->type));
+   LOG_FMT(LSPACE, "   first->orig_line  is %zu, first->orig_col  is %zu, first->Text()  '%s', first->type is  %s\n",
+           first->orig_line, first->orig_col, first->Text(), get_token_name(first->type));
+   LOG_FMT(LSPACE, "   second->orig_line is %zu, second->orig_col is %zu, second->Text() '%s', second->type is %s\n",
+           second->orig_line, second->orig_col, second->Text(), get_token_name(second->type));
    LOG_FMT(LSPACE, "   Please make a call at https://github.com/uncrustify/uncrustify/issues/new\n");
    LOG_FMT(LSPACE, "   or merge the line:\n");
    LOG_FMT(LSPACE, "   {%s,    %s},\n",
@@ -3347,7 +3347,7 @@ static iarf_e ensure_force_space(Chunk *first, Chunk *second, iarf_e av)
    if (first->flags.test(PCF_FORCE_SPACE))
    {
       LOG_FMT(LSPACE, "%s(%d): <force between '%s' and '%s'>",
-              __func__, __LINE__, first->text(), second->text());
+              __func__, __LINE__, first->Text(), second->Text());
       return(av | IARF_ADD);
    }
    return(av);
@@ -3386,8 +3386,8 @@ void space_text(void)
       }
 
       if (  (options::use_options_overriding_for_qt_macros())
-         && (  (strcmp(pc->text(), "SIGNAL") == 0)
-            || (strcmp(pc->text(), "SLOT") == 0)))
+         && (  (strcmp(pc->Text(), "SIGNAL") == 0)
+            || (strcmp(pc->Text(), "SLOT") == 0)))
       {
          LOG_FMT(LSPACE, "%s(%d): orig_col is %zu, type is %s SIGNAL/SLOT found\n",
                  __func__, __LINE__, pc->orig_line, get_token_name(pc->type));
@@ -3498,8 +3498,8 @@ void space_text(void)
                   && kw2)
                {
                   // back-to-back words need a space
-                  LOG_FMT(LSPACE, "%s(%d): back-to-back words need a space: pc->text() '%s', next->text() '%s'\n",
-                          __func__, __LINE__, pc->text(), next->text());
+                  LOG_FMT(LSPACE, "%s(%d): back-to-back words need a space: pc->Text() '%s', next->Text() '%s'\n",
+                          __func__, __LINE__, pc->Text(), next->Text());
                   chunk_flags_set(pc, PCF_FORCE_SPACE);
                }
                // TODO:  what is the meaning of 4
@@ -3510,8 +3510,8 @@ void space_text(void)
                {
                   // We aren't dealing with keywords. concat and try punctuators
                   char buf[9];
-                  memcpy(buf, pc->text(), pc->len());
-                  memcpy(buf + pc->len(), next->text(), next->len());
+                  memcpy(buf, pc->Text(), pc->len());
+                  memcpy(buf + pc->len(), next->Text(), next->len());
                   buf[pc->len() + next->len()] = 0;
 
                   const chunk_tag_t *ct;
@@ -3542,8 +3542,8 @@ void space_text(void)
                      }
                      else
                      {
-                        LOG_FMT(LSPACE, "%s(%d): : pc->text() is %s, next->text() is %s\n",
-                                __func__, __LINE__, pc->text(), next->text());
+                        LOG_FMT(LSPACE, "%s(%d): : pc->Text() is %s, next->Text() is %s\n",
+                                __func__, __LINE__, pc->Text(), next->Text());
                         chunk_flags_set(pc, PCF_FORCE_SPACE);
                      }
                   }
@@ -3551,8 +3551,8 @@ void space_text(void)
             }
          }
          int min_sp;
-         LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, pc-text() '%s', type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+         LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, pc-Text() '%s', type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
          iarf_e av = do_space_ensured(pc, next, min_sp);
          min_sp = max(1, min_sp);
 
@@ -3629,7 +3629,7 @@ void space_text(void)
                   // Try to keep relative spacing between tokens
                   LOG_FMT(LSPACE, "%s(%d): <relative adj>", __func__, __LINE__);
                   LOG_FMT(LSPACE, "%s(%d): pc is '%s', pc->orig_col is %zu, next->orig_col is %zu, pc->orig_col_end is %zu\n",
-                          __func__, __LINE__, pc->text(),
+                          __func__, __LINE__, pc->Text(),
                           pc->orig_col, next->orig_col, pc->orig_col_end);
                   column = pc->column + (next->orig_col - pc->orig_col_end);
                }
@@ -3750,14 +3750,14 @@ size_t space_col_align(Chunk *first, Chunk *second)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LSPACE, "%s(%d): first->orig_line is %zu, orig_col is %zu, [%s/%s], text() '%s' <==>\n",
+   LOG_FMT(LSPACE, "%s(%d): first->orig_line is %zu, orig_col is %zu, [%s/%s], Text() '%s' <==>\n",
            __func__, __LINE__, first->orig_line, first->orig_col,
            get_token_name(first->type), get_token_name(get_chunk_parent_type(first)),
-           first->text());
-   LOG_FMT(LSPACE, "%s(%d): second->orig_line is %zu, orig_col is %zu [%s/%s], text() '%s',",
+           first->Text());
+   LOG_FMT(LSPACE, "%s(%d): second->orig_line is %zu, orig_col is %zu [%s/%s], Text() '%s',",
            __func__, __LINE__, second->orig_line, second->orig_col,
            get_token_name(second->type), get_token_name(get_chunk_parent_type(second)),
-           second->text());
+           second->Text());
    log_func_stack_inline(LSPACE);
 
    int    min_sp;
@@ -3796,8 +3796,8 @@ size_t space_col_align(Chunk *first, Chunk *second)
    case IARF_IGNORE:                // Issue #2064
       LOG_FMT(LSPACE, "%s(%d):    => first->orig_line  is %zu\n", __func__, __LINE__, first->orig_line);
       LOG_FMT(LSPACE, "%s(%d):    => second->orig_line is %zu\n", __func__, __LINE__, second->orig_line);
-      LOG_FMT(LSPACE, "%s(%d):    => first->text()     is '%s'\n", __func__, __LINE__, first->text());
-      LOG_FMT(LSPACE, "%s(%d):    => second->text()    is '%s'\n", __func__, __LINE__, second->text());
+      LOG_FMT(LSPACE, "%s(%d):    => first->Text()     is '%s'\n", __func__, __LINE__, first->Text());
+      LOG_FMT(LSPACE, "%s(%d):    => second->Text()    is '%s'\n", __func__, __LINE__, second->Text());
       LOG_FMT(LSPACE, "%s(%d):    => first->orig_col   is %zu\n", __func__, __LINE__, first->orig_col);
       LOG_FMT(LSPACE, "%s(%d):    => second->orig_col  is %zu\n", __func__, __LINE__, second->orig_col);
       LOG_FMT(LSPACE, "%s(%d):    => first->len()      is %zu\n", __func__, __LINE__, first->len());

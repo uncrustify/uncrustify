@@ -57,8 +57,8 @@ void align_same_func_call_params(void)
       }
       else
       {
-         LOG_FMT(LAS, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+         LOG_FMT(LAS, "%s(%d): orig_line is %zu, orig_col is %zu, pc->Text() '%s'\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
       }
 
       if (chunk_is_not_token(pc, CT_FUNC_CALL))
@@ -167,7 +167,7 @@ void align_same_func_call_params(void)
 
       if (align_root->IsNullChunk())
       {
-         LOG_FMT(LASFCP, "%s(%d):align_root is null chunk, Add pc '%s'\n", __func__, __LINE__, pc->text());
+         LOG_FMT(LASFCP, "%s(%d):align_root is null chunk, Add pc '%s'\n", __func__, __LINE__, pc->Text());
          fcn_as.Add(pc);
          align_root      = align_fcn;
          align_root_name = align_fcn_name;
@@ -187,7 +187,7 @@ void align_same_func_call_params(void)
          for (size_t idx = 0; idx < chunks.size(); idx++)
          {
             // show the chunk(s)
-            LOG_FMT(LASFCP, " [%s]", chunks[idx]->text());
+            LOG_FMT(LASFCP, " [%s]", chunks[idx]->Text());
 
             if (idx < chunks.size() - 1)
             {
@@ -199,7 +199,7 @@ void align_same_func_call_params(void)
 
          for (size_t idx = 0; idx < chunks.size(); idx++)
          {
-            LOG_FMT(LASFCP, "%s(%d): chunks[%zu] is [%s]\n", __func__, __LINE__, idx, chunks[idx]->text());
+            LOG_FMT(LASFCP, "%s(%d): chunks[%zu] is [%s]\n", __func__, __LINE__, idx, chunks[idx]->Text());
             // Issue #2368
 
             if (array_of_AlignStack.size() > idx)
@@ -229,7 +229,7 @@ void align_same_func_call_params(void)
                   }
                }
             }
-            LOG_FMT(LASFCP, "%s(%d): save the chunk %s\n", __func__, __LINE__, chunks[idx]->text());
+            LOG_FMT(LASFCP, "%s(%d): save the chunk %s\n", __func__, __LINE__, chunks[idx]->Text());
             array_of_AlignStack[idx].Add(chunks[idx]);
          }
       }

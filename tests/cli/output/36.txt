@@ -1,19 +1,19 @@
-fix_fcn_def_params : text() '(', type is PAREN_OPEN, on orig_line 3, level is 1
-fix_fcn_def_params : looking at, text() 'const' on orig_line 3, level 2
-fix_fcn_def_params : looking at, text() 'char' on orig_line 3, level 2
-fix_fcn_def_params : looking at, text() '*' on orig_line 3, level 2
-fix_fcn_def_params : looking at, text() 'pN' on orig_line 3, level 2
-fix_fcn_def_params : looking at, text() ',' on orig_line 3, level 2
+fix_fcn_def_params : Text() '(', type is PAREN_OPEN, on orig_line 3, level is 1
+fix_fcn_def_params : looking at, Text() 'const' on orig_line 3, level 2
+fix_fcn_def_params : looking at, Text() 'char' on orig_line 3, level 2
+fix_fcn_def_params : looking at, Text() '*' on orig_line 3, level 2
+fix_fcn_def_params : looking at, Text() 'pN' on orig_line 3, level 2
+fix_fcn_def_params : looking at, Text() ',' on orig_line 3, level 2
 mark_variable_stack : parameter on orig_line 3, orig_col 27:
 mark_variable_stack : parameter on orig_line 3, orig_col 27: <char> as TYPE
 mark_variable_stack : parameter on orig_line 3, orig_col 27: <pN> as VAR
-fix_fcn_def_params : looking at, text() 'unsigned' on orig_line 3, level 2
-fix_fcn_def_params : looking at, text() 'long' on orig_line 3, level 2
-fix_fcn_def_params : looking at, text() 'nI' on orig_line 3, level 2
-fix_fcn_def_params : bailed on text() ')', on orig_line 3
+fix_fcn_def_params : looking at, Text() 'unsigned' on orig_line 3, level 2
+fix_fcn_def_params : looking at, Text() 'long' on orig_line 3, level 2
+fix_fcn_def_params : looking at, Text() 'nI' on orig_line 3, level 2
+fix_fcn_def_params : bailed on Text() ')', on orig_line 3
 mark_variable_stack : parameter on orig_line 3, orig_col 45:
 mark_variable_stack : parameter on orig_line 3, orig_col 45: <long> as TYPE
 mark_variable_stack : parameter on orig_line 3, orig_col 45: <unsigned> as TYPE
 mark_variable_stack : parameter on orig_line 3, orig_col 45: <nI> as VAR
-fix_fcn_def_params : text() '(', type is PAREN_OPEN, on orig_line 9, level is 1
-fix_fcn_def_params : bailed on text() ')', on orig_line 9
+fix_fcn_def_params : Text() '(', type is PAREN_OPEN, on orig_line 9, level is 1
+fix_fcn_def_params : bailed on Text() ')', on orig_line 9

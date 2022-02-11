@@ -43,7 +43,7 @@ void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev)
          chunk_flags_set(pc, PCF_WAS_ALIGNED);
 
          LOG_FMT(sev, "%s(%d): indented [%s] on line %zu to %zu\n",
-                 __func__, __LINE__, pc->text(), pc->orig_line, pc->column);
+                 __func__, __LINE__, pc->Text(), pc->orig_line, pc->column);
       }
    }
    cs.Reset();

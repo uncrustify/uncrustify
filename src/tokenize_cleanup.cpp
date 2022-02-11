@@ -119,7 +119,7 @@ static Chunk *handle_double_angle_close(Chunk *pc)
 
 void split_off_angle_close(Chunk *pc)
 {
-   const chunk_tag_t *ct = find_punctuator(pc->text() + 1, cpd.lang_flags);
+   const chunk_tag_t *ct = find_punctuator(pc->Text() + 1, cpd.lang_flags);
 
    if (ct == nullptr)
    {
@@ -166,11 +166,11 @@ void tokenize_trailing_return_types(void)
    for (Chunk *pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       char copy[1000];
-      LOG_FMT(LNOTE, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
+      LOG_FMT(LNOTE, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy));
 
       if (  chunk_is_token(pc, CT_MEMBER)
-         && (strcmp(pc->text(), "->") == 0))
+         && (strcmp(pc->Text(), "->") == 0))
       {
          Chunk *tmp = chunk_get_prev_nc_nnl(pc);
          Chunk *tmp_2;
@@ -260,8 +260,8 @@ void tokenize_trailing_return_types(void)
                || get_chunk_parent_type(tmp) == CT_FUNC_DEF))
          {
             set_chunk_type(pc, CT_TRAILING_RET);
-            LOG_FMT(LNOTE, "%s(%d): set trailing return type for text() is '%s'\n",
-                    __func__, __LINE__, pc->text());                  // Issue #3222
+            LOG_FMT(LNOTE, "%s(%d): set trailing return type for Text() is '%s'\n",
+                    __func__, __LINE__, pc->Text());                  // Issue #3222
             // TODO
             // https://en.cppreference.com/w/cpp/language/function
             // noptr-declarator ( parameter-list ) cv(optional) ref(optional) except(optional) attr(optional) -> trailing
@@ -494,7 +494,7 @@ void tokenize_cleanup(void)
             && (chunk_is_token(next, CT_CARET)))
          || (  language_is_set(LANG_CS)
             && (chunk_is_token(next, CT_QUESTION))
-            && (strcmp(pc->text(), "null") != 0)))
+            && (strcmp(pc->Text(), "null") != 0)))
       {
          if (  chunk_is_token(pc, CT_TYPE)
             || chunk_is_token(pc, CT_QUALIFIER)
@@ -676,7 +676,7 @@ void tokenize_cleanup(void)
 
             if (  chunk_is_token(next2, CT_INV)      // CT_INV hasn't turned into CT_DESTRUCTOR just yet
                || (  chunk_is_token(next2, CT_CLASS) // constructor isn't turned into CT_FUNC* just yet
-                  && !strcmp(pc->text(), next2->text())))
+                  && !strcmp(pc->Text(), next2->Text())))
             {
                set_chunk_type(pc, CT_TYPE);
             }
@@ -776,7 +776,7 @@ void tokenize_cleanup(void)
          set_chunk_parent(next, CT_OPERATOR);
 
          LOG_FMT(LOPERATOR, "%s(%d): %zu:%zu operator '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, next->text());
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, next->Text());
       }
 
       // Change private, public, protected into either a qualifier or label
@@ -937,7 +937,7 @@ void tokenize_cleanup(void)
 
          // Fix self keyword back to word when mixing c++/objective-c
          if (  chunk_is_token(pc, CT_THIS)
-            && !strcmp(pc->text(), "self")
+            && !strcmp(pc->Text(), "self")
             && (  chunk_is_token(next, CT_COMMA)
                || chunk_is_token(next, CT_PAREN_CLOSE)))
          {
@@ -946,7 +946,7 @@ void tokenize_cleanup(void)
 
          // Fix self keyword back to word when mixing c++/objective-c
          if (  chunk_is_token(pc, CT_THIS)
-            && !strcmp(pc->text(), "self")
+            && !strcmp(pc->Text(), "self")
             && (  chunk_is_token(next, CT_COMMA)
                || chunk_is_token(next, CT_PAREN_CLOSE)))
          {
@@ -999,7 +999,7 @@ void tokenize_cleanup(void)
             if (get_token_pattern_class(tmp->type) != pattern_class_e::NONE)
             {
                LOG_FMT(LOBJCWORD, "%s(%d): @interface %zu:%zu change '%s' (%s) to CT_WORD\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, tmp->text(),
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, tmp->Text(),
                        get_token_name(tmp->type));
                set_chunk_type(tmp, CT_WORD);
             }
@@ -1238,12 +1238,12 @@ static void check_template(Chunk *start, bool in_type_cast)
             if (pc->str[1] == '=')                         // Issue #1462 and #2565
             {
                LOG_FMT(LTEMPL, "%s(%d): do not split '%s' at orig_line %zu, orig_col %zu\n",
-                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+                       __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
             }
             else
             {
                LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}\n",
-                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+                       __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
                split_off_angle_close(pc);
             }
          }
@@ -1416,7 +1416,7 @@ static void check_template(Chunk *start, bool in_type_cast)
                         && in_type_cast)))))
          {
             LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}\n",
-                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+                    __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
 
             split_off_angle_close(pc);
          }

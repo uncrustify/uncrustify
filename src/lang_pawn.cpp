@@ -84,7 +84,7 @@ Chunk *pawn_add_vsemi_after(Chunk *pc)
    chunk.column += pc->len();
 
    LOG_FMT(LPVSEMI, "%s: Added VSEMI on line %zu, prev='%s' [%s]\n",
-           __func__, pc->orig_line, pc->text(),
+           __func__, pc->orig_line, pc->Text(),
            get_token_name(pc->type));
 
    return(chunk_add_after(&chunk, pc));
@@ -212,7 +212,7 @@ static Chunk *pawn_process_line(Chunk *start)
    LOG_FUNC_ENTRY();
 
    //LOG_FMT(LSYS, "%s: %d - %s\n", __func__,
-   //        start->orig_line, start->text());
+   //        start->orig_line, start->Text());
 
    if (  chunk_is_token(start, CT_NEW)
       || chunk_is_str(start, "const", 5))
@@ -257,7 +257,7 @@ static Chunk *pawn_process_line(Chunk *start)
 
    if (fcn != nullptr)
    {
-      //LOG_FMT(LSYS, "FUNCTION: %s\n", fcn->text());
+      //LOG_FMT(LSYS, "FUNCTION: %s\n", fcn->Text());
       return(pawn_mark_function0(start, fcn));
    }
 
@@ -267,7 +267,7 @@ static Chunk *pawn_process_line(Chunk *start)
       return(pc);
    }
    //LOG_FMT(LSYS, "%s: Don't understand line %d, starting with '%s' [%s]\n",
-   //        __func__, start->orig_line, start->text(), get_token_name(start->type));
+   //        __func__, start->orig_line, start->Text(), get_token_name(start->type));
    return(start);
 } // pawn_process_line
 
@@ -363,7 +363,7 @@ static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn)
       if (chunk_is_token(last, CT_SEMICOLON))
       {
          LOG_FMT(LPFUNC, "%s: %zu] '%s' proto due to semicolon\n",
-                 __func__, fcn->orig_line, fcn->text());
+                 __func__, fcn->orig_line, fcn->Text());
          set_chunk_type(fcn, CT_FUNC_PROTO);
          return(last);
       }
@@ -374,7 +374,7 @@ static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn)
          || chunk_is_token(start, CT_NATIVE))
       {
          LOG_FMT(LPFUNC, "%s: %zu] '%s' [%s] proto due to %s\n",
-                 __func__, fcn->orig_line, fcn->text(),
+                 __func__, fcn->orig_line, fcn->Text(),
                  get_token_name(fcn->type),
                  get_token_name(start->type));
          set_chunk_type(fcn, CT_FUNC_PROTO);
@@ -394,7 +394,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
    set_chunk_type(pc, CT_FUNC_DEF);
 
    LOG_FMT(LPFUNC, "%s: %zu:%zu %s\n",
-           __func__, pc->orig_line, pc->orig_col, pc->text());
+           __func__, pc->orig_line, pc->orig_col, pc->Text());
 
    /*
     * If we don't have a brace open right after the close fparen, then
@@ -406,7 +406,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
    if (last != nullptr)
    {
       LOG_FMT(LPFUNC, "%s: %zu] last is '%s' [%s]\n",
-              __func__, last->orig_line, last->text(), get_token_name(last->type));
+              __func__, last->orig_line, last->Text(), get_token_name(last->type));
    }
 
    // See if there is a state clause after the function
@@ -414,7 +414,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       && chunk_is_str(last, "<", 1))
    {
       LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle open %s\n",
-              __func__, pc->orig_line, pc->text(), get_token_name(last->type));
+              __func__, pc->orig_line, pc->Text(), get_token_name(last->type));
 
       set_chunk_type(last, CT_ANGLE_OPEN);
       set_chunk_parent(last, CT_FUNC_DEF);
@@ -428,7 +428,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       if (last->IsNotNullChunk())
       {
          LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle close %s\n",
-                 __func__, pc->orig_line, pc->text(), get_token_name(last->type));
+                 __func__, pc->orig_line, pc->Text(), get_token_name(last->type));
          set_chunk_type(last, CT_ANGLE_CLOSE);
          set_chunk_parent(last, CT_FUNC_DEF);
       }
@@ -455,7 +455,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
    else
    {
       LOG_FMT(LPFUNC, "%s: %zu] '%s' fdef: expected brace open: %s\n",
-              __func__, pc->orig_line, pc->text(), get_token_name(last->type));
+              __func__, pc->orig_line, pc->Text(), get_token_name(last->type));
 
       // do not insert a vbrace before a preproc
       if (last->flags.test(PCF_IN_PREPROC))
@@ -540,7 +540,7 @@ Chunk *pawn_check_vsemicolon(Chunk *pc)
       if (prev != nullptr)
       {
          LOG_FMT(LPVSEMI, "%s:  no  VSEMI on line %zu, prev='%s' [%s]\n",
-                 __func__, prev->orig_line, prev->text(), get_token_name(prev->type));
+                 __func__, prev->orig_line, prev->Text(), get_token_name(prev->type));
       }
       return(pc);
    }

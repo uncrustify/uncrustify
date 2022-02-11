@@ -326,22 +326,22 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    LOG_FUNC_ENTRY();
    LOG_FMT(LFCNR, "%s(%d): prev is '%s' %s\n",
            __func__, __LINE__,
-           prev->text(), get_token_name(prev->type));
+           prev->Text(), get_token_name(prev->type));
    log_pcf_flags(LFCNR, prev->flags);
    LOG_FMT(LFCNR, "%s(%d): pc is '%s' %s\n",
            __func__, __LINE__,
-           pc->text(), get_token_name(pc->type));
+           pc->Text(), get_token_name(pc->type));
    log_pcf_flags(LFCNR, pc->flags);
    LOG_FMT(LFCNR, "%s(%d): next is '%s' %s\n",
            __func__, __LINE__,
-           next->text(), get_token_name(next->type));
+           next->Text(), get_token_name(next->type));
    log_pcf_flags(LFCNR, next->flags);
 
    if (  chunk_is_token(pc, CT_NOEXCEPT)                 // Issue #3284
       && chunk_is_token(next, CT_ASSIGN))                // skip over noexcept
    {
-      LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+      LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
       pc   = next;
       next = pc->GetNext();
    }
@@ -353,8 +353,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       && (  pc->flags.test(PCF_IN_FCN_DEF)                            // Issue #2236
          || pc->flags.test(PCF_IN_CONST_ARGS)))
    {
-      LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+      LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
       log_pcf_flags(LFCNR, pc->flags);
       set_chunk_type(pc, CT_ASSIGN_DEFAULT_ARG);
       return;
@@ -889,8 +889,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                || chunk_is_token(tmp, CT_CARET))
             && chunk_is_token(pc, CT_WORD))
          {
-            LOG_FMT(LFCN, "%s(%d): (1) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, text() '%s'\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+            LOG_FMT(LFCN, "%s(%d): (1) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
             set_chunk_type(pc, CT_FUNC_CALL);
          }
       }
@@ -917,8 +917,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
           *
           * FIXME: this check can be done better...
           */
-         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s'\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
 
          bool is_byref_array = false;
 
@@ -998,8 +998,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       if (  chunk_is_token(pc, CT_FUNCTION)
          && pc->brace_level > 0)
       {
-         LOG_FMT(LFCN, "%s(%d): (2) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, text() '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+         LOG_FMT(LFCN, "%s(%d): (2) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
          set_chunk_type(pc, CT_FUNC_CALL);
       }
 
@@ -1103,8 +1103,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          || get_chunk_parent_type(prev) == CT_FUNC_CALL_USER)
       && !pc->flags.test(PCF_IN_CONST_ARGS))
    {
-      LOG_FMT(LFCN, "%s(%d): (3) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, text() '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+      LOG_FMT(LFCN, "%s(%d): (3) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
       set_paren_parent(pc, CT_FUNC_CALL);
       return;
    }
@@ -1370,8 +1370,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
               || chunk_is_token(prev, CT_DC_MEMBER)
               || chunk_is_token(prev, CT_PTR_TYPE))
       {
-         LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n   ",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+         LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n   ",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
          log_pcf_flags(LFCNR, pc->flags);
          set_chunk_type(pc, CT_PTR_TYPE);
       }
@@ -1571,8 +1571,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                           || chunk_is_token(next, CT_TYPE)
                           || chunk_is_token(next, CT_DC_MEMBER)))
                      {
-                        LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', set PCF_VAR_1ST\n",
-                                __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+                        LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', set PCF_VAR_1ST\n",
+                                __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
                         chunk_flags_set(next, PCF_VAR_1ST);
                      }
                   }
@@ -1624,7 +1624,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             {
                if (pc->prev->type == CT_STRING)
                {
-                  if (unc_text::compare(pc->prev->text(), "\"C\"") == 0)
+                  if (unc_text::compare(pc->prev->Text(), "\"C\"") == 0)
                   {
                      if (pc->prev->prev->type == CT_EXTERN)
                      {
@@ -1684,9 +1684,9 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             {
                if (chunk_is_token(tmp, CT_ATTRIBUTE))
                {
-                  LOG_FMT(LFCNR, "%s(%d): ATTRIBUTE found, type is %s, text() '%s'\n",
-                          __func__, __LINE__, get_token_name(tmp->type), tmp->text());
-                  LOG_FMT(LFCNR, "for token, type is %s, text() '%s'\n", get_token_name(pc->type), pc->text());
+                  LOG_FMT(LFCNR, "%s(%d): ATTRIBUTE found, type is %s, Text() '%s'\n",
+                          __func__, __LINE__, get_token_name(tmp->type), tmp->Text());
+                  LOG_FMT(LFCNR, "for token, type is %s, Text() '%s'\n", get_token_name(pc->type), pc->Text());
                   // change CT_WORD => CT_TYPE
                   set_chunk_type(pc, CT_TYPE);
                   // change CT_STAR => CT_PTR_TYPE
@@ -1719,9 +1719,9 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       {
          for (Chunk *temp = pc; temp != nullptr; temp = chunk_get_next_nc_nnl(temp))
          {
-            LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+            LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
                     __func__, __LINE__, temp->orig_line, temp->orig_col,
-                    temp->text(), get_token_name(temp->type));
+                    temp->Text(), get_token_name(temp->type));
 
             if (chunk_is_token(temp, CT_ASSIGN))
             {
@@ -1770,17 +1770,17 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       && chunk_ends_type(pc->prev))
    {
       Chunk *tmp = pc->GetPrev();                 // Issue #2688
-      LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+      LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
               __func__, __LINE__, tmp->orig_line, tmp->orig_col,
-              tmp->text(), get_token_name(tmp->type));
+              tmp->Text(), get_token_name(tmp->type));
       log_pcf_flags(LFCNR, tmp->flags);
       // look for a type
 
       if (chunk_is_token(tmp, CT_TYPE))
       {
-         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col,
-                 pc->text(), get_token_name(pc->type));
+                 pc->Text(), get_token_name(pc->type));
          log_pcf_flags(LFCNR, pc->flags);
          set_chunk_type(pc, CT_BYREF);
       }
@@ -1789,15 +1789,15 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
       if (semi != nullptr)
       {
-         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
                  __func__, __LINE__, semi->orig_line, semi->orig_col,
-                 semi->text(), get_token_name(semi->type));
+                 semi->Text(), get_token_name(semi->type));
 
          for (Chunk *test_it = pc; test_it != semi; test_it = test_it->GetNext())
          {
-            LOG_FMT(LFCNR, "%s(%d): test_it->orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+            LOG_FMT(LFCNR, "%s(%d): test_it->orig_line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
                     __func__, __LINE__, test_it->orig_line, test_it->orig_col,
-                    test_it->text(), get_token_name(test_it->type));
+                    test_it->Text(), get_token_name(test_it->type));
 
             if (chunk_is_token(test_it, CT_ASSIGN))
             {
@@ -1815,9 +1815,9 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       && pc->flags.test(PCF_IN_PREPROC))
    {
       Chunk *tmp_2 = pc->GetNext();
-      LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+      LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col,
-              pc->text(), get_token_name(pc->type));
+              pc->Text(), get_token_name(pc->type));
       log_pcf_flags(LFTYPE, pc->flags);
 
       if (chunk_is_token(tmp_2, CT_WORD))
@@ -1962,8 +1962,8 @@ void fix_symbols(void)
          pc = chunk_get_next_nc_nnl(pc);
          continue;
       }
-      LOG_FMT(LFCNR, "%s(%d): pc->orig_line       is %zu, orig_col is %zu, text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+      LOG_FMT(LFCNR, "%s(%d): pc->orig_line       is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
       Chunk *prev = chunk_get_prev_nc_nnl_ni(pc, E_Scope::PREPROC);   // Issue #2279
 
       if (prev == nullptr)
@@ -1973,8 +1973,8 @@ void fix_symbols(void)
       else
       {
          // Issue #2279
-         LOG_FMT(LFCNR, "%s(%d): prev(ni)->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
-                 __func__, __LINE__, prev->orig_line, prev->orig_col, prev->text(), get_token_name(prev->type));
+         LOG_FMT(LFCNR, "%s(%d): prev(ni)->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+                 __func__, __LINE__, prev->orig_line, prev->orig_col, prev->Text(), get_token_name(prev->type));
       }
       Chunk *next = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
 
@@ -1985,11 +1985,11 @@ void fix_symbols(void)
       else
       {
          // Issue #2279
-         LOG_FMT(LFCNR, "%s(%d): next->orig_line     is %zu, orig_col is %zu, text() is '%s', type is %s\n",
-                 __func__, __LINE__, next->orig_line, next->orig_col, next->text(), get_token_name(next->type));
+         LOG_FMT(LFCNR, "%s(%d): next->orig_line     is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+                 __func__, __LINE__, next->orig_line, next->orig_col, next->Text(), get_token_name(next->type));
       }
       LOG_FMT(LFCNR, "%s(%d): do_symbol_check(%s, %s, %s)\n",
-              __func__, __LINE__, prev->text(), pc->text(), next->text());
+              __func__, __LINE__, prev->Text(), pc->Text(), next->Text());
       do_symbol_check(prev, pc, next);
       pc = chunk_get_next_nc_nnl(pc);
    }
@@ -2007,7 +2007,7 @@ void fix_symbols(void)
          && pc->IsNotNullChunk())
    {
       char copy[1000];
-      LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n",
+      LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent_type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy), get_token_name(pc->type), get_token_name(pc->parent_type));
 
       // Can't have a variable definition inside [ ]
@@ -2068,8 +2068,8 @@ void fix_symbols(void)
       if (  chunk_is_token(pc, CT_BRACE_OPEN)                       // Issue #2332
          && get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST)
       {
-         LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', look for CT_BRACE_OPEN\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+         LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', look for CT_BRACE_OPEN\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
          pc = chunk_get_next_type(pc, CT_BRACE_CLOSE, pc->level);
       }
       /*
@@ -2078,7 +2078,7 @@ void fix_symbols(void)
        */
       // Issue #2279
       // Issue #2478
-      LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n   ",
+      LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent_type is %s\n   ",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy), get_token_name(pc->type), get_token_name(pc->parent_type));
       log_pcf_flags(LFCNR, pc->flags);
 
@@ -2443,7 +2443,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
    {
       //LOG_FMT(LFCNR, "%s(%d): prev is '%s'/%s\n",
       //        __func__, __LINE__,
-      //        prev->text(), get_token_name(prev->type));
+      //        prev->Text(), get_token_name(prev->type));
    }
 
    if (  prev == nullptr
@@ -2531,7 +2531,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
    {
       LOG_FMT(LFCNR, "%s(%d): br_o is '%s'/%s\n",
               __func__, __LINE__,
-              br_o->text(), get_token_name(br_o->type));
+              br_o->Text(), get_token_name(br_o->type));
       LOG_FMT(LFCNR, "%s(%d): return\n", __func__, __LINE__);
       return;
    }
@@ -2714,7 +2714,7 @@ static void handle_oc_class(Chunk *pc)
    angle_state_e as            = angle_state_e::NONE;
 
    LOG_FMT(LOCCLASS, "%s(%d): start [%s] [%s] line %zu\n",
-           __func__, __LINE__, pc->text(), get_token_name(get_chunk_parent_type(pc)), pc->orig_line);
+           __func__, __LINE__, pc->Text(), get_token_name(get_chunk_parent_type(pc)), pc->orig_line);
 
    if (get_chunk_parent_type(pc) == CT_OC_PROTOCOL)
    {
@@ -2733,7 +2733,7 @@ static void handle_oc_class(Chunk *pc)
          && tmp->IsNotNullChunk())
    {
       LOG_FMT(LOCCLASS, "%s(%d):       orig_line is %zu, [%s]\n",
-              __func__, __LINE__, tmp->orig_line, tmp->text());
+              __func__, __LINE__, tmp->orig_line, tmp->Text());
 
       if (chunk_is_token(tmp, CT_OC_END))
       {
@@ -2916,7 +2916,7 @@ static void handle_oc_block_literal(Chunk *pc)
          }
          tmp = chunk_get_next_nc_nnl(ac);
       }
-      LOG_FMT(LOCBLK, " '%s'", tmp->text());
+      LOG_FMT(LOCBLK, " '%s'", tmp->Text());
 
       if (  tmp->level < pc->level
          || chunk_is_token(tmp, CT_SEMICOLON))
@@ -2981,7 +2981,7 @@ static void handle_oc_block_literal(Chunk *pc)
    // mark the return type, if any
    while (lbp != pc)
    {
-      LOG_FMT(LOCBLK, " -- lbp %s[%s]\n", lbp->text(), get_token_name(lbp->type));
+      LOG_FMT(LOCBLK, " -- lbp %s[%s]\n", lbp->Text(), get_token_name(lbp->type));
       make_type(lbp);
       chunk_flags_set(lbp, PCF_OC_RTYPE);
       set_chunk_parent(lbp, CT_OC_BLOCK_EXPR);
@@ -3059,8 +3059,8 @@ static void handle_oc_block_type(Chunk *pc)
             set_chunk_type(nam, CT_FUNC_TYPE);
             pt = CT_FUNC_TYPE;
          }
-         LOG_FMT(LOCBLK, "%s(%d): block type @ orig_line is %zu, orig_col is %zu, text() '%s'[%s]\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, nam->text(), get_token_name(nam->type));
+         LOG_FMT(LOCBLK, "%s(%d): block type @ orig_line is %zu, orig_col is %zu, Text() '%s'[%s]\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, nam->Text(), get_token_name(nam->type));
          set_chunk_type(pc, CT_PTR_TYPE);
          set_chunk_parent(pc, pt);  //CT_OC_BLOCK_TYPE;
          set_chunk_type(tpo, CT_TPAREN_OPEN);
@@ -3099,7 +3099,7 @@ static Chunk *handle_oc_md_type(Chunk *paren_open, c_token_t ptype, pcf_flags_t 
         cur != paren_close;
         cur = chunk_get_next_nc_nnl(cur))
    {
-      LOG_FMT(LOCMSGD, " <%s|%s>", cur->text(), get_token_name(cur->type));
+      LOG_FMT(LOCMSGD, " <%s|%s>", cur->Text(), get_token_name(cur->type));
       chunk_flags_set(cur, flags);
       make_type(cur);
    }
@@ -3177,7 +3177,7 @@ static void handle_oc_message_decl(Chunk *pc)
    set_chunk_parent(tmp, pt);
    pc = chunk_get_next_nc_nnl(tmp);
 
-   LOG_FMT(LOCMSGD, " [%s]%s", pc->text(), get_token_name(pc->type));
+   LOG_FMT(LOCMSGD, " [%s]%s", pc->Text(), get_token_name(pc->type));
 
    // if we have a colon next, we have args
    if (  chunk_is_token(pc, CT_COLON)
@@ -3205,7 +3205,7 @@ static void handle_oc_message_decl(Chunk *pc)
          pc = chunk_get_next_nc_nnl(pc);
 
          // next is the type in parens
-         LOG_FMT(LOCMSGD, "  (%s)", pc->text());
+         LOG_FMT(LOCMSGD, "  (%s)", pc->Text());
          tmp = handle_oc_md_type(pc, pt, PCF_OC_ATYPE, did_it);
 
          if (!did_it)
@@ -3218,11 +3218,11 @@ static void handle_oc_message_decl(Chunk *pc)
          pc = skip_attribute_next(tmp);
          // we should now be on the arg name
          chunk_flags_set(pc, PCF_VAR_DEF);
-         LOG_FMT(LOCMSGD, " arg[%s]", pc->text());
+         LOG_FMT(LOCMSGD, " arg[%s]", pc->Text());
          pc = chunk_get_next_nc_nnl(pc);
       }
    }
-   LOG_FMT(LOCMSGD, " end[%s]", pc->text());
+   LOG_FMT(LOCMSGD, " end[%s]", pc->Text());
 
    if (chunk_is_token(pc, CT_BRACE_OPEN))
    {
@@ -3295,7 +3295,7 @@ static void handle_oc_message_send(Chunk *os)
          {
             LOG_FMT(LOCMSG, "%s(%d): tmp->orig_line is %zu, tmp->orig_col is %zu, expected identifier, not '%s' [%s]\n",
                     __func__, __LINE__, tmp->orig_line, tmp->orig_col,
-                    tmp->text(), get_token_name(tmp->type));
+                    tmp->Text(), get_token_name(tmp->type));
             return;
          }
       }
@@ -3309,7 +3309,7 @@ static void handle_oc_message_send(Chunk *os)
    {
       LOG_FMT(LOCMSG, "%s(%d): orig_line is %zu, orig_col is %zu, expected identifier, not '%s' [%s]\n",
               __func__, __LINE__, tmp->orig_line, tmp->orig_col,
-              tmp->text(), get_token_name(tmp->type));
+              tmp->Text(), get_token_name(tmp->type));
       return;
    }
    else
@@ -3323,8 +3323,8 @@ static void handle_oc_message_send(Chunk *os)
 
       if (chunk_is_paren_open(tt))
       {
-         LOG_FMT(LFCN, "%s(%d): (18) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, text() '%s'\n",
-                 __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->text());
+         LOG_FMT(LFCN, "%s(%d): (18) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
+                 __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->Text());
          set_chunk_type(tmp, CT_FUNC_CALL);
          tmp = chunk_get_prev_nc_nnl_ni(set_paren_parent(tt, CT_FUNC_CALL));   // Issue #2279
       }
@@ -3906,8 +3906,8 @@ static void handle_proto_wrap(Chunk *pc)
    }
    else if (chunk_is_token(cma, CT_BRACE_OPEN))
    {
-      LOG_FMT(LFCN, "%s(%d): (19) SET TO CT_FUNC_DEF: orig_line is %zu, orig_col is %zu, text() '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+      LOG_FMT(LFCN, "%s(%d): (19) SET TO CT_FUNC_DEF: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
       set_chunk_type(pc, CT_FUNC_DEF);
    }
    else

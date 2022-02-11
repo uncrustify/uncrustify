@@ -111,7 +111,7 @@ void align_init_brace(Chunk *start)
                   chunk_flags_set(pc, PCF_DONT_INDENT);
                }
             }
-            LOG_FMT(LALBR, " [%s] to col %zu\n", pc->text(), cpd.al[idx].col);
+            LOG_FMT(LALBR, " [%s] to col %zu\n", pc->Text(), cpd.al[idx].col);
 
             if (num_token != nullptr)
             {
@@ -120,7 +120,7 @@ void align_init_brace(Chunk *start)
                reindent_line(num_token, cpd.al[idx].col - col_diff);
                //LOG_FMT(LSYS, "-= %zu =- NUM indent [%s] col=%d diff=%d\n",
                //        num_token->orig_line,
-               //        num_token->text(), cpd.al[idx - 1].col, col_diff);
+               //        num_token->Text(), cpd.al[idx - 1].col, col_diff);
 
                chunk_flags_set(num_token, PCF_WAS_ALIGNED);
                num_token = nullptr;
@@ -135,7 +135,7 @@ void align_init_brace(Chunk *start)
                {
                   //LOG_FMT(LSYS, "-= %zu =- indent [%s] col=%d len=%d\n",
                   //        next->orig_line,
-                  //        next->text(), cpd.al[idx].col, cpd.al[idx].len);
+                  //        next->Text(), cpd.al[idx].col, cpd.al[idx].len);
 
                   log_rule_B("align_number_right");
 

@@ -148,7 +148,7 @@ Chunk *skip_parent_types(Chunk *colon)
       else if (next)
       {
          LOG_FMT(LPCU, "%s -> %zu:%zu ('%s')\n", __func__,
-                 next->orig_line, next->orig_col, next->text());
+                 next->orig_line, next->orig_col, next->Text());
          return(next);
       }
       else
