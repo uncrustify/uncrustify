@@ -30,7 +30,7 @@ Chunk *const Chunk::NullChunkPtr(&Chunk::NullChunk);
 Chunk::Chunk(bool null_c)
    : null_chunk(null_c)
 {
-   reset();
+   Reset();
 }
 
 
@@ -82,7 +82,7 @@ void Chunk::copyFrom(const Chunk &o)
 }
 
 
-void Chunk::reset()
+void Chunk::Reset()
 {
    memset(&align, 0, sizeof(align));
    memset(&indent, 0, sizeof(indent));
@@ -123,7 +123,7 @@ const char *Chunk::text() const
 }
 
 
-const char *Chunk::elided_text(char *for_the_copy) const
+const char *Chunk::ElidedText(char *for_the_copy) const
 {
    const char *test_it       = text();
    size_t     test_it_length = strlen(test_it);
@@ -420,7 +420,7 @@ Chunk *Chunk::Search(const ::check_t check_fct, const E_Scope scope,
                      const E_Direction dir, const bool cond) const
 {
    T_SearchFnPtr searchFnPtr = GetSearchFn(dir);
-   Chunk         *pc         = const_cast<Chunk*>(this);
+   Chunk         *pc         = const_cast<Chunk *>(this);
 
    do                                   // loop over the chunk list
    {
@@ -439,7 +439,7 @@ static Chunk *__internal_chunk_search(Chunk *cur, const check_t check_fct, const
     * Depending on the parameter dir the search function searches
     * in forward or backward direction */
    Chunk::T_SearchFnPtr search_function = Chunk::GetSearchFn(dir);
-   Chunk           *pc             = cur;
+   Chunk                *pc             = cur;
 
    if (pc == nullptr)
    {
@@ -501,7 +501,7 @@ static Chunk *chunk_search_type(Chunk *cur, const c_token_t type,
     * in forward or backward direction
     */
    Chunk::T_SearchFnPtr search_function = Chunk::GetSearchFn(dir);
-   Chunk           *pc             = cur;
+   Chunk                *pc             = cur;
 
    if (pc == nullptr)
    {
@@ -529,7 +529,7 @@ static Chunk *chunk_search_type_level(Chunk *cur, c_token_t type, E_Scope scope,
     * in forward or backward direction
     */
    Chunk::T_SearchFnPtr search_function = Chunk::GetSearchFn(dir);
-   Chunk           *pc             = cur;
+   Chunk                *pc             = cur;
 
    if (pc == nullptr)
    {
@@ -556,7 +556,7 @@ static Chunk *chunk_search_str(Chunk *cur, const char *str, size_t len, E_Scope 
     * Depending on the parameter dir the search function searches
     * in forward or backward direction */
    Chunk::T_SearchFnPtr search_function = Chunk::GetSearchFn(dir);
-   Chunk           *pc             = cur;
+   Chunk                *pc             = cur;
 
    if (pc == nullptr)
    {
@@ -1056,7 +1056,7 @@ void set_chunk_parent_real(Chunk *pc, c_token_t token, const char *func, int lin
    else
    {
       char copy[1000];
-      LOG_FMT(LSETPAR, "'%s'\n", pc->elided_text(copy));
+      LOG_FMT(LSETPAR, "'%s'\n", pc->ElidedText(copy));
    }
    LOG_FMT(LSETPAR, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s\n",
            get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)),

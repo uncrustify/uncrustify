@@ -291,7 +291,7 @@ void reindent_line(Chunk *pc, size_t column)
    char copy[1000];
 
    LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, on '%s' [%s/%s] => %zu\n",
-           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->elided_text(copy),
+           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy),
            get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)),
            column);
    log_func_stack_inline(LINDLINE);
@@ -676,7 +676,7 @@ void indent_text(void)
       {
          char copy[1000];
          LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, column is %zu, for '%s'\n   ",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->elided_text(copy));
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->ElidedText(copy));
          log_pcf_flags(LINDLINE, pc->flags);
       }
       log_rule_B("use_options_overriding_for_qt_macros");
@@ -1412,7 +1412,7 @@ void indent_text(void)
       }
       char copy[1000];
       LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, orig_col is %zu, column is %zu, text() is '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->elided_text(copy));
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->ElidedText(copy));
 
       // Issue #672
       if (  chunk_is_token(pc, CT_BRACE_OPEN)
@@ -3514,7 +3514,7 @@ void indent_text(void)
             pc->indent.delta = frm.top().ip.delta;
          }
          LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, pc->column_indent is %zu, indent_column is %zu, for '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->column_indent, indent_column, pc->elided_text(copy));
+                 __func__, __LINE__, pc->orig_line, pc->column_indent, indent_column, pc->ElidedText(copy));
 
          /*
           * Check for special continuations.
@@ -4396,7 +4396,7 @@ static void indent_comment(Chunk *pc, size_t col)
    char copy[1000];
 
    LOG_FMT(LCMTIND, "%s(%d): pc->text() is '%s', orig_line %zu, orig_col %zu, level %zu\n",
-           __func__, __LINE__, pc->elided_text(copy), pc->orig_line, pc->orig_col, pc->level);
+           __func__, __LINE__, pc->ElidedText(copy), pc->orig_line, pc->orig_col, pc->level);
 
    // force column 1 comment to column 1 if not changing them
    log_rule_B("indent_col1_comment");

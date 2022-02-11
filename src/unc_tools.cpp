@@ -402,7 +402,7 @@ void dump_in(unsigned int type)
                aNewChunkIsFound = false;
                // add the chunk in the list
                chunk_add_before(&chunk, nullptr);
-               chunk.reset();
+               chunk.Reset();
                aNewChunkIsFound = true;
                continue;
             }
@@ -469,7 +469,7 @@ void dump_in(unsigned int type)
             if (first == '[')
             {
                aNewChunkIsFound = true;
-               chunk.reset();
+               chunk.Reset();
             }
          }
       }

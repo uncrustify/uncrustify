@@ -83,7 +83,7 @@ public:
    bool IsNotNullChunk() const { return(!null_chunk); }
 
    //! sets all elements of the struct to their default value
-   void reset();
+   void Reset();
 
    //! provides the number of characters of string
    size_t len() const;
@@ -92,7 +92,7 @@ public:
    const char *text() const;
 
    // Issue #2984, fill up, if necessary, a copy of the first chars of the text() string
-   const char *elided_text(char *for_the_copy) const;
+   const char *ElidedText(char *for_the_copy) const;
 
 
    /**
@@ -200,7 +200,7 @@ public:
    /**
     * @brief defines a member function pointer for a function of type
     * Chunk *Chunk::function(E_Scope scope)
-		* that will search for a new chunk
+    * that will search for a new chunk
     */
    typedef Chunk *(Chunk::*T_SearchFnPtr)(E_Scope scope) const;
 

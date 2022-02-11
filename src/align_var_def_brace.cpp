@@ -72,7 +72,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
    char copy[1000];
 
    LOG_FMT(LAVDB, "%s(%d): start->text() '%s', type is %s, on orig_line %zu\n",
-           __func__, __LINE__, start->elided_text(copy), get_token_name(start->type), start->orig_line);
+           __func__, __LINE__, start->ElidedText(copy), get_token_name(start->type), start->orig_line);
 
    log_rule_B("align_var_def_inline");
    auto const align_mask =

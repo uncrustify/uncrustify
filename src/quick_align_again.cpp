@@ -21,7 +21,7 @@ void quick_align_again(void)
    {
       char copy[1000];
       LOG_FMT(LALAGAIN, "%s(%d): orig_line is %zu, orig_col is %zu, column is %zu, text() '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->elided_text(copy));
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->ElidedText(copy));
 
       if (  pc->align.next != nullptr
          && pc->flags.test(PCF_ALIGN_START))
