@@ -32,7 +32,7 @@ void align_typedefs(size_t span)
    as.m_amp_style = static_cast<AlignStack::StarStyle>(options::align_typedef_amp_style());
 
    Chunk *c_typedef = Chunk::NullChunkPtr;
-   Chunk *pc        = Chunk::get_head();
+   Chunk *pc        = Chunk::GetHead();
 
    while (pc->IsNotNullChunk())
    {

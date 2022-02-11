@@ -160,7 +160,7 @@ void do_braces(void)
    LOG_FUNC_ENTRY();
    // Mark one-liners
    // Issue #2232 put this at the beginning
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
 
    while ((pc = chunk_get_next_nc_nnl(pc)) != nullptr)
    {
@@ -270,7 +270,7 @@ static void examine_braces(void)
    log_rule_B("mod_full_brace_using");
    log_rule_B("mod_full_brace_while");
 
-   for (Chunk *pc = Chunk::get_tail(); pc->IsNotNullChunk();)
+   for (Chunk *pc = Chunk::GetTail(); pc->IsNotNullChunk();)
    {
       Chunk *prev = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1);
 
@@ -917,7 +917,7 @@ static void convert_vbrace_to_brace(void)
    log_rule_B("mod_full_brace_using");
    log_rule_B("mod_full_brace_function");
 
-   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (chunk_is_not_token(pc, CT_VBRACE_OPEN))
       {
@@ -1071,7 +1071,7 @@ void add_long_closebrace_comment(void)
    Chunk *ns_pc  = nullptr;
    Chunk *cl_pc  = nullptr;
 
-   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (  chunk_is_token(pc, CT_FUNC_DEF)
          || chunk_is_token(pc, CT_OC_MSG_DECL))
@@ -1237,7 +1237,7 @@ static void move_case_break(void)
    LOG_FUNC_ENTRY();
    Chunk *prev = Chunk::NullChunkPtr;
 
-   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (  chunk_is_token(pc, CT_BREAK)
          && chunk_is_token(prev, CT_BRACE_CLOSE)
@@ -1257,7 +1257,7 @@ static void move_case_return(void)
    LOG_FUNC_ENTRY();
    Chunk *prev = Chunk::NullChunkPtr;
 
-   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (  chunk_is_token(pc, CT_RETURN)
          && chunk_is_token(prev, CT_BRACE_CLOSE)
@@ -1474,7 +1474,7 @@ static void mod_case_brace(void)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
 
    // Make sure to start outside of a preprocessor line (see issue #3366)
    if (chunk_is_preproc(pc))
@@ -1682,7 +1682,7 @@ static void mod_full_brace_if_chain(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       if (  (  chunk_is_token(pc, CT_BRACE_OPEN)
             || chunk_is_token(pc, CT_VBRACE_OPEN))

@@ -17,7 +17,7 @@ void remove_extra_returns(void)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
 
    while (pc->IsNotNullChunk())
    {

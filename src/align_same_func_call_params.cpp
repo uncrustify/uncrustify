@@ -49,7 +49,7 @@ void align_same_func_call_params(void)
    LOG_FMT(LAS, "%s(%d): (3): span is %zu, thresh is %zu\n",
            __func__, __LINE__, span, thresh);
 
-   for (pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
+   for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       if (chunk_is_newline(pc))
       {

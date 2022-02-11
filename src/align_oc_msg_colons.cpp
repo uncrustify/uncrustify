@@ -172,7 +172,7 @@ void align_oc_msg_colons(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       if (  chunk_is_token(pc, CT_SQUARE_OPEN)
          && get_chunk_parent_type(pc) == CT_OC_MSG)

@@ -1898,7 +1898,7 @@ void fix_symbols(void)
    bool is_cpp  = language_is_set(LANG_CPP);
    bool is_java = language_is_set(LANG_JAVA);
 
-   for (pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (  chunk_is_token(pc, CT_FUNC_WRAP)
          || chunk_is_token(pc, CT_TYPE_WRAP))
@@ -1941,7 +1941,7 @@ void fix_symbols(void)
       }
    }
 
-   pc = Chunk::get_head();
+   pc = Chunk::GetHead();
 
    if (pc->IsNullChunk())
    {
@@ -2000,7 +2000,7 @@ void fix_symbols(void)
     * 2nd pass - handle variable definitions
     * REVISIT: We need function params marked to do this (?)
     */
-   pc = Chunk::get_head();
+   pc = Chunk::GetHead();
    int square_level = -1;
 
    while (  pc != nullptr
@@ -2109,7 +2109,7 @@ static void process_returns(void)
    LOG_FUNC_ENTRY();
    Chunk *pc;
 
-   pc = Chunk::get_head();
+   pc = Chunk::GetHead();
 
    while (  pc != nullptr
          && pc->IsNotNullChunk())
@@ -2334,7 +2334,7 @@ void mark_comments(void)
    cpd.unc_stage = unc_stage_e::MARK_COMMENTS;
 
    bool  prev_nl = true;
-   Chunk *cur    = Chunk::get_head();
+   Chunk *cur    = Chunk::GetHead();
 
    while (  cur != nullptr
          && cur->IsNotNullChunk())

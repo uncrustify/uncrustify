@@ -26,7 +26,7 @@ void enum_cleanup(void)
       // nothing to do
       return;
    }
-   Chunk *pc = Chunk::get_head();  // Issue #858
+   Chunk *pc = Chunk::GetHead();  // Issue #858
 
    while (pc->IsNotNullChunk())
    {

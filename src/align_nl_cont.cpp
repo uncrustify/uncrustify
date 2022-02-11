@@ -50,7 +50,7 @@ Chunk *align_nl_cont(Chunk *start)
 void align_backslash_newline(void)
 {
    LOG_FUNC_ENTRY();
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
 
    while (  pc != nullptr
          && pc->IsNotNullChunk())

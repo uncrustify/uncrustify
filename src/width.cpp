@@ -160,7 +160,7 @@ void do_code_width(void)
    LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "%s(%d)\n", __func__, __LINE__);
 
-   for (Chunk *pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       if (  !chunk_is_newline(pc)
          && !chunk_is_comment(pc)

@@ -163,7 +163,7 @@ void tokenize_trailing_return_types(void)
    // auto f23() const throw() -> bool;
    // auto f24() const throw() -> bool = delete;
 
-   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       char copy[1000];
       LOG_FMT(LNOTE, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
@@ -314,7 +314,7 @@ void tokenize_cleanup(void)
     */
    Chunk *pc;
 
-   for (pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (chunk_is_token(pc, CT_SQUARE_OPEN))
       {
@@ -345,7 +345,7 @@ void tokenize_cleanup(void)
    }
 
    // change := to CT_SQL_ASSIGN Issue #527
-   for (pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (chunk_is_token(pc, CT_COLON))
       {
@@ -363,7 +363,7 @@ void tokenize_cleanup(void)
    }
 
    // We can handle everything else in the second pass
-   pc   = Chunk::get_head();
+   pc   = Chunk::GetHead();
    next = chunk_get_next_nc_nnl(pc);
 
    while (  pc != nullptr

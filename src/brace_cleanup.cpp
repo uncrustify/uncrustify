@@ -185,7 +185,7 @@ void brace_cleanup(void)
 
    BraceState braceState;
    ParseFrame frm{};
-   Chunk      *pc = Chunk::get_head();
+   Chunk      *pc = Chunk::GetHead();
 
    while (pc->IsNotNullChunk())
    {
@@ -257,7 +257,7 @@ void brace_cleanup(void)
       }
       pc = pc->get_next();
    }
-//   pc = Chunk::get_head();
+//   pc = Chunk::GetHead();
 //
 //   while (pc->IsNotNullChunk())
 //   {

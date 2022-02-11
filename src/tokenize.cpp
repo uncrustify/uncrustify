@@ -2367,7 +2367,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
       if (  (ch == '<')
          && cpd.in_preproc == CT_PP_DEFINE)
       {
-         if (chunk_is_token(Chunk::get_tail(), CT_MACRO))
+         if (chunk_is_token(Chunk::GetTail(), CT_MACRO))
          {
             // We have "#define XXX <", assume '<' starts an include string
             parse_string(ctx, pc, 0, false);
@@ -2375,7 +2375,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
          }
       }
       /* Inside clang's __has_include() could be "path/to/file.h" or system-style <path/to/file.h> */
-      Chunk *tail = Chunk::get_tail();
+      Chunk *tail = Chunk::GetTail();
 
       if (  (ch == '(')
          && (tail->IsNotNullChunk())

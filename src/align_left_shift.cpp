@@ -27,7 +27,7 @@ void align_left_shift(void)
 
    as.Start(255);
 
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
 
    while (pc->IsNotNullChunk())
    {

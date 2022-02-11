@@ -100,7 +100,7 @@ public:
     *
     * @return pointer to the first chunk
     */
-   static Chunk *get_head(void);
+   static Chunk *GetHead(void);
 
 
    /**
@@ -108,7 +108,7 @@ public:
     *
     * @return pointer to the last chunk
     */
-   static Chunk *get_tail(void);
+   static Chunk *GetTail(void);
 
 
    /**

@@ -120,7 +120,7 @@ void output_parsed(FILE *pfile)
 
    fprintf(pfile, "-=====-\n");
    fprintf(pfile, "Line      Tag          Parent     Columns  Br/Lvl/pp Flg Nl  Text");
-   for (pc = Chunk::get_head(); pc != NULL; pc = pc->get_next())
+   for (pc = Chunk::GetHead(); pc != NULL; pc = pc->get_next())
    {
       fprintf(pfile, "\n%3d> %13.13s[%13.13s][%2d/%2d/%2d][%d/%d/%d][%6x][%d-%d]",
               pc->orig_line, get_token_name(pc->type),
@@ -198,7 +198,7 @@ void output_text(FILE *pfile)
 
    cpd.fout = pfile;
 
-   for (pc = Chunk::get_head(); pc != NULL; pc = pc->get_next())
+   for (pc = Chunk::GetHead(); pc != NULL; pc = pc->get_next())
    {
       if (pc->type == CT_NEWLINE)
       {

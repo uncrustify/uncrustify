@@ -415,7 +415,7 @@ static bool chunk_is_macro_reference(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *next = Chunk::get_head();
+   Chunk *next = Chunk::GetHead();
 
    if (  (  language_is_set(LANG_CPP)
          || language_is_set(LANG_C))

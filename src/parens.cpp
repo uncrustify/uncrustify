@@ -48,7 +48,7 @@ void do_parens(void)
 
    if (options::mod_full_paren_if_bool())
    {
-      Chunk *pc = Chunk::get_head();
+      Chunk *pc = Chunk::GetHead();
 
       while (  (pc = chunk_get_next_nc_nnl(pc)) != nullptr
             && pc->IsNotNullChunk())
@@ -83,7 +83,7 @@ void do_parens_assign(void)                         // Issue #3316
 
    if (options::mod_full_paren_assign_bool())
    {
-      Chunk *pc = Chunk::get_head();
+      Chunk *pc = Chunk::GetHead();
 
       while (  (pc = chunk_get_next_nc_nnl(pc)) != nullptr
             && pc->IsNotNullChunk())
@@ -154,7 +154,7 @@ void do_parens_return(void)                         // Issue #3316
 
    if (options::mod_full_paren_return_bool())
    {
-      Chunk *pc = Chunk::get_head();
+      Chunk *pc = Chunk::GetHead();
 
       while (  (pc = chunk_get_next_nc_nnl(pc)) != nullptr
             && pc->IsNotNullChunk())

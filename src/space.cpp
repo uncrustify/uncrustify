@@ -3366,7 +3366,7 @@ void space_text(void)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk  *pc = Chunk::get_head();
+   Chunk  *pc = Chunk::GetHead();
    Chunk  *next;
    size_t prev_column;
    size_t column = pc->column;
@@ -3678,7 +3678,7 @@ void space_text_balance_nested_parens(void)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *first = Chunk::get_head();
+   Chunk *first = Chunk::GetHead();
 
    while (first->IsNotNullChunk())
    {

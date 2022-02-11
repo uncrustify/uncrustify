@@ -588,7 +588,7 @@ void sort_imports(void)
 
    prepare_categories();
 
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
 
    log_rule_B("mod_sort_incl_import_grouping_enabled");
 

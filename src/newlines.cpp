@@ -886,7 +886,7 @@ void newlines_sparens()
 
    //Chunk *sparen_open;
 
-   for (Chunk *sparen_open = chunk_get_next_type(Chunk::get_head(), CT_SPAREN_OPEN, ANY_LEVEL);
+   for (Chunk *sparen_open = chunk_get_next_type(Chunk::GetHead(), CT_SPAREN_OPEN, ANY_LEVEL);
         sparen_open != nullptr; sparen_open = chunk_get_next_type(
            sparen_open, CT_SPAREN_OPEN, ANY_LEVEL))
    {
@@ -3717,7 +3717,7 @@ void newlines_remove_newlines(void)
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LBLANK, "%s(%d):\n", __func__, __LINE__);
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
 
    if (!chunk_is_newline(pc))
    {
@@ -3735,7 +3735,7 @@ void newlines_remove_newlines(void)
          prev = pc->get_prev();
          newline_iarf(pc, IARF_REMOVE);
 
-         if (next == Chunk::get_head())
+         if (next == Chunk::GetHead())
          {
             pc = next;
             continue;
@@ -3755,7 +3755,7 @@ void newlines_remove_disallowed()
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
    Chunk *next;
 
    while ((pc = pc->get_next_nl())->IsNotNullChunk())
@@ -3787,7 +3787,7 @@ void newlines_cleanup_angles()
    // Issue #1167
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       char copy[1000];
       LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
@@ -3806,7 +3806,7 @@ void newlines_cleanup_braces(bool first)
    LOG_FUNC_ENTRY();
 
    // Get the first token that's not an empty line:
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
 
    if (chunk_is_newline(pc))
    {
@@ -4974,7 +4974,7 @@ void newlines_cleanup_braces(bool first)
       }
    }
 
-   newline_def_blk(Chunk::get_head(), false);
+   newline_def_blk(Chunk::GetHead(), false);
 } // newlines_cleanup_braces
 
 
@@ -5015,7 +5015,7 @@ void newline_after_multiline_comment(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       if (chunk_is_not_token(pc, CT_COMMENT_MULTI))
       {
@@ -5040,7 +5040,7 @@ void newline_after_label_colon(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       if (chunk_is_not_token(pc, CT_LABEL_COLON))
       {
@@ -5070,7 +5070,7 @@ void newlines_insert_blank_lines(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       //LOG_FMT(LNEWLINE, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
       //        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -5170,7 +5170,7 @@ void newlines_functions_remove_extra_blank_lines(void)
       return;
    }
 
-   for (Chunk *pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       LOG_FMT(LNEWLINE, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
@@ -5216,7 +5216,7 @@ void newlines_squeeze_ifdef(void)
 
    Chunk *pc;
 
-   for (pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (  chunk_is_token(pc, CT_PREPROC)
          && (  pc->level > 0
@@ -5282,7 +5282,7 @@ void newlines_squeeze_paren_close(void)
 
    Chunk *pc;
 
-   for (pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
+   for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       Chunk *next;
       Chunk *prev;
@@ -5355,7 +5355,7 @@ void newlines_eat_start_end(void)
    {
       log_rule_B("nl_start_of_file");
       log_rule_B("nl_start_of_file_min");
-      pc = Chunk::get_head();
+      pc = Chunk::GetHead();
 
       if (pc->IsNotNullChunk())
       {
@@ -5408,7 +5408,7 @@ void newlines_eat_start_end(void)
    {
       log_rule_B("nl_end_of_file");
       log_rule_B("nl_end_of_file_min");
-      pc = Chunk::get_tail();
+      pc = Chunk::GetTail();
 
       if (pc->IsNotNullChunk())
       {
@@ -5474,7 +5474,7 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
       return;
    }
 
-   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       char copy[1000];
       LOG_FMT(LNEWLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() is '%s'\n",
@@ -5714,7 +5714,7 @@ void newlines_class_colon_pos(c_token_t tok)
       log_rule_B("align_on_tabstop");
    }
 
-   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (  ccolon == nullptr
          && chunk_is_not_token(pc, tok))
@@ -5978,7 +5978,7 @@ void do_blank_lines(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->IsNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = pc->get_next())
    {
       if (chunk_is_token(pc, CT_NEWLINE))
       {
@@ -6021,7 +6021,7 @@ void do_blank_lines(void)
        * If this is the first or the last token, pretend that there is an extra
        * line. It will be removed at the end.
        */
-      if (  pc == Chunk::get_head()
+      if (  pc == Chunk::GetHead()
          || next->IsNullChunk())
       {
          line_added = true;
@@ -6540,7 +6540,7 @@ void newlines_cleanup_dup(void)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *pc   = Chunk::get_head();
+   Chunk *pc   = Chunk::GetHead();
    Chunk *next = pc;
 
    while (pc->IsNotNullChunk())
@@ -6634,7 +6634,7 @@ void annotations_newlines(void)
    Chunk *next;
    Chunk *prev;
    Chunk *ae;   // last token of the annotation
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
 
    while (  (pc = chunk_get_next_type(pc, CT_ANNOTATION, -1)) != nullptr
          && (next = pc->get_next_nnl())->IsNotNullChunk())

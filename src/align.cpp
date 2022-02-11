@@ -151,7 +151,7 @@ void align_all(void)
       || (options::align_var_struct_span() > 0)
       || (options::align_var_class_span() > 0))
    {
-      align_var_def_brace(Chunk::get_head(), options::align_var_def_span(), nullptr);
+      align_var_def_brace(Chunk::GetHead(), options::align_var_def_span(), nullptr);
    }
    // Align assignments
    log_rule_B("align_enum_equ_span");
@@ -161,7 +161,7 @@ void align_all(void)
    if (  (options::align_enum_equ_span() > 0)
       || (options::align_assign_span() > 0))
    {
-      align_assign(Chunk::get_head(),
+      align_assign(Chunk::GetHead(),
                    options::align_assign_span(),
                    options::align_assign_thresh(),
                    nullptr);
@@ -170,7 +170,7 @@ void align_all(void)
    if (  (options::align_braced_init_list_span() > 0)                   // Issue #750
       || (options::align_braced_init_list_thresh() > 0))
    {
-      align_braced_init_list(Chunk::get_head(),
+      align_braced_init_list(Chunk::GetHead(),
                              options::align_braced_init_list_span(),
                              options::align_braced_init_list_thresh(),
                              nullptr);

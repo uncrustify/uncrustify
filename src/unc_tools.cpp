@@ -48,7 +48,7 @@ static size_t tokenCounter;
  */
 void prot_the_line(const char *func_name, int theLine, unsigned int actual_line, size_t partNumber)
 {
-   prot_the_line_pc(Chunk::get_head(), func_name, theLine, actual_line, partNumber);
+   prot_the_line_pc(Chunk::GetHead(), func_name, theLine, actual_line, partNumber);
 }
 
 
@@ -154,7 +154,7 @@ void prot_all_lines(const char *func_name, int theLine)
 
    LOG_FMT(LGUY, "Prot_all_lines:(%s:%d)(%zu)\n", func_name, theLine, counter);
 
-   for (Chunk *pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
    {
       tokenCounter++;
 
@@ -216,7 +216,7 @@ void examine_Data(const char *func_name, int theLine, int what)
    {
    case 1:
 
-      for (pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
+      for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
       {
          if (  chunk_is_token(pc, CT_SQUARE_CLOSE)
             || chunk_is_token(pc, CT_TSQUARE))
@@ -232,7 +232,7 @@ void examine_Data(const char *func_name, int theLine, int what)
    case 2:
       LOG_FMT(LGUY, "2:(%d)\n", theLine);
 
-      for (pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
+      for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
       {
          if (pc->orig_line == 7)
          {
@@ -252,7 +252,7 @@ void examine_Data(const char *func_name, int theLine, int what)
    case 3:
       LOG_FMT(LGUY, "3:(%d)\n", theLine);
 
-      for (pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
+      for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
       {
          if (chunk_is_token(pc, CT_NEWLINE))
          {
@@ -269,7 +269,7 @@ void examine_Data(const char *func_name, int theLine, int what)
    case 4:
       LOG_FMT(LGUY, "4:(%d)\n", theLine);
 
-      for (pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
+      for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
       {
          if (pc->orig_line == 6)
          {
@@ -308,7 +308,7 @@ void dump_out(unsigned int type)
 
    if (D_file != nullptr)
    {
-      for (Chunk *pc = Chunk::get_head(); pc->IsNotNullChunk(); pc = pc->get_next())
+      for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->get_next())
       {
          fprintf(D_file, "[%p]\n", pc);
          fprintf(D_file, "  type %s\n", get_token_name(pc->type));

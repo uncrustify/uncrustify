@@ -21,7 +21,7 @@ void remove_duplicate_include(void)
    vector<Chunk *> includes;
 
    Chunk           *preproc = Chunk::NullChunkPtr;
-   Chunk           *pc      = Chunk::get_head();
+   Chunk           *pc      = Chunk::GetHead();
 
    while (pc->IsNotNullChunk())
    {

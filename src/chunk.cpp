@@ -385,7 +385,7 @@ static Chunk *chunk_search_str(Chunk *cur, const char *str, size_t len, E_Scope 
 static Chunk *chunk_add(const Chunk *pc_in, Chunk *ref, const E_Direction pos = E_Direction::FORWARD);
 
 
-Chunk *Chunk::get_head(void)
+Chunk *Chunk::GetHead(void)
 {
    Chunk *ret = g_cl.GetHead();
 
@@ -397,7 +397,7 @@ Chunk *Chunk::get_head(void)
 }
 
 
-Chunk *Chunk::get_tail(void)
+Chunk *Chunk::GetTail(void)
 {
    Chunk *ret = g_cl.GetTail();
 
@@ -877,7 +877,7 @@ Chunk *chunk_first_on_line(Chunk *pc)
 bool chunk_is_last_on_line(Chunk *pc)  //TODO: pc should be const here
 {
    // check if pc is the very last chunk of the file
-   const Chunk *end = Chunk::get_tail();
+   const Chunk *end = Chunk::GetTail();
 
    if (pc == end)
    {

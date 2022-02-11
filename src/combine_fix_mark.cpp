@@ -909,7 +909,7 @@ void mark_define_expressions(void)
 
    bool  in_define = false;
    bool  first     = true;
-   Chunk *pc       = Chunk::get_head();
+   Chunk *pc       = Chunk::GetHead();
    Chunk *prev     = pc;
 
    while (pc->IsNotNullChunk())
@@ -1793,7 +1793,7 @@ void mark_function(Chunk *pc)
 
          if (prev == nullptr)
          {
-            prev = Chunk::get_head();
+            prev = Chunk::GetHead();
          }
 
          for (  tmp = prev; (tmp != nullptr)
