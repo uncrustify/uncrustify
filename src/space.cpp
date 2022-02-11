@@ -2695,11 +2695,11 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       // variable name. If set to 'ignore', sp_before_ptr_star is used instead.
       if (options::sp_before_unnamed_ptr_star() != IARF_IGNORE)
       {
-         Chunk *next = second->get_next_nc();
+         Chunk *next = second->GetNextNc();
 
          while (chunk_is_token(next, CT_PTR_TYPE))
          {
-            next = next->get_next_nc();
+            next = next->GetNextNc();
          }
 
          if (  next->IsNotNullChunk()

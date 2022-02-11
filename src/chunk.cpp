@@ -732,13 +732,13 @@ Chunk *Chunk::GetPrevNnl(E_Scope scope)
 }
 
 
-Chunk *Chunk::get_next_nc(E_Scope scope)
+Chunk *Chunk::GetNextNc(E_Scope scope)
 {
    return(Search(chunk_is_comment, scope, E_Direction::FORWARD, false));
 }
 
 
-Chunk *Chunk::get_prev_nc(E_Scope scope)
+Chunk *Chunk::GetPrevNc(E_Scope scope)
 {
    return(Search(chunk_is_comment, scope, E_Direction::BACKWARD, false));
 }

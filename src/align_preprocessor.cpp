@@ -51,11 +51,11 @@ void align_preprocessor(void)
       // If we aren't on a 'define', then skip to the next non-comment
       if (chunk_is_not_token(pc, CT_PP_DEFINE))
       {
-         pc = pc->get_next_nc();
+         pc = pc->GetNextNc();
          continue;
       }
       // step past the 'define'
-      pc = pc->get_next_nc();
+      pc = pc->GetNextNc();
 
       if (pc->IsNullChunk())
       {
@@ -77,7 +77,7 @@ void align_preprocessor(void)
             cur_as = &asf;
          }
          // Skip to the close parenthesis
-         pc = pc->get_next_nc(); // point to open (
+         pc = pc->GetNextNc(); // point to open (
          pc = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
 
          LOG_FMT(LALPP, "%s(%d): jumped to (%s) on line %zu col %zu\n",

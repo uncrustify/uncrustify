@@ -94,7 +94,7 @@ void do_parens_assign(void)                         // Issue #3316
                     __func__, __LINE__, pc->orig_line, pc->text(), pc->level);
             // look before for a open sparen
             size_t check_level = pc->level;
-            Chunk  *p          = pc->get_prev_nc(E_Scope::PREPROC);
+            Chunk  *p          = pc->GetPrevNc(E_Scope::PREPROC);
 
             while (p->IsNotNullChunk())
             {
@@ -116,7 +116,7 @@ void do_parens_assign(void)                         // Issue #3316
                {
                   break;
                }
-               p = p->get_prev_nc(E_Scope::PREPROC);
+               p = p->GetPrevNc(E_Scope::PREPROC);
 
                if (p->level < check_level - 1)
                {
@@ -165,7 +165,7 @@ void do_parens_return(void)                         // Issue #3316
                     __func__, __LINE__, pc->orig_line, pc->text(), pc->level);
             // look before for a open sparen
             size_t check_level = pc->level;
-            Chunk  *p          = pc->get_prev_nc(E_Scope::PREPROC);
+            Chunk  *p          = pc->GetPrevNc(E_Scope::PREPROC);
 
             while (p->IsNotNullChunk())
             {
@@ -187,7 +187,7 @@ void do_parens_return(void)                         // Issue #3316
                {
                   break;
                }
-               p = p->get_prev_nc(E_Scope::PREPROC);
+               p = p->GetPrevNc(E_Scope::PREPROC);
 
                if (p->level < check_level - 1)
                {

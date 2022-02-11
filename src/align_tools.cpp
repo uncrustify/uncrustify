@@ -23,11 +23,11 @@ Chunk *skip_c99_array(Chunk *sq_open)
       {
          tmp = Chunk::NullChunkPtr;
       }
-      tmp = tmp->get_next_nc();
+      tmp = tmp->GetNextNc();
 
       if (chunk_is_token(tmp, CT_ASSIGN))
       {
-         return(tmp->get_next_nc());
+         return(tmp->GetNextNc());
       }
    }
    return(nullptr);
@@ -152,7 +152,7 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
          }
          prev_match = pc;
       }
-      pc = pc->get_next_nc();
+      pc = pc->GetNextNc();
    }
    return(pc);
 } // scan_ib_line

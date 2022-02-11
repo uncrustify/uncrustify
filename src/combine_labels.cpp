@@ -71,13 +71,13 @@ void combine_labels(void)
    {
       return;
    }
-   Chunk *cur = prev->get_next_nc();
+   Chunk *cur = prev->GetNextNc();
 
    if (cur->IsNullChunk())
    {
       return;
    }
-   Chunk *next = cur->get_next_nc();
+   Chunk *next = cur->GetNextNc();
 
    // unlikely that the file will start with a label...
    // prev cur next
@@ -226,7 +226,7 @@ void combine_labels(void)
                {
                   c_token_t new_type = CT_TAG;
 
-                  Chunk     *tmp = next->get_next_nc();
+                  Chunk     *tmp = next->GetNextNc();
 
                   if (tmp->IsNullChunk())
                   {
@@ -264,7 +264,7 @@ void combine_labels(void)
             }
             else if (chunk_is_token(cur, CT_WORD))
             {
-               Chunk *tmp = next->get_next_nc(E_Scope::PREPROC);
+               Chunk *tmp = next->GetNextNc(E_Scope::PREPROC);
 
                // Issue #1187
                if (tmp->IsNullChunk())

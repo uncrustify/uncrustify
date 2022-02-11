@@ -592,7 +592,7 @@ void indent_text(void)
       if ((chunk_is_str(pc, "(", 1) && !cpd.settings[UO_indent_paren_nl].b) ||
           (chunk_is_str(pc, "[", 1) && !cpd.settings[UO_indent_square_nl].b))
         {
-        next = pc->get_next_nc();
+        next = pc->GetNextNc();
 
         if (chunk_is_newline(next))
           {

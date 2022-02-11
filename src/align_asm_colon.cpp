@@ -57,7 +57,7 @@ void align_asm_colon(void)
             did_nl = false;
             cas.Add(pc);
          }
-         pc = pc->get_next_nc(E_Scope::PREPROC);
+         pc = pc->GetNextNc(E_Scope::PREPROC);
       }
       cas.End();
    }

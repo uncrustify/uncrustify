@@ -182,7 +182,7 @@ void do_braces(void)
       // Scan for the brace close or a newline
       tmp = br_open;
 
-      while ((tmp = tmp->get_next_nc())->IsNotNullChunk())
+      while ((tmp = tmp->GetNextNc())->IsNotNullChunk())
       {
          if (chunk_is_newline(tmp))
          {
@@ -324,9 +324,9 @@ static bool should_add_braces(Chunk *vbopen)
 
    Chunk  *pc = Chunk::NullChunkPtr;
 
-   for (pc = vbopen->get_next_nc(E_Scope::PREPROC);
+   for (pc = vbopen->GetNextNc(E_Scope::PREPROC);
         (pc->IsNotNullChunk() && pc->level > vbopen->level);
-        pc = pc->get_next_nc(E_Scope::PREPROC))
+        pc = pc->GetNextNc(E_Scope::PREPROC))
    {
       if (chunk_is_newline(pc))
       {
@@ -376,7 +376,7 @@ static bool can_remove_braces(Chunk *bopen)
    size_t       if_count   = 0;
    int          br_count   = 0;
 
-   pc = bopen->get_next_nc(E_Scope::ALL);
+   pc = bopen->GetNextNc(E_Scope::ALL);
    LOG_FMT(LBRDEL, "%s(%d):  - begin with token '%s', orig_line is %zu, orig_col is %zu\n",
            __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
 
@@ -477,7 +477,7 @@ static bool can_remove_braces(Chunk *bopen)
          }
       }
       prev = pc;
-      pc   = pc->get_next_nc();
+      pc   = pc->GetNextNc();
    }
 
    if (pc->IsNullChunk())
@@ -529,7 +529,7 @@ static void examine_brace(Chunk *bopen)
    size_t       if_count   = 0;
    int          br_count   = 0;
 
-   Chunk        *pc = bopen->get_next_nc();
+   Chunk        *pc = bopen->GetNextNc();
 
    while (  pc->IsNotNullChunk()
          && pc->level >= level)

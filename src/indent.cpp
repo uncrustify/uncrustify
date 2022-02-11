@@ -465,7 +465,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
 
    if (pc != nullptr)
    {
-      tmp = pc->get_prev_nc();
+      tmp = pc->GetPrevNc();
    }
 
    if (from_brace)
@@ -476,19 +476,19 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    // Skip to open paren in ':^TYPE *(ARGS) {'
    if (chunk_is_paren_close(tmp))
    {
-      tmp = chunk_skip_to_match_rev(tmp)->get_prev_nc();
+      tmp = chunk_skip_to_match_rev(tmp)->GetPrevNc();
    }
 
    // // Check for star in ':^TYPE *(ARGS) {'. Issue 2477
    if (chunk_is_token(tmp, CT_PTR_TYPE))
    {
-      tmp = tmp->get_prev_nc();
+      tmp = tmp->GetPrevNc();
    }
 
    // Check for type in ':^TYPE *(ARGS) {'. Issue 2482
    if (chunk_is_token(tmp, CT_TYPE))
    {
-      tmp = tmp->get_prev_nc();
+      tmp = tmp->GetPrevNc();
    }
    // Check for caret in ':^TYPE *(ARGS) {'
    // Store the caret position
@@ -517,7 +517,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    {
       return(tmp);
    }
-   tmp = tmp->get_prev_nc();
+   tmp = tmp->GetPrevNc();
 
    // Check for colon in ':^TYPE *(ARGS) {'
    if (from_colon)
@@ -532,7 +532,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
          return(tmp);
       }
    }
-   tmp = tmp->get_prev_nc();
+   tmp = tmp->GetPrevNc();
 
    if (from_keyword)
    {
@@ -1180,7 +1180,7 @@ void indent_text(void)
                && frm.top().level >= pc->level)
             {
                size_t count = 1;
-               Chunk  *next = pc->get_next_nc();
+               Chunk  *next = pc->GetNextNc();
 
                while (  next->IsNotNullChunk()
                      && (  (  chunk_is_token(next, CT_BRACE_CLOSE)
@@ -1191,7 +1191,7 @@ void indent_text(void)
                            && get_chunk_parent_type(next) == CT_OC_MSG)))
                {
                   count++;
-                  next = next->get_next_nc();
+                  next = next->GetNextNc();
                }
                count = std::min(count, frm.size());
 
@@ -1470,7 +1470,7 @@ void indent_text(void)
                && frm.top().level >= pc->level)
             {
                size_t count = 1;
-               Chunk  *next = pc->get_next_nc();
+               Chunk  *next = pc->GetNextNc();
 
                while (  next->IsNotNullChunk()
                      && (  (  chunk_is_token(next, CT_BRACE_CLOSE)
@@ -1481,7 +1481,7 @@ void indent_text(void)
                            && get_chunk_parent_type(next) == CT_OC_MSG)))
                {
                   count++;
-                  next = next->get_next_nc();
+                  next = next->GetNextNc();
                }
                count = std::min(count, frm.size());
 
@@ -1814,7 +1814,7 @@ void indent_text(void)
                  && get_chunk_parent_type(pc) == CT_CPP_LAMBDA
                  && (  pc->flags.test(PCF_IN_FCN_DEF)
                     || pc->flags.test(PCF_IN_FCN_CTOR)) // Issue #2152
-                 && chunk_is_newline(pc->get_next_nc()))
+                 && chunk_is_newline(pc->GetNextNc()))
          {
             log_rule_B("indent_paren_open_brace");
             // Issue #1165
@@ -1832,7 +1832,7 @@ void indent_text(void)
          // only to help the vim command }
          else if (  !options::indent_paren_open_brace()
                  && chunk_is_paren_open(frm.prev().pc)
-                 && chunk_is_newline(pc->get_next_nc()))
+                 && chunk_is_newline(pc->GetNextNc()))
          {
             log_rule_B("indent_paren_open_brace");
             LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, pc->brace_level is %zu, for '%s', pc->level is %zu, pc(-1)->level is %zu\n",
@@ -2648,7 +2648,7 @@ void indent_text(void)
                   && (  frm.at(idx).type != CT_CLASS_COLON
                      && frm.at(idx).type != CT_CONSTR_COLON
                      && !(  frm.at(idx).type == CT_LAMBDA
-                         && frm.at(idx).pc->get_prev_nc()->type == CT_NEWLINE)))
+                         && frm.at(idx).pc->GetPrevNc()->type == CT_NEWLINE)))
             {
                if (idx == 0)
                {
@@ -2736,7 +2736,7 @@ void indent_text(void)
          {
             log_rule_B("indent_paren_nl");
             log_rule_B("indent_square_nl");
-            Chunk *next = pc->get_next_nc();
+            Chunk *next = pc->GetNextNc();
 
             if (next->IsNullChunk())
             {
@@ -2800,7 +2800,7 @@ void indent_text(void)
                {
                   if (chunk_is_token(next, CT_SPACE))
                   {
-                     next = next->get_next_nc();
+                     next = next->GetNextNc();
 
                      if (next->IsNullChunk())
                      {
@@ -3244,7 +3244,7 @@ void indent_text(void)
          frm.top().indent = frm.prev().indent;
          log_indent();
 
-         if (  chunk_is_newline(pc->get_prev_nc())
+         if (  chunk_is_newline(pc->GetPrevNc())
             && !are_chunks_in_same_line(frm.prev().pc, chunk_get_prev_nc_nnl(pc)))
          {
             frm.top().indent = frm.prev().indent + indent_size;
@@ -3252,7 +3252,7 @@ void indent_text(void)
             reindent_line(pc, (frm.prev().indent + indent_size));
             did_newline = false;
          }
-         else if (  chunk_is_newline(pc->get_next_nc())
+         else if (  chunk_is_newline(pc->GetNextNc())
                  && !are_chunks_in_same_line(frm.prev().pc, frm.top().pc))
          {
             frm.top().indent = frm.prev().indent + indent_size;
@@ -3392,7 +3392,7 @@ void indent_text(void)
          LOG_FMT(LINDENT2, "%s(%d): in_shift is %s\n",
                  __func__, __LINE__, in_shift ? "TRUE" : "FALSE");
          Chunk *prev_nonl = chunk_get_prev_nc_nnl(pc);
-         Chunk *prev2     = pc->get_prev_nc();
+         Chunk *prev2     = pc->GetPrevNc();
 
          if ((  chunk_is_semicolon(prev_nonl)
              || chunk_is_token(prev_nonl, CT_BRACE_OPEN)
@@ -3469,20 +3469,20 @@ void indent_text(void)
             // Issue #3010
             vardefcol = pc->column;
             // BUT, we need to skip backward over any '*'
-            Chunk *tmp = pc->get_prev_nc();
+            Chunk *tmp = pc->GetPrevNc();
 
             while (chunk_is_token(tmp, CT_PTR_TYPE))
             {
                vardefcol = tmp->column;
-               tmp       = tmp->get_prev_nc();
+               tmp       = tmp->GetPrevNc();
             }
             // BUT, we need to skip backward over any '::' or TYPE
-            //tmp = pc->get_prev_nc();
+            //tmp = pc->GetPrevNc();
 
             //if (chunk_is_token(tmp, CT_DC_MEMBER))
             //{
             //   // look for a type
-            //   Chunk *tmp2 = tmp->get_prev_nc();
+            //   Chunk *tmp2 = tmp->GetPrevNc();
             //   if (chunk_is_token(tmp2, CT_TYPE))
             //   {
             //      // we have something like "SomeLongNamespaceName::Foo()"

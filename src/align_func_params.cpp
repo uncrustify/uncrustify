@@ -72,7 +72,7 @@ Chunk *align_func_param(Chunk *start)
       if (chunk_is_token(pc, CT_FUNC_VAR))                    // Issue #2278
       {
          // look after 'protect parenthesis'
-         Chunk *after = pc->get_next_nc();
+         Chunk *after = pc->GetNextNc();
 
          if (chunk_is_token(after, CT_PAREN_CLOSE))
          {
@@ -85,7 +85,7 @@ Chunk *align_func_param(Chunk *start)
                set_chunk_type(before, CT_PPAREN_OPEN);
                set_chunk_type(after, CT_PPAREN_CLOSE);
                pc->level = before->level;
-               Chunk *tmp = pc->get_prev_nc();
+               Chunk *tmp = pc->GetPrevNc();
 
                if (chunk_is_token(tmp, CT_PTR_TYPE))
                {
@@ -139,7 +139,7 @@ Chunk *align_func_param(Chunk *start)
          }
          else
          {
-            Chunk *tmp_prev = pc->get_prev_nc();
+            Chunk *tmp_prev = pc->GetPrevNc();
 
             if (!chunk_is_newline(tmp_prev))  // don't count leading commas
             {

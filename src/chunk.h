@@ -183,7 +183,7 @@ public:
     * @return pointer to next non-comment chunk or Chunk::NullChunkPtr if no chunk was found
     */
    // TODO make it a const member
-   Chunk *get_next_nc(E_Scope scope = E_Scope::ALL);
+   Chunk *GetNextNc(E_Scope scope = E_Scope::ALL);
 
 
    /**
@@ -194,7 +194,7 @@ public:
     * @return pointer to prev non-comment chunk or Chunk::NullChunkPtr if no chunk was found
     */
    // TODO make it a const member
-   Chunk *get_prev_nc(E_Scope scope = E_Scope::ALL);
+   Chunk *GetPrevNc(E_Scope scope = E_Scope::ALL);
 
 
    /**
