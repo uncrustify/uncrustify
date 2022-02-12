@@ -27,9 +27,9 @@ void align_left_shift(void)
 
    as.Start(255);
 
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
 
-   while (pc->isNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       if (chunk_is_newline(pc))
       {
@@ -38,11 +38,11 @@ void align_left_shift(void)
       else
       {
          char copy[1000];
-         LOG_FMT(LALIGN, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->elided_text(copy));
+         LOG_FMT(LALIGN, "%s(%d): orig_line is %zu, orig_col is %zu, pc->Text() '%s'\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy));
       }
 
-      if (  start->isNotNullChunk()
+      if (  start->IsNotNullChunk()
          && ((pc->flags & PCF_IN_PREPROC) != (start->flags & PCF_IN_PREPROC)))
       {
          // a change in preproc status restarts the aligning
@@ -53,14 +53,14 @@ void align_left_shift(void)
       {
          as.NewLines(pc->nl_count);
       }
-      else if (  start->isNotNullChunk()
+      else if (  start->IsNotNullChunk()
               && pc->level < start->level)
       {
          // A drop in level restarts the aligning
          as.Flush();
          start = Chunk::NullChunkPtr;
       }
-      else if (  start->isNotNullChunk()
+      else if (  start->IsNotNullChunk()
               && pc->level > start->level)
       {
          // Ignore any deeper levels when aligning
@@ -88,9 +88,9 @@ void align_left_shift(void)
              *      cout
              *          << "something";
              */
-            Chunk *prev = pc->get_prev();
+            Chunk *prev = pc->GetPrev();
 
-            if (  prev->isNotNullChunk()
+            if (  prev->IsNotNullChunk()
                && chunk_is_newline(prev))
             {
                log_rule_B("indent_columns");
@@ -102,7 +102,7 @@ void align_left_shift(void)
             as.Add(pc);
             start = pc;
          }
-         else if (chunk_is_newline(pc->get_prev()))
+         else if (chunk_is_newline(pc->GetPrev()))
          {
             // subsequent ones must be after a newline
             as.Add(pc);
@@ -117,9 +117,9 @@ void align_left_shift(void)
           *      cout <<
           *          "something";
           */
-         Chunk *prev = pc->get_prev();
+         Chunk *prev = pc->GetPrev();
 
-         if (  prev->isNotNullChunk()
+         if (  prev->IsNotNullChunk()
             && chunk_is_newline(prev))
          {
             log_rule_B("indent_columns");
@@ -128,7 +128,7 @@ void align_left_shift(void)
             chunk_flags_set(pc, PCF_DONT_INDENT);
          }
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
    as.End();
 } // align_left_shift

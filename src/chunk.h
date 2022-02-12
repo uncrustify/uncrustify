@@ -35,7 +35,7 @@ static constexpr int ANY_LEVEL = -1;
  *  - If not in a preprocessor, skip over any encountered preprocessor stuff
  *  - If in a preprocessor, fail to leave (return nullptr)
  */
-enum class scope_e : unsigned int
+enum class E_Scope : unsigned int
 {
    ALL,      //! search in all kind of chunks
    PREPROC,  //! search only in preprocessor chunks
@@ -45,11 +45,24 @@ enum class scope_e : unsigned int
 /**
  * Specifies which direction or location an operation shall be performed.
  */
-enum class direction_e : unsigned int
+enum class E_Direction : unsigned int
 {
    FORWARD,
    BACKWARD
 };
+
+
+/**
+ * Temporary internal typedef. Will be progressively be replaced by Chunk::CheckFnPtr.
+ *
+ * @brief prototype for a function that checks a chunk to have a given type
+ *
+ * @note this typedef defines the function type "check_t"
+ * for a function pointer of type
+ * bool function(Chunk *pc)
+ */
+// TODO remove when finished
+typedef bool (*check_t)(Chunk *pc);
 
 
 // This is the main type of this program
@@ -66,20 +79,20 @@ public:
    Chunk &operator=(const Chunk &o); // !!! partial copy: chunk is not linked to others
 
    //! whether this is a null Chunk or not
-   bool isNullChunk() const { return(null_chunk); }
-   bool isNotNullChunk() const { return(!null_chunk); }
+   bool IsNullChunk() const { return(null_chunk); }
+   bool IsNotNullChunk() const { return(!null_chunk); }
 
    //! sets all elements of the struct to their default value
-   void reset();
+   void Reset();
 
    //! provides the number of characters of string
-   size_t len() const;
+   size_t Len() const;
 
    //! provides the content of a string a zero terminated character pointer
-   const char *text() const;
+   const char *Text() const;
 
-   // Issue #2984, fill up, if necessary, a copy of the first chars of the text() string
-   const char *elided_text(char *for_the_copy) const;
+   // Issue #2984, fill up, if necessary, a copy of the first chars of the Text() string
+   const char *ElidedText(char *for_the_copy) const;
 
 
    /**
@@ -87,7 +100,7 @@ public:
     *
     * @return pointer to the first chunk
     */
-   static Chunk *get_head(void);
+   static Chunk *GetHead(void);
 
 
    /**
@@ -95,7 +108,7 @@ public:
     *
     * @return pointer to the last chunk
     */
-   static Chunk *get_tail(void);
+   static Chunk *GetTail(void);
 
 
    /**
@@ -105,7 +118,7 @@ public:
     *
     * @return pointer to next chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *get_next(scope_e scope = scope_e::ALL) const;
+   Chunk *GetNext(E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -115,7 +128,7 @@ public:
     *
     * @return pointer to previous chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *get_prev(scope_e scope = scope_e::ALL) const;
+   Chunk *GetPrev(E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -125,8 +138,7 @@ public:
     *
     * @return pointer to next newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   // TODO make it a const member
-   Chunk *get_next_nl(scope_e scope = scope_e::ALL);
+   Chunk *GetNextNl(E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -136,8 +148,7 @@ public:
     *
     * @return pointer to prev newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   // TODO make it a const member
-   Chunk *get_prev_nl(scope_e scope = scope_e::ALL);
+   Chunk *GetPrevNl(E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -147,8 +158,7 @@ public:
     *
     * @return pointer to next non-newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   // TODO make it a const member
-   Chunk *get_next_nnl(scope_e scope = scope_e::ALL);
+   Chunk *GetNextNnl(E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -158,8 +168,7 @@ public:
     *
     * @return pointer to prev non-newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   // TODO make it a const member
-   Chunk *get_prev_nnl(scope_e scope = scope_e::ALL);
+   Chunk *GetPrevNnl(E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -167,10 +176,9 @@ public:
     *
     * @param scope code region to search in
     *
-    * @return pointer to next non-comment chunk or null Chunk if no chunk was found
+    * @return pointer to next non-comment chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   // TODO make it a const member
-   Chunk *get_next_nc(scope_e scope = scope_e::ALL);
+   Chunk *GetNextNc(E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -178,16 +186,17 @@ public:
     *
     * @param scope code region to search in
     *
-    * @return pointer to prev non-comment chunk or null Chunk if no chunk was found
+    * @return pointer to prev non-comment chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   // TODO make it a const member
-   Chunk *get_prev_nc(scope_e scope = scope_e::ALL);
+   Chunk *GetPrevNc(E_Scope scope = E_Scope::ALL) const;
+
 
    /**
     * @brief defines a member function pointer for a function of type
-    * Chunk *Chunk::function(scope_e scope)
+    * Chunk *Chunk::function(E_Scope scope)
+    * that will search for a new chunk
     */
-   typedef Chunk *(Chunk::*search_t)(scope_e scope) const;
+   typedef Chunk *(Chunk::*T_SearchFnPtr)(E_Scope scope) const;
 
 
    /**
@@ -198,7 +207,27 @@ public:
     *
     * @return pointer to search function
     */
-   static search_t select_search_dir_fct(const direction_e dir = direction_e::FORWARD);
+   static T_SearchFnPtr GetSearchFn(const E_Direction dir = E_Direction::FORWARD);
+
+
+   /**
+    * @brief search for a chunk that satisfies a condition in a chunk list
+    *
+    * A generic function that traverses a chunks list either
+    * in forward or reverse direction. The traversal continues until a
+    * chunk satisfies the condition defined by the compare function.
+    * Depending on the parameter cond the condition will either be
+    * checked to be true or false.
+    *
+    * @param  check_fct  compare function
+    * @param  scope      code parts to consider for search
+    * @param  dir        search direction (forward or backward)
+    * @param  cond       success condition
+    *
+    * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+// TODO replace ::check_t with Chunk::CheckFnPtr when feasible
+   Chunk *Search(const ::check_t check_fct, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const bool cond = true) const;
 
 
    Chunk        *next;          //! pointer to next chunk in list
@@ -328,7 +357,7 @@ bool chunk_is_last_on_line(Chunk *pc);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_next_nc_nnl(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nc_nnl(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -337,7 +366,7 @@ Chunk *chunk_get_next_nc_nnl(Chunk *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_next_nc_nnl_np(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nc_nnl_np(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -346,7 +375,7 @@ Chunk *chunk_get_next_nc_nnl_np(Chunk *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_prev_nc_nnl_np(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nc_nnl_np(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -355,7 +384,7 @@ Chunk *chunk_get_prev_nc_nnl_np(Chunk *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_next_nc_nnl_in_pp(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nc_nnl_in_pp(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -364,7 +393,7 @@ Chunk *chunk_get_next_nc_nnl_in_pp(Chunk *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_prev_nc_nnl_in_pp(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nc_nnl_in_pp(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -385,7 +414,7 @@ Chunk *chunk_ppa_get_next_nc_nnl(Chunk *cur);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_prev_nc_nnl(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nc_nnl(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -394,7 +423,7 @@ Chunk *chunk_get_prev_nc_nnl(Chunk *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_next_nc_nnl_nb(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nc_nnl_nb(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -403,7 +432,7 @@ Chunk *chunk_get_next_nc_nnl_nb(Chunk *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_prev_nc_nnl_nb(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nc_nnl_nb(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -416,7 +445,7 @@ Chunk *chunk_get_prev_nc_nnl_nb(Chunk *cur, scope_e scope = scope_e::ALL);
  *
  * @return nullptr or the next chunk not in or part of square brackets
  */
-Chunk *chunk_get_next_nisq(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nisq(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -425,7 +454,7 @@ Chunk *chunk_get_next_nisq(Chunk *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_prev_nc_nnl_ni(Chunk *cur, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nc_nnl_ni(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -438,7 +467,7 @@ Chunk *chunk_get_prev_nc_nnl_ni(Chunk *cur, scope_e scope = scope_e::ALL);
  *
  * @return nullptr or the match
  */
-Chunk *chunk_get_next_type(Chunk *cur, c_token_t type, int level, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_type(Chunk *cur, c_token_t type, int level, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -451,7 +480,7 @@ Chunk *chunk_get_next_type(Chunk *cur, c_token_t type, int level, scope_e scope 
  *
  * @return nullptr or the match
  */
-Chunk *chunk_get_prev_type(Chunk *cur, c_token_t type, int level, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_type(Chunk *cur, c_token_t type, int level, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -468,7 +497,7 @@ Chunk *chunk_get_prev_type(Chunk *cur, c_token_t type, int level, scope_e scope 
  * @retval nullptr  no chunk found or invalid parameters provided
  * @retval Chunk  pointer to the found chunk
  */
-Chunk *chunk_get_next_str(Chunk *cur, const char *str, size_t len, int level, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_str(Chunk *cur, const char *str, size_t len, int level, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -485,7 +514,7 @@ Chunk *chunk_get_next_str(Chunk *cur, const char *str, size_t len, int level, sc
  * @retval nullptr  no chunk found or invalid parameters provided
  * @retval Chunk  pointer to the found chunk
  */
-Chunk *chunk_get_prev_str(Chunk *cur, const char *str, size_t len, int level, scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_str(Chunk *cur, const char *str, size_t len, int level, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -496,7 +525,7 @@ Chunk *chunk_get_prev_str(Chunk *cur, const char *str, size_t len, int level, sc
  *
  * @return pointer to found chunk or nullptr if no chunk was found
  */
-Chunk *chunk_get_next_nvb(Chunk *cur, const scope_e scope = scope_e::ALL);
+Chunk *chunk_get_next_nvb(Chunk *cur, const E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -507,7 +536,7 @@ Chunk *chunk_get_next_nvb(Chunk *cur, const scope_e scope = scope_e::ALL);
  *
  * @return pointer to found chunk or nullptr if no chunk was found
  */
-Chunk *chunk_get_prev_nvb(Chunk *cur, const scope_e scope = scope_e::ALL);
+Chunk *chunk_get_prev_nvb(Chunk *cur, const E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -603,15 +632,15 @@ static inline bool is_expected_string_and_level(Chunk *pc, const char *str, int 
    return(  pc == nullptr
          || (  (  level < 0
                || pc->level == static_cast<size_t>(level))
-            && pc->len() == len                        // and the length is as expected
-            && memcmp(str, pc->text(), len) == 0));    // and the strings are equal
+            && pc->Len() == len                        // and the length is as expected
+            && memcmp(str, pc->Text(), len) == 0));    // and the strings are equal
 }
 
 
 static inline bool chunk_is_token(const Chunk *pc, c_token_t c_token)
 {
    return(  pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && pc->type == c_token);
 }
 
@@ -619,7 +648,7 @@ static inline bool chunk_is_token(const Chunk *pc, c_token_t c_token)
 static inline bool chunk_is_not_token(const Chunk *pc, c_token_t c_token)
 {
    return(  pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && pc->type != c_token);
 }
 
@@ -632,7 +661,7 @@ static inline bool chunk_is_not_token(const Chunk *pc, c_token_t c_token)
  *
  * @return nullptr or the matching paren/brace/square
  */
-static inline Chunk *chunk_skip_to_match(Chunk *cur, scope_e scope = scope_e::ALL)
+static inline Chunk *chunk_skip_to_match(Chunk *cur, E_Scope scope = E_Scope::ALL)
 {
    if (  cur != nullptr
       && (  chunk_is_token(cur, CT_PAREN_OPEN)
@@ -650,7 +679,7 @@ static inline Chunk *chunk_skip_to_match(Chunk *cur, scope_e scope = scope_e::AL
 }
 
 
-static inline Chunk *chunk_skip_to_match_rev(Chunk *cur, scope_e scope = scope_e::ALL)
+static inline Chunk *chunk_skip_to_match_rev(Chunk *cur, E_Scope scope = E_Scope::ALL)
 {
    if (  cur != nullptr
       && (  chunk_is_token(cur, CT_PAREN_CLOSE)
@@ -669,8 +698,8 @@ static inline Chunk *chunk_skip_to_match_rev(Chunk *cur, scope_e scope = scope_e
 
 
 //! skip to the final word/type in a :: chain
-Chunk *chunk_skip_dc_member(Chunk *start, scope_e scope = scope_e::ALL);
-Chunk *chunk_skip_dc_member_rev(Chunk *start, scope_e scope = scope_e::ALL);
+Chunk *chunk_skip_dc_member(Chunk *start, E_Scope scope = E_Scope::ALL);
+Chunk *chunk_skip_dc_member_rev(Chunk *start, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -697,7 +726,7 @@ static inline bool chunk_is_cpp_inheritance_access_specifier(Chunk *pc)
 {
    return(  language_is_set(LANG_CPP)
          && pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && (  chunk_is_token(pc, CT_ACCESS)
             || chunk_is_token(pc, CT_QUALIFIER))
          && (  std::strncmp(pc->str.c_str(), "private", 7) == 0
@@ -758,8 +787,8 @@ static inline bool chunk_is_semicolon(Chunk *pc)
 static inline bool chunk_is_blank(Chunk *pc)
 {
    return(  pc != nullptr
-         && pc->isNotNullChunk()
-         && (pc->len() == 0));
+         && pc->IsNotNullChunk()
+         && (pc->Len() == 0));
 }
 
 
@@ -791,7 +820,7 @@ static inline bool chunk_is_balanced_square(Chunk *pc)
 static inline bool chunk_is_preproc(Chunk *pc)
 {
    return(  pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && pc->flags.test(PCF_IN_PREPROC));
 }
 
@@ -799,7 +828,7 @@ static inline bool chunk_is_preproc(Chunk *pc)
 static inline bool chunk_is_comment_or_newline_in_preproc(Chunk *pc)
 {
    return(  pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && chunk_is_preproc(pc)
          && (  chunk_is_comment(pc)
             || chunk_is_newline(pc)));
@@ -830,7 +859,7 @@ static inline bool chunk_is_Doxygen_comment(Chunk *pc)
       return(false);
    }
    // check the third character
-   const char   *sComment = pc->text();
+   const char   *sComment = pc->Text();
    const size_t len       = strlen(sComment);
 
    if (len < 3)
@@ -859,8 +888,8 @@ static inline bool chunk_is_type(Chunk *pc)
 static inline bool chunk_is_str(Chunk *pc, const char *str, size_t len)
 {
    return(  pc != nullptr                         // valid pc pointer
-         && (pc->len() == len)                    // token size equals size parameter
-         && (memcmp(pc->text(), str, len) == 0)); // token name is the same as str parameter
+         && (pc->Len() == len)                    // token size equals size parameter
+         && (memcmp(pc->Text(), str, len) == 0)); // token name is the same as str parameter
 
    /*
     * TODO: possible access beyond array for memcmp, check this
@@ -872,15 +901,15 @@ static inline bool chunk_is_str(Chunk *pc, const char *str, size_t len)
 static inline bool chunk_is_str_case(Chunk *pc, const char *str, size_t len)
 {
    return(  pc != nullptr
-         && (pc->len() == len)
-         && (strncasecmp(pc->text(), str, len) == 0));
+         && (pc->Len() == len)
+         && (strncasecmp(pc->Text(), str, len) == 0));
 }
 
 
 static inline bool chunk_is_word(Chunk *pc)
 {
    return(  pc != nullptr
-         && (pc->len() >= 1)
+         && (pc->Len() >= 1)
          && CharTable::IsKw1(pc->str[0]));
 }
 
@@ -888,7 +917,7 @@ static inline bool chunk_is_word(Chunk *pc)
 static inline bool chunk_is_star(Chunk *pc)
 {
    return(  pc != nullptr
-         && (pc->len() == 1)
+         && (pc->Len() == 1)
          && (pc->str[0] == '*')
          && pc->type != CT_OPERATOR_VAL);
 }
@@ -898,7 +927,7 @@ static inline bool chunk_is_nullable(Chunk *pc)
 {
    return(  language_is_set(LANG_CS)
          && (pc != nullptr)
-         && (pc->len() == 1)
+         && (pc->Len() == 1)
          && (pc->str[0] == '?'));
 }
 
@@ -906,13 +935,13 @@ static inline bool chunk_is_nullable(Chunk *pc)
 static inline bool chunk_is_addr(Chunk *pc)
 {
    if (  pc != nullptr
-      && pc->isNotNullChunk()
+      && pc->IsNotNullChunk()
       && (  chunk_is_token(pc, CT_BYREF)
-         || (  (pc->len() == 1)
+         || (  (pc->Len() == 1)
             && (pc->str[0] == '&')
             && pc->type != CT_OPERATOR_VAL)))
    {
-      Chunk *prev = pc->get_prev();
+      Chunk *prev = pc->GetPrev();
 
       if (  pc->flags.test(PCF_IN_TEMPLATE)
          && (  chunk_is_token(prev, CT_COMMA)
@@ -930,7 +959,7 @@ static inline bool chunk_is_msref(Chunk *pc) // ms compilers for C++/CLI and Win
 {
    return(  language_is_set(LANG_CPP)
          && (  pc != nullptr
-            && (pc->len() == 1)
+            && (pc->Len() == 1)
             && (pc->str[0] == '^')
             && pc->type != CT_OPERATOR_VAL));
 }
@@ -1003,9 +1032,9 @@ static inline bool chunk_is_paren_close(Chunk *pc)
 static inline bool chunk_same_preproc(Chunk *pc1, Chunk *pc2)
 {
    return(  pc1 == nullptr
-         || pc1->isNullChunk()
+         || pc1->IsNullChunk()
          || pc2 == nullptr
-         || pc2->isNullChunk()
+         || pc2->IsNullChunk()
          || ((pc1->flags & PCF_IN_PREPROC) == (pc2->flags & PCF_IN_PREPROC)));
 }
 
@@ -1021,13 +1050,13 @@ static inline bool chunk_safe_to_del_nl(Chunk *nl)
    {
       nl = Chunk::NullChunkPtr;
    }
-   Chunk *tmp = nl->get_prev();
+   Chunk *tmp = nl->GetPrev();
 
    if (chunk_is_token(tmp, CT_COMMENT_CPP))
    {
       return(false);
    }
-   return(chunk_same_preproc(tmp, nl->get_next()));
+   return(chunk_same_preproc(tmp, nl->GetNext()));
 }
 
 

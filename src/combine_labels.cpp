@@ -13,7 +13,7 @@
 #include "uncrustify.h"
 
 
-Chunk *chunk_get_next_local(Chunk *pc, scope_e scope = scope_e::ALL)
+Chunk *chunk_get_next_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
 {
    Chunk *tmp = pc;
 
@@ -24,8 +24,8 @@ Chunk *chunk_get_next_local(Chunk *pc, scope_e scope = scope_e::ALL)
 
    do
    {
-      tmp = tmp->get_next(scope);
-   } while (  tmp->isNotNullChunk()
+      tmp = tmp->GetNext(scope);
+   } while (  tmp->IsNotNullChunk()
            && (  chunk_is_comment(tmp)
               || chunk_is_token(tmp, CT_NOEXCEPT)));
 
@@ -33,7 +33,7 @@ Chunk *chunk_get_next_local(Chunk *pc, scope_e scope = scope_e::ALL)
 }
 
 
-Chunk *chunk_get_prev_local(Chunk *pc, scope_e scope = scope_e::ALL)
+Chunk *chunk_get_prev_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
 {
    Chunk *tmp = pc;
 
@@ -44,8 +44,8 @@ Chunk *chunk_get_prev_local(Chunk *pc, scope_e scope = scope_e::ALL)
 
    do
    {
-      tmp = tmp->get_prev(scope);
-   } while (  tmp->isNotNullChunk()
+      tmp = tmp->GetPrev(scope);
+   } while (  tmp->IsNotNullChunk()
            && (  chunk_is_comment(tmp)
               || chunk_is_newline(tmp)
               || chunk_is_token(tmp, CT_NOEXCEPT)));
@@ -65,24 +65,24 @@ void combine_labels(void)
    // stack to handle nesting inside of OC messages, which reset the scope
    ChunkStack cs;
 
-   Chunk      *prev = Chunk::get_head();
+   Chunk      *prev = Chunk::GetHead();
 
-   if (prev->isNullChunk())
+   if (prev->IsNullChunk())
    {
       return;
    }
-   Chunk *cur = prev->get_next_nc();
+   Chunk *cur = prev->GetNextNc();
 
-   if (cur->isNullChunk())
+   if (cur->IsNullChunk())
    {
       return;
    }
-   Chunk *next = cur->get_next_nc();
+   Chunk *next = cur->GetNextNc();
 
    // unlikely that the file will start with a label...
    // prev cur next
    while (  next != nullptr
-         && next->isNotNullChunk())
+         && next->IsNotNullChunk())
    {
       if (chunk_is_token(next, CT_NEWLINE))
       {
@@ -101,8 +101,8 @@ void combine_labels(void)
       }
       else
       {
-         LOG_FMT(LFCN, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, text() '%s'\n",
-                 __func__, __LINE__, next->orig_line, next->orig_col, next->text());
+         LOG_FMT(LFCN, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, Text() '%s'\n",
+                 __func__, __LINE__, next->orig_line, next->orig_col, next->Text());
       }
 
       if (  !next->flags.test(PCF_IN_OC_MSG) // filter OC case of [self class] msg send
@@ -206,12 +206,12 @@ void combine_labels(void)
          }
          else
          {
-            LOG_FMT(LFCN, "%s(%d): prev->text() is '%s', orig_line is %zu, orig_col is %zu\n",
-                    __func__, __LINE__, prev->text(), prev->orig_line, prev->orig_col);
-            LOG_FMT(LFCN, "%s(%d): cur->text() is '%s', orig_line is %zu, orig_col is %zu\n",
-                    __func__, __LINE__, cur->text(), cur->orig_line, cur->orig_col);
-            LOG_FMT(LFCN, "%s(%d): next->text() is '%s', orig_line is %zu, orig_col is %zu\n",
-                    __func__, __LINE__, next->text(), next->orig_line, next->orig_col);
+            LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', orig_line is %zu, orig_col is %zu\n",
+                    __func__, __LINE__, prev->Text(), prev->orig_line, prev->orig_col);
+            LOG_FMT(LFCN, "%s(%d): cur->Text() is '%s', orig_line is %zu, orig_col is %zu\n",
+                    __func__, __LINE__, cur->Text(), cur->orig_line, cur->orig_col);
+            LOG_FMT(LFCN, "%s(%d): next->Text() is '%s', orig_line is %zu, orig_col is %zu\n",
+                    __func__, __LINE__, next->Text(), next->orig_line, next->orig_col);
             Chunk *nextprev = chunk_get_prev_local(next);   // Issue #2279
 
             if (nextprev == nullptr)
@@ -226,9 +226,9 @@ void combine_labels(void)
                {
                   c_token_t new_type = CT_TAG;
 
-                  Chunk     *tmp = next->get_next_nc();
+                  Chunk     *tmp = next->GetNextNc();
 
-                  if (tmp->isNullChunk())
+                  if (tmp->IsNullChunk())
                   {
                      return;
                   }
@@ -264,16 +264,16 @@ void combine_labels(void)
             }
             else if (chunk_is_token(cur, CT_WORD))
             {
-               Chunk *tmp = next->get_next_nc(scope_e::PREPROC);
+               Chunk *tmp = next->GetNextNc(E_Scope::PREPROC);
 
                // Issue #1187
-               if (tmp->isNullChunk())
+               if (tmp->IsNullChunk())
                {
                   return;
                }
                LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, tmp '%s': ",
                        __func__, __LINE__, tmp->orig_line, tmp->orig_col,
-                       (chunk_is_token(tmp, CT_NEWLINE)) ? "<Newline>" : tmp->text());
+                       (chunk_is_token(tmp, CT_NEWLINE)) ? "<Newline>" : tmp->Text());
                log_pcf_flags(LGUY, tmp->flags);
 
                if (next->flags.test(PCF_IN_FCN_CALL))
@@ -281,7 +281,7 @@ void combine_labels(void)
                   // Must be a macro thingy, assume some sort of label
                   set_chunk_type(next, CT_LABEL_COLON);
                }
-               else if (  tmp->isNullChunk()
+               else if (  tmp->IsNullChunk()
                        || (  chunk_is_not_token(tmp, CT_NUMBER)
                           && chunk_is_not_token(tmp, CT_DECLTYPE)
                           && chunk_is_not_token(tmp, CT_SIZEOF)
@@ -323,14 +323,14 @@ void combine_labels(void)
                {
                   set_chunk_type(next, CT_BIT_COLON);
 
-                  Chunk *nnext = next->get_next();
+                  Chunk *nnext = next->GetNext();
 
-                  if (nnext->isNullChunk())
+                  if (nnext->IsNullChunk())
                   {
                      return;
                   }
 
-                  while ((nnext = nnext->get_next())->isNotNullChunk())
+                  while ((nnext = nnext->GetNext())->IsNotNullChunk())
                   {
                      if (chunk_is_token(nnext, CT_SEMICOLON))
                      {
@@ -346,11 +346,11 @@ void combine_labels(void)
             }
             else if (chunk_is_token(nextprev, CT_FPAREN_CLOSE))
             {
-               LOG_FMT(LFCN, "%s(%d): nextprev->text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
-                       __func__, __LINE__, nextprev->text(), nextprev->orig_line, nextprev->orig_col,
+               LOG_FMT(LFCN, "%s(%d): nextprev->Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
+                       __func__, __LINE__, nextprev->Text(), nextprev->orig_line, nextprev->orig_col,
                        get_token_name(nextprev->type));
-               LOG_FMT(LFCN, "%s(%d): next->text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
-                       __func__, __LINE__, next->text(), next->orig_line, next->orig_col,
+               LOG_FMT(LFCN, "%s(%d): next->Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
+                       __func__, __LINE__, next->Text(), next->orig_line, next->orig_col,
                        get_token_name(next->type));
 
                // Issue #2172
@@ -410,8 +410,8 @@ void combine_labels(void)
                if (tmp != nullptr)
 
                {
-                  LOG_FMT(LFCN, "%s(%d): tmp->text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
-                          __func__, __LINE__, tmp->text(), tmp->orig_line, tmp->orig_col,
+                  LOG_FMT(LFCN, "%s(%d): tmp->Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
+                          __func__, __LINE__, tmp->Text(), tmp->orig_line, tmp->orig_col,
                           get_token_name(tmp->type));
 
                   if (  chunk_is_token(tmp, CT_BASE)

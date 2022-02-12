@@ -48,10 +48,10 @@ void do_parens(void)
 
    if (options::mod_full_paren_if_bool())
    {
-      Chunk *pc = Chunk::get_head();
+      Chunk *pc = Chunk::GetHead();
 
       while (  (pc = chunk_get_next_nc_nnl(pc)) != nullptr
-            && pc->isNotNullChunk())
+            && pc->IsNotNullChunk())
       {
          if (  pc->type != CT_SPAREN_OPEN
             || (  get_chunk_parent_type(pc) != CT_IF
@@ -61,7 +61,7 @@ void do_parens(void)
             continue;
          }
          // Grab the close sparen
-         Chunk *pclose = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level, scope_e::PREPROC);
+         Chunk *pclose = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level, E_Scope::PREPROC);
 
          if (pclose != nullptr)
          {
@@ -83,23 +83,23 @@ void do_parens_assign(void)                         // Issue #3316
 
    if (options::mod_full_paren_assign_bool())
    {
-      Chunk *pc = Chunk::get_head();
+      Chunk *pc = Chunk::GetHead();
 
       while (  (pc = chunk_get_next_nc_nnl(pc)) != nullptr
-            && pc->isNotNullChunk())
+            && pc->IsNotNullChunk())
       {
          if (chunk_is_token(pc, CT_ASSIGN))
          {
             LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu\n",
-                    __func__, __LINE__, pc->orig_line, pc->text(), pc->level);
+                    __func__, __LINE__, pc->orig_line, pc->Text(), pc->level);
             // look before for a open sparen
             size_t check_level = pc->level;
-            Chunk  *p          = pc->get_prev_nc(scope_e::PREPROC);
+            Chunk  *p          = pc->GetPrevNc(E_Scope::PREPROC);
 
-            while (p->isNotNullChunk())
+            while (p->IsNotNullChunk())
             {
                LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
-                       __func__, __LINE__, p->orig_line, p->text(), p->level, get_token_name(p->type));
+                       __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->type));
 
                //log_pcf_flags(LPARADD, p->flags);
                if (p->flags.test(PCF_STMT_START))
@@ -116,7 +116,7 @@ void do_parens_assign(void)                         // Issue #3316
                {
                   break;
                }
-               p = p->get_prev_nc(scope_e::PREPROC);
+               p = p->GetPrevNc(E_Scope::PREPROC);
 
                if (p->level < check_level - 1)
                {
@@ -124,14 +124,14 @@ void do_parens_assign(void)                         // Issue #3316
                }
             }
             LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
-                    __func__, __LINE__, p->orig_line, p->text(), p->level, get_token_name(p->type));
+                    __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->type));
 
             if (get_chunk_parent_type(p) == CT_WHILE)
             {
                continue;
             }
             // Grab the semicolon
-            Chunk *semicolon = chunk_get_next_type(pc, CT_SEMICOLON, pc->level, scope_e::PREPROC);
+            Chunk *semicolon = chunk_get_next_type(pc, CT_SEMICOLON, pc->level, E_Scope::PREPROC);
 
             if (semicolon != nullptr)
             {
@@ -154,23 +154,23 @@ void do_parens_return(void)                         // Issue #3316
 
    if (options::mod_full_paren_return_bool())
    {
-      Chunk *pc = Chunk::get_head();
+      Chunk *pc = Chunk::GetHead();
 
       while (  (pc = chunk_get_next_nc_nnl(pc)) != nullptr
-            && pc->isNotNullChunk())
+            && pc->IsNotNullChunk())
       {
          if (chunk_is_token(pc, CT_RETURN))
          {
             LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu\n",
-                    __func__, __LINE__, pc->orig_line, pc->text(), pc->level);
+                    __func__, __LINE__, pc->orig_line, pc->Text(), pc->level);
             // look before for a open sparen
             size_t check_level = pc->level;
-            Chunk  *p          = pc->get_prev_nc(scope_e::PREPROC);
+            Chunk  *p          = pc->GetPrevNc(E_Scope::PREPROC);
 
-            while (p->isNotNullChunk())
+            while (p->IsNotNullChunk())
             {
                LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
-                       __func__, __LINE__, p->orig_line, p->text(), p->level, get_token_name(p->type));
+                       __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->type));
 
                //log_pcf_flags(LPARADD, p->flags);
                if (p->flags.test(PCF_STMT_START))
@@ -187,7 +187,7 @@ void do_parens_return(void)                         // Issue #3316
                {
                   break;
                }
-               p = p->get_prev_nc(scope_e::PREPROC);
+               p = p->GetPrevNc(E_Scope::PREPROC);
 
                if (p->level < check_level - 1)
                {
@@ -195,14 +195,14 @@ void do_parens_return(void)                         // Issue #3316
                }
             }
             LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
-                    __func__, __LINE__, p->orig_line, p->text(), p->level, get_token_name(p->type));
+                    __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->type));
 
             if (get_chunk_parent_type(p) == CT_WHILE)
             {
                continue;
             }
             // Grab the semicolon
-            Chunk *semicolon = chunk_get_next_type(pc, CT_SEMICOLON, pc->level, scope_e::PREPROC);
+            Chunk *semicolon = chunk_get_next_type(pc, CT_SEMICOLON, pc->level, E_Scope::PREPROC);
 
             if (semicolon != nullptr)
             {
@@ -221,8 +221,8 @@ static void add_parens_between(Chunk *first, Chunk *last)
 
    LOG_FMT(LPARADD, "%s(%d): line %zu, between '%s' [lvl is %zu] and '%s' [lvl is %zu]\n",
            __func__, __LINE__, first->orig_line,
-           first->text(), first->level,
-           last->text(), last->level);
+           first->Text(), first->level,
+           last->Text(), last->level);
 
    // Don't do anything if we have a bad sequence, ie "&& )"
    Chunk *first_n = chunk_get_next_nc_nnl(first);
@@ -244,7 +244,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
 
    chunk_add_before(&pc, first_n);
 
-   Chunk *last_p = chunk_get_prev_nc_nnl(last, scope_e::PREPROC);
+   Chunk *last_p = chunk_get_prev_nc_nnl(last, E_Scope::PREPROC);
 
    set_chunk_type(&pc, CT_PAREN_CLOSE);
    pc.orig_line   = last_p->orig_line;
@@ -290,7 +290,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       {
          LOG_FMT(LPARADD2, " -- bail on PP %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->type),
-                 pc->text(), pc->orig_line, pc->orig_col, pc->level);
+                 pc->Text(), pc->orig_line, pc->orig_col, pc->level);
          return;
       }
 
@@ -301,7 +301,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       {
          LOG_FMT(LPARADD2, " -- %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->type),
-                 pc->text(), pc->orig_line, pc->orig_col, pc->level);
+                 pc->Text(), pc->orig_line, pc->orig_col, pc->level);
 
          if (hit_compare)
          {
@@ -317,7 +317,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       else if (chunk_is_token(pc, CT_COMPARE))
       {
          LOG_FMT(LPARADD2, " -- compare '%s' at line %zu, orig_col is %zu, level is %zu\n",
-                 pc->text(), pc->orig_line, pc->orig_col, pc->level);
+                 pc->Text(), pc->orig_line, pc->orig_col, pc->level);
          hit_compare = true;
       }
       else if (chunk_is_paren_open(pc))

@@ -26,9 +26,9 @@ void enum_cleanup(void)
       // nothing to do
       return;
    }
-   Chunk *pc = Chunk::get_head();  // Issue #858
+   Chunk *pc = Chunk::GetHead();  // Issue #858
 
-   while (pc->isNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       if (  get_chunk_parent_type(pc) == CT_ENUM
          && chunk_is_token(pc, CT_BRACE_CLOSE))
@@ -74,6 +74,6 @@ void enum_cleanup(void)
             }
          }
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
 } // enum_cleanup

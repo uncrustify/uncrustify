@@ -132,7 +132,7 @@ bool token_is_within_trailing_return(Chunk *pc)
       prev = Chunk::NullChunkPtr;
    }
 
-   while (prev->isNotNullChunk())
+   while (prev->IsNotNullChunk())
    {
       if (chunk_is_token(prev, CT_TRAILING_RET))
       {
@@ -145,7 +145,7 @@ bool token_is_within_trailing_return(Chunk *pc)
       }
       else
       {
-         prev = prev->get_prev();
+         prev = prev->GetPrev();
       }
    }
    return(false);
@@ -160,8 +160,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, first->text() '%s', type is %s\n",
-           __func__, __LINE__, first->orig_line, first->orig_col, first->text(), get_token_name(first->type));
+   LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, first->Text() '%s', type is %s\n",
+           __func__, __LINE__, first->orig_line, first->orig_col, first->Text(), get_token_name(first->type));
 
    min_sp = 1;
 
@@ -676,7 +676,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
             || chunk_is_token(first, CT_TYPE)
             || chunk_is_token(first, CT_PAREN_CLOSE)
             || CharTable::IsKw1(first->str[0]))
-         && (strcmp(first->text(), "void") != 0)) // Issue 1249
+         && (strcmp(first->Text(), "void") != 0)) // Issue 1249
       {
          // Add or remove space before the '::' operator.
          log_rule("sp_before_dc");
@@ -1455,9 +1455,9 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          log_rule("sp_before_byref_func");                         // byref 4
          return(options::sp_before_byref_func());
       }
-      Chunk *next = second->get_next();
+      Chunk *next = second->GetNext();
 
-      if (  next->isNotNullChunk()
+      if (  next->IsNotNullChunk()
          && (  chunk_is_token(next, CT_COMMA)
             || chunk_is_token(next, CT_FPAREN_CLOSE)
             || chunk_is_token(next, CT_SEMICOLON)))
@@ -2400,13 +2400,13 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    if (chunk_is_token(first, CT_CLASS_COLON))
    {
-      //Chunk *a = chunk_get_prev_type(first, CT_OC_INTF, first->level, scope_e::ALL);
-      //Chunk *b = chunk_get_prev_type(first, CT_OC_IMPL, first->level, scope_e::ALL);
+      //Chunk *a = chunk_get_prev_type(first, CT_OC_INTF, first->level, E_Scope::ALL);
+      //Chunk *b = chunk_get_prev_type(first, CT_OC_IMPL, first->level, E_Scope::ALL);
       //bool B_a = a != nullptr;
       //bool B_b = b != nullptr;
       if (  get_chunk_parent_type(first) == CT_OC_CLASS
-         && (  !chunk_get_prev_type(first, CT_OC_INTF, first->level, scope_e::ALL)
-            && !chunk_get_prev_type(first, CT_OC_IMPL, first->level, scope_e::ALL)))
+         && (  !chunk_get_prev_type(first, CT_OC_INTF, first->level, E_Scope::ALL)
+            && !chunk_get_prev_type(first, CT_OC_IMPL, first->level, E_Scope::ALL)))
       {
          if (options::sp_after_oc_colon() != IARF_IGNORE)
          {
@@ -2430,11 +2430,11 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    {
       if (  language_is_set(LANG_OC)
          && get_chunk_parent_type(second) == CT_OC_CLASS
-         && (  !chunk_get_prev_type(second, CT_OC_INTF, second->level, scope_e::ALL)
-            && !chunk_get_prev_type(second, CT_OC_IMPL, second->level, scope_e::ALL)))
+         && (  !chunk_get_prev_type(second, CT_OC_INTF, second->level, E_Scope::ALL)
+            && !chunk_get_prev_type(second, CT_OC_IMPL, second->level, E_Scope::ALL)))
       {
          if (  get_chunk_parent_type(second) == CT_OC_CLASS
-            && !chunk_get_prev_type(second, CT_OC_INTF, second->level, scope_e::ALL))
+            && !chunk_get_prev_type(second, CT_OC_INTF, second->level, E_Scope::ALL))
          {
             if (options::sp_before_oc_colon() != IARF_IGNORE)
             {
@@ -2611,7 +2611,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
       else if (CharTable::IsKw1(second->str[0]))
       {
-         Chunk *prev = first->get_prev();
+         Chunk *prev = first->GetPrev();
 
          if (chunk_is_token(prev, CT_IN))
          {
@@ -2680,7 +2680,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
          do
          {
-            next = next->get_next();
+            next = next->GetNext();
          } while (chunk_is_token(next, CT_PTR_TYPE));
 
          if (  chunk_is_token(next, CT_FUNC_DEF)
@@ -2695,14 +2695,14 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       // variable name. If set to 'ignore', sp_before_ptr_star is used instead.
       if (options::sp_before_unnamed_ptr_star() != IARF_IGNORE)
       {
-         Chunk *next = second->get_next_nc();
+         Chunk *next = second->GetNextNc();
 
          while (chunk_is_token(next, CT_PTR_TYPE))
          {
-            next = next->get_next_nc();
+            next = next->GetNextNc();
          }
 
-         if (  next->isNotNullChunk()
+         if (  next->IsNotNullChunk()
             && next->type != CT_WORD)
          {
             log_rule("sp_before_unnamed_ptr_star");                   // ptr_star 8
@@ -2924,7 +2924,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          {
             open_paren = Chunk::NullChunkPtr;
          }
-         Chunk *type = open_paren->get_prev()->get_prev();
+         Chunk *type = open_paren->GetPrev()->GetPrev();
 
          if (chunk_is_token(type, CT_TYPE))
          {
@@ -3327,10 +3327,10 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    // these lines are only useful for debugging uncrustify itself
    LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize do_space:\n",
            __func__, __LINE__);
-   LOG_FMT(LSPACE, "   first->orig_line  is %zu, first->orig_col  is %zu, first->text()  '%s', first->type is  %s\n",
-           first->orig_line, first->orig_col, first->text(), get_token_name(first->type));
-   LOG_FMT(LSPACE, "   second->orig_line is %zu, second->orig_col is %zu, second->text() '%s', second->type is %s\n",
-           second->orig_line, second->orig_col, second->text(), get_token_name(second->type));
+   LOG_FMT(LSPACE, "   first->orig_line  is %zu, first->orig_col  is %zu, first->Text()  '%s', first->type is  %s\n",
+           first->orig_line, first->orig_col, first->Text(), get_token_name(first->type));
+   LOG_FMT(LSPACE, "   second->orig_line is %zu, second->orig_col is %zu, second->Text() '%s', second->type is %s\n",
+           second->orig_line, second->orig_col, second->Text(), get_token_name(second->type));
    LOG_FMT(LSPACE, "   Please make a call at https://github.com/uncrustify/uncrustify/issues/new\n");
    LOG_FMT(LSPACE, "   or merge the line:\n");
    LOG_FMT(LSPACE, "   {%s,    %s},\n",
@@ -3347,7 +3347,7 @@ static iarf_e ensure_force_space(Chunk *first, Chunk *second, iarf_e av)
    if (first->flags.test(PCF_FORCE_SPACE))
    {
       LOG_FMT(LSPACE, "%s(%d): <force between '%s' and '%s'>",
-              __func__, __LINE__, first->text(), second->text());
+              __func__, __LINE__, first->Text(), second->Text());
       return(av | IARF_ADD);
    }
    return(av);
@@ -3366,12 +3366,12 @@ void space_text(void)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk  *pc = Chunk::get_head();
+   Chunk  *pc = Chunk::GetHead();
    Chunk  *next;
    size_t prev_column;
    size_t column = pc->column;
 
-   while (pc->isNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       if (chunk_is_token(pc, CT_NEWLINE))
       {
@@ -3382,12 +3382,12 @@ void space_text(void)
       {
          char copy[1000];
          LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, '%s' type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->elided_text(copy), get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy), get_token_name(pc->type));
       }
 
       if (  (options::use_options_overriding_for_qt_macros())
-         && (  (strcmp(pc->text(), "SIGNAL") == 0)
-            || (strcmp(pc->text(), "SLOT") == 0)))
+         && (  (strcmp(pc->Text(), "SIGNAL") == 0)
+            || (strcmp(pc->Text(), "SLOT") == 0)))
       {
          LOG_FMT(LSPACE, "%s(%d): orig_col is %zu, type is %s SIGNAL/SLOT found\n",
                  __func__, __LINE__, pc->orig_line, get_token_name(pc->type));
@@ -3401,7 +3401,7 @@ void space_text(void)
       // If true, vbrace tokens are dropped to the previous token and skipped.
       if (options::sp_skip_vbrace_tokens())
       {
-         next = pc->get_next();
+         next = pc->GetNext();
 
          while (  chunk_is_blank(next)
                && !chunk_is_newline(next)
@@ -3412,15 +3412,15 @@ void space_text(void)
                     __func__, __LINE__, next->orig_line, next->orig_col, get_token_name(next->type),
                     pc->column, pc->str.size());
             next->column = pc->column + pc->str.size();
-            next         = next->get_next();
+            next         = next->GetNext();
          }
       }
       else
       {
-         next = pc->get_next();
+         next = pc->GetNext();
       }
 
-      if (next->isNullChunk())
+      if (next->IsNullChunk())
       {
          break;
       }
@@ -3430,9 +3430,9 @@ void space_text(void)
       if (  QT_SIGNAL_SLOT_found
          && options::sp_balance_nested_parens())
       {
-         Chunk *nn = next->get_next();                                    // Issue #2734
+         Chunk *nn = next->GetNext();                                    // Issue #2734
 
-         if (  nn->isNotNullChunk()
+         if (  nn->IsNotNullChunk()
             && chunk_is_token(nn, CT_SPACE))
          {
             chunk_del(nn); // remove the space
@@ -3454,7 +3454,7 @@ void space_text(void)
          // Set to the minimum allowed column
          if (pc->nl_count == 0)
          {
-            column += pc->len();
+            column += pc->Len();
          }
          else
          {
@@ -3471,7 +3471,7 @@ void space_text(void)
           */
          chunk_flags_clr(pc, PCF_FORCE_SPACE);
 
-         if (  (pc->len() > 0)
+         if (  (pc->Len() > 0)
             && !chunk_is_str(pc, "[]", 2)
             && !chunk_is_str(pc, "{{", 2)
             && !chunk_is_str(pc, "}}", 2)
@@ -3481,45 +3481,44 @@ void space_text(void)
             // Find the next non-empty chunk on this line
             Chunk *tmp = next;
 
-            // TODO: better use chunk_search here
-            while (  tmp->isNotNullChunk()
-                  && (tmp->len() == 0)
+            while (  tmp->IsNotNullChunk()
+                  && (tmp->Len() == 0)
                   && !chunk_is_newline(tmp))
             {
-               tmp = tmp->get_next();
+               tmp = tmp->GetNext();
             }
 
-            if (  tmp->isNotNullChunk()
-               && tmp->len() > 0)
+            if (  tmp->IsNotNullChunk()
+               && tmp->Len() > 0)
             {
-               bool kw1 = CharTable::IsKw2(pc->str[pc->len() - 1]);
+               bool kw1 = CharTable::IsKw2(pc->str[pc->Len() - 1]);
                bool kw2 = CharTable::IsKw1(next->str[0]);
 
                if (  kw1
                   && kw2)
                {
                   // back-to-back words need a space
-                  LOG_FMT(LSPACE, "%s(%d): back-to-back words need a space: pc->text() '%s', next->text() '%s'\n",
-                          __func__, __LINE__, pc->text(), next->text());
+                  LOG_FMT(LSPACE, "%s(%d): back-to-back words need a space: pc->Text() '%s', next->Text() '%s'\n",
+                          __func__, __LINE__, pc->Text(), next->Text());
                   chunk_flags_set(pc, PCF_FORCE_SPACE);
                }
                // TODO:  what is the meaning of 4
                else if (  !kw1
                        && !kw2
-                       && (pc->len() < 4)
-                       && (next->len() < 4))
+                       && (pc->Len() < 4)
+                       && (next->Len() < 4))
                {
                   // We aren't dealing with keywords. concat and try punctuators
                   char buf[9];
-                  memcpy(buf, pc->text(), pc->len());
-                  memcpy(buf + pc->len(), next->text(), next->len());
-                  buf[pc->len() + next->len()] = 0;
+                  memcpy(buf, pc->Text(), pc->Len());
+                  memcpy(buf + pc->Len(), next->Text(), next->Len());
+                  buf[pc->Len() + next->Len()] = 0;
 
                   const chunk_tag_t *ct;
                   ct = find_punctuator(buf, cpd.lang_flags);
 
                   if (  ct != nullptr
-                     && (strlen(ct->tag) != pc->len()))
+                     && (strlen(ct->tag) != pc->Len()))
                   {
                      // punctuator parsed to a different size..
 
@@ -3543,8 +3542,8 @@ void space_text(void)
                      }
                      else
                      {
-                        LOG_FMT(LSPACE, "%s(%d): : pc->text() is %s, next->text() is %s\n",
-                                __func__, __LINE__, pc->text(), next->text());
+                        LOG_FMT(LSPACE, "%s(%d): : pc->Text() is %s, next->Text() is %s\n",
+                                __func__, __LINE__, pc->Text(), next->Text());
                         chunk_flags_set(pc, PCF_FORCE_SPACE);
                      }
                   }
@@ -3552,8 +3551,8 @@ void space_text(void)
             }
          }
          int min_sp;
-         LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, pc-text() '%s', type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+         LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, pc-Text() '%s', type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
          iarf_e av = do_space_ensured(pc, next, min_sp);
          min_sp = max(1, min_sp);
 
@@ -3611,7 +3610,7 @@ void space_text(void)
          } // switch
 
          if (  chunk_is_comment(next)
-            && chunk_is_newline(next->get_next())
+            && chunk_is_newline(next->GetNext())
             && column < next->orig_col)
          {
             /*
@@ -3630,7 +3629,7 @@ void space_text(void)
                   // Try to keep relative spacing between tokens
                   LOG_FMT(LSPACE, "%s(%d): <relative adj>", __func__, __LINE__);
                   LOG_FMT(LSPACE, "%s(%d): pc is '%s', pc->orig_col is %zu, next->orig_col is %zu, pc->orig_col_end is %zu\n",
-                          __func__, __LINE__, pc->text(),
+                          __func__, __LINE__, pc->Text(),
                           pc->orig_col, next->orig_col, pc->orig_col_end);
                   column = pc->column + (next->orig_col - pc->orig_col_end);
                }
@@ -3640,7 +3639,7 @@ void space_text(void)
                    * If there was a space, we need to force one, otherwise
                    * try to keep the comment in the same column.
                    */
-                  size_t col_min = pc->column + pc->len() + ((next->orig_prev_sp > 0) ? 1 : 0);
+                  size_t col_min = pc->column + pc->Len() + ((next->orig_prev_sp > 0) ? 1 : 0);
                   column = next->orig_col;
 
                   if (column < col_min)
@@ -3679,13 +3678,13 @@ void space_text_balance_nested_parens(void)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *first = Chunk::get_head();
+   Chunk *first = Chunk::GetHead();
 
-   while (first->isNotNullChunk())
+   while (first->IsNotNullChunk())
    {
-      Chunk *next = first->get_next();
+      Chunk *next = first->GetNext();
 
-      if (next->isNullChunk())
+      if (next->IsNullChunk())
       {
          break;
       }
@@ -3742,7 +3741,7 @@ size_t space_needed(Chunk *first, Chunk *second)
 
    case IARF_IGNORE:
    default:
-      return(second->orig_col > (first->orig_col + first->len()));
+      return(second->orig_col > (first->orig_col + first->Len()));
    }
 }
 
@@ -3751,14 +3750,14 @@ size_t space_col_align(Chunk *first, Chunk *second)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LSPACE, "%s(%d): first->orig_line is %zu, orig_col is %zu, [%s/%s], text() '%s' <==>\n",
+   LOG_FMT(LSPACE, "%s(%d): first->orig_line is %zu, orig_col is %zu, [%s/%s], Text() '%s' <==>\n",
            __func__, __LINE__, first->orig_line, first->orig_col,
            get_token_name(first->type), get_token_name(get_chunk_parent_type(first)),
-           first->text());
-   LOG_FMT(LSPACE, "%s(%d): second->orig_line is %zu, orig_col is %zu [%s/%s], text() '%s',",
+           first->Text());
+   LOG_FMT(LSPACE, "%s(%d): second->orig_line is %zu, orig_col is %zu [%s/%s], Text() '%s',",
            __func__, __LINE__, second->orig_line, second->orig_col,
            get_token_name(second->type), get_token_name(get_chunk_parent_type(second)),
-           second->text());
+           second->Text());
    log_func_stack_inline(LSPACE);
 
    int    min_sp;
@@ -3774,8 +3773,8 @@ size_t space_col_align(Chunk *first, Chunk *second)
    }
    else
    {
-      LOG_FMT(LSPACE, "%s(%d):    len is %zu\n", __func__, __LINE__, first->len());
-      coldiff = first->len();
+      LOG_FMT(LSPACE, "%s(%d):    Len is %zu\n", __func__, __LINE__, first->Len());
+      coldiff = first->Len();
    }
    LOG_FMT(LSPACE, "%s(%d):    => coldiff is %zu\n", __func__, __LINE__, coldiff);
 
@@ -3797,14 +3796,14 @@ size_t space_col_align(Chunk *first, Chunk *second)
    case IARF_IGNORE:                // Issue #2064
       LOG_FMT(LSPACE, "%s(%d):    => first->orig_line  is %zu\n", __func__, __LINE__, first->orig_line);
       LOG_FMT(LSPACE, "%s(%d):    => second->orig_line is %zu\n", __func__, __LINE__, second->orig_line);
-      LOG_FMT(LSPACE, "%s(%d):    => first->text()     is '%s'\n", __func__, __LINE__, first->text());
-      LOG_FMT(LSPACE, "%s(%d):    => second->text()    is '%s'\n", __func__, __LINE__, second->text());
+      LOG_FMT(LSPACE, "%s(%d):    => first->Text()     is '%s'\n", __func__, __LINE__, first->Text());
+      LOG_FMT(LSPACE, "%s(%d):    => second->Text()    is '%s'\n", __func__, __LINE__, second->Text());
       LOG_FMT(LSPACE, "%s(%d):    => first->orig_col   is %zu\n", __func__, __LINE__, first->orig_col);
       LOG_FMT(LSPACE, "%s(%d):    => second->orig_col  is %zu\n", __func__, __LINE__, second->orig_col);
-      LOG_FMT(LSPACE, "%s(%d):    => first->len()      is %zu\n", __func__, __LINE__, first->len());
+      LOG_FMT(LSPACE, "%s(%d):    => first->Len()      is %zu\n", __func__, __LINE__, first->Len());
 
       if (  first->orig_line == second->orig_line
-         && second->orig_col > (first->orig_col + first->len()))
+         && second->orig_col > (first->orig_col + first->Len()))
       {
          coldiff++;
       }
@@ -3823,10 +3822,10 @@ void space_add_after(Chunk *pc, size_t count)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *next = pc->get_next();
+   Chunk *next = pc->GetNext();
 
    // don't add at the end of the file or before a newline
-   if (  next->isNullChunk()
+   if (  next->IsNullChunk()
       || chunk_is_newline(next))
    {
       return;
@@ -3841,9 +3840,9 @@ void space_add_after(Chunk *pc, size_t count)
    // Two CT_SPACE in a row -- use the max of the two
    if (chunk_is_token(next, CT_SPACE))
    {
-      if (next->len() < count)
+      if (next->Len() < count)
       {
-         while (next->len() < count)
+         while (next->Len() < count)
          {
             next->str.append(' ');
          }
@@ -3859,7 +3858,7 @@ void space_add_after(Chunk *pc, size_t count)
    sp.level       = pc->level;
    sp.brace_level = pc->brace_level;
    sp.pp_level    = pc->pp_level;
-   sp.column      = pc->column + pc->len();
+   sp.column      = pc->column + pc->Len();
    sp.orig_line   = pc->orig_line;
    sp.orig_col    = pc->orig_col;
 

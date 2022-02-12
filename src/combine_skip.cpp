@@ -46,7 +46,7 @@ Chunk *skip_expression_rev(Chunk *pc)
 }
 
 
-static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(*chunk_get_next_fn)(Chunk *cur, scope_e scope))
+static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(*chunk_get_next_fn)(Chunk *cur, E_Scope scope))
 {
    Chunk *prev = pc;
 
@@ -81,7 +81,7 @@ static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(*chunk_get_next_fn)(Chu
             break;
          }
          prev = next;
-         next = (*chunk_get_next_fn)(next, scope_e::PREPROC);
+         next = (*chunk_get_next_fn)(next, E_Scope::PREPROC);
       }
    }
    return(prev);
@@ -148,7 +148,7 @@ Chunk *skip_parent_types(Chunk *colon)
       else if (next)
       {
          LOG_FMT(LPCU, "%s -> %zu:%zu ('%s')\n", __func__,
-                 next->orig_line, next->orig_col, next->text());
+                 next->orig_line, next->orig_col, next->Text());
          return(next);
       }
       else

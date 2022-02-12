@@ -22,7 +22,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 {
    LOG_FUNC_ENTRY();
 
-   if (start->isNullChunk())
+   if (start->IsNullChunk())
    {
       return(nullptr);
    }
@@ -63,16 +63,16 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
    if (chunk_is_token(prev, CT_ASSIGN))
    {
-      LOG_FMT(LAVDB, "%s(%d): start->text() '%s', type is %s, on orig_line %zu (abort due to assign)\n",
-              __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line);
+      LOG_FMT(LAVDB, "%s(%d): start->Text() '%s', type is %s, on orig_line %zu (abort due to assign)\n",
+              __func__, __LINE__, start->Text(), get_token_name(start->type), start->orig_line);
 
       Chunk *pc = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
       return(chunk_get_next_nc_nnl(pc));
    }
    char copy[1000];
 
-   LOG_FMT(LAVDB, "%s(%d): start->text() '%s', type is %s, on orig_line %zu\n",
-           __func__, __LINE__, start->elided_text(copy), get_token_name(start->type), start->orig_line);
+   LOG_FMT(LAVDB, "%s(%d): start->Text() '%s', type is %s, on orig_line %zu\n",
+           __func__, __LINE__, start->ElidedText(copy), get_token_name(start->type), start->orig_line);
 
    log_rule_B("align_var_def_inline");
    auto const align_mask =
@@ -112,10 +112,10 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
    log_rule_B("align_mix_var_proto");
    bool  fp_active = options::align_mix_var_proto();
-   Chunk *pc       = start->get_next();
+   Chunk *pc       = start->GetNext();
 
    while (  pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && (  pc->level >= start->level
             || pc->level == 0))
    {
@@ -126,8 +126,8 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       }
       else
       {
-         LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+         LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
       }
 
       if (chunk_is_comment(pc))
@@ -139,7 +139,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
             as_at.NewLines(pc->nl_count);
             as_br.NewLines(pc->nl_count);
          }
-         pc = pc->get_next();
+         pc = pc->GetNext();
          continue;
       }
 
@@ -154,7 +154,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
                && options::align_single_line_func()))
          {
             LOG_FMT(LAVDB, "%s(%d): add = '%s', orig_line is %zu, orig_col is %zu, level is %zu\n",
-                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
+                    __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col, pc->level);
 
             Chunk *toadd;
 
@@ -210,7 +210,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       // Done with this brace set?
       if (chunk_is_token(pc, CT_BRACE_CLOSE))
       {
-         pc = pc->get_next();
+         pc = pc->GetNext();
          break;
       }
 
@@ -228,13 +228,13 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
             *p_nl_count += pc->nl_count;
          }
       }
-      LOG_FMT(LAVDB, "%s(%d): pc->text() is '%s', level is %zu, pc->brace_level is %zu\n",
-              __func__, __LINE__, chunk_is_newline(pc) ? "Newline" : pc->text(), pc->level, pc->brace_level);
+      LOG_FMT(LAVDB, "%s(%d): pc->Text() is '%s', level is %zu, pc->brace_level is %zu\n",
+              __func__, __LINE__, chunk_is_newline(pc) ? "Newline" : pc->Text(), pc->level, pc->brace_level);
 
       if (!chunk_is_newline(pc))
       {
-         LOG_FMT(LAVDB, "%s(%d): pc->orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+         LOG_FMT(LAVDB, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
 
          if (chunk_is_not_token(pc, CT_IGNORED))
          {
@@ -246,7 +246,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       // don't align stuff inside parenthesis/squares/angles
       if (pc->level > pc->brace_level)
       {
-         pc = pc->get_next();
+         pc = pc->GetNext();
          continue;
       }
 
@@ -263,8 +263,8 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       {
          LOG_FMT(LAVDB, "%s(%d): a-did_this_line is %s\n",
                  __func__, __LINE__, did_this_line ? "TRUE" : "FALSE");
-         LOG_FMT(LAVDB, "%s(%d): text() is '%s', orig_line is %zu, orig_col is %zu, level is %zu\n",
-                 __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
+         LOG_FMT(LAVDB, "%s(%d): Text() is '%s', orig_line is %zu, orig_col is %zu, level is %zu\n",
+                 __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col, pc->level);
 
          if (!did_this_line)
          {
@@ -278,7 +278,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
                      || chunk_is_token(prev_local, CT_ADDR))
                {
                   LOG_FMT(LAVDB, "%s(%d): prev_local '%s', prev_local->type %s\n",
-                          __func__, __LINE__, prev_local->text(), get_token_name(prev_local->type));
+                          __func__, __LINE__, prev_local->Text(), get_token_name(prev_local->type));
                   prev_local = prev_local->prev;
                }
                pc = prev_local->next;
@@ -289,7 +289,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
             if (chunk_is_not_token(prev_local, CT_DEREF))                    // Issue #2971
             {
                LOG_FMT(LAVDB, "%s(%d): add = '%s', orig_line is %zu, orig_col is %zu, level is %zu\n",
-                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
+                       __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col, pc->level);
 
                as.Add(step_back_over_member(pc));
             }
@@ -297,7 +297,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
             if (options::align_var_def_colon())
             {
-               next = pc->get_next_nc();
+               next = pc->GetNextNc();
 
                if (chunk_is_token(next, CT_BIT_COLON))
                {
@@ -310,7 +310,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
             {
                next = pc;
 
-               while ((next = next->get_next_nc())->isNotNullChunk())
+               while ((next = next->GetNextNc())->IsNotNullChunk())
                {
                   if (chunk_is_token(next, CT_ATTRIBUTE))
                   {
@@ -341,7 +341,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
          LOG_FMT(LAVDB, "%s(%d): b-did_this_line is %s\n",
                  __func__, __LINE__, did_this_line ? "TRUE" : "FALSE");
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
    as.End();
    as_bc.End();

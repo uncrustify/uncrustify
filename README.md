@@ -210,9 +210,9 @@ The p-file gives you details of the parsing process and indentation.
 The A-file gives you many details about the run itself, where the process is running thru,
 which values have the most important variables.
 ```.txt
-tokenize(2351): orig_line is 1, orig_col is 1, text() 'class', type is CLASS, orig_col_end is 6
-tokenize(2351): orig_line is 1, orig_col is 7, text() 'Capteur', type is WORD, orig_col_end is 14
-tokenize(2351): orig_line is 1, orig_col is 15, text() '{', type is BRACE_OPEN, orig_col_end is 16
+tokenize(2351): orig_line is 1, orig_col is 1, Text() 'class', type is CLASS, orig_col_end is 6
+tokenize(2351): orig_line is 1, orig_col is 7, Text() 'Capteur', type is WORD, orig_col_end is 14
+tokenize(2351): orig_line is 1, orig_col is 15, Text() '{', type is BRACE_OPEN, orig_col_end is 16
 ```
 
 You can also dump the parsing information of each formatting step using the 'dump steps' option.

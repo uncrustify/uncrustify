@@ -36,11 +36,11 @@ static void some_really_long_function_name(struct device *dev, struct device_dri
    {
    }
 
-   for (a = get_first(); a != NULL; a = get_next(a))
+   for (a = get_first(); a != NULL; a = GetNext(a))
    {
    }
 
-   for (a_ptr = get_first(); a_ptr != NULL; a_ptr = get_next(a))
+   for (a_ptr = get_first(); a_ptr != NULL; a_ptr = GetNext(a))
    {
    }
 

@@ -153,7 +153,7 @@ void reindent_line(Chunk *pc, int column)
    do
    {
       min_col += pc->len;
-      pc       = pc->get_next();
+      pc       = pc->GetNext();
       if (pc != NULL)
       {
          if (chunk_is_comment(pc))
@@ -296,7 +296,7 @@ void indent_text(void)
    frm.pse[0].indent_tmp = 1;
    frm.pse[0].type       = CT_EOF;
 
-   pc = Chunk::get_head();
+   pc = Chunk::GetHead();
    while (pc != NULL)
    {
       /* Handle proprocessor transitions */
@@ -367,7 +367,7 @@ void indent_text(void)
             {
                indent_pse_pop(frm, pc);
                frm.level--;
-               pc = pc->get_next();
+               pc = pc->GetNext();
             }
 
             /* End any assign operations with a semicolon on the same level */
@@ -599,7 +599,7 @@ void indent_text(void)
 
          if (cpd.settings[UO_indent_class_colon].b)
          {
-            prev = pc->get_prev();
+            prev = pc->GetPrev();
             if (chunk_is_newline(prev))
             {
                frm.pse[frm.pse_tos].indent += 2;
@@ -627,7 +627,7 @@ void indent_text(void)
          if ((chunk_is_str(pc, "(", 1) && !cpd.settings[UO_indent_paren_nl].b) ||
              (chunk_is_str(pc, "[", 1) && !cpd.settings[UO_indent_square_nl].b))
          {
-            next = pc->get_next_nc();
+            next = pc->GetNextNc();
             if (chunk_is_newline(next))
             {
                int sub = 1;
@@ -648,7 +648,7 @@ void indent_text(void)
           * otherwise align on the '='.
           * Never update indent_column.
           */
-         next = pc->get_next();
+         next = pc->GetNext();
          if (next != NULL)
          {
             indent_pse_push(frm, pc);
@@ -798,7 +798,7 @@ void indent_text(void)
       {
          prev = pc;
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
 
    /* Throw out any stuff inside a preprocessor - no need to warn */
@@ -832,7 +832,7 @@ static bool single_line_comment_indent_rule_applies(Chunk *start)
       return(false);
    }
    /* scan forward, if only single newlines and comments before next line of code, we want to apply */
-   while ((pc = pc->get_next()) != NULL)
+   while ((pc = pc->GetNext()) != NULL)
    {
       if (chunk_is_newline(pc))
       {
@@ -908,7 +908,7 @@ static void indent_comment(Chunk *pc, int col)
       return;
    }
 
-   nl = pc->get_prev();
+   nl = pc->GetPrev();
 
    /* outside of any expression or statement? */
    if (pc->level == 0)
@@ -921,7 +921,7 @@ static void indent_comment(Chunk *pc, int col)
       }
    }
 
-   prev = nl->get_prev();
+   prev = nl->GetPrev();
    if (chunk_is_comment(prev) && (nl->nl_count == 1))
    {
       int coldiff = prev->orig_col - pc->orig_col;
@@ -967,7 +967,7 @@ void indent_preproc(void)
    /* Scan to see if the whole file is covered by one #ifdef */
    int stage = 0;
 
-   for (pc = Chunk::get_head(); pc != NULL; pc = pc->get_next())
+   for (pc = Chunk::GetHead(); pc != NULL; pc = pc->GetNext())
    {
       if (chunk_is_comment(pc) || chunk_is_newline(pc))
       {
@@ -981,7 +981,7 @@ void indent_preproc(void)
          {
             break;
          }
-         next = pc->get_next();
+         next = pc->GetNext();
          if ((next == NULL) || (next->type != CT_PP_IF))
          {
             break;
@@ -1016,7 +1016,7 @@ void indent_preproc(void)
       pp_level_sub = 1;
    }
 
-   for (pc = Chunk::get_head(); pc != NULL; pc = pc->get_next())
+   for (pc = Chunk::GetHead(); pc != NULL; pc = pc->GetNext())
    {
       if (pc->type != CT_PREPROC)
       {
@@ -1072,7 +1072,7 @@ void indent_preproc(void)
          pc->len += pp_level;
       }
 
-      next = pc->get_next();
+      next = pc->GetNext();
       if (next != NULL)
       {
          reindent_line(next, pc->len + 1);

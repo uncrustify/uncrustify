@@ -922,9 +922,9 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
          ch = ctx.get();
          pc_temp.str.append(ch);
       }
-      ch = pc_temp.str[pc_temp.len() - 1];
+      ch = pc_temp.str[pc_temp.Len() - 1];
       ctx.restore();
-      LOG_FMT(LGUY, "%s(%d): pc_temp:%s\n", __func__, __LINE__, pc_temp.text());
+      LOG_FMT(LGUY, "%s(%d): pc_temp:%s\n", __func__, __LINE__, pc_temp.Text());
 
       if (ch == 'h') // TODO can we combine this in analyze_character
       {
@@ -938,7 +938,7 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
          } while (is_hex_(ctx.peek()));
 
          pc.str.append(ctx.get());    // store the h
-         LOG_FMT(LGUY, "%s(%d): pc:%s\n", __func__, __LINE__, pc.text());
+         LOG_FMT(LGUY, "%s(%d): pc:%s\n", __func__, __LINE__, pc.Text());
       }
       else
       {
@@ -1621,7 +1621,7 @@ static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
       {
          // Turn it into a keyword now
          // Issue #1460 will return "COMMENT_CPP"
-         set_chunk_type(&pc, find_keyword_type(pc.text(), pc.str.size()));
+         set_chunk_type(&pc, find_keyword_type(pc.Text(), pc.str.size()));
 
          /* Special pattern: if we're trying to redirect a preprocessor directive to PP_IGNORE,
           * then ensure we're actually part of a preprocessor before doing the swap, or we'll
@@ -1631,7 +1631,7 @@ static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
          if (  pc.type == CT_PP_IGNORE
             && !cpd.in_preproc)
          {
-            set_chunk_type(&pc, find_keyword_type(pc.text(), pc.str.size()));
+            set_chunk_type(&pc, find_keyword_type(pc.Text(), pc.str.size()));
          }
          else if (pc.type == CT_COMMENT_CPP)   // Issue #1460
          {
@@ -2367,7 +2367,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
       if (  (ch == '<')
          && cpd.in_preproc == CT_PP_DEFINE)
       {
-         if (chunk_is_token(Chunk::get_tail(), CT_MACRO))
+         if (chunk_is_token(Chunk::GetTail(), CT_MACRO))
          {
             // We have "#define XXX <", assume '<' starts an include string
             parse_string(ctx, pc, 0, false);
@@ -2375,10 +2375,10 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
          }
       }
       /* Inside clang's __has_include() could be "path/to/file.h" or system-style <path/to/file.h> */
-      Chunk *tail = Chunk::get_tail();
+      Chunk *tail = Chunk::GetTail();
 
       if (  (ch == '(')
-         && (tail->isNotNullChunk())
+         && (tail->IsNotNullChunk())
          && (  chunk_is_token(tail, CT_CNG_HASINC)
             || chunk_is_token(tail, CT_CNG_HASINCN)))
       {
@@ -2635,7 +2635,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
 
    while (ctx.more())
    {
-      chunk.reset();
+      chunk.Reset();
       chunk.pp_level = 0;
 
       if (!parse_next(ctx, chunk, pc))
@@ -2648,7 +2648,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
 
       if (  language_is_set(LANG_JAVA)
          && chunk.type == CT_MEMBER
-         && !memcmp(chunk.text(), "->", 2))
+         && !memcmp(chunk.Text(), "->", 2))
       {
          chunk.type = CT_LAMBDA;
       }
@@ -2766,7 +2766,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
          // Disable indentation if a #pragma asm directive is found
          if (cpd.in_preproc == CT_PP_PRAGMA)
          {
-            if (memcmp(pc->text(), "asm", 3) == 0)
+            if (memcmp(pc->Text(), "asm", 3) == 0)
             {
                LOG_FMT(LBCTRL, "Found a pragma %s on line %zu\n", "asm", pc->orig_line);
                cpd.unc_off = true;
@@ -2830,8 +2830,8 @@ void tokenize(const deque<int> &data, Chunk *ref)
       else
       {
          char copy[1000];
-         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s, orig_col_end is %zu\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->elided_text(copy), get_token_name(pc->type), pc->orig_col_end);
+         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', type is %s, orig_col_end is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy), get_token_name(pc->type), pc->orig_col_end);
       }
    }
    // Set the cpd.newline string for this file

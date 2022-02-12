@@ -21,12 +21,12 @@ void remove_duplicate_include(void)
    vector<Chunk *> includes;
 
    Chunk           *preproc = Chunk::NullChunkPtr;
-   Chunk           *pc      = Chunk::get_head();
+   Chunk           *pc      = Chunk::GetHead();
 
-   while (pc->isNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
-      //LOG_FMT(LRMRETURN, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n",
-      //        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
+      //LOG_FMT(LRMRETURN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent_type is %s\n",
+      //        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(),
       //        get_token_name(pc->type), get_token_name(pc->parent_type));
 
       if (chunk_is_token(pc, CT_PREPROC))
@@ -35,16 +35,16 @@ void remove_duplicate_include(void)
       }
       else if (chunk_is_token(pc, CT_PP_INCLUDE))
       {
-         Chunk *next = pc->get_next();
+         Chunk *next = pc->GetNext();
 
-         //LOG_FMT(LRMRETURN, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n",
-         //        __func__, __LINE__, next->orig_line, next->orig_col, next->text(),
+         //LOG_FMT(LRMRETURN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent_type is %s\n",
+         //        __func__, __LINE__, next->orig_line, next->orig_col, next->Text(),
          //        get_token_name(next->type), get_token_name(next->parent_type));
          if (includes.empty())
          {
             includes.push_back(next);
             // goto next newline
-            pc = next->get_next_nl();
+            pc = next->GetNextNl();
          }
          else
          {
@@ -57,17 +57,17 @@ void remove_duplicate_include(void)
             {
                Chunk *current = *itc;
 
-               //LOG_FMT(LRMRETURN, "%s(%d): next->text()    is '%s'\n",
-               //        __func__, __LINE__, next->text());
-               //LOG_FMT(LRMRETURN, "%s(%d): current->text() is '%s'\n",
-               //        __func__, __LINE__, current->text());
-               if (std::strcmp(next->text(), current->text()) == 0)
+               //LOG_FMT(LRMRETURN, "%s(%d): next->Text()    is '%s'\n",
+               //        __func__, __LINE__, next->Text());
+               //LOG_FMT(LRMRETURN, "%s(%d): current->Text() is '%s'\n",
+               //        __func__, __LINE__, current->Text());
+               if (std::strcmp(next->Text(), current->Text()) == 0)
                {
                   // erase the statement
                   Chunk *temp    = pc;
-                  Chunk *comment = next->get_next();
-                  Chunk *eol     = next->get_next_nl();
-                  pc = preproc->get_prev();
+                  Chunk *comment = next->GetNext();
+                  Chunk *eol     = next->GetNextNl();
+                  pc = preproc->GetPrev();
                   chunk_del(preproc);
                   chunk_del(temp);
                   chunk_del(next);
@@ -82,13 +82,13 @@ void remove_duplicate_include(void)
                else
                {
                   // goto next newline
-                  pc = next->get_next_nl();
+                  pc = next->GetNextNl();
                   // and still look for duplicate
                }
             } // for (auto itc = includes.begin();
          } // if (includes.empty())
       } // else if (chunk_is_token(pc, CT_PP_INCLUDE))
       // get the next token
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
 } // remove_duplicate_include

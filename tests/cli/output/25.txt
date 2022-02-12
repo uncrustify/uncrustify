@@ -13,8 +13,8 @@ log_rule(newline_def_blk : rule is 'nl_var_def_blk_end'
 log_rule(newline_def_blk : rule is 'nl_var_def_blk_end'
 log_rule(newline_def_blk : rule is 'nl_var_def_blk_start'
 log_rule(newline_def_blk : rule is 'nl_var_def_blk_start'
-newline_add_between : start->text() is ';', type is SEMICOLON, orig_line is 14, orig_col is 24
-newline_add_between : and end->text() is '}', orig_line is 15, orig_col is 1
+newline_add_between : start->Text() is ';', type is SEMICOLON, orig_line is 14, orig_col is 24
+newline_add_between : and end->Text() is '}', orig_line is 15, orig_col is 1
    [CallStack]
 log_rule(newlines_cleanup_braces : rule is 'nl_func_decl_start'
 log_rule(newlines_cleanup_braces : rule is 'nl_func_def_start'
@@ -110,11 +110,11 @@ log_rule(newlines_brace_pair : rule is 'nl_fdef_brace_cond'
 log_rule(newlines_brace_pair : rule is 'nl_fdef_brace'
 log_rule(collapse_empty_body : rule is 'nl_collapse_empty_body'
 log_rule(newlines_brace_pair : rule is 'eat_blanks_after_open_brace'
-newline_add_between : start->text() is '{', type is BRACE_OPEN, orig_line is 6, orig_col is 1
-newline_add_between : and end->text() is '}', orig_line is 7, orig_col is 1
+newline_add_between : start->Text() is '{', type is BRACE_OPEN, orig_line is 6, orig_col is 1
+newline_add_between : and end->Text() is '}', orig_line is 7, orig_col is 1
    [CallStack]
-newline_add_between : start->text() is '{', type is BRACE_OPEN, orig_line is 6, orig_col is 1
-newline_add_between : and end->text() is '}', orig_line is 7, orig_col is 1
+newline_add_between : start->Text() is '{', type is BRACE_OPEN, orig_line is 6, orig_col is 1
+newline_add_between : and end->Text() is '}', orig_line is 7, orig_col is 1
    [CallStack]
 log_rule(newlines_cleanup_braces : rule is 'nl_brace_brace'
 log_rule(newlines_cleanup_braces : rule is 'nl_brace_square'
@@ -161,11 +161,11 @@ log_rule(newlines_brace_pair : rule is 'nl_fdef_brace_cond'
 log_rule(newlines_brace_pair : rule is 'nl_fdef_brace'
 log_rule(collapse_empty_body : rule is 'nl_collapse_empty_body'
 log_rule(newlines_brace_pair : rule is 'eat_blanks_after_open_brace'
-newline_add_between : start->text() is '{', type is BRACE_OPEN, orig_line is 10, orig_col is 1
-newline_add_between : and end->text() is '}', orig_line is 11, orig_col is 1
+newline_add_between : start->Text() is '{', type is BRACE_OPEN, orig_line is 10, orig_col is 1
+newline_add_between : and end->Text() is '}', orig_line is 11, orig_col is 1
    [CallStack]
-newline_add_between : start->text() is '{', type is BRACE_OPEN, orig_line is 10, orig_col is 1
-newline_add_between : and end->text() is '}', orig_line is 11, orig_col is 1
+newline_add_between : start->Text() is '{', type is BRACE_OPEN, orig_line is 10, orig_col is 1
+newline_add_between : and end->Text() is '}', orig_line is 11, orig_col is 1
    [CallStack]
 log_rule(newlines_cleanup_braces : rule is 'nl_brace_brace'
 log_rule(newlines_cleanup_braces : rule is 'nl_brace_square'
