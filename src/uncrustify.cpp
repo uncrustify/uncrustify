@@ -2589,8 +2589,6 @@ struct lang_ext_t language_exts[] =
    { ".hxx",  "CPP"      },
    { ".cc",   "CPP"      },
    { ".cp",   "CPP"      },
-   { ".C",    "CPP"      },
-   { ".CPP",  "CPP"      },
    { ".c++",  "CPP"      },
    { ".di",   "D"        },
    { ".m",    "OC"       },
