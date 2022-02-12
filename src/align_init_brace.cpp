@@ -56,10 +56,10 @@ void align_init_brace(Chunk *start)
 
       while (chunk_is_newline(pc))
       {
-         pc = pc->get_next();
+         pc = pc->GetNext();
       }
    } while (  pc != nullptr
-           && pc->isNotNullChunk()
+           && pc->IsNotNullChunk()
            && pc->level > start->level);
 
    // debug dump the current frame
@@ -73,7 +73,7 @@ void align_init_brace(Chunk *start)
    {
       cpd.al[0].col = align_tab_column(cpd.al[0].col);
    }
-   pc = start->get_next();
+   pc = start->GetNext();
    size_t idx = 0;
 
    do
@@ -104,14 +104,14 @@ void align_init_brace(Chunk *start)
             if (  idx == 0
                && cpd.al_c99_array)
             {
-               Chunk *prev = pc->get_prev();
+               Chunk *prev = pc->GetPrev();
 
                if (chunk_is_newline(prev))
                {
                   chunk_flags_set(pc, PCF_DONT_INDENT);
                }
             }
-            LOG_FMT(LALBR, " [%s] to col %zu\n", pc->text(), cpd.al[idx].col);
+            LOG_FMT(LALBR, " [%s] to col %zu\n", pc->Text(), cpd.al[idx].col);
 
             if (num_token != nullptr)
             {
@@ -120,7 +120,7 @@ void align_init_brace(Chunk *start)
                reindent_line(num_token, cpd.al[idx].col - col_diff);
                //LOG_FMT(LSYS, "-= %zu =- NUM indent [%s] col=%d diff=%d\n",
                //        num_token->orig_line,
-               //        num_token->text(), cpd.al[idx - 1].col, col_diff);
+               //        num_token->Text(), cpd.al[idx - 1].col, col_diff);
 
                chunk_flags_set(num_token, PCF_WAS_ALIGNED);
                num_token = nullptr;
@@ -129,13 +129,13 @@ void align_init_brace(Chunk *start)
             // Comma's need to 'fall back' to the previous token
             if (chunk_is_token(pc, CT_COMMA))
             {
-               next = pc->get_next();
+               next = pc->GetNext();
 
                if (!chunk_is_newline(next))
                {
                   //LOG_FMT(LSYS, "-= %zu =- indent [%s] col=%d len=%d\n",
                   //        next->orig_line,
-                  //        next->text(), cpd.al[idx].col, cpd.al[idx].len);
+                  //        next->Text(), cpd.al[idx].col, cpd.al[idx].len);
 
                   log_rule_B("align_number_right");
 
@@ -172,7 +172,7 @@ void align_init_brace(Chunk *start)
                if (  (idx < (cpd.al_cnt - 1))
                   && options::align_number_right())
                {
-                  next = pc->get_next();
+                  next = pc->GetNext();
 
                   if (  !chunk_is_newline(next)
                      && (  chunk_is_token(next, CT_NUMBER_FP)
@@ -198,8 +198,8 @@ void align_init_brace(Chunk *start)
       {
          idx = 0;
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    } while (  pc != nullptr
-           && pc->isNotNullChunk()
+           && pc->IsNotNullChunk()
            && pc->level > start->level);
 } // align_init_brace

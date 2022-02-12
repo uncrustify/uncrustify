@@ -89,9 +89,9 @@ static Chunk *handle_double_angle_close(Chunk *pc)
    {
       pc = Chunk::NullChunkPtr;
    }
-   Chunk *next = pc->get_next();
+   Chunk *next = pc->GetNext();
 
-   if (next->isNotNullChunk())
+   if (next->IsNotNullChunk())
    {
       if (  chunk_is_token(pc, CT_ANGLE_CLOSE)
          && chunk_is_token(next, CT_ANGLE_CLOSE)
@@ -119,7 +119,7 @@ static Chunk *handle_double_angle_close(Chunk *pc)
 
 void split_off_angle_close(Chunk *pc)
 {
-   const chunk_tag_t *ct = find_punctuator(pc->text() + 1, cpd.lang_flags);
+   const chunk_tag_t *ct = find_punctuator(pc->Text() + 1, cpd.lang_flags);
 
    if (ct == nullptr)
    {
@@ -163,14 +163,14 @@ void tokenize_trailing_return_types(void)
    // auto f23() const throw() -> bool;
    // auto f24() const throw() -> bool = delete;
 
-   for (Chunk *pc = Chunk::get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       char copy[1000];
-      LOG_FMT(LNOTE, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->elided_text(copy));
+      LOG_FMT(LNOTE, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy));
 
       if (  chunk_is_token(pc, CT_MEMBER)
-         && (strcmp(pc->text(), "->") == 0))
+         && (strcmp(pc->Text(), "->") == 0))
       {
          Chunk *tmp = chunk_get_prev_nc_nnl(pc);
          Chunk *tmp_2;
@@ -260,8 +260,8 @@ void tokenize_trailing_return_types(void)
                || get_chunk_parent_type(tmp) == CT_FUNC_DEF))
          {
             set_chunk_type(pc, CT_TRAILING_RET);
-            LOG_FMT(LNOTE, "%s(%d): set trailing return type for text() is '%s'\n",
-                    __func__, __LINE__, pc->text());                  // Issue #3222
+            LOG_FMT(LNOTE, "%s(%d): set trailing return type for Text() is '%s'\n",
+                    __func__, __LINE__, pc->Text());                  // Issue #3222
             // TODO
             // https://en.cppreference.com/w/cpp/language/function
             // noptr-declarator ( parameter-list ) cv(optional) ref(optional) except(optional) attr(optional) -> trailing
@@ -314,7 +314,7 @@ void tokenize_cleanup(void)
     */
    Chunk *pc;
 
-   for (pc = Chunk::get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (chunk_is_token(pc, CT_SQUARE_OPEN))
       {
@@ -337,7 +337,7 @@ void tokenize_cleanup(void)
 
       if (  chunk_is_token(pc, CT_SEMICOLON)
          && pc->flags.test(PCF_IN_PREPROC)
-         && !chunk_get_next_nc_nnl(pc, scope_e::PREPROC))
+         && !chunk_get_next_nc_nnl(pc, E_Scope::PREPROC))
       {
          LOG_FMT(LNOTE, "%s(%d): %s:%zu Detected a macro that ends with a semicolon. Possible failures if used.\n",
                  __func__, __LINE__, cpd.filename.c_str(), pc->orig_line);
@@ -345,7 +345,7 @@ void tokenize_cleanup(void)
    }
 
    // change := to CT_SQL_ASSIGN Issue #527
-   for (pc = Chunk::get_head(); pc != nullptr && pc->isNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
    {
       if (chunk_is_token(pc, CT_COLON))
       {
@@ -363,11 +363,11 @@ void tokenize_cleanup(void)
    }
 
    // We can handle everything else in the second pass
-   pc   = Chunk::get_head();
+   pc   = Chunk::GetHead();
    next = chunk_get_next_nc_nnl(pc);
 
    while (  pc != nullptr
-         && pc->isNotNullChunk()
+         && pc->IsNotNullChunk()
          && next != nullptr)
    {
       if (  chunk_is_token(pc, CT_DOT)
@@ -494,7 +494,7 @@ void tokenize_cleanup(void)
             && (chunk_is_token(next, CT_CARET)))
          || (  language_is_set(LANG_CS)
             && (chunk_is_token(next, CT_QUESTION))
-            && (strcmp(pc->text(), "null") != 0)))
+            && (strcmp(pc->Text(), "null") != 0)))
       {
          if (  chunk_is_token(pc, CT_TYPE)
             || chunk_is_token(pc, CT_QUALIFIER)
@@ -607,9 +607,9 @@ void tokenize_cleanup(void)
          if (  chunk_is_token(pc, CT_WORD)
             && chunk_is_token(next, CT_DC_MEMBER))
          {
-            prev = pc->get_prev();
+            prev = pc->GetPrev();
 
-            if (prev->isNullChunk())                  // Issue #3010
+            if (prev->IsNullChunk())                  // Issue #3010
             {
                set_chunk_type(pc, CT_TYPE);
             }
@@ -676,7 +676,7 @@ void tokenize_cleanup(void)
 
             if (  chunk_is_token(next2, CT_INV)      // CT_INV hasn't turned into CT_DESTRUCTOR just yet
                || (  chunk_is_token(next2, CT_CLASS) // constructor isn't turned into CT_FUNC* just yet
-                  && !strcmp(pc->text(), next2->text())))
+                  && !strcmp(pc->Text(), next2->Text())))
             {
                set_chunk_type(pc, CT_TYPE);
             }
@@ -702,12 +702,12 @@ void tokenize_cleanup(void)
        */
       if (chunk_is_token(pc, CT_OPERATOR))
       {
-         Chunk *tmp2 = next->get_next();
+         Chunk *tmp2 = next->GetNext();
 
          // Handle special case of () operator -- [] already handled
          if (chunk_is_token(next, CT_PAREN_OPEN))
          {
-            Chunk *tmp = next->get_next();
+            Chunk *tmp = next->GetNext();
 
             if (chunk_is_token(tmp, CT_PAREN_CLOSE))
             {
@@ -741,7 +741,7 @@ void tokenize_cleanup(void)
             tmp2 = next;
             Chunk *tmp;
 
-            while ((tmp = tmp2->get_next())->isNotNullChunk())
+            while ((tmp = tmp2->GetNext())->IsNotNullChunk())
             {
                if (  tmp->type != CT_WORD
                   && tmp->type != CT_TYPE
@@ -765,18 +765,18 @@ void tokenize_cleanup(void)
                tmp2 = tmp;
             }
 
-            while ((tmp2 = next->get_next()) != tmp)
+            while ((tmp2 = next->GetNext()) != tmp)
             {
                chunk_del(tmp2);
             }
             set_chunk_type(next, CT_OPERATOR_VAL);
 
-            next->orig_col_end = next->orig_col + next->len();
+            next->orig_col_end = next->orig_col + next->Len();
          }
          set_chunk_parent(next, CT_OPERATOR);
 
          LOG_FMT(LOPERATOR, "%s(%d): %zu:%zu operator '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, next->text());
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, next->Text());
       }
 
       // Change private, public, protected into either a qualifier or label
@@ -786,7 +786,7 @@ void tokenize_cleanup(void)
          if (  chunk_is_str(next, "slots", 5)
             || chunk_is_str(next, "Q_SLOTS", 7))
          {
-            Chunk *tmp = next->get_next();
+            Chunk *tmp = next->GetNext();
 
             if (chunk_is_token(tmp, CT_COLON))
             {
@@ -823,7 +823,7 @@ void tokenize_cleanup(void)
                   && (!pc->str.startswith("$\""))
                   && (!pc->str.startswith("$@\""))))))
       {
-         Chunk *tmp = pc->get_prev();
+         Chunk *tmp = pc->GetPrev();
 
          if (chunk_is_newline(tmp))
          {
@@ -831,7 +831,7 @@ void tokenize_cleanup(void)
             {
                set_chunk_type(pc, CT_SQL_EXEC);
 
-               if (pc->len() > 1)
+               if (pc->Len() > 1)
                {
                   // SPLIT OFF '$'
                   Chunk nc;
@@ -846,10 +846,10 @@ void tokenize_cleanup(void)
                   nc.column++;
                   chunk_add_after(&nc, pc);
 
-                  next = pc->get_next();
+                  next = pc->GetNext();
                }
             }
-            tmp = next->get_next();
+            tmp = next->GetNext();
 
             if (chunk_is_str_case(tmp, "BEGIN", 5))
             {
@@ -866,14 +866,14 @@ void tokenize_cleanup(void)
 
             // Change words into CT_SQL_WORD until CT_SEMICOLON
             while (  tmp != nullptr
-                  && tmp->isNotNullChunk())
+                  && tmp->IsNotNullChunk())
             {
                if (chunk_is_token(tmp, CT_SEMICOLON))
                {
                   break;
                }
 
-               if (  (tmp->len() > 0)
+               if (  (tmp->Len() > 0)
                   && (  unc_isalpha(*tmp->str.c_str())
                      || (*tmp->str.c_str() == '$')))
                {
@@ -887,7 +887,7 @@ void tokenize_cleanup(void)
       // handle MS abomination 'for each'
       if (  chunk_is_token(pc, CT_FOR)
          && chunk_is_str(next, "each", 4)
-         && (next == pc->get_next()))
+         && (next == pc->GetNext()))
       {
          // merge the two with a space between
          pc->str.append(' ');
@@ -937,7 +937,7 @@ void tokenize_cleanup(void)
 
          // Fix self keyword back to word when mixing c++/objective-c
          if (  chunk_is_token(pc, CT_THIS)
-            && !strcmp(pc->text(), "self")
+            && !strcmp(pc->Text(), "self")
             && (  chunk_is_token(next, CT_COMMA)
                || chunk_is_token(next, CT_PAREN_CLOSE)))
          {
@@ -946,7 +946,7 @@ void tokenize_cleanup(void)
 
          // Fix self keyword back to word when mixing c++/objective-c
          if (  chunk_is_token(pc, CT_THIS)
-            && !strcmp(pc->text(), "self")
+            && !strcmp(pc->Text(), "self")
             && (  chunk_is_token(next, CT_COMMA)
                || chunk_is_token(next, CT_PAREN_CLOSE)))
          {
@@ -991,7 +991,7 @@ void tokenize_cleanup(void)
 
       if (chunk_is_token(pc, CT_OC_INTF))
       {
-         Chunk *tmp = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+         Chunk *tmp = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
 
          while (  tmp != nullptr
                && tmp->type != CT_OC_END)
@@ -999,11 +999,11 @@ void tokenize_cleanup(void)
             if (get_token_pattern_class(tmp->type) != pattern_class_e::NONE)
             {
                LOG_FMT(LOBJCWORD, "%s(%d): @interface %zu:%zu change '%s' (%s) to CT_WORD\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, tmp->text(),
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, tmp->Text(),
                        get_token_name(tmp->type));
                set_chunk_type(tmp, CT_WORD);
             }
-            tmp = chunk_get_next_nc_nnl(tmp, scope_e::PREPROC);
+            tmp = chunk_get_next_nc_nnl(tmp, E_Scope::PREPROC);
          }
       }
 
@@ -1021,10 +1021,10 @@ void tokenize_cleanup(void)
       {
          set_chunk_parent(next, get_chunk_parent_type(pc));
 
-         Chunk *tmp = next->get_next();
+         Chunk *tmp = next->GetNext();
 
-         if (  tmp->isNotNullChunk()
-            && tmp->get_next()->isNotNullChunk())
+         if (  tmp->IsNotNullChunk()
+            && tmp->GetNext()->IsNotNullChunk())
          {
             if (chunk_is_token(tmp, CT_PAREN_CLOSE))
             {
@@ -1073,9 +1073,9 @@ void tokenize_cleanup(void)
       {
          set_chunk_parent(next, pc->type);
 
-         Chunk *tmp = next->get_next();
+         Chunk *tmp = next->GetNext();
 
-         if (tmp->isNotNullChunk())
+         if (tmp->IsNotNullChunk())
          {
             set_chunk_type(tmp, CT_OC_SEL_NAME);
             set_chunk_parent(tmp, pc->type);
@@ -1208,7 +1208,7 @@ static void check_template(Chunk *start, bool in_type_cast)
    LOG_FMT(LTEMPL, "%s(%d): orig_line %zu, orig_col %zu:\n",
            __func__, __LINE__, start->orig_line, start->orig_col);
 
-   Chunk *prev = chunk_get_prev_nc_nnl(start, scope_e::PREPROC);
+   Chunk *prev = chunk_get_prev_nc_nnl(start, E_Scope::PREPROC);
 
    if (prev == nullptr)
    {
@@ -1225,25 +1225,25 @@ static void check_template(Chunk *start, bool in_type_cast)
       size_t level  = 1;
       size_t parens = 0;
 
-      for (pc = chunk_get_next_nc_nnl(start, scope_e::PREPROC);
+      for (pc = chunk_get_next_nc_nnl(start, E_Scope::PREPROC);
            pc != nullptr;
-           pc = chunk_get_next_nc_nnl(pc, scope_e::PREPROC))
+           pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC))
       {
          LOG_FMT(LTEMPL, "%s(%d): type is %s, level is %zu\n",
                  __func__, __LINE__, get_token_name(pc->type), level);
 
          if (  (pc->str[0] == '>')
-            && (pc->len() > 1))
+            && (pc->Len() > 1))
          {
             if (pc->str[1] == '=')                         // Issue #1462 and #2565
             {
                LOG_FMT(LTEMPL, "%s(%d): do not split '%s' at orig_line %zu, orig_col %zu\n",
-                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+                       __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
             }
             else
             {
                LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}\n",
-                       __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+                       __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
                split_off_angle_close(pc);
             }
          }
@@ -1326,7 +1326,7 @@ static void check_template(Chunk *start, bool in_type_cast)
       bool hit_semicolon = false;
       pc = start;
 
-      while ((pc = chunk_get_prev_nc_nnl(pc, scope_e::PREPROC)) != nullptr)
+      while ((pc = chunk_get_prev_nc_nnl(pc, E_Scope::PREPROC)) != nullptr)
       {
          if (  (  chunk_is_token(pc, CT_SEMICOLON)
                && hit_semicolon)
@@ -1385,9 +1385,9 @@ static void check_template(Chunk *start, bool in_type_cast)
 
       tokens[0] = CT_ANGLE_OPEN;
 
-      for (pc = chunk_get_next_nc_nnl(start, scope_e::PREPROC);
+      for (pc = chunk_get_next_nc_nnl(start, E_Scope::PREPROC);
            pc != nullptr;
-           pc = chunk_get_next_nc_nnl(pc, scope_e::PREPROC))
+           pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC))
       {
          constexpr static auto LCURRENT = LTEMPL;
 
@@ -1402,12 +1402,12 @@ static void check_template(Chunk *start, bool in_type_cast)
             Chunk *A = chunk_skip_to_match(pc);
             LOG_FMT(LTEMPL, "%s(%d): A->orig_line is %zu, A->orig_col is %zu, type is %s\n",
                     __func__, __LINE__, A->orig_line, A->orig_col, get_token_name(A->type));
-            pc = A->get_next();
+            pc = A->GetNext();
          }
 
          if (  (tokens[num_tokens - 1] == CT_ANGLE_OPEN)
             && (pc->str[0] == '>')
-            && (pc->len() > 1)
+            && (pc->Len() > 1)
             && (  options::tok_split_gte()
                || (  (  chunk_is_str(pc, ">>", 2)
                      || chunk_is_str(pc, ">>>", 3))
@@ -1416,7 +1416,7 @@ static void check_template(Chunk *start, bool in_type_cast)
                         && in_type_cast)))))
          {
             LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig_line %zu, orig_col %zu}\n",
-                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+                    __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
 
             split_off_angle_close(pc);
          }
@@ -1515,7 +1515,7 @@ static void check_template(Chunk *start, bool in_type_cast)
 
    if (chunk_is_token(end, CT_ANGLE_CLOSE))
    {
-      pc = chunk_get_next_nc_nnl(end, scope_e::PREPROC);
+      pc = chunk_get_next_nc_nnl(end, E_Scope::PREPROC);
 
       if (  pc == nullptr
          || pc->type != CT_NUMBER)
@@ -1563,7 +1563,7 @@ static void check_template_arg(Chunk *start, Chunk *end)
 
    while (pc != end)
    {
-      Chunk *next = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+      Chunk *next = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
       // a test "if (next == nullptr)" is not necessary
       chunk_flags_set(pc, PCF_IN_TEMPLATE);
 
@@ -1596,12 +1596,12 @@ static void check_template_arg(Chunk *start, Chunk *end)
 
       while (pc != end)
       {
-         Chunk *next = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+         Chunk *next = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
          // a test "if (next == nullptr)" is not necessary
          chunk_flags_set(pc, PCF_IN_TEMPLATE);
 
-         Chunk *prev  = chunk_get_prev_nc_nnl(pc, scope_e::PREPROC);
-         Chunk *prev2 = chunk_get_prev_nc_nnl(prev, scope_e::PREPROC);
+         Chunk *prev  = chunk_get_prev_nc_nnl(pc, E_Scope::PREPROC);
+         Chunk *prev2 = chunk_get_prev_nc_nnl(prev, E_Scope::PREPROC);
 
          if (  chunk_is_token(prev, CT_ELLIPSIS)                 // Issue #3309
             && chunk_is_token(prev2, CT_TYPENAME))
@@ -1625,9 +1625,9 @@ static void check_template_args(Chunk *start, Chunk *end)
    // Scan for commas
    Chunk *pc;
 
-   for (pc = chunk_get_next_nc_nnl(start, scope_e::PREPROC);
+   for (pc = chunk_get_next_nc_nnl(start, E_Scope::PREPROC);
         pc != nullptr && pc != end;
-        pc = chunk_get_next_nc_nnl(pc, scope_e::PREPROC))
+        pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC))
    {
       switch (pc->type)
       {

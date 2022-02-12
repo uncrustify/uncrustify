@@ -17,12 +17,12 @@ void remove_extra_returns(void)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
 
-   while (pc->isNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LRMRETURN, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, parent_type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
+      LOG_FMT(LRMRETURN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent_type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(),
               get_token_name(pc->type), get_token_name(pc->parent_type));
 
       if (  chunk_is_token(pc, CT_RETURN)
@@ -79,6 +79,6 @@ void remove_extra_returns(void)
             }
          }
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
 } // remove_extra_returns

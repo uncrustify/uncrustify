@@ -25,7 +25,7 @@ Chunk *align_nl_cont(Chunk *start)
    size_t     max_col = 0;
    Chunk      *pc     = start;
 
-   while (  pc->isNotNullChunk()
+   while (  pc->IsNotNullChunk()
          && chunk_is_not_token(pc, CT_NEWLINE)
          && chunk_is_not_token(pc, CT_COMMENT_MULTI))
    {
@@ -33,7 +33,7 @@ Chunk *align_nl_cont(Chunk *start)
       {
          align_add(cs, pc, max_col);
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
    // NL_CONT is always the last thing on a line
    Chunk *tmp;
@@ -50,10 +50,10 @@ Chunk *align_nl_cont(Chunk *start)
 void align_backslash_newline(void)
 {
    LOG_FUNC_ENTRY();
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
 
    while (  pc != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
    {
       if (chunk_is_not_token(pc, CT_NL_CONT))
       {

@@ -24,9 +24,9 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
 
       if (switch_before != nullptr)
       {
-         LOG_FMT(LFCNR, "%s(%d): switch_before->orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
+         LOG_FMT(LFCNR, "%s(%d): switch_before->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
                  __func__, __LINE__, switch_before->orig_line, switch_before->orig_col,
-                 switch_before->text(), get_token_name(switch_before->type));
+                 switch_before->Text(), get_token_name(switch_before->type));
          we_have_a_case_before = true;
       }
    }
@@ -48,8 +48,8 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
          && (  get_chunk_parent_type(pc) == CT_NONE
             || get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST)))
    {
-      LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n   ",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+      LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n   ",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
       log_pcf_flags(LFCNR, pc->flags);
       auto brace_open = chunk_get_next_nc_nnl(pc);
 

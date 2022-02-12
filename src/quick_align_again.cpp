@@ -17,11 +17,11 @@ void quick_align_again(void)
 {
    LOG_FUNC_ENTRY();
 
-   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       char copy[1000];
-      LOG_FMT(LALAGAIN, "%s(%d): orig_line is %zu, orig_col is %zu, column is %zu, text() '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->elided_text(copy));
+      LOG_FMT(LALAGAIN, "%s(%d): orig_line is %zu, orig_col is %zu, column is %zu, Text() '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->ElidedText(copy));
 
       if (  pc->align.next != nullptr
          && pc->flags.test(PCF_ALIGN_START))
@@ -33,8 +33,8 @@ void quick_align_again(void)
          as.m_amp_style   = static_cast<AlignStack::StarStyle>(pc->align.amp_style);
          as.m_gap         = pc->align.gap;
 
-         LOG_FMT(LALAGAIN, "%s(%d):   pc->text() is '%s', orig_line is %zu\n",
-                 __func__, __LINE__, pc->text(), pc->orig_line);
+         LOG_FMT(LALAGAIN, "%s(%d):   pc->Text() is '%s', orig_line is %zu\n",
+                 __func__, __LINE__, pc->Text(), pc->orig_line);
          as.Add(pc->align.start);
          chunk_flags_set(pc, PCF_WAS_ALIGNED);
 
@@ -42,8 +42,8 @@ void quick_align_again(void)
          {
             chunk_flags_set(tmp, PCF_WAS_ALIGNED);
             as.Add(tmp->align.start);
-            LOG_FMT(LALAGAIN, "%s(%d):    => tmp->text() is '%s', orig_line is %zu\n",
-                    __func__, __LINE__, tmp->text(), tmp->orig_line);
+            LOG_FMT(LALAGAIN, "%s(%d):    => tmp->Text() is '%s', orig_line is %zu\n",
+                    __func__, __LINE__, tmp->Text(), tmp->orig_line);
          }
 
          LOG_FMT(LALAGAIN, "\n");

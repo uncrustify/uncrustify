@@ -1,6 +1,6 @@
 {
 QString fileName = QFileDialog::getOpenFileName(this,
-tr("Choose Configuration File"), ui->leStrategyFile->text(),
+tr("Choose Configuration File"), ui->leStrategyFile->Text(),
 tr("Configuration Files (*.cfg);; All Files (*.*)"), 0);
 
 pSettings = new QSettings(QCoreApplication::applicationDirPath() + "/" +

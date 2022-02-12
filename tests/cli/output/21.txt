@@ -14,7 +14,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 1, pc->column is 1, pc->text() is 'struct, indent_column is 1
+indent_text : pc->line is 1, pc->column is 1, pc->Text() is 'struct, indent_column is 1
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 1, indent_column set to 1, for 'struct'
 log_rule(indent_text : rule is 'indent_xml_string'
@@ -70,7 +70,7 @@ indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_macro_brace'
 log_rule(indent_text : rule is 'Update the indent_column'
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 2, pc->column is 1, pc->text() is '{, indent_column is 1
+indent_text : pc->line is 2, pc->column is 1, pc->Text() is '{, indent_column is 1
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 2, indent_column set to 1, for '{'
 log_rule(indent_text : rule is 'indent_xml_string'
@@ -101,7 +101,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 3, pc->column is 1, pc->text() is 'TelegramIndex, indent_column is 9
+indent_text : pc->line is 3, pc->column is 1, pc->Text() is 'TelegramIndex, indent_column is 9
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 3, indent_column set to 9, for 'TelegramIndex'
 log_rule(reindent_line : rule is 'indent_relative_single_line_comments'
@@ -320,7 +320,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 4, pc->column is 1, pc->text() is 'pTelName, indent_column is 17
+indent_text : pc->line is 4, pc->column is 1, pc->Text() is 'pTelName, indent_column is 17
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 4, indent_column set to 17, for 'pTelName'
 log_rule(reindent_line : rule is 'indent_relative_single_line_comments'
@@ -442,7 +442,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 5, pc->column is 1, pc->text() is 'nTelIndex, indent_column is 17
+indent_text : pc->line is 5, pc->column is 1, pc->Text() is 'nTelIndex, indent_column is 17
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 5, indent_column set to 17, for 'nTelIndex'
 log_rule(reindent_line : rule is 'indent_relative_single_line_comments'
@@ -548,7 +548,7 @@ indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_macro_brace'
 log_rule(indent_text : rule is 'Update the indent_column'
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 6, pc->column is 1, pc->text() is '{, indent_column is 9
+indent_text : pc->line is 6, pc->column is 1, pc->Text() is '{, indent_column is 9
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 6, indent_column set to 9, for '{'
 log_rule(reindent_line : rule is 'indent_relative_single_line_comments'
@@ -583,7 +583,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 7, pc->column is 1, pc->text() is '}, indent_column is 9
+indent_text : pc->line is 7, pc->column is 1, pc->Text() is '}, indent_column is 9
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 7, indent_column set to 9, for '}'
 log_rule(reindent_line : rule is 'indent_relative_single_line_comments'
@@ -615,7 +615,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 9, pc->column is 1, pc->text() is '~, indent_column is 9
+indent_text : pc->line is 9, pc->column is 1, pc->Text() is '~, indent_column is 9
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 9, indent_column set to 9, for '~'
 log_rule(reindent_line : rule is 'indent_relative_single_line_comments'
@@ -709,7 +709,7 @@ indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_macro_brace'
 log_rule(indent_text : rule is 'Update the indent_column'
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 10, pc->column is 1, pc->text() is '{, indent_column is 9
+indent_text : pc->line is 10, pc->column is 1, pc->Text() is '{, indent_column is 9
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 10, indent_column set to 9, for '{'
 log_rule(reindent_line : rule is 'indent_relative_single_line_comments'
@@ -744,7 +744,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 11, pc->column is 1, pc->text() is '}, indent_column is 9
+indent_text : pc->line is 11, pc->column is 1, pc->Text() is '}, indent_column is 9
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 11, indent_column set to 9, for '}'
 log_rule(reindent_line : rule is 'indent_relative_single_line_comments'
@@ -776,7 +776,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 13, pc->column is 1, pc->text() is 'const, indent_column is 9
+indent_text : pc->line is 13, pc->column is 1, pc->Text() is 'const, indent_column is 9
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 13, indent_column set to 9, for 'const'
 log_rule(reindent_line : rule is 'indent_relative_single_line_comments'
@@ -884,7 +884,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 14, pc->column is 1, pc->text() is 'unsigned, indent_column is 9
+indent_text : pc->line is 14, pc->column is 1, pc->Text() is 'unsigned, indent_column is 9
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 14, indent_column set to 9, for 'unsigned'
 log_rule(reindent_line : rule is 'indent_relative_single_line_comments'
@@ -965,7 +965,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 15, pc->column is 1, pc->text() is '}, indent_column is 1
+indent_text : pc->line is 15, pc->column is 1, pc->Text() is '}, indent_column is 1
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 15, indent_column set to 1, for '}'
 log_rule(indent_text : rule is 'indent_xml_string'
@@ -1020,7 +1020,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 1, pc->column is 1, pc->text() is 'struct, indent_column is 1
+indent_text : pc->line is 1, pc->column is 1, pc->Text() is 'struct, indent_column is 1
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 1, indent_column set to 1, for 'struct'
 log_rule(indent_text : rule is 'indent_xml_string'
@@ -1076,7 +1076,7 @@ indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_macro_brace'
 log_rule(indent_text : rule is 'Update the indent_column'
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 2, pc->column is 1, pc->text() is '{, indent_column is 1
+indent_text : pc->line is 2, pc->column is 1, pc->Text() is '{, indent_column is 1
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 2, indent_column set to 1, for '{'
 log_rule(indent_text : rule is 'indent_xml_string'
@@ -1107,7 +1107,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 3, pc->column is 9, pc->text() is 'TelegramIndex, indent_column is 9
+indent_text : pc->line is 3, pc->column is 9, pc->Text() is 'TelegramIndex, indent_column is 9
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 3, indent_column set to 9, for 'TelegramIndex'
 log_rule(indent_text : rule is 'indent_xml_string'
@@ -1314,7 +1314,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 4, pc->column is 17, pc->text() is 'pTelName, indent_column is 17
+indent_text : pc->line is 4, pc->column is 17, pc->Text() is 'pTelName, indent_column is 17
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 4, indent_column set to 17, for 'pTelName'
 log_rule(indent_text : rule is 'indent_xml_string'
@@ -1431,7 +1431,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 5, pc->column is 17, pc->text() is 'nTelIndex, indent_column is 17
+indent_text : pc->line is 5, pc->column is 17, pc->Text() is 'nTelIndex, indent_column is 17
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 5, indent_column set to 17, for 'nTelIndex'
 log_rule(indent_text : rule is 'indent_xml_string'
@@ -1533,7 +1533,7 @@ indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_macro_brace'
 log_rule(indent_text : rule is 'Update the indent_column'
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 6, pc->column is 9, pc->text() is '{, indent_column is 9
+indent_text : pc->line is 6, pc->column is 9, pc->Text() is '{, indent_column is 9
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 6, indent_column set to 9, for '{'
 log_rule(indent_text : rule is 'indent_xml_string'
@@ -1567,7 +1567,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 7, pc->column is 9, pc->text() is '}, indent_column is 9
+indent_text : pc->line is 7, pc->column is 9, pc->Text() is '}, indent_column is 9
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 7, indent_column set to 9, for '}'
 log_rule(indent_text : rule is 'indent_xml_string'
@@ -1598,7 +1598,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 9, pc->column is 9, pc->text() is '~, indent_column is 9
+indent_text : pc->line is 9, pc->column is 9, pc->Text() is '~, indent_column is 9
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 9, indent_column set to 9, for '~'
 log_rule(indent_text : rule is 'indent_xml_string'
@@ -1688,7 +1688,7 @@ indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_macro_brace'
 log_rule(indent_text : rule is 'Update the indent_column'
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 10, pc->column is 9, pc->text() is '{, indent_column is 9
+indent_text : pc->line is 10, pc->column is 9, pc->Text() is '{, indent_column is 9
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 10, indent_column set to 9, for '{'
 log_rule(indent_text : rule is 'indent_xml_string'
@@ -1722,7 +1722,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 11, pc->column is 9, pc->text() is '}, indent_column is 9
+indent_text : pc->line is 11, pc->column is 9, pc->Text() is '}, indent_column is 9
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 11, indent_column set to 9, for '}'
 log_rule(indent_text : rule is 'indent_xml_string'
@@ -1753,7 +1753,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 13, pc->column is 9, pc->text() is 'const, indent_column is 9
+indent_text : pc->line is 13, pc->column is 9, pc->Text() is 'const, indent_column is 9
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 13, indent_column set to 9, for 'const'
 log_rule(indent_text : rule is 'indent_xml_string'
@@ -1855,7 +1855,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 14, pc->column is 9, pc->text() is 'unsigned, indent_column is 9
+indent_text : pc->line is 14, pc->column is 9, pc->Text() is 'unsigned, indent_column is 9
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 14, indent_column set to 9, for 'unsigned'
 log_rule(indent_text : rule is 'indent_xml_string'
@@ -1932,7 +1932,7 @@ log_rule(indent_text : rule is 'indent_braces_no_class'
 log_rule(indent_text : rule is 'indent_braces_no_struct'
 indent_text : brace_indent is FAlse
 log_rule(indent_text : rule is 'indent_shift'
-indent_text : pc->line is 15, pc->column is 1, pc->text() is '}, indent_column is 1
+indent_text : pc->line is 15, pc->column is 1, pc->Text() is '}, indent_column is 1
 log_rule(indent_text : rule is 'pos_conditional'
 indent_text : orig_line is 15, indent_column set to 1, for '}'
 log_rule(indent_text : rule is 'indent_xml_string'

@@ -200,7 +200,7 @@ Chunk *newline_add_between(Chunk *start, Chunk *end);
  * @return false  if pc_start or pc_end are nullptr or if pc_end is not reached
  * @return true   if above cases are not met
  */
-bool newlines_between(Chunk *pc_start, Chunk *pc_end, size_t &newlines, scope_e scope = scope_e::ALL);
+bool newlines_between(Chunk *pc_start, Chunk *pc_end, size_t &newlines, E_Scope scope = E_Scope::ALL);
 
 
 #endif /* NEWLINES_H_INCLUDED */

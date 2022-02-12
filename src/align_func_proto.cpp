@@ -68,11 +68,11 @@ void align_func_proto(size_t span)
    bool  look_bro = false;
    Chunk *toadd;
 
-   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       char copy[1000];
-      LOG_FMT(LAS, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s, level is %zu, brace_level is %zu\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->elided_text(copy),
+      LOG_FMT(LAS, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, level is %zu, brace_level is %zu\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy),
               get_token_name(pc->type), pc->level, pc->brace_level);
 
       // make the vector larger if necessary
@@ -157,8 +157,8 @@ void align_func_proto(size_t span)
             toadd = pc;
          }
          Chunk *tmp = step_back_over_member(toadd);
-         LOG_FMT(LAS, "%s(%d): tmp->text() is '%s', orig_line is %zu, orig_col is %zu, level is %zu, brace_level is %zu\n",
-                 __func__, __LINE__, tmp->text(), tmp->orig_line, tmp->orig_col,
+         LOG_FMT(LAS, "%s(%d): tmp->Text() is '%s', orig_line is %zu, orig_col is %zu, level is %zu, brace_level is %zu\n",
+                 __func__, __LINE__, tmp->Text(), tmp->orig_line, tmp->orig_col,
                  tmp->level, tmp->brace_level);
          // test the Stack
          AlignStack *stack_at_l_bl = many_as.at(pc->level).at(pc->brace_level);

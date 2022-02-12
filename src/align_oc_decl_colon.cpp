@@ -28,26 +28,26 @@ void align_oc_decl_colon(void)
    nas.Start(4);
    nas.m_right_align = !options::align_on_tabstop();
 
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
 
    while (  pc != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
    {
       if (chunk_is_not_token(pc, CT_OC_SCOPE))
       {
-         pc = pc->get_next();
+         pc = pc->GetNext();
          continue;
       }
       nas.Reset();
       cas.Reset();
 
       size_t level = pc->level;
-      pc = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+      pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
 
       did_line = false;
 
       while (  pc != nullptr
-            && pc->isNotNullChunk()
+            && pc->IsNotNullChunk()
             && pc->level >= level)
       {
          // The declaration ends with an open brace or semicolon
@@ -68,8 +68,8 @@ void align_oc_decl_colon(void)
          {
             cas.Add(pc);
 
-            Chunk *tmp  = pc->get_prev(scope_e::PREPROC);
-            Chunk *tmp2 = chunk_get_prev_nc_nnl(tmp, scope_e::PREPROC);
+            Chunk *tmp  = pc->GetPrev(E_Scope::PREPROC);
+            Chunk *tmp2 = chunk_get_prev_nc_nnl(tmp, E_Scope::PREPROC);
 
             // Check for an un-labeled parameter
             if (  (  chunk_is_token(tmp, CT_WORD)
@@ -84,7 +84,7 @@ void align_oc_decl_colon(void)
             }
             did_line = true;
          }
-         pc = pc->get_next(scope_e::PREPROC);
+         pc = pc->GetNext(E_Scope::PREPROC);
       }
       nas.End();
       cas.End();

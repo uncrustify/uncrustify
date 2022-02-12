@@ -28,9 +28,9 @@ void align_eigen_comma_init(void)
 
    as.Start(255);
 
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
 
-   while (pc->isNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       if (chunk_is_newline(pc))
       {
@@ -38,11 +38,11 @@ void align_eigen_comma_init(void)
       }
       else
       {
-         LOG_FMT(LALIGN, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+         LOG_FMT(LALIGN, "%s(%d): orig_line is %zu, orig_col is %zu, pc->Text() '%s'\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
       }
 
-      if (  start->isNotNullChunk()
+      if (  start->IsNotNullChunk()
          && ((pc->flags & PCF_IN_PREPROC) != (start->flags & PCF_IN_PREPROC)))
       {
          // a change in preproc status restarts the aligning
@@ -53,14 +53,14 @@ void align_eigen_comma_init(void)
       {
          as.NewLines(pc->nl_count);
       }
-      else if (  start->isNotNullChunk()
+      else if (  start->IsNotNullChunk()
               && pc->level < start->level)
       {
          // A drop in level restarts the aligning
          as.Flush();
          start = Chunk::NullChunkPtr;
       }
-      else if (  start->isNotNullChunk()
+      else if (  start->IsNotNullChunk()
               && pc->level > start->level)
       {
          // Ignore any deeper levels when aligning
@@ -88,9 +88,9 @@ void align_eigen_comma_init(void)
              *      cout
              *          << "something";
              */
-            Chunk *prev = pc->get_prev();
+            Chunk *prev = pc->GetPrev();
 
-            if (  prev->isNotNullChunk()
+            if (  prev->IsNotNullChunk()
                && chunk_is_newline(prev))
             {
                log_rule_B("indent_columns");
@@ -100,13 +100,13 @@ void align_eigen_comma_init(void)
             }
             // Restart alignment
             as.Flush();
-            as.Add(pc->get_next());
+            as.Add(pc->GetNext());
             start = pc;
          }
       }
       else if (!as.m_aligned.Empty())
       {
-         Chunk *prev = pc->get_prev();
+         Chunk *prev = pc->GetPrev();
 
          if (  chunk_is_newline(prev)
             && chunk_is_token(chunk_get_prev_nc_nnl(pc), CT_COMMA))
@@ -115,7 +115,7 @@ void align_eigen_comma_init(void)
             as.Add(pc);
          }
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
    as.End();
 } // align_left_shift

@@ -23,11 +23,11 @@ Chunk *skip_c99_array(Chunk *sq_open)
       {
          tmp = Chunk::NullChunkPtr;
       }
-      tmp = tmp->get_next_nc();
+      tmp = tmp->GetNextNc();
 
       if (chunk_is_token(tmp, CT_ASSIGN))
       {
-         return(tmp->get_next_nc());
+         return(tmp->GetNextNc());
       }
    }
    return(nullptr);
@@ -62,16 +62,16 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
       pc = Chunk::NullChunkPtr;
    }
 
-   while (  pc->isNotNullChunk()
+   while (  pc->IsNotNullChunk()
          && !chunk_is_newline(pc)
          && pc->level >= start->level)
    {
       //LOG_FMT(LSIB, "%s:     '%s'   col %d/%d line %zu\n", __func__,
-      //        pc->text(), pc->column, pc->orig_col, pc->orig_line);
+      //        pc->Text(), pc->column, pc->orig_col, pc->orig_line);
 
-      Chunk *next = pc->get_next();
+      Chunk *next = pc->GetNext();
 
-      if (  next->isNullChunk()
+      if (  next->IsNullChunk()
          || chunk_is_comment(next))
       {
          // do nothing
@@ -92,8 +92,8 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
             {
                LOG_FMT(LSIB, "%s(%d): Prepare the 'idx's\n", __func__, __LINE__);
             }
-            LOG_FMT(LSIB, "%s(%d):   New idx is %2.1zu, pc->column is %2.1zu, text() '%s', token_width is %zu, type is %s\n",
-                    __func__, __LINE__, idx, pc->column, pc->text(), token_width, get_token_name(pc->type));
+            LOG_FMT(LSIB, "%s(%d):   New idx is %2.1zu, pc->column is %2.1zu, Text() '%s', token_width is %zu, type is %s\n",
+                    __func__, __LINE__, idx, pc->column, pc->Text(), token_width, get_token_name(pc->type));
             cpd.al[cpd.al_cnt].type = pc->type;
             cpd.al[cpd.al_cnt].col  = pc->column;
             cpd.al[cpd.al_cnt].len  = token_width;
@@ -134,7 +134,7 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
                else if (idx > 0)
                {
                   LOG_FMT(LSIB, "%s(%d):   prev_match '%s', prev_match->orig_line is %zu, prev_match->orig_col is %zu\n",
-                          __func__, __LINE__, prev_match->text(), prev_match->orig_line, prev_match->orig_col);
+                          __func__, __LINE__, prev_match->Text(), prev_match->orig_line, prev_match->orig_col);
                   int min_col_diff = pc->column - prev_match->column;
                   int cur_col_diff = cpd.al[idx].col - cpd.al[idx - 1].col;
 
@@ -152,7 +152,7 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
          }
          prev_match = pc;
       }
-      pc = pc->get_next_nc();
+      pc = pc->GetNextNc();
    }
    return(pc);
 } // scan_ib_line

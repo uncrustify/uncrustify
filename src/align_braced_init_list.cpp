@@ -20,7 +20,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
    LOG_FUNC_ENTRY();
 
    if (  first == nullptr
-      && first->isNotNullChunk())
+      && first->IsNotNullChunk())
    {
       // coveralls will complain here. There are no example for that.
       // see https://en.wikipedia.org/wiki/Robustness_principle
@@ -31,7 +31,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
    char   copy[1000];
 
    LOG_FMT(LALASS, "%s(%d): [my_level is %zu]: start checking with '%s', on orig_line %zu, span is %zu, thresh is %zu\n",
-           __func__, __LINE__, my_level, first->elided_text(copy), first->orig_line, span, thresh);
+           __func__, __LINE__, my_level, first->ElidedText(copy), first->orig_line, span, thresh);
 
    // If we are aligning on a tabstop, we shouldn't right-align
 
@@ -46,10 +46,10 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
    Chunk  *pc = first;
 
    while (  pc != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
    {
-      LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->text() '%s', type is %s, parent_type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->elided_text(copy), get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)));
+      LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->Text() '%s', type is %s, parent_type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->ElidedText(copy), get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)));
 
       // Don't check inside SPAREN, PAREN or SQUARE groups
       if (  chunk_is_token(pc, CT_SPAREN_OPEN)
@@ -100,7 +100,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
             || chunk_is_token(pc, CT_VBRACE_CLOSE))
          && !(get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST))
       {
-         pc = pc->get_next();
+         pc = pc->GetNext();
          break;
       }
 
@@ -146,18 +146,18 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
          if (var_def_cnt != 0)
          {
             LOG_FMT(LALASS, "%s(%d)OK: vdas.Add on '%s' on orig_line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+                    __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
             vdas.Add(pc);
          }
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
    vdas.End();
 
    if (pc != nullptr)
    {
       LOG_FMT(LALASS, "%s(%d): done on '%s' on orig_line %zu\n",
-              __func__, __LINE__, pc->text(), pc->orig_line);
+              __func__, __LINE__, pc->Text(), pc->orig_line);
    }
    else
    {

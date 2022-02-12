@@ -90,7 +90,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LAS, "AlignStack::%s(%d): Candidate is '%s': orig_line is %zu, column is %zu, type is %s, level is %zu\n",
-           __func__, __LINE__, start->text(), start->orig_line, start->column, get_token_name(start->type), start->level);
+           __func__, __LINE__, start->Text(), start->orig_line, start->column, get_token_name(start->type), start->level);
    LOG_FMT(LAS, "AlignStack::%s(%d): seqnum is %zu\n", __func__, __LINE__, seqnum);
 
    // Assign a seqnum if needed
@@ -177,8 +177,8 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       prev = start;
    }
 
-   while (  (prev = prev->get_prev()) != nullptr
-         && prev->isNotNullChunk()
+   while (  (prev = prev->GetPrev()) != nullptr
+         && prev->IsNotNullChunk()
          && (  chunk_is_ptr_operator(prev)
             || chunk_is_token(prev, CT_TPAREN_OPEN)))
    {
@@ -193,7 +193,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
 
    if (chunk_is_newline(ref))
    {
-      ref = ref->get_next();
+      ref = ref->GetNext();
    }
    // Find the item that we are going to align.
    Chunk *ali = Chunk::NullChunkPtr;
@@ -206,34 +206,34 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
    if (m_star_style != SS_IGNORE)
    {
       // back up to the first '*' or '^' preceding the token
-      Chunk *tmp_prev = ali->get_prev();
+      Chunk *tmp_prev = ali->GetPrev();
 
       while (  chunk_is_star(tmp_prev)
             || chunk_is_msref(tmp_prev))
       {
          ali      = tmp_prev;
-         tmp_prev = ali->get_prev();
+         tmp_prev = ali->GetPrev();
       }
 
       if (chunk_is_token(tmp_prev, CT_TPAREN_OPEN))
       {
          ali      = tmp_prev;
-         tmp_prev = ali->get_prev();
+         tmp_prev = ali->GetPrev();
          // this is correct, even Coverity says:
          // CID 76021 (#1 of 1): Unused value (UNUSED_VALUE)returned_pointer: Assigning value from
-         // ali->get_prev(nav_e::ALL) to prev here, but that stored value is overwritten before it can be used.
+         // ali->GetPrev(nav_e::ALL) to prev here, but that stored value is overwritten before it can be used.
       }
    }
 
    if (m_amp_style != SS_IGNORE)
    {
       // back up to the first '&' preceding the token
-      Chunk *tmp_prev = ali->get_prev();
+      Chunk *tmp_prev = ali->GetPrev();
 
       while (chunk_is_addr(tmp_prev))
       {
          ali      = tmp_prev;
-         tmp_prev = ali->get_prev();
+         tmp_prev = ali->GetPrev();
       }
    }
    log_rule_B("align_keep_extra_space");
@@ -246,15 +246,15 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       LOG_FMT(LAS, "AlignStack::%s(%d): tmp_col is %zu\n",
               __func__, __LINE__, tmp_col);
 
-      while (  tmp->isNotNullChunk()
+      while (  tmp->IsNotNullChunk()
             && tmp != start)
       {
-         Chunk *next = tmp->get_next();
+         Chunk *next = tmp->GetNext();
 
-         if (next->isNotNullChunk())
+         if (next->IsNotNullChunk())
          {
-            LOG_FMT(LAS, "AlignStack::%s(%d): next->orig_line is %zu, orig_col is %zu, text() '%s', level is %zu, type is %s\n",
-                    __func__, __LINE__, next->orig_line, next->orig_col, next->text(), next->level, get_token_name(next->type));
+            LOG_FMT(LAS, "AlignStack::%s(%d): next->orig_line is %zu, orig_col is %zu, Text() '%s', level is %zu, type is %s\n",
+                    __func__, __LINE__, next->orig_line, next->orig_col, next->Text(), next->level, get_token_name(next->type));
             tmp_col += space_col_align(tmp, next);
             LOG_FMT(LAS, "AlignStack::%s(%d): next->column is %zu, level is %zu, tmp_col is %zu\n",
                     __func__, __LINE__, next->column, next->level, tmp_col);
@@ -287,13 +287,13 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
 
       if (ref != ali)
       {
-         gap = ali->column - (ref->column + ref->len());
+         gap = ali->column - (ref->column + ref->Len());
       }
       Chunk *tmp = ali;
 
       if (chunk_is_token(tmp, CT_TPAREN_OPEN))
       {
-         tmp = tmp->get_next();
+         tmp = tmp->GetNext();
       }
 
       if (  (  chunk_is_star(tmp)
@@ -306,7 +306,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
             && m_star_style == SS_DANGLE)) // TODO: add m_msref_style
       {
          col_adj = start->column - ali->column;
-         gap     = start->column - (ref->column + ref->len());
+         gap     = start->column - (ref->column + ref->Len());
       }
       // See if this pushes out the max_col
       const size_t endcol = ali->column + col_adj
@@ -322,15 +322,15 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       if (chunk_is_token(ali, CT_PTR_TYPE))
       {
          LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s][%s]: ali->orig_line is %zu, column is %zu, type is %s, level is %zu\n",
-                 __func__, __LINE__, ali->text(), start->text(), ali->orig_line, ali->column, get_token_name(ali->type), ali->level);
+                 __func__, __LINE__, ali->Text(), start->Text(), ali->orig_line, ali->column, get_token_name(ali->type), ali->level);
       }
       else
       {
          LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s]: ali->orig_line is %zu, column is %zu, type is %s, level is %zu\n",
-                 __func__, __LINE__, ali->text(), ali->orig_line, ali->column, get_token_name(ali->type), ali->level);
+                 __func__, __LINE__, ali->Text(), ali->orig_line, ali->column, get_token_name(ali->type), ali->level);
       }
       LOG_FMT(LAS, "AlignStack::%s(%d):    ali->align.col_adj is %d, ref '%s', endcol is %zu\n",
-              __func__, __LINE__, ali->align.col_adj, ref->text(), endcol);
+              __func__, __LINE__, ali->align.col_adj, ref->Text(), endcol);
 
       if (m_min_col > endcol)
       {
@@ -440,8 +440,8 @@ void AlignStack::Flush()
    for (size_t idx = 0; idx < Len(); idx++)
    {
       Chunk *pc = m_aligned.Get(idx)->m_pc;
-      LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, pc->text() is '%s', pc->align.col_adj is %d\n",
-              __func__, __LINE__, idx, pc->text(), pc->align.col_adj);
+      LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, pc->Text() is '%s', pc->align.col_adj is %d\n",
+              __func__, __LINE__, idx, pc->Text(), pc->align.col_adj);
    }
 
    // Recalculate the max_col - it may have shifted since the last Add()
@@ -455,17 +455,17 @@ void AlignStack::Flush()
 
       if (pc != pc->align.ref)
       {
-         gap = pc->column - (pc->align.ref->column + pc->align.ref->len());
+         gap = pc->column - (pc->align.ref->column + pc->align.ref->Len());
       }
 
       if (m_star_style == SS_DANGLE)
       {
-         Chunk *tmp = (chunk_is_token(pc, CT_TPAREN_OPEN)) ? pc->get_next() : pc;
+         Chunk *tmp = (chunk_is_token(pc, CT_TPAREN_OPEN)) ? pc->GetNext() : pc;
 
          if (chunk_is_ptr_operator(tmp))
          {
             col_adj = pc->align.start->column - pc->column;
-            gap     = pc->align.start->column - (pc->align.ref->column + pc->align.ref->len());
+            gap     = pc->align.start->column - (pc->align.ref->column + pc->align.ref->Len());
          }
       }
 
@@ -474,15 +474,15 @@ void AlignStack::Flush()
          // Adjust the width for signed numbers
          if (pc->align.start != nullptr)
          {
-            size_t start_len = pc->align.start->len();
+            size_t start_len = pc->align.start->Len();
 
             if (pc->align.start->type == CT_NEG)
             {
-               Chunk *next = pc->align.start->get_next();
+               Chunk *next = pc->align.start->GetNext();
 
                if (chunk_is_token(next, CT_NUMBER))
                {
-                  start_len += next->len();
+                  start_len += next->Len();
                }
             }
             col_adj += start_len;
@@ -515,8 +515,8 @@ void AlignStack::Flush()
    for (size_t idx = 0; idx < Len(); idx++)
    {
       ce = m_aligned.Get(idx);
-      LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, ce->m_pc->text() is '%s', orig_line is %zu, orig_col is %zu, align.col_adj is %d\n",
-              __func__, __LINE__, idx, ce->m_pc->text(), ce->m_pc->orig_line, ce->m_pc->orig_col, ce->m_pc->align.col_adj);
+      LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, ce->m_pc->Text() is '%s', orig_line is %zu, orig_col is %zu, align.col_adj is %d\n",
+              __func__, __LINE__, idx, ce->m_pc->Text(), ce->m_pc->orig_line, ce->m_pc->orig_col, ce->m_pc->align.col_adj);
    }
 
    for (size_t idx = 0; idx < Len(); idx++)
@@ -549,8 +549,8 @@ void AlignStack::Flush()
       pc->align.next = m_aligned.GetChunk(idx + 1);
 
       // Indent the token, taking col_adj into account
-      LOG_FMT(LAS, "AlignStack::%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', set to col %zu (adj is %d)\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), tmp_col, pc->align.col_adj);
+      LOG_FMT(LAS, "AlignStack::%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', set to col %zu (adj is %d)\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), tmp_col, pc->align.col_adj);
       align_to_column(pc, tmp_col);
    }
 
@@ -638,12 +638,12 @@ void AlignStack::Debug()
          if (chunk_is_token(pc, CT_PTR_TYPE))
          {
             LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s][%s]: orig_line is %zu, orig_col is %zu, type is %s, level is %zu, brace_level is %zu\n",
-                    __func__, __LINE__, idx, pc->text(), pc->next->text(), pc->orig_line, pc->orig_col, get_token_name(pc->type), pc->level, pc->brace_level);
+                    __func__, __LINE__, idx, pc->Text(), pc->next->Text(), pc->orig_line, pc->orig_col, get_token_name(pc->type), pc->level, pc->brace_level);
          }
          else
          {
             LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s]: orig_line is %zu, orig_col is %zu, type is %s, level is %zu, brace_level is %zu\n",
-                    __func__, __LINE__, idx, pc->text(), pc->orig_line, pc->orig_col, get_token_name(pc->type), pc->level, pc->brace_level);
+                    __func__, __LINE__, idx, pc->Text(), pc->orig_line, pc->orig_col, get_token_name(pc->type), pc->level, pc->brace_level);
          }
       }
    }

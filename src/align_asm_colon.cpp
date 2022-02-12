@@ -22,24 +22,24 @@ void align_asm_colon(void)
 
    cas.Start(4);
 
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
 
    while (  pc != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
    {
       if (chunk_is_not_token(pc, CT_ASM_COLON))
       {
-         pc = pc->get_next();
+         pc = pc->GetNext();
          continue;
       }
       cas.Reset();
 
-      pc = chunk_get_next_nc_nnl(pc, scope_e::PREPROC);
+      pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
       size_t level = pc ? pc->level : 0;
       did_nl = true;
 
       while (  pc != nullptr
-            && pc->isNotNullChunk()
+            && pc->IsNotNullChunk()
             && pc->level >= level)
       {
          if (chunk_is_newline(pc))
@@ -57,7 +57,7 @@ void align_asm_colon(void)
             did_nl = false;
             cas.Add(pc);
          }
-         pc = pc->get_next_nc(scope_e::PREPROC);
+         pc = pc->GetNextNc(E_Scope::PREPROC);
       }
       cas.End();
    }

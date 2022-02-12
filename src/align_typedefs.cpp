@@ -32,23 +32,23 @@ void align_typedefs(size_t span)
    as.m_amp_style = static_cast<AlignStack::StarStyle>(options::align_typedef_amp_style());
 
    Chunk *c_typedef = Chunk::NullChunkPtr;
-   Chunk *pc        = Chunk::get_head();
+   Chunk *pc        = Chunk::GetHead();
 
-   while (pc->isNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       if (chunk_is_newline(pc))
       {
          as.NewLines(pc->nl_count);
          c_typedef = Chunk::NullChunkPtr;
       }
-      else if (c_typedef->isNotNullChunk())
+      else if (c_typedef->IsNotNullChunk())
       {
          if (pc->flags.test(PCF_ANCHOR))
          {
             as.Add(pc);
             LOG_FMT(LALTD, "%s(%d): typedef @ %zu:%zu, tag '%s' @ %zu:%zu\n",
                     __func__, __LINE__, c_typedef->orig_line, c_typedef->orig_col,
-                    pc->text(), pc->orig_line, pc->orig_col);
+                    pc->Text(), pc->orig_line, pc->orig_col);
             c_typedef = Chunk::NullChunkPtr;
          }
       }
@@ -59,7 +59,7 @@ void align_typedefs(size_t span)
             c_typedef = pc;
          }
       }
-      pc = pc->get_next();
+      pc = pc->GetNext();
    }
    as.End();
 } // align_typedefs

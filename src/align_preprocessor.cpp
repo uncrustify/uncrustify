@@ -36,10 +36,10 @@ void align_preprocessor(void)
    log_rule_B("align_pp_define_gap");
    asf.m_gap = options::align_pp_define_gap();
 
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
 
    while (  pc != nullptr
-         && pc->isNotNullChunk())
+         && pc->IsNotNullChunk())
    {
       // Note: not counting back-slash newline combos
       if (chunk_is_token(pc, CT_NEWLINE))   // mind the gap: chunk_is_newline(pc) is NOT the same!
@@ -51,20 +51,20 @@ void align_preprocessor(void)
       // If we aren't on a 'define', then skip to the next non-comment
       if (chunk_is_not_token(pc, CT_PP_DEFINE))
       {
-         pc = pc->get_next_nc();
+         pc = pc->GetNextNc();
          continue;
       }
       // step past the 'define'
-      pc = pc->get_next_nc();
+      pc = pc->GetNextNc();
 
-      if (pc->isNullChunk())
+      if (pc->IsNullChunk())
       {
          // coveralls will complain here. There are no example for that.
          // see https://en.wikipedia.org/wiki/Robustness_principle
          break;
       }
       LOG_FMT(LALPP, "%s(%d): define (%s) on line %zu col %zu\n",
-              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+              __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
 
       cur_as = &as;
 
@@ -77,16 +77,16 @@ void align_preprocessor(void)
             cur_as = &asf;
          }
          // Skip to the close parenthesis
-         pc = pc->get_next_nc(); // point to open (
+         pc = pc->GetNextNc(); // point to open (
          pc = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
 
          LOG_FMT(LALPP, "%s(%d): jumped to (%s) on line %zu col %zu\n",
-                 __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+                 __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
       }
       // step to the value past the close parenthesis or the macro name
-      pc = pc->get_next();
+      pc = pc->GetNext();
 
-      if (pc->isNullChunk())
+      if (pc->IsNullChunk())
       {
          // coveralls will complain here. There are no example for that.
          // see https://en.wikipedia.org/wiki/Robustness_principle
@@ -100,7 +100,7 @@ void align_preprocessor(void)
       if (!chunk_is_newline(pc))
       {
          LOG_FMT(LALPP, "%s(%d): align on '%s', line %zu col %zu\n",
-                 __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+                 __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
 
          cur_as->Add(pc);
       }

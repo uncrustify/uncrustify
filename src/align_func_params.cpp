@@ -24,7 +24,7 @@ Chunk *align_func_param(Chunk *start)
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LAS, "AlignStack::%s(%d): Candidate is '%s': orig_line is %zu, column is %zu, type is %s, level is %zu\n",
-           __func__, __LINE__, start->text(), start->orig_line, start->column,
+           __func__, __LINE__, start->Text(), start->orig_line, start->column,
            get_token_name(start->type), start->level);
    // Defaults, if the align_func_params = true
    size_t myspan   = 2;
@@ -62,17 +62,17 @@ Chunk *align_func_param(Chunk *start)
    size_t chunk_count = 0;
    Chunk  *pc         = start;
 
-   while ((pc = pc->get_next())->isNotNullChunk())
+   while ((pc = pc->GetNext())->IsNotNullChunk())
    {
       chunk_count++;
-      LOG_FMT(LFLPAREN, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
+      LOG_FMT(LFLPAREN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(),
               get_token_name(pc->type));
 
       if (chunk_is_token(pc, CT_FUNC_VAR))                    // Issue #2278
       {
          // look after 'protect parenthesis'
-         Chunk *after = pc->get_next_nc();
+         Chunk *after = pc->GetNextNc();
 
          if (chunk_is_token(after, CT_PAREN_CLOSE))
          {
@@ -85,7 +85,7 @@ Chunk *align_func_param(Chunk *start)
                set_chunk_type(before, CT_PPAREN_OPEN);
                set_chunk_type(after, CT_PPAREN_CLOSE);
                pc->level = before->level;
-               Chunk *tmp = pc->get_prev_nc();
+               Chunk *tmp = pc->GetPrevNc();
 
                if (chunk_is_token(tmp, CT_PTR_TYPE))
                {
@@ -139,7 +139,7 @@ Chunk *align_func_param(Chunk *start)
          }
          else
          {
-            Chunk *tmp_prev = pc->get_prev_nc();
+            Chunk *tmp_prev = pc->GetPrevNc();
 
             if (!chunk_is_newline(tmp_prev))  // don't count leading commas
             {
@@ -165,12 +165,12 @@ Chunk *align_func_param(Chunk *start)
 void align_func_params(void)
 {
    LOG_FUNC_ENTRY();
-   Chunk *pc = Chunk::get_head();
+   Chunk *pc = Chunk::GetHead();
 
-   while ((pc = pc->get_next())->isNotNullChunk())
+   while ((pc = pc->GetNext())->IsNotNullChunk())
    {
-      LOG_FMT(LFLPAREN, "%s(%d): orig_line is %zu, orig_col is %zu, text() is '%s', parent_type is %s, parent_type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
+      LOG_FMT(LFLPAREN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', parent_type is %s, parent_type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(),
               get_token_name(pc->type), get_token_name(pc->parent_type));
 
       if (  chunk_is_not_token(pc, CT_FPAREN_OPEN)

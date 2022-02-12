@@ -48,7 +48,7 @@ static size_t tokenCounter;
  */
 void prot_the_line(const char *func_name, int theLine, unsigned int actual_line, size_t partNumber)
 {
-   prot_the_line_pc(Chunk::get_head(), func_name, theLine, actual_line, partNumber);
+   prot_the_line_pc(Chunk::GetHead(), func_name, theLine, actual_line, partNumber);
 }
 
 
@@ -69,7 +69,7 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigne
    tokenCounter = 0;
    LOG_FMT(LGUY, "Prot_the_line:(%s:%d)(%zu)\n", func_name, theLine, counter);
 
-   for (Chunk *pc = pc_sub; pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = pc_sub; pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (pc->orig_line == actual_line)
       {
@@ -106,7 +106,7 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigne
             }
             else
             {
-               LOG_FMT(LGUY, "text() '%s', ", pc->text());
+               LOG_FMT(LGUY, "Text() '%s', ", pc->Text());
             }
             LOG_FMT(LGUY, " column is %zu, pp_level is %zu, type is %s, parent_type is %s, orig_col is %zu,",
                     pc->column, pc->pp_level, get_token_name(pc->type),
@@ -154,7 +154,7 @@ void prot_all_lines(const char *func_name, int theLine)
 
    LOG_FMT(LGUY, "Prot_all_lines:(%s:%d)(%zu)\n", func_name, theLine, counter);
 
-   for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       tokenCounter++;
 
@@ -188,7 +188,7 @@ void prot_all_lines(const char *func_name, int theLine)
       }
       else
       {
-         LOG_FMT(LGUY, "text() '%s', ", pc->text());
+         LOG_FMT(LGUY, "Text() '%s', ", pc->Text());
       }
       LOG_FMT(LGUY, " column is %zu, type is %s\n",
               pc->column, get_token_name(pc->type));
@@ -216,14 +216,14 @@ void examine_Data(const char *func_name, int theLine, int what)
    {
    case 1:
 
-      for (pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+      for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
          if (  chunk_is_token(pc, CT_SQUARE_CLOSE)
             || chunk_is_token(pc, CT_TSQUARE))
          {
             LOG_FMT(LGUY, "\n");
             LOG_FMT(LGUY, "1:(%d),", theLine);
-            LOG_FMT(LGUY, "%s, orig_col=%zu, orig_col_end=%zu\n", pc->text(), pc->orig_col, pc->orig_col_end);
+            LOG_FMT(LGUY, "%s, orig_col=%zu, orig_col_end=%zu\n", pc->Text(), pc->orig_col, pc->orig_col_end);
          }
       }
 
@@ -232,7 +232,7 @@ void examine_Data(const char *func_name, int theLine, int what)
    case 2:
       LOG_FMT(LGUY, "2:(%d)\n", theLine);
 
-      for (pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+      for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
          if (pc->orig_line == 7)
          {
@@ -242,7 +242,7 @@ void examine_Data(const char *func_name, int theLine, int what)
             }
             else
             {
-               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->orig_line, pc->text(), get_token_name(pc->type), pc->orig_col, pc->column);
+               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->orig_line, pc->Text(), get_token_name(pc->type), pc->orig_col, pc->column);
             }
          }
       }
@@ -252,7 +252,7 @@ void examine_Data(const char *func_name, int theLine, int what)
    case 3:
       LOG_FMT(LGUY, "3:(%d)\n", theLine);
 
-      for (pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+      for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
          if (chunk_is_token(pc, CT_NEWLINE))
          {
@@ -260,7 +260,7 @@ void examine_Data(const char *func_name, int theLine, int what)
          }
          else
          {
-            LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->orig_line, pc->text(), get_token_name(pc->type), pc->orig_col, pc->column);
+            LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->orig_line, pc->Text(), get_token_name(pc->type), pc->orig_col, pc->column);
          }
       }
 
@@ -269,7 +269,7 @@ void examine_Data(const char *func_name, int theLine, int what)
    case 4:
       LOG_FMT(LGUY, "4:(%d)\n", theLine);
 
-      for (pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+      for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
          if (pc->orig_line == 6)
          {
@@ -279,7 +279,7 @@ void examine_Data(const char *func_name, int theLine, int what)
             }
             else
             {
-               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->orig_line, pc->text(), get_token_name(pc->type), pc->orig_col, pc->column);
+               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->orig_line, pc->Text(), get_token_name(pc->type), pc->orig_col, pc->column);
             }
          }
       }
@@ -308,7 +308,7 @@ void dump_out(unsigned int type)
 
    if (D_file != nullptr)
    {
-      for (Chunk *pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+      for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
          fprintf(D_file, "[%p]\n", pc);
          fprintf(D_file, "  type %s\n", get_token_name(pc->type));
@@ -358,7 +358,7 @@ void dump_out(unsigned int type)
 
          if (pc->type != CT_NEWLINE)
          {
-            fprintf(D_file, "  text %s\n", pc->text());
+            fprintf(D_file, "  Text %s\n", pc->Text());
          }
       }
 
@@ -402,7 +402,7 @@ void dump_in(unsigned int type)
                aNewChunkIsFound = false;
                // add the chunk in the list
                chunk_add_before(&chunk, nullptr);
-               chunk.reset();
+               chunk.Reset();
                aNewChunkIsFound = true;
                continue;
             }
@@ -469,7 +469,7 @@ void dump_in(unsigned int type)
             if (first == '[')
             {
                aNewChunkIsFound = true;
-               chunk.reset();
+               chunk.Reset();
             }
          }
       }

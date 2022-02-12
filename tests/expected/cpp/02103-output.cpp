@@ -108,7 +108,7 @@ void output_parsed(FILE *pfile)
   fprintf(pfile, "-=====-\n");
   fprintf(pfile, "Line      Tag          Parent     Columns  Br/Lvl/pp Flg Nl  Text");
 
-  for (pc = Chunk::get_head(); pc != NULL; pc = pc->get_next())
+  for (pc = Chunk::GetHead(); pc != NULL; pc = pc->GetNext())
     {
     fprintf(pfile, "\n%3d> %13.13s[%13.13s][%2d/%2d/%2d][%d/%d/%d][%6x][%d-%d]",
             pc->orig_line, get_token_name(pc->type),
@@ -186,7 +186,7 @@ void output_text(FILE *pfile)
 
   cpd.fout = pfile;
 
-  for (pc = Chunk::get_head(); pc != NULL; pc = pc->get_next())
+  for (pc = Chunk::GetHead(); pc != NULL; pc = pc->GetNext())
     {
     if (pc->type == CT_NEWLINE)
       {
@@ -230,7 +230,7 @@ void output_text(FILE *pfile)
           allow_tabs = pc->after_tab;
         else
           {
-          prev       = pc->get_prev();
+          prev       = pc->GetPrev();
           allow_tabs = (cpd.settings[UO_align_with_tabs].b &&
                         ((pc->flags & PCF_WAS_ALIGNED) != 0) &&
                         (((pc->column - 1) % cpd.settings[UO_output_tab_size].n) == 0) &&
@@ -363,7 +363,7 @@ Chunk *output_comment_cpp(Chunk *first)
     /* Make sure we have at least one space past the last token */
   if (first->parent_type == CT_COMMENT_END)
     {
-    Chunk *prev = first->get_prev();
+    Chunk *prev = first->GetPrev();
 
     if (prev != NULL)
       {
@@ -389,11 +389,11 @@ Chunk *output_comment_cpp(Chunk *first)
   if (cpd.settings[UO_cmt_cpp_group].b)
     {
       /* next is a newline by definition */
-    Chunk *next = first->get_next();
+    Chunk *next = first->GetNext();
 
     if ((next != NULL) && (next->nl_count == 1))
       {
-      next = next->get_next();
+      next = next->GetNext();
 
       /**
        * Only combine the next comment if they are both at indent level or
@@ -439,7 +439,7 @@ Chunk *output_comment_cpp(Chunk *first)
   goto cpp_addline;
 
     /* Output combined lines */
-  while ((pc = pc->get_next()) != NULL)
+  while ((pc = pc->GetNext()) != NULL)
     {
     if ((pc->type == CT_NEWLINE) && (pc->nl_count == 1))
       continue;
@@ -490,7 +490,7 @@ void output_comment_multi(Chunk *pc)
   int col_diff = 0;
   int xtra     = 1;
 
-  prev = pc->get_prev();
+  prev = pc->GetPrev();
 
   if ((prev != NULL) && (prev->type != CT_NEWLINE))
     cmt_col = pc->orig_col;

@@ -49,7 +49,7 @@ void align_same_func_call_params(void)
    LOG_FMT(LAS, "%s(%d): (3): span is %zu, thresh is %zu\n",
            __func__, __LINE__, span, thresh);
 
-   for (pc = Chunk::get_head(); pc->isNotNullChunk(); pc = pc->get_next())
+   for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (chunk_is_newline(pc))
       {
@@ -57,8 +57,8 @@ void align_same_func_call_params(void)
       }
       else
       {
-         LOG_FMT(LAS, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+         LOG_FMT(LAS, "%s(%d): orig_line is %zu, orig_col is %zu, pc->Text() '%s'\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
       }
 
       if (chunk_is_not_token(pc, CT_FUNC_CALL))
@@ -75,7 +75,7 @@ void align_same_func_call_params(void)
          else
          {
             // if we drop below the brace level that started it, we are done
-            if (  align_root->isNotNullChunk()
+            if (  align_root->IsNotNullChunk()
                && align_root->brace_level > pc->brace_level)
             {
                LOG_FMT(LASFCP, "  ++ (drop) Ended with %zu fcns\n", align_len);
@@ -94,26 +94,26 @@ void align_same_func_call_params(void)
          continue;
       }
       // Only align function calls that are right after a newline
-      Chunk *prev = pc->get_prev();
+      Chunk *prev = pc->GetPrev();
 
       while (  chunk_is_token(prev, CT_MEMBER)
             || chunk_is_token(prev, CT_DC_MEMBER))
       {
-         Chunk *tprev = prev->get_prev();
+         Chunk *tprev = prev->GetPrev();
 
          if (chunk_is_not_token(tprev, CT_TYPE))
          {
             prev = tprev;
             break;
          }
-         prev = tprev->get_prev();
+         prev = tprev->GetPrev();
       }
 
       if (!chunk_is_newline(prev))
       {
          continue;
       }
-      prev      = prev->get_next();
+      prev      = prev->GetNext();
       align_fcn = prev;
       align_fcn_name.clear();
       LOG_FMT(LASFCP, "%s(%d):\n", __func__, __LINE__);
@@ -121,7 +121,7 @@ void align_same_func_call_params(void)
       while (prev != pc)
       {
          align_fcn_name += prev->str;
-         prev            = prev->get_next();
+         prev            = prev->GetNext();
       }
       align_fcn_name += pc->str;
       LOG_FMT(LASFCP, "%s(%d): Func Call found at orig_line is %zu, orig_col is %zu, c_str() '%s'\n",
@@ -131,7 +131,7 @@ void align_same_func_call_params(void)
 
       add_str = nullptr;
 
-      if (align_root->isNotNullChunk())
+      if (align_root->IsNotNullChunk())
       {
          // Issue # 1395
          // can only align functions on the same brace level
@@ -165,9 +165,9 @@ void align_same_func_call_params(void)
       }
       LOG_FMT(LASFCP, "%s(%d):\n", __func__, __LINE__);
 
-      if (align_root->isNullChunk())
+      if (align_root->IsNullChunk())
       {
-         LOG_FMT(LASFCP, "%s(%d):align_root is null chunk, Add pc '%s'\n", __func__, __LINE__, pc->text());
+         LOG_FMT(LASFCP, "%s(%d):align_root is null chunk, Add pc '%s'\n", __func__, __LINE__, pc->Text());
          fcn_as.Add(pc);
          align_root      = align_fcn;
          align_root_name = align_fcn_name;
@@ -187,7 +187,7 @@ void align_same_func_call_params(void)
          for (size_t idx = 0; idx < chunks.size(); idx++)
          {
             // show the chunk(s)
-            LOG_FMT(LASFCP, " [%s]", chunks[idx]->text());
+            LOG_FMT(LASFCP, " [%s]", chunks[idx]->Text());
 
             if (idx < chunks.size() - 1)
             {
@@ -199,7 +199,7 @@ void align_same_func_call_params(void)
 
          for (size_t idx = 0; idx < chunks.size(); idx++)
          {
-            LOG_FMT(LASFCP, "%s(%d): chunks[%zu] is [%s]\n", __func__, __LINE__, idx, chunks[idx]->text());
+            LOG_FMT(LASFCP, "%s(%d): chunks[%zu] is [%s]\n", __func__, __LINE__, idx, chunks[idx]->Text());
             // Issue #2368
 
             if (array_of_AlignStack.size() > idx)
@@ -229,7 +229,7 @@ void align_same_func_call_params(void)
                   }
                }
             }
-            LOG_FMT(LASFCP, "%s(%d): save the chunk %s\n", __func__, __LINE__, chunks[idx]->text());
+            LOG_FMT(LASFCP, "%s(%d): save the chunk %s\n", __func__, __LINE__, chunks[idx]->Text());
             array_of_AlignStack[idx].Add(chunks[idx]);
          }
       }
@@ -262,7 +262,7 @@ void align_params(Chunk *start, deque<Chunk *> &chunks)
       pc = Chunk::NullChunkPtr;
    }
 
-   while ((pc = pc->get_next())->isNotNullChunk())
+   while ((pc = pc->GetNext())->IsNotNullChunk())
    {
       if (  chunk_is_newline(pc)
          || chunk_is_token(pc, CT_SEMICOLON)
