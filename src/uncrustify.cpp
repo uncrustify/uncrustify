@@ -2598,6 +2598,7 @@ struct lang_ext_t language_exts[] =
    { ".pawn", "PAWN"     },
    { ".sma",  "PAWN"     },
    { ".sqc",  "C"        },  // embedded SQL
+   { ".sql",  "SQL"      },
    { ".vala", "VALA"     },
 };
 
