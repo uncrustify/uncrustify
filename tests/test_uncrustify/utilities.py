@@ -162,19 +162,19 @@ def report(counts):
     total = sum(counts.values())
     print('{passing} / {total} tests passed'.format(total=total, **counts))
     if counts['failing'] > 0:
-        printc('{failing} tests failed to execute'.format(**counts),
+        printc('{failing} tests failed to execute'.format(**counts), 'f',
                **FAIL_ATTRS)
     if counts['mismatch'] > 0:
         printc(
             '{mismatch} tests did not match the expected output'.format(
-                **counts),
+                **counts), 'm',
             **FAIL_ATTRS)
     if counts['unstable'] > 0:
-        printc('{unstable} tests were unstable'.format(**counts),
+        printc('{unstable} tests were unstable'.format(**counts), 'u',
                **FAIL_ATTRS)
     if counts['xpass'] > 0:
-        printc('{xpass} tests passed but were expected to fail'
-            .format(**counts), **FAIL_ATTRS)
+        printc('{xpass} tests passed but were expected to fail'.format(**counts),
+               'x', **FAIL_ATTRS)
 
 
 # -----------------------------------------------------------------------------
