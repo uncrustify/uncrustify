@@ -75,7 +75,7 @@ public:
 
    void push(Chunk *pc, const char *func, int line, brace_stage_e stage = brace_stage_e::NONE);
    void push(std::nullptr_t, brace_stage_e stage = brace_stage_e::NONE);
-   void pop(const char *func, int line);
+   void pop(const char *func, int line, Chunk *pc);
 
    size_t size() const;
 

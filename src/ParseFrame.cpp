@@ -177,19 +177,18 @@ void ParseFrame::push(Chunk *pc, const char *func, int line, brace_stage_e stage
    new_entry.pop_pc     = nullptr;
 
    pse.push_back(new_entry);
-   LOG_FMT(LINDPSE, "pse size is %zu\n", pse.size());
 
 // uncomment the line below to get the address of the pse
 // #define DEBUG_PUSH_POP
 #ifdef DEBUG_PUSH_POP
-   LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d) Add is %zu: orig_line is %zu, orig_col is %zu, type is %s, "
-           "brace_level is %zu, level is %zu, pse_tos: %zu -> %zu\n",
+   LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d) Add is %4zu: orig_line is %4zu, orig_col is %4zu, type is %12s, "
+           "brace_level is %2zu, level is %2zu, pse_tos: %2zu -> %2zu\n",
            func, line, (size_t)this, pc->orig_line, pc->orig_col,
            get_token_name(pc->type), pc->brace_level, pc->level,
            (pse.size() - 2), (pse.size() - 1));
 #else /* DEBUG_PUSH_POP */
-   LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d): orig_line is %zu, orig_col is %zu, type is %s, "
-           "brace_level is %zu, level is %zu, pse_tos: %zu -> %zu\n",
+   LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d): orig_line is %4zu, orig_col is %4zu, type is %12s, "
+           "brace_level is %2zu, level is %2zu, pse_tos: %2zu -> %2zu\n",
            func, line, pc->orig_line, pc->orig_col,
            get_token_name(pc->type), pc->brace_level, pc->level,
            (pse.size() - 2), (pse.size() - 1));
@@ -197,7 +196,7 @@ void ParseFrame::push(Chunk *pc, const char *func, int line, brace_stage_e stage
 }
 
 
-void ParseFrame::pop(const char *func, int line)
+void ParseFrame::pop(const char *func, int line, Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
@@ -208,15 +207,67 @@ void ParseFrame::pop(const char *func, int line)
 //                        + "the stack index is already zero");
 //   }
 
+   if (  pc->type == CT_PAREN_CLOSE
+      || pc->type == CT_BRACE_CLOSE
+      || pc->type == CT_VBRACE_CLOSE
+      || pc->type == CT_FPAREN_CLOSE
+      || pc->type == CT_LPAREN_CLOSE
+      || pc->type == CT_SPAREN_CLOSE
+      || pc->type == CT_CLASS_COLON
+      || pc->type == CT_ANGLE_CLOSE
+      || pc->type == CT_SEMICOLON
+      || pc->type == CT_SQUARE_CLOSE)
+   {
+      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig_line is %4zu, orig_col is %4zu, type is %12s, pushed with\n",
+              func, line, pc->orig_line, pc->orig_col, get_token_name(pc->type));
+   }
+   else if (  pc->type == CT_ACCESS
+           || pc->type == CT_ASSIGN
+           || pc->type == CT_BRACE_OPEN
+           || pc->type == CT_BOOL
+           || pc->type == CT_CASE
+           || pc->type == CT_COMMA
+           || pc->type == CT_COMMENT
+           || pc->type == CT_COMMENT_CPP
+           || pc->type == CT_COMMENT_MULTI
+           || pc->type == CT_COND_COLON
+           || pc->type == CT_FPAREN_OPEN
+           || pc->type == CT_PAREN_OPEN
+           || pc->type == CT_TPAREN_OPEN
+           || pc->type == CT_MACRO_CLOSE
+           || pc->type == CT_MACRO_OPEN
+           || pc->type == CT_NEWLINE
+           || pc->type == CT_NONE
+           || pc->type == CT_OC_END
+           || pc->type == CT_OC_MSG_NAME
+           || pc->type == CT_OC_MSG_NAME
+           || pc->type == CT_OC_SCOPE
+           || pc->type == CT_PREPROC
+           || pc->type == CT_SQUARE_OPEN
+           || pc->type == CT_SQL_END
+           || pc->type == CT_TYPEDEF
+           || pc->type == CT_VSEMICOLON
+           || pc->type == CT_WORD)
+   {
+      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig_line is %4zu, orig_col is %4zu, type is %12s, ++++++++++++++++++++++++++\n",
+              func, line, pc->orig_line, pc->orig_col, get_token_name(pc->type));
+   }
+   else
+   {
+      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig_line is %4zu, orig_col is %4zu, type is %12s, *** Software error ***\n",
+              func, line, pc->orig_line, pc->orig_col, get_token_name(pc->type));
+      log_flush(true);
+      exit(EX_SOFTWARE);
+   }
 #ifdef DEBUG_PUSH_POP
-   LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d) Add is %zu: open_line is %zu, clos_col is %zu, type is %s, "
-           "cpd.level   is %d, level is %zu, pse_tos: %zu -> %zu\n",
+   LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d) Add is %4zu: open_line is %4zu, clos_col is %4zu, type is %12s, "
+           "cpd.level   is %2d, level is %2zu, pse_tos: %2zu -> %2zu\n",
            func, line, (size_t)this, pse.back().open_line, pse.back().open_colu,
            get_token_name(pse.back().type), cpd.pp_level, pse.back().level,
            (pse.size() - 1), (pse.size() - 2));
 #else /* DEBUG_PUSH_POP */
-   LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): open_line is %zu, clos_col is %zu, type is %s, "
-           "cpd.level   is %d, level is %zu, pse_tos: %zu -> %zu\n",
+   LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): open_line is %4zu, clos_col is %4zu, type is %12s, "
+           "cpd.level   is %2d, level is %2zu, pse_tos: %2zu -> %2zu\n",
            func, line, pse.back().open_line, pse.back().open_colu,
            get_token_name(pse.back().type), cpd.pp_level, pse.back().level,
            (pse.size() - 1), (pse.size() - 2));
