@@ -1,6 +1,6 @@
 int main()
 {
-        auto lambda2 = [&]()
+        auto lambda2222222222222222222 = [&]()
         {
                 code();
         };
