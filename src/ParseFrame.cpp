@@ -283,7 +283,7 @@ void ParseFrame::pop(const char *func, int line, Chunk *pc)
    {
       pse.pop_back();
    }
-}
+} // ParseFrame::pop
 
 
 size_t ParseFrame::size() const
