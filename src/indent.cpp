@@ -1752,6 +1752,7 @@ void indent_text(void)
                  && options::indent_cpp_lambda_only_once()
                  && (get_chunk_parent_type(pc) == CT_CPP_LAMBDA))
          {
+            // test example cpp:30756
             log_rule_B("indent_cpp_lambda_only_once");
 
             size_t namespace_indent_to_ignore = 0;                   // Issue #1813
