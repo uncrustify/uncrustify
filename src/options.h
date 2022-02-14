@@ -4061,15 +4061,12 @@ use_indent_func_call_param; // = true
 extern Option<bool>
 use_indent_continue_only_once;
 
-// The value might be used twice:
-// - at the assignment
-// - at the opening brace
+// The indentation can be:
+// - after the assignment, at the '[' character
+// - at the begin of the lambda body
 //
-// To prevent the double use of the indentation value, use this option with the
-// value 'true'.
-//
-// true:  indentation will be used only once
-// false: indentation will be used every time (default)
+// true:  indentation will be after the assignment
+// false: indentation will be at the begin of the lambda body (default)
 extern Option<bool>
 indent_cpp_lambda_only_once;
 
