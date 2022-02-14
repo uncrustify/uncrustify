@@ -2165,7 +2165,8 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
 
             if (options::nl_var_def_blk_end() > 0)
             {
-               newline_min_after(prev, options::nl_var_def_blk_end(), PCF_VAR_DEF);
+               // Issue #3516
+               newline_min_after(prev, options::nl_var_def_blk_end() + 1, PCF_VAR_DEF);
             }
             // set blank lines after first var def block
             log_rule_B("nl_func_var_def_blk");

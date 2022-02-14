@@ -2809,7 +2809,7 @@ nl_typedef_blk_in;
 extern BoundedOption<unsigned, 0, 16>
 nl_var_def_blk_start;
 
-// The number of newlines after a block of variable definitions not at the top
+// The number of empty newlines after a block of variable definitions not at the top
 // of a function body.
 //
 // 0: No change (default).

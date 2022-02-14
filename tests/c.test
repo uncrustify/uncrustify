@@ -1,7 +1,6 @@
 #
 # Test cases specifically for the C language.
 #
-# Range: 00000 - 09999
 # test.name  config.file  input.file
 
 
@@ -92,7 +91,7 @@
 00143  c/ben_074.cfg                              c/t3.in.c
 00144  c/ben_075.cfg                              c/align-proto-vars.c
 00145  c/ben_076.cfg                              c/vardefcol.c
-
+00146  c/Issue_3516.cfg                           c/Issue_3516.c
 
 # casts
 
