@@ -1966,6 +1966,11 @@ void fix_symbols(void)
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
       Chunk *prev = chunk_get_prev_nc_nnl_ni(pc, E_Scope::PREPROC);   // Issue #2279
 
+      if (chunk_is_token(prev, CT_QUALIFIER))
+      {
+         prev = chunk_get_prev_nc_nnl_ni(prev, E_Scope::PREPROC);     // Issue #3513
+      }
+
       if (prev == nullptr)
       {
          prev = &dummy;
