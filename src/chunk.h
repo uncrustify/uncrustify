@@ -95,101 +95,78 @@ public:
    const char *ElidedText(char *for_the_copy) const;
 
 
+   // --------- Get* chuck functions
+
    /**
     * @brief returns the head of the chunk list
-    *
     * @return pointer to the first chunk
     */
    static Chunk *GetHead(void);
 
-
    /**
     * @brief returns the tail of the chunk list
-    *
     * @return pointer to the last chunk
     */
    static Chunk *GetTail(void);
 
-
    /**
     * @brief returns the next chunk in a list of chunks
-    *
     * @param scope code region to search in
-    *
     * @return pointer to next chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetNext(E_Scope scope = E_Scope::ALL) const;
 
-
    /**
     * @brief returns the previous chunk in a list of chunks
-    *
     * @param scope code region to search in
-    *
     * @return pointer to previous chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetPrev(E_Scope scope = E_Scope::ALL) const;
 
-
    /**
     * @brief returns the next newline chunk
-    *
     * @param scope code region to search in
-    *
     * @return pointer to next newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetNextNl(E_Scope scope = E_Scope::ALL) const;
 
-
    /**
     * @brief returns the prev newline chunk
-    *
     * @param scope code region to search in
-    *
     * @return pointer to prev newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetPrevNl(E_Scope scope = E_Scope::ALL) const;
 
-
    /**
     * @brief returns the next non-newline chunk
-    *
     * @param scope code region to search in
-    *
     * @return pointer to next non-newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetNextNnl(E_Scope scope = E_Scope::ALL) const;
 
-
    /**
     * @brief returns the prev non-newline chunk
-    *
     * @param scope code region to search in
-    *
     * @return pointer to prev non-newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetPrevNnl(E_Scope scope = E_Scope::ALL) const;
 
-
    /**
     * @brief returns the next non-comment chunk
-    *
     * @param scope code region to search in
-    *
     * @return pointer to next non-comment chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetNextNc(E_Scope scope = E_Scope::ALL) const;
 
-
    /**
     * @brief returns the prev non-comment chunk
-    *
     * @param scope code region to search in
-    *
     * @return pointer to prev non-comment chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetPrevNc(E_Scope scope = E_Scope::ALL) const;
 
+
+   // --------- Search functions
 
    /**
     * @brief defines a member function pointer for a function of type
@@ -198,17 +175,20 @@ public:
     */
    typedef Chunk *(Chunk::*T_SearchFnPtr)(E_Scope scope) const;
 
+   /**
+    * @brief defines a member function pointer for a function of type
+    * bool Chunk::function() const;
+    * that checks whether a chuck satisty a specific condition
+    */
+   typedef bool (Chunk::*T_CheckFnPtr)() const;
 
    /**
     * @brief determines the search direction to use and returns a pointer
     *        to the corresponding search function.
-    *
     * @param dir search direction
-    *
     * @return pointer to search function
     */
    static T_SearchFnPtr GetSearchFn(const E_Direction dir = E_Direction::FORWARD);
-
 
    /**
     * @brief search for a chunk that satisfies a condition in a chunk list
@@ -226,9 +206,43 @@ public:
     *
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
-// TODO replace ::check_t with Chunk::CheckFnPtr when feasible
-   Chunk *Search(const ::check_t check_fct, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const bool cond = true) const;
+   Chunk *Search(const T_CheckFnPtr checkFn, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const bool cond = true) const;
 
+
+   // --------- Is* functions
+
+   /**
+    * @brief checks whether the chuck is a specific token
+    * @token the token to check for
+    * @return true if the chuck type matches the specified token, false otherwise
+    */
+   bool Is(c_token_t token) const;
+
+   /**
+    * @brief checks whether the chuck is not a specific token
+    * @token the token to check for
+    * @return true if the chuck type does not matches the specified token, false otherwise
+    */
+   bool IsNot(c_token_t token) const;
+
+   /**
+    * @brief checks whether the chuck is a newline
+    * @return true if the chuck is a newline, false otherwise
+    */
+   bool IsNewline() const;
+
+   /**
+    * @brief checks whether the chuck is a comment
+    * This means any kind of:
+    *   - single line comment
+    *   - multiline comment
+    *   - C comment
+    *   - C++ comment
+    */
+   bool IsComment() const;
+
+
+   // --------- Data members
 
    Chunk        *next;          //! pointer to next chunk in list
    Chunk        *prev;          //! pointer to previous chunk in list
@@ -561,6 +575,7 @@ Chunk *chunk_get_next_ssq(Chunk *cur);
  */
 Chunk *chunk_get_prev_ssq(Chunk *cur);
 
+
 /**
  * Gets the corresponding start chunk if the given chunk is within a
  * preprocessor directive, or nullptr otherwise.
@@ -570,6 +585,7 @@ Chunk *chunk_get_prev_ssq(Chunk *cur);
  * @return nullptr or start chunk of the preprocessor directive
  */
 Chunk *chunk_get_pp_start(Chunk *cur);
+
 
 /**
  * @brief reverse search a chunk of a given category in a chunk list
@@ -594,6 +610,7 @@ Chunk *chunk_search_prev_cat(Chunk *pc, const c_token_t cat);
  */
 Chunk *chunk_search_next_cat(Chunk *pc, const c_token_t cat);
 
+
 /**
  * @brief checks wether two chunks are in same line
  *
@@ -603,11 +620,6 @@ Chunk *chunk_search_next_cat(Chunk *pc, const c_token_t cat);
  * @return true if there is no newline between start and end chunks
  */
 bool are_chunks_in_same_line(Chunk *start, Chunk *end);
-
-/*
- * TODO: better move the function implementations to the source file.
- * No need to make the implementation public.
- */
 
 
 /*
@@ -634,6 +646,34 @@ static inline bool is_expected_string_and_level(Chunk *pc, const char *str, int 
                || pc->level == static_cast<size_t>(level))
             && pc->Len() == len                        // and the length is as expected
             && memcmp(str, pc->Text(), len) == 0));    // and the strings are equal
+}
+
+
+inline bool Chunk::Is(c_token_t token) const
+{
+   return(  IsNotNullChunk()
+         && type == token);
+}
+
+
+inline bool Chunk::IsNot(c_token_t token) const
+{
+   return(!Is(token));
+}
+
+
+inline bool Chunk::IsNewline() const
+{
+   return(  Is(CT_NEWLINE)
+         || Is(CT_NL_CONT));
+}
+
+
+inline bool Chunk::IsComment() const
+{
+   return(  Is(CT_COMMENT)
+         || Is(CT_COMMENT_MULTI)
+         || Is(CT_COMMENT_CPP));
 }
 
 

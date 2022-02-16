@@ -116,7 +116,6 @@ size_t Chunk::Len() const
 }
 
 
-//! provides the content of a string a zero terminated character pointer
 const char *Chunk::Text() const
 {
    return(str.c_str());
@@ -161,7 +160,7 @@ const char *Chunk::ElidedText(char *for_the_copy) const
 
 Chunk *Chunk::GetNext(E_Scope scope) const
 {
-   if (this->IsNullChunk())
+   if (IsNullChunk())
    {
       return(NullChunkPtr);
    }
@@ -178,7 +177,7 @@ Chunk *Chunk::GetNext(E_Scope scope) const
       return(pc);
    }
 
-   if (this->flags.test(PCF_IN_PREPROC))
+   if (flags.test(PCF_IN_PREPROC))
    {
       // If in a preproc, return a null chunk if trying to leave
       if (!pc->flags.test(PCF_IN_PREPROC))
@@ -207,7 +206,7 @@ Chunk *Chunk::GetNext(E_Scope scope) const
 
 Chunk *Chunk::GetPrev(E_Scope scope) const
 {
-   if (this->IsNullChunk())
+   if (IsNullChunk())
    {
       return(NullChunkPtr);
    }
@@ -224,7 +223,7 @@ Chunk *Chunk::GetPrev(E_Scope scope) const
       return(pc);
    }
 
-   if (this->flags.test(PCF_IN_PREPROC))
+   if (flags.test(PCF_IN_PREPROC))
    {
       // If in a preproc, return a null chunk if trying to leave
       if (!pc->flags.test(PCF_IN_PREPROC))
@@ -415,20 +414,19 @@ Chunk::T_SearchFnPtr Chunk::GetSearchFn(const E_Direction dir)
 }
 
 
-// TODO replace ::check_t with Chunk::T_CheckFnPtr when feasible
-Chunk *Chunk::Search(const ::check_t check_fct, const E_Scope scope,
+Chunk *Chunk::Search(const T_CheckFnPtr checkFn, const E_Scope scope,
                      const E_Direction dir, const bool cond) const
 {
    T_SearchFnPtr searchFnPtr = GetSearchFn(dir);
    Chunk         *pc         = const_cast<Chunk *>(this);
 
-   do                                   // loop over the chunk list
+   do                                      // loop over the chunk list
    {
-      pc = (pc->*searchFnPtr)(scope);       // in either direction while
-   } while (  pc->IsNotNullChunk()      // the end of the list was not reached yet
-           && (check_fct(pc) != cond)); // and the demanded chunk was not found either
+      pc = (pc->*searchFnPtr)(scope);      // in either direction while
+   } while (  pc->IsNotNullChunk()         // the end of the list was not reached yet
+           && ((pc->*checkFn)() != cond)); // and the demanded chunk was not found either
 
-   return(pc);                          // the latest chunk is the searched one
+   return(pc);                             // the latest chunk is the searched one
 }
 
 
@@ -710,37 +708,37 @@ void chunk_move_after(Chunk *pc_in, Chunk *ref)
 
 Chunk *Chunk::GetNextNl(E_Scope scope) const
 {
-   return(Search(chunk_is_newline, scope, E_Direction::FORWARD, true));
+   return(Search(&Chunk::IsNewline, scope, E_Direction::FORWARD, true));
 }
 
 
 Chunk *Chunk::GetPrevNl(E_Scope scope) const
 {
-   return(Search(chunk_is_newline, scope, E_Direction::BACKWARD, true));
+   return(Search(&Chunk::IsNewline, scope, E_Direction::BACKWARD, true));
 }
 
 
 Chunk *Chunk::GetNextNnl(E_Scope scope) const
 {
-   return(Search(chunk_is_newline, scope, E_Direction::FORWARD, false));
+   return(Search(&Chunk::IsNewline, scope, E_Direction::FORWARD, false));
 }
 
 
 Chunk *Chunk::GetPrevNnl(E_Scope scope) const
 {
-   return(Search(chunk_is_newline, scope, E_Direction::BACKWARD, false));
+   return(Search(&Chunk::IsNewline, scope, E_Direction::BACKWARD, false));
 }
 
 
 Chunk *Chunk::GetNextNc(E_Scope scope) const
 {
-   return(Search(chunk_is_comment, scope, E_Direction::FORWARD, false));
+   return(Search(&Chunk::IsComment, scope, E_Direction::FORWARD, false));
 }
 
 
 Chunk *Chunk::GetPrevNc(E_Scope scope) const
 {
-   return(Search(chunk_is_comment, scope, E_Direction::BACKWARD, false));
+   return(Search(&Chunk::IsComment, scope, E_Direction::BACKWARD, false));
 }
 
 
