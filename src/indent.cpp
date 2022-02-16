@@ -2248,7 +2248,8 @@ void indent_text(void)
       }
       else if (  chunk_is_token(pc, CT_SQL_BEGIN)
               || chunk_is_token(pc, CT_MACRO_OPEN)
-              || chunk_is_token(pc, CT_CLASS))
+              || (  chunk_is_token(pc, CT_CLASS)
+                 && language_is_set(LANG_CS))) // Issue #3536
       {
          frm.push(pc, __func__, __LINE__);
 
