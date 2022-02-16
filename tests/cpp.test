@@ -1090,3 +1090,4 @@
 60077  cpp/indent_ignore_before_constr_colon-t.cfg          cpp/indent_ctor_init.cpp
 60078  cpp/indent_func_proto_param-t.cfg                    cpp/Issue_3505.cpp
 60079  common/empty.cfg                                     cpp/Issue_3536.cpp
+60080  common/empty.cfg                                     cpp/Issue_3538.cpp
