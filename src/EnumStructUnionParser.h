@@ -464,7 +464,7 @@ private:
    /**
     * Map of token-type, chunk pairs
     */
-   std::map<c_token_t, std::map<std::size_t, Chunk *> > m_chunk_map;
+   std::map<E_Token, std::map<std::size_t, Chunk *> > m_chunk_map;
 
 
    /**

@@ -173,11 +173,11 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
    fl_log_frms(LPFCHK, "TOP", frm, frames);
 
 
-   int             out_pp_level = pp_level;
-   const c_token_t in_ifdef     = frm.in_ifdef;
-   const size_t    b4_cnt       = frames.size();
+   int           out_pp_level = pp_level;
+   const E_Token in_ifdef     = frm.in_ifdef;
+   const size_t  b4_cnt       = frames.size();
 
-   const char      *txt = nullptr;
+   const char    *txt = nullptr;
 
    if (pc->flags.test(PCF_IN_PREPROC))
    {

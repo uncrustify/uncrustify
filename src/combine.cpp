@@ -149,7 +149,7 @@ static void handle_oc_available(Chunk *pc);
  *
  * @return the chunk after the type
  */
-static Chunk *handle_oc_md_type(Chunk *paren_open, c_token_t ptype, pcf_flags_t flags, bool &did_it);
+static Chunk *handle_oc_md_type(Chunk *paren_open, E_Token ptype, pcf_flags_t flags, bool &did_it);
 
 /**
  * Process an C# [] thingy:
@@ -3045,8 +3045,8 @@ static void handle_oc_block_type(Chunk *pc)
 
       if (chunk_is_paren_close(apc))
       {
-         Chunk     *aft = chunk_get_next_nc_nnl(apc);
-         c_token_t pt;
+         Chunk   *aft = chunk_get_next_nc_nnl(apc);
+         E_Token pt;
 
          if (chunk_is_str(nam, "^", 1))
          {
@@ -3083,7 +3083,7 @@ static void handle_oc_block_type(Chunk *pc)
 } // handle_oc_block_type
 
 
-static Chunk *handle_oc_md_type(Chunk *paren_open, c_token_t ptype, pcf_flags_t flags, bool &did_it)
+static Chunk *handle_oc_md_type(Chunk *paren_open, E_Token ptype, pcf_flags_t flags, bool &did_it)
 {
    Chunk *paren_close;
 
@@ -3150,7 +3150,7 @@ static void handle_oc_message_decl(Chunk *pc)
    {
       return;
    }
-   c_token_t pt = chunk_is_token(tmp, CT_SEMICOLON) ? CT_OC_MSG_SPEC : CT_OC_MSG_DECL;
+   E_Token pt = chunk_is_token(tmp, CT_SEMICOLON) ? CT_OC_MSG_SPEC : CT_OC_MSG_DECL;
 
    set_chunk_type(pc, CT_OC_SCOPE);
    set_chunk_parent(pc, pt);
@@ -3470,7 +3470,7 @@ static void handle_oc_available(Chunk *os)
 
    while (os->IsNotNullChunk())
    {
-      c_token_t origType = os->type;
+      E_Token origType = os->type;
       set_chunk_type(os, CT_OC_AVAILABLE_VALUE);
 
       if (origType == CT_PAREN_CLOSE)

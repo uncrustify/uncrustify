@@ -224,9 +224,9 @@ void combine_labels(void)
                if (  chunk_is_token(cur, CT_WORD)
                   || chunk_is_token(cur, CT_BRACE_CLOSE))
                {
-                  c_token_t new_type = CT_TAG;
+                  E_Token new_type = CT_TAG;
 
-                  Chunk     *tmp = next->GetNextNc();
+                  Chunk   *tmp = next->GetNextNc();
 
                   if (tmp->IsNullChunk())
                   {

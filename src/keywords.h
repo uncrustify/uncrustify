@@ -57,7 +57,7 @@ int load_keyword_file(const char *filename);
  *
  * @return CT_WORD (no match) or the keyword token
  */
-c_token_t find_keyword_type(const char *word, size_t len);
+E_Token find_keyword_type(const char *word, size_t len);
 
 
 /**
@@ -66,7 +66,7 @@ c_token_t find_keyword_type(const char *word, size_t len);
  * @param tag   The tag (string) must be zero terminated
  * @param type  The type, usually CT_TYPE
  */
-void add_keyword(const std::string &tag, c_token_t type);
+void add_keyword(const std::string &tag, E_Token type);
 
 
 void print_custom_keywords(FILE *pfile);
@@ -76,7 +76,7 @@ void clear_keyword_file(void);
 
 
 //! Returns the pattern that the keyword needs based on the token
-pattern_class_e get_token_pattern_class(c_token_t tok);
+pattern_class_e get_token_pattern_class(E_Token tok);
 
 
 bool keywords_are_sorted(void);

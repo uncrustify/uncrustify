@@ -17,7 +17,7 @@
 /**
  * Extern declarations
  */
-extern const char *get_token_name(c_token_t);
+extern const char *get_token_name(E_Token);
 extern void log_pcf_flags(log_sev_t, pcf_flags_t);
 
 

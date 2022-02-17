@@ -128,10 +128,10 @@ static void add_file_header();
 static void add_file_footer();
 
 
-static void add_func_header(c_token_t type, file_mem &fm);
+static void add_func_header(E_Token type, file_mem &fm);
 
 
-static void add_msg_header(c_token_t type, file_mem &fm);
+static void add_msg_header(E_Token type, file_mem &fm);
 
 
 static void process_source_list(const char *source_list, const char *prefix, const char *suffix, bool no_backup, bool keep_mtime);
@@ -1683,7 +1683,7 @@ static void add_file_footer()
 }
 
 
-static void add_func_header(c_token_t type, file_mem &fm)
+static void add_func_header(E_Token type, file_mem &fm)
 {
    Chunk *pc;
    Chunk *ref;
@@ -1840,7 +1840,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
 } // add_func_header
 
 
-static void add_msg_header(c_token_t type, file_mem &fm)
+static void add_msg_header(E_Token type, file_mem &fm)
 {
    Chunk *pc;
    Chunk *ref;
@@ -2460,7 +2460,7 @@ void uncrustify_end()
 }
 
 
-const char *get_token_name(c_token_t token)
+const char *get_token_name(E_Token token)
 {
    if (  token >= 0
       && (token < static_cast<int> ARRAY_SIZE(token_names))
@@ -2472,7 +2472,7 @@ const char *get_token_name(c_token_t token)
 }
 
 
-c_token_t find_token_name(const char *text)
+E_Token find_token_name(const char *text)
 {
    if (  text != nullptr
       && (*text != 0))
@@ -2481,7 +2481,7 @@ c_token_t find_token_name(const char *text)
       {
          if (strcasecmp(text, token_names[idx]) == 0)
          {
-            return(static_cast<c_token_t>(idx));
+            return(static_cast<E_Token>(idx));
          }
       }
    }

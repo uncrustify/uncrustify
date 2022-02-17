@@ -22,7 +22,7 @@
 using namespace std;
 
 // Dynamic keyword map
-typedef map<string, c_token_t> dkwmap;
+typedef map<string, E_Token> dkwmap;
 static dkwmap dkwm;
 
 
@@ -419,7 +419,7 @@ bool keywords_are_sorted(void)
 } // keywords_are_sorted
 
 
-void add_keyword(const std::string &tag, c_token_t type)
+void add_keyword(const std::string &tag, E_Token type)
 {
    // See if the keyword has already been added
    dkwmap::iterator it = dkwm.find(tag);
@@ -478,7 +478,7 @@ static const chunk_tag_t *kw_static_match(bool orig_list, const chunk_tag_t *tag
 } // kw_static_match
 
 
-c_token_t find_keyword_type(const char *word, size_t len)
+E_Token find_keyword_type(const char *word, size_t len)
 {
    if (len <= 0)
    {
@@ -574,7 +574,7 @@ void print_custom_keywords(FILE *pfile)
 {
    for (const auto &keyword_pair : dkwm)
    {
-      c_token_t tt = keyword_pair.second;
+      E_Token tt = keyword_pair.second;
 
       if (tt == CT_TYPE)
       {
@@ -619,7 +619,7 @@ void clear_keyword_file(void)
 } // clear_keyword_file
 
 
-pattern_class_e get_token_pattern_class(c_token_t tok)
+pattern_class_e get_token_pattern_class(E_Token tok)
 {
    // TODO: instead of this switch better assign the pattern class to each statement
    switch (tok)

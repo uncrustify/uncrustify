@@ -327,7 +327,7 @@ static void chunk_log(Chunk *pc, const char *text);
  * @retval nullptr  no chunk found or invalid parameters provided
  * @retval Chunk  pointer to the found chunk
  */
-static Chunk *chunk_search_type(Chunk *cur, const c_token_t type, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD);
+static Chunk *chunk_search_type(Chunk *cur, const E_Token type, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD);
 
 
 /**
@@ -347,7 +347,7 @@ static Chunk *chunk_search_type(Chunk *cur, const c_token_t type, const E_Scope 
  * @retval nullptr  no chunk found or invalid parameters provided
  * @retval Chunk  pointer to the found chunk
  */
-static Chunk *chunk_search_type_level(Chunk *cur, c_token_t type, E_Scope scope = E_Scope::ALL, E_Direction dir = E_Direction::FORWARD, int level = -1);
+static Chunk *chunk_search_type_level(Chunk *cur, E_Token type, E_Scope scope = E_Scope::ALL, E_Direction dir = E_Direction::FORWARD, int level = -1);
 
 
 /**
@@ -458,13 +458,13 @@ static Chunk *__internal_chunk_search(Chunk *cur, const check_t check_fct, const
 }
 
 
-Chunk *chunk_search_prev_cat(Chunk *pc, const c_token_t cat)
+Chunk *chunk_search_prev_cat(Chunk *pc, const E_Token cat)
 {
    return(chunk_search_type(pc, cat, E_Scope::ALL, E_Direction::BACKWARD));
 }
 
 
-Chunk *chunk_search_next_cat(Chunk *pc, const c_token_t cat)
+Chunk *chunk_search_next_cat(Chunk *pc, const E_Token cat)
 {
    return(chunk_search_type(pc, cat, E_Scope::ALL, E_Direction::FORWARD));
 }
@@ -491,7 +491,7 @@ bool are_chunks_in_same_line(Chunk *start, Chunk *end)
 }
 
 
-static Chunk *chunk_search_type(Chunk *cur, const c_token_t type,
+static Chunk *chunk_search_type(Chunk *cur, const E_Token type,
                                 const E_Scope scope, const E_Direction dir)
 {
    /*
@@ -520,7 +520,7 @@ static Chunk *chunk_search_type(Chunk *cur, const c_token_t type,
 }
 
 
-static Chunk *chunk_search_type_level(Chunk *cur, c_token_t type, E_Scope scope, E_Direction dir, int level)
+static Chunk *chunk_search_type_level(Chunk *cur, E_Token type, E_Scope scope, E_Direction dir, int level)
 {
    /*
     * Depending on the parameter dir the search function searches
@@ -808,13 +808,13 @@ Chunk *chunk_get_prev_nc_nnl_ni(Chunk *cur, E_Scope scope)
 }
 
 
-Chunk *chunk_get_next_type(Chunk *cur, c_token_t type, int level, E_Scope scope)
+Chunk *chunk_get_next_type(Chunk *cur, E_Token type, int level, E_Scope scope)
 {
    return(chunk_search_type_level(cur, type, scope, E_Direction::FORWARD, level));
 }
 
 
-Chunk *chunk_get_prev_type(Chunk *cur, c_token_t type, int level, E_Scope scope)
+Chunk *chunk_get_prev_type(Chunk *cur, E_Token type, int level, E_Scope scope)
 {
    return(chunk_search_type_level(cur, type, scope, E_Direction::BACKWARD, level));
 }
@@ -1008,7 +1008,7 @@ void chunk_flags_set_real(Chunk *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits)
 }
 
 
-void set_chunk_type_real(Chunk *pc, c_token_t token, const char *func, int line)
+void set_chunk_type_real(Chunk *pc, E_Token token, const char *func, int line)
 {
    LOG_FUNC_ENTRY();
 
@@ -1035,7 +1035,7 @@ void set_chunk_type_real(Chunk *pc, c_token_t token, const char *func, int line)
 } // set_chunk_type_real
 
 
-void set_chunk_parent_real(Chunk *pc, c_token_t token, const char *func, int line)
+void set_chunk_parent_real(Chunk *pc, E_Token token, const char *func, int line)
 {
    LOG_FUNC_ENTRY();
 
@@ -1063,7 +1063,7 @@ void set_chunk_parent_real(Chunk *pc, c_token_t token, const char *func, int lin
 } // set_chunk_parent_real
 
 
-c_token_t get_chunk_parent_type(Chunk *pc)
+E_Token get_chunk_parent_type(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
@@ -1229,7 +1229,7 @@ void chunk_set_parent(Chunk *pc, Chunk *parent)
 }
 
 
-c_token_t get_type_of_the_parent(Chunk *pc)
+E_Token get_type_of_the_parent(Chunk *pc)
 {
    if (pc == nullptr)
    {

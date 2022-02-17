@@ -537,7 +537,7 @@ void make_type(Chunk *pc)
 } // make_type
 
 
-Chunk *set_paren_parent(Chunk *start, c_token_t parent)
+Chunk *set_paren_parent(Chunk *start, E_Token parent)
 {
    LOG_FUNC_ENTRY();
    Chunk *end;

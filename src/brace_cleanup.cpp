@@ -39,7 +39,7 @@ using std::stringstream;
 struct BraceState
 {
    std::vector<ParseFrame> frames     = {};
-   c_token_t               in_preproc = CT_NONE;
+   E_Token                 in_preproc = CT_NONE;
    int                     pp_level   = 0;
    bool                    consumed   = false;
 };
@@ -499,7 +499,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
             || (frm.top().type == CT_SPAREN_OPEN)))
       {
          // TODO: fix enum hack
-         set_chunk_type(pc, static_cast<c_token_t>(frm.top().type + 1));
+         set_chunk_type(pc, static_cast<E_Token>(frm.top().type + 1));
 
          if (chunk_is_token(pc, CT_SPAREN_CLOSE))
          {
@@ -509,7 +509,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       }
 
       // Make sure the open / close match
-      if (chunk_is_not_token(pc, (c_token_t)(frm.top().type + 1)))
+      if (chunk_is_not_token(pc, (E_Token)(frm.top().type + 1)))
       {
          if (pc->flags.test(PCF_IN_PREPROC))                // Issue #3113, #3283
          {
@@ -524,7 +524,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
             if (AA.type != CT_EOF)
             {
                LOG_FMT(LWARN, "%s(%d): (frm.top().type + 1) is %s\n",
-                       __func__, __LINE__, get_token_name((c_token_t)(frm.top().type + 1)));
+                       __func__, __LINE__, get_token_name((E_Token)(frm.top().type + 1)));
             }
 
             if (  frm.top().type != CT_EOF
@@ -632,7 +632,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       }
    }
    // Get the parent type for brace and parenthesis open
-   c_token_t parent = get_chunk_parent_type(pc);
+   E_Token parent = get_chunk_parent_type(pc);
 
    if (  chunk_is_token(pc, CT_PAREN_OPEN)
       || chunk_is_token(pc, CT_FPAREN_OPEN)
@@ -1108,9 +1108,9 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
       }
       else
       {
-         const c_token_t parent = frm.top().type;
+         const E_Token parent = frm.top().type;
 
-         Chunk           *vbrace = insert_vbrace_open_before(pc, frm);
+         Chunk         *vbrace = insert_vbrace_open_before(pc, frm);
          set_chunk_parent(vbrace, parent);
 
          frm.level++;

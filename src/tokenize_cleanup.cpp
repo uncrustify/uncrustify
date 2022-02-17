@@ -1380,7 +1380,7 @@ static void check_template(Chunk *start, bool in_type_cast)
        * If we have a comparison in there, then it can't be a template.
        */
       const int max_token_count = 1024;
-      c_token_t tokens[max_token_count];
+      E_Token   tokens[max_token_count];
       size_t    num_tokens = 1;
 
       tokens[0] = CT_ANGLE_OPEN;
@@ -1620,7 +1620,7 @@ static void check_template_arg(Chunk *start, Chunk *end)
 
 static void check_template_args(Chunk *start, Chunk *end)
 {
-   std::vector<c_token_t> tokens;
+   std::vector<E_Token> tokens;
 
    // Scan for commas
    Chunk *pc;

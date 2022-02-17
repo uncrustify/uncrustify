@@ -18,7 +18,7 @@
 //! Structure for counting nested level
 struct paren_stack_entry_t
 {
-   c_token_t     type;         //! the type that opened the entry
+   E_Token       type;         //! the type that opened the entry
    size_t        level;        //! Level of opening type
    size_t        open_line;    //! line that open symbol is on, only for logging purposes
    size_t        open_colu;    //! column that open symbol is on, only for logging purposes
@@ -28,7 +28,7 @@ struct paren_stack_entry_t
    size_t        indent_tmp;   //! temporary indent level (depends on use)
    size_t        indent_tab;   //! the 'tab' indent (always <= real column)
    bool          indent_cont;  //! indent_continue was applied
-   c_token_t     parent;       //! if, for, function, etc
+   E_Token       parent;       //! if, for, function, etc
    brace_stage_e stage;        //! used to check progression of complex statements.
    bool          in_preproc;   //! whether this was created in a preprocessor
    size_t        ns_cnt;       //! Number of consecutive namespace levels
@@ -46,15 +46,15 @@ private:
    void clear();
 
 public:
-   size_t    ref_no;
-   size_t    level;           //! level of parens/square/angle/brace
-   size_t    brace_level;     //! level of brace/vbrace
-   size_t    pp_level;        //! level of preproc #if stuff
-   size_t    sparen_count;
-   size_t    paren_count;
-   c_token_t in_ifdef;
-   size_t    stmt_count;
-   size_t    expr_count;
+   size_t  ref_no;
+   size_t  level;             //! level of parens/square/angle/brace
+   size_t  brace_level;       //! level of brace/vbrace
+   size_t  pp_level;          //! level of preproc #if stuff
+   size_t  sparen_count;
+   size_t  paren_count;
+   E_Token in_ifdef;
+   size_t  stmt_count;
+   size_t  expr_count;
 
 
    ParseFrame();

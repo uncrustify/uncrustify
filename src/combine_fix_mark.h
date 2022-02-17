@@ -100,7 +100,7 @@ void mark_exec_sql(Chunk *pc);
  * @param pc           the last chunk of the return type
  * @param parent_type  CT_NONE (no change) or the new parent type
  */
-void mark_function_return_type(Chunk *fname, Chunk *start, c_token_t parent_type);
+void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type);
 
 
 /**
@@ -190,7 +190,7 @@ void mark_variable_stack(ChunkStack &cs, log_sev_t sev);
  * TODO: add doc cmt
  *
  */
-pcf_flags_t mark_where_chunk(Chunk *pc, c_token_t parent_type, pcf_flags_t flags);
+pcf_flags_t mark_where_chunk(Chunk *pc, E_Token parent_type, pcf_flags_t flags);
 
 
 #endif /* COMBINE_FIX_MARK_H_INCLUDED */

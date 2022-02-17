@@ -60,7 +60,7 @@ void make_type(Chunk *pc);
  *
  * @return The chunk after the close paren
  */
-Chunk *set_paren_parent(Chunk *start, c_token_t parent);
+Chunk *set_paren_parent(Chunk *start, E_Token parent);
 
 
 /**

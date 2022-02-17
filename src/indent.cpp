@@ -164,7 +164,7 @@ using namespace uncrustify;
 static void indent_comment(Chunk *pc, size_t col);
 
 
-static size_t token_indent(c_token_t type);
+static size_t token_indent(E_Token type);
 
 
 static size_t calc_indent_continue(const ParseFrame &frm, size_t pse_tos);
@@ -390,7 +390,7 @@ void reindent_line(Chunk *pc, size_t column)
 } // reindent_line
 
 
-static size_t token_indent(c_token_t type)
+static size_t token_indent(E_Token type)
 {
    switch (type)
    {
@@ -748,7 +748,7 @@ void indent_text(void)
          while (  !frm.empty()
                && frm.top().in_preproc)
          {
-            const c_token_t type = frm.top().type;
+            const E_Token type = frm.top().type;
             LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
             frm.pop(__func__, __LINE__, pc);
@@ -869,7 +869,7 @@ void indent_text(void)
             {
                // Hack to get the logs to look right
 
-               const c_token_t memtype = next->type;
+               const E_Token memtype = next->type;
                set_chunk_type(next, CT_PP_IF_INDENT);
                frm.push(next, __func__, __LINE__);
                set_chunk_type(next, memtype);
@@ -3653,7 +3653,7 @@ void indent_text(void)
             LOG_FMT(LINDLINE, "%s(%d): indent_column is %zu\n",
                     __func__, __LINE__, indent_column);
 
-            if (frm.poped().type == c_token_t(pc->type - 1))
+            if (frm.poped().type == E_Token(pc->type - 1))
             {
                // Issue # 405
                LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",

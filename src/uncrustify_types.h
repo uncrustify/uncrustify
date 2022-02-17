@@ -12,7 +12,7 @@
 
 #include "options.h"
 #include "pcf_flags.h"
-#include "token_enum.h"    // c_token_t
+#include "token_enum.h"    // E_Token
 #include "unc_text.h"
 #include "uncrustify_limits.h"
 
@@ -173,17 +173,17 @@ enum class pattern_class_e : unsigned int
 //! used to link language keywords with some addition information
 struct chunk_tag_t
 {
-   const char *tag;        //! name of the keyword e.g. "bool"
-   c_token_t  type;        //! uncrustify type assigned to that keyword
-   size_t     lang_flags;  //! programming language that uses this keyword
+   const char *tag;       //! name of the keyword e.g. "bool"
+   E_Token    type;       //! uncrustify type assigned to that keyword
+   size_t     lang_flags; //! programming language that uses this keyword
 };
 
 
 struct align_t
 {
-   size_t    col;
-   c_token_t type;
-   size_t    len;    //! length of the token + space
+   size_t  col;
+   E_Token type;
+   size_t  len;      //! length of the token + space
 };
 
 //! holds information and data of a file
@@ -250,7 +250,7 @@ struct cp_data_t
    unc_text          newline;
 
    int               did_newline;       //! flag indicates if a newline was added or converted
-   c_token_t         in_preproc;
+   E_Token           in_preproc;
    int               preproc_ncnl_count;
    bool              output_trailspace;
    bool              output_tab_as_space;

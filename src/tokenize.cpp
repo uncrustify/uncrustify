@@ -233,7 +233,7 @@ static bool parse_newline(tok_ctx &ctx);
  *
  * @param pc  structure to update, str is an input
  */
-static void parse_pawn_pattern(tok_ctx &ctx, Chunk &pc, c_token_t tt);
+static void parse_pawn_pattern(tok_ctx &ctx, Chunk &pc, E_Token tt);
 
 
 static bool parse_ignored(tok_ctx &ctx, Chunk &pc);
@@ -1906,7 +1906,7 @@ static bool parse_newline(tok_ctx &ctx)
 }
 
 
-static void parse_pawn_pattern(tok_ctx &ctx, Chunk &pc, c_token_t tt)
+static void parse_pawn_pattern(tok_ctx &ctx, Chunk &pc, E_Token tt)
 {
    pc.str.clear();
    set_chunk_type(&pc, tt);

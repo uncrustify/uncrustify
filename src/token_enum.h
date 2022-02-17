@@ -22,7 +22,7 @@
  * program can work with. The parser and scanner assigns one of these to
  * each chunk/token.
  */
-enum c_token_t
+enum E_Token
 {
    CT_NONE,
    CT_PARENT_NOT_SET,
