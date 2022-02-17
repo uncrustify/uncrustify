@@ -32,8 +32,8 @@ struct cw_entry
 
 struct token_pri
 {
-   c_token_t tok;
-   size_t    pri;
+   E_Token tok;
+   size_t  pri;
 };
 
 
@@ -44,7 +44,7 @@ static inline bool is_past_width(Chunk *pc);
 static void split_before_chunk(Chunk *pc);
 
 
-static size_t get_split_pri(c_token_t tok);
+static size_t get_split_pri(E_Token tok);
 
 
 /**
@@ -216,7 +216,7 @@ static const token_pri pri_table[] =
 };
 
 
-static size_t get_split_pri(c_token_t tok)
+static size_t get_split_pri(E_Token tok)
 {
    for (auto token : pri_table)
    {
@@ -855,7 +855,7 @@ static void split_fcn_params(Chunk *start)
          }
 
          // Don't split "()"
-         if (pc->type != c_token_t(prev->type + 1))
+         if (pc->type != E_Token(prev->type + 1))
          {
             break;
          }

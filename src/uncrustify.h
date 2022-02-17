@@ -22,7 +22,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file, c
 void uncrustify_end();
 
 
-const char *get_token_name(c_token_t token);
+const char *get_token_name(E_Token token);
 
 
 /**
@@ -40,7 +40,7 @@ const char *language_name_from_flags(size_t lang);
  *
  * @return token, will be CT_NONE on failure to match
  */
-c_token_t find_token_name(const char *text);
+E_Token find_token_name(const char *text);
 
 std::string pcf_flags_str(pcf_flags_t flags);
 

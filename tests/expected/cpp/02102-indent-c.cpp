@@ -237,7 +237,7 @@ static void indent_pse_pop(struct parse_frame& frm, Chunk *pc)
     }
   }
 
-static int token_indent(c_token_t type)
+static int token_indent(E_Token type)
   {
   switch (type)
     {

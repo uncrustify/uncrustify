@@ -65,7 +65,7 @@ ENUMS_INFO = [
         'suffix_chars': 1,
     },
     {
-        'name': 'c_token_t',
+        'name': 'E_Token',
         'substitute_name': 'TokenType',
         'filepath': '%s/src/token_enum.h' % ROOT_DIR,
         'extra_arg': [],

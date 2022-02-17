@@ -587,7 +587,7 @@ void fix_typedef(Chunk *start)
 
       if (br_c != nullptr)
       {
-         const c_token_t tag = after->type;
+         const E_Token tag = after->type;
          set_chunk_parent(next, tag);
          set_chunk_parent(br_c, tag);
 
@@ -1000,7 +1000,7 @@ void mark_exec_sql(Chunk *pc)
 } // mark_exec_sql
 
 
-void mark_function_return_type(Chunk *fname, Chunk *start, c_token_t parent_type)
+void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type)
 {
    LOG_FUNC_ENTRY();
    Chunk *pc = start;
@@ -2080,15 +2080,15 @@ bool mark_function_type(Chunk *pc)
            __func__, __LINE__, get_token_name(pc->type), pc->Text(),
            pc->orig_line, pc->orig_col);
 
-   size_t    star_count = 0;
-   size_t    word_count = 0;
-   Chunk     *ptrcnk    = nullptr;
-   Chunk     *tmp;
-   Chunk     *apo;
-   Chunk     *apc;
-   Chunk     *aft;
-   bool      anon = false;
-   c_token_t pt, ptp;
+   size_t  star_count = 0;
+   size_t  word_count = 0;
+   Chunk   *ptrcnk    = nullptr;
+   Chunk   *tmp;
+   Chunk   *apo;
+   Chunk   *apc;
+   Chunk   *aft;
+   bool    anon = false;
+   E_Token pt, ptp;
 
    // Scan backwards across the name, which can only be a word and single star
    Chunk *varcnk = chunk_get_prev_nc_nnl_ni(pc);   // Issue #2279
@@ -2555,7 +2555,7 @@ void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
 } // mark_variable_stack
 
 
-pcf_flags_t mark_where_chunk(Chunk *pc, c_token_t parent_type, pcf_flags_t flags)
+pcf_flags_t mark_where_chunk(Chunk *pc, E_Token parent_type, pcf_flags_t flags)
 {
    /* TODO: should have options to control spacing around the ':' as well as newline ability for the
     * constraint clauses (should it break up a 'where A : B where C : D' on the same line? wrap? etc.) */

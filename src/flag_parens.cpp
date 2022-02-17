@@ -10,7 +10,7 @@
 #include "uncrustify.h"
 
 
-Chunk *flag_parens(Chunk *po, pcf_flags_t flags, c_token_t opentype, c_token_t parenttype, bool parent_all)
+Chunk *flag_parens(Chunk *po, pcf_flags_t flags, E_Token opentype, E_Token parenttype, bool parent_all)
 {
    LOG_FUNC_ENTRY();
    Chunk *paren_close;
@@ -59,7 +59,7 @@ Chunk *flag_parens(Chunk *po, pcf_flags_t flags, c_token_t opentype, c_token_t p
       if (opentype != CT_NONE)
       {
          set_chunk_type(po, opentype);
-         set_chunk_type(paren_close, (c_token_t)(opentype + 1));
+         set_chunk_type(paren_close, (E_Token)(opentype + 1));
       }
 
       if (parenttype != CT_NONE)

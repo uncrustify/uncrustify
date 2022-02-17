@@ -3385,8 +3385,8 @@ void add_long_preprocessor_conditional_block_comment(void)
                   && nl_count > nl_min) // nl_count is 1 too large at all times as #if line was counted too
                {
                   // determine the added comment style
-                  c_token_t style = (language_is_set(LANG_CPP)) ?
-                                    CT_COMMENT_CPP : CT_COMMENT;
+                  E_Token style = (language_is_set(LANG_CPP)) ?
+                                  CT_COMMENT_CPP : CT_COMMENT;
 
                   unc_text str;
                   generate_if_conditional_as_text(str, br_open);

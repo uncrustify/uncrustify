@@ -169,10 +169,10 @@ void do_braces(void)
       {
          continue;
       }
-      Chunk           *br_open = pc;
-      const c_token_t brc_type = c_token_t(pc->type + 1); // corresponds to closing type
+      Chunk         *br_open = pc;
+      const E_Token brc_type = E_Token(pc->type + 1); // corresponds to closing type
       // Detect empty bodies
-      Chunk           *tmp = chunk_get_next_nc_nnl(pc);
+      Chunk         *tmp = chunk_get_next_nc_nnl(pc);
 
       if (chunk_is_token(tmp, brc_type))
       {
@@ -976,7 +976,7 @@ static void convert_vbrace_to_brace(void)
 } // convert_vbrace_to_brace
 
 
-Chunk *insert_comment_after(Chunk *ref, c_token_t cmt_type,
+Chunk *insert_comment_after(Chunk *ref, E_Token cmt_type,
                             const unc_text &cmt_text)
 {
    LOG_FUNC_ENTRY();
@@ -1218,7 +1218,7 @@ void add_long_closebrace_comment(void)
             && tag_pc != nullptr)
          {
             // use the comment style that fits to the selected language
-            const c_token_t style = language_is_set(LANG_CPP | LANG_CS)
+            const E_Token style = language_is_set(LANG_CPP | LANG_CS)
                                     ? CT_COMMENT_CPP : CT_COMMENT;
 
             // Add a comment after the close brace

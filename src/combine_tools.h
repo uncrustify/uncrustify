@@ -79,7 +79,7 @@ bool is_ucase_str(const char *str, size_t len);
 
 void make_type(Chunk *pc);
 
-Chunk *set_paren_parent(Chunk *start, c_token_t parent);
+Chunk *set_paren_parent(Chunk *start, E_Token parent);
 
 
 #endif /* COMBINE_TOOLS_H_INCLUDED */

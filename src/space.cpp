@@ -57,8 +57,8 @@ static iarf_e ensure_force_space(Chunk *first, Chunk *second, iarf_e av);
 //! type that stores two chunks between those no space shall occur
 struct no_space_table_t
 {
-   c_token_t first;  //! first  chunk
-   c_token_t second; //! second chunk
+   E_Token first;  //! first  chunk
+   E_Token second; //! second chunk
 };
 
 
@@ -3697,7 +3697,7 @@ void space_text_balance_nested_parens(void)
          space_add_after(first, 1);
 
          // test after the closing parens   Issue #1703
-         Chunk *closing = chunk_get_next_type(first, (c_token_t)(first->type + 1), first->level);
+         Chunk *closing = chunk_get_next_type(first, (E_Token)(first->type + 1), first->level);
 
          if (closing->orig_col == closing->prev->orig_col_end)
          {
@@ -3711,7 +3711,7 @@ void space_text_balance_nested_parens(void)
          space_add_after(first, 1);
 
          // test after the opening parens   Issue #1703
-         Chunk *opening = chunk_get_prev_type(next, (c_token_t)(next->type - 1), next->level);
+         Chunk *opening = chunk_get_prev_type(next, (E_Token)(next->type - 1), next->level);
 
          if (opening->orig_col_end == opening->next->orig_col)
          {

@@ -106,7 +106,7 @@ static bool is_class_one_liner(Chunk *pc);
  * a definition of the same sort as surrounding prototypes. This checks against
  * either the function name, or the function closing brace.
  */
-bool is_func_proto_group(Chunk *pc, c_token_t one_liner_type);
+bool is_func_proto_group(Chunk *pc, E_Token one_liner_type);
 
 
 //! Find the next newline or nl_cont
@@ -185,7 +185,7 @@ static void blank_line_set(Chunk *pc, Option<unsigned> &opt);
  * Doesn't do anything if open brace before it
  * "code\n\ncomment\nif (...)" or "code\ncomment\nif (...)"
  */
-static void newlines_func_pre_blank_lines(Chunk *start, c_token_t start_type);
+static void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type);
 
 
 static Chunk *get_closing_brace(Chunk *start);
@@ -1146,7 +1146,7 @@ static void blank_line_set(Chunk *pc, Option<unsigned> &opt)
 } // blank_line_set
 
 
-bool do_it_newlines_func_pre_blank_lines(Chunk *last_nl, c_token_t start_type)
+bool do_it_newlines_func_pre_blank_lines(Chunk *last_nl, E_Token start_type)
 {
    LOG_FUNC_ENTRY();
 
@@ -1248,7 +1248,7 @@ bool do_it_newlines_func_pre_blank_lines(Chunk *last_nl, c_token_t start_type)
 } // do_it_newlines_func_pre_blank_lines
 
 
-static void newlines_func_pre_blank_lines(Chunk *start, c_token_t start_type)
+static void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type)
 {
    LOG_FUNC_ENTRY();
 
@@ -5462,7 +5462,7 @@ void newlines_eat_start_end(void)
 } // newlines_eat_start_end
 
 
-void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
+void newlines_chunk_pos(E_Token chunk_type, token_pos_e mode)
 {
    LOG_FUNC_ENTRY();
 
@@ -5665,7 +5665,7 @@ void newlines_chunk_pos(c_token_t chunk_type, token_pos_e mode)
 } // newlines_chunk_pos
 
 
-void newlines_class_colon_pos(c_token_t tok)
+void newlines_class_colon_pos(E_Token tok)
 {
    LOG_FUNC_ENTRY();
 
@@ -5949,7 +5949,7 @@ iarf_e newline_template_option(Chunk *pc, iarf_e special, iarf_e base, iarf_e fa
 } // newline_template_option
 
 
-bool is_func_proto_group(Chunk *pc, c_token_t one_liner_type)
+bool is_func_proto_group(Chunk *pc, E_Token one_liner_type)
 {
    if (  pc != nullptr
       && options::nl_class_leave_one_liner_groups()
@@ -6110,9 +6110,9 @@ void do_blank_lines(void)
          && (  get_chunk_parent_type(prev) == CT_CLASS
             || get_chunk_parent_type(prev) == CT_STRUCT))
       {
-         c_token_t parent_type = get_chunk_parent_type(prev);
-         Chunk     *start      = chunk_get_prev_type(prev, parent_type, prev->level);
-         Chunk     *tmp        = start;
+         E_Token parent_type = get_chunk_parent_type(prev);
+         Chunk   *start      = chunk_get_prev_type(prev, parent_type, prev->level);
+         Chunk   *tmp        = start;
 
          // Is this a class/struct template?
          if (get_chunk_parent_type(tmp) == CT_TEMPLATE)

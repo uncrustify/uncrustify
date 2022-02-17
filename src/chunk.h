@@ -216,14 +216,14 @@ public:
     * @token the token to check for
     * @return true if the chuck type matches the specified token, false otherwise
     */
-   bool Is(c_token_t token) const;
+   bool Is(E_Token token) const;
 
    /**
     * @brief checks whether the chuck is not a specific token
     * @token the token to check for
     * @return true if the chuck type does not matches the specified token, false otherwise
     */
-   bool IsNot(c_token_t token) const;
+   bool IsNot(E_Token token) const;
 
    /**
     * @brief checks whether the chuck is a newline
@@ -250,26 +250,26 @@ public:
 
    align_ptr_t  align;
    indent_ptr_t indent;
-   c_token_t    type;             //! type of the chunk itself
-   c_token_t    parent_type;      //! type of the parent chunk usually CT_NONE
-                                  //! might be different from parent->parent_type (above)
-   size_t       orig_line;        //! line number of chunk in input file
-   size_t       orig_col;         //! column where chunk started in the input file, is always > 0
-   size_t       orig_col_end;     //! column where chunk ended in the input file, is always > 1
-   UINT32       orig_prev_sp;     //! whitespace before this token
-   pcf_flags_t  flags;            //! see PCF_xxx
-   size_t       column;           //! column of chunk
-   size_t       column_indent;    /** if 1st on a line, set to the 'indent'
-                                   * column, which may be less than the real
-                                   * column used to indent with tabs          */
-   size_t   nl_count;             //! number of newlines in CT_NEWLINE
-   size_t   nl_column;            //! column of the subsequent newline entries(all of them should have the same column)
-   size_t   level;                /** nest level in {, (, or [
-                                   * only to help vim command } */
-   size_t   brace_level;          //! nest level in braces only
-   size_t   pp_level;             //! nest level in preprocessor
-   bool     after_tab;            //! whether this token was after a tab
-   unc_text str;                  //! the token text
+   E_Token      type;           //! type of the chunk itself
+   E_Token      parent_type;    //! type of the parent chunk usually CT_NONE
+                                //! might be different from parent->parent_type (above)
+   size_t       orig_line;      //! line number of chunk in input file
+   size_t       orig_col;       //! column where chunk started in the input file, is always > 0
+   size_t       orig_col_end;   //! column where chunk ended in the input file, is always > 1
+   UINT32       orig_prev_sp;   //! whitespace before this token
+   pcf_flags_t  flags;          //! see PCF_xxx
+   size_t       column;         //! column of chunk
+   size_t       column_indent;  /** if 1st on a line, set to the 'indent'
+                                 * column, which may be less than the real
+                                 * column used to indent with tabs          */
+   size_t   nl_count;           //! number of newlines in CT_NEWLINE
+   size_t   nl_column;          //! column of the subsequent newline entries(all of them should have the same column)
+   size_t   level;              /** nest level in {, (, or [
+                                 * only to help vim command } */
+   size_t   brace_level;        //! nest level in braces only
+   size_t   pp_level;           //! nest level in preprocessor
+   bool     after_tab;          //! whether this token was after a tab
+   unc_text str;                //! the token text
 
    // for debugging purpose only
    track_list *tracking;
@@ -481,7 +481,7 @@ Chunk *chunk_get_prev_nc_nnl_ni(Chunk *cur, E_Scope scope = E_Scope::ALL);
  *
  * @return nullptr or the match
  */
-Chunk *chunk_get_next_type(Chunk *cur, c_token_t type, int level, E_Scope scope = E_Scope::ALL);
+Chunk *chunk_get_next_type(Chunk *cur, E_Token type, int level, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -494,7 +494,7 @@ Chunk *chunk_get_next_type(Chunk *cur, c_token_t type, int level, E_Scope scope 
  *
  * @return nullptr or the match
  */
-Chunk *chunk_get_prev_type(Chunk *cur, c_token_t type, int level, E_Scope scope = E_Scope::ALL);
+Chunk *chunk_get_prev_type(Chunk *cur, E_Token type, int level, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -596,7 +596,7 @@ Chunk *chunk_get_pp_start(Chunk *cur);
  * @retval nullptr  no object found, or invalid parameters provided
  * @retval Chunk  pointer to the found object
  */
-Chunk *chunk_search_prev_cat(Chunk *pc, const c_token_t cat);
+Chunk *chunk_search_prev_cat(Chunk *pc, const E_Token cat);
 
 
 /**
@@ -608,7 +608,7 @@ Chunk *chunk_search_prev_cat(Chunk *pc, const c_token_t cat);
  * @retval nullptr  no object found, or invalid parameters provided
  * @retval Chunk  pointer to the found object
  */
-Chunk *chunk_search_next_cat(Chunk *pc, const c_token_t cat);
+Chunk *chunk_search_next_cat(Chunk *pc, const E_Token cat);
 
 
 /**
@@ -627,7 +627,7 @@ bool are_chunks_in_same_line(Chunk *start, Chunk *end);
  * The compiler should know how to optimize the code itself.
  * To clarify do a profiling run with and without inline
  */
-static inline bool is_expected_type_and_level(Chunk *pc, c_token_t type, int level)
+static inline bool is_expected_type_and_level(Chunk *pc, E_Token type, int level)
 {
    // we don't care if the pointer is invalid or about the level (if it is negative),
    // or it is as expected and the type is as expected
@@ -649,14 +649,14 @@ static inline bool is_expected_string_and_level(Chunk *pc, const char *str, int 
 }
 
 
-inline bool Chunk::Is(c_token_t token) const
+inline bool Chunk::Is(E_Token token) const
 {
    return(  IsNotNullChunk()
          && type == token);
 }
 
 
-inline bool Chunk::IsNot(c_token_t token) const
+inline bool Chunk::IsNot(E_Token token) const
 {
    return(!Is(token));
 }
@@ -677,7 +677,7 @@ inline bool Chunk::IsComment() const
 }
 
 
-static inline bool chunk_is_token(const Chunk *pc, c_token_t c_token)
+static inline bool chunk_is_token(const Chunk *pc, E_Token c_token)
 {
    return(  pc != nullptr
          && pc->IsNotNullChunk()
@@ -685,7 +685,7 @@ static inline bool chunk_is_token(const Chunk *pc, c_token_t c_token)
 }
 
 
-static inline bool chunk_is_not_token(const Chunk *pc, c_token_t c_token)
+static inline bool chunk_is_not_token(const Chunk *pc, E_Token c_token)
 {
    return(  pc != nullptr
          && pc->IsNotNullChunk()
@@ -713,7 +713,7 @@ static inline Chunk *chunk_skip_to_match(Chunk *cur, E_Scope scope = E_Scope::AL
          || chunk_is_token(cur, CT_ANGLE_OPEN)
          || chunk_is_token(cur, CT_SQUARE_OPEN)))
    {
-      return(chunk_get_next_type(cur, (c_token_t)(cur->type + 1), cur->level, scope));
+      return(chunk_get_next_type(cur, (E_Token)(cur->type + 1), cur->level, scope));
    }
    return(cur);
 }
@@ -731,7 +731,7 @@ static inline Chunk *chunk_skip_to_match_rev(Chunk *cur, E_Scope scope = E_Scope
          || chunk_is_token(cur, CT_ANGLE_CLOSE)
          || chunk_is_token(cur, CT_SQUARE_CLOSE)))
    {
-      return(chunk_get_prev_type(cur, (c_token_t)(cur->type - 1), cur->level, scope));
+      return(chunk_get_prev_type(cur, (E_Token)(cur->type - 1), cur->level, scope));
    }
    return(cur);
 }
@@ -1164,10 +1164,10 @@ bool chunk_is_class_struct_union(Chunk *pc);
 bool chunk_is_enum(Chunk *pc);
 
 
-void set_chunk_type_real(Chunk *pc, c_token_t tt, const char *func, int line);
+void set_chunk_type_real(Chunk *pc, E_Token tt, const char *func, int line);
 
 
-void set_chunk_parent_real(Chunk *pc, c_token_t tt, const char *func, int line);
+void set_chunk_parent_real(Chunk *pc, E_Token tt, const char *func, int line);
 
 
 #define set_chunk_type(pc, tt)      set_chunk_type_real((pc), (tt), __unqualified_func__, __LINE__)
@@ -1176,7 +1176,7 @@ void set_chunk_parent_real(Chunk *pc, c_token_t tt, const char *func, int line);
 #define set_chunk_parent(pc, tt)    set_chunk_parent_real((pc), (tt), __unqualified_func__, __LINE__)
 
 
-c_token_t get_chunk_parent_type(Chunk *pc);
+E_Token get_chunk_parent_type(Chunk *pc);
 
 
 void chunk_flags_set_real(Chunk *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits);
@@ -1194,7 +1194,7 @@ void chunk_flags_set_real(Chunk *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits)
 void chunk_set_parent(Chunk *pc, Chunk *parent);
 
 
-c_token_t get_type_of_the_parent(Chunk *pc);
+E_Token get_type_of_the_parent(Chunk *pc);
 
 
 /**

@@ -87,14 +87,14 @@ void newlines_eat_start_end(void);
  * exactly 1 newline before (UO_pos_comma == TRAIL) or after (UO_pos_comma == LEAD).
  * We can't remove a newline if it is right before a preprocessor.
  */
-void newlines_chunk_pos(c_token_t chunk_type, uncrustify::token_pos_e mode);
+void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode);
 
 
 /**
  * Searches for CT_CLASS_COLON and moves them, if needed.
  * Also breaks up the args
  */
-void newlines_class_colon_pos(c_token_t tok);
+void newlines_class_colon_pos(E_Token tok);
 
 
 void newlines_cleanup_dup(void);

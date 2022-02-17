@@ -55,7 +55,7 @@ void ParseFrame::clear()
    pp_level     = 0;
    sparen_count = 0;
    paren_count  = 0;
-   in_ifdef     = c_token_t::CT_NONE;
+   in_ifdef     = E_Token::CT_NONE;
    stmt_count   = 0;
    expr_count   = 0;
 }
