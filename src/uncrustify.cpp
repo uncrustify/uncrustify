@@ -1648,7 +1648,9 @@ static void do_source_file(const char *filename_in,
 
 static void add_file_header()
 {
-   if (!chunk_is_comment(Chunk::GetHead()))
+   // don't add the file header if running as frag
+   if (  !chunk_is_comment(Chunk::GetHead())
+      && !cpd.frag)
    {
       // TODO: detect the typical #ifndef FOO / #define FOO sequence
       tokenize(cpd.file_hdr.data, Chunk::GetHead());
