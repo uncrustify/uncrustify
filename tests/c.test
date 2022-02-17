@@ -92,6 +92,7 @@
 00144  c/ben_075.cfg                              c/align-proto-vars.c
 00145  c/ben_076.cfg                              c/vardefcol.c
 00146  c/Issue_3516.cfg                           c/Issue_3516.c
+00147  c/Issue_3517.cfg                           c/Issue_3516.c
 
 # casts
 
