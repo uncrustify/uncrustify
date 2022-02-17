@@ -1306,7 +1306,7 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
     * the following may identify cases where we've reached the
     * end of a cast terminated by a closing paren
     */
-   if (  (  chunk_is_token(pc, CT_PAREN_CLOSE)
+   if (  (  chunk_is_paren_close(pc) // Issue #3538
          && pc->level < m_start->level)
       || (start_in_funcdef ^ pc_in_funcdef).test_any()
       || (start_in_preproc ^ pc_in_preproc).test_any())
