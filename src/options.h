@@ -2801,16 +2801,16 @@ nl_typedef_blk_end;
 extern BoundedOption<unsigned, 0, 16>
 nl_typedef_blk_in;
 
-// The number of newlines before a block of variable definitions not at the top
-// of a function body. If nl_after_access_spec is non-zero, that option takes
-// precedence.
+// The number of empty newlines before a block of variable definitions
+// not at the top of a function body. If nl_after_access_spec is non-zero,
+// that option takes precedence.
 //
 // 0: No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_var_def_blk_start;
 
-// The number of empty newlines after a block of variable definitions not at the top
-// of a function body.
+// The number of empty newlines after a block of variable definitions
+// not at the top of a function body.
 //
 // 0: No change (default).
 extern BoundedOption<unsigned, 0, 16>

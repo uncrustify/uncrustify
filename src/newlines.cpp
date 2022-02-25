@@ -2133,7 +2133,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
 
                if (!chunk_is_opening_brace(prev))
                {
-                  newline_min_after(prev, options::nl_var_def_blk_start(), PCF_VAR_DEF);
+                  newline_min_after(prev, options::nl_var_def_blk_start() + 1, PCF_VAR_DEF);
                }
             }
 
