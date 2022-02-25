@@ -3,6 +3,7 @@ void foo(void)
     while (nextSegmentIndex >= 0)
     {
         Segment seg = map.segments[nextSegmentIndex--];
+
         volatile if (seg.count)
             {
                 currentTable = seg.table;

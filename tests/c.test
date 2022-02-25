@@ -93,6 +93,7 @@
 00145  c/ben_076.cfg                              c/vardefcol.c
 00146  c/Issue_3516.cfg                           c/Issue_3516.c
 00147  c/Issue_3517.cfg                           c/Issue_3516.c
+00148  c/Issue_3518.cfg                           c/Issue_3518.c
 
 # casts
 

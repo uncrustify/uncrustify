@@ -37,6 +37,7 @@ int errno = 0;
 // from \dm\src\include\setlocal.h
 //extern "C" char * __cdecl __locale_decpoint;
 char *__locale_decpoint;
+
 //#endif
 //const uint LS = 0x2028;	// UTF line separator
 //const uint PS = 0x2029;	// UTF paragraph separator
@@ -88,6 +89,7 @@ class Lexer
             while (true)
             {
                 ubyte c = *p;
+
                 switch (c)
                 {
                 case '\n':
@@ -108,6 +110,7 @@ class Lexer
                     if (c & 0x80)
                     {
                         uint u = decodeUTF();
+
                         if (u == PS || u == LS)
                             break;
                     }
@@ -243,6 +246,7 @@ class Lexer
         if (token.next)
         {
             Token *t = token.next;
+
             memcpy(&token, t, Token.sizeof);
 //			t.next = freelist;
 //			freelist = t;
@@ -386,6 +390,7 @@ class Lexer
             case '\\':                                  // escaped string literal
 //					debug writefln( "    escaped string literal" );
                 uint c;
+
                 stringbuffer.offset = 0;
                 do
                 {
@@ -458,6 +463,7 @@ class Lexer
                 {
 //					debug writefln( "    identifier" );
                     ubyte c;
+
                     do
                     {
                         c = *++p;
@@ -469,6 +475,7 @@ class Lexer
                     memcpy(tmp.ptr, t.ptr, p - t.ptr);
                     Identifier id;
                     Identifier *pid = tmp in stringtable;
+
                     if (pid)
                     {
                         id = *pid;
@@ -563,6 +570,7 @@ class Lexer
                         while (true)
                         {
                             ubyte c = *p;
+
                             switch (c)
                             {
                             case '/':
@@ -590,6 +598,7 @@ class Lexer
                                 if (c & 0x80)
                                 {
                                     uint u = decodeUTF();
+
                                     if (u == PS || u == LS)
                                         loc.linnum++;
                                 }
@@ -618,6 +627,7 @@ class Lexer
                     while (1)
                     {
                         ubyte c = *++p;
+
                         switch (c)
                         {
                         case '\n':
@@ -646,6 +656,7 @@ class Lexer
                             if (c & 0x80)
                             {
                                 uint u = decodeUTF();
+
                                 if (u == PS || u == LS)
                                     break;
                             }
@@ -671,12 +682,14 @@ class Lexer
                 case '+':
                     {
                         int nest;
+
                         linnum = loc.linnum;
                         p++;
                         nest = 1;
                         while (1)
                         {
                             ubyte c = *p;
+
                             switch (c)
                             {
                             case '/':
@@ -720,6 +733,7 @@ class Lexer
                                 if (c & 0x80)
                                 {
                                     uint u = decodeUTF();
+
                                     if (u == PS || u == LS)
                                         loc.linnum++;
                                 }
@@ -1043,9 +1057,11 @@ class Lexer
                 {
                     debug writefln("    default char");
                     ubyte c = *p;
+
                     if (c & 0x80)
                     {
                         uint u = decodeUTF();
+
                         // Check for start of unicode identifier
                         if (isUniAlpha(u))
                             goto case_identifier;
@@ -1118,6 +1134,7 @@ class Lexer
             if (ishex(c))
             {
                 uint v;
+
                 n = 0;
                 v = 0;
                 while (1)
@@ -1184,6 +1201,7 @@ class Lexer
             if (isoctal(c))
             {
                 ubyte v;
+
                 n = 0;
                 do
                 {
@@ -1251,6 +1269,7 @@ class Lexer
                 {
                     p--;
                     uint u = decodeUTF();
+
                     p++;
                     if (u == PS || u == LS)
                         loc.linnum++;
@@ -1329,6 +1348,7 @@ class Lexer
                 {
                     p--;
                     uint u = decodeUTF();
+
                     p++;
                     if (u == PS || u == LS)
                         loc.linnum++;
@@ -1615,6 +1635,7 @@ class Lexer
         while (true)
         {
             char c = cast(char)*p;
+
             switch (state)
             {
             case STATE.STATE_initial:                           // opening state
@@ -1843,6 +1864,7 @@ class Lexer
             char *p = cast(char *)stringbuffer.data.ptr;
             int  r  = 10;
             int  d;
+
             if (*p == '0')
             {
                 if (p[1] == 'x' || p[1] == 'X')
@@ -1899,6 +1921,7 @@ class Lexer
         while (true)
         {
             ubyte f;
+
             switch (*p)
             {
             case 'U':
@@ -2216,6 +2239,7 @@ class Lexer
                 while (1)
                 {
                     uint c;
+
                     c = *p;
                     switch (c)
                     {
@@ -2236,6 +2260,7 @@ class Lexer
                         if (c & 0x80)
                         {
                             uint u = decodeUTF();
+
                             if (u == PS || u == LS)
                                 goto Lerr;
                         }
@@ -2251,6 +2276,7 @@ class Lexer
                 if (*p & 0x80)
                 {
                     uint u = decodeUTF();
+
                     if (u == PS || u == LS)
                         goto Lnewline;
                 }
