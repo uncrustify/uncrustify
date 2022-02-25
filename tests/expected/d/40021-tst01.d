@@ -5,11 +5,13 @@ in
     assert(aRegisterOffset < IMAGE_SIZE);
 }
 body {
-    int  idx = aRegisterOffset / 2;
+    int idx = aRegisterOffset / 2;
+
     mMemCache[idx] = aValue;
     uint readback;
     uint st;
     uint st2;
+
     volatile {
         mMemImage[idx] = aValue;
         //readback = (cast(uint*)mMemImage.ptr)[ idx/2 ];
