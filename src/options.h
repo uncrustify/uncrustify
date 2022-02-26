@@ -1699,6 +1699,11 @@ indent_comma_paren;
 extern BoundedOption<signed, -1, 1>
 indent_bool_paren;
 
+// Whether to ignore the indentation of a Boolean operator when outside
+// parentheses.
+extern Option<bool>
+indent_ignore_bool;
+
 // Whether to ignore the indentation of an arithmetic operator.
 extern Option<bool>
 indent_ignore_arith;

@@ -452,3 +452,4 @@
 10057  c/sp_enum_brace-a.cfg                      c/Issue_3496.h
 10058  c/sp_enum_brace-r.cfg                      c/Issue_3496.h
 10059  c/sp_enum_brace-f.cfg                      c/Issue_3496.h
+10060  c/indent_ignore_bool-true.cfg              c/Issue_3548.c
