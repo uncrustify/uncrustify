@@ -1398,6 +1398,10 @@ indent_comma_paren              = 0        # signed number
 # -1: Preserve original indentation
 indent_bool_paren               = 0        # signed number
 
+# Whether to ignore the indentation of a Boolean operator when outside
+# parentheses.
+indent_ignore_bool              = false    # true/false
+
 # Whether to ignore the indentation of an arithmetic operator.
 indent_ignore_arith             = false    # true/false
 

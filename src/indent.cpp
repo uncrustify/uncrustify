@@ -3952,10 +3952,10 @@ void indent_text(void)
          }
          else if (chunk_is_token(pc, CT_BOOL))
          {
-            log_rule_B("indent_bool_paren");
-
             if (chunk_is_paren_open(frm.top().pc))
             {
+               log_rule_B("indent_bool_paren");
+
                if (options::indent_bool_paren() == (int)indent_mode_e::IGNORE)
                {
                   indent_column_set(pc->orig_col);
@@ -3971,6 +3971,15 @@ void indent_text(void)
                      reindent_line(frm.top().pc->GetNext(),
                                    indent_column + pc->Len() + 1);
                   }
+               }
+            }
+            else
+            {
+               log_rule_B("indent_ignore_bool");
+
+               if (options::indent_ignore_bool())
+               {
+                  indent_column_set(pc->orig_col);
                }
             }
             LOG_FMT(LINDENT, "%s(%d): %zu] bool => %zu [%s]\n",
