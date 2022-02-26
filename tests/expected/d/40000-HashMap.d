@@ -475,11 +475,13 @@ class HashMap
             if (c)
             {
                 HashEntry e = getFirst(hash);
+
                 while (e)
                 {
                     if (hash == e.hash && matchKey(key, e.key))
                     {
                         V v;
+
                         volatile v = e.value;
                         if (v)
                             return v;
@@ -503,6 +505,7 @@ class HashMap
             if (c)
             {
                 HashEntry e = getFirst(hash);
+
                 while (e)
                 {
                     if (e.hash == hash && matchKey(key, e.key))
@@ -619,9 +622,11 @@ class HashMap
                         // Reuse trailing consecutive sequence at same slot
                         HashEntry lastRun = e;
                         int       lastIdx = idx;
+
                         for (HashEntry last = next; last; last = last.next)
                         {
                             uint k = last.hash & sizeMask;
+
                             if (k != lastIdx)
                             {
                                 lastIdx = k;
@@ -635,6 +640,7 @@ class HashMap
                         {
                             uint      k = p.hash & sizeMask;
                             HashEntry n = newTable[k];
+
                             newTable[k] = new HashEntry(p.key, p.hash, n, p.value);
                         }
                     }
@@ -667,6 +673,7 @@ class HashMap
             if (e)
             {
                 V v;
+
                 volatile v = e.value;
                 if (value is null || value == v)
                 {
@@ -676,6 +683,7 @@ class HashMap
                     // in list, but all preceding ones need to be
                     // cloned.
                     HashEntry newFirst = e.next;
+
                     for (HashEntry p = first; p !is e; p = p.next)
                         newFirst = new HashEntry(p.key, p.hash, newFirst, p.value);
                     tab[index] = newFirst;
@@ -999,6 +1007,7 @@ class HashMap
         while (iterator.hasNext)
         {
             HashEntry he = iterator.nextElement;
+
             char[]    ca = cast(char[])he.key;
             if ((result = dg(ca, he.value)) != 0)
                 break;
@@ -1013,6 +1022,7 @@ class HashMap
     {
         int         nextSegmentIndex;
         int         nextTableIndex;
+
         HashEntry[] currentTable;
         HashEntry   nextEntry;
         HashEntry   lastReturned;
@@ -1040,6 +1050,7 @@ class HashMap
             while (nextSegmentIndex >= 0)
             {
                 Segment seg = map.segments[nextSegmentIndex--];
+
                 volatile if (seg.count)
                     {
                         currentTable = seg.table;

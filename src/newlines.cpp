@@ -26,6 +26,7 @@
 #include "keywords.h"
 #include "prototypes.h"
 #include "space.h"
+#include "unc_tools.h"
 
 #ifdef WIN32
 #include <algorithm>                   // to get max
@@ -673,7 +674,7 @@ static void newline_min_after(Chunk *ref, size_t count, pcf_flag_e flag)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LNEWLINE, "%s(%d): for '%s', at orig_line %zu, count is %zu, flag is %s:",
+   LOG_FMT(LNEWLINE, "%s(%d): for '%s', at orig_line %zu, count is %zu,\n   flag is %s:",
            __func__, __LINE__, ref->Text(), ref->orig_line, count,
            pcf_flags_str(flag).c_str());
    log_func_stack_inline(LNEWLINE);
@@ -2138,7 +2139,8 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
             }
 
             // set newlines within var def block
-            if (var_blk && (options::nl_var_def_blk_in() > 0))
+            if (  var_blk
+               && (options::nl_var_def_blk_in() > 0))
             {
                log_rule_B("nl_var_def_blk_in");
                prev = pc->GetPrev();
@@ -2170,6 +2172,10 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
             }
             // set blank lines after first var def block
             log_rule_B("nl_func_var_def_blk");
+            LOG_FMT(LBLANKD, "%s(%d): first_var_blk %s\n",
+                    __func__, __LINE__, first_var_blk ? "TRUE" : "FALSE");
+            LOG_FMT(LBLANKD, "%s(%d): fn_top %s\n",
+                    __func__, __LINE__, fn_top ? "TRUE" : "FALSE");
 
             if (  var_blk
                && first_var_blk
@@ -2179,7 +2185,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
                LOG_FMT(LBLANKD, "%s(%d): nl_func_var_def_blk at line %zu\n",
                        __func__, __LINE__, prev->orig_line);
                log_rule_B("nl_func_var_def_blk");
-               newline_min_after(prev, 1 + options::nl_func_var_def_blk(), PCF_VAR_DEF);
+               newline_min_after(prev, options::nl_func_var_def_blk() + 1, PCF_VAR_DEF);
             }
             // reset the variables for the next block
             first_var_blk = true;
@@ -2197,7 +2203,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
             {
                prev = pc->GetPrev();
                prev = prev->GetPrev();
-               newline_min_after(prev, options::nl_var_def_blk_end(), PCF_VAR_DEF);
+               newline_min_after(prev, options::nl_var_def_blk_end() + 1, PCF_VAR_DEF);
                pc            = pc->GetNext();
                first_var_blk = false;
                var_blk       = false;
@@ -2576,7 +2582,9 @@ static void newlines_brace_pair(Chunk *br_open)
       Chunk *pc = chunk_get_next_nc_nnl(br_open);
       newline_add_between(br_open, pc);
 
-      newline_def_blk(br_open, true);
+      Chunk *ne             = chunk_get_next_nc_nnl(pc);
+      bool  this_is_var_def = is_var_def(pc, ne);                          // Issue #3518
+      newline_def_blk(br_open, this_is_var_def);
    }
 
    // Handle the cases where the brace is part of a class or struct
@@ -2758,6 +2766,8 @@ static void newline_before_return(Chunk *start)
    {
       nl->nl_count++;
       MARK_CHANGE();
+      LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, text is '%s', ++ nl_count is now %zu\n",
+              __func__, __LINE__, nl->orig_line, nl->orig_col, nl->Text(), nl->nl_count);
    }
 } // newline_before_return
 
@@ -6027,6 +6037,8 @@ void do_blank_lines(void)
       {
          line_added = true;
          ++pc->nl_count;
+         LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, text is '%s', ++ nl_count is now %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), pc->nl_count);
       }
 
       // Limit consecutive newlines
@@ -6530,8 +6542,10 @@ void do_blank_lines(void)
          && pc->nl_count > 1)
       {
          --pc->nl_count;
+         LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, text is '%s', -- nl_count is now %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), pc->nl_count);
       }
-      LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, text is '%s', nl_count is now %zu\n",
+      LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, text is '%s', end nl_count is now %zu\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), pc->nl_count);
    }
 } // do_blank_lines
