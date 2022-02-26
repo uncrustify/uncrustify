@@ -1057,15 +1057,21 @@ force_tab_after_define          = false    # true/false
 # Default: 8
 indent_columns                  = 8        # unsigned number
 
+# Whether to ignore indent for the first continuation line. Subsequent
+# continuation lines will still be indented to match the first.
+indent_ignore_first_continue    = false    # true/false
+
 # The continuation indent. If non-zero, this overrides the indent of '(', '['
 # and '=' continuation indents. Negative values are OK; negative value is
 # absolute and not increased for each '(' or '[' level.
 #
 # For FreeBSD, this is set to 4.
+# Requires indent_ignore_first_continue=false.
 indent_continue                 = 0        # number
 
 # The continuation indent, only for class header line(s). If non-zero, this
 # overrides the indent of 'class' continuation indents.
+# Requires indent_ignore_first_continue=false.
 indent_continue_class_head      = 0        # unsigned number
 
 # Whether to indent empty lines (i.e. lines which contain only spaces before
@@ -3302,6 +3308,8 @@ use_indent_func_call_param      = true     # true/false
 #
 # true:  indent_continue will be used only once
 # false: indent_continue will be used every time (default)
+#
+# Requires indent_ignore_first_continue=false.
 use_indent_continue_only_once   = false    # true/false
 
 # The value might be used twice:

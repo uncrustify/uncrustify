@@ -429,6 +429,24 @@ static size_t token_indent(E_Token type)
    } while (false)
 
 
+static size_t get_indent_first_continue(Chunk *pc)
+{
+   log_rule_B("indent_ignore_first_continue");
+   Chunk *continuation = chunk_get_next_type(pc, CT_NEWLINE, pc->level);
+
+   if (continuation)
+   {
+      continuation = continuation->GetNext();
+
+      if (continuation)
+      {
+         return(continuation->orig_col);
+      }
+   }
+   return(0);
+}
+
+
 static size_t calc_indent_continue(const ParseFrame &frm, size_t pse_tos)
 {
    log_rule_B("indent_continue");
@@ -2861,13 +2879,22 @@ void indent_text(void)
          log_rule_B("indent_continue");
 
          if (  get_chunk_parent_type(pc) != CT_OC_AT
-            && options::indent_continue() != 0
+            && (  options::indent_ignore_first_continue()
+               || options::indent_continue() != 0)
             && !skipped)
          {
-            frm.top().indent = frm.prev().indent;
+            if (options::indent_ignore_first_continue())
+            {
+               frm.top().indent = get_indent_first_continue(pc->GetNext());
+            }
+            else
+            {
+               frm.top().indent = frm.prev().indent;
+            }
             log_indent();
 
             if (  pc->level == pc->brace_level
+               && !options::indent_ignore_first_continue()
                && (  chunk_is_token(pc, CT_FPAREN_OPEN)
                   || chunk_is_token(pc, CT_SPAREN_OPEN)
                   || (  chunk_is_token(pc, CT_SQUARE_OPEN)
@@ -3064,7 +3091,12 @@ void indent_text(void)
             }
             log_rule_B("indent_continue");
 
-            if (options::indent_continue() != 0)
+            if (options::indent_ignore_first_continue())
+            {
+               frm.top().indent = get_indent_first_continue(pc);
+               log_indent();
+            }
+            else if (options::indent_continue() != 0)
             {
                frm.top().indent = frm.prev().indent;
                log_indent();
@@ -3187,7 +3219,12 @@ void indent_text(void)
 
          log_rule_B("indent_continue");
 
-         if (options::indent_continue() != 0)
+         if (options::indent_ignore_first_continue())
+         {
+            frm.top().indent = get_indent_first_continue(pc);
+            log_indent();
+         }
+         else if (options::indent_continue() != 0)
          {
             frm.top().indent = calc_indent_continue(frm, frm.size() - 2);
             log_indent();
@@ -3464,7 +3501,11 @@ void indent_text(void)
       {
          log_rule_B("indent_continue");
 
-         if (options::indent_continue() != 0)
+         if (options::indent_ignore_first_continue())
+         {
+            vardefcol = get_indent_first_continue(pc);
+         }
+         else if (options::indent_continue() != 0)
          {
             vardefcol = calc_indent_continue(frm);
             // Setting frm.top().indent_cont = true in the top context when the indent is not also set
@@ -4244,13 +4285,22 @@ void indent_text(void)
 
       if (  chunk_is_token(pc, CT_CLASS)
          && language_is_set(LANG_CPP | LANG_JAVA)
-         && options::indent_continue_class_head() != 0
+         && (  options::indent_ignore_first_continue()
+            || options::indent_continue_class_head() != 0)
          && !classFound)
       {
-         LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, CT_CLASS found and UO_indent_continue != 0, OPEN IT\n",
+         LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, CT_CLASS found, OPEN IT\n",
                  __func__, __LINE__, pc->orig_line);
          frm.push(pc, __func__, __LINE__);
-         frm.top().indent = options::indent_continue_class_head() + 1;
+
+         if (options::indent_ignore_first_continue())
+         {
+            frm.top().indent = get_indent_first_continue(pc);
+         }
+         else
+         {
+            frm.top().indent = options::indent_continue_class_head() + 1;
+         }
          log_indent();
 
          frm.top().indent_tmp = frm.top().indent;

@@ -1300,16 +1300,23 @@ force_tab_after_define;
 extern BoundedOption<unsigned, 0, 16>
 indent_columns; // = 8
 
+// Whether to ignore indent for the first continuation line. Subsequent
+// continuation lines will still be indented to match the first.
+extern Option<bool>
+indent_ignore_first_continue;
+
 // The continuation indent. If non-zero, this overrides the indent of '(', '['
 // and '=' continuation indents. Negative values are OK; negative value is
 // absolute and not increased for each '(' or '[' level.
 //
 // For FreeBSD, this is set to 4.
+// Requires indent_ignore_first_continue=false.
 extern BoundedOption<signed, -16, 16>
 indent_continue;
 
 // The continuation indent, only for class header line(s). If non-zero, this
 // overrides the indent of 'class' continuation indents.
+// Requires indent_ignore_first_continue=false.
 extern BoundedOption<unsigned, 0, 16>
 indent_continue_class_head;
 
@@ -4058,6 +4065,8 @@ use_indent_func_call_param; // = true
 //
 // true:  indent_continue will be used only once
 // false: indent_continue will be used every time (default)
+//
+// Requires indent_ignore_first_continue=false.
 extern Option<bool>
 use_indent_continue_only_once;
 
