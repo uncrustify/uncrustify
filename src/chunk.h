@@ -241,6 +241,12 @@ public:
     */
    bool IsComment() const;
 
+   /**
+    * @brief checks whether the chuck is either a comment or a newline
+    * @return true if the chuck is either a comment or a newline, false otherwise
+    */
+   bool IsCommentOrNewline() const;
+
 
    // --------- Data members
 
@@ -674,6 +680,13 @@ inline bool Chunk::IsComment() const
    return(  Is(CT_COMMENT)
          || Is(CT_COMMENT_MULTI)
          || Is(CT_COMMENT_CPP));
+}
+
+
+inline bool Chunk::IsCommentOrNewline() const
+{
+   return(  IsComment()
+         || IsNewline());
 }
 
 
