@@ -1100,3 +1100,4 @@
 60084  cpp/Issue_3576-a.cfg                                 cpp/Issue_3576.h
 60085  cpp/Issue_3576-b.cfg                                 cpp/Issue_3576.h
 60086  cpp/indent_namespace_inner_only.cfg                  cpp/indent_namespace_inner_only.h
+60087  cpp/Issue_3550.cfg                                   cpp/Issue_3550.cpp
