@@ -1138,6 +1138,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    if (chunk_is_token(pc, CT_OC_CLASS))
    {
       handle_oc_class(pc);
+      return;
    }
    // TODO: Check for stuff that can only occur at the start of an statement
 
@@ -1167,6 +1168,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          && !pc->flags.test(PCF_IN_TYPEDEF))
       {
          fix_casts(pc);
+         return;
       }
    }
 
@@ -1270,22 +1272,22 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          set_chunk_type(pc, CT_PTR_TYPE);
       }
 
-      if (chunk_is_token(pc, CT_MINUS))
+      else if (chunk_is_token(pc, CT_MINUS))
       {
          set_chunk_type(pc, CT_NEG);
       }
 
-      if (chunk_is_token(pc, CT_PLUS))
+      else if (chunk_is_token(pc, CT_PLUS))
       {
          set_chunk_type(pc, CT_POS);
       }
 
-      if (chunk_is_token(pc, CT_INCDEC_AFTER))
+      else if (chunk_is_token(pc, CT_INCDEC_AFTER))
       {
          set_chunk_type(pc, CT_INCDEC_BEFORE);
       }
 
-      if (chunk_is_token(pc, CT_AMP))
+      else if (chunk_is_token(pc, CT_AMP))
       {
          if (chunk_is_token(prev, CT_ANGLE_CLOSE))             // Issue #2324
          {
@@ -1297,7 +1299,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          }
       }
 
-      if (chunk_is_token(pc, CT_CARET))
+      else if (chunk_is_token(pc, CT_CARET))
       {
          if (language_is_set(LANG_C | LANG_CPP | LANG_OC))
          {
