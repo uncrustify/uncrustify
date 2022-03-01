@@ -12,6 +12,7 @@
 #include "prototypes.h"
 
 #include <regex>
+#include <unordered_map>
 
 constexpr static auto LCURRENT = LSORT;
 
@@ -36,7 +37,9 @@ struct include_category
 };
 
 
-include_category *include_categories[kIncludeCategoriesCount];
+include_category                 *include_categories[kIncludeCategoriesCount];
+unordered_map<Chunk *, int>      chunk_priority_cache;
+unordered_map<std::string, bool> filename_without_ext_cache;
 
 
 /**
@@ -49,13 +52,11 @@ include_category *include_categories[kIncludeCategoriesCount];
  * @retval  > 0
  * @retval  < 0
  */
-static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare = false);
+static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare);
 
 
 /**
- * Sorting should be pretty rare and should usually only include a few chunks.
- * We need to minimize the number of swaps, as those are expensive.
- * So, we do a min sort.
+ * Sort all of the chunks in O(n log n) time with a maximum of O(n) swaps
  */
 static void do_the_sort(Chunk **chunks, size_t num_chunks);
 
@@ -96,6 +97,9 @@ static void prepare_categories()
 
 static void cleanup_categories()
 {
+   chunk_priority_cache.clear();
+   filename_without_ext_cache.clear();
+
    for (auto &include_category : include_categories)
    {
       if (include_category == nullptr)
@@ -110,18 +114,26 @@ static void cleanup_categories()
 
 static int get_chunk_priority(Chunk *pc)
 {
+   if (chunk_priority_cache.count(pc) > 0)
+   {
+      return(chunk_priority_cache[pc]);
+   }
+   int category = kIncludeCategoriesCount;
+
    for (int i = 0; i < kIncludeCategoriesCount; i++)
    {
       if (include_categories[i] != nullptr)
       {
          if (std::regex_match(pc->Text(), include_categories[i]->regex))
          {
-            return(i);
+            category = i;
+            break;
          }
       }
    }
 
-   return(kIncludeCategoriesCount);
+   chunk_priority_cache[pc] = category;
+   return(category);
 }
 
 
@@ -130,6 +142,10 @@ static int get_chunk_priority(Chunk *pc)
  */
 static bool text_contains_filename_without_ext(const char *text)
 {
+   if (filename_without_ext_cache.count(text) > 0)
+   {
+      return(filename_without_ext_cache[text]);
+   }
    std::string filepath             = cpd.filename;
    size_t      slash_idx            = filepath.find_last_of("/\\");
    std::string filename_without_ext = filepath;
@@ -145,7 +161,8 @@ static bool text_contains_filename_without_ext(const char *text)
    const std::string sanitized_filename = std::regex_replace(filename_without_ext, special_chars, R"(\$&)");
    const std::regex  filename_pattern   = std::regex("\\S?" + sanitized_filename + "\\b.*");
 
-   return(std::regex_match(text, filename_pattern));
+   filename_without_ext_cache[text] = std::regex_match(text, filename_pattern);
+   return(filename_without_ext_cache[text]);
 }
 
 
@@ -341,9 +358,7 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
 
 
 /**
- * Sorting should be pretty rare and should usually only include a few chunks.
- * We need to minimize the number of swaps, as those are expensive.
- * So, we do a min sort.
+ * Sort all of the chunks in O(n log n) time with a maximum of O(n) swaps
  */
 static void do_the_sort(Chunk **chunks, size_t num_chunks)
 {
@@ -359,41 +374,39 @@ static void do_the_sort(Chunk **chunks, size_t num_chunks)
 
    LOG_FMT(LSORT, "\n");
 
-   size_t start_idx;
-
    log_rule_B("mod_sort_case_sensitive");
    bool take_care = options::mod_sort_case_sensitive();                    // Issue #2091
 
-   for (start_idx = 0; start_idx < (num_chunks - 1); start_idx++)
+   // Sort an array of the chunk positions in order to minimize the number of swaps
+   std::vector<size_t> chunk_positions(num_chunks);
+
+   for (size_t idx = 0; idx < num_chunks; idx++)
    {
-      // Find the index of the minimum value
-      size_t min_idx = start_idx;
+      chunk_positions[idx] = idx;
+   }
 
-      for (size_t idx = start_idx + 1; idx < num_chunks; idx++)
-      {
-         if (compare_chunks(chunks[idx], chunks[min_idx], take_care) < 0)  // Issue #2091
-         {
-            min_idx = idx;
-         }
-      }
+   sort(chunk_positions.begin(), chunk_positions.end(), [chunks, take_care](const size_t &l, const size_t &r) {
+      return(compare_chunks(chunks[l], chunks[r], take_care) < 0);
+   });
 
-      // Swap the lines if the minimum isn't the first entry
-      if (min_idx != start_idx)
+   // Swap the chunk positions
+   for (size_t idx = 0; idx < num_chunks; idx++)
+   {
+      if (chunk_positions[idx] != idx)
       {
-         chunks[start_idx]->SwapLines(chunks[min_idx]);
          log_rule_B("mod_sort_incl_import_grouping_enabled");
 
-         if (options::mod_sort_incl_import_grouping_enabled())
-         {
-            Chunk *pc = chunks[min_idx];
-            chunks[min_idx]   = chunks[start_idx];
-            chunks[start_idx] = pc;
-         }
-         else
-         {
-            // Don't need to swap, since we only want the side-effects
-            chunks[min_idx] = chunks[start_idx];
-         }
+         const size_t from = chunk_positions[idx];
+         const size_t to   = chunk_positions[from];
+         chunks[from]->SwapLines(chunks[to]);
+
+         Chunk *pc = chunks[from];
+         chunks[from] = chunks[to];
+         chunks[to]   = pc;
+
+         chunk_positions[from] = from;
+         chunk_positions[idx]  = to;
+         idx--;
       }
    }
 } // do_the_sort
