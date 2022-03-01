@@ -4006,6 +4006,18 @@ void indent_text(void)
                     __func__, __LINE__, pc->orig_line, indent_column, pc->Text());
             reindent_line(pc, indent_column);
          }
+         else if (chunk_is_token(pc, CT_ASSIGN))
+         {
+            log_rule_B("indent_ignore_assign");
+
+            if (options::indent_ignore_assign())
+            {
+               indent_column_set(pc->orig_col);
+            }
+            LOG_FMT(LINDENT, "%s(%d): %zu] assign => %zu [%s]\n",
+                    __func__, __LINE__, pc->orig_line, indent_column, pc->Text());
+            reindent_line(pc, indent_column);
+         }
          else if (  options::indent_ternary_operator() == 1
                  && chunk_is_token(prev, CT_COND_COLON)
                  && (  chunk_is_token(pc, CT_ADDR)

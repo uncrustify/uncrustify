@@ -1737,6 +1737,10 @@ indent_square_nl;
 extern Option<bool>
 indent_preserve_sql;
 
+// Whether to ignore the indentation of an assignment operator.
+extern Option<bool>
+indent_ignore_assign;
+
 // Whether to align continued statements at the '='. If false or if the '=' is
 // followed by a newline, the next line is indent one tab.
 extern Option<bool>
