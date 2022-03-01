@@ -1452,11 +1452,6 @@ void indent_text(void)
                  __func__, __LINE__);
          LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
-         frm.pop(__func__, __LINE__, pc);
-         frm.top().indent_tmp = 1;
-         frm.top().indent     = 1;
-         frm.top().indent_tab = 1;
-         log_indent();
          classFound = false;
       }
       /*
@@ -4308,7 +4303,7 @@ void indent_text(void)
          }
          else
          {
-            frm.top().indent = options::indent_continue_class_head() + 1;
+            frm.top().indent = frm.prev().indent + options::indent_continue_class_head();
          }
          log_indent();
 
