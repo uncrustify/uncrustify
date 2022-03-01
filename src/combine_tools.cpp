@@ -28,8 +28,8 @@ bool can_be_full_param(Chunk *start, Chunk *end)
    bool  first_word_set = false;
 
    for (pc = start;
-        pc != nullptr && pc != end;
-        pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC))
+        pc != nullptr && pc->IsNotNullChunk() && pc != end;
+        pc = pc->GetNextNcNnl(E_Scope::PREPROC))
    {
       LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', type is %s\n",
               __func__, __LINE__, pc->Text(), get_token_name(pc->type));
@@ -103,9 +103,9 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          {
             return(false);
          }
-         Chunk *tmp2 = chunk_get_next_nc_nnl(tmp1, E_Scope::PREPROC);
+         Chunk *tmp2 = tmp1->GetNextNcNnl(E_Scope::PREPROC);
 
-         if (tmp2 == nullptr)
+         if (tmp2->IsNullChunk())
          {
             return(false);
          }
@@ -115,9 +115,9 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          {
             do
             {
-               pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
+               pc = pc->GetNextNcNnl(E_Scope::PREPROC);
 
-               if (pc == nullptr)
+               if (pc->IsNullChunk())
                {
                   return(false);
                }
@@ -142,21 +142,21 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       {
          // Check for func proto param 'void (*name)' or 'void (*name)(params)' or 'void (^name)(params)'
          // <name> can be optional
-         Chunk *tmp1 = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
+         Chunk *tmp1 = pc->GetNextNcNnl(E_Scope::PREPROC);
 
-         if (tmp1 == nullptr)
+         if (tmp1->IsNullChunk())
          {
             return(false);
          }
-         Chunk *tmp2 = chunk_get_next_nc_nnl(tmp1, E_Scope::PREPROC);
+         Chunk *tmp2 = tmp1->GetNextNcNnl(E_Scope::PREPROC);
 
-         if (tmp2 == nullptr)
+         if (tmp2->IsNullChunk())
          {
             return(false);
          }
-         Chunk *tmp3 = (chunk_is_str(tmp2, ")", 1)) ? tmp2 : chunk_get_next_nc_nnl(tmp2, E_Scope::PREPROC);
+         Chunk *tmp3 = (chunk_is_str(tmp2, ")", 1)) ? tmp2 : tmp2->GetNextNcNnl(E_Scope::PREPROC);
 
-         if (tmp3 == nullptr)
+         if (tmp3->IsNullChunk())
          {
             return(false);
          }
@@ -174,9 +174,9 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          LOG_FMT(LFPARAM, "%s(%d): <skip fcn type>\n",
                  __func__, __LINE__);
 
-         tmp1 = chunk_get_next_nc_nnl(tmp3, E_Scope::PREPROC);
+         tmp1 = tmp3->GetNextNcNnl(E_Scope::PREPROC);
 
-         if (tmp1 == nullptr)
+         if (tmp1->IsNullChunk())
          {
             return(false);
          }
@@ -434,6 +434,7 @@ size_t get_cpp_template_angle_nest_level(Chunk *pc)
    int nestLevel = 0;
 
    while (  pc != nullptr
+         && pc->IsNotNullChunk()
          && pc->flags.test(PCF_IN_TEMPLATE))
    {
       if (  chunk_is_token(pc, CT_ANGLE_CLOSE)
@@ -455,10 +456,10 @@ size_t get_cpp_template_angle_nest_level(Chunk *pc)
 Chunk *get_d_template_types(ChunkStack &cs, Chunk *open_paren)
 {
    LOG_FUNC_ENTRY();
-   Chunk *tmp       = open_paren;
+   Chunk *tmp       = open_paren->GetNextNcNnl();
    bool  maybe_type = true;
 
-   while (  ((tmp = chunk_get_next_nc_nnl(tmp)) != nullptr)
+   while (  tmp->IsNullChunk()
          && tmp->level > open_paren->level)
    {
       if (  chunk_is_token(tmp, CT_TYPE)
@@ -475,6 +476,7 @@ Chunk *get_d_template_types(ChunkStack &cs, Chunk *open_paren)
       {
          maybe_type = true;
       }
+      tmp = tmp->GetNextNcNnl();
    }
    return(tmp);
 } // get_d_template_types
@@ -483,6 +485,7 @@ Chunk *get_d_template_types(ChunkStack &cs, Chunk *open_paren)
 bool go_on(Chunk *pc, Chunk *start)
 {
    if (  pc == nullptr
+      || pc->IsNullChunk()
       || pc->level != start->level)
    {
       return(false);
@@ -553,7 +556,9 @@ Chunk *set_paren_parent(Chunk *start, E_Token parent)
       log_func_stack_inline(LFLPAREN);
       set_chunk_parent(start, parent);
       set_chunk_parent(end, parent);
+      LOG_FMT(LFLPAREN, "%s(%d):\n", __func__, __LINE__);
+      return(end->GetNextNcNnl(E_Scope::PREPROC));
    }
    LOG_FMT(LFLPAREN, "%s(%d):\n", __func__, __LINE__);
-   return(chunk_get_next_nc_nnl(end, E_Scope::PREPROC));
+   return(nullptr);
 } // set_paren_parent

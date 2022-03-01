@@ -50,7 +50,7 @@ void do_parens(void)
    {
       Chunk *pc = Chunk::GetHead();
 
-      while (  (pc = chunk_get_next_nc_nnl(pc)) != nullptr
+      while (  (pc = pc->GetNextNcNnl()) != nullptr
             && pc->IsNotNullChunk())
       {
          if (  pc->type != CT_SPAREN_OPEN
@@ -85,7 +85,7 @@ void do_parens_assign(void)                         // Issue #3316
    {
       Chunk *pc = Chunk::GetHead();
 
-      while (  (pc = chunk_get_next_nc_nnl(pc)) != nullptr
+      while (  (pc = pc->GetNextNcNnl()) != nullptr
             && pc->IsNotNullChunk())
       {
          if (chunk_is_token(pc, CT_ASSIGN))
@@ -156,7 +156,7 @@ void do_parens_return(void)                         // Issue #3316
    {
       Chunk *pc = Chunk::GetHead();
 
-      while (  (pc = chunk_get_next_nc_nnl(pc)) != nullptr
+      while (  (pc = pc->GetNextNcNnl()) != nullptr
             && pc->IsNotNullChunk())
       {
          if (chunk_is_token(pc, CT_RETURN))
@@ -225,7 +225,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
            last->Text(), last->level);
 
    // Don't do anything if we have a bad sequence, ie "&& )"
-   Chunk *first_n = chunk_get_next_nc_nnl(first);
+   Chunk *first_n = first->GetNextNcNnl();
 
    if (first_n == last)
    {
@@ -259,7 +259,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
 
    for (Chunk *tmp = first_n;
         tmp != last_p;
-        tmp = chunk_get_next_nc_nnl(tmp))
+        tmp = tmp->GetNextNcNnl())
    {
       tmp->level++;
    }
@@ -283,7 +283,8 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
 
    Chunk *pc = popen;
 
-   while (  (pc = chunk_get_next_nc_nnl(pc)) != nullptr
+   while (  (pc = pc->GetNextNcNnl()) != nullptr
+         && pc->IsNotNullChunk()
          && pc != pclose)
    {
       if (pc->flags.test(PCF_IN_PREPROC))

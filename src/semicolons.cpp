@@ -39,10 +39,9 @@ void remove_extra_semicolons(void)
 
    Chunk *pc = Chunk::GetHead();
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
-      Chunk *next = chunk_get_next_nc_nnl(pc);
+      Chunk *next = pc->GetNextNcNnl();
       Chunk *prev;
 
       if (  chunk_is_token(pc, CT_SEMICOLON)

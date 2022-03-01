@@ -477,7 +477,7 @@ static Chunk *candidate_chunk_first_on_line(Chunk *pc)
       && (  chunk_is_token(first, CT_QUESTION)
          || chunk_is_token(first, CT_COND_COLON)))
    {
-      return(chunk_get_next_nc_nnl(first));
+      return(first->GetNextNcNnl());
    }
    else
    {
@@ -730,11 +730,11 @@ void indent_text(void)
       {
          if (!in_func_def)
          {
-            Chunk *next = chunk_get_next_nc_nnl(pc);
+            Chunk *next = pc->GetNextNcNnl();
 
             if (  get_chunk_parent_type(pc) == CT_FUNC_DEF
                || (  chunk_is_token(pc, CT_COMMENT)
-                  && next != nullptr
+                  && next->IsNotNullChunk()
                   && get_chunk_parent_type(next) == CT_FUNC_DEF))
             {
                in_func_def = true;
@@ -1927,7 +1927,7 @@ void indent_text(void)
                   if (options::indent_oc_block_msg_xcode_style())
                   {
                      Chunk *bbc           = chunk_skip_to_match(pc); // block brace close '}'
-                     Chunk *bbc_next_ncnl = chunk_get_next_nc_nnl(bbc);
+                     Chunk *bbc_next_ncnl = bbc->GetNextNcNnl();
 
                      if (  bbc_next_ncnl->type == CT_OC_MSG_NAME
                         || bbc_next_ncnl->type == CT_OC_MSG_FUNC)
@@ -2206,9 +2206,9 @@ void indent_text(void)
              * { a++;
              *   b--; };
              */
-            Chunk *next = chunk_get_next_nc_nnl(pc);
+            Chunk *next = pc->GetNextNcNnl();
 
-            if (next == nullptr)
+            if (next->IsNullChunk())
             {
                break;
             }
@@ -3310,7 +3310,7 @@ void indent_text(void)
       else if (  options::indent_oc_inside_msg_sel()
               && (  chunk_is_token(pc, CT_OC_MSG_FUNC)
                  || chunk_is_token(pc, CT_OC_MSG_NAME))
-              && chunk_is_token(chunk_get_next_nc_nnl(pc), CT_OC_COLON)) // Issue #2658
+              && chunk_is_token(pc->GetNextNcNnl(), CT_OC_COLON)) // Issue #2658
       {
          log_rule_B("indent_oc_inside_msg_sel");
          // Pop the OC msg name that is on the top of the stack
@@ -3409,9 +3409,9 @@ void indent_text(void)
 
          do
          {
-            tmp = chunk_get_next_nc_nnl(tmp);
+            tmp = tmp->GetNextNcNnl();
 
-            if (  tmp != nullptr
+            if (  tmp->IsNotNullChunk()
                && chunk_is_token(tmp, CT_SHIFT))
             {
                in_shift = true;
@@ -3427,7 +3427,7 @@ void indent_text(void)
                break;
             }
          } while (  !in_shift
-                 && tmp != nullptr
+                 && tmp->IsNotNullChunk()
                  && tmp->type != CT_SEMICOLON
                  && tmp->type != CT_BRACE_OPEN
                  && tmp->type != CT_BRACE_CLOSE
@@ -3574,7 +3574,7 @@ void indent_text(void)
 
          auto prev  = chunk_get_prev_nc_nnl(pc);
          auto prevv = chunk_get_prev_nc_nnl(prev);
-         auto next  = chunk_get_next_nc_nnl(pc);
+         auto next  = pc->GetNextNcNnl();
 
          bool do_vardefcol = false;
 
@@ -3589,7 +3589,7 @@ void indent_text(void)
 
             while (chunk_is_token(tmp, CT_PTR_TYPE))
             {
-               tmp = chunk_get_next_nc_nnl(tmp);
+               tmp = tmp->GetNextNcNnl();
             }
             LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, for '%s'",
                     __func__, __LINE__, tmp->orig_line, tmp->Text());
@@ -4020,9 +4020,9 @@ void indent_text(void)
 
             if (tmp != nullptr)
             {
-               tmp = chunk_get_next_nc_nnl(tmp);
+               tmp = tmp->GetNextNcNnl();
 
-               if (tmp != nullptr)
+               if (tmp->IsNotNullChunk())
                {
                   LOG_FMT(LINDENT, "%s: %zu] ternarydefcol => %zu [%s]\n",
                           __func__, pc->orig_line, tmp->column, pc->Text());
@@ -4680,9 +4680,9 @@ void indent_preproc(void)
       {
          continue;
       }
-      Chunk *next = chunk_get_next_nc_nnl(pc);
+      Chunk *next = pc->GetNextNcNnl();
 
-      if (next == nullptr)
+      if (next->IsNullChunk())
       {
          break;
       }

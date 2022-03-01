@@ -1830,7 +1830,7 @@ static void add_func_header(E_Token type, file_mem &fm)
       else if (do_insert)
       {
          // Insert between after and ref
-         Chunk *after = chunk_get_next_nc_nnl(ref);
+         Chunk *after = ref->GetNextNcNnl();
          tokenize(fm.data, after);
 
          for (tmp = ref->GetNext(); tmp != after; tmp = tmp->GetNext())
@@ -1924,7 +1924,7 @@ static void add_msg_header(E_Token type, file_mem &fm)
       if (do_insert)
       {
          // Insert between after and ref
-         Chunk *after = chunk_get_next_nc_nnl(ref);
+         Chunk *after = ref->GetNextNcNnl();
          tokenize(fm.data, after);
 
          for (tmp = ref->GetNext(); tmp != after; tmp = tmp->GetNext())

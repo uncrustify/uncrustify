@@ -67,7 +67,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
               __func__, __LINE__, start->Text(), get_token_name(start->type), start->orig_line);
 
       Chunk *pc = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
-      return(chunk_get_next_nc_nnl(pc));
+      return(pc->GetNextNcNnl());
    }
    char copy[1000];
 

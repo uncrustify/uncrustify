@@ -2751,16 +2751,16 @@ static bool kw_fcn_message(Chunk *cmt, unc_text &out_txt)
 {
    Chunk *fcn = get_next_function(cmt);
 
-   if (!fcn)
+   if (fcn == nullptr)
    {
       return(false);
    }
    out_txt.append(fcn->str);
 
-   Chunk *tmp  = chunk_get_next_nc_nnl(fcn);
-   Chunk *word = nullptr;
+   Chunk *tmp  = fcn->GetNextNcNnl();
+   Chunk *word = Chunk::NullChunkPtr;
 
-   while (tmp != nullptr)
+   while (tmp->IsNotNullChunk())
    {
       if (  chunk_is_token(tmp, CT_BRACE_OPEN)
          || chunk_is_token(tmp, CT_SEMICOLON))
@@ -2770,10 +2770,10 @@ static bool kw_fcn_message(Chunk *cmt, unc_text &out_txt)
 
       if (chunk_is_token(tmp, CT_OC_COLON))
       {
-         if (word != nullptr)
+         if (word->IsNotNullChunk())
          {
             out_txt.append(word->str);
-            word = nullptr;
+            word = Chunk::NullChunkPtr;
          }
          out_txt.append(":");
       }
@@ -2782,7 +2782,7 @@ static bool kw_fcn_message(Chunk *cmt, unc_text &out_txt)
       {
          word = tmp;
       }
-      tmp = chunk_get_next_nc_nnl(tmp);
+      tmp = tmp->GetNextNcNnl();
    }
    return(true);
 } // kw_fcn_message
@@ -2842,7 +2842,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
 {
    Chunk *fcn = get_next_function(cmt);
 
-   if (!fcn)
+   if (fcn == nullptr)
    {
       return(false);
    }
@@ -2853,10 +2853,10 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
 
    if (chunk_is_token(fcn, CT_OC_MSG_DECL))
    {
-      Chunk *tmp = chunk_get_next_nc_nnl(fcn);
+      Chunk *tmp = fcn->GetNextNcNnl();
       has_param = false;
 
-      while (tmp != nullptr)
+      while (tmp->IsNotNullChunk())
       {
          if (  chunk_is_token(tmp, CT_BRACE_OPEN)
             || chunk_is_token(tmp, CT_SEMICOLON))
@@ -2882,7 +2882,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
          {
             has_param = true;
          }
-         tmp = chunk_get_next_nc_nnl(tmp);
+         tmp = tmp->GetNextNcNnl();
       }
       fpo = fpc = nullptr;
    }
@@ -2904,18 +2904,21 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
    Chunk *tmp;
 
    // Check for 'foo()' and 'foo(void)'
-   if (chunk_get_next_nc_nnl(fpo) == fpc)
+   if (fpo != nullptr)
    {
-      has_param = false;
-   }
-   else
-   {
-      tmp = chunk_get_next_nc_nnl(fpo);
-
-      if (  (tmp == chunk_get_prev_nc_nnl(fpc))
-         && chunk_is_str(tmp, "void", 4))
+      if (fpo->GetNextNcNnl() == fpc)
       {
          has_param = false;
+      }
+      else
+      {
+         tmp = fpo->GetNextNcNnl();
+
+         if (  (tmp == chunk_get_prev_nc_nnl(fpc))
+            && chunk_is_str(tmp, "void", 4))
+         {
+            has_param = false;
+         }
       }
    }
 
@@ -2994,15 +2997,24 @@ static bool kw_fcn_fclass(Chunk *cmt, unc_text &out_txt)
       // if inside a class, we need to find to the class name
       Chunk *tmp = chunk_get_prev_type(fcn, CT_BRACE_OPEN, fcn->level - 1);
       tmp = chunk_get_prev_type(tmp, CT_CLASS, tmp->level);
-      tmp = chunk_get_next_nc_nnl(tmp);
 
-      while (chunk_is_token(chunk_get_next_nc_nnl(tmp), CT_DC_MEMBER))
+      if (tmp == nullptr)
       {
-         tmp = chunk_get_next_nc_nnl(tmp);
-         tmp = chunk_get_next_nc_nnl(tmp);
+         tmp = Chunk::NullChunkPtr;
+      }
+      else
+      {
+         tmp = tmp->GetNextNcNnl();
       }
 
-      if (tmp != nullptr)
+      while (  tmp->IsNotNullChunk()
+            && chunk_is_token(tmp->GetNextNcNnl(), CT_DC_MEMBER))
+      {
+         tmp = tmp->GetNextNcNnl();
+         tmp = tmp->GetNextNcNnl();
+      }
+
+      if (tmp->IsNotNullChunk())
       {
          out_txt.append(tmp->str);
          return(true);
@@ -3307,7 +3319,7 @@ void add_long_preprocessor_conditional_block_comment(void)
    Chunk *pp_start = nullptr;
    Chunk *pp_end   = nullptr;
 
-   for (Chunk *pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl(pc))
+   for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
       // just track the preproc level:
       if (chunk_is_token(pc, CT_PREPROC))

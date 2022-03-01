@@ -51,7 +51,7 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
       LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n   ",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
       log_pcf_flags(LFCNR, pc->flags);
-      auto brace_open = chunk_get_next_nc_nnl(pc);
+      auto brace_open = pc->GetNextNcNnl();
 
       if (  chunk_is_token(brace_open, CT_BRACE_OPEN)
          && (  get_chunk_parent_type(brace_open) == CT_NONE
@@ -74,15 +74,15 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
 
 void flag_cpp_braced_init_list(Chunk *pc, Chunk *next)
 {
-   auto brace_open  = chunk_get_next_nc_nnl(pc);
+   auto brace_open  = pc->GetNextNcNnl();
    auto brace_close = chunk_skip_to_match(next);
 
    set_chunk_parent(brace_open, CT_BRACED_INIT_LIST);
    set_chunk_parent(brace_close, CT_BRACED_INIT_LIST);
 
-   auto *tmp = chunk_get_next_nc_nnl(brace_close);
+   auto *tmp = brace_close->GetNextNcNnl();
 
-   if (tmp != nullptr)
+   if (tmp->IsNotNullChunk())
    {
       chunk_flags_clr(tmp, PCF_EXPR_START | PCF_STMT_START);
 

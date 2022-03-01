@@ -17,18 +17,27 @@ Chunk *skip_align(Chunk *start)
 
    if (chunk_is_token(pc, CT_ALIGN))
    {
-      pc = chunk_get_next_nc_nnl(pc);
+      pc = pc->GetNextNcNnl();
 
       if (chunk_is_token(pc, CT_PAREN_OPEN))
       {
          pc = chunk_get_next_type(pc, CT_PAREN_CLOSE, pc->level);
-         pc = chunk_get_next_nc_nnl(pc);
+
+         if (pc != nullptr)
+         {
+            pc = pc->GetNextNcNnl();
+         }
 
          if (chunk_is_token(pc, CT_COLON))
          {
-            pc = chunk_get_next_nc_nnl(pc);
+            pc = pc->GetNextNcNnl();
          }
       }
+   }
+
+   if (pc == nullptr)
+   {
+      return(Chunk::NullChunkPtr);
    }
    return(pc);
 }
@@ -36,7 +45,7 @@ Chunk *skip_align(Chunk *start)
 
 Chunk *skip_expression(Chunk *pc)
 {
-   return(chunk_get_next_nc_nnl(skip_to_expression_end(pc)));
+   return(skip_to_expression_end(pc)->GetNextNcNnl());
 }
 
 
@@ -51,6 +60,7 @@ static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(*chunk_get_next_fn)(Chu
    Chunk *prev = pc;
 
    if (  prev != nullptr
+      && prev->IsNotNullChunk()
       && chunk_get_next_fn != nullptr)
    {
       std::size_t level         = prev->level;
@@ -58,6 +68,7 @@ static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(*chunk_get_next_fn)(Chu
       std::size_t template_nest = get_cpp_template_angle_nest_level(prev);
 
       while (  next != nullptr
+            && next->IsNotNullChunk()
             && next->level >= level)
       {
          /**
@@ -84,13 +95,18 @@ static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(*chunk_get_next_fn)(Chu
          next = (*chunk_get_next_fn)(next, E_Scope::PREPROC);
       }
    }
+
+   if (prev == nullptr)
+   {
+      prev = Chunk::NullChunkPtr;
+   }
    return(prev);
 }
 
 
 Chunk *skip_to_expression_end(Chunk *pc)
 {
-   return(skip_to_expression_edge(pc, chunk_get_next_nc_nnl));
+   return(skip_to_expression_edge(pc, __internal_chunk_get_next_nc_nnl));
 }
 
 
@@ -102,12 +118,17 @@ Chunk *skip_to_expression_start(Chunk *pc)
 
 Chunk *skip_to_next_statement(Chunk *pc)
 {
-   while (  pc != nullptr
+   if (pc == nullptr)
+   {
+      pc = Chunk::NullChunkPtr;
+   }
+
+   while (  pc->IsNotNullChunk()
          && !chunk_is_semicolon(pc)
          && chunk_is_not_token(pc, CT_BRACE_OPEN)
          && chunk_is_not_token(pc, CT_BRACE_CLOSE))
    {
-      pc = chunk_get_next_nc_nnl(pc);
+      pc = pc->GetNextNcNnl();
    }
    return(pc);
 }
@@ -175,6 +196,11 @@ Chunk *skip_template_prev(Chunk *ang_close)
 
 Chunk *skip_tsquare_next(Chunk *ary_def)
 {
+   if (ary_def == nullptr)
+   {
+      return(Chunk::NullChunkPtr);
+   }
+
    if (  chunk_is_token(ary_def, CT_SQUARE_OPEN)
       || chunk_is_token(ary_def, CT_TSQUARE))
    {
@@ -190,7 +216,7 @@ Chunk *skip_attribute(Chunk *attr)
 
    while (chunk_is_token(pc, CT_ATTRIBUTE))
    {
-      pc = chunk_get_next_nc_nnl(pc);
+      pc = pc->GetNextNcNnl();
 
       if (chunk_is_token(pc, CT_FPAREN_OPEN))
       {
@@ -208,7 +234,12 @@ Chunk *skip_attribute_next(Chunk *attr)
    if (  next != attr
       && chunk_is_token(next, CT_FPAREN_CLOSE))
    {
-      attr = chunk_get_next_nc_nnl(next);
+      attr = next->GetNextNcNnl();
+   }
+
+   if (attr == nullptr)
+   {
+      return(Chunk::NullChunkPtr);
    }
    return(attr);
 }
@@ -244,7 +275,7 @@ Chunk *skip_declspec(Chunk *pc)
 {
    if (chunk_is_token(pc, CT_DECLSPEC))
    {
-      pc = chunk_get_next_nc_nnl(pc);
+      pc = pc->GetNextNcNnl();
 
       if (chunk_is_token(pc, CT_PAREN_OPEN))
       {
@@ -262,7 +293,7 @@ Chunk *skip_declspec_next(Chunk *pc)
    if (  next != pc
       && chunk_is_token(next, CT_PAREN_CLOSE))
    {
-      pc = chunk_get_next_nc_nnl(next);
+      pc = next->GetNextNcNnl();
    }
    return(pc);
 }
@@ -300,7 +331,7 @@ Chunk *skip_matching_brace_bracket_paren_next(Chunk *pc)
           * retrieve the subsequent chunk
           */
 
-         pc = chunk_get_next_nc_nnl(pc);
+         pc = pc->GetNextNcNnl();
       }
    }
    return(pc);
