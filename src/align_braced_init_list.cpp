@@ -20,7 +20,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
    LOG_FUNC_ENTRY();
 
    if (  first == nullptr
-      && first->IsNotNullChunk())
+      || first->IsNullChunk())
    {
       // coveralls will complain here. There are no example for that.
       // see https://en.wikipedia.org/wiki/Robustness_principle
@@ -81,7 +81,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
          myspan = options::align_braced_init_list_span();
          log_rule_B("align_braced_init_list_thresh");
          mythresh = options::align_braced_init_list_thresh();
-         pc       = align_braced_init_list(chunk_get_next_nc_nnl(pc), myspan, mythresh, &sub_nl_count);
+         pc       = align_braced_init_list(pc->GetNextNcNnl(), myspan, mythresh, &sub_nl_count);
 
          if (sub_nl_count > 0)
          {

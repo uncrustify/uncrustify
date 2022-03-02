@@ -518,7 +518,7 @@ void indent_text(void)
          * { a++;
          *   b--; };
          */
-        next = chunk_get_next_nc_nnl(pc);
+        next = pc->GetNextNcNnl();
 
         if (!chunk_is_newline_between(pc, next))
           frm.pse[frm.pse_tos].indent = next->column;

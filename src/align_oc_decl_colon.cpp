@@ -30,8 +30,7 @@ void align_oc_decl_colon(void)
 
    Chunk *pc = Chunk::GetHead();
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       if (chunk_is_not_token(pc, CT_OC_SCOPE))
       {
@@ -42,12 +41,11 @@ void align_oc_decl_colon(void)
       cas.Reset();
 
       size_t level = pc->level;
-      pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
+      pc = pc->GetNextNcNnl(E_Scope::PREPROC);
 
       did_line = false;
 
-      while (  pc != nullptr
-            && pc->IsNotNullChunk()
+      while (  pc->IsNotNullChunk()
             && pc->level >= level)
       {
          // The declaration ends with an open brace or semicolon

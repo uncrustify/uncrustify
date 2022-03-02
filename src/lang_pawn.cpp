@@ -401,16 +401,16 @@ static Chunk *pawn_process_func_def(Chunk *pc)
     * we need to add virtual braces around the function body.
     */
    Chunk *clp  = chunk_get_next_str(pc, ")", 1, 0);
-   Chunk *last = chunk_get_next_nc_nnl(clp);
+   Chunk *last = clp->GetNextNcNnl();
 
-   if (last != nullptr)
+   if (last->IsNotNullChunk())
    {
       LOG_FMT(LPFUNC, "%s: %zu] last is '%s' [%s]\n",
               __func__, last->orig_line, last->Text(), get_token_name(last->type));
    }
 
    // See if there is a state clause after the function
-   if (  last != nullptr
+   if (  last->IsNotNullChunk()
       && chunk_is_str(last, "<", 1))
    {
       LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle open %s\n",
@@ -432,11 +432,10 @@ static Chunk *pawn_process_func_def(Chunk *pc)
          set_chunk_type(last, CT_ANGLE_CLOSE);
          set_chunk_parent(last, CT_FUNC_DEF);
       }
-      last = chunk_get_next_nc_nnl(last);
+      last = last->GetNextNcNnl();
    }
 
-   if (  last == nullptr
-      || last->IsNullChunk())
+   if (last->IsNullChunk())
    {
       return(last);
    }
@@ -471,7 +470,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       last = prev;
 
       // find the next newline at level 0
-      prev = chunk_get_next_nc_nnl(prev);
+      prev = prev->GetNextNcNnl();
 
       do
       {
@@ -481,9 +480,9 @@ static Chunk *pawn_process_func_def(Chunk *pc)
          if (  chunk_is_token(prev, CT_NEWLINE)
             && prev->level == 0)
          {
-            Chunk *next = chunk_get_next_nc_nnl(prev);
+            Chunk *next = prev->GetNextNcNnl();
 
-            if (  next != nullptr
+            if (  next->IsNotNullChunk()
                && next->type != CT_ELSE
                && next->type != CT_WHILE_OF_DO)
             {

@@ -66,9 +66,9 @@ void remove_extra_returns(void)
 
          if (remove_it)
          {
-            Chunk *semicolon = chunk_get_next_nc_nnl(pc);
+            Chunk *semicolon = pc->GetNextNcNnl();
 
-            if (  semicolon != nullptr
+            if (  semicolon->IsNotNullChunk()
                && chunk_is_token(semicolon, CT_SEMICOLON))
             {
                LOG_FMT(LRMRETURN, "%s(%d): Removed 'return;' on orig_line %zu\n",

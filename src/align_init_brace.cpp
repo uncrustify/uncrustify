@@ -32,7 +32,7 @@ void align_init_brace(Chunk *start)
    LOG_FMT(LALBR, "%s(%d): start @ orig_line is %zu, orig_col is %zu\n",
            __func__, __LINE__, start->orig_line, start->orig_col);
 
-   Chunk *pc       = chunk_get_next_nc_nnl(start);
+   Chunk *pc       = start->GetNextNcNnl();
    Chunk *pcSingle = scan_ib_line(pc, true);
 
    if (  pcSingle == nullptr

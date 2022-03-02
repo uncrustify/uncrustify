@@ -34,15 +34,14 @@ void align_oc_msg_colon(Chunk *so)
    cas.Start(span);
 
    size_t level = so->level;
-   Chunk  *pc   = chunk_get_next_nc_nnl(so, E_Scope::PREPROC);
+   Chunk  *pc   = so->GetNextNcNnl(E_Scope::PREPROC);
 
    bool   did_line   = false;
    bool   has_colon  = false;
    size_t lcnt       = 0;  // line count with no colon for span
    bool   first_line = true;
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk()
+   while (  pc->IsNotNullChunk()
          && pc->level > level)
    {
       if (pc->level > (level + 1))

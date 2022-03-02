@@ -24,8 +24,7 @@ void align_asm_colon(void)
 
    Chunk *pc = Chunk::GetHead();
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       if (chunk_is_not_token(pc, CT_ASM_COLON))
       {
@@ -34,12 +33,11 @@ void align_asm_colon(void)
       }
       cas.Reset();
 
-      pc = chunk_get_next_nc_nnl(pc, E_Scope::PREPROC);
+      pc = pc->GetNextNcNnl(E_Scope::PREPROC);
       size_t level = pc ? pc->level : 0;
       did_nl = true;
 
-      while (  pc != nullptr
-            && pc->IsNotNullChunk()
+      while (  pc->IsNotNullChunk()
             && pc->level >= level)
       {
          if (chunk_is_newline(pc))

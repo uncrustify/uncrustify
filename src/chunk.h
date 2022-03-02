@@ -166,6 +166,14 @@ public:
    Chunk *GetPrevNc(E_Scope scope = E_Scope::ALL) const;
 
 
+   /**
+    * @brief returns the next non-comment and non-newline chunk
+    * @param scope code region to search in
+    * @return pointer to next non-comment and non-newline chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetNextNcNnl(E_Scope scope = E_Scope::ALL) const;
+
+
    // --------- Search functions
 
    /**
@@ -240,6 +248,12 @@ public:
     *   - C++ comment
     */
    bool IsComment() const;
+
+   /**
+    * @brief checks whether the chuck is either a comment or a newline
+    * @return true if the chuck is either a comment or a newline, false otherwise
+    */
+   bool IsCommentOrNewline() const;
 
 
    // --------- Data members
@@ -366,12 +380,15 @@ bool chunk_is_last_on_line(Chunk *pc);
 
 
 /**
+ * This is a temporary internal method
+ *
  * Gets the next non-NEWLINE and non-comment chunk
  *
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-Chunk *chunk_get_next_nc_nnl(Chunk *cur, E_Scope scope = E_Scope::ALL);
+// TODO remove when possible (see combine_skip.cpp)
+Chunk *__internal_chunk_get_next_nc_nnl(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -412,7 +429,7 @@ Chunk *chunk_get_prev_nc_nnl_in_pp(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 /**
  * Gets the next non-NEWLINE and non-comment chunk (preprocessor aware).
- * Unlike chunk_get_next_nc_nnl, this will also ignore a line continuation if
+ * Unlike Chunk::GetNextNcNnl, this will also ignore a line continuation if
  * the starting chunk is in a preprocessor directive, and may return a newline
  * if the search reaches the end of a preprocessor directive.
  *
@@ -674,6 +691,13 @@ inline bool Chunk::IsComment() const
    return(  Is(CT_COMMENT)
          || Is(CT_COMMENT_MULTI)
          || Is(CT_COMMENT_CPP));
+}
+
+
+inline bool Chunk::IsCommentOrNewline() const
+{
+   return(  IsComment()
+         || IsNewline());
 }
 
 
@@ -1121,7 +1145,7 @@ static inline bool chunk_is_forin(Chunk *pc)
                && next->type != CT_SPAREN_CLOSE
                && next->type != CT_IN)
          {
-            next = chunk_get_next_nc_nnl(next);
+            next = next->GetNextNcNnl();
          }
 
          if (chunk_is_token(next, CT_IN))

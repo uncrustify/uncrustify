@@ -13,7 +13,7 @@ bool flag_cpp_decltype(Chunk *pc)
 
    if (chunk_is_token(pc, CT_DECLTYPE))
    {
-      auto paren_open = chunk_get_next_nc_nnl(pc);
+      auto paren_open = pc->GetNextNcNnl();
 
       if (chunk_is_token(paren_open, CT_PAREN_OPEN))
       {
@@ -30,16 +30,16 @@ bool flag_cpp_decltype(Chunk *pc)
          //
          // So, we will manually look for the matching closing parenthesis.
          chunk_flags_set(paren_open, PCF_IN_DECLTYPE);
-         pc = chunk_get_next_nc_nnl(paren_open);
+         pc = paren_open->GetNextNcNnl();
 
-         for (int level = 1; pc != nullptr && level > 0; pc = chunk_get_next_nc_nnl(pc))
+         for (int level = 1; pc->IsNotNullChunk() && level > 0; pc = pc->GetNextNcNnl())
          {
             level += chunk_is_token(pc, CT_PAREN_OPEN);
             level -= chunk_is_token(pc, CT_PAREN_CLOSE);
             chunk_flags_set(pc, PCF_IN_DECLTYPE);
          }
 
-         return(pc != nullptr);
+         return(pc->IsNotNullChunk());
       }
    }
    return(false);

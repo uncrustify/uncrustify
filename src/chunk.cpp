@@ -742,15 +742,21 @@ Chunk *Chunk::GetPrevNc(E_Scope scope) const
 }
 
 
-Chunk *chunk_get_next_nc_nnl(Chunk *cur, E_Scope scope)
+Chunk *Chunk::GetNextNcNnl(E_Scope scope) const
 {
-   return(__internal_chunk_search(cur, chunk_is_comment_or_newline, scope, E_Direction::FORWARD, false));
+   return(Search(&Chunk::IsCommentOrNewline, scope, E_Direction::FORWARD, false));
 }
 
 
 Chunk *chunk_get_prev_nc_nnl(Chunk *cur, E_Scope scope)
 {
    return(__internal_chunk_search(cur, chunk_is_comment_or_newline, scope, E_Direction::BACKWARD, false));
+}
+
+
+Chunk *__internal_chunk_get_next_nc_nnl(Chunk *cur, E_Scope scope)
+{
+   return(__internal_chunk_search(cur, chunk_is_comment_or_newline, scope, E_Direction::FORWARD, false));
 }
 
 
@@ -1013,6 +1019,7 @@ void set_chunk_type_real(Chunk *pc, E_Token token, const char *func, int line)
    LOG_FUNC_ENTRY();
 
    if (  pc == nullptr
+      || pc->IsNullChunk()
       || pc->type == token)
    {
       return;
@@ -1040,6 +1047,7 @@ void set_chunk_parent_real(Chunk *pc, E_Token token, const char *func, int line)
    LOG_FUNC_ENTRY();
 
    if (  pc == nullptr
+      || pc->IsNullChunk()
       || get_chunk_parent_type(pc) == token)
    {
       return;
@@ -1131,7 +1139,7 @@ Chunk *chunk_get_next_ssq(Chunk *cur)
       {
          cur = chunk_skip_to_match(cur);
       }
-      cur = chunk_get_next_nc_nnl(cur);
+      cur = cur->GetNextNcNnl();
    }
    return(cur);
 }
@@ -1177,7 +1185,7 @@ static Chunk *chunk_skip_dc_member(Chunk *start, E_Scope scope, E_Direction dir)
       return(nullptr);
    }
    const auto step_fcn = (dir == E_Direction::FORWARD)
-                         ? chunk_get_next_nc_nnl : chunk_get_prev_nc_nnl;
+                         ? __internal_chunk_get_next_nc_nnl : chunk_get_prev_nc_nnl;
 
    Chunk *pc   = start;
    Chunk *next = chunk_is_token(pc, CT_DC_MEMBER) ? pc : step_fcn(pc, scope);

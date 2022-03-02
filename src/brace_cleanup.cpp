@@ -119,9 +119,9 @@ static size_t preproc_start(BraceState &braceState, ParseFrame &frm, Chunk *pc)
    LOG_FUNC_ENTRY();
    const size_t pp_level = braceState.pp_level;
 
-   Chunk        *next = chunk_get_next_nc_nnl(pc);
+   Chunk        *next = pc->GetNextNcNnl();
 
-   if (next == nullptr)
+   if (next->IsNullChunk())
    {
       return(pp_level);
    }
@@ -603,7 +603,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
           */
          if (language_is_set(LANG_PAWN))
          {
-            Chunk *tmp = chunk_get_next_nc_nnl(pc);
+            Chunk *tmp = pc->GetNextNcNnl();
 
             if (  chunk_is_not_token(tmp, CT_SEMICOLON)
                && chunk_is_not_token(tmp, CT_VSEMICOLON))
@@ -905,7 +905,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
    // Mark expression starts
    LOG_FMT(LSTMT, "%s(%d): Mark expression starts: orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
            __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-   Chunk *tmp = chunk_get_next_nc_nnl(pc);
+   Chunk *tmp = pc->GetNextNcNnl();
 
    if (  chunk_is_token(pc, CT_ARITH)
       || chunk_is_token(pc, CT_SHIFT)
@@ -1196,9 +1196,9 @@ static bool handle_complex_close(ParseFrame &frm, Chunk *pc, const BraceState &b
          frm.top().stage = brace_stage_e::ELSE;
 
          // If the next chunk isn't CT_ELSE, close the statement
-         Chunk *next = chunk_get_next_nc_nnl(pc);
+         Chunk *next = pc->GetNextNcNnl();
 
-         if (  next == nullptr
+         if (  next->IsNullChunk()
             || chunk_is_not_token(next, CT_ELSE))
          {
             LOG_FMT(LBCSPOP, "%s(%d): no CT_ELSE, pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
@@ -1215,7 +1215,7 @@ static bool handle_complex_close(ParseFrame &frm, Chunk *pc, const BraceState &b
          frm.top().stage = brace_stage_e::CATCH;
 
          // If the next chunk isn't CT_CATCH or CT_FINALLY, close the statement
-         Chunk *next = chunk_get_next_nc_nnl(pc);
+         Chunk *next = pc->GetNextNcNnl();
 
          if (  chunk_is_not_token(next, CT_CATCH)
             && chunk_is_not_token(next, CT_FINALLY))
@@ -1289,9 +1289,9 @@ static void mark_namespace(Chunk *pns)
       is_using = true;
       set_chunk_parent(pns, CT_USING);
    }
-   pc = chunk_get_next_nc_nnl(pns);
+   pc = pns->GetNextNcNnl();
 
-   while (pc != nullptr)
+   while (pc->IsNotNullChunk())
    {
       set_chunk_parent(pc, CT_NAMESPACE);
 
@@ -1305,7 +1305,7 @@ static void mark_namespace(Chunk *pns)
             }
             return;
          }
-         pc = chunk_get_next_nc_nnl(pc);
+         pc = pc->GetNextNcNnl();
          continue;
       }
       log_rule_B("indent_namespace_limit");

@@ -1366,7 +1366,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (  chunk_is_token(second, CT_FPAREN_OPEN)
          || chunk_is_token(second, CT_PAREN_OPEN))
       {
-         Chunk *next = chunk_get_next_nc_nnl(second);
+         Chunk *next = second->GetNextNcNnl();
 
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
@@ -1531,7 +1531,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (  (options::sp_after_operator_sym_empty() != IARF_IGNORE)
          && chunk_is_token(second, CT_FPAREN_OPEN))
       {
-         Chunk *next = chunk_get_next_nc_nnl(second);
+         Chunk *next = second->GetNextNcNnl();
 
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
@@ -1590,7 +1590,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (  (options::sp_func_call_paren_empty() != IARF_IGNORE)
          && chunk_is_token(second, CT_FPAREN_OPEN))
       {
-         Chunk *next = chunk_get_next_nc_nnl(second);
+         Chunk *next = second->GetNextNcNnl();
 
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
@@ -1628,7 +1628,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (  (options::sp_func_def_paren_empty() != IARF_IGNORE)
          && chunk_is_token(second, CT_FPAREN_OPEN))
       {
-         Chunk *next = chunk_get_next_nc_nnl(second);
+         Chunk *next = second->GetNextNcNnl();
 
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
@@ -1705,7 +1705,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (  (options::sp_func_proto_paren_empty() != IARF_IGNORE)
          && chunk_is_token(second, CT_FPAREN_OPEN))
       {
-         Chunk *next = chunk_get_next_nc_nnl(second);
+         Chunk *next = second->GetNextNcNnl();
 
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {
@@ -1735,7 +1735,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (  (options::sp_func_class_paren_empty() != IARF_IGNORE)
          && chunk_is_token(second, CT_FPAREN_OPEN))
       {
-         Chunk *next = chunk_get_next_nc_nnl(second);
+         Chunk *next = second->GetNextNcNnl();
 
          if (chunk_is_token(next, CT_FPAREN_CLOSE))
          {

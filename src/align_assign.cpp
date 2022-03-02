@@ -22,7 +22,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
    LOG_FUNC_ENTRY();
 
    if (  first == nullptr
-      && first->IsNotNullChunk())
+      || first->IsNullChunk())
    {
       // coveralls will complain here. There are no example for that.
       // see https://en.wikipedia.org/wiki/Robustness_principle
@@ -123,7 +123,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
             log_rule_B("align_assign_thresh");
             mythresh = options::align_assign_thresh();
          }
-         pc = align_assign(chunk_get_next_nc_nnl(pc), myspan, mythresh, &sub_nl_count);
+         pc = align_assign(pc->GetNextNcNnl(), myspan, mythresh, &sub_nl_count);
 
          if (sub_nl_count > 0)
          {

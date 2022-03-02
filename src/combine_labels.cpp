@@ -404,11 +404,10 @@ void combine_labels(void)
             }
             else
             {
-               Chunk *tmp = chunk_get_next_nc_nnl(next);
+               Chunk *tmp = next->GetNextNcNnl();
 
                //tmp = chunk_get_next_local(next);
-               if (tmp != nullptr)
-
+               if (tmp->IsNotNullChunk())
                {
                   LOG_FMT(LFCN, "%s(%d): tmp->Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
                           __func__, __LINE__, tmp->Text(), tmp->orig_line, tmp->orig_col,
