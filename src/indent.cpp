@@ -2854,6 +2854,7 @@ void indent_text(void)
          log_rule_B("indent_paren_after_func_call");
 
          if (  !options::use_indent_continue_only_once() // Issue #1160
+            && !options::indent_ignore_first_continue()  // Issue #3561
             && (  chunk_is_token(pc, CT_FPAREN_OPEN)
                && chunk_is_newline(pc->GetPrev()))
             && (  (  (  get_chunk_parent_type(pc) == CT_FUNC_PROTO
