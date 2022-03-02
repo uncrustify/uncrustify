@@ -2680,13 +2680,12 @@ void tokenize(const deque<int> &data, Chunk *ref)
          chunk.after_tab = last_was_tab;
          last_was_tab    = false;
       }
+      num_stripped = 0; // Issue #1966 and #3565
 
       if (chunk.type != CT_IGNORED)
       {
          // Issue #1338
          // Strip trailing whitespace (for CPP comments and PP blocks)
-         num_stripped = 0;                     // Issue #1966
-
          while (  (chunk.str.size() > 0)
                && (  (chunk.str[chunk.str.size() - 1] == ' ')
                   || (chunk.str[chunk.str.size() - 1] == '\t')))
@@ -2703,16 +2702,8 @@ void tokenize(const deque<int> &data, Chunk *ref)
          }
       }
       // Store off the end column
-      chunk.orig_col_end = ctx.c.col;
+      chunk.orig_col_end = ctx.c.col - num_stripped; // Issue #1966 and #3565
 
-      if (  (  chunk.type == CT_COMMENT_MULTI                  // Issue #1966
-            || chunk.type == CT_COMMENT
-            || chunk.type == CT_COMMENT_CPP)
-         && (pc != nullptr)
-         && chunk_is_token(pc, CT_PP_IGNORE))
-      {
-         chunk.orig_col_end -= num_stripped;
-      }
       // Add the chunk to the list
       rprev = pc;
 
