@@ -455,3 +455,4 @@
 10060  c/indent_ignore_bool-true.cfg              c/Issue_3548.c
 10061  c/Issue_3556.cfg                           c/Issue_3556.c
 10062  c/Issue_3561.cfg                           c/Issue_3561.c
+10063  c/Issue_3565.cfg                           c/Issue_3565.c
