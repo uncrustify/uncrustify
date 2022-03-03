@@ -55,7 +55,54 @@ Chunk *skip_expression_rev(Chunk *pc)
 }
 
 
-static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(*chunk_get_next_fn)(Chunk *cur, E_Scope scope))
+static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(Chunk::*GetNextFn)(E_Scope scope)const)
+{
+   Chunk *prev = pc;
+
+   if (prev == nullptr)
+   {
+      prev = Chunk::NullChunkPtr;
+   }
+
+   if (prev->IsNotNullChunk())
+   {
+      std::size_t level         = prev->level;
+      Chunk       *next         = prev;
+      std::size_t template_nest = get_cpp_template_angle_nest_level(prev);
+
+      while (  next->IsNotNullChunk()
+            && next->level >= level)
+      {
+         /**
+          * if we encounter a comma or semicolon at the level of the starting chunk,
+          * return the current chunk
+          */
+         if (  next->level == level
+            && (  chunk_is_token(next, CT_COMMA)
+               || chunk_is_semicolon(next)))
+         {
+            break;
+         }
+         /**
+          * check the template nest level; if the current chunk's nest level
+          * is less than that of the starting chunk, return the current chunk
+          */
+         auto next_template_nest = get_cpp_template_angle_nest_level(next);
+
+         if (template_nest > next_template_nest)
+         {
+            break;
+         }
+         prev = next;
+         next = (next->*GetNextFn)(E_Scope::PREPROC);
+      }
+   }
+   return(prev);
+}
+
+
+// TODO to remove as soon as feasible
+static Chunk *__internal_skip_to_expression_edge(Chunk *pc, Chunk *(*chunk_get_next_fn)(Chunk *cur, E_Scope scope))
 {
    Chunk *prev = pc;
 
@@ -106,13 +153,13 @@ static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(*chunk_get_next_fn)(Chu
 
 Chunk *skip_to_expression_end(Chunk *pc)
 {
-   return(skip_to_expression_edge(pc, __internal_chunk_get_next_nc_nnl));
+   return(skip_to_expression_edge(pc, &Chunk::GetNextNcNnl));
 }
 
 
 Chunk *skip_to_expression_start(Chunk *pc)
 {
-   return(skip_to_expression_edge(pc, chunk_get_prev_nc_nnl_ni));
+   return(__internal_skip_to_expression_edge(pc, chunk_get_prev_nc_nnl_ni));
 }
 
 

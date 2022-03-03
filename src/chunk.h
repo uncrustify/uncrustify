@@ -388,18 +388,6 @@ bool chunk_is_last_on_line(Chunk *pc);
 
 
 /**
- * This is a temporary internal method
- *
- * Gets the next non-NEWLINE and non-comment chunk
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-// TODO remove when possible (see combine_skip.cpp)
-Chunk *__internal_chunk_get_next_nc_nnl(Chunk *cur, E_Scope scope = E_Scope::ALL);
-
-
-/**
  * Gets the next non-NEWLINE and non-comment chunk, non-preprocessor chunk
  *
  * @param cur    chunk to use as start point
