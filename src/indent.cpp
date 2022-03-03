@@ -2853,8 +2853,10 @@ void indent_text(void)
          log_rule_B("indent_paren_after_func_def");
          log_rule_B("indent_paren_after_func_call");
 
-         if (  !options::use_indent_continue_only_once() // Issue #1160
-            && !options::indent_ignore_first_continue()  // Issue #3561
+         if (  (  (  !frm.top().indent_cont                     // Issue #3567
+                  && vardefcol == 0)
+               || (  !options::use_indent_continue_only_once()  // Issue #1160
+                  && !options::indent_ignore_first_continue())) // Issue #3561
             && (  chunk_is_token(pc, CT_FPAREN_OPEN)
                && chunk_is_newline(pc->GetPrev()))
             && (  (  (  get_chunk_parent_type(pc) == CT_FUNC_PROTO
@@ -3091,6 +3093,7 @@ void indent_text(void)
             {
                frm.top().indent = get_indent_first_continue(pc);
                log_indent();
+               frm.top().indent_cont = true; // Issue #3567
             }
             else if (options::indent_continue() != 0)
             {
