@@ -234,7 +234,7 @@ Create a tarball:
 .. code::
 
    $ cd /path/to/uncrustify
-   $ git archive -o uncrustify-0.1.2.tar.gz uncrustify-0.1.2
+   $ git archive -o uncrustify-0.1.2.tar.gz --prefix=uncrustify-0.1.2/ uncrustify-0.1.2
 TODO: find the best strategie...
 
 (If you don't have Ninja_, or just don't want to use it for whatever reason,
