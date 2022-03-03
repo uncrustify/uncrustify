@@ -2862,7 +2862,8 @@ void indent_text(void)
             && (  (  (  get_chunk_parent_type(pc) == CT_FUNC_PROTO
                      || get_chunk_parent_type(pc) == CT_FUNC_CLASS_PROTO)
                   && options::indent_paren_after_func_decl())
-               || (  get_chunk_parent_type(pc) == CT_FUNC_DEF
+               || (  (  get_chunk_parent_type(pc) == CT_FUNC_DEF
+                     || get_chunk_parent_type(pc) == CT_FUNC_CLASS_DEF)
                   && options::indent_paren_after_func_def())
                || (  (  get_chunk_parent_type(pc) == CT_FUNC_CALL
                      || get_chunk_parent_type(pc) == CT_FUNC_CALL_USER)
