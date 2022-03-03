@@ -456,3 +456,5 @@
 10061  c/Issue_3556.cfg                           c/Issue_3556.c
 10062  c/Issue_3561.cfg                           c/Issue_3561.c
 10063  c/Issue_3565.cfg                           c/Issue_3565.c
+10064  c/Issue_3567-a.cfg                         c/Issue_3567.c
+10065  c/Issue_3567-b.cfg                         c/Issue_3567.c
