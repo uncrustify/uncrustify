@@ -493,7 +493,7 @@ static bool can_remove_braces(Chunk *bopen)
       && get_chunk_parent_type(pc) == CT_IF)
    {
       Chunk *next     = pc->GetNextNcNnl(E_Scope::PREPROC);
-      Chunk *tmp_prev = chunk_get_prev_nc_nnl(pc, E_Scope::PREPROC);
+      Chunk *tmp_prev = pc->GetPrevNcNnl(E_Scope::PREPROC);
 
       if (  chunk_is_token(next, CT_ELSE)
          && (  chunk_is_token(tmp_prev, CT_BRACE_CLOSE)
@@ -725,7 +725,7 @@ static void examine_brace(Chunk *bopen)
 
             if (chunk_is_token(tmp_next, CT_IF))
             {
-               Chunk *tmp_prev = chunk_get_prev_nc_nnl(bopen);
+               Chunk *tmp_prev = bopen->GetPrevNcNnl();
                LOG_FMT(LBRDEL, "%s(%d):  else-if removing braces on line %zu and %zu\n",
                        __func__, __LINE__, bopen->orig_line, pc->orig_line);
 
@@ -1020,20 +1020,20 @@ Chunk *insert_comment_after(Chunk *ref, E_Token cmt_type,
 static void append_tag_name(unc_text &txt, Chunk *pc)
 {
    LOG_FUNC_ENTRY();
-   Chunk *tmp = pc;
+   Chunk *tmp = pc->GetPrevNcNnl();
 
    LOG_FMT(LMCB, "%s(%d): txt is '%s'\n",
            __func__, __LINE__, txt.c_str());
 
    // step backwards over all a::b stuff
-   while ((tmp = chunk_get_prev_nc_nnl(tmp)) != nullptr)
+   while (tmp->IsNotNullChunk())
    {
       if (  chunk_is_not_token(tmp, CT_DC_MEMBER)
          && chunk_is_not_token(tmp, CT_MEMBER))
       {
          break;
       }
-      tmp = chunk_get_prev_nc_nnl(tmp);
+      tmp = tmp->GetPrevNcNnl();
       pc  = tmp;
 
       if (!chunk_is_word(tmp))

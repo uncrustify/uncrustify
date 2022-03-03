@@ -1112,7 +1112,7 @@ void indent_text(void)
             if (  chunk_is_token(pc, CT_BRACE_CLOSE)
                && get_chunk_parent_type(pc) == CT_ENUM)
             {
-               Chunk *prev_ncnl = chunk_get_prev_nc_nnl(pc);
+               Chunk *prev_ncnl = pc->GetPrevNcNnl();
                LOG_FMT(LINDLINE, "%s(%d): prev_ncnl is '%s', prev_ncnl->orig_line is %zu, prev_ncnl->orig_col is %zu\n",
                        __func__, __LINE__, prev_ncnl->Text(), prev_ncnl->orig_line, prev_ncnl->orig_col);
 
@@ -2330,7 +2330,7 @@ void indent_text(void)
       }
       else if (chunk_is_token(pc, CT_BREAK))
       {
-         Chunk *prev = chunk_get_prev_nc_nnl(pc);
+         Chunk *prev = pc->GetPrevNcNnl();
 
          if (  chunk_is_token(prev, CT_BRACE_CLOSE)
             && get_chunk_parent_type(prev) == CT_CASE)
@@ -2552,8 +2552,8 @@ void indent_text(void)
       }
       else if (  chunk_is_token(pc, CT_PAREN_OPEN)
               && (  get_chunk_parent_type(pc) == CT_ASM
-                 || (  chunk_get_prev_nc_nnl(pc) != nullptr
-                    && chunk_get_prev_nc_nnl(pc)->type == CT_ASM))
+                 || (  pc->GetPrevNcNnl()->IsNotNullChunk()
+                    && pc->GetPrevNcNnl()->type == CT_ASM))
               && options::indent_ignore_asm_block())
       {
          log_rule_B("indent_ignore_asm_block");
@@ -3292,7 +3292,7 @@ void indent_text(void)
          log_indent();
 
          if (  chunk_is_newline(pc->GetPrevNc())
-            && !are_chunks_in_same_line(frm.prev().pc, chunk_get_prev_nc_nnl(pc)))
+            && !are_chunks_in_same_line(frm.prev().pc, pc->GetPrevNcNnl()))
          {
             frm.top().indent = frm.prev().indent + indent_size;
             log_indent();
@@ -3388,7 +3388,7 @@ void indent_text(void)
                LOG_FMT(LINDENT2, "%s(%d): in_shift set to TRUE\n",
                        __func__, __LINE__);
 
-               tmp = chunk_get_prev_nc_nnl(tmp);
+               tmp = tmp->GetPrevNcNnl();
 
                if (chunk_is_token(tmp, CT_OPERATOR))
                {
@@ -3396,9 +3396,9 @@ void indent_text(void)
                }
                break;
             }
-            tmp = chunk_get_prev_nc_nnl(tmp);
+            tmp = tmp->GetPrevNcNnl();
          } while (  !in_shift
-                 && tmp != nullptr
+                 && tmp->IsNotNullChunk()
                  && tmp->type != CT_SEMICOLON
                  && tmp->type != CT_BRACE_OPEN
                  && tmp->type != CT_BRACE_CLOSE
@@ -3419,7 +3419,7 @@ void indent_text(void)
                LOG_FMT(LINDENT2, "%s(%d): in_shift set to TRUE\n",
                        __func__, __LINE__);
 
-               tmp = chunk_get_prev_nc_nnl(tmp);
+               tmp = tmp->GetPrevNcNnl();
 
                if (chunk_is_token(tmp, CT_OPERATOR))
                {
@@ -3438,7 +3438,7 @@ void indent_text(void)
 
          LOG_FMT(LINDENT2, "%s(%d): in_shift is %s\n",
                  __func__, __LINE__, in_shift ? "TRUE" : "FALSE");
-         Chunk *prev_nonl = chunk_get_prev_nc_nnl(pc);
+         Chunk *prev_nonl = pc->GetPrevNcNnl();
          Chunk *prev2     = pc->GetPrevNc();
 
          if ((  chunk_is_semicolon(prev_nonl)
@@ -3447,7 +3447,7 @@ void indent_text(void)
              || chunk_is_token(prev_nonl, CT_VBRACE_CLOSE)
              || chunk_is_token(prev_nonl, CT_VBRACE_OPEN)
              || chunk_is_token(prev_nonl, CT_CASE_COLON)
-             || (  prev_nonl != nullptr
+             || (  prev_nonl->IsNotNullChunk()
                 && prev_nonl->flags.test(PCF_IN_PREPROC)) != pc->flags.test(PCF_IN_PREPROC)
              || chunk_is_token(prev_nonl, CT_COMMA)
              || is_operator))
@@ -3573,8 +3573,8 @@ void indent_text(void)
           * everything else
           */
 
-         auto prev  = chunk_get_prev_nc_nnl(pc);
-         auto prevv = chunk_get_prev_nc_nnl(prev);
+         auto prev  = pc->GetPrevNcNnl();
+         auto prevv = prev->GetPrevNcNnl();
          auto next  = pc->GetNextNcNnl();
 
          bool do_vardefcol = false;
@@ -3792,7 +3792,7 @@ void indent_text(void)
                            search = chunk_skip_to_match_rev(search);
 
                            if (  options::indent_oc_inside_msg_sel()
-                              && chunk_is_token(chunk_get_prev_nc_nnl(search), CT_OC_COLON)
+                              && chunk_is_token(search->GetPrevNcNnl(), CT_OC_COLON)
                               && (  frm.top().type == CT_OC_MSG_FUNC
                                  || frm.top().type == CT_OC_MSG_NAME)) // Issue #2658
                            {

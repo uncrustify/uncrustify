@@ -109,7 +109,7 @@ void align_eigen_comma_init(void)
          Chunk *prev = pc->GetPrev();
 
          if (  chunk_is_newline(prev)
-            && chunk_is_token(chunk_get_prev_nc_nnl(pc), CT_COMMA))
+            && chunk_is_token(pc->GetPrevNcNnl(), CT_COMMA))
          {
             log_rule_B("align_eigen_comma_init");
             as.Add(pc);

@@ -663,7 +663,7 @@ void indent_text(void)
        * everything else
        */
 
-      prev = chunk_get_prev_nc_nnl(pc);
+      prev = pc->GetPrevNcNnl();
 
       if ((pc->type == CT_MEMBER) ||
           (pc->type == CT_DC_MEMBER) ||

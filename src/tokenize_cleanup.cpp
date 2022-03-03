@@ -172,7 +172,7 @@ void tokenize_trailing_return_types(void)
       if (  chunk_is_token(pc, CT_MEMBER)
          && (strcmp(pc->Text(), "->") == 0))
       {
-         Chunk *tmp = chunk_get_prev_nc_nnl(pc);
+         Chunk *tmp = pc->GetPrevNcNnl();
          Chunk *tmp_2;
          Chunk *open_paren;
 
@@ -180,18 +180,18 @@ void tokenize_trailing_return_types(void)
          {
             // auto max(int a, int b) const -> int;
             // auto f11() const -> bool;
-            tmp = chunk_get_prev_nc_nnl(tmp);
+            tmp = tmp->GetPrevNcNnl();
          }
          else if (chunk_is_token(tmp, CT_NOEXCEPT))
          {
             // noexcept is present
-            tmp_2 = chunk_get_prev_nc_nnl(tmp);
+            tmp_2 = tmp->GetPrevNcNnl();
 
             if (chunk_is_token(tmp_2, CT_QUALIFIER))
             {
                // auto f12() const noexcept -> bool;
                // auto f15() const noexcept -> bool = delete;
-               tmp = chunk_get_prev_nc_nnl(tmp_2);
+               tmp = tmp_2->GetPrevNcNnl();
             }
             else
             {
@@ -203,12 +203,12 @@ void tokenize_trailing_return_types(void)
          else if (chunk_is_token(tmp, CT_PAREN_CLOSE))
          {
             open_paren = chunk_get_prev_type(tmp, CT_PAREN_OPEN, tmp->level);
-            tmp        = chunk_get_prev_nc_nnl(open_paren);
+            tmp        = open_paren->GetPrevNcNnl();
 
             if (chunk_is_token(tmp, CT_NOEXCEPT))
             {
                // noexcept is present
-               tmp_2 = chunk_get_prev_nc_nnl(tmp);
+               tmp_2 = tmp->GetPrevNcNnl();
 
                if (chunk_is_token(tmp_2, CT_QUALIFIER))
                {
@@ -216,7 +216,7 @@ void tokenize_trailing_return_types(void)
                   // auto f14() const noexcept(false) -> bool;
                   // auto f16() const noexcept(true) -> bool = delete;
                   // auto f17() const noexcept(false) -> bool = delete;
-                  tmp = chunk_get_prev_nc_nnl(tmp_2);
+                  tmp = tmp_2->GetPrevNcNnl();
                }
                else
                {
@@ -230,13 +230,13 @@ void tokenize_trailing_return_types(void)
             else if (chunk_is_token(tmp, CT_THROW))
             {
                // throw is present
-               tmp_2 = chunk_get_prev_nc_nnl(tmp);
+               tmp_2 = tmp->GetPrevNcNnl();
 
                if (chunk_is_token(tmp_2, CT_QUALIFIER))
                {
                   // auto f23() const throw() -> bool;
                   // auto f24() const throw() -> bool = delete;
-                  tmp = chunk_get_prev_nc_nnl(tmp_2);
+                  tmp = tmp_2->GetPrevNcNnl();
                }
                else
                {
@@ -591,9 +591,9 @@ void tokenize_cleanup(void)
             pc->orig_col  = prev->orig_col;
             pc->orig_line = prev->orig_line;
             Chunk *to_be_deleted = prev;
-            prev = chunk_get_prev_nc_nnl(prev);
+            prev = prev->GetPrevNcNnl();
 
-            if (prev != nullptr)
+            if (prev->IsNotNullChunk())
             {
                chunk_del(to_be_deleted);
             }
@@ -1206,9 +1206,9 @@ static void check_template(Chunk *start, bool in_type_cast)
    LOG_FMT(LTEMPL, "%s(%d): orig_line %zu, orig_col %zu:\n",
            __func__, __LINE__, start->orig_line, start->orig_col);
 
-   Chunk *prev = chunk_get_prev_nc_nnl(start, E_Scope::PREPROC);
+   Chunk *prev = start->GetPrevNcNnl(E_Scope::PREPROC);
 
-   if (prev == nullptr)
+   if (prev->IsNullChunk())
    {
       return;
    }
@@ -1322,9 +1322,9 @@ static void check_template(Chunk *start, bool in_type_cast)
       // Scan back and make sure we aren't inside square parenthesis
       bool in_if         = false;
       bool hit_semicolon = false;
-      pc = start;
+      pc = start->GetPrevNcNnl(E_Scope::PREPROC);
 
-      while ((pc = chunk_get_prev_nc_nnl(pc, E_Scope::PREPROC)) != nullptr)
+      while (pc->IsNotNullChunk())
       {
          if (  (  chunk_is_token(pc, CT_SEMICOLON)
                && hit_semicolon)
@@ -1372,6 +1372,7 @@ static void check_template(Chunk *start, bool in_type_cast)
             in_if = true;
             break;
          }
+         pc = pc->GetPrevNcNnl(E_Scope::PREPROC);
       }
       /*
        * Scan forward to the angle close
@@ -1598,8 +1599,8 @@ static void check_template_arg(Chunk *start, Chunk *end)
          // a test "if (next == nullptr)" is not necessary
          chunk_flags_set(pc, PCF_IN_TEMPLATE);
 
-         Chunk *prev  = chunk_get_prev_nc_nnl(pc, E_Scope::PREPROC);
-         Chunk *prev2 = chunk_get_prev_nc_nnl(prev, E_Scope::PREPROC);
+         Chunk *prev  = pc->GetPrevNcNnl(E_Scope::PREPROC);
+         Chunk *prev2 = prev->GetPrevNcNnl(E_Scope::PREPROC);
 
          if (  chunk_is_token(prev, CT_ELLIPSIS)                 // Issue #3309
             && chunk_is_token(prev2, CT_TYPENAME))

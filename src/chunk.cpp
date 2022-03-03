@@ -748,15 +748,9 @@ Chunk *Chunk::GetNextNcNnl(E_Scope scope) const
 }
 
 
-Chunk *chunk_get_prev_nc_nnl(Chunk *cur, E_Scope scope)
+Chunk *Chunk::GetPrevNcNnl(E_Scope scope) const
 {
-   return(__internal_chunk_search(cur, chunk_is_comment_or_newline, scope, E_Direction::BACKWARD, false));
-}
-
-
-Chunk *__internal_chunk_get_next_nc_nnl(Chunk *cur, E_Scope scope)
-{
-   return(__internal_chunk_search(cur, chunk_is_comment_or_newline, scope, E_Direction::FORWARD, false));
+   return(Search(&Chunk::IsCommentOrNewline, scope, E_Direction::BACKWARD, false));
 }
 
 
@@ -1154,7 +1148,7 @@ Chunk *chunk_get_prev_ssq(Chunk *cur)
       {
          cur = chunk_skip_to_match_rev(cur);
       }
-      cur = chunk_get_prev_nc_nnl(cur);
+      cur = cur->GetPrevNcNnl();
    }
    return(cur);
 }
@@ -1185,20 +1179,20 @@ static Chunk *chunk_skip_dc_member(Chunk *start, E_Scope scope, E_Direction dir)
       return(nullptr);
    }
    const auto step_fcn = (dir == E_Direction::FORWARD)
-                         ? __internal_chunk_get_next_nc_nnl : chunk_get_prev_nc_nnl;
+                         ? &Chunk::GetNextNcNnl : &Chunk::GetPrevNcNnl;
 
    Chunk *pc   = start;
-   Chunk *next = chunk_is_token(pc, CT_DC_MEMBER) ? pc : step_fcn(pc, scope);
+   Chunk *next = chunk_is_token(pc, CT_DC_MEMBER) ? pc : (pc->*step_fcn)(scope);
 
    while (chunk_is_token(next, CT_DC_MEMBER))
    {
-      pc = step_fcn(next, scope);
+      pc = (next->*step_fcn)(scope);
 
-      if (pc == nullptr)
+      if (pc->IsNullChunk())
       {
-         return(nullptr);
+         return(Chunk::NullChunkPtr);
       }
-      next = step_fcn(pc, scope);
+      next = (pc->*step_fcn)(scope);
    }
    return(pc);
 }

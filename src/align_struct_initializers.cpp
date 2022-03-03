@@ -21,7 +21,7 @@ void align_struct_initializers(void)
    while (  pc != nullptr
          && pc->IsNotNullChunk())
    {
-      Chunk *prev = chunk_get_prev_nc_nnl(pc);
+      Chunk *prev = pc->GetPrevNcNnl();
 
       if (  chunk_is_token(prev, CT_ASSIGN)
          && (  chunk_is_token(pc, CT_BRACE_OPEN)
