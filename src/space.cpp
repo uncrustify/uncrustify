@@ -765,7 +765,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (  chunk_is_token(tmp, CT_PTR_TYPE)
          || chunk_is_token(tmp, CT_BYREF))
       {
-         tmp = chunk_get_prev_nc_nnl(tmp);
+         tmp = tmp->GetPrevNcNnl();
       }
 
       if (  chunk_is_token(tmp, CT_TYPE)
@@ -1818,7 +1818,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          || get_chunk_parent_type(second) == CT_UNION)
       {
          // Fix for issue #1240  adding space in struct initializers
-         Chunk *tmp = chunk_get_prev_nc_nnl(chunk_skip_to_match_rev(second));
+         Chunk *tmp = chunk_skip_to_match_rev(second)->GetPrevNcNnl();
 
          if (chunk_is_token(tmp, CT_ASSIGN))
          {
@@ -1966,7 +1966,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (get_chunk_parent_type(first) == CT_FUNC_CALL)
       {
          Chunk *tmp = chunk_get_prev_type(first, get_chunk_parent_type(first), first->level);
-         tmp = chunk_get_prev_nc_nnl(tmp);
+         tmp = tmp->GetPrevNcNnl();
 
          if (chunk_is_token(tmp, CT_NEW))
          {
@@ -2800,7 +2800,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          || get_chunk_parent_type(first) == CT_UNION)
       {
          // Fix for issue #1240  adding space in struct initializers
-         Chunk *tmp = chunk_get_prev_nc_nnl(first);
+         Chunk *tmp = first->GetPrevNcNnl();
 
          if (chunk_is_token(tmp, CT_ASSIGN))
          {

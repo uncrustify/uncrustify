@@ -922,7 +922,7 @@ void newlines_sparens()
       else
       {
          // add/remove trailing newline in an if condition
-         Chunk *ctrl_structure = chunk_get_prev_nc_nnl(sparen_open);
+         Chunk *ctrl_structure = sparen_open->GetPrevNcNnl();
 
          if (  chunk_is_token(ctrl_structure, CT_IF)
             || chunk_is_token(ctrl_structure, CT_ELSEIF))
@@ -2092,12 +2092,12 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
          LOG_FMT(LNL1LINE, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, Text() is '%s'\n",
                  __func__, __LINE__, next->orig_line, next->orig_col, next->Text());
 
-         prev = chunk_get_prev_nc_nnl(pc);
+         prev = pc->GetPrevNcNnl();
 
          while (  chunk_is_token(prev, CT_DC_MEMBER)
                || chunk_is_token(prev, CT_TYPE))
          {
-            prev = chunk_get_prev_nc_nnl(prev);
+            prev = prev->GetPrevNcNnl();
          }
 
          if (!(chunk_is_opening_brace(prev) || chunk_is_closing_brace(prev)))
@@ -2937,7 +2937,7 @@ static void newline_func_multi_line(Chunk *start)
                                   || start_next->parent_type == CT_CPP_LAMBDA
                                   || chunk_is_token(start_next, CT_BRACE_OPEN));
 
-      Chunk *prev_end            = chunk_get_prev_nc_nnl(pc);
+      Chunk *prev_end            = pc->GetPrevNcNnl();
       bool  has_trailing_closure = (  prev_end->parent_type == CT_OC_BLOCK_EXPR
                                    || prev_end->parent_type == CT_CPP_LAMBDA
                                    || chunk_is_token(prev_end, CT_BRACE_OPEN));
@@ -3004,7 +3004,7 @@ static void newline_func_multi_line(Chunk *start)
 
                   if (options::nl_func_call_args_multi_line_ignore_closures())
                   {
-                     Chunk *prev_comma  = chunk_get_prev_nc_nnl(pc);
+                     Chunk *prev_comma  = pc->GetPrevNcNnl();
                      Chunk *after_comma = pc->GetNextNcNnl();
 
                      if (!(  (  prev_comma->parent_type == CT_OC_BLOCK_EXPR
@@ -5942,7 +5942,7 @@ static void blank_line_max(Chunk *pc, Option<unsigned> &opt)
 
 iarf_e newline_template_option(Chunk *pc, iarf_e special, iarf_e base, iarf_e fallback)
 {
-   Chunk *const prev = chunk_get_prev_nc_nnl(pc);
+   Chunk *const prev = pc->GetPrevNcNnl();
 
    if (  chunk_is_token(prev, CT_ANGLE_OPEN)
       && special != IARF_IGNORE)

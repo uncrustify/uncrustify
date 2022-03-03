@@ -244,7 +244,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
 
    chunk_add_before(&pc, first_n);
 
-   Chunk *last_p = chunk_get_prev_nc_nnl(last, E_Scope::PREPROC);
+   Chunk *last_p = last->GetPrevNcNnl(E_Scope::PREPROC);
 
    set_chunk_type(&pc, CT_PAREN_CLOSE);
    pc.orig_line   = last_p->orig_line;

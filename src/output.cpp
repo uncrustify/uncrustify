@@ -2914,7 +2914,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
       {
          tmp = fpo->GetNextNcNnl();
 
-         if (  (tmp == chunk_get_prev_nc_nnl(fpc))
+         if (  (tmp == fpc->GetPrevNcNnl())
             && chunk_is_str(tmp, "void", 4))
          {
             has_param = false;
@@ -2960,17 +2960,17 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
       }
    }
    // Do the return stuff
-   tmp = chunk_get_prev_nc_nnl(fcn);
+   tmp = fcn->GetPrevNcNnl();
 
    // For Objective-C we need to go to the previous chunk
-   if (  tmp != nullptr
+   if (  tmp->IsNotNullChunk()
       && get_chunk_parent_type(tmp) == CT_OC_MSG_DECL
       && chunk_is_token(tmp, CT_PAREN_CLOSE))
    {
-      tmp = chunk_get_prev_nc_nnl(tmp);
+      tmp = tmp->GetPrevNcNnl();
    }
 
-   if (  tmp != nullptr
+   if (  tmp->IsNotNullChunk()
       && !chunk_is_str(tmp, "void", 4))
    {
       if (need_nl)
@@ -3023,18 +3023,18 @@ static bool kw_fcn_fclass(Chunk *cmt, unc_text &out_txt)
    else
    {
       // if outside a class, we expect "CLASS::METHOD(...)"
-      Chunk *tmp = chunk_get_prev_nc_nnl(fcn);
+      Chunk *tmp = fcn->GetPrevNcNnl();
 
       if (chunk_is_token(tmp, CT_OPERATOR))
       {
-         tmp = chunk_get_prev_nc_nnl(tmp);
+         tmp = tmp->GetPrevNcNnl();
       }
 
-      if (  tmp != nullptr
+      if (  tmp->IsNotNullChunk()
          && (  chunk_is_token(tmp, CT_DC_MEMBER)
             || chunk_is_token(tmp, CT_MEMBER)))
       {
-         tmp = chunk_get_prev_nc_nnl(tmp);
+         tmp = tmp->GetPrevNcNnl();
          out_txt.append(tmp->str);
          return(true);
       }

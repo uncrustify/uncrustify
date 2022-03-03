@@ -170,14 +170,18 @@ void ib_shift_out(size_t idx, size_t num)
 
 Chunk *step_back_over_member(Chunk *pc)
 {
-   Chunk *tmp;
+   if (pc == nullptr)
+   {
+      pc = Chunk::NullChunkPtr;
+   }
+   Chunk *tmp = pc->GetPrevNcNnl();
 
    // Skip over any class stuff: bool CFoo::bar()
-   while (  ((tmp = chunk_get_prev_nc_nnl(pc)) != nullptr)
+   while (  tmp->IsNotNullChunk()
          && chunk_is_token(tmp, CT_DC_MEMBER))
    {
-      // TODO: verify that we are pointing at something sane?
-      pc = chunk_get_prev_nc_nnl(tmp);
+      pc  = tmp->GetPrevNcNnl();
+      tmp = pc->GetPrevNcNnl();
    }
    return(pc);
 } // step_back_over_member

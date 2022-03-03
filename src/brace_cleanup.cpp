@@ -315,19 +315,19 @@ static bool maybe_while_of_do(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *prev = chunk_get_prev_nc_nnl(pc);
+   Chunk *prev = pc->GetPrevNcNnl();
 
-   if (  prev == nullptr
+   if (  prev->IsNullChunk()
       || !prev->flags.test(PCF_IN_PREPROC))
    {
       return(false);
    }
 
    // Find the chunk before the preprocessor
-   while (  prev != nullptr
+   while (  prev->IsNullChunk()
          && prev->flags.test(PCF_IN_PREPROC))
    {
-      prev = chunk_get_prev_nc_nnl(prev);
+      prev = prev->GetPrevNcNnl();
    }
 
    if (  (  chunk_is_token(prev, CT_VBRACE_CLOSE)
@@ -639,9 +639,9 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       || chunk_is_token(pc, CT_SPAREN_OPEN)
       || chunk_is_token(pc, CT_BRACE_OPEN))
    {
-      Chunk *prev = chunk_get_prev_nc_nnl(pc);
+      Chunk *prev = pc->GetPrevNcNnl();
 
-      if (prev != nullptr)
+      if (prev->IsNotNullChunk())
       {
          if (  chunk_is_token(pc, CT_PAREN_OPEN)
             || chunk_is_token(pc, CT_FPAREN_OPEN)
@@ -799,7 +799,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
    if (  chunk_is_token(pc, CT_CASE)
       || chunk_is_token(pc, CT_DEFAULT))
    {
-      Chunk *prev = chunk_get_prev_nc_nnl(pc);         // Issue #3176
+      Chunk *prev = pc->GetPrevNcNnl();         // Issue #3176
 
       if (  chunk_is_token(pc, CT_CASE)
          || (  chunk_is_token(pc, CT_DEFAULT)
@@ -1282,7 +1282,7 @@ static void mark_namespace(Chunk *pns)
    Chunk *br_close;
    bool  is_using = false;
 
-   Chunk *pc = chunk_get_prev_nc_nnl(pns);
+   Chunk *pc = pns->GetPrevNcNnl();
 
    if (chunk_is_token(pc, CT_USING))
    {
@@ -1461,7 +1461,7 @@ bool close_statement(ParseFrame &frm, Chunk *pc, const BraceState &braceState)
       else
       {
          // otherwise, add before it and consume the vbrace
-         vbc = chunk_get_prev_nc_nnl(pc);
+         vbc = pc->GetPrevNcNnl();
 
          frm.level--;
          frm.brace_level--;

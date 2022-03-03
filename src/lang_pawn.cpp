@@ -110,7 +110,7 @@ void pawn_scrub_vsemi(void)
       {
          continue;
       }
-      Chunk *prev = chunk_get_prev_nc_nnl(pc);
+      Chunk *prev = pc->GetPrevNcNnl();
 
       if (chunk_is_token(prev, CT_BRACE_CLOSE))
       {
@@ -529,14 +529,14 @@ Chunk *pawn_check_vsemicolon(Chunk *pc)
     *  - it is something that needs a continuation
     *    + arith, assign, bool, comma, compare
     */
-   Chunk *prev = chunk_get_prev_nc_nnl(pc);
+   Chunk *prev = pc->GetPrevNcNnl();
 
-   if (  prev == nullptr
+   if (  prev->IsNullChunk()
       || prev == vb_open
       || prev->flags.test(PCF_IN_PREPROC)
       || pawn_continued(prev, vb_open->level + 1))
    {
-      if (prev != nullptr)
+      if (prev->IsNotNullChunk())
       {
          LOG_FMT(LPVSEMI, "%s:  no  VSEMI on line %zu, prev='%s' [%s]\n",
                  __func__, prev->orig_line, prev->Text(), get_token_name(prev->type));

@@ -67,7 +67,7 @@ void align_oc_decl_colon(void)
             cas.Add(pc);
 
             Chunk *tmp  = pc->GetPrev(E_Scope::PREPROC);
-            Chunk *tmp2 = chunk_get_prev_nc_nnl(tmp, E_Scope::PREPROC);
+            Chunk *tmp2 = tmp->GetPrevNcNnl(E_Scope::PREPROC);
 
             // Check for an un-labeled parameter
             if (  (  chunk_is_token(tmp, CT_WORD)

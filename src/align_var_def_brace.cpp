@@ -59,7 +59,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       mygap = options::align_var_def_gap();
    }
    // can't be any variable definitions in a "= {" block
-   Chunk *prev = chunk_get_prev_nc_nnl(start);
+   Chunk *prev = start->GetPrevNcNnl();
 
    if (chunk_is_token(prev, CT_ASSIGN))
    {
@@ -163,7 +163,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
             if (  get_chunk_parent_type(pc) == CT_OPERATOR
                && options::align_on_operator())
             {
-               toadd = chunk_get_prev_nc_nnl(pc);
+               toadd = pc->GetPrevNcNnl();
             }
             else
             {
