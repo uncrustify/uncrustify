@@ -1094,3 +1094,4 @@
 60080  common/empty.cfg                                     cpp/Issue_3538.cpp
 60081  cpp/Issue_3546.cfg                                   cpp/Issue_3546.cpp
 60082  cpp/Issue_3552.cfg                                   cpp/Issue_3552.cpp
+60083  cpp/Issue_3570.cfg                                   cpp/Issue_3570.h
