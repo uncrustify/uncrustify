@@ -2130,6 +2130,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
             {
                LOG_FMT(LBLANKD, "%s(%d): pc is '%s', orig_line is %zu\n",
                        __func__, __LINE__, pc->Text(), pc->orig_line);
+
                if (prev == nullptr)
                {
                   LOG_FMT(LBLANKD, "%s(%d): prev is nullptr\n", __func__, __LINE__);
@@ -2138,6 +2139,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
                {
                   LOG_FMT(LBLANKD, "%s(%d): prev is '%s', orig_line is %zu\n",
                           __func__, __LINE__, prev->Text(), prev->orig_line);
+
                   if (!chunk_is_opening_brace(prev))
                   {
                      newline_min_after(prev, options::nl_var_def_blk_start() + 1, PCF_VAR_DEF);
