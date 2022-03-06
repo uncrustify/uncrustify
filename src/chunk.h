@@ -95,7 +95,7 @@ public:
    const char *ElidedText(char *for_the_copy) const;
 
 
-   // --------- Get* chuck functions
+   // --------- Get* chunk functions
 
    /**
     * @brief returns the head of the chunk list
@@ -194,7 +194,7 @@ public:
    /**
     * @brief defines a member function pointer for a function of type
     * bool Chunk::function() const;
-    * that checks whether a chuck satisty a specific condition
+    * that checks whether a chunk satisty a specific condition
     */
    typedef bool (Chunk::*T_CheckFnPtr)() const;
 
@@ -228,27 +228,27 @@ public:
    // --------- Is* functions
 
    /**
-    * @brief checks whether the chuck is a specific token
+    * @brief checks whether the chunk is a specific token
     * @token the token to check for
-    * @return true if the chuck type matches the specified token, false otherwise
+    * @return true if the chunk type matches the specified token, false otherwise
     */
    bool Is(E_Token token) const;
 
    /**
-    * @brief checks whether the chuck is not a specific token
+    * @brief checks whether the chunk is not a specific token
     * @token the token to check for
-    * @return true if the chuck type does not matches the specified token, false otherwise
+    * @return true if the chunk type does not matches the specified token, false otherwise
     */
    bool IsNot(E_Token token) const;
 
    /**
-    * @brief checks whether the chuck is a newline
-    * @return true if the chuck is a newline, false otherwise
+    * @brief checks whether the chunk is a newline
+    * @return true if the chunk is a newline, false otherwise
     */
    bool IsNewline() const;
 
    /**
-    * @brief checks whether the chuck is a comment
+    * @brief checks whether the chunk is a comment
     * This means any kind of:
     *   - single line comment
     *   - multiline comment
@@ -258,10 +258,22 @@ public:
    bool IsComment() const;
 
    /**
-    * @brief checks whether the chuck is either a comment or a newline
-    * @return true if the chuck is either a comment or a newline, false otherwise
+    * @brief checks whether the chunk is a preprocessor
+    * @return true if the chunk is a preprocessor, false otherwise
+    */
+   bool IsPreproc() const;
+
+   /**
+    * @brief checks whether the chunk is either a comment or a newline
+    * @return true if the chunk is either a comment or a newline, false otherwise
     */
    bool IsCommentOrNewline() const;
+
+   /**
+    * @brief checks whether the chunk is a comment, a newline or a preprocessor
+    * @return true if the chunk is a comment, a newline or a preprocessor, false otherwise
+    */
+   bool IsCommentNewlineOrPreproc() const;
 
 
    // --------- Data members
@@ -681,6 +693,13 @@ inline bool Chunk::IsComment() const
 }
 
 
+inline bool Chunk::IsPreproc() const
+{
+   return(  IsNotNullChunk()
+         && flags.test(PCF_IN_PREPROC));
+}
+
+
 inline bool Chunk::IsCommentOrNewline() const
 {
    return(  IsComment()
@@ -688,6 +707,15 @@ inline bool Chunk::IsCommentOrNewline() const
 }
 
 
+inline bool Chunk::IsCommentNewlineOrPreproc() const
+{
+   return(  IsComment()
+         || IsNewline()
+         || IsPreproc());
+}
+
+
+// TODO remove when possible
 static inline bool chunk_is_token(const Chunk *pc, E_Token c_token)
 {
    return(  pc != nullptr
@@ -696,6 +724,7 @@ static inline bool chunk_is_token(const Chunk *pc, E_Token c_token)
 }
 
 
+// TODO remove when possible
 static inline bool chunk_is_not_token(const Chunk *pc, E_Token c_token)
 {
    return(  pc != nullptr
@@ -761,6 +790,7 @@ Chunk *chunk_skip_dc_member_rev(Chunk *start, E_Scope scope = E_Scope::ALL);
  * - multiline comment
  * - C comment
  * - C++ comment
+ * TODO remove when possible
  */
 static inline bool chunk_is_comment(Chunk *pc)
 {
@@ -814,6 +844,7 @@ static inline bool chunk_is_single_line_comment(Chunk *pc)
 }
 
 
+// TODO remove when possible
 static inline bool chunk_is_newline(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_NEWLINE)
@@ -844,6 +875,7 @@ static inline bool chunk_is_blank(Chunk *pc)
 
 
 //! checks if a chunk is valid and either a comment or newline
+// TODO remove when possible
 static inline bool chunk_is_comment_or_newline(Chunk *pc)
 {
    return(  chunk_is_comment(pc)
@@ -868,6 +900,7 @@ static inline bool chunk_is_balanced_square(Chunk *pc)
 }
 
 
+// TODO remove when possible
 static inline bool chunk_is_preproc(Chunk *pc)
 {
    return(  pc != nullptr
@@ -886,6 +919,7 @@ static inline bool chunk_is_comment_or_newline_in_preproc(Chunk *pc)
 }
 
 
+// TODO remove when possible
 static inline bool chunk_is_comment_newline_or_preproc(Chunk *pc)
 {
    return(  chunk_is_comment(pc)
