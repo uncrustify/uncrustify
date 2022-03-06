@@ -1632,7 +1632,7 @@ void indent_text(void)
             log_rule_B("indent_cpp_lambda_body");
             frm.top().brace_indent = frm.prev().indent;
 
-            Chunk *head     = chunk_get_prev_nc_nnl_np(frm.top().pc);
+            Chunk *head     = frm.top().pc->GetPrevNcNnlNpp();
             Chunk *tail     = nullptr;
             Chunk *frm_prev = frm.prev().pc;
             bool  enclosure = (  frm_prev->parent_type != CT_FUNC_DEF           // Issue #3407
@@ -1736,7 +1736,7 @@ void indent_text(void)
                && (  (  !enclosure
                      && options::align_assign_span() == 0
                      && !options::indent_align_assign()
-                     && are_chunks_in_same_line(chunk_get_prev_nc_nnl_np(frm.prev().pc), frm.prev().pc)
+                     && are_chunks_in_same_line(frm.prev().pc->GetPrevNcNnlNpp(), frm.prev().pc)
                      && are_chunks_in_same_line(frm.prev().pc, frm.prev().pc->GetNextNcNnlNpp()))
                   || (  enclosure
                      && linematch
@@ -1823,7 +1823,7 @@ void indent_text(void)
             frm.top().brace_indent = frm.prev().indent;
 
             // Issue # 1620, UNI-24090.cs
-            if (are_chunks_in_same_line(frm.prev().pc, chunk_get_prev_nc_nnl_np(frm.top().pc)))
+            if (are_chunks_in_same_line(frm.prev().pc, frm.top().pc->GetPrevNcNnlNpp()))
             {
                frm.top().brace_indent -= indent_size;
             }
@@ -1996,7 +1996,7 @@ void indent_text(void)
                frm.top().indent = frm.prev().indent_tmp;
                log_indent();
             }
-            else if (  are_chunks_in_same_line(frm.prev().pc, chunk_get_prev_nc_nnl_np(frm.top().pc))
+            else if (  are_chunks_in_same_line(frm.prev().pc, frm.top().pc->GetPrevNcNnlNpp())
                     && !options::indent_align_paren()
                     && chunk_is_paren_open(frm.prev().pc)
                     && !pc->flags.test(PCF_ONE_LINER))
@@ -2962,7 +2962,7 @@ void indent_text(void)
          if (frm.top().type != CT_MEMBER)
          {
             frm.push(pc, __func__, __LINE__);
-            Chunk *tmp = chunk_get_prev_nc_nnl_np(frm.top().pc);
+            Chunk *tmp = frm.top().pc->GetPrevNcNnlNpp();
 
             if (are_chunks_in_same_line(frm.prev().pc, tmp))
             {
@@ -3015,7 +3015,7 @@ void indent_text(void)
          {
             if (chunk_is_paren_close(tmp))
             {
-               tmp = chunk_get_prev_nc_nnl_np(tmp);
+               tmp = tmp->GetPrevNcNnlNpp();
             }
             Chunk *local_prev = tmp->GetPrev();             // Issue #3294
 
@@ -3024,14 +3024,13 @@ void indent_text(void)
                tmp = tmp->GetPrev();                        // Issue #3294
             }
 
-            if (  tmp != nullptr
-               && chunk_is_newline(tmp->prev))
+            if (  tmp->IsNotNullChunk()
+               && chunk_is_newline(tmp->GetPrev()))
             {
-               tmp = chunk_get_prev_nc_nnl_np(tmp)->GetNextNl();
+               tmp = tmp->GetPrevNcNnlNpp()->GetNextNl();
             }
 
-            if (  tmp != nullptr
-               && tmp->IsNotNullChunk())
+            if (tmp->IsNotNullChunk())
             {
                frm.top().pop_pc = tmp;
             }

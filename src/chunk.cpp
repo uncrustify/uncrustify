@@ -760,9 +760,9 @@ Chunk *Chunk::GetNextNcNnlNpp(E_Scope scope) const
 }
 
 
-Chunk *chunk_get_prev_nc_nnl_np(Chunk *cur, E_Scope scope)
+Chunk *Chunk::GetPrevNcNnlNpp(E_Scope scope) const
 {
-   return(__internal_chunk_search(cur, chunk_is_comment_newline_or_preproc, scope, E_Direction::BACKWARD, false));
+   return(Search(&Chunk::IsCommentNewlineOrPreproc, scope, E_Direction::BACKWARD, false));
 }
 
 

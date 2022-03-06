@@ -192,7 +192,7 @@ void combine_labels(void)
             if (  chunk_is_token(cur, CT_NUMBER)
                && chunk_is_token(prev, CT_ELLIPSIS))
             {
-               Chunk *pre_elipsis = chunk_get_prev_nc_nnl_np(prev);
+               Chunk *pre_elipsis = prev->GetPrevNcNnlNpp();
 
                if (chunk_is_token(pre_elipsis, CT_NUMBER))
                {
