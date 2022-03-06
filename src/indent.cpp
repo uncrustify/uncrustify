@@ -920,14 +920,14 @@ void indent_text(void)
                   && frm.top().pop_pc != nullptr
                   && frm.top().pc != frmbkup.top().pc)
                {
-                  Chunk *tmp = chunk_get_next_nc_nnl_np(pc);
+                  Chunk *tmp = pc->GetNextNcNnlNpp();
 
-                  if (tmp != nullptr)
+                  if (tmp->IsNotNullChunk())
                   {
                      if (  chunk_is_token(tmp, CT_WORD)
                         || chunk_is_token(tmp, CT_TYPE))
                      {
-                        tmp = chunk_get_next_nc_nnl_np(pc);
+                        tmp = pc->GetNextNcNnlNpp();
                      }
                      else if (  chunk_is_token(tmp, CT_FUNC_CALL)
                              || chunk_is_token(tmp, CT_FPAREN_OPEN))
@@ -936,11 +936,12 @@ void indent_text(void)
 
                         if (tmp != nullptr)
                         {
-                           tmp = chunk_get_next_nc_nnl_np(pc);
+                           tmp = pc->GetNextNcNnlNpp();
                         }
                      }
 
-                     if (tmp != nullptr)
+                     if (  tmp != nullptr
+                        && tmp->IsNotNullChunk())
                      {
                         frm.top().pop_pc = tmp;
                      }
@@ -1650,10 +1651,10 @@ void indent_text(void)
                {
                   continue;
                }
-               Chunk *target = chunk_get_next_nc_nnl_np(match);
+               Chunk *target = match->GetNextNcNnlNpp();
 
                while (  tail == nullptr
-                     && target != nullptr)
+                     && target->IsNotNullChunk())
                {
                   if (  chunk_is_semicolon(target)
                      && target->level == match->level)
@@ -1666,7 +1667,7 @@ void indent_text(void)
                   }
                   else
                   {
-                     target = chunk_get_next_nc_nnl_np(target);
+                     target = target->GetNextNcNnlNpp();
                   }
                }
             }
@@ -1736,7 +1737,7 @@ void indent_text(void)
                      && options::align_assign_span() == 0
                      && !options::indent_align_assign()
                      && are_chunks_in_same_line(chunk_get_prev_nc_nnl_np(frm.prev().pc), frm.prev().pc)
-                     && are_chunks_in_same_line(frm.prev().pc, chunk_get_next_nc_nnl_np(frm.prev().pc)))
+                     && are_chunks_in_same_line(frm.prev().pc, frm.prev().pc->GetNextNcNnlNpp()))
                   || (  enclosure
                      && linematch
                      && toplevel)))
@@ -2992,23 +2993,23 @@ void indent_text(void)
             }
          }
          //check for the series of CT_member chunks else pop it.
-         Chunk *tmp = chunk_get_next_nc_nnl_np(pc);
+         Chunk *tmp = pc->GetNextNcNnlNpp();
 
-         if (tmp != nullptr)
+         if (tmp->IsNotNullChunk())
          {
             if (chunk_is_token(tmp, CT_FUNC_CALL))
             {
                tmp = chunk_get_next_type(tmp, CT_FPAREN_CLOSE, tmp->level);
-               tmp = chunk_get_next_nc_nnl_np(tmp);
+               tmp = tmp->GetNextNcNnlNpp();
             }
             else if (  chunk_is_token(tmp, CT_WORD)
                     || chunk_is_token(tmp, CT_TYPE))
             {
-               tmp = chunk_get_next_nc_nnl_np(tmp);
+               tmp = tmp->GetNextNcNnlNpp();
             }
          }
 
-         if (  tmp != nullptr
+         if (  tmp->IsNotNullChunk()
             && (  (strcmp(tmp->Text(), ".") != 0)
                || tmp->type != CT_MEMBER))
          {
@@ -3287,7 +3288,7 @@ void indent_text(void)
       }
       else if (  chunk_is_token(pc, CT_LAMBDA)
               && (language_is_set(LANG_CS | LANG_JAVA))
-              && chunk_get_next_nc_nnl_np(pc)->type != CT_BRACE_OPEN
+              && pc->GetNextNcNnlNpp()->type != CT_BRACE_OPEN
               && options::indent_cs_delegate_body())
       {
          log_rule_B("indent_cs_delegate_body");

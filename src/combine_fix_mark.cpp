@@ -1829,8 +1829,7 @@ void mark_function(Chunk *pc)
             prev = Chunk::GetHead();
          }
 
-         for (  tmp = prev; (tmp != nullptr)
-             && tmp != pc; tmp = chunk_get_next_nc_nnl_np(tmp))
+         for (tmp = prev; tmp->IsNotNullChunk() && tmp != pc; tmp = tmp->GetNextNcNnlNpp())
          {
             LOG_FMT(LFCN, "%s(%d): Text() is '%s', type is %s\n",
                     __func__, __LINE__, tmp->Text(), get_token_name(tmp->type));

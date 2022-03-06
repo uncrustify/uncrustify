@@ -182,6 +182,14 @@ public:
    Chunk *GetPrevNcNnl(E_Scope scope = E_Scope::ALL) const;
 
 
+   /**
+    * @brief returns the next non-comment, non-newline, non-preprocessor chunk
+    * @param scope code region to search in
+    * @return pointer to next non-comment, non-newline, non-preprocessor chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetNextNcNnlNpp(E_Scope scope = E_Scope::ALL) const;
+
+
    // --------- Search functions
 
    /**
@@ -397,15 +405,6 @@ Chunk *chunk_first_on_line(Chunk *pc);
 
 //! check if a given chunk is the last on its line
 bool chunk_is_last_on_line(Chunk *pc);
-
-
-/**
- * Gets the next non-NEWLINE and non-comment chunk, non-preprocessor chunk
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-Chunk *chunk_get_next_nc_nnl_np(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**

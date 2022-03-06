@@ -1692,7 +1692,7 @@ static void add_func_header(E_Token type, file_mem &fm)
    Chunk *tmp;
    bool  do_insert;
 
-   for (pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl_np(pc))
+   for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnlNpp())
    {
       if (pc->type != type)
       {
@@ -1710,15 +1710,15 @@ static void add_func_header(E_Token type, file_mem &fm)
 
       if (  chunk_is_token(ref, CT_CLASS)
          && get_chunk_parent_type(ref) == CT_NONE
-         && ref->next)
+         && ref->GetNext())
       {
-         ref = ref->next;
+         ref = ref->GetNext();
 
          if (  chunk_is_token(ref, CT_TYPE)
             && get_chunk_parent_type(ref) == type
-            && ref->next)
+            && ref->GetNext())
          {
-            ref = ref->next;
+            ref = ref->GetNext();
 
             if (  chunk_is_token(ref, CT_SEMICOLON)
                && ref->level == pc->level)
@@ -1732,12 +1732,12 @@ static void add_func_header(E_Token type, file_mem &fm)
 
       if (  chunk_is_token(ref, CT_FUNC_DEF)
          && get_chunk_parent_type(ref) == CT_NONE
-         && ref->next)
+         && ref->GetNext())
       {
          int found_brace = 0;                                 // Set if a close brace is found before a newline
 
          while (  ref->type != CT_NEWLINE
-               && (ref = ref->next)) // TODO: is the assignment of ref wanted here?, better move it to the loop
+               && (ref = ref->GetNext())) // TODO: is the assignment of ref wanted here?, better move it to the loop
          {
             if (chunk_is_token(ref, CT_BRACE_CLOSE))
             {
@@ -1849,7 +1849,7 @@ static void add_msg_header(E_Token type, file_mem &fm)
    Chunk *tmp;
    bool  do_insert;
 
-   for (pc = Chunk::GetHead(); pc != nullptr && pc->IsNotNullChunk(); pc = chunk_get_next_nc_nnl_np(pc))
+   for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnlNpp())
    {
       if (pc->type != type)
       {

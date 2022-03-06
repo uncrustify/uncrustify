@@ -1488,7 +1488,7 @@ static void mod_case_brace(void)
    // Make sure to start outside of a preprocessor line (see issue #3366)
    if (chunk_is_preproc(pc))
    {
-      pc = chunk_get_next_nc_nnl_np(pc);
+      pc = pc->GetNextNcNnlNpp();
    }
 
    while (  pc != nullptr
