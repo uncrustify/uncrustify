@@ -766,15 +766,15 @@ Chunk *Chunk::GetPrevNcNnlNpp(E_Scope scope) const
 }
 
 
-Chunk *chunk_get_next_nc_nnl_in_pp(Chunk *cur, E_Scope scope)
+Chunk *Chunk::GetNextNppOrNcNnl(E_Scope scope) const
 {
-   return(__internal_chunk_search(cur, chunk_is_comment_or_newline_in_preproc, scope, E_Direction::FORWARD, false));
+   return(Search(&Chunk::IsCommentOrNewlineInPreproc, scope, E_Direction::FORWARD, false));
 }
 
 
-Chunk *chunk_get_prev_nc_nnl_in_pp(Chunk *cur, E_Scope scope)
+Chunk *Chunk::GetPrevNppOrNcNnl(E_Scope scope) const
 {
-   return(__internal_chunk_search(cur, chunk_is_comment_or_newline_in_preproc, scope, E_Direction::BACKWARD, false));
+   return(Search(&Chunk::IsCommentOrNewlineInPreproc, scope, E_Direction::BACKWARD, false));
 }
 
 

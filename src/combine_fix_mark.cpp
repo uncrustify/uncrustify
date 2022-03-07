@@ -1165,9 +1165,9 @@ void mark_function(Chunk *pc)
    LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s'\n",
            __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
    Chunk *prev = chunk_get_prev_nc_nnl_ni(pc);   // Issue #2279
-   Chunk *next = chunk_get_next_nc_nnl_in_pp(pc);
+   Chunk *next = pc->GetNextNppOrNcNnl();
 
-   if (next == nullptr)
+   if (next->IsNullChunk())
    {
       return;
    }
@@ -1271,9 +1271,9 @@ void mark_function(Chunk *pc)
    if (  chunk_is_ptr_operator(next)
       || chunk_is_newline(next))
    {
-      next = chunk_get_next_nc_nnl_in_pp(next);
+      next = next->GetNextNppOrNcNnl();
 
-      if (next == nullptr)
+      if (next->IsNullChunk())
       {
          return;
       }
