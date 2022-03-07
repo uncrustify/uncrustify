@@ -183,14 +183,14 @@ Chunk *skip_to_next_statement(Chunk *pc)
 
 Chunk *skip_parent_types(Chunk *colon)
 {
-   auto pc = chunk_get_next_nc_nnl_np(colon);
+   Chunk *pc = colon->GetNextNcNnlNpp();
 
    while (pc)
    {
       // Skip access specifier
       if (chunk_is_token(pc, CT_ACCESS))
       {
-         pc = chunk_get_next_nc_nnl_np(pc);
+         pc = pc->GetNextNcNnlNpp();
          continue;
       }
 
@@ -206,14 +206,14 @@ Chunk *skip_parent_types(Chunk *colon)
          return(colon);
       }
       // Get next token
-      auto next = skip_template_next(chunk_get_next_nc_nnl_np(pc));
+      Chunk *next = skip_template_next(pc->GetNextNcNnlNpp());
 
       if (  chunk_is_token(next, CT_DC_MEMBER)
          || chunk_is_token(next, CT_COMMA))
       {
-         pc = chunk_get_next_nc_nnl_np(next);
+         pc = next->GetNextNcNnlNpp();
       }
-      else if (next)
+      else if (next != nullptr)
       {
          LOG_FMT(LPCU, "%s -> %zu:%zu ('%s')\n", __func__,
                  next->orig_line, next->orig_col, next->Text());

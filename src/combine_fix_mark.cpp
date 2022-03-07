@@ -1165,9 +1165,9 @@ void mark_function(Chunk *pc)
    LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s'\n",
            __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
    Chunk *prev = chunk_get_prev_nc_nnl_ni(pc);   // Issue #2279
-   Chunk *next = chunk_get_next_nc_nnl_in_pp(pc);
+   Chunk *next = pc->GetNextNppOrNcNnl();
 
-   if (next == nullptr)
+   if (next->IsNullChunk())
    {
       return;
    }
@@ -1271,9 +1271,9 @@ void mark_function(Chunk *pc)
    if (  chunk_is_ptr_operator(next)
       || chunk_is_newline(next))
    {
-      next = chunk_get_next_nc_nnl_in_pp(next);
+      next = next->GetNextNppOrNcNnl();
 
-      if (next == nullptr)
+      if (next->IsNullChunk())
       {
          return;
       }
@@ -1446,14 +1446,18 @@ void mark_function(Chunk *pc)
       LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
               __func__, __LINE__, prev->Text(), prev->orig_line, prev->orig_col, get_token_name(prev->type));
    }
+   else
+   {
+      prev = Chunk::NullChunkPtr;
+   }
 
    // Check for C++ function def
    if (  chunk_is_token(pc, CT_FUNC_CLASS_DEF)
-      || (  prev != nullptr
+      || (  prev->IsNotNullChunk()
          && (  chunk_is_token(prev, CT_INV)
             || chunk_is_token(prev, CT_DC_MEMBER))))
    {
-      Chunk *destr = nullptr;
+      Chunk *destr = Chunk::NullChunkPtr;
 
       if (chunk_is_token(prev, CT_INV))
       {
@@ -1465,14 +1469,14 @@ void mark_function(Chunk *pc)
 
          destr = prev;
          // Point to the item previous to the class name
-         prev = chunk_get_prev_nc_nnl_np(prev);
+         prev = prev->GetPrevNcNnlNpp();
       }
 
       if (chunk_is_token(prev, CT_DC_MEMBER))
       {
-         prev = chunk_get_prev_nc_nnl_np(prev);
+         prev = prev->GetPrevNcNnlNpp();
 
-         if (prev)
+         if (prev->IsNotNullChunk())
          {
             LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
                     __func__, __LINE__, prev->Text(), prev->orig_line, prev->orig_col,
@@ -1499,14 +1503,14 @@ void mark_function(Chunk *pc)
                LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu - FOUND %sSTRUCTOR for '%s', type is %s\n",
                        __func__, __LINE__,
                        prev->orig_line, prev->orig_col,
-                       (destr != nullptr) ? "DE" : "CON",
+                       (destr->IsNotNullChunk()) ? "DE" : "CON",
                        prev->Text(), get_token_name(prev->type));
 
                mark_cpp_constructor(pc);
                return;
             }
             // Point to the item previous to the class name
-            prev = chunk_get_prev_nc_nnl_np(prev);
+            prev = prev->GetPrevNcNnlNpp();
          }
       }
    }
@@ -1527,9 +1531,9 @@ void mark_function(Chunk *pc)
               __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col,
               get_token_name(pc->type));
 
-      if (prev == nullptr)
+      if (prev->IsNullChunk())
       {
-         LOG_FMT(LFCN, "%s(%d): Checking func call: prev is NULL\n",
+         LOG_FMT(LFCN, "%s(%d): Checking func call: prev is null chunk\n",
                  __func__, __LINE__);
       }
       else
@@ -1573,7 +1577,7 @@ void mark_function(Chunk *pc)
 
          if (prev->flags.test(PCF_IN_PREPROC))
          {
-            prev = chunk_get_prev_nc_nnl_np(prev);
+            prev = prev->GetPrevNcNnlNpp();
             continue;
          }
 
@@ -1606,7 +1610,8 @@ void mark_function(Chunk *pc)
 
             if (chunk_is_token(prev, CT_DECLSPEC))
             {
-               if (prev != nullptr)
+               if (  prev != nullptr
+                  && prev->IsNotNullChunk())
                {
                   prev = prev->GetPrev();
                }
@@ -1629,15 +1634,15 @@ void mark_function(Chunk *pc)
             while (  chunk_is_token(prev, CT_DC_MEMBER)
                   || chunk_is_token(prev, CT_MEMBER))
             {
-               prev = chunk_get_prev_nc_nnl_np(prev);
+               prev = prev->GetPrevNcNnlNpp();
 
-               if (  prev == nullptr
+               if (  prev->IsNullChunk()
                   || (  chunk_is_not_token(prev, CT_WORD)
                      && chunk_is_not_token(prev, CT_TYPE)
                      && chunk_is_not_token(prev, CT_THIS)))
                {
                   LOG_FMT(LFCN, "%s(%d): --? skipped MEMBER and landed on %s\n",
-                          __func__, __LINE__, (prev == nullptr) ? "<null>" : get_token_name(prev->type));
+                          __func__, __LINE__, (prev->IsNullChunk()) ? "<null chunk>" : get_token_name(prev->type));
                   break;
                }
                LOG_FMT(LFCN, "%s(%d): <skip> '%s'\n",
@@ -1647,11 +1652,11 @@ void mark_function(Chunk *pc)
                // clarification: this will skip the CT_WORD, CT_TYPE or CT_THIS landing on either
                // another CT_DC_MEMBER or CT_MEMBER or a token that indicates the context of the
                // token in question; therefore, exit loop when not a CT_DC_MEMBER or CT_MEMBER
-               prev = chunk_get_prev_nc_nnl_np(prev);
+               prev = prev->GetPrevNcNnlNpp();
 
-               if (prev == nullptr)
+               if (prev->IsNullChunk())
                {
-                  LOG_FMT(LFCN, "%s(%d): prev is nullptr\n",
+                  LOG_FMT(LFCN, "%s(%d): prev is null chunk\n",
                           __func__, __LINE__);
                }
                else
@@ -1661,7 +1666,7 @@ void mark_function(Chunk *pc)
                }
             }
 
-            if (prev == nullptr)
+            if (prev->IsNullChunk())
             {
                break;
             }
@@ -1678,7 +1683,7 @@ void mark_function(Chunk *pc)
                isa_def = true;
                break;
             }
-            Chunk *prev_prev = chunk_get_prev_nc_nnl_np(prev);
+            Chunk *prev_prev = prev->GetPrevNcNnlNpp();
 
             if (!chunk_is_token(prev_prev, CT_QUESTION))               // Issue #1753
             {
@@ -1733,7 +1738,7 @@ void mark_function(Chunk *pc)
          }
          else
          {
-            prev = chunk_get_prev_nc_nnl_np(prev);
+            prev = prev->GetPrevNcNnlNpp();
          }
       }
       //LOG_FMT(LFCN, " -- stopped on %s [%s]\n",
@@ -1742,12 +1747,7 @@ void mark_function(Chunk *pc)
       // Fixes issue #1634
       if (chunk_is_paren_close(prev))
       {
-         Chunk *preproc = Chunk::NullChunkPtr;
-
-         if (prev != nullptr)
-         {
-            preproc = prev->GetNextNcNnl();
-         }
+         Chunk *preproc = prev->GetNextNcNnl();
 
          if (chunk_is_token(preproc, CT_PREPROC))
          {
@@ -1765,7 +1765,7 @@ void mark_function(Chunk *pc)
 
                      if (preproc->pp_level == pp_level)
                      {
-                        prev = chunk_get_prev_nc_nnl_np(preproc);
+                        prev = preproc->GetPrevNcNnlNpp();
                         break;
                      }
                   }
@@ -1777,6 +1777,7 @@ void mark_function(Chunk *pc)
 
       if (  isa_def
          && prev != nullptr
+         && prev->IsNotNullChunk()
          && (  (  chunk_is_paren_close(prev)
                && get_chunk_parent_type(prev) != CT_D_CAST
                && get_chunk_parent_type(prev) != CT_MACRO_OPEN  // Issue #2726
@@ -1824,13 +1825,13 @@ void mark_function(Chunk *pc)
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
          set_chunk_type(pc, CT_FUNC_DEF);
 
-         if (prev == nullptr)
+         if (  prev == nullptr
+            || prev->IsNullChunk())
          {
             prev = Chunk::GetHead();
          }
 
-         for (  tmp = prev; (tmp != nullptr)
-             && tmp != pc; tmp = chunk_get_next_nc_nnl_np(tmp))
+         for (tmp = prev; tmp->IsNotNullChunk() && tmp != pc; tmp = tmp->GetNextNcNnlNpp())
          {
             LOG_FMT(LFCN, "%s(%d): Text() is '%s', type is %s\n",
                     __func__, __LINE__, tmp->Text(), get_token_name(tmp->type));
@@ -2547,8 +2548,8 @@ void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
    Chunk *var_name = cs.Pop_Back();
 
    if (  var_name != nullptr
-      && var_name->prev != nullptr
-      && var_name->prev->type == CT_DC_MEMBER)
+      && var_name->GetPrev()->IsNotNullChunk()
+      && var_name->GetPrev()->type == CT_DC_MEMBER)
    {
       cs.Push_Back(var_name);
    }

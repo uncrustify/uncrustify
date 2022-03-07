@@ -1486,9 +1486,9 @@ static void mod_case_brace(void)
    Chunk *pc = Chunk::GetHead();
 
    // Make sure to start outside of a preprocessor line (see issue #3366)
-   if (chunk_is_preproc(pc))
+   if (pc->IsPreproc())
    {
-      pc = chunk_get_next_nc_nnl_np(pc);
+      pc = pc->GetNextNcNnlNpp();
    }
 
    while (  pc != nullptr

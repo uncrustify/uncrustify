@@ -95,7 +95,7 @@ public:
    const char *ElidedText(char *for_the_copy) const;
 
 
-   // --------- Get* chuck functions
+   // --------- Get* chunk functions
 
    /**
     * @brief returns the head of the chunk list
@@ -165,7 +165,6 @@ public:
     */
    Chunk *GetPrevNc(E_Scope scope = E_Scope::ALL) const;
 
-
    /**
     * @brief returns the next non-comment and non-newline chunk
     * @param scope code region to search in
@@ -173,13 +172,40 @@ public:
     */
    Chunk *GetNextNcNnl(E_Scope scope = E_Scope::ALL) const;
 
-
    /**
     * @brief returns the prev non-comment and non-newline chunk
     * @param scope code region to search in
     * @return pointer to prev non-comment and non-newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetPrevNcNnl(E_Scope scope = E_Scope::ALL) const;
+
+   /**
+    * @brief returns the next non-comment, non-newline, non-preprocessor chunk
+    * @param scope code region to search in
+    * @return pointer to next non-comment, non-newline, non-preprocessor chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetNextNcNnlNpp(E_Scope scope = E_Scope::ALL) const;
+
+   /**
+    * @brief returns the prev non-comment, non-newline, non-preprocessor chunk
+    * @param scope code region to search in
+    * @return pointer to prev non-comment, non-newline, non-preprocessor chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetPrevNcNnlNpp(E_Scope scope = E_Scope::ALL) const;
+
+   /**
+    * @brief returns the next non-preprocessor or non-comment, non-newline chunk
+    * @param scope code region to search in
+    * @return pointer to next non-preprocessor or non-comment, non-newline chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetNextNppOrNcNnl(E_Scope scope = E_Scope::ALL) const;
+
+   /**
+    * @brief returns the prev non-preprocessor or non-comment, non-newline chunk
+    * @param scope code region to search in
+    * @return pointer to prev non-preprocessor or non-comment, non-newline chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetPrevNppOrNcNnl(E_Scope scope = E_Scope::ALL) const;
 
 
    // --------- Search functions
@@ -194,7 +220,7 @@ public:
    /**
     * @brief defines a member function pointer for a function of type
     * bool Chunk::function() const;
-    * that checks whether a chuck satisty a specific condition
+    * that checks whether a chunk satisty a specific condition
     */
    typedef bool (Chunk::*T_CheckFnPtr)() const;
 
@@ -228,27 +254,27 @@ public:
    // --------- Is* functions
 
    /**
-    * @brief checks whether the chuck is a specific token
+    * @brief checks whether the chunk is a specific token
     * @token the token to check for
-    * @return true if the chuck type matches the specified token, false otherwise
+    * @return true if the chunk type matches the specified token, false otherwise
     */
    bool Is(E_Token token) const;
 
    /**
-    * @brief checks whether the chuck is not a specific token
+    * @brief checks whether the chunk is not a specific token
     * @token the token to check for
-    * @return true if the chuck type does not matches the specified token, false otherwise
+    * @return true if the chunk type does not matches the specified token, false otherwise
     */
    bool IsNot(E_Token token) const;
 
    /**
-    * @brief checks whether the chuck is a newline
-    * @return true if the chuck is a newline, false otherwise
+    * @brief checks whether the chunk is a newline
+    * @return true if the chunk is a newline, false otherwise
     */
    bool IsNewline() const;
 
    /**
-    * @brief checks whether the chuck is a comment
+    * @brief checks whether the chunk is a comment
     * This means any kind of:
     *   - single line comment
     *   - multiline comment
@@ -258,10 +284,28 @@ public:
    bool IsComment() const;
 
    /**
-    * @brief checks whether the chuck is either a comment or a newline
-    * @return true if the chuck is either a comment or a newline, false otherwise
+    * @brief checks whether the chunk is a preprocessor
+    * @return true if the chunk is a preprocessor, false otherwise
+    */
+   bool IsPreproc() const;
+
+   /**
+    * @brief checks whether the chunk is either a comment or a newline
+    * @return true if the chunk is either a comment or a newline, false otherwise
     */
    bool IsCommentOrNewline() const;
+
+   /**
+    * @brief checks whether the chunk is a comment, a newline or a preprocessor
+    * @return true if the chunk is a comment, a newline or a preprocessor, false otherwise
+    */
+   bool IsCommentNewlineOrPreproc() const;
+
+   /**
+    * @brief checks whether the chunk is a preprocessor and either a comment or a newline
+    * @return true if the chunk is a preprocessor and either a comment or a newline, false otherwise
+    */
+   bool IsCommentOrNewlineInPreproc() const;
 
 
    // --------- Data members
@@ -385,42 +429,6 @@ Chunk *chunk_first_on_line(Chunk *pc);
 
 //! check if a given chunk is the last on its line
 bool chunk_is_last_on_line(Chunk *pc);
-
-
-/**
- * Gets the next non-NEWLINE and non-comment chunk, non-preprocessor chunk
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-Chunk *chunk_get_next_nc_nnl_np(Chunk *cur, E_Scope scope = E_Scope::ALL);
-
-
-/**
- * Gets the prev non-NEWLINE and non-comment chunk, non-preprocessor chunk
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-Chunk *chunk_get_prev_nc_nnl_np(Chunk *cur, E_Scope scope = E_Scope::ALL);
-
-
-/**
- * Gets the next non-NEWLINE and non-comment chunk inside a preprocessor block
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-Chunk *chunk_get_next_nc_nnl_in_pp(Chunk *cur, E_Scope scope = E_Scope::ALL);
-
-
-/**
- * Gets the prev non-NEWLINE and non-comment chunk inside a preprocessor block
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-Chunk *chunk_get_prev_nc_nnl_in_pp(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -681,6 +689,13 @@ inline bool Chunk::IsComment() const
 }
 
 
+inline bool Chunk::IsPreproc() const
+{
+   return(  IsNotNullChunk()
+         && flags.test(PCF_IN_PREPROC));
+}
+
+
 inline bool Chunk::IsCommentOrNewline() const
 {
    return(  IsComment()
@@ -688,6 +703,23 @@ inline bool Chunk::IsCommentOrNewline() const
 }
 
 
+inline bool Chunk::IsCommentNewlineOrPreproc() const
+{
+   return(  IsComment()
+         || IsNewline()
+         || IsPreproc());
+}
+
+
+inline bool Chunk::IsCommentOrNewlineInPreproc() const
+{
+   return(  IsPreproc()
+         && (  IsComment()
+            || IsNewline()));
+}
+
+
+// TODO remove when possible
 static inline bool chunk_is_token(const Chunk *pc, E_Token c_token)
 {
    return(  pc != nullptr
@@ -696,6 +728,7 @@ static inline bool chunk_is_token(const Chunk *pc, E_Token c_token)
 }
 
 
+// TODO remove when possible
 static inline bool chunk_is_not_token(const Chunk *pc, E_Token c_token)
 {
    return(  pc != nullptr
@@ -761,6 +794,7 @@ Chunk *chunk_skip_dc_member_rev(Chunk *start, E_Scope scope = E_Scope::ALL);
  * - multiline comment
  * - C comment
  * - C++ comment
+ * TODO remove when possible
  */
 static inline bool chunk_is_comment(Chunk *pc)
 {
@@ -814,6 +848,7 @@ static inline bool chunk_is_single_line_comment(Chunk *pc)
 }
 
 
+// TODO remove when possible
 static inline bool chunk_is_newline(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_NEWLINE)
@@ -844,6 +879,7 @@ static inline bool chunk_is_blank(Chunk *pc)
 
 
 //! checks if a chunk is valid and either a comment or newline
+// TODO remove when possible
 static inline bool chunk_is_comment_or_newline(Chunk *pc)
 {
    return(  chunk_is_comment(pc)
@@ -865,32 +901,6 @@ static inline bool chunk_is_balanced_square(Chunk *pc)
    return(  chunk_is_token(pc, CT_SQUARE_OPEN)
          || chunk_is_token(pc, CT_TSQUARE)
          || chunk_is_token(pc, CT_SQUARE_CLOSE));
-}
-
-
-static inline bool chunk_is_preproc(Chunk *pc)
-{
-   return(  pc != nullptr
-         && pc->IsNotNullChunk()
-         && pc->flags.test(PCF_IN_PREPROC));
-}
-
-
-static inline bool chunk_is_comment_or_newline_in_preproc(Chunk *pc)
-{
-   return(  pc != nullptr
-         && pc->IsNotNullChunk()
-         && chunk_is_preproc(pc)
-         && (  chunk_is_comment(pc)
-            || chunk_is_newline(pc)));
-}
-
-
-static inline bool chunk_is_comment_newline_or_preproc(Chunk *pc)
-{
-   return(  chunk_is_comment(pc)
-         || chunk_is_newline(pc)
-         || chunk_is_preproc(pc));
 }
 
 

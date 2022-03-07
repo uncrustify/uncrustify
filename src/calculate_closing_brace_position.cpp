@@ -150,11 +150,10 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
    LOG_FMT(LMCB, "%s(%d): last->Text()     is '%s', orig_line %zu, orig_col is %zu\n",
            __func__, __LINE__, last->Text(), last->orig_line, last->orig_col);
 
-   if (chunk_is_preproc(last))
+   if (last->IsPreproc())
    {
       // we have a preprocessor token
-      while (  last != nullptr
-            && last->IsNotNullChunk())
+      while (last->IsNotNullChunk())
       {
          LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig_line %zu, orig_col is %zu\n",
                  __func__, __LINE__, last->Text(), last->orig_line, last->orig_col);
@@ -190,7 +189,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
          LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig_line %zu, orig_col is %zu\n",
                  __func__, __LINE__, last->Text(), last->orig_line, last->orig_col);
 
-         if (!chunk_is_preproc(last))
+         if (!last->IsPreproc())
          {
             break;
          }

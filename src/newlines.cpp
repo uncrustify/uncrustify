@@ -2039,7 +2039,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
          break;
       }
 
-      if (chunk_is_preproc(pc))
+      if (pc->IsPreproc())
       {
          if (!var_blk)
          {
