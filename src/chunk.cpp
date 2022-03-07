@@ -1156,7 +1156,7 @@ Chunk *chunk_get_prev_ssq(Chunk *cur)
 
 Chunk *chunk_get_pp_start(Chunk *cur)
 {
-   if (!chunk_is_preproc(cur))
+   if (!cur->IsPreproc())
    {
       return(nullptr);
    }

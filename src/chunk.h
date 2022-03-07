@@ -904,35 +904,6 @@ static inline bool chunk_is_balanced_square(Chunk *pc)
 }
 
 
-// TODO remove when possible
-static inline bool chunk_is_preproc(Chunk *pc)
-{
-   return(  pc != nullptr
-         && pc->IsNotNullChunk()
-         && pc->flags.test(PCF_IN_PREPROC));
-}
-
-
-// TODO remove when possible
-static inline bool chunk_is_comment_or_newline_in_preproc(Chunk *pc)
-{
-   return(  pc != nullptr
-         && pc->IsNotNullChunk()
-         && chunk_is_preproc(pc)
-         && (  chunk_is_comment(pc)
-            || chunk_is_newline(pc)));
-}
-
-
-// TODO remove when possible
-static inline bool chunk_is_comment_newline_or_preproc(Chunk *pc)
-{
-   return(  chunk_is_comment(pc)
-         || chunk_is_newline(pc)
-         || chunk_is_preproc(pc));
-}
-
-
 static inline bool chunk_is_comment_newline_or_blank(Chunk *pc)
 {
    return(  chunk_is_comment(pc)
