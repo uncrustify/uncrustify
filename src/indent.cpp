@@ -3551,7 +3551,8 @@ void indent_text(void)
 
       if (  chunk_is_semicolon(pc)
          || (  chunk_is_token(pc, CT_BRACE_OPEN)
-            && get_chunk_parent_type(pc) == CT_FUNCTION))
+            && (  get_chunk_parent_type(pc) == CT_FUNCTION
+               || get_chunk_parent_type(pc) == CT_CLASS))) //Issue #3576
       {
          vardefcol = 0;
       }
