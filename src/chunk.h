@@ -291,6 +291,12 @@ public:
     */
    bool IsCommentNewlineOrPreproc() const;
 
+   /**
+    * @brief checks whether the chunk is a preprocessor and either a comment or a newline
+    * @return true if the chunk is a preprocessor and either a comment or a newline, false otherwise
+    */
+   bool IsCommentOrNewlineInPreproc() const;
+
 
    // --------- Data members
 
@@ -713,6 +719,14 @@ inline bool Chunk::IsCommentNewlineOrPreproc() const
 }
 
 
+inline bool Chunk::IsCommentOrNewlineInPreproc() const
+{
+   return(  IsPreproc()
+         && (  IsComment()
+            || IsNewline()));
+}
+
+
 // TODO remove when possible
 static inline bool chunk_is_token(const Chunk *pc, E_Token c_token)
 {
@@ -907,6 +921,7 @@ static inline bool chunk_is_preproc(Chunk *pc)
 }
 
 
+// TODO remove when possible
 static inline bool chunk_is_comment_or_newline_in_preproc(Chunk *pc)
 {
    return(  pc != nullptr
