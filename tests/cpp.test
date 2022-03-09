@@ -1095,3 +1095,5 @@
 60081  cpp/Issue_3546.cfg                                   cpp/Issue_3546.cpp
 60082  cpp/Issue_3552.cfg                                   cpp/Issue_3552.cpp
 60083  cpp/Issue_3570.cfg                                   cpp/Issue_3570.h
+60084  cpp/Issue_3576-a.cfg                                 cpp/Issue_3576.h
+60085  cpp/Issue_3576-b.cfg                                 cpp/Issue_3576.h
