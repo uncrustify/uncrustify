@@ -4029,11 +4029,14 @@ pp_indent_func_def; // = true
 extern Option<bool>
 pp_indent_extern; // = true
 
-// Whether to indent braces directly inside #if, #else, and #endif.
-// Only applies to the indent of the preprocesser that the braces are directly
-// inside of.
-extern Option<bool>
-pp_indent_brace; // = true
+// How to indent braces directly inside #if, #else, and #endif.
+// Requires pp_if_indent_code=true and only applies to the indent of the
+// preprocesser that the braces are directly inside of.
+//  0: No extra indent
+//  1: Indent by one level
+// -1: Preserve original indentation
+extern BoundedOption<signed, -1, 1>
+pp_indent_brace; // = 1
 
 // TODO ...until here.
 
