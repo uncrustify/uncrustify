@@ -1586,6 +1586,10 @@ indent_switch_case;
 extern BoundedOption<unsigned, 0, 16>
 indent_switch_body;
 
+// Whether to ignore indent for '{' following 'case'.
+extern Option<bool>
+indent_ignore_case_brace;
+
 // Spaces to indent '{' from 'case'. By default, the brace will appear under
 // the 'c' in case. Usually set to 0 or indent_columns. Negative values are OK.
 // It might be wise to choose the same value for the option indent_switch_case.

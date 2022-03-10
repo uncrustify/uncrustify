@@ -2110,20 +2110,26 @@ void indent_text(void)
             }
             else if (get_chunk_parent_type(pc) == CT_CASE)
             {
-               log_rule_B("indent_case_brace");
-               const auto tmp_indent = static_cast<int>(frm.prev().indent)
-                                       - static_cast<int>(indent_size)
-                                       + options::indent_case_brace();
-
-               /*
-                * An open brace with the parent of case does not indent by default
-                * UO_indent_case_brace can be used to indent the brace.
-                * So we need to take the CASE indent, subtract off the
-                * indent_size that was added above and then add indent_case_brace.
-                * may take negative value
-                */
-               indent_column_set(max(tmp_indent, 0));
-
+               if (options::indent_ignore_case_brace())
+               {
+                  log_rule_B("indent_ignore_case_brace");
+                  indent_column_set(pc->orig_col);
+               }
+               else
+               {
+                  log_rule_B("indent_case_brace");
+                  const auto tmp_indent = static_cast<int>(frm.prev().indent)
+                                          - static_cast<int>(indent_size)
+                                          + options::indent_case_brace();
+                  /*
+                   * An open brace with the parent of case does not indent by default
+                   * UO_indent_case_brace can be used to indent the brace.
+                   * So we need to take the CASE indent, subtract off the
+                   * indent_size that was added above and then add indent_case_brace.
+                   * may take negative value
+                   */
+                  indent_column_set(max(tmp_indent, 0));
+               }
                // Stuff inside the brace still needs to be indented
                frm.top().indent = indent_column + indent_size;
                log_indent();
