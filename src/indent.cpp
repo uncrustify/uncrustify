@@ -854,6 +854,7 @@ void indent_text(void)
                break;
             }
             int   should_indent_preproc = true;
+            int   should_ignore_preproc = false;
             Chunk *preproc_next         = pc->GetNextNl();
             preproc_next = chunk_get_next_nc_nnl_nb(preproc_next);
 
@@ -867,15 +868,26 @@ void indent_text(void)
                   && preproc_next->IsNotNullChunk()
                   && preproc_next->type != CT_NEWLINE)
             {
-               if (  (  (  (chunk_is_token(preproc_next, CT_BRACE_OPEN))
-                        || (chunk_is_token(preproc_next, CT_BRACE_CLOSE)))
-                     && !options::pp_indent_brace())
-                  || (  chunk_is_token(preproc_next, CT_FUNC_DEF)
-                     && !options::pp_indent_func_def())
-                  || (  chunk_is_token(preproc_next, CT_CASE)
-                     && !options::pp_indent_case())
-                  || (  chunk_is_token(preproc_next, CT_EXTERN)
-                     && !options::pp_indent_extern()))
+               if (  (chunk_is_token(preproc_next, CT_BRACE_OPEN))
+                  || (chunk_is_token(preproc_next, CT_BRACE_CLOSE)))
+               {
+                  if (options::pp_indent_brace() == 0)
+                  {
+                     should_indent_preproc = false;
+                     break;
+                  }
+                  else if (options::pp_indent_brace() == -1)
+                  {
+                     should_ignore_preproc = true;
+                     break;
+                  }
+               }
+               else if (  (  chunk_is_token(preproc_next, CT_FUNC_DEF)
+                          && !options::pp_indent_func_def())
+                       || (  chunk_is_token(preproc_next, CT_CASE)
+                          && !options::pp_indent_case())
+                       || (  chunk_is_token(preproc_next, CT_EXTERN)
+                          && !options::pp_indent_extern()))
                {
                   should_indent_preproc = false;
                   break;
@@ -892,15 +904,24 @@ void indent_text(void)
                frm.push(next, __func__, __LINE__);
                set_chunk_type(next, memtype);
 
-               // Indent one level except if the #if is a #include guard
-               size_t extra = (  pc->pp_level == 0
-                              && ifdef_over_whole_file())
-                              ? 0 : indent_size;
+               if (should_ignore_preproc)
+               {
+                  // Preserve original indentation
+                  frm.top().indent = preproc_next->orig_col;
+                  log_indent();
+               }
+               else
+               {
+                  // Indent one level except if the #if is a #include guard
+                  size_t extra = (  pc->pp_level == 0
+                                 && ifdef_over_whole_file())
+                                 ? 0 : indent_size;
 
-               frm.top().indent = frm.prev().indent + extra;
-               log_indent();
+                  frm.top().indent = frm.prev().indent + extra;
+                  log_indent();
 
-               frm.top().indent_tab = frm.prev().indent_tab + extra;
+                  frm.top().indent_tab = frm.prev().indent_tab + extra;
+               }
                frm.top().indent_tmp = frm.top().indent;
                frm.top().in_preproc = false;
                log_indent_tmp();
