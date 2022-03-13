@@ -2140,7 +2140,7 @@ static Chunk *process_return(Chunk *pc)
    Chunk chunk;
 
    // grab next and bail if it is a semicolon
-   next = chunk_ppa_get_next_nc_nnl(pc);
+   next = pc->PpaGetNextNcNnl();
 
    if (  next->IsNullChunk()
       || chunk_is_semicolon(next)
@@ -2169,7 +2169,7 @@ static Chunk *process_return(Chunk *pc)
       {
          return(nullptr);
       }
-      semi = chunk_ppa_get_next_nc_nnl(cpar);
+      semi = cpar->PpaGetNextNcNnl();
 
       if (semi->IsNullChunk())
       {

@@ -755,9 +755,9 @@ Chunk *Chunk::GetPrevNppOrNcNnl(E_Scope scope) const
 }
 
 
-Chunk *chunk_ppa_get_next_nc_nnl(Chunk *cur)
+Chunk *Chunk::PpaGetNextNcNnl() const
 {
-   return(cur->SearchPpa(&Chunk::IsCommentOrNewline, false));
+   return(SearchPpa(&Chunk::IsCommentOrNewline, false));
 }
 
 

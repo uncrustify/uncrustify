@@ -207,6 +207,15 @@ public:
     */
    Chunk *GetPrevNppOrNcNnl(E_Scope scope = E_Scope::ALL) const;
 
+   /**
+    * @brief returns the next preprocessor aware non-comment and non-newline chunk
+    *        Unlike Chunk::GetNextNcNnl, this will also ignore a line continuation if
+    *        the starting chunk is in a preprocessor directive, and may return a newline
+    *        if the search reaches the end of a preprocessor directive.
+    * @return pointer to next preprocessor aware non-comment and non-newline chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *PpaGetNextNcNnl() const;
+
 
    // --------- Search functions
 
@@ -446,18 +455,6 @@ Chunk *chunk_first_on_line(Chunk *pc);
 
 //! check if a given chunk is the last on its line
 bool chunk_is_last_on_line(Chunk *pc);
-
-
-/**
- * Gets the next non-NEWLINE and non-comment chunk (preprocessor aware).
- * Unlike Chunk::GetNextNcNnl, this will also ignore a line continuation if
- * the starting chunk is in a preprocessor directive, and may return a newline
- * if the search reaches the end of a preprocessor directive.
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-Chunk *chunk_ppa_get_next_nc_nnl(Chunk *cur);
 
 
 /**
