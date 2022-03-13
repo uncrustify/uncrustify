@@ -892,15 +892,6 @@ static inline bool chunk_is_blank(Chunk *pc)
 }
 
 
-//! checks if a chunk is valid and either a comment or newline
-// TODO remove when possible
-static inline bool chunk_is_comment_or_newline(Chunk *pc)
-{
-   return(  chunk_is_comment(pc)
-         || chunk_is_newline(pc));
-}
-
-
 //! checks if a chunk is valid and either a comment or newline or ignored
 static inline bool chunk_is_comment_or_newline_or_ignored(Chunk *pc)
 {

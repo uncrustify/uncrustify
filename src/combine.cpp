@@ -1946,12 +1946,7 @@ void fix_symbols(void)
 
    pc = Chunk::GetHead();
 
-   if (pc->IsNullChunk())
-   {
-      return;
-   }
-
-   if (chunk_is_comment_or_newline(pc))
+   if (pc->IsCommentOrNewline())
    {
       pc = pc->GetNextNcNnl();
    }
