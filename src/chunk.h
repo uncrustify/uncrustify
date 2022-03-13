@@ -241,14 +241,31 @@ public:
     * Depending on the parameter cond the condition will either be
     * checked to be true or false.
     *
-    * @param  check_fct  compare function
-    * @param  scope      code parts to consider for search
-    * @param  dir        search direction (forward or backward)
-    * @param  cond       success condition
+    * @param  checkFn  compare function
+    * @param  scope    code parts to consider for search
+    * @param  dir      search direction (forward or backward)
+    * @param  cond     success condition
     *
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *Search(const T_CheckFnPtr checkFn, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const bool cond = true) const;
+
+   /**
+    * @brief search for a chunk that satisfies a condition in a chunk list,
+    *        but being aware of preprocessor chucks.
+    *
+    * This function is similar to Search, except that it is tweaked to
+    * handle searches inside of preprocessor directives. Specifically, if the
+    * starting token is inside a preprocessor directive, it will ignore a line
+    * continuation, and will abort the search if it reaches the end of the
+    * directive. This function only searches forward.
+    *
+    * @param  checkFn  compare function
+    * @param  cond     success condition
+    *
+    * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *SearchPpa(const T_CheckFnPtr checkFn, const bool cond = true) const;
 
 
    // --------- Is* functions
