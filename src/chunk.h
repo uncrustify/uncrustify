@@ -207,6 +207,15 @@ public:
     */
    Chunk *GetPrevNppOrNcNnl(E_Scope scope = E_Scope::ALL) const;
 
+   /**
+    * @brief returns the next preprocessor aware non-comment and non-newline chunk
+    *        Unlike Chunk::GetNextNcNnl, this will also ignore a line continuation if
+    *        the starting chunk is in a preprocessor directive, and may return a newline
+    *        if the search reaches the end of a preprocessor directive.
+    * @return pointer to next preprocessor aware non-comment and non-newline chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *PpaGetNextNcNnl() const;
+
 
    // --------- Search functions
 
@@ -241,14 +250,31 @@ public:
     * Depending on the parameter cond the condition will either be
     * checked to be true or false.
     *
-    * @param  check_fct  compare function
-    * @param  scope      code parts to consider for search
-    * @param  dir        search direction (forward or backward)
-    * @param  cond       success condition
+    * @param  checkFn  compare function
+    * @param  scope    code parts to consider for search
+    * @param  dir      search direction (forward or backward)
+    * @param  cond     success condition
     *
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *Search(const T_CheckFnPtr checkFn, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const bool cond = true) const;
+
+   /**
+    * @brief search for a chunk that satisfies a condition in a chunk list,
+    *        but being aware of preprocessor chucks.
+    *
+    * This function is similar to Search, except that it is tweaked to
+    * handle searches inside of preprocessor directives. Specifically, if the
+    * starting token is inside a preprocessor directive, it will ignore a line
+    * continuation, and will abort the search if it reaches the end of the
+    * directive. This function only searches forward.
+    *
+    * @param  checkFn  compare function
+    * @param  cond     success condition
+    *
+    * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *SearchPpa(const T_CheckFnPtr checkFn, const bool cond = true) const;
 
 
    // --------- Is* functions
@@ -429,18 +455,6 @@ Chunk *chunk_first_on_line(Chunk *pc);
 
 //! check if a given chunk is the last on its line
 bool chunk_is_last_on_line(Chunk *pc);
-
-
-/**
- * Gets the next non-NEWLINE and non-comment chunk (preprocessor aware).
- * Unlike Chunk::GetNextNcNnl, this will also ignore a line continuation if
- * the starting chunk is in a preprocessor directive, and may return a newline
- * if the search reaches the end of a preprocessor directive.
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-Chunk *chunk_ppa_get_next_nc_nnl(Chunk *cur);
 
 
 /**
@@ -875,15 +889,6 @@ static inline bool chunk_is_blank(Chunk *pc)
    return(  pc != nullptr
          && pc->IsNotNullChunk()
          && (pc->Len() == 0));
-}
-
-
-//! checks if a chunk is valid and either a comment or newline
-// TODO remove when possible
-static inline bool chunk_is_comment_or_newline(Chunk *pc)
-{
-   return(  chunk_is_comment(pc)
-         || chunk_is_newline(pc));
 }
 
 

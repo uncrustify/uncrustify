@@ -1946,12 +1946,7 @@ void fix_symbols(void)
 
    pc = Chunk::GetHead();
 
-   if (pc->IsNullChunk())
-   {
-      return;
-   }
-
-   if (chunk_is_comment_or_newline(pc))
+   if (pc->IsCommentOrNewline())
    {
       pc = pc->GetNextNcNnl();
    }
@@ -2140,12 +2135,16 @@ static Chunk *process_return(Chunk *pc)
    Chunk chunk;
 
    // grab next and bail if it is a semicolon
-   next = chunk_ppa_get_next_nc_nnl(pc);
+   next = pc->PpaGetNextNcNnl();
 
-   if (  next == nullptr
+   if (  next->IsNullChunk()
       || chunk_is_semicolon(next)
       || chunk_is_token(next, CT_NEWLINE))
    {
+      if (next->IsNullChunk())
+      {
+         return(nullptr);
+      }
       return(next);
    }
    log_rule_B("nl_return_expr");
@@ -2165,9 +2164,9 @@ static Chunk *process_return(Chunk *pc)
       {
          return(nullptr);
       }
-      semi = chunk_ppa_get_next_nc_nnl(cpar);
+      semi = cpar->PpaGetNextNcNnl();
 
-      if (semi == nullptr)
+      if (semi->IsNullChunk())
       {
          return(nullptr);
       }
@@ -2202,8 +2201,7 @@ static Chunk *process_return(Chunk *pc)
             // back up following chunks
             temp = semi;
 
-            while (  temp != nullptr
-                  && temp->IsNotNullChunk()
+            while (  temp->IsNotNullChunk()
                   && chunk_is_not_token(temp, CT_NEWLINE))
             {
                temp->column       = temp->column - 2;
@@ -2220,6 +2218,11 @@ static Chunk *process_return(Chunk *pc)
             // mark & keep them
             set_chunk_parent(next, CT_RETURN);
             set_chunk_parent(cpar, CT_RETURN);
+         }
+
+         if (semi->IsNullChunk())
+         {
+            return(nullptr);
          }
          return(semi);
       }

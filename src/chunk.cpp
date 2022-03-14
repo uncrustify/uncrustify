@@ -282,27 +282,6 @@ Chunk *Chunk::GetPrev(E_Scope scope) const
 static Chunk *__internal_chunk_search(Chunk *cur, const check_t check_fct, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const bool cond = true);
 
 
-/**
- * @brief search for a chunk that satisfies a condition in a chunk list.
- *
- * This function is similar to __internal_chunk_search, except that it is tweaked to
- * handle searches inside of preprocessor directives. Specifically, if the
- * starting token is inside a preprocessor directive, it will ignore a line
- * continuation, and will abort the search if it reaches the end of the
- * directive. This function only searches forward.
- *
- * @param  cur        chunk to start search at
- * @param  check_fct  compare function
- * @param  scope      code parts to consider for search
- * @param  cond       success condition
- *
- * @retval nullptr  no requested chunk was found or invalid parameters provided
- * @retval Chunk  pointer to the found chunk or pointer to the chunk at the
- *                  end of the preprocessor directive
- */
-static Chunk *chunk_ppa_search(Chunk *cur, const check_t check_fct, const bool cond = true);
-
-
 static void chunk_log(Chunk *pc, const char *text);
 
 
@@ -575,25 +554,21 @@ static Chunk *chunk_search_str(Chunk *cur, const char *str, size_t len, E_Scope 
 }
 
 
-static Chunk *chunk_ppa_search(Chunk *cur, const check_t check_fct, const bool cond)
+Chunk *Chunk::SearchPpa(const T_CheckFnPtr checkFn, const bool cond) const
 {
-   if (  cur != nullptr
-      && !cur->flags.test(PCF_IN_PREPROC))
+   if (!flags.test(PCF_IN_PREPROC))
    {
       // if not in preprocessor, do a regular search
-      return(__internal_chunk_search(cur, check_fct, E_Scope::ALL,
-                                     E_Direction::FORWARD, cond));
+      return(Search(checkFn, E_Scope::ALL, E_Direction::FORWARD, cond));
    }
-   Chunk *pc = cur;
+   Chunk *pc = GetNext();
 
-   while (  pc != nullptr
-         && (pc = pc->next) != nullptr)
+   while (pc->IsNotNullChunk())
    {
       if (!pc->flags.test(PCF_IN_PREPROC))
       {
-         // Bail if we run off the end of the preprocessor directive, but
-         // return the next token, NOT nullptr, because the caller may need to
-         // know where the search ended
+         // Bail if we run off the end of the preprocessor directive, but return
+         // the token because the caller may need to know where the search ended
          assert(chunk_is_token(pc, CT_NEWLINE));
          return(pc);
       }
@@ -601,17 +576,19 @@ static Chunk *chunk_ppa_search(Chunk *cur, const check_t check_fct, const bool c
       if (chunk_is_token(pc, CT_NL_CONT))
       {
          // Skip line continuation
+         pc = pc->GetNext();
          continue;
       }
 
-      if (check_fct(pc) == cond)
+      if ((pc->*checkFn)() == cond)
       {
          // Requested token was found
          return(pc);
       }
+      pc = pc->GetNext();
    }
    // Ran out of tokens
-   return(nullptr);
+   return(Chunk::NullChunkPtr);
 }
 
 
@@ -778,9 +755,9 @@ Chunk *Chunk::GetPrevNppOrNcNnl(E_Scope scope) const
 }
 
 
-Chunk *chunk_ppa_get_next_nc_nnl(Chunk *cur)
+Chunk *Chunk::PpaGetNextNcNnl() const
 {
-   return(chunk_ppa_search(cur, chunk_is_comment_or_newline, false));
+   return(SearchPpa(&Chunk::IsCommentOrNewline, false));
 }
 
 
