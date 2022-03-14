@@ -907,7 +907,7 @@ void indent_text(void)
                if (should_ignore_preproc)
                {
                   // Preserve original indentation
-                  frm.top().indent = preproc_next->orig_col;
+                  frm.top().indent = pc->GetNextNl()->GetNext()->orig_col;
                   log_indent();
                }
                else
