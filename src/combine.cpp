@@ -2088,20 +2088,30 @@ void fix_symbols(void)
          && (  chunk_is_token(pc, CT_QUALIFIER)
             || chunk_is_token(pc, CT_TYPE)
             || chunk_is_token(pc, CT_TYPENAME)
-            || chunk_is_token(pc, CT_DC_MEMBER)                         // Issue #2478
+            || chunk_is_token(pc, CT_DC_MEMBER)                       // Issue #2478
             || chunk_is_token(pc, CT_WORD))
          && get_chunk_parent_type(pc) != CT_BIT_COLON
          && get_chunk_parent_type(pc) != CT_ENUM
          && !pc->flags.test(PCF_IN_CLASS_BASE)
          && !pc->flags.test(PCF_IN_ENUM))
       {
-         pc = fix_variable_definition(pc);
+         if (  language_is_set(LANG_CPP)
+            && pc->flags.test(PCF_IN_CONDITIONAL))                   // Issue #3558
+         {
+            // do nothing
+            pc = pc->GetNextNcNnl();
+         }
+         else
+         {
+            pc = fix_variable_definition(pc);
+         }
       }
       else
       {
          pc = pc->GetNextNcNnl();
       }
    }
+
 } // fix_symbols
 
 
@@ -4038,4 +4048,4 @@ static void handle_java_assert(Chunk *pc)
          }
       }
    }
-}
+} // handle_java_assert

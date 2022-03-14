@@ -25,6 +25,7 @@
 #include "indent.h"
 #include "keywords.h"
 #include "lang_pawn.h"
+#include "mark_question_colon.h"
 #include "newlines.h"
 #include "output.h"
 #include "parameter_pack_cleanup.h"
@@ -2068,6 +2069,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
    }
 
    uncrustify_start(data);
+   mark_question_colon();
    dump_step(dump_file, "After uncrustify_start()");
 
    cpd.unc_stage = unc_stage_e::OTHER;

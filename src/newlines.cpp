@@ -2117,6 +2117,10 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
             prev = chunk_get_prev_nc_nnl_ni(prev->prev);   // Issue #2279
          }
 
+         LOG_FMT(LBLANKD, "%s(%d): pc is '%s', orig_line is %zu, type is %s\n",
+                 __func__, __LINE__, pc->Text(), pc->orig_line, get_token_name(pc->type));
+         LOG_FMT(LBLANKD, "%s(%d): +++++++++++ next is '%s', orig_line is %zu, type is %s\n",
+                 __func__, __LINE__, next->Text(), next->orig_line, get_token_name(next->type));
          if (is_var_def(pc, next))
          {
             LOG_FMT(LBLANKD, "%s(%d): 'typ==var' found: '%s %s' at line %zu\n",
@@ -2181,6 +2185,8 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
             }
             // set blank lines after first var def block
             log_rule_B("nl_func_var_def_blk");
+            LOG_FMT(LBLANKD, "%s(%d): var_blk %s\n",
+                    __func__, __LINE__, var_blk ? "TRUE" : "FALSE");
             LOG_FMT(LBLANKD, "%s(%d): first_var_blk %s\n",
                     __func__, __LINE__, first_var_blk ? "TRUE" : "FALSE");
             LOG_FMT(LBLANKD, "%s(%d): fn_top %s\n",
@@ -5092,8 +5098,6 @@ void newlines_insert_blank_lines(void)
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-      //LOG_FMT(LNEWLINE, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
-      //        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
       if (chunk_is_token(pc, CT_IF))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_if());
