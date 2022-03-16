@@ -670,6 +670,7 @@
 33064  cpp/if_chain_braces_2.cfg                            cpp/if_chain_braces.cpp
 33065  cpp/Issue_3316.cfg                                   cpp/Issue_3316.cpp
 33066  cpp/mod_full_brace_if_chain-2.cfg                    cpp/if_chain_braces.cpp
+33067  cpp/mod_full_brace_if_chain-3.cfg                    cpp/if_chain_braces.cpp
 
 33069  cpp/Issue_2195.cfg                                   cpp/Issue_2195.cpp
 
