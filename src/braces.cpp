@@ -1552,7 +1552,8 @@ static void process_if_chain(Chunk *br_start)
                  __func__, __LINE__, braces.size(), pc->orig_line, tmp ? "" : "not",
                  get_token_name(pc->type));
 
-         if (!tmp)
+         if (  !tmp
+            || options::mod_full_brace_if_chain() == 2)
          {
             must_have_braces = true;
          }
