@@ -1536,7 +1536,8 @@ static void process_if_chain(Chunk *br_start)
 
    braces.reserve(16);
 
-   bool  must_have_braces = false;
+   bool  must_have_braces   = false;
+   bool  has_unbraced_block = false;
 
    Chunk *pc = br_start;
 
@@ -1569,6 +1570,14 @@ static void process_if_chain(Chunk *br_start)
          LOG_FMT(LBRCH, "%s(%d): braces.size() is %zu, line is %zu, - %s %s\n",
                  __func__, __LINE__, braces.size(), pc->orig_line, tmp ? "should add" : "ignore",
                  get_token_name(pc->type));
+
+         has_unbraced_block = true;
+      }
+
+      if (  options::mod_full_brace_if_chain() == 3
+         && !has_unbraced_block)
+      {
+         must_have_braces = true;
       }
       braces.push_back(pc);
       Chunk *br_close = chunk_skip_to_match(pc, E_Scope::PREPROC);

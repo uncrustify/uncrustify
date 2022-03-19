@@ -33,6 +33,21 @@ int foo() {
 
 	if ( b ) {
 		{ b = 5; }
-		return 9;
+		return 10;
+	}
+
+	if ( a ) {
+		return 11;
+	}
+	else {
+		return 12;
+	}
+
+	if ( a ) {
+		return 13;
+	} else if ( b ) {
+		return 14;
+	} else {
+		return 15;
 	}
 }

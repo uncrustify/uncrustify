@@ -1,11 +1,9 @@
 
 int foo() {
-	if ( a ) {
+	if ( a )
 		return 1;
-	}
-	else if ( b ) {
+	else if ( b )
 		return 2;
-	}
 
 	if ( a ) {
 		return 3;
@@ -18,12 +16,10 @@ int foo() {
 		return 5;
 	}
 
-	if ( a ) {
+	if ( a )
 		return 6;
-	}
-	else{
+	else
 		return 7;
-	}
 
 	if ( a )
 		return 8;
@@ -37,12 +33,10 @@ int foo() {
 		return 10;
 	}
 
-	if ( a ) {
+	if ( a )
 		return 11;
-	}
-	else {
+	else
 		return 12;
-	}
 
 	if ( a ) {
 		return 13;

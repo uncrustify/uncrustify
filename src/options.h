@@ -3733,11 +3733,14 @@ mod_full_brace_if;
 // have, or do not have, braces. Overrides mod_full_brace_if.
 //
 // 0: Don't override mod_full_brace_if
-// 1: Add braces if any block needs braces and remove braces if they can be
-//    removed from all blocks
+// 1: Add braces to all blocks if any block needs braces and remove braces if
+//    they can be removed from all blocks
 // 2: Add braces to all blocks if any block already has braces, regardless of
 //    whether it needs them
-extern BoundedOption<unsigned, 0, 2>
+// 3: Add braces to all blocks if any block needs braces and remove braces if
+//    they can be removed from all blocks, except if all blocks have braces
+//    despite none needing them
+extern BoundedOption<unsigned, 0, 3>
 mod_full_brace_if_chain;
 
 // Whether to add braces to all blocks of an 'if'/'else if'/'else' chain.
