@@ -409,19 +409,21 @@ void flag_series(Chunk *start, Chunk *end, pcf_flags_t set_flags, pcf_flags_t cl
    LOG_FUNC_ENTRY();
 
    while (  start != nullptr
+         && start->IsNotNullChunk()
          && start != end)
    {
       chunk_flags_upd(start, clr_flags, set_flags);
 
       start = start->GetNext(nav);
 
-      if (start == nullptr)
+      if (start->IsNullChunk())
       {
          return;
       }
    }
 
-   if (end != nullptr)
+   if (  end != nullptr
+      && end->IsNotNullChunk())
    {
       chunk_flags_upd(end, clr_flags, set_flags);
    }
