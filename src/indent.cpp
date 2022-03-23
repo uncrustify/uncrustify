@@ -856,7 +856,7 @@ void indent_text(void)
             int   should_indent_preproc = true;
             int   should_ignore_preproc = false;
             Chunk *preproc_next         = pc->GetNextNl();
-            preproc_next = chunk_get_next_nc_nnl_nb(preproc_next);
+            preproc_next = preproc_next->GetNextNcNnlNet();
 
             /* Look ahead at what's on the line after the #if */
             log_rule_B("pp_indent_brace");
@@ -864,8 +864,7 @@ void indent_text(void)
             log_rule_B("pp_indent_case");
             log_rule_B("pp_indent_extern");
 
-            while (  preproc_next != nullptr
-                  && preproc_next->IsNotNullChunk()
+            while (  preproc_next->IsNotNullChunk()
                   && preproc_next->type != CT_NEWLINE)
             {
                if (  (chunk_is_token(preproc_next, CT_BRACE_OPEN))
@@ -3403,7 +3402,7 @@ void indent_text(void)
          && pc->type != CT_COMMENT_MULTI
          && pc->type != CT_BRACE_OPEN
          && pc->level > 0
-         && !chunk_is_blank(pc))
+         && !pc->IsEmptyText())
       {
          bool in_shift    = false;
          bool is_operator = false;

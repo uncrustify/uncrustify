@@ -671,7 +671,7 @@ void tokenize_cleanup(void)
          }
          else if (chunk_is_token(next, CT_DC_MEMBER))
          {
-            Chunk *next2 = chunk_get_next_nc_nnl_nb(next);
+            Chunk *next2 = next->GetNextNcNnlNet();
 
             if (  chunk_is_token(next2, CT_INV)      // CT_INV hasn't turned into CT_DESTRUCTOR just yet
                || (  chunk_is_token(next2, CT_CLASS) // constructor isn't turned into CT_FUNC* just yet
