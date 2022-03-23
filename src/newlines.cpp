@@ -1000,7 +1000,7 @@ static bool newlines_if_for_while_switch(Chunk *start, iarf_e nl_opt)
             }
             // Make sure nothing is cuddled with the closing brace
             pc = chunk_get_next_type(brace_open, CT_BRACE_CLOSE, brace_open->level);
-            newline_add_between(pc, chunk_get_next_nc_nnl_nb(pc));
+            newline_add_between(pc, pc->GetNextNcNnlNet());
             retval = true;
          }
       }
@@ -2630,7 +2630,7 @@ static void newlines_brace_pair(Chunk *br_open)
          nl_close_brace = true;
       }
    }
-   Chunk *prev = chunk_get_prev_nc_nnl_nb(br_close);
+   Chunk *prev = br_close->GetPrevNcNnlNet();
 
    if (nl_close_brace)
    {
@@ -2786,10 +2786,10 @@ static void newline_after_return(Chunk *start)
    LOG_FUNC_ENTRY();
 
    Chunk *semi  = chunk_get_next_type(start, CT_SEMICOLON, start->level);
-   Chunk *after = chunk_get_next_nc_nnl_nb(semi);
+   Chunk *after = semi->GetNextNcNnlNet();
 
    // If we hit a brace or an 'else', then a newline isn't needed
-   if (  after == nullptr
+   if (  after->IsNullChunk()
       || chunk_is_token(after, CT_BRACE_CLOSE)
       || chunk_is_token(after, CT_VBRACE_CLOSE)
       || chunk_is_token(after, CT_ELSE))
