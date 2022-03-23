@@ -3403,7 +3403,7 @@ void space_text(void)
       {
          next = pc->GetNext();
 
-         while (  chunk_is_blank(next)
+         while (  next->IsEmptyText()
                && !chunk_is_newline(next)
                && (  chunk_is_token(next, CT_VBRACE_OPEN)
                   || chunk_is_token(next, CT_VBRACE_CLOSE)))

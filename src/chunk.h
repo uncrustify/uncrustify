@@ -333,6 +333,18 @@ public:
     */
    bool IsCommentOrNewlineInPreproc() const;
 
+   /**
+    * @brief checks whether the chunk is valid and has an empty text
+    * @return true if the chunk is valid and has an empty text
+    */
+   bool IsEmptyText() const;
+
+   /**
+    * @brief checks whether the chunk is a comment, a newline or has an empty text
+    * @return true if the chunk is a comment, a newline or has an empty text
+    */
+   bool IsCommentNewlineOrEmptyText() const;
+
 
    // --------- Data members
 
@@ -733,6 +745,21 @@ inline bool Chunk::IsCommentOrNewlineInPreproc() const
 }
 
 
+inline bool Chunk::IsEmptyText() const
+{
+   return(  IsNotNullChunk()
+         && Len() == 0);
+}
+
+
+inline bool Chunk::IsCommentNewlineOrEmptyText() const
+{
+   return(  IsComment()
+         || IsNewline()
+         || IsEmptyText());
+}
+
+
 // TODO remove when possible
 static inline bool chunk_is_token(const Chunk *pc, E_Token c_token)
 {
@@ -877,21 +904,6 @@ static inline bool chunk_is_semicolon(Chunk *pc)
 }
 
 
-/**
- * checks if a chunk is valid and is a blank character
- *
- * @note check compares if len == 0
- *
- * @todo rename function: blank is a space not an empty string
- */
-static inline bool chunk_is_blank(Chunk *pc)
-{
-   return(  pc != nullptr
-         && pc->IsNotNullChunk()
-         && (pc->Len() == 0));
-}
-
-
 //! checks if a chunk is valid and either a comment or newline or ignored
 static inline bool chunk_is_comment_or_newline_or_ignored(Chunk *pc)
 {
@@ -906,14 +918,6 @@ static inline bool chunk_is_balanced_square(Chunk *pc)
    return(  chunk_is_token(pc, CT_SQUARE_OPEN)
          || chunk_is_token(pc, CT_TSQUARE)
          || chunk_is_token(pc, CT_SQUARE_CLOSE));
-}
-
-
-static inline bool chunk_is_comment_newline_or_blank(Chunk *pc)
-{
-   return(  chunk_is_comment(pc)
-         || chunk_is_newline(pc)
-         || chunk_is_blank(pc));
 }
 
 

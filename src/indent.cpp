@@ -3403,7 +3403,7 @@ void indent_text(void)
          && pc->type != CT_COMMENT_MULTI
          && pc->type != CT_BRACE_OPEN
          && pc->level > 0
-         && !chunk_is_blank(pc))
+         && !pc->IsEmptyText())
       {
          bool in_shift    = false;
          bool is_operator = false;

@@ -763,13 +763,21 @@ Chunk *Chunk::PpaGetNextNcNnl() const
 
 Chunk *chunk_get_next_nc_nnl_nb(Chunk *cur, E_Scope scope)
 {
-   return(__internal_chunk_search(cur, chunk_is_comment_newline_or_blank, scope, E_Direction::FORWARD, false));
+   if (cur == nullptr)
+   {
+      return(nullptr);
+   }
+   return(cur->Search(&Chunk::IsCommentNewlineOrEmptyText, scope, E_Direction::FORWARD, false));
 }
 
 
 Chunk *chunk_get_prev_nc_nnl_nb(Chunk *cur, E_Scope scope)
 {
-   return(__internal_chunk_search(cur, chunk_is_comment_newline_or_blank, scope, E_Direction::BACKWARD, false));
+   if (cur == nullptr)
+   {
+      return(nullptr);
+   }
+   return(cur->Search(&Chunk::IsCommentNewlineOrEmptyText, scope, E_Direction::BACKWARD, false));
 }
 
 
