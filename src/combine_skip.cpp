@@ -251,7 +251,7 @@ Chunk *skip_tsquare_next(Chunk *ary_def)
    if (  chunk_is_token(ary_def, CT_SQUARE_OPEN)
       || chunk_is_token(ary_def, CT_TSQUARE))
    {
-      return(chunk_get_next_nisq(ary_def));
+      return(ary_def->GetNextNisq());
    }
    return(ary_def);
 }

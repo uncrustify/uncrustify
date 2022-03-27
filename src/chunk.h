@@ -231,6 +231,16 @@ public:
    Chunk *GetPrevNcNnlNet(E_Scope scope = E_Scope::ALL) const;
 
 
+   /**
+    * @brief returns the next chunk not in or part of balanced square
+    *        brackets. This handles stacked [] instances to accommodate
+    *        multi-dimensional array declarations
+    * @param scope  code region to search in
+    * @return nullptr or the next chunk not in or part of square brackets
+    */
+   Chunk *GetNextNisq(E_Scope scope = E_Scope::ALL) const;
+
+
    // --------- Search functions
 
    /**
@@ -359,6 +369,11 @@ public:
     */
    bool IsCommentNewlineOrEmptyText() const;
 
+   /**
+    * @brief checks whether the chunk is a square bracket
+    * @return true if the chunk is a square bracket
+    */
+   bool IsSquareBracket() const;
 
    // --------- Data members
 
@@ -481,19 +496,6 @@ Chunk *chunk_first_on_line(Chunk *pc);
 
 //! check if a given chunk is the last on its line
 bool chunk_is_last_on_line(Chunk *pc);
-
-
-/**
- * Gets the next chunk not in or part of balanced square
- * brackets. This handles stacked [] instances to accommodate
- * multi-dimensional array declarations
- *
- * @param  cur    chunk to use as start point
- * @param  scope  code region to search in
- *
- * @return nullptr or the next chunk not in or part of square brackets
- */
-Chunk *chunk_get_next_nisq(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -756,6 +758,14 @@ inline bool Chunk::IsCommentNewlineOrEmptyText() const
 }
 
 
+inline bool Chunk::IsSquareBracket() const
+{
+   return(  Is(CT_SQUARE_OPEN)
+         || Is(CT_TSQUARE)
+         || Is(CT_SQUARE_CLOSE));
+}
+
+
 // TODO remove when possible
 static inline bool chunk_is_token(const Chunk *pc, E_Token c_token)
 {
@@ -906,14 +916,6 @@ static inline bool chunk_is_comment_or_newline_or_ignored(Chunk *pc)
    return(  chunk_is_comment(pc)
          || chunk_is_newline(pc)
          || chunk_is_token(pc, CT_IGNORED));
-}
-
-
-static inline bool chunk_is_balanced_square(Chunk *pc)
-{
-   return(  chunk_is_token(pc, CT_SQUARE_OPEN)
-         || chunk_is_token(pc, CT_TSQUARE)
-         || chunk_is_token(pc, CT_SQUARE_CLOSE));
 }
 
 
