@@ -684,7 +684,7 @@ Chunk *fix_variable_definition(Chunk *start)
       {
          pc = skip_tsquare_next(pc);
 
-         if (pc != nullptr)
+         if (pc->IsNotNullChunk())
          {
             LOG_FMT(LFVD, "%s(%d):   5:pc->Text() '%s', type is %s\n", __func__, __LINE__, pc->Text(), get_token_name(pc->type));
          }

@@ -773,9 +773,9 @@ Chunk *Chunk::GetPrevNcNnlNet(E_Scope scope) const
 }
 
 
-Chunk *chunk_get_next_nisq(Chunk *cur, E_Scope scope)
+Chunk *Chunk::GetNextNisq(E_Scope scope) const
 {
-   return(__internal_chunk_search(cur, chunk_is_balanced_square, scope, E_Direction::FORWARD, false));
+   return(Search(&Chunk::IsSquareBracket, scope, E_Direction::FORWARD, false));
 }
 
 
