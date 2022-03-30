@@ -229,7 +229,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
               __func__, __LINE__, pc->Text(), get_token_name(pc->type));
    }
 
-   Chunk *last = chunk_get_prev_nc_nnl_ni(pc);   // Issue #2279
+   Chunk *last = pc->GetPrevNcNnlNi();   // Issue #2279
 
    LOG_FMT(LFPARAM, "%s(%d): last->Text() is '%s', type is %s\n",
            __func__, __LINE__, last->Text(), get_token_name(last->type));
@@ -317,7 +317,7 @@ bool chunk_ends_type(Chunk *start)
       return(false);
    }
 
-   for ( ; pc != nullptr; pc = chunk_get_prev_nc_nnl_ni(pc)) // Issue #2279
+   for ( ; pc->IsNotNullChunk(); pc = pc->GetPrevNcNnlNi()) // Issue #2279
    {
       LOG_FMT(LFTYPE, "%s(%d): type is %s, Text() '%s', orig_line %zu, orig_col %zu\n   ",
               __func__, __LINE__, get_token_name(pc->type), pc->Text(),
@@ -376,7 +376,7 @@ bool chunk_ends_type(Chunk *start)
       break;
    }
 
-   if (pc == nullptr)
+   if (pc->IsNullChunk())
    {
       // first token
       ret = true;
@@ -435,8 +435,12 @@ size_t get_cpp_template_angle_nest_level(Chunk *pc)
    LOG_FUNC_ENTRY();
    int nestLevel = 0;
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk()
+   if (pc == nullptr)
+   {
+      pc = Chunk::NullChunkPtr;
+   }
+
+   while (  pc->IsNotNullChunk()
          && pc->flags.test(PCF_IN_TEMPLATE))
    {
       if (  chunk_is_token(pc, CT_ANGLE_CLOSE)
@@ -449,7 +453,7 @@ size_t get_cpp_template_angle_nest_level(Chunk *pc)
       {
          ++nestLevel;
       }
-      pc = chunk_get_prev_nc_nnl_ni(pc);
+      pc = pc->GetPrevNcNnlNi();
    }
    return(nestLevel <= 0 ? 0 : size_t(nestLevel));
 }
