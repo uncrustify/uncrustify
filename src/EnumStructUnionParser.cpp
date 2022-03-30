@@ -518,7 +518,7 @@ static std::tuple<Chunk *, Chunk *, Chunk *> match_variable(Chunk *pc, std::size
    if (  identifier != nullptr
       && start != nullptr
       && (  end != nullptr
-         || chunk_is_token(chunk_get_prev_nc_nnl_ni(identifier), CT_WORD)))
+         || chunk_is_token(identifier->GetPrevNcNnlNi(), CT_WORD)))
    {
       return(std::make_tuple(start, identifier, end));
    }
@@ -651,22 +651,27 @@ static std::pair<Chunk *, Chunk *> match_variable_start(Chunk *pc, std::size_t l
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *identifier = nullptr;
+   Chunk *identifier = Chunk::NullChunkPtr;
 
-   while (pc != nullptr)
+   if (pc == nullptr)
+   {
+      pc = Chunk::NullChunkPtr;
+   }
+
+   while (pc->IsNotNullChunk())
    {
       /**
        * skip any right-hand side assignments
        */
       Chunk *before_rhs_exp_start = skip_expression_rev(pc);
-      Chunk *prev                 = nullptr;
+      Chunk *prev                 = Chunk::NullChunkPtr;
       Chunk *next                 = pc;
 
       while (  chunk_is_after(next, before_rhs_exp_start)
             && pc != prev)
       {
          next = prev;
-         prev = chunk_get_prev_nc_nnl_ni(next);
+         prev = next->GetPrevNcNnlNi();
 
          if (chunk_is_token(next, CT_ASSIGN))
          {
@@ -677,10 +682,10 @@ static std::pair<Chunk *, Chunk *> match_variable_start(Chunk *pc, std::size_t l
        * skip current and preceding chunks if at a higher brace level
        */
 
-      while (  pc != nullptr
+      while (  pc->IsNotNullChunk()
             && pc->level > level)
       {
-         pc = chunk_get_prev_nc_nnl_ni(pc);
+         pc = pc->GetPrevNcNnlNi();
       }
 
       /**
@@ -699,7 +704,7 @@ static std::pair<Chunk *, Chunk *> match_variable_start(Chunk *pc, std::size_t l
        * matching a variable declaration/definition
        */
 
-      prev = chunk_get_prev_nc_nnl_ni(pc);
+      prev = pc->GetPrevNcNnlNi();
 
       if (!adj_tokens_match_var_def_pattern(prev, pc))
       {
@@ -719,7 +724,7 @@ static std::pair<Chunk *, Chunk *> match_variable_start(Chunk *pc, std::size_t l
          }
       }
 
-      if (  identifier == nullptr
+      if (  identifier->IsNullChunk()
          && chunk_is_token(pc, CT_WORD))
       {
          /**
@@ -800,13 +805,18 @@ static Chunk *skip_scope_resolution_and_nested_name_specifiers_rev(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (  (  pc != nullptr
+   if (pc == nullptr)
+   {
+      pc = Chunk::NullChunkPtr;
+   }
+
+   if (  (  pc->IsNotNullChunk()
          && pc->flags.test(PCF_IN_TEMPLATE))
       || chunk_is_token(pc, CT_DC_MEMBER)
       || chunk_is_token(pc, CT_TYPE)
       || chunk_is_token(pc, CT_WORD))
    {
-      while (pc != nullptr)
+      while (pc->IsNotNullChunk())
       {
          /**
           * skip to any preceding match for angle brackets
@@ -815,7 +825,7 @@ static Chunk *skip_scope_resolution_and_nested_name_specifiers_rev(Chunk *pc)
          {
             pc = chunk_skip_to_match_rev(pc, E_Scope::PREPROC);
          }
-         auto *prev = chunk_get_prev_nc_nnl_ni(pc);
+         Chunk *prev = pc->GetPrevNcNnlNi();
 
          /**
           * call a separate function to validate adjacent tokens as potentially
@@ -1699,7 +1709,7 @@ void EnumStructUnionParser::mark_extracorporeal_lvalues()
     *       following isn't necessary
     */
    Chunk *next = m_start;
-   Chunk *prev = nullptr;
+   Chunk *prev = Chunk::NullChunkPtr;
 
    /**
     * if the class is a template, go the extra step and correct the
@@ -1710,9 +1720,9 @@ void EnumStructUnionParser::mark_extracorporeal_lvalues()
    {
       while (true)
       {
-         prev = chunk_get_prev_nc_nnl_ni(next);
+         prev = next->GetPrevNcNnlNi();
 
-         if (  prev == nullptr
+         if (  prev->IsNullChunk()
             || (  !prev->flags.test(PCF_IN_TEMPLATE)
                && chunk_is_not_token(prev, CT_TEMPLATE)))
          {
@@ -1721,8 +1731,8 @@ void EnumStructUnionParser::mark_extracorporeal_lvalues()
          next = prev;
       }
    }
-   auto *body_end   = get_body_end();
-   auto *body_start = get_body_start();
+   Chunk *body_end   = get_body_end();
+   Chunk *body_start = get_body_start();
 
    while (next != m_end)
    {
@@ -1809,7 +1819,7 @@ void EnumStructUnionParser::mark_pointer_types(Chunk *pc)
       do
       {
          // TODO: should there be a CT_BYREF_TYPE?
-         pc = chunk_get_prev_nc_nnl_ni(pc);
+         pc = pc->GetPrevNcNnlNi();
 
          if (chunk_is_ptr_operator(pc))
          {
@@ -2008,7 +2018,7 @@ void EnumStructUnionParser::parse(Chunk *pc)
    }
    else if (chunk_is_enum(prev))
    {
-      auto *prev_prev = chunk_get_prev_nc_nnl_ni(prev);
+      auto *prev_prev = prev->GetPrevNcNnlNi();
 
       if (  chunk_is_enum(prev_prev)
          && chunk_is_enum(prev))
@@ -2166,7 +2176,7 @@ Chunk *EnumStructUnionParser::parse_angles(Chunk *angle_open)
              * bracket should be preceded by a CT_WORD token and we should have
              * found a closing angle bracket
              */
-            auto *prev = chunk_get_prev_nc_nnl_ni(angle_open);
+            auto *prev = angle_open->GetPrevNcNnlNi();
 
             if (chunk_is_not_token(prev, CT_WORD))
             {
@@ -2233,7 +2243,7 @@ Chunk *EnumStructUnionParser::parse_braces(Chunk *brace_open)
 
       auto *enum_base_start   = get_enum_base_start();
       auto *inheritance_start = get_inheritance_start();
-      auto *prev              = chunk_get_prev_nc_nnl_ni(pc);
+      auto *prev              = pc->GetPrevNcNnlNi();
 
       /**
        * check to see if the open brace was preceded by a closing paren;
@@ -2265,7 +2275,7 @@ Chunk *EnumStructUnionParser::parse_braces(Chunk *brace_open)
              * a function definition
              */
             auto *type       = m_start->GetNextNcNnl();
-            auto *identifier = chunk_get_prev_nc_nnl_ni(paren_open, E_Scope::PREPROC);
+            auto *identifier = paren_open->GetPrevNcNnlNi(E_Scope::PREPROC);
             is_potential_function_definition = (  (  chunk_is_token(identifier, CT_FUNCTION)
                                                   || chunk_is_token(identifier, CT_FUNC_DEF)
                                                   || chunk_is_token(identifier, CT_WORD))
@@ -2796,7 +2806,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
       else if (  next->IsNotNullChunk()
               && chunk_is_token(next, CT_WORD)
               && chunk_is_token(next_next, CT_WORD)
-              && chunk_get_prev_nc_nnl_ni(m_end) == next_next)
+              && m_end->GetPrevNcNnlNi() == next_next)
       {
          /**
           * check to see if we've got a macro reference preceding the last word chunk;
@@ -2854,19 +2864,19 @@ bool EnumStructUnionParser::try_pre_identify_type()
        * the chunk preceding the previously selected chunk should indicate the type
        */
 
-      pc = chunk_get_prev_nc_nnl_ni(pc, E_Scope::PREPROC);
+      pc = pc->GetPrevNcNnlNi(E_Scope::PREPROC);
 
       if (  chunk_is_token(pc, CT_QUALIFIER)
          && std::strncmp(pc->str.c_str(), "final", 5) == 0)
       {
-         pc = chunk_get_prev_nc_nnl_ni(pc, E_Scope::PREPROC);
+         pc = pc->GetPrevNcNnlNi(E_Scope::PREPROC);
       }
 
       if (  language_is_set(LANG_D)
          && chunk_is_paren_close(pc))
       {
          pc = chunk_skip_to_match_rev(pc);
-         pc = chunk_get_prev_nc_nnl_ni(pc);
+         pc = pc->GetPrevNcNnlNi();
       }
 
       if (chunk_is_token(pc, CT_WORD))

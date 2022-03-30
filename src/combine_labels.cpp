@@ -303,10 +303,10 @@ void combine_labels(void)
 
                      if (chunk_is_token(labelPrev, CT_NEWLINE))
                      {
-                        labelPrev = chunk_get_prev_nc_nnl_ni(prev);   // Issue #2279
+                        labelPrev = prev->GetPrevNcNnlNi();   // Issue #2279
                      }
 
-                     if (  labelPrev != nullptr
+                     if (  labelPrev->IsNotNullChunk()
                         && chunk_is_not_token(labelPrev, CT_FPAREN_CLOSE))
                      {
                         set_chunk_type(cur, CT_LABEL);

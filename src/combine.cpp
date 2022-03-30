@@ -288,7 +288,7 @@ static void flag_asm(Chunk *pc)
       {
          // if there is a string on both sides, then this is two ASM_COLONs
          if (  chunk_is_token(tmp->GetNextNcNnl(E_Scope::PREPROC), CT_STRING)
-            && chunk_is_token(chunk_get_prev_nc_nnl_ni(tmp, E_Scope::PREPROC), CT_STRING)) // Issue #2279
+            && chunk_is_token(tmp->GetPrevNcNnlNi(E_Scope::PREPROC), CT_STRING)) // Issue #2279
          {
             Chunk nc;
 
@@ -449,7 +449,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             }
          }
 
-         for (tmp = chunk_get_prev_nc_nnl_ni(pc); tmp != nullptr; tmp = chunk_get_prev_nc_nnl_ni(tmp)) // Issue #2279
+         for (tmp = pc->GetPrevNcNnlNi(); tmp->IsNotNullChunk(); tmp = tmp->GetPrevNcNnlNi()) // Issue #2279
          {
             if (  chunk_is_semicolon(tmp)
                || chunk_is_token(tmp, CT_BRACE_OPEN)
@@ -1400,7 +1400,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             bool  is_multiplication = false;
             Chunk *tmp              = pc;
 
-            while (tmp != nullptr)
+            while (tmp->IsNotNullChunk())
             {
                if (  chunk_is_token(tmp, CT_SEMICOLON)
                   || get_chunk_parent_type(tmp) == CT_CLASS)
@@ -1414,7 +1414,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                   is_multiplication = true;
                   break;
                }
-               tmp = chunk_get_prev_nc_nnl_ni(tmp); // Issue #2279
+               tmp = tmp->GetPrevNcNnlNi(); // Issue #2279
             }
 
             if (is_multiplication)
@@ -1491,7 +1491,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          {
             Chunk *tmp = pc;
 
-            while (tmp != nullptr)
+            while (tmp->IsNotNullChunk())
             {
                if (  chunk_is_token(tmp, CT_SEMICOLON)
                   || chunk_is_token(tmp, CT_BRACE_OPEN)
@@ -1503,7 +1503,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                {
                   set_chunk_type(pc, CT_PTR_TYPE);
                }
-               tmp = chunk_get_prev_nc_nnl_ni(tmp); // Issue #2279
+               tmp = tmp->GetPrevNcNnlNi(); // Issue #2279
             }
          }
       }
@@ -1559,9 +1559,9 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             if (  chunk_is_token(prev, CT_WORD)
                && !chunk_is_token(next, CT_NUMBER)) // Issue #3407
             {
-               Chunk *tmp = chunk_get_prev_nc_nnl_ni(prev); // Issue #2279
+               Chunk *tmp = prev->GetPrevNcNnlNi(); // Issue #2279
 
-               if (tmp != nullptr)
+               if (tmp->IsNotNullChunk())
                {
                   if (  chunk_is_semicolon(tmp)
                      || chunk_is_token(tmp, CT_BRACE_OPEN)
@@ -1835,9 +1835,9 @@ static void check_double_brace_init(Chunk *bo1)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LJDBI, "%s(%d): orig_line is %zu, orig_col is %zu", __func__, __LINE__, bo1->orig_line, bo1->orig_col);
-   Chunk *pc = chunk_get_prev_nc_nnl_ni(bo1);   // Issue #2279
+   Chunk *pc = bo1->GetPrevNcNnlNi();   // Issue #2279
 
-   if (pc == nullptr)
+   if (pc->IsNullChunk())
    {
       return;
    }
@@ -1916,7 +1916,7 @@ void fix_symbols(void)
       // a brace immediately preceded by word in C++11 is an initializer list though it may also
       // by a type casting initializer list if the word is really a type; sadly uncrustify knows
       // only built-in types and knows nothing of user-defined types
-      Chunk *prev = chunk_get_prev_nc_nnl_ni(pc);   // Issue #2279
+      Chunk *prev = pc->GetPrevNcNnlNi();   // Issue #2279
 
       if (  is_cpp
          && chunk_is_token(pc, CT_BRACE_OPEN)
@@ -1960,14 +1960,14 @@ void fix_symbols(void)
       }
       LOG_FMT(LFCNR, "%s(%d): pc->orig_line       is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
-      Chunk *prev = chunk_get_prev_nc_nnl_ni(pc, E_Scope::PREPROC);   // Issue #2279
+      Chunk *prev = pc->GetPrevNcNnlNi(E_Scope::PREPROC);   // Issue #2279
 
       if (chunk_is_token(prev, CT_QUALIFIER))
       {
-         prev = chunk_get_prev_nc_nnl_ni(prev, E_Scope::PREPROC);     // Issue #3513
+         prev = prev->GetPrevNcNnlNi(E_Scope::PREPROC);     // Issue #3513
       }
 
-      if (prev == nullptr)
+      if (prev->IsNullChunk())
       {
          prev = &dummy;
       }
@@ -2445,20 +2445,14 @@ static void handle_cpp_lambda(Chunk *sq_o)
    Chunk *ret = nullptr;
 
    // abort if type of the previous token is not contained in this whitelist
-   Chunk *prev = chunk_get_prev_nc_nnl_ni(sq_o);   // Issue #2279
+   Chunk *prev = sq_o->GetPrevNcNnlNi();   // Issue #2279
 
-   if (prev == nullptr)
+   if (prev->IsNullChunk())
    {
       LOG_FMT(LFCNR, "%s(%d): prev is nullptr\n", __func__, __LINE__);
    }
-   else
-   {
-      //LOG_FMT(LFCNR, "%s(%d): prev is '%s'/%s\n",
-      //        __func__, __LINE__,
-      //        prev->Text(), get_token_name(prev->type));
-   }
 
-   if (  prev == nullptr
+   if (  prev->IsNullChunk()
       || (  chunk_is_not_token(prev, CT_ASSIGN)
          && chunk_is_not_token(prev, CT_COMMA)
          && chunk_is_not_token(prev, CT_PAREN_OPEN)   // allow Js like self invoking lambda syntax: ([](){})();
@@ -2903,10 +2897,10 @@ static void handle_oc_block_literal(Chunk *pc)
    {
       return; // let's be paranoid
    }
-   Chunk *prev = chunk_get_prev_nc_nnl_ni(pc);   // Issue #2279
+   Chunk *prev = pc->GetPrevNcNnlNi();   // Issue #2279
    Chunk *next = pc->GetNextNcNnl();
 
-   if (  prev == nullptr
+   if (  prev->IsNullChunk()
       || next->IsNullChunk())
    {
       return; // let's be paranoid
@@ -3009,11 +3003,11 @@ static void handle_oc_block_literal(Chunk *pc)
          flag_parens(apo, PCF_OC_ATYPE, CT_FPAREN_OPEN, CT_OC_BLOCK_EXPR, true);
          fix_fcn_def_params(apo);
       }
-      lbp = chunk_get_prev_nc_nnl_ni(apo);   // Issue #2279
+      lbp = apo->GetPrevNcNnlNi();   // Issue #2279
    }
    else
    {
-      lbp = chunk_get_prev_nc_nnl_ni(bbo);   // Issue #2279
+      lbp = bbo->GetPrevNcNnlNi();   // Issue #2279
    }
 
    // mark the return type, if any
@@ -3023,7 +3017,7 @@ static void handle_oc_block_literal(Chunk *pc)
       make_type(lbp);
       chunk_flags_set(lbp, PCF_OC_RTYPE);
       set_chunk_parent(lbp, CT_OC_BLOCK_EXPR);
-      lbp = chunk_get_prev_nc_nnl_ni(lbp);   // Issue #2279
+      lbp = lbp->GetPrevNcNnlNi();   // Issue #2279
    }
    // mark the braces
    set_chunk_parent(bbo, CT_OC_BLOCK_EXPR);
@@ -3047,7 +3041,7 @@ static void handle_oc_block_type(Chunk *pc)
       return;
    }
    // make sure we have '( ^'
-   Chunk *tpo = chunk_get_prev_nc_nnl_ni(pc); // type paren open   Issue #2279
+   Chunk *tpo = pc->GetPrevNcNnlNi(); // type paren open   Issue #2279
 
    if (chunk_is_paren_open(tpo))
    {
@@ -3055,10 +3049,10 @@ static void handle_oc_block_type(Chunk *pc)
        * block type: 'RTYPE (^LABEL)(ARGS)'
        * LABEL is optional.
        */
-      Chunk *tpc = chunk_skip_to_match(tpo);      // type close paren (after '^')
-      Chunk *nam = chunk_get_prev_nc_nnl_ni(tpc); // name (if any) or '^'   Issue #2279
-      Chunk *apo = tpc->GetNextNcNnl();           // arg open paren
-      Chunk *apc = chunk_skip_to_match(apo);      // arg close paren
+      Chunk *tpc = chunk_skip_to_match(tpo); // type close paren (after '^')
+      Chunk *nam = tpc->GetPrevNcNnlNi();    // name (if any) or '^'   Issue #2279
+      Chunk *apo = tpc->GetNextNcNnl();      // arg open paren
+      Chunk *apc = chunk_skip_to_match(apo); // arg close paren
 
       /*
        * If this is a block literal instead of a block type, 'nam'
@@ -3110,7 +3104,7 @@ static void handle_oc_block_type(Chunk *pc)
          set_chunk_type(apc, CT_FPAREN_CLOSE);
          set_chunk_parent(apc, CT_FUNC_PROTO);
          fix_fcn_def_params(apo);
-         mark_function_return_type(nam, chunk_get_prev_nc_nnl_ni(tpo), pt);   // Issue #2279
+         mark_function_return_type(nam, tpo->GetPrevNcNnlNi(), pt);   // Issue #2279
       }
    }
 } // handle_oc_block_type
@@ -3369,7 +3363,7 @@ static void handle_oc_message_send(Chunk *os)
          LOG_FMT(LFCN, "%s(%d): (18) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                  __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->Text());
          set_chunk_type(tmp, CT_FUNC_CALL);
-         tmp = chunk_get_prev_nc_nnl_ni(set_paren_parent(tt, CT_FUNC_CALL));   // Issue #2279
+         tmp = set_paren_parent(tt, CT_FUNC_CALL)->GetPrevNcNnlNi();   // Issue #2279
       }
       else
       {
@@ -3821,7 +3815,7 @@ static void handle_cs_property(Chunk *bro)
    bool  did_prop = false;
    Chunk *pc      = bro;
 
-   while ((pc = chunk_get_prev_nc_nnl_ni(pc)) != nullptr)   // Issue #2279
+   while ((pc = pc->GetPrevNcNnlNi())->IsNotNullChunk()) // Issue #2279
    {
       if (pc->level == bro->level)
       {
@@ -3990,7 +3984,7 @@ static void handle_proto_wrap(Chunk *pc)
    // Mark return type (TODO: move to own function)
    tmp = pc;
 
-   while ((tmp = chunk_get_prev_nc_nnl_ni(tmp)) != nullptr)   // Issue #2279
+   while ((tmp = tmp->GetPrevNcNnlNi())->IsNotNullChunk()) // Issue #2279
    {
       if (  !chunk_is_type(tmp)
          && chunk_is_not_token(tmp, CT_OPERATOR)

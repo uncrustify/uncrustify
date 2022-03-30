@@ -232,6 +232,14 @@ public:
 
 
    /**
+    * @brief returns the prev non-comment, non-newline, non-ignored chunk
+    * @param scope code region to search in
+    * @return pointer to prev non-comment, non-newline, non-ignored chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetPrevNcNnlNi(E_Scope scope = E_Scope::ALL) const;
+
+
+   /**
     * @brief returns the next chunk not in or part of balanced square
     *        brackets. This handles stacked [] instances to accommodate
     *        multi-dimensional array declarations
@@ -334,6 +342,12 @@ public:
    bool IsComment() const;
 
    /**
+    * @brief checks whether the chunk is valid and has an empty text
+    * @return true if the chunk is valid and has an empty text
+    */
+   bool IsEmptyText() const;
+
+   /**
     * @brief checks whether the chunk is a preprocessor
     * @return true if the chunk is a preprocessor, false otherwise
     */
@@ -344,6 +358,12 @@ public:
     * @return true if the chunk is either a comment or a newline, false otherwise
     */
    bool IsCommentOrNewline() const;
+
+   /**
+    * @brief checks whether the chunk is either a comment, a newline or ignored
+    * @return true if the chunk is either a comment, a newline or ignored, false otherwise
+    */
+   bool IsCommentNewlineOrIgnored() const;
 
    /**
     * @brief checks whether the chunk is a comment, a newline or a preprocessor
@@ -358,12 +378,6 @@ public:
    bool IsCommentOrNewlineInPreproc() const;
 
    /**
-    * @brief checks whether the chunk is valid and has an empty text
-    * @return true if the chunk is valid and has an empty text
-    */
-   bool IsEmptyText() const;
-
-   /**
     * @brief checks whether the chunk is a comment, a newline or has an empty text
     * @return true if the chunk is a comment, a newline or has an empty text
     */
@@ -374,6 +388,7 @@ public:
     * @return true if the chunk is a square bracket
     */
    bool IsSquareBracket() const;
+
 
    // --------- Data members
 
@@ -496,15 +511,6 @@ Chunk *chunk_first_on_line(Chunk *pc);
 
 //! check if a given chunk is the last on its line
 bool chunk_is_last_on_line(Chunk *pc);
-
-
-/**
- * Gets the prev non-NEWLINE and non-comment and non-ignored chunk
- *
- * @param cur    chunk to use as start point
- * @param scope  code region to search in
- */
-Chunk *chunk_get_prev_nc_nnl_ni(Chunk *cur, E_Scope scope = E_Scope::ALL);
 
 
 /**
@@ -713,6 +719,13 @@ inline bool Chunk::IsComment() const
 }
 
 
+inline bool Chunk::IsEmptyText() const
+{
+   return(  IsNotNullChunk()
+         && Len() == 0);
+}
+
+
 inline bool Chunk::IsPreproc() const
 {
    return(  IsNotNullChunk()
@@ -743,18 +756,19 @@ inline bool Chunk::IsCommentOrNewlineInPreproc() const
 }
 
 
-inline bool Chunk::IsEmptyText() const
-{
-   return(  IsNotNullChunk()
-         && Len() == 0);
-}
-
-
 inline bool Chunk::IsCommentNewlineOrEmptyText() const
 {
    return(  IsComment()
          || IsNewline()
          || IsEmptyText());
+}
+
+
+inline bool Chunk::IsCommentNewlineOrIgnored() const
+{
+   return(  IsComment()
+         || IsNewline()
+         || Is(CT_IGNORED));
 }
 
 
@@ -907,15 +921,6 @@ static inline bool chunk_is_semicolon(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_SEMICOLON)
          || chunk_is_token(pc, CT_VSEMICOLON));
-}
-
-
-//! checks if a chunk is valid and either a comment or newline or ignored
-static inline bool chunk_is_comment_or_newline_or_ignored(Chunk *pc)
-{
-   return(  chunk_is_comment(pc)
-         || chunk_is_newline(pc)
-         || chunk_is_token(pc, CT_IGNORED));
 }
 
 

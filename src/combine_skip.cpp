@@ -51,7 +51,7 @@ Chunk *skip_expression(Chunk *pc)
 
 Chunk *skip_expression_rev(Chunk *pc)
 {
-   return(chunk_get_prev_nc_nnl_ni(skip_to_expression_start(pc)));
+   return(skip_to_expression_start(pc)->GetPrevNcNnlNi());
 }
 
 
@@ -101,56 +101,6 @@ static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(Chunk::*GetNextFn)(E_Sc
 }
 
 
-// TODO to remove as soon as feasible
-static Chunk *__internal_skip_to_expression_edge(Chunk *pc, Chunk *(*chunk_get_next_fn)(Chunk *cur, E_Scope scope))
-{
-   Chunk *prev = pc;
-
-   if (  prev != nullptr
-      && prev->IsNotNullChunk()
-      && chunk_get_next_fn != nullptr)
-   {
-      std::size_t level         = prev->level;
-      Chunk       *next         = prev;
-      std::size_t template_nest = get_cpp_template_angle_nest_level(prev);
-
-      while (  next != nullptr
-            && next->IsNotNullChunk()
-            && next->level >= level)
-      {
-         /**
-          * if we encounter a comma or semicolon at the level of the starting chunk,
-          * return the current chunk
-          */
-         if (  next->level == level
-            && (  chunk_is_token(next, CT_COMMA)
-               || chunk_is_semicolon(next)))
-         {
-            break;
-         }
-         /**
-          * check the template nest level; if the current chunk's nest level
-          * is less than that of the starting chunk, return the current chunk
-          */
-         auto next_template_nest = get_cpp_template_angle_nest_level(next);
-
-         if (template_nest > next_template_nest)
-         {
-            break;
-         }
-         prev = next;
-         next = (*chunk_get_next_fn)(next, E_Scope::PREPROC);
-      }
-   }
-
-   if (prev == nullptr)
-   {
-      prev = Chunk::NullChunkPtr;
-   }
-   return(prev);
-}
-
-
 Chunk *skip_to_expression_end(Chunk *pc)
 {
    return(skip_to_expression_edge(pc, &Chunk::GetNextNcNnl));
@@ -159,7 +109,7 @@ Chunk *skip_to_expression_end(Chunk *pc)
 
 Chunk *skip_to_expression_start(Chunk *pc)
 {
-   return(__internal_skip_to_expression_edge(pc, chunk_get_prev_nc_nnl_ni));
+   return(skip_to_expression_edge(pc, &Chunk::GetPrevNcNnlNi));
 }
 
 
@@ -235,7 +185,7 @@ Chunk *skip_template_prev(Chunk *ang_close)
    if (chunk_is_token(ang_close, CT_ANGLE_CLOSE))
    {
       Chunk *pc = chunk_get_prev_type(ang_close, CT_ANGLE_OPEN, ang_close->level);
-      return(chunk_get_prev_nc_nnl_ni(pc));   // Issue #2279
+      return(pc->GetPrevNcNnlNi());   // Issue #2279
    }
    return(ang_close);
 }
@@ -307,9 +257,9 @@ Chunk *skip_attribute_prev(Chunk *fp_close)
       {
          break;
       }
-      pc = chunk_get_prev_nc_nnl_ni(pc); // Issue #2279
+      pc = pc->GetPrevNcNnlNi(); // Issue #2279
 
-      if (pc == nullptr)                 // Issue #3356
+      if (pc->IsNullChunk())     // Issue #3356
       {
          break;
       }
@@ -352,11 +302,11 @@ Chunk *skip_declspec_prev(Chunk *pc)
       && get_chunk_parent_type(pc) == CT_DECLSPEC)
    {
       pc = chunk_skip_to_match_rev(pc);
-      pc = chunk_get_prev_nc_nnl_ni(pc);
+      pc = pc->GetPrevNcNnlNi();
 
       if (chunk_is_token(pc, CT_DECLSPEC))
       {
-         pc = chunk_get_prev_nc_nnl_ni(pc);
+         pc = pc->GetPrevNcNnlNi();
       }
    }
    return(pc);
@@ -400,7 +350,7 @@ Chunk *skip_to_chunk_before_matching_brace_bracket_paren_rev(Chunk *pc)
           * retrieve the preceding chunk
           */
 
-         pc = chunk_get_prev_nc_nnl_ni(pc);
+         pc = pc->GetPrevNcNnlNi();
       }
    }
    return(pc);

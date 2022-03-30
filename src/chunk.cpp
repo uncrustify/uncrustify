@@ -773,15 +773,15 @@ Chunk *Chunk::GetPrevNcNnlNet(E_Scope scope) const
 }
 
 
-Chunk *Chunk::GetNextNisq(E_Scope scope) const
+Chunk *Chunk::GetPrevNcNnlNi(E_Scope scope) const
 {
-   return(Search(&Chunk::IsSquareBracket, scope, E_Direction::FORWARD, false));
+   return(Search(&Chunk::IsCommentNewlineOrIgnored, scope, E_Direction::BACKWARD, false));
 }
 
 
-Chunk *chunk_get_prev_nc_nnl_ni(Chunk *cur, E_Scope scope)
+Chunk *Chunk::GetNextNisq(E_Scope scope) const
 {
-   return(__internal_chunk_search(cur, chunk_is_comment_or_newline_or_ignored, scope, E_Direction::BACKWARD, false));
+   return(Search(&Chunk::IsSquareBracket, scope, E_Direction::FORWARD, false));
 }
 
 
