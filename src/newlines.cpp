@@ -1949,34 +1949,48 @@ static void newlines_do_else(Chunk *start, iarf_e nl_opt)
 
 static bool is_var_def(Chunk *pc, Chunk *next)
 {
+   LOG_FMT(LBLANKD, "%s(%d): iiiiiiii pc is '%s', orig_line is %zu, type is %s\n",
+           __func__, __LINE__, pc->Text(), pc->orig_line, get_token_name(pc->type));
+   LOG_FMT(LBLANKD, "%s(%d): iiiiiiii next is '%s', orig_line is %zu, type is %s\n",
+           __func__, __LINE__, next->Text(), next->orig_line, get_token_name(next->type));
    if (  chunk_is_token(pc, CT_DECLTYPE)
       && chunk_is_token(next, CT_PAREN_OPEN))
    {
       // If current token starts a decltype expression, skip it
+      LOG_FMT(LBLANKD, "%s(%d): iiiiiiii\n", __func__, __LINE__);
       next = chunk_skip_to_match(next);
       next = next->GetNextNcNnl();
    }
    else if (!chunk_is_type(pc))
    {
       // Otherwise, if the current token is not a type --> not a declaration
+      LOG_FMT(LBLANKD, "%s(%d): iiiiiiii\n", __func__, __LINE__);
       return(false);
    }
    else if (chunk_is_token(next, CT_DC_MEMBER))
    {
       // If next token is CT_DC_MEMBER, skip it
+      LOG_FMT(LBLANKD, "%s(%d): iiiiiiii\n", __func__, __LINE__);
       next = chunk_skip_dc_member(next);
    }
    else if (chunk_is_token(next, CT_ANGLE_OPEN))
    {
+      LOG_FMT(LBLANKD, "%s(%d): iiiiiiii\n", __func__, __LINE__);
       // If we have a template type, skip it
       next = chunk_skip_to_match(next);
       next = next->GetNextNcNnl();
    }
+   LOG_FMT(LBLANKD, "%s(%d): iiiiiiii pc is '%s', orig_line is %zu, type is %s\n",
+           __func__, __LINE__, pc->Text(), pc->orig_line, get_token_name(pc->type));
+   LOG_FMT(LBLANKD, "%s(%d): iiiiiiii next is '%s', orig_line is %zu, type is %s\n",
+           __func__, __LINE__, next->Text(), next->orig_line, get_token_name(next->type));
    bool is = (  (  chunk_is_type(next)
                 && get_chunk_parent_type(next) != CT_FUNC_DEF)           // Issue #2639
              || chunk_is_token(next, CT_WORD)
              || chunk_is_token(next, CT_FUNC_CTOR_VAR));
 
+   LOG_FMT(LBLANKD, "%s(%d): is '%s'\n",
+           __func__, __LINE__, is  ? "True" : "False");
    return(is);
 } // is_var_def
 

@@ -93,7 +93,7 @@ class SourceTest(object):
 
         cmd = [
             config.uncrustify_exe,
-            '-q',
+            #'-q',
             '-l', self.test_lang,
             '-c', self.test_config,
             '-f', self.test_input,
@@ -105,8 +105,8 @@ class SourceTest(object):
                 '-p', _result + '.unc'
             ]
 
-        else:
-            cmd += ['-LA']
+#        else:
+#            cmd += ['-LA']
 
         if args.show_commands:
             printc('RUN: ', repr(cmd))
@@ -130,6 +130,10 @@ class SourceTest(object):
 
         try:
             has_diff = not filecmp.cmp(_expected, _result)
+            if has_diff:
+                printc('GUY: ',"ja")
+            else:
+                printc('GUY: ', "nein")
             if has_diff and not self.test_xfail:
                 if args.diff:
                     self._diff(_expected, _result)

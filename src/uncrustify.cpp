@@ -1986,6 +1986,8 @@ static void uncrustify_start(const deque<int> &data)
    {
       pawn_prescan();
    }
+combine_labels();
+mark_question_colon();
    // Re-type chunks, combine chunks
    fix_symbols();
    tokenize_trailing_return_types();
@@ -1993,7 +1995,8 @@ static void uncrustify_start(const deque<int> &data)
    mark_comments();
 
    // Look at all colons ':' and mark labels, :? sequences, etc.
-   combine_labels();
+   //combine_labels();
+//mark_question_colon();
 
    enum_cleanup();
 } // uncrustify_start
@@ -2069,7 +2072,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
    }
 
    uncrustify_start(data);
-   mark_question_colon();
+   //mark_question_colon();
    dump_step(dump_file, "After uncrustify_start()");
 
    cpd.unc_stage = unc_stage_e::OTHER;
