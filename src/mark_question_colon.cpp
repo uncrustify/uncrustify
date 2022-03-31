@@ -41,6 +41,10 @@ void mark_question_colon(void)
          LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, level is %zu, Text() '%s'\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->level, pc->Text());
          log_pcf_flags(LFCNR, pc->flags);
+         if (pc->flags.test(PCF_IN_PREPROC))
+         {
+            continue;
+         }
          if (chunk_is_token(pc, CT_QUESTION))
          {
             if (firstQuestion == nullptr)
@@ -48,7 +52,18 @@ void mark_question_colon(void)
                firstQuestion = pc;
             }
             // search the colon
+            Chunk *cond_colon = chunk_get_next_type(pc, CT_COND_COLON, pc->level);
             Chunk *colon = chunk_get_next_type(pc, CT_COLON, pc->level);
+            // choose
+            if (cond_colon == nullptr)
+            {
+               // take colon
+            }
+            else
+            {
+               // take cond_colon
+               colon = cond_colon;
+            }
             if (colon != nullptr)
             {
                set_chunk_type(colon, CT_COND_COLON);
@@ -85,9 +100,16 @@ void mark_question_colon(void)
             }
             else
             {
-               LOG_FMT(LWARN, "%s(%d): %zu: Error: Expected a colon\n",
+               if (cond_colon != nullptr)
+               {
+                  LOG_FMT(LFCNR, "%s(%d): COND_COLON: orig_line is %zu, orig_col is %zu, level is %zu, Text() '%s'\n",
+                          __func__, __LINE__, cond_colon->orig_line, cond_colon->orig_col, cond_colon->level, cond_colon->Text());
+                  log_pcf_flags(LFCNR, cond_colon->flags);
+               }
+               LOG_FMT(LERR, "%s(%d): %zu: Error: Expected a colon\n",
                        __func__, __LINE__, pc->orig_line);
                cpd.error_count++;
+               exit(EXIT_FAILURE);
             }
          }
       }
