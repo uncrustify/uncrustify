@@ -45,8 +45,6 @@
 00065  c/ben_053.cfg                              c/braces-5.c
 00066  c/ben_054.cfg                              c/vb-while.c
 00067  c/ben_055.cfg                              c/vb-do.c
-
-
 00068  c/ben_056.cfg                              c/bsnl.c
 00069  c/ben_057.cfg                              c/vb-pp.c
 
@@ -59,6 +57,7 @@
 
 00081  c/else-if-1.cfg                            c/else-if.c
 00082  c/else-if-2.cfg                            c/else-if.c
+00083  c/Issue_3601.cfg                           c/Issue_3601.c
 
 00091  c/cond-1.cfg                               c/cond.c
 00092  common/indent_columns-3.cfg                c/cond.c
