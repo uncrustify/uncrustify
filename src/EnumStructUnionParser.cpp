@@ -2846,6 +2846,18 @@ bool EnumStructUnionParser::try_pre_identify_type()
              */
             next = skip_scope_resolution_and_nested_name_specifiers(next);
 
+            /**
+             * skip array brackets, as the type cannot be located within;
+             * also skip a set of parens - there may be a type embedded within,
+             * but it's not the type with which we're concerned
+             */
+            if (  next->IsSquareBracket()                       // Issue #3601
+               || chunk_is_paren_open(next))
+            {
+               prev = chunk_skip_to_match(next, E_Scope::PREPROC);
+               next = prev->GetNextNcNnl(E_Scope::PREPROC);
+            }
+
             if (  chunk_is_token(prev, CT_WORD)
                && chunk_is_pointer_or_reference(next))
             {
