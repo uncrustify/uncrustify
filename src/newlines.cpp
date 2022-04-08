@@ -542,7 +542,7 @@ Chunk *newline_add_before(Chunk *pc)
    LOG_FUNC_ENTRY();
 
    Chunk nl;
-   Chunk *prev = chunk_get_prev_nvb(pc);
+   Chunk *prev = pc->GetPrevNvb();
 
    if (chunk_is_newline(prev))
    {
@@ -570,7 +570,7 @@ Chunk *newline_force_before(Chunk *pc)
 
    Chunk *nl = newline_add_before(pc);
 
-   if (  nl != nullptr
+   if (  nl->IsNotNullChunk()
       && nl->nl_count > 1)
    {
       nl->nl_count = 1;
@@ -586,9 +586,9 @@ Chunk *newline_add_after(Chunk *pc)
 
    if (pc == nullptr)
    {
-      return(nullptr);
+      return(Chunk::NullChunkPtr);
    }
-   Chunk *next = chunk_get_next_nvb(pc);
+   Chunk *next = pc->GetNextNvb();
 
    if (chunk_is_newline(next))
    {
@@ -619,7 +619,7 @@ Chunk *newline_force_after(Chunk *pc)
 
    Chunk *nl = newline_add_after(pc);   // add a newline
 
-   if (  nl != nullptr
+   if (  nl->IsNotNullChunk()
       && nl->nl_count > 1) // check if there are more than 1 newline
    {
       nl->nl_count = 1;                   // if so change the newline count back to 1
@@ -1043,7 +1043,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
 
          // if we found 2 or more in a row
          if (  pc->nl_count > 1
-            || chunk_is_newline(chunk_get_prev_nvb(pc)))
+            || chunk_is_newline(pc->GetPrevNvb()))
          {
             // need to remove
             if (  (nl_opt & IARF_REMOVE)
@@ -1060,7 +1060,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
                Chunk *prev;
 
                // can keep using pc because anything other than newline stops loop, and we delete if newline
-               while (chunk_is_newline(prev = chunk_get_prev_nvb(pc)))
+               while (chunk_is_newline(prev = pc->GetPrevNvb()))
                {
                   // Make sure we don't combine a preproc and non-preproc
                   if (!chunk_safe_to_del_nl(prev))
@@ -1114,7 +1114,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
                   pc = next;
                }
 
-               if ((last_nl = newline_add_after(pc)) != nullptr)
+               if ((last_nl = newline_add_after(pc))->IsNotNullChunk())
                {
                   double_newline(last_nl);
                }
@@ -1422,7 +1422,7 @@ static void remove_next_newlines(Chunk *start)
          chunk_del(next);
          MARK_CHANGE();
       }
-      else if (chunk_is_vbrace(next))
+      else if (next->IsVBrace())
       {
          start = next;
       }
@@ -1517,7 +1517,7 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
       LOG_FMT(LNEWLINE, "%s(%d): isVBrace is FALSE\n", __func__, __LINE__);
    }
 
-   if ((prev = chunk_get_prev_nvb(pc)) == nullptr)
+   if ((prev = pc->GetPrevNvb())->IsNullChunk())
    {
       return;
    }
@@ -1546,7 +1546,7 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
          }
          remove_next_newlines(pc);
       }
-      else if (  (chunk_is_newline(next = chunk_get_next_nvb(pc)))
+      else if (  (chunk_is_newline(next = pc->GetNextNvb()))
               && !next->flags.test(PCF_VAR_DEF))
       {
          // otherwise just deal with newlines after brace
@@ -1589,7 +1589,7 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
          size_t nl_count = have_pre_vbrace_nl ? prev->nl_count : 0;
          LOG_FMT(LNEWLINE, "%s(%d): nl_count %zu\n", __func__, __LINE__, nl_count);
 
-         if (chunk_is_newline(next = chunk_get_next_nvb(pc)))
+         if (chunk_is_newline(next = pc->GetNextNvb()))
          {
             LOG_FMT(LNEWLINE, "%s(%d): next->Text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
                     __func__, __LINE__, next->Text(), get_token_name(next->type), next->orig_line, next->orig_col);
@@ -1612,7 +1612,7 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
                        __func__, __LINE__, pc->Text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
             }
 
-            if ((next = newline_add_after(pc)) == nullptr)
+            if ((next = newline_add_after(pc))->IsNullChunk())
             {
                return;
             }

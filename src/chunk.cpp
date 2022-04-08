@@ -945,15 +945,15 @@ void chunk_swap_lines(Chunk *pc1, Chunk *pc2)
 } // chunk_swap_lines
 
 
-Chunk *chunk_get_next_nvb(Chunk *cur, const E_Scope scope)
+Chunk *Chunk::GetNextNvb(E_Scope scope) const
 {
-   return(__internal_chunk_search(cur, chunk_is_vbrace, scope, E_Direction::FORWARD, false));
+   return(Search(&Chunk::IsVBrace, scope, E_Direction::FORWARD, false));
 }
 
 
-Chunk *chunk_get_prev_nvb(Chunk *cur, const E_Scope scope)
+Chunk *Chunk::GetPrevNvb(E_Scope scope) const
 {
-   return(__internal_chunk_search(cur, chunk_is_vbrace, scope, E_Direction::BACKWARD, false));
+   return(Search(&Chunk::IsVBrace, scope, E_Direction::BACKWARD, false));
 }
 
 

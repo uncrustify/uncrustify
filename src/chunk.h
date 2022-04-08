@@ -249,6 +249,22 @@ public:
    Chunk *GetNextNisq(E_Scope scope = E_Scope::ALL) const;
 
 
+   /**
+    * @brief returns the next non-virtual brace chunk
+    * @param scope code region to search in
+    * @return pointer to next non-virtual brace chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetNextNvb(E_Scope scope = E_Scope::ALL) const;
+
+
+   /**
+    * @brief returns the prev non-virtual brace chunk
+    * @param scope code region to search in
+    * @return pointer to prev non-virtual brace chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetPrevNvb(E_Scope scope = E_Scope::ALL) const;
+
+
    // --------- Search functions
 
    /**
@@ -388,6 +404,12 @@ public:
     * @return true if the chunk is a square bracket
     */
    bool IsSquareBracket() const;
+
+   /**
+    * @brief checks whether the chunk is a virtual brace
+    * @return true if the chunk is a virtual brace
+    */
+   bool IsVBrace() const;
 
 
    // --------- Data members
@@ -574,28 +596,6 @@ Chunk *chunk_get_prev_str(Chunk *cur, const char *str, size_t len, int level, E_
 
 
 /**
- * @brief Gets the next non-vbrace chunk
- *
- * @param  cur    chunk to start search
- * @param  scope  chunk section to consider
- *
- * @return pointer to found chunk or nullptr if no chunk was found
- */
-Chunk *chunk_get_next_nvb(Chunk *cur, const E_Scope scope = E_Scope::ALL);
-
-
-/**
- * @brief Gets the previous non-vbrace chunk
- *
- * @param  cur    chunk to start search
- * @param  scope  chunk section to consider
- *
- * @return pointer to found chunk or nullptr if no chunk was found
- */
-Chunk *chunk_get_prev_nvb(Chunk *cur, const E_Scope scope = E_Scope::ALL);
-
-
-/**
  * Gets the next chunk not in or part of balanced square
  * brackets.This handles stacked[] instances to accommodate
  * multi - dimensional array declarations
@@ -777,6 +777,13 @@ inline bool Chunk::IsSquareBracket() const
    return(  Is(CT_SQUARE_OPEN)
          || Is(CT_TSQUARE)
          || Is(CT_SQUARE_CLOSE));
+}
+
+
+inline bool Chunk::IsVBrace() const
+{
+   return(  Is(CT_VBRACE_OPEN)
+         || Is(CT_VBRACE_CLOSE));
 }
 
 
@@ -1068,13 +1075,6 @@ static inline bool chunk_is_closing_brace(Chunk *pc)
 static inline bool chunk_is_opening_brace(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_BRACE_OPEN)
-         || chunk_is_token(pc, CT_VBRACE_OPEN));
-}
-
-
-static inline bool chunk_is_vbrace(Chunk *pc)
-{
-   return(  chunk_is_token(pc, CT_VBRACE_CLOSE)
          || chunk_is_token(pc, CT_VBRACE_OPEN));
 }
 
