@@ -515,8 +515,8 @@ static std::tuple<Chunk *, Chunk *, Chunk *> match_variable(Chunk *pc, std::size
     * chunk indicates a variable declaration/definition
     */
 
-   if (  identifier != nullptr
-      && start != nullptr
+   if (  identifier->IsNotNullChunk()
+      && start->IsNotNullChunk()
       && (  end != nullptr
          || chunk_is_token(identifier->GetPrevNcNnlNi(), CT_WORD)))
    {
@@ -749,7 +749,7 @@ static std::pair<Chunk *, Chunk *> match_variable_start(Chunk *pc, std::size_t l
       }
       pc = prev;
    }
-   return(std::make_pair(nullptr, nullptr));
+   return(std::make_pair(Chunk::NullChunkPtr, Chunk::NullChunkPtr));
 } // match_variable_start
 
 
