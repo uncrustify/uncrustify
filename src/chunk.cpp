@@ -158,7 +158,7 @@ const char *Chunk::ElidedText(char *for_the_copy) const
 }
 
 
-Chunk *Chunk::GetNext(E_Scope scope) const
+Chunk *Chunk::GetNext(const E_Scope scope) const
 {
    if (IsNullChunk())
    {
@@ -204,7 +204,7 @@ Chunk *Chunk::GetNext(E_Scope scope) const
 } // Chunk::GetNext
 
 
-Chunk *Chunk::GetPrev(E_Scope scope) const
+Chunk *Chunk::GetPrev(const E_Scope scope) const
 {
    if (IsNullChunk())
    {
@@ -623,73 +623,73 @@ void chunk_move_after(Chunk *pc_in, Chunk *ref)
 }
 
 
-Chunk *Chunk::GetNextNl(E_Scope scope) const
+Chunk *Chunk::GetNextNl(const E_Scope scope) const
 {
    return(Search(&Chunk::IsNewline, scope, E_Direction::FORWARD, true));
 }
 
 
-Chunk *Chunk::GetPrevNl(E_Scope scope) const
+Chunk *Chunk::GetPrevNl(const E_Scope scope) const
 {
    return(Search(&Chunk::IsNewline, scope, E_Direction::BACKWARD, true));
 }
 
 
-Chunk *Chunk::GetNextNnl(E_Scope scope) const
+Chunk *Chunk::GetNextNnl(const E_Scope scope) const
 {
    return(Search(&Chunk::IsNewline, scope, E_Direction::FORWARD, false));
 }
 
 
-Chunk *Chunk::GetPrevNnl(E_Scope scope) const
+Chunk *Chunk::GetPrevNnl(const E_Scope scope) const
 {
    return(Search(&Chunk::IsNewline, scope, E_Direction::BACKWARD, false));
 }
 
 
-Chunk *Chunk::GetNextNc(E_Scope scope) const
+Chunk *Chunk::GetNextNc(const E_Scope scope) const
 {
    return(Search(&Chunk::IsComment, scope, E_Direction::FORWARD, false));
 }
 
 
-Chunk *Chunk::GetPrevNc(E_Scope scope) const
+Chunk *Chunk::GetPrevNc(const E_Scope scope) const
 {
    return(Search(&Chunk::IsComment, scope, E_Direction::BACKWARD, false));
 }
 
 
-Chunk *Chunk::GetNextNcNnl(E_Scope scope) const
+Chunk *Chunk::GetNextNcNnl(const E_Scope scope) const
 {
    return(Search(&Chunk::IsCommentOrNewline, scope, E_Direction::FORWARD, false));
 }
 
 
-Chunk *Chunk::GetPrevNcNnl(E_Scope scope) const
+Chunk *Chunk::GetPrevNcNnl(const E_Scope scope) const
 {
    return(Search(&Chunk::IsCommentOrNewline, scope, E_Direction::BACKWARD, false));
 }
 
 
-Chunk *Chunk::GetNextNcNnlNpp(E_Scope scope) const
+Chunk *Chunk::GetNextNcNnlNpp(const E_Scope scope) const
 {
    return(Search(&Chunk::IsCommentNewlineOrPreproc, scope, E_Direction::FORWARD, false));
 }
 
 
-Chunk *Chunk::GetPrevNcNnlNpp(E_Scope scope) const
+Chunk *Chunk::GetPrevNcNnlNpp(const E_Scope scope) const
 {
    return(Search(&Chunk::IsCommentNewlineOrPreproc, scope, E_Direction::BACKWARD, false));
 }
 
 
-Chunk *Chunk::GetNextNppOrNcNnl(E_Scope scope) const
+Chunk *Chunk::GetNextNppOrNcNnl(const E_Scope scope) const
 {
    return(Search(&Chunk::IsCommentOrNewlineInPreproc, scope, E_Direction::FORWARD, false));
 }
 
 
-Chunk *Chunk::GetPrevNppOrNcNnl(E_Scope scope) const
+Chunk *Chunk::GetPrevNppOrNcNnl(const E_Scope scope) const
 {
    return(Search(&Chunk::IsCommentOrNewlineInPreproc, scope, E_Direction::BACKWARD, false));
 }
@@ -701,25 +701,25 @@ Chunk *Chunk::PpaGetNextNcNnl() const
 }
 
 
-Chunk *Chunk::GetNextNcNnlNet(E_Scope scope) const
+Chunk *Chunk::GetNextNcNnlNet(const E_Scope scope) const
 {
    return(Search(&Chunk::IsCommentNewlineOrEmptyText, scope, E_Direction::FORWARD, false));
 }
 
 
-Chunk *Chunk::GetPrevNcNnlNet(E_Scope scope) const
+Chunk *Chunk::GetPrevNcNnlNet(const E_Scope scope) const
 {
    return(Search(&Chunk::IsCommentNewlineOrEmptyText, scope, E_Direction::BACKWARD, false));
 }
 
 
-Chunk *Chunk::GetPrevNcNnlNi(E_Scope scope) const
+Chunk *Chunk::GetPrevNcNnlNi(const E_Scope scope) const
 {
    return(Search(&Chunk::IsCommentNewlineOrIgnored, scope, E_Direction::BACKWARD, false));
 }
 
 
-Chunk *Chunk::GetNextNisq(E_Scope scope) const
+Chunk *Chunk::GetNextNisq(const E_Scope scope) const
 {
    return(Search(&Chunk::IsSquareBracket, scope, E_Direction::FORWARD, false));
 }
@@ -885,13 +885,13 @@ void chunk_swap_lines(Chunk *pc1, Chunk *pc2)
 } // chunk_swap_lines
 
 
-Chunk *Chunk::GetNextNvb(E_Scope scope) const
+Chunk *Chunk::GetNextNvb(const E_Scope scope) const
 {
    return(Search(&Chunk::IsVBrace, scope, E_Direction::FORWARD, false));
 }
 
 
-Chunk *Chunk::GetPrevNvb(E_Scope scope) const
+Chunk *Chunk::GetPrevNvb(const E_Scope scope) const
 {
    return(Search(&Chunk::IsVBrace, scope, E_Direction::BACKWARD, false));
 }
