@@ -250,38 +250,6 @@ Chunk *Chunk::GetPrev(E_Scope scope) const
 } // Chunk::GetPrev
 
 
-/**
- *
- * This is a temporary internal function that will progressively be
- * replaced by Chunk::Search().
- *
- * @brief search for a chunk that satisfies a condition in a chunk list
- *
- * A generic function that traverses a chunks list either
- * in forward or reverse direction. The traversal continues until a
- * chunk satisfies the condition defined by the compare function.
- * Depending on the parameter cond the condition will either be
- * checked to be true or false.
- *
- * Whenever a chunk list traversal is to be performed this function
- * shall be used. This keeps the code clear and easy to understand.
- *
- * If there are performance issues this function might be worth to
- * be optimized as it is heavily used.
- *
- * @param  cur        chunk to start search at
- * @param  check_fct  compare function
- * @param  scope      code parts to consider for search
- * @param  dir        search direction
- * @param  cond       success condition
- *
- * @retval nullptr  no requested chunk was found or invalid parameters provided
- * @retval Chunk  pointer to the found chunk
- */
-// TODO remove when finished
-static Chunk *__internal_chunk_search(Chunk *cur, const check_t check_fct, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const bool cond = true);
-
-
 static void chunk_log(Chunk *pc, const char *text);
 
 
@@ -296,7 +264,7 @@ static void chunk_log(Chunk *pc, const char *text);
  * traverses a chunk list either in forward or backward direction.
  * The traversal continues until a chunk of a given category is found.
  *
- * This function is a specialization of __internal_chunk_search.
+ * This function is a specialization of Chunk::Search.
  *
  * @param cur    chunk to start search at
  * @param type   category to search for
@@ -315,7 +283,7 @@ static Chunk *chunk_search_type(Chunk *cur, const E_Token type, const E_Scope sc
  * Traverses a chunk list in the specified direction until a chunk of a given type
  * is found.
  *
- * This function is a specialization of __internal_chunk_search.
+ * This function is a specialization of Chunk::Search.
  *
  * @param cur    chunk to start search at
  * @param type   category to search for
@@ -406,34 +374,6 @@ Chunk *Chunk::Search(const T_CheckFnPtr checkFn, const E_Scope scope,
            && ((pc->*checkFn)() != cond)); // and the demanded chunk was not found either
 
    return(pc);                             // the latest chunk is the searched one
-}
-
-
-static Chunk *__internal_chunk_search(Chunk *cur, const check_t check_fct, const E_Scope scope,
-                                      const E_Direction dir, const bool cond)
-{
-   /*
-    * Depending on the parameter dir the search function searches
-    * in forward or backward direction */
-   Chunk::T_SearchFnPtr search_function = Chunk::GetSearchFn(dir);
-   Chunk                *pc             = cur;
-
-   if (pc == nullptr)
-   {
-      pc = Chunk::NullChunkPtr;
-   }
-
-   do                                     // loop over the chunk list
-   {
-      pc = (pc->*search_function)(scope); // in either direction while
-   } while (  pc->IsNotNullChunk()        // the end of the list was not reached yet
-           && (check_fct(pc) != cond));   // and the demanded chunk was not found either
-
-   if (pc->IsNullChunk())
-   {
-      pc = nullptr;
-   }
-   return(pc);                            // the latest chunk is the searched one
 }
 
 
