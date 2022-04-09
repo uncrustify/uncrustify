@@ -114,98 +114,98 @@ public:
     * @param scope code region to search in
     * @return pointer to next chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetNext(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetNext(const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the previous chunk in a list of chunks
     * @param scope code region to search in
     * @return pointer to previous chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetPrev(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetPrev(const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the next newline chunk
     * @param scope code region to search in
     * @return pointer to next newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetNextNl(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetNextNl(const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the prev newline chunk
     * @param scope code region to search in
     * @return pointer to prev newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetPrevNl(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetPrevNl(const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the next non-newline chunk
     * @param scope code region to search in
     * @return pointer to next non-newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetNextNnl(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetNextNnl(const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the prev non-newline chunk
     * @param scope code region to search in
     * @return pointer to prev non-newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetPrevNnl(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetPrevNnl(const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the next non-comment chunk
     * @param scope code region to search in
     * @return pointer to next non-comment chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetNextNc(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetNextNc(const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the prev non-comment chunk
     * @param scope code region to search in
     * @return pointer to prev non-comment chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetPrevNc(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetPrevNc(const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the next non-comment and non-newline chunk
     * @param scope code region to search in
     * @return pointer to next non-comment and non-newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetNextNcNnl(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetNextNcNnl(const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the prev non-comment and non-newline chunk
     * @param scope code region to search in
     * @return pointer to prev non-comment and non-newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetPrevNcNnl(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetPrevNcNnl(const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the next non-comment, non-newline, non-preprocessor chunk
     * @param scope code region to search in
     * @return pointer to next non-comment, non-newline, non-preprocessor chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetNextNcNnlNpp(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetNextNcNnlNpp(const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the prev non-comment, non-newline, non-preprocessor chunk
     * @param scope code region to search in
     * @return pointer to prev non-comment, non-newline, non-preprocessor chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetPrevNcNnlNpp(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetPrevNcNnlNpp(const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the next non-preprocessor or non-comment, non-newline chunk
     * @param scope code region to search in
     * @return pointer to next non-preprocessor or non-comment, non-newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetNextNppOrNcNnl(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetNextNppOrNcNnl(const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the prev non-preprocessor or non-comment, non-newline chunk
     * @param scope code region to search in
     * @return pointer to prev non-preprocessor or non-comment, non-newline chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetPrevNppOrNcNnl(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetPrevNppOrNcNnl(const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the next preprocessor aware non-comment and non-newline chunk
@@ -221,14 +221,14 @@ public:
     * @param scope code region to search in
     * @return pointer to next non-comment, non-newline, non-empty text chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetNextNcNnlNet(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetNextNcNnlNet(const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the prev non-comment, non-newline, non-empty text chunk
     * @param scope code region to search in
     * @return pointer to prev non-comment, non-newline, non-empty text chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetPrevNcNnlNet(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetPrevNcNnlNet(const E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -236,7 +236,7 @@ public:
     * @param scope code region to search in
     * @return pointer to prev non-comment, non-newline, non-ignored chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetPrevNcNnlNi(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetPrevNcNnlNi(const E_Scope scope = E_Scope::ALL) const;
 
 
    /**
@@ -246,17 +246,33 @@ public:
     * @param scope  code region to search in
     * @return nullptr or the next chunk not in or part of square brackets
     */
-   Chunk *GetNextNisq(E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetNextNisq(const E_Scope scope = E_Scope::ALL) const;
+
+
+   /**
+    * @brief returns the next non-virtual brace chunk
+    * @param scope code region to search in
+    * @return pointer to next non-virtual brace chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetNextNvb(const E_Scope scope = E_Scope::ALL) const;
+
+
+   /**
+    * @brief returns the prev non-virtual brace chunk
+    * @param scope code region to search in
+    * @return pointer to prev non-virtual brace chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetPrevNvb(const E_Scope scope = E_Scope::ALL) const;
 
 
    // --------- Search functions
 
    /**
     * @brief defines a member function pointer for a function of type
-    * Chunk *Chunk::function(E_Scope scope)
+    * Chunk *Chunk::function(const E_Scope scope)
     * that will search for a new chunk
     */
-   typedef Chunk *(Chunk::*T_SearchFnPtr)(E_Scope scope) const;
+   typedef Chunk *(Chunk::*T_SearchFnPtr)(const E_Scope scope) const;
 
    /**
     * @brief defines a member function pointer for a function of type
@@ -388,6 +404,12 @@ public:
     * @return true if the chunk is a square bracket
     */
    bool IsSquareBracket() const;
+
+   /**
+    * @brief checks whether the chunk is a virtual brace
+    * @return true if the chunk is a virtual brace
+    */
+   bool IsVBrace() const;
 
 
    // --------- Data members
@@ -574,28 +596,6 @@ Chunk *chunk_get_prev_str(Chunk *cur, const char *str, size_t len, int level, E_
 
 
 /**
- * @brief Gets the next non-vbrace chunk
- *
- * @param  cur    chunk to start search
- * @param  scope  chunk section to consider
- *
- * @return pointer to found chunk or nullptr if no chunk was found
- */
-Chunk *chunk_get_next_nvb(Chunk *cur, const E_Scope scope = E_Scope::ALL);
-
-
-/**
- * @brief Gets the previous non-vbrace chunk
- *
- * @param  cur    chunk to start search
- * @param  scope  chunk section to consider
- *
- * @return pointer to found chunk or nullptr if no chunk was found
- */
-Chunk *chunk_get_prev_nvb(Chunk *cur, const E_Scope scope = E_Scope::ALL);
-
-
-/**
  * Gets the next chunk not in or part of balanced square
  * brackets.This handles stacked[] instances to accommodate
  * multi - dimensional array declarations
@@ -777,6 +777,13 @@ inline bool Chunk::IsSquareBracket() const
    return(  Is(CT_SQUARE_OPEN)
          || Is(CT_TSQUARE)
          || Is(CT_SQUARE_CLOSE));
+}
+
+
+inline bool Chunk::IsVBrace() const
+{
+   return(  Is(CT_VBRACE_OPEN)
+         || Is(CT_VBRACE_CLOSE));
 }
 
 
@@ -1068,13 +1075,6 @@ static inline bool chunk_is_closing_brace(Chunk *pc)
 static inline bool chunk_is_opening_brace(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_BRACE_OPEN)
-         || chunk_is_token(pc, CT_VBRACE_OPEN));
-}
-
-
-static inline bool chunk_is_vbrace(Chunk *pc)
-{
-   return(  chunk_is_token(pc, CT_VBRACE_CLOSE)
          || chunk_is_token(pc, CT_VBRACE_OPEN));
 }
 

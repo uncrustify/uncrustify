@@ -2345,11 +2345,10 @@ void mark_comments(void)
    bool  prev_nl = true;
    Chunk *cur    = Chunk::GetHead();
 
-   while (  cur != nullptr
-         && cur->IsNotNullChunk())
+   while (cur->IsNotNullChunk())
    {
-      Chunk *next   = chunk_get_next_nvb(cur);
-      bool  next_nl = (next == nullptr) || chunk_is_newline(next);
+      Chunk *next   = cur->GetNextNvb();
+      bool  next_nl = next->IsNullChunk() || chunk_is_newline(next);
 
       if (chunk_is_comment(cur))
       {
