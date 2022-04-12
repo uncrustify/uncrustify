@@ -1410,6 +1410,11 @@ indent_namespace_level;
 extern BoundedOption<unsigned, 0, 255>
 indent_namespace_limit;
 
+// Whether to indent only in inner namespaces (nested in other namespaces).
+// Requires indent_namespace=true.
+extern Option<bool>
+indent_namespace_inner_only;
+
 // Whether the 'extern "C"' body is indented.
 extern Option<bool>
 indent_extern;

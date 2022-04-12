@@ -2184,6 +2184,16 @@ void indent_text(void)
                   }
                   indent_column_set(frm.prev(frm.top().ns_cnt).indent);
                }
+               else if (  options::indent_namespace()
+                       && options::indent_namespace_inner_only())
+               {
+                  if (frm.top().ns_cnt == 1)
+                  {
+                     // undo indent on first namespace only
+                     frm.top().indent -= indent_size;
+                     log_indent();
+                  }
+               }
                else if (  pc->flags.test(PCF_LONG_BLOCK)
                        || !options::indent_namespace())
                {
