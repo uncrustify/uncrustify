@@ -1147,6 +1147,10 @@ indent_namespace_level          = 0        # unsigned number
 # indented. Requires indent_namespace=true. 0 means no limit.
 indent_namespace_limit          = 0        # unsigned number
 
+# Whether to indent only in inner namespaces (nested in other namespaces).
+# Requires indent_namespace=true.
+indent_namespace_inner_only     = false    # true/false
+
 # Whether the 'extern "C"' body is indented.
 indent_extern                   = false    # true/false
 
