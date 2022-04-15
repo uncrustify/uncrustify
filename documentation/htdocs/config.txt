@@ -467,12 +467,12 @@ sp_paren_comma                  = force    # ignore/add/remove/force/not_defined
 
 # Add or remove space after the variadic '...' when preceded by a
 # non-punctuator.
-# The value REMOVE will be overriden with FORCE
+# The value REMOVE will be overridden with FORCE
 sp_after_ellipsis               = ignore   # ignore/add/remove/force/not_defined
 
 # Add or remove space before the variadic '...' when preceded by a
 # non-punctuator.
-# The value REMOVE will be overriden with FORCE
+# The value REMOVE will be overridden with FORCE
 sp_before_ellipsis              = ignore   # ignore/add/remove/force/not_defined
 
 # Add or remove space between a type and '...'.
@@ -2841,7 +2841,7 @@ align_oc_decl_colon             = false    # true/false
 
 # (OC) Whether to not align parameters in an Objectve-C message call if first
 # colon is not on next line of the message call (the same way Xcode does
-# aligment)
+# alignment)
 align_oc_msg_colon_xcode_like   = false    # true/false
 
 #
