@@ -4048,6 +4048,29 @@ pp_indent_extern; // = true
 extern BoundedOption<signed, -1, 1>
 pp_indent_brace; // = 1
 
+// Whether to print warning messages for unbalanced #if and #else blocks.
+// This will print a message in the following cases:
+// - if an #ifdef block ends on a different indent level than
+//   where it started from. Example:
+//
+//    #ifdef TEST
+//      int i;
+//      {
+//        int j;
+//    #endif
+//
+// - an #elif/#else block ends on a different indent level than
+//   the corresponding #ifdef block. Example:
+//
+//    #ifdef TEST
+//        int i;
+//    #else
+//        }
+//      int j;
+//    #endif
+extern Option<bool>
+pp_warn_unbalanced_if; // = false
+
 // TODO ...until here.
 
 //END
