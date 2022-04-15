@@ -572,7 +572,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          return(options::sp_return_brace());
       }
       // Everything else requires a space
-      // The value REMOVE will be overriden with FORCE
+      // The value REMOVE will be overridden with FORCE
       log_rule("sp_return");
 
       if (options::sp_return() == IARF_REMOVE)
@@ -3292,7 +3292,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    {
       // Add or remove space after the variadic '...' when preceded by a
       // non-punctuator.
-      // The value REMOVE will be overriden with FORCE
+      // The value REMOVE will be overridden with FORCE
       if (options::sp_after_ellipsis() == IARF_REMOVE)
       {
          log_rule("sp_after_ellipsis/FORCE");
@@ -3310,7 +3310,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    {
       // Add or remove space before the variadic '...' when preceded by a
       // non-punctuator.
-      // The value REMOVE will be overriden with FORCE
+      // The value REMOVE will be overridden with FORCE
       if (options::sp_before_ellipsis() == IARF_REMOVE)
       {
          log_rule("sp_before_ellipsis/FORCE");
