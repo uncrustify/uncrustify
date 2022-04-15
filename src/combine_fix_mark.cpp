@@ -72,11 +72,13 @@ void fix_casts(Chunk *start)
             || chunk_is_token(pc, CT_TSQUARE)
             || (  (  chunk_is_token(pc, CT_ANGLE_OPEN)
                   || chunk_is_token(pc, CT_ANGLE_CLOSE))
-               && language_is_set(LANG_OC | LANG_JAVA | LANG_CS | LANG_VALA))
+               && language_is_set(LANG_OC | LANG_JAVA | LANG_CS | LANG_VALA | LANG_CPP))
             || (  (  chunk_is_token(pc, CT_QUESTION)
                   || chunk_is_token(pc, CT_COMMA)
                   || chunk_is_token(pc, CT_MEMBER))
                && language_is_set(LANG_JAVA | LANG_CS | LANG_VALA))
+            || (  chunk_is_token(pc, CT_COMMA)
+               && language_is_set(LANG_CPP))
             || chunk_is_token(pc, CT_AMP)))
    {
       LOG_FMT(LCASTS, "%s(%d): pc->Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
@@ -124,7 +126,7 @@ void fix_casts(Chunk *start)
       || chunk_is_token(last, CT_PTR_TYPE)
       || chunk_is_token(last, CT_TYPE)
       || (  chunk_is_token(last, CT_ANGLE_CLOSE)
-         && language_is_set(LANG_OC | LANG_JAVA | LANG_CS | LANG_VALA)))
+         && language_is_set(LANG_OC | LANG_JAVA | LANG_CS | LANG_VALA | LANG_CPP)))
    {
       verb = "for sure";
    }
