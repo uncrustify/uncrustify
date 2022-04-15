@@ -147,3 +147,4 @@
 60042  cs/indent-multistring-coulmn1.cfg            cs/indent-multistring-coulmn1.cs
 60044  cs/UNI-37241.cfg                             cs/UNI-37241.cs
 60045  common/nl_before_after.cfg                   cs/add-nl-before-namespace.cs
+60046  common/sp_after_cast.cfg                     cs/cast.cs
