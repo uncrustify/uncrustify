@@ -336,6 +336,10 @@ If such part ends at a different brace level than the corresponding #ifdef part,
 will be displayed highlighting the ending indentation levels of both the part in question
 and the respective #ifdef part.
 
+3) unbalanced #define
+If a #define ends at a brace level different from where it starts, a message will
+be displayed, highlighting the ending indentation level.
+
 Here is an example with a mix of balanced and unbalanced blocks, with line numbers in front
 for easier reference:
 
