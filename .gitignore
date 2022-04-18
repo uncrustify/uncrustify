@@ -62,3 +62,9 @@ cmake-build-*/
 
 # Vim
 *.swp
+
+# Clangd
+/.cache/clangd/
+
+# Compilation database
+compile_commands.json
