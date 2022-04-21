@@ -69,14 +69,14 @@ typedef bool (*check_t)(Chunk *pc);
 class Chunk
 {
 public:
-   static Chunk        NullChunk;          // Null Chunk
-   static Chunk *const NullChunkPtr;       // Pointer to the Null Chunk
+   static Chunk        NullChunk;                       // Null Chunk
+   static Chunk *const NullChunkPtr;                    // Pointer to the Null Chunk
 
    //! constructors
-   Chunk(bool null_c = false);       // default
-   Chunk(const Chunk &o);            // !!! partial copy: chunk is not linked to others
+   Chunk(bool null_c = false);                    // default
+   Chunk(const Chunk &o);                         // !!! partial copy: chunk is not linked to others
 
-   Chunk &operator=(const Chunk &o); // !!! partial copy: chunk is not linked to others
+   Chunk &operator=(const Chunk &o);              // !!! partial copy: chunk is not linked to others
 
    //! whether this is a null Chunk or not
    bool IsNullChunk() const { return(null_chunk); }
@@ -324,6 +324,21 @@ public:
     */
    Chunk *SearchPpa(const T_CheckFnPtr checkFn, const bool cond = true) const;
 
+   /**
+    * @brief search a chunk of a given type and level. Traverses a chunk list in the
+    * specified direction until a chunk of a given type is found.
+    *
+    * This function is a specialization of Chunk::Search.
+    *
+    * @param type  category to search for
+    * @param scope code parts to consider for search
+    * @param dir   search direction
+    * @param level nesting level to match or -1 / ANY_LEVEL
+    *
+    * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *SearchTypeLevel(const E_Token type, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, int level = -1) const;
+
 
    // --------- Is* functions
 
@@ -411,43 +426,51 @@ public:
     */
    bool IsVBrace() const;
 
+   /**
+    * @brief checks whether the chunk matches a given type and level
+    * @param type  category to search for
+    * @param level nesting level to match
+    * @return true if the chunk matches a given type and level
+    */
+   bool IsTypeAndLevel(const E_Token cType, int cLevel) const;
+
 
    // --------- Data members
 
-   Chunk        *next;          //! pointer to next chunk in list
-   Chunk        *prev;          //! pointer to previous chunk in list
-   Chunk        *parent;        //! pointer to parent chunk(not always set)
+   Chunk        *next;                       //! pointer to next chunk in list
+   Chunk        *prev;                       //! pointer to previous chunk in list
+   Chunk        *parent;                     //! pointer to parent chunk(not always set)
 
    align_ptr_t  align;
    indent_ptr_t indent;
-   E_Token      type;           //! type of the chunk itself
-   E_Token      parent_type;    //! type of the parent chunk usually CT_NONE
-                                //! might be different from parent->parent_type (above)
-   size_t       orig_line;      //! line number of chunk in input file
-   size_t       orig_col;       //! column where chunk started in the input file, is always > 0
-   size_t       orig_col_end;   //! column where chunk ended in the input file, is always > 1
-   UINT32       orig_prev_sp;   //! whitespace before this token
-   pcf_flags_t  flags;          //! see PCF_xxx
-   size_t       column;         //! column of chunk
-   size_t       column_indent;  /** if 1st on a line, set to the 'indent'
-                                 * column, which may be less than the real
-                                 * column used to indent with tabs          */
-   size_t   nl_count;           //! number of newlines in CT_NEWLINE
-   size_t   nl_column;          //! column of the subsequent newline entries(all of them should have the same column)
-   size_t   level;              /** nest level in {, (, or [
-                                 * only to help vim command } */
-   size_t   brace_level;        //! nest level in braces only
-   size_t   pp_level;           //! nest level in preprocessor
-   bool     after_tab;          //! whether this token was after a tab
-   unc_text str;                //! the token text
+   E_Token      type;                        //! type of the chunk itself
+   E_Token      parent_type;                 //! type of the parent chunk usually CT_NONE
+   //! might be different from parent->parent_type (above)
+   size_t       orig_line;                   //! line number of chunk in input file
+   size_t       orig_col;                    //! column where chunk started in the input file, is always > 0
+   size_t       orig_col_end;                //! column where chunk ended in the input file, is always > 1
+   UINT32       orig_prev_sp;                //! whitespace before this token
+   pcf_flags_t  flags;                       //! see PCF_xxx
+   size_t       column;                      //! column of chunk
+   size_t       column_indent;               /** if 1st on a line, set to the 'indent'
+                                              * column, which may be less than the real
+                                              * column used to indent with tabs          */
+   size_t   nl_count;                        //! number of newlines in CT_NEWLINE
+   size_t   nl_column;                       //! column of the subsequent newline entries(all of them should have the same column)
+   size_t   level;                           /** nest level in {, (, or [
+                                              * only to help vim command } */
+   size_t   brace_level;                     //! nest level in braces only
+   size_t   pp_level;                        //! nest level in preprocessor
+   bool     after_tab;                       //! whether this token was after a tab
+   unc_text str;                             //! the token text
 
    // for debugging purpose only
    track_list *tracking;
 
 private:
-   void copyFrom(const Chunk &o); // !!! partial copy: chunk is not linked to others
+   void copyFrom(const Chunk &o);              // !!! partial copy: chunk is not linked to others
 
-   const bool null_chunk;         //! true for null chunks
+   const bool null_chunk;                      //! true for null chunks
 };
 
 
@@ -664,19 +687,11 @@ Chunk *chunk_search_next_cat(Chunk *pc, const E_Token cat);
 bool are_chunks_in_same_line(Chunk *start, Chunk *end);
 
 
-/*
- * TODO: I doubt that inline is required for the functions below.
- * The compiler should know how to optimize the code itself.
- * To clarify do a profiling run with and without inline
- */
-static inline bool is_expected_type_and_level(Chunk *pc, E_Token type, int level)
+inline bool Chunk::IsTypeAndLevel(const E_Token cType, int cLevel) const
 {
-   // we don't care if the pointer is invalid or about the level (if it is negative),
-   // or it is as expected and the type is as expected
-   return(  pc == nullptr
-         || (  (  level < 0
-               || pc->level == static_cast<size_t>(level))
-            && pc->type == type));
+   return(  (  cLevel < 0
+            || level == static_cast<size_t>(cLevel))
+         && type == cType);
 }
 
 

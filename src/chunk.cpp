@@ -278,26 +278,6 @@ static Chunk *chunk_search_type(Chunk *cur, const E_Token type, const E_Scope sc
 
 
 /**
- * @brief search a chunk of a given type and level
- *
- * Traverses a chunk list in the specified direction until a chunk of a given type
- * is found.
- *
- * This function is a specialization of Chunk::Search.
- *
- * @param cur    chunk to start search at
- * @param type   category to search for
- * @param scope  code parts to consider for search
- * @param dir    search direction
- * @param level  nesting level to match or -1 / ANY_LEVEL
- *
- * @retval nullptr  no chunk found or invalid parameters provided
- * @retval Chunk  pointer to the found chunk
- */
-static Chunk *chunk_search_type_level(Chunk *cur, E_Token type, E_Scope scope = E_Scope::ALL, E_Direction dir = E_Direction::FORWARD, int level = -1);
-
-
-/**
  * @brief searches a chunk that holds a specific string
  *
  * Traverses a chunk list either in forward or backward direction until a chunk
@@ -439,31 +419,23 @@ static Chunk *chunk_search_type(Chunk *cur, const E_Token type,
 }
 
 
-static Chunk *chunk_search_type_level(Chunk *cur, E_Token type, E_Scope scope, E_Direction dir, int level)
+Chunk *Chunk::SearchTypeLevel(const E_Token cType, const E_Scope scope,
+                              const E_Direction dir, int cLevel) const
 {
    /*
     * Depending on the parameter dir the search function searches
     * in forward or backward direction
     */
-   Chunk::T_SearchFnPtr search_function = Chunk::GetSearchFn(dir);
-   Chunk                *pc             = cur;
+   T_SearchFnPtr searchFnPtr = GetSearchFn(dir);
+   Chunk         *pc         = const_cast<Chunk *>(this);
 
-   if (pc == nullptr)
+   do                                      // loop over the chunk list
    {
-      pc = Chunk::NullChunkPtr;
-   }
+      pc = (pc->*searchFnPtr)(scope);      // in either direction while
+   } while (  pc->IsNotNullChunk()                   // the end of the list was not reached yet
+           && (!pc->IsTypeAndLevel(cType, cLevel))); // and the chunk was not found either
 
-   do                                     // loop over the chunk list
-   {
-      pc = (pc->*search_function)(scope); // in either direction while
-   } while (  pc->IsNotNullChunk()        // the end of the list was not reached yet
-           && (!is_expected_type_and_level(pc, type, level)));
-
-   if (pc->IsNullChunk())
-   {
-      pc = nullptr;
-   }
-   return(pc);                            // the latest chunk is the searched one
+   return(pc);                                       // the latest chunk is the searched one
 }
 
 
@@ -727,13 +699,33 @@ Chunk *Chunk::GetNextNisq(const E_Scope scope) const
 
 Chunk *chunk_get_next_type(Chunk *cur, E_Token type, int level, E_Scope scope)
 {
-   return(chunk_search_type_level(cur, type, scope, E_Direction::FORWARD, level));
+   if (cur == nullptr)
+   {
+      return(nullptr);
+   }
+   Chunk *ret = cur->SearchTypeLevel(type, scope, E_Direction::FORWARD, level);
+
+   if (ret->IsNullChunk())
+   {
+      return(nullptr);
+   }
+   return(ret);
 }
 
 
 Chunk *chunk_get_prev_type(Chunk *cur, E_Token type, int level, E_Scope scope)
 {
-   return(chunk_search_type_level(cur, type, scope, E_Direction::BACKWARD, level));
+   if (cur == nullptr)
+   {
+      return(nullptr);
+   }
+   Chunk *ret = cur->SearchTypeLevel(type, scope, E_Direction::BACKWARD, level);
+
+   if (ret->IsNullChunk())
+   {
+      return(nullptr);
+   }
+   return(ret);
 }
 
 
