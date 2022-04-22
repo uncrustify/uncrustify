@@ -979,9 +979,9 @@ void tokenize_cleanup(void)
          {
             chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
          }
-         tmp = chunk_get_next_type(pc, CT_OC_END, pc->level);
+         tmp = pc->GetNextType(CT_OC_END, pc->level);
 
-         if (tmp != nullptr)
+         if (tmp->IsNotNullChunk())
          {
             set_chunk_parent(tmp, pc->type);
          }
@@ -1035,9 +1035,9 @@ void tokenize_cleanup(void)
                set_chunk_parent(tmp, get_chunk_parent_type(pc));
             }
          }
-         tmp = chunk_get_next_type(pc, CT_PAREN_CLOSE, pc->level);
+         tmp = pc->GetNextType(CT_PAREN_CLOSE, pc->level);
 
-         if (tmp != nullptr)
+         if (tmp->IsNotNullChunk())
          {
             set_chunk_parent(tmp, get_chunk_parent_type(pc));
          }
@@ -1677,18 +1677,18 @@ static void cleanup_objc_property(Chunk *start)
 {
    assert(chunk_is_token(start, CT_OC_PROPERTY));
 
-   Chunk *open_paren = chunk_get_next_type(start, CT_PAREN_OPEN, start->level);
+   Chunk *open_paren = start->GetNextType(CT_PAREN_OPEN, start->level);
 
-   if (open_paren == nullptr)
+   if (open_paren->IsNullChunk())
    {
       LOG_FMT(LTEMPL, "%s(%d): Property is not followed by openning paren\n", __func__, __LINE__);
       return;
    }
    set_chunk_parent(open_paren, start->type);
 
-   Chunk *tmp = chunk_get_next_type(start, CT_PAREN_CLOSE, start->level);
+   Chunk *tmp = start->GetNextType(CT_PAREN_CLOSE, start->level);
 
-   if (tmp != nullptr)
+   if (tmp->IsNotNullChunk())
    {
       set_chunk_parent(tmp, start->type);
       tmp = tmp->GetNextNcNnl();
@@ -1697,9 +1697,9 @@ static void cleanup_objc_property(Chunk *start)
       {
          chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
 
-         tmp = chunk_get_next_type(tmp, CT_SEMICOLON, start->level);
+         tmp = tmp->GetNextType(CT_SEMICOLON, start->level);
 
-         if (tmp != nullptr)
+         if (tmp->IsNotNullChunk())
          {
             set_chunk_parent(tmp, start->type);
          }

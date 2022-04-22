@@ -263,7 +263,7 @@ static Chunk *pawn_process_line(Chunk *start)
 
    if (chunk_is_token(start, CT_ENUM))
    {
-      pc = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
+      pc = start->GetNextType(CT_BRACE_CLOSE, start->level);
       return(pc);
    }
    //LOG_FMT(LSYS, "%s: Don't understand line %d, starting with '%s' [%s]\n",
@@ -352,13 +352,7 @@ static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn)
    // handle prototypes
    if (start == fcn)
    {
-      Chunk *last = chunk_get_next_type(fcn, CT_PAREN_CLOSE, fcn->level);
-
-      if (last == nullptr)
-      {
-         last = Chunk::NullChunkPtr;
-      }
-      last = last->GetNext();
+      Chunk *last = fcn->GetNextType(CT_PAREN_CLOSE, fcn->level)->GetNext();
 
       if (chunk_is_token(last, CT_SEMICOLON))
       {
@@ -443,10 +437,9 @@ static Chunk *pawn_process_func_def(Chunk *pc)
    if (chunk_is_token(last, CT_BRACE_OPEN))
    {
       set_chunk_parent(last, CT_FUNC_DEF);
-      last = chunk_get_next_type(last, CT_BRACE_CLOSE, last->level);
+      last = last->GetNextType(CT_BRACE_CLOSE, last->level);
 
-      if (  last != nullptr
-         && last->IsNotNullChunk())
+      if (last->IsNotNullChunk())
       {
          set_chunk_parent(last, CT_FUNC_DEF);
       }

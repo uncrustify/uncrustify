@@ -31,11 +31,11 @@ void remove_extra_returns(void)
          // we might be in a class, check it                                     Issue #2705
          // look for a closing brace
          bool  remove_it      = false;
-         Chunk *closing_brace = chunk_get_next_type(pc, CT_BRACE_CLOSE, 1);
+         Chunk *closing_brace = pc->GetNextType(CT_BRACE_CLOSE, 1);
          LOG_FMT(LRMRETURN, "%s(%d): on orig_line %zu, level is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->level);
 
-         if (closing_brace != nullptr)
+         if (closing_brace->IsNotNullChunk())
          {
             if (get_chunk_parent_type(closing_brace) == CT_FUNC_CLASS_DEF)
             {
@@ -51,11 +51,11 @@ void remove_extra_returns(void)
          {
             // it is not a class
             // look for a closing brace
-            closing_brace = chunk_get_next_type(pc, CT_BRACE_CLOSE, 0);
+            closing_brace = pc->GetNextType(CT_BRACE_CLOSE, 0);
             LOG_FMT(LRMRETURN, "%s(%d): on orig_line %zu, level is %zu\n",
                     __func__, __LINE__, pc->orig_line, pc->level);
 
-            if (closing_brace != nullptr)
+            if (closing_brace->IsNotNullChunk())
             {
                if (get_chunk_parent_type(closing_brace) == CT_FUNC_DEF)
                {

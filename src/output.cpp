@@ -2884,19 +2884,19 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
          }
          tmp = tmp->GetNextNcNnl();
       }
-      fpo = fpc = nullptr;
+      fpo = fpc = Chunk::NullChunkPtr;
    }
    else
    {
-      fpo = chunk_get_next_type(fcn, CT_FPAREN_OPEN, fcn->level);
+      fpo = fcn->GetNextType(CT_FPAREN_OPEN, fcn->level);
 
-      if (fpo == nullptr)
+      if (fpo->IsNullChunk())
       {
          return(true);
       }
-      fpc = chunk_get_next_type(fpo, CT_FPAREN_CLOSE, fcn->level);
+      fpc = fpo->GetNextType(CT_FPAREN_CLOSE, fcn->level);
 
-      if (fpc == nullptr)
+      if (fpc->IsNullChunk())
       {
          return(true);
       }
@@ -2904,7 +2904,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
    Chunk *tmp;
 
    // Check for 'foo()' and 'foo(void)'
-   if (fpo != nullptr)
+   if (fpo->IsNotNullChunk())
    {
       if (fpo->GetNextNcNnl() == fpc)
       {

@@ -432,13 +432,13 @@ static size_t token_indent(E_Token type)
 static size_t get_indent_first_continue(Chunk *pc)
 {
    log_rule_B("indent_ignore_first_continue");
-   Chunk *continuation = chunk_get_next_type(pc, CT_NEWLINE, pc->level);
+   Chunk *continuation = pc->GetNextType(CT_NEWLINE, pc->level);
 
-   if (continuation)
+   if (continuation->IsNotNullChunk())
    {
       continuation = continuation->GetNext();
 
-      if (continuation)
+      if (continuation->IsNotNullChunk())
       {
          return(continuation->orig_col);
       }
@@ -952,16 +952,15 @@ void indent_text(void)
                      else if (  chunk_is_token(tmp, CT_FUNC_CALL)
                              || chunk_is_token(tmp, CT_FPAREN_OPEN))
                      {
-                        tmp = chunk_get_next_type(tmp, CT_FPAREN_CLOSE, tmp->level);
+                        tmp = tmp->GetNextType(CT_FPAREN_CLOSE, tmp->level);
 
-                        if (tmp != nullptr)
+                        if (tmp->IsNotNullChunk())
                         {
                            tmp = pc->GetNextNcNnlNpp();
                         }
                      }
 
-                     if (  tmp != nullptr
-                        && tmp->IsNotNullChunk())
+                     if (tmp->IsNotNullChunk())
                      {
                         frm.top().pop_pc = tmp;
                      }
@@ -3035,7 +3034,7 @@ void indent_text(void)
          {
             if (chunk_is_token(tmp, CT_FUNC_CALL))
             {
-               tmp = chunk_get_next_type(tmp, CT_FPAREN_CLOSE, tmp->level);
+               tmp = tmp->GetNextType(CT_FPAREN_CLOSE, tmp->level);
                tmp = tmp->GetNextNcNnlNpp();
             }
             else if (  chunk_is_token(tmp, CT_WORD)

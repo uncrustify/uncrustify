@@ -1156,10 +1156,7 @@ Chunk *EnumStructUnionParser::get_inheritance_end() const
 
       if (brace_open == nullptr)
       {
-         brace_open = chunk_get_next_type(inheritance_start,
-                                          CT_BRACE_OPEN,
-                                          m_start->level,
-                                          E_Scope::ALL);
+         brace_open = inheritance_start->GetNextType(CT_BRACE_OPEN, m_start->level, E_Scope::ALL);
       }
    }
    return(brace_open);
@@ -1249,10 +1246,7 @@ Chunk *EnumStructUnionParser::get_where_end() const
 
       if (brace_open == nullptr)
       {
-         brace_open = chunk_get_next_type(where_start,
-                                          CT_BRACE_OPEN,
-                                          m_start->level,
-                                          E_Scope::ALL);
+         brace_open = where_start->GetNextType(CT_BRACE_OPEN, m_start->level, E_Scope::ALL);
       }
    }
    return(brace_open);

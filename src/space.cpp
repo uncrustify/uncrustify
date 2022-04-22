@@ -3697,7 +3697,7 @@ void space_text_balance_nested_parens(void)
          space_add_after(first, 1);
 
          // test after the closing parens   Issue #1703
-         Chunk *closing = chunk_get_next_type(first, (E_Token)(first->type + 1), first->level);
+         Chunk *closing = first->GetNextType((E_Token)(first->type + 1), first->level);
 
          if (closing->orig_col == closing->prev->orig_col_end)
          {

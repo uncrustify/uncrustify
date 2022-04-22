@@ -265,6 +265,16 @@ public:
    Chunk *GetPrevNvb(const E_Scope scope = E_Scope::ALL) const;
 
 
+   /**
+    * @brief returns the next chunk of the given type at the level.
+    * @param type  the type to look for
+    * @param level -1 or ANY_LEVEL (any level) or the level to match
+    * @param scope code region to search in
+    * @return pointer to the next matching chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetNextType(const E_Token cType, const int cLevel, const E_Scope scope = E_Scope::ALL) const;
+
+
    // --------- Search functions
 
    /**
@@ -337,7 +347,7 @@ public:
     *
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *SearchTypeLevel(const E_Token type, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, int level = -1) const;
+   Chunk *SearchTypeLevel(const E_Token cType, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const int cLevel = -1) const;
 
 
    // --------- Is* functions
@@ -432,7 +442,7 @@ public:
     * @param level nesting level to match
     * @return true if the chunk matches a given type and level
     */
-   bool IsTypeAndLevel(const E_Token cType, int cLevel) const;
+   bool IsTypeAndLevel(const E_Token cType, const int cLevel) const;
 
 
    // --------- Data members
@@ -559,19 +569,6 @@ bool chunk_is_last_on_line(Chunk *pc);
 
 
 /**
- * Grabs the next chunk of the given type at the level.
- *
- * @param cur    chunk to use as start point
- * @param type   the type to look for
- * @param level  -1 or ANY_LEVEL (any level) or the level to match
- * @param scope  code region to search in
- *
- * @return nullptr or the match
- */
-Chunk *chunk_get_next_type(Chunk *cur, E_Token type, int level, E_Scope scope = E_Scope::ALL);
-
-
-/**
  * Grabs the prev chunk of the given type at the level.
  *
  * @param cur    chunk to use as start point
@@ -687,7 +684,7 @@ Chunk *chunk_search_next_cat(Chunk *pc, const E_Token cat);
 bool are_chunks_in_same_line(Chunk *start, Chunk *end);
 
 
-inline bool Chunk::IsTypeAndLevel(const E_Token cType, int cLevel) const
+inline bool Chunk::IsTypeAndLevel(const E_Token cType, const int cLevel) const
 {
    return(  (  cLevel < 0
             || level == static_cast<size_t>(cLevel))
@@ -840,7 +837,7 @@ static inline Chunk *chunk_skip_to_match(Chunk *cur, E_Scope scope = E_Scope::AL
          || chunk_is_token(cur, CT_ANGLE_OPEN)
          || chunk_is_token(cur, CT_SQUARE_OPEN)))
    {
-      return(chunk_get_next_type(cur, (E_Token)(cur->type + 1), cur->level, scope));
+      return(cur->GetNextType((E_Token)(cur->type + 1), cur->level, scope));
    }
    return(cur);
 }

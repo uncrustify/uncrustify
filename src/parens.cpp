@@ -61,9 +61,9 @@ void do_parens(void)
             continue;
          }
          // Grab the close sparen
-         Chunk *pclose = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level, E_Scope::PREPROC);
+         Chunk *pclose = pc->GetNextType(CT_SPAREN_CLOSE, pc->level, E_Scope::PREPROC);
 
-         if (pclose != nullptr)
+         if (pclose->IsNotNullChunk())
          {
             check_bool_parens(pc, pclose, 0);
             pc = pclose;
@@ -131,9 +131,9 @@ void do_parens_assign(void)                         // Issue #3316
                continue;
             }
             // Grab the semicolon
-            Chunk *semicolon = chunk_get_next_type(pc, CT_SEMICOLON, pc->level, E_Scope::PREPROC);
+            Chunk *semicolon = pc->GetNextType(CT_SEMICOLON, pc->level, E_Scope::PREPROC);
 
-            if (semicolon != nullptr)
+            if (semicolon->IsNotNullChunk())
             {
                check_bool_parens(pc, semicolon, 0);
                pc = semicolon;
@@ -202,9 +202,9 @@ void do_parens_return(void)                         // Issue #3316
                continue;
             }
             // Grab the semicolon
-            Chunk *semicolon = chunk_get_next_type(pc, CT_SEMICOLON, pc->level, E_Scope::PREPROC);
+            Chunk *semicolon = pc->GetNextType(CT_SEMICOLON, pc->level, E_Scope::PREPROC);
 
-            if (semicolon != nullptr)
+            if (semicolon->IsNotNullChunk())
             {
                check_bool_parens(pc, semicolon, 0);
                pc = semicolon;

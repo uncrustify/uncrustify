@@ -78,7 +78,7 @@ void align_preprocessor(void)
          }
          // Skip to the close parenthesis
          pc = pc->GetNextNc(); // point to open (
-         pc = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
+         pc = pc->GetNextType(CT_FPAREN_CLOSE, pc->level);
 
          LOG_FMT(LALPP, "%s(%d): jumped to (%s) on line %zu col %zu\n",
                  __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);

@@ -1315,9 +1315,9 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
 
    // Find the matching brace close
    Chunk *next     = br_open->GetNextNcNnl(E_Scope::PREPROC);
-   Chunk *br_close = chunk_get_next_type(br_open, CT_BRACE_CLOSE, br_open->level, E_Scope::PREPROC);
+   Chunk *br_close = br_open->GetNextType(CT_BRACE_CLOSE, br_open->level, E_Scope::PREPROC);
 
-   if (br_close == nullptr)
+   if (br_close->IsNullChunk())
    {
       LOG_FMT(LMCB, "%s(%d):  - no close\n", __func__, __LINE__);
       return(next);
@@ -1399,7 +1399,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    // look for the parent
    Chunk *swit = cas_->parent;
    // look for the opening brace of the switch
-   Chunk *open = chunk_get_next_type(swit, CT_BRACE_OPEN, swit->level);
+   Chunk *open = swit->GetNextType(CT_BRACE_OPEN, swit->level);
    // look for the closing brace of the switch
    Chunk *clos = chunk_skip_to_match(open);
 

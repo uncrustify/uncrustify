@@ -21,9 +21,9 @@ Chunk *skip_align(Chunk *start)
 
       if (chunk_is_token(pc, CT_PAREN_OPEN))
       {
-         pc = chunk_get_next_type(pc, CT_PAREN_CLOSE, pc->level);
+         pc = pc->GetNextType(CT_PAREN_CLOSE, pc->level);
 
-         if (pc != nullptr)
+         if (pc->IsNotNullChunk())
          {
             pc = pc->GetNextNcNnl();
          }
@@ -33,11 +33,6 @@ Chunk *skip_align(Chunk *start)
             pc = pc->GetNextNcNnl();
          }
       }
-   }
-
-   if (pc == nullptr)
-   {
-      return(Chunk::NullChunkPtr);
    }
    return(pc);
 }
@@ -217,7 +212,7 @@ Chunk *skip_attribute(Chunk *attr)
 
       if (chunk_is_token(pc, CT_FPAREN_OPEN))
       {
-         pc = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
+         pc = pc->GetNextType(CT_FPAREN_CLOSE, pc->level);
       }
    }
    return(pc);
