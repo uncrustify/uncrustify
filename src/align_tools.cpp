@@ -72,7 +72,7 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
       Chunk *next = pc->GetNext();
 
       if (  next->IsNullChunk()
-         || chunk_is_comment(next))
+         || next->IsComment())
       {
          // do nothing
       }

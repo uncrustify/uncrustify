@@ -314,7 +314,7 @@ void pawn_add_virtual_semicolons(void)
 
       while ((pc = pc->GetNext())->IsNotNullChunk())
       {
-         if (  !chunk_is_comment(pc)
+         if (  !pc->IsComment()
             && !chunk_is_newline(pc)
             && pc->type != CT_VBRACE_CLOSE
             && pc->type != CT_VBRACE_OPEN)

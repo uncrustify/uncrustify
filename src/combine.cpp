@@ -2335,7 +2335,7 @@ void mark_comments(void)
       Chunk *next   = cur->GetNextNvb();
       bool  next_nl = next->IsNullChunk() || chunk_is_newline(next);
 
-      if (chunk_is_comment(cur))
+      if (cur->IsComment())
       {
          if (  next_nl
             && prev_nl)

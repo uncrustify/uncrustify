@@ -431,7 +431,7 @@ static void delete_chunks_on_line_having_chunk(Chunk *chunk)
 
    while (  pc != nullptr
          && pc->IsNotNullChunk()
-         && !chunk_is_comment(pc))
+         && !pc->IsComment())
    {
       Chunk *next_pc = pc->GetNext();
       LOG_FMT(LCHUNK, "%s(%d): Removed '%s' on orig_line %zu\n",
@@ -690,7 +690,7 @@ void sort_imports(void)
             p_last = pc;
          }
       }
-      else if (!chunk_is_comment(pc))
+      else if (!pc->IsComment())
       {
          p_last = pc;
       }

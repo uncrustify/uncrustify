@@ -26,7 +26,7 @@ Chunk *chunk_get_next_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
    {
       tmp = tmp->GetNext(scope);
    } while (  tmp->IsNotNullChunk()
-           && (  chunk_is_comment(tmp)
+           && (  tmp->IsComment()
               || chunk_is_token(tmp, CT_NOEXCEPT)));
 
    return(tmp);
@@ -46,7 +46,7 @@ Chunk *chunk_get_prev_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
    {
       tmp = tmp->GetPrev(scope);
    } while (  tmp->IsNotNullChunk()
-           && (  chunk_is_comment(tmp)
+           && (  tmp->IsComment()
               || chunk_is_newline(tmp)
               || chunk_is_token(tmp, CT_NOEXCEPT)));
 

@@ -244,7 +244,7 @@ void brace_cleanup(void)
        * #define bodies get the full formatting treatment
        * Also need to pass in the initial '#' to close out any virtual braces.
        */
-      if (  !chunk_is_comment(pc)
+      if (  !pc->IsComment()
          && !chunk_is_newline(pc)
          && !chunk_is_token(pc, CT_ATTRIBUTE)
          && !chunk_is_token(pc, CT_IGNORED)            // Issue #2279
@@ -1365,10 +1365,10 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    {
       chunk.flags &= ~PCF_IN_PREPROC;
    }
-   bool ref_is_comment = chunk_is_comment(ref);      // Issue #3351
+   bool ref_is_comment = ref->IsComment();      // Issue #3351
 
    while (  chunk_is_newline(ref)
-         || chunk_is_comment(ref))
+         || ref->IsComment())
    {
       ref->level++;
       ref->brace_level++;
