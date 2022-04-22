@@ -202,7 +202,7 @@ void tokenize_trailing_return_types(void)
          }
          else if (chunk_is_token(tmp, CT_PAREN_CLOSE))
          {
-            open_paren = chunk_get_prev_type(tmp, CT_PAREN_OPEN, tmp->level);
+            open_paren = tmp->GetPrevType(CT_PAREN_OPEN, tmp->level);
             tmp        = open_paren->GetPrevNcNnl();
 
             if (chunk_is_token(tmp, CT_NOEXCEPT))

@@ -131,11 +131,11 @@ static bool paren_multiline_before_brace(Chunk *brace)
    const auto paren_t = CT_SPAREN_CLOSE;
 
    // find parenthesis pair of the if/for/while/...
-   auto paren_close = chunk_get_prev_type(brace, paren_t, brace->level, E_Scope::ALL);
+   auto paren_close = brace->GetPrevType(paren_t, brace->level, E_Scope::ALL);
    auto paren_open  = chunk_skip_to_match_rev(paren_close, E_Scope::ALL);
 
-   if (  paren_close == nullptr
-      || paren_open == nullptr
+   if (  paren_close->IsNullChunk()
+      || paren_open->IsNullChunk()
       || paren_close == brace
       || paren_open == paren_close)
    {
@@ -275,12 +275,7 @@ static void examine_braces(void)
 
    for (Chunk *pc = Chunk::GetTail(); pc->IsNotNullChunk();)
    {
-      Chunk *prev = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1);
-
-      if (prev == nullptr)
-      {
-         prev = Chunk::NullChunkPtr;
-      }
+      Chunk *prev = pc->GetPrevType(CT_BRACE_OPEN, -1);
 
       if (  chunk_is_token(pc, CT_BRACE_OPEN)
          && !pc->flags.test(PCF_IN_PREPROC)
@@ -823,7 +818,7 @@ static void convert_brace(Chunk *br)
       {
          // Issue #2219
          // look for opening brace
-         Chunk *brace = nullptr;
+         Chunk *brace = Chunk::NullChunkPtr;
 
          if (chunk_is_token(br, CT_VBRACE_OPEN))
          {
@@ -833,10 +828,9 @@ static void convert_brace(Chunk *br)
          {
             brace = chunk_skip_to_match_rev(br);
 
-            if (  brace == nullptr
-               || brace->IsNullChunk())
+            if (brace->IsNullChunk())
             {
-               brace = chunk_get_prev_type(br, CT_BRACE_OPEN, br->level);
+               brace = br->GetPrevType(CT_BRACE_OPEN, br->level);
             }
          }
 
@@ -1395,7 +1389,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    Chunk *pc   = cl_colon;
    Chunk *last = Chunk::NullChunkPtr;
    // look for the case token to the colon
-   Chunk *cas_ = chunk_get_prev_type(cl_colon, CT_CASE, cl_colon->level);
+   Chunk *cas_ = cl_colon->GetPrevType(CT_CASE, cl_colon->level);
    // look for the parent
    Chunk *swit = cas_->parent;
    // look for the opening brace of the switch

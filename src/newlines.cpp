@@ -2098,12 +2098,12 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
 
          if (!(chunk_is_opening_brace(prev) || chunk_is_closing_brace(prev)))
          {
-            prev = chunk_get_prev_type(pc, CT_SEMICOLON, pc->level);
+            prev = pc->GetPrevType(CT_SEMICOLON, pc->level);
          }
 
-         if (prev == nullptr)
+         if (prev->IsNullChunk())
          {
-            prev = chunk_get_prev_type(pc, CT_BRACE_OPEN, pc->level - 1);      // Issue #2692
+            prev = pc->GetPrevType(CT_BRACE_OPEN, pc->level - 1);      // Issue #2692
          }
 
          if (  chunk_is_token(prev, CT_STRING)
@@ -3470,14 +3470,12 @@ static bool one_liner_nl_ok(Chunk *pc)
 
    if (chunk_is_closing_brace(br_open))
    {
-      br_open = chunk_get_prev_type(br_open,
-                                    chunk_is_token(br_open, CT_BRACE_CLOSE) ? CT_BRACE_OPEN : CT_VBRACE_OPEN,
-                                    br_open->level, E_Scope::ALL);
+      br_open = br_open->GetPrevType(chunk_is_token(br_open, CT_BRACE_CLOSE) ? CT_BRACE_OPEN : CT_VBRACE_OPEN,
+                                     br_open->level, E_Scope::ALL);
    }
    else
    {
-      while (  br_open != nullptr
-            && br_open->IsNotNullChunk()
+      while (  br_open->IsNotNullChunk()
             && br_open->flags.test(PCF_ONE_LINER)
             && !chunk_is_opening_brace(br_open)
             && !chunk_is_closing_brace(br_open))
@@ -3487,7 +3485,7 @@ static bool one_liner_nl_ok(Chunk *pc)
    }
    pc = br_open;
 
-   if (  pc != nullptr
+   if (  pc->IsNotNullChunk()
       && pc->flags.test(PCF_ONE_LINER)
       && (  chunk_is_token(pc, CT_BRACE_OPEN)
          || chunk_is_token(pc, CT_BRACE_CLOSE)
@@ -4789,7 +4787,7 @@ void newlines_cleanup_braces(bool first)
             if (  next->IsNotNullChunk()
                && next->level == next->brace_level)
             {
-               Chunk *tmp = chunk_get_prev_type(pc, CT_ANGLE_OPEN, pc->level)->GetPrevNcNnlNi();   // Issue #2279
+               Chunk *tmp = pc->GetPrevType(CT_ANGLE_OPEN, pc->level)->GetPrevNcNnlNi();   // Issue #2279
 
                if (chunk_is_token(tmp, CT_TEMPLATE))
                {
@@ -6127,13 +6125,13 @@ void do_blank_lines(void)
             || get_chunk_parent_type(prev) == CT_STRUCT))
       {
          E_Token parent_type = get_chunk_parent_type(prev);
-         Chunk   *start      = chunk_get_prev_type(prev, parent_type, prev->level);
+         Chunk   *start      = prev->GetPrevType(parent_type, prev->level);
          Chunk   *tmp        = start;
 
          // Is this a class/struct template?
          if (get_chunk_parent_type(tmp) == CT_TEMPLATE)
          {
-            tmp = chunk_get_prev_type(tmp, CT_TEMPLATE, prev->level);
+            tmp = tmp->GetPrevType(CT_TEMPLATE, prev->level);
             tmp = tmp->GetPrevNc();
          }
          else
@@ -6179,7 +6177,7 @@ void do_blank_lines(void)
          && get_chunk_parent_type(prev) == CT_NAMESPACE)
       {
          // Control blanks before a namespace
-         Chunk *tmp = chunk_get_prev_type(prev, CT_NAMESPACE, prev->level);
+         Chunk *tmp = prev->GetPrevType(CT_NAMESPACE, prev->level);
          tmp = tmp->GetPrevNc();
 
          while (  chunk_is_token(tmp, CT_NEWLINE)

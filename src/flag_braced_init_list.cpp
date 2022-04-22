@@ -20,9 +20,9 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
    if (chunk_is_token(pc, CT_COLON))
    {
       // check if we have a case before
-      Chunk *switch_before = chunk_get_prev_type(pc, CT_CASE, pc->level);
+      Chunk *switch_before = pc->GetPrevType(CT_CASE, pc->level);
 
-      if (switch_before != nullptr)
+      if (switch_before->IsNotNullChunk())
       {
          LOG_FMT(LFCNR, "%s(%d): switch_before->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
                  __func__, __LINE__, switch_before->orig_line, switch_before->orig_col,

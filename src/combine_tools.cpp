@@ -248,17 +248,17 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       LOG_FMT(LFPARAM, "%s(%d): !MVP!\n",
               __func__, __LINE__);
       // Oh, joy, we are in Most Vexing Parse territory
-      auto const brace =
-         chunk_get_prev_type(start, CT_BRACE_OPEN, start->brace_level - 1);
+      Chunk *brace =
+         start->GetPrevType(CT_BRACE_OPEN, start->brace_level - 1);
 
-      if (brace != nullptr)
+      if (brace->IsNotNullChunk())
       {
          LOG_FMT(LFPARAM, "%s(%d): (matching %s brace at orig_line %zu, orig_col is %zu)",
                  __func__, __LINE__,
                  get_token_name(get_chunk_parent_type(brace)), brace->orig_line, brace->orig_col);
       }
 
-      if (  brace != nullptr
+      if (  brace->IsNotNullChunk()
          && (  get_chunk_parent_type(brace) == CT_CLASS
             || get_chunk_parent_type(brace) == CT_STRUCT))
       {

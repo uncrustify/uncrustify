@@ -703,19 +703,9 @@ Chunk *Chunk::GetNextType(const E_Token cType, const int cLevel, const E_Scope s
 }
 
 
-Chunk *chunk_get_prev_type(Chunk *cur, E_Token type, int level, E_Scope scope)
+Chunk *Chunk::GetPrevType(const E_Token cType, const int cLevel, const E_Scope scope) const
 {
-   if (cur == nullptr)
-   {
-      return(nullptr);
-   }
-   Chunk *ret = cur->SearchTypeLevel(type, scope, E_Direction::BACKWARD, level);
-
-   if (ret->IsNullChunk())
-   {
-      return(nullptr);
-   }
-   return(ret);
+   return(SearchTypeLevel(cType, scope, E_Direction::BACKWARD, cLevel));
 }
 
 

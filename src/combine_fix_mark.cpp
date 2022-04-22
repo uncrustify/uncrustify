@@ -1182,9 +1182,9 @@ void mark_function(Chunk *pc)
       LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
       log_pcf_flags(LGUY, pc->flags);
-      Chunk *pc_op = chunk_get_prev_type(pc, CT_OPERATOR, pc->level);
+      Chunk *pc_op = pc->GetPrevType(CT_OPERATOR, pc->level);
 
-      if (  pc_op != nullptr
+      if (  pc_op->IsNotNullChunk()
          && pc_op->flags.test(PCF_EXPR_START))
       {
          LOG_FMT(LFCN, "%s(%d): (4) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
@@ -1987,9 +1987,9 @@ void mark_function(Chunk *pc)
       }
       else if (pc->brace_level > 0)
       {
-         Chunk *br_open = chunk_get_prev_type(pc, CT_BRACE_OPEN, pc->brace_level - 1);
+         Chunk *br_open = pc->GetPrevType(CT_BRACE_OPEN, pc->brace_level - 1);
 
-         if (  br_open != nullptr
+         if (  br_open->IsNotNullChunk()
             && get_chunk_parent_type(br_open) != CT_EXTERN
             && get_chunk_parent_type(br_open) != CT_NAMESPACE)
          {
@@ -1999,9 +1999,9 @@ void mark_function(Chunk *pc)
             if (  !chunk_is_str(prev, "*", 1)
                && !chunk_is_str(prev, "&", 1))
             {
-               Chunk *p_op = chunk_get_prev_type(pc, CT_BRACE_OPEN, pc->brace_level - 1);
+               Chunk *p_op = pc->GetPrevType(CT_BRACE_OPEN, pc->brace_level - 1);
 
-               if (  p_op != nullptr
+               if (  p_op->IsNotNullChunk()
                   && get_chunk_parent_type(p_op) != CT_CLASS
                   && get_chunk_parent_type(p_op) != CT_STRUCT
                   && get_chunk_parent_type(p_op) != CT_NAMESPACE)

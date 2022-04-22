@@ -2995,10 +2995,10 @@ static bool kw_fcn_fclass(Chunk *cmt, unc_text &out_txt)
    if (fcn->flags.test(PCF_IN_CLASS))
    {
       // if inside a class, we need to find to the class name
-      Chunk *tmp = chunk_get_prev_type(fcn, CT_BRACE_OPEN, fcn->level - 1);
-      tmp = chunk_get_prev_type(tmp, CT_CLASS, tmp->level);
+      Chunk *tmp = fcn->GetPrevType(CT_BRACE_OPEN, fcn->level - 1);
+      tmp = tmp->GetPrevType(CT_CLASS, tmp->level);
 
-      if (tmp == nullptr)
+      if (tmp->IsNullChunk())
       {
          tmp = Chunk::NullChunkPtr;
       }

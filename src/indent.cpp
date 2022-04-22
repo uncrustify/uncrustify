@@ -531,13 +531,12 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    }
    else
    {
-      caret_tmp = chunk_get_prev_type(tmp, CT_OC_BLOCK_CARET, -1);
+      caret_tmp = tmp->GetPrevType(CT_OC_BLOCK_CARET, -1);
       tmp       = caret_tmp;
    }
 
    // If we still cannot find caret then return first chunk on the line
-   if (  tmp == nullptr
-      || tmp->IsNullChunk()
+   if (  tmp->IsNullChunk()
       || tmp->type != CT_OC_BLOCK_CARET)
    {
       return(candidate_chunk_first_on_line(pc));
@@ -4069,9 +4068,9 @@ void indent_text(void)
                     || chunk_is_token(pc, CT_PAREN_OPEN)))
          {
             log_rule_B("indent_ternary_operator");
-            Chunk *tmp = chunk_get_prev_type(prev, CT_QUESTION, -1);
+            Chunk *tmp = prev->GetPrevType(CT_QUESTION, -1);
 
-            if (tmp != nullptr)
+            if (tmp->IsNotNullChunk())
             {
                tmp = tmp->GetNextNcNnl();
 
@@ -4087,9 +4086,9 @@ void indent_text(void)
                  && chunk_is_token(pc, CT_COND_COLON))
          {
             log_rule_B("indent_ternary_operator");
-            Chunk *tmp = chunk_get_prev_type(pc, CT_QUESTION, -1);
+            Chunk *tmp = pc->GetPrevType(CT_QUESTION, -1);
 
-            if (tmp != nullptr)
+            if (tmp->IsNotNullChunk())
             {
                LOG_FMT(LINDENT, "%s: %zu] ternarydefcol => %zu [%s]\n",
                        __func__, pc->orig_line, tmp->column, pc->Text());
@@ -4156,9 +4155,9 @@ void indent_text(void)
                      && get_type_of_the_parent(pc) == CT_SWITCH)
                   {
                      // look for a case before Issue #2735
-                     Chunk *whereIsCase = chunk_get_prev_type(pc, CT_CASE, pc->level);
+                     Chunk *whereIsCase = pc->GetPrevType(CT_CASE, pc->level);
 
-                     if (whereIsCase != nullptr)
+                     if (whereIsCase->IsNotNullChunk())
                      {
                         LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
                                 __func__, __LINE__, whereIsCase->orig_line, whereIsCase->orig_col, whereIsCase->Text());

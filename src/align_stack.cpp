@@ -418,9 +418,9 @@ void AlignStack::Flush()
    {
       // check if we have *one* typedef in the line
       Chunk *pc   = m_aligned.Get(0)->m_pc;
-      Chunk *temp = chunk_get_prev_type(pc, CT_TYPEDEF, pc->level);
+      Chunk *temp = pc->GetPrevType(CT_TYPEDEF, pc->level);
 
-      if (temp != nullptr)
+      if (temp->IsNotNullChunk())
       {
          if (pc->orig_line == temp->orig_line)
          {

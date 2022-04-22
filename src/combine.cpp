@@ -1650,9 +1650,9 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             {
                // look for the opening parenthesis
                // Issue 1403
-               Chunk *tmp = chunk_get_prev_type(pc, CT_FPAREN_OPEN, pc->level - 1);
+               Chunk *tmp = pc->GetPrevType(CT_FPAREN_OPEN, pc->level - 1);
 
-               if (  tmp != nullptr
+               if (  tmp->IsNotNullChunk()
                   && get_chunk_parent_type(tmp) != CT_FUNC_CTOR_VAR)
                {
                   set_chunk_type(pc->next, CT_PTR_TYPE);

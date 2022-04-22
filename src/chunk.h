@@ -275,6 +275,16 @@ public:
    Chunk *GetNextType(const E_Token cType, const int cLevel, const E_Scope scope = E_Scope::ALL) const;
 
 
+   /**
+    * @brief returns the prev chunk of the given type at the level.
+    * @param type  the type to look for
+    * @param level -1 or ANY_LEVEL (any level) or the level to match
+    * @param scope code region to search in
+    * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetPrevType(const E_Token type, int level, E_Scope scope = E_Scope::ALL) const;
+
+
    // --------- Search functions
 
    /**
@@ -569,19 +579,6 @@ bool chunk_is_last_on_line(Chunk *pc);
 
 
 /**
- * Grabs the prev chunk of the given type at the level.
- *
- * @param cur    chunk to use as start point
- * @param type   The type to look for
- * @param level  -1 or ANY_LEVEL (any level) or the level to match
- * @param scope  code region to search in
- *
- * @return nullptr or the match
- */
-Chunk *chunk_get_prev_type(Chunk *cur, E_Token type, int level, E_Scope scope = E_Scope::ALL);
-
-
-/**
  * @brief find a chunk that holds a given string
  *
  * Traverses a chunk list in forward direction until a chunk of a given category is found.
@@ -855,7 +852,7 @@ static inline Chunk *chunk_skip_to_match_rev(Chunk *cur, E_Scope scope = E_Scope
          || chunk_is_token(cur, CT_ANGLE_CLOSE)
          || chunk_is_token(cur, CT_SQUARE_CLOSE)))
    {
-      return(chunk_get_prev_type(cur, (E_Token)(cur->type - 1), cur->level, scope));
+      return(cur->GetPrevType((E_Token)(cur->type - 1), cur->level, scope));
    }
    return(cur);
 }
