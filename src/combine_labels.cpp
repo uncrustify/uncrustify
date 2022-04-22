@@ -181,9 +181,9 @@ void combine_labels(void)
             if (chunk_is_token(tmp, CT_BRACE_OPEN))
             {
                set_chunk_parent(tmp, CT_CASE);
-               tmp = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
+               tmp = tmp->GetNextType(CT_BRACE_CLOSE, tmp->level);
 
-               if (tmp != nullptr)
+               if (tmp->IsNotNullChunk())
                {
                   set_chunk_parent(tmp, CT_CASE);
                }

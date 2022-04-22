@@ -107,7 +107,7 @@ void remove_extra_semicolons(void)
 static void check_unknown_brace_close(Chunk *semi, Chunk *brace_close)
 {
    LOG_FUNC_ENTRY();
-   Chunk *pc = chunk_get_prev_type(brace_close, CT_BRACE_OPEN, brace_close->level);
+   Chunk *pc = brace_close->GetPrevType(CT_BRACE_OPEN, brace_close->level);
 
    pc = pc->GetPrevNcNnl();
 

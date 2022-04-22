@@ -255,12 +255,7 @@ void align_params(Chunk *start, deque<Chunk *> &chunks)
    chunks.clear();
 
    bool  hit_comma = true;
-   Chunk *pc       = chunk_get_next_type(start, CT_FPAREN_OPEN, start->level);
-
-   if (pc == nullptr)
-   {
-      pc = Chunk::NullChunkPtr;
-   }
+   Chunk *pc       = start->GetNextType(CT_FPAREN_OPEN, start->level);
 
    while ((pc = pc->GetNext())->IsNotNullChunk())
    {

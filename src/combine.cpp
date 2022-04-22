@@ -953,12 +953,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
          if (!is_byref_array)
          {
-            tmp = chunk_get_next_type(next, CT_PAREN_CLOSE, next->level);
-
-            if (tmp == nullptr)
-            {
-               tmp = Chunk::NullChunkPtr;
-            }
+            tmp = next->GetNextType(CT_PAREN_CLOSE, next->level);
 
             if (tmp->IsNotNullChunk())
             {
@@ -1655,9 +1650,9 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             {
                // look for the opening parenthesis
                // Issue 1403
-               Chunk *tmp = chunk_get_prev_type(pc, CT_FPAREN_OPEN, pc->level - 1);
+               Chunk *tmp = pc->GetPrevType(CT_FPAREN_OPEN, pc->level - 1);
 
-               if (  tmp != nullptr
+               if (  tmp->IsNotNullChunk()
                   && get_chunk_parent_type(tmp) != CT_FUNC_CTOR_VAR)
                {
                   set_chunk_type(pc->next, CT_PTR_TYPE);
@@ -1788,9 +1783,9 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          set_chunk_type(pc, CT_BYREF);
       }
       // look next, is there a "assign" before the ";"
-      Chunk *semi = chunk_get_next_type(pc, CT_SEMICOLON, pc->level);                // Issue #2688
+      Chunk *semi = pc->GetNextType(CT_SEMICOLON, pc->level);                // Issue #2688
 
-      if (semi != nullptr)
+      if (semi->IsNotNullChunk())
       {
          LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
                  __func__, __LINE__, semi->orig_line, semi->orig_col,
@@ -2071,7 +2066,7 @@ void fix_symbols(void)
       {
          LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', look for CT_BRACE_OPEN\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-         pc = chunk_get_next_type(pc, CT_BRACE_CLOSE, pc->level);
+         pc = pc->GetNextType(CT_BRACE_CLOSE, pc->level);
       }
       /*
        * A variable definition is possible after at the start of a statement
@@ -2112,12 +2107,11 @@ static void process_returns(void)
 
    pc = Chunk::GetHead();
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       if (chunk_is_not_token(pc, CT_RETURN))
       {
-         pc = chunk_get_next_type(pc, CT_RETURN, -1);
+         pc = pc->GetNextType(CT_RETURN, -1);
          continue;
       }
       pc = process_return(pc);
@@ -2141,10 +2135,6 @@ static Chunk *process_return(Chunk *pc)
       || chunk_is_semicolon(next)
       || chunk_is_token(next, CT_NEWLINE))
    {
-      if (next->IsNullChunk())
-      {
-         return(nullptr);
-      }
       return(next);
    }
    log_rule_B("nl_return_expr");
@@ -2158,17 +2148,17 @@ static Chunk *process_return(Chunk *pc)
    if (chunk_is_token(next, CT_PAREN_OPEN))
    {
       // See if the return is fully paren'd
-      cpar = chunk_get_next_type(next, CT_PAREN_CLOSE, next->level);
+      cpar = next->GetNextType(CT_PAREN_CLOSE, next->level);
 
-      if (cpar == nullptr)
+      if (cpar->IsNullChunk())
       {
-         return(nullptr);
+         return(Chunk::NullChunkPtr);
       }
       semi = cpar->PpaGetNextNcNnl();
 
       if (semi->IsNullChunk())
       {
-         return(nullptr);
+         return(Chunk::NullChunkPtr);
       }
 
       if (  chunk_is_token(semi, CT_NEWLINE)
@@ -2218,11 +2208,6 @@ static Chunk *process_return(Chunk *pc)
             // mark & keep them
             set_chunk_parent(next, CT_RETURN);
             set_chunk_parent(cpar, CT_RETURN);
-         }
-
-         if (semi->IsNullChunk())
-         {
-            return(nullptr);
          }
          return(semi);
       }
@@ -2426,9 +2411,9 @@ static void handle_cpp_template(Chunk *pc)
          set_chunk_parent(tmp, CT_TEMPLATE);
 
          // REVISIT: This may be a bit risky - might need to track the { };
-         tmp = chunk_get_next_type(tmp, CT_SEMICOLON, tmp->level);
+         tmp = tmp->GetNextType(CT_SEMICOLON, tmp->level);
 
-         if (tmp != nullptr)
+         if (tmp->IsNotNullChunk())
          {
             set_chunk_parent(tmp, CT_TEMPLATE);
          }
@@ -2441,7 +2426,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *ret = nullptr;
+   Chunk *ret = Chunk::NullChunkPtr;
 
    // abort if type of the previous token is not contained in this whitelist
    Chunk *prev = sq_o->GetPrevNcNnlNi();   // Issue #2279
@@ -2492,7 +2477,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
       LOG_FMT(LFCNR, "%s(%d): return\n", __func__, __LINE__);
       return;
    }
-   Chunk *pa_c = nullptr;
+   Chunk *pa_c = Chunk::NullChunkPtr;
 
    // lambda-declarator '( params )' is optional
    if (chunk_is_token(pa_o, CT_PAREN_OPEN))
@@ -2500,14 +2485,14 @@ static void handle_cpp_lambda(Chunk *sq_o)
       // and now find the ')'
       pa_c = chunk_skip_to_match(pa_o);
 
-      if (pa_c == nullptr)
+      if (pa_c->IsNullChunk())
       {
          LOG_FMT(LFCNR, "%s(%d): return\n", __func__, __LINE__);
          return;
       }
    }
    // Check for 'mutable' keyword: '[]() mutable {}' or []() mutable -> ret {}
-   Chunk *br_o = (pa_c != nullptr && pa_c->IsNotNullChunk()) ? pa_c->GetNextNcNnl() : pa_o;
+   Chunk *br_o = pa_c->IsNotNullChunk() ? pa_c->GetNextNcNnl() : pa_o;
 
    if (chunk_is_str(br_o, "mutable", 7))
    {
@@ -2520,7 +2505,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
    {
       ret = br_o;
       // REVISIT: really should check the stuff we are skipping
-      br_o = chunk_get_next_type(br_o, CT_BRACE_OPEN, br_o->level);
+      br_o = br_o->GetNextType(CT_BRACE_OPEN, br_o->level);
    }
 
    // skip possible CT_NOEXCEPT
@@ -2528,11 +2513,10 @@ static void handle_cpp_lambda(Chunk *sq_o)
    {
       ret = br_o;
       // REVISIT: really should check the stuff we are skipping
-      br_o = chunk_get_next_type(br_o, CT_BRACE_OPEN, br_o->level);
+      br_o = br_o->GetNextType(CT_BRACE_OPEN, br_o->level);
    }
 
-   if (  br_o == nullptr
-      && br_o->IsNullChunk())
+   if (br_o->IsNullChunk())
    {
       LOG_FMT(LFCNR, "%s(%d): br_o is null. Return\n", __func__, __LINE__);
       return;
@@ -2549,7 +2533,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
    // and now find the '}'
    Chunk *br_c = chunk_skip_to_match(br_o);
 
-   if (br_c == nullptr)
+   if (br_c->IsNullChunk())
    {
       LOG_FMT(LFCNR, "%s(%d): return\n", __func__, __LINE__);
       return;
@@ -2583,7 +2567,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
    set_chunk_parent(sq_o, CT_CPP_LAMBDA);
    set_chunk_parent(sq_c, CT_CPP_LAMBDA);
 
-   if (pa_c != nullptr)
+   if (pa_c->IsNotNullChunk())
    {
       set_chunk_type(pa_o, CT_LPAREN_OPEN);                    // Issue #3054
       set_chunk_parent(pa_o, CT_CPP_LAMBDA);
@@ -2597,7 +2581,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
    set_chunk_parent(br_o, CT_CPP_LAMBDA);
    set_chunk_parent(br_c, CT_CPP_LAMBDA);
 
-   if (ret != nullptr)
+   if (ret->IsNotNullChunk())
    {
       set_chunk_type(ret, CT_CPP_LAMBDA_RET);
       ret = ret->GetNextNcNnl();
@@ -2609,7 +2593,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
       }
    }
 
-   if (pa_c != nullptr)
+   if (pa_c->IsNotNullChunk())
    {
       fix_fcn_def_params(pa_o);
    }
@@ -2620,7 +2604,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
    {
       Chunk *call_pa_c = chunk_skip_to_match(call_pa_o);
 
-      if (call_pa_c != nullptr)
+      if (call_pa_c->IsNotNullChunk())
       {
          set_chunk_type(call_pa_o, CT_FPAREN_OPEN);
          set_chunk_parent(call_pa_o, CT_FUNC_CALL);
@@ -2706,9 +2690,9 @@ Chunk *skip_template_next(Chunk *ang_open)
 
    if (chunk_is_token(ang_open, CT_ANGLE_OPEN))
    {
-      Chunk *pc = chunk_get_next_type(ang_open, CT_ANGLE_CLOSE, ang_open->level);
+      Chunk *pc = ang_open->GetNextType(CT_ANGLE_CLOSE, ang_open->level);
 
-      if (pc == nullptr)
+      if (pc->IsNullChunk())
       {
          return(Chunk::NullChunkPtr);
       }
@@ -2829,9 +2813,9 @@ static void handle_oc_class(Chunk *pc)
       {
          as = angle_state_e::CLOSE;
          set_chunk_parent(tmp, CT_OC_CLASS);
-         tmp = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
+         tmp = tmp->GetNextType(CT_BRACE_CLOSE, tmp->level);
 
-         if (  tmp != nullptr
+         if (  tmp->IsNotNullChunk()
             && get_chunk_parent_type(tmp) != CT_ASSIGN)
          {
             set_chunk_parent(tmp, CT_OC_CLASS);
@@ -2878,9 +2862,9 @@ static void handle_oc_class(Chunk *pc)
 
    if (chunk_is_token(tmp, CT_BRACE_OPEN))
    {
-      tmp = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
+      tmp = tmp->GetNextType(CT_BRACE_CLOSE, tmp->level);
 
-      if (tmp != nullptr)
+      if (tmp->IsNotNullChunk())
       {
          set_chunk_parent(tmp, CT_OC_CLASS);
       }

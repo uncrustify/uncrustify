@@ -267,10 +267,10 @@ void brace_cleanup(void)
 //      // look for template
 //      if (chunk_is_token(pc, CT_TEMPLATE))                 // Issue #3309
 //      {
-//         Chunk *template_end = chunk_get_next_type(pc, CT_SEMICOLON, pc->level);
+//         Chunk *template_end = pc->GetNextType(CT_SEMICOLON, pc->level);
 //
 //         // look for a parameter pack
-//         while (pc != nullptr)
+//         while (pc->IsNotNullChunk())
 //         {
 //            LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
 //                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
@@ -280,8 +280,7 @@ void brace_cleanup(void)
 //               Chunk *parameter_pack = pc;
 //
 //               // look for a token with the same text
-//               while (  pc != ullptr)
-//			               && pc->IsNotNullChunk())
+//               while (pc->IsNotNullChunk())
 //               {
 //                  LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
 //                          __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());

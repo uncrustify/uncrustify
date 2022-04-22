@@ -52,12 +52,11 @@ void align_backslash_newline(void)
    LOG_FUNC_ENTRY();
    Chunk *pc = Chunk::GetHead();
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       if (chunk_is_not_token(pc, CT_NL_CONT))
       {
-         pc = chunk_get_next_type(pc, CT_NL_CONT, -1);
+         pc = pc->GetNextType(CT_NL_CONT, -1);
          continue;
       }
       pc = align_nl_cont(pc);

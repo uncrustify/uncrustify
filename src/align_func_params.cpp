@@ -76,9 +76,9 @@ Chunk *align_func_param(Chunk *start)
 
          if (chunk_is_token(after, CT_PAREN_CLOSE))
          {
-            Chunk *before = chunk_get_prev_type(after, CT_PAREN_OPEN, after->level);
+            Chunk *before = after->GetPrevType(CT_PAREN_OPEN, after->level);
 
-            if (before != nullptr)
+            if (before->IsNotNullChunk())
             {
                // these are 'protect parenthesis'
                // change the types and the level

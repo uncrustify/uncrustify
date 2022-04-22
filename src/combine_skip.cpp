@@ -21,9 +21,9 @@ Chunk *skip_align(Chunk *start)
 
       if (chunk_is_token(pc, CT_PAREN_OPEN))
       {
-         pc = chunk_get_next_type(pc, CT_PAREN_CLOSE, pc->level);
+         pc = pc->GetNextType(CT_PAREN_CLOSE, pc->level);
 
-         if (pc != nullptr)
+         if (pc->IsNotNullChunk())
          {
             pc = pc->GetNextNcNnl();
          }
@@ -33,11 +33,6 @@ Chunk *skip_align(Chunk *start)
             pc = pc->GetNextNcNnl();
          }
       }
-   }
-
-   if (pc == nullptr)
-   {
-      return(Chunk::NullChunkPtr);
    }
    return(pc);
 }
@@ -184,7 +179,7 @@ Chunk *skip_template_prev(Chunk *ang_close)
 {
    if (chunk_is_token(ang_close, CT_ANGLE_CLOSE))
    {
-      Chunk *pc = chunk_get_prev_type(ang_close, CT_ANGLE_OPEN, ang_close->level);
+      Chunk *pc = ang_close->GetPrevType(CT_ANGLE_OPEN, ang_close->level);
       return(pc->GetPrevNcNnlNi());   // Issue #2279
    }
    return(ang_close);
@@ -217,7 +212,7 @@ Chunk *skip_attribute(Chunk *attr)
 
       if (chunk_is_token(pc, CT_FPAREN_OPEN))
       {
-         pc = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
+         pc = pc->GetNextType(CT_FPAREN_CLOSE, pc->level);
       }
    }
    return(pc);
@@ -251,7 +246,7 @@ Chunk *skip_attribute_prev(Chunk *fp_close)
       if (  chunk_is_token(pc, CT_FPAREN_CLOSE)
          && get_chunk_parent_type(pc) == CT_ATTRIBUTE)
       {
-         pc = chunk_get_prev_type(pc, CT_ATTRIBUTE, pc->level);
+         pc = pc->GetPrevType(CT_ATTRIBUTE, pc->level);
       }
       else if (chunk_is_not_token(pc, CT_ATTRIBUTE))
       {

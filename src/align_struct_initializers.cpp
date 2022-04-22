@@ -18,8 +18,7 @@ void align_struct_initializers(void)
    LOG_FUNC_ENTRY();
    Chunk *pc = Chunk::GetHead();
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       Chunk *prev = pc->GetPrevNcNnl();
 
@@ -30,6 +29,6 @@ void align_struct_initializers(void)
       {
          align_init_brace(pc);
       }
-      pc = chunk_get_next_type(pc, CT_BRACE_OPEN, -1);
+      pc = pc->GetNextType(CT_BRACE_OPEN, -1);
    }
 } // align_struct_initializers

@@ -1965,7 +1965,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       // check for initializers and add space or ignore based on the option.
       if (get_chunk_parent_type(first) == CT_FUNC_CALL)
       {
-         Chunk *tmp = chunk_get_prev_type(first, get_chunk_parent_type(first), first->level);
+         Chunk *tmp = first->GetPrevType(get_chunk_parent_type(first), first->level);
          tmp = tmp->GetPrevNcNnl();
 
          if (chunk_is_token(tmp, CT_NEW))
@@ -2400,13 +2400,9 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    if (chunk_is_token(first, CT_CLASS_COLON))
    {
-      //Chunk *a = chunk_get_prev_type(first, CT_OC_INTF, first->level, E_Scope::ALL);
-      //Chunk *b = chunk_get_prev_type(first, CT_OC_IMPL, first->level, E_Scope::ALL);
-      //bool B_a = a != nullptr;
-      //bool B_b = b != nullptr;
       if (  get_chunk_parent_type(first) == CT_OC_CLASS
-         && (  !chunk_get_prev_type(first, CT_OC_INTF, first->level, E_Scope::ALL)
-            && !chunk_get_prev_type(first, CT_OC_IMPL, first->level, E_Scope::ALL)))
+         && (  first->GetPrevType(CT_OC_INTF, first->level, E_Scope::ALL)->IsNullChunk()
+            && first->GetPrevType(CT_OC_IMPL, first->level, E_Scope::ALL)->IsNullChunk()))
       {
          if (options::sp_after_oc_colon() != IARF_IGNORE)
          {
@@ -2430,11 +2426,11 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    {
       if (  language_is_set(LANG_OC)
          && get_chunk_parent_type(second) == CT_OC_CLASS
-         && (  !chunk_get_prev_type(second, CT_OC_INTF, second->level, E_Scope::ALL)
-            && !chunk_get_prev_type(second, CT_OC_IMPL, second->level, E_Scope::ALL)))
+         && (  second->GetPrevType(CT_OC_INTF, second->level, E_Scope::ALL)->IsNullChunk()
+            && second->GetPrevType(CT_OC_IMPL, second->level, E_Scope::ALL)->IsNullChunk()))
       {
          if (  get_chunk_parent_type(second) == CT_OC_CLASS
-            && !chunk_get_prev_type(second, CT_OC_INTF, second->level, E_Scope::ALL))
+            && second->GetPrevType(CT_OC_INTF, second->level, E_Scope::ALL)->IsNullChunk())
          {
             if (options::sp_before_oc_colon() != IARF_IGNORE)
             {
@@ -3697,7 +3693,7 @@ void space_text_balance_nested_parens(void)
          space_add_after(first, 1);
 
          // test after the closing parens   Issue #1703
-         Chunk *closing = chunk_get_next_type(first, (E_Token)(first->type + 1), first->level);
+         Chunk *closing = first->GetNextType((E_Token)(first->type + 1), first->level);
 
          if (closing->orig_col == closing->prev->orig_col_end)
          {
@@ -3711,9 +3707,9 @@ void space_text_balance_nested_parens(void)
          space_add_after(first, 1);
 
          // test after the opening parens   Issue #1703
-         Chunk *opening = chunk_get_prev_type(next, (E_Token)(next->type - 1), next->level);
+         Chunk *opening = next->GetPrevType((E_Token)(next->type - 1), next->level);
 
-         if (opening->orig_col_end == opening->next->orig_col)
+         if (opening->orig_col_end == opening->GetNext()->orig_col)
          {
             space_add_after(opening, 1);
          }

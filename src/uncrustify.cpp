@@ -1759,8 +1759,7 @@ static void add_func_header(E_Token type, file_mem &fm)
        */
       ref = pc;
 
-      while (  ref != nullptr
-            && (ref = ref->GetPrev()) != nullptr
+      while (  (ref = ref->GetPrev())
             && ref->IsNotNullChunk())
       {
          // Bail if we change level or find an access specifier colon
@@ -1774,16 +1773,16 @@ static void add_func_header(E_Token type, file_mem &fm)
          // If we hit an angle close, back up to the angle open
          if (chunk_is_token(ref, CT_ANGLE_CLOSE))
          {
-            ref = chunk_get_prev_type(ref, CT_ANGLE_OPEN, ref->level, E_Scope::PREPROC);
+            ref = ref->GetPrevType(CT_ANGLE_OPEN, ref->level, E_Scope::PREPROC);
             continue;
          }
 
          // Bail if we hit a preprocessor and cmt_insert_before_preproc is false
          if (ref->flags.test(PCF_IN_PREPROC))
          {
-            tmp = chunk_get_prev_type(ref, CT_PREPROC, ref->level);
+            tmp = ref->GetPrevType(CT_PREPROC, ref->level);
 
-            if (  tmp != nullptr
+            if (  tmp->IsNotNullChunk()
                && get_chunk_parent_type(tmp) == CT_PP_IF)
             {
                tmp = tmp->GetPrevNnl();
@@ -1815,8 +1814,7 @@ static void add_func_header(E_Token type, file_mem &fm)
          }
       }
 
-      if (  (  ref == nullptr
-            || ref->IsNullChunk())
+      if (  ref->IsNullChunk()
          && !chunk_is_comment(Chunk::GetHead())
          && get_chunk_parent_type(Chunk::GetHead()) == type)
       {
@@ -1877,16 +1875,16 @@ static void add_msg_header(E_Token type, file_mem &fm)
          // If we hit a parentheses around return type, back up to the open parentheses
          if (chunk_is_token(ref, CT_PAREN_CLOSE))
          {
-            ref = chunk_get_prev_type(ref, CT_PAREN_OPEN, ref->level, E_Scope::PREPROC);
+            ref = ref->GetPrevType(CT_PAREN_OPEN, ref->level, E_Scope::PREPROC);
             continue;
          }
 
          // Bail if we hit a preprocessor and cmt_insert_before_preproc is false
          if (ref->flags.test(PCF_IN_PREPROC))
          {
-            tmp = chunk_get_prev_type(ref, CT_PREPROC, ref->level);
+            tmp = ref->GetPrevType(CT_PREPROC, ref->level);
 
-            if (  tmp != nullptr
+            if (  tmp->IsNotNullChunk()
                && get_chunk_parent_type(tmp) == CT_PP_IF)
             {
                tmp = tmp->GetPrevNnl();
@@ -1907,7 +1905,7 @@ static void add_msg_header(E_Token type, file_mem &fm)
          {
             ref = ref->GetPrev();
 
-            if (ref != nullptr)
+            if (ref->IsNotNullChunk())
             {
                // Ignore 'right' comments
                if (  chunk_is_newline(ref)

@@ -593,9 +593,9 @@ void fix_typedef(Chunk *start)
    if (chunk_is_token(next, CT_BRACE_OPEN))
    {
       // Skip to the closing brace
-      Chunk *br_c = chunk_get_next_type(next, CT_BRACE_CLOSE, next->level, E_Scope::PREPROC);
+      Chunk *br_c = next->GetNextType(CT_BRACE_CLOSE, next->level, E_Scope::PREPROC);
 
-      if (br_c != nullptr)
+      if (br_c->IsNotNullChunk())
       {
          const E_Token tag = after->type;
          set_chunk_parent(next, tag);
@@ -909,7 +909,7 @@ void mark_cpp_lambda(Chunk *square_open)
    if (  chunk_is_token(square_open, CT_SQUARE_OPEN)
       && get_chunk_parent_type(square_open) == CT_CPP_LAMBDA)
    {
-      auto *brace_close = chunk_get_next_type(square_open, CT_BRACE_CLOSE, square_open->level);
+      auto *brace_close = square_open->GetNextType(CT_BRACE_CLOSE, square_open->level);
 
       if (get_chunk_parent_type(brace_close) == CT_CPP_LAMBDA)
       {
@@ -1110,7 +1110,7 @@ void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type)
          //template angles should keep parent type CT_TEMPLATE
          if (chunk_is_token(pc, CT_ANGLE_OPEN))
          {
-            pc = chunk_get_next_type(pc, CT_ANGLE_CLOSE, pc->level);
+            pc = pc->GetNextType(CT_ANGLE_CLOSE, pc->level);
 
             if (pc == start)
             {
@@ -1182,9 +1182,9 @@ void mark_function(Chunk *pc)
       LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
       log_pcf_flags(LGUY, pc->flags);
-      Chunk *pc_op = chunk_get_prev_type(pc, CT_OPERATOR, pc->level);
+      Chunk *pc_op = pc->GetPrevType(CT_OPERATOR, pc->level);
 
-      if (  pc_op != nullptr
+      if (  pc_op->IsNotNullChunk()
          && pc_op->flags.test(PCF_EXPR_START))
       {
          LOG_FMT(LFCN, "%s(%d): (4) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
@@ -1420,9 +1420,9 @@ void mark_function(Chunk *pc)
       LOG_FMT(LFCN, "%s(%d): examine: Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
               __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col, get_token_name(pc->type));
       // look for an assigment. Issue #575
-      Chunk *temp = chunk_get_next_type(pc, CT_ASSIGN, pc->level);
+      Chunk *temp = pc->GetNextType(CT_ASSIGN, pc->level);
 
-      if (temp != nullptr)
+      if (temp->IsNotNullChunk())
       {
          LOG_FMT(LFCN, "%s(%d): assigment found, orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                  __func__, __LINE__, temp->orig_line, temp->orig_col, temp->Text());
@@ -1987,9 +1987,9 @@ void mark_function(Chunk *pc)
       }
       else if (pc->brace_level > 0)
       {
-         Chunk *br_open = chunk_get_prev_type(pc, CT_BRACE_OPEN, pc->brace_level - 1);
+         Chunk *br_open = pc->GetPrevType(CT_BRACE_OPEN, pc->brace_level - 1);
 
-         if (  br_open != nullptr
+         if (  br_open->IsNotNullChunk()
             && get_chunk_parent_type(br_open) != CT_EXTERN
             && get_chunk_parent_type(br_open) != CT_NAMESPACE)
          {
@@ -1999,9 +1999,9 @@ void mark_function(Chunk *pc)
             if (  !chunk_is_str(prev, "*", 1)
                && !chunk_is_str(prev, "&", 1))
             {
-               Chunk *p_op = chunk_get_prev_type(pc, CT_BRACE_OPEN, pc->brace_level - 1);
+               Chunk *p_op = pc->GetPrevType(CT_BRACE_OPEN, pc->brace_level - 1);
 
-               if (  p_op != nullptr
+               if (  p_op->IsNotNullChunk()
                   && get_chunk_parent_type(p_op) != CT_CLASS
                   && get_chunk_parent_type(p_op) != CT_STRUCT
                   && get_chunk_parent_type(p_op) != CT_NAMESPACE)
@@ -2419,13 +2419,8 @@ void mark_template_func(Chunk *pc, Chunk *pc_next)
    LOG_FUNC_ENTRY();
 
    // We know angle_close must be there...
-   Chunk *angle_close = chunk_get_next_type(pc_next, CT_ANGLE_CLOSE, pc->level);
-   Chunk *after       = Chunk::NullChunkPtr;
-
-   if (angle_close != nullptr)
-   {
-      after = angle_close->GetNextNcNnl();
-   }
+   Chunk *angle_close = pc_next->GetNextType(CT_ANGLE_CLOSE, pc->level);
+   Chunk *after       = angle_close->GetNextNcNnl();
 
    if (after->IsNotNullChunk())
    {
