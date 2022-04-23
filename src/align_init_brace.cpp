@@ -85,11 +85,8 @@ void align_init_brace(Chunk *start)
       {
          pc = tmp;
 
-         if (pc != nullptr)
-         {
-            LOG_FMT(LALBR, " -%zu- skipped '[] =' to %s\n",
-                    pc->orig_line, get_token_name(pc->type));
-         }
+         LOG_FMT(LALBR, " -%zu- skipped '[] =' to %s\n",
+                 pc->orig_line, get_token_name(pc->type));
          continue;
       }
       Chunk *next = pc;

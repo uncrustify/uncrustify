@@ -2182,8 +2182,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
             LOG_FMT(LBLANKD, "%s(%d): fn_top %s\n",
                     __func__, __LINE__, fn_top ? "TRUE" : "FALSE");
 
-            if (  var_blk
-               && first_var_blk
+            if (  first_var_blk
                && fn_top
                && (options::nl_func_var_def_blk() > 0))
             {

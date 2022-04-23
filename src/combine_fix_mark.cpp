@@ -744,14 +744,6 @@ Chunk *fix_variable_definition(Chunk *start)
          {
             break;
          }
-
-         if (idx == 0)
-         {
-            fprintf(stderr, "%s(%d): idx is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                    __func__, __LINE__, tmp_pc->orig_line, tmp_pc->orig_col);
-            log_flush(true);
-            exit(EX_SOFTWARE);
-         }
          idx--;
          tmp_pc = cs.Get(idx)->m_pc;
 

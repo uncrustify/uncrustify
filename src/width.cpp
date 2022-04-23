@@ -322,8 +322,7 @@ static void try_split_here(cw_entry &ent, Chunk *pc)
    }
    else
    {
-      if (  pc->level >= ent.pc->level
-         && pc_pri < ent.pri)
+      if (pc_pri < ent.pri)
       {
          LOG_FMT(LSPLIT, "%s(%d):\n", __func__, __LINE__);
          change = true;

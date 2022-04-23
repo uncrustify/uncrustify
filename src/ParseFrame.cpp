@@ -240,7 +240,6 @@ void ParseFrame::pop(const char *func, int line, Chunk *pc)
            || pc->type == CT_NONE
            || pc->type == CT_OC_END
            || pc->type == CT_OC_MSG_NAME
-           || pc->type == CT_OC_MSG_NAME
            || pc->type == CT_OC_SCOPE
            || pc->type == CT_PREPROC
            || pc->type == CT_SQUARE_OPEN

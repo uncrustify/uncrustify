@@ -802,13 +802,6 @@ static void convert_brace(Chunk *br)
       {
          if (!br->flags.test(PCF_ONE_LINER)) // Issue #2232
          {
-            if (tmp->nl_count == 0)
-            {
-               fprintf(stderr, "%s(%d): tmp->nl_count is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                       __func__, __LINE__, tmp->orig_line, tmp->orig_col);
-               log_flush(true);
-               exit(EX_SOFTWARE);
-            }
             tmp->nl_count--;
             LOG_FMT(LBRDEL, "%s(%d): tmp->nl_count is %zu\n",
                     __func__, __LINE__, tmp->nl_count);
