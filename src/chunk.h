@@ -454,6 +454,12 @@ public:
     */
    bool IsTypeAndLevel(const E_Token cType, const int cLevel) const;
 
+   /**
+    * @brief checks whether the chunk is a star/asterisk
+    * @return true if the chunk is a star/asterisk
+    */
+   bool IsStar() const;
+
 
    // --------- Data members
 
@@ -796,6 +802,14 @@ inline bool Chunk::IsVBrace() const
 }
 
 
+inline bool Chunk::IsStar() const
+{
+   return(  Len() == 1
+         && str[0] == '*'
+         && IsNot(CT_OPERATOR_VAL));
+}
+
+
 // TODO remove when possible
 static inline bool chunk_is_token(const Chunk *pc, E_Token c_token)
 {
@@ -985,15 +999,6 @@ static inline bool chunk_is_word(Chunk *pc)
 }
 
 
-static inline bool chunk_is_star(Chunk *pc)
-{
-   return(  pc != nullptr
-         && (pc->Len() == 1)
-         && (pc->str[0] == '*')
-         && pc->type != CT_OPERATOR_VAL);
-}
-
-
 static inline bool chunk_is_nullable(Chunk *pc)
 {
    return(  language_is_set(LANG_CS)
@@ -1038,10 +1043,11 @@ static inline bool chunk_is_msref(Chunk *pc) // ms compilers for C++/CLI and Win
 
 static inline bool chunk_is_ptr_operator(Chunk *pc)
 {
-   return(  (  chunk_is_star(pc)
-            || chunk_is_addr(pc)
-            || chunk_is_msref(pc))
-         || chunk_is_nullable(pc));
+   return(  pc != nullptr
+         && (  (  pc->IsStar()
+               || chunk_is_addr(pc)
+               || chunk_is_msref(pc))
+            || chunk_is_nullable(pc)));
 }
 
 

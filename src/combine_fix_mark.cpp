@@ -351,7 +351,7 @@ void fix_fcn_def_params(Chunk *start)
          continue;
       }
 
-      if (  chunk_is_star(pc)
+      if (  pc->IsStar()
          || chunk_is_msref(pc)
          || chunk_is_nullable(pc))
       {
@@ -1362,7 +1362,7 @@ void mark_function(Chunk *pc)
       tmp3 = chunk_get_next_ssq(tmp3);
 
       if (  chunk_is_str(tmp3, ")", 1)
-         && (  chunk_is_star(tmp1)
+         && (  tmp1->IsStar()
             || chunk_is_msref(tmp1)
             || (  language_is_set(LANG_OC)
                && chunk_is_token(tmp1, CT_CARET)))
@@ -2181,7 +2181,7 @@ bool mark_function_type(Chunk *pc)
               get_token_name(tmp->type), tmp->Text(),
               tmp->orig_line, tmp->orig_col);
 
-      if (  chunk_is_star(tmp)
+      if (  tmp->IsStar()
          || chunk_is_token(tmp, CT_PTR_TYPE)
          || chunk_is_token(tmp, CT_CARET))
       {
@@ -2499,7 +2499,7 @@ Chunk *mark_variable_definition(Chunk *start)
                  pcf_flags_str(pc->flags).c_str());
       }
       else if (  !bit_field_colon_is_present                      // Issue #2689
-              && (  chunk_is_star(pc)
+              && (  pc->IsStar()
                  || chunk_is_msref(pc)))
       {
          set_chunk_type(pc, CT_PTR_TYPE);
