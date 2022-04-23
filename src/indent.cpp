@@ -2773,13 +2773,6 @@ void indent_text(void)
             while (  idx > 0
                   && are_chunks_in_same_line(frm.at(idx).pc, frm.top().pc))
             {
-               if (idx == 0)
-               {
-                  fprintf(stderr, "%s(%d): idx is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                          __func__, __LINE__, pc->orig_line, pc->orig_col);
-                  log_flush(true);
-                  exit(EX_SOFTWARE);
-               }
                idx--;
                skipped = true;
             }
@@ -2831,13 +2824,6 @@ void indent_text(void)
                   while (  sub > 0
                         && are_chunks_in_same_line(frm.at(sub).pc, frm.top().pc))
                   {
-                     if (sub == 0)
-                     {
-                        fprintf(stderr, "%s(%d): sub is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                                __func__, __LINE__, pc->orig_line, pc->orig_col);
-                        log_flush(true);
-                        exit(EX_SOFTWARE);
-                     }
                      sub--;
                      skipped = true;
                   }
@@ -4193,7 +4179,7 @@ void indent_text(void)
                      indent_column = 1 + indent_size;
                      reindent_line(pc, indent_column);
                   }
-                  else if (temp_ttidx > 0)
+                  else
                   {
                      Chunk *token_before = frm.at(temp_ttidx).pc;
                      LOG_FMT(LINDPC, "%s(%d): Text() is '%s', token_before->type is %s\n",
@@ -4237,11 +4223,6 @@ void indent_text(void)
                         // TO DO
                      }
                      reindent_line(pc, indent_column);
-                  }
-                  else
-                  {
-                     LOG_FMT(LINDPC, "%s(%d): temp_ttidx is zero\n",
-                             __func__, __LINE__);
                   }
                   reindent_line(pc, indent_column);
                }
