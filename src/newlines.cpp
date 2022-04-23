@@ -701,8 +701,7 @@ static void newline_min_after(Chunk *ref, size_t count, pcf_flag_e flag)
 
    if (  next->IsComment()
       && next->nl_count == 1
-      && (  pc != nullptr
-         && pc->GetPrev()->IsComment()))
+      && pc->GetPrev()->IsComment())
    {
       newline_min_after(next, count, flag);
       return;
@@ -2700,7 +2699,7 @@ static void newline_case_colon(Chunk *start)
       pc = pc->GetNext();
    } while (pc->IsComment());
 
-   if (  pc != nullptr
+   if (  pc->IsNotNullChunk()
       && !chunk_is_newline(pc))
    {
       newline_add_before(pc);
@@ -5561,7 +5560,7 @@ void newlines_chunk_pos(E_Token chunk_type, token_pos_e mode)
                // remove newline if not preceded by a comment
                Chunk *prev2 = prev->GetPrev();
 
-               if (  prev2 != nullptr
+               if (  prev2->IsNotNullChunk()
                   && !(prev2->IsComment()))
                {
                   remove_next_newlines(prev2);

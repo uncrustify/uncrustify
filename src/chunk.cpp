@@ -751,8 +751,7 @@ Chunk *chunk_first_on_line(Chunk *pc)
    }
    Chunk *first = pc;
 
-   while (  (pc = pc->GetPrev()) != nullptr
-         && pc->IsNotNullChunk()
+   while (  (pc = pc->GetPrev())->IsNotNullChunk()
          && !chunk_is_newline(pc))
    {
       first = pc;
