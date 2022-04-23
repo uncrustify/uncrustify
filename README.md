@@ -383,7 +383,7 @@ window that allows you to run commands without it closing as soon as
 they exit) and run uncrustify.exe there.
 
 ## Using uncrustify with vim
-Have a look [here]https://github.com/cofyc/vim-uncrustify
+Have a look [here](https://github.com/cofyc/vim-uncrustify)
   
 ## Using uncrustify with IntelliJ
 Have a look at https://plugins.jetbrains.com/plugin/17528-uncrustify
