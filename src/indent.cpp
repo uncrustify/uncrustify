@@ -4512,7 +4512,7 @@ static void indent_comment(Chunk *pc, size_t col)
    }
    Chunk *nl = pc->GetPrev();
 
-   if (nl != nullptr)
+   if (nl->IsNotNullChunk())
    {
       LOG_FMT(LCMTIND, "%s(%d): nl->Text() is '%s', orig_line %zu, orig_col %zu, level %zu\n",
               __func__, __LINE__, nl->Text(), nl->orig_line, nl->orig_col, nl->level);
@@ -4520,12 +4520,7 @@ static void indent_comment(Chunk *pc, size_t col)
 
    if (pc->orig_col > 1)
    {
-      Chunk *prev = Chunk::NullChunkPtr;
-
-      if (nl != nullptr)
-      {
-         prev = nl->GetPrev();
-      }
+      Chunk *prev = nl->GetPrev();
 
       if (prev->IsNotNullChunk())
       {
