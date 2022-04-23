@@ -124,7 +124,7 @@ Chunk *align_func_param(Chunk *start)
       }
       else if (comma_count > 0)
       {
-         if (!chunk_is_comment(pc))
+         if (!pc->IsComment())
          {
             comma_count = 2;
             break;

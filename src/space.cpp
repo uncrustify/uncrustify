@@ -529,7 +529,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
             return(options::sp_after_semi_for());
          }
       }
-      else if (  !chunk_is_comment(second)
+      else if (  !second->IsComment()
               && second->type != CT_BRACE_CLOSE) // issue #197
       {
          // Add or remove space after ';', except when followed by a comment.
@@ -1515,7 +1515,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          }
       }
 
-      if (  !chunk_is_comment(second)
+      if (  !second->IsComment()
          && (options::sp_after_sparen() != IARF_IGNORE))
       {
          // Add or remove space after ')' of control statements.
@@ -2849,7 +2849,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          }
       }
 
-      if (!chunk_is_comment(second))
+      if (!second->IsComment())
       {
          // Add or remove space inside '{' and '}'.
          log_rule("sp_inside_braces");
@@ -3605,7 +3605,7 @@ void space_text(void)
             break;
          } // switch
 
-         if (  chunk_is_comment(next)
+         if (  next->IsComment()
             && chunk_is_newline(next->GetNext())
             && column < next->orig_col)
          {

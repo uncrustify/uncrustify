@@ -887,7 +887,7 @@ static void convert_vbrace(Chunk *vbr)
        */
       Chunk *tmp = vbr->GetNext();
 
-      if (chunk_is_comment(tmp))
+      if (tmp->IsComment())
       {
          tmp = tmp->GetNext();
 

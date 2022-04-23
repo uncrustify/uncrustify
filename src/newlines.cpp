@@ -637,7 +637,7 @@ static void newline_end_newline(Chunk *br_close)
    Chunk nl;
 
    if (  !chunk_is_newline(next)
-      && !chunk_is_comment(next))
+      && !next->IsComment())
    {
       nl.orig_line = br_close->orig_line;
       nl.orig_col  = br_close->orig_col;
@@ -699,10 +699,10 @@ static void newline_min_after(Chunk *ref, size_t count, pcf_flag_e flag)
       return;
    }
 
-   if (  chunk_is_comment(next)
+   if (  next->IsComment()
       && next->nl_count == 1
       && (  pc != nullptr
-         && chunk_is_comment(pc->GetPrev())))
+         && pc->GetPrev()->IsComment()))
    {
       newline_min_after(next, count, flag);
       return;
@@ -764,7 +764,7 @@ Chunk *newline_add_between(Chunk *start, Chunk *end)
    {
       Chunk *pc = end->GetNext();
 
-      if (chunk_is_comment(pc))
+      if (pc->IsComment())
       {
          pc = pc->GetNext();
 
@@ -838,8 +838,8 @@ void newline_del_between(Chunk *start, Chunk *end)
       {
          Chunk *prev = pc->GetPrev();
 
-         if (  (  !chunk_is_comment(prev)
-               && !chunk_is_comment(next))
+         if (  (  !prev->IsComment()
+               && !next->IsComment())
             || chunk_is_newline(prev)
             || chunk_is_newline(next))
          {
@@ -1079,7 +1079,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
       {
          return;
       }
-      else if (chunk_is_comment(pc))
+      else if (pc->IsComment())
       {
          // vbrace close is ok because it won't go into output, so we should skip it
          last_nl = nullptr;
@@ -1109,7 +1109,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
 
                // we didn't run into a newline, so we need to add one
                if (  ((next = pc->GetNext())->IsNotNullChunk())
-                  && chunk_is_comment(next))
+                  && next->IsComment())
                {
                   pc = next;
                }
@@ -1316,7 +1316,7 @@ static void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type)
             continue;
          }
       }
-      else if (chunk_is_comment(pc))
+      else if (pc->IsComment())
       {
          LOG_FMT(LNLFUNCT, "%s(%d):    <chunk_is_comment> found at line %zu, column %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
@@ -1603,7 +1603,7 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
             LOG_FMT(LNEWLINE, "%s(%d): nl_count is 0\n", __func__, __LINE__);
 
             if (  ((next = pc->GetNext())->IsNotNullChunk())
-               && chunk_is_comment(next))
+               && next->IsComment())
             {
                LOG_FMT(LNEWLINE, "%s(%d): next->Text() is '%s', type %s, orig_line %zu, orig_column %zu\n",
                        __func__, __LINE__, next->Text(), get_token_name(next->type), next->orig_line, next->orig_col);
@@ -1720,7 +1720,7 @@ static void newlines_struct_union(Chunk *start, iarf_e nl_opt, bool leave_traili
       }
 
       if (  leave_trailing
-         && !chunk_is_comment(next)
+         && !next->IsComment()
          && !chunk_is_newline(next))
       {
          nl_opt = IARF_IGNORE;
@@ -1822,7 +1822,7 @@ static void newlines_enum(Chunk *start)
       }
       iarf_e nl_opt;
 
-      if (  !chunk_is_comment(next)
+      if (  !next->IsComment()
          && !chunk_is_newline(next))
       {
          nl_opt = IARF_IGNORE;
@@ -2015,7 +2015,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
          pc = chunk_skip_dc_member(pc);
       }
 
-      if (chunk_is_comment(pc))
+      if (pc->IsComment())
       {
          pc = pc->GetNext();
          continue;
@@ -2319,7 +2319,7 @@ static void newlines_brace_pair(Chunk *br_open)
             LOG_FMT(LNL1LINE, "%s(%d): tmp->orig_line is %zu, tmp->orig_col is %zu, Text() is '%s'\n",
                     __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->Text());
 
-            if (chunk_is_comment(tmp))
+            if (tmp->IsComment())
             {
                is_it_possible = false;
                break;
@@ -2620,7 +2620,7 @@ static void newlines_brace_pair(Chunk *br_open)
       }
 
       if (  chunk_is_newline(pc)
-         || chunk_is_comment(pc))
+         || pc->IsComment())
       {
          nl_close_brace = true;
       }
@@ -2698,7 +2698,7 @@ static void newline_case_colon(Chunk *start)
    do
    {
       pc = pc->GetNext();
-   } while (chunk_is_comment(pc));
+   } while (pc->IsComment());
 
    if (  pc != nullptr
       && !chunk_is_newline(pc))
@@ -2735,7 +2735,7 @@ static void newline_before_return(Chunk *start)
    // into account that comment blocks may span multiple lines.
    // Trailing comments are considered part of the previous token, not the
    // return statement.  They are handled below.
-   while (  chunk_is_comment(pc)
+   while (  pc->IsComment()
          && get_chunk_parent_type(pc) != CT_COMMENT_END)
    {
       pc = pc->GetPrev();
@@ -2750,7 +2750,7 @@ static void newline_before_return(Chunk *start)
    pc = nl->GetPrev();
 
    // Peek over trailing comment of previous token
-   if (  chunk_is_comment(pc)
+   if (  pc->IsComment()
       && get_chunk_parent_type(pc) == CT_COMMENT_END)
    {
       pc = pc->GetPrev();
@@ -2996,7 +2996,7 @@ static void newline_func_multi_line(Chunk *start)
             {
                Chunk *tmp = pc->GetNext();
 
-               if (chunk_is_comment(tmp))
+               if (tmp->IsComment())
                {
                   pc = tmp;
                }
@@ -3088,7 +3088,7 @@ static void newline_template(Chunk *start)
             {
                Chunk *tmp = pc_1->GetNext();
 
-               if (chunk_is_comment(tmp))
+               if (tmp->IsComment())
                {
                   pc_1 = tmp;
                }
@@ -3345,7 +3345,7 @@ static void newline_func_def_or_call(Chunk *start)
          comma_count++;
          tmp = pc->GetNext();
 
-         if (chunk_is_comment(tmp))
+         if (tmp->IsComment())
          {
             pc = tmp;
          }
@@ -4191,7 +4191,7 @@ void newlines_cleanup_braces(bool first)
 
                   while (tmp != pc)
                   {
-                     if (chunk_is_comment(tmp))
+                     if (tmp->IsComment())
                      {
                         log_rule_B("nl_after_brace_open_cmt");
 
@@ -4404,7 +4404,7 @@ void newlines_cleanup_braces(bool first)
                && !pc->flags.test(PCF_IN_ARRAY_ASSIGN)
                && !pc->flags.test(PCF_IN_TYPEDEF)
                && !chunk_is_newline(next)
-               && !chunk_is_comment(next))
+               && !next->IsComment())
             {
                // #1258
                // dont add newline between two consecutive braces closes, if the second is a part of one liner.
@@ -4448,7 +4448,7 @@ void newlines_cleanup_braces(bool first)
                log_rule_B("nl_after_vbrace_open");
                add_it = (  options::nl_after_vbrace_open()
                         && chunk_is_not_token(next, CT_VBRACE_CLOSE)
-                        && !chunk_is_comment(next)
+                        && !next->IsComment()
                         && !chunk_is_newline(next));
             }
 
@@ -4637,7 +4637,7 @@ void newlines_cleanup_braces(bool first)
             }
 
             if (  next->IsNotNullChunk()
-               && !chunk_is_comment(next)
+               && !next->IsComment()
                && !chunk_is_newline(next))
             {
                if (one_liner_nl_ok(next))
@@ -5039,7 +5039,7 @@ void newline_after_multiline_comment(void)
       while (  ((tmp = tmp->GetNext())->IsNotNullChunk())
             && !chunk_is_newline(tmp))
       {
-         if (!chunk_is_comment(tmp))
+         if (!tmp->IsComment())
          {
             newline_add_before(tmp);
             break;
@@ -5562,7 +5562,7 @@ void newlines_chunk_pos(E_Token chunk_type, token_pos_e mode)
                Chunk *prev2 = prev->GetPrev();
 
                if (  prev2 != nullptr
-                  && !(chunk_is_comment(prev2)))
+                  && !(prev2->IsComment()))
                {
                   remove_next_newlines(prev2);
                }
@@ -5574,7 +5574,7 @@ void newlines_chunk_pos(E_Token chunk_type, token_pos_e mode)
                Chunk *next2 = next->GetNext();
 
                if (  next2->IsNotNullChunk()
-                  && !(chunk_is_comment(next2))
+                  && !next2->IsComment()
                   && !(chunk_is_token(next2, CT_BRACE_OPEN)))
                {
                   remove_next_newlines(pc);
@@ -6139,7 +6139,7 @@ void do_blank_lines(void)
             tmp = tmp->GetPrevNc();
 
             while (  chunk_is_token(tmp, CT_NEWLINE)
-                  && chunk_is_comment(tmp->prev))
+                  && tmp->GetPrev()->IsComment())
             {
                tmp = tmp->GetPrev()->GetPrevNc();
             }
@@ -6152,7 +6152,7 @@ void do_blank_lines(void)
          }
 
          while (  chunk_is_token(tmp, CT_NEWLINE)
-               && chunk_is_comment(tmp->prev))
+               && tmp->GetPrev()->IsComment())
          {
             tmp = tmp->GetPrev()->GetPrevNc();
          }
@@ -6181,7 +6181,7 @@ void do_blank_lines(void)
          tmp = tmp->GetPrevNc();
 
          while (  chunk_is_token(tmp, CT_NEWLINE)
-               && chunk_is_comment(tmp->GetPrev()))
+               && tmp->GetPrev()->IsComment())
          {
             tmp = tmp->GetPrev()->GetPrevNc();
          }
@@ -6631,9 +6631,9 @@ static void newlines_double_space_struct_enum_union(Chunk *open_brace)
        */
       Chunk *prev = pc->GetPrev();
 
-      if (  !chunk_is_comment(prev)
+      if (  !prev->IsComment()
          && chunk_is_not_token(prev, CT_BRACE_OPEN)
-         && chunk_is_comment(pc->GetNext()))
+         && pc->GetNext()->IsComment())
       {
          if (pc->nl_count < 2)
          {

@@ -864,24 +864,6 @@ Chunk *chunk_skip_dc_member_rev(Chunk *start, E_Scope scope = E_Scope::ALL);
 
 
 /**
- * checks if a chunk is valid and is a comment
- *
- * comment means any kind of
- * - single line comment
- * - multiline comment
- * - C comment
- * - C++ comment
- * TODO remove when possible
- */
-static inline bool chunk_is_comment(Chunk *pc)
-{
-   return(  chunk_is_token(pc, CT_COMMENT)
-         || chunk_is_token(pc, CT_COMMENT_MULTI)
-         || chunk_is_token(pc, CT_COMMENT_CPP));
-}
-
-
-/**
  * Returns true if the chunk under test is an inheritance access specifier
  */
 static inline bool chunk_is_cpp_inheritance_access_specifier(Chunk *pc)
@@ -943,7 +925,7 @@ static inline bool chunk_is_semicolon(Chunk *pc)
 static inline bool chunk_is_Doxygen_comment(Chunk *pc)
 {
    if (  pc == nullptr
-      || !chunk_is_comment(pc))
+      || !pc->IsComment())
    {
       return(false);
    }

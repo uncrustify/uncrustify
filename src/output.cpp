@@ -632,7 +632,7 @@ void output_text(FILE *pfile)
               __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->type), pc->orig_line, pc->column, pc->nl_count);
       log_rule_B("cmt_convert_tab_to_spaces");
       cpd.output_tab_as_space = (  options::cmt_convert_tab_to_spaces()
-                                && chunk_is_comment(pc));
+                                && pc->IsComment());
 
       if (chunk_is_token(pc, CT_NEWLINE))
       {
@@ -817,7 +817,7 @@ void output_text(FILE *pfile)
             }
             log_rule_B("indent_with_tabs");
             allow_tabs = (options::indent_with_tabs() == 2)
-                         || (  chunk_is_comment(pc)
+                         || (  pc->IsComment()
                             && options::indent_with_tabs() != 0);
 
             LOG_FMT(LOUTIND, "%s(%d): orig_line is %zu, column is %zu, column_indent is %zu, cpd.column is %zu\n",
@@ -3372,7 +3372,7 @@ void add_long_preprocessor_conditional_block_comment(void)
 
             LOG_FMT(LPPIF, "next item type %d (is %s)\n",
                     (tmp ? tmp->type : -1), (tmp ? chunk_is_newline(tmp) ? "newline"
-                                             : chunk_is_comment(tmp) ? "comment" : "other" : "---"));
+                                             : tmp->IsComment() ? "comment" : "other" : "---"));
 
             if (  tmp->IsNullChunk()
                || chunk_is_token(tmp, CT_NEWLINE)) // chunk_is_newline(tmp))

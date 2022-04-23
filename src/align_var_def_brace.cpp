@@ -130,7 +130,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
       }
 
-      if (chunk_is_comment(pc))
+      if (pc->IsComment())
       {
          if (pc->nl_count > 0)
          {

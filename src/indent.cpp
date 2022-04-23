@@ -257,7 +257,7 @@ void align_to_column(Chunk *pc, size_t column)
 
       auto almod = align_mode_e::SHIFT;
 
-      if (  chunk_is_comment(pc)
+      if (  pc->IsComment()
          && get_chunk_parent_type(pc) != CT_COMMENT_EMBED)
       {
          log_rule_B("indent_relative_single_line_comments");
@@ -354,7 +354,7 @@ void reindent_line(Chunk *pc, size_t column)
       min_col += space_col_align(pc, next);
       pc       = next;
 
-      const bool is_comment = chunk_is_comment(pc);
+      const bool is_comment = pc->IsComment();
       log_rule_B("indent_relative_single_line_comments");
       const bool keep = (  is_comment
                         && chunk_is_single_line_comment(pc)
@@ -1082,7 +1082,7 @@ void indent_text(void)
                xml_indent -= options::indent_xml_string();
             }
          }
-         else if (  !chunk_is_comment(pc)
+         else if (  !pc->IsComment()
                  && !chunk_is_newline(pc))
          {
             xml_indent = 0;
@@ -1100,7 +1100,7 @@ void indent_text(void)
 
          // End anything that drops a level
          if (  !chunk_is_newline(pc)
-            && !chunk_is_comment(pc)
+            && !pc->IsComment()
             && frm.top().level > pc->level)
          {
             LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
@@ -1202,7 +1202,7 @@ void indent_text(void)
                   || chunk_is_token(pc, CT_MACRO_OPEN)
                   || chunk_is_token(pc, CT_MACRO_CLOSE)
                   || (  language_is_set(LANG_OC)
-                     && chunk_is_comment(pc)
+                     && pc->IsComment()
                      && get_chunk_parent_type(pc) == CT_COMMENT_WHOLE) // Issue #2675
                   || chunk_is_semicolon(pc)))
             {
@@ -1434,7 +1434,7 @@ void indent_text(void)
       }
 
       if (  !chunk_is_newline(pc)
-         && !chunk_is_comment(pc)
+         && !pc->IsComment()
          && log_sev_on(LINDPC))
       {
          LOG_FMT(LINDPC, "%s(%d):\n", __func__, __LINE__);
@@ -2351,7 +2351,7 @@ void indent_text(void)
             Chunk *pct = pc;
 
             while (  ((pct = pct->GetPrevNnl())->IsNotNullChunk())
-                  && chunk_is_comment(pct))
+                  && pct->IsComment())
             {
                Chunk *t2 = pct->GetPrev();
 
@@ -2442,7 +2442,7 @@ void indent_text(void)
             Chunk *pct = pc;
 
             while (  ((pct = pct->GetPrevNnl())->IsNotNullChunk())
-                  && chunk_is_comment(pct)
+                  && pct->IsComment()
                   && !chunk_is_Doxygen_comment(pct))
             {
                Chunk *t2 = pct->GetPrev();
@@ -2858,7 +2858,7 @@ void indent_text(void)
             else
             {
                if (  next->IsNotNullChunk()
-                  && !chunk_is_comment(next))
+                  && !next->IsComment())
                {
                   if (chunk_is_token(next, CT_SPACE))
                   {
@@ -2870,7 +2870,7 @@ void indent_text(void)
                      }
                   }
 
-                  if (chunk_is_comment(next->prev))
+                  if (next->prev->IsComment())
                   {
                      // Issue #2099
                      frm.top().indent = next->prev->column;
@@ -3053,7 +3053,7 @@ void indent_text(void)
             }
             Chunk *local_prev = tmp->GetPrev();             // Issue #3294
 
-            if (chunk_is_comment(local_prev))
+            if (local_prev->IsComment())
             {
                tmp = tmp->GetPrev();                        // Issue #3294
             }
@@ -3362,7 +3362,7 @@ void indent_text(void)
          frm.top().indent_tmp = frm.prev().indent_tmp;
          log_indent_tmp();
       }
-      else if (chunk_is_comment(pc))
+      else if (pc->IsComment())
       {
          // Issue #3294
          Chunk *next = pc->GetNext();
@@ -3707,7 +3707,7 @@ void indent_text(void)
                     __func__, __LINE__, pc->orig_line, tmp);
             reindent_line(pc, tmp);
          }
-         else if (chunk_is_comment(pc))
+         else if (pc->IsComment())
          {
             LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, comment => %zu\n",
                     __func__, __LINE__, pc->orig_line, frm.top().indent_tmp);
@@ -4495,7 +4495,7 @@ static size_t calc_comment_next_col_diff(Chunk *pc)
          LOG_FMT(LCMTIND, "%s(%d): next->Text() is '%s', orig_line is %zu, orig_col is %zu\n",
                  __func__, __LINE__, next->Text(), next->orig_line, next->orig_col);
       }
-   } while (chunk_is_comment(next));
+   } while (next->IsComment());
 
    if (next->IsNullChunk())
    {
@@ -4553,7 +4553,7 @@ static void indent_comment(Chunk *pc, size_t col)
          log_pcf_flags(LCMTIND, prev->flags);
       }
 
-      if (  chunk_is_comment(prev)
+      if (  prev->IsComment()
          && nl->nl_count == 1)
       {
          const size_t prev_col_diff = (prev->orig_col > pc->orig_col)
@@ -4655,7 +4655,7 @@ bool ifdef_over_whole_file(void)
       LOG_FMT(LNOTE, "%s(%d): pc->pp_level is %zu, pc->orig_line is %zu, pc->orig_col is %zu, pc->Text() is '%s'\n",
               __func__, __LINE__, pc->pp_level, pc->orig_line, pc->orig_col, pc->Text());
 
-      if (  chunk_is_comment(pc)
+      if (  pc->IsComment()
          || chunk_is_newline(pc))
       {
          continue;

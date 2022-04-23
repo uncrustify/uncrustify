@@ -1649,7 +1649,7 @@ static void do_source_file(const char *filename_in,
 static void add_file_header()
 {
    // don't add the file header if running as frag
-   if (  !chunk_is_comment(Chunk::GetHead())
+   if (  !Chunk::GetHead()->IsComment()
       && !cpd.frag)
    {
       // TODO: detect the typical #ifndef FOO / #define FOO sequence
@@ -1670,7 +1670,7 @@ static void add_file_footer()
    }
 
    if (  pc->IsNotNullChunk()
-      && (  !chunk_is_comment(pc)
+      && (  !pc->IsComment()
          || !chunk_is_newline(pc->GetPrev())))
    {
       pc = Chunk::GetTail();
@@ -1789,7 +1789,7 @@ static void add_func_header(E_Token type, file_mem &fm)
 
                log_rule_B("cmt_insert_before_preproc");
 
-               if (  chunk_is_comment(tmp)
+               if (  tmp->IsComment()
                   && !options::cmt_insert_before_preproc())
                {
                   break;
@@ -1798,7 +1798,7 @@ static void add_func_header(E_Token type, file_mem &fm)
          }
 
          // Ignore 'right' comments
-         if (  chunk_is_comment(ref)
+         if (  ref->IsComment()
             && chunk_is_newline(ref->GetPrev()))
          {
             break;
@@ -1815,7 +1815,7 @@ static void add_func_header(E_Token type, file_mem &fm)
       }
 
       if (  ref->IsNullChunk()
-         && !chunk_is_comment(Chunk::GetHead())
+         && !Chunk::GetHead()->IsComment()
          && get_chunk_parent_type(Chunk::GetHead()) == type)
       {
          /**
@@ -1891,7 +1891,7 @@ static void add_msg_header(E_Token type, file_mem &fm)
 
                log_rule_B("cmt_insert_before_preproc");
 
-               if (  chunk_is_comment(tmp)
+               if (  tmp->IsComment()
                   && !options::cmt_insert_before_preproc())
                {
                   break;
@@ -1909,7 +1909,7 @@ static void add_msg_header(E_Token type, file_mem &fm)
             {
                // Ignore 'right' comments
                if (  chunk_is_newline(ref)
-                  && chunk_is_comment(ref->GetPrev()))
+                  && ref->GetPrev()->IsComment())
                {
                   break;
                }

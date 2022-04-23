@@ -75,7 +75,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
             erst_found = 4;
          }
 
-         if (chunk_is_comment(back))
+         if (back->IsComment())
          {
             // comment found
             is_comment = back;
