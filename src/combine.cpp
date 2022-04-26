@@ -1449,7 +1449,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          }
          else if (  (  get_chunk_parent_type(pc) == CT_FUNC_DEF
                     && (  chunk_is_opening_brace(next)
-                       || chunk_is_star(pc->next)))
+                       || pc->GetNext()->IsStar()))
                  || chunk_is_token(next, CT_QUALIFIER))               // Issue #2648
          {
             // example:
@@ -3334,7 +3334,7 @@ static void handle_oc_message_send(Chunk *os)
    }
    else
    {
-      if (chunk_is_star(tmp)) // Issue #2722
+      if (tmp->IsStar()) // Issue #2722
       {
          set_chunk_type(tmp, CT_PTR_TYPE);
          tmp = tmp->GetNextNcNnl();
