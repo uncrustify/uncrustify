@@ -394,7 +394,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
     * If we don't have a brace open right after the close fparen, then
     * we need to add virtual braces around the function body.
     */
-   Chunk *clp  = chunk_get_next_str(pc, ")", 1, 0);
+   Chunk *clp  = pc->GetNextString(")", 1, 0);
    Chunk *last = clp->GetNextNcNnl();
 
    if (last->IsNotNullChunk())

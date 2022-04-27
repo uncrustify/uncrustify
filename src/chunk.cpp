@@ -674,35 +674,15 @@ Chunk *Chunk::GetPrevType(const E_Token cType, const int cLevel, const E_Scope s
 }
 
 
-Chunk *chunk_get_next_str(Chunk *cur, const char *str, size_t len, int level, E_Scope scope)
+Chunk *Chunk::GetNextString(const char *cStr, const size_t len, const int cLevel, const E_Scope scope) const
 {
-   if (cur == nullptr)
-   {
-      cur = Chunk::NullChunkPtr;
-   }
-   Chunk *ret = cur->SearchStringLevel(str, len, level, scope, E_Direction::FORWARD);
-
-   if (ret == Chunk::NullChunkPtr)
-   {
-      return(nullptr);
-   }
-   return(ret);
+   return(SearchStringLevel(cStr, len, cLevel, scope, E_Direction::FORWARD));
 }
 
 
-Chunk *chunk_get_prev_str(Chunk *cur, const char *str, size_t len, int level, E_Scope scope)
+Chunk *Chunk::GetPrevString(const char *cStr, const size_t len, const int cLevel, const E_Scope scope) const
 {
-   if (cur == nullptr)
-   {
-      cur = Chunk::NullChunkPtr;
-   }
-   Chunk *ret = cur->SearchStringLevel(str, len, level, scope, E_Direction::BACKWARD);
-
-   if (ret == Chunk::NullChunkPtr)
-   {
-      return(nullptr);
-   }
-   return(ret);
+   return(SearchStringLevel(cStr, len, cLevel, scope, E_Direction::BACKWARD));
 }
 
 

@@ -267,9 +267,9 @@ public:
 
    /**
     * @brief returns the next chunk of the given type at the level.
-    * @param type  the type to look for
-    * @param level -1 or ANY_LEVEL (any level) or the level to match
-    * @param scope code region to search in
+    * @param cType  the type to look for
+    * @param cLevel the level to match, -1 or ANY_LEVEL (any level)
+    * @param scope  code region to search in
     * @return pointer to the next matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetNextType(const E_Token cType, const int cLevel, const E_Scope scope = E_Scope::ALL) const;
@@ -277,12 +277,34 @@ public:
 
    /**
     * @brief returns the prev chunk of the given type at the level.
-    * @param type  the type to look for
-    * @param level -1 or ANY_LEVEL (any level) or the level to match
-    * @param scope code region to search in
+    * @param cType  the type to look for
+    * @param cLevel the level to match, -1 or ANY_LEVEL (any level)
+    * @param scope  code region to search in
     * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetPrevType(const E_Token type, int level, E_Scope scope = E_Scope::ALL) const;
+
+
+   /**
+    * @brief returns the next chunk that holds a given string at a given level.
+    * @param cStr   string to search for
+    * @param len    length of string
+    * @param cLevel -1 or ANY_LEVEL (any level) or the level to match
+    * @param scope  code region to search in
+    * @return pointer to the next matching chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetNextString(const char *cStr, const size_t len, const int cLevel, const E_Scope scope = E_Scope::ALL) const;
+
+
+   /**
+    * @brief returns the prev chunk that holds a given string at a given level.
+    * @param cStr   string to search for
+    * @param len    length of string
+    * @param cLevel -1 or ANY_LEVEL (any level) or the level to match
+    * @param scope  code region to search in
+    * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetPrevString(const char *cStr, const size_t len, const int cLevel, const E_Scope scope = E_Scope::ALL) const;
 
 
    // --------- Search functions
@@ -611,40 +633,6 @@ Chunk *chunk_first_on_line(Chunk *pc);
 
 //! check if a given chunk is the last on its line
 bool chunk_is_last_on_line(Chunk *pc);
-
-
-/**
- * @brief find a chunk that holds a given string
- *
- * Traverses a chunk list in forward direction until a chunk of a given category is found.
- *
- * @param cur    chunk to use as start point
- * @param str    string to search for
- * @param len    length of string
- * @param level  the level to match or -1 or ANY_LEVEL
- * @param scope  code region to search in
- *
- * @retval nullptr  no chunk found or invalid parameters provided
- * @retval Chunk  pointer to the found chunk
- */
-Chunk *chunk_get_next_str(Chunk *cur, const char *str, size_t len, int level, E_Scope scope = E_Scope::ALL);
-
-
-/**
- * @brief find a chunk that holds a given string
- *
- * Traverses a chunk list in backward direction until a chunk of a given category is found.
- *
- * @param cur    chunk to use as start point
- * @param str    string to search for
- * @param len    length of string
- * @param level  the level to match or -1 or ANY_LEVEL
- * @param scope  code region to search in
- *
- * @retval nullptr  no chunk found or invalid parameters provided
- * @retval Chunk  pointer to the found chunk
- */
-Chunk *chunk_get_prev_str(Chunk *cur, const char *str, size_t len, int level, E_Scope scope = E_Scope::ALL);
 
 
 /**
