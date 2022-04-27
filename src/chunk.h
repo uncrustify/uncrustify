@@ -350,14 +350,32 @@ public:
     *
     * This function is a specialization of Chunk::Search.
     *
-    * @param type  category to search for
-    * @param scope code parts to consider for search
-    * @param dir   search direction
-    * @param level nesting level to match or -1 / ANY_LEVEL
+    * @param cType  category to search for
+    * @param scope  code parts to consider for search
+    * @param dir    search direction
+    * @param cLevel nesting level to match or -1 / ANY_LEVEL
     *
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *SearchTypeLevel(const E_Token cType, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const int cLevel = -1) const;
+
+
+   /**
+    * @brief searches a chunk that holds a specific string
+    *
+    * Traverses a chunk list either in forward or backward direction until a chunk
+    * with the provided string was found. Additionally a nesting level can be
+    * provided to narrow down the search.
+    *
+    * @param  cStr   string that searched chunk needs to have
+    * @param  len    length of the string
+    * @param  cLevel nesting level of the searched chunk, ignored when negative
+    * @param  scope  code parts to consider for search
+    * @param  dir    search direction
+    *
+    * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *SearchStringLevel(const char *cStr, const size_t len, const int cLevel, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD) const;
 
 
    // --------- Is* functions
@@ -453,6 +471,17 @@ public:
     * @return true if the chunk matches a given type and level
     */
    bool IsTypeAndLevel(const E_Token cType, const int cLevel) const;
+
+
+   /**
+    * @brief checks whether the chunk matches a given string and level
+    * @param cStr   the expected string
+    * @param len    length of the string
+    * @param cLevel nesting level of the searched chunk, ignored when negative
+    * @return true if the chunk matches a given string and level
+    */
+   bool IsStringAndLevel(const char *cStr, const size_t len, const int cLevel) const;
+
 
    /**
     * @brief checks whether the chunk is a star/asterisk
@@ -695,14 +724,12 @@ inline bool Chunk::IsTypeAndLevel(const E_Token cType, const int cLevel) const
 }
 
 
-static inline bool is_expected_string_and_level(Chunk *pc, const char *str, int level, size_t len)
+inline bool Chunk::IsStringAndLevel(const char *cStr, const size_t len, const int cLevel) const
 {
-   // we don't care if the pointer is invalid or about the level (if it is negative) or it is as expected
-   return(  pc == nullptr
-         || (  (  level < 0
-               || pc->level == static_cast<size_t>(level))
-            && pc->Len() == len                        // and the length is as expected
-            && memcmp(str, pc->Text(), len) == 0));    // and the strings are equal
+   return(  (  cLevel < 0
+            || level == static_cast<size_t>(cLevel))
+         && Len() == len                       // the length is as expected
+         && memcmp(cStr, Text(), len) == 0);   // the strings are equal
 }
 
 
