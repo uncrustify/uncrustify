@@ -267,9 +267,9 @@ public:
 
    /**
     * @brief returns the next chunk of the given type at the level.
-    * @param type  the type to look for
-    * @param level -1 or ANY_LEVEL (any level) or the level to match
-    * @param scope code region to search in
+    * @param cType  the type to look for
+    * @param cLevel the level to match, -1 or ANY_LEVEL (any level)
+    * @param scope  code region to search in
     * @return pointer to the next matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetNextType(const E_Token cType, const int cLevel, const E_Scope scope = E_Scope::ALL) const;
@@ -277,12 +277,34 @@ public:
 
    /**
     * @brief returns the prev chunk of the given type at the level.
-    * @param type  the type to look for
-    * @param level -1 or ANY_LEVEL (any level) or the level to match
-    * @param scope code region to search in
+    * @param cType  the type to look for
+    * @param cLevel the level to match, -1 or ANY_LEVEL (any level)
+    * @param scope  code region to search in
     * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetPrevType(const E_Token type, int level, E_Scope scope = E_Scope::ALL) const;
+
+
+   /**
+    * @brief returns the next chunk that holds a given string at a given level.
+    * @param cStr   string to search for
+    * @param len    length of string
+    * @param cLevel -1 or ANY_LEVEL (any level) or the level to match
+    * @param scope  code region to search in
+    * @return pointer to the next matching chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetNextString(const char *cStr, const size_t len, const int cLevel, const E_Scope scope = E_Scope::ALL) const;
+
+
+   /**
+    * @brief returns the prev chunk that holds a given string at a given level.
+    * @param cStr   string to search for
+    * @param len    length of string
+    * @param cLevel -1 or ANY_LEVEL (any level) or the level to match
+    * @param scope  code region to search in
+    * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetPrevString(const char *cStr, const size_t len, const int cLevel, const E_Scope scope = E_Scope::ALL) const;
 
 
    // --------- Search functions
@@ -350,14 +372,32 @@ public:
     *
     * This function is a specialization of Chunk::Search.
     *
-    * @param type  category to search for
-    * @param scope code parts to consider for search
-    * @param dir   search direction
-    * @param level nesting level to match or -1 / ANY_LEVEL
+    * @param cType  category to search for
+    * @param scope  code parts to consider for search
+    * @param dir    search direction
+    * @param cLevel nesting level to match or -1 / ANY_LEVEL
     *
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *SearchTypeLevel(const E_Token cType, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const int cLevel = -1) const;
+
+
+   /**
+    * @brief searches a chunk that holds a specific string
+    *
+    * Traverses a chunk list either in forward or backward direction until a chunk
+    * with the provided string was found. Additionally a nesting level can be
+    * provided to narrow down the search.
+    *
+    * @param  cStr   string that searched chunk needs to have
+    * @param  len    length of the string
+    * @param  cLevel nesting level of the searched chunk, ignored when negative
+    * @param  scope  code parts to consider for search
+    * @param  dir    search direction
+    *
+    * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *SearchStringLevel(const char *cStr, const size_t len, const int cLevel, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD) const;
 
 
    // --------- Is* functions
@@ -453,6 +493,17 @@ public:
     * @return true if the chunk matches a given type and level
     */
    bool IsTypeAndLevel(const E_Token cType, const int cLevel) const;
+
+
+   /**
+    * @brief checks whether the chunk matches a given string and level
+    * @param cStr   the expected string
+    * @param len    length of the string
+    * @param cLevel nesting level of the searched chunk, ignored when negative
+    * @return true if the chunk matches a given string and level
+    */
+   bool IsStringAndLevel(const char *cStr, const size_t len, const int cLevel) const;
+
 
    /**
     * @brief checks whether the chunk is a star/asterisk
@@ -585,40 +636,6 @@ bool chunk_is_last_on_line(Chunk *pc);
 
 
 /**
- * @brief find a chunk that holds a given string
- *
- * Traverses a chunk list in forward direction until a chunk of a given category is found.
- *
- * @param cur    chunk to use as start point
- * @param str    string to search for
- * @param len    length of string
- * @param level  the level to match or -1 or ANY_LEVEL
- * @param scope  code region to search in
- *
- * @retval nullptr  no chunk found or invalid parameters provided
- * @retval Chunk  pointer to the found chunk
- */
-Chunk *chunk_get_next_str(Chunk *cur, const char *str, size_t len, int level, E_Scope scope = E_Scope::ALL);
-
-
-/**
- * @brief find a chunk that holds a given string
- *
- * Traverses a chunk list in backward direction until a chunk of a given category is found.
- *
- * @param cur    chunk to use as start point
- * @param str    string to search for
- * @param len    length of string
- * @param level  the level to match or -1 or ANY_LEVEL
- * @param scope  code region to search in
- *
- * @retval nullptr  no chunk found or invalid parameters provided
- * @retval Chunk  pointer to the found chunk
- */
-Chunk *chunk_get_prev_str(Chunk *cur, const char *str, size_t len, int level, E_Scope scope = E_Scope::ALL);
-
-
-/**
  * Gets the next chunk not in or part of balanced square
  * brackets.This handles stacked[] instances to accommodate
  * multi - dimensional array declarations
@@ -695,14 +712,12 @@ inline bool Chunk::IsTypeAndLevel(const E_Token cType, const int cLevel) const
 }
 
 
-static inline bool is_expected_string_and_level(Chunk *pc, const char *str, int level, size_t len)
+inline bool Chunk::IsStringAndLevel(const char *cStr, const size_t len, const int cLevel) const
 {
-   // we don't care if the pointer is invalid or about the level (if it is negative) or it is as expected
-   return(  pc == nullptr
-         || (  (  level < 0
-               || pc->level == static_cast<size_t>(level))
-            && pc->Len() == len                        // and the length is as expected
-            && memcmp(str, pc->Text(), len) == 0));    // and the strings are equal
+   return(  (  cLevel < 0
+            || level == static_cast<size_t>(cLevel))
+         && Len() == len                       // the length is as expected
+         && memcmp(cStr, Text(), len) == 0);   // the strings are equal
 }
 
 

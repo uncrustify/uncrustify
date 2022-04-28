@@ -2908,9 +2908,9 @@ static void handle_oc_block_literal(Chunk *pc)
       if (chunk_is_str(tmp, "<", 1))
       {
          Chunk *ao = tmp;
-         Chunk *ac = chunk_get_next_str(ao, ">", 1, ao->level);
+         Chunk *ac = ao->GetNextString(">", 1, ao->level);
 
-         if (ac)
+         if (ac->IsNotNullChunk())
          {
             set_chunk_type(ao, CT_ANGLE_OPEN);
             set_chunk_parent(ao, CT_OC_PROTO_LIST);
@@ -3364,9 +3364,9 @@ static void handle_oc_message_send(Chunk *os)
    if (chunk_is_str(tmp, "<", 1))
    {
       Chunk *ao = tmp;
-      Chunk *ac = chunk_get_next_str(ao, ">", 1, ao->level);
+      Chunk *ac = ao->GetNextString(">", 1, ao->level);
 
-      if (ac)
+      if (ac->IsNotNullChunk())
       {
          set_chunk_type(ao, CT_ANGLE_OPEN);
          set_chunk_parent(ao, CT_OC_PROTO_LIST);

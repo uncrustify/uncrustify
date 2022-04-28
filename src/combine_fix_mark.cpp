@@ -1305,11 +1305,11 @@ void mark_function(Chunk *pc)
       return;
    }
    // Find the open and close parenthesis
-   paren_open  = chunk_get_next_str(pc, "(", 1, pc->level);
-   paren_close = chunk_get_next_str(paren_open, ")", 1, pc->level);
+   paren_open  = pc->GetNextString("(", 1, pc->level);
+   paren_close = paren_open->GetNextString(")", 1, pc->level);
 
-   if (  paren_open == nullptr
-      || paren_close == nullptr)
+   if (  paren_open->IsNullChunk()
+      || paren_close->IsNullChunk())
    {
       LOG_FMT(LFCN, "%s(%d): No parens found for [%s] on orig_line %zu, orig_col %zu\n",
               __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);

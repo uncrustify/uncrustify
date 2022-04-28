@@ -278,26 +278,6 @@ static Chunk *chunk_search_type(Chunk *cur, const E_Token type, const E_Scope sc
 
 
 /**
- * @brief searches a chunk that holds a specific string
- *
- * Traverses a chunk list either in forward or backward direction until a chunk
- * with the provided string was found. Additionally a nesting level can be
- * provided to narrow down the search.
- *
- * @param  cur    chunk to start search at
- * @param  str    string that searched chunk needs to have
- * @param  len    length of the string
- * @param  scope  code parts to consider for search
- * @param  dir    search direction
- * @param  level  nesting level of the searched chunk, ignored when negative
- *
- * @retval NULL     no chunk found or invalid parameters provided
- * @retval Chunk  pointer to the found chunk
- */
-static Chunk *chunk_search_str(Chunk *cur, const char *str, size_t len, E_Scope scope, E_Direction dir, int level);
-
-
-/**
  * @brief Add a new chunk before/after the given position in a chunk list
  *
  * If ref is nullptr, add either at the head or tail based on the specified pos
@@ -422,16 +402,12 @@ static Chunk *chunk_search_type(Chunk *cur, const E_Token type,
 Chunk *Chunk::SearchTypeLevel(const E_Token cType, const E_Scope scope,
                               const E_Direction dir, const int cLevel) const
 {
-   /*
-    * Depending on the parameter dir the search function searches
-    * in forward or backward direction
-    */
    T_SearchFnPtr searchFnPtr = GetSearchFn(dir);
    Chunk         *pc         = const_cast<Chunk *>(this);
 
-   do                                      // loop over the chunk list
+   do                                                // loop over the chunk list
    {
-      pc = (pc->*searchFnPtr)(scope);      // in either direction while
+      pc = (pc->*searchFnPtr)(scope);                // in either direction while
    } while (  pc->IsNotNullChunk()                   // the end of the list was not reached yet
            && (!pc->IsTypeAndLevel(cType, cLevel))); // and the chunk was not found either
 
@@ -439,30 +415,19 @@ Chunk *Chunk::SearchTypeLevel(const E_Token cType, const E_Scope scope,
 }
 
 
-static Chunk *chunk_search_str(Chunk *cur, const char *str, size_t len, E_Scope scope, E_Direction dir, int level)
+Chunk *Chunk::SearchStringLevel(const char *cStr, const size_t len, int cLevel,
+                                const E_Scope scope, const E_Direction dir) const
 {
-   /*
-    * Depending on the parameter dir the search function searches
-    * in forward or backward direction */
-   Chunk::T_SearchFnPtr search_function = Chunk::GetSearchFn(dir);
-   Chunk                *pc             = cur;
+   T_SearchFnPtr searchFnPtr = GetSearchFn(dir);
+   Chunk         *pc         = const_cast<Chunk *>(this);
 
-   if (pc == nullptr)
+   do                                                // loop over the chunk list
    {
-      pc = Chunk::NullChunkPtr;
-   }
+      pc = (pc->*searchFnPtr)(scope);                // in either direction while
+   } while (  pc->IsNotNullChunk()                       // the end of the list was not reached yet
+           && !pc->IsStringAndLevel(cStr, len, cLevel)); // and the demanded chunk was not found either
 
-   do                                     // loop over the chunk list
-   {
-      pc = (pc->*search_function)(scope); // in either direction while
-   } while (  pc->IsNotNullChunk()        // the end of the list was not reached yet
-           && (!is_expected_string_and_level(pc, str, level, len)));
-
-   if (pc->IsNullChunk())
-   {
-      pc = nullptr;
-   }
-   return(pc);                            // the latest chunk is the searched one
+   return(pc);                                           // the latest chunk is the searched one
 }
 
 
@@ -709,15 +674,15 @@ Chunk *Chunk::GetPrevType(const E_Token cType, const int cLevel, const E_Scope s
 }
 
 
-Chunk *chunk_get_next_str(Chunk *cur, const char *str, size_t len, int level, E_Scope scope)
+Chunk *Chunk::GetNextString(const char *cStr, const size_t len, const int cLevel, const E_Scope scope) const
 {
-   return(chunk_search_str(cur, str, len, scope, E_Direction::FORWARD, level));
+   return(SearchStringLevel(cStr, len, cLevel, scope, E_Direction::FORWARD));
 }
 
 
-Chunk *chunk_get_prev_str(Chunk *cur, const char *str, size_t len, int level, E_Scope scope)
+Chunk *Chunk::GetPrevString(const char *cStr, const size_t len, const int cLevel, const E_Scope scope) const
 {
-   return(chunk_search_str(cur, str, len, scope, E_Direction::BACKWARD, level));
+   return(SearchStringLevel(cStr, len, cLevel, scope, E_Direction::BACKWARD));
 }
 
 
