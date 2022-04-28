@@ -210,16 +210,45 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
           * pop and then push.
           * We need to use the copy right before the if.
           */
+         bool if_block = false;
+
          if (frm.in_ifdef == CT_PP_IF)
          {
             // we have [...] [base]-[if], so push an [else]
             fl_push(frames, frm);
             frm.in_ifdef = CT_PP_ELSE;
+            if_block     = true;
          }
+         size_t brace_level = frm.brace_level;
          // we have [...] [base] [if]-[else], copy [base] over [else]
          fl_copy_2nd_tos(frm, frames);
          frm.in_ifdef = CT_PP_ELSE;
-         txt          = "else-push";
+
+         if (if_block)
+         {
+            // check if #if block was unbalanced
+            size_t base_brace_level = frames[frames.size() - 2].brace_level;
+
+            if (  options::pp_warn_unbalanced_if()
+               && brace_level != base_brace_level)
+            {
+               LOG_FMT(LWARN, "%s(%d): orig_line is %zu, unbalanced #if block braces (1), in-level is %zu, out-level is %zu\n",
+                       __func__, __LINE__, pc->orig_line, base_brace_level, brace_level);
+            }
+         }
+         else
+         {
+            // check if previous #else block has a different indentation than the corresponding #if block
+            size_t if_brace_level = frames[frames.size() - 1].brace_level;
+
+            if (  options::pp_warn_unbalanced_if()
+               && brace_level != if_brace_level)
+            {
+               LOG_FMT(LWARN, "%s(%d): orig_line is %zu, unbalanced #if-#else block braces (1), #else out-level is %zu, #if out-level is %zu\n",
+                       __func__, __LINE__, pc->orig_line, brace_level, if_brace_level);
+            }
+         }
+         txt = "else-push";
       }
       else if (get_chunk_parent_type(pc) == CT_PP_ENDIF)
       {
@@ -248,11 +277,19 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
 
          if (frm.in_ifdef == CT_PP_ELSE)
          {
+            size_t brace_level = frm.brace_level; // brace level or current #else block
             /*
              * We have: [...] [base] [if]-[else]
              * We want: [...]-[if]
              */
-            fl_copy_tos(frm, frames);     // [...] [base] [if]-[if]
+            fl_copy_tos(frm, frames);             // [...] [base] [if]-[if]
+
+            if (  options::pp_warn_unbalanced_if()
+               && brace_level != frm.brace_level)
+            {
+               LOG_FMT(LWARN, "%s(%d): orig_line is %zu, unbalanced #if-#else block braces (2), #else out-level is %zu, #if out-level is %zu\n",
+                       __func__, __LINE__, pc->orig_line, brace_level, frm.brace_level);
+            }
 
             if (frames.size() < 2)
             {
@@ -273,7 +310,16 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
              * We have: [...] [base] [if]
              * We want: [...] [base]
              */
+            // check if #if block was unbalanced
+            size_t brace_level = frm.brace_level;
             fl_pop(frames, frm);
+
+            if (  options::pp_warn_unbalanced_if()
+               && brace_level != frm.brace_level)
+            {
+               LOG_FMT(LWARN, "%s(%d): orig_line is %zu, unbalanced #if block braces (2), in-level is %zu, out-level is %zu\n",
+                       __func__, __LINE__, pc->orig_line, frm.brace_level, brace_level);
+            }
             txt = "endif-pop";
          }
          else

@@ -1,0 +1,414 @@
+
+Preprocessor blocks can arbitrarily alter the program flow and make indenting
+code a challenging task.
+
+This file covers the following topics:
+1) Uncrustify approach to indentation of preprocessor blocks
+2) Rationale for the chosen approach
+3) Recommendations for the user
+
+
+---------------------------------------------------------
+Uncrustify approach to indentation of preprocessor blocks
+---------------------------------------------------------
+
+Uncrustify handles different preprocessor blocks in different ways.
+There are just three simple rules to remember.
+
+A. #ifdef/#endif block
+----------------------
+The contents of the block are indented starting at the same brace level of the
+code preceding the block. Once #endif is reached, any indentation change caused
+by the block is discarded and the following code continues at the same brace
+level of the code preceding the block.
+
+B. #ifdef/#elif/#else/#endif block
+----------------------------------
+The contents of the #ifdef part of the block are indented starting at the same
+brace level of the code preceding the block.
+Once an #elif/#else is reached, the indentation restarts at the brace level of
+the code preceding the #ifdef part of the block. This is repeated for each
+#else and #elif part.
+Once #endif is reached, the following code continues at the same brace level
+reached at the end of the #ifdef part.
+
+C. #define block
+----------------
+The contents of the block are indented starting anew, therefore not following the
+indentation of the code preceding the block. Once the #define ends, any indentation
+change caused by the block is discarded and the following code continues at the same
+brace level of the code preceding the block.
+
+
+---------------------------------
+Rationale for the chosen approach
+---------------------------------
+
+Preprocessor blocks can be very hard to handle and there is no definitive
+correct way that works in all situations. Therefore a compromise approach is
+required, coupled with warning to the user when tricky code is encountered.
+
+A. #ifdef/#endif block
+----------------------
+Let's start with the simplest case, a balanced #ifdef/#endif block. This is a
+block that starts and ends at the same brace level. For example:
+
+    some code A
+  #ifdef TEST
+    some code B
+  #endif
+    some code C
+
+or
+
+    some code A
+  #ifdef TEST
+    {
+      some code B
+    }
+  #endif
+    some code C
+
+These cases are very easy to handle, since the indentation before, through and after
+the preprocessor block is consistent. There is no alteration of the brace level
+from 'some code A' to 'some code C'. Rule A applies nicely to the above code.
+
+Let's now look at a more complex example.
+
+    some code A
+  #ifdef TEST
+    {
+      some code B
+  #endif
+    some code C
+  #ifdef TEST
+      some code D
+    }
+  #endif
+    some code E
+
+This contains two unbalanced #ifdef blocks. Most likely the programmer intended to
+use them in pair, but that is not important when it comes to indentation. The code
+above could be indented as:
+
+    some code A
+  #ifdef TEST
+    {
+      some code B
+  #endif
+    some code C
+  #ifdef TEST
+      some code D
+    }
+  #endif
+    some code E
+
+or as:
+
+    some code A
+  #ifdef TEST
+    {
+      some code B
+  #endif
+      some code C
+  #ifdef TEST
+      some code D
+    }
+  #endif
+    some code E
+
+Note how 'some code C' is indented differently in the two cases: in the first, the
+indentation change caused by the first #ifdef block is discarded, while in the
+second it is taken into consideration.
+Depending on the options used at compile time, the code in the preprocessor blocks
+could be included or not included in the final code, therefore none of the two
+options is superior to the other. A better approach would be to avoid the use
+of unbalanced preprocessor blocks, so that indentation of the code could be uniquely
+defined.
+Uncrustify follows the first version, discarding indentation changes caused by
+the #ifdef block. Warning messages about unbalanced preprocessor blocks can optionally
+be printed by using the option 'pp_warn_unbalanced_if'.
+
+B. #ifdef/#elif/#else/#endif block
+----------------------------------
+Let's start with the simplest case, a balanced #ifdef/#else/#endif block. This is a
+block where each part starts and ends at the same brace level. For example:
+
+    some code A
+  #ifdef TEST
+    some code B
+  #else
+    some code C
+  #endif
+    some code D
+
+or
+
+    some code A
+  #ifdef TEST
+    {
+      some code B
+    }
+  #else
+    {
+      some code C
+    }
+  #endif
+    some code D
+
+or even:
+
+    some code A
+  #ifdef TEST
+    {
+      some code B
+    }
+  #else
+    some code C
+  #endif
+    some code D
+
+These cases are very easy to handle, since the indentation before, through and after
+the preprocessor blocks is consistent. There is no alteration of the brace level
+from 'some code A' to 'some code D'. Rule B applies nicely to the above code.
+
+Let's now look at a more complex example.
+
+    some code A
+  #ifdef TEST
+    {
+      some code B
+  #else
+    some code C
+  #endif
+    some code D
+  #ifdef TEST
+      some code E
+    }
+  #else
+    some code F
+  #endif
+    some code G
+
+This once again raises the question of where 'some code D' should be placed and
+there is no unique best choice.
+Uncrustify has chosen (for reasons explained further below) to:
+- indent each part of an #ifdef/#elif/#else/#endif block starting at the brace
+level of the code preceding #ifdef.
+- continue after #endif at the indentation level reached at the end of the #ifdef
+part.
+This would result in the following formatted code:
+
+    some code A
+  #ifdef TEST
+    {
+      some code B
+  #else
+    some code C
+  #endif
+      some code D
+  #ifdef TEST
+      some code E
+    }
+  #else
+      some code F
+  #endif
+    some code G
+
+And yes, the indentation of 'some code F' may surprise you a bit.
+Here is an even trickier example:
+
+    some code A
+  #ifdef TEST
+    some code B
+  #else
+    {
+      some code C
+  #endif
+    some code D
+  #ifndef TEST
+      some code E
+    }
+  #else
+    some code F
+  #endif
+    some code G
+
+which results in this bizarre output, where 'some code G' is no
+longer aligned with 'some code A':
+
+    some code A
+  #ifdef TEST
+    some code B
+  #else
+    {
+      some code C
+  #endif
+    some code D
+  #ifndef TEST
+    some code E
+  }
+  #else
+    some code F
+  #endif
+  some code G
+
+So why not simply discard all the indentation changes created by an
+#ifdef/#elif/#else/#endif block? The answer is simple: to make sure things
+still work fine after the #endif line! Without going into too much detail here
+(see the overview.odt and theory.txt files for more info) in addition to the
+visible braces, there is a thing called 'virtual braces' which also affects
+indentation. A common use of #ifdef/#elif/#else/#endif blocks is to do some
+different things on the same set of variables. In this case, there may not be
+any visible brace, but virtual braces may get modified between the code before
+and after the preprocessor block. Throwing away the whole thing would result
+in the code after #endif being formatted in a completely wrong manner.
+As an example, consider this piece of code:
+
+  some code A
+  if (cond1)
+    some var = value1;
+  else
+    some var =
+  #ifdef TEST
+      value2;
+  #else
+      value3;
+  #endif
+  some code B
+
+The formatted version looks exactly like the original. But if the complete
+#ifdef/#else/#endif block was thrown away, the result would be as if 'some code B'
+was being indented as part of the else (not #else) block, at a position just after
+the = symbol. By retaining the changes made in the #ifdef part, the 'else' block
+is correctly handled and 'some code B' is indented as per its original position.
+
+C. #define block
+----------------
+Here is an example showing how #define works. The following code:
+
+    {
+    {
+    some code A
+    #define TEST \
+    { \
+    some defs \
+    }
+    some code B
+    }
+    }
+
+would be formatted as:
+
+    {
+      {
+        some code A
+    #define TEST \
+    { \
+      some defs \
+    }
+        some code B
+      }
+    }
+
+Notice how 'some code B' and 'some code A' are indented in the same way, while the
+#define body starts from anew.
+
+
+----------------------------
+Recommendations for the user
+----------------------------
+The golden rule is to avoid unbalanced preprocessor blocks. This keeps things
+simple and indentation can be uniquely defined. Existing unbalanced blocks should
+be reworked so that all braces are properly balanced, either outside or inside the
+preprocessor blocks.
+If you have a huge code base, it may be difficult to quickly find offending blocks.
+If the option 'pp_warn_unbalanced_if' is set to true, Uncrustify will print warning
+messages at the end of each unbalanced preprocessor block part based on the following rules:
+
+1) unbalanced #ifdef part
+This works for either an #ifdef/#endif block or the first part of an #ifdef/#elif/#else/#endif
+block. If the #ifdef ends at a brace level different from where it starts, a message will
+be displayed, highlighting both the starting and ending indentation levels.
+
+2) unbalanced #elif or #else part
+If such part ends at a different brace level than the corresponding #ifdef part, a message
+will be displayed highlighting the ending indentation levels of both the part in question
+and the respective #ifdef part.
+
+3) unbalanced #define
+If a #define ends at a brace level different from where it starts, a message will
+be displayed, highlighting the ending indentation level.
+
+Here is an example with a mix of balanced and unbalanced blocks, with line numbers in front
+for easier reference:
+
+  1    void Fun(int &data)
+  2    {
+  3      data = 1;
+  4
+  5    #ifdef MANUAL_LAYOUT
+  6    {
+  7      data = 2;
+  8    }
+  9    #endif
+ 10
+ 11    #ifdef MANUAL_LAYOUT
+ 12    {
+ 13      {
+ 14      data = 2;
+ 15    #elif TEST1
+ 16      data = 21;
+ 17    #elif TEST2
+ 18    {
+ 19      data = 22;
+ 20    #elif TEST3
+ 21      {
+ 22        {
+ 23      data = 22;
+ 24    #else
+ 25      {
+ 26        {
+ 27      data = 22;
+ 28    #endif
+ 29
+ 30      data = 3;
+ 31
+ 32    #ifdef MANUAL_LAYOUT
+ 33    {
+ 34      data = 4;
+ 35    #else
+ 36      data = 5;
+ 37    #endif
+ 38
+ 39    #ifdef MANUAL_LAYOUT
+ 40      data = 6;
+ 41    #else
+ 42      data = 7;
+ 43    #endif
+ 44
+ 45    #ifdef MANUAL_LAYOUT
+ 46      }
+ 47    }
+ 48    #endif
+ 49
+ 50    #ifdef MANUAL_LAYOUT
+ 51    }
+ 52    #endif
+ 53
+ 54      data = 8;
+ 55
+ 56      data = 9;
+ 57    }
+
+These are the warning messages related to unbalanced preprocessor blocks
+printed by Uncrustify when 'pp_warn_unbalanced_if' is true.
+
+fl_check(236): orig_line is 15, unbalanced #if block braces (1), in-level is 1, out-level is 3
+fl_check(248): orig_line is 17, unbalanced #if-#else block braces (1), #else out-level is 1, #if out-level is 3
+fl_check(248): orig_line is 20, unbalanced #if-#else block braces (1), #else out-level is 2, #if out-level is 3
+fl_check(236): orig_line is 35, unbalanced #if block braces (1), in-level is 3, out-level is 4
+fl_check(291): orig_line is 37, unbalanced #if-#else block braces (2), #else out-level is 3, #if out-level is 4
+fl_check(321): orig_line is 48, unbalanced #if block braces (2), in-level is 4, out-level is 2
+fl_check(321): orig_line is 52, unbalanced #if block braces (2), in-level is 4, out-level is 3
+

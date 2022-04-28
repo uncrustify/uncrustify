@@ -199,6 +199,14 @@ void brace_cleanup(void)
          if (braceState.in_preproc == CT_PP_DEFINE)
          {
             // out of the #define body, restore the frame
+            size_t brace_level = frm.brace_level;
+
+            if (  options::pp_warn_unbalanced_if()
+               && brace_level != 1)
+            {
+               LOG_FMT(LWARN, "%s(%d): orig_line is %zu, unbalanced #define block braces, out-level is %zu\n",
+                       __func__, __LINE__, pc->orig_line, brace_level);
+            }
             fl_pop(braceState.frames, frm);
          }
          braceState.in_preproc = CT_NONE;
