@@ -163,9 +163,9 @@ static bool pawn_continued(Chunk *pc, size_t br_level)
       || get_chunk_parent_type(pc) == CT_FUNC_DEF
       || get_chunk_parent_type(pc) == CT_ENUM
       || pc->flags.test_any(PCF_IN_ENUM | PCF_IN_STRUCT)
-      || chunk_is_str(pc, ":", 1)
-      || chunk_is_str(pc, "+", 1)
-      || chunk_is_str(pc, "-", 1))
+      || chunk_is_str(pc, ":")
+      || chunk_is_str(pc, "+")
+      || chunk_is_str(pc, "-"))
    {
       return(true);
    }
@@ -215,7 +215,7 @@ static Chunk *pawn_process_line(Chunk *start)
    //        start->orig_line, start->Text());
 
    if (  chunk_is_token(start, CT_NEW)
-      || chunk_is_str(start, "const", 5))
+      || chunk_is_str(start, "const"))
    {
       return(pawn_process_variable(start));
    }
@@ -234,7 +234,7 @@ static Chunk *pawn_process_line(Chunk *start)
    }
 
    while (  ((pc = pc->GetNextNc())->IsNotNullChunk())
-         && !chunk_is_str(pc, "(", 1)
+         && !chunk_is_str(pc, "(")
          && pc->type != CT_ASSIGN
          && pc->type != CT_NEWLINE)
    {
@@ -405,7 +405,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
 
    // See if there is a state clause after the function
    if (  last->IsNotNullChunk()
-      && chunk_is_str(last, "<", 1))
+      && chunk_is_str(last, "<"))
    {
       LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle open %s\n",
               __func__, pc->orig_line, pc->Text(), get_token_name(last->type));
@@ -414,7 +414,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       set_chunk_parent(last, CT_FUNC_DEF);
 
       while (  ((last = last->GetNext())->IsNotNullChunk())
-            && !chunk_is_str(last, ">", 1))
+            && !chunk_is_str(last, ">"))
       {
          // do nothing just search, TODO: use search_chunk
       }
