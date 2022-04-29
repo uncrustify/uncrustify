@@ -2225,16 +2225,8 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
 } // newline_def_blk
 
 
-static bool collapse_empty_body(Chunk *br_open)
+static void collapse_empty_body(Chunk *br_open)
 {
-   log_rule_B("nl_collapse_empty_body");
-
-   if (  !options::nl_collapse_empty_body()
-      || !chunk_is_token(br_open->GetNextNnl(), CT_BRACE_CLOSE))
-   {
-      return(false);
-   }
-
    for (Chunk *pc = br_open->GetNext()
         ; chunk_is_not_token(pc, CT_BRACE_CLOSE)
         ; pc = pc->GetNext())
@@ -2248,8 +2240,6 @@ static bool collapse_empty_body(Chunk *br_open)
          MARK_CHANGE();
       }
    }
-
-   return(true);
 } // collapse_empty_body
 
 
@@ -2507,9 +2497,31 @@ static void newlines_brace_pair(Chunk *br_open)
       }
    }
 
-   if (collapse_empty_body(br_open))
+   if (chunk_is_token(br_open->GetNextNnl(), CT_BRACE_CLOSE))
    {
-      return;
+      // Chunk is "{" and "}" with only whitespace/newlines in between
+
+      if (get_chunk_parent_type(br_open) == CT_FUNC_DEF)
+      {
+         // Braces belong to a function definition
+         log_rule_B("nl_collapse_empty_body_functions");
+
+         if (options::nl_collapse_empty_body_functions())
+         {
+            collapse_empty_body(br_open);
+            return;
+         }
+      }
+      else
+      {
+         log_rule_B("nl_collapse_empty_body");
+
+         if (options::nl_collapse_empty_body())
+         {
+            collapse_empty_body(br_open);
+            return;
+         }
+      }
    }
    //fixes #1245 will add new line between tsquare and brace open based on nl_tsquare_brace
 

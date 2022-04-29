@@ -1884,10 +1884,16 @@ donot_indent_func_def_close_paren;
 ///////////////////////////////////////////////////////////////////////////////
 //BEGIN Newline adding and removing options
 
-// Whether to collapse empty blocks between '{' and '}'.
-// If true, overrides nl_inside_empty_func
+// Whether to collapse empty blocks between '{' and '}' except for functions.
+// Use nl_collapse_empty_body_functions to specify how empty function braces
+// should be formatted.
 extern Option<bool>
 nl_collapse_empty_body;
+
+// Whether to collapse empty blocks between '{' and '}' for functions only.
+// If true, overrides nl_inside_empty_func.
+extern Option<bool>
+nl_collapse_empty_body_functions;
 
 // Don't split one-line braced assignments, as in 'foo_t f = { 1, 2 };'.
 extern Option<bool>
@@ -2731,7 +2737,7 @@ nl_max_blank_in_func;
 // The number of newlines inside an empty function body.
 // This option overrides eat_blanks_after_open_brace and
 // eat_blanks_before_close_brace, but is ignored when
-// nl_collapse_empty_body=true
+// nl_collapse_empty_body_functions=true
 extern BoundedOption<unsigned, 0, 16>
 nl_inside_empty_func;
 
