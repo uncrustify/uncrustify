@@ -870,8 +870,8 @@ void newline_del_between(Chunk *start, Chunk *end)
    } while (pc != end);
 
    if (  !start_removed
-      && chunk_is_str(end, "{", 1)
-      && (  chunk_is_str(start, ")", 1)
+      && chunk_is_str(end, "{")
+      && (  chunk_is_str(start, ")")
          || chunk_is_token(start, CT_DO)
          || chunk_is_token(start, CT_ELSE)))
    {
@@ -3134,7 +3134,7 @@ static void newline_func_def_or_call(Chunk *start)
       }
       Chunk *pc = start->GetNextNcNnl();
 
-      if (chunk_is_str(pc, ")", 1))
+      if (chunk_is_str(pc, ")"))
       {
          log_rule_B("nl_func_call_paren_empty");
          atmp = options::nl_func_call_paren_empty();
@@ -3300,7 +3300,7 @@ static void newline_func_def_or_call(Chunk *start)
       }
       Chunk *pc = start->GetNextNcNnl();
 
-      if (chunk_is_str(pc, ")", 1))
+      if (chunk_is_str(pc, ")"))
       {
          log_rule_B("nl_func_def_empty");
          log_rule_B("nl_func_decl_empty");

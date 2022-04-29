@@ -422,8 +422,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       && !chunk_is_semicolon(pc)
       && chunk_is_not_token(pc, CT_BRACE_CLOSE)
       && chunk_is_not_token(pc, CT_VBRACE_CLOSE)
-      && !chunk_is_str(pc, ")", 1)
-      && !chunk_is_str(pc, "]", 1))
+      && !chunk_is_str(pc, ")")
+      && !chunk_is_str(pc, "]"))
    {
       chunk_flags_set(pc, PCF_EXPR_START | ((frm.stmt_count == 0) ? PCF_STMT_START : PCF_NONE));
       LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 1.marked '%s' as %s, start stmt_count is %zu, expr_count is %zu\n",

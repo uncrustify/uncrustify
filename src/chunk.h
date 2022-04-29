@@ -985,11 +985,13 @@ static inline bool chunk_is_type(Chunk *pc)
 }
 
 
-static inline bool chunk_is_str(Chunk *pc, const char *str, size_t len)
+static inline bool chunk_is_str(Chunk *pc, const string &str)
 {
-   return(  pc != nullptr                         // valid pc pointer
-         && (pc->Len() == len)                    // token size equals size parameter
-         && (memcmp(pc->Text(), str, len) == 0)); // token name is the same as str parameter
+   auto len = str.size();
+
+   return(  pc != nullptr                                 // valid pc pointer
+         && (pc->Len() == len)                            // token size equals size parameter
+         && (memcmp(pc->Text(), str.c_str(), len) == 0)); // token name is the same as str parameter
 
    /*
     * TODO: possible access beyond array for memcmp, check this
