@@ -2659,14 +2659,6 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          return(options::sp_before_ptr_star_trailing());
       }
 
-      if (  language_is_set(LANG_CS)
-         && chunk_is_nullable(second))
-      {
-         min_sp = 0;
-         log_rule("REMOVE");
-         return(IARF_REMOVE);
-      }
-
       // Add or remove space before a pointer star '*', if followed by a function
       // prototype or function definition.
       if (options::sp_before_ptr_star_func() != IARF_IGNORE)
