@@ -1261,7 +1261,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          set_chunk_type(pc, CT_PTR_TYPE);
       }
 
-      if (  language_is_set(LANG_CS)
+      if (  language_is_set(LANG_CS | LANG_VALA)
          && chunk_is_token(pc, CT_QUESTION)
          && chunk_is_token(prev, CT_ANGLE_CLOSE))
       {
