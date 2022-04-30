@@ -185,3 +185,13 @@
 10020  oc/align-objc-like-xcode.cfg             oc/align-objc-like-xcode.m
 10021  oc/double-indent-objc-dict.cfg           oc/double-indent-objc-dict.m
 10022  oc/indent-objc-block.cfg                 oc/indent-objc-block.m
+10033  oc/U11-Cpp.cfg                           oc/objc.mm
+10034  oc/U12-Cpp.cfg                           oc/asm.h.mm
+10035  oc/U13-Cpp.cfg                           oc/definesalign.h.mm
+10036  oc/U14-Cpp.cfg                           oc/inttypes.h.mm
+10046  oc/U15-Cpp.cfg                           oc/UNI-1333.mm
+10102  oc/U24-Cpp.cfg                           oc/pp-ignore.mm
+11030  oc/U08-Cpp.cfg                           oc/argtypes.mm
+11031  oc/U09-Cpp.cfg                           oc/casting.mm
+11032  oc/U10-Cpp.cfg                           oc/newlines.mm
+60011  oc/UNI-11095.cfg                         oc/UNI-11095.mm

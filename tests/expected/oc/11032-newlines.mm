@@ -1,6 +1,6 @@
 NSString* GetXcodePath()
 {
-    return [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier: kXCodeBundleId];
+    return [[NSWorkspace sharedWorkspace]absolutePathForAppBundleWithIdentifier: kXCodeBundleId];
 }
 
 extern "C" EXPORTDLL void LaunchXCode()
@@ -28,6 +28,6 @@ NSString* MakeNSString(const std::string& string)
 
 NSString* MakeNSString(const char* string)
 {
-    NSString* ret = string? [NSString stringWithUTF8String:string] : nil;
+    NSString* ret = string ? [NSString stringWithUTF8String: string] : nil;
     return ret ? ret : @"";
 }
