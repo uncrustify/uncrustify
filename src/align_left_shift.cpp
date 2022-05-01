@@ -73,7 +73,7 @@ void align_left_shift(void)
       }
       else if (  !pc->flags.test(PCF_IN_ENUM)
               && !pc->flags.test(PCF_IN_TYPEDEF)
-              && chunk_is_str(pc, "<<", 2))
+              && chunk_is_str(pc, "<<"))
       {
          if (get_chunk_parent_type(pc) == CT_OPERATOR)
          {

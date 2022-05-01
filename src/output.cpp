@@ -2915,7 +2915,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
          tmp = fpo->GetNextNcNnl();
 
          if (  (tmp == fpc->GetPrevNcNnl())
-            && chunk_is_str(tmp, "void", 4))
+            && chunk_is_str(tmp, "void"))
          {
             has_param = false;
          }
@@ -2971,7 +2971,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
    }
 
    if (  tmp->IsNotNullChunk()
-      && !chunk_is_str(tmp, "void", 4))
+      && !chunk_is_str(tmp, "void"))
    {
       if (need_nl)
       {

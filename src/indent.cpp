@@ -2782,11 +2782,11 @@ void indent_text(void)
             frm.top().indent_tab = frm.top().indent;
             skipped = true;
          }
-         else if (  (  chunk_is_str(pc, "(", 1)
+         else if (  (  chunk_is_str(pc, "(")
                     && !options::indent_paren_nl())
-                 || (  chunk_is_str(pc, "<", 1)
+                 || (  chunk_is_str(pc, "<")
                     && !options::indent_paren_nl())    // TODO: add indent_angle_nl?
-                 || (  chunk_is_str(pc, "[", 1)
+                 || (  chunk_is_str(pc, "[")
                     && !options::indent_square_nl()))
          {
             log_rule_B("indent_paren_nl");
