@@ -35,41 +35,58 @@ void enum_cleanup(void)
       {
          LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s\n",
                  __func__, __LINE__, pc->orig_line, get_token_name(pc->type));
-         Chunk *prev = pc->GetPrevNcNnlNpp();
+         Chunk *prev = pc->GetPrevNcNnl();                           // Issue #3604
 
-         // test of (prev == nullptr) is not necessary
-         if (chunk_is_token(prev, CT_COMMA))
+         if (  prev != nullptr
+            && prev->IsNotNullChunk())
          {
-            log_rule_B("mod_enum_last_comma");
-
-            if (options::mod_enum_last_comma() == IARF_REMOVE)
-            {
-               chunk_del(prev);
-            }
-         }
-         else
-         {
-            if (chunk_is_token(prev, CT_BRACE_OPEN))                // Issue #2902
-            {
-               // nothing betwen CT_BRACE_OPEN and CT_BRACE_CLOSE
-            }
-            else
+            if (chunk_is_token(prev, CT_COMMA))
             {
                log_rule_B("mod_enum_last_comma");
 
-               if (  options::mod_enum_last_comma() == IARF_ADD
-                  || options::mod_enum_last_comma() == IARF_FORCE)
+               if (options::mod_enum_last_comma() == IARF_REMOVE)
                {
-                  // create a comma
-                  Chunk comma;
-                  set_chunk_type(&comma, CT_COMMA);
-                  comma.orig_line = prev->orig_line;
-                  comma.orig_col  = prev->orig_col + 1;
-                  comma.nl_count  = 0;
-                  comma.pp_level  = 0;
-                  comma.flags     = PCF_NONE;
-                  comma.str       = ",";
-                  chunk_add_after(&comma, prev);
+                  chunk_del(prev);
+               }
+            }
+            else
+            {
+               if (chunk_is_token(prev, CT_BRACE_OPEN))                // Issue #2902
+               {
+                  // nothing between CT_BRACE_OPEN and CT_BRACE_CLOSE
+               }
+               else
+               {
+                  log_rule_B("mod_enum_last_comma");
+
+                  if (  options::mod_enum_last_comma() == IARF_ADD
+                     || options::mod_enum_last_comma() == IARF_FORCE)
+                  {
+                     // create a comma
+                     Chunk comma;
+                     set_chunk_type(&comma, CT_COMMA);
+                     comma.orig_line = prev->orig_line;
+                     comma.orig_col  = prev->orig_col + 1;
+                     comma.nl_count  = 0;
+                     comma.pp_level  = 0;
+                     comma.flags     = PCF_NONE;
+                     comma.str       = ",";
+
+                     if (chunk_is_token(prev, CT_PP_ENDIF))                // Issue #3604
+                     {
+                        prev = prev->GetPrevNcNnlNpp();
+                     }
+
+                     if (chunk_is_token(prev, CT_COMMA))                   // Issue #3604
+                     {
+                        // nothing to do
+                     }
+                     else
+                     {
+                        chunk_add_after(&comma, prev);
+                     }
+                     pc = pc->GetNext();
+                  }
                }
             }
          }
