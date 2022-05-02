@@ -69,10 +69,10 @@ void fl_log_frms(log_sev_t                     logsev,
 {
    LOG_FMT(logsev, "%s Parse Frames(%zu):", txt, frames.size());
 
-   for (size_t idx = 0; idx < frames.size(); idx++)
+   for (const auto &frame : frames)
    {
-      LOG_FMT(logsev, " [%s-%zu]", get_token_name(frames.at(idx).in_ifdef),
-              frames.at(idx).ref_no);
+      LOG_FMT(logsev, " [%s-%zu]", get_token_name(frame.in_ifdef),
+              frame.ref_no);
    }
 
    LOG_FMT(logsev, "-[%s-%zu]\n", get_token_name(frm.in_ifdef), frm.ref_no);

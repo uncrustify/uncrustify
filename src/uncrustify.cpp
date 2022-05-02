@@ -427,14 +427,14 @@ int main(int argc, char *argv[])
    // output.cpp, line 427: fprintf(pfile, "# Line              Tag                Parent...
    // and              430: ... fprintf(pfile, "%s# %3zu>%19.19s[%19.19s] ...
    // here                                                xx xx   xx xx
-   for (size_t token = 0; token < ARRAY_SIZE(token_names); token++)
+   for (auto &token_name : token_names)
    {
-      const size_t name_length = strlen(token_names[token]);
+      const size_t name_length = strlen(token_name);
 
       if (name_length > max_name_length)
       {
          fprintf(stderr, "%s(%d): The token name '%s' is too long (%d)\n",
-                 __func__, __LINE__, token_names[token], static_cast<int>(name_length));
+                 __func__, __LINE__, token_name, static_cast<int>(name_length));
          fprintf(stderr, "%s(%d): the max token name length is %d\n",
                  __func__, __LINE__, max_name_length);
          log_flush(true);
@@ -443,7 +443,7 @@ int main(int argc, char *argv[])
    }
 
    // make sure we have token_names.h in sync with token_enum.h
-   assert(ARRAY_SIZE(token_names) == CT_TOKEN_COUNT_);
+   static_assert(ARRAY_SIZE(token_names) == CT_TOKEN_COUNT_, "");
 #endif // DEBUG
 
    Args arg(argc, argv);
@@ -662,13 +662,13 @@ int main(int argc, char *argv[])
 
    LOG_FMT(LDATA, "%s\n", UNCRUSTIFY_VERSION);
    LOG_FMT(LDATA, "config_file = %s\n", cfg_file.c_str());
-   LOG_FMT(LDATA, "output_file = %s\n", (output_file != NULL) ? output_file : "null");
-   LOG_FMT(LDATA, "source_file = %s\n", (source_file != NULL) ? source_file : "null");
-   LOG_FMT(LDATA, "source_list = %s\n", (source_list != NULL) ? source_list : "null");
-   LOG_FMT(LDATA, "tracking    = %s\n", (cpd.html_file != NULL) ? cpd.html_file : "null");
-   LOG_FMT(LDATA, "prefix      = %s\n", (prefix != NULL) ? prefix : "null");
-   LOG_FMT(LDATA, "suffix      = %s\n", (suffix != NULL) ? suffix : "null");
-   LOG_FMT(LDATA, "assume      = %s\n", (assume != NULL) ? assume : "null");
+   LOG_FMT(LDATA, "output_file = %s\n", (output_file != nullptr) ? output_file : "null");
+   LOG_FMT(LDATA, "source_file = %s\n", (source_file != nullptr) ? source_file : "null");
+   LOG_FMT(LDATA, "source_list = %s\n", (source_list != nullptr) ? source_list : "null");
+   LOG_FMT(LDATA, "tracking    = %s\n", (cpd.html_file != nullptr) ? cpd.html_file : "null");
+   LOG_FMT(LDATA, "prefix      = %s\n", (prefix != nullptr) ? prefix : "null");
+   LOG_FMT(LDATA, "suffix      = %s\n", (suffix != nullptr) ? suffix : "null");
+   LOG_FMT(LDATA, "assume      = %s\n", (assume != nullptr) ? assume : "null");
    LOG_FMT(LDATA, "replace     = %s\n", replace ? "true" : "false");
    LOG_FMT(LDATA, "no_backup   = %s\n", no_backup ? "true" : "false");
    LOG_FMT(LDATA, "detect      = %s\n", detect ? "true" : "false");
@@ -1583,9 +1583,9 @@ static void do_source_file(const char *filename_in,
 
    if (cpd.if_changed)
    {
-      for (deque<UINT8>::const_iterator i = cpd.bout->begin(), end = cpd.bout->end(); i != end; ++i)
+      for (unsigned char i : *cpd.bout)
       {
-         fputc(*i, pfout);
+         fputc(i, pfout);
       }
 
       uncrustify_end();

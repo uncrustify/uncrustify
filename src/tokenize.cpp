@@ -2487,7 +2487,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
 
    if (probe_lang_flags != 0)
    {
-      if ((punc = find_punctuator(punc_txt, probe_lang_flags)) != NULL)
+      if ((punc = find_punctuator(punc_txt, probe_lang_flags)) != nullptr)
       {
          cpd.lang_flags = probe_lang_flags;
          int cnt = strlen(punc->tag);

@@ -42,11 +42,6 @@ const char *language_name_from_flags(size_t lang);
  */
 E_Token find_token_name(const char *text);
 
-std::string pcf_flags_str(pcf_flags_t flags);
-
-
-void log_pcf_flags(log_sev_t sev, pcf_flags_t flags);
-
 
 /**
  * Replace the brain-dead and non-portable basename().

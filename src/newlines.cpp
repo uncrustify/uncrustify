@@ -5317,19 +5317,16 @@ void newlines_squeeze_paren_close(void)
          Chunk *next_op = chunk_skip_to_match_rev(next);
          bool  flag     = true;
 
-         if (true)
+         Chunk *tmp = prev;
+
+         while (chunk_is_paren_close(tmp))
          {
-            Chunk *tmp = prev;
+            tmp = tmp->GetPrev();
+         }
 
-            while (chunk_is_paren_close(tmp))
-            {
-               tmp = tmp->GetPrev();
-            }
-
-            if (chunk_is_not_token(tmp, CT_NEWLINE))
-            {
-               flag = false;
-            }
+         if (chunk_is_not_token(tmp, CT_NEWLINE))
+         {
+            flag = false;
          }
 
          if (flag)
