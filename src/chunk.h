@@ -1018,7 +1018,7 @@ static inline bool chunk_is_word(Chunk *pc)
 
 static inline bool chunk_is_nullable(Chunk *pc)
 {
-   return(  language_is_set(LANG_CS)
+   return(  language_is_set(LANG_CS | LANG_VALA)
          && (pc != nullptr)
          && (pc->Len() == 1)
          && (pc->str[0] == '?'));

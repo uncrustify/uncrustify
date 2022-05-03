@@ -491,7 +491,7 @@ void tokenize_cleanup(void)
       if (  (chunk_is_token(next, CT_STAR))
          || (  language_is_set(LANG_CPP)
             && (chunk_is_token(next, CT_CARET)))
-         || (  language_is_set(LANG_CS)
+         || (  language_is_set(LANG_CS | LANG_VALA)
             && (chunk_is_token(next, CT_QUESTION))
             && (strcmp(pc->Text(), "null") != 0)))
       {

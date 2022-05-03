@@ -336,7 +336,7 @@ bool chunk_ends_type(Chunk *start)
             && get_chunk_parent_type(pc) == CT_TEMPLATE
             && (  chunk_is_token(pc, CT_ANGLE_OPEN)
                || chunk_is_token(pc, CT_ANGLE_CLOSE)))
-         || (  language_is_set(LANG_CS)
+         || (  language_is_set(LANG_CS | LANG_VALA)
             && (chunk_is_token(pc, CT_MEMBER))))
       {
          cnt++;
