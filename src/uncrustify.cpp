@@ -427,7 +427,7 @@ int main(int argc, char *argv[])
    // output.cpp, line 427: fprintf(pfile, "# Line              Tag                Parent...
    // and              430: ... fprintf(pfile, "%s# %3zu>%19.19s[%19.19s] ...
    // here                                                xx xx   xx xx
-   for (auto &token_name : token_names)
+   for (const auto &token_name : token_names)
    {
       const size_t name_length = strlen(token_name);
 
@@ -1583,7 +1583,7 @@ static void do_source_file(const char *filename_in,
 
    if (cpd.if_changed)
    {
-      for (unsigned char i : *cpd.bout)
+      for (UINT8 i : *cpd.bout)
       {
          fputc(i, pfout);
       }
