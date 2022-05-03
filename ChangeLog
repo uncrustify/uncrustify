@@ -1,3 +1,59 @@
+Change highlights in uncrustify-0.75.0 (May 2022)
+-------------------------------------------------------------------------------
+  52131d9fa22fd0c655ae2510563ff85306d4bd27
+    Added   : mod_move_case_return                 Nov 25 2021
+  d0008e933daca163ef8f7258f526e75fb8b5b160
+    Added   : sp_ptr_star_func_type                Dec  8 2021
+  a17751ae534cb7d1a8b505a111d7b8b50c9842d4
+    Added   : pp_indent_at_level0                  Dec 14 2021
+  498c1b3a6c96c9dd8ec13a4c0f616acdb7a03cc5
+    Added   : align_braced_init_list_thresh        Dec 16 2021
+    Added   : align_braced_init_list_span          Dec 16 2021
+  8e811b9a57bc43d280aa592d8838cff93227968e
+    Added   : align_assign_on_multi_var_defs       Dec 18 2021
+  75d3c536789ef23d2d8568d891a4e3ba73aa7045
+    Added   : sp_byref_paren                       Dec 24 2021
+  d8507bb212aa317dce0f51227b8fd862354e03c2
+    Added   : sp_not_not                           Dec 28 2021
+  d9e2ae9aad5481f9da818909893e2f55d51ba392
+    Added   : indent_ignore_comma_paren            Jan  4 2022
+    Added   : indent_ignore_comma_brace            Jan  4 2022
+  8eff5202a58732e17f063af8360ff3e2691713aa
+    Added   : indent_ignore_bool_paren             Jan 13 2022
+  2c02f5c8285882ddf756992d842db12d0f98188a
+    Added   : indent_ignore_arith                  Jan 18 2022
+  0664cacee7689cf838425e83f38fb84f5e71bc63
+    Added   : mod_full_paren_return_bool           Jan 21 2022
+    Added   : mod_full_paren_assign_bool           Jan 21 2022
+  d593f257e88161a3ed1cff15b354c85e3da68992
+    Added   : sp_type_colon                        Jan 25 2022
+  026162b8da51660126863b42d00245e21a47d7c0
+    Removed : indent_ignore_comma_paren            Jan 28 2022
+    Removed : indent_ignore_bool_paren             Jan 28 2022
+    Removed : indent_ignore_comma_brace            Jan 28 2022
+  6cb50031c5e2e3681d69c3dafdbb865a5b6b6a2c
+    Added   : indent_ignore_semicolon              Feb  1 2022
+  b6f55dd25fb6a12c7f81c0090f8ee42e8823ee93
+    Added   : sp_enum_brace                        Feb  2 2022
+  8aa0522fcc2ad468f1122943443f5ebf426fffc1
+    Added   : indent_ignore_before_class_colon     Feb  4 2022
+  133fe55d6fc0b2e1695bd7a70ccd6d2dcd1b2262
+    Added   : indent_ignore_before_constr_colon    Feb  4 2022
+  c95460809c74a73459c61712ff2d9142dff101d7
+    Added   : indent_ignore_bool                   Feb 25 2022
+  b37091110063b5c24b64516a49af09b8ca3cc18c
+    Added   : indent_ignore_first_continue         Feb 25 2022
+  e84f08879a7cf53b0301099a64faadeacf04a3a5
+    Added   : indent_ignore_assign                 Mar  1 2022
+  6ef69ee2a359f2e1bd8517ba4af25b969951fa71
+    Added   : indent_ignore_case_brace             Mar  9 2022
+  02a5e50419fd1bf7c9bf0ff9d208035b47db6fbf
+    Added   : indent_namespace_inner_only          Apr 12 2022
+  9040b9f068a179c3a09e0cf202a5ed7f91b2a12b
+    Added   : pp_warn_unbalanced_if                Apr 15 2022
+  df2ef721c95105b62a9e0cb0e9985947a739a44b
+    Removed : sp_type_question                     Apr 30 2022
+
 Change highlights in uncrustify-0.74.0 (November 2021)
 -------------------------------------------------------------------------------
   4714d5d673d5b9c8f45d70c179f508d60130b18a
