@@ -40,7 +40,7 @@
 
 10090  cs/ben_043.cfg                               cs/string_multi.cs
 
-10100  common/empty.cfg                             cs/bug_600.cs
+10100  cs/bug_600.cfg                               cs/bug_600.cs
 10101  cs/sf607.cfg                                 cs/sf607.cs
 
 10110  cs/mda_space_a.cfg                           cs/mdarray_space.cs
