@@ -1,7 +1,13 @@
 ---
 
 name: uncrustify_test
-on: [push]
+on: [push, pull_request]
+
+# Cancel any in-progress CI runs for a PR if it is updated
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
+
 jobs:
   check-uncrustify:
     runs-on: ubuntu-latest
