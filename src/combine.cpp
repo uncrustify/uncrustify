@@ -38,12 +38,6 @@ static void flag_asm(Chunk *pc);
 
 
 /**
- * Skips the list of class/struct parent types.
- */
-Chunk *skip_parent_types(Chunk *colon);
-
-
-/**
  * Combines two tokens into {{ and }} if inside parens and nothing is between
  * either pair.
  */

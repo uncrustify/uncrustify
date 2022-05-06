@@ -253,7 +253,7 @@ static void add_char(UINT32 ch, bool is_literal)
    {
       write_string(cpd.newline);
       cpd.column      = 1;
-      cpd.did_newline = 1;
+      cpd.did_newline = true;
       cpd.spaces      = 0;
    }
 
@@ -263,14 +263,14 @@ static void add_char(UINT32 ch, bool is_literal)
       add_spaces();
       write_string(cpd.newline);
       cpd.column      = 1;
-      cpd.did_newline = 1;
+      cpd.did_newline = true;
       cpd.spaces      = 0;
    }
    else if (ch == '\r') // do not output the CARRIAGERETURN
    {
       // do not output '\r'
       cpd.column      = 1;
-      cpd.did_newline = 1;
+      cpd.did_newline = true;
       cpd.spaces      = 0;
    }
    else if (  (ch == '\t')
@@ -393,7 +393,7 @@ static bool next_word_exceeds_limit(const unc_text &text, size_t idx)
  */
 static void output_to_column(size_t column, bool allow_tabs)
 {
-   cpd.did_newline = 0;
+   cpd.did_newline = false;
 
    if (allow_tabs)
    {
@@ -427,7 +427,7 @@ static void cmt_output_indent(size_t brace_col, size_t base_col, size_t column)
    // LOG_FMT(LSYS, "%s(brace=%zd base=%zd col=%zd iwt=%zd) tab=%zd cur=%zd\n",
    //        __func__, brace_col, base_col, column, iwt, tab_col, cpd.column);
 
-   cpd.did_newline = 0;
+   cpd.did_newline = false;
 
    if (  iwt == 2
       || (  cpd.column == 1
@@ -587,7 +587,7 @@ void output_text(FILE *pfile)
    bool tracking = cpd.html_file != nullptr;                 // special for debugging
 
    cpd.fout        = pfile;
-   cpd.did_newline = 1;
+   cpd.did_newline = true;
    cpd.column      = 1;
 
    if (cpd.bom)
@@ -647,7 +647,7 @@ void output_text(FILE *pfile)
             add_char('\n');
          }
 
-         cpd.did_newline = 1;
+         cpd.did_newline = true;
          cpd.column      = 1;
          LOG_FMT(LOUTIND, " xx\n");
       }
@@ -729,7 +729,7 @@ void output_text(FILE *pfile)
          }
          add_char('\\');
          add_char('\n');
-         cpd.did_newline = 1;
+         cpd.did_newline = true;
          cpd.column      = 1;
          LOG_FMT(LOUTIND, " \\xx\n");
       }
@@ -1770,8 +1770,7 @@ static Chunk *output_comment_c(Chunk *first)
       tmp.set(pc->str, 2, pc->Len() - 4);
 
       if (  cpd.last_char == '*'
-         && (  tmp[0] == '/'
-            || tmp[0] != ' '))                 // Issue #1908
+         && tmp[0] != ' ')                 // Issue #1908
       {
          LOG_FMT(LCONTTEXT, "%s(%d): add_text a " "\n", __func__, __LINE__);
          add_text(" ");

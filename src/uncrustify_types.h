@@ -249,7 +249,7 @@ struct cp_data_t
    UINT32            le_counts[uncrustify::line_end_styles];
    unc_text          newline;
 
-   int               did_newline;       //! flag indicates if a newline was added or converted
+   bool              did_newline;       //! flag indicates if a newline was added or converted
    E_Token           in_preproc;
    int               preproc_ncnl_count;
    bool              output_trailspace;
