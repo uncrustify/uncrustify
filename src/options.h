@@ -3221,12 +3221,6 @@ align_var_def_inline;
 extern BoundedOption<unsigned, 0, 5000>
 align_assign_span;
 
-// The span for aligning on '{' in braced init list.
-//
-// 0: Don't align (default).
-extern BoundedOption<unsigned, 0, 5000>
-align_braced_init_list_span;
-
 // The span for aligning on '=' in function prototype modifier.
 //
 // 0: Don't align (default).
@@ -3245,6 +3239,12 @@ align_assign_thresh;
 // Depends on 'align_assign_span' and 'align_assign_thresh' settings.
 extern Option<bool>
 align_assign_on_multi_var_defs;
+
+// The span for aligning on '{' in braced init list.
+//
+// 0: Don't align (default).
+extern BoundedOption<unsigned, 0, 5000>
+align_braced_init_list_span;
 
 // The threshold for aligning on '{' in braced init list.
 // Use a negative number for absolute thresholds.
