@@ -68,12 +68,6 @@ Chunk *skip_to_expression_start(Chunk *pc);
 
 
 /**
- * Skips the list of class/struct parent types.
- */
-Chunk *skip_parent_types(Chunk *colon);
-
-
-/**
  * Skips over the rest of the template if ang_open is indeed a CT_ANGLE_OPEN.
  * Points to the chunk after the CT_ANGLE_CLOSE.
  * If the chunk isn't an CT_ANGLE_OPEN, then it is returned.

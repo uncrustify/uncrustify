@@ -126,55 +126,6 @@ Chunk *skip_to_next_statement(Chunk *pc)
 }
 
 
-Chunk *skip_parent_types(Chunk *colon)
-{
-   Chunk *pc = colon->GetNextNcNnlNpp();
-
-   while (pc)
-   {
-      // Skip access specifier
-      if (chunk_is_token(pc, CT_ACCESS))
-      {
-         pc = pc->GetNextNcNnlNpp();
-         continue;
-      }
-
-      // Check for a type name
-      if (!(  chunk_is_token(pc, CT_WORD)
-           || chunk_is_token(pc, CT_TYPE)))
-      {
-         LOG_FMT(LPCU,
-                 "%s is confused; expected a word at %zu:%zu "
-                 "following type list at %zu:%zu\n", __func__,
-                 colon->orig_line, colon->orig_col,
-                 pc->orig_line, pc->orig_col);
-         return(colon);
-      }
-      // Get next token
-      Chunk *next = skip_template_next(pc->GetNextNcNnlNpp());
-
-      if (  chunk_is_token(next, CT_DC_MEMBER)
-         || chunk_is_token(next, CT_COMMA))
-      {
-         pc = next->GetNextNcNnlNpp();
-      }
-      else if (next != nullptr)
-      {
-         LOG_FMT(LPCU, "%s -> %zu:%zu ('%s')\n", __func__,
-                 next->orig_line, next->orig_col, next->Text());
-         return(next);
-      }
-      else
-      {
-         break;
-      }
-   }
-   LOG_FMT(LPCU, "%s: did not find end of type list (start was %zu:%zu)\n",
-           __func__, colon->orig_line, colon->orig_col);
-   return(colon);
-} // skip_parent_types
-
-
 Chunk *skip_template_prev(Chunk *ang_close)
 {
    if (chunk_is_token(ang_close, CT_ANGLE_CLOSE))
