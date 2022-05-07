@@ -977,33 +977,37 @@ static Chunk *chunk_add(const Chunk *pc_in, Chunk *ref, const E_Direction pos)
 } // chunk_add
 
 
-Chunk *chunk_get_next_ssq(Chunk *cur)
+Chunk *Chunk::GetNextNbsb() const
 {
-   while (  chunk_is_token(cur, CT_TSQUARE)
-         || chunk_is_token(cur, CT_SQUARE_OPEN))
+   Chunk *pc = const_cast<Chunk *>(this);
+
+   while (  pc->Is(CT_TSQUARE)
+         || pc->Is(CT_SQUARE_OPEN))
    {
-      if (chunk_is_token(cur, CT_SQUARE_OPEN))
+      if (pc->Is(CT_SQUARE_OPEN))
       {
-         cur = chunk_skip_to_match(cur);
+         pc = chunk_skip_to_match(pc);
       }
-      cur = cur->GetNextNcNnl();
+      pc = pc->GetNextNcNnl();
    }
-   return(cur);
+   return(pc);
 }
 
 
-Chunk *chunk_get_prev_ssq(Chunk *cur)
+Chunk *Chunk::GetPrevNbsb() const
 {
-   while (  chunk_is_token(cur, CT_TSQUARE)
-         || chunk_is_token(cur, CT_SQUARE_CLOSE))
+   Chunk *pc = const_cast<Chunk *>(this);
+
+   while (  pc->Is(CT_TSQUARE)
+         || pc->Is(CT_SQUARE_CLOSE))
    {
-      if (chunk_is_token(cur, CT_SQUARE_CLOSE))
+      if (pc->Is(CT_SQUARE_CLOSE))
       {
-         cur = chunk_skip_to_match_rev(cur);
+         pc = chunk_skip_to_match_rev(pc);
       }
-      cur = cur->GetPrevNcNnl();
+      pc = pc->GetPrevNcNnl();
    }
-   return(cur);
+   return(pc);
 }
 
 

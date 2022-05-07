@@ -1359,7 +1359,7 @@ void mark_function(Chunk *pc)
       {
          tmp3 = tmp2->GetNextNcNnl();
       }
-      tmp3 = chunk_get_next_ssq(tmp3);
+      tmp3 = tmp3->GetNextNbsb();
 
       if (  chunk_is_str(tmp3, ")")
          && (  tmp1->IsStar()
@@ -2118,7 +2118,7 @@ bool mark_function_type(Chunk *pc)
    // Scan backwards across the name, which can only be a word and single star
    Chunk *varcnk = pc->GetPrevNcNnlNi();   // Issue #2279
 
-   varcnk = chunk_get_prev_ssq(varcnk);
+   varcnk = varcnk->GetPrevNbsb();
 
    if (  varcnk->IsNotNullChunk()
       && !chunk_is_word(varcnk))
@@ -2175,7 +2175,7 @@ bool mark_function_type(Chunk *pc)
 
    while ((tmp = tmp->GetPrevNcNnlNi())->IsNotNullChunk()) // Issue #2279
    {
-      tmp = chunk_get_prev_ssq(tmp);
+      tmp = tmp->GetPrevNbsb();
 
       LOG_FMT(LFTYPE, " -- type is %s, %s on orig_line %zu, orig_col is %zu",
               get_token_name(tmp->type), tmp->Text(),
