@@ -230,14 +230,12 @@ public:
     */
    Chunk *GetPrevNcNnlNet(const E_Scope scope = E_Scope::ALL) const;
 
-
    /**
     * @brief returns the prev non-comment, non-newline, non-ignored chunk
     * @param scope code region to search in
     * @return pointer to prev non-comment, non-newline, non-ignored chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetPrevNcNnlNi(const E_Scope scope = E_Scope::ALL) const;
-
 
    /**
     * @brief returns the next chunk not in or part of balanced square
@@ -248,7 +246,6 @@ public:
     */
    Chunk *GetNextNisq(const E_Scope scope = E_Scope::ALL) const;
 
-
    /**
     * @brief returns the next non-virtual brace chunk
     * @param scope code region to search in
@@ -256,14 +253,12 @@ public:
     */
    Chunk *GetNextNvb(const E_Scope scope = E_Scope::ALL) const;
 
-
    /**
     * @brief returns the prev non-virtual brace chunk
     * @param scope code region to search in
     * @return pointer to prev non-virtual brace chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetPrevNvb(const E_Scope scope = E_Scope::ALL) const;
-
 
    /**
     * @brief returns the next chunk of the given type at the level.
@@ -274,7 +269,6 @@ public:
     */
    Chunk *GetNextType(const E_Token cType, const int cLevel, const E_Scope scope = E_Scope::ALL) const;
 
-
    /**
     * @brief returns the prev chunk of the given type at the level.
     * @param cType  the type to look for
@@ -283,7 +277,6 @@ public:
     * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetPrevType(const E_Token type, int level, E_Scope scope = E_Scope::ALL) const;
-
 
    /**
     * @brief returns the next chunk that holds a given string at a given level.
@@ -295,7 +288,6 @@ public:
     */
    Chunk *GetNextString(const char *cStr, const size_t len, const int cLevel, const E_Scope scope = E_Scope::ALL) const;
 
-
    /**
     * @brief returns the prev chunk that holds a given string at a given level.
     * @param cStr   string to search for
@@ -305,6 +297,20 @@ public:
     * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetPrevString(const char *cStr, const size_t len, const int cLevel, const E_Scope scope = E_Scope::ALL) const;
+
+   /**
+    * @brief returns the next chunk that is not part of balanced square brackets.
+    * This handles stacked[] instances to accommodate multidimensional arrays.
+    * @return pointer to the next matching chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetNextNbsb() const;
+
+   /**
+    * @brief returns the prev chunk that is not part of balanced square brackets.
+    * This handles stacked[] instances to accommodate multidimensional arrays.
+    * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetPrevNbsb() const;
 
 
    // --------- Search functions
@@ -633,29 +639,6 @@ Chunk *chunk_first_on_line(Chunk *pc);
 
 //! check if a given chunk is the last on its line
 bool chunk_is_last_on_line(Chunk *pc);
-
-
-/**
- * Gets the next chunk not in or part of balanced square
- * brackets.This handles stacked[] instances to accommodate
- * multi - dimensional array declarations
- *
- * @param  cur    chunk to use as start point
- *
- * @return nullptr or the next chunk not in or part of square brackets
- */
-Chunk *chunk_get_next_ssq(Chunk *cur);
-
-/**
- * Gets the prev chunk not in or part of balanced square
- * brackets.This handles stacked[] instances to accommodate
- * multi - dimensional array declarations
- *
- * @param  cur    chunk to use as start point
- *
- * @return nullptr or the prev chunk not in or part of square brackets
- */
-Chunk *chunk_get_prev_ssq(Chunk *cur);
 
 
 /**
