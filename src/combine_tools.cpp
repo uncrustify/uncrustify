@@ -97,9 +97,9 @@ bool can_be_full_param(Chunk *start, Chunk *end)
               && chunk_is_token(pc, CT_PAREN_OPEN))
       {
          // Check for old-school func proto param '(type)'
-         Chunk *tmp1 = chunk_skip_to_match(pc, E_Scope::PREPROC);
+         Chunk *tmp1 = pc->SkipToMatch(E_Scope::PREPROC);
 
-         if (tmp1 == nullptr)
+         if (tmp1->IsNullChunk())
          {
             return(false);
          }
@@ -183,7 +183,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
 
          if (chunk_is_str(tmp1, "("))
          {
-            tmp3 = chunk_skip_to_match(tmp1, E_Scope::PREPROC);
+            tmp3 = tmp1->SkipToMatch(E_Scope::PREPROC);
          }
          pc = tmp3;
          LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', type is %s\n",
@@ -201,7 +201,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
               && chunk_is_token(pc, CT_SQUARE_OPEN))
       {
          // skip over any array stuff
-         pc = chunk_skip_to_match(pc, E_Scope::PREPROC);
+         pc = pc->SkipToMatch(E_Scope::PREPROC);
          LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', type is %s\n",
                  __func__, __LINE__, pc->Text(), get_token_name(pc->type));
       }
@@ -209,7 +209,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
               && chunk_is_token(pc, CT_SQUARE_OPEN))
       {
          // Bug #671: is it such as: bool foo[FOO_MAX]
-         pc = chunk_skip_to_match(pc, E_Scope::PREPROC);
+         pc = pc->SkipToMatch(E_Scope::PREPROC);
          LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', type is %s\n",
                  __func__, __LINE__, pc->Text(), get_token_name(pc->type));
       }
@@ -551,9 +551,9 @@ Chunk *set_paren_parent(Chunk *start, E_Token parent)
    LOG_FUNC_ENTRY();
    Chunk *end;
 
-   end = chunk_skip_to_match(start, E_Scope::PREPROC);
+   end = start->SkipToMatch(E_Scope::PREPROC);
 
-   if (end != nullptr)
+   if (end->IsNotNullChunk())
    {
       LOG_FMT(LFLPAREN, "%s(%d): %zu:%zu '%s' and %zu:%zu '%s' type is %s, parent_type is %s",
               __func__, __LINE__, start->orig_line, start->orig_col, start->Text(),

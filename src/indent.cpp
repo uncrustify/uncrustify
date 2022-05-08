@@ -506,7 +506,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    // Skip to open paren in ':^TYPE *(ARGS) {'
    if (chunk_is_paren_close(tmp))
    {
-      tmp = chunk_skip_to_match_rev(tmp)->GetPrevNc();
+      tmp = tmp->SkipToMatchRev()->GetPrevNc();
    }
 
    // // Check for star in ':^TYPE *(ARGS) {'. Issue 2477
@@ -1651,27 +1651,27 @@ void indent_text(void)
             frm.top().brace_indent = frm.prev().indent;
 
             Chunk *head     = frm.top().pc->GetPrevNcNnlNpp();
-            Chunk *tail     = nullptr;
+            Chunk *tail     = Chunk::NullChunkPtr;
             Chunk *frm_prev = frm.prev().pc;
             bool  enclosure = (  frm_prev->parent_type != CT_FUNC_DEF           // Issue #3407
-                              && frm_prev != chunk_skip_to_match(frm_prev));
+                              && frm_prev != frm_prev->SkipToMatch());
             bool  linematch = true;
 
-            for (auto it = frm.rbegin(); it != frm.rend() && tail == nullptr; ++it)
+            for (auto it = frm.rbegin(); it != frm.rend() && tail->IsNullChunk(); ++it)
             {
                if (it->pc && it->pc != frm.top().pc)
                {
                   linematch &= are_chunks_in_same_line(it->pc, head);
                }
-               Chunk *match = chunk_skip_to_match(it->pc);
+               Chunk *match = it->pc->SkipToMatch();
 
-               if (match == nullptr)
+               if (match->IsNullChunk())
                {
                   continue;
                }
                Chunk *target = match->GetNextNcNnlNpp();
 
-               while (  tail == nullptr
+               while (  tail->IsNullChunk()
                      && target->IsNotNullChunk())
                {
                   if (  chunk_is_semicolon(target)
@@ -1692,7 +1692,7 @@ void indent_text(void)
 
             bool toplevel = true;
 
-            for (auto it = frm.rbegin(); it != frm.rend() && tail != nullptr; ++it)
+            for (auto it = frm.rbegin(); it != frm.rend() && tail->IsNotNullChunk(); ++it)
             {
                if (!chunk_is_token(it->pc, CT_FPAREN_OPEN))
                {
@@ -1749,8 +1749,7 @@ void indent_text(void)
             // 2a. If it's an assignment, check that both sides of the assignment operator are on the same line
             // 2b. If it's inside some closure, check that all the frames are on the same line,
             //     and it is in the top level closure, and indent_continue is non-zero
-            bool sameLine =
-               are_chunks_in_same_line(chunk_skip_to_match(frm.top().pc), tail);
+            bool sameLine = are_chunks_in_same_line(frm.top().pc->SkipToMatch(), tail);
 
             bool isAssignSameLine =
                !enclosure
@@ -1952,7 +1951,7 @@ void indent_text(void)
 
                   if (options::indent_oc_block_msg_xcode_style())
                   {
-                     Chunk *bbc           = chunk_skip_to_match(pc); // block brace close '}'
+                     Chunk *bbc           = pc->SkipToMatch(); // block brace close '}'
                      Chunk *bbc_next_ncnl = bbc->GetNextNcNnl();
 
                      if (  bbc_next_ncnl->type == CT_OC_MSG_NAME
@@ -2599,7 +2598,7 @@ void indent_text(void)
               && options::indent_ignore_asm_block())
       {
          log_rule_B("indent_ignore_asm_block");
-         Chunk *tmp = chunk_skip_to_match(pc);
+         Chunk *tmp = pc->SkipToMatch();
 
          int   move = 0;
 
@@ -3821,7 +3820,7 @@ void indent_text(void)
                            || searchNext->type == CT_NEWLINE)
                         {
                            LOG_FMT(LINDLINE, "%s(%d):\n", __func__, __LINE__);
-                           search = chunk_skip_to_match_rev(search);
+                           search = search->SkipToMatchRev();
 
                            if (  options::indent_oc_inside_msg_sel()
                               && chunk_is_token(search->GetPrevNcNnl(), CT_OC_COLON)

@@ -78,9 +78,9 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
          LOG_FMT(LALASS, "%s(%d): Don't check inside SPAREN, PAREN or SQUARE groups, type is %s\n",
                  __func__, __LINE__, get_token_name(pc->type));
          tmp = pc->orig_line;
-         pc  = chunk_skip_to_match(pc);
+         pc  = pc->SkipToMatch();
 
-         if (pc != nullptr)
+         if (pc->IsNotNullChunk())
          {
             as.NewLines(pc->orig_line - tmp);
             vdas.NewLines(pc->orig_line - tmp);

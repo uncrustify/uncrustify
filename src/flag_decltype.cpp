@@ -17,7 +17,7 @@ bool flag_cpp_decltype(Chunk *pc)
 
       if (chunk_is_token(paren_open, CT_PAREN_OPEN))
       {
-         // We would like to simply call chunk_skip_to_match(), but it finds
+         // We would like to simply call Chunk::SkipToMatch(), but it finds
          // a match based on level, and the level is 0 for all chunks in some
          // cases, like the following example.
          //

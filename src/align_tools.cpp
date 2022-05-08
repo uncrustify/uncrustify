@@ -17,15 +17,9 @@ Chunk *skip_c99_array(Chunk *sq_open)
 {
    if (chunk_is_token(sq_open, CT_SQUARE_OPEN))
    {
-      Chunk *tmp = chunk_skip_to_match(sq_open);
+      Chunk *tmp = sq_open->SkipToMatch()->GetNextNc();
 
-      if (tmp == nullptr)
-      {
-         tmp = Chunk::NullChunkPtr;
-      }
-      tmp = tmp->GetNextNc();
-
-      if (chunk_is_token(tmp, CT_ASSIGN))
+      if (tmp->Is(CT_ASSIGN))
       {
          return(tmp->GetNextNc());
       }

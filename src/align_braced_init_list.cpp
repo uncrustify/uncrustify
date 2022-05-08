@@ -59,9 +59,9 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
          LOG_FMT(LALASS, "%s(%d)OK: Don't check inside SPAREN, PAREN or SQUARE groups, type is %s\n",
                  __func__, __LINE__, get_token_name(pc->type));
          tmp = pc->orig_line;
-         pc  = chunk_skip_to_match(pc);
+         pc  = pc->SkipToMatch();
 
-         if (pc != nullptr)
+         if (pc->IsNotNullChunk())
          {
             vdas.NewLines(pc->orig_line - tmp);
          }

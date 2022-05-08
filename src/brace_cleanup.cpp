@@ -1318,7 +1318,7 @@ static void mark_namespace(Chunk *pns)
       log_rule_B("indent_namespace_limit");
 
       if (  (options::indent_namespace_limit() > 0)
-         && ((br_close = chunk_skip_to_match(pc)) != nullptr))
+         && ((br_close = pc->SkipToMatch())->IsNotNullChunk()))
       {
          // br_close->orig_line is always >= pc->orig_line;
          size_t numberOfLines = br_close->orig_line - pc->orig_line - 1;                 // Issue #2345

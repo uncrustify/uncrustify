@@ -260,9 +260,9 @@ static void flag_asm(Chunk *pc)
    {
       return;
    }
-   Chunk *end = chunk_skip_to_match(po, E_Scope::PREPROC);
+   Chunk *end = po->SkipToMatch(E_Scope::PREPROC);
 
-   if (end == nullptr)
+   if (end->IsNullChunk())
    {
       return;
    }
@@ -1843,9 +1843,9 @@ static void check_double_brace_init(Chunk *bo1)
       if (chunk_is_token(bo2, CT_BRACE_OPEN))
       {
          // found a potential double brace
-         Chunk *bc2 = chunk_skip_to_match(bo2);
+         Chunk *bc2 = bo2->SkipToMatch();
 
-         if (bc2 == nullptr)
+         if (bc2->IsNullChunk())
          {
             return;
          }
@@ -2448,9 +2448,9 @@ static void handle_cpp_lambda(Chunk *sq_o)
    if (chunk_is_token(sq_o, CT_SQUARE_OPEN))
    {
       // make sure there is a ']'
-      sq_c = chunk_skip_to_match(sq_o);
+      sq_c = sq_o->SkipToMatch();
 
-      if (sq_c == nullptr)
+      if (sq_c->IsNullChunk())
       {
          LOG_FMT(LFCNR, "%s(%d): return\n", __func__, __LINE__);
          return;
@@ -2477,7 +2477,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
    if (chunk_is_token(pa_o, CT_PAREN_OPEN))
    {
       // and now find the ')'
-      pa_c = chunk_skip_to_match(pa_o);
+      pa_c = pa_o->SkipToMatch();
 
       if (pa_c->IsNullChunk())
       {
@@ -2525,7 +2525,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
       return;
    }
    // and now find the '}'
-   Chunk *br_c = chunk_skip_to_match(br_o);
+   Chunk *br_c = br_o->SkipToMatch();
 
    if (br_c->IsNullChunk())
    {
@@ -2596,7 +2596,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
 
    if (chunk_is_token(call_pa_o, CT_PAREN_OPEN))
    {
-      Chunk *call_pa_c = chunk_skip_to_match(call_pa_o);
+      Chunk *call_pa_c = call_pa_o->SkipToMatch();
 
       if (call_pa_c->IsNotNullChunk())
       {
@@ -2951,10 +2951,9 @@ static void handle_oc_block_literal(Chunk *pc)
    }
 
    // make sure we have braces
-   bbc = chunk_skip_to_match(bbo);
+   bbc = bbo->SkipToMatch();
 
    if (  bbo->IsNullChunk()
-      || bbc == nullptr
       || bbc->IsNullChunk())
    {
       LOG_FMT(LOCBLK, " -- no braces found\n");
@@ -2971,7 +2970,7 @@ static void handle_oc_block_literal(Chunk *pc)
 
    if (apo->IsNotNullChunk())
    {
-      Chunk *apc = chunk_skip_to_match(apo);  // arg parenthesis close
+      Chunk *apc = apo->SkipToMatch();  // arg parenthesis close
 
       if (chunk_is_paren_close(apc))
       {
@@ -3026,10 +3025,10 @@ static void handle_oc_block_type(Chunk *pc)
        * block type: 'RTYPE (^LABEL)(ARGS)'
        * LABEL is optional.
        */
-      Chunk *tpc = chunk_skip_to_match(tpo); // type close paren (after '^')
-      Chunk *nam = tpc->GetPrevNcNnlNi();    // name (if any) or '^'   Issue #2279
-      Chunk *apo = tpc->GetNextNcNnl();      // arg open paren
-      Chunk *apc = chunk_skip_to_match(apo); // arg close paren
+      Chunk *tpc = tpo->SkipToMatch();    // type close paren (after '^')
+      Chunk *nam = tpc->GetPrevNcNnlNi(); // name (if any) or '^'   Issue #2279
+      Chunk *apo = tpc->GetNextNcNnl();   // arg open paren
+      Chunk *apc = apo->SkipToMatch();    // arg close paren
 
       /*
        * If this is a block literal instead of a block type, 'nam'
@@ -3092,7 +3091,7 @@ static Chunk *handle_oc_md_type(Chunk *paren_open, E_Token ptype, pcf_flags_t fl
    Chunk *paren_close;
 
    if (  !chunk_is_paren_open(paren_open)
-      || ((paren_close = chunk_skip_to_match(paren_open)) == nullptr))
+      || ((paren_close = paren_open->SkipToMatch())->IsNullChunk()))
    {
       did_it = false;
       return(paren_open);
@@ -3236,9 +3235,9 @@ static void handle_oc_message_decl(Chunk *pc)
    if (chunk_is_token(pc, CT_BRACE_OPEN))
    {
       set_chunk_parent(pc, pt);
-      pc = chunk_skip_to_match(pc);
+      pc = pc->SkipToMatch();
 
-      if (pc != nullptr)
+      if (pc->IsNotNullChunk())
       {
          set_chunk_parent(pc, pt);
       }
@@ -3313,7 +3312,7 @@ static void handle_oc_message_send(Chunk *os)
             return;
          }
       }
-      tmp = chunk_skip_to_match(tmp);
+      tmp = tmp->SkipToMatch();
    }
    else if (  chunk_is_not_token(tmp, CT_WORD)
            && chunk_is_not_token(tmp, CT_TYPE)
@@ -3428,7 +3427,7 @@ static void handle_oc_message_send(Chunk *os)
    // [(self.foo.bar) method]
    if (chunk_is_paren_open(tmp))
    {
-      tmp = chunk_skip_to_match(tmp)->GetNextNcNnl();
+      tmp = tmp->SkipToMatch()->GetNextNcNnl();
    }
 
    if (  chunk_is_token(tmp, CT_WORD)
@@ -3732,7 +3731,7 @@ static void handle_oc_property_decl(Chunk *os)
 
    if (chunk_is_paren_open(tmp))
    {
-      tmp = chunk_skip_to_match(tmp)->GetNextNcNnl();
+      tmp = tmp->SkipToMatch()->GetNextNcNnl();
    }
    fix_variable_definition(tmp);
 } // handle_oc_property_decl
@@ -3909,7 +3908,7 @@ static void handle_proto_wrap(Chunk *pc)
    Chunk *opp  = pc->GetNextNcNnl();
    Chunk *name = opp->GetNextNcNnl();
    Chunk *tmp  = name->GetNextNcNnl()->GetNextNcNnl();
-   Chunk *clp  = chunk_skip_to_match(opp);
+   Chunk *clp  = opp->SkipToMatch();
    Chunk *cma  = clp->GetNextNcNnl();
 
    if (  opp->IsNullChunk()
@@ -3952,9 +3951,9 @@ static void handle_proto_wrap(Chunk *pc)
       fix_fcn_def_params(opp);
       set_chunk_type(name, CT_WORD);
    }
-   tmp = chunk_skip_to_match(tmp);
+   tmp = tmp->SkipToMatch();
 
-   if (tmp)
+   if (tmp->IsNotNullChunk())
    {
       set_chunk_parent(tmp, CT_PROTO_WRAP);
    }

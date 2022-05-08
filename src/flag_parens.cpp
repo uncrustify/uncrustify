@@ -15,9 +15,9 @@ Chunk *flag_parens(Chunk *po, pcf_flags_t flags, E_Token opentype, E_Token paren
    LOG_FUNC_ENTRY();
    Chunk *paren_close;
 
-   paren_close = chunk_skip_to_match(po, E_Scope::PREPROC);
+   paren_close = po->SkipToMatch(E_Scope::PREPROC);
 
-   if (paren_close == nullptr)
+   if (paren_close->IsNullChunk())
    {
       LOG_FMT(LERR, "%s(%d): no match for '%s' at [%zu:%zu]",
               __func__, __LINE__, po->Text(), po->orig_line, po->orig_col);

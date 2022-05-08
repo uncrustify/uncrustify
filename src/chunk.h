@@ -350,7 +350,6 @@ public:
     * @param  scope    code parts to consider for search
     * @param  dir      search direction (forward or backward)
     * @param  cond     success condition
-    *
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *Search(const T_CheckFnPtr checkFn, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const bool cond = true) const;
@@ -367,7 +366,6 @@ public:
     *
     * @param  checkFn  compare function
     * @param  cond     success condition
-    *
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *SearchPpa(const T_CheckFnPtr checkFn, const bool cond = true) const;
@@ -382,11 +380,9 @@ public:
     * @param scope  code parts to consider for search
     * @param dir    search direction
     * @param cLevel nesting level to match or -1 / ANY_LEVEL
-    *
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *SearchTypeLevel(const E_Token cType, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const int cLevel = -1) const;
-
 
    /**
     * @brief searches a chunk that holds a specific string
@@ -400,10 +396,23 @@ public:
     * @param  cLevel nesting level of the searched chunk, ignored when negative
     * @param  scope  code parts to consider for search
     * @param  dir    search direction
-    *
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *SearchStringLevel(const char *cStr, const size_t len, const int cLevel, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD) const;
+
+   /**
+    * @brief skip to the closing match for the current paren/brace/square.
+    * @param scope chunk section to consider
+    * @return pointer to the next matching chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *SkipToMatch(E_Scope scope = E_Scope::ALL) const;
+
+   /**
+    * @brief skip to the opening match for the current paren/brace/square.
+    * @param scope chunk section to consider
+    * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *SkipToMatchRev(E_Scope scope = E_Scope::ALL) const;
 
 
    // --------- Is* functions
@@ -826,47 +835,37 @@ static inline bool chunk_is_not_token(const Chunk *pc, E_Token c_token)
 }
 
 
-/**
- * Skips to the closing match for the current paren/brace/square.
- *
- * @param  cur    The opening or closing paren/brace/square
- * @param  scope  chunk section to consider
- *
- * @return nullptr or the matching paren/brace/square
- */
-static inline Chunk *chunk_skip_to_match(Chunk *cur, E_Scope scope = E_Scope::ALL)
+inline Chunk *Chunk::SkipToMatch(E_Scope scope) const
 {
-   if (  cur != nullptr
-      && (  chunk_is_token(cur, CT_PAREN_OPEN)
-         || chunk_is_token(cur, CT_SPAREN_OPEN)
-         || chunk_is_token(cur, CT_FPAREN_OPEN)
-         || chunk_is_token(cur, CT_TPAREN_OPEN)
-         || chunk_is_token(cur, CT_BRACE_OPEN)
-         || chunk_is_token(cur, CT_VBRACE_OPEN)
-         || chunk_is_token(cur, CT_ANGLE_OPEN)
-         || chunk_is_token(cur, CT_SQUARE_OPEN)))
+   if (  Is(CT_PAREN_OPEN)
+      || Is(CT_SPAREN_OPEN)
+      || Is(CT_FPAREN_OPEN)
+      || Is(CT_TPAREN_OPEN)
+      || Is(CT_BRACE_OPEN)
+      || Is(CT_VBRACE_OPEN)
+      || Is(CT_ANGLE_OPEN)
+      || Is(CT_SQUARE_OPEN))
    {
-      return(cur->GetNextType((E_Token)(cur->type + 1), cur->level, scope));
+      return(GetNextType((E_Token)(type + 1), level, scope));
    }
-   return(cur);
+   return(const_cast<Chunk *>(this));
 }
 
 
-static inline Chunk *chunk_skip_to_match_rev(Chunk *cur, E_Scope scope = E_Scope::ALL)
+inline Chunk *Chunk::SkipToMatchRev(E_Scope scope) const
 {
-   if (  cur != nullptr
-      && (  chunk_is_token(cur, CT_PAREN_CLOSE)
-         || chunk_is_token(cur, CT_SPAREN_CLOSE)
-         || chunk_is_token(cur, CT_FPAREN_CLOSE)
-         || chunk_is_token(cur, CT_TPAREN_CLOSE)
-         || chunk_is_token(cur, CT_BRACE_CLOSE)
-         || chunk_is_token(cur, CT_VBRACE_CLOSE)
-         || chunk_is_token(cur, CT_ANGLE_CLOSE)
-         || chunk_is_token(cur, CT_SQUARE_CLOSE)))
+   if (  Is(CT_PAREN_CLOSE)
+      || Is(CT_SPAREN_CLOSE)
+      || Is(CT_FPAREN_CLOSE)
+      || Is(CT_TPAREN_CLOSE)
+      || Is(CT_BRACE_CLOSE)
+      || Is(CT_VBRACE_CLOSE)
+      || Is(CT_ANGLE_CLOSE)
+      || Is(CT_SQUARE_CLOSE))
    {
-      return(cur->GetPrevType((E_Token)(cur->type - 1), cur->level, scope));
+      return(GetPrevType((E_Token)(type - 1), level, scope));
    }
-   return(cur);
+   return(const_cast<Chunk *>(this));
 }
 
 
