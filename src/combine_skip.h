@@ -134,30 +134,4 @@ Chunk *skip_declspec(Chunk *pc);
 Chunk *skip_declspec_next(Chunk *pc);
 
 
-/**
- * If pc is a CT_FPAREN_CLOSE with a parent of CT_DECLSPEC, then skip it
- * and the '__declspec' keyword and return the chunk before CT_DECLSPEC.
- * Otherwise return pc.
- */
-Chunk *skip_declspec_prev(Chunk *pc);
-
-
-/**
- * If pc is a CT_BRACE_OPEN, CT_PAREN_OPEN or CT_SQUARE_OPEN, then skip
- * forward to the next non-comment/non-newline chunk following the matching
- * CT_BRACE_CLOSE, CT_PAREN_CLOSE or CT_SQUARE_CLOSE; if pc is none of these
- * upon calling this function, then pc is returned.
- */
-Chunk *skip_matching_brace_bracket_paren_next(Chunk *pc);
-
-
-/**
- * If pc is a CT_BRACE_CLOSE, CT_PAREN_CLOSE or CT_SQUARE_CLOSE, then skip
- * in reverse to the first non-comment/non-newline chunk preceding the matching
- * CT_BRACE_OPEN, CT_PAREN_OPEN or CT_SQUARE_OPEN; if pc is none of these upon
- * calling this function, then pc is returned.
- */
-Chunk *skip_to_chunk_before_matching_brace_bracket_paren_rev(Chunk *pc);
-
-
 #endif /* COMBINE_SKIP_H_INCLUDED */
