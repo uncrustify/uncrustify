@@ -1358,9 +1358,9 @@ static void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type)
       {
          LOG_FMT(LNLFUNCT, "%s(%d):\n", __func__, __LINE__);
          // skip template stuff to add newlines before it
-         pc = chunk_skip_to_match_rev(pc);
+         pc = pc->SkipToMatchRev();
 
-         if (pc != nullptr)
+         if (pc->IsNotNullChunk())
          {
             first_line = pc->orig_line;
          }
@@ -1952,7 +1952,7 @@ static bool is_var_def(Chunk *pc, Chunk *next)
       && chunk_is_token(next, CT_PAREN_OPEN))
    {
       // If current token starts a decltype expression, skip it
-      next = chunk_skip_to_match(next);
+      next = next->SkipToMatch();
       next = next->GetNextNcNnl();
    }
    else if (!chunk_is_type(pc))
@@ -1968,7 +1968,7 @@ static bool is_var_def(Chunk *pc, Chunk *next)
    else if (chunk_is_token(next, CT_ANGLE_OPEN))
    {
       // If we have a template type, skip it
-      next = chunk_skip_to_match(next);
+      next = next->SkipToMatch();
       next = next->GetNextNcNnl();
    }
    bool is = (  (  chunk_is_type(next)
@@ -2270,9 +2270,9 @@ static void newlines_brace_pair(Chunk *br_open)
       && (get_chunk_parent_type(br_open) == CT_NAMESPACE)
       && chunk_is_newline(br_open->GetPrev()))
    {
-      Chunk *chunk_brace_close = chunk_skip_to_match(br_open, E_Scope::ALL);
+      Chunk *chunk_brace_close = br_open->SkipToMatch();
 
-      if (chunk_brace_close != nullptr)
+      if (chunk_brace_close->IsNotNullChunk())
       {
          if (are_chunks_in_same_line(br_open, chunk_brace_close))
          {
@@ -2299,10 +2299,10 @@ static void newlines_brace_pair(Chunk *br_open)
       && options::nl_create_func_def_one_liner()
       && !br_open->flags.test(PCF_NOT_POSSIBLE))          // Issue #2795
    {
-      Chunk *br_close = chunk_skip_to_match(br_open, E_Scope::ALL);
+      Chunk *br_close = br_open->SkipToMatch();
       Chunk *tmp      = br_open->GetPrevNcNnlNi(); // Issue #2279
 
-      if (  br_close != nullptr                    // Issue #2594
+      if (  br_close->IsNotNullChunk()             // Issue #2594
          && ((br_close->orig_line - br_open->orig_line) <= 2)
          && chunk_is_paren_close(tmp))             // need to check the conditions.
       {
@@ -2515,11 +2515,11 @@ static void newlines_brace_pair(Chunk *br_open)
 
    if (chunk_is_token(br_open, CT_BRACE_OPEN))
    {
-      Chunk *chunk_closeing_brace = chunk_skip_to_match(br_open, E_Scope::ALL);
+      Chunk *chunk_closing_brace = br_open->SkipToMatch();
 
-      if (chunk_closeing_brace != nullptr)
+      if (chunk_closing_brace->IsNotNullChunk())
       {
-         if (chunk_closeing_brace->orig_line > br_open->orig_line)
+         if (chunk_closing_brace->orig_line > br_open->orig_line)
          {
             Chunk *prev = br_open->GetPrevNc();
 
@@ -3221,7 +3221,7 @@ static void newline_func_def_or_call(Chunk *start)
 
          if (chunk_is_not_token(tmp_next, CT_FUNC_CLASS_DEF))
          {
-            Chunk  *closing = chunk_skip_to_match(tmp);
+            Chunk  *closing = tmp->SkipToMatch();
             Chunk  *brace   = closing->GetNextNcNnl();
             iarf_e a;                                            // Issue #2561
 
@@ -3422,9 +3422,9 @@ static void newline_oc_msg(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *sq_c = chunk_skip_to_match(start);
+   Chunk *sq_c = start->SkipToMatch();
 
-   if (sq_c == nullptr)
+   if (sq_c->IsNullChunk())
    {
       return;
    }
@@ -5313,8 +5313,8 @@ void newlines_squeeze_paren_close(void)
          && chunk_is_paren_close(next)
          && chunk_is_paren_close(prev))
       {
-         Chunk *prev_op = chunk_skip_to_match_rev(prev);
-         Chunk *next_op = chunk_skip_to_match_rev(next);
+         Chunk *prev_op = prev->SkipToMatchRev();
+         Chunk *next_op = next->SkipToMatchRev();
          bool  flag     = true;
 
          Chunk *tmp = prev;
@@ -6655,7 +6655,7 @@ void annotations_newlines(void)
       if (chunk_is_paren_open(next))
       {
          // TODO: control newline between annotation and '(' ?
-         ae = chunk_skip_to_match(next);
+         ae = next->SkipToMatch();
       }
       else
       {

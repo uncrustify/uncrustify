@@ -323,9 +323,9 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       }
       else if (chunk_is_paren_open(pc))
       {
-         Chunk *next = chunk_skip_to_match(pc);
+         Chunk *next = pc->SkipToMatch();
 
-         if (next != nullptr)
+         if (next->IsNotNullChunk())
          {
             check_bool_parens(pc, next, nest + 1);
             pc = next;
@@ -336,7 +336,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
               || chunk_is_token(pc, CT_ANGLE_OPEN))
       {
          // Skip [], {}, and <>
-         pc = chunk_skip_to_match(pc);
+         pc = pc->SkipToMatch();
       }
    }
 

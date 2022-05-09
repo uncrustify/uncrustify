@@ -1805,7 +1805,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          || get_chunk_parent_type(second) == CT_UNION)
       {
          // Fix for issue #1240  adding space in struct initializers
-         Chunk *tmp = chunk_skip_to_match_rev(second)->GetPrevNcNnl();
+         Chunk *tmp = second->SkipToMatchRev()->GetPrevNcNnl();
 
          if (chunk_is_token(tmp, CT_ASSIGN))
          {
@@ -2893,13 +2893,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
       if (chunk_is_token(second, CT_WORD))
       {
-         Chunk *open_paren = chunk_skip_to_match_rev(first);
-
-         if (open_paren == nullptr)
-         {
-            open_paren = Chunk::NullChunkPtr;
-         }
-         Chunk *type = open_paren->GetPrev()->GetPrev();
+         Chunk *open_paren = first->SkipToMatchRev();
+         Chunk *type       = open_paren->GetPrev()->GetPrev();
 
          if (chunk_is_token(type, CT_TYPE))
          {

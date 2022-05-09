@@ -222,7 +222,7 @@ Chunk *skip_declspec(Chunk *pc)
 
       if (chunk_is_token(pc, CT_PAREN_OPEN))
       {
-         pc = chunk_skip_to_match(pc);
+         pc = pc->SkipToMatch();
       }
    }
    return(pc);
@@ -247,7 +247,7 @@ Chunk *skip_declspec_prev(Chunk *pc)
    if (  chunk_is_token(pc, CT_PAREN_CLOSE)
       && get_chunk_parent_type(pc) == CT_DECLSPEC)
    {
-      pc = chunk_skip_to_match_rev(pc);
+      pc = pc->SkipToMatchRev();
       pc = pc->GetPrevNcNnlNi();
 
       if (chunk_is_token(pc, CT_DECLSPEC))
@@ -265,15 +265,14 @@ Chunk *skip_matching_brace_bracket_paren_next(Chunk *pc)
       || chunk_is_token(pc, CT_PAREN_OPEN)
       || chunk_is_token(pc, CT_SQUARE_OPEN))
    {
-      pc = chunk_skip_to_match(pc);
+      pc = pc->SkipToMatch();
 
-      if (pc != nullptr)
+      if (pc->IsNotNullChunk())
       {
          /**
           * a matching brace, square bracket, or paren was found;
           * retrieve the subsequent chunk
           */
-
          pc = pc->GetNextNcNnl();
       }
    }
@@ -287,15 +286,14 @@ Chunk *skip_to_chunk_before_matching_brace_bracket_paren_rev(Chunk *pc)
       || chunk_is_token(pc, CT_PAREN_CLOSE)
       || chunk_is_token(pc, CT_SQUARE_CLOSE))
    {
-      pc = chunk_skip_to_match_rev(pc);
+      pc = pc->SkipToMatchRev();
 
-      if (pc != nullptr)
+      if (pc->IsNotNullChunk())
       {
          /**
           * a matching brace, square bracket, or paren was found;
           * retrieve the preceding chunk
           */
-
          pc = pc->GetPrevNcNnlNi();
       }
    }

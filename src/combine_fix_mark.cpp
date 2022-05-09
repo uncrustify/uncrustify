@@ -505,11 +505,11 @@ void fix_typedef(Chunk *start)
       {
          return;
       }
-      Chunk *open_paren = nullptr;
+      Chunk *open_paren = Chunk::NullChunkPtr;
 
       if (chunk_is_paren_close(the_type))
       {
-         open_paren = chunk_skip_to_match_rev(the_type);
+         open_paren = the_type->SkipToMatchRev();
          mark_function_type(the_type);
          the_type = the_type->GetPrevNcNnlNi(E_Scope::PREPROC);   // Issue #2279
 
@@ -531,7 +531,7 @@ void fix_typedef(Chunk *start)
       // If we are aligning on the open parenthesis, grab that instead
       log_rule_B("align_typedef_func");
 
-      if (  open_paren != nullptr
+      if (  open_paren->IsNotNullChunk()
          && options::align_typedef_func() == 1)
       {
          the_type = open_paren;
@@ -1070,7 +1070,7 @@ void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type)
       if (  chunk_is_token(pc, CT_PAREN_CLOSE)
          && !pc->flags.test(PCF_IN_PREPROC))
       {
-         first           = chunk_skip_to_match_rev(pc);
+         first           = pc->SkipToMatchRev();
          is_return_tuple = true;
       }
       pc = first;
@@ -1592,17 +1592,16 @@ void mark_function(Chunk *pc)
 
          if (get_chunk_parent_type(prev) == CT_DECLSPEC)  // Issue 1289
          {
-            prev = chunk_skip_to_match_rev(prev);
+            prev = prev->SkipToMatchRev();
 
-            if (prev != nullptr)
+            if (prev->IsNotNullChunk())
             {
                prev = prev->GetPrev();
             }
 
             if (chunk_is_token(prev, CT_DECLSPEC))
             {
-               if (  prev != nullptr
-                  && prev->IsNotNullChunk())
+               if (prev->IsNotNullChunk())
                {
                   prev = prev->GetPrev();
                }
@@ -1785,12 +1784,7 @@ void mark_function(Chunk *pc)
          && chunk_is_token(prev, CT_PAREN_CLOSE)
          && prev->GetNextNcNnl() == pc)
       {
-         tmp = chunk_skip_to_match_rev(prev);
-
-         if (tmp == nullptr)
-         {
-            tmp = Chunk::NullChunkPtr;
-         }
+         tmp = prev->SkipToMatchRev();
 
          while (  tmp->IsNotNullChunk() // Issue #2315
                && tmp != prev)
@@ -2085,9 +2079,9 @@ void mark_function(Chunk *pc)
          LOG_FMT(LFCN, "%s(%d): (14) SET TO CT_FUNC_DEF: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                  __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->Text());
          set_chunk_parent(tmp, CT_FUNC_DEF);
-         tmp = chunk_skip_to_match(tmp);
+         tmp = tmp->SkipToMatch();
 
-         if (tmp != nullptr)
+         if (tmp->IsNotNullChunk())
          {
             LOG_FMT(LFCN, "%s(%d): (15) SET TO CT_FUNC_DEF: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                     __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->Text());
@@ -2144,11 +2138,11 @@ bool mark_function_type(Chunk *pc)
    {
       return(false);
    }
-   apc = chunk_skip_to_match(apo);
+   apc = apo->SkipToMatch();
 
-   if (  apc != nullptr
+   if (  apc->IsNotNullChunk()
       && (  !chunk_is_paren_open(apo)
-         || ((apc = chunk_skip_to_match(apo)) == nullptr)))
+         || ((apc = apo->SkipToMatch())->IsNullChunk())))
    {
       LOG_FMT(LFTYPE, "%s(%d): not followed by parens\n", __func__, __LINE__);
       goto nogo_exit;

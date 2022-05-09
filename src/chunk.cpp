@@ -986,7 +986,7 @@ Chunk *Chunk::GetNextNbsb() const
    {
       if (pc->Is(CT_SQUARE_OPEN))
       {
-         pc = chunk_skip_to_match(pc);
+         pc = pc->SkipToMatch();
       }
       pc = pc->GetNextNcNnl();
    }
@@ -1003,7 +1003,7 @@ Chunk *Chunk::GetPrevNbsb() const
    {
       if (pc->Is(CT_SQUARE_CLOSE))
       {
-         pc = chunk_skip_to_match_rev(pc);
+         pc = pc->SkipToMatchRev();
       }
       pc = pc->GetPrevNcNnl();
    }
