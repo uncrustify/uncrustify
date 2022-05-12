@@ -52,19 +52,6 @@ enum class E_Direction : unsigned int
 };
 
 
-/**
- * Temporary internal typedef. Will be progressively be replaced by Chunk::CheckFnPtr.
- *
- * @brief prototype for a function that checks a chunk to have a given type
- *
- * @note this typedef defines the function type "check_t"
- * for a function pointer of type
- * bool function(Chunk *pc)
- */
-// TODO remove when finished
-typedef bool (*check_t)(Chunk *pc);
-
-
 // This is the main type of this program
 class Chunk
 {
