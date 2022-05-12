@@ -4,7 +4,7 @@
 
 set(CMAKE_SYSTEM_NAME Windows)
 
-if(COMPILER_PREFIX STREQUAL "")
+if(NOT COMPILER_PREFIX)
   if(EXISTS /usr/x86_64-w64-mingw32)
     # mingw-w64
     set(COMPILER_PREFIX "x86_64-w64-mingw32")
