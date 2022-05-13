@@ -1541,6 +1541,14 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
              */
             set_chunk_type(prev, CT_TYPE);
          }
+         else if (  pc->flags.test(PCF_IN_PREPROC) // Issue #3559
+                 && chunk_is_token(pc, CT_AMP)
+                 && chunk_is_token(next, CT_WORD))
+         {
+            //LOG_FMT(LGUY, " ++++++++++ pc->flags: ");
+            //log_pcf_flags(LGUY, pc->flags);
+            set_chunk_type(pc, CT_ADDR);
+         }
          else
          {
             set_chunk_type(pc, CT_ARITH);

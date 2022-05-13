@@ -116,6 +116,8 @@
 00170  common/empty.cfg                           c/beautifier-off.c
 00180  c/sf538.cfg                                c/lvalue.c
 
+00190  common/empty.cfg                           c/Issue_3559.c
+
 
 # switch & case stuff
 
