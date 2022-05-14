@@ -1,3 +1,8 @@
+Change highlights in uncrustify-0.75.1 (May 2022)
+-------------------------------------------------------------------------------
+No changes to supported options.
+This release has been created to correctly cross-build Windows executables.
+
 Change highlights in uncrustify-0.75.0 (May 2022)
 -------------------------------------------------------------------------------
   52131d9fa22fd0c655ae2510563ff85306d4bd27
