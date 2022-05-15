@@ -275,7 +275,7 @@ static void examine_braces(void)
 
    for (Chunk *pc = Chunk::GetTail(); pc->IsNotNullChunk();)
    {
-      Chunk *prev = pc->GetPrevType(CT_BRACE_OPEN, -1);
+      Chunk *prev = pc->GetPrevType(CT_BRACE_OPEN);
 
       if (  chunk_is_token(pc, CT_BRACE_OPEN)
          && !pc->flags.test(PCF_IN_PREPROC)

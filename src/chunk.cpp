@@ -253,30 +253,6 @@ Chunk *Chunk::GetPrev(const E_Scope scope) const
 static void chunk_log(Chunk *pc, const char *text);
 
 
-/*
- * TODO: if we use C++ we can overload the following two functions
- * and thus name them equally
- */
-
-/**
- * @brief search a chunk of a given category in a chunk list
- *
- * traverses a chunk list either in forward or backward direction.
- * The traversal continues until a chunk of a given category is found.
- *
- * This function is a specialization of Chunk::Search.
- *
- * @param cur    chunk to start search at
- * @param type   category to search for
- * @param scope  code parts to consider for search
- * @param dir    search direction
- *
- * @retval nullptr  no chunk found or invalid parameters provided
- * @retval Chunk  pointer to the found chunk
- */
-static Chunk *chunk_search_type(Chunk *cur, const E_Token type, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD);
-
-
 /**
  * @brief Add a new chunk before/after the given position in a chunk list
  *
@@ -337,18 +313,6 @@ Chunk *Chunk::Search(const T_CheckFnPtr checkFn, const E_Scope scope,
 }
 
 
-Chunk *chunk_search_prev_cat(Chunk *pc, const E_Token cat)
-{
-   return(chunk_search_type(pc, cat, E_Scope::ALL, E_Direction::BACKWARD));
-}
-
-
-Chunk *chunk_search_next_cat(Chunk *pc, const E_Token cat)
-{
-   return(chunk_search_type(pc, cat, E_Scope::ALL, E_Direction::FORWARD));
-}
-
-
 bool are_chunks_in_same_line(Chunk *start, Chunk *end)
 {
    if (start == nullptr)
@@ -367,35 +331,6 @@ bool are_chunks_in_same_line(Chunk *start, Chunk *end)
       tmp = tmp->GetNext();
    }
    return(true);
-}
-
-
-static Chunk *chunk_search_type(Chunk *cur, const E_Token type,
-                                const E_Scope scope, const E_Direction dir)
-{
-   /*
-    * Depending on the parameter dir the search function searches
-    * in forward or backward direction
-    */
-   Chunk::T_SearchFnPtr search_function = Chunk::GetSearchFn(dir);
-   Chunk                *pc             = cur;
-
-   if (pc == nullptr)
-   {
-      pc = Chunk::NullChunkPtr;
-   }
-
-   do                                     // loop over the chunk list
-   {
-      pc = (pc->*search_function)(scope); // in either direction while
-   } while (  pc->IsNotNullChunk()        // the end of the list was not reached yet
-           && pc->type != type);          // and the demanded chunk was not found either
-
-   if (pc->IsNullChunk())
-   {
-      pc = nullptr;
-   }
-   return(pc);                            // the latest chunk is the searched one
 }
 
 

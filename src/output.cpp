@@ -1403,25 +1403,25 @@ static Chunk *get_next_function(Chunk *pc)
 
 static Chunk *get_next_class(Chunk *pc)
 {
-   return(chunk_search_next_cat(pc, CT_CLASS)->GetNext());
+   return(pc->GetNextType(CT_CLASS)->GetNext());
 }
 
 
 static Chunk *get_prev_category(Chunk *pc)
 {
-   return(chunk_search_prev_cat(pc, CT_OC_CATEGORY));
+   return(pc->GetPrevType(CT_OC_CATEGORY));
 }
 
 
 static Chunk *get_next_scope(Chunk *pc)
 {
-   return(chunk_search_next_cat(pc, CT_OC_SCOPE));
+   return(pc->GetNextType(CT_OC_SCOPE));
 }
 
 
 static Chunk *get_prev_oc_class(Chunk *pc)
 {
-   return(chunk_search_prev_cat(pc, CT_OC_CLASS));
+   return(pc->GetPrevType(CT_OC_CLASS));
 }
 
 
@@ -2697,7 +2697,7 @@ static bool kw_fcn_filename(Chunk *cmt, unc_text &out_txt)
 
 static bool kw_fcn_class(Chunk *cmt, unc_text &out_txt)
 {
-   Chunk *tmp = nullptr;
+   Chunk *tmp = Chunk::NullChunkPtr;
 
    if (language_is_set(LANG_CPP | LANG_OC))
    {
@@ -2717,12 +2717,12 @@ static bool kw_fcn_class(Chunk *cmt, unc_text &out_txt)
       tmp = get_prev_oc_class(cmt);
    }
 
-   if (tmp == nullptr)
+   if (tmp->IsNullChunk())
    {
       tmp = get_next_class(cmt);
    }
 
-   if (tmp != nullptr)
+   if (tmp->IsNotNullChunk())
    {
       out_txt.append(tmp->str);
 
@@ -2791,7 +2791,7 @@ static bool kw_fcn_category(Chunk *cmt, unc_text &out_txt)
 {
    Chunk *category = get_prev_category(cmt);
 
-   if (category)
+   if (category->IsNotNullChunk())
    {
       out_txt.append('(');
       out_txt.append(category->str);
@@ -2805,7 +2805,7 @@ static bool kw_fcn_scope(Chunk *cmt, unc_text &out_txt)
 {
    Chunk *scope = get_next_scope(cmt);
 
-   if (scope)
+   if (scope->IsNotNullChunk())
    {
       out_txt.append(scope->str);
       return(true);

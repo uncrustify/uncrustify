@@ -250,26 +250,26 @@ public:
    /**
     * @brief returns the next chunk of the given type at the level.
     * @param cType  the type to look for
-    * @param cLevel the level to match, -1 or ANY_LEVEL (any level)
+    * @param cLevel the level to match or ANY_LEVEL
     * @param scope  code region to search in
     * @return pointer to the next matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetNextType(const E_Token cType, const int cLevel, const E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetNextType(const E_Token cType, const int cLevel = ANY_LEVEL, const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the prev chunk of the given type at the level.
     * @param cType  the type to look for
-    * @param cLevel the level to match, -1 or ANY_LEVEL (any level)
+    * @param cLevel the level to match or ANY_LEVEL
     * @param scope  code region to search in
     * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetPrevType(const E_Token type, int level, E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetPrevType(const E_Token type, int level = ANY_LEVEL, E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the next chunk that holds a given string at a given level.
     * @param cStr   string to search for
     * @param len    length of string
-    * @param cLevel -1 or ANY_LEVEL (any level) or the level to match
+    * @param cLevel the level to match or ANY_LEVEL
     * @param scope  code region to search in
     * @return pointer to the next matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
@@ -279,7 +279,7 @@ public:
     * @brief returns the prev chunk that holds a given string at a given level.
     * @param cStr   string to search for
     * @param len    length of string
-    * @param cLevel -1 or ANY_LEVEL (any level) or the level to match
+    * @param cLevel the level to match or ANY_LEVEL
     * @param scope  code region to search in
     * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
@@ -359,17 +359,17 @@ public:
 
    /**
     * @brief search a chunk of a given type and level. Traverses a chunk list in the
-    * specified direction until a chunk of a given type is found.
+    * specified direction until a chunk of a given type and level is found.
     *
     * This function is a specialization of Chunk::Search.
     *
     * @param cType  category to search for
     * @param scope  code parts to consider for search
     * @param dir    search direction
-    * @param cLevel nesting level to match or -1 / ANY_LEVEL
+    * @param cLevel nesting level to match or ANY_LEVEL
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *SearchTypeLevel(const E_Token cType, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const int cLevel = -1) const;
+   Chunk *SearchTypeLevel(const E_Token cType, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const int cLevel = ANY_LEVEL) const;
 
    /**
     * @brief searches a chunk that holds a specific string
@@ -646,30 +646,6 @@ bool chunk_is_last_on_line(Chunk *pc);
  * @return nullptr or start chunk of the preprocessor directive
  */
 Chunk *chunk_get_pp_start(Chunk *cur);
-
-
-/**
- * @brief reverse search a chunk of a given category in a chunk list
- *
- * @param  pc   chunk list to search in
- * @param  cat  category to search for
- *
- * @retval nullptr  no object found, or invalid parameters provided
- * @retval Chunk  pointer to the found object
- */
-Chunk *chunk_search_prev_cat(Chunk *pc, const E_Token cat);
-
-
-/**
- * @brief forward search a chunk of a given category in a chunk list
- *
- * @param  pc   chunk list to search in
- * @param  cat  category to search for
- *
- * @retval nullptr  no object found, or invalid parameters provided
- * @retval Chunk  pointer to the found object
- */
-Chunk *chunk_search_next_cat(Chunk *pc, const E_Token cat);
 
 
 /**

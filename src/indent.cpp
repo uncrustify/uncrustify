@@ -531,7 +531,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    }
    else
    {
-      caret_tmp = tmp->GetPrevType(CT_OC_BLOCK_CARET, -1);
+      caret_tmp = tmp->GetPrevType(CT_OC_BLOCK_CARET);
       tmp       = caret_tmp;
    }
 
@@ -4060,7 +4060,7 @@ void indent_text(void)
                     || chunk_is_token(pc, CT_PAREN_OPEN)))
          {
             log_rule_B("indent_ternary_operator");
-            Chunk *tmp = prev->GetPrevType(CT_QUESTION, -1);
+            Chunk *tmp = prev->GetPrevType(CT_QUESTION);
 
             if (tmp->IsNotNullChunk())
             {
@@ -4078,7 +4078,7 @@ void indent_text(void)
                  && chunk_is_token(pc, CT_COND_COLON))
          {
             log_rule_B("indent_ternary_operator");
-            Chunk *tmp = pc->GetPrevType(CT_QUESTION, -1);
+            Chunk *tmp = pc->GetPrevType(CT_QUESTION);
 
             if (tmp->IsNotNullChunk())
             {

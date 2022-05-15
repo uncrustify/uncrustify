@@ -4486,7 +4486,7 @@ void newlines_cleanup_braces(bool first)
             if (pc->flags.test(PCF_ONE_LINER))
             {
                // split one-liner
-               Chunk *end = pc->GetNext()->GetNextType(CT_SEMICOLON, -1)->GetNext();
+               Chunk *end = pc->GetNext()->GetNextType(CT_SEMICOLON)->GetNext();
                // Scan for clear flag
                LOG_FMT(LNEWLINE, "(%d) ", __LINE__);
                LOG_FMT(LNEWLINE, "\n");
@@ -6648,7 +6648,7 @@ void annotations_newlines(void)
    Chunk *ae;   // last token of the annotation
    Chunk *pc = Chunk::GetHead();
 
-   while (  (pc = pc->GetNextType(CT_ANNOTATION, -1))->IsNotNullChunk()
+   while (  (pc = pc->GetNextType(CT_ANNOTATION))->IsNotNullChunk()
          && (next = pc->GetNextNnl())->IsNotNullChunk())
    {
       // find the end of this annotation

@@ -29,6 +29,6 @@ void align_struct_initializers(void)
       {
          align_init_brace(pc);
       }
-      pc = pc->GetNextType(CT_BRACE_OPEN, -1);
+      pc = pc->GetNextType(CT_BRACE_OPEN);
    }
 } // align_struct_initializers

@@ -423,15 +423,14 @@ static bool chunk_is_macro_reference(Chunk *pc)
       && chunk_is_token(pc, CT_WORD)
       && !pc->flags.test(PCF_IN_PREPROC))
    {
-      while (  next != nullptr
-            && next->IsNotNullChunk())
+      while (next->IsNotNullChunk())
       {
          if (  next->flags.test(PCF_IN_PREPROC)
             && std::strcmp(pc->str.c_str(), next->str.c_str()) == 0)
          {
             return(true);
          }
-         next = chunk_search_next_cat(next, CT_MACRO);
+         next = next->GetNextType(CT_MACRO);
       }
    }
    return(false);
@@ -475,9 +474,9 @@ static std::pair<Chunk *, Chunk *> match_qualified_identifier(Chunk *pc)
    if (  end != nullptr
       && start != nullptr)
    {
-      auto *double_colon = chunk_search_next_cat(start, CT_DC_MEMBER);
+      auto *double_colon = start->GetNextType(CT_DC_MEMBER);
 
-      if (  double_colon != nullptr
+      if (  double_colon->IsNotNullChunk()
          && chunk_is_between(double_colon, start, end))
       {
          return(std::make_pair(start, end));
