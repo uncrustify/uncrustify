@@ -2105,7 +2105,7 @@ static void process_returns(void)
    {
       if (chunk_is_not_token(pc, CT_RETURN))
       {
-         pc = pc->GetNextType(CT_RETURN, -1);
+         pc = pc->GetNextType(CT_RETURN);
          continue;
       }
       pc = process_return(pc);

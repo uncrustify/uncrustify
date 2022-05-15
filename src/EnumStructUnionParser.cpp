@@ -430,7 +430,7 @@ static bool chunk_is_macro_reference(Chunk *pc)
          {
             return(true);
          }
-         next = next->GetNextCat(CT_MACRO);
+         next = next->GetNextType(CT_MACRO);
       }
    }
    return(false);
@@ -474,7 +474,7 @@ static std::pair<Chunk *, Chunk *> match_qualified_identifier(Chunk *pc)
    if (  end != nullptr
       && start != nullptr)
    {
-      auto *double_colon = start->GetNextCat(CT_DC_MEMBER);
+      auto *double_colon = start->GetNextType(CT_DC_MEMBER);
 
       if (  double_colon->IsNotNullChunk()
          && chunk_is_between(double_colon, start, end))

@@ -621,18 +621,6 @@ Chunk *Chunk::GetPrevString(const char *cStr, const size_t len, const int cLevel
 }
 
 
-Chunk *Chunk::GetNextCat(const E_Token cat) const
-{
-   return(SearchTypeLevel(cat, E_Scope::ALL, E_Direction::FORWARD, -1));
-}
-
-
-Chunk *Chunk::GetPrevCat(const E_Token cat) const
-{
-   return(SearchTypeLevel(cat, E_Scope::ALL, E_Direction::BACKWARD, -1));
-}
-
-
 bool chunk_is_newline_between(Chunk *start, Chunk *end)
 {
    for (Chunk *pc = start; pc != nullptr && pc != end; pc = pc->GetNext())

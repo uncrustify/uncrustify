@@ -56,7 +56,7 @@ void align_backslash_newline(void)
    {
       if (chunk_is_not_token(pc, CT_NL_CONT))
       {
-         pc = pc->GetNextType(CT_NL_CONT, -1);
+         pc = pc->GetNextType(CT_NL_CONT);
          continue;
       }
       pc = align_nl_cont(pc);

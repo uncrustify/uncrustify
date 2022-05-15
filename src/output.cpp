@@ -1403,25 +1403,25 @@ static Chunk *get_next_function(Chunk *pc)
 
 static Chunk *get_next_class(Chunk *pc)
 {
-   return(pc->GetNextCat(CT_CLASS)->GetNext());
+   return(pc->GetNextType(CT_CLASS)->GetNext());
 }
 
 
 static Chunk *get_prev_category(Chunk *pc)
 {
-   return(pc->GetPrevCat(CT_OC_CATEGORY));
+   return(pc->GetPrevType(CT_OC_CATEGORY));
 }
 
 
 static Chunk *get_next_scope(Chunk *pc)
 {
-   return(pc->GetNextCat(CT_OC_SCOPE));
+   return(pc->GetNextType(CT_OC_SCOPE));
 }
 
 
 static Chunk *get_prev_oc_class(Chunk *pc)
 {
-   return(pc->GetPrevCat(CT_OC_CLASS));
+   return(pc->GetPrevType(CT_OC_CLASS));
 }
 
 
