@@ -1441,9 +1441,8 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
    {
       if (report_status)
       {
-         fprintf(stderr, "FAIL: %s (File size changed from %u to %u)\n",
-                 cpd.filename.c_str(), static_cast<int>(fm.raw.size()),
-                 static_cast<int>(cpd.bout->size()));
+         fprintf(stderr, "FAIL: %s (File size changed from %zu to %zu)\n",
+                 cpd.filename.c_str(), fm.raw.size(), cpd.bout->size());
          log_flush(true);
       }
       is_same = false;
@@ -1456,7 +1455,7 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
          {
             if (report_status)
             {
-               fprintf(stderr, "FAIL: %s (Difference at byte %u)\n",
+               fprintf(stderr, "FAIL: %s (Difference at byte %d)\n",
                        cpd.filename.c_str(), idx);
                log_flush(true);
             }
@@ -1469,8 +1468,8 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
    if (  is_same
       && report_status)
    {
-      fprintf(stdout, "PASS: %s (%u bytes)\n",
-              cpd.filename.c_str(), static_cast<int>(fm.raw.size()));
+      fprintf(stdout, "PASS: %s (%zu bytes)\n",
+              cpd.filename.c_str(), fm.raw.size());
    }
    return(is_same);
 } // bout_content_matches

@@ -425,7 +425,7 @@ OptionWarning::OptionWarning(const GenericOption *opt, Severity severity)
    {
       ++cpd.error_count;
    }
-   fprintf(stderr, "Option<%s>: at %s:%d: ", to_string(opt->type()),
+   fprintf(stderr, "Option<%s>: at %s:%u: ", to_string(opt->type()),
            cpd.filename.c_str(), cpd.line_number);
 }
 
