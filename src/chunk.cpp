@@ -313,38 +313,6 @@ Chunk *Chunk::Search(const T_CheckFnPtr checkFn, const E_Scope scope,
 }
 
 
-Chunk *chunk_search_next_cat(Chunk *pc, const E_Token cat)
-{
-   if (pc == nullptr)
-   {
-      pc = Chunk::NullChunkPtr;
-   }
-   Chunk *ret = pc->SearchTypeLevel(cat, E_Scope::ALL, E_Direction::FORWARD, -1);
-
-   if (ret->IsNullChunk())
-   {
-      ret = nullptr;
-   }
-   return(ret);
-}
-
-
-Chunk *chunk_search_prev_cat(Chunk *pc, const E_Token cat)
-{
-   if (pc == nullptr)
-   {
-      pc = Chunk::NullChunkPtr;
-   }
-   Chunk *ret = pc->SearchTypeLevel(cat, E_Scope::ALL, E_Direction::BACKWARD, -1);
-
-   if (ret->IsNullChunk())
-   {
-      ret = nullptr;
-   }
-   return(ret);
-}
-
-
 bool are_chunks_in_same_line(Chunk *start, Chunk *end)
 {
    if (start == nullptr)
@@ -650,6 +618,18 @@ Chunk *Chunk::GetNextString(const char *cStr, const size_t len, const int cLevel
 Chunk *Chunk::GetPrevString(const char *cStr, const size_t len, const int cLevel, const E_Scope scope) const
 {
    return(SearchStringLevel(cStr, len, cLevel, scope, E_Direction::BACKWARD));
+}
+
+
+Chunk *Chunk::GetNextCat(const E_Token cat) const
+{
+   return(SearchTypeLevel(cat, E_Scope::ALL, E_Direction::FORWARD, -1));
+}
+
+
+Chunk *Chunk::GetPrevCat(const E_Token cat) const
+{
+   return(SearchTypeLevel(cat, E_Scope::ALL, E_Direction::BACKWARD, -1));
 }
 
 

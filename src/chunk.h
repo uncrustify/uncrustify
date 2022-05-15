@@ -299,6 +299,20 @@ public:
     */
    Chunk *GetPrevNbsb() const;
 
+   /**
+    * @brief returns the next chunk of a given category
+    * @param cat the category to look for
+    * @return pointer to the next matching chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetNextCat(const E_Token cat) const;
+
+   /**
+    * @brief returns the prev chunk of a given category
+    * @param cat the category to look for
+    * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetPrevCat(const E_Token cat) const;
+
 
    // --------- Search functions
 
@@ -646,30 +660,6 @@ bool chunk_is_last_on_line(Chunk *pc);
  * @return nullptr or start chunk of the preprocessor directive
  */
 Chunk *chunk_get_pp_start(Chunk *cur);
-
-
-/**
- * @brief reverse search a chunk of a given category in a chunk list
- *
- * @param  pc   chunk list to search in
- * @param  cat  category to search for
- *
- * @retval nullptr  no object found, or invalid parameters provided
- * @retval Chunk  pointer to the found object
- */
-Chunk *chunk_search_prev_cat(Chunk *pc, const E_Token cat);
-
-
-/**
- * @brief forward search a chunk of a given category in a chunk list
- *
- * @param  pc   chunk list to search in
- * @param  cat  category to search for
- *
- * @retval nullptr  no object found, or invalid parameters provided
- * @retval Chunk  pointer to the found object
- */
-Chunk *chunk_search_next_cat(Chunk *pc, const E_Token cat);
 
 
 /**
