@@ -359,7 +359,7 @@ public:
 
    /**
     * @brief search a chunk of a given type and level. Traverses a chunk list in the
-    * specified direction until a chunk of a given type is found.
+    * specified direction until a chunk of a given type and level is found.
     *
     * This function is a specialization of Chunk::Search.
     *
