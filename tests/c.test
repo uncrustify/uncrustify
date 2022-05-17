@@ -103,6 +103,10 @@
 00154  common/sp_after_cast.cfg                   c/casts.c
 00155  c/ben_078.cfg                              c/cast_brace.c
 
+00156  c/nl_collapse_empty_1.cfg                  c/empty-braces.c
+00157  c/nl_collapse_empty_2.cfg                  c/empty-braces.c
+00158  c/nl_collapse_empty_3.cfg                  c/empty-braces.c
+00159  c/nl_collapse_empty_4.cfg                  c/empty-braces.c
 
 # fcn indents
 
