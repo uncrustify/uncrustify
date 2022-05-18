@@ -1983,6 +1983,7 @@ static bool is_var_def(Chunk *pc, Chunk *next)
 // Put newline(s) before and/or after a block of variable definitions
 static Chunk *newline_def_blk(Chunk *start, bool fn_top)
 {
+//prot_the_line(__func__, __LINE__, 15, 4);
    LOG_FUNC_ENTRY();
 
    Chunk *prev = start->GetPrevNcNnlNi();               // Issue #2279
@@ -2005,8 +2006,11 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
    {
       LOG_FMT(LNL1LINE, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, Text() is '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
+      //prot_the_line(__func__, __LINE__, 15, 4);
 
       Chunk *next_pc = pc->GetNext();
+      LOG_FMT(LNL1LINE, "%s(%d): next_pc->orig_line is %zu, next_pc->orig_col is %zu, type is %s, Text() is '%s'\n",
+              __func__, __LINE__, next_pc->orig_line, next_pc->orig_col, get_token_name(next_pc->type), next_pc->Text());
 
       if (chunk_is_token(next_pc, CT_DC_MEMBER))
       {
@@ -2095,7 +2099,8 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
             prev = prev->GetPrevNcNnl();
          }
 
-         if (!(chunk_is_opening_brace(prev) || chunk_is_closing_brace(prev)))
+         if (!(  chunk_is_opening_brace(prev)
+              || chunk_is_closing_brace(prev)))
          {
             prev = pc->GetPrevType(CT_SEMICOLON, pc->level);
          }
@@ -2111,6 +2116,10 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
          {
             prev = prev->GetPrev()->GetPrevNcNnlNi();   // Issue #2279
          }
+         LOG_FMT(LNL1LINE, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, type is %s, Text() is '%s'\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type), pc->Text());
+         LOG_FMT(LNL1LINE, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, type is %s, Text() is '%s'\n",
+                 __func__, __LINE__, next->orig_line, next->orig_col, get_token_name(next->type), next->Text());
 
          if (is_var_def(pc, next))
          {
@@ -2167,6 +2176,8 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
          }
          else if (var_blk)
          {
+            LOG_FMT(LBLANKD, "%s(%d): var_blk %s\n",
+                    __func__, __LINE__, var_blk ? "TRUE" : "FALSE");
             log_rule_B("nl_var_def_blk_end");
 
             if (options::nl_var_def_blk_end() > 0)
@@ -2187,10 +2198,13 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
             {
                LOG_FMT(LBLANKD, "%s(%d): nl_func_var_def_blk at line %zu\n",
                        __func__, __LINE__, prev->orig_line);
+               prot_the_line(__func__, __LINE__, 15, 4);
                log_rule_B("nl_func_var_def_blk");
                newline_min_after(prev, options::nl_func_var_def_blk() + 1, PCF_VAR_DEF);
+               prot_the_line(__func__, __LINE__, 15, 4);
             }
             // reset the variables for the next block
+            prot_the_line(__func__, __LINE__, 15, 4);
             first_var_blk = true;
             var_blk       = false;
          }
@@ -2221,6 +2235,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
       }
       pc = pc->GetNext();
    }
+   //prot_the_line(__func__, __LINE__, 15, 4);
    return(pc);
 } // newline_def_blk
 
@@ -3814,6 +3829,7 @@ void newlines_cleanup_angles()
 
 void newlines_cleanup_braces(bool first)
 {
+//prot_the_line(__func__, __LINE__, 15, 4);
    LOG_FUNC_ENTRY();
 
    // Get the first token that's not an empty line:
@@ -3826,6 +3842,7 @@ void newlines_cleanup_braces(bool first)
 
    for ( ; pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
+//prot_the_line(__func__, __LINE__, 15, 4);
       char copy[1000];
       LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy));
@@ -3987,7 +4004,7 @@ void newlines_cleanup_braces(bool first)
 
             if (options::nl_paren_dbrace_open() != IARF_IGNORE)
             {
-               Chunk *prev = pc->GetPrevNcNnlNi(E_Scope::PREPROC);   // Issue #2279
+               Chunk *prev = pc->GetPrevNcNnlNi(E_Scope::PREPROC);    // Issue #2279
 
                if (chunk_is_paren_close(prev))
                {
@@ -4985,7 +5002,9 @@ void newlines_cleanup_braces(bool first)
       }
    }
 
+//prot_the_line(__func__, __LINE__, 15, 4);
    newline_def_blk(Chunk::GetHead(), false);
+//prot_the_line(__func__, __LINE__, 15, 4);
 } // newlines_cleanup_braces
 
 

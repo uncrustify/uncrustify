@@ -1983,8 +1983,11 @@ static void uncrustify_start(const deque<int> &data)
    {
       pawn_prescan();
    }
+   mark_question_colon();
+
    // Re-type chunks, combine chunks
    fix_symbols();
+
    tokenize_trailing_return_types();
 
    mark_comments();
@@ -2227,7 +2230,9 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
          {
             newlines_squeeze_paren_close();
          }
+//prot_the_line(__func__, __LINE__, 15, 4);
          do_blank_lines();
+//prot_the_line(__func__, __LINE__, 15, 4);
          newlines_eat_start_end();
          newlines_functions_remove_extra_blank_lines();
          newlines_cleanup_dup();

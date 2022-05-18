@@ -12,6 +12,8 @@
 #include "chunk.h"
 #include "uncrustify_types.h"
 
+void mark_question_colon(void);
+
 
 /**
  * Change CT_INCDEC_AFTER + WORD to CT_INCDEC_BEFORE

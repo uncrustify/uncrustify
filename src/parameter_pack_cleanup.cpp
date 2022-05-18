@@ -8,6 +8,7 @@
 #include "parameter_pack_cleanup.h"
 
 #include "chunk.h"
+#include "uncrustify.h"
 
 
 void parameter_pack_cleanup(void)
@@ -18,8 +19,8 @@ void parameter_pack_cleanup(void)
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
+      LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
 
       // look for template
       if (chunk_is_token(pc, CT_TEMPLATE))                 // Issue #3309

@@ -16,9 +16,11 @@
 #include "flag_braced_init_list.h"
 #include "flag_parens.h"
 #include "lang_pawn.h"
+#include "mark_question_colon.h"
 #include "newlines.h"
 #include "prototypes.h"
 #include "tokenize_cleanup.h"
+#include "unc_tools.h"
 
 #include <limits>
 
@@ -1713,8 +1715,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    {
       // look for CT_ASSIGN before CT_SEMICOLON at the end of the statement
 
-      bool       is_preproc = pc->flags.test(PCF_IN_PREPROC);
-
+      bool       is_preproc    = pc->flags.test(PCF_IN_PREPROC);
       auto const search_assign = [&pc, &is_preproc]()
       {
          for (Chunk *temp = pc; temp->IsNotNullChunk(); temp = temp->GetNextNcNnl())
@@ -1900,6 +1901,9 @@ void fix_symbols(void)
 
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
+      LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+
       if (  chunk_is_token(pc, CT_FUNC_WRAP)
          || chunk_is_token(pc, CT_TYPE_WRAP))
       {
@@ -2086,7 +2090,11 @@ void fix_symbols(void)
             || chunk_is_token(pc, CT_TYPE)
             || chunk_is_token(pc, CT_TYPENAME)
             || chunk_is_token(pc, CT_DC_MEMBER)                         // Issue #2478
-            || chunk_is_token(pc, CT_WORD))
+            || (  chunk_is_token(pc, CT_WORD)
+               && !pc->flags.test(PCF_IN_CONDITIONAL)                   // Issue #3558
+//               && language_is_set(LANG_CPP)
+                  )
+               )
          && get_chunk_parent_type(pc) != CT_BIT_COLON
          && get_chunk_parent_type(pc) != CT_ENUM
          && !pc->flags.test(PCF_IN_CLASS_BASE)
@@ -4016,4 +4024,4 @@ static void handle_java_assert(Chunk *pc)
          }
       }
    }
-}
+} // handle_java_assert

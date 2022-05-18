@@ -635,6 +635,7 @@ Chunk *fix_variable_definition(Chunk *start)
 
    LOG_FMT(LFVD, "%s(%d): start at pc->orig_line is %zu, pc->orig_col is %zu\n",
            __func__, __LINE__, pc->orig_line, pc->orig_col);
+   log_pcf_flags(LFCNR, pc->flags);
 
    // Scan for words and types and stars oh my!
    while (  chunk_is_token(pc, CT_TYPE)
