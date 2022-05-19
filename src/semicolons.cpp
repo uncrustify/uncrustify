@@ -70,7 +70,35 @@ void remove_extra_semicolons(void)
                     || get_chunk_parent_type(prev) == CT_FUNC_CLASS_DEF
                     || get_chunk_parent_type(prev) == CT_NAMESPACE))
          {
-            remove_semicolon(pc);
+            // looking for code block vs. initialisation
+            bool  code_block_found = true;
+            Chunk *closing_brace   = pc->GetPrevNcNnl();                   // Issue #3506
+
+            if (  closing_brace != nullptr
+               && closing_brace->IsNotNullChunk())
+            {
+               Chunk *opening_brace = closing_brace->SkipToMatchRev();
+
+               if (  opening_brace != nullptr
+                  && opening_brace->IsNotNullChunk())
+               {
+                  Chunk *equal_sign = opening_brace->GetPrevNcNnl();
+
+                  if (  equal_sign != nullptr
+                     && equal_sign->IsNotNullChunk()
+                     && chunk_is_token(equal_sign, CT_ASSIGN))
+                  {
+                     // initialisation found
+                     code_block_found = false;
+                  }
+               }
+            }
+
+            if (code_block_found)
+            {
+               // code block found
+               remove_semicolon(pc);
+            }
          }
          else if (  chunk_is_token(prev, CT_BRACE_CLOSE)
                  && get_chunk_parent_type(prev) == CT_NONE)

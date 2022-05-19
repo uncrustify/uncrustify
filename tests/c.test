@@ -166,6 +166,7 @@
 00421  c/nl_ds_struct_enum_cmt-t.cfg              c/nl_ds_struct_enum.c
 00422  c/nl_ds_struct_enum-2.cfg                  c/nl_ds_struct_enum.c
 00423  c/bug_1702.cfg                             c/bug_1702.c
+00424  c/Issue_3506.cfg                           c/Issue_3506.c
 
 00430  common/empty.cfg                           c/paren-indent.c
 00431  c/indent_paren_close-1.cfg                 c/paren-indent.c
