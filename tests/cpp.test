@@ -243,6 +243,7 @@
 30283  common/empty.cfg                                     cpp/Issue_3321.h
 30284  cpp/Issue_2957.cfg                                   cpp/Issue_2957.cpp
 30285  cpp/Issue_2971.cfg                                   cpp/Issue_2971.cpp
+30286  cpp/Issue_3558.cfg                                   cpp/Issue_3558.cpp
 
 30290  cpp/indent_shift.cfg                                 cpp/align_left_shift.cpp
 30291  cpp/indent_shift.cfg                                 cpp/indent_shift.cpp

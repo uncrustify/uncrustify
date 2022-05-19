@@ -82,6 +82,7 @@ enum pcf_flag_e : decltype ( 0ULL )
    PCF_WF_IF           = pcf_bit(46),  //! #if for a whole file ifdef
    PCF_NOT_POSSIBLE    = pcf_bit(47),  //! it is not possible to make an one_liner
                                        //! because the line would be too long
+   PCF_IN_CONDITIONAL  = pcf_bit(48),  //! inside a conditional ternary expression
 };
 
 UNC_DECLARE_FLAGS(pcf_flags_t, pcf_flag_e);

@@ -10,6 +10,7 @@
 
 #include "chunk.h"
 #include "cs_top_is_question.h"
+#include "unc_tools.h"
 #include "uncrustify.h"
 
 
@@ -101,8 +102,8 @@ void combine_labels(void)
       }
       else
       {
-         LOG_FMT(LFCN, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, Text() '%s'\n",
-                 __func__, __LINE__, next->orig_line, next->orig_col, next->Text());
+         LOG_FMT(LFCN, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, Text() '%s', type is %s\n",
+                 __func__, __LINE__, next->orig_line, next->orig_col, next->Text(), get_token_name(next->type));
       }
 
       if (  !next->flags.test(PCF_IN_OC_MSG) // filter OC case of [self class] msg send
@@ -167,8 +168,10 @@ void combine_labels(void)
             hit_case = true;
          }
 
-         if (cs_top_is_question(cs, next->level))
+         if (  cs_top_is_question(cs, next->level)
+            && next->flags.test(PCF_IN_CONDITIONAL))             // Issue #3558
          {
+            //log_pcf_flags(LGUY, next->flags);
             set_chunk_type(next, CT_COND_COLON);
             cs.Pop_Back();
          }

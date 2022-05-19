@@ -368,61 +368,61 @@ parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 brace_cleanup : orig_line is 15, orig_col is 3, Text() is ''
 brace_cleanup : pp_level is 0
-parameter_pack_cleanup : orig_line is 1, orig_col is 1, Text() is 'struct'
-parameter_pack_cleanup : orig_line is 1, orig_col is 8, Text() is 'TelegramIndex'
-parameter_pack_cleanup : orig_line is 1, orig_col is 21, Text() is ''
-parameter_pack_cleanup : orig_line is 2, orig_col is 1, Text() is '{'
-parameter_pack_cleanup : orig_line is 2, orig_col is 2, Text() is ''
-parameter_pack_cleanup : orig_line is 3, orig_col is 1, Text() is 'TelegramIndex'
-parameter_pack_cleanup : orig_line is 3, orig_col is 14, Text() is '('
-parameter_pack_cleanup : orig_line is 3, orig_col is 15, Text() is 'const'
-parameter_pack_cleanup : orig_line is 3, orig_col is 21, Text() is 'char'
-parameter_pack_cleanup : orig_line is 3, orig_col is 25, Text() is '*'
-parameter_pack_cleanup : orig_line is 3, orig_col is 27, Text() is 'pN'
-parameter_pack_cleanup : orig_line is 3, orig_col is 29, Text() is ','
-parameter_pack_cleanup : orig_line is 3, orig_col is 31, Text() is 'unsigned'
-parameter_pack_cleanup : orig_line is 3, orig_col is 40, Text() is 'long'
-parameter_pack_cleanup : orig_line is 3, orig_col is 45, Text() is 'nI'
-parameter_pack_cleanup : orig_line is 3, orig_col is 47, Text() is ')'
-parameter_pack_cleanup : orig_line is 3, orig_col is 49, Text() is ':'
-parameter_pack_cleanup : orig_line is 3, orig_col is 50, Text() is ''
-parameter_pack_cleanup : orig_line is 4, orig_col is 1, Text() is 'pTelName'
-parameter_pack_cleanup : orig_line is 4, orig_col is 9, Text() is '('
-parameter_pack_cleanup : orig_line is 4, orig_col is 10, Text() is 'pN'
-parameter_pack_cleanup : orig_line is 4, orig_col is 12, Text() is ')'
-parameter_pack_cleanup : orig_line is 4, orig_col is 13, Text() is ','
-parameter_pack_cleanup : orig_line is 4, orig_col is 14, Text() is ''
-parameter_pack_cleanup : orig_line is 5, orig_col is 1, Text() is 'nTelIndex'
-parameter_pack_cleanup : orig_line is 5, orig_col is 10, Text() is '('
-parameter_pack_cleanup : orig_line is 5, orig_col is 11, Text() is 'n'
-parameter_pack_cleanup : orig_line is 5, orig_col is 12, Text() is ')'
-parameter_pack_cleanup : orig_line is 5, orig_col is 13, Text() is ''
-parameter_pack_cleanup : orig_line is 6, orig_col is 1, Text() is '{'
-parameter_pack_cleanup : orig_line is 6, orig_col is 2, Text() is ''
-parameter_pack_cleanup : orig_line is 7, orig_col is 1, Text() is '}'
-parameter_pack_cleanup : orig_line is 7, orig_col is 2, Text() is ''
-parameter_pack_cleanup : orig_line is 9, orig_col is 1, Text() is '~'
-parameter_pack_cleanup : orig_line is 9, orig_col is 2, Text() is 'TelegramIndex'
-parameter_pack_cleanup : orig_line is 9, orig_col is 15, Text() is '('
-parameter_pack_cleanup : orig_line is 9, orig_col is 16, Text() is ')'
-parameter_pack_cleanup : orig_line is 9, orig_col is 17, Text() is ''
-parameter_pack_cleanup : orig_line is 10, orig_col is 1, Text() is '{'
-parameter_pack_cleanup : orig_line is 10, orig_col is 2, Text() is ''
-parameter_pack_cleanup : orig_line is 11, orig_col is 1, Text() is '}'
-parameter_pack_cleanup : orig_line is 11, orig_col is 2, Text() is ''
-parameter_pack_cleanup : orig_line is 13, orig_col is 1, Text() is 'const'
-parameter_pack_cleanup : orig_line is 13, orig_col is 7, Text() is 'char'
-parameter_pack_cleanup : orig_line is 13, orig_col is 11, Text() is '*'
-parameter_pack_cleanup : orig_line is 13, orig_col is 13, Text() is 'const'
-parameter_pack_cleanup : orig_line is 13, orig_col is 19, Text() is 'pTelName'
-parameter_pack_cleanup : orig_line is 13, orig_col is 27, Text() is ';'
-parameter_pack_cleanup : orig_line is 13, orig_col is 28, Text() is ''
-parameter_pack_cleanup : orig_line is 14, orig_col is 1, Text() is 'unsigned'
-parameter_pack_cleanup : orig_line is 14, orig_col is 10, Text() is 'long'
-parameter_pack_cleanup : orig_line is 14, orig_col is 15, Text() is 'nTelIndex'
-parameter_pack_cleanup : orig_line is 14, orig_col is 24, Text() is ';'
-parameter_pack_cleanup : orig_line is 14, orig_col is 25, Text() is ''
-parameter_pack_cleanup : orig_line is 15, orig_col is 1, Text() is '}'
-parameter_pack_cleanup : orig_line is 15, orig_col is 2, Text() is ';'
-parameter_pack_cleanup : orig_line is 15, orig_col is 3, Text() is ''
+parameter_pack_cleanup : orig_line is 1, orig_col is 1, Text() is 'struct', type is STRUCT
+parameter_pack_cleanup : orig_line is 1, orig_col is 8, Text() is 'TelegramIndex', type is TYPE
+parameter_pack_cleanup : orig_line is 1, orig_col is 21, Text() is '', type is NEWLINE
+parameter_pack_cleanup : orig_line is 2, orig_col is 1, Text() is '{', type is BRACE_OPEN
+parameter_pack_cleanup : orig_line is 2, orig_col is 2, Text() is '', type is NEWLINE
+parameter_pack_cleanup : orig_line is 3, orig_col is 1, Text() is 'TelegramIndex', type is WORD
+parameter_pack_cleanup : orig_line is 3, orig_col is 14, Text() is '(', type is PAREN_OPEN
+parameter_pack_cleanup : orig_line is 3, orig_col is 15, Text() is 'const', type is QUALIFIER
+parameter_pack_cleanup : orig_line is 3, orig_col is 21, Text() is 'char', type is TYPE
+parameter_pack_cleanup : orig_line is 3, orig_col is 25, Text() is '*', type is PTR_TYPE
+parameter_pack_cleanup : orig_line is 3, orig_col is 27, Text() is 'pN', type is WORD
+parameter_pack_cleanup : orig_line is 3, orig_col is 29, Text() is ',', type is COMMA
+parameter_pack_cleanup : orig_line is 3, orig_col is 31, Text() is 'unsigned', type is TYPE
+parameter_pack_cleanup : orig_line is 3, orig_col is 40, Text() is 'long', type is TYPE
+parameter_pack_cleanup : orig_line is 3, orig_col is 45, Text() is 'nI', type is WORD
+parameter_pack_cleanup : orig_line is 3, orig_col is 47, Text() is ')', type is PAREN_CLOSE
+parameter_pack_cleanup : orig_line is 3, orig_col is 49, Text() is ':', type is COLON
+parameter_pack_cleanup : orig_line is 3, orig_col is 50, Text() is '', type is NEWLINE
+parameter_pack_cleanup : orig_line is 4, orig_col is 1, Text() is 'pTelName', type is WORD
+parameter_pack_cleanup : orig_line is 4, orig_col is 9, Text() is '(', type is PAREN_OPEN
+parameter_pack_cleanup : orig_line is 4, orig_col is 10, Text() is 'pN', type is WORD
+parameter_pack_cleanup : orig_line is 4, orig_col is 12, Text() is ')', type is PAREN_CLOSE
+parameter_pack_cleanup : orig_line is 4, orig_col is 13, Text() is ',', type is COMMA
+parameter_pack_cleanup : orig_line is 4, orig_col is 14, Text() is '', type is NEWLINE
+parameter_pack_cleanup : orig_line is 5, orig_col is 1, Text() is 'nTelIndex', type is WORD
+parameter_pack_cleanup : orig_line is 5, orig_col is 10, Text() is '(', type is PAREN_OPEN
+parameter_pack_cleanup : orig_line is 5, orig_col is 11, Text() is 'n', type is WORD
+parameter_pack_cleanup : orig_line is 5, orig_col is 12, Text() is ')', type is PAREN_CLOSE
+parameter_pack_cleanup : orig_line is 5, orig_col is 13, Text() is '', type is NEWLINE
+parameter_pack_cleanup : orig_line is 6, orig_col is 1, Text() is '{', type is BRACE_OPEN
+parameter_pack_cleanup : orig_line is 6, orig_col is 2, Text() is '', type is NEWLINE
+parameter_pack_cleanup : orig_line is 7, orig_col is 1, Text() is '}', type is BRACE_CLOSE
+parameter_pack_cleanup : orig_line is 7, orig_col is 2, Text() is '', type is NEWLINE
+parameter_pack_cleanup : orig_line is 9, orig_col is 1, Text() is '~', type is INV
+parameter_pack_cleanup : orig_line is 9, orig_col is 2, Text() is 'TelegramIndex', type is WORD
+parameter_pack_cleanup : orig_line is 9, orig_col is 15, Text() is '(', type is PAREN_OPEN
+parameter_pack_cleanup : orig_line is 9, orig_col is 16, Text() is ')', type is PAREN_CLOSE
+parameter_pack_cleanup : orig_line is 9, orig_col is 17, Text() is '', type is NEWLINE
+parameter_pack_cleanup : orig_line is 10, orig_col is 1, Text() is '{', type is BRACE_OPEN
+parameter_pack_cleanup : orig_line is 10, orig_col is 2, Text() is '', type is NEWLINE
+parameter_pack_cleanup : orig_line is 11, orig_col is 1, Text() is '}', type is BRACE_CLOSE
+parameter_pack_cleanup : orig_line is 11, orig_col is 2, Text() is '', type is NEWLINE
+parameter_pack_cleanup : orig_line is 13, orig_col is 1, Text() is 'const', type is QUALIFIER
+parameter_pack_cleanup : orig_line is 13, orig_col is 7, Text() is 'char', type is TYPE
+parameter_pack_cleanup : orig_line is 13, orig_col is 11, Text() is '*', type is PTR_TYPE
+parameter_pack_cleanup : orig_line is 13, orig_col is 13, Text() is 'const', type is QUALIFIER
+parameter_pack_cleanup : orig_line is 13, orig_col is 19, Text() is 'pTelName', type is WORD
+parameter_pack_cleanup : orig_line is 13, orig_col is 27, Text() is ';', type is SEMICOLON
+parameter_pack_cleanup : orig_line is 13, orig_col is 28, Text() is '', type is NEWLINE
+parameter_pack_cleanup : orig_line is 14, orig_col is 1, Text() is 'unsigned', type is TYPE
+parameter_pack_cleanup : orig_line is 14, orig_col is 10, Text() is 'long', type is TYPE
+parameter_pack_cleanup : orig_line is 14, orig_col is 15, Text() is 'nTelIndex', type is WORD
+parameter_pack_cleanup : orig_line is 14, orig_col is 24, Text() is ';', type is SEMICOLON
+parameter_pack_cleanup : orig_line is 14, orig_col is 25, Text() is '', type is NEWLINE
+parameter_pack_cleanup : orig_line is 15, orig_col is 1, Text() is '}', type is BRACE_CLOSE
+parameter_pack_cleanup : orig_line is 15, orig_col is 2, Text() is ';', type is SEMICOLON
+parameter_pack_cleanup : orig_line is 15, orig_col is 3, Text() is '', type is NEWLINE
 log_rule(enum_cleanup : rule is 'mod_enum_last_comma'

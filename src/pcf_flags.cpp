@@ -56,6 +56,8 @@ static const char *pcf_names[] =
    "INCOMPLETE",        // 44
    "IN_LAMBDA",         // 45
    "WF_IF",             // 46
+   "NOT_POSSIBLE",      // 47
+   "IN_CONDITIONAL",    // 48                    Issue #3558
 };
 
 
