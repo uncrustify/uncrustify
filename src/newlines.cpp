@@ -332,9 +332,9 @@ static bool can_increase_nl(Chunk *nl)
    {
       log_rule_B("nl_squeeze_ifdef");
 
-      Chunk *pp_start = chunk_get_pp_start(prev);
+      Chunk *pp_start = prev->GetPpStart();
 
-      if (  pp_start != nullptr
+      if (  pp_start->IsNotNullChunk()
          && (  get_chunk_parent_type(pp_start) == CT_PP_IF
             || get_chunk_parent_type(pp_start) == CT_PP_ELSE)
          && (  pp_start->level > 0
@@ -6526,9 +6526,9 @@ void do_blank_lines(void)
       if (  options::nl_after_whole_file_ifdef() != 0
          && options::nl_after_whole_file_ifdef() != pc->nl_count)
       {
-         Chunk *pp_start = chunk_get_pp_start(prev);
+         Chunk *pp_start = prev->GetPpStart();
 
-         if (  pp_start != nullptr
+         if (  pp_start->IsNotNullChunk()
             && get_chunk_parent_type(pp_start) == CT_PP_IF
             && ifdef_over_whole_file()
             && pp_start->flags.test(PCF_WF_IF))
@@ -6554,9 +6554,9 @@ void do_blank_lines(void)
       if (  options::nl_after_whole_file_endif() != 0
          && options::nl_after_whole_file_endif() != pc->nl_count)
       {
-         Chunk *pp_start = chunk_get_pp_start(prev);
+         Chunk *pp_start = prev->GetPpStart();
 
-         if (  pp_start != nullptr
+         if (  pp_start->IsNotNullChunk()
             && get_chunk_parent_type(pp_start) == CT_PP_ENDIF
             && ifdef_over_whole_file()
             && pp_start->flags.test(PCF_WF_ENDIF))

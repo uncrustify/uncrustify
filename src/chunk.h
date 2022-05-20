@@ -299,6 +299,13 @@ public:
     */
    Chunk *GetPrevNbsb() const;
 
+   /**
+    * @brief returns the corresponding start chunk if the given chunk is within a
+    * preprocessor directive, or Chunk::NullChunkPtr otherwise.
+    * @return start chunk of the preprocessor directive or Chunk::NullChunkPtr if no chunk was found
+    */
+   Chunk *GetPpStart() const;
+
 
    // --------- Search functions
 
@@ -635,17 +642,6 @@ Chunk *chunk_first_on_line(Chunk *pc);
 
 //! check if a given chunk is the last on its line
 bool chunk_is_last_on_line(Chunk *pc);
-
-
-/**
- * Gets the corresponding start chunk if the given chunk is within a
- * preprocessor directive, or nullptr otherwise.
- *
- * @param  cur    chunk to use as start point
- *
- * @return nullptr or start chunk of the preprocessor directive
- */
-Chunk *chunk_get_pp_start(Chunk *cur);
 
 
 /**

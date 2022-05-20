@@ -946,18 +946,19 @@ Chunk *Chunk::GetPrevNbsb() const
 }
 
 
-Chunk *chunk_get_pp_start(Chunk *cur)
+Chunk *Chunk::GetPpStart() const
 {
-   if (!cur->IsPreproc())
+   if (!IsPreproc())
    {
-      return(nullptr);
+      return(Chunk::NullChunkPtr);
    }
+   Chunk *pc = const_cast<Chunk *>(this);
 
-   while (!chunk_is_token(cur, CT_PREPROC))
+   while (pc->IsNot(CT_PREPROC))
    {
-      cur = cur->GetPrev(E_Scope::PREPROC);
+      pc = pc->GetPrev(E_Scope::PREPROC);
    }
-   return(cur);
+   return(pc);
 }
 
 
