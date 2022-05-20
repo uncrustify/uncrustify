@@ -171,7 +171,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
             {
                // cl_colon is after parent_last ==>
                // the closing brace will be set before #endif
-               Chunk *pp_start = chunk_get_pp_start(last);
+               Chunk *pp_start = last->GetPpStart();
                last = pp_start->GetPrevNnl();
                LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig_line %zu, orig_col is %zu\n",
                        __func__, __LINE__, last->Text(), last->orig_line, last->orig_col);
