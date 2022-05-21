@@ -466,3 +466,4 @@
 10066  c/Issue_3580.cfg                           c/Issue_3580.c
 10077  c/Issue_3582.cfg                           c/Issue_3582.c
 10078  c/pp_indent_brace--1.cfg                   c/Issue_3587.h
+10079  c/Issue_3662.cfg                           c/Issue_3662.c

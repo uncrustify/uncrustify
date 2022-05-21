@@ -358,9 +358,9 @@ void fix_fcn_def_params(Chunk *start)
          set_chunk_type(pc, CT_PTR_TYPE);
          cs.Push_Back(pc);
       }
-      else if (  chunk_is_token(pc, CT_AMP)
-              || (  language_is_set(LANG_CPP)
-                 && chunk_is_str(pc, "&&")))
+      else if (  language_is_set(LANG_CPP)   // Issue #3662
+              && (  chunk_is_token(pc, CT_AMP)
+                 || chunk_is_str(pc, "&&")))
       {
          set_chunk_type(pc, CT_BYREF);
          cs.Push_Back(pc);
