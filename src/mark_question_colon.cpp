@@ -12,8 +12,6 @@
 #include "log_levels.h"
 #include "unc_tools.h"
 
-constexpr static auto LCURRENT = LCOMBINE;
-
 
 /*
  * Issue #3558
