@@ -242,7 +242,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
    pc.pp_level    = first_n->pp_level;
    pc.brace_level = first_n->brace_level;
 
-   chunk_add_before(&pc, first_n);
+   pc.CopyAndAddBefore(first_n);
 
    Chunk *last_p = last->GetPrevNcNnl(E_Scope::PREPROC);
 
@@ -255,7 +255,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
    pc.pp_level    = last_p->pp_level;
    pc.brace_level = last_p->brace_level;
 
-   chunk_add_after(&pc, last_p);
+   pc.CopyAndAddAfter(last_p);
 
    for (Chunk *tmp = first_n;
         tmp != last_p;

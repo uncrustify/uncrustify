@@ -83,7 +83,7 @@ void enum_cleanup(void)
                      }
                      else
                      {
-                        chunk_add_after(&comma, prev);
+                        comma.CopyAndAddAfter(prev);
                      }
                      pc = pc->GetNext();
                   }

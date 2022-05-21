@@ -135,7 +135,7 @@ void split_off_angle_close(Chunk *pc)
    nc.str.pop_front();
    nc.orig_col++;
    nc.column++;
-   chunk_add_after(&nc, pc);
+   nc.CopyAndAddAfter(pc);
 }
 
 
@@ -843,7 +843,7 @@ void tokenize_cleanup(void)
                   nc.str.pop_front();
                   nc.orig_col++;
                   nc.column++;
-                  chunk_add_after(&nc, pc);
+                  nc.CopyAndAddAfter(pc);
 
                   next = pc->GetNext();
                }

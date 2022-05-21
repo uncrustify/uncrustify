@@ -401,7 +401,7 @@ void dump_in(unsigned int type)
             {
                aNewChunkIsFound = false;
                // add the chunk in the list
-               chunk_add_before(&chunk, nullptr);
+               chunk.CopyAndAddBefore(Chunk::NullChunkPtr);
                chunk.Reset();
                aNewChunkIsFound = true;
                continue;
@@ -474,7 +474,7 @@ void dump_in(unsigned int type)
          }
       }
       // add the last chunk in the list
-      chunk_add_before(&chunk, nullptr);
+      chunk.CopyAndAddBefore(Chunk::NullChunkPtr);
       fclose(D_file);
    }
    else

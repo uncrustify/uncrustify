@@ -521,6 +521,25 @@ public:
    bool IsStar() const;
 
 
+   // --------- Util functions
+
+   /**
+    * @brief add a copy of this chunk after the given position in a chunk list.
+    * @note If pos is NullChunk, add at the tail of the chunk list
+    * @param pos insert position in list
+    * @return pointer to the newly added chunk
+    */
+   Chunk *CopyAndAddAfter(Chunk *pos) const;
+
+   /**
+    * @brief add a copy of this chunk before the given position in a chunk list.
+    * @note If pos is NullChunk, add at the head of the chunk list
+    * @param pos insert position in list
+    * @return pointer to the newly added chunk
+    */
+   Chunk *CopyAndAddBefore(Chunk *pos) const;
+
+
    // --------- Data members
 
    Chunk        *next;                       //! pointer to next chunk in list
@@ -553,43 +572,26 @@ public:
    // for debugging purpose only
    track_list *tracking;
 
-private:
+
+protected:
    void copyFrom(const Chunk &o);              // !!! partial copy: chunk is not linked to others
 
+   // --------- Private util functions
+
+   /**
+    * @brief add a copy of this chunk before/after the given position in a chunk list.
+    * @note If pos is NullChunk, add the new chuck either at the head or tail of the
+    * list based on the specified directon.
+    * @param pos insert position in list
+    * @param dir insert before or after the given position chunk
+    * @return pointer to the newly added chunk
+    */
+   Chunk *CopyAndAdd(Chunk *pos, const E_Direction dir = E_Direction::FORWARD) const;
+
+
+private:
    const bool null_chunk;                      //! true for null chunks
 };
-
-
-/**
- * @brief Add a copy of a chunk to a chunk list after the given position.
- *
- * @note If ref is nullptr, add at the tail of the chunk list
- *
- * @todo is ref=nullptr really useful ?
- *
- * @param pc_in  pointer to chunk to add to list
- * @param ref    position where insertion takes place
- *
- * @return pointer to the added chunk
- */
-Chunk *chunk_add_after(const Chunk *pc_in, Chunk *ref);
-
-
-/**
- * @brief Add a copy of a chunk to a chunk list before the given position
- *
- * @note If ref is nullptr, add at the head of the chunk list
- *
- * @todo is ref=nullptr really useful ?
- *
- * \bug code adds it before the tail, either code or comment is wrong
- *
- * @param pc_in  pointer to chunk to add to list
- * @param ref    position where insertion takes place
- *
- * @retval pointer to the added chunk
- */
-Chunk *chunk_add_before(const Chunk *pc_in, Chunk *ref);
 
 
 /**
