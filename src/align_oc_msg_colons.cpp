@@ -160,7 +160,7 @@ void align_oc_msg_colon(Chunk *so)
          chunk.str.append(' ');
       }
 
-      chunk_add_before(&chunk, longest);
+      chunk.CopyAndAddBefore(longest);
    }
    nas.End();
    cas.End();

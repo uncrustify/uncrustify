@@ -1000,7 +1000,7 @@ Chunk *insert_comment_after(Chunk *ref, E_Token cmt_type,
    new_cmt.column   = ref->column + ref->Len() + 1;
    new_cmt.orig_col = new_cmt.column;
 
-   return(chunk_add_after(&new_cmt, ref));
+   return(new_cmt.CopyAndAddAfter(ref));
 }
 
 
@@ -1446,13 +1446,13 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    chunk.brace_level = cl_colon->brace_level;
    chunk.flags       = pc->flags & PCF_COPY_FLAGS;
    chunk.str         = "{";
-   Chunk *br_open = chunk_add_after(&chunk, cl_colon);
+   Chunk *br_open = chunk.CopyAndAddAfter(cl_colon);
 
    set_chunk_type(&chunk, CT_BRACE_CLOSE);
    chunk.orig_line = last->orig_line;
    chunk.orig_col  = last->orig_col;
    chunk.str       = "}";
-   Chunk *br_close = chunk_add_after(&chunk, last);
+   Chunk *br_close = chunk.CopyAndAddAfter(last);
 
    for (pc = br_open->GetNext(E_Scope::PREPROC);
         pc != br_close;

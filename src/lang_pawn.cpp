@@ -87,7 +87,7 @@ Chunk *pawn_add_vsemi_after(Chunk *pc)
            __func__, pc->orig_line, pc->Text(),
            get_token_name(pc->type));
 
-   return(chunk_add_after(&chunk, pc));
+   return(chunk.CopyAndAddAfter(pc));
 }
 
 
@@ -459,7 +459,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       set_chunk_type(&chunk, CT_VBRACE_OPEN);
       set_chunk_parent(&chunk, CT_FUNC_DEF);
 
-      Chunk *prev = chunk_add_before(&chunk, last);
+      Chunk *prev = chunk.CopyAndAddBefore(last);
       last = prev;
 
       // find the next newline at level 0
@@ -500,7 +500,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       chunk.column     += last->Len();
       chunk.level       = 0;
       chunk.brace_level = 0;
-      last              = chunk_add_after(&chunk, last);
+      last              = chunk.CopyAndAddAfter(last);
    }
    return(last);
 } // pawn_process_func_def

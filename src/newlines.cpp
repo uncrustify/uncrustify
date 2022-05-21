@@ -560,7 +560,7 @@ Chunk *newline_add_before(Chunk *pc)
            __func__, __LINE__, nl.column);
 
    MARK_CHANGE();
-   return(chunk_add_before(&nl, pc));
+   return(nl.CopyAndAddBefore(pc));
 } // newline_add_before
 
 
@@ -609,7 +609,7 @@ Chunk *newline_add_after(Chunk *pc)
    // TO DO: check why the next statement is necessary
    nl.orig_col = pc->orig_col;
    nl.pp_level = pc->pp_level;
-   return(chunk_add_after(&nl, pc));
+   return(nl.CopyAndAddAfter(pc));
 } // newline_add_after
 
 
@@ -665,7 +665,7 @@ static void newline_end_newline(Chunk *br_close)
       MARK_CHANGE();
       LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline after '%s'\n",
               __func__, __LINE__, br_close->orig_line, br_close->orig_col, br_close->Text());
-      chunk_add_after(&nl, br_close);
+      nl.CopyAndAddAfter(br_close);
    }
 } // newline_end_newline
 
@@ -2404,7 +2404,7 @@ static void newlines_brace_pair(Chunk *br_open)
                      chunk.orig_col  = current->orig_col;
                      chunk.pp_level  = current->pp_level;
                      chunk.nl_count  = 1;
-                     chunk_add_before(&chunk, current);
+                     chunk.CopyAndAddBefore(current);
                      LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline before '%s'\n",
                              __func__, __LINE__, current->orig_line, current->orig_col, current->Text());
                   }
@@ -5431,7 +5431,7 @@ void newlines_eat_start_end(void)
             chunk.pp_level  = pc->pp_level;
             chunk.nl_count  = options::nl_start_of_file_min();
             log_rule_B("nl_start_of_file_min");
-            chunk_add_before(&chunk, pc);
+            chunk.CopyAndAddBefore(pc);
             LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline before '%s'\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
             MARK_CHANGE();
@@ -5490,7 +5490,7 @@ void newlines_eat_start_end(void)
             chunk.pp_level  = pc->pp_level;
             chunk.nl_count  = options::nl_end_of_file_min();
             log_rule_B("nl_end_of_file_min");
-            chunk_add_before(&chunk, nullptr);
+            chunk.CopyAndAddBefore(Chunk::NullChunkPtr);
             LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline after '%s'\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
             MARK_CHANGE();

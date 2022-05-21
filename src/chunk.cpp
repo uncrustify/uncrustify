@@ -253,20 +253,6 @@ Chunk *Chunk::GetPrev(const E_Scope scope) const
 static void chunk_log(Chunk *pc, const char *text);
 
 
-/**
- * @brief Add a new chunk before/after the given position in a chunk list
- *
- * If ref is nullptr, add either at the head or tail based on the specified pos
- *
- * @param  pc_in  chunk to add to list
- * @param  ref    insert position in list
- * @param  pos    insert before or after
- *
- * @return Chunk  pointer to the added chunk
- */
-static Chunk *chunk_add(const Chunk *pc_in, Chunk *ref, const E_Direction pos = E_Direction::FORWARD);
-
-
 Chunk *Chunk::GetHead(void)
 {
    Chunk *ret = g_cl.GetHead();
@@ -462,15 +448,15 @@ static void chunk_log(Chunk *pc, const char *text)
 }
 
 
-Chunk *chunk_add_after(const Chunk *pc_in, Chunk *ref)
+Chunk *Chunk::CopyAndAddAfter(Chunk *ref) const
 {
-   return(chunk_add(pc_in, ref, E_Direction::FORWARD));
+   return(CopyAndAdd(ref, E_Direction::FORWARD));
 }
 
 
-Chunk *chunk_add_before(const Chunk *pc_in, Chunk *ref)
+Chunk *Chunk::CopyAndAddBefore(Chunk *ref) const
 {
-   return(chunk_add(pc_in, ref, E_Direction::BACKWARD));
+   return(CopyAndAdd(ref, E_Direction::BACKWARD));
 }
 
 
@@ -865,11 +851,11 @@ E_Token get_chunk_parent_type(Chunk *pc)
 } // get_chunk_parent_type
 
 
-static Chunk *chunk_add(const Chunk *pc_in, Chunk *ref, const E_Direction pos)
+Chunk *Chunk::CopyAndAdd(Chunk *pos, const E_Direction dir) const
 {
 #ifdef DEBUG
-   // test if the pc_in chunk is properly set
-   if (pc_in->pp_level == 999)
+   // test if this chunk is properly set
+   if (pp_level == 999)
    {
       fprintf(stderr, "%s(%d): pp_level is not set\n", __func__, __LINE__);
       log_func_stack_inline(LSETFLG);
@@ -877,7 +863,7 @@ static Chunk *chunk_add(const Chunk *pc_in, Chunk *ref, const E_Direction pos)
       exit(EX_SOFTWARE);
    }
 
-   if (pc_in->orig_line == 0)
+   if (orig_line == 0)
    {
       fprintf(stderr, "%s(%d): no line number\n", __func__, __LINE__);
       log_func_stack_inline(LSETFLG);
@@ -885,7 +871,7 @@ static Chunk *chunk_add(const Chunk *pc_in, Chunk *ref, const E_Direction pos)
       exit(EX_SOFTWARE);
    }
 
-   if (pc_in->orig_col == 0)
+   if (orig_col == 0)
    {
       fprintf(stderr, "%s(%d): no column number\n", __func__, __LINE__);
       log_func_stack_inline(LSETFLG);
@@ -894,22 +880,25 @@ static Chunk *chunk_add(const Chunk *pc_in, Chunk *ref, const E_Direction pos)
    }
 #endif /* DEBUG */
 
-   Chunk *pc = new Chunk(*pc_in);
+   Chunk *pc = new Chunk(*this);
 
-   if (pc != nullptr)
+   if (pc == nullptr)
    {
-      if (ref != nullptr) // ref is a valid chunk
-      {
-         (pos == E_Direction::FORWARD) ? g_cl.AddAfter(pc, ref) : g_cl.AddBefore(pc, ref);
-      }
-      else // ref == NULL
-      {
-         (pos == E_Direction::FORWARD) ? g_cl.AddHead(pc) : g_cl.AddTail(pc);
-      }
-      chunk_log(pc, "chunk_add(A):");
+      return(Chunk::NullChunkPtr);
    }
+
+   if (  pos != nullptr
+      && pos->IsNotNullChunk())
+   {
+      (dir == E_Direction::FORWARD) ? g_cl.AddAfter(pc, pos) : g_cl.AddBefore(pc, pos);
+   }
+   else
+   {
+      (dir == E_Direction::FORWARD) ? g_cl.AddHead(pc) : g_cl.AddTail(pc);
+   }
+   chunk_log(pc, "CopyAndAdd(A):");
    return(pc);
-} // chunk_add
+} // Chunk::CopyAndAdd
 
 
 Chunk *Chunk::GetNextNbsb() const

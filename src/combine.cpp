@@ -298,7 +298,7 @@ static void flag_asm(Chunk *pc)
             nc.str.pop_front();
             nc.orig_col++;
             nc.column++;
-            chunk_add_after(&nc, tmp);
+            nc.CopyAndAddAfter(tmp);
          }
       }
    }
@@ -2296,13 +2296,13 @@ static Chunk *process_return(Chunk *pc)
       chunk.orig_line   = pc->orig_line;
       chunk.orig_col    = next->orig_col - 1;
       chunk.flags       = pc->flags & PCF_COPY_FLAGS;
-      chunk_add_before(&chunk, next);
+      chunk.CopyAndAddBefore(next);
 
       set_chunk_type(&chunk, CT_PAREN_CLOSE);
       chunk.str       = ")";
       chunk.orig_line = semi->orig_line;
       chunk.orig_col  = semi->orig_col - 1;
-      cpar            = chunk_add_before(&chunk, semi);
+      cpar            = chunk.CopyAndAddBefore(semi);
 
       LOG_FMT(LRETURN, "%s(%d): added parens on orig_line %zu\n",
               __func__, __LINE__, pc->orig_line);
@@ -2572,7 +2572,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
 
       set_chunk_type(&nc, CT_SQUARE_CLOSE);
       nc.str.pop_front();
-      sq_c = chunk_add_after(&nc, sq_o);
+      sq_c = nc.CopyAndAddAfter(sq_o);
    }
    set_chunk_parent(sq_o, CT_CPP_LAMBDA);
    set_chunk_parent(sq_c, CT_CPP_LAMBDA);
@@ -3722,7 +3722,7 @@ static void handle_oc_property_decl(Chunk *os)
                endchunk.orig_col    = curr_chunk->orig_col;
                endchunk.column      = curr_chunk->orig_col_end + 1;
                endchunk.flags       = curr_chunk->flags & PCF_COPY_FLAGS;
-               chunk_add_after(&endchunk, curr_chunk);
+               endchunk.CopyAndAddAfter(curr_chunk);
                curr_chunk = curr_chunk->GetNext();
             }
          }

@@ -3832,5 +3832,5 @@ void space_add_after(Chunk *pc, size_t count)
    sp.orig_line   = pc->orig_line;
    sp.orig_col    = pc->orig_col;
 
-   chunk_add_after(&sp, pc);
+   sp.CopyAndAddAfter(pc);
 } // space_add_after

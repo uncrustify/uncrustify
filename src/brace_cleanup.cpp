@@ -1360,7 +1360,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    {
       chunk.orig_col = pc->orig_col;
       set_chunk_type(&chunk, CT_VBRACE_CLOSE);
-      return(chunk_add_after(&chunk, pc));
+      return(chunk.CopyAndAddAfter(pc));
    }
    Chunk *ref = pc->GetPrev();
 
@@ -1426,7 +1426,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    chunk.pp_level  = ref->pp_level;                         // Issue #3055
    set_chunk_type(&chunk, CT_VBRACE_OPEN);
 
-   return(chunk_add_after(&chunk, ref));
+   return(chunk.CopyAndAddAfter(ref));
 } // insert_vbrace
 
 

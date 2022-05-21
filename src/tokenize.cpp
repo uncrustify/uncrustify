@@ -2726,7 +2726,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
       {
          chunk.flags &= ~PCF_INSERTED;
       }
-      pc = chunk_add_before(&chunk, ref);
+      pc = chunk.CopyAndAddBefore(ref);
 
       // A newline marks the end of a preprocessor
       if (chunk_is_token(pc, CT_NEWLINE)) // || chunk_is_token(pc, CT_COMMENT_MULTI))
