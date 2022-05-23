@@ -309,6 +309,7 @@ enum E_Token
    CT_PP_ENDIF,         // #endif
    CT_PP_ASSERT,
    CT_PP_EMIT,
+   CT_PP_ENDASM,        // end of assembly code section
    CT_PP_ENDINPUT,
    CT_PP_ERROR,
    CT_PP_FILE,

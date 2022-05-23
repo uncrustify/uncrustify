@@ -304,6 +304,7 @@ set(uncrustify_sources
   src/parens.cpp
   src/parent_for_pp.cpp
   src/ParseFrame.cpp
+  src/pragma_cleanup.cpp
   src/pcf_flags.cpp
   src/punctuators.cpp
   src/quick_align_again.cpp
@@ -396,6 +397,7 @@ set(uncrustify_headers
   src/parens.h
   src/parent_for_pp.h
   src/ParseFrame.h
+  src/pragma_cleanup.h
   src/pcf_flags.h
   src/prototypes.h
   src/punctuators.h
