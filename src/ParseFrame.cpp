@@ -248,7 +248,7 @@ void ParseFrame::pop(const char *func, int line, Chunk *pc)
            || pc->type == CT_VSEMICOLON
            || pc->type == CT_WORD)
    {
-      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig_line is %4zu, orig_col is %4zu, type is %12s, ++++++++++++++++++++++++++\n",
+      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig_line is %4zu, orig_col is %4zu, type is %12s\n",
               func, line, pc->orig_line, pc->orig_col, get_token_name(pc->type));
    }
    else

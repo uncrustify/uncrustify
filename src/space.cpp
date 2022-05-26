@@ -165,13 +165,6 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    min_sp = 1;
 
-   if (  chunk_is_token(first, CT_IGNORED)
-      || chunk_is_token(second, CT_IGNORED))
-   {
-      log_rule("REMOVE");
-      return(IARF_REMOVE);
-   }
-
    if (  chunk_is_token(first, CT_PP_IGNORE)
       && chunk_is_token(second, CT_PP_IGNORE))
    {
@@ -3303,7 +3296,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
            second->orig_line, second->orig_col, second->Text(), get_token_name(second->type));
    LOG_FMT(LSPACE, "   Please make a call at https://github.com/uncrustify/uncrustify/issues/new\n");
    LOG_FMT(LSPACE, "   or merge the line:\n");
-   LOG_FMT(LSPACE, "   {%s,    %s},\n",
+   LOG_FMT(LSPACE, "   { CT_%s,    CT_%s},\n",
            get_token_name(first->type), get_token_name(second->type));
    LOG_FMT(LSPACE, "   in the file <Path_to_uncrustify>/src/add_space_table.h\n");
 
