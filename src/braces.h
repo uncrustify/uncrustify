@@ -13,14 +13,14 @@
 
 
 //! Change virtual braces into real braces
-void do_braces(void);
+void do_braces();
 
 /**
  * See the preprocessor counterpart:
  *   add_long_preprocessor_conditional_block_comment
  * in output.cpp
  */
-void add_long_closebrace_comment(void);
+void add_long_closebrace_comment();
 
 
 /**

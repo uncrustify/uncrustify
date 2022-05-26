@@ -12,6 +12,6 @@
 
 #include "uncrustify_types.h"
 
-void quick_align_again(void);
+void quick_align_again();
 
 #endif /* QUICK_ALIGN_AGAIN_H_INCLUDED */

@@ -253,7 +253,7 @@ Chunk *Chunk::GetPrev(const E_Scope scope) const
 static void chunk_log(Chunk *pc, const char *text);
 
 
-Chunk *Chunk::GetHead(void)
+Chunk *Chunk::GetHead()
 {
    Chunk *ret = g_cl.GetHead();
 
@@ -265,7 +265,7 @@ Chunk *Chunk::GetHead(void)
 }
 
 
-Chunk *Chunk::GetTail(void)
+Chunk *Chunk::GetTail()
 {
    Chunk *ret = g_cl.GetTail();
 

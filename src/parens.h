@@ -12,13 +12,13 @@
 
 
 //! add parenthesis
-void do_parens(void);
+void do_parens();
 
 
-void do_parens_assign(void);
+void do_parens_assign();
 
 
-void do_parens_return(void);
+void do_parens_return();
 
 
 #endif /* PARENS_H_INCLUDED */

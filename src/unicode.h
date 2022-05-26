@@ -12,7 +12,7 @@
 #include "uncrustify_types.h"
 
 
-void write_bom(void);
+void write_bom();
 
 
 /**

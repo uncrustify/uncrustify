@@ -173,7 +173,7 @@ static int load_mem_file_config(const std::string &filename, file_mem &fm);
 
 
 //! print uncrustify version number and terminate
-static void version_exit(void);
+static void version_exit();
 
 
 const char *path_basename(const char *path)
@@ -324,7 +324,7 @@ void usage(const char *argv0)
 } // usage
 
 
-static void version_exit(void)
+static void version_exit()
 {
    printf("%s\n", UNCRUSTIFY_VERSION);
    exit(EX_OK);

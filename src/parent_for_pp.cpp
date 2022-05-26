@@ -10,7 +10,7 @@
 #include "chunk.h"
 
 
-void do_parent_for_pp(void)
+void do_parent_for_pp()
 {
    LOG_FUNC_ENTRY();
 

@@ -44,7 +44,7 @@ void dump_step(const char *filename, const char *description);
  * Hence we need to track and seek matching CT_PREPROC pp_levels here, which complicates
  * things a little bit, but not much.
  */
-void add_long_preprocessor_conditional_block_comment(void);
+void add_long_preprocessor_conditional_block_comment();
 
 
 #endif /* OUTPUT_H_INCLUDED */

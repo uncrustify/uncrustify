@@ -17,7 +17,7 @@ constexpr static auto LCURRENT = LALPP;
 using namespace uncrustify;
 
 
-void align_preprocessor(void)
+void align_preprocessor()
 {
    LOG_FUNC_ENTRY();
 

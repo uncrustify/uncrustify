@@ -18,7 +18,7 @@ constexpr static auto LCURRENT = LALIGN;
 using namespace uncrustify;
 
 
-void align_left_shift(void)
+void align_left_shift()
 {
    LOG_FUNC_ENTRY();
 

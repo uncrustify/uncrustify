@@ -72,7 +72,7 @@ Chunk *search_for_colon(Chunk *pc_local)
 } // search_for_colon
 
 
-void mark_question_colon(void)
+void mark_question_colon()
 {
    LOG_FUNC_ENTRY();
    Chunk *pc;

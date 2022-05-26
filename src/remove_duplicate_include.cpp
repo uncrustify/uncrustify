@@ -14,7 +14,7 @@
 using std::vector;
 
 
-void remove_duplicate_include(void)
+void remove_duplicate_include()
 {
    LOG_FUNC_ENTRY();
 

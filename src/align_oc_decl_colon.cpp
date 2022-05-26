@@ -16,7 +16,7 @@
 using namespace uncrustify;
 
 
-void align_oc_decl_colon(void)
+void align_oc_decl_colon()
 {
    LOG_FUNC_ENTRY();
 

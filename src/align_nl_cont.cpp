@@ -47,7 +47,7 @@ Chunk *align_nl_cont(Chunk *start)
 } // align_nl_cont
 
 
-void align_backslash_newline(void)
+void align_backslash_newline()
 {
    LOG_FUNC_ENTRY();
    Chunk *pc = Chunk::GetHead();

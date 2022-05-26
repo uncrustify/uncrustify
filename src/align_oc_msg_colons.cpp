@@ -167,7 +167,7 @@ void align_oc_msg_colon(Chunk *so)
 } // align_oc_msg_colon
 
 
-void align_oc_msg_colons(void)
+void align_oc_msg_colons()
 {
    LOG_FUNC_ENTRY();
 

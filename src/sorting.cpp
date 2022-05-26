@@ -573,7 +573,7 @@ static void group_imports_by_adding_newlines(Chunk **chunks, size_t num_chunks)
 } // group_imports_by_adding_newlines
 
 
-void sort_imports(void)
+void sort_imports()
 {
    LOG_FUNC_ENTRY();
    const int max_number_to_sort                        = 1024;

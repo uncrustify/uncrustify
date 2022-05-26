@@ -10,7 +10,7 @@
 
 
 //! Call all the detect_xxxx() functions
-void detect_options(void);
+void detect_options();
 
 
 #endif /* DETECT_H_INCLUDED */

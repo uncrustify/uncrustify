@@ -17,7 +17,7 @@ constexpr static auto LCURRENT = LASFCP;
 using namespace uncrustify;
 
 
-void align_same_func_call_params(void)
+void align_same_func_call_params()
 {
    LOG_FUNC_ENTRY();
 

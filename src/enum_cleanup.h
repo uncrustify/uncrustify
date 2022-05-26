@@ -11,6 +11,6 @@
  * Scans through the whole list and does stuff.
  * works on the last comma withing enum
  */
-void enum_cleanup(void);
+void enum_cleanup();
 
 #endif /* ENUM_CLEANUP_H_INCLUDED */

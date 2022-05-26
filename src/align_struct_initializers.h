@@ -13,6 +13,6 @@
 #include "uncrustify_types.h"
 
 //! Aligns stuff inside a multi-line "= { ... }" sequence.
-void align_struct_initializers(void);
+void align_struct_initializers();
 
 #endif /* ALIGN_STRUCT_INITIALIZERS_H_INCLUDED */

@@ -179,7 +179,7 @@ static void print_stack(log_sev_t logsev, const char *str,
 
 
 //TODO: This can be cleaned up and simplified - we can look both forward and backward!
-void brace_cleanup(void)
+void brace_cleanup()
 {
    LOG_FUNC_ENTRY();
 

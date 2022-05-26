@@ -36,7 +36,7 @@
  *            void);
  *    };
  */
-void init_keywords_for_language(void);
+void init_keywords_for_language();
 
 /**
  * Loads the dynamic keywords from a file
@@ -72,14 +72,14 @@ void add_keyword(const std::string &tag, E_Token type);
 void print_custom_keywords(FILE *pfile);
 
 
-void clear_keyword_file(void);
+void clear_keyword_file();
 
 
 //! Returns the pattern that the keyword needs based on the token
 pattern_class_e get_token_pattern_class(E_Token tok);
 
 
-bool keywords_are_sorted(void);
+bool keywords_are_sorted();
 
 
 #endif /* KEYWORDS_H_INCLUDED */

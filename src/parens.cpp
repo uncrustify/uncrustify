@@ -38,7 +38,7 @@ static void add_parens_between(Chunk *first, Chunk *last);
 static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest);
 
 
-void do_parens(void)
+void do_parens()
 {
    constexpr static auto LCURRENT = LPARADD;
 
@@ -73,7 +73,7 @@ void do_parens(void)
 } // do_parens
 
 
-void do_parens_assign(void)                         // Issue #3316
+void do_parens_assign()                         // Issue #3316
 {
    constexpr static auto LCURRENT = LPARADD;
 
@@ -144,7 +144,7 @@ void do_parens_assign(void)                         // Issue #3316
 } // do_parens_assign
 
 
-void do_parens_return(void)                         // Issue #3316
+void do_parens_return()                         // Issue #3316
 {
    constexpr static auto LCURRENT = LPARADD;
 

@@ -155,7 +155,7 @@ static void split_before_chunk(Chunk *pc)
 }
 
 
-void do_code_width(void)
+void do_code_width()
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "%s(%d)\n", __func__, __LINE__);

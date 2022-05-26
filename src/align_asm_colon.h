@@ -20,6 +20,6 @@
  *    : "z"(h)
  *    );
  */
-void align_asm_colon(void);
+void align_asm_colon();
 
 #endif /* ALIGN_ASM_COLON_H_INCLUDED */

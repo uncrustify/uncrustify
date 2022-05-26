@@ -139,7 +139,7 @@ void split_off_angle_close(Chunk *pc)
 }
 
 
-void tokenize_trailing_return_types(void)
+void tokenize_trailing_return_types()
 {
    // Issue #2330
    // auto max(int a, int b) -> int;
@@ -298,7 +298,7 @@ void tokenize_trailing_return_types(void)
 } // tokenize_trailing_return_types
 
 
-void tokenize_cleanup(void)
+void tokenize_cleanup()
 {
    LOG_FUNC_ENTRY();
 

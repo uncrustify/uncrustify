@@ -13,7 +13,7 @@
 #include "chunk.h"
 
 
-void quick_align_again(void)
+void quick_align_again()
 {
    LOG_FUNC_ENTRY();
 

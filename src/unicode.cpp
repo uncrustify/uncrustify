@@ -512,7 +512,7 @@ static void write_utf16(int ch, bool be)
 } // write_utf16
 
 
-void write_bom(void)
+void write_bom()
 {
    switch (cpd.enc)
    {

@@ -15,7 +15,7 @@ using namespace uncrustify;
 
 
 //! Detect spacing options
-static void detect_space_options(void);
+static void detect_space_options();
 
 
 class sp_votes
@@ -95,7 +95,7 @@ sp_votes::~sp_votes()
 #define SP_VOTE_VAR(x)    sp_votes vote_ ## x(options::x)
 
 
-static void detect_space_options(void)
+static void detect_space_options()
 {
    SP_VOTE_VAR(sp_arith);
    SP_VOTE_VAR(sp_before_assign);
@@ -433,7 +433,7 @@ static void detect_space_options(void)
 } // detect_space_options
 
 
-void detect_options(void)
+void detect_options()
 {
    detect_space_options();
 }

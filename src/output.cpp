@@ -3313,7 +3313,7 @@ static void generate_if_conditional_as_text(unc_text &dst, Chunk *ifdef)
 } // generate_if_conditional_as_text
 
 
-void add_long_preprocessor_conditional_block_comment(void)
+void add_long_preprocessor_conditional_block_comment()
 {
    Chunk *pp_start = nullptr;
    Chunk *pp_end   = nullptr;

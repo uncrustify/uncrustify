@@ -8,6 +8,6 @@
 #ifndef MARK_QUESTION_COLON_H_INCLUDED
 #define MARK_QUESTION_COLON_H_INCLUDED
 
-void mark_question_colon(void);
+void mark_question_colon();
 
 #endif /* MARK_QUESTION_COLON_H_INCLUDED */

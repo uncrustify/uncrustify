@@ -316,7 +316,7 @@ GenericOption *find_option(const char *name);
 
 
 //! Add all uncrustify options to the global option registry
-void register_options(void);
+void register_options();
 
 
 OptionGroup *get_option_group(size_t);

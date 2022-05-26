@@ -107,7 +107,7 @@ void save_set_options_for_QT(size_t level)
 
 
 //-----------------------------------------------------------------------------
-void restore_options_for_QT(void)
+void restore_options_for_QT()
 {
    log_rule_B("use_options_overriding_for_qt_macros");
    assert(options::use_options_overriding_for_qt_macros());

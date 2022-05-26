@@ -11,7 +11,7 @@
 
 
 // mark the parent
-void do_parent_for_pp(void);
+void do_parent_for_pp();
 
 
 #endif /* PARENT_FOR_PP_H_INCLUDED */

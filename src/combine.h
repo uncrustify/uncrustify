@@ -12,7 +12,7 @@
 #include "chunk.h"
 #include "uncrustify_types.h"
 
-void mark_question_colon(void);
+void mark_question_colon();
 
 
 /**
@@ -30,7 +30,7 @@ void mark_question_colon(void);
  *   STRUCT/ENUM/UNION + WORD :: WORD => TYPE
  *   WORD + '('               :: WORD => FUNCTION
  */
-void fix_symbols(void);
+void fix_symbols();
 
 
 /**
@@ -38,7 +38,7 @@ void fix_symbols(void);
  * CT_Q_COLON, CT_LABEL_COLON, or CT_CASE_COLON.
  * It also changes the CT_WORD before CT_LABEL_COLON into CT_LABEL.
  */
-void combine_labels(void);
+void combine_labels();
 
 
 //! help function for mark_variable_definition...
@@ -46,7 +46,7 @@ bool go_on(Chunk *pc, Chunk *start);
 
 
 //! Sets the parent for comments.
-void mark_comments(void);
+void mark_comments();
 
 
 void make_type(Chunk *pc);

@@ -16,7 +16,7 @@
  * the chunk structures.
  * The level indicator must already be set.
  */
-void indent_text(void);
+void indent_text();
 
 
 /**
@@ -24,7 +24,7 @@ void indent_text(void);
  * FIXME: This is broken if there is a comment or escaped newline
  * between '#' and 'define'.
  */
-void indent_preproc(void);
+void indent_preproc();
 
 /**
  *
@@ -44,7 +44,7 @@ void align_to_column(Chunk *pc, size_t column);
 
 
 //! Scan to see if the whole file is covered by one #ifdef
-bool ifdef_over_whole_file(void);
+bool ifdef_over_whole_file();
 
 
 /**

@@ -10,6 +10,6 @@
 
 #include "uncrustify_types.h"
 
-void parameter_pack_cleanup(void);
+void parameter_pack_cleanup();
 
 #endif /* PARAMETER_PACK_CLEANUP_H_INCLUDED */

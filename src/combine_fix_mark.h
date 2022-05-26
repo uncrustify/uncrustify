@@ -84,7 +84,7 @@ void mark_cpp_lambda(Chunk *square_open);
  * Marks statement starts in a macro body.
  * REVISIT: this may already be done
  */
-void mark_define_expressions(void);
+void mark_define_expressions();
 
 
 /**

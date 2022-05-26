@@ -19,10 +19,10 @@
  * Note that level info is not yet available, so it is OK to do all
  * processing that doesn't need to know level info. (that's very little!)
  */
-void tokenize_cleanup(void);
+void tokenize_cleanup();
 
 
-void tokenize_trailing_return_types(void);
+void tokenize_trailing_return_types();
 
 
 void split_off_angle_close(Chunk *pc);

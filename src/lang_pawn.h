@@ -18,10 +18,10 @@
  *
  * We are looking for unbraced functions.
  */
-void pawn_prescan(void);
+void pawn_prescan();
 
 
-void pawn_add_virtual_semicolons(void);
+void pawn_add_virtual_semicolons();
 
 
 /**
@@ -39,7 +39,7 @@ Chunk *pawn_check_vsemicolon(Chunk *pc);
  * Turns certain virtual semicolons invisible.
  *  - after a close brace with a parent of switch, case, else, if
  */
-void pawn_scrub_vsemi(void);
+void pawn_scrub_vsemi();
 
 
 //! add a semicolon after ...

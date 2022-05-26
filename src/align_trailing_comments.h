@@ -41,6 +41,6 @@ comment_align_e get_comment_align_type(Chunk *cmt);
 
 void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev);
 
-void align_right_comments(void);
+void align_right_comments();
 
 #endif /* ALIGN_TRAILING_COMMENTS_H_INCLUDED */

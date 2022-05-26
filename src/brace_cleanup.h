@@ -17,7 +17,7 @@
  * Scans through the whole list and does stuff.
  * It has to do some tricks to parse preprocessors.
  */
-void brace_cleanup(void);
+void brace_cleanup();
 
 
 #endif /* BRACE_CLEANUP_H_INCLUDED */

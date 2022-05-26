@@ -11,7 +11,7 @@
 #include "uncrustify.h"
 
 
-void parameter_pack_cleanup(void)
+void parameter_pack_cleanup()
 {
    LOG_FUNC_ENTRY();
 
