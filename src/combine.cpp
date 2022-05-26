@@ -732,7 +732,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          {
             tmp = set_paren_parent(tmp, CT_BRACED_INIT_LIST);
 
-            if (tmp)
+            if (  tmp != nullptr
+               && tmp->IsNotNullChunk())
             {
                chunk_flags_clr(tmp, PCF_EXPR_START | PCF_STMT_START);
             }
