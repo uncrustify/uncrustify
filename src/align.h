@@ -11,6 +11,6 @@
 #include "uncrustify_types.h"
 
 
-void align_all(void);
+void align_all();
 
 #endif /* ALIGN_H_INCLUDED */

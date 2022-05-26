@@ -20,7 +20,7 @@
  *  - after an open brace
  *  - when not in a #DEFINE
  */
-void remove_extra_semicolons(void);
+void remove_extra_semicolons();
 
 
 #endif /* SEMICOLONS_H_INCLUDED */

@@ -3750,7 +3750,7 @@ static void nl_create_list_liner(Chunk *brace_open)
 } // nl_create_list_liner
 
 
-void newlines_remove_newlines(void)
+void newlines_remove_newlines()
 {
    LOG_FUNC_ENTRY();
 
@@ -5053,7 +5053,7 @@ static void nl_handle_define(Chunk *pc)
 } // nl_handle_define
 
 
-void newline_after_multiline_comment(void)
+void newline_after_multiline_comment()
 {
    LOG_FUNC_ENTRY();
 
@@ -5078,7 +5078,7 @@ void newline_after_multiline_comment(void)
 } // newline_after_multiline_comment
 
 
-void newline_after_label_colon(void)
+void newline_after_label_colon()
 {
    LOG_FUNC_ENTRY();
 
@@ -5108,7 +5108,7 @@ static bool is_class_one_liner(Chunk *pc)
 } // is_class_one_liner
 
 
-void newlines_insert_blank_lines(void)
+void newlines_insert_blank_lines()
 {
    LOG_FUNC_ENTRY();
 
@@ -5198,7 +5198,7 @@ void newlines_insert_blank_lines(void)
 } // newlines_insert_blank_lines
 
 
-void newlines_functions_remove_extra_blank_lines(void)
+void newlines_functions_remove_extra_blank_lines()
 {
    LOG_FUNC_ENTRY();
 
@@ -5252,7 +5252,7 @@ void newlines_functions_remove_extra_blank_lines(void)
 } // newlines_functions_remove_extra_blank_lines
 
 
-void newlines_squeeze_ifdef(void)
+void newlines_squeeze_ifdef()
 {
    LOG_FUNC_ENTRY();
 
@@ -5318,7 +5318,7 @@ void newlines_squeeze_ifdef(void)
 } // newlines_squeeze_ifdef
 
 
-void newlines_squeeze_paren_close(void)
+void newlines_squeeze_paren_close()
 {
    LOG_FUNC_ENTRY();
 
@@ -5380,7 +5380,7 @@ void newlines_squeeze_paren_close(void)
 } // newlines_squeeze_paren_close
 
 
-void newlines_eat_start_end(void)
+void newlines_eat_start_end()
 {
    LOG_FUNC_ENTRY();
 
@@ -6013,7 +6013,7 @@ bool is_func_proto_group(Chunk *pc, E_Token one_liner_type)
 } // is_func_proto_group
 
 
-void do_blank_lines(void)
+void do_blank_lines()
 {
    LOG_FUNC_ENTRY();
 
@@ -6579,7 +6579,7 @@ void do_blank_lines(void)
 } // do_blank_lines
 
 
-void newlines_cleanup_dup(void)
+void newlines_cleanup_dup()
 {
    LOG_FUNC_ENTRY();
 
@@ -6670,7 +6670,7 @@ static void newlines_double_space_struct_enum_union(Chunk *open_brace)
 } // newlines_double_space_struct_enum_union
 
 
-void annotations_newlines(void)
+void annotations_newlines()
 {
    LOG_FUNC_ENTRY();
 

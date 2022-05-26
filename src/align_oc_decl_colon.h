@@ -16,6 +16,6 @@
  * -(void) doSomething: (NSString*) param1
  *                with: (NSString*) param2
  */
-void align_oc_decl_colon(void);
+void align_oc_decl_colon();
 
 #endif /* ALIGN_OC_DECL_COLON_H_INCLUDED */

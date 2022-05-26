@@ -14,7 +14,7 @@
 /**
  * @brief Remove duplicate include
  */
-void remove_duplicate_include(void);
+void remove_duplicate_include();
 
 
 #endif /* REMOVE_DUPLICATE_INCLUDE_H_INCLUDED */

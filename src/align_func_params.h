@@ -12,7 +12,7 @@
 
 #include "chunk.h"
 
-void align_func_params(void);
+void align_func_params();
 
 Chunk *align_func_param(Chunk *start);
 

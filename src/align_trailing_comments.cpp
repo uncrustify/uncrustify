@@ -173,7 +173,7 @@ comment_align_e get_comment_align_type(Chunk *cmt)
 } // get_comment_align_type
 
 
-void align_right_comments(void)
+void align_right_comments()
 {
    LOG_FUNC_ENTRY();
 

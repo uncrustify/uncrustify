@@ -397,7 +397,7 @@ static int kw_compare(const void *p1, const void *p2)
 } // kw_compare
 
 
-bool keywords_are_sorted(void)
+bool keywords_are_sorted()
 {
    size_t keywords_count = ARRAY_SIZE(keywords);
 
@@ -613,7 +613,7 @@ void print_custom_keywords(FILE *pfile)
 } // print_custom_keywords
 
 
-void clear_keyword_file(void)
+void clear_keyword_file()
 {
    dkwm.clear();
 } // clear_keyword_file

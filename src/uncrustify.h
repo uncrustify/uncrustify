@@ -13,7 +13,7 @@
 
 #include <stdio.h>
 
-int load_header_files(void);
+int load_header_files();
 
 
 void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file, const char *dump_filename, bool defer_uncrustify_end = false);

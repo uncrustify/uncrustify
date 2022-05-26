@@ -55,7 +55,7 @@ Chunk *chunk_get_prev_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
 }
 
 
-void combine_labels(void)
+void combine_labels()
 {
    LOG_FUNC_ENTRY();
    bool hit_case  = false;

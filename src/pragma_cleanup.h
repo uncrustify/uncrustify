@@ -10,7 +10,7 @@
 
 
 // cleanup the pagma line(s)
-void pragma_cleanup(void);
+void pragma_cleanup();
 
 
 #endif /* PRAGMA_CLEANUP_H_INCLUDED */

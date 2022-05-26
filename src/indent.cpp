@@ -618,7 +618,7 @@ static void _log_indent_tmp(const char *func, const uint32_t line, const ParseFr
 }
 
 
-static void quick_indent_again(void)
+static void quick_indent_again()
 {
    LOG_FUNC_ENTRY();
 
@@ -645,7 +645,7 @@ static void quick_indent_again(void)
 }
 
 
-void indent_text(void)
+void indent_text()
 {
    LOG_FUNC_ENTRY();
    bool   did_newline = true;
@@ -4611,7 +4611,7 @@ static void indent_comment(Chunk *pc, size_t col)
 } // indent_comment
 
 
-bool ifdef_over_whole_file(void)
+bool ifdef_over_whole_file()
 {
    LOG_FUNC_ENTRY();
 
@@ -4698,7 +4698,7 @@ bool ifdef_over_whole_file(void)
 } // ifdef_over_whole_file
 
 
-void indent_preproc(void)
+void indent_preproc()
 {
    LOG_FUNC_ENTRY();
 

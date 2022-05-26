@@ -20,7 +20,7 @@ void double_newline(Chunk *nl);
  * Remove all extra newlines.
  * Modify line breaks as needed.
  */
-void newlines_remove_newlines(void);
+void newlines_remove_newlines();
 
 
 /**
@@ -42,17 +42,17 @@ void newlines_cleanup_angles();
 
 
 //! Handle insertion/removal of blank lines before if/for/while/do and functions
-void newlines_insert_blank_lines(void);
+void newlines_insert_blank_lines();
 
 
 /**
  * Handle removal of extra blank lines in functions
  * x <= 0: do nothing, x > 0: allow max x-1 blank lines
  */
-void newlines_functions_remove_extra_blank_lines(void);
+void newlines_functions_remove_extra_blank_lines();
 
 
-void newlines_squeeze_ifdef(void);
+void newlines_squeeze_ifdef();
 
 /**
  * In case of consecutive closing parens, which follow a newline,
@@ -74,11 +74,11 @@ void newlines_squeeze_ifdef(void);
  *    )
  * ));
  */
-void newlines_squeeze_paren_close(void);
+void newlines_squeeze_paren_close();
 
 
 //! removes unnecessary newlines at start and end of a file
-void newlines_eat_start_end(void);
+void newlines_eat_start_end();
 
 
 /**
@@ -97,17 +97,17 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode);
 void newlines_class_colon_pos(E_Token tok);
 
 
-void newlines_cleanup_dup(void);
+void newlines_cleanup_dup();
 
 
-void annotations_newlines(void);
+void annotations_newlines();
 
 
-void newline_after_multiline_comment(void);
+void newline_after_multiline_comment();
 
 
 //! Handle insertion of blank lines after label colons
-void newline_after_label_colon(void);
+void newline_after_label_colon();
 
 
 /**
@@ -117,7 +117,7 @@ void newline_after_label_colon(void);
  * first chunk.
  * So, most comparisons have +1 below.
  */
-void do_blank_lines(void);
+void do_blank_lines();
 
 
 /**

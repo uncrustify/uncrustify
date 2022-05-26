@@ -13,7 +13,7 @@
 #include "uncrustify.h"
 
 
-void remove_extra_returns(void)
+void remove_extra_returns()
 {
    LOG_FUNC_ENTRY();
 

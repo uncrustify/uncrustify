@@ -23,7 +23,7 @@ extern bool   restoreValues;
 void save_set_options_for_QT(size_t level);
 
 
-void restore_options_for_QT(void);
+void restore_options_for_QT();
 
 
 #endif /* OPTIONS_FOR_QT_H_INCLUDED */

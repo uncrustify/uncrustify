@@ -91,7 +91,7 @@ Chunk *pawn_add_vsemi_after(Chunk *pc)
 }
 
 
-void pawn_scrub_vsemi(void)
+void pawn_scrub_vsemi()
 {
    constexpr static auto LCURRENT = LPVSEMI;
 
@@ -173,7 +173,7 @@ static bool pawn_continued(Chunk *pc, size_t br_level)
 } // pawn_continued
 
 
-void pawn_prescan(void)
+void pawn_prescan()
 {
    LOG_FUNC_ENTRY();
 
@@ -302,7 +302,7 @@ static Chunk *pawn_process_variable(Chunk *start)
 }
 
 
-void pawn_add_virtual_semicolons(void)
+void pawn_add_virtual_semicolons()
 {
    LOG_FUNC_ENTRY();
 

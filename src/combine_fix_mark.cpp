@@ -915,7 +915,7 @@ void mark_cpp_lambda(Chunk *square_open)
 } // mark_cpp_lambda
 
 
-void mark_define_expressions(void)
+void mark_define_expressions()
 {
    LOG_FUNC_ENTRY();
 

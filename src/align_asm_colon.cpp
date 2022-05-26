@@ -13,7 +13,7 @@
 #include "chunk.h"
 
 
-void align_asm_colon(void)
+void align_asm_colon()
 {
    LOG_FUNC_ENTRY();
 

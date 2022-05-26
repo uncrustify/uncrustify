@@ -15,7 +15,7 @@ constexpr static auto LCURRENT = LTOK;
 using namespace uncrustify;
 
 
-void enum_cleanup(void)
+void enum_cleanup()
 {
    LOG_FUNC_ENTRY();
 

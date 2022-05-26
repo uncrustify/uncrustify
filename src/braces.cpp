@@ -28,11 +28,11 @@ static void convert_brace(Chunk *br);
 static void convert_vbrace(Chunk *br);
 
 
-static void convert_vbrace_to_brace(void);
+static void convert_vbrace_to_brace();
 
 
 //! Go backwards to honor brace newline removal limits
-static void examine_braces(void);
+static void examine_braces();
 
 
 /**
@@ -42,16 +42,16 @@ static void examine_braces(void);
 static void examine_brace(Chunk *bopen);
 
 
-static void move_case_break(void);
+static void move_case_break();
 
 
-static void move_case_return(void);
+static void move_case_return();
 
 
-static void mod_case_brace(void);
+static void mod_case_brace();
 
 
-static void mod_full_brace_if_chain(void);
+static void mod_full_brace_if_chain();
 
 
 /**
@@ -155,7 +155,7 @@ static bool paren_multiline_before_brace(Chunk *brace)
 }
 
 
-void do_braces(void)
+void do_braces()
 {
    LOG_FUNC_ENTRY();
    // Mark one-liners
@@ -260,7 +260,7 @@ void do_braces(void)
 } // do_braces
 
 
-static void examine_braces(void)
+static void examine_braces()
 {
    LOG_FUNC_ENTRY();
 
@@ -894,7 +894,7 @@ static void convert_vbrace(Chunk *vbr)
 } // convert_vbrace
 
 
-static void convert_vbrace_to_brace(void)
+static void convert_vbrace_to_brace()
 {
    LOG_FUNC_ENTRY();
 
@@ -1057,7 +1057,7 @@ static void append_tag_name(unc_text &txt, Chunk *pc)
 } // append_tag_name
 
 
-void add_long_closebrace_comment(void)
+void add_long_closebrace_comment()
 {
    LOG_FUNC_ENTRY();
    Chunk *fcn_pc = Chunk::NullChunkPtr;
@@ -1226,7 +1226,7 @@ void add_long_closebrace_comment(void)
 } // add_long_closebrace_comment
 
 
-static void move_case_break(void)
+static void move_case_break()
 {
    LOG_FUNC_ENTRY();
    Chunk *prev = Chunk::NullChunkPtr;
@@ -1246,7 +1246,7 @@ static void move_case_break(void)
 }
 
 
-static void move_case_return(void)
+static void move_case_return()
 {
    LOG_FUNC_ENTRY();
    Chunk *prev = Chunk::NullChunkPtr;
@@ -1466,7 +1466,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
 } // mod_case_brace_add
 
 
-static void mod_case_brace(void)
+static void mod_case_brace()
 {
    LOG_FUNC_ENTRY();
 
@@ -1684,7 +1684,7 @@ static void process_if_chain(Chunk *br_start)
 } // process_if_chain
 
 
-static void mod_full_brace_if_chain(void)
+static void mod_full_brace_if_chain()
 {
    LOG_FUNC_ENTRY();
 

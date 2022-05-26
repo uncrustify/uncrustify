@@ -11,7 +11,7 @@
 #include "unc_tools.h"
 
 
-void pragma_cleanup(void)
+void pragma_cleanup()
 {
    LOG_FUNC_ENTRY();
 

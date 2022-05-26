@@ -88,13 +88,13 @@ public:
     * @brief returns the head of the chunk list
     * @return pointer to the first chunk
     */
-   static Chunk *GetHead(void);
+   static Chunk *GetHead();
 
    /**
     * @brief returns the tail of the chunk list
     * @return pointer to the last chunk
     */
-   static Chunk *GetTail(void);
+   static Chunk *GetTail();
 
    /**
     * @brief returns the next chunk in a list of chunks

@@ -162,7 +162,7 @@ Chunk *align_func_param(Chunk *start)
 } // align_func_param
 
 
-void align_func_params(void)
+void align_func_params()
 {
    LOG_FUNC_ENTRY();
    Chunk *pc = Chunk::GetHead();

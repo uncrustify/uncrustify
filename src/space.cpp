@@ -3325,7 +3325,7 @@ static iarf_e do_space_ensured(Chunk *first, Chunk *second, int &min_sp)
 }
 
 
-void space_text(void)
+void space_text()
 {
    LOG_FUNC_ENTRY();
 
@@ -3637,7 +3637,7 @@ void space_text(void)
 } // space_text
 
 
-void space_text_balance_nested_parens(void)
+void space_text_balance_nested_parens()
 {
    LOG_FUNC_ENTRY();
 

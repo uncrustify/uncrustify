@@ -13,6 +13,6 @@
 #include "uncrustify_types.h"
 
 //! Scans the whole file for #defines. Aligns all within X lines of each other
-void align_preprocessor(void);
+void align_preprocessor();
 
 #endif /* ALIGN_PREPROCESSOR_H_INCLUDED */

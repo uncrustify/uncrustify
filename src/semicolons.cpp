@@ -33,7 +33,7 @@ static void remove_semicolon(Chunk *pc)
 }
 
 
-void remove_extra_semicolons(void)
+void remove_extra_semicolons()
 {
    LOG_FUNC_ENTRY();
 

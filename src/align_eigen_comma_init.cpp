@@ -19,7 +19,7 @@ constexpr static auto LCURRENT = LALIGN;
 using namespace uncrustify;
 
 
-void align_eigen_comma_init(void)
+void align_eigen_comma_init()
 {
    LOG_FUNC_ENTRY();
 

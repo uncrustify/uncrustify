@@ -13,7 +13,7 @@
 #include "chunk.h"
 
 
-void align_struct_initializers(void)
+void align_struct_initializers()
 {
    LOG_FUNC_ENTRY();
    Chunk *pc = Chunk::GetHead();

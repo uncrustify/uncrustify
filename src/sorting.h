@@ -18,7 +18,7 @@
  * @todo better use a chunk pointer parameter
  * instead of a global variable
  */
-void sort_imports(void);
+void sort_imports();
 
 
 #endif /* SORTING_H_INCLUDED */

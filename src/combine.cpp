@@ -46,7 +46,7 @@ static void flag_asm(Chunk *pc);
 static void check_double_brace_init(Chunk *bo1);
 
 
-static void process_returns(void);
+static void process_returns();
 
 
 /**
@@ -1886,7 +1886,7 @@ static void check_double_brace_init(Chunk *bo1)
 } // check_double_brace_init
 
 
-void fix_symbols(void)
+void fix_symbols()
 {
    LOG_FUNC_ENTRY();
    Chunk *pc;
@@ -2110,7 +2110,7 @@ void fix_symbols(void)
 } // fix_symbols
 
 
-static void process_returns(void)
+static void process_returns()
 {
    LOG_FUNC_ENTRY();
    Chunk *pc;
@@ -2331,7 +2331,7 @@ static bool is_oc_block(Chunk *pc)
 }
 
 
-void mark_comments(void)
+void mark_comments()
 {
    LOG_FUNC_ENTRY();
 

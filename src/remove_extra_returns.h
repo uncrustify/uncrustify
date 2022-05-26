@@ -15,7 +15,7 @@
  * @brief Remove unnecessary returns
  * that is remove 'return;' that appears as the last statement in a function
  */
-void remove_extra_returns(void);
+void remove_extra_returns();
 
 
 #endif /* REMOVE_EXTRA_RETURNS_H_INCLUDED */

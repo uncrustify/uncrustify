@@ -114,7 +114,7 @@ using namespace uncrustify;
  *     typedef int32_t     INT32;
  *     typedef uint32_t    UINT32;
  */
-void align_all(void)
+void align_all()
 {
    LOG_FUNC_ENTRY();
 

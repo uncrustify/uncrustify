@@ -28,6 +28,6 @@ Chunk *align_nl_cont(Chunk *start);
  * Aligns all backslash-newline combos in the file.
  * This should be done LAST.
  */
-void align_backslash_newline(void);
+void align_backslash_newline();
 
 #endif /* ALIGN_NL_COUNT_H_INCLUDED */

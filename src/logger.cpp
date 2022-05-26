@@ -71,7 +71,7 @@ static size_t log_start(log_sev_t sev);
  * Cleans up after a log statement by detecting whether the log is done,
  * (it ends in a newline) and possibly flushing the log.
  */
-static void log_end(void);
+static void log_end();
 
 
 /**
@@ -167,7 +167,7 @@ static size_t log_start(log_sev_t sev)
 }
 
 
-static void log_end(void)
+static void log_end()
 {
    g_log.in_log = (g_log.bufX[g_log.buf_len - 1] != '\n');
 

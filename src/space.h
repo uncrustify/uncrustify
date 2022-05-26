@@ -15,11 +15,11 @@
  * Marches through the whole file and checks to see how many spaces should be
  * between two chunks
  */
-void space_text(void);
+void space_text();
 
 
 //! Marches through the whole file and adds spaces around nested parenthesis
-void space_text_balance_nested_parens(void);
+void space_text_balance_nested_parens();
 
 
 //! Determines if a space is required between two chunks
