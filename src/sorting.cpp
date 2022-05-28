@@ -439,12 +439,12 @@ static void delete_chunks_on_line_having_chunk(Chunk *chunk)
 
       if (chunk_is_newline(pc))
       {
-         chunk_del(pc);
+         Chunk::Delete(pc);
          break;
       }
       else
       {
-         chunk_del(pc);
+         Chunk::Delete(pc);
       }
       pc = next_pc;
    }

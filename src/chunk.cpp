@@ -460,7 +460,7 @@ Chunk *Chunk::CopyAndAddBefore(Chunk *ref) const
 }
 
 
-void chunk_del(Chunk * &pc)
+void Chunk::Delete(Chunk * &pc)
 {
    g_cl.Pop(pc);
    delete pc;

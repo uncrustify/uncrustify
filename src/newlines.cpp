@@ -848,7 +848,7 @@ void newline_del_between(Chunk *start, Chunk *end)
                {
                   start_removed = true;
                }
-               chunk_del(pc);
+               Chunk::Delete(pc);
                MARK_CHANGE();
 
                if (prev != nullptr)
@@ -1066,7 +1066,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
                   {
                      break;
                   }
-                  chunk_del(prev);
+                  Chunk::Delete(prev);
                   MARK_CHANGE();
                }
             }
@@ -1418,7 +1418,7 @@ static void remove_next_newlines(Chunk *start)
       if (  chunk_is_newline(next)
          && chunk_safe_to_del_nl(next))
       {
-         chunk_del(next);
+         Chunk::Delete(next);
          MARK_CHANGE();
       }
       else if (next->IsVBrace())
@@ -2251,7 +2251,7 @@ static void collapse_empty_body(Chunk *br_open)
       {
          pc = pc->prev;
          Chunk *next = pc->next;
-         chunk_del(next);
+         Chunk::Delete(next);
          MARK_CHANGE();
       }
    }
@@ -5405,7 +5405,7 @@ void newlines_eat_start_end()
                log_rule_B("nl_start_of_file");
                LOG_FMT(LBLANKD, "%s(%d): eat_blanks_start_of_file %zu\n",
                        __func__, __LINE__, pc->orig_line);
-               chunk_del(pc);
+               Chunk::Delete(pc);
                MARK_CHANGE();
             }
             else if (  options::nl_start_of_file() == IARF_FORCE
@@ -5458,7 +5458,7 @@ void newlines_eat_start_end()
                log_rule_B("nl_end_of_file");
                LOG_FMT(LBLANKD, "%s(%d): eat_blanks_end_of_file %zu\n",
                        __func__, __LINE__, pc->orig_line);
-               chunk_del(pc);
+               Chunk::Delete(pc);
                MARK_CHANGE();
             }
             else if (  options::nl_end_of_file() == IARF_FORCE
@@ -5803,7 +5803,7 @@ void newlines_class_colon_pos(E_Token tok)
             if (  chunk_is_newline(prev)
                && chunk_safe_to_del_nl(prev))
             {
-               chunk_del(prev);
+               Chunk::Delete(prev);
                MARK_CHANGE();
                prev = pc->GetPrevNc();
             }
@@ -5811,7 +5811,7 @@ void newlines_class_colon_pos(E_Token tok)
             if (  chunk_is_newline(next)
                && chunk_safe_to_del_nl(next))
             {
-               chunk_del(next);
+               Chunk::Delete(next);
                MARK_CHANGE();
                next = pc->GetNextNc();
             }
@@ -5891,7 +5891,7 @@ void newlines_class_colon_pos(E_Token tok)
                   if (  chunk_is_newline(prev)
                      && chunk_safe_to_del_nl(prev))
                   {
-                     chunk_del(prev);
+                     Chunk::Delete(prev);
                      MARK_CHANGE();
                   }
                }
@@ -5911,7 +5911,7 @@ void newlines_class_colon_pos(E_Token tok)
                   if (  chunk_is_newline(next)
                      && chunk_safe_to_del_nl(next))
                   {
-                     chunk_del(next);
+                     Chunk::Delete(next);
                      MARK_CHANGE();
                   }
                }
@@ -5924,7 +5924,7 @@ void newlines_class_colon_pos(E_Token tok)
                   && chunk_safe_to_del_nl(next))
                {
                   // comma is after
-                  chunk_del(next);
+                  Chunk::Delete(next);
                   MARK_CHANGE();
                }
                else
@@ -5935,7 +5935,7 @@ void newlines_class_colon_pos(E_Token tok)
                      && chunk_safe_to_del_nl(prev))
                   {
                      // comma is before
-                     chunk_del(prev);
+                     Chunk::Delete(prev);
                      MARK_CHANGE();
                   }
                }
@@ -6594,7 +6594,7 @@ void newlines_cleanup_dup()
          && chunk_is_token(next, CT_NEWLINE))
       {
          next->nl_count = max(pc->nl_count, next->nl_count);
-         chunk_del(pc);
+         Chunk::Delete(pc);
          MARK_CHANGE();
       }
       pc = next;

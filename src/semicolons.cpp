@@ -29,7 +29,7 @@ static void remove_semicolon(Chunk *pc)
            __func__, __LINE__, pc->orig_line, pc->orig_col);
    log_func_stack_inline(LDELSEMI);
    // TODO: do we want to shift stuff back a column?
-   chunk_del(pc);
+   Chunk::Delete(pc);
 }
 
 

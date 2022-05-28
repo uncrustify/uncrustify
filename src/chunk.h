@@ -15,14 +15,6 @@
 #include "language_tools.h"
 
 
-/*
- * TODO: better use a namespace for all chunk related operations.
- * The function "chunk_is_comment()" would for instance
- * become "chunk::is_comment()". This makes the usage of the chunks easier
- * and more intuitive.
- */
-
-
 static constexpr int ANY_LEVEL = -1;
 
 
@@ -539,6 +531,12 @@ public:
     */
    Chunk *CopyAndAddBefore(Chunk *pos) const;
 
+   /**
+    * @brief delete the chunk from the chunk list
+    * @param pc the chunk to remove from the list
+    */
+   static void Delete(Chunk * &pc);
+
 
    // --------- Data members
 
@@ -592,14 +590,6 @@ protected:
 private:
    const bool null_chunk;                      //! true for null chunks
 };
-
-
-/**
- * delete a chunk from a chunk list
- *
- * @param pc  chunk to delete
- */
-void chunk_del(Chunk * &pc);
 
 
 /**

@@ -724,8 +724,8 @@ static void examine_brace(Chunk *bopen)
                LOG_FMT(LBRDEL, "%s(%d):  else-if removing braces on line %zu and %zu\n",
                        __func__, __LINE__, bopen->orig_line, pc->orig_line);
 
-               chunk_del(bopen);
-               chunk_del(pc);
+               Chunk::Delete(bopen);
+               Chunk::Delete(pc);
                newline_del_between(tmp_prev, tmp_next);
 
                log_rule_B("nl_else_if");
@@ -833,7 +833,7 @@ static void convert_brace(Chunk *br)
          {
             if (chunk_safe_to_del_nl(tmp))
             {
-               chunk_del(tmp);
+               Chunk::Delete(tmp);
             }
          }
       }
@@ -1366,8 +1366,8 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
 
    next = br_open->GetPrev(E_Scope::PREPROC);
 
-   chunk_del(br_open);
-   chunk_del(br_close);
+   Chunk::Delete(br_open);
+   Chunk::Delete(br_close);
 
    return(next->GetNext(E_Scope::PREPROC));
 } // mod_case_brace_remove

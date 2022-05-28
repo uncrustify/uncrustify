@@ -104,7 +104,7 @@ static Chunk *handle_double_angle_close(Chunk *pc)
          pc->orig_col_end = next->orig_col_end;
 
          Chunk *tmp = next->GetNextNcNnl();
-         chunk_del(next);
+         Chunk::Delete(next);
          next = tmp;
       }
       else
@@ -331,7 +331,7 @@ void tokenize_cleanup()
              * pc->orig_col_end += 1;
              */
             pc->orig_col_end = next->orig_col_end;
-            chunk_del(next);
+            Chunk::Delete(next);
          }
       }
 
@@ -357,7 +357,7 @@ void tokenize_cleanup()
             set_chunk_type(pc, CT_SQL_ASSIGN);
             pc->str          = ":=";
             pc->orig_col_end = next->orig_col_end;
-            chunk_del(next);
+            Chunk::Delete(next);
          }
       }
    }
@@ -595,7 +595,7 @@ void tokenize_cleanup()
 
             if (prev->IsNotNullChunk())
             {
-               chunk_del(to_be_deleted);
+               Chunk::Delete(to_be_deleted);
             }
          }
       }
@@ -712,7 +712,7 @@ void tokenize_cleanup()
             {
                next->str = "()";
                set_chunk_type(next, CT_OPERATOR_VAL);
-               chunk_del(tmp);
+               Chunk::Delete(tmp);
                next->orig_col_end += 1;
             }
          }
@@ -723,7 +723,7 @@ void tokenize_cleanup()
             next->str.append('>');
             next->orig_col_end++;
             set_chunk_type(next, CT_OPERATOR_VAL);
-            chunk_del(tmp2);
+            Chunk::Delete(tmp2);
          }
          else if (next->flags.test(PCF_PUNCTUATOR))
          {
@@ -766,7 +766,7 @@ void tokenize_cleanup()
 
             while ((tmp2 = next->GetNext()) != tmp)
             {
-               chunk_del(tmp2);
+               Chunk::Delete(tmp2);
             }
             set_chunk_type(next, CT_OPERATOR_VAL);
 
@@ -891,7 +891,7 @@ void tokenize_cleanup()
          pc->str.append(' ');
          pc->str         += next->str;
          pc->orig_col_end = next->orig_col_end;
-         chunk_del(next);
+         Chunk::Delete(next);
          next = pc->GetNextNcNnl();
 
          // label the 'in'

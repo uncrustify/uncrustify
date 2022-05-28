@@ -68,15 +68,15 @@ void remove_duplicate_include()
                   Chunk *comment = next->GetNext();
                   Chunk *eol     = next->GetNextNl();
                   pc = preproc->GetPrev();
-                  chunk_del(preproc);
-                  chunk_del(temp);
-                  chunk_del(next);
+                  Chunk::Delete(preproc);
+                  Chunk::Delete(temp);
+                  Chunk::Delete(next);
 
                   if (comment != eol)
                   {
-                     chunk_del(comment);
+                     Chunk::Delete(comment);
                   }
-                  chunk_del(eol);
+                  Chunk::Delete(eol);
                   break;
                }
                else

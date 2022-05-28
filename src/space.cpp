@@ -3398,7 +3398,7 @@ void space_text()
          if (  nn->IsNotNullChunk()
             && chunk_is_token(nn, CT_SPACE))
          {
-            chunk_del(nn); // remove the space
+            Chunk::Delete(nn); // remove the space
          }
       }
 
