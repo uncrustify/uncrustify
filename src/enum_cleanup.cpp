@@ -46,7 +46,7 @@ void enum_cleanup()
 
                if (options::mod_enum_last_comma() == IARF_REMOVE)
                {
-                  chunk_del(prev);
+                  Chunk::Delete(prev);
                }
             }
             else

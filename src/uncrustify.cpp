@@ -2444,7 +2444,7 @@ void uncrustify_end()
 
    while ((pc = Chunk::GetHead())->IsNotNullChunk())
    {
-      chunk_del(pc);
+      Chunk::Delete(pc);
    }
 
    if (cpd.bout)

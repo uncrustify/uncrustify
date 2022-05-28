@@ -380,7 +380,7 @@ static void do_the_sort(Chunk **chunks, size_t num_chunks)
       // Swap the lines if the minimum isn't the first entry
       if (min_idx != start_idx)
       {
-         chunk_swap_lines(chunks[start_idx], chunks[min_idx]);
+         chunks[start_idx]->SwapLines(chunks[min_idx]);
          log_rule_B("mod_sort_incl_import_grouping_enabled");
 
          if (options::mod_sort_incl_import_grouping_enabled())
@@ -439,12 +439,12 @@ static void delete_chunks_on_line_having_chunk(Chunk *chunk)
 
       if (chunk_is_newline(pc))
       {
-         chunk_del(pc);
+         Chunk::Delete(pc);
          break;
       }
       else
       {
-         chunk_del(pc);
+         Chunk::Delete(pc);
       }
       pc = next_pc;
    }

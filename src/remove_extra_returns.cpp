@@ -73,8 +73,8 @@ void remove_extra_returns()
             {
                LOG_FMT(LRMRETURN, "%s(%d): Removed 'return;' on orig_line %zu\n",
                        __func__, __LINE__, pc->orig_line);
-               chunk_del(pc);
-               chunk_del(semicolon);
+               Chunk::Delete(pc);
+               Chunk::Delete(semicolon);
                pc = closing_brace;
             }
          }

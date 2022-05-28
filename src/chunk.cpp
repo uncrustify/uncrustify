@@ -460,7 +460,7 @@ Chunk *Chunk::CopyAndAddBefore(Chunk *ref) const
 }
 
 
-void chunk_del(Chunk * &pc)
+void Chunk::Delete(Chunk * &pc)
 {
    g_cl.Pop(pc);
    delete pc;
@@ -468,16 +468,16 @@ void chunk_del(Chunk * &pc)
 }
 
 
-void chunk_move_after(Chunk *pc_in, Chunk *ref)
+void Chunk::MoveAfter(Chunk *ref)
 {
    LOG_FUNC_ENTRY();
-   g_cl.Pop(pc_in);
-   g_cl.AddAfter(pc_in, ref);
+   g_cl.Pop(this);
+   g_cl.AddAfter(this, ref);
 
-   // HACK: Adjust the original column
-   pc_in->column       = ref->column + space_col_align(ref, pc_in);
-   pc_in->orig_col     = pc_in->column;
-   pc_in->orig_col_end = pc_in->orig_col + pc_in->Len();
+   // Adjust the original column
+   column       = ref->column + space_col_align(ref, this);
+   orig_col     = column;
+   orig_col_end = orig_col + Len();
 }
 
 
@@ -621,9 +621,9 @@ bool chunk_is_newline_between(Chunk *start, Chunk *end)
 }
 
 
-void chunk_swap(Chunk *pc1, Chunk *pc2)
+void Chunk::Swap(Chunk *other)
 {
-   g_cl.Swap(pc1, pc2);
+   g_cl.Swap(this, other);
 }
 
 
@@ -666,12 +666,11 @@ bool chunk_is_last_on_line(Chunk *pc)  //TODO: pc should be const here
 }
 
 
-// TODO: this function needs some cleanup
-void chunk_swap_lines(Chunk *pc1, Chunk *pc2)
+void Chunk::SwapLines(Chunk *other)
 {
    // to swap lines we need to find the first chunk of the lines
-   pc1 = chunk_first_on_line(pc1);
-   pc2 = chunk_first_on_line(pc2);
+   Chunk *pc1 = chunk_first_on_line(this);
+   Chunk *pc2 = chunk_first_on_line(other);
 
    if (  pc1->IsNullChunk()
       || pc2->IsNullChunk()
@@ -732,14 +731,14 @@ void chunk_swap_lines(Chunk *pc1, Chunk *pc2)
    if (  pc1->IsNotNullChunk()
       && pc2->IsNotNullChunk())
    {
-      size_t nl_count = pc1->nl_count;
+      size_t nlCount = pc1->nl_count;
 
       pc1->nl_count = pc2->nl_count;
-      pc2->nl_count = nl_count;
+      pc2->nl_count = nlCount;
 
-      chunk_swap(pc1, pc2);
+      pc1->Swap(pc2);
    }
-} // chunk_swap_lines
+} // Chunk::SwapLines
 
 
 Chunk *Chunk::GetNextNvb(const E_Scope scope) const

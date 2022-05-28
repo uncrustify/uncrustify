@@ -1872,12 +1872,12 @@ static void check_double_brace_init(Chunk *bo1)
             // delete bo2 and bc1
             bo1->str         += bo2->str;
             bo1->orig_col_end = bo2->orig_col_end;
-            chunk_del(bo2);
+            Chunk::Delete(bo2);
             set_chunk_parent(bo1, CT_DOUBLE_BRACE);
 
             bc2->str         += bc1->str;
             bc2->orig_col_end = bc1->orig_col_end;
-            chunk_del(bc1);
+            Chunk::Delete(bc1);
             set_chunk_parent(bc2, CT_DOUBLE_BRACE);
             return;
          }
@@ -2196,8 +2196,8 @@ static Chunk *process_return(Chunk *pc)
             }
 
             // delete the parenthesis
-            chunk_del(next);
-            chunk_del(cpar);
+            Chunk::Delete(next);
+            Chunk::Delete(cpar);
 
             // back up following chunks
             temp = semi;
@@ -3702,7 +3702,7 @@ static void handle_oc_property_decl(Chunk *os)
 
                   if (chunk != curr_chunk)
                   {
-                     chunk_move_after(chunk, curr_chunk);
+                     chunk->MoveAfter(curr_chunk);
                      curr_chunk = chunk;
                   }
                   else
@@ -3735,7 +3735,7 @@ static void handle_oc_property_decl(Chunk *os)
          {
             Chunk *rm_chunk = curr_chunk;
             curr_chunk = curr_chunk->GetNext();
-            chunk_del(rm_chunk);
+            Chunk::Delete(rm_chunk);
          }
       }
    }
@@ -3912,9 +3912,9 @@ static void handle_wrap(Chunk *pc)
 
       pc->orig_col_end = pc->orig_col + pc->Len();
 
-      chunk_del(opp);
-      chunk_del(name);
-      chunk_del(clp);
+      Chunk::Delete(opp);
+      Chunk::Delete(name);
+      Chunk::Delete(clp);
    }
 } // handle_wrap
 
