@@ -3702,7 +3702,7 @@ static void handle_oc_property_decl(Chunk *os)
 
                   if (chunk != curr_chunk)
                   {
-                     chunk_move_after(chunk, curr_chunk);
+                     chunk->MoveAfter(curr_chunk);
                      curr_chunk = chunk;
                   }
                   else

@@ -537,6 +537,24 @@ public:
     */
    static void Delete(Chunk * &pc);
 
+   /**
+    * @brief move the chunk after the reference position in the chunk list
+    * @param ref chunk after which to move the current chunk
+    */
+   void MoveAfter(Chunk *ref);
+
+   /**
+    * @brief Swaps the place of this chunk with the given one
+    * @param other the other chunk
+    */
+   void Swap(Chunk *other);
+
+   /**
+    * @brief Swaps the two lines that are started by the current chunk and the other chunk
+    * @param other the other chunk
+    */
+   void SwapLines(Chunk *other);
+
 
    // --------- Data members
 
@@ -590,33 +608,6 @@ protected:
 private:
    const bool null_chunk;                      //! true for null chunks
 };
-
-
-/**
- * move a chunk to after the reference position in a chunk list
- *
- * @param pc_in  chunk to move
- * @param ref    chunk after which to move
- */
-void chunk_move_after(Chunk *pc_in, Chunk *ref);
-
-
-/**
- * Swaps two chunks
- *
- * @param pc1  The first chunk
- * @param pc2  The second chunk
- */
-void chunk_swap(Chunk *pc1, Chunk *pc2);
-
-
-/**
- * Swaps two lines that are started with the specified chunks.
- *
- * @param pc1  The first chunk of line 1
- * @param pc2  The first chunk of line 2
- */
-void chunk_swap_lines(Chunk *pc1, Chunk *pc2);
 
 
 /**

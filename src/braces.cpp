@@ -864,7 +864,7 @@ static void convert_vbrace(Chunk *vbr)
       if (chunk_is_token(tmp, CT_PREPROC))
       {
          tmp = vbr->GetNext(E_Scope::PREPROC);
-         chunk_move_after(vbr, tmp);
+         vbr->MoveAfter(tmp);
          newline_add_after(vbr);
       }
    }
@@ -886,7 +886,7 @@ static void convert_vbrace(Chunk *vbr)
 
          if (chunk_is_newline(tmp))
          {
-            chunk_move_after(vbr, tmp);
+            vbr->MoveAfter(tmp);
             newline_add_after(vbr);
          }
       }
@@ -1239,7 +1239,7 @@ static void move_case_break()
          && chunk_is_newline(pc->GetPrev())
          && chunk_is_newline(prev->GetPrev()))
       {
-         chunk_swap_lines(prev, pc);
+         prev->SwapLines(pc);
       }
       prev = pc;
    }
@@ -1284,7 +1284,7 @@ static void move_case_return()
 
             while (curr != pc)
             {
-               chunk_swap_lines(prev, curr);
+               prev->SwapLines(curr);
                curr = prev->GetNextNcNnl();
             }
          }

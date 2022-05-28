@@ -788,7 +788,7 @@ Chunk *newline_add_between(Chunk *start, Chunk *end)
          else
          {
             // Move the open brace to after the newline
-            chunk_move_after(end, pc);
+            end->MoveAfter(pc);
          }
          LOG_FMT(LNEWLINE, "%s(%d):\n", __func__, __LINE__);
          newline_add_after(end);
@@ -875,7 +875,7 @@ void newline_del_between(Chunk *start, Chunk *end)
          || chunk_is_token(start, CT_DO)
          || chunk_is_token(start, CT_ELSE)))
    {
-      chunk_move_after(end, start);
+      end->MoveAfter(start);
    }
 } // newline_del_between
 
@@ -5673,7 +5673,7 @@ void newlines_chunk_pos(E_Token chunk_type, token_pos_e mode)
                   && !prev->flags.test(PCF_IN_PREPROC))
                {
                   // move the CT_BOOL to after the newline
-                  chunk_move_after(pc, next);
+                  pc->MoveAfter(next);
                }
             }
          }
@@ -5694,7 +5694,7 @@ void newlines_chunk_pos(E_Token chunk_type, token_pos_e mode)
                   && !prev->flags.test(PCF_IN_PREPROC)
                   && !prev->flags.test(PCF_IN_OC_MSG))
                {
-                  chunk_move_after(pc, prev);
+                  pc->MoveAfter(prev);
                }
             }
          }
@@ -5823,7 +5823,7 @@ void newlines_class_colon_pos(E_Token tok)
                && prev->nl_count == 1
                && chunk_safe_to_del_nl(prev))
             {
-               chunk_swap(pc, prev);
+               pc->Swap(prev);
             }
          }
          else if (tpc & TP_LEAD)                   // pos_class_colon, pos_constr_colon: 3
@@ -5832,7 +5832,7 @@ void newlines_class_colon_pos(E_Token tok)
                && next->nl_count == 1
                && chunk_safe_to_del_nl(next))
             {
-               chunk_swap(pc, next);
+               pc->Swap(next);
             }
          }
       }
