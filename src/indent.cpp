@@ -3397,9 +3397,7 @@ void indent_text()
       if (  options::indent_shift() == 1
          && !pc->flags.test(PCF_IN_ENUM)
          && get_chunk_parent_type(pc) != CT_OPERATOR
-         && pc->type != CT_COMMENT
-         && pc->type != CT_COMMENT_CPP
-         && pc->type != CT_COMMENT_MULTI
+         && !pc->IsComment()
          && pc->type != CT_BRACE_OPEN
          && pc->level > 0
          && !pc->IsEmptyText())
@@ -3472,10 +3470,8 @@ void indent_text()
          Chunk *prev2     = pc->GetPrevNc();
 
          if ((  chunk_is_semicolon(prev_nonl)
-             || chunk_is_token(prev_nonl, CT_BRACE_OPEN)
-             || chunk_is_token(prev_nonl, CT_BRACE_CLOSE)
-             || chunk_is_token(prev_nonl, CT_VBRACE_CLOSE)
-             || chunk_is_token(prev_nonl, CT_VBRACE_OPEN)
+             || chunk_is_opening_brace(prev_nonl)
+             || chunk_is_closing_brace(prev_nonl)
              || chunk_is_token(prev_nonl, CT_CASE_COLON)
              || (  prev_nonl->IsNotNullChunk()
                 && prev_nonl->flags.test(PCF_IN_PREPROC)) != pc->flags.test(PCF_IN_PREPROC)
@@ -3921,11 +3917,10 @@ void indent_text()
                  && strncasecmp(pc->Text(), "const", pc->Len()) == 0
                  && (  next == nullptr
                     || chunk_is_token(next, CT_BRACED)
-                    || chunk_is_token(next, CT_BRACE_OPEN)
+                    || chunk_is_opening_brace(next)
                     || chunk_is_token(next, CT_NEWLINE)
                     || chunk_is_token(next, CT_SEMICOLON)
-                    || chunk_is_token(next, CT_THROW)
-                    || chunk_is_token(next, CT_VBRACE_OPEN)))
+                    || chunk_is_token(next, CT_THROW)))
          {
             // indent const - void GetFoo(void)\n const\n { return (m_Foo); }
             log_rule_B("indent_func_const");

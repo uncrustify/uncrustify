@@ -2416,8 +2416,7 @@ static void handle_cpp_template(Chunk *pc)
          tmp = tmp->GetNextNcNnl();
       }
 
-      if (  chunk_is_token(tmp, CT_CLASS)
-         || chunk_is_token(tmp, CT_STRUCT))
+      if (chunk_is_class_or_struct(tmp))
       {
          set_chunk_parent(tmp, CT_TEMPLATE);
 

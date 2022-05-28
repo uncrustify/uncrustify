@@ -2596,8 +2596,7 @@ pcf_flags_t mark_where_chunk(Chunk *pc, E_Token parent_type, pcf_flags_t flags)
          LOG_FMT(LFTOR, "%s: where-spec colon on line %zu\n",
                  __func__, pc->orig_line);
       }
-      else if (  (chunk_is_token(pc, CT_STRUCT))
-              || (chunk_is_token(pc, CT_CLASS)))
+      else if (chunk_is_class_or_struct(pc))
       {
          /* class/struct inside of a where-clause confuses parser for indentation; set it as a word so it looks like the rest */
          set_chunk_type(pc, CT_WORD);

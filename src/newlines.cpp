@@ -1388,8 +1388,7 @@ static Chunk *get_closing_brace(Chunk *start)
 
    for (pc = start; (pc = pc->GetNext())->IsNotNullChunk();)
    {
-      if (  (  chunk_is_token(pc, CT_BRACE_CLOSE)
-            || chunk_is_token(pc, CT_VBRACE_CLOSE))
+      if (  (chunk_is_closing_brace(pc))
          && pc->level == level)
       {
          return(pc);
@@ -2810,8 +2809,7 @@ static void newline_after_return(Chunk *start)
 
    // If we hit a brace or an 'else', then a newline isn't needed
    if (  after->IsNullChunk()
-      || chunk_is_token(after, CT_BRACE_CLOSE)
-      || chunk_is_token(after, CT_VBRACE_CLOSE)
+      || chunk_is_closing_brace(after)
       || chunk_is_token(after, CT_ELSE))
    {
       return;
@@ -3309,8 +3307,7 @@ static void newline_func_def_or_call(Chunk *start)
                   prev = prev->GetPrevNcNnlNi();   // Issue #2279
                }
 
-               if (  chunk_is_not_token(prev, CT_BRACE_CLOSE)
-                  && chunk_is_not_token(prev, CT_VBRACE_CLOSE)
+               if (  !chunk_is_closing_brace(prev)
                   && chunk_is_not_token(prev, CT_BRACE_OPEN)
                   && chunk_is_not_token(prev, CT_SEMICOLON)
                   && chunk_is_not_token(prev, CT_ACCESS_COLON)
@@ -3512,10 +3509,8 @@ static bool one_liner_nl_ok(Chunk *pc)
 
    if (  pc->IsNotNullChunk()
       && pc->flags.test(PCF_ONE_LINER)
-      && (  chunk_is_token(pc, CT_BRACE_OPEN)
-         || chunk_is_token(pc, CT_BRACE_CLOSE)
-         || chunk_is_token(pc, CT_VBRACE_OPEN)
-         || chunk_is_token(pc, CT_VBRACE_CLOSE)))
+      && (  chunk_is_opening_brace(pc)
+         || chunk_is_closing_brace(pc)))
    {
       log_rule_B("nl_class_leave_one_liners");
 
@@ -6248,8 +6243,7 @@ void do_blank_lines()
 
          // Don't add blanks before a closing brace
          if (  next->IsNullChunk()
-            || (  chunk_is_not_token(next, CT_BRACE_CLOSE)
-               && chunk_is_not_token(next, CT_VBRACE_CLOSE)))
+            || !chunk_is_closing_brace(next))
          {
             log_rule_B("nl_after_access_spec");
             blank_line_set(pc, options::nl_after_access_spec);
