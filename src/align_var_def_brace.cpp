@@ -259,7 +259,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
          && (  (pc->level == (start->level + 1))
             || pc->level == 0)
          && pc->prev != nullptr
-         && pc->prev->type != CT_MEMBER)
+         && pc->GetPrev()->IsNot(CT_MEMBER))
       {
          LOG_FMT(LAVDB, "%s(%d): a-did_this_line is %s\n",
                  __func__, __LINE__, did_this_line ? "TRUE" : "FALSE");

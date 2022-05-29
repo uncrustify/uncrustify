@@ -220,15 +220,15 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    }
 
    if (  chunk_is_token(first, CT_VBRACE_OPEN)
-      && second->type != CT_NL_CONT
-      && second->type != CT_SEMICOLON) // # Issue 1158
+      && second->IsNot(CT_NL_CONT)
+      && second->IsNot(CT_SEMICOLON)) // # Issue 1158
    {
       log_rule("FORCE");
       return(IARF_FORCE);
    }
 
    if (  chunk_is_token(first, CT_VBRACE_CLOSE)
-      && second->type != CT_NL_CONT)
+      && second->IsNot(CT_NL_CONT))
    {
       log_rule("REMOVE");
       return(IARF_REMOVE);
@@ -502,7 +502,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
             return(options::sp_after_semi_for_empty());
          }
 
-         if (second->type != CT_SPAREN_CLOSE)  // Issue 1324
+         if (second->IsNot(CT_SPAREN_CLOSE))  // Issue 1324
          {
             // Add or remove space after ';' in non-empty 'for' statements.
             log_rule("sp_after_semi_for");
@@ -510,7 +510,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          }
       }
       else if (  !second->IsComment()
-              && second->type != CT_BRACE_CLOSE) // issue #197
+              && second->IsNot(CT_BRACE_CLOSE)) // issue #197
       {
          // Add or remove space after ';', except when followed by a comment.
          // see the tests cpp:34517-34519
@@ -1211,9 +1211,9 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (chunk_is_token(second, CT_OC_MSG_FUNC))
       {
          if (  (options::sp_after_oc_msg_receiver() == IARF_REMOVE)
-            && (  (first->type != CT_SQUARE_CLOSE)
-               && (first->type != CT_FPAREN_CLOSE)
-               && (first->type != CT_PAREN_CLOSE)))
+            && (  first->IsNot(CT_SQUARE_CLOSE)
+               && first->IsNot(CT_FPAREN_CLOSE)
+               && first->IsNot(CT_PAREN_CLOSE)))
          {
             log_rule("FORCE");
             return(IARF_FORCE);
@@ -1324,7 +1324,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          return(options::sp_template_angle());
       }
 
-      if (first->type != CT_QUALIFIER)
+      if (first->IsNot(CT_QUALIFIER))
       {
          // Add or remove space before '<'.
          log_rule("sp_before_angle");
@@ -1366,10 +1366,10 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          return(options::sp_before_dc());
       }
 
-      if (  second->type != CT_BYREF
-         && second->type != CT_PTR_TYPE
-         && second->type != CT_BRACE_OPEN
-         && second->type != CT_PAREN_CLOSE)
+      if (  second->IsNot(CT_BYREF)
+         && second->IsNot(CT_PTR_TYPE)
+         && second->IsNot(CT_BRACE_OPEN)
+         && second->IsNot(CT_PAREN_CLOSE))
       {
          if (  chunk_is_token(second, CT_CLASS_COLON)
             && options::sp_angle_colon() != IARF_IGNORE)
@@ -2158,7 +2158,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
 
       if (  get_chunk_parent_type(first) == CT_OC_SEL
-         && second->type != CT_SQUARE_CLOSE)
+         && second->IsNot(CT_SQUARE_CLOSE))
       {
          // (OC) Add or remove space between '@selector(x)' and the following word,
          // i.e. '@selector(foo) a:' vs. '@selector(foo)a:'.
@@ -2630,7 +2630,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    }
 
    if (  chunk_is_token(second, CT_PTR_TYPE)
-      && first->type != CT_IN)
+      && first->IsNot(CT_IN))
    {
       // look back for '->' type is TRAILING_RET
       if (token_is_within_trailing_return(second))
@@ -2671,7 +2671,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          }
 
          if (  next->IsNotNullChunk()
-            && next->type != CT_WORD)
+            && next->IsNot(CT_WORD))
          {
             log_rule("sp_before_unnamed_ptr_star");                   // ptr_star 8
             return(options::sp_before_unnamed_ptr_star());
@@ -2696,8 +2696,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (  chunk_is_token(second, CT_FUNC_PROTO)
       || chunk_is_token(second, CT_FUNC_DEF))
    {
-      if (  first->type != CT_PTR_TYPE
-         && first->type != CT_BYREF)
+      if (  first->IsNot(CT_PTR_TYPE)
+         && first->IsNot(CT_BYREF))
       {
          // Add or remove space between return type and function name. A
          // minimum of 1 is forced except for pointer/reference return types.
@@ -3582,8 +3582,8 @@ void space_text()
             if (  (  options::sp_before_tr_cmt() == IARF_IGNORE
                   || get_chunk_parent_type(next) != CT_COMMENT_END)
                && (  options::sp_endif_cmt() == IARF_IGNORE
-                  || (  pc->type != CT_PP_ELSE
-                     && pc->type != CT_PP_ENDIF)))
+                  || (  pc->IsNot(CT_PP_ELSE)
+                     && pc->IsNot(CT_PP_ENDIF))))
             {
                if (options::indent_relative_single_line_comments())
                {

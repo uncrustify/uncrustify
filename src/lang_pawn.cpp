@@ -104,7 +104,7 @@ void pawn_scrub_vsemi()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (pc->type != CT_VSEMICOLON)
+      if (pc->IsNot(CT_VSEMICOLON))
       {
          continue;
       }
@@ -186,7 +186,7 @@ void pawn_prescan()
          && pc->IsNotNullChunk())
    {
       if (  did_nl
-         && pc->type != CT_PREPROC
+         && pc->IsNot(CT_PREPROC)
          && !chunk_is_newline(pc)
          && pc->level == 0)
       {
@@ -233,8 +233,8 @@ static Chunk *pawn_process_line(Chunk *start)
 
    while (  ((pc = pc->GetNextNc())->IsNotNullChunk())
          && !chunk_is_str(pc, "(")
-         && pc->type != CT_ASSIGN
-         && pc->type != CT_NEWLINE)
+         && pc->IsNot(CT_ASSIGN)
+         && pc->IsNot(CT_NEWLINE))
    {
       if (  pc->level == 0
          && (  chunk_is_token(pc, CT_FUNCTION)
@@ -318,7 +318,7 @@ void pawn_add_virtual_semicolons()
          }
 
          if (  prev->IsNullChunk()
-            || (  pc->type != CT_NEWLINE
+            || (  pc->IsNot(CT_NEWLINE)
                && !chunk_is_closing_brace(pc)))
          {
             continue;
@@ -469,8 +469,8 @@ static Chunk *pawn_process_func_def(Chunk *pc)
             Chunk *next = prev->GetNextNcNnl();
 
             if (  next->IsNotNullChunk()
-               && next->type != CT_ELSE
-               && next->type != CT_WHILE_OF_DO)
+               && next->IsNot(CT_ELSE)
+               && next->IsNot(CT_WHILE_OF_DO))
             {
                break;
             }

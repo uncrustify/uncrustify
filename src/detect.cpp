@@ -240,7 +240,7 @@ static void detect_space_options()
          {
             vote_sp_between_ptr_star.vote(prev, pc);
          }
-         else if (next->type != CT_WORD)
+         else if (next->IsNot(CT_WORD))
          {
             vote_sp_before_unnamed_ptr_star.vote(prev, pc);
          }
@@ -257,7 +257,7 @@ static void detect_space_options()
 
       if (chunk_is_token(pc, CT_BYREF))
       {
-         if (next->type != CT_WORD)
+         if (next->IsNot(CT_WORD))
          {
             vote_sp_before_unnamed_byref.vote(prev, pc);
          }
@@ -268,7 +268,7 @@ static void detect_space_options()
          vote_sp_after_byref.vote(pc, next);
       }
 
-      if (  pc->type != CT_PTR_TYPE
+      if (  pc->IsNot(CT_PTR_TYPE)
          && (  chunk_is_token(prev, CT_QUALIFIER)
             || chunk_is_token(prev, CT_TYPE)))
       {
@@ -346,7 +346,7 @@ static void detect_space_options()
                //                  ^ is next
                vote_sp_after_semi_for_empty.vote(pc, next);
             }
-            else if (prev->type != CT_SEMICOLON)
+            else if (prev->IsNot(CT_SEMICOLON))
             {
                // empty, ie for (; i < 8;)
                //                       ^ is pc
