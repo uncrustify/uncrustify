@@ -1282,6 +1282,11 @@ void EnumStructUnionParser::initialize(Chunk *pc)
    m_start = pc;
    m_type  = nullptr;
    pc      = try_find_end_chunk(pc);
+   if (parse_error_detected())
+   {
+      return;
+   }
+
    m_end   = refine_end_chunk(pc);
 } // EnumStructUnionParser::initialize
 
@@ -1289,6 +1294,9 @@ void EnumStructUnionParser::initialize(Chunk *pc)
 bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
 {
    LOG_FUNC_ENTRY();
+   LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
+           __unqualified_func__, __LINE__,
+           pc->orig_line, pc->orig_col, get_token_name(pc->type));
 
    /**
     * test for a semicolon or closing brace at the level of the starting chunk
@@ -1299,6 +1307,9 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
             || chunk_is_token(pc, CT_BRACE_CLOSE))
          && pc->level == m_start->level))
    {
+      LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
+              __unqualified_func__, __LINE__,
+              pc->orig_line, pc->orig_col, get_token_name(pc->type));
       return(true);
    }
    /**
@@ -1322,6 +1333,9 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
       || (start_in_funcdef ^ pc_in_funcdef).test_any()
       || (start_in_preproc ^ pc_in_preproc).test_any())
    {
+      LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
+              __unqualified_func__, __LINE__,
+              pc->orig_line, pc->orig_col, get_token_name(pc->type));
       return(true);
    }
    /**
@@ -1334,6 +1348,9 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
 
    if (start_template_nest > pc_template_nest)
    {
+      LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
+              __unqualified_func__, __LINE__,
+              pc->orig_line, pc->orig_col, get_token_name(pc->type));
       return(true);
    }
    /**
@@ -1356,8 +1373,14 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
                   || chunk_is_token(pc, CT_COMMA))
                && pc->level == m_start->level))))
    {
+      LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
+              __unqualified_func__, __LINE__,
+              pc->orig_line, pc->orig_col, get_token_name(pc->type));
       return(true);
    }
+   LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
+           __unqualified_func__, __LINE__,
+           pc->orig_line, pc->orig_col, get_token_name(pc->type));
    return(false);
 } // EnumStructUnionParser::is_potential_end_chunk
 
@@ -1986,6 +2009,10 @@ void EnumStructUnionParser::parse(Chunk *pc)
    LOG_FUNC_ENTRY();
 
    initialize(pc);
+   if (parse_error_detected())
+   {
+      return;
+   }
 
    /**
     * make sure this wasn't a cast, and also make sure we're
@@ -2592,9 +2619,16 @@ bool EnumStructUnionParser::template_detected() const
 Chunk *EnumStructUnionParser::try_find_end_chunk(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
+   LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
+           __unqualified_func__, __LINE__,
+           pc->orig_line, pc->orig_col, get_token_name(pc->type));
 
    do
    {
+      LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
+              __unqualified_func__, __LINE__,
+              pc->orig_line, pc->orig_col, get_token_name(pc->type));
+
       /**
        * clear some previously marked token types, some of which have likely
        * been erroneously marked up to this point; a good example of this
@@ -2607,12 +2641,33 @@ Chunk *EnumStructUnionParser::try_find_end_chunk(Chunk *pc)
          set_chunk_type(pc, CT_WORD);
          set_chunk_parent(pc, CT_NONE);
       }
+      LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
+              __unqualified_func__, __LINE__,
+              pc->orig_line, pc->orig_col, get_token_name(pc->type));
 
       do
       {
          pc = pc->GetNextNcNnl(E_Scope::PREPROC);
+         LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
+                 __unqualified_func__, __LINE__,
+                 pc->orig_line, pc->orig_col, get_token_name(pc->type));
       } while (  pc->IsNotNullChunk()
               && pc->level > m_start->level);
+
+      if (pc->IsNullChunk())
+      {
+         LOG_FMT(LFTOR, "%s(%d): IsNullChunk\n",
+                 __unqualified_func__, __LINE__);
+         // parse error
+         parse_error_detected(true);
+         return(Chunk::NullChunkPtr);
+      }
+      else
+      {
+         LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
+                 __unqualified_func__, __LINE__,
+                 pc->orig_line, pc->orig_col, get_token_name(pc->type));
+      }
    } while (!is_potential_end_chunk(pc));
 
    /**
