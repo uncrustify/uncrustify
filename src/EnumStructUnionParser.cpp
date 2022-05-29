@@ -1282,12 +1282,12 @@ void EnumStructUnionParser::initialize(Chunk *pc)
    m_start = pc;
    m_type  = nullptr;
    pc      = try_find_end_chunk(pc);
+
    if (parse_error_detected())
    {
       return;
    }
-
-   m_end   = refine_end_chunk(pc);
+   m_end = refine_end_chunk(pc);
 } // EnumStructUnionParser::initialize
 
 
@@ -2009,6 +2009,7 @@ void EnumStructUnionParser::parse(Chunk *pc)
    LOG_FUNC_ENTRY();
 
    initialize(pc);
+
    if (parse_error_detected())
    {
       return;
