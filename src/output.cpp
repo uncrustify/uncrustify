@@ -41,6 +41,44 @@ struct cmt_reflow
 };
 
 
+// for tracking line numbering
+bool numbering_status = false;
+int  line_number;
+char char_number[12] = { 0 };
+
+
+void set_numbering(bool status)
+{
+   if (options::set_numbering_for_html_output())
+   {
+      numbering_status = status;
+   }
+}
+
+
+bool get_numbering()
+{
+   return(numbering_status);
+}
+
+
+void set_line_number()
+{
+   line_number = 0;
+}
+
+
+void print_numbering()
+{
+   if (get_numbering())
+   {
+      line_number++;
+      sprintf(char_number, "%d ", line_number);
+      write_string(char_number);
+   }
+}
+
+
 /**
  * A multiline comment
  * The only trick here is that we have to trim out whitespace characters
@@ -265,6 +303,7 @@ static void add_char(UINT32 ch, bool is_literal)
       cpd.column      = 1;
       cpd.did_newline = true;
       cpd.spaces      = 0;
+      print_numbering();
    }
    else if (ch == '\r') // do not output the CARRIAGERETURN
    {
@@ -612,6 +651,7 @@ void output_text(FILE *pfile)
 
    if (tracking)
    {
+      set_numbering(false);
       add_text("<html>\n");
       add_text("<head>\n");
       add_text("   <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>\n");
@@ -621,6 +661,9 @@ void output_text(FILE *pfile)
       add_text("<p>\n");
       add_text("</p>\n");
       add_text("<pre>\n");
+      set_numbering(true);
+      set_line_number();
+      print_numbering();
    }
    bool write_in_tracking = false;
 
@@ -922,6 +965,7 @@ void output_text(FILE *pfile)
 
    if (tracking)
    {
+      set_numbering(false);
       add_text("</pre>\n");
       add_text("</body>\n");
       add_text("</html>\n");
