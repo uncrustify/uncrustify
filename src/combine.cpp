@@ -3689,7 +3689,7 @@ static void handle_oc_property_decl(Chunk *os)
 
          Chunk *curr_chunk = open_paren;
 
-         for (multimap<int, std::vector<ChunkGroup> >::reverse_iterator it = sorted_chunk_map.rbegin(); it != sorted_chunk_map.rend(); ++it)
+         for (auto it = sorted_chunk_map.rbegin(); it != sorted_chunk_map.rend(); ++it)
          {
             std::vector<ChunkGroup> chunk_groups = (*it).second;
 

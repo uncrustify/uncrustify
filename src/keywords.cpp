@@ -422,7 +422,7 @@ bool keywords_are_sorted()
 void add_keyword(const std::string &tag, E_Token type)
 {
    // See if the keyword has already been added
-   dkwmap::iterator it = dkwm.find(tag);
+   auto it = dkwm.find(tag);
 
    if (it != dkwm.end())
    {
@@ -485,8 +485,8 @@ E_Token find_keyword_type(const char *word, size_t len)
       return(CT_NONE);
    }
    // check the dynamic word list first
-   string           ss(word, len);
-   dkwmap::iterator it = dkwm.find(ss);
+   string ss(word, len);
+   auto   it = dkwm.find(ss);
 
    if (it != dkwm.end())
    {
