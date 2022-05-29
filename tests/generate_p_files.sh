@@ -5,7 +5,7 @@
 #
 # generate p-files from the sources
 #
-# the test is only usefull for the developpers
+# the test is only useful for the developers
 #
 LIST=`ls -1 ../src/*.cpp`
 LIST_H=`ls -1 ../src/*.h`
