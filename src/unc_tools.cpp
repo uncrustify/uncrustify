@@ -356,7 +356,7 @@ void dump_out(unsigned int type)
             fprintf(D_file, "  after_tab %d\n", pc->after_tab);
          }
 
-         if (pc->type != CT_NEWLINE)
+         if (pc->IsNot(CT_NEWLINE))
          {
             fprintf(D_file, "  Text %s\n", pc->Text());
          }

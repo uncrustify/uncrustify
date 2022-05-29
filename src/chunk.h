@@ -773,7 +773,7 @@ static inline bool chunk_is_not_token(const Chunk *pc, E_Token c_token)
 {
    return(  pc != nullptr
          && pc->IsNotNullChunk()
-         && pc->type != c_token);
+         && pc->IsNot(c_token));
 }
 
 
@@ -956,7 +956,7 @@ static inline bool chunk_is_addr(Chunk *pc)
       && (  chunk_is_token(pc, CT_BYREF)
          || (  (pc->Len() == 1)
             && (pc->str[0] == '&')
-            && pc->type != CT_OPERATOR_VAL)))
+            && pc->IsNot(CT_OPERATOR_VAL))))
    {
       Chunk *prev = pc->GetPrev();
 
@@ -978,7 +978,7 @@ static inline bool chunk_is_msref(Chunk *pc) // ms compilers for C++/CLI and Win
          && (  pc != nullptr
             && (pc->Len() == 1)
             && (pc->str[0] == '^')
-            && pc->type != CT_OPERATOR_VAL));
+            && pc->IsNot(CT_OPERATOR_VAL)));
 }
 
 
@@ -1089,8 +1089,8 @@ static inline bool chunk_is_forin(Chunk *pc)
          Chunk *next = pc;
 
          while (  next != nullptr
-               && next->type != CT_SPAREN_CLOSE
-               && next->type != CT_IN)
+               && next->IsNot(CT_SPAREN_CLOSE)
+               && next->IsNot(CT_IN))
          {
             next = next->GetNextNcNnl();
          }

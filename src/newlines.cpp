@@ -6028,7 +6028,6 @@ void do_blank_lines()
       LOG_FMT(LBLANK, "%s(%d): nl_count is %zu\n",
               __func__, __LINE__, pc->nl_count);
 
-      //if (pc->type != CT_NEWLINE)
       if (chunk_is_not_token(pc, CT_NEWLINE))
       {
          continue;

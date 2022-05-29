@@ -390,7 +390,7 @@ void tokenize_cleanup()
          }
          else
          {
-            if (next->type != CT_ASSIGN)
+            if (next->IsNot(CT_ASSIGN))
             {
                LOG_FMT(LERR, "%s(%d): %s:%zu: version: Unexpected token %s\n",
                        __func__, __LINE__, cpd.filename.c_str(), pc->orig_line, get_token_name(next->type));
@@ -471,7 +471,7 @@ void tokenize_cleanup()
             Chunk *tmp = next->GetNextNcNnl();
 
             if (  tmp->IsNullChunk()
-               || tmp->type != CT_BRACE_OPEN)
+               || tmp->IsNot(CT_BRACE_OPEN))
             {
                set_chunk_type(pc, CT_QUALIFIER);
             }
@@ -632,7 +632,7 @@ void tokenize_cleanup()
 
       // Change get/set to CT_WORD if not followed by a brace open
       if (  chunk_is_token(pc, CT_GETSET)
-         && next->type != CT_BRACE_OPEN)
+         && next->IsNot(CT_BRACE_OPEN))
       {
          if (  chunk_is_token(next, CT_SEMICOLON)
             && (  chunk_is_token(prev, CT_BRACE_CLOSE)
@@ -738,13 +738,13 @@ void tokenize_cleanup()
 
             while ((tmp = tmp2->GetNext())->IsNotNullChunk())
             {
-               if (  tmp->type != CT_WORD
-                  && tmp->type != CT_TYPE
-                  && tmp->type != CT_QUALIFIER
-                  && tmp->type != CT_STAR
-                  && tmp->type != CT_CARET
-                  && tmp->type != CT_AMP
-                  && tmp->type != CT_TSQUARE)
+               if (  tmp->IsNot(CT_WORD)
+                  && tmp->IsNot(CT_TYPE)
+                  && tmp->IsNot(CT_QUALIFIER)
+                  && tmp->IsNot(CT_STAR)
+                  && tmp->IsNot(CT_CARET)
+                  && tmp->IsNot(CT_AMP)
+                  && tmp->IsNot(CT_TSQUARE))
                {
                   break;
                }
@@ -811,7 +811,7 @@ void tokenize_cleanup()
       if (  (  chunk_is_str_case(pc, "EXEC", 4)
             && chunk_is_str_case(next, "SQL", 3))
          || (  (*pc->str.c_str() == '$')
-            && pc->type != CT_SQL_WORD
+            && pc->IsNot(CT_SQL_WORD)
                /* but avoid breaking tokenization for C# 6 interpolated strings. */
             && (  !language_is_set(LANG_CS)
                || (  chunk_is_token(pc, CT_STRING)
@@ -896,7 +896,7 @@ void tokenize_cleanup()
             Chunk *tmp = next->GetNextNcNnl();
 
             while (  tmp->IsNotNullChunk()
-                  && tmp->type != CT_PAREN_CLOSE)
+                  && tmp->IsNot(CT_PAREN_CLOSE))
             {
                if (chunk_is_str(tmp, "in"))
                {
@@ -963,7 +963,7 @@ void tokenize_cleanup()
          || chunk_is_token(pc, CT_OC_INTF)
          || chunk_is_token(pc, CT_OC_PROTOCOL))
       {
-         if (next->type != CT_PAREN_OPEN)
+         if (next->IsNot(CT_PAREN_OPEN))
          {
             set_chunk_type(next, CT_OC_CLASS);
          }
@@ -988,7 +988,7 @@ void tokenize_cleanup()
          Chunk *tmp = pc->GetNextNcNnl(E_Scope::PREPROC);
 
          while (  tmp->IsNotNullChunk()
-               && tmp->type != CT_OC_END)
+               && tmp->IsNot(CT_OC_END))
          {
             if (get_token_pattern_class(tmp->type) != pattern_class_e::NONE)
             {
@@ -1046,7 +1046,7 @@ void tokenize_cleanup()
        */
       if (chunk_is_token(pc, CT_OC_PROPERTY))
       {
-         if (next->type != CT_PAREN_OPEN)
+         if (next->IsNot(CT_PAREN_OPEN))
          {
             chunk_flags_set(next, PCF_STMT_START | PCF_EXPR_START);
          }
@@ -1116,7 +1116,7 @@ void tokenize_cleanup()
       }
 
       if (  chunk_is_token(pc, CT_UNSAFE)
-         && next->type != CT_BRACE_OPEN)
+         && next->IsNot(CT_BRACE_OPEN))
       {
          set_chunk_type(pc, CT_QUALIFIER);
       }
@@ -1161,7 +1161,7 @@ void tokenize_cleanup()
        */
       if (  language_is_set(LANG_JAVA)
          && chunk_is_token(pc, CT_SYNCHRONIZED)
-         && next->type != CT_PAREN_OPEN)
+         && next->IsNot(CT_PAREN_OPEN))
       {
          set_chunk_type(pc, CT_QUALIFIER);
       }
@@ -1188,11 +1188,11 @@ bool invalid_open_angle_template(Chunk *prev)
       return(false);
    }
    // A template requires a word/type right before the open angle
-   return(  prev->type != CT_WORD
-         && prev->type != CT_TYPE
-         && prev->type != CT_COMMA
-         && prev->type != CT_QUALIFIER
-         && prev->type != CT_OPERATOR_VAL
+   return(  prev->IsNot(CT_WORD)
+         && prev->IsNot(CT_TYPE)
+         && prev->IsNot(CT_COMMA)
+         && prev->IsNot(CT_QUALIFIER)
+         && prev->IsNot(CT_OPERATOR_VAL)
          && get_chunk_parent_type(prev) != CT_OPERATOR);
 }
 
@@ -1513,7 +1513,7 @@ static void check_template(Chunk *start, bool in_type_cast)
       pc = end->GetNextNcNnl(E_Scope::PREPROC);
 
       if (  pc->IsNullChunk()
-         || pc->type != CT_NUMBER)
+         || pc->IsNot(CT_NUMBER))
       {
          LOG_FMT(LTEMPL, "%s(%d): Template detected\n", __func__, __LINE__);
          LOG_FMT(LTEMPL, "%s(%d):     from orig_line %zu, orig_col %zu\n",
@@ -1569,7 +1569,7 @@ static void check_template_arg(Chunk *start, Chunk *end)
          break;
       }
 
-      if (next->type != CT_PAREN_OPEN)
+      if (next->IsNot(CT_PAREN_OPEN))
       {
          if (  chunk_is_token(pc, CT_NUMBER)
             || chunk_is_token(pc, CT_ARITH)
@@ -1713,7 +1713,7 @@ static void mark_selectors_in_property_with_open_paren(Chunk *open_paren)
    Chunk *tmp = open_paren;
 
    while (  tmp != nullptr
-         && tmp->type != CT_PAREN_CLOSE)
+         && tmp->IsNot(CT_PAREN_CLOSE))
    {
       if (  chunk_is_token(tmp, CT_WORD)
          && (  chunk_is_str(tmp, "setter")
@@ -1722,8 +1722,8 @@ static void mark_selectors_in_property_with_open_paren(Chunk *open_paren)
          tmp = tmp->next;
 
          while (  tmp != nullptr
-               && tmp->type != CT_COMMA
-               && tmp->type != CT_PAREN_CLOSE)
+               && tmp->IsNot(CT_COMMA)
+               && tmp->IsNot(CT_PAREN_CLOSE))
          {
             if (  chunk_is_token(tmp, CT_WORD)
                || chunk_is_str(tmp, ":"))
@@ -1748,7 +1748,7 @@ static void mark_attributes_in_property_with_open_paren(Chunk *open_paren)
    Chunk *tmp = open_paren;
 
    while (  tmp != nullptr
-         && tmp->type != CT_PAREN_CLOSE)
+         && tmp->IsNot(CT_PAREN_CLOSE))
    {
       if (  (  chunk_is_token(tmp, CT_COMMA)
             || chunk_is_token(tmp, CT_PAREN_OPEN))

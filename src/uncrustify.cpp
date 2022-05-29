@@ -1736,7 +1736,7 @@ static void add_func_header(E_Token type, file_mem &fm)
       {
          int found_brace = 0;                                 // Set if a close brace is found before a newline
 
-         while (  ref->type != CT_NEWLINE
+         while (  ref->IsNot(CT_NEWLINE)
                && (ref = ref->GetNext())) // TODO: is the assignment of ref wanted here?, better move it to the loop
          {
             if (chunk_is_token(ref, CT_BRACE_CLOSE))

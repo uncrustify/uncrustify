@@ -537,7 +537,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
 
    // If we still cannot find caret then return first chunk on the line
    if (  tmp->IsNullChunk()
-      || tmp->type != CT_OC_BLOCK_CARET)
+      || tmp->IsNot(CT_OC_BLOCK_CARET))
    {
       return(candidate_chunk_first_on_line(pc));
    }
@@ -552,7 +552,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    if (from_colon)
    {
       if (  tmp->IsNullChunk()
-         || tmp->type != CT_OC_COLON)
+         || tmp->IsNot(CT_OC_COLON))
       {
          return(candidate_chunk_first_on_line(pc));
       }
@@ -566,8 +566,8 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    if (from_keyword)
    {
       if (  tmp->IsNullChunk()
-         || (  tmp->type != CT_OC_MSG_NAME
-            && tmp->type != CT_OC_MSG_FUNC))
+         || (  tmp->IsNot(CT_OC_MSG_NAME)
+            && tmp->IsNot(CT_OC_MSG_FUNC)))
       {
          return(candidate_chunk_first_on_line(pc));
       }
@@ -864,7 +864,7 @@ void indent_text()
             log_rule_B("pp_indent_extern");
 
             while (  preproc_next->IsNotNullChunk()
-                  && preproc_next->type != CT_NEWLINE)
+                  && preproc_next->IsNot(CT_NEWLINE))
             {
                if (  (chunk_is_token(preproc_next, CT_BRACE_OPEN))
                   || (chunk_is_token(preproc_next, CT_BRACE_CLOSE)))
@@ -1630,7 +1630,7 @@ void indent_text()
       }
       else if (  chunk_is_token(pc, CT_BRACE_OPEN)
               && (  pc->next != nullptr
-                 && pc->next->type != CT_NAMESPACE))
+                 && pc->GetNext()->IsNot(CT_NAMESPACE)))
       {
          LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
@@ -3037,7 +3037,7 @@ void indent_text()
 
          if (  tmp->IsNotNullChunk()
             && (  (strcmp(tmp->Text(), ".") != 0)
-               || tmp->type != CT_MEMBER))
+               || tmp->IsNot(CT_MEMBER)))
          {
             if (chunk_is_paren_close(tmp))
             {
@@ -3128,7 +3128,7 @@ void indent_text()
                log_indent();
 
                if (  pc->level == pc->brace_level
-                  && (  pc->type != CT_ASSIGN
+                  && (  pc->IsNot(CT_ASSIGN)
                      || (  get_chunk_parent_type(pc) != CT_FUNC_PROTO
                         && get_chunk_parent_type(pc) != CT_FUNC_DEF)))
                {
@@ -3313,7 +3313,7 @@ void indent_text()
       }
       else if (  chunk_is_token(pc, CT_LAMBDA)
               && (language_is_set(LANG_CS | LANG_JAVA))
-              && pc->GetNextNcNnlNpp()->type != CT_BRACE_OPEN
+              && pc->GetNextNcNnlNpp()->IsNot(CT_BRACE_OPEN)
               && options::indent_cs_delegate_body())
       {
          log_rule_B("indent_cs_delegate_body");
@@ -3398,7 +3398,7 @@ void indent_text()
          && !pc->flags.test(PCF_IN_ENUM)
          && get_chunk_parent_type(pc) != CT_OPERATOR
          && !pc->IsComment()
-         && pc->type != CT_BRACE_OPEN
+         && pc->IsNot(CT_BRACE_OPEN)
          && pc->level > 0
          && !pc->IsEmptyText())
       {
@@ -3427,12 +3427,12 @@ void indent_text()
             tmp = tmp->GetPrevNcNnl();
          } while (  !in_shift
                  && tmp->IsNotNullChunk()
-                 && tmp->type != CT_SEMICOLON
-                 && tmp->type != CT_BRACE_OPEN
-                 && tmp->type != CT_BRACE_CLOSE
-                 && tmp->type != CT_COMMA
-                 && tmp->type != CT_SPAREN_OPEN
-                 && tmp->type != CT_SPAREN_CLOSE);
+                 && tmp->IsNot(CT_SEMICOLON)
+                 && tmp->IsNot(CT_BRACE_OPEN)
+                 && tmp->IsNot(CT_BRACE_CLOSE)
+                 && tmp->IsNot(CT_COMMA)
+                 && tmp->IsNot(CT_SPAREN_OPEN)
+                 && tmp->IsNot(CT_SPAREN_CLOSE));
 
          tmp = pc;
 
@@ -3457,12 +3457,12 @@ void indent_text()
             }
          } while (  !in_shift
                  && tmp->IsNotNullChunk()
-                 && tmp->type != CT_SEMICOLON
-                 && tmp->type != CT_BRACE_OPEN
-                 && tmp->type != CT_BRACE_CLOSE
-                 && tmp->type != CT_COMMA
-                 && tmp->type != CT_SPAREN_OPEN
-                 && tmp->type != CT_SPAREN_CLOSE);
+                 && tmp->IsNot(CT_SEMICOLON)
+                 && tmp->IsNot(CT_BRACE_OPEN)
+                 && tmp->IsNot(CT_BRACE_CLOSE)
+                 && tmp->IsNot(CT_COMMA)
+                 && tmp->IsNot(CT_SPAREN_OPEN)
+                 && tmp->IsNot(CT_SPAREN_CLOSE));
 
          LOG_FMT(LINDENT2, "%s(%d): in_shift is %s\n",
                  __func__, __LINE__, in_shift ? "TRUE" : "FALSE");
@@ -4120,7 +4120,7 @@ void indent_text()
                     __func__, __LINE__, pc->orig_line, pc->column, pc->Text(), indent_column);
 
             if (  use_indent
-               && pc->type != CT_PP_IGNORE) // Leave indentation alone for PP_IGNORE tokens
+               && pc->IsNot(CT_PP_IGNORE)) // Leave indentation alone for PP_IGNORE tokens
             {
                log_rule_B("pos_conditional");
 
@@ -4641,14 +4641,14 @@ bool ifdef_over_whole_file()
       if (IFstage == 0)                   // 0 is BEGIN
       {
          // Check the first preprocessor, make sure it is an #if type
-         if (pc->type != CT_PREPROC)
+         if (pc->IsNot(CT_PREPROC))
          {
             break;
          }
          Chunk *next = pc->GetNext();
 
          if (  next->IsNullChunk()
-            || next->type != CT_PP_IF)
+            || next->IsNot(CT_PP_IF))
          {
             break;
          }
@@ -4705,7 +4705,7 @@ void indent_preproc()
       LOG_FMT(LPPIS, "%s(%d): orig_line is %zu, orig_col is %zu, pc->Text() is '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
 
-      if (pc->type != CT_PREPROC)
+      if (pc->IsNot(CT_PREPROC))
       {
          continue;
       }

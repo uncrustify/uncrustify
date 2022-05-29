@@ -611,7 +611,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
       if (  chunk_is_token(pc, CT_WHEN)
          && pc->GetNext()->IsNotNullChunk()
-         && pc->GetNext()->type != CT_SPAREN_OPEN)
+         && pc->GetNext()->IsNot(CT_SPAREN_OPEN))
       {
          set_chunk_type(pc, CT_WORD);
          return;
@@ -2633,7 +2633,6 @@ static void handle_d_template(Chunk *pc)
    Chunk *name = pc->GetNextNcNnl();
    Chunk *po   = name->GetNextNcNnl();
 
-   //if (!name || (name->type != CT_WORD && name->type != CT_WORD))  Coverity CID 76000 Same on both sides, 2016-03-16
    if (  name->IsNullChunk()
       || chunk_is_not_token(name, CT_WORD))
    {

@@ -53,7 +53,7 @@ void do_parens()
       while (  (pc = pc->GetNextNcNnl()) != nullptr
             && pc->IsNotNullChunk())
       {
-         if (  pc->type != CT_SPAREN_OPEN
+         if (  pc->IsNot(CT_SPAREN_OPEN)
             || (  get_chunk_parent_type(pc) != CT_IF
                && get_chunk_parent_type(pc) != CT_ELSEIF
                && get_chunk_parent_type(pc) != CT_SWITCH))

@@ -493,7 +493,7 @@ void output_parsed(FILE *pfile, bool withOptions)
               pc->nl_count, pc->after_tab);
 #endif // ifdef WIN32
 
-      if (  pc->type != CT_NEWLINE
+      if (  pc->IsNot(CT_NEWLINE)
          && (pc->Len() != 0))
       {
          for (size_t cnt = 0; cnt < pc->column; cnt++)
@@ -501,7 +501,7 @@ void output_parsed(FILE *pfile, bool withOptions)
             fprintf(pfile, " ");
          }
 
-         if (pc->type != CT_NL_CONT)
+         if (pc->IsNot(CT_NL_CONT))
          {
             fprintf(pfile, "%s", pc->Text());
          }
@@ -547,7 +547,7 @@ void output_parsed_csv(FILE *pfile)
       fprintf(pfile, "%zu,%d,",
               pc->nl_count, pc->after_tab);
 
-      if (  pc->type != CT_NEWLINE
+      if (  pc->IsNot(CT_NEWLINE)
          && (pc->Len() != 0))
       {
          fprintf(pfile, "\"");
@@ -557,7 +557,7 @@ void output_parsed_csv(FILE *pfile)
             fprintf(pfile, " ");
          }
 
-         if (pc->type != CT_NL_CONT)
+         if (pc->IsNot(CT_NL_CONT))
          {
             for (auto *ch = pc->Text(); *ch != '\0'; ++ch)
             {
@@ -2728,7 +2728,7 @@ static bool kw_fcn_class(Chunk *cmt, unc_text &out_txt)
 
       while ((tmp = tmp->GetNext())->IsNotNullChunk())
       {
-         if (tmp->type != CT_DC_MEMBER)
+         if (tmp->IsNot(CT_DC_MEMBER))
          {
             break;
          }
@@ -3326,7 +3326,7 @@ void add_long_preprocessor_conditional_block_comment()
          pp_end = pp_start = pc;
       }
 
-      if (  pc->type != CT_PP_IF
+      if (  pc->IsNot(CT_PP_IF)
          || !pp_start)
       {
          continue;

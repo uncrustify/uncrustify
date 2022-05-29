@@ -150,7 +150,7 @@ void fl_pop(std::vector<ParseFrame> &frames, ParseFrame &pf)
 
 int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Chunk *pc)
 {
-   if (pc->type != CT_PREPROC)
+   if (pc->IsNot(CT_PREPROC))
    {
       return(pp_level);
    }
