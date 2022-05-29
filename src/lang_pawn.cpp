@@ -58,8 +58,7 @@ Chunk *pawn_add_vsemi_after(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (  chunk_is_token(pc, CT_VSEMICOLON)
-      || chunk_is_token(pc, CT_SEMICOLON))
+   if (chunk_is_semicolon(pc))
    {
       return(pc);
    }
@@ -71,8 +70,7 @@ Chunk *pawn_add_vsemi_after(Chunk *pc)
    Chunk *next = pc->GetNextNc();
 
    if (  next->IsNotNullChunk()
-      && (  chunk_is_token(next, CT_VSEMICOLON)
-         || chunk_is_token(next, CT_SEMICOLON)))
+      && chunk_is_semicolon(next))
    {
       return(pc);
    }
@@ -289,8 +287,7 @@ static Chunk *pawn_process_variable(Chunk *start)
          && prev->IsNotNullChunk()
          && !pawn_continued(prev, start->level))
       {
-         if (  prev->type != CT_VSEMICOLON
-            && prev->type != CT_SEMICOLON)
+         if (!chunk_is_semicolon(prev))
          {
             pawn_add_vsemi_after(prev);
          }
@@ -314,18 +311,15 @@ void pawn_add_virtual_semicolons()
 
       while ((pc = pc->GetNext())->IsNotNullChunk())
       {
-         if (  !pc->IsComment()
-            && !chunk_is_newline(pc)
-            && pc->type != CT_VBRACE_CLOSE
-            && pc->type != CT_VBRACE_OPEN)
+         if (  !pc->IsCommentOrNewline()
+            && !pc->IsVBrace())
          {
             prev = pc;
          }
 
          if (  prev->IsNullChunk()
             || (  pc->type != CT_NEWLINE
-               && pc->type != CT_BRACE_CLOSE
-               && pc->type != CT_VBRACE_CLOSE))
+               && !chunk_is_closing_brace(pc)))
          {
             continue;
          }
@@ -333,8 +327,7 @@ void pawn_add_virtual_semicolons()
          // we just hit a newline and we have a previous token
          if (  !prev->flags.test(PCF_IN_PREPROC)
             && !prev->flags.test_any(PCF_IN_ENUM | PCF_IN_STRUCT)
-            && prev->type != CT_VSEMICOLON
-            && prev->type != CT_SEMICOLON
+            && !chunk_is_semicolon(prev)
             && !pawn_continued(prev, prev->brace_level))
          {
             pawn_add_vsemi_after(prev);

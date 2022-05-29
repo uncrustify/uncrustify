@@ -612,8 +612,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          {
             Chunk *tmp = pc->GetNextNcNnl();
 
-            if (  chunk_is_not_token(tmp, CT_SEMICOLON)
-               && chunk_is_not_token(tmp, CT_VSEMICOLON))
+            if (!chunk_is_semicolon(tmp))
             {
                pawn_add_vsemi_after(pc);
             }
@@ -622,8 +621,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       else
       {
          // Complain if this ISN'T a semicolon, but close out WHILE_OF_DO anyway
-         if (  chunk_is_token(pc, CT_SEMICOLON)
-            || chunk_is_token(pc, CT_VSEMICOLON))
+         if (chunk_is_semicolon(pc))
          {
             braceState.consumed = true;
             set_chunk_parent(pc, CT_WHILE_OF_DO);

@@ -3368,8 +3368,7 @@ void space_text()
 
          while (  next->IsEmptyText()
                && !chunk_is_newline(next)
-               && (  chunk_is_token(next, CT_VBRACE_OPEN)
-                  || chunk_is_token(next, CT_VBRACE_CLOSE)))
+               && next->IsVBrace())
          {
             LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, Skip %s (%zu+%zu)\n",
                     __func__, __LINE__, next->orig_line, next->orig_col, get_token_name(next->type),
@@ -3406,8 +3405,7 @@ void space_text()
        * If the current chunk contains a newline, do not change the column
        * of the next item
        */
-      if (  chunk_is_token(pc, CT_NEWLINE)
-         || chunk_is_token(pc, CT_NL_CONT)
+      if (  chunk_is_newline(pc)
          || chunk_is_token(pc, CT_COMMENT_MULTI))
       {
          column = next->column;

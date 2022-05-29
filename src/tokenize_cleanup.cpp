@@ -440,11 +440,7 @@ void tokenize_cleanup()
        */
       if (chunk_is_token(next_non_attr, CT_WORD))
       {
-         if (  chunk_is_token(pc, CT_ENUM)
-            || chunk_is_token(pc, CT_ENUM_CLASS)
-            || chunk_is_token(pc, CT_UNION)
-            || chunk_is_token(pc, CT_STRUCT)
-            || chunk_is_token(pc, CT_CLASS))
+         if (chunk_is_class_enum_struct_union(pc))
          {
             set_chunk_type(next_non_attr, CT_TYPE);
          }

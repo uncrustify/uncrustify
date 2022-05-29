@@ -2778,9 +2778,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
          {
             // ASSERT(options::pp_ignore_define_body());
             if (  !chunk_is_token(pc, CT_NL_CONT)
-               && !chunk_is_token(pc, CT_COMMENT_CPP)
-               && !chunk_is_token(pc, CT_COMMENT)
-               && !chunk_is_token(pc, CT_COMMENT_MULTI))     // Issue #1966
+               && !pc->IsComment())        // Issue #1966
             {
                set_chunk_type(pc, CT_PP_IGNORE);
             }
