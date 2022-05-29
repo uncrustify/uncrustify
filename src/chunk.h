@@ -411,6 +411,13 @@ public:
    bool Is(E_Token token) const;
 
    /**
+    * @brief checks whether chunk token name is a specific string
+    * @param cStr string to compare token name with
+    * @return true if the chunk token name matches the specified string, false otherwise
+    */
+   bool IsString(const char *cStr) const;
+
+   /**
     * @brief checks whether the chunk is not a specific token
     * @token the token to check for
     * @return true if the chunk type does not matches the specified token, false otherwise
@@ -662,6 +669,12 @@ inline bool Chunk::Is(E_Token token) const
 }
 
 
+inline bool Chunk::IsString(const char *cStr) const
+{
+   return(IsStringAndLevel(cStr, strlen(cStr), ANY_LEVEL));
+}
+
+
 inline bool Chunk::IsNot(E_Token token) const
 {
    return(!Is(token));
@@ -906,21 +919,6 @@ static inline bool chunk_is_type(Chunk *pc)
          || chunk_is_token(pc, CT_STRUCT)
          || chunk_is_token(pc, CT_ENUM)
          || chunk_is_token(pc, CT_UNION));
-}
-
-
-static inline bool chunk_is_str(Chunk *pc, const char *str)
-{
-   size_t len = strlen(str);
-
-   return(  pc != nullptr                         // valid pc pointer
-         && (pc->Len() == len)                    // token size equals size parameter
-         && (memcmp(pc->Text(), str, len) == 0)); // token name is the same as str parameter
-
-   /*
-    * TODO: possible access beyond array for memcmp, check this
-    * why not use strncmp here?
-    */
 }
 
 

@@ -357,13 +357,13 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    }
 
    if (  (  chunk_is_token(prev, CT_FPAREN_CLOSE)
-         || (  (  chunk_is_str(prev, "const")
-               || chunk_is_str(prev, "override"))
+         || (  (  prev->IsString("const")
+               || prev->IsString("override"))
             && chunk_is_token(prev->prev, CT_FPAREN_CLOSE)))
       && chunk_is_token(pc, CT_ASSIGN)
       && (  chunk_is_token(next, CT_DEFAULT)
          || chunk_is_token(next, CT_DELETE)
-         || chunk_is_str(next, "0")))
+         || next->IsString("0")))
    {
       set_chunk_type(pc, CT_ASSIGN_FUNC_PROTO);
       return;                  // cpp 30031
@@ -387,7 +387,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    // D stuff
    if (  language_is_set(LANG_D)
       && chunk_is_token(pc, CT_QUALIFIER)
-      && chunk_is_str(pc, "const")
+      && pc->IsString("const")
       && chunk_is_token(next, CT_PAREN_OPEN))
    {
       set_chunk_type(pc, CT_D_CAST);
@@ -541,9 +541,9 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       // Check for message declarations
       if (pc->flags.test(PCF_STMT_START))
       {
-         if (  (  chunk_is_str(pc, "-")
-               || chunk_is_str(pc, "+"))
-            && chunk_is_str(next, "("))
+         if (  (  pc->IsString("-")
+               || pc->IsString("+"))
+            && next->IsString("("))
          {
             handle_oc_message_decl(pc);
             return;
@@ -1115,8 +1115,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       && !is_oc_block(pc)
       && get_chunk_parent_type(pc) != CT_OC_MSG_DECL
       && get_chunk_parent_type(pc) != CT_OC_MSG_SPEC
-      && chunk_is_str(pc, ")")
-      && chunk_is_str(next, "("))
+      && pc->IsString(")")
+      && next->IsString("("))
    {
       if (language_is_set(LANG_D))
       {
@@ -1177,7 +1177,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          && (  chunk_is_token(next, CT_DEFAULT)
             || chunk_is_token(next, CT_DELETE)
             || (  chunk_is_token(next, CT_NUMBER)
-               && chunk_is_str(next, "0"))))
+               && next->IsString("0"))))
       {
          const size_t level        = pc->level;
          bool         found_status = false;
@@ -1197,7 +1197,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             if (chunk_is_token(next, CT_NUMBER))
             {
                if (  chunk_is_token(pprev, CT_QUALIFIER)
-                  && chunk_is_str(pprev, "virtual"))
+                  && pprev->IsString("virtual"))
                {
                   found_status = true;
                   break;
@@ -1768,7 +1768,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    // Issue #548: inline T && someFunc(foo * *p, bar && q) { }
    if (  chunk_is_token(pc, CT_BOOL)
       && !pc->flags.test(PCF_IN_PREPROC)
-      && chunk_is_str(pc, "&&")
+      && pc->IsString("&&")
       && chunk_ends_type(pc->prev))
    {
       Chunk *tmp = pc->GetPrev();                 // Issue #2688
@@ -2504,14 +2504,14 @@ static void handle_cpp_lambda(Chunk *sq_o)
    // Check for 'mutable' keyword: '[]() mutable {}' or []() mutable -> ret {}
    Chunk *br_o = pa_c->IsNotNullChunk() ? pa_c->GetNextNcNnl() : pa_o;
 
-   if (chunk_is_str(br_o, "mutable"))
+   if (br_o->IsString("mutable"))
    {
       br_o = br_o->GetNextNcNnl();
    }
    //TODO: also check for exception and attribute between [] ... {}
 
    // skip possible arrow syntax: '-> ret'
-   if (chunk_is_str(br_o, "->"))
+   if (br_o->IsString("->"))
    {
       ret = br_o;
       // REVISIT: really should check the stuff we are skipping
@@ -2759,7 +2759,7 @@ static void handle_oc_class(Chunk *pc)
          passed_name = true;
       }
 
-      if (chunk_is_str(tmp, "<"))
+      if (tmp->IsString("<"))
       {
          set_chunk_type(tmp, CT_ANGLE_OPEN);
 
@@ -2775,7 +2775,7 @@ static void handle_oc_class(Chunk *pc)
          as = angle_state_e::OPEN;
       }
 
-      if (chunk_is_str(tmp, ">"))
+      if (tmp->IsString(">"))
       {
          set_chunk_type(tmp, CT_ANGLE_CLOSE);
 
@@ -2804,7 +2804,7 @@ static void handle_oc_class(Chunk *pc)
          }
       }
 
-      if (chunk_is_str(tmp, ">>"))
+      if (tmp->IsString(">>"))
       {
          set_chunk_type(tmp, CT_ANGLE_CLOSE);
          set_chunk_parent(tmp, CT_OC_GENERIC_SPEC);
@@ -2843,8 +2843,8 @@ static void handle_oc_class(Chunk *pc)
             set_chunk_parent(tmp, CT_OC_CLASS);
          }
       }
-      else if (  chunk_is_str(tmp, "-")
-              || chunk_is_str(tmp, "+"))
+      else if (  tmp->IsString("-")
+              || tmp->IsString("+"))
       {
          as = angle_state_e::CLOSE;
 
@@ -2914,7 +2914,7 @@ static void handle_oc_block_literal(Chunk *pc)
    for (tmp = next; tmp->IsNotNullChunk(); tmp = tmp->GetNextNcNnl())
    {
       /* handle '< protocol >' */
-      if (chunk_is_str(tmp, "<"))
+      if (tmp->IsString("<"))
       {
          Chunk *ao = tmp;
          Chunk *ac = ao->GetNextString(">", 1, ao->level);
@@ -3066,7 +3066,7 @@ static void handle_oc_block_type(Chunk *pc)
          Chunk   *aft = apc->GetNextNcNnl();
          E_Token pt;
 
-         if (chunk_is_str(nam, "^"))
+         if (nam->IsString("^"))
          {
             set_chunk_type(nam, CT_PTR_TYPE);
             pt = CT_FUNC_TYPE;
@@ -3219,7 +3219,7 @@ static void handle_oc_message_decl(Chunk *pc)
          }
 
          // a colon must be next
-         if (!chunk_is_str(pc, ":"))
+         if (!pc->IsString(":"))
          {
             break;
          }
@@ -3369,7 +3369,7 @@ static void handle_oc_message_send(Chunk *os)
    // handle '< protocol >'
    tmp = tmp->GetNextNcNnl();
 
-   if (chunk_is_str(tmp, "<"))
+   if (tmp->IsString("<"))
    {
       Chunk *ao = tmp;
       Chunk *ac = ao->GetNextString(">", 1, ao->level);
@@ -3552,32 +3552,32 @@ static void handle_oc_property_decl(Chunk *os)
          {
             if (chunk_is_token(next, CT_OC_PROPERTY_ATTR))
             {
-               if (  chunk_is_str(next, "atomic")
-                  || chunk_is_str(next, "nonatomic"))
+               if (  next->IsString("atomic")
+                  || next->IsString("nonatomic"))
                {
                   ChunkGroup chunkGroup;
                   chunkGroup.push_back(next);
                   thread_chunks.push_back(chunkGroup);
                }
-               else if (  chunk_is_str(next, "readonly")
-                       || chunk_is_str(next, "readwrite"))
+               else if (  next->IsString("readonly")
+                       || next->IsString("readwrite"))
                {
                   ChunkGroup chunkGroup;
                   chunkGroup.push_back(next);
                   readwrite_chunks.push_back(chunkGroup);
                }
-               else if (  chunk_is_str(next, "assign")
-                       || chunk_is_str(next, "retain")
-                       || chunk_is_str(next, "copy")
-                       || chunk_is_str(next, "strong")
-                       || chunk_is_str(next, "weak")
-                       || chunk_is_str(next, "unsafe_unretained"))
+               else if (  next->IsString("assign")
+                       || next->IsString("retain")
+                       || next->IsString("copy")
+                       || next->IsString("strong")
+                       || next->IsString("weak")
+                       || next->IsString("unsafe_unretained"))
                {
                   ChunkGroup chunkGroup;
                   chunkGroup.push_back(next);
                   ref_chunks.push_back(chunkGroup);
                }
-               else if (chunk_is_str(next, "getter"))
+               else if (next->IsString("getter"))
                {
                   ChunkGroup chunkGroup;
 
@@ -3598,7 +3598,7 @@ static void handle_oc_property_decl(Chunk *os)
                   }
                   getter_chunks.push_back(chunkGroup);
                }
-               else if (chunk_is_str(next, "setter"))
+               else if (next->IsString("setter"))
                {
                   ChunkGroup chunkGroup;
 
@@ -3621,16 +3621,16 @@ static void handle_oc_property_decl(Chunk *os)
                   }
                   setter_chunks.push_back(chunkGroup);
                }
-               else if (  chunk_is_str(next, "nullable")
-                       || chunk_is_str(next, "nonnull")
-                       || chunk_is_str(next, "null_resettable")
-                       || chunk_is_str(next, "null_unspecified"))
+               else if (  next->IsString("nullable")
+                       || next->IsString("nonnull")
+                       || next->IsString("null_resettable")
+                       || next->IsString("null_unspecified"))
                {
                   ChunkGroup chunkGroup;
                   chunkGroup.push_back(next);
                   nullability_chunks.push_back(chunkGroup);
                }
-               else if (chunk_is_str(next, "class"))
+               else if (next->IsString("class"))
                {
                   ChunkGroup chunkGroup;
                   chunkGroup.push_back(next);
@@ -3645,7 +3645,7 @@ static void handle_oc_property_decl(Chunk *os)
             }
             else if (chunk_is_word(next))
             {
-               if (chunk_is_str(next, "class"))
+               if (next->IsString("class"))
                {
                   ChunkGroup chunkGroup;
                   chunkGroup.push_back(next);

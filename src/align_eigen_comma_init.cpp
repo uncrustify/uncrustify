@@ -73,7 +73,7 @@ void align_eigen_comma_init()
       }
       else if (  !pc->flags.test(PCF_IN_ENUM)
               && !pc->flags.test(PCF_IN_TYPEDEF)
-              && chunk_is_str(pc, "<<"))
+              && pc->IsString("<<"))
       {
          if (get_chunk_parent_type(pc) == CT_OPERATOR)
          {

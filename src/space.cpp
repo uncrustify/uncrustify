@@ -1532,7 +1532,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (  language_is_set(LANG_VALA)
       && chunk_is_token(first, CT_FUNC_CALL))
    {
-      if (  chunk_is_str(first, "_")
+      if (  first->IsString("_")
          && chunk_is_token(second, CT_FPAREN_OPEN)
          && (options::sp_vala_after_translation() != IARF_IGNORE))
       {
@@ -1668,8 +1668,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    }
 
    // ")(" vs. ") ("
-   if (  (  chunk_is_str(first, ")")
-         && chunk_is_str(second, "("))
+   if (  (  first->IsString(")")
+         && second->IsString("("))
       || (  chunk_is_paren_close(first)
          && chunk_is_paren_open(second)))
    {
@@ -2072,10 +2072,10 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    /* "((" vs. "( (" or "))" vs. ") )" */
    // Issue #1342
-   if (  (  chunk_is_str(first, "(")
-         && chunk_is_str(second, "("))
-      || (  chunk_is_str(first, ")")
-         && chunk_is_str(second, ")")))
+   if (  (  first->IsString("(")
+         && second->IsString("("))
+      || (  first->IsString(")")
+         && second->IsString(")")))
    {
       if (get_chunk_parent_type(second) == CT_FUNC_CALL_USER)
       {
@@ -3433,10 +3433,10 @@ void space_text()
          chunk_flags_clr(pc, PCF_FORCE_SPACE);
 
          if (  (pc->Len() > 0)
-            && !chunk_is_str(pc, "[]")
-            && !chunk_is_str(pc, "{{")
-            && !chunk_is_str(pc, "}}")
-            && !chunk_is_str(pc, "()")
+            && !pc->IsString("[]")
+            && !pc->IsString("{{")
+            && !pc->IsString("}}")
+            && !pc->IsString("()")
             && !pc->str.startswith("@\""))
          {
             // Find the next non-empty chunk on this line
@@ -3651,8 +3651,8 @@ void space_text_balance_nested_parens()
       }
 
       // if there are two successive opening parenthesis
-      if (  chunk_is_str(first, "(")
-         && chunk_is_str(next, "("))
+      if (  first->IsString("(")
+         && next->IsString("("))
       {
          // insert a space between them
          space_add_after(first, 1);
@@ -3665,8 +3665,8 @@ void space_text_balance_nested_parens()
             space_add_after(closing->prev, 1);
          }
       }
-      else if (  chunk_is_str(first, ")")
-              && chunk_is_str(next, ")"))
+      else if (  first->IsString(")")
+              && next->IsString(")"))
       {
          // insert a space between the two closing parens
          space_add_after(first, 1);

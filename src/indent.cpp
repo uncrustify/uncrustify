@@ -2788,11 +2788,11 @@ void indent_text()
             frm.top().indent_tab = frm.top().indent;
             skipped = true;
          }
-         else if (  (  chunk_is_str(pc, "(")
+         else if (  (  pc->IsString("(")
                     && !options::indent_paren_nl())
-                 || (  chunk_is_str(pc, "<")
+                 || (  pc->IsString("<")
                     && !options::indent_paren_nl())    // TODO: add indent_angle_nl?
-                 || (  chunk_is_str(pc, "[")
+                 || (  pc->IsString("[")
                     && !options::indent_square_nl()))
          {
             log_rule_B("indent_paren_nl");
