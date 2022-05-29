@@ -597,7 +597,7 @@ protected:
    /**
     * @brief add a copy of this chunk before/after the given position in a chunk list.
     * @note If pos is NullChunk, add the new chuck either at the head or tail of the
-    * list based on the specified directon.
+    * list based on the specified direction.
     * @param pos insert position in list
     * @param dir insert before or after the given position chunk
     * @return pointer to the newly added chunk
@@ -628,7 +628,7 @@ bool chunk_is_last_on_line(Chunk *pc);
 
 
 /**
- * @brief checks wether two chunks are in same line
+ * @brief checks whether two chunks are in same line
  *
  * @param  start
  * @param  end
@@ -1072,7 +1072,7 @@ static inline bool chunk_safe_to_del_nl(Chunk *nl)
 
 
 /**
- * Checks if a chunk points to the opening parenthese of a
+ * Checks if a chunk points to the opening parentheses of a
  * for(...in...) loop in Objective-C.
  *
  * @return true  - the chunk is the opening parentheses of a for in loop

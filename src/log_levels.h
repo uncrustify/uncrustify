@@ -33,7 +33,7 @@ enum log_sev_t
    LERR      = 1,   //! error messages
    LWARN     = 2,   //! warnings
    LNOTE     = 3,   //! user notifications
-   LINFO     = 4,   //! user informations
+   LINFO     = 4,   //! user information
    LDATA     = 5,   //! data logging
 
    LFILELIST = 8,   //! Files in the file list file

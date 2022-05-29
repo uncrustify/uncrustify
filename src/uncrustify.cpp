@@ -300,7 +300,7 @@ void usage(const char *argv0)
            " -L SEV                : Set the log severity (see log_levels.h; note 'A' = 'all')\n"
            " -s                    : Show the log severity in the logs.\n"
            " --decode              : Decode remaining args (chunk flags) and exit.\n"
-           " --tracking_space FILE : Prepare tracking informations for debugging.\n"
+           " --tracking_space FILE : Prepare tracking information for debugging.\n"
            "                         Cannot be used with the -o option'\n"
            "\n"
            "Usage Examples\n"

@@ -1,6 +1,6 @@
 /**
  * @file enum_cleanup.cpp
- * works on the last comma withing enum
+ * works on the last comma within enum
  *
  * @author  Guy Maurel Juli 2018
  * @license GPL v2+

@@ -23,7 +23,7 @@ using namespace uncrustify;
    log_rule2(__func__, __LINE__, (rule), first, second)
 #endif
 
-// if you need more debug informations, remove the comment at the next line
+// if you need more debug information, remove the comment at the next line
 #define SUPER_LOG    1
 #ifdef SUPER_LOG
 #define log_rule_B(rule) \

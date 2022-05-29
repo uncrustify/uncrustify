@@ -63,9 +63,9 @@ using namespace uncrustify;
  * cont-col is set to the column of the item after the open paren, unless
  * followed by a newline, then it is set to (brace-col + indent_columns).
  * Examples:
- *    a_really_long_funcion_name(
+ *    a_really_long_function_name(
  *       param1, param2);
- *    a_really_long_funcion_name(param1,
+ *    a_really_long_function_name(param1,
  *                               param2);
  *
  * Assignments:
@@ -1729,7 +1729,7 @@ void indent_text()
                if (namespace_indent_to_ignore && options::indent_namespace())
                {
                   // I honestly don't know what's going on, so this is an
-                  // emperical fix. For some reason lambda's don't have
+                  // empirical fix. For some reason lambdas don't have
                   // their indent calculated properly when indent_namespace
                   // is true. But only if they are not in enclosures.
                   namespace_indent_to_ignore = indent_size;
@@ -3098,7 +3098,7 @@ void indent_text()
              * fixes  1260 , 1268 , 1277 (Extra indentation after line with multiple assignments)
              * For multiple consecutive assignments in single line , the indent of all these
              * assignments should be same and one more than this line's indent.
-             * so poping the previous assign and pushing the new one
+             * so popping the previous assign and pushing the new one
              */
             if (  frm.top().type == CT_ASSIGN
                && chunk_is_token(pc, CT_ASSIGN))
@@ -3488,7 +3488,7 @@ void indent_text()
          {
             shiftcontcol = calc_indent_continue(frm);
             // Setting frm.top().indent_cont = true in the top context when the indent is not also set
-            // just leads to compications when succeeding statements try to indent based on being
+            // just leads to complications when succeeding statements try to indent based on being
             // embedded in a continuation. In other words setting frm.top().indent_cont = true
             // should only be set if frm.top().indent is also set.
 
@@ -3531,7 +3531,7 @@ void indent_text()
          {
             vardefcol = calc_indent_continue(frm);
             // Setting frm.top().indent_cont = true in the top context when the indent is not also set
-            // just leads to compications when succeeding statements try to indent based on being
+            // just leads to complications when succeeding statements try to indent based on being
             // embedded in a continuation. In other words setting frm.top().indent_cont = true
             // should only be set if frm.top().indent is also set.
          }
