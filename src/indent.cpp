@@ -1082,8 +1082,7 @@ void indent_text()
                xml_indent -= options::indent_xml_string();
             }
          }
-         else if (  !pc->IsComment()
-                 && !chunk_is_newline(pc))
+         else if (!pc->IsCommentOrNewline())
          {
             xml_indent = 0;
          }
@@ -1099,8 +1098,7 @@ void indent_text()
          old_frm_size = frm.size();
 
          // End anything that drops a level
-         if (  !chunk_is_newline(pc)
-            && !pc->IsComment()
+         if (  !pc->IsCommentOrNewline()
             && frm.top().level > pc->level)
          {
             LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
@@ -1433,8 +1431,7 @@ void indent_text()
          pc->nl_column = indent_column;
       }
 
-      if (  !chunk_is_newline(pc)
-         && !pc->IsComment()
+      if (  !pc->IsCommentOrNewline()
          && log_sev_on(LINDPC))
       {
          LOG_FMT(LINDPC, "%s(%d):\n", __func__, __LINE__);
@@ -4632,8 +4629,7 @@ bool ifdef_over_whole_file()
       LOG_FMT(LNOTE, "%s(%d): pc->pp_level is %zu, pc->orig_line is %zu, pc->orig_col is %zu, pc->Text() is '%s'\n",
               __func__, __LINE__, pc->pp_level, pc->orig_line, pc->orig_col, pc->Text());
 
-      if (  pc->IsComment()
-         || chunk_is_newline(pc))
+      if (pc->IsCommentOrNewline())
       {
          continue;
       }

@@ -2748,8 +2748,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
          chunk_flags_set(pc, PCF_IN_PREPROC);
 
          // Count words after the preprocessor
-         if (  !pc->IsComment()
-            && !chunk_is_newline(pc))
+         if (!pc->IsCommentOrNewline())
          {
             cpd.preproc_ncnl_count++;
          }

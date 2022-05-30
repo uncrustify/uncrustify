@@ -47,8 +47,7 @@ Chunk *chunk_get_prev_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
    {
       tmp = tmp->GetPrev(scope);
    } while (  tmp->IsNotNullChunk()
-           && (  tmp->IsComment()
-              || chunk_is_newline(tmp)
+           && (  tmp->IsCommentOrNewline()
               || chunk_is_token(tmp, CT_NOEXCEPT)));
 
    return(tmp);
