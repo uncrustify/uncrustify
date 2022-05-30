@@ -7,6 +7,8 @@
 #ifndef FLAG_BRACED_INIT_LIST_INCLUDED
 #define FLAG_BRACED_INIT_LIST_INCLUDED
 
+#include "chunk.h"
+
 
 /**
  * Detect a cpp braced init list

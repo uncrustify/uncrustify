@@ -13,7 +13,10 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
+
+#ifdef WIN32
 #include "windows.h"
+#endif
 
 #define HAVE_SYS_STAT_H
 
@@ -85,9 +88,11 @@ typedef unsigned long long   UINT64;
 #define fileno         _fileno
 
 // includes for _setmode()
+#ifdef WIN32
 #include <direct.h>
-#include <fcntl.h>
 #include <io.h>
+#endif
+#include <fcntl.h>
 
 // on windows the file permissions have no meaning thus neglect them
 #define mkdir(x, y)    _mkdir(x)
