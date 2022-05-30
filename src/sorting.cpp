@@ -564,7 +564,8 @@ static void group_imports_by_adding_newlines(Chunk **chunks, size_t num_chunks)
       chunk_has_filename = text_contains_filename_without_ext(chunk_text.c_str());
 
       if (  !chunk_has_filename
-         && last_chunk_has_filename)
+         && last_chunk_has_filename
+         && options::mod_sort_incl_import_prioritize_filename())
       {
          blankline_add_before(chunks[idx]);
       }
