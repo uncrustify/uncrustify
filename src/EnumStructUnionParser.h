@@ -1,7 +1,7 @@
 /**
  * @file combine_fix_mark_enum_struct_union.h
  *
- * @author
+ * @author  Joshua Parker
  * @license GPL v2+
  * extract from combine_fix_mark.h
  */
