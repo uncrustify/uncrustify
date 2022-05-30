@@ -16,91 +16,34 @@
 
 #include <cctype>                    // to get std::tolower
 
-// TODO: better avoid inline and move implementation to cpp file
-
-
 //! Test anything EOF (-1) to 0-255
-static inline int unc_fix_ctype(int ch)
-{
-   if (  ch >= -1
-      && ch <= 255)
-   {
-      return(ch);
-   }
-   return(0);                                // Issue #3025
-}
-
+int unc_fix_ctype(int ch);
 
 //! check if a character is a space
-static inline int unc_isspace(int ch)
-{
-   if (  (ch == 12)                          // Issue #2386
-      && uncrustify::options::use_form_feed_no_more_as_whitespace_character())
-   {
-      return(0);
-   }
-   else
-   {
-      return(isspace(unc_fix_ctype(ch)));
-   }
-}
-
+int unc_isspace(int ch);
 
 //! check if a character is a printing character
-static inline int unc_isprint(int ch)
-{
-   return(isprint(unc_fix_ctype(ch)));
-}
-
+int unc_isprint(int ch);
 
 //! check if a character is an alphabetic character (a letter).
-static inline int unc_isalpha(int ch)
-{
-   return(isalpha(unc_fix_ctype(ch)));
-}
-
+int unc_isalpha(int ch);
 
 //! check if a character is an alphanumeric character.
-static inline int unc_isalnum(int ch)
-{
-   return(isalnum(unc_fix_ctype(ch)));
-}
-
+int unc_isalnum(int ch);
 
 //! convert a character to upper case
-static inline int unc_toupper(int ch)
-{
-   return(toupper(unc_fix_ctype(ch)));
-}
-
+int unc_toupper(int ch);
 
 //! convert a character to lower case
-static inline int unc_tolower(int ch)
-{
-   return(tolower(unc_fix_ctype(ch)));
-}
-
+int unc_tolower(int ch);
 
 //! check if a character is a hexadecimal digit
-static inline int unc_isxdigit(int ch)
-{
-   return(isxdigit(unc_fix_ctype(ch)));
-}
-
+int unc_isxdigit(int ch);
 
 //! check if a character is a decimal digit
-static inline int unc_isdigit(int ch)
-{
-   return(isdigit(unc_fix_ctype(ch)));
-}
-
+int unc_isdigit(int ch);
 
 //! check if a character is upper case
-static inline int unc_isupper(int ch)
-{
-   return(  isalpha(unc_fix_ctype(ch))
-         && (unc_toupper(unc_fix_ctype(ch)) == ch));
-}
-
+int unc_isupper(int ch);
 
 #endif /* UNC_CTYPE_H_INCLUDED */
