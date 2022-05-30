@@ -61,7 +61,7 @@ void print_universal_indent_cfg(FILE *pfile)
 #if defined (DEBUG) && !defined (WIN32)
    vector<size_t> allGroups;
    allGroups.reserve(16);
-   // first run to get the first option number of each group/categorie
+   // first run to get the first option number of each group/category
    size_t optionNumber         = 0;
    bool   firstOptionNumberSet = false;
 

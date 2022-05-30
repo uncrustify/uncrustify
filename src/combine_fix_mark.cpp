@@ -94,7 +94,7 @@ void fix_casts(Chunk *start)
               || chunk_is_token(pc, CT_MEMBER)
               || chunk_is_token(pc, CT_PP))
       {
-         // might be negativ, such as with:
+         // might be negative, such as with:
          // a = val + (CFoo::bar_t)7;
          word_count--;
       }
@@ -1412,12 +1412,12 @@ void mark_function(Chunk *pc)
    {
       LOG_FMT(LFCN, "%s(%d): examine: Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
               __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col, get_token_name(pc->type));
-      // look for an assigment. Issue #575
+      // look for an assignment. Issue #575
       Chunk *temp = pc->GetNextType(CT_ASSIGN, pc->level);
 
       if (temp->IsNotNullChunk())
       {
-         LOG_FMT(LFCN, "%s(%d): assigment found, orig_line is %zu, orig_col is %zu, Text() '%s'\n",
+         LOG_FMT(LFCN, "%s(%d): assignment found, orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                  __func__, __LINE__, temp->orig_line, temp->orig_col, temp->Text());
          LOG_FMT(LFCN, "%s(%d): (10) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
@@ -2211,7 +2211,7 @@ bool mark_function_type(Chunk *pc)
    }
 
    // Fixes #issue 1577
-   // Allow word count 2 incase of function pointer declaration.
+   // Allow word count 2 in case of function pointer declaration.
    // Ex: bool (__stdcall* funcptr)(int, int);
    if (  star_count > 1
       || (  word_count > 1

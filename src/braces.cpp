@@ -1117,7 +1117,7 @@ void add_long_closebrace_comment()
          if (chunk_is_token(tmp, CT_SEMICOLON))
          {
             // set br_close to the semi token,
-            // as br_close is used to add the coment after it
+            // as br_close is used to add the comment after it
             br_close = tmp;
             tmp      = tmp->GetNext();
          }
@@ -1265,7 +1265,7 @@ static void move_case_return()
                || chunk_is_token(pc, CT_BRACE_CLOSE))
             {
                // This may indicate a semicolon was missing in the code to format.
-               // Avoid moving the return statement to prevent potential unwanted erros.
+               // Avoid moving the return statement to prevent potential unwanted errors.
                pc = Chunk::NullChunkPtr;
                break;
             }

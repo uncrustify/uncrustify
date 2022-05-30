@@ -8,7 +8,7 @@
 
 /**
  *
- *   Contet of the generated "punctuator_table.h" file is based off this.
+ *   Content of the generated "punctuator_table.h" file is based off this.
  *
  *   NOTE: the tables below do not need to be sorted.
  */
