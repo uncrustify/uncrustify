@@ -624,7 +624,7 @@ Chunk *chunk_first_on_line(Chunk *pc);
 
 
 //! check if a given chunk is the last on its line
-bool chunk_is_last_on_line(Chunk *pc);
+bool chunk_is_last_on_line(const Chunk *pc);
 
 
 /**
