@@ -19,6 +19,7 @@
 
 #include "space.h"
 
+#include "add_space_table.h"
 #include "log_rules.h"
 #include "options_for_QT.h"
 #include "punctuators.h"
@@ -53,71 +54,6 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp);
  * @return IARF_IGNORE, IARF_ADD, IARF_REMOVE or IARF_FORCE
  */
 static iarf_e ensure_force_space(Chunk *first, Chunk *second, iarf_e av);
-
-//! type that stores two chunks between those no space shall occur
-struct no_space_table_t
-{
-   E_Token first;  //! first  chunk
-   E_Token second; //! second chunk
-};
-
-
-/**
- * this table lists out all combos where a space MUST be present
- * CT_UNKNOWN is a wildcard.
- *
- * TODO: some of these are no longer needed.
- */
-const no_space_table_t add_space_table[] =
-{
-#include "add_space_table.h"
-};
-
-
-/**
- * this table lists out all combos where a space should NOT be present
- * CT_UNKNOWN is a wildcard.
- *
- * TODO: some of these are no longer needed.
- */
-const no_space_table_t no_space_table[] =
-{
-   { CT_OC_AT,          CT_UNKNOWN      },
-   { CT_INCDEC_BEFORE,  CT_WORD         },
-   { CT_UNKNOWN,        CT_INCDEC_AFTER },
-   { CT_UNKNOWN,        CT_LABEL_COLON  },
-   { CT_UNKNOWN,        CT_ACCESS_COLON },
-   { CT_UNKNOWN,        CT_SEMICOLON    },
-   { CT_UNKNOWN,        CT_D_TEMPLATE   },
-   { CT_D_TEMPLATE,     CT_UNKNOWN      },
-   { CT_MACRO_FUNC,     CT_FPAREN_OPEN  },
-   { CT_PAREN_OPEN,     CT_UNKNOWN      },
-   { CT_UNKNOWN,        CT_PAREN_CLOSE  },
-   { CT_FPAREN_OPEN,    CT_UNKNOWN      },
-   { CT_UNKNOWN,        CT_SPAREN_CLOSE },
-   { CT_SPAREN_OPEN,    CT_UNKNOWN      },
-   { CT_UNKNOWN,        CT_FPAREN_CLOSE },
-   { CT_UNKNOWN,        CT_COMMA        },
-   { CT_POS,            CT_UNKNOWN      },
-   { CT_STAR,           CT_UNKNOWN      },
-   { CT_VBRACE_CLOSE,   CT_UNKNOWN      },
-   { CT_VBRACE_OPEN,    CT_UNKNOWN      },
-   { CT_UNKNOWN,        CT_VBRACE_CLOSE },
-   { CT_UNKNOWN,        CT_VBRACE_OPEN  },
-   { CT_PREPROC,        CT_UNKNOWN      },
-   { CT_PREPROC_INDENT, CT_UNKNOWN      },
-   { CT_NEG,            CT_UNKNOWN      },
-   { CT_UNKNOWN,        CT_SQUARE_OPEN  },
-   { CT_UNKNOWN,        CT_SQUARE_CLOSE },
-   { CT_SQUARE_OPEN,    CT_UNKNOWN      },
-   { CT_PAREN_CLOSE,    CT_WORD         },
-   { CT_PAREN_CLOSE,    CT_FUNC_DEF     },
-   { CT_PAREN_CLOSE,    CT_FUNC_CALL    },
-   { CT_PAREN_CLOSE,    CT_ADDR         },
-   { CT_PAREN_CLOSE,    CT_FPAREN_OPEN  },
-   { CT_OC_SEL_NAME,    CT_OC_SEL_NAME  },
-   { CT_TYPENAME,       CT_TYPE         },
-};
 
 
 bool token_is_within_trailing_return(Chunk *pc)
