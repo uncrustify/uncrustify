@@ -18,8 +18,8 @@
 /*
  * the test suite Coveralls: https://coveralls.io
  * will complains because these functions are only
- * used at developement time.
- * Don't worry about unsed lines for the functions:
+ * used at development time.
+ * Don't worry about unused lines for the functions:
  *   logmask_test
  *   logmask_set_all
  */

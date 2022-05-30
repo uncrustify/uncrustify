@@ -1380,7 +1380,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          // Add check for CT_DC_MEMBER CT_WORD CT_STAR sequence
          // to convert CT_WORD into CT_TYPE
          // and CT_STAR into CT_PTR_TYPE
-         // look for an assign backward, fuction call, return to distinguish between
+         // look for an assign backward, function call, return to distinguish between
          //    double result = Constants::PI * factor;
          // and
          //    ::some::name * foo;
@@ -1803,7 +1803,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
             if (chunk_is_token(test_it, CT_ASSIGN))
             {
-               // the statement is an assigment
+               // the statement is an assignment
                // && is before assign
                set_chunk_type(pc, CT_BYREF);
                break;

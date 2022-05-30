@@ -88,7 +88,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       }
       else if (chunk_is_token(pc, CT_ELLIPSIS))
       {
-         LOG_FMT(LFPARAM, "%s(%d): <== elipses\n",
+         LOG_FMT(LFPARAM, "%s(%d): <== ellipsis\n",
                  __func__, __LINE__);
 
          return(true);

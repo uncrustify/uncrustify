@@ -38,7 +38,7 @@ public:
    StarStyle  m_star_style;
    StarStyle  m_amp_style;
    bool       m_skip_first; //! do not include the first item if it causes it to be indented
-   size_t     stackID;      //! for debugging purpose only
+   size_t     stackID;      //! for debugging purposes only
 
 
    AlignStack()
@@ -125,7 +125,7 @@ public:
    size_t Len();
 
 
-   //! for debuging purpose only
+   //! for debugging purpose only
    void Debug();
 
 

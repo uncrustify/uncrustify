@@ -266,7 +266,7 @@ bool is_path_relative(const std::string &path)
       return(false);
    }
 
-   // Check for double backslashs as indication for a network path
+   // Check for double backslashes as indication for a network path
    // '\\server\path\to\file style' absolute UNC path
    if (  path.size() > 1
       && path[0] == '\\'

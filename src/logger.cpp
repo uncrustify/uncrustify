@@ -201,7 +201,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
 
    if (length >= buffer_length)
    {
-      fprintf(stderr, "FATAL(1): The variable 'buf' is not big enought:\n");
+      fprintf(stderr, "FATAL(1): The variable 'buf' is not big enough:\n");
       fprintf(stderr, "   it should be bigger as %u\n", length);
       fprintf(stderr, "Please make a report.\n");
       fprintf(stderr, "For the buffer: %s\n", fmt);
@@ -243,7 +243,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
 
             if (X >= buffer_length)
             {
-               fprintf(stderr, "FATAL(2): The variable 'buf' is not big enought:\n");
+               fprintf(stderr, "FATAL(2): The variable 'buf' is not big enough:\n");
                fprintf(stderr, "   it should be bigger as %zu\n", X);
                fprintf(stderr, "Please make a report.\n");
                fprintf(stderr, "For the buffer: %s\n", fmt);

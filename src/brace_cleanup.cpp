@@ -597,7 +597,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
    /*
     * In this state, we expect a semicolon, but we'll also hit the closing
     * sparen, so we need to check braceState.consumed to see if the close sparen
-    * was aleady handled.
+    * was already handled.
     */
    if (frm.top().stage == brace_stage_e::WOD_SEMI)
    {
