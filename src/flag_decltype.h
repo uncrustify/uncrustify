@@ -7,6 +7,7 @@
 #ifndef FLAG_DECLTYPE_INCLUDED
 #define FLAG_DECLTYPE_INCLUDED
 
+#include "chunk.h"
 
 /**
  * Flags all chunks within a cpp decltype expression from the opening

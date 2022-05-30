@@ -13,6 +13,8 @@
  *   NOTE: the tables below do not need to be sorted.
  */
 
+#include "uncrustify_types.h"
+
 // 6-char symbols
 static const chunk_tag_t symbols6[] =
 {
