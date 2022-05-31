@@ -40,7 +40,7 @@ void align_asm_colon()
       while (  pc->IsNotNullChunk()
             && pc->level >= level)
       {
-         if (chunk_is_newline(pc))
+         if (pc->IsNewline())
          {
             cas.NewLines(pc->nl_count);
             did_nl = true;

@@ -884,7 +884,7 @@ void output_text(FILE *pfile)
                add_char('\t');
             }
          }
-         cpd.did_newline       = chunk_is_newline(pc);
+         cpd.did_newline       = pc->IsNewline();
          cpd.output_trailspace = false;
       }
 
@@ -2914,7 +2914,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
          tmp = fpo->GetNextNcNnl();
 
          if (  (tmp == fpc->GetPrevNcNnl())
-            && chunk_is_str(tmp, "void"))
+            && tmp->IsString("void"))
          {
             has_param = false;
          }
@@ -2970,7 +2970,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
    }
 
    if (  tmp->IsNotNullChunk()
-      && !chunk_is_str(tmp, "void"))
+      && !tmp->IsString("void"))
    {
       if (need_nl)
       {
@@ -3136,7 +3136,7 @@ static void output_comment_multi_simple(Chunk *pc)
    {
       int diff = 0;
 
-      if (chunk_is_newline(pc->GetPrev()))
+      if (pc->GetPrev()->IsNewline())
       {
          // The comment should be indented correctly
          diff = pc->column - pc->orig_col;
@@ -3352,7 +3352,7 @@ void add_long_preprocessor_conditional_block_comment()
             pp_end = tmp;
          }
 
-         if (chunk_is_newline(tmp))
+         if (tmp->IsNewline())
          {
             nl_count += tmp->nl_count;
          }
@@ -3370,11 +3370,11 @@ void add_long_preprocessor_conditional_block_comment()
             tmp = tmp->GetNext();
 
             LOG_FMT(LPPIF, "next item type %d (is %s)\n",
-                    (tmp ? tmp->type : -1), (tmp ? chunk_is_newline(tmp) ? "newline"
+                    (tmp ? tmp->type : -1), (tmp ? tmp->IsNewline() ? "newline"
                                              : tmp->IsComment() ? "comment" : "other" : "---"));
 
             if (  tmp->IsNullChunk()
-               || chunk_is_token(tmp, CT_NEWLINE)) // chunk_is_newline(tmp))
+               || chunk_is_token(tmp, CT_NEWLINE)) // tmp->IsNewline())
             {
                size_t nl_min;
 

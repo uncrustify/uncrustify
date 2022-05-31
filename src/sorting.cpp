@@ -318,21 +318,21 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
 
       // If we hit a newline or nullptr, we are done
       if (  pc1->IsNullChunk()
-         || chunk_is_newline(pc1)
+         || pc1->IsNewline()
          || pc2->IsNullChunk()
-         || chunk_is_newline(pc2))
+         || pc2->IsNewline())
       {
          break;
       }
    }
 
    if (  pc1->IsNullChunk()
-      || !chunk_is_newline(pc2))
+      || !pc2->IsNewline())
    {
       return(-1);
    }
 
-   if (!chunk_is_newline(pc1))
+   if (!pc1->IsNewline())
    {
       return(1);
    }
@@ -429,15 +429,14 @@ static void delete_chunks_on_line_having_chunk(Chunk *chunk)
 
    Chunk *pc = chunk_first_on_line(chunk);
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk()
+   while (  pc->IsNotNullChunk()
          && !pc->IsComment())
    {
       Chunk *next_pc = pc->GetNext();
       LOG_FMT(LCHUNK, "%s(%d): Removed '%s' on orig_line %zu\n",
               __func__, __LINE__, pc->Text(), pc->orig_line);
 
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          Chunk::Delete(pc);
          break;
@@ -604,7 +603,7 @@ void sort_imports()
       }
       Chunk *next = pc->GetNext();
 
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          bool did_import = false;
 

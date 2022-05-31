@@ -252,8 +252,7 @@ void brace_cleanup()
        * #define bodies get the full formatting treatment
        * Also need to pass in the initial '#' to close out any virtual braces.
        */
-      if (  !pc->IsComment()
-         && !chunk_is_newline(pc)
+      if (  !pc->IsCommentOrNewline()
          && !chunk_is_token(pc, CT_ATTRIBUTE)
          && !chunk_is_token(pc, CT_IGNORED)            // Issue #2279
          && (  braceState.in_preproc == CT_PP_DEFINE
@@ -422,8 +421,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       && !chunk_is_semicolon(pc)
       && chunk_is_not_token(pc, CT_BRACE_CLOSE)
       && chunk_is_not_token(pc, CT_VBRACE_CLOSE)
-      && !chunk_is_str(pc, ")")
-      && !chunk_is_str(pc, "]"))
+      && !pc->IsString(")")
+      && !pc->IsString("]"))
    {
       chunk_flags_set(pc, PCF_EXPR_START | ((frm.stmt_count == 0) ? PCF_STMT_START : PCF_NONE));
       LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 1.marked '%s' as %s, start stmt_count is %zu, expr_count is %zu\n",
@@ -997,7 +996,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
 
       if (  chunk_is_token(pc, CT_IF)
          && (  !options::indent_else_if()
-            || !chunk_is_newline(pc->GetPrevNc())))
+            || !pc->GetPrevNc()->IsNewline()))
       {
          // Replace CT_ELSE with CT_IF
          set_chunk_type(pc, CT_ELSEIF);
@@ -1373,8 +1372,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    }
    bool ref_is_comment = ref->IsComment();      // Issue #3351
 
-   while (  chunk_is_newline(ref)
-         || ref->IsComment())
+   while (ref->IsCommentOrNewline())
    {
       ref->level++;
       ref->brace_level++;

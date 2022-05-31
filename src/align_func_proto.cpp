@@ -92,7 +92,7 @@ void align_func_proto(size_t span)
          }
       }
 
-      if (  chunk_is_newline(pc)
+      if (  pc->IsNewline()
          && !pc->flags.test(PCF_IN_FCN_CALL))                 // Issue #2831
       {
          look_bro = false;

@@ -47,8 +47,7 @@ Chunk *chunk_get_prev_local(Chunk *pc, E_Scope scope = E_Scope::ALL)
    {
       tmp = tmp->GetPrev(scope);
    } while (  tmp->IsNotNullChunk()
-           && (  tmp->IsComment()
-              || chunk_is_newline(tmp)
+           && (  tmp->IsCommentOrNewline()
               || chunk_is_token(tmp, CT_NOEXCEPT)));
 
    return(tmp);
@@ -236,8 +235,8 @@ void combine_labels()
                      return;
                   }
 
-                  if (  chunk_is_newline(prev)
-                     && chunk_is_newline(tmp))
+                  if (  prev->IsNewline()
+                     && tmp->IsNewline())
                   {
                      new_type = CT_LABEL;
                      set_chunk_type(next, CT_LABEL_COLON);

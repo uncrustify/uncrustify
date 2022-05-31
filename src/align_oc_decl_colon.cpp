@@ -55,7 +55,7 @@ void align_oc_decl_colon()
             break;
          }
 
-         if (chunk_is_newline(pc))
+         if (pc->IsNewline())
          {
             nas.NewLines(pc->nl_count);
             cas.NewLines(pc->nl_count);

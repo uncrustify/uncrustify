@@ -141,8 +141,8 @@ static void split_before_chunk(Chunk *pc)
    LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "%s(%d): Text() '%s'\n", __func__, __LINE__, pc->Text());
 
-   if (  !chunk_is_newline(pc)
-      && !chunk_is_newline(pc->GetPrev()))
+   if (  !pc->IsNewline()
+      && !pc->GetPrev()->IsNewline())
    {
       newline_add_before(pc);
       // reindent needs to include the indent_continue value and was off by one
@@ -162,8 +162,7 @@ void do_code_width()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (  !chunk_is_newline(pc)
-         && !pc->IsComment()
+      if (  !pc->IsCommentOrNewline()
          && chunk_is_not_token(pc, CT_SPACE)
          && is_past_width(pc))
       {
@@ -248,11 +247,11 @@ static void try_split_here(cw_entry &ent, Chunk *pc)
    // Can't split after a newline
    Chunk *prev = pc->GetPrev();
 
-   if (  prev == nullptr
-      || (  chunk_is_newline(prev)
+   if (  prev->IsNullChunk()
+      || (  prev->IsNewline()
          && chunk_is_not_token(pc, CT_STRING)))
    {
-      if (prev != nullptr)
+      if (prev->IsNotNullChunk())
       {
          LOG_FMT(LSPLIT, "%s(%d): Can't split after a newline, orig_line is %zu, return\n",
                  __func__, __LINE__, prev->orig_line);
@@ -427,7 +426,7 @@ static bool split_line(Chunk *start)
 
    while (  ((pc = pc->GetPrev()) != nullptr)
          && pc->IsNotNullChunk()
-         && !chunk_is_newline(pc))
+         && !pc->IsNewline())
    {
       LOG_FMT(LSPLIT, "%s(%d): at %s, orig_line is %zu, orig_col is %zu\n",
               __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
@@ -526,10 +525,9 @@ static bool split_line(Chunk *start)
    // add a newline before pc
    prev = pc->GetPrev();
 
-   if (  prev != nullptr
-      && prev->IsNotNullChunk()
-      && !chunk_is_newline(pc)
-      && !chunk_is_newline(prev))
+   if (  prev->IsNotNullChunk()
+      && !pc->IsNewline()
+      && !prev->IsNewline())
    {
       //int plen = (pc->Len() < 5) ? pc->Len() : 5;
       //int slen = (start->Len() < 5) ? start->Len() : 5;
@@ -755,7 +753,7 @@ static void split_fcn_params(Chunk *start)
       LOG_FMT(LSPLIT, "%s(%d): pc->Text() '%s', type is %s\n",
               __func__, __LINE__, pc->Text(), get_token_name(pc->type));
 
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          cur_width = 0;
          last_col  = -1;
@@ -812,7 +810,7 @@ static void split_fcn_params(Chunk *start)
       LOG_FMT(LSPLIT, "%s(%d): prev->level is %zu, prev '%s', prev->type is %s\n",
               __func__, __LINE__, prev->level, prev->Text(), get_token_name(prev->type));
 
-      if (  chunk_is_newline(prev)
+      if (  prev->IsNewline()
          || chunk_is_token(prev, CT_COMMA))
       {
          LOG_FMT(LSPLIT, "%s(%d): found at %zu\n",
@@ -862,7 +860,7 @@ static void split_fcn_params(Chunk *start)
    }
 
    if (  prev->IsNotNullChunk()
-      && !chunk_is_newline(prev))
+      && !prev->IsNewline())
    {
       LOG_FMT(LSPLIT, "%s(%d): -- ended on %s --\n",
               __func__, __LINE__, get_token_name(prev->type));
@@ -889,15 +887,15 @@ static void split_template(Chunk *start)
    {
       LOG_FMT(LSPLIT, "  %s(%d): prev '%s'\n", __func__, __LINE__, prev->Text());
 
-      if (  chunk_is_newline(prev)
+      if (  prev->IsNewline()
          || chunk_is_token(prev, CT_COMMA))
       {
          break;
       }
    }
 
-   if (  prev != nullptr
-      && !chunk_is_newline(prev))
+   if (  prev->IsNotNullChunk()
+      && !prev->IsNewline())
    {
       LOG_FMT(LSPLIT, "  %s(%d):", __func__, __LINE__);
       LOG_FMT(LSPLIT, " -- ended on %s --\n", get_token_name(prev->type));

@@ -1468,7 +1468,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (  language_is_set(LANG_VALA)
       && chunk_is_token(first, CT_FUNC_CALL))
    {
-      if (  chunk_is_str(first, "_")
+      if (  first->IsString("_")
          && chunk_is_token(second, CT_FPAREN_OPEN)
          && (options::sp_vala_after_translation() != IARF_IGNORE))
       {
@@ -1604,8 +1604,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    }
 
    // ")(" vs. ") ("
-   if (  (  chunk_is_str(first, ")")
-         && chunk_is_str(second, "("))
+   if (  (  first->IsString(")")
+         && second->IsString("("))
       || (  chunk_is_paren_close(first)
          && chunk_is_paren_open(second)))
    {
@@ -2008,10 +2008,10 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    /* "((" vs. "( (" or "))" vs. ") )" */
    // Issue #1342
-   if (  (  chunk_is_str(first, "(")
-         && chunk_is_str(second, "("))
-      || (  chunk_is_str(first, ")")
-         && chunk_is_str(second, ")")))
+   if (  (  first->IsString("(")
+         && second->IsString("("))
+      || (  first->IsString(")")
+         && second->IsString(")")))
    {
       if (get_chunk_parent_type(second) == CT_FUNC_CALL_USER)
       {
@@ -3303,7 +3303,7 @@ void space_text()
          next = pc->GetNext();
 
          while (  next->IsEmptyText()
-               && !chunk_is_newline(next)
+               && !next->IsNewline()
                && next->IsVBrace())
          {
             LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, Skip %s (%zu+%zu)\n",
@@ -3341,7 +3341,7 @@ void space_text()
        * If the current chunk contains a newline, do not change the column
        * of the next item
        */
-      if (  chunk_is_newline(pc)
+      if (  pc->IsNewline()
          || chunk_is_token(pc, CT_COMMENT_MULTI))
       {
          column = next->column;
@@ -3369,10 +3369,10 @@ void space_text()
          chunk_flags_clr(pc, PCF_FORCE_SPACE);
 
          if (  (pc->Len() > 0)
-            && !chunk_is_str(pc, "[]")
-            && !chunk_is_str(pc, "{{")
-            && !chunk_is_str(pc, "}}")
-            && !chunk_is_str(pc, "()")
+            && !pc->IsString("[]")
+            && !pc->IsString("{{")
+            && !pc->IsString("}}")
+            && !pc->IsString("()")
             && !pc->str.startswith("@\""))
          {
             // Find the next non-empty chunk on this line
@@ -3380,7 +3380,7 @@ void space_text()
 
             while (  tmp->IsNotNullChunk()
                   && (tmp->Len() == 0)
-                  && !chunk_is_newline(tmp))
+                  && !tmp->IsNewline())
             {
                tmp = tmp->GetNext();
             }
@@ -3507,7 +3507,7 @@ void space_text()
          } // switch
 
          if (  next->IsComment()
-            && chunk_is_newline(next->GetNext())
+            && next->GetNext()->IsNewline()
             && column < next->orig_col)
          {
             /*
@@ -3587,8 +3587,8 @@ void space_text_balance_nested_parens()
       }
 
       // if there are two successive opening parenthesis
-      if (  chunk_is_str(first, "(")
-         && chunk_is_str(next, "("))
+      if (  first->IsString("(")
+         && next->IsString("("))
       {
          // insert a space between them
          space_add_after(first, 1);
@@ -3601,8 +3601,8 @@ void space_text_balance_nested_parens()
             space_add_after(closing->prev, 1);
          }
       }
-      else if (  chunk_is_str(first, ")")
-              && chunk_is_str(next, ")"))
+      else if (  first->IsString(")")
+              && next->IsString(")"))
       {
          // insert a space between the two closing parens
          space_add_after(first, 1);
@@ -3723,7 +3723,7 @@ void space_add_after(Chunk *pc, size_t count)
 
    // don't add at the end of the file or before a newline
    if (  next->IsNullChunk()
-      || chunk_is_newline(next))
+      || next->IsNewline())
    {
       return;
    }

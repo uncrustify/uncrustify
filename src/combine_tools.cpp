@@ -154,18 +154,18 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          {
             return(false);
          }
-         Chunk *tmp3 = (chunk_is_str(tmp2, ")")) ? tmp2 : tmp2->GetNextNcNnl(E_Scope::PREPROC);
+         Chunk *tmp3 = (tmp2->IsString(")")) ? tmp2 : tmp2->GetNextNcNnl(E_Scope::PREPROC);
 
          if (tmp3->IsNullChunk())
          {
             return(false);
          }
 
-         if (  !chunk_is_str(tmp3, ")")
-            || !(  chunk_is_str(tmp1, "*")
-                || chunk_is_str(tmp1, "^")) // Issue #2656
+         if (  !tmp3->IsString(")")
+            || !(  tmp1->IsString("*")
+                || tmp1->IsString("^")) // Issue #2656
             || !(  tmp2->type == CT_WORD
-                || chunk_is_str(tmp2, ")")))
+                || tmp2->IsString(")")))
          {
             LOG_FMT(LFPARAM, "%s(%d): <== '%s' not fcn type!\n",
                     __func__, __LINE__, get_token_name(pc->type));
@@ -181,7 +181,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
             return(false);
          }
 
-         if (chunk_is_str(tmp1, "("))
+         if (tmp1->IsString("("))
          {
             tmp3 = tmp1->SkipToMatch(E_Scope::PREPROC);
          }
@@ -215,7 +215,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       }
       else if (  word_count == 1
               && language_is_set(LANG_CPP)
-              && chunk_is_str(pc, "&&"))
+              && pc->IsString("&&"))
       {
          // ignore possible 'move' operator
       }

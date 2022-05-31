@@ -32,7 +32,7 @@ void align_eigen_comma_init()
 
    while (pc->IsNotNullChunk())
    {
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          LOG_FMT(LALIGN, "%s(%d): orig_line is %zu, <Newline>\n", __func__, __LINE__, pc->orig_line);
       }
@@ -49,7 +49,7 @@ void align_eigen_comma_init()
          as.Flush();
          start = Chunk::NullChunkPtr;
       }
-      else if (chunk_is_newline(pc))
+      else if (pc->IsNewline())
       {
          as.NewLines(pc->nl_count);
       }
@@ -73,7 +73,7 @@ void align_eigen_comma_init()
       }
       else if (  !pc->flags.test(PCF_IN_ENUM)
               && !pc->flags.test(PCF_IN_TYPEDEF)
-              && chunk_is_str(pc, "<<"))
+              && pc->IsString("<<"))
       {
          if (get_chunk_parent_type(pc) == CT_OPERATOR)
          {
@@ -91,7 +91,7 @@ void align_eigen_comma_init()
             Chunk *prev = pc->GetPrev();
 
             if (  prev->IsNotNullChunk()
-               && chunk_is_newline(prev))
+               && prev->IsNewline())
             {
                log_rule_B("indent_columns");
                indent_to_column(pc, pc->column_indent + options::indent_columns());
@@ -108,7 +108,7 @@ void align_eigen_comma_init()
       {
          Chunk *prev = pc->GetPrev();
 
-         if (  chunk_is_newline(prev)
+         if (  prev->IsNewline()
             && chunk_is_token(pc->GetPrevNcNnl(), CT_COMMA))
          {
             log_rule_B("align_eigen_comma_init");

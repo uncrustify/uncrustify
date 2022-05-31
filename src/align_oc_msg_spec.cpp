@@ -23,7 +23,7 @@ void align_oc_msg_spec(size_t span)
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          as.NewLines(pc->nl_count);
       }

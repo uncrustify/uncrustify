@@ -57,7 +57,7 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
    }
 
    while (  pc->IsNotNullChunk()
-         && !chunk_is_newline(pc)
+         && !pc->IsNewline()
          && pc->level >= start->level)
    {
       //LOG_FMT(LSIB, "%s:     '%s'   col %d/%d line %zu\n", __func__,

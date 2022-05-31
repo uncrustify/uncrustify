@@ -578,8 +578,9 @@ void tokenize_cleanup()
          }
 
          // handle 'static if' and merge the tokens
-         if (  chunk_is_token(pc, CT_IF)
-            && chunk_is_str(prev, "static"))
+         if (  prev != nullptr
+            && chunk_is_token(pc, CT_IF)
+            && prev->IsString("static"))
          {
             // delete PREV and merge with IF
             pc->str.insert(0, ' ');
@@ -624,7 +625,7 @@ void tokenize_cleanup()
          // Set parent type for 'if constexpr'
          if (  chunk_is_token(prev, CT_IF)
             && chunk_is_token(pc, CT_QUALIFIER)
-            && chunk_is_str(pc, "constexpr"))
+            && pc->IsString("constexpr"))
          {
             set_chunk_type(pc, CT_CONSTEXPR);
          }
@@ -778,8 +779,8 @@ void tokenize_cleanup()
       if (chunk_is_token(pc, CT_ACCESS))
       {
          // Handle Qt slots - maybe should just check for a CT_WORD?
-         if (  chunk_is_str(next, "slots")
-            || chunk_is_str(next, "Q_SLOTS"))
+         if (  next->IsString("slots")
+            || next->IsString("Q_SLOTS"))
          {
             Chunk *tmp = next->GetNext();
 
@@ -801,8 +802,8 @@ void tokenize_cleanup()
          }
          else
          {
-            set_chunk_type(pc, (  chunk_is_str(pc, "signals")
-                               || chunk_is_str(pc, "Q_SIGNALS"))
+            set_chunk_type(pc, (  pc->IsString("signals")
+                               || pc->IsString("Q_SIGNALS"))
                            ? CT_WORD : CT_QUALIFIER);
          }
       }
@@ -820,7 +821,7 @@ void tokenize_cleanup()
       {
          Chunk *tmp = pc->GetPrev();
 
-         if (chunk_is_newline(tmp))
+         if (tmp->IsNewline())
          {
             if (*pc->str.c_str() == '$')
             {
@@ -880,7 +881,7 @@ void tokenize_cleanup()
 
       // handle MS abomination 'for each'
       if (  chunk_is_token(pc, CT_FOR)
-         && chunk_is_str(next, "each")
+         && next->IsString("each")
          && (next == pc->GetNext()))
       {
          // merge the two with a space between
@@ -898,7 +899,7 @@ void tokenize_cleanup()
             while (  tmp->IsNotNullChunk()
                   && tmp->IsNot(CT_PAREN_CLOSE))
             {
-               if (chunk_is_str(tmp, "in"))
+               if (tmp->IsString("in"))
                {
                   set_chunk_type(tmp, CT_IN);
                   break;
@@ -1132,7 +1133,7 @@ void tokenize_cleanup()
       // Add minimal support for C++0x rvalue references
       if (  chunk_is_token(pc, CT_BOOL)
          && language_is_set(LANG_CPP)
-         && chunk_is_str(pc, "&&"))
+         && pc->IsString("&&"))
       {
          if (chunk_is_token(prev, CT_TYPE))
          {
@@ -1149,7 +1150,7 @@ void tokenize_cleanup()
        *   A::A(int) try : B() { } catch (...) { }
        */
       if (  chunk_is_token(pc, CT_TRY)
-         && chunk_is_str(pc, "try")
+         && pc->IsString("try")
          && chunk_is_token(next, CT_COLON))
       {
          set_chunk_type(pc, CT_QUALIFIER);
@@ -1257,11 +1258,11 @@ static void check_template(Chunk *start, bool in_type_cast)
 
          if (parens == 0)
          {
-            if (chunk_is_str(pc, "<"))
+            if (pc->IsString("<"))
             {
                level++;
             }
-            else if (chunk_is_str(pc, ">"))
+            else if (pc->IsString(">"))
             {
                if (level == 0)
                {
@@ -1404,8 +1405,8 @@ static void check_template(Chunk *start, bool in_type_cast)
             && (pc->str[0] == '>')
             && (pc->Len() > 1)
             && (  options::tok_split_gte()
-               || (  (  chunk_is_str(pc, ">>")
-                     || chunk_is_str(pc, ">>>"))
+               || (  (  pc->IsString(">>")
+                     || pc->IsString(">>>"))
                   && (  num_tokens >= 2
                      || (  num_tokens >= 1
                         && in_type_cast)))))
@@ -1416,7 +1417,7 @@ static void check_template(Chunk *start, bool in_type_cast)
             split_off_angle_close(pc);
          }
 
-         if (chunk_is_str(pc, "<"))
+         if (pc->IsString("<"))
          {
             if (  num_tokens > 0 && (tokens[num_tokens - 1] == CT_PAREN_OPEN)
                && invalid_open_angle_template(pc->prev))
@@ -1429,7 +1430,7 @@ static void check_template(Chunk *start, bool in_type_cast)
                num_tokens++;
             }
          }
-         else if (chunk_is_str(pc, ">"))
+         else if (pc->IsString(">"))
          {
             if (num_tokens > 0 && (tokens[num_tokens - 1] == CT_PAREN_OPEN))
             {
@@ -1716,8 +1717,8 @@ static void mark_selectors_in_property_with_open_paren(Chunk *open_paren)
          && tmp->IsNot(CT_PAREN_CLOSE))
    {
       if (  chunk_is_token(tmp, CT_WORD)
-         && (  chunk_is_str(tmp, "setter")
-            || chunk_is_str(tmp, "getter")))
+         && (  tmp->IsString("setter")
+            || tmp->IsString("getter")))
       {
          tmp = tmp->next;
 
@@ -1726,7 +1727,7 @@ static void mark_selectors_in_property_with_open_paren(Chunk *open_paren)
                && tmp->IsNot(CT_PAREN_CLOSE))
          {
             if (  chunk_is_token(tmp, CT_WORD)
-               || chunk_is_str(tmp, ":"))
+               || tmp->IsString(":"))
             {
                set_chunk_type(tmp, CT_OC_SEL_NAME);
             }
