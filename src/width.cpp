@@ -162,8 +162,7 @@ void do_code_width()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (  !chunk_is_newline(pc)
-         && !pc->IsComment()
+      if (  !pc->IsCommentOrNewline()
          && chunk_is_not_token(pc, CT_SPACE)
          && is_past_width(pc))
       {

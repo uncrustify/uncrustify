@@ -636,8 +636,7 @@ static void newline_end_newline(Chunk *br_close)
    Chunk *next = br_close->GetNext();
    Chunk nl;
 
-   if (  !chunk_is_newline(next)
-      && !next->IsComment())
+   if (!next->IsCommentOrNewline())
    {
       nl.orig_line = br_close->orig_line;
       nl.orig_col  = br_close->orig_col;
@@ -1718,8 +1717,7 @@ static void newlines_struct_union(Chunk *start, iarf_e nl_opt, bool leave_traili
       }
 
       if (  leave_trailing
-         && !next->IsComment()
-         && !chunk_is_newline(next))
+         && !next->IsCommentOrNewline())
       {
          nl_opt = IARF_IGNORE;
       }
@@ -1820,8 +1818,7 @@ static void newlines_enum(Chunk *start)
       }
       iarf_e nl_opt;
 
-      if (  !next->IsComment()
-         && !chunk_is_newline(next))
+      if (!next->IsCommentOrNewline())
       {
          nl_opt = IARF_IGNORE;
       }
@@ -2643,8 +2640,7 @@ static void newlines_brace_pair(Chunk *br_open)
          pc = pc->GetNext();
       }
 
-      if (  chunk_is_newline(pc)
-         || pc->IsComment())
+      if (pc->IsCommentOrNewline())
       {
          nl_close_brace = true;
       }
@@ -4425,8 +4421,7 @@ void newlines_cleanup_braces(bool first)
                   || !next->flags.test(PCF_ONE_LINER))      // #1258
                && !pc->flags.test(PCF_IN_ARRAY_ASSIGN)
                && !pc->flags.test(PCF_IN_TYPEDEF)
-               && !chunk_is_newline(next)
-               && !next->IsComment())
+               && !next->IsCommentOrNewline())
             {
                // #1258
                // dont add newline between two consecutive braces closes, if the second is a part of one liner.
@@ -4470,8 +4465,7 @@ void newlines_cleanup_braces(bool first)
                log_rule_B("nl_after_vbrace_open");
                add_it = (  options::nl_after_vbrace_open()
                         && chunk_is_not_token(next, CT_VBRACE_CLOSE)
-                        && !next->IsComment()
-                        && !chunk_is_newline(next));
+                        && !next->IsCommentOrNewline());
             }
 
             if (add_it)
@@ -4659,8 +4653,7 @@ void newlines_cleanup_braces(bool first)
             }
 
             if (  next->IsNotNullChunk()
-               && !next->IsComment()
-               && !chunk_is_newline(next))
+               && !next->IsCommentOrNewline())
             {
                if (one_liner_nl_ok(next))
                {
