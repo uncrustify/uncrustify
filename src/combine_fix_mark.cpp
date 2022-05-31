@@ -1262,7 +1262,7 @@ void mark_function(Chunk *pc)
    }
 
    if (  chunk_is_ptr_operator(next)
-      || chunk_is_newline(next))
+      || next->IsNewline())
    {
       next = next->GetNextNppOrNcNnl();
 

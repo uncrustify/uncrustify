@@ -1664,18 +1664,18 @@ static void add_file_footer()
 
    // Back up if the file ends with a newline
    if (  pc->IsNotNullChunk()
-      && chunk_is_newline(pc))
+      && pc->IsNewline())
    {
       pc = pc->GetPrev();
    }
 
    if (  pc->IsNotNullChunk()
       && (  !pc->IsComment()
-         || !chunk_is_newline(pc->GetPrev())))
+         || !pc->GetPrev()->IsNewline()))
    {
       pc = Chunk::GetTail();
 
-      if (!chunk_is_newline(pc))
+      if (!pc->IsNewline())
       {
          LOG_FMT(LSYS, "Adding a newline at the end of the file\n");
          newline_add_after(pc);
@@ -1799,7 +1799,7 @@ static void add_func_header(E_Token type, file_mem &fm)
 
          // Ignore 'right' comments
          if (  ref->IsComment()
-            && chunk_is_newline(ref->GetPrev()))
+            && ref->GetPrev()->IsNewline())
          {
             break;
          }
@@ -1908,7 +1908,7 @@ static void add_msg_header(E_Token type, file_mem &fm)
             if (ref->IsNotNullChunk())
             {
                // Ignore 'right' comments
-               if (  chunk_is_newline(ref)
+               if (  ref->IsNewline()
                   && ref->GetPrev()->IsComment())
                {
                   break;

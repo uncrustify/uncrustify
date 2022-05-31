@@ -51,7 +51,7 @@ void align_same_func_call_params()
 
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          LOG_FMT(LAS, "%s(%d): orig_line is %zu, <Newline>\n", __func__, __LINE__, pc->orig_line);
       }
@@ -63,7 +63,7 @@ void align_same_func_call_params()
 
       if (chunk_is_not_token(pc, CT_FUNC_CALL))
       {
-         if (chunk_is_newline(pc))
+         if (pc->IsNewline())
          {
             for (auto &as_v : array_of_AlignStack)
             {
@@ -109,7 +109,7 @@ void align_same_func_call_params()
          prev = tprev->GetPrev();
       }
 
-      if (!chunk_is_newline(prev))
+      if (!prev->IsNewline())
       {
          continue;
       }
@@ -259,7 +259,7 @@ void align_params(Chunk *start, deque<Chunk *> &chunks)
 
    while ((pc = pc->GetNext())->IsNotNullChunk())
    {
-      if (  chunk_is_newline(pc)
+      if (  pc->IsNewline()
          || chunk_is_token(pc, CT_SEMICOLON)
          || (  chunk_is_token(pc, CT_FPAREN_CLOSE)
             && pc->level == start->level))

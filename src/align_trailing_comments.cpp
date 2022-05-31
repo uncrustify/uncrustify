@@ -105,7 +105,7 @@ Chunk *align_trailing_comments(Chunk *start)
          }
       }
 
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          nl_count += pc->nl_count;
       }

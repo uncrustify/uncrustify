@@ -177,21 +177,20 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       prev = start;
    }
 
-   while (  (prev = prev->GetPrev()) != nullptr
-         && prev->IsNotNullChunk()
+   while (  (prev = prev->GetPrev())->IsNotNullChunk()
          && (  chunk_is_ptr_operator(prev)
             || chunk_is_token(prev, CT_TPAREN_OPEN)))
    {
       // do nothing - we want prev when this exits
    }
 
-   if (prev == nullptr)
+   if (prev->IsNullChunk())
    {
       return;
    }
    Chunk *ref = prev;
 
-   if (chunk_is_newline(ref))
+   if (ref->IsNewline())
    {
       ref = ref->GetNext();
    }

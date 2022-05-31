@@ -48,7 +48,7 @@ void align_oc_msg_colon(Chunk *so)
       {
          // do nothing
       }
-      else if (chunk_is_newline(pc))
+      else if (pc->IsNewline())
       {
          if (!has_colon)
          {

@@ -3303,7 +3303,7 @@ void space_text()
          next = pc->GetNext();
 
          while (  next->IsEmptyText()
-               && !chunk_is_newline(next)
+               && !next->IsNewline()
                && next->IsVBrace())
          {
             LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, Skip %s (%zu+%zu)\n",
@@ -3341,7 +3341,7 @@ void space_text()
        * If the current chunk contains a newline, do not change the column
        * of the next item
        */
-      if (  chunk_is_newline(pc)
+      if (  pc->IsNewline()
          || chunk_is_token(pc, CT_COMMENT_MULTI))
       {
          column = next->column;
@@ -3380,7 +3380,7 @@ void space_text()
 
             while (  tmp->IsNotNullChunk()
                   && (tmp->Len() == 0)
-                  && !chunk_is_newline(tmp))
+                  && !tmp->IsNewline())
             {
                tmp = tmp->GetNext();
             }
@@ -3507,7 +3507,7 @@ void space_text()
          } // switch
 
          if (  next->IsComment()
-            && chunk_is_newline(next->GetNext())
+            && next->GetNext()->IsNewline()
             && column < next->orig_col)
          {
             /*
@@ -3723,7 +3723,7 @@ void space_add_after(Chunk *pc, size_t count)
 
    // don't add at the end of the file or before a newline
    if (  next->IsNullChunk()
-      || chunk_is_newline(next))
+      || next->IsNewline())
    {
       return;
    }

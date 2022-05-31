@@ -821,7 +821,7 @@ void tokenize_cleanup()
       {
          Chunk *tmp = pc->GetPrev();
 
-         if (chunk_is_newline(tmp))
+         if (tmp->IsNewline())
          {
             if (*pc->str.c_str() == '$')
             {

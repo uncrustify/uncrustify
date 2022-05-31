@@ -31,7 +31,7 @@ void align_left_shift()
 
    while (pc->IsNotNullChunk())
    {
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          LOG_FMT(LALIGN, "%s(%d): orig_line is %zu, <Newline>\n", __func__, __LINE__, pc->orig_line);
       }
@@ -49,7 +49,7 @@ void align_left_shift()
          as.Flush();
          start = Chunk::NullChunkPtr;
       }
-      else if (chunk_is_newline(pc))
+      else if (pc->IsNewline())
       {
          as.NewLines(pc->nl_count);
       }
@@ -91,7 +91,7 @@ void align_left_shift()
             Chunk *prev = pc->GetPrev();
 
             if (  prev->IsNotNullChunk()
-               && chunk_is_newline(prev))
+               && prev->IsNewline())
             {
                log_rule_B("indent_columns");
                indent_to_column(pc, pc->column_indent + options::indent_columns());
@@ -102,7 +102,7 @@ void align_left_shift()
             as.Add(pc);
             start = pc;
          }
-         else if (chunk_is_newline(pc->GetPrev()))
+         else if (pc->GetPrev()->IsNewline())
          {
             // subsequent ones must be after a newline
             as.Add(pc);
@@ -120,7 +120,7 @@ void align_left_shift()
          Chunk *prev = pc->GetPrev();
 
          if (  prev->IsNotNullChunk()
-            && chunk_is_newline(prev))
+            && prev->IsNewline())
          {
             log_rule_B("indent_columns");
             indent_to_column(pc, pc->column_indent + options::indent_columns());

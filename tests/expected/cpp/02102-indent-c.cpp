@@ -344,7 +344,7 @@ void indent_text(void)
       /* End anything that drops a level
        * REVISIT: not sure about the preproc check
        */
-      if (!chunk_is_newline(pc) &&
+      if (!pc->IsNewline() &&
           !chunk_is_comment(pc) &&
           ((pc->flags & PCF_IN_PREPROC) == 0) &&
           (frm.pse[frm.pse_tos].level > pc->level))
@@ -403,7 +403,7 @@ void indent_text(void)
       /* Grab a copy of the current indent */
     indent_column = frm.pse[frm.pse_tos].indent_tmp;
 
-    if (!chunk_is_newline(pc) && !chunk_is_comment(pc))
+    if (!pc->IsNewline() && !chunk_is_comment(pc))
       {
       LOG_FMT(LINDPC, " -=[ %.*s ]=- top=%d %s %d/%d\n",
               pc->len, pc->str,
@@ -567,7 +567,7 @@ void indent_text(void)
         {
         prev = pc->GetPrev();
 
-        if (chunk_is_newline(prev))
+        if (prev->IsNewline())
           {
           frm.pse[frm.pse_tos].indent += 2;
           /* don't change indent of current line */
@@ -594,7 +594,7 @@ void indent_text(void)
         {
         next = pc->GetNextNc();
 
-        if (chunk_is_newline(next))
+        if (next->IsNewline())
           {
           int sub = 1;
 
@@ -621,7 +621,7 @@ void indent_text(void)
         {
         indent_pse_push(frm, pc);
 
-        if (chunk_is_newline(next))
+        if (next->IsNewline())
           frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent_tmp + indent_size;
         else
           frm.pse[frm.pse_tos].indent = pc->column + pc->len + 1;
@@ -655,7 +655,7 @@ void indent_text(void)
     /**
      * Indent the line if needed
      */
-    if (did_newline && !chunk_is_newline(pc) && (pc->len != 0))
+    if (did_newline && !pc->IsNewline() && (pc->len != 0))
       {
       /**
        * Check for special continuations.
@@ -736,7 +736,7 @@ void indent_text(void)
       vardefcol = 0;
 
       /* if we hit a newline, reset indent_tmp */
-    if (chunk_is_newline(pc) ||
+    if (pc->IsNewline() ||
         (pc->type == CT_COMMENT_MULTI) ||
         (pc->type == CT_COMMENT_CPP))
       {
@@ -754,7 +754,7 @@ void indent_text(void)
       did_newline = true;
       }
 
-    if (!chunk_is_comment(pc) && !chunk_is_newline(pc))
+    if (!chunk_is_comment(pc) && !pc->IsNewline())
       prev = pc;
 
     pc = pc->GetNext();
@@ -791,7 +791,7 @@ static bool single_line_comment_indent_rule_applies(Chunk *start)
     /* scan forward, if only single newlines and comments before next line of code, we want to apply */
   while ((pc = pc->GetNext()) != NULL)
     {
-    if (chunk_is_newline(pc))
+    if (pc->IsNewline())
       {
       if (nl_count > 0 || pc->nl_count > 1)
         return false;
@@ -925,7 +925,7 @@ void indent_preproc(void)
 
   for (pc = Chunk::GetHead(); pc != NULL; pc = pc->GetNext())
     {
-    if (chunk_is_comment(pc) || chunk_is_newline(pc))
+    if (chunk_is_comment(pc) || pc->IsNewline())
       continue;
 
     if (stage == 0)

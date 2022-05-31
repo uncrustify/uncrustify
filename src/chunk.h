@@ -873,14 +873,6 @@ static inline bool chunk_is_single_line_comment(Chunk *pc)
 }
 
 
-// TODO remove when possible
-static inline bool chunk_is_newline(Chunk *pc)
-{
-   return(  chunk_is_token(pc, CT_NEWLINE)
-         || chunk_is_token(pc, CT_NL_CONT));
-}
-
-
 static inline bool chunk_is_semicolon(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_SEMICOLON)

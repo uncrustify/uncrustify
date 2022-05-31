@@ -42,7 +42,7 @@ void align_preprocessor()
          && pc->IsNotNullChunk())
    {
       // Note: not counting back-slash newline combos
-      if (chunk_is_token(pc, CT_NEWLINE))   // mind the gap: chunk_is_newline(pc) is NOT the same!
+      if (chunk_is_token(pc, CT_NEWLINE))   // mind the gap: pc->IsNewline() is NOT the same!
       {
          as.NewLines(pc->nl_count);
          asf.NewLines(pc->nl_count);
@@ -97,7 +97,7 @@ void align_preprocessor()
        * don't align anything if the first line ends with a newline before
        * a value is given
        */
-      if (!chunk_is_newline(pc))
+      if (!pc->IsNewline())
       {
          LOG_FMT(LALPP, "%s(%d): align on '%s', line %zu col %zu\n",
                  __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);

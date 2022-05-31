@@ -996,7 +996,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
 
       if (  chunk_is_token(pc, CT_IF)
          && (  !options::indent_else_if()
-            || !chunk_is_newline(pc->GetPrevNc())))
+            || !pc->GetPrevNc()->IsNewline()))
       {
          // Replace CT_ELSE with CT_IF
          set_chunk_type(pc, CT_ELSEIF);

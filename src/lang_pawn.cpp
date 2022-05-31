@@ -187,7 +187,7 @@ void pawn_prescan()
    {
       if (  did_nl
          && pc->IsNot(CT_PREPROC)
-         && !chunk_is_newline(pc)
+         && !pc->IsNewline()
          && pc->level == 0)
       {
          // pc now points to the start of a line

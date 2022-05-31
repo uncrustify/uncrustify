@@ -672,7 +672,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
          while ((tmp = tmp->GetNextNc())->IsNotNullChunk())
          {
-            if (chunk_is_newline(tmp))
+            if (tmp->IsNewline())
             {
                break;
             }
@@ -2344,7 +2344,7 @@ void mark_comments()
    while (cur->IsNotNullChunk())
    {
       Chunk *next   = cur->GetNextNvb();
-      bool  next_nl = next->IsNullChunk() || chunk_is_newline(next);
+      bool  next_nl = next->IsNullChunk() || next->IsNewline();
 
       if (cur->IsComment())
       {
@@ -2366,7 +2366,7 @@ void mark_comments()
             set_chunk_parent(cur, CT_COMMENT_EMBED);
          }
       }
-      prev_nl = chunk_is_newline(cur);
+      prev_nl = cur->IsNewline();
       cur     = next;
    }
 }
@@ -2848,7 +2848,7 @@ static void handle_oc_class(Chunk *pc)
       {
          as = angle_state_e::CLOSE;
 
-         if (chunk_is_newline(tmp->GetPrev()))
+         if (tmp->GetPrev()->IsNewline())
          {
             set_chunk_type(tmp, CT_OC_SCOPE);
             chunk_flags_set(tmp, PCF_STMT_START);

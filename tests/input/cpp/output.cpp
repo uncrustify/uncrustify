@@ -262,7 +262,7 @@ void output_text(FILE *pfile)
 
          output_to_column(pc->column, allow_tabs);
          add_text_len(pc->str, pc->len);
-         cpd.did_newline = chunk_is_newline(pc);
+         cpd.did_newline = pc->IsNewline();
       }
    }
 }
