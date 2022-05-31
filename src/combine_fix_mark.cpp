@@ -153,7 +153,7 @@ void fix_casts(Chunk *start)
          detail = " -- upper case";
       }
       else if (  language_is_set(LANG_OC)
-              && chunk_is_str(last, "id"))
+              && last->IsString("id"))
       {
          detail = " -- Objective-C id";
       }
@@ -360,7 +360,7 @@ void fix_fcn_def_params(Chunk *start)
       }
       else if (  language_is_set(LANG_CPP)   // Issue #3662
               && (  chunk_is_token(pc, CT_AMP)
-                 || chunk_is_str(pc, "&&")))
+                 || pc->IsString("&&")))
       {
          set_chunk_type(pc, CT_BYREF);
          cs.Push_Back(pc);
@@ -421,7 +421,7 @@ void fix_type_cast(Chunk *start)
             return;
          }
 
-         if (chunk_is_str(pc, "("))
+         if (pc->IsString("("))
          {
             set_paren_parent(pc, CT_TYPE_CAST);
          }
@@ -817,7 +817,7 @@ void mark_cpp_constructor(Chunk *pc)
 
    paren_open = skip_template_next(pc->GetNextNcNnl());
 
-   if (!chunk_is_str(paren_open, "("))
+   if (!paren_open->IsString("("))
    {
       LOG_FMT(LWARN, "%s:%zu Expected '(', got: [%s]\n",
               cpd.filename.c_str(), paren_open->orig_line,
@@ -844,7 +844,7 @@ void mark_cpp_constructor(Chunk *pc)
       chunk_flags_set(tmp, PCF_IN_CONST_ARGS);
       tmp = tmp->GetNextNcNnl();
 
-      if (  chunk_is_str(tmp, ":")
+      if (  tmp->IsString(":")
          && tmp->level == paren_open->level)
       {
          set_chunk_type(tmp, CT_CONSTR_COLON);
@@ -1329,7 +1329,7 @@ void mark_function(Chunk *pc)
    tmp = paren_close->GetNextNcNnl();
 
    if (  tmp->IsNotNullChunk()
-      && chunk_is_str(tmp, "("))
+      && tmp->IsString("("))
    {
       Chunk *tmp1;
       Chunk *tmp2;
@@ -1351,7 +1351,7 @@ void mark_function(Chunk *pc)
       }
       tmp2 = tmp1->GetNextNcNnl();
 
-      if (chunk_is_str(tmp2, ")"))
+      if (tmp2->IsString(")"))
       {
          tmp3 = tmp2;
          tmp2 = Chunk::NullChunkPtr;
@@ -1362,7 +1362,7 @@ void mark_function(Chunk *pc)
       }
       tmp3 = tmp3->GetNextNbsb();
 
-      if (  chunk_is_str(tmp3, ")")
+      if (  tmp3->IsString(")")
          && (  tmp1->IsStar()
             || chunk_is_msref(tmp1)
             || (  language_is_set(LANG_OC)
@@ -1983,8 +1983,8 @@ void mark_function(Chunk *pc)
             // Do a check to see if the level is right
             prev = pc->GetPrevNcNnlNi();   // Issue #2279
 
-            if (  !chunk_is_str(prev, "*")
-               && !chunk_is_str(prev, "&"))
+            if (  !prev->IsString("*")
+               && !prev->IsString("&"))
             {
                Chunk *p_op = pc->GetPrevType(CT_BRACE_OPEN, pc->brace_level - 1);
 
@@ -2119,7 +2119,7 @@ bool mark_function_type(Chunk *pc)
       && !chunk_is_word(varcnk))
    {
       if (  language_is_set(LANG_OC)
-         && chunk_is_str(varcnk, "^")
+         && varcnk->IsString("^")
          && chunk_is_paren_open(varcnk->GetPrevNcNnlNi()))   // Issue #2279
       {
          // anonymous ObjC block type -- RTYPE (^)(ARGS)
@@ -2196,7 +2196,7 @@ bool mark_function_type(Chunk *pc)
          word_count = 0;
          LOG_FMT(LFTYPE, " -- :: reset word_count\n");
       }
-      else if (chunk_is_str(tmp, "("))
+      else if (tmp->IsString("("))
       {
          LOG_FMT(LFTYPE, " -- open paren (break)\n");
          break;
@@ -2333,9 +2333,9 @@ void mark_lvalue(Chunk *pc)
          || chunk_is_token(prev, CT_COMMA)
          || chunk_is_cpp_inheritance_access_specifier(prev)
          || chunk_is_semicolon(prev)
-         || chunk_is_str(prev, "(")
-         || chunk_is_str(prev, "{")
-         || chunk_is_str(prev, "[")
+         || prev->IsString("(")
+         || prev->IsString("{")
+         || prev->IsString("[")
          || prev->flags.test(PCF_IN_PREPROC)
          || get_chunk_parent_type(prev) == CT_NAMESPACE
          || get_chunk_parent_type(prev) == CT_TEMPLATE)
@@ -2345,7 +2345,7 @@ void mark_lvalue(Chunk *pc)
       chunk_flags_set(prev, PCF_LVALUE);
 
       if (  prev->level == pc->level
-         && chunk_is_str(prev, "&"))
+         && prev->IsString("&"))
       {
          make_type(prev);
       }
@@ -2411,7 +2411,7 @@ void mark_template_func(Chunk *pc, Chunk *pc_next)
 
    if (after->IsNotNullChunk())
    {
-      if (chunk_is_str(after, "("))
+      if (after->IsString("("))
       {
          if (angle_close->flags.test(PCF_IN_FCN_CALL))
          {
@@ -2590,7 +2590,7 @@ pcf_flags_t mark_where_chunk(Chunk *pc, E_Token parent_type, pcf_flags_t flags)
    }
    else if (flags.test(PCF_IN_WHERE_SPEC))
    {
-      if (chunk_is_str(pc, ":"))
+      if (pc->IsString(":"))
       {
          set_chunk_type(pc, CT_WHERE_COLON);
          LOG_FMT(LFTOR, "%s: where-spec colon on line %zu\n",
