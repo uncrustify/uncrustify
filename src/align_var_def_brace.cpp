@@ -114,12 +114,11 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
    bool  fp_active = options::align_mix_var_proto();
    Chunk *pc       = start->GetNext();
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk()
+   while (  pc->IsNotNullChunk()
          && (  pc->level >= start->level
             || pc->level == 0))
    {
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
@@ -214,7 +213,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
          break;
       }
 
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          fp_look_bro   = false;
          did_this_line = false;
@@ -229,9 +228,9 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
          }
       }
       LOG_FMT(LAVDB, "%s(%d): pc->Text() is '%s', level is %zu, pc->brace_level is %zu\n",
-              __func__, __LINE__, chunk_is_newline(pc) ? "Newline" : pc->Text(), pc->level, pc->brace_level);
+              __func__, __LINE__, pc->IsNewline() ? "Newline" : pc->Text(), pc->level, pc->brace_level);
 
-      if (!chunk_is_newline(pc))
+      if (!pc->IsNewline())
       {
          LOG_FMT(LAVDB, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
@@ -319,7 +318,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
                   }
 
                   if (  chunk_is_token(next, CT_SEMICOLON)
-                     || chunk_is_newline(next))
+                     || next->IsNewline())
                   {
                      break;
                   }

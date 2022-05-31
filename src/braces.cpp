@@ -185,7 +185,7 @@ void do_braces()
 
       while (tmp->IsNotNullChunk())
       {
-         if (chunk_is_newline(tmp))
+         if (tmp->IsNewline())
          {
             break;
          }
@@ -326,7 +326,7 @@ static bool should_add_braces(Chunk *vbopen)
         (pc->IsNotNullChunk() && pc->level > vbopen->level);
         pc = pc->GetNextNc(E_Scope::PREPROC))
    {
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          nl_count += pc->nl_count;
       }
@@ -390,7 +390,7 @@ static bool can_remove_braces(Chunk *bopen)
          return(false);
       }
 
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          nl_count += pc->nl_count;
 
@@ -549,7 +549,7 @@ static void examine_brace(Chunk *bopen)
          return;
       }
 
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          nl_count += pc->nl_count;
 
@@ -795,7 +795,7 @@ static void convert_brace(Chunk *br)
       return;
    }
 
-   if (chunk_is_newline(tmp))
+   if (tmp->IsNewline())
    {
       if (tmp->nl_count > 1)
       {
@@ -883,7 +883,7 @@ static void convert_vbrace(Chunk *vbr)
       {
          tmp = tmp->GetNext();
 
-         if (chunk_is_newline(tmp))
+         if (tmp->IsNewline())
          {
             vbr->MoveAfter(tmp);
             newline_add_after(vbr);
@@ -1097,7 +1097,7 @@ void add_long_closebrace_comment()
 
       while ((tmp = tmp->GetNext(E_Scope::PREPROC))->IsNotNullChunk())
       {
-         if (chunk_is_newline(tmp))
+         if (tmp->IsNewline())
          {
             nl_count += tmp->nl_count;
             continue;
@@ -1125,7 +1125,7 @@ void add_long_closebrace_comment()
          // make sure a newline follows in order to not overwrite an already
          // existring comment
          if (  tmp->IsNotNullChunk()
-            && !chunk_is_newline(tmp))
+            && !tmp->IsNewline())
          {
             break;
          }
@@ -1235,8 +1235,8 @@ static void move_case_break()
       if (  chunk_is_token(pc, CT_BREAK)
          && chunk_is_token(prev, CT_BRACE_CLOSE)
          && get_chunk_parent_type(prev) == CT_CASE
-         && chunk_is_newline(pc->GetPrev())
-         && chunk_is_newline(prev->GetPrev()))
+         && pc->GetPrev()->IsNewline()
+         && prev->GetPrev()->IsNewline())
       {
          prev->SwapLines(pc);
       }
@@ -1255,8 +1255,8 @@ static void move_case_return()
       if (  chunk_is_token(pc, CT_RETURN)
          && chunk_is_token(prev, CT_BRACE_CLOSE)
          && get_chunk_parent_type(prev) == CT_CASE
-         && chunk_is_newline(pc->GetPrev())
-         && chunk_is_newline(prev->GetPrev()))
+         && pc->GetPrev()->IsNewline()
+         && prev->GetPrev()->IsNewline())
       {
          // Find the end of the return statement
          while (chunk_is_not_token(pc, CT_SEMICOLON))

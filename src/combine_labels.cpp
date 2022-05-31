@@ -235,8 +235,8 @@ void combine_labels()
                      return;
                   }
 
-                  if (  chunk_is_newline(prev)
-                     && chunk_is_newline(tmp))
+                  if (  prev->IsNewline()
+                     && tmp->IsNewline())
                   {
                      new_type = CT_LABEL;
                      set_chunk_type(next, CT_LABEL_COLON);

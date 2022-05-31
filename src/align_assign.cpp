@@ -155,7 +155,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
          break;
       }
 
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          as.NewLines(pc->nl_count);
          vdas.NewLines(pc->nl_count);

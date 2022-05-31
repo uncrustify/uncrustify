@@ -54,7 +54,7 @@ void align_init_brace(Chunk *start)
               __func__, __LINE__, pc->orig_line);
       align_log_al(LALBR, pc->orig_line);
 
-      while (chunk_is_newline(pc))
+      while (pc->IsNewline())
       {
          pc = pc->GetNext();
       }
@@ -103,7 +103,7 @@ void align_init_brace(Chunk *start)
             {
                Chunk *prev = pc->GetPrev();
 
-               if (chunk_is_newline(prev))
+               if (prev->IsNewline())
                {
                   chunk_flags_set(pc, PCF_DONT_INDENT);
                }
@@ -128,7 +128,7 @@ void align_init_brace(Chunk *start)
             {
                next = pc->GetNext();
 
-               if (!chunk_is_newline(next))
+               if (!next->IsNewline())
                {
                   //LOG_FMT(LSYS, "-= %zu =- indent [%s] col=%d len=%d\n",
                   //        next->orig_line,
@@ -171,7 +171,7 @@ void align_init_brace(Chunk *start)
                {
                   next = pc->GetNext();
 
-                  if (  !chunk_is_newline(next)
+                  if (  !next->IsNewline()
                      && (  chunk_is_token(next, CT_NUMBER_FP)
                         || chunk_is_token(next, CT_NUMBER)
                         || chunk_is_token(next, CT_POS)
@@ -190,13 +190,12 @@ void align_init_brace(Chunk *start)
          }
       }
 
-      if (  chunk_is_newline(pc)
-         || chunk_is_newline(next))
+      if (  pc->IsNewline()
+         || next->IsNewline())
       {
          idx = 0;
       }
       pc = pc->GetNext();
-   } while (  pc != nullptr
-           && pc->IsNotNullChunk()
+   } while (  pc->IsNotNullChunk()
            && pc->level > start->level);
 } // align_init_brace

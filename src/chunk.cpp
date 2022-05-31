@@ -611,7 +611,7 @@ bool chunk_is_newline_between(Chunk *start, Chunk *end)
 {
    for (Chunk *pc = start; pc != nullptr && pc != end; pc = pc->GetNext())
    {
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          return(true);
       }
@@ -638,7 +638,7 @@ Chunk *chunk_first_on_line(Chunk *pc)
    Chunk *first = pc;
 
    while (  (pc = pc->GetPrev())->IsNotNullChunk()
-         && !chunk_is_newline(pc))
+         && !pc->IsNewline())
    {
       first = pc;
    }
@@ -687,7 +687,7 @@ void Chunk::SwapLines(Chunk *other)
 
    // Move the line started at pc2 before pc1
    while (  pc2->IsNotNullChunk()
-         && !chunk_is_newline(pc2))
+         && !pc2->IsNewline())
    {
       Chunk *tmp = pc2->GetNext();
       g_cl.Pop(pc2);
@@ -702,7 +702,7 @@ void Chunk::SwapLines(Chunk *other)
 
    // Now move the line started at pc1 after ref2
    while (  pc1->IsNotNullChunk()
-         && !chunk_is_newline(pc1))
+         && !pc1->IsNewline())
    {
       Chunk *tmp = pc1->GetNext();
       g_cl.Pop(pc1);

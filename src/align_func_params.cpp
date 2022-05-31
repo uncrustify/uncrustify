@@ -95,7 +95,7 @@ Chunk *align_func_param(Chunk *start)
          }
       }
 
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          comma_count = 0;
          chunk_count = 0;
@@ -141,7 +141,7 @@ Chunk *align_func_param(Chunk *start)
          {
             Chunk *tmp_prev = pc->GetPrevNc();
 
-            if (!chunk_is_newline(tmp_prev))  // don't count leading commas
+            if (!tmp_prev->IsNewline())  // don't count leading commas
             {
                comma_count++;
                LOG_FMT(LFLPAREN, "%s(%d): comma_count is %zu\n",

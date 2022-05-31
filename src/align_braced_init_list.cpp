@@ -104,7 +104,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
          break;
       }
 
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          vdas.NewLines(pc->nl_count);
 

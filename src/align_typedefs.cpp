@@ -36,7 +36,7 @@ void align_typedefs(size_t span)
 
    while (pc->IsNotNullChunk())
    {
-      if (chunk_is_newline(pc))
+      if (pc->IsNewline())
       {
          as.NewLines(pc->nl_count);
          c_typedef = Chunk::NullChunkPtr;

@@ -41,9 +41,9 @@ public:
 void sp_votes::vote(Chunk *first, Chunk *second)
 {
    if (  first == nullptr
-      || chunk_is_newline(first)
+      || first->IsNewline()
       || second == nullptr
-      || chunk_is_newline(second))
+      || second->IsNewline())
    {
       return;
    }
