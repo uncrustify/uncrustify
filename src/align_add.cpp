@@ -18,7 +18,8 @@ void align_add(ChunkStack &cs, Chunk *pc, size_t &max_col)
    size_t min_col;
    Chunk  *prev = Chunk::NullChunkPtr;
 
-   if (pc != nullptr)
+   if (  pc != nullptr
+      && pc->IsNotNullChunk())
    {
       prev = pc->GetPrev();
    }

@@ -493,7 +493,8 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    LOG_FUNC_ENTRY();
    Chunk *tmp = Chunk::NullChunkPtr;
 
-   if (pc != nullptr)
+   if (  pc != nullptr
+      && pc->IsNotNullChunk())
    {
       tmp = pc->GetPrevNc();
    }
@@ -4707,7 +4708,8 @@ void indent_preproc()
       }
       Chunk *next = pc->GetNextNcNnl();
 
-      if (next->IsNullChunk())
+      if (  pc != nullptr
+         && pc->IsNullChunk())
       {
          break;
       }
@@ -4731,7 +4733,8 @@ void indent_preproc()
       log_rule_B("pp_space");
 
       if (  (options::pp_space() != IARF_IGNORE)
-         && next != nullptr)
+         && next != nullptr
+         && next->IsNotNullChunk())
       {
          if (options::pp_space() & IARF_ADD)
          {

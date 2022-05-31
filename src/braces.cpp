@@ -1527,7 +1527,8 @@ static void process_if_chain(Chunk *br_start)
 
    Chunk *pc = br_start;
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->IsNotNullChunk())
    {
       LOG_FMT(LBRCH, "%s(%d): pc->Text() is '%s', orig_line is %zu, orig_col is %zu.\n",
               __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);

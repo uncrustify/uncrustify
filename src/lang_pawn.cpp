@@ -253,7 +253,8 @@ static Chunk *pawn_process_line(Chunk *start)
       }
    }
 
-   if (fcn != nullptr)
+   if (  fcn != nullptr
+      && fcn->IsNotNullChunk())
    {
       //LOG_FMT(LSYS, "FUNCTION: %s\n", fcn->Text());
       return(pawn_mark_function0(start, fcn));
@@ -275,7 +276,8 @@ static Chunk *pawn_process_variable(Chunk *start)
    LOG_FUNC_ENTRY();
    Chunk *pc = Chunk::NullChunkPtr;
 
-   if (start != nullptr)
+   if (  start != nullptr
+      && start->IsNotNullChunk())
    {
       pc = start;
    }
