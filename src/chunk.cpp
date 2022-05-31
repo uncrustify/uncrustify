@@ -646,7 +646,7 @@ Chunk *chunk_first_on_line(Chunk *pc)
 }
 
 
-bool chunk_is_last_on_line(Chunk *pc)  //TODO: pc should be const here
+bool chunk_is_last_on_line(const Chunk *pc)
 {
    // check if pc is the very last chunk of the file
    const Chunk *end = Chunk::GetTail();
