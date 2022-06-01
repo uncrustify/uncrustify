@@ -276,7 +276,8 @@ static Chunk *pawn_process_variable(Chunk *start)
    LOG_FUNC_ENTRY();
    Chunk *pc = Chunk::NullChunkPtr;
 
-   if (start != nullptr)
+   if (  start != nullptr
+      && start->IsNotNullChunk())
    {
       pc = start;
    }
