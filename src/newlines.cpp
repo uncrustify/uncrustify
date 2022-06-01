@@ -2735,8 +2735,7 @@ static void newline_before_return(Chunk *start)
 
    Chunk *pc = Chunk::NullChunkPtr;
 
-   if (  start != nullptr
-      && start->IsNotNullChunk())
+   if (start != nullptr)
    {
       pc = start->GetPrev();
    }
@@ -2881,8 +2880,7 @@ void newline_iarf(Chunk *pc, iarf_e av)
    log_func_stack(LNFD, "CallStack:");
    Chunk *after = Chunk::NullChunkPtr;
 
-   if (  pc != nullptr
-      && pc->IsNotNullChunk())
+   if (pc != nullptr)
    {
       after = pc->GetNextNnl();
    }
@@ -3283,7 +3281,6 @@ static void newline_func_def_or_call(Chunk *start)
             }
 
             if (  (a != IARF_IGNORE)
-               && prev != nullptr
                && prev->IsNotNullChunk())
             {
                LOG_FMT(LNFD, "%s(%d): prev->Text() '%s', orig_line is %zu, orig_col is %zu, [%s/%s]\n",
@@ -6598,8 +6595,7 @@ static void newlines_enum_entries(Chunk *open_brace, iarf_e av)
 
    Chunk *pc = Chunk::NullChunkPtr;
 
-   if (  open_brace != nullptr
-      && open_brace->IsNotNullChunk())
+   if (open_brace != nullptr)
    {
       pc = open_brace;
    }
@@ -6628,8 +6624,7 @@ static void newlines_double_space_struct_enum_union(Chunk *open_brace)
 
    Chunk *pc = Chunk::NullChunkPtr;
 
-   if (  open_brace != nullptr
-      && open_brace->IsNotNullChunk())
+   if (open_brace != nullptr)
    {
       pc = open_brace;
    }

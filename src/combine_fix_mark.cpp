@@ -1435,8 +1435,8 @@ void mark_function(Chunk *pc)
    LOG_FMT(LFCN, "%s(%d): Check for C++ function def, Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
            __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col, get_token_name(pc->type));
 
-   if (  pc != nullptr
-      && pc->IsNotNullChunk())
+   if (  prev != nullptr
+      && prev->IsNotNullChunk())
    {
       LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
               __func__, __LINE__, prev->Text(), prev->orig_line, prev->orig_col, get_token_name(prev->type));

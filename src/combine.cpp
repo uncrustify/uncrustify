@@ -1618,8 +1618,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
     */
    if (chunk_is_token(pc, CT_WORD))     // here NSString
    {
-      if (  pc->next != nullptr          // here *
-         && pc->IsNotNullChunk())
+      if (pc->next != nullptr)          // here *
       {
          if (pc->next->type == CT_STAR) // here *
          {
