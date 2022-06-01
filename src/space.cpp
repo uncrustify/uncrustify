@@ -1376,6 +1376,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       if (  next->IsNotNullChunk()
          && (  chunk_is_token(next, CT_COMMA)
             || chunk_is_token(next, CT_FPAREN_CLOSE)
+            || (  chunk_is_token(next, CT_PAREN_CLOSE)            // Issue #3691
+               && get_chunk_parent_type(next) == CT_CPP_CAST)
             || chunk_is_token(next, CT_SEMICOLON)))
       {
          if (options::sp_before_unnamed_byref() != IARF_IGNORE)

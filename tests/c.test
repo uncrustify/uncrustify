@@ -58,6 +58,7 @@
 00081  c/else-if-1.cfg                            c/else-if.c
 00082  c/else-if-2.cfg                            c/else-if.c
 00083  c/Issue_3601.cfg                           c/Issue_3601.c
+00084  c/Issue_3691.cfg                           c/Issue_3691.h
 
 00091  c/cond-1.cfg                               c/cond.c
 00092  common/indent_columns-3.cfg                c/cond.c
