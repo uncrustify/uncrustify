@@ -318,6 +318,7 @@ set(uncrustify_sources
   src/uncrustify.cpp
   src/uncrustify_emscripten.cpp
   src/uncrustify_types.cpp
+  src/unc_ctype.cpp
   src/unc_text.cpp
   src/unc_tools.cpp
   src/unicode.cpp
