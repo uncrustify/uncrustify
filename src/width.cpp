@@ -163,7 +163,7 @@ void do_code_width()
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (  !pc->IsCommentOrNewline()
-         && chunk_is_not_token(pc, CT_SPACE)
+         && pc->IsNot(CT_SPACE)
          && is_past_width(pc))
       {
          if (  chunk_is_token(pc, CT_VBRACE_CLOSE) // don't break if a vbrace close
@@ -249,7 +249,7 @@ static void try_split_here(cw_entry &ent, Chunk *pc)
 
    if (  prev->IsNullChunk()
       || (  prev->IsNewline()
-         && chunk_is_not_token(pc, CT_STRING)))
+         && pc->IsNot(CT_STRING)))
    {
       if (prev->IsNotNullChunk())
       {
@@ -278,7 +278,7 @@ static void try_split_here(cw_entry &ent, Chunk *pc)
    {
       Chunk *next = pc->GetNext();
 
-      if (chunk_is_not_token(next, CT_STRING))
+      if (next->IsNot(CT_STRING))
       {
          LOG_FMT(LSPLIT, "%s(%d): Only split concatenated strings, return\n", __func__, __LINE__);
          return;
@@ -302,7 +302,7 @@ static void try_split_here(cw_entry &ent, Chunk *pc)
    {
       Chunk *next = pc->GetNext();
 
-      if (  chunk_is_not_token(next, CT_WORD)
+      if (  next->IsNot(CT_WORD)
          && (get_split_pri(next->type) != 25))
       {
          LOG_FMT(LSPLIT, "%s(%d): don't break after last term of a qualified type, return\n", __func__, __LINE__);
@@ -431,7 +431,7 @@ static bool split_line(Chunk *start)
       LOG_FMT(LSPLIT, "%s(%d): at %s, orig_line is %zu, orig_col is %zu\n",
               __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
 
-      if (chunk_is_not_token(pc, CT_SPACE))
+      if (pc->IsNot(CT_SPACE))
       {
          try_split_here(ent, pc);
 
@@ -729,7 +729,7 @@ static void split_fcn_params(Chunk *start)
 
       while (  ((fpo = fpo->GetPrev()) != nullptr)
             && fpo->IsNotNullChunk()
-            && chunk_is_not_token(fpo, CT_FPAREN_OPEN))
+            && fpo->IsNot(CT_FPAREN_OPEN))
       {
          // do nothing
          LOG_FMT(LSPLIT, "%s(%d): '%s', orig_col is %zu, level is %zu\n",

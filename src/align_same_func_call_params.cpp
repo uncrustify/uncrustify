@@ -61,7 +61,7 @@ void align_same_func_call_params()
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
       }
 
-      if (chunk_is_not_token(pc, CT_FUNC_CALL))
+      if (pc->IsNot(CT_FUNC_CALL))
       {
          if (pc->IsNewline())
          {
@@ -101,7 +101,7 @@ void align_same_func_call_params()
       {
          Chunk *tprev = prev->GetPrev();
 
-         if (chunk_is_not_token(tprev, CT_TYPE))
+         if (tprev->IsNot(CT_TYPE))
          {
             prev = tprev;
             break;

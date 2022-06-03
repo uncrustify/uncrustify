@@ -656,8 +656,8 @@ void tokenize_cleanup()
       if (  chunk_is_token(pc, CT_CLASS)
          && !CharTable::IsKw1(next->str[0]))
       {
-         if (  chunk_is_not_token(next, CT_DC_MEMBER)
-            && chunk_is_not_token(next, CT_ATTRIBUTE))                       // Issue #2570
+         if (  next->IsNot(CT_DC_MEMBER)
+            && next->IsNot(CT_ATTRIBUTE))                       // Issue #2570
          {
             set_chunk_type(pc, CT_WORD);
          }
@@ -1720,9 +1720,9 @@ static void mark_selectors_in_property_with_open_paren(Chunk *open_paren)
          && (  tmp->IsString("setter")
             || tmp->IsString("getter")))
       {
-         tmp = tmp->next;
+         tmp = tmp->GetNext();
 
-         while (  tmp != nullptr
+         while (  tmp->IsNotNullChunk()
                && tmp->IsNot(CT_COMMA)
                && tmp->IsNot(CT_PAREN_CLOSE))
          {
@@ -1731,12 +1731,12 @@ static void mark_selectors_in_property_with_open_paren(Chunk *open_paren)
             {
                set_chunk_type(tmp, CT_OC_SEL_NAME);
             }
-            tmp = tmp->next;
+            tmp = tmp->GetNext();
          }
       }
       else
       {
-         tmp = tmp->next;
+         tmp = tmp->GetNext();
       }
    }
 }

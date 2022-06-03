@@ -32,7 +32,7 @@ void align_oc_decl_colon()
 
    while (pc->IsNotNullChunk())
    {
-      if (chunk_is_not_token(pc, CT_OC_SCOPE))
+      if (pc->IsNot(CT_OC_SCOPE))
       {
          pc = pc->GetNext();
          continue;
