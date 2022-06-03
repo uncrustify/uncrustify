@@ -26,7 +26,7 @@ void align_asm_colon()
 
    while (pc->IsNotNullChunk())
    {
-      if (chunk_is_not_token(pc, CT_ASM_COLON))
+      if (pc->IsNot(CT_ASM_COLON))
       {
          pc = pc->GetNext();
          continue;

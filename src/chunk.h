@@ -781,15 +781,6 @@ static inline bool chunk_is_token(const Chunk *pc, E_Token c_token)
 }
 
 
-// TODO remove when possible
-static inline bool chunk_is_not_token(const Chunk *pc, E_Token c_token)
-{
-   return(  pc != nullptr
-         && pc->IsNotNullChunk()
-         && pc->IsNot(c_token));
-}
-
-
 inline Chunk *Chunk::SkipToMatch(E_Scope scope) const
 {
    if (  Is(CT_PAREN_OPEN)
@@ -1078,7 +1069,7 @@ static inline bool chunk_is_forin(Chunk *pc)
       {
          Chunk *next = pc;
 
-         while (  next != nullptr
+         while (  next->IsNotNullChunk()
                && next->IsNot(CT_SPAREN_CLOSE)
                && next->IsNot(CT_IN))
          {

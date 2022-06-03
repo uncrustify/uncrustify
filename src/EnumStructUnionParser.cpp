@@ -591,8 +591,8 @@ static std::pair<Chunk *, Chunk *> match_variable_end(Chunk *pc, std::size_t lev
 
       Chunk *next = pc->GetNextNcNnl();
 
-      if (  chunk_is_not_token(next, CT_COMMA)
-         && chunk_is_not_token(next, CT_FPAREN_CLOSE)
+      if (  next->IsNot(CT_COMMA)
+         && next->IsNot(CT_FPAREN_CLOSE)
          && !chunk_is_semicolon(next)
          && !adj_tokens_match_var_def_pattern(pc, next))
       {
@@ -709,9 +709,9 @@ static std::pair<Chunk *, Chunk *> match_variable_start(Chunk *pc, std::size_t l
           * perhaps the previous chunk possibly indicates a type that yet to be
           * marked? if not, then break
           */
-         if (  chunk_is_not_token(prev, CT_WORD)
+         if (  prev->IsNot(CT_WORD)
             || (  !chunk_is_pointer_or_reference(pc)
-               && chunk_is_not_token(pc, CT_WORD)))
+               && pc->IsNot(CT_WORD)))
          {
             /**
              * error, pattern is not consistent with a variable declaration/definition
@@ -1023,7 +1023,7 @@ void EnumStructUnionParser::analyze_identifiers()
    try_post_identify_macro_calls();
 
    if (  chunk_is_class_or_struct(m_start)
-      && (  chunk_is_not_token(m_start, CT_STRUCT)
+      && (  m_start->IsNot(CT_STRUCT)
          || !language_is_set(LANG_C)))
    {
       /**
@@ -1695,7 +1695,7 @@ void EnumStructUnionParser::mark_enum_integral_type(Chunk *colon)
 
    while (  chunk_is_between(pc, m_start, m_end)
          && pc != body_start
-         && chunk_is_not_token(pc, CT_BRACE_OPEN)
+         && pc->IsNot(CT_BRACE_OPEN)
          && !chunk_is_semicolon(pc))
    {
       /**
@@ -1703,7 +1703,7 @@ void EnumStructUnionParser::mark_enum_integral_type(Chunk *colon)
        * TODO: this may not be necessary in the future once code outside this
        *       class is improved such that PCF_VAR_TYPE is not set for these chunks
        */
-      if (chunk_is_not_token(pc, CT_DC_MEMBER))                             // Issue #3198
+      if (pc->IsNot(CT_DC_MEMBER))                             // Issue #3198
       {
          pc->flags &= ~PCF_VAR_TYPE;
          set_chunk_type(pc, CT_TYPE);
@@ -1738,7 +1738,7 @@ void EnumStructUnionParser::mark_extracorporeal_lvalues()
 
          if (  prev->IsNullChunk()
             || (  !prev->flags.test(PCF_IN_TEMPLATE)
-               && chunk_is_not_token(prev, CT_TEMPLATE)))
+               && prev->IsNot(CT_TEMPLATE)))
          {
             break;
          }
@@ -2186,7 +2186,7 @@ Chunk *EnumStructUnionParser::parse_angles(Chunk *angle_open)
           */
          auto *next = angle_close->GetNextNcNnl();
 
-         if (chunk_is_not_token(next, CT_DC_MEMBER))
+         if (next->IsNot(CT_DC_MEMBER))
          {
             set_template_start(angle_open);
 
@@ -2197,7 +2197,7 @@ Chunk *EnumStructUnionParser::parse_angles(Chunk *angle_open)
              */
             auto *prev = angle_open->GetPrevNcNnlNi();
 
-            if (chunk_is_not_token(prev, CT_WORD))
+            if (prev->IsNot(CT_WORD))
             {
                // parse error
                parse_error_detected(true);
@@ -2879,8 +2879,8 @@ bool EnumStructUnionParser::try_pre_identify_type()
          Chunk *prev = m_start;
 
          while (  chunk_is_between(next, m_start, m_end)
-               && (  (  chunk_is_not_token(next, CT_ASSIGN)
-                     && chunk_is_not_token(next, CT_COMMA))
+               && (  (  next->IsNot(CT_ASSIGN)
+                     && next->IsNot(CT_COMMA))
                   || next->level != m_start->level)
                && !chunk_is_semicolon(next))
          {

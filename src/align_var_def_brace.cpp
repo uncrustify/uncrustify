@@ -235,7 +235,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
          LOG_FMT(LAVDB, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
 
-         if (chunk_is_not_token(pc, CT_IGNORED))
+         if (pc->IsNot(CT_IGNORED))
          {
             LOG_FMT(LAVDB, "   ");
             log_pcf_flags(LAVDB, pc->flags);
@@ -251,10 +251,10 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
       // If this is a variable def, update the max_col
       if (  !pc->flags.test(PCF_IN_CLASS_BASE)
-         && chunk_is_not_token(pc, CT_FUNC_CLASS_DEF)
-         && chunk_is_not_token(pc, CT_FUNC_CLASS_PROTO)
+         && pc->IsNot(CT_FUNC_CLASS_DEF)
+         && pc->IsNot(CT_FUNC_CLASS_PROTO)
          && ((pc->flags & align_mask) == PCF_VAR_1ST)
-         && chunk_is_not_token(pc, CT_FUNC_DEF)                                   // Issue 1452
+         && pc->IsNot(CT_FUNC_DEF)                                   // Issue 1452
          && (  (pc->level == (start->level + 1))
             || pc->level == 0)
          && pc->prev != nullptr
@@ -278,14 +278,14 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
                {
                   LOG_FMT(LAVDB, "%s(%d): prev_local '%s', prev_local->type %s\n",
                           __func__, __LINE__, prev_local->Text(), get_token_name(prev_local->type));
-                  prev_local = prev_local->prev;
+                  prev_local = prev_local->GetPrev();
                }
-               pc = prev_local->next;
+               pc = prev_local->GetNext();
             }
             // we must look after the previous token
-            Chunk *prev_local = pc->prev;
+            Chunk *prev_local = pc->GetPrev();
 
-            if (chunk_is_not_token(prev_local, CT_DEREF))                    // Issue #2971
+            if (prev_local->IsNot(CT_DEREF))                    // Issue #2971
             {
                LOG_FMT(LAVDB, "%s(%d): add = '%s', orig_line is %zu, orig_col is %zu, level is %zu\n",
                        __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col, pc->level);
