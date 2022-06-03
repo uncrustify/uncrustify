@@ -253,8 +253,7 @@ static Chunk *pawn_process_line(Chunk *start)
       }
    }
 
-   if (  fcn != nullptr
-      && fcn->IsNotNullChunk())
+   if (fcn != nullptr)
    {
       //LOG_FMT(LSYS, "FUNCTION: %s\n", fcn->Text());
       return(pawn_mark_function0(start, fcn));
