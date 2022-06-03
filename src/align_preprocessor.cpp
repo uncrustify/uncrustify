@@ -49,7 +49,7 @@ void align_preprocessor()
       }
 
       // If we aren't on a 'define', then skip to the next non-comment
-      if (chunk_is_not_token(pc, CT_PP_DEFINE))
+      if (pc->IsNot(CT_PP_DEFINE))
       {
          pc = pc->GetNextNc();
          continue;

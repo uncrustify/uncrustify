@@ -26,8 +26,8 @@ Chunk *align_nl_cont(Chunk *start)
    Chunk      *pc     = start;
 
    while (  pc->IsNotNullChunk()
-         && chunk_is_not_token(pc, CT_NEWLINE)
-         && chunk_is_not_token(pc, CT_COMMENT_MULTI))
+         && pc->IsNot(CT_NEWLINE)
+         && pc->IsNot(CT_COMMENT_MULTI))
    {
       if (chunk_is_token(pc, CT_NL_CONT))
       {
@@ -54,7 +54,7 @@ void align_backslash_newline()
 
    while (pc->IsNotNullChunk())
    {
-      if (chunk_is_not_token(pc, CT_NL_CONT))
+      if (pc->IsNot(CT_NL_CONT))
       {
          pc = pc->GetNextType(CT_NL_CONT);
          continue;

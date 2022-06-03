@@ -117,8 +117,8 @@ Chunk *skip_to_next_statement(Chunk *pc)
 
    while (  pc->IsNotNullChunk()
          && !chunk_is_semicolon(pc)
-         && chunk_is_not_token(pc, CT_BRACE_OPEN)
-         && chunk_is_not_token(pc, CT_BRACE_CLOSE))
+         && pc->IsNot(CT_BRACE_OPEN)
+         && pc->IsNot(CT_BRACE_CLOSE))
    {
       pc = pc->GetNextNcNnl();
    }
@@ -199,7 +199,7 @@ Chunk *skip_attribute_prev(Chunk *fp_close)
       {
          pc = pc->GetPrevType(CT_ATTRIBUTE, pc->level);
       }
-      else if (chunk_is_not_token(pc, CT_ATTRIBUTE))
+      else if (pc->IsNot(CT_ATTRIBUTE))
       {
          break;
       }

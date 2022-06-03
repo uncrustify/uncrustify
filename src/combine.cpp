@@ -252,7 +252,7 @@ static void flag_asm(Chunk *pc)
 
    Chunk *tmp = pc->GetNextNcNnl(E_Scope::PREPROC);
 
-   if (chunk_is_not_token(tmp, CT_QUALIFIER))
+   if (tmp->IsNot(CT_QUALIFIER))
    {
       return;
    }
@@ -359,7 +359,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    if (  (  chunk_is_token(prev, CT_FPAREN_CLOSE)
          || (  (  prev->IsString("const")
                || prev->IsString("override"))
-            && chunk_is_token(prev->prev, CT_FPAREN_CLOSE)))
+            && chunk_is_token(prev->GetPrev(), CT_FPAREN_CLOSE)))
       && chunk_is_token(pc, CT_ASSIGN)
       && (  chunk_is_token(next, CT_DEFAULT)
          || chunk_is_token(next, CT_DELETE)
@@ -787,7 +787,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    }
 
    if (  chunk_is_class_enum_struct_union(pc)
-      && chunk_is_not_token(prev, CT_TYPEDEF))
+      && prev->IsNot(CT_TYPEDEF))
    {
       EnumStructUnionParser parser;
       parser.parse(pc);
@@ -1155,8 +1155,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             || chunk_is_token(next, CT_DC_MEMBER)
             || chunk_is_token(next, CT_ENUM)
             || chunk_is_token(next, CT_UNION))
-         && chunk_is_not_token(prev, CT_DECLTYPE)
-         && chunk_is_not_token(prev, CT_SIZEOF)
+         && prev->IsNot(CT_DECLTYPE)
+         && prev->IsNot(CT_SIZEOF)
          && get_chunk_parent_type(prev) != CT_SIZEOF
          && get_chunk_parent_type(prev) != CT_OPERATOR
          && !pc->flags.test(PCF_IN_TYPEDEF))
@@ -1185,8 +1185,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
          for ( ; (  pprev->IsNotNullChunk()
                  && pprev->level >= level
-                 && chunk_is_not_token(pprev, CT_SEMICOLON)
-                 && chunk_is_not_token(pprev, CT_ACCESS_COLON))
+                 && pprev->IsNot(CT_SEMICOLON)
+                 && pprev->IsNot(CT_ACCESS_COLON))
                ; pprev = pprev->GetPrev())
          {
             if (pprev->level != level)
@@ -1475,8 +1475,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                            && (  !chunk_is_paren_close(prev)
                               || chunk_is_token(prev, CT_SPAREN_CLOSE)
                               || get_chunk_parent_type(prev) == CT_MACRO_FUNC)
-                           && chunk_is_not_token(prev, CT_SQUARE_CLOSE)
-                           && chunk_is_not_token(prev, CT_DC_MEMBER)) ? CT_DEREF : CT_ARITH);
+                           && prev->IsNot(CT_SQUARE_CLOSE)
+                           && prev->IsNot(CT_DC_MEMBER)) ? CT_DEREF : CT_ARITH);
          }
 
          if (pc->flags.test(PCF_IN_TYPEDEF))  // Issue #1255/#633
@@ -2120,7 +2120,7 @@ static void process_returns()
 
    while (pc->IsNotNullChunk())
    {
-      if (chunk_is_not_token(pc, CT_RETURN))
+      if (pc->IsNot(CT_RETURN))
       {
          pc = pc->GetNextType(CT_RETURN);
          continue;
@@ -2203,7 +2203,7 @@ static Chunk *process_return(Chunk *pc)
             temp = semi;
 
             while (  temp->IsNotNullChunk()
-                  && chunk_is_not_token(temp, CT_NEWLINE))
+                  && temp->IsNot(CT_NEWLINE))
             {
                temp->column       = temp->column - 2;
                temp->orig_col     = temp->orig_col - 2;
@@ -2378,7 +2378,7 @@ static void handle_cpp_template(Chunk *pc)
 
    Chunk *tmp = pc->GetNextNcNnl();
 
-   if (chunk_is_not_token(tmp, CT_ANGLE_OPEN))
+   if (tmp->IsNot(CT_ANGLE_OPEN))
    {
       return;
    }
@@ -2447,14 +2447,14 @@ static void handle_cpp_lambda(Chunk *sq_o)
    }
 
    if (  prev->IsNullChunk()
-      || (  chunk_is_not_token(prev, CT_ASSIGN)
-         && chunk_is_not_token(prev, CT_COMMA)
-         && chunk_is_not_token(prev, CT_PAREN_OPEN)   // allow Js like self invoking lambda syntax: ([](){})();
-         && chunk_is_not_token(prev, CT_FPAREN_OPEN)
-         && chunk_is_not_token(prev, CT_SQUARE_OPEN)
-         && chunk_is_not_token(prev, CT_BRACE_OPEN)
-         && chunk_is_not_token(prev, CT_SEMICOLON)
-         && chunk_is_not_token(prev, CT_RETURN)))
+      || (  prev->IsNot(CT_ASSIGN)
+         && prev->IsNot(CT_COMMA)
+         && prev->IsNot(CT_PAREN_OPEN)   // allow Js like self invoking lambda syntax: ([](){})();
+         && prev->IsNot(CT_FPAREN_OPEN)
+         && prev->IsNot(CT_SQUARE_OPEN)
+         && prev->IsNot(CT_BRACE_OPEN)
+         && prev->IsNot(CT_SEMICOLON)
+         && prev->IsNot(CT_RETURN)))
    {
       LOG_FMT(LFCNR, "%s(%d): return\n", __func__, __LINE__);
       return;
@@ -2532,7 +2532,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
       return;
    }
 
-   if (chunk_is_not_token(br_o, CT_BRACE_OPEN))
+   if (br_o->IsNot(CT_BRACE_OPEN))
    {
       LOG_FMT(LFCNR, "%s(%d): br_o is '%s'/%s\n",
               __func__, __LINE__,
@@ -2634,14 +2634,14 @@ static void handle_d_template(Chunk *pc)
    Chunk *po   = name->GetNextNcNnl();
 
    if (  name->IsNullChunk()
-      || chunk_is_not_token(name, CT_WORD))
+      || name->IsNot(CT_WORD))
    {
       // TODO: log an error, expected NAME
       return;
    }
 
    if (  po->IsNullChunk()
-      || chunk_is_not_token(po, CT_PAREN_OPEN))
+      || po->IsNot(CT_PAREN_OPEN))
    {
       // TODO: log an error, expected '('
       return;
@@ -2654,7 +2654,7 @@ static void handle_d_template(Chunk *pc)
    Chunk      *tmp = get_d_template_types(cs, po);
 
    if (  tmp == nullptr
-      || chunk_is_not_token(tmp, CT_PAREN_CLOSE))
+      || tmp->IsNot(CT_PAREN_CLOSE))
    {
       // TODO: log an error, expected ')'
       return;
@@ -2663,7 +2663,7 @@ static void handle_d_template(Chunk *pc)
 
    tmp = tmp->GetNextNcNnl();
 
-   if (chunk_is_not_token(tmp, CT_BRACE_OPEN))
+   if (tmp->IsNot(CT_BRACE_OPEN))
    {
       // TODO: log an error, expected '{'
       return;
@@ -3188,7 +3188,7 @@ static void handle_oc_message_decl(Chunk *pc)
    }
 
    // expect the method name/label
-   if (chunk_is_not_token(tmp, CT_WORD))
+   if (tmp->IsNot(CT_WORD))
    {
       LOG_FMT(LOCMSGD, " -- missing method name\n");
       return;
@@ -3283,7 +3283,7 @@ static void handle_oc_message_send(Chunk *os)
    }
 
    if (  cs->IsNullChunk()
-      || chunk_is_not_token(cs, CT_SQUARE_CLOSE))
+      || cs->IsNot(CT_SQUARE_CLOSE))
    {
       return;
    }
@@ -3329,11 +3329,11 @@ static void handle_oc_message_send(Chunk *os)
       }
       tmp = tmp->SkipToMatch();
    }
-   else if (  chunk_is_not_token(tmp, CT_WORD)
-           && chunk_is_not_token(tmp, CT_TYPE)
-           && chunk_is_not_token(tmp, CT_THIS)
-           && chunk_is_not_token(tmp, CT_STAR)
-           && chunk_is_not_token(tmp, CT_STRING))
+   else if (  tmp->IsNot(CT_WORD)
+           && tmp->IsNot(CT_TYPE)
+           && tmp->IsNot(CT_THIS)
+           && tmp->IsNot(CT_STAR)
+           && tmp->IsNot(CT_STRING))
    {
       LOG_FMT(LOCMSG, "%s(%d): orig_line is %zu, orig_col is %zu, expected identifier, not '%s' [%s]\n",
               __func__, __LINE__, tmp->orig_line, tmp->orig_col,
@@ -3469,10 +3469,10 @@ static void handle_oc_message_send(Chunk *os)
                Chunk *pp = prev->GetPrev();
 
                if (  pp->IsNotNullChunk()
-                  && chunk_is_not_token(pp, CT_OC_COLON)
-                  && chunk_is_not_token(pp, CT_ARITH)
-                  && chunk_is_not_token(pp, CT_SHIFT)
-                  && chunk_is_not_token(pp, CT_CARET))
+                  && pp->IsNot(CT_OC_COLON)
+                  && pp->IsNot(CT_ARITH)
+                  && pp->IsNot(CT_SHIFT)
+                  && pp->IsNot(CT_CARET))
                {
                   set_chunk_type(prev, CT_OC_MSG_NAME);
                   set_chunk_parent(tmp, CT_OC_MSG_NAME);
@@ -3548,7 +3548,7 @@ static void handle_oc_property_decl(Chunk *os)
           * when I attempted to add them so this is my hack for now.
           */
          while (  next->IsNotNullChunk()
-               && chunk_is_not_token(next, CT_PAREN_CLOSE))
+               && next->IsNot(CT_PAREN_CLOSE))
          {
             if (chunk_is_token(next, CT_OC_PROPERTY_ATTR))
             {
@@ -3586,8 +3586,8 @@ static void handle_oc_property_decl(Chunk *os)
                      chunkGroup.push_back(next);
                      next = next->GetNext();
                   } while (  next->IsNotNullChunk()
-                          && chunk_is_not_token(next, CT_COMMA)
-                          && chunk_is_not_token(next, CT_PAREN_CLOSE));
+                          && next->IsNot(CT_COMMA)
+                          && next->IsNot(CT_PAREN_CLOSE));
 
                   next = next->GetPrev();
 
@@ -3607,8 +3607,8 @@ static void handle_oc_property_decl(Chunk *os)
                      chunkGroup.push_back(next);
                      next = next->GetNext();
                   } while (  next->IsNotNullChunk()
-                          && chunk_is_not_token(next, CT_COMMA)
-                          && chunk_is_not_token(next, CT_PAREN_CLOSE));
+                          && next->IsNot(CT_COMMA)
+                          && next->IsNot(CT_PAREN_CLOSE));
 
                   if (next->IsNotNullChunk())
                   {
@@ -3729,7 +3729,7 @@ static void handle_oc_property_decl(Chunk *os)
          // Remove the extra comma's that we did not move
          while (  curr_chunk != nullptr
                && curr_chunk->IsNotNullChunk()
-               && chunk_is_not_token(curr_chunk, CT_PAREN_CLOSE))
+               && curr_chunk->IsNot(CT_PAREN_CLOSE))
          {
             Chunk *rm_chunk = curr_chunk;
             curr_chunk = curr_chunk->GetNext();
@@ -3769,7 +3769,7 @@ static void handle_cs_square_stmt(Chunk *os)
    }
 
    if (  cs->IsNullChunk()
-      || chunk_is_not_token(cs, CT_SQUARE_CLOSE))
+      || cs->IsNot(CT_SQUARE_CLOSE))
    {
       return;
    }
@@ -3931,9 +3931,9 @@ static void handle_proto_wrap(Chunk *pc)
       || tmp->IsNullChunk()
       || clp == nullptr
       || cma->IsNullChunk()
-      || (  chunk_is_not_token(name, CT_WORD)
-         && chunk_is_not_token(name, CT_TYPE))
-      || chunk_is_not_token(opp, CT_PAREN_OPEN))
+      || (  name->IsNot(CT_WORD)
+         && name->IsNot(CT_TYPE))
+      || opp->IsNot(CT_PAREN_OPEN))
    {
       return;
    }
@@ -3978,9 +3978,9 @@ static void handle_proto_wrap(Chunk *pc)
    while ((tmp = tmp->GetPrevNcNnlNi())->IsNotNullChunk()) // Issue #2279
    {
       if (  !chunk_is_type(tmp)
-         && chunk_is_not_token(tmp, CT_OPERATOR)
-         && chunk_is_not_token(tmp, CT_WORD)
-         && chunk_is_not_token(tmp, CT_ADDR))
+         && tmp->IsNot(CT_OPERATOR)
+         && tmp->IsNot(CT_WORD)
+         && tmp->IsNot(CT_ADDR))
       {
          break;
       }
