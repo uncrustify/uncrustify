@@ -1017,7 +1017,8 @@ void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type)
    LOG_FUNC_ENTRY();
    Chunk *pc = start;
 
-   if (pc != nullptr)
+   if (  pc != nullptr
+      && pc->IsNotNullChunk())
    {
       // Step backwards from pc and mark the parent of the return type
       LOG_FMT(LFCNR, "%s(%d): (backwards) return type for '%s' @ orig_line is %zu, orig_col is %zu\n",
@@ -1434,7 +1435,8 @@ void mark_function(Chunk *pc)
    LOG_FMT(LFCN, "%s(%d): Check for C++ function def, Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
            __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col, get_token_name(pc->type));
 
-   if (prev != nullptr)
+   if (  prev != nullptr
+      && prev->IsNotNullChunk())
    {
       LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
               __func__, __LINE__, prev->Text(), prev->orig_line, prev->orig_col, get_token_name(prev->type));
@@ -2002,7 +2004,8 @@ void mark_function(Chunk *pc)
       }
    }
 
-   if (semi != nullptr)
+   if (  semi != nullptr
+      && semi->IsNotNullChunk())
    {
       set_chunk_parent(semi, pc->type);
    }

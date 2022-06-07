@@ -1460,7 +1460,8 @@ void EnumStructUnionParser::mark_base_classes(Chunk *pc)
 
    pcf_flags_t flags = PCF_VAR_1ST_DEF;
 
-   while (pc != nullptr)
+   while (  pc != nullptr
+         && pc->IsNotNullChunk())
    {
       chunk_flags_set(pc, PCF_IN_CLASS_BASE);
       /**

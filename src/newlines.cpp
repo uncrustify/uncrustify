@@ -1094,7 +1094,8 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
          if (do_add) // we found something previously besides a comment or a new line
          {
             // if we have run across a newline
-            if (last_nl != nullptr)
+            if (  last_nl != nullptr
+               && last_nl->IsNotNullChunk())
             {
                if (last_nl->nl_count < 2)
                {
@@ -3277,8 +3278,8 @@ static void newline_func_def_or_call(Chunk *start)
                a = options::nl_func_type_name_class();
             }
 
-            if (  a != IARF_IGNORE
-               && prev != nullptr)
+            if (  (a != IARF_IGNORE)
+               && prev->IsNotNullChunk())
             {
                LOG_FMT(LNFD, "%s(%d): prev->Text() '%s', orig_line is %zu, orig_col is %zu, [%s/%s]\n",
                        __func__, __LINE__, prev->Text(), prev->orig_line, prev->orig_col,

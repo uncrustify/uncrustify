@@ -272,7 +272,8 @@ bool can_be_full_param(Chunk *start, Chunk *end)
    LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', word_count is %d, type_count is %d\n",
            __func__, __LINE__, pc->Text(), word_count, type_count);
 
-   if (first_word != nullptr)
+   if (  first_word != nullptr
+      && first_word->IsNotNullChunk())
    {
       LOG_FMT(LFPARAM, "%s(%d): first_word->Text() is '%s'\n",
               __func__, __LINE__, first_word->Text());
@@ -525,7 +526,8 @@ void make_type(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (pc != nullptr)
+   if (  pc != nullptr
+      && pc->IsNotNullChunk())
    {
       if (chunk_is_token(pc, CT_WORD))
       {
