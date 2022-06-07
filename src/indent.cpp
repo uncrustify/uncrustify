@@ -4731,7 +4731,8 @@ void indent_preproc()
       log_rule_B("pp_space");
 
       if (  (options::pp_space() != IARF_IGNORE)
-         && next != nullptr)
+         && next != nullptr
+         && next->IsNotNullChunk())
       {
          if (options::pp_space() & IARF_ADD)
          {

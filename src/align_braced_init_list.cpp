@@ -154,7 +154,8 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
    }
    vdas.End();
 
-   if (pc != nullptr)
+   if (  pc != nullptr
+      && pc->IsNotNullChunk())
    {
       LOG_FMT(LALASS, "%s(%d): done on '%s' on orig_line %zu\n",
               __func__, __LINE__, pc->Text(), pc->orig_line);
