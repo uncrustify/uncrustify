@@ -44,7 +44,7 @@ struct cmt_reflow
 // for tracking line numbering
 bool numbering_status = false;
 int  line_number;
-char char_number[12] = { 0 };
+char char_number[16] = { 0 };
 
 
 void set_numbering(bool status)
