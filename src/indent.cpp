@@ -936,7 +936,7 @@ void indent_text()
             else if (get_chunk_parent_type(pc) == CT_PP_ELSE)
             {
                if (  frm.top().type == CT_MEMBER
-                  && frm.top().pop_pc != nullptr
+                  && frm.top().pop_pc->IsNotNullChunk()
                   && frm.top().pc != frmbkup.top().pc)
                {
                   Chunk *tmp = pc->GetNextNcNnlNpp();
@@ -1288,7 +1288,7 @@ void indent_text()
                frm.pop(__func__, __LINE__, pc);
             }
 
-            if (frm.top().pop_pc != nullptr)
+            if (frm.top().pop_pc->IsNotNullChunk())
             {
                LOG_FMT(LINDLINE, "%s(%d): pop_pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
                        __func__, __LINE__, frm.top().pop_pc->orig_line, frm.top().pop_pc->orig_col,
@@ -4189,7 +4189,7 @@ void indent_text()
                      {
                         Chunk *before_Assign = frm.at(temp_ttidx - 1).pc;
 
-                        if (before_Assign == nullptr)
+                        if (before_Assign->IsNullChunk())
                         {
                            indent_column = 1 + indent_size;
                         }

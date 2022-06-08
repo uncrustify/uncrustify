@@ -301,7 +301,8 @@ Chunk *Chunk::Search(const T_CheckFnPtr checkFn, const E_Scope scope,
 
 bool are_chunks_in_same_line(Chunk *start, Chunk *end)
 {
-   if (start == nullptr)
+   if (  start == nullptr
+      || start->IsNullChunk())
    {
       return(false);
    }
