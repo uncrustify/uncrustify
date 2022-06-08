@@ -469,7 +469,7 @@ static size_t calc_indent_continue(const ParseFrame &frm)
 
 static Chunk *candidate_chunk_first_on_line(Chunk *pc)
 {
-   Chunk *first = chunk_first_on_line(pc);
+   Chunk *first = pc->GetFirstChunkOnLine();
 
    log_rule_B("indent_inside_ternary_operator");
 
