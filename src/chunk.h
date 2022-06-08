@@ -580,6 +580,14 @@ public:
     */
    bool IsLastChunkOnLine() const;
 
+   /**
+    * @brief checks whether the current chunk is on same line of the given 'end' chunk.
+    * The current chunk must be before the 'end' chunk
+    * @param end the end chunk
+    * @return true if there is no newline between the current chunk and end chunk
+    */
+   bool IsOnSameLine(const Chunk *end) const;
+
 
    // --------- Data members
 
@@ -633,17 +641,6 @@ protected:
 private:
    const bool null_chunk;                      //! true for null chunks
 };
-
-
-/**
- * @brief checks whether two chunks are in same line
- *
- * @param  start
- * @param  end
- *
- * @return true if there is no newline between start and end chunks
- */
-bool are_chunks_in_same_line(Chunk *start, Chunk *end);
 
 
 inline bool Chunk::IsTypeAndLevel(const E_Token cType, const int cLevel) const

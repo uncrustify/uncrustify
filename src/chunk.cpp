@@ -299,19 +299,18 @@ Chunk *Chunk::Search(const T_CheckFnPtr checkFn, const E_Scope scope,
 }
 
 
-bool are_chunks_in_same_line(Chunk *start, Chunk *end)
+bool Chunk::IsOnSameLine(const Chunk *end) const
 {
-   if (  start == nullptr
-      || start->IsNullChunk())
+   if (this->IsNullChunk())
    {
       return(false);
    }
-   Chunk *tmp = start->GetNext();
+   Chunk *tmp = this->GetNext();
 
    while (  tmp->IsNotNullChunk()
          && tmp != end)
    {
-      if (chunk_is_token(tmp, CT_NEWLINE))
+      if (tmp->Is(CT_NEWLINE))
       {
          return(false);
       }
