@@ -562,6 +562,32 @@ public:
     */
    void SwapLines(Chunk *other);
 
+   /**
+    * @brief Finds the first chunk on the line the current chunk is on.
+    * This just backs up until a newline or nullptr is hit.
+    *
+    * given: [ a - b - c - n1 - d - e - n2 ]
+    * input: [ a | b | c | n1 ] => a
+    * input: [ d | e | n2 ]     => d
+    *
+    * @return pointer to the first chunk on the line the current chunk is on.
+    */
+   Chunk *GetFirstChunkOnLine() const;
+
+   /**
+    * @brief Checks if a given chunk is the last on its line
+    * @return true or false depending on whether a given chunk is the last on its line
+    */
+   bool IsLastChunkOnLine() const;
+
+   /**
+    * @brief checks whether the current chunk is on same line of the given 'end' chunk.
+    * The current chunk must be before the 'end' chunk
+    * @param end the end chunk
+    * @return true if there is no newline between the current chunk and end chunk
+    */
+   bool IsOnSameLine(const Chunk *end) const;
+
 
    // --------- Data members
 
@@ -615,34 +641,6 @@ protected:
 private:
    const bool null_chunk;                      //! true for null chunks
 };
-
-
-/**
- * Finds the first chunk on the line that pc is on.
- * This just backs up until a newline or nullptr is hit.
- *
- * given: [ a - b - c - n1 - d - e - n2 ]
- * input: [ a | b | c | n1 ] => a
- * input: [ d | e | n2 ]     => d
- *
- * @param pc  chunk to start with
- */
-Chunk *chunk_first_on_line(Chunk *pc);
-
-
-//! check if a given chunk is the last on its line
-bool chunk_is_last_on_line(const Chunk *pc);
-
-
-/**
- * @brief checks whether two chunks are in same line
- *
- * @param  start
- * @param  end
- *
- * @return true if there is no newline between start and end chunks
- */
-bool are_chunks_in_same_line(Chunk *start, Chunk *end);
 
 
 inline bool Chunk::IsTypeAndLevel(const E_Token cType, const int cLevel) const

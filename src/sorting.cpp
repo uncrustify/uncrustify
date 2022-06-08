@@ -427,7 +427,7 @@ static void delete_chunks_on_line_having_chunk(Chunk *chunk)
 {
    LOG_FUNC_ENTRY();
 
-   Chunk *pc = chunk_first_on_line(chunk);
+   Chunk *pc = chunk->GetFirstChunkOnLine();
 
    while (  pc->IsNotNullChunk()
          && !pc->IsComment())
@@ -482,7 +482,7 @@ static void dedupe_imports(Chunk **chunks, size_t num_chunks)
  */
 static void blankline_add_before(Chunk *pc)
 {
-   Chunk *newline = newline_add_before(chunk_first_on_line(pc));
+   Chunk *newline = newline_add_before(pc->GetFirstChunkOnLine());
 
    if (newline->nl_count < 2)
    {

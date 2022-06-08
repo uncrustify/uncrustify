@@ -899,7 +899,7 @@ void newlines_sparens()
       Chunk *sparen_content_end   = sparen_close->GetPrevNnl();
       bool  is_multiline          = (
          sparen_content_start != sparen_content_end
-                                    && !are_chunks_in_same_line(sparen_content_start, sparen_content_end));
+                                    && !sparen_content_start->IsOnSameLine(sparen_content_end));
 
       // Add a newline after '(' if an if/for/while/switch condition spans multiple lines,
       // as e.g. required by the ROS 2 development style guidelines:
@@ -2274,7 +2274,7 @@ static void newlines_brace_pair(Chunk *br_open)
 
       if (chunk_brace_close->IsNotNullChunk())
       {
-         if (are_chunks_in_same_line(br_open, chunk_brace_close))
+         if (br_open->IsOnSameLine(chunk_brace_close))
          {
             log_rule_B("nl_namespace_two_to_one_liner - 1");
 
@@ -5349,9 +5349,9 @@ void newlines_squeeze_paren_close()
 
          if (flag)
          {
-            if (are_chunks_in_same_line(next_op, prev_op))
+            if (next_op->IsOnSameLine(prev_op))
             {
-               if (chunk_is_token(pc, CT_NEWLINE))
+               if (pc->Is(CT_NEWLINE))
                {
                   pc = next;
                }

@@ -167,7 +167,7 @@ void do_code_width()
          && is_past_width(pc))
       {
          if (  chunk_is_token(pc, CT_VBRACE_CLOSE) // don't break if a vbrace close
-            && chunk_is_last_on_line(pc))          // is the last chunk on its line
+            && pc->IsLastChunkOnLine())            // is the last chunk on its line
          {
             continue;
          }
