@@ -299,18 +299,18 @@ Chunk *Chunk::Search(const T_CheckFnPtr checkFn, const E_Scope scope,
 }
 
 
-bool are_chunks_in_same_line(Chunk *start, Chunk *end)
+bool Chunk::IsOnSameLine(const Chunk *end) const
 {
-   if (start == nullptr)
+   if (this->IsNullChunk())
    {
       return(false);
    }
-   Chunk *tmp = start->GetNext();
+   Chunk *tmp = this->GetNext();
 
    while (  tmp->IsNotNullChunk()
          && tmp != end)
    {
-      if (chunk_is_token(tmp, CT_NEWLINE))
+      if (tmp->Is(CT_NEWLINE))
       {
          return(false);
       }
@@ -627,38 +627,32 @@ void Chunk::Swap(Chunk *other)
 }
 
 
-// TODO: the following function shall be made similar to the search functions
-Chunk *chunk_first_on_line(Chunk *pc)
+Chunk *Chunk::GetFirstChunkOnLine() const
 {
-   if (  pc == nullptr
-      || pc->IsNullChunk())
-   {
-      return(Chunk::NullChunkPtr);
-   }
+   Chunk *pc    = const_cast<Chunk *>(this);
    Chunk *first = pc;
 
-   while (  (pc = pc->GetPrev())->IsNotNullChunk()
+   pc = pc->GetPrev();
+
+   while (  pc->IsNotNullChunk()
          && !pc->IsNewline())
    {
       first = pc;
+      pc    = pc->GetPrev();
    }
    return(first);
 }
 
 
-bool chunk_is_last_on_line(const Chunk *pc)
+bool Chunk::IsLastChunkOnLine() const
 {
-   // check if pc is the very last chunk of the file
-   const Chunk *end = Chunk::GetTail();
-
-   if (pc == end)
+   if (this == Chunk::GetTail())
    {
       return(true);
    }
-   // if the next chunk is a newline then pc is the last chunk on its line
-   const Chunk *next = pc->GetNext();
 
-   if (chunk_is_token(next, CT_NEWLINE))
+   // if the next chunk is a newline then pc is the last chunk on its line
+   if (this->GetNext()->Is(CT_NEWLINE))
    {
       return(true);
    }
@@ -669,8 +663,8 @@ bool chunk_is_last_on_line(const Chunk *pc)
 void Chunk::SwapLines(Chunk *other)
 {
    // to swap lines we need to find the first chunk of the lines
-   Chunk *pc1 = chunk_first_on_line(this);
-   Chunk *pc2 = chunk_first_on_line(other);
+   Chunk *pc1 = this->GetFirstChunkOnLine();
+   Chunk *pc2 = other->GetFirstChunkOnLine();
 
    if (  pc1->IsNullChunk()
       || pc2->IsNullChunk()

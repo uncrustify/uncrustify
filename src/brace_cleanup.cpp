@@ -1430,7 +1430,8 @@ bool close_statement(ParseFrame &frm, Chunk *pc, const BraceState &braceState)
 {
    LOG_FUNC_ENTRY();
 
-   if (pc == nullptr)
+   if (  pc == nullptr
+      || pc->IsNullChunk())
    {
       throw invalid_argument(string(__func__) + ":" + to_string(__LINE__)
                              + "args cannot be nullptr");

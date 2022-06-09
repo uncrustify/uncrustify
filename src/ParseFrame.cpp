@@ -36,6 +36,8 @@ static ContainerType genDummy()
    tmp_dummy.indent_tmp = 1;
    tmp_dummy.indent_tab = 1;
    tmp_dummy.type       = CT_EOF;
+   tmp_dummy.pc         = Chunk::NullChunkPtr;
+   tmp_dummy.pop_pc     = Chunk::NullChunkPtr;
 
    return(tmp_dummy);
 }
@@ -151,7 +153,7 @@ void ParseFrame::push(std::nullptr_t, brace_stage_e stage)
    static Chunk dummy;
 
    push(&dummy, __func__, __LINE__, stage);
-   top().pc = nullptr;
+   top().pc = Chunk::NullChunkPtr;
 }
 
 
@@ -174,7 +176,7 @@ void ParseFrame::push(Chunk *pc, const char *func, int line, brace_stage_e stage
    new_entry.in_preproc = pc->flags.test(PCF_IN_PREPROC);
    new_entry.non_vardef = false;
    new_entry.ip         = top().ip;
-   new_entry.pop_pc     = nullptr;
+   new_entry.pop_pc     = Chunk::NullChunkPtr;
 
    pse.push_back(new_entry);
 

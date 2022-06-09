@@ -44,7 +44,7 @@ struct cmt_reflow
 // for tracking line numbering
 bool numbering_status = false;
 int  line_number;
-char char_number[12] = { 0 };
+char char_number[16] = { 0 };
 
 
 void set_numbering(bool status)
@@ -1777,7 +1777,7 @@ static Chunk *output_comment_c(Chunk *first)
 
       log_rule_B("cmt_trailing_single_line_c_to_cpp");
 
-      if (options::cmt_trailing_single_line_c_to_cpp() && chunk_is_last_on_line(first))
+      if (options::cmt_trailing_single_line_c_to_cpp() && first->IsLastChunkOnLine())
       {
          add_text("//");
 

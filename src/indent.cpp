@@ -469,7 +469,7 @@ static size_t calc_indent_continue(const ParseFrame &frm)
 
 static Chunk *candidate_chunk_first_on_line(Chunk *pc)
 {
-   Chunk *first = chunk_first_on_line(pc);
+   Chunk *first = pc->GetFirstChunkOnLine();
 
    log_rule_B("indent_inside_ternary_operator");
 
@@ -936,7 +936,7 @@ void indent_text()
             else if (get_chunk_parent_type(pc) == CT_PP_ELSE)
             {
                if (  frm.top().type == CT_MEMBER
-                  && frm.top().pop_pc != nullptr
+                  && frm.top().pop_pc->IsNotNullChunk()
                   && frm.top().pc != frmbkup.top().pc)
                {
                   Chunk *tmp = pc->GetNextNcNnlNpp();
@@ -1288,7 +1288,7 @@ void indent_text()
                frm.pop(__func__, __LINE__, pc);
             }
 
-            if (frm.top().pop_pc != nullptr)
+            if (frm.top().pop_pc->IsNotNullChunk())
             {
                LOG_FMT(LINDLINE, "%s(%d): pop_pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
                        __func__, __LINE__, frm.top().pop_pc->orig_line, frm.top().pop_pc->orig_col,
@@ -1658,7 +1658,7 @@ void indent_text()
             {
                if (it->pc && it->pc != frm.top().pc)
                {
-                  linematch &= are_chunks_in_same_line(it->pc, head);
+                  linematch &= it->pc->IsOnSameLine(head);
                }
                Chunk *match = it->pc->SkipToMatch();
 
@@ -1746,14 +1746,14 @@ void indent_text()
             // 2a. If it's an assignment, check that both sides of the assignment operator are on the same line
             // 2b. If it's inside some closure, check that all the frames are on the same line,
             //     and it is in the top level closure, and indent_continue is non-zero
-            bool sameLine = are_chunks_in_same_line(frm.top().pc->SkipToMatch(), tail);
+            bool sameLine = frm.top().pc->SkipToMatch()->IsOnSameLine(tail);
 
             bool isAssignSameLine =
                !enclosure
                && options::align_assign_span() == 0
                && !options::indent_align_assign()
-               && are_chunks_in_same_line(frm.prev().pc->GetPrevNcNnlNpp(), frm.prev().pc)
-               && are_chunks_in_same_line(frm.prev().pc, frm.prev().pc->GetNextNcNnlNpp());
+               && frm.prev().pc->GetPrevNcNnlNpp()->IsOnSameLine(frm.prev().pc)
+               && frm.prev().pc->IsOnSameLine(frm.prev().pc->GetNextNcNnlNpp());
 
             bool closureSameLineTopLevel =
                (options::indent_continue() > 0)
@@ -1844,7 +1844,7 @@ void indent_text()
             frm.top().brace_indent = frm.prev().indent;
 
             // Issue # 1620, UNI-24090.cs
-            if (are_chunks_in_same_line(frm.prev().pc, frm.top().pc->GetPrevNcNnlNpp()))
+            if (frm.prev().pc->IsOnSameLine(frm.top().pc->GetPrevNcNnlNpp()))
             {
                frm.top().brace_indent -= indent_size;
             }
@@ -2004,7 +2004,7 @@ void indent_text()
                log_indent();
             }
             // Issue # 1620, UNI-24090.cs
-            else if (  are_chunks_in_same_line(frm.prev().pc, frm.top().pc)
+            else if (  frm.prev().pc->IsOnSameLine(frm.top().pc)
                     && !options::indent_align_paren()
                     && chunk_is_paren_open(frm.prev().pc)
                     && !pc->flags.test(PCF_ONE_LINER))
@@ -2017,7 +2017,7 @@ void indent_text()
                frm.top().indent = frm.prev().indent_tmp;
                log_indent();
             }
-            else if (  are_chunks_in_same_line(frm.prev().pc, frm.top().pc->GetPrevNcNnlNpp())
+            else if (  frm.prev().pc->IsOnSameLine(frm.top().pc->GetPrevNcNnlNpp())
                     && !options::indent_align_paren()
                     && chunk_is_paren_open(frm.prev().pc)
                     && !pc->flags.test(PCF_ONE_LINER))
@@ -2709,7 +2709,7 @@ void indent_text()
                         && frm.at(idx).type != CT_COND_COLON
                         && frm.at(idx).type != CT_LAMBDA
                         && frm.at(idx).type != CT_ASSIGN_NL)
-                     || are_chunks_in_same_line(frm.at(idx).pc, frm.top().pc))
+                     || frm.at(idx).pc->IsOnSameLine(frm.top().pc))
                   && (  frm.at(idx).type != CT_CLASS_COLON
                      && frm.at(idx).type != CT_CONSTR_COLON
                      && !(  frm.at(idx).type == CT_LAMBDA
@@ -2774,7 +2774,7 @@ void indent_text()
             int idx = static_cast<int>(frm.size()) - 2;
 
             while (  idx > 0
-                  && are_chunks_in_same_line(frm.at(idx).pc, frm.top().pc))
+                  && frm.at(idx).pc->IsOnSameLine(frm.top().pc))
             {
                idx--;
                skipped = true;
@@ -2825,7 +2825,7 @@ void indent_text()
                   sub = static_cast<int>(frm.size()) - 2;
 
                   while (  sub > 0
-                        && are_chunks_in_same_line(frm.at(sub).pc, frm.top().pc))
+                        && frm.at(sub).pc->IsOnSameLine(frm.top().pc))
                   {
                      sub--;
                      skipped = true;
@@ -2987,7 +2987,7 @@ void indent_text()
             frm.push(pc, __func__, __LINE__);
             Chunk *tmp = frm.top().pc->GetPrevNcNnlNpp();
 
-            if (are_chunks_in_same_line(frm.prev().pc, tmp))
+            if (frm.prev().pc->IsOnSameLine(tmp))
             {
                frm.top().indent = frm.prev().indent;
             }
@@ -3319,7 +3319,7 @@ void indent_text()
          log_indent();
 
          if (  pc->GetPrevNc()->IsNewline()
-            && !are_chunks_in_same_line(frm.prev().pc, pc->GetPrevNcNnl()))
+            && !frm.prev().pc->IsOnSameLine(pc->GetPrevNcNnl()))
          {
             frm.top().indent = frm.prev().indent + indent_size;
             log_indent();
@@ -3327,7 +3327,7 @@ void indent_text()
             did_newline = false;
          }
          else if (  pc->GetNextNc()->IsNewline()
-                 && !are_chunks_in_same_line(frm.prev().pc, frm.top().pc))
+                 && !frm.prev().pc->IsOnSameLine(frm.top().pc))
          {
             frm.top().indent = frm.prev().indent + indent_size;
          }
@@ -4189,7 +4189,7 @@ void indent_text()
                      {
                         Chunk *before_Assign = frm.at(temp_ttidx - 1).pc;
 
-                        if (before_Assign == nullptr)
+                        if (before_Assign->IsNullChunk())
                         {
                            indent_column = 1 + indent_size;
                         }
