@@ -58,19 +58,14 @@ Chunk *pawn_add_vsemi_after(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_semicolon(pc))
+   if (pc->IsSemicolon())
    {
       return(pc);
-   }
-
-   if (pc == nullptr)
-   {
-      pc = Chunk::NullChunkPtr;
    }
    Chunk *next = pc->GetNextNc();
 
    if (  next->IsNotNullChunk()
-      && chunk_is_semicolon(next))
+      && next->IsSemicolon())
    {
       return(pc);
    }
@@ -288,7 +283,7 @@ static Chunk *pawn_process_variable(Chunk *start)
          && prev->IsNotNullChunk()
          && !pawn_continued(prev, start->level))
       {
-         if (!chunk_is_semicolon(prev))
+         if (!prev->IsSemicolon())
          {
             pawn_add_vsemi_after(prev);
          }
@@ -328,7 +323,7 @@ void pawn_add_virtual_semicolons()
          // we just hit a newline and we have a previous token
          if (  !prev->flags.test(PCF_IN_PREPROC)
             && !prev->flags.test_any(PCF_IN_ENUM | PCF_IN_STRUCT)
-            && !chunk_is_semicolon(prev)
+            && !prev->IsSemicolon()
             && !pawn_continued(prev, prev->brace_level))
          {
             pawn_add_vsemi_after(prev);

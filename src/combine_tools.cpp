@@ -351,7 +351,7 @@ bool chunk_ends_type(Chunk *start)
        * template (i.e. argument list nest level)
        */
 
-      if (  (  chunk_is_semicolon(pc)
+      if (  (  pc->IsSemicolon()
             && !pc->flags.test(PCF_IN_FOR))
          || chunk_is_token(pc, CT_TYPEDEF)
          || chunk_is_token(pc, CT_BRACE_OPEN)
@@ -501,10 +501,10 @@ bool go_on(Chunk *pc, Chunk *start)
 
    if (pc->flags.test(PCF_IN_FOR))
    {
-      return(  (!chunk_is_semicolon(pc))
+      return(  (!pc->IsSemicolon())
             && (!(chunk_is_token(pc, CT_COLON))));
    }
-   return(!chunk_is_semicolon(pc));
+   return(!pc->IsSemicolon());
 } // go_on
 
 

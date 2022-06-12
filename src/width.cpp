@@ -513,7 +513,7 @@ static bool split_line(Chunk *start)
          || chunk_is_token(start, CT_ANGLE_CLOSE)
          || chunk_is_token(start, CT_BRACE_CLOSE)
          || chunk_is_token(start, CT_COMMA)
-         || chunk_is_semicolon(start)
+         || start->IsSemicolon()
          || start->Len() == 0)
       {
          LOG_FMT(LSPLIT, " ** NO GO **\n");

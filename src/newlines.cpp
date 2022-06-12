@@ -1697,7 +1697,7 @@ static void newlines_struct_union(Chunk *start, iarf_e nl_opt, bool leave_traili
    {
       if (  pc->level == level
          && (  chunk_is_token(pc, CT_BRACE_OPEN)
-            || chunk_is_semicolon(pc)
+            || pc->IsSemicolon()
             || chunk_is_token(pc, CT_ASSIGN)))
       {
          break;
@@ -1798,7 +1798,7 @@ static void newlines_enum(Chunk *start)
    {
       if (  pc->level == level
          && (  chunk_is_token(pc, CT_BRACE_OPEN)
-            || chunk_is_semicolon(pc)
+            || pc->IsSemicolon()
             || chunk_is_token(pc, CT_ASSIGN)))
       {
          break;
@@ -4454,7 +4454,7 @@ void newlines_cleanup_braces(bool first)
             Chunk *next = pc->GetNext(E_Scope::PREPROC);
             bool  add_it;
 
-            if (chunk_is_semicolon(next))
+            if (next->IsSemicolon())
             {
                log_rule_B("nl_after_vbrace_open_empty");
                add_it = options::nl_after_vbrace_open_empty();
