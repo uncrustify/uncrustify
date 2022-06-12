@@ -447,7 +447,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
          for (tmp = pc->GetPrevNcNnlNi(); tmp->IsNotNullChunk(); tmp = tmp->GetPrevNcNnlNi()) // Issue #2279
          {
-            if (  chunk_is_semicolon(tmp)
+            if (  tmp->IsSemicolon()
                || chunk_is_token(tmp, CT_BRACE_OPEN)
                || chunk_is_token(tmp, CT_VBRACE_OPEN))
             {
@@ -1058,7 +1058,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                      set_paren_parent(tmp, pc->type);
                   }
                }
-               else if (  chunk_is_semicolon(tmp)
+               else if (  tmp->IsSemicolon()
                        && chunk_is_token(pc, CT_FUNC_PROTO))
                {
                   set_chunk_parent(tmp, pc->type);
@@ -1563,7 +1563,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
                if (tmp->IsNotNullChunk())
                {
-                  if (  chunk_is_semicolon(tmp)
+                  if (  tmp->IsSemicolon()
                      || chunk_is_token(tmp, CT_BRACE_OPEN)
                      || chunk_is_token(tmp, CT_QUALIFIER))
                   {
@@ -2143,7 +2143,7 @@ static Chunk *process_return(Chunk *pc)
    next = pc->PpaGetNextNcNnl();
 
    if (  next->IsNullChunk()
-      || chunk_is_semicolon(next)
+      || next->IsSemicolon()
       || chunk_is_token(next, CT_NEWLINE))
    {
       return(next);
@@ -2173,7 +2173,7 @@ static Chunk *process_return(Chunk *pc)
       }
 
       if (  chunk_is_token(semi, CT_NEWLINE)
-         || chunk_is_semicolon(semi))
+         || semi->IsSemicolon())
       {
          log_rule_B("mod_paren_on_return");
 
@@ -2261,7 +2261,7 @@ static Chunk *process_return(Chunk *pc)
             return(semi);
          }
 
-         if (  chunk_is_semicolon(semi)
+         if (  semi->IsSemicolon()
             && pc->level == semi->level)
          {
             break;
@@ -2277,7 +2277,7 @@ static Chunk *process_return(Chunk *pc)
             return(semi);
          }
 
-         if (  chunk_is_semicolon(semi)
+         if (  semi->IsSemicolon()
             && pc->level == semi->level)
          {
             break;
@@ -2734,7 +2734,7 @@ static void handle_oc_class(Chunk *pc)
    {
       tmp = pc->GetNextNcNnl();
 
-      if (chunk_is_semicolon(tmp))
+      if (tmp->IsSemicolon())
       {
          set_chunk_parent(tmp, get_chunk_parent_type(pc));
          LOG_FMT(LOCCLASS, "%s(%d):   bail on semicolon\n", __func__, __LINE__);
@@ -3292,7 +3292,7 @@ static void handle_oc_message_send(Chunk *os)
 
    Chunk *tmp = cs->GetNextNcNnl();
 
-   if (chunk_is_semicolon(tmp))
+   if (tmp->IsSemicolon())
    {
       set_chunk_parent(tmp, CT_OC_MSG);
    }

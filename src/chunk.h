@@ -502,7 +502,6 @@ public:
     */
    bool IsTypeAndLevel(const E_Token cType, const int cLevel) const;
 
-
    /**
     * @brief checks whether the chunk matches a given string and level
     * @param cStr   the expected string
@@ -512,12 +511,23 @@ public:
     */
    bool IsStringAndLevel(const char *cStr, const size_t len, const int cLevel) const;
 
-
    /**
     * @brief checks whether the chunk is a star/asterisk
     * @return true if the chunk is a star/asterisk
     */
    bool IsStar() const;
+
+   /**
+    * @brief checks whether the chunk is a colon
+    * @return true if the chunk is a colon
+    */
+   bool IsColon() const;
+
+   /**
+    * @brief checks whether the chunk is a semicolon
+    * @return true if the chunk is a semicolon
+    */
+   bool IsSemicolon() const;
 
 
    // --------- Util functions
@@ -834,24 +844,31 @@ static inline bool chunk_is_cpp_inheritance_access_specifier(Chunk *pc)
 } // chunk_is_cpp_inheritance_access_specifier
 
 
-static inline bool chunk_is_colon(Chunk *pc)
+inline bool Chunk::IsColon() const
 {
-   return(  chunk_is_token(pc, CT_ACCESS_COLON)
-         || chunk_is_token(pc, CT_ASM_COLON)
-         || chunk_is_token(pc, CT_BIT_COLON)
-         || chunk_is_token(pc, CT_CASE_COLON)
-         || chunk_is_token(pc, CT_CLASS_COLON)
-         || chunk_is_token(pc, CT_COLON)
-         || chunk_is_token(pc, CT_COND_COLON)
-         || chunk_is_token(pc, CT_CONSTR_COLON)
-         || chunk_is_token(pc, CT_CS_SQ_COLON)
-         || chunk_is_token(pc, CT_D_ARRAY_COLON)
-         || chunk_is_token(pc, CT_FOR_COLON)
-         || chunk_is_token(pc, CT_LABEL_COLON)
-         || chunk_is_token(pc, CT_OC_COLON)
-         || chunk_is_token(pc, CT_OC_DICT_COLON)
-         || chunk_is_token(pc, CT_TAG_COLON)
-         || chunk_is_token(pc, CT_WHERE_COLON));
+   return(  Is(CT_ACCESS_COLON)
+         || Is(CT_ASM_COLON)
+         || Is(CT_BIT_COLON)
+         || Is(CT_CASE_COLON)
+         || Is(CT_CLASS_COLON)
+         || Is(CT_COLON)
+         || Is(CT_COND_COLON)
+         || Is(CT_CONSTR_COLON)
+         || Is(CT_CS_SQ_COLON)
+         || Is(CT_D_ARRAY_COLON)
+         || Is(CT_FOR_COLON)
+         || Is(CT_LABEL_COLON)
+         || Is(CT_OC_COLON)
+         || Is(CT_OC_DICT_COLON)
+         || Is(CT_TAG_COLON)
+         || Is(CT_WHERE_COLON));
+}
+
+
+inline bool Chunk::IsSemicolon() const
+{
+   return(  Is(CT_SEMICOLON)
+         || Is(CT_VSEMICOLON));
 }
 
 
@@ -859,13 +876,6 @@ static inline bool chunk_is_single_line_comment(Chunk *pc)
 {
    return(  chunk_is_token(pc, CT_COMMENT)
          || chunk_is_token(pc, CT_COMMENT_CPP));
-}
-
-
-static inline bool chunk_is_semicolon(Chunk *pc)
-{
-   return(  chunk_is_token(pc, CT_SEMICOLON)
-         || chunk_is_token(pc, CT_VSEMICOLON));
 }
 
 

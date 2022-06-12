@@ -50,7 +50,7 @@ void align_oc_decl_colon()
       {
          // The declaration ends with an open brace or semicolon
          if (  chunk_is_token(pc, CT_BRACE_OPEN)
-            || chunk_is_semicolon(pc))
+            || pc->IsSemicolon())
          {
             break;
          }
