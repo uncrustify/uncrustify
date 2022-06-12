@@ -453,7 +453,7 @@ static bool can_remove_braces(Chunk *bopen)
                return(false);
             }
 
-            if (  chunk_is_semicolon(pc)
+            if (  pc->IsSemicolon()
                || chunk_is_token(pc, CT_IF)
                || chunk_is_token(pc, CT_ELSEIF)
                || chunk_is_token(pc, CT_FOR)
@@ -463,7 +463,7 @@ static bool can_remove_braces(Chunk *bopen)
                || (  chunk_is_token(pc, CT_BRACE_OPEN)
                   && chunk_is_token(prev, CT_FPAREN_CLOSE)))
             {
-               hit_semi |= chunk_is_semicolon(pc);
+               hit_semi |= pc->IsSemicolon();
 
                if (++semi_count > 1)
                {
@@ -640,7 +640,7 @@ static void examine_brace(Chunk *bopen)
             LOG_FMT(LBRDEL, "%s(%d): for pc->Text() '%s', pc->level is %zu,  bopen->level is %zu\n",
                     __func__, __LINE__, pc->Text(), pc->level, bopen->level);
 
-            if (  chunk_is_semicolon(pc)
+            if (  pc->IsSemicolon()
                || chunk_is_token(pc, CT_IF)
                || chunk_is_token(pc, CT_ELSEIF)
                || chunk_is_token(pc, CT_FOR)
@@ -653,7 +653,7 @@ static void examine_brace(Chunk *bopen)
             {
                LOG_FMT(LBRDEL, "%s(%d): pc->Text() '%s', orig_line is %zu, orig_col is %zu, level is %zu\n",
                        __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col, pc->level);
-               hit_semi |= chunk_is_semicolon(pc);
+               hit_semi |= pc->IsSemicolon();
                semi_count++;
                LOG_FMT(LBRDEL, "%s(%d): semi_count is %zu\n",
                        __func__, __LINE__, semi_count);

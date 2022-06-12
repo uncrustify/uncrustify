@@ -593,7 +593,7 @@ static std::pair<Chunk *, Chunk *> match_variable_end(Chunk *pc, std::size_t lev
 
       if (  next->IsNot(CT_COMMA)
          && next->IsNot(CT_FPAREN_CLOSE)
-         && !chunk_is_semicolon(next)
+         && !next->IsSemicolon()
          && !adj_tokens_match_var_def_pattern(pc, next))
       {
          /**
@@ -618,7 +618,7 @@ static std::pair<Chunk *, Chunk *> match_variable_end(Chunk *pc, std::size_t lev
        */
       if (  chunk_is_token(next, CT_COMMA)
          || chunk_is_token(next, CT_FPAREN_CLOSE)
-         || chunk_is_semicolon(next))
+         || next->IsSemicolon())
       {
          return(std::make_pair(identifier, pc));
       }
@@ -1003,7 +1003,7 @@ void EnumStructUnionParser::analyze_identifiers()
       /**
        * if we're sitting at a comma or semicolon, skip it
        */
-      if (  chunk_is_semicolon(pc)
+      if (  pc->IsSemicolon()
          || (  chunk_is_token(pc, CT_COMMA)
             && !pc->flags.test_any(PCF_IN_FCN_DEF | PCF_IN_FCN_CALL | PCF_IN_TEMPLATE)
             && !chunk_is_between(pc, inheritance_start, body_start)))
@@ -1301,9 +1301,9 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
    /**
     * test for a semicolon or closing brace at the level of the starting chunk
     */
-   if (  pc == nullptr
+   if (  pc->IsNullChunk()
       || parse_error_detected()
-      || (  (  chunk_is_semicolon(pc)
+      || (  (  pc->IsSemicolon()
             || chunk_is_token(pc, CT_BRACE_CLOSE))
          && pc->level == m_start->level))
    {
@@ -1697,7 +1697,7 @@ void EnumStructUnionParser::mark_enum_integral_type(Chunk *colon)
    while (  chunk_is_between(pc, m_start, m_end)
          && pc != body_start
          && pc->IsNot(CT_BRACE_OPEN)
-         && !chunk_is_semicolon(pc))
+         && !pc->IsSemicolon())
    {
       /**
        * clear the PCF_VAR_TYPE flag for all chunks within the enum integral base
@@ -2081,7 +2081,7 @@ void EnumStructUnionParser::parse(Chunk *pc)
       {
          next = parse_braces(next);
       }
-      else if (chunk_is_colon(next))
+      else if (next->IsColon())
       {
          parse_colon(next);
       }
@@ -2140,8 +2140,8 @@ void EnumStructUnionParser::parse(Chunk *pc)
     */
    mark_extracorporeal_lvalues();
 
-   if (  prev != nullptr
-      && chunk_is_semicolon(prev)
+   if (  prev->IsNotNullChunk()
+      && prev->IsSemicolon()
       && prev->level == m_start->level
       && !prev->flags.test(PCF_IN_FOR))
    {
@@ -2472,7 +2472,7 @@ Chunk *EnumStructUnionParser::refine_end_chunk(Chunk *pc)
 
       while (true)
       {
-         if (chunk_is_semicolon(next))
+         if (next->IsSemicolon())
          {
             pc = next;
 
@@ -2544,7 +2544,7 @@ void EnumStructUnionParser::set_enum_base_start(Chunk *enum_base_start)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_colon(enum_base_start))
+   if (enum_base_start->IsColon())
    {
       m_chunk_map[CT_BIT_COLON][0] = enum_base_start;
    }
@@ -2555,7 +2555,7 @@ void EnumStructUnionParser::set_inheritance_start(Chunk *inheritance_start)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_colon(inheritance_start))
+   if (inheritance_start->IsColon())
    {
       m_chunk_map[CT_COLON][0] = inheritance_start;
    }
@@ -2883,7 +2883,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
                && (  (  next->IsNot(CT_ASSIGN)
                      && next->IsNot(CT_COMMA))
                   || next->level != m_start->level)
-               && !chunk_is_semicolon(next))
+               && !next->IsSemicolon())
          {
             prev = next;
             next = next->GetNextNcNnl();

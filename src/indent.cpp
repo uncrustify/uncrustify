@@ -1158,7 +1158,7 @@ void indent_text()
 
             if (  options::indent_inside_ternary_operator()
                && (frm.top().type == CT_COND_COLON)
-               && (  chunk_is_semicolon(pc)
+               && (  pc->IsSemicolon()
                   || chunk_is_token(pc, CT_COMMA)
                   || chunk_is_token(pc, CT_OC_MSG_NAME)
                   || chunk_is_token(pc, CT_SPAREN_CLOSE))) // Issue #1130, #1715
@@ -1169,7 +1169,7 @@ void indent_text()
             }
 
             // End any assign operations with a semicolon on the same level
-            if (  chunk_is_semicolon(pc)
+            if (  pc->IsSemicolon()
                && (  (frm.top().type == CT_IMPORT)
                   || (frm.top().type == CT_USING)))
             {
@@ -1202,7 +1202,7 @@ void indent_text()
                   || (  language_is_set(LANG_OC)
                      && pc->IsComment()
                      && get_chunk_parent_type(pc) == CT_COMMENT_WHOLE) // Issue #2675
-                  || chunk_is_semicolon(pc)))
+                  || pc->IsSemicolon()))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
@@ -1328,7 +1328,7 @@ void indent_text()
             }
 
             // return & throw are ended with a semicolon
-            if (  chunk_is_semicolon(pc)
+            if (  pc->IsSemicolon()
                && (  (frm.top().type == CT_RETURN)
                   || (frm.top().type == CT_THROW)))
             {
@@ -1339,7 +1339,7 @@ void indent_text()
 
             // an OC SCOPE ('-' or '+') ends with a semicolon or brace open
             if (  (frm.top().type == CT_OC_SCOPE)
-               && (  chunk_is_semicolon(pc)
+               && (  pc->IsSemicolon()
                   || chunk_is_token(pc, CT_BRACE_OPEN)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
@@ -1352,7 +1352,7 @@ void indent_text()
              * brace open
              */
             if (  (frm.top().type == CT_TYPEDEF)
-               && (  chunk_is_semicolon(pc)
+               && (  pc->IsSemicolon()
                   || chunk_is_paren_open(pc)
                   || chunk_is_token(pc, CT_BRACE_OPEN)))
             {
@@ -1363,7 +1363,7 @@ void indent_text()
 
             // an SQL EXEC is ended with a semicolon
             if (  (frm.top().type == CT_SQL_EXEC)
-               && chunk_is_semicolon(pc))
+               && pc->IsSemicolon())
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
@@ -1374,7 +1374,7 @@ void indent_text()
             if (  (frm.top().type == CT_CLASS)
                && (  chunk_is_token(pc, CT_CLASS_COLON)
                   || chunk_is_token(pc, CT_BRACE_OPEN)
-                  || chunk_is_semicolon(pc)))
+                  || pc->IsSemicolon()))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
@@ -1671,7 +1671,7 @@ void indent_text()
                while (  tail->IsNullChunk()
                      && target->IsNotNullChunk())
                {
-                  if (  chunk_is_semicolon(target)
+                  if (  target->IsSemicolon()
                      && target->level == match->level)
                   {
                      tail = target;
@@ -3466,7 +3466,7 @@ void indent_text()
          Chunk *prev_nonl = pc->GetPrevNcNnl();
          Chunk *prev2     = pc->GetPrevNc();
 
-         if ((  chunk_is_semicolon(prev_nonl)
+         if ((  prev_nonl->IsSemicolon()
              || chunk_is_opening_brace(prev_nonl)
              || chunk_is_closing_brace(prev_nonl)
              || chunk_is_token(prev_nonl, CT_CASE_COLON)
@@ -3568,7 +3568,7 @@ void indent_text()
          }
       }
 
-      if (  chunk_is_semicolon(pc)
+      if (  pc->IsSemicolon()
          || (  chunk_is_token(pc, CT_BRACE_OPEN)
             && (  get_chunk_parent_type(pc) == CT_FUNCTION
                || get_chunk_parent_type(pc) == CT_CLASS))) //Issue #3576
@@ -4436,7 +4436,7 @@ static bool is_end_of_assignment(Chunk *pc, const ParseFrame &frm)
    return(  (  frm.top().type == CT_ASSIGN_NL
             || frm.top().type == CT_MEMBER
             || frm.top().type == CT_ASSIGN)
-         && (  chunk_is_semicolon(pc)
+         && (  pc->IsSemicolon()
             || chunk_is_token(pc, CT_COMMA)
             || chunk_is_token(pc, CT_BRACE_OPEN)
             || chunk_is_token(pc, CT_SPAREN_CLOSE)

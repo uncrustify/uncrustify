@@ -261,7 +261,7 @@ void fix_casts(Chunk *start)
       return;
    }
 
-   if (  chunk_is_semicolon(pc)
+   if (  pc->IsSemicolon()
       || chunk_is_token(pc, CT_COMMA)
       || chunk_is_token(pc, CT_BOOL)               // Issue #2151
       || chunk_is_paren_close(pc))
@@ -459,7 +459,7 @@ void fix_typedef(Chunk *start)
 
       if (start->level == next->level)
       {
-         if (chunk_is_semicolon(next))
+         if (next->IsSemicolon())
          {
             set_chunk_parent(next, CT_TYPEDEF);
             break;
@@ -837,7 +837,7 @@ void mark_cpp_constructor(Chunk *pc)
    while (  tmp->IsNotNullChunk()
          && (  tmp->IsNot(CT_BRACE_OPEN)
             || tmp->level != paren_open->level)
-         && !chunk_is_semicolon(tmp))
+         && !tmp->IsSemicolon())
    {
       LOG_FMT(LFTOR, "%s(%d): tmp is '%s', orig_line is %zu, orig_col is %zu\n",
               __func__, __LINE__, tmp->Text(), tmp->orig_line, tmp->orig_col);
@@ -959,7 +959,7 @@ void mark_define_expressions()
                   || chunk_is_token(prev, CT_FPAREN_OPEN)
                   || chunk_is_token(prev, CT_SPAREN_OPEN)
                   || chunk_is_token(prev, CT_BRACE_OPEN)
-                  || chunk_is_semicolon(prev)
+                  || prev->IsSemicolon()
                   || chunk_is_token(prev, CT_COMMA)
                   || chunk_is_token(prev, CT_COLON)
                   || chunk_is_token(prev, CT_QUESTION)))
@@ -1872,7 +1872,7 @@ void mark_function(Chunk *pc)
             // its a function def for sure
             break;
          }
-         else if (chunk_is_semicolon(tmp))
+         else if (tmp->IsSemicolon())
          {
             // Set the parent for the semicolon for later
             semi = tmp;
@@ -2071,7 +2071,7 @@ void mark_function(Chunk *pc)
                  __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->Text());
          set_chunk_parent(tmp, CT_FUNC_DEF);
 
-         if (!chunk_is_semicolon(tmp))
+         if (!tmp->IsSemicolon())
          {
             chunk_flags_set(tmp, PCF_OLD_FCN_PARAMS);
          }
@@ -2259,7 +2259,7 @@ bool mark_function_type(Chunk *pc)
    set_chunk_parent(apc, pt);
    fix_fcn_def_params(apo);
 
-   if (chunk_is_semicolon(aft))
+   if (aft->IsSemicolon())
    {
       set_chunk_parent(aft, aft->flags.test(PCF_IN_TYPEDEF) ? CT_TYPEDEF : CT_FUNC_VAR);
    }
@@ -2335,7 +2335,7 @@ void mark_lvalue(Chunk *pc)
          || chunk_is_token(prev, CT_BOOL)
          || chunk_is_token(prev, CT_COMMA)
          || chunk_is_cpp_inheritance_access_specifier(prev)
-         || chunk_is_semicolon(prev)
+         || prev->IsSemicolon()
          || prev->IsString("(")
          || prev->IsString("{")
          || prev->IsString("[")

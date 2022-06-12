@@ -324,7 +324,7 @@ void indent_text(void)
       }
 
     if ((cout_col > 0) &&
-        (chunk_is_semicolon(pc) ||
+        (pc->IsSemicolon() ||
          (pc->level < cout_level)))
       {
       cout_col   = 0;
@@ -363,7 +363,7 @@ void indent_text(void)
 
           /* End any assign operations with a semicolon on the same level */
         if ((frm.pse[frm.pse_tos].type == CT_ASSIGN) &&
-            (chunk_is_semicolon(pc) ||
+            (pc->IsSemicolon() ||
              (pc->type == CT_COMMA) ||
              (pc->type == CT_BRACE_OPEN)))
           indent_pse_pop(frm, pc);
@@ -371,7 +371,7 @@ void indent_text(void)
           /* End any CPP class colon crap */
         if ((frm.pse[frm.pse_tos].type == CT_CLASS_COLON) &&
             ((pc->type == CT_BRACE_OPEN) ||
-             chunk_is_semicolon(pc)))
+             pc->IsSemicolon()))
           indent_pse_pop(frm, pc);
 
           /* a case is ended with another case or a close brace */
@@ -382,7 +382,7 @@ void indent_text(void)
 
           /* a return is ended with a semicolon */
         if ((frm.pse[frm.pse_tos].type == CT_RETURN) &&
-            chunk_is_semicolon(pc))
+            pc->IsSemicolon())
           indent_pse_pop(frm, pc);
 
           /* Close out parens and squares */
@@ -731,7 +731,7 @@ void indent_text(void)
         ((pc->flags & PCF_VAR_1ST_DEF) == PCF_VAR_1ST_DEF))
       vardefcol = pc->column;
 
-    if (chunk_is_semicolon(pc) ||
+    if (pc->IsSemicolon() ||
         ((pc->type == CT_BRACE_OPEN) && (pc->parent_type == CT_FUNCTION)))
       vardefcol = 0;
 

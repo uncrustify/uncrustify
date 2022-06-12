@@ -113,7 +113,7 @@ void combine_labels()
          hit_class = true;
       }
 
-      if (  chunk_is_semicolon(next)
+      if (  next->IsSemicolon()
          || chunk_is_token(next, CT_BRACE_OPEN))
       {
          hit_class = false;

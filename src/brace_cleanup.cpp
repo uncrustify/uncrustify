@@ -418,7 +418,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
 
    if (  (  frm.stmt_count == 0
          || frm.expr_count == 0)
-      && !chunk_is_semicolon(pc)
+      && !pc->IsSemicolon()
       && pc->IsNot(CT_BRACE_CLOSE)
       && pc->IsNot(CT_VBRACE_CLOSE)
       && !pc->IsString(")")
@@ -474,7 +474,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
     */
    if (frm.top().type == CT_VBRACE_OPEN)
    {
-      if (chunk_is_semicolon(pc))
+      if (pc->IsSemicolon())
       {
          braceState.consumed = true;
          close_statement(frm, pc, braceState);
@@ -611,7 +611,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          {
             Chunk *tmp = pc->GetNextNcNnl();
 
-            if (!chunk_is_semicolon(tmp))
+            if (!tmp->IsSemicolon())
             {
                pawn_add_vsemi_after(pc);
             }
@@ -620,7 +620,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       else
       {
          // Complain if this ISN'T a semicolon, but close out WHILE_OF_DO anyway
-         if (chunk_is_semicolon(pc))
+         if (pc->IsSemicolon())
          {
             braceState.consumed = true;
             set_chunk_parent(pc, CT_WHILE_OF_DO);
@@ -893,7 +893,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          && get_chunk_parent_type(pc) == CT_FOR)
       || chunk_is_token(pc, CT_COLON)
       || chunk_is_token(pc, CT_OC_END)
-      || (  chunk_is_semicolon(pc)
+      || (  pc->IsSemicolon()
          && frm.top().type != CT_PAREN_OPEN
          && frm.top().type != CT_FPAREN_OPEN
          && frm.top().type != CT_SPAREN_OPEN)
@@ -932,7 +932,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       || chunk_is_token(pc, CT_FPAREN_OPEN)
       || chunk_is_token(pc, CT_SPAREN_OPEN)
       || chunk_is_token(pc, CT_BRACE_OPEN)
-      || chunk_is_semicolon(pc)
+      || pc->IsSemicolon()
       || chunk_is_token(pc, CT_COMMA)
       || chunk_is_token(pc, CT_NOT)
       || chunk_is_token(pc, CT_INV)

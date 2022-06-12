@@ -74,7 +74,7 @@ static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(Chunk::*GetNextFn)(E_Sc
           */
          if (  next->level == level
             && (  chunk_is_token(next, CT_COMMA)
-               || chunk_is_semicolon(next)))
+               || next->IsSemicolon()))
          {
             break;
          }
@@ -116,7 +116,7 @@ Chunk *skip_to_next_statement(Chunk *pc)
    }
 
    while (  pc->IsNotNullChunk()
-         && !chunk_is_semicolon(pc)
+         && !pc->IsSemicolon()
          && pc->IsNot(CT_BRACE_OPEN)
          && pc->IsNot(CT_BRACE_CLOSE))
    {
