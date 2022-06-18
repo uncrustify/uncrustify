@@ -70,7 +70,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          }
       }
       else if (  pc != start
-              && chunk_is_ptr_operator(pc))
+              && pc->IsPointerOperator())
       {
          // chunk is OK
       }
@@ -234,7 +234,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
    LOG_FMT(LFPARAM, "%s(%d): last->Text() is '%s', type is %s\n",
            __func__, __LINE__, last->Text(), get_token_name(last->type));
 
-   if (chunk_is_ptr_operator(last))
+   if (last->IsPointerOperator())
    {
       LOG_FMT(LFPARAM, "%s(%d): <== type is %s, sure!\n",
               __func__, __LINE__, get_token_name(last->type));
@@ -534,14 +534,14 @@ void make_type(Chunk *pc)
          set_chunk_type(pc, CT_TYPE);
       }
       else if (  (  pc->IsStar()
-                 || chunk_is_msref(pc)
-                 || chunk_is_nullable(pc))
-              && chunk_is_type(pc->prev))                              // Issue # 2640
+                 || pc->IsMsRef()
+                 || pc->IsNullable())
+              && chunk_is_type(pc->prev))                    // Issue # 2640
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
-      else if (  chunk_is_addr(pc)
-              && !chunk_is_token(pc->prev, CT_SQUARE_OPEN))            // Issue # 2166
+      else if (  pc->IsAddress()
+              && pc->GetPrev()->IsNot(CT_SQUARE_OPEN))            // Issue # 2166
       {
          set_chunk_type(pc, CT_BYREF);
       }

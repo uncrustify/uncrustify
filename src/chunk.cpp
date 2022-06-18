@@ -301,11 +301,11 @@ Chunk *Chunk::Search(const T_CheckFnPtr checkFn, const E_Scope scope,
 
 bool Chunk::IsOnSameLine(const Chunk *end) const
 {
-   if (this->IsNullChunk())
+   if (IsNullChunk())
    {
       return(false);
    }
-   Chunk *tmp = this->GetNext();
+   Chunk *tmp = GetNext();
 
    while (  tmp->IsNotNullChunk()
          && tmp != end)
@@ -652,7 +652,7 @@ bool Chunk::IsLastChunkOnLine() const
    }
 
    // if the next chunk is a newline then pc is the last chunk on its line
-   if (this->GetNext()->Is(CT_NEWLINE))
+   if (GetNext()->Is(CT_NEWLINE))
    {
       return(true);
    }
@@ -663,7 +663,7 @@ bool Chunk::IsLastChunkOnLine() const
 void Chunk::SwapLines(Chunk *other)
 {
    // to swap lines we need to find the first chunk of the lines
-   Chunk *pc1 = this->GetFirstChunkOnLine();
+   Chunk *pc1 = GetFirstChunkOnLine();
    Chunk *pc2 = other->GetFirstChunkOnLine();
 
    if (  pc1->IsNullChunk()
