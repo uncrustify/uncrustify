@@ -170,16 +170,11 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
    LOG_FMT(LAS, "AlignStack::%s(%d): m_star_style is %s\n",
            __func__, __LINE__, get_StarStyle_name(m_star_style));
    // Find ref. Back up to the real item that is aligned.
-   Chunk *prev = Chunk::NullChunkPtr;
-
-   if (start != nullptr)
-   {
-      prev = start;
-   }
+   Chunk *prev = start;
 
    while (  (prev = prev->GetPrev())->IsNotNullChunk()
-         && (  chunk_is_ptr_operator(prev)
-            || chunk_is_token(prev, CT_TPAREN_OPEN)))
+         && (  prev->IsPointerOperator()
+            || prev->Is(CT_TPAREN_OPEN)))
    {
       // do nothing - we want prev when this exits
    }
@@ -208,7 +203,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       Chunk *tmp_prev = ali->GetPrev();
 
       while (  tmp_prev->IsStar()
-            || chunk_is_msref(tmp_prev))
+            || tmp_prev->IsMsRef())
       {
          ali      = tmp_prev;
          tmp_prev = ali->GetPrev();
@@ -229,7 +224,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       // back up to the first '&' preceding the token
       Chunk *tmp_prev = ali->GetPrev();
 
-      while (chunk_is_addr(tmp_prev))
+      while (tmp_prev->IsAddress())
       {
          ali      = tmp_prev;
          tmp_prev = ali->GetPrev();
@@ -297,11 +292,11 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
 
       if (  (  tmp->IsStar()
             && m_star_style == SS_DANGLE)
-         || (  chunk_is_addr(tmp)
+         || (  tmp->IsAddress()
             && m_amp_style == SS_DANGLE)
-         || (  chunk_is_nullable(tmp)
+         || (  tmp->IsNullable()
             && (m_star_style == SS_DANGLE))
-         || (  chunk_is_msref(tmp)
+         || (  tmp->IsMsRef()
             && m_star_style == SS_DANGLE))     // TODO: add m_msref_style
       {
          col_adj = start->column - ali->column;
@@ -459,9 +454,9 @@ void AlignStack::Flush()
 
       if (m_star_style == SS_DANGLE)
       {
-         Chunk *tmp = (chunk_is_token(pc, CT_TPAREN_OPEN)) ? pc->GetNext() : pc;
+         Chunk *tmp = (pc->Is(CT_TPAREN_OPEN)) ? pc->GetNext() : pc;
 
-         if (chunk_is_ptr_operator(tmp))
+         if (tmp->IsPointerOperator())
          {
             col_adj = pc->align.start->column - pc->column;
             gap     = pc->align.start->column - (pc->align.ref->column + pc->align.ref->Len());

@@ -194,7 +194,7 @@ void fix_casts(Chunk *start)
       }
       nope = false;
 
-      if (chunk_is_ptr_operator(pc))
+      if (pc->IsPointerOperator())
       {
          // star (*) and address (&) are ambiguous
          if (  chunk_is_token(after, CT_NUMBER_FP)
@@ -352,8 +352,8 @@ void fix_fcn_def_params(Chunk *start)
       }
 
       if (  pc->IsStar()
-         || chunk_is_msref(pc)
-         || chunk_is_nullable(pc))
+         || pc->IsMsRef()
+         || pc->IsNullable())
       {
          set_chunk_type(pc, CT_PTR_TYPE);
          cs.Push_Back(pc);
@@ -638,14 +638,14 @@ Chunk *fix_variable_definition(Chunk *start)
    log_pcf_flags(LFCNR, pc->flags);
 
    // Scan for words and types and stars oh my!
-   while (  chunk_is_token(pc, CT_TYPE)
-         || chunk_is_token(pc, CT_WORD)
-         || chunk_is_token(pc, CT_QUALIFIER)
-         || chunk_is_token(pc, CT_TYPENAME)
-         || chunk_is_token(pc, CT_DC_MEMBER)
-         || chunk_is_token(pc, CT_MEMBER)
-         || chunk_is_token(pc, CT_PP)                       // Issue #3169
-         || chunk_is_ptr_operator(pc))
+   while (  pc->Is(CT_TYPE)
+         || pc->Is(CT_WORD)
+         || pc->Is(CT_QUALIFIER)
+         || pc->Is(CT_TYPENAME)
+         || pc->Is(CT_DC_MEMBER)
+         || pc->Is(CT_MEMBER)
+         || pc->Is(CT_PP)                       // Issue #3169
+         || pc->IsPointerOperator())
    {
       LOG_FMT(LFVD, "%s(%d):   1:pc->Text() '%s', type is %s\n",
               __func__, __LINE__, pc->Text(), get_token_name(pc->type));
@@ -1058,7 +1058,7 @@ void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type)
             break;
          }
 
-         if (!chunk_is_ptr_operator(pc))
+         if (!pc->IsPointerOperator())
          {
             first = pc;
          }
@@ -1262,7 +1262,7 @@ void mark_function(Chunk *pc)
       }
    }
 
-   if (  chunk_is_ptr_operator(next)
+   if (  next->IsPointerOperator()
       || next->IsNewline())
    {
       next = next->GetNextNppOrNcNnl();
@@ -1365,7 +1365,7 @@ void mark_function(Chunk *pc)
 
       if (  tmp3->IsString(")")
          && (  tmp1->IsStar()
-            || chunk_is_msref(tmp1)
+            || tmp1->IsMsRef()
             || (  language_is_set(LANG_OC)
                && chunk_is_token(tmp1, CT_CARET)))
          && (  tmp2->IsNullChunk()
@@ -1691,7 +1691,7 @@ void mark_function(Chunk *pc)
             }
          }
 
-         if (chunk_is_ptr_operator(prev))
+         if (prev->IsPointerOperator())
          {
             hit_star = true;
          }
@@ -1702,7 +1702,7 @@ void mark_function(Chunk *pc)
             && prev->IsNot(CT_QUALIFIER)
             && prev->IsNot(CT_TYPE)
             && prev->IsNot(CT_WORD)
-            && !chunk_is_ptr_operator(prev))
+            && !prev->IsPointerOperator())
          {
             LOG_FMT(LFCN, "%s(%d):  --> Stopping on prev is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
                     __func__, __LINE__, prev->Text(), prev->orig_line, prev->orig_col, get_token_name(prev->type));
@@ -2318,23 +2318,22 @@ nogo_exit:
 void mark_lvalue(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
-   Chunk *prev;
 
    if (pc->flags.test(PCF_IN_PREPROC))
    {
       return;
    }
 
-   for (prev = pc->GetPrevNcNnlNi();     // Issue #2279
+   for (Chunk *prev = pc->GetPrevNcNnlNi();  // Issue #2279
         prev->IsNotNullChunk();
-        prev = prev->GetPrevNcNnlNi())   // Issue #2279
+        prev = prev->GetPrevNcNnlNi())       // Issue #2279
    {
       if (  prev->level < pc->level
-         || chunk_is_token(prev, CT_ACCESS_COLON)
-         || chunk_is_token(prev, CT_ASSIGN)
-         || chunk_is_token(prev, CT_BOOL)
-         || chunk_is_token(prev, CT_COMMA)
-         || chunk_is_cpp_inheritance_access_specifier(prev)
+         || prev->Is(CT_ACCESS_COLON)
+         || prev->Is(CT_ASSIGN)
+         || prev->Is(CT_BOOL)
+         || prev->Is(CT_COMMA)
+         || prev->IsCppInheritanceAccessSpecifier()
          || prev->IsSemicolon()
          || prev->IsString("(")
          || prev->IsString("{")
@@ -2498,11 +2497,11 @@ Chunk *mark_variable_definition(Chunk *start)
       }
       else if (  !bit_field_colon_is_present                      // Issue #2689
               && (  pc->IsStar()
-                 || chunk_is_msref(pc)))
+                 || pc->IsMsRef()))
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
-      else if (chunk_is_addr(pc))
+      else if (pc->IsAddress())
       {
          set_chunk_type(pc, CT_BYREF);
       }

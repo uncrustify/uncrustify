@@ -116,7 +116,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * - a qualifier (const, etc.)
           * - an identifier
           */
-         return(  chunk_is_pointer_or_reference(next)
+         return(  next->IsPointerOrReference()
                || next_token_type == CT_DC_MEMBER
                || next_token_type == CT_QUALIFIER
                || next_token_type == CT_WORD);
@@ -141,7 +141,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * - a qualifier (const, etc.)
           * - an identifier
           */
-         return(  chunk_is_pointer_or_reference(next)
+         return(  next->IsPointerOrReference()
                || next_token_type == CT_QUALIFIER
                || next_token_type == CT_WORD);
 
@@ -170,7 +170,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * - an identifier
           */
          return(  language_is_set(LANG_CPP)
-               && (  chunk_is_pointer_or_reference(next)
+               && (  next->IsPointerOrReference()
                   || next_token_type == CT_QUALIFIER
                   || next_token_type == CT_WORD));
 
@@ -183,7 +183,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * - a reference symbol ('&')
           * - an identifier
           */
-         return(  chunk_is_pointer_or_reference(next)
+         return(  next->IsPointerOrReference()
                || next_token_type == CT_WORD);
 
       case CT_DC_MEMBER:
@@ -218,7 +218,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * - a qualifier (const, etc.)
           * - an identifier
           */
-         return(  chunk_is_pointer_or_reference(next)
+         return(  next->IsPointerOrReference()
                || next_token_type == CT_QUALIFIER
                || next_token_type == CT_WORD);
 
@@ -231,7 +231,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * - another qualifier
           * - an identifier
           */
-         return(  chunk_is_pointer_or_reference(next)
+         return(  next->IsPointerOrReference()
                || next_token_type == CT_QUALIFIER
                || next_token_type == CT_WORD);
 
@@ -258,7 +258,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * - a qualifier (const, etc.)
           * - an identifier
           */
-         return(  chunk_is_pointer_or_reference(next)
+         return(  next->IsPointerOrReference()
                || next_token_type == CT_QUALIFIER
                || next_token_type == CT_WORD);
 
@@ -281,7 +281,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * - a qualifier (const, etc.)
           * - an identifier
           */
-         return(  chunk_is_pointer_or_reference(next)
+         return(  next->IsPointerOrReference()
                || next_token_type == CT_ANGLE_OPEN
                || next_token_type == CT_DC_MEMBER
                || next_token_type == CT_QUALIFIER
@@ -437,18 +437,14 @@ static bool chunk_is_macro_reference(Chunk *pc)
 } // chunk_is_macro_reference
 
 
-/**
- * Returns true if the input chunk is a pointer/reference operator or a
- * qualifier
- */
-static bool chunk_is_pointer_reference_or_qualifier(Chunk *pc)
+bool Chunk::IsPointerReferenceOrQualifier() const
 {
    LOG_FUNC_ENTRY();
 
-   return(  chunk_is_pointer_or_reference(pc)
-         || (  chunk_is_token(pc, CT_QUALIFIER)
-            && !chunk_is_cpp_inheritance_access_specifier(pc)));
-} // chunk_is_pointer_reference_or_qualifier
+   return(  IsPointerOrReference()
+         || (  Is(CT_QUALIFIER)
+            && !IsCppInheritanceAccessSpecifier()));
+}
 
 
 /**
@@ -710,7 +706,7 @@ static std::pair<Chunk *, Chunk *> match_variable_start(Chunk *pc, std::size_t l
           * marked? if not, then break
           */
          if (  prev->IsNot(CT_WORD)
-            || (  !chunk_is_pointer_or_reference(pc)
+            || (  !pc->IsPointerOrReference()
                && pc->IsNot(CT_WORD)))
          {
             /**
@@ -1829,19 +1825,19 @@ void EnumStructUnionParser::mark_pointer_types(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(pc, CT_WORD))
+   if (pc->Is(CT_WORD))
    {
       do
       {
          // TODO: should there be a CT_BYREF_TYPE?
          pc = pc->GetPrevNcNnlNi();
 
-         if (chunk_is_ptr_operator(pc))
+         if (pc->IsPointerOperator())
          {
             set_chunk_parent(pc, m_start->type);
             set_chunk_type(pc, CT_PTR_TYPE);
          }
-      } while (chunk_is_pointer_reference_or_qualifier(pc));
+      } while (pc->IsPointerReferenceOrQualifier());
    }
 } // EnumStructUnionParser::mark_pointer_types
 
@@ -1931,7 +1927,7 @@ void EnumStructUnionParser::mark_type(Chunk *pc)
          make_type(pc);
          set_chunk_parent(pc, m_start->type);
          pc = pc->GetNextNcNnl(E_Scope::PREPROC);
-      } while (chunk_is_pointer_or_reference(pc));
+      } while (pc->IsPointerOrReference());
    }
 } // EnumStructUnionParser::mark_type
 
@@ -2907,7 +2903,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
             }
 
             if (  chunk_is_token(prev, CT_WORD)
-               && chunk_is_pointer_or_reference(next))
+               && next->IsPointerOrReference())
             {
                pc = next;
 
