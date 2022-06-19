@@ -315,7 +315,7 @@ void pawn_add_virtual_semicolons()
 
          if (  prev->IsNullChunk()
             || (  pc->IsNot(CT_NEWLINE)
-               && !chunk_is_closing_brace(pc)))
+               && !pc->IsBraceClose()))
          {
             continue;
          }

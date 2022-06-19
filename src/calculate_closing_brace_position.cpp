@@ -56,7 +56,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
 
       if (back->level == check_level)
       {
-         if (chunk_is_closing_brace(back))
+         if (back->IsBraceClose())
          {
             // brace_close found
             is_brace_close = back;

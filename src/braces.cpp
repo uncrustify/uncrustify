@@ -491,7 +491,7 @@ static bool can_remove_braces(Chunk *bopen)
       Chunk *tmp_prev = pc->GetPrevNcNnl(E_Scope::PREPROC);
 
       if (  chunk_is_token(next, CT_ELSE)
-         && chunk_is_closing_brace(tmp_prev)
+         && tmp_prev->IsBraceClose()
          && get_chunk_parent_type(tmp_prev) == CT_IF)
       {
          LOG_FMT(LBRDEL, "%s(%d):  - bailed on '%s'[%s] on line %zu due to 'if' and 'else' sequence\n",
@@ -1689,7 +1689,7 @@ static void mod_full_brace_if_chain()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (  chunk_is_opening_brace(pc)
+      if (  pc->IsBraceOpen()
          && get_chunk_parent_type(pc) == CT_IF)
       {
          process_if_chain(pc);

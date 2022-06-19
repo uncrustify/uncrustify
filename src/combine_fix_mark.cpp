@@ -262,9 +262,9 @@ void fix_casts(Chunk *start)
    }
 
    if (  pc->IsSemicolon()
-      || chunk_is_token(pc, CT_COMMA)
-      || chunk_is_token(pc, CT_BOOL)               // Issue #2151
-      || chunk_is_paren_close(pc))
+      || pc->Is(CT_COMMA)
+      || pc->Is(CT_BOOL)               // Issue #2151
+      || pc->IsParenClose())
    {
       LOG_FMT(LCASTS, "%s(%d):  -- not a cast - followed by type %s\n",
               __func__, __LINE__, get_token_name(pc->type));
@@ -294,7 +294,7 @@ void fix_casts(Chunk *start)
    {
       chunk_flags_set(pc, PCF_EXPR_START);
 
-      if (chunk_is_opening_brace(pc))
+      if (pc->IsBraceOpen())
       {
          set_paren_parent(pc, get_chunk_parent_type(start));
       }
@@ -314,7 +314,7 @@ void fix_fcn_def_params(Chunk *start)
            __func__, __LINE__, start->Text(), get_token_name(start->type), start->orig_line, start->level);
 
    while (  start->IsNotNullChunk()
-         && !chunk_is_paren_open(start))
+         && !start->IsParenOpen())
    {
       start = start->GetNextNcNnl();
    }
@@ -507,7 +507,7 @@ void fix_typedef(Chunk *start)
       }
       Chunk *open_paren = Chunk::NullChunkPtr;
 
-      if (chunk_is_paren_close(the_type))
+      if (the_type->IsParenClose())
       {
          open_paren = the_type->SkipToMatchRev();
          mark_function_type(the_type);
@@ -852,8 +852,8 @@ void mark_cpp_constructor(Chunk *pc)
       }
 
       if (  hit_colon
-         && (  chunk_is_paren_open(tmp)
-            || chunk_is_opening_brace(tmp))
+         && (  tmp->IsParenOpen()
+            || tmp->IsBraceOpen())
          && tmp->level == paren_open->level)
       {
          var = skip_template_prev(tmp->GetPrevNcNnlNi());   // Issue #2279
@@ -1199,7 +1199,7 @@ void mark_function(Chunk *pc)
                break;
             }
 
-            if (  chunk_is_paren_open(tmp)
+            if (  tmp->IsParenOpen()
                && !pc->flags.test(PCF_IN_PREPROC))               // Issue #2703
             {
                LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s'\n",
@@ -1738,7 +1738,7 @@ void mark_function(Chunk *pc)
       //        prev->Text(), get_token_name(prev->type));
 
       // Fixes issue #1634
-      if (chunk_is_paren_close(prev))
+      if (prev->IsParenClose())
       {
          Chunk *preproc = prev->GetNextNcNnl();
 
@@ -1770,12 +1770,12 @@ void mark_function(Chunk *pc)
       if (  isa_def
          && prev != nullptr
          && prev->IsNotNullChunk()
-         && (  (  chunk_is_paren_close(prev)
+         && (  (  prev->IsParenClose()
                && get_chunk_parent_type(prev) != CT_D_CAST
                && get_chunk_parent_type(prev) != CT_MACRO_OPEN  // Issue #2726
                && get_chunk_parent_type(prev) != CT_MACRO_CLOSE)
-            || chunk_is_token(prev, CT_ASSIGN)
-            || chunk_is_token(prev, CT_RETURN)))
+            || prev->Is(CT_ASSIGN)
+            || prev->Is(CT_RETURN)))
       {
          LOG_FMT(LFCN, "%s(%d): -- overriding DEF due to prev is '%s', type is %s\n",
                  __func__, __LINE__, prev->Text(), get_token_name(prev->type));
@@ -1784,7 +1784,7 @@ void mark_function(Chunk *pc)
 
       // Fixes issue #1266, identification of a tuple return type in CS.
       if (  !isa_def
-         && chunk_is_token(prev, CT_PAREN_CLOSE)
+         && prev->Is(CT_PAREN_CLOSE)
          && prev->GetNextNcNnl() == pc)
       {
          tmp = prev->SkipToMatchRev();
@@ -2123,7 +2123,7 @@ bool mark_function_type(Chunk *pc)
    {
       if (  language_is_set(LANG_OC)
          && varcnk->IsString("^")
-         && chunk_is_paren_open(varcnk->GetPrevNcNnlNi()))   // Issue #2279
+         && varcnk->GetPrevNcNnlNi()->IsParenOpen())   // Issue #2279
       {
          // anonymous ObjC block type -- RTYPE (^)(ARGS)
          anon = true;
@@ -2145,7 +2145,7 @@ bool mark_function_type(Chunk *pc)
    apc = apo->SkipToMatch();
 
    if (  apc->IsNotNullChunk()
-      && (  !chunk_is_paren_open(apo)
+      && (  !apo->IsParenOpen()
          || ((apc = apo->SkipToMatch())->IsNullChunk())))
    {
       LOG_FMT(LFTYPE, "%s(%d): not followed by parens\n", __func__, __LINE__);
@@ -2305,7 +2305,7 @@ bool mark_function_type(Chunk *pc)
 nogo_exit:
    tmp = pc->GetNextNcNnl();
 
-   if (chunk_is_paren_open(tmp))
+   if (tmp->IsParenOpen())
    {
       LOG_FMT(LFTYPE, "%s(%d): setting FUNC_CALL on orig_line is %zu, orig_col is %zu\n",
               __func__, __LINE__, tmp->orig_line, tmp->orig_col);

@@ -258,7 +258,7 @@ static void flag_asm(Chunk *pc)
    }
    Chunk *po = tmp->GetNextNcNnl(E_Scope::PREPROC);
 
-   if (!chunk_is_paren_open(po))
+   if (!po->IsParenOpen())
    {
       return;
    }
@@ -699,7 +699,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    {
       Chunk *tmp = pc->GetNextNcNnl();
 
-      if (chunk_is_paren_open(tmp))
+      if (tmp->IsParenOpen())
       {
          set_paren_parent(tmp, CT_ANNOTATION);
       }
@@ -723,12 +723,12 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    {
       Chunk *tmp = pc->GetNextNcNnl();
 
-      if (chunk_is_paren_open(tmp))
+      if (tmp->IsParenOpen())
       {
          // decltype may be followed by a braced-init-list
          tmp = set_paren_parent(tmp, CT_DECLTYPE);
 
-         if (chunk_is_opening_brace(tmp) && !pc->flags.test(PCF_IN_LAMBDA))
+         if (tmp->IsBraceOpen() && !pc->flags.test(PCF_IN_LAMBDA))
          {
             tmp = set_paren_parent(tmp, CT_BRACED_INIT_LIST);
 
@@ -796,7 +796,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
    if (chunk_is_token(pc, CT_EXTERN))
    {
-      if (chunk_is_paren_open(next))
+      if (next->IsParenOpen())
       {
          Chunk *tmp = flag_parens(next, PCF_NONE, CT_NONE, CT_EXTERN, true);
 
@@ -1043,7 +1043,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       if (  tmp != nullptr
          && tmp->IsNotNullChunk())
       {
-         if (chunk_is_paren_open(tmp))
+         if (tmp->IsParenOpen())
          {
             tmp = flag_parens(tmp, PCF_NONE, CT_FPAREN_OPEN, pc->type, false);
 
@@ -1328,17 +1328,17 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    }
 
    // Change CT_STAR to CT_PTR_TYPE or CT_ARITH or CT_DEREF
-   if (  chunk_is_token(pc, CT_STAR)
+   if (  pc->Is(CT_STAR)
       || (  language_is_set(LANG_CPP)
-         && chunk_is_token(pc, CT_CARET)))
+         && pc->Is(CT_CARET)))
    {
-      if (  chunk_is_paren_close(next)
-         || chunk_is_token(next, CT_COMMA))
+      if (  next->IsParenClose()
+         || next->Is(CT_COMMA))
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
       else if (  language_is_set(LANG_OC)
-              && chunk_is_token(next, CT_STAR))
+              && next->Is(CT_STAR))
       {
          /*
           * Change pointer-to-pointer types in OC_MSG_DECLs
@@ -1445,7 +1445,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             set_chunk_type(pc, CT_PTR_TYPE);
          }
          else if (  (  get_chunk_parent_type(pc) == CT_FUNC_DEF
-                    && (  chunk_is_opening_brace(next)
+                    && (  next->IsBraceOpen()
                        || pc->GetNext()->IsStar()))
                  || chunk_is_token(next, CT_QUALIFIER))               // Issue #2648
          {
@@ -1472,8 +1472,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             // Issue 1402
             set_chunk_type(pc,
                            (  prev->flags.test(PCF_PUNCTUATOR)
-                           && (  !chunk_is_paren_close(prev)
-                              || chunk_is_token(prev, CT_SPAREN_CLOSE)
+                           && (  !prev->IsParenClose()
+                              || prev->Is(CT_SPAREN_CLOSE)
                               || get_chunk_parent_type(prev) == CT_MACRO_FUNC)
                            && prev->IsNot(CT_SQUARE_CLOSE)
                            && prev->IsNot(CT_DC_MEMBER)) ? CT_DEREF : CT_ARITH);
@@ -1841,7 +1841,7 @@ static void check_double_brace_init(Chunk *bo1)
       return;
    }
 
-   if (chunk_is_paren_close(pc))
+   if (pc->IsParenClose())
    {
       Chunk *bo2 = bo1->GetNext();
 
@@ -2950,7 +2950,7 @@ static void handle_oc_block_literal(Chunk *pc)
 
       if (tmp->level == pc->level)
       {
-         if (chunk_is_paren_open(tmp))
+         if (tmp->IsParenOpen())
          {
             apo = tmp;
             LOG_FMT(LOCBLK, "[PAREN]");
@@ -2987,7 +2987,7 @@ static void handle_oc_block_literal(Chunk *pc)
    {
       Chunk *apc = apo->SkipToMatch();  // arg parenthesis close
 
-      if (chunk_is_paren_close(apc))
+      if (apc->IsParenClose())
       {
          LOG_FMT(LOCBLK, " -- marking parens @ apo->orig_line is %zu, apo->orig_col is %zu and apc->orig_line is %zu, apc->orig_col is %zu\n",
                  apo->orig_line, apo->orig_col, apc->orig_line, apc->orig_col);
@@ -3034,7 +3034,7 @@ static void handle_oc_block_type(Chunk *pc)
    // make sure we have '( ^'
    Chunk *tpo = pc->GetPrevNcNnlNi(); // type paren open   Issue #2279
 
-   if (chunk_is_paren_open(tpo))
+   if (tpo->IsParenOpen())
    {
       /*
        * block type: 'RTYPE (^LABEL)(ARGS)'
@@ -3050,18 +3050,18 @@ static void handle_oc_block_type(Chunk *pc)
        * will actually be the closing bracket of the block. We run into
        * this situation if a block literal is enclosed in parentheses.
        */
-      if (chunk_is_closing_brace(nam))
+      if (nam->IsBraceClose())
       {
          return(handle_oc_block_literal(pc));
       }
 
       // Check apo is '(' or else this might be a block literal. Issue 2643.
-      if (!chunk_is_paren_open(apo))
+      if (!apo->IsParenOpen())
       {
          return(handle_oc_block_literal(pc));
       }
 
-      if (chunk_is_paren_close(apc))
+      if (apc->IsParenClose())
       {
          Chunk   *aft = apc->GetNextNcNnl();
          E_Token pt;
@@ -3105,7 +3105,7 @@ static Chunk *handle_oc_md_type(Chunk *paren_open, E_Token ptype, pcf_flags_t fl
 {
    Chunk *paren_close;
 
-   if (  !chunk_is_paren_open(paren_open)
+   if (  !paren_open->IsParenOpen()
       || ((paren_close = paren_open->SkipToMatch())->IsNullChunk()))
    {
       did_it = false;
@@ -3349,7 +3349,7 @@ static void handle_oc_message_send(Chunk *os)
       }
       Chunk *tt = tmp->GetNextNcNnl();
 
-      if (chunk_is_paren_open(tt))
+      if (tt->IsParenOpen())
       {
          LOG_FMT(LFCN, "%s(%d): (18) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                  __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->Text());
@@ -3440,7 +3440,7 @@ static void handle_oc_message_send(Chunk *os)
    }
 
    // [(self.foo.bar) method]
-   if (chunk_is_paren_open(tmp))
+   if (tmp->IsParenOpen())
    {
       tmp = tmp->SkipToMatch()->GetNextNcNnl();
    }
@@ -3744,7 +3744,7 @@ static void handle_oc_property_decl(Chunk *os)
       tmp = os->GetNextNcNnl();
    }
 
-   if (chunk_is_paren_open(tmp))
+   if (tmp->IsParenOpen())
    {
       tmp = tmp->SkipToMatch()->GetNextNcNnl();
    }

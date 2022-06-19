@@ -599,6 +599,30 @@ public:
     */
    bool IsOnSameLine(const Chunk *end) const;
 
+   /**
+    * @brief checks whether the chunk is an opening brace
+    * @return true if the chunk is an opening brace
+    */
+   bool IsBraceOpen() const;
+
+   /**
+    * @brief checks whether the chunk is a closing brace
+    * @return true if the chunk is a closing brace
+    */
+   bool IsBraceClose() const;
+
+   /**
+    * @brief checks whether the chunk is an opening parenthesis
+    * @return true if the chunk is an opening parenthesis
+    */
+   bool IsParenOpen() const;
+
+   /**
+    * @brief checks whether the chunk is a closing parenthesis
+    * @return true if the chunk is a closing parenthesis
+    */
+   bool IsParenClose() const;
+
 
    // --------- Util functions
 
@@ -1027,36 +1051,36 @@ inline bool Chunk::IsPointerOrReference() const
 bool chunk_is_newline_between(Chunk *start, Chunk *end);
 
 
-static inline bool chunk_is_closing_brace(Chunk *pc)
+inline bool Chunk::IsBraceOpen() const
 {
-   return(  chunk_is_token(pc, CT_BRACE_CLOSE)
-         || chunk_is_token(pc, CT_VBRACE_CLOSE));
+   return(  Is(CT_BRACE_OPEN)
+         || Is(CT_VBRACE_OPEN));
 }
 
 
-static inline bool chunk_is_opening_brace(Chunk *pc)
+inline bool Chunk::IsBraceClose() const
 {
-   return(  chunk_is_token(pc, CT_BRACE_OPEN)
-         || chunk_is_token(pc, CT_VBRACE_OPEN));
+   return(  Is(CT_BRACE_CLOSE)
+         || Is(CT_VBRACE_CLOSE));
 }
 
 
-static inline bool chunk_is_paren_open(Chunk *pc)
+inline bool Chunk::IsParenOpen() const
 {
-   return(  chunk_is_token(pc, CT_PAREN_OPEN)
-         || chunk_is_token(pc, CT_SPAREN_OPEN)
-         || chunk_is_token(pc, CT_TPAREN_OPEN)
-         || chunk_is_token(pc, CT_FPAREN_OPEN)
-         || chunk_is_token(pc, CT_LPAREN_OPEN));
+   return(  Is(CT_PAREN_OPEN)
+         || Is(CT_SPAREN_OPEN)
+         || Is(CT_TPAREN_OPEN)
+         || Is(CT_FPAREN_OPEN)
+         || Is(CT_LPAREN_OPEN));
 }
 
 
-static inline bool chunk_is_paren_close(Chunk *pc)
+inline bool Chunk::IsParenClose() const
 {
-   return(  chunk_is_token(pc, CT_PAREN_CLOSE)
-         || chunk_is_token(pc, CT_SPAREN_CLOSE)
-         || chunk_is_token(pc, CT_TPAREN_CLOSE)
-         || chunk_is_token(pc, CT_FPAREN_CLOSE));
+   return(  Is(CT_PAREN_CLOSE)
+         || Is(CT_SPAREN_CLOSE)
+         || Is(CT_TPAREN_CLOSE)
+         || Is(CT_FPAREN_CLOSE));
 }
 
 
