@@ -146,7 +146,7 @@ static void check_unknown_brace_close(Chunk *semi, Chunk *brace_close)
       && pc->IsNot(CT_SQUARE_CLOSE)
       && pc->IsNot(CT_ANGLE_CLOSE)
       && pc->IsNot(CT_TSQUARE)
-      && !chunk_is_paren_close(pc))
+      && !pc->IsParenClose())
    {
       remove_semicolon(semi);
    }

@@ -1532,7 +1532,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    }
 
    if (  chunk_is_token(first, CT_ATTRIBUTE)
-      && chunk_is_paren_open(second))
+      && second->IsParenOpen())
    {
       // Add or remove space between '__attribute__' and '('.
       log_rule("sp_attribute_paren");
@@ -1606,8 +1606,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    // ")(" vs. ") ("
    if (  (  first->IsString(")")
          && second->IsString("("))
-      || (  chunk_is_paren_close(first)
-         && chunk_is_paren_open(second)))
+      || (  first->IsParenClose()
+         && second->IsParenOpen()))
    {
       // Add or remove space between back-to-back parentheses, i.e. ')(' vs. ') ('.
       log_rule("sp_cparen_oparen");
@@ -3039,7 +3039,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    if (  language_is_set(LANG_JAVA)
       && chunk_is_token(first, CT_ANNOTATION)
-      && chunk_is_paren_open(second))
+      && second->IsParenOpen())
    {
       // (Java) Add or remove space between an annotation and the open parenthesis.
       log_rule("sp_annotation_paren");

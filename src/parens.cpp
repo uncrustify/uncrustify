@@ -321,7 +321,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
                  pc->Text(), pc->orig_line, pc->orig_col, pc->level);
          hit_compare = true;
       }
-      else if (chunk_is_paren_open(pc))
+      else if (pc->IsParenOpen())
       {
          Chunk *next = pc->SkipToMatch();
 

@@ -850,7 +850,7 @@ static bool single_line_comment_indent_rule_applies(Chunk *start)
          {
             /* here we check for things to run into that we wouldn't want to indent the comment for */
             /* for example, non-single line comment, closing brace */
-            if (chunk_is_comment(pc) || chunk_is_closing_brace(pc))
+            if (chunk_is_comment(pc) || pc->IsBraceClose())
             {
                return(false);
             }

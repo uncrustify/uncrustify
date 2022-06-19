@@ -1072,7 +1072,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
             return;
          }
       }
-      else if (  chunk_is_opening_brace(pc)
+      else if (  pc->IsBraceOpen()
               || pc->level < level)
       {
          return;
@@ -1388,7 +1388,7 @@ static Chunk *get_closing_brace(Chunk *start)
 
    for (pc = start; (pc = pc->GetNext())->IsNotNullChunk();)
    {
-      if (  (chunk_is_closing_brace(pc))
+      if (  (pc->IsBraceClose())
          && pc->level == level)
       {
          return(pc);
@@ -2090,14 +2090,14 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
 
          prev = pc->GetPrevNcNnl();
 
-         while (  chunk_is_token(prev, CT_DC_MEMBER)
-               || chunk_is_token(prev, CT_TYPE))
+         while (  prev->Is(CT_DC_MEMBER)
+               || prev->Is(CT_TYPE))
          {
             prev = prev->GetPrevNcNnl();
          }
 
-         if (!(  chunk_is_opening_brace(prev)
-              || chunk_is_closing_brace(prev)))
+         if (!(  prev->IsBraceOpen()
+              || prev->IsBraceClose()))
          {
             prev = pc->GetPrevType(CT_SEMICOLON, pc->level);
          }
@@ -2141,7 +2141,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
                   LOG_FMT(LBLANKD, "%s(%d): prev is '%s', orig_line is %zu\n",
                           __func__, __LINE__, prev->Text(), prev->orig_line);
 
-                  if (!chunk_is_opening_brace(prev))
+                  if (!prev->IsBraceOpen())
                   {
                      newline_min_after(prev, options::nl_var_def_blk_start() + 1, PCF_VAR_DEF);
                   }
@@ -2304,14 +2304,14 @@ static void newlines_brace_pair(Chunk *br_open)
 
       if (  br_close->IsNotNullChunk()             // Issue #2594
          && ((br_close->orig_line - br_open->orig_line) <= 2)
-         && chunk_is_paren_close(tmp))             // need to check the conditions.
+         && tmp->IsParenClose())                   // need to check the conditions.
       {
          // Issue #1825
          bool is_it_possible = true;
 
          while (  tmp->IsNotNullChunk()
                && (tmp = tmp->GetNext())->IsNotNullChunk()
-               && !chunk_is_closing_brace(tmp)
+               && !tmp->IsBraceClose()
                && (tmp->GetNext()->IsNotNullChunk()))
          {
             LOG_FMT(LNL1LINE, "%s(%d): tmp->orig_line is %zu, tmp->orig_col is %zu, Text() is '%s'\n",
@@ -2358,7 +2358,7 @@ static void newlines_brace_pair(Chunk *br_open)
 
             while (  tmp_1->IsNotNullChunk()
                   && (tmp_1 = tmp_1->GetNext())->IsNotNullChunk()
-                  && !chunk_is_closing_brace(tmp_1)
+                  && !tmp_1->IsBraceClose()
                   && (tmp_1->GetNext()->IsNotNullChunk()))
             {
                LOG_FMT(LNL1LINE, "%s(%d): tmp_1->orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
@@ -2804,8 +2804,8 @@ static void newline_after_return(Chunk *start)
 
    // If we hit a brace or an 'else', then a newline isn't needed
    if (  after->IsNullChunk()
-      || chunk_is_closing_brace(after)
-      || chunk_is_token(after, CT_ELSE))
+      || after->IsBraceClose()
+      || after->Is(CT_ELSE))
    {
       return;
    }
@@ -3203,7 +3203,7 @@ static void newline_func_def_or_call(Chunk *start)
       Chunk *prev = start->GetPrevNcNnlNi();   // Issue #2279
       prev = skip_template_prev(prev);
       // Don't split up a function variable
-      prev = chunk_is_paren_close(prev) ? Chunk::NullChunkPtr : prev->GetPrevNcNnlNi();   // Issue #2279
+      prev = prev->IsParenClose() ? Chunk::NullChunkPtr : prev->GetPrevNcNnlNi();   // Issue #2279
 
       log_rule_B("nl_func_class_scope");
 
@@ -3302,7 +3302,7 @@ static void newline_func_def_or_call(Chunk *start)
                   prev = prev->GetPrevNcNnlNi();   // Issue #2279
                }
 
-               if (  !chunk_is_closing_brace(prev)
+               if (  !prev->IsBraceClose()
                   && prev->IsNot(CT_BRACE_OPEN)
                   && prev->IsNot(CT_SEMICOLON)
                   && prev->IsNot(CT_ACCESS_COLON)
@@ -3485,7 +3485,7 @@ static bool one_liner_nl_ok(Chunk *pc)
    // Step back to find the opening brace
    Chunk *br_open = pc;
 
-   if (chunk_is_closing_brace(br_open))
+   if (br_open->IsBraceClose())
    {
       br_open = br_open->GetPrevType(chunk_is_token(br_open, CT_BRACE_CLOSE) ? CT_BRACE_OPEN : CT_VBRACE_OPEN,
                                      br_open->level, E_Scope::ALL);
@@ -3494,8 +3494,8 @@ static bool one_liner_nl_ok(Chunk *pc)
    {
       while (  br_open->IsNotNullChunk()
             && br_open->flags.test(PCF_ONE_LINER)
-            && !chunk_is_opening_brace(br_open)
-            && !chunk_is_closing_brace(br_open))
+            && !br_open->IsBraceOpen()
+            && !br_open->IsBraceClose())
       {
          br_open = br_open->GetPrev();
       }
@@ -3504,8 +3504,8 @@ static bool one_liner_nl_ok(Chunk *pc)
 
    if (  pc->IsNotNullChunk()
       && pc->flags.test(PCF_ONE_LINER)
-      && (  chunk_is_opening_brace(pc)
-         || chunk_is_closing_brace(pc)))
+      && (  pc->IsBraceOpen()
+         || pc->IsBraceClose()))
    {
       log_rule_B("nl_class_leave_one_liners");
 
@@ -4008,7 +4008,7 @@ void newlines_cleanup_braces(bool first)
             {
                Chunk *prev = pc->GetPrevNcNnlNi(E_Scope::PREPROC);    // Issue #2279
 
-               if (chunk_is_paren_close(prev))
+               if (prev->IsParenClose())
                {
                   log_rule_B("nl_paren_dbrace_open");
                   newline_iarf_pair(prev, pc, options::nl_paren_dbrace_open());
@@ -5328,8 +5328,8 @@ void newlines_squeeze_paren_close()
 
       if (  next->IsNotNullChunk()
          && prev->IsNotNullChunk()
-         && chunk_is_paren_close(next)
-         && chunk_is_paren_close(prev))
+         && next->IsParenClose()
+         && prev->IsParenClose())
       {
          Chunk *prev_op = prev->SkipToMatchRev();
          Chunk *next_op = next->SkipToMatchRev();
@@ -5337,7 +5337,7 @@ void newlines_squeeze_paren_close()
 
          Chunk *tmp = prev;
 
-         while (chunk_is_paren_close(tmp))
+         while (tmp->IsParenClose())
          {
             tmp = tmp->GetPrev();
          }
@@ -6234,7 +6234,7 @@ void do_blank_lines()
 
          // Don't add blanks before a closing brace
          if (  next->IsNullChunk()
-            || !chunk_is_closing_brace(next))
+            || !next->IsBraceClose())
          {
             log_rule_B("nl_after_access_spec");
             blank_line_set(pc, options::nl_after_access_spec);
@@ -6668,7 +6668,7 @@ void annotations_newlines()
          && (next = pc->GetNextNnl())->IsNotNullChunk())
    {
       // find the end of this annotation
-      if (chunk_is_paren_open(next))
+      if (next->IsParenOpen())
       {
          // TODO: control newline between annotation and '(' ?
          ae = next->SkipToMatch();
