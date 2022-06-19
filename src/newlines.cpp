@@ -1317,7 +1317,7 @@ static void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type)
       }
       else if (pc->IsComment())
       {
-         LOG_FMT(LNLFUNCT, "%s(%d):    <chunk_is_comment> found at line %zu, column %zu\n",
+         LOG_FMT(LNLFUNCT, "%s(%d):    <Chunk::IsComment> found at line %zu, column %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
 
          if (  (  pc->orig_line < first_line

@@ -155,7 +155,7 @@ void reindent_line(Chunk *pc, int column)
 
     if (pc != NULL)
       {
-      if (chunk_is_comment(pc))
+      if (pc->IsComment())
         {
         pc->column = pc->orig_col;
 
@@ -345,7 +345,7 @@ void indent_text(void)
        * REVISIT: not sure about the preproc check
        */
       if (!pc->IsNewline() &&
-          !chunk_is_comment(pc) &&
+          !pc->IsComment() &&
           ((pc->flags & PCF_IN_PREPROC) == 0) &&
           (frm.pse[frm.pse_tos].level > pc->level))
         indent_pse_pop(frm, pc);
@@ -403,7 +403,7 @@ void indent_text(void)
       /* Grab a copy of the current indent */
     indent_column = frm.pse[frm.pse_tos].indent_tmp;
 
-    if (!pc->IsNewline() && !chunk_is_comment(pc))
+    if (!pc->IsNewline() && !pc->IsComment())
       {
       LOG_FMT(LINDPC, " -=[ %.*s ]=- top=%d %s %d/%d\n",
               pc->len, pc->str,
@@ -698,7 +698,7 @@ void indent_text(void)
                 __func__, pc->orig_line, prev->column);
         reindent_line(pc, prev->column);
         }
-      else if (chunk_is_comment(pc))
+      else if (pc->IsComment())
         {
         LOG_FMT(LINDENT, "%s: %d] comment => %d\n",
                 __func__, pc->orig_line, frm.pse[frm.pse_tos].indent_tmp);
@@ -754,7 +754,7 @@ void indent_text(void)
       did_newline = true;
       }
 
-    if (!chunk_is_comment(pc) && !pc->IsNewline())
+    if (!pc->IsComment() && !pc->IsNewline())
       prev = pc;
 
     pc = pc->GetNext();
@@ -806,7 +806,7 @@ static bool single_line_comment_indent_rule_applies(Chunk *start)
         {
           /* here we check for things to run into that we wouldn't want to indent the comment for */
           /* for example, non-single line comment, closing brace */
-        if (chunk_is_comment(pc) || pc->IsBraceClose())
+        if (pc->IsComment() || pc->IsBraceClose())
           return false;
 
         return true;
@@ -877,7 +877,7 @@ static void indent_comment(Chunk *pc, int col)
 
   prev = nl->GetPrev();
 
-  if (chunk_is_comment(prev) && (nl->nl_count == 1))
+  if (prev->IsComment() && (nl->nl_count == 1))
     {
     int coldiff = prev->orig_col - pc->orig_col;
 
@@ -925,7 +925,7 @@ void indent_preproc(void)
 
   for (pc = Chunk::GetHead(); pc != NULL; pc = pc->GetNext())
     {
-    if (chunk_is_comment(pc) || pc->IsNewline())
+    if (pc->IsComment() || pc->IsNewline())
       continue;
 
     if (stage == 0)
