@@ -218,7 +218,7 @@ void output_text(FILE *pfile)
           }
 
         allow_tabs = (cpd.settings[UO_indent_with_tabs].n == 2) ||
-                     (chunk_is_comment(pc) &&
+                     (pc->IsComment() &&
                       (cpd.settings[UO_indent_with_tabs].n != 0));
 
         LOG_FMT(LOUTIND, "  %d> col %d/%d - ", pc->orig_line, pc->column, cpd.column);

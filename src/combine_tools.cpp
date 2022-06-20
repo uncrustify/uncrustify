@@ -70,7 +70,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          }
       }
       else if (  pc != start
-              && chunk_is_ptr_operator(pc))
+              && pc->IsPointerOperator())
       {
          // chunk is OK
       }
@@ -110,8 +110,8 @@ bool can_be_full_param(Chunk *start, Chunk *end)
             return(false);
          }
 
-         if (  chunk_is_token(tmp2, CT_COMMA)
-            || chunk_is_paren_close(tmp2))
+         if (  tmp2->Is(CT_COMMA)
+            || tmp2->IsParenClose())
          {
             do
             {
@@ -234,7 +234,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
    LOG_FMT(LFPARAM, "%s(%d): last->Text() is '%s', type is %s\n",
            __func__, __LINE__, last->Text(), get_token_name(last->type));
 
-   if (chunk_is_ptr_operator(last))
+   if (last->IsPointerOperator())
    {
       LOG_FMT(LFPARAM, "%s(%d): <== type is %s, sure!\n",
               __func__, __LINE__, get_token_name(last->type));
@@ -325,20 +325,20 @@ bool chunk_ends_type(Chunk *start)
               pc->orig_line, pc->orig_col);
       log_pcf_flags(LFTYPE, pc->flags);
 
-      if (  chunk_is_token(pc, CT_WORD)
-         || chunk_is_token(pc, CT_TYPE)
-         || chunk_is_token(pc, CT_PTR_TYPE)
-         || chunk_is_token(pc, CT_STAR)
-         || chunk_is_token(pc, CT_STRUCT)
-         || chunk_is_token(pc, CT_DC_MEMBER)
-         || chunk_is_token(pc, CT_PP)
-         || chunk_is_token(pc, CT_QUALIFIER)
+      if (  pc->Is(CT_WORD)
+         || pc->Is(CT_TYPE)
+         || pc->Is(CT_PTR_TYPE)
+         || pc->Is(CT_STAR)
+         || pc->Is(CT_STRUCT)
+         || pc->Is(CT_DC_MEMBER)
+         || pc->Is(CT_PP)
+         || pc->Is(CT_QUALIFIER)
          || (  language_is_set(LANG_CPP | LANG_OC)                       // Issue #2727
             && get_chunk_parent_type(pc) == CT_TEMPLATE
-            && (  chunk_is_token(pc, CT_ANGLE_OPEN)
-               || chunk_is_token(pc, CT_ANGLE_CLOSE)))
+            && (  pc->Is(CT_ANGLE_OPEN)
+               || pc->Is(CT_ANGLE_CLOSE)))
          || (  language_is_set(LANG_CS | LANG_VALA)
-            && (chunk_is_token(pc, CT_MEMBER))))
+            && (pc->Is(CT_MEMBER))))
       {
          cnt++;
          last_expr = pc->flags.test(PCF_EXPR_START)
@@ -353,22 +353,22 @@ bool chunk_ends_type(Chunk *start)
 
       if (  (  pc->IsSemicolon()
             && !pc->flags.test(PCF_IN_FOR))
-         || chunk_is_token(pc, CT_TYPEDEF)
-         || chunk_is_token(pc, CT_BRACE_OPEN)
-         || chunk_is_closing_brace(pc)
-         || chunk_is_token(pc, CT_FPAREN_CLOSE)
+         || pc->Is(CT_TYPEDEF)
+         || pc->Is(CT_BRACE_OPEN)
+         || pc->IsBraceClose()
+         || pc->Is(CT_FPAREN_CLOSE)
          || chunk_is_forin(pc)
-         || chunk_is_token(pc, CT_MACRO)
-         || chunk_is_token(pc, CT_PP_IF)
-         || chunk_is_token(pc, CT_PP_ELSE)
-         || chunk_is_token(pc, CT_PP_ENDIF)
+         || pc->Is(CT_MACRO)
+         || pc->Is(CT_PP_IF)
+         || pc->Is(CT_PP_ELSE)
+         || pc->Is(CT_PP_ENDIF)
          || get_chunk_parent_type(pc) == CT_PP_INCLUDE                       // Issue #3233
-         || (  (  chunk_is_token(pc, CT_COMMA)
+         || (  (  pc->Is(CT_COMMA)
                && !pc->flags.test(PCF_IN_FCN_CALL)
                && get_cpp_template_angle_nest_level(start) ==
                   get_cpp_template_angle_nest_level(pc))
             && last_expr)
-         || (  chunk_is_token(pc, CT_SPAREN_OPEN)
+         || (  pc->Is(CT_SPAREN_OPEN)
             && last_lval))
       {
          ret = cnt > 0;
@@ -534,14 +534,14 @@ void make_type(Chunk *pc)
          set_chunk_type(pc, CT_TYPE);
       }
       else if (  (  pc->IsStar()
-                 || chunk_is_msref(pc)
-                 || chunk_is_nullable(pc))
-              && chunk_is_type(pc->prev))                              // Issue # 2640
+                 || pc->IsMsRef()
+                 || pc->IsNullable())
+              && chunk_is_type(pc->prev))                    // Issue # 2640
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
-      else if (  chunk_is_addr(pc)
-              && !chunk_is_token(pc->prev, CT_SQUARE_OPEN))            // Issue # 2166
+      else if (  pc->IsAddress()
+              && pc->GetPrev()->IsNot(CT_SQUARE_OPEN))            // Issue # 2166
       {
          set_chunk_type(pc, CT_BYREF);
       }

@@ -504,7 +504,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    }
 
    // Skip to open paren in ':^TYPE *(ARGS) {'
-   if (chunk_is_paren_close(tmp))
+   if (tmp->IsParenClose())
    {
       tmp = tmp->SkipToMatchRev()->GetPrevNc();
    }
@@ -1353,8 +1353,8 @@ void indent_text()
              */
             if (  (frm.top().type == CT_TYPEDEF)
                && (  pc->IsSemicolon()
-                  || chunk_is_paren_open(pc)
-                  || chunk_is_token(pc, CT_BRACE_OPEN)))
+                  || pc->IsParenOpen()
+                  || pc->Is(CT_BRACE_OPEN)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
@@ -1879,7 +1879,7 @@ void indent_text()
          // any '{' that is inside of a '(' overrides the '(' indent
          // only to help the vim command }
          else if (  !options::indent_paren_open_brace()
-                 && chunk_is_paren_open(frm.prev().pc)
+                 && frm.prev().pc->IsParenOpen()
                  && pc->GetNextNc()->IsNewline())
          {
             log_rule_B("indent_paren_open_brace");
@@ -2006,7 +2006,7 @@ void indent_text()
             // Issue # 1620, UNI-24090.cs
             else if (  frm.prev().pc->IsOnSameLine(frm.top().pc)
                     && !options::indent_align_paren()
-                    && chunk_is_paren_open(frm.prev().pc)
+                    && frm.prev().pc->IsParenOpen()
                     && !pc->flags.test(PCF_ONE_LINER))
             {
                log_rule_B("indent_align_paren");
@@ -2019,7 +2019,7 @@ void indent_text()
             }
             else if (  frm.prev().pc->IsOnSameLine(frm.top().pc->GetPrevNcNnlNpp())
                     && !options::indent_align_paren()
-                    && chunk_is_paren_open(frm.prev().pc)
+                    && frm.prev().pc->IsParenOpen()
                     && !pc->flags.test(PCF_ONE_LINER))
             {
                log_rule_B("indent_align_paren");
@@ -2045,7 +2045,7 @@ void indent_text()
                // We are inside ({ ... }) -- indent one tab from the paren
                frm.top().indent = frm.prev().indent_tmp + indent_size;
 
-               if (!chunk_is_paren_open(frm.prev().pc))
+               if (!frm.prev().pc->IsParenOpen())
                {
                   frm.top().indent_tab = frm.top().indent;
                }
@@ -3036,7 +3036,7 @@ void indent_text()
             && (  (strcmp(tmp->Text(), ".") != 0)
                || tmp->IsNot(CT_MEMBER)))
          {
-            if (chunk_is_paren_close(tmp))
+            if (tmp->IsParenClose())
             {
                tmp = tmp->GetPrevNcNnlNpp();
             }
@@ -3467,12 +3467,12 @@ void indent_text()
          Chunk *prev2     = pc->GetPrevNc();
 
          if ((  prev_nonl->IsSemicolon()
-             || chunk_is_opening_brace(prev_nonl)
-             || chunk_is_closing_brace(prev_nonl)
-             || chunk_is_token(prev_nonl, CT_CASE_COLON)
+             || prev_nonl->IsBraceOpen()
+             || prev_nonl->IsBraceClose()
+             || prev_nonl->Is(CT_CASE_COLON)
              || (  prev_nonl->IsNotNullChunk()
                 && prev_nonl->flags.test(PCF_IN_PREPROC)) != pc->flags.test(PCF_IN_PREPROC)
-             || chunk_is_token(prev_nonl, CT_COMMA)
+             || prev_nonl->Is(CT_COMMA)
              || is_operator))
          {
             in_shift = false;
@@ -3704,8 +3704,8 @@ void indent_text()
                     __func__, __LINE__, pc->orig_line, indent_column, pc->Text());
             reindent_line(pc, indent_column);
          }
-         else if (  chunk_is_paren_close(pc)
-                 || chunk_is_token(pc, CT_ANGLE_CLOSE))
+         else if (  pc->IsParenClose()
+                 || pc->Is(CT_ANGLE_CLOSE))
          {
             /*
              * This is a big hack. We assume that since we hit a paren close,
@@ -3796,7 +3796,7 @@ void indent_text()
                                 __func__, __LINE__);
                         Chunk *search = pc;
 
-                        while (chunk_is_paren_close(search->GetNext()))
+                        while (search->GetNext()->IsParenClose())
                         {
                            search = search->GetNext();
                         }
@@ -3884,13 +3884,13 @@ void indent_text()
             bool align  = false;
             bool ignore = false;
 
-            if (chunk_is_paren_open(frm.top().pc))
+            if (frm.top().pc->IsParenOpen())
             {
                log_rule_B("indent_comma_paren");
                align  = options::indent_comma_paren() == (int)indent_mode_e::ALIGN;
                ignore = options::indent_comma_paren() == (int)indent_mode_e::IGNORE;
             }
-            else if (chunk_is_opening_brace(frm.top().pc))
+            else if (frm.top().pc->IsBraceOpen())
             {
                log_rule_B("indent_comma_brace");
                align  = options::indent_comma_brace() == (int)indent_mode_e::ALIGN;
@@ -3913,11 +3913,11 @@ void indent_text()
                  && chunk_is_token(pc, CT_QUALIFIER)
                  && strncasecmp(pc->Text(), "const", pc->Len()) == 0
                  && (  next == nullptr
-                    || chunk_is_token(next, CT_BRACED)
-                    || chunk_is_opening_brace(next)
-                    || chunk_is_token(next, CT_NEWLINE)
-                    || chunk_is_token(next, CT_SEMICOLON)
-                    || chunk_is_token(next, CT_THROW)))
+                    || next->Is(CT_BRACED)
+                    || next->IsBraceOpen()
+                    || next->Is(CT_NEWLINE)
+                    || next->Is(CT_SEMICOLON)
+                    || next->Is(CT_THROW)))
          {
             // indent const - void GetFoo(void)\n const\n { return (m_Foo); }
             log_rule_B("indent_func_const");
@@ -3971,7 +3971,7 @@ void indent_text()
          }
          else if (chunk_is_token(pc, CT_BOOL))
          {
-            if (chunk_is_paren_open(frm.top().pc))
+            if (frm.top().pc->IsParenOpen())
             {
                log_rule_B("indent_bool_paren");
 
@@ -4412,9 +4412,9 @@ static bool single_line_comment_indent_rule_applies(Chunk *start, bool forward)
       {
          nl_count = 0;
       }
-      else if (  chunk_is_token(pc, CT_COMMENT_MULTI)
-              || (forward && chunk_is_closing_brace(pc))
-              || (!forward && chunk_is_opening_brace(pc)))
+      else if (  pc->Is(CT_COMMENT_MULTI)
+              || (forward && pc->IsBraceClose())
+              || (!forward && pc->IsBraceOpen()))
       {
          /*
           * check for things we wouldn't want to indent the comment for

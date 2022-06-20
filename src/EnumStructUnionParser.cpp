@@ -116,7 +116,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * - a qualifier (const, etc.)
           * - an identifier
           */
-         return(  chunk_is_pointer_or_reference(next)
+         return(  next->IsPointerOrReference()
                || next_token_type == CT_DC_MEMBER
                || next_token_type == CT_QUALIFIER
                || next_token_type == CT_WORD);
@@ -141,7 +141,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * - a qualifier (const, etc.)
           * - an identifier
           */
-         return(  chunk_is_pointer_or_reference(next)
+         return(  next->IsPointerOrReference()
                || next_token_type == CT_QUALIFIER
                || next_token_type == CT_WORD);
 
@@ -170,7 +170,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * - an identifier
           */
          return(  language_is_set(LANG_CPP)
-               && (  chunk_is_pointer_or_reference(next)
+               && (  next->IsPointerOrReference()
                   || next_token_type == CT_QUALIFIER
                   || next_token_type == CT_WORD));
 
@@ -183,7 +183,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * - a reference symbol ('&')
           * - an identifier
           */
-         return(  chunk_is_pointer_or_reference(next)
+         return(  next->IsPointerOrReference()
                || next_token_type == CT_WORD);
 
       case CT_DC_MEMBER:
@@ -218,7 +218,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * - a qualifier (const, etc.)
           * - an identifier
           */
-         return(  chunk_is_pointer_or_reference(next)
+         return(  next->IsPointerOrReference()
                || next_token_type == CT_QUALIFIER
                || next_token_type == CT_WORD);
 
@@ -231,7 +231,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * - another qualifier
           * - an identifier
           */
-         return(  chunk_is_pointer_or_reference(next)
+         return(  next->IsPointerOrReference()
                || next_token_type == CT_QUALIFIER
                || next_token_type == CT_WORD);
 
@@ -258,7 +258,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * - a qualifier (const, etc.)
           * - an identifier
           */
-         return(  chunk_is_pointer_or_reference(next)
+         return(  next->IsPointerOrReference()
                || next_token_type == CT_QUALIFIER
                || next_token_type == CT_WORD);
 
@@ -281,7 +281,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
           * - a qualifier (const, etc.)
           * - an identifier
           */
-         return(  chunk_is_pointer_or_reference(next)
+         return(  next->IsPointerOrReference()
                || next_token_type == CT_ANGLE_OPEN
                || next_token_type == CT_DC_MEMBER
                || next_token_type == CT_QUALIFIER
@@ -437,18 +437,14 @@ static bool chunk_is_macro_reference(Chunk *pc)
 } // chunk_is_macro_reference
 
 
-/**
- * Returns true if the input chunk is a pointer/reference operator or a
- * qualifier
- */
-static bool chunk_is_pointer_reference_or_qualifier(Chunk *pc)
+bool Chunk::IsPointerReferenceOrQualifier() const
 {
    LOG_FUNC_ENTRY();
 
-   return(  chunk_is_pointer_or_reference(pc)
-         || (  chunk_is_token(pc, CT_QUALIFIER)
-            && !chunk_is_cpp_inheritance_access_specifier(pc)));
-} // chunk_is_pointer_reference_or_qualifier
+   return(  IsPointerOrReference()
+         || (  Is(CT_QUALIFIER)
+            && !IsCppInheritanceAccessSpecifier()));
+}
 
 
 /**
@@ -577,10 +573,10 @@ static std::pair<Chunk *, Chunk *> match_variable_end(Chunk *pc, std::size_t lev
        * skip to any following match for angle brackets, braces, parens,
        * or square brackets
        */
-      if (  chunk_is_token(pc, CT_ANGLE_OPEN)
-         || chunk_is_token(pc, CT_BRACE_OPEN)
-         || chunk_is_paren_open(pc)
-         || chunk_is_token(pc, CT_SQUARE_OPEN))
+      if (  pc->Is(CT_ANGLE_OPEN)
+         || pc->Is(CT_BRACE_OPEN)
+         || pc->IsParenOpen()
+         || pc->Is(CT_SQUARE_OPEN))
       {
          pc = pc->SkipToMatch(E_Scope::PREPROC);
       }
@@ -689,10 +685,10 @@ static std::pair<Chunk *, Chunk *> match_variable_start(Chunk *pc, std::size_t l
        * skip to any preceding match for angle brackets, braces, parens,
        * or square brackets
        */
-      if (  chunk_is_token(pc, CT_ANGLE_CLOSE)
-         || chunk_is_token(pc, CT_BRACE_CLOSE)
-         || chunk_is_paren_close(pc)
-         || chunk_is_token(pc, CT_SQUARE_CLOSE))
+      if (  pc->Is(CT_ANGLE_CLOSE)
+         || pc->Is(CT_BRACE_CLOSE)
+         || pc->IsParenClose()
+         || pc->Is(CT_SQUARE_CLOSE))
       {
          pc = pc->SkipToMatchRev(E_Scope::PREPROC);
       }
@@ -710,7 +706,7 @@ static std::pair<Chunk *, Chunk *> match_variable_start(Chunk *pc, std::size_t l
           * marked? if not, then break
           */
          if (  prev->IsNot(CT_WORD)
-            || (  !chunk_is_pointer_or_reference(pc)
+            || (  !pc->IsPointerOrReference()
                && pc->IsNot(CT_WORD)))
          {
             /**
@@ -1328,7 +1324,7 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
     * the following may identify cases where we've reached the
     * end of a cast terminated by a closing paren
     */
-   if (  (  chunk_is_paren_close(pc) // Issue #3538
+   if (  (  pc->IsParenClose() // Issue #3538
          && pc->level < m_start->level)
       || (start_in_funcdef ^ pc_in_funcdef).test_any()
       || (start_in_preproc ^ pc_in_preproc).test_any())
@@ -1656,7 +1652,7 @@ void EnumStructUnionParser::mark_constructors()
          if (  prev->IsNotNullChunk()
             && std::strcmp(prev->Text(), name) == 0
             && prev->level == level
-            && chunk_is_paren_open(next))
+            && next->IsParenOpen())
          {
             set_chunk_type(prev, CT_FUNC_CLASS_DEF);
 
@@ -1829,19 +1825,19 @@ void EnumStructUnionParser::mark_pointer_types(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(pc, CT_WORD))
+   if (pc->Is(CT_WORD))
    {
       do
       {
          // TODO: should there be a CT_BYREF_TYPE?
          pc = pc->GetPrevNcNnlNi();
 
-         if (chunk_is_ptr_operator(pc))
+         if (pc->IsPointerOperator())
          {
             set_chunk_parent(pc, m_start->type);
             set_chunk_type(pc, CT_PTR_TYPE);
          }
-      } while (chunk_is_pointer_reference_or_qualifier(pc));
+      } while (pc->IsPointerReferenceOrQualifier());
    }
 } // EnumStructUnionParser::mark_pointer_types
 
@@ -1931,7 +1927,7 @@ void EnumStructUnionParser::mark_type(Chunk *pc)
          make_type(pc);
          set_chunk_parent(pc, m_start->type);
          pc = pc->GetNextNcNnl(E_Scope::PREPROC);
-      } while (chunk_is_pointer_or_reference(pc));
+      } while (pc->IsPointerOrReference());
    }
 } // EnumStructUnionParser::mark_type
 
@@ -2093,7 +2089,7 @@ void EnumStructUnionParser::parse(Chunk *pc)
       {
          next = parse_double_colon(next);
       }
-      else if (  chunk_is_paren_open(next)
+      else if (  next->IsParenOpen()
               && (  language_is_set(LANG_D)
                  || (  language_is_set(LANG_PAWN)
                     && chunk_is_enum(m_start))))
@@ -2275,7 +2271,7 @@ Chunk *EnumStructUnionParser::parse_braces(Chunk *brace_open)
 
       if (  (  language_is_set(LANG_C)
             || language_is_set(LANG_CPP))
-         && chunk_is_paren_close(prev))
+         && prev->IsParenClose())
       {
          /**
           * we may be dealing with a c/cpp function definition, where the 'struct'
@@ -2305,7 +2301,7 @@ Chunk *EnumStructUnionParser::parse_braces(Chunk *brace_open)
 
       if (  language_is_set(LANG_D)
          || language_is_set(LANG_PAWN)
-         || !chunk_is_paren_close(prev)
+         || !prev->IsParenClose()
          || is_potential_function_definition
          || chunk_is_between(prev, enum_base_start, brace_open)
          || chunk_is_between(prev, inheritance_start, brace_open))
@@ -2708,7 +2704,7 @@ void EnumStructUnionParser::try_post_identify_macro_calls()
             && !prev->flags.test_any(PCF_VAR_DEF | PCF_VAR_1ST | PCF_VAR_INLINE)
             && prev->level == m_start->level)
          {
-            if (chunk_is_paren_open(pc))
+            if (pc->IsParenOpen())
             {
                auto *paren_open  = pc;
                auto *paren_close = paren_open->SkipToMatch(E_Scope::PREPROC);
@@ -2900,14 +2896,14 @@ bool EnumStructUnionParser::try_pre_identify_type()
              * but it's not the type with which we're concerned
              */
             if (  next->IsSquareBracket()                       // Issue #3601
-               || chunk_is_paren_open(next))
+               || next->IsParenOpen())
             {
                prev = next->SkipToMatch(E_Scope::PREPROC);
                next = prev->GetNextNcNnl(E_Scope::PREPROC);
             }
 
             if (  chunk_is_token(prev, CT_WORD)
-               && chunk_is_pointer_or_reference(next))
+               && next->IsPointerOrReference())
             {
                pc = next;
 
@@ -2926,20 +2922,20 @@ bool EnumStructUnionParser::try_pre_identify_type()
 
       pc = pc->GetPrevNcNnlNi(E_Scope::PREPROC);
 
-      if (  chunk_is_token(pc, CT_QUALIFIER)
+      if (  pc->Is(CT_QUALIFIER)
          && std::strncmp(pc->str.c_str(), "final", 5) == 0)
       {
          pc = pc->GetPrevNcNnlNi(E_Scope::PREPROC);
       }
 
       if (  language_is_set(LANG_D)
-         && chunk_is_paren_close(pc))
+         && pc->IsParenClose())
       {
          pc = pc->SkipToMatchRev();
          pc = pc->GetPrevNcNnlNi();
       }
 
-      if (chunk_is_token(pc, CT_WORD))
+      if (pc->Is(CT_WORD))
       {
          mark_type(pc);
 

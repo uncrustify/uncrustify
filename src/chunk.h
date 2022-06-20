@@ -298,6 +298,18 @@ public:
     */
    Chunk *GetPpStart() const;
 
+   /**
+    * @brief Finds the first chunk on the line the current chunk is on.
+    * This just backs up until a newline or nullptr is hit.
+    *
+    * given: [ a - b - c - n1 - d - e - n2 ]
+    * input: [ a | b | c | n1 ] => a
+    * input: [ d | e | n2 ]     => d
+    *
+    * @return pointer to the first chunk on the line the current chunk is on.
+    */
+   Chunk *GetFirstChunkOnLine() const;
+
 
    // --------- Search functions
 
@@ -529,8 +541,96 @@ public:
     */
    bool IsSemicolon() const;
 
+   /**
+    * @brief checks whether the chunk is a pointer operator
+    * @return true if the chunk is a pointer operator
+    */
+   bool IsPointerOperator() const;
+
+   /**
+    * @brief checks whether the chunk is a pointer or a reference
+    * @return true if the chunk is a pointer or a reference
+    */
+   bool IsPointerOrReference() const;
+
+   /**
+    * @brief checks whether the chunk is an inheritance access specifier
+    * @return true if the chunk is an inheritance access specifier
+    */
+   bool IsCppInheritanceAccessSpecifier() const;
+
+   /**
+    * @brief checks whether the chunk is a pointer, reference or a qualifier
+    * @return true if the chunk is a pointer, reference or a qualifier
+    */
+   bool IsPointerReferenceOrQualifier() const;
+
+   /**
+    * @brief checks whether the chunk is an address
+    * @return true if the chunk is an address
+    */
+   bool IsAddress() const;
+
+   /**
+    * @brief checks whether the chunk is a MS reference
+    * @return true if the chunk is a MS reference
+    * NOTE: MS compilers for C++/CLI and WinRT use '^' instead of '*'
+    * for marking up reference types vs pointer types
+    */
+   bool IsMsRef() const;
+
+   /**
+    * @brief checks whether the chunk is nullable
+    * @return true if the chunk is nullable
+    */
+   bool IsNullable() const;
+
+   /**
+    * @brief Checks if a given chunk is the last on its line
+    * @return true or false depending on whether a given chunk is the last on its line
+    */
+   bool IsLastChunkOnLine() const;
+
+   /**
+    * @brief checks whether the current chunk is on same line of the given 'end' chunk.
+    * The current chunk must be before the 'end' chunk
+    * @param end the end chunk
+    * @return true if there is no newline between the current chunk and end chunk
+    */
+   bool IsOnSameLine(const Chunk *end) const;
+
+   /**
+    * @brief checks whether the chunk is an opening brace
+    * @return true if the chunk is an opening brace
+    */
+   bool IsBraceOpen() const;
+
+   /**
+    * @brief checks whether the chunk is a closing brace
+    * @return true if the chunk is a closing brace
+    */
+   bool IsBraceClose() const;
+
+   /**
+    * @brief checks whether the chunk is an opening parenthesis
+    * @return true if the chunk is an opening parenthesis
+    */
+   bool IsParenOpen() const;
+
+   /**
+    * @brief checks whether the chunk is a closing parenthesis
+    * @return true if the chunk is a closing parenthesis
+    */
+   bool IsParenClose() const;
+
 
    // --------- Util functions
+
+   /**
+    * @brief delete the chunk from the chunk list
+    * @param pc the chunk to remove from the list
+    */
+   static void Delete(Chunk * &pc);
 
    /**
     * @brief add a copy of this chunk after the given position in a chunk list.
@@ -549,12 +649,6 @@ public:
    Chunk *CopyAndAddBefore(Chunk *pos) const;
 
    /**
-    * @brief delete the chunk from the chunk list
-    * @param pc the chunk to remove from the list
-    */
-   static void Delete(Chunk * &pc);
-
-   /**
     * @brief move the chunk after the reference position in the chunk list
     * @param ref chunk after which to move the current chunk
     */
@@ -571,32 +665,6 @@ public:
     * @param other the other chunk
     */
    void SwapLines(Chunk *other);
-
-   /**
-    * @brief Finds the first chunk on the line the current chunk is on.
-    * This just backs up until a newline or nullptr is hit.
-    *
-    * given: [ a - b - c - n1 - d - e - n2 ]
-    * input: [ a | b | c | n1 ] => a
-    * input: [ d | e | n2 ]     => d
-    *
-    * @return pointer to the first chunk on the line the current chunk is on.
-    */
-   Chunk *GetFirstChunkOnLine() const;
-
-   /**
-    * @brief Checks if a given chunk is the last on its line
-    * @return true or false depending on whether a given chunk is the last on its line
-    */
-   bool IsLastChunkOnLine() const;
-
-   /**
-    * @brief checks whether the current chunk is on same line of the given 'end' chunk.
-    * The current chunk must be before the 'end' chunk
-    * @param end the end chunk
-    * @return true if there is no newline between the current chunk and end chunk
-    */
-   bool IsOnSameLine(const Chunk *end) const;
 
 
    // --------- Data members
@@ -828,20 +896,15 @@ Chunk *chunk_skip_dc_member(Chunk *start, E_Scope scope = E_Scope::ALL);
 Chunk *chunk_skip_dc_member_rev(Chunk *start, E_Scope scope = E_Scope::ALL);
 
 
-/**
- * Returns true if the chunk under test is an inheritance access specifier
- */
-static inline bool chunk_is_cpp_inheritance_access_specifier(Chunk *pc)
+inline bool Chunk::IsCppInheritanceAccessSpecifier() const
 {
    return(  language_is_set(LANG_CPP)
-         && pc != nullptr
-         && pc->IsNotNullChunk()
-         && (  chunk_is_token(pc, CT_ACCESS)
-            || chunk_is_token(pc, CT_QUALIFIER))
-         && (  std::strncmp(pc->str.c_str(), "private", 7) == 0
-            || std::strncmp(pc->str.c_str(), "protected", 9) == 0
-            || std::strncmp(pc->str.c_str(), "public", 6) == 0));
-} // chunk_is_cpp_inheritance_access_specifier
+         && (  Is(CT_ACCESS)
+            || Is(CT_QUALIFIER))
+         && (  IsString("private")
+            || IsString("protected")
+            || IsString("public")));
+}
 
 
 inline bool Chunk::IsColon() const
@@ -929,29 +992,27 @@ static inline bool chunk_is_word(Chunk *pc)
 }
 
 
-static inline bool chunk_is_nullable(Chunk *pc)
+inline bool Chunk::IsNullable() const
 {
    return(  language_is_set(LANG_CS | LANG_VALA)
-         && (pc != nullptr)
-         && (pc->Len() == 1)
-         && (pc->str[0] == '?'));
+         && Len() == 1
+         && str[0] == '?');
 }
 
 
-static inline bool chunk_is_addr(Chunk *pc)
+inline bool Chunk::IsAddress() const
 {
-   if (  pc != nullptr
-      && pc->IsNotNullChunk()
-      && (  chunk_is_token(pc, CT_BYREF)
-         || (  (pc->Len() == 1)
-            && (pc->str[0] == '&')
-            && pc->IsNot(CT_OPERATOR_VAL))))
+   if (  IsNotNullChunk()
+      && (  Is(CT_BYREF)
+         || (  Len() == 1
+            && str[0] == '&'
+            && IsNot(CT_OPERATOR_VAL))))
    {
-      Chunk *prev = pc->GetPrev();
+      Chunk *prevc = GetPrev();
 
-      if (  pc->flags.test(PCF_IN_TEMPLATE)
-         && (  chunk_is_token(prev, CT_COMMA)
-            || chunk_is_token(prev, CT_ANGLE_OPEN)))
+      if (  flags.test(PCF_IN_TEMPLATE)
+         && (  prevc->Is(CT_COMMA)
+            || prevc->Is(CT_ANGLE_OPEN)))
       {
          return(false);
       }
@@ -961,30 +1022,28 @@ static inline bool chunk_is_addr(Chunk *pc)
 }
 
 
-static inline bool chunk_is_msref(Chunk *pc) // ms compilers for C++/CLI and WinRT use '^' instead of '*' for marking up reference types vs pointer types
+inline bool Chunk::IsMsRef() const
 {
    return(  language_is_set(LANG_CPP)
-         && (  pc != nullptr
-            && (pc->Len() == 1)
-            && (pc->str[0] == '^')
-            && pc->IsNot(CT_OPERATOR_VAL)));
+         && Len() == 1
+         && str[0] == '^'
+         && IsNot(CT_OPERATOR_VAL));
 }
 
 
-static inline bool chunk_is_ptr_operator(Chunk *pc)
+inline bool Chunk::IsPointerOperator() const
 {
-   return(  pc != nullptr
-         && (  (  pc->IsStar()
-               || chunk_is_addr(pc)
-               || chunk_is_msref(pc))
-            || chunk_is_nullable(pc)));
+   return(  IsStar()
+         || IsAddress()
+         || IsMsRef()
+         || IsNullable());
 }
 
 
-static inline bool chunk_is_pointer_or_reference(Chunk *pc)
+inline bool Chunk::IsPointerOrReference() const
 {
-   return(  chunk_is_ptr_operator(pc)
-         || chunk_is_token(pc, CT_BYREF));
+   return(  IsPointerOperator()
+         || Is(CT_BYREF));
 }
 
 
@@ -992,36 +1051,36 @@ static inline bool chunk_is_pointer_or_reference(Chunk *pc)
 bool chunk_is_newline_between(Chunk *start, Chunk *end);
 
 
-static inline bool chunk_is_closing_brace(Chunk *pc)
+inline bool Chunk::IsBraceOpen() const
 {
-   return(  chunk_is_token(pc, CT_BRACE_CLOSE)
-         || chunk_is_token(pc, CT_VBRACE_CLOSE));
+   return(  Is(CT_BRACE_OPEN)
+         || Is(CT_VBRACE_OPEN));
 }
 
 
-static inline bool chunk_is_opening_brace(Chunk *pc)
+inline bool Chunk::IsBraceClose() const
 {
-   return(  chunk_is_token(pc, CT_BRACE_OPEN)
-         || chunk_is_token(pc, CT_VBRACE_OPEN));
+   return(  Is(CT_BRACE_CLOSE)
+         || Is(CT_VBRACE_CLOSE));
 }
 
 
-static inline bool chunk_is_paren_open(Chunk *pc)
+inline bool Chunk::IsParenOpen() const
 {
-   return(  chunk_is_token(pc, CT_PAREN_OPEN)
-         || chunk_is_token(pc, CT_SPAREN_OPEN)
-         || chunk_is_token(pc, CT_TPAREN_OPEN)
-         || chunk_is_token(pc, CT_FPAREN_OPEN)
-         || chunk_is_token(pc, CT_LPAREN_OPEN));
+   return(  Is(CT_PAREN_OPEN)
+         || Is(CT_SPAREN_OPEN)
+         || Is(CT_TPAREN_OPEN)
+         || Is(CT_FPAREN_OPEN)
+         || Is(CT_LPAREN_OPEN));
 }
 
 
-static inline bool chunk_is_paren_close(Chunk *pc)
+inline bool Chunk::IsParenClose() const
 {
-   return(  chunk_is_token(pc, CT_PAREN_CLOSE)
-         || chunk_is_token(pc, CT_SPAREN_CLOSE)
-         || chunk_is_token(pc, CT_TPAREN_CLOSE)
-         || chunk_is_token(pc, CT_FPAREN_CLOSE));
+   return(  Is(CT_PAREN_CLOSE)
+         || Is(CT_SPAREN_CLOSE)
+         || Is(CT_TPAREN_CLOSE)
+         || Is(CT_FPAREN_CLOSE));
 }
 
 

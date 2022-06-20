@@ -220,15 +220,15 @@ static void detect_space_options()
          vote_sp_inside_paren.vote(pc, next);
       }
 
-      if (  (  chunk_is_paren_open(pc)
-            && chunk_is_paren_open(next))
-         || (  chunk_is_paren_close(pc)
-            && chunk_is_paren_close(next)))
+      if (  (  pc->IsParenOpen()
+            && next->IsParenOpen())
+         || (  pc->IsParenClose()
+            && next->IsParenClose()))
       {
          vote_sp_paren_paren.vote(pc, next);
       }
 
-      if (  chunk_is_paren_close(pc)
+      if (  pc->IsParenClose()
          && chunk_is_token(next, CT_BRACE_OPEN))
       {
          vote_sp_paren_brace.vote(pc, next);
@@ -293,7 +293,7 @@ static void detect_space_options()
       {
          vote_sp_inside_angle.vote(prev, pc);
 
-         if (chunk_is_paren_open(next))
+         if (next->IsParenOpen())
          {
             vote_sp_angle_paren.vote(prev, pc);
          }
