@@ -468,3 +468,9 @@
 10077  c/Issue_3582.cfg                           c/Issue_3582.c
 10078  c/pp_indent_brace--1.cfg                   c/Issue_3587.h
 10079  c/Issue_3662.cfg                           c/Issue_3662.c
+10080  c/mod_infinite_loop-0.cfg                  c/infinite-loops.c
+10081  c/mod_infinite_loop-1.cfg                  c/infinite-loops.c
+10082  c/mod_infinite_loop-2.cfg                  c/infinite-loops.c
+10083  c/mod_infinite_loop-3.cfg                  c/infinite-loops.c
+10084  c/mod_infinite_loop-4.cfg                  c/infinite-loops.c
+10085  c/mod_infinite_loop-5.cfg                  c/infinite-loops.c

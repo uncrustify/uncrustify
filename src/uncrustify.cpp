@@ -32,6 +32,7 @@
 #include "parent_for_pp.h"
 #include "remove_duplicate_include.h"
 #include "remove_extra_returns.h"
+#include "rewrite_infinite_loops.h"
 #include "semicolons.h"
 #include "sorting.h"
 #include "space.h"
@@ -2116,6 +2117,13 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
       if (options::mod_remove_empty_return())
       {
          remove_extra_returns();
+      }
+      // Rewrite infinite loops
+      log_rule_B("mod_infinite_loop");
+
+      if (options::mod_infinite_loop())
+      {
+         rewrite_infinite_loops();
       }
       // Remove duplicate include
       log_rule_B("mod_duplicate_include");
