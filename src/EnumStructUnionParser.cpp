@@ -420,7 +420,7 @@ static bool chunk_is_macro_reference(Chunk *pc)
 
    if (  (  language_is_set(LANG_CPP)
          || language_is_set(LANG_C))
-      && chunk_is_token(pc, CT_WORD)
+      && pc->Is(CT_WORD)
       && !pc->flags.test(PCF_IN_PREPROC))
    {
       while (next->IsNotNullChunk())
@@ -549,7 +549,7 @@ static std::pair<Chunk *, Chunk *> match_variable_end(Chunk *pc, std::size_t lev
        */
       Chunk *rhs_exp_end = nullptr;
 
-      if (chunk_is_token(pc, CT_ASSIGN))
+      if (pc->Is(CT_ASSIGN))
       {
          /**
           * store a pointer to the end chunk of the rhs expression;
@@ -598,7 +598,7 @@ static std::pair<Chunk *, Chunk *> match_variable_end(Chunk *pc, std::size_t lev
          break;
       }
 
-      if (  chunk_is_token(pc, CT_WORD)
+      if (  pc->Is(CT_WORD)
          && pc != rhs_exp_end)
       {
          /**
@@ -612,8 +612,8 @@ static std::pair<Chunk *, Chunk *> match_variable_end(Chunk *pc, std::size_t lev
        * we're done searching if we've previously identified a variable name
        * and then encounter a comma or semicolon
        */
-      if (  chunk_is_token(next, CT_COMMA)
-         || chunk_is_token(next, CT_FPAREN_CLOSE)
+      if (  next->Is(CT_COMMA)
+         || next->Is(CT_FPAREN_CLOSE)
          || next->IsSemicolon())
       {
          return(std::make_pair(identifier, pc));
@@ -666,7 +666,7 @@ static std::pair<Chunk *, Chunk *> match_variable_start(Chunk *pc, std::size_t l
          next = prev;
          prev = next->GetPrevNcNnlNi();
 
-         if (chunk_is_token(next, CT_ASSIGN))
+         if (next->Is(CT_ASSIGN))
          {
             pc = prev;
          }
@@ -718,7 +718,7 @@ static std::pair<Chunk *, Chunk *> match_variable_start(Chunk *pc, std::size_t l
       }
 
       if (  identifier->IsNullChunk()
-         && chunk_is_token(pc, CT_WORD))
+         && pc->Is(CT_WORD))
       {
          /**
           * we've encountered a candidate for the variable name
@@ -732,11 +732,11 @@ static std::pair<Chunk *, Chunk *> match_variable_start(Chunk *pc, std::size_t l
        * and then encounter another identifier, or we encounter a closing
        * brace (which would likely indicate an inline variable definition)
        */
-      if (  chunk_is_token(prev, CT_ANGLE_CLOSE)
-         || chunk_is_token(prev, CT_BRACE_CLOSE)
-         || chunk_is_token(prev, CT_COMMA)
-         || chunk_is_token(prev, CT_TYPE)
-         || chunk_is_token(prev, CT_WORD))
+      if (  prev->Is(CT_ANGLE_CLOSE)
+         || prev->Is(CT_BRACE_CLOSE)
+         || prev->Is(CT_COMMA)
+         || prev->Is(CT_TYPE)
+         || prev->Is(CT_WORD))
       {
          return(std::make_pair(pc, identifier));
       }
@@ -758,17 +758,16 @@ static Chunk *skip_scope_resolution_and_nested_name_specifiers(Chunk *pc)
 
    if (  (  pc != nullptr
          && pc->flags.test(PCF_IN_TEMPLATE))
-      || chunk_is_token(pc, CT_DC_MEMBER)
-      || chunk_is_token(pc, CT_TYPE)
-      || chunk_is_token(pc, CT_WORD))
+      || pc->Is(CT_DC_MEMBER)
+      || pc->Is(CT_TYPE)
+      || pc->Is(CT_WORD))
    {
-      while (  pc != nullptr
-            && pc->IsNotNullChunk())
+      while (pc->IsNotNullChunk())
       {
          /**
           * skip to any following match for angle brackets
           */
-         if (chunk_is_token(pc, CT_ANGLE_OPEN))
+         if (pc->Is(CT_ANGLE_OPEN))
          {
             pc = pc->SkipToMatch(E_Scope::PREPROC);
          }
@@ -805,16 +804,16 @@ static Chunk *skip_scope_resolution_and_nested_name_specifiers_rev(Chunk *pc)
 
    if (  (  pc->IsNotNullChunk()
          && pc->flags.test(PCF_IN_TEMPLATE))
-      || chunk_is_token(pc, CT_DC_MEMBER)
-      || chunk_is_token(pc, CT_TYPE)
-      || chunk_is_token(pc, CT_WORD))
+      || pc->Is(CT_DC_MEMBER)
+      || pc->Is(CT_TYPE)
+      || pc->Is(CT_WORD))
    {
       while (pc->IsNotNullChunk())
       {
          /**
           * skip to any preceding match for angle brackets
           */
-         if (chunk_is_token(pc, CT_ANGLE_CLOSE))
+         if (pc->Is(CT_ANGLE_CLOSE))
          {
             pc = pc->SkipToMatchRev(E_Scope::PREPROC);
          }
@@ -991,7 +990,7 @@ void EnumStructUnionParser::analyze_identifiers()
       /**
        * skip any right-hand side assignments
        */
-      if (chunk_is_token(pc, CT_ASSIGN))
+      if (pc->Is(CT_ASSIGN))
       {
          pc = skip_to_expression_end(pc);
       }
@@ -1000,7 +999,7 @@ void EnumStructUnionParser::analyze_identifiers()
        * if we're sitting at a comma or semicolon, skip it
        */
       if (  pc->IsSemicolon()
-         || (  chunk_is_token(pc, CT_COMMA)
+         || (  pc->Is(CT_COMMA)
             && !pc->flags.test_any(PCF_IN_FCN_DEF | PCF_IN_FCN_CALL | PCF_IN_TEMPLATE)
             && !chunk_is_between(pc, inheritance_start, body_start)))
       {
@@ -1300,7 +1299,7 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
    if (  pc->IsNullChunk()
       || parse_error_detected()
       || (  (  pc->IsSemicolon()
-            || chunk_is_token(pc, CT_BRACE_CLOSE))
+            || pc->Is(CT_BRACE_CLOSE))
          && pc->level == m_start->level))
    {
       LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
@@ -1360,13 +1359,13 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
 
    if (  (  pc_in_funccall.test_any()
          && start_in_funccall.test_any()
-         && chunk_is_token(pc, CT_COMMA)
+         && pc->Is(CT_COMMA)
          && pc->level == m_start->level)
       || (  pc_in_funcdef.test_any()
-         && (  (  chunk_is_token(pc, CT_FPAREN_CLOSE)
+         && (  (  pc->Is(CT_FPAREN_CLOSE)
                && pc->level < m_start->level)
-            || (  (  chunk_is_token(pc, CT_ASSIGN)
-                  || chunk_is_token(pc, CT_COMMA))
+            || (  (  pc->Is(CT_ASSIGN)
+                  || pc->Is(CT_COMMA))
                && pc->level == m_start->level))))
    {
       LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
@@ -1469,14 +1468,14 @@ void EnumStructUnionParser::mark_base_classes(Chunk *pc)
 
       Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
 
-      if (chunk_is_token(next, CT_DC_MEMBER))
+      if (next->Is(CT_DC_MEMBER))
       {
          /**
           * just in case it's a templated type
           */
          pc = skip_template_prev(pc);
 
-         if (chunk_is_token(pc, CT_WORD))
+         if (pc->Is(CT_WORD))
          {
             /**
              * TODO:
@@ -1490,8 +1489,8 @@ void EnumStructUnionParser::mark_base_classes(Chunk *pc)
             set_chunk_type(pc, CT_TYPE);
          }
       }
-      else if (  (  chunk_is_token(next, CT_BRACE_OPEN)
-                 || (  chunk_is_token(next, CT_COMMA)
+      else if (  (  next->Is(CT_BRACE_OPEN)
+                 || (  next->Is(CT_COMMA)
                     && !is_within_where_clause(next)))
               && next->level == m_start->level)
       {
@@ -1500,7 +1499,7 @@ void EnumStructUnionParser::mark_base_classes(Chunk *pc)
           */
          pc = skip_template_prev(pc);
 
-         if (chunk_is_token(pc, CT_WORD))
+         if (pc->Is(CT_WORD))
          {
             chunk_flags_set(pc, flags);
 
@@ -1510,7 +1509,7 @@ void EnumStructUnionParser::mark_base_classes(Chunk *pc)
             }
          }
 
-         if (chunk_is_token(next, CT_BRACE_OPEN))
+         if (next->Is(CT_BRACE_OPEN))
          {
             break;
          }
@@ -1527,7 +1526,7 @@ void EnumStructUnionParser::mark_braces(Chunk *brace_open)
 
    pcf_flags_t flags = PCF_NONE;
 
-   if (chunk_is_token(m_start, CT_CLASS))
+   if (m_start->Is(CT_CLASS))
    {
       flags = PCF_IN_CLASS;
    }
@@ -1535,7 +1534,7 @@ void EnumStructUnionParser::mark_braces(Chunk *brace_open)
    {
       flags = PCF_IN_ENUM;
    }
-   else if (chunk_is_token(m_start, CT_STRUCT))
+   else if (m_start->Is(CT_STRUCT))
    {
       flags = PCF_IN_STRUCT;
    }
@@ -1752,9 +1751,9 @@ void EnumStructUnionParser::mark_extracorporeal_lvalues()
       {
          next->flags &= ~PCF_LVALUE;
       }
-      else if (  (  chunk_is_token(next, CT_ASSIGN)
-                 || chunk_is_token(next, CT_BRACE_OPEN))
-              && chunk_is_token(prev, CT_WORD)
+      else if (  (  next->Is(CT_ASSIGN)
+                 || next->Is(CT_BRACE_OPEN))
+              && prev->Is(CT_WORD)
               && prev->flags.test_any(PCF_VAR_DEF | PCF_VAR_1ST | PCF_VAR_INLINE))
       {
          chunk_flags_set(prev, PCF_LVALUE);
@@ -1775,7 +1774,7 @@ void EnumStructUnionParser::mark_nested_name_specifiers(Chunk *pc)
 
    for (pc = start; chunk_is_between(pc, start, end); pc = pc->GetNextNcNnl())
    {
-      if (chunk_is_token(pc, CT_WORD))
+      if (pc->Is(CT_WORD))
       {
          /**
           * if the next token is an opening angle, then we can safely
@@ -1783,7 +1782,7 @@ void EnumStructUnionParser::mark_nested_name_specifiers(Chunk *pc)
           */
          auto *next = pc->GetNextNcNnl();
 
-         if (chunk_is_token(next, CT_ANGLE_OPEN))
+         if (next->Is(CT_ANGLE_OPEN))
          {
             /**
              * the template may have already been previously marked elsewhere...
@@ -1811,8 +1810,8 @@ void EnumStructUnionParser::mark_nested_name_specifiers(Chunk *pc)
             pc = angle_close;
          }
          else if (  is_within_inheritance_list(pc)
-                 && (  chunk_is_token(next, CT_COMMA)
-                    || chunk_is_token(next, CT_BRACE_OPEN)))
+                 && (  next->Is(CT_COMMA)
+                    || next->Is(CT_BRACE_OPEN)))
          {
             set_chunk_type(pc, CT_TYPE);
          }
@@ -2062,17 +2061,17 @@ void EnumStructUnionParser::parse(Chunk *pc)
       /**
        * skip any right-hand side assignments
        */
-      if (chunk_is_token(next, CT_ASSIGN))
+      if (next->Is(CT_ASSIGN))
       {
          next = skip_to_expression_end(next);
       }
 
-      if (  chunk_is_token(next, CT_ANGLE_OPEN)
+      if (  next->Is(CT_ANGLE_OPEN)
          && !template_detected())
       {
          next = parse_angles(next);
       }
-      else if (  chunk_is_token(next, CT_BRACE_OPEN)
+      else if (  next->Is(CT_BRACE_OPEN)
               && !body_detected())
       {
          next = parse_braces(next);
@@ -2081,11 +2080,11 @@ void EnumStructUnionParser::parse(Chunk *pc)
       {
          parse_colon(next);
       }
-      else if (chunk_is_token(next, CT_COMMA))
+      else if (next->Is(CT_COMMA))
       {
          record_top_level_comma(next);
       }
-      else if (chunk_is_token(next, CT_DC_MEMBER))
+      else if (next->Is(CT_DC_MEMBER))
       {
          next = parse_double_colon(next);
       }
@@ -2096,24 +2095,24 @@ void EnumStructUnionParser::parse(Chunk *pc)
       {
          set_paren_parent(next, m_start->type);
 
-         if (  chunk_is_token(prev, CT_WORD)
+         if (  prev->Is(CT_WORD)
             && language_is_set(LANG_D))
          {
             mark_template(next);
          }
          next = next->SkipToMatch(E_Scope::PREPROC);
       }
-      else if (  chunk_is_token(next, CT_QUALIFIER)
+      else if (  next->Is(CT_QUALIFIER)
               && language_is_set(LANG_JAVA)
               && std::strncmp(next->str.c_str(), "implements", 10) == 0)
       {
          mark_base_classes(next);
       }
-      else if (chunk_is_token(next, CT_QUESTION))
+      else if (next->Is(CT_QUESTION))
       {
          record_question_operator(next);
       }
-      else if (  chunk_is_token(next, CT_WHERE)
+      else if (  next->Is(CT_WHERE)
               && !where_clause_detected())
       {
          mark_where_clause(next);
@@ -2292,9 +2291,9 @@ Chunk *EnumStructUnionParser::parse_braces(Chunk *brace_open)
              */
             auto *type       = m_start->GetNextNcNnl();
             auto *identifier = paren_open->GetPrevNcNnlNi(E_Scope::PREPROC);
-            is_potential_function_definition = (  (  chunk_is_token(identifier, CT_FUNCTION)
-                                                  || chunk_is_token(identifier, CT_FUNC_DEF)
-                                                  || chunk_is_token(identifier, CT_WORD))
+            is_potential_function_definition = (  (  identifier->Is(CT_FUNCTION)
+                                                  || identifier->Is(CT_FUNC_DEF)
+                                                  || identifier->Is(CT_WORD))
                                                && type != identifier);
          }
       }
@@ -2341,7 +2340,7 @@ void EnumStructUnionParser::parse_colon(Chunk *colon)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(m_start, CT_UNION))
+   if (m_start->Is(CT_UNION))
    {
       /**
        * unions do not implement inheritance
@@ -2394,7 +2393,7 @@ Chunk *EnumStructUnionParser::parse_double_colon(Chunk *double_colon)
    auto *pc = double_colon;
 
    if (  language_is_set(LANG_CPP)
-      && chunk_is_token(pc, CT_DC_MEMBER))
+      && pc->Is(CT_DC_MEMBER))
    {
       mark_nested_name_specifiers(pc);
       pc = skip_scope_resolution_and_nested_name_specifiers(pc);
@@ -2423,7 +2422,7 @@ void EnumStructUnionParser::record_question_operator(Chunk *question)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(question, CT_QUESTION))
+   if (question->Is(CT_QUESTION))
    {
       std::size_t index = m_chunk_map[CT_QUESTION].size();
 
@@ -2452,7 +2451,7 @@ Chunk *EnumStructUnionParser::refine_end_chunk(Chunk *pc)
 
    if (  (  language_is_set(LANG_C)
          || language_is_set(LANG_CPP))
-      && chunk_is_token(pc, CT_BRACE_CLOSE))
+      && pc->Is(CT_BRACE_CLOSE))
    {
       /**
        * if dealing with C/C++, one or more trailing variable definitions may
@@ -2479,7 +2478,7 @@ Chunk *EnumStructUnionParser::refine_end_chunk(Chunk *pc)
             /**
              * if we're sitting at a comma, skip it
              */
-            if (chunk_is_token(next, CT_COMMA))
+            if (next->Is(CT_COMMA))
             {
                next = next->GetNextNcNnl();
             }
@@ -2501,7 +2500,7 @@ Chunk *EnumStructUnionParser::refine_end_chunk(Chunk *pc)
                /**
                 * skip any right-hand side assignments
                 */
-               if (chunk_is_token(pc, CT_ASSIGN))
+               if (pc->Is(CT_ASSIGN))
                {
                   pc = skip_to_expression_end(pc);
                }
@@ -2518,7 +2517,7 @@ void EnumStructUnionParser::set_body_end(Chunk *body_end)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(body_end, CT_BRACE_CLOSE))
+   if (body_end->Is(CT_BRACE_CLOSE))
    {
       m_chunk_map[CT_BRACE_CLOSE][0] = body_end;
    }
@@ -2529,7 +2528,7 @@ void EnumStructUnionParser::set_body_start(Chunk *body_start)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(body_start, CT_BRACE_OPEN))
+   if (body_start->Is(CT_BRACE_OPEN))
    {
       m_chunk_map[CT_BRACE_OPEN][0] = body_start;
    }
@@ -2562,7 +2561,7 @@ void EnumStructUnionParser::set_template_end(Chunk *template_end)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(template_end, CT_ANGLE_CLOSE))
+   if (template_end->Is(CT_ANGLE_CLOSE))
    {
       m_chunk_map[CT_ANGLE_CLOSE][0] = template_end;
    }
@@ -2573,7 +2572,7 @@ void EnumStructUnionParser::set_template_start(Chunk *template_start)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(template_start, CT_ANGLE_OPEN))
+   if (template_start->Is(CT_ANGLE_OPEN))
    {
       m_chunk_map[CT_ANGLE_OPEN][0] = template_start;
    }
@@ -2584,7 +2583,7 @@ void EnumStructUnionParser::set_where_end(Chunk *where_end)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(where_end, CT_BRACE_OPEN))
+   if (where_end->Is(CT_BRACE_OPEN))
    {
       m_chunk_map[CT_WHERE][0] = where_end;
    }
@@ -2595,7 +2594,7 @@ void EnumStructUnionParser::set_where_start(Chunk *where_start)
 {
    LOG_FUNC_ENTRY();
 
-   if (chunk_is_token(where_start, CT_WHERE))
+   if (where_start->Is(CT_WHERE))
    {
       m_chunk_map[CT_WHERE][0] = where_start;
    }
@@ -2633,8 +2632,8 @@ Chunk *EnumStructUnionParser::try_find_end_chunk(Chunk *pc)
        * arises when macro variables and/or macro function calls follow the
        * class/enum/struct/union keyword and precede the actual type name
        */
-      if (  chunk_is_token(pc, CT_TYPE)
-         || chunk_is_token(pc, CT_WORD))
+      if (  pc->Is(CT_TYPE)
+         || pc->Is(CT_WORD))
       {
          set_chunk_type(pc, CT_WORD);
          set_chunk_parent(pc, CT_NONE);
@@ -2693,14 +2692,14 @@ void EnumStructUnionParser::try_post_identify_macro_calls()
       auto  *body_start        = get_body_start();
       auto  *inheritance_start = get_inheritance_start();
       Chunk *pc                = m_start;
-      Chunk *prev              = nullptr;
+      Chunk *prev              = Chunk::NullChunkPtr;
 
       do
       {
          if (  !chunk_is_between(prev, inheritance_start, body_start)
-            && (  chunk_is_token(prev, CT_WORD)
-               || chunk_is_token(prev, CT_FUNCTION)
-               || chunk_is_token(prev, CT_FUNC_DEF))
+            && (  prev->Is(CT_WORD)
+               || prev->Is(CT_FUNCTION)
+               || prev->Is(CT_FUNC_DEF))
             && !prev->flags.test_any(PCF_VAR_DEF | PCF_VAR_1ST | PCF_VAR_INLINE)
             && prev->level == m_start->level)
          {
@@ -2759,8 +2758,8 @@ void EnumStructUnionParser::try_post_identify_type()
          {
             break;
          }
-         else if (  chunk_is_token(pc, CT_WORD)
-                 || chunk_is_token(pc, CT_ANGLE_CLOSE))
+         else if (  pc->Is(CT_WORD)
+                 || pc->Is(CT_ANGLE_CLOSE))
          {
             type = skip_template_prev(pc);
          }
@@ -2798,7 +2797,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
    {
       pc = get_inheritance_start();
 
-      if (chunk_is_token(m_start, CT_UNION))
+      if (m_start->Is(CT_UNION))
       {
          /**
           * unions do not implement inheritance
@@ -2848,8 +2847,8 @@ bool EnumStructUnionParser::try_pre_identify_type()
          pc = next_next;
       }
       else if (  next->IsNotNullChunk()
-              && chunk_is_token(next, CT_WORD)
-              && chunk_is_token(next_next, CT_WORD)
+              && next->Is(CT_WORD)
+              && next_next->Is(CT_WORD)
               && m_end->GetPrevNcNnlNi() == next_next)
       {
          /**
@@ -2902,7 +2901,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
                next = prev->GetNextNcNnl(E_Scope::PREPROC);
             }
 
-            if (  chunk_is_token(prev, CT_WORD)
+            if (  prev->Is(CT_WORD)
                && next->IsPointerOrReference())
             {
                pc = next;
