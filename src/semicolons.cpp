@@ -44,7 +44,7 @@ void remove_extra_semicolons()
       Chunk *next = pc->GetNextNcNnl();
       Chunk *prev;
 
-      if (  chunk_is_token(pc, CT_SEMICOLON)
+      if (  pc->Is(CT_SEMICOLON)
          && !pc->flags.test(PCF_IN_PREPROC)
          && (prev = pc->GetPrevNcNnl())->IsNotNullChunk())
       {
@@ -57,7 +57,7 @@ void remove_extra_semicolons()
          {
             // keep it
          }
-         else if (  chunk_is_token(prev, CT_BRACE_CLOSE)
+         else if (  prev->Is(CT_BRACE_CLOSE)
                  && (  get_chunk_parent_type(prev) == CT_IF
                     || get_chunk_parent_type(prev) == CT_ELSEIF
                     || get_chunk_parent_type(prev) == CT_ELSE
@@ -86,7 +86,7 @@ void remove_extra_semicolons()
 
                   if (  equal_sign != nullptr
                      && equal_sign->IsNotNullChunk()
-                     && chunk_is_token(equal_sign, CT_ASSIGN))
+                     && equal_sign->Is(CT_ASSIGN))
                   {
                      // initialisation found
                      code_block_found = false;
@@ -100,12 +100,12 @@ void remove_extra_semicolons()
                remove_semicolon(pc);
             }
          }
-         else if (  chunk_is_token(prev, CT_BRACE_CLOSE)
+         else if (  prev->Is(CT_BRACE_CLOSE)
                  && get_chunk_parent_type(prev) == CT_NONE)
          {
             check_unknown_brace_close(pc, prev);
          }
-         else if (  chunk_is_token(prev, CT_SEMICOLON)
+         else if (  prev->Is(CT_SEMICOLON)
                  && get_chunk_parent_type(prev) != CT_FOR)
          {
             remove_semicolon(pc);
@@ -122,7 +122,7 @@ void remove_extra_semicolons()
          {
             remove_semicolon(pc);
          }
-         else if (chunk_is_token(prev, CT_BRACE_OPEN))
+         else if (prev->Is(CT_BRACE_OPEN))
          {
             remove_semicolon(pc);
          }
