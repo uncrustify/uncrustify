@@ -1963,8 +1963,12 @@ static bool parse_macro(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
    ctx.save();
    pc.str.clear();
 
-   bool continued = (  chunk_is_token(prev_pc, CT_NL_CONT)
-                    || chunk_is_token(prev_pc, CT_COMMENT_MULTI));
+   if (prev_pc == nullptr)
+   {
+      return(false);
+   }
+   bool continued = (  prev_pc->Is(CT_NL_CONT)
+                    || prev_pc->Is(CT_COMMENT_MULTI));
 
    while (ctx.more())
    {
@@ -2379,8 +2383,8 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
 
       if (  (ch == '(')
          && (tail->IsNotNullChunk())
-         && (  chunk_is_token(tail, CT_CNG_HASINC)
-            || chunk_is_token(tail, CT_CNG_HASINCN)))
+         && (  tail->Is(CT_CNG_HASINC)
+            || tail->Is(CT_CNG_HASINCN)))
       {
          parse_string(ctx, pc, 0, false);
          return(true);
@@ -2441,7 +2445,8 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
       && ctx.peek() == '[')
    {
       if (  !language_is_set(LANG_OC)
-         || !chunk_is_token(prev_pc, CT_OC_AT))
+         || (  prev_pc != nullptr
+            && !prev_pc->Is(CT_OC_AT)))
       {
          if (auto length = parse_attribute_specifier_sequence(ctx))
          {
@@ -2712,7 +2717,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
          chunk_flags_set(pc, rprev->flags & PCF_COPY_FLAGS);
 
          // a newline can't be in a preprocessor
-         if (chunk_is_token(pc, CT_NEWLINE))
+         if (pc->Is(CT_NEWLINE))
          {
             chunk_flags_clr(pc, PCF_IN_PREPROC);
          }
@@ -2729,14 +2734,14 @@ void tokenize(const deque<int> &data, Chunk *ref)
       pc = chunk.CopyAndAddBefore(ref);
 
       // A newline marks the end of a preprocessor
-      if (chunk_is_token(pc, CT_NEWLINE)) // || chunk_is_token(pc, CT_COMMENT_MULTI))
+      if (pc->Is(CT_NEWLINE)) // || pc->Is(CT_COMMENT_MULTI))
       {
          cpd.in_preproc         = CT_NONE;
          cpd.preproc_ncnl_count = 0;
       }
 
       // Disable indentation when #asm directive found
-      if (chunk_is_token(pc, CT_PP_ASM))
+      if (pc->Is(CT_PP_ASM))
       {
          LOG_FMT(LBCTRL, "Found a directive %s on line %zu\n", "#asm", pc->orig_line);
          cpd.unc_off = true;
@@ -2776,14 +2781,14 @@ void tokenize(const deque<int> &data, Chunk *ref)
          else if (cpd.in_preproc == CT_PP_IGNORE)
          {
             // ASSERT(options::pp_ignore_define_body());
-            if (  !chunk_is_token(pc, CT_NL_CONT)
+            if (  !pc->Is(CT_NL_CONT)
                && !pc->IsComment())        // Issue #1966
             {
                set_chunk_type(pc, CT_PP_IGNORE);
             }
          }
          else if (  cpd.in_preproc == CT_PP_DEFINE
-                 && chunk_is_token(pc, CT_PAREN_CLOSE)
+                 && pc->Is(CT_PAREN_CLOSE)
                  && options::pp_ignore_define_body())
          {
             log_rule_B("pp_ignore_define_body");
@@ -2795,9 +2800,9 @@ void tokenize(const deque<int> &data, Chunk *ref)
       else
       {
          // Check for a preprocessor start
-         if (  chunk_is_token(pc, CT_POUND)
+         if (  pc->Is(CT_POUND)
             && (  rprev == nullptr
-               || chunk_is_token(rprev, CT_NEWLINE)))
+               || rprev->Is(CT_NEWLINE)))
          {
             set_chunk_type(pc, CT_PREPROC);
             chunk_flags_set(pc, PCF_IN_PREPROC);
@@ -2805,12 +2810,12 @@ void tokenize(const deque<int> &data, Chunk *ref)
          }
       }
 
-      if (chunk_is_token(pc, CT_NEWLINE))
+      if (pc->Is(CT_NEWLINE))
       {
          LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, <Newline>, nl is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->nl_count);
       }
-      else if (chunk_is_token(pc, CT_VBRACE_OPEN))
+      else if (pc->Is(CT_VBRACE_OPEN))
       {
          LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s, orig_col_end is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type), pc->orig_col_end);
