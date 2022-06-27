@@ -31,7 +31,7 @@ void enum_cleanup()
    while (pc->IsNotNullChunk())
    {
       if (  get_chunk_parent_type(pc) == CT_ENUM
-         && chunk_is_token(pc, CT_BRACE_CLOSE))
+         && pc->Is(CT_BRACE_CLOSE))
       {
          LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s\n",
                  __func__, __LINE__, pc->orig_line, get_token_name(pc->type));
@@ -40,7 +40,7 @@ void enum_cleanup()
          if (  prev != nullptr
             && prev->IsNotNullChunk())
          {
-            if (chunk_is_token(prev, CT_COMMA))
+            if (prev->Is(CT_COMMA))
             {
                log_rule_B("mod_enum_last_comma");
 
@@ -51,7 +51,7 @@ void enum_cleanup()
             }
             else
             {
-               if (chunk_is_token(prev, CT_BRACE_OPEN))                // Issue #2902
+               if (prev->Is(CT_BRACE_OPEN))                // Issue #2902
                {
                   // nothing between CT_BRACE_OPEN and CT_BRACE_CLOSE
                }
@@ -72,12 +72,12 @@ void enum_cleanup()
                      comma.flags     = PCF_NONE;
                      comma.str       = ",";
 
-                     if (chunk_is_token(prev, CT_PP_ENDIF))                // Issue #3604
+                     if (prev->Is(CT_PP_ENDIF))                // Issue #3604
                      {
                         prev = prev->GetPrevNcNnlNpp();
                      }
 
-                     if (chunk_is_token(prev, CT_COMMA))                   // Issue #3604
+                     if (prev->Is(CT_COMMA))                   // Issue #3604
                      {
                         // nothing to do
                      }

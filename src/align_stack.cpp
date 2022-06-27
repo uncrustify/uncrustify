@@ -209,7 +209,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
          tmp_prev = ali->GetPrev();
       }
 
-      if (chunk_is_token(tmp_prev, CT_TPAREN_OPEN))
+      if (tmp_prev->Is(CT_TPAREN_OPEN))
       {
          ali      = tmp_prev;
          tmp_prev = ali->GetPrev();
@@ -285,7 +285,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       }
       Chunk *tmp = ali;
 
-      if (chunk_is_token(tmp, CT_TPAREN_OPEN))
+      if (tmp->Is(CT_TPAREN_OPEN))
       {
          tmp = tmp->GetNext();
       }
@@ -313,7 +313,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       m_last_added = 1;
 
       // Issue #2278
-      if (chunk_is_token(ali, CT_PTR_TYPE))
+      if (ali->Is(CT_PTR_TYPE))
       {
          LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s][%s]: ali->orig_line is %zu, column is %zu, type is %s, level is %zu\n",
                  __func__, __LINE__, ali->Text(), start->Text(), ali->orig_line, ali->column, get_token_name(ali->type), ali->level);
@@ -474,7 +474,7 @@ void AlignStack::Flush()
             {
                Chunk *next = pc->align.start->GetNext();
 
-               if (chunk_is_token(next, CT_NUMBER))
+               if (next->Is(CT_NUMBER))
                {
                   start_len += next->Len();
                }
@@ -629,7 +629,7 @@ void AlignStack::Debug()
       {
          Chunk *pc = m_aligned.Get(idx)->m_pc;
 
-         if (chunk_is_token(pc, CT_PTR_TYPE))
+         if (pc->Is(CT_PTR_TYPE))
          {
             LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s][%s]: orig_line is %zu, orig_col is %zu, type is %s, level is %zu, brace_level is %zu\n",
                     __func__, __LINE__, idx, pc->Text(), pc->next->Text(), pc->orig_line, pc->orig_col, get_token_name(pc->type), pc->level, pc->brace_level);

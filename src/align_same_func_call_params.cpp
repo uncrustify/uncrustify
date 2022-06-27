@@ -96,8 +96,8 @@ void align_same_func_call_params()
       // Only align function calls that are right after a newline
       Chunk *prev = pc->GetPrev();
 
-      while (  chunk_is_token(prev, CT_MEMBER)
-            || chunk_is_token(prev, CT_DC_MEMBER))
+      while (  prev->Is(CT_MEMBER)
+            || prev->Is(CT_DC_MEMBER))
       {
          Chunk *tprev = prev->GetPrev();
 
@@ -260,8 +260,8 @@ void align_params(Chunk *start, deque<Chunk *> &chunks)
    while ((pc = pc->GetNext())->IsNotNullChunk())
    {
       if (  pc->IsNewline()
-         || chunk_is_token(pc, CT_SEMICOLON)
-         || (  chunk_is_token(pc, CT_FPAREN_CLOSE)
+         || pc->Is(CT_SEMICOLON)
+         || (  pc->Is(CT_FPAREN_CLOSE)
             && pc->level == start->level))
       {
          break;
@@ -274,7 +274,7 @@ void align_params(Chunk *start, deque<Chunk *> &chunks)
             chunks.push_back(pc);
             hit_comma = false;
          }
-         else if (chunk_is_token(pc, CT_COMMA))
+         else if (pc->Is(CT_COMMA))
          {
             hit_comma = true;
          }

@@ -471,6 +471,11 @@ void Chunk::Delete(Chunk * &pc)
 void Chunk::MoveAfter(Chunk *ref)
 {
    LOG_FUNC_ENTRY();
+
+   if (ref == this)
+   {
+      return;
+   }
    g_cl.Pop(this);
    g_cl.AddAfter(this, ref);
 

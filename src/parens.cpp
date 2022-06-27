@@ -88,7 +88,7 @@ void do_parens_assign()                         // Issue #3316
       while (  (pc = pc->GetNextNcNnl()) != nullptr
             && pc->IsNotNullChunk())
       {
-         if (chunk_is_token(pc, CT_ASSIGN))
+         if (pc->Is(CT_ASSIGN))
          {
             LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu\n",
                     __func__, __LINE__, pc->orig_line, pc->Text(), pc->level);
@@ -107,12 +107,12 @@ void do_parens_assign()                         // Issue #3316
                   break;
                }
 
-               if (chunk_is_token(p, CT_PAREN_OPEN))
+               if (p->Is(CT_PAREN_OPEN))
                {
                   check_level--;
                }
 
-               if (chunk_is_token(p, CT_SPAREN_OPEN))
+               if (p->Is(CT_SPAREN_OPEN))
                {
                   break;
                }
@@ -159,7 +159,7 @@ void do_parens_return()                         // Issue #3316
       while (  (pc = pc->GetNextNcNnl()) != nullptr
             && pc->IsNotNullChunk())
       {
-         if (chunk_is_token(pc, CT_RETURN))
+         if (pc->Is(CT_RETURN))
          {
             LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu\n",
                     __func__, __LINE__, pc->orig_line, pc->Text(), pc->level);
@@ -178,12 +178,12 @@ void do_parens_return()                         // Issue #3316
                   break;
                }
 
-               if (chunk_is_token(p, CT_PAREN_OPEN))
+               if (p->Is(CT_PAREN_OPEN))
                {
                   check_level--;
                }
 
-               if (chunk_is_token(p, CT_SPAREN_OPEN))
+               if (p->Is(CT_SPAREN_OPEN))
                {
                   break;
                }
@@ -295,10 +295,10 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
          return;
       }
 
-      if (  chunk_is_token(pc, CT_BOOL)
-         || chunk_is_token(pc, CT_QUESTION)
-         || chunk_is_token(pc, CT_COND_COLON)
-         || chunk_is_token(pc, CT_COMMA))
+      if (  pc->Is(CT_BOOL)
+         || pc->Is(CT_QUESTION)
+         || pc->Is(CT_COND_COLON)
+         || pc->Is(CT_COMMA))
       {
          LOG_FMT(LPARADD2, " -- %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->type),
@@ -315,7 +315,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
          }
          ref = pc;
       }
-      else if (chunk_is_token(pc, CT_COMPARE))
+      else if (pc->Is(CT_COMPARE))
       {
          LOG_FMT(LPARADD2, " -- compare '%s' at line %zu, orig_col is %zu, level is %zu\n",
                  pc->Text(), pc->orig_line, pc->orig_col, pc->level);
@@ -331,9 +331,9 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
             pc = next;
          }
       }
-      else if (  chunk_is_token(pc, CT_BRACE_OPEN)
-              || chunk_is_token(pc, CT_SQUARE_OPEN)
-              || chunk_is_token(pc, CT_ANGLE_OPEN))
+      else if (  pc->Is(CT_BRACE_OPEN)
+              || pc->Is(CT_SQUARE_OPEN)
+              || pc->Is(CT_ANGLE_OPEN))
       {
          // Skip [], {}, and <>
          pc = pc->SkipToMatch();

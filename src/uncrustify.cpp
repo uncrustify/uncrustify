@@ -32,6 +32,7 @@
 #include "parent_for_pp.h"
 #include "remove_duplicate_include.h"
 #include "remove_extra_returns.h"
+#include "rewrite_infinite_loops.h"
 #include "semicolons.h"
 #include "sorting.h"
 #include "space.h"
@@ -1708,19 +1709,19 @@ static void add_func_header(E_Token type, file_mem &fm)
       // Check for one liners for classes. Declarations only. Walk down the chunks.
       ref = pc;
 
-      if (  chunk_is_token(ref, CT_CLASS)
+      if (  ref->Is(CT_CLASS)
          && get_chunk_parent_type(ref) == CT_NONE
          && ref->GetNext())
       {
          ref = ref->GetNext();
 
-         if (  chunk_is_token(ref, CT_TYPE)
+         if (  ref->Is(CT_TYPE)
             && get_chunk_parent_type(ref) == type
             && ref->GetNext())
          {
             ref = ref->GetNext();
 
-            if (  chunk_is_token(ref, CT_SEMICOLON)
+            if (  ref->Is(CT_SEMICOLON)
                && ref->level == pc->level)
             {
                continue;
@@ -1730,7 +1731,7 @@ static void add_func_header(E_Token type, file_mem &fm)
       // Check for one liners for functions. There'll be a closing brace w/o any newlines. Walk down the chunks.
       ref = pc;
 
-      if (  chunk_is_token(ref, CT_FUNC_DEF)
+      if (  ref->Is(CT_FUNC_DEF)
          && get_chunk_parent_type(ref) == CT_NONE
          && ref->GetNext())
       {
@@ -1739,7 +1740,7 @@ static void add_func_header(E_Token type, file_mem &fm)
          while (  ref->IsNot(CT_NEWLINE)
                && (ref = ref->GetNext())) // TODO: is the assignment of ref wanted here?, better move it to the loop
          {
-            if (chunk_is_token(ref, CT_BRACE_CLOSE))
+            if (ref->Is(CT_BRACE_CLOSE))
             {
                found_brace = 1;
                break;
@@ -1764,14 +1765,14 @@ static void add_func_header(E_Token type, file_mem &fm)
       {
          // Bail if we change level or find an access specifier colon
          if (  ref->level != pc->level
-            || chunk_is_token(ref, CT_ACCESS_COLON))
+            || ref->Is(CT_ACCESS_COLON))
          {
             do_insert = true;
             break;
          }
 
          // If we hit an angle close, back up to the angle open
-         if (chunk_is_token(ref, CT_ANGLE_CLOSE))
+         if (ref->Is(CT_ANGLE_CLOSE))
          {
             ref = ref->GetPrevType(CT_ANGLE_OPEN, ref->level, E_Scope::PREPROC);
             continue;
@@ -1806,8 +1807,8 @@ static void add_func_header(E_Token type, file_mem &fm)
 
          if (  ref->level == pc->level
             && (  ref->flags.test(PCF_IN_PREPROC)
-               || chunk_is_token(ref, CT_SEMICOLON)
-               || chunk_is_token(ref, CT_BRACE_CLOSE)))
+               || ref->Is(CT_SEMICOLON)
+               || ref->Is(CT_BRACE_CLOSE)))
          {
             do_insert = true;
             break;
@@ -1861,19 +1862,18 @@ static void add_msg_header(E_Token type, file_mem &fm)
        */
       ref = pc;
 
-      while (  (ref = ref->GetPrev()) != nullptr
-            && ref->IsNotNullChunk())
+      while ((ref = ref->GetPrev())->IsNotNullChunk())
       {
          // ignore the CT_TYPE token that is the result type
          if (  ref->level != pc->level
-            && (  chunk_is_token(ref, CT_TYPE)
-               || chunk_is_token(ref, CT_PTR_TYPE)))
+            && (  ref->Is(CT_TYPE)
+               || ref->Is(CT_PTR_TYPE)))
          {
             continue;
          }
 
          // If we hit a parentheses around return type, back up to the open parentheses
-         if (chunk_is_token(ref, CT_PAREN_CLOSE))
+         if (ref->Is(CT_PAREN_CLOSE))
          {
             ref = ref->GetPrevType(CT_PAREN_OPEN, ref->level, E_Scope::PREPROC);
             continue;
@@ -1901,7 +1901,7 @@ static void add_msg_header(E_Token type, file_mem &fm)
 
          if (  ref->level == pc->level
             && (  ref->flags.test(PCF_IN_PREPROC)
-               || chunk_is_token(ref, CT_OC_SCOPE)))
+               || ref->Is(CT_OC_SCOPE)))
          {
             ref = ref->GetPrev();
 
@@ -2116,6 +2116,13 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
       if (options::mod_remove_empty_return())
       {
          remove_extra_returns();
+      }
+      // Rewrite infinite loops
+      log_rule_B("mod_infinite_loop");
+
+      if (options::mod_infinite_loop())
+      {
+         rewrite_infinite_loops();
       }
       // Remove duplicate include
       log_rule_B("mod_duplicate_include");

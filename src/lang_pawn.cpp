@@ -105,7 +105,7 @@ void pawn_scrub_vsemi()
       }
       Chunk *prev = pc->GetPrevNcNnl();
 
-      if (chunk_is_token(prev, CT_BRACE_CLOSE))
+      if (prev->Is(CT_BRACE_CLOSE))
       {
          if (  get_chunk_parent_type(prev) == CT_IF
             || get_chunk_parent_type(prev) == CT_ELSE
@@ -130,22 +130,22 @@ static bool pawn_continued(Chunk *pc, size_t br_level)
    }
 
    if (  pc->level > br_level
-      || chunk_is_token(pc, CT_ARITH)
-      || chunk_is_token(pc, CT_SHIFT)
-      || chunk_is_token(pc, CT_CARET)
-      || chunk_is_token(pc, CT_QUESTION)
-      || chunk_is_token(pc, CT_BOOL)
-      || chunk_is_token(pc, CT_ASSIGN)
-      || chunk_is_token(pc, CT_COMMA)
-      || chunk_is_token(pc, CT_COMPARE)
-      || chunk_is_token(pc, CT_IF)
-      || chunk_is_token(pc, CT_ELSE)
-      || chunk_is_token(pc, CT_DO)
-      || chunk_is_token(pc, CT_SWITCH)
-      || chunk_is_token(pc, CT_WHILE)
-      || chunk_is_token(pc, CT_BRACE_OPEN)
-      || chunk_is_token(pc, CT_VBRACE_OPEN)
-      || chunk_is_token(pc, CT_FPAREN_OPEN)
+      || pc->Is(CT_ARITH)
+      || pc->Is(CT_SHIFT)
+      || pc->Is(CT_CARET)
+      || pc->Is(CT_QUESTION)
+      || pc->Is(CT_BOOL)
+      || pc->Is(CT_ASSIGN)
+      || pc->Is(CT_COMMA)
+      || pc->Is(CT_COMPARE)
+      || pc->Is(CT_IF)
+      || pc->Is(CT_ELSE)
+      || pc->Is(CT_DO)
+      || pc->Is(CT_SWITCH)
+      || pc->Is(CT_WHILE)
+      || pc->Is(CT_BRACE_OPEN)
+      || pc->Is(CT_VBRACE_OPEN)
+      || pc->Is(CT_FPAREN_OPEN)
       || get_chunk_parent_type(pc) == CT_IF
       || get_chunk_parent_type(pc) == CT_ELSE
       || get_chunk_parent_type(pc) == CT_ELSEIF
@@ -193,7 +193,7 @@ void pawn_prescan()
       if (  pc != nullptr
          && pc->IsNotNullChunk())
       {
-         did_nl = (chunk_is_token(pc, CT_NEWLINE));
+         did_nl = (pc->Is(CT_NEWLINE));
       }
       pc = pc->GetNextNc();
    }
@@ -207,7 +207,7 @@ static Chunk *pawn_process_line(Chunk *start)
    //LOG_FMT(LSYS, "%s: %d - %s\n", __func__,
    //        start->orig_line, start->Text());
 
-   if (  chunk_is_token(start, CT_NEW)
+   if (  start->Is(CT_NEW)
       || start->IsString("const"))
    {
       return(pawn_process_variable(start));
@@ -215,16 +215,11 @@ static Chunk *pawn_process_line(Chunk *start)
    // if a open paren is found before an assign, then this is a function
    Chunk *fcn = nullptr;
 
-   if (chunk_is_token(start, CT_WORD))
+   if (start->Is(CT_WORD))
    {
       fcn = start;
    }
-   Chunk *pc = Chunk::NullChunkPtr;
-
-   if (start != nullptr)
-   {
-      pc = start;
-   }
+   Chunk *pc = start;
 
    while (  ((pc = pc->GetNextNc())->IsNotNullChunk())
          && !pc->IsString("(")
@@ -232,9 +227,9 @@ static Chunk *pawn_process_line(Chunk *start)
          && pc->IsNot(CT_NEWLINE))
    {
       if (  pc->level == 0
-         && (  chunk_is_token(pc, CT_FUNCTION)
-            || chunk_is_token(pc, CT_WORD)
-            || chunk_is_token(pc, CT_OPERATOR_VAL)))
+         && (  pc->Is(CT_FUNCTION)
+            || pc->Is(CT_WORD)
+            || pc->Is(CT_OPERATOR_VAL)))
       {
          fcn = pc;
       }
@@ -242,7 +237,7 @@ static Chunk *pawn_process_line(Chunk *start)
 
    if (pc->IsNotNullChunk())
    {
-      if (chunk_is_token(pc, CT_ASSIGN))
+      if (pc->Is(CT_ASSIGN))
       {
          return(pawn_process_variable(pc));
       }
@@ -254,7 +249,7 @@ static Chunk *pawn_process_line(Chunk *start)
       return(pawn_mark_function0(start, fcn));
    }
 
-   if (chunk_is_token(start, CT_ENUM))
+   if (start->Is(CT_ENUM))
    {
       pc = start->GetNextType(CT_BRACE_CLOSE, start->level);
       return(pc);
@@ -279,7 +274,7 @@ static Chunk *pawn_process_variable(Chunk *start)
 
    while ((pc = pc->GetNextNc())->IsNotNullChunk())
    {
-      if (  chunk_is_token(pc, CT_NEWLINE)
+      if (  pc->Is(CT_NEWLINE)
          && prev->IsNotNullChunk()
          && !pawn_continued(prev, start->level))
       {
@@ -343,7 +338,7 @@ static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn)
    {
       Chunk *last = fcn->GetNextType(CT_PAREN_CLOSE, fcn->level)->GetNext();
 
-      if (chunk_is_token(last, CT_SEMICOLON))
+      if (last->Is(CT_SEMICOLON))
       {
          LOG_FMT(LPFUNC, "%s: %zu] '%s' proto due to semicolon\n",
                  __func__, fcn->orig_line, fcn->Text());
@@ -353,8 +348,8 @@ static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn)
    }
    else
    {
-      if (  chunk_is_token(start, CT_FORWARD)
-         || chunk_is_token(start, CT_NATIVE))
+      if (  start->Is(CT_FORWARD)
+         || start->Is(CT_NATIVE))
       {
          LOG_FMT(LPFUNC, "%s: %zu] '%s' [%s] proto due to %s\n",
                  __func__, fcn->orig_line, fcn->Text(),
@@ -423,7 +418,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       return(last);
    }
 
-   if (chunk_is_token(last, CT_BRACE_OPEN))
+   if (last->Is(CT_BRACE_OPEN))
    {
       set_chunk_parent(last, CT_FUNC_DEF);
       last = last->GetNextType(CT_BRACE_CLOSE, last->level);
@@ -459,7 +454,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
          LOG_FMT(LPFUNC, "%s:%zu] check %s, level %zu\n",
                  __func__, prev->orig_line, get_token_name(prev->type), prev->level);
 
-         if (  chunk_is_token(prev, CT_NEWLINE)
+         if (  prev->Is(CT_NEWLINE)
             && prev->level == 0)
          {
             Chunk *next = prev->GetNextNcNnl();

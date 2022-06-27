@@ -157,15 +157,15 @@ comment_align_e get_comment_align_type(Chunk *cmt)
       && cmt != nullptr
       && ((prev = cmt->GetPrev())->IsNotNullChunk()))
    {
-      if (  chunk_is_token(prev, CT_PP_ENDIF)
-         || chunk_is_token(prev, CT_PP_ELSE)
-         || chunk_is_token(prev, CT_ELSE)
-         || chunk_is_token(prev, CT_BRACE_CLOSE))
+      if (  prev->Is(CT_PP_ENDIF)
+         || prev->Is(CT_PP_ELSE)
+         || prev->Is(CT_ELSE)
+         || prev->Is(CT_BRACE_CLOSE))
       {
          // TODO: make the magic 3 configurable
          if ((cmt->column - (prev->column + prev->Len())) < 3)
          {
-            cmt_type = (chunk_is_token(prev, CT_PP_ENDIF)) ? comment_align_e::ENDIF : comment_align_e::BRACE;
+            cmt_type = (prev->Is(CT_PP_ENDIF)) ? comment_align_e::ENDIF : comment_align_e::BRACE;
          }
       }
    }
@@ -179,9 +179,9 @@ void align_right_comments()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (  chunk_is_token(pc, CT_COMMENT)
-         || chunk_is_token(pc, CT_COMMENT_CPP)
-         || chunk_is_token(pc, CT_COMMENT_MULTI))
+      if (  pc->Is(CT_COMMENT)
+         || pc->Is(CT_COMMENT_CPP)
+         || pc->Is(CT_COMMENT_MULTI))
       {
          if (get_chunk_parent_type(pc) == CT_COMMENT_END)
          {

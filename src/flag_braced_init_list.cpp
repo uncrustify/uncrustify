@@ -17,7 +17,7 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
    // Issue #2332
    bool we_have_a_case_before = false;
 
-   if (chunk_is_token(pc, CT_COLON))
+   if (pc->Is(CT_COLON))
    {
       // check if we have a case before
       Chunk *switch_before = pc->GetPrevType(CT_CASE, pc->level);
@@ -32,19 +32,19 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
    }
 
    // Detect a braced-init-list
-   if (  chunk_is_token(pc, CT_WORD)
-      || chunk_is_token(pc, CT_TYPE)
-      || chunk_is_token(pc, CT_ASSIGN)
-      || chunk_is_token(pc, CT_RETURN)
-      || chunk_is_token(pc, CT_COMMA)
-      || chunk_is_token(pc, CT_ANGLE_CLOSE)
-      || chunk_is_token(pc, CT_SQUARE_CLOSE)
-      || chunk_is_token(pc, CT_TSQUARE)
-      || chunk_is_token(pc, CT_FPAREN_OPEN)
-      || chunk_is_token(pc, CT_QUESTION)
-      || (  chunk_is_token(pc, CT_COLON)
+   if (  pc->Is(CT_WORD)
+      || pc->Is(CT_TYPE)
+      || pc->Is(CT_ASSIGN)
+      || pc->Is(CT_RETURN)
+      || pc->Is(CT_COMMA)
+      || pc->Is(CT_ANGLE_CLOSE)
+      || pc->Is(CT_SQUARE_CLOSE)
+      || pc->Is(CT_TSQUARE)
+      || pc->Is(CT_FPAREN_OPEN)
+      || pc->Is(CT_QUESTION)
+      || (  pc->Is(CT_COLON)
          && !we_have_a_case_before)
-      || (  chunk_is_token(pc, CT_BRACE_OPEN)
+      || (  pc->Is(CT_BRACE_OPEN)
          && (  get_chunk_parent_type(pc) == CT_NONE
             || get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST)))
    {
@@ -53,7 +53,7 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
       log_pcf_flags(LFCNR, pc->flags);
       auto brace_open = pc->GetNextNcNnl();
 
-      if (  chunk_is_token(brace_open, CT_BRACE_OPEN)
+      if (  brace_open->Is(CT_BRACE_OPEN)
          && (  get_chunk_parent_type(brace_open) == CT_NONE
             || get_chunk_parent_type(brace_open) == CT_ASSIGN
             || get_chunk_parent_type(brace_open) == CT_RETURN
@@ -62,7 +62,7 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
          log_pcf_flags(LFCNR, brace_open->flags);
          auto brace_close = next->SkipToMatch();
 
-         if (chunk_is_token(brace_close, CT_BRACE_CLOSE))
+         if (brace_close->Is(CT_BRACE_CLOSE))
          {
             return(true);
          }
@@ -87,7 +87,7 @@ void flag_cpp_braced_init_list(Chunk *pc, Chunk *next)
       chunk_flags_clr(tmp, PCF_EXPR_START | PCF_STMT_START);
 
       // Flag call operator
-      if (chunk_is_token(tmp, CT_PAREN_OPEN))
+      if (tmp->Is(CT_PAREN_OPEN))
       {
          if (auto *const c = tmp->SkipToMatch())
          {
@@ -102,7 +102,7 @@ void flag_cpp_braced_init_list(Chunk *pc, Chunk *next)
    // for the case CT_ASSIGN (and others).
 
    // TODO: Move this block to the fix_fcn_call_args function.
-   if (  chunk_is_token(pc, CT_WORD)
+   if (  pc->Is(CT_WORD)
       && pc->flags.test(PCF_IN_FCN_CALL))
    {
       set_chunk_type(pc, CT_TYPE);

@@ -34,19 +34,19 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', type is %s\n",
               __func__, __LINE__, pc->Text(), get_token_name(pc->type));
 
-      if (  chunk_is_token(pc, CT_QUALIFIER)
-         || chunk_is_token(pc, CT_STRUCT)
-         || chunk_is_token(pc, CT_ENUM)
-         || chunk_is_token(pc, CT_UNION)
-         || chunk_is_token(pc, CT_TYPENAME))
+      if (  pc->Is(CT_QUALIFIER)
+         || pc->Is(CT_STRUCT)
+         || pc->Is(CT_ENUM)
+         || pc->Is(CT_UNION)
+         || pc->Is(CT_TYPENAME))
       {
          LOG_FMT(LFPARAM, "%s(%d): <== %s! (yes)\n",
                  __func__, __LINE__, get_token_name(pc->type));
          return(true);
       }
 
-      if (  chunk_is_token(pc, CT_WORD)
-         || chunk_is_token(pc, CT_TYPE))
+      if (  pc->Is(CT_WORD)
+         || pc->Is(CT_TYPE))
       {
          ++word_count;
 
@@ -56,13 +56,13 @@ bool can_be_full_param(Chunk *start, Chunk *end)
             first_word_set = true;
          }
 
-         if (chunk_is_token(pc, CT_TYPE))
+         if (pc->Is(CT_TYPE))
          {
             ++type_count;
          }
       }
-      else if (  chunk_is_token(pc, CT_MEMBER)
-              || chunk_is_token(pc, CT_DC_MEMBER))
+      else if (  pc->Is(CT_MEMBER)
+              || pc->Is(CT_DC_MEMBER))
       {
          if (word_count > 0)
          {
@@ -74,19 +74,19 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       {
          // chunk is OK
       }
-      else if (chunk_is_token(pc, CT_ASSIGN))
+      else if (pc->Is(CT_ASSIGN))
       {
          // chunk is OK (default values)
          break;
       }
-      else if (chunk_is_token(pc, CT_ANGLE_OPEN))
+      else if (pc->Is(CT_ANGLE_OPEN))
       {
          LOG_FMT(LFPARAM, "%s(%d): <== template\n",
                  __func__, __LINE__);
 
          return(true);
       }
-      else if (chunk_is_token(pc, CT_ELLIPSIS))
+      else if (pc->Is(CT_ELLIPSIS))
       {
          LOG_FMT(LFPARAM, "%s(%d): <== ellipsis\n",
                  __func__, __LINE__);
@@ -94,7 +94,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          return(true);
       }
       else if (  word_count == 0
-              && chunk_is_token(pc, CT_PAREN_OPEN))
+              && pc->Is(CT_PAREN_OPEN))
       {
          // Check for old-school func proto param '(type)'
          Chunk *tmp1 = pc->SkipToMatch(E_Scope::PREPROC);
@@ -138,7 +138,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       }
       else if (  (  word_count == 1
                  || (word_count == type_count))
-              && chunk_is_token(pc, CT_PAREN_OPEN))
+              && pc->Is(CT_PAREN_OPEN))
       {
          // Check for func proto param 'void (*name)' or 'void (*name)(params)' or 'void (^name)(params)'
          // <name> can be optional
@@ -193,12 +193,12 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          word_count = 1;
          type_count = 1;
       }
-      else if (chunk_is_token(pc, CT_TSQUARE))
+      else if (pc->Is(CT_TSQUARE))
       {
          // ignore it
       }
       else if (  word_count == 1
-              && chunk_is_token(pc, CT_SQUARE_OPEN))
+              && pc->Is(CT_SQUARE_OPEN))
       {
          // skip over any array stuff
          pc = pc->SkipToMatch(E_Scope::PREPROC);
@@ -206,7 +206,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
                  __func__, __LINE__, pc->Text(), get_token_name(pc->type));
       }
       else if (  word_count == 2
-              && chunk_is_token(pc, CT_SQUARE_OPEN))
+              && pc->Is(CT_SQUARE_OPEN))
       {
          // Bug #671: is it such as: bool foo[FOO_MAX]
          pc = pc->SkipToMatch(E_Scope::PREPROC);
@@ -445,12 +445,12 @@ size_t get_cpp_template_angle_nest_level(Chunk *pc)
    while (  pc->IsNotNullChunk()
          && pc->flags.test(PCF_IN_TEMPLATE))
    {
-      if (  chunk_is_token(pc, CT_ANGLE_CLOSE)
+      if (  pc->Is(CT_ANGLE_CLOSE)
          && get_chunk_parent_type(pc) == CT_TEMPLATE)
       {
          --nestLevel;
       }
-      else if (  chunk_is_token(pc, CT_ANGLE_OPEN)
+      else if (  pc->Is(CT_ANGLE_OPEN)
               && get_chunk_parent_type(pc) == CT_TEMPLATE)
       {
          ++nestLevel;
@@ -470,8 +470,8 @@ Chunk *get_d_template_types(ChunkStack &cs, Chunk *open_paren)
    while (  tmp->IsNullChunk()
          && tmp->level > open_paren->level)
    {
-      if (  chunk_is_token(tmp, CT_TYPE)
-         || chunk_is_token(tmp, CT_WORD))
+      if (  tmp->Is(CT_TYPE)
+         || tmp->Is(CT_WORD))
       {
          if (maybe_type)
          {
@@ -480,7 +480,7 @@ Chunk *get_d_template_types(ChunkStack &cs, Chunk *open_paren)
          }
          maybe_type = false;
       }
-      else if (chunk_is_token(tmp, CT_COMMA))
+      else if (tmp->Is(CT_COMMA))
       {
          maybe_type = true;
       }
@@ -502,7 +502,7 @@ bool go_on(Chunk *pc, Chunk *start)
    if (pc->flags.test(PCF_IN_FOR))
    {
       return(  (!pc->IsSemicolon())
-            && (!(chunk_is_token(pc, CT_COLON))));
+            && (!(pc->Is(CT_COLON))));
    }
    return(!pc->IsSemicolon());
 } // go_on
@@ -529,7 +529,7 @@ void make_type(Chunk *pc)
    if (  pc != nullptr
       && pc->IsNotNullChunk())
    {
-      if (chunk_is_token(pc, CT_WORD))
+      if (pc->Is(CT_WORD))
       {
          set_chunk_type(pc, CT_TYPE);
       }

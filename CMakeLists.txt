@@ -310,6 +310,7 @@ set(uncrustify_sources
   src/quick_align_again.cpp
   src/remove_duplicate_include.cpp
   src/remove_extra_returns.cpp
+  src/rewrite_infinite_loops.cpp
   src/semicolons.cpp
   src/sorting.cpp
   src/space.cpp
@@ -405,6 +406,7 @@ set(uncrustify_headers
   src/quick_align_again.h
   src/remove_duplicate_include.h
   src/remove_extra_returns.h
+  src/rewrite_infinite_loops.h
   src/semicolons.h
   src/sorting.h
   src/space.h

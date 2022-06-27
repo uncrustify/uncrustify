@@ -3912,6 +3912,21 @@ mod_remove_empty_return;
 extern Option<iarf_e>
 mod_enum_last_comma;
 
+// Syntax to use for infinite loops.
+//
+// 0: Leave syntax alone (default)
+// 1: Rewrite as `for(;;)`
+// 2: Rewrite as `while(true)`
+// 3: Rewrite as `do`...`while(true);`
+// 4: Rewrite as `while(1)`
+// 5: Rewrite as `do`...`while(1);`
+//
+// Infinite loops that do not already match one of these syntaxes are ignored.
+// Other options that affect loop formatting will be applied after transforming
+// the syntax.
+extern BoundedOption<unsigned, 0, 5>
+mod_infinite_loop;
+
 // (OC) Whether to organize the properties. If true, properties will be
 // rearranged according to the mod_sort_oc_property_*_weight factors.
 extern Option<bool>

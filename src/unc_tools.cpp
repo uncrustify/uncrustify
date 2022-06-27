@@ -80,27 +80,27 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigne
          {
             LOG_FMT(LGUY, " orig_line is %d, (%zu) ", actual_line, tokenCounter);
 
-            if (chunk_is_token(pc, CT_VBRACE_OPEN))
+            if (pc->Is(CT_VBRACE_OPEN))
             {
                LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
             }
-            else if (chunk_is_token(pc, CT_NEWLINE))
+            else if (pc->Is(CT_NEWLINE))
             {
                LOG_FMT(LGUY, "<NL>(nl_count is %zu), ", pc->nl_count);
             }
-            else if (chunk_is_token(pc, CT_VBRACE_CLOSE))
+            else if (pc->Is(CT_VBRACE_CLOSE))
             {
                LOG_FMT(LGUY, "<CT_VBRACE_CLOSE>, ");
             }
-            else if (chunk_is_token(pc, CT_VBRACE_OPEN))
+            else if (pc->Is(CT_VBRACE_OPEN))
             {
                LOG_FMT(LGUY, "<CT_VBRACE_OPEN>, ");
             }
-            else if (chunk_is_token(pc, CT_SPACE))
+            else if (pc->Is(CT_SPACE))
             {
                LOG_FMT(LGUY, "<CT_SPACE>, ");
             }
-            else if (chunk_is_token(pc, CT_IGNORED))
+            else if (pc->Is(CT_IGNORED))
             {
                LOG_FMT(LGUY, "<IGNORED> ");
             }
@@ -112,7 +112,7 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigne
                     pc->column, pc->pp_level, get_token_name(pc->type),
                     get_token_name(get_chunk_parent_type(pc)), pc->orig_col);
 
-            if (chunk_is_token(pc, CT_IGNORED))
+            if (pc->Is(CT_IGNORED))
             {
                LOG_FMT(LGUY, "\n");
             }
@@ -160,29 +160,29 @@ void prot_all_lines(const char *func_name, int theLine)
 
       LOG_FMT(LGUY, " orig_line is %zu,%zu, pp_level is %zu, ", lineNumber, tokenCounter, pc->pp_level);
 
-      if (chunk_is_token(pc, CT_VBRACE_OPEN))
+      if (pc->Is(CT_VBRACE_OPEN))
       {
          LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
       }
-      else if (chunk_is_token(pc, CT_NEWLINE))
+      else if (pc->Is(CT_NEWLINE))
       {
          LOG_FMT(LGUY, "<NL>(nl_count is %zu), ", pc->nl_count);
          tokenCounter = 0;
          lineNumber   = lineNumber + pc->nl_count;
       }
-      else if (chunk_is_token(pc, CT_VBRACE_CLOSE))
+      else if (pc->Is(CT_VBRACE_CLOSE))
       {
          LOG_FMT(LGUY, "<CT_VBRACE_CLOSE>, ");
       }
-      else if (chunk_is_token(pc, CT_VBRACE_OPEN))
+      else if (pc->Is(CT_VBRACE_OPEN))
       {
          LOG_FMT(LGUY, "<CT_VBRACE_OPEN>, ");
       }
-      else if (chunk_is_token(pc, CT_SPACE))
+      else if (pc->Is(CT_SPACE))
       {
          LOG_FMT(LGUY, "<CT_SPACE>, ");
       }
-      else if (chunk_is_token(pc, CT_IGNORED))
+      else if (pc->Is(CT_IGNORED))
       {
          LOG_FMT(LGUY, "<IGNORED> ");
       }
@@ -218,8 +218,8 @@ void examine_Data(const char *func_name, int theLine, int what)
 
       for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
-         if (  chunk_is_token(pc, CT_SQUARE_CLOSE)
-            || chunk_is_token(pc, CT_TSQUARE))
+         if (  pc->Is(CT_SQUARE_CLOSE)
+            || pc->Is(CT_TSQUARE))
          {
             LOG_FMT(LGUY, "\n");
             LOG_FMT(LGUY, "1:(%d),", theLine);
@@ -236,7 +236,7 @@ void examine_Data(const char *func_name, int theLine, int what)
       {
          if (pc->orig_line == 7)
          {
-            if (chunk_is_token(pc, CT_NEWLINE))
+            if (pc->Is(CT_NEWLINE))
             {
                LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->orig_line, pc->orig_col);
             }
@@ -254,7 +254,7 @@ void examine_Data(const char *func_name, int theLine, int what)
 
       for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
-         if (chunk_is_token(pc, CT_NEWLINE))
+         if (pc->Is(CT_NEWLINE))
          {
             LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->orig_line, pc->orig_col);
          }
@@ -273,7 +273,7 @@ void examine_Data(const char *func_name, int theLine, int what)
       {
          if (pc->orig_line == 6)
          {
-            if (chunk_is_token(pc, CT_NEWLINE))
+            if (pc->Is(CT_NEWLINE))
             {
                LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->orig_line, pc->orig_col);
             }
