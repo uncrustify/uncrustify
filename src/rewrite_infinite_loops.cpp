@@ -200,13 +200,13 @@ void rewrite_loop_in_place(Chunk *keyword, E_Token desired_type, const char *des
 }
 
 
-static Chunk *find_end_brace(Chunk *pc)
+static Chunk *find_start_brace(Chunk *pc)
 {
    while (!pc->IsBraceOpen())
    {
       pc = pc->GetNextNcNnl();
    }
-   return(pc->SkipToMatch());
+   return(pc);
 }
 
 
@@ -252,7 +252,9 @@ void rewrite_infinite_loops()
    {
       if (pc->Is(CT_DO))
       {
-         Chunk *while_keyword = find_end_brace(pc)->GetNextNcNnl();
+         Chunk *start_brace   = find_start_brace(pc);
+         Chunk *end_brace     = start_brace->SkipToMatch();
+         Chunk *while_keyword = end_brace->GetNextNcNnl();
 
          if (  !while_keyword->Is(CT_WHILE_OF_DO)
             || !while_needs_rewrite(while_keyword, desired_type, desired_condition))
@@ -262,7 +264,12 @@ void rewrite_infinite_loops()
 
          if (desired_type == CT_WHILE_OF_DO)
          {
+            // Change the loop condition
             rewrite_loop_in_place(while_keyword, desired_type, desired_condition);
+
+            // Update the braces' parent types
+            start_brace->parent_type = CT_DO;
+            end_brace->parent_type   = CT_DO;
          }
          else
          {
@@ -280,6 +287,10 @@ void rewrite_infinite_loops()
 
             // Delete the final semicolon
             Chunk::Delete(bottom);
+
+            // Update the braces' parent types
+            start_brace->parent_type = desired_type;
+            end_brace->parent_type   = desired_type;
          }
       }
       else if (  (  pc->Is(CT_WHILE)
@@ -287,10 +298,13 @@ void rewrite_infinite_loops()
               || (  pc->Is(CT_FOR)
                  && for_needs_rewrite(pc, desired_type)))
       {
+         Chunk *start_brace = find_start_brace(pc);
+         Chunk *end_brace   = start_brace->SkipToMatch();
+
          if (desired_type == CT_WHILE_OF_DO)
          {
             Chunk *top    = pc;
-            Chunk *bottom = find_end_brace(top);
+            Chunk *bottom = end_brace;
 
             if (bottom->Is(CT_VBRACE_CLOSE))
             {
@@ -312,10 +326,19 @@ void rewrite_infinite_loops()
             bottom = bottom->CopyAndAddAfter(bottom);
             set_chunk_type(bottom, CT_SEMICOLON);
             bottom->str = ";";
+
+            // Update the braces' parent types
+            start_brace->parent_type = CT_DO;
+            end_brace->parent_type   = CT_DO;
          }
          else
          {
+            // Change 'for' to 'while' or vice-versa
             rewrite_loop_in_place(pc, desired_type, desired_condition);
+
+            // Update the braces' parent types
+            start_brace->parent_type = desired_type;
+            end_brace->parent_type   = desired_type;
          }
       }
    }

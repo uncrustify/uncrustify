@@ -2101,6 +2101,14 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
          add_msg_header(CT_OC_MSG_DECL, cpd.oc_msg_hdr);
       }
       do_parent_for_pp();
+
+      // Rewrite infinite loops
+      log_rule_B("mod_infinite_loop");
+
+      if (options::mod_infinite_loop())
+      {
+         rewrite_infinite_loops();
+      }
       do_braces();  // Change virtual braces into real braces...
 
       // Scrub extra semicolons
@@ -2116,13 +2124,6 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
       if (options::mod_remove_empty_return())
       {
          remove_extra_returns();
-      }
-      // Rewrite infinite loops
-      log_rule_B("mod_infinite_loop");
-
-      if (options::mod_infinite_loop())
-      {
-         rewrite_infinite_loops();
       }
       // Remove duplicate include
       log_rule_B("mod_duplicate_include");
