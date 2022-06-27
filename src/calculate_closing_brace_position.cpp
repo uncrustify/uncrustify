@@ -28,7 +28,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
 
    size_t check_level = 0;
 
-   if (chunk_is_token(pc, CT_BRACE_CLOSE))
+   if (pc->Is(CT_BRACE_CLOSE))
    {
       check_level = pc->level + 1;
    }
@@ -65,7 +65,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
             erst_found = 3;
          }
 
-         if (chunk_is_token(back, CT_SEMICOLON))
+         if (back->Is(CT_SEMICOLON))
          {
             // semicolon found
             is_semicolon = back;
@@ -142,7 +142,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
       exit(EX_SOFTWARE);
    }
 
-   if (chunk_is_token(last, CT_COMMENT_CPP))         // Issue #3058
+   if (last->Is(CT_COMMENT_CPP))         // Issue #3058
    {
       last = last->GetNext();
    }
@@ -157,7 +157,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
          LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig_line %zu, orig_col is %zu\n",
                  __func__, __LINE__, last->Text(), last->orig_line, last->orig_col);
 
-         if (chunk_is_token(last, CT_PP_ENDIF))
+         if (last->Is(CT_PP_ENDIF))
          {
             // look for the parent
             Chunk *parent_last = last->parent;

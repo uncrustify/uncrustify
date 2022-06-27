@@ -15,11 +15,11 @@ Chunk *skip_align(Chunk *start)
 {
    Chunk *pc = start;
 
-   if (chunk_is_token(pc, CT_ALIGN))
+   if (pc->Is(CT_ALIGN))
    {
       pc = pc->GetNextNcNnl();
 
-      if (chunk_is_token(pc, CT_PAREN_OPEN))
+      if (pc->Is(CT_PAREN_OPEN))
       {
          pc = pc->GetNextType(CT_PAREN_CLOSE, pc->level);
 
@@ -28,7 +28,7 @@ Chunk *skip_align(Chunk *start)
             pc = pc->GetNextNcNnl();
          }
 
-         if (chunk_is_token(pc, CT_COLON))
+         if (pc->Is(CT_COLON))
          {
             pc = pc->GetNextNcNnl();
          }
@@ -128,7 +128,7 @@ Chunk *skip_to_next_statement(Chunk *pc)
 
 Chunk *skip_template_prev(Chunk *ang_close)
 {
-   if (chunk_is_token(ang_close, CT_ANGLE_CLOSE))
+   if (ang_close->Is(CT_ANGLE_CLOSE))
    {
       Chunk *pc = ang_close->GetPrevType(CT_ANGLE_OPEN, ang_close->level);
       return(pc->GetPrevNcNnlNi());   // Issue #2279
@@ -144,8 +144,8 @@ Chunk *skip_tsquare_next(Chunk *ary_def)
       return(Chunk::NullChunkPtr);
    }
 
-   if (  chunk_is_token(ary_def, CT_SQUARE_OPEN)
-      || chunk_is_token(ary_def, CT_TSQUARE))
+   if (  ary_def->Is(CT_SQUARE_OPEN)
+      || ary_def->Is(CT_TSQUARE))
    {
       return(ary_def->GetNextNisq());
    }
@@ -157,11 +157,11 @@ Chunk *skip_attribute(Chunk *attr)
 {
    Chunk *pc = attr;
 
-   while (chunk_is_token(pc, CT_ATTRIBUTE))
+   while (pc->Is(CT_ATTRIBUTE))
    {
       pc = pc->GetNextNcNnl();
 
-      if (chunk_is_token(pc, CT_FPAREN_OPEN))
+      if (pc->Is(CT_FPAREN_OPEN))
       {
          pc = pc->GetNextType(CT_FPAREN_CLOSE, pc->level);
       }
@@ -175,7 +175,7 @@ Chunk *skip_attribute_next(Chunk *attr)
    Chunk *next = skip_attribute(attr);
 
    if (  next != attr
-      && chunk_is_token(next, CT_FPAREN_CLOSE))
+      && next->Is(CT_FPAREN_CLOSE))
    {
       attr = next->GetNextNcNnl();
    }
@@ -194,7 +194,7 @@ Chunk *skip_attribute_prev(Chunk *fp_close)
 
    while (true)
    {
-      if (  chunk_is_token(pc, CT_FPAREN_CLOSE)
+      if (  pc->Is(CT_FPAREN_CLOSE)
          && get_chunk_parent_type(pc) == CT_ATTRIBUTE)
       {
          pc = pc->GetPrevType(CT_ATTRIBUTE, pc->level);
@@ -216,11 +216,11 @@ Chunk *skip_attribute_prev(Chunk *fp_close)
 
 Chunk *skip_declspec(Chunk *pc)
 {
-   if (chunk_is_token(pc, CT_DECLSPEC))
+   if (pc->Is(CT_DECLSPEC))
    {
       pc = pc->GetNextNcNnl();
 
-      if (chunk_is_token(pc, CT_PAREN_OPEN))
+      if (pc->Is(CT_PAREN_OPEN))
       {
          pc = pc->SkipToMatch();
       }
@@ -234,7 +234,7 @@ Chunk *skip_declspec_next(Chunk *pc)
    Chunk *next = skip_declspec(pc);
 
    if (  next != pc
-      && chunk_is_token(next, CT_PAREN_CLOSE))
+      && next->Is(CT_PAREN_CLOSE))
    {
       pc = next->GetNextNcNnl();
    }

@@ -28,7 +28,7 @@ void pragma_cleanup()
 
       if (!preproc_found)
       {
-         if (chunk_is_token(pc, CT_PREPROC))
+         if (pc->Is(CT_PREPROC))
          {
             LOG_FMT(LMCB, "%s(%d): PREPROC found: orig_line %zu, orig_col is %zu\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col);
@@ -40,7 +40,7 @@ void pragma_cleanup()
       {
          if (!pragma_found)
          {
-            if (chunk_is_token(pc, CT_PP_PRAGMA))
+            if (pc->Is(CT_PP_PRAGMA))
             {
                LOG_FMT(LMCB, "%s(%d): PP_PRAGMA found: orig_line %zu, orig_col is %zu\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col);
