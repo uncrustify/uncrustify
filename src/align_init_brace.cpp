@@ -36,7 +36,7 @@ void align_init_brace(Chunk *start)
    Chunk *pcSingle = scan_ib_line(pc, true);
 
    if (  pcSingle == nullptr
-      || (  chunk_is_token(pcSingle, CT_BRACE_CLOSE)
+      || (  pcSingle->Is(CT_BRACE_CLOSE)
          && get_chunk_parent_type(pcSingle) == CT_ASSIGN))
    {
       // single line - nothing to do
@@ -96,7 +96,7 @@ void align_init_brace(Chunk *start)
          LOG_FMT(LALBR, " (%zu) check %s vs %s -- ",
                  idx, get_token_name(pc->type), get_token_name(cpd.al[idx].type));
 
-         if (chunk_is_token(pc, cpd.al[idx].type))
+         if (pc->Is(cpd.al[idx].type))
          {
             if (  idx == 0
                && cpd.al_c99_array)
@@ -124,7 +124,7 @@ void align_init_brace(Chunk *start)
             }
 
             // Comma's need to 'fall back' to the previous token
-            if (chunk_is_token(pc, CT_COMMA))
+            if (pc->Is(CT_COMMA))
             {
                next = pc->GetNext();
 
@@ -138,10 +138,10 @@ void align_init_brace(Chunk *start)
 
                   if (  (idx < (cpd.al_cnt - 1))
                      && options::align_number_right()
-                     && (  chunk_is_token(next, CT_NUMBER_FP)
-                        || chunk_is_token(next, CT_NUMBER)
-                        || chunk_is_token(next, CT_POS)
-                        || chunk_is_token(next, CT_NEG)))
+                     && (  next->Is(CT_NUMBER_FP)
+                        || next->Is(CT_NUMBER)
+                        || next->Is(CT_POS)
+                        || next->Is(CT_NEG)))
                   {
                      // Need to wait until the next match to indent numbers
                      num_token = next;
@@ -172,10 +172,10 @@ void align_init_brace(Chunk *start)
                   next = pc->GetNext();
 
                   if (  !next->IsNewline()
-                     && (  chunk_is_token(next, CT_NUMBER_FP)
-                        || chunk_is_token(next, CT_NUMBER)
-                        || chunk_is_token(next, CT_POS)
-                        || chunk_is_token(next, CT_NEG)))
+                     && (  next->Is(CT_NUMBER_FP)
+                        || next->Is(CT_NUMBER)
+                        || next->Is(CT_POS)
+                        || next->Is(CT_NEG)))
                   {
                      // Need to wait until the next match to indent numbers
                      num_token = next;

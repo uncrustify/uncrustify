@@ -52,9 +52,9 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
               __func__, __LINE__, pc->orig_line, pc->ElidedText(copy), get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)));
 
       // Don't check inside SPAREN, PAREN or SQUARE groups
-      if (  chunk_is_token(pc, CT_SPAREN_OPEN)
-         || chunk_is_token(pc, CT_SQUARE_OPEN)
-         || chunk_is_token(pc, CT_PAREN_OPEN))
+      if (  pc->Is(CT_SPAREN_OPEN)
+         || pc->Is(CT_SQUARE_OPEN)
+         || pc->Is(CT_PAREN_OPEN))
       {
          LOG_FMT(LALASS, "%s(%d)OK: Don't check inside SPAREN, PAREN or SQUARE groups, type is %s\n",
                  __func__, __LINE__, get_token_name(pc->type));
@@ -69,7 +69,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
       }
 
       // Recurse if a brace set is found
-      if (  chunk_is_token(pc, CT_BRACE_OPEN)
+      if (  pc->Is(CT_BRACE_OPEN)
          && !(get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST))
       {
          size_t myspan;
@@ -96,8 +96,8 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
       }
 
       // Done with this brace set?
-      if (  (  chunk_is_token(pc, CT_BRACE_CLOSE)
-            || chunk_is_token(pc, CT_VBRACE_CLOSE))
+      if (  (  pc->Is(CT_BRACE_CLOSE)
+            || pc->Is(CT_VBRACE_CLOSE))
          && !(get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST))
       {
          pc = pc->GetNext();
@@ -132,7 +132,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
       }
       else if (  equ_count == 0
               && !pc->flags.test(PCF_IN_TEMPLATE)
-              && chunk_is_token(pc, CT_BRACE_OPEN)
+              && pc->Is(CT_BRACE_OPEN)
               && (get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST))
 
       {
