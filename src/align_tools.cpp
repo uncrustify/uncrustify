@@ -15,7 +15,7 @@
 
 Chunk *skip_c99_array(Chunk *sq_open)
 {
-   if (chunk_is_token(sq_open, CT_SQUARE_OPEN))
+   if (sq_open->Is(CT_SQUARE_OPEN))
    {
       Chunk *tmp = sq_open->SkipToMatch()->GetNextNc();
 
@@ -70,10 +70,10 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
       {
          // do nothing
       }
-      else if (  chunk_is_token(pc, CT_ASSIGN)
-              || chunk_is_token(pc, CT_BRACE_OPEN)
-              || chunk_is_token(pc, CT_BRACE_CLOSE)
-              || chunk_is_token(pc, CT_COMMA))
+      else if (  pc->Is(CT_ASSIGN)
+              || pc->Is(CT_BRACE_OPEN)
+              || pc->Is(CT_BRACE_CLOSE)
+              || pc->Is(CT_COMMA))
       {
          size_t token_width = space_col_align(pc, next);
 
@@ -172,7 +172,7 @@ Chunk *step_back_over_member(Chunk *pc)
 
    // Skip over any class stuff: bool CFoo::bar()
    while (  tmp->IsNotNullChunk()
-         && chunk_is_token(tmp, CT_DC_MEMBER))
+         && tmp->Is(CT_DC_MEMBER))
    {
       pc  = tmp->GetPrevNcNnl();
       tmp = pc->GetPrevNcNnl();

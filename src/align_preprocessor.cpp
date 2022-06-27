@@ -38,11 +38,10 @@ void align_preprocessor()
 
    Chunk *pc = Chunk::GetHead();
 
-   while (  pc != nullptr
-         && pc->IsNotNullChunk())
+   while (pc->IsNotNullChunk())
    {
       // Note: not counting back-slash newline combos
-      if (chunk_is_token(pc, CT_NEWLINE))   // mind the gap: pc->IsNewline() is NOT the same!
+      if (pc->Is(CT_NEWLINE))   // mind the gap: pc->IsNewline() is NOT the same!
       {
          as.NewLines(pc->nl_count);
          asf.NewLines(pc->nl_count);
@@ -68,7 +67,7 @@ void align_preprocessor()
 
       cur_as = &as;
 
-      if (chunk_is_token(pc, CT_MACRO_FUNC))
+      if (pc->Is(CT_MACRO_FUNC))
       {
          log_rule_B("align_pp_define_together");
 

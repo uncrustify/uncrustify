@@ -69,12 +69,12 @@ Chunk *align_func_param(Chunk *start)
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(),
               get_token_name(pc->type));
 
-      if (chunk_is_token(pc, CT_FUNC_VAR))                    // Issue #2278
+      if (pc->Is(CT_FUNC_VAR))                    // Issue #2278
       {
          // look after 'protect parenthesis'
          Chunk *after = pc->GetNextNc();
 
-         if (chunk_is_token(after, CT_PAREN_CLOSE))
+         if (after->Is(CT_PAREN_CLOSE))
          {
             Chunk *before = after->GetPrevType(CT_PAREN_OPEN, after->level);
 
@@ -87,7 +87,7 @@ Chunk *align_func_param(Chunk *start)
                pc->level = before->level;
                Chunk *tmp = pc->GetPrevNc();
 
-               if (chunk_is_token(tmp, CT_PTR_TYPE))
+               if (tmp->Is(CT_PTR_TYPE))
                {
                   tmp->level = before->level;
                }
@@ -130,7 +130,7 @@ Chunk *align_func_param(Chunk *start)
             break;
          }
       }
-      else if (chunk_is_token(pc, CT_COMMA))
+      else if (pc->Is(CT_COMMA))
       {
          if (pc->flags.test(PCF_IN_TEMPLATE))            // Issue #2757
          {

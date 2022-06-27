@@ -1338,11 +1338,11 @@ static void check_template(Chunk *start, bool in_type_cast)
          if (chunk_is_token(pc, CT_BRACE_OPEN))
          {
             if (  !pc->flags.test(PCF_IN_DECLTYPE)
-               || !detect_cpp_braced_init_list(pc->prev, pc))
+               || !detect_cpp_braced_init_list(pc->GetPrev(), pc))
             {
                break;
             }
-            flag_cpp_braced_init_list(pc->prev, pc);
+            flag_cpp_braced_init_list(pc->GetPrev(), pc);
          }
 
          if (  chunk_is_token(pc, CT_BRACE_CLOSE)
