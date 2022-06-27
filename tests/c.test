@@ -474,3 +474,8 @@
 10083  c/mod_infinite_loop-3.cfg                  c/infinite-loops.c
 10084  c/mod_infinite_loop-4.cfg                  c/infinite-loops.c
 10085  c/mod_infinite_loop-5.cfg                  c/infinite-loops.c
+10086  c/Issue_3716-1.cfg                         c/infinite-loops.c
+10087  c/Issue_3716-2.cfg                         c/infinite-loops.c
+10088  c/Issue_3716-3.cfg                         c/infinite-loops.c
+10089  c/Issue_3716-4.cfg                         c/infinite-loops.c
+10090  c/Issue_3716-5.cfg                         c/infinite-loops.c
