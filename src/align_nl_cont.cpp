@@ -29,7 +29,7 @@ Chunk *align_nl_cont(Chunk *start)
          && pc->IsNot(CT_NEWLINE)
          && pc->IsNot(CT_COMMENT_MULTI))
    {
-      if (chunk_is_token(pc, CT_NL_CONT))
+      if (pc->Is(CT_NL_CONT))
       {
          align_add(cs, pc, max_col);
       }
