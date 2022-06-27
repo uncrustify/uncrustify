@@ -61,7 +61,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
    // can't be any variable definitions in a "= {" block
    Chunk *prev = start->GetPrevNcNnl();
 
-   if (chunk_is_token(prev, CT_ASSIGN))
+   if (prev->Is(CT_ASSIGN))
    {
       LOG_FMT(LAVDB, "%s(%d): start->Text() '%s', type is %s, on orig_line %zu (abort due to assign)\n",
               __func__, __LINE__, start->Text(), get_token_name(start->type), start->orig_line);
@@ -148,8 +148,8 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
          // WARNING: Duplicate from the align_func_proto()
          log_rule_B("align_single_line_func");
 
-         if (  chunk_is_token(pc, CT_FUNC_PROTO)
-            || (  chunk_is_token(pc, CT_FUNC_DEF)
+         if (  pc->Is(CT_FUNC_PROTO)
+            || (  pc->Is(CT_FUNC_DEF)
                && options::align_single_line_func()))
          {
             LOG_FMT(LAVDB, "%s(%d): add = '%s', orig_line is %zu, orig_col is %zu, level is %zu\n",
@@ -170,11 +170,11 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
             }
             as.Add(step_back_over_member(toadd));
             log_rule_B("align_single_line_brace");
-            fp_look_bro = (chunk_is_token(pc, CT_FUNC_DEF))
+            fp_look_bro = (pc->Is(CT_FUNC_DEF))
                           && options::align_single_line_brace();
          }
          else if (  fp_look_bro
-                 && chunk_is_token(pc, CT_BRACE_OPEN)
+                 && pc->Is(CT_BRACE_OPEN)
                  && pc->flags.test(PCF_ONE_LINER))
          {
             as_br.Add(pc);
@@ -183,7 +183,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       }
 
       // process nested braces
-      if (chunk_is_token(pc, CT_BRACE_OPEN))
+      if (pc->Is(CT_BRACE_OPEN))
       {
          size_t sub_nl_count = 0;
 
@@ -207,7 +207,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       }
 
       // Done with this brace set?
-      if (chunk_is_token(pc, CT_BRACE_CLOSE))
+      if (pc->Is(CT_BRACE_CLOSE))
       {
          pc = pc->GetNext();
          break;
@@ -271,10 +271,10 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
                && (as.m_star_style == AlignStack::SS_INCLUDE))
             {
                // we must look after the previous token
-               Chunk *prev_local = pc->prev;
+               Chunk *prev_local = pc->GetPrev();
 
-               while (  chunk_is_token(prev_local, CT_PTR_TYPE)
-                     || chunk_is_token(prev_local, CT_ADDR))
+               while (  prev_local->Is(CT_PTR_TYPE)
+                     || prev_local->Is(CT_ADDR))
                {
                   LOG_FMT(LAVDB, "%s(%d): prev_local '%s', prev_local->type %s\n",
                           __func__, __LINE__, prev_local->Text(), get_token_name(prev_local->type));
@@ -298,7 +298,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
             {
                next = pc->GetNextNc();
 
-               if (chunk_is_token(next, CT_BIT_COLON))
+               if (next->Is(CT_BIT_COLON))
                {
                   as_bc.Add(next);
                }
@@ -311,13 +311,13 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
                while ((next = next->GetNextNc())->IsNotNullChunk())
                {
-                  if (chunk_is_token(next, CT_ATTRIBUTE))
+                  if (next->Is(CT_ATTRIBUTE))
                   {
                      as_at.Add(next);
                      break;
                   }
 
-                  if (  chunk_is_token(next, CT_SEMICOLON)
+                  if (  next->Is(CT_SEMICOLON)
                      || next->IsNewline())
                   {
                      break;
@@ -327,7 +327,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
          }
          did_this_line = true;
       }
-      else if (chunk_is_token(pc, CT_BIT_COLON))
+      else if (pc->Is(CT_BIT_COLON))
       {
          if (!did_this_line)
          {

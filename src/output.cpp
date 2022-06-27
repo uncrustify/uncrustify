@@ -677,7 +677,7 @@ void output_text(FILE *pfile)
       cpd.output_tab_as_space = (  options::cmt_convert_tab_to_spaces()
                                 && pc->IsComment());
 
-      if (chunk_is_token(pc, CT_NEWLINE))
+      if (pc->Is(CT_NEWLINE))
       {
          for (size_t cnt = 0; cnt < pc->nl_count; cnt++)
          {
@@ -694,7 +694,7 @@ void output_text(FILE *pfile)
          cpd.column      = 1;
          LOG_FMT(LOUTIND, " xx\n");
       }
-      else if (chunk_is_token(pc, CT_NL_CONT))
+      else if (pc->Is(CT_NL_CONT))
       {
          // FIXME: this really shouldn't be done here!
          if (!pc->flags.test(PCF_WAS_ALIGNED))
@@ -712,7 +712,7 @@ void output_text(FILE *pfile)
                // Try to keep the same relative spacing
                Chunk *prev = pc->GetPrev();
 
-               if (chunk_is_token(prev, CT_PP_IGNORE))
+               if (prev->Is(CT_PP_IGNORE))
                {
                   /*
                    * Want to completely leave alone PP_IGNORE'd blocks because
@@ -776,7 +776,7 @@ void output_text(FILE *pfile)
          cpd.column      = 1;
          LOG_FMT(LOUTIND, " \\xx\n");
       }
-      else if (chunk_is_token(pc, CT_COMMENT_MULTI))
+      else if (pc->Is(CT_COMMENT_MULTI))
       {
          log_rule_B("cmt_indent_multi");
 
@@ -789,7 +789,7 @@ void output_text(FILE *pfile)
             output_comment_multi_simple(pc);
          }
       }
-      else if (chunk_is_token(pc, CT_COMMENT_CPP))
+      else if (pc->Is(CT_COMMENT_CPP))
       {
          bool tmp = cpd.output_trailspace;
          /*
@@ -801,12 +801,12 @@ void output_text(FILE *pfile)
          pc                    = output_comment_cpp(pc);
          cpd.output_trailspace = tmp;
       }
-      else if (chunk_is_token(pc, CT_COMMENT))
+      else if (pc->Is(CT_COMMENT))
       {
          pc = output_comment_c(pc);
       }
-      else if (  chunk_is_token(pc, CT_JUNK)
-              || chunk_is_token(pc, CT_IGNORED))
+      else if (  pc->Is(CT_JUNK)
+              || pc->Is(CT_IGNORED))
       {
          LOG_FMT(LOUTIND, "%s(%d): orig_line is %zu, orig_col is %zu,\npc->Text() >%s<, pc->str.size() is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), pc->str.size());
@@ -822,7 +822,7 @@ void output_text(FILE *pfile)
       else
       {
          bool allow_tabs;
-         cpd.output_trailspace = (chunk_is_token(pc, CT_STRING_MULTI));
+         cpd.output_trailspace = (pc->Is(CT_STRING_MULTI));
 
          // indent to the 'level' first
          if (cpd.did_newline)
@@ -837,9 +837,9 @@ void output_text(FILE *pfile)
                 * FIXME: it would be better to properly set column_indent in
                 * indent_text(), but this hack for '}' and '#' seems to work.
                 */
-               if (  chunk_is_token(pc, CT_BRACE_CLOSE)
-                  || chunk_is_token(pc, CT_CASE_COLON)
-                  || chunk_is_token(pc, CT_PREPROC))
+               if (  pc->Is(CT_BRACE_CLOSE)
+                  || pc->Is(CT_CASE_COLON)
+                  || pc->Is(CT_PREPROC))
                {
                   lvlcol = pc->column;
                }
@@ -898,26 +898,26 @@ void output_text(FILE *pfile)
 
          if (write_in_tracking)
          {
-            if (chunk_is_token(pc, CT_ANGLE_OPEN))
+            if (pc->Is(CT_ANGLE_OPEN))
             {
                add_text("&lt;", false, false);
             }
-            else if (chunk_is_token(pc, CT_ANGLE_CLOSE))
+            else if (pc->Is(CT_ANGLE_CLOSE))
             {
                add_text("&gt;", false, false);
             }
             else
             {
-               add_text(pc->str, false, chunk_is_token(pc, CT_STRING));
+               add_text(pc->str, false, pc->Is(CT_STRING));
             }
             write_in_tracking = false;
          }
          else
          {
-            add_text(pc->str, false, chunk_is_token(pc, CT_STRING));
+            add_text(pc->str, false, pc->Is(CT_STRING));
          }
 
-         if (chunk_is_token(pc, CT_PP_DEFINE))  // Issue #876
+         if (pc->Is(CT_PP_DEFINE))  // Issue #876
          {
             // If true, a <TAB> is inserted after #define.
             log_rule_B("force_tab_after_define");
@@ -1432,11 +1432,11 @@ static Chunk *get_next_function(Chunk *pc)
 
    while ((pc = pc->GetNext())->IsNotNullChunk())
    {
-      if (  chunk_is_token(pc, CT_FUNC_DEF)
-         || chunk_is_token(pc, CT_FUNC_PROTO)
-         || chunk_is_token(pc, CT_FUNC_CLASS_DEF)
-         || chunk_is_token(pc, CT_FUNC_CLASS_PROTO)
-         || chunk_is_token(pc, CT_OC_MSG_DECL))
+      if (  pc->Is(CT_FUNC_DEF)
+         || pc->Is(CT_FUNC_PROTO)
+         || pc->Is(CT_FUNC_CLASS_DEF)
+         || pc->Is(CT_FUNC_CLASS_PROTO)
+         || pc->Is(CT_OC_MSG_DECL))
       {
          return(pc);
       }
@@ -1741,7 +1741,7 @@ static bool can_combine_comment(Chunk *pc, cmt_reflow &cmt)
       // Make sure the comment is the same type at the same column
       next = next->GetNext();
 
-      if (  chunk_is_token(next, pc->type)
+      if (  next->Is(pc->type)
          && (  (  next->column == 1
                && pc->column == 1)
             || (  next->column == cmt.base_col
@@ -2747,7 +2747,8 @@ static bool kw_fcn_class(Chunk *cmt, unc_text &out_txt)
    {
       Chunk *fcn = get_next_function(cmt);
 
-      if (chunk_is_token(fcn, CT_OC_MSG_DECL))
+      if (  fcn != nullptr
+         && fcn->Is(CT_OC_MSG_DECL))
       {
          tmp = get_prev_oc_class(cmt);
       }
@@ -2805,13 +2806,13 @@ static bool kw_fcn_message(Chunk *cmt, unc_text &out_txt)
 
    while (tmp->IsNotNullChunk())
    {
-      if (  chunk_is_token(tmp, CT_BRACE_OPEN)
-         || chunk_is_token(tmp, CT_SEMICOLON))
+      if (  tmp->Is(CT_BRACE_OPEN)
+         || tmp->Is(CT_SEMICOLON))
       {
          break;
       }
 
-      if (chunk_is_token(tmp, CT_OC_COLON))
+      if (tmp->Is(CT_OC_COLON))
       {
          if (word->IsNotNullChunk())
          {
@@ -2821,7 +2822,7 @@ static bool kw_fcn_message(Chunk *cmt, unc_text &out_txt)
          out_txt.append(":");
       }
 
-      if (chunk_is_token(tmp, CT_WORD))
+      if (tmp->Is(CT_WORD))
       {
          word = tmp;
       }
@@ -2894,15 +2895,15 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
    bool  has_param = true;
    bool  need_nl   = false;
 
-   if (chunk_is_token(fcn, CT_OC_MSG_DECL))
+   if (fcn->Is(CT_OC_MSG_DECL))
    {
       Chunk *tmp = fcn->GetNextNcNnl();
       has_param = false;
 
       while (tmp->IsNotNullChunk())
       {
-         if (  chunk_is_token(tmp, CT_BRACE_OPEN)
-            || chunk_is_token(tmp, CT_SEMICOLON))
+         if (  tmp->Is(CT_BRACE_OPEN)
+            || tmp->Is(CT_SEMICOLON))
          {
             break;
          }
@@ -2921,7 +2922,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
          }
          has_param = false;
 
-         if (chunk_is_token(tmp, CT_PAREN_CLOSE))
+         if (tmp->Is(CT_PAREN_CLOSE))
          {
             has_param = true;
          }
@@ -2972,7 +2973,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
 
       while ((tmp = tmp->GetNext())->IsNotNullChunk())
       {
-         if (  chunk_is_token(tmp, CT_COMMA)
+         if (  tmp->Is(CT_COMMA)
             || tmp == fpc)
          {
             if (need_nl)
@@ -2996,7 +2997,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
             }
          }
 
-         if (chunk_is_token(tmp, CT_WORD))
+         if (tmp->Is(CT_WORD))
          {
             prev = tmp;
          }
@@ -3008,7 +3009,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
    // For Objective-C we need to go to the previous chunk
    if (  tmp->IsNotNullChunk()
       && get_chunk_parent_type(tmp) == CT_OC_MSG_DECL
-      && chunk_is_token(tmp, CT_PAREN_CLOSE))
+      && tmp->Is(CT_PAREN_CLOSE))
    {
       tmp = tmp->GetPrevNcNnl();
    }
@@ -3068,14 +3069,14 @@ static bool kw_fcn_fclass(Chunk *cmt, unc_text &out_txt)
       // if outside a class, we expect "CLASS::METHOD(...)"
       Chunk *tmp = fcn->GetPrevNcNnl();
 
-      if (chunk_is_token(tmp, CT_OPERATOR))
+      if (tmp->Is(CT_OPERATOR))
       {
          tmp = tmp->GetPrevNcNnl();
       }
 
       if (  tmp->IsNotNullChunk()
-         && (  chunk_is_token(tmp, CT_DC_MEMBER)
-            || chunk_is_token(tmp, CT_MEMBER)))
+         && (  tmp->Is(CT_DC_MEMBER)
+            || tmp->Is(CT_MEMBER)))
       {
          tmp = tmp->GetPrevNcNnl();
          out_txt.append(tmp->str);
@@ -3327,22 +3328,22 @@ static void generate_if_conditional_as_text(unc_text &dst, Chunk *ifdef)
          column = pc->column;
       }
 
-      if (  chunk_is_token(pc, CT_NEWLINE)
-         || chunk_is_token(pc, CT_COMMENT_MULTI)
-         || chunk_is_token(pc, CT_COMMENT_CPP))
+      if (  pc->Is(CT_NEWLINE)
+         || pc->Is(CT_COMMENT_MULTI)
+         || pc->Is(CT_COMMENT_CPP))
       {
          break;
       }
-      else if (chunk_is_token(pc, CT_NL_CONT))
+      else if (pc->Is(CT_NL_CONT))
       {
          dst   += ' ';
          column = -1;
       }
-      else if (  chunk_is_token(pc, CT_COMMENT)
-              || chunk_is_token(pc, CT_COMMENT_EMBED))
+      else if (  pc->Is(CT_COMMENT)
+              || pc->Is(CT_COMMENT_EMBED))
       {
       }
-      else // if (chunk_is_token(pc, CT_JUNK)) || else
+      else // if (pc->Is(CT_JUNK)) || else
       {
          for (int spacing = pc->column - column; spacing > 0; spacing--)
          {
@@ -3365,7 +3366,7 @@ void add_long_preprocessor_conditional_block_comment()
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
       // just track the preproc level:
-      if (chunk_is_token(pc, CT_PREPROC))
+      if (pc->Is(CT_PREPROC))
       {
          pp_end = pp_start = pc;
       }
@@ -3391,7 +3392,7 @@ void add_long_preprocessor_conditional_block_comment()
       while ((tmp = tmp->GetNext())->IsNotNullChunk())
       {
          // just track the preproc level:
-         if (chunk_is_token(tmp, CT_PREPROC))
+         if (tmp->Is(CT_PREPROC))
          {
             pp_end = tmp;
          }
@@ -3401,13 +3402,13 @@ void add_long_preprocessor_conditional_block_comment()
             nl_count += tmp->nl_count;
          }
          else if (  pp_end->pp_level == pp_start->pp_level
-                 && (  chunk_is_token(tmp, CT_PP_ENDIF)
-                    || ((chunk_is_token(br_open, CT_PP_IF)) ? (chunk_is_token(tmp, CT_PP_ELSE)) : 0)))
+                 && (  tmp->Is(CT_PP_ENDIF)
+                    || ((br_open->Is(CT_PP_IF)) ? (tmp->Is(CT_PP_ELSE)) : 0)))
          {
             br_close = tmp;
 
             LOG_FMT(LPPIF, "found #if / %s section on lines %zu and %zu, nl_count=%zu\n",
-                    (chunk_is_token(tmp, CT_PP_ENDIF) ? "#endif" : "#else"),
+                    (tmp->Is(CT_PP_ENDIF) ? "#endif" : "#else"),
                     br_open->orig_line, br_close->orig_line, nl_count);
 
             // Found the matching #else or #endif - make sure a newline is next
@@ -3418,11 +3419,11 @@ void add_long_preprocessor_conditional_block_comment()
                                              : tmp->IsComment() ? "comment" : "other" : "---"));
 
             if (  tmp->IsNullChunk()
-               || chunk_is_token(tmp, CT_NEWLINE)) // tmp->IsNewline())
+               || tmp->Is(CT_NEWLINE)) // tmp->IsNewline())
             {
                size_t nl_min;
 
-               if (chunk_is_token(br_close, CT_PP_ENDIF))
+               if (br_close->Is(CT_PP_ENDIF))
                {
                   log_rule_B("mod_add_long_ifdef_endif_comment");
                   nl_min = options::mod_add_long_ifdef_endif_comment();
@@ -3432,7 +3433,7 @@ void add_long_preprocessor_conditional_block_comment()
                   log_rule_B("mod_add_long_ifdef_else_comment");
                   nl_min = options::mod_add_long_ifdef_else_comment();
                }
-               const char *txt = !tmp ? "EOF" : ((chunk_is_token(tmp, CT_PP_ENDIF)) ? "#endif" : "#else");
+               const char *txt = !tmp ? "EOF" : ((tmp->Is(CT_PP_ENDIF)) ? "#endif" : "#else");
                LOG_FMT(LPPIF, "#if / %s section candidate for augmenting when over NL threshold %zu != 0 (nl_count=%zu)\n",
                        txt, nl_min, nl_count);
 
@@ -3455,7 +3456,7 @@ void add_long_preprocessor_conditional_block_comment()
             }
 
             // checks both the #else and #endif for a given level, only then look further in the main loop
-            if (chunk_is_token(br_close, CT_PP_ENDIF))
+            if (br_close->Is(CT_PP_ENDIF))
             {
                break;
             }
