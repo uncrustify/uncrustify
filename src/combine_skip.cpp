@@ -73,7 +73,7 @@ static Chunk *skip_to_expression_edge(Chunk *pc, Chunk *(Chunk::*GetNextFn)(E_Sc
           * return the current chunk
           */
          if (  next->level == level
-            && (  chunk_is_token(next, CT_COMMA)
+            && (  next->Is(CT_COMMA)
                || next->IsSemicolon()))
          {
             break;

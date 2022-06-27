@@ -367,11 +367,11 @@ Chunk *Chunk::SearchPpa(const T_CheckFnPtr checkFn, const bool cond) const
       {
          // Bail if we run off the end of the preprocessor directive, but return
          // the token because the caller may need to know where the search ended
-         assert(chunk_is_token(pc, CT_NEWLINE));
+         assert(pc->Is(CT_NEWLINE));
          return(pc);
       }
 
-      if (chunk_is_token(pc, CT_NL_CONT))
+      if (pc->Is(CT_NL_CONT))
       {
          // Skip line continuation
          pc = pc->GetNext();
@@ -395,15 +395,15 @@ static void chunk_log_msg(Chunk *chunk, const log_sev_t log, const char *str)
    LOG_FMT(log, "%s orig_line is %zu, orig_col is %zu, ",
            str, chunk->orig_line, chunk->orig_col);
 
-   if (chunk_is_token(chunk, CT_NEWLINE))
+   if (chunk->Is(CT_NEWLINE))
    {
       LOG_FMT(log, "<Newline>,\n");
    }
-   else if (chunk_is_token(chunk, CT_VBRACE_OPEN))
+   else if (chunk->Is(CT_VBRACE_OPEN))
    {
       LOG_FMT(log, "<VBRACE_OPEN>,\n");
    }
-   else if (chunk_is_token(chunk, CT_VBRACE_CLOSE))
+   else if (chunk->Is(CT_VBRACE_CLOSE))
    {
       LOG_FMT(log, "<VBRACE_CLOSE>,\n");
    }
@@ -962,9 +962,9 @@ static Chunk *chunk_skip_dc_member(Chunk *start, E_Scope scope, E_Direction dir)
                          ? &Chunk::GetNextNcNnl : &Chunk::GetPrevNcNnl;
 
    Chunk *pc   = start;
-   Chunk *next = chunk_is_token(pc, CT_DC_MEMBER) ? pc : (pc->*step_fcn)(scope);
+   Chunk *next = pc->Is(CT_DC_MEMBER) ? pc : (pc->*step_fcn)(scope);
 
-   while (chunk_is_token(next, CT_DC_MEMBER))
+   while (next->Is(CT_DC_MEMBER))
    {
       pc = (next->*step_fcn)(scope);
 
@@ -1026,40 +1026,32 @@ E_Token get_type_of_the_parent(Chunk *pc)
 }
 
 
-bool chunk_is_attribute_or_declspec(Chunk *pc)
-{
-   return(  language_is_set(LANG_CPP)
-         && (  chunk_is_token(pc, CT_ATTRIBUTE)
-            || chunk_is_token(pc, CT_DECLSPEC)));
-}
-
-
 bool chunk_is_class_enum_struct_union(Chunk *pc)
 {
    return(  chunk_is_class_or_struct(pc)
          || chunk_is_enum(pc)
-         || chunk_is_token(pc, CT_UNION));
+         || pc->Is(CT_UNION));
 }
 
 
 bool chunk_is_class_or_struct(Chunk *pc)
 {
-   return(  chunk_is_token(pc, CT_CLASS)
-         || chunk_is_token(pc, CT_STRUCT));
+   return(  pc->Is(CT_CLASS)
+         || pc->Is(CT_STRUCT));
 }
 
 
 bool chunk_is_class_struct_union(Chunk *pc)
 {
    return(  chunk_is_class_or_struct(pc)
-         || chunk_is_token(pc, CT_UNION));
+         || pc->Is(CT_UNION));
 }
 
 
 bool chunk_is_enum(Chunk *pc)
 {
-   return(  chunk_is_token(pc, CT_ENUM)
-         || chunk_is_token(pc, CT_ENUM_CLASS));
+   return(  pc->Is(CT_ENUM)
+         || pc->Is(CT_ENUM_CLASS));
 }
 
 

@@ -2833,7 +2833,7 @@ void indent_text()
 
                   if (  (  frm.at(sub + 1).type == CT_CLASS_COLON
                         || frm.at(sub + 1).type == CT_CONSTR_COLON)
-                     && (chunk_is_token(frm.at(sub + 1).pc->prev, CT_NEWLINE)))
+                     && (frm.at(sub + 1).pc->GetPrev()->Is(CT_NEWLINE)))
                   {
                      sub = sub + 1;
                   }
@@ -3338,7 +3338,7 @@ void indent_text()
       else if (  options::indent_oc_inside_msg_sel()
               && (  pc->Is(CT_OC_MSG_FUNC)
                  || pc->Is(CT_OC_MSG_NAME))
-              && chunk_is_token(pc->GetNextNcNnl(), CT_OC_COLON)) // Issue #2658
+              && pc->GetNextNcNnl()->Is(CT_OC_COLON)) // Issue #2658
       {
          log_rule_B("indent_oc_inside_msg_sel");
          // Pop the OC msg name that is on the top of the stack
@@ -3816,7 +3816,7 @@ void indent_text()
                            search = search->SkipToMatchRev();
 
                            if (  options::indent_oc_inside_msg_sel()
-                              && chunk_is_token(search->GetPrevNcNnl(), CT_OC_COLON)
+                              && search->GetPrevNcNnl()->Is(CT_OC_COLON)
                               && (  frm.top().type == CT_OC_MSG_FUNC
                                  || frm.top().type == CT_OC_MSG_NAME)) // Issue #2658
                            {

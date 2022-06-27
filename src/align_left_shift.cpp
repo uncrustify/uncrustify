@@ -65,7 +65,7 @@ void align_left_shift()
       {
          // Ignore any deeper levels when aligning
       }
-      else if (chunk_is_token(pc, CT_SEMICOLON))
+      else if (pc->Is(CT_SEMICOLON))
       {
          // A semicolon at the same level flushes
          as.Flush();

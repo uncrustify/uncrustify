@@ -473,19 +473,19 @@ static bool split_line(Chunk *start)
       log_rule_B("pos_shift");
       log_rule_B("pos_bool");
 
-      if (  (  chunk_is_token(ent.pc, CT_SHIFT)
+      if (  (  ent.pc->Is(CT_SHIFT)
             && (options::pos_shift() & TP_LEAD))
-         || (  (  chunk_is_token(ent.pc, CT_ARITH)
-               || chunk_is_token(ent.pc, CT_CARET))
+         || (  (  ent.pc->Is(CT_ARITH)
+               || ent.pc->Is(CT_CARET))
             && (options::pos_arith() & TP_LEAD))
-         || (  chunk_is_token(ent.pc, CT_ASSIGN)
+         || (  ent.pc->Is(CT_ASSIGN)
             && (options::pos_assign() & TP_LEAD))
-         || (  chunk_is_token(ent.pc, CT_COMPARE)
+         || (  ent.pc->Is(CT_COMPARE)
             && (options::pos_compare() & TP_LEAD))
-         || (  (  chunk_is_token(ent.pc, CT_COND_COLON)
-               || chunk_is_token(ent.pc, CT_QUESTION))
+         || (  (  ent.pc->Is(CT_COND_COLON)
+               || ent.pc->Is(CT_QUESTION))
             && (options::pos_conditional() & TP_LEAD))
-         || (  chunk_is_token(ent.pc, CT_BOOL)
+         || (  ent.pc->Is(CT_BOOL)
             && (options::pos_bool() & TP_LEAD)))
       {
          pc = ent.pc;

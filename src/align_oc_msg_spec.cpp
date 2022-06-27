@@ -27,7 +27,7 @@ void align_oc_msg_spec(size_t span)
       {
          as.NewLines(pc->nl_count);
       }
-      else if (chunk_is_token(pc, CT_OC_MSG_SPEC))
+      else if (pc->Is(CT_OC_MSG_SPEC))
       {
          as.Add(pc);
       }

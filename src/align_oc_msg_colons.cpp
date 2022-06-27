@@ -69,15 +69,15 @@ void align_oc_msg_colon(Chunk *so)
       }
       else if (  !did_line
               && (lcnt < span + 1)
-              && chunk_is_token(pc, CT_OC_COLON))
+              && pc->Is(CT_OC_COLON))
       {
          has_colon = true;
          cas.Add(pc);
          Chunk *tmp = pc->GetPrev();
 
          if (  tmp->IsNotNullChunk()
-            && (  chunk_is_token(tmp, CT_OC_MSG_FUNC)
-               || chunk_is_token(tmp, CT_OC_MSG_NAME)))
+            && (  tmp->Is(CT_OC_MSG_FUNC)
+               || tmp->Is(CT_OC_MSG_NAME)))
          {
             nas.Add(tmp);
             chunk_flags_set(tmp, PCF_DONT_INDENT);
@@ -173,7 +173,7 @@ void align_oc_msg_colons()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (  chunk_is_token(pc, CT_SQUARE_OPEN)
+      if (  pc->Is(CT_SQUARE_OPEN)
          && get_chunk_parent_type(pc) == CT_OC_MSG)
       {
          align_oc_msg_colon(pc);
