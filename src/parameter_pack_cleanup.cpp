@@ -23,7 +23,7 @@ void parameter_pack_cleanup()
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
 
       // look for template
-      if (chunk_is_token(pc, CT_TEMPLATE))                 // Issue #3309
+      if (pc->Is(CT_TEMPLATE))                 // Issue #3309
       {
          Chunk *template_end = pc->GetNextType(CT_SEMICOLON, pc->level);
 
@@ -33,7 +33,7 @@ void parameter_pack_cleanup()
             LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
 
-            if (chunk_is_token(pc, CT_PARAMETER_PACK))
+            if (pc->Is(CT_PARAMETER_PACK))
             {
                Chunk *parameter_pack = pc;
 

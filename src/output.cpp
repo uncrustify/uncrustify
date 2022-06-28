@@ -3052,7 +3052,7 @@ static bool kw_fcn_fclass(Chunk *cmt, unc_text &out_txt)
       }
 
       while (  tmp->IsNotNullChunk()
-            && chunk_is_token(tmp->GetNextNcNnl(), CT_DC_MEMBER))
+            && tmp->GetNextNcNnl()->Is(CT_DC_MEMBER))
       {
          tmp = tmp->GetNextNcNnl();
          tmp = tmp->GetNextNcNnl();

@@ -29,11 +29,11 @@ void remove_duplicate_include()
       //        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(),
       //        get_token_name(pc->type), get_token_name(pc->parent_type));
 
-      if (chunk_is_token(pc, CT_PREPROC))
+      if (pc->Is(CT_PREPROC))
       {
          preproc = pc;
       }
-      else if (chunk_is_token(pc, CT_PP_INCLUDE))
+      else if (pc->Is(CT_PP_INCLUDE))
       {
          Chunk *next = pc->GetNext();
 
@@ -87,7 +87,7 @@ void remove_duplicate_include()
                }
             } // for (auto itc = includes.begin();
          } // if (includes.empty())
-      } // else if (chunk_is_token(pc, CT_PP_INCLUDE))
+      } // else if (pc->Is(CT_PP_INCLUDE))
       // get the next token
       pc = pc->GetNext();
    }

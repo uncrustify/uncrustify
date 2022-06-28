@@ -848,15 +848,6 @@ inline bool Chunk::IsStar() const
 }
 
 
-// TODO remove when possible
-static inline bool chunk_is_token(const Chunk *pc, E_Token c_token)
-{
-   return(  pc != nullptr
-         && pc->IsNotNullChunk()
-         && pc->type == c_token);
-}
-
-
 inline Chunk *Chunk::SkipToMatch(E_Scope scope) const
 {
    if (  Is(CT_PAREN_OPEN)
@@ -937,8 +928,8 @@ inline bool Chunk::IsSemicolon() const
 
 static inline bool chunk_is_single_line_comment(Chunk *pc)
 {
-   return(  chunk_is_token(pc, CT_COMMENT)
-         || chunk_is_token(pc, CT_COMMENT_CPP));
+   return(  pc->Is(CT_COMMENT)
+         || pc->Is(CT_COMMENT_CPP));
 }
 
 
@@ -965,14 +956,14 @@ static inline bool chunk_is_Doxygen_comment(Chunk *pc)
 
 static inline bool chunk_is_type(Chunk *pc)
 {
-   return(  chunk_is_token(pc, CT_TYPE)
-         || chunk_is_token(pc, CT_PTR_TYPE)
-         || chunk_is_token(pc, CT_BYREF)
-         || chunk_is_token(pc, CT_DC_MEMBER)
-         || chunk_is_token(pc, CT_QUALIFIER)
-         || chunk_is_token(pc, CT_STRUCT)
-         || chunk_is_token(pc, CT_ENUM)
-         || chunk_is_token(pc, CT_UNION));
+   return(  pc->Is(CT_TYPE)
+         || pc->Is(CT_PTR_TYPE)
+         || pc->Is(CT_BYREF)
+         || pc->Is(CT_DC_MEMBER)
+         || pc->Is(CT_QUALIFIER)
+         || pc->Is(CT_STRUCT)
+         || pc->Is(CT_ENUM)
+         || pc->Is(CT_UNION));
 }
 
 
@@ -1111,7 +1102,7 @@ static inline bool chunk_safe_to_del_nl(Chunk *nl)
    }
    Chunk *tmp = nl->GetPrev();
 
-   if (chunk_is_token(tmp, CT_COMMENT_CPP))
+   if (tmp->Is(CT_COMMENT_CPP))
    {
       return(false);
    }
@@ -1128,11 +1119,11 @@ static inline bool chunk_safe_to_del_nl(Chunk *nl)
 static inline bool chunk_is_forin(Chunk *pc)
 {
    if (  language_is_set(LANG_OC)
-      && chunk_is_token(pc, CT_SPAREN_OPEN))
+      && pc->Is(CT_SPAREN_OPEN))
    {
       Chunk *prev = pc->GetPrevNcNnl();
 
-      if (chunk_is_token(prev, CT_FOR))
+      if (prev->Is(CT_FOR))
       {
          Chunk *next = pc;
 
@@ -1143,7 +1134,7 @@ static inline bool chunk_is_forin(Chunk *pc)
             next = next->GetNextNcNnl();
          }
 
-         if (chunk_is_token(next, CT_IN))
+         if (next->Is(CT_IN))
          {
             return(true);
          }
@@ -1151,12 +1142,6 @@ static inline bool chunk_is_forin(Chunk *pc)
    }
    return(false);
 }
-
-
-/**
- * Returns true if pc is an CT_ATTRIBUTE or CT_DECLSPEC
- */
-bool chunk_is_attribute_or_declspec(Chunk *pc);
 
 
 /**

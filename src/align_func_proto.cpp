@@ -140,8 +140,8 @@ void align_func_proto(size_t span)
          stack_at_l_bl_brace->Debug();
          stack_at_l_bl_brace->NewLines(pc->nl_count);
       }
-      else if (  chunk_is_token(pc, CT_FUNC_PROTO)
-              || (  chunk_is_token(pc, CT_FUNC_DEF)
+      else if (  pc->Is(CT_FUNC_PROTO)
+              || (  pc->Is(CT_FUNC_DEF)
                  && options::align_single_line_func()))
       {
          log_rule_B("align_single_line_func");
@@ -177,11 +177,11 @@ void align_func_proto(size_t span)
          }
          stack_at_l_bl->Add(tmp);
          log_rule_B("align_single_line_brace");
-         look_bro = (chunk_is_token(pc, CT_FUNC_DEF))
+         look_bro = (pc->Is(CT_FUNC_DEF))
                     && options::align_single_line_brace();
       }
       else if (  look_bro
-              && chunk_is_token(pc, CT_BRACE_OPEN)
+              && pc->Is(CT_BRACE_OPEN)
               && pc->flags.test(PCF_ONE_LINER))
       {
          AlignStack *stack_at_l_bl_brace = many_as_brace.at(pc->level).at(pc->brace_level);

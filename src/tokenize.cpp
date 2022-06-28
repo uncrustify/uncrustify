@@ -2371,7 +2371,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
       if (  (ch == '<')
          && cpd.in_preproc == CT_PP_DEFINE)
       {
-         if (chunk_is_token(Chunk::GetTail(), CT_MACRO))
+         if (Chunk::GetTail()->Is(CT_MACRO))
          {
             // We have "#define XXX <", assume '<' starts an include string
             parse_string(ctx, pc, 0, false);

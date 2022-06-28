@@ -42,13 +42,13 @@ Chunk *search_for_colon(Chunk *pc_local)
          chunk_flags_set(pc2, PCF_IN_CONDITIONAL);
          log_pcf_flags(LCOMBINE, pc2->flags);
 
-         if (chunk_is_token(pc2, CT_SEMICOLON))
+         if (pc2->Is(CT_SEMICOLON))
          {
             LOG_FMT(LCOMBINE, "%s(%d): orig_line is %zu, orig_col is %zu, level is %zu, Text() is '%s'\n",
                     __func__, __LINE__, pc2->orig_line, pc2->orig_col, pc2->level, pc2->Text());
             return(pc2);
          }
-         else if (chunk_is_token(pc2, CT_QUESTION))
+         else if (pc2->Is(CT_QUESTION))
          {
             LOG_FMT(LCOMBINE, "%s(%d): orig_line is %zu, orig_col is %zu, level is %zu, Text() is '%s'\n",
                     __func__, __LINE__, pc2->orig_line, pc2->orig_col, pc2->level, pc2->Text());
@@ -84,7 +84,7 @@ void mark_question_colon()
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->level, pc->Text());
       log_pcf_flags(LCOMBINE, pc->flags);
 
-      if (chunk_is_token(pc, CT_QUESTION))
+      if (pc->Is(CT_QUESTION))
       {
          Chunk *colon = search_for_colon(pc);
 
@@ -93,7 +93,7 @@ void mark_question_colon()
             LOG_FMT(LCOMBINE, "%s(%d): orig_line is %zu, orig_col is %zu, level is %zu, Text() is '%s'\n",
                     __func__, __LINE__, colon->orig_line, colon->orig_col, colon->level, colon->Text());
 
-            if (chunk_is_token(colon, CT_SEMICOLON))
+            if (colon->Is(CT_SEMICOLON))
             {
                // set at the end of the question statement ...
                pc = colon;

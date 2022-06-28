@@ -45,7 +45,7 @@ void align_asm_colon()
             cas.NewLines(pc->nl_count);
             did_nl = true;
          }
-         else if (chunk_is_token(pc, CT_ASM_COLON))
+         else if (pc->Is(CT_ASM_COLON))
          {
             cas.Flush();
             did_nl = true;

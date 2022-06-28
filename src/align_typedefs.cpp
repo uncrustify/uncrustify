@@ -54,7 +54,7 @@ void align_typedefs(size_t span)
       }
       else
       {
-         if (chunk_is_token(pc, CT_TYPEDEF))
+         if (pc->Is(CT_TYPEDEF))
          {
             c_typedef = pc;
          }
