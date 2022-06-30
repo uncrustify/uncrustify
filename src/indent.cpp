@@ -4344,6 +4344,11 @@ void indent_text()
          classFound = true;
       }
       pc = pc->GetNext();
+
+      if (pc->Is(CT_SPACE))                       // Issue #3710
+      {
+         pc = pc->GetNext();
+      }
       LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
    }

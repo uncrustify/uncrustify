@@ -255,8 +255,10 @@ void ParseFrame::pop(const char *func, int line, Chunk *pc)
    }
    else
    {
-      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig_line is %4zu, orig_col is %4zu, type is %12s, *** Software error ***\n",
+      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig_line is %4zu, orig_col is %4zu, type is %12s,\n",
               func, line, pc->orig_line, pc->orig_col, get_token_name(pc->type));
+      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): the type is %s, is not coded. Please make a call.\n",
+              func, line, get_token_name(pc->type));
       log_flush(true);
       exit(EX_SOFTWARE);
    }
