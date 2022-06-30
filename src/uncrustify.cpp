@@ -18,6 +18,7 @@
 #include "backup.h"
 #include "brace_cleanup.h"
 #include "braces.h"
+#include "change_int_types.h"
 #include "combine.h"
 #include "compat.h"
 #include "detect.h"
@@ -2124,6 +2125,21 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
       if (options::mod_remove_empty_return())
       {
          remove_extra_returns();
+      }
+      // Add or remove redundant 'int' keyword of integer types
+      log_rule_B("mod_short_int");
+      log_rule_B("mod_long_int");
+      log_rule_B("mod_signed_int");
+      log_rule_B("mod_unsigned_int");
+
+      if (  (  language_is_set(LANG_C)
+            || language_is_set(LANG_CPP))
+         && (  options::mod_short_int() != IARF_IGNORE
+            || options::mod_long_int() != IARF_IGNORE
+            || options::mod_signed_int() != IARF_IGNORE
+            || options::mod_unsigned_int() != IARF_IGNORE))
+      {
+         change_int_types();
       }
       // Remove duplicate include
       log_rule_B("mod_duplicate_include");
