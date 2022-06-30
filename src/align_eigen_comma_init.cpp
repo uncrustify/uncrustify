@@ -65,7 +65,7 @@ void align_eigen_comma_init()
       {
          // Ignore any deeper levels when aligning
       }
-      else if (chunk_is_token(pc, CT_SEMICOLON))
+      else if (pc->Is(CT_SEMICOLON))
       {
          // A semicolon at the same level flushes
          as.Flush();
@@ -109,7 +109,7 @@ void align_eigen_comma_init()
          Chunk *prev = pc->GetPrev();
 
          if (  prev->IsNewline()
-            && chunk_is_token(pc->GetPrevNcNnl(), CT_COMMA))
+            && pc->GetPrevNcNnl()->Is(CT_COMMA))
          {
             log_rule_B("align_eigen_comma_init");
             as.Add(pc);

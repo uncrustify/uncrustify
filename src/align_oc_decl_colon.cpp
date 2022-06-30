@@ -49,7 +49,7 @@ void align_oc_decl_colon()
             && pc->level >= level)
       {
          // The declaration ends with an open brace or semicolon
-         if (  chunk_is_token(pc, CT_BRACE_OPEN)
+         if (  pc->Is(CT_BRACE_OPEN)
             || pc->IsSemicolon())
          {
             break;
@@ -62,7 +62,7 @@ void align_oc_decl_colon()
             did_line = false;
          }
          else if (  !did_line
-                 && chunk_is_token(pc, CT_OC_COLON))
+                 && pc->Is(CT_OC_COLON))
          {
             cas.Add(pc);
 
@@ -70,13 +70,13 @@ void align_oc_decl_colon()
             Chunk *tmp2 = tmp->GetPrevNcNnl(E_Scope::PREPROC);
 
             // Check for an un-labeled parameter
-            if (  (  chunk_is_token(tmp, CT_WORD)
-                  || chunk_is_token(tmp, CT_TYPE)
-                  || chunk_is_token(tmp, CT_OC_MSG_DECL)
-                  || chunk_is_token(tmp, CT_OC_MSG_SPEC))
-               && (  chunk_is_token(tmp2, CT_WORD)
-                  || chunk_is_token(tmp2, CT_TYPE)
-                  || chunk_is_token(tmp2, CT_PAREN_CLOSE)))
+            if (  (  tmp->Is(CT_WORD)
+                  || tmp->Is(CT_TYPE)
+                  || tmp->Is(CT_OC_MSG_DECL)
+                  || tmp->Is(CT_OC_MSG_SPEC))
+               && (  tmp2->Is(CT_WORD)
+                  || tmp2->Is(CT_TYPE)
+                  || tmp2->Is(CT_PAREN_CLOSE)))
             {
                nas.Add(tmp);
             }

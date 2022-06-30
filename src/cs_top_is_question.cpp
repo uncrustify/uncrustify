@@ -13,8 +13,8 @@
 
 bool cs_top_is_question(ChunkStack &cs, size_t level)
 {
-   Chunk *pc = cs.Empty() ? nullptr : cs.Top()->m_pc;
+   Chunk *pc = cs.Empty() ? Chunk::NullChunkPtr : cs.Top()->m_pc;
 
-   return(  chunk_is_token(pc, CT_QUESTION)
+   return(  pc->Is(CT_QUESTION)
          && pc->level == level);
 }

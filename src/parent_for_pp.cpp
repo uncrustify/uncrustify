@@ -23,14 +23,14 @@ void do_parent_for_pp()
       // CT_PP_IF,            // #if, #ifdef, or #ifndef
       // CT_PP_ELSE,          // #else or #elif
       // CT_PP_ENDIF,         // #endif
-      if (chunk_is_token(pc, CT_PP_IF))
+      if (pc->Is(CT_PP_IF))
       {
          LOG_FMT(LMCB, "%s(%d): IF: orig_line %zu, orig_col is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
          log_pcf_flags(LMCB, pc->flags);
          viz.push_back(pc);
       }
-      else if (chunk_is_token(pc, CT_PP_ELSE))
+      else if (pc->Is(CT_PP_ELSE))
       {
          LOG_FMT(LMCB, "%s(%d): ELSE: orig_line %zu, orig_col is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
@@ -39,7 +39,7 @@ void do_parent_for_pp()
          Chunk  *a    = viz.at(level - 1);
          chunk_set_parent(pc, a);
       }
-      else if (chunk_is_token(pc, CT_PP_ENDIF))
+      else if (pc->Is(CT_PP_ENDIF))
       {
          LOG_FMT(LMCB, "%s(%d): ENDIF: orig_line %zu, orig_col is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);

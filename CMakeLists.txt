@@ -269,6 +269,7 @@ set(uncrustify_sources
   src/brace_cleanup.cpp
   src/braces.cpp
   src/calculate_closing_brace_position.cpp
+  src/change_int_types.cpp
   src/chunk.cpp
   src/ChunkStack.cpp
   src/combine.cpp
@@ -361,6 +362,7 @@ set(uncrustify_headers
   src/brace_cleanup.h
   src/braces.h
   src/calculate_closing_brace_position.h
+  src/change_int_types.h
   src/char_table.h
   src/chunk.h
   src/ChunkStack.h

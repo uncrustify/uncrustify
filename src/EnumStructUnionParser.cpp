@@ -512,7 +512,7 @@ static std::tuple<Chunk *, Chunk *, Chunk *> match_variable(Chunk *pc, std::size
    if (  identifier->IsNotNullChunk()
       && start->IsNotNullChunk()
       && (  end != nullptr
-         || chunk_is_token(identifier->GetPrevNcNnlNi(), CT_WORD)))
+         || identifier->GetPrevNcNnlNi()->Is(CT_WORD)))
    {
       return(std::make_tuple(start, identifier, end));
    }

@@ -18,6 +18,7 @@
 #include "backup.h"
 #include "brace_cleanup.h"
 #include "braces.h"
+#include "change_int_types.h"
 #include "combine.h"
 #include "compat.h"
 #include "detect.h"
@@ -2101,6 +2102,14 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
          add_msg_header(CT_OC_MSG_DECL, cpd.oc_msg_hdr);
       }
       do_parent_for_pp();
+
+      // Rewrite infinite loops
+      log_rule_B("mod_infinite_loop");
+
+      if (options::mod_infinite_loop())
+      {
+         rewrite_infinite_loops();
+      }
       do_braces();  // Change virtual braces into real braces...
 
       // Scrub extra semicolons
@@ -2117,12 +2126,20 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
       {
          remove_extra_returns();
       }
-      // Rewrite infinite loops
-      log_rule_B("mod_infinite_loop");
+      // Add or remove redundant 'int' keyword of integer types
+      log_rule_B("mod_short_int");
+      log_rule_B("mod_long_int");
+      log_rule_B("mod_signed_int");
+      log_rule_B("mod_unsigned_int");
 
-      if (options::mod_infinite_loop())
+      if (  (  language_is_set(LANG_C)
+            || language_is_set(LANG_CPP))
+         && (  options::mod_short_int() != IARF_IGNORE
+            || options::mod_long_int() != IARF_IGNORE
+            || options::mod_signed_int() != IARF_IGNORE
+            || options::mod_unsigned_int() != IARF_IGNORE))
       {
-         rewrite_infinite_loops();
+         change_int_types();
       }
       // Remove duplicate include
       log_rule_B("mod_duplicate_include");

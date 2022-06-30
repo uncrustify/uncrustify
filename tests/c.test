@@ -474,3 +474,16 @@
 10083  c/mod_infinite_loop-3.cfg                  c/infinite-loops.c
 10084  c/mod_infinite_loop-4.cfg                  c/infinite-loops.c
 10085  c/mod_infinite_loop-5.cfg                  c/infinite-loops.c
+10086  c/Issue_3716-1.cfg                         c/infinite-loops.c
+10087  c/Issue_3716-2.cfg                         c/infinite-loops.c
+10088  c/Issue_3716-3.cfg                         c/infinite-loops.c
+10089  c/Issue_3716-4.cfg                         c/infinite-loops.c
+10090  c/Issue_3716-5.cfg                         c/infinite-loops.c
+10091  c/mod_short_int-a.cfg                      c/int-types.c
+10092  c/mod_short_int-r.cfg                      c/int-types.c
+10093  c/mod_long_int-a.cfg                       c/int-types.c
+10094  c/mod_long_int-r.cfg                       c/int-types.c
+10095  c/mod_signed_int-a.cfg                     c/int-types.c
+10096  c/mod_signed_int-r.cfg                     c/int-types.c
+10097  c/mod_unsigned_int-a.cfg                   c/int-types.c
+10098  c/mod_unsigned_int-r.cfg                   c/int-types.c

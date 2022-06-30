@@ -1746,7 +1746,7 @@ void mark_function(Chunk *pc)
          {
             size_t pp_level = preproc->pp_level;
 
-            if (chunk_is_token(preproc->GetNextNcNnl(), CT_PP_ELSE))
+            if (preproc->GetNextNcNnl()->Is(CT_PP_ELSE))
             {
                do
                {

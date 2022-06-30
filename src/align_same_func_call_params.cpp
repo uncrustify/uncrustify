@@ -219,10 +219,10 @@ void align_same_func_call_params()
 
                if (!options::align_number_right())
                {
-                  if (  chunk_is_token(chunks[idx], CT_NUMBER_FP)
-                     || chunk_is_token(chunks[idx], CT_NUMBER)
-                     || chunk_is_token(chunks[idx], CT_POS)
-                     || chunk_is_token(chunks[idx], CT_NEG))
+                  if (  chunks[idx]->Is(CT_NUMBER_FP)
+                     || chunks[idx]->Is(CT_NUMBER)
+                     || chunks[idx]->Is(CT_POS)
+                     || chunks[idx]->Is(CT_NEG))
                   {
                      log_rule_B("align_on_tabstop");
                      array_of_AlignStack[idx].m_right_align = !options::align_on_tabstop();

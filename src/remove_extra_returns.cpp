@@ -25,7 +25,7 @@ void remove_extra_returns()
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(),
               get_token_name(pc->type), get_token_name(pc->parent_type));
 
-      if (  chunk_is_token(pc, CT_RETURN)
+      if (  pc->Is(CT_RETURN)
          && !pc->flags.test(PCF_IN_PREPROC))
       {
          // we might be in a class, check it                                     Issue #2705
@@ -69,7 +69,7 @@ void remove_extra_returns()
             Chunk *semicolon = pc->GetNextNcNnl();
 
             if (  semicolon->IsNotNullChunk()
-               && chunk_is_token(semicolon, CT_SEMICOLON))
+               && semicolon->Is(CT_SEMICOLON))
             {
                LOG_FMT(LRMRETURN, "%s(%d): Removed 'return;' on orig_line %zu\n",
                        __func__, __LINE__, pc->orig_line);

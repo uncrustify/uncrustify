@@ -161,14 +161,14 @@ static void detect_space_options()
          break;
       }
 
-      if (  chunk_is_token(pc, CT_ARITH)
-         || chunk_is_token(pc, CT_SHIFT))
+      if (  pc->Is(CT_ARITH)
+         || pc->Is(CT_SHIFT))
       {
          vote_sp_arith.vote(pc, next);
          vote_sp_arith.vote(prev, pc);
       }
 
-      if (chunk_is_token(pc, CT_ASSIGN))
+      if (pc->Is(CT_ASSIGN))
       {
          if (!pc->flags.test(PCF_IN_ENUM))
          {
@@ -182,40 +182,40 @@ static void detect_space_options()
          }
       }
 
-      if (chunk_is_token(pc, CT_SQUARE_OPEN))
+      if (pc->Is(CT_SQUARE_OPEN))
       {
          vote_sp_before_square.vote(prev, pc);
          vote_sp_inside_square.vote(pc, next);
       }
 
-      if (chunk_is_token(pc, CT_SQUARE_CLOSE))
+      if (pc->Is(CT_SQUARE_CLOSE))
       {
          vote_sp_inside_square.vote(prev, pc);
       }
 
-      if (chunk_is_token(pc, CT_TSQUARE))
+      if (pc->Is(CT_TSQUARE))
       {
          vote_sp_before_squares.vote(prev, pc);
       }
 
-      if (chunk_is_token(pc, CT_BOOL))
+      if (pc->Is(CT_BOOL))
       {
          vote_sp_bool.vote(prev, pc);
          vote_sp_bool.vote(pc, next);
       }
 
-      if (chunk_is_token(pc, CT_COMPARE))
+      if (pc->Is(CT_COMPARE))
       {
          vote_sp_compare.vote(prev, pc);
          vote_sp_compare.vote(pc, next);
       }
 
-      if (chunk_is_token(pc, CT_PAREN_CLOSE))
+      if (pc->Is(CT_PAREN_CLOSE))
       {
          vote_sp_inside_paren.vote(prev, pc);
       }
 
-      if (chunk_is_token(pc, CT_PAREN_OPEN))
+      if (pc->Is(CT_PAREN_OPEN))
       {
          vote_sp_inside_paren.vote(pc, next);
       }
@@ -229,14 +229,14 @@ static void detect_space_options()
       }
 
       if (  pc->IsParenClose()
-         && chunk_is_token(next, CT_BRACE_OPEN))
+         && next->Is(CT_BRACE_OPEN))
       {
          vote_sp_paren_brace.vote(pc, next);
       }
 
-      if (chunk_is_token(pc, CT_PTR_TYPE))
+      if (pc->Is(CT_PTR_TYPE))
       {
-         if (chunk_is_token(prev, CT_PTR_TYPE))
+         if (prev->Is(CT_PTR_TYPE))
          {
             vote_sp_between_ptr_star.vote(prev, pc);
          }
@@ -255,7 +255,7 @@ static void detect_space_options()
          }
       }
 
-      if (chunk_is_token(pc, CT_BYREF))
+      if (pc->Is(CT_BYREF))
       {
          if (next->IsNot(CT_WORD))
          {
@@ -269,17 +269,17 @@ static void detect_space_options()
       }
 
       if (  pc->IsNot(CT_PTR_TYPE)
-         && (  chunk_is_token(prev, CT_QUALIFIER)
-            || chunk_is_token(prev, CT_TYPE)))
+         && (  prev->Is(CT_QUALIFIER)
+            || prev->Is(CT_TYPE)))
       {
          vote_sp_after_type.vote(prev, pc);
       }
 
-      if (chunk_is_token(pc, CT_ANGLE_OPEN))
+      if (pc->Is(CT_ANGLE_OPEN))
       {
          vote_sp_inside_angle.vote(pc, next);
 
-         if (chunk_is_token(prev, CT_TEMPLATE))
+         if (prev->Is(CT_TEMPLATE))
          {
             vote_sp_template_angle.vote(prev, pc);
          }
@@ -289,7 +289,7 @@ static void detect_space_options()
          }
       }
 
-      if (chunk_is_token(pc, CT_ANGLE_CLOSE))
+      if (pc->Is(CT_ANGLE_CLOSE))
       {
          vote_sp_inside_angle.vote(prev, pc);
 
@@ -297,7 +297,7 @@ static void detect_space_options()
          {
             vote_sp_angle_paren.vote(prev, pc);
          }
-         else if (  chunk_is_token(next, CT_WORD)
+         else if (  next->Is(CT_WORD)
                  || CharTable::IsKw1(next->str[0]))
          {
             vote_sp_angle_word.vote(prev, pc);
@@ -308,17 +308,17 @@ static void detect_space_options()
          }
       }
 
-      if (chunk_is_token(pc, CT_SPAREN_OPEN))
+      if (pc->Is(CT_SPAREN_OPEN))
       {
          vote_sp_before_sparen.vote(prev, pc);
          vote_sp_inside_sparen.vote(pc, next);
       }
 
-      if (chunk_is_token(pc, CT_SPAREN_CLOSE))
+      if (pc->Is(CT_SPAREN_CLOSE))
       {
          vote_sp_inside_sparen.vote(prev, pc);
 
-         if (chunk_is_token(next, CT_BRACE_OPEN))
+         if (next->Is(CT_BRACE_OPEN))
          {
             vote_sp_sparen_brace.vote(pc, next);
          }
@@ -328,18 +328,18 @@ static void detect_space_options()
          }
       }
 
-      if (chunk_is_token(pc, CT_SEMICOLON))
+      if (pc->Is(CT_SEMICOLON))
       {
          if (get_chunk_parent_type(pc) == CT_FOR)
          {
-            if (chunk_is_token(prev, CT_SPAREN_OPEN))
+            if (prev->Is(CT_SPAREN_OPEN))
             {
                // empty, ie for (;;)
                //               ^ is prev
                //                ^ is pc
                vote_sp_before_semi_for_empty.vote(prev, pc);
             }
-            else if (chunk_is_token(next, CT_SPAREN_CLOSE))
+            else if (next->Is(CT_SPAREN_CLOSE))
             {
                // empty, ie for (;;)
                //                 ^ is pc
@@ -355,7 +355,7 @@ static void detect_space_options()
                vote_sp_before_semi_for.vote(prev, pc);
             }
          }
-         else if (chunk_is_token(prev, CT_VBRACE_OPEN))
+         else if (prev->Is(CT_VBRACE_OPEN))
          {
             vote_sp_special_semi.vote(prev->GetPrev(), pc);
          }
@@ -365,42 +365,42 @@ static void detect_space_options()
          }
       }
 
-      if (chunk_is_token(pc, CT_COMMA))
+      if (pc->Is(CT_COMMA))
       {
          vote_sp_before_comma.vote(prev, pc);
          vote_sp_after_comma.vote(pc, next);
       }
 
-      if (chunk_is_token(pc, CT_CLASS_COLON))
+      if (pc->Is(CT_CLASS_COLON))
       {
          vote_sp_before_class_colon.vote(prev, pc);
          vote_sp_after_class_colon.vote(pc, next);
       }
 
-      if (chunk_is_token(pc, CT_BRACE_OPEN))
+      if (pc->Is(CT_BRACE_OPEN))
       {
-         if (chunk_is_token(prev, CT_ELSE))
+         if (prev->Is(CT_ELSE))
          {
             vote_sp_else_brace.vote(prev, pc);
          }
-         else if (chunk_is_token(prev, CT_CATCH))
+         else if (prev->Is(CT_CATCH))
          {
             vote_sp_catch_brace.vote(prev, pc);
          }
-         else if (chunk_is_token(prev, CT_FINALLY))
+         else if (prev->Is(CT_FINALLY))
          {
             vote_sp_catch_brace.vote(prev, pc);
          }
-         else if (chunk_is_token(prev, CT_TRY))
+         else if (prev->Is(CT_TRY))
          {
             vote_sp_catch_brace.vote(prev, pc);
          }
-         else if (chunk_is_token(prev, CT_GETSET))
+         else if (prev->Is(CT_GETSET))
          {
             vote_sp_catch_brace.vote(prev, pc);
          }
 
-         if (chunk_is_token(next, CT_BRACE_CLOSE))
+         if (next->Is(CT_BRACE_CLOSE))
          {
             vote_sp_inside_braces_empty.vote(pc, next);
          }
@@ -410,19 +410,19 @@ static void detect_space_options()
          }
       }
 
-      if (chunk_is_token(pc, CT_BRACE_CLOSE))
+      if (pc->Is(CT_BRACE_CLOSE))
       {
          vote_sp_inside_braces.vote(prev, pc);
 
-         if (chunk_is_token(next, CT_ELSE))
+         if (next->Is(CT_ELSE))
          {
             vote_sp_brace_else.vote(pc, next);
          }
-         else if (chunk_is_token(next, CT_CATCH))
+         else if (next->Is(CT_CATCH))
          {
             vote_sp_brace_catch.vote(pc, next);
          }
-         else if (chunk_is_token(next, CT_FINALLY))
+         else if (next->Is(CT_FINALLY))
          {
             vote_sp_brace_finally.vote(pc, next);
          }
