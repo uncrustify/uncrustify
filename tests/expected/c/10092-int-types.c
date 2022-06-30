@@ -17,3 +17,10 @@ unsigned int unsigned_int_var;
 
 short /* comment */ short_comment_var;
 short /* comment */ short_comment_int_var;
+
+char char_var;
+signed char signed_char_var;
+unsigned char unsigned_char_var;
+
+double double_var;
+long double long_double_var;

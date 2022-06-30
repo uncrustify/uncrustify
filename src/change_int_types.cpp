@@ -25,7 +25,8 @@ static void add_or_remove_int_keyword(Chunk *pc, iarf_e action)
          Chunk::Delete(next);
       }
    }
-   else
+   else if (  strcmp(next->Text(), "char") != 0
+           && strcmp(next->Text(), "double") != 0)
    {
       if (  action == IARF_ADD
          || action == IARF_FORCE)
