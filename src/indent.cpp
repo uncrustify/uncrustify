@@ -3686,11 +3686,26 @@ void indent_text()
                  && options::indent_align_string())
          {
             log_rule_B("indent_align_string");
-            const int tmp = (xml_indent != 0) ? xml_indent : prev->column;
+            int indent;
 
+            if (xml_indent != 0)
+            {
+               indent = xml_indent;
+            }
+            else
+            {
+               Chunk *tmp = prev;
+
+               while (  tmp->prev
+                     && (tmp->prev->Is(CT_WORD) || tmp->prev->Is(CT_STRING)))
+               {
+                  tmp = tmp->prev;
+               }
+               indent = tmp->column;
+            }
             LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, String => %d\n",
-                    __func__, __LINE__, pc->orig_line, tmp);
-            reindent_line(pc, tmp);
+                    __func__, __LINE__, pc->orig_line, indent);
+            reindent_line(pc, indent);
          }
          else if (pc->IsComment())
          {
