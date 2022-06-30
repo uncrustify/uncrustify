@@ -16,7 +16,7 @@ using namespace uncrustify;
 
 static void add_or_remove_int_keyword(Chunk *pc, iarf_e action)
 {
-   Chunk *next = pc->GetNext();
+   Chunk *next = pc->GetNextNcNnl();
 
    if (strcmp(next->Text(), "int") == 0)
    {

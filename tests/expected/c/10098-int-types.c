@@ -14,3 +14,6 @@ signed int signed_int_var;
 
 unsigned unsigned_var;
 unsigned unsigned_int_var;
+
+short /* comment */ short_comment_var;
+short /* comment */ int short_comment_int_var;
