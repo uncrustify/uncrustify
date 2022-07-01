@@ -16,7 +16,19 @@ using namespace uncrustify;
 
 static void add_or_remove_int_keyword(Chunk *pc, iarf_e action)
 {
-   Chunk *next = pc->GetNext();
+   Chunk *next = pc->GetNextNcNnl();
+
+   // Skip over all but the final type qualifier
+   if (  strcmp(next->Text(), "const") == 0
+      || strcmp(next->Text(), "long") == 0
+      || strcmp(next->Text(), "short") == 0
+      || strcmp(next->Text(), "signed") == 0
+      || strcmp(next->Text(), "static") == 0
+      || strcmp(next->Text(), "unsigned") == 0
+      || strcmp(next->Text(), "volatile") == 0)
+   {
+      return;
+   }
 
    if (strcmp(next->Text(), "int") == 0)
    {
@@ -25,7 +37,8 @@ static void add_or_remove_int_keyword(Chunk *pc, iarf_e action)
          Chunk::Delete(next);
       }
    }
-   else
+   else if (  strcmp(next->Text(), "char") != 0
+           && strcmp(next->Text(), "double") != 0)
    {
       if (  action == IARF_ADD
          || action == IARF_FORCE)
@@ -47,8 +60,7 @@ void change_int_types()
       {
          add_or_remove_int_keyword(pc, options::mod_short_int());
       }
-      else if (  strcmp(pc->Text(), "long") == 0
-              && strcmp(pc->GetNextNcNnl()->Text(), "long") != 0)
+      else if (strcmp(pc->Text(), "long") == 0)
       {
          add_or_remove_int_keyword(pc, options::mod_long_int());
       }
