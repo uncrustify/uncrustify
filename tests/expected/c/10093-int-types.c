@@ -25,7 +25,7 @@ short /* comment */ short_comment_var;
 short /* comment */ int short_comment_int_var;
 
 const long int const_long_var;
-long const long_const_var;
+long int const long_const_var;
 
 unsigned long int unsigned_long_var;
 long unsigned long_unsigned_var;

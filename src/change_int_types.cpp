@@ -14,24 +14,23 @@
 using namespace uncrustify;
 
 
-static bool is_int_qualifier(Chunk *pc)
-{
-   return(  strcmp(pc->Text(), "const") == 0
-         || strcmp(pc->Text(), "long") == 0
-         || strcmp(pc->Text(), "short") == 0
-         || strcmp(pc->Text(), "signed") == 0
-         || strcmp(pc->Text(), "static") == 0
-         || strcmp(pc->Text(), "unsigned") == 0
-         || strcmp(pc->Text(), "volatile") == 0);
-}
-
-
 static bool add_or_remove_int_keyword(Chunk *pc, iarf_e action)
 {
    Chunk *next = pc->GetNextNcNnl();
 
-   // Skip over all but the last qualifier before the 'int' keyword
-   if (is_int_qualifier(next))
+   // Find the next token that is not a storage keyword
+   while (  strcmp(next->Text(), "const") == 0
+         || strcmp(next->Text(), "static") == 0
+         || strcmp(next->Text(), "volatile") == 0)
+   {
+      next = next->GetNextNcNnl();
+   }
+
+   // Skip over all but the last size/sign qualifier before the 'int' keyword
+   if (  strcmp(next->Text(), "long") == 0
+      || strcmp(next->Text(), "short") == 0
+      || strcmp(next->Text(), "signed") == 0
+      || strcmp(next->Text(), "unsigned") == 0)
    {
       return(false);
    }
@@ -69,7 +68,13 @@ void change_int_types()
       if (found_int)
       {
          if (  strcmp(pc->Text(), "int") != 0
-            && !is_int_qualifier(pc))
+            && strcmp(pc->Text(), "const") != 0
+            && strcmp(pc->Text(), "long") != 0
+            && strcmp(pc->Text(), "short") != 0
+            && strcmp(pc->Text(), "signed") != 0
+            && strcmp(pc->Text(), "static") != 0
+            && strcmp(pc->Text(), "unsigned") != 0
+            && strcmp(pc->Text(), "volatile") != 0)
          {
             found_int = false;
          }
@@ -97,4 +102,4 @@ void change_int_types()
          found_int = true;
       }
    }
-}
+} // change_int_types
