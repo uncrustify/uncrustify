@@ -3645,7 +3645,7 @@ static void handle_oc_property_decl(Chunk *os)
                   other_chunks.push_back(chunkGroup);
                }
             }
-            else if (chunk_is_word(next))
+            else if (next->IsWord())
             {
                if (next->IsString("class"))
                {
@@ -3979,7 +3979,7 @@ static void handle_proto_wrap(Chunk *pc)
 
    while ((tmp = tmp->GetPrevNcNnlNi())->IsNotNullChunk()) // Issue #2279
    {
-      if (  !chunk_is_type(tmp)
+      if (  !tmp->IsTypeDefinition()
          && tmp->IsNot(CT_OPERATOR)
          && tmp->IsNot(CT_WORD)
          && tmp->IsNot(CT_ADDR))

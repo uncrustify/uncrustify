@@ -342,13 +342,13 @@ Chunk *Chunk::SearchStringLevel(const char *cStr, const size_t len, int cLevel,
    T_SearchFnPtr searchFnPtr = GetSearchFn(dir);
    Chunk         *pc         = const_cast<Chunk *>(this);
 
-   do                                                // loop over the chunk list
+   do                                                          // loop over the chunk list
    {
-      pc = (pc->*searchFnPtr)(scope);                // in either direction while
-   } while (  pc->IsNotNullChunk()                       // the end of the list was not reached yet
-           && !pc->IsStringAndLevel(cStr, len, cLevel)); // and the demanded chunk was not found either
+      pc = (pc->*searchFnPtr)(scope);                          // in either direction while
+   } while (  pc->IsNotNullChunk()                             // the end of the list was not reached yet
+           && !pc->IsStringAndLevel(cStr, len, true, cLevel)); // and the demanded chunk was not found either
 
-   return(pc);                                           // the latest chunk is the searched one
+   return(pc);                                                 // the latest chunk is the searched one
 }
 
 
@@ -1029,7 +1029,7 @@ E_Token get_type_of_the_parent(Chunk *pc)
 bool chunk_is_class_enum_struct_union(Chunk *pc)
 {
    return(  chunk_is_class_or_struct(pc)
-         || chunk_is_enum(pc)
+         || pc->IsEnum()
          || pc->Is(CT_UNION));
 }
 
@@ -1045,13 +1045,6 @@ bool chunk_is_class_struct_union(Chunk *pc)
 {
    return(  chunk_is_class_or_struct(pc)
          || pc->Is(CT_UNION));
-}
-
-
-bool chunk_is_enum(Chunk *pc)
-{
-   return(  pc->Is(CT_ENUM)
-         || pc->Is(CT_ENUM_CLASS));
 }
 
 

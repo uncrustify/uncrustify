@@ -1530,7 +1530,7 @@ void EnumStructUnionParser::mark_braces(Chunk *brace_open)
    {
       flags = PCF_IN_CLASS;
    }
-   else if (chunk_is_enum(m_start))
+   else if (m_start->IsEnum())
    {
       flags = PCF_IN_ENUM;
    }
@@ -2026,17 +2026,17 @@ void EnumStructUnionParser::parse(Chunk *pc)
    /**
     * the enum-key might be enum, enum class or enum struct
     */
-   if (chunk_is_enum(next))
+   if (next->IsEnum())
    {
       prev = next;
       next = prev->GetNextNcNnl();
    }
-   else if (chunk_is_enum(prev))
+   else if (prev->IsEnum())
    {
-      auto *prev_prev = prev->GetPrevNcNnlNi();
+      Chunk *prev_prev = prev->GetPrevNcNnlNi();
 
-      if (  chunk_is_enum(prev_prev)
-         && chunk_is_enum(prev))
+      if (  prev_prev->IsEnum()
+         && prev->IsEnum())
       {
          m_start = prev_prev;
       }
@@ -2091,7 +2091,7 @@ void EnumStructUnionParser::parse(Chunk *pc)
       else if (  next->IsParenOpen()
               && (  language_is_set(LANG_D)
                  || (  language_is_set(LANG_PAWN)
-                    && chunk_is_enum(m_start))))
+                    && m_start->IsEnum())))
       {
          set_paren_parent(next, m_start->type);
 
@@ -2312,7 +2312,7 @@ Chunk *EnumStructUnionParser::parse_braces(Chunk *brace_open)
           * other code happy.
           */
          if (  language_is_set(LANG_D)
-            && chunk_is_enum(m_start))
+            && m_start->IsEnum())
          {
             pawn_add_vsemi_after(brace_close); // Issue #2279
          }
@@ -2377,7 +2377,7 @@ void EnumStructUnionParser::parse_colon(Chunk *colon)
          set_inheritance_start(colon);
          mark_class_colon(colon);
       }
-      else if (chunk_is_enum(m_start))
+      else if (m_start->IsEnum())
       {
          set_enum_base_start(colon);
          mark_enum_integral_type(colon);
@@ -2781,7 +2781,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
    Chunk *pc = get_body_start();
 
    if (  language_is_set(LANG_PAWN)
-      && chunk_is_enum(m_start))
+      && m_start->IsEnum())
    {
       set_paren_parent(pc, m_start->type);
    }

@@ -536,7 +536,7 @@ void make_type(Chunk *pc)
       else if (  (  pc->IsStar()
                  || pc->IsMsRef()
                  || pc->IsNullable())
-              && chunk_is_type(pc->prev))                    // Issue # 2640
+              && pc->GetPrev()->IsTypeDefinition())               // Issue # 2640
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }

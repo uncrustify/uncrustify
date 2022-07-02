@@ -423,11 +423,12 @@ public:
    bool Is(E_Token token) const;
 
    /**
-    * @brief checks whether chunk token name is a specific string
+    * @brief checks whether the chunk token name is a specific string
     * @param cStr string to compare token name with
+    * @param caseSensitive whether to do a case sensitive or insensitive comparison
     * @return true if the chunk token name matches the specified string, false otherwise
     */
-   bool IsString(const char *cStr) const;
+   bool IsString(const char *cStr, bool caseSensitive = true) const;
 
    /**
     * @brief checks whether the chunk is not a specific token
@@ -495,6 +496,18 @@ public:
    bool IsCommentNewlineOrEmptyText() const;
 
    /**
+    * @brief checks whether the chunk is a single line comment
+    * @return true if the chunk is a single line comment
+    */
+   bool IsSingleLineComment() const;
+
+   /**
+    * @brief checks whether the chunk is a Doxygen comment
+    * @return true if the chunk is a Doxygen comment
+    */
+   bool IsDoxygenComment() const;
+
+   /**
     * @brief checks whether the chunk is a square bracket
     * @return true if the chunk is a square bracket
     */
@@ -518,10 +531,11 @@ public:
     * @brief checks whether the chunk matches a given string and level
     * @param cStr   the expected string
     * @param len    length of the string
+    * @param caseSensitive whether to do a case sensitive or insensitive comparison
     * @param cLevel nesting level of the searched chunk, ignored when negative
     * @return true if the chunk matches a given string and level
     */
-   bool IsStringAndLevel(const char *cStr, const size_t len, const int cLevel) const;
+   bool IsStringAndLevel(const char *cStr, const size_t len, bool caseSensitive, const int cLevel) const;
 
    /**
     * @brief checks whether the chunk is a star/asterisk
@@ -622,6 +636,24 @@ public:
     * @return true if the chunk is a closing parenthesis
     */
    bool IsParenClose() const;
+
+   /**
+    * @brief checks whether the chunk is a type defining token
+    * @return true if the chunk is a type defining token
+    */
+   bool IsTypeDefinition() const;
+
+   /**
+    * @brief checks whether the chunk is a word
+    * @return true if the chunk is a word
+    */
+   bool IsWord() const;
+
+   /**
+    * @brief checks whether the chunk is a CT_ENUM or CT_ENUM_CLASS
+    * @return true if the chunk is a CT_ENUM or CT_ENUM_CLASS
+    */
+   bool IsEnum() const;
 
 
    // --------- Util functions
@@ -729,12 +761,16 @@ inline bool Chunk::IsTypeAndLevel(const E_Token cType, const int cLevel) const
 }
 
 
-inline bool Chunk::IsStringAndLevel(const char *cStr, const size_t len, const int cLevel) const
+inline bool Chunk::IsStringAndLevel(const char *cStr, const size_t len,
+                                    bool caseSensitive, const int cLevel) const
 {
    return(  (  cLevel < 0
             || level == static_cast<size_t>(cLevel))
-         && Len() == len                       // the length is as expected
-         && memcmp(cStr, Text(), len) == 0);   // the strings are equal
+         && Len() == len                                    // the length is as expected
+         && (  (  caseSensitive
+               && memcmp(Text(), cStr, len) == 0)
+            || (  !caseSensitive
+               && strncasecmp(Text(), cStr, len) == 0)));                                             // the strings are equal
 }
 
 
@@ -745,9 +781,9 @@ inline bool Chunk::Is(E_Token token) const
 }
 
 
-inline bool Chunk::IsString(const char *cStr) const
+inline bool Chunk::IsString(const char *cStr, bool caseSensitive) const
 {
-   return(IsStringAndLevel(cStr, strlen(cStr), ANY_LEVEL));
+   return(IsStringAndLevel(cStr, strlen(cStr), caseSensitive, ANY_LEVEL));
 }
 
 
@@ -822,6 +858,13 @@ inline bool Chunk::IsCommentNewlineOrIgnored() const
    return(  IsComment()
          || IsNewline()
          || Is(CT_IGNORED));
+}
+
+
+inline bool Chunk::IsSingleLineComment() const
+{
+   return(  Is(CT_COMMENT)
+         || Is(CT_COMMENT_CPP));
 }
 
 
@@ -926,60 +969,42 @@ inline bool Chunk::IsSemicolon() const
 }
 
 
-static inline bool chunk_is_single_line_comment(Chunk *pc)
+inline bool Chunk::IsDoxygenComment() const
 {
-   return(  pc->Is(CT_COMMENT)
-         || pc->Is(CT_COMMENT_CPP));
-}
+   if (!IsComment())
+   {
+      return(false);
+   }
 
-
-static inline bool chunk_is_Doxygen_comment(Chunk *pc)
-{
-   if (  pc == nullptr
-      || !pc->IsComment())
+   if (Len() < 3)
    {
       return(false);
    }
    // check the third character
-   const char   *sComment = pc->Text();
-   const size_t len       = strlen(sComment);
-
-   if (len < 3)
-   {
-      return(false);
-   }
+   const char *sComment = Text();
    return(  (sComment[2] == '/')
          || (sComment[2] == '!')
          || (sComment[2] == '@'));
 }
 
 
-static inline bool chunk_is_type(Chunk *pc)
+inline bool Chunk::IsTypeDefinition() const
 {
-   return(  pc->Is(CT_TYPE)
-         || pc->Is(CT_PTR_TYPE)
-         || pc->Is(CT_BYREF)
-         || pc->Is(CT_DC_MEMBER)
-         || pc->Is(CT_QUALIFIER)
-         || pc->Is(CT_STRUCT)
-         || pc->Is(CT_ENUM)
-         || pc->Is(CT_UNION));
+   return(  Is(CT_TYPE)
+         || Is(CT_PTR_TYPE)
+         || Is(CT_BYREF)
+         || Is(CT_DC_MEMBER)
+         || Is(CT_QUALIFIER)
+         || Is(CT_STRUCT)
+         || Is(CT_ENUM)
+         || Is(CT_UNION));
 }
 
 
-static inline bool chunk_is_str_case(Chunk *pc, const char *str, size_t len)
+inline bool Chunk::IsWord() const
 {
-   return(  pc != nullptr
-         && (pc->Len() == len)
-         && (strncasecmp(pc->Text(), str, len) == 0));
-}
-
-
-static inline bool chunk_is_word(Chunk *pc)
-{
-   return(  pc != nullptr
-         && (pc->Len() >= 1)
-         && CharTable::IsKw1(pc->str[0]));
+   return(  Len() >= 1
+         && CharTable::IsKw1(str[0]));
 }
 
 
@@ -1162,10 +1187,11 @@ bool chunk_is_class_or_struct(Chunk *pc);
 bool chunk_is_class_struct_union(Chunk *pc);
 
 
-/**
- * Returns true if pc is a CT_ENUM or CT_ENUM_CLASS
- */
-bool chunk_is_enum(Chunk *pc);
+inline bool Chunk::IsEnum() const
+{
+   return(  Is(CT_ENUM)
+         || Is(CT_ENUM_CLASS));
+}
 
 
 void set_chunk_type_real(Chunk *pc, E_Token tt, const char *func, int line);
