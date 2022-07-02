@@ -73,7 +73,7 @@ main(int argc, char *argv[])
 		stmt2;
 	}
 
-        almod = (chunk_is_single_line_comment(pc) &&
+        almod = (pc->IsSingleLineComment() &&
                 cpd.settings[UO_indent_relative_single_line_comments].b) ?
             ALMODE_KEEP_REL : ALMODE_KEEP_ABS;
 

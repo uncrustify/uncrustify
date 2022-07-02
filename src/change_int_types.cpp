@@ -14,9 +14,27 @@
 using namespace uncrustify;
 
 
-static void add_or_remove_int_keyword(Chunk *pc, iarf_e action)
+static bool is_int_qualifier(Chunk *pc)
 {
-   Chunk *next = pc->GetNext();
+   return(  strcmp(pc->Text(), "const") == 0
+         || strcmp(pc->Text(), "long") == 0
+         || strcmp(pc->Text(), "short") == 0
+         || strcmp(pc->Text(), "signed") == 0
+         || strcmp(pc->Text(), "static") == 0
+         || strcmp(pc->Text(), "unsigned") == 0
+         || strcmp(pc->Text(), "volatile") == 0);
+}
+
+
+static bool add_or_remove_int_keyword(Chunk *pc, iarf_e action)
+{
+   Chunk *next = pc->GetNextNcNnl();
+
+   // Skip over all but the last qualifier before the 'int' keyword
+   if (is_int_qualifier(next))
+   {
+      return(false);
+   }
 
    if (strcmp(next->Text(), "int") == 0)
    {
@@ -25,7 +43,8 @@ static void add_or_remove_int_keyword(Chunk *pc, iarf_e action)
          Chunk::Delete(next);
       }
    }
-   else
+   else if (  strcmp(next->Text(), "char") != 0
+           && strcmp(next->Text(), "double") != 0)
    {
       if (  action == IARF_ADD
          || action == IARF_FORCE)
@@ -34,6 +53,7 @@ static void add_or_remove_int_keyword(Chunk *pc, iarf_e action)
          int_keyword->str = "int";
       }
    }
+   return(true);
 }
 
 
@@ -41,24 +61,40 @@ void change_int_types()
 {
    LOG_FUNC_ENTRY();
 
+   bool found_int = false;
+
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
+      // Skip any 'int' keyword that has already been processed, as well as any qualifiers after it
+      if (found_int)
+      {
+         if (  strcmp(pc->Text(), "int") != 0
+            && !is_int_qualifier(pc))
+         {
+            found_int = false;
+         }
+         continue;
+      }
+
       if (strcmp(pc->Text(), "short") == 0)
       {
-         add_or_remove_int_keyword(pc, options::mod_short_int());
+         found_int = add_or_remove_int_keyword(pc, options::mod_short_int());
       }
-      else if (  strcmp(pc->Text(), "long") == 0
-              && strcmp(pc->GetNextNcNnl()->Text(), "long") != 0)
+      else if (strcmp(pc->Text(), "long") == 0)
       {
-         add_or_remove_int_keyword(pc, options::mod_long_int());
+         found_int = add_or_remove_int_keyword(pc, options::mod_long_int());
       }
       else if (strcmp(pc->Text(), "signed") == 0)
       {
-         add_or_remove_int_keyword(pc, options::mod_signed_int());
+         found_int = add_or_remove_int_keyword(pc, options::mod_signed_int());
       }
       else if (strcmp(pc->Text(), "unsigned") == 0)
       {
-         add_or_remove_int_keyword(pc, options::mod_unsigned_int());
+         found_int = add_or_remove_int_keyword(pc, options::mod_unsigned_int());
+      }
+      else if (strcmp(pc->Text(), "int") == 0)
+      {
+         found_int = true;
       }
    }
 }

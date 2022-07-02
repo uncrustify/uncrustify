@@ -808,8 +808,8 @@ void tokenize_cleanup()
       }
 
       // Look for <newline> 'EXEC' 'SQL'
-      if (  (  chunk_is_str_case(pc, "EXEC", 4)
-            && chunk_is_str_case(next, "SQL", 3))
+      if (  (  pc->IsString("EXEC", false)
+            && next->IsString("SQL", false))
          || (  (*pc->str.c_str() == '$')
             && pc->IsNot(CT_SQL_WORD)
                /* but avoid breaking tokenization for C# 6 interpolated strings. */
@@ -846,11 +846,11 @@ void tokenize_cleanup()
             }
             tmp = next->GetNext();
 
-            if (chunk_is_str_case(tmp, "BEGIN", 5))
+            if (tmp->IsString("BEGIN", false))
             {
                set_chunk_type(pc, CT_SQL_BEGIN);
             }
-            else if (chunk_is_str_case(tmp, "END", 3))
+            else if (tmp->IsString("END", false))
             {
                set_chunk_type(pc, CT_SQL_END);
             }

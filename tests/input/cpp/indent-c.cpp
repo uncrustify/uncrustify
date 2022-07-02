@@ -827,7 +827,7 @@ static bool single_line_comment_indent_rule_applies(Chunk *start)
 {
    Chunk *pc      = start;
    int     nl_count = 0;
-   if (!chunk_is_single_line_comment(pc))
+   if (!pc->IsSingleLineComment())
    {
       return(false);
    }
@@ -846,7 +846,7 @@ static bool single_line_comment_indent_rule_applies(Chunk *start)
       else
       {
          nl_count = 0;
-         if (!chunk_is_single_line_comment(pc))
+         if (!pc->IsSingleLineComment())
          {
             /* here we check for things to run into that we wouldn't want to indent the comment for */
             /* for example, non-single line comment, closing brace */
