@@ -61,7 +61,7 @@ void fix_casts(Chunk *start)
    first = pc;
 
    while (  pc->IsNotNullChunk()
-         && (  chunk_is_type(pc)
+         && (  pc->IsTypeDefinition()
             || pc->Is(CT_WORD)
             || pc->Is(CT_QUALIFIER)
             || pc->Is(CT_DC_MEMBER)
@@ -1049,7 +1049,7 @@ void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type)
             }
          }
 
-         if (  (  !chunk_is_type(pc)
+         if (  (  !pc->IsTypeDefinition()
                && pc->IsNot(CT_OPERATOR)
                && pc->IsNot(CT_WORD)
                && pc->IsNot(CT_ADDR))
@@ -1343,7 +1343,7 @@ void mark_function(Chunk *pc)
       {
          tmp2 = tmp1->GetNextNcNnl();
 
-         if (  !chunk_is_word(tmp1)
+         if (  !tmp1->IsWord()
             || tmp2->IsNot(CT_DC_MEMBER))
          {
             break;
@@ -2120,7 +2120,7 @@ bool mark_function_type(Chunk *pc)
    varcnk = varcnk->GetPrevNbsb();
 
    if (  varcnk->IsNotNullChunk()
-      && !chunk_is_word(varcnk))
+      && !varcnk->IsWord())
    {
       if (  language_is_set(LANG_OC)
          && varcnk->IsString("^")
@@ -2188,7 +2188,7 @@ bool mark_function_type(Chunk *pc)
          ptrcnk = tmp;
          LOG_FMT(LFTYPE, " -- PTR_TYPE\n");
       }
-      else if (  chunk_is_word(tmp)
+      else if (  tmp->IsWord()
               || tmp->Is(CT_WORD)
               || tmp->Is(CT_TYPE))
       {

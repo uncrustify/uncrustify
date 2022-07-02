@@ -1952,7 +1952,7 @@ static bool is_var_def(Chunk *pc, Chunk *next)
       next = next->SkipToMatch();
       next = next->GetNextNcNnl();
    }
-   else if (!chunk_is_type(pc))
+   else if (!pc->IsTypeDefinition())
    {
       // Otherwise, if the current token is not a type --> not a declaration
       return(false);
@@ -1968,7 +1968,7 @@ static bool is_var_def(Chunk *pc, Chunk *next)
       next = next->SkipToMatch();
       next = next->GetNextNcNnl();
    }
-   bool is = (  (  chunk_is_type(next)
+   bool is = (  (  next->IsTypeDefinition()
                 && get_chunk_parent_type(next) != CT_FUNC_DEF)           // Issue #2639
              || next->Is(CT_WORD)
              || next->Is(CT_FUNC_CTOR_VAR));
@@ -3310,7 +3310,7 @@ static void newline_func_def_or_call(Chunk *start)
                      // a type before it, in order to not apply nl_func_type_name
                      // on conversion operators as they don't have a normal
                      // return type syntax
-                  && (tmp_next->IsNot(CT_OPERATOR) ? true : chunk_is_type(prev)))
+                  && (tmp_next->IsNot(CT_OPERATOR) ? true : prev->IsTypeDefinition()))
                {
                   newline_iarf(prev, a);
                }

@@ -261,7 +261,7 @@ void align_to_column(Chunk *pc, size_t column)
          && get_chunk_parent_type(pc) != CT_COMMENT_EMBED)
       {
          log_rule_B("indent_relative_single_line_comments");
-         almod = (  chunk_is_single_line_comment(pc)
+         almod = (  pc->IsSingleLineComment()
                  && options::indent_relative_single_line_comments())
                  ? align_mode_e::KEEP_REL : align_mode_e::KEEP_ABS;
       }
@@ -357,7 +357,7 @@ void reindent_line(Chunk *pc, size_t column)
       const bool is_comment = pc->IsComment();
       log_rule_B("indent_relative_single_line_comments");
       const bool keep = (  is_comment
-                        && chunk_is_single_line_comment(pc)
+                        && pc->IsSingleLineComment()
                         && options::indent_relative_single_line_comments());
 
       if (  is_comment
@@ -2446,7 +2446,7 @@ void indent_text()
 
             while (  ((pct = pct->GetPrevNnl())->IsNotNullChunk())
                   && pct->IsComment()
-                  && !chunk_is_Doxygen_comment(pct))
+                  && !pct->IsDoxygenComment())
             {
                Chunk *t2 = pct->GetPrev();
 
@@ -4385,16 +4385,11 @@ static bool single_line_comment_indent_rule_applies(Chunk *start, bool forward)
 {
    LOG_FUNC_ENTRY();
 
-   if (!chunk_is_single_line_comment(start))
+   if (!start->IsSingleLineComment())
    {
       return(false);
    }
-   Chunk *pc = start;
-
-   if (pc == nullptr)
-   {
-      pc = Chunk::NullChunkPtr;
-   }
+   Chunk  *pc      = start;
    size_t nl_count = 0;
 
    while ((pc = forward ? pc->GetNext() : pc->GetPrev())->IsNotNullChunk())
@@ -4408,7 +4403,7 @@ static bool single_line_comment_indent_rule_applies(Chunk *start, bool forward)
          }
          nl_count++;
       }
-      else if (chunk_is_single_line_comment(pc))
+      else if (pc->IsSingleLineComment())
       {
          nl_count = 0;
       }
@@ -4543,11 +4538,11 @@ static void indent_comment(Chunk *pc, size_t col)
          if (prev_col_diff <= options::indent_comment_align_thresh())
          {
             LOG_FMT(LCMTIND, "%s(%d): prev->Text() is '%s', Doxygen_comment(prev) is %s\n",
-                    __func__, __LINE__, prev->Text(), chunk_is_Doxygen_comment(prev) ? "TRUE" : "FALSE");
+                    __func__, __LINE__, prev->Text(), prev->IsDoxygenComment() ? "TRUE" : "FALSE");
             LOG_FMT(LCMTIND, "%s(%d): pc->Text() is '%s', Doxygen_comment(pc) is %s\n",
-                    __func__, __LINE__, pc->Text(), chunk_is_Doxygen_comment(pc) ? "TRUE" : "FALSE");
+                    __func__, __LINE__, pc->Text(), pc->IsDoxygenComment() ? "TRUE" : "FALSE");
 
-            if (chunk_is_Doxygen_comment(prev) == chunk_is_Doxygen_comment(pc))
+            if (prev->IsDoxygenComment() == pc->IsDoxygenComment())
             {
                const size_t next_col_diff = calc_comment_next_col_diff(pc);
                LOG_FMT(LCMTIND, "%s(%d): next_col_diff is %zu\n",

@@ -1022,7 +1022,7 @@ static void append_tag_name(unc_text &txt, Chunk *pc)
       tmp = tmp->GetPrevNcNnl();
       pc  = tmp;
 
-      if (!chunk_is_word(tmp))
+      if (!tmp->IsWord())
       {
          break;
       }
