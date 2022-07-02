@@ -178,6 +178,7 @@
 30215  common/empty.cfg                                     cpp/Issue_2099.cpp
 30216  cpp/Issue_2302.cfg                                   cpp/Issue_2302.cpp
 30217  common/empty.cfg                                     cpp/2138.cpp
+30218  cpp/Issue_3710.cfg                                   cpp/Issue_3710.cpp
 
 30220  cpp/bug_1340.cfg                                     cpp/bug_1340.cpp
 30221  cpp/Issue_2914.cfg                                   cpp/Issue_2914.cpp
