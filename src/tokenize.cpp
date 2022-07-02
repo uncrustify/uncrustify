@@ -2218,10 +2218,16 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
       {
          return(true);
       }
+   }
 
+   if (language_is_set(LANG_CS | LANG_VALA))
+   {
       // check for non-keyword identifiers such as @if @switch, etc
-      if (  (ctx.peek() == '@')
-         && CharTable::IsKw1(ctx.peek(1)))
+      // Vala also allows numeric identifiers if prefixed with '@'
+      if (  ctx.peek() == '@'
+         && (  CharTable::IsKw1(ctx.peek(1))
+            || (  language_is_set(LANG_VALA)
+               && CharTable::IsKw2(ctx.peek(1)))))
       {
          parse_word(ctx, pc, true);
          return(true);
@@ -2391,8 +2397,22 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
       }
    }
 
-   // Check for Objective C literals and VALA identifiers ('@1', '@if')
-   if (  language_is_set(LANG_OC | LANG_VALA)
+   // Check for Vala string templates
+   if (  language_is_set(LANG_VALA)
+      && (ctx.peek() == '@'))
+   {
+      size_t nc = ctx.peek(1);
+
+      if (nc == '"')
+      {
+         // literal string
+         parse_string(ctx, pc, 1, true);
+         return(true);
+      }
+   }
+
+   // Check for Objective C literals
+   if (  language_is_set(LANG_OC)
       && (ctx.peek() == '@'))
    {
       size_t nc = ctx.peek(1);

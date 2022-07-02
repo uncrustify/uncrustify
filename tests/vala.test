@@ -15,3 +15,4 @@
 70301  vala/Issue_2270.cfg                  vala/Issue_2270.vala
 70302  common/sp_after_cast.cfg             vala/cast.vala
 70303  vala/nullable.cfg                    vala/nullable.vala
+70304  common/empty.cfg                     vala/identifier.vala

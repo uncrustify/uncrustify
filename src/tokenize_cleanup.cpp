@@ -948,6 +948,20 @@ void tokenize_cleanup()
          }
       }
 
+      // Vala allows keywords to be used as identifiers
+      if (language_is_set(LANG_VALA))
+      {
+         if (  find_keyword_type(pc->Text(), pc->Len()) != CT_WORD
+            && (  prev->Is(CT_DOT)
+               || next->Is(CT_DOT)
+               || prev->Is(CT_MEMBER)
+               || next->Is(CT_MEMBER)
+               || prev->Is(CT_TYPE)))
+         {
+            set_chunk_type(pc, CT_WORD);
+         }
+      }
+
       // Another hack to clean up more keyword abuse
       if (  pc->Is(CT_CLASS)
          && (  prev->Is(CT_DOT)
