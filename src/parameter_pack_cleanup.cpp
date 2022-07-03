@@ -50,7 +50,7 @@ void parameter_pack_cleanup()
 
                   if (strcmp(pc->Text(), parameter_pack->Text()) == 0)
                   {
-                     set_chunk_type(pc, CT_PARAMETER_PACK);
+                     pc->SetType(CT_PARAMETER_PACK);
                   }
                   pc = pc->GetNext();
                }

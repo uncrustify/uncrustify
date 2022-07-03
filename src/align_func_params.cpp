@@ -82,8 +82,8 @@ Chunk *align_func_param(Chunk *start)
             {
                // these are 'protect parenthesis'
                // change the types and the level
-               set_chunk_type(before, CT_PPAREN_OPEN);
-               set_chunk_type(after, CT_PPAREN_CLOSE);
+               before->SetType(CT_PPAREN_OPEN);
+               after->SetType(CT_PPAREN_CLOSE);
                pc->level = before->level;
                Chunk *tmp = pc->GetPrevNc();
 

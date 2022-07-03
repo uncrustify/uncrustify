@@ -355,14 +355,14 @@ void fix_fcn_def_params(Chunk *start)
          || pc->IsMsRef()
          || pc->IsNullable())
       {
-         set_chunk_type(pc, CT_PTR_TYPE);
+         pc->SetType(CT_PTR_TYPE);
          cs.Push_Back(pc);
       }
       else if (  language_is_set(LANG_CPP)   // Issue #3662
               && (  pc->Is(CT_AMP)
                  || pc->IsString("&&")))
       {
-         set_chunk_type(pc, CT_BYREF);
+         pc->SetType(CT_BYREF);
          cs.Push_Back(pc);
       }
       else if (pc->Is(CT_TYPE_WRAP))
@@ -521,7 +521,7 @@ void fix_typedef(Chunk *start)
       else
       {
          // must be: "typedef <return type>func(params);"
-         set_chunk_type(the_type, CT_FUNC_TYPE);
+         the_type->SetType(CT_FUNC_TYPE);
       }
       set_chunk_parent(the_type, CT_TYPEDEF);
 
@@ -713,7 +713,7 @@ Chunk *fix_variable_definition(Chunk *start)
       && end->Is(CT_BRACE_OPEN)
       && get_chunk_parent_type(end) == CT_BRACED_INIT_LIST)
    {
-      set_chunk_type(cs.Get(0)->m_pc, CT_TYPE);
+      cs.Get(0)->m_pc->SetType(CT_TYPE);
    }
 
    // Function defs are handled elsewhere
@@ -805,7 +805,7 @@ void mark_cpp_constructor(Chunk *pc)
    if (  tmp->Is(CT_INV)
       || tmp->Is(CT_DESTRUCTOR))
    {
-      set_chunk_type(tmp, CT_DESTRUCTOR);
+      tmp->SetType(CT_DESTRUCTOR);
       set_chunk_parent(pc, CT_DESTRUCTOR);
       is_destr = true;
    }
@@ -847,7 +847,7 @@ void mark_cpp_constructor(Chunk *pc)
       if (  tmp->IsString(":")
          && tmp->level == paren_open->level)
       {
-         set_chunk_type(tmp, CT_CONSTR_COLON);
+         tmp->SetType(CT_CONSTR_COLON);
          hit_colon = true;
       }
 
@@ -861,7 +861,7 @@ void mark_cpp_constructor(Chunk *pc)
          if (  var->Is(CT_TYPE)
             || var->Is(CT_WORD))
          {
-            set_chunk_type(var, CT_FUNC_CTOR_VAR);
+            var->SetType(CT_FUNC_CTOR_VAR);
             flag_parens(tmp, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CTOR_VAR, false);
          }
       }
@@ -877,7 +877,7 @@ void mark_cpp_constructor(Chunk *pc)
    else
    {
       set_chunk_parent(tmp, CT_FUNC_CLASS_PROTO);
-      set_chunk_type(pc, CT_FUNC_CLASS_PROTO);
+      pc->SetType(CT_FUNC_CLASS_PROTO);
       LOG_FMT(LFCN, "%s(%d):  Marked '%s' as FUNC_CLASS_PROTO on orig_line %zu, orig_col %zu\n",
               __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
    }
@@ -987,7 +987,7 @@ void mark_exec_sql(Chunk *pc)
 
       if (tmp->Is(CT_WORD))
       {
-         set_chunk_type(tmp, CT_SQL_WORD);
+         tmp->SetType(CT_SQL_WORD);
       }
 
       if (tmp->Is(CT_SEMICOLON))
@@ -1183,7 +1183,7 @@ void mark_function(Chunk *pc)
       {
          LOG_FMT(LFCN, "%s(%d): (4) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-         set_chunk_type(pc, CT_FUNC_CALL);
+         pc->SetType(CT_FUNC_CALL);
       }
 
       if (language_is_set(LANG_CPP))
@@ -1206,7 +1206,7 @@ void mark_function(Chunk *pc)
                        __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->Text());
                LOG_FMT(LFCN, "%s(%d): (5) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-               set_chunk_type(pc, CT_FUNC_CALL);
+               pc->SetType(CT_FUNC_CALL);
                break;
             }
 
@@ -1214,7 +1214,7 @@ void mark_function(Chunk *pc)
             {
                LOG_FMT(LFCN, "%s(%d): (6) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-               set_chunk_type(pc, CT_FUNC_CALL);
+               pc->SetType(CT_FUNC_CALL);
                break;
             }
 
@@ -1222,7 +1222,7 @@ void mark_function(Chunk *pc)
             {
                LOG_FMT(LFCN, "%s(%d): (7) SET TO CT_FUNC_DEF: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-               set_chunk_type(pc, CT_FUNC_DEF);
+               pc->SetType(CT_FUNC_DEF);
                break;
             }
 
@@ -1232,7 +1232,7 @@ void mark_function(Chunk *pc)
                {
                   LOG_FMT(LFCN, "%s(%d): (8) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-                  set_chunk_type(pc, CT_FUNC_CALL);
+                  pc->SetType(CT_FUNC_CALL);
                }
 
                if (  get_chunk_parent_type(tmp) == CT_CLASS
@@ -1240,7 +1240,7 @@ void mark_function(Chunk *pc)
                {
                   LOG_FMT(LFCN, "%s(%d): (9) SET TO CT_FUNC_DEF: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-                  set_chunk_type(pc, CT_FUNC_DEF);
+                  pc->SetType(CT_FUNC_DEF);
                }
                break;
             }
@@ -1281,7 +1281,7 @@ void mark_function(Chunk *pc)
 
    if (pc->flags.test(PCF_IN_CONST_ARGS))
    {
-      set_chunk_type(pc, CT_FUNC_CTOR_VAR);
+      pc->SetType(CT_FUNC_CTOR_VAR);
       LOG_FMT(LFCN, "%s(%d):   1) Marked [%s] as FUNC_CTOR_VAR on line %zu col %zu\n",
               __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
       next = skip_template_next(next);
@@ -1375,7 +1375,7 @@ void mark_function(Chunk *pc)
          {
             LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, function variable '%s', changing '%s' into a type\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, tmp2->Text(), pc->Text());
-            set_chunk_type(tmp2, CT_FUNC_VAR);
+            tmp2->SetType(CT_FUNC_VAR);
             flag_parens(paren_open, PCF_NONE, CT_PAREN_OPEN, CT_FUNC_VAR, false);
 
             LOG_FMT(LFCN, "%s(%d): paren open @ orig_line %zu, orig_col %zu\n",
@@ -1388,12 +1388,12 @@ void mark_function(Chunk *pc)
 
             if (tmp2)
             {
-               set_chunk_type(tmp2, CT_FUNC_TYPE);
+               tmp2->SetType(CT_FUNC_TYPE);
             }
             flag_parens(paren_open, PCF_NONE, CT_PAREN_OPEN, CT_FUNC_TYPE, false);
          }
-         set_chunk_type(pc, CT_TYPE);
-         set_chunk_type(tmp1, CT_PTR_TYPE);
+         pc->SetType(CT_TYPE);
+         tmp1->SetType(CT_PTR_TYPE);
          chunk_flags_clr(pc, PCF_VAR_1ST_DEF);
 
          if (tmp2->IsNotNullChunk())
@@ -1422,14 +1422,14 @@ void mark_function(Chunk *pc)
                  __func__, __LINE__, temp->orig_line, temp->orig_col, temp->Text());
          LOG_FMT(LFCN, "%s(%d): (10) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-         set_chunk_type(pc, CT_FUNC_CALL);
+         pc->SetType(CT_FUNC_CALL);
       }
       else
       {
          LOG_FMT(LFCN, "%s(%d): (11) SET TO %s: orig_line is %zu, orig_col is %zu, Text() '%s'",
                  __func__, __LINE__, (get_chunk_parent_type(pc) == CT_OPERATOR) ? "CT_FUNC_DEF" : "CT_FUNC_CALL",
                  pc->orig_line, pc->orig_col, pc->Text());
-         set_chunk_type(pc, (get_chunk_parent_type(pc) == CT_OPERATOR) ? CT_FUNC_DEF : CT_FUNC_CALL);
+         pc->SetType((get_chunk_parent_type(pc) == CT_OPERATOR) ? CT_FUNC_DEF : CT_FUNC_CALL);
       }
    }
    LOG_FMT(LFCN, "%s(%d): Check for C++ function def, Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
@@ -1457,8 +1457,8 @@ void mark_function(Chunk *pc)
       if (prev->Is(CT_INV))
       {
          // TODO: do we care that this is the destructor?
-         set_chunk_type(prev, CT_DESTRUCTOR);
-         set_chunk_type(pc, CT_FUNC_CLASS_DEF);
+         prev->SetType(CT_DESTRUCTOR);
+         pc->SetType(CT_FUNC_CLASS_DEF);
 
          set_chunk_parent(pc, CT_DESTRUCTOR);
 
@@ -1494,7 +1494,7 @@ void mark_function(Chunk *pc)
                LOG_FMT(LFCN, "%s(%d): pc->Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
                        __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col,
                        get_token_name(prev->type));
-               set_chunk_type(pc, CT_FUNC_CLASS_DEF);
+               pc->SetType(CT_FUNC_CLASS_DEF);
                LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu - FOUND %sSTRUCTOR for '%s', type is %s\n",
                        __func__, __LINE__,
                        prev->orig_line, prev->orig_col,
@@ -1810,7 +1810,7 @@ void mark_function(Chunk *pc)
                  __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col, get_token_name(pc->type));
          LOG_FMT(LFCN, "%s(%d): (12) SET TO CT_FUNC_DEF: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-         set_chunk_type(pc, CT_FUNC_DEF);
+         pc->SetType(CT_FUNC_DEF);
 
          if (  prev == nullptr
             || prev->IsNullChunk())
@@ -1863,7 +1863,7 @@ void mark_function(Chunk *pc)
       {
          // No semicolon - guess that it is a prototype
          chunk_flags_clr(pc, PCF_VAR_1ST_DEF);
-         set_chunk_type(pc, CT_FUNC_PROTO);
+         pc->SetType(CT_FUNC_PROTO);
          break;
       }
       else if (tmp->level == pc->level)
@@ -1878,14 +1878,14 @@ void mark_function(Chunk *pc)
             // Set the parent for the semicolon for later
             semi = tmp;
             chunk_flags_clr(pc, PCF_VAR_1ST_DEF);
-            set_chunk_type(pc, CT_FUNC_PROTO);
+            pc->SetType(CT_FUNC_PROTO);
             LOG_FMT(LFCN, "%s(%d):   2) Marked Text() is '%s', as FUNC_PROTO on orig_line %zu, orig_col %zu\n",
                     __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
             break;
          }
          else if (pc->Is(CT_COMMA))
          {
-            set_chunk_type(pc, CT_FUNC_CTOR_VAR);
+            pc->SetType(CT_FUNC_CTOR_VAR);
             LOG_FMT(LFCN, "%s(%d):   2) Marked Text() is '%s', as FUNC_CTOR_VAR on orig_line %zu, orig_col %zu\n",
                     __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
             break;
@@ -1971,7 +1971,7 @@ void mark_function(Chunk *pc)
       if (  !is_extern
          && !is_param)
       {
-         set_chunk_type(pc, CT_FUNC_CTOR_VAR);
+         pc->SetType(CT_FUNC_CTOR_VAR);
          LOG_FMT(LFCN, "%s(%d):   3) Marked Text() '%s' as FUNC_CTOR_VAR on orig_line %zu, orig_col %zu\n",
                  __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
       }
@@ -1996,7 +1996,7 @@ void mark_function(Chunk *pc)
                   && get_chunk_parent_type(p_op) != CT_STRUCT
                   && get_chunk_parent_type(p_op) != CT_NAMESPACE)
                {
-                  set_chunk_type(pc, CT_FUNC_CTOR_VAR);
+                  pc->SetType(CT_FUNC_CTOR_VAR);
                   LOG_FMT(LFCN, "%s(%d):   4) Marked Text() is'%s', as FUNC_CTOR_VAR on orig_line %zu, orig_col %zu\n",
                           __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
                }
@@ -2236,27 +2236,27 @@ bool mark_function_type(Chunk *pc)
 
    if (ptrcnk)
    {
-      set_chunk_type(ptrcnk, CT_PTR_TYPE);
+      ptrcnk->SetType(CT_PTR_TYPE);
    }
 
    if (!anon)
    {
       if (pc->flags.test(PCF_IN_TYPEDEF))
       {
-         set_chunk_type(varcnk, CT_FUNC_TYPE);   // Issue #3402
+         varcnk->SetType(CT_FUNC_TYPE);   // Issue #3402
       }
       else
       {
-         set_chunk_type(varcnk, CT_FUNC_VAR);
+         varcnk->SetType(CT_FUNC_VAR);
          chunk_flags_set(varcnk, PCF_VAR_1ST_DEF);
       }
    }
-   set_chunk_type(pc, CT_TPAREN_CLOSE);
+   pc->SetType(CT_TPAREN_CLOSE);
    set_chunk_parent(pc, ptp);
 
-   set_chunk_type(apo, CT_FPAREN_OPEN);
+   apo->SetType(CT_FPAREN_OPEN);
    set_chunk_parent(apo, pt);
-   set_chunk_type(apc, CT_FPAREN_CLOSE);
+   apc->SetType(CT_FPAREN_CLOSE);
    set_chunk_parent(apc, pt);
    fix_fcn_def_params(apo);
 
@@ -2283,7 +2283,7 @@ bool mark_function_type(Chunk *pc)
          {
             chunk_flags_set(tmp, PCF_VAR_1ST_DEF);
          }
-         set_chunk_type(tmp, CT_TPAREN_OPEN);
+         tmp->SetType(CT_TPAREN_OPEN);
          set_chunk_parent(tmp, ptp);
 
          tmp = tmp->GetPrevNcNnlNi();   // Issue #2279
@@ -2294,7 +2294,7 @@ bool mark_function_type(Chunk *pc)
             || tmp->Is(CT_FUNC_DEF)
             || tmp->Is(CT_FUNC_PROTO))
          {
-            set_chunk_type(tmp, CT_TYPE);
+            tmp->SetType(CT_TYPE);
             chunk_flags_clr(tmp, PCF_VAR_1ST_DEF);
          }
          mark_function_return_type(varcnk, tmp, ptp);
@@ -2422,7 +2422,7 @@ void mark_template_func(Chunk *pc, Chunk *pc_next)
                     __func__, __LINE__, pc->Text(), pc->orig_line);
             LOG_FMT(LFCN, "%s(%d): (16) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-            set_chunk_type(pc, CT_FUNC_CALL);
+            pc->SetType(CT_FUNC_CALL);
             flag_parens(after, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
          }
          else
@@ -2440,14 +2440,14 @@ void mark_template_func(Chunk *pc, Chunk *pc_next)
             // its a function!!!
             LOG_FMT(LFCN, "%s(%d): (17) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-            set_chunk_type(pc, CT_FUNC_CALL);
+            pc->SetType(CT_FUNC_CALL);
             mark_function(pc);
          }
       }
       else if (after->Is(CT_WORD))
       {
          // its a type!
-         set_chunk_type(pc, CT_TYPE);
+         pc->SetType(CT_TYPE);
          chunk_flags_set(pc, PCF_VAR_TYPE);
          chunk_flags_set(after, PCF_VAR_DEF);
       }
@@ -2500,11 +2500,11 @@ Chunk *mark_variable_definition(Chunk *start)
               && (  pc->IsStar()
                  || pc->IsMsRef()))
       {
-         set_chunk_type(pc, CT_PTR_TYPE);
+         pc->SetType(CT_PTR_TYPE);
       }
       else if (pc->IsAddress())
       {
-         set_chunk_type(pc, CT_BYREF);
+         pc->SetType(CT_BYREF);
       }
       else if (  pc->Is(CT_SQUARE_OPEN)
               || pc->Is(CT_ASSIGN))
@@ -2552,7 +2552,7 @@ void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
          {
             LOG_FMT(LFCNP, "%s(%d): parameter on orig_line %zu, orig_col %zu: <%s> as TYPE\n",
                     __func__, __LINE__, var_name->orig_line, var_name->orig_col, word_type->Text());
-            set_chunk_type(word_type, CT_TYPE);
+            word_type->SetType(CT_TYPE);
             chunk_flags_set(word_type, PCF_VAR_TYPE);
          }
          word_cnt++;
@@ -2570,7 +2570,7 @@ void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
          {
             LOG_FMT(LFCNP, "%s(%d): parameter on orig_line %zu, orig_col %zu: <%s> as TYPE\n",
                     __func__, __LINE__, var_name->orig_line, var_name->orig_col, var_name->Text());
-            set_chunk_type(var_name, CT_TYPE);
+            var_name->SetType(CT_TYPE);
             chunk_flags_set(var_name, PCF_VAR_TYPE);
          }
       }
@@ -2585,7 +2585,7 @@ pcf_flags_t mark_where_chunk(Chunk *pc, E_Token parent_type, pcf_flags_t flags)
 
    if (pc->Is(CT_WHERE))
    {
-      set_chunk_type(pc, CT_WHERE_SPEC);
+      pc->SetType(CT_WHERE_SPEC);
       set_chunk_parent(pc, parent_type);
       flags |= PCF_IN_WHERE_SPEC;
       LOG_FMT(LFTOR, "%s: where-spec on line %zu\n",
@@ -2595,14 +2595,14 @@ pcf_flags_t mark_where_chunk(Chunk *pc, E_Token parent_type, pcf_flags_t flags)
    {
       if (pc->IsString(":"))
       {
-         set_chunk_type(pc, CT_WHERE_COLON);
+         pc->SetType(CT_WHERE_COLON);
          LOG_FMT(LFTOR, "%s: where-spec colon on line %zu\n",
                  __func__, pc->orig_line);
       }
       else if (chunk_is_class_or_struct(pc))
       {
          /* class/struct inside of a where-clause confuses parser for indentation; set it as a word so it looks like the rest */
-         set_chunk_type(pc, CT_WORD);
+         pc->SetType(CT_WORD);
       }
    }
 

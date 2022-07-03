@@ -531,19 +531,19 @@ void make_type(Chunk *pc)
    {
       if (pc->Is(CT_WORD))
       {
-         set_chunk_type(pc, CT_TYPE);
+         pc->SetType(CT_TYPE);
       }
       else if (  (  pc->IsStar()
                  || pc->IsMsRef()
                  || pc->IsNullable())
               && pc->GetPrev()->IsTypeDefinition())               // Issue # 2640
       {
-         set_chunk_type(pc, CT_PTR_TYPE);
+         pc->SetType(CT_PTR_TYPE);
       }
       else if (  pc->IsAddress()
               && pc->GetPrev()->IsNot(CT_SQUARE_OPEN))            // Issue # 2166
       {
-         set_chunk_type(pc, CT_BYREF);
+         pc->SetType(CT_BYREF);
       }
    }
 } // make_type

@@ -74,13 +74,13 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
 
 void flag_cpp_braced_init_list(Chunk *pc, Chunk *next)
 {
-   auto brace_open  = pc->GetNextNcNnl();
-   auto brace_close = next->SkipToMatch();
+   Chunk *brace_open  = pc->GetNextNcNnl();
+   Chunk *brace_close = next->SkipToMatch();
 
    set_chunk_parent(brace_open, CT_BRACED_INIT_LIST);
    set_chunk_parent(brace_close, CT_BRACED_INIT_LIST);
 
-   auto *tmp = brace_close->GetNextNcNnl();
+   Chunk *tmp = brace_close->GetNextNcNnl();
 
    if (tmp->IsNotNullChunk())
    {
@@ -89,11 +89,13 @@ void flag_cpp_braced_init_list(Chunk *pc, Chunk *next)
       // Flag call operator
       if (tmp->Is(CT_PAREN_OPEN))
       {
-         if (auto *const c = tmp->SkipToMatch())
+         Chunk *c = tmp->SkipToMatch();
+
+         if (c->IsNotNullChunk())
          {
-            set_chunk_type(tmp, CT_FPAREN_OPEN);
+            tmp->SetType(CT_FPAREN_OPEN);
             set_chunk_parent(tmp, CT_FUNC_CALL);
-            set_chunk_type(c, CT_FPAREN_CLOSE);
+            c->SetType(CT_FPAREN_CLOSE);
             set_chunk_parent(c, CT_FUNC_CALL);
          }
       }
@@ -105,6 +107,6 @@ void flag_cpp_braced_init_list(Chunk *pc, Chunk *next)
    if (  pc->Is(CT_WORD)
       && pc->flags.test(PCF_IN_FCN_CALL))
    {
-      set_chunk_type(pc, CT_TYPE);
+      pc->SetType(CT_TYPE);
    }
 } // flag_cpp_braced_init_list

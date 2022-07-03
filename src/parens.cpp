@@ -233,7 +233,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
    }
    Chunk pc;
 
-   set_chunk_type(&pc, CT_PAREN_OPEN);
+   pc.SetType(CT_PAREN_OPEN);
    pc.orig_line   = first_n->orig_line;
    pc.orig_col    = first_n->orig_col;
    pc.str         = "(";
@@ -246,7 +246,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
 
    Chunk *last_p = last->GetPrevNcNnl(E_Scope::PREPROC);
 
-   set_chunk_type(&pc, CT_PAREN_CLOSE);
+   pc.SetType(CT_PAREN_CLOSE);
    pc.orig_line   = last_p->orig_line;
    pc.orig_col    = last_p->orig_col;
    pc.str         = ")";

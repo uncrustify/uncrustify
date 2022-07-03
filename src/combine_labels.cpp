@@ -150,7 +150,7 @@ void combine_labels()
          if (cur->Is(CT_GOTO))
          {
             // handle "goto case x;"
-            set_chunk_type(next, CT_QUALIFIER);
+            next->SetType(CT_QUALIFIER);
          }
          else
          {
@@ -163,7 +163,7 @@ void combine_labels()
       {
          if (cur->Is(CT_DEFAULT))
          {
-            set_chunk_type(cur, CT_CASE);
+            cur->SetType(CT_CASE);
             hit_case = true;
          }
 
@@ -171,13 +171,13 @@ void combine_labels()
             && next->flags.test(PCF_IN_CONDITIONAL))             // Issue #3558
          {
             //log_pcf_flags(LGUY, next->flags);
-            set_chunk_type(next, CT_COND_COLON);
+            next->SetType(CT_COND_COLON);
             cs.Pop_Back();
          }
          else if (hit_case)
          {
             hit_case = false;
-            set_chunk_type(next, CT_CASE_COLON);
+            next->SetType(CT_CASE_COLON);
             Chunk *tmp = next->GetNextNcNnlNpp();                // Issue #2150
 
             if (tmp->Is(CT_BRACE_OPEN))
@@ -198,7 +198,7 @@ void combine_labels()
 
                if (pre_elipsis->Is(CT_NUMBER))
                {
-                  set_chunk_type(prev, CT_CASE_ELLIPSIS);
+                  prev->SetType(CT_CASE_ELLIPSIS);
                }
             }
          }
@@ -239,30 +239,30 @@ void combine_labels()
                      && tmp->IsNewline())
                   {
                      new_type = CT_LABEL;
-                     set_chunk_type(next, CT_LABEL_COLON);
+                     next->SetType(CT_LABEL_COLON);
                   }
                   else
                   {
-                     set_chunk_type(next, CT_TAG_COLON);
+                     next->SetType(CT_TAG_COLON);
                   }
 
                   if (cur->Is(CT_WORD))
                   {
-                     set_chunk_type(cur, new_type);
+                     cur->SetType(new_type);
                   }
                }
             }
             else if (next->flags.test(PCF_IN_ARRAY_ASSIGN))
             {
-               set_chunk_type(next, CT_D_ARRAY_COLON);
+               next->SetType(CT_D_ARRAY_COLON);
             }
             else if (next->flags.test(PCF_IN_FOR))
             {
-               set_chunk_type(next, CT_FOR_COLON);
+               next->SetType(CT_FOR_COLON);
             }
             else if (next->flags.test(PCF_OC_BOXED))
             {
-               set_chunk_type(next, CT_OC_DICT_COLON);
+               next->SetType(CT_OC_DICT_COLON);
             }
             else if (cur->Is(CT_WORD))
             {
@@ -281,7 +281,7 @@ void combine_labels()
                if (next->flags.test(PCF_IN_FCN_CALL))
                {
                   // Must be a macro thingy, assume some sort of label
-                  set_chunk_type(next, CT_LABEL_COLON);
+                  next->SetType(CT_LABEL_COLON);
                }
                else if (  tmp->IsNullChunk()
                        || (  tmp->IsNot(CT_NUMBER)
@@ -311,19 +311,19 @@ void combine_labels()
                      if (  labelPrev->IsNotNullChunk()
                         && labelPrev->IsNot(CT_FPAREN_CLOSE))
                      {
-                        set_chunk_type(cur, CT_LABEL);
-                        set_chunk_type(next, CT_LABEL_COLON);
+                        cur->SetType(CT_LABEL);
+                        next->SetType(CT_LABEL_COLON);
                      }
                   }
                   else
                   {
-                     set_chunk_type(cur, CT_LABEL);
-                     set_chunk_type(next, CT_LABEL_COLON);
+                     cur->SetType(CT_LABEL);
+                     next->SetType(CT_LABEL_COLON);
                   }
                }
                else if (next->flags.test_any(PCF_IN_STRUCT | PCF_IN_CLASS | PCF_IN_TYPEDEF))
                {
-                  set_chunk_type(next, CT_BIT_COLON);
+                  next->SetType(CT_BIT_COLON);
 
                   Chunk *nnext = next->GetNext();
 
@@ -341,7 +341,7 @@ void combine_labels()
 
                      if (nnext->Is(CT_COLON))
                      {
-                        set_chunk_type(nnext, CT_BIT_COLON);
+                        nnext->SetType(CT_BIT_COLON);
                      }
                   }
                }
@@ -360,13 +360,13 @@ void combine_labels()
                {
                   LOG_FMT(LFCN, "%s(%d): it's a construct colon\n", __func__, __LINE__);
                   // it's a construct colon
-                  set_chunk_type(next, CT_CONSTR_COLON);
+                  next->SetType(CT_CONSTR_COLON);
                }
                else
                {
                   LOG_FMT(LFCN, "%s(%d): it's a class colon\n", __func__, __LINE__);
                   // it's a class colon
-                  set_chunk_type(next, CT_CLASS_COLON);
+                  next->SetType(CT_CLASS_COLON);
                }
             }
             else if (next->level > next->brace_level)
@@ -378,7 +378,7 @@ void combine_labels()
                     || nextprev->Is(CT_TYPE)
                     || nextprev->Is(CT_ENUM)) // Issue #2584
             {
-               set_chunk_type(next, CT_BIT_COLON);
+               next->SetType(CT_BIT_COLON);
             }
             else if (  cur->Is(CT_ENUM)
                     || cur->Is(CT_ACCESS)
