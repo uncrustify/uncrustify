@@ -471,7 +471,7 @@ static bool d_parse_string(tok_ctx &ctx, Chunk &pc)
       ctx.restore();
       return(false);
    }
-   set_chunk_type(&pc, CT_STRING);
+   pc.SetType(CT_STRING);
    return(true);
 } // d_parse_string
 
@@ -522,7 +522,7 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
 
    if (ch == '/')
    {
-      set_chunk_type(&pc, CT_COMMENT_CPP);
+      pc.SetType(CT_COMMENT_CPP);
 
       while (true)
       {
@@ -581,7 +581,7 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
    }
    else if (ch == '+')
    {
-      set_chunk_type(&pc, CT_COMMENT);
+      pc.SetType(CT_COMMENT);
       d_level++;
 
       while (  d_level > 0
@@ -610,7 +610,7 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
          if (  (ch == '\n')
             || (ch == '\r'))
          {
-            set_chunk_type(&pc, CT_COMMENT_MULTI);
+            pc.SetType(CT_COMMENT_MULTI);
             pc.nl_count++;
 
             if (ch == '\r')
@@ -634,7 +634,7 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
    }
    else  // must be '/ *'
    {
-      set_chunk_type(&pc, CT_COMMENT);
+      pc.SetType(CT_COMMENT);
 
       while (ctx.more())
       {
@@ -670,7 +670,7 @@ static bool parse_comment(tok_ctx &ctx, Chunk &pc)
          if (  (ch == '\n')
             || (ch == '\r'))
          {
-            set_chunk_type(&pc, CT_COMMENT_MULTI);
+            pc.SetType(CT_COMMENT_MULTI);
             pc.nl_count++;
 
             if (ch == '\r')
@@ -761,7 +761,7 @@ static bool parse_code_placeholder(tok_ctx &ctx, Chunk &pc)
       if (  (last2 == '#')
          && (last1 == '>'))
       {
-         set_chunk_type(&pc, CT_WORD);
+         pc.SetType(CT_WORD);
          return(true);
       }
    }
@@ -1014,7 +1014,7 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
       if (ctx.peek(1) == '(')
       {
          ctx.restore(ss);
-         set_chunk_type(&pc, CT_NUMBER);
+         pc.SetType(CT_NUMBER);
          return(true);
       }
       else
@@ -1105,7 +1105,7 @@ static bool parse_number(tok_ctx &ctx, Chunk &pc)
       pc.str.append(ctx.get());
       pc.str.append(ctx.get());
    }
-   set_chunk_type(&pc, is_float ? CT_NUMBER_FP : CT_NUMBER);
+   pc.SetType(is_float ? CT_NUMBER_FP : CT_NUMBER);
 
    /*
     * If there is anything left, then we are probably dealing with garbage or
@@ -1136,7 +1136,7 @@ static bool parse_string(tok_ctx &ctx, Chunk &pc, size_t quote_idx, bool allow_e
    {
       pc.str.append(ctx.get());
    }
-   set_chunk_type(&pc, CT_STRING);
+   pc.SetType(CT_STRING);
    const size_t termination_character = CharTable::Get(ctx.peek()) & 0xff;
 
    pc.str.append(ctx.get());                          // store the "
@@ -1162,14 +1162,14 @@ static bool parse_string(tok_ctx &ctx, Chunk &pc, size_t quote_idx, bool allow_e
       if (ch == '\n')
       {
          pc.nl_count++;
-         set_chunk_type(&pc, CT_STRING_MULTI);
+         pc.SetType(CT_STRING_MULTI);
       }
       else if (  ch == '\r'
               && ctx.peek() != '\n')
       {
          pc.str.append(ctx.get());
          pc.nl_count++;
-         set_chunk_type(&pc, CT_STRING_MULTI);
+         pc.SetType(CT_STRING_MULTI);
       }
 
       // if last char in prev loop was escaped the one in the current loop isn't
@@ -1240,7 +1240,7 @@ static cs_string_t parse_cs_string_start(tok_ctx &ctx, Chunk &pc)
    {
       stringType |= CS_STRING_STRING;
 
-      set_chunk_type(&pc, CT_STRING);
+      pc.SetType(CT_STRING);
 
       for (int i = 0; i <= offset; ++i)
       {
@@ -1328,12 +1328,12 @@ static bool parse_cs_string(tok_ctx &ctx, Chunk &pc)
 
       if (ch == '\n')
       {
-         set_chunk_type(&pc, CT_STRING_MULTI);
+         pc.SetType(CT_STRING_MULTI);
          pc.nl_count++;
       }
       else if (ch == '\r')
       {
-         set_chunk_type(&pc, CT_STRING_MULTI);
+         pc.SetType(CT_STRING_MULTI);
       }
       else if (parseState.top().braceDepth > 0)
       {
@@ -1425,7 +1425,7 @@ static bool parse_cs_string(tok_ctx &ctx, Chunk &pc)
 
 static void parse_verbatim_string(tok_ctx &ctx, Chunk &pc)
 {
-   set_chunk_type(&pc, CT_STRING);
+   pc.SetType(CT_STRING);
 
    // consume the initial """
    pc.str = ctx.get();
@@ -1450,7 +1450,7 @@ static void parse_verbatim_string(tok_ctx &ctx, Chunk &pc)
       if (  (ch == '\n')
          || (ch == '\r'))
       {
-         set_chunk_type(&pc, CT_STRING_MULTI);
+         pc.SetType(CT_STRING_MULTI);
          pc.nl_count++;
       }
    }
@@ -1502,7 +1502,7 @@ static bool parse_cr_string(tok_ctx &ctx, Chunk &pc, size_t q_idx)
       ctx.restore();
       return(false);
    }
-   set_chunk_type(&pc, CT_STRING);
+   pc.SetType(CT_STRING);
 
    while (ctx.more())
    {
@@ -1524,7 +1524,7 @@ static bool parse_cr_string(tok_ctx &ctx, Chunk &pc, size_t q_idx)
       {
          pc.str.append(ctx.get());
          pc.nl_count++;
-         set_chunk_type(&pc, CT_STRING_MULTI);
+         pc.SetType(CT_STRING_MULTI);
       }
       else
       {
@@ -1577,7 +1577,7 @@ static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
          skipcheck = true;
       }
    }
-   set_chunk_type(&pc, CT_WORD);
+   pc.SetType(CT_WORD);
 
    if (skipcheck)
    {
@@ -1590,11 +1590,11 @@ static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
    {
       if (ctx.peek() == '(')
       {
-         set_chunk_type(&pc, CT_MACRO_FUNC);
+         pc.SetType(CT_MACRO_FUNC);
       }
       else
       {
-         set_chunk_type(&pc, CT_MACRO);
+         pc.SetType(CT_MACRO);
 
          log_rule_B("pp_ignore_define_body");
 
@@ -1615,13 +1615,13 @@ static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
          && pc.str.startswith("@")
          && !pc.str.equals(intr_txt))
       {
-         set_chunk_type(&pc, CT_ANNOTATION);
+         pc.SetType(CT_ANNOTATION);
       }
       else
       {
          // Turn it into a keyword now
          // Issue #1460 will return "COMMENT_CPP"
-         set_chunk_type(&pc, find_keyword_type(pc.Text(), pc.str.size()));
+         pc.SetType(find_keyword_type(pc.Text(), pc.str.size()));
 
          /* Special pattern: if we're trying to redirect a preprocessor directive to PP_IGNORE,
           * then ensure we're actually part of a preprocessor before doing the swap, or we'll
@@ -1631,7 +1631,7 @@ static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
          if (  pc.type == CT_PP_IGNORE
             && !cpd.in_preproc)
          {
-            set_chunk_type(&pc, find_keyword_type(pc.Text(), pc.str.size()));
+            pc.SetType(find_keyword_type(pc.Text(), pc.str.size()));
          }
          else if (pc.type == CT_COMMENT_CPP)   // Issue #1460
          {
@@ -1783,7 +1783,7 @@ static bool extract_attribute_specifier_sequence(tok_ctx &ctx, Chunk &pc, size_t
    {
       pc.str.append(ctx.get());
    }
-   set_chunk_type(&pc, CT_ATTRIBUTE);
+   pc.SetType(CT_ATTRIBUTE);
    return(true);
 } // extract_attribute_specifier_sequence
 
@@ -1841,7 +1841,7 @@ static bool parse_whitespace(tok_ctx &ctx, Chunk &pc)
    if (ch != 0)
    {
       pc.str.clear();
-      set_chunk_type(&pc, nl_count ? CT_NEWLINE : CT_WHITESPACE);
+      pc.SetType(nl_count ? CT_NEWLINE : CT_WHITESPACE);
       pc.nl_count  = nl_count;
       pc.after_tab = (ctx.c.last_ch == '\t');
       return(true);
@@ -1869,7 +1869,7 @@ static bool parse_bs_newline(tok_ctx &ctx, Chunk &pc)
          {
             ctx.expect('\n');
          }
-         set_chunk_type(&pc, CT_NL_CONT);
+         pc.SetType(CT_NL_CONT);
          pc.str      = "\\";
          pc.nl_count = 1;
          return(true);
@@ -1909,7 +1909,7 @@ static bool parse_newline(tok_ctx &ctx)
 static void parse_pawn_pattern(tok_ctx &ctx, Chunk &pc, E_Token tt)
 {
    pc.str.clear();
-   set_chunk_type(&pc, tt);
+   pc.SetType(tt);
 
    while (!unc_isspace(ctx.peek()))
    {
@@ -1942,7 +1942,7 @@ static bool parse_off_newlines(tok_ctx &ctx, Chunk &pc)
    if (nl_count > 0)
    {
       pc.nl_count = nl_count;
-      set_chunk_type(&pc, CT_NEWLINE);
+      pc.SetType(CT_NEWLINE);
       return(true);
    }
    return(false);
@@ -1984,7 +1984,7 @@ static bool parse_macro(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
                && nl))
          && pc.str.size() > 0)
       {
-         set_chunk_type(&pc, CT_IGNORED);
+         pc.SetType(CT_IGNORED);
          return(true);
       }
       else if (nl)
@@ -2061,7 +2061,7 @@ static bool parse_ignored(tok_ctx &ctx, Chunk &pc)
 
       if (!found_enable_pattern)
       {
-         set_chunk_type(&pc, CT_IGNORED);
+         pc.SetType(CT_IGNORED);
          return(true);
       }
    }
@@ -2070,7 +2070,7 @@ static bool parse_ignored(tok_ctx &ctx, Chunk &pc)
    // parse off whitespace leading to the comment
    if (parse_whitespace(ctx, pc))
    {
-      set_chunk_type(&pc, CT_IGNORED);
+      pc.SetType(CT_IGNORED);
       return(true);
    }
 
@@ -2092,7 +2092,7 @@ static bool parse_ignored(tok_ctx &ctx, Chunk &pc)
 
    if (pc.str.size() > 0)
    {
-      set_chunk_type(&pc, CT_IGNORED);
+      pc.SetType(CT_IGNORED);
       return(true);
    }
    return(false);
@@ -2106,7 +2106,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
       return(false);
    }
    // Save off the current column
-   set_chunk_type(&pc, CT_NONE);
+   pc.SetType(CT_NONE);
    pc.orig_line = ctx.c.row;
    pc.column    = ctx.c.col;
    pc.orig_col  = ctx.c.col;
@@ -2146,7 +2146,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
       tok_info ss;
       ctx.save(ss);
       // Chunk to a newline or comment
-      set_chunk_type(&pc, CT_PREPROC_BODY);
+      pc.SetType(CT_PREPROC_BODY);
       size_t last = 0;
 
       while (ctx.more())
@@ -2331,7 +2331,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
          pc.str.clear();
          pc.str.append(ctx.get());
          pc.str.append(ctx.get());
-         set_chunk_type(&pc, CT_WORD);
+         pc.SetType(CT_WORD);
          return(true);
       }
    }
@@ -2495,7 +2495,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
       {
          pc.str.append(ctx.get());
       }
-      set_chunk_type(&pc, punc->type);
+      pc.SetType(punc->type);
       pc.flags |= PCF_PUNCTUATOR;
       return(true);
    }
@@ -2521,13 +2521,13 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
          {
             pc.str.append(ctx.get());
          }
-         set_chunk_type(&pc, punc->type);
+         pc.SetType(punc->type);
          pc.flags |= PCF_PUNCTUATOR;
          return(true);
       }
    }
    // throw away this character
-   set_chunk_type(&pc, CT_UNKNOWN);
+   pc.SetType(CT_UNKNOWN);
    pc.str.append(ctx.get());
 
    LOG_FMT(LWARN, "%s:%zu Garbage in col %zu: %x\n",
@@ -2794,7 +2794,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
             if (  pc->type < CT_PP_DEFINE
                || pc->type > CT_PP_OTHER)
             {
-               set_chunk_type(pc, CT_PP_OTHER);
+               pc->SetType(CT_PP_OTHER);
             }
             cpd.in_preproc = pc->type;
          }
@@ -2804,7 +2804,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
             if (  !pc->Is(CT_NL_CONT)
                && !pc->IsComment())        // Issue #1966
             {
-               set_chunk_type(pc, CT_PP_IGNORE);
+               pc->SetType(CT_PP_IGNORE);
             }
          }
          else if (  cpd.in_preproc == CT_PP_DEFINE
@@ -2824,7 +2824,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
             && (  rprev == nullptr
                || rprev->Is(CT_NEWLINE)))
          {
-            set_chunk_type(pc, CT_PREPROC);
+            pc->SetType(CT_PREPROC);
             chunk_flags_set(pc, PCF_IN_PREPROC);
             cpd.in_preproc = CT_PREPROC;
          }

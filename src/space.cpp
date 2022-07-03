@@ -391,7 +391,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       && (  first->Is(CT_PP_ELSE)
          || first->Is(CT_PP_ENDIF)))
    {
-      set_chunk_type(second, CT_COMMENT_ENDIF);
+      second->SetType(CT_COMMENT_ENDIF);
       // Add or remove space between #else or #endif and a trailing comment.
       log_rule("sp_endif_cmt");
       return(options::sp_endif_cmt());
@@ -3748,7 +3748,7 @@ void space_add_after(Chunk *pc, size_t count)
    }
    Chunk sp;
 
-   set_chunk_type(&sp, CT_SPACE);
+   sp.SetType(CT_SPACE);
    sp.flags = pc->flags & PCF_COPY_FLAGS;
    sp.str   = "                ";       // 16 spaces
    sp.str.resize(count);

@@ -484,12 +484,12 @@ static void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next)
 
    if (nl->flags.test(PCF_IN_PREPROC))
    {
-      set_chunk_type(nl, CT_NL_CONT);
+      nl->SetType(CT_NL_CONT);
       nl->str = "\\\n";
    }
    else
    {
-      set_chunk_type(nl, CT_NEWLINE);
+      nl->SetType(CT_NEWLINE);
       nl->str = "\n";
    }
 } // setup_newline_add
@@ -653,12 +653,12 @@ static void newline_end_newline(Chunk *br_close)
 
       if (nl.flags.test(PCF_IN_PREPROC))
       {
-         set_chunk_type(&nl, CT_NL_CONT);
+         nl.SetType(CT_NL_CONT);
          nl.str = "\\\n";
       }
       else
       {
-         set_chunk_type(&nl, CT_NEWLINE);
+         nl.SetType(CT_NEWLINE);
          nl.str = "\n";
       }
       MARK_CHANGE();
@@ -2394,7 +2394,7 @@ static void newlines_brace_pair(Chunk *br_open)
                   {
                      // restore the newline
                      Chunk chunk;
-                     set_chunk_type(&chunk, CT_NEWLINE);
+                     chunk.SetType(CT_NEWLINE);
                      chunk.orig_line = current->orig_line;
                      chunk.orig_col  = current->orig_col;
                      chunk.pp_level  = current->pp_level;
@@ -5412,7 +5412,7 @@ void newlines_eat_start_end()
             log_rule_B("nl_start_of_file");
             log_rule_B("nl_start_of_file_min");
             Chunk chunk;
-            set_chunk_type(&chunk, CT_NEWLINE);
+            chunk.SetType(CT_NEWLINE);
             chunk.orig_line = pc->orig_line;
             chunk.orig_col  = pc->orig_col;
             chunk.pp_level  = pc->pp_level;
@@ -5471,7 +5471,7 @@ void newlines_eat_start_end()
             log_rule_B("nl_end_of_file");
             log_rule_B("nl_end_of_file_min");
             Chunk chunk;
-            set_chunk_type(&chunk, CT_NEWLINE);
+            chunk.SetType(CT_NEWLINE);
             chunk.orig_line = pc->orig_line;
             chunk.orig_col  = pc->orig_col;
             chunk.pp_level  = pc->pp_level;

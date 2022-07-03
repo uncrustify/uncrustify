@@ -31,7 +31,7 @@ Chunk *search_for_colon(Chunk *pc_local)
    {
       LOG_FMT(LCOMBINE, "%s(%d): orig_line is %zu, orig_col is %zu, level is %zu, Text() is '%s'\n",
               __func__, __LINE__, colon->orig_line, colon->orig_col, colon->level, colon->Text());
-      set_chunk_type(colon, CT_COND_COLON);
+      colon->SetType(CT_COND_COLON);
       flag_series(pc_local, colon, PCF_IN_CONDITIONAL);
 
       // examine the next tokens, search for a next CT_QUESTION

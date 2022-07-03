@@ -421,7 +421,7 @@ void dump_in(unsigned int type)
             if (strcasecmp(parts[0], "type") == 0)
             {
                E_Token tokenName = find_token_name(parts[1]);
-               set_chunk_type(&chunk, tokenName);
+               chunk.SetType(tokenName);
             }
             else if (strcasecmp(parts[0], "orig_line") == 0)
             {

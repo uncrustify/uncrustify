@@ -698,6 +698,14 @@ public:
     */
    void SwapLines(Chunk *other);
 
+   /**
+    * @brief Set the chunk type
+    * @param token the type to set
+    * @param func the name of the function from where this method is called (for log purposes)
+    * @param line the line number from where this method is called (for log purposes)
+    */
+   void SetTypeReal(const E_Token token, const char *func, const int line);
+
 
    // --------- Data members
 
@@ -1194,13 +1202,10 @@ inline bool Chunk::IsEnum() const
 }
 
 
-void set_chunk_type_real(Chunk *pc, E_Token tt, const char *func, int line);
-
-
 void set_chunk_parent_real(Chunk *pc, E_Token tt, const char *func, int line);
 
 
-#define set_chunk_type(pc, tt)      set_chunk_type_real((pc), (tt), __unqualified_func__, __LINE__)
+#define SetType(tt)                 SetTypeReal((tt), __unqualified_func__, __LINE__)
 
 
 #define set_chunk_parent(pc, tt)    set_chunk_parent_real((pc), (tt), __unqualified_func__, __LINE__)

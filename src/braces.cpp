@@ -770,7 +770,7 @@ static void convert_brace(Chunk *br)
 
    if (br->Is(CT_BRACE_OPEN))
    {
-      set_chunk_type(br, CT_VBRACE_OPEN);
+      br->SetType(CT_VBRACE_OPEN);
       br->str.clear();
       tmp = br->GetPrev();
 
@@ -781,7 +781,7 @@ static void convert_brace(Chunk *br)
    }
    else if (br->Is(CT_BRACE_CLOSE))
    {
-      set_chunk_type(br, CT_VBRACE_CLOSE);
+      br->SetType(CT_VBRACE_CLOSE);
       br->str.clear();
       tmp = br->GetNext();
 
@@ -851,7 +851,7 @@ static void convert_vbrace(Chunk *vbr)
 
    if (vbr->Is(CT_VBRACE_OPEN))
    {
-      set_chunk_type(vbr, CT_BRACE_OPEN);
+      vbr->SetType(CT_BRACE_OPEN);
       vbr->str = "{";
 
       /*
@@ -869,7 +869,7 @@ static void convert_vbrace(Chunk *vbr)
    }
    else if (vbr->Is(CT_VBRACE_CLOSE))
    {
-      set_chunk_type(vbr, CT_BRACE_CLOSE);
+      vbr->SetType(CT_BRACE_CLOSE);
       vbr->str = "}";
 
       /*
@@ -976,7 +976,7 @@ Chunk *insert_comment_after(Chunk *ref, E_Token cmt_type,
    new_cmt.prev  = nullptr;
    new_cmt.next  = nullptr;
    new_cmt.flags = (ref->flags & PCF_COPY_FLAGS);
-   set_chunk_type(&new_cmt, cmt_type);
+   new_cmt.SetType(cmt_type);
    new_cmt.str.clear();
 
    if (cmt_type == CT_COMMENT_CPP)
@@ -1436,7 +1436,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
 
    Chunk chunk;
 
-   set_chunk_type(&chunk, CT_BRACE_OPEN);
+   chunk.SetType(CT_BRACE_OPEN);
    set_chunk_parent(&chunk, CT_CASE);
    chunk.orig_line   = cl_colon->orig_line;
    chunk.orig_col    = cl_colon->orig_col;
@@ -1447,7 +1447,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    chunk.str         = "{";
    Chunk *br_open = chunk.CopyAndAddAfter(cl_colon);
 
-   set_chunk_type(&chunk, CT_BRACE_CLOSE);
+   chunk.SetType(CT_BRACE_CLOSE);
    chunk.orig_line = last->orig_line;
    chunk.orig_col  = last->orig_col;
    chunk.str       = "}";

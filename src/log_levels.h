@@ -120,7 +120,7 @@ enum log_sev_t
    LNFD      = 89,  //! newline-function-def
    LJDBI     = 90,  //! Java Double Brace Init
    LSETPAR   = 91,  //! set_chunk_parent()
-   LSETTYP   = 92,  //! set_chunk_type()
+   LSETTYP   = 92,  //! Chunk::SetTypeReal()
    LSETFLG   = 93,  //! set_chunk_flags()
    LNLFUNCT  = 94,  //! newlines before function
    LCHUNK    = 95,  //! Add or delete chunk

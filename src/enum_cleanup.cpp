@@ -64,7 +64,7 @@ void enum_cleanup()
                   {
                      // create a comma
                      Chunk comma;
-                     set_chunk_type(&comma, CT_COMMA);
+                     comma.SetType(CT_COMMA);
                      comma.orig_line = prev->orig_line;
                      comma.orig_col  = prev->orig_col + 1;
                      comma.nl_count  = 0;

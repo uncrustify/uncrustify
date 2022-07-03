@@ -810,9 +810,9 @@ void indent_text()
                break;
             }
             // Hack to get the logs to look right
-            set_chunk_type(next, CT_PP_REGION_INDENT);
+            next->SetType(CT_PP_REGION_INDENT);
             frm.push(next, __func__, __LINE__);
-            set_chunk_type(next, CT_PP_REGION);
+            next->SetType(CT_PP_REGION);
 
             // Indent one level
             frm.top().indent = frm.prev().indent + indent_size;
@@ -898,9 +898,9 @@ void indent_text()
                // Hack to get the logs to look right
 
                const E_Token memtype = next->type;
-               set_chunk_type(next, CT_PP_IF_INDENT);
+               next->SetType(CT_PP_IF_INDENT);
                frm.push(next, __func__, __LINE__);
-               set_chunk_type(next, memtype);
+               next->SetType(memtype);
 
                if (should_ignore_preproc)
                {

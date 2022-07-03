@@ -7,7 +7,7 @@ void a()
 	   (tmp->type == CT_NEWLINE)
 	   )
 	{
-		set_chunk_type(next, CT_LABEL_COLON);
+		next->SetType(CT_LABEL_COLON);
 	}
 	else if ((tmp == nullptr) ||
 	         ((tmp->type != CT_NUMBER) &&
@@ -16,7 +16,7 @@ void a()
 	         (tmp->type == CT_NEWLINE)
 	         )
 	{
-		set_chunk_type(next, CT_LABEL_COLON);
+		next->SetType(CT_LABEL_COLON);
 	}
 
 
@@ -27,7 +27,7 @@ void a()
 	                    (tmp->type == CT_NEWLINE)
 	                    )
 	{
-		set_chunk_type(next, CT_LABEL_COLON);
+		next->SetType(CT_LABEL_COLON);
 	}
 
 	if                 ((tmp == nullptr) ||
@@ -37,6 +37,6 @@ void a()
 	                    (tmp->type == CT_NEWLINE)
 	                    )
 	{
-		set_chunk_type(next, CT_LABEL_COLON);
+		next->SetType(CT_LABEL_COLON);
 	}
 }
