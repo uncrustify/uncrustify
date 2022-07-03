@@ -300,7 +300,7 @@ void brace_cleanup()
 //
 //                  if (strcmp(pc->Text(), parameter_pack->Text()) == 0)
 //                  {
-//                     set_chunk_type(pc, CT_PARAMETER_PACK);
+//                     pc->SetType(CT_PARAMETER_PACK);
 //                  }
 //               }
 //            }
@@ -505,7 +505,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
             || (frm.top().type == CT_SPAREN_OPEN)))
       {
          // TODO: fix enum hack
-         set_chunk_type(pc, static_cast<E_Token>(frm.top().type + 1));
+         pc->SetType(static_cast<E_Token>(frm.top().type + 1));
 
          if (pc->Is(CT_SPAREN_CLOSE))
          {
@@ -667,13 +667,13 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
                || prev->Is(CT_D_SCOPE)
                || prev->Is(CT_D_SCOPE_IF))
             {
-               set_chunk_type(pc, CT_SPAREN_OPEN);
+               pc->SetType(CT_SPAREN_OPEN);
                parent = frm.top().type;
                frm.sparen_count++;
             }
             else if (prev->Is(CT_FUNCTION))
             {
-               set_chunk_type(pc, CT_FPAREN_OPEN);
+               pc->SetType(CT_FPAREN_OPEN);
                parent = CT_FUNCTION;
             }
             // NS_ENUM and NS_OPTIONS are followed by a (type, name) pair
@@ -681,7 +681,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
                     && language_is_set(LANG_OC))
             {
                // Treat both as CT_ENUM since the syntax is identical
-               set_chunk_type(pc, CT_FPAREN_OPEN);
+               pc->SetType(CT_FPAREN_OPEN);
                parent = CT_ENUM;
             }
             else if (prev->Is(CT_DECLSPEC))  // Issue 1289
@@ -861,7 +861,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       if (  pc->Is(CT_WHILE)
          && maybe_while_of_do(pc))
       {
-         set_chunk_type(pc, CT_WHILE_OF_DO);
+         pc->SetType(CT_WHILE_OF_DO);
          bs = brace_stage_e::WOD_PAREN;
       }
       frm.push(pc, __func__, __LINE__, bs);
@@ -999,7 +999,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
             || !pc->GetPrevNc()->IsNewline()))
       {
          // Replace CT_ELSE with CT_IF
-         set_chunk_type(pc, CT_ELSEIF);
+         pc->SetType(CT_ELSEIF);
          frm.top().type  = CT_ELSEIF;
          frm.top().stage = brace_stage_e::PAREN1;
          return(true);
@@ -1050,7 +1050,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
       if (pc->Is(CT_PAREN_OPEN)) // this is for the paren after "catch"
       {
          // Replace CT_PAREN_OPEN with CT_SPAREN_OPEN
-         set_chunk_type(pc, CT_SPAREN_OPEN);
+         pc->SetType(CT_SPAREN_OPEN);
          frm.top().type  = pc->type;
          frm.top().stage = brace_stage_e::PAREN1;
 
@@ -1078,7 +1078,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
    {
       if (pc->Is(CT_WHILE))
       {
-         set_chunk_type(pc, CT_WHILE_OF_DO);
+         pc->SetType(CT_WHILE_OF_DO);
          frm.top().type  = CT_WHILE_OF_DO; //CT_WHILE;
          frm.top().stage = brace_stage_e::WOD_PAREN;
 
@@ -1356,7 +1356,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    if (after)
    {
       chunk.orig_col = pc->orig_col;
-      set_chunk_type(&chunk, CT_VBRACE_CLOSE);
+      chunk.SetType(CT_VBRACE_CLOSE);
       return(chunk.CopyAndAddAfter(pc));
    }
    Chunk *ref = pc->GetPrev();
@@ -1420,7 +1420,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    chunk.orig_col  = ref->orig_col;
    chunk.column    = ref->column + ref->Len() + 1;
    chunk.pp_level  = ref->pp_level;                         // Issue #3055
-   set_chunk_type(&chunk, CT_VBRACE_OPEN);
+   chunk.SetType(CT_VBRACE_OPEN);
 
    return(chunk.CopyAndAddAfter(ref));
 } // insert_vbrace

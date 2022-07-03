@@ -58,19 +58,19 @@ void pragma_cleanup()
 
                if (strcmp(pc->Text(), "endasm") == 0)
                {
-                  set_chunk_type(pc, CT_PP_ENDASM);
+                  pc->SetType(CT_PP_ENDASM);
                }
                else if (strcmp(pc->Text(), "region") == 0)
                {
-                  set_chunk_type(pc, CT_PP_REGION);
+                  pc->SetType(CT_PP_REGION);
                }
                //else if (strcmp(pc->Text(), "comment") == 0)
                //{
-               //   set_chunk_type(pc, CT_PP_COMMENT);
+               //   pc->SetType(CT_PP_COMMENT);
                //}
                else
                {
-                  set_chunk_type(pc, CT_PP_PRAGMA);
+                  pc->SetType(CT_PP_PRAGMA);
                }
                parameter_found = true;
             }
@@ -88,7 +88,7 @@ void pragma_cleanup()
                }
                else
                {
-                  set_chunk_type(pc, CT_PP_IGNORE);
+                  pc->SetType(CT_PP_IGNORE);
                }
             }
          }

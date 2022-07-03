@@ -111,7 +111,7 @@ static bool while_needs_rewrite(Chunk *keyword, E_Token desired_type, const char
 
 void rewrite_loop_keyword(Chunk *keyword, E_Token new_type)
 {
-   set_chunk_type(keyword, new_type);
+   keyword->SetType(new_type);
 
    switch (new_type)
    {
@@ -165,7 +165,7 @@ static void rewrite_loop_condition(Chunk * &source, Chunk * &destination,
    // Move the condition
    if (desired_type == CT_FOR)
    {
-      set_chunk_type(source, CT_SEMICOLON);
+      source->SetType(CT_SEMICOLON);
       set_chunk_parent(source, CT_FOR);
       source->str = ";";
       move_one_token(source, destination, desired_type);
@@ -173,7 +173,7 @@ static void rewrite_loop_condition(Chunk * &source, Chunk * &destination,
    }
    else
    {
-      set_chunk_type(source, CT_WORD);
+      source->SetType(CT_WORD);
       source->str = desired_condition;
       move_one_token(source, destination, desired_type);
    }
@@ -324,7 +324,7 @@ void rewrite_infinite_loops()
 
             // Add the final semicolon
             bottom = bottom->CopyAndAddAfter(bottom);
-            set_chunk_type(bottom, CT_SEMICOLON);
+            bottom->SetType(CT_SEMICOLON);
             bottom->str = ";";
 
             // Update the braces' parent types

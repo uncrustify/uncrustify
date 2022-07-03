@@ -71,7 +71,7 @@ Chunk *pawn_add_vsemi_after(Chunk *pc)
    }
    Chunk chunk = *pc;
 
-   set_chunk_type(&chunk, CT_VSEMICOLON);
+   chunk.SetType(CT_VSEMICOLON);
    set_chunk_parent(&chunk, CT_NONE);
    chunk.str     = options::mod_pawn_semicolon() ? ";" : "";
    chunk.column += pc->Len();
@@ -342,7 +342,7 @@ static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn)
       {
          LOG_FMT(LPFUNC, "%s: %zu] '%s' proto due to semicolon\n",
                  __func__, fcn->orig_line, fcn->Text());
-         set_chunk_type(fcn, CT_FUNC_PROTO);
+         fcn->SetType(CT_FUNC_PROTO);
          return(last);
       }
    }
@@ -355,7 +355,7 @@ static Chunk *pawn_mark_function0(Chunk *start, Chunk *fcn)
                  __func__, fcn->orig_line, fcn->Text(),
                  get_token_name(fcn->type),
                  get_token_name(start->type));
-         set_chunk_type(fcn, CT_FUNC_PROTO);
+         fcn->SetType(CT_FUNC_PROTO);
          return(fcn->GetNextNc());
       }
    }
@@ -369,7 +369,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
    LOG_FUNC_ENTRY();
 
    // We are on a function definition
-   set_chunk_type(pc, CT_FUNC_DEF);
+   pc->SetType(CT_FUNC_DEF);
 
    LOG_FMT(LPFUNC, "%s: %zu:%zu %s\n",
            __func__, pc->orig_line, pc->orig_col, pc->Text());
@@ -394,7 +394,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle open %s\n",
               __func__, pc->orig_line, pc->Text(), get_token_name(last->type));
 
-      set_chunk_type(last, CT_ANGLE_OPEN);
+      last->SetType(CT_ANGLE_OPEN);
       set_chunk_parent(last, CT_FUNC_DEF);
 
       while (  ((last = last->GetNext())->IsNotNullChunk())
@@ -407,7 +407,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       {
          LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle close %s\n",
                  __func__, pc->orig_line, pc->Text(), get_token_name(last->type));
-         set_chunk_type(last, CT_ANGLE_CLOSE);
+         last->SetType(CT_ANGLE_CLOSE);
          set_chunk_parent(last, CT_FUNC_DEF);
       }
       last = last->GetNextNcNnl();
@@ -440,7 +440,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       }
       Chunk chunk = *last;
       chunk.str.clear();
-      set_chunk_type(&chunk, CT_VBRACE_OPEN);
+      chunk.SetType(CT_VBRACE_OPEN);
       set_chunk_parent(&chunk, CT_FUNC_DEF);
 
       Chunk *prev = chunk.CopyAndAddBefore(last);
@@ -479,7 +479,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       }
       chunk = *last;
       chunk.str.clear();
-      set_chunk_type(&chunk, CT_VBRACE_CLOSE);
+      chunk.SetType(CT_VBRACE_CLOSE);
       set_chunk_parent(&chunk, CT_FUNC_DEF);
       chunk.column     += last->Len();
       chunk.level       = 0;

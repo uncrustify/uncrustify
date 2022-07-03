@@ -1486,7 +1486,7 @@ void EnumStructUnionParser::mark_base_classes(Chunk *pc)
              * in the absence of a pair trailing angle brackets, the chunk may be
              * a namespace rather than a type. Need to revisit this!
              */
-            set_chunk_type(pc, CT_TYPE);
+            pc->SetType(CT_TYPE);
          }
       }
       else if (  (  next->Is(CT_BRACE_OPEN)
@@ -1588,14 +1588,14 @@ void EnumStructUnionParser::mark_class_colon(Chunk *colon)
            colon->orig_line,
            colon->orig_col);
 
-   set_chunk_type(colon, CT_CLASS_COLON);
+   colon->SetType(CT_CLASS_COLON);
    set_chunk_parent(colon, m_start->type);
 } // EnumStructUnionParser::mark_class_colon
 
 
 void EnumStructUnionParser::mark_conditional_colon(Chunk *colon)
 {
-   set_chunk_type(colon, CT_COND_COLON);
+   colon->SetType(CT_COND_COLON);
 } // EnumStructUnionParser::mark_conditional_colon
 
 
@@ -1653,7 +1653,7 @@ void EnumStructUnionParser::mark_constructors()
             && prev->level == level
             && next->IsParenOpen())
          {
-            set_chunk_type(prev, CT_FUNC_CLASS_DEF);
+            prev->SetType(CT_FUNC_CLASS_DEF);
 
             LOG_FMT(LFTOR,
                     "%s(%d): Constructor/destructor detected: '%s' at orig_line is %zu, orig_col is %zu, type is %s\n",
@@ -1677,7 +1677,7 @@ void EnumStructUnionParser::mark_enum_integral_type(Chunk *colon)
 {
    LOG_FUNC_ENTRY();
 
-   set_chunk_type(colon, CT_BIT_COLON);
+   colon->SetType(CT_BIT_COLON);
    set_chunk_parent(colon, m_start->type);
 
    auto *body_start = get_body_start();
@@ -1702,7 +1702,7 @@ void EnumStructUnionParser::mark_enum_integral_type(Chunk *colon)
       if (pc->IsNot(CT_DC_MEMBER))                             // Issue #3198
       {
          pc->flags &= ~PCF_VAR_TYPE;
-         set_chunk_type(pc, CT_TYPE);
+         pc->SetType(CT_TYPE);
          set_chunk_parent(pc, colon->type);
       }
       pc = pc->GetNextNcNnl();
@@ -1805,7 +1805,7 @@ void EnumStructUnionParser::mark_nested_name_specifiers(Chunk *pc)
 
                break;
             }
-            set_chunk_type(pc, CT_TYPE);
+            pc->SetType(CT_TYPE);
             mark_template(next);
             pc = angle_close;
          }
@@ -1813,7 +1813,7 @@ void EnumStructUnionParser::mark_nested_name_specifiers(Chunk *pc)
                  && (  next->Is(CT_COMMA)
                     || next->Is(CT_BRACE_OPEN)))
          {
-            set_chunk_type(pc, CT_TYPE);
+            pc->SetType(CT_TYPE);
          }
       }
    }
@@ -1834,7 +1834,7 @@ void EnumStructUnionParser::mark_pointer_types(Chunk *pc)
          if (pc->IsPointerOperator())
          {
             set_chunk_parent(pc, m_start->type);
-            set_chunk_type(pc, CT_PTR_TYPE);
+            pc->SetType(CT_PTR_TYPE);
          }
       } while (pc->IsPointerReferenceOrQualifier());
    }
@@ -1947,7 +1947,7 @@ void EnumStructUnionParser::mark_variable(Chunk *variable, pcf_flags_t flags)
               flags & PCF_VAR_1ST_DEF ? "PCF_VAR_1ST_DEF" : "PCF_VAR_1ST");
 
       chunk_flags_set(variable, flags);
-      set_chunk_type(variable, CT_WORD);
+      variable->SetType(CT_WORD);
       mark_pointer_types(variable);
    }
 } // EnumStructUnionParser::mark_variable
@@ -1995,7 +1995,7 @@ void EnumStructUnionParser::mark_where_colon(Chunk *colon)
               colon->orig_line,
               colon->orig_col);
    }
-   set_chunk_type(colon, CT_WHERE_COLON);
+   colon->SetType(CT_WHERE_COLON);
    set_chunk_parent(colon, m_start->type);
 } // EnumStructUnionParser::mark_where_colon
 
@@ -2635,7 +2635,7 @@ Chunk *EnumStructUnionParser::try_find_end_chunk(Chunk *pc)
       if (  pc->Is(CT_TYPE)
          || pc->Is(CT_WORD))
       {
-         set_chunk_type(pc, CT_WORD);
+         pc->SetType(CT_WORD);
          set_chunk_parent(pc, CT_NONE);
       }
       LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
@@ -2710,11 +2710,11 @@ void EnumStructUnionParser::try_post_identify_macro_calls()
 
                if (paren_close->IsNotNullChunk())
                {
-                  set_chunk_type(paren_open, CT_FPAREN_OPEN);
+                  paren_open->SetType(CT_FPAREN_OPEN);
                   set_chunk_parent(paren_open, CT_MACRO_FUNC_CALL);
-                  set_chunk_type(paren_close, CT_FPAREN_CLOSE);
+                  paren_close->SetType(CT_FPAREN_CLOSE);
                   set_chunk_parent(paren_close, CT_MACRO_FUNC_CALL);
-                  set_chunk_type(prev, CT_MACRO_FUNC_CALL);
+                  prev->SetType(CT_MACRO_FUNC_CALL);
                }
             }
          }

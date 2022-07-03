@@ -278,7 +278,7 @@ static void flag_asm(Chunk *pc)
    {
       if (tmp->Is(CT_COLON))
       {
-         set_chunk_type(tmp, CT_ASM_COLON);
+         tmp->SetType(CT_ASM_COLON);
       }
       else if (tmp->Is(CT_DC_MEMBER))
       {
@@ -292,9 +292,9 @@ static void flag_asm(Chunk *pc)
 
             tmp->str.resize(1);
             tmp->orig_col_end = tmp->orig_col + 1;
-            set_chunk_type(tmp, CT_ASM_COLON);
+            tmp->SetType(CT_ASM_COLON);
 
-            set_chunk_type(&nc, tmp->type);
+            nc.SetType(tmp->type);
             nc.str.pop_front();
             nc.orig_col++;
             nc.column++;
@@ -352,7 +352,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
       log_pcf_flags(LFCNR, pc->flags);
-      set_chunk_type(pc, CT_ASSIGN_DEFAULT_ARG);
+      pc->SetType(CT_ASSIGN_DEFAULT_ARG);
       return;
    }
 
@@ -365,7 +365,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          || next->Is(CT_DELETE)
          || next->IsString("0")))
    {
-      set_chunk_type(pc, CT_ASSIGN_FUNC_PROTO);
+      pc->SetType(CT_ASSIGN_FUNC_PROTO);
       return;                  // cpp 30031
    }
 
@@ -390,7 +390,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       && pc->IsString("const")
       && next->Is(CT_PAREN_OPEN))
    {
-      set_chunk_type(pc, CT_D_CAST);
+      pc->SetType(CT_D_CAST);
       set_paren_parent(next, pc->type);
       return;                  // d_40061
    }
@@ -409,22 +409,22 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       {
          if (tmp->Is(CT_STAR))
          {
-            set_chunk_type(tmp, CT_DEREF);
+            tmp->SetType(CT_DEREF);
             return;                  // d_40006
          }
          else if (tmp->Is(CT_AMP))
          {
-            set_chunk_type(tmp, CT_ADDR);
+            tmp->SetType(CT_ADDR);
             return;                  // d_40060
          }
          else if (tmp->Is(CT_MINUS))
          {
-            set_chunk_type(tmp, CT_NEG);
+            tmp->SetType(CT_NEG);
             return;                  // d_40060
          }
          else if (tmp->Is(CT_PLUS))
          {
-            set_chunk_type(tmp, CT_POS);
+            tmp->SetType(CT_POS);
             return;                  // d_40060
          }
       }
@@ -501,7 +501,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       }
       else
       {
-         set_chunk_type(pc, CT_QUALIFIER);
+         pc->SetType(CT_QUALIFIER);
          return;
       }
    }
@@ -613,7 +613,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          && pc->GetNext()->IsNotNullChunk()
          && pc->GetNext()->IsNot(CT_SPAREN_OPEN))
       {
-         set_chunk_type(pc, CT_WORD);
+         pc->SetType(CT_WORD);
          return;
       }
    }
@@ -756,7 +756,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    {
       if (prev->Is(CT_WORD))
       {
-         set_chunk_type(prev, CT_TYPE);
+         prev->SetType(CT_TYPE);
       }
 
       if (next->Is(CT_WORD))
@@ -890,17 +890,17 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          {
             LOG_FMT(LFCN, "%s(%d): (1) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-            set_chunk_type(pc, CT_FUNC_CALL);
+            pc->SetType(CT_FUNC_CALL);
          }
       }
       else if (  pc->Is(CT_WORD)
               || pc->Is(CT_OPERATOR_VAL))
       {
-         set_chunk_type(pc, CT_FUNCTION);
+         pc->SetType(CT_FUNCTION);
       }
       else if (pc->Is(CT_FIXED))
       {
-         set_chunk_type(pc, CT_FUNCTION);
+         pc->SetType(CT_FUNCTION);
          set_chunk_parent(pc, CT_FIXED);
       }
       else if (pc->Is(CT_TYPE))
@@ -944,7 +944,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                   if (tmp2->Is(CT_SQUARE_OPEN))
                   {
                      is_byref_array = true;
-                     set_chunk_type(tmp, CT_BYREF);
+                     tmp->SetType(CT_BYREF);
                   }
                }
             }
@@ -960,7 +960,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
                if (tmp->Is(CT_PAREN_OPEN))
                {
-                  set_chunk_type(pc, CT_FUNCTION);
+                  pc->SetType(CT_FUNCTION);
                }
                else
                {
@@ -972,12 +972,12 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                      if (tmp->Is(CT_PAREN_CLOSE))
                      {
                         // we have TYPE()
-                        set_chunk_type(pc, CT_FUNCTION);
+                        pc->SetType(CT_FUNCTION);
                      }
                      else
                      {
                         // we have TYPE(...)
-                        set_chunk_type(pc, CT_CPP_CAST);
+                        pc->SetType(CT_CPP_CAST);
                         set_paren_parent(next, CT_CPP_CAST);
                      }
                   }
@@ -994,7 +994,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       {
          LOG_FMT(LFCN, "%s(%d): (2) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-         set_chunk_type(pc, CT_FUNC_CALL);
+         pc->SetType(CT_FUNC_CALL);
       }
 
       if (  pc->Is(CT_STATE)
@@ -1019,7 +1019,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       && (  prev->Is(CT_COMMA)
          || prev->Is(CT_BRACE_OPEN)))
    {
-      set_chunk_type(pc, CT_C99_MEMBER);
+      pc->SetType(CT_C99_MEMBER);
       set_chunk_parent(next, CT_C99_MEMBER);
       return;
    }
@@ -1241,15 +1241,15 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          // prev->type is CT_COLON ==> CT_DEREF
          if (prev->Is(CT_ANGLE_CLOSE))
          {
-            set_chunk_type(pc, CT_PTR_TYPE);
+            pc->SetType(CT_PTR_TYPE);
          }
          else if (prev->Is(CT_COLON))
          {
-            set_chunk_type(pc, CT_DEREF);
+            pc->SetType(CT_DEREF);
          }
          else
          {
-            set_chunk_type(pc, CT_DEREF);
+            pc->SetType(CT_DEREF);
          }
       }
 
@@ -1257,40 +1257,40 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          && pc->Is(CT_CARET)
          && prev->Is(CT_ANGLE_CLOSE))
       {
-         set_chunk_type(pc, CT_PTR_TYPE);
+         pc->SetType(CT_PTR_TYPE);
       }
 
       if (  language_is_set(LANG_CS | LANG_VALA)
          && pc->Is(CT_QUESTION)
          && prev->Is(CT_ANGLE_CLOSE))
       {
-         set_chunk_type(pc, CT_PTR_TYPE);
+         pc->SetType(CT_PTR_TYPE);
       }
 
       else if (pc->Is(CT_MINUS))
       {
-         set_chunk_type(pc, CT_NEG);
+         pc->SetType(CT_NEG);
       }
 
       else if (pc->Is(CT_PLUS))
       {
-         set_chunk_type(pc, CT_POS);
+         pc->SetType(CT_POS);
       }
 
       else if (pc->Is(CT_INCDEC_AFTER))
       {
-         set_chunk_type(pc, CT_INCDEC_BEFORE);
+         pc->SetType(CT_INCDEC_BEFORE);
       }
 
       else if (pc->Is(CT_AMP))
       {
          if (prev->Is(CT_ANGLE_CLOSE))             // Issue #2324
          {
-            set_chunk_type(pc, CT_BYREF);
+            pc->SetType(CT_BYREF);
          }
          else
          {
-            set_chunk_type(pc, CT_ADDR);
+            pc->SetType(CT_ADDR);
          }
       }
 
@@ -1337,7 +1337,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       if (  next->IsParenClose()
          || next->Is(CT_COMMA))
       {
-         set_chunk_type(pc, CT_PTR_TYPE);
+         pc->SetType(CT_PTR_TYPE);
       }
       else if (  language_is_set(LANG_OC)
               && next->Is(CT_STAR))
@@ -1346,10 +1346,10 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
           * Change pointer-to-pointer types in OC_MSG_DECLs
           * from ARITH <===> DEREF to PTR_TYPE <===> PTR_TYPE
           */
-         set_chunk_type(pc, CT_PTR_TYPE);
+         pc->SetType(CT_PTR_TYPE);
          set_chunk_parent(pc, get_chunk_parent_type(prev));
 
-         set_chunk_type(next, CT_PTR_TYPE);
+         next->SetType(CT_PTR_TYPE);
          set_chunk_parent(next, get_chunk_parent_type(pc));
       }
       else if (  pc->Is(CT_STAR)
@@ -1358,7 +1358,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                  || prev->Is(CT_DELETE)
                  || get_chunk_parent_type(pc) == CT_SIZEOF))
       {
-         set_chunk_type(pc, CT_DEREF);
+         pc->SetType(CT_DEREF);
       }
       else if (  (  prev->Is(CT_WORD)
                  && chunk_ends_type(prev)
@@ -1370,12 +1370,12 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n   ",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
          log_pcf_flags(LFCNR, pc->flags);
-         set_chunk_type(pc, CT_PTR_TYPE);
+         pc->SetType(CT_PTR_TYPE);
       }
       else if (  next->Is(CT_SQUARE_OPEN)
               && !language_is_set(LANG_OC))  // Issue #408
       {
-         set_chunk_type(pc, CT_PTR_TYPE);
+         pc->SetType(CT_PTR_TYPE);
       }
       else if (pc->Is(CT_STAR))
       {
@@ -1414,13 +1414,13 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             if (is_multiplication)
             {
                // double result = Constants::PI * factor;
-               set_chunk_type(pc, CT_ARITH);
+               pc->SetType(CT_ARITH);
             }
             else
             {
                //    ::some::name * foo;
-               set_chunk_type(prev, CT_TYPE);
-               set_chunk_type(pc, CT_PTR_TYPE);
+               prev->SetType(CT_TYPE);
+               pc->SetType(CT_PTR_TYPE);
             }
          }
 
@@ -1435,7 +1435,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
           */
          if (prev->Is(CT_TYPE))
          {
-            set_chunk_type(pc, CT_PTR_TYPE);
+            pc->SetType(CT_PTR_TYPE);
          }
          else if (  pc->GetNext()->Is(CT_SEMICOLON)      // Issue #2319
                  || (  pc->GetNext()->Is(CT_STAR)
@@ -1444,7 +1444,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             // example:
             //    using AbstractLinkPtr = AbstractLink*;
             //    using AbstractLinkPtrPtr = AbstractLink**;
-            set_chunk_type(pc, CT_PTR_TYPE);
+            pc->SetType(CT_PTR_TYPE);
          }
          else if (  (  get_chunk_parent_type(pc) == CT_FUNC_DEF
                     && (  next->IsBraceOpen()
@@ -1456,7 +1456,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             // auto getComponent(Color *color) -> Component ** {
             // auto getComponent(Color *color) -> Component * _Nonnull
             // only to help the vim command }}
-            set_chunk_type(pc, CT_PTR_TYPE);
+            pc->SetType(CT_PTR_TYPE);
          }
          else if (  pc->GetNext()->Is(CT_SEMICOLON)      // Issue #2319
                  || (  pc->GetNext()->Is(CT_STAR)
@@ -1472,13 +1472,12 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          else
          {
             // Issue 1402
-            set_chunk_type(pc,
-                           (  prev->flags.test(PCF_PUNCTUATOR)
-                           && (  !prev->IsParenClose()
-                              || prev->Is(CT_SPAREN_CLOSE)
-                              || get_chunk_parent_type(prev) == CT_MACRO_FUNC)
-                           && prev->IsNot(CT_SQUARE_CLOSE)
-                           && prev->IsNot(CT_DC_MEMBER)) ? CT_DEREF : CT_ARITH);
+            pc->SetType((  prev->flags.test(PCF_PUNCTUATOR)
+                        && (  !prev->IsParenClose()
+                           || prev->Is(CT_SPAREN_CLOSE)
+                           || get_chunk_parent_type(prev) == CT_MACRO_FUNC)
+                        && prev->IsNot(CT_SQUARE_CLOSE)
+                        && prev->IsNot(CT_DC_MEMBER)) ? CT_DEREF : CT_ARITH);
          }
 
          if (pc->flags.test(PCF_IN_TYPEDEF))  // Issue #1255/#633
@@ -1495,7 +1494,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                }
                else if (tmp->Is(CT_TYPEDEF))
                {
-                  set_chunk_type(pc, CT_PTR_TYPE);
+                  pc->SetType(CT_PTR_TYPE);
                }
                tmp = tmp->GetPrevNcNnlNi(); // Issue #2279
             }
@@ -1507,31 +1506,31 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    {
       if (prev->Is(CT_DELETE))
       {
-         set_chunk_type(pc, CT_ADDR);
+         pc->SetType(CT_ADDR);
       }
       else if (  prev->Is(CT_TYPE)
               || prev->Is(CT_QUALIFIER))
       {
-         set_chunk_type(pc, CT_BYREF);
+         pc->SetType(CT_BYREF);
       }
       else if (  prev->Is(CT_WORD)             // Issue #3204
               && next->Is(CT_OPERATOR))
       {
-         set_chunk_type(pc, CT_BYREF);
+         pc->SetType(CT_BYREF);
       }
       else if (  next->Is(CT_FPAREN_CLOSE)
               || next->Is(CT_COMMA))
       {
          // fix the bug #654
          // connect(&mapper, SIGNAL(mapped(QString &)), this, SLOT(onSomeEvent(QString &)));
-         set_chunk_type(pc, CT_BYREF);
+         pc->SetType(CT_BYREF);
       }
       else if (get_chunk_parent_type(pc) == CT_USING_ALIAS)
       {
          // fix the Issue # 1689
          // using reference = value_type &;
-         set_chunk_type(pc->prev, CT_TYPE);
-         set_chunk_type(pc, CT_BYREF);
+         pc->GetPrev()->SetType(CT_TYPE);
+         pc->SetType(CT_BYREF);
       }
       else
       {
@@ -1544,7 +1543,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             /*
              * Change CT_WORD before CT_AMP before CT_WORD to CT_TYPE
              */
-            set_chunk_type(prev, CT_TYPE);
+            prev->SetType(CT_TYPE);
          }
          else if (  pc->flags.test(PCF_IN_PREPROC) // Issue #3559
                  && pc->Is(CT_AMP)
@@ -1552,11 +1551,11 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          {
             //LOG_FMT(LGUY, " ++++++++++ pc->flags: ");
             //log_pcf_flags(LGUY, pc->flags);
-            set_chunk_type(pc, CT_ADDR);
+            pc->SetType(CT_ADDR);
          }
          else
          {
-            set_chunk_type(pc, CT_ARITH);
+            pc->SetType(CT_ARITH);
 
             if (  prev->Is(CT_WORD)
                && !next->Is(CT_NUMBER)) // Issue #3407
@@ -1569,8 +1568,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                      || tmp->Is(CT_BRACE_OPEN)
                      || tmp->Is(CT_QUALIFIER))
                   {
-                     set_chunk_type(pc, CT_BYREF);
-                     set_chunk_type(prev, CT_TYPE);
+                     pc->SetType(CT_BYREF);
+                     prev->SetType(CT_TYPE);
 
                      if (!(  next->Is(CT_OPERATOR)
                           || next->Is(CT_TYPE)
@@ -1583,7 +1582,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                   }
                   else if (tmp->Is(CT_DC_MEMBER))
                   {
-                     set_chunk_type(prev, CT_TYPE);
+                     prev->SetType(CT_TYPE);
                   }
                }
             }
@@ -1599,15 +1598,15 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          || prev->Is(CT_ARITH)
          || prev->Is(CT_SHIFT))
       {
-         set_chunk_type(pc, pc->Is(CT_MINUS) ? CT_NEG : CT_POS);
+         pc->SetType(pc->Is(CT_MINUS) ? CT_NEG : CT_POS);
       }
       else if (prev->Is(CT_OC_CLASS))
       {
-         set_chunk_type(pc, (pc->Is(CT_MINUS)) ? CT_NEG : CT_POS);
+         pc->SetType((pc->Is(CT_MINUS)) ? CT_NEG : CT_POS);
       }
       else
       {
-         set_chunk_type(pc, CT_ARITH);
+         pc->SetType(CT_ARITH);
       }
    }
 
@@ -1620,50 +1619,46 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
     */
    if (pc->Is(CT_WORD))     // here NSString
    {
-      if (pc->next != nullptr)          // here *
+      Chunk *pcNext = pc->GetNext();
+      Chunk *pcPrev = pc->GetPrev();
+
+      if (pcNext->Is(CT_STAR))                   // here *
       {
-         if (pc->next->type == CT_STAR) // here *
+         // compare text with "C" to find extern "C" instructions
+         if (pcPrev->Is(CT_STRING))
          {
-            // compare text with "C" to find extern "C" instructions
-            if (pc->prev != nullptr)
+            if (unc_text::compare(pcPrev->Text(), "\"C\"") == 0)
             {
-               if (pc->prev->type == CT_STRING)
+               if (pcPrev->GetPrev()->Is(CT_EXTERN))
                {
-                  if (unc_text::compare(pc->prev->Text(), "\"C\"") == 0)
-                  {
-                     if (pc->prev->prev->type == CT_EXTERN)
-                     {
-                        set_chunk_type(pc, CT_TYPE);            // change CT_WORD => CT_TYPE
-                        set_chunk_type(pc->next, CT_PTR_TYPE);  // change CT_STAR => CT_PTR_TYPE
-                     }
-                  }
+                  pc->SetType(CT_TYPE);                                                // change CT_WORD => CT_TYPE
+                  pcNext->SetType(CT_PTR_TYPE);                                        // change CT_STAR => CT_PTR_TYPE
                }
             }
+         }
+         // Issue #322 STDMETHOD(GetValues)(BSTR bsName, REFDATA** pData);
+         Chunk *nnext = pcNext->GetNext();
 
-            // Issue #322 STDMETHOD(GetValues)(BSTR bsName, REFDATA** pData);
-            if (  (pc->next->next != nullptr)
-               && pc->next->next->type == CT_STAR
-               && pc->flags.test(PCF_IN_CONST_ARGS))
+         if (  nnext->Is(CT_STAR)
+            && pc->flags.test(PCF_IN_CONST_ARGS))
+         {
+            // change CT_STAR => CT_PTR_TYPE
+            pcNext->SetType(CT_PTR_TYPE);
+            nnext->SetType(CT_PTR_TYPE);
+         }
+
+         // Issue #222 whatever3 *(func_ptr)( whatever4 *foo2, ...
+         if (  nnext->Is(CT_WORD)
+            && pc->flags.test(PCF_IN_FCN_DEF))
+         {
+            // look for the opening parenthesis
+            // Issue 1403
+            Chunk *tmp = pc->GetPrevType(CT_FPAREN_OPEN, pc->level - 1);
+
+            if (  tmp->IsNotNullChunk()
+               && get_chunk_parent_type(tmp) != CT_FUNC_CTOR_VAR)
             {
-               // change CT_STAR => CT_PTR_TYPE
-               set_chunk_type(pc->next, CT_PTR_TYPE);
-               set_chunk_type(pc->next->next, CT_PTR_TYPE);
-            }
-
-            // Issue #222 whatever3 *(func_ptr)( whatever4 *foo2, ...
-            if (  (pc->next->next != nullptr)
-               && pc->next->next->type == CT_WORD
-               && pc->flags.test(PCF_IN_FCN_DEF))
-            {
-               // look for the opening parenthesis
-               // Issue 1403
-               Chunk *tmp = pc->GetPrevType(CT_FPAREN_OPEN, pc->level - 1);
-
-               if (  tmp->IsNotNullChunk()
-                  && get_chunk_parent_type(tmp) != CT_FUNC_CTOR_VAR)
-               {
-                  set_chunk_type(pc->next, CT_PTR_TYPE);
-               }
+               pcNext->SetType(CT_PTR_TYPE);
             }
          }
       }
@@ -1678,33 +1673,31 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
     */
    if (pc->Is(CT_WORD))     // here NSString
    {
-      if (pc->next != nullptr)          // here *
+      Chunk *pcNext = pc->GetNext();
+
+      if (pcNext->Is(CT_STAR))                   // here *
       {
-         if (pc->next->type == CT_STAR) // here *
+         Chunk *tmp = pc;
+
+         while (tmp->IsNotNullChunk())
          {
-            Chunk *tmp = pc;
-
-            while (  tmp != nullptr
-                  && tmp->IsNotNullChunk())
+            if (tmp->Is(CT_ATTRIBUTE))
             {
-               if (tmp->Is(CT_ATTRIBUTE))
-               {
-                  LOG_FMT(LFCNR, "%s(%d): ATTRIBUTE found, type is %s, Text() '%s'\n",
-                          __func__, __LINE__, get_token_name(tmp->type), tmp->Text());
-                  LOG_FMT(LFCNR, "for token, type is %s, Text() '%s'\n", get_token_name(pc->type), pc->Text());
-                  // change CT_WORD => CT_TYPE
-                  set_chunk_type(pc, CT_TYPE);
-                  // change CT_STAR => CT_PTR_TYPE
-                  set_chunk_type(pc->next, CT_PTR_TYPE);
-               }
-
-               if (tmp->flags.test(PCF_STMT_START))
-               {
-                  // we are at beginning of the line
-                  break;
-               }
-               tmp = tmp->GetPrev();
+               LOG_FMT(LFCNR, "%s(%d): ATTRIBUTE found, type is %s, Text() '%s'\n",
+                       __func__, __LINE__, get_token_name(tmp->type), tmp->Text());
+               LOG_FMT(LFCNR, "for token, type is %s, Text() '%s'\n", get_token_name(pc->type), pc->Text());
+               // change CT_WORD => CT_TYPE
+               pc->SetType(CT_TYPE);
+               // change CT_STAR => CT_PTR_TYPE
+               pcNext->SetType(CT_PTR_TYPE);
             }
+
+            if (tmp->flags.test(PCF_STMT_START))
+            {
+               // we are at beginning of the line
+               break;
+            }
+            tmp = tmp->GetPrev();
          }
       }
    }
@@ -1786,7 +1779,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                  __func__, __LINE__, pc->orig_line, pc->orig_col,
                  pc->Text(), get_token_name(pc->type));
          log_pcf_flags(LFCNR, pc->flags);
-         set_chunk_type(pc, CT_BYREF);
+         pc->SetType(CT_BYREF);
       }
       // look next, is there a "assign" before the ";"
       Chunk *semi = pc->GetNextType(CT_SEMICOLON, pc->level);                // Issue #2688
@@ -1807,7 +1800,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             {
                // the statement is an assignment
                // && is before assign
-               set_chunk_type(pc, CT_BYREF);
+               pc->SetType(CT_BYREF);
                break;
             }
          }
@@ -1826,7 +1819,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
       if (tmp_2->Is(CT_WORD))
       {
-         set_chunk_type(pc, CT_INCDEC_BEFORE);
+         pc->SetType(CT_INCDEC_BEFORE);
       }
    }
 } // do_symbol_check
@@ -2290,7 +2283,7 @@ static Chunk *process_return(Chunk *pc)
    if (semi)
    {
       // add the parenthesis
-      set_chunk_type(&chunk, CT_PAREN_OPEN);
+      chunk.SetType(CT_PAREN_OPEN);
       set_chunk_parent(&chunk, CT_RETURN);
       chunk.str         = "(";
       chunk.level       = pc->level;
@@ -2301,7 +2294,7 @@ static Chunk *process_return(Chunk *pc)
       chunk.flags       = pc->flags & PCF_COPY_FLAGS;
       chunk.CopyAndAddBefore(next);
 
-      set_chunk_type(&chunk, CT_PAREN_CLOSE);
+      chunk.SetType(CT_PAREN_CLOSE);
       chunk.str       = ")";
       chunk.orig_line = semi->orig_line;
       chunk.orig_col  = semi->orig_col - 1;
@@ -2395,7 +2388,7 @@ static void handle_cpp_template(Chunk *pc)
       if (  tmp->Is(CT_CLASS)
          || tmp->Is(CT_STRUCT))
       {
-         set_chunk_type(tmp, CT_TYPE);
+         tmp->SetType(CT_TYPE);
       }
       else if (  tmp->Is(CT_ANGLE_CLOSE)
               && tmp->level == level)
@@ -2558,7 +2551,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
       Chunk nc;
 
       nc = *sq_o;
-      set_chunk_type(sq_o, CT_SQUARE_OPEN);
+      sq_o->SetType(CT_SQUARE_OPEN);
       sq_o->str.resize(1);
       /*
        * bug # 664
@@ -2572,7 +2565,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
       nc.orig_col_end    = sq_o->orig_col_end;
       sq_o->orig_col_end = sq_o->orig_col + 1;
 
-      set_chunk_type(&nc, CT_SQUARE_CLOSE);
+      nc.SetType(CT_SQUARE_CLOSE);
       nc.str.pop_front();
       sq_c = nc.CopyAndAddAfter(sq_o);
    }
@@ -2581,11 +2574,11 @@ static void handle_cpp_lambda(Chunk *sq_o)
 
    if (pa_c->IsNotNullChunk())
    {
-      set_chunk_type(pa_o, CT_LPAREN_OPEN);                    // Issue #3054
+      pa_o->SetType(CT_LPAREN_OPEN);                    // Issue #3054
       set_chunk_parent(pa_o, CT_CPP_LAMBDA);
       chunk_set_parent(pa_o, sq_o);
       chunk_set_parent(br_o, sq_o);
-      set_chunk_type(pa_c, CT_LPAREN_CLOSE);
+      pa_c->SetType(CT_LPAREN_CLOSE);
       set_chunk_parent(pa_c, CT_CPP_LAMBDA);
       chunk_set_parent(pa_c, sq_o);
       chunk_set_parent(br_c, sq_o);
@@ -2595,7 +2588,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
 
    if (ret->IsNotNullChunk())
    {
-      set_chunk_type(ret, CT_CPP_LAMBDA_RET);
+      ret->SetType(CT_CPP_LAMBDA_RET);
       ret = ret->GetNextNcNnl();
 
       while (ret != br_o)
@@ -2618,9 +2611,9 @@ static void handle_cpp_lambda(Chunk *sq_o)
 
       if (call_pa_c->IsNotNullChunk())
       {
-         set_chunk_type(call_pa_o, CT_FPAREN_OPEN);
+         call_pa_o->SetType(CT_FPAREN_OPEN);
          set_chunk_parent(call_pa_o, CT_FUNC_CALL);
-         set_chunk_type(call_pa_c, CT_FPAREN_CLOSE);
+         call_pa_c->SetType(CT_FPAREN_CLOSE);
          set_chunk_parent(call_pa_c, CT_FUNC_CALL);
       }
    }
@@ -2648,7 +2641,7 @@ static void handle_d_template(Chunk *pc)
       // TODO: log an error, expected '('
       return;
    }
-   set_chunk_type(name, CT_TYPE);
+   name->SetType(CT_TYPE);
    set_chunk_parent(name, CT_TEMPLATE);
    set_chunk_parent(po, CT_TEMPLATE);
 
@@ -2680,7 +2673,7 @@ static void handle_d_template(Chunk *pc)
       if (  tmp->Is(CT_WORD)
          && chunkstack_match(cs, tmp))
       {
-         set_chunk_type(tmp, CT_TYPE);
+         tmp->SetType(CT_TYPE);
       }
       tmp = tmp->GetNextNcNnl();
    }
@@ -2763,7 +2756,7 @@ static void handle_oc_class(Chunk *pc)
 
       if (tmp->IsString("<"))
       {
-         set_chunk_type(tmp, CT_ANGLE_OPEN);
+         tmp->SetType(CT_ANGLE_OPEN);
 
          if (passed_name)
          {
@@ -2779,7 +2772,7 @@ static void handle_oc_class(Chunk *pc)
 
       if (tmp->IsString(">"))
       {
-         set_chunk_type(tmp, CT_ANGLE_CLOSE);
+         tmp->SetType(CT_ANGLE_CLOSE);
 
          if (passed_name)
          {
@@ -2808,7 +2801,7 @@ static void handle_oc_class(Chunk *pc)
 
       if (tmp->IsString(">>"))
       {
-         set_chunk_type(tmp, CT_ANGLE_CLOSE);
+         tmp->SetType(CT_ANGLE_CLOSE);
          set_chunk_parent(tmp, CT_OC_GENERIC_SPEC);
          split_off_angle_close(tmp);
          generic_level -= 1;
@@ -2838,7 +2831,7 @@ static void handle_oc_class(Chunk *pc)
          {
             passed_name = true;
          }
-         set_chunk_type(tmp, hit_scope ? CT_OC_COLON : CT_CLASS_COLON);
+         tmp->SetType(hit_scope ? CT_OC_COLON : CT_CLASS_COLON);
 
          if (tmp->Is(CT_CLASS_COLON))
          {
@@ -2852,7 +2845,7 @@ static void handle_oc_class(Chunk *pc)
 
          if (tmp->GetPrev()->IsNewline())
          {
-            set_chunk_type(tmp, CT_OC_SCOPE);
+            tmp->SetType(CT_OC_SCOPE);
             chunk_flags_set(tmp, PCF_STMT_START);
             hit_scope = true;
          }
@@ -2923,9 +2916,9 @@ static void handle_oc_block_literal(Chunk *pc)
 
          if (ac->IsNotNullChunk())
          {
-            set_chunk_type(ao, CT_ANGLE_OPEN);
+            ao->SetType(CT_ANGLE_OPEN);
             set_chunk_parent(ao, CT_OC_PROTO_LIST);
-            set_chunk_type(ac, CT_ANGLE_CLOSE);
+            ac->SetType(CT_ANGLE_CLOSE);
             set_chunk_parent(ac, CT_OC_PROTO_LIST);
 
             for (tmp = ao->GetNext(); tmp != ac; tmp = tmp->GetNext())
@@ -2979,7 +2972,7 @@ static void handle_oc_block_literal(Chunk *pc)
    LOG_FMT(LOCBLK, "\n");
 
    // we are on a block literal for sure
-   set_chunk_type(pc, CT_OC_BLOCK_CARET);
+   pc->SetType(CT_OC_BLOCK_CARET);
    set_chunk_parent(pc, CT_OC_BLOCK_EXPR);
 
    // handle the optional args
@@ -3070,31 +3063,31 @@ static void handle_oc_block_type(Chunk *pc)
 
          if (nam->IsString("^"))
          {
-            set_chunk_type(nam, CT_PTR_TYPE);
+            nam->SetType(CT_PTR_TYPE);
             pt = CT_FUNC_TYPE;
          }
          else if (  aft->Is(CT_ASSIGN)
                  || aft->Is(CT_SEMICOLON))
          {
-            set_chunk_type(nam, CT_FUNC_VAR);
+            nam->SetType(CT_FUNC_VAR);
             pt = CT_FUNC_VAR;
          }
          else
          {
-            set_chunk_type(nam, CT_FUNC_TYPE);
+            nam->SetType(CT_FUNC_TYPE);
             pt = CT_FUNC_TYPE;
          }
          LOG_FMT(LOCBLK, "%s(%d): block type @ orig_line is %zu, orig_col is %zu, Text() '%s'[%s]\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, nam->Text(), get_token_name(nam->type));
-         set_chunk_type(pc, CT_PTR_TYPE);
+         pc->SetType(CT_PTR_TYPE);
          set_chunk_parent(pc, pt);  //CT_OC_BLOCK_TYPE;
-         set_chunk_type(tpo, CT_TPAREN_OPEN);
+         tpo->SetType(CT_TPAREN_OPEN);
          set_chunk_parent(tpo, pt); //CT_OC_BLOCK_TYPE;
-         set_chunk_type(tpc, CT_TPAREN_CLOSE);
+         tpc->SetType(CT_TPAREN_CLOSE);
          set_chunk_parent(tpc, pt); //CT_OC_BLOCK_TYPE;
-         set_chunk_type(apo, CT_FPAREN_OPEN);
+         apo->SetType(CT_FPAREN_OPEN);
          set_chunk_parent(apo, CT_FUNC_PROTO);
-         set_chunk_type(apc, CT_FPAREN_CLOSE);
+         apc->SetType(CT_FPAREN_CLOSE);
          set_chunk_parent(apc, CT_FUNC_PROTO);
          fix_fcn_def_params(apo);
          mark_function_return_type(nam, tpo->GetPrevNcNnlNi(), pt);   // Issue #2279
@@ -3172,7 +3165,7 @@ static void handle_oc_message_decl(Chunk *pc)
    }
    E_Token pt = tmp->Is(CT_SEMICOLON) ? CT_OC_MSG_SPEC : CT_OC_MSG_DECL;
 
-   set_chunk_type(pc, CT_OC_SCOPE);
+   pc->SetType(CT_OC_SCOPE);
    set_chunk_parent(pc, pt);
 
    LOG_FMT(LOCMSGD, "%s(%d): %s @ orig_line is %zu, orig_col is %zu -",
@@ -3198,7 +3191,7 @@ static void handle_oc_message_decl(Chunk *pc)
 
    Chunk *label = tmp;
 
-   set_chunk_type(tmp, pt);
+   tmp->SetType(pt);
    set_chunk_parent(tmp, pt);
    pc = tmp->GetNextNcNnl();
 
@@ -3225,7 +3218,7 @@ static void handle_oc_message_decl(Chunk *pc)
          {
             break;
          }
-         set_chunk_type(pc, CT_OC_COLON);
+         pc->SetType(CT_OC_COLON);
          set_chunk_parent(pc, pt);
          pc = pc->GetNextNcNnl();
 
@@ -3346,7 +3339,7 @@ static void handle_oc_message_send(Chunk *os)
    {
       if (tmp->IsStar()) // Issue #2722
       {
-         set_chunk_type(tmp, CT_PTR_TYPE);
+         tmp->SetType(CT_PTR_TYPE);
          tmp = tmp->GetNextNcNnl();
       }
       Chunk *tt = tmp->GetNextNcNnl();
@@ -3355,12 +3348,12 @@ static void handle_oc_message_send(Chunk *os)
       {
          LOG_FMT(LFCN, "%s(%d): (18) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                  __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->Text());
-         set_chunk_type(tmp, CT_FUNC_CALL);
+         tmp->SetType(CT_FUNC_CALL);
          tmp = set_paren_parent(tt, CT_FUNC_CALL)->GetPrevNcNnlNi();   // Issue #2279
       }
       else
       {
-         set_chunk_type(tmp, CT_OC_MSG_CLASS);
+         tmp->SetType(CT_OC_MSG_CLASS);
       }
    }
    set_chunk_parent(os, CT_OC_MSG);
@@ -3378,9 +3371,9 @@ static void handle_oc_message_send(Chunk *os)
 
       if (ac->IsNotNullChunk())
       {
-         set_chunk_type(ao, CT_ANGLE_OPEN);
+         ao->SetType(CT_ANGLE_OPEN);
          set_chunk_parent(ao, CT_OC_PROTO_LIST);
-         set_chunk_type(ac, CT_ANGLE_CLOSE);
+         ac->SetType(CT_ANGLE_CLOSE);
          set_chunk_parent(ac, CT_OC_PROTO_LIST);
 
          for (tmp = ao->GetNext(); tmp != ac; tmp = tmp->GetNext())
@@ -3450,7 +3443,7 @@ static void handle_oc_message_send(Chunk *os)
    if (  tmp->Is(CT_WORD)
       || tmp->Is(CT_TYPE))
    {
-      set_chunk_type(tmp, CT_OC_MSG_FUNC);
+      tmp->SetType(CT_OC_MSG_FUNC);
    }
    Chunk *prev = Chunk::NullChunkPtr;
 
@@ -3462,7 +3455,7 @@ static void handle_oc_message_send(Chunk *os)
       {
          if (tmp->Is(CT_COLON))
          {
-            set_chunk_type(tmp, CT_OC_COLON);
+            tmp->SetType(CT_OC_COLON);
 
             if (  prev->Is(CT_WORD)
                || prev->Is(CT_TYPE))
@@ -3476,7 +3469,7 @@ static void handle_oc_message_send(Chunk *os)
                   && pp->IsNot(CT_SHIFT)
                   && pp->IsNot(CT_CARET))
                {
-                  set_chunk_type(prev, CT_OC_MSG_NAME);
+                  prev->SetType(CT_OC_MSG_NAME);
                   set_chunk_parent(tmp, CT_OC_MSG_NAME);
                }
             }
@@ -3501,7 +3494,7 @@ static void handle_oc_available(Chunk *os)
    while (os->IsNotNullChunk())
    {
       E_Token origType = os->type;
-      set_chunk_type(os, CT_OC_AVAILABLE_VALUE);
+      os->SetType(CT_OC_AVAILABLE_VALUE);
 
       if (origType == CT_PAREN_CLOSE)
       {
@@ -3713,7 +3706,7 @@ static void handle_oc_property_decl(Chunk *os)
 
                // add the parenthesis
                Chunk endchunk;
-               set_chunk_type(&endchunk, CT_COMMA);
+               endchunk.SetType(CT_COMMA);
                set_chunk_parent(&endchunk, get_chunk_parent_type(curr_chunk));
                endchunk.str         = ",";
                endchunk.level       = curr_chunk->level;
@@ -3786,7 +3779,7 @@ static void handle_cs_square_stmt(Chunk *os)
 
       if (tmp->Is(CT_COLON))
       {
-         set_chunk_type(tmp, CT_CS_SQ_COLON);
+         tmp->SetType(CT_CS_SQ_COLON);
       }
    }
 
@@ -3823,7 +3816,7 @@ static void handle_cs_property(Chunk *bro)
             && (  pc->Is(CT_WORD)
                || pc->Is(CT_THIS)))
          {
-            set_chunk_type(pc, CT_CS_PROPERTY);
+            pc->SetType(CT_CS_PROPERTY);
             did_prop = true;
          }
          else
@@ -3908,7 +3901,7 @@ static void handle_wrap(Chunk *pc)
       pc->str.append(fsp);
       pc->str.append(")");
 
-      set_chunk_type(pc, pc->Is(CT_FUNC_WRAP) ? CT_FUNCTION : CT_TYPE);
+      pc->SetType(pc->Is(CT_FUNC_WRAP) ? CT_FUNCTION : CT_TYPE);
 
       pc->orig_col_end = pc->orig_col + pc->Len();
 
@@ -3942,13 +3935,13 @@ static void handle_proto_wrap(Chunk *pc)
 
    if (cma->Is(CT_SEMICOLON))
    {
-      set_chunk_type(pc, CT_FUNC_PROTO);
+      pc->SetType(CT_FUNC_PROTO);
    }
    else if (cma->Is(CT_BRACE_OPEN))
    {
       LOG_FMT(LFCN, "%s(%d): (19) SET TO CT_FUNC_DEF: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-      set_chunk_type(pc, CT_FUNC_DEF);
+      pc->SetType(CT_FUNC_DEF);
    }
    else
    {
@@ -3966,7 +3959,7 @@ static void handle_proto_wrap(Chunk *pc)
    else
    {
       fix_fcn_def_params(opp);
-      set_chunk_type(name, CT_WORD);
+      name->SetType(CT_WORD);
    }
    tmp = tmp->SkipToMatch();
 
