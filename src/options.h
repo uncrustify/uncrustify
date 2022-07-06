@@ -3927,21 +3927,43 @@ mod_enum_last_comma;
 extern BoundedOption<unsigned, 0, 5>
 mod_infinite_loop;
 
+// Add or remove the 'int' keyword in 'int short'.
+extern Option<iarf_e>
+mod_int_short;
+
 // Add or remove the 'int' keyword in 'short int'.
 extern Option<iarf_e>
 mod_short_int;
+
+// Add or remove the 'int' keyword in 'int long'.
+extern Option<iarf_e>
+mod_int_long;
 
 // Add or remove the 'int' keyword in 'long int'.
 extern Option<iarf_e>
 mod_long_int;
 
+// Add or remove the 'int' keyword in 'int signed'.
+extern Option<iarf_e>
+mod_int_signed;
+
 // Add or remove the 'int' keyword in 'signed int'.
 extern Option<iarf_e>
 mod_signed_int;
 
+// Add or remove the 'int' keyword in 'int unsigned'.
+extern Option<iarf_e>
+mod_int_unsigned;
+
 // Add or remove the 'int' keyword in 'unsigned int'.
 extern Option<iarf_e>
 mod_unsigned_int;
+
+// If there is a situation where mod_int_* and mod_*_int would result in
+// multiple int keywords, whether to keep the rightmost int (the default) or the
+// leftmost int.
+extern Option<bool>
+mod_int_prefer_int_on_left;
 
 // (OC) Whether to organize the properties. If true, properties will be
 // rearranged according to the mod_sort_oc_property_*_weight factors.

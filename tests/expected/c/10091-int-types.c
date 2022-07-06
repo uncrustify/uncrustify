@@ -2,7 +2,7 @@ int int_var;
 
 short int short_var;
 short int short_int_var;
-int short int_short_var;
+short int int_short_var;
 
 long long_var;
 long int long_int_var;
@@ -49,7 +49,10 @@ int long unsigned unsigned_long_int_var;
 
 char char_var;
 signed char signed_char_var;
+char signed char_signed_var;
 unsigned char unsigned_char_var;
+char unsigned char_unsigned_var;
 
 double double_var;
 long double long_double_var;
+double long double_long_var;
