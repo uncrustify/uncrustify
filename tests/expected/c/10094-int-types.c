@@ -38,7 +38,7 @@ const int long const_int_long_var;
 long const long_const_int_var;
 long const long_int_const_var;
 int const long int_const_long_var;
-int long const const_long_int_var;
+int long const int_long_const_var;
 
 unsigned long unsigned_long_int_var;
 unsigned int long unsigned_int_long_var;
