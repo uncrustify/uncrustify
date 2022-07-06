@@ -2162,8 +2162,8 @@ static std::map<std::size_t, std::pair<std::wregex, std::wregex> > get_reflow_fo
       }
       else
       {
-         regex_map.emplace(0L, std::make_pair(L"[\\w,\\]\\)]$", L"^[\\w,\\[\\(]"));
-         regex_map.emplace(1L, std::make_pair(L"\\.$", L"^[A-Z]"));
+         regex_map.emplace(0L, std::make_pair((std::wregex)L"[\\w,\\]\\)]$", (std::wregex)L"^[\\w,\\[\\(]"));
+         regex_map.emplace(1L, std::make_pair((std::wregex)L"\\.$", (std::wregex)L"^[A-Z]"));
       }
    }
    return(regex_map);
