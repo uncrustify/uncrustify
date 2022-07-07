@@ -16,9 +16,17 @@ using namespace uncrustify;
 
 static bool is_storage_keyword(const Chunk *pc)
 {
-   return(  strcmp(pc->Text(), "const") == 0
+   return(  strcmp(pc->Text(), "auto") == 0
+         || strcmp(pc->Text(), "const") == 0
+         || strcmp(pc->Text(), "extern") == 0
+         || strcmp(pc->Text(), "mutable") == 0
+         || strcmp(pc->Text(), "register") == 0
          || strcmp(pc->Text(), "static") == 0
-         || strcmp(pc->Text(), "volatile") == 0);
+         || strcmp(pc->Text(), "thread_local") == 0
+         || strcmp(pc->Text(), "typedef") == 0
+         || strcmp(pc->Text(), "volatile") == 0
+         || strcmp(pc->Text(), "_Atomic") == 0
+         || strcmp(pc->Text(), "_Thread_local") == 0);
 }
 
 
