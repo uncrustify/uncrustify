@@ -1,8 +1,8 @@
 int int_var;
 
-short short_var;
+short int short_var;
 short int short_int_var;
-int short int_short_var;
+short int int_short_var;
 
 long int long_var;
 long int long_int_var;
@@ -13,22 +13,22 @@ long long int long_long_int_var;
 long long int int_long_long_var;
 long long int long_int_long_var;
 
-signed signed_var;
+signed int signed_var;
 signed int signed_int_var;
-int signed int_signed_var;
+signed int int_signed_var;
 
-unsigned unsigned_var;
+unsigned int unsigned_var;
 unsigned int unsigned_int_var;
-int unsigned int_unsigned_var;
+unsigned int int_unsigned_var;
 
-short /* comment */ short_comment_var;
+short int /* comment */ short_comment_var;
 short /* comment */ int short_comment_int_var;
 
 const long int const_long_var;
 long int const long_const_var;
 
 unsigned long int unsigned_long_var;
-long int unsigned long_unsigned_var;
+long unsigned int long_unsigned_var;
 
 unsigned const long int unsigned_const_long_var;
 unsigned const long int unsigned_const_long_int_var;
@@ -43,9 +43,9 @@ long int const int_long_const_var;
 unsigned long int unsigned_long_int_var;
 unsigned long int unsigned_int_long_var;
 long unsigned int long_unsigned_int_var;
-long int unsigned long_int_unsigned_var;
+long unsigned int long_int_unsigned_var;
 unsigned long int int_unsigned_long_var;
-long int unsigned unsigned_long_int_var;
+long unsigned int unsigned_long_int_var;
 
 char char_var;
 signed char signed_char_var;

@@ -2127,16 +2127,24 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
          remove_extra_returns();
       }
       // Add or remove redundant 'int' keyword of integer types
+      log_rule_B("mod_int_short");
       log_rule_B("mod_short_int");
+      log_rule_B("mod_int_long");
       log_rule_B("mod_long_int");
+      log_rule_B("mod_int_signed");
       log_rule_B("mod_signed_int");
+      log_rule_B("mod_int_unsigned");
       log_rule_B("mod_unsigned_int");
 
       if (  (  language_is_set(LANG_C)
             || language_is_set(LANG_CPP))
-         && (  options::mod_short_int() != IARF_IGNORE
+         && (  options::mod_int_short() != IARF_IGNORE
+            || options::mod_short_int() != IARF_IGNORE
+            || options::mod_int_long() != IARF_IGNORE
             || options::mod_long_int() != IARF_IGNORE
+            || options::mod_int_signed() != IARF_IGNORE
             || options::mod_signed_int() != IARF_IGNORE
+            || options::mod_int_unsigned() != IARF_IGNORE
             || options::mod_unsigned_int() != IARF_IGNORE))
       {
          change_int_types();
