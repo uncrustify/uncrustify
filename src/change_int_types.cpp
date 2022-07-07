@@ -14,87 +14,165 @@
 using namespace uncrustify;
 
 
-static bool is_int_qualifier(Chunk *pc)
+static bool is_storage_keyword(const Chunk *pc)
 {
    return(  strcmp(pc->Text(), "const") == 0
-         || strcmp(pc->Text(), "long") == 0
-         || strcmp(pc->Text(), "short") == 0
-         || strcmp(pc->Text(), "signed") == 0
          || strcmp(pc->Text(), "static") == 0
-         || strcmp(pc->Text(), "unsigned") == 0
          || strcmp(pc->Text(), "volatile") == 0);
 }
 
 
-static bool add_or_remove_int_keyword(Chunk *pc, iarf_e action)
+static bool is_non_integer(const Chunk *pc)
 {
-   Chunk *next = pc->GetNextNcNnl();
+   return(  strcmp(pc->Text(), "char") == 0
+         || strcmp(pc->Text(), "double") == 0);
+}
 
-   // Skip over all but the last qualifier before the 'int' keyword
-   if (is_int_qualifier(next))
+
+static bool find_non_storage_siblings(const Chunk *pc, Chunk * &prev, Chunk * &next)
+{
+   prev = pc->GetPrevNcNnl();
+   next = pc->GetNextNcNnl();
+
+   // Find the last token that was not a storage keyword
+   while (is_storage_keyword(prev))
+   {
+      prev = prev->GetPrevNcNnl();
+   }
+
+   // Return false if the last token indicates that this is not an integer type
+   if (is_non_integer(prev))
    {
       return(false);
    }
 
-   if (strcmp(next->Text(), "int") == 0)
+   // Find the next token that is not a storage keyword
+   while (is_storage_keyword(next))
+   {
+      next = next->GetNextNcNnl();
+   }
+
+   // Return false if the next token indicates that this is not an integer type
+   if (is_non_integer(next))
+   {
+      return(false);
+   }
+   // Return true if this is indeed an integer type
+   return(true);
+}
+
+
+static void add_or_remove_int_keyword(Chunk *pc, Chunk *sibling, iarf_e action, E_Direction dir, Chunk * &int_keyword)
+{
+   if (strcmp(sibling->Text(), "int") == 0)
    {
       if (action == IARF_REMOVE)
       {
-         Chunk::Delete(next);
+         if (sibling == int_keyword)
+         {
+            int_keyword = nullptr;
+         }
+         Chunk::Delete(sibling);
+      }
+      else if (  int_keyword != nullptr
+              && int_keyword != sibling)
+      {
+         // We added an int keyword, but now we see that there already was one.
+         // Keep one or the other but not both.
+         if (options::mod_int_prefer_int_on_left())
+         {
+            Chunk::Delete(sibling);
+         }
+         else
+         {
+            Chunk::Delete(int_keyword);
+            int_keyword = sibling;
+         }
+      }
+      else
+      {
+         int_keyword = sibling;
       }
    }
-   else if (  strcmp(next->Text(), "char") != 0
-           && strcmp(next->Text(), "double") != 0)
+   else
    {
       if (  action == IARF_ADD
          || action == IARF_FORCE)
       {
-         Chunk *int_keyword = pc->CopyAndAddAfter(pc);
+         if (int_keyword)
+         {
+            // There was already an int keyword. Either keep it and don't add a
+            // new one or delete it to make way for the new one.
+            if (options::mod_int_prefer_int_on_left())
+            {
+               return;
+            }
+            else
+            {
+               Chunk::Delete(int_keyword);
+            }
+         }
+
+         if (dir == E_Direction::BACKWARD)
+         {
+            int_keyword = pc->CopyAndAddBefore(pc);
+         }
+         else
+         {
+            int_keyword = pc->CopyAndAddAfter(pc);
+         }
          int_keyword->str = "int";
       }
    }
-   return(true);
-}
+} // add_or_remove_int_keyword
 
 
 void change_int_types()
 {
    LOG_FUNC_ENTRY();
 
-   bool found_int = false;
+   Chunk *prev;
+   Chunk *next;
+   Chunk *int_keyword = nullptr;
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-      // Skip any 'int' keyword that has already been processed, as well as any qualifiers after it
-      if (found_int)
-      {
-         if (  strcmp(pc->Text(), "int") != 0
-            && !is_int_qualifier(pc))
-         {
-            found_int = false;
-         }
-         continue;
-      }
-
       if (strcmp(pc->Text(), "short") == 0)
       {
-         found_int = add_or_remove_int_keyword(pc, options::mod_short_int());
+         if (find_non_storage_siblings(pc, prev, next))
+         {
+            add_or_remove_int_keyword(pc, prev, options::mod_int_short(), E_Direction::BACKWARD, int_keyword);
+            add_or_remove_int_keyword(pc, next, options::mod_short_int(), E_Direction::FORWARD, int_keyword);
+         }
       }
       else if (strcmp(pc->Text(), "long") == 0)
       {
-         found_int = add_or_remove_int_keyword(pc, options::mod_long_int());
+         if (find_non_storage_siblings(pc, prev, next))
+         {
+            add_or_remove_int_keyword(pc, prev, options::mod_int_long(), E_Direction::BACKWARD, int_keyword);
+            add_or_remove_int_keyword(pc, next, options::mod_long_int(), E_Direction::FORWARD, int_keyword);
+         }
       }
       else if (strcmp(pc->Text(), "signed") == 0)
       {
-         found_int = add_or_remove_int_keyword(pc, options::mod_signed_int());
+         if (find_non_storage_siblings(pc, prev, next))
+         {
+            add_or_remove_int_keyword(pc, prev, options::mod_int_signed(), E_Direction::BACKWARD, int_keyword);
+            add_or_remove_int_keyword(pc, next, options::mod_signed_int(), E_Direction::FORWARD, int_keyword);
+         }
       }
       else if (strcmp(pc->Text(), "unsigned") == 0)
       {
-         found_int = add_or_remove_int_keyword(pc, options::mod_unsigned_int());
+         if (find_non_storage_siblings(pc, prev, next))
+         {
+            add_or_remove_int_keyword(pc, prev, options::mod_int_unsigned(), E_Direction::BACKWARD, int_keyword);
+            add_or_remove_int_keyword(pc, next, options::mod_unsigned_int(), E_Direction::FORWARD, int_keyword);
+         }
       }
-      else if (strcmp(pc->Text(), "int") == 0)
+      else if (  strcmp(pc->Text(), "int") != 0
+              && !is_storage_keyword(pc))
       {
-         found_int = true;
+         int_keyword = nullptr; // We are no longer in a variable declaration
       }
    }
-}
+} // change_int_types
