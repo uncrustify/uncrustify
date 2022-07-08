@@ -604,18 +604,18 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (first->Is(CT_COMMA))                         // see the tests cpp:34520-34524
    // see the tests c-sharp:12200-12202
    {
-      if (  language_is_set(LANG_CS)
+      if (  language_is_set(LANG_CS | LANG_VALA)
          && first->GetParentType() == CT_TYPE)
       {
-         // C# multidimensional array type: ',,' vs. ', ,' or ',]' vs. ', ]'
+         // (C#, Vala) multidimensional array type: ',,' vs. ', ,' or ',]' vs. ', ]'
          if (second->Is(CT_COMMA))
          {
-            // (C#) Add or remove space between ',' in multidimensional array type
+            // (C#, Vala) Add or remove space between ',' in multidimensional array type
             // like 'int[,,]'.
             log_rule("sp_between_mdatype_commas");
             return(options::sp_between_mdatype_commas());
          }
-         // (C#) Add or remove space between ',' and ']' in multidimensional array type
+         // (C#, Vala) Add or remove space between ',' and ']' in multidimensional array type
          // like 'int[,,]'.
          log_rule("sp_after_mdatype_commas");
          return(options::sp_after_mdatype_commas());
@@ -649,12 +649,11 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    if (second->Is(CT_COMMA))
    {
-      if (  language_is_set(LANG_CS)
+      if (  language_is_set(LANG_CS | LANG_VALA)
          && first->Is(CT_SQUARE_OPEN)
          && first->GetParentType() == CT_TYPE)
       {
-         // Only for C#.
-         // (C#) Add or remove space between '[' and ',' in multidimensional array type
+         // (C#, Vala) Add or remove space between '[' and ',' in multidimensional array type
          // like 'int[,,]'.
          log_rule("sp_before_mdatype_commas");
          return(options::sp_before_mdatype_commas());

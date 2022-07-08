@@ -573,18 +573,20 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       }
    }
 
-   // C# stuff
-   if (language_is_set(LANG_CS))
+   // C# and Vala stuff
+   if (language_is_set(LANG_CS | LANG_VALA))
    {
       // '[assembly: xxx]' stuff
-      if (  pc->flags.test(PCF_EXPR_START)
+      if (  language_is_set(LANG_CS)
+         && pc->flags.test(PCF_EXPR_START)
          && pc->Is(CT_SQUARE_OPEN))
       {
          handle_cs_square_stmt(pc);
          return;
       }
 
-      if (  next->Is(CT_BRACE_OPEN)
+      if (  language_is_set(LANG_CS)
+         && next->Is(CT_BRACE_OPEN)
          && next->GetParentType() == CT_NONE
          && (  pc->Is(CT_SQUARE_CLOSE)
             || pc->Is(CT_ANGLE_CLOSE)
@@ -601,7 +603,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          return;
       }
 
-      if (  (  pc->Is(CT_LAMBDA)
+      if (  language_is_set(LANG_CS)
+         && (  pc->Is(CT_LAMBDA)
             || pc->Is(CT_DELEGATE))
          && next->Is(CT_BRACE_OPEN))
       {
@@ -609,7 +612,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          return;
       }
 
-      if (  pc->Is(CT_WHEN)
+      if (  language_is_set(LANG_CS)
+         && pc->Is(CT_WHEN)
          && pc->GetNext()->IsNotNullChunk()
          && pc->GetNext()->IsNot(CT_SPAREN_OPEN))
       {
@@ -750,7 +754,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       return;
    }
 
-   // A [] in C# and D only follows a type
+   // A [] in C#, D and Vala only follows a type
    if (  pc->Is(CT_TSQUARE)
       && language_is_set(LANG_D | LANG_CS | LANG_VALA))
    {
