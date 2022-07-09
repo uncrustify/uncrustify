@@ -37,11 +37,11 @@ void remove_extra_returns()
 
          if (closing_brace->IsNotNullChunk())
          {
-            if (get_chunk_parent_type(closing_brace) == CT_FUNC_CLASS_DEF)
+            if (closing_brace->GetParentType() == CT_FUNC_CLASS_DEF)
             {
                // we have a class. Do nothing
             }
-            else if (  get_chunk_parent_type(closing_brace) == CT_FUNC_DEF
+            else if (  closing_brace->GetParentType() == CT_FUNC_DEF
                     && pc->level < 2)
             {
                remove_it = true;
@@ -57,7 +57,7 @@ void remove_extra_returns()
 
             if (closing_brace->IsNotNullChunk())
             {
-               if (get_chunk_parent_type(closing_brace) == CT_FUNC_DEF)
+               if (closing_brace->GetParentType() == CT_FUNC_DEF)
                {
                   remove_it = true;
                }

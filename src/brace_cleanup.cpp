@@ -338,7 +338,7 @@ static bool maybe_while_of_do(Chunk *pc)
 
    if (  (  prev->Is(CT_VBRACE_CLOSE)
          || prev->Is(CT_BRACE_CLOSE))
-      && get_chunk_parent_type(prev) == CT_DO)
+      && prev->GetParentType() == CT_DO)
    {
       return(true);
    }
@@ -636,7 +636,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       }
    }
    // Get the parent type for brace and parenthesis open
-   E_Token parent = get_chunk_parent_type(pc);
+   E_Token parent = pc->GetParentType();
 
    if (  pc->Is(CT_PAREN_OPEN)
       || pc->Is(CT_FPAREN_OPEN)
@@ -711,7 +711,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
             // only to help the vim command }
             else if (  prev->Is(CT_FPAREN_CLOSE)
                     && language_is_set(LANG_OC)
-                    && get_chunk_parent_type(prev) == CT_ENUM)
+                    && prev->GetParentType() == CT_ENUM)
             {
                parent = CT_ENUM;
             }
@@ -744,14 +744,14 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          // Issue #1813
          bool single = false;
 
-         if (get_chunk_parent_type(pc) == CT_NAMESPACE)
+         if (pc->GetParentType() == CT_NAMESPACE)
          {
             LOG_FMT(LBCSPOP, "%s(%d): parent_type is NAMESPACE\n",
                     __func__, __LINE__);
             Chunk *tmp = frm.top().pc;
 
             if (  tmp != nullptr
-               && get_chunk_parent_type(tmp) == CT_NAMESPACE)
+               && tmp->GetParentType() == CT_NAMESPACE)
             {
                LOG_FMT(LBCSPOP, "%s(%d): tmp->parent_type is NAMESPACE\n",
                        __func__, __LINE__);
@@ -769,7 +769,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
             }
          }
          LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent_type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)));
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type), get_token_name(pc->GetParentType()));
 
          if (!single)
          {
@@ -886,11 +886,11 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
     */
    if (  pc->Is(CT_SQUARE_OPEN)
       || (  pc->Is(CT_BRACE_OPEN)
-         && get_chunk_parent_type(pc) != CT_ASSIGN)
+         && pc->GetParentType() != CT_ASSIGN)
       || pc->Is(CT_BRACE_CLOSE)
       || pc->Is(CT_VBRACE_CLOSE)
       || (  pc->Is(CT_SPAREN_OPEN)
-         && get_chunk_parent_type(pc) == CT_FOR)
+         && pc->GetParentType() == CT_FOR)
       || pc->Is(CT_COLON)
       || pc->Is(CT_OC_END)
       || (  pc->IsSemicolon()

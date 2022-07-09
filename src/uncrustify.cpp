@@ -1711,13 +1711,13 @@ static void add_func_header(E_Token type, file_mem &fm)
       ref = pc;
 
       if (  ref->Is(CT_CLASS)
-         && get_chunk_parent_type(ref) == CT_NONE
+         && ref->GetParentType() == CT_NONE
          && ref->GetNext())
       {
          ref = ref->GetNext();
 
          if (  ref->Is(CT_TYPE)
-            && get_chunk_parent_type(ref) == type
+            && ref->GetParentType() == type
             && ref->GetNext())
          {
             ref = ref->GetNext();
@@ -1733,7 +1733,7 @@ static void add_func_header(E_Token type, file_mem &fm)
       ref = pc;
 
       if (  ref->Is(CT_FUNC_DEF)
-         && get_chunk_parent_type(ref) == CT_NONE
+         && ref->GetParentType() == CT_NONE
          && ref->GetNext())
       {
          int found_brace = 0;                                 // Set if a close brace is found before a newline
@@ -1785,7 +1785,7 @@ static void add_func_header(E_Token type, file_mem &fm)
             tmp = ref->GetPrevType(CT_PREPROC, ref->level);
 
             if (  tmp->IsNotNullChunk()
-               && get_chunk_parent_type(tmp) == CT_PP_IF)
+               && tmp->GetParentType() == CT_PP_IF)
             {
                tmp = tmp->GetPrevNnl();
 
@@ -1818,7 +1818,7 @@ static void add_func_header(E_Token type, file_mem &fm)
 
       if (  ref->IsNullChunk()
          && !Chunk::GetHead()->IsComment()
-         && get_chunk_parent_type(Chunk::GetHead()) == type)
+         && Chunk::GetHead()->GetParentType() == type)
       {
          /**
           * In addition to testing for preceding semicolons, closing braces, etc.,
@@ -1886,7 +1886,7 @@ static void add_msg_header(E_Token type, file_mem &fm)
             tmp = ref->GetPrevType(CT_PREPROC, ref->level);
 
             if (  tmp->IsNotNullChunk()
-               && get_chunk_parent_type(tmp) == CT_PP_IF)
+               && tmp->GetParentType() == CT_PP_IF)
             {
                tmp = tmp->GetPrevNnl();
 

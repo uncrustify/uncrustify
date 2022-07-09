@@ -75,7 +75,7 @@ void align_eigen_comma_init()
               && !pc->flags.test(PCF_IN_TYPEDEF)
               && pc->IsString("<<"))
       {
-         if (get_chunk_parent_type(pc) == CT_OPERATOR)
+         if (pc->GetParentType() == CT_OPERATOR)
          {
             // Ignore operator<<
          }

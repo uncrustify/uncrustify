@@ -107,11 +107,11 @@ void pawn_scrub_vsemi()
 
       if (prev->Is(CT_BRACE_CLOSE))
       {
-         if (  get_chunk_parent_type(prev) == CT_IF
-            || get_chunk_parent_type(prev) == CT_ELSE
-            || get_chunk_parent_type(prev) == CT_SWITCH
-            || get_chunk_parent_type(prev) == CT_CASE
-            || get_chunk_parent_type(prev) == CT_WHILE_OF_DO)
+         if (  prev->GetParentType() == CT_IF
+            || prev->GetParentType() == CT_ELSE
+            || prev->GetParentType() == CT_SWITCH
+            || prev->GetParentType() == CT_CASE
+            || prev->GetParentType() == CT_WHILE_OF_DO)
          {
             pc->str.clear();
          }
@@ -146,15 +146,15 @@ static bool pawn_continued(Chunk *pc, size_t br_level)
       || pc->Is(CT_BRACE_OPEN)
       || pc->Is(CT_VBRACE_OPEN)
       || pc->Is(CT_FPAREN_OPEN)
-      || get_chunk_parent_type(pc) == CT_IF
-      || get_chunk_parent_type(pc) == CT_ELSE
-      || get_chunk_parent_type(pc) == CT_ELSEIF
-      || get_chunk_parent_type(pc) == CT_DO
-      || get_chunk_parent_type(pc) == CT_FOR
-      || get_chunk_parent_type(pc) == CT_SWITCH
-      || get_chunk_parent_type(pc) == CT_WHILE
-      || get_chunk_parent_type(pc) == CT_FUNC_DEF
-      || get_chunk_parent_type(pc) == CT_ENUM
+      || pc->GetParentType() == CT_IF
+      || pc->GetParentType() == CT_ELSE
+      || pc->GetParentType() == CT_ELSEIF
+      || pc->GetParentType() == CT_DO
+      || pc->GetParentType() == CT_FOR
+      || pc->GetParentType() == CT_SWITCH
+      || pc->GetParentType() == CT_WHILE
+      || pc->GetParentType() == CT_FUNC_DEF
+      || pc->GetParentType() == CT_ENUM
       || pc->flags.test_any(PCF_IN_ENUM | PCF_IN_STRUCT)
       || pc->IsString(":")
       || pc->IsString("+")

@@ -64,14 +64,22 @@ public:
    //! sets all elements of the struct to their default value
    void Reset();
 
-   //! provides the number of characters of string
+
+   // --------- Access methods
+
+   // @brief returns the number of characters in the string
    size_t Len() const;
 
-   //! provides the content of a string a zero terminated character pointer
+   // @brief returns the content of the string
    const char *Text() const;
 
    // Issue #2984, fill up, if necessary, a copy of the first chars of the Text() string
    const char *ElidedText(char *for_the_copy) const;
+
+   /**
+    * @brief returns the type of the chunk parent
+    */
+   E_Token GetParentType() const;
 
 
    // --------- Get* chunk functions
@@ -1209,9 +1217,6 @@ void set_chunk_parent_real(Chunk *pc, E_Token tt, const char *func, int line);
 
 
 #define set_chunk_parent(pc, tt)    set_chunk_parent_real((pc), (tt), __unqualified_func__, __LINE__)
-
-
-E_Token get_chunk_parent_type(Chunk *pc);
 
 
 void chunk_flags_set_real(Chunk *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits);

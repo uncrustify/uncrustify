@@ -95,9 +95,9 @@ static Chunk *handle_double_angle_close(Chunk *pc)
    {
       if (  pc->Is(CT_ANGLE_CLOSE)
          && next->Is(CT_ANGLE_CLOSE)
-         && get_chunk_parent_type(pc) == CT_NONE
+         && pc->GetParentType() == CT_NONE
          && (pc->orig_col_end + 1) == next->orig_col
-         && get_chunk_parent_type(next) == CT_NONE)
+         && next->GetParentType() == CT_NONE)
       {
          pc->str.append('>');
          pc->SetType(CT_SHIFT);
@@ -256,8 +256,8 @@ void tokenize_trailing_return_types()
          }
 
          if (  tmp->Is(CT_FPAREN_CLOSE)
-            && (  get_chunk_parent_type(tmp) == CT_FUNC_PROTO
-               || get_chunk_parent_type(tmp) == CT_FUNC_DEF))
+            && (  tmp->GetParentType() == CT_FUNC_PROTO
+               || tmp->GetParentType() == CT_FUNC_DEF))
          {
             pc->SetType(CT_TRAILING_RET);
             LOG_FMT(LNOTE, "%s(%d): set trailing return type for Text() is '%s'\n",
@@ -1022,12 +1022,12 @@ void tokenize_cleanup()
        *   @interface ClassName ()
        *   @implementation ClassName ()
        */
-      if (  (  get_chunk_parent_type(pc) == CT_OC_IMPL
-            || get_chunk_parent_type(pc) == CT_OC_INTF
+      if (  (  pc->GetParentType() == CT_OC_IMPL
+            || pc->GetParentType() == CT_OC_INTF
             || pc->Is(CT_OC_CLASS))
          && next->Is(CT_PAREN_OPEN))
       {
-         set_chunk_parent(next, get_chunk_parent_type(pc));
+         set_chunk_parent(next, pc->GetParentType());
 
          Chunk *tmp = next->GetNext();
 
@@ -1037,19 +1037,19 @@ void tokenize_cleanup()
             if (tmp->Is(CT_PAREN_CLOSE))
             {
                //tmp->SetType(CT_OC_CLASS_EXT);
-               set_chunk_parent(tmp, get_chunk_parent_type(pc));
+               set_chunk_parent(tmp, pc->GetParentType());
             }
             else
             {
                tmp->SetType(CT_OC_CATEGORY);
-               set_chunk_parent(tmp, get_chunk_parent_type(pc));
+               set_chunk_parent(tmp, pc->GetParentType());
             }
          }
          tmp = pc->GetNextType(CT_PAREN_CLOSE, pc->level);
 
          if (tmp->IsNotNullChunk())
          {
-            set_chunk_parent(tmp, get_chunk_parent_type(pc));
+            set_chunk_parent(tmp, pc->GetParentType());
          }
       }
 
@@ -1207,7 +1207,7 @@ bool invalid_open_angle_template(Chunk *prev)
          && prev->IsNot(CT_COMMA)
          && prev->IsNot(CT_QUALIFIER)
          && prev->IsNot(CT_OPERATOR_VAL)
-         && get_chunk_parent_type(prev) != CT_OPERATOR);
+         && prev->GetParentType() != CT_OPERATOR);
 }
 
 
@@ -1359,7 +1359,7 @@ static void check_template(Chunk *start, bool in_type_cast)
          }
 
          if (  pc->Is(CT_BRACE_CLOSE)
-            && get_chunk_parent_type(pc) != CT_BRACED_INIT_LIST
+            && pc->GetParentType() != CT_BRACED_INIT_LIST
             && !pc->flags.test(PCF_IN_DECLTYPE))
          {
             break;
@@ -1478,7 +1478,7 @@ static void check_template(Chunk *start, bool in_type_cast)
             set_chunk_parent(brace_close, CT_BRACED_INIT_LIST);
          }
          else if (  pc->Is(CT_BRACE_CLOSE)
-                 && get_chunk_parent_type(pc) != CT_BRACED_INIT_LIST
+                 && pc->GetParentType() != CT_BRACED_INIT_LIST
                  && !pc->flags.test(PCF_IN_DECLTYPE))
          {
             break;

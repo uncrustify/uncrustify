@@ -45,8 +45,8 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
       || (  pc->Is(CT_COLON)
          && !we_have_a_case_before)
       || (  pc->Is(CT_BRACE_OPEN)
-         && (  get_chunk_parent_type(pc) == CT_NONE
-            || get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST)))
+         && (  pc->GetParentType() == CT_NONE
+            || pc->GetParentType() == CT_BRACED_INIT_LIST)))
    {
       LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n   ",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
@@ -54,10 +54,10 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
       auto brace_open = pc->GetNextNcNnl();
 
       if (  brace_open->Is(CT_BRACE_OPEN)
-         && (  get_chunk_parent_type(brace_open) == CT_NONE
-            || get_chunk_parent_type(brace_open) == CT_ASSIGN
-            || get_chunk_parent_type(brace_open) == CT_RETURN
-            || get_chunk_parent_type(brace_open) == CT_BRACED_INIT_LIST))
+         && (  brace_open->GetParentType() == CT_NONE
+            || brace_open->GetParentType() == CT_ASSIGN
+            || brace_open->GetParentType() == CT_RETURN
+            || brace_open->GetParentType() == CT_BRACED_INIT_LIST))
       {
          log_pcf_flags(LFCNR, brace_open->flags);
          auto brace_close = next->SkipToMatch();
