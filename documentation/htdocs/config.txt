@@ -2026,6 +2026,9 @@ nl_template_end                 = false    # true/false
 # See nl_oc_msg_leave_one_liner.
 nl_oc_msg_args                  = false    # true/false
 
+# (OC) Minimum number of Objective-C message parameters before applying nl_oc_msg_args.
+nl_oc_msg_args_min_params       = 0
+
 # Add or remove newline between function signature and '{'.
 nl_fdef_brace                   = ignore   # ignore/add/remove/force/not_defined
 
