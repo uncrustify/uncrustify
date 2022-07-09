@@ -2476,6 +2476,10 @@ nl_template_end;
 extern Option<bool>
 nl_oc_msg_args;
 
+// (OC) Minimum number of Objective-C message parameters before applying nl_oc_msg_args.
+extern BoundedOption<unsigned, 0, 16>
+nl_oc_msg_args_min_params;
+
 // Add or remove newline between function signature and '{'.
 extern Option<iarf_e>
 nl_fdef_brace;
