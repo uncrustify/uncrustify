@@ -772,7 +772,7 @@ void chunk_flags_set_real(Chunk *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits)
                  pc->orig_line, pc->orig_col, pc->Text(),
                  get_token_name(pc->type));
          LOG_FMT(LSETFLG, " parent_type is %s,\n  ",
-                 get_token_name(get_chunk_parent_type(pc)));
+                 get_token_name(pc->GetParentType()));
          log_func_stack_inline(LSETFLG);
          pc->flags = nflags;
       }
@@ -801,8 +801,8 @@ void Chunk::SetTypeReal(const E_Token token, const char *func, const int line)
       LOG_FMT(LSETTYP, "'%s'\n", Text());
    }
    LOG_FMT(LSETTYP, "   type is %s, parent_type is %s => *type is %s, *parent_type is %s\n",
-           get_token_name(type), get_token_name(get_chunk_parent_type(this)),
-           get_token_name(token), get_token_name(get_chunk_parent_type(this)));
+           get_token_name(type), get_token_name(this->GetParentType()),
+           get_token_name(token), get_token_name(this->GetParentType()));
    type = token;
 }
 
@@ -813,7 +813,7 @@ void set_chunk_parent_real(Chunk *pc, E_Token token, const char *func, int line)
 
    if (  pc == nullptr
       || pc->IsNullChunk()
-      || get_chunk_parent_type(pc) == token)
+      || pc->GetParentType() == token)
    {
       return;
    }
@@ -830,22 +830,18 @@ void set_chunk_parent_real(Chunk *pc, E_Token token, const char *func, int line)
       LOG_FMT(LSETPAR, "'%s'\n", pc->ElidedText(copy));
    }
    LOG_FMT(LSETPAR, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s\n",
-           get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)),
-           get_token_name(token), get_token_name(get_chunk_parent_type(pc)));
+           get_token_name(pc->type), get_token_name(pc->GetParentType()),
+           get_token_name(token), get_token_name(pc->GetParentType()));
    pc->parent_type = token;
 } // set_chunk_parent_real
 
 
-E_Token get_chunk_parent_type(Chunk *pc)
+E_Token Chunk::GetParentType() const
 {
    LOG_FUNC_ENTRY();
 
-   if (pc == nullptr)
-   {
-      return(CT_NONE);
-   }
-   return(pc->parent_type);
-} // get_chunk_parent_type
+   return(parent_type);
+}
 
 
 Chunk *Chunk::CopyAndAdd(Chunk *pos, const E_Direction dir) const

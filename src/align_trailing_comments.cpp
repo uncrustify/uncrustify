@@ -183,7 +183,7 @@ void align_right_comments()
          || pc->Is(CT_COMMENT_CPP)
          || pc->Is(CT_COMMENT_MULTI))
       {
-         if (get_chunk_parent_type(pc) == CT_COMMENT_END)
+         if (pc->GetParentType() == CT_COMMENT_END)
          {
             Chunk *prev = pc->GetPrev();
 
@@ -204,7 +204,7 @@ void align_right_comments()
          }
 
          // Change certain WHOLE comments into RIGHT-alignable comments
-         if (get_chunk_parent_type(pc) == CT_COMMENT_WHOLE)
+         if (pc->GetParentType() == CT_COMMENT_WHOLE)
          {
             log_rule_B("input_tab_size");
             size_t max_col = pc->column_indent + options::input_tab_size();

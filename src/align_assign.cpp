@@ -66,7 +66,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
    while (pc->IsNotNullChunk())
    {
       LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->Text() '%s', type is %s, parent_type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->ElidedText(copy), get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)));
+              __func__, __LINE__, pc->orig_line, pc->ElidedText(copy), get_token_name(pc->type), get_token_name(pc->GetParentType()));
 
       // Don't check inside SPAREN, PAREN or SQUARE groups
       if (  pc->Is(CT_SPAREN_OPEN)
@@ -101,14 +101,14 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
       // Recurse if a brace set is found
       if (  (  pc->Is(CT_BRACE_OPEN)
             || pc->Is(CT_VBRACE_OPEN))
-         && !(get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST))
+         && !(pc->GetParentType() == CT_BRACED_INIT_LIST))
       {
          size_t myspan;
          size_t mythresh;
 
          size_t sub_nl_count = 0;
 
-         if (get_chunk_parent_type(pc) == CT_ENUM)
+         if (pc->GetParentType() == CT_ENUM)
          {
             log_rule_B("align_enum_equ_span");
             myspan = options::align_enum_equ_span();
@@ -148,7 +148,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
       // Done with this brace set?
       if (  (  pc->Is(CT_BRACE_CLOSE)
             || pc->Is(CT_VBRACE_CLOSE))
-         && !(get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST))
+         && !(pc->GetParentType() == CT_BRACED_INIT_LIST))
       {
          pc = pc->GetNext();
          break;

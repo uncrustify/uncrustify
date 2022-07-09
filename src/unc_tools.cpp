@@ -110,7 +110,7 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigne
             }
             LOG_FMT(LGUY, " column is %zu, pp_level is %zu, type is %s, parent_type is %s, orig_col is %zu,",
                     pc->column, pc->pp_level, get_token_name(pc->type),
-                    get_token_name(get_chunk_parent_type(pc)), pc->orig_col);
+                    get_token_name(pc->GetParentType()), pc->orig_col);
 
             if (pc->Is(CT_IGNORED))
             {

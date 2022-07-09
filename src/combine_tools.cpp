@@ -255,12 +255,12 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       {
          LOG_FMT(LFPARAM, "%s(%d): (matching %s brace at orig_line %zu, orig_col is %zu)",
                  __func__, __LINE__,
-                 get_token_name(get_chunk_parent_type(brace)), brace->orig_line, brace->orig_col);
+                 get_token_name(brace->GetParentType()), brace->orig_line, brace->orig_col);
       }
 
       if (  brace->IsNotNullChunk()
-         && (  get_chunk_parent_type(brace) == CT_CLASS
-            || get_chunk_parent_type(brace) == CT_STRUCT))
+         && (  brace->GetParentType() == CT_CLASS
+            || brace->GetParentType() == CT_STRUCT))
       {
          // A Most Vexing Parse variable declaration cannot occur in the body
          // of a struct/class, so we probably have a function prototype
@@ -334,7 +334,7 @@ bool chunk_ends_type(Chunk *start)
          || pc->Is(CT_PP)
          || pc->Is(CT_QUALIFIER)
          || (  language_is_set(LANG_CPP | LANG_OC)                       // Issue #2727
-            && get_chunk_parent_type(pc) == CT_TEMPLATE
+            && pc->GetParentType() == CT_TEMPLATE
             && (  pc->Is(CT_ANGLE_OPEN)
                || pc->Is(CT_ANGLE_CLOSE)))
          || (  language_is_set(LANG_CS | LANG_VALA)
@@ -362,7 +362,7 @@ bool chunk_ends_type(Chunk *start)
          || pc->Is(CT_PP_IF)
          || pc->Is(CT_PP_ELSE)
          || pc->Is(CT_PP_ENDIF)
-         || get_chunk_parent_type(pc) == CT_PP_INCLUDE                       // Issue #3233
+         || pc->GetParentType() == CT_PP_INCLUDE                       // Issue #3233
          || (  (  pc->Is(CT_COMMA)
                && !pc->flags.test(PCF_IN_FCN_CALL)
                && get_cpp_template_angle_nest_level(start) ==
@@ -446,12 +446,12 @@ size_t get_cpp_template_angle_nest_level(Chunk *pc)
          && pc->flags.test(PCF_IN_TEMPLATE))
    {
       if (  pc->Is(CT_ANGLE_CLOSE)
-         && get_chunk_parent_type(pc) == CT_TEMPLATE)
+         && pc->GetParentType() == CT_TEMPLATE)
       {
          --nestLevel;
       }
       else if (  pc->Is(CT_ANGLE_OPEN)
-              && get_chunk_parent_type(pc) == CT_TEMPLATE)
+              && pc->GetParentType() == CT_TEMPLATE)
       {
          ++nestLevel;
       }

@@ -233,7 +233,7 @@ void fix_casts(Chunk *start)
               && pc->IsNot(CT_STRING)
               && pc->IsNot(CT_DECLTYPE)
               && pc->IsNot(CT_SIZEOF)
-              && get_chunk_parent_type(pc) != CT_SIZEOF
+              && pc->GetParentType() != CT_SIZEOF
               && pc->IsNot(CT_FUNC_CALL)
               && pc->IsNot(CT_FUNC_CALL_USER)
               && pc->IsNot(CT_FUNCTION)
@@ -296,7 +296,7 @@ void fix_casts(Chunk *start)
 
       if (pc->IsBraceOpen())
       {
-         set_paren_parent(pc, get_chunk_parent_type(start));
+         set_paren_parent(pc, start->GetParentType());
       }
    }
 } // fix_casts
@@ -494,7 +494,7 @@ void fix_typedef(Chunk *start)
    // avoid interpreting typedef NS_ENUM (NSInteger, MyEnum) as a function def
    if (  last_op->IsNotNullChunk()
       && !(  language_is_set(LANG_OC)
-          && get_chunk_parent_type(last_op) == CT_ENUM))
+          && last_op->GetParentType() == CT_ENUM))
    {
       flag_parens(last_op, PCF_NONE, CT_FPAREN_OPEN, CT_TYPEDEF, false);
       fix_fcn_def_params(last_op);
@@ -711,7 +711,7 @@ Chunk *fix_variable_definition(Chunk *start)
 
    if (  cs.Len() == 1
       && end->Is(CT_BRACE_OPEN)
-      && get_chunk_parent_type(end) == CT_BRACED_INIT_LIST)
+      && end->GetParentType() == CT_BRACED_INIT_LIST)
    {
       cs.Get(0)->m_pc->SetType(CT_TYPE);
    }
@@ -900,11 +900,11 @@ void mark_cpp_constructor(Chunk *pc)
 void mark_cpp_lambda(Chunk *square_open)
 {
    if (  square_open->Is(CT_SQUARE_OPEN)
-      && get_chunk_parent_type(square_open) == CT_CPP_LAMBDA)
+      && square_open->GetParentType() == CT_CPP_LAMBDA)
    {
       auto *brace_close = square_open->GetNextType(CT_BRACE_CLOSE, square_open->level);
 
-      if (get_chunk_parent_type(brace_close) == CT_CPP_LAMBDA)
+      if (brace_close->GetParentType() == CT_CPP_LAMBDA)
       {
          for (auto *pc = square_open; pc != brace_close; pc = pc->GetNextNcNnl())
          {
@@ -1171,7 +1171,7 @@ void mark_function(Chunk *pc)
    Chunk *paren_close;
 
    // Find out what is before the operator
-   if (get_chunk_parent_type(pc) == CT_OPERATOR)
+   if (pc->GetParentType() == CT_OPERATOR)
    {
       LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
@@ -1228,15 +1228,15 @@ void mark_function(Chunk *pc)
 
             if (tmp->Is(CT_BRACE_OPEN))
             {
-               if (get_chunk_parent_type(tmp) == CT_FUNC_DEF)
+               if (tmp->GetParentType() == CT_FUNC_DEF)
                {
                   LOG_FMT(LFCN, "%s(%d): (8) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
                   pc->SetType(CT_FUNC_CALL);
                }
 
-               if (  get_chunk_parent_type(tmp) == CT_CLASS
-                  || get_chunk_parent_type(tmp) == CT_STRUCT)
+               if (  tmp->GetParentType() == CT_CLASS
+                  || tmp->GetParentType() == CT_STRUCT)
                {
                   LOG_FMT(LFCN, "%s(%d): (9) SET TO CT_FUNC_DEF: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
@@ -1274,7 +1274,7 @@ void mark_function(Chunk *pc)
    }
    LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s, type is %s, parent_type is %s\n",
            __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(),
-           get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)));
+           get_token_name(pc->type), get_token_name(pc->GetParentType()));
    LOG_FMT(LFCN, "   level is %zu, brace_level is %zu, next->Text() '%s', next->type is %s, next->level is %zu\n",
            pc->level, pc->brace_level,
            next->Text(), get_token_name(next->type), next->level);
@@ -1427,9 +1427,9 @@ void mark_function(Chunk *pc)
       else
       {
          LOG_FMT(LFCN, "%s(%d): (11) SET TO %s: orig_line is %zu, orig_col is %zu, Text() '%s'",
-                 __func__, __LINE__, (get_chunk_parent_type(pc) == CT_OPERATOR) ? "CT_FUNC_DEF" : "CT_FUNC_CALL",
+                 __func__, __LINE__, (pc->GetParentType() == CT_OPERATOR) ? "CT_FUNC_DEF" : "CT_FUNC_CALL",
                  pc->orig_line, pc->orig_col, pc->Text());
-         pc->SetType((get_chunk_parent_type(pc) == CT_OPERATOR) ? CT_FUNC_DEF : CT_FUNC_CALL);
+         pc->SetType((pc->GetParentType() == CT_OPERATOR) ? CT_FUNC_DEF : CT_FUNC_CALL);
       }
    }
    LOG_FMT(LFCN, "%s(%d): Check for C++ function def, Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
@@ -1564,7 +1564,7 @@ void mark_function(Chunk *pc)
          LOG_FMT(LFCN, "%s(%d): next step with: prev->orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                  __func__, __LINE__, prev->orig_line, prev->orig_col, prev->Text());
 
-         if (get_chunk_parent_type(pc) == CT_FIXED)
+         if (pc->GetParentType() == CT_FIXED)
          {
             isa_def = true;
          }
@@ -1577,7 +1577,7 @@ void mark_function(Chunk *pc)
 
          // Some code slips an attribute between the type and function
          if (  prev->Is(CT_FPAREN_CLOSE)
-            && get_chunk_parent_type(prev) == CT_ATTRIBUTE)
+            && prev->GetParentType() == CT_ATTRIBUTE)
          {
             prev = skip_attribute_prev(prev);
             continue;
@@ -1585,7 +1585,7 @@ void mark_function(Chunk *pc)
 
          // skip const(TYPE)
          if (  prev->Is(CT_PAREN_CLOSE)
-            && get_chunk_parent_type(prev) == CT_D_CAST)
+            && prev->GetParentType() == CT_D_CAST)
          {
             LOG_FMT(LFCN, "%s(%d): --> For sure a prototype or definition\n",
                     __func__, __LINE__);
@@ -1593,7 +1593,7 @@ void mark_function(Chunk *pc)
             break;
          }
 
-         if (get_chunk_parent_type(prev) == CT_DECLSPEC)  // Issue 1289
+         if (prev->GetParentType() == CT_DECLSPEC)  // Issue 1289
          {
             prev = prev->SkipToMatchRev();
 
@@ -1685,7 +1685,7 @@ void mark_function(Chunk *pc)
 
                LOG_FMT(LFCN, "%s(%d): prev is '%s', orig_line is %zu, orig_col is %zu, type is %s, parent_type is %s\n",
                        __func__, __LINE__, prev->Text(), prev->orig_line, prev->orig_col,
-                       get_token_name(prev->type), get_token_name(get_chunk_parent_type(prev)));
+                       get_token_name(prev->type), get_token_name(prev->GetParentType()));
                log_pcf_flags(LFCN, pc->flags);
                isa_def = true;
             }
@@ -1713,7 +1713,7 @@ void mark_function(Chunk *pc)
                || prev->Is(CT_ASSIGN)
                || prev->Is(CT_COMMA)
                || (  prev->Is(CT_STRING)
-                  && get_chunk_parent_type(prev) != CT_EXTERN)  // fixes issue 1259
+                  && prev->GetParentType() != CT_EXTERN)  // fixes issue 1259
                || prev->Is(CT_STRING_MULTI)
                || prev->Is(CT_NUMBER)
                || prev->Is(CT_NUMBER_FP)
@@ -1771,9 +1771,9 @@ void mark_function(Chunk *pc)
          && prev != nullptr
          && prev->IsNotNullChunk()
          && (  (  prev->IsParenClose()
-               && get_chunk_parent_type(prev) != CT_D_CAST
-               && get_chunk_parent_type(prev) != CT_MACRO_OPEN  // Issue #2726
-               && get_chunk_parent_type(prev) != CT_MACRO_CLOSE)
+               && prev->GetParentType() != CT_D_CAST
+               && prev->GetParentType() != CT_MACRO_OPEN  // Issue #2726
+               && prev->GetParentType() != CT_MACRO_CLOSE)
             || prev->Is(CT_ASSIGN)
             || prev->Is(CT_RETURN)))
       {
@@ -1837,7 +1837,7 @@ void mark_function(Chunk *pc)
 
       if (  tmp != nullptr
          && tmp->Is(CT_BRACE_OPEN)
-         && get_chunk_parent_type(tmp) != CT_DOUBLE_BRACE)
+         && tmp->GetParentType() != CT_DOUBLE_BRACE)
       {
          set_paren_parent(tmp, pc->type);
       }
@@ -1907,7 +1907,7 @@ void mark_function(Chunk *pc)
     */
    if (  language_is_set(LANG_CPP)
       && pc->Is(CT_FUNC_PROTO)
-      && get_chunk_parent_type(pc) != CT_OPERATOR)
+      && pc->GetParentType() != CT_OPERATOR)
    {
       LOG_FMT(LFPARAM, "%s(%d):", __func__, __LINE__);
       LOG_FMT(LFPARAM, "  checking '%s' for constructor variable %s %s\n",
@@ -1980,8 +1980,8 @@ void mark_function(Chunk *pc)
          Chunk *br_open = pc->GetPrevType(CT_BRACE_OPEN, pc->brace_level - 1);
 
          if (  br_open->IsNotNullChunk()
-            && get_chunk_parent_type(br_open) != CT_EXTERN
-            && get_chunk_parent_type(br_open) != CT_NAMESPACE)
+            && br_open->GetParentType() != CT_EXTERN
+            && br_open->GetParentType() != CT_NAMESPACE)
          {
             // Do a check to see if the level is right
             prev = pc->GetPrevNcNnlNi();   // Issue #2279
@@ -1992,9 +1992,9 @@ void mark_function(Chunk *pc)
                Chunk *p_op = pc->GetPrevType(CT_BRACE_OPEN, pc->brace_level - 1);
 
                if (  p_op->IsNotNullChunk()
-                  && get_chunk_parent_type(p_op) != CT_CLASS
-                  && get_chunk_parent_type(p_op) != CT_STRUCT
-                  && get_chunk_parent_type(p_op) != CT_NAMESPACE)
+                  && p_op->GetParentType() != CT_CLASS
+                  && p_op->GetParentType() != CT_STRUCT
+                  && p_op->GetParentType() != CT_NAMESPACE)
                {
                   pc->SetType(CT_FUNC_CTOR_VAR);
                   LOG_FMT(LFCN, "%s(%d):   4) Marked Text() is'%s', as FUNC_CTOR_VAR on orig_line %zu, orig_col %zu\n",
@@ -2340,8 +2340,8 @@ void mark_lvalue(Chunk *pc)
          || prev->IsString("{")
          || prev->IsString("[")
          || prev->flags.test(PCF_IN_PREPROC)
-         || get_chunk_parent_type(prev) == CT_NAMESPACE
-         || get_chunk_parent_type(prev) == CT_TEMPLATE)
+         || prev->GetParentType() == CT_NAMESPACE
+         || prev->GetParentType() == CT_TEMPLATE)
       {
          break;
       }

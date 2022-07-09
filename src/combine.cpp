@@ -345,7 +345,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    // separate the uses of CT_ASSIGN sign '='
    // into CT_ASSIGN_DEFAULT_ARG, CT_ASSIGN_FUNC_PROTO
    if (  pc->Is(CT_ASSIGN)
-      && get_chunk_parent_type(pc) == CT_FUNC_PROTO
+      && pc->GetParentType() == CT_FUNC_PROTO
       && (  pc->flags.test(PCF_IN_FCN_DEF)                            // Issue #2236
          || pc->flags.test(PCF_IN_CONST_ARGS)))
    {
@@ -507,7 +507,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    }
 
    if (  prev->Is(CT_BRACE_OPEN)
-      && get_chunk_parent_type(prev) != CT_CS_PROPERTY
+      && prev->GetParentType() != CT_CS_PROPERTY
       && (  pc->Is(CT_GETSET)
          || pc->Is(CT_GETSET_EMPTY)))
    {
@@ -585,7 +585,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       }
 
       if (  next->Is(CT_BRACE_OPEN)
-         && get_chunk_parent_type(next) == CT_NONE
+         && next->GetParentType() == CT_NONE
          && (  pc->Is(CT_SQUARE_CLOSE)
             || pc->Is(CT_ANGLE_CLOSE)
             || pc->Is(CT_WORD)))
@@ -836,7 +836,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
    if (  pc->Is(CT_WORD)
       && next->Is(CT_ANGLE_OPEN)
-      && get_chunk_parent_type(next) == CT_TEMPLATE)
+      && next->GetParentType() == CT_TEMPLATE)
    {
       mark_template_func(pc, next);
       return;
@@ -855,7 +855,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       return;
    }
 
-   if (  get_chunk_parent_type(pc) == CT_ASSIGN
+   if (  pc->GetParentType() == CT_ASSIGN
       && (  pc->Is(CT_BRACE_OPEN)
          || pc->Is(CT_SQUARE_OPEN)))
    {
@@ -964,7 +964,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                }
                else
                {
-                  if (  get_chunk_parent_type(pc) == CT_NONE
+                  if (  pc->GetParentType() == CT_NONE
                      && !pc->flags.test(PCF_IN_TYPEDEF))
                   {
                      tmp = next->GetNextNcNnl();
@@ -1007,7 +1007,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    {
       if (  (  pc->Is(CT_FUNCTION)
             || pc->Is(CT_FUNC_DEF))
-         && (  (get_chunk_parent_type(pc) == CT_OC_BLOCK_EXPR)
+         && (  (pc->GetParentType() == CT_OC_BLOCK_EXPR)
             || !is_oc_block(pc)))
       {
          mark_function(pc);
@@ -1037,7 +1037,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          tmp = set_paren_parent(tmp, pc->type);
       }
       else if (  tmp->Is(CT_TSQUARE)
-              || get_chunk_parent_type(tmp) == CT_OPERATOR)
+              || tmp->GetParentType() == CT_OPERATOR)
       {
          tmp = tmp->GetNextNcNnl();
       }
@@ -1054,7 +1054,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             {
                if (tmp->Is(CT_BRACE_OPEN))
                {
-                  if (  get_chunk_parent_type(tmp) != CT_DOUBLE_BRACE
+                  if (  tmp->GetParentType() != CT_DOUBLE_BRACE
                      && !pc->flags.test(PCF_IN_CONST_ARGS))
                   {
                      set_paren_parent(tmp, pc->type);
@@ -1082,7 +1082,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    if (  pc->Is(CT_THROW)
       && prev->Is(CT_FPAREN_CLOSE))
    {
-      set_chunk_parent(pc, get_chunk_parent_type(prev));
+      set_chunk_parent(pc, prev->GetParentType());
 
       if (next->Is(CT_PAREN_OPEN))
       {
@@ -1093,10 +1093,10 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
    // Mark the braces in: "for_each_entry(xxx) { }"
    if (  pc->Is(CT_BRACE_OPEN)
-      && get_chunk_parent_type(pc) != CT_DOUBLE_BRACE
+      && pc->GetParentType() != CT_DOUBLE_BRACE
       && prev->Is(CT_FPAREN_CLOSE)
-      && (  get_chunk_parent_type(prev) == CT_FUNC_CALL
-         || get_chunk_parent_type(prev) == CT_FUNC_CALL_USER)
+      && (  prev->GetParentType() == CT_FUNC_CALL
+         || prev->GetParentType() == CT_FUNC_CALL_USER)
       && !pc->flags.test(PCF_IN_CONST_ARGS))
    {
       LOG_FMT(LFCN, "%s(%d): (3) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
@@ -1111,12 +1111,12 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
     * Note that typedefs are already taken care of.
     */
    if (  !pc->flags.test(PCF_IN_TEMPLATE)                         // Issue #3252
-      && get_chunk_parent_type(pc) != CT_CPP_CAST
-      && get_chunk_parent_type(pc) != CT_C_CAST
+      && pc->GetParentType() != CT_CPP_CAST
+      && pc->GetParentType() != CT_C_CAST
       && !pc->flags.test(PCF_IN_PREPROC)
       && !is_oc_block(pc)
-      && get_chunk_parent_type(pc) != CT_OC_MSG_DECL
-      && get_chunk_parent_type(pc) != CT_OC_MSG_SPEC
+      && pc->GetParentType() != CT_OC_MSG_DECL
+      && pc->GetParentType() != CT_OC_MSG_SPEC
       && pc->IsString(")")
       && next->IsString("("))
    {
@@ -1145,10 +1145,10 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
        * Note that SPAREN and FPAREN have already been marked.
        */
       if (  pc->Is(CT_PAREN_OPEN)
-         && (  get_chunk_parent_type(pc) == CT_NONE
-            || get_chunk_parent_type(pc) == CT_OC_MSG
-            || get_chunk_parent_type(pc) == CT_OC_BLOCK_EXPR
-            || get_chunk_parent_type(pc) == CT_CS_SQ_STMT)           // Issue # 1256
+         && (  pc->GetParentType() == CT_NONE
+            || pc->GetParentType() == CT_OC_MSG
+            || pc->GetParentType() == CT_OC_BLOCK_EXPR
+            || pc->GetParentType() == CT_CS_SQ_STMT)           // Issue # 1256
          && (  next->Is(CT_WORD)
             || next->Is(CT_TYPE)
             || next->Is(CT_STRUCT)
@@ -1159,8 +1159,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             || next->Is(CT_UNION))
          && prev->IsNot(CT_DECLTYPE)
          && prev->IsNot(CT_SIZEOF)
-         && get_chunk_parent_type(prev) != CT_SIZEOF
-         && get_chunk_parent_type(prev) != CT_OPERATOR
+         && prev->GetParentType() != CT_SIZEOF
+         && prev->GetParentType() != CT_OPERATOR
          && !pc->flags.test(PCF_IN_TYPEDEF))
       {
          fix_casts(pc);
@@ -1231,7 +1231,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    // Check for stuff that can only occur at the start of an expression
    if (  pc->flags.test(PCF_EXPR_START)
       || (  prev->flags.test(PCF_EXPR_START)
-         && get_chunk_parent_type(pc) == CT_OC_AT))
+         && pc->GetParentType() == CT_OC_AT))
    {
       // Change STAR, MINUS, and PLUS in the easy cases
       if (pc->Is(CT_STAR))
@@ -1347,16 +1347,16 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
           * from ARITH <===> DEREF to PTR_TYPE <===> PTR_TYPE
           */
          pc->SetType(CT_PTR_TYPE);
-         set_chunk_parent(pc, get_chunk_parent_type(prev));
+         set_chunk_parent(pc, prev->GetParentType());
 
          next->SetType(CT_PTR_TYPE);
-         set_chunk_parent(next, get_chunk_parent_type(pc));
+         set_chunk_parent(next, pc->GetParentType());
       }
       else if (  pc->Is(CT_STAR)
               && (  prev->Is(CT_DECLTYPE)
                  || prev->Is(CT_SIZEOF)
                  || prev->Is(CT_DELETE)
-                 || get_chunk_parent_type(pc) == CT_SIZEOF))
+                 || pc->GetParentType() == CT_SIZEOF))
       {
          pc->SetType(CT_DEREF);
       }
@@ -1397,7 +1397,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             while (tmp->IsNotNullChunk())
             {
                if (  tmp->Is(CT_SEMICOLON)
-                  || get_chunk_parent_type(tmp) == CT_CLASS)
+                  || tmp->GetParentType() == CT_CLASS)
                {
                   break;
                }
@@ -1446,7 +1446,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             //    using AbstractLinkPtrPtr = AbstractLink**;
             pc->SetType(CT_PTR_TYPE);
          }
-         else if (  (  get_chunk_parent_type(pc) == CT_FUNC_DEF
+         else if (  (  pc->GetParentType() == CT_FUNC_DEF
                     && (  next->IsBraceOpen()
                        || pc->GetNext()->IsStar()))
                  || next->Is(CT_QUALIFIER))               // Issue #2648
@@ -1475,7 +1475,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             pc->SetType((  prev->flags.test(PCF_PUNCTUATOR)
                         && (  !prev->IsParenClose()
                            || prev->Is(CT_SPAREN_CLOSE)
-                           || get_chunk_parent_type(prev) == CT_MACRO_FUNC)
+                           || prev->GetParentType() == CT_MACRO_FUNC)
                         && prev->IsNot(CT_SQUARE_CLOSE)
                         && prev->IsNot(CT_DC_MEMBER)) ? CT_DEREF : CT_ARITH);
          }
@@ -1525,7 +1525,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          // connect(&mapper, SIGNAL(mapped(QString &)), this, SLOT(onSomeEvent(QString &)));
          pc->SetType(CT_BYREF);
       }
-      else if (get_chunk_parent_type(pc) == CT_USING_ALIAS)
+      else if (pc->GetParentType() == CT_USING_ALIAS)
       {
          // fix the Issue # 1689
          // using reference = value_type &;
@@ -1656,7 +1656,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             Chunk *tmp = pc->GetPrevType(CT_FPAREN_OPEN, pc->level - 1);
 
             if (  tmp->IsNotNullChunk()
-               && get_chunk_parent_type(tmp) != CT_FUNC_CTOR_VAR)
+               && tmp->GetParentType() != CT_FUNC_CTOR_VAR)
             {
                pcNext->SetType(CT_PTR_TYPE);
             }
@@ -1744,7 +1744,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          // it is a Type alias, alias template
          for (Chunk *temp = pc; temp->IsNotNullChunk(); temp = temp->GetNextNcNnl())
          {
-            if (get_chunk_parent_type(temp) == CT_NONE)
+            if (temp->GetParentType() == CT_NONE)
             {
                set_chunk_parent(temp, CT_USING_ALIAS);
             }
@@ -2064,7 +2064,7 @@ void fix_symbols()
       }
 
       if (  pc->Is(CT_BRACE_OPEN)                       // Issue #2332
-         && get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST)
+         && pc->GetParentType() == CT_BRACED_INIT_LIST)
       {
          LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', look for CT_BRACE_OPEN\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
@@ -2091,8 +2091,8 @@ void fix_symbols()
 //               && language_is_set(LANG_CPP)
                   )
                )
-         && get_chunk_parent_type(pc) != CT_BIT_COLON
-         && get_chunk_parent_type(pc) != CT_ENUM
+         && pc->GetParentType() != CT_BIT_COLON
+         && pc->GetParentType() != CT_ENUM
          && !pc->flags.test(PCF_IN_CLASS_BASE)
          && !pc->flags.test(PCF_IN_ENUM))
       {
@@ -2232,7 +2232,7 @@ static Chunk *process_return(Chunk *pc)
    //   return ({args...});  // ill-formed
    if (  language_is_set(LANG_CPP)
       && next->Is(CT_BRACE_OPEN)
-      && get_chunk_parent_type(next) == CT_BRACED_INIT_LIST)
+      && next->GetParentType() == CT_BRACED_INIT_LIST)
    {
       LOG_FMT(LRETURN, "%s(%d): not adding parens around braced initializer"
               " on orig_line %zd\n",
@@ -2315,15 +2315,13 @@ static Chunk *process_return(Chunk *pc)
 static bool is_oc_block(Chunk *pc)
 {
    return(  pc != nullptr
-         && (  get_chunk_parent_type(pc) == CT_OC_BLOCK_TYPE
-            || get_chunk_parent_type(pc) == CT_OC_BLOCK_EXPR
-            || get_chunk_parent_type(pc) == CT_OC_BLOCK_ARG
-            || get_chunk_parent_type(pc) == CT_OC_BLOCK
+         && (  pc->GetParentType() == CT_OC_BLOCK_TYPE
+            || pc->GetParentType() == CT_OC_BLOCK_EXPR
+            || pc->GetParentType() == CT_OC_BLOCK_ARG
+            || pc->GetParentType() == CT_OC_BLOCK
             || pc->Is(CT_OC_BLOCK_CARET)
-            || (  pc->next != nullptr
-               && pc->next->type == CT_OC_BLOCK_CARET)
-            || (  pc->prev != nullptr
-               && pc->prev->type == CT_OC_BLOCK_CARET)));
+            || pc->GetNext()->Is(CT_OC_BLOCK_CARET)
+            || pc->GetPrev()->Is(CT_OC_BLOCK_CARET)));
 }
 
 
@@ -2723,15 +2721,15 @@ static void handle_oc_class(Chunk *pc)
    angle_state_e as            = angle_state_e::NONE;
 
    LOG_FMT(LOCCLASS, "%s(%d): start [%s] [%s] line %zu\n",
-           __func__, __LINE__, pc->Text(), get_token_name(get_chunk_parent_type(pc)), pc->orig_line);
+           __func__, __LINE__, pc->Text(), get_token_name(pc->GetParentType()), pc->orig_line);
 
-   if (get_chunk_parent_type(pc) == CT_OC_PROTOCOL)
+   if (pc->GetParentType() == CT_OC_PROTOCOL)
    {
       tmp = pc->GetNextNcNnl();
 
       if (tmp->IsSemicolon())
       {
-         set_chunk_parent(tmp, get_chunk_parent_type(pc));
+         set_chunk_parent(tmp, pc->GetParentType());
          LOG_FMT(LOCCLASS, "%s(%d):   bail on semicolon\n", __func__, __LINE__);
          return;
       }
@@ -2813,14 +2811,14 @@ static void handle_oc_class(Chunk *pc)
       }
 
       if (  tmp->Is(CT_BRACE_OPEN)
-         && get_chunk_parent_type(tmp) != CT_ASSIGN)
+         && tmp->GetParentType() != CT_ASSIGN)
       {
          as = angle_state_e::CLOSE;
          set_chunk_parent(tmp, CT_OC_CLASS);
          tmp = tmp->GetNextType(CT_BRACE_CLOSE, tmp->level);
 
          if (  tmp->IsNotNullChunk()
-            && get_chunk_parent_type(tmp) != CT_ASSIGN)
+            && tmp->GetParentType() != CT_ASSIGN)
          {
             set_chunk_parent(tmp, CT_OC_CLASS);
          }
@@ -3707,7 +3705,7 @@ static void handle_oc_property_decl(Chunk *os)
                // add the parenthesis
                Chunk endchunk;
                endchunk.SetType(CT_COMMA);
-               set_chunk_parent(&endchunk, get_chunk_parent_type(curr_chunk));
+               set_chunk_parent(&endchunk, curr_chunk->GetParentType());
                endchunk.str         = ",";
                endchunk.level       = curr_chunk->level;
                endchunk.pp_level    = curr_chunk->pp_level;

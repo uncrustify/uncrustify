@@ -195,7 +195,7 @@ Chunk *skip_attribute_prev(Chunk *fp_close)
    while (true)
    {
       if (  pc->Is(CT_FPAREN_CLOSE)
-         && get_chunk_parent_type(pc) == CT_ATTRIBUTE)
+         && pc->GetParentType() == CT_ATTRIBUTE)
       {
          pc = pc->GetPrevType(CT_ATTRIBUTE, pc->level);
       }

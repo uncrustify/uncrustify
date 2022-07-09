@@ -37,7 +37,7 @@ void align_init_brace(Chunk *start)
 
    if (  pcSingle == nullptr
       || (  pcSingle->Is(CT_BRACE_CLOSE)
-         && get_chunk_parent_type(pcSingle) == CT_ASSIGN))
+         && pcSingle->GetParentType() == CT_ASSIGN))
    {
       // single line - nothing to do
       LOG_FMT(LALBR, "%s(%d): single line - nothing to do\n", __func__, __LINE__);

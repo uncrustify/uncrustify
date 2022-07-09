@@ -147,7 +147,7 @@ void align_func_proto(size_t span)
          log_rule_B("align_single_line_func");
          log_rule_B("align_on_operator");
 
-         if (  get_chunk_parent_type(pc) == CT_OPERATOR
+         if (  pc->GetParentType() == CT_OPERATOR
             && options::align_on_operator())
          {
             toadd = pc->GetPrevNcNnl();
