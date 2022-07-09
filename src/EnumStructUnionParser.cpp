@@ -1618,7 +1618,7 @@ void EnumStructUnionParser::mark_constructors()
               m_start->orig_line,
               m_start->orig_col,
               m_start->Text(),
-              get_token_name(get_chunk_parent_type(m_start)));
+              get_token_name(m_start->GetParentType()));
 
       log_pcf_flags(LFTOR, m_start->flags);
 
@@ -1726,7 +1726,7 @@ void EnumStructUnionParser::mark_extracorporeal_lvalues()
     * erroneously marked chunks - as previously mentioned, this likely
     * won't be necessary with improvements to the mark_lvalue() function
     */
-   if (get_chunk_parent_type(next) == CT_TEMPLATE)
+   if (next->GetParentType() == CT_TEMPLATE)
    {
       while (true)
       {
@@ -2015,7 +2015,7 @@ void EnumStructUnionParser::parse(Chunk *pc)
     * make sure this wasn't a cast, and also make sure we're
     * actually dealing with a class/enum/struct/union type
     */
-   if (  get_chunk_parent_type(m_start) == CT_C_CAST
+   if (  m_start->GetParentType() == CT_C_CAST
       || !chunk_is_class_enum_struct_union(m_start))
    {
       return;
@@ -2858,7 +2858,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
           * chunk as the type
           */
          if (  chunk_is_macro_reference(next)
-            || get_chunk_parent_type(m_start) == CT_TEMPLATE)
+            || m_start->GetParentType() == CT_TEMPLATE)
          {
             pc = m_end;
          }

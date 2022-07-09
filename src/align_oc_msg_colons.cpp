@@ -174,7 +174,7 @@ void align_oc_msg_colons()
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       if (  pc->Is(CT_SQUARE_OPEN)
-         && get_chunk_parent_type(pc) == CT_OC_MSG)
+         && pc->GetParentType() == CT_OC_MSG)
       {
          align_oc_msg_colon(pc);
       }

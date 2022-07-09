@@ -54,9 +54,9 @@ void do_parens()
             && pc->IsNotNullChunk())
       {
          if (  pc->IsNot(CT_SPAREN_OPEN)
-            || (  get_chunk_parent_type(pc) != CT_IF
-               && get_chunk_parent_type(pc) != CT_ELSEIF
-               && get_chunk_parent_type(pc) != CT_SWITCH))
+            || (  pc->GetParentType() != CT_IF
+               && pc->GetParentType() != CT_ELSEIF
+               && pc->GetParentType() != CT_SWITCH))
          {
             continue;
          }
@@ -126,7 +126,7 @@ void do_parens_assign()                         // Issue #3316
             LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
                     __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->type));
 
-            if (get_chunk_parent_type(p) == CT_WHILE)
+            if (p->GetParentType() == CT_WHILE)
             {
                continue;
             }
@@ -197,7 +197,7 @@ void do_parens_return()                         // Issue #3316
             LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
                     __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->type));
 
-            if (get_chunk_parent_type(p) == CT_WHILE)
+            if (p->GetParentType() == CT_WHILE)
             {
                continue;
             }

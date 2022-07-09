@@ -174,11 +174,11 @@ void align_func_params()
               get_token_name(pc->type), get_token_name(pc->parent_type));
 
       if (  pc->IsNot(CT_FPAREN_OPEN)
-         || (  get_chunk_parent_type(pc) != CT_FUNC_PROTO
-            && get_chunk_parent_type(pc) != CT_FUNC_DEF
-            && get_chunk_parent_type(pc) != CT_FUNC_CLASS_PROTO
-            && get_chunk_parent_type(pc) != CT_FUNC_CLASS_DEF
-            && get_chunk_parent_type(pc) != CT_TYPEDEF))
+         || (  pc->GetParentType() != CT_FUNC_PROTO
+            && pc->GetParentType() != CT_FUNC_DEF
+            && pc->GetParentType() != CT_FUNC_CLASS_PROTO
+            && pc->GetParentType() != CT_FUNC_CLASS_DEF
+            && pc->GetParentType() != CT_TYPEDEF))
       {
          continue;
       }

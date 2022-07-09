@@ -330,7 +330,7 @@ static void detect_space_options()
 
       if (pc->Is(CT_SEMICOLON))
       {
-         if (get_chunk_parent_type(pc) == CT_FOR)
+         if (pc->GetParentType() == CT_FOR)
          {
             if (prev->Is(CT_SPAREN_OPEN))
             {

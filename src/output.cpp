@@ -515,13 +515,13 @@ void output_parsed(FILE *pfile, bool withOptions)
 #ifdef WIN32
       fprintf(pfile, "%s# %3d>%19.19s|%19.19s|%19.19s[%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
               eol_marker, (int)pc->orig_line, get_token_name(pc->type),
-              get_token_name(get_chunk_parent_type(pc)), get_token_name(get_type_of_the_parent(pc)),
+              get_token_name(pc->GetParentType()), get_token_name(get_type_of_the_parent(pc)),
               (int)pc->column, (int)pc->orig_col, (int)pc->orig_col_end, (int)pc->orig_prev_sp,
               (int)pc->brace_level, (int)pc->level, (int)pc->pp_level, (int)pc->nl_count, pc->after_tab);
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu]",
               eol_marker, pc->orig_line, get_token_name(pc->type),
-              get_token_name(get_chunk_parent_type(pc)), get_token_name(get_type_of_the_parent(pc)),
+              get_token_name(pc->GetParentType()), get_token_name(get_type_of_the_parent(pc)),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
       // Print pc flags in groups of 4 hex characters
@@ -569,7 +569,7 @@ void output_parsed_csv(FILE *pfile)
    {
       fprintf(pfile, "%s%zu,%s,%s,%s,%zu,%zu,%zu,%d,%zu,%zu,%zu,",
               eol_marker, pc->orig_line, get_token_name(pc->type),
-              get_token_name(get_chunk_parent_type(pc)), get_token_name(get_type_of_the_parent(pc)),
+              get_token_name(pc->GetParentType()), get_token_name(get_type_of_the_parent(pc)),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
 
@@ -1684,8 +1684,8 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
    //        __func__, pc->orig_line, cmt.brace_col, cmt.base_col, cmt.column, pc->orig_col,
    //        pc->flags & (PCF_WAS_ALIGNED | PCF_RIGHT_COMMENT));
 
-   if (  get_chunk_parent_type(pc) == CT_COMMENT_START
-      || get_chunk_parent_type(pc) == CT_COMMENT_WHOLE)
+   if (  pc->GetParentType() == CT_COMMENT_START
+      || pc->GetParentType() == CT_COMMENT_WHOLE)
    {
       log_rule_B("indent_col1_comment");
 
@@ -1702,8 +1702,8 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
    log_rule_B("indent_cmt_with_tabs");
 
    if (  options::indent_cmt_with_tabs()
-      && (  get_chunk_parent_type(pc) == CT_COMMENT_END
-         || get_chunk_parent_type(pc) == CT_COMMENT_WHOLE))
+      && (  pc->GetParentType() == CT_COMMENT_END
+         || pc->GetParentType() == CT_COMMENT_WHOLE))
    {
       cmt.column = align_tab_column(cmt.column - 1);
       // LOG_FMT(LSYS, "%s: line %d, orig:%d new:%d\n",
@@ -1723,7 +1723,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
 static bool can_combine_comment(Chunk *pc, cmt_reflow &cmt)
 {
    // We can't combine if there is something other than a newline next
-   if (get_chunk_parent_type(pc) == CT_COMMENT_START)
+   if (pc->GetParentType() == CT_COMMENT_START)
    {
       return(false);
    }
@@ -1747,7 +1747,7 @@ static bool can_combine_comment(Chunk *pc, cmt_reflow &cmt)
             || (  next->column == cmt.base_col
                && pc->column == cmt.base_col)
             || (  next->column > cmt.base_col
-               && get_chunk_parent_type(pc) == CT_COMMENT_END)))
+               && pc->GetParentType() == CT_COMMENT_END)))
       {
          return(true);
       }
@@ -2863,9 +2863,9 @@ static bool kw_fcn_function(Chunk *cmt, unc_text &out_txt)
 {
    Chunk *fcn = get_next_function(cmt);
 
-   if (fcn)
+   if (fcn != nullptr)
    {
-      if (get_chunk_parent_type(fcn) == CT_OPERATOR)
+      if (fcn->GetParentType() == CT_OPERATOR)
       {
          out_txt.append("operator ");
       }
@@ -3008,7 +3008,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
 
    // For Objective-C we need to go to the previous chunk
    if (  tmp->IsNotNullChunk()
-      && get_chunk_parent_type(tmp) == CT_OC_MSG_DECL
+      && tmp->GetParentType() == CT_OC_MSG_DECL
       && tmp->Is(CT_PAREN_CLOSE))
    {
       tmp = tmp->GetPrevNcNnl();

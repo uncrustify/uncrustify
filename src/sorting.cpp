@@ -182,7 +182,7 @@ static bool has_dot(const unc_text &chunk_text)
  */
 static unc_text chunk_sort_str(Chunk *pc)
 {
-   if (get_chunk_parent_type(pc) == CT_PP_INCLUDE)
+   if (pc->GetParentType() == CT_PP_INCLUDE)
    {
       return(unc_text{ pc->str, 0, pc->Len() - 1 });
    }

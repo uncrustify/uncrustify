@@ -30,7 +30,7 @@ void enum_cleanup()
 
    while (pc->IsNotNullChunk())
    {
-      if (  get_chunk_parent_type(pc) == CT_ENUM
+      if (  pc->GetParentType() == CT_ENUM
          && pc->Is(CT_BRACE_CLOSE))
       {
          LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s\n",
