@@ -3463,7 +3463,7 @@ static void newline_oc_msg(Chunk *start)
          break;
       }
 
-      if (pc->Is(CT_OC_MSG_NAME))
+      if (pc->Is(CT_OC_COLON))
       {
          parameter_count++;
       }
