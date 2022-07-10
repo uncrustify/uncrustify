@@ -5,7 +5,7 @@
 ---------------------------
 
 # Uncrustify
-A source code beautifier for C, C++, C#, ObjectiveC, D, Java, Pawn and VALA
+A source code beautifier for C, C++, C#, Objective-C, D, Java, Pawn and Vala.
 
 ## Features
 * Highly configurable - 810 configurable options as of version 0.75.0
