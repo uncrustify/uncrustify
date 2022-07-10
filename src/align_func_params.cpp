@@ -169,9 +169,9 @@ void align_func_params()
 
    while ((pc = pc->GetNext())->IsNotNullChunk())
    {
-      LOG_FMT(LFLPAREN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', parent_type is %s, parent_type is %s\n",
+      LOG_FMT(LFLPAREN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(),
-              get_token_name(pc->type), get_token_name(pc->parent_type));
+              get_token_name(pc->type), get_token_name(pc->GetParentType()));
 
       if (  pc->IsNot(CT_FPAREN_OPEN)
          || (  pc->GetParentType() != CT_FUNC_PROTO

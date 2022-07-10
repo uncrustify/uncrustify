@@ -732,8 +732,7 @@ public:
    align_ptr_t  align;
    indent_ptr_t indent;
    E_Token      type;                        //! type of the chunk itself
-   E_Token      parent_type;                 //! type of the parent chunk usually CT_NONE
-   //! might be different from parent->parent_type (above)
+   //! might be different from parent->GetParentType() (above)
    size_t       orig_line;                   //! line number of chunk in input file
    size_t       orig_col;                    //! column where chunk started in the input file, is always > 0
    size_t       orig_col_end;                //! column where chunk ended in the input file, is always > 1
@@ -757,7 +756,12 @@ public:
 
 
 protected:
-   void copyFrom(const Chunk &o);              // !!! partial copy: chunk is not linked to others
+   void copyFrom(const Chunk &o);            // !!! partial copy: chunk is not linked to others
+
+
+   // --------- Data members
+   E_Token m_parentType;                     //! type of the parent chunk usually CT_NONE
+
 
    // --------- Private util functions
 

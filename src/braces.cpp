@@ -710,7 +710,7 @@ static void examine_brace(Chunk *bopen)
 
       if (semi_count > 0)
       {
-         LOG_FMT(LBRDEL, "%s(%d): bopen->parent_type is %s\n",
+         LOG_FMT(LBRDEL, "%s(%d): bopen->GetParentType() is %s\n",
                  __func__, __LINE__, get_token_name(bopen->GetParentType()));
 
          if (bopen->GetParentType() == CT_ELSE)

@@ -268,8 +268,8 @@ void rewrite_infinite_loops()
             rewrite_loop_in_place(while_keyword, desired_type, desired_condition);
 
             // Update the braces' parent types
-            start_brace->parent_type = CT_DO;
-            end_brace->parent_type   = CT_DO;
+            start_brace->SetParentType(CT_DO);
+            end_brace->SetParentType(CT_DO);
          }
          else
          {
@@ -289,8 +289,8 @@ void rewrite_infinite_loops()
             Chunk::Delete(bottom);
 
             // Update the braces' parent types
-            start_brace->parent_type = desired_type;
-            end_brace->parent_type   = desired_type;
+            start_brace->SetParentType(desired_type);
+            end_brace->SetParentType(desired_type);
          }
       }
       else if (  (  pc->Is(CT_WHILE)
@@ -328,8 +328,8 @@ void rewrite_infinite_loops()
             bottom->str = ";";
 
             // Update the braces' parent types
-            start_brace->parent_type = CT_DO;
-            end_brace->parent_type   = CT_DO;
+            start_brace->SetParentType(CT_DO);
+            end_brace->SetParentType(CT_DO);
          }
          else
          {
@@ -337,8 +337,8 @@ void rewrite_infinite_loops()
             rewrite_loop_in_place(pc, desired_type, desired_condition);
 
             // Update the braces' parent types
-            start_brace->parent_type = desired_type;
-            end_brace->parent_type   = desired_type;
+            start_brace->SetParentType(desired_type);
+            end_brace->SetParentType(desired_type);
          }
       }
    }

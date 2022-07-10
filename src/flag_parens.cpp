@@ -10,7 +10,7 @@
 #include "uncrustify.h"
 
 
-Chunk *flag_parens(Chunk *po, pcf_flags_t flags, E_Token opentype, E_Token parenttype, bool parent_all)
+Chunk *flag_parens(Chunk *po, pcf_flags_t flags, E_Token opentype, E_Token parent_type, bool parent_all)
 {
    LOG_FUNC_ENTRY();
    Chunk *paren_close;
@@ -27,9 +27,9 @@ Chunk *flag_parens(Chunk *po, pcf_flags_t flags, E_Token opentype, E_Token paren
    }
    LOG_FMT(LFLPAREN, "%s(%d): between  po is '%s', orig_line is %zu, orig_col is %zu, and\n",
            __func__, __LINE__, po->Text(), po->orig_line, po->orig_col);
-   LOG_FMT(LFLPAREN, "%s(%d): paren_close is '%s', orig_line is %zu, orig_col is %zu, type is %s, parent_type is %s\n",
+   LOG_FMT(LFLPAREN, "%s(%d): paren_close is '%s', orig_line is %zu, orig_col is %zu, type is %s, parent type is %s\n",
            __func__, __LINE__, paren_close->Text(), paren_close->orig_line, paren_close->orig_col,
-           get_token_name(opentype), get_token_name(parenttype));
+           get_token_name(opentype), get_token_name(parent_type));
    log_func_stack_inline(LFLPAREN);
 
    // the last chunk must be also modified. Issue #2149
@@ -39,7 +39,7 @@ Chunk *flag_parens(Chunk *po, pcf_flags_t flags, E_Token opentype, E_Token paren
    {
       if (  flags != PCF_NONE
          || (  parent_all
-            && parenttype != CT_NONE))
+            && parent_type != CT_NONE))
       {
          Chunk *pc;
 
@@ -51,7 +51,7 @@ Chunk *flag_parens(Chunk *po, pcf_flags_t flags, E_Token opentype, E_Token paren
 
             if (parent_all)
             {
-               pc->SetParentType(parenttype);
+               pc->SetParentType(parent_type);
             }
          }
       }
@@ -62,10 +62,10 @@ Chunk *flag_parens(Chunk *po, pcf_flags_t flags, E_Token opentype, E_Token paren
          paren_close->SetType((E_Token)(opentype + 1));
       }
 
-      if (parenttype != CT_NONE)
+      if (parent_type != CT_NONE)
       {
-         po->SetParentType(parenttype);
-         paren_close->SetParentType(parenttype);
+         po->SetParentType(parent_type);
+         paren_close->SetParentType(parent_type);
       }
    }
    return(paren_close->GetNextNcNnl(E_Scope::PREPROC));

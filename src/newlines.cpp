@@ -2425,7 +2425,7 @@ static void newlines_brace_pair(Chunk *br_open)
    Chunk *next = br_open->GetNextNc();
 
    // Insert a newline between the '=' and open brace, if needed
-   LOG_FMT(LNL1LINE, "%s(%d): br_open->Text() '%s', br_open->type [%s], br_open->parent_type [%s]\n",
+   LOG_FMT(LNL1LINE, "%s(%d): br_open->Text() '%s', br_open->type [%s], br_open->GetParentType() [%s]\n",
            __func__, __LINE__, br_open->Text(), get_token_name(br_open->type),
            get_token_name(br_open->GetParentType()));
 
@@ -2954,13 +2954,13 @@ static void newline_func_multi_line(Chunk *start)
       && chunk_is_newline_between(start, pc))
    {
       Chunk *start_next         = start->GetNextNcNnl();
-      bool  has_leading_closure = (  start_next->parent_type == CT_OC_BLOCK_EXPR
-                                  || start_next->parent_type == CT_CPP_LAMBDA
+      bool  has_leading_closure = (  start_next->GetParentType() == CT_OC_BLOCK_EXPR
+                                  || start_next->GetParentType() == CT_CPP_LAMBDA
                                   || start_next->Is(CT_BRACE_OPEN));
 
       Chunk *prev_end            = pc->GetPrevNcNnl();
-      bool  has_trailing_closure = (  prev_end->parent_type == CT_OC_BLOCK_EXPR
-                                   || prev_end->parent_type == CT_CPP_LAMBDA
+      bool  has_trailing_closure = (  prev_end->GetParentType() == CT_OC_BLOCK_EXPR
+                                   || prev_end->GetParentType() == CT_CPP_LAMBDA
                                    || prev_end->Is(CT_BRACE_OPEN));
 
       if (  add_start
@@ -3028,11 +3028,11 @@ static void newline_func_multi_line(Chunk *start)
                      Chunk *prev_comma  = pc->GetPrevNcNnl();
                      Chunk *after_comma = pc->GetNextNcNnl();
 
-                     if (!(  (  prev_comma->parent_type == CT_OC_BLOCK_EXPR
-                             || prev_comma->parent_type == CT_CPP_LAMBDA
+                     if (!(  (  prev_comma->GetParentType() == CT_OC_BLOCK_EXPR
+                             || prev_comma->GetParentType() == CT_CPP_LAMBDA
                              || prev_comma->Is(CT_BRACE_OPEN))
-                          || (  after_comma->parent_type == CT_OC_BLOCK_EXPR
-                             || after_comma->parent_type == CT_CPP_LAMBDA
+                          || (  after_comma->GetParentType() == CT_OC_BLOCK_EXPR
+                             || after_comma->GetParentType() == CT_CPP_LAMBDA
                              || after_comma->Is(CT_BRACE_OPEN))))
                      {
                         newline_iarf(pc, IARF_ADD);
@@ -4107,8 +4107,8 @@ void newlines_cleanup_braces(bool first)
                && (  prev->type == CT_TYPE
                   || prev->type == CT_WORD
                   || prev->type == CT_ASSIGN                      // Issue #2957
-                  || prev->parent_type == CT_TEMPLATE
-                  || prev->parent_type == CT_DECLTYPE))
+                  || prev->GetParentType() == CT_TEMPLATE
+                  || prev->GetParentType() == CT_DECLTYPE))
             {
                log_rule_B("nl_type_brace_init_lst");
                newline_iarf_pair(prev, pc, options::nl_type_brace_init_lst(), true);
@@ -4987,7 +4987,7 @@ void newlines_cleanup_braces(bool first)
                  || language_is_set(LANG_CPP)))                 // Issue #2574
       {
          // Issue #1124
-         if (pc->parent_type != CT_FUNC_DEF)
+         if (pc->GetParentType() != CT_FUNC_DEF)
          {
             newline_iarf(pc->GetPrevNnl(), options::nl_before_member());
             log_rule_B("nl_before_member");

@@ -345,7 +345,7 @@ static bool split_line(Chunk *start)
            __func__, __LINE__, start->Text(), start->orig_line, start->orig_col, get_token_name(start->type));
    LOG_FMT(LSPLIT, "   start->flags ");
    log_pcf_flags(LSPLIT, start->flags);
-   LOG_FMT(LSPLIT, "   start->parent_type %s, (PCF_IN_FCN_DEF is %s), (PCF_IN_FCN_CALL is %s)\n",
+   LOG_FMT(LSPLIT, "   start->GetParentType() %s, (PCF_IN_FCN_DEF is %s), (PCF_IN_FCN_CALL is %s)\n",
            get_token_name(start->GetParentType()),
            start->flags.test((PCF_IN_FCN_DEF)) ? "TRUE" : "FALSE",
            start->flags.test((PCF_IN_FCN_CALL)) ? "TRUE" : "FALSE");

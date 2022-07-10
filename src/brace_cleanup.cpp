@@ -746,14 +746,14 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
 
          if (pc->GetParentType() == CT_NAMESPACE)
          {
-            LOG_FMT(LBCSPOP, "%s(%d): parent_type is NAMESPACE\n",
+            LOG_FMT(LBCSPOP, "%s(%d): parent type is NAMESPACE\n",
                     __func__, __LINE__);
             Chunk *tmp = frm.top().pc;
 
             if (  tmp != nullptr
                && tmp->GetParentType() == CT_NAMESPACE)
             {
-               LOG_FMT(LBCSPOP, "%s(%d): tmp->parent_type is NAMESPACE\n",
+               LOG_FMT(LBCSPOP, "%s(%d): tmp->GetParentType() is NAMESPACE\n",
                        __func__, __LINE__);
 
                log_rule_B("indent_namespace");
@@ -768,7 +768,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
                }
             }
          }
-         LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent_type is %s\n",
+         LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type), get_token_name(pc->GetParentType()));
 
          if (!single)
@@ -786,7 +786,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
    // Issue #2281
 
    if (  pc->Is(CT_BRACE_OPEN)
-      && pc->parent_type == CT_SWITCH)
+      && pc->GetParentType() == CT_SWITCH)
    {
       size_t idx = frm.size();
       LOG_FMT(LBCSPOP, "%s(%d): idx is %zu\n",

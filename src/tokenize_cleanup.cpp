@@ -513,7 +513,7 @@ void tokenize_cleanup()
 
       // Change angle open/close to CT_COMPARE, if not a template thingy
       if (  pc->Is(CT_ANGLE_OPEN)
-         && pc->parent_type != CT_TYPE_CAST)
+         && pc->GetParentType() != CT_TYPE_CAST)
       {
          /*
           * pretty much all languages except C use <> for something other than
@@ -532,7 +532,7 @@ void tokenize_cleanup()
       }
 
       if (  pc->Is(CT_ANGLE_CLOSE)
-         && pc->parent_type != CT_TEMPLATE)
+         && pc->GetParentType() != CT_TEMPLATE)
       {
          if (in_type_cast)
          {

@@ -305,7 +305,7 @@ void indent_text(void)
 
       if (cpd.settings[UO_indent_brace_parent].b)
       {
-         parent_token_indent = token_indent(pc->parent_type);
+         parent_token_indent = token_indent(pc->GetParentType());
       }
 
       /* Clean up after a #define */
@@ -459,13 +459,13 @@ void indent_text(void)
                indent_column = frm.pse[frm.pse_tos].indent_tmp;
             }
 
-            if ((pc->parent_type == CT_IF) ||
-                (pc->parent_type == CT_ELSE) ||
-                (pc->parent_type == CT_ELSEIF) ||
-                (pc->parent_type == CT_DO) ||
-                (pc->parent_type == CT_WHILE) ||
-                (pc->parent_type == CT_SWITCH) ||
-                (pc->parent_type == CT_FOR))
+            if ((pc->GetParentType() == CT_IF) ||
+                (pc->GetParentType() == CT_ELSE) ||
+                (pc->GetParentType() == CT_ELSEIF) ||
+                (pc->GetParentType() == CT_DO) ||
+                (pc->GetParentType() == CT_WHILE) ||
+                (pc->GetParentType() == CT_SWITCH) ||
+                (pc->GetParentType() == CT_FOR))
             {
                indent_column += cpd.settings[UO_indent_brace].n;
             }
@@ -498,13 +498,13 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
 
             /* If this brace is part of a statement, bump it out by indent_brace */
-            if ((pc->parent_type == CT_IF) ||
-                (pc->parent_type == CT_ELSE) ||
-                (pc->parent_type == CT_ELSEIF) ||
-                (pc->parent_type == CT_DO) ||
-                (pc->parent_type == CT_WHILE) ||
-                (pc->parent_type == CT_SWITCH) ||
-                (pc->parent_type == CT_FOR))
+            if ((pc->GetParentType() == CT_IF) ||
+                (pc->GetParentType() == CT_ELSE) ||
+                (pc->GetParentType() == CT_ELSEIF) ||
+                (pc->GetParentType() == CT_DO) ||
+                (pc->GetParentType() == CT_WHILE) ||
+                (pc->GetParentType() == CT_SWITCH) ||
+                (pc->GetParentType() == CT_FOR))
             {
                if (parent_token_indent != 0)
                {
@@ -516,17 +516,17 @@ void indent_text(void)
                   indent_column += cpd.settings[UO_indent_brace].n;
                }
             }
-            else if (pc->parent_type == CT_CASE)
+            else if (pc->GetParentType() == CT_CASE)
             {
                /* The indent_case_brace setting affects the parent CT_CASE */
                frm.pse[frm.pse_tos].indent_tmp += cpd.settings[UO_indent_case_brace].n;
                frm.pse[frm.pse_tos].indent     += cpd.settings[UO_indent_case_brace].n;
             }
-            else if ((pc->parent_type == CT_CLASS) && !cpd.settings[UO_indent_class].b)
+            else if ((pc->GetParentType() == CT_CLASS) && !cpd.settings[UO_indent_class].b)
             {
                frm.pse[frm.pse_tos].indent -= indent_size;
             }
-            else if ((pc->parent_type == CT_NAMESPACE) && !cpd.settings[UO_indent_namespace].b)
+            else if ((pc->GetParentType() == CT_NAMESPACE) && !cpd.settings[UO_indent_namespace].b)
             {
                frm.pse[frm.pse_tos].indent -= indent_size;
             }
@@ -619,7 +619,7 @@ void indent_text(void)
 
          if (cpd.settings[UO_indent_func_call_param].b &&
              (pc->type == CT_FPAREN_OPEN) &&
-             (pc->parent_type == CT_FUNC_CALL))
+             (pc->GetParentType() == CT_FUNC_CALL))
          {
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
          }
@@ -768,7 +768,7 @@ void indent_text(void)
          vardefcol = pc->column;
       }
       if (pc->IsSemicolon() ||
-          ((pc->type == CT_BRACE_OPEN) && (pc->parent_type == CT_FUNCTION)))
+          ((pc->type == CT_BRACE_OPEN) && (pc->GetParentType() == CT_FUNCTION)))
       {
          vardefcol = 0;
       }

@@ -1612,7 +1612,7 @@ void EnumStructUnionParser::mark_constructors()
       && chunk_is_class_or_struct(m_start))
    {
       LOG_FMT(LFTOR,
-              "%s(%d): orig_line is %zu, orig_col is %zu, start is '%s', parent_type is %s\n",
+              "%s(%d): orig_line is %zu, orig_col is %zu, start is '%s', parent type is %s\n",
               __unqualified_func__,
               __LINE__,
               m_start->orig_line,

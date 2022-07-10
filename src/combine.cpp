@@ -719,7 +719,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    }
 
    if (  pc->Is(CT_DECLTYPE)
-      && pc->parent_type != CT_FUNC_DEF)
+      && pc->GetParentType() != CT_FUNC_DEF)
    {
       Chunk *tmp = pc->GetNextNcNnl();
 
@@ -2005,8 +2005,8 @@ void fix_symbols()
          && pc->IsNotNullChunk())
    {
       char copy[1000];
-      LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent_type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy), get_token_name(pc->type), get_token_name(pc->parent_type));
+      LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy), get_token_name(pc->type), get_token_name(pc->GetParentType()));
 
       // Can't have a variable definition inside [ ]
       if (square_level < 0)
@@ -2076,8 +2076,8 @@ void fix_symbols()
        */
       // Issue #2279
       // Issue #2478
-      LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent_type is %s\n   ",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy), get_token_name(pc->type), get_token_name(pc->parent_type));
+      LOG_FMT(LFCNR, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n   ",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy), get_token_name(pc->type), get_token_name(pc->GetParentType()));
       log_pcf_flags(LFCNR, pc->flags);
 
       if (  (square_level < 0)

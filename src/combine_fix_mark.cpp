@@ -1272,7 +1272,7 @@ void mark_function(Chunk *pc)
          return;
       }
    }
-   LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s, type is %s, parent_type is %s\n",
+   LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s, type is %s, parent type is %s\n",
            __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(),
            get_token_name(pc->type), get_token_name(pc->GetParentType()));
    LOG_FMT(LFCN, "   level is %zu, brace_level is %zu, next->Text() '%s', next->type is %s, next->level is %zu\n",
@@ -1683,7 +1683,7 @@ void mark_function(Chunk *pc)
                LOG_FMT(LFCN, "%s(%d):   --> maybe a proto/def\n",
                        __func__, __LINE__);
 
-               LOG_FMT(LFCN, "%s(%d): prev is '%s', orig_line is %zu, orig_col is %zu, type is %s, parent_type is %s\n",
+               LOG_FMT(LFCN, "%s(%d): prev is '%s', orig_line is %zu, orig_col is %zu, type is %s, parent type is %s\n",
                        __func__, __LINE__, prev->Text(), prev->orig_line, prev->orig_col,
                        get_token_name(prev->type), get_token_name(prev->GetParentType()));
                log_pcf_flags(LFCN, pc->flags);
