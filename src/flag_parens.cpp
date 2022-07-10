@@ -51,7 +51,7 @@ Chunk *flag_parens(Chunk *po, pcf_flags_t flags, E_Token opentype, E_Token paren
 
             if (parent_all)
             {
-               set_chunk_parent(pc, parenttype);
+               pc->SetParentType(parenttype);
             }
          }
       }
@@ -64,8 +64,8 @@ Chunk *flag_parens(Chunk *po, pcf_flags_t flags, E_Token opentype, E_Token paren
 
       if (parenttype != CT_NONE)
       {
-         set_chunk_parent(po, parenttype);
-         set_chunk_parent(paren_close, parenttype);
+         po->SetParentType(parenttype);
+         paren_close->SetParentType(parenttype);
       }
    }
    return(paren_close->GetNextNcNnl(E_Scope::PREPROC));

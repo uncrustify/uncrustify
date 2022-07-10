@@ -1437,7 +1437,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    Chunk chunk;
 
    chunk.SetType(CT_BRACE_OPEN);
-   set_chunk_parent(&chunk, CT_CASE);
+   chunk.SetParentType(CT_CASE);
    chunk.orig_line   = cl_colon->orig_line;
    chunk.orig_col    = cl_colon->orig_col;
    chunk.level       = cl_colon->level;

@@ -166,7 +166,7 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
       LOG_FMT(LNOTE, "%s(%d): Preproc parent not set correctly on orig_line %zu: got %s expected %s\n",
               __func__, __LINE__, pc->orig_line, get_token_name(pc->GetParentType()),
               get_token_name(next->type));
-      set_chunk_parent(pc, next->type);
+      pc->SetParentType(next->type);
    }
    LOG_FMT(LPFCHK, "%s(%d): orig_line is %zu, %s\n",
            __func__, __LINE__, pc->orig_line, get_token_name(pc->GetParentType()));

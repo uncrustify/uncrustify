@@ -563,8 +563,8 @@ Chunk *set_paren_parent(Chunk *start, E_Token parent)
               end->orig_line, end->orig_col, end->Text(),
               get_token_name(start->type), get_token_name(parent));
       log_func_stack_inline(LFLPAREN);
-      set_chunk_parent(start, parent);
-      set_chunk_parent(end, parent);
+      start->SetParentType(parent);
+      end->SetParentType(parent);
       LOG_FMT(LFLPAREN, "%s(%d):\n", __func__, __LINE__);
       return(end->GetNextNcNnl(E_Scope::PREPROC));
    }

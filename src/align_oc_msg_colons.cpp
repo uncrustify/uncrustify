@@ -147,7 +147,7 @@ void align_oc_msg_colon(Chunk *so)
       Chunk chunk;
 
       chunk.SetType(CT_SPACE);
-      set_chunk_parent(&chunk, CT_NONE);
+      chunk.SetParentType(CT_NONE);
       chunk.orig_line   = longest->orig_line;
       chunk.orig_col    = longest->orig_col;
       chunk.level       = longest->level;

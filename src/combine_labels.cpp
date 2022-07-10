@@ -182,12 +182,12 @@ void combine_labels()
 
             if (tmp->Is(CT_BRACE_OPEN))
             {
-               set_chunk_parent(tmp, CT_CASE);
+               tmp->SetParentType(CT_CASE);
                tmp = tmp->GetNextType(CT_BRACE_CLOSE, tmp->level);
 
                if (tmp->IsNotNullChunk())
                {
-                  set_chunk_parent(tmp, CT_CASE);
+                  tmp->SetParentType(CT_CASE);
                }
             }
 

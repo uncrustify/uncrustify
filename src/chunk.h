@@ -77,9 +77,25 @@ public:
    const char *ElidedText(char *for_the_copy) const;
 
    /**
-    * @brief returns the type of the chunk parent
+    * @brief returns the type of the parent chunk
     */
    E_Token GetParentType() const;
+
+   /**
+    * @brief Sets the chunk type
+    * @param token the type to set
+    * @param func the name of the function from where this method is called (for log purposes)
+    * @param line the line number from where this method is called (for log purposes)
+    */
+   void SetTypeReal(const E_Token token, const char *func, const int line);
+
+   /**
+    * @brief Sets the type of the parent chunk
+    * @param token the type to set
+    * @param func the name of the function from where this method is called (for log purposes)
+    * @param line the line number from where this method is called (for log purposes)
+    */
+   void SetParentTypeReal(const E_Token token, const char *func, const int line);
 
 
    // --------- Get* chunk functions
@@ -706,14 +722,6 @@ public:
     */
    void SwapLines(Chunk *other);
 
-   /**
-    * @brief Set the chunk type
-    * @param token the type to set
-    * @param func the name of the function from where this method is called (for log purposes)
-    * @param line the line number from where this method is called (for log purposes)
-    */
-   void SetTypeReal(const E_Token token, const char *func, const int line);
-
 
    // --------- Data members
 
@@ -1210,13 +1218,10 @@ inline bool Chunk::IsEnum() const
 }
 
 
-void set_chunk_parent_real(Chunk *pc, E_Token tt, const char *func, int line);
+#define SetType(tt)          SetTypeReal((tt), __unqualified_func__, __LINE__)
 
 
-#define SetType(tt)                 SetTypeReal((tt), __unqualified_func__, __LINE__)
-
-
-#define set_chunk_parent(pc, tt)    set_chunk_parent_real((pc), (tt), __unqualified_func__, __LINE__)
+#define SetParentType(tt)    SetParentTypeReal((tt), __unqualified_func__, __LINE__)
 
 
 void chunk_flags_set_real(Chunk *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits);

@@ -72,7 +72,7 @@ Chunk *pawn_add_vsemi_after(Chunk *pc)
    Chunk chunk = *pc;
 
    chunk.SetType(CT_VSEMICOLON);
-   set_chunk_parent(&chunk, CT_NONE);
+   chunk.SetParentType(CT_NONE);
    chunk.str     = options::mod_pawn_semicolon() ? ";" : "";
    chunk.column += pc->Len();
 
@@ -395,7 +395,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
               __func__, pc->orig_line, pc->Text(), get_token_name(last->type));
 
       last->SetType(CT_ANGLE_OPEN);
-      set_chunk_parent(last, CT_FUNC_DEF);
+      last->SetParentType(CT_FUNC_DEF);
 
       while (  ((last = last->GetNext())->IsNotNullChunk())
             && !last->IsString(">"))
@@ -408,7 +408,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
          LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle close %s\n",
                  __func__, pc->orig_line, pc->Text(), get_token_name(last->type));
          last->SetType(CT_ANGLE_CLOSE);
-         set_chunk_parent(last, CT_FUNC_DEF);
+         last->SetParentType(CT_FUNC_DEF);
       }
       last = last->GetNextNcNnl();
    }
@@ -420,12 +420,12 @@ static Chunk *pawn_process_func_def(Chunk *pc)
 
    if (last->Is(CT_BRACE_OPEN))
    {
-      set_chunk_parent(last, CT_FUNC_DEF);
+      last->SetParentType(CT_FUNC_DEF);
       last = last->GetNextType(CT_BRACE_CLOSE, last->level);
 
       if (last->IsNotNullChunk())
       {
-         set_chunk_parent(last, CT_FUNC_DEF);
+         last->SetParentType(CT_FUNC_DEF);
       }
    }
    else
@@ -441,7 +441,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       Chunk chunk = *last;
       chunk.str.clear();
       chunk.SetType(CT_VBRACE_OPEN);
-      set_chunk_parent(&chunk, CT_FUNC_DEF);
+      chunk.SetParentType(CT_FUNC_DEF);
 
       Chunk *prev = chunk.CopyAndAddBefore(last);
       last = prev;
@@ -480,7 +480,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       chunk = *last;
       chunk.str.clear();
       chunk.SetType(CT_VBRACE_CLOSE);
-      set_chunk_parent(&chunk, CT_FUNC_DEF);
+      chunk.SetParentType(CT_FUNC_DEF);
       chunk.column     += last->Len();
       chunk.level       = 0;
       chunk.brace_level = 0;
