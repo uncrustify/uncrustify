@@ -710,7 +710,7 @@ static void examine_brace(Chunk *bopen)
 
       if (semi_count > 0)
       {
-         LOG_FMT(LBRDEL, "%s(%d): bopen->parent_type is %s\n",
+         LOG_FMT(LBRDEL, "%s(%d): bopen->GetParentType() is %s\n",
                  __func__, __LINE__, get_token_name(bopen->GetParentType()));
 
          if (bopen->GetParentType() == CT_ELSE)
@@ -1437,7 +1437,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    Chunk chunk;
 
    chunk.SetType(CT_BRACE_OPEN);
-   set_chunk_parent(&chunk, CT_CASE);
+   chunk.SetParentType(CT_CASE);
    chunk.orig_line   = cl_colon->orig_line;
    chunk.orig_col    = cl_colon->orig_col;
    chunk.level       = cl_colon->level;

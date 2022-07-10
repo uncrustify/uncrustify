@@ -112,7 +112,7 @@ void output_parsed(FILE *pfile)
     {
     fprintf(pfile, "\n%3d> %13.13s[%13.13s][%2d/%2d/%2d][%d/%d/%d][%6x][%d-%d]",
             pc->orig_line, get_token_name(pc->type),
-            get_token_name(pc->parent_type),
+            get_token_name(pc->GetParentType()),
             pc->column, pc->orig_col, pc->orig_col_end,
             pc->brace_level, pc->level, pc->pp_level,
             pc->flags, pc->nl_count, pc->after_tab);
@@ -361,7 +361,7 @@ Chunk *output_comment_cpp(Chunk *first)
   int col_br = 1 + (first->brace_level * cpd.settings[UO_indent_columns].n);
 
     /* Make sure we have at least one space past the last token */
-  if (first->parent_type == CT_COMMENT_END)
+  if (first->GetParentType() == CT_COMMENT_END)
     {
     Chunk *prev = first->GetPrev();
 
@@ -406,7 +406,7 @@ Chunk *output_comment_cpp(Chunk *first)
           (next->type == CT_COMMENT_CPP) &&
           (((next->column == 1) && (first->column == 1)) ||
            ((next->column == col_br) && (first->column == col_br)) ||
-           ((next->column > col_br) && (first->parent_type == CT_COMMENT_END))))
+           ((next->column > col_br) && (first->GetParentType() == CT_COMMENT_END))))
         combined = true;
       }
     }
@@ -449,7 +449,7 @@ Chunk *output_comment_cpp(Chunk *first)
 
     if (((pc->column == 1) && (first->column == 1)) ||
         ((pc->column == col_br) && (first->column == col_br)) ||
-        ((pc->column > col_br) && (first->parent_type == CT_COMMENT_END)))
+        ((pc->column > col_br) && (first->GetParentType() == CT_COMMENT_END)))
       {
       last = pc;
 cpp_newline:

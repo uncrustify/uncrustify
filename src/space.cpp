@@ -1100,7 +1100,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (first->Is(CT_BIT_COLON))
    {
       if (  first->flags.test(PCF_IN_ENUM)
-         || first->parent_type == CT_ENUM)
+         || first->GetParentType() == CT_ENUM)
       {
          // Add or remove space around assignment ':' in enum.
          log_rule("sp_enum_colon");
@@ -1111,7 +1111,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (second->Is(CT_BIT_COLON))
    {
       if (  second->flags.test(PCF_IN_ENUM)
-         || second->parent_type == CT_ENUM)
+         || second->GetParentType() == CT_ENUM)
       {
          // Add or remove space around assignment ':' in enum.
          log_rule("sp_enum_colon");
@@ -1500,7 +1500,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       || first->Is(CT_CNG_HASINC)
       || first->Is(CT_CNG_HASINCN)
       || (  first->Is(CT_BRACE_CLOSE)
-         && first->parent_type == CT_BRACED_INIT_LIST
+         && first->GetParentType() == CT_BRACED_INIT_LIST
          && second->Is(CT_FPAREN_OPEN)))
    {
       if (  (options::sp_func_call_paren_empty() != IARF_IGNORE)

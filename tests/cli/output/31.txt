@@ -29,7 +29,7 @@ indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : pc->orig_line is 2, orig_col is 1, Text() is '{', type is BRACE_OPEN
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 1, ... indent is 9
-indent_text : orig_line is 2, orig_col is 1, Text() is '{', parent_type is STRUCT
+indent_text : orig_line is 2, orig_col is 1, Text() is '{', parent type is STRUCT
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 reindent_line : orig_line is 2, orig_col is 1, on '{' [BRACE_OPEN/STRUCT] => 1
  [CallStack]
@@ -229,7 +229,7 @@ indent_text : pc->orig_line is 6, orig_col is 1, Text() is '{', type is BRACE_OP
 indent_text : pc->orig_line is 6, orig_col is 1, Text() is '{', type is BRACE_OPEN
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : frm.pse_tos is 2, ... indent is 17
-indent_text : orig_line is 6, orig_col is 1, Text() is '{', parent_type is FUNC_CLASS_DEF
+indent_text : orig_line is 6, orig_col is 1, Text() is '{', parent type is FUNC_CLASS_DEF
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 reindent_line : orig_line is 6, orig_col is 1, on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9
  [CallStack]
@@ -302,7 +302,7 @@ indent_text : orig_line is 10, orig_col is 1, column is 1, for '{'
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : frm.pse_tos is 2, ... indent is 17
-indent_text : orig_line is 10, orig_col is 1, Text() is '{', parent_type is FUNC_CLASS_DEF
+indent_text : orig_line is 10, orig_col is 1, Text() is '{', parent type is FUNC_CLASS_DEF
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 reindent_line : orig_line is 10, orig_col is 1, on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9
  [CallStack]
@@ -467,7 +467,7 @@ indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : pc->orig_line is 2, orig_col is 1, Text() is '{', type is BRACE_OPEN
 indent_text : frm.pse_tos is 0, ...indent_tmp is 1
 indent_text : frm.pse_tos is 1, ... indent is 9
-indent_text : orig_line is 2, orig_col is 1, Text() is '{', parent_type is STRUCT
+indent_text : orig_line is 2, orig_col is 1, Text() is '{', parent type is STRUCT
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 reindent_line : orig_line is 2, orig_col is 1, on '{' [BRACE_OPEN/STRUCT] => 1
  [CallStack]
@@ -667,7 +667,7 @@ indent_text : pc->orig_line is 6, orig_col is 1, Text() is '{', type is BRACE_OP
 indent_text : pc->orig_line is 6, orig_col is 1, Text() is '{', type is BRACE_OPEN
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : frm.pse_tos is 2, ... indent is 17
-indent_text : orig_line is 6, orig_col is 1, Text() is '{', parent_type is FUNC_CLASS_DEF
+indent_text : orig_line is 6, orig_col is 1, Text() is '{', parent type is FUNC_CLASS_DEF
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 reindent_line : orig_line is 6, orig_col is 1, on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9
  [CallStack]
@@ -740,7 +740,7 @@ indent_text : orig_line is 10, orig_col is 1, column is 9, for '{'
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : frm.pse_tos is 1, ...indent_tmp is 9
 indent_text : frm.pse_tos is 2, ... indent is 17
-indent_text : orig_line is 10, orig_col is 1, Text() is '{', parent_type is FUNC_CLASS_DEF
+indent_text : orig_line is 10, orig_col is 1, Text() is '{', parent type is FUNC_CLASS_DEF
 indent_text : frm.pse_tos is 2, ...indent_tmp is 17
 reindent_line : orig_line is 10, orig_col is 1, on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9
  [CallStack]

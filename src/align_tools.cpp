@@ -40,7 +40,7 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
 
    if (tmp != nullptr)
    {
-      set_chunk_parent(start, CT_TSQUARE);
+      start->SetParentType(CT_TSQUARE);
       start            = tmp;
       cpd.al_c99_array = true;
    }

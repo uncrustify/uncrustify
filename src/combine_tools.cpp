@@ -549,7 +549,7 @@ void make_type(Chunk *pc)
 } // make_type
 
 
-Chunk *set_paren_parent(Chunk *start, E_Token parent)
+Chunk *set_paren_parent(Chunk *start, E_Token parent_type)
 {
    LOG_FUNC_ENTRY();
    Chunk *end;
@@ -558,13 +558,13 @@ Chunk *set_paren_parent(Chunk *start, E_Token parent)
 
    if (end->IsNotNullChunk())
    {
-      LOG_FMT(LFLPAREN, "%s(%d): %zu:%zu '%s' and %zu:%zu '%s' type is %s, parent_type is %s",
+      LOG_FMT(LFLPAREN, "%s(%d): %zu:%zu '%s' and %zu:%zu '%s' type is %s, parent type is %s",
               __func__, __LINE__, start->orig_line, start->orig_col, start->Text(),
               end->orig_line, end->orig_col, end->Text(),
-              get_token_name(start->type), get_token_name(parent));
+              get_token_name(start->type), get_token_name(parent_type));
       log_func_stack_inline(LFLPAREN);
-      set_chunk_parent(start, parent);
-      set_chunk_parent(end, parent);
+      start->SetParentType(parent_type);
+      end->SetParentType(parent_type);
       LOG_FMT(LFLPAREN, "%s(%d):\n", __func__, __LINE__);
       return(end->GetNextNcNnl(E_Scope::PREPROC));
    }

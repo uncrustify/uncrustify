@@ -77,8 +77,8 @@ void flag_cpp_braced_init_list(Chunk *pc, Chunk *next)
    Chunk *brace_open  = pc->GetNextNcNnl();
    Chunk *brace_close = next->SkipToMatch();
 
-   set_chunk_parent(brace_open, CT_BRACED_INIT_LIST);
-   set_chunk_parent(brace_close, CT_BRACED_INIT_LIST);
+   brace_open->SetParentType(CT_BRACED_INIT_LIST);
+   brace_close->SetParentType(CT_BRACED_INIT_LIST);
 
    Chunk *tmp = brace_close->GetNextNcNnl();
 
@@ -94,9 +94,9 @@ void flag_cpp_braced_init_list(Chunk *pc, Chunk *next)
          if (c->IsNotNullChunk())
          {
             tmp->SetType(CT_FPAREN_OPEN);
-            set_chunk_parent(tmp, CT_FUNC_CALL);
+            tmp->SetParentType(CT_FUNC_CALL);
             c->SetType(CT_FPAREN_CLOSE);
-            set_chunk_parent(c, CT_FUNC_CALL);
+            c->SetParentType(CT_FUNC_CALL);
          }
       }
    }

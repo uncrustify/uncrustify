@@ -53,13 +53,13 @@ Chunk &Chunk::operator=(const Chunk &o)
 
 void Chunk::copyFrom(const Chunk &o)
 {
-   next        = nullptr;
-   prev        = nullptr;
-   parent      = nullptr;
-   align       = o.align;
-   indent      = o.indent;
-   type        = o.type;
-   parent_type = o.parent_type;
+   next         = nullptr;
+   prev         = nullptr;
+   parent       = nullptr;
+   align        = o.align;
+   indent       = o.indent;
+   type         = o.type;
+   m_parentType = o.m_parentType;
 
    orig_line     = o.orig_line;
    orig_col      = o.orig_col;
@@ -90,7 +90,7 @@ void Chunk::Reset()
    prev          = nullptr;
    parent        = nullptr;
    type          = CT_NONE;
-   parent_type   = CT_NONE;
+   m_parentType  = CT_NONE;
    orig_line     = 0;
    orig_col      = 0;
    orig_col_end  = 0;
@@ -764,14 +764,14 @@ void chunk_flags_set_real(Chunk *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits)
       {
          LOG_FMT(LSETFLG,
                  "%s(%d): %016llx^%016llx=%016llx\n"
-                 "   orig_line is %zu, orig_col is %zu, Text() '%s', type is %s,",
+                 "   orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s,",
                  __func__, __LINE__,
                  static_cast<pcf_flags_t::int_t>(pc->flags),
                  static_cast<pcf_flags_t::int_t>(pc->flags ^ nflags),
                  static_cast<pcf_flags_t::int_t>(nflags),
                  pc->orig_line, pc->orig_col, pc->Text(),
                  get_token_name(pc->type));
-         LOG_FMT(LSETFLG, " parent_type is %s,\n  ",
+         LOG_FMT(LSETFLG, " parent type is %s,\n  ",
                  get_token_name(pc->GetParentType()));
          log_func_stack_inline(LSETFLG);
          pc->flags = nflags;
@@ -800,25 +800,23 @@ void Chunk::SetTypeReal(const E_Token token, const char *func, const int line)
    {
       LOG_FMT(LSETTYP, "'%s'\n", Text());
    }
-   LOG_FMT(LSETTYP, "   type is %s, parent_type is %s => *type is %s, *parent_type is %s\n",
-           get_token_name(type), get_token_name(this->GetParentType()),
-           get_token_name(token), get_token_name(this->GetParentType()));
+   LOG_FMT(LSETTYP, "   type is %s, parent type is %s => new type is %s\n",
+           get_token_name(type), get_token_name(GetParentType()), get_token_name(token));
    type = token;
 }
 
 
-void set_chunk_parent_real(Chunk *pc, E_Token token, const char *func, int line)
+void Chunk::SetParentTypeReal(const E_Token token, const char *func, const int line)
 {
    LOG_FUNC_ENTRY();
 
-   if (  pc == nullptr
-      || pc->IsNullChunk()
-      || pc->GetParentType() == token)
+   if (  IsNullChunk()
+      || GetParentType() == token)
    {
       return;
    }
-   LOG_FMT(LSETPAR, "%s(%d): orig_line is %zu, orig_col is %zu, pc->Text() ",
-           func, line, pc->orig_line, pc->orig_col);
+   LOG_FMT(LSETPAR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is ",
+           func, line, orig_line, orig_col);
 
    if (token == CT_NEWLINE)
    {
@@ -826,21 +824,19 @@ void set_chunk_parent_real(Chunk *pc, E_Token token, const char *func, int line)
    }
    else
    {
-      char copy[1000];
-      LOG_FMT(LSETPAR, "'%s'\n", pc->ElidedText(copy));
+      LOG_FMT(LSETPAR, "'%s'\n", Text());
    }
-   LOG_FMT(LSETPAR, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s\n",
-           get_token_name(pc->type), get_token_name(pc->GetParentType()),
-           get_token_name(token), get_token_name(pc->GetParentType()));
-   pc->parent_type = token;
-} // set_chunk_parent_real
+   LOG_FMT(LSETPAR, "   type is %s, parent type is %s => new parent type is %s\n",
+           get_token_name(type), get_token_name(GetParentType()), get_token_name(token));
+   m_parentType = token;
+}
 
 
 E_Token Chunk::GetParentType() const
 {
    LOG_FUNC_ENTRY();
 
-   return(parent_type);
+   return(m_parentType);
 }
 
 

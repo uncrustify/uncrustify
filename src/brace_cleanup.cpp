@@ -454,7 +454,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          && frm.size() > 2
          && frm.prev().type == CT_FOR)
       {
-         set_chunk_parent(pc, CT_FOR);
+         pc->SetParentType(CT_FOR);
       }
    }
 
@@ -551,7 +551,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          braceState.consumed = true;
 
          // Copy the parent, update the parenthesis/brace levels
-         set_chunk_parent(pc, frm.top().parent);
+         pc->SetParentType(frm.top().parent);
          frm.level--;
 
          if (  pc->Is(CT_BRACE_CLOSE)
@@ -623,7 +623,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          if (pc->IsSemicolon())
          {
             braceState.consumed = true;
-            set_chunk_parent(pc, CT_WHILE_OF_DO);
+            pc->SetParentType(CT_WHILE_OF_DO);
          }
          else
          {
@@ -746,14 +746,14 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
 
          if (pc->GetParentType() == CT_NAMESPACE)
          {
-            LOG_FMT(LBCSPOP, "%s(%d): parent_type is NAMESPACE\n",
+            LOG_FMT(LBCSPOP, "%s(%d): parent type is NAMESPACE\n",
                     __func__, __LINE__);
             Chunk *tmp = frm.top().pc;
 
             if (  tmp != nullptr
                && tmp->GetParentType() == CT_NAMESPACE)
             {
-               LOG_FMT(LBCSPOP, "%s(%d): tmp->parent_type is NAMESPACE\n",
+               LOG_FMT(LBCSPOP, "%s(%d): tmp->GetParentType() is NAMESPACE\n",
                        __func__, __LINE__);
 
                log_rule_B("indent_namespace");
@@ -768,7 +768,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
                }
             }
          }
-         LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent_type is %s\n",
+         LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type), get_token_name(pc->GetParentType()));
 
          if (!single)
@@ -781,12 +781,12 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       frm.push(pc, __func__, __LINE__);
       frm.top().parent = parent;
       // set parent type
-      set_chunk_parent(pc, parent);
+      pc->SetParentType(parent);
    }
    // Issue #2281
 
    if (  pc->Is(CT_BRACE_OPEN)
-      && pc->parent_type == CT_SWITCH)
+      && pc->GetParentType() == CT_SWITCH)
    {
       size_t idx = frm.size();
       LOG_FMT(LBCSPOP, "%s(%d): idx is %zu\n",
@@ -812,7 +812,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          // it is a CT_DEFAULT from a switch
          LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
-         set_chunk_parent(pc, CT_SWITCH);
+         pc->SetParentType(CT_SWITCH);
          size_t idx = frm.size();
          LOG_FMT(LBCSPOP, "%s(%d): idx is %zu\n",
                  __func__, __LINE__, idx);
@@ -1115,7 +1115,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
          const E_Token parent = frm.top().type;
 
          Chunk         *vbrace = insert_vbrace_open_before(pc, frm);
-         set_chunk_parent(vbrace, parent);
+         vbrace->SetParentType(parent);
 
          frm.level++;
          frm.brace_level++;
@@ -1291,13 +1291,13 @@ static void mark_namespace(Chunk *pns)
    if (pc->Is(CT_USING))
    {
       is_using = true;
-      set_chunk_parent(pns, CT_USING);
+      pns->SetParentType(CT_USING);
    }
    pc = pns->GetNextNcNnl();
 
    while (pc->IsNotNullChunk())
    {
-      set_chunk_parent(pc, CT_NAMESPACE);
+      pc->SetParentType(CT_NAMESPACE);
 
       if (pc->IsNot(CT_BRACE_OPEN))
       {
@@ -1305,7 +1305,7 @@ static void mark_namespace(Chunk *pns)
          {
             if (is_using)
             {
-               set_chunk_parent(pc, CT_USING);
+               pc->SetParentType(CT_USING);
             }
             return;
          }
@@ -1345,7 +1345,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
 
    Chunk chunk;
 
-   set_chunk_parent(&chunk, frm.top().type);
+   chunk.SetParentType(frm.top().type);
    chunk.orig_line   = pc->orig_line;
    chunk.level       = frm.level;
    chunk.pp_level    = frm.pp_level;
@@ -1470,7 +1470,7 @@ bool close_statement(ParseFrame &frm, Chunk *pc, const BraceState &braceState)
          frm.level--;
          frm.brace_level--;
          vbc = insert_vbrace_close_after(vbc, frm);
-         set_chunk_parent(vbc, frm.top().parent);
+         vbc->SetParentType(frm.top().parent);
 
          LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level decreased to %zu\n",
                  __func__, __LINE__, frm.brace_level);
