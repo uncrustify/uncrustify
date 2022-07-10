@@ -3471,7 +3471,8 @@ static void newline_oc_msg(Chunk *start)
 
    int min_params = options::nl_oc_msg_args_min_params();
 
-   if (parameter_count < min_params && min_params != 0)
+   if (  parameter_count < min_params
+      && min_params != 0)
    {
       return;
    }
