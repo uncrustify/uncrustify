@@ -567,17 +567,17 @@ sp_after_comma;
 extern Option<iarf_e>
 sp_before_comma; // = IARF_REMOVE
 
-// (C#) Add or remove space between ',' and ']' in multidimensional array type
+// (C#, Vala) Add or remove space between ',' and ']' in multidimensional array type
 // like 'int[,,]'.
 extern Option<iarf_e>
 sp_after_mdatype_commas;
 
-// (C#) Add or remove space between '[' and ',' in multidimensional array type
+// (C#, Vala) Add or remove space between '[' and ',' in multidimensional array type
 // like 'int[,,]'.
 extern Option<iarf_e>
 sp_before_mdatype_commas;
 
-// (C#) Add or remove space between ',' in multidimensional array type
+// (C#, Vala) Add or remove space between ',' in multidimensional array type
 // like 'int[,,]'.
 extern Option<iarf_e>
 sp_between_mdatype_commas;
