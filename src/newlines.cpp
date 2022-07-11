@@ -3453,6 +3453,29 @@ static void newline_oc_msg(Chunk *start)
    {
       return;
    }
+   // Get count of parameters
+   size_t parameter_count = 0;
+
+   for (Chunk *pc = start->GetNextNcNnl(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
+   {
+      if (pc->level <= start->level)
+      {
+         break;
+      }
+
+      if (pc->Is(CT_OC_COLON))
+      {
+         parameter_count++;
+      }
+   }
+
+   int min_params = options::nl_oc_msg_args_min_params();
+
+   if (  parameter_count < min_params
+      && min_params != 0)
+   {
+      return;
+   }
 
    for (Chunk *pc = start->GetNextNcNnl(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
