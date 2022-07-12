@@ -2370,7 +2370,11 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
             && cpd.in_preproc == CT_PP_INCLUDE))
       {
          parse_string(ctx, pc, unc_isalpha(ch) ? 1 : 0, true);
-         pc.SetParentType(CT_PP_INCLUDE);
+
+         if (cpd.in_preproc == CT_PP_INCLUDE)
+         {
+            pc.SetParentType(CT_PP_INCLUDE);
+         }
          return(true);
       }
 
