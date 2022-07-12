@@ -93,7 +93,7 @@ Chunk *align_trailing_comments(Chunk *start)
          {
             LOG_FMT(LALADD, "%s(%d): line=%zu min_col=%zu pc->col=%zu pc->len=%zu %s\n",
                     __func__, __LINE__, pc->orig_line, min_col, pc->column, pc->Len(),
-                    get_token_name(pc->type));
+                    get_token_name(pc->GetType()));
 
             if (  min_orig == 0
                || min_orig > pc->column)

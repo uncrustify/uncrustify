@@ -49,7 +49,7 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
    if (pc != nullptr)
    {
       LOG_FMT(LSIB, "%s(%d): start: orig_line is %zu, orig_col is %zu, column is %zu, type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, get_token_name(pc->type));
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, get_token_name(pc->GetType()));
    }
    else
    {
@@ -87,8 +87,8 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
                LOG_FMT(LSIB, "%s(%d): Prepare the 'idx's\n", __func__, __LINE__);
             }
             LOG_FMT(LSIB, "%s(%d):   New idx is %2.1zu, pc->column is %2.1zu, Text() '%s', token_width is %zu, type is %s\n",
-                    __func__, __LINE__, idx, pc->column, pc->Text(), token_width, get_token_name(pc->type));
-            cpd.al[cpd.al_cnt].type = pc->type;
+                    __func__, __LINE__, idx, pc->column, pc->Text(), token_width, get_token_name(pc->GetType()));
+            cpd.al[cpd.al_cnt].type = pc->GetType();
             cpd.al[cpd.al_cnt].col  = pc->column;
             cpd.al[cpd.al_cnt].len  = token_width;
             cpd.al_cnt++;
@@ -108,10 +108,10 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
          else
          {
             // expect to match stuff
-            if (cpd.al[idx].type == pc->type)
+            if (cpd.al[idx].type == pc->GetType())
             {
                LOG_FMT(LSIB, "%s(%d):   Match? idx is %2.1zu, orig_line is %2.1zu, column is %2.1zu, token_width is %zu, type is %s\n",
-                       __func__, __LINE__, idx, pc->orig_line, pc->column, token_width, get_token_name(pc->type));
+                       __func__, __LINE__, idx, pc->orig_line, pc->column, token_width, get_token_name(pc->GetType()));
 
                // Shift out based on column
                if (prev_match == nullptr)

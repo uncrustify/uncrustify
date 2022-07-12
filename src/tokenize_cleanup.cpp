@@ -393,7 +393,7 @@ void tokenize_cleanup()
             if (next->IsNot(CT_ASSIGN))
             {
                LOG_FMT(LERR, "%s(%d): %s:%zu: version: Unexpected token %s\n",
-                       __func__, __LINE__, cpd.filename.c_str(), pc->orig_line, get_token_name(next->type));
+                       __func__, __LINE__, cpd.filename.c_str(), pc->orig_line, get_token_name(next->GetType()));
                cpd.error_count++;
             }
             pc->SetType(CT_WORD);
@@ -981,7 +981,7 @@ void tokenize_cleanup()
          {
             next->SetType(CT_OC_CLASS);
          }
-         next->SetParentType(pc->type);
+         next->SetParentType(pc->GetType());
 
          Chunk *tmp = next->GetNextNcNnl();
 
@@ -993,7 +993,7 @@ void tokenize_cleanup()
 
          if (tmp->IsNotNullChunk())
          {
-            tmp->SetParentType(pc->type);
+            tmp->SetParentType(pc->GetType());
          }
       }
 
@@ -1004,11 +1004,11 @@ void tokenize_cleanup()
          while (  tmp->IsNotNullChunk()
                && tmp->IsNot(CT_OC_END))
          {
-            if (get_token_pattern_class(tmp->type) != pattern_class_e::NONE)
+            if (get_token_pattern_class(tmp->GetType()) != pattern_class_e::NONE)
             {
                LOG_FMT(LOBJCWORD, "%s(%d): @interface %zu:%zu change '%s' (%s) to CT_WORD\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, tmp->Text(),
-                       get_token_name(tmp->type));
+                       get_token_name(tmp->GetType()));
                tmp->SetType(CT_WORD);
             }
             tmp = tmp->GetNextNcNnl(E_Scope::PREPROC);
@@ -1079,14 +1079,14 @@ void tokenize_cleanup()
       if (  pc->Is(CT_OC_SEL)
          && next->Is(CT_PAREN_OPEN))
       {
-         next->SetParentType(pc->type);
+         next->SetParentType(pc->GetType());
 
          Chunk *tmp = next->GetNext();
 
          if (tmp->IsNotNullChunk())
          {
             tmp->SetType(CT_OC_SEL_NAME);
-            tmp->SetParentType(pc->type);
+            tmp->SetParentType(pc->GetType());
 
             while ((tmp = tmp->GetNextNcNnl())->IsNotNullChunk())
             {
@@ -1096,7 +1096,7 @@ void tokenize_cleanup()
                   break;
                }
                tmp->SetType(CT_OC_SEL_NAME);
-               tmp->SetParentType(pc->type);
+               tmp->SetParentType(pc->GetType());
             }
          }
       }
@@ -1104,7 +1104,7 @@ void tokenize_cleanup()
       // Handle special preprocessor junk
       if (pc->Is(CT_PREPROC))
       {
-         pc->SetParentType(next->type);
+         pc->SetParentType(next->GetType());
       }
 
       // Detect "pragma region" and "pragma endregion"
@@ -1117,7 +1117,7 @@ void tokenize_cleanup()
          {
             pc->SetType((*next->str.c_str() == 'r') ? CT_PP_REGION : CT_PP_ENDREGION);
 
-            prev->SetParentType(pc->type);
+            prev->SetParentType(pc->GetType());
          }
       }
 
@@ -1238,7 +1238,7 @@ static void check_template(Chunk *start, bool in_type_cast)
            pc = pc->GetNextNcNnl(E_Scope::PREPROC))
       {
          LOG_FMT(LTEMPL, "%s(%d): type is %s, level is %zu\n",
-                 __func__, __LINE__, get_token_name(pc->type), level);
+                 __func__, __LINE__, get_token_name(pc->GetType()), level);
 
          if (  (pc->str[0] == '>')
             && (pc->Len() > 1))
@@ -1322,12 +1322,12 @@ static void check_template(Chunk *start, bool in_type_cast)
       if (invalid_open_angle_template(prev))
       {
          LOG_FMT(LTEMPL, "%s(%d): - after type %s + ( - Not a template\n",
-                 __func__, __LINE__, get_token_name(prev->type));
+                 __func__, __LINE__, get_token_name(prev->GetType()));
          start->SetType(CT_COMPARE);
          return;
       }
-      LOG_FMT(LTEMPL, "%s(%d): - prev->type is %s -\n",
-              __func__, __LINE__, get_token_name(prev->type));
+      LOG_FMT(LTEMPL, "%s(%d): - prev->GetType() is %s -\n",
+              __func__, __LINE__, get_token_name(prev->GetType()));
 
       // Scan back and make sure we aren't inside square parenthesis
       bool in_if         = false;
@@ -1401,7 +1401,7 @@ static void check_template(Chunk *start, bool in_type_cast)
          constexpr static auto LCURRENT = LTEMPL;
 
          LOG_FMT(LTEMPL, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, type is %s, num_tokens is %zu\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type), num_tokens);
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->GetType()), num_tokens);
 
          log_rule_B("tok_split_gte");
 
@@ -1410,7 +1410,7 @@ static void check_template(Chunk *start, bool in_type_cast)
             // look for the closing brace
             Chunk *A = pc->SkipToMatch();
             LOG_FMT(LTEMPL, "%s(%d): A->orig_line is %zu, A->orig_col is %zu, type is %s\n",
-                    __func__, __LINE__, A->orig_line, A->orig_col, get_token_name(A->type));
+                    __func__, __LINE__, A->orig_line, A->orig_col, get_token_name(A->GetType()));
             pc = A->GetNext();
          }
 
@@ -1544,7 +1544,7 @@ static void check_template(Chunk *start, bool in_type_cast)
       }
    }
    LOG_FMT(LTEMPL, "%s(%d): - Not a template: end = %s\n",
-           __func__, __LINE__, (end != nullptr) ? get_token_name(end->type) : "<null>");
+           __func__, __LINE__, (end != nullptr) ? get_token_name(end->GetType()) : "<null>");
    start->SetType(CT_COMPARE);
 } // check_template
 
@@ -1638,7 +1638,7 @@ static void check_template_args(Chunk *start, Chunk *end)
         pc->IsNotNullChunk() && pc != end;
         pc = pc->GetNextNcNnl(E_Scope::PREPROC))
    {
-      switch (pc->type)
+      switch (pc->GetType())
       {
       case CT_COMMA:
 
@@ -1652,7 +1652,7 @@ static void check_template_args(Chunk *start, Chunk *end)
 
       case CT_ANGLE_OPEN:
       case CT_PAREN_OPEN:
-         tokens.push_back(pc->type);
+         tokens.push_back(pc->GetType());
          break;
 
       case CT_ANGLE_CLOSE:
@@ -1694,13 +1694,13 @@ static void cleanup_objc_property(Chunk *start)
       LOG_FMT(LTEMPL, "%s(%d): Property is not followed by opening paren\n", __func__, __LINE__);
       return;
    }
-   open_paren->SetParentType(start->type);
+   open_paren->SetParentType(start->GetType());
 
    Chunk *tmp = start->GetNextType(CT_PAREN_CLOSE, start->level);
 
    if (tmp->IsNotNullChunk())
    {
-      tmp->SetParentType(start->type);
+      tmp->SetParentType(start->GetType());
       tmp = tmp->GetNextNcNnl();
 
       if (tmp->IsNotNullChunk())
@@ -1711,7 +1711,7 @@ static void cleanup_objc_property(Chunk *start)
 
          if (tmp->IsNotNullChunk())
          {
-            tmp->SetParentType(start->type);
+            tmp->SetParentType(start->GetType());
          }
       }
    }

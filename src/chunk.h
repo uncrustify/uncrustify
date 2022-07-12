@@ -77,9 +77,9 @@ public:
    const char *ElidedText(char *for_the_copy) const;
 
    /**
-    * @brief returns the type of the parent chunk
+    * @brief returns the type of the chunk
     */
-   E_Token GetParentType() const;
+   E_Token GetType() const;
 
    /**
     * @brief Sets the chunk type
@@ -88,6 +88,11 @@ public:
     * @param line the line number from where this method is called (for log purposes)
     */
    void SetTypeReal(const E_Token token, const char *func, const int line);
+
+   /**
+    * @brief returns the type of the parent chunk
+    */
+   E_Token GetParentType() const;
 
    /**
     * @brief Sets the type of the parent chunk
@@ -265,18 +270,18 @@ public:
 
    /**
     * @brief returns the next chunk of the given type at the level.
-    * @param cType  the type to look for
-    * @param cLevel the level to match or ANY_LEVEL
-    * @param scope  code region to search in
+    * @param type    the type to look for
+    * @param cLevel  the level to match or ANY_LEVEL
+    * @param scope   code region to search in
     * @return pointer to the next matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetNextType(const E_Token cType, const int cLevel = ANY_LEVEL, const E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetNextType(const E_Token type, const int cLevel = ANY_LEVEL, const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the prev chunk of the given type at the level.
-    * @param cType  the type to look for
-    * @param cLevel the level to match or ANY_LEVEL
-    * @param scope  code region to search in
+    * @param type    the type to look for
+    * @param cLevel  the level to match or ANY_LEVEL
+    * @param scope   code region to search in
     * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetPrevType(const E_Token type, int level = ANY_LEVEL, E_Scope scope = E_Scope::ALL) const;
@@ -398,13 +403,13 @@ public:
     *
     * This function is a specialization of Chunk::Search.
     *
-    * @param cType  category to search for
+    * @param type   category to search for
     * @param scope  code parts to consider for search
     * @param dir    search direction
     * @param cLevel nesting level to match or ANY_LEVEL
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *SearchTypeLevel(const E_Token cType, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const int cLevel = ANY_LEVEL) const;
+   Chunk *SearchTypeLevel(const E_Token type, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const int cLevel = ANY_LEVEL) const;
 
    /**
     * @brief searches a chunk that holds a specific string
@@ -549,7 +554,7 @@ public:
     * @param level nesting level to match
     * @return true if the chunk matches a given type and level
     */
-   bool IsTypeAndLevel(const E_Token cType, const int cLevel) const;
+   bool IsTypeAndLevel(const E_Token type, const int cLevel) const;
 
    /**
     * @brief checks whether the chunk matches a given string and level
@@ -731,8 +736,6 @@ public:
 
    align_ptr_t  align;
    indent_ptr_t indent;
-   E_Token      type;                        //! type of the chunk itself
-   //! might be different from parent->GetParentType() (above)
    size_t       orig_line;                   //! line number of chunk in input file
    size_t       orig_col;                    //! column where chunk started in the input file, is always > 0
    size_t       orig_col_end;                //! column where chunk ended in the input file, is always > 1
@@ -760,6 +763,7 @@ protected:
 
 
    // --------- Data members
+   E_Token m_type;                           //! type of the chunk itself
    E_Token m_parentType;                     //! type of the parent chunk usually CT_NONE
 
 
@@ -781,11 +785,23 @@ private:
 };
 
 
-inline bool Chunk::IsTypeAndLevel(const E_Token cType, const int cLevel) const
+inline E_Token Chunk::GetType() const
+{
+   return(m_type);
+}
+
+
+inline E_Token Chunk::GetParentType() const
+{
+   return(m_parentType);
+}
+
+
+inline bool Chunk::IsTypeAndLevel(const E_Token type, const int cLevel) const
 {
    return(  (  cLevel < 0
             || level == static_cast<size_t>(cLevel))
-         && type == cType);
+         && m_type == type);
 }
 
 
@@ -805,7 +821,7 @@ inline bool Chunk::IsStringAndLevel(const char *cStr, const size_t len,
 inline bool Chunk::Is(E_Token token) const
 {
    return(  IsNotNullChunk()
-         && type == token);
+         && m_type == token);
 }
 
 
@@ -930,7 +946,7 @@ inline Chunk *Chunk::SkipToMatch(E_Scope scope) const
       || Is(CT_ANGLE_OPEN)
       || Is(CT_SQUARE_OPEN))
    {
-      return(GetNextType((E_Token)(type + 1), level, scope));
+      return(GetNextType((E_Token)(m_type + 1), level, scope));
    }
    return(const_cast<Chunk *>(this));
 }
@@ -947,7 +963,7 @@ inline Chunk *Chunk::SkipToMatchRev(E_Scope scope) const
       || Is(CT_ANGLE_CLOSE)
       || Is(CT_SQUARE_CLOSE))
    {
-      return(GetPrevType((E_Token)(type - 1), level, scope));
+      return(GetPrevType((E_Token)(m_type - 1), level, scope));
    }
    return(const_cast<Chunk *>(this));
 }

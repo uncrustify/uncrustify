@@ -161,12 +161,12 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
       return(pp_level);
    }
 
-   if (pc->GetParentType() != next->type)
+   if (pc->GetParentType() != next->GetType())
    {
       LOG_FMT(LNOTE, "%s(%d): Preproc parent not set correctly on orig_line %zu: got %s expected %s\n",
               __func__, __LINE__, pc->orig_line, get_token_name(pc->GetParentType()),
-              get_token_name(next->type));
-      pc->SetParentType(next->type);
+              get_token_name(next->GetType()));
+      pc->SetParentType(next->GetType());
    }
    LOG_FMT(LPFCHK, "%s(%d): orig_line is %zu, %s\n",
            __func__, __LINE__, pc->orig_line, get_token_name(pc->GetParentType()));

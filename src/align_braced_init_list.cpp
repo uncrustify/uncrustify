@@ -49,7 +49,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
          && pc->IsNotNullChunk())
    {
       LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->Text() is '%s', type is %s, parent type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->ElidedText(copy), get_token_name(pc->type), get_token_name(pc->GetParentType()));
+              __func__, __LINE__, pc->orig_line, pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       // Don't check inside SPAREN, PAREN or SQUARE groups
       if (  pc->Is(CT_SPAREN_OPEN)
@@ -57,7 +57,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
          || pc->Is(CT_PAREN_OPEN))
       {
          LOG_FMT(LALASS, "%s(%d)OK: Don't check inside SPAREN, PAREN or SQUARE groups, type is %s\n",
-                 __func__, __LINE__, get_token_name(pc->type));
+                 __func__, __LINE__, get_token_name(pc->GetType()));
          tmp = pc->orig_line;
          pc  = pc->SkipToMatch();
 

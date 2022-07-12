@@ -1696,7 +1696,7 @@ static void add_func_header(E_Token type, file_mem &fm)
 
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnlNpp())
    {
-      if (pc->type != type)
+      if (pc->GetType() != type)
       {
          continue;
       }
@@ -1851,7 +1851,7 @@ static void add_msg_header(E_Token type, file_mem &fm)
 
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnlNpp())
    {
-      if (pc->type != type)
+      if (pc->GetType() != type)
       {
          continue;
       }

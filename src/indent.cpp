@@ -234,7 +234,7 @@ void align_to_column(Chunk *pc, size_t column)
    }
    LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', type is %s => column is %zu\n",
            __func__, __LINE__, pc->orig_line, pc->column, pc->Text(),
-           get_token_name(pc->type), column);
+           get_token_name(pc->GetType()), column);
 
    const auto col_delta = static_cast<int>(column) - static_cast<int>(pc->column);
    size_t     min_col   = column;
@@ -291,7 +291,7 @@ void align_to_column(Chunk *pc, size_t column)
               __func__, __LINE__,
               (almod == align_mode_e::KEEP_ABS) ? "abs" :
               (almod == align_mode_e::KEEP_REL) ? "rel" : "sft",
-              pc->Text(), get_token_name(pc->type), pc->orig_line, pc->column, pc->orig_col);
+              pc->Text(), get_token_name(pc->GetType()), pc->orig_line, pc->column, pc->orig_col);
    } while (  pc->IsNotNullChunk()
            && pc->nl_count == 0);
 } // align_to_column
@@ -304,7 +304,7 @@ void reindent_line(Chunk *pc, size_t column)
 
    LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, on '%s' [%s/%s] => %zu\n",
            __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy),
-           get_token_name(pc->type), get_token_name(pc->GetParentType()),
+           get_token_name(pc->GetType()), get_token_name(pc->GetParentType()),
            column);
    log_func_stack_inline(LINDLINE);
 
@@ -525,7 +525,7 @@ static Chunk *oc_msg_block_indent(Chunk *pc, bool from_brace,
    Chunk *caret_tmp = Chunk::NullChunkPtr;
 
    if (  tmp->IsNotNullChunk()
-      && tmp->type == CT_OC_BLOCK_CARET)
+      && tmp->GetType() == CT_OC_BLOCK_CARET)
    {
       caret_tmp = tmp;
    }
@@ -675,14 +675,14 @@ void indent_text()
       //  forces string literal to column-1 [Fix for 1246]
       log_rule_B("indent_col1_multi_string_literal");
 
-      if (  (pc->type == CT_STRING_MULTI)
+      if (  (pc->GetType() == CT_STRING_MULTI)
          && !(cpd.lang_flags & LANG_OC)                      // Issue #1795
          && options::indent_col1_multi_string_literal())
       {
          string str = pc->Text();
 
          if (  (str[0] == '@')
-            && (pc->GetPrev()->type == CT_NEWLINE))
+            && (pc->GetPrev()->GetType() == CT_NEWLINE))
          {
             indent_column_set(1);
             reindent_line(pc, indent_column);
@@ -715,7 +715,7 @@ void indent_text()
             || strcmp(pc->Text(), "SLOT") == 0))
       {
          LOG_FMT(LINDLINE, "%s(%d): orig_line=%zu: type %s SIGNAL/SLOT found\n",
-                 __func__, __LINE__, pc->orig_line, get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, get_token_name(pc->GetType()));
       }
       // Handle preprocessor transitions
       log_rule_B("indent_brace_parent");
@@ -752,7 +752,7 @@ void indent_text()
             {
                in_func_def = false;
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
          }
@@ -767,7 +767,7 @@ void indent_text()
          {
             const E_Token type = frm.top().type;
             LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
             frm.pop(__func__, __LINE__, pc);
 
             /*
@@ -778,7 +778,7 @@ void indent_text()
                && frm.top().type == CT_PP_REGION_INDENT)
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
          }
@@ -791,7 +791,7 @@ void indent_text()
                || pc->GetParentType() == CT_PP_ELSE))
          {
             LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
             frm.pop(__func__, __LINE__, pc);
          }
          ParseFrame frmbkup = frm;
@@ -897,7 +897,7 @@ void indent_text()
             {
                // Hack to get the logs to look right
 
-               const E_Token memtype = next->type;
+               const E_Token memtype = next->GetType();
                next->SetType(CT_PP_IF_INDENT);
                frm.push(next, __func__, __LINE__);
                next->SetType(memtype);
@@ -1102,7 +1102,7 @@ void indent_text()
             && frm.top().level > pc->level)
          {
             LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
             frm.pop(__func__, __LINE__, pc);
          }
 
@@ -1113,11 +1113,11 @@ void indent_text()
                && frm.top().type == CT_VBRACE_OPEN)
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
                pc = pc->GetNext();
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
 
                if (pc->IsNullChunk())
                {
@@ -1147,7 +1147,7 @@ void indent_text()
             if (is_end_of_assignment(pc, frm))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
             // Pop Colon from stack in ternary operator
@@ -1164,7 +1164,7 @@ void indent_text()
                   || pc->Is(CT_SPAREN_CLOSE))) // Issue #1130, #1715
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
 
@@ -1174,7 +1174,7 @@ void indent_text()
                   || (frm.top().type == CT_USING)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
 
@@ -1185,7 +1185,7 @@ void indent_text()
             {
                token_used = true;
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
 
@@ -1205,7 +1205,7 @@ void indent_text()
                   || pc->IsSemicolon()))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
 
@@ -1215,7 +1215,7 @@ void indent_text()
                && pc->GetParentType() == CT_OC_GENERIC_SPEC)
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
 
@@ -1258,7 +1258,7 @@ void indent_text()
                         frm.paren_count--;
                      }
                      LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                             __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                             __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                      frm.pop(__func__, __LINE__, pc);
                   }
 
@@ -1268,7 +1268,7 @@ void indent_text()
                      if (is_end_of_assignment(next, frm))
                      {
                         LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                                __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                                __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                         frm.pop(__func__, __LINE__, pc);
                      }
                   }
@@ -1284,7 +1284,7 @@ void indent_text()
                   || pc->Is(CT_CASE)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
 
@@ -1292,16 +1292,16 @@ void indent_text()
             {
                LOG_FMT(LINDLINE, "%s(%d): pop_pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
                        __func__, __LINE__, frm.top().pop_pc->orig_line, frm.top().pop_pc->orig_col,
-                       frm.top().pop_pc->Text(), get_token_name(frm.top().pop_pc->type));
+                       frm.top().pop_pc->Text(), get_token_name(frm.top().pop_pc->GetType()));
             }
             LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
 
             if (  (frm.top().type == CT_MEMBER)
                && frm.top().pop_pc == pc)
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
 
@@ -1311,7 +1311,7 @@ void indent_text()
                   || pc->Is(CT_BRACE_OPEN)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
             // a class scope is ended with another class scope or a close brace
@@ -1323,7 +1323,7 @@ void indent_text()
                   || pc->Is(CT_ACCESS)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
 
@@ -1333,7 +1333,7 @@ void indent_text()
                   || (frm.top().type == CT_THROW)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
 
@@ -1343,7 +1343,7 @@ void indent_text()
                   || pc->Is(CT_BRACE_OPEN)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
 
@@ -1357,7 +1357,7 @@ void indent_text()
                   || pc->Is(CT_BRACE_OPEN)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
 
@@ -1366,7 +1366,7 @@ void indent_text()
                && pc->IsSemicolon())
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
 
@@ -1377,7 +1377,7 @@ void indent_text()
                   || pc->IsSemicolon()))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
             log_rule_B("indent_oc_inside_msg_sel");
@@ -1390,12 +1390,12 @@ void indent_text()
                   || pc->Is(CT_OC_MSG_NAME))) // Issue #2658
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
 
             // Close out parenthesis and squares
-            if (  (frm.top().type == (pc->type - 1))
+            if (  (frm.top().type == (pc->GetType() - 1))
                && (  pc->Is(CT_PAREN_CLOSE)
                   || pc->Is(CT_LPAREN_CLOSE)                     // Issue #3054
                   || pc->Is(CT_SPAREN_CLOSE)
@@ -1404,7 +1404,7 @@ void indent_text()
                   || pc->Is(CT_ANGLE_CLOSE)))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
 
                if (frm.paren_count == 0)
@@ -1467,7 +1467,7 @@ void indent_text()
          LOG_FMT(LINDENT, "%s(%d): CT_BRACE_OPEN found, CLOSE IT\n",
                  __func__, __LINE__);
          LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
          classFound = false;
       }
       /*
@@ -1541,7 +1541,7 @@ void indent_text()
                   while (count-- > 0)
                   {
                      LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                             __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                             __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                      frm.pop(__func__, __LINE__, pc);
                   }
 
@@ -1551,7 +1551,7 @@ void indent_text()
                      if (is_end_of_assignment(next, frm))
                      {
                         LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                                __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                                __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                         frm.pop(__func__, __LINE__, pc);
                      }
                   }
@@ -1577,7 +1577,7 @@ void indent_text()
                      pc->indent.delta = 0;
                   }
                   LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                          __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                          __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                   frm.pop(__func__, __LINE__, pc);
                }
             }
@@ -1593,7 +1593,7 @@ void indent_text()
                pc->indent.delta = 0;
             }
             LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
             frm.pop(__func__, __LINE__, pc);
          }
       }
@@ -1951,8 +1951,8 @@ void indent_text()
                      Chunk *bbc           = pc->SkipToMatch(); // block brace close '}'
                      Chunk *bbc_next_ncnl = bbc->GetNextNcNnl();
 
-                     if (  bbc_next_ncnl->type == CT_OC_MSG_NAME
-                        || bbc_next_ncnl->type == CT_OC_MSG_FUNC)
+                     if (  bbc_next_ncnl->GetType() == CT_OC_MSG_NAME
+                        || bbc_next_ncnl->GetType() == CT_OC_MSG_FUNC)
                      {
                         indent_from_brace   = false;
                         indent_from_colon   = false;
@@ -1989,7 +1989,7 @@ void indent_text()
                   log_indent();
                }
             }
-            else if (  frm.top().pc->type == CT_BRACE_OPEN
+            else if (  frm.top().pc->GetType() == CT_BRACE_OPEN
                     && frm.top().pc->GetParentType() == CT_OC_AT)
             {
                // We are inside @{ ... } -- indent one tab from the paren
@@ -2052,7 +2052,7 @@ void indent_text()
                log_indent();
             }
          }
-         else if (  frm.top().pc->type == CT_BRACE_OPEN
+         else if (  frm.top().pc->GetType() == CT_BRACE_OPEN
                  && frm.top().pc->GetParentType() == CT_OC_AT)
          {
             // We are inside @{ ... } -- indent one tab from the paren
@@ -2291,7 +2291,7 @@ void indent_text()
          if (frm.top().type == CT_SQL_BEGIN)
          {
             LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
             frm.pop(__func__, __LINE__, pc);
             indent_column_set(frm.top().indent_tmp);
             log_indent_tmp();
@@ -2591,7 +2591,7 @@ void indent_text()
       else if (  pc->Is(CT_PAREN_OPEN)
               && (  pc->GetParentType() == CT_ASM
                  || (  pc->GetPrevNcNnl()->IsNotNullChunk()
-                    && pc->GetPrevNcNnl()->type == CT_ASM))
+                    && pc->GetPrevNcNnl()->GetType() == CT_ASM))
               && options::indent_ignore_asm_block())
       {
          log_rule_B("indent_ignore_asm_block");
@@ -2713,7 +2713,7 @@ void indent_text()
                   && (  frm.at(idx).type != CT_CLASS_COLON
                      && frm.at(idx).type != CT_CONSTR_COLON
                      && !(  frm.at(idx).type == CT_LAMBDA
-                         && frm.at(idx).pc->GetPrevNc()->type == CT_NEWLINE)))
+                         && frm.at(idx).pc->GetPrevNc()->GetType() == CT_NEWLINE)))
             {
                if (idx == 0)
                {
@@ -3101,7 +3101,7 @@ void indent_text()
                && pc->Is(CT_ASSIGN))
             {
                LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                frm.pop(__func__, __LINE__, pc);
             }
             frm.push(pc, __func__, __LINE__);
@@ -3198,7 +3198,7 @@ void indent_text()
             // to properly indent object initializers returned by functions.
             log_rule_B("indent_off_after_return_new");
             bool indent_after_return = (  next->IsNotNullChunk()
-                                       && next->type == CT_NEW)
+                                       && next->GetType() == CT_NEW)
                                        ? !options::indent_off_after_return_new()
                                        : !options::indent_off_after_return();
 
@@ -3296,7 +3296,7 @@ void indent_text()
             && frm.top().type == CT_QUESTION)
          {
             LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
             frm.pop(__func__, __LINE__, pc);
             indent_column_set(frm.top().indent_tmp);
          }
@@ -3359,7 +3359,7 @@ void indent_text()
          if (next->Is(CT_COND_COLON))
          {
             LOG_FMT(LINDLINE, "%s(%d): Comment and COND_COLON: pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
             frm.pop(__func__, __LINE__, pc);
          }
 // uncomment the line below to get debug info
@@ -3370,7 +3370,7 @@ void indent_text()
             // anything else?
             // Issue #3294
             LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
             LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize indent_text:\n",
                     __func__, __LINE__);
          }
@@ -3381,7 +3381,7 @@ void indent_text()
          // anything else?
 #ifdef ANYTHING_ELSE
          LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
          LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize indent_text:\n",
                  __func__, __LINE__);
 #endif /* ANYTHING_ELSE */
@@ -3714,17 +3714,17 @@ void indent_text()
             LOG_FMT(LINDLINE, "%s(%d): indent_column is %zu\n",
                     __func__, __LINE__, indent_column);
 
-            if (frm.poped().type == E_Token(pc->type - 1))
+            if (frm.poped().type == E_Token(pc->GetType() - 1))
             {
                // Issue # 405
                LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                       __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                Chunk *ck1 = frm.poped().pc;
-               LOG_FMT(LINDLINE, "%s(%d): ck1->orig_line is %zu, ck1->orig_col is %zu, ck1->Text() is '%s', ck1->type is %s\n",
-                       __func__, __LINE__, ck1->orig_line, ck1->orig_col, ck1->Text(), get_token_name(ck1->type));
+               LOG_FMT(LINDLINE, "%s(%d): ck1->orig_line is %zu, ck1->orig_col is %zu, ck1->Text() is '%s', ck1->GetType() is %s\n",
+                       __func__, __LINE__, ck1->orig_line, ck1->orig_col, ck1->Text(), get_token_name(ck1->GetType()));
                Chunk *ck2 = ck1->GetPrev();
-               LOG_FMT(LINDLINE, "%s(%d): ck2->orig_line is %zu, ck2->orig_col is %zu, ck2->Text() is '%s', ck2->type is %s\n",
-                       __func__, __LINE__, ck2->orig_line, ck2->orig_col, ck2->Text(), get_token_name(ck2->type));
+               LOG_FMT(LINDLINE, "%s(%d): ck2->orig_line is %zu, ck2->orig_col is %zu, ck2->Text() is '%s', ck2->GetType() is %s\n",
+                       __func__, __LINE__, ck2->orig_line, ck2->orig_col, ck2->Text(), get_token_name(ck2->GetType()));
 
                log_rule_B("indent_paren_close");
 
@@ -3788,10 +3788,10 @@ void indent_text()
                      LOG_FMT(LINDLINE, "%s(%d): ck2->orig_line is %zu, ck2->orig_col is %zu, ck2->Text() is '%s'\n",
                              __func__, __LINE__, ck2->orig_line, ck2->orig_col, ck2->Text());
 
-                     if (pc->GetPrev()->type == CT_NEWLINE)
+                     if (pc->GetPrev()->GetType() == CT_NEWLINE)
                      {
                         LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                                __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                                __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
                         LOG_FMT(LINDLINE, "%s(%d): prev is <newline>\n",
                                 __func__, __LINE__);
                         Chunk *search = pc;
@@ -3803,14 +3803,14 @@ void indent_text()
                         Chunk *searchNext = search->GetNext();
 
                         // Issue #3407 - Skip over a possible 'noexcept' keyword before going forward.
-                        if (searchNext->type == CT_NOEXCEPT)
+                        if (searchNext->GetType() == CT_NOEXCEPT)
                         {
                            searchNext = searchNext->GetNext();
                         }
 
-                        if (  searchNext->type == CT_SEMICOLON
-                           || searchNext->type == CT_MEMBER            // Issue #2582
-                           || searchNext->type == CT_NEWLINE)
+                        if (  searchNext->GetType() == CT_SEMICOLON
+                           || searchNext->GetType() == CT_MEMBER            // Issue #2582
+                           || searchNext->GetType() == CT_NEWLINE)
                         {
                            LOG_FMT(LINDLINE, "%s(%d):\n", __func__, __LINE__);
                            search = search->SkipToMatchRev();
@@ -3851,7 +3851,7 @@ void indent_text()
                     __func__, __LINE__, pc->orig_line, indent_column, pc->Text());
             LOG_FMT(LINDENT, "%s(%d): [%s/%s]\n",
                     __func__, __LINE__,
-                    get_token_name(pc->type), get_token_name(pc->GetParentType()));
+                    get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
             Chunk *prev2 = pc->GetPrev();                  // Issue #2930
             LOG_FMT(LINDENT, "%s(%d): prev2 is orig_line is %zu, text is '%s'\n",
                     __func__, __LINE__, prev2->orig_line, prev2->Text());
@@ -4167,8 +4167,8 @@ void indent_text()
                   LOG_FMT(LINDPC, "%s(%d): frm_size is %zu\n",
                           __func__, __LINE__, frm_size);
                   // get pc
-                  LOG_FMT(LINDPC, "%s(%d): Text() is '%s', (frm.at(frm_size - 1).pc)->type is %s\n",
-                          __func__, __LINE__, (frm.at(frm_size - 1).pc)->Text(), get_token_name((frm.at(frm_size - 1).pc)->type));
+                  LOG_FMT(LINDPC, "%s(%d): Text() is '%s', (frm.at(frm_size - 1).pc)->GetType() is %s\n",
+                          __func__, __LINE__, (frm.at(frm_size - 1).pc)->Text(), get_token_name((frm.at(frm_size - 1).pc)->GetType()));
                   // get the token before
                   const size_t temp_ttidx = frm_size - 2;
 
@@ -4180,8 +4180,8 @@ void indent_text()
                   else
                   {
                      Chunk *token_before = frm.at(temp_ttidx).pc;
-                     LOG_FMT(LINDPC, "%s(%d): Text() is '%s', token_before->type is %s\n",
-                             __func__, __LINE__, token_before->Text(), get_token_name(token_before->type));
+                     LOG_FMT(LINDPC, "%s(%d): Text() is '%s', token_before->GetType() is %s\n",
+                             __func__, __LINE__, token_before->Text(), get_token_name(token_before->GetType()));
 
                      size_t vor_col = 0;
 
@@ -4196,24 +4196,24 @@ void indent_text()
                         else
                         {
                            vor_col = before_Assign->column;
-                           LOG_FMT(LINDPC, "%s(%d): Text() is '%s', before_Assign->type is %s, column is %zu\n",
-                                   __func__, __LINE__, before_Assign->Text(), get_token_name(before_Assign->type), vor_col);
+                           LOG_FMT(LINDPC, "%s(%d): Text() is '%s', before_Assign->GetType() is %s, column is %zu\n",
+                                   __func__, __LINE__, before_Assign->Text(), get_token_name(before_Assign->GetType()), vor_col);
                            indent_column = vor_col + 2 * indent_size;
                         }
                      }
                      else if (token_before->Is(CT_BRACE_OPEN))
                      {
                         vor_col = token_before->column;
-                        LOG_FMT(LINDPC, "%s(%d): Text() is '%s', token_before->type is %s, column is %zu\n",
-                                __func__, __LINE__, token_before->Text(), get_token_name(token_before->type), vor_col);
+                        LOG_FMT(LINDPC, "%s(%d): Text() is '%s', token_before->GetType() is %s, column is %zu\n",
+                                __func__, __LINE__, token_before->Text(), get_token_name(token_before->GetType()), vor_col);
                         indent_column = vor_col + 2 * indent_size;
                      }
                      else if (token_before->Is(CT_RETURN))
                      {
                         Chunk *before_Return = frm.at(temp_ttidx - 1).pc;
                         vor_col = before_Return->column;
-                        LOG_FMT(LINDPC, "%s(%d): Text() is '%s', before_Return->type is %s, column is %zu\n",
-                                __func__, __LINE__, before_Return->Text(), get_token_name(before_Return->type), vor_col);
+                        LOG_FMT(LINDPC, "%s(%d): Text() is '%s', before_Return->GetType() is %s, column is %zu\n",
+                                __func__, __LINE__, before_Return->Text(), get_token_name(before_Return->GetType()), vor_col);
                         indent_column = vor_col + 2 * indent_size;
                      }
                      else
@@ -4350,7 +4350,7 @@ void indent_text()
          pc = pc->GetNext();
       }
       LOG_FMT(LINDLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
    }
 null_pc:
 

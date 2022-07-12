@@ -97,7 +97,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, first->Text() '%s', type is %s\n",
-           __func__, __LINE__, first->orig_line, first->orig_col, first->Text(), get_token_name(first->type));
+           __func__, __LINE__, first->orig_line, first->orig_col, first->Text(), get_token_name(first->GetType()));
 
    min_sp = 1;
 
@@ -544,7 +544,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (  first->Is(CT_PAREN_CLOSE)
       && second->Is(CT_DC_MEMBER)
       && second->next != nullptr
-      && second->next->type == CT_FUNC_CALL)
+      && second->next->GetType() == CT_FUNC_CALL)
    {
       log_rule("sp_after_cast");
       return(options::sp_after_cast());
@@ -555,7 +555,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       /* '::' at the start of an identifier is not member access, but global scope operator.
        * Detect if previous chunk is keyword
        */
-      switch (first->type)
+      switch (first->GetType())
       {
       case CT_SBOOL:
       case CT_SASSIGN:
@@ -3146,9 +3146,9 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    for (auto it : no_space_table)
    {
       if (  (  it.first == CT_UNKNOWN
-            || it.first == first->type)
+            || it.first == first->GetType())
          && (  it.second == CT_UNKNOWN
-            || it.second == second->type))
+            || it.second == second->GetType()))
       {
          log_rule("REMOVE from no_space_table");
          return(IARF_REMOVE);
@@ -3160,8 +3160,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    // this table lists out all combos where a space MUST be present
    for (auto it : add_space_table)
    {
-      if (  it.first == first->type
-         && it.second == second->type)
+      if (  it.first == first->GetType()
+         && it.second == second->GetType())
       {
          // TODO: if necessary create a new option
          log_rule("ADD from add_space_table");
@@ -3225,14 +3225,14 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    // these lines are only useful for debugging uncrustify itself
    LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize do_space:\n",
            __func__, __LINE__);
-   LOG_FMT(LSPACE, "   first->orig_line  is %zu, first->orig_col  is %zu, first->Text()  '%s', first->type is  %s\n",
-           first->orig_line, first->orig_col, first->Text(), get_token_name(first->type));
-   LOG_FMT(LSPACE, "   second->orig_line is %zu, second->orig_col is %zu, second->Text() '%s', second->type is %s\n",
-           second->orig_line, second->orig_col, second->Text(), get_token_name(second->type));
+   LOG_FMT(LSPACE, "   first->orig_line  is %zu, first->orig_col  is %zu, first->Text()  '%s', first->GetType() is  %s\n",
+           first->orig_line, first->orig_col, first->Text(), get_token_name(first->GetType()));
+   LOG_FMT(LSPACE, "   second->orig_line is %zu, second->orig_col is %zu, second->Text() '%s', second->GetType() is %s\n",
+           second->orig_line, second->orig_col, second->Text(), get_token_name(second->GetType()));
    LOG_FMT(LSPACE, "   Please make a call at https://github.com/uncrustify/uncrustify/issues/new\n");
    LOG_FMT(LSPACE, "   or merge the line:\n");
    LOG_FMT(LSPACE, "   { CT_%s,    CT_%s},\n",
-           get_token_name(first->type), get_token_name(second->type));
+           get_token_name(first->GetType()), get_token_name(second->GetType()));
    LOG_FMT(LSPACE, "   in the file <Path_to_uncrustify>/src/add_space_table.h\n");
 
    log_rule("ADD as default value");
@@ -3280,7 +3280,7 @@ void space_text()
       {
          char copy[1000];
          LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, '%s' type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy), get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy), get_token_name(pc->GetType()));
       }
 
       if (  (options::use_options_overriding_for_qt_macros())
@@ -3288,7 +3288,7 @@ void space_text()
             || (strcmp(pc->Text(), "SLOT") == 0)))
       {
          LOG_FMT(LSPACE, "%s(%d): orig_col is %zu, type is %s SIGNAL/SLOT found\n",
-                 __func__, __LINE__, pc->orig_line, get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, get_token_name(pc->GetType()));
          chunk_flags_set(pc, PCF_IN_QT_MACRO); // flag the chunk for a second processing
 
          // save the values
@@ -3306,7 +3306,7 @@ void space_text()
                && next->IsVBrace())
          {
             LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, Skip %s (%zu+%zu)\n",
-                    __func__, __LINE__, next->orig_line, next->orig_col, get_token_name(next->type),
+                    __func__, __LINE__, next->orig_line, next->orig_col, get_token_name(next->GetType()),
                     pc->column, pc->str.size());
             next->column = pc->column + pc->str.size();
             next         = next->GetNext();
@@ -3448,7 +3448,7 @@ void space_text()
          }
          int min_sp;
          LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, pc-Text() '%s', type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
          iarf_e av = do_space_ensured(pc, next, min_sp);
          min_sp = max(1, min_sp);
 
@@ -3593,7 +3593,7 @@ void space_text_balance_nested_parens()
          space_add_after(first, 1);
 
          // test after the closing parens   Issue #1703
-         Chunk *closing = first->GetNextType((E_Token)(first->type + 1), first->level);
+         Chunk *closing = first->GetNextType((E_Token)(first->GetType() + 1), first->level);
 
          if (closing->orig_col == closing->prev->orig_col_end)
          {
@@ -3607,7 +3607,7 @@ void space_text_balance_nested_parens()
          space_add_after(first, 1);
 
          // test after the opening parens   Issue #1703
-         Chunk *opening = next->GetPrevType((E_Token)(next->type - 1), next->level);
+         Chunk *opening = next->GetPrevType((E_Token)(next->GetType() - 1), next->level);
 
          if (opening->orig_col_end == opening->GetNext()->orig_col)
          {
@@ -3648,11 +3648,11 @@ size_t space_col_align(Chunk *first, Chunk *second)
 
    LOG_FMT(LSPACE, "%s(%d): first->orig_line is %zu, orig_col is %zu, [%s/%s], Text() '%s' <==>\n",
            __func__, __LINE__, first->orig_line, first->orig_col,
-           get_token_name(first->type), get_token_name(first->GetParentType()),
+           get_token_name(first->GetType()), get_token_name(first->GetParentType()),
            first->Text());
    LOG_FMT(LSPACE, "%s(%d): second->orig_line is %zu, orig_col is %zu [%s/%s], Text() '%s',",
            __func__, __LINE__, second->orig_line, second->orig_col,
-           get_token_name(second->type), get_token_name(second->GetParentType()),
+           get_token_name(second->GetType()), get_token_name(second->GetParentType()),
            second->Text());
    log_func_stack_inline(LSPACE);
 

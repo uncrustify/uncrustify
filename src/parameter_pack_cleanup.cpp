@@ -20,7 +20,7 @@ void parameter_pack_cleanup()
    while (pc->IsNotNullChunk())
    {
       LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
 
       // look for template
       if (pc->Is(CT_TEMPLATE))                 // Issue #3309

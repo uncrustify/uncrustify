@@ -34,7 +34,7 @@ void enum_cleanup()
          && pc->Is(CT_BRACE_CLOSE))
       {
          LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s\n",
-                 __func__, __LINE__, pc->orig_line, get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, get_token_name(pc->GetType()));
          Chunk *prev = pc->GetPrevNcNnl();                           // Issue #3604
 
          if (  prev != nullptr
