@@ -10,7 +10,7 @@ public class Sample : Object {
    {
       foo += s => {
          stdout.printf("Lambda expression %s!\n", name);
-      }
+      };
 
       /* Calling lambda expression */
       foo();

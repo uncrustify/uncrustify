@@ -603,8 +603,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          return;
       }
 
-      if (  language_is_set(LANG_CS)
-         && (  pc->Is(CT_LAMBDA)
+      if (  (  pc->Is(CT_LAMBDA)
             || pc->Is(CT_DELEGATE))
          && next->Is(CT_BRACE_OPEN))
       {
