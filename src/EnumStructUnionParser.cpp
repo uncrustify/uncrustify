@@ -40,8 +40,8 @@ static bool adj_tokens_match_qualified_identifier_pattern(Chunk *prev, Chunk *ne
    if (  prev != nullptr
       && next != nullptr)
    {
-      auto prev_token_type = prev->type;
-      auto next_token_type = next->type;
+      auto prev_token_type = prev->GetType();
+      auto next_token_type = next->GetType();
 
       switch (prev_token_type)
       {
@@ -101,8 +101,8 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
    if (  prev != nullptr
       && next != nullptr)
    {
-      auto prev_token_type = prev->type;
-      auto next_token_type = next->type;
+      auto prev_token_type = prev->GetType();
+      auto next_token_type = next->GetType();
 
       switch (prev_token_type)
       {
@@ -205,7 +205,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
 
          if (next->IsNotNullChunk())
          {
-            next_token_type = next->type;
+            next_token_type = next->GetType();
          }
          return(next_token_type == CT_PAREN_CLOSE);
 
@@ -1291,7 +1291,7 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
    LOG_FUNC_ENTRY();
    LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
            __unqualified_func__, __LINE__,
-           pc->orig_line, pc->orig_col, get_token_name(pc->type));
+           pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
 
    /**
     * test for a semicolon or closing brace at the level of the starting chunk
@@ -1304,7 +1304,7 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
    {
       LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->orig_line, pc->orig_col, get_token_name(pc->type));
+              pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
       return(true);
    }
    /**
@@ -1330,7 +1330,7 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
    {
       LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->orig_line, pc->orig_col, get_token_name(pc->type));
+              pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
       return(true);
    }
    /**
@@ -1345,7 +1345,7 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
    {
       LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->orig_line, pc->orig_col, get_token_name(pc->type));
+              pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
       return(true);
    }
    /**
@@ -1370,12 +1370,12 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
    {
       LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->orig_line, pc->orig_col, get_token_name(pc->type));
+              pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
       return(true);
    }
    LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
            __unqualified_func__, __LINE__,
-           pc->orig_line, pc->orig_col, get_token_name(pc->type));
+           pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
    return(false);
 } // EnumStructUnionParser::is_potential_end_chunk
 
@@ -1566,13 +1566,13 @@ void EnumStructUnionParser::mark_braces(Chunk *brace_open)
          mark_base_classes(inheritance_start);
       }
    }
-   brace_open->SetParentType(m_start->type);
+   brace_open->SetParentType(m_start->GetType());
 
    auto *brace_close = brace_open->SkipToMatch(E_Scope::PREPROC);
 
    if (brace_close->IsNotNullChunk())
    {
-      brace_close->SetParentType(m_start->type);
+      brace_close->SetParentType(m_start->GetType());
    }
 } // EnumStructUnionParser::mark_braces
 
@@ -1589,7 +1589,7 @@ void EnumStructUnionParser::mark_class_colon(Chunk *colon)
            colon->orig_col);
 
    colon->SetType(CT_CLASS_COLON);
-   colon->SetParentType(m_start->type);
+   colon->SetParentType(m_start->GetType());
 } // EnumStructUnionParser::mark_class_colon
 
 
@@ -1662,7 +1662,7 @@ void EnumStructUnionParser::mark_constructors()
                     name,
                     prev->orig_line,
                     prev->orig_col,
-                    get_token_name(prev->type));
+                    get_token_name(prev->GetType()));
 
             mark_cpp_constructor(prev);
          }
@@ -1678,7 +1678,7 @@ void EnumStructUnionParser::mark_enum_integral_type(Chunk *colon)
    LOG_FUNC_ENTRY();
 
    colon->SetType(CT_BIT_COLON);
-   colon->SetParentType(m_start->type);
+   colon->SetParentType(m_start->GetType());
 
    auto *body_start = get_body_start();
    auto *pc         = colon->GetNextNcNnl();
@@ -1703,7 +1703,7 @@ void EnumStructUnionParser::mark_enum_integral_type(Chunk *colon)
       {
          pc->flags &= ~PCF_VAR_TYPE;
          pc->SetType(CT_TYPE);
-         pc->SetParentType(colon->type);
+         pc->SetParentType(colon->GetType());
       }
       pc = pc->GetNextNcNnl();
    }
@@ -1833,7 +1833,7 @@ void EnumStructUnionParser::mark_pointer_types(Chunk *pc)
 
          if (pc->IsPointerOperator())
          {
-            pc->SetParentType(m_start->type);
+            pc->SetParentType(m_start->GetType());
             pc->SetType(CT_PTR_TYPE);
          }
       } while (pc->IsPointerReferenceOrQualifier());
@@ -1924,7 +1924,7 @@ void EnumStructUnionParser::mark_type(Chunk *pc)
       do
       {
          make_type(pc);
-         pc->SetParentType(m_start->type);
+         pc->SetParentType(m_start->GetType());
          pc = pc->GetNextNcNnl(E_Scope::PREPROC);
       } while (pc->IsPointerOrReference());
    }
@@ -1977,7 +1977,7 @@ void EnumStructUnionParser::mark_where_clause(Chunk *where)
 
    for (auto *pc = where_start; pc != where_end; pc = pc->GetNextNcNnl())
    {
-      flags = mark_where_chunk(pc, m_start->type, flags);
+      flags = mark_where_chunk(pc, m_start->GetType(), flags);
    }
 } // EnumStructUnionParser::mark_where_clause
 
@@ -1996,7 +1996,7 @@ void EnumStructUnionParser::mark_where_colon(Chunk *colon)
               colon->orig_col);
    }
    colon->SetType(CT_WHERE_COLON);
-   colon->SetParentType(m_start->type);
+   colon->SetParentType(m_start->GetType());
 } // EnumStructUnionParser::mark_where_colon
 
 
@@ -2093,7 +2093,7 @@ void EnumStructUnionParser::parse(Chunk *pc)
                  || (  language_is_set(LANG_PAWN)
                     && m_start->IsEnum())))
       {
-         set_paren_parent(next, m_start->type);
+         set_paren_parent(next, m_start->GetType());
 
          if (  prev->Is(CT_WORD)
             && language_is_set(LANG_D))
@@ -2140,7 +2140,7 @@ void EnumStructUnionParser::parse(Chunk *pc)
       && prev->level == m_start->level
       && !prev->flags.test(PCF_IN_FOR))
    {
-      prev->SetParentType(m_start->type);
+      prev->SetParentType(m_start->GetType());
    }
 } // EnumStructUnionParser::parse
 
@@ -2618,13 +2618,13 @@ Chunk *EnumStructUnionParser::try_find_end_chunk(Chunk *pc)
    LOG_FUNC_ENTRY();
    LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
            __unqualified_func__, __LINE__,
-           pc->orig_line, pc->orig_col, get_token_name(pc->type));
+           pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
 
    do
    {
       LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->orig_line, pc->orig_col, get_token_name(pc->type));
+              pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
 
       /**
        * clear some previously marked token types, some of which have likely
@@ -2640,14 +2640,14 @@ Chunk *EnumStructUnionParser::try_find_end_chunk(Chunk *pc)
       }
       LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->orig_line, pc->orig_col, get_token_name(pc->type));
+              pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
 
       do
       {
          pc = pc->GetNextNcNnl(E_Scope::PREPROC);
          LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
                  __unqualified_func__, __LINE__,
-                 pc->orig_line, pc->orig_col, get_token_name(pc->type));
+                 pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
       } while (  pc->IsNotNullChunk()
               && pc->level > m_start->level);
 
@@ -2663,7 +2663,7 @@ Chunk *EnumStructUnionParser::try_find_end_chunk(Chunk *pc)
       {
          LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
                  __unqualified_func__, __LINE__,
-                 pc->orig_line, pc->orig_col, get_token_name(pc->type));
+                 pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
       }
    } while (!is_potential_end_chunk(pc));
 
@@ -2783,7 +2783,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
    if (  language_is_set(LANG_PAWN)
       && m_start->IsEnum())
    {
-      set_paren_parent(pc, m_start->type);
+      set_paren_parent(pc, m_start->GetType());
    }
    else if (template_detected())
    {

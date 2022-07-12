@@ -25,7 +25,7 @@ Chunk *align_func_param(Chunk *start)
 
    LOG_FMT(LAS, "AlignStack::%s(%d): Candidate is '%s': orig_line is %zu, column is %zu, type is %s, level is %zu\n",
            __func__, __LINE__, start->Text(), start->orig_line, start->column,
-           get_token_name(start->type), start->level);
+           get_token_name(start->GetType()), start->level);
    // Defaults, if the align_func_params = true
    size_t myspan   = 2;
    size_t mythresh = 0;
@@ -67,7 +67,7 @@ Chunk *align_func_param(Chunk *start)
       chunk_count++;
       LOG_FMT(LFLPAREN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(),
-              get_token_name(pc->type));
+              get_token_name(pc->GetType()));
 
       if (pc->Is(CT_FUNC_VAR))                    // Issue #2278
       {
@@ -171,7 +171,7 @@ void align_func_params()
    {
       LOG_FMT(LFLPAREN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(),
-              get_token_name(pc->type), get_token_name(pc->GetParentType()));
+              get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       if (  pc->IsNot(CT_FPAREN_OPEN)
          || (  pc->GetParentType() != CT_FUNC_PROTO

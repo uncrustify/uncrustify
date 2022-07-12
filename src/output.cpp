@@ -514,13 +514,13 @@ void output_parsed(FILE *pfile, bool withOptions)
    {
 #ifdef WIN32
       fprintf(pfile, "%s# %3d>%19.19s|%19.19s|%19.19s[%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
-              eol_marker, (int)pc->orig_line, get_token_name(pc->type),
+              eol_marker, (int)pc->orig_line, get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(get_type_of_the_parent(pc)),
               (int)pc->column, (int)pc->orig_col, (int)pc->orig_col_end, (int)pc->orig_prev_sp,
               (int)pc->brace_level, (int)pc->level, (int)pc->pp_level, (int)pc->nl_count, pc->after_tab);
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu]",
-              eol_marker, pc->orig_line, get_token_name(pc->type),
+              eol_marker, pc->orig_line, get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(get_type_of_the_parent(pc)),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
@@ -568,7 +568,7 @@ void output_parsed_csv(FILE *pfile)
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       fprintf(pfile, "%s%zu,%s,%s,%s,%zu,%zu,%zu,%d,%zu,%zu,%zu,",
-              eol_marker, pc->orig_line, get_token_name(pc->type),
+              eol_marker, pc->orig_line, get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(get_type_of_the_parent(pc)),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
@@ -672,7 +672,7 @@ void output_text(FILE *pfile)
    {
       char copy[1000];
       LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig_line is %zu, column is %zu, nl is %zu\n",
-              __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->type), pc->orig_line, pc->column, pc->nl_count);
+              __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->orig_line, pc->column, pc->nl_count);
       log_rule_B("cmt_convert_tab_to_spaces");
       cpd.output_tab_as_space = (  options::cmt_convert_tab_to_spaces()
                                 && pc->IsComment());
@@ -817,7 +817,7 @@ void output_text(FILE *pfile)
       {
          // don't do anything for non-visible stuff
          LOG_FMT(LOUTIND, "%s(%d): orig_line is %zu, column is %zu, non-visible stuff: type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->column, get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, pc->column, get_token_name(pc->GetType()));
       }
       else
       {
@@ -1741,7 +1741,7 @@ static bool can_combine_comment(Chunk *pc, cmt_reflow &cmt)
       // Make sure the comment is the same type at the same column
       next = next->GetNext();
 
-      if (  next->Is(pc->type)
+      if (  next->Is(pc->GetType())
          && (  (  next->column == 1
                && pc->column == 1)
             || (  next->column == cmt.base_col
@@ -2181,7 +2181,7 @@ static void output_comment_multi(Chunk *pc)
    char       copy[1000];
 
    LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig_col is %zu, column is %zu\n",
-           __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->type), pc->orig_col, pc->column);
+           __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->orig_col, pc->column);
 
    output_cmt_start(cmt, pc);
    log_rule_B("cmt_reflow_mode");
@@ -2871,7 +2871,7 @@ static bool kw_fcn_function(Chunk *cmt, unc_text &out_txt)
       }
 
       if (  fcn->prev != nullptr
-         && fcn->prev->type == CT_DESTRUCTOR)
+         && fcn->prev->GetType() == CT_DESTRUCTOR)
       {
          out_txt.append('~');
       }
@@ -3169,7 +3169,7 @@ static void output_comment_multi_simple(Chunk *pc)
    cmt_reflow cmt;
 
    LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig_col is %zu, column is %zu\n",
-           __func__, __LINE__, pc->Text(), get_token_name(pc->type), pc->orig_col, pc->column);
+           __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()), pc->orig_col, pc->column);
 
    output_cmt_start(cmt, pc);
 
@@ -3415,7 +3415,7 @@ void add_long_preprocessor_conditional_block_comment()
             tmp = tmp->GetNext();
 
             LOG_FMT(LPPIF, "next item type %d (is %s)\n",
-                    (tmp ? tmp->type : -1), (tmp ? tmp->IsNewline() ? "newline"
+                    (tmp ? tmp->GetType() : -1), (tmp ? tmp->IsNewline() ? "newline"
                                              : tmp->IsComment() ? "comment" : "other" : "---"));
 
             if (  tmp->IsNullChunk()

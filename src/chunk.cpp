@@ -58,7 +58,7 @@ void Chunk::copyFrom(const Chunk &o)
    parent       = nullptr;
    align        = o.align;
    indent       = o.indent;
-   type         = o.type;
+   m_type       = o.m_type;
    m_parentType = o.m_parentType;
 
    orig_line     = o.orig_line;
@@ -89,7 +89,7 @@ void Chunk::Reset()
    next          = nullptr;
    prev          = nullptr;
    parent        = nullptr;
-   type          = CT_NONE;
+   m_type        = CT_NONE;
    m_parentType  = CT_NONE;
    orig_line     = 0;
    orig_col      = 0;
@@ -320,7 +320,7 @@ bool Chunk::IsOnSameLine(const Chunk *end) const
 }
 
 
-Chunk *Chunk::SearchTypeLevel(const E_Token cType, const E_Scope scope,
+Chunk *Chunk::SearchTypeLevel(const E_Token type, const E_Scope scope,
                               const E_Direction dir, const int cLevel) const
 {
    T_SearchFnPtr searchFnPtr = GetSearchFn(dir);
@@ -329,10 +329,10 @@ Chunk *Chunk::SearchTypeLevel(const E_Token cType, const E_Scope scope,
    do                                                // loop over the chunk list
    {
       pc = (pc->*searchFnPtr)(scope);                // in either direction while
-   } while (  pc->IsNotNullChunk()                   // the end of the list was not reached yet
-           && (!pc->IsTypeAndLevel(cType, cLevel))); // and the chunk was not found either
+   } while (  pc->IsNotNullChunk()                  // the end of the list was not reached yet
+           && (!pc->IsTypeAndLevel(type, cLevel))); // and the chunk was not found either
 
-   return(pc);                                       // the latest chunk is the searched one
+   return(pc);                                      // the latest chunk is the searched one
 }
 
 
@@ -409,7 +409,7 @@ static void chunk_log_msg(Chunk *chunk, const log_sev_t log, const char *str)
    }
    else
    {
-      LOG_FMT(log, "Text() is '%s', type is %s,\n", chunk->Text(), get_token_name(chunk->type));
+      LOG_FMT(log, "Text() is '%s', type is %s,\n", chunk->Text(), get_token_name(chunk->GetType()));
    }
 }
 
@@ -588,15 +588,15 @@ Chunk *Chunk::GetNextNisq(const E_Scope scope) const
 }
 
 
-Chunk *Chunk::GetNextType(const E_Token cType, const int cLevel, const E_Scope scope) const
+Chunk *Chunk::GetNextType(const E_Token type, const int cLevel, const E_Scope scope) const
 {
-   return(SearchTypeLevel(cType, scope, E_Direction::FORWARD, cLevel));
+   return(SearchTypeLevel(type, scope, E_Direction::FORWARD, cLevel));
 }
 
 
-Chunk *Chunk::GetPrevType(const E_Token cType, const int cLevel, const E_Scope scope) const
+Chunk *Chunk::GetPrevType(const E_Token type, const int cLevel, const E_Scope scope) const
 {
-   return(SearchTypeLevel(cType, scope, E_Direction::BACKWARD, cLevel));
+   return(SearchTypeLevel(type, scope, E_Direction::BACKWARD, cLevel));
 }
 
 
@@ -770,7 +770,7 @@ void chunk_flags_set_real(Chunk *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits)
                  static_cast<pcf_flags_t::int_t>(pc->flags ^ nflags),
                  static_cast<pcf_flags_t::int_t>(nflags),
                  pc->orig_line, pc->orig_col, pc->Text(),
-                 get_token_name(pc->type));
+                 get_token_name(pc->GetType()));
          LOG_FMT(LSETFLG, " parent type is %s,\n  ",
                  get_token_name(pc->GetParentType()));
          log_func_stack_inline(LSETFLG);
@@ -785,7 +785,7 @@ void Chunk::SetTypeReal(const E_Token token, const char *func, const int line)
    LOG_FUNC_ENTRY();
 
    if (  IsNullChunk()
-      || type == token)
+      || m_type == token)
    {
       return;
    }
@@ -801,8 +801,8 @@ void Chunk::SetTypeReal(const E_Token token, const char *func, const int line)
       LOG_FMT(LSETTYP, "'%s'\n", Text());
    }
    LOG_FMT(LSETTYP, "   type is %s, parent type is %s => new type is %s\n",
-           get_token_name(type), get_token_name(GetParentType()), get_token_name(token));
-   type = token;
+           get_token_name(m_type), get_token_name(m_parentType), get_token_name(token));
+   m_type = token;
 }
 
 
@@ -811,7 +811,7 @@ void Chunk::SetParentTypeReal(const E_Token token, const char *func, const int l
    LOG_FUNC_ENTRY();
 
    if (  IsNullChunk()
-      || GetParentType() == token)
+      || m_parentType == token)
    {
       return;
    }
@@ -827,16 +827,8 @@ void Chunk::SetParentTypeReal(const E_Token token, const char *func, const int l
       LOG_FMT(LSETPAR, "'%s'\n", Text());
    }
    LOG_FMT(LSETPAR, "   type is %s, parent type is %s => new parent type is %s\n",
-           get_token_name(type), get_token_name(GetParentType()), get_token_name(token));
+           get_token_name(m_type), get_token_name(m_parentType), get_token_name(token));
    m_parentType = token;
-}
-
-
-E_Token Chunk::GetParentType() const
-{
-   LOG_FUNC_ENTRY();
-
-   return(m_parentType);
 }
 
 
@@ -1013,7 +1005,7 @@ E_Token get_type_of_the_parent(Chunk *pc)
    {
       return(CT_PARENT_NOT_SET);
    }
-   return(pc->parent->type);
+   return(pc->parent->GetType());
 }
 
 

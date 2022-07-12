@@ -86,7 +86,7 @@ void align_init_brace(Chunk *start)
          pc = tmp;
 
          LOG_FMT(LALBR, " -%zu- skipped '[] =' to %s\n",
-                 pc->orig_line, get_token_name(pc->type));
+                 pc->orig_line, get_token_name(pc->GetType()));
          continue;
       }
       Chunk *next = pc;
@@ -94,7 +94,7 @@ void align_init_brace(Chunk *start)
       if (idx < cpd.al_cnt)
       {
          LOG_FMT(LALBR, " (%zu) check %s vs %s -- ",
-                 idx, get_token_name(pc->type), get_token_name(cpd.al[idx].type));
+                 idx, get_token_name(pc->GetType()), get_token_name(cpd.al[idx].type));
 
          if (pc->Is(cpd.al[idx].type))
          {

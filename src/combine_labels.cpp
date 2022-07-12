@@ -102,7 +102,7 @@ void combine_labels()
       else
       {
          LOG_FMT(LFCN, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, Text() '%s', type is %s\n",
-                 __func__, __LINE__, next->orig_line, next->orig_col, next->Text(), get_token_name(next->type));
+                 __func__, __LINE__, next->orig_line, next->orig_col, next->Text(), get_token_name(next->GetType()));
       }
 
       if (  !next->flags.test(PCF_IN_OC_MSG) // filter OC case of [self class] msg send
@@ -350,10 +350,10 @@ void combine_labels()
             {
                LOG_FMT(LFCN, "%s(%d): nextprev->Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
                        __func__, __LINE__, nextprev->Text(), nextprev->orig_line, nextprev->orig_col,
-                       get_token_name(nextprev->type));
+                       get_token_name(nextprev->GetType()));
                LOG_FMT(LFCN, "%s(%d): next->Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
                        __func__, __LINE__, next->Text(), next->orig_line, next->orig_col,
-                       get_token_name(next->type));
+                       get_token_name(next->GetType()));
 
                // Issue #2172
                if (next->GetParentType() == CT_FUNC_DEF)
@@ -413,7 +413,7 @@ void combine_labels()
                {
                   LOG_FMT(LFCN, "%s(%d): tmp->Text() is '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
                           __func__, __LINE__, tmp->Text(), tmp->orig_line, tmp->orig_col,
-                          get_token_name(tmp->type));
+                          get_token_name(tmp->GetType()));
 
                   if (  tmp->Is(CT_BASE)
                      || tmp->Is(CT_THIS))

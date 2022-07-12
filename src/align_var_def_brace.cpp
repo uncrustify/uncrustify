@@ -64,7 +64,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
    if (prev->Is(CT_ASSIGN))
    {
       LOG_FMT(LAVDB, "%s(%d): start->Text() '%s', type is %s, on orig_line %zu (abort due to assign)\n",
-              __func__, __LINE__, start->Text(), get_token_name(start->type), start->orig_line);
+              __func__, __LINE__, start->Text(), get_token_name(start->GetType()), start->orig_line);
 
       Chunk *pc = start->GetNextType(CT_BRACE_CLOSE, start->level);
       return(pc->GetNextNcNnl());
@@ -72,7 +72,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
    char copy[1000];
 
    LOG_FMT(LAVDB, "%s(%d): start->Text() '%s', type is %s, on orig_line %zu\n",
-           __func__, __LINE__, start->ElidedText(copy), get_token_name(start->type), start->orig_line);
+           __func__, __LINE__, start->ElidedText(copy), get_token_name(start->GetType()), start->orig_line);
 
    log_rule_B("align_var_def_inline");
    auto const align_mask =
@@ -126,7 +126,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       else
       {
          LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
       }
 
       if (pc->IsComment())
@@ -233,7 +233,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       if (!pc->IsNewline())
       {
          LOG_FMT(LAVDB, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
 
          if (pc->IsNot(CT_IGNORED))
          {
@@ -276,8 +276,8 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
                while (  prev_local->Is(CT_PTR_TYPE)
                      || prev_local->Is(CT_ADDR))
                {
-                  LOG_FMT(LAVDB, "%s(%d): prev_local '%s', prev_local->type %s\n",
-                          __func__, __LINE__, prev_local->Text(), get_token_name(prev_local->type));
+                  LOG_FMT(LAVDB, "%s(%d): prev_local '%s', prev_local->GetType() %s\n",
+                          __func__, __LINE__, prev_local->Text(), get_token_name(prev_local->GetType()));
                   prev_local = prev_local->GetPrev();
                }
                pc = prev_local->GetNext();

@@ -99,7 +99,7 @@ void do_parens_assign()                         // Issue #3316
             while (p->IsNotNullChunk())
             {
                LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
-                       __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->type));
+                       __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->GetType()));
 
                //log_pcf_flags(LPARADD, p->flags);
                if (p->flags.test(PCF_STMT_START))
@@ -124,7 +124,7 @@ void do_parens_assign()                         // Issue #3316
                }
             }
             LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
-                    __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->type));
+                    __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->GetType()));
 
             if (p->GetParentType() == CT_WHILE)
             {
@@ -170,7 +170,7 @@ void do_parens_return()                         // Issue #3316
             while (p->IsNotNullChunk())
             {
                LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
-                       __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->type));
+                       __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->GetType()));
 
                //log_pcf_flags(LPARADD, p->flags);
                if (p->flags.test(PCF_STMT_START))
@@ -195,7 +195,7 @@ void do_parens_return()                         // Issue #3316
                }
             }
             LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
-                    __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->type));
+                    __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->GetType()));
 
             if (p->GetParentType() == CT_WHILE)
             {
@@ -290,7 +290,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       if (pc->flags.test(PCF_IN_PREPROC))
       {
          LOG_FMT(LPARADD2, " -- bail on PP %s [%s] at line %zu col %zu, level %zu\n",
-                 get_token_name(pc->type),
+                 get_token_name(pc->GetType()),
                  pc->Text(), pc->orig_line, pc->orig_col, pc->level);
          return;
       }
@@ -301,7 +301,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
          || pc->Is(CT_COMMA))
       {
          LOG_FMT(LPARADD2, " -- %s [%s] at line %zu col %zu, level %zu\n",
-                 get_token_name(pc->type),
+                 get_token_name(pc->GetType()),
                  pc->Text(), pc->orig_line, pc->orig_col, pc->level);
 
          if (hit_compare)

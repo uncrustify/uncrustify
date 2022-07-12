@@ -26,7 +26,7 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
       {
          LOG_FMT(LFCNR, "%s(%d): switch_before->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
                  __func__, __LINE__, switch_before->orig_line, switch_before->orig_col,
-                 switch_before->Text(), get_token_name(switch_before->type));
+                 switch_before->Text(), get_token_name(switch_before->GetType()));
          we_have_a_case_before = true;
       }
    }
@@ -49,7 +49,7 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
             || pc->GetParentType() == CT_BRACED_INIT_LIST)))
    {
       LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n   ",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
       log_pcf_flags(LFCNR, pc->flags);
       auto brace_open = pc->GetNextNcNnl();
 
@@ -100,7 +100,7 @@ void flag_cpp_braced_init_list(Chunk *pc, Chunk *next)
          }
       }
    }
-   // TODO: Change pc->type CT_WORD -> CT_TYPE
+   // TODO: Change pc->GetType() CT_WORD -> CT_TYPE
    // for the case CT_ASSIGN (and others).
 
    // TODO: Move this block to the fix_fcn_call_args function.
