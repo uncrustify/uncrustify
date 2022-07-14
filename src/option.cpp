@@ -326,8 +326,7 @@ bool process_option_line_compat_0_68(const std::string              &cmd,
 } // process_option_line_compat_0_68
 
 
-bool process_option_line_compat_0_70(const std::string &cmd,
-                                     const char        *filename)
+bool process_option_line_compat_0_70(const std::string &cmd, const char *filename)
 {
    if (cmd == "sp_word_brace")                     // Issue #2428
    {
@@ -342,8 +341,7 @@ bool process_option_line_compat_0_70(const std::string &cmd,
 } // process_option_line_compat_0_70
 
 
-bool process_option_line_compat_0_73(const std::string &cmd,
-                                     const char        *filename)
+bool process_option_line_compat_0_73(const std::string &cmd, const char *filename)
 {
    if (cmd == "indent_sing_line_comments")         // Issue #3249
    {
@@ -378,8 +376,7 @@ bool process_option_line_compat_0_73(const std::string &cmd,
 } // process_option_line_compat_0_73
 
 
-bool process_option_line_compat_0_74(const std::string &cmd,
-                                     const char        *filename)
+bool process_option_line_compat_0_74(const std::string &cmd, const char *filename)
 {
    if (cmd == "sp_type_question")         // PR #3638
    {
@@ -391,6 +388,21 @@ bool process_option_line_compat_0_74(const std::string &cmd,
    }
    return(false);
 } // process_option_line_compat_0_74
+
+
+bool process_option_line_compat_0_75(const std::string &cmd, const char *filename)
+{
+   if (cmd == "pp_space")
+   {
+      OptionWarning w{ filename, OptionWarning::MINOR };
+      w("option '%s' is deprecated; it has been replaced by '%s'.\n"
+        "You can also use '%s' for additional functionality",
+        cmd.c_str(), options::pp_space_after.name(), options::pp_space_before.name());
+
+      return(true);
+   }
+   return(false);
+} // process_option_line_compat_0_75
 
 } // namespace
 
@@ -1085,6 +1097,14 @@ void process_option_line(const std::string &config_line, const char *filename,
       if (compat_level < option_level(0, 75))
       {
          if (process_option_line_compat_0_74(cmd, filename))
+         {
+            return;
+         }
+      }
+
+      if (compat_level < option_level(0, 76))
+      {
+         if (process_option_line_compat_0_75(cmd, filename))
          {
             return;
          }
