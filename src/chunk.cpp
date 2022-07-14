@@ -55,7 +55,7 @@ void Chunk::copyFrom(const Chunk &o)
 {
    next         = nullptr;
    prev         = nullptr;
-   parent       = nullptr;
+   m_parent     = Chunk::NullChunkPtr;
    align        = o.align;
    indent       = o.indent;
    m_type       = o.m_type;
@@ -88,7 +88,7 @@ void Chunk::Reset()
    memset(&indent, 0, sizeof(indent));
    next          = nullptr;
    prev          = nullptr;
-   parent        = nullptr;
+   m_parent      = Chunk::NullChunkPtr;
    m_type        = CT_NONE;
    m_parentType  = CT_NONE;
    orig_line     = 0;
@@ -973,24 +973,13 @@ Chunk *chunk_skip_dc_member_rev(Chunk *start, E_Scope scope)
 }
 
 
-// set parent member
-void chunk_set_parent(Chunk *pc, Chunk *parent)
+void Chunk::SetParent(Chunk *parent)
 {
-   if (pc == nullptr)
+   if (this == parent)
    {
       return;
    }
-
-   if (parent == nullptr)
-   {
-      return;
-   }
-
-   if (pc == parent)
-   {
-      return;
-   }
-   pc->parent = parent;
+   m_parent = parent;
 }
 
 
@@ -1001,11 +990,11 @@ E_Token get_type_of_the_parent(Chunk *pc)
       return(CT_UNKNOWN);
    }
 
-   if (pc->parent == nullptr)
+   if (pc->GetParent() == Chunk::NullChunkPtr)
    {
       return(CT_PARENT_NOT_SET);
    }
-   return(pc->parent->GetType());
+   return(pc->GetParent()->GetType());
 }
 
 
@@ -1033,16 +1022,6 @@ bool chunk_is_class_struct_union(Chunk *pc)
 
 int chunk_compare_position(const Chunk *A_token, const Chunk *B_token)
 {
-   if (A_token == nullptr)
-   {
-      assert(A_token);
-   }
-
-   if (B_token == nullptr)
-   {
-      assert(B_token);
-   }
-
    if (A_token->orig_line < B_token->orig_line)
    {
       return(-1);

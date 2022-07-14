@@ -160,7 +160,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
          if (last->Is(CT_PP_ENDIF))
          {
             // look for the parent
-            Chunk *parent_last = last->parent;
+            Chunk *parent_last = last->GetParent();
             // compare the positions
             int   comp = chunk_compare_position(parent_last, cl_colon);
             LOG_FMT(LMCB, "%s(%d): comp is %d\n",

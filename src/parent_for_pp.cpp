@@ -37,7 +37,7 @@ void do_parent_for_pp()
          log_pcf_flags(LMCB, pc->flags);
          size_t level = pc->pp_level;
          Chunk  *a    = viz.at(level - 1);
-         chunk_set_parent(pc, a);
+         pc->SetParent(a);
       }
       else if (pc->Is(CT_PP_ENDIF))
       {
@@ -46,7 +46,7 @@ void do_parent_for_pp()
          log_pcf_flags(LMCB, pc->flags);
          size_t level = pc->pp_level;
          Chunk  *a    = viz.at(level);
-         chunk_set_parent(pc, a);
+         pc->SetParent(a);
          viz.pop_back();
       }
       pc = pc->GetNextNcNnl();
