@@ -636,7 +636,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       }
    }
    // Get the parent type for brace and parenthesis open
-   E_Token parent = pc->GetParentType();
+   E_Token parentType = pc->GetParentType();
 
    if (  pc->Is(CT_PAREN_OPEN)
       || pc->Is(CT_FPAREN_OPEN)
@@ -668,13 +668,13 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
                || prev->Is(CT_D_SCOPE_IF))
             {
                pc->SetType(CT_SPAREN_OPEN);
-               parent = frm.top().type;
+               parentType = frm.top().type;
                frm.sparen_count++;
             }
             else if (prev->Is(CT_FUNCTION))
             {
                pc->SetType(CT_FPAREN_OPEN);
-               parent = CT_FUNCTION;
+               parentType = CT_FUNCTION;
             }
             // NS_ENUM and NS_OPTIONS are followed by a (type, name) pair
             else if (  prev->Is(CT_ENUM)
@@ -682,11 +682,11 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
             {
                // Treat both as CT_ENUM since the syntax is identical
                pc->SetType(CT_FPAREN_OPEN);
-               parent = CT_ENUM;
+               parentType = CT_ENUM;
             }
             else if (prev->Is(CT_DECLSPEC))  // Issue 1289
             {
-               parent = CT_DECLSPEC;
+               parentType = CT_DECLSPEC;
             }
             // else: no need to set parent
          }
@@ -695,17 +695,17 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
             // Set the parent for open braces
             if (frm.top().stage != brace_stage_e::NONE)
             {
-               parent = frm.top().type;
+               parentType = frm.top().type;
             }
             else if (  prev->Is(CT_ASSIGN)
                     && (prev->str[0] == '='))
             {
-               parent = CT_ASSIGN;
+               parentType = CT_ASSIGN;
             }
             else if (  prev->Is(CT_RETURN)
                     && language_is_set(LANG_CPP))
             {
-               parent = CT_RETURN;
+               parentType = CT_RETURN;
             }
             // Carry through CT_ENUM parent in NS_ENUM (type, name) {
             // only to help the vim command }
@@ -713,11 +713,11 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
                     && language_is_set(LANG_OC)
                     && prev->GetParentType() == CT_ENUM)
             {
-               parent = CT_ENUM;
+               parentType = CT_ENUM;
             }
             else if (prev->Is(CT_FPAREN_CLOSE))
             {
-               parent = CT_FUNCTION;
+               parentType = CT_FUNCTION;
             }
             // else: no need to set parent
          }
@@ -779,9 +779,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          }
       }
       frm.push(pc, __func__, __LINE__);
-      frm.top().parent = parent;
-      // set parent type
-      pc->SetParentType(parent);
+      frm.top().parent = parentType;
+      pc->SetParentType(parentType);
    }
    // Issue #2281
 
@@ -796,7 +795,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       if (saved != nullptr)
       {
          // set parent member
-         chunk_set_parent(pc, saved);
+         pc->SetParent(saved);
       }
    }
 
@@ -821,7 +820,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          if (saved != nullptr)
          {
             // set parent member
-            chunk_set_parent(pc, saved);
+            pc->SetParent(saved);
          }
       }
    }
@@ -838,7 +837,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       if (saved != nullptr)
       {
          // set parent member
-         chunk_set_parent(pc, saved);
+         pc->SetParent(saved);
       }
    }
    const pattern_class_e patcls = get_token_pattern_class(pc->GetType());
@@ -1112,10 +1111,10 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
       }
       else
       {
-         const E_Token parent = frm.top().type;
+         const E_Token parentType = frm.top().type;
 
          Chunk         *vbrace = insert_vbrace_open_before(pc, frm);
-         vbrace->SetParentType(parent);
+         vbrace->SetParentType(parentType);
 
          frm.level++;
          frm.brace_level++;
@@ -1126,7 +1125,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
          frm.push(vbrace, __func__, __LINE__, brace_stage_e::NONE);
          // "+VBrace");
 
-         frm.top().parent = parent;
+         frm.top().parent = parentType;
 
          // update the level of pc
          pc->level       = frm.level;

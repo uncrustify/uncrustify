@@ -102,6 +102,17 @@ public:
     */
    void SetParentTypeReal(const E_Token token, const char *func, const int line);
 
+   /**
+    * @brief returns the parent of the chunk
+    */
+   Chunk *GetParent() const;
+
+   /**
+    * @brief Sets the parent of the chunk
+    * @param parent the parent chunk to set
+    */
+   void SetParent(Chunk *parent);
+
 
    // --------- Get* chunk functions
 
@@ -732,7 +743,6 @@ public:
 
    Chunk        *next;                       //! pointer to next chunk in list
    Chunk        *prev;                       //! pointer to previous chunk in list
-   Chunk        *parent;                     //! pointer to parent chunk(not always set)
 
    align_ptr_t  align;
    indent_ptr_t indent;
@@ -763,6 +773,7 @@ protected:
 
 
    // --------- Data members
+   Chunk   *m_parent;                        //! pointer to parent chunk (not always set)
    E_Token m_type;                           //! type of the chunk itself
    E_Token m_parentType;                     //! type of the parent chunk usually CT_NONE
 
@@ -783,6 +794,12 @@ protected:
 private:
    const bool null_chunk;                      //! true for null chunks
 };
+
+
+inline Chunk *Chunk::GetParent() const
+{
+   return(m_parent);
+}
 
 
 inline E_Token Chunk::GetType() const
@@ -1254,9 +1271,6 @@ void chunk_flags_set_real(Chunk *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits)
 
 
 #define chunk_flags_clr(pc, cc)        chunk_flags_set_real((pc), (cc), {})
-
-
-void chunk_set_parent(Chunk *pc, Chunk *parent);
 
 
 E_Token get_type_of_the_parent(Chunk *pc);

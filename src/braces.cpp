@@ -1383,7 +1383,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    // look for the case token to the colon
    Chunk *cas_ = cl_colon->GetPrevType(CT_CASE, cl_colon->level);
    // look for the parent
-   Chunk *swit = cas_->parent;
+   Chunk *swit = cas_->GetParent();
    // look for the opening brace of the switch
    Chunk *open = swit->GetNextType(CT_BRACE_OPEN, swit->level);
    // look for the closing brace of the switch

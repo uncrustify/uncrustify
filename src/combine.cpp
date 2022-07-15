@@ -2577,12 +2577,12 @@ static void handle_cpp_lambda(Chunk *sq_o)
    {
       pa_o->SetType(CT_LPAREN_OPEN);                    // Issue #3054
       pa_o->SetParentType(CT_CPP_LAMBDA);
-      chunk_set_parent(pa_o, sq_o);
-      chunk_set_parent(br_o, sq_o);
+      pa_o->SetParent(sq_o);
+      br_o->SetParent(sq_o);
       pa_c->SetType(CT_LPAREN_CLOSE);
       pa_c->SetParentType(CT_CPP_LAMBDA);
-      chunk_set_parent(pa_c, sq_o);
-      chunk_set_parent(br_c, sq_o);
+      pa_c->SetParent(sq_o);
+      br_c->SetParent(sq_o);
    }
    br_o->SetParentType(CT_CPP_LAMBDA);
    br_c->SetParentType(CT_CPP_LAMBDA);
