@@ -29,14 +29,14 @@ bool flag_cpp_decltype(Chunk *pc)
          // closing parenthesis right before ".put" in the above example.
          //
          // So, we will manually look for the matching closing parenthesis.
-         chunk_flags_set(paren_open, PCF_IN_DECLTYPE);
+         paren_open->SetFlags(PCF_IN_DECLTYPE);
          pc = paren_open->GetNextNcNnl();
 
          for (int level = 1; pc->IsNotNullChunk() && level > 0; pc = pc->GetNextNcNnl())
          {
             level += pc->Is(CT_PAREN_OPEN);
             level -= pc->Is(CT_PAREN_CLOSE);
-            chunk_flags_set(pc, PCF_IN_DECLTYPE);
+            pc->SetFlags(PCF_IN_DECLTYPE);
          }
 
          return(pc->IsNotNullChunk());

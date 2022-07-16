@@ -4680,8 +4680,8 @@ bool ifdef_over_whole_file()
 
    if (cpd.ifdef_over_whole_file > 0)
    {
-      chunk_flags_set(start_pp, PCF_WF_IF);
-      chunk_flags_set(end_pp, PCF_WF_ENDIF);
+      start_pp->SetFlags(PCF_WF_IF);
+      end_pp->SetFlags(PCF_WF_ENDIF);
    }
    LOG_FMT(LNOTE, "The whole file is%s covered by a #IF\n",
            (cpd.ifdef_over_whole_file > 0) ? "" : " NOT");
@@ -4764,7 +4764,7 @@ void indent_preproc()
          if (  !options::pp_define_at_level()
             || pc->GetParentType() != CT_PP_DEFINE)
          {
-            chunk_flags_set(pc, PCF_DONT_INDENT);
+            pc->SetFlags(PCF_DONT_INDENT);
          }
       }
       LOG_FMT(LPPIS, "%s(%d): orig_line %zu to %zu (len %zu, next->col %zu)\n",

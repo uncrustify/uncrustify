@@ -479,7 +479,7 @@ static void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next)
    if (  prev->flags.test(PCF_IN_PREPROC)
       && next->flags.test(PCF_IN_PREPROC))
    {
-      chunk_flags_set(nl, PCF_IN_PREPROC);
+      nl->SetFlags(PCF_IN_PREPROC);
    }
 
    if (nl->flags.test(PCF_IN_PREPROC))
@@ -705,7 +705,7 @@ static void newline_min_after(Chunk *ref, size_t count, pcf_flag_e flag)
       newline_min_after(next, count, flag);
       return;
    }
-   chunk_flags_set(pc, flag);
+   pc->SetFlags(flag);
 
    if (  pc->IsNewline()
       && can_increase_nl(pc))
@@ -2370,8 +2370,8 @@ static void newlines_brace_pair(Chunk *br_open)
                   newline_iarf_pair(tmp_1, tmp_1->GetNextNcNnl(), IARF_REMOVE);
                }
             }
-            chunk_flags_set(br_open, PCF_ONE_LINER);         // set the one liner flag if needed
-            chunk_flags_set(br_close, PCF_ONE_LINER);
+            br_open->SetFlags(PCF_ONE_LINER);         // set the one liner flag if needed
+            br_close->SetFlags(PCF_ONE_LINER);
             log_rule_B("code_width");
 
             if (  options::code_width() > 0
@@ -2380,7 +2380,7 @@ static void newlines_brace_pair(Chunk *br_open)
                // the created line is too long
                // it is not possible to make an one_liner
                // because the line would be too long
-               chunk_flags_set(br_open, PCF_NOT_POSSIBLE);
+               br_open->SetFlags(PCF_NOT_POSSIBLE);
                // restore the code
                size_t count;
                Chunk  tmp_2;
@@ -3661,7 +3661,7 @@ void undo_one_liner(Chunk *pc)
    {
       LOG_FMT(LNL1LINE, "%s(%d): pc->Text() '%s', orig_line is %zu, orig_col is %zu",
               __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
-      chunk_flags_clr(pc, PCF_ONE_LINER);
+      pc->ResetFlags(PCF_ONE_LINER);
 
       // scan backward
       LOG_FMT(LNL1LINE, "%s(%d): scan backward\n", __func__, __LINE__);
@@ -3677,7 +3677,7 @@ void undo_one_liner(Chunk *pc)
          }
          LOG_FMT(LNL1LINE, "%s(%d): clear for tmp->Text() '%s', orig_line is %zu, orig_col is %zu",
                  __func__, __LINE__, tmp->Text(), tmp->orig_line, tmp->orig_col);
-         chunk_flags_clr(tmp, PCF_ONE_LINER);
+         tmp->ResetFlags(PCF_ONE_LINER);
       }
       // scan forward
       LOG_FMT(LNL1LINE, "%s(%d): scan forward\n", __func__, __LINE__);
@@ -3694,7 +3694,7 @@ void undo_one_liner(Chunk *pc)
          }
          LOG_FMT(LNL1LINE, "%s(%d): clear for tmp->Text() '%s', orig_line is %zu, orig_col is %zu",
                  __func__, __LINE__, tmp->Text(), tmp->orig_line, tmp->orig_col);
-         chunk_flags_clr(tmp, PCF_ONE_LINER);
+         tmp->ResetFlags(PCF_ONE_LINER);
       }
       LOG_FMT(LNL1LINE, "\n");
    }
@@ -4537,7 +4537,7 @@ void newlines_cleanup_braces(bool first)
                           __func__, __LINE__, temp->Text(), get_token_name(temp->GetType()), temp->level);
                   // produces much more log output. Use it only debugging purpose
                   //log_pcf_flags(LNEWLINE, temp->flags);
-                  chunk_flags_clr(temp, PCF_ONE_LINER);
+                  temp->ResetFlags(PCF_ONE_LINER);
                }
 
                // split

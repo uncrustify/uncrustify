@@ -80,7 +80,7 @@ void align_oc_msg_colon(Chunk *so)
                || tmp->Is(CT_OC_MSG_NAME)))
          {
             nas.Add(tmp);
-            chunk_flags_set(tmp, PCF_DONT_INDENT);
+            tmp->SetFlags(PCF_DONT_INDENT);
          }
          did_line = true;
       }

@@ -441,7 +441,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
             if (tmp->level == tmp->brace_level)
             {
-               chunk_flags_set(tmp, PCF_VAR_1ST_DEF);
+               tmp->SetFlags(PCF_VAR_1ST_DEF);
             }
          }
 
@@ -683,8 +683,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             if (  tmp->Is(CT_SQUARE_CLOSE)
                && next->level == tmp->level)
             {
-               chunk_flags_set(tmp, PCF_ONE_LINER);
-               chunk_flags_set(next, PCF_ONE_LINER);
+               tmp->SetFlags(PCF_ONE_LINER);
+               next->SetFlags(PCF_ONE_LINER);
                break;
             }
          }
@@ -738,7 +738,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             if (  tmp != nullptr
                && tmp->IsNotNullChunk())
             {
-               chunk_flags_clr(tmp, PCF_EXPR_START | PCF_STMT_START);
+               tmp->ResetFlags(PCF_EXPR_START | PCF_STMT_START);
             }
          }
          else
@@ -746,7 +746,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             if (  tmp != nullptr
                && tmp->Is(CT_WORD))
             {
-               chunk_flags_set(tmp, PCF_VAR_1ST_DEF);
+               tmp->SetFlags(PCF_VAR_1ST_DEF);
             }
          }
       }
@@ -764,7 +764,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
       if (next->Is(CT_WORD))
       {
-         chunk_flags_set(next, PCF_VAR_1ST_DEF);
+         next->SetFlags(PCF_VAR_1ST_DEF);
       }
       return;
    }
@@ -1580,7 +1580,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                      {
                         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', set PCF_VAR_1ST\n",
                                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-                        chunk_flags_set(next, PCF_VAR_1ST);
+                        next->SetFlags(PCF_VAR_1ST);
                      }
                   }
                   else if (tmp->Is(CT_DC_MEMBER))
@@ -2047,7 +2047,7 @@ void fix_symbols()
 
                if (tmp->Is(CT_WORD))
                {
-                  chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
+                  tmp->SetFlags(PCF_STMT_START | PCF_EXPR_START);
                   break;
                }
                tmp = tmp->GetNextNcNnl();
@@ -2062,7 +2062,7 @@ void fix_symbols()
 
          if (tmp->Is(CT_WORD))
          {
-            chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
+            tmp->SetFlags(PCF_STMT_START | PCF_EXPR_START);
          }
       }
 
@@ -2847,7 +2847,7 @@ static void handle_oc_class(Chunk *pc)
          if (tmp->GetPrev()->IsNewline())
          {
             tmp->SetType(CT_OC_SCOPE);
-            chunk_flags_set(tmp, PCF_STMT_START);
+            tmp->SetFlags(PCF_STMT_START);
             hit_scope = true;
          }
       }
@@ -3002,7 +3002,7 @@ static void handle_oc_block_literal(Chunk *pc)
    {
       LOG_FMT(LOCBLK, " -- lbp %s[%s]\n", lbp->Text(), get_token_name(lbp->GetType()));
       make_type(lbp);
-      chunk_flags_set(lbp, PCF_OC_RTYPE);
+      lbp->SetFlags(PCF_OC_RTYPE);
       lbp->SetParentType(CT_OC_BLOCK_EXPR);
       lbp = lbp->GetPrevNcNnlNi();   // Issue #2279
    }
@@ -3110,16 +3110,16 @@ static Chunk *handle_oc_md_type(Chunk *paren_open, E_Token ptype, pcf_flags_t fl
    did_it = true;
 
    paren_open->SetParentType(ptype);
-   chunk_flags_set(paren_open, flags);
+   paren_open->SetFlags(flags);
    paren_close->SetParentType(ptype);
-   chunk_flags_set(paren_close, flags);
+   paren_close->SetFlags(flags);
 
    for (Chunk *cur = paren_open->GetNextNcNnl();
         cur != paren_close;
         cur = cur->GetNextNcNnl())
    {
       LOG_FMT(LOCMSGD, " <%s|%s>", cur->Text(), get_token_name(cur->GetType()));
-      chunk_flags_set(cur, flags);
+      cur->SetFlags(flags);
       make_type(cur);
    }
 
@@ -3236,7 +3236,7 @@ static void handle_oc_message_decl(Chunk *pc)
          // attributes for a method parameter sit between the parameter type and the parameter name
          pc = skip_attribute_next(tmp);
          // we should now be on the arg name
-         chunk_flags_set(pc, PCF_VAR_DEF);
+         pc->SetFlags(PCF_VAR_DEF);
          LOG_FMT(LOCMSGD, " arg[%s]", pc->Text());
          pc = pc->GetNextNcNnl();
       }
@@ -3358,9 +3358,9 @@ static void handle_oc_message_send(Chunk *os)
       }
    }
    os->SetParentType(CT_OC_MSG);
-   chunk_flags_set(os, PCF_IN_OC_MSG);
+   os->SetFlags(PCF_IN_OC_MSG);
    cs->SetParentType(CT_OC_MSG);
-   chunk_flags_set(cs, PCF_IN_OC_MSG);
+   cs->SetFlags(PCF_IN_OC_MSG);
 
    // handle '< protocol >'
    tmp = tmp->GetNextNcNnl();
@@ -3450,7 +3450,7 @@ static void handle_oc_message_send(Chunk *os)
 
    for (tmp = os->GetNext(); tmp != cs; tmp = tmp->GetNext())
    {
-      chunk_flags_set(tmp, PCF_IN_OC_MSG);
+      tmp->SetFlags(PCF_IN_OC_MSG);
 
       if (tmp->level == cs->level + 1)
       {
@@ -3788,7 +3788,7 @@ static void handle_cs_square_stmt(Chunk *os)
 
    if (tmp->IsNotNullChunk())
    {
-      chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
+      tmp->SetFlags(PCF_STMT_START | PCF_EXPR_START);
    }
 } // handle_cs_square_stmt
 

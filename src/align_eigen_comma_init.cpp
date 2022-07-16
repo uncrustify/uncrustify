@@ -96,7 +96,7 @@ void align_eigen_comma_init()
                log_rule_B("indent_columns");
                indent_to_column(pc, pc->column_indent + options::indent_columns());
                pc->column_indent = pc->column;
-               chunk_flags_set(pc, PCF_DONT_INDENT);
+               pc->SetFlags(PCF_DONT_INDENT);
             }
             // Restart alignment
             as.Flush();

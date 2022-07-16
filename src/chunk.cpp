@@ -37,7 +37,7 @@ Chunk::Chunk(bool null_c)
 Chunk::Chunk(const Chunk &o)
    : null_chunk(o.null_chunk)
 {
-   copyFrom(o);
+   CopyFrom(o);
 }
 
 
@@ -45,13 +45,13 @@ Chunk &Chunk::operator=(const Chunk &o)
 {
    if (this != &o)
    {
-      copyFrom(o);
+      CopyFrom(o);
    }
    return(*this);
 }
 
 
-void Chunk::copyFrom(const Chunk &o)
+void Chunk::CopyFrom(const Chunk &o)
 {
    next         = nullptr;
    prev         = nullptr;
@@ -752,29 +752,27 @@ Chunk *Chunk::GetPrevNvb(const E_Scope scope) const
 }
 
 
-void chunk_flags_set_real(Chunk *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits)
+void Chunk::SetResetFlags(pcf_flags_t resetBits, pcf_flags_t setBits)
 {
-   if (  pc != nullptr
-      && pc->IsNotNullChunk())
+   if (IsNotNullChunk())
    {
       LOG_FUNC_ENTRY();
-      auto const nflags = (pc->flags & ~clr_bits) | set_bits;
+      const pcf_flags_t newFlags = (flags & ~resetBits) | setBits;
 
-      if (pc->flags != nflags)
+      if (flags != newFlags)
       {
          LOG_FMT(LSETFLG,
                  "%s(%d): %016llx^%016llx=%016llx\n"
                  "   orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s,",
                  __func__, __LINE__,
-                 static_cast<pcf_flags_t::int_t>(pc->flags),
-                 static_cast<pcf_flags_t::int_t>(pc->flags ^ nflags),
-                 static_cast<pcf_flags_t::int_t>(nflags),
-                 pc->orig_line, pc->orig_col, pc->Text(),
-                 get_token_name(pc->GetType()));
+                 static_cast<pcf_flags_t::int_t>(flags),
+                 static_cast<pcf_flags_t::int_t>(flags ^ newFlags),
+                 static_cast<pcf_flags_t::int_t>(newFlags),
+                 orig_line, orig_col, Text(), get_token_name(m_type));
          LOG_FMT(LSETFLG, " parent type is %s,\n  ",
-                 get_token_name(pc->GetParentType()));
+                 get_token_name(m_parentType));
          log_func_stack_inline(LSETFLG);
-         pc->flags = nflags;
+         flags = newFlags;
       }
    }
 }

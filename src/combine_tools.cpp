@@ -412,7 +412,7 @@ void flag_series(Chunk *start, Chunk *end, pcf_flags_t set_flags, pcf_flags_t cl
          && start->IsNotNullChunk()
          && start != end)
    {
-      chunk_flags_upd(start, clr_flags, set_flags);
+      start->UpdateFlags(clr_flags, set_flags);
       log_pcf_flags(LGUY, start->flags);
 
       start = start->GetNext(nav);
@@ -426,7 +426,7 @@ void flag_series(Chunk *start, Chunk *end, pcf_flags_t set_flags, pcf_flags_t cl
    if (  end != nullptr
       && end->IsNotNullChunk())
    {
-      chunk_flags_upd(end, clr_flags, set_flags);
+      end->UpdateFlags(clr_flags, set_flags);
       log_pcf_flags(LGUY, end->flags);
    }
 } // flag_series

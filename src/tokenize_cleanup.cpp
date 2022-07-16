@@ -796,7 +796,7 @@ void tokenize_cleanup()
 
             if ((tmp = next->GetNextNcNnl())->IsNotNullChunk())
             {
-               chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
+               tmp->SetFlags(PCF_STMT_START | PCF_EXPR_START);
             }
          }
          else
@@ -987,7 +987,7 @@ void tokenize_cleanup()
 
          if (tmp->IsNotNullChunk())
          {
-            chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
+            tmp->SetFlags(PCF_STMT_START | PCF_EXPR_START);
          }
          tmp = pc->GetNextType(CT_OC_END, pc->level);
 
@@ -1062,7 +1062,7 @@ void tokenize_cleanup()
       {
          if (next->IsNot(CT_PAREN_OPEN))
          {
-            chunk_flags_set(next, PCF_STMT_START | PCF_EXPR_START);
+            next->SetFlags(PCF_STMT_START | PCF_EXPR_START);
          }
          else
          {
@@ -1539,7 +1539,7 @@ static void check_template(Chunk *start, bool in_type_cast)
          check_template_args(start, end);
 
          end->SetParentType(CT_TEMPLATE);
-         chunk_flags_set(end, PCF_IN_TEMPLATE);
+         end->SetFlags(PCF_IN_TEMPLATE);
          return;
       }
    }
@@ -1574,7 +1574,7 @@ static void check_template_arg(Chunk *start, Chunk *end)
    {
       Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
       // a test "if (next == nullptr)" is not necessary
-      chunk_flags_set(pc, PCF_IN_TEMPLATE);
+      pc->SetFlags(PCF_IN_TEMPLATE);
 
       if (  pc->Is(CT_DECLTYPE)
          || pc->Is(CT_SIZEOF))
@@ -1607,7 +1607,7 @@ static void check_template_arg(Chunk *start, Chunk *end)
       {
          Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
          // a test "if (next == nullptr)" is not necessary
-         chunk_flags_set(pc, PCF_IN_TEMPLATE);
+         pc->SetFlags(PCF_IN_TEMPLATE);
 
          Chunk *prev  = pc->GetPrevNcNnl(E_Scope::PREPROC);
          Chunk *prev2 = prev->GetPrevNcNnl(E_Scope::PREPROC);
@@ -1705,7 +1705,7 @@ static void cleanup_objc_property(Chunk *start)
 
       if (tmp->IsNotNullChunk())
       {
-         chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
+         tmp->SetFlags(PCF_STMT_START | PCF_EXPR_START);
 
          tmp = tmp->GetNextType(CT_SEMICOLON, start->level);
 

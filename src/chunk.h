@@ -113,6 +113,25 @@ public:
     */
    void SetParent(Chunk *parent);
 
+   /**
+    * @brief Resets some of the chunk flags
+    * @param resetBits the flag bits to reset
+    */
+   void ResetFlags(pcf_flags_t resetBits);
+
+   /**
+    * @brief Sets some of the chunk flags
+    * @param setBits the flag bits to set
+    */
+   void SetFlags(pcf_flags_t setBits);
+
+   /**
+    * @brief Sets and reset some of the chunk flags
+    * @param resetBits the flag bits to reset
+    * @param setBits the flag bits to set
+    */
+   void UpdateFlags(pcf_flags_t resetBits, pcf_flags_t setBits);
+
 
    // --------- Get* chunk functions
 
@@ -769,16 +788,20 @@ public:
 
 
 protected:
-   void copyFrom(const Chunk &o);            // !!! partial copy: chunk is not linked to others
-
-
    // --------- Data members
    Chunk   *m_parent;                        //! pointer to parent chunk (not always set)
    E_Token m_type;                           //! type of the chunk itself
    E_Token m_parentType;                     //! type of the parent chunk usually CT_NONE
 
 
-   // --------- Private util functions
+   // --------- Protected util functions
+
+   /**
+    * @brief copy the values from another chunk.
+    * @NOTE: this is a partial copy only: the chunk is not linked to others
+    * @param o the chunk to copy from
+    */
+   void CopyFrom(const Chunk &o);
 
    /**
     * @brief add a copy of this chunk before/after the given position in a chunk list.
@@ -789,6 +812,13 @@ protected:
     * @return pointer to the newly added chunk
     */
    Chunk *CopyAndAdd(Chunk *pos, const E_Direction dir = E_Direction::FORWARD) const;
+
+   /**
+    * @brief set and/or clear the chunk flags
+    * @param setBits the flag bits to set
+    * @param resetBits the flag bits to reset
+    */
+   void SetResetFlags(pcf_flags_t resetBits, pcf_flags_t setBits);
 
 
 private:
@@ -811,6 +841,24 @@ inline E_Token Chunk::GetType() const
 inline E_Token Chunk::GetParentType() const
 {
    return(m_parentType);
+}
+
+
+inline void Chunk::ResetFlags(pcf_flags_t resetBits)
+{
+   SetResetFlags(resetBits, pcf_flags_t());
+}
+
+
+inline void Chunk::SetFlags(pcf_flags_t setBits)
+{
+   SetResetFlags(pcf_flags_t(), setBits);
+}
+
+
+inline void Chunk::UpdateFlags(pcf_flags_t resetBits, pcf_flags_t setBits)
+{
+   SetResetFlags(resetBits, setBits);
 }
 
 
@@ -1259,18 +1307,6 @@ inline bool Chunk::IsEnum() const
 
 
 #define SetParentType(tt)    SetParentTypeReal((tt), __unqualified_func__, __LINE__)
-
-
-void chunk_flags_set_real(Chunk *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits);
-
-
-#define chunk_flags_upd(pc, cc, ss)    chunk_flags_set_real((pc), (cc), (ss))
-
-
-#define chunk_flags_set(pc, ss)        chunk_flags_set_real((pc), {}, (ss))
-
-
-#define chunk_flags_clr(pc, cc)        chunk_flags_set_real((pc), (cc), {})
 
 
 E_Token get_type_of_the_parent(Chunk *pc);

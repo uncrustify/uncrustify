@@ -36,11 +36,11 @@ void quick_align_again()
          LOG_FMT(LALAGAIN, "%s(%d):   pc->Text() is '%s', orig_line is %zu\n",
                  __func__, __LINE__, pc->Text(), pc->orig_line);
          as.Add(pc->align.start);
-         chunk_flags_set(pc, PCF_WAS_ALIGNED);
+         pc->SetFlags(PCF_WAS_ALIGNED);
 
          for (Chunk *tmp = pc->align.next; tmp != nullptr; tmp = tmp->align.next)
          {
-            chunk_flags_set(tmp, PCF_WAS_ALIGNED);
+            tmp->SetFlags(PCF_WAS_ALIGNED);
             as.Add(tmp->align.start);
             LOG_FMT(LALAGAIN, "%s(%d):    => tmp->Text() is '%s', orig_line is %zu\n",
                     __func__, __LINE__, tmp->Text(), tmp->orig_line);

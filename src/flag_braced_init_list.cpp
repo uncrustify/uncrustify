@@ -84,7 +84,7 @@ void flag_cpp_braced_init_list(Chunk *pc, Chunk *next)
 
    if (tmp->IsNotNullChunk())
    {
-      chunk_flags_clr(tmp, PCF_EXPR_START | PCF_STMT_START);
+      tmp->ResetFlags(PCF_EXPR_START | PCF_STMT_START);
 
       // Flag call operator
       if (tmp->Is(CT_PAREN_OPEN))

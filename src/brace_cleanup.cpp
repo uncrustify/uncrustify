@@ -424,7 +424,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       && !pc->IsString(")")
       && !pc->IsString("]"))
    {
-      chunk_flags_set(pc, PCF_EXPR_START | ((frm.stmt_count == 0) ? PCF_STMT_START : PCF_NONE));
+      pc->SetFlags(PCF_EXPR_START | ((frm.stmt_count == 0) ? PCF_STMT_START : PCF_NONE));
       LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 1.marked '%s' as %s, start stmt_count is %zu, expr_count is %zu\n",
               __func__, __LINE__, pc->orig_line, pc->Text(),
               pc->flags.test(PCF_STMT_START) ? "stmt" : "expr", frm.stmt_count,
@@ -437,14 +437,14 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
 
    if (frm.sparen_count > 0)
    {
-      chunk_flags_set(pc, PCF_IN_SPAREN);
+      pc->SetFlags(PCF_IN_SPAREN);
 
       // Mark everything in the for statement
       for (int tmp = static_cast<int>(frm.size()) - 2; tmp >= 0; tmp--)
       {
          if (frm.at(tmp).type == CT_FOR)
          {
-            chunk_flags_set(pc, PCF_IN_FOR);
+            pc->SetFlags(PCF_IN_FOR);
             break;
          }
       }
@@ -510,7 +510,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          if (pc->Is(CT_SPAREN_CLOSE))
          {
             frm.sparen_count--;
-            chunk_flags_clr(pc, PCF_IN_SPAREN);
+            pc->ResetFlags(PCF_IN_SPAREN);
          }
       }
 
@@ -1136,7 +1136,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
          frm.expr_count = 0;
          LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
                  __func__, __LINE__, frm.stmt_count, frm.expr_count);
-         chunk_flags_set(pc, PCF_STMT_START | PCF_EXPR_START);
+         pc->SetFlags(PCF_STMT_START | PCF_EXPR_START);
          frm.stmt_count = 1;
          frm.expr_count = 1;
          LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 2.marked '%s' as stmt start\n",
@@ -1328,8 +1328,8 @@ static void mark_namespace(Chunk *pns)
          if (numberOfLines > options::indent_namespace_limit())
          {
             LOG_FMT(LTOK, "%s(%d): PCF_LONG_BLOCK is set\n", __func__, __LINE__);
-            chunk_flags_set(pc, PCF_LONG_BLOCK);
-            chunk_flags_set(br_close, PCF_LONG_BLOCK);
+            pc->SetFlags(PCF_LONG_BLOCK);
+            br_close->SetFlags(PCF_LONG_BLOCK);
          }
       }
       flag_parens(pc, PCF_IN_NAMESPACE, CT_NONE, CT_NAMESPACE, false);

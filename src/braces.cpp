@@ -177,8 +177,8 @@ void do_braces()
 
       if (tmp->Is(brc_type))
       {
-         chunk_flags_set(br_open, PCF_EMPTY_BODY);
-         chunk_flags_set(tmp, PCF_EMPTY_BODY);
+         br_open->SetFlags(PCF_EMPTY_BODY);
+         tmp->SetFlags(PCF_EMPTY_BODY);
       }
       // Scan for the brace close or a newline
       tmp = br_open->GetNextNc();
@@ -1623,7 +1623,7 @@ static void process_if_chain(Chunk *br_start)
       {
          const auto brace = *itc;
 
-         chunk_flags_set(brace, PCF_KEEP_BRACE);
+         brace->SetFlags(PCF_KEEP_BRACE);
 
          if (brace->IsVBrace())
          {
