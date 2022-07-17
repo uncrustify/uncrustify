@@ -336,7 +336,7 @@ void tokenize_cleanup()
       }
 
       if (  pc->Is(CT_SEMICOLON)
-         && pc->flags.test(PCF_IN_PREPROC)
+         && pc->TestFlags(PCF_IN_PREPROC)
          && !pc->GetNextNcNnl(E_Scope::PREPROC))
       {
          LOG_FMT(LNOTE, "%s(%d): %s:%zu Detected a macro that ends with a semicolon. Possible failures if used.\n",
@@ -721,7 +721,7 @@ void tokenize_cleanup()
             next->SetType(CT_OPERATOR_VAL);
             Chunk::Delete(tmp2);
          }
-         else if (next->flags.test(PCF_PUNCTUATOR))
+         else if (next->TestFlags(PCF_PUNCTUATOR))
          {
             next->SetType(CT_OPERATOR_VAL);
          }
@@ -796,7 +796,7 @@ void tokenize_cleanup()
 
             if ((tmp = next->GetNextNcNnl())->IsNotNullChunk())
             {
-               chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
+               tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
             }
          }
          else
@@ -987,7 +987,7 @@ void tokenize_cleanup()
 
          if (tmp->IsNotNullChunk())
          {
-            chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
+            tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
          }
          tmp = pc->GetNextType(CT_OC_END, pc->level);
 
@@ -1062,7 +1062,7 @@ void tokenize_cleanup()
       {
          if (next->IsNot(CT_PAREN_OPEN))
          {
-            chunk_flags_set(next, PCF_STMT_START | PCF_EXPR_START);
+            next->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
          }
          else
          {
@@ -1151,7 +1151,7 @@ void tokenize_cleanup()
          if (prev->Is(CT_TYPE))
          {
             // Issue # 1002
-            if (!pc->flags.test(PCF_IN_TEMPLATE))
+            if (!pc->TestFlags(PCF_IN_TEMPLATE))
             {
                pc->SetType(CT_BYREF);
             }
@@ -1350,7 +1350,7 @@ static void check_template(Chunk *start, bool in_type_cast)
 
          if (pc->Is(CT_BRACE_OPEN))
          {
-            if (  !pc->flags.test(PCF_IN_DECLTYPE)
+            if (  !pc->TestFlags(PCF_IN_DECLTYPE)
                || !detect_cpp_braced_init_list(pc->GetPrev(), pc))
             {
                break;
@@ -1360,7 +1360,7 @@ static void check_template(Chunk *start, bool in_type_cast)
 
          if (  pc->Is(CT_BRACE_CLOSE)
             && pc->GetParentType() != CT_BRACED_INIT_LIST
-            && !pc->flags.test(PCF_IN_DECLTYPE))
+            && !pc->TestFlags(PCF_IN_DECLTYPE))
          {
             break;
          }
@@ -1466,7 +1466,7 @@ static void check_template(Chunk *start, bool in_type_cast)
          }
          else if (pc->Is(CT_BRACE_OPEN))
          {
-            if (  !pc->flags.test(PCF_IN_DECLTYPE)
+            if (  !pc->TestFlags(PCF_IN_DECLTYPE)
                || !detect_cpp_braced_init_list(pc->prev, pc))
             {
                break;
@@ -1479,7 +1479,7 @@ static void check_template(Chunk *start, bool in_type_cast)
          }
          else if (  pc->Is(CT_BRACE_CLOSE)
                  && pc->GetParentType() != CT_BRACED_INIT_LIST
-                 && !pc->flags.test(PCF_IN_DECLTYPE))
+                 && !pc->TestFlags(PCF_IN_DECLTYPE))
          {
             break;
          }
@@ -1539,7 +1539,7 @@ static void check_template(Chunk *start, bool in_type_cast)
          check_template_args(start, end);
 
          end->SetParentType(CT_TEMPLATE);
-         chunk_flags_set(end, PCF_IN_TEMPLATE);
+         end->SetFlagBits(PCF_IN_TEMPLATE);
          return;
       }
    }
@@ -1574,7 +1574,7 @@ static void check_template_arg(Chunk *start, Chunk *end)
    {
       Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
       // a test "if (next == nullptr)" is not necessary
-      chunk_flags_set(pc, PCF_IN_TEMPLATE);
+      pc->SetFlagBits(PCF_IN_TEMPLATE);
 
       if (  pc->Is(CT_DECLTYPE)
          || pc->Is(CT_SIZEOF))
@@ -1607,7 +1607,7 @@ static void check_template_arg(Chunk *start, Chunk *end)
       {
          Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
          // a test "if (next == nullptr)" is not necessary
-         chunk_flags_set(pc, PCF_IN_TEMPLATE);
+         pc->SetFlagBits(PCF_IN_TEMPLATE);
 
          Chunk *prev  = pc->GetPrevNcNnl(E_Scope::PREPROC);
          Chunk *prev2 = prev->GetPrevNcNnl(E_Scope::PREPROC);
@@ -1705,7 +1705,7 @@ static void cleanup_objc_property(Chunk *start)
 
       if (tmp->IsNotNullChunk())
       {
-         chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
+         tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
 
          tmp = tmp->GetNextType(CT_SEMICOLON, start->level);
 

@@ -155,7 +155,7 @@ static bool pawn_continued(Chunk *pc, size_t br_level)
       || pc->GetParentType() == CT_WHILE
       || pc->GetParentType() == CT_FUNC_DEF
       || pc->GetParentType() == CT_ENUM
-      || pc->flags.test_any(PCF_IN_ENUM | PCF_IN_STRUCT)
+      || pc->GetFlags().test_any(PCF_IN_ENUM | PCF_IN_STRUCT)
       || pc->IsString(":")
       || pc->IsString("+")
       || pc->IsString("-"))
@@ -316,8 +316,8 @@ void pawn_add_virtual_semicolons()
          }
 
          // we just hit a newline and we have a previous token
-         if (  !prev->flags.test(PCF_IN_PREPROC)
-            && !prev->flags.test_any(PCF_IN_ENUM | PCF_IN_STRUCT)
+         if (  !prev->TestFlags(PCF_IN_PREPROC)
+            && !prev->GetFlags().test_any(PCF_IN_ENUM | PCF_IN_STRUCT)
             && !prev->IsSemicolon()
             && !pawn_continued(prev, prev->brace_level))
          {
@@ -434,7 +434,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
               __func__, pc->orig_line, pc->Text(), get_token_name(last->GetType()));
 
       // do not insert a vbrace before a preproc
-      if (last->flags.test(PCF_IN_PREPROC))
+      if (last->TestFlags(PCF_IN_PREPROC))
       {
          return(last);
       }
@@ -510,7 +510,7 @@ Chunk *pawn_check_vsemicolon(Chunk *pc)
 
    if (  prev->IsNullChunk()
       || prev == vb_open
-      || prev->flags.test(PCF_IN_PREPROC)
+      || prev->TestFlags(PCF_IN_PREPROC)
       || pawn_continued(prev, vb_open->level + 1))
    {
       if (prev->IsNotNullChunk())

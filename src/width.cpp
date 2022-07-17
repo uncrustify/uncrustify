@@ -343,16 +343,16 @@ static bool split_line(Chunk *start)
    LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "%s(%d): start->Text() '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
            __func__, __LINE__, start->Text(), start->orig_line, start->orig_col, get_token_name(start->GetType()));
-   LOG_FMT(LSPLIT, "   start->flags ");
-   log_pcf_flags(LSPLIT, start->flags);
+   LOG_FMT(LSPLIT, "   start->GetFlags() ");
+   log_pcf_flags(LSPLIT, start->GetFlags());
    LOG_FMT(LSPLIT, "   start->GetParentType() %s, (PCF_IN_FCN_DEF is %s), (PCF_IN_FCN_CALL is %s)\n",
            get_token_name(start->GetParentType()),
-           start->flags.test((PCF_IN_FCN_DEF)) ? "TRUE" : "FALSE",
-           start->flags.test((PCF_IN_FCN_CALL)) ? "TRUE" : "FALSE");
+           start->TestFlags((PCF_IN_FCN_DEF)) ? "TRUE" : "FALSE",
+           start->TestFlags((PCF_IN_FCN_CALL)) ? "TRUE" : "FALSE");
 
    // break at maximum line length if ls_code_width is true
    // Issue #2432
-   if (start->flags.test(PCF_ONE_LINER))
+   if (start->TestFlags(PCF_ONE_LINER))
    {
       LOG_FMT(LSPLIT, "%s(%d): ** ONCE LINER SPLIT **\n", __func__, __LINE__);
       undo_one_liner(start);
@@ -369,7 +369,7 @@ static bool split_line(Chunk *start)
    {
    }
    // Check to see if we are in a for statement
-   else if (start->flags.test(PCF_IN_FOR))
+   else if (start->TestFlags(PCF_IN_FOR))
    {
       LOG_FMT(LSPLIT, " ** FOR SPLIT **\n");
       split_for_stmt(start);
@@ -385,10 +385,10 @@ static bool split_line(Chunk *start)
     * If this is in a function call or prototype, split on commas or right
     * after the open parenthesis
     */
-   else if (  start->flags.test(PCF_IN_FCN_DEF)
+   else if (  start->TestFlags(PCF_IN_FCN_DEF)
            || start->GetParentType() == CT_FUNC_PROTO            // Issue #1169
            || (  (start->level == (start->brace_level + 1))
-              && start->flags.test(PCF_IN_FCN_CALL)))
+              && start->TestFlags(PCF_IN_FCN_CALL)))
    {
       LOG_FMT(LSPLIT, " ** FUNC SPLIT **\n");
 
@@ -410,7 +410,7 @@ static bool split_line(Chunk *start)
    /*
     * If this is in a template, split on commas, Issue #1170
     */
-   else if (start->flags.test(PCF_IN_TEMPLATE))
+   else if (start->TestFlags(PCF_IN_TEMPLATE))
    {
       LOG_FMT(LSPLIT, " ** TEMPLATE SPLIT **\n");
       split_template(start);
@@ -602,7 +602,7 @@ static void split_for_stmt(Chunk *start)
    while (  (count < static_cast<int>(max_cnt))
          && ((pc = pc->GetPrev())->IsNotNullChunk())
          && pc->IsNotNullChunk()
-         && pc->flags.test(PCF_IN_SPAREN))
+         && pc->TestFlags(PCF_IN_SPAREN))
    {
       if (  pc->Is(CT_SEMICOLON)
          && pc->GetParentType() == CT_FOR)
@@ -615,7 +615,7 @@ static void split_for_stmt(Chunk *start)
 
    while (  (count < static_cast<int>(max_cnt))
          && ((pc = pc->GetNext())->IsNotNullChunk())
-         && pc->flags.test(PCF_IN_SPAREN))
+         && pc->TestFlags(PCF_IN_SPAREN))
    {
       if (  pc->Is(CT_SEMICOLON)
          && pc->GetParentType() == CT_FOR)

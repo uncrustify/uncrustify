@@ -311,7 +311,7 @@ bool chunk_ends_type(Chunk *start)
    bool   last_expr = false;
    bool   last_lval = false;
 
-   bool   a = pc->flags.test(PCF_IN_FCN_CTOR);
+   bool   a = pc->TestFlags(PCF_IN_FCN_CTOR);
 
    if (a)
    {
@@ -323,7 +323,7 @@ bool chunk_ends_type(Chunk *start)
       LOG_FMT(LFTYPE, "%s(%d): type is %s, Text() '%s', orig_line %zu, orig_col %zu\n   ",
               __func__, __LINE__, get_token_name(pc->GetType()), pc->Text(),
               pc->orig_line, pc->orig_col);
-      log_pcf_flags(LFTYPE, pc->flags);
+      log_pcf_flags(LFTYPE, pc->GetFlags());
 
       if (  pc->Is(CT_WORD)
          || pc->Is(CT_TYPE)
@@ -341,9 +341,9 @@ bool chunk_ends_type(Chunk *start)
             && (pc->Is(CT_MEMBER))))
       {
          cnt++;
-         last_expr = pc->flags.test(PCF_EXPR_START)
-                     && !pc->flags.test(PCF_IN_FCN_CALL);
-         last_lval = pc->flags.test(PCF_LVALUE);
+         last_expr = pc->TestFlags(PCF_EXPR_START)
+                     && !pc->TestFlags(PCF_IN_FCN_CALL);
+         last_lval = pc->TestFlags(PCF_LVALUE);
          continue;
       }
       /* If a comma is encountered within a template, it must be
@@ -352,7 +352,7 @@ bool chunk_ends_type(Chunk *start)
        */
 
       if (  (  pc->IsSemicolon()
-            && !pc->flags.test(PCF_IN_FOR))
+            && !pc->TestFlags(PCF_IN_FOR))
          || pc->Is(CT_TYPEDEF)
          || pc->Is(CT_BRACE_OPEN)
          || pc->IsBraceClose()
@@ -364,7 +364,7 @@ bool chunk_ends_type(Chunk *start)
          || pc->Is(CT_PP_ENDIF)
          || pc->GetParentType() == CT_PP_INCLUDE                       // Issue #3233
          || (  (  pc->Is(CT_COMMA)
-               && !pc->flags.test(PCF_IN_FCN_CALL)
+               && !pc->TestFlags(PCF_IN_FCN_CALL)
                && get_cpp_template_angle_nest_level(start) ==
                   get_cpp_template_angle_nest_level(pc))
             && last_expr)
@@ -404,7 +404,7 @@ bool chunkstack_match(ChunkStack &cs, Chunk *pc)
 } // chunkstack_match
 
 
-void flag_series(Chunk *start, Chunk *end, pcf_flags_t set_flags, pcf_flags_t clr_flags, E_Scope nav)
+void flag_series(Chunk *start, Chunk *end, T_PcfFlags set_flags, T_PcfFlags clr_flags, E_Scope nav)
 {
    LOG_FUNC_ENTRY();
 
@@ -412,8 +412,8 @@ void flag_series(Chunk *start, Chunk *end, pcf_flags_t set_flags, pcf_flags_t cl
          && start->IsNotNullChunk()
          && start != end)
    {
-      chunk_flags_upd(start, clr_flags, set_flags);
-      log_pcf_flags(LGUY, start->flags);
+      start->UpdateFlagBits(clr_flags, set_flags);
+      log_pcf_flags(LGUY, start->GetFlags());
 
       start = start->GetNext(nav);
 
@@ -426,8 +426,8 @@ void flag_series(Chunk *start, Chunk *end, pcf_flags_t set_flags, pcf_flags_t cl
    if (  end != nullptr
       && end->IsNotNullChunk())
    {
-      chunk_flags_upd(end, clr_flags, set_flags);
-      log_pcf_flags(LGUY, end->flags);
+      end->UpdateFlagBits(clr_flags, set_flags);
+      log_pcf_flags(LGUY, end->GetFlags());
    }
 } // flag_series
 
@@ -443,7 +443,7 @@ size_t get_cpp_template_angle_nest_level(Chunk *pc)
    }
 
    while (  pc->IsNotNullChunk()
-         && pc->flags.test(PCF_IN_TEMPLATE))
+         && pc->TestFlags(PCF_IN_TEMPLATE))
    {
       if (  pc->Is(CT_ANGLE_CLOSE)
          && pc->GetParentType() == CT_TEMPLATE)
@@ -499,7 +499,7 @@ bool go_on(Chunk *pc, Chunk *start)
       return(false);
    }
 
-   if (pc->flags.test(PCF_IN_FOR))
+   if (pc->TestFlags(PCF_IN_FOR))
    {
       return(  (!pc->IsSemicolon())
             && (!(pc->Is(CT_COLON))));

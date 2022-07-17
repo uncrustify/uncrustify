@@ -69,8 +69,8 @@ void enum_cleanup()
                      comma.orig_col  = prev->orig_col + 1;
                      comma.nl_count  = 0;
                      comma.pp_level  = 0;
-                     comma.flags     = PCF_NONE;
-                     comma.str       = ",";
+                     comma.SetFlags(PCF_NONE);
+                     comma.str = ",";
 
                      if (prev->Is(CT_PP_ENDIF))                // Issue #3604
                      {

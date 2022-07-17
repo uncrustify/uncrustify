@@ -3,7 +3,7 @@ void a()
 	if((tmp == nullptr) ||
 	   ((tmp->GetType() != CT_NUMBER) &&
 	    (tmp->GetType() != CT_SIZEOF) &&
-	    !(tmp->flags & (PCF_IN_STRUCT | PCF_IN_CLASS))) ||
+	    !(tmp->GetFlags() & (PCF_IN_STRUCT | PCF_IN_CLASS))) ||
 	   (tmp->GetType() == CT_NEWLINE)
 	   )
 	{
@@ -12,7 +12,7 @@ void a()
 	else if ((tmp == nullptr) ||
 	         ((tmp->GetType() != CT_NUMBER) &&
 	          (tmp->GetType() != CT_SIZEOF) &&
-	          !(tmp->flags & (PCF_IN_STRUCT | PCF_IN_CLASS))) ||
+	          !(tmp->GetFlags() & (PCF_IN_STRUCT | PCF_IN_CLASS))) ||
 	         (tmp->GetType() == CT_NEWLINE)
 	         )
 	{
@@ -23,7 +23,7 @@ void a()
 	if                 ((tmp == nullptr) ||
 	                    ((tmp->GetType() != CT_NUMBER) &&
 	                     (tmp->GetType() != CT_SIZEOF) &&
-	                     !(tmp->flags & (PCF_IN_STRUCT | PCF_IN_CLASS))) ||
+	                     !(tmp->GetFlags() & (PCF_IN_STRUCT | PCF_IN_CLASS))) ||
 	                    (tmp->GetType() == CT_NEWLINE)
 	                    )
 	{
@@ -33,7 +33,7 @@ void a()
 	if                 ((tmp == nullptr) ||
 	                    ((tmp->GetType() != CT_NUMBER) &&
 	                     (tmp->GetType() != CT_SIZEOF) &&
-	                     !(tmp->flags & (PCF_IN_STRUCT | PCF_IN_CLASS))) ||
+	                     !(tmp->GetFlags() & (PCF_IN_STRUCT | PCF_IN_CLASS))) ||
 	                    (tmp->GetType() == CT_NEWLINE)
 	                    )
 	{

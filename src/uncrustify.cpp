@@ -509,7 +509,7 @@ int main(int argc, char *argv[])
 
       while ((p_arg = arg.Unused(idx)) != nullptr)
       {
-         log_pcf_flags(LSYS, static_cast<pcf_flag_e>(strtoul(p_arg, nullptr, 16)));
+         log_pcf_flags(LSYS, static_cast<E_PcfFlag>(strtoul(p_arg, nullptr, 16)));
       }
       return(EXIT_SUCCESS);
    }
@@ -1702,7 +1702,7 @@ static void add_func_header(E_Token type, file_mem &fm)
       }
       log_rule_B("cmt_insert_before_inlines");
 
-      if (  pc->flags.test(PCF_IN_CLASS)
+      if (  pc->TestFlags(PCF_IN_CLASS)
          && !options::cmt_insert_before_inlines())
       {
          continue;
@@ -1780,7 +1780,7 @@ static void add_func_header(E_Token type, file_mem &fm)
          }
 
          // Bail if we hit a preprocessor and cmt_insert_before_preproc is false
-         if (ref->flags.test(PCF_IN_PREPROC))
+         if (ref->TestFlags(PCF_IN_PREPROC))
          {
             tmp = ref->GetPrevType(CT_PREPROC, ref->level);
 
@@ -1807,7 +1807,7 @@ static void add_func_header(E_Token type, file_mem &fm)
          }
 
          if (  ref->level == pc->level
-            && (  ref->flags.test(PCF_IN_PREPROC)
+            && (  ref->TestFlags(PCF_IN_PREPROC)
                || ref->Is(CT_SEMICOLON)
                || ref->Is(CT_BRACE_CLOSE)))
          {
@@ -1881,7 +1881,7 @@ static void add_msg_header(E_Token type, file_mem &fm)
          }
 
          // Bail if we hit a preprocessor and cmt_insert_before_preproc is false
-         if (ref->flags.test(PCF_IN_PREPROC))
+         if (ref->TestFlags(PCF_IN_PREPROC))
          {
             tmp = ref->GetPrevType(CT_PREPROC, ref->level);
 
@@ -1901,7 +1901,7 @@ static void add_msg_header(E_Token type, file_mem &fm)
          }
 
          if (  ref->level == pc->level
-            && (  ref->flags.test(PCF_IN_PREPROC)
+            && (  ref->TestFlags(PCF_IN_PREPROC)
                || ref->Is(CT_OC_SCOPE)))
          {
             ref = ref->GetPrev();

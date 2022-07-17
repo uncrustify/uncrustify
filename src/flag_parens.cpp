@@ -10,7 +10,7 @@
 #include "uncrustify.h"
 
 
-Chunk *flag_parens(Chunk *po, pcf_flags_t flags, E_Token opentype, E_Token parent_type, bool parent_all)
+Chunk *flag_parens(Chunk *po, T_PcfFlags flags, E_Token opentype, E_Token parent_type, bool parent_all)
 {
    LOG_FUNC_ENTRY();
    Chunk *paren_close;
@@ -47,7 +47,7 @@ Chunk *flag_parens(Chunk *po, pcf_flags_t flags, E_Token opentype, E_Token paren
               pc != nullptr && pc->IsNotNullChunk() && pc != after_paren_close;
               pc = pc->GetNext(E_Scope::PREPROC))
          {
-            chunk_flags_set(pc, flags);
+            pc->SetFlagBits(flags);
 
             if (parent_all)
             {

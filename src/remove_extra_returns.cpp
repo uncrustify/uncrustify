@@ -26,7 +26,7 @@ void remove_extra_returns()
               get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       if (  pc->Is(CT_RETURN)
-         && !pc->flags.test(PCF_IN_PREPROC))
+         && !pc->TestFlags(PCF_IN_PREPROC))
       {
          // we might be in a class, check it                                     Issue #2705
          // look for a closing brace

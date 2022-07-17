@@ -80,7 +80,7 @@ void align_oc_msg_colon(Chunk *so)
                || tmp->Is(CT_OC_MSG_NAME)))
          {
             nas.Add(tmp);
-            chunk_flags_set(tmp, PCF_DONT_INDENT);
+            tmp->SetFlagBits(PCF_DONT_INDENT);
          }
          did_line = true;
       }
@@ -152,7 +152,7 @@ void align_oc_msg_colon(Chunk *so)
       chunk.orig_col    = longest->orig_col;
       chunk.level       = longest->level;
       chunk.brace_level = longest->brace_level;
-      chunk.flags       = longest->flags & PCF_COPY_FLAGS;
+      chunk.SetFlags(longest->GetFlags() & PCF_COPY_FLAGS);
 
       // start at one since we already indent for the '['
       for (size_t idx = 1; idx < len; idx++)

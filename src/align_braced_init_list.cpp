@@ -115,14 +115,14 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
          var_def_cnt = 0;
          equ_count   = 0;
       }
-      else if (  pc->flags.test(PCF_VAR_DEF)
-              && !pc->flags.test(PCF_IN_CONST_ARGS) // Issue #1717
-              && !pc->flags.test(PCF_IN_FCN_DEF)    // Issue #1717
-              && !pc->flags.test(PCF_IN_FCN_CALL))  // Issue #1717
+      else if (  pc->TestFlags(PCF_VAR_DEF)
+              && !pc->TestFlags(PCF_IN_CONST_ARGS) // Issue #1717
+              && !pc->TestFlags(PCF_IN_FCN_DEF)    // Issue #1717
+              && !pc->TestFlags(PCF_IN_FCN_CALL))  // Issue #1717
       {
          // produces much more log output. Use it only debugging purpose
-         //LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->flags:\n   ", __func__, __LINE__);
-         //log_pcf_flags(LALASS, pc->flags);
+         //LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->GetFlags():\n   ", __func__, __LINE__);
+         //log_pcf_flags(LALASS, pc->GetFlags());
          var_def_cnt++;
       }
       else if (var_def_cnt > 1)
@@ -131,7 +131,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
          vdas.Reset();
       }
       else if (  equ_count == 0
-              && !pc->flags.test(PCF_IN_TEMPLATE)
+              && !pc->TestFlags(PCF_IN_TEMPLATE)
               && pc->Is(CT_BRACE_OPEN)
               && (pc->GetParentType() == CT_BRACED_INIT_LIST))
 
@@ -140,8 +140,8 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
          LOG_FMT(LALASS, "%s(%d)OK: align_braced_init_list_span() is %d\n",
                  __func__, __LINE__, options::align_braced_init_list_span());
          // produces much more log output. Use it only debugging purpose
-         //LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->flags: ", __func__, __LINE__);
-         //log_pcf_flags(LALASS, pc->flags);
+         //LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->GetFlags(): ", __func__, __LINE__);
+         //log_pcf_flags(LALASS, pc->GetFlags());
 
          if (var_def_cnt != 0)
          {

@@ -37,7 +37,7 @@ Chunk::Chunk(bool null_c)
 Chunk::Chunk(const Chunk &o)
    : null_chunk(o.null_chunk)
 {
-   copyFrom(o);
+   CopyFrom(o);
 }
 
 
@@ -45,13 +45,13 @@ Chunk &Chunk::operator=(const Chunk &o)
 {
    if (this != &o)
    {
-      copyFrom(o);
+      CopyFrom(o);
    }
    return(*this);
 }
 
 
-void Chunk::copyFrom(const Chunk &o)
+void Chunk::CopyFrom(const Chunk &o)
 {
    next         = nullptr;
    prev         = nullptr;
@@ -65,7 +65,7 @@ void Chunk::copyFrom(const Chunk &o)
    orig_col      = o.orig_col;
    orig_col_end  = o.orig_col_end;
    orig_prev_sp  = o.orig_prev_sp;
-   flags         = o.flags;
+   m_flags       = o.m_flags;
    column        = o.column;
    column_indent = o.column_indent;
 
@@ -95,7 +95,7 @@ void Chunk::Reset()
    orig_col      = 0;
    orig_col_end  = 0;
    orig_prev_sp  = 0;
-   flags         = PCF_NONE;
+   m_flags       = PCF_NONE;
    column        = 0;
    column_indent = 0;
    nl_count      = 0;
@@ -177,10 +177,10 @@ Chunk *Chunk::GetNext(const E_Scope scope) const
       return(pc);
    }
 
-   if (flags.test(PCF_IN_PREPROC))
+   if (TestFlags(PCF_IN_PREPROC))
    {
       // If in a preproc, return a null chunk if trying to leave
-      if (!pc->flags.test(PCF_IN_PREPROC))
+      if (!pc->TestFlags(PCF_IN_PREPROC))
       {
          return(NullChunkPtr);
       }
@@ -190,7 +190,7 @@ Chunk *Chunk::GetNext(const E_Scope scope) const
    // Not in a preproc, skip any preproc
    while (  pc != nullptr
          && pc->IsNotNullChunk()
-         && pc->flags.test(PCF_IN_PREPROC))
+         && pc->TestFlags(PCF_IN_PREPROC))
    {
       pc = g_cl.GetNext(pc);
    }
@@ -223,10 +223,10 @@ Chunk *Chunk::GetPrev(const E_Scope scope) const
       return(pc);
    }
 
-   if (flags.test(PCF_IN_PREPROC))
+   if (TestFlags(PCF_IN_PREPROC))
    {
       // If in a preproc, return a null chunk if trying to leave
-      if (!pc->flags.test(PCF_IN_PREPROC))
+      if (!pc->TestFlags(PCF_IN_PREPROC))
       {
          return(NullChunkPtr);
       }
@@ -236,7 +236,7 @@ Chunk *Chunk::GetPrev(const E_Scope scope) const
    // Not in a preproc, skip any preproc
    while (  pc != nullptr
          && pc->IsNotNullChunk()
-         && pc->flags.test(PCF_IN_PREPROC))
+         && pc->TestFlags(PCF_IN_PREPROC))
    {
       pc = g_cl.GetPrev(pc);
    }
@@ -354,7 +354,7 @@ Chunk *Chunk::SearchStringLevel(const char *cStr, const size_t len, int cLevel,
 
 Chunk *Chunk::SearchPpa(const T_CheckFnPtr checkFn, const bool cond) const
 {
-   if (!flags.test(PCF_IN_PREPROC))
+   if (!TestFlags(PCF_IN_PREPROC))
    {
       // if not in preprocessor, do a regular search
       return(Search(checkFn, E_Scope::ALL, E_Direction::FORWARD, cond));
@@ -363,7 +363,7 @@ Chunk *Chunk::SearchPpa(const T_CheckFnPtr checkFn, const bool cond) const
 
    while (pc->IsNotNullChunk())
    {
-      if (!pc->flags.test(PCF_IN_PREPROC))
+      if (!pc->TestFlags(PCF_IN_PREPROC))
       {
          // Bail if we run off the end of the preprocessor directive, but return
          // the token because the caller may need to know where the search ended
@@ -752,29 +752,27 @@ Chunk *Chunk::GetPrevNvb(const E_Scope scope) const
 }
 
 
-void chunk_flags_set_real(Chunk *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits)
+void Chunk::SetResetFlags(T_PcfFlags resetBits, T_PcfFlags setBits)
 {
-   if (  pc != nullptr
-      && pc->IsNotNullChunk())
+   if (IsNotNullChunk())
    {
       LOG_FUNC_ENTRY();
-      auto const nflags = (pc->flags & ~clr_bits) | set_bits;
+      const T_PcfFlags newFlags = (m_flags & ~resetBits) | setBits;
 
-      if (pc->flags != nflags)
+      if (m_flags != newFlags)
       {
          LOG_FMT(LSETFLG,
                  "%s(%d): %016llx^%016llx=%016llx\n"
                  "   orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s,",
                  __func__, __LINE__,
-                 static_cast<pcf_flags_t::int_t>(pc->flags),
-                 static_cast<pcf_flags_t::int_t>(pc->flags ^ nflags),
-                 static_cast<pcf_flags_t::int_t>(nflags),
-                 pc->orig_line, pc->orig_col, pc->Text(),
-                 get_token_name(pc->GetType()));
+                 static_cast<T_PcfFlags::int_t>(m_flags),
+                 static_cast<T_PcfFlags::int_t>(m_flags ^ newFlags),
+                 static_cast<T_PcfFlags::int_t>(newFlags),
+                 orig_line, orig_col, Text(), get_token_name(m_type));
          LOG_FMT(LSETFLG, " parent type is %s,\n  ",
-                 get_token_name(pc->GetParentType()));
+                 get_token_name(m_parentType));
          log_func_stack_inline(LSETFLG);
-         pc->flags = nflags;
+         m_flags = newFlags;
       }
    }
 }

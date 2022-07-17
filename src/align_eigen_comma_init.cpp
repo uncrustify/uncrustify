@@ -43,7 +43,7 @@ void align_eigen_comma_init()
       }
 
       if (  start->IsNotNullChunk()
-         && ((pc->flags & PCF_IN_PREPROC) != (start->flags & PCF_IN_PREPROC)))
+         && ((pc->GetFlags() & PCF_IN_PREPROC) != (start->GetFlags() & PCF_IN_PREPROC)))
       {
          // a change in preproc status restarts the aligning
          as.Flush();
@@ -71,8 +71,8 @@ void align_eigen_comma_init()
          as.Flush();
          start = Chunk::NullChunkPtr;
       }
-      else if (  !pc->flags.test(PCF_IN_ENUM)
-              && !pc->flags.test(PCF_IN_TYPEDEF)
+      else if (  !pc->TestFlags(PCF_IN_ENUM)
+              && !pc->TestFlags(PCF_IN_TYPEDEF)
               && pc->IsString("<<"))
       {
          if (pc->GetParentType() == CT_OPERATOR)
@@ -96,7 +96,7 @@ void align_eigen_comma_init()
                log_rule_B("indent_columns");
                indent_to_column(pc, pc->column_indent + options::indent_columns());
                pc->column_indent = pc->column;
-               chunk_flags_set(pc, PCF_DONT_INDENT);
+               pc->SetFlagBits(PCF_DONT_INDENT);
             }
             // Restart alignment
             as.Flush();

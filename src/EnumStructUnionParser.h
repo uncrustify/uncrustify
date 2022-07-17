@@ -279,7 +279,7 @@ private:
    /**
     * Marks all variable identifiers associated with the class/enum/struct/union
     */
-   void mark_variable(Chunk *variable, pcf_flags_t flags);
+   void mark_variable(Chunk *variable, T_PcfFlags flags);
 
 
    /**

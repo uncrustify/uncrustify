@@ -35,7 +35,7 @@ static size_t tokenCounter;
  *   prot_the_line(__func__, __LINE__, 0, 0);
  *   prot_the_line(__func__, __LINE__, 6, 5);
  *   prot_the_source(__LINE__);
- *   log_pcf_flags(LSYS, pc->flags);
+ *   log_pcf_flags(LSYS, pc->GetFlags());
  *
  * if actual_line is zero, use the option debug_line_number_to_protocol.
  * if the value is zero, don't make any protocol and return.
@@ -118,8 +118,8 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigne
             }
             else
             {
-               LOG_FMT(LGUY, " pc->flags: ");
-               log_pcf_flags(LGUY, pc->flags);
+               LOG_FMT(LGUY, " pc->GetFlags(): ");
+               log_pcf_flags(LGUY, pc->GetFlags());
             }
 
             if (pc->tracking != nullptr)

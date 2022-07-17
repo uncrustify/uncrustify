@@ -40,7 +40,7 @@ void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev)
       while ((pc = cs.Pop_Back()) != nullptr)
       {
          align_to_column(pc, col);
-         chunk_flags_set(pc, PCF_WAS_ALIGNED);
+         pc->SetFlagBits(PCF_WAS_ALIGNED);
 
          LOG_FMT(sev, "%s(%d): indented [%s] on line %zu to %zu\n",
                  __func__, __LINE__, pc->Text(), pc->orig_line, pc->column);
@@ -78,7 +78,7 @@ Chunk *align_trailing_comments(Chunk *start)
    while (  pc->IsNotNullChunk()
          && (nl_count < options::align_right_cmt_span()))
    {
-      if (  pc->flags.test(PCF_RIGHT_COMMENT)
+      if (  pc->TestFlags(PCF_RIGHT_COMMENT)
          && pc->column > 1)
       {
          if (  same_level
@@ -199,7 +199,7 @@ void align_right_comments()
             {
                LOG_FMT(LALTC, "Changing END comment on line %zu into a RIGHT-comment\n",
                        pc->orig_line);
-               chunk_flags_set(pc, PCF_RIGHT_COMMENT);
+               pc->SetFlagBits(PCF_RIGHT_COMMENT);
             }
          }
 
@@ -215,7 +215,7 @@ void align_right_comments()
                LOG_FMT(LALTC, "Changing WHOLE comment on line %zu into a RIGHT-comment (col=%zu col_ind=%zu max_col=%zu)\n",
                        pc->orig_line, pc->column, pc->column_indent, max_col);
 
-               chunk_flags_set(pc, PCF_RIGHT_COMMENT);
+               pc->SetFlagBits(PCF_RIGHT_COMMENT);
             }
          }
       }
@@ -225,7 +225,7 @@ void align_right_comments()
 
    while (pc->IsNotNullChunk())
    {
-      if (pc->flags.test(PCF_RIGHT_COMMENT))
+      if (pc->TestFlags(PCF_RIGHT_COMMENT))
       {
          pc = align_trailing_comments(pc);
       }

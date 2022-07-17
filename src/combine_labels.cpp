@@ -105,7 +105,7 @@ void combine_labels()
                  __func__, __LINE__, next->orig_line, next->orig_col, next->Text(), get_token_name(next->GetType()));
       }
 
-      if (  !next->flags.test(PCF_IN_OC_MSG) // filter OC case of [self class] msg send
+      if (  !next->TestFlags(PCF_IN_OC_MSG) // filter OC case of [self class] msg send
          && (  next->Is(CT_CLASS)
             || next->Is(CT_OC_CLASS)
             || next->Is(CT_TEMPLATE)))
@@ -141,7 +141,7 @@ void combine_labels()
       }
 
       if (  next->Is(CT_QUESTION)
-         && !next->flags.test(PCF_IN_TEMPLATE))
+         && !next->TestFlags(PCF_IN_TEMPLATE))
       {
          cs.Push_Back(next);
       }
@@ -168,9 +168,9 @@ void combine_labels()
          }
 
          if (  cs_top_is_question(cs, next->level)
-            && next->flags.test(PCF_IN_CONDITIONAL))             // Issue #3558
+            && next->TestFlags(PCF_IN_CONDITIONAL))             // Issue #3558
          {
-            //log_pcf_flags(LGUY, next->flags);
+            //log_pcf_flags(LGUY, next->GetFlags());
             next->SetType(CT_COND_COLON);
             cs.Pop_Back();
          }
@@ -202,7 +202,7 @@ void combine_labels()
                }
             }
          }
-         else if (cur->flags.test(PCF_IN_WHERE_SPEC))
+         else if (cur->TestFlags(PCF_IN_WHERE_SPEC))
          {
             /* leave colons in where-constraint clauses alone */
          }
@@ -252,15 +252,15 @@ void combine_labels()
                   }
                }
             }
-            else if (next->flags.test(PCF_IN_ARRAY_ASSIGN))
+            else if (next->TestFlags(PCF_IN_ARRAY_ASSIGN))
             {
                next->SetType(CT_D_ARRAY_COLON);
             }
-            else if (next->flags.test(PCF_IN_FOR))
+            else if (next->TestFlags(PCF_IN_FOR))
             {
                next->SetType(CT_FOR_COLON);
             }
-            else if (next->flags.test(PCF_OC_BOXED))
+            else if (next->TestFlags(PCF_OC_BOXED))
             {
                next->SetType(CT_OC_DICT_COLON);
             }
@@ -276,9 +276,9 @@ void combine_labels()
                LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, tmp '%s': ",
                        __func__, __LINE__, tmp->orig_line, tmp->orig_col,
                        (tmp->Is(CT_NEWLINE)) ? "<Newline>" : tmp->Text());
-               log_pcf_flags(LGUY, tmp->flags);
+               log_pcf_flags(LGUY, tmp->GetFlags());
 
-               if (next->flags.test(PCF_IN_FCN_CALL))
+               if (next->TestFlags(PCF_IN_FCN_CALL))
                {
                   // Must be a macro thingy, assume some sort of label
                   next->SetType(CT_LABEL_COLON);
@@ -288,7 +288,7 @@ void combine_labels()
                           && tmp->IsNot(CT_DECLTYPE)
                           && tmp->IsNot(CT_SIZEOF)
                           && tmp->GetParentType() != CT_SIZEOF
-                          && !tmp->flags.test_any(PCF_IN_STRUCT | PCF_IN_CLASS))
+                          && !tmp->GetFlags().test_any(PCF_IN_STRUCT | PCF_IN_CLASS))
                        || tmp->Is(CT_NEWLINE))
                {
                   /*
@@ -321,7 +321,7 @@ void combine_labels()
                      next->SetType(CT_LABEL_COLON);
                   }
                }
-               else if (next->flags.test_any(PCF_IN_STRUCT | PCF_IN_CLASS | PCF_IN_TYPEDEF))
+               else if (next->GetFlags().test_any(PCF_IN_STRUCT | PCF_IN_CLASS | PCF_IN_TYPEDEF))
                {
                   next->SetType(CT_BIT_COLON);
 

@@ -45,7 +45,7 @@ void remove_extra_semicolons()
       Chunk *prev;
 
       if (  pc->Is(CT_SEMICOLON)
-         && !pc->flags.test(PCF_IN_PREPROC)
+         && !pc->TestFlags(PCF_IN_PREPROC)
          && (prev = pc->GetPrevNcNnl())->IsNotNullChunk())
       {
          LOG_FMT(LSCANSEMI, "%s(%d): Semi orig_line is %zu, orig_col is %zu, parent is %s, prev = '%s' [%s/%s]\n",

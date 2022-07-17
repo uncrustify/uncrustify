@@ -341,7 +341,7 @@ static bool can_increase_nl(Chunk *nl)
             || options::nl_squeeze_ifdef_top_level()))
       {
          log_rule_B("nl_squeeze_ifdef_top_level");
-         bool rv = ifdef_over_whole_file() && pp_start->flags.test(PCF_WF_IF);
+         bool rv = ifdef_over_whole_file() && pp_start->TestFlags(PCF_WF_IF);
          LOG_FMT(LBLANKD, "%s(%d): nl_squeeze_ifdef %zu (prev) pp_lvl=%zu rv=%d\n",
                  __func__, __LINE__, nl->orig_line, nl->pp_level, rv);
          return(rv);
@@ -354,7 +354,7 @@ static bool can_increase_nl(Chunk *nl)
             || options::nl_squeeze_ifdef_top_level()))
       {
          log_rule_B("nl_squeeze_ifdef_top_level");
-         bool rv = ifdef_over_whole_file() && next->flags.test(PCF_WF_ENDIF);
+         bool rv = ifdef_over_whole_file() && next->TestFlags(PCF_WF_ENDIF);
          LOG_FMT(LBLANKD, "%s(%d): nl_squeeze_ifdef %zu (next) pp_lvl=%zu rv=%d\n",
                  __func__, __LINE__, nl->orig_line, nl->pp_level, rv);
          return(rv);
@@ -472,17 +472,17 @@ static void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next)
    nl->brace_level = prev->brace_level;
    nl->pp_level    = prev->pp_level;
    nl->nl_count    = 1;
-   nl->flags       = (prev->flags & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC;
-   nl->orig_col    = prev->orig_col_end;
-   nl->column      = prev->orig_col;
+   nl->SetFlags((prev->GetFlags() & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC);
+   nl->orig_col = prev->orig_col_end;
+   nl->column   = prev->orig_col;
 
-   if (  prev->flags.test(PCF_IN_PREPROC)
-      && next->flags.test(PCF_IN_PREPROC))
+   if (  prev->TestFlags(PCF_IN_PREPROC)
+      && next->TestFlags(PCF_IN_PREPROC))
    {
-      chunk_flags_set(nl, PCF_IN_PREPROC);
+      nl->SetFlagBits(PCF_IN_PREPROC);
    }
 
-   if (nl->flags.test(PCF_IN_PREPROC))
+   if (nl->TestFlags(PCF_IN_PREPROC))
    {
       nl->SetType(CT_NL_CONT);
       nl->str = "\\\n";
@@ -642,16 +642,16 @@ static void newline_end_newline(Chunk *br_close)
       nl.orig_col  = br_close->orig_col;
       nl.nl_count  = 1;
       nl.pp_level  = 0;
-      nl.flags     = (br_close->flags & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC;
+      nl.SetFlags((br_close->GetFlags() & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC);
 
-      if (  br_close->flags.test(PCF_IN_PREPROC)
+      if (  br_close->TestFlags(PCF_IN_PREPROC)
          && next->IsNotNullChunk()
-         && next->flags.test(PCF_IN_PREPROC))
+         && next->TestFlags(PCF_IN_PREPROC))
       {
-         nl.flags |= PCF_IN_PREPROC;
+         nl.SetFlagBits(PCF_IN_PREPROC);
       }
 
-      if (nl.flags.test(PCF_IN_PREPROC))
+      if (nl.TestFlags(PCF_IN_PREPROC))
       {
          nl.SetType(CT_NL_CONT);
          nl.str = "\\\n";
@@ -669,7 +669,7 @@ static void newline_end_newline(Chunk *br_close)
 } // newline_end_newline
 
 
-static void newline_min_after(Chunk *ref, size_t count, pcf_flag_e flag)
+static void newline_min_after(Chunk *ref, size_t count, E_PcfFlag flag)
 {
    LOG_FUNC_ENTRY();
 
@@ -705,7 +705,7 @@ static void newline_min_after(Chunk *ref, size_t count, pcf_flag_e flag)
       newline_min_after(next, count, flag);
       return;
    }
-   chunk_flags_set(pc, flag);
+   pc->SetFlagBits(flag);
 
    if (  pc->IsNewline()
       && can_increase_nl(pc))
@@ -816,8 +816,8 @@ void newline_del_between(Chunk *start, Chunk *end)
            __func__, __LINE__, start->Text(), start->orig_line, start->orig_col);
    LOG_FMT(LNEWLINE, "%s(%d): and end->Text() is '%s', orig_line is %zu, orig_col is %zu: preproc=%c/%c\n",
            __func__, __LINE__, end->Text(), end->orig_line, end->orig_col,
-           start->flags.test(PCF_IN_PREPROC) ? 'y' : 'n',
-           end->flags.test(PCF_IN_PREPROC) ? 'y' : 'n');
+           start->TestFlags(PCF_IN_PREPROC) ? 'y' : 'n',
+           end->TestFlags(PCF_IN_PREPROC) ? 'y' : 'n');
    log_func_stack_inline(LNEWLINE);
 
    // Can't remove anything if the preproc status differs
@@ -940,7 +940,7 @@ static bool newlines_if_for_while_switch(Chunk *start, iarf_e nl_opt)
    log_rule_B("nl_define_macro");
 
    if (  nl_opt == IARF_IGNORE
-      || (  start->flags.test(PCF_IN_PREPROC)
+      || (  start->TestFlags(PCF_IN_PREPROC)
          && !options::nl_define_macro()))
    {
       return(false);
@@ -1017,7 +1017,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
    log_rule_B("nl_define_macro");
 
    if (  nl_opt == IARF_IGNORE
-      || (  start->flags.test(PCF_IN_PREPROC)
+      || (  start->TestFlags(PCF_IN_PREPROC)
          && !options::nl_define_macro()))
    {
       return;
@@ -1045,7 +1045,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
          {
             // need to remove
             if (  (nl_opt & IARF_REMOVE)
-               && !pc->flags.test(PCF_VAR_DEF))
+               && !pc->TestFlags(PCF_VAR_DEF))
             {
                // if we're also adding, take care of that here
                size_t nl_count = do_add ? 2 : 1;
@@ -1444,7 +1444,7 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
    log_rule_B("nl_define_macro");
 
    if (  nl_opt == IARF_IGNORE
-      || (  start->flags.test(PCF_IN_PREPROC)
+      || (  start->TestFlags(PCF_IN_PREPROC)
          && !options::nl_define_macro()))
    {
       return;
@@ -1545,7 +1545,7 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
          remove_next_newlines(pc);
       }
       else if (  ((next = pc->GetNextNvb())->IsNewline())
-              && !next->flags.test(PCF_VAR_DEF))
+              && !next->TestFlags(PCF_VAR_DEF))
       {
          // otherwise just deal with newlines after brace
          if (next->nl_count != 1)
@@ -1680,7 +1680,7 @@ static void newlines_struct_union(Chunk *start, iarf_e nl_opt, bool leave_traili
    log_rule_B("nl_define_macro");
 
    if (  nl_opt == IARF_IGNORE
-      || (  start->flags.test(PCF_IN_PREPROC)
+      || (  start->TestFlags(PCF_IN_PREPROC)
          && !options::nl_define_macro()))
    {
       return;
@@ -1741,7 +1741,7 @@ static void newlines_enum(Chunk *start)
 
    log_rule_B("nl_define_macro");
 
-   if (  start->flags.test(PCF_IN_PREPROC)
+   if (  start->TestFlags(PCF_IN_PREPROC)
       && !options::nl_define_macro())
    {
       return;
@@ -1847,7 +1847,7 @@ static void newlines_namespace(Chunk *start)
    iarf_e nl_opt = options::nl_namespace_brace();
 
    if (  nl_opt == IARF_IGNORE
-      || (  start->flags.test(PCF_IN_PREPROC)
+      || (  start->TestFlags(PCF_IN_PREPROC)
          && !options::nl_define_macro()))
    {
       return;
@@ -1857,9 +1857,9 @@ static void newlines_namespace(Chunk *start)
    LOG_FMT(LNEWLINE, "%s(%d): braceOpen->orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
            __func__, __LINE__, braceOpen->orig_line, braceOpen->orig_col, braceOpen->Text());
    // produces much more log output. Use it only debugging purpose
-   //log_pcf_flags(LNEWLINE, braceOpen->flags);
+   //log_pcf_flags(LNEWLINE, braceOpen->GetFlags());
 
-   if (braceOpen->flags.test(PCF_ONE_LINER))
+   if (braceOpen->TestFlags(PCF_ONE_LINER))
    {
       LOG_FMT(LNEWLINE, "%s(%d): is one_liner\n",
               __func__, __LINE__);
@@ -1880,7 +1880,7 @@ static void newlines_cuddle_uncuddle(Chunk *start, iarf_e nl_opt)
 
    log_rule_B("nl_define_macro");
 
-   if (  start->flags.test(PCF_IN_PREPROC)
+   if (  start->TestFlags(PCF_IN_PREPROC)
       && !options::nl_define_macro())
    {
       return;
@@ -1901,7 +1901,7 @@ static void newlines_do_else(Chunk *start, iarf_e nl_opt)
    log_rule_B("nl_define_macro");
 
    if (  nl_opt == IARF_IGNORE
-      || (  start->flags.test(PCF_IN_PREPROC)
+      || (  start->TestFlags(PCF_IN_PREPROC)
          && !options::nl_define_macro()))
    {
       return;
@@ -2259,7 +2259,7 @@ static void newlines_brace_pair(Chunk *br_open)
 
    log_rule_B("nl_define_macro");
 
-   if (  br_open->flags.test(PCF_IN_PREPROC)
+   if (  br_open->TestFlags(PCF_IN_PREPROC)
       && !options::nl_define_macro())
    {
       return;
@@ -2297,7 +2297,7 @@ static void newlines_brace_pair(Chunk *br_open)
 
    if (  br_open->GetParentType() == CT_FUNC_DEF
       && options::nl_create_func_def_one_liner()
-      && !br_open->flags.test(PCF_NOT_POSSIBLE))          // Issue #2795
+      && !br_open->TestFlags(PCF_NOT_POSSIBLE))          // Issue #2795
    {
       Chunk *br_close = br_open->SkipToMatch();
       Chunk *tmp      = br_open->GetPrevNcNnlNi(); // Issue #2279
@@ -2370,8 +2370,8 @@ static void newlines_brace_pair(Chunk *br_open)
                   newline_iarf_pair(tmp_1, tmp_1->GetNextNcNnl(), IARF_REMOVE);
                }
             }
-            chunk_flags_set(br_open, PCF_ONE_LINER);         // set the one liner flag if needed
-            chunk_flags_set(br_close, PCF_ONE_LINER);
+            br_open->SetFlagBits(PCF_ONE_LINER);         // set the one liner flag if needed
+            br_close->SetFlagBits(PCF_ONE_LINER);
             log_rule_B("code_width");
 
             if (  options::code_width() > 0
@@ -2380,7 +2380,7 @@ static void newlines_brace_pair(Chunk *br_open)
                // the created line is too long
                // it is not possible to make an one_liner
                // because the line would be too long
-               chunk_flags_set(br_open, PCF_NOT_POSSIBLE);
+               br_open->SetFlagBits(PCF_NOT_POSSIBLE);
                // restore the code
                size_t count;
                Chunk  tmp_2;
@@ -2598,7 +2598,7 @@ static void newlines_brace_pair(Chunk *br_open)
       || br_open->GetParentType() == CT_CPP_LAMBDA)
    {
       // Need to force a newline before the close brace, if not in a class body
-      if (!br_open->flags.test(PCF_IN_CLASS))
+      if (!br_open->TestFlags(PCF_IN_CLASS))
       {
          nl_close_brace = true;
       }
@@ -2845,7 +2845,7 @@ static void newline_iarf_pair(Chunk *before, Chunk *after, iarf_e av, bool check
    {
       if (  check_nl_assign_leave_one_liners
          && options::nl_assign_leave_one_liners()
-         && after->flags.test(PCF_ONE_LINER))
+         && after->TestFlags(PCF_ONE_LINER))
       {
          log_rule_B("nl_assign_leave_one_liners");
          return;
@@ -3232,7 +3232,7 @@ static void newline_func_def_or_call(Chunk *start)
             log_rule_B("nl_func_scope_name");
 
             if (  options::nl_func_scope_name() != IARF_IGNORE
-               && !start->flags.test(PCF_IN_DECLTYPE))
+               && !start->TestFlags(PCF_IN_DECLTYPE))
             {
                newline_iarf(prev, options::nl_func_scope_name());
             }
@@ -3260,7 +3260,7 @@ static void newline_func_def_or_call(Chunk *start)
 
                if (  options::nl_func_leave_one_liners()
                   && (  brace == nullptr
-                     || brace->flags.test(PCF_ONE_LINER)))   // Issue #1511 and #3274
+                     || brace->TestFlags(PCF_ONE_LINER)))   // Issue #1511 and #3274
                {
                   a = IARF_IGNORE;
                }
@@ -3272,7 +3272,7 @@ static void newline_func_def_or_call(Chunk *start)
             }
             log_rule_B("nl_func_type_name_class");
 
-            if (  tmp->flags.test(PCF_IN_CLASS)
+            if (  tmp->TestFlags(PCF_IN_CLASS)
                && (options::nl_func_type_name_class() != IARF_IGNORE))
             {
                a = options::nl_func_type_name_class();
@@ -3498,9 +3498,9 @@ static bool one_liner_nl_ok(Chunk *pc)
 
    LOG_FMT(LNL1LINE, "%s(%d): check type is %s, parent is %s, flag is %s, orig_line is %zu, orig_col is %zu\n",
            __func__, __LINE__, get_token_name(pc->GetType()), get_token_name(pc->GetParentType()),
-           pcf_flags_str(pc->flags).c_str(), pc->orig_line, pc->orig_col);
+           pcf_flags_str(pc->GetFlags()).c_str(), pc->orig_line, pc->orig_col);
 
-   if (!pc->flags.test(PCF_ONE_LINER))
+   if (!pc->TestFlags(PCF_ONE_LINER))
    {
       LOG_FMT(LNL1LINE, "%s(%d): true (not 1-liner), a new line may be added\n", __func__, __LINE__);
       return(true);
@@ -3516,7 +3516,7 @@ static bool one_liner_nl_ok(Chunk *pc)
    else
    {
       while (  br_open->IsNotNullChunk()
-            && br_open->flags.test(PCF_ONE_LINER)
+            && br_open->TestFlags(PCF_ONE_LINER)
             && !br_open->IsBraceOpen()
             && !br_open->IsBraceClose())
       {
@@ -3526,14 +3526,14 @@ static bool one_liner_nl_ok(Chunk *pc)
    pc = br_open;
 
    if (  pc->IsNotNullChunk()
-      && pc->flags.test(PCF_ONE_LINER)
+      && pc->TestFlags(PCF_ONE_LINER)
       && (  pc->IsBraceOpen()
          || pc->IsBraceClose()))
    {
       log_rule_B("nl_class_leave_one_liners");
 
       if (  options::nl_class_leave_one_liners()
-         && pc->flags.test(PCF_IN_CLASS))
+         && pc->TestFlags(PCF_IN_CLASS))
       {
          LOG_FMT(LNL1LINE, "%s(%d): false (class)\n", __func__, __LINE__);
          return(false);
@@ -3599,7 +3599,7 @@ static bool one_liner_nl_ok(Chunk *pc)
       log_rule_B("nl_oc_msg_leave_one_liner");
 
       if (  options::nl_oc_msg_leave_one_liner()
-         && pc->flags.test(PCF_IN_OC_MSG))
+         && pc->TestFlags(PCF_IN_OC_MSG))
       {
          LOG_FMT(LNL1LINE, "%s(%d): false (message)\n", __func__, __LINE__);
          return(false);
@@ -3657,11 +3657,11 @@ void undo_one_liner(Chunk *pc)
    LOG_FUNC_ENTRY();
 
    if (  pc != nullptr
-      && pc->flags.test(PCF_ONE_LINER))
+      && pc->TestFlags(PCF_ONE_LINER))
    {
       LOG_FMT(LNL1LINE, "%s(%d): pc->Text() '%s', orig_line is %zu, orig_col is %zu",
               __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
-      chunk_flags_clr(pc, PCF_ONE_LINER);
+      pc->ResetFlagBits(PCF_ONE_LINER);
 
       // scan backward
       LOG_FMT(LNL1LINE, "%s(%d): scan backward\n", __func__, __LINE__);
@@ -3669,7 +3669,7 @@ void undo_one_liner(Chunk *pc)
 
       while ((tmp = tmp->GetPrev())->IsNotNullChunk())
       {
-         if (!tmp->flags.test(PCF_ONE_LINER))
+         if (!tmp->TestFlags(PCF_ONE_LINER))
          {
             LOG_FMT(LNL1LINE, "%s(%d): tmp->Text() '%s', orig_line is %zu, orig_col is %zu, --> break\n",
                     __func__, __LINE__, tmp->Text(), tmp->orig_line, tmp->orig_col);
@@ -3677,7 +3677,7 @@ void undo_one_liner(Chunk *pc)
          }
          LOG_FMT(LNL1LINE, "%s(%d): clear for tmp->Text() '%s', orig_line is %zu, orig_col is %zu",
                  __func__, __LINE__, tmp->Text(), tmp->orig_line, tmp->orig_col);
-         chunk_flags_clr(tmp, PCF_ONE_LINER);
+         tmp->ResetFlagBits(PCF_ONE_LINER);
       }
       // scan forward
       LOG_FMT(LNL1LINE, "%s(%d): scan forward\n", __func__, __LINE__);
@@ -3686,7 +3686,7 @@ void undo_one_liner(Chunk *pc)
 
       while ((tmp = tmp->GetNext())->IsNotNullChunk())
       {
-         if (!tmp->flags.test(PCF_ONE_LINER))
+         if (!tmp->TestFlags(PCF_ONE_LINER))
          {
             LOG_FMT(LNL1LINE, "%s(%d): tmp->Text() '%s', orig_line is %zu, orig_col is %zu, --> break\n",
                     __func__, __LINE__, tmp->Text(), tmp->orig_line, tmp->orig_col);
@@ -3694,7 +3694,7 @@ void undo_one_liner(Chunk *pc)
          }
          LOG_FMT(LNL1LINE, "%s(%d): clear for tmp->Text() '%s', orig_line is %zu, orig_col is %zu",
                  __func__, __LINE__, tmp->Text(), tmp->orig_line, tmp->orig_col);
-         chunk_flags_clr(tmp, PCF_ONE_LINER);
+         tmp->ResetFlagBits(PCF_ONE_LINER);
       }
       LOG_FMT(LNL1LINE, "\n");
    }
@@ -3780,7 +3780,7 @@ void newlines_remove_newlines()
    while (pc->IsNotNullChunk())
    {
       // Remove all newlines not in preproc
-      if (!pc->flags.test(PCF_IN_PREPROC))
+      if (!pc->TestFlags(PCF_IN_PREPROC))
       {
          next = pc->GetNext();
          prev = pc->GetPrev();
@@ -4219,8 +4219,8 @@ void newlines_cleanup_braces(bool first)
                   LOG_FMT(LNL1LINE, "a new line may NOT be added (nl_after_brace_open)\n");
                   // no change - preserve one liner body
                }
-               else if (  pc->flags.test(PCF_IN_ARRAY_ASSIGN)
-                       || pc->flags.test(PCF_IN_PREPROC))
+               else if (  pc->TestFlags(PCF_IN_ARRAY_ASSIGN)
+                       || pc->TestFlags(PCF_IN_PREPROC))
                {
                   // no change - don't break up array assignments or preprocessors
                }
@@ -4273,8 +4273,8 @@ void newlines_cleanup_braces(bool first)
                LOG_FMT(LNL1LINE, "a new line may NOT be added (nl_before_brace_open)\n");
                // no change - preserve one liner body
             }
-            else if (  pc->flags.test(PCF_IN_PREPROC)
-                    || pc->flags.test(PCF_IN_ARRAY_ASSIGN))
+            else if (  pc->TestFlags(PCF_IN_PREPROC)
+                    || pc->TestFlags(PCF_IN_ARRAY_ASSIGN))
             {
                // no change - don't break up array assignments or preprocessors
             }
@@ -4388,7 +4388,7 @@ void newlines_cleanup_braces(bool first)
          {
             log_rule_B("nl_ds_struct_enum_close_brace");
 
-            if (!pc->flags.test(PCF_ONE_LINER))
+            if (!pc->TestFlags(PCF_ONE_LINER))
             {
                // Make sure the brace is preceded by two newlines
                Chunk *prev = pc->GetPrev();
@@ -4438,11 +4438,11 @@ void newlines_cleanup_braces(bool first)
                && next->IsNot(CT_FPAREN_CLOSE)
                && next->IsNot(CT_PAREN_CLOSE)
                && next->IsNot(CT_WHILE_OF_DO)
-               && next->IsNot(CT_VBRACE_CLOSE)         // Issue #666
+               && next->IsNot(CT_VBRACE_CLOSE)        // Issue #666
                && (  next->IsNot(CT_BRACE_CLOSE)
-                  || !next->flags.test(PCF_ONE_LINER)) // #1258
-               && !pc->flags.test(PCF_IN_ARRAY_ASSIGN)
-               && !pc->flags.test(PCF_IN_TYPEDEF)
+                  || !next->TestFlags(PCF_ONE_LINER)) // #1258
+               && !pc->TestFlags(PCF_IN_ARRAY_ASSIGN)
+               && !pc->TestFlags(PCF_IN_TYPEDEF)
                && !next->IsCommentOrNewline())
             {
                // #1258
@@ -4523,7 +4523,7 @@ void newlines_cleanup_braces(bool first)
             || (  pc->GetParentType() == CT_WHILE
                && options::nl_split_while_one_liner()))
          {
-            if (pc->flags.test(PCF_ONE_LINER))
+            if (pc->TestFlags(PCF_ONE_LINER))
             {
                // split one-liner
                Chunk *end = pc->GetNext()->GetNextType(CT_SEMICOLON)->GetNext();
@@ -4536,8 +4536,8 @@ void newlines_cleanup_braces(bool first)
                   LOG_FMT(LNEWLINE, "%s(%d): Text() is '%s', type is %s, level is %zu\n",
                           __func__, __LINE__, temp->Text(), get_token_name(temp->GetType()), temp->level);
                   // produces much more log output. Use it only debugging purpose
-                  //log_pcf_flags(LNEWLINE, temp->flags);
-                  chunk_flags_clr(temp, PCF_ONE_LINER);
+                  //log_pcf_flags(LNEWLINE, temp->GetFlags());
+                  temp->ResetFlagBits(PCF_ONE_LINER);
                }
 
                // split
@@ -4663,8 +4663,8 @@ void newlines_cleanup_braces(bool first)
       {
          log_rule_B("nl_after_semicolon");
 
-         if (  !pc->flags.test(PCF_IN_SPAREN)
-            && !pc->flags.test(PCF_IN_PREPROC)
+         if (  !pc->TestFlags(PCF_IN_SPAREN)
+            && !pc->TestFlags(PCF_IN_PREPROC)
             && options::nl_after_semicolon())
          {
             Chunk *next = pc->GetNext();
@@ -4865,7 +4865,7 @@ void newlines_cleanup_braces(bool first)
                      newline_iarf(pc, options::nl_template_var());
                      log_rule_B("nl_template_var");
                   }
-                  else if (next->flags.test(PCF_INCOMPLETE)) // class declaration
+                  else if (next->TestFlags(PCF_INCOMPLETE)) // class declaration
                   {
                      iarf_e const action =
                         newline_template_option(
@@ -4921,7 +4921,7 @@ void newlines_cleanup_braces(bool first)
                LOG_FMT(LNEWLINE, "%s(%d): braceOpen->orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
                        __func__, __LINE__, braceOpen->orig_line, braceOpen->orig_col, braceOpen->Text());
                // produces much more log output. Use it only debugging purpose
-               //log_pcf_flags(LNEWLINE, braceOpen->flags);
+               //log_pcf_flags(LNEWLINE, braceOpen->GetFlags());
                newlines_namespace(pc);
             }
          }
@@ -4929,7 +4929,7 @@ void newlines_cleanup_braces(bool first)
       else if (pc->Is(CT_SQUARE_OPEN))
       {
          if (  pc->GetParentType() == CT_ASSIGN
-            && !pc->flags.test(PCF_ONE_LINER))
+            && !pc->TestFlags(PCF_ONE_LINER))
          {
             Chunk *tmp = pc->GetPrevNcNnlNi();   // Issue #2279
             newline_iarf(tmp, options::nl_assign_square());
@@ -5000,7 +5000,7 @@ void newlines_cleanup_braces(bool first)
       }
       else if (  first
               && (options::nl_remove_extra_newlines() == 1)
-              && !pc->flags.test(PCF_IN_PREPROC))
+              && !pc->TestFlags(PCF_IN_PREPROC))
       {
          log_rule_B("nl_remove_extra_newlines");
          newline_iarf(pc, IARF_REMOVE);
@@ -5107,12 +5107,12 @@ static bool is_class_one_liner(Chunk *pc)
 {
    if (  (  pc->Is(CT_FUNC_CLASS_DEF)
          || pc->Is(CT_FUNC_DEF))
-      && pc->flags.test(PCF_IN_CLASS))
+      && pc->TestFlags(PCF_IN_CLASS))
    {
       // Find opening brace
       pc = pc->GetNextType(CT_BRACE_OPEN, pc->level);
       return(  pc->IsNotNullChunk()
-            && pc->flags.test(PCF_ONE_LINER));
+            && pc->TestFlags(PCF_ONE_LINER));
    }
    return(false);
 } // is_class_one_liner
@@ -5529,7 +5529,7 @@ void newlines_chunk_pos(E_Token chunk_type, token_pos_e mode)
       LOG_FMT(LNEWLINE, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy));
       // produces much more log output. Use it only debugging purpose
-      //log_pcf_flags(LNEWLINE, pc->flags);
+      //log_pcf_flags(LNEWLINE, pc->GetFlags());
 
       if (pc->Is(chunk_type))
       {
@@ -5540,9 +5540,9 @@ void newlines_chunk_pos(E_Token chunk_type, token_pos_e mode)
             LOG_FMT(LNEWLINE, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
             // produces much more log output. Use it only debugging purpose
-            //log_pcf_flags(LNEWLINE, pc->flags);
+            //log_pcf_flags(LNEWLINE, pc->GetFlags());
 
-            if (pc->flags.test(PCF_IN_CONST_ARGS)) // Issue #2250
+            if (pc->TestFlags(PCF_IN_CONST_ARGS)) // Issue #2250
             {
                continue;
             }
@@ -5553,13 +5553,13 @@ void newlines_chunk_pos(E_Token chunk_type, token_pos_e mode)
              * BUT we must take care of options::pos_class_comma()
              * TODO and options::pos_constr_comma()
              */
-            if (pc->flags.test(PCF_IN_CLASS_BASE))
+            if (pc->TestFlags(PCF_IN_CLASS_BASE))
             {
                // change mode
                log_rule_B("pos_class_comma");
                mode_local = options::pos_class_comma();
             }
-            else if (pc->flags.test(PCF_IN_ENUM))
+            else if (pc->TestFlags(PCF_IN_ENUM))
             {
                log_rule_B("pos_enum_comma");
                mode_local = options::pos_enum_comma();
@@ -5680,7 +5680,7 @@ void newlines_chunk_pos(E_Token chunk_type, token_pos_e mode)
             if (next->nl_count == 1)
             {
                if (  prev != nullptr
-                  && !prev->flags.test(PCF_IN_PREPROC))
+                  && !prev->TestFlags(PCF_IN_PREPROC))
                {
                   // move the CT_BOOL to after the newline
                   pc->MoveAfter(next);
@@ -5701,8 +5701,8 @@ void newlines_chunk_pos(E_Token chunk_type, token_pos_e mode)
 
                if (  prev->IsNotNullChunk()
                   && !prev->IsNewline()
-                  && !prev->flags.test(PCF_IN_PREPROC)
-                  && !prev->flags.test(PCF_IN_OC_MSG))
+                  && !prev->TestFlags(PCF_IN_PREPROC)
+                  && !prev->TestFlags(PCF_IN_OC_MSG))
                {
                   pc->MoveAfter(prev);
                }
@@ -6003,20 +6003,20 @@ bool is_func_proto_group(Chunk *pc, E_Token one_liner_type)
       && options::nl_class_leave_one_liner_groups()
       && (  pc->Is(one_liner_type)
          || pc->GetParentType() == one_liner_type)
-      && pc->flags.test(PCF_IN_CLASS))
+      && pc->TestFlags(PCF_IN_CLASS))
    {
       log_rule_B("nl_class_leave_one_liner_groups");
 
       if (pc->Is(CT_BRACE_CLOSE))
       {
-         return(pc->flags.test(PCF_ONE_LINER));
+         return(pc->TestFlags(PCF_ONE_LINER));
       }
       else
       {
          // Find opening brace
          pc = pc->GetNextType(CT_BRACE_OPEN, pc->level);
          return(  pc->IsNotNullChunk()
-               && pc->flags.test(PCF_ONE_LINER));
+               && pc->TestFlags(PCF_ONE_LINER));
       }
    }
    return(false);
@@ -6193,7 +6193,7 @@ void do_blank_lines()
          }
 
          if (  tmp->IsNotNullChunk()
-            && !start->flags.test(PCF_INCOMPLETE))
+            && !start->TestFlags(PCF_INCOMPLETE))
          {
             if (parent_type == CT_CLASS && options::nl_before_class() > tmp->nl_count)
             {
@@ -6242,7 +6242,7 @@ void do_blank_lines()
          && (  prev->GetParentType() == CT_FUNC_DEF
             || prev->GetParentType() == CT_FUNC_CLASS_DEF)
          && options::nl_inside_empty_func() > pc->nl_count
-         && prev->flags.test(PCF_EMPTY_BODY))
+         && prev->TestFlags(PCF_EMPTY_BODY))
       {
          blank_line_set(pc, options::nl_inside_empty_func);
          log_rule_B("nl_inside_empty_func");
@@ -6271,7 +6271,7 @@ void do_blank_lines()
             || prev->GetParentType() == CT_OC_MSG_DECL
             || prev->GetParentType() == CT_ASSIGN))
       {
-         if (prev->flags.test(PCF_ONE_LINER))
+         if (prev->TestFlags(PCF_ONE_LINER))
          {
             if (options::nl_after_func_body_one_liner() > pc->nl_count)
             {
@@ -6281,7 +6281,7 @@ void do_blank_lines()
          }
          else
          {
-            if (  prev->flags.test(PCF_IN_CLASS)
+            if (  prev->TestFlags(PCF_IN_CLASS)
                && (options::nl_after_func_body_class() > 0))
             {
                log_rule_B("nl_after_func_body_class");
@@ -6297,7 +6297,7 @@ void do_blank_lines()
                log_rule_B("nl_after_func_body");
 
                // Issue #1734
-               if (!(pc->prev->flags.test(PCF_IN_TRY_BLOCK)))
+               if (!(pc->prev->TestFlags(PCF_IN_TRY_BLOCK)))
                {
                   if (options::nl_after_func_body() != pc->nl_count)
                   {
@@ -6384,7 +6384,7 @@ void do_blank_lines()
                LOG_FMT(LBLANK, "%s(%d): %zu:%zu token is '%s'\n",
                        __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->Text());
 
-               if (tmp->flags.test(PCF_VAR_DEF))
+               if (tmp->TestFlags(PCF_VAR_DEF))
                {
                   is_var_def = true;
                   break;
@@ -6392,7 +6392,7 @@ void do_blank_lines()
 
                if (tmp->Is(prev->GetParentType()))
                {
-                  is_fwd_decl = tmp->flags.test(PCF_INCOMPLETE);
+                  is_fwd_decl = tmp->TestFlags(PCF_INCOMPLETE);
                   break;
                }
             }
@@ -6482,7 +6482,7 @@ void do_blank_lines()
             log_rule_B("nl_around_cs_property");
          }
          else if (  next->GetParentType() == CT_CS_PROPERTY
-                 && next->flags.test(PCF_STMT_START))
+                 && next->TestFlags(PCF_STMT_START))
          {
             blank_line_set(pc, options::nl_around_cs_property);
             log_rule_B("nl_around_cs_property");
@@ -6524,7 +6524,7 @@ void do_blank_lines()
          && next->Is(CT_PREPROC)
          && next->GetParentType() == CT_PP_IF
          && ifdef_over_whole_file()
-         && next->flags.test(PCF_WF_IF))
+         && next->TestFlags(PCF_WF_IF))
       {
          log_rule_B("nl_before_whole_file_ifdef");
          blank_line_set(pc, options::nl_before_whole_file_ifdef);
@@ -6539,7 +6539,7 @@ void do_blank_lines()
          if (  pp_start->IsNotNullChunk()
             && pp_start->GetParentType() == CT_PP_IF
             && ifdef_over_whole_file()
-            && pp_start->flags.test(PCF_WF_IF))
+            && pp_start->TestFlags(PCF_WF_IF))
          {
             log_rule_B("nl_after_whole_file_ifdef");
             blank_line_set(pc, options::nl_after_whole_file_ifdef);
@@ -6552,7 +6552,7 @@ void do_blank_lines()
          && next->Is(CT_PREPROC)
          && next->GetParentType() == CT_PP_ENDIF
          && ifdef_over_whole_file()
-         && next->flags.test(PCF_WF_ENDIF))
+         && next->TestFlags(PCF_WF_ENDIF))
       {
          log_rule_B("nl_before_whole_file_endif");
          blank_line_set(pc, options::nl_before_whole_file_endif);
@@ -6567,7 +6567,7 @@ void do_blank_lines()
          if (  pp_start->IsNotNullChunk()
             && pp_start->GetParentType() == CT_PP_ENDIF
             && ifdef_over_whole_file()
-            && pp_start->flags.test(PCF_WF_ENDIF))
+            && pp_start->TestFlags(PCF_WF_ENDIF))
          {
             log_rule_B("nl_after_whole_file_endif");
             blank_line_set(pc, options::nl_after_whole_file_endif);

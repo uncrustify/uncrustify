@@ -93,7 +93,7 @@ void align_func_proto(size_t span)
       }
 
       if (  pc->IsNewline()
-         && !pc->flags.test(PCF_IN_FCN_CALL))                 // Issue #2831
+         && !pc->TestFlags(PCF_IN_FCN_CALL))                 // Issue #2831
       {
          look_bro = false;
          AlignStack *stack_at_l_bl = many_as.at(pc->level).at(pc->brace_level);
@@ -182,7 +182,7 @@ void align_func_proto(size_t span)
       }
       else if (  look_bro
               && pc->Is(CT_BRACE_OPEN)
-              && pc->flags.test(PCF_ONE_LINER))
+              && pc->TestFlags(PCF_ONE_LINER))
       {
          AlignStack *stack_at_l_bl_brace = many_as_brace.at(pc->level).at(pc->brace_level);
 

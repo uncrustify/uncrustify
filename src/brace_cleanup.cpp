@@ -194,7 +194,7 @@ void brace_cleanup()
 
       // Check for leaving a #define body
       if (  braceState.in_preproc != CT_NONE
-         && !pc->flags.test(PCF_IN_PREPROC))
+         && !pc->TestFlags(PCF_IN_PREPROC))
       {
          if (braceState.in_preproc == CT_PP_DEFINE)
          {
@@ -324,14 +324,14 @@ static bool maybe_while_of_do(Chunk *pc)
    Chunk *prev = pc->GetPrevNcNnl();
 
    if (  prev->IsNullChunk()
-      || !prev->flags.test(PCF_IN_PREPROC))
+      || !prev->TestFlags(PCF_IN_PREPROC))
    {
       return(false);
    }
 
    // Find the chunk before the preprocessor
    while (  prev->IsNullChunk()
-         && prev->flags.test(PCF_IN_PREPROC))
+         && prev->TestFlags(PCF_IN_PREPROC))
    {
       prev = prev->GetPrevNcNnl();
    }
@@ -408,7 +408,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
            __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->GetType()),
            frm.size() - 1, get_token_name(frm.top().type),
            get_brace_stage_name(frm.top().stage));
-   log_pcf_flags(LTOK, pc->flags);
+   log_pcf_flags(LTOK, pc->GetFlags());
 
    // Mark statement starts
    LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s, Text() is '%s'\n",
@@ -424,10 +424,10 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       && !pc->IsString(")")
       && !pc->IsString("]"))
    {
-      chunk_flags_set(pc, PCF_EXPR_START | ((frm.stmt_count == 0) ? PCF_STMT_START : PCF_NONE));
+      pc->SetFlagBits(PCF_EXPR_START | ((frm.stmt_count == 0) ? PCF_STMT_START : PCF_NONE));
       LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 1.marked '%s' as %s, start stmt_count is %zu, expr_count is %zu\n",
               __func__, __LINE__, pc->orig_line, pc->Text(),
-              pc->flags.test(PCF_STMT_START) ? "stmt" : "expr", frm.stmt_count,
+              pc->TestFlags(PCF_STMT_START) ? "stmt" : "expr", frm.stmt_count,
               frm.expr_count);
    }
    frm.stmt_count++;
@@ -437,14 +437,14 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
 
    if (frm.sparen_count > 0)
    {
-      chunk_flags_set(pc, PCF_IN_SPAREN);
+      pc->SetFlagBits(PCF_IN_SPAREN);
 
       // Mark everything in the for statement
       for (int tmp = static_cast<int>(frm.size()) - 2; tmp >= 0; tmp--)
       {
          if (frm.at(tmp).type == CT_FOR)
          {
-            chunk_flags_set(pc, PCF_IN_FOR);
+            pc->SetFlagBits(PCF_IN_FOR);
             break;
          }
       }
@@ -510,14 +510,14 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          if (pc->Is(CT_SPAREN_CLOSE))
          {
             frm.sparen_count--;
-            chunk_flags_clr(pc, PCF_IN_SPAREN);
+            pc->ResetFlagBits(PCF_IN_SPAREN);
          }
       }
 
       // Make sure the open / close match
       if (pc->IsNot((E_Token)(frm.top().type + 1)))
       {
-         if (pc->flags.test(PCF_IN_PREPROC))                // Issue #3113, #3283
+         if (pc->TestFlags(PCF_IN_PREPROC))                // Issue #3113, #3283
          {
             // do nothing
          }
@@ -561,7 +561,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
             frm.brace_level--;
             LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level decreased to %zu",
                     __func__, __LINE__, frm.brace_level);
-            log_pcf_flags(LBCSPOP, pc->flags);
+            log_pcf_flags(LBCSPOP, pc->GetFlags());
          }
          pc->level       = frm.level;
          pc->brace_level = frm.brace_level;
@@ -1097,7 +1097,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
    atest = frm.top().stage;
 
    if (  pc->IsNot(CT_BRACE_OPEN)
-      && !pc->flags.test(PCF_IN_PREPROC)
+      && !pc->TestFlags(PCF_IN_PREPROC)
       && (  (frm.top().stage == brace_stage_e::BRACE2)
          || (frm.top().stage == brace_stage_e::BRACE_DO)))
    {
@@ -1120,7 +1120,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
          frm.brace_level++;
          LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level increased to %zu\n",
                  __func__, __LINE__, frm.brace_level);
-         log_pcf_flags(LBCSPOP, pc->flags);
+         log_pcf_flags(LBCSPOP, pc->GetFlags());
 
          frm.push(vbrace, __func__, __LINE__, brace_stage_e::NONE);
          // "+VBrace");
@@ -1136,7 +1136,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
          frm.expr_count = 0;
          LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
                  __func__, __LINE__, frm.stmt_count, frm.expr_count);
-         chunk_flags_set(pc, PCF_STMT_START | PCF_EXPR_START);
+         pc->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
          frm.stmt_count = 1;
          frm.expr_count = 1;
          LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 2.marked '%s' as stmt start\n",
@@ -1328,8 +1328,8 @@ static void mark_namespace(Chunk *pns)
          if (numberOfLines > options::indent_namespace_limit())
          {
             LOG_FMT(LTOK, "%s(%d): PCF_LONG_BLOCK is set\n", __func__, __LINE__);
-            chunk_flags_set(pc, PCF_LONG_BLOCK);
-            chunk_flags_set(br_close, PCF_LONG_BLOCK);
+            pc->SetFlagBits(PCF_LONG_BLOCK);
+            br_close->SetFlagBits(PCF_LONG_BLOCK);
          }
       }
       flag_parens(pc, PCF_IN_NAMESPACE, CT_NONE, CT_NAMESPACE, false);
@@ -1349,8 +1349,8 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    chunk.level       = frm.level;
    chunk.pp_level    = frm.pp_level;
    chunk.brace_level = frm.brace_level;
-   chunk.flags       = pc->flags & PCF_COPY_FLAGS;
-   chunk.str         = "";
+   chunk.SetFlags(pc->GetFlags() & PCF_COPY_FLAGS);
+   chunk.str = "";
 
    if (after)
    {
@@ -1365,9 +1365,9 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
       return(nullptr);
    }
 
-   if (!ref->flags.test(PCF_IN_PREPROC))
+   if (!ref->TestFlags(PCF_IN_PREPROC))
    {
-      chunk.flags &= ~PCF_IN_PREPROC;
+      chunk.ResetFlagBits(PCF_IN_PREPROC);
    }
    bool ref_is_comment = ref->IsComment();      // Issue #3351
 
@@ -1384,13 +1384,13 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    }
 
    // Don't back into a preprocessor
-   if (  !pc->flags.test(PCF_IN_PREPROC)
-      && ref->flags.test(PCF_IN_PREPROC))
+   if (  !pc->TestFlags(PCF_IN_PREPROC)
+      && ref->TestFlags(PCF_IN_PREPROC))
    {
       if (ref->Is(CT_PREPROC_BODY))
       {
          while (  ref->IsNotNullChunk()
-               && ref->flags.test(PCF_IN_PREPROC))
+               && ref->TestFlags(PCF_IN_PREPROC))
          {
             ref = ref->GetPrev();
          }
@@ -1473,7 +1473,7 @@ bool close_statement(ParseFrame &frm, Chunk *pc, const BraceState &braceState)
 
          LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level decreased to %zu\n",
                  __func__, __LINE__, frm.brace_level);
-         log_pcf_flags(LBCSPOP, pc->flags);
+         log_pcf_flags(LBCSPOP, pc->GetFlags());
          LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
          frm.pop(__func__, __LINE__, pc);
