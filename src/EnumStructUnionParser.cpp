@@ -875,12 +875,12 @@ void EnumStructUnionParser::analyze_identifiers()
     * "class/struct [macros/attributes ...] [: bases] { } x, ..."
     */
 
-   Chunk       *template_end      = get_template_end();
-   auto        *body_end          = get_body_end();
-   auto        *body_start        = get_body_start();
-   pcf_flags_t flags              = PCF_VAR_1ST_DEF;
-   auto        *inheritance_start = get_inheritance_start();
-   Chunk       *pc                = body_end ? body_end : m_start;
+   Chunk      *template_end      = get_template_end();
+   auto       *body_end          = get_body_end();
+   auto       *body_start        = get_body_start();
+   T_PcfFlags flags              = PCF_VAR_1ST_DEF;
+   auto       *inheritance_start = get_inheritance_start();
+   Chunk      *pc                = body_end ? body_end : m_start;
 
    /**
     * first, try a simple approach to identify any associated type
@@ -1453,7 +1453,7 @@ void EnumStructUnionParser::mark_base_classes(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   pcf_flags_t flags = PCF_VAR_1ST_DEF;
+   T_PcfFlags flags = PCF_VAR_1ST_DEF;
 
    while (  pc != nullptr
          && pc->IsNotNullChunk())
@@ -1524,7 +1524,7 @@ void EnumStructUnionParser::mark_braces(Chunk *brace_open)
 {
    LOG_FUNC_ENTRY();
 
-   pcf_flags_t flags = PCF_NONE;
+   T_PcfFlags flags = PCF_NONE;
 
    if (m_start->Is(CT_CLASS))
    {
@@ -1883,8 +1883,8 @@ void EnumStructUnionParser::mark_template_args(Chunk *start, Chunk *end) const
               start->orig_line,
               start->orig_col);
 
-      pcf_flags_t flags = PCF_IN_TEMPLATE;
-      Chunk       *next = start;
+      T_PcfFlags flags = PCF_IN_TEMPLATE;
+      Chunk      *next = start;
 
       /**
        * TODO: for now, just mark the chunks within the template as PCF_IN_TEMPLATE;
@@ -1931,7 +1931,7 @@ void EnumStructUnionParser::mark_type(Chunk *pc)
 } // EnumStructUnionParser::mark_type
 
 
-void EnumStructUnionParser::mark_variable(Chunk *variable, pcf_flags_t flags)
+void EnumStructUnionParser::mark_variable(Chunk *variable, T_PcfFlags flags)
 {
    LOG_FUNC_ENTRY();
 
@@ -1973,7 +1973,7 @@ void EnumStructUnionParser::mark_where_clause(Chunk *where)
 
    set_where_end(where_end);
 
-   pcf_flags_t flags;
+   T_PcfFlags flags;
 
    for (auto *pc = where_start; pc != where_end; pc = pc->GetNextNcNnl())
    {

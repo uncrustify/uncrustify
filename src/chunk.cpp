@@ -752,12 +752,12 @@ Chunk *Chunk::GetPrevNvb(const E_Scope scope) const
 }
 
 
-void Chunk::SetResetFlags(pcf_flags_t resetBits, pcf_flags_t setBits)
+void Chunk::SetResetFlags(T_PcfFlags resetBits, T_PcfFlags setBits)
 {
    if (IsNotNullChunk())
    {
       LOG_FUNC_ENTRY();
-      const pcf_flags_t newFlags = (m_flags & ~resetBits) | setBits;
+      const T_PcfFlags newFlags = (m_flags & ~resetBits) | setBits;
 
       if (m_flags != newFlags)
       {
@@ -765,9 +765,9 @@ void Chunk::SetResetFlags(pcf_flags_t resetBits, pcf_flags_t setBits)
                  "%s(%d): %016llx^%016llx=%016llx\n"
                  "   orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s,",
                  __func__, __LINE__,
-                 static_cast<pcf_flags_t::int_t>(m_flags),
-                 static_cast<pcf_flags_t::int_t>(m_flags ^ newFlags),
-                 static_cast<pcf_flags_t::int_t>(newFlags),
+                 static_cast<T_PcfFlags::int_t>(m_flags),
+                 static_cast<T_PcfFlags::int_t>(m_flags ^ newFlags),
+                 static_cast<T_PcfFlags::int_t>(newFlags),
                  orig_line, orig_col, Text(), get_token_name(m_type));
          LOG_FMT(LSETFLG, " parent type is %s,\n  ",
                  get_token_name(m_parentType));

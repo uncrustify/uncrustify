@@ -116,39 +116,39 @@ public:
    /**
     * @brief returns the chunk flags
     */
-   pcf_flags_t GetFlags() const;
+   T_PcfFlags GetFlags() const;
 
    /**
     * @brief Sets the chunk flags
     * @param flags the new chunk flags
     */
-   void SetFlags(pcf_flags_t flags);
+   void SetFlags(T_PcfFlags flags);
 
    /**
     * @brief Tests if some chunk flags are set
     * @param flags the flag bits to test
     * @return true if the specified bits are set, false otherwise
     */
-   bool TestFlags(pcf_flags_t flags) const;
+   bool TestFlags(T_PcfFlags flags) const;
 
    /**
     * @brief Resets some of the chunk flag bits
     * @param resetBits the flag bits to reset
     */
-   void ResetFlagBits(pcf_flags_t resetBits);
+   void ResetFlagBits(T_PcfFlags resetBits);
 
    /**
     * @brief Sets some of the chunk flag bits
     * @param setBits the flag bits to set
     */
-   void SetFlagBits(pcf_flags_t setBits);
+   void SetFlagBits(T_PcfFlags setBits);
 
    /**
     * @brief Sets and reset some of the chunk flag bits
     * @param resetBits the flag bits to reset
     * @param setBits the flag bits to set
     */
-   void UpdateFlagBits(pcf_flags_t resetBits, pcf_flags_t setBits);
+   void UpdateFlagBits(T_PcfFlags resetBits, T_PcfFlags setBits);
 
 
    // --------- Get* chunk functions
@@ -806,10 +806,10 @@ public:
 
 protected:
    // --------- Data members
-   Chunk       *m_parent;                    //! pointer to parent chunk (not always set)
-   E_Token     m_type;                       //! type of the chunk itself
-   E_Token     m_parentType;                 //! type of the parent chunk usually CT_NONE
-   pcf_flags_t m_flags;                      //! see PCF_xxx
+   Chunk      *m_parent;                    //! pointer to parent chunk (not always set)
+   E_Token    m_type;                       //! type of the chunk itself
+   E_Token    m_parentType;                 //! type of the parent chunk usually CT_NONE
+   T_PcfFlags m_flags;                      //! see PCF_xxx
 
 
    // --------- Protected util functions
@@ -836,7 +836,7 @@ protected:
     * @param setBits the flag bits to set
     * @param resetBits the flag bits to reset
     */
-   void SetResetFlags(pcf_flags_t resetBits, pcf_flags_t setBits);
+   void SetResetFlags(T_PcfFlags resetBits, T_PcfFlags setBits);
 
 
 private:
@@ -862,37 +862,37 @@ inline E_Token Chunk::GetParentType() const
 }
 
 
-inline pcf_flags_t Chunk::GetFlags() const
+inline T_PcfFlags Chunk::GetFlags() const
 {
    return(m_flags);
 }
 
 
-inline void Chunk::SetFlags(pcf_flags_t flags)
+inline void Chunk::SetFlags(T_PcfFlags flags)
 {
    m_flags = flags;
 }
 
 
-inline bool Chunk::TestFlags(pcf_flags_t flags) const
+inline bool Chunk::TestFlags(T_PcfFlags flags) const
 {
    return(m_flags.test(flags));
 }
 
 
-inline void Chunk::ResetFlagBits(pcf_flags_t resetBits)
+inline void Chunk::ResetFlagBits(T_PcfFlags resetBits)
 {
    SetResetFlags(resetBits, PCF_NONE);
 }
 
 
-inline void Chunk::SetFlagBits(pcf_flags_t setBits)
+inline void Chunk::SetFlagBits(T_PcfFlags setBits)
 {
    SetResetFlags(PCF_NONE, setBits);
 }
 
 
-inline void Chunk::UpdateFlagBits(pcf_flags_t resetBits, pcf_flags_t setBits)
+inline void Chunk::UpdateFlagBits(T_PcfFlags resetBits, T_PcfFlags setBits)
 {
    SetResetFlags(resetBits, setBits);
 }

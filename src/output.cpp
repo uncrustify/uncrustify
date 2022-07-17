@@ -526,7 +526,7 @@ void output_parsed(FILE *pfile, bool withOptions)
               pc->brace_level, pc->level, pc->pp_level);
       // Print pc flags in groups of 4 hex characters
       char flag_string[20];
-      sprintf(flag_string, "%12llx", static_cast<pcf_flags_t::int_t>(pc->GetFlags()));
+      sprintf(flag_string, "%12llx", static_cast<T_PcfFlags::int_t>(pc->GetFlags()));
       fprintf(pfile, "[%.4s %.4s %.4s]", flag_string, flag_string + 4, flag_string + 8);
       fprintf(pfile, "[%zu-%d]",
               pc->nl_count, pc->after_tab);
@@ -573,7 +573,7 @@ void output_parsed_csv(FILE *pfile)
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
 
-      auto pcf_flag_str = pcf_flags_str(pcf_flag_e(pc->GetFlags()));
+      auto pcf_flag_str = pcf_flags_str(E_PcfFlag(pc->GetFlags()));
 #ifdef WIN32
       auto pcf_flag_str_start = pcf_flag_str.find("[") + 1;
 #else // not WIN32

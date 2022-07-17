@@ -509,7 +509,7 @@ int main(int argc, char *argv[])
 
       while ((p_arg = arg.Unused(idx)) != nullptr)
       {
-         log_pcf_flags(LSYS, static_cast<pcf_flag_e>(strtoul(p_arg, nullptr, 16)));
+         log_pcf_flags(LSYS, static_cast<E_PcfFlag>(strtoul(p_arg, nullptr, 16)));
       }
       return(EXIT_SUCCESS);
    }

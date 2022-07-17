@@ -61,7 +61,7 @@ static const char *pcf_names[] =
 };
 
 
-std::string pcf_flags_str(pcf_flags_t flags)
+std::string pcf_flags_str(T_PcfFlags flags)
 {
    char buffer[64];
 
@@ -78,7 +78,7 @@ std::string pcf_flags_str(pcf_flags_t flags)
 
    for (size_t i = 0; i < ARRAY_SIZE(pcf_names); ++i)
    {
-      if (flags & static_cast<pcf_flag_e>(pcf_bit(i)))
+      if (flags & static_cast<E_PcfFlag>(pcf_bit(i)))
       {
          if (first)
          {
@@ -97,7 +97,7 @@ std::string pcf_flags_str(pcf_flags_t flags)
 }
 
 
-void log_pcf_flags(log_sev_t sev, pcf_flags_t flags)
+void log_pcf_flags(log_sev_t sev, T_PcfFlags flags)
 {
    if (!log_sev_on(sev))
    {

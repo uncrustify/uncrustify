@@ -24,7 +24,7 @@ constexpr auto pcf_bit(size_t b) -> decltype(0ULL)
    return(1ULL << b);
 }
 
-enum pcf_flag_e : decltype ( 0ULL )
+enum E_PcfFlag : decltype ( 0ULL )
 {
 // Copy flags are in the lower 17 bits
    PCF_NONE            = 0ULL,
@@ -85,13 +85,13 @@ enum pcf_flag_e : decltype ( 0ULL )
    PCF_IN_CONDITIONAL  = pcf_bit(48),  //! inside a conditional ternary expression
 };
 
-UNC_DECLARE_FLAGS(pcf_flags_t, pcf_flag_e);
-UNC_DECLARE_OPERATORS_FOR_FLAGS(pcf_flags_t);
+UNC_DECLARE_FLAGS(T_PcfFlags, E_PcfFlag);
+UNC_DECLARE_OPERATORS_FOR_FLAGS(T_PcfFlags);
 
-std::string pcf_flags_str(pcf_flags_t flags);
+std::string pcf_flags_str(T_PcfFlags flags);
 
 
-void log_pcf_flags(log_sev_t sev, pcf_flags_t flags);
+void log_pcf_flags(log_sev_t sev, T_PcfFlags flags);
 
 
 #endif /* PCF_FLAGS_STR_INCLUDED */

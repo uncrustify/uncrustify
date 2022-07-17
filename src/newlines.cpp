@@ -669,7 +669,7 @@ static void newline_end_newline(Chunk *br_close)
 } // newline_end_newline
 
 
-static void newline_min_after(Chunk *ref, size_t count, pcf_flag_e flag)
+static void newline_min_after(Chunk *ref, size_t count, E_PcfFlag flag)
 {
    LOG_FUNC_ENTRY();
 
