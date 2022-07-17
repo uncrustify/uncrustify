@@ -292,7 +292,7 @@ void fix_casts(Chunk *start)
 
    if (pc->IsNotNullChunk())
    {
-      pc->SetFlags(PCF_EXPR_START);
+      pc->SetFlagBits(PCF_EXPR_START);
 
       if (pc->IsBraceOpen())
       {
@@ -455,7 +455,7 @@ void fix_typedef(Chunk *start)
         ; next->IsNotNullChunk() && next->level >= start->level
         ; next = next->GetNextNcNnl(E_Scope::PREPROC))
    {
-      next->SetFlags(PCF_IN_TYPEDEF);
+      next->SetFlagBits(PCF_IN_TYPEDEF);
 
       if (start->level == next->level)
       {
@@ -482,7 +482,7 @@ void fix_typedef(Chunk *start)
          {
             the_type = next;
          }
-         next->ResetFlags(PCF_VAR_1ST_DEF);
+         next->ResetFlagBits(PCF_VAR_1ST_DEF);
 
          if (*next->str.c_str() == '(')
          {
@@ -542,7 +542,7 @@ void fix_typedef(Chunk *start)
       {
          LOG_FMT(LTYPEDEF, "%s(%d):  -- align anchor on Text() %s, @ orig_line %zu, orig_col %zu\n",
                  __func__, __LINE__, the_type->Text(), the_type->orig_line, the_type->orig_col);
-         the_type->SetFlags(PCF_ANCHOR);
+         the_type->SetFlagBits(PCF_ANCHOR);
       }
       // already did everything we need to do
       return;
@@ -568,7 +568,7 @@ void fix_typedef(Chunk *start)
          // We have just a regular typedef
          LOG_FMT(LTYPEDEF, "%s(%d): regular typedef Text() %s, on orig_line %zu\n",
                  __func__, __LINE__, the_type->Text(), the_type->orig_line);
-         the_type->SetFlags(PCF_ANCHOR);
+         the_type->SetFlagBits(PCF_ANCHOR);
       }
       return;
    }
@@ -618,7 +618,7 @@ void fix_typedef(Chunk *start)
       LOG_FMT(LTYPEDEF, "%s(%d): %s typedef Text() %s, on orig_line %zu\n",
               __func__, __LINE__, get_token_name(after->GetType()), the_type->Text(),
               the_type->orig_line);
-      the_type->SetFlags(PCF_ANCHOR);
+      the_type->SetFlagBits(PCF_ANCHOR);
    }
 } // fix_typedef
 
@@ -772,7 +772,7 @@ Chunk *fix_variable_definition(Chunk *start)
    {
       tmp_pc = cs.Get(idxForCs)->m_pc;
       make_type(tmp_pc);
-      tmp_pc->SetFlags(PCF_VAR_TYPE);
+      tmp_pc->SetFlagBits(PCF_VAR_TYPE);
       LOG_FMT(LFVD2, " Text() is '%s', type is %s", tmp_pc->Text(), get_token_name(tmp_pc->GetType()));
    }
 
@@ -841,7 +841,7 @@ void mark_cpp_constructor(Chunk *pc)
    {
       LOG_FMT(LFTOR, "%s(%d): tmp is '%s', orig_line is %zu, orig_col is %zu\n",
               __func__, __LINE__, tmp->Text(), tmp->orig_line, tmp->orig_col);
-      tmp->SetFlags(PCF_IN_CONST_ARGS);
+      tmp->SetFlagBits(PCF_IN_CONST_ARGS);
       tmp = tmp->GetNextNcNnl();
 
       if (  tmp->IsString(":")
@@ -908,7 +908,7 @@ void mark_cpp_lambda(Chunk *square_open)
       {
          for (auto *pc = square_open; pc != brace_close; pc = pc->GetNextNcNnl())
          {
-            pc->SetFlags(PCF_IN_LAMBDA);
+            pc->SetFlagBits(PCF_IN_LAMBDA);
          }
       }
    }
@@ -964,7 +964,7 @@ void mark_define_expressions()
                   || prev->Is(CT_COLON)
                   || prev->Is(CT_QUESTION)))
             {
-               pc->SetFlags(PCF_EXPR_START);
+               pc->SetFlagBits(PCF_EXPR_START);
                first = false;
             }
          }
@@ -1394,11 +1394,11 @@ void mark_function(Chunk *pc)
          }
          pc->SetType(CT_TYPE);
          tmp1->SetType(CT_PTR_TYPE);
-         pc->ResetFlags(PCF_VAR_1ST_DEF);
+         pc->ResetFlagBits(PCF_VAR_1ST_DEF);
 
          if (tmp2->IsNotNullChunk())
          {
-            tmp2->SetFlags(PCF_VAR_1ST_DEF);
+            tmp2->SetFlagBits(PCF_VAR_1ST_DEF);
          }
          flag_parens(tmp, PCF_NONE, CT_FPAREN_OPEN, CT_FUNC_PROTO, false);
          fix_fcn_def_params(tmp);
@@ -1862,7 +1862,7 @@ void mark_function(Chunk *pc)
       if (tmp->level < pc->level)
       {
          // No semicolon - guess that it is a prototype
-         pc->ResetFlags(PCF_VAR_1ST_DEF);
+         pc->ResetFlagBits(PCF_VAR_1ST_DEF);
          pc->SetType(CT_FUNC_PROTO);
          break;
       }
@@ -1877,7 +1877,7 @@ void mark_function(Chunk *pc)
          {
             // Set the parent for the semicolon for later
             semi = tmp;
-            pc->ResetFlags(PCF_VAR_1ST_DEF);
+            pc->ResetFlagBits(PCF_VAR_1ST_DEF);
             pc->SetType(CT_FUNC_PROTO);
             LOG_FMT(LFCN, "%s(%d):   2) Marked Text() is '%s', as FUNC_PROTO on orig_line %zu, orig_col %zu\n",
                     __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
@@ -2024,7 +2024,7 @@ void mark_function(Chunk *pc)
 
    if (pc->Is(CT_FUNC_CTOR_VAR))
    {
-      pc->SetFlags(PCF_VAR_1ST_DEF);
+      pc->SetFlagBits(PCF_VAR_1ST_DEF);
       return;
    }
 
@@ -2074,7 +2074,7 @@ void mark_function(Chunk *pc)
 
          if (!tmp->IsSemicolon())
          {
-            tmp->SetFlags(PCF_OLD_FCN_PARAMS);
+            tmp->SetFlagBits(PCF_OLD_FCN_PARAMS);
          }
          tmp = tmp->GetNextNcNnl();
       }
@@ -2248,7 +2248,7 @@ bool mark_function_type(Chunk *pc)
       else
       {
          varcnk->SetType(CT_FUNC_VAR);
-         varcnk->SetFlags(PCF_VAR_1ST_DEF);
+         varcnk->SetFlagBits(PCF_VAR_1ST_DEF);
       }
    }
    pc->SetType(CT_TPAREN_CLOSE);
@@ -2281,7 +2281,7 @@ bool mark_function_type(Chunk *pc)
       {
          if (!pc->GetFlags().test(PCF_IN_TYPEDEF))
          {
-            tmp->SetFlags(PCF_VAR_1ST_DEF);
+            tmp->SetFlagBits(PCF_VAR_1ST_DEF);
          }
          tmp->SetType(CT_TPAREN_OPEN);
          tmp->SetParentType(ptp);
@@ -2295,7 +2295,7 @@ bool mark_function_type(Chunk *pc)
             || tmp->Is(CT_FUNC_PROTO))
          {
             tmp->SetType(CT_TYPE);
-            tmp->ResetFlags(PCF_VAR_1ST_DEF);
+            tmp->ResetFlagBits(PCF_VAR_1ST_DEF);
          }
          mark_function_return_type(varcnk, tmp, ptp);
          break;
@@ -2345,7 +2345,7 @@ void mark_lvalue(Chunk *pc)
       {
          break;
       }
-      prev->SetFlags(PCF_LVALUE);
+      prev->SetFlagBits(PCF_LVALUE);
 
       if (  prev->level == pc->level
          && prev->IsString("&"))
@@ -2448,8 +2448,8 @@ void mark_template_func(Chunk *pc, Chunk *pc_next)
       {
          // its a type!
          pc->SetType(CT_TYPE);
-         pc->SetFlags(PCF_VAR_TYPE);
-         after->SetFlags(PCF_VAR_DEF);
+         pc->SetFlagBits(PCF_VAR_TYPE);
+         after->SetFlagBits(PCF_VAR_DEF);
       }
    }
 } // mark_template_func
@@ -2482,7 +2482,7 @@ Chunk *mark_variable_definition(Chunk *start)
 
          if (!pc->GetFlags().test(PCF_IN_ENUM))
          {
-            pc->SetFlags(flags);
+            pc->SetFlagBits(flags);
          }
          flags &= ~PCF_VAR_1ST;
          LOG_FMT(LVARDEF, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', set PCF_VAR_1ST\n",
@@ -2553,7 +2553,7 @@ void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
             LOG_FMT(LFCNP, "%s(%d): parameter on orig_line %zu, orig_col %zu: <%s> as TYPE\n",
                     __func__, __LINE__, var_name->orig_line, var_name->orig_col, word_type->Text());
             word_type->SetType(CT_TYPE);
-            word_type->SetFlags(PCF_VAR_TYPE);
+            word_type->SetFlagBits(PCF_VAR_TYPE);
          }
          word_cnt++;
       }
@@ -2564,14 +2564,14 @@ void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
          {
             LOG_FMT(LFCNP, "%s(%d): parameter on orig_line %zu, orig_col %zu: <%s> as VAR\n",
                     __func__, __LINE__, var_name->orig_line, var_name->orig_col, var_name->Text());
-            var_name->SetFlags(PCF_VAR_DEF);
+            var_name->SetFlagBits(PCF_VAR_DEF);
          }
          else
          {
             LOG_FMT(LFCNP, "%s(%d): parameter on orig_line %zu, orig_col %zu: <%s> as TYPE\n",
                     __func__, __LINE__, var_name->orig_line, var_name->orig_col, var_name->Text());
             var_name->SetType(CT_TYPE);
-            var_name->SetFlags(PCF_VAR_TYPE);
+            var_name->SetFlagBits(PCF_VAR_TYPE);
          }
       }
    }
@@ -2608,7 +2608,7 @@ pcf_flags_t mark_where_chunk(Chunk *pc, E_Token parent_type, pcf_flags_t flags)
 
    if (flags.test(PCF_IN_WHERE_SPEC))
    {
-      pc->SetFlags(PCF_IN_WHERE_SPEC);
+      pc->SetFlagBits(PCF_IN_WHERE_SPEC);
    }
    return(flags);
 } // mark_where_chunk

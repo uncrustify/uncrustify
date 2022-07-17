@@ -441,7 +441,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
             if (tmp->level == tmp->brace_level)
             {
-               tmp->SetFlags(PCF_VAR_1ST_DEF);
+               tmp->SetFlagBits(PCF_VAR_1ST_DEF);
             }
          }
 
@@ -683,8 +683,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             if (  tmp->Is(CT_SQUARE_CLOSE)
                && next->level == tmp->level)
             {
-               tmp->SetFlags(PCF_ONE_LINER);
-               next->SetFlags(PCF_ONE_LINER);
+               tmp->SetFlagBits(PCF_ONE_LINER);
+               next->SetFlagBits(PCF_ONE_LINER);
                break;
             }
          }
@@ -738,7 +738,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             if (  tmp != nullptr
                && tmp->IsNotNullChunk())
             {
-               tmp->ResetFlags(PCF_EXPR_START | PCF_STMT_START);
+               tmp->ResetFlagBits(PCF_EXPR_START | PCF_STMT_START);
             }
          }
          else
@@ -746,7 +746,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             if (  tmp != nullptr
                && tmp->Is(CT_WORD))
             {
-               tmp->SetFlags(PCF_VAR_1ST_DEF);
+               tmp->SetFlagBits(PCF_VAR_1ST_DEF);
             }
          }
       }
@@ -764,7 +764,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
       if (next->Is(CT_WORD))
       {
-         next->SetFlags(PCF_VAR_1ST_DEF);
+         next->SetFlagBits(PCF_VAR_1ST_DEF);
       }
       return;
    }
@@ -1580,7 +1580,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                      {
                         LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', set PCF_VAR_1ST\n",
                                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-                        next->SetFlags(PCF_VAR_1ST);
+                        next->SetFlagBits(PCF_VAR_1ST);
                      }
                   }
                   else if (tmp->Is(CT_DC_MEMBER))
@@ -2047,7 +2047,7 @@ void fix_symbols()
 
                if (tmp->Is(CT_WORD))
                {
-                  tmp->SetFlags(PCF_STMT_START | PCF_EXPR_START);
+                  tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
                   break;
                }
                tmp = tmp->GetNextNcNnl();
@@ -2062,7 +2062,7 @@ void fix_symbols()
 
          if (tmp->Is(CT_WORD))
          {
-            tmp->SetFlags(PCF_STMT_START | PCF_EXPR_START);
+            tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
          }
       }
 
@@ -2294,7 +2294,7 @@ static Chunk *process_return(Chunk *pc)
       chunk.brace_level = pc->brace_level;
       chunk.orig_line   = pc->orig_line;
       chunk.orig_col    = next->orig_col - 1;
-      chunk.Flags()     = pc->GetFlags() & PCF_COPY_FLAGS;
+      chunk.SetFlags(pc->GetFlags() & PCF_COPY_FLAGS);
       chunk.CopyAndAddBefore(next);
 
       chunk.SetType(CT_PAREN_CLOSE);
@@ -2847,7 +2847,7 @@ static void handle_oc_class(Chunk *pc)
          if (tmp->GetPrev()->IsNewline())
          {
             tmp->SetType(CT_OC_SCOPE);
-            tmp->SetFlags(PCF_STMT_START);
+            tmp->SetFlagBits(PCF_STMT_START);
             hit_scope = true;
          }
       }
@@ -3002,7 +3002,7 @@ static void handle_oc_block_literal(Chunk *pc)
    {
       LOG_FMT(LOCBLK, " -- lbp %s[%s]\n", lbp->Text(), get_token_name(lbp->GetType()));
       make_type(lbp);
-      lbp->SetFlags(PCF_OC_RTYPE);
+      lbp->SetFlagBits(PCF_OC_RTYPE);
       lbp->SetParentType(CT_OC_BLOCK_EXPR);
       lbp = lbp->GetPrevNcNnlNi();   // Issue #2279
    }
@@ -3110,16 +3110,16 @@ static Chunk *handle_oc_md_type(Chunk *paren_open, E_Token ptype, pcf_flags_t fl
    did_it = true;
 
    paren_open->SetParentType(ptype);
-   paren_open->SetFlags(flags);
+   paren_open->SetFlagBits(flags);
    paren_close->SetParentType(ptype);
-   paren_close->SetFlags(flags);
+   paren_close->SetFlagBits(flags);
 
    for (Chunk *cur = paren_open->GetNextNcNnl();
         cur != paren_close;
         cur = cur->GetNextNcNnl())
    {
       LOG_FMT(LOCMSGD, " <%s|%s>", cur->Text(), get_token_name(cur->GetType()));
-      cur->SetFlags(flags);
+      cur->SetFlagBits(flags);
       make_type(cur);
    }
 
@@ -3236,7 +3236,7 @@ static void handle_oc_message_decl(Chunk *pc)
          // attributes for a method parameter sit between the parameter type and the parameter name
          pc = skip_attribute_next(tmp);
          // we should now be on the arg name
-         pc->SetFlags(PCF_VAR_DEF);
+         pc->SetFlagBits(PCF_VAR_DEF);
          LOG_FMT(LOCMSGD, " arg[%s]", pc->Text());
          pc = pc->GetNextNcNnl();
       }
@@ -3358,9 +3358,9 @@ static void handle_oc_message_send(Chunk *os)
       }
    }
    os->SetParentType(CT_OC_MSG);
-   os->SetFlags(PCF_IN_OC_MSG);
+   os->SetFlagBits(PCF_IN_OC_MSG);
    cs->SetParentType(CT_OC_MSG);
-   cs->SetFlags(PCF_IN_OC_MSG);
+   cs->SetFlagBits(PCF_IN_OC_MSG);
 
    // handle '< protocol >'
    tmp = tmp->GetNextNcNnl();
@@ -3450,7 +3450,7 @@ static void handle_oc_message_send(Chunk *os)
 
    for (tmp = os->GetNext(); tmp != cs; tmp = tmp->GetNext())
    {
-      tmp->SetFlags(PCF_IN_OC_MSG);
+      tmp->SetFlagBits(PCF_IN_OC_MSG);
 
       if (tmp->level == cs->level + 1)
       {
@@ -3716,7 +3716,7 @@ static void handle_oc_property_decl(Chunk *os)
                endchunk.orig_line   = curr_chunk->orig_line;
                endchunk.orig_col    = curr_chunk->orig_col;
                endchunk.column      = curr_chunk->orig_col_end + 1;
-               endchunk.Flags()     = curr_chunk->GetFlags() & PCF_COPY_FLAGS;
+               endchunk.SetFlags(curr_chunk->GetFlags() & PCF_COPY_FLAGS);
                endchunk.CopyAndAddAfter(curr_chunk);
                curr_chunk = curr_chunk->GetNext();
             }
@@ -3788,7 +3788,7 @@ static void handle_cs_square_stmt(Chunk *os)
 
    if (tmp->IsNotNullChunk())
    {
-      tmp->SetFlags(PCF_STMT_START | PCF_EXPR_START);
+      tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
    }
 } // handle_cs_square_stmt
 

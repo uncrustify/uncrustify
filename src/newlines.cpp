@@ -472,14 +472,14 @@ static void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next)
    nl->brace_level = prev->brace_level;
    nl->pp_level    = prev->pp_level;
    nl->nl_count    = 1;
-   nl->Flags()     = (prev->GetFlags() & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC;
-   nl->orig_col    = prev->orig_col_end;
-   nl->column      = prev->orig_col;
+   nl->SetFlags((prev->GetFlags() & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC);
+   nl->orig_col = prev->orig_col_end;
+   nl->column   = prev->orig_col;
 
    if (  prev->GetFlags().test(PCF_IN_PREPROC)
       && next->GetFlags().test(PCF_IN_PREPROC))
    {
-      nl->SetFlags(PCF_IN_PREPROC);
+      nl->SetFlagBits(PCF_IN_PREPROC);
    }
 
    if (nl->GetFlags().test(PCF_IN_PREPROC))
@@ -642,13 +642,13 @@ static void newline_end_newline(Chunk *br_close)
       nl.orig_col  = br_close->orig_col;
       nl.nl_count  = 1;
       nl.pp_level  = 0;
-      nl.Flags()   = (br_close->GetFlags() & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC;
+      nl.SetFlags((br_close->GetFlags() & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC);
 
       if (  br_close->GetFlags().test(PCF_IN_PREPROC)
          && next->IsNotNullChunk()
          && next->GetFlags().test(PCF_IN_PREPROC))
       {
-         nl.Flags() |= PCF_IN_PREPROC;
+         nl.SetFlagBits(PCF_IN_PREPROC);
       }
 
       if (nl.GetFlags().test(PCF_IN_PREPROC))
@@ -705,7 +705,7 @@ static void newline_min_after(Chunk *ref, size_t count, pcf_flag_e flag)
       newline_min_after(next, count, flag);
       return;
    }
-   pc->SetFlags(flag);
+   pc->SetFlagBits(flag);
 
    if (  pc->IsNewline()
       && can_increase_nl(pc))
@@ -2370,8 +2370,8 @@ static void newlines_brace_pair(Chunk *br_open)
                   newline_iarf_pair(tmp_1, tmp_1->GetNextNcNnl(), IARF_REMOVE);
                }
             }
-            br_open->SetFlags(PCF_ONE_LINER);         // set the one liner flag if needed
-            br_close->SetFlags(PCF_ONE_LINER);
+            br_open->SetFlagBits(PCF_ONE_LINER);         // set the one liner flag if needed
+            br_close->SetFlagBits(PCF_ONE_LINER);
             log_rule_B("code_width");
 
             if (  options::code_width() > 0
@@ -2380,7 +2380,7 @@ static void newlines_brace_pair(Chunk *br_open)
                // the created line is too long
                // it is not possible to make an one_liner
                // because the line would be too long
-               br_open->SetFlags(PCF_NOT_POSSIBLE);
+               br_open->SetFlagBits(PCF_NOT_POSSIBLE);
                // restore the code
                size_t count;
                Chunk  tmp_2;
@@ -3661,7 +3661,7 @@ void undo_one_liner(Chunk *pc)
    {
       LOG_FMT(LNL1LINE, "%s(%d): pc->Text() '%s', orig_line is %zu, orig_col is %zu",
               __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
-      pc->ResetFlags(PCF_ONE_LINER);
+      pc->ResetFlagBits(PCF_ONE_LINER);
 
       // scan backward
       LOG_FMT(LNL1LINE, "%s(%d): scan backward\n", __func__, __LINE__);
@@ -3677,7 +3677,7 @@ void undo_one_liner(Chunk *pc)
          }
          LOG_FMT(LNL1LINE, "%s(%d): clear for tmp->Text() '%s', orig_line is %zu, orig_col is %zu",
                  __func__, __LINE__, tmp->Text(), tmp->orig_line, tmp->orig_col);
-         tmp->ResetFlags(PCF_ONE_LINER);
+         tmp->ResetFlagBits(PCF_ONE_LINER);
       }
       // scan forward
       LOG_FMT(LNL1LINE, "%s(%d): scan forward\n", __func__, __LINE__);
@@ -3694,7 +3694,7 @@ void undo_one_liner(Chunk *pc)
          }
          LOG_FMT(LNL1LINE, "%s(%d): clear for tmp->Text() '%s', orig_line is %zu, orig_col is %zu",
                  __func__, __LINE__, tmp->Text(), tmp->orig_line, tmp->orig_col);
-         tmp->ResetFlags(PCF_ONE_LINER);
+         tmp->ResetFlagBits(PCF_ONE_LINER);
       }
       LOG_FMT(LNL1LINE, "\n");
    }
@@ -4537,7 +4537,7 @@ void newlines_cleanup_braces(bool first)
                           __func__, __LINE__, temp->Text(), get_token_name(temp->GetType()), temp->level);
                   // produces much more log output. Use it only debugging purpose
                   //log_pcf_flags(LNEWLINE, temp->GetFlags());
-                  temp->ResetFlags(PCF_ONE_LINER);
+                  temp->ResetFlagBits(PCF_ONE_LINER);
                }
 
                // split

@@ -1036,7 +1036,7 @@ void EnumStructUnionParser::analyze_identifiers()
           * PCF_VAR_1ST was cleared and a type was identified; therefore, set
           * PCF_VAR_TYPE for the identified type
           */
-         m_type->SetFlags(PCF_VAR_TYPE);
+         m_type->SetFlagBits(PCF_VAR_TYPE);
       }
       else if (~flags & PCF_VAR_INLINE)
       {
@@ -1458,13 +1458,13 @@ void EnumStructUnionParser::mark_base_classes(Chunk *pc)
    while (  pc != nullptr
          && pc->IsNotNullChunk())
    {
-      pc->SetFlags(PCF_IN_CLASS_BASE);
+      pc->SetFlagBits(PCF_IN_CLASS_BASE);
       /**
        * clear the PCF_VAR_TYPE flag for all chunks within the inheritance list
        * TODO: this may not be necessary in the future once code outside this
        *       class is improved such that PCF_VAR_TYPE is not set for these chunks
        */
-      pc->Flags() &= ~PCF_VAR_TYPE;
+      pc->ResetFlagBits(PCF_VAR_TYPE);
 
       Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
 
@@ -1501,7 +1501,7 @@ void EnumStructUnionParser::mark_base_classes(Chunk *pc)
 
          if (pc->Is(CT_WORD))
          {
-            pc->SetFlags(flags);
+            pc->SetFlagBits(flags);
 
             if (flags & PCF_VAR_1ST)
             {
@@ -1516,7 +1516,7 @@ void EnumStructUnionParser::mark_base_classes(Chunk *pc)
       }
       pc = next;
    }
-   pc->SetFlags(PCF_IN_CLASS_BASE);
+   pc->SetFlagBits(PCF_IN_CLASS_BASE);
 } // EnumStructUnionParser::mark_base_classes
 
 
@@ -1641,7 +1641,7 @@ void EnumStructUnionParser::mark_constructors()
 
       for (auto *prev = body_start; next != body_end; prev = next)
       {
-         prev->SetFlags(PCF_IN_CLASS);
+         prev->SetFlagBits(PCF_IN_CLASS);
 
          next = skip_template_next(prev->GetNextNcNnl(E_Scope::PREPROC));                         // Issue #3368
 
@@ -1668,7 +1668,7 @@ void EnumStructUnionParser::mark_constructors()
          }
       }
 
-      next->SetFlags(PCF_IN_CLASS);
+      next->SetFlagBits(PCF_IN_CLASS);
    }
 } // EnumStructUnionParser::mark_constructor
 
@@ -1701,7 +1701,7 @@ void EnumStructUnionParser::mark_enum_integral_type(Chunk *colon)
        */
       if (pc->IsNot(CT_DC_MEMBER))                             // Issue #3198
       {
-         pc->Flags() &= ~PCF_VAR_TYPE;
+         pc->ResetFlagBits(PCF_VAR_TYPE);
          pc->SetType(CT_TYPE);
          pc->SetParentType(colon->GetType());
       }
@@ -1749,14 +1749,14 @@ void EnumStructUnionParser::mark_extracorporeal_lvalues()
       if (  !chunk_is_between(next, body_start, body_end)
          && next->GetFlags().test(PCF_LVALUE))
       {
-         next->Flags() &= ~PCF_LVALUE;
+         next->ResetFlagBits(PCF_LVALUE);
       }
       else if (  (  next->Is(CT_ASSIGN)
                  || next->Is(CT_BRACE_OPEN))
               && prev->Is(CT_WORD)
               && prev->GetFlags().test_any(PCF_VAR_DEF | PCF_VAR_1ST | PCF_VAR_INLINE))
       {
-         prev->SetFlags(PCF_LVALUE);
+         prev->SetFlagBits(PCF_LVALUE);
       }
       prev = next;
       next = next->GetNextNcNnl();
@@ -1900,7 +1900,7 @@ void EnumStructUnionParser::mark_template_args(Chunk *start, Chunk *end) const
          {
             break;
          }
-         next->SetFlags(flags);
+         next->SetFlagBits(flags);
       }
       LOG_FMT(LTEMPL,
               "%s(%d): End of template detected: '%s' at orig_line %zu, orig_col %zu\n",
@@ -1946,7 +1946,7 @@ void EnumStructUnionParser::mark_variable(Chunk *variable, pcf_flags_t flags)
               variable->orig_col,
               flags & PCF_VAR_1ST_DEF ? "PCF_VAR_1ST_DEF" : "PCF_VAR_1ST");
 
-      variable->SetFlags(flags);
+      variable->SetFlagBits(flags);
       variable->SetType(CT_WORD);
       mark_pointer_types(variable);
    }

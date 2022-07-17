@@ -39,7 +39,7 @@ Chunk *search_for_colon(Chunk *pc_local)
       {
          LOG_FMT(LCOMBINE, "%s(%d): THE NEXT: orig_line is %zu, orig_col is %zu, level is %zu, Text() is '%s'\n",
                  __func__, __LINE__, pc2->orig_line, pc2->orig_col, pc2->level, pc2->Text());
-         pc2->SetFlags(PCF_IN_CONDITIONAL);
+         pc2->SetFlagBits(PCF_IN_CONDITIONAL);
          log_pcf_flags(LCOMBINE, pc2->GetFlags());
 
          if (pc2->Is(CT_SEMICOLON))

@@ -2111,7 +2111,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
    pc.column    = ctx.c.col;
    pc.orig_col  = ctx.c.col;
    pc.nl_count  = 0;
-   pc.Flags()   = PCF_NONE;
+   pc.SetFlags(PCF_NONE);
 
    // If it is turned off, we put everything except newlines into CT_UNKNOWN
    if (cpd.unc_off)
@@ -2500,7 +2500,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
          pc.str.append(ctx.get());
       }
       pc.SetType(punc->type);
-      pc.Flags() |= PCF_PUNCTUATOR;
+      pc.SetFlagBits(PCF_PUNCTUATOR);
       return(true);
    }
    /* When parsing C/C++ files and running into some unknown token,
@@ -2526,7 +2526,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
             pc.str.append(ctx.get());
          }
          pc.SetType(punc->type);
-         pc.Flags() |= PCF_PUNCTUATOR;
+         pc.SetFlagBits(PCF_PUNCTUATOR);
          return(true);
       }
    }
@@ -2738,22 +2738,22 @@ void tokenize(const deque<int> &data, Chunk *ref)
 
       if (rprev != nullptr)
       {
-         pc->SetFlags(rprev->GetFlags() & PCF_COPY_FLAGS);
+         pc->SetFlagBits(rprev->GetFlags() & PCF_COPY_FLAGS);
 
          // a newline can't be in a preprocessor
          if (pc->Is(CT_NEWLINE))
          {
-            pc->ResetFlags(PCF_IN_PREPROC);
+            pc->ResetFlagBits(PCF_IN_PREPROC);
          }
       }
 
       if (ref != nullptr)
       {
-         chunk.Flags() |= PCF_INSERTED;
+         chunk.SetFlagBits(PCF_INSERTED);
       }
       else
       {
-         chunk.Flags() &= ~PCF_INSERTED;
+         chunk.ResetFlagBits(PCF_INSERTED);
       }
       pc = chunk.CopyAndAddBefore(ref);
 
@@ -2774,7 +2774,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
       // Special handling for preprocessor stuff
       if (cpd.in_preproc != CT_NONE)
       {
-         pc->SetFlags(PCF_IN_PREPROC);
+         pc->SetFlagBits(PCF_IN_PREPROC);
 
          // Count words after the preprocessor
          if (!pc->IsCommentOrNewline())
@@ -2829,7 +2829,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
                || rprev->Is(CT_NEWLINE)))
          {
             pc->SetType(CT_PREPROC);
-            pc->SetFlags(PCF_IN_PREPROC);
+            pc->SetFlagBits(PCF_IN_PREPROC);
             cpd.in_preproc = CT_PREPROC;
          }
       }

@@ -40,7 +40,7 @@ Chunk *align_nl_cont(Chunk *start)
 
    while ((tmp = cs.Pop_Back()) != nullptr)
    {
-      tmp->SetFlags(PCF_WAS_ALIGNED);
+      tmp->SetFlagBits(PCF_WAS_ALIGNED);
       tmp->column = max_col;
    }
    return(pc);

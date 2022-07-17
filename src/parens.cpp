@@ -234,10 +234,10 @@ static void add_parens_between(Chunk *first, Chunk *last)
    Chunk pc;
 
    pc.SetType(CT_PAREN_OPEN);
-   pc.orig_line   = first_n->orig_line;
-   pc.orig_col    = first_n->orig_col;
-   pc.str         = "(";
-   pc.Flags()     = first_n->GetFlags() & PCF_COPY_FLAGS;
+   pc.orig_line = first_n->orig_line;
+   pc.orig_col  = first_n->orig_col;
+   pc.str       = "(";
+   pc.SetFlags(first_n->GetFlags() & PCF_COPY_FLAGS);
    pc.level       = first_n->level;
    pc.pp_level    = first_n->pp_level;
    pc.brace_level = first_n->brace_level;
@@ -247,10 +247,10 @@ static void add_parens_between(Chunk *first, Chunk *last)
    Chunk *last_p = last->GetPrevNcNnl(E_Scope::PREPROC);
 
    pc.SetType(CT_PAREN_CLOSE);
-   pc.orig_line   = last_p->orig_line;
-   pc.orig_col    = last_p->orig_col;
-   pc.str         = ")";
-   pc.Flags()     = last_p->GetFlags() & PCF_COPY_FLAGS;
+   pc.orig_line = last_p->orig_line;
+   pc.orig_col  = last_p->orig_col;
+   pc.str       = ")";
+   pc.SetFlags(last_p->GetFlags() & PCF_COPY_FLAGS);
    pc.level       = last_p->level;
    pc.pp_level    = last_p->pp_level;
    pc.brace_level = last_p->brace_level;

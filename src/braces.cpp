@@ -177,8 +177,8 @@ void do_braces()
 
       if (tmp->Is(brc_type))
       {
-         br_open->SetFlags(PCF_EMPTY_BODY);
-         tmp->SetFlags(PCF_EMPTY_BODY);
+         br_open->SetFlagBits(PCF_EMPTY_BODY);
+         tmp->SetFlagBits(PCF_EMPTY_BODY);
       }
       // Scan for the brace close or a newline
       tmp = br_open->GetNextNc();
@@ -973,9 +973,9 @@ Chunk *insert_comment_after(Chunk *ref, E_Token cmt_type,
 
    Chunk new_cmt = *ref;
 
-   new_cmt.prev    = nullptr;
-   new_cmt.next    = nullptr;
-   new_cmt.Flags() = ref->GetFlags() & PCF_COPY_FLAGS;
+   new_cmt.prev = nullptr;
+   new_cmt.next = nullptr;
+   new_cmt.SetFlags(ref->GetFlags() & PCF_COPY_FLAGS);
    new_cmt.SetType(cmt_type);
    new_cmt.str.clear();
 
@@ -1443,8 +1443,8 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    chunk.level       = cl_colon->level;
    chunk.pp_level    = cl_colon->pp_level;
    chunk.brace_level = cl_colon->brace_level;
-   chunk.Flags()     = pc->GetFlags() & PCF_COPY_FLAGS;
-   chunk.str         = "{";
+   chunk.SetFlags(pc->GetFlags() & PCF_COPY_FLAGS);
+   chunk.str = "{";
    Chunk *br_open = chunk.CopyAndAddAfter(cl_colon);
 
    chunk.SetType(CT_BRACE_CLOSE);
@@ -1623,7 +1623,7 @@ static void process_if_chain(Chunk *br_start)
       {
          const auto brace = *itc;
 
-         brace->SetFlags(PCF_KEEP_BRACE);
+         brace->SetFlagBits(PCF_KEEP_BRACE);
 
          if (brace->IsVBrace())
          {

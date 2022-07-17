@@ -119,28 +119,29 @@ public:
    pcf_flags_t GetFlags() const;
 
    /**
-    * @brief returns a reference to the chunk flags
+    * @brief Sets the chunk flags
+    * @param flags the new chunk flags
     */
-   pcf_flags_t &Flags();
+   void SetFlags(pcf_flags_t flags);
 
    /**
-    * @brief Resets some of the chunk flags
+    * @brief Resets some of the chunk flag bits
     * @param resetBits the flag bits to reset
     */
-   void ResetFlags(pcf_flags_t resetBits);
+   void ResetFlagBits(pcf_flags_t resetBits);
 
    /**
-    * @brief Sets some of the chunk flags
+    * @brief Sets some of the chunk flag bits
     * @param setBits the flag bits to set
     */
-   void SetFlags(pcf_flags_t setBits);
+   void SetFlagBits(pcf_flags_t setBits);
 
    /**
-    * @brief Sets and reset some of the chunk flags
+    * @brief Sets and reset some of the chunk flag bits
     * @param resetBits the flag bits to reset
     * @param setBits the flag bits to set
     */
-   void UpdateFlags(pcf_flags_t resetBits, pcf_flags_t setBits);
+   void UpdateFlagBits(pcf_flags_t resetBits, pcf_flags_t setBits);
 
 
    // --------- Get* chunk functions
@@ -860,25 +861,25 @@ inline pcf_flags_t Chunk::GetFlags() const
 }
 
 
-inline pcf_flags_t &Chunk::Flags()
+inline void Chunk::SetFlags(pcf_flags_t flags)
 {
-   return(m_flags);
+   m_flags = flags;
 }
 
 
-inline void Chunk::ResetFlags(pcf_flags_t resetBits)
+inline void Chunk::ResetFlagBits(pcf_flags_t resetBits)
 {
    SetResetFlags(resetBits, PCF_NONE);
 }
 
 
-inline void Chunk::SetFlags(pcf_flags_t setBits)
+inline void Chunk::SetFlagBits(pcf_flags_t setBits)
 {
    SetResetFlags(PCF_NONE, setBits);
 }
 
 
-inline void Chunk::UpdateFlags(pcf_flags_t resetBits, pcf_flags_t setBits)
+inline void Chunk::UpdateFlagBits(pcf_flags_t resetBits, pcf_flags_t setBits)
 {
    SetResetFlags(resetBits, setBits);
 }

@@ -533,7 +533,7 @@ void AlignStack::Flush()
             m_skip_first = true;
             return;
          }
-         pc->SetFlags(PCF_ALIGN_START);
+         pc->SetFlagBits(PCF_ALIGN_START);
 
          pc->align.right_align = m_right_align;
          pc->align.amp_style   = m_amp_style;

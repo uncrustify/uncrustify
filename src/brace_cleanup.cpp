@@ -424,7 +424,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       && !pc->IsString(")")
       && !pc->IsString("]"))
    {
-      pc->SetFlags(PCF_EXPR_START | ((frm.stmt_count == 0) ? PCF_STMT_START : PCF_NONE));
+      pc->SetFlagBits(PCF_EXPR_START | ((frm.stmt_count == 0) ? PCF_STMT_START : PCF_NONE));
       LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 1.marked '%s' as %s, start stmt_count is %zu, expr_count is %zu\n",
               __func__, __LINE__, pc->orig_line, pc->Text(),
               pc->GetFlags().test(PCF_STMT_START) ? "stmt" : "expr", frm.stmt_count,
@@ -437,14 +437,14 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
 
    if (frm.sparen_count > 0)
    {
-      pc->SetFlags(PCF_IN_SPAREN);
+      pc->SetFlagBits(PCF_IN_SPAREN);
 
       // Mark everything in the for statement
       for (int tmp = static_cast<int>(frm.size()) - 2; tmp >= 0; tmp--)
       {
          if (frm.at(tmp).type == CT_FOR)
          {
-            pc->SetFlags(PCF_IN_FOR);
+            pc->SetFlagBits(PCF_IN_FOR);
             break;
          }
       }
@@ -510,7 +510,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          if (pc->Is(CT_SPAREN_CLOSE))
          {
             frm.sparen_count--;
-            pc->ResetFlags(PCF_IN_SPAREN);
+            pc->ResetFlagBits(PCF_IN_SPAREN);
          }
       }
 
@@ -1136,7 +1136,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
          frm.expr_count = 0;
          LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
                  __func__, __LINE__, frm.stmt_count, frm.expr_count);
-         pc->SetFlags(PCF_STMT_START | PCF_EXPR_START);
+         pc->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
          frm.stmt_count = 1;
          frm.expr_count = 1;
          LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 2.marked '%s' as stmt start\n",
@@ -1328,8 +1328,8 @@ static void mark_namespace(Chunk *pns)
          if (numberOfLines > options::indent_namespace_limit())
          {
             LOG_FMT(LTOK, "%s(%d): PCF_LONG_BLOCK is set\n", __func__, __LINE__);
-            pc->SetFlags(PCF_LONG_BLOCK);
-            br_close->SetFlags(PCF_LONG_BLOCK);
+            pc->SetFlagBits(PCF_LONG_BLOCK);
+            br_close->SetFlagBits(PCF_LONG_BLOCK);
          }
       }
       flag_parens(pc, PCF_IN_NAMESPACE, CT_NONE, CT_NAMESPACE, false);
@@ -1349,8 +1349,8 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    chunk.level       = frm.level;
    chunk.pp_level    = frm.pp_level;
    chunk.brace_level = frm.brace_level;
-   chunk.Flags()     = pc->GetFlags() & PCF_COPY_FLAGS;
-   chunk.str         = "";
+   chunk.SetFlags(pc->GetFlags() & PCF_COPY_FLAGS);
+   chunk.str = "";
 
    if (after)
    {
@@ -1367,7 +1367,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
 
    if (!ref->GetFlags().test(PCF_IN_PREPROC))
    {
-      chunk.Flags() &= ~PCF_IN_PREPROC;
+      chunk.ResetFlagBits(PCF_IN_PREPROC);
    }
    bool ref_is_comment = ref->IsComment();      // Issue #3351
 
