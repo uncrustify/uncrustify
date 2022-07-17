@@ -421,11 +421,11 @@ static bool chunk_is_macro_reference(Chunk *pc)
    if (  (  language_is_set(LANG_CPP)
          || language_is_set(LANG_C))
       && pc->Is(CT_WORD)
-      && !pc->GetFlags().test(PCF_IN_PREPROC))
+      && !pc->TestFlags(PCF_IN_PREPROC))
    {
       while (next->IsNotNullChunk())
       {
-         if (  next->GetFlags().test(PCF_IN_PREPROC)
+         if (  next->TestFlags(PCF_IN_PREPROC)
             && std::strcmp(pc->str.c_str(), next->str.c_str()) == 0)
          {
             return(true);
@@ -757,7 +757,7 @@ static Chunk *skip_scope_resolution_and_nested_name_specifiers(Chunk *pc)
    LOG_FUNC_ENTRY();
 
    if (  (  pc != nullptr
-         && pc->GetFlags().test(PCF_IN_TEMPLATE))
+         && pc->TestFlags(PCF_IN_TEMPLATE))
       || pc->Is(CT_DC_MEMBER)
       || pc->Is(CT_TYPE)
       || pc->Is(CT_WORD))
@@ -803,7 +803,7 @@ static Chunk *skip_scope_resolution_and_nested_name_specifiers_rev(Chunk *pc)
    }
 
    if (  (  pc->IsNotNullChunk()
-         && pc->GetFlags().test(PCF_IN_TEMPLATE))
+         && pc->TestFlags(PCF_IN_TEMPLATE))
       || pc->Is(CT_DC_MEMBER)
       || pc->Is(CT_TYPE)
       || pc->Is(CT_WORD))
@@ -1412,7 +1412,7 @@ bool EnumStructUnionParser::is_within_inheritance_list(Chunk *pc) const
    LOG_FUNC_ENTRY();
 
    if (  pc != nullptr
-      && pc->GetFlags().test(PCF_IN_CLASS_BASE))
+      && pc->TestFlags(PCF_IN_CLASS_BASE))
    {
       return(true);
    }
@@ -1433,7 +1433,7 @@ bool EnumStructUnionParser::is_within_where_clause(Chunk *pc) const
    LOG_FUNC_ENTRY();
 
    if (  pc != nullptr
-      && pc->GetFlags().test(PCF_IN_WHERE_SPEC))
+      && pc->TestFlags(PCF_IN_WHERE_SPEC))
    {
       return(true);
    }
@@ -1733,7 +1733,7 @@ void EnumStructUnionParser::mark_extracorporeal_lvalues()
          prev = next->GetPrevNcNnlNi();
 
          if (  prev->IsNullChunk()
-            || (  !prev->GetFlags().test(PCF_IN_TEMPLATE)
+            || (  !prev->TestFlags(PCF_IN_TEMPLATE)
                && prev->IsNot(CT_TEMPLATE)))
          {
             break;
@@ -1747,7 +1747,7 @@ void EnumStructUnionParser::mark_extracorporeal_lvalues()
    while (next != m_end)
    {
       if (  !chunk_is_between(next, body_start, body_end)
-         && next->GetFlags().test(PCF_LVALUE))
+         && next->TestFlags(PCF_LVALUE))
       {
          next->ResetFlagBits(PCF_LVALUE);
       }
@@ -2138,7 +2138,7 @@ void EnumStructUnionParser::parse(Chunk *pc)
    if (  prev->IsNotNullChunk()
       && prev->IsSemicolon()
       && prev->level == m_start->level
-      && !prev->GetFlags().test(PCF_IN_FOR))
+      && !prev->TestFlags(PCF_IN_FOR))
    {
       prev->SetParentType(m_start->GetType());
    }

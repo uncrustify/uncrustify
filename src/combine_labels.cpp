@@ -105,7 +105,7 @@ void combine_labels()
                  __func__, __LINE__, next->orig_line, next->orig_col, next->Text(), get_token_name(next->GetType()));
       }
 
-      if (  !next->GetFlags().test(PCF_IN_OC_MSG) // filter OC case of [self class] msg send
+      if (  !next->TestFlags(PCF_IN_OC_MSG) // filter OC case of [self class] msg send
          && (  next->Is(CT_CLASS)
             || next->Is(CT_OC_CLASS)
             || next->Is(CT_TEMPLATE)))
@@ -141,7 +141,7 @@ void combine_labels()
       }
 
       if (  next->Is(CT_QUESTION)
-         && !next->GetFlags().test(PCF_IN_TEMPLATE))
+         && !next->TestFlags(PCF_IN_TEMPLATE))
       {
          cs.Push_Back(next);
       }
@@ -168,7 +168,7 @@ void combine_labels()
          }
 
          if (  cs_top_is_question(cs, next->level)
-            && next->GetFlags().test(PCF_IN_CONDITIONAL))             // Issue #3558
+            && next->TestFlags(PCF_IN_CONDITIONAL))             // Issue #3558
          {
             //log_pcf_flags(LGUY, next->GetFlags());
             next->SetType(CT_COND_COLON);
@@ -202,7 +202,7 @@ void combine_labels()
                }
             }
          }
-         else if (cur->GetFlags().test(PCF_IN_WHERE_SPEC))
+         else if (cur->TestFlags(PCF_IN_WHERE_SPEC))
          {
             /* leave colons in where-constraint clauses alone */
          }
@@ -252,15 +252,15 @@ void combine_labels()
                   }
                }
             }
-            else if (next->GetFlags().test(PCF_IN_ARRAY_ASSIGN))
+            else if (next->TestFlags(PCF_IN_ARRAY_ASSIGN))
             {
                next->SetType(CT_D_ARRAY_COLON);
             }
-            else if (next->GetFlags().test(PCF_IN_FOR))
+            else if (next->TestFlags(PCF_IN_FOR))
             {
                next->SetType(CT_FOR_COLON);
             }
-            else if (next->GetFlags().test(PCF_OC_BOXED))
+            else if (next->TestFlags(PCF_OC_BOXED))
             {
                next->SetType(CT_OC_DICT_COLON);
             }
@@ -278,7 +278,7 @@ void combine_labels()
                        (tmp->Is(CT_NEWLINE)) ? "<Newline>" : tmp->Text());
                log_pcf_flags(LGUY, tmp->GetFlags());
 
-               if (next->GetFlags().test(PCF_IN_FCN_CALL))
+               if (next->TestFlags(PCF_IN_FCN_CALL))
                {
                   // Must be a macro thingy, assume some sort of label
                   next->SetType(CT_LABEL_COLON);

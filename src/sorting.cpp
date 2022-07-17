@@ -611,7 +611,7 @@ void sort_imports()
             && p_imp->IsNotNullChunk()
             && p_last != nullptr
             && (  p_last->Is(CT_SEMICOLON)
-               || p_imp->GetFlags().test(PCF_IN_PREPROC)))
+               || p_imp->TestFlags(PCF_IN_PREPROC)))
          {
             if (num_chunks < max_number_to_sort)
             {

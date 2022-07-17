@@ -71,8 +71,8 @@ void align_left_shift()
          as.Flush();
          start = Chunk::NullChunkPtr;
       }
-      else if (  !pc->GetFlags().test(PCF_IN_ENUM)
-              && !pc->GetFlags().test(PCF_IN_TYPEDEF)
+      else if (  !pc->TestFlags(PCF_IN_ENUM)
+              && !pc->TestFlags(PCF_IN_TYPEDEF)
               && pc->IsString("<<"))
       {
          if (pc->GetParentType() == CT_OPERATOR)

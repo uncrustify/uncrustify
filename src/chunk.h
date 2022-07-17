@@ -125,6 +125,13 @@ public:
    void SetFlags(pcf_flags_t flags);
 
    /**
+    * @brief Tests if some chunk flags are set
+    * @param flags the flag bits to test
+    * @return true if the specified bits are set, false otherwise
+    */
+   bool TestFlags(pcf_flags_t flags) const;
+
+   /**
     * @brief Resets some of the chunk flag bits
     * @param resetBits the flag bits to reset
     */
@@ -867,6 +874,12 @@ inline void Chunk::SetFlags(pcf_flags_t flags)
 }
 
 
+inline bool Chunk::TestFlags(pcf_flags_t flags) const
+{
+   return(m_flags.test(flags));
+}
+
+
 inline void Chunk::ResetFlagBits(pcf_flags_t resetBits)
 {
    SetResetFlags(resetBits, PCF_NONE);
@@ -950,7 +963,7 @@ inline bool Chunk::IsEmptyText() const
 inline bool Chunk::IsPreproc() const
 {
    return(  IsNotNullChunk()
-         && m_flags.test(PCF_IN_PREPROC));
+         && TestFlags(PCF_IN_PREPROC));
 }
 
 
@@ -1158,7 +1171,7 @@ inline bool Chunk::IsAddress() const
    {
       Chunk *prevc = GetPrev();
 
-      if (  m_flags.test(PCF_IN_TEMPLATE)
+      if (  TestFlags(PCF_IN_TEMPLATE)
          && (  prevc->Is(CT_COMMA)
             || prevc->Is(CT_ANGLE_OPEN)))
       {

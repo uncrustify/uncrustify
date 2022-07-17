@@ -24,7 +24,7 @@ void quick_align_again()
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->ElidedText(copy));
 
       if (  pc->align.next != nullptr
-         && pc->GetFlags().test(PCF_ALIGN_START))
+         && pc->TestFlags(PCF_ALIGN_START))
       {
          AlignStack as;
          as.Start(100, 0);

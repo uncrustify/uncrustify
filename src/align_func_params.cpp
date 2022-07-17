@@ -105,7 +105,7 @@ Chunk *align_func_param(Chunk *start)
       {
          break;
       }
-      else if (pc->GetFlags().test(PCF_VAR_DEF))
+      else if (pc->TestFlags(PCF_VAR_DEF))
       {
          if (chunk_count > 1)
          {
@@ -132,7 +132,7 @@ Chunk *align_func_param(Chunk *start)
       }
       else if (pc->Is(CT_COMMA))
       {
-         if (pc->GetFlags().test(PCF_IN_TEMPLATE))            // Issue #2757
+         if (pc->TestFlags(PCF_IN_TEMPLATE))            // Issue #2757
          {
             LOG_FMT(LFLPAREN, "%s(%d): comma is in template\n",
                     __func__, __LINE__);

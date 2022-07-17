@@ -105,7 +105,7 @@ void flag_cpp_braced_init_list(Chunk *pc, Chunk *next)
 
    // TODO: Move this block to the fix_fcn_call_args function.
    if (  pc->Is(CT_WORD)
-      && pc->GetFlags().test(PCF_IN_FCN_CALL))
+      && pc->TestFlags(PCF_IN_FCN_CALL))
    {
       pc->SetType(CT_TYPE);
    }

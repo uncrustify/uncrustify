@@ -311,7 +311,7 @@ bool chunk_ends_type(Chunk *start)
    bool   last_expr = false;
    bool   last_lval = false;
 
-   bool   a = pc->GetFlags().test(PCF_IN_FCN_CTOR);
+   bool   a = pc->TestFlags(PCF_IN_FCN_CTOR);
 
    if (a)
    {
@@ -341,9 +341,9 @@ bool chunk_ends_type(Chunk *start)
             && (pc->Is(CT_MEMBER))))
       {
          cnt++;
-         last_expr = pc->GetFlags().test(PCF_EXPR_START)
-                     && !pc->GetFlags().test(PCF_IN_FCN_CALL);
-         last_lval = pc->GetFlags().test(PCF_LVALUE);
+         last_expr = pc->TestFlags(PCF_EXPR_START)
+                     && !pc->TestFlags(PCF_IN_FCN_CALL);
+         last_lval = pc->TestFlags(PCF_LVALUE);
          continue;
       }
       /* If a comma is encountered within a template, it must be
@@ -352,7 +352,7 @@ bool chunk_ends_type(Chunk *start)
        */
 
       if (  (  pc->IsSemicolon()
-            && !pc->GetFlags().test(PCF_IN_FOR))
+            && !pc->TestFlags(PCF_IN_FOR))
          || pc->Is(CT_TYPEDEF)
          || pc->Is(CT_BRACE_OPEN)
          || pc->IsBraceClose()
@@ -364,7 +364,7 @@ bool chunk_ends_type(Chunk *start)
          || pc->Is(CT_PP_ENDIF)
          || pc->GetParentType() == CT_PP_INCLUDE                       // Issue #3233
          || (  (  pc->Is(CT_COMMA)
-               && !pc->GetFlags().test(PCF_IN_FCN_CALL)
+               && !pc->TestFlags(PCF_IN_FCN_CALL)
                && get_cpp_template_angle_nest_level(start) ==
                   get_cpp_template_angle_nest_level(pc))
             && last_expr)
@@ -443,7 +443,7 @@ size_t get_cpp_template_angle_nest_level(Chunk *pc)
    }
 
    while (  pc->IsNotNullChunk()
-         && pc->GetFlags().test(PCF_IN_TEMPLATE))
+         && pc->TestFlags(PCF_IN_TEMPLATE))
    {
       if (  pc->Is(CT_ANGLE_CLOSE)
          && pc->GetParentType() == CT_TEMPLATE)
@@ -499,7 +499,7 @@ bool go_on(Chunk *pc, Chunk *start)
       return(false);
    }
 
-   if (pc->GetFlags().test(PCF_IN_FOR))
+   if (pc->TestFlags(PCF_IN_FOR))
    {
       return(  (!pc->IsSemicolon())
             && (!(pc->Is(CT_COLON))));

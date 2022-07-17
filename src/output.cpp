@@ -697,7 +697,7 @@ void output_text(FILE *pfile)
       else if (pc->Is(CT_NL_CONT))
       {
          // FIXME: this really shouldn't be done here!
-         if (!pc->GetFlags().test(PCF_WAS_ALIGNED))
+         if (!pc->TestFlags(PCF_WAS_ALIGNED))
          {
             // Add or remove space before a backslash-newline at the end of a line.
             log_rule_B("sp_before_nl_cont");
@@ -882,7 +882,7 @@ void output_text(FILE *pfile)
             Chunk *prev = pc->GetPrev();
             log_rule_B("align_with_tabs");
             allow_tabs = (  options::align_with_tabs()
-                         && pc->GetFlags().test(PCF_WAS_ALIGNED)
+                         && pc->TestFlags(PCF_WAS_ALIGNED)
                          && ((prev->column + prev->Len() + 1) != pc->column));
 
             log_rule_B("align_keep_tabs");
@@ -1691,7 +1691,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
 
       if (  !options::indent_col1_comment()
          && pc->orig_col == 1
-         && !pc->GetFlags().test(PCF_INSERTED))
+         && !pc->TestFlags(PCF_INSERTED))
       {
          cmt.column    = 1;
          cmt.base_col  = 1;
@@ -2426,7 +2426,7 @@ static void output_comment_multi(Chunk *pc)
             if (  prev_nonempty_line < 0
                && !unc_isspace(line[nwidx])
                && line[nwidx] != '*'    // block comment: skip '*' at end of line
-               && (pc->GetFlags().test(PCF_IN_PREPROC)
+               && (pc->TestFlags(PCF_IN_PREPROC)
                    ? (  line[nwidx] != '\\'
                      || (  line[nwidx + 1] != '\r'
                         && line[nwidx + 1] != '\n'))
@@ -2445,7 +2445,7 @@ static void output_comment_multi(Chunk *pc)
             if (  next_nonempty_line < 0
                && !unc_isspace(pc->str[nxt_idx])
                && pc->str[nxt_idx] != '*'
-               && (pc->GetFlags().test(PCF_IN_PREPROC)
+               && (pc->TestFlags(PCF_IN_PREPROC)
                    ? (  pc->str[nxt_idx] != '\\'
                      || (  pc->str[nxt_idx + 1] != '\r'
                         && pc->str[nxt_idx + 1] != '\n'))
@@ -2566,7 +2566,7 @@ static void output_comment_multi(Chunk *pc)
          {
             nl_end = true;
             line.pop_back();
-            cmt_trim_whitespace(line, pc->GetFlags().test(PCF_IN_PREPROC));
+            cmt_trim_whitespace(line, pc->TestFlags(PCF_IN_PREPROC));
          }
 
          if (line_count == 1)
@@ -3036,7 +3036,7 @@ static bool kw_fcn_fclass(Chunk *cmt, unc_text &out_txt)
       return(false);
    }
 
-   if (fcn->GetFlags().test(PCF_IN_CLASS))
+   if (fcn->TestFlags(PCF_IN_CLASS))
    {
       // if inside a class, we need to find to the class name
       Chunk *tmp = fcn->GetPrevType(CT_BRACE_OPEN, fcn->level - 1);
@@ -3377,7 +3377,7 @@ void add_long_preprocessor_conditional_block_comment()
          continue;
       }
 #if 0
-      if (pc->GetFlags().test(PCF_IN_PREPROC))
+      if (pc->TestFlags(PCF_IN_PREPROC))
       {
          continue;
       }

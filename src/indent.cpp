@@ -324,7 +324,7 @@ void reindent_line(Chunk *pc, size_t column)
          // fix the bug #654
          // connect(&mapper, SIGNAL(mapped(QString &)), this, SLOT(onSomeEvent(QString &)));
          // look for end of SIGNAL/SLOT block
-         if (!pc->GetFlags().test(PCF_IN_QT_MACRO))
+         if (!pc->TestFlags(PCF_IN_QT_MACRO))
          {
             LOG_FMT(LINDLINE, "FLAGS is NOT set: PCF_IN_QT_MACRO\n");
             restore_options_for_QT();
@@ -333,7 +333,7 @@ void reindent_line(Chunk *pc, size_t column)
       else
       {
          // look for begin of SIGNAL/SLOT block
-         if (pc->GetFlags().test(PCF_IN_QT_MACRO))
+         if (pc->TestFlags(PCF_IN_QT_MACRO))
          {
             LOG_FMT(LINDLINE, "FLAGS is set: PCF_IN_QT_MACRO\n");
             save_set_options_for_QT(pc->level);
@@ -758,7 +758,7 @@ void indent_text()
          }
       }
       // Clean up after a #define, etc
-      const bool in_preproc = pc->GetFlags().test(PCF_IN_PREPROC);
+      const bool in_preproc = pc->TestFlags(PCF_IN_PREPROC);
 
       if (!in_preproc)
       {
@@ -1860,8 +1860,8 @@ void indent_text()
          else if (  !options::indent_paren_open_brace()
                  && !language_is_set(LANG_CS)
                  && pc->GetParentType() == CT_CPP_LAMBDA
-                 && (  pc->GetFlags().test(PCF_IN_FCN_DEF)
-                    || pc->GetFlags().test(PCF_IN_FCN_CTOR)) // Issue #2152
+                 && (  pc->TestFlags(PCF_IN_FCN_DEF)
+                    || pc->TestFlags(PCF_IN_FCN_CTOR)) // Issue #2152
                  && pc->GetNextNc()->IsNewline())
          {
             log_rule_B("indent_paren_open_brace");
@@ -1892,7 +1892,7 @@ void indent_text()
             log_indent();
 
             if (  (pc->GetParentType() == CT_OC_BLOCK_EXPR)
-               && pc->GetFlags().test(PCF_IN_OC_MSG))
+               && pc->TestFlags(PCF_IN_OC_MSG))
             {
                frm.top().indent = frm.prev().indent_tmp + indent_size;
                log_indent();
@@ -1911,7 +1911,7 @@ void indent_text()
             {
                log_rule_B("indent_oc_block_msg");
 
-               if (  pc->GetFlags().test(PCF_IN_OC_MSG)
+               if (  pc->TestFlags(PCF_IN_OC_MSG)
                   && options::indent_oc_block_msg())
                {
                   frm.top().ip.ref = oc_msg_block_indent(pc, false, false, false, true);
@@ -1924,7 +1924,7 @@ void indent_text()
                if (  options::indent_oc_block()
                   || options::indent_oc_block_msg_xcode_style())
                {
-                  bool in_oc_msg = pc->GetFlags().test(PCF_IN_OC_MSG);
+                  bool in_oc_msg = pc->TestFlags(PCF_IN_OC_MSG);
                   log_rule_B("indent_oc_block_msg_from_keyword");
                   bool indent_from_keyword = options::indent_oc_block_msg_from_keyword()
                                              && in_oc_msg;
@@ -2007,7 +2007,7 @@ void indent_text()
             else if (  frm.prev().pc->IsOnSameLine(frm.top().pc)
                     && !options::indent_align_paren()
                     && frm.prev().pc->IsParenOpen()
-                    && !pc->GetFlags().test(PCF_ONE_LINER))
+                    && !pc->TestFlags(PCF_ONE_LINER))
             {
                log_rule_B("indent_align_paren");
                // We are inside ({ ... }) -- where { and ( are on the same line, avoiding double indentations.
@@ -2020,7 +2020,7 @@ void indent_text()
             else if (  frm.prev().pc->IsOnSameLine(frm.top().pc->GetPrevNcNnlNpp())
                     && !options::indent_align_paren()
                     && frm.prev().pc->IsParenOpen()
-                    && !pc->GetFlags().test(PCF_ONE_LINER))
+                    && !pc->TestFlags(PCF_ONE_LINER))
             {
                log_rule_B("indent_align_paren");
                // We are inside ({ ... }) -- where { and ( are on adjacent lines, avoiding indentation of brace.
@@ -2195,7 +2195,7 @@ void indent_text()
                      log_indent();
                   }
                }
-               else if (  pc->GetFlags().test(PCF_LONG_BLOCK)
+               else if (  pc->TestFlags(PCF_LONG_BLOCK)
                        || !options::indent_namespace())
                {
                   log_rule_B("indent_namespace");
@@ -2228,7 +2228,7 @@ void indent_text()
             frm.top().indent_tab = frm.top().indent;
          }
 
-         if (pc->GetFlags().test(PCF_DONT_INDENT))
+         if (pc->TestFlags(PCF_DONT_INDENT))
          {
             frm.top().indent = pc->column;
             log_indent();
@@ -2263,7 +2263,7 @@ void indent_text()
             else if (  !chunk_is_newline_between(pc, next)
                     && next->GetParentType() != CT_BRACED_INIT_LIST
                     && options::indent_token_after_brace()
-                    && !pc->GetFlags().test(PCF_ONE_LINER)) // Issue #1108
+                    && !pc->TestFlags(PCF_ONE_LINER)) // Issue #1108
             {
                log_rule_B("indent_token_after_brace");
                frm.top().indent = next->column;
@@ -2632,7 +2632,7 @@ void indent_text()
 
          if (  pc->GetPrev()->IsNewline()
             && pc->column != indent_column
-            && !pc->GetFlags().test(PCF_DONT_INDENT))
+            && !pc->TestFlags(PCF_DONT_INDENT))
          {
             LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, indent => %zu, text is '%s'\n",
                     __func__, __LINE__, pc->orig_line, indent_column, pc->Text());
@@ -2768,7 +2768,7 @@ void indent_text()
          else if (  pc->Is(CT_PAREN_OPEN)
                  && !pc->GetNext()->IsNewline()
                  && !options::indent_align_paren()
-                 && !pc->GetFlags().test(PCF_IN_SPAREN))
+                 && !pc->TestFlags(PCF_IN_SPAREN))
          {
             log_rule_B("indent_align_paren");
             int idx = static_cast<int>(frm.size()) - 2;
@@ -3187,7 +3187,7 @@ void indent_text()
       {
          // don't count returns inside a () or []
          if (  pc->level == pc->brace_level
-            || pc->GetFlags().test(PCF_IN_LAMBDA))
+            || pc->TestFlags(PCF_IN_LAMBDA))
          {
             Chunk *next = pc->GetNext();
 
@@ -3392,7 +3392,7 @@ void indent_text()
       log_rule_B("indent_shift");
 
       if (  options::indent_shift() == 1
-         && !pc->GetFlags().test(PCF_IN_ENUM)
+         && !pc->TestFlags(PCF_IN_ENUM)
          && pc->GetParentType() != CT_OPERATOR
          && !pc->IsComment()
          && pc->IsNot(CT_BRACE_OPEN)
@@ -3471,7 +3471,7 @@ void indent_text()
              || prev_nonl->IsBraceClose()
              || prev_nonl->Is(CT_CASE_COLON)
              || (  prev_nonl->IsNotNullChunk()
-                && prev_nonl->GetFlags().test(PCF_IN_PREPROC)) != pc->GetFlags().test(PCF_IN_PREPROC)
+                && prev_nonl->TestFlags(PCF_IN_PREPROC)) != pc->TestFlags(PCF_IN_PREPROC)
              || prev_nonl->Is(CT_COMMA)
              || is_operator))
          {
@@ -3515,8 +3515,8 @@ void indent_text()
       if (  vardefcol == 0
          && (  pc->Is(CT_WORD)
             || pc->Is(CT_FUNC_CTOR_VAR))
-         && !pc->GetFlags().test(PCF_IN_FCN_DEF)
-         && pc->GetFlags().test(PCF_VAR_1ST_DEF))
+         && !pc->TestFlags(PCF_IN_FCN_DEF)
+         && pc->TestFlags(PCF_VAR_1ST_DEF))
       {
          log_rule_B("indent_continue");
 
@@ -3621,7 +3621,7 @@ void indent_text()
             LOG_FMT(LINDENT2, " tmp->GetFlags(): ");
             log_pcf_flags(LINDENT2, tmp->GetFlags());                   // Issue #2332
 
-            if (  tmp->GetFlags().test(PCF_VAR_DEF)
+            if (  tmp->TestFlags(PCF_VAR_DEF)
                && (  tmp->Is(CT_WORD)
                   || tmp->Is(CT_FUNC_CTOR_VAR)))
             {
@@ -3630,7 +3630,7 @@ void indent_text()
          }
          //LOG_FMT(LINDENT2, "%s(%d): GUY 2:\n", __func__, __LINE__);
 
-         if (pc->GetFlags().test(PCF_DONT_INDENT))
+         if (pc->TestFlags(PCF_DONT_INDENT))
          {
             // no change
          }
@@ -3643,7 +3643,7 @@ void indent_text()
                     pc->Text(), pc->column, sql_col, sql_orig_col);
          }
          else if (  !options::indent_member_single()
-                 && !pc->GetFlags().test(PCF_STMT_START)
+                 && !pc->TestFlags(PCF_STMT_START)
                  && (  pc->Is(CT_MEMBER)
                     || (  pc->Is(CT_DC_MEMBER)
                        && prev->Is(CT_TYPE))
@@ -3939,7 +3939,7 @@ void indent_text()
          }
          else if (pc->Is(CT_SEMICOLON))
          {
-            if (  pc->GetFlags().test(PCF_IN_FOR)
+            if (  pc->TestFlags(PCF_IN_FOR)
                && options::indent_semicolon_for_paren())
             {
                log_rule_B("indent_semicolon_for_paren");
@@ -4249,7 +4249,7 @@ void indent_text()
          }
 
          // Handle indent for variable defs at the top of a block of code
-         if (pc->GetFlags().test(PCF_VAR_TYPE))
+         if (pc->TestFlags(PCF_VAR_TYPE))
          {
             if (  !frm.top().non_vardef
                && (frm.top().type == CT_BRACE_OPEN))
@@ -4502,7 +4502,7 @@ static void indent_comment(Chunk *pc, size_t col)
 
    if (  pc->orig_col == 1
       && !options::indent_col1_comment()
-      && !pc->GetFlags().test(PCF_INSERTED))
+      && !pc->TestFlags(PCF_INSERTED))
    {
       LOG_FMT(LCMTIND, "%s(%d): rule 1 - keep in col 1\n", __func__, __LINE__);
       reindent_line(pc, 1);
@@ -4668,7 +4668,7 @@ bool ifdef_over_whole_file()
       {
          // We should only see the rest of the preprocessor
          if (  pc->Is(CT_PREPROC)
-            || !pc->GetFlags().test(PCF_IN_PREPROC))
+            || !pc->TestFlags(PCF_IN_PREPROC))
          {
             IFstage = 0;
             break;

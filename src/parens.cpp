@@ -102,7 +102,7 @@ void do_parens_assign()                         // Issue #3316
                        __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->GetType()));
 
                //log_pcf_flags(LPARADD, p->GetFlags());
-               if (p->GetFlags().test(PCF_STMT_START))
+               if (p->TestFlags(PCF_STMT_START))
                {
                   break;
                }
@@ -173,7 +173,7 @@ void do_parens_return()                         // Issue #3316
                        __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->GetType()));
 
                //log_pcf_flags(LPARADD, p->GetFlags());
-               if (p->GetFlags().test(PCF_STMT_START))
+               if (p->TestFlags(PCF_STMT_START))
                {
                   break;
                }
@@ -287,7 +287,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
          && pc->IsNotNullChunk()
          && pc != pclose)
    {
-      if (pc->GetFlags().test(PCF_IN_PREPROC))
+      if (pc->TestFlags(PCF_IN_PREPROC))
       {
          LOG_FMT(LPARADD2, " -- bail on PP %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->GetType()),

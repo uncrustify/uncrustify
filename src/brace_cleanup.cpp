@@ -194,7 +194,7 @@ void brace_cleanup()
 
       // Check for leaving a #define body
       if (  braceState.in_preproc != CT_NONE
-         && !pc->GetFlags().test(PCF_IN_PREPROC))
+         && !pc->TestFlags(PCF_IN_PREPROC))
       {
          if (braceState.in_preproc == CT_PP_DEFINE)
          {
@@ -324,14 +324,14 @@ static bool maybe_while_of_do(Chunk *pc)
    Chunk *prev = pc->GetPrevNcNnl();
 
    if (  prev->IsNullChunk()
-      || !prev->GetFlags().test(PCF_IN_PREPROC))
+      || !prev->TestFlags(PCF_IN_PREPROC))
    {
       return(false);
    }
 
    // Find the chunk before the preprocessor
    while (  prev->IsNullChunk()
-         && prev->GetFlags().test(PCF_IN_PREPROC))
+         && prev->TestFlags(PCF_IN_PREPROC))
    {
       prev = prev->GetPrevNcNnl();
    }
@@ -427,7 +427,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       pc->SetFlagBits(PCF_EXPR_START | ((frm.stmt_count == 0) ? PCF_STMT_START : PCF_NONE));
       LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 1.marked '%s' as %s, start stmt_count is %zu, expr_count is %zu\n",
               __func__, __LINE__, pc->orig_line, pc->Text(),
-              pc->GetFlags().test(PCF_STMT_START) ? "stmt" : "expr", frm.stmt_count,
+              pc->TestFlags(PCF_STMT_START) ? "stmt" : "expr", frm.stmt_count,
               frm.expr_count);
    }
    frm.stmt_count++;
@@ -517,7 +517,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       // Make sure the open / close match
       if (pc->IsNot((E_Token)(frm.top().type + 1)))
       {
-         if (pc->GetFlags().test(PCF_IN_PREPROC))                // Issue #3113, #3283
+         if (pc->TestFlags(PCF_IN_PREPROC))                // Issue #3113, #3283
          {
             // do nothing
          }
@@ -1097,7 +1097,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
    atest = frm.top().stage;
 
    if (  pc->IsNot(CT_BRACE_OPEN)
-      && !pc->GetFlags().test(PCF_IN_PREPROC)
+      && !pc->TestFlags(PCF_IN_PREPROC)
       && (  (frm.top().stage == brace_stage_e::BRACE2)
          || (frm.top().stage == brace_stage_e::BRACE_DO)))
    {
@@ -1365,7 +1365,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
       return(nullptr);
    }
 
-   if (!ref->GetFlags().test(PCF_IN_PREPROC))
+   if (!ref->TestFlags(PCF_IN_PREPROC))
    {
       chunk.ResetFlagBits(PCF_IN_PREPROC);
    }
@@ -1384,13 +1384,13 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    }
 
    // Don't back into a preprocessor
-   if (  !pc->GetFlags().test(PCF_IN_PREPROC)
-      && ref->GetFlags().test(PCF_IN_PREPROC))
+   if (  !pc->TestFlags(PCF_IN_PREPROC)
+      && ref->TestFlags(PCF_IN_PREPROC))
    {
       if (ref->Is(CT_PREPROC_BODY))
       {
          while (  ref->IsNotNullChunk()
-               && ref->GetFlags().test(PCF_IN_PREPROC))
+               && ref->TestFlags(PCF_IN_PREPROC))
          {
             ref = ref->GetPrev();
          }

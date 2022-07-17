@@ -173,7 +173,7 @@ void ParseFrame::push(Chunk *pc, const char *func, int line, brace_stage_e stage
    new_entry.indent_cont = top().indent_cont;
    new_entry.stage       = stage;
 
-   new_entry.in_preproc = pc->GetFlags().test(PCF_IN_PREPROC);
+   new_entry.in_preproc = pc->TestFlags(PCF_IN_PREPROC);
    new_entry.non_vardef = false;
    new_entry.ip         = top().ip;
    new_entry.pop_pc     = Chunk::NullChunkPtr;

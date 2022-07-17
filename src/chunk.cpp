@@ -177,10 +177,10 @@ Chunk *Chunk::GetNext(const E_Scope scope) const
       return(pc);
    }
 
-   if (m_flags.test(PCF_IN_PREPROC))
+   if (TestFlags(PCF_IN_PREPROC))
    {
       // If in a preproc, return a null chunk if trying to leave
-      if (!pc->GetFlags().test(PCF_IN_PREPROC))
+      if (!pc->TestFlags(PCF_IN_PREPROC))
       {
          return(NullChunkPtr);
       }
@@ -190,7 +190,7 @@ Chunk *Chunk::GetNext(const E_Scope scope) const
    // Not in a preproc, skip any preproc
    while (  pc != nullptr
          && pc->IsNotNullChunk()
-         && pc->GetFlags().test(PCF_IN_PREPROC))
+         && pc->TestFlags(PCF_IN_PREPROC))
    {
       pc = g_cl.GetNext(pc);
    }
@@ -223,10 +223,10 @@ Chunk *Chunk::GetPrev(const E_Scope scope) const
       return(pc);
    }
 
-   if (m_flags.test(PCF_IN_PREPROC))
+   if (TestFlags(PCF_IN_PREPROC))
    {
       // If in a preproc, return a null chunk if trying to leave
-      if (!pc->GetFlags().test(PCF_IN_PREPROC))
+      if (!pc->TestFlags(PCF_IN_PREPROC))
       {
          return(NullChunkPtr);
       }
@@ -236,7 +236,7 @@ Chunk *Chunk::GetPrev(const E_Scope scope) const
    // Not in a preproc, skip any preproc
    while (  pc != nullptr
          && pc->IsNotNullChunk()
-         && pc->GetFlags().test(PCF_IN_PREPROC))
+         && pc->TestFlags(PCF_IN_PREPROC))
    {
       pc = g_cl.GetPrev(pc);
    }
@@ -354,7 +354,7 @@ Chunk *Chunk::SearchStringLevel(const char *cStr, const size_t len, int cLevel,
 
 Chunk *Chunk::SearchPpa(const T_CheckFnPtr checkFn, const bool cond) const
 {
-   if (!m_flags.test(PCF_IN_PREPROC))
+   if (!TestFlags(PCF_IN_PREPROC))
    {
       // if not in preprocessor, do a regular search
       return(Search(checkFn, E_Scope::ALL, E_Direction::FORWARD, cond));
@@ -363,7 +363,7 @@ Chunk *Chunk::SearchPpa(const T_CheckFnPtr checkFn, const bool cond) const
 
    while (pc->IsNotNullChunk())
    {
-      if (!pc->GetFlags().test(PCF_IN_PREPROC))
+      if (!pc->TestFlags(PCF_IN_PREPROC))
       {
          // Bail if we run off the end of the preprocessor directive, but return
          // the token because the caller may need to know where the search ended
