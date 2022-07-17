@@ -179,7 +179,7 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
 
    const char    *txt = nullptr;
 
-   if (pc->flags.test(PCF_IN_PREPROC))
+   if (pc->GetFlags().test(PCF_IN_PREPROC))
    {
       LOG_FMT(LPF, " <In> ");
       fl_log(LPF, frm);

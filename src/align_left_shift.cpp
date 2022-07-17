@@ -43,7 +43,7 @@ void align_left_shift()
       }
 
       if (  start->IsNotNullChunk()
-         && ((pc->flags & PCF_IN_PREPROC) != (start->flags & PCF_IN_PREPROC)))
+         && ((pc->GetFlags() & PCF_IN_PREPROC) != (start->GetFlags() & PCF_IN_PREPROC)))
       {
          // a change in preproc status restarts the aligning
          as.Flush();
@@ -71,8 +71,8 @@ void align_left_shift()
          as.Flush();
          start = Chunk::NullChunkPtr;
       }
-      else if (  !pc->flags.test(PCF_IN_ENUM)
-              && !pc->flags.test(PCF_IN_TYPEDEF)
+      else if (  !pc->GetFlags().test(PCF_IN_ENUM)
+              && !pc->GetFlags().test(PCF_IN_TYPEDEF)
               && pc->IsString("<<"))
       {
          if (pc->GetParentType() == CT_OPERATOR)

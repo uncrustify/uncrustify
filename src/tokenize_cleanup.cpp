@@ -336,7 +336,7 @@ void tokenize_cleanup()
       }
 
       if (  pc->Is(CT_SEMICOLON)
-         && pc->flags.test(PCF_IN_PREPROC)
+         && pc->GetFlags().test(PCF_IN_PREPROC)
          && !pc->GetNextNcNnl(E_Scope::PREPROC))
       {
          LOG_FMT(LNOTE, "%s(%d): %s:%zu Detected a macro that ends with a semicolon. Possible failures if used.\n",
@@ -721,7 +721,7 @@ void tokenize_cleanup()
             next->SetType(CT_OPERATOR_VAL);
             Chunk::Delete(tmp2);
          }
-         else if (next->flags.test(PCF_PUNCTUATOR))
+         else if (next->GetFlags().test(PCF_PUNCTUATOR))
          {
             next->SetType(CT_OPERATOR_VAL);
          }
@@ -1151,7 +1151,7 @@ void tokenize_cleanup()
          if (prev->Is(CT_TYPE))
          {
             // Issue # 1002
-            if (!pc->flags.test(PCF_IN_TEMPLATE))
+            if (!pc->GetFlags().test(PCF_IN_TEMPLATE))
             {
                pc->SetType(CT_BYREF);
             }
@@ -1350,7 +1350,7 @@ static void check_template(Chunk *start, bool in_type_cast)
 
          if (pc->Is(CT_BRACE_OPEN))
          {
-            if (  !pc->flags.test(PCF_IN_DECLTYPE)
+            if (  !pc->GetFlags().test(PCF_IN_DECLTYPE)
                || !detect_cpp_braced_init_list(pc->GetPrev(), pc))
             {
                break;
@@ -1360,7 +1360,7 @@ static void check_template(Chunk *start, bool in_type_cast)
 
          if (  pc->Is(CT_BRACE_CLOSE)
             && pc->GetParentType() != CT_BRACED_INIT_LIST
-            && !pc->flags.test(PCF_IN_DECLTYPE))
+            && !pc->GetFlags().test(PCF_IN_DECLTYPE))
          {
             break;
          }
@@ -1466,7 +1466,7 @@ static void check_template(Chunk *start, bool in_type_cast)
          }
          else if (pc->Is(CT_BRACE_OPEN))
          {
-            if (  !pc->flags.test(PCF_IN_DECLTYPE)
+            if (  !pc->GetFlags().test(PCF_IN_DECLTYPE)
                || !detect_cpp_braced_init_list(pc->prev, pc))
             {
                break;
@@ -1479,7 +1479,7 @@ static void check_template(Chunk *start, bool in_type_cast)
          }
          else if (  pc->Is(CT_BRACE_CLOSE)
                  && pc->GetParentType() != CT_BRACED_INIT_LIST
-                 && !pc->flags.test(PCF_IN_DECLTYPE))
+                 && !pc->GetFlags().test(PCF_IN_DECLTYPE))
          {
             break;
          }

@@ -127,7 +127,7 @@ void output_parsed(FILE *pfile)
               get_token_name(pc->GetParentType()),
               pc->column, pc->orig_col, pc->orig_col_end,
               pc->brace_level, pc->level, pc->pp_level,
-              pc->flags, pc->nl_count, pc->after_tab);
+              pc->GetFlags(), pc->nl_count, pc->after_tab);
 
       if ((pc->GetType() != CT_NEWLINE) && (pc->len != 0))
       {
@@ -253,7 +253,7 @@ void output_text(FILE *pfile)
             {
                prev       = pc->GetPrev();
                allow_tabs = (cpd.settings[UO_align_with_tabs].b &&
-                             ((pc->flags & PCF_WAS_ALIGNED) != 0) &&
+                             ((pc->GetFlags() & PCF_WAS_ALIGNED) != 0) &&
                              (((pc->column - 1) % cpd.settings[UO_output_tab_size].n) == 0) &&
                              ((prev->column + prev->len + 1) != pc->column));
             }

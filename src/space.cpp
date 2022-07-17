@@ -126,7 +126,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    }
 
    if (  second->Is(CT_POUND)
-      && second->flags.test(PCF_IN_PREPROC)
+      && second->GetFlags().test(PCF_IN_PREPROC)
       && first->GetParentType() != CT_MACRO_FUNC)
    {
       // Add or remove space before preprocessor '#' stringify operator
@@ -692,7 +692,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
 
       // non-punc followed by a ellipsis
-      if (  !first->flags.test(PCF_PUNCTUATOR)
+      if (  !first->GetFlags().test(PCF_PUNCTUATOR)
          && (options::sp_before_ellipsis() != IARF_IGNORE))
       {
          // Add or remove space before the variadic '...' when preceded by a
@@ -968,7 +968,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    if (second->Is(CT_ASSIGN))
    {
-      if (second->flags.test(PCF_IN_ENUM))
+      if (second->GetFlags().test(PCF_IN_ENUM))
       {
          // Add or remove space before assignment '=' in enum.
          // Overrides sp_enum_assign.
@@ -1028,7 +1028,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    if (first->Is(CT_ASSIGN))
    {
-      if (first->flags.test(PCF_IN_ENUM))
+      if (first->GetFlags().test(PCF_IN_ENUM))
       {
          // Add or remove space after assignment '=' in enum.
          // Overrides sp_enum_assign.
@@ -1098,7 +1098,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    if (first->Is(CT_BIT_COLON))
    {
-      if (  first->flags.test(PCF_IN_ENUM)
+      if (  first->GetFlags().test(PCF_IN_ENUM)
          || first->GetParentType() == CT_ENUM)
       {
          // Add or remove space around assignment ':' in enum.
@@ -1109,7 +1109,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    if (second->Is(CT_BIT_COLON))
    {
-      if (  second->flags.test(PCF_IN_ENUM)
+      if (  second->GetFlags().test(PCF_IN_ENUM)
          || second->GetParentType() == CT_ENUM)
       {
          // Add or remove space around assignment ':' in enum.
@@ -1180,7 +1180,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          && second->GetParentType() != CT_CS_SQ_STMT
          && second->GetParentType() != CT_CPP_LAMBDA))
    {
-      if (  second->flags.test(PCF_IN_SPAREN)
+      if (  second->GetFlags().test(PCF_IN_SPAREN)
          && (first->Is(CT_IN)))
       {
          log_rule("FORCE");
@@ -1194,7 +1194,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          return(options::sp_before_square_asm_block());
       }
 
-      if (first->flags.test(PCF_VAR_DEF))
+      if (first->GetFlags().test(PCF_VAR_DEF))
       {
          // Add or remove space before '[' for a variable definition.
          log_rule("sp_before_vardef_square");
@@ -1667,7 +1667,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    }
 
    if (  first->Is(CT_CLASS)
-      && !first->flags.test(PCF_IN_OC_MSG))
+      && !first->GetFlags().test(PCF_IN_OC_MSG))
    {
       log_rule("FORCE");
       return(IARF_FORCE);
@@ -2073,7 +2073,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (  language_is_set(LANG_OC)
       && first->Is(CT_PAREN_CLOSE))
    {
-      if (  first->flags.test(PCF_OC_RTYPE) // == CT_OC_RTYPE)
+      if (  first->GetFlags().test(PCF_OC_RTYPE) // == CT_OC_RTYPE)
          && (  first->GetParentType() == CT_OC_MSG_DECL
             || first->GetParentType() == CT_OC_MSG_SPEC))
       {
@@ -2765,7 +2765,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    }
 
    if (  first->Is(CT_BRACE_CLOSE)
-      && first->flags.test(PCF_IN_TYPEDEF)
+      && first->GetFlags().test(PCF_IN_TYPEDEF)
       && (  first->GetParentType() == CT_ENUM
          || first->GetParentType() == CT_STRUCT
          || first->GetParentType() == CT_UNION))
@@ -2967,7 +2967,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (  language_is_set(LANG_OC)
       && first->Is(CT_OC_COLON))
    {
-      if (first->flags.test(PCF_IN_OC_MSG))
+      if (first->GetFlags().test(PCF_IN_OC_MSG))
       {
          // (OC) Add or remove space after the colon in message specs,
          // i.e. '[object setValue:1];' vs. '[object setValue: 1];'.
@@ -2983,7 +2983,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (  language_is_set(LANG_OC)
       && second->Is(CT_OC_COLON))
    {
-      if (  first->flags.test(PCF_IN_OC_MSG)
+      if (  first->GetFlags().test(PCF_IN_OC_MSG)
          && (  first->Is(CT_OC_MSG_FUNC)
             || first->Is(CT_OC_MSG_NAME)))
       {
@@ -3242,7 +3242,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
 static iarf_e ensure_force_space(Chunk *first, Chunk *second, iarf_e av)
 {
-   if (first->flags.test(PCF_FORCE_SPACE))
+   if (first->GetFlags().test(PCF_FORCE_SPACE))
    {
       LOG_FMT(LSPACE, "%s(%d): <force between '%s' and '%s'>",
               __func__, __LINE__, first->Text(), second->Text());
@@ -3748,8 +3748,8 @@ void space_add_after(Chunk *pc, size_t count)
    Chunk sp;
 
    sp.SetType(CT_SPACE);
-   sp.flags = pc->flags & PCF_COPY_FLAGS;
-   sp.str   = "                ";       // 16 spaces
+   sp.Flags() = pc->GetFlags() & PCF_COPY_FLAGS;
+   sp.str     = "                ";     // 16 spaces
    sp.str.resize(count);
    sp.level       = pc->level;
    sp.brace_level = pc->brace_level;

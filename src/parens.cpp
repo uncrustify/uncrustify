@@ -101,8 +101,8 @@ void do_parens_assign()                         // Issue #3316
                LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
                        __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->GetType()));
 
-               //log_pcf_flags(LPARADD, p->flags);
-               if (p->flags.test(PCF_STMT_START))
+               //log_pcf_flags(LPARADD, p->GetFlags());
+               if (p->GetFlags().test(PCF_STMT_START))
                {
                   break;
                }
@@ -172,8 +172,8 @@ void do_parens_return()                         // Issue #3316
                LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
                        __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->GetType()));
 
-               //log_pcf_flags(LPARADD, p->flags);
-               if (p->flags.test(PCF_STMT_START))
+               //log_pcf_flags(LPARADD, p->GetFlags());
+               if (p->GetFlags().test(PCF_STMT_START))
                {
                   break;
                }
@@ -237,7 +237,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
    pc.orig_line   = first_n->orig_line;
    pc.orig_col    = first_n->orig_col;
    pc.str         = "(";
-   pc.flags       = first_n->flags & PCF_COPY_FLAGS;
+   pc.Flags()     = first_n->GetFlags() & PCF_COPY_FLAGS;
    pc.level       = first_n->level;
    pc.pp_level    = first_n->pp_level;
    pc.brace_level = first_n->brace_level;
@@ -250,7 +250,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
    pc.orig_line   = last_p->orig_line;
    pc.orig_col    = last_p->orig_col;
    pc.str         = ")";
-   pc.flags       = last_p->flags & PCF_COPY_FLAGS;
+   pc.Flags()     = last_p->GetFlags() & PCF_COPY_FLAGS;
    pc.level       = last_p->level;
    pc.pp_level    = last_p->pp_level;
    pc.brace_level = last_p->brace_level;
@@ -287,7 +287,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
          && pc->IsNotNullChunk()
          && pc != pclose)
    {
-      if (pc->flags.test(PCF_IN_PREPROC))
+      if (pc->GetFlags().test(PCF_IN_PREPROC))
       {
          LOG_FMT(LPARADD2, " -- bail on PP %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->GetType()),

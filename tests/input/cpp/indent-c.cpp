@@ -203,7 +203,7 @@ static void indent_pse_push(struct parse_frame& frm, Chunk *pc)
       frm.pse[frm.pse_tos].level      = pc->level;
       frm.pse[frm.pse_tos].open_line  = pc->orig_line;
       frm.pse[frm.pse_tos].ref        = ++ref;
-      frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
+      frm.pse[frm.pse_tos].in_preproc = (pc->GetFlags() & PCF_IN_PREPROC) != 0;
    }
 }
 
@@ -301,7 +301,7 @@ void indent_text(void)
    {
       /* Handle proprocessor transitions */
       was_preproc = in_preproc;
-      in_preproc  = (pc->flags & PCF_IN_PREPROC) != 0;
+      in_preproc  = (pc->GetFlags() & PCF_IN_PREPROC) != 0;
 
       if (cpd.settings[UO_indent_brace_parent].b)
       {
@@ -353,7 +353,7 @@ void indent_text(void)
           */
          if (!pc->IsNewline() &&
              !pc->IsComment() &&
-             ((pc->flags & PCF_IN_PREPROC) == 0) &&
+             ((pc->GetFlags() & PCF_IN_PREPROC) == 0) &&
              (frm.pse[frm.pse_tos].level > pc->level))
          {
             indent_pse_pop(frm, pc);
@@ -532,7 +532,7 @@ void indent_text(void)
             }
          }
 
-         if ((pc->flags & PCF_DONT_INDENT) != 0)
+         if ((pc->GetFlags() & PCF_DONT_INDENT) != 0)
          {
             frm.pse[frm.pse_tos].indent = pc->column;
             indent_column = pc->column;
@@ -718,7 +718,7 @@ void indent_text(void)
          }
          else if ((vardefcol > 0) &&
                   (pc->GetType() == CT_WORD) &&
-                  ((pc->flags & PCF_VAR_DEF) != 0) &&
+                  ((pc->GetFlags() & PCF_VAR_DEF) != 0) &&
                   (prev != NULL) && (prev->GetType() == CT_COMMA))
          {
             LOG_FMT(LINDENT, "%s: %d] Vardefcol => %d\n",
@@ -762,8 +762,8 @@ void indent_text(void)
        * Handle variable definition continuation indenting
        */
       if ((pc->GetType() == CT_WORD) &&
-          ((pc->flags & PCF_IN_FCN_DEF) == 0) &&
-          ((pc->flags & PCF_VAR_1ST_DEF) == PCF_VAR_1ST_DEF))
+          ((pc->GetFlags() & PCF_IN_FCN_DEF) == 0) &&
+          ((pc->GetFlags() & PCF_VAR_1ST_DEF) == PCF_VAR_1ST_DEF))
       {
          vardefcol = pc->column;
       }
@@ -1002,7 +1002,7 @@ void indent_preproc(void)
       {
          /* We should only see the rest of the preprocessor */
          if ((pc->GetType() == CT_PREPROC) ||
-             ((pc->flags & PCF_IN_PREPROC) == 0))
+             ((pc->GetFlags() & PCF_IN_PREPROC) == 0))
          {
             stage = 0;
             break;

@@ -114,6 +114,16 @@ public:
    void SetParent(Chunk *parent);
 
    /**
+    * @brief returns the chunk flags
+    */
+   pcf_flags_t GetFlags() const;
+
+   /**
+    * @brief returns a reference to the chunk flags
+    */
+   pcf_flags_t &Flags();
+
+   /**
     * @brief Resets some of the chunk flags
     * @param resetBits the flag bits to reset
     */
@@ -769,7 +779,6 @@ public:
    size_t       orig_col;                    //! column where chunk started in the input file, is always > 0
    size_t       orig_col_end;                //! column where chunk ended in the input file, is always > 1
    UINT32       orig_prev_sp;                //! whitespace before this token
-   pcf_flags_t  flags;                       //! see PCF_xxx
    size_t       column;                      //! column of chunk
    size_t       column_indent;               /** if 1st on a line, set to the 'indent'
                                               * column, which may be less than the real
@@ -789,9 +798,10 @@ public:
 
 protected:
    // --------- Data members
-   Chunk   *m_parent;                        //! pointer to parent chunk (not always set)
-   E_Token m_type;                           //! type of the chunk itself
-   E_Token m_parentType;                     //! type of the parent chunk usually CT_NONE
+   Chunk       *m_parent;                    //! pointer to parent chunk (not always set)
+   E_Token     m_type;                       //! type of the chunk itself
+   E_Token     m_parentType;                 //! type of the parent chunk usually CT_NONE
+   pcf_flags_t m_flags;                      //! see PCF_xxx
 
 
    // --------- Protected util functions
@@ -844,15 +854,27 @@ inline E_Token Chunk::GetParentType() const
 }
 
 
+inline pcf_flags_t Chunk::GetFlags() const
+{
+   return(m_flags);
+}
+
+
+inline pcf_flags_t &Chunk::Flags()
+{
+   return(m_flags);
+}
+
+
 inline void Chunk::ResetFlags(pcf_flags_t resetBits)
 {
-   SetResetFlags(resetBits, pcf_flags_t());
+   SetResetFlags(resetBits, PCF_NONE);
 }
 
 
 inline void Chunk::SetFlags(pcf_flags_t setBits)
 {
-   SetResetFlags(pcf_flags_t(), setBits);
+   SetResetFlags(PCF_NONE, setBits);
 }
 
 
@@ -927,7 +949,7 @@ inline bool Chunk::IsEmptyText() const
 inline bool Chunk::IsPreproc() const
 {
    return(  IsNotNullChunk()
-         && flags.test(PCF_IN_PREPROC));
+         && m_flags.test(PCF_IN_PREPROC));
 }
 
 
@@ -1135,7 +1157,7 @@ inline bool Chunk::IsAddress() const
    {
       Chunk *prevc = GetPrev();
 
-      if (  flags.test(PCF_IN_TEMPLATE)
+      if (  m_flags.test(PCF_IN_TEMPLATE)
          && (  prevc->Is(CT_COMMA)
             || prevc->Is(CT_ANGLE_OPEN)))
       {
@@ -1219,7 +1241,7 @@ static inline bool chunk_same_preproc(Chunk *pc1, Chunk *pc2)
          || pc1->IsNullChunk()
          || pc2 == nullptr
          || pc2->IsNullChunk()
-         || ((pc1->flags & PCF_IN_PREPROC) == (pc2->flags & PCF_IN_PREPROC)));
+         || ((pc1->GetFlags() & PCF_IN_PREPROC) == (pc2->GetFlags() & PCF_IN_PREPROC)));
 }
 
 

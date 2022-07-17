@@ -50,7 +50,7 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
    {
       LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n   ",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
-      log_pcf_flags(LFCNR, pc->flags);
+      log_pcf_flags(LFCNR, pc->GetFlags());
       auto brace_open = pc->GetNextNcNnl();
 
       if (  brace_open->Is(CT_BRACE_OPEN)
@@ -59,7 +59,7 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
             || brace_open->GetParentType() == CT_RETURN
             || brace_open->GetParentType() == CT_BRACED_INIT_LIST))
       {
-         log_pcf_flags(LFCNR, brace_open->flags);
+         log_pcf_flags(LFCNR, brace_open->GetFlags());
          auto brace_close = next->SkipToMatch();
 
          if (brace_close->Is(CT_BRACE_CLOSE))
@@ -105,7 +105,7 @@ void flag_cpp_braced_init_list(Chunk *pc, Chunk *next)
 
    // TODO: Move this block to the fix_fcn_call_args function.
    if (  pc->Is(CT_WORD)
-      && pc->flags.test(PCF_IN_FCN_CALL))
+      && pc->GetFlags().test(PCF_IN_FCN_CALL))
    {
       pc->SetType(CT_TYPE);
    }

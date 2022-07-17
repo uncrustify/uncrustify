@@ -78,7 +78,7 @@ Chunk *align_trailing_comments(Chunk *start)
    while (  pc->IsNotNullChunk()
          && (nl_count < options::align_right_cmt_span()))
    {
-      if (  pc->flags.test(PCF_RIGHT_COMMENT)
+      if (  pc->GetFlags().test(PCF_RIGHT_COMMENT)
          && pc->column > 1)
       {
          if (  same_level
@@ -225,7 +225,7 @@ void align_right_comments()
 
    while (pc->IsNotNullChunk())
    {
-      if (pc->flags.test(PCF_RIGHT_COMMENT))
+      if (pc->GetFlags().test(PCF_RIGHT_COMMENT))
       {
          pc = align_trailing_comments(pc);
       }

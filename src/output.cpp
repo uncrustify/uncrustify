@@ -526,7 +526,7 @@ void output_parsed(FILE *pfile, bool withOptions)
               pc->brace_level, pc->level, pc->pp_level);
       // Print pc flags in groups of 4 hex characters
       char flag_string[20];
-      sprintf(flag_string, "%12llx", static_cast<pcf_flags_t::int_t>(pc->flags));
+      sprintf(flag_string, "%12llx", static_cast<pcf_flags_t::int_t>(pc->GetFlags()));
       fprintf(pfile, "[%.4s %.4s %.4s]", flag_string, flag_string + 4, flag_string + 8);
       fprintf(pfile, "[%zu-%d]",
               pc->nl_count, pc->after_tab);
@@ -573,7 +573,7 @@ void output_parsed_csv(FILE *pfile)
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
 
-      auto pcf_flag_str = pcf_flags_str(pcf_flag_e(pc->flags));
+      auto pcf_flag_str = pcf_flags_str(pcf_flag_e(pc->GetFlags()));
 #ifdef WIN32
       auto pcf_flag_str_start = pcf_flag_str.find("[") + 1;
 #else // not WIN32
@@ -697,7 +697,7 @@ void output_text(FILE *pfile)
       else if (pc->Is(CT_NL_CONT))
       {
          // FIXME: this really shouldn't be done here!
-         if (!pc->flags.test(PCF_WAS_ALIGNED))
+         if (!pc->GetFlags().test(PCF_WAS_ALIGNED))
          {
             // Add or remove space before a backslash-newline at the end of a line.
             log_rule_B("sp_before_nl_cont");
@@ -882,7 +882,7 @@ void output_text(FILE *pfile)
             Chunk *prev = pc->GetPrev();
             log_rule_B("align_with_tabs");
             allow_tabs = (  options::align_with_tabs()
-                         && pc->flags.test(PCF_WAS_ALIGNED)
+                         && pc->GetFlags().test(PCF_WAS_ALIGNED)
                          && ((prev->column + prev->Len() + 1) != pc->column));
 
             log_rule_B("align_keep_tabs");
@@ -1682,7 +1682,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
    }
    // LOG_FMT(LSYS, "%s: line %zd, brace=%zd base=%zd col=%zd orig=%zd aligned=%x\n",
    //        __func__, pc->orig_line, cmt.brace_col, cmt.base_col, cmt.column, pc->orig_col,
-   //        pc->flags & (PCF_WAS_ALIGNED | PCF_RIGHT_COMMENT));
+   //        pc->GetFlags() & (PCF_WAS_ALIGNED | PCF_RIGHT_COMMENT));
 
    if (  pc->GetParentType() == CT_COMMENT_START
       || pc->GetParentType() == CT_COMMENT_WHOLE)
@@ -1691,7 +1691,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
 
       if (  !options::indent_col1_comment()
          && pc->orig_col == 1
-         && !pc->flags.test(PCF_INSERTED))
+         && !pc->GetFlags().test(PCF_INSERTED))
       {
          cmt.column    = 1;
          cmt.base_col  = 1;
@@ -2426,7 +2426,7 @@ static void output_comment_multi(Chunk *pc)
             if (  prev_nonempty_line < 0
                && !unc_isspace(line[nwidx])
                && line[nwidx] != '*'    // block comment: skip '*' at end of line
-               && (pc->flags.test(PCF_IN_PREPROC)
+               && (pc->GetFlags().test(PCF_IN_PREPROC)
                    ? (  line[nwidx] != '\\'
                      || (  line[nwidx + 1] != '\r'
                         && line[nwidx + 1] != '\n'))
@@ -2445,7 +2445,7 @@ static void output_comment_multi(Chunk *pc)
             if (  next_nonempty_line < 0
                && !unc_isspace(pc->str[nxt_idx])
                && pc->str[nxt_idx] != '*'
-               && (pc->flags.test(PCF_IN_PREPROC)
+               && (pc->GetFlags().test(PCF_IN_PREPROC)
                    ? (  pc->str[nxt_idx] != '\\'
                      || (  pc->str[nxt_idx + 1] != '\r'
                         && pc->str[nxt_idx + 1] != '\n'))
@@ -2566,7 +2566,7 @@ static void output_comment_multi(Chunk *pc)
          {
             nl_end = true;
             line.pop_back();
-            cmt_trim_whitespace(line, pc->flags.test(PCF_IN_PREPROC));
+            cmt_trim_whitespace(line, pc->GetFlags().test(PCF_IN_PREPROC));
          }
 
          if (line_count == 1)
@@ -3036,7 +3036,7 @@ static bool kw_fcn_fclass(Chunk *cmt, unc_text &out_txt)
       return(false);
    }
 
-   if (fcn->flags.test(PCF_IN_CLASS))
+   if (fcn->GetFlags().test(PCF_IN_CLASS))
    {
       // if inside a class, we need to find to the class name
       Chunk *tmp = fcn->GetPrevType(CT_BRACE_OPEN, fcn->level - 1);
@@ -3377,7 +3377,7 @@ void add_long_preprocessor_conditional_block_comment()
          continue;
       }
 #if 0
-      if (pc->flags.test(PCF_IN_PREPROC))
+      if (pc->GetFlags().test(PCF_IN_PREPROC))
       {
          continue;
       }

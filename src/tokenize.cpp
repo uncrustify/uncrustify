@@ -2111,7 +2111,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
    pc.column    = ctx.c.col;
    pc.orig_col  = ctx.c.col;
    pc.nl_count  = 0;
-   pc.flags     = PCF_NONE;
+   pc.Flags()   = PCF_NONE;
 
    // If it is turned off, we put everything except newlines into CT_UNKNOWN
    if (cpd.unc_off)
@@ -2500,7 +2500,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
          pc.str.append(ctx.get());
       }
       pc.SetType(punc->type);
-      pc.flags |= PCF_PUNCTUATOR;
+      pc.Flags() |= PCF_PUNCTUATOR;
       return(true);
    }
    /* When parsing C/C++ files and running into some unknown token,
@@ -2526,7 +2526,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
             pc.str.append(ctx.get());
          }
          pc.SetType(punc->type);
-         pc.flags |= PCF_PUNCTUATOR;
+         pc.Flags() |= PCF_PUNCTUATOR;
          return(true);
       }
    }
@@ -2738,7 +2738,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
 
       if (rprev != nullptr)
       {
-         pc->SetFlags(rprev->flags & PCF_COPY_FLAGS);
+         pc->SetFlags(rprev->GetFlags() & PCF_COPY_FLAGS);
 
          // a newline can't be in a preprocessor
          if (pc->Is(CT_NEWLINE))
@@ -2749,11 +2749,11 @@ void tokenize(const deque<int> &data, Chunk *ref)
 
       if (ref != nullptr)
       {
-         chunk.flags |= PCF_INSERTED;
+         chunk.Flags() |= PCF_INSERTED;
       }
       else
       {
-         chunk.flags &= ~PCF_INSERTED;
+         chunk.Flags() &= ~PCF_INSERTED;
       }
       pc = chunk.CopyAndAddBefore(ref);
 

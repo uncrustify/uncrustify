@@ -32,7 +32,7 @@ void pragma_cleanup()
          {
             LOG_FMT(LMCB, "%s(%d): PREPROC found: orig_line %zu, orig_col is %zu\n",
                     __func__, __LINE__, pc->orig_line, pc->orig_col);
-            log_pcf_flags(LMCB, pc->flags);
+            log_pcf_flags(LMCB, pc->GetFlags());
             preproc_found = true;
          }
       }
@@ -44,7 +44,7 @@ void pragma_cleanup()
             {
                LOG_FMT(LMCB, "%s(%d): PP_PRAGMA found: orig_line %zu, orig_col is %zu\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col);
-               log_pcf_flags(LMCB, pc->flags);
+               log_pcf_flags(LMCB, pc->GetFlags());
                pragma_found = true;
             }
          }
@@ -54,7 +54,7 @@ void pragma_cleanup()
             {
                LOG_FMT(LMCB, "%s(%d): PARAMETER found: orig_line %zu, orig_col is %zu, Text is '%s'\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-               log_pcf_flags(LMCB, pc->flags);
+               log_pcf_flags(LMCB, pc->GetFlags());
 
                if (strcmp(pc->Text(), "endasm") == 0)
                {

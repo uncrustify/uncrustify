@@ -152,7 +152,7 @@ void align_oc_msg_colon(Chunk *so)
       chunk.orig_col    = longest->orig_col;
       chunk.level       = longest->level;
       chunk.brace_level = longest->brace_level;
-      chunk.flags       = longest->flags & PCF_COPY_FLAGS;
+      chunk.Flags()     = longest->GetFlags() & PCF_COPY_FLAGS;
 
       // start at one since we already indent for the '['
       for (size_t idx = 1; idx < len; idx++)

@@ -635,7 +635,7 @@ Chunk *fix_variable_definition(Chunk *start)
 
    LOG_FMT(LFVD, "%s(%d): start at pc->orig_line is %zu, pc->orig_col is %zu\n",
            __func__, __LINE__, pc->orig_line, pc->orig_col);
-   log_pcf_flags(LFCNR, pc->flags);
+   log_pcf_flags(LFCNR, pc->GetFlags());
 
    // Scan for words and types and stars oh my!
    while (  pc->Is(CT_TYPE)
@@ -938,7 +938,7 @@ void mark_define_expressions()
       }
       else
       {
-         if (  !pc->flags.test(PCF_IN_PREPROC)
+         if (  !pc->GetFlags().test(PCF_IN_PREPROC)
             || pc->Is(CT_PREPROC))
          {
             in_define = false;
@@ -1030,7 +1030,7 @@ void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type)
       {
          LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', type is %s, ",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
-         log_pcf_flags(LFCNR, pc->flags);
+         log_pcf_flags(LFCNR, pc->GetFlags());
 
          if (pc->Is(CT_ANGLE_CLOSE))
          {
@@ -1053,7 +1053,7 @@ void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type)
                && pc->IsNot(CT_OPERATOR)
                && pc->IsNot(CT_WORD)
                && pc->IsNot(CT_ADDR))
-            || pc->flags.test(PCF_IN_PREPROC))
+            || pc->GetFlags().test(PCF_IN_PREPROC))
          {
             break;
          }
@@ -1070,7 +1070,7 @@ void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type)
       bool is_return_tuple = false;
 
       if (  pc->Is(CT_PAREN_CLOSE)
-         && !pc->flags.test(PCF_IN_PREPROC))
+         && !pc->GetFlags().test(PCF_IN_PREPROC))
       {
          first           = pc->SkipToMatchRev();
          is_return_tuple = true;
@@ -1118,7 +1118,7 @@ void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type)
       // Back up and mark parent type on friend declarations
       if (  parent_type != CT_NONE
          && first
-         && first->flags.test(PCF_IN_CLASS))
+         && first->GetFlags().test(PCF_IN_CLASS))
       {
          pc = first->GetPrevNcNnlNi();   // Issue #2279
 
@@ -1175,11 +1175,11 @@ void mark_function(Chunk *pc)
    {
       LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
-      log_pcf_flags(LGUY, pc->flags);
+      log_pcf_flags(LGUY, pc->GetFlags());
       Chunk *pc_op = pc->GetPrevType(CT_OPERATOR, pc->level);
 
       if (  pc_op->IsNotNullChunk()
-         && pc_op->flags.test(PCF_EXPR_START))
+         && pc_op->GetFlags().test(PCF_EXPR_START))
       {
          LOG_FMT(LFCN, "%s(%d): (4) SET TO CT_FUNC_CALL: orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
@@ -1200,7 +1200,7 @@ void mark_function(Chunk *pc)
             }
 
             if (  tmp->IsParenOpen()
-               && !pc->flags.test(PCF_IN_PREPROC))               // Issue #2703
+               && !pc->GetFlags().test(PCF_IN_PREPROC))               // Issue #2703
             {
                LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s'\n",
                        __func__, __LINE__, tmp->orig_line, tmp->orig_col, tmp->Text());
@@ -1279,7 +1279,7 @@ void mark_function(Chunk *pc)
            pc->level, pc->brace_level,
            next->Text(), get_token_name(next->GetType()), next->level);
 
-   if (pc->flags.test(PCF_IN_CONST_ARGS))
+   if (pc->GetFlags().test(PCF_IN_CONST_ARGS))
    {
       pc->SetType(CT_FUNC_CTOR_VAR);
       LOG_FMT(LFCN, "%s(%d):   1) Marked [%s] as FUNC_CTOR_VAR on line %zu col %zu\n",
@@ -1518,7 +1518,7 @@ void mark_function(Chunk *pc)
    if (  pc->Is(CT_FUNC_CALL)
       && (  pc->level == pc->brace_level
          || pc->level == 1)
-      && !pc->flags.test(PCF_IN_ARRAY_ASSIGN))
+      && !pc->GetFlags().test(PCF_IN_ARRAY_ASSIGN))
    {
       bool isa_def  = false;
       bool hit_star = false;
@@ -1569,7 +1569,7 @@ void mark_function(Chunk *pc)
             isa_def = true;
          }
 
-         if (prev->flags.test(PCF_IN_PREPROC))
+         if (prev->GetFlags().test(PCF_IN_PREPROC))
          {
             prev = prev->GetPrevNcNnlNpp();
             continue;
@@ -1686,7 +1686,7 @@ void mark_function(Chunk *pc)
                LOG_FMT(LFCN, "%s(%d): prev is '%s', orig_line is %zu, orig_col is %zu, type is %s, parent type is %s\n",
                        __func__, __LINE__, prev->Text(), prev->orig_line, prev->orig_col,
                        get_token_name(prev->GetType()), get_token_name(prev->GetParentType()));
-               log_pcf_flags(LFCN, pc->flags);
+               log_pcf_flags(LFCN, pc->GetFlags());
                isa_def = true;
             }
          }
@@ -1922,7 +1922,7 @@ void mark_function(Chunk *pc)
       tmp = pc;
 
       while (  tmp->IsNotNullChunk()
-            && !tmp->flags.test(PCF_STMT_START))
+            && !tmp->GetFlags().test(PCF_STMT_START))
       {
          tmp = tmp->GetPrevNcNnlNi();   // Issue #2279
       }
@@ -2053,8 +2053,8 @@ void mark_function(Chunk *pc)
             && tmp->IsNot(CT_BRACE_OPEN)
             && tmp->IsNot(CT_SEMICOLON))
       {
-         mark_where_chunk(tmp, pc->GetType(), tmp->flags | in_where_spec_flags);
-         in_where_spec_flags = tmp->flags & PCF_IN_WHERE_SPEC;
+         mark_where_chunk(tmp, pc->GetType(), tmp->GetFlags() | in_where_spec_flags);
+         in_where_spec_flags = tmp->GetFlags() & PCF_IN_WHERE_SPEC;
 
          tmp = tmp->GetNextNcNnl();
       }
@@ -2168,7 +2168,7 @@ bool mark_function_type(Chunk *pc)
       LOG_FMT(LFTYPE, "%s(%d): not followed by '{' or ';'\n", __func__, __LINE__);
       goto nogo_exit;
    }
-   ptp = pc->flags.test(PCF_IN_TYPEDEF) ? CT_FUNC_TYPE : CT_FUNC_VAR;
+   ptp = pc->GetFlags().test(PCF_IN_TYPEDEF) ? CT_FUNC_TYPE : CT_FUNC_VAR;
 
    tmp = pc;
 
@@ -2241,7 +2241,7 @@ bool mark_function_type(Chunk *pc)
 
    if (!anon)
    {
-      if (pc->flags.test(PCF_IN_TYPEDEF))
+      if (pc->GetFlags().test(PCF_IN_TYPEDEF))
       {
          varcnk->SetType(CT_FUNC_TYPE);   // Issue #3402
       }
@@ -2262,7 +2262,7 @@ bool mark_function_type(Chunk *pc)
 
    if (aft->IsSemicolon())
    {
-      aft->SetParentType(aft->flags.test(PCF_IN_TYPEDEF) ? CT_TYPEDEF : CT_FUNC_VAR);
+      aft->SetParentType(aft->GetFlags().test(PCF_IN_TYPEDEF) ? CT_TYPEDEF : CT_FUNC_VAR);
    }
    else if (aft->Is(CT_BRACE_OPEN))
    {
@@ -2279,7 +2279,7 @@ bool mark_function_type(Chunk *pc)
 
       if (*tmp->str.c_str() == '(')
       {
-         if (!pc->flags.test(PCF_IN_TYPEDEF))
+         if (!pc->GetFlags().test(PCF_IN_TYPEDEF))
          {
             tmp->SetFlags(PCF_VAR_1ST_DEF);
          }
@@ -2320,7 +2320,7 @@ void mark_lvalue(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   if (pc->flags.test(PCF_IN_PREPROC))
+   if (pc->GetFlags().test(PCF_IN_PREPROC))
    {
       return;
    }
@@ -2339,7 +2339,7 @@ void mark_lvalue(Chunk *pc)
          || prev->IsString("(")
          || prev->IsString("{")
          || prev->IsString("[")
-         || prev->flags.test(PCF_IN_PREPROC)
+         || prev->GetFlags().test(PCF_IN_PREPROC)
          || prev->GetParentType() == CT_NAMESPACE
          || prev->GetParentType() == CT_TEMPLATE)
       {
@@ -2416,7 +2416,7 @@ void mark_template_func(Chunk *pc, Chunk *pc_next)
    {
       if (after->IsString("("))
       {
-         if (angle_close->flags.test(PCF_IN_FCN_CALL))
+         if (angle_close->GetFlags().test(PCF_IN_FCN_CALL))
          {
             LOG_FMT(LTEMPFUNC, "%s(%d): marking '%s' in line %zu as a FUNC_CALL\n",
                     __func__, __LINE__, pc->Text(), pc->orig_line);
@@ -2478,9 +2478,9 @@ Chunk *mark_variable_definition(Chunk *start)
       if (  pc->Is(CT_WORD)
          || pc->Is(CT_FUNC_CTOR_VAR))
       {
-         auto const orig_flags = pc->flags;
+         auto const orig_flags = pc->GetFlags();
 
-         if (!pc->flags.test(PCF_IN_ENUM))
+         if (!pc->GetFlags().test(PCF_IN_ENUM))
          {
             pc->SetFlags(flags);
          }
@@ -2494,7 +2494,7 @@ Chunk *mark_variable_definition(Chunk *start)
                  __func__, __LINE__, pc->orig_line, pc->Text(),
                  get_token_name(pc->GetType()), pc->orig_col,
                  pcf_flags_str(orig_flags).c_str(),
-                 pcf_flags_str(pc->flags).c_str());
+                 pcf_flags_str(pc->GetFlags()).c_str());
       }
       else if (  !bit_field_colon_is_present                      // Issue #2689
               && (  pc->IsStar()
