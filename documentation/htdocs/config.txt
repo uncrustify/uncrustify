@@ -995,7 +995,7 @@ sp_between_new_paren            = ignore   # ignore/add/remove/force/not_defined
 # Add or remove space between ')' and type in 'new(foo) BAR'.
 sp_after_newop_paren            = ignore   # ignore/add/remove/force/not_defined
 
-# Add or remove space inside parenthesis of the new operator
+# Add or remove space inside parentheses of the new operator
 # as in 'new(foo) BAR'.
 sp_inside_newop_paren           = ignore   # ignore/add/remove/force/not_defined
 
@@ -3107,7 +3107,7 @@ mod_full_brace_nl               = 0        # unsigned number
 #   mod_full_brace_function
 mod_full_brace_nl_block_rem_mlcond = false    # true/false
 
-# Add or remove unnecessary parenthesis on 'return' statement.
+# Add or remove unnecessary parentheses on 'return' statement.
 mod_paren_on_return             = ignore   # ignore/add/remove/force/not_defined
 
 # (Pawn) Whether to change optional semicolons to real semicolons.

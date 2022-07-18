@@ -2160,7 +2160,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
          if (options::sp_inside_newop_paren() != IARF_IGNORE)
          {
-            // Add or remove space inside parenthesis of the new operator
+            // Add or remove space inside parentheses of the new operator
             // as in 'new(foo) BAR'.
             log_rule("sp_inside_newop_paren");
             return(options::sp_inside_newop_paren());
@@ -2194,7 +2194,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
          if (options::sp_inside_newop_paren() != IARF_IGNORE)
          {
-            // Add or remove space inside parenthesis of the new operator
+            // Add or remove space inside parentheses of the new operator
             // as in 'new(foo) BAR'.
             log_rule("sp_inside_newop_paren");
             return(options::sp_inside_newop_paren());
