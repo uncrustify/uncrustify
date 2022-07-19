@@ -2042,6 +2042,9 @@ nl_cpp_ldef_brace               = ignore   # ignore/add/remove/force/not_defined
 # Add or remove newline between 'return' and the return expression.
 nl_return_expr                  = ignore   # ignore/add/remove/force/not_defined
 
+# Add or remove newline between 'throw' and the throw expression.
+nl_throw_expr                   = ignore   # ignore/add/remove/force/not_defined
+
 # Whether to add a newline after semicolons, except in 'for' statements.
 nl_after_semicolon              = false    # true/false
 
@@ -3109,6 +3112,9 @@ mod_full_brace_nl_block_rem_mlcond = false    # true/false
 
 # Add or remove unnecessary parentheses on 'return' statement.
 mod_paren_on_return             = ignore   # ignore/add/remove/force/not_defined
+
+# Add or remove unnecessary parentheses on 'throw' statement.
+mod_paren_on_throw              = ignore   # ignore/add/remove/force/not_defined
 
 # (Pawn) Whether to change optional semicolons to real semicolons.
 mod_pawn_semicolon              = false    # true/false
