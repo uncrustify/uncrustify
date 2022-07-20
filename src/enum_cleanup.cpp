@@ -30,11 +30,11 @@ void enum_cleanup()
 
    while (pc->IsNotNullChunk())
    {
-      if (  get_chunk_parent_type(pc) == CT_ENUM
+      if (  pc->GetParentType() == CT_ENUM
          && pc->Is(CT_BRACE_CLOSE))
       {
          LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s\n",
-                 __func__, __LINE__, pc->orig_line, get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, get_token_name(pc->GetType()));
          Chunk *prev = pc->GetPrevNcNnl();                           // Issue #3604
 
          if (  prev != nullptr
@@ -69,8 +69,8 @@ void enum_cleanup()
                      comma.orig_col  = prev->orig_col + 1;
                      comma.nl_count  = 0;
                      comma.pp_level  = 0;
-                     comma.flags     = PCF_NONE;
-                     comma.str       = ",";
+                     comma.SetFlags(PCF_NONE);
+                     comma.str = ",";
 
                      if (prev->Is(CT_PP_ENDIF))                // Issue #3604
                      {

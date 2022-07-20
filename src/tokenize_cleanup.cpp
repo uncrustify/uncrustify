@@ -95,9 +95,9 @@ static Chunk *handle_double_angle_close(Chunk *pc)
    {
       if (  pc->Is(CT_ANGLE_CLOSE)
          && next->Is(CT_ANGLE_CLOSE)
-         && get_chunk_parent_type(pc) == CT_NONE
+         && pc->GetParentType() == CT_NONE
          && (pc->orig_col_end + 1) == next->orig_col
-         && get_chunk_parent_type(next) == CT_NONE)
+         && next->GetParentType() == CT_NONE)
       {
          pc->str.append('>');
          pc->SetType(CT_SHIFT);
@@ -256,8 +256,8 @@ void tokenize_trailing_return_types()
          }
 
          if (  tmp->Is(CT_FPAREN_CLOSE)
-            && (  get_chunk_parent_type(tmp) == CT_FUNC_PROTO
-               || get_chunk_parent_type(tmp) == CT_FUNC_DEF))
+            && (  tmp->GetParentType() == CT_FUNC_PROTO
+               || tmp->GetParentType() == CT_FUNC_DEF))
          {
             pc->SetType(CT_TRAILING_RET);
             LOG_FMT(LNOTE, "%s(%d): set trailing return type for Text() is '%s'\n",
@@ -336,7 +336,7 @@ void tokenize_cleanup()
       }
 
       if (  pc->Is(CT_SEMICOLON)
-         && pc->flags.test(PCF_IN_PREPROC)
+         && pc->TestFlags(PCF_IN_PREPROC)
          && !pc->GetNextNcNnl(E_Scope::PREPROC))
       {
          LOG_FMT(LNOTE, "%s(%d): %s:%zu Detected a macro that ends with a semicolon. Possible failures if used.\n",
@@ -393,7 +393,7 @@ void tokenize_cleanup()
             if (next->IsNot(CT_ASSIGN))
             {
                LOG_FMT(LERR, "%s(%d): %s:%zu: version: Unexpected token %s\n",
-                       __func__, __LINE__, cpd.filename.c_str(), pc->orig_line, get_token_name(next->type));
+                       __func__, __LINE__, cpd.filename.c_str(), pc->orig_line, get_token_name(next->GetType()));
                cpd.error_count++;
             }
             pc->SetType(CT_WORD);
@@ -502,7 +502,7 @@ void tokenize_cleanup()
       if (  pc->Is(CT_TYPE_CAST)
          && next->Is(CT_ANGLE_OPEN))
       {
-         set_chunk_parent(next, CT_TYPE_CAST);
+         next->SetParentType(CT_TYPE_CAST);
          in_type_cast = true;
       }
 
@@ -513,7 +513,7 @@ void tokenize_cleanup()
 
       // Change angle open/close to CT_COMPARE, if not a template thingy
       if (  pc->Is(CT_ANGLE_OPEN)
-         && pc->parent_type != CT_TYPE_CAST)
+         && pc->GetParentType() != CT_TYPE_CAST)
       {
          /*
           * pretty much all languages except C use <> for something other than
@@ -532,12 +532,12 @@ void tokenize_cleanup()
       }
 
       if (  pc->Is(CT_ANGLE_CLOSE)
-         && pc->parent_type != CT_TEMPLATE)
+         && pc->GetParentType() != CT_TEMPLATE)
       {
          if (in_type_cast)
          {
             in_type_cast = false;
-            set_chunk_parent(pc, CT_TYPE_CAST);
+            pc->SetParentType(CT_TYPE_CAST);
          }
          else
          {
@@ -640,7 +640,7 @@ void tokenize_cleanup()
                || prev->Is(CT_SEMICOLON)))
          {
             pc->SetType(CT_GETSET_EMPTY);
-            set_chunk_parent(next, CT_GETSET);
+            next->SetParentType(CT_GETSET);
          }
          else
          {
@@ -721,7 +721,7 @@ void tokenize_cleanup()
             next->SetType(CT_OPERATOR_VAL);
             Chunk::Delete(tmp2);
          }
-         else if (next->flags.test(PCF_PUNCTUATOR))
+         else if (next->TestFlags(PCF_PUNCTUATOR))
          {
             next->SetType(CT_OPERATOR_VAL);
          }
@@ -768,7 +768,7 @@ void tokenize_cleanup()
 
             next->orig_col_end = next->orig_col + next->Len();
          }
-         set_chunk_parent(next, CT_OPERATOR);
+         next->SetParentType(CT_OPERATOR);
 
          LOG_FMT(LOPERATOR, "%s(%d): %zu:%zu operator '%s'\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, next->Text());
@@ -796,7 +796,7 @@ void tokenize_cleanup()
 
             if ((tmp = next->GetNextNcNnl())->IsNotNullChunk())
             {
-               chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
+               tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
             }
          }
          else
@@ -981,19 +981,19 @@ void tokenize_cleanup()
          {
             next->SetType(CT_OC_CLASS);
          }
-         set_chunk_parent(next, pc->type);
+         next->SetParentType(pc->GetType());
 
          Chunk *tmp = next->GetNextNcNnl();
 
          if (tmp->IsNotNullChunk())
          {
-            chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
+            tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
          }
          tmp = pc->GetNextType(CT_OC_END, pc->level);
 
          if (tmp->IsNotNullChunk())
          {
-            set_chunk_parent(tmp, pc->type);
+            tmp->SetParentType(pc->GetType());
          }
       }
 
@@ -1004,11 +1004,11 @@ void tokenize_cleanup()
          while (  tmp->IsNotNullChunk()
                && tmp->IsNot(CT_OC_END))
          {
-            if (get_token_pattern_class(tmp->type) != pattern_class_e::NONE)
+            if (get_token_pattern_class(tmp->GetType()) != pattern_class_e::NONE)
             {
                LOG_FMT(LOBJCWORD, "%s(%d): @interface %zu:%zu change '%s' (%s) to CT_WORD\n",
                        __func__, __LINE__, pc->orig_line, pc->orig_col, tmp->Text(),
-                       get_token_name(tmp->type));
+                       get_token_name(tmp->GetType()));
                tmp->SetType(CT_WORD);
             }
             tmp = tmp->GetNextNcNnl(E_Scope::PREPROC);
@@ -1022,12 +1022,12 @@ void tokenize_cleanup()
        *   @interface ClassName ()
        *   @implementation ClassName ()
        */
-      if (  (  get_chunk_parent_type(pc) == CT_OC_IMPL
-            || get_chunk_parent_type(pc) == CT_OC_INTF
+      if (  (  pc->GetParentType() == CT_OC_IMPL
+            || pc->GetParentType() == CT_OC_INTF
             || pc->Is(CT_OC_CLASS))
          && next->Is(CT_PAREN_OPEN))
       {
-         set_chunk_parent(next, get_chunk_parent_type(pc));
+         next->SetParentType(pc->GetParentType());
 
          Chunk *tmp = next->GetNext();
 
@@ -1037,19 +1037,19 @@ void tokenize_cleanup()
             if (tmp->Is(CT_PAREN_CLOSE))
             {
                //tmp->SetType(CT_OC_CLASS_EXT);
-               set_chunk_parent(tmp, get_chunk_parent_type(pc));
+               tmp->SetParentType(pc->GetParentType());
             }
             else
             {
                tmp->SetType(CT_OC_CATEGORY);
-               set_chunk_parent(tmp, get_chunk_parent_type(pc));
+               tmp->SetParentType(pc->GetParentType());
             }
          }
          tmp = pc->GetNextType(CT_PAREN_CLOSE, pc->level);
 
          if (tmp->IsNotNullChunk())
          {
-            set_chunk_parent(tmp, get_chunk_parent_type(pc));
+            tmp->SetParentType(pc->GetParentType());
          }
       }
 
@@ -1062,7 +1062,7 @@ void tokenize_cleanup()
       {
          if (next->IsNot(CT_PAREN_OPEN))
          {
-            chunk_flags_set(next, PCF_STMT_START | PCF_EXPR_START);
+            next->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
          }
          else
          {
@@ -1079,24 +1079,24 @@ void tokenize_cleanup()
       if (  pc->Is(CT_OC_SEL)
          && next->Is(CT_PAREN_OPEN))
       {
-         set_chunk_parent(next, pc->type);
+         next->SetParentType(pc->GetType());
 
          Chunk *tmp = next->GetNext();
 
          if (tmp->IsNotNullChunk())
          {
             tmp->SetType(CT_OC_SEL_NAME);
-            set_chunk_parent(tmp, pc->type);
+            tmp->SetParentType(pc->GetType());
 
             while ((tmp = tmp->GetNextNcNnl())->IsNotNullChunk())
             {
                if (tmp->Is(CT_PAREN_CLOSE))
                {
-                  set_chunk_parent(tmp, CT_OC_SEL);
+                  tmp->SetParentType(CT_OC_SEL);
                   break;
                }
                tmp->SetType(CT_OC_SEL_NAME);
-               set_chunk_parent(tmp, pc->type);
+               tmp->SetParentType(pc->GetType());
             }
          }
       }
@@ -1104,7 +1104,7 @@ void tokenize_cleanup()
       // Handle special preprocessor junk
       if (pc->Is(CT_PREPROC))
       {
-         set_chunk_parent(pc, next->type);
+         pc->SetParentType(next->GetType());
       }
 
       // Detect "pragma region" and "pragma endregion"
@@ -1117,7 +1117,7 @@ void tokenize_cleanup()
          {
             pc->SetType((*next->str.c_str() == 'r') ? CT_PP_REGION : CT_PP_ENDREGION);
 
-            set_chunk_parent(prev, pc->type);
+            prev->SetParentType(pc->GetType());
          }
       }
 
@@ -1151,7 +1151,7 @@ void tokenize_cleanup()
          if (prev->Is(CT_TYPE))
          {
             // Issue # 1002
-            if (!pc->flags.test(PCF_IN_TEMPLATE))
+            if (!pc->TestFlags(PCF_IN_TEMPLATE))
             {
                pc->SetType(CT_BYREF);
             }
@@ -1207,7 +1207,7 @@ bool invalid_open_angle_template(Chunk *prev)
          && prev->IsNot(CT_COMMA)
          && prev->IsNot(CT_QUALIFIER)
          && prev->IsNot(CT_OPERATOR_VAL)
-         && get_chunk_parent_type(prev) != CT_OPERATOR);
+         && prev->GetParentType() != CT_OPERATOR);
 }
 
 
@@ -1238,7 +1238,7 @@ static void check_template(Chunk *start, bool in_type_cast)
            pc = pc->GetNextNcNnl(E_Scope::PREPROC))
       {
          LOG_FMT(LTEMPL, "%s(%d): type is %s, level is %zu\n",
-                 __func__, __LINE__, get_token_name(pc->type), level);
+                 __func__, __LINE__, get_token_name(pc->GetType()), level);
 
          if (  (pc->str[0] == '>')
             && (pc->Len() > 1))
@@ -1322,12 +1322,12 @@ static void check_template(Chunk *start, bool in_type_cast)
       if (invalid_open_angle_template(prev))
       {
          LOG_FMT(LTEMPL, "%s(%d): - after type %s + ( - Not a template\n",
-                 __func__, __LINE__, get_token_name(prev->type));
+                 __func__, __LINE__, get_token_name(prev->GetType()));
          start->SetType(CT_COMPARE);
          return;
       }
-      LOG_FMT(LTEMPL, "%s(%d): - prev->type is %s -\n",
-              __func__, __LINE__, get_token_name(prev->type));
+      LOG_FMT(LTEMPL, "%s(%d): - prev->GetType() is %s -\n",
+              __func__, __LINE__, get_token_name(prev->GetType()));
 
       // Scan back and make sure we aren't inside square parenthesis
       bool in_if         = false;
@@ -1350,7 +1350,7 @@ static void check_template(Chunk *start, bool in_type_cast)
 
          if (pc->Is(CT_BRACE_OPEN))
          {
-            if (  !pc->flags.test(PCF_IN_DECLTYPE)
+            if (  !pc->TestFlags(PCF_IN_DECLTYPE)
                || !detect_cpp_braced_init_list(pc->GetPrev(), pc))
             {
                break;
@@ -1359,8 +1359,8 @@ static void check_template(Chunk *start, bool in_type_cast)
          }
 
          if (  pc->Is(CT_BRACE_CLOSE)
-            && get_chunk_parent_type(pc) != CT_BRACED_INIT_LIST
-            && !pc->flags.test(PCF_IN_DECLTYPE))
+            && pc->GetParentType() != CT_BRACED_INIT_LIST
+            && !pc->TestFlags(PCF_IN_DECLTYPE))
          {
             break;
          }
@@ -1401,7 +1401,7 @@ static void check_template(Chunk *start, bool in_type_cast)
          constexpr static auto LCURRENT = LTEMPL;
 
          LOG_FMT(LTEMPL, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, type is %s, num_tokens is %zu\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type), num_tokens);
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->GetType()), num_tokens);
 
          log_rule_B("tok_split_gte");
 
@@ -1410,7 +1410,7 @@ static void check_template(Chunk *start, bool in_type_cast)
             // look for the closing brace
             Chunk *A = pc->SkipToMatch();
             LOG_FMT(LTEMPL, "%s(%d): A->orig_line is %zu, A->orig_col is %zu, type is %s\n",
-                    __func__, __LINE__, A->orig_line, A->orig_col, get_token_name(A->type));
+                    __func__, __LINE__, A->orig_line, A->orig_col, get_token_name(A->GetType()));
             pc = A->GetNext();
          }
 
@@ -1466,7 +1466,7 @@ static void check_template(Chunk *start, bool in_type_cast)
          }
          else if (pc->Is(CT_BRACE_OPEN))
          {
-            if (  !pc->flags.test(PCF_IN_DECLTYPE)
+            if (  !pc->TestFlags(PCF_IN_DECLTYPE)
                || !detect_cpp_braced_init_list(pc->prev, pc))
             {
                break;
@@ -1474,12 +1474,12 @@ static void check_template(Chunk *start, bool in_type_cast)
             auto brace_open  = pc->GetNextNcNnl();
             auto brace_close = brace_open->SkipToMatch();
 
-            set_chunk_parent(brace_open, CT_BRACED_INIT_LIST);
-            set_chunk_parent(brace_close, CT_BRACED_INIT_LIST);
+            brace_open->SetParentType(CT_BRACED_INIT_LIST);
+            brace_close->SetParentType(CT_BRACED_INIT_LIST);
          }
          else if (  pc->Is(CT_BRACE_CLOSE)
-                 && get_chunk_parent_type(pc) != CT_BRACED_INIT_LIST
-                 && !pc->flags.test(PCF_IN_DECLTYPE))
+                 && pc->GetParentType() != CT_BRACED_INIT_LIST
+                 && !pc->TestFlags(PCF_IN_DECLTYPE))
          {
             break;
          }
@@ -1534,17 +1534,17 @@ static void check_template(Chunk *start, bool in_type_cast)
                  __func__, __LINE__, start->orig_line, start->orig_col);
          LOG_FMT(LTEMPL, "%s(%d):     to   orig_line %zu, orig_col %zu\n",
                  __func__, __LINE__, end->orig_line, end->orig_col);
-         set_chunk_parent(start, CT_TEMPLATE);
+         start->SetParentType(CT_TEMPLATE);
 
          check_template_args(start, end);
 
-         set_chunk_parent(end, CT_TEMPLATE);
-         chunk_flags_set(end, PCF_IN_TEMPLATE);
+         end->SetParentType(CT_TEMPLATE);
+         end->SetFlagBits(PCF_IN_TEMPLATE);
          return;
       }
    }
    LOG_FMT(LTEMPL, "%s(%d): - Not a template: end = %s\n",
-           __func__, __LINE__, (end != nullptr) ? get_token_name(end->type) : "<null>");
+           __func__, __LINE__, (end != nullptr) ? get_token_name(end->GetType()) : "<null>");
    start->SetType(CT_COMPARE);
 } // check_template
 
@@ -1574,7 +1574,7 @@ static void check_template_arg(Chunk *start, Chunk *end)
    {
       Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
       // a test "if (next == nullptr)" is not necessary
-      chunk_flags_set(pc, PCF_IN_TEMPLATE);
+      pc->SetFlagBits(PCF_IN_TEMPLATE);
 
       if (  pc->Is(CT_DECLTYPE)
          || pc->Is(CT_SIZEOF))
@@ -1607,7 +1607,7 @@ static void check_template_arg(Chunk *start, Chunk *end)
       {
          Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
          // a test "if (next == nullptr)" is not necessary
-         chunk_flags_set(pc, PCF_IN_TEMPLATE);
+         pc->SetFlagBits(PCF_IN_TEMPLATE);
 
          Chunk *prev  = pc->GetPrevNcNnl(E_Scope::PREPROC);
          Chunk *prev2 = prev->GetPrevNcNnl(E_Scope::PREPROC);
@@ -1638,7 +1638,7 @@ static void check_template_args(Chunk *start, Chunk *end)
         pc->IsNotNullChunk() && pc != end;
         pc = pc->GetNextNcNnl(E_Scope::PREPROC))
    {
-      switch (pc->type)
+      switch (pc->GetType())
       {
       case CT_COMMA:
 
@@ -1652,7 +1652,7 @@ static void check_template_args(Chunk *start, Chunk *end)
 
       case CT_ANGLE_OPEN:
       case CT_PAREN_OPEN:
-         tokens.push_back(pc->type);
+         tokens.push_back(pc->GetType());
          break;
 
       case CT_ANGLE_CLOSE:
@@ -1694,24 +1694,24 @@ static void cleanup_objc_property(Chunk *start)
       LOG_FMT(LTEMPL, "%s(%d): Property is not followed by opening paren\n", __func__, __LINE__);
       return;
    }
-   set_chunk_parent(open_paren, start->type);
+   open_paren->SetParentType(start->GetType());
 
    Chunk *tmp = start->GetNextType(CT_PAREN_CLOSE, start->level);
 
    if (tmp->IsNotNullChunk())
    {
-      set_chunk_parent(tmp, start->type);
+      tmp->SetParentType(start->GetType());
       tmp = tmp->GetNextNcNnl();
 
       if (tmp->IsNotNullChunk())
       {
-         chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
+         tmp->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
 
          tmp = tmp->GetNextType(CT_SEMICOLON, start->level);
 
          if (tmp->IsNotNullChunk())
          {
-            set_chunk_parent(tmp, start->type);
+            tmp->SetParentType(start->GetType());
          }
       }
    }

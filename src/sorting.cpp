@@ -182,7 +182,7 @@ static bool has_dot(const unc_text &chunk_text)
  */
 static unc_text chunk_sort_str(Chunk *pc)
 {
-   if (get_chunk_parent_type(pc) == CT_PP_INCLUDE)
+   if (pc->GetParentType() == CT_PP_INCLUDE)
    {
       return(unc_text{ pc->str, 0, pc->Len() - 1 });
    }
@@ -611,7 +611,7 @@ void sort_imports()
             && p_imp->IsNotNullChunk()
             && p_last != nullptr
             && (  p_last->Is(CT_SEMICOLON)
-               || p_imp->flags.test(PCF_IN_PREPROC)))
+               || p_imp->TestFlags(PCF_IN_PREPROC)))
          {
             if (num_chunks < max_number_to_sort)
             {

@@ -151,7 +151,7 @@ enum log_sev_t
    LINDENTAG = 88, /* indent again */
    LNFD      = 89, /* newline-function-def */
    LJDBI     = 90, /* Java Double Brace Init */
-   LSETPAR   = 91, /* set_chunk_parent() */
+   LSETPAR   = 91, /* Chunk::SetParentTypeReal() */
    LSETTYP   = 92, /* Chunk::SetTypeReal() */
    LSETFLG   = 93, /* set_chunk_flags() */
    LNLFUNCT  = 94, /* newlines before function */

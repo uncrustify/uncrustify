@@ -64,14 +64,91 @@ public:
    //! sets all elements of the struct to their default value
    void Reset();
 
-   //! provides the number of characters of string
+
+   // --------- Access methods
+
+   // @brief returns the number of characters in the string
    size_t Len() const;
 
-   //! provides the content of a string a zero terminated character pointer
+   // @brief returns the content of the string
    const char *Text() const;
 
    // Issue #2984, fill up, if necessary, a copy of the first chars of the Text() string
    const char *ElidedText(char *for_the_copy) const;
+
+   /**
+    * @brief returns the type of the chunk
+    */
+   E_Token GetType() const;
+
+   /**
+    * @brief Sets the chunk type
+    * @param token the type to set
+    * @param func the name of the function from where this method is called (for log purposes)
+    * @param line the line number from where this method is called (for log purposes)
+    */
+   void SetTypeReal(const E_Token token, const char *func, const int line);
+
+   /**
+    * @brief returns the type of the parent chunk
+    */
+   E_Token GetParentType() const;
+
+   /**
+    * @brief Sets the type of the parent chunk
+    * @param token the type to set
+    * @param func the name of the function from where this method is called (for log purposes)
+    * @param line the line number from where this method is called (for log purposes)
+    */
+   void SetParentTypeReal(const E_Token token, const char *func, const int line);
+
+   /**
+    * @brief returns the parent of the chunk
+    */
+   Chunk *GetParent() const;
+
+   /**
+    * @brief Sets the parent of the chunk
+    * @param parent the parent chunk to set
+    */
+   void SetParent(Chunk *parent);
+
+   /**
+    * @brief returns the chunk flags
+    */
+   T_PcfFlags GetFlags() const;
+
+   /**
+    * @brief Sets the chunk flags
+    * @param flags the new chunk flags
+    */
+   void SetFlags(T_PcfFlags flags);
+
+   /**
+    * @brief Tests if some chunk flags are set
+    * @param flags the flag bits to test
+    * @return true if the specified bits are set, false otherwise
+    */
+   bool TestFlags(T_PcfFlags flags) const;
+
+   /**
+    * @brief Resets some of the chunk flag bits
+    * @param resetBits the flag bits to reset
+    */
+   void ResetFlagBits(T_PcfFlags resetBits);
+
+   /**
+    * @brief Sets some of the chunk flag bits
+    * @param setBits the flag bits to set
+    */
+   void SetFlagBits(T_PcfFlags setBits);
+
+   /**
+    * @brief Sets and reset some of the chunk flag bits
+    * @param resetBits the flag bits to reset
+    * @param setBits the flag bits to set
+    */
+   void UpdateFlagBits(T_PcfFlags resetBits, T_PcfFlags setBits);
 
 
    // --------- Get* chunk functions
@@ -241,18 +318,18 @@ public:
 
    /**
     * @brief returns the next chunk of the given type at the level.
-    * @param cType  the type to look for
-    * @param cLevel the level to match or ANY_LEVEL
-    * @param scope  code region to search in
+    * @param type    the type to look for
+    * @param cLevel  the level to match or ANY_LEVEL
+    * @param scope   code region to search in
     * @return pointer to the next matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *GetNextType(const E_Token cType, const int cLevel = ANY_LEVEL, const E_Scope scope = E_Scope::ALL) const;
+   Chunk *GetNextType(const E_Token type, const int cLevel = ANY_LEVEL, const E_Scope scope = E_Scope::ALL) const;
 
    /**
     * @brief returns the prev chunk of the given type at the level.
-    * @param cType  the type to look for
-    * @param cLevel the level to match or ANY_LEVEL
-    * @param scope  code region to search in
+    * @param type    the type to look for
+    * @param cLevel  the level to match or ANY_LEVEL
+    * @param scope   code region to search in
     * @return pointer to the prev matching chunk or Chunk::NullChunkPtr if no chunk was found
     */
    Chunk *GetPrevType(const E_Token type, int level = ANY_LEVEL, E_Scope scope = E_Scope::ALL) const;
@@ -374,13 +451,13 @@ public:
     *
     * This function is a specialization of Chunk::Search.
     *
-    * @param cType  category to search for
+    * @param type   category to search for
     * @param scope  code parts to consider for search
     * @param dir    search direction
     * @param cLevel nesting level to match or ANY_LEVEL
     * @return pointer to the found chunk or Chunk::NullChunkPtr if no chunk was found
     */
-   Chunk *SearchTypeLevel(const E_Token cType, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const int cLevel = ANY_LEVEL) const;
+   Chunk *SearchTypeLevel(const E_Token type, const E_Scope scope = E_Scope::ALL, const E_Direction dir = E_Direction::FORWARD, const int cLevel = ANY_LEVEL) const;
 
    /**
     * @brief searches a chunk that holds a specific string
@@ -525,7 +602,7 @@ public:
     * @param level nesting level to match
     * @return true if the chunk matches a given type and level
     */
-   bool IsTypeAndLevel(const E_Token cType, const int cLevel) const;
+   bool IsTypeAndLevel(const E_Token type, const int cLevel) const;
 
    /**
     * @brief checks whether the chunk matches a given string and level
@@ -698,31 +775,18 @@ public:
     */
    void SwapLines(Chunk *other);
 
-   /**
-    * @brief Set the chunk type
-    * @param token the type to set
-    * @param func the name of the function from where this method is called (for log purposes)
-    * @param line the line number from where this method is called (for log purposes)
-    */
-   void SetTypeReal(const E_Token token, const char *func, const int line);
-
 
    // --------- Data members
 
    Chunk        *next;                       //! pointer to next chunk in list
    Chunk        *prev;                       //! pointer to previous chunk in list
-   Chunk        *parent;                     //! pointer to parent chunk(not always set)
 
    align_ptr_t  align;
    indent_ptr_t indent;
-   E_Token      type;                        //! type of the chunk itself
-   E_Token      parent_type;                 //! type of the parent chunk usually CT_NONE
-   //! might be different from parent->parent_type (above)
    size_t       orig_line;                   //! line number of chunk in input file
    size_t       orig_col;                    //! column where chunk started in the input file, is always > 0
    size_t       orig_col_end;                //! column where chunk ended in the input file, is always > 1
    UINT32       orig_prev_sp;                //! whitespace before this token
-   pcf_flags_t  flags;                       //! see PCF_xxx
    size_t       column;                      //! column of chunk
    size_t       column_indent;               /** if 1st on a line, set to the 'indent'
                                               * column, which may be less than the real
@@ -741,9 +805,21 @@ public:
 
 
 protected:
-   void copyFrom(const Chunk &o);              // !!! partial copy: chunk is not linked to others
+   // --------- Data members
+   Chunk      *m_parent;                    //! pointer to parent chunk (not always set)
+   E_Token    m_type;                       //! type of the chunk itself
+   E_Token    m_parentType;                 //! type of the parent chunk usually CT_NONE
+   T_PcfFlags m_flags;                      //! see PCF_xxx
 
-   // --------- Private util functions
+
+   // --------- Protected util functions
+
+   /**
+    * @brief copy the values from another chunk.
+    * @NOTE: this is a partial copy only: the chunk is not linked to others
+    * @param o the chunk to copy from
+    */
+   void CopyFrom(const Chunk &o);
 
    /**
     * @brief add a copy of this chunk before/after the given position in a chunk list.
@@ -755,17 +831,78 @@ protected:
     */
    Chunk *CopyAndAdd(Chunk *pos, const E_Direction dir = E_Direction::FORWARD) const;
 
+   /**
+    * @brief set and/or clear the chunk flags
+    * @param setBits the flag bits to set
+    * @param resetBits the flag bits to reset
+    */
+   void SetResetFlags(T_PcfFlags resetBits, T_PcfFlags setBits);
+
 
 private:
    const bool null_chunk;                      //! true for null chunks
 };
 
 
-inline bool Chunk::IsTypeAndLevel(const E_Token cType, const int cLevel) const
+inline Chunk *Chunk::GetParent() const
+{
+   return(m_parent);
+}
+
+
+inline E_Token Chunk::GetType() const
+{
+   return(m_type);
+}
+
+
+inline E_Token Chunk::GetParentType() const
+{
+   return(m_parentType);
+}
+
+
+inline T_PcfFlags Chunk::GetFlags() const
+{
+   return(m_flags);
+}
+
+
+inline void Chunk::SetFlags(T_PcfFlags flags)
+{
+   m_flags = flags;
+}
+
+
+inline bool Chunk::TestFlags(T_PcfFlags flags) const
+{
+   return(m_flags.test(flags));
+}
+
+
+inline void Chunk::ResetFlagBits(T_PcfFlags resetBits)
+{
+   SetResetFlags(resetBits, PCF_NONE);
+}
+
+
+inline void Chunk::SetFlagBits(T_PcfFlags setBits)
+{
+   SetResetFlags(PCF_NONE, setBits);
+}
+
+
+inline void Chunk::UpdateFlagBits(T_PcfFlags resetBits, T_PcfFlags setBits)
+{
+   SetResetFlags(resetBits, setBits);
+}
+
+
+inline bool Chunk::IsTypeAndLevel(const E_Token type, const int cLevel) const
 {
    return(  (  cLevel < 0
             || level == static_cast<size_t>(cLevel))
-         && type == cType);
+         && m_type == type);
 }
 
 
@@ -785,7 +922,7 @@ inline bool Chunk::IsStringAndLevel(const char *cStr, const size_t len,
 inline bool Chunk::Is(E_Token token) const
 {
    return(  IsNotNullChunk()
-         && type == token);
+         && m_type == token);
 }
 
 
@@ -826,7 +963,7 @@ inline bool Chunk::IsEmptyText() const
 inline bool Chunk::IsPreproc() const
 {
    return(  IsNotNullChunk()
-         && flags.test(PCF_IN_PREPROC));
+         && TestFlags(PCF_IN_PREPROC));
 }
 
 
@@ -910,7 +1047,7 @@ inline Chunk *Chunk::SkipToMatch(E_Scope scope) const
       || Is(CT_ANGLE_OPEN)
       || Is(CT_SQUARE_OPEN))
    {
-      return(GetNextType((E_Token)(type + 1), level, scope));
+      return(GetNextType((E_Token)(m_type + 1), level, scope));
    }
    return(const_cast<Chunk *>(this));
 }
@@ -927,7 +1064,7 @@ inline Chunk *Chunk::SkipToMatchRev(E_Scope scope) const
       || Is(CT_ANGLE_CLOSE)
       || Is(CT_SQUARE_CLOSE))
    {
-      return(GetPrevType((E_Token)(type - 1), level, scope));
+      return(GetPrevType((E_Token)(m_type - 1), level, scope));
    }
    return(const_cast<Chunk *>(this));
 }
@@ -1034,7 +1171,7 @@ inline bool Chunk::IsAddress() const
    {
       Chunk *prevc = GetPrev();
 
-      if (  flags.test(PCF_IN_TEMPLATE)
+      if (  TestFlags(PCF_IN_TEMPLATE)
          && (  prevc->Is(CT_COMMA)
             || prevc->Is(CT_ANGLE_OPEN)))
       {
@@ -1118,7 +1255,7 @@ static inline bool chunk_same_preproc(Chunk *pc1, Chunk *pc2)
          || pc1->IsNullChunk()
          || pc2 == nullptr
          || pc2->IsNullChunk()
-         || ((pc1->flags & PCF_IN_PREPROC) == (pc2->flags & PCF_IN_PREPROC)));
+         || ((pc1->GetFlags() & PCF_IN_PREPROC) == (pc2->GetFlags() & PCF_IN_PREPROC)));
 }
 
 
@@ -1202,31 +1339,10 @@ inline bool Chunk::IsEnum() const
 }
 
 
-void set_chunk_parent_real(Chunk *pc, E_Token tt, const char *func, int line);
+#define SetType(tt)          SetTypeReal((tt), __unqualified_func__, __LINE__)
 
 
-#define SetType(tt)                 SetTypeReal((tt), __unqualified_func__, __LINE__)
-
-
-#define set_chunk_parent(pc, tt)    set_chunk_parent_real((pc), (tt), __unqualified_func__, __LINE__)
-
-
-E_Token get_chunk_parent_type(Chunk *pc);
-
-
-void chunk_flags_set_real(Chunk *pc, pcf_flags_t clr_bits, pcf_flags_t set_bits);
-
-
-#define chunk_flags_upd(pc, cc, ss)    chunk_flags_set_real((pc), (cc), (ss))
-
-
-#define chunk_flags_set(pc, ss)        chunk_flags_set_real((pc), {}, (ss))
-
-
-#define chunk_flags_clr(pc, cc)        chunk_flags_set_real((pc), (cc), {})
-
-
-void chunk_set_parent(Chunk *pc, Chunk *parent);
+#define SetParentType(tt)    SetParentTypeReal((tt), __unqualified_func__, __LINE__)
 
 
 E_Token get_type_of_the_parent(Chunk *pc);

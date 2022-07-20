@@ -73,7 +73,7 @@ void align_func_proto(size_t span)
       char copy[1000];
       LOG_FMT(LAS, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, level is %zu, brace_level is %zu\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy),
-              get_token_name(pc->type), pc->level, pc->brace_level);
+              get_token_name(pc->GetType()), pc->level, pc->brace_level);
 
       // make the vector larger if necessary
       if (  pc->level >= num_of_column                             // Issue #2960
@@ -93,7 +93,7 @@ void align_func_proto(size_t span)
       }
 
       if (  pc->IsNewline()
-         && !pc->flags.test(PCF_IN_FCN_CALL))                 // Issue #2831
+         && !pc->TestFlags(PCF_IN_FCN_CALL))                 // Issue #2831
       {
          look_bro = false;
          AlignStack *stack_at_l_bl = many_as.at(pc->level).at(pc->brace_level);
@@ -147,7 +147,7 @@ void align_func_proto(size_t span)
          log_rule_B("align_single_line_func");
          log_rule_B("align_on_operator");
 
-         if (  get_chunk_parent_type(pc) == CT_OPERATOR
+         if (  pc->GetParentType() == CT_OPERATOR
             && options::align_on_operator())
          {
             toadd = pc->GetPrevNcNnl();
@@ -182,7 +182,7 @@ void align_func_proto(size_t span)
       }
       else if (  look_bro
               && pc->Is(CT_BRACE_OPEN)
-              && pc->flags.test(PCF_ONE_LINER))
+              && pc->TestFlags(PCF_ONE_LINER))
       {
          AlignStack *stack_at_l_bl_brace = many_as_brace.at(pc->level).at(pc->brace_level);
 

@@ -61,7 +61,7 @@ enum log_sev_t
    LCMTIND   = 30,  //! Comment Indent
    LINDLINE  = 31,  //! indent line
    LSIB      = 32,  //! Scan IB
-   LRETURN   = 33,  //! add/remove parens for return
+   LRETURN   = 33,  //! add/remove parens for return or throw
    LBRDEL    = 34,  //! brace removal
    LFCN      = 35,  //! function detection
    LFCNP     = 36,  //! function parameters
@@ -119,7 +119,7 @@ enum log_sev_t
    LINDENTAG = 88,  //! indent again
    LNFD      = 89,  //! newline-function-def
    LJDBI     = 90,  //! Java Double Brace Init
-   LSETPAR   = 91,  //! set_chunk_parent()
+   LSETPAR   = 91,  //! Chunk::SetParentTypeReal()
    LSETTYP   = 92,  //! Chunk::SetTypeReal()
    LSETFLG   = 93,  //! set_chunk_flags()
    LNLFUNCT  = 94,  //! newlines before function

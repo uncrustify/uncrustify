@@ -163,7 +163,7 @@ void ParseFrame::push(Chunk *pc, const char *func, int line, brace_stage_e stage
 
    ContainerType new_entry = {};
 
-   new_entry.type      = pc->type;
+   new_entry.type      = pc->GetType();
    new_entry.level     = pc->level;
    new_entry.open_line = pc->orig_line;
    new_entry.open_colu = pc->orig_col;
@@ -173,7 +173,7 @@ void ParseFrame::push(Chunk *pc, const char *func, int line, brace_stage_e stage
    new_entry.indent_cont = top().indent_cont;
    new_entry.stage       = stage;
 
-   new_entry.in_preproc = pc->flags.test(PCF_IN_PREPROC);
+   new_entry.in_preproc = pc->TestFlags(PCF_IN_PREPROC);
    new_entry.non_vardef = false;
    new_entry.ip         = top().ip;
    new_entry.pop_pc     = Chunk::NullChunkPtr;
@@ -186,13 +186,13 @@ void ParseFrame::push(Chunk *pc, const char *func, int line, brace_stage_e stage
    LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d) Add is %4zu: orig_line is %4zu, orig_col is %4zu, type is %12s, "
            "brace_level is %2zu, level is %2zu, pse_tos: %2zu -> %2zu\n",
            func, line, (size_t)this, pc->orig_line, pc->orig_col,
-           get_token_name(pc->type), pc->brace_level, pc->level,
+           get_token_name(pc->GetType()), pc->brace_level, pc->level,
            (pse.size() - 2), (pse.size() - 1));
 #else /* DEBUG_PUSH_POP */
    LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d): orig_line is %4zu, orig_col is %4zu, type is %12s, "
            "brace_level is %2zu, level is %2zu, pse_tos: %2zu -> %2zu\n",
            func, line, pc->orig_line, pc->orig_col,
-           get_token_name(pc->type), pc->brace_level, pc->level,
+           get_token_name(pc->GetType()), pc->brace_level, pc->level,
            (pse.size() - 2), (pse.size() - 1));
 #endif /* DEBUG_PUSH_POP */
 }
@@ -209,56 +209,56 @@ void ParseFrame::pop(const char *func, int line, Chunk *pc)
 //                        + "the stack index is already zero");
 //   }
 
-   if (  pc->type == CT_PAREN_CLOSE
-      || pc->type == CT_BRACE_CLOSE
-      || pc->type == CT_VBRACE_CLOSE
-      || pc->type == CT_FPAREN_CLOSE
-      || pc->type == CT_LPAREN_CLOSE
-      || pc->type == CT_SPAREN_CLOSE
-      || pc->type == CT_CLASS_COLON
-      || pc->type == CT_ANGLE_CLOSE
-      || pc->type == CT_SEMICOLON
-      || pc->type == CT_SQUARE_CLOSE)
+   if (  pc->GetType() == CT_PAREN_CLOSE
+      || pc->GetType() == CT_BRACE_CLOSE
+      || pc->GetType() == CT_VBRACE_CLOSE
+      || pc->GetType() == CT_FPAREN_CLOSE
+      || pc->GetType() == CT_LPAREN_CLOSE
+      || pc->GetType() == CT_SPAREN_CLOSE
+      || pc->GetType() == CT_CLASS_COLON
+      || pc->GetType() == CT_ANGLE_CLOSE
+      || pc->GetType() == CT_SEMICOLON
+      || pc->GetType() == CT_SQUARE_CLOSE)
    {
       LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig_line is %4zu, orig_col is %4zu, type is %12s, pushed with\n",
-              func, line, pc->orig_line, pc->orig_col, get_token_name(pc->type));
+              func, line, pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
    }
-   else if (  pc->type == CT_ACCESS
-           || pc->type == CT_ASSIGN
-           || pc->type == CT_BRACE_OPEN
-           || pc->type == CT_BOOL
-           || pc->type == CT_CASE
-           || pc->type == CT_COMMA
-           || pc->type == CT_COMMENT
-           || pc->type == CT_COMMENT_CPP
-           || pc->type == CT_COMMENT_MULTI
-           || pc->type == CT_COND_COLON
-           || pc->type == CT_FPAREN_OPEN
-           || pc->type == CT_PAREN_OPEN
-           || pc->type == CT_TPAREN_OPEN
-           || pc->type == CT_MACRO_CLOSE
-           || pc->type == CT_MACRO_OPEN
-           || pc->type == CT_NEWLINE
-           || pc->type == CT_NONE
-           || pc->type == CT_OC_END
-           || pc->type == CT_OC_MSG_NAME
-           || pc->type == CT_OC_SCOPE
-           || pc->type == CT_PREPROC
-           || pc->type == CT_SQUARE_OPEN
-           || pc->type == CT_SQL_END
-           || pc->type == CT_TYPEDEF
-           || pc->type == CT_VSEMICOLON
-           || pc->type == CT_WORD)
+   else if (  pc->GetType() == CT_ACCESS
+           || pc->GetType() == CT_ASSIGN
+           || pc->GetType() == CT_BRACE_OPEN
+           || pc->GetType() == CT_BOOL
+           || pc->GetType() == CT_CASE
+           || pc->GetType() == CT_COMMA
+           || pc->GetType() == CT_COMMENT
+           || pc->GetType() == CT_COMMENT_CPP
+           || pc->GetType() == CT_COMMENT_MULTI
+           || pc->GetType() == CT_COND_COLON
+           || pc->GetType() == CT_FPAREN_OPEN
+           || pc->GetType() == CT_PAREN_OPEN
+           || pc->GetType() == CT_TPAREN_OPEN
+           || pc->GetType() == CT_MACRO_CLOSE
+           || pc->GetType() == CT_MACRO_OPEN
+           || pc->GetType() == CT_NEWLINE
+           || pc->GetType() == CT_NONE
+           || pc->GetType() == CT_OC_END
+           || pc->GetType() == CT_OC_MSG_NAME
+           || pc->GetType() == CT_OC_SCOPE
+           || pc->GetType() == CT_PREPROC
+           || pc->GetType() == CT_SQUARE_OPEN
+           || pc->GetType() == CT_SQL_END
+           || pc->GetType() == CT_TYPEDEF
+           || pc->GetType() == CT_VSEMICOLON
+           || pc->GetType() == CT_WORD)
    {
       LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig_line is %4zu, orig_col is %4zu, type is %12s\n",
-              func, line, pc->orig_line, pc->orig_col, get_token_name(pc->type));
+              func, line, pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
    }
    else
    {
       LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig_line is %4zu, orig_col is %4zu, type is %12s,\n",
-              func, line, pc->orig_line, pc->orig_col, get_token_name(pc->type));
+              func, line, pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
       LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): the type is %s, is not coded. Please make a call.\n",
-              func, line, get_token_name(pc->type));
+              func, line, get_token_name(pc->GetType()));
       log_flush(true);
       exit(EX_SOFTWARE);
    }

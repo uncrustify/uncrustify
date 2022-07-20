@@ -45,30 +45,30 @@ void remove_extra_semicolons()
       Chunk *prev;
 
       if (  pc->Is(CT_SEMICOLON)
-         && !pc->flags.test(PCF_IN_PREPROC)
+         && !pc->TestFlags(PCF_IN_PREPROC)
          && (prev = pc->GetPrevNcNnl())->IsNotNullChunk())
       {
          LOG_FMT(LSCANSEMI, "%s(%d): Semi orig_line is %zu, orig_col is %zu, parent is %s, prev = '%s' [%s/%s]\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(get_chunk_parent_type(pc)),
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->GetParentType()),
                  prev->Text(),
-                 get_token_name(prev->type), get_token_name(get_chunk_parent_type(prev)));
+                 get_token_name(prev->GetType()), get_token_name(prev->GetParentType()));
 
-         if (get_chunk_parent_type(pc) == CT_TYPEDEF)
+         if (pc->GetParentType() == CT_TYPEDEF)
          {
             // keep it
          }
          else if (  prev->Is(CT_BRACE_CLOSE)
-                 && (  get_chunk_parent_type(prev) == CT_IF
-                    || get_chunk_parent_type(prev) == CT_ELSEIF
-                    || get_chunk_parent_type(prev) == CT_ELSE
-                    || get_chunk_parent_type(prev) == CT_SWITCH
-                    || get_chunk_parent_type(prev) == CT_WHILE
-                    || get_chunk_parent_type(prev) == CT_USING_STMT
-                    || get_chunk_parent_type(prev) == CT_FOR
-                    || get_chunk_parent_type(prev) == CT_FUNC_DEF
-                    || get_chunk_parent_type(prev) == CT_OC_MSG_DECL
-                    || get_chunk_parent_type(prev) == CT_FUNC_CLASS_DEF
-                    || get_chunk_parent_type(prev) == CT_NAMESPACE))
+                 && (  prev->GetParentType() == CT_IF
+                    || prev->GetParentType() == CT_ELSEIF
+                    || prev->GetParentType() == CT_ELSE
+                    || prev->GetParentType() == CT_SWITCH
+                    || prev->GetParentType() == CT_WHILE
+                    || prev->GetParentType() == CT_USING_STMT
+                    || prev->GetParentType() == CT_FOR
+                    || prev->GetParentType() == CT_FUNC_DEF
+                    || prev->GetParentType() == CT_OC_MSG_DECL
+                    || prev->GetParentType() == CT_FUNC_CLASS_DEF
+                    || prev->GetParentType() == CT_NAMESPACE))
          {
             // looking for code block vs. initialisation
             bool  code_block_found = true;
@@ -101,24 +101,24 @@ void remove_extra_semicolons()
             }
          }
          else if (  prev->Is(CT_BRACE_CLOSE)
-                 && get_chunk_parent_type(prev) == CT_NONE)
+                 && prev->GetParentType() == CT_NONE)
          {
             check_unknown_brace_close(pc, prev);
          }
          else if (  prev->Is(CT_SEMICOLON)
-                 && get_chunk_parent_type(prev) != CT_FOR)
+                 && prev->GetParentType() != CT_FOR)
          {
             remove_semicolon(pc);
          }
          else if (  language_is_set(LANG_D)
-                 && (  get_chunk_parent_type(prev) == CT_ENUM
-                    || get_chunk_parent_type(prev) == CT_UNION
-                    || get_chunk_parent_type(prev) == CT_STRUCT))
+                 && (  prev->GetParentType() == CT_ENUM
+                    || prev->GetParentType() == CT_UNION
+                    || prev->GetParentType() == CT_STRUCT))
          {
             remove_semicolon(pc);
          }
          else if (  language_is_set(LANG_JAVA)
-                 && get_chunk_parent_type(prev) == CT_SYNCHRONIZED)
+                 && prev->GetParentType() == CT_SYNCHRONIZED)
          {
             remove_semicolon(pc);
          }

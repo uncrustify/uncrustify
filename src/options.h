@@ -567,17 +567,17 @@ sp_after_comma;
 extern Option<iarf_e>
 sp_before_comma; // = IARF_REMOVE
 
-// (C#) Add or remove space between ',' and ']' in multidimensional array type
+// (C#, Vala) Add or remove space between ',' and ']' in multidimensional array type
 // like 'int[,,]'.
 extern Option<iarf_e>
 sp_after_mdatype_commas;
 
-// (C#) Add or remove space between '[' and ',' in multidimensional array type
+// (C#, Vala) Add or remove space between '[' and ',' in multidimensional array type
 // like 'int[,,]'.
 extern Option<iarf_e>
 sp_before_mdatype_commas;
 
-// (C#) Add or remove space between ',' in multidimensional array type
+// (C#, Vala) Add or remove space between ',' in multidimensional array type
 // like 'int[,,]'.
 extern Option<iarf_e>
 sp_between_mdatype_commas;
@@ -1224,7 +1224,7 @@ sp_between_new_paren;
 extern Option<iarf_e>
 sp_after_newop_paren;
 
-// Add or remove space inside parenthesis of the new operator
+// Add or remove space inside parentheses of the new operator
 // as in 'new(foo) BAR'.
 extern Option<iarf_e>
 sp_inside_newop_paren;
@@ -2476,6 +2476,10 @@ nl_template_end;
 extern Option<bool>
 nl_oc_msg_args;
 
+// (OC) Minimum number of Objective-C message parameters before applying nl_oc_msg_args.
+extern BoundedOption<unsigned, 0, 16>
+nl_oc_msg_args_min_params;
+
 // Add or remove newline between function signature and '{'.
 extern Option<iarf_e>
 nl_fdef_brace;
@@ -2492,6 +2496,10 @@ nl_cpp_ldef_brace;
 // Add or remove newline between 'return' and the return expression.
 extern Option<iarf_e>
 nl_return_expr;
+
+// Add or remove newline between 'throw' and the throw expression.
+extern Option<iarf_e>
+nl_throw_expr;
 
 // Whether to add a newline after semicolons, except in 'for' statements.
 extern Option<bool>
@@ -3785,9 +3793,13 @@ mod_full_brace_nl;
 extern Option<bool>
 mod_full_brace_nl_block_rem_mlcond;
 
-// Add or remove unnecessary parenthesis on 'return' statement.
+// Add or remove unnecessary parentheses on 'return' statement.
 extern Option<iarf_e>
 mod_paren_on_return;
+
+// Add or remove unnecessary parentheses on 'throw' statement.
+extern Option<iarf_e>
+mod_paren_on_throw;
 
 // (Pawn) Whether to change optional semicolons to real semicolons.
 extern Option<bool>
@@ -4029,9 +4041,13 @@ pp_indent_count; // = 1
 
 // Add or remove space after # based on pp_level of #if blocks.
 extern Option<iarf_e>
-pp_space;
+pp_space_after;
 
-// Sets the number of spaces per level added with pp_space.
+// Add or remove space before # based on pp_level of #if blocks.
+extern Option<iarf_e>
+pp_space_before;
+
+// Sets the number of spaces per level added with pp_space_after and pp_space_before.
 extern BoundedOption<unsigned, 0, 16>
 pp_space_count;
 

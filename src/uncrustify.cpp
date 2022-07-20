@@ -509,7 +509,7 @@ int main(int argc, char *argv[])
 
       while ((p_arg = arg.Unused(idx)) != nullptr)
       {
-         log_pcf_flags(LSYS, static_cast<pcf_flag_e>(strtoul(p_arg, nullptr, 16)));
+         log_pcf_flags(LSYS, static_cast<E_PcfFlag>(strtoul(p_arg, nullptr, 16)));
       }
       return(EXIT_SUCCESS);
    }
@@ -1696,13 +1696,13 @@ static void add_func_header(E_Token type, file_mem &fm)
 
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnlNpp())
    {
-      if (pc->type != type)
+      if (pc->GetType() != type)
       {
          continue;
       }
       log_rule_B("cmt_insert_before_inlines");
 
-      if (  pc->flags.test(PCF_IN_CLASS)
+      if (  pc->TestFlags(PCF_IN_CLASS)
          && !options::cmt_insert_before_inlines())
       {
          continue;
@@ -1711,13 +1711,13 @@ static void add_func_header(E_Token type, file_mem &fm)
       ref = pc;
 
       if (  ref->Is(CT_CLASS)
-         && get_chunk_parent_type(ref) == CT_NONE
+         && ref->GetParentType() == CT_NONE
          && ref->GetNext())
       {
          ref = ref->GetNext();
 
          if (  ref->Is(CT_TYPE)
-            && get_chunk_parent_type(ref) == type
+            && ref->GetParentType() == type
             && ref->GetNext())
          {
             ref = ref->GetNext();
@@ -1733,7 +1733,7 @@ static void add_func_header(E_Token type, file_mem &fm)
       ref = pc;
 
       if (  ref->Is(CT_FUNC_DEF)
-         && get_chunk_parent_type(ref) == CT_NONE
+         && ref->GetParentType() == CT_NONE
          && ref->GetNext())
       {
          int found_brace = 0;                                 // Set if a close brace is found before a newline
@@ -1780,12 +1780,12 @@ static void add_func_header(E_Token type, file_mem &fm)
          }
 
          // Bail if we hit a preprocessor and cmt_insert_before_preproc is false
-         if (ref->flags.test(PCF_IN_PREPROC))
+         if (ref->TestFlags(PCF_IN_PREPROC))
          {
             tmp = ref->GetPrevType(CT_PREPROC, ref->level);
 
             if (  tmp->IsNotNullChunk()
-               && get_chunk_parent_type(tmp) == CT_PP_IF)
+               && tmp->GetParentType() == CT_PP_IF)
             {
                tmp = tmp->GetPrevNnl();
 
@@ -1807,7 +1807,7 @@ static void add_func_header(E_Token type, file_mem &fm)
          }
 
          if (  ref->level == pc->level
-            && (  ref->flags.test(PCF_IN_PREPROC)
+            && (  ref->TestFlags(PCF_IN_PREPROC)
                || ref->Is(CT_SEMICOLON)
                || ref->Is(CT_BRACE_CLOSE)))
          {
@@ -1818,7 +1818,7 @@ static void add_func_header(E_Token type, file_mem &fm)
 
       if (  ref->IsNullChunk()
          && !Chunk::GetHead()->IsComment()
-         && get_chunk_parent_type(Chunk::GetHead()) == type)
+         && Chunk::GetHead()->GetParentType() == type)
       {
          /**
           * In addition to testing for preceding semicolons, closing braces, etc.,
@@ -1851,7 +1851,7 @@ static void add_msg_header(E_Token type, file_mem &fm)
 
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnlNpp())
    {
-      if (pc->type != type)
+      if (pc->GetType() != type)
       {
          continue;
       }
@@ -1881,12 +1881,12 @@ static void add_msg_header(E_Token type, file_mem &fm)
          }
 
          // Bail if we hit a preprocessor and cmt_insert_before_preproc is false
-         if (ref->flags.test(PCF_IN_PREPROC))
+         if (ref->TestFlags(PCF_IN_PREPROC))
          {
             tmp = ref->GetPrevType(CT_PREPROC, ref->level);
 
             if (  tmp->IsNotNullChunk()
-               && get_chunk_parent_type(tmp) == CT_PP_IF)
+               && tmp->GetParentType() == CT_PP_IF)
             {
                tmp = tmp->GetPrevNnl();
 
@@ -1901,7 +1901,7 @@ static void add_msg_header(E_Token type, file_mem &fm)
          }
 
          if (  ref->level == pc->level
-            && (  ref->flags.test(PCF_IN_PREPROC)
+            && (  ref->TestFlags(PCF_IN_PREPROC)
                || ref->Is(CT_OC_SCOPE)))
          {
             ref = ref->GetPrev();

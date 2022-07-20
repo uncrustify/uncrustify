@@ -90,7 +90,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LAS, "AlignStack::%s(%d): Candidate is '%s': orig_line is %zu, column is %zu, type is %s, level is %zu\n",
-           __func__, __LINE__, start->Text(), start->orig_line, start->column, get_token_name(start->type), start->level);
+           __func__, __LINE__, start->Text(), start->orig_line, start->column, get_token_name(start->GetType()), start->level);
    LOG_FMT(LAS, "AlignStack::%s(%d): seqnum is %zu\n", __func__, __LINE__, seqnum);
 
    // Assign a seqnum if needed
@@ -248,7 +248,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
          if (next->IsNotNullChunk())
          {
             LOG_FMT(LAS, "AlignStack::%s(%d): next->orig_line is %zu, orig_col is %zu, Text() '%s', level is %zu, type is %s\n",
-                    __func__, __LINE__, next->orig_line, next->orig_col, next->Text(), next->level, get_token_name(next->type));
+                    __func__, __LINE__, next->orig_line, next->orig_col, next->Text(), next->level, get_token_name(next->GetType()));
             tmp_col += space_col_align(tmp, next);
             LOG_FMT(LAS, "AlignStack::%s(%d): next->column is %zu, level is %zu, tmp_col is %zu\n",
                     __func__, __LINE__, next->column, next->level, tmp_col);
@@ -316,12 +316,12 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       if (ali->Is(CT_PTR_TYPE))
       {
          LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s][%s]: ali->orig_line is %zu, column is %zu, type is %s, level is %zu\n",
-                 __func__, __LINE__, ali->Text(), start->Text(), ali->orig_line, ali->column, get_token_name(ali->type), ali->level);
+                 __func__, __LINE__, ali->Text(), start->Text(), ali->orig_line, ali->column, get_token_name(ali->GetType()), ali->level);
       }
       else
       {
          LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s]: ali->orig_line is %zu, column is %zu, type is %s, level is %zu\n",
-                 __func__, __LINE__, ali->Text(), ali->orig_line, ali->column, get_token_name(ali->type), ali->level);
+                 __func__, __LINE__, ali->Text(), ali->orig_line, ali->column, get_token_name(ali->GetType()), ali->level);
       }
       LOG_FMT(LAS, "AlignStack::%s(%d):    ali->align.col_adj is %d, ref '%s', endcol is %zu\n",
               __func__, __LINE__, ali->align.col_adj, ref->Text(), endcol);
@@ -470,7 +470,7 @@ void AlignStack::Flush()
          {
             size_t start_len = pc->align.start->Len();
 
-            if (pc->align.start->type == CT_NEG)
+            if (pc->align.start->GetType() == CT_NEG)
             {
                Chunk *next = pc->align.start->GetNext();
 
@@ -533,7 +533,7 @@ void AlignStack::Flush()
             m_skip_first = true;
             return;
          }
-         chunk_flags_set(pc, PCF_ALIGN_START);
+         pc->SetFlagBits(PCF_ALIGN_START);
 
          pc->align.right_align = m_right_align;
          pc->align.amp_style   = m_amp_style;
@@ -632,12 +632,12 @@ void AlignStack::Debug()
          if (pc->Is(CT_PTR_TYPE))
          {
             LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s][%s]: orig_line is %zu, orig_col is %zu, type is %s, level is %zu, brace_level is %zu\n",
-                    __func__, __LINE__, idx, pc->Text(), pc->next->Text(), pc->orig_line, pc->orig_col, get_token_name(pc->type), pc->level, pc->brace_level);
+                    __func__, __LINE__, idx, pc->Text(), pc->next->Text(), pc->orig_line, pc->orig_col, get_token_name(pc->GetType()), pc->level, pc->brace_level);
          }
          else
          {
             LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s]: orig_line is %zu, orig_col is %zu, type is %s, level is %zu, brace_level is %zu\n",
-                    __func__, __LINE__, idx, pc->Text(), pc->orig_line, pc->orig_col, get_token_name(pc->type), pc->level, pc->brace_level);
+                    __func__, __LINE__, idx, pc->Text(), pc->orig_line, pc->orig_col, get_token_name(pc->GetType()), pc->level, pc->brace_level);
          }
       }
    }

@@ -234,7 +234,7 @@ static void try_split_here(cw_entry &ent, Chunk *pc)
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LSPLIT, "%s(%d): at %s, orig_col=%zu\n", __func__, __LINE__, pc->Text(), pc->orig_col);
-   size_t pc_pri = get_split_pri(pc->type);
+   size_t pc_pri = get_split_pri(pc->GetType());
 
    LOG_FMT(LSPLIT, "%s(%d): pc_pri is %zu\n", __func__, __LINE__, pc_pri);
 
@@ -303,7 +303,7 @@ static void try_split_here(cw_entry &ent, Chunk *pc)
       Chunk *next = pc->GetNext();
 
       if (  next->IsNot(CT_WORD)
-         && (get_split_pri(next->type) != 25))
+         && (get_split_pri(next->GetType()) != 25))
       {
          LOG_FMT(LSPLIT, "%s(%d): don't break after last term of a qualified type, return\n", __func__, __LINE__);
          return;
@@ -342,17 +342,17 @@ static bool split_line(Chunk *start)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "%s(%d): start->Text() '%s', orig_line is %zu, orig_col is %zu, type is %s\n",
-           __func__, __LINE__, start->Text(), start->orig_line, start->orig_col, get_token_name(start->type));
-   LOG_FMT(LSPLIT, "   start->flags ");
-   log_pcf_flags(LSPLIT, start->flags);
-   LOG_FMT(LSPLIT, "   start->parent_type %s, (PCF_IN_FCN_DEF is %s), (PCF_IN_FCN_CALL is %s)\n",
-           get_token_name(get_chunk_parent_type(start)),
-           start->flags.test((PCF_IN_FCN_DEF)) ? "TRUE" : "FALSE",
-           start->flags.test((PCF_IN_FCN_CALL)) ? "TRUE" : "FALSE");
+           __func__, __LINE__, start->Text(), start->orig_line, start->orig_col, get_token_name(start->GetType()));
+   LOG_FMT(LSPLIT, "   start->GetFlags() ");
+   log_pcf_flags(LSPLIT, start->GetFlags());
+   LOG_FMT(LSPLIT, "   start->GetParentType() %s, (PCF_IN_FCN_DEF is %s), (PCF_IN_FCN_CALL is %s)\n",
+           get_token_name(start->GetParentType()),
+           start->TestFlags((PCF_IN_FCN_DEF)) ? "TRUE" : "FALSE",
+           start->TestFlags((PCF_IN_FCN_CALL)) ? "TRUE" : "FALSE");
 
    // break at maximum line length if ls_code_width is true
    // Issue #2432
-   if (start->flags.test(PCF_ONE_LINER))
+   if (start->TestFlags(PCF_ONE_LINER))
    {
       LOG_FMT(LSPLIT, "%s(%d): ** ONCE LINER SPLIT **\n", __func__, __LINE__);
       undo_one_liner(start);
@@ -369,7 +369,7 @@ static bool split_line(Chunk *start)
    {
    }
    // Check to see if we are in a for statement
-   else if (start->flags.test(PCF_IN_FOR))
+   else if (start->TestFlags(PCF_IN_FOR))
    {
       LOG_FMT(LSPLIT, " ** FOR SPLIT **\n");
       split_for_stmt(start);
@@ -385,10 +385,10 @@ static bool split_line(Chunk *start)
     * If this is in a function call or prototype, split on commas or right
     * after the open parenthesis
     */
-   else if (  start->flags.test(PCF_IN_FCN_DEF)
-           || get_chunk_parent_type(start) == CT_FUNC_PROTO            // Issue #1169
+   else if (  start->TestFlags(PCF_IN_FCN_DEF)
+           || start->GetParentType() == CT_FUNC_PROTO            // Issue #1169
            || (  (start->level == (start->brace_level + 1))
-              && start->flags.test(PCF_IN_FCN_CALL)))
+              && start->TestFlags(PCF_IN_FCN_CALL)))
    {
       LOG_FMT(LSPLIT, " ** FUNC SPLIT **\n");
 
@@ -410,7 +410,7 @@ static bool split_line(Chunk *start)
    /*
     * If this is in a template, split on commas, Issue #1170
     */
-   else if (start->flags.test(PCF_IN_TEMPLATE))
+   else if (start->TestFlags(PCF_IN_TEMPLATE))
    {
       LOG_FMT(LSPLIT, " ** TEMPLATE SPLIT **\n");
       split_template(start);
@@ -449,12 +449,12 @@ static bool split_line(Chunk *start)
    if (ent.pc == nullptr)
    {
       LOG_FMT(LSPLIT, "%s(%d):    TRY_SPLIT yielded NO SOLUTION for orig_line %zu at '%s' [%s]\n",
-              __func__, __LINE__, start->orig_line, start->Text(), get_token_name(start->type));
+              __func__, __LINE__, start->orig_line, start->Text(), get_token_name(start->GetType()));
    }
    else
    {
       LOG_FMT(LSPLIT, "%s(%d):    TRY_SPLIT yielded '%s' [%s] on orig_line %zu\n",
-              __func__, __LINE__, ent.pc->Text(), get_token_name(ent.pc->type), ent.pc->orig_line);
+              __func__, __LINE__, ent.pc->Text(), get_token_name(ent.pc->GetType()), ent.pc->orig_line);
       LOG_FMT(LSPLIT, "%s(%d): ent at '%s', orig_col is %zu\n",
               __func__, __LINE__, ent.pc->Text(), ent.pc->orig_col);
    }
@@ -532,11 +532,11 @@ static bool split_line(Chunk *start)
       //int plen = (pc->Len() < 5) ? pc->Len() : 5;
       //int slen = (start->Len() < 5) ? start->Len() : 5;
       //LOG_FMT(LSPLIT, " '%.*s' [%s], started on token '%.*s' [%s]\n",
-      //        plen, pc->Text(), get_token_name(pc->type),
-      //        slen, start->Text(), get_token_name(start->type));
+      //        plen, pc->Text(), get_token_name(pc->GetType()),
+      //        slen, start->Text(), get_token_name(start->GetType()));
       LOG_FMT(LSPLIT, "%s(%d): Text() '%s', type %s, started on token '%s', type %s\n",
-              __func__, __LINE__, pc->Text(), get_token_name(pc->type),
-              start->Text(), get_token_name(start->type));
+              __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()),
+              start->Text(), get_token_name(start->GetType()));
 
       split_before_chunk(pc);
    }
@@ -593,7 +593,7 @@ static void split_for_stmt(Chunk *start)
    pc = start;
 
    if (  pc->Is(CT_SEMICOLON)
-      && get_chunk_parent_type(pc) == CT_FOR)
+      && pc->GetParentType() == CT_FOR)
    {
       st[count++] = pc;
    }
@@ -602,10 +602,10 @@ static void split_for_stmt(Chunk *start)
    while (  (count < static_cast<int>(max_cnt))
          && ((pc = pc->GetPrev())->IsNotNullChunk())
          && pc->IsNotNullChunk()
-         && pc->flags.test(PCF_IN_SPAREN))
+         && pc->TestFlags(PCF_IN_SPAREN))
    {
       if (  pc->Is(CT_SEMICOLON)
-         && get_chunk_parent_type(pc) == CT_FOR)
+         && pc->GetParentType() == CT_FOR)
       {
          st[count++] = pc;
       }
@@ -615,10 +615,10 @@ static void split_for_stmt(Chunk *start)
 
    while (  (count < static_cast<int>(max_cnt))
          && ((pc = pc->GetNext())->IsNotNullChunk())
-         && pc->flags.test(PCF_IN_SPAREN))
+         && pc->TestFlags(PCF_IN_SPAREN))
    {
       if (  pc->Is(CT_SEMICOLON)
-         && get_chunk_parent_type(pc) == CT_FOR)
+         && pc->GetParentType() == CT_FOR)
       {
          st[count++] = pc;
       }
@@ -749,7 +749,7 @@ static void split_fcn_params(Chunk *start)
    while (pc->IsNotNullChunk())
    {
       LOG_FMT(LSPLIT, "%s(%d): pc->Text() '%s', type is %s\n",
-              __func__, __LINE__, pc->Text(), get_token_name(pc->type));
+              __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()));
 
       if (pc->IsNewline())
       {
@@ -805,8 +805,8 @@ static void split_fcn_params(Chunk *start)
    {
       LOG_FMT(LSPLIT, "%s(%d): prev->Text() is '%s', prev->orig_line is %zu, prev->orig_col is %zu\n",
               __func__, __LINE__, prev->Text(), prev->orig_line, prev->orig_col);
-      LOG_FMT(LSPLIT, "%s(%d): prev->level is %zu, prev '%s', prev->type is %s\n",
-              __func__, __LINE__, prev->level, prev->Text(), get_token_name(prev->type));
+      LOG_FMT(LSPLIT, "%s(%d): prev->level is %zu, prev '%s', prev->GetType() is %s\n",
+              __func__, __LINE__, prev->level, prev->Text(), get_token_name(prev->GetType()));
 
       if (  prev->IsNewline()
          || prev->Is(CT_COMMA))
@@ -850,7 +850,7 @@ static void split_fcn_params(Chunk *start)
          }
 
          // Don't split "()"
-         if (pc->type != E_Token(prev->type + 1))
+         if (pc->GetType() != E_Token(prev->GetType() + 1))
          {
             break;
          }
@@ -861,7 +861,7 @@ static void split_fcn_params(Chunk *start)
       && !prev->IsNewline())
    {
       LOG_FMT(LSPLIT, "%s(%d): -- ended on %s --\n",
-              __func__, __LINE__, get_token_name(prev->type));
+              __func__, __LINE__, get_token_name(prev->GetType()));
       LOG_FMT(LSPLIT, "%s(%d): min_col is %zu\n",
               __func__, __LINE__, min_col);
       pc = prev->GetNext();
@@ -896,7 +896,7 @@ static void split_template(Chunk *start)
       && !prev->IsNewline())
    {
       LOG_FMT(LSPLIT, "  %s(%d):", __func__, __LINE__);
-      LOG_FMT(LSPLIT, " -- ended on %s --\n", get_token_name(prev->type));
+      LOG_FMT(LSPLIT, " -- ended on %s --\n", get_token_name(prev->GetType()));
       Chunk  *pc = prev->GetNext();
       newline_add_before(pc);
       size_t min_col = 1;

@@ -123,13 +123,13 @@ void output_parsed(FILE *pfile)
    for (pc = Chunk::GetHead(); pc != NULL; pc = pc->GetNext())
    {
       fprintf(pfile, "\n%3d> %13.13s[%13.13s][%2d/%2d/%2d][%d/%d/%d][%6x][%d-%d]",
-              pc->orig_line, get_token_name(pc->type),
-              get_token_name(pc->parent_type),
+              pc->orig_line, get_token_name(pc->GetType()),
+              get_token_name(pc->GetParentType()),
               pc->column, pc->orig_col, pc->orig_col_end,
               pc->brace_level, pc->level, pc->pp_level,
-              pc->flags, pc->nl_count, pc->after_tab);
+              pc->GetFlags(), pc->nl_count, pc->after_tab);
 
-      if ((pc->type != CT_NEWLINE) && (pc->len != 0))
+      if ((pc->GetType() != CT_NEWLINE) && (pc->len != 0))
       {
          for (cnt = 0; cnt < pc->column; cnt++)
          {
@@ -153,13 +153,13 @@ void output_options(FILE *pfile)
       ptr = get_option_name(idx);
       if (ptr != NULL)
       {
-         if (ptr->type == AT_BOOL)
+         if (ptr->GetType() == AT_BOOL)
          {
             fprintf(pfile, "%3d) %32s = %s\n",
                     ptr->id, ptr->name,
                     cpd.settings[ptr->id].b ? "True" : "False");
          }
-         else if (ptr->type == AT_IARF)
+         else if (ptr->GetType() == AT_IARF)
          {
             fprintf(pfile, "%3d) %32s = %s\n",
                     ptr->id, ptr->name,
@@ -167,7 +167,7 @@ void output_options(FILE *pfile)
                     (cpd.settings[ptr->id].a == AV_REMOVE) ? "Remove" :
                     (cpd.settings[ptr->id].a == AV_FORCE) ? "Force" : "Ignore");
          }
-         else if (ptr->type == AT_LINE)
+         else if (ptr->GetType() == AT_LINE)
          {
             fprintf(pfile, "%3d) %32s = %s\n",
                     ptr->id, ptr->name,
@@ -200,7 +200,7 @@ void output_text(FILE *pfile)
 
    for (pc = Chunk::GetHead(); pc != NULL; pc = pc->GetNext())
    {
-      if (pc->type == CT_NEWLINE)
+      if (pc->GetType() == CT_NEWLINE)
       {
          for (cnt = 0; cnt < pc->nl_count; cnt++)
          {
@@ -210,11 +210,11 @@ void output_text(FILE *pfile)
          cpd.column      = 1;
          LOG_FMT(LOUTIND, " xx\n");
       }
-      else if (pc->type == CT_COMMENT_MULTI)
+      else if (pc->GetType() == CT_COMMENT_MULTI)
       {
          output_comment_multi(pc);
       }
-      else if (pc->type == CT_COMMENT_CPP)
+      else if (pc->GetType() == CT_COMMENT_CPP)
       {
          pc = output_comment_cpp(pc);
       }
@@ -253,7 +253,7 @@ void output_text(FILE *pfile)
             {
                prev       = pc->GetPrev();
                allow_tabs = (cpd.settings[UO_align_with_tabs].b &&
-                             ((pc->flags & PCF_WAS_ALIGNED) != 0) &&
+                             ((pc->GetFlags() & PCF_WAS_ALIGNED) != 0) &&
                              (((pc->column - 1) % cpd.settings[UO_output_tab_size].n) == 0) &&
                              ((prev->column + prev->len + 1) != pc->column));
             }
@@ -391,7 +391,7 @@ Chunk *output_comment_cpp(Chunk *first)
    int col_br = 1 + (first->brace_level * cpd.settings[UO_indent_columns].n);
 
    /* Make sure we have at least one space past the last token */
-   if (first->parent_type == CT_COMMENT_END)
+   if (first->GetParentType() == CT_COMMENT_END)
    {
       Chunk *prev = first->GetPrev();
       if (prev != NULL)
@@ -431,10 +431,10 @@ Chunk *output_comment_cpp(Chunk *first)
           * level or less
           */
          if ((next != NULL) &&
-             (next->type == CT_COMMENT_CPP) &&
+             (next->GetType() == CT_COMMENT_CPP) &&
              (((next->column == 1) && (first->column == 1)) ||
               ((next->column == col_br) && (first->column == col_br)) ||
-              ((next->column > col_br) && (first->parent_type == CT_COMMENT_END))))
+              ((next->column > col_br) && (first->GetParentType() == CT_COMMENT_END))))
          {
             combined = true;
          }
@@ -471,17 +471,17 @@ Chunk *output_comment_cpp(Chunk *first)
    /* Output combined lines */
    while ((pc = pc->GetNext()) != NULL)
    {
-      if ((pc->type == CT_NEWLINE) && (pc->nl_count == 1))
+      if ((pc->GetType() == CT_NEWLINE) && (pc->nl_count == 1))
       {
          continue;
       }
-      if (pc->type != CT_COMMENT_CPP)
+      if (pc->GetType() != CT_COMMENT_CPP)
       {
          break;
       }
       if (((pc->column == 1) && (first->column == 1)) ||
           ((pc->column == col_br) && (first->column == col_br)) ||
-          ((pc->column > col_br) && (first->parent_type == CT_COMMENT_END)))
+          ((pc->column > col_br) && (first->GetParentType() == CT_COMMENT_END)))
       {
          last = pc;
 cpp_newline:
@@ -522,7 +522,7 @@ void output_comment_multi(Chunk *pc)
    int        xtra     = 1;
 
    prev = pc->GetPrev();
-   if ((prev != NULL) && (prev->type != CT_NEWLINE))
+   if ((prev != NULL) && (prev->GetType() != CT_NEWLINE))
    {
       cmt_col = pc->orig_col;
    }

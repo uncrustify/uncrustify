@@ -32,8 +32,8 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
    size_t mygap    = 0;
 
    // Override the span, if this is a struct/union
-   if (  get_chunk_parent_type(start) == CT_STRUCT
-      || get_chunk_parent_type(start) == CT_UNION)
+   if (  start->GetParentType() == CT_STRUCT
+      || start->GetParentType() == CT_UNION)
    {
       log_rule_B("align_var_struct_span");
       myspan = options::align_var_struct_span();
@@ -42,7 +42,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       log_rule_B("align_var_struct_gap");
       mygap = options::align_var_struct_gap();
    }
-   else if (get_chunk_parent_type(start) == CT_CLASS)
+   else if (start->GetParentType() == CT_CLASS)
    {
       log_rule_B("align_var_class_span");
       myspan = options::align_var_class_span();
@@ -64,7 +64,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
    if (prev->Is(CT_ASSIGN))
    {
       LOG_FMT(LAVDB, "%s(%d): start->Text() '%s', type is %s, on orig_line %zu (abort due to assign)\n",
-              __func__, __LINE__, start->Text(), get_token_name(start->type), start->orig_line);
+              __func__, __LINE__, start->Text(), get_token_name(start->GetType()), start->orig_line);
 
       Chunk *pc = start->GetNextType(CT_BRACE_CLOSE, start->level);
       return(pc->GetNextNcNnl());
@@ -72,7 +72,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
    char copy[1000];
 
    LOG_FMT(LAVDB, "%s(%d): start->Text() '%s', type is %s, on orig_line %zu\n",
-           __func__, __LINE__, start->ElidedText(copy), get_token_name(start->type), start->orig_line);
+           __func__, __LINE__, start->ElidedText(copy), get_token_name(start->GetType()), start->orig_line);
 
    log_rule_B("align_var_def_inline");
    auto const align_mask =
@@ -126,7 +126,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       else
       {
          LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
       }
 
       if (pc->IsComment())
@@ -143,7 +143,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       }
 
       if (  fp_active
-         && !pc->flags.test(PCF_IN_CLASS_BASE))
+         && !pc->TestFlags(PCF_IN_CLASS_BASE))
       {
          // WARNING: Duplicate from the align_func_proto()
          log_rule_B("align_single_line_func");
@@ -159,7 +159,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
             log_rule_B("align_on_operator");
 
-            if (  get_chunk_parent_type(pc) == CT_OPERATOR
+            if (  pc->GetParentType() == CT_OPERATOR
                && options::align_on_operator())
             {
                toadd = pc->GetPrevNcNnl();
@@ -175,7 +175,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
          }
          else if (  fp_look_bro
                  && pc->Is(CT_BRACE_OPEN)
-                 && pc->flags.test(PCF_ONE_LINER))
+                 && pc->TestFlags(PCF_ONE_LINER))
          {
             as_br.Add(pc);
             fp_look_bro = false;
@@ -233,12 +233,12 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       if (!pc->IsNewline())
       {
          LOG_FMT(LAVDB, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
 
          if (pc->IsNot(CT_IGNORED))
          {
             LOG_FMT(LAVDB, "   ");
-            log_pcf_flags(LAVDB, pc->flags);
+            log_pcf_flags(LAVDB, pc->GetFlags());
          }
       }
 
@@ -250,10 +250,10 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       }
 
       // If this is a variable def, update the max_col
-      if (  !pc->flags.test(PCF_IN_CLASS_BASE)
+      if (  !pc->TestFlags(PCF_IN_CLASS_BASE)
          && pc->IsNot(CT_FUNC_CLASS_DEF)
          && pc->IsNot(CT_FUNC_CLASS_PROTO)
-         && ((pc->flags & align_mask) == PCF_VAR_1ST)
+         && ((pc->GetFlags() & align_mask) == PCF_VAR_1ST)
          && pc->IsNot(CT_FUNC_DEF)                                   // Issue 1452
          && (  (pc->level == (start->level + 1))
             || pc->level == 0)
@@ -267,7 +267,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
          if (!did_this_line)
          {
-            if (  get_chunk_parent_type(start) == CT_STRUCT
+            if (  start->GetParentType() == CT_STRUCT
                && (as.m_star_style == AlignStack::SS_INCLUDE))
             {
                // we must look after the previous token
@@ -276,8 +276,8 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
                while (  prev_local->Is(CT_PTR_TYPE)
                      || prev_local->Is(CT_ADDR))
                {
-                  LOG_FMT(LAVDB, "%s(%d): prev_local '%s', prev_local->type %s\n",
-                          __func__, __LINE__, prev_local->Text(), get_token_name(prev_local->type));
+                  LOG_FMT(LAVDB, "%s(%d): prev_local '%s', prev_local->GetType() %s\n",
+                          __func__, __LINE__, prev_local->Text(), get_token_name(prev_local->GetType()));
                   prev_local = prev_local->GetPrev();
                }
                pc = prev_local->GetNext();

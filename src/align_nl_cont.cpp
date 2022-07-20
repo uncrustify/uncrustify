@@ -18,7 +18,7 @@ Chunk *align_nl_cont(Chunk *start)
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LALNLC, "%s(%d): start on [%s] on line %zu\n",
-           __func__, __LINE__, get_token_name(start->type), start->orig_line);
+           __func__, __LINE__, get_token_name(start->GetType()), start->orig_line);
 
    // Find the max column
    ChunkStack cs;
@@ -40,7 +40,7 @@ Chunk *align_nl_cont(Chunk *start)
 
    while ((tmp = cs.Pop_Back()) != nullptr)
    {
-      chunk_flags_set(tmp, PCF_WAS_ALIGNED);
+      tmp->SetFlagBits(PCF_WAS_ALIGNED);
       tmp->column = max_col;
    }
    return(pc);

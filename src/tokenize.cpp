@@ -1628,12 +1628,12 @@ static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
           * end up with a function named 'define' as PP_IGNORE. This is necessary because with
           * the config 'set' feature, there's no way to do a pair of tokens as a word
           * substitution. */
-         if (  pc.type == CT_PP_IGNORE
+         if (  pc.GetType() == CT_PP_IGNORE
             && !cpd.in_preproc)
          {
             pc.SetType(find_keyword_type(pc.Text(), pc.str.size()));
          }
-         else if (pc.type == CT_COMMENT_CPP)   // Issue #1460
+         else if (pc.GetType() == CT_COMMENT_CPP)   // Issue #1460
          {
             size_t ch;
             bool   is_cs = language_is_set(LANG_CS);
@@ -2111,7 +2111,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
    pc.column    = ctx.c.col;
    pc.orig_col  = ctx.c.col;
    pc.nl_count  = 0;
-   pc.flags     = PCF_NONE;
+   pc.SetFlags(PCF_NONE);
 
    // If it is turned off, we put everything except newlines into CT_UNKNOWN
    if (cpd.unc_off)
@@ -2370,7 +2370,11 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
             && cpd.in_preproc == CT_PP_INCLUDE))
       {
          parse_string(ctx, pc, unc_isalpha(ch) ? 1 : 0, true);
-         set_chunk_parent(&pc, CT_PP_INCLUDE);
+
+         if (cpd.in_preproc == CT_PP_INCLUDE)
+         {
+            pc.SetParentType(CT_PP_INCLUDE);
+         }
          return(true);
       }
 
@@ -2496,7 +2500,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
          pc.str.append(ctx.get());
       }
       pc.SetType(punc->type);
-      pc.flags |= PCF_PUNCTUATOR;
+      pc.SetFlagBits(PCF_PUNCTUATOR);
       return(true);
    }
    /* When parsing C/C++ files and running into some unknown token,
@@ -2522,7 +2526,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
             pc.str.append(ctx.get());
          }
          pc.SetType(punc->type);
-         pc.flags |= PCF_PUNCTUATOR;
+         pc.SetFlagBits(PCF_PUNCTUATOR);
          return(true);
       }
    }
@@ -2672,14 +2676,14 @@ void tokenize(const deque<int> &data, Chunk *ref)
       }
 
       if (  language_is_set(LANG_JAVA)
-         && chunk.type == CT_MEMBER
+         && chunk.GetType() == CT_MEMBER
          && !memcmp(chunk.Text(), "->", 2))
       {
-         chunk.type = CT_LAMBDA;
+         chunk.SetType(CT_LAMBDA);
       }
 
       // Don't create an entry for whitespace
-      if (chunk.type == CT_WHITESPACE)
+      if (chunk.GetType() == CT_WHITESPACE)
       {
          last_was_tab = chunk.after_tab;
          prev_sp      = chunk.orig_prev_sp;
@@ -2688,13 +2692,13 @@ void tokenize(const deque<int> &data, Chunk *ref)
       chunk.orig_prev_sp = prev_sp;
       prev_sp            = 0;
 
-      if (chunk.type == CT_NEWLINE)
+      if (chunk.GetType() == CT_NEWLINE)
       {
          last_was_tab    = chunk.after_tab;
          chunk.after_tab = false;
          chunk.str.clear();
       }
-      else if (chunk.type == CT_NL_CONT)
+      else if (chunk.GetType() == CT_NL_CONT)
       {
          last_was_tab    = chunk.after_tab;
          chunk.after_tab = false;
@@ -2707,7 +2711,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
       }
       num_stripped = 0; // Issue #1966 and #3565
 
-      if (chunk.type != CT_IGNORED)
+      if (chunk.GetType() != CT_IGNORED)
       {
          // Issue #1338
          // Strip trailing whitespace (for CPP comments and PP blocks)
@@ -2734,22 +2738,22 @@ void tokenize(const deque<int> &data, Chunk *ref)
 
       if (rprev != nullptr)
       {
-         chunk_flags_set(pc, rprev->flags & PCF_COPY_FLAGS);
+         pc->SetFlagBits(rprev->GetFlags() & PCF_COPY_FLAGS);
 
          // a newline can't be in a preprocessor
          if (pc->Is(CT_NEWLINE))
          {
-            chunk_flags_clr(pc, PCF_IN_PREPROC);
+            pc->ResetFlagBits(PCF_IN_PREPROC);
          }
       }
 
       if (ref != nullptr)
       {
-         chunk.flags |= PCF_INSERTED;
+         chunk.SetFlagBits(PCF_INSERTED);
       }
       else
       {
-         chunk.flags &= ~PCF_INSERTED;
+         chunk.ResetFlagBits(PCF_INSERTED);
       }
       pc = chunk.CopyAndAddBefore(ref);
 
@@ -2770,7 +2774,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
       // Special handling for preprocessor stuff
       if (cpd.in_preproc != CT_NONE)
       {
-         chunk_flags_set(pc, PCF_IN_PREPROC);
+         pc->SetFlagBits(PCF_IN_PREPROC);
 
          // Count words after the preprocessor
          if (!pc->IsCommentOrNewline())
@@ -2791,12 +2795,12 @@ void tokenize(const deque<int> &data, Chunk *ref)
          // Figure out the type of preprocessor for #include parsing
          if (cpd.in_preproc == CT_PREPROC)
          {
-            if (  pc->type < CT_PP_DEFINE
-               || pc->type > CT_PP_OTHER)
+            if (  pc->GetType() < CT_PP_DEFINE
+               || pc->GetType() > CT_PP_OTHER)
             {
                pc->SetType(CT_PP_OTHER);
             }
-            cpd.in_preproc = pc->type;
+            cpd.in_preproc = pc->GetType();
          }
          else if (cpd.in_preproc == CT_PP_IGNORE)
          {
@@ -2825,7 +2829,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
                || rprev->Is(CT_NEWLINE)))
          {
             pc->SetType(CT_PREPROC);
-            chunk_flags_set(pc, PCF_IN_PREPROC);
+            pc->SetFlagBits(PCF_IN_PREPROC);
             cpd.in_preproc = CT_PREPROC;
          }
       }
@@ -2838,13 +2842,13 @@ void tokenize(const deque<int> &data, Chunk *ref)
       else if (pc->Is(CT_VBRACE_OPEN))
       {
          LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s, orig_col_end is %zu\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->type), pc->orig_col_end);
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->GetType()), pc->orig_col_end);
       }
       else
       {
          char copy[1000];
          LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', type is %s, orig_col_end is %zu\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy), get_token_name(pc->type), pc->orig_col_end);
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->orig_col_end);
       }
    }
    // Set the cpd.newline string for this file

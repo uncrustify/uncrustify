@@ -21,12 +21,12 @@ void remove_extra_returns()
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LRMRETURN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent_type is %s\n",
+      LOG_FMT(LRMRETURN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(),
-              get_token_name(pc->type), get_token_name(pc->parent_type));
+              get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       if (  pc->Is(CT_RETURN)
-         && !pc->flags.test(PCF_IN_PREPROC))
+         && !pc->TestFlags(PCF_IN_PREPROC))
       {
          // we might be in a class, check it                                     Issue #2705
          // look for a closing brace
@@ -37,11 +37,11 @@ void remove_extra_returns()
 
          if (closing_brace->IsNotNullChunk())
          {
-            if (get_chunk_parent_type(closing_brace) == CT_FUNC_CLASS_DEF)
+            if (closing_brace->GetParentType() == CT_FUNC_CLASS_DEF)
             {
                // we have a class. Do nothing
             }
-            else if (  get_chunk_parent_type(closing_brace) == CT_FUNC_DEF
+            else if (  closing_brace->GetParentType() == CT_FUNC_DEF
                     && pc->level < 2)
             {
                remove_it = true;
@@ -57,7 +57,7 @@ void remove_extra_returns()
 
             if (closing_brace->IsNotNullChunk())
             {
-               if (get_chunk_parent_type(closing_brace) == CT_FUNC_DEF)
+               if (closing_brace->GetParentType() == CT_FUNC_DEF)
                {
                   remove_it = true;
                }

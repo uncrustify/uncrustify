@@ -25,7 +25,7 @@ Chunk *align_func_param(Chunk *start)
 
    LOG_FMT(LAS, "AlignStack::%s(%d): Candidate is '%s': orig_line is %zu, column is %zu, type is %s, level is %zu\n",
            __func__, __LINE__, start->Text(), start->orig_line, start->column,
-           get_token_name(start->type), start->level);
+           get_token_name(start->GetType()), start->level);
    // Defaults, if the align_func_params = true
    size_t myspan   = 2;
    size_t mythresh = 0;
@@ -67,7 +67,7 @@ Chunk *align_func_param(Chunk *start)
       chunk_count++;
       LOG_FMT(LFLPAREN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(),
-              get_token_name(pc->type));
+              get_token_name(pc->GetType()));
 
       if (pc->Is(CT_FUNC_VAR))                    // Issue #2278
       {
@@ -105,7 +105,7 @@ Chunk *align_func_param(Chunk *start)
       {
          break;
       }
-      else if (pc->flags.test(PCF_VAR_DEF))
+      else if (pc->TestFlags(PCF_VAR_DEF))
       {
          if (chunk_count > 1)
          {
@@ -132,7 +132,7 @@ Chunk *align_func_param(Chunk *start)
       }
       else if (pc->Is(CT_COMMA))
       {
-         if (pc->flags.test(PCF_IN_TEMPLATE))            // Issue #2757
+         if (pc->TestFlags(PCF_IN_TEMPLATE))            // Issue #2757
          {
             LOG_FMT(LFLPAREN, "%s(%d): comma is in template\n",
                     __func__, __LINE__);
@@ -169,16 +169,16 @@ void align_func_params()
 
    while ((pc = pc->GetNext())->IsNotNullChunk())
    {
-      LOG_FMT(LFLPAREN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', parent_type is %s, parent_type is %s\n",
+      LOG_FMT(LFLPAREN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(),
-              get_token_name(pc->type), get_token_name(pc->parent_type));
+              get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       if (  pc->IsNot(CT_FPAREN_OPEN)
-         || (  get_chunk_parent_type(pc) != CT_FUNC_PROTO
-            && get_chunk_parent_type(pc) != CT_FUNC_DEF
-            && get_chunk_parent_type(pc) != CT_FUNC_CLASS_PROTO
-            && get_chunk_parent_type(pc) != CT_FUNC_CLASS_DEF
-            && get_chunk_parent_type(pc) != CT_TYPEDEF))
+         || (  pc->GetParentType() != CT_FUNC_PROTO
+            && pc->GetParentType() != CT_FUNC_DEF
+            && pc->GetParentType() != CT_FUNC_CLASS_PROTO
+            && pc->GetParentType() != CT_FUNC_CLASS_DEF
+            && pc->GetParentType() != CT_TYPEDEF))
       {
          continue;
       }

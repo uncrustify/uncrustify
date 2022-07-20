@@ -149,7 +149,7 @@ static void move_one_token(Chunk * &source, Chunk * &destination, E_Token parent
    source->orig_col     = destination->orig_col + destination->Len();
    source->orig_col_end = source->orig_col_end + source->Len();
    source->orig_prev_sp = 0;
-   set_chunk_parent(source, parent_type);
+   source->SetParentType(parent_type);
 
    destination = source;
    source      = next_source;
@@ -166,7 +166,7 @@ static void rewrite_loop_condition(Chunk * &source, Chunk * &destination,
    if (desired_type == CT_FOR)
    {
       source->SetType(CT_SEMICOLON);
-      set_chunk_parent(source, CT_FOR);
+      source->SetParentType(CT_FOR);
       source->str = ";";
       move_one_token(source, destination, desired_type);
       destination = (destination)->CopyAndAddAfter(destination);
@@ -268,8 +268,8 @@ void rewrite_infinite_loops()
             rewrite_loop_in_place(while_keyword, desired_type, desired_condition);
 
             // Update the braces' parent types
-            start_brace->parent_type = CT_DO;
-            end_brace->parent_type   = CT_DO;
+            start_brace->SetParentType(CT_DO);
+            end_brace->SetParentType(CT_DO);
          }
          else
          {
@@ -289,8 +289,8 @@ void rewrite_infinite_loops()
             Chunk::Delete(bottom);
 
             // Update the braces' parent types
-            start_brace->parent_type = desired_type;
-            end_brace->parent_type   = desired_type;
+            start_brace->SetParentType(desired_type);
+            end_brace->SetParentType(desired_type);
          }
       }
       else if (  (  pc->Is(CT_WHILE)
@@ -328,8 +328,8 @@ void rewrite_infinite_loops()
             bottom->str = ";";
 
             // Update the braces' parent types
-            start_brace->parent_type = CT_DO;
-            end_brace->parent_type   = CT_DO;
+            start_brace->SetParentType(CT_DO);
+            end_brace->SetParentType(CT_DO);
          }
          else
          {
@@ -337,8 +337,8 @@ void rewrite_infinite_loops()
             rewrite_loop_in_place(pc, desired_type, desired_condition);
 
             // Update the braces' parent types
-            start_brace->parent_type = desired_type;
-            end_brace->parent_type   = desired_type;
+            start_brace->SetParentType(desired_type);
+            end_brace->SetParentType(desired_type);
          }
       }
    }

@@ -40,8 +40,8 @@ static bool adj_tokens_match_qualified_identifier_pattern(Chunk *prev, Chunk *ne
    if (  prev != nullptr
       && next != nullptr)
    {
-      auto prev_token_type = prev->type;
-      auto next_token_type = next->type;
+      auto prev_token_type = prev->GetType();
+      auto next_token_type = next->GetType();
 
       switch (prev_token_type)
       {
@@ -101,8 +101,8 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
    if (  prev != nullptr
       && next != nullptr)
    {
-      auto prev_token_type = prev->type;
-      auto next_token_type = next->type;
+      auto prev_token_type = prev->GetType();
+      auto next_token_type = next->GetType();
 
       switch (prev_token_type)
       {
@@ -205,7 +205,7 @@ static bool adj_tokens_match_var_def_pattern(Chunk *prev, Chunk *next)
 
          if (next->IsNotNullChunk())
          {
-            next_token_type = next->type;
+            next_token_type = next->GetType();
          }
          return(next_token_type == CT_PAREN_CLOSE);
 
@@ -421,11 +421,11 @@ static bool chunk_is_macro_reference(Chunk *pc)
    if (  (  language_is_set(LANG_CPP)
          || language_is_set(LANG_C))
       && pc->Is(CT_WORD)
-      && !pc->flags.test(PCF_IN_PREPROC))
+      && !pc->TestFlags(PCF_IN_PREPROC))
    {
       while (next->IsNotNullChunk())
       {
-         if (  next->flags.test(PCF_IN_PREPROC)
+         if (  next->TestFlags(PCF_IN_PREPROC)
             && std::strcmp(pc->str.c_str(), next->str.c_str()) == 0)
          {
             return(true);
@@ -757,7 +757,7 @@ static Chunk *skip_scope_resolution_and_nested_name_specifiers(Chunk *pc)
    LOG_FUNC_ENTRY();
 
    if (  (  pc != nullptr
-         && pc->flags.test(PCF_IN_TEMPLATE))
+         && pc->TestFlags(PCF_IN_TEMPLATE))
       || pc->Is(CT_DC_MEMBER)
       || pc->Is(CT_TYPE)
       || pc->Is(CT_WORD))
@@ -803,7 +803,7 @@ static Chunk *skip_scope_resolution_and_nested_name_specifiers_rev(Chunk *pc)
    }
 
    if (  (  pc->IsNotNullChunk()
-         && pc->flags.test(PCF_IN_TEMPLATE))
+         && pc->TestFlags(PCF_IN_TEMPLATE))
       || pc->Is(CT_DC_MEMBER)
       || pc->Is(CT_TYPE)
       || pc->Is(CT_WORD))
@@ -875,12 +875,12 @@ void EnumStructUnionParser::analyze_identifiers()
     * "class/struct [macros/attributes ...] [: bases] { } x, ..."
     */
 
-   Chunk       *template_end      = get_template_end();
-   auto        *body_end          = get_body_end();
-   auto        *body_start        = get_body_start();
-   pcf_flags_t flags              = PCF_VAR_1ST_DEF;
-   auto        *inheritance_start = get_inheritance_start();
-   Chunk       *pc                = body_end ? body_end : m_start;
+   Chunk      *template_end      = get_template_end();
+   auto       *body_end          = get_body_end();
+   auto       *body_start        = get_body_start();
+   T_PcfFlags flags              = PCF_VAR_1ST_DEF;
+   auto       *inheritance_start = get_inheritance_start();
+   Chunk      *pc                = body_end ? body_end : m_start;
 
    /**
     * first, try a simple approach to identify any associated type
@@ -1000,7 +1000,7 @@ void EnumStructUnionParser::analyze_identifiers()
        */
       if (  pc->IsSemicolon()
          || (  pc->Is(CT_COMMA)
-            && !pc->flags.test_any(PCF_IN_FCN_DEF | PCF_IN_FCN_CALL | PCF_IN_TEMPLATE)
+            && !pc->GetFlags().test_any(PCF_IN_FCN_DEF | PCF_IN_FCN_CALL | PCF_IN_TEMPLATE)
             && !chunk_is_between(pc, inheritance_start, body_start)))
       {
          pc = pc->GetNextNcNnl();
@@ -1036,7 +1036,7 @@ void EnumStructUnionParser::analyze_identifiers()
           * PCF_VAR_1ST was cleared and a type was identified; therefore, set
           * PCF_VAR_TYPE for the identified type
           */
-         chunk_flags_set(m_type, PCF_VAR_TYPE);
+         m_type->SetFlagBits(PCF_VAR_TYPE);
       }
       else if (~flags & PCF_VAR_INLINE)
       {
@@ -1291,7 +1291,7 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
    LOG_FUNC_ENTRY();
    LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
            __unqualified_func__, __LINE__,
-           pc->orig_line, pc->orig_col, get_token_name(pc->type));
+           pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
 
    /**
     * test for a semicolon or closing brace at the level of the starting chunk
@@ -1304,7 +1304,7 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
    {
       LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->orig_line, pc->orig_col, get_token_name(pc->type));
+              pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
       return(true);
    }
    /**
@@ -1314,10 +1314,10 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
     * 3) did we cross the closing paren of a function signature?
     */
 
-   auto const pc_in_funcdef    = pc->flags & PCF_IN_FCN_DEF;
-   auto const pc_in_preproc    = pc->flags & PCF_IN_PREPROC;
-   auto const start_in_funcdef = m_start->flags & PCF_IN_FCN_DEF;
-   auto const start_in_preproc = m_start->flags & PCF_IN_PREPROC;
+   auto const pc_in_funcdef    = pc->GetFlags() & PCF_IN_FCN_DEF;
+   auto const pc_in_preproc    = pc->GetFlags() & PCF_IN_PREPROC;
+   auto const start_in_funcdef = m_start->GetFlags() & PCF_IN_FCN_DEF;
+   auto const start_in_preproc = m_start->GetFlags() & PCF_IN_PREPROC;
 
    /**
     * the following may identify cases where we've reached the
@@ -1330,7 +1330,7 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
    {
       LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->orig_line, pc->orig_col, get_token_name(pc->type));
+              pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
       return(true);
    }
    /**
@@ -1345,7 +1345,7 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
    {
       LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->orig_line, pc->orig_col, get_token_name(pc->type));
+              pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
       return(true);
    }
    /**
@@ -1354,8 +1354,8 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
     * 2) chunk is an assignment ('=') or comma at the level of the starting chunk
     */
 
-   auto const pc_in_funccall    = pc->flags & PCF_IN_FCN_CALL;
-   auto const start_in_funccall = m_start->flags & PCF_IN_FCN_CALL;
+   auto const pc_in_funccall    = pc->GetFlags() & PCF_IN_FCN_CALL;
+   auto const start_in_funccall = m_start->GetFlags() & PCF_IN_FCN_CALL;
 
    if (  (  pc_in_funccall.test_any()
          && start_in_funccall.test_any()
@@ -1370,12 +1370,12 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
    {
       LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->orig_line, pc->orig_col, get_token_name(pc->type));
+              pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
       return(true);
    }
    LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
            __unqualified_func__, __LINE__,
-           pc->orig_line, pc->orig_col, get_token_name(pc->type));
+           pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
    return(false);
 } // EnumStructUnionParser::is_potential_end_chunk
 
@@ -1412,7 +1412,7 @@ bool EnumStructUnionParser::is_within_inheritance_list(Chunk *pc) const
    LOG_FUNC_ENTRY();
 
    if (  pc != nullptr
-      && pc->flags.test(PCF_IN_CLASS_BASE))
+      && pc->TestFlags(PCF_IN_CLASS_BASE))
    {
       return(true);
    }
@@ -1433,7 +1433,7 @@ bool EnumStructUnionParser::is_within_where_clause(Chunk *pc) const
    LOG_FUNC_ENTRY();
 
    if (  pc != nullptr
-      && pc->flags.test(PCF_IN_WHERE_SPEC))
+      && pc->TestFlags(PCF_IN_WHERE_SPEC))
    {
       return(true);
    }
@@ -1453,18 +1453,18 @@ void EnumStructUnionParser::mark_base_classes(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   pcf_flags_t flags = PCF_VAR_1ST_DEF;
+   T_PcfFlags flags = PCF_VAR_1ST_DEF;
 
    while (  pc != nullptr
          && pc->IsNotNullChunk())
    {
-      chunk_flags_set(pc, PCF_IN_CLASS_BASE);
+      pc->SetFlagBits(PCF_IN_CLASS_BASE);
       /**
        * clear the PCF_VAR_TYPE flag for all chunks within the inheritance list
        * TODO: this may not be necessary in the future once code outside this
        *       class is improved such that PCF_VAR_TYPE is not set for these chunks
        */
-      pc->flags &= ~PCF_VAR_TYPE;
+      pc->ResetFlagBits(PCF_VAR_TYPE);
 
       Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
 
@@ -1501,7 +1501,7 @@ void EnumStructUnionParser::mark_base_classes(Chunk *pc)
 
          if (pc->Is(CT_WORD))
          {
-            chunk_flags_set(pc, flags);
+            pc->SetFlagBits(flags);
 
             if (flags & PCF_VAR_1ST)
             {
@@ -1516,7 +1516,7 @@ void EnumStructUnionParser::mark_base_classes(Chunk *pc)
       }
       pc = next;
    }
-   chunk_flags_set(pc, PCF_IN_CLASS_BASE);
+   pc->SetFlagBits(PCF_IN_CLASS_BASE);
 } // EnumStructUnionParser::mark_base_classes
 
 
@@ -1524,7 +1524,7 @@ void EnumStructUnionParser::mark_braces(Chunk *brace_open)
 {
    LOG_FUNC_ENTRY();
 
-   pcf_flags_t flags = PCF_NONE;
+   T_PcfFlags flags = PCF_NONE;
 
    if (m_start->Is(CT_CLASS))
    {
@@ -1566,13 +1566,13 @@ void EnumStructUnionParser::mark_braces(Chunk *brace_open)
          mark_base_classes(inheritance_start);
       }
    }
-   set_chunk_parent(brace_open, m_start->type);
+   brace_open->SetParentType(m_start->GetType());
 
    auto *brace_close = brace_open->SkipToMatch(E_Scope::PREPROC);
 
    if (brace_close->IsNotNullChunk())
    {
-      set_chunk_parent(brace_close, m_start->type);
+      brace_close->SetParentType(m_start->GetType());
    }
 } // EnumStructUnionParser::mark_braces
 
@@ -1589,7 +1589,7 @@ void EnumStructUnionParser::mark_class_colon(Chunk *colon)
            colon->orig_col);
 
    colon->SetType(CT_CLASS_COLON);
-   set_chunk_parent(colon, m_start->type);
+   colon->SetParentType(m_start->GetType());
 } // EnumStructUnionParser::mark_class_colon
 
 
@@ -1612,15 +1612,15 @@ void EnumStructUnionParser::mark_constructors()
       && chunk_is_class_or_struct(m_start))
    {
       LOG_FMT(LFTOR,
-              "%s(%d): orig_line is %zu, orig_col is %zu, start is '%s', parent_type is %s\n",
+              "%s(%d): orig_line is %zu, orig_col is %zu, start is '%s', parent type is %s\n",
               __unqualified_func__,
               __LINE__,
               m_start->orig_line,
               m_start->orig_col,
               m_start->Text(),
-              get_token_name(get_chunk_parent_type(m_start)));
+              get_token_name(m_start->GetParentType()));
 
-      log_pcf_flags(LFTOR, m_start->flags);
+      log_pcf_flags(LFTOR, m_start->GetFlags());
 
       /**
        * get the name of the type
@@ -1634,14 +1634,14 @@ void EnumStructUnionParser::mark_constructors()
               __unqualified_func__,
               __LINE__,
               name);
-      log_pcf_flags(LFTOR, m_type->flags);
+      log_pcf_flags(LFTOR, m_type->GetFlags());
 
       Chunk       *next = Chunk::NullChunkPtr;
       std::size_t level = m_type->brace_level + 1;
 
       for (auto *prev = body_start; next != body_end; prev = next)
       {
-         chunk_flags_set(prev, PCF_IN_CLASS);
+         prev->SetFlagBits(PCF_IN_CLASS);
 
          next = skip_template_next(prev->GetNextNcNnl(E_Scope::PREPROC));                         // Issue #3368
 
@@ -1662,13 +1662,13 @@ void EnumStructUnionParser::mark_constructors()
                     name,
                     prev->orig_line,
                     prev->orig_col,
-                    get_token_name(prev->type));
+                    get_token_name(prev->GetType()));
 
             mark_cpp_constructor(prev);
          }
       }
 
-      chunk_flags_set(next, PCF_IN_CLASS);
+      next->SetFlagBits(PCF_IN_CLASS);
    }
 } // EnumStructUnionParser::mark_constructor
 
@@ -1678,7 +1678,7 @@ void EnumStructUnionParser::mark_enum_integral_type(Chunk *colon)
    LOG_FUNC_ENTRY();
 
    colon->SetType(CT_BIT_COLON);
-   set_chunk_parent(colon, m_start->type);
+   colon->SetParentType(m_start->GetType());
 
    auto *body_start = get_body_start();
    auto *pc         = colon->GetNextNcNnl();
@@ -1701,9 +1701,9 @@ void EnumStructUnionParser::mark_enum_integral_type(Chunk *colon)
        */
       if (pc->IsNot(CT_DC_MEMBER))                             // Issue #3198
       {
-         pc->flags &= ~PCF_VAR_TYPE;
+         pc->ResetFlagBits(PCF_VAR_TYPE);
          pc->SetType(CT_TYPE);
-         set_chunk_parent(pc, colon->type);
+         pc->SetParentType(colon->GetType());
       }
       pc = pc->GetNextNcNnl();
    }
@@ -1726,14 +1726,14 @@ void EnumStructUnionParser::mark_extracorporeal_lvalues()
     * erroneously marked chunks - as previously mentioned, this likely
     * won't be necessary with improvements to the mark_lvalue() function
     */
-   if (get_chunk_parent_type(next) == CT_TEMPLATE)
+   if (next->GetParentType() == CT_TEMPLATE)
    {
       while (true)
       {
          prev = next->GetPrevNcNnlNi();
 
          if (  prev->IsNullChunk()
-            || (  !prev->flags.test(PCF_IN_TEMPLATE)
+            || (  !prev->TestFlags(PCF_IN_TEMPLATE)
                && prev->IsNot(CT_TEMPLATE)))
          {
             break;
@@ -1747,16 +1747,16 @@ void EnumStructUnionParser::mark_extracorporeal_lvalues()
    while (next != m_end)
    {
       if (  !chunk_is_between(next, body_start, body_end)
-         && next->flags.test(PCF_LVALUE))
+         && next->TestFlags(PCF_LVALUE))
       {
-         next->flags &= ~PCF_LVALUE;
+         next->ResetFlagBits(PCF_LVALUE);
       }
       else if (  (  next->Is(CT_ASSIGN)
                  || next->Is(CT_BRACE_OPEN))
               && prev->Is(CT_WORD)
-              && prev->flags.test_any(PCF_VAR_DEF | PCF_VAR_1ST | PCF_VAR_INLINE))
+              && prev->GetFlags().test_any(PCF_VAR_DEF | PCF_VAR_1ST | PCF_VAR_INLINE))
       {
-         chunk_flags_set(prev, PCF_LVALUE);
+         prev->SetFlagBits(PCF_LVALUE);
       }
       prev = next;
       next = next->GetNextNcNnl();
@@ -1833,7 +1833,7 @@ void EnumStructUnionParser::mark_pointer_types(Chunk *pc)
 
          if (pc->IsPointerOperator())
          {
-            set_chunk_parent(pc, m_start->type);
+            pc->SetParentType(m_start->GetType());
             pc->SetType(CT_PTR_TYPE);
          }
       } while (pc->IsPointerReferenceOrQualifier());
@@ -1855,13 +1855,13 @@ void EnumStructUnionParser::mark_template(Chunk *start) const
               start->orig_line,
               start->orig_col);
    }
-   set_chunk_parent(start, CT_TEMPLATE);
+   start->SetParentType(CT_TEMPLATE);
 
    auto *end = start->SkipToMatch(E_Scope::PREPROC);
 
    if (end->IsNotNullChunk())
    {
-      set_chunk_parent(end, CT_TEMPLATE);
+      end->SetParentType(CT_TEMPLATE);
 
       mark_template_args(start, end);
    }
@@ -1883,8 +1883,8 @@ void EnumStructUnionParser::mark_template_args(Chunk *start, Chunk *end) const
               start->orig_line,
               start->orig_col);
 
-      pcf_flags_t flags = PCF_IN_TEMPLATE;
-      Chunk       *next = start;
+      T_PcfFlags flags = PCF_IN_TEMPLATE;
+      Chunk      *next = start;
 
       /**
        * TODO: for now, just mark the chunks within the template as PCF_IN_TEMPLATE;
@@ -1900,7 +1900,7 @@ void EnumStructUnionParser::mark_template_args(Chunk *start, Chunk *end) const
          {
             break;
          }
-         chunk_flags_set(next, flags);
+         next->SetFlagBits(flags);
       }
       LOG_FMT(LTEMPL,
               "%s(%d): End of template detected: '%s' at orig_line %zu, orig_col %zu\n",
@@ -1924,14 +1924,14 @@ void EnumStructUnionParser::mark_type(Chunk *pc)
       do
       {
          make_type(pc);
-         set_chunk_parent(pc, m_start->type);
+         pc->SetParentType(m_start->GetType());
          pc = pc->GetNextNcNnl(E_Scope::PREPROC);
       } while (pc->IsPointerOrReference());
    }
 } // EnumStructUnionParser::mark_type
 
 
-void EnumStructUnionParser::mark_variable(Chunk *variable, pcf_flags_t flags)
+void EnumStructUnionParser::mark_variable(Chunk *variable, T_PcfFlags flags)
 {
    LOG_FUNC_ENTRY();
 
@@ -1946,7 +1946,7 @@ void EnumStructUnionParser::mark_variable(Chunk *variable, pcf_flags_t flags)
               variable->orig_col,
               flags & PCF_VAR_1ST_DEF ? "PCF_VAR_1ST_DEF" : "PCF_VAR_1ST");
 
-      chunk_flags_set(variable, flags);
+      variable->SetFlagBits(flags);
       variable->SetType(CT_WORD);
       mark_pointer_types(variable);
    }
@@ -1973,11 +1973,11 @@ void EnumStructUnionParser::mark_where_clause(Chunk *where)
 
    set_where_end(where_end);
 
-   pcf_flags_t flags;
+   T_PcfFlags flags;
 
    for (auto *pc = where_start; pc != where_end; pc = pc->GetNextNcNnl())
    {
-      flags = mark_where_chunk(pc, m_start->type, flags);
+      flags = mark_where_chunk(pc, m_start->GetType(), flags);
    }
 } // EnumStructUnionParser::mark_where_clause
 
@@ -1996,7 +1996,7 @@ void EnumStructUnionParser::mark_where_colon(Chunk *colon)
               colon->orig_col);
    }
    colon->SetType(CT_WHERE_COLON);
-   set_chunk_parent(colon, m_start->type);
+   colon->SetParentType(m_start->GetType());
 } // EnumStructUnionParser::mark_where_colon
 
 
@@ -2015,7 +2015,7 @@ void EnumStructUnionParser::parse(Chunk *pc)
     * make sure this wasn't a cast, and also make sure we're
     * actually dealing with a class/enum/struct/union type
     */
-   if (  get_chunk_parent_type(m_start) == CT_C_CAST
+   if (  m_start->GetParentType() == CT_C_CAST
       || !chunk_is_class_enum_struct_union(m_start))
    {
       return;
@@ -2093,7 +2093,7 @@ void EnumStructUnionParser::parse(Chunk *pc)
                  || (  language_is_set(LANG_PAWN)
                     && m_start->IsEnum())))
       {
-         set_paren_parent(next, m_start->type);
+         set_paren_parent(next, m_start->GetType());
 
          if (  prev->Is(CT_WORD)
             && language_is_set(LANG_D))
@@ -2138,9 +2138,9 @@ void EnumStructUnionParser::parse(Chunk *pc)
    if (  prev->IsNotNullChunk()
       && prev->IsSemicolon()
       && prev->level == m_start->level
-      && !prev->flags.test(PCF_IN_FOR))
+      && !prev->TestFlags(PCF_IN_FOR))
    {
-      set_chunk_parent(prev, m_start->type);
+      prev->SetParentType(m_start->GetType());
    }
 } // EnumStructUnionParser::parse
 
@@ -2618,13 +2618,13 @@ Chunk *EnumStructUnionParser::try_find_end_chunk(Chunk *pc)
    LOG_FUNC_ENTRY();
    LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
            __unqualified_func__, __LINE__,
-           pc->orig_line, pc->orig_col, get_token_name(pc->type));
+           pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
 
    do
    {
       LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->orig_line, pc->orig_col, get_token_name(pc->type));
+              pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
 
       /**
        * clear some previously marked token types, some of which have likely
@@ -2636,18 +2636,18 @@ Chunk *EnumStructUnionParser::try_find_end_chunk(Chunk *pc)
          || pc->Is(CT_WORD))
       {
          pc->SetType(CT_WORD);
-         set_chunk_parent(pc, CT_NONE);
+         pc->SetParentType(CT_NONE);
       }
       LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->orig_line, pc->orig_col, get_token_name(pc->type));
+              pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
 
       do
       {
          pc = pc->GetNextNcNnl(E_Scope::PREPROC);
          LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
                  __unqualified_func__, __LINE__,
-                 pc->orig_line, pc->orig_col, get_token_name(pc->type));
+                 pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
       } while (  pc->IsNotNullChunk()
               && pc->level > m_start->level);
 
@@ -2663,7 +2663,7 @@ Chunk *EnumStructUnionParser::try_find_end_chunk(Chunk *pc)
       {
          LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s\n",
                  __unqualified_func__, __LINE__,
-                 pc->orig_line, pc->orig_col, get_token_name(pc->type));
+                 pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
       }
    } while (!is_potential_end_chunk(pc));
 
@@ -2700,7 +2700,7 @@ void EnumStructUnionParser::try_post_identify_macro_calls()
             && (  prev->Is(CT_WORD)
                || prev->Is(CT_FUNCTION)
                || prev->Is(CT_FUNC_DEF))
-            && !prev->flags.test_any(PCF_VAR_DEF | PCF_VAR_1ST | PCF_VAR_INLINE)
+            && !prev->GetFlags().test_any(PCF_VAR_DEF | PCF_VAR_1ST | PCF_VAR_INLINE)
             && prev->level == m_start->level)
          {
             if (pc->IsParenOpen())
@@ -2711,9 +2711,9 @@ void EnumStructUnionParser::try_post_identify_macro_calls()
                if (paren_close->IsNotNullChunk())
                {
                   paren_open->SetType(CT_FPAREN_OPEN);
-                  set_chunk_parent(paren_open, CT_MACRO_FUNC_CALL);
+                  paren_open->SetParentType(CT_MACRO_FUNC_CALL);
                   paren_close->SetType(CT_FPAREN_CLOSE);
-                  set_chunk_parent(paren_close, CT_MACRO_FUNC_CALL);
+                  paren_close->SetParentType(CT_MACRO_FUNC_CALL);
                   prev->SetType(CT_MACRO_FUNC_CALL);
                }
             }
@@ -2754,7 +2754,7 @@ void EnumStructUnionParser::try_post_identify_type()
           */
          pc = skip_scope_resolution_and_nested_name_specifiers(pc);
 
-         if (pc->flags.test_any(PCF_VAR_DEF | PCF_VAR_1ST | PCF_VAR_INLINE))
+         if (pc->GetFlags().test_any(PCF_VAR_DEF | PCF_VAR_1ST | PCF_VAR_INLINE))
          {
             break;
          }
@@ -2783,7 +2783,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
    if (  language_is_set(LANG_PAWN)
       && m_start->IsEnum())
    {
-      set_paren_parent(pc, m_start->type);
+      set_paren_parent(pc, m_start->GetType());
    }
    else if (template_detected())
    {
@@ -2858,7 +2858,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
           * chunk as the type
           */
          if (  chunk_is_macro_reference(next)
-            || get_chunk_parent_type(m_start) == CT_TEMPLATE)
+            || m_start->GetParentType() == CT_TEMPLATE)
          {
             pc = m_end;
          }

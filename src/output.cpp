@@ -514,19 +514,19 @@ void output_parsed(FILE *pfile, bool withOptions)
    {
 #ifdef WIN32
       fprintf(pfile, "%s# %3d>%19.19s|%19.19s|%19.19s[%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
-              eol_marker, (int)pc->orig_line, get_token_name(pc->type),
-              get_token_name(get_chunk_parent_type(pc)), get_token_name(get_type_of_the_parent(pc)),
+              eol_marker, (int)pc->orig_line, get_token_name(pc->GetType()),
+              get_token_name(pc->GetParentType()), get_token_name(get_type_of_the_parent(pc)),
               (int)pc->column, (int)pc->orig_col, (int)pc->orig_col_end, (int)pc->orig_prev_sp,
               (int)pc->brace_level, (int)pc->level, (int)pc->pp_level, (int)pc->nl_count, pc->after_tab);
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu]",
-              eol_marker, pc->orig_line, get_token_name(pc->type),
-              get_token_name(get_chunk_parent_type(pc)), get_token_name(get_type_of_the_parent(pc)),
+              eol_marker, pc->orig_line, get_token_name(pc->GetType()),
+              get_token_name(pc->GetParentType()), get_token_name(get_type_of_the_parent(pc)),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
       // Print pc flags in groups of 4 hex characters
       char flag_string[20];
-      sprintf(flag_string, "%12llx", static_cast<pcf_flags_t::int_t>(pc->flags));
+      sprintf(flag_string, "%12llx", static_cast<T_PcfFlags::int_t>(pc->GetFlags()));
       fprintf(pfile, "[%.4s %.4s %.4s]", flag_string, flag_string + 4, flag_string + 8);
       fprintf(pfile, "[%zu-%d]",
               pc->nl_count, pc->after_tab);
@@ -568,12 +568,12 @@ void output_parsed_csv(FILE *pfile)
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       fprintf(pfile, "%s%zu,%s,%s,%s,%zu,%zu,%zu,%d,%zu,%zu,%zu,",
-              eol_marker, pc->orig_line, get_token_name(pc->type),
-              get_token_name(get_chunk_parent_type(pc)), get_token_name(get_type_of_the_parent(pc)),
+              eol_marker, pc->orig_line, get_token_name(pc->GetType()),
+              get_token_name(pc->GetParentType()), get_token_name(get_type_of_the_parent(pc)),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
 
-      auto pcf_flag_str = pcf_flags_str(pcf_flag_e(pc->flags));
+      auto pcf_flag_str = pcf_flags_str(E_PcfFlag(pc->GetFlags()));
 #ifdef WIN32
       auto pcf_flag_str_start = pcf_flag_str.find("[") + 1;
 #else // not WIN32
@@ -672,7 +672,7 @@ void output_text(FILE *pfile)
    {
       char copy[1000];
       LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig_line is %zu, column is %zu, nl is %zu\n",
-              __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->type), pc->orig_line, pc->column, pc->nl_count);
+              __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->orig_line, pc->column, pc->nl_count);
       log_rule_B("cmt_convert_tab_to_spaces");
       cpd.output_tab_as_space = (  options::cmt_convert_tab_to_spaces()
                                 && pc->IsComment());
@@ -697,7 +697,7 @@ void output_text(FILE *pfile)
       else if (pc->Is(CT_NL_CONT))
       {
          // FIXME: this really shouldn't be done here!
-         if (!pc->flags.test(PCF_WAS_ALIGNED))
+         if (!pc->TestFlags(PCF_WAS_ALIGNED))
          {
             // Add or remove space before a backslash-newline at the end of a line.
             log_rule_B("sp_before_nl_cont");
@@ -817,7 +817,7 @@ void output_text(FILE *pfile)
       {
          // don't do anything for non-visible stuff
          LOG_FMT(LOUTIND, "%s(%d): orig_line is %zu, column is %zu, non-visible stuff: type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->column, get_token_name(pc->type));
+                 __func__, __LINE__, pc->orig_line, pc->column, get_token_name(pc->GetType()));
       }
       else
       {
@@ -882,7 +882,7 @@ void output_text(FILE *pfile)
             Chunk *prev = pc->GetPrev();
             log_rule_B("align_with_tabs");
             allow_tabs = (  options::align_with_tabs()
-                         && pc->flags.test(PCF_WAS_ALIGNED)
+                         && pc->TestFlags(PCF_WAS_ALIGNED)
                          && ((prev->column + prev->Len() + 1) != pc->column));
 
             log_rule_B("align_keep_tabs");
@@ -1682,16 +1682,16 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
    }
    // LOG_FMT(LSYS, "%s: line %zd, brace=%zd base=%zd col=%zd orig=%zd aligned=%x\n",
    //        __func__, pc->orig_line, cmt.brace_col, cmt.base_col, cmt.column, pc->orig_col,
-   //        pc->flags & (PCF_WAS_ALIGNED | PCF_RIGHT_COMMENT));
+   //        pc->GetFlags() & (PCF_WAS_ALIGNED | PCF_RIGHT_COMMENT));
 
-   if (  get_chunk_parent_type(pc) == CT_COMMENT_START
-      || get_chunk_parent_type(pc) == CT_COMMENT_WHOLE)
+   if (  pc->GetParentType() == CT_COMMENT_START
+      || pc->GetParentType() == CT_COMMENT_WHOLE)
    {
       log_rule_B("indent_col1_comment");
 
       if (  !options::indent_col1_comment()
          && pc->orig_col == 1
-         && !pc->flags.test(PCF_INSERTED))
+         && !pc->TestFlags(PCF_INSERTED))
       {
          cmt.column    = 1;
          cmt.base_col  = 1;
@@ -1702,8 +1702,8 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
    log_rule_B("indent_cmt_with_tabs");
 
    if (  options::indent_cmt_with_tabs()
-      && (  get_chunk_parent_type(pc) == CT_COMMENT_END
-         || get_chunk_parent_type(pc) == CT_COMMENT_WHOLE))
+      && (  pc->GetParentType() == CT_COMMENT_END
+         || pc->GetParentType() == CT_COMMENT_WHOLE))
    {
       cmt.column = align_tab_column(cmt.column - 1);
       // LOG_FMT(LSYS, "%s: line %d, orig:%d new:%d\n",
@@ -1723,7 +1723,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
 static bool can_combine_comment(Chunk *pc, cmt_reflow &cmt)
 {
    // We can't combine if there is something other than a newline next
-   if (get_chunk_parent_type(pc) == CT_COMMENT_START)
+   if (pc->GetParentType() == CT_COMMENT_START)
    {
       return(false);
    }
@@ -1741,13 +1741,13 @@ static bool can_combine_comment(Chunk *pc, cmt_reflow &cmt)
       // Make sure the comment is the same type at the same column
       next = next->GetNext();
 
-      if (  next->Is(pc->type)
+      if (  next->Is(pc->GetType())
          && (  (  next->column == 1
                && pc->column == 1)
             || (  next->column == cmt.base_col
                && pc->column == cmt.base_col)
             || (  next->column > cmt.base_col
-               && get_chunk_parent_type(pc) == CT_COMMENT_END)))
+               && pc->GetParentType() == CT_COMMENT_END)))
       {
          return(true);
       }
@@ -2181,7 +2181,7 @@ static void output_comment_multi(Chunk *pc)
    char       copy[1000];
 
    LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig_col is %zu, column is %zu\n",
-           __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->type), pc->orig_col, pc->column);
+           __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->orig_col, pc->column);
 
    output_cmt_start(cmt, pc);
    log_rule_B("cmt_reflow_mode");
@@ -2426,7 +2426,7 @@ static void output_comment_multi(Chunk *pc)
             if (  prev_nonempty_line < 0
                && !unc_isspace(line[nwidx])
                && line[nwidx] != '*'    // block comment: skip '*' at end of line
-               && (pc->flags.test(PCF_IN_PREPROC)
+               && (pc->TestFlags(PCF_IN_PREPROC)
                    ? (  line[nwidx] != '\\'
                      || (  line[nwidx + 1] != '\r'
                         && line[nwidx + 1] != '\n'))
@@ -2445,7 +2445,7 @@ static void output_comment_multi(Chunk *pc)
             if (  next_nonempty_line < 0
                && !unc_isspace(pc->str[nxt_idx])
                && pc->str[nxt_idx] != '*'
-               && (pc->flags.test(PCF_IN_PREPROC)
+               && (pc->TestFlags(PCF_IN_PREPROC)
                    ? (  pc->str[nxt_idx] != '\\'
                      || (  pc->str[nxt_idx + 1] != '\r'
                         && pc->str[nxt_idx + 1] != '\n'))
@@ -2566,7 +2566,7 @@ static void output_comment_multi(Chunk *pc)
          {
             nl_end = true;
             line.pop_back();
-            cmt_trim_whitespace(line, pc->flags.test(PCF_IN_PREPROC));
+            cmt_trim_whitespace(line, pc->TestFlags(PCF_IN_PREPROC));
          }
 
          if (line_count == 1)
@@ -2863,15 +2863,15 @@ static bool kw_fcn_function(Chunk *cmt, unc_text &out_txt)
 {
    Chunk *fcn = get_next_function(cmt);
 
-   if (fcn)
+   if (fcn != nullptr)
    {
-      if (get_chunk_parent_type(fcn) == CT_OPERATOR)
+      if (fcn->GetParentType() == CT_OPERATOR)
       {
          out_txt.append("operator ");
       }
 
       if (  fcn->prev != nullptr
-         && fcn->prev->type == CT_DESTRUCTOR)
+         && fcn->prev->GetType() == CT_DESTRUCTOR)
       {
          out_txt.append('~');
       }
@@ -3008,7 +3008,7 @@ static bool kw_fcn_javaparam(Chunk *cmt, unc_text &out_txt)
 
    // For Objective-C we need to go to the previous chunk
    if (  tmp->IsNotNullChunk()
-      && get_chunk_parent_type(tmp) == CT_OC_MSG_DECL
+      && tmp->GetParentType() == CT_OC_MSG_DECL
       && tmp->Is(CT_PAREN_CLOSE))
    {
       tmp = tmp->GetPrevNcNnl();
@@ -3036,7 +3036,7 @@ static bool kw_fcn_fclass(Chunk *cmt, unc_text &out_txt)
       return(false);
    }
 
-   if (fcn->flags.test(PCF_IN_CLASS))
+   if (fcn->TestFlags(PCF_IN_CLASS))
    {
       // if inside a class, we need to find to the class name
       Chunk *tmp = fcn->GetPrevType(CT_BRACE_OPEN, fcn->level - 1);
@@ -3169,7 +3169,7 @@ static void output_comment_multi_simple(Chunk *pc)
    cmt_reflow cmt;
 
    LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig_col is %zu, column is %zu\n",
-           __func__, __LINE__, pc->Text(), get_token_name(pc->type), pc->orig_col, pc->column);
+           __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()), pc->orig_col, pc->column);
 
    output_cmt_start(cmt, pc);
 
@@ -3377,7 +3377,7 @@ void add_long_preprocessor_conditional_block_comment()
          continue;
       }
 #if 0
-      if (pc->flags.test(PCF_IN_PREPROC))
+      if (pc->TestFlags(PCF_IN_PREPROC))
       {
          continue;
       }
@@ -3415,7 +3415,7 @@ void add_long_preprocessor_conditional_block_comment()
             tmp = tmp->GetNext();
 
             LOG_FMT(LPPIF, "next item type %d (is %s)\n",
-                    (tmp ? tmp->type : -1), (tmp ? tmp->IsNewline() ? "newline"
+                    (tmp ? tmp->GetType() : -1), (tmp ? tmp->IsNewline() ? "newline"
                                              : tmp->IsComment() ? "comment" : "other" : "---"));
 
             if (  tmp->IsNullChunk()

@@ -37,7 +37,7 @@ void align_init_brace(Chunk *start)
 
    if (  pcSingle == nullptr
       || (  pcSingle->Is(CT_BRACE_CLOSE)
-         && get_chunk_parent_type(pcSingle) == CT_ASSIGN))
+         && pcSingle->GetParentType() == CT_ASSIGN))
    {
       // single line - nothing to do
       LOG_FMT(LALBR, "%s(%d): single line - nothing to do\n", __func__, __LINE__);
@@ -86,7 +86,7 @@ void align_init_brace(Chunk *start)
          pc = tmp;
 
          LOG_FMT(LALBR, " -%zu- skipped '[] =' to %s\n",
-                 pc->orig_line, get_token_name(pc->type));
+                 pc->orig_line, get_token_name(pc->GetType()));
          continue;
       }
       Chunk *next = pc;
@@ -94,7 +94,7 @@ void align_init_brace(Chunk *start)
       if (idx < cpd.al_cnt)
       {
          LOG_FMT(LALBR, " (%zu) check %s vs %s -- ",
-                 idx, get_token_name(pc->type), get_token_name(cpd.al[idx].type));
+                 idx, get_token_name(pc->GetType()), get_token_name(cpd.al[idx].type));
 
          if (pc->Is(cpd.al[idx].type))
          {
@@ -105,7 +105,7 @@ void align_init_brace(Chunk *start)
 
                if (prev->IsNewline())
                {
-                  chunk_flags_set(pc, PCF_DONT_INDENT);
+                  pc->SetFlagBits(PCF_DONT_INDENT);
                }
             }
             LOG_FMT(LALBR, " [%s] to col %zu\n", pc->Text(), cpd.al[idx].col);
@@ -119,7 +119,7 @@ void align_init_brace(Chunk *start)
                //        num_token->orig_line,
                //        num_token->Text(), cpd.al[idx - 1].col, col_diff);
 
-               chunk_flags_set(num_token, PCF_WAS_ALIGNED);
+               num_token->SetFlagBits(PCF_WAS_ALIGNED);
                num_token = nullptr;
             }
 
@@ -151,7 +151,7 @@ void align_init_brace(Chunk *start)
                      LOG_FMT(LALBR, "%s(%d): idx is %zu, al_cnt is %zu, cpd.al[%zu].col is %zu, cpd.al[%zu].len is %zu\n",
                              __func__, __LINE__, idx, cpd.al_cnt, idx, cpd.al[idx].col, idx, cpd.al[idx].len);
                      reindent_line(next, cpd.al[idx].col + cpd.al[idx].len);
-                     chunk_flags_set(next, PCF_WAS_ALIGNED);
+                     next->SetFlagBits(PCF_WAS_ALIGNED);
                   }
                }
             }
@@ -161,7 +161,7 @@ void align_init_brace(Chunk *start)
                LOG_FMT(LALBR, "%s(%d): idx is %zu, cpd.al[%zu].col is %zu\n",
                        __func__, __LINE__, idx, idx, cpd.al[idx].col);
                reindent_line(pc, cpd.al[idx].col);
-               chunk_flags_set(pc, PCF_WAS_ALIGNED);
+               pc->SetFlagBits(PCF_WAS_ALIGNED);
 
                // see if we need to right-align a number
                log_rule_B("align_number_right");

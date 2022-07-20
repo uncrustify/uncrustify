@@ -65,8 +65,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->Text() '%s', type is %s, parent_type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->ElidedText(copy), get_token_name(pc->type), get_token_name(get_chunk_parent_type(pc)));
+      LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->Text() is '%s', type is %s, m_parentType is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       // Don't check inside SPAREN, PAREN or SQUARE groups
       if (  pc->Is(CT_SPAREN_OPEN)
@@ -75,7 +75,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
          || pc->Is(CT_PAREN_OPEN))
       {
          LOG_FMT(LALASS, "%s(%d): Don't check inside SPAREN, PAREN or SQUARE groups, type is %s\n",
-                 __func__, __LINE__, get_token_name(pc->type));
+                 __func__, __LINE__, get_token_name(pc->GetType()));
          tmp = pc->orig_line;
          pc  = pc->SkipToMatch();
 
@@ -101,14 +101,14 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
       // Recurse if a brace set is found
       if (  (  pc->Is(CT_BRACE_OPEN)
             || pc->Is(CT_VBRACE_OPEN))
-         && !(get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST))
+         && !(pc->GetParentType() == CT_BRACED_INIT_LIST))
       {
          size_t myspan;
          size_t mythresh;
 
          size_t sub_nl_count = 0;
 
-         if (get_chunk_parent_type(pc) == CT_ENUM)
+         if (pc->GetParentType() == CT_ENUM)
          {
             log_rule_B("align_enum_equ_span");
             myspan = options::align_enum_equ_span();
@@ -148,7 +148,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
       // Done with this brace set?
       if (  (  pc->Is(CT_BRACE_CLOSE)
             || pc->Is(CT_VBRACE_CLOSE))
-         && !(get_chunk_parent_type(pc) == CT_BRACED_INIT_LIST))
+         && !(pc->GetParentType() == CT_BRACED_INIT_LIST))
       {
          pc = pc->GetNext();
          break;
@@ -174,14 +174,14 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
          var_def_cnt = 0;
          equ_count   = 0;
       }
-      else if (  pc->flags.test(PCF_VAR_DEF)
-              && !pc->flags.test(PCF_IN_CONST_ARGS) // Issue #1717
-              && !pc->flags.test(PCF_IN_FCN_DEF)    // Issue #1717
-              && !pc->flags.test(PCF_IN_FCN_CALL))  // Issue #1717
+      else if (  pc->TestFlags(PCF_VAR_DEF)
+              && !pc->TestFlags(PCF_IN_CONST_ARGS) // Issue #1717
+              && !pc->TestFlags(PCF_IN_FCN_DEF)    // Issue #1717
+              && !pc->TestFlags(PCF_IN_FCN_CALL))  // Issue #1717
       {
          // produces much more log output. Use it only debugging purpose
-         //LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->flags:\n   ", __func__, __LINE__);
-         //log_pcf_flags(LALASS, pc->flags);
+         //LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->GetFlags():\n   ", __func__, __LINE__);
+         //log_pcf_flags(LALASS, pc->GetFlags());
          var_def_cnt++;
       }
       else if (  var_def_cnt > 1
@@ -192,8 +192,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
                  __func__, __LINE__);
          vdas.Reset();
       }
-      else if (  equ_count == 0                      // indent only if first '=' in line
-              && !pc->flags.test(PCF_IN_TEMPLATE)    // and it is not inside a template #999
+      else if (  equ_count == 0                  // indent only if first '=' in line
+              && !pc->TestFlags(PCF_IN_TEMPLATE) // and it is not inside a template #999
               && (  pc->Is(CT_ASSIGN)
                  || pc->Is(CT_ASSIGN_DEFAULT_ARG)
                  || pc->Is(CT_ASSIGN_FUNC_PROTO)))
@@ -205,8 +205,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
          LOG_FMT(LALASS, "%s(%d): align_assign_decl_func() is %d\n",
                  __func__, __LINE__, options::align_assign_decl_func());
          // produces much more log output. Use it only debugging purpose
-         //LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->flags: ", __func__, __LINE__);
-         //log_pcf_flags(LALASS, pc->flags);
+         //LOG_FMT(LALASS, "%s(%d): log_pcf_flags pc->GetFlags(): ", __func__, __LINE__);
+         //log_pcf_flags(LALASS, pc->GetFlags());
 
          log_rule_B("align_assign_decl_func");
 

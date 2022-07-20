@@ -27,26 +27,26 @@ void do_parent_for_pp()
       {
          LOG_FMT(LMCB, "%s(%d): IF: orig_line %zu, orig_col is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
-         log_pcf_flags(LMCB, pc->flags);
+         log_pcf_flags(LMCB, pc->GetFlags());
          viz.push_back(pc);
       }
       else if (pc->Is(CT_PP_ELSE))
       {
          LOG_FMT(LMCB, "%s(%d): ELSE: orig_line %zu, orig_col is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
-         log_pcf_flags(LMCB, pc->flags);
+         log_pcf_flags(LMCB, pc->GetFlags());
          size_t level = pc->pp_level;
          Chunk  *a    = viz.at(level - 1);
-         chunk_set_parent(pc, a);
+         pc->SetParent(a);
       }
       else if (pc->Is(CT_PP_ENDIF))
       {
          LOG_FMT(LMCB, "%s(%d): ENDIF: orig_line %zu, orig_col is %zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
-         log_pcf_flags(LMCB, pc->flags);
+         log_pcf_flags(LMCB, pc->GetFlags());
          size_t level = pc->pp_level;
          Chunk  *a    = viz.at(level);
-         chunk_set_parent(pc, a);
+         pc->SetParent(a);
          viz.pop_back();
       }
       pc = pc->GetNextNcNnl();

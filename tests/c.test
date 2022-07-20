@@ -223,6 +223,11 @@
 00621  c/nl_endif.cfg                             c/nl_endif.c
 00622  c/indent_assign.cfg                        c/indent-off-after-assign.c
 
+00623  c/pp_space_none.cfg                        c/pp_space_before_after.c
+00624  c/pp_space_after.cfg                       c/pp_space_before_after.c
+00625  c/pp_space_before.cfg                      c/pp_space_before_after.c
+00626  c/pp_space_before_after.cfg                c/pp_space_before_after.c
+
 00631  c/nl_assign1.cfg                           c/nl_assign.c
 00632  c/nl_assign2.cfg                           c/nl_assign.c
 00633  c/nl_assign1.cfg                           c/bug_3156.c

@@ -170,7 +170,7 @@ static void detect_space_options()
 
       if (pc->Is(CT_ASSIGN))
       {
-         if (!pc->flags.test(PCF_IN_ENUM))
+         if (!pc->TestFlags(PCF_IN_ENUM))
          {
             vote_sp_before_assign.vote(prev, pc);
             vote_sp_after_assign.vote(pc, next);
@@ -330,7 +330,7 @@ static void detect_space_options()
 
       if (pc->Is(CT_SEMICOLON))
       {
-         if (get_chunk_parent_type(pc) == CT_FOR)
+         if (pc->GetParentType() == CT_FOR)
          {
             if (prev->Is(CT_SPAREN_OPEN))
             {
