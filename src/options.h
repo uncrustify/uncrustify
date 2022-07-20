@@ -4033,9 +4033,13 @@ pp_indent_count; // = 1
 
 // Add or remove space after # based on pp_level of #if blocks.
 extern Option<iarf_e>
-pp_space;
+pp_space_after;
 
-// Sets the number of spaces per level added with pp_space.
+// Add or remove space before # based on pp_level of #if blocks.
+extern Option<iarf_e>
+pp_space_before;
+
+// Sets the number of spaces per level added with pp_space_after and pp_space_before.
 extern BoundedOption<unsigned, 0, 16>
 pp_space_count;
 
