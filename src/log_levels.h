@@ -61,7 +61,7 @@ enum log_sev_t
    LCMTIND   = 30,  //! Comment Indent
    LINDLINE  = 31,  //! indent line
    LSIB      = 32,  //! Scan IB
-   LRETURN   = 33,  //! add/remove parens for return
+   LRETURN   = 33,  //! add/remove parens for return or throw
    LBRDEL    = 34,  //! brace removal
    LFCN      = 35,  //! function detection
    LFCNP     = 36,  //! function parameters

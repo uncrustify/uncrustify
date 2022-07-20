@@ -46,16 +46,16 @@ static void flag_asm(Chunk *pc);
 static void check_double_brace_init(Chunk *bo1);
 
 
-static void process_returns();
+static void process_returns_and_throws();
 
 
 /**
- * Processes a return statement, labeling the parens and marking the parent.
- * May remove or add parens around the return statement
+ * Processes a 'return' or 'throw' statement, labeling the parens and marking
+ * the parent. May remove or add parens around the return/throw statement.
  *
- * @param pc  Pointer to the return chunk
+ * @param pc  Pointer to the return or throw chunk
  */
-static Chunk *process_return(Chunk *pc);
+static Chunk *process_return_or_throw(Chunk *pc);
 
 
 /**
@@ -1995,7 +1995,7 @@ void fix_symbols()
       pc = pc->GetNextNcNnl();
    }
    pawn_add_virtual_semicolons();
-   process_returns();
+   process_returns_and_throws();
 
    /*
     * 2nd pass - handle variable definitions
@@ -2109,7 +2109,7 @@ void fix_symbols()
 } // fix_symbols
 
 
-static void process_returns()
+static void process_returns_and_throws()
 {
    LOG_FUNC_ENTRY();
    Chunk *pc;
@@ -2118,19 +2118,46 @@ static void process_returns()
 
    while (pc->IsNotNullChunk())
    {
-      if (pc->IsNot(CT_RETURN))
+      if (  pc->Is(CT_RETURN)
+         || pc->Is(CT_THROW))
       {
-         pc = pc->GetNextType(CT_RETURN);
-         continue;
+         pc = process_return_or_throw(pc);
       }
-      pc = process_return(pc);
+      else
+      {
+         pc = pc->GetNext();
+      }
    }
 }
 
 
-static Chunk *process_return(Chunk *pc)
+static Chunk *process_return_or_throw(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
+
+   const char *nl_expr_name;
+   iarf_e     nl_expr_value;
+   const char *mod_paren_name;
+   iarf_e     mod_paren_value;
+
+   if (pc->Is(CT_RETURN))
+   {
+      nl_expr_name    = "nl_return_expr";
+      nl_expr_value   = options::nl_return_expr();
+      mod_paren_name  = "mod_paren_on_return";
+      mod_paren_value = options::mod_paren_on_return();
+   }
+   else if (pc->Is(CT_THROW))
+   {
+      nl_expr_name    = "nl_throw_expr";
+      nl_expr_value   = options::nl_throw_expr();
+      mod_paren_name  = "mod_paren_on_throw";
+      mod_paren_value = options::mod_paren_on_throw();
+   }
+   else // should never happen
+   {
+      return(pc->GetNext());
+   }
    Chunk *next;
    Chunk *temp;
    Chunk *semi;
@@ -2146,17 +2173,17 @@ static Chunk *process_return(Chunk *pc)
    {
       return(next);
    }
-   log_rule_B("nl_return_expr");
+   log_rule_B(nl_expr_name);
 
-   if (  options::nl_return_expr() != IARF_IGNORE
+   if (  nl_expr_value != IARF_IGNORE
       && !pc->TestFlags(PCF_IN_PREPROC))
    {
-      newline_iarf(pc, options::nl_return_expr());
+      newline_iarf(pc, nl_expr_value);
    }
 
    if (next->Is(CT_PAREN_OPEN))
    {
-      // See if the return is fully paren'd
+      // See if the return/throw is fully paren'd
       cpar = next->GetNextType(CT_PAREN_CLOSE, next->level);
 
       if (cpar->IsNullChunk())
@@ -2173,9 +2200,9 @@ static Chunk *process_return(Chunk *pc)
       if (  semi->Is(CT_NEWLINE)
          || semi->IsSemicolon())
       {
-         log_rule_B("mod_paren_on_return");
+         log_rule_B(mod_paren_name);
 
-         if (options::mod_paren_on_return() == IARF_REMOVE)
+         if (mod_paren_value == IARF_REMOVE)
          {
             LOG_FMT(LRETURN, "%s(%d): removing parens on orig_line %zu\n",
                     __func__, __LINE__, pc->orig_line);
@@ -2215,16 +2242,16 @@ static Chunk *process_return(Chunk *pc)
                     __func__, __LINE__, pc->orig_line);
 
             // mark & keep them
-            next->SetParentType(CT_RETURN);
-            cpar->SetParentType(CT_RETURN);
+            next->SetParentType(pc->GetType());
+            cpar->SetParentType(pc->GetType());
          }
          return(semi);
       }
    }
-   // We don't have a fully paren'd return. Should we add some?
-   log_rule_B("mod_paren_on_return");
+   // We don't have a fully paren'd return/throw. Should we add some?
+   log_rule_B(mod_paren_name);
 
-   if (!(options::mod_paren_on_return() & IARF_ADD))
+   if (!(mod_paren_value & IARF_ADD))
    {
       return(next);
    }
@@ -2287,7 +2314,7 @@ static Chunk *process_return(Chunk *pc)
    {
       // add the parenthesis
       chunk.SetType(CT_PAREN_OPEN);
-      chunk.SetParentType(CT_RETURN);
+      chunk.SetParentType(pc->GetType());
       chunk.str         = "(";
       chunk.level       = pc->level;
       chunk.pp_level    = pc->pp_level;
@@ -2312,7 +2339,7 @@ static Chunk *process_return(Chunk *pc)
       }
    }
    return(semi);
-} // process_return
+} // process_return_or_throw
 
 
 static bool is_oc_block(Chunk *pc)

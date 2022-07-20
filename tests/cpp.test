@@ -978,6 +978,15 @@
 34542  cpp/sp_byref_paren-r.cfg                             cpp/byref-4.cpp
 34543  cpp/sp_byref_paren-f.cfg                             cpp/byref-4.cpp
 
+34550  cpp/nl_throw_expr-i.cfg                              cpp/throws.cpp
+34551  cpp/nl_throw_expr-a.cfg                              cpp/throws.cpp
+34552  cpp/nl_throw_expr-r.cfg                              cpp/throws.cpp
+34553  cpp/nl_throw_expr-f.cfg                              cpp/throws.cpp
+34554  cpp/mod_paren_on_throw-i.cfg                         cpp/throws.cpp
+34555  cpp/mod_paren_on_throw-a.cfg                         cpp/throws.cpp
+34556  cpp/mod_paren_on_throw-r.cfg                         cpp/throws.cpp
+34557  cpp/mod_paren_on_throw-f.cfg                         cpp/throws.cpp
+
 # Adopt some UT tests
 10000  common/empty.cfg                                     cpp/621_this-spacing.cpp
 10001  common/empty.cfg                                     cpp/622_ifdef-indentation.cpp

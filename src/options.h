@@ -1224,7 +1224,7 @@ sp_between_new_paren;
 extern Option<iarf_e>
 sp_after_newop_paren;
 
-// Add or remove space inside parenthesis of the new operator
+// Add or remove space inside parentheses of the new operator
 // as in 'new(foo) BAR'.
 extern Option<iarf_e>
 sp_inside_newop_paren;
@@ -2496,6 +2496,10 @@ nl_cpp_ldef_brace;
 // Add or remove newline between 'return' and the return expression.
 extern Option<iarf_e>
 nl_return_expr;
+
+// Add or remove newline between 'throw' and the throw expression.
+extern Option<iarf_e>
+nl_throw_expr;
 
 // Whether to add a newline after semicolons, except in 'for' statements.
 extern Option<bool>
@@ -3789,9 +3793,13 @@ mod_full_brace_nl;
 extern Option<bool>
 mod_full_brace_nl_block_rem_mlcond;
 
-// Add or remove unnecessary parenthesis on 'return' statement.
+// Add or remove unnecessary parentheses on 'return' statement.
 extern Option<iarf_e>
 mod_paren_on_return;
+
+// Add or remove unnecessary parentheses on 'throw' statement.
+extern Option<iarf_e>
+mod_paren_on_throw;
 
 // (Pawn) Whether to change optional semicolons to real semicolons.
 extern Option<bool>
