@@ -168,6 +168,7 @@ void combine_labels()
          }
 
          if (  cs_top_is_question(cs, next->level)
+            && !cur->Is(CT_OC_MSG_NAME)
             && next->TestFlags(PCF_IN_CONDITIONAL))             // Issue #3558
          {
             //log_pcf_flags(LGUY, next->GetFlags());
