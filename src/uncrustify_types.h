@@ -87,6 +87,13 @@ enum class char_encoding_e : unsigned int
    e_UTF16_BE   //! utf 16 bit wide, big endian
 };
 
+enum class tracking_type_e : unsigned int
+{
+   TT_NONE,
+   TT_SPACE,
+   TT_NEWLINE
+};
+
 
 class Chunk; //forward declaration
 
@@ -272,7 +279,9 @@ struct cp_data_t
 
    const char        *phase_name;
    const char        *dumped_file;
-   const char        *html_file = nullptr; // for debugging purpose only
+   // for debugging purpose only
+   tracking_type_e   html_type  = tracking_type_e::TT_NONE;
+   const char        *html_file = nullptr;
 };
 
 extern cp_data_t cpd;  // TODO: can we avoid this external variable?
