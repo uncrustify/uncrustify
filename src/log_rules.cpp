@@ -54,7 +54,7 @@ void log_rule3(log_sev_t sev, const char *func, const char *rule)
 
 void log_rule4(const char *rule, Chunk *first)
 {
-   if (cpd.html_file == nullptr)
+   if (!(cpd.html_type == tracking_type_e::TT_SPACE))
    {
       return;
    }
@@ -77,4 +77,32 @@ void log_rule4(const char *rule, Chunk *first)
 
    LOG_FMT(LSPACE, "log_rule4(%d): rule is '%s', after '%s', at line %zu, tracking number is %zu, size is %zu\n",
            __LINE__, rule, first->Text(), first->orig_line, a_number, sizeOfTrack);
+}
+
+
+void log_ruleNL(const char *rule, Chunk *pc)
+{
+   if (!(cpd.html_type == tracking_type_e::TT_NEWLINE))
+   {
+      return;
+   }
+
+   if (pc->tracking == nullptr)
+   {
+      pc->tracking = new track_list;
+      pc->tracking->reserve(3);
+   }
+   // copy the rule
+   size_t length = strlen(rule) + 1;
+   char   *r     = (char *)malloc(length);
+
+   strcpy(r, rule);
+   size_t   a_number = get_A_Number();
+   Track_nr A        = make_pair(a_number, r);
+
+   pc->tracking->push_back(A);
+   size_t sizeOfTrack = pc->tracking->size();
+
+   LOG_FMT(LSPACE, "log_rule4(%d): rule is '%s', after '%s', at line %zu, tracking number is %zu, size is %zu\n",
+           __LINE__, rule, pc->Text(), pc->orig_line, a_number, sizeOfTrack);
 }
