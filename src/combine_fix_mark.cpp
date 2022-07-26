@@ -13,6 +13,8 @@
 #include "flag_parens.h"
 #include "log_rules.h"
 
+#include <iostream>
+
 constexpr static auto LCURRENT = LCOMBINE;
 
 
@@ -308,6 +310,7 @@ void fix_fcn_def_params(Chunk *start)
 
    if (start == nullptr)
    {
+      std::cout << "AAAA exit top 2 " << "\n";
       return;
    }
    LOG_FMT(LFCNP, "%s(%d): Text() '%s', type is %s, on orig_line %zu, level is %zu\n",
@@ -321,6 +324,7 @@ void fix_fcn_def_params(Chunk *start)
 
    if (start->IsNullChunk()) // Coverity CID 76003, 1100782
    {
+      std::cout << "AAAA exit top 1 " << start->Text() << "\n";
       return;
    }
    // ensure start chunk holds a single '(' character
@@ -333,12 +337,14 @@ void fix_fcn_def_params(Chunk *start)
 
    while (pc->IsNotNullChunk())
    {
+      std::cout << "AAAA logic here " << pc->Text() << "\n";
       if (  (  (start->Len() == 1)
             && (start->str[0] == ')'))
          || pc->level < level)
       {
          LOG_FMT(LFCNP, "%s(%d): bailed on Text() '%s', on orig_line %zu\n",
                  __func__, __LINE__, pc->Text(), pc->orig_line);
+                 std::cout << "exit 1\n";
          break;
       }
       LOG_FMT(LFCNP, "%s(%d): %s, Text() '%s' on orig_line %zu, level %zu\n",
@@ -348,6 +354,7 @@ void fix_fcn_def_params(Chunk *start)
       if (pc->level > level)
       {
          pc = pc->GetNextNcNnl();
+         std::cout << "exit 2\n";
          continue;
       }
 
@@ -497,6 +504,7 @@ void fix_typedef(Chunk *start)
           && last_op->GetParentType() == CT_ENUM))
    {
       flag_parens(last_op, PCF_NONE, CT_FPAREN_OPEN, CT_TYPEDEF, false);
+      std::cout << "BBBB 1\n";
       fix_fcn_def_params(last_op);
 
       the_type = last_op->GetPrevNcNnlNi(E_Scope::PREPROC);   // Issue #2279
@@ -825,6 +833,7 @@ void mark_cpp_constructor(Chunk *pc)
       return;
    }
    // Mark parameters
+   std::cout << "BBBB 2\n";
    fix_fcn_def_params(paren_open);
    after = flag_parens(paren_open, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CLASS_PROTO, false);
 
@@ -861,6 +870,7 @@ void mark_cpp_constructor(Chunk *pc)
          if (  var->Is(CT_TYPE)
             || var->Is(CT_WORD))
          {
+            std::cout << "setType CT_FUNC_CTOR_VAR 1\n";
             var->SetType(CT_FUNC_CTOR_VAR);
             flag_parens(tmp, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CTOR_VAR, false);
          }
@@ -1281,6 +1291,7 @@ void mark_function(Chunk *pc)
 
    if (pc->TestFlags(PCF_IN_CONST_ARGS))
    {
+      std::cout << "setType CT_FUNC_CTOR_VAR 2\n";
       pc->SetType(CT_FUNC_CTOR_VAR);
       LOG_FMT(LFCN, "%s(%d):   1) Marked [%s] as FUNC_CTOR_VAR on line %zu col %zu\n",
               __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
@@ -1298,12 +1309,14 @@ void mark_function(Chunk *pc)
 
    if (next == nullptr)
    {
+      std::cout << "BBBB 4 ret 7\n";
       return;
    }
    next = skip_attribute_next(next);
 
    if (next == nullptr)
    {
+      std::cout << "BBBB 4 ret 6\n";
       return;
    }
    // Find the open and close parenthesis
@@ -1315,6 +1328,7 @@ void mark_function(Chunk *pc)
    {
       LOG_FMT(LFCN, "%s(%d): No parens found for [%s] on orig_line %zu, orig_col %zu\n",
               __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
+              std::cout << "BBBB 4 ret 5\n";
       return;
    }
    /*
@@ -1401,6 +1415,7 @@ void mark_function(Chunk *pc)
             tmp2->SetFlagBits(PCF_VAR_1ST_DEF);
          }
          flag_parens(tmp, PCF_NONE, CT_FPAREN_OPEN, CT_FUNC_PROTO, false);
+         std::cout << "BBBB 3\n";
          fix_fcn_def_params(tmp);
          return;
       }
@@ -1502,6 +1517,7 @@ void mark_function(Chunk *pc)
                        prev->Text(), get_token_name(prev->GetType()));
 
                mark_cpp_constructor(pc);
+               std::cout << "BBBB 4 ret 4\n";
                return;
             }
             // Point to the item previous to the class name
@@ -1841,6 +1857,7 @@ void mark_function(Chunk *pc)
       {
          set_paren_parent(tmp, pc->GetType());
       }
+      std::cout << "BBBB 4 ret 3\n";
       return;
    }
    /*
@@ -1858,19 +1875,23 @@ void mark_function(Chunk *pc)
 
    while (tmp->IsNotNullChunk())
    {
+      std::cout << "CCCC " << tmp->level << " " << pc->level << "\n";
       // Only care about brace or semicolon on the same level
       if (tmp->level < pc->level)
       {
          // No semicolon - guess that it is a prototype
          pc->ResetFlagBits(PCF_VAR_1ST_DEF);
          pc->SetType(CT_FUNC_PROTO);
+         std::cout << "CCCCC 3 \n";
          break;
       }
       else if (tmp->level == pc->level)
       {
+         std::cout << "CCCC hereee\n";
          if (tmp->Is(CT_BRACE_OPEN))
          {
             // its a function def for sure
+            std::cout << "CCCCC 2 \n";
             break;
          }
          else if (tmp->IsSemicolon())
@@ -1881,15 +1902,18 @@ void mark_function(Chunk *pc)
             pc->SetType(CT_FUNC_PROTO);
             LOG_FMT(LFCN, "%s(%d):   2) Marked Text() is '%s', as FUNC_PROTO on orig_line %zu, orig_col %zu\n",
                     __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
+            std::cout << pc->Text() << " sSet to proto \n";
             break;
          }
          else if (pc->Is(CT_COMMA))
          {
+            std::cout << "setType CT_FUNC_CTOR_VAR 3\n";
             pc->SetType(CT_FUNC_CTOR_VAR);
             LOG_FMT(LFCN, "%s(%d):   2) Marked Text() is '%s', as FUNC_CTOR_VAR on orig_line %zu, orig_col %zu\n",
                     __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
             break;
          }
+         std::cout << "CCCCC 1 \n";
       }
       tmp = tmp->GetNextNcNnl();
    }
@@ -1964,13 +1988,21 @@ void mark_function(Chunk *pc)
       {
          if (!can_be_full_param(ref, tmp))
          {
+            std::cout << ref->Text() << tmp->Text() << "D2\n";
             is_param = false;
          }
       }
 
+      std::cout << pc->Text() << "\n";
+
+      std::cout << is_extern << is_param << "\n";
+
+
+
       if (  !is_extern
          && !is_param)
       {
+         std::cout << "setType CT_FUNC_CTOR_VAR 4\n";
          pc->SetType(CT_FUNC_CTOR_VAR);
          LOG_FMT(LFCN, "%s(%d):   3) Marked Text() '%s' as FUNC_CTOR_VAR on orig_line %zu, orig_col %zu\n",
                  __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
@@ -1996,6 +2028,7 @@ void mark_function(Chunk *pc)
                   && p_op->GetParentType() != CT_STRUCT
                   && p_op->GetParentType() != CT_NAMESPACE)
                {
+                  std::cout << "setType CT_FUNC_CTOR_VAR 5\n";
                   pc->SetType(CT_FUNC_CTOR_VAR);
                   LOG_FMT(LFCN, "%s(%d):   4) Marked Text() is'%s', as FUNC_CTOR_VAR on orig_line %zu, orig_col %zu\n",
                           __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
@@ -2022,9 +2055,12 @@ void mark_function(Chunk *pc)
    }
    //flag_parens(paren_open, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, pc->GetType(), true);
 
+   std::cout << "BBBB " << pc->Text() << "\n";
    if (pc->Is(CT_FUNC_CTOR_VAR))
    {
       pc->SetFlagBits(PCF_VAR_1ST_DEF);
+
+      std::cout << "BBBB 4 ret 2\n";
       return;
    }
 
@@ -2034,10 +2070,12 @@ void mark_function(Chunk *pc)
 
       if (next->IsNullChunk())
       {
+         std::cout << "BBBB 4 ret 1\n";
          return;
       }
    }
    // Mark parameters and return type
+   std::cout << "BBBB 4\n";
    fix_fcn_def_params(next);
    mark_function_return_type(pc, pc->GetPrevNcNnlNi(), pc->GetType());   // Issue #2279
 
@@ -2258,6 +2296,7 @@ bool mark_function_type(Chunk *pc)
    apo->SetParentType(pt);
    apc->SetType(CT_FPAREN_CLOSE);
    apc->SetParentType(pt);
+   std::cout << "BBBB 5\n";
    fix_fcn_def_params(apo);
 
    if (aft->IsSemicolon())

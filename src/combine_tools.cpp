@@ -11,6 +11,8 @@
 #include "unc_ctype.h"
 #include "uncrustify.h"
 
+#include <iostream>
+
 
 bool can_be_full_param(Chunk *start, Chunk *end)
 {
@@ -101,13 +103,15 @@ bool can_be_full_param(Chunk *start, Chunk *end)
 
          if (tmp1->IsNullChunk())
          {
-            return(false);
+            std::cout << __LINE__ << "\n";
+return(false);
          }
          Chunk *tmp2 = tmp1->GetNextNcNnl(E_Scope::PREPROC);
 
          if (tmp2->IsNullChunk())
          {
-            return(false);
+            std::cout << __LINE__ << "\n";
+return(false);
          }
 
          if (  tmp2->Is(CT_COMMA)
@@ -119,7 +123,8 @@ bool can_be_full_param(Chunk *start, Chunk *end)
 
                if (pc->IsNullChunk())
                {
-                  return(false);
+                  std::cout << __LINE__ << "\n";
+return(false);
                }
                LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', type is %s\n",
                        __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()));
@@ -133,7 +138,8 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          {
             LOG_FMT(LFPARAM, "%s(%d): <== '%s' not fcn type!\n",
                     __func__, __LINE__, get_token_name(pc->GetType()));
-            return(false);
+            std::cout << __LINE__ << "\n";
+return(false);
          }
       }
       else if (  (  word_count == 1
@@ -149,6 +155,12 @@ bool can_be_full_param(Chunk *start, Chunk *end)
             return(false);
          }
          Chunk *tmp2 = tmp1->GetNextNcNnl(E_Scope::PREPROC);
+         if (tmp2->Is(CT_QUALIFIER)) {
+            // tmp2 is the "nullable" in this case:
+            // void (^nullable name)(params)
+            // skip the qualifier
+            tmp2 = tmp2->GetNextNcNnl(E_Scope::PREPROC);
+         }
 
          if (tmp2->IsNullChunk())
          {
@@ -156,10 +168,25 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          }
          Chunk *tmp3 = (tmp2->IsString(")")) ? tmp2 : tmp2->GetNextNcNnl(E_Scope::PREPROC);
 
+
+
          if (tmp3->IsNullChunk())
          {
             return(false);
          }
+
+         std::cout << "hiii\n";
+         std::cout << tmp1->GetType() << "      "  << tmp2->GetType()  << "      " << tmp3->GetType() << "\n";
+         std::cout << tmp1->Text() << "      "  << tmp2->Text()  << "      " << tmp3->Text() << "\n";
+         std::cout << tmp3->IsString(")") << "\n";
+         std::cout << tmp1->IsString("*") << "\n";
+
+         std::cout << tmp1->IsString("^") << "\n";
+
+         std::cout << (tmp2->GetType() == CT_WORD) << "\n";
+
+         std::cout << tmp2->IsString(")") << "\n";
+
 
          if (  !tmp3->IsString(")")
             || !(  tmp1->IsString("*")
@@ -169,6 +196,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
          {
             LOG_FMT(LFPARAM, "%s(%d): <== '%s' not fcn type!\n",
                     __func__, __LINE__, get_token_name(pc->GetType()));
+            std::cout << __LINE__ << "\n";
             return(false);
          }
          LOG_FMT(LFPARAM, "%s(%d): <skip fcn type>\n",
@@ -223,7 +251,8 @@ bool can_be_full_param(Chunk *start, Chunk *end)
       {
          LOG_FMT(LFPARAM, "%s(%d): <== type is %s, no way!, type count is %d, word count is %d\n",
                  __func__, __LINE__, get_token_name(pc->GetType()), type_count, word_count);
-         return(false);
+         std::cout << __LINE__ << "\n";
+return(false);
       }
       LOG_FMT(LFPARAM, "%s(%d): pc->Text() is '%s', type is %s\n",
               __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()));
@@ -315,7 +344,8 @@ bool chunk_ends_type(Chunk *start)
 
    if (a)
    {
-      return(false);
+      std::cout << __LINE__ << "\n";
+return(false);
    }
 
    for ( ; pc->IsNotNullChunk(); pc = pc->GetPrevNcNnlNi()) // Issue #2279
@@ -400,7 +430,8 @@ bool chunkstack_match(ChunkStack &cs, Chunk *pc)
       }
    }
 
-   return(false);
+   std::cout << __LINE__ << "\n";
+return(false);
 } // chunkstack_match
 
 
@@ -496,7 +527,8 @@ bool go_on(Chunk *pc, Chunk *start)
       || pc->IsNullChunk()
       || pc->level != start->level)
    {
-      return(false);
+      std::cout << __LINE__ << "\n";
+return(false);
    }
 
    if (pc->TestFlags(PCF_IN_FOR))
@@ -514,7 +546,8 @@ bool is_ucase_str(const char *str, size_t len)
    {
       if (unc_toupper(*str) != *str)
       {
-         return(false);
+         std::cout << __LINE__ << "\n";
+return(false);
       }
       str++;
    }
