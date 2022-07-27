@@ -149,6 +149,7 @@ bool can_be_full_param(Chunk *start, Chunk *end)
             return(false);
          }
          Chunk *tmp2 = tmp1->GetNextNcNnl(E_Scope::PREPROC);
+
          if (tmp2->Is(CT_QUALIFIER))
          {
             // tmp2 is the "nullable" qualifier in this case:
