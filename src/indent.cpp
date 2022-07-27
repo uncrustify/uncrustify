@@ -1759,7 +1759,8 @@ void indent_text()
                (options::indent_continue() > 0)
                && enclosure
                && linematch
-               && toplevel;
+               && toplevel
+               && frm.top().pc->SkipToMatch()->IsOnSameLine(frm.top().pc);
 
             if (sameLine && ((isAssignSameLine) || (closureSameLineTopLevel)))
             {

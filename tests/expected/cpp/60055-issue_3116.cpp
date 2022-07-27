@@ -129,8 +129,8 @@ A(
 // Inside scope
 {
     std::thread([](const char *c) {
-        std::cout << c << std::endl;
-    }).detach();
+            std::cout << c << std::endl;
+        }).detach();
 
     std::thread(
         [](const char *c) {
@@ -149,8 +149,8 @@ A(
 }
 
 Func(std::count_if(v.begin(), v.end(), [&](const auto &a) {
-    return a == 3;
-}));
+        return a == 3;
+    }));
 
 Func(
     std::count_if(v.begin(), v.end(), [&](const auto &a)
@@ -210,14 +210,14 @@ else
 
 // Test case from issue 1296 and some variants
 obj->Func([&](int a)
-{
-    return b;
-});
+    {
+        return b;
+    });
 
 obj->Func([] -> int
-{
-    return b;
-});
+    {
+        return b;
+    });
 
 obj->Func([]
     {
