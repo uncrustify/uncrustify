@@ -2501,7 +2501,6 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
          pc.str.append(ctx.get());
       }
       pc.SetType(punc->type);
-      // std::cout << "AAAAA 2: " << pc.Text() << "\n";
       pc.SetFlagBits(PCF_PUNCTUATOR);
       return(true);
    }

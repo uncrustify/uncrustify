@@ -23,7 +23,6 @@
 #include "unc_tools.h"
 
 #include <limits>
-#include <iostream>
 
 constexpr static auto LCURRENT = LCOMBINE;
 
@@ -410,7 +409,6 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       {
          if (tmp->Is(CT_STAR))
          {
-            std::cout << "set type CT_DEREF 1\n";
             tmp->SetType(CT_DEREF);
             return;                  // d_40006
          }
@@ -1080,7 +1078,6 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    if (  pc->Is(CT_CATCH)
       && next->Is(CT_SPAREN_OPEN))
    {
-      std::cout << "BBBB 6\n";
       fix_fcn_def_params(next);
       return;
    }
@@ -1251,12 +1248,10 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          }
          else if (prev->Is(CT_COLON))
          {
-            std::cout << "set type CT_DEREF 2\n";
             pc->SetType(CT_DEREF);
          }
          else
          {
-            std::cout << "set type CT_DEREF 3\n";
             pc->SetType(CT_DEREF);
          }
       }
@@ -1366,7 +1361,6 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                  || prev->Is(CT_DELETE)
                  || pc->GetParentType() == CT_SIZEOF))
       {
-         std::cout << "set type CT_DEREF 4\n";
          pc->SetType(CT_DEREF);
       }
       else if (  (  prev->Is(CT_WORD)
@@ -1423,7 +1417,6 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             if (is_multiplication)
             {
                // double result = Constants::PI * factor;
-               std::cout << "AAAA set arith 1\n";
                pc->SetType(CT_ARITH);
             }
             else
@@ -1481,18 +1474,8 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          }
          else
          {
-            cout << "AAAAA changing here " << prev->Text() << prev->GetType() << "\n";
-            cout << prev->TestFlags(PCF_PUNCTUATOR) << "\n";
-            cout << prev->IsParenClose() << "\n";
-            cout << prev->Is(CT_SPAREN_CLOSE) << "\n";
-            cout << (prev->GetParentType() == CT_MACRO_FUNC) << "\n";
-            cout << prev->IsNot(CT_SQUARE_CLOSE) << "\n";
-            cout << prev->IsNot(CT_DC_MEMBER) << "\n";
             // Issue 1402
-            pc->SetType((  (
-               prev->TestFlags(PCF_PUNCTUATOR)
-               || prev->Is(CT_TYPE)
-            )
+            pc->SetType((  prev->TestFlags(PCF_PUNCTUATOR)
                         && (  !prev->IsParenClose()
                            || prev->Is(CT_SPAREN_CLOSE)
                            || prev->GetParentType() == CT_MACRO_FUNC)
@@ -1575,7 +1558,6 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          }
          else
          {
-            std::cout << "AAAA set arith 2\n";
             pc->SetType(CT_ARITH);
 
             if (  prev->Is(CT_WORD)
@@ -1627,7 +1609,6 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       }
       else
       {
-         std::cout << "AAAA set arith 3\n";
          pc->SetType(CT_ARITH);
       }
    }
@@ -2647,7 +2628,6 @@ static void handle_cpp_lambda(Chunk *sq_o)
 
    if (pa_c->IsNotNullChunk())
    {
-      std::cout << "BBBB 7\n";
       fix_fcn_def_params(pa_o);
    }
    //handle self calling lambda paren
@@ -3035,7 +3015,6 @@ static void handle_oc_block_literal(Chunk *pc)
          LOG_FMT(LOCBLK, " -- marking parens @ apo->orig_line is %zu, apo->orig_col is %zu and apc->orig_line is %zu, apc->orig_col is %zu\n",
                  apo->orig_line, apo->orig_col, apc->orig_line, apc->orig_col);
          flag_parens(apo, PCF_OC_ATYPE, CT_FPAREN_OPEN, CT_OC_BLOCK_EXPR, true);
-         std::cout << "BBBB 8\n";
          fix_fcn_def_params(apo);
       }
       lbp = apo->GetPrevNcNnlNi();   // Issue #2279
@@ -3138,7 +3117,6 @@ static void handle_oc_block_type(Chunk *pc)
          apo->SetParentType(CT_FUNC_PROTO);
          apc->SetType(CT_FPAREN_CLOSE);
          apc->SetParentType(CT_FUNC_PROTO);
-         std::cout << "BBBB 9\n";
          fix_fcn_def_params(apo);
          mark_function_return_type(nam, tpo->GetPrevNcNnlNi(), pt);   // Issue #2279
       }
@@ -4004,12 +3982,10 @@ static void handle_proto_wrap(Chunk *pc)
 
    if (tmp->Is(CT_PAREN_OPEN))
    {
-      std::cout << "BBBB 10\n";
       fix_fcn_def_params(tmp);
    }
    else
    {
-      std::cout << "BBBB 11\n";
       fix_fcn_def_params(opp);
       name->SetType(CT_WORD);
    }
