@@ -39,6 +39,7 @@
 50033  oc/mod_sort_incl_import_prioritize_extensionless.cfg     oc/sort_import.m
 50034  oc/mod_sort_incl_import_prioritize_angle_over_quotes.cfg oc/sort_import.m
 50035  oc/mod_sort_incl_import_grouping_enabled.cfg             oc/sort_import_group.m
+50036  oc/mod_sort_incl_import_grouping_enabled_with_regex.cfg  oc/sort_import_group_regex.mm
 
 50040  oc/objc_complex_method.cfg               oc/complex_method.m
 
