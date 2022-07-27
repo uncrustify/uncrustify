@@ -17,7 +17,6 @@
 
 #include <regex>
 #include <stack>
-#include <iostream>
 
 
 #define LE_COUNT(x)    cpd.le_counts[static_cast<size_t>(LE_ ## x)]
