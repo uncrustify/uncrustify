@@ -174,6 +174,9 @@
 50905  oc/double_angle_space_2.cfg              oc/double_angle_space.m
 50906  oc/double_angle_space_3.cfg              oc/double_angle_space.m
 
+50907  oc/align_colon_with_ternary_1.cfg        oc/align_colon_with_ternary_1.m
+50908  oc/align_colon_with_ternary_2.cfg        oc/align_colon_with_ternary_2.m
+
 # test the options sp_ with the value "ignore"
 51000  oc/sp_cond_ternary_short.cfg             oc/sp_cond_ternary_short.m
 51001  oc/sp_enum_paren-i.cfg                   oc/ns_enum-i.m
