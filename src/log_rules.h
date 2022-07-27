@@ -33,6 +33,14 @@ using namespace uncrustify;
    log_rule3(LCURRENT, __func__, (rule))
 #endif
 
+#ifdef SUPER_LOG
+#define log_rule_NL(rule) \
+   log_ruleNL((rule), pc)
+#else
+#define log_rule_NL(rule) \
+   log_ruleNL(LCURRENT, __func__, (rule))
+#endif
+
 void log_rule2(const char *func, size_t line, const char *rule, Chunk *first, Chunk *second);
 
 
@@ -45,5 +53,7 @@ void log_rule3(log_sev_t sev, const char *func, const char *rule);
 #endif
 
 void log_rule4(const char *rule, Chunk *first);
+
+void log_ruleNL(const char *rule, Chunk *pc);
 
 #endif /* LOG_RULES_H_INCLUDED */

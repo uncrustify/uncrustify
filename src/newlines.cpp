@@ -1899,6 +1899,7 @@ static void newlines_do_else(Chunk *start, iarf_e nl_opt)
    LOG_FUNC_ENTRY();
 
    log_rule_B("nl_define_macro");
+   log_ruleNL("nl_define_macro", start);
 
    if (  nl_opt == IARF_IGNORE
       || (  start->TestFlags(PCF_IN_PREPROC)
@@ -4074,6 +4075,7 @@ void newlines_cleanup_braces(bool first)
             if (pc->level == pc->brace_level)
             {
                log_rule_B("nl_class_brace");
+               log_ruleNL("nl_class_brace", pc->GetPrevNnl());
                newlines_do_else(pc->GetPrevNnl(), options::nl_class_brace());
             }
             break;
@@ -4662,6 +4664,7 @@ void newlines_cleanup_braces(bool first)
       else if (pc->Is(CT_SEMICOLON))
       {
          log_rule_B("nl_after_semicolon");
+         log_rule_NL("nl_after_semicolon");
 
          if (  !pc->TestFlags(PCF_IN_SPAREN)
             && !pc->TestFlags(PCF_IN_PREPROC)
@@ -5003,6 +5006,7 @@ void newlines_cleanup_braces(bool first)
               && !pc->TestFlags(PCF_IN_PREPROC))
       {
          log_rule_B("nl_remove_extra_newlines");
+         log_rule_NL("nl_remove_extra_newlines");
          newline_iarf(pc, IARF_REMOVE);
       }
       else if (  pc->Is(CT_MEMBER)

@@ -302,7 +302,8 @@ void usage(const char *argv0)
            " -L SEV                : Set the log severity (see log_levels.h; note 'A' = 'all')\n"
            " -s                    : Show the log severity in the logs.\n"
            " --decode              : Decode remaining args (chunk flags) and exit.\n"
-           " --tracking_space FILE : Prepare tracking information for debugging.\n"
+           " --tracking_space FILE : Prepare space tracking information for debugging.\n"
+           " --tracking_nl FILE    : Prepare newline tracking information for debugging.\n"
            "                         Cannot be used with the -o option'\n"
            "\n"
            "Usage Examples\n"
@@ -660,8 +661,33 @@ int main(int argc, char *argv[])
    const char *output_file = arg.Param("-o");
 
    // for debugging tracking
-   cpd.html_file = arg.Param("--tracking_space");
+   const char *html_file = nullptr;
+   html_file = arg.Param("--tracking_space");
 
+   if (html_file != nullptr)
+   {
+      cpd.html_type = tracking_type_e::TT_SPACE;
+      cpd.html_file = html_file;
+      html_file     = arg.Param("--tracking_nl");
+      bool try_it = html_file != nullptr;
+
+      if (try_it)
+      {
+         usage_error("Cannot specify both --tracking_space and --tracking_nl.");
+         return(EX_NOUSER);
+      }
+   }
+   else
+   {
+      html_file = arg.Param("--tracking_nl");
+      bool try_it = html_file != nullptr;
+
+      if (try_it)
+      {
+         cpd.html_type = tracking_type_e::TT_NEWLINE;
+         cpd.html_file = html_file;
+      }
+   }
    LOG_FMT(LDATA, "%s\n", UNCRUSTIFY_VERSION);
    LOG_FMT(LDATA, "config_file = %s\n", cfg_file.c_str());
    LOG_FMT(LDATA, "output_file = %s\n", (output_file != nullptr) ? output_file : "null");
