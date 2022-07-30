@@ -830,7 +830,7 @@ static void convert_brace(Chunk *br)
             || (  br->Is(CT_VBRACE_CLOSE)
                && brace->orig_line < tmp->orig_line))
          {
-            if (chunk_safe_to_del_nl(tmp))
+            if (tmp->SafeToDeleteNl())
             {
                Chunk::Delete(tmp);
             }

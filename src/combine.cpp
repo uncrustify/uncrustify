@@ -790,7 +790,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
       return;
    }
 
-   if (  chunk_is_class_enum_struct_union(pc)
+   if (  pc->IsClassEnumStructOrUnion()
       && prev->IsNot(CT_TYPEDEF))
    {
       EnumStructUnionParser parser;
@@ -2439,7 +2439,7 @@ static void handle_cpp_template(Chunk *pc)
          tmp = tmp->GetNextNcNnl();
       }
 
-      if (chunk_is_class_or_struct(tmp))
+      if (tmp->IsClassOrStruct())
       {
          tmp->SetParentType(CT_TEMPLATE);
 

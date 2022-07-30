@@ -543,6 +543,12 @@ public:
    bool IsPreproc() const;
 
    /**
+    * @brief checks whether the other chunk has the same preproc flags
+    * @return true if the other chunk has the same preproc flags
+    */
+   bool IsSamePreproc(const Chunk *other) const;
+
+   /**
     * @brief checks whether the chunk is either a comment or a newline
     * @return true if the chunk is either a comment or a newline, false otherwise
     */
@@ -715,6 +721,13 @@ public:
    bool IsParenClose() const;
 
    /**
+    * @brief checks if a chunk points to the opening parentheses of a
+    * for (...in...) loop in Objective-C.
+    * @return true  if the chunk is the opening parentheses of a for-in loop
+    */
+   bool IsOCForinOpenParen() const;
+
+   /**
     * @brief checks whether the chunk is a type defining token
     * @return true if the chunk is a type defining token
     */
@@ -727,10 +740,34 @@ public:
    bool IsWord() const;
 
    /**
-    * @brief checks whether the chunk is a CT_ENUM or CT_ENUM_CLASS
-    * @return true if the chunk is a CT_ENUM or CT_ENUM_CLASS
+    * @brief checks whether the chunk is an enum or an enum class
+    * @return true if the chunk is an enum or an enum class
     */
    bool IsEnum() const;
+
+   /**
+    * @brief checks whether the chunk is a class or a struct
+    * @return true if the chunk is a class or a struct
+    */
+   bool IsClassOrStruct() const;
+
+   /**
+    * @brief checks whether the chunk is a class, struct or union
+    * @return true if the chunk is a class, struct or union
+    */
+   bool IsClassStructOrUnion() const;
+
+   /**
+    * @brief checks whether the chunk is a class, enum, struct or union
+    * @return true if the chunk is a class, enum, struct or union
+    */
+   bool IsClassEnumStructOrUnion() const;
+
+   /**
+    * @brief checks whether there is a newline between this chunk and the other
+    * @return true if there is a newline between this chunk and the other
+    */
+   bool IsNewlineBetween(const Chunk *other) const;
 
 
    // --------- Util functions
@@ -764,16 +801,37 @@ public:
    void MoveAfter(Chunk *ref);
 
    /**
-    * @brief Swaps the place of this chunk with the given one
+    * @brief swaps the place of this chunk with the given one
     * @param other the other chunk
     */
    void Swap(Chunk *other);
 
    /**
-    * @brief Swaps the two lines that are started by the current chunk and the other chunk
+    * @brief swaps the two lines that are started by the current chunk and the other chunk
     * @param other the other chunk
     */
    void SwapLines(Chunk *other);
+
+   //!
+   /**
+    * @brief skips to the final word/type in a :: chain
+    * @return pointer to the chunk after the final word/type in a :: chain
+    */
+   Chunk *SkipDcMember() const;
+
+   /**
+    * @brief compare the positions of the chunk with another one
+    * @param other the other chunk
+    * @return returns -1 if this chunk comes first, +1 if it comes after, or 0.
+    */
+   int ComparePosition(const Chunk *other) const;
+
+   /**
+    * Returns true if it is safe to delete the newline token.
+    * The prev and next chunks must have the same PCF_IN_PREPROC flag AND
+    * the newline can't be after a C++ comment.
+    */
+   bool SafeToDeleteNl() const;
 
 
    // --------- Data members
@@ -1070,11 +1128,6 @@ inline Chunk *Chunk::SkipToMatchRev(E_Scope scope) const
 }
 
 
-//! skip to the final word/type in a :: chain
-Chunk *chunk_skip_dc_member(Chunk *start, E_Scope scope = E_Scope::ALL);
-Chunk *chunk_skip_dc_member_rev(Chunk *start, E_Scope scope = E_Scope::ALL);
-
-
 inline bool Chunk::IsCppInheritanceAccessSpecifier() const
 {
    return(  language_is_set(LANG_CPP)
@@ -1161,28 +1214,6 @@ inline bool Chunk::IsNullable() const
 }
 
 
-inline bool Chunk::IsAddress() const
-{
-   if (  IsNotNullChunk()
-      && (  Is(CT_BYREF)
-         || (  Len() == 1
-            && str[0] == '&'
-            && IsNot(CT_OPERATOR_VAL))))
-   {
-      Chunk *prevc = GetPrev();
-
-      if (  TestFlags(PCF_IN_TEMPLATE)
-         && (  prevc->Is(CT_COMMA)
-            || prevc->Is(CT_ANGLE_OPEN)))
-      {
-         return(false);
-      }
-      return(true);
-   }
-   return(false);
-}
-
-
 inline bool Chunk::IsMsRef() const
 {
    return(  language_is_set(LANG_CPP)
@@ -1206,10 +1237,6 @@ inline bool Chunk::IsPointerOrReference() const
    return(  IsPointerOperator()
          || Is(CT_BYREF));
 }
-
-
-//! Check to see if there is a newline between the two chunks
-bool chunk_is_newline_between(Chunk *start, Chunk *end);
 
 
 inline bool Chunk::IsBraceOpen() const
@@ -1245,97 +1272,67 @@ inline bool Chunk::IsParenClose() const
 }
 
 
-/**
- * Returns true if either chunk is null or both have the same preproc flags.
- * If this is true, you can remove a newline/nl_cont between the two.
- */
-static inline bool chunk_same_preproc(Chunk *pc1, Chunk *pc2)
+inline bool Chunk::IsSamePreproc(const Chunk *other) const
 {
-   return(  pc1 == nullptr
-         || pc1->IsNullChunk()
-         || pc2 == nullptr
-         || pc2->IsNullChunk()
-         || ((pc1->GetFlags() & PCF_IN_PREPROC) == (pc2->GetFlags() & PCF_IN_PREPROC)));
+   return(  IsNotNullChunk()
+         && other->IsNotNullChunk()
+         && (TestFlags(PCF_IN_PREPROC) == other->TestFlags(PCF_IN_PREPROC)));
 }
 
 
-/**
- * Returns true if it is safe to delete the newline token.
- * The prev and next chunks must have the same PCF_IN_PREPROC flag AND
- * the newline can't be after a C++ comment.
- */
-static inline bool chunk_safe_to_del_nl(Chunk *nl)
+inline bool Chunk::SafeToDeleteNl() const
 {
-   if (nl == nullptr)
-   {
-      nl = Chunk::NullChunkPtr;
-   }
-   Chunk *tmp = nl->GetPrev();
+   Chunk *tmp = GetPrev();
 
    if (tmp->Is(CT_COMMENT_CPP))
    {
       return(false);
    }
-   return(chunk_same_preproc(tmp, nl->GetNext()));
+   return(tmp->IsSamePreproc(GetNext()));
 }
-
-
-/**
- * Checks if a chunk points to the opening parentheses of a
- * for(...in...) loop in Objective-C.
- *
- * @return true  - the chunk is the opening parentheses of a for in loop
- */
-static inline bool chunk_is_forin(Chunk *pc)
-{
-   if (  language_is_set(LANG_OC)
-      && pc->Is(CT_SPAREN_OPEN))
-   {
-      Chunk *prev = pc->GetPrevNcNnl();
-
-      if (prev->Is(CT_FOR))
-      {
-         Chunk *next = pc;
-
-         while (  next->IsNotNullChunk()
-               && next->IsNot(CT_SPAREN_CLOSE)
-               && next->IsNot(CT_IN))
-         {
-            next = next->GetNextNcNnl();
-         }
-
-         if (next->Is(CT_IN))
-         {
-            return(true);
-         }
-      }
-   }
-   return(false);
-}
-
-
-/**
- * Returns true if pc is one of CT_CLASS, CT_ENUM, CT_ENUM_CLASS, CT_STRUCT or CT_UNION
- */
-bool chunk_is_class_enum_struct_union(Chunk *pc);
-
-
-/**
- * Returns true if pc is a CT_CLASS or CT_STRUCT
- */
-bool chunk_is_class_or_struct(Chunk *pc);
-
-
-/**
- * Returns true if pc is one of CT_CLASS, CT_STRUCT or CT_UNION
- */
-bool chunk_is_class_struct_union(Chunk *pc);
 
 
 inline bool Chunk::IsEnum() const
 {
    return(  Is(CT_ENUM)
          || Is(CT_ENUM_CLASS));
+}
+
+
+inline bool Chunk::IsClassOrStruct() const
+{
+   return(  Is(CT_CLASS)
+         || Is(CT_STRUCT));
+}
+
+
+inline bool Chunk::IsClassStructOrUnion() const
+{
+   return(  IsClassOrStruct()
+         || Is(CT_UNION));
+}
+
+
+inline bool Chunk::IsClassEnumStructOrUnion() const
+{
+   return(  IsClassStructOrUnion()
+         || IsEnum());
+}
+
+
+inline bool Chunk::IsNewlineBetween(const Chunk *other) const
+{
+   Chunk *pc = const_cast<Chunk *>(this);
+
+   while (pc != other)
+   {
+      if (pc->IsNewline())
+      {
+         return(true);
+      }
+      pc = pc->GetNext();
+   }
+   return(false);
 }
 
 
@@ -1346,21 +1343,6 @@ inline bool Chunk::IsEnum() const
 
 
 E_Token get_type_of_the_parent(Chunk *pc);
-
-
-/**
- * @brief compare the positions of two tokens in a file.
- *
- * The function compares the two positions of two tokens.
- *
- * @param A_token
- * @param B_token
- *
- * @return returns an integer less than, equal to, or greater than zero
- *         if A_token is found, respectively, to be less/before than, to
- *         match, or be greater/after than B_token.
- */
-int chunk_compare_position(const Chunk *A_token, const Chunk *B_token);
 
 
 #endif /* CHUNK_LIST_H_INCLUDED */
