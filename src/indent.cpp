@@ -2261,7 +2261,7 @@ void indent_text()
                frm.top().indent = frm.prev().indent;
                log_indent();
             }
-            else if (  !chunk_is_newline_between(pc, next)
+            else if (  !pc->IsNewlineBetween(next)
                     && next->GetParentType() != CT_BRACED_INIT_LIST
                     && options::indent_token_after_brace()
                     && !pc->TestFlags(PCF_ONE_LINER)) // Issue #1108

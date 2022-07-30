@@ -440,7 +440,7 @@ void tokenize_cleanup()
        */
       if (next_non_attr->Is(CT_WORD))
       {
-         if (chunk_is_class_enum_struct_union(pc))
+         if (pc->IsClassEnumStructOrUnion())
          {
             next_non_attr->SetType(CT_TYPE);
          }

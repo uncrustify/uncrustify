@@ -821,7 +821,7 @@ void newline_del_between(Chunk *start, Chunk *end)
    log_func_stack_inline(LNEWLINE);
 
    // Can't remove anything if the preproc status differs
-   if (!chunk_same_preproc(start, end))
+   if (!start->IsSamePreproc(end))
    {
       return;
    }
@@ -841,7 +841,7 @@ void newline_del_between(Chunk *start, Chunk *end)
             || prev->IsNewline()
             || next->IsNewline())
          {
-            if (chunk_safe_to_del_nl(pc))
+            if (pc->SafeToDeleteNl())
             {
                if (pc == start)
                {
@@ -1061,7 +1061,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
                while ((prev = pc->GetPrevNvb())->IsNewline())
                {
                   // Make sure we don't combine a preproc and non-preproc
-                  if (!chunk_safe_to_del_nl(prev))
+                  if (!prev->SafeToDeleteNl())
                   {
                      break;
                   }
@@ -1415,7 +1415,7 @@ static void remove_next_newlines(Chunk *start)
    while ((next = start->GetNext())->IsNotNullChunk())
    {
       if (  next->IsNewline()
-         && chunk_safe_to_del_nl(next))
+         && next->SafeToDeleteNl())
       {
          Chunk::Delete(next);
          MARK_CHANGE();
@@ -1961,7 +1961,7 @@ static bool is_var_def(Chunk *pc, Chunk *next)
    else if (next->Is(CT_DC_MEMBER))
    {
       // If next token is CT_DC_MEMBER, skip it
-      next = chunk_skip_dc_member(next);
+      next = next->SkipDcMember();
    }
    else if (next->Is(CT_ANGLE_OPEN))
    {
@@ -2013,7 +2013,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
       if (next_pc->Is(CT_DC_MEMBER))
       {
          // If next_pc token is CT_DC_MEMBER, skip it
-         pc = chunk_skip_dc_member(pc);
+         pc = pc->SkipDcMember();
       }
 
       if (pc->IsComment())
@@ -2243,7 +2243,7 @@ static void collapse_empty_body(Chunk *br_open)
    for (Chunk *pc = br_open->GetNext(); pc->IsNot(CT_BRACE_CLOSE); pc = pc->GetNext())
    {
       if (  pc->Is(CT_NEWLINE)
-         && chunk_safe_to_del_nl(pc))
+         && pc->SafeToDeleteNl())
       {
          pc = pc->prev;
          Chunk *next = pc->next;
@@ -2952,7 +2952,7 @@ static void newline_func_multi_line(Chunk *start)
    }
 
    if (  pc->Is(CT_FPAREN_CLOSE)
-      && chunk_is_newline_between(start, pc))
+      && start->IsNewlineBetween(pc))
    {
       Chunk *start_next         = start->GetNextNcNnl();
       bool  has_leading_closure = (  start_next->GetParentType() == CT_OC_BLOCK_EXPR
@@ -5815,7 +5815,7 @@ void newlines_class_colon_pos(E_Token tok)
          if (anc == IARF_REMOVE)                   // nl_class_colon, nl_constr_colon: 2
          {
             if (  prev->IsNewline()
-               && chunk_safe_to_del_nl(prev))
+               && prev->SafeToDeleteNl())
             {
                Chunk::Delete(prev);
                MARK_CHANGE();
@@ -5823,7 +5823,7 @@ void newlines_class_colon_pos(E_Token tok)
             }
 
             if (  next->IsNewline()
-               && chunk_safe_to_del_nl(next))
+               && next->SafeToDeleteNl())
             {
                Chunk::Delete(next);
                MARK_CHANGE();
@@ -5835,7 +5835,7 @@ void newlines_class_colon_pos(E_Token tok)
          {
             if (  prev->IsNewline()
                && prev->nl_count == 1
-               && chunk_safe_to_del_nl(prev))
+               && prev->SafeToDeleteNl())
             {
                pc->Swap(prev);
             }
@@ -5844,7 +5844,7 @@ void newlines_class_colon_pos(E_Token tok)
          {
             if (  next->IsNewline()
                && next->nl_count == 1
-               && chunk_safe_to_del_nl(next))
+               && next->SafeToDeleteNl())
             {
                pc->Swap(next);
             }
@@ -5903,7 +5903,7 @@ void newlines_class_colon_pos(E_Token tok)
                   prev = pc->GetPrevNc();
 
                   if (  prev->IsNewline()
-                     && chunk_safe_to_del_nl(prev))
+                     && prev->SafeToDeleteNl())
                   {
                      Chunk::Delete(prev);
                      MARK_CHANGE();
@@ -5923,7 +5923,7 @@ void newlines_class_colon_pos(E_Token tok)
                   next = pc->GetNextNc();
 
                   if (  next->IsNewline()
-                     && chunk_safe_to_del_nl(next))
+                     && next->SafeToDeleteNl())
                   {
                      Chunk::Delete(next);
                      MARK_CHANGE();
@@ -5935,7 +5935,7 @@ void newlines_class_colon_pos(E_Token tok)
                next = pc->GetNext();
 
                if (  next->IsNewline()
-                  && chunk_safe_to_del_nl(next))
+                  && next->SafeToDeleteNl())
                {
                   // comma is after
                   Chunk::Delete(next);
@@ -5946,7 +5946,7 @@ void newlines_class_colon_pos(E_Token tok)
                   prev = pc->GetPrev();
 
                   if (  prev->IsNewline()
-                     && chunk_safe_to_del_nl(prev))
+                     && prev->SafeToDeleteNl())
                   {
                      // comma is before
                      Chunk::Delete(prev);

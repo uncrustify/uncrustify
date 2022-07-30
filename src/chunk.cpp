@@ -612,23 +612,31 @@ Chunk *Chunk::GetPrevString(const char *cStr, const size_t len, const int cLevel
 }
 
 
-bool chunk_is_newline_between(Chunk *start, Chunk *end)
-{
-   for (Chunk *pc = start; pc != nullptr && pc != end; pc = pc->GetNext())
-   {
-      if (pc->IsNewline())
-      {
-         return(true);
-      }
-   }
-
-   return(false);
-}
-
-
 void Chunk::Swap(Chunk *other)
 {
    g_cl.Swap(this, other);
+}
+
+
+bool Chunk::IsAddress() const
+{
+   if (  IsNotNullChunk()
+      && (  Is(CT_BYREF)
+         || (  Len() == 1
+            && str[0] == '&'
+            && IsNot(CT_OPERATOR_VAL))))
+   {
+      Chunk *prevc = GetPrev();
+
+      if (  TestFlags(PCF_IN_TEMPLATE)
+         && (  prevc->Is(CT_COMMA)
+            || prevc->Is(CT_ANGLE_OPEN)))
+      {
+         return(false);
+      }
+      return(true);
+   }
+   return(false);
 }
 
 
@@ -930,44 +938,24 @@ Chunk *Chunk::GetPpStart() const
 }
 
 
-//! skip to the final word/type in a :: chain
-static Chunk *chunk_skip_dc_member(Chunk *start, E_Scope scope, E_Direction dir)
+Chunk *Chunk::SkipDcMember() const
 {
    LOG_FUNC_ENTRY();
 
-   if (start == nullptr)
-   {
-      return(nullptr);
-   }
-   const auto step_fcn = (dir == E_Direction::FORWARD)
-                         ? &Chunk::GetNextNcNnl : &Chunk::GetPrevNcNnl;
+   Chunk *pc  = const_cast<Chunk *>(this);
+   Chunk *nxt = pc->Is(CT_DC_MEMBER) ? pc : pc->GetNextNcNnl(E_Scope::ALL);
 
-   Chunk *pc   = start;
-   Chunk *next = pc->Is(CT_DC_MEMBER) ? pc : (pc->*step_fcn)(scope);
-
-   while (next->Is(CT_DC_MEMBER))
+   while (nxt->Is(CT_DC_MEMBER))
    {
-      pc = (next->*step_fcn)(scope);
+      pc = nxt->GetNextNcNnl(E_Scope::ALL);
 
       if (pc->IsNullChunk())
       {
          return(Chunk::NullChunkPtr);
       }
-      next = (pc->*step_fcn)(scope);
+      nxt = pc->GetNextNcNnl(E_Scope::ALL);
    }
    return(pc);
-}
-
-
-Chunk *chunk_skip_dc_member(Chunk *start, E_Scope scope)
-{
-   return(chunk_skip_dc_member(start, scope, E_Direction::FORWARD));
-}
-
-
-Chunk *chunk_skip_dc_member_rev(Chunk *start, E_Scope scope)
-{
-   return(chunk_skip_dc_member(start, scope, E_Direction::BACKWARD));
 }
 
 
@@ -996,44 +984,46 @@ E_Token get_type_of_the_parent(Chunk *pc)
 }
 
 
-bool chunk_is_class_enum_struct_union(Chunk *pc)
+int Chunk::ComparePosition(const Chunk *other) const
 {
-   return(  chunk_is_class_or_struct(pc)
-         || pc->IsEnum()
-         || pc->Is(CT_UNION));
-}
-
-
-bool chunk_is_class_or_struct(Chunk *pc)
-{
-   return(  pc->Is(CT_CLASS)
-         || pc->Is(CT_STRUCT));
-}
-
-
-bool chunk_is_class_struct_union(Chunk *pc)
-{
-   return(  chunk_is_class_or_struct(pc)
-         || pc->Is(CT_UNION));
-}
-
-
-int chunk_compare_position(const Chunk *A_token, const Chunk *B_token)
-{
-   if (A_token->orig_line < B_token->orig_line)
+   if (orig_line < other->orig_line)
    {
       return(-1);
    }
-   else if (A_token->orig_line == B_token->orig_line)
+   else if (orig_line == other->orig_line)
    {
-      if (A_token->orig_col < B_token->orig_col)
+      if (orig_col < other->orig_col)
       {
          return(-1);
       }
-      else if (A_token->orig_col == B_token->orig_col)
+      else if (orig_col == other->orig_col)
       {
          return(0);
       }
    }
    return(1);
+}
+
+
+bool Chunk::IsOCForinOpenParen() const
+{
+   if (  language_is_set(LANG_OC)
+      && Is(CT_SPAREN_OPEN)
+      && GetPrevNcNnl()->Is(CT_FOR))
+   {
+      Chunk *nxt = const_cast<Chunk *>(this);
+
+      while (  nxt->IsNotNullChunk()
+            && nxt->IsNot(CT_SPAREN_CLOSE)
+            && nxt->IsNot(CT_IN))
+      {
+         nxt = nxt->GetNextNcNnl();
+      }
+
+      if (nxt->Is(CT_IN))
+      {
+         return(true);
+      }
+   }
+   return(false);
 }

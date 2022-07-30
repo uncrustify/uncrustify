@@ -920,7 +920,7 @@ void EnumStructUnionParser::analyze_identifiers()
    }
 
    if (  type_identified()
-      || chunk_is_class_enum_struct_union(pc)
+      || pc->IsClassEnumStructOrUnion()
       || pc == m_end)
    {
       /**
@@ -1017,7 +1017,7 @@ void EnumStructUnionParser::analyze_identifiers()
     */
    try_post_identify_macro_calls();
 
-   if (  chunk_is_class_or_struct(m_start)
+   if (  m_start->IsClassOrStruct()
       && (  m_start->IsNot(CT_STRUCT)
          || !language_is_set(LANG_C)))
    {
@@ -1549,7 +1549,7 @@ void EnumStructUnionParser::mark_braces(Chunk *brace_open)
                CT_NONE,
                false);
 
-   if (chunk_is_class_struct_union(m_start))
+   if (m_start->IsClassStructOrUnion())
    {
       mark_struct_union_body(brace_open);
 
@@ -1609,7 +1609,7 @@ void EnumStructUnionParser::mark_constructors()
     */
    if (  body_detected()
       && type_identified()
-      && chunk_is_class_or_struct(m_start))
+      && m_start->IsClassOrStruct())
    {
       LOG_FMT(LFTOR,
               "%s(%d): orig_line is %zu, orig_col is %zu, start is '%s', parent type is %s\n",
@@ -2016,7 +2016,7 @@ void EnumStructUnionParser::parse(Chunk *pc)
     * actually dealing with a class/enum/struct/union type
     */
    if (  m_start->GetParentType() == CT_C_CAST
-      || !chunk_is_class_enum_struct_union(m_start))
+      || !m_start->IsClassEnumStructOrUnion())
    {
       return;
    }
@@ -2367,7 +2367,7 @@ void EnumStructUnionParser::parse_colon(Chunk *colon)
    }
    else if (!inheritance_detected())
    {
-      if (chunk_is_class_or_struct(m_start))
+      if (m_start->IsClassOrStruct())
       {
          /**
           * the colon likely specifies an inheritance list for a struct

@@ -520,7 +520,7 @@ void indent_text(void)
          */
         next = pc->GetNextNcNnl();
 
-        if (!chunk_is_newline_between(pc, next))
+        if (!pc->IsNewlineBetween(next))
           frm.pse[frm.pse_tos].indent = next->column;
 
         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
