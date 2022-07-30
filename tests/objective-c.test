@@ -175,6 +175,7 @@
 
 50907  oc/align_colon_with_ternary_1.cfg        oc/align_colon_with_ternary_1.m
 50908  oc/align_colon_with_ternary_2.cfg        oc/align_colon_with_ternary_2.m
+50909  oc/3766.cfg                              oc/3766.m
 
 # test the options sp_ with the value "ignore"
 51000  oc/sp_cond_ternary_short.cfg             oc/sp_cond_ternary_short.m
