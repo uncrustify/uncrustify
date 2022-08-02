@@ -970,9 +970,12 @@ void output_text(FILE *pfile)
                LOG_FMT(LGUY, "  %zu, rule            is %s\n", track, Bsecond);
             }
 #endif
-            track_list *A1 = pc->tracking;
-            sort(A1->begin(), A1->end(), compareTrack);
 
+            if (options::debug_sort_the_tracks())
+            {
+               track_list *A1 = pc->tracking;
+               sort(A1->begin(), A1->end(), compareTrack);
+            }
 #ifdef EXTRA_LOG
             // protocol after sort
             for (size_t track = 0; track < pc->tracking->size(); track++)

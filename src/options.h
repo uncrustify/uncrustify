@@ -4255,6 +4255,10 @@ debug_timeout;
 extern BoundedOption<unsigned, 0, 960>
 debug_truncate;
 
+// sort (or not) the tracking info.
+extern Option<bool>
+debug_sort_the_tracks;  // = true
+
 // insert the number of the line at the beginning of each line
 extern Option<bool>
 set_numbering_for_html_output;
