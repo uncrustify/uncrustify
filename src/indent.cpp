@@ -4137,7 +4137,7 @@ void indent_text()
 
                   // Issue #2281
                   if (  options::indent_switch_break_with_case()
-                     && get_type_of_the_parent(pc) == CT_SWITCH)
+                     && pc->GetTypeOfParent() == CT_SWITCH)
                   {
                      // look for a case before Issue #2735
                      Chunk *whereIsCase = pc->GetPrevType(CT_CASE, pc->level);

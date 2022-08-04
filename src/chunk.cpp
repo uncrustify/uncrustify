@@ -959,31 +959,6 @@ Chunk *Chunk::SkipDcMember() const
 }
 
 
-void Chunk::SetParent(Chunk *parent)
-{
-   if (this == parent)
-   {
-      return;
-   }
-   m_parent = parent;
-}
-
-
-E_Token get_type_of_the_parent(Chunk *pc)
-{
-   if (pc == nullptr)
-   {
-      return(CT_UNKNOWN);
-   }
-
-   if (pc->GetParent() == Chunk::NullChunkPtr)
-   {
-      return(CT_PARENT_NOT_SET);
-   }
-   return(pc->GetParent()->GetType());
-}
-
-
 int Chunk::ComparePosition(const Chunk *other) const
 {
    if (orig_line < other->orig_line)

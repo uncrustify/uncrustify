@@ -517,13 +517,13 @@ void output_parsed(FILE *pfile, bool withOptions)
 #ifdef WIN32
       fprintf(pfile, "%s# %3d>%19.19s|%19.19s|%19.19s[%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
               eol_marker, (int)pc->orig_line, get_token_name(pc->GetType()),
-              get_token_name(pc->GetParentType()), get_token_name(get_type_of_the_parent(pc)),
+              get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               (int)pc->column, (int)pc->orig_col, (int)pc->orig_col_end, (int)pc->orig_prev_sp,
               (int)pc->brace_level, (int)pc->level, (int)pc->pp_level, (int)pc->nl_count, pc->after_tab);
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu]",
               eol_marker, pc->orig_line, get_token_name(pc->GetType()),
-              get_token_name(pc->GetParentType()), get_token_name(get_type_of_the_parent(pc)),
+              get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
       // Print pc flags in groups of 4 hex characters
@@ -571,7 +571,7 @@ void output_parsed_csv(FILE *pfile)
    {
       fprintf(pfile, "%s%zu,%s,%s,%s,%zu,%zu,%zu,%d,%zu,%zu,%zu,",
               eol_marker, pc->orig_line, get_token_name(pc->GetType()),
-              get_token_name(pc->GetParentType()), get_token_name(get_type_of_the_parent(pc)),
+              get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
 
