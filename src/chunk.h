@@ -90,7 +90,7 @@ public:
    void SetTypeReal(const E_Token token, const char *func, const int line);
 
    /**
-    * @brief returns the type of the parent chunk
+    * @brief returns the parent type of the chunk
     */
    E_Token GetParentType() const;
 
@@ -112,6 +112,11 @@ public:
     * @param parent the parent chunk to set
     */
    void SetParent(Chunk *parent);
+
+   /**
+    * @brief returns the type of the parent chunk
+    */
+   E_Token GetTypeOfParent() const;
 
    /**
     * @brief returns the chunk flags
@@ -908,6 +913,15 @@ inline Chunk *Chunk::GetParent() const
 }
 
 
+inline void Chunk::SetParent(Chunk *parent)
+{
+   if (this != parent)
+   {
+      m_parent = parent;
+   }
+}
+
+
 inline E_Token Chunk::GetType() const
 {
    return(m_type);
@@ -917,6 +931,16 @@ inline E_Token Chunk::GetType() const
 inline E_Token Chunk::GetParentType() const
 {
    return(m_parentType);
+}
+
+
+inline E_Token Chunk::GetTypeOfParent() const
+{
+   if (GetParent()->IsNullChunk())
+   {
+      return(CT_PARENT_NOT_SET);
+   }
+   return(GetParent()->GetType());
 }
 
 
@@ -1340,9 +1364,6 @@ inline bool Chunk::IsNewlineBetween(const Chunk *other) const
 
 
 #define SetParentType(tt)    SetParentTypeReal((tt), __unqualified_func__, __LINE__)
-
-
-E_Token get_type_of_the_parent(Chunk *pc);
 
 
 #endif /* CHUNK_LIST_H_INCLUDED */
