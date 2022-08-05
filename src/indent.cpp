@@ -1906,7 +1906,8 @@ void indent_text()
 
             frm.prev().indent_tmp = frm.top().indent_tmp;
          }
-         else if (frm.paren_count != 0)
+         else if (  frm.paren_count != 0
+                 && !pc->TestFlags(PCF_IN_LAMBDA)) // Issue #3761
          {
             if (frm.top().pc->GetParentType() == CT_OC_BLOCK_EXPR)
             {
