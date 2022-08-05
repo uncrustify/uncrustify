@@ -2123,11 +2123,13 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
          {
             LOG_FMT(LBLANKD, "%s(%d): 'typ==var' found: '%s %s' at line %zu\n",
                     __func__, __LINE__, pc->Text(), next->Text(), pc->orig_line);
+            LOG_FMT(LBLANKD, "%s(%d): var_blk is %s, first_var_blk is %s\n",
+                    __func__, __LINE__, var_blk ? "TRUE" : "FALSE", first_var_blk ? "TRUE" : "FALSE");
             // Put newline(s) before a block of variable definitions
             log_rule_B("nl_var_def_blk_start");
 
             if (  !var_blk
-               && first_var_blk
+               && !first_var_blk
                && options::nl_var_def_blk_start() > 0)
             {
                LOG_FMT(LBLANKD, "%s(%d): pc is '%s', orig_line is %zu\n",
@@ -2203,8 +2205,12 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
             }
             // reset the variables for the next block
             prot_the_line(__func__, __LINE__, 15, 4);
-            first_var_blk = true;
+            first_var_blk = false;
             var_blk       = false;
+         }
+         else
+         {
+            first_var_blk = false;
          }
       }
       else

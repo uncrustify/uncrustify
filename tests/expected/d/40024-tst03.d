@@ -97,6 +97,7 @@ struct ABC
 struct Foo
 {
     int i;
+
     union
     {
         struct { int x; long y; }
