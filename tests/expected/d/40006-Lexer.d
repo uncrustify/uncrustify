@@ -157,6 +157,7 @@ class Lexer
     static char[] combineComments(char[] c1, char[] c2)
     {
         char[] c = c2;
+
         if (c1.length)
         {
             c = c1;
@@ -471,6 +472,7 @@ class Lexer
 
 //					sv = stringtable.update((char *)t.ptr, p - t.ptr);
                     char[] tmp;
+
                     tmp.length = p - t.ptr;
                     memcpy(tmp.ptr, t.ptr, p - t.ptr);
                     Identifier id;
@@ -2179,7 +2181,6 @@ class Lexer
     {
         Token  tok;
         int    linnum;
-
         char[] filespec;
         Loc    loc = this.loc;
 

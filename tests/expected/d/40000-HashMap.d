@@ -547,10 +547,11 @@ class HashMap
                 rehash();
 
             HashEntry[] tab;
+
             volatile tab = table;
-            uint        index = hash & (tab.length - 1);
-            HashEntry   first = tab[index];
-            HashEntry   e     = first;
+            uint      index = hash & (tab.length - 1);
+            HashEntry first = tab[index];
+            HashEntry e     = first;
 
             while (e && (e.hash != hash || !matchKey(key, e.key)))
                 e = e.next;
@@ -600,8 +601,9 @@ class HashMap
              */
 
             HashEntry[] newTable = new HashEntry[oldCapacity << 1];
+
             threshold = cast(int)(newTable.length * loadFactor);
-            int         sizeMask = newTable.length - 1;
+            int sizeMask = newTable.length - 1;
 
             for (int i = 0; i < oldCapacity; ++i)
             {
@@ -655,7 +657,6 @@ class HashMap
         final synchronized V remove(K key, uint hash, V value)
         {
             int         c;
-
             HashEntry[] tab;
 
             volatile c = count - 1;
@@ -701,6 +702,7 @@ class HashMap
             if (count)
             {
                 HashEntry[] tab;
+
                 volatile tab = table;
 
                 for (int i = 0; i < tab.length; i++)
@@ -987,6 +989,7 @@ class HashMap
         while (iterator.hasNext)
         {
             char[] ca = cast(char[])iterator.next;
+
             if ((result = dg(ca)) != 0)
                 break;
         }
@@ -1007,8 +1010,8 @@ class HashMap
         while (iterator.hasNext)
         {
             HashEntry he = iterator.nextElement;
-
             char[]    ca = cast(char[])he.key;
+
             if ((result = dg(ca, he.value)) != 0)
                 break;
         }
@@ -1022,7 +1025,6 @@ class HashMap
     {
         int         nextSegmentIndex;
         int         nextTableIndex;
-
         HashEntry[] currentTable;
         HashEntry   nextEntry;
         HashEntry   lastReturned;

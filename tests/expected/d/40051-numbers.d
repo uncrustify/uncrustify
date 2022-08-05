@@ -42,5 +42,6 @@ int foo(int bar)
 void main()
 {
     char[] c = "kkkkkkkkkkkkkkkkkkkkk";
+
     writefln("%s", c[2 .. 3]);
 }
