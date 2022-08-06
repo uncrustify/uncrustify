@@ -395,9 +395,18 @@ bool process_option_line_compat_0_75(const std::string &cmd, const char *filenam
    if (cmd == "pp_space")
    {
       OptionWarning w{ filename, OptionWarning::MINOR };
-      w("option '%s' is deprecated; it has been replaced by '%s'.\n"
-        "You can also use '%s' for additional functionality",
-        cmd.c_str(), options::pp_space_after.name(), options::pp_space_before.name());
+      w("option '%s' is deprecated; it has been replaced by '%s'.",
+        cmd.c_str(), options::pp_space_after.name());
+
+      return(true);
+   }
+
+   if (cmd == "pp_space_before")
+   {
+      OptionWarning w{ filename, OptionWarning::MINOR };
+      w("option '%s' is deprecated; it was a temporary option used\n"
+        "during the development of version 0.76. Use '%s' and '%s' instead.",
+        cmd.c_str(), options::pp_indent.name(), options::pp_indent_count.name());
 
       return(true);
    }
