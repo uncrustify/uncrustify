@@ -2098,7 +2098,6 @@ done:
     void Pragma() {
         Token  tok;
         int    linnum;
-
         char[] filespec;
         Loc    loc = this.loc;
 

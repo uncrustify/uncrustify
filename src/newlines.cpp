@@ -2082,6 +2082,11 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
             next = next->GetNextNcNnl();
          }
 
+         while (next->Is(CT_TSQUARE))
+         {
+            next = next->GetNextNcNnl();
+         }
+
          if (next->IsNullChunk())
          {
             break;

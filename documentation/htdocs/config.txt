@@ -1,4 +1,4 @@
-# Uncrustify_d-0.76.0-development
+# Uncrustify_d-0.75.0-224-742256bf
 
 #
 # General options
@@ -447,15 +447,15 @@ sp_after_comma                  = ignore   # ignore/add/remove/force/not_defined
 # Default: remove
 sp_before_comma                 = remove   # ignore/add/remove/force/not_defined
 
-# (C#) Add or remove space between ',' and ']' in multidimensional array type
+# (C#, Vala) Add or remove space between ',' and ']' in multidimensional array type
 # like 'int[,,]'.
 sp_after_mdatype_commas         = ignore   # ignore/add/remove/force/not_defined
 
-# (C#) Add or remove space between '[' and ',' in multidimensional array type
+# (C#, Vala) Add or remove space between '[' and ',' in multidimensional array type
 # like 'int[,,]'.
 sp_before_mdatype_commas        = ignore   # ignore/add/remove/force/not_defined
 
-# (C#) Add or remove space between ',' in multidimensional array type
+# (C#, Vala) Add or remove space between ',' in multidimensional array type
 # like 'int[,,]'.
 sp_between_mdatype_commas       = ignore   # ignore/add/remove/force/not_defined
 
@@ -3254,7 +3254,6 @@ mod_unsigned_int                = ignore   # ignore/add/remove/force/not_defined
 # If there is a situation where mod_int_* and mod_*_int would result in
 # multiple int keywords, whether to keep the rightmost int (the default) or the
 # leftmost int.
-extern Option<bool>
 mod_int_prefer_int_on_left      = false    # true/false
 
 # (OC) Whether to organize the properties. If true, properties will be
