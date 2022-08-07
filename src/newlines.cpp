@@ -109,6 +109,11 @@ static bool is_class_one_liner(Chunk *pc);
  */
 bool is_func_proto_group(Chunk *pc, E_Token one_liner_type);
 
+/**
+ * Test if an opening brace is part of a function call or definition.
+ */
+static bool is_func_call_or_def(Chunk *pc);
+
 
 //! Find the next newline or nl_cont
 static void nl_handle_define(Chunk *pc);
@@ -1978,6 +1983,23 @@ static bool is_var_def(Chunk *pc, Chunk *next)
 } // is_var_def
 
 
+static bool is_func_call_or_def(Chunk *pc)
+{
+   if (  pc->GetParentType() == CT_FUNC_DEF
+      || pc->GetParentType() == CT_FUNC_CALL
+      || pc->GetParentType() == CT_FUNC_CALL_USER
+      || pc->GetParentType() == CT_FUNC_CLASS_DEF
+      || pc->GetParentType() == CT_OC_CLASS
+      || pc->GetParentType() == CT_OC_MSG_DECL
+      || pc->GetParentType() == CT_CS_PROPERTY
+      || pc->GetParentType() == CT_CPP_LAMBDA)
+   {
+      return(true);
+   }
+   return(false);
+} // is_func_call_or_def
+
+
 // Put newline(s) before and/or after a block of variable definitions
 static Chunk *newline_def_blk(Chunk *start, bool fn_top)
 {
@@ -2602,14 +2624,7 @@ static void newlines_brace_pair(Chunk *br_open)
    bool nl_close_brace = false;
 
    // Handle the cases where the brace is part of a function call or definition
-   if (  br_open->GetParentType() == CT_FUNC_DEF
-      || br_open->GetParentType() == CT_FUNC_CALL
-      || br_open->GetParentType() == CT_FUNC_CALL_USER
-      || br_open->GetParentType() == CT_FUNC_CLASS_DEF
-      || br_open->GetParentType() == CT_OC_CLASS
-      || br_open->GetParentType() == CT_OC_MSG_DECL
-      || br_open->GetParentType() == CT_CS_PROPERTY
-      || br_open->GetParentType() == CT_CPP_LAMBDA)
+   if (is_func_call_or_def(br_open))
    {
       // Need to force a newline before the close brace, if not in a class body
       if (!br_open->TestFlags(PCF_IN_CLASS))
