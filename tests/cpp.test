@@ -931,6 +931,8 @@
 34360  cpp/nl_before_struct.cfg                             cpp/nl_before_struct_struct.cpp
 34361  cpp/nl_before_struct.cfg                             cpp/nl_before_struct_scoped_enum.cpp
 
+34370  cpp/asm_block_pp.cfg                                 cpp/asm_block_pp.cpp
+
 # test the options sp_ with the value "ignore"
 34500  cpp/sp_before_case_colon.cfg                         cpp/sp_before_case_colon.cpp
 34501  cpp/sp_endif_cmt.cfg                                 cpp/sp_endif_cmt.cpp

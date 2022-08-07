@@ -2613,8 +2613,11 @@ void indent_text()
 
          do
          {
-            pc->column = pc->orig_col + move;
-            pc         = pc->GetNext();
+            if (!pc->TestFlags(PCF_IN_PREPROC))
+            {
+               pc->column = pc->orig_col + move;
+            }
+            pc = pc->GetNext();
          } while (pc != tmp);
 
          reindent_line(pc, indent_column);
