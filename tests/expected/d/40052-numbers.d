@@ -39,5 +39,6 @@ int foo(int bar) {
 /* test '..' ranges */
 void main() {
     char[] c = "kkkkkkkkkkkkkkkkkkkkk";
+
     writefln("%s", c[2..3]);
 }

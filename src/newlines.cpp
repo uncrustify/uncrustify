@@ -250,7 +250,7 @@ static bool is_var_def(Chunk *pc, Chunk *next);
 
 
 //! Put newline(s) before and/or after a block of variable definitions
-static Chunk *newline_def_blk(Chunk *start, bool fn_top);
+static Chunk *newline_var_def_blk(Chunk *start);
 
 
 /**
@@ -2001,24 +2001,34 @@ static bool is_func_call_or_def(Chunk *pc)
 
 
 // Put newline(s) before and/or after a block of variable definitions
-static Chunk *newline_def_blk(Chunk *start, bool fn_top)
+static Chunk *newline_var_def_blk(Chunk *start)
 {
 //prot_the_line(__func__, __LINE__, 15, 4);
    LOG_FUNC_ENTRY();
 
-   Chunk *prev = start->GetPrevNcNnlNi();               // Issue #2279
-
-   // can't be any variable definitions in a "= {" block
-   if (prev->Is(CT_ASSIGN))
-   {
-      Chunk *tmp = start->GetNextType(CT_BRACE_CLOSE, start->level);
-      return(tmp->GetNextNcNnl());
-   }
-   Chunk *pc = start->GetNext();
-
+   Chunk *pc           = start;
+   Chunk *prev         = start->GetPrevNcNnlNi(); // Issue #2279
    bool  did_this_line = false;
-   bool  first_var_blk = true;
+   bool  fn_top        = false;
    bool  var_blk       = false;
+   bool  first_var_blk = true;
+
+   if (start->Is(CT_BRACE_OPEN))
+   {
+      // can't be any variable definitions in a "= {" block
+      if (  (prev != nullptr)
+         && prev->IsNotNullChunk()
+         && prev->Is(CT_ASSIGN))
+      {
+         Chunk *tmp = start->SkipToMatch();
+         return(tmp->GetNextNcNnl());
+      }
+      // check if we're at the top of a function definition, or function call with a
+      // possible variable block
+      fn_top = is_func_call_or_def(start);
+      // opening brace is processed, start with next chunk
+      pc = pc->GetNext();
+   }
 
    while (  pc->IsNotNullChunk()
          && (  pc->level >= start->level
@@ -2054,7 +2064,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
       // process nested braces
       if (pc->Is(CT_BRACE_OPEN))
       {
-         pc = newline_def_blk(pc, false);
+         pc = newline_var_def_blk(pc);
          continue;
       }
 
@@ -2063,15 +2073,6 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
       {
          pc = pc->GetNext();
          break;
-      }
-
-      if (pc->IsPreproc())
-      {
-         if (!var_blk)
-         {
-            pc = pc->GetNext();
-            break;
-         }
       }
 
       // skip vbraces
@@ -2105,13 +2106,11 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
       {
          Chunk *next = pc->GetNextNcNnl();
 
-         if (  next->Is(CT_PTR_TYPE) // Issue #2692
-            || next->Is(CT_BYREF))   // Issue #3018
-         {
-            next = next->GetNextNcNnl();
-         }
-
-         while (next->Is(CT_TSQUARE))
+         // skip over all other type-like things
+         while (  next->Is(CT_PTR_TYPE)  // Issue #2692
+               || next->Is(CT_BYREF)     // Issue #3018
+               || next->Is(CT_QUALIFIER)
+               || next->Is(CT_TSQUARE))
          {
             next = next->GetNextNcNnl();
          }
@@ -2162,7 +2161,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
             log_rule_B("nl_var_def_blk_start");
 
             if (  !var_blk
-               && first_var_blk
+               && !first_var_blk
                && options::nl_var_def_blk_start() > 0)
             {
                LOG_FMT(LVARDFBLK, "%s(%d): pc is '%s', orig_line is %zu\n",
@@ -2213,7 +2212,8 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
                     __func__, __LINE__, var_blk ? "TRUE" : "FALSE");
             log_rule_B("nl_var_def_blk_end");
 
-            if (options::nl_var_def_blk_end() > 0)
+            if (  !pc->IsPreproc()
+               && options::nl_var_def_blk_end() > 0)
             {
                // Issue #3516
                newline_min_after(prev, options::nl_var_def_blk_end() + 1, PCF_VAR_DEF);
@@ -2238,7 +2238,12 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
             }
             // reset the variables for the next block
             prot_the_line(__func__, __LINE__, 15, 4);
-            first_var_blk = true;
+            first_var_blk = false;
+            var_blk       = false;
+         }
+         else
+         {
+            first_var_blk = false;
             var_blk       = false;
          }
       }
@@ -2270,7 +2275,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
    }
    //prot_the_line(__func__, __LINE__, 15, 4);
    return(pc);
-} // newline_def_blk
+} // newline_var_def_blk
 
 
 static void collapse_empty_body(Chunk *br_open)
@@ -2634,17 +2639,6 @@ static void newlines_brace_pair(Chunk *br_open)
       // handle newlines after the open brace
       Chunk *pc = br_open->GetNextNcNnl();
       newline_add_between(br_open, pc);
-
-      Chunk *ne             = pc->GetNextNcNnl();
-      bool  this_is_var_def = is_var_def(pc, ne);                          // Issue #3518
-      newline_def_blk(br_open, this_is_var_def);
-   }
-
-   // Handle the cases where the brace is part of a class or struct
-   if (  br_open->GetParentType() == CT_CLASS
-      || br_open->GetParentType() == CT_STRUCT)
-   {
-      newline_def_blk(br_open, false);
    }
    // Grab the matching brace close
    Chunk *br_close = br_open->GetNextType(CT_BRACE_CLOSE, br_open->level);
@@ -5057,7 +5051,7 @@ void newlines_cleanup_braces(bool first)
    }
 
 //prot_the_line(__func__, __LINE__, 15, 4);
-   newline_def_blk(Chunk::GetHead(), false);
+   newline_var_def_blk(Chunk::GetHead());
 //prot_the_line(__func__, __LINE__, 15, 4);
 } // newlines_cleanup_braces
 

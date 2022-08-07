@@ -149,6 +149,7 @@ class Lexer
     // Combine two document comments into one.
     static char[] combineComments(char[] c1, char[] c2) {
         char[] c = c2;
+
         if (c1.length) {
             c = c1;
             if (c2.length) {
@@ -2038,7 +2039,6 @@ done:
 
 //	#if _WIN32 && __DMC__
         char *save = __locale_decpoint;
-
         __locale_decpoint = ".";
 //	#endif
         t.float80value = strtold(cast(char *)stringbuffer.data.ptr, null);
