@@ -2024,12 +2024,12 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
          && (  pc->level >= start->level
             || pc->level == 0))
    {
-      LOG_FMT(LNL1LINE, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, Text() is '%s'\n",
+      LOG_FMT(LVARDFBLK, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, Text() is '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
       //prot_the_line(__func__, __LINE__, 15, 4);
 
       Chunk *next_pc = pc->GetNext();
-      LOG_FMT(LNL1LINE, "%s(%d): next_pc->orig_line is %zu, next_pc->orig_col is %zu, type is %s, Text() is '%s'\n",
+      LOG_FMT(LVARDFBLK, "%s(%d): next_pc->orig_line is %zu, next_pc->orig_col is %zu, type is %s, Text() is '%s'\n",
               __func__, __LINE__, next_pc->orig_line, next_pc->orig_col, get_token_name(next_pc->GetType()), next_pc->Text());
 
       if (next_pc->Is(CT_DC_MEMBER))
@@ -2120,7 +2120,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
          {
             break;
          }
-         LOG_FMT(LNL1LINE, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, Text() is '%s'\n",
+         LOG_FMT(LVARDFBLK, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, Text() is '%s'\n",
                  __func__, __LINE__, next->orig_line, next->orig_col, next->Text());
 
          prev = pc->GetPrevNcNnl();
@@ -2149,14 +2149,14 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
          {
             prev = prev->GetPrev()->GetPrevNcNnlNi();   // Issue #2279
          }
-         LOG_FMT(LNL1LINE, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, type is %s, Text() is '%s'\n",
+         LOG_FMT(LVARDFBLK, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, type is %s, Text() is '%s'\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->GetType()), pc->Text());
-         LOG_FMT(LNL1LINE, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, type is %s, Text() is '%s'\n",
+         LOG_FMT(LVARDFBLK, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, type is %s, Text() is '%s'\n",
                  __func__, __LINE__, next->orig_line, next->orig_col, get_token_name(next->GetType()), next->Text());
 
          if (is_var_def(pc, next))
          {
-            LOG_FMT(LBLANKD, "%s(%d): 'typ==var' found: '%s %s' at line %zu\n",
+            LOG_FMT(LVARDFBLK, "%s(%d): 'typ==var' found: '%s %s' at line %zu\n",
                     __func__, __LINE__, pc->Text(), next->Text(), pc->orig_line);
             // Put newline(s) before a block of variable definitions
             log_rule_B("nl_var_def_blk_start");
@@ -2165,16 +2165,16 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
                && first_var_blk
                && options::nl_var_def_blk_start() > 0)
             {
-               LOG_FMT(LBLANKD, "%s(%d): pc is '%s', orig_line is %zu\n",
+               LOG_FMT(LVARDFBLK, "%s(%d): pc is '%s', orig_line is %zu\n",
                        __func__, __LINE__, pc->Text(), pc->orig_line);
 
                if (prev == nullptr)
                {
-                  LOG_FMT(LBLANKD, "%s(%d): prev is nullptr\n", __func__, __LINE__);
+                  LOG_FMT(LVARDFBLK, "%s(%d): prev is nullptr\n", __func__, __LINE__);
                }
                else
                {
-                  LOG_FMT(LBLANKD, "%s(%d): prev is '%s', orig_line is %zu\n",
+                  LOG_FMT(LVARDFBLK, "%s(%d): prev is '%s', orig_line is %zu\n",
                           __func__, __LINE__, prev->Text(), prev->orig_line);
 
                   if (!prev->IsBraceOpen())
@@ -2190,7 +2190,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
             {
                log_rule_B("nl_var_def_blk_in");
                prev = pc->GetPrev();
-               LOG_FMT(LNL1LINE, "%s(%d): prev->orig_line is %zu, prev->orig_col is %zu, Text() is '%s'\n",
+               LOG_FMT(LVARDFBLK, "%s(%d): prev->orig_line is %zu, prev->orig_col is %zu, Text() is '%s'\n",
                        __func__, __LINE__, prev->orig_line, prev->orig_col, prev->Text());
 
                if (prev->IsNewline())
@@ -2209,7 +2209,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
          }
          else if (var_blk)
          {
-            LOG_FMT(LBLANKD, "%s(%d): var_blk %s\n",
+            LOG_FMT(LVARDFBLK, "%s(%d): var_blk %s\n",
                     __func__, __LINE__, var_blk ? "TRUE" : "FALSE");
             log_rule_B("nl_var_def_blk_end");
 
@@ -2220,16 +2220,16 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
             }
             // set blank lines after first var def block
             log_rule_B("nl_func_var_def_blk");
-            LOG_FMT(LBLANKD, "%s(%d): first_var_blk %s\n",
+            LOG_FMT(LVARDFBLK, "%s(%d): first_var_blk %s\n",
                     __func__, __LINE__, first_var_blk ? "TRUE" : "FALSE");
-            LOG_FMT(LBLANKD, "%s(%d): fn_top %s\n",
+            LOG_FMT(LVARDFBLK, "%s(%d): fn_top %s\n",
                     __func__, __LINE__, fn_top ? "TRUE" : "FALSE");
 
             if (  first_var_blk
                && fn_top
                && (options::nl_func_var_def_blk() > 0))
             {
-               LOG_FMT(LBLANKD, "%s(%d): nl_func_var_def_blk at line %zu\n",
+               LOG_FMT(LVARDFBLK, "%s(%d): nl_func_var_def_blk at line %zu\n",
                        __func__, __LINE__, prev->orig_line);
                prot_the_line(__func__, __LINE__, 15, 4);
                log_rule_B("nl_func_var_def_blk");
