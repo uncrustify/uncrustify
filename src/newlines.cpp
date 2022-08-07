@@ -2222,23 +2222,26 @@ static Chunk *newline_var_def_blk(Chunk *start)
             log_rule_B("nl_func_var_def_blk");
             log_rule_B("nl_var_def_blk_end");
 
-            if (  !pc->IsPreproc()
-               && options::nl_var_def_blk_end() > 0)
+            if (  first_var_blk
+               && fn_top)
             {
+               // set blank lines after first var def block at the top of a function
+               if (options::nl_func_var_def_blk() > 0)
+               {
+                  LOG_FMT(LVARDFBLK, "%s(%d): nl_func_var_def_blk at line %zu\n",
+                          __func__, __LINE__, prev->orig_line);
+                  prot_the_line(__func__, __LINE__, 15, 4);
+                  newline_min_after(prev, options::nl_func_var_def_blk() + 1, PCF_VAR_DEF);
+               }
+            }
+            else if (  !pc->IsPreproc()
+                    && options::nl_var_def_blk_end() > 0)
+            {
+               // set blank lines after other var def blocks
                LOG_FMT(LVARDFBLK, "%s(%d): nl_var_def_blk_end at line %zu\n",
                        __func__, __LINE__, prev->orig_line);
                // Issue #3516
                newline_min_after(prev, options::nl_var_def_blk_end() + 1, PCF_VAR_DEF);
-            }
-
-            if (  first_var_blk
-               && fn_top
-               && (options::nl_func_var_def_blk() > 0))
-            {
-               LOG_FMT(LVARDFBLK, "%s(%d): nl_func_var_def_blk at line %zu\n",
-                       __func__, __LINE__, prev->orig_line);
-               prot_the_line(__func__, __LINE__, 15, 4);
-               newline_min_after(prev, options::nl_func_var_def_blk() + 1, PCF_VAR_DEF);
             }
             // reset the variables for the next block
             prot_the_line(__func__, __LINE__, 15, 4);
