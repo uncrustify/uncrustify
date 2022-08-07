@@ -2016,6 +2016,13 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
          pc = pc->SkipDcMember();
       }
 
+      // skip qualifiers
+      if (pc->Is(CT_QUALIFIER))
+      {
+         pc = pc->GetNext();
+         continue;
+      }
+
       if (pc->IsComment())
       {
          pc = pc->GetNext();
@@ -2097,6 +2104,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
          prev = pc->GetPrevNcNnl();
 
          while (  prev->Is(CT_DC_MEMBER)
+               || prev->Is(CT_QUALIFIER)
                || prev->Is(CT_TYPE))
          {
             prev = prev->GetPrevNcNnl();

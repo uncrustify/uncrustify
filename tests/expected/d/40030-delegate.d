@@ -6,7 +6,6 @@ typedef ushort          TAddr;
 
 public void delegate(ubyte[] a) TSender;
 public bool delegate(ushort a)  TVerifier;
-
 public typedef ushort   TAddr;
 
 void delegate() dg;

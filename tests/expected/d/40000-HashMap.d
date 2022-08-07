@@ -742,6 +742,7 @@ class HashMap
         // Find power-of-two sizes best matching arguments
         int sshift = 0;
         int ssize  = 1;
+
         while (ssize < concurrencyLevel)
         {
             ++sshift;
@@ -756,10 +757,12 @@ class HashMap
             initialCapacity = MAXIMUM_CAPACITY;
 
         int c = initialCapacity / ssize;
+
         if (c * ssize < initialCapacity)
             ++c;
 
         int cap = 1;
+
         while (cap < c)
             cap <<= 1;
 
