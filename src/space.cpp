@@ -338,9 +338,9 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    if (second->Is(CT_PREPROC))
    {
       // Remove spaces, unless we are ignoring. See indent_preproc()
-      log_rule("pp_space_before");
+      log_rule("pp_indent");
 
-      if (options::pp_space_before() == IARF_IGNORE)
+      if (options::pp_indent() == IARF_IGNORE)
       {
          log_rule("IGNORE");
          return(IARF_IGNORE);
