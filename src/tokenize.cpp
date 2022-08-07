@@ -1984,7 +1984,7 @@ static bool parse_macro(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
                && nl))
          && pc.str.size() > 0)
       {
-         pc.SetType(CT_IGNORED);
+         pc.SetType(CT_PP_IGNORE);
          return(true);
       }
       else if (nl)
