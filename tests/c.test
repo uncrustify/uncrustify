@@ -405,6 +405,7 @@
 09620  c/Issue_2640.cfg                           c/Issue_2640.c
 09621  c/preproc-cleanup.cfg                      c/pp-before-func-def.c
 09622  c/Issue_3356.cfg                           c/Issue_3356.c
+09623  c/convert_cmt_vbrace_one_line.cfg          c/vbrace_one_liner.c
 
 10004  c/ben_094.cfg                              c/pragma_asm.c
 10005  common/empty.cfg                           c/i1270.c
