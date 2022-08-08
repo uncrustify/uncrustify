@@ -4702,7 +4702,25 @@ void newlines_cleanup_braces(bool first)
 
             if (options::nl_after_class() > 0)
             {
-               newline_iarf(pc, IARF_ADD);
+               /*
+                * If there is already a "class" comment, then don't add a newline if
+                * one exists after the comment. or else this will interfere with the
+                * mod_add_long_class_closebrace_comment option.
+                */
+               iarf_e mode  = IARF_ADD;
+               Chunk  *next = pc->GetNext();
+
+               if (next->IsComment())
+               {
+                  pc   = next;
+                  next = pc->GetNext();
+
+                  if (next->IsNewline())
+                  {
+                     mode = IARF_IGNORE;
+                  }
+               }
+               newline_iarf(pc, mode);
             }
          }
       }
