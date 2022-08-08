@@ -2176,7 +2176,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
          change_int_types();
       }
       // Remove duplicate include
-      log_rule_B("mod_duplicate_include");
+      log_rule_B("mod_remove_duplicate_include");
 
       if (options::mod_remove_duplicate_include())
       {
