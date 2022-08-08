@@ -875,11 +875,13 @@ static void convert_vbrace(Chunk *vbr)
       /*
        * If the next chunk is a comment, followed by a newline, then
        * move the brace after the newline and add another newline after
-       * the close brace.
+       * the close brace, unless we're keeping a one-liner.
        */
       Chunk *tmp = vbr->GetNext();
 
-      if (tmp->IsComment())
+      if (  tmp->IsComment()
+         && (  !vbr->TestFlags(PCF_ONE_LINER)
+            || !options::nl_if_leave_one_liners()))
       {
          tmp = tmp->GetNext();
 
