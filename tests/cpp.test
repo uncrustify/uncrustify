@@ -857,6 +857,7 @@
 # TODO: Find relevant test cases for 'override'.
 34210  common/empty.cfg                                     cpp/override_virtual.cpp
 34211  cpp/anonymous_enum.cfg                               cpp/anonymous_enum.cpp
+34212  cpp/mod_add_long_class_closebrace_comment.cfg        cpp/func_class.h
 
 34250  common/empty.cfg                                     cpp/bug_1607.cpp
 34251  cpp/bug_1649.cfg                                     cpp/bug_1649.cpp
