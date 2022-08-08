@@ -750,7 +750,7 @@ void output_text(FILE *pfile)
                      && prev->IsNotNullChunk()
                      && prev->nl_count == 0)
                   {
-                     int orig_sp = (pc->orig_col - prev->orig_col_end);
+                     int orig_sp = pc->orig_prev_sp;
 
                      if ((int)(cpd.column + orig_sp) < 0)
                      {

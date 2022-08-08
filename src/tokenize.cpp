@@ -1797,6 +1797,7 @@ static bool parse_whitespace(tok_ctx &ctx, Chunk &pc)
    while (  ctx.more()
          && unc_isspace(ctx.peek()))
    {
+      int lastcol = ctx.c.col;
       ch = ctx.get();   // throw away the whitespace char
 
       switch (ch)
@@ -1825,8 +1826,7 @@ static bool parse_whitespace(tok_ctx &ctx, Chunk &pc)
          break;
 
       case '\t':
-         log_rule_B("input_tab_size");
-         pc.orig_prev_sp += calc_next_tab_column(cpd.column, options::input_tab_size()) - cpd.column;
+         pc.orig_prev_sp += ctx.c.col - lastcol;
          break;
 
       case ' ':
@@ -2732,6 +2732,9 @@ void tokenize(const deque<int> &data, Chunk *ref)
       }
       // Store off the end column
       chunk.orig_col_end = ctx.c.col - num_stripped; // Issue #1966 and #3565
+
+      // Make the whitespace we disposed of be attributed to the next chunk
+      prev_sp = num_stripped;
 
       // Add the chunk to the list
       rprev = pc;
