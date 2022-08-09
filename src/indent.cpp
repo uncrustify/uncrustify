@@ -4720,34 +4720,15 @@ void indent_preproc()
                               ? pc->pp_level - pp_level_sub : 0;
 
       // Adjust the indent of the '#'
-      log_rule_B("pp_indent");
-
       if (options::pp_indent() & IARF_ADD)
       {
-         log_rule_B("pp_indent_count");
+         log_rule_B("pp_indent ADD");
          reindent_line(pc, 1 + pp_level * options::pp_indent_count());
       }
       else if (options::pp_indent() & IARF_REMOVE)
       {
-         log_rule_B("pp_indent");
+         log_rule_B("pp_indent REMOVE");
          reindent_line(pc, 1);
-      }
-      // Add spacing by adjusting the length
-      log_rule_B("pp_space_before");
-
-      if (options::pp_space_before() != IARF_IGNORE)
-      {
-         if (options::pp_space_before() & IARF_ADD)
-         {
-            log_rule_B("pp_space_before ADD");
-            const size_t mult = max<size_t>(options::pp_space_count(), 1);
-            reindent_line(pc, 1 + pp_level * mult);
-         }
-         else if (options::pp_space_before() & IARF_REMOVE)
-         {
-            log_rule_B("pp_space_before REMOVE");
-            reindent_line(pc, pc->column);
-         }
       }
       // Add spacing by adjusting the length
       log_rule_B("pp_space_after");
@@ -4758,8 +4739,7 @@ void indent_preproc()
          if (options::pp_space_after() & IARF_ADD)
          {
             log_rule_B("pp_space_after ADD");
-            // Issue #3055
-            const size_t mult = max<size_t>(options::pp_space_count(), 1);
+            const size_t mult = options::pp_space_count();
             reindent_line(next, pc->column + pc->Len() + (pp_level * mult));
          }
          else if (options::pp_space_after() & IARF_REMOVE)
