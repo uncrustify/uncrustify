@@ -371,6 +371,7 @@
 #02503  ger.cfg                                    c/pp_concat_asn1.h
 
 02504  c/align_keep_extra.cfg                     c/align_keep_extra.c
+02505  c/align_multi.cfg                          c/align_assigns.c
 
 02510  c/ben_093.cfg                              c/asm.c
 

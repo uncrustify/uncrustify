@@ -59,6 +59,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
    size_t var_def_cnt = 0;
    size_t equ_count   = 0;
+   size_t nl_count    = 0;
    size_t fcn_idx     = 0;
    size_t tmp;
    Chunk  *pc = first;
@@ -67,6 +68,27 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
    {
       LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->Text() is '%s', type is %s, m_parentType is %s\n",
               __func__, __LINE__, pc->orig_line, pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
+
+      if (nl_count != 0)
+      {
+         if (p_nl_count != nullptr)
+         {
+            *p_nl_count += nl_count;
+         }
+         as.NewLines(nl_count);
+         vdas.NewLines(nl_count);
+         fcnProto.NewLines(nl_count);
+
+         for (auto &fcn : fcnDefault)
+         {
+            fcn.NewLines(nl_count);
+         }
+
+         fcn_idx     = 0;
+         nl_count    = 0;
+         var_def_cnt = 0;
+         equ_count   = 0;
+      }
 
       // Don't check inside SPAREN, PAREN or SQUARE groups
       if (  pc->Is(CT_SPAREN_OPEN)
@@ -81,19 +103,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
          if (pc->IsNotNullChunk())
          {
-            as.NewLines(pc->orig_line - tmp);
-            vdas.NewLines(pc->orig_line - tmp);
-
-            if (pc->orig_line != tmp)
-            {
-               fcn_idx = 0;
-
-               for (auto &fcn : fcnDefault)
-               {
-                  fcn.NewLines(pc->orig_line - tmp);
-               }
-            }
-            fcnProto.NewLines(pc->orig_line - tmp);
+            nl_count = pc->orig_line - tmp;
          }
          continue;
       }
@@ -105,8 +115,6 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
       {
          size_t myspan;
          size_t mythresh;
-
-         size_t sub_nl_count = 0;
 
          if (pc->GetParentType() == CT_ENUM)
          {
@@ -122,26 +130,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
             log_rule_B("align_assign_thresh");
             mythresh = options::align_assign_thresh();
          }
-         pc = align_assign(pc->GetNextNcNnl(), myspan, mythresh, &sub_nl_count);
-
-         if (sub_nl_count > 0)
-         {
-            as.NewLines(sub_nl_count);
-            vdas.NewLines(sub_nl_count);
-            fcn_idx = 0;
-
-            for (auto &fcn : fcnDefault)
-            {
-               fcn.NewLines(sub_nl_count);
-            }
-
-            fcnProto.NewLines(sub_nl_count);
-
-            if (p_nl_count != nullptr)
-            {
-               *p_nl_count += sub_nl_count;
-            }
-         }
+         pc = align_assign(pc->GetNext(), myspan, mythresh, &nl_count);
          continue;
       }
 
@@ -156,23 +145,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
       if (pc->IsNewline())
       {
-         as.NewLines(pc->nl_count);
-         vdas.NewLines(pc->nl_count);
-         fcn_idx = 0;
-
-         for (auto &fcn : fcnDefault)
-         {
-            fcn.NewLines(pc->nl_count);
-         }
-
-         fcnProto.NewLines(pc->nl_count);
-
-         if (p_nl_count != nullptr)
-         {
-            *p_nl_count += pc->nl_count;
-         }
-         var_def_cnt = 0;
-         equ_count   = 0;
+         nl_count = pc->nl_count;
       }
       else if (  pc->TestFlags(PCF_VAR_DEF)
               && !pc->TestFlags(PCF_IN_CONST_ARGS) // Issue #1717
