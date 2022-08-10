@@ -62,7 +62,6 @@ void log_rule4(const char *rule, Chunk *first)
    if (first->tracking == nullptr)
    {
       first->tracking = new track_list;
-      first->tracking->reserve(3);
    }
    // copy the rule
    size_t length = strlen(rule) + 1;
@@ -90,7 +89,6 @@ void log_ruleNL(const char *rule, Chunk *pc)
    if (pc->tracking == nullptr)
    {
       pc->tracking = new track_list;
-      pc->tracking->reserve(3);
    }
    // copy the rule
    size_t length = strlen(rule) + 1;
