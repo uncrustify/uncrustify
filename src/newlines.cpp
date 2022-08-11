@@ -2219,19 +2219,19 @@ static Chunk *newline_var_def_blk(Chunk *start)
             LOG_FMT(LVARDFBLK, "%s(%d): var_blk %s, first_var_blk %s, fn_top %s\n",
                     __func__, __LINE__, var_blk ? "TRUE" : "FALSE",
                     first_var_blk ? "TRUE" : "FALSE", fn_top ? "TRUE" : "FALSE");
-            log_rule_B("nl_func_var_def_blk");
+            log_rule_B("nl_var_def_blk_end_func_top");
             log_rule_B("nl_var_def_blk_end");
 
             if (  first_var_blk
                && fn_top)
             {
                // set blank lines after first var def block at the top of a function
-               if (options::nl_func_var_def_blk() > 0)
+               if (options::nl_var_def_blk_end_func_top() > 0)
                {
-                  LOG_FMT(LVARDFBLK, "%s(%d): nl_func_var_def_blk at line %zu\n",
+                  LOG_FMT(LVARDFBLK, "%s(%d): nl_var_def_blk_end_func_top at line %zu\n",
                           __func__, __LINE__, prev->orig_line);
                   prot_the_line(__func__, __LINE__, 15, 4);
-                  newline_min_after(prev, options::nl_func_var_def_blk() + 1, PCF_VAR_DEF);
+                  newline_min_after(prev, options::nl_var_def_blk_end_func_top() + 1, PCF_VAR_DEF);
                }
             }
             else if (  !pc->IsPreproc()

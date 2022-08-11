@@ -768,11 +768,11 @@ int main(int argc, char *argv[])
       if (options::nl_max() > 0)
       {
          // test if one/some option(s) is/are not too big for that
-         log_rule_B("nl_func_var_def_blk");
+         log_rule_B("nl_var_def_blk_end_func_top");
 
-         if (options::nl_func_var_def_blk() >= options::nl_max())
+         if (options::nl_var_def_blk_end_func_top() >= options::nl_max())
          {
-            fprintf(stderr, "The option 'nl_func_var_def_blk' is too big against the option 'nl_max'\n");
+            fprintf(stderr, "The option 'nl_var_def_blk_end_func_top' is too big against the option 'nl_max'\n");
             log_flush(true);
             exit(EX_CONFIG);
          }

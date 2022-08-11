@@ -2810,13 +2810,6 @@ nl_after_func_body_class;
 extern BoundedOption<unsigned, 0, 16>
 nl_after_func_body_one_liner;
 
-// The number of blank lines after a block of variable definitions at the top
-// of a function body.
-//
-// 0: No change (default).
-extern BoundedOption<unsigned, 0, 16>
-nl_func_var_def_blk;
-
 // The number of newlines before a block of typedefs. If nl_after_access_spec
 // is non-zero, that option takes precedence.
 //
@@ -2836,16 +2829,29 @@ nl_typedef_blk_end;
 extern BoundedOption<unsigned, 0, 16>
 nl_typedef_blk_in;
 
-// The number of empty newlines before a block of variable definitions
+// The minimum number of blank lines after a block of variable definitions
+// at the top of a function body. If any preprocessor directives appear
+// between the opening brace of the function and the variable block, then
+// it is considered as not at the top of the function.Newlines are added
+// before trailing preprocessor directives, if any exist.
+//
+// 0: No change (default).
+extern BoundedOption<unsigned, 0, 16>
+nl_var_def_blk_end_func_top;
+
+// The minimum number of empty newlines before a block of variable definitions
 // not at the top of a function body. If nl_after_access_spec is non-zero,
-// that option takes precedence.
+// that option takes precedence. Newlines are not added at the top of the
+// file or just after an opening brace. Newlines are added above any
+// preprocessor directives before the block.
 //
 // 0: No change (default).
 extern BoundedOption<unsigned, 0, 16>
 nl_var_def_blk_start;
 
-// The number of empty newlines after a block of variable definitions
-// not at the top of a function body.
+// The minimum number of empty newlines after a block of variable definitions
+// not at the top of a function body. Newlines are not added if the block
+// is at the bottom of the file or just before a preprocessor directive.
 //
 // 0: No change (default).
 extern BoundedOption<unsigned, 0, 16>
