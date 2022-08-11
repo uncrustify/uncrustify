@@ -922,6 +922,22 @@ void output_text(FILE *pfile)
             }
             else
             {
+               if (tracking)
+               {
+                  if (pc->str[0] == '<')
+                  {
+                     add_text("&lt;", false, false);
+                     size_t lang = pc->str.size();
+
+                     for (size_t idx = 1; idx < lang - 1; idx++)
+                     {
+                        int ch = pc->str[idx];
+                        add_char(ch);
+                     }
+
+                     add_text("&gt;", false, false);
+                  }
+               }
                add_text(pc->str, false, pc->Is(CT_STRING));
             }
             write_in_tracking = false;
