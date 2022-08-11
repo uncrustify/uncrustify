@@ -4048,13 +4048,7 @@ void indent_text()
             reindent_line(pc, indent_column);
          }
          else if (  options::indent_ternary_operator() == 1
-                 && prev->Is(CT_COND_COLON)
-                 && (  pc->Is(CT_ADDR)
-                    || pc->Is(CT_WORD)
-                    || pc->Is(CT_DEREF)
-                    || pc->Is(CT_NUMBER)
-                    || pc->Is(CT_STRING)
-                    || pc->Is(CT_PAREN_OPEN)))
+                 && prev->Is(CT_COND_COLON))
          {
             log_rule_B("indent_ternary_operator");
             Chunk *tmp = prev->GetPrevType(CT_QUESTION);
