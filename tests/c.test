@@ -406,6 +406,7 @@
 09621  c/preproc-cleanup.cfg                      c/pp-before-func-def.c
 09622  c/Issue_3356.cfg                           c/Issue_3356.c
 
+10003  common/empty.cfg                           c/incdec_postfix_multiply.c
 10004  c/ben_094.cfg                              c/pragma_asm.c
 10005  common/empty.cfg                           c/i1270.c
 10006  c/bug_2331.cfg                             c/bug_2331.c
