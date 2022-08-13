@@ -193,6 +193,8 @@
 00468  c/align_func_proto_star_amp-8.cfg          c/align_func_proto_star_amp.h
 00469  c/align_func_proto_star_amp-9.cfg          c/align_func_proto_star_amp.h
 
+00470  c/align_trailing_do_cmt.cfg                c/align_trailing_do_cmt.c
+
 # boolean and comma positioning
 
 00501  c/bool-pos-eol.cfg                         c/bool-pos.c

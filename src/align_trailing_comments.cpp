@@ -185,14 +185,12 @@ void align_right_comments()
       {
          if (pc->GetParentType() == CT_COMMENT_END)
          {
-            Chunk *prev = pc->GetPrev();
-
             log_rule_B("align_right_cmt_gap");
 
-            if (pc->orig_col < prev->orig_col_end + options::align_right_cmt_gap())
+            if (pc->orig_prev_sp < options::align_right_cmt_gap())
             {
-               LOG_FMT(LALTC, "NOT changing END comment on line %zu (%zu <= %zu + %u)\n",
-                       pc->orig_line, pc->orig_col, prev->orig_col_end,
+               LOG_FMT(LALTC, "NOT changing END comment on line %zu (%u < %u)\n",
+                       pc->orig_line, pc->orig_prev_sp,
                        options::align_right_cmt_gap());
             }
             else
