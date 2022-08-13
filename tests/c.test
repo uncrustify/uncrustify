@@ -374,6 +374,7 @@
 
 02504  c/align_keep_extra.cfg                     c/align_keep_extra.c
 02505  c/align_multi.cfg                          c/align_assigns.c
+02506  c/align-4.cfg                              c/align_assign_var_defs.c
 
 02510  c/ben_093.cfg                              c/asm.c
 
