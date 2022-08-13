@@ -907,6 +907,42 @@ private:
 };
 
 
+inline Chunk::Chunk(bool null_c)
+   : null_chunk(null_c)
+{
+   Reset();
+}
+
+
+inline Chunk::Chunk(const Chunk &o)
+   : null_chunk(o.null_chunk)
+{
+   CopyFrom(o);
+}
+
+
+inline Chunk &Chunk::operator=(const Chunk &o)
+{
+   if (this != &o)
+   {
+      CopyFrom(o);
+   }
+   return(*this);
+}
+
+
+inline size_t Chunk::Len() const
+{
+   return(str.size());
+}
+
+
+inline const char *Chunk::Text() const
+{
+   return(str.c_str());
+}
+
+
 inline Chunk *Chunk::GetParent() const
 {
    return(m_parent);
@@ -980,24 +1016,149 @@ inline void Chunk::UpdateFlagBits(T_PcfFlags resetBits, T_PcfFlags setBits)
 }
 
 
+inline Chunk *Chunk::GetNextNl(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsNewline, scope, E_Direction::FORWARD, true));
+}
+
+
+inline Chunk *Chunk::GetPrevNl(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsNewline, scope, E_Direction::BACKWARD, true));
+}
+
+
+inline Chunk *Chunk::GetNextNnl(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsNewline, scope, E_Direction::FORWARD, false));
+}
+
+
+inline Chunk *Chunk::GetPrevNnl(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsNewline, scope, E_Direction::BACKWARD, false));
+}
+
+
+inline Chunk *Chunk::GetNextNc(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsComment, scope, E_Direction::FORWARD, false));
+}
+
+
+inline Chunk *Chunk::GetPrevNc(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsComment, scope, E_Direction::BACKWARD, false));
+}
+
+
+inline Chunk *Chunk::GetNextNcNnl(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsCommentOrNewline, scope, E_Direction::FORWARD, false));
+}
+
+
+inline Chunk *Chunk::GetPrevNcNnl(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsCommentOrNewline, scope, E_Direction::BACKWARD, false));
+}
+
+
+inline Chunk *Chunk::GetNextNcNnlNpp(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsCommentNewlineOrPreproc, scope, E_Direction::FORWARD, false));
+}
+
+
+inline Chunk *Chunk::GetPrevNcNnlNpp(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsCommentNewlineOrPreproc, scope, E_Direction::BACKWARD, false));
+}
+
+
+inline Chunk *Chunk::GetNextNppOrNcNnl(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsCommentOrNewlineInPreproc, scope, E_Direction::FORWARD, false));
+}
+
+
+inline Chunk *Chunk::GetPrevNppOrNcNnl(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsCommentOrNewlineInPreproc, scope, E_Direction::BACKWARD, false));
+}
+
+
+inline Chunk *Chunk::PpaGetNextNcNnl() const
+{
+   return(SearchPpa(&Chunk::IsCommentOrNewline, false));
+}
+
+
+inline Chunk *Chunk::GetNextNcNnlNet(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsCommentNewlineOrEmptyText, scope, E_Direction::FORWARD, false));
+}
+
+
+inline Chunk *Chunk::GetPrevNcNnlNet(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsCommentNewlineOrEmptyText, scope, E_Direction::BACKWARD, false));
+}
+
+
+inline Chunk *Chunk::GetPrevNcNnlNi(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsCommentNewlineOrIgnored, scope, E_Direction::BACKWARD, false));
+}
+
+
+inline Chunk *Chunk::GetNextNisq(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsSquareBracket, scope, E_Direction::FORWARD, false));
+}
+
+
+inline Chunk *Chunk::GetNextType(const E_Token type, const int cLevel, const E_Scope scope) const
+{
+   return(SearchTypeLevel(type, scope, E_Direction::FORWARD, cLevel));
+}
+
+
+inline Chunk *Chunk::GetPrevType(const E_Token type, const int cLevel, const E_Scope scope) const
+{
+   return(SearchTypeLevel(type, scope, E_Direction::BACKWARD, cLevel));
+}
+
+
+inline Chunk *Chunk::GetNextString(const char *cStr, const size_t len, const int cLevel, const E_Scope scope) const
+{
+   return(SearchStringLevel(cStr, len, cLevel, scope, E_Direction::FORWARD));
+}
+
+
+inline Chunk *Chunk::GetPrevString(const char *cStr, const size_t len, const int cLevel, const E_Scope scope) const
+{
+   return(SearchStringLevel(cStr, len, cLevel, scope, E_Direction::BACKWARD));
+}
+
+
+inline Chunk *Chunk::GetNextNvb(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsVBrace, scope, E_Direction::FORWARD, false));
+}
+
+
+inline Chunk *Chunk::GetPrevNvb(const E_Scope scope) const
+{
+   return(Search(&Chunk::IsVBrace, scope, E_Direction::BACKWARD, false));
+}
+
+
 inline bool Chunk::IsTypeAndLevel(const E_Token type, const int cLevel) const
 {
    return(  (  cLevel < 0
             || level == static_cast<size_t>(cLevel))
          && m_type == type);
-}
-
-
-inline bool Chunk::IsStringAndLevel(const char *cStr, const size_t len,
-                                    bool caseSensitive, const int cLevel) const
-{
-   return(  (  cLevel < 0
-            || level == static_cast<size_t>(cLevel))
-         && Len() == len                                    // the length is as expected
-         && (  (  caseSensitive
-               && memcmp(Text(), cStr, len) == 0)
-            || (  !caseSensitive
-               && strncasecmp(Text(), cStr, len) == 0)));                                             // the strings are equal
 }
 
 
@@ -1118,108 +1279,10 @@ inline bool Chunk::IsStar() const
 }
 
 
-inline Chunk *Chunk::SkipToMatch(E_Scope scope) const
-{
-   if (  Is(CT_PAREN_OPEN)
-      || Is(CT_SPAREN_OPEN)
-      || Is(CT_FPAREN_OPEN)
-      || Is(CT_TPAREN_OPEN)
-      || Is(CT_BRACE_OPEN)
-      || Is(CT_VBRACE_OPEN)
-      || Is(CT_ANGLE_OPEN)
-      || Is(CT_SQUARE_OPEN))
-   {
-      return(GetNextType((E_Token)(m_type + 1), level, scope));
-   }
-   return(const_cast<Chunk *>(this));
-}
-
-
-inline Chunk *Chunk::SkipToMatchRev(E_Scope scope) const
-{
-   if (  Is(CT_PAREN_CLOSE)
-      || Is(CT_SPAREN_CLOSE)
-      || Is(CT_FPAREN_CLOSE)
-      || Is(CT_TPAREN_CLOSE)
-      || Is(CT_BRACE_CLOSE)
-      || Is(CT_VBRACE_CLOSE)
-      || Is(CT_ANGLE_CLOSE)
-      || Is(CT_SQUARE_CLOSE))
-   {
-      return(GetPrevType((E_Token)(m_type - 1), level, scope));
-   }
-   return(const_cast<Chunk *>(this));
-}
-
-
-inline bool Chunk::IsCppInheritanceAccessSpecifier() const
-{
-   return(  language_is_set(LANG_CPP)
-         && (  Is(CT_ACCESS)
-            || Is(CT_QUALIFIER))
-         && (  IsString("private")
-            || IsString("protected")
-            || IsString("public")));
-}
-
-
-inline bool Chunk::IsColon() const
-{
-   return(  Is(CT_ACCESS_COLON)
-         || Is(CT_ASM_COLON)
-         || Is(CT_BIT_COLON)
-         || Is(CT_CASE_COLON)
-         || Is(CT_CLASS_COLON)
-         || Is(CT_COLON)
-         || Is(CT_COND_COLON)
-         || Is(CT_CONSTR_COLON)
-         || Is(CT_CS_SQ_COLON)
-         || Is(CT_D_ARRAY_COLON)
-         || Is(CT_FOR_COLON)
-         || Is(CT_LABEL_COLON)
-         || Is(CT_OC_COLON)
-         || Is(CT_OC_DICT_COLON)
-         || Is(CT_TAG_COLON)
-         || Is(CT_WHERE_COLON));
-}
-
-
 inline bool Chunk::IsSemicolon() const
 {
    return(  Is(CT_SEMICOLON)
          || Is(CT_VSEMICOLON));
-}
-
-
-inline bool Chunk::IsDoxygenComment() const
-{
-   if (!IsComment())
-   {
-      return(false);
-   }
-
-   if (Len() < 3)
-   {
-      return(false);
-   }
-   // check the third character
-   const char *sComment = Text();
-   return(  (sComment[2] == '/')
-         || (sComment[2] == '!')
-         || (sComment[2] == '@'));
-}
-
-
-inline bool Chunk::IsTypeDefinition() const
-{
-   return(  Is(CT_TYPE)
-         || Is(CT_PTR_TYPE)
-         || Is(CT_BYREF)
-         || Is(CT_DC_MEMBER)
-         || Is(CT_QUALIFIER)
-         || Is(CT_STRUCT)
-         || Is(CT_ENUM)
-         || Is(CT_UNION));
 }
 
 
@@ -1344,19 +1407,15 @@ inline bool Chunk::IsClassEnumStructOrUnion() const
 }
 
 
-inline bool Chunk::IsNewlineBetween(const Chunk *other) const
+inline Chunk *Chunk::CopyAndAddAfter(Chunk *ref) const
 {
-   Chunk *pc = const_cast<Chunk *>(this);
+   return(CopyAndAdd(ref, E_Direction::FORWARD));
+}
 
-   while (pc != other)
-   {
-      if (pc->IsNewline())
-      {
-         return(true);
-      }
-      pc = pc->GetNext();
-   }
-   return(false);
+
+inline Chunk *Chunk::CopyAndAddBefore(Chunk *ref) const
+{
+   return(CopyAndAdd(ref, E_Direction::BACKWARD));
 }
 
 
