@@ -1848,7 +1848,7 @@ indent_using_block; // = true
 // How to indent the continuation of ternary operator.
 //
 // 0: Off (default)
-// 1: When the `if_false` is a continuation, indent it under `if_false`
+// 1: When the `if_false` is a continuation, indent it under the `if_true` branch
 // 2: When the `:` is a continuation, indent it under `?`
 extern BoundedOption<unsigned, 0, 2>
 indent_ternary_operator;
