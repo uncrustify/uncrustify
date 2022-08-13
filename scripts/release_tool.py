@@ -74,13 +74,26 @@ def generate(repo, version, path, *args):
     import subprocess
 
     p = os.path.join(repo.working_tree_dir, path)
+
+    if version is None:
+        with open(p, 'r') as f:
+            content = f.read()
+            version = re.search(r'Uncrustify([a-z_]*)?-([0-9]+(\.[0-9]+)+(-[0-9]+)?)?(-?[0-9a-f]{6,})?', content)
+            if version:
+                version = version.group()
+            else:
+                version = 'Uncrustify'
+            version += "-dev"
+    else:
+        version = 'Uncrustify-{}'.format(version)
+
     with open(p, 'w') as f:
         c = subprocess.check_call(args, stdout=f)
     print('Created: {}'.format(path))
 
     alter(repo, path,
-          r'Uncrustify-[0-9.]+(-[0-9]+-[0-9a-f]+(-dirty)?)?',
-          r'Uncrustify-{}'.format(version))
+           r'Uncrustify([a-z_]*)?-([0-9]+(\.[0-9]+)+(-[0-9]+)?)?(-?[0-9a-f]{6,})?(-?dirty)?(-dev)?',
+           r'{}'.format(version))
 
 
 # -----------------------------------------------------------------------------
@@ -102,24 +115,35 @@ def cmd_init(repo, args):
 
     repo.git.checkout('-b', 'uncrustify-RC-{}'.format(v))
 
-
 # -----------------------------------------------------------------------------
 def cmd_update(repo, args):
-    v = get_version_str(repo)
+    if args.keepversion:
+        print('Not updating version info in docs')
+        v = None
+    else:
+        v = get_version_str(repo)
     c = get_option_count(args.executable)
 
-    alter(repo, 'CMakeLists.txt',
-          r'(set *[(] *UNCRUSTIFY_VERSION +")[0-9.]+',
-          r'\g<1>{}'.format(v))
-    alter(repo, 'package.json',
-          r'("version" *): *"[0-9.]+"',
-          r'\g<1>: "{}"'.format(v))
-    alter(repo, 'README.md',
-          r'[0-9]+ configurable options as of version [0-9.]+',
-          r'{} configurable options as of version {}'.format(c, v))
-    alter(repo, 'documentation/htdocs/index.html',
-          r'[0-9]+ configurable options as of version [0-9.]+',
-          r'{} configurable options as of version {}'.format(c, v))
+    if not args.keepversion:
+        alter(repo, 'CMakeLists.txt',
+              r'(set *[(] *UNCRUSTIFY_VERSION +")[0-9.]+',
+              r'\g<1>{}'.format(v))
+        alter(repo, 'package.json',
+              r'("version" *): *"[0-9.]+"',
+              r'\g<1>: "{}"'.format(v))
+        alter(repo, 'README.md',
+              r'[0-9]+ configurable options as of version [0-9.]+',
+              r'{} configurable options as of version {}'.format(c, v))
+        alter(repo, 'documentation/htdocs/index.html',
+              r'[0-9]+ configurable options as of version [0-9.]+',
+              r'{} configurable options as of version {}'.format(c, v))
+    else:
+        alter(repo, 'README.md',
+              r'[0-9]+ configurable options as of version ',
+              r'{} configurable options as of version '.format(c))
+        alter(repo, 'documentation/htdocs/index.html',
+              r'[0-9]+ configurable options as of version ',
+              r'{} configurable options as of version '.format(c))
 
     generate(repo, v, 'etc/defaults.cfg',
              args.executable, '--show-config')
@@ -130,6 +154,15 @@ def cmd_update(repo, args):
     generate(repo, v, 'etc/uigui_uncrustify.ini',
              args.executable, '--universalindent')
 
+    # For 'optiondocs' command, update universalindent.cfg also, since
+    # unit tests verify it.
+    if args.keepversion:
+        # Needs to be kept in sync with test_cli_options.py
+        generate(repo, v, 'tests/cli/output/universalindent.cfg',
+                 args.executable, '--universalindent')
+        alter(repo, 'tests/cli/output/universalindent.cfg',
+              r'(version=U.+)|(\(\d+\))|(\r)',
+              r'');
 
 # -----------------------------------------------------------------------------
 def cmd_commit(repo, args):
@@ -204,6 +237,12 @@ def main():
     parser_init.set_defaults(func=cmd_init)
     parser_init.add_argument('-v', '--version',
                              help='version number for release')
+
+    parser_update = subparsers.add_parser(
+        'optiondocs', help='update documentation from options')
+    parser_update.set_defaults(func=cmd_update, keepversion=True)
+    parser_update.add_argument('executable',
+                               help='path to uncrustify executable')
 
     parser_update = subparsers.add_parser(
         'update', help='update version information')
