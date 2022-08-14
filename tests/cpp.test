@@ -928,6 +928,7 @@
 
 34350  cpp/indent_comma_brace.cfg                           cpp/indent_comma_brace_glob.cpp
 34351  cpp/indent_comma_brace.cfg                           cpp/indent_comma_brace_func.cpp
+30353  common/indent_ternary_operator-1.cfg                 cpp/indent_ternary-1.cpp
 
 34360  cpp/nl_before_struct.cfg                             cpp/nl_before_struct_struct.cpp
 34361  cpp/nl_before_struct.cfg                             cpp/nl_before_struct_scoped_enum.cpp
