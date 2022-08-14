@@ -789,6 +789,12 @@ sp_inside_fparens;
 extern Option<iarf_e>
 sp_inside_fparen;
 
+// Add or remove space inside function call '(' and ')'. Default is to use
+// sp_inside_fparen. Note that sp_paren_paren and sp_inside_fparens can each
+// override this setting.
+extern Option<iarf_e>
+sp_func_call_inside_fparen;
+
 // Add or remove space inside the first parentheses in a function type, as in
 // 'void (*x)(...)'.
 extern Option<iarf_e>

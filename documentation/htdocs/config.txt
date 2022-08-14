@@ -628,6 +628,11 @@ sp_inside_fparens               = ignore   # ignore/add/remove/force/not_defined
 # Add or remove space inside function '(' and ')'.
 sp_inside_fparen                = ignore   # ignore/add/remove/force/not_defined
 
+# Add or remove space inside function call '(' and ')'. Default is to use
+# sp_inside_fparen. Note that sp_paren_paren and sp_inside_fparens can each
+# override this setting.
+sp_func_call_inside_fparen      = ignore   # ignore/add/remove/force/not_defined
+
 # Add or remove space inside the first parentheses in a function type, as in
 # 'void (*x)(...)'.
 sp_inside_tparen                = ignore   # ignore/add/remove/force/not_defined

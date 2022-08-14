@@ -984,6 +984,9 @@
 34534  cpp/templates-r.cfg                                  cpp/templates.cpp
 34535  cpp/template_sp-ignore.cfg                           cpp/sp_after_angle.cpp
 34536  cpp/template_sp-remove.cfg                           cpp/sp_after_angle.cpp
+34537  cpp/sp_inside_fparen-1.cfg                           cpp/class_fn_call_angle.cpp
+34538  cpp/sp_inside_fparen-2.cfg                           cpp/class_fn_call_angle.cpp
+34539  cpp/sp_inside_fparen-3.cfg                           cpp/class_fn_call_angle.cpp
 
 34540  cpp/sp_byref_paren-i.cfg                             cpp/byref-4.cpp
 34541  cpp/sp_byref_paren-a.cfg                             cpp/byref-4.cpp

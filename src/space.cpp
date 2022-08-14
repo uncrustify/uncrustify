@@ -1331,12 +1331,20 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          // historic behavior, but is probably not the desired behavior, so this is off
          // by default.
          if (  second->Is(CT_FPAREN_CLOSE)
-            && options::sp_inside_fparen() != IARF_IGNORE
             && !options::use_sp_after_angle_always())
          {
             // Add or remove space between '>' and ')'.
-            log_rule("sp_inside_fparen");
-            return(options::sp_inside_fparen());
+            if (  second->GetParentType() == CT_FUNC_CALL
+               && options::sp_func_call_inside_fparen() != IARF_IGNORE)
+            {
+               log_rule("sp_func_call_inside_fparen");
+               return(options::sp_func_call_inside_fparen());
+            }
+            else if (options::sp_inside_fparen() != IARF_IGNORE)
+            {
+               log_rule("sp_inside_fparen");
+               return(options::sp_inside_fparen());
+            }
          }
          // Add or remove space after '>'.
          log_rule("sp_after_angle");
@@ -2067,6 +2075,14 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
          // Add or remove space inside empty function '()'.
          log_rule("sp_inside_fparens");
          return(options::sp_inside_fparens());
+      }
+      else if (  options::sp_func_call_inside_fparen() != IARF_IGNORE
+              && (  (first->GetParentType() == CT_FUNC_CALL)
+                 || (second->GetParentType() == CT_FUNC_CALL)))
+      {
+         // Add or remove space inside function call '(' and ')'.
+         log_rule("sp_func_call_inside_fparen");
+         return(options::sp_func_call_inside_fparen());
       }
       // Add or remove space inside function '(' and ')'.
       log_rule("sp_inside_fparen");
