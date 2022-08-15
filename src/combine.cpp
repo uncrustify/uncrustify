@@ -1472,15 +1472,22 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
             log_flush(true);
             exit(EX_SOFTWARE);
          }
+         else if (  !prev->TestFlags(PCF_PUNCTUATOR)
+                 || prev->Is(CT_INCDEC_AFTER)
+                 || prev->Is(CT_SQUARE_CLOSE)
+                 || prev->Is(CT_DC_MEMBER)) // Issue 1402
+         {
+            pc->SetType(CT_ARITH);
+         }
+         else if (  !prev->IsParenClose()
+                 || prev->Is(CT_SPAREN_CLOSE)
+                 || prev->GetParentType() == CT_MACRO_FUNC)
+         {
+            pc->SetType(CT_DEREF);
+         }
          else
          {
-            // Issue 1402
-            pc->SetType((  prev->TestFlags(PCF_PUNCTUATOR)
-                        && (  !prev->IsParenClose()
-                           || prev->Is(CT_SPAREN_CLOSE)
-                           || prev->GetParentType() == CT_MACRO_FUNC)
-                        && prev->IsNot(CT_SQUARE_CLOSE)
-                        && prev->IsNot(CT_DC_MEMBER)) ? CT_DEREF : CT_ARITH);
+            pc->SetType(CT_ARITH);
          }
 
          if (pc->TestFlags(PCF_IN_TYPEDEF))  // Issue #1255/#633
