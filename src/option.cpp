@@ -413,6 +413,23 @@ bool process_option_line_compat_0_75(const std::string &cmd, const char *filenam
    return(false);
 } // process_option_line_compat_0_75
 
+
+bool process_option_line_compat_0_76(const std::string &cmd, const std::vector<std::string> &args, const char *filename)
+{
+   if (cmd == "nl_func_var_def_blk")
+   {
+      OptionWarning w{ filename, OptionWarning::MINOR };
+      w("option '%s' is deprecated; it has been replaced by '%s'.\n"
+        "You can also use '%s' for additional functionality",
+        cmd.c_str(), options::nl_var_def_blk_end_func_top.name(),
+        options::nl_var_def_blk_end.name());
+
+      UNUSED(options::nl_var_def_blk_end_func_top.read(args[1].c_str()));
+      return(true);
+   }
+   return(false);
+} // process_option_line_compat_0_76
+
 } // namespace
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1114,6 +1131,14 @@ void process_option_line(const std::string &config_line, const char *filename,
       if (compat_level < option_level(0, 76))
       {
          if (process_option_line_compat_0_75(cmd, filename))
+         {
+            return;
+         }
+      }
+
+      if (compat_level < option_level(0, 77))
+      {
+         if (process_option_line_compat_0_76(cmd, args, filename))
          {
             return;
          }

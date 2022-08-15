@@ -567,6 +567,13 @@
 
 31660  cpp/nl_func_var_def_blk-1.cfg                        cpp/issue_1919.cpp
 31661  cpp/Issue_3097.cfg                                   cpp/Issue_3097.cpp
+31662  cpp/nl_func_var_def_blk-1.cfg                        cpp/var_def_blks.cpp
+31663  cpp/nl_func_var_def_blk-2.cfg                        cpp/var_def_blks.cpp
+31664  cpp/nl_func_var_def_blk-3.cfg                        cpp/var_def_blks.cpp
+31665  cpp/nl_func_var_def_blk-4.cfg                        cpp/var_def_blks.cpp
+31666  cpp/nl_func_var_def_blk-5.cfg                        cpp/var_def_blks.cpp
+31667  cpp/nl_func_var_def_blk-6.cfg                        cpp/var_def_blks.cpp
+31668  cpp/nl_func_var_def_blk-7.cfg                        cpp/var_def_blks.cpp
 
 31700  cpp/toggle_processing_cmt.cfg                        cpp/toggle_processing_cmt.cpp
 31701  cpp/toggle_processing_cmt2.cfg                       cpp/toggle_processing_cmt2.cpp

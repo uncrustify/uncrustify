@@ -132,6 +132,7 @@ enum log_sev_t
    LOUTPUT   = 101, //! output
    LUNC      = 102, //! rules used in uncrustify.cpp
    LQT       = 103, //! load/save options for Qt
+   LVARDFBLK = 104, //! newlines for variable definition blocks
    LOTHER    = 255, //! stuff that doesn't neatly fit any other category
 };
 

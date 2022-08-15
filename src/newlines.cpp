@@ -109,6 +109,11 @@ static bool is_class_one_liner(Chunk *pc);
  */
 bool is_func_proto_group(Chunk *pc, E_Token one_liner_type);
 
+/**
+ * Test if an opening brace is part of a function call or definition.
+ */
+static bool is_func_call_or_def(Chunk *pc);
+
 
 //! Find the next newline or nl_cont
 static void nl_handle_define(Chunk *pc);
@@ -245,7 +250,7 @@ static bool is_var_def(Chunk *pc, Chunk *next);
 
 
 //! Put newline(s) before and/or after a block of variable definitions
-static Chunk *newline_def_blk(Chunk *start, bool fn_top);
+static Chunk *newline_var_def_blk(Chunk *start);
 
 
 /**
@@ -1978,42 +1983,79 @@ static bool is_var_def(Chunk *pc, Chunk *next)
 } // is_var_def
 
 
+static bool is_func_call_or_def(Chunk *pc)
+{
+   if (  pc->GetParentType() == CT_FUNC_DEF
+      || pc->GetParentType() == CT_FUNC_CALL
+      || pc->GetParentType() == CT_FUNC_CALL_USER
+      || pc->GetParentType() == CT_FUNC_CLASS_DEF
+      || pc->GetParentType() == CT_OC_CLASS
+      || pc->GetParentType() == CT_OC_MSG_DECL
+      || pc->GetParentType() == CT_CS_PROPERTY
+      || pc->GetParentType() == CT_CPP_LAMBDA)
+   {
+      return(true);
+   }
+   return(false);
+} // is_func_call_or_def
+
+
 // Put newline(s) before and/or after a block of variable definitions
-static Chunk *newline_def_blk(Chunk *start, bool fn_top)
+static Chunk *newline_var_def_blk(Chunk *start)
 {
 //prot_the_line(__func__, __LINE__, 15, 4);
    LOG_FUNC_ENTRY();
 
-   Chunk *prev = start->GetPrevNcNnlNi();               // Issue #2279
-
-   // can't be any variable definitions in a "= {" block
-   if (prev->Is(CT_ASSIGN))
-   {
-      Chunk *tmp = start->GetNextType(CT_BRACE_CLOSE, start->level);
-      return(tmp->GetNextNcNnl());
-   }
-   Chunk *pc = start->GetNext();
-
+   Chunk *pc           = start;
+   Chunk *prev         = start->GetPrevNcNnlNi(); // Issue #2279
    bool  did_this_line = false;
-   bool  first_var_blk = true;
+   bool  fn_top        = false;
    bool  var_blk       = false;
+   bool  first_var_blk = true;
+
+   LOG_FMT(LVARDFBLK, "%s(%d): start->orig_line is %zu, start->orig_col is %zu, Text() is '%s'\n",
+           __func__, __LINE__, start->orig_line, start->orig_col, start->Text());
+
+   if (start->Is(CT_BRACE_OPEN))
+   {
+      // can't be any variable definitions in a "= {" block
+      if (  (prev != nullptr)
+         && prev->IsNotNullChunk()
+         && prev->Is(CT_ASSIGN))
+      {
+         Chunk *tmp = start->SkipToMatch();
+         return(tmp->GetNextNcNnl());
+      }
+      // check if we're at the top of a function definition, or function call with a
+      // possible variable block
+      fn_top = is_func_call_or_def(start);
+      // opening brace is processed, start with next chunk
+      pc = pc->GetNext();
+   }
 
    while (  pc->IsNotNullChunk()
          && (  pc->level >= start->level
             || pc->level == 0))
    {
-      LOG_FMT(LNL1LINE, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, Text() is '%s'\n",
+      LOG_FMT(LVARDFBLK, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, Text() is '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
       //prot_the_line(__func__, __LINE__, 15, 4);
 
       Chunk *next_pc = pc->GetNext();
-      LOG_FMT(LNL1LINE, "%s(%d): next_pc->orig_line is %zu, next_pc->orig_col is %zu, type is %s, Text() is '%s'\n",
+      LOG_FMT(LVARDFBLK, "%s(%d): next_pc->orig_line is %zu, next_pc->orig_col is %zu, type is %s, Text() is '%s'\n",
               __func__, __LINE__, next_pc->orig_line, next_pc->orig_col, get_token_name(next_pc->GetType()), next_pc->Text());
 
+      // If next_pc token is CT_DC_MEMBER, skip it
       if (next_pc->Is(CT_DC_MEMBER))
       {
-         // If next_pc token is CT_DC_MEMBER, skip it
          pc = pc->SkipDcMember();
+      }
+
+      // skip qualifiers
+      if (pc->Is(CT_QUALIFIER))
+      {
+         pc = pc->GetNext();
+         continue;
       }
 
       if (pc->IsComment())
@@ -2025,7 +2067,7 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
       // process nested braces
       if (pc->Is(CT_BRACE_OPEN))
       {
-         pc = newline_def_blk(pc, false);
+         pc = newline_var_def_blk(pc);
          continue;
       }
 
@@ -2034,15 +2076,6 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
       {
          pc = pc->GetNext();
          break;
-      }
-
-      if (pc->IsPreproc())
-      {
-         if (!var_blk)
-         {
-            pc = pc->GetNext();
-            break;
-         }
       }
 
       // skip vbraces
@@ -2075,28 +2108,31 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
             || pc->level == 0))
       {
          Chunk *next = pc->GetNextNcNnl();
+         LOG_FMT(LVARDFBLK, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, Text() is '%s'\n",
+                 __func__, __LINE__, next->orig_line, next->orig_col, next->Text());
 
-         if (  next->Is(CT_PTR_TYPE) // Issue #2692
-            || next->Is(CT_BYREF))   // Issue #3018
+         // skip over all other type-like things
+         while (  next->Is(CT_PTR_TYPE)  // Issue #2692
+               || next->Is(CT_BYREF)     // Issue #3018
+               || next->Is(CT_QUALIFIER)
+               || next->Is(CT_TSQUARE))
          {
             next = next->GetNextNcNnl();
-         }
-
-         while (next->Is(CT_TSQUARE))
-         {
-            next = next->GetNextNcNnl();
+            LOG_FMT(LVARDFBLK, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, Text() is '%s'\n",
+                    __func__, __LINE__, next->orig_line, next->orig_col, next->Text());
          }
 
          if (next->IsNullChunk())
          {
             break;
          }
-         LOG_FMT(LNL1LINE, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, Text() is '%s'\n",
+         LOG_FMT(LVARDFBLK, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, Text() is '%s'\n",
                  __func__, __LINE__, next->orig_line, next->orig_col, next->Text());
 
          prev = pc->GetPrevNcNnl();
 
          while (  prev->Is(CT_DC_MEMBER)
+               || prev->Is(CT_QUALIFIER)
                || prev->Is(CT_TYPE))
          {
             prev = prev->GetPrevNcNnl();
@@ -2119,32 +2155,35 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
          {
             prev = prev->GetPrev()->GetPrevNcNnlNi();   // Issue #2279
          }
-         LOG_FMT(LNL1LINE, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, type is %s, Text() is '%s'\n",
+         LOG_FMT(LVARDFBLK, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, type is %s, Text() is '%s'\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->GetType()), pc->Text());
-         LOG_FMT(LNL1LINE, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, type is %s, Text() is '%s'\n",
+         LOG_FMT(LVARDFBLK, "%s(%d): next->orig_line is %zu, next->orig_col is %zu, type is %s, Text() is '%s'\n",
                  __func__, __LINE__, next->orig_line, next->orig_col, get_token_name(next->GetType()), next->Text());
 
          if (is_var_def(pc, next))
          {
-            LOG_FMT(LBLANKD, "%s(%d): 'typ==var' found: '%s %s' at line %zu\n",
+            LOG_FMT(LVARDFBLK, "%s(%d): 'typ==var' found: '%s %s' at line %zu\n",
                     __func__, __LINE__, pc->Text(), next->Text(), pc->orig_line);
+            LOG_FMT(LBLANKD, "%s(%d): var_blk %s, first_var_blk %s, fn_top %s\n",
+                    __func__, __LINE__, var_blk ? "TRUE" : "FALSE",
+                    first_var_blk ? "TRUE" : "FALSE", fn_top ? "TRUE" : "FALSE");
             // Put newline(s) before a block of variable definitions
             log_rule_B("nl_var_def_blk_start");
 
             if (  !var_blk
-               && first_var_blk
+               && !first_var_blk
                && options::nl_var_def_blk_start() > 0)
             {
-               LOG_FMT(LBLANKD, "%s(%d): pc is '%s', orig_line is %zu\n",
+               LOG_FMT(LVARDFBLK, "%s(%d): pc is '%s', orig_line is %zu\n",
                        __func__, __LINE__, pc->Text(), pc->orig_line);
 
                if (prev == nullptr)
                {
-                  LOG_FMT(LBLANKD, "%s(%d): prev is nullptr\n", __func__, __LINE__);
+                  LOG_FMT(LVARDFBLK, "%s(%d): prev is nullptr\n", __func__, __LINE__);
                }
                else
                {
-                  LOG_FMT(LBLANKD, "%s(%d): prev is '%s', orig_line is %zu\n",
+                  LOG_FMT(LVARDFBLK, "%s(%d): prev is '%s', orig_line is %zu\n",
                           __func__, __LINE__, prev->Text(), prev->orig_line);
 
                   if (!prev->IsBraceOpen())
@@ -2153,20 +2192,18 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
                   }
                }
             }
-
             // set newlines within var def block
+            log_rule_B("nl_var_def_blk_in");
+
             if (  var_blk
                && (options::nl_var_def_blk_in() > 0))
             {
-               log_rule_B("nl_var_def_blk_in");
                prev = pc->GetPrev();
-               LOG_FMT(LNL1LINE, "%s(%d): prev->orig_line is %zu, prev->orig_col is %zu, Text() is '%s'\n",
+               LOG_FMT(LVARDFBLK, "%s(%d): prev->orig_line is %zu, prev->orig_col is %zu, Text() is '%s'\n",
                        __func__, __LINE__, prev->orig_line, prev->orig_col, prev->Text());
 
                if (prev->IsNewline())
                {
-                  log_rule_B("nl_var_def_blk_in");
-
                   if (prev->nl_count > options::nl_var_def_blk_in())
                   {
                      prev->nl_count = options::nl_var_def_blk_in();
@@ -2179,36 +2216,41 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
          }
          else if (var_blk)
          {
-            LOG_FMT(LBLANKD, "%s(%d): var_blk %s\n",
-                    __func__, __LINE__, var_blk ? "TRUE" : "FALSE");
+            LOG_FMT(LVARDFBLK, "%s(%d): var_blk %s, first_var_blk %s, fn_top %s\n",
+                    __func__, __LINE__, var_blk ? "TRUE" : "FALSE",
+                    first_var_blk ? "TRUE" : "FALSE", fn_top ? "TRUE" : "FALSE");
+            log_rule_B("nl_var_def_blk_end_func_top");
             log_rule_B("nl_var_def_blk_end");
 
-            if (options::nl_var_def_blk_end() > 0)
+            if (  first_var_blk
+               && fn_top)
             {
+               // set blank lines after first var def block at the top of a function
+               if (options::nl_var_def_blk_end_func_top() > 0)
+               {
+                  LOG_FMT(LVARDFBLK, "%s(%d): nl_var_def_blk_end_func_top at line %zu\n",
+                          __func__, __LINE__, prev->orig_line);
+                  prot_the_line(__func__, __LINE__, 15, 4);
+                  newline_min_after(prev, options::nl_var_def_blk_end_func_top() + 1, PCF_VAR_DEF);
+               }
+            }
+            else if (  !pc->IsPreproc()
+                    && options::nl_var_def_blk_end() > 0)
+            {
+               // set blank lines after other var def blocks
+               LOG_FMT(LVARDFBLK, "%s(%d): nl_var_def_blk_end at line %zu\n",
+                       __func__, __LINE__, prev->orig_line);
                // Issue #3516
                newline_min_after(prev, options::nl_var_def_blk_end() + 1, PCF_VAR_DEF);
             }
-            // set blank lines after first var def block
-            log_rule_B("nl_func_var_def_blk");
-            LOG_FMT(LBLANKD, "%s(%d): first_var_blk %s\n",
-                    __func__, __LINE__, first_var_blk ? "TRUE" : "FALSE");
-            LOG_FMT(LBLANKD, "%s(%d): fn_top %s\n",
-                    __func__, __LINE__, fn_top ? "TRUE" : "FALSE");
-
-            if (  first_var_blk
-               && fn_top
-               && (options::nl_func_var_def_blk() > 0))
-            {
-               LOG_FMT(LBLANKD, "%s(%d): nl_func_var_def_blk at line %zu\n",
-                       __func__, __LINE__, prev->orig_line);
-               prot_the_line(__func__, __LINE__, 15, 4);
-               log_rule_B("nl_func_var_def_blk");
-               newline_min_after(prev, options::nl_func_var_def_blk() + 1, PCF_VAR_DEF);
-               prot_the_line(__func__, __LINE__, 15, 4);
-            }
             // reset the variables for the next block
             prot_the_line(__func__, __LINE__, 15, 4);
-            first_var_blk = true;
+            first_var_blk = false;
+            var_blk       = false;
+         }
+         else
+         {
+            first_var_blk = false;
             var_blk       = false;
          }
       }
@@ -2238,9 +2280,13 @@ static Chunk *newline_def_blk(Chunk *start, bool fn_top)
       }
       pc = pc->GetNext();
    }
+   LOG_FMT(LVARDFBLK, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, Text() is '%s', level is %zu\n",
+           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), pc->level);
+   LOG_FMT(LVARDFBLK, "%s(%d): start->orig_line is %zu, start->orig_col is %zu, Text() is '%s', level is %zu\n",
+           __func__, __LINE__, start->orig_line, start->orig_col, start->Text(), start->level);
    //prot_the_line(__func__, __LINE__, 15, 4);
    return(pc);
-} // newline_def_blk
+} // newline_var_def_blk
 
 
 static void collapse_empty_body(Chunk *br_open)
@@ -2594,14 +2640,7 @@ static void newlines_brace_pair(Chunk *br_open)
    bool nl_close_brace = false;
 
    // Handle the cases where the brace is part of a function call or definition
-   if (  br_open->GetParentType() == CT_FUNC_DEF
-      || br_open->GetParentType() == CT_FUNC_CALL
-      || br_open->GetParentType() == CT_FUNC_CALL_USER
-      || br_open->GetParentType() == CT_FUNC_CLASS_DEF
-      || br_open->GetParentType() == CT_OC_CLASS
-      || br_open->GetParentType() == CT_OC_MSG_DECL
-      || br_open->GetParentType() == CT_CS_PROPERTY
-      || br_open->GetParentType() == CT_CPP_LAMBDA)
+   if (is_func_call_or_def(br_open))
    {
       // Need to force a newline before the close brace, if not in a class body
       if (!br_open->TestFlags(PCF_IN_CLASS))
@@ -2611,17 +2650,6 @@ static void newlines_brace_pair(Chunk *br_open)
       // handle newlines after the open brace
       Chunk *pc = br_open->GetNextNcNnl();
       newline_add_between(br_open, pc);
-
-      Chunk *ne             = pc->GetNextNcNnl();
-      bool  this_is_var_def = is_var_def(pc, ne);                          // Issue #3518
-      newline_def_blk(br_open, this_is_var_def);
-   }
-
-   // Handle the cases where the brace is part of a class or struct
-   if (  br_open->GetParentType() == CT_CLASS
-      || br_open->GetParentType() == CT_STRUCT)
-   {
-      newline_def_blk(br_open, false);
    }
    // Grab the matching brace close
    Chunk *br_close = br_open->GetNextType(CT_BRACE_CLOSE, br_open->level);
@@ -5052,7 +5080,7 @@ void newlines_cleanup_braces(bool first)
    }
 
 //prot_the_line(__func__, __LINE__, 15, 4);
-   newline_def_blk(Chunk::GetHead(), false);
+   newline_var_def_blk(Chunk::GetHead());
 //prot_the_line(__func__, __LINE__, 15, 4);
 } // newlines_cleanup_braces
 
