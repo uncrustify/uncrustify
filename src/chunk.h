@@ -25,7 +25,7 @@ static constexpr int ANY_LEVEL = -1;
  *
  * PREPROC
  *  - If not in a preprocessor, skip over any encountered preprocessor stuff
- *  - If in a preprocessor, fail to leave (return nullptr)
+ *  - If in a preprocessor, fail to leave (return Chunk::NullChunkPtr)
  */
 enum class E_Scope : unsigned int
 {

@@ -29,8 +29,8 @@ Chunk *const Chunk::NullChunkPtr(&Chunk::NullChunk);
 
 void Chunk::CopyFrom(const Chunk &o)
 {
-   next         = nullptr;
-   prev         = nullptr;
+   next         = Chunk::NullChunkPtr;
+   prev         = Chunk::NullChunkPtr;
    m_parent     = Chunk::NullChunkPtr;
    align        = o.align;
    indent       = o.indent;
@@ -62,8 +62,8 @@ void Chunk::Reset()
 {
    memset(&align, 0, sizeof(align));
    memset(&indent, 0, sizeof(indent));
-   next          = nullptr;
-   prev          = nullptr;
+   next          = Chunk::NullChunkPtr;
+   prev          = Chunk::NullChunkPtr;
    m_parent      = Chunk::NullChunkPtr;
    m_type        = CT_NONE;
    m_parentType  = CT_NONE;
@@ -124,22 +124,11 @@ const char *Chunk::ElidedText(char *for_the_copy) const
 
 Chunk *Chunk::GetNext(const E_Scope scope) const
 {
-   if (IsNullChunk())
-   {
-      return(NullChunkPtr);
-   }
-   Chunk *pc = g_cl.GetNext(this);
-
-   if (  pc == nullptr
-      || pc->IsNullChunk())
-   {
-      return(NullChunkPtr);
-   }
-
    if (scope == E_Scope::ALL)
    {
-      return(pc);
+      return(next);
    }
+   Chunk *pc = next;
 
    if (TestFlags(PCF_IN_PREPROC))
    {
@@ -152,17 +141,10 @@ Chunk *Chunk::GetNext(const E_Scope scope) const
    }
 
    // Not in a preproc, skip any preproc
-   while (  pc != nullptr
-         && pc->IsNotNullChunk()
+   while (  pc->IsNotNullChunk()
          && pc->TestFlags(PCF_IN_PREPROC))
    {
-      pc = g_cl.GetNext(pc);
-   }
-
-   if (  pc == nullptr
-      || pc->IsNullChunk())
-   {
-      return(NullChunkPtr);
+      pc = pc->next;
    }
    return(pc);
 } // Chunk::GetNext
@@ -170,22 +152,11 @@ Chunk *Chunk::GetNext(const E_Scope scope) const
 
 Chunk *Chunk::GetPrev(const E_Scope scope) const
 {
-   if (IsNullChunk())
-   {
-      return(NullChunkPtr);
-   }
-   Chunk *pc = g_cl.GetPrev(this);
-
-   if (  pc == nullptr
-      || pc->IsNullChunk())
-   {
-      return(NullChunkPtr);
-   }
-
    if (scope == E_Scope::ALL)
    {
-      return(pc);
+      return(prev);
    }
+   Chunk *pc = prev;
 
    if (TestFlags(PCF_IN_PREPROC))
    {
@@ -198,17 +169,10 @@ Chunk *Chunk::GetPrev(const E_Scope scope) const
    }
 
    // Not in a preproc, skip any preproc
-   while (  pc != nullptr
-         && pc->IsNotNullChunk()
+   while (  pc->IsNotNullChunk()
          && pc->TestFlags(PCF_IN_PREPROC))
    {
-      pc = g_cl.GetPrev(pc);
-   }
-
-   if (  pc == nullptr
-      || pc->IsNullChunk())
-   {
-      return(NullChunkPtr);
+      pc = pc->prev;
    }
    return(pc);
 } // Chunk::GetPrev
@@ -416,7 +380,7 @@ void Chunk::Delete(Chunk * &pc)
 {
    g_cl.Pop(pc);
    delete pc;
-   pc = nullptr;
+   pc = Chunk::NullChunkPtr;
 }
 
 
