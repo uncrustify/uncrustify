@@ -10,6 +10,8 @@
 #ifndef LIST_MANAGER_H_INCLUDED
 #define LIST_MANAGER_H_INCLUDED
 
+#include "chunk.h"
+
 /*
  * TODO: why do we provide this template class? can't we use
  * a double linked list std::deque from the standard library ?
@@ -25,26 +27,18 @@ protected:
    T *first; //! pointer to the head of list
    T *last;  //! pointer to tail of list
 
-private:
-   // Hide copy constructor
-   ListManager(const ListManager &ref)
-   {
-      first = nullptr;
-      last  = nullptr;
-   }
-
 public:
    ListManager()
    {
-      first = nullptr;
-      last  = nullptr;
+      first = Chunk::NullChunkPtr;
+      last  = Chunk::NullChunkPtr;
    }
 
 
    /**
     * @brief return the first element of the linked list
     *
-    * @return pointer to first element or nullptr if list is empty
+    * @return pointer to first element or Chunk::NullChunkPtr if list is empty
     */
    T *GetHead() const
    {
@@ -55,37 +49,11 @@ public:
    /**
     * @brief return the last element of the linked list
     *
-    * @return pointer to last element or nullptr if list is empty
+    * @return pointer to last element or Chunk::NullChunkPtr if list is empty
     */
    T *GetTail() const
    {
       return(last);
-   }
-
-
-   /**
-    *  @brief return the next element of the linked list
-    *
-    * @param[in] ref  pointer to current list element
-    *
-    * @return pointer to next element or nullptr if no next element exists
-    */
-   T *GetNext(const T *ref) const
-   {
-      return((ref != nullptr) ? ref->next : nullptr);
-   }
-
-
-   /**
-    * @brief return the previous element of the linked list
-    *
-    * @param[in] ref  pointer to current list element
-    *
-    * @return pointer to previous element or nullptr if no previous element exists
-    */
-   T *GetPrev(const T *ref) const
-   {
-      return((ref != nullptr) ? ref->prev : nullptr);
    }
 
 
@@ -96,7 +64,7 @@ public:
     */
    void Pop(T *obj)
    {
-      if (obj != nullptr)
+      if (obj != Chunk::NullChunkPtr)
       {
          if (first == obj)
          {
@@ -108,17 +76,17 @@ public:
             last = obj->prev;
          }
 
-         if (obj->next != nullptr)
+         if (obj->next != Chunk::NullChunkPtr)
          {
             obj->next->prev = obj->prev;
          }
 
-         if (obj->prev != nullptr)
+         if (obj->prev != Chunk::NullChunkPtr)
          {
             obj->prev->next = obj->next;
          }
-         obj->next = nullptr;
-         obj->prev = nullptr;
+         obj->next = Chunk::NullChunkPtr;
+         obj->prev = Chunk::NullChunkPtr;
       }
    }
 
@@ -126,8 +94,8 @@ public:
    //! swap two elements of a list
    void Swap(T *obj1, T *obj2)
    {
-      if (  obj1 != nullptr
-         && obj2 != nullptr)
+      if (  obj1 != Chunk::NullChunkPtr
+         && obj2 != Chunk::NullChunkPtr)
       {
          if (obj1->prev == obj2)
          {
@@ -162,14 +130,14 @@ public:
     */
    void AddAfter(T *obj, T *ref)
    {
-      if (  obj != nullptr
-         && ref != nullptr)
+      if (  obj != Chunk::NullChunkPtr
+         && ref != Chunk::NullChunkPtr)
       {
          Pop(obj); // TODO: is this necessary?
          obj->next = ref->next;
          obj->prev = ref;
 
-         if (ref->next != nullptr)
+         if (ref->next != Chunk::NullChunkPtr)
          {
             ref->next->prev = obj;
          }
@@ -190,14 +158,14 @@ public:
     */
    void AddBefore(T *obj, T *ref)
    {
-      if (  obj != nullptr
-         && ref != nullptr)
+      if (  obj != Chunk::NullChunkPtr
+         && ref != Chunk::NullChunkPtr)
       {
          Pop(obj);
          obj->next = ref;
          obj->prev = ref->prev;
 
-         if (ref->prev != nullptr)
+         if (ref->prev != Chunk::NullChunkPtr)
          {
             ref->prev->next = obj;
          }
@@ -217,10 +185,10 @@ public:
     */
    void AddTail(T *obj)
    {
-      obj->next = nullptr;
+      obj->next = Chunk::NullChunkPtr;
       obj->prev = last;
 
-      if (last == nullptr)
+      if (last == Chunk::NullChunkPtr)
       {
          last  = obj;
          first = obj;
@@ -241,9 +209,9 @@ public:
    void AddHead(T *obj)
    {
       obj->next = first;
-      obj->prev = nullptr;
+      obj->prev = Chunk::NullChunkPtr;
 
-      if (first == nullptr)
+      if (first == Chunk::NullChunkPtr)
       {
          last  = obj;
          first = obj;
