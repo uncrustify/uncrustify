@@ -103,5 +103,5 @@ void log_pcf_flags(log_sev_t sev, T_PcfFlags flags)
    {
       return;
    }
-   log_fmt(sev, "%s\n", pcf_flags_str(flags).c_str());
+   LOG_FMT(sev, "%s\n", pcf_flags_str(flags).c_str());
 }
