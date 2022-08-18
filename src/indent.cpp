@@ -1517,9 +1517,7 @@ void indent_text()
                      && (  (  next->Is(CT_BRACE_CLOSE)
                            && next->GetParentType() == CT_OC_AT)
                         || (  next->Is(CT_SQUARE_CLOSE)
-                           && next->GetParentType() == CT_OC_AT)
-                        || (  next->Is(CT_SQUARE_CLOSE)
-                           && next->GetParentType() == CT_OC_MSG)))
+                           && next->GetParentType() == CT_OC_AT)))
                {
                   count++;
                   next = next->GetNextNc();
