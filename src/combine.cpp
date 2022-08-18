@@ -556,7 +556,13 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          if (pc->Is(CT_SQUARE_OPEN))
          {
             handle_oc_message_send(pc);
-            return;                  // objective-c_50003
+
+            // Only return early if the '[' was determined to be an OC MSG
+            // Otherwise, it could have been a lambda capture list (ie '[&]')
+            if (pc->GetParentType() == CT_OC_MSG)
+            {
+               return;  // objective-c_50003
+            }
          }
       }
 
