@@ -62,7 +62,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
    size_t nl_count    = 0;
    size_t fcn_idx     = 0;
    size_t tmp;
-   Chunk  *pc = first;
+   Chunk  *pc      = first;
+   Chunk  *vdas_pc = nullptr;
 
    while (pc->IsNotNullChunk())
    {
@@ -71,6 +72,14 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
       if (nl_count != 0)
       {
+         if (vdas_pc != nullptr)
+         {
+            LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig_line %zu, orig_col is %zu\n",
+                    __func__, __LINE__, vdas_pc->Text(), vdas_pc->orig_line, vdas_pc->orig_col);
+            vdas.Add(vdas_pc);
+            vdas_pc = nullptr;
+         }
+
          if (p_nl_count != nullptr)
          {
             *p_nl_count += nl_count;
@@ -163,7 +172,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
          // we hit the second variable def and align was not requested - don't look for assigns, don't align
          LOG_FMT(LALASS, "%s(%d): multiple var defs found and alignment was not requested\n",
                  __func__, __LINE__);
-         vdas.Reset();
+         vdas_pc = nullptr;
       }
       else if (  equ_count == 0                  // indent only if first '=' in line
               && !pc->TestFlags(PCF_IN_TEMPLATE) // and it is not inside a template #999
@@ -223,9 +232,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
             }
             else if (pc->Is(CT_ASSIGN)) // Issue #2197
             {
-               LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig_line %zu, orig_col is %zu\n",
-                       __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
-               vdas.Add(pc);
+               vdas_pc = pc;
             }
          }
          else if (  options::align_assign_decl_func() == 2 // Don't align
@@ -238,9 +245,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
          }
          else if (var_def_cnt != 0)
          {
-            LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig_line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
-            vdas.Add(pc);
+            vdas_pc = pc;
          }
          else
          {
@@ -253,6 +258,14 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
          }
       }
       pc = pc->GetNext();
+   }
+
+   if (vdas_pc != nullptr)
+   {
+      LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig_line %zu, orig_col is %zu\n",
+              __func__, __LINE__, vdas_pc->Text(), vdas_pc->orig_line, vdas_pc->orig_col);
+      vdas.Add(vdas_pc);
+      vdas_pc = nullptr;
    }
    as.End();
    vdas.End();
