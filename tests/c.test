@@ -235,6 +235,7 @@
 00633  c/nl_assign1.cfg                           c/bug_3156.c
 
 # function def newlines
+
 00701  common/func-def-1.cfg                      c/function-def.c
 00702  common/func-def-2.cfg                      c/function-def.c
 00703  common/func-def-3.cfg                      c/function-def.c
@@ -244,6 +245,14 @@
 # nl_after_semicolon and nl_after_open_brace
 
 00721  c/nl_semicolon.cfg                         c/nl-semicolon.c
+
+# function call newlines
+
+00730  c/nl_func_call-1.cfg                       c/nl_func_call.c
+00731  c/nl_func_call-2.cfg                       c/nl_func_call.c
+00732  c/nl_func_call-3.cfg                       c/nl_func_call.c
+00733  c/nl_func_call-4.cfg                       c/nl_func_call.c
+00734  c/nl_func_call-5.cfg                       c/nl_func_call.c
 
 # function types
 

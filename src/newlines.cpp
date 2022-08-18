@@ -4781,58 +4781,49 @@ void newlines_cleanup_braces(bool first)
          log_rule_B("nl_func_def_paren");
          log_rule_B("nl_func_def_paren_empty");
          log_rule_B("nl_func_paren_empty");
-         log_rule_B("nl_func_call_args");
 
-         if (  (  (  pc->GetParentType() == CT_FUNC_DEF
-                  || pc->GetParentType() == CT_FUNC_PROTO
-                  || pc->GetParentType() == CT_FUNC_CLASS_DEF
-                  || pc->GetParentType() == CT_FUNC_CLASS_PROTO
-                  || pc->GetParentType() == CT_OPERATOR)
-               && (  options::nl_func_decl_start() != IARF_IGNORE
-                  || options::nl_func_def_start() != IARF_IGNORE
-                  || options::nl_func_decl_start_single() != IARF_IGNORE
-                  || options::nl_func_def_start_single() != IARF_IGNORE
-                  || options::nl_func_decl_start_multi_line()
-                  || options::nl_func_def_start_multi_line()
-                  || options::nl_func_decl_args() != IARF_IGNORE
-                  || options::nl_func_def_args() != IARF_IGNORE
-                  || options::nl_func_decl_args_multi_line()
-                  || options::nl_func_def_args_multi_line()
-                  || options::nl_func_decl_end() != IARF_IGNORE
-                  || options::nl_func_def_end() != IARF_IGNORE
-                  || options::nl_func_decl_end_single() != IARF_IGNORE
-                  || options::nl_func_def_end_single() != IARF_IGNORE
-                  || options::nl_func_decl_end_multi_line()
-                  || options::nl_func_def_end_multi_line()
-                  || options::nl_func_decl_empty() != IARF_IGNORE
-                  || options::nl_func_def_empty() != IARF_IGNORE
-                  || options::nl_func_type_name() != IARF_IGNORE
-                  || options::nl_func_type_name_class() != IARF_IGNORE
-                  || options::nl_func_class_scope() != IARF_IGNORE
-                  || options::nl_func_scope_name() != IARF_IGNORE
-                  || options::nl_func_proto_type_name() != IARF_IGNORE
-                  || options::nl_func_paren() != IARF_IGNORE
-                  || options::nl_func_def_paren() != IARF_IGNORE
-                  || options::nl_func_def_paren_empty() != IARF_IGNORE
-                  || options::nl_func_paren_empty() != IARF_IGNORE))
-
-            || (  pc->GetParentType() == CT_FUNC_CALL                // Issue #2604
-               && options::nl_func_call_args() != IARF_IGNORE))
+         if (  (  pc->GetParentType() == CT_FUNC_DEF
+               || pc->GetParentType() == CT_FUNC_PROTO
+               || pc->GetParentType() == CT_FUNC_CLASS_DEF
+               || pc->GetParentType() == CT_FUNC_CLASS_PROTO
+               || pc->GetParentType() == CT_OPERATOR)
+            && (  options::nl_func_decl_start() != IARF_IGNORE
+               || options::nl_func_def_start() != IARF_IGNORE
+               || options::nl_func_decl_start_single() != IARF_IGNORE
+               || options::nl_func_def_start_single() != IARF_IGNORE
+               || options::nl_func_decl_start_multi_line()
+               || options::nl_func_def_start_multi_line()
+               || options::nl_func_decl_args() != IARF_IGNORE
+               || options::nl_func_def_args() != IARF_IGNORE
+               || options::nl_func_decl_args_multi_line()
+               || options::nl_func_def_args_multi_line()
+               || options::nl_func_decl_end() != IARF_IGNORE
+               || options::nl_func_def_end() != IARF_IGNORE
+               || options::nl_func_decl_end_single() != IARF_IGNORE
+               || options::nl_func_def_end_single() != IARF_IGNORE
+               || options::nl_func_decl_end_multi_line()
+               || options::nl_func_def_end_multi_line()
+               || options::nl_func_decl_empty() != IARF_IGNORE
+               || options::nl_func_def_empty() != IARF_IGNORE
+               || options::nl_func_type_name() != IARF_IGNORE
+               || options::nl_func_type_name_class() != IARF_IGNORE
+               || options::nl_func_class_scope() != IARF_IGNORE
+               || options::nl_func_scope_name() != IARF_IGNORE
+               || options::nl_func_proto_type_name() != IARF_IGNORE
+               || options::nl_func_paren() != IARF_IGNORE
+               || options::nl_func_def_paren() != IARF_IGNORE
+               || options::nl_func_def_paren_empty() != IARF_IGNORE
+               || options::nl_func_paren_empty() != IARF_IGNORE))
          {
             newline_func_def_or_call(pc);
-         }
-         else if (  (  pc->GetParentType() == CT_FUNC_CALL                // Issue #2020
-                    || pc->GetParentType() == CT_FUNC_CALL_USER)
-                 && options::nl_func_call_start() != IARF_IGNORE)
-         {
-            log_rule_B("nl_func_call_start");
-            newline_iarf(pc, options::nl_func_call_start());
          }
          else if (  (  pc->GetParentType() == CT_FUNC_CALL
                     || pc->GetParentType() == CT_FUNC_CALL_USER)
                  && (  (options::nl_func_call_start_multi_line())
                     || (options::nl_func_call_args_multi_line())
                     || (options::nl_func_call_end_multi_line())
+                    || (options::nl_func_call_start() != IARF_IGNORE)        // Issue #2020
+                    || (options::nl_func_call_args() != IARF_IGNORE)         // Issue #2604
                     || (options::nl_func_call_paren() != IARF_IGNORE)
                     || (options::nl_func_call_paren_empty() != IARF_IGNORE)
                     || (options::nl_func_call_empty() != IARF_IGNORE)))
@@ -4840,17 +4831,18 @@ void newlines_cleanup_braces(bool first)
             log_rule_B("nl_func_call_start_multi_line");
             log_rule_B("nl_func_call_args_multi_line");
             log_rule_B("nl_func_call_end_multi_line");
+            log_rule_B("nl_func_call_start");
+            log_rule_B("nl_func_call_args");
             log_rule_B("nl_func_call_paren");
             log_rule_B("nl_func_call_paren_empty");
             log_rule_B("nl_func_call_empty");
 
-            if (  options::nl_func_call_paren() != IARF_IGNORE
-               || options::nl_func_call_paren_empty() != IARF_IGNORE
-               || options::nl_func_call_empty() != IARF_IGNORE)
+            if (options::nl_func_call_start() != IARF_IGNORE)
             {
-               newline_func_def_or_call(pc);
+               newline_iarf(pc, options::nl_func_call_start());
             }
-            newline_func_multi_line(pc);
+            // note that newline_func_def_or_call() calls newline_func_multi_line()
+            newline_func_def_or_call(pc);
          }
          else if (  first
                  && (options::nl_remove_extra_newlines() == 1))
