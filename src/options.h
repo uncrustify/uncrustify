@@ -1833,6 +1833,11 @@ indent_token_after_brace; // = true
 extern Option<bool>
 indent_cpp_lambda_body;
 
+// Whether or not to use the opening brace when formatting cpp lambdas in
+// function parameters, ignoring the opening parenthesis of the function.
+extern Option<bool>
+indent_cpp_lambda_to_brace;
+
 // How to indent compound literals that are being returned.
 // true: add both the indent from return & the compound literal open brace
 //       (i.e. 2 indent levels)

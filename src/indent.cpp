@@ -2052,6 +2052,16 @@ void indent_text()
             }
             log_indent();
          }
+         else if (  pc->GetParentType() == CT_CPP_LAMBDA
+                 && pc->Is(CT_BRACE_OPEN)
+                 && frm.prev().pc->orig_line == pc->orig_line
+                 && options::indent_cpp_lambda_to_brace()) {
+            frm.top().indent = frm.prev().indent;
+            frm.top().indent_tab = frm.top().indent;
+
+            // if same line as parent, decrease indent
+            indent_column_set(frm.top().indent - indent_size);
+         }
          else
          {
             // Use the prev indent level + indent_size.
