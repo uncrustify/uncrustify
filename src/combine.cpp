@@ -799,6 +799,24 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    if (  pc->IsClassEnumStructOrUnion()
       && prev->IsNot(CT_TYPEDEF))
    {
+      // Issue #3811
+      // Sometimes the enum chunk can exist in a parameter (ie. `void foo(enum EnumType param)`)
+      // In this case we don't need to run the parser since we are not declaring an enum.
+      if (pc->IsEnum())
+      {
+         const size_t level = pc->level;
+         Chunk        *tmp  = pc;
+
+         while (tmp->level == level && tmp->IsNotNullChunk())
+         {
+            tmp = tmp->GetNextNcNnl();
+         }
+
+         if (tmp->level < level)
+         {
+            return;
+         }
+      }
       EnumStructUnionParser parser;
       parser.parse(pc);
       return;
