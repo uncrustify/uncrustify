@@ -66,22 +66,22 @@ Pre compiled binaries for Windows can be downloaded [here](https://sourceforge.n
 [CMake](https://cmake.org/) is a tool that generates build systems
 (Makefiles, Visual Studio project files, Xcode project files and others).
 
-To generate a build system for Uncrustify using CMake, create a build
-folder and run CMake from it:
+To generate a build system for Uncrustify using CMake on UNIX-like systems, create a
+build folder and run CMake from it, making sure to specify Release mode:
 
 ```bash
 $ mkdir build
 $ cd build
-$ cmake ..
+$ cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
-(Use `cmake -G Xcode ..` for Xcode)
+Other systems may require other flags (e.g. `cmake -G Xcode ..` for Xcode).
 
 Then use the build tools of your build system (in many cases this will
 simply be `make`, but on Windows it could be MSBuild or Visual Studio).
 Or use CMake to invoke it:
 
 ```bash
-$ cmake --build .
+$ cmake --build . --config Release
 ```
 
 If testing is enabled, CMake generates a `test` target, which you can
@@ -101,10 +101,15 @@ build type when running CMake (by setting the `CMAKE_BUILD_TYPE`
 variable), and the generated files then build that configuration.
 
 An example of a single-configuration build system are Makefiles. You can
-build the Release configuration of Uncrustify (from the build folder) with:
+build the Release or Debug configurations of Uncrustify (from the build folder) with:
 
 ```bash
 $ cmake -DCMAKE_BUILD_TYPE=Release ..
+$ make
+```
+or
+```bash
+$ cmake -DCMAKE_BUILD_TYPE=Debug ..
 $ make
 ```
 
@@ -114,7 +119,7 @@ build type when building.
 An example of a multi-configuration build system are Visual Studios project
 files. When you open the project in Visual Studio, you can select which
 configuration to build. You can also do this while building from the
-command line with `cmake --build . --config Release`.
+command line with `cmake --build . --config Debug`.
 
 
 ## Bugs
