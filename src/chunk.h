@@ -43,13 +43,13 @@ enum class E_Direction : unsigned int
    BACKWARD
 };
 
-template<class T> class ListManager;
-typedef ListManager<Chunk> ChunkList_t;
+
+class ChunkListManager;
 
 // This is the main type of this program
 class Chunk
 {
-   friend ChunkList_t;
+   friend ChunkListManager;
 
 public:
    static Chunk        NullChunk;                       // Null Chunk

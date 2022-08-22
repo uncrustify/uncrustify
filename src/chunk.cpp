@@ -12,10 +12,7 @@
 #include "prototypes.h"
 #include "space.h"
 
-typedef ListManager<Chunk> ChunkList_t;
-
-
-ChunkList_t g_cl; //! global chunk list
+static ChunkListManager gChunkList;  // global chunk list
 
 
 /*
@@ -183,25 +180,13 @@ static void chunk_log(Chunk *pc, const char *text);
 
 Chunk *Chunk::GetHead()
 {
-   Chunk *ret = g_cl.GetHead();
-
-   if (ret == nullptr)
-   {
-      return(Chunk::NullChunkPtr);
-   }
-   return(ret);
+   return(gChunkList.GetHead());
 }
 
 
 Chunk *Chunk::GetTail()
 {
-   Chunk *ret = g_cl.GetTail();
-
-   if (ret == nullptr)
-   {
-      return(Chunk::NullChunkPtr);
-   }
-   return(ret);
+   return(gChunkList.GetTail());
 }
 
 
@@ -378,7 +363,7 @@ static void chunk_log(Chunk *pc, const char *text)
 
 void Chunk::Delete(Chunk * &pc)
 {
-   g_cl.Pop(pc);
+   gChunkList.Remove(pc);
    delete pc;
    pc = Chunk::NullChunkPtr;
 }
@@ -392,8 +377,8 @@ void Chunk::MoveAfter(Chunk *ref)
    {
       return;
    }
-   g_cl.Pop(this);
-   g_cl.AddAfter(this, ref);
+   gChunkList.Remove(this);
+   gChunkList.AddAfter(this, ref);
 
    // Adjust the original column
    column       = ref->column + space_col_align(ref, this);
@@ -404,7 +389,7 @@ void Chunk::MoveAfter(Chunk *ref)
 
 void Chunk::Swap(Chunk *other)
 {
-   g_cl.Swap(this, other);
+   gChunkList.Swap(this, other);
 }
 
 
@@ -487,8 +472,8 @@ void Chunk::SwapLines(Chunk *other)
          && !pc2->IsNewline())
    {
       Chunk *tmp = pc2->GetNext();
-      g_cl.Pop(pc2);
-      g_cl.AddBefore(pc2, pc1);
+      gChunkList.Remove(pc2);
+      gChunkList.AddBefore(pc2, pc1);
       pc2 = tmp;
    }
    /*
@@ -502,15 +487,15 @@ void Chunk::SwapLines(Chunk *other)
          && !pc1->IsNewline())
    {
       Chunk *tmp = pc1->GetNext();
-      g_cl.Pop(pc1);
+      gChunkList.Remove(pc1);
 
       if (ref2->IsNotNullChunk())
       {
-         g_cl.AddAfter(pc1, ref2);
+         gChunkList.AddAfter(pc1, ref2);
       }
       else
       {
-         g_cl.AddHead(pc1);
+         gChunkList.AddHead(pc1);
       }
       ref2 = pc1;
       pc1  = tmp;
@@ -647,19 +632,14 @@ Chunk *Chunk::CopyAndAdd(Chunk *pos, const E_Direction dir) const
 
    Chunk *pc = new Chunk(*this);
 
-   if (pc == nullptr)
-   {
-      return(Chunk::NullChunkPtr);
-   }
-
    if (  pos != nullptr
       && pos->IsNotNullChunk())
    {
-      (dir == E_Direction::FORWARD) ? g_cl.AddAfter(pc, pos) : g_cl.AddBefore(pc, pos);
+      (dir == E_Direction::FORWARD) ? gChunkList.AddAfter(pc, pos) : gChunkList.AddBefore(pc, pos);
    }
    else
    {
-      (dir == E_Direction::FORWARD) ? g_cl.AddHead(pc) : g_cl.AddTail(pc);
+      (dir == E_Direction::FORWARD) ? gChunkList.AddHead(pc) : gChunkList.AddTail(pc);
    }
    chunk_log(pc, "CopyAndAdd(A):");
    return(pc);
