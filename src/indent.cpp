@@ -1624,8 +1624,7 @@ void indent_text()
          indent_column_set(frm.top().indent_tmp);
       }
       else if (  pc->Is(CT_BRACE_OPEN)
-              && (  pc->next != nullptr
-                 && pc->GetNext()->IsNot(CT_NAMESPACE)))
+              && pc->GetNext()->IsNot(CT_NAMESPACE))
       {
          LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
@@ -2862,10 +2861,10 @@ void indent_text()
                      }
                   }
 
-                  if (next->prev->IsComment())
+                  if (next->GetPrev()->IsComment())
                   {
                      // Issue #2099
-                     frm.top().indent = next->prev->column;
+                     frm.top().indent = next->GetPrev()->column;
                   }
                   else
                   {

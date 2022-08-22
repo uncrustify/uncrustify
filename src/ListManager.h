@@ -18,7 +18,7 @@
  */
 /**
  * A simple list manager for a double-linked list.
- * Class T must define 'next' and 'prev', which must be pointers to type T.
+ * Class T must define 'm_next' and 'm_prev', which must be pointers to type T.
  */
 template<class T>
 class ListManager
@@ -68,25 +68,25 @@ public:
       {
          if (first == obj)
          {
-            first = obj->next;
+            first = obj->m_next;
          }
 
          if (last == obj)
          {
-            last = obj->prev;
+            last = obj->m_prev;
          }
 
-         if (obj->next != Chunk::NullChunkPtr)
+         if (obj->m_next != Chunk::NullChunkPtr)
          {
-            obj->next->prev = obj->prev;
+            obj->m_next->m_prev = obj->m_prev;
          }
 
-         if (obj->prev != Chunk::NullChunkPtr)
+         if (obj->m_prev != Chunk::NullChunkPtr)
          {
-            obj->prev->next = obj->next;
+            obj->m_prev->m_next = obj->m_next;
          }
-         obj->next = Chunk::NullChunkPtr;
-         obj->prev = Chunk::NullChunkPtr;
+         obj->m_next = Chunk::NullChunkPtr;
+         obj->m_prev = Chunk::NullChunkPtr;
       }
    }
 
@@ -97,26 +97,26 @@ public:
       if (  obj1 != Chunk::NullChunkPtr
          && obj2 != Chunk::NullChunkPtr)
       {
-         if (obj1->prev == obj2)
+         if (obj1->m_prev == obj2)
          {
             Pop(obj1);
             AddBefore(obj1, obj2);
          }
-         else if (obj2->prev == obj1)
+         else if (obj2->m_prev == obj1)
          {
             Pop(obj2);
             AddBefore(obj2, obj1);
          }
          else
          {
-            T *prev1 = obj1->prev;
+            T *m_prev1 = obj1->m_prev;
             Pop(obj1);
 
-            T *prev2 = obj2->prev;
+            T *m_prev2 = obj2->m_prev;
             Pop(obj2);
 
-            AddAfter(obj1, prev2);
-            AddAfter(obj2, prev1);
+            AddAfter(obj1, m_prev2);
+            AddAfter(obj2, m_prev1);
          }
       }
    }
@@ -134,18 +134,18 @@ public:
          && ref != Chunk::NullChunkPtr)
       {
          Pop(obj); // TODO: is this necessary?
-         obj->next = ref->next;
-         obj->prev = ref;
+         obj->m_next = ref->m_next;
+         obj->m_prev = ref;
 
-         if (ref->next != Chunk::NullChunkPtr)
+         if (ref->m_next != Chunk::NullChunkPtr)
          {
-            ref->next->prev = obj;
+            ref->m_next->m_prev = obj;
          }
          else
          {
             last = obj;
          }
-         ref->next = obj;
+         ref->m_next = obj;
       }
    }
 
@@ -162,18 +162,18 @@ public:
          && ref != Chunk::NullChunkPtr)
       {
          Pop(obj);
-         obj->next = ref;
-         obj->prev = ref->prev;
+         obj->m_next = ref;
+         obj->m_prev = ref->m_prev;
 
-         if (ref->prev != Chunk::NullChunkPtr)
+         if (ref->m_prev != Chunk::NullChunkPtr)
          {
-            ref->prev->next = obj;
+            ref->m_prev->m_next = obj;
          }
          else
          {
             first = obj;
          }
-         ref->prev = obj;
+         ref->m_prev = obj;
       }
    }
 
@@ -185,8 +185,8 @@ public:
     */
    void AddTail(T *obj)
    {
-      obj->next = Chunk::NullChunkPtr;
-      obj->prev = last;
+      obj->m_next = Chunk::NullChunkPtr;
+      obj->m_prev = last;
 
       if (last == Chunk::NullChunkPtr)
       {
@@ -195,7 +195,7 @@ public:
       }
       else
       {
-         last->next = obj;
+         last->m_next = obj;
       }
       last = obj;
    }
@@ -208,8 +208,8 @@ public:
     */
    void AddHead(T *obj)
    {
-      obj->next = first;
-      obj->prev = Chunk::NullChunkPtr;
+      obj->m_next = first;
+      obj->m_prev = Chunk::NullChunkPtr;
 
       if (first == Chunk::NullChunkPtr)
       {
@@ -218,7 +218,7 @@ public:
       }
       else
       {
-         first->prev = obj;
+         first->m_prev = obj;
       }
       first = obj;
    }

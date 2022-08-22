@@ -1433,7 +1433,7 @@ static void check_template(Chunk *start, bool in_type_cast)
          if (pc->IsString("<"))
          {
             if (  num_tokens > 0 && (tokens[num_tokens - 1] == CT_PAREN_OPEN)
-               && invalid_open_angle_template(pc->prev))
+               && invalid_open_angle_template(pc->GetPrev()))
             {
                pc->SetType(CT_COMPARE); // Issue #3127
             }
@@ -1467,7 +1467,7 @@ static void check_template(Chunk *start, bool in_type_cast)
          else if (pc->Is(CT_BRACE_OPEN))
          {
             if (  !pc->TestFlags(PCF_IN_DECLTYPE)
-               || !detect_cpp_braced_init_list(pc->prev, pc))
+               || !detect_cpp_braced_init_list(pc->GetPrev(), pc))
             {
                break;
             }

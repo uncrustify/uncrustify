@@ -29,8 +29,8 @@ Chunk *const Chunk::NullChunkPtr(&Chunk::NullChunk);
 
 void Chunk::CopyFrom(const Chunk &o)
 {
-   next         = Chunk::NullChunkPtr;
-   prev         = Chunk::NullChunkPtr;
+   m_next       = Chunk::NullChunkPtr;
+   m_prev       = Chunk::NullChunkPtr;
    m_parent     = Chunk::NullChunkPtr;
    align        = o.align;
    indent       = o.indent;
@@ -62,8 +62,8 @@ void Chunk::Reset()
 {
    memset(&align, 0, sizeof(align));
    memset(&indent, 0, sizeof(indent));
-   next          = Chunk::NullChunkPtr;
-   prev          = Chunk::NullChunkPtr;
+   m_next        = Chunk::NullChunkPtr;
+   m_prev        = Chunk::NullChunkPtr;
    m_parent      = Chunk::NullChunkPtr;
    m_type        = CT_NONE;
    m_parentType  = CT_NONE;
@@ -126,9 +126,9 @@ Chunk *Chunk::GetNext(const E_Scope scope) const
 {
    if (scope == E_Scope::ALL)
    {
-      return(next);
+      return(m_next);
    }
-   Chunk *pc = next;
+   Chunk *pc = m_next;
 
    if (TestFlags(PCF_IN_PREPROC))
    {
@@ -144,7 +144,7 @@ Chunk *Chunk::GetNext(const E_Scope scope) const
    while (  pc->IsNotNullChunk()
          && pc->TestFlags(PCF_IN_PREPROC))
    {
-      pc = pc->next;
+      pc = pc->m_next;
    }
    return(pc);
 } // Chunk::GetNext
@@ -154,9 +154,9 @@ Chunk *Chunk::GetPrev(const E_Scope scope) const
 {
    if (scope == E_Scope::ALL)
    {
-      return(prev);
+      return(m_prev);
    }
-   Chunk *pc = prev;
+   Chunk *pc = m_prev;
 
    if (TestFlags(PCF_IN_PREPROC))
    {
@@ -172,7 +172,7 @@ Chunk *Chunk::GetPrev(const E_Scope scope) const
    while (  pc->IsNotNullChunk()
          && pc->TestFlags(PCF_IN_PREPROC))
    {
-      pc = pc->prev;
+      pc = pc->m_prev;
    }
    return(pc);
 } // Chunk::GetPrev

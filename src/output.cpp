@@ -2019,8 +2019,8 @@ static Chunk *output_comment_cpp(Chunk *first)
       }
 
       // Determine if we are dealing with a region marker
-      if (  (  !first->prev
-            || first->prev->orig_line != first->orig_line)
+      if (  (  first->GetPrev()->IsNullChunk()
+            || first->GetPrev()->orig_line != first->orig_line)
          && (  strncmp(cmt_text, "BEGIN", 5) == 0
             || strncmp(cmt_text, "END", 3) == 0))
       {
@@ -2954,8 +2954,7 @@ static bool kw_fcn_function(Chunk *cmt, unc_text &out_txt)
          out_txt.append("operator ");
       }
 
-      if (  fcn->prev != nullptr
-         && fcn->prev->GetType() == CT_DESTRUCTOR)
+      if (fcn->GetPrev()->GetType() == CT_DESTRUCTOR)
       {
          out_txt.append('~');
       }

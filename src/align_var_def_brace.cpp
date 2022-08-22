@@ -257,7 +257,6 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
          && pc->IsNot(CT_FUNC_DEF)                                   // Issue 1452
          && (  (pc->level == (start->level + 1))
             || pc->level == 0)
-         && pc->prev != nullptr
          && pc->GetPrev()->IsNot(CT_MEMBER))
       {
          LOG_FMT(LAVDB, "%s(%d): a-did_this_line is %s\n",

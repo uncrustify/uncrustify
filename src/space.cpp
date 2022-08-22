@@ -386,7 +386,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       iarf_e arg = options::sp_before_semi();          // see the tests cpp:34517-34519
 
       if (  first->Is(CT_VBRACE_OPEN)                  // Issue #2942
-         && first->prev->Is(CT_SPAREN_CLOSE)
+         && first->GetPrev()->Is(CT_SPAREN_CLOSE)
          && first->GetParentType() != CT_WHILE_OF_DO)
       {
          // Add or remove space before empty statement ';' on 'if', 'for' and 'while'.
@@ -558,8 +558,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    // mapped_file_source abc((int) ::CW2A(sTemp));
    if (  first->Is(CT_PAREN_CLOSE)
       && second->Is(CT_DC_MEMBER)
-      && second->next != nullptr
-      && second->next->GetType() == CT_FUNC_CALL)
+      && second->GetNext()->GetType() == CT_FUNC_CALL)
    {
       log_rule("sp_after_cast");
       return(options::sp_after_cast());
@@ -758,8 +757,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
 
       if (  second->Is(CT_PAREN_OPEN)
-         && first->prev != nullptr
-         && first->prev->Is(CT_SIZEOF))
+         && first->GetPrev()->Is(CT_SIZEOF))
       {
          // Add or remove space between 'sizeof...' and '('.
          log_rule("sp_sizeof_ellipsis_paren");
@@ -3610,9 +3608,9 @@ void space_text_balance_nested_parens()
          // test after the closing parens   Issue #1703
          Chunk *closing = first->GetNextType((E_Token)(first->GetType() + 1), first->level);
 
-         if (closing->orig_col == closing->prev->orig_col_end)
+         if (closing->orig_col == closing->GetPrev()->orig_col_end)
          {
-            space_add_after(closing->prev, 1);
+            space_add_after(closing->GetPrev(), 1);
          }
       }
       else if (  first->IsString(")")
