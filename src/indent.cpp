@@ -2916,7 +2916,9 @@ void indent_text()
             }
             log_indent();
 
-            if (  pc->level == pc->brace_level
+            if (  (  pc->level == pc->brace_level // Issue #3752
+                  || (  pc->level > pc->brace_level
+                     && !language_is_set(LANG_OC)))
                && !options::indent_ignore_first_continue()
                && (  pc->Is(CT_FPAREN_OPEN)
                   || pc->Is(CT_SPAREN_OPEN)
