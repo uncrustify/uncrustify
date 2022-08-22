@@ -1125,3 +1125,7 @@
 60086  cpp/indent_namespace_inner_only.cfg                  cpp/indent_namespace_inner_only.h
 60087  cpp/Issue_3550.cfg                                   cpp/Issue_3550.cpp
 60088  common/empty.cfg                                     cpp/Issue_3761.cpp
+
+60100  cpp/indent_continue-0.cfg                            cpp/indent_continue.cpp
+60101  cpp/indent_continue-4.cfg                            cpp/indent_continue.cpp
+60102  cpp/indent_continue-neg-4.cfg                        cpp/indent_continue.cpp

@@ -2830,7 +2830,6 @@ void indent_text()
                         && frm.at(sub).pc->IsOnSameLine(frm.top().pc))
                   {
                      sub--;
-                     skipped = true;
                   }
 
                   if (  (  frm.at(sub + 1).type == CT_CLASS_COLON
@@ -2844,7 +2843,6 @@ void indent_text()
                log_indent();
 
                frm.top().indent_tab = frm.top().indent;
-               skipped = true;
             }
             else
             {
