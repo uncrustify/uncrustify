@@ -1,4 +1,4 @@
-enum { // Keep this line as it is. It's a regression test for checking pc->prev->prev-> on CT_BRACE_OPEN.
+enum { // Keep this line as it is. It's a regression test for checking pc->GetPrev()->GetPrev()-> on CT_BRACE_OPEN.
   kEnumValue = 5,
 };
 

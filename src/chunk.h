@@ -44,9 +44,13 @@ enum class E_Direction : unsigned int
 };
 
 
+class ChunkListManager;
+
 // This is the main type of this program
 class Chunk
 {
+   friend ChunkListManager;
+
 public:
    static Chunk        NullChunk;                       // Null Chunk
    static Chunk *const NullChunkPtr;                    // Pointer to the Null Chunk
@@ -840,10 +844,6 @@ public:
 
 
    // --------- Data members
-
-   Chunk        *next;                       //! pointer to next chunk in list
-   Chunk        *prev;                       //! pointer to previous chunk in list
-
    align_ptr_t  align;
    indent_ptr_t indent;
    size_t       orig_line;                   //! line number of chunk in input file
@@ -868,13 +868,6 @@ public:
 
 
 protected:
-   // --------- Data members
-   Chunk      *m_parent;                    //! pointer to parent chunk (not always set)
-   E_Token    m_type;                       //! type of the chunk itself
-   E_Token    m_parentType;                 //! type of the parent chunk usually CT_NONE
-   T_PcfFlags m_flags;                      //! see PCF_xxx
-
-
    // --------- Protected util functions
 
    /**
@@ -900,6 +893,15 @@ protected:
     * @param resetBits the flag bits to reset
     */
    void SetResetFlags(T_PcfFlags resetBits, T_PcfFlags setBits);
+
+
+   // --------- Data members
+   Chunk      *m_next;                      //! pointer to next chunk in list
+   Chunk      *m_prev;                      //! pointer to previous chunk in list
+   Chunk      *m_parent;                    //! pointer to parent chunk (not always set)
+   E_Token    m_type;                       //! type of the chunk itself
+   E_Token    m_parentType;                 //! type of the parent chunk usually CT_NONE
+   T_PcfFlags m_flags;                      //! see PCF_xxx
 
 
 private:

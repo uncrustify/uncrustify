@@ -2151,7 +2151,7 @@ static Chunk *newline_var_def_blk(Chunk *start)
 
          if (  prev->Is(CT_STRING)
             && prev->GetParentType() == CT_EXTERN
-            && prev->prev->Is(CT_EXTERN))
+            && prev->GetPrev()->Is(CT_EXTERN))
          {
             prev = prev->GetPrev()->GetPrevNcNnlNi();   // Issue #2279
          }
@@ -2296,8 +2296,8 @@ static void collapse_empty_body(Chunk *br_open)
       if (  pc->Is(CT_NEWLINE)
          && pc->SafeToDeleteNl())
       {
-         pc = pc->prev;
-         Chunk *next = pc->next;
+         pc = pc->GetPrev();
+         Chunk *next = pc->GetNext();
          Chunk::Delete(next);
          MARK_CHANGE();
       }
@@ -4576,7 +4576,7 @@ void newlines_cleanup_braces(bool first)
                }
 
                // split
-               newline_add_between(pc, pc->next);
+               newline_add_between(pc, pc->GetNext());
             }
          }
       }
@@ -4858,7 +4858,7 @@ void newlines_cleanup_braces(bool first)
             && options::nl_func_call_end() != IARF_IGNORE)
          {
             log_rule_B("nl_func_call_end");
-            newline_iarf(pc->prev, options::nl_func_call_end());
+            newline_iarf(pc->GetPrev(), options::nl_func_call_end());
          }
       }
       else if (pc->Is(CT_ANGLE_CLOSE))
@@ -6344,7 +6344,7 @@ void do_blank_lines()
                log_rule_B("nl_after_func_body");
 
                // Issue #1734
-               if (!(pc->prev->TestFlags(PCF_IN_TRY_BLOCK)))
+               if (!(pc->GetPrev()->TestFlags(PCF_IN_TRY_BLOCK)))
                {
                   if (options::nl_after_func_body() != pc->nl_count)
                   {

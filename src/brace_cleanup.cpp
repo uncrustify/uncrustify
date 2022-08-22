@@ -1179,8 +1179,7 @@ static bool handle_complex_close(ParseFrame &frm, Chunk *pc, const BraceState &b
 
    if (frm.top().stage == brace_stage_e::PAREN1)
    {
-      if (  pc->next != nullptr
-         && pc->next->GetType() == CT_WHEN)
+      if (pc->GetNext()->GetType() == CT_WHEN)
       {
          frm.top().type  = pc->GetType();
          frm.top().stage = brace_stage_e::CATCH_WHEN;

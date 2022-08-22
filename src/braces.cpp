@@ -975,8 +975,6 @@ Chunk *insert_comment_after(Chunk *ref, E_Token cmt_type,
 
    Chunk new_cmt = *ref;
 
-   new_cmt.prev = nullptr;
-   new_cmt.next = nullptr;
    new_cmt.SetFlags(ref->GetFlags() & PCF_COPY_FLAGS);
    new_cmt.SetType(cmt_type);
    new_cmt.str.clear();

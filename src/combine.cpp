@@ -1798,7 +1798,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    if (  pc->Is(CT_BOOL)
       && !pc->TestFlags(PCF_IN_PREPROC)
       && pc->IsString("&&")
-      && chunk_ends_type(pc->prev))
+      && chunk_ends_type(pc->GetPrev()))
    {
       Chunk *tmp = pc->GetPrev();                 // Issue #2688
       LOG_FMT(LFCNR, "%s(%d): orig_line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
