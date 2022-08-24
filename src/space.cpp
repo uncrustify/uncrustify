@@ -13,7 +13,7 @@
  *   Rmk: spaces = space + nl
  *
  * @author  Ben Gardner
- * @author  Guy Maurel, 2015-2021
+ * @author  Guy Maurel, 2015-2022
  * @license GPL v2+
  */
 
@@ -3257,7 +3257,7 @@ static iarf_e ensure_force_space(Chunk *first, Chunk *second, iarf_e av)
 {
    if (first->TestFlags(PCF_FORCE_SPACE))
    {
-      LOG_FMT(LSPACE, "%s(%d): <force between '%s' and '%s'>",
+      LOG_FMT(LSPACE, "%s(%d): <force between '%s' and '%s'>\n",
               __func__, __LINE__, first->Text(), second->Text());
       return(av | IARF_ADD);
    }
@@ -3561,7 +3561,11 @@ void space_text()
          }
          next->column = column;
 
-         LOG_FMT(LSPACE, " rule = %s @ %zu => %zu\n",
+         LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, pc-Text() '%s', type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
+         LOG_FMT(LSPACE, "%s(%d): ",
+                 __func__, __LINE__);
+         LOG_FMT(LSPACE, "   rule = %s @ %zu => %zu\n",
                  (av == IARF_IGNORE) ? "IGNORE" :
                  (av == IARF_ADD) ? "ADD" :
                  (av == IARF_REMOVE) ? "REMOVE" : "FORCE",

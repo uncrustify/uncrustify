@@ -191,6 +191,7 @@ struct align_t
    size_t  col;
    E_Token type;
    size_t  len;      //! length of the token + space
+   Chunk   *ref;     // Issue #3786
 };
 
 //! holds information and data of a file

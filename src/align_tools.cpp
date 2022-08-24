@@ -28,9 +28,8 @@ Chunk *skip_c99_array(Chunk *sq_open)
 } // skip_c99_array
 
 
-Chunk *scan_ib_line(Chunk *start, bool first_pass)
+Chunk *scan_ib_line(Chunk *start)
 {
-   UNUSED(first_pass);
    LOG_FUNC_ENTRY();
    Chunk  *prev_match = nullptr;
    size_t idx         = 0;
@@ -91,6 +90,7 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
             cpd.al[cpd.al_cnt].type = pc->GetType();
             cpd.al[cpd.al_cnt].col  = pc->column;
             cpd.al[cpd.al_cnt].len  = token_width;
+            cpd.al[cpd.al_cnt].ref  = pc;                  // Issue #3786
             cpd.al_cnt++;
 
             if (cpd.al_cnt == uncrustify::limits::AL_SIZE)
@@ -127,7 +127,7 @@ Chunk *scan_ib_line(Chunk *start, bool first_pass)
                }
                else if (idx > 0)
                {
-                  LOG_FMT(LSIB, "%s(%d):   prev_match '%s', prev_match->orig_line is %zu, prev_match->orig_col is %zu\n",
+                  LOG_FMT(LSIB, "%s(%d): prev_match '%s', prev_match->orig_line is %zu, prev_match->orig_col is %zu\n",
                           __func__, __LINE__, prev_match->Text(), prev_match->orig_line, prev_match->orig_col);
                   int min_col_diff = pc->column - prev_match->column;
                   int cur_col_diff = cpd.al[idx].col - cpd.al[idx - 1].col;
@@ -156,7 +156,23 @@ void ib_shift_out(size_t idx, size_t num)
 {
    while (idx < cpd.al_cnt)
    {
-      cpd.al[idx].col += num;
+      bool  is_empty = false;                  // Issue #3786
+      Chunk *tmp     = cpd.al[idx].ref;
+
+      if (tmp->Is(CT_BRACE_CLOSE))
+      {
+         Chunk *pre = tmp->GetPrev();
+
+         if (pre->Is(CT_COMMA))
+         {
+            is_empty = true;
+         }
+      }
+
+      if (!is_empty)
+      {
+         cpd.al[idx].col += num;
+      }
       idx++;
    }
 } // ib_shift_out

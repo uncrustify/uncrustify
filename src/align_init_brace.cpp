@@ -33,7 +33,7 @@ void align_init_brace(Chunk *start)
            __func__, __LINE__, start->orig_line, start->orig_col);
 
    Chunk *pc       = start->GetNextNcNnl();
-   Chunk *pcSingle = scan_ib_line(pc, true);
+   Chunk *pcSingle = scan_ib_line(pc);
 
    if (  pcSingle == nullptr
       || (  pcSingle->Is(CT_BRACE_CLOSE)
@@ -47,7 +47,7 @@ void align_init_brace(Chunk *start)
 
    do
    {
-      pc = scan_ib_line(pc, false);
+      pc = scan_ib_line(pc);
 
       // debug dump the current frame
       LOG_FMT(LALBR, "%s(%d): debug dump after, orig_line is %zu\n",
@@ -93,8 +93,8 @@ void align_init_brace(Chunk *start)
 
       if (idx < cpd.al_cnt)
       {
-         LOG_FMT(LALBR, " (%zu) check %s vs %s -- ",
-                 idx, get_token_name(pc->GetType()), get_token_name(cpd.al[idx].type));
+         LOG_FMT(LALBR, "%s(%d): (%zu) check %s vs %s -- ??\n",
+                 __func__, __LINE__, idx, get_token_name(pc->GetType()), get_token_name(cpd.al[idx].type));
 
          if (pc->Is(cpd.al[idx].type))
          {
@@ -108,7 +108,11 @@ void align_init_brace(Chunk *start)
                   pc->SetFlagBits(PCF_DONT_INDENT);
                }
             }
-            LOG_FMT(LALBR, " [%s] to col %zu\n", pc->Text(), cpd.al[idx].col);
+            LOG_FMT(LALBR, "%s(%d): cpd.al[%zu].col is %zu\n",
+                    __func__, __LINE__, idx, cpd.al[idx].col);
+            LOG_FMT(LALBR, "%s(%d): (idx is %zu) check %s vs %s -- [%s] to col %zu\n",
+                    __func__, __LINE__,
+                    idx, get_token_name(pc->GetType()), get_token_name(cpd.al[idx].type), pc->Text(), cpd.al[idx].col);
 
             if (num_token != nullptr)
             {
@@ -186,7 +190,8 @@ void align_init_brace(Chunk *start)
          }
          else
          {
-            LOG_FMT(LALBR, " no match\n");
+            LOG_FMT(LALBR, "%s(%d): (%zu) check %s vs %s -- no match\n",
+                    __func__, __LINE__, idx, get_token_name(pc->GetType()), get_token_name(cpd.al[idx].type));
          }
       }
 

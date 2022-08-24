@@ -534,13 +534,13 @@ void Chunk::SetResetFlags(T_PcfFlags resetBits, T_PcfFlags setBits)
       {
          LOG_FMT(LSETFLG,
                  "%s(%d): %016llx^%016llx=%016llx\n"
-                 "   orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s,",
+                 "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s,",
                  __func__, __LINE__,
                  static_cast<T_PcfFlags::int_t>(m_flags),
                  static_cast<T_PcfFlags::int_t>(m_flags ^ newFlags),
                  static_cast<T_PcfFlags::int_t>(newFlags),
-                 orig_line, orig_col, Text(), get_token_name(m_type));
-         LOG_FMT(LSETFLG, " parent type is %s,\n  ",
+                 __func__, __LINE__, orig_line, orig_col, Text(), get_token_name(m_type));
+         LOG_FMT(LSETFLG, " parent type is %s,\n",
                  get_token_name(m_parentType));
          log_func_stack_inline(LSETFLG);
          m_flags = newFlags;
