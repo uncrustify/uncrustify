@@ -39,7 +39,7 @@ Chunk *skip_c99_array(Chunk *sq_open);
  * We trigger on BRACE_OPEN, FPAREN_OPEN, ASSIGN, and COMMA.
  * We want to align the NEXT item.
  */
-Chunk *scan_ib_line(Chunk *start, bool first_pass);
+Chunk *scan_ib_line(Chunk *start);
 
 void ib_shift_out(size_t idx, size_t num);
 
