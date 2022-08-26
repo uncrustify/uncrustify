@@ -4194,10 +4194,10 @@ use_indent_continue_only_once;
 
 // The indentation can be:
 // - after the assignment, at the '[' character
-// - at the begin of the lambda body
+// - at the beginning of the lambda body
 //
-// true:  indentation will be after the assignment
-// false: indentation will be at the begin of the lambda body (default)
+// true:  indentation will be at the beginning of the lambda body
+// false: indentation will be after the assignment (default)
 extern Option<bool>
 indent_cpp_lambda_only_once;
 

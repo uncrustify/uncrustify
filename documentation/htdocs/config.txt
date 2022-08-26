@@ -3445,10 +3445,10 @@ use_indent_continue_only_once   = false    # true/false
 
 # The indentation can be:
 # - after the assignment, at the '[' character
-# - at the begin of the lambda body
+# - at the beginning of the lambda body
 #
-# true:  indentation will be after the assignment
-# false: indentation will be at the begin of the lambda body (default)
+# true:  indentation will be at the beginning of the lambda body
+# false: indentation will be after the assignment (default)
 indent_cpp_lambda_only_once     = false    # true/false
 
 # Whether sp_after_angle takes precedence over sp_inside_fparen. This was the
