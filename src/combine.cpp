@@ -3067,6 +3067,12 @@ static void handle_oc_block_literal(Chunk *pc)
    // mark the braces
    bbo->SetParentType(CT_OC_BLOCK_EXPR);
    bbc->SetParentType(CT_OC_BLOCK_EXPR);
+
+   // mark the OC_BLOCK
+   for (auto *tmp = bbo; tmp != bbc; tmp = tmp->GetNextNcNnl())
+   {
+      tmp->SetFlagBits(PCF_OC_IN_BLOCK);
+   }
 } // handle_oc_block_literal
 
 
