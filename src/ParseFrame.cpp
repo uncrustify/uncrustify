@@ -165,7 +165,7 @@ void ParseFrame::push(Chunk *pc, const char *func, int line, brace_stage_e stage
 
    new_entry.type      = pc->GetType();
    new_entry.level     = pc->level;
-   new_entry.open_line = pc->orig_line;
+   new_entry.open_line = pc->GetOrigLine();
    new_entry.open_colu = pc->orig_col;
    new_entry.pc        = pc;
 
@@ -183,15 +183,15 @@ void ParseFrame::push(Chunk *pc, const char *func, int line, brace_stage_e stage
 // uncomment the line below to get the address of the pse
 // #define DEBUG_PUSH_POP
 #ifdef DEBUG_PUSH_POP
-   LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d) Add is %4zu: orig_line is %4zu, orig_col is %4zu, type is %12s, "
+   LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d) Add is %4zu: orig line is %4zu, orig_col is %4zu, type is %12s, "
            "brace_level is %2zu, level is %2zu, pse_tos: %2zu -> %2zu\n",
-           func, line, (size_t)this, pc->orig_line, pc->orig_col,
+           func, line, (size_t)this, pc->GetOrigLine(), pc->orig_col,
            get_token_name(pc->GetType()), pc->brace_level, pc->level,
            (pse.size() - 2), (pse.size() - 1));
 #else /* DEBUG_PUSH_POP */
-   LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d): orig_line is %4zu, orig_col is %4zu, type is %12s, "
+   LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d): orig line is %4zu, orig_col is %4zu, type is %12s, "
            "brace_level is %2zu, level is %2zu, pse_tos: %2zu -> %2zu\n",
-           func, line, pc->orig_line, pc->orig_col,
+           func, line, pc->GetOrigLine(), pc->orig_col,
            get_token_name(pc->GetType()), pc->brace_level, pc->level,
            (pse.size() - 2), (pse.size() - 1));
 #endif /* DEBUG_PUSH_POP */
@@ -220,8 +220,8 @@ void ParseFrame::pop(const char *func, int line, Chunk *pc)
       || pc->GetType() == CT_SEMICOLON
       || pc->GetType() == CT_SQUARE_CLOSE)
    {
-      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig_line is %4zu, orig_col is %4zu, type is %12s, pushed with\n",
-              func, line, pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
+      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig line is %4zu, orig_col is %4zu, type is %12s, pushed with\n",
+              func, line, pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()));
    }
    else if (  pc->GetType() == CT_ACCESS
            || pc->GetType() == CT_ASSIGN
@@ -250,13 +250,13 @@ void ParseFrame::pop(const char *func, int line, Chunk *pc)
            || pc->GetType() == CT_VSEMICOLON
            || pc->GetType() == CT_WORD)
    {
-      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig_line is %4zu, orig_col is %4zu, type is %12s\n",
-              func, line, pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
+      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig line is %4zu, orig_col is %4zu, type is %12s\n",
+              func, line, pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()));
    }
    else
    {
-      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig_line is %4zu, orig_col is %4zu, type is %12s,\n",
-              func, line, pc->orig_line, pc->orig_col, get_token_name(pc->GetType()));
+      LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): orig line is %4zu, orig_col is %4zu, type is %12s,\n",
+              func, line, pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()));
       LOG_FMT(LINDPSE, "ParseFrame::pop (%s:%d): the type is %s, is not coded. Please make a call.\n",
               func, line, get_token_name(pc->GetType()));
       log_flush(true);

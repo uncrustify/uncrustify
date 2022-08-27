@@ -21,8 +21,8 @@ void remove_extra_returns()
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LRMRETURN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(),
+      LOG_FMT(LRMRETURN, "%s(%d): orig line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(),
               get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       if (  pc->Is(CT_RETURN)
@@ -32,8 +32,8 @@ void remove_extra_returns()
          // look for a closing brace
          bool  remove_it      = false;
          Chunk *closing_brace = pc->GetNextType(CT_BRACE_CLOSE, 1);
-         LOG_FMT(LRMRETURN, "%s(%d): on orig_line %zu, level is %zu\n",
-                 __func__, __LINE__, pc->orig_line, pc->level);
+         LOG_FMT(LRMRETURN, "%s(%d): on orig line %zu, level is %zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->level);
 
          if (closing_brace->IsNotNullChunk())
          {
@@ -52,8 +52,8 @@ void remove_extra_returns()
             // it is not a class
             // look for a closing brace
             closing_brace = pc->GetNextType(CT_BRACE_CLOSE, 0);
-            LOG_FMT(LRMRETURN, "%s(%d): on orig_line %zu, level is %zu\n",
-                    __func__, __LINE__, pc->orig_line, pc->level);
+            LOG_FMT(LRMRETURN, "%s(%d): on orig line %zu, level is %zu\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->level);
 
             if (closing_brace->IsNotNullChunk())
             {
@@ -71,8 +71,8 @@ void remove_extra_returns()
             if (  semicolon->IsNotNullChunk()
                && semicolon->Is(CT_SEMICOLON))
             {
-               LOG_FMT(LRMRETURN, "%s(%d): Removed 'return;' on orig_line %zu\n",
-                       __func__, __LINE__, pc->orig_line);
+               LOG_FMT(LRMRETURN, "%s(%d): Removed 'return;' on orig line %zu\n",
+                       __func__, __LINE__, pc->GetOrigLine());
                Chunk::Delete(pc);
                Chunk::Delete(semicolon);
                pc = closing_brace;

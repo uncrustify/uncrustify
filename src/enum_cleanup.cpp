@@ -33,8 +33,8 @@ void enum_cleanup()
       if (  pc->GetParentType() == CT_ENUM
          && pc->Is(CT_BRACE_CLOSE))
       {
-         LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s\n",
-                 __func__, __LINE__, pc->orig_line, get_token_name(pc->GetType()));
+         LOG_FMT(LTOK, "%s(%d): orig line is %zu, type is %s\n",
+                 __func__, __LINE__, pc->GetOrigLine(), get_token_name(pc->GetType()));
          Chunk *prev = pc->GetPrevNcNnl();                           // Issue #3604
 
          if (  prev != nullptr
@@ -65,10 +65,10 @@ void enum_cleanup()
                      // create a comma
                      Chunk comma;
                      comma.SetType(CT_COMMA);
-                     comma.orig_line = prev->orig_line;
-                     comma.orig_col  = prev->orig_col + 1;
-                     comma.nl_count  = 0;
-                     comma.pp_level  = 0;
+                     comma.SetOrigLine(prev->GetOrigLine());
+                     comma.orig_col = prev->orig_col + 1;
+                     comma.nl_count = 0;
+                     comma.pp_level = 0;
                      comma.SetFlags(PCF_NONE);
                      comma.str = ",";
 

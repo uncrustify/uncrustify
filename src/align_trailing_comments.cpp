@@ -43,7 +43,7 @@ void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev)
          pc->SetFlagBits(PCF_WAS_ALIGNED);
 
          LOG_FMT(sev, "%s(%d): indented [%s] on line %zu to %zu\n",
-                 __func__, __LINE__, pc->Text(), pc->orig_line, pc->column);
+                 __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->column);
       }
    }
    cs.Reset();
@@ -70,7 +70,7 @@ Chunk *align_trailing_comments(Chunk *start)
    comment_align_e cmt_type_start = get_comment_align_type(pc);
 
    LOG_FMT(LALADD, "%s(%d): start on line=%zu\n",
-           __func__, __LINE__, pc->orig_line);
+           __func__, __LINE__, pc->GetOrigLine());
 
    // Find the max column
    log_rule_B("align_right_cmt_span");
@@ -92,7 +92,7 @@ Chunk *align_trailing_comments(Chunk *start)
          if (cmt_type_cur == cmt_type_start)
          {
             LOG_FMT(LALADD, "%s(%d): line=%zu min_col=%zu pc->col=%zu pc->len=%zu %s\n",
-                    __func__, __LINE__, pc->orig_line, min_col, pc->column, pc->Len(),
+                    __func__, __LINE__, pc->GetOrigLine(), min_col, pc->column, pc->Len(),
                     get_token_name(pc->GetType()));
 
             if (  min_orig == 0
@@ -190,13 +190,13 @@ void align_right_comments()
             if (pc->orig_prev_sp < options::align_right_cmt_gap())
             {
                LOG_FMT(LALTC, "NOT changing END comment on line %zu (%u < %u)\n",
-                       pc->orig_line, pc->orig_prev_sp,
+                       pc->GetOrigLine(), pc->orig_prev_sp,
                        options::align_right_cmt_gap());
             }
             else
             {
                LOG_FMT(LALTC, "Changing END comment on line %zu into a RIGHT-comment\n",
-                       pc->orig_line);
+                       pc->GetOrigLine());
                pc->SetFlagBits(PCF_RIGHT_COMMENT);
             }
          }
@@ -211,7 +211,7 @@ void align_right_comments()
             if (pc->column >= max_col)
             {
                LOG_FMT(LALTC, "Changing WHOLE comment on line %zu into a RIGHT-comment (col=%zu col_ind=%zu max_col=%zu)\n",
-                       pc->orig_line, pc->column, pc->column_indent, max_col);
+                       pc->GetOrigLine(), pc->column, pc->column_indent, max_col);
 
                pc->SetFlagBits(PCF_RIGHT_COMMENT);
             }

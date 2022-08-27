@@ -189,8 +189,8 @@ void brace_cleanup()
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
+      LOG_FMT(LTOK, "%s(%d): orig line is %zu, orig_col is %zu, Text() is '%s'\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
 
       // Check for leaving a #define body
       if (  braceState.in_preproc != CT_NONE
@@ -204,8 +204,8 @@ void brace_cleanup()
             if (  options::pp_warn_unbalanced_if()
                && brace_level != 1)
             {
-               LOG_FMT(LWARN, "%s(%d): orig_line is %zu, unbalanced #define block braces, out-level is %zu\n",
-                       __func__, __LINE__, pc->orig_line, brace_level);
+               LOG_FMT(LWARN, "%s(%d): orig line is %zu, unbalanced #define block braces, out-level is %zu\n",
+                       __func__, __LINE__, pc->GetOrigLine(), brace_level);
             }
             fl_pop(braceState.frames, frm);
          }
@@ -268,8 +268,8 @@ void brace_cleanup()
 //
 //   while (pc->IsNotNullChunk())
 //   {
-//      LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
-//              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
+//      LOG_FMT(LTOK, "%s(%d): orig line is %zu, orig_col is %zu, Text() is '%s'\n",
+//              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
 //
 //      // look for template
 //      if (pc->Is(T_TEMPLATE))                 // Issue #3309
@@ -279,8 +279,8 @@ void brace_cleanup()
 //         // look for a parameter pack
 //         while (pc->IsNotNullChunk())
 //         {
-//            LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
-//                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
+//            LOG_FMT(LTOK, "%s(%d): orig line is %zu, orig_col is %zu, Text() is '%s'\n",
+//                    __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
 //
 //            if (pc->Is(T_PARAMETER_PACK))
 //            {
@@ -289,8 +289,8 @@ void brace_cleanup()
 //               // look for a token with the same text
 //               while (pc->IsNotNullChunk())
 //               {
-//                  LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
-//                          __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
+//                  LOG_FMT(LTOK, "%s(%d): orig line is %zu, orig_col is %zu, Text() is '%s'\n",
+//                          __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
 //                  pc = pc->GetNext();
 //
 //                  if (pc == template_end)
@@ -404,15 +404,15 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LTOK, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s, tos is %zu, TOS.type is %s, TOS.stage is %s, ",
-           __func__, __LINE__, pc->orig_line, pc->orig_col, get_token_name(pc->GetType()),
+   LOG_FMT(LTOK, "%s(%d): orig line is %zu, orig_col is %zu, type is %s, tos is %zu, TOS.type is %s, TOS.stage is %s, ",
+           __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()),
            frm.size() - 1, get_token_name(frm.top().type),
            get_brace_stage_name(frm.top().stage));
    log_pcf_flags(LTOK, pc->GetFlags());
 
    // Mark statement starts
-   LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s, Text() is '%s'\n",
-           __func__, __LINE__, pc->orig_line, get_token_name(pc->GetType()), pc->Text());
+   LOG_FMT(LTOK, "%s(%d): orig line is %zu, type is %s, Text() is '%s'\n",
+           __func__, __LINE__, pc->GetOrigLine(), get_token_name(pc->GetType()), pc->Text());
    LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
            __func__, __LINE__, frm.stmt_count, frm.expr_count);
 
@@ -425,8 +425,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       && !pc->IsString("]"))
    {
       pc->SetFlagBits(PCF_EXPR_START | ((frm.stmt_count == 0) ? PCF_STMT_START : PCF_NONE));
-      LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 1.marked '%s' as %s, start stmt_count is %zu, expr_count is %zu\n",
-              __func__, __LINE__, pc->orig_line, pc->Text(),
+      LOG_FMT(LSTMT, "%s(%d): orig line is %zu, 1.marked '%s' as %s, start stmt_count is %zu, expr_count is %zu\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->Text(),
               pc->TestFlags(PCF_STMT_START) ? "stmt" : "expr", frm.stmt_count,
               frm.expr_count);
    }
@@ -523,8 +523,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          }
          else
          {
-            LOG_FMT(LWARN, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
+            LOG_FMT(LWARN, "%s(%d): pc->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
             paren_stack_entry_t AA = frm.top();                // Issue #3055
 
             if (AA.type != CT_EOF)
@@ -536,10 +536,10 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
             if (  frm.top().type != CT_EOF
                && frm.top().type != CT_PP_DEFINE)
             {
-               LOG_FMT(LWARN, "%s(%d): File: %s, orig_line is %zu, orig_col is %zu, Error: Unexpected '%s' for '%s', which was on line %zu\n",
-                       __func__, __LINE__, cpd.filename.c_str(), pc->orig_line, pc->orig_col,
+               LOG_FMT(LWARN, "%s(%d): File: %s, orig line is %zu, orig_col is %zu, Error: Unexpected '%s' for '%s', which was on line %zu\n",
+                       __func__, __LINE__, cpd.filename.c_str(), pc->GetOrigLine(), pc->orig_col,
                        pc->Text(), get_token_name(frm.top().pc->GetType()),
-                       frm.top().pc->orig_line);
+                       frm.top().pc->GetOrigLine());
                print_stack(LBCSPOP, "=Error  ", frm);
                cpd.error_count++;
                exit(EXIT_FAILURE);
@@ -567,8 +567,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          pc->brace_level = frm.brace_level;
 
          // Pop the entry
-         LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
+         LOG_FMT(LBCSPOP, "%s(%d): pc->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
          frm.pop(__func__, __LINE__, pc);
          print_stack(LBCSPOP, "-Close  ", frm);
 
@@ -628,7 +628,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          else
          {
             LOG_FMT(LWARN, "%s: %s(%d): %zu: Error: Expected a semicolon for WHILE_OF_DO, but got '%s'\n",
-                    cpd.filename.c_str(), __func__, __LINE__, pc->orig_line,
+                    cpd.filename.c_str(), __func__, __LINE__, pc->GetOrigLine(),
                     get_token_name(pc->GetType()));
             cpd.error_count++;
          }
@@ -768,8 +768,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
                }
             }
          }
-         LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
+         LOG_FMT(LBCSPOP, "%s(%d): pc->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
          if (!single)
          {
@@ -809,8 +809,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
             && prev->IsNot(CT_ASSIGN)))
       {
          // it is a CT_DEFAULT from a switch
-         LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col);
+         LOG_FMT(LBCSPOP, "%s(%d): pc->GetOrigLine() is %zu, pc->orig_col is %zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
          pc->SetParentType(CT_SWITCH);
          size_t idx = frm.size();
          LOG_FMT(LBCSPOP, "%s(%d): idx is %zu\n",
@@ -827,8 +827,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
 
    if (pc->Is(CT_BREAK))
    {
-      LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col);
+      LOG_FMT(LBCSPOP, "%s(%d): pc->GetOrigLine() is %zu, pc->orig_col is %zu\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
       size_t idx = frm.size();
       LOG_FMT(LBCSPOP, "%s(%d): idx is %zu\n",
               __func__, __LINE__, idx);
@@ -898,16 +898,16 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
          && frm.top().type != CT_SPAREN_OPEN)
       || pc->Is(CT_MACRO))                         // Issue #2742
    {
-      LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, reset1 stmt on '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->Text());
+      LOG_FMT(LSTMT, "%s(%d): orig line is %zu, reset1 stmt on '%s'\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->Text());
       frm.stmt_count = 0;
       frm.expr_count = 0;
       LOG_FMT(LTOK, "%s(%d): frm.stmt_count is %zu, frm.expr_count is %zu\n",
               __func__, __LINE__, frm.stmt_count, frm.expr_count);
    }
    // Mark expression starts
-   LOG_FMT(LSTMT, "%s(%d): Mark expression starts: orig_line is %zu, orig_col is %zu, Text() is '%s'\n",
-           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
+   LOG_FMT(LSTMT, "%s(%d): Mark expression starts: orig line is %zu, orig_col is %zu, Text() is '%s'\n",
+           __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
    Chunk *tmp = pc->GetNextNcNnl();
 
    if (  pc->Is(CT_ARITH)
@@ -939,8 +939,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
       || pc->Is(CT_QUESTION))
    {
       frm.expr_count = 0;
-      LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, orig_col is %zu, reset expr on '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
+      LOG_FMT(LSTMT, "%s(%d): orig line is %zu, orig_col is %zu, reset expr on '%s'\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
    }
 } // parse_cleanup
 
@@ -977,8 +977,8 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
          return(true);
       }
       // Remove the CT_IF and close the statement
-      LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
+      LOG_FMT(LBCSPOP, "%s(%d): pc->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
       frm.pop(__func__, __LINE__, pc);
       print_stack(LBCSPOP, "-IF-CCS ", frm);
 
@@ -1032,8 +1032,8 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
          return(true);
       }
       // Remove the CT_TRY and close the statement
-      LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
+      LOG_FMT(LBCSPOP, "%s(%d): pc->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
       frm.pop(__func__, __LINE__, pc);
       print_stack(LBCSPOP, "-TRY-CCS ", frm);
 
@@ -1083,11 +1083,11 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
 
          return(true);
       }
-      LOG_FMT(LWARN, "%s(%d): %s, orig_line is %zu, Error: Expected 'while', got '%s'\n",
-              __func__, __LINE__, cpd.filename.c_str(), pc->orig_line,
+      LOG_FMT(LWARN, "%s(%d): %s, orig line is %zu, Error: Expected 'while', got '%s'\n",
+              __func__, __LINE__, cpd.filename.c_str(), pc->GetOrigLine(),
               pc->Text());
-      LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
+      LOG_FMT(LBCSPOP, "%s(%d): pc->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
       frm.pop(__func__, __LINE__, pc);
       print_stack(LBCSPOP, "-Error  ", frm);
       cpd.error_count++;
@@ -1139,8 +1139,8 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
          pc->SetFlagBits(PCF_STMT_START | PCF_EXPR_START);
          frm.stmt_count = 1;
          frm.expr_count = 1;
-         LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 2.marked '%s' as stmt start\n",
-                 __func__, __LINE__, pc->orig_line, pc->Text());
+         LOG_FMT(LSTMT, "%s(%d): orig line is %zu, 2.marked '%s' as stmt start\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->Text());
       }
    }
 
@@ -1158,13 +1158,13 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
       && (  (frm.top().stage == brace_stage_e::PAREN1)
          || (frm.top().stage == brace_stage_e::WOD_PAREN)))
    {
-      LOG_FMT(LWARN, "%s(%d): %s, orig_line is %zu, Error: Expected '(', got '%s' for '%s'\n",
-              __func__, __LINE__, cpd.filename.c_str(), pc->orig_line, pc->Text(),
+      LOG_FMT(LWARN, "%s(%d): %s, orig line is %zu, Error: Expected '(', got '%s' for '%s'\n",
+              __func__, __LINE__, cpd.filename.c_str(), pc->GetOrigLine(), pc->Text(),
               get_token_name(frm.top().type));
 
       // Throw out the complex statement
-      LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
+      LOG_FMT(LBCSPOP, "%s(%d): pc->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
       frm.pop(__func__, __LINE__, pc);
       print_stack(LBCSPOP, "-Error  ", frm);
       cpd.error_count++;
@@ -1203,8 +1203,8 @@ static bool handle_complex_close(ParseFrame &frm, Chunk *pc, const BraceState &b
          if (  next->IsNullChunk()
             || next->IsNot(CT_ELSE))
          {
-            LOG_FMT(LBCSPOP, "%s(%d): no CT_ELSE, pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
+            LOG_FMT(LBCSPOP, "%s(%d): no CT_ELSE, pc->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
             frm.pop(__func__, __LINE__, pc);
             print_stack(LBCSPOP, "-IF-HCS ", frm);
 
@@ -1222,8 +1222,8 @@ static bool handle_complex_close(ParseFrame &frm, Chunk *pc, const BraceState &b
          if (  next->IsNot(CT_CATCH)
             && next->IsNot(CT_FINALLY))
          {
-            LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
+            LOG_FMT(LBCSPOP, "%s(%d): pc->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
             frm.pop(__func__, __LINE__, pc);
             print_stack(LBCSPOP, "-TRY-HCS ", frm);
 
@@ -1234,8 +1234,8 @@ static bool handle_complex_close(ParseFrame &frm, Chunk *pc, const BraceState &b
       {
          LOG_FMT(LNOTE, "%s(%d): close_statement on %s brace_stage_e::BRACE2\n",
                  __func__, __LINE__, get_token_name(frm.top().type));
-         LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
+         LOG_FMT(LBCSPOP, "%s(%d): pc->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
          frm.pop(__func__, __LINE__, pc);
          print_stack(LBCSPOP, "-HCC B2 ", frm);
 
@@ -1257,8 +1257,8 @@ static bool handle_complex_close(ParseFrame &frm, Chunk *pc, const BraceState &b
    {
       LOG_FMT(LNOTE, "%s(%d): close_statement on %s brace_stage_e::WOD_SEMI\n",
               __func__, __LINE__, get_token_name(frm.top().type));
-      LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
+      LOG_FMT(LBCSPOP, "%s(%d): pc->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
       frm.pop(__func__, __LINE__, pc);
       print_stack(LBCSPOP, "-HCC WoDS ", frm);
 
@@ -1268,7 +1268,7 @@ static bool handle_complex_close(ParseFrame &frm, Chunk *pc, const BraceState &b
    {
       // PROBLEM
       LOG_FMT(LWARN, "%s(%d): %s:%zu Error: TOS.type='%s' TOS.stage=%u\n",
-              __func__, __LINE__, cpd.filename.c_str(), pc->orig_line,
+              __func__, __LINE__, cpd.filename.c_str(), pc->GetOrigLine(),
               get_token_name(frm.top().type),
               (unsigned int)frm.top().stage);
       cpd.error_count++;
@@ -1315,10 +1315,10 @@ static void mark_namespace(Chunk *pns)
       if (  (options::indent_namespace_limit() > 0)
          && ((br_close = pc->SkipToMatch())->IsNotNullChunk()))
       {
-         // br_close->orig_line is always >= pc->orig_line;
-         size_t numberOfLines = br_close->orig_line - pc->orig_line - 1;                 // Issue #2345
-         LOG_FMT(LTOK, "%s(%d): br_close->orig_line is %zu, pc->orig_line is %zu\n",
-                 __func__, __LINE__, br_close->orig_line, pc->orig_line);
+         // br_close->GetOrigLine() is always >= pc->GetOrigLine();
+         size_t numberOfLines = br_close->GetOrigLine() - pc->GetOrigLine() - 1;                 // Issue #2345
+         LOG_FMT(LTOK, "%s(%d): br_close->GetOrigLine() is %zu, pc->GetOrigLine() is %zu\n",
+                 __func__, __LINE__, br_close->GetOrigLine(), pc->GetOrigLine());
          LOG_FMT(LTOK, "%s(%d): numberOfLines is %zu, indent_namespace_limit() is %d\n",
                  __func__, __LINE__, numberOfLines, options::indent_namespace_limit());
 
@@ -1344,7 +1344,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    Chunk chunk;
 
    chunk.SetParentType(frm.top().type);
-   chunk.orig_line   = pc->orig_line;
+   chunk.SetOrigLine(pc->GetOrigLine());
    chunk.level       = frm.level;
    chunk.pp_level    = frm.pp_level;
    chunk.brace_level = frm.brace_level;
@@ -1414,10 +1414,10 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    {
       return(nullptr);
    }
-   chunk.orig_line = ref->orig_line;
-   chunk.orig_col  = ref->orig_col;
-   chunk.column    = ref->column + ref->Len() + 1;
-   chunk.pp_level  = ref->pp_level;                         // Issue #3055
+   chunk.SetOrigLine(ref->GetOrigLine());
+   chunk.orig_col = ref->orig_col;
+   chunk.column   = ref->column + ref->Len() + 1;
+   chunk.pp_level = ref->pp_level;                          // Issue #3055
    chunk.SetType(CT_VBRACE_OPEN);
 
    return(chunk.CopyAndAddAfter(ref));
@@ -1434,8 +1434,8 @@ bool close_statement(ParseFrame &frm, Chunk *pc, const BraceState &braceState)
       throw invalid_argument(string(__func__) + ":" + to_string(__LINE__)
                              + "args cannot be nullptr");
    }
-   LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s, '%s' type is %s, stage is %u\n",
-           __func__, __LINE__, pc->orig_line,
+   LOG_FMT(LTOK, "%s(%d): orig line is %zu, type is %s, '%s' type is %s, stage is %u\n",
+           __func__, __LINE__, pc->GetOrigLine(),
            get_token_name(pc->GetType()), pc->Text(),
            get_token_name(frm.top().type),
            (unsigned int)frm.top().stage);
@@ -1444,8 +1444,8 @@ bool close_statement(ParseFrame &frm, Chunk *pc, const BraceState &braceState)
    {
       frm.stmt_count = 0;
       frm.expr_count = 0;
-      LOG_FMT(LSTMT, "%s(%d): orig_line is %zu> reset2 stmt on '%s'\n",
-              __func__, __LINE__, pc->orig_line, pc->Text());
+      LOG_FMT(LSTMT, "%s(%d): orig line is %zu> reset2 stmt on '%s'\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->Text());
    }
    /*
     * Insert a CT_VBRACE_CLOSE, if needed:
@@ -1473,8 +1473,8 @@ bool close_statement(ParseFrame &frm, Chunk *pc, const BraceState &braceState)
          LOG_FMT(LBCSPOP, "%s(%d): frm.brace_level decreased to %zu\n",
                  __func__, __LINE__, frm.brace_level);
          log_pcf_flags(LBCSPOP, pc->GetFlags());
-         LOG_FMT(LBCSPOP, "%s(%d): pc->orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
+         LOG_FMT(LBCSPOP, "%s(%d): pc->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
          frm.pop(__func__, __LINE__, pc);
 
          // Update the token level

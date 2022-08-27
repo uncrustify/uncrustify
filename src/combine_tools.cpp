@@ -261,9 +261,9 @@ bool can_be_full_param(Chunk *start, Chunk *end)
 
       if (brace->IsNotNullChunk())
       {
-         LOG_FMT(LFPARAM, "%s(%d): (matching %s brace at orig_line %zu, orig_col is %zu)",
+         LOG_FMT(LFPARAM, "%s(%d): (matching %s brace at orig line %zu, orig_col is %zu)",
                  __func__, __LINE__,
-                 get_token_name(brace->GetParentType()), brace->orig_line, brace->orig_col);
+                 get_token_name(brace->GetParentType()), brace->GetOrigLine(), brace->orig_col);
       }
 
       if (  brace->IsNotNullChunk()
@@ -328,9 +328,9 @@ bool chunk_ends_type(Chunk *start)
 
    for ( ; pc->IsNotNullChunk(); pc = pc->GetPrevNcNnlNi()) // Issue #2279
    {
-      LOG_FMT(LFTYPE, "%s(%d): type is %s, Text() '%s', orig_line %zu, orig_col %zu\n   ",
+      LOG_FMT(LFTYPE, "%s(%d): type is %s, Text() '%s', orig line %zu, orig_col %zu\n   ",
               __func__, __LINE__, get_token_name(pc->GetType()), pc->Text(),
-              pc->orig_line, pc->orig_col);
+              pc->GetOrigLine(), pc->orig_col);
       log_pcf_flags(LFTYPE, pc->GetFlags());
 
       if (  pc->Is(CT_WORD)
@@ -567,8 +567,8 @@ Chunk *set_paren_parent(Chunk *start, E_Token parent_type)
    if (end->IsNotNullChunk())
    {
       LOG_FMT(LFLPAREN, "%s(%d): %zu:%zu '%s' and %zu:%zu '%s' type is %s, parent type is %s",
-              __func__, __LINE__, start->orig_line, start->orig_col, start->Text(),
-              end->orig_line, end->orig_col, end->Text(),
+              __func__, __LINE__, start->GetOrigLine(), start->orig_col, start->Text(),
+              end->GetOrigLine(), end->orig_col, end->Text(),
               get_token_name(start->GetType()), get_token_name(parent_type));
       log_func_stack_inline(LFLPAREN);
       start->SetParentType(parent_type);

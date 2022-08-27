@@ -212,9 +212,9 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LSORT, "%s(%d): @begin pc1->len is %zu, line is %zu, column is %zu\n",
-           __func__, __LINE__, pc1->Len(), pc1->orig_line, pc1->orig_col);
+           __func__, __LINE__, pc1->Len(), pc1->GetOrigLine(), pc1->orig_col);
    LOG_FMT(LSORT, "%s(%d): @begin pc2->len is %zu, line is %zu, column is %zu\n",
-           __func__, __LINE__, pc2->Len(), pc2->orig_line, pc2->orig_col);
+           __func__, __LINE__, pc2->Len(), pc2->GetOrigLine(), pc2->orig_col);
 
    if (pc1 == pc2) // same chunk is always identical thus return 0 differences
    {
@@ -290,9 +290,9 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
          return(ppc1 - ppc2);
       }
       LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->orig_line, pc1->orig_col);
+              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->GetOrigLine(), pc1->orig_col);
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->orig_line, pc2->orig_col);
+              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->orig_col);
 
       int ret_val = unc_text::compare(s1, s2, std::min(s1.size(), s2.size()), tcare);
       LOG_FMT(LSORT, "%s(%d): ret_val is %d\n",
@@ -310,28 +310,28 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
       // Same word, same length. Step to the next chunk.
       pc1 = pc1->GetNext();
       LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->orig_line, pc1->orig_col);
+              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->GetOrigLine(), pc1->orig_col);
 
       if (pc1->Is(CT_MEMBER))
       {
          pc1 = pc1->GetNext();
          LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-                 __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->orig_line, pc1->orig_col);
+                 __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->GetOrigLine(), pc1->orig_col);
       }
       pc2 = pc2->GetNext();
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->orig_line, pc2->orig_col);
+              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->orig_col);
 
       if (pc2->Is(CT_MEMBER))
       {
          pc2 = pc2->GetNext();
          LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-                 __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->orig_line, pc2->orig_col);
+                 __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->orig_col);
       }
       LOG_FMT(LSORT, "%s(%d): >>>text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->orig_line, pc1->orig_col);
+              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->GetOrigLine(), pc1->orig_col);
       LOG_FMT(LSORT, "%s(%d): >>>text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->orig_line, pc2->orig_col);
+              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->orig_col);
 
       // If we hit a newline or nullptr, we are done
       if (  pc1->IsNullChunk()
@@ -446,8 +446,8 @@ static void delete_chunks_on_line_having_chunk(Chunk *chunk)
          && !pc->IsComment())
    {
       Chunk *next_pc = pc->GetNext();
-      LOG_FMT(LCHUNK, "%s(%d): Removed '%s' on orig_line %zu\n",
-              __func__, __LINE__, pc->Text(), pc->orig_line);
+      LOG_FMT(LCHUNK, "%s(%d): Removed '%s' on orig line %zu\n",
+              __func__, __LINE__, pc->Text(), pc->GetOrigLine());
 
       if (pc->IsNewline())
       {
@@ -610,7 +610,7 @@ void sort_imports()
       // import is seen are ignore from sorting.
       if (  options::mod_sort_incl_import_grouping_enabled()
          && p_imp_last != nullptr
-         && (pc->orig_line - p_imp_last->orig_line) > max_lines_to_check_for_sort_after_include)
+         && (pc->GetOrigLine() - p_imp_last->GetOrigLine()) > max_lines_to_check_for_sort_after_include)
       {
          break;
       }
@@ -649,7 +649,7 @@ void sort_imports()
                && pc->nl_count > 1)
             || (  options::mod_sort_incl_import_grouping_enabled()
                && p_imp_last != nullptr
-               && (pc->orig_line - p_imp_last->orig_line) > max_gap_threshold_between_include_to_sort)
+               && (pc->GetOrigLine() - p_imp_last->GetOrigLine()) > max_gap_threshold_between_include_to_sort)
             || next->IsNullChunk())
          {
             if (num_chunks > 1)

@@ -90,16 +90,16 @@ void do_parens_assign()                         // Issue #3316
       {
          if (pc->Is(CT_ASSIGN))
          {
-            LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu\n",
-                    __func__, __LINE__, pc->orig_line, pc->Text(), pc->level);
+            LOG_FMT(LPARADD, "%s(%d): orig line is %zu, text is '%s', level is %zu\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->Text(), pc->level);
             // look before for a open sparen
             size_t check_level = pc->level;
             Chunk  *p          = pc->GetPrevNc(E_Scope::PREPROC);
 
             while (p->IsNotNullChunk())
             {
-               LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
-                       __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->GetType()));
+               LOG_FMT(LPARADD, "%s(%d): orig line is %zu, text is '%s', level is %zu, type is %s\n",
+                       __func__, __LINE__, p->GetOrigLine(), p->Text(), p->level, get_token_name(p->GetType()));
 
                //log_pcf_flags(LPARADD, p->GetFlags());
                if (p->TestFlags(PCF_STMT_START))
@@ -123,8 +123,8 @@ void do_parens_assign()                         // Issue #3316
                   break;
                }
             }
-            LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
-                    __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->GetType()));
+            LOG_FMT(LPARADD, "%s(%d): orig line is %zu, text is '%s', level is %zu, type is %s\n",
+                    __func__, __LINE__, p->GetOrigLine(), p->Text(), p->level, get_token_name(p->GetType()));
 
             if (p->GetParentType() == CT_WHILE)
             {
@@ -161,16 +161,16 @@ void do_parens_return()                         // Issue #3316
       {
          if (pc->Is(CT_RETURN))
          {
-            LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu\n",
-                    __func__, __LINE__, pc->orig_line, pc->Text(), pc->level);
+            LOG_FMT(LPARADD, "%s(%d): orig line is %zu, text is '%s', level is %zu\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->Text(), pc->level);
             // look before for a open sparen
             size_t check_level = pc->level;
             Chunk  *p          = pc->GetPrevNc(E_Scope::PREPROC);
 
             while (p->IsNotNullChunk())
             {
-               LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
-                       __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->GetType()));
+               LOG_FMT(LPARADD, "%s(%d): orig line is %zu, text is '%s', level is %zu, type is %s\n",
+                       __func__, __LINE__, p->GetOrigLine(), p->Text(), p->level, get_token_name(p->GetType()));
 
                //log_pcf_flags(LPARADD, p->GetFlags());
                if (p->TestFlags(PCF_STMT_START))
@@ -194,8 +194,8 @@ void do_parens_return()                         // Issue #3316
                   break;
                }
             }
-            LOG_FMT(LPARADD, "%s(%d): orig_line is %zu, text is '%s', level is %zu, type is %s\n",
-                    __func__, __LINE__, p->orig_line, p->Text(), p->level, get_token_name(p->GetType()));
+            LOG_FMT(LPARADD, "%s(%d): orig line is %zu, text is '%s', level is %zu, type is %s\n",
+                    __func__, __LINE__, p->GetOrigLine(), p->Text(), p->level, get_token_name(p->GetType()));
 
             if (p->GetParentType() == CT_WHILE)
             {
@@ -220,7 +220,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LPARADD, "%s(%d): line %zu, between '%s' [lvl is %zu] and '%s' [lvl is %zu]\n",
-           __func__, __LINE__, first->orig_line,
+           __func__, __LINE__, first->GetOrigLine(),
            first->Text(), first->level,
            last->Text(), last->level);
 
@@ -234,9 +234,9 @@ static void add_parens_between(Chunk *first, Chunk *last)
    Chunk pc;
 
    pc.SetType(CT_PAREN_OPEN);
-   pc.orig_line = first_n->orig_line;
-   pc.orig_col  = first_n->orig_col;
-   pc.str       = "(";
+   pc.SetOrigLine(first_n->GetOrigLine());
+   pc.orig_col = first_n->orig_col;
+   pc.str      = "(";
    pc.SetFlags(first_n->GetFlags() & PCF_COPY_FLAGS);
    pc.level       = first_n->level;
    pc.pp_level    = first_n->pp_level;
@@ -247,9 +247,9 @@ static void add_parens_between(Chunk *first, Chunk *last)
    Chunk *last_p = last->GetPrevNcNnl(E_Scope::PREPROC);
 
    pc.SetType(CT_PAREN_CLOSE);
-   pc.orig_line = last_p->orig_line;
-   pc.orig_col  = last_p->orig_col;
-   pc.str       = ")";
+   pc.SetOrigLine(last_p->GetOrigLine());
+   pc.orig_col = last_p->orig_col;
+   pc.str      = ")";
    pc.SetFlags(last_p->GetFlags() & PCF_COPY_FLAGS);
    pc.level       = last_p->level;
    pc.pp_level    = last_p->pp_level;
@@ -277,8 +277,8 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
 
    LOG_FMT(LPARADD, "%s(%d): nest is %d, popen on line %zu, orig_col is %zu, pclose on line %zu, orig_col is %zu, level is %zu\n",
            __func__, __LINE__, nest,
-           popen->orig_line, popen->orig_col,
-           pclose->orig_line, pclose->orig_col,
+           popen->GetOrigLine(), popen->orig_col,
+           pclose->GetOrigLine(), pclose->orig_col,
            popen->level);
 
    Chunk *pc = popen;
@@ -291,7 +291,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       {
          LOG_FMT(LPARADD2, " -- bail on PP %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->GetType()),
-                 pc->Text(), pc->orig_line, pc->orig_col, pc->level);
+                 pc->Text(), pc->GetOrigLine(), pc->orig_col, pc->level);
          return;
       }
 
@@ -302,7 +302,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       {
          LOG_FMT(LPARADD2, " -- %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->GetType()),
-                 pc->Text(), pc->orig_line, pc->orig_col, pc->level);
+                 pc->Text(), pc->GetOrigLine(), pc->orig_col, pc->level);
 
          if (hit_compare)
          {
@@ -318,7 +318,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       else if (pc->Is(CT_COMPARE))
       {
          LOG_FMT(LPARADD2, " -- compare '%s' at line %zu, orig_col is %zu, level is %zu\n",
-                 pc->Text(), pc->orig_line, pc->orig_col, pc->level);
+                 pc->Text(), pc->GetOrigLine(), pc->orig_col, pc->level);
          hit_compare = true;
       }
       else if (pc->IsParenOpen())
