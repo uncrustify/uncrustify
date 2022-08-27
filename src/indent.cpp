@@ -1700,44 +1700,6 @@ void indent_text()
                }
             }
 
-            // Issues: #1813, #3409, #3428
-            // if enclosure is set, the namespace is already accounted for
-            // so don't apply the correction twice.
-            // And for some reason, it's also accounted for when
-            // indent_namespace_single_indent is set
-            if (!enclosure && !options::indent_namespace_single_indent())
-            {
-               size_t namespace_indent_to_ignore = 0;
-               log_rule_B("indent_namespace");
-
-               for (auto i = frm.rbegin(); i != frm.rend(); ++i)
-               {
-                  if (i->ns_cnt)
-                  {
-                     const auto foo = i->ns_cnt;
-                     namespace_indent_to_ignore = indent_size * foo;
-                     break;
-                  }
-               }
-
-               if (namespace_indent_to_ignore && options::indent_namespace())
-               {
-                  // I honestly don't know what's going on, so this is an
-                  // empirical fix. For some reason lambdas don't have
-                  // their indent calculated properly when indent_namespace
-                  // is true. But only if they are not in enclosures.
-                  namespace_indent_to_ignore = indent_size;
-               }
-
-               if (namespace_indent_to_ignore <= frm.top().brace_indent)
-               {
-                  frm.top().brace_indent -= namespace_indent_to_ignore;
-               }
-               else
-               {
-                  frm.top().brace_indent = 1;
-               }
-            }
             // A few things to check:
             // 1. The matching brace is on the same line as the ending semicolon
             // 2a. If it's an assignment, check that both sides of the assignment operator are on the same line
