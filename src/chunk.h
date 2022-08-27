@@ -159,6 +159,17 @@ public:
     */
    void UpdateFlagBits(T_PcfFlags resetBits, T_PcfFlags setBits);
 
+   /**
+    * @brief returns the line number of the chunk in the input file
+    */
+   size_t GetOrigLine() const;
+
+   /**
+    * @brief Sets the line number of the chunk in the input file
+    * @param line the line number of the chunk
+    */
+   void SetOrigLine(size_t line);
+
 
    // --------- Get* chunk functions
 
@@ -846,7 +857,6 @@ public:
    // --------- Data members
    align_ptr_t  align;
    indent_ptr_t indent;
-   size_t       orig_line;                   //! line number of chunk in input file
    size_t       orig_col;                    //! column where chunk started in the input file, is always > 0
    size_t       orig_col_end;                //! column where chunk ended in the input file, is always > 1
    UINT32       orig_prev_sp;                //! whitespace before this token
@@ -899,6 +909,7 @@ protected:
    Chunk      *m_next;                      //! pointer to next chunk in list
    Chunk      *m_prev;                      //! pointer to previous chunk in list
    Chunk      *m_parent;                    //! pointer to parent chunk (not always set)
+   size_t     m_origLine;                   //! line number of chunk in input file
    E_Token    m_type;                       //! type of the chunk itself
    E_Token    m_parentType;                 //! type of the parent chunk usually CT_NONE
    T_PcfFlags m_flags;                      //! see PCF_xxx
@@ -1015,6 +1026,18 @@ inline void Chunk::SetFlagBits(T_PcfFlags setBits)
 inline void Chunk::UpdateFlagBits(T_PcfFlags resetBits, T_PcfFlags setBits)
 {
    SetResetFlags(resetBits, setBits);
+}
+
+
+inline size_t Chunk::GetOrigLine() const
+{
+   return(m_origLine);
+}
+
+
+inline void Chunk::SetOrigLine(size_t line)
+{
+   m_origLine = line;
 }
 
 

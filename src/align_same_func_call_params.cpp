@@ -53,12 +53,12 @@ void align_same_func_call_params()
    {
       if (pc->IsNewline())
       {
-         LOG_FMT(LAS, "%s(%d): orig_line is %zu, <Newline>\n", __func__, __LINE__, pc->orig_line);
+         LOG_FMT(LAS, "%s(%d): GetOrigLine() is %zu, <Newline>\n", __func__, __LINE__, pc->GetOrigLine());
       }
       else
       {
-         LOG_FMT(LAS, "%s(%d): orig_line is %zu, orig_col is %zu, pc->Text() '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
+         LOG_FMT(LAS, "%s(%d): GetOrigLine() is %zu, orig_col is %zu, pc->Text() '%s'\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
       }
 
       if (pc->IsNot(CT_FUNC_CALL))
@@ -124,8 +124,8 @@ void align_same_func_call_params()
          prev            = prev->GetNext();
       }
       align_fcn_name += pc->str;
-      LOG_FMT(LASFCP, "%s(%d): Func Call found at orig_line is %zu, orig_col is %zu, c_str() '%s'\n",
-              __func__, __LINE__, align_fcn->orig_line,
+      LOG_FMT(LASFCP, "%s(%d): Func Call found at orig line is %zu, orig_col is %zu, c_str() '%s'\n",
+              __func__, __LINE__, align_fcn->GetOrigLine(),
               align_fcn->orig_col,
               align_fcn_name.c_str());
 
@@ -179,8 +179,8 @@ void align_same_func_call_params()
 
       if (add_str != nullptr)
       {
-         LOG_FMT(LASFCP, "%s(%d): %s with function '%s', on orig_line %zu, ",
-                 __func__, __LINE__, add_str, align_fcn_name.c_str(), pc->orig_line);
+         LOG_FMT(LASFCP, "%s(%d): %s with function '%s', on orig line %zu, ",
+                 __func__, __LINE__, add_str, align_fcn_name.c_str(), pc->GetOrigLine());
          align_params(pc, chunks);
          LOG_FMT(LASFCP, "%zu items:", chunks.size());
 

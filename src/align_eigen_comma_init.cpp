@@ -34,12 +34,12 @@ void align_eigen_comma_init()
    {
       if (pc->IsNewline())
       {
-         LOG_FMT(LALIGN, "%s(%d): orig_line is %zu, <Newline>\n", __func__, __LINE__, pc->orig_line);
+         LOG_FMT(LALIGN, "%s(%d): GetOrigLine() is %zu, <Newline>\n", __func__, __LINE__, pc->GetOrigLine());
       }
       else
       {
-         LOG_FMT(LALIGN, "%s(%d): orig_line is %zu, orig_col is %zu, pc->Text() '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text());
+         LOG_FMT(LALIGN, "%s(%d): GetOrigLine() is %zu, orig_col is %zu, pc->Text() '%s'\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
       }
 
       if (  start->IsNotNullChunk()

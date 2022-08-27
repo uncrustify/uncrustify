@@ -31,7 +31,7 @@ static size_t tokenCounter;
 
 /* protocol of the line
  * examples:
- *   prot_the_line(__func__, __LINE__, pc->orig_line, 0);
+ *   prot_the_line(__func__, __LINE__, pc->GetOrigLine(), 0);
  *   prot_the_line(__func__, __LINE__, 0, 0);
  *   prot_the_line(__func__, __LINE__, 6, 5);
  *   prot_the_source(__LINE__);
@@ -71,14 +71,14 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigne
 
    for (Chunk *pc = pc_sub; pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (pc->orig_line == actual_line)
+      if (pc->GetOrigLine() == actual_line)
       {
          tokenCounter++;
 
          if (  partNumber == 0
             || partNumber == tokenCounter)
          {
-            LOG_FMT(LGUY, " orig_line is %d, (%zu) ", actual_line, tokenCounter);
+            LOG_FMT(LGUY, " orig line is %d, (%zu) ", actual_line, tokenCounter);
 
             if (pc->Is(CT_VBRACE_OPEN))
             {
@@ -158,7 +158,7 @@ void prot_all_lines(const char *func_name, int theLine)
    {
       tokenCounter++;
 
-      LOG_FMT(LGUY, " orig_line is %zu,%zu, pp_level is %zu, ", lineNumber, tokenCounter, pc->pp_level);
+      LOG_FMT(LGUY, " GetOrigLine() is %zu,%zu, pp_level is %zu, ", lineNumber, tokenCounter, pc->pp_level);
 
       if (pc->Is(CT_VBRACE_OPEN))
       {
@@ -234,15 +234,15 @@ void examine_Data(const char *func_name, int theLine, int what)
 
       for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
-         if (pc->orig_line == 7)
+         if (pc->GetOrigLine() == 7)
          {
             if (pc->Is(CT_NEWLINE))
             {
-               LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->orig_line, pc->orig_col);
+               LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->GetOrigLine(), pc->orig_col);
             }
             else
             {
-               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->orig_line, pc->Text(), get_token_name(pc->GetType()), pc->orig_col, pc->column);
+               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->orig_col, pc->column);
             }
          }
       }
@@ -256,11 +256,11 @@ void examine_Data(const char *func_name, int theLine, int what)
       {
          if (pc->Is(CT_NEWLINE))
          {
-            LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->orig_line, pc->orig_col);
+            LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->GetOrigLine(), pc->orig_col);
          }
          else
          {
-            LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->orig_line, pc->Text(), get_token_name(pc->GetType()), pc->orig_col, pc->column);
+            LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->orig_col, pc->column);
          }
       }
 
@@ -271,15 +271,15 @@ void examine_Data(const char *func_name, int theLine, int what)
 
       for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
-         if (pc->orig_line == 6)
+         if (pc->GetOrigLine() == 6)
          {
             if (pc->Is(CT_NEWLINE))
             {
-               LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->orig_line, pc->orig_col);
+               LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->GetOrigLine(), pc->orig_col);
             }
             else
             {
-               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->orig_line, pc->Text(), get_token_name(pc->GetType()), pc->orig_col, pc->column);
+               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->orig_col, pc->column);
             }
          }
       }
@@ -312,7 +312,7 @@ void dump_out(unsigned int type)
       {
          fprintf(D_file, "[%p]\n", pc);
          fprintf(D_file, "  type %s\n", get_token_name(pc->GetType()));
-         fprintf(D_file, "  orig_line %zu\n", pc->orig_line);
+         fprintf(D_file, "  GetOrigLine() %zu\n", pc->GetOrigLine());
          fprintf(D_file, "  orig_col %zu\n", pc->orig_col);
          fprintf(D_file, "  orig_col_end %zu\n", pc->orig_col_end);
 
@@ -423,9 +423,9 @@ void dump_in(unsigned int type)
                E_Token tokenName = find_token_name(parts[1]);
                chunk.SetType(tokenName);
             }
-            else if (strcasecmp(parts[0], "orig_line") == 0)
+            else if (strcasecmp(parts[0], "orig line") == 0)
             {
-               chunk.orig_line = strtol(parts[1], nullptr, 0);
+               chunk.SetOrigLine(strtol(parts[1], nullptr, 0));
             }
             else if (strcasecmp(parts[0], "orig_col") == 0)
             {

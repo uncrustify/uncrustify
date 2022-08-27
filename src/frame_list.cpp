@@ -163,13 +163,13 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
 
    if (pc->GetParentType() != next->GetType())
    {
-      LOG_FMT(LNOTE, "%s(%d): Preproc parent not set correctly on orig_line %zu: got %s expected %s\n",
-              __func__, __LINE__, pc->orig_line, get_token_name(pc->GetParentType()),
+      LOG_FMT(LNOTE, "%s(%d): Preproc parent not set correctly on orig line %zu: got %s expected %s\n",
+              __func__, __LINE__, pc->GetOrigLine(), get_token_name(pc->GetParentType()),
               get_token_name(next->GetType()));
       pc->SetParentType(next->GetType());
    }
-   LOG_FMT(LPFCHK, "%s(%d): orig_line is %zu, %s\n",
-           __func__, __LINE__, pc->orig_line, get_token_name(pc->GetParentType()));
+   LOG_FMT(LPFCHK, "%s(%d): orig line is %zu, %s\n",
+           __func__, __LINE__, pc->GetOrigLine(), get_token_name(pc->GetParentType()));
    fl_log_frms(LPFCHK, "TOP", frm, frames);
 
 
@@ -197,7 +197,7 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
          if (out_pp_level == 0)
          {
             fprintf(stderr, "%s(%d): pp_level is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col);
+                    __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
             log_flush(true);
             exit(EX_SOFTWARE);
          }
@@ -232,8 +232,8 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
             if (  options::pp_warn_unbalanced_if()
                && brace_level != base_brace_level)
             {
-               LOG_FMT(LWARN, "%s(%d): orig_line is %zu, unbalanced #if block braces (1), in-level is %zu, out-level is %zu\n",
-                       __func__, __LINE__, pc->orig_line, base_brace_level, brace_level);
+               LOG_FMT(LWARN, "%s(%d): orig line is %zu, unbalanced #if block braces (1), in-level is %zu, out-level is %zu\n",
+                       __func__, __LINE__, pc->GetOrigLine(), base_brace_level, brace_level);
             }
          }
          else
@@ -244,8 +244,8 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
             if (  options::pp_warn_unbalanced_if()
                && brace_level != if_brace_level)
             {
-               LOG_FMT(LWARN, "%s(%d): orig_line is %zu, unbalanced #if-#else block braces (1), #else out-level is %zu, #if out-level is %zu\n",
-                       __func__, __LINE__, pc->orig_line, brace_level, if_brace_level);
+               LOG_FMT(LWARN, "%s(%d): orig line is %zu, unbalanced #if-#else block braces (1), #else out-level is %zu, #if out-level is %zu\n",
+                       __func__, __LINE__, pc->GetOrigLine(), brace_level, if_brace_level);
             }
          }
          txt = "else-push";
@@ -260,7 +260,7 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
          {
             // cpd.pp_level is ZERO, cannot be decremented.
             fprintf(stderr, "%s(%d): #endif found, at line %zu, column %zu, without corresponding #if\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col);
+                    __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
             log_flush(true);
             exit(EX_SOFTWARE);
          }
@@ -269,7 +269,7 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
          if (out_pp_level == 0)
          {
             fprintf(stderr, "%s(%d): pp_level is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                    __func__, __LINE__, pc->orig_line, pc->orig_col);
+                    __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
             log_flush(true);
             exit(EX_SOFTWARE);
          }
@@ -287,8 +287,8 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
             if (  options::pp_warn_unbalanced_if()
                && brace_level != frm.brace_level)
             {
-               LOG_FMT(LWARN, "%s(%d): orig_line is %zu, unbalanced #if-#else block braces (2), #else out-level is %zu, #if out-level is %zu\n",
-                       __func__, __LINE__, pc->orig_line, brace_level, frm.brace_level);
+               LOG_FMT(LWARN, "%s(%d): orig line is %zu, unbalanced #if-#else block braces (2), #else out-level is %zu, #if out-level is %zu\n",
+                       __func__, __LINE__, pc->GetOrigLine(), brace_level, frm.brace_level);
             }
 
             if (frames.size() < 2)
@@ -317,8 +317,8 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
             if (  options::pp_warn_unbalanced_if()
                && brace_level != frm.brace_level)
             {
-               LOG_FMT(LWARN, "%s(%d): orig_line is %zu, unbalanced #if block braces (2), in-level is %zu, out-level is %zu\n",
-                       __func__, __LINE__, pc->orig_line, frm.brace_level, brace_level);
+               LOG_FMT(LWARN, "%s(%d): orig line is %zu, unbalanced #if block braces (2), in-level is %zu, out-level is %zu\n",
+                       __func__, __LINE__, pc->GetOrigLine(), frm.brace_level, brace_level);
             }
             txt = "endif-pop";
          }
@@ -331,8 +331,8 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
 
    if (txt != nullptr)
    {
-      LOG_FMT(LPF, "%s(%d): orig_line is %zu, type is %s: %s in_ifdef is %s/%s, counts is %zu, frame_count is %zu\n",
-              __func__, __LINE__, pc->orig_line,
+      LOG_FMT(LPF, "%s(%d): orig line is %zu, type is %s: %s in_ifdef is %s/%s, counts is %zu, frame_count is %zu\n",
+              __func__, __LINE__, pc->GetOrigLine(),
               get_token_name(pc->GetParentType()), txt, get_token_name(in_ifdef),
               get_token_name(frm.in_ifdef), b4_cnt, frames.size());
       fl_log_all(LPF, frames);

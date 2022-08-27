@@ -17,11 +17,11 @@ void log_rule2(const char *func, size_t line, const char *rule, Chunk *first, Ch
 
    if (second->IsNot(CT_NEWLINE))
    {
-      LOG_FMT(LSPACE, "%s(%zu): first->orig_line is %zu, first->orig_col is %zu, first->Text() is '%s', [%s/%s] <===>\n",
-              func, line, first->orig_line, first->orig_col, first->Text(),
+      LOG_FMT(LSPACE, "%s(%zu): first->GetOrigLine() is %zu, first->orig_col is %zu, first->Text() is '%s', [%s/%s] <===>\n",
+              func, line, first->GetOrigLine(), first->orig_col, first->Text(),
               get_token_name(first->GetType()), get_token_name(first->GetParentType()));
-      LOG_FMT(LSPACE, "           second->orig_line is %zu, second->orig_col is %zu, second->Text() is '%s', [%s/%s] :",
-              second->orig_line, second->orig_col, second->Text(),
+      LOG_FMT(LSPACE, "           second->GetOrigLine() is %zu, second->orig_col is %zu, second->Text() is '%s', [%s/%s] :",
+              second->GetOrigLine(), second->orig_col, second->Text(),
               get_token_name(second->GetType()), get_token_name(second->GetParentType()));
       LOG_FMT(LSPACE, " rule %s[line %zu]\n",
               rule, line);
@@ -75,7 +75,7 @@ void log_rule4(const char *rule, Chunk *first)
    size_t sizeOfTrack = first->tracking->size();
 
    LOG_FMT(LSPACE, "log_rule4(%d): rule is '%s', after '%s', at line %zu, tracking number is %zu, size is %zu\n",
-           __LINE__, rule, first->Text(), first->orig_line, a_number, sizeOfTrack);
+           __LINE__, rule, first->Text(), first->GetOrigLine(), a_number, sizeOfTrack);
 }
 
 
@@ -102,5 +102,5 @@ void log_ruleNL(const char *rule, Chunk *pc)
    size_t sizeOfTrack = pc->tracking->size();
 
    LOG_FMT(LSPACE, "log_rule4(%d): rule is '%s', after '%s', at line %zu, tracking number is %zu, size is %zu\n",
-           __LINE__, rule, pc->Text(), pc->orig_line, a_number, sizeOfTrack);
+           __LINE__, rule, pc->Text(), pc->GetOrigLine(), a_number, sizeOfTrack);
 }

@@ -111,7 +111,7 @@ void output_parsed(FILE *pfile)
   for (pc = Chunk::GetHead(); pc != NULL; pc = pc->GetNext())
     {
     fprintf(pfile, "\n%3d> %13.13s[%13.13s][%2d/%2d/%2d][%d/%d/%d][%6x][%d-%d]",
-            pc->orig_line, get_token_name(pc->GetType()),
+            pc->GetOrigLine(), get_token_name(pc->GetType()),
             get_token_name(pc->GetParentType()),
             pc->column, pc->orig_col, pc->orig_col_end,
             pc->brace_level, pc->level, pc->pp_level,
@@ -221,7 +221,7 @@ void output_text(FILE *pfile)
                      (pc->IsComment() &&
                       (cpd.settings[UO_indent_with_tabs].n != 0));
 
-        LOG_FMT(LOUTIND, "  %d> col %d/%d - ", pc->orig_line, pc->column, cpd.column);
+        LOG_FMT(LOUTIND, "  %d> col %d/%d - ", pc->GetOrigLine(), pc->column, cpd.column);
         }
       else
         {
@@ -498,7 +498,7 @@ void output_comment_multi(Chunk *pc)
     col_diff = pc->orig_col - pc->column;
 
   //   fprintf(stderr, "Indenting1 line %d to col %d (orig=%d) col_diff=%d\n",
-  //           pc->orig_line, cmt_col, pc->orig_col, col_diff);
+  //           pc->GetOrigLine(), cmt_col, pc->orig_col, col_diff);
 
   xtra = calculate_comment_body_indent(pc->str, pc->len, pc->column);
 

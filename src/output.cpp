@@ -516,13 +516,13 @@ void output_parsed(FILE *pfile, bool withOptions)
    {
 #ifdef WIN32
       fprintf(pfile, "%s# %3d>%19.19s|%19.19s|%19.19s[%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
-              eol_marker, (int)pc->orig_line, get_token_name(pc->GetType()),
+              eol_marker, (int)pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               (int)pc->column, (int)pc->orig_col, (int)pc->orig_col_end, (int)pc->orig_prev_sp,
               (int)pc->brace_level, (int)pc->level, (int)pc->pp_level, (int)pc->nl_count, pc->after_tab);
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu]",
-              eol_marker, pc->orig_line, get_token_name(pc->GetType()),
+              eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
@@ -570,7 +570,7 @@ void output_parsed_csv(FILE *pfile)
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       fprintf(pfile, "%s%zu,%s,%s,%s,%zu,%zu,%zu,%d,%zu,%zu,%zu,",
-              eol_marker, pc->orig_line, get_token_name(pc->GetType()),
+              eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
@@ -685,8 +685,8 @@ void output_text(FILE *pfile)
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
       char copy[1000];
-      LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig_line is %zu, column is %zu, nl is %zu\n",
-              __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->orig_line, pc->column, pc->nl_count);
+      LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig line is %zu, column is %zu, nl is %zu\n",
+              __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->column, pc->nl_count);
       log_rule_B("cmt_convert_tab_to_spaces");
       cpd.output_tab_as_space = (  options::cmt_convert_tab_to_spaces()
                                 && pc->IsComment());
@@ -822,16 +822,16 @@ void output_text(FILE *pfile)
       else if (  pc->Is(CT_JUNK)
               || pc->Is(CT_IGNORED))
       {
-         LOG_FMT(LOUTIND, "%s(%d): orig_line is %zu, orig_col is %zu,\npc->Text() >%s<, pc->str.size() is %zu\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(), pc->str.size());
+         LOG_FMT(LOUTIND, "%s(%d): GetOrigLine() is %zu, orig_col is %zu,\npc->Text() >%s<, pc->str.size() is %zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), pc->str.size());
          // do not adjust the column for junk
          add_text(pc->str, true);
       }
       else if (pc->Len() == 0)
       {
          // don't do anything for non-visible stuff
-         LOG_FMT(LOUTIND, "%s(%d): orig_line is %zu, column is %zu, non-visible stuff: type is %s\n",
-                 __func__, __LINE__, pc->orig_line, pc->column, get_token_name(pc->GetType()));
+         LOG_FMT(LOUTIND, "%s(%d): orig line is %zu, column is %zu, non-visible stuff: type is %s\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->column, get_token_name(pc->GetType()));
       }
       else
       {
@@ -877,8 +877,8 @@ void output_text(FILE *pfile)
                          || (  pc->IsComment()
                             && options::indent_with_tabs() != 0);
 
-            LOG_FMT(LOUTIND, "%s(%d): orig_line is %zu, column is %zu, column_indent is %zu, cpd.column is %zu\n",
-                    __func__, __LINE__, pc->orig_line, pc->column, pc->column_indent, cpd.column);
+            LOG_FMT(LOUTIND, "%s(%d): orig line is %zu, column is %zu, column_indent is %zu, cpd.column is %zu\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->column, pc->column_indent, cpd.column);
          }
          else
          {
@@ -1765,7 +1765,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
       cmt.brace_col = 1 + (pc->brace_level * options::output_tab_size());
    }
    // LOG_FMT(LSYS, "%s: line %zd, brace=%zd base=%zd col=%zd orig=%zd aligned=%x\n",
-   //        __func__, pc->orig_line, cmt.brace_col, cmt.base_col, cmt.column, pc->orig_col,
+   //        __func__, pc->GetOrigLine(), cmt.brace_col, cmt.base_col, cmt.column, pc->orig_col,
    //        pc->GetFlags() & (PCF_WAS_ALIGNED | PCF_RIGHT_COMMENT));
 
    if (  pc->GetParentType() == CT_COMMENT_START
@@ -1791,7 +1791,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
    {
       cmt.column = align_tab_column(cmt.column - 1);
       // LOG_FMT(LSYS, "%s: line %d, orig:%d new:%d\n",
-      //        __func__, pc->orig_line, pc->column, cmt.column);
+      //        __func__, pc->GetOrigLine(), pc->column, cmt.column);
       pc->column = cmt.column;
    }
    cmt.base_col = cmt.column;
@@ -2020,7 +2020,7 @@ static Chunk *output_comment_cpp(Chunk *first)
 
       // Determine if we are dealing with a region marker
       if (  (  first->GetPrev()->IsNullChunk()
-            || first->GetPrev()->orig_line != first->orig_line)
+            || first->GetPrev()->GetOrigLine() != first->GetOrigLine())
          && (  strncmp(cmt_text, "BEGIN", 5) == 0
             || strncmp(cmt_text, "END", 3) == 0))
       {
@@ -3492,7 +3492,7 @@ void add_long_preprocessor_conditional_block_comment()
 
             LOG_FMT(LPPIF, "found #if / %s section on lines %zu and %zu, nl_count=%zu\n",
                     (tmp->Is(CT_PP_ENDIF) ? "#endif" : "#else"),
-                    br_open->orig_line, br_close->orig_line, nl_count);
+                    br_open->GetOrigLine(), br_close->GetOrigLine(), nl_count);
 
             // Found the matching #else or #endif - make sure a newline is next
             tmp = tmp->GetNext();

@@ -32,8 +32,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
    char   copy[1000];
 
-   LOG_FMT(LALASS, "%s(%d): [my_level is %zu]: start checking with '%s', on orig_line %zu, span is %zu, thresh is %zu\n",
-           __func__, __LINE__, my_level, first->ElidedText(copy), first->orig_line, span, thresh);
+   LOG_FMT(LALASS, "%s(%d): [my_level is %zu]: start checking with '%s', on orig line %zu, span is %zu, thresh is %zu\n",
+           __func__, __LINE__, my_level, first->ElidedText(copy), first->GetOrigLine(), span, thresh);
 
    // If we are aligning on a tabstop, we shouldn't right-align
    AlignStack as;    // regular assigns
@@ -67,15 +67,15 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->Text() is '%s', type is %s, m_parentType is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
+      LOG_FMT(LALASS, "%s(%d): GetOrigLine() is %zu, check pc->Text() is '%s', type is %s, m_parentType is %s\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       if (nl_count != 0)
       {
          if (vdas_pc != nullptr)
          {
-            LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig_line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, vdas_pc->Text(), vdas_pc->orig_line, vdas_pc->orig_col);
+            LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig line %zu, orig_col is %zu\n",
+                    __func__, __LINE__, vdas_pc->Text(), vdas_pc->GetOrigLine(), vdas_pc->orig_col);
             vdas.Add(vdas_pc);
             vdas_pc = nullptr;
          }
@@ -107,12 +107,12 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
       {
          LOG_FMT(LALASS, "%s(%d): Don't check inside SPAREN, PAREN or SQUARE groups, type is %s\n",
                  __func__, __LINE__, get_token_name(pc->GetType()));
-         tmp = pc->orig_line;
+         tmp = pc->GetOrigLine();
          pc  = pc->SkipToMatch();
 
          if (pc->IsNotNullChunk())
          {
-            nl_count = pc->orig_line - tmp;
+            nl_count = pc->GetOrigLine() - tmp;
          }
          continue;
       }
@@ -196,8 +196,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
             && (  pc->Is(CT_ASSIGN_DEFAULT_ARG)       // Foo( int bar = 777 );
                || pc->Is(CT_ASSIGN_FUNC_PROTO)))      // Foo( const Foo & ) = delete;
          {
-            LOG_FMT(LALASS, "%s(%d): fcnDefault[%zu].Add on '%s' on orig_line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, fcn_idx, pc->Text(), pc->orig_line, pc->orig_col);
+            LOG_FMT(LALASS, "%s(%d): fcnDefault[%zu].Add on '%s' on orig line %zu, orig_col is %zu\n",
+                    __func__, __LINE__, fcn_idx, pc->Text(), pc->GetOrigLine(), pc->orig_col);
 
             if (++fcn_idx == fcnDefault.size())
             {
@@ -213,8 +213,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
             if (pc->Is(CT_ASSIGN_DEFAULT_ARG))  // Foo( int bar = 777 );
             {
-               LOG_FMT(LALASS, "%s(%d): default: fcnDefault[%zu].Add on '%s' on orig_line %zu, orig_col is %zu\n",
-                       __func__, __LINE__, fcn_idx, pc->Text(), pc->orig_line, pc->orig_col);
+               LOG_FMT(LALASS, "%s(%d): default: fcnDefault[%zu].Add on '%s' on orig line %zu, orig_col is %zu\n",
+                       __func__, __LINE__, fcn_idx, pc->Text(), pc->GetOrigLine(), pc->orig_col);
 
                if (++fcn_idx == fcnDefault.size())
                {
@@ -226,8 +226,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
             }
             else if (pc->Is(CT_ASSIGN_FUNC_PROTO))  // Foo( const Foo & ) = delete;
             {
-               LOG_FMT(LALASS, "%s(%d): proto: fcnProto.Add on '%s' on orig_line %zu, orig_col is %zu\n",
-                       __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
+               LOG_FMT(LALASS, "%s(%d): proto: fcnProto.Add on '%s' on orig line %zu, orig_col is %zu\n",
+                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
                fcnProto.Add(pc);
             }
             else if (pc->Is(CT_ASSIGN)) // Issue #2197
@@ -251,8 +251,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
          {
             if (pc->Is(CT_ASSIGN))
             {
-               LOG_FMT(LALASS, "%s(%d): as.Add on '%s' on orig_line %zu, orig_col is %zu\n",
-                       __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
+               LOG_FMT(LALASS, "%s(%d): as.Add on '%s' on orig line %zu, orig_col is %zu\n",
+                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
                as.Add(pc);
             }
          }
@@ -262,8 +262,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
    if (vdas_pc != nullptr)
    {
-      LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig_line %zu, orig_col is %zu\n",
-              __func__, __LINE__, vdas_pc->Text(), vdas_pc->orig_line, vdas_pc->orig_col);
+      LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig line %zu, orig_col is %zu\n",
+              __func__, __LINE__, vdas_pc->Text(), vdas_pc->GetOrigLine(), vdas_pc->orig_col);
       vdas.Add(vdas_pc);
       vdas_pc = nullptr;
    }
@@ -279,8 +279,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
    if (pc->IsNotNullChunk())
    {
-      LOG_FMT(LALASS, "%s(%d): done on '%s' on orig_line %zu\n",
-              __func__, __LINE__, pc->Text(), pc->orig_line);
+      LOG_FMT(LALASS, "%s(%d): done on '%s' on orig line %zu\n",
+              __func__, __LINE__, pc->Text(), pc->GetOrigLine());
    }
    else
    {

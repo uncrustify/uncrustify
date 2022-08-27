@@ -30,8 +30,8 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
 
    char   copy[1000];
 
-   LOG_FMT(LALASS, "%s(%d): [my_level is %zu]: start checking with '%s', on orig_line %zu, span is %zu, thresh is %zu\n",
-           __func__, __LINE__, my_level, first->ElidedText(copy), first->orig_line, span, thresh);
+   LOG_FMT(LALASS, "%s(%d): [my_level is %zu]: start checking with '%s', on orig line %zu, span is %zu, thresh is %zu\n",
+           __func__, __LINE__, my_level, first->ElidedText(copy), first->GetOrigLine(), span, thresh);
 
    // If we are aligning on a tabstop, we shouldn't right-align
 
@@ -48,8 +48,8 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
    while (  pc != nullptr
          && pc->IsNotNullChunk())
    {
-      LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->Text() is '%s', type is %s, parent type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
+      LOG_FMT(LALASS, "%s(%d): GetOrigLine() is %zu, check pc->Text() is '%s', type is %s, parent type is %s\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       // Don't check inside SPAREN, PAREN or SQUARE groups
       if (  pc->Is(CT_SPAREN_OPEN)
@@ -58,12 +58,12 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
       {
          LOG_FMT(LALASS, "%s(%d)OK: Don't check inside SPAREN, PAREN or SQUARE groups, type is %s\n",
                  __func__, __LINE__, get_token_name(pc->GetType()));
-         tmp = pc->orig_line;
+         tmp = pc->GetOrigLine();
          pc  = pc->SkipToMatch();
 
          if (pc->IsNotNullChunk())
          {
-            vdas.NewLines(pc->orig_line - tmp);
+            vdas.NewLines(pc->GetOrigLine() - tmp);
          }
          continue;
       }
@@ -145,8 +145,8 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
 
          if (var_def_cnt != 0)
          {
-            LOG_FMT(LALASS, "%s(%d)OK: vdas.Add on '%s' on orig_line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, pc->Text(), pc->orig_line, pc->orig_col);
+            LOG_FMT(LALASS, "%s(%d)OK: vdas.Add on '%s' on orig line %zu, orig_col is %zu\n",
+                    __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
             vdas.Add(pc);
          }
       }
@@ -157,8 +157,8 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
    if (  pc != nullptr
       && pc->IsNotNullChunk())
    {
-      LOG_FMT(LALASS, "%s(%d): done on '%s' on orig_line %zu\n",
-              __func__, __LINE__, pc->Text(), pc->orig_line);
+      LOG_FMT(LALASS, "%s(%d): done on '%s' on orig line %zu\n",
+              __func__, __LINE__, pc->Text(), pc->GetOrigLine());
    }
    else
    {

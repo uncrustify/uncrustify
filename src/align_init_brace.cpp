@@ -29,8 +29,8 @@ void align_init_brace(Chunk *start)
    cpd.al_cnt       = 0;
    cpd.al_c99_array = false;
 
-   LOG_FMT(LALBR, "%s(%d): start @ orig_line is %zu, orig_col is %zu\n",
-           __func__, __LINE__, start->orig_line, start->orig_col);
+   LOG_FMT(LALBR, "%s(%d): start @ orig line is %zu, orig_col is %zu\n",
+           __func__, __LINE__, start->GetOrigLine(), start->orig_col);
 
    Chunk *pc       = start->GetNextNcNnl();
    Chunk *pcSingle = scan_ib_line(pc);
@@ -50,9 +50,9 @@ void align_init_brace(Chunk *start)
       pc = scan_ib_line(pc);
 
       // debug dump the current frame
-      LOG_FMT(LALBR, "%s(%d): debug dump after, orig_line is %zu\n",
-              __func__, __LINE__, pc->orig_line);
-      align_log_al(LALBR, pc->orig_line);
+      LOG_FMT(LALBR, "%s(%d): debug dump after, orig line is %zu\n",
+              __func__, __LINE__, pc->GetOrigLine());
+      align_log_al(LALBR, pc->GetOrigLine());
 
       while (pc->IsNewline())
       {
@@ -63,7 +63,7 @@ void align_init_brace(Chunk *start)
            && pc->level > start->level);
 
    // debug dump the current frame
-   align_log_al(LALBR, start->orig_line);
+   align_log_al(LALBR, start->GetOrigLine());
 
    log_rule_B("align_on_tabstop");
 
@@ -86,7 +86,7 @@ void align_init_brace(Chunk *start)
          pc = tmp;
 
          LOG_FMT(LALBR, " -%zu- skipped '[] =' to %s\n",
-                 pc->orig_line, get_token_name(pc->GetType()));
+                 pc->GetOrigLine(), get_token_name(pc->GetType()));
          continue;
       }
       Chunk *next = pc;
@@ -120,7 +120,7 @@ void align_init_brace(Chunk *start)
 
                reindent_line(num_token, cpd.al[idx].col - col_diff);
                //LOG_FMT(LSYS, "-= %zu =- NUM indent [%s] col=%d diff=%d\n",
-               //        num_token->orig_line,
+               //        num_token->GetOrigLine(),
                //        num_token->Text(), cpd.al[idx - 1].col, col_diff);
 
                num_token->SetFlagBits(PCF_WAS_ALIGNED);
@@ -135,7 +135,7 @@ void align_init_brace(Chunk *start)
                if (!next->IsNewline())
                {
                   //LOG_FMT(LSYS, "-= %zu =- indent [%s] col=%d len=%d\n",
-                  //        next->orig_line,
+                  //        next->GetOrigLine(),
                   //        next->Text(), cpd.al[idx].col, cpd.al[idx].len);
 
                   log_rule_B("align_number_right");

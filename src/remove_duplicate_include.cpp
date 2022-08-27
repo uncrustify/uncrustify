@@ -25,8 +25,8 @@ void remove_duplicate_include()
 
    while (pc->IsNotNullChunk())
    {
-      //LOG_FMT(LRMRETURN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
-      //        __func__, __LINE__, pc->orig_line, pc->orig_col, pc->Text(),
+      //LOG_FMT(LRMRETURN, "%s(%d): orig line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
+      //        __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(),
       //        get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       if (pc->Is(CT_PREPROC))
@@ -37,8 +37,8 @@ void remove_duplicate_include()
       {
          Chunk *next = pc->GetNext();
 
-         //LOG_FMT(LRMRETURN, "%s(%d): orig_line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
-         //        __func__, __LINE__, next->orig_line, next->orig_col, next->Text(),
+         //LOG_FMT(LRMRETURN, "%s(%d): orig line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
+         //        __func__, __LINE__, next->GetOrigLine(), next->orig_col, next->Text(),
          //        get_token_name(next->GetType()), get_token_name(next->GetParentType()));
          if (includes.empty())
          {
