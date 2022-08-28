@@ -83,6 +83,7 @@ enum E_PcfFlag : decltype ( 0ULL )
    PCF_NOT_POSSIBLE    = pcf_bit(47),  //! it is not possible to make an one_liner
                                        //! because the line would be too long
    PCF_IN_CONDITIONAL  = pcf_bit(48),  //! inside a conditional ternary expression
+   PCF_OC_IN_BLOCK     = pcf_bit(49),  //! inside OC block function
 };
 
 UNC_DECLARE_FLAGS(T_PcfFlags, E_PcfFlag);

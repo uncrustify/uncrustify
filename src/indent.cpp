@@ -2001,6 +2001,11 @@ void indent_text()
                log_indent();
                indent_column_set(frm.prev().pc->column);
             }
+            // Issue #3813
+            else if (pc->TestFlags(PCF_OC_IN_BLOCK) && pc->GetParentType() == CT_SWITCH)
+            {
+               frm.top().indent = frm.prev().indent_tmp;
+            }
             else
             {
                // We are inside ({ ... }) -- indent one tab from the paren
