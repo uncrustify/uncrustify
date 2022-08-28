@@ -14,9 +14,9 @@ using namespace uncrustify;
 
 Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
 {
-   LOG_FMT(LMCB, "%s(%d): cl_colon->Text() is '%s', GetOrigLine() %zu, orig_col is %zu, level is %zu\n",
+   LOG_FMT(LMCB, "%s(%d): cl_colon->Text() is '%s', orig line %zu, orig_col is %zu, level is %zu\n",
            __func__, __LINE__, cl_colon->Text(), cl_colon->GetOrigLine(), cl_colon->orig_col, cl_colon->level);
-   LOG_FMT(LMCB, "%s(%d): pc->Text()       is '%s', GetOrigLine() %zu, orig_col is %zu, level is %zu\n",
+   LOG_FMT(LMCB, "%s(%d): pc->Text()       is '%s', orig line %zu, orig_col is %zu, level is %zu\n",
            __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col, pc->level);
    // end of block is reached
    // look back over newline, preprocessor BUT NOT #endif
@@ -146,7 +146,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
    {
       last = last->GetNext();
    }
-   LOG_FMT(LMCB, "%s(%d): last->Text()     is '%s', GetOrigLine() %zu, orig_col is %zu\n",
+   LOG_FMT(LMCB, "%s(%d): last->Text()     is '%s', orig line %zu, orig_col is %zu\n",
            __func__, __LINE__, last->Text(), last->GetOrigLine(), last->orig_col);
 
    if (last->IsPreproc())

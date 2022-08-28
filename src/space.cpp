@@ -96,7 +96,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LSPACE, "%s(%d): GetOrigLine() is %zu, orig_col is %zu, first->Text() '%s', type is %s\n",
+   LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig_col is %zu, first Text() '%s', type is %s\n",
            __func__, __LINE__, first->GetOrigLine(), first->orig_col, first->Text(), get_token_name(first->GetType()));
 
    min_sp = 1;
@@ -3238,9 +3238,9 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    // these lines are only useful for debugging uncrustify itself
    LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize do_space:\n",
            __func__, __LINE__);
-   LOG_FMT(LSPACE, "   first->GetOrigLine()  is %zu, first->orig_col  is %zu, first->Text()  '%s', first->GetType() is  %s\n",
+   LOG_FMT(LSPACE, "   first orig line  is %zu, orig_col  is %zu, Text()  '%s', GetType() is  %s\n",
            first->GetOrigLine(), first->orig_col, first->Text(), get_token_name(first->GetType()));
-   LOG_FMT(LSPACE, "   second->GetOrigLine() is %zu, second->orig_col is %zu, second->Text() '%s', second->GetType() is %s\n",
+   LOG_FMT(LSPACE, "   second orig line is %zu, orig_col is %zu, Text() '%s', GetType() is %s\n",
            second->GetOrigLine(), second->orig_col, second->Text(), get_token_name(second->GetType()));
    LOG_FMT(LSPACE, "   Please make a call at https://github.com/uncrustify/uncrustify/issues/new\n");
    LOG_FMT(LSPACE, "   or merge the line:\n");
@@ -3663,11 +3663,11 @@ size_t space_col_align(Chunk *first, Chunk *second)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LSPACE, "%s(%d): first->GetOrigLine() is %zu, orig_col is %zu, [%s/%s], Text() '%s' <==>\n",
+   LOG_FMT(LSPACE, "%s(%d): first orig line is %zu, orig_col is %zu, [%s/%s], Text() '%s' <==>\n",
            __func__, __LINE__, first->GetOrigLine(), first->orig_col,
            get_token_name(first->GetType()), get_token_name(first->GetParentType()),
            first->Text());
-   LOG_FMT(LSPACE, "%s(%d): second->GetOrigLine() is %zu, orig_col is %zu [%s/%s], Text() '%s',",
+   LOG_FMT(LSPACE, "%s(%d): second orig line is %zu, orig_col is %zu [%s/%s], Text() '%s',",
            __func__, __LINE__, second->GetOrigLine(), second->orig_col,
            get_token_name(second->GetType()), get_token_name(second->GetParentType()),
            second->Text());
@@ -3707,13 +3707,13 @@ size_t space_col_align(Chunk *first, Chunk *second)
       break;
 
    case IARF_IGNORE:                // Issue #2064
-      LOG_FMT(LSPACE, "%s(%d):    => first->GetOrigLine()  is %zu\n", __func__, __LINE__, first->GetOrigLine());
-      LOG_FMT(LSPACE, "%s(%d):    => second->GetOrigLine() is %zu\n", __func__, __LINE__, second->GetOrigLine());
-      LOG_FMT(LSPACE, "%s(%d):    => first->Text()     is '%s'\n", __func__, __LINE__, first->Text());
-      LOG_FMT(LSPACE, "%s(%d):    => second->Text()    is '%s'\n", __func__, __LINE__, second->Text());
-      LOG_FMT(LSPACE, "%s(%d):    => first->orig_col   is %zu\n", __func__, __LINE__, first->orig_col);
-      LOG_FMT(LSPACE, "%s(%d):    => second->orig_col  is %zu\n", __func__, __LINE__, second->orig_col);
-      LOG_FMT(LSPACE, "%s(%d):    => first->Len()      is %zu\n", __func__, __LINE__, first->Len());
+      LOG_FMT(LSPACE, "%s(%d):    => first orig line  is %zu\n", __func__, __LINE__, first->GetOrigLine());
+      LOG_FMT(LSPACE, "%s(%d):    => second orig line is %zu\n", __func__, __LINE__, second->GetOrigLine());
+      LOG_FMT(LSPACE, "%s(%d):    => first Text()     is '%s'\n", __func__, __LINE__, first->Text());
+      LOG_FMT(LSPACE, "%s(%d):    => second Text()    is '%s'\n", __func__, __LINE__, second->Text());
+      LOG_FMT(LSPACE, "%s(%d):    => first orig_col   is %zu\n", __func__, __LINE__, first->orig_col);
+      LOG_FMT(LSPACE, "%s(%d):    => second orig_col  is %zu\n", __func__, __LINE__, second->orig_col);
+      LOG_FMT(LSPACE, "%s(%d):    => first Len()      is %zu\n", __func__, __LINE__, first->Len());
 
       if (  first->GetOrigLine() == second->GetOrigLine()
          && second->orig_col > (first->orig_col + first->Len()))

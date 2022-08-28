@@ -53,11 +53,11 @@ void align_same_func_call_params()
    {
       if (pc->IsNewline())
       {
-         LOG_FMT(LAS, "%s(%d): GetOrigLine() is %zu, <Newline>\n", __func__, __LINE__, pc->GetOrigLine());
+         LOG_FMT(LAS, "%s(%d): orig line is %zu, <Newline>\n", __func__, __LINE__, pc->GetOrigLine());
       }
       else
       {
-         LOG_FMT(LAS, "%s(%d): GetOrigLine() is %zu, orig_col is %zu, pc->Text() '%s'\n",
+         LOG_FMT(LAS, "%s(%d): orig line is %zu, orig_col is %zu, pc->Text() '%s'\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
       }
 

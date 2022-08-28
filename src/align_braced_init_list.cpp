@@ -48,7 +48,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
    while (  pc != nullptr
          && pc->IsNotNullChunk())
    {
-      LOG_FMT(LALASS, "%s(%d): GetOrigLine() is %zu, check pc->Text() is '%s', type is %s, parent type is %s\n",
+      LOG_FMT(LALASS, "%s(%d): orig line is %zu, check pc->Text() is '%s', type is %s, parent type is %s\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       // Don't check inside SPAREN, PAREN or SQUARE groups

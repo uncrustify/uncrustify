@@ -1400,7 +1400,7 @@ static void check_template(Chunk *start, bool in_type_cast)
       {
          constexpr static auto LCURRENT = LTEMPL;
 
-         LOG_FMT(LTEMPL, "%s(%d): pc->GetOrigLine() is %zu, pc->orig_col is %zu, type is %s, num_tokens is %zu\n",
+         LOG_FMT(LTEMPL, "%s(%d): pc orig line is %zu, orig_col is %zu, type is %s, num_tokens is %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()), num_tokens);
 
          log_rule_B("tok_split_gte");
@@ -1409,7 +1409,7 @@ static void check_template(Chunk *start, bool in_type_cast)
          {
             // look for the closing brace
             Chunk *A = pc->SkipToMatch();
-            LOG_FMT(LTEMPL, "%s(%d): A->GetOrigLine() is %zu, A->orig_col is %zu, type is %s\n",
+            LOG_FMT(LTEMPL, "%s(%d): A orig line is %zu, orig_col is %zu, type is %s\n",
                     __func__, __LINE__, A->GetOrigLine(), A->orig_col, get_token_name(A->GetType()));
             pc = A->GetNext();
          }

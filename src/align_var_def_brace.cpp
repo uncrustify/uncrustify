@@ -63,7 +63,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
    if (prev->Is(CT_ASSIGN))
    {
-      LOG_FMT(LAVDB, "%s(%d): start->Text() '%s', type is %s, on GetOrigLine() %zu (abort due to assign)\n",
+      LOG_FMT(LAVDB, "%s(%d): start->Text() '%s', type is %s, on orig line %zu (abort due to assign)\n",
               __func__, __LINE__, start->Text(), get_token_name(start->GetType()), start->GetOrigLine());
 
       Chunk *pc = start->GetNextType(CT_BRACE_CLOSE, start->level);
@@ -71,7 +71,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
    }
    char copy[1000];
 
-   LOG_FMT(LAVDB, "%s(%d): start->Text() '%s', type is %s, on GetOrigLine() %zu\n",
+   LOG_FMT(LAVDB, "%s(%d): start->Text() '%s', type is %s, on orig line %zu\n",
            __func__, __LINE__, start->ElidedText(copy), get_token_name(start->GetType()), start->GetOrigLine());
 
    log_rule_B("align_var_def_inline");
@@ -232,7 +232,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
       if (!pc->IsNewline())
       {
-         LOG_FMT(LAVDB, "%s(%d): pc->GetOrigLine() is %zu, orig_col is %zu, Text() '%s', type is %s\n",
+         LOG_FMT(LAVDB, "%s(%d): pc orig line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
 
          if (pc->IsNot(CT_IGNORED))

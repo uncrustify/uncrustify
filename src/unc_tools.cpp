@@ -158,7 +158,7 @@ void prot_all_lines(const char *func_name, int theLine)
    {
       tokenCounter++;
 
-      LOG_FMT(LGUY, " GetOrigLine() is %zu,%zu, pp_level is %zu, ", lineNumber, tokenCounter, pc->pp_level);
+      LOG_FMT(LGUY, " orig line is %zu,%zu, pp_level is %zu, ", lineNumber, tokenCounter, pc->pp_level);
 
       if (pc->Is(CT_VBRACE_OPEN))
       {
@@ -312,7 +312,7 @@ void dump_out(unsigned int type)
       {
          fprintf(D_file, "[%p]\n", pc);
          fprintf(D_file, "  type %s\n", get_token_name(pc->GetType()));
-         fprintf(D_file, "  GetOrigLine() %zu\n", pc->GetOrigLine());
+         fprintf(D_file, "  orig line %zu\n", pc->GetOrigLine());
          fprintf(D_file, "  orig_col %zu\n", pc->orig_col);
          fprintf(D_file, "  orig_col_end %zu\n", pc->orig_col_end);
 

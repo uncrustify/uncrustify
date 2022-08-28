@@ -127,14 +127,14 @@ Chunk *scan_ib_line(Chunk *start)
                }
                else if (idx > 0)
                {
-                  LOG_FMT(LSIB, "%s(%d): prev_match '%s', prev_match->GetOrigLine() is %zu, prev_match->orig_col is %zu\n",
+                  LOG_FMT(LSIB, "%s(%d): prev_match '%s', prev_match orig line is %zu, prev_match->orig_col is %zu\n",
                           __func__, __LINE__, prev_match->Text(), prev_match->GetOrigLine(), prev_match->orig_col);
                   int min_col_diff = pc->column - prev_match->column;
                   int cur_col_diff = cpd.al[idx].col - cpd.al[idx - 1].col;
 
                   if (cur_col_diff < min_col_diff)
                   {
-                     LOG_FMT(LSIB, "%s(%d):   pc->GetOrigLine() is %zu\n",
+                     LOG_FMT(LSIB, "%s(%d):   pc orig line is %zu\n",
                              __func__, __LINE__, pc->GetOrigLine());
                      ib_shift_out(idx, min_col_diff - cur_col_diff);
                   }

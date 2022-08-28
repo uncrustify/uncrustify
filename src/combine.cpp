@@ -1394,7 +1394,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
               || prev->Is(CT_DC_MEMBER)
               || prev->Is(CT_PTR_TYPE))
       {
-         LOG_FMT(LFCNR, "%s(%d): pc->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s\n   ",
+         LOG_FMT(LFCNR, "%s(%d): pc orig line is %zu, orig_col is %zu, Text() is '%s', type is %s\n   ",
                  __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
          log_pcf_flags(LFCNR, pc->GetFlags());
          pc->SetType(CT_PTR_TYPE);
@@ -1826,7 +1826,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 
          for (Chunk *test_it = pc; test_it != semi; test_it = test_it->GetNext())
          {
-            LOG_FMT(LFCNR, "%s(%d): test_it->GetOrigLine() is %zu, orig_col is %zu, Text() '%s', type is %s\n",
+            LOG_FMT(LFCNR, "%s(%d): test_it orig line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
                     __func__, __LINE__, test_it->GetOrigLine(), test_it->orig_col,
                     test_it->Text(), get_token_name(test_it->GetType()));
 
@@ -1862,7 +1862,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
 static void check_double_brace_init(Chunk *bo1)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LJDBI, "%s(%d): GetOrigLine() is %zu, orig_col is %zu", __func__, __LINE__, bo1->GetOrigLine(), bo1->orig_col);
+   LOG_FMT(LJDBI, "%s(%d): orig line is %zu, orig_col is %zu", __func__, __LINE__, bo1->GetOrigLine(), bo1->orig_col);
    Chunk *pc = bo1->GetPrevNcNnlNi();   // Issue #2279
 
    if (pc->IsNullChunk())
@@ -1897,7 +1897,7 @@ static void check_double_brace_init(Chunk *bo1)
 
          if (bc1->Is(CT_BRACE_CLOSE))
          {
-            LOG_FMT(LJDBI, " - end, GetOrigLine() is %zu, orig_col is %zu\n", bc2->GetOrigLine(), bc2->orig_col);
+            LOG_FMT(LJDBI, " - end, orig line is %zu, orig_col is %zu\n", bc2->GetOrigLine(), bc2->orig_col);
             // delete bo2 and bc1
             bo1->str         += bo2->str;
             bo1->orig_col_end = bo2->orig_col_end;
@@ -1931,7 +1931,7 @@ void fix_symbols()
 
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-      LOG_FMT(LFCNR, "%s(%d): pc->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+      LOG_FMT(LFCNR, "%s(%d): pc orig line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
 
       if (  pc->Is(CT_FUNC_WRAP)
@@ -1989,7 +1989,7 @@ void fix_symbols()
          pc = pc->GetNextNcNnl();
          continue;
       }
-      LOG_FMT(LFCNR, "%s(%d): pc->GetOrigLine()       is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+      LOG_FMT(LFCNR, "%s(%d): pc orig line       is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
       Chunk *prev = pc->GetPrevNcNnlNi(E_Scope::PREPROC);   // Issue #2279
 
@@ -2005,7 +2005,7 @@ void fix_symbols()
       else
       {
          // Issue #2279
-         LOG_FMT(LFCNR, "%s(%d): prev(ni)->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+         LOG_FMT(LFCNR, "%s(%d): prev(ni) orig line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
                  __func__, __LINE__, prev->GetOrigLine(), prev->orig_col, prev->Text(), get_token_name(prev->GetType()));
       }
       Chunk *next = pc->GetNextNcNnl(E_Scope::PREPROC);
@@ -2017,7 +2017,7 @@ void fix_symbols()
       else
       {
          // Issue #2279
-         LOG_FMT(LFCNR, "%s(%d): next->GetOrigLine()     is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+         LOG_FMT(LFCNR, "%s(%d): next orig line     is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
                  __func__, __LINE__, next->GetOrigLine(), next->orig_col, next->Text(), get_token_name(next->GetType()));
       }
       LOG_FMT(LFCNR, "%s(%d): do_symbol_check(%s, %s, %s)\n",
@@ -2039,7 +2039,7 @@ void fix_symbols()
          && pc->IsNotNullChunk())
    {
       char copy[1000];
-      LOG_FMT(LFCNR, "%s(%d): pc->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
+      LOG_FMT(LFCNR, "%s(%d): pc orig line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       // Can't have a variable definition inside [ ]
@@ -2100,7 +2100,7 @@ void fix_symbols()
       if (  pc->Is(CT_BRACE_OPEN)                       // Issue #2332
          && pc->GetParentType() == CT_BRACED_INIT_LIST)
       {
-         LOG_FMT(LFCNR, "%s(%d): pc->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', look for CT_BRACE_OPEN\n",
+         LOG_FMT(LFCNR, "%s(%d): pc orig line is %zu, orig_col is %zu, Text() is '%s', look for CT_BRACE_OPEN\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
          pc = pc->GetNextType(CT_BRACE_CLOSE, pc->level);
       }
@@ -2110,7 +2110,7 @@ void fix_symbols()
        */
       // Issue #2279
       // Issue #2478
-      LOG_FMT(LFCNR, "%s(%d): pc->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n   ",
+      LOG_FMT(LFCNR, "%s(%d): pc orig line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n   ",
               __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
       log_pcf_flags(LFCNR, pc->GetFlags());
 
@@ -3043,7 +3043,7 @@ static void handle_oc_block_literal(Chunk *pc)
 
       if (apc->IsParenClose())
       {
-         LOG_FMT(LOCBLK, " -- marking parens @ apo->GetOrigLine() is %zu, apo->orig_col is %zu and apc->GetOrigLine() is %zu, apc->orig_col is %zu\n",
+         LOG_FMT(LOCBLK, " -- marking parens @ apo orig line is %zu, apo->orig_col is %zu and apc orig line is %zu, apc->orig_col is %zu\n",
                  apo->GetOrigLine(), apo->orig_col, apc->GetOrigLine(), apc->orig_col);
          flag_parens(apo, PCF_OC_ATYPE, CT_FPAREN_OPEN, CT_OC_BLOCK_EXPR, true);
          fix_fcn_def_params(apo);
@@ -3069,9 +3069,9 @@ static void handle_oc_block_literal(Chunk *pc)
    bbc->SetParentType(CT_OC_BLOCK_EXPR);
 
    // mark the OC_BLOCK
-   for (auto *tmp = bbo; tmp != bbc; tmp = tmp->GetNextNcNnl())
+   for (Chunk *tmp1 = bbo; tmp1 != bbc; tmp1 = tmp1->GetNextNcNnl())
    {
-      tmp->SetFlagBits(PCF_OC_IN_BLOCK);
+      tmp1->SetFlagBits(PCF_OC_IN_BLOCK);
    }
 } // handle_oc_block_literal
 
@@ -3381,7 +3381,7 @@ static void handle_oc_message_send(Chunk *os)
          }
          else
          {
-            LOG_FMT(LOCMSG, "%s(%d): tmp->GetOrigLine() is %zu, tmp->orig_col is %zu, expected identifier, not '%s' [%s]\n",
+            LOG_FMT(LOCMSG, "%s(%d): tmp orig line is %zu, tmp->orig_col is %zu, expected identifier, not '%s' [%s]\n",
                     __func__, __LINE__, tmp->GetOrigLine(), tmp->orig_col,
                     tmp->Text(), get_token_name(tmp->GetType()));
             return;

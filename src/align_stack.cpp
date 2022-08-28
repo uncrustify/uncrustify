@@ -247,7 +247,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
 
          if (next->IsNotNullChunk())
          {
-            LOG_FMT(LAS, "AlignStack::%s(%d): next->GetOrigLine() is %zu, orig_col is %zu, Text() '%s', level is %zu, type is %s\n",
+            LOG_FMT(LAS, "AlignStack::%s(%d): next orig line is %zu, orig_col is %zu, Text() '%s', level is %zu, type is %s\n",
                     __func__, __LINE__, next->GetOrigLine(), next->orig_col, next->Text(), next->level, get_token_name(next->GetType()));
             tmp_col += space_col_align(tmp, next);
             LOG_FMT(LAS, "AlignStack::%s(%d): next->column is %zu, level is %zu, tmp_col is %zu\n",
@@ -315,12 +315,12 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       // Issue #2278
       if (ali->Is(CT_PTR_TYPE))
       {
-         LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s][%s]: ali->GetOrigLine() is %zu, column is %zu, type is %s, level is %zu\n",
+         LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s][%s]: ali orig line is %zu, column is %zu, type is %s, level is %zu\n",
                  __func__, __LINE__, ali->Text(), start->Text(), ali->GetOrigLine(), ali->column, get_token_name(ali->GetType()), ali->level);
       }
       else
       {
-         LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s]: ali->GetOrigLine() is %zu, column is %zu, type is %s, level is %zu\n",
+         LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s]: ali orig line is %zu, column is %zu, type is %s, level is %zu\n",
                  __func__, __LINE__, ali->Text(), ali->GetOrigLine(), ali->column, get_token_name(ali->GetType()), ali->level);
       }
       LOG_FMT(LAS, "AlignStack::%s(%d):    ali->align.col_adj is %d, ref '%s', endcol is %zu\n",
@@ -335,7 +335,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       {
          LOG_FMT(LAS, "AlignStack::%s(%d): Add-aligned: seqnum is %zu, m_nl_seqnum is %zu, m_seqnum is %zu\n",
                  __func__, __LINE__, seqnum, m_nl_seqnum, m_seqnum);
-         LOG_FMT(LAS, "AlignStack::%s(%d):    ali->GetOrigLine() is %zu, ali->column is %zu, max_col old is %zu, new is %zu, m_min_col is %zu\n",
+         LOG_FMT(LAS, "AlignStack::%s(%d):    ali orig line is %zu, column is %zu, max_col old is %zu, new is %zu, m_min_col is %zu\n",
                  __func__, __LINE__, ali->GetOrigLine(), ali->column, m_max_col, endcol, m_min_col);
          m_max_col = endcol;
 
@@ -352,7 +352,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       {
          LOG_FMT(LAS, "AlignStack::%s(%d): Add-aligned: seqnum is %zu, m_nl_seqnum is %zu, m_seqnum is %zu\n",
                  __func__, __LINE__, seqnum, m_nl_seqnum, m_seqnum);
-         LOG_FMT(LAS, "AlignStack::%s(%d):    ali->GetOrigLine() is %zu, ali->column is %zu, max_col old is %zu, new is %zu, m_min_col is %zu\n",
+         LOG_FMT(LAS, "AlignStack::%s(%d):    ali orig line is %zu, column is %zu, max_col old is %zu, new is %zu, m_min_col is %zu\n",
                  __func__, __LINE__, ali->GetOrigLine(), ali->column, m_max_col, endcol, m_min_col);
       }
    }
@@ -509,7 +509,7 @@ void AlignStack::Flush()
    for (size_t idx = 0; idx < Len(); idx++)
    {
       ce = m_aligned.Get(idx);
-      LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, ce->m_pc->Text() is '%s', GetOrigLine() is %zu, orig_col is %zu, align.col_adj is %d\n",
+      LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, ce->m_pc->Text() is '%s', orig line is %zu, orig_col is %zu, align.col_adj is %d\n",
               __func__, __LINE__, idx, ce->m_pc->Text(), ce->m_pc->GetOrigLine(), ce->m_pc->orig_col, ce->m_pc->align.col_adj);
    }
 

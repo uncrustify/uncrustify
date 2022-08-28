@@ -33,7 +33,7 @@ void fix_casts(Chunk *start)
    bool       doubtful_cast = false;
 
 
-   LOG_FMT(LCASTS, "%s(%d): start->Text() is '%s', GetOrigLine() is %zu, orig_col is %zu\n",
+   LOG_FMT(LCASTS, "%s(%d): start->Text() is '%s', orig line is %zu, orig_col is %zu\n",
            __func__, __LINE__, start->Text(), start->GetOrigLine(), start->orig_col);
 
    prev = start->GetPrevNcNnlNi();   // Issue #2279
@@ -81,7 +81,7 @@ void fix_casts(Chunk *start)
                && language_is_set(LANG_CPP))
             || pc->Is(CT_AMP)))
    {
-      LOG_FMT(LCASTS, "%s(%d): pc->Text() is '%s', GetOrigLine() is %zu, orig_col is %zu, type is %s\n",
+      LOG_FMT(LCASTS, "%s(%d): pc->Text() is '%s', orig line is %zu, orig_col is %zu, type is %s\n",
               __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()));
 
       if (  pc->Is(CT_WORD)
@@ -633,7 +633,7 @@ Chunk *fix_variable_definition(Chunk *start)
    int        idx;
    int        ref_idx;
 
-   LOG_FMT(LFVD, "%s(%d): start at pc->GetOrigLine() is %zu, pc->orig_col is %zu\n",
+   LOG_FMT(LFVD, "%s(%d): start at pc orig line is %zu, pc->orig_col is %zu\n",
            __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
    log_pcf_flags(LFCNR, pc->GetFlags());
 
@@ -766,7 +766,7 @@ Chunk *fix_variable_definition(Chunk *start)
    {
       return(skip_to_next_statement(end));
    }
-   LOG_FMT(LFVD2, "%s(%d): GetOrigLine() is %zu, TYPE : ", __func__, __LINE__, start->GetOrigLine());
+   LOG_FMT(LFVD2, "%s(%d): orig line is %zu, TYPE : ", __func__, __LINE__, start->GetOrigLine());
 
    for (size_t idxForCs = 0; idxForCs < cs.Len() - 1; idxForCs++)
    {
@@ -779,7 +779,7 @@ Chunk *fix_variable_definition(Chunk *start)
    LOG_FMT(LFVD2, "\n");
 
    // OK we have two or more items, mark types up to the end.
-   LOG_FMT(LFVD, "%s(%d): pc->GetOrigLine() is %zu, pc->orig_col is %zu\n",
+   LOG_FMT(LFVD, "%s(%d): pc orig line is %zu, pc->orig_col is %zu\n",
            __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
    mark_variable_definition(cs.Get(cs.Len() - 1)->m_pc);
 
@@ -1438,7 +1438,7 @@ void mark_function(Chunk *pc)
    if (  prev != nullptr
       && prev->IsNotNullChunk())
    {
-      LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', GetOrigLine() is %zu, orig_col is %zu, type is %s\n",
+      LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', orig line is %zu, orig_col is %zu, type is %s\n",
               __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->orig_col, get_token_name(prev->GetType()));
    }
    else
@@ -1473,15 +1473,15 @@ void mark_function(Chunk *pc)
 
          if (prev->IsNotNullChunk())
          {
-            LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', GetOrigLine() is %zu, orig_col is %zu, type is %s\n",
+            LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', orig line is %zu, orig_col is %zu, type is %s\n",
                     __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->orig_col,
                     get_token_name(prev->GetType()));
             prev = skip_template_prev(prev);
-            LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', GetOrigLine() is %zu, orig_col is %zu, type is %s\n",
+            LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', orig line is %zu, orig_col is %zu, type is %s\n",
                     __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->orig_col,
                     get_token_name(prev->GetType()));
             prev = skip_attribute_prev(prev);
-            LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', GetOrigLine() is %zu, orig_col is %zu, type is %s\n",
+            LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', orig line is %zu, orig_col is %zu, type is %s\n",
                     __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->orig_col,
                     get_token_name(prev->GetType()));
          }
@@ -1491,7 +1491,7 @@ void mark_function(Chunk *pc)
          {
             if (pc->str.equals(prev->str))
             {
-               LOG_FMT(LFCN, "%s(%d): pc->Text() is '%s', GetOrigLine() is %zu, orig_col is %zu, type is %s\n",
+               LOG_FMT(LFCN, "%s(%d): pc->Text() is '%s', orig line is %zu, orig_col is %zu, type is %s\n",
                        __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col,
                        get_token_name(prev->GetType()));
                pc->SetType(CT_FUNC_CLASS_DEF);
@@ -1522,7 +1522,7 @@ void mark_function(Chunk *pc)
    {
       bool isa_def  = false;
       bool hit_star = false;
-      LOG_FMT(LFCN, "%s(%d): pc->Text() is '%s', GetOrigLine() is %zu, orig_col is %zu, type is %s\n",
+      LOG_FMT(LFCN, "%s(%d): pc->Text() is '%s', orig line is %zu, orig_col is %zu, type is %s\n",
               __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col,
               get_token_name(pc->GetType()));
 
@@ -1561,7 +1561,7 @@ void mark_function(Chunk *pc)
        */
       while (prev->IsNotNullChunk())
       {
-         LOG_FMT(LFCN, "%s(%d): next step with: prev->GetOrigLine() is %zu, orig_col is %zu, Text() '%s'\n",
+         LOG_FMT(LFCN, "%s(%d): next step with: prev orig line is %zu, orig_col is %zu, Text() '%s'\n",
                  __func__, __LINE__, prev->GetOrigLine(), prev->orig_col, prev->Text());
 
          if (pc->GetParentType() == CT_FIXED)
@@ -1704,7 +1704,7 @@ void mark_function(Chunk *pc)
             && prev->IsNot(CT_WORD)
             && !prev->IsPointerOperator())
          {
-            LOG_FMT(LFCN, "%s(%d):  --> Stopping on prev is '%s', GetOrigLine() is %zu, orig_col is %zu, type is %s\n",
+            LOG_FMT(LFCN, "%s(%d):  --> Stopping on prev is '%s', orig line is %zu, orig_col is %zu, type is %s\n",
                     __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->orig_col, get_token_name(prev->GetType()));
 
             // certain tokens are unlikely to precede a prototype or definition

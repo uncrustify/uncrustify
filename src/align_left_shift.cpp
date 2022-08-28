@@ -33,12 +33,12 @@ void align_left_shift()
    {
       if (pc->IsNewline())
       {
-         LOG_FMT(LALIGN, "%s(%d): GetOrigLine() is %zu, <Newline>\n", __func__, __LINE__, pc->GetOrigLine());
+         LOG_FMT(LALIGN, "%s(%d): orig line is %zu, <Newline>\n", __func__, __LINE__, pc->GetOrigLine());
       }
       else
       {
          char copy[1000];
-         LOG_FMT(LALIGN, "%s(%d): GetOrigLine() is %zu, orig_col is %zu, pc->Text() '%s'\n",
+         LOG_FMT(LALIGN, "%s(%d): orig line is %zu, orig_col is %zu, pc->Text() '%s'\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->ElidedText(copy));
       }
 
