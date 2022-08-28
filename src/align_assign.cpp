@@ -67,7 +67,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LALASS, "%s(%d): GetOrigLine() is %zu, check pc->Text() is '%s', type is %s, m_parentType is %s\n",
+      LOG_FMT(LALASS, "%s(%d): orig line is %zu, check pc->Text() is '%s', type is %s, m_parentType is %s\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       if (nl_count != 0)

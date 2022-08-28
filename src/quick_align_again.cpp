@@ -33,7 +33,7 @@ void quick_align_again()
          as.m_amp_style   = static_cast<AlignStack::StarStyle>(pc->align.amp_style);
          as.m_gap         = pc->align.gap;
 
-         LOG_FMT(LALAGAIN, "%s(%d):   pc->Text() is '%s', GetOrigLine() is %zu\n",
+         LOG_FMT(LALAGAIN, "%s(%d):   pc->Text() is '%s', orig line is %zu\n",
                  __func__, __LINE__, pc->Text(), pc->GetOrigLine());
          as.Add(pc->align.start);
          pc->SetFlagBits(PCF_WAS_ALIGNED);
@@ -42,7 +42,7 @@ void quick_align_again()
          {
             tmp->SetFlagBits(PCF_WAS_ALIGNED);
             as.Add(tmp->align.start);
-            LOG_FMT(LALAGAIN, "%s(%d):    => tmp->Text() is '%s', GetOrigLine() is %zu\n",
+            LOG_FMT(LALAGAIN, "%s(%d):    => tmp->Text() is '%s', orig line is %zu\n",
                     __func__, __LINE__, tmp->Text(), tmp->GetOrigLine());
          }
 

@@ -341,7 +341,7 @@ static void try_split_here(cw_entry &ent, Chunk *pc)
 static bool split_line(Chunk *start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "%s(%d): start->Text() '%s', GetOrigLine() is %zu, orig_col is %zu, type is %s\n",
+   LOG_FMT(LSPLIT, "%s(%d): start->Text() '%s', orig line is %zu, orig_col is %zu, type is %s\n",
            __func__, __LINE__, start->Text(), start->GetOrigLine(), start->orig_col, get_token_name(start->GetType()));
    LOG_FMT(LSPLIT, "   start->GetFlags() ");
    log_pcf_flags(LSPLIT, start->GetFlags());
@@ -716,7 +716,7 @@ static void split_fcn_params_full(Chunk *start)
 static void split_fcn_params(Chunk *start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "%s(%d): start->Text() is '%s', GetOrigLine() is %zu, orig_col is %zu\n",
+   LOG_FMT(LSPLIT, "%s(%d): start->Text() is '%s', orig line is %zu, orig_col is %zu\n",
            __func__, __LINE__, start->Text(), start->GetOrigLine(), start->orig_col);
    Chunk *fpo = start;
 
@@ -803,7 +803,7 @@ static void split_fcn_params(Chunk *start)
 
    while ((prev = prev->GetPrev())->IsNotNullChunk())
    {
-      LOG_FMT(LSPLIT, "%s(%d): prev->Text() is '%s', prev->GetOrigLine() is %zu, prev->orig_col is %zu\n",
+      LOG_FMT(LSPLIT, "%s(%d): prev->Text() is '%s', orig line is %zu, orig_col is %zu\n",
               __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->orig_col);
       LOG_FMT(LSPLIT, "%s(%d): prev->level is %zu, prev '%s', prev->GetType() is %s\n",
               __func__, __LINE__, prev->level, prev->Text(), get_token_name(prev->GetType()));

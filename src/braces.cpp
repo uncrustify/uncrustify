@@ -511,7 +511,7 @@ static bool can_remove_braces(Chunk *bopen)
 static void examine_brace(Chunk *bopen)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LBRDEL, "%s(%d): start on GetOrigLine() %zu, bopen->level is %zu\n",
+   LOG_FMT(LBRDEL, "%s(%d): start on orig line %zu, bopen->level is %zu\n",
            __func__, __LINE__, bopen->GetOrigLine(), bopen->level);
 
    const size_t level = bopen->level + 1;
@@ -629,7 +629,7 @@ static void examine_brace(Chunk *bopen)
 
             if (prev->IsNotNullChunk())
             {
-               LOG_FMT(LBRDEL, "%s(%d): GetOrigLine() is %zu, orig_col is %zu, Text() '%s', prev->Text '%s', prev->GetType() %s\n",
+               LOG_FMT(LBRDEL, "%s(%d): orig line is %zu, orig_col is %zu, Text() '%s', prev->Text '%s', prev->GetType() %s\n",
                        __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), prev->Text(), get_token_name(prev->GetType()));
             }
             else
@@ -651,7 +651,7 @@ static void examine_brace(Chunk *bopen)
                || (  pc->Is(CT_BRACE_OPEN)
                   && pc->level == bopen->level)) // Issue #1758
             {
-               LOG_FMT(LBRDEL, "%s(%d): pc->Text() '%s', GetOrigLine() is %zu, orig_col is %zu, level is %zu\n",
+               LOG_FMT(LBRDEL, "%s(%d): pc->Text() '%s', orig line is %zu, orig_col is %zu, level is %zu\n",
                        __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col, pc->level);
                hit_semi |= pc->IsSemicolon();
                semi_count++;
@@ -1415,7 +1415,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
                     __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
             // end of switch is reached
             last = calculate_closing_brace_position(cl_colon, pc);
-            LOG_FMT(LMCB, "%s(%d): last->Text() is '%s', GetOrigLine() %zu, orig_col is %zu\n",
+            LOG_FMT(LMCB, "%s(%d): last->Text() is '%s', orig line %zu, orig_col is %zu\n",
                     __func__, __LINE__, last->Text(), last->GetOrigLine(), last->orig_col);
             break;
          }
@@ -1429,7 +1429,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
       Chunk *next = cl_colon->GetNextNcNnl(E_Scope::PREPROC);
       return(next);
    }
-   LOG_FMT(LMCB, "%s(%d): last->Text() is '%s', GetOrigLine() %zu, orig_col is %zu\n",
+   LOG_FMT(LMCB, "%s(%d): last->Text() is '%s', orig line %zu, orig_col is %zu\n",
            __func__, __LINE__, last->Text(), last->GetOrigLine(), last->orig_col);
    LOG_FMT(LMCB, "%s(%d): adding braces after '%s' on line %zu\n",
            __func__, __LINE__, cl_colon->Text(), cl_colon->GetOrigLine());
@@ -1530,7 +1530,7 @@ static void process_if_chain(Chunk *br_start)
    while (  pc != nullptr
          && pc->IsNotNullChunk())
    {
-      LOG_FMT(LBRCH, "%s(%d): pc->Text() is '%s', GetOrigLine() is %zu, orig_col is %zu.\n",
+      LOG_FMT(LBRCH, "%s(%d): pc->Text() is '%s', orig line is %zu, orig_col is %zu.\n",
               __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
 
       if (pc->Is(CT_BRACE_OPEN))
@@ -1669,13 +1669,13 @@ static void process_if_chain(Chunk *br_start)
             && (brace->GetParentType() != CT_BRACED_INIT_LIST)
             && (multiline_block ? !paren_multiline_before_brace(brace) : true))
          {
-            LOG_FMT(LBRCH, "%s(%d): brace->GetOrigLine() is %zu, brace->orig_col is %zu\n",
+            LOG_FMT(LBRCH, "%s(%d): brace orig line is %zu, brace->orig_col is %zu\n",
                     __func__, __LINE__, brace->GetOrigLine(), brace->orig_col);
             convert_brace(brace);
          }
          else
          {
-            LOG_FMT(LBRCH, "%s(%d): brace->GetOrigLine() is %zu, brace->orig_col is %zu\n",
+            LOG_FMT(LBRCH, "%s(%d): brace orig line is %zu, brace->orig_col is %zu\n",
                     __func__, __LINE__, brace->GetOrigLine(), brace->orig_col);
          }
       }

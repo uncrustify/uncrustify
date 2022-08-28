@@ -719,11 +719,11 @@ Chunk *Chunk::SkipDcMember() const
 
 int Chunk::ComparePosition(const Chunk *other) const
 {
-   if (GetOrigLine() < other->GetOrigLine())
+   if (m_origLine < other->GetOrigLine())
    {
       return(-1);
    }
-   else if (GetOrigLine() == other->GetOrigLine())
+   else if (m_origLine == other->GetOrigLine())
    {
       if (orig_col < other->orig_col)
       {

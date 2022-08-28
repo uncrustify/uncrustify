@@ -24,7 +24,7 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
 
       if (switch_before->IsNotNullChunk())
       {
-         LOG_FMT(LFCNR, "%s(%d): switch_before->GetOrigLine() is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
+         LOG_FMT(LFCNR, "%s(%d): switch_before orig line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
                  __func__, __LINE__, switch_before->GetOrigLine(), switch_before->orig_col,
                  switch_before->Text(), get_token_name(switch_before->GetType()));
          we_have_a_case_before = true;

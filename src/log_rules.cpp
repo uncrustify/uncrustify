@@ -17,10 +17,10 @@ void log_rule2(const char *func, size_t line, const char *rule, Chunk *first, Ch
 
    if (second->IsNot(CT_NEWLINE))
    {
-      LOG_FMT(LSPACE, "%s(%zu): first->GetOrigLine() is %zu, first->orig_col is %zu, first->Text() is '%s', [%s/%s] <===>\n",
+      LOG_FMT(LSPACE, "%s(%zu): first orig line is %zu, orig_col is %zu, Text() is '%s', [%s/%s] <===>\n",
               func, line, first->GetOrigLine(), first->orig_col, first->Text(),
               get_token_name(first->GetType()), get_token_name(first->GetParentType()));
-      LOG_FMT(LSPACE, "           second->GetOrigLine() is %zu, second->orig_col is %zu, second->Text() is '%s', [%s/%s] :",
+      LOG_FMT(LSPACE, "           second orig line is %zu, orig_col is %zu, Text() is '%s', [%s/%s] :",
               second->GetOrigLine(), second->orig_col, second->Text(),
               get_token_name(second->GetType()), get_token_name(second->GetParentType()));
       LOG_FMT(LSPACE, " rule %s[line %zu]\n",

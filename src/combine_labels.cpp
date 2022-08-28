@@ -86,22 +86,22 @@ void combine_labels()
    {
       if (next->Is(CT_NEWLINE))
       {
-         LOG_FMT(LFCN, "%s(%d): next->GetOrigLine() is %zu, next->orig_col is %zu, <Newline>, nl is %zu\n",
+         LOG_FMT(LFCN, "%s(%d): next orig line is %zu, next->orig_col is %zu, <Newline>, nl is %zu\n",
                  __func__, __LINE__, next->GetOrigLine(), next->orig_col, next->nl_count);
       }
       else if (next->Is(CT_VBRACE_OPEN))
       {
-         LOG_FMT(LFCN, "%s(%d): next->GetOrigLine() is %zu, next->orig_col is %zu, VBRACE_OPEN\n",
+         LOG_FMT(LFCN, "%s(%d): next orig line is %zu, next->orig_col is %zu, VBRACE_OPEN\n",
                  __func__, __LINE__, next->GetOrigLine(), next->orig_col);
       }
       else if (next->Is(CT_VBRACE_CLOSE))
       {
-         LOG_FMT(LFCN, "%s(%d): next->GetOrigLine() is %zu, next->orig_col is %zu, VBRACE_CLOSE\n",
+         LOG_FMT(LFCN, "%s(%d): next orig line is %zu, next->orig_col is %zu, VBRACE_CLOSE\n",
                  __func__, __LINE__, next->GetOrigLine(), next->orig_col);
       }
       else
       {
-         LOG_FMT(LFCN, "%s(%d): next->GetOrigLine() is %zu, next->orig_col is %zu, Text() '%s', type is %s\n",
+         LOG_FMT(LFCN, "%s(%d): next orig line is %zu, next->orig_col is %zu, Text() '%s', type is %s\n",
                  __func__, __LINE__, next->GetOrigLine(), next->orig_col, next->Text(), get_token_name(next->GetType()));
       }
 
@@ -209,11 +209,11 @@ void combine_labels()
          }
          else
          {
-            LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', GetOrigLine() is %zu, orig_col is %zu\n",
+            LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', orig line is %zu, orig_col is %zu\n",
                     __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->orig_col);
-            LOG_FMT(LFCN, "%s(%d): cur->Text() is '%s', GetOrigLine() is %zu, orig_col is %zu\n",
+            LOG_FMT(LFCN, "%s(%d): cur->Text() is '%s', orig line is %zu, orig_col is %zu\n",
                     __func__, __LINE__, cur->Text(), cur->GetOrigLine(), cur->orig_col);
-            LOG_FMT(LFCN, "%s(%d): next->Text() is '%s', GetOrigLine() is %zu, orig_col is %zu\n",
+            LOG_FMT(LFCN, "%s(%d): next->Text() is '%s', orig line is %zu, orig_col is %zu\n",
                     __func__, __LINE__, next->Text(), next->GetOrigLine(), next->orig_col);
             Chunk *nextprev = chunk_get_prev_local(next);   // Issue #2279
 
@@ -349,10 +349,10 @@ void combine_labels()
             }
             else if (nextprev->Is(CT_FPAREN_CLOSE))
             {
-               LOG_FMT(LFCN, "%s(%d): nextprev->Text() is '%s', GetOrigLine() is %zu, orig_col is %zu, type is %s\n",
+               LOG_FMT(LFCN, "%s(%d): nextprev->Text() is '%s', orig line is %zu, orig_col is %zu, type is %s\n",
                        __func__, __LINE__, nextprev->Text(), nextprev->GetOrigLine(), nextprev->orig_col,
                        get_token_name(nextprev->GetType()));
-               LOG_FMT(LFCN, "%s(%d): next->Text() is '%s', GetOrigLine() is %zu, orig_col is %zu, type is %s\n",
+               LOG_FMT(LFCN, "%s(%d): next->Text() is '%s', orig line is %zu, orig_col is %zu, type is %s\n",
                        __func__, __LINE__, next->Text(), next->GetOrigLine(), next->orig_col,
                        get_token_name(next->GetType()));
 
@@ -412,7 +412,7 @@ void combine_labels()
                //tmp = chunk_get_next_local(next);
                if (tmp->IsNotNullChunk())
                {
-                  LOG_FMT(LFCN, "%s(%d): tmp->Text() is '%s', GetOrigLine() is %zu, orig_col is %zu, type is %s\n",
+                  LOG_FMT(LFCN, "%s(%d): tmp->Text() is '%s', orig line is %zu, orig_col is %zu, type is %s\n",
                           __func__, __LINE__, tmp->Text(), tmp->GetOrigLine(), tmp->orig_col,
                           get_token_name(tmp->GetType()));
 
