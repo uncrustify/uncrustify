@@ -1355,8 +1355,8 @@ static bool parse_cs_string(tok_ctx &ctx, Chunk &pc)
                 * a tab char can't be replaced with \\t because escapes don't
                 * work in here-strings. best we can do is warn.
                 */
-               LOG_FMT(warnlevel, "%s(%d): %s: orig line is %zu, orig_col is %zu, Detected non-replaceable tab char in literal string\n",
-                       __func__, __LINE__, cpd.filename.c_str(), pc.GetOrigLine(), pc.orig_col);
+               LOG_FMT(warnlevel, "%s(%d): %s: orig line is %zu, orig col is %zu, Detected non-replaceable tab char in literal string\n",
+                       __func__, __LINE__, cpd.filename.c_str(), pc.GetOrigLine(), pc.GetOrigCol());
                LOG_FMT(warnlevel, "%s(%d): Warning is given if doing tab-to-\\t replacement and we have found one in a C# verbatim string literal.\n",
                        __func__, __LINE__);
 
@@ -2108,8 +2108,8 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
    // Save off the current column
    pc.SetType(CT_NONE);
    pc.SetOrigLine(ctx.c.row);
-   pc.column   = ctx.c.col;
-   pc.orig_col = ctx.c.col;
+   pc.column = ctx.c.col;
+   pc.SetOrigCol(ctx.c.col);
    pc.nl_count = 0;
    pc.SetFlags(PCF_NONE);
 
@@ -2839,19 +2839,19 @@ void tokenize(const deque<int> &data, Chunk *ref)
 
       if (pc->Is(CT_NEWLINE))
       {
-         LOG_FMT(LGUY, "%s(%d): orig line is %zu, orig_col is %zu, <Newline>, nl is %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->nl_count);
+         LOG_FMT(LGUY, "%s(%d): orig line is %zu, orig col is %zu, <Newline>, nl is %zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->nl_count);
       }
       else if (pc->Is(CT_VBRACE_OPEN))
       {
-         LOG_FMT(LGUY, "%s(%d): orig line is %zu, orig_col is %zu, type is %s, orig_col_end is %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()), pc->orig_col_end);
+         LOG_FMT(LGUY, "%s(%d): orig line is %zu, orig col is %zu, type is %s, orig_col_end is %zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->orig_col_end);
       }
       else
       {
          char copy[1000];
-         LOG_FMT(LGUY, "%s(%d): orig line is %zu, orig_col is %zu, Text() '%s', type is %s, orig_col_end is %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->orig_col_end);
+         LOG_FMT(LGUY, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s, orig_col_end is %zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy), get_token_name(pc->GetType()), pc->orig_col_end);
       }
    }
    // Set the cpd.newline string for this file

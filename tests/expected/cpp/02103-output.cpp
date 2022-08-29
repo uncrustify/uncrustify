@@ -113,7 +113,7 @@ void output_parsed(FILE *pfile)
     fprintf(pfile, "\n%3d> %13.13s[%13.13s][%2d/%2d/%2d][%d/%d/%d][%6x][%d-%d]",
             pc->GetOrigLine(), get_token_name(pc->GetType()),
             get_token_name(pc->GetParentType()),
-            pc->column, pc->orig_col, pc->orig_col_end,
+            pc->column, pc->GetOrigCol(), pc->orig_col_end,
             pc->brace_level, pc->level, pc->pp_level,
             pc->GetFlags(), pc->nl_count, pc->after_tab);
 
@@ -493,12 +493,12 @@ void output_comment_multi(Chunk *pc)
   prev = pc->GetPrev();
 
   if ((prev != NULL) && (prev->GetType() != CT_NEWLINE))
-    cmt_col = pc->orig_col;
+    cmt_col = pc->GetOrigCol();
   else
-    col_diff = pc->orig_col - pc->column;
+    col_diff = pc->GetOrigCol() - pc->column;
 
   //   fprintf(stderr, "Indenting1 line %d to col %d (orig=%d) col_diff=%d\n",
-  //           pc->GetOrigLine(), cmt_col, pc->orig_col, col_diff);
+  //           pc->GetOrigLine(), cmt_col, pc->GetOrigCol(), col_diff);
 
   xtra = calculate_comment_body_indent(pc->str, pc->len, pc->column);
 

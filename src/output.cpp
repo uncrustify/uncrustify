@@ -518,13 +518,13 @@ void output_parsed(FILE *pfile, bool withOptions)
       fprintf(pfile, "%s# %3d>%19.19s|%19.19s|%19.19s[%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
               eol_marker, (int)pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
-              (int)pc->column, (int)pc->orig_col, (int)pc->orig_col_end, (int)pc->orig_prev_sp,
+              (int)pc->column, (int)pc->GetOrigCol(), (int)pc->orig_col_end, (int)pc->orig_prev_sp,
               (int)pc->brace_level, (int)pc->level, (int)pc->pp_level, (int)pc->nl_count, pc->after_tab);
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu]",
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
-              pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
+              pc->column, pc->GetOrigCol(), pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
       // Print pc flags in groups of 4 hex characters
       char flag_string[20];
@@ -572,7 +572,7 @@ void output_parsed_csv(FILE *pfile)
       fprintf(pfile, "%s%zu,%s,%s,%s,%zu,%zu,%zu,%d,%zu,%zu,%zu,",
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
-              pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
+              pc->column, pc->GetOrigCol(), pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
 
       auto pcf_flag_str = pcf_flags_str(E_PcfFlag(pc->GetFlags()));
@@ -733,14 +733,14 @@ void output_text(FILE *pfile)
                    * they likely have special column aligned newline
                    * continuations (common in multiline macros)
                    */
-                  pc->column = pc->orig_col;
+                  pc->column = pc->GetOrigCol();
                }
                else
                {
                   // Try to keep the same relative spacing
                   while (  prev != nullptr
                         && prev->IsNotNullChunk()
-                        && prev->orig_col == 0
+                        && prev->GetOrigCol() == 0
                         && prev->nl_count == 0)
                   {
                      prev = prev->GetPrev();
@@ -755,11 +755,11 @@ void output_text(FILE *pfile)
                      if ((int)(cpd.column + orig_sp) < 0)
                      {
 #ifdef WIN32
-                        fprintf(stderr, "FATAL: negative value.\n   pc->orig_col is %d, prev->orig_col_end is %d\n",
-                                (int)pc->orig_col, (int)prev->orig_col_end);
+                        fprintf(stderr, "FATAL: negative value.\n   pc->GetOrigCol() is %d, prev->orig_col_end is %d\n",
+                                (int)pc->GetOrigCol(), (int)prev->orig_col_end);
 #else // not WIN32
-                        fprintf(stderr, "FATAL: negative value.\n   pc->orig_col is %zu, prev->orig_col_end is %zu\n",
-                                pc->orig_col, prev->orig_col_end);
+                        fprintf(stderr, "FATAL: negative value.\n   pc->GetOrigCol() is %zu, prev->orig_col_end is %zu\n",
+                                pc->GetOrigCol(), prev->orig_col_end);
 #endif // ifdef WIN32
                         log_flush(true);
                         exit(EX_SOFTWARE);
@@ -822,8 +822,8 @@ void output_text(FILE *pfile)
       else if (  pc->Is(CT_JUNK)
               || pc->Is(CT_IGNORED))
       {
-         LOG_FMT(LOUTIND, "%s(%d): orig line is %zu, orig_col is %zu,\npc->Text() >%s<, pc->str.size() is %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), pc->str.size());
+         LOG_FMT(LOUTIND, "%s(%d): orig line is %zu, orig col is %zu,\npc->Text() >%s<, pc->str.size() is %zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->str.size());
          // do not adjust the column for junk
          add_text(pc->str, true);
       }
@@ -1765,7 +1765,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
       cmt.brace_col = 1 + (pc->brace_level * options::output_tab_size());
    }
    // LOG_FMT(LSYS, "%s: line %zd, brace=%zd base=%zd col=%zd orig=%zd aligned=%x\n",
-   //        __func__, pc->GetOrigLine(), cmt.brace_col, cmt.base_col, cmt.column, pc->orig_col,
+   //        __func__, pc->GetOrigLine(), cmt.brace_col, cmt.base_col, cmt.column, pc->GetOrigCol(),
    //        pc->GetFlags() & (PCF_WAS_ALIGNED | PCF_RIGHT_COMMENT));
 
    if (  pc->GetParentType() == CT_COMMENT_START
@@ -1774,7 +1774,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
       log_rule_B("indent_col1_comment");
 
       if (  !options::indent_col1_comment()
-         && pc->orig_col == 1
+         && pc->GetOrigCol() == 1
          && !pc->TestFlags(PCF_INSERTED))
       {
          cmt.column    = 1;
@@ -2264,15 +2264,15 @@ static void output_comment_multi(Chunk *pc)
 
    char       copy[1000];
 
-   LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig_col is %zu, column is %zu\n",
-           __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->orig_col, pc->column);
+   LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig col is %zu, column is %zu\n",
+           __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->column);
 
    output_cmt_start(cmt, pc);
    log_rule_B("cmt_reflow_mode");
    cmt.reflow = (options::cmt_reflow_mode() != 1);
 
    size_t cmt_col  = cmt.base_col;
-   int    col_diff = pc->orig_col - cmt.base_col;
+   int    col_diff = pc->GetOrigCol() - cmt.base_col;
 
    calculate_comment_body_indent(cmt, pc->str);
 
@@ -3251,8 +3251,8 @@ static void output_comment_multi_simple(Chunk *pc)
    }
    cmt_reflow cmt;
 
-   LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig_col is %zu, column is %zu\n",
-           __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()), pc->orig_col, pc->column);
+   LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig col is %zu, column is %zu\n",
+           __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->column);
 
    output_cmt_start(cmt, pc);
 
@@ -3267,7 +3267,7 @@ static void output_comment_multi_simple(Chunk *pc)
       if (pc->GetPrev()->IsNewline())
       {
          // The comment should be indented correctly
-         diff = pc->column - pc->orig_col;
+         diff = pc->column - pc->GetOrigCol();
       }
       return(diff);
    }();

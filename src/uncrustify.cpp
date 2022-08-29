@@ -1974,7 +1974,7 @@ static void uncrustify_start(const deque<int> &data)
    {
       Chunk *pc = Chunk::GetHead();
 
-      cpd.frag_cols = pc->orig_col;
+      cpd.frag_cols = pc->GetOrigCol();
    }
 
    // Add the file header

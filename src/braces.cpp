@@ -375,14 +375,14 @@ static bool can_remove_braces(Chunk *bopen)
    int          br_count   = 0;
 
    pc = bopen->GetNextNc(E_Scope::ALL);
-   LOG_FMT(LBRDEL, "%s(%d):  - begin with token '%s', orig line is %zu, orig_col is %zu\n",
-           __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
+   LOG_FMT(LBRDEL, "%s(%d):  - begin with token '%s', orig line is %zu, orig col is %zu\n",
+           __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
 
    while (  pc->IsNotNullChunk()
          && pc->level >= level)
    {
-      LOG_FMT(LBRDEL, "%s(%d): test token '%s', orig line is %zu, orig_col is %zu\n",
-              __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
+      LOG_FMT(LBRDEL, "%s(%d): test token '%s', orig line is %zu, orig col is %zu\n",
+              __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
 
       if (pc->TestFlags(PCF_IN_PREPROC))
       {
@@ -413,7 +413,7 @@ static bool can_remove_braces(Chunk *bopen)
             if (br_count == 0)
             {
                fprintf(stderr, "%s(%d): br_count is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                       __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
+                       __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
                log_flush(true);
                exit(EX_SOFTWARE);
             }
@@ -533,13 +533,13 @@ static void examine_brace(Chunk *bopen)
    {
       if (pc->Is(CT_NEWLINE))
       {
-         LOG_FMT(LBRDEL, "%s(%d): orig line is %zu, orig_col is %zu, <Newline>\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
+         LOG_FMT(LBRDEL, "%s(%d): orig line is %zu, orig col is %zu, <Newline>\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
       }
       else
       {
-         LOG_FMT(LBRDEL, "%s(%d): orig line is %zu, orig_col is %zu, Text() '%s'\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
+         LOG_FMT(LBRDEL, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s'\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
       }
 
       if (pc->TestFlags(PCF_IN_PREPROC))
@@ -579,7 +579,7 @@ static void examine_brace(Chunk *bopen)
             if (br_count == 0)
             {
                fprintf(stderr, "%s(%d): br_count is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                       __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
+                       __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
                log_flush(true);
                exit(EX_SOFTWARE);
             }
@@ -629,13 +629,13 @@ static void examine_brace(Chunk *bopen)
 
             if (prev->IsNotNullChunk())
             {
-               LOG_FMT(LBRDEL, "%s(%d): orig line is %zu, orig_col is %zu, Text() '%s', prev->Text '%s', prev->GetType() %s\n",
-                       __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), prev->Text(), get_token_name(prev->GetType()));
+               LOG_FMT(LBRDEL, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', prev->Text '%s', prev->GetType() %s\n",
+                       __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), prev->Text(), get_token_name(prev->GetType()));
             }
             else
             {
-               LOG_FMT(LBRDEL, "%s(%d): orig line is %zu, orig_col is %zu, Text() '%s', prev is a null chunk\n",
-                       __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
+               LOG_FMT(LBRDEL, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', prev is a null chunk\n",
+                       __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
             }
             LOG_FMT(LBRDEL, "%s(%d): for pc->Text() '%s', pc->level is %zu,  bopen->level is %zu\n",
                     __func__, __LINE__, pc->Text(), pc->level, bopen->level);
@@ -651,8 +651,8 @@ static void examine_brace(Chunk *bopen)
                || (  pc->Is(CT_BRACE_OPEN)
                   && pc->level == bopen->level)) // Issue #1758
             {
-               LOG_FMT(LBRDEL, "%s(%d): pc->Text() '%s', orig line is %zu, orig_col is %zu, level is %zu\n",
-                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col, pc->level);
+               LOG_FMT(LBRDEL, "%s(%d): pc->Text() '%s', orig line is %zu, orig col is %zu, level is %zu\n",
+                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->level);
                hit_semi |= pc->IsSemicolon();
                semi_count++;
                LOG_FMT(LBRDEL, "%s(%d): semi_count is %zu\n",
@@ -692,8 +692,8 @@ static void examine_brace(Chunk *bopen)
 
          if (next->IsNotNullChunk())
          {
-            LOG_FMT(LBRDEL, "%s(%d): orig line is %zu, orig_col is %zu, next is '%s'\n",
-                    __func__, __LINE__, next->GetOrigLine(), next->orig_col, get_token_name(next->GetType()));
+            LOG_FMT(LBRDEL, "%s(%d): orig line is %zu, orig col is %zu, next is '%s'\n",
+                    __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()));
          }
 
          if (  if_count > 0
@@ -996,8 +996,8 @@ Chunk *insert_comment_after(Chunk *ref, E_Token cmt_type,
    }
    // TODO: expand comment type to cover other comment styles?
 
-   new_cmt.column   = ref->column + ref->Len() + 1;
-   new_cmt.orig_col = new_cmt.column;
+   new_cmt.column = ref->column + ref->Len() + 1;
+   new_cmt.SetOrigCol(new_cmt.column);
 
    return(new_cmt.CopyAndAddAfter(ref));
 }
@@ -1347,7 +1347,7 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
       if (tmp_pc->brace_level == 0)
       {
          fprintf(stderr, "%s(%d): tmp_pc->brace_level is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                 __func__, __LINE__, tmp_pc->GetOrigLine(), tmp_pc->orig_col);
+                 __func__, __LINE__, tmp_pc->GetOrigLine(), tmp_pc->GetOrigCol());
          log_flush(true);
          exit(EX_SOFTWARE);
       }
@@ -1356,7 +1356,7 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
       if (tmp_pc->level == 0)
       {
          fprintf(stderr, "%s(%d): tmp_pc->level is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                 __func__, __LINE__, tmp_pc->GetOrigLine(), tmp_pc->orig_col);
+                 __func__, __LINE__, tmp_pc->GetOrigLine(), tmp_pc->GetOrigCol());
          log_flush(true);
          exit(EX_SOFTWARE);
       }
@@ -1375,8 +1375,8 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
 static Chunk *mod_case_brace_add(Chunk *cl_colon)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LMCB, "%s(%d): orig line %zu, orig_col is %zu\n",
-           __func__, __LINE__, cl_colon->GetOrigLine(), cl_colon->orig_col);
+   LOG_FMT(LMCB, "%s(%d): orig line %zu, orig col is %zu\n",
+           __func__, __LINE__, cl_colon->GetOrigLine(), cl_colon->GetOrigCol());
 
    Chunk *pc   = cl_colon;
    Chunk *last = Chunk::NullChunkPtr;
@@ -1394,15 +1394,15 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig_col is %zu, pp_level is %zu\n",
-              __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col, pc->pp_level);
+      LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig col is %zu, pp_level is %zu\n",
+              __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->pp_level);
 
       if (pc->level == cl_colon->level)
       {
          if (pc->Is(CT_CASE))
          {
-            LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
+            LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig col is %zu\n",
+                    __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
             last = calculate_closing_brace_position(cl_colon, pc);
             break;
          }
@@ -1411,12 +1411,12 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
       {
          if (pc == clos)
          {
-            LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
+            LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig col is %zu\n",
+                    __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
             // end of switch is reached
             last = calculate_closing_brace_position(cl_colon, pc);
-            LOG_FMT(LMCB, "%s(%d): last->Text() is '%s', orig line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, last->Text(), last->GetOrigLine(), last->orig_col);
+            LOG_FMT(LMCB, "%s(%d): last->Text() is '%s', orig line %zu, orig col is %zu\n",
+                    __func__, __LINE__, last->Text(), last->GetOrigLine(), last->GetOrigCol());
             break;
          }
       }
@@ -1429,8 +1429,8 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
       Chunk *next = cl_colon->GetNextNcNnl(E_Scope::PREPROC);
       return(next);
    }
-   LOG_FMT(LMCB, "%s(%d): last->Text() is '%s', orig line %zu, orig_col is %zu\n",
-           __func__, __LINE__, last->Text(), last->GetOrigLine(), last->orig_col);
+   LOG_FMT(LMCB, "%s(%d): last->Text() is '%s', orig line %zu, orig col is %zu\n",
+           __func__, __LINE__, last->Text(), last->GetOrigLine(), last->GetOrigCol());
    LOG_FMT(LMCB, "%s(%d): adding braces after '%s' on line %zu\n",
            __func__, __LINE__, cl_colon->Text(), cl_colon->GetOrigLine());
 
@@ -1439,7 +1439,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    chunk.SetType(CT_BRACE_OPEN);
    chunk.SetParentType(CT_CASE);
    chunk.SetOrigLine(cl_colon->GetOrigLine());
-   chunk.orig_col    = cl_colon->orig_col;
+   chunk.SetOrigCol(cl_colon->GetOrigCol());
    chunk.level       = cl_colon->level;
    chunk.pp_level    = cl_colon->pp_level;
    chunk.brace_level = cl_colon->brace_level;
@@ -1449,8 +1449,8 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
 
    chunk.SetType(CT_BRACE_CLOSE);
    chunk.SetOrigLine(last->GetOrigLine());
-   chunk.orig_col = last->orig_col;
-   chunk.str      = "}";
+   chunk.SetOrigCol(last->GetOrigCol());
+   chunk.str = "}";
    Chunk *br_close = chunk.CopyAndAddAfter(last);
 
    for (pc = br_open->GetNext(E_Scope::PREPROC);
@@ -1515,8 +1515,8 @@ static void mod_case_brace()
 static void process_if_chain(Chunk *br_start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LBRCH, "%s(%d): if starts on line %zu, orig_col is %zu.\n",
-           __func__, __LINE__, br_start->GetOrigLine(), br_start->orig_col);
+   LOG_FMT(LBRCH, "%s(%d): if starts on line %zu, orig col is %zu.\n",
+           __func__, __LINE__, br_start->GetOrigLine(), br_start->GetOrigCol());
 
    vector<Chunk *> braces;
 
@@ -1530,8 +1530,8 @@ static void process_if_chain(Chunk *br_start)
    while (  pc != nullptr
          && pc->IsNotNullChunk())
    {
-      LOG_FMT(LBRCH, "%s(%d): pc->Text() is '%s', orig line is %zu, orig_col is %zu.\n",
-              __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
+      LOG_FMT(LBRCH, "%s(%d): pc->Text() is '%s', orig line is %zu, orig col is %zu.\n",
+              __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
 
       if (pc->Is(CT_BRACE_OPEN))
       {
@@ -1669,14 +1669,14 @@ static void process_if_chain(Chunk *br_start)
             && (brace->GetParentType() != CT_BRACED_INIT_LIST)
             && (multiline_block ? !paren_multiline_before_brace(brace) : true))
          {
-            LOG_FMT(LBRCH, "%s(%d): brace orig line is %zu, brace->orig_col is %zu\n",
-                    __func__, __LINE__, brace->GetOrigLine(), brace->orig_col);
+            LOG_FMT(LBRCH, "%s(%d): brace orig line is %zu, orig col is %zu\n",
+                    __func__, __LINE__, brace->GetOrigLine(), brace->GetOrigCol());
             convert_brace(brace);
          }
          else
          {
-            LOG_FMT(LBRCH, "%s(%d): brace orig line is %zu, brace->orig_col is %zu\n",
-                    __func__, __LINE__, brace->GetOrigLine(), brace->orig_col);
+            LOG_FMT(LBRCH, "%s(%d): brace orig line is %zu, orig col is %zu\n",
+                    __func__, __LINE__, brace->GetOrigLine(), brace->GetOrigCol());
          }
       }
    }

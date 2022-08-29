@@ -14,10 +14,10 @@ using namespace uncrustify;
 
 Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
 {
-   LOG_FMT(LMCB, "%s(%d): cl_colon->Text() is '%s', orig line %zu, orig_col is %zu, level is %zu\n",
-           __func__, __LINE__, cl_colon->Text(), cl_colon->GetOrigLine(), cl_colon->orig_col, cl_colon->level);
-   LOG_FMT(LMCB, "%s(%d): pc->Text()       is '%s', orig line %zu, orig_col is %zu, level is %zu\n",
-           __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col, pc->level);
+   LOG_FMT(LMCB, "%s(%d): cl_colon->Text() is '%s', orig line %zu, orig col is %zu, level is %zu\n",
+           __func__, __LINE__, cl_colon->Text(), cl_colon->GetOrigLine(), cl_colon->GetOrigCol(), cl_colon->level);
+   LOG_FMT(LMCB, "%s(%d): pc->Text()       is '%s', orig line %zu, orig col is %zu, level is %zu\n",
+           __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->level);
    // end of block is reached
    // look back over newline, preprocessor BUT NOT #endif
 
@@ -61,7 +61,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
             // brace_close found
             is_brace_close = back;
             LOG_FMT(LMCB, "%s(%d): BRACE_CLOSE: line is %zu, col is %zu, level is %zu\n",
-                    __func__, __LINE__, is_brace_close->GetOrigLine(), is_brace_close->orig_col, is_brace_close->level);
+                    __func__, __LINE__, is_brace_close->GetOrigLine(), is_brace_close->GetOrigCol(), is_brace_close->level);
             erst_found = 3;
          }
 
@@ -70,7 +70,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
             // semicolon found
             is_semicolon = back;
             LOG_FMT(LMCB, "%s(%d): SEMICOLON:   line is %zu, col is %zu, level is %zu\n",
-                    __func__, __LINE__, is_semicolon->GetOrigLine(), is_semicolon->orig_col, is_semicolon->level);
+                    __func__, __LINE__, is_semicolon->GetOrigLine(), is_semicolon->GetOrigCol(), is_semicolon->level);
             erst_found = 4;
          }
 
@@ -79,7 +79,7 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
             // comment found
             is_comment = back;
             LOG_FMT(LMCB, "%s(%d): COMMENT:     line is %zu, col is %zu, level is %zu\n",
-                    __func__, __LINE__, back->GetOrigLine(), back->orig_col, back->level);
+                    __func__, __LINE__, back->GetOrigLine(), back->GetOrigCol(), back->level);
          }
       }
       back = back->GetPrev();
@@ -146,16 +146,16 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
    {
       last = last->GetNext();
    }
-   LOG_FMT(LMCB, "%s(%d): last->Text()     is '%s', orig line %zu, orig_col is %zu\n",
-           __func__, __LINE__, last->Text(), last->GetOrigLine(), last->orig_col);
+   LOG_FMT(LMCB, "%s(%d): last->Text()     is '%s', orig line %zu, orig col is %zu\n",
+           __func__, __LINE__, last->Text(), last->GetOrigLine(), last->GetOrigCol());
 
    if (last->IsPreproc())
    {
       // we have a preprocessor token
       while (last->IsNotNullChunk())
       {
-         LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig_col is %zu\n",
-                 __func__, __LINE__, last->Text(), last->GetOrigLine(), last->orig_col);
+         LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig col is %zu\n",
+                 __func__, __LINE__, last->Text(), last->GetOrigLine(), last->GetOrigCol());
 
          if (last->Is(CT_PP_ENDIF))
          {
@@ -171,21 +171,21 @@ Chunk *calculate_closing_brace_position(const Chunk *cl_colon, Chunk *pc)
                // the closing brace will be set before #endif
                Chunk *pp_start = last->GetPpStart();
                last = pp_start->GetPrevNnl();
-               LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig_col is %zu\n",
-                       __func__, __LINE__, last->Text(), last->GetOrigLine(), last->orig_col);
+               LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig col is %zu\n",
+                       __func__, __LINE__, last->Text(), last->GetOrigLine(), last->GetOrigCol());
             }
             else if (comp == 1)
             {
                // cl_colon is before parent_last ==>
                // the closing brace will be set after #endif
-               LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig_col is %zu\n",
-                       __func__, __LINE__, last->Text(), last->GetOrigLine(), last->orig_col);
+               LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig col is %zu\n",
+                       __func__, __LINE__, last->Text(), last->GetOrigLine(), last->GetOrigCol());
             }
             break;
          }
          last = last->GetPrevNcNnl();
-         LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig_col is %zu\n",
-                 __func__, __LINE__, last->Text(), last->GetOrigLine(), last->orig_col);
+         LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig col is %zu\n",
+                 __func__, __LINE__, last->Text(), last->GetOrigLine(), last->GetOrigCol());
 
          if (!last->IsPreproc())
          {

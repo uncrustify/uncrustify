@@ -38,8 +38,8 @@ void align_eigen_comma_init()
       }
       else
       {
-         LOG_FMT(LALIGN, "%s(%d): orig line is %zu, orig_col is %zu, pc->Text() '%s'\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
+         LOG_FMT(LALIGN, "%s(%d): orig line is %zu, orig col is %zu, pc->Text() '%s'\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
       }
 
       if (  start->IsNotNullChunk()

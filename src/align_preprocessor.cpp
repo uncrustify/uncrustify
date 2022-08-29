@@ -63,7 +63,7 @@ void align_preprocessor()
          break;
       }
       LOG_FMT(LALPP, "%s(%d): define (%s) on line %zu col %zu\n",
-              __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
+              __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
 
       cur_as = &as;
 
@@ -80,7 +80,7 @@ void align_preprocessor()
          pc = pc->GetNextType(CT_FPAREN_CLOSE, pc->level);
 
          LOG_FMT(LALPP, "%s(%d): jumped to (%s) on line %zu col %zu\n",
-                 __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
+                 __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
       }
       // step to the value past the close parenthesis or the macro name
       pc = pc->GetNext();
@@ -99,7 +99,7 @@ void align_preprocessor()
       if (!pc->IsNewline())
       {
          LOG_FMT(LALPP, "%s(%d): align on '%s', line %zu col %zu\n",
-                 __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
+                 __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
 
          cur_as->Add(pc);
       }

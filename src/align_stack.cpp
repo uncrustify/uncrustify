@@ -247,8 +247,8 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
 
          if (next->IsNotNullChunk())
          {
-            LOG_FMT(LAS, "AlignStack::%s(%d): next orig line is %zu, orig_col is %zu, Text() '%s', level is %zu, type is %s\n",
-                    __func__, __LINE__, next->GetOrigLine(), next->orig_col, next->Text(), next->level, get_token_name(next->GetType()));
+            LOG_FMT(LAS, "AlignStack::%s(%d): next orig line is %zu, orig col is %zu, Text() '%s', level is %zu, type is %s\n",
+                    __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->Text(), next->level, get_token_name(next->GetType()));
             tmp_col += space_col_align(tmp, next);
             LOG_FMT(LAS, "AlignStack::%s(%d): next->column is %zu, level is %zu, tmp_col is %zu\n",
                     __func__, __LINE__, next->column, next->level, tmp_col);
@@ -509,8 +509,8 @@ void AlignStack::Flush()
    for (size_t idx = 0; idx < Len(); idx++)
    {
       ce = m_aligned.Get(idx);
-      LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, ce->m_pc->Text() is '%s', orig line is %zu, orig_col is %zu, align.col_adj is %d\n",
-              __func__, __LINE__, idx, ce->m_pc->Text(), ce->m_pc->GetOrigLine(), ce->m_pc->orig_col, ce->m_pc->align.col_adj);
+      LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, ce->m_pc->Text() is '%s', orig line is %zu, orig col is %zu, align.col_adj is %d\n",
+              __func__, __LINE__, idx, ce->m_pc->Text(), ce->m_pc->GetOrigLine(), ce->m_pc->GetOrigCol(), ce->m_pc->align.col_adj);
    }
 
    for (size_t idx = 0; idx < Len(); idx++)
@@ -525,8 +525,8 @@ void AlignStack::Flush()
          if (  m_skip_first
             && pc->column != tmp_col)
          {
-            LOG_FMT(LAS, "AlignStack::%s(%d): orig line is %zu, orig_col is %zu, dropping first item due to skip_first\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
+            LOG_FMT(LAS, "AlignStack::%s(%d): orig line is %zu, orig col is %zu, dropping first item due to skip_first\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
             m_skip_first = false;
             m_aligned.Pop_Front();
             Flush();
@@ -543,8 +543,8 @@ void AlignStack::Flush()
       pc->align.next = m_aligned.GetChunk(idx + 1);
 
       // Indent the token, taking col_adj into account
-      LOG_FMT(LAS, "AlignStack::%s(%d): orig line is %zu, orig_col is %zu, Text() '%s', set to col %zu (adj is %d)\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), tmp_col, pc->align.col_adj);
+      LOG_FMT(LAS, "AlignStack::%s(%d): orig line is %zu, orig col is %zu, Text() '%s', set to col %zu (adj is %d)\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), tmp_col, pc->align.col_adj);
       align_to_column(pc, tmp_col);
    }
 
@@ -631,13 +631,13 @@ void AlignStack::Debug()
 
          if (pc->Is(CT_PTR_TYPE))
          {
-            LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s][%s]: orig line is %zu, orig_col is %zu, type is %s, level is %zu, brace_level is %zu\n",
-                    __func__, __LINE__, idx, pc->Text(), pc->GetNext()->Text(), pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()), pc->level, pc->brace_level);
+            LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s][%s]: orig line is %zu, orig col is %zu, type is %s, level is %zu, brace_level is %zu\n",
+                    __func__, __LINE__, idx, pc->Text(), pc->GetNext()->Text(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->level, pc->brace_level);
          }
          else
          {
-            LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s]: orig line is %zu, orig_col is %zu, type is %s, level is %zu, brace_level is %zu\n",
-                    __func__, __LINE__, idx, pc->Text(), pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()), pc->level, pc->brace_level);
+            LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s]: orig line is %zu, orig col is %zu, type is %s, level is %zu, brace_level is %zu\n",
+                    __func__, __LINE__, idx, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->level, pc->brace_level);
          }
       }
    }

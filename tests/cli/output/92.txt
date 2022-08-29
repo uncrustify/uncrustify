@@ -1,196 +1,196 @@
-parse_word : orig line is 1, orig_col is 1, Text() is 'struct'
+parse_word : orig line is 1, orig col is 1, Text() is 'struct'
    type is NONE, parent type is NONE => new type is WORD
-parse_word : orig line is 1, orig_col is 1, Text() is 'struct'
+parse_word : orig line is 1, orig col is 1, Text() is 'struct'
    type is WORD, parent type is NONE => new type is STRUCT
-parse_whitespace : orig line is 1, orig_col is 7, Text() is ''
+parse_whitespace : orig line is 1, orig col is 7, Text() is ''
    type is NONE, parent type is NONE => new type is WHITESPACE
-parse_word : orig line is 1, orig_col is 8, Text() is 'TelegramIndex'
+parse_word : orig line is 1, orig col is 8, Text() is 'TelegramIndex'
    type is NONE, parent type is NONE => new type is WORD
-parse_whitespace : orig line is 1, orig_col is 21, Text() is <Newline>
+parse_whitespace : orig line is 1, orig col is 21, Text() is <Newline>
    type is NONE, parent type is NONE => new type is NEWLINE
-parse_next : orig line is 2, orig_col is 1, Text() is '{'
+parse_next : orig line is 2, orig col is 1, Text() is '{'
    type is NONE, parent type is NONE => new type is BRACE_OPEN
-parse_whitespace : orig line is 2, orig_col is 2, Text() is <Newline>
+parse_whitespace : orig line is 2, orig col is 2, Text() is <Newline>
    type is NONE, parent type is NONE => new type is NEWLINE
-parse_word : orig line is 3, orig_col is 1, Text() is 'TelegramIndex'
+parse_word : orig line is 3, orig col is 1, Text() is 'TelegramIndex'
    type is NONE, parent type is NONE => new type is WORD
-parse_next : orig line is 3, orig_col is 14, Text() is '('
+parse_next : orig line is 3, orig col is 14, Text() is '('
    type is NONE, parent type is NONE => new type is PAREN_OPEN
-parse_word : orig line is 3, orig_col is 15, Text() is 'const'
+parse_word : orig line is 3, orig col is 15, Text() is 'const'
    type is NONE, parent type is NONE => new type is WORD
-parse_word : orig line is 3, orig_col is 15, Text() is 'const'
+parse_word : orig line is 3, orig col is 15, Text() is 'const'
    type is WORD, parent type is NONE => new type is QUALIFIER
-parse_whitespace : orig line is 3, orig_col is 20, Text() is ''
+parse_whitespace : orig line is 3, orig col is 20, Text() is ''
    type is NONE, parent type is NONE => new type is WHITESPACE
-parse_word : orig line is 3, orig_col is 21, Text() is 'char'
+parse_word : orig line is 3, orig col is 21, Text() is 'char'
    type is NONE, parent type is NONE => new type is WORD
-parse_word : orig line is 3, orig_col is 21, Text() is 'char'
+parse_word : orig line is 3, orig col is 21, Text() is 'char'
    type is WORD, parent type is NONE => new type is TYPE
-parse_next : orig line is 3, orig_col is 25, Text() is '*'
+parse_next : orig line is 3, orig col is 25, Text() is '*'
    type is NONE, parent type is NONE => new type is STAR
-parse_whitespace : orig line is 3, orig_col is 26, Text() is ''
+parse_whitespace : orig line is 3, orig col is 26, Text() is ''
    type is NONE, parent type is NONE => new type is WHITESPACE
-parse_word : orig line is 3, orig_col is 27, Text() is 'pN'
+parse_word : orig line is 3, orig col is 27, Text() is 'pN'
    type is NONE, parent type is NONE => new type is WORD
-parse_next : orig line is 3, orig_col is 29, Text() is ','
+parse_next : orig line is 3, orig col is 29, Text() is ','
    type is NONE, parent type is NONE => new type is COMMA
-parse_whitespace : orig line is 3, orig_col is 30, Text() is ''
+parse_whitespace : orig line is 3, orig col is 30, Text() is ''
    type is NONE, parent type is NONE => new type is WHITESPACE
-parse_word : orig line is 3, orig_col is 31, Text() is 'unsigned'
+parse_word : orig line is 3, orig col is 31, Text() is 'unsigned'
    type is NONE, parent type is NONE => new type is WORD
-parse_word : orig line is 3, orig_col is 31, Text() is 'unsigned'
+parse_word : orig line is 3, orig col is 31, Text() is 'unsigned'
    type is WORD, parent type is NONE => new type is TYPE
-parse_whitespace : orig line is 3, orig_col is 39, Text() is ''
+parse_whitespace : orig line is 3, orig col is 39, Text() is ''
    type is NONE, parent type is NONE => new type is WHITESPACE
-parse_word : orig line is 3, orig_col is 40, Text() is 'long'
+parse_word : orig line is 3, orig col is 40, Text() is 'long'
    type is NONE, parent type is NONE => new type is WORD
-parse_word : orig line is 3, orig_col is 40, Text() is 'long'
+parse_word : orig line is 3, orig col is 40, Text() is 'long'
    type is WORD, parent type is NONE => new type is TYPE
-parse_whitespace : orig line is 3, orig_col is 44, Text() is ''
+parse_whitespace : orig line is 3, orig col is 44, Text() is ''
    type is NONE, parent type is NONE => new type is WHITESPACE
-parse_word : orig line is 3, orig_col is 45, Text() is 'nI'
+parse_word : orig line is 3, orig col is 45, Text() is 'nI'
    type is NONE, parent type is NONE => new type is WORD
-parse_next : orig line is 3, orig_col is 47, Text() is ')'
+parse_next : orig line is 3, orig col is 47, Text() is ')'
    type is NONE, parent type is NONE => new type is PAREN_CLOSE
-parse_whitespace : orig line is 3, orig_col is 48, Text() is ''
+parse_whitespace : orig line is 3, orig col is 48, Text() is ''
    type is NONE, parent type is NONE => new type is WHITESPACE
-parse_next : orig line is 3, orig_col is 49, Text() is ':'
+parse_next : orig line is 3, orig col is 49, Text() is ':'
    type is NONE, parent type is NONE => new type is COLON
-parse_whitespace : orig line is 3, orig_col is 50, Text() is <Newline>
+parse_whitespace : orig line is 3, orig col is 50, Text() is <Newline>
    type is NONE, parent type is NONE => new type is NEWLINE
-parse_word : orig line is 4, orig_col is 1, Text() is 'pTelName'
+parse_word : orig line is 4, orig col is 1, Text() is 'pTelName'
    type is NONE, parent type is NONE => new type is WORD
-parse_next : orig line is 4, orig_col is 9, Text() is '('
+parse_next : orig line is 4, orig col is 9, Text() is '('
    type is NONE, parent type is NONE => new type is PAREN_OPEN
-parse_word : orig line is 4, orig_col is 10, Text() is 'pN'
+parse_word : orig line is 4, orig col is 10, Text() is 'pN'
    type is NONE, parent type is NONE => new type is WORD
-parse_next : orig line is 4, orig_col is 12, Text() is ')'
+parse_next : orig line is 4, orig col is 12, Text() is ')'
    type is NONE, parent type is NONE => new type is PAREN_CLOSE
-parse_next : orig line is 4, orig_col is 13, Text() is ','
+parse_next : orig line is 4, orig col is 13, Text() is ','
    type is NONE, parent type is NONE => new type is COMMA
-parse_whitespace : orig line is 4, orig_col is 14, Text() is <Newline>
+parse_whitespace : orig line is 4, orig col is 14, Text() is <Newline>
    type is NONE, parent type is NONE => new type is NEWLINE
-parse_word : orig line is 5, orig_col is 1, Text() is 'nTelIndex'
+parse_word : orig line is 5, orig col is 1, Text() is 'nTelIndex'
    type is NONE, parent type is NONE => new type is WORD
-parse_next : orig line is 5, orig_col is 10, Text() is '('
+parse_next : orig line is 5, orig col is 10, Text() is '('
    type is NONE, parent type is NONE => new type is PAREN_OPEN
-parse_word : orig line is 5, orig_col is 11, Text() is 'n'
+parse_word : orig line is 5, orig col is 11, Text() is 'n'
    type is NONE, parent type is NONE => new type is WORD
-parse_next : orig line is 5, orig_col is 12, Text() is ')'
+parse_next : orig line is 5, orig col is 12, Text() is ')'
    type is NONE, parent type is NONE => new type is PAREN_CLOSE
-parse_whitespace : orig line is 5, orig_col is 13, Text() is <Newline>
+parse_whitespace : orig line is 5, orig col is 13, Text() is <Newline>
    type is NONE, parent type is NONE => new type is NEWLINE
-parse_next : orig line is 6, orig_col is 1, Text() is '{'
+parse_next : orig line is 6, orig col is 1, Text() is '{'
    type is NONE, parent type is NONE => new type is BRACE_OPEN
-parse_whitespace : orig line is 6, orig_col is 2, Text() is <Newline>
+parse_whitespace : orig line is 6, orig col is 2, Text() is <Newline>
    type is NONE, parent type is NONE => new type is NEWLINE
-parse_next : orig line is 7, orig_col is 1, Text() is '}'
+parse_next : orig line is 7, orig col is 1, Text() is '}'
    type is NONE, parent type is NONE => new type is BRACE_CLOSE
-parse_whitespace : orig line is 7, orig_col is 2, Text() is <Newline>
+parse_whitespace : orig line is 7, orig col is 2, Text() is <Newline>
    type is NONE, parent type is NONE => new type is NEWLINE
-parse_next : orig line is 9, orig_col is 1, Text() is '~'
+parse_next : orig line is 9, orig col is 1, Text() is '~'
    type is NONE, parent type is NONE => new type is INV
-parse_word : orig line is 9, orig_col is 2, Text() is 'TelegramIndex'
+parse_word : orig line is 9, orig col is 2, Text() is 'TelegramIndex'
    type is NONE, parent type is NONE => new type is WORD
-parse_next : orig line is 9, orig_col is 15, Text() is '('
+parse_next : orig line is 9, orig col is 15, Text() is '('
    type is NONE, parent type is NONE => new type is PAREN_OPEN
-parse_next : orig line is 9, orig_col is 16, Text() is ')'
+parse_next : orig line is 9, orig col is 16, Text() is ')'
    type is NONE, parent type is NONE => new type is PAREN_CLOSE
-parse_whitespace : orig line is 9, orig_col is 17, Text() is <Newline>
+parse_whitespace : orig line is 9, orig col is 17, Text() is <Newline>
    type is NONE, parent type is NONE => new type is NEWLINE
-parse_next : orig line is 10, orig_col is 1, Text() is '{'
+parse_next : orig line is 10, orig col is 1, Text() is '{'
    type is NONE, parent type is NONE => new type is BRACE_OPEN
-parse_whitespace : orig line is 10, orig_col is 2, Text() is <Newline>
+parse_whitespace : orig line is 10, orig col is 2, Text() is <Newline>
    type is NONE, parent type is NONE => new type is NEWLINE
-parse_next : orig line is 11, orig_col is 1, Text() is '}'
+parse_next : orig line is 11, orig col is 1, Text() is '}'
    type is NONE, parent type is NONE => new type is BRACE_CLOSE
-parse_whitespace : orig line is 11, orig_col is 2, Text() is <Newline>
+parse_whitespace : orig line is 11, orig col is 2, Text() is <Newline>
    type is NONE, parent type is NONE => new type is NEWLINE
-parse_word : orig line is 13, orig_col is 1, Text() is 'const'
+parse_word : orig line is 13, orig col is 1, Text() is 'const'
    type is NONE, parent type is NONE => new type is WORD
-parse_word : orig line is 13, orig_col is 1, Text() is 'const'
+parse_word : orig line is 13, orig col is 1, Text() is 'const'
    type is WORD, parent type is NONE => new type is QUALIFIER
-parse_whitespace : orig line is 13, orig_col is 6, Text() is ''
+parse_whitespace : orig line is 13, orig col is 6, Text() is ''
    type is NONE, parent type is NONE => new type is WHITESPACE
-parse_word : orig line is 13, orig_col is 7, Text() is 'char'
+parse_word : orig line is 13, orig col is 7, Text() is 'char'
    type is NONE, parent type is NONE => new type is WORD
-parse_word : orig line is 13, orig_col is 7, Text() is 'char'
+parse_word : orig line is 13, orig col is 7, Text() is 'char'
    type is WORD, parent type is NONE => new type is TYPE
-parse_next : orig line is 13, orig_col is 11, Text() is '*'
+parse_next : orig line is 13, orig col is 11, Text() is '*'
    type is NONE, parent type is NONE => new type is STAR
-parse_whitespace : orig line is 13, orig_col is 12, Text() is ''
+parse_whitespace : orig line is 13, orig col is 12, Text() is ''
    type is NONE, parent type is NONE => new type is WHITESPACE
-parse_word : orig line is 13, orig_col is 13, Text() is 'const'
+parse_word : orig line is 13, orig col is 13, Text() is 'const'
    type is NONE, parent type is NONE => new type is WORD
-parse_word : orig line is 13, orig_col is 13, Text() is 'const'
+parse_word : orig line is 13, orig col is 13, Text() is 'const'
    type is WORD, parent type is NONE => new type is QUALIFIER
-parse_whitespace : orig line is 13, orig_col is 18, Text() is ''
+parse_whitespace : orig line is 13, orig col is 18, Text() is ''
    type is NONE, parent type is NONE => new type is WHITESPACE
-parse_word : orig line is 13, orig_col is 19, Text() is 'pTelName'
+parse_word : orig line is 13, orig col is 19, Text() is 'pTelName'
    type is NONE, parent type is NONE => new type is WORD
-parse_next : orig line is 13, orig_col is 27, Text() is ';'
+parse_next : orig line is 13, orig col is 27, Text() is ';'
    type is NONE, parent type is NONE => new type is SEMICOLON
-parse_whitespace : orig line is 13, orig_col is 28, Text() is <Newline>
+parse_whitespace : orig line is 13, orig col is 28, Text() is <Newline>
    type is NONE, parent type is NONE => new type is NEWLINE
-parse_word : orig line is 14, orig_col is 1, Text() is 'unsigned'
+parse_word : orig line is 14, orig col is 1, Text() is 'unsigned'
    type is NONE, parent type is NONE => new type is WORD
-parse_word : orig line is 14, orig_col is 1, Text() is 'unsigned'
+parse_word : orig line is 14, orig col is 1, Text() is 'unsigned'
    type is WORD, parent type is NONE => new type is TYPE
-parse_whitespace : orig line is 14, orig_col is 9, Text() is ''
+parse_whitespace : orig line is 14, orig col is 9, Text() is ''
    type is NONE, parent type is NONE => new type is WHITESPACE
-parse_word : orig line is 14, orig_col is 10, Text() is 'long'
+parse_word : orig line is 14, orig col is 10, Text() is 'long'
    type is NONE, parent type is NONE => new type is WORD
-parse_word : orig line is 14, orig_col is 10, Text() is 'long'
+parse_word : orig line is 14, orig col is 10, Text() is 'long'
    type is WORD, parent type is NONE => new type is TYPE
-parse_whitespace : orig line is 14, orig_col is 14, Text() is ''
+parse_whitespace : orig line is 14, orig col is 14, Text() is ''
    type is NONE, parent type is NONE => new type is WHITESPACE
-parse_word : orig line is 14, orig_col is 15, Text() is 'nTelIndex'
+parse_word : orig line is 14, orig col is 15, Text() is 'nTelIndex'
    type is NONE, parent type is NONE => new type is WORD
-parse_next : orig line is 14, orig_col is 24, Text() is ';'
+parse_next : orig line is 14, orig col is 24, Text() is ';'
    type is NONE, parent type is NONE => new type is SEMICOLON
-parse_whitespace : orig line is 14, orig_col is 25, Text() is <Newline>
+parse_whitespace : orig line is 14, orig col is 25, Text() is <Newline>
    type is NONE, parent type is NONE => new type is NEWLINE
-parse_next : orig line is 15, orig_col is 1, Text() is '}'
+parse_next : orig line is 15, orig col is 1, Text() is '}'
    type is NONE, parent type is NONE => new type is BRACE_CLOSE
-parse_next : orig line is 15, orig_col is 2, Text() is ';'
+parse_next : orig line is 15, orig col is 2, Text() is ';'
    type is NONE, parent type is NONE => new type is SEMICOLON
-parse_whitespace : orig line is 15, orig_col is 3, Text() is <Newline>
+parse_whitespace : orig line is 15, orig col is 3, Text() is <Newline>
    type is NONE, parent type is NONE => new type is NEWLINE
-tokenize_cleanup : orig line is 1, orig_col is 8, Text() is 'TelegramIndex'
+tokenize_cleanup : orig line is 1, orig col is 8, Text() is 'TelegramIndex'
    type is WORD, parent type is NONE => new type is TYPE
-tokenize_cleanup : orig line is 3, orig_col is 25, Text() is '*'
+tokenize_cleanup : orig line is 3, orig col is 25, Text() is '*'
    type is STAR, parent type is NONE => new type is PTR_TYPE
-tokenize_cleanup : orig line is 13, orig_col is 11, Text() is '*'
+tokenize_cleanup : orig line is 13, orig col is 11, Text() is '*'
    type is STAR, parent type is NONE => new type is PTR_TYPE
-try_find_end_chunk : orig line is 1, orig_col is 8, Text() is 'TelegramIndex'
+try_find_end_chunk : orig line is 1, orig col is 8, Text() is 'TelegramIndex'
    type is TYPE, parent type is NONE => new type is WORD
-make_type : orig line is 1, orig_col is 8, Text() is 'TelegramIndex'
+make_type : orig line is 1, orig col is 8, Text() is 'TelegramIndex'
    type is WORD, parent type is NONE => new type is TYPE
-mark_constructors : orig line is 3, orig_col is 1, Text() is 'TelegramIndex'
+mark_constructors : orig line is 3, orig col is 1, Text() is 'TelegramIndex'
    type is WORD, parent type is NONE => new type is FUNC_CLASS_DEF
-flag_parens : orig line is 3, orig_col is 14, Text() is '('
+flag_parens : orig line is 3, orig col is 14, Text() is '('
    type is PAREN_OPEN, parent type is NONE => new type is FPAREN_OPEN
-flag_parens : orig line is 3, orig_col is 47, Text() is ')'
+flag_parens : orig line is 3, orig col is 47, Text() is ')'
    type is PAREN_CLOSE, parent type is NONE => new type is FPAREN_CLOSE
-mark_cpp_constructor : orig line is 3, orig_col is 49, Text() is ':'
+mark_cpp_constructor : orig line is 3, orig col is 49, Text() is ':'
    type is COLON, parent type is NONE => new type is CONSTR_COLON
-mark_cpp_constructor : orig line is 4, orig_col is 1, Text() is 'pTelName'
+mark_cpp_constructor : orig line is 4, orig col is 1, Text() is 'pTelName'
    type is WORD, parent type is NONE => new type is FUNC_CTOR_VAR
-flag_parens : orig line is 4, orig_col is 9, Text() is '('
+flag_parens : orig line is 4, orig col is 9, Text() is '('
    type is PAREN_OPEN, parent type is NONE => new type is FPAREN_OPEN
-flag_parens : orig line is 4, orig_col is 12, Text() is ')'
+flag_parens : orig line is 4, orig col is 12, Text() is ')'
    type is PAREN_CLOSE, parent type is NONE => new type is FPAREN_CLOSE
-mark_cpp_constructor : orig line is 5, orig_col is 1, Text() is 'nTelIndex'
+mark_cpp_constructor : orig line is 5, orig col is 1, Text() is 'nTelIndex'
    type is WORD, parent type is NONE => new type is FUNC_CTOR_VAR
-flag_parens : orig line is 5, orig_col is 10, Text() is '('
+flag_parens : orig line is 5, orig col is 10, Text() is '('
    type is PAREN_OPEN, parent type is NONE => new type is FPAREN_OPEN
-flag_parens : orig line is 5, orig_col is 12, Text() is ')'
+flag_parens : orig line is 5, orig col is 12, Text() is ')'
    type is PAREN_CLOSE, parent type is NONE => new type is FPAREN_CLOSE
-mark_constructors : orig line is 9, orig_col is 2, Text() is 'TelegramIndex'
+mark_constructors : orig line is 9, orig col is 2, Text() is 'TelegramIndex'
    type is WORD, parent type is NONE => new type is FUNC_CLASS_DEF
-mark_cpp_constructor : orig line is 9, orig_col is 1, Text() is '~'
+mark_cpp_constructor : orig line is 9, orig col is 1, Text() is '~'
    type is INV, parent type is NONE => new type is DESTRUCTOR
-flag_parens : orig line is 9, orig_col is 15, Text() is '('
+flag_parens : orig line is 9, orig col is 15, Text() is '('
    type is PAREN_OPEN, parent type is NONE => new type is FPAREN_OPEN
-flag_parens : orig line is 9, orig_col is 16, Text() is ')'
+flag_parens : orig line is 9, orig col is 16, Text() is ')'
    type is PAREN_CLOSE, parent type is NONE => new type is FPAREN_CLOSE

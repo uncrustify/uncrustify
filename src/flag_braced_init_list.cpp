@@ -24,8 +24,8 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
 
       if (switch_before->IsNotNullChunk())
       {
-         LOG_FMT(LFCNR, "%s(%d): switch_before orig line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-                 __func__, __LINE__, switch_before->GetOrigLine(), switch_before->orig_col,
+         LOG_FMT(LFCNR, "%s(%d): switch_before orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
+                 __func__, __LINE__, switch_before->GetOrigLine(), switch_before->GetOrigCol(),
                  switch_before->Text(), get_token_name(switch_before->GetType()));
          we_have_a_case_before = true;
       }
@@ -48,8 +48,8 @@ bool detect_cpp_braced_init_list(Chunk *pc, Chunk *next)
          && (  pc->GetParentType() == CT_NONE
             || pc->GetParentType() == CT_BRACED_INIT_LIST)))
    {
-      LOG_FMT(LFCNR, "%s(%d): orig line is %zu, orig_col is %zu, Text() is '%s', type is %s\n   ",
-              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
+      LOG_FMT(LFCNR, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n   ",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
       log_pcf_flags(LFCNR, pc->GetFlags());
       auto brace_open = pc->GetNextNcNnl();
 

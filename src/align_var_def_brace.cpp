@@ -120,13 +120,13 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
    {
       if (pc->IsNewline())
       {
-         LOG_FMT(LAVDB, "%s(%d): orig line is %zu, orig_col is %zu, <Newline>\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
+         LOG_FMT(LAVDB, "%s(%d): orig line is %zu, orig col is %zu, <Newline>\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
       }
       else
       {
-         LOG_FMT(LAVDB, "%s(%d): orig line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
+         LOG_FMT(LAVDB, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
       }
 
       if (pc->IsComment())
@@ -152,8 +152,8 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
             || (  pc->Is(CT_FUNC_DEF)
                && options::align_single_line_func()))
          {
-            LOG_FMT(LAVDB, "%s(%d): add = '%s', orig line is %zu, orig_col is %zu, level is %zu\n",
-                    __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col, pc->level);
+            LOG_FMT(LAVDB, "%s(%d): add = '%s', orig line is %zu, orig col is %zu, level is %zu\n",
+                    __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->level);
 
             Chunk *toadd;
 
@@ -232,8 +232,8 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
       if (!pc->IsNewline())
       {
-         LOG_FMT(LAVDB, "%s(%d): pc orig line is %zu, orig_col is %zu, Text() '%s', type is %s\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
+         LOG_FMT(LAVDB, "%s(%d): pc orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
 
          if (pc->IsNot(CT_IGNORED))
          {
@@ -261,8 +261,8 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       {
          LOG_FMT(LAVDB, "%s(%d): a-did_this_line is %s\n",
                  __func__, __LINE__, did_this_line ? "TRUE" : "FALSE");
-         LOG_FMT(LAVDB, "%s(%d): Text() is '%s', orig line is %zu, orig_col is %zu, level is %zu\n",
-                 __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col, pc->level);
+         LOG_FMT(LAVDB, "%s(%d): Text() is '%s', orig line is %zu, orig col is %zu, level is %zu\n",
+                 __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->level);
 
          if (!did_this_line)
          {
@@ -286,8 +286,8 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
             if (prev_local->IsNot(CT_DEREF))                    // Issue #2971
             {
-               LOG_FMT(LAVDB, "%s(%d): add = '%s', orig line is %zu, orig_col is %zu, level is %zu\n",
-                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col, pc->level);
+               LOG_FMT(LAVDB, "%s(%d): add = '%s', orig line is %zu, orig col is %zu, level is %zu\n",
+                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->level);
 
                as.Add(step_back_over_member(pc));
             }

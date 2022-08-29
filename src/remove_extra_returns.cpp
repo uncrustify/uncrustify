@@ -21,8 +21,8 @@ void remove_extra_returns()
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LRMRETURN, "%s(%d): orig line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(),
+      LOG_FMT(LRMRETURN, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s, parent type is %s\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(),
               get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       if (  pc->Is(CT_RETURN)

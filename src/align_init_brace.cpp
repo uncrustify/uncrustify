@@ -29,8 +29,8 @@ void align_init_brace(Chunk *start)
    cpd.al_cnt       = 0;
    cpd.al_c99_array = false;
 
-   LOG_FMT(LALBR, "%s(%d): start @ orig line is %zu, orig_col is %zu\n",
-           __func__, __LINE__, start->GetOrigLine(), start->orig_col);
+   LOG_FMT(LALBR, "%s(%d): start @ orig line is %zu, orig col is %zu\n",
+           __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol());
 
    Chunk *pc       = start->GetNextNcNnl();
    Chunk *pcSingle = scan_ib_line(pc);

@@ -372,7 +372,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
    pc->SetType(CT_FUNC_DEF);
 
    LOG_FMT(LPFUNC, "%s: %zu:%zu %s\n",
-           __func__, pc->GetOrigLine(), pc->orig_col, pc->Text());
+           __func__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
 
    /*
     * If we don't have a brace open right after the close fparen, then

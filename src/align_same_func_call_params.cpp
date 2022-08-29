@@ -57,8 +57,8 @@ void align_same_func_call_params()
       }
       else
       {
-         LOG_FMT(LAS, "%s(%d): orig line is %zu, orig_col is %zu, pc->Text() '%s'\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
+         LOG_FMT(LAS, "%s(%d): orig line is %zu, orig col is %zu, pc->Text() '%s'\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
       }
 
       if (pc->IsNot(CT_FUNC_CALL))
@@ -124,9 +124,9 @@ void align_same_func_call_params()
          prev            = prev->GetNext();
       }
       align_fcn_name += pc->str;
-      LOG_FMT(LASFCP, "%s(%d): Func Call found at orig line is %zu, orig_col is %zu, c_str() '%s'\n",
+      LOG_FMT(LASFCP, "%s(%d): Func Call found at orig line is %zu, orig col is %zu, c_str() '%s'\n",
               __func__, __LINE__, align_fcn->GetOrigLine(),
-              align_fcn->orig_col,
+              align_fcn->GetOrigCol(),
               align_fcn_name.c_str());
 
       add_str = nullptr;

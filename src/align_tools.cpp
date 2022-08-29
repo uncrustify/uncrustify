@@ -47,8 +47,8 @@ Chunk *scan_ib_line(Chunk *start)
 
    if (pc != nullptr)
    {
-      LOG_FMT(LSIB, "%s(%d): start: orig line is %zu, orig_col is %zu, column is %zu, type is %s\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->column, get_token_name(pc->GetType()));
+      LOG_FMT(LSIB, "%s(%d): start: orig line is %zu, orig col is %zu, column is %zu, type is %s\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->column, get_token_name(pc->GetType()));
    }
    else
    {
@@ -60,7 +60,7 @@ Chunk *scan_ib_line(Chunk *start)
          && pc->level >= start->level)
    {
       //LOG_FMT(LSIB, "%s:     '%s'   col %d/%d line %zu\n", __func__,
-      //        pc->Text(), pc->column, pc->orig_col, pc->GetOrigLine());
+      //        pc->Text(), pc->column, pc->GetOrigCol(), pc->GetOrigLine());
 
       Chunk *next = pc->GetNext();
 
@@ -98,7 +98,7 @@ Chunk *scan_ib_line(Chunk *start)
                fprintf(stderr, "Number of 'entry' to be aligned is too big for the current value %d,\n",
                        uncrustify::limits::AL_SIZE);
                fprintf(stderr, "at line %zu, column %zu.\n",
-                       pc->GetOrigLine(), pc->orig_col);
+                       pc->GetOrigLine(), pc->GetOrigCol());
                fprintf(stderr, "Please make a report.\n");
                log_flush(true);
                exit(EX_SOFTWARE);
@@ -127,8 +127,8 @@ Chunk *scan_ib_line(Chunk *start)
                }
                else if (idx > 0)
                {
-                  LOG_FMT(LSIB, "%s(%d): prev_match '%s', prev_match orig line is %zu, prev_match->orig_col is %zu\n",
-                          __func__, __LINE__, prev_match->Text(), prev_match->GetOrigLine(), prev_match->orig_col);
+                  LOG_FMT(LSIB, "%s(%d): prev_match '%s', orig line is %zu, orig col is %zu\n",
+                          __func__, __LINE__, prev_match->Text(), prev_match->GetOrigLine(), prev_match->GetOrigCol());
                   int min_col_diff = pc->column - prev_match->column;
                   int cur_col_diff = cpd.al[idx].col - cpd.al[idx - 1].col;
 

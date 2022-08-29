@@ -23,15 +23,15 @@ void pragma_cleanup()
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LMCB, "%s(%d): orig line is %zu, orig_col is %zu, Text is '%s'\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
+      LOG_FMT(LMCB, "%s(%d): orig line is %zu, orig col is %zu, Text is '%s'\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
 
       if (!preproc_found)
       {
          if (pc->Is(CT_PREPROC))
          {
-            LOG_FMT(LMCB, "%s(%d): PREPROC found: orig line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
+            LOG_FMT(LMCB, "%s(%d): PREPROC found: orig line %zu, orig col is %zu\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
             log_pcf_flags(LMCB, pc->GetFlags());
             preproc_found = true;
          }
@@ -42,8 +42,8 @@ void pragma_cleanup()
          {
             if (pc->Is(CT_PP_PRAGMA))
             {
-               LOG_FMT(LMCB, "%s(%d): PP_PRAGMA found: orig line %zu, orig_col is %zu\n",
-                       __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
+               LOG_FMT(LMCB, "%s(%d): PP_PRAGMA found: orig line %zu, orig col is %zu\n",
+                       __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
                log_pcf_flags(LMCB, pc->GetFlags());
                pragma_found = true;
             }
@@ -52,8 +52,8 @@ void pragma_cleanup()
          {
             if (!parameter_found)
             {
-               LOG_FMT(LMCB, "%s(%d): PARAMETER found: orig line %zu, orig_col is %zu, Text is '%s'\n",
-                       __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
+               LOG_FMT(LMCB, "%s(%d): PARAMETER found: orig line %zu, orig col is %zu, Text is '%s'\n",
+                       __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
                log_pcf_flags(LMCB, pc->GetFlags());
 
                if (strcmp(pc->Text(), "endasm") == 0)
@@ -76,8 +76,8 @@ void pragma_cleanup()
             }
             else
             {
-               LOG_FMT(LMCB, "%s(%d): orig line is %zu, orig_col is %zu, Text is '%s'\n",
-                       __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
+               LOG_FMT(LMCB, "%s(%d): orig line is %zu, orig col is %zu, Text is '%s'\n",
+                       __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
 
                if (pc->IsNewline())
                {

@@ -25,8 +25,8 @@ static void check_unknown_brace_close(Chunk *semi, Chunk *brace_close);
 static void remove_semicolon(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LDELSEMI, "%s(%d): Removed semicolon: orig line is %zu, orig_col is %zu",
-           __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
+   LOG_FMT(LDELSEMI, "%s(%d): Removed semicolon: orig line is %zu, orig col is %zu",
+           __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
    log_func_stack_inline(LDELSEMI);
    // TODO: do we want to shift stuff back a column?
    Chunk::Delete(pc);
@@ -48,8 +48,8 @@ void remove_extra_semicolons()
          && !pc->TestFlags(PCF_IN_PREPROC)
          && (prev = pc->GetPrevNcNnl())->IsNotNullChunk())
       {
-         LOG_FMT(LSCANSEMI, "%s(%d): Semi orig line is %zu, orig_col is %zu, parent is %s, prev = '%s' [%s/%s]\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetParentType()),
+         LOG_FMT(LSCANSEMI, "%s(%d): Semi orig line is %zu, orig col is %zu, parent is %s, prev = '%s' [%s/%s]\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetParentType()),
                  prev->Text(),
                  get_token_name(prev->GetType()), get_token_name(prev->GetParentType()));
 

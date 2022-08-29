@@ -65,8 +65,8 @@ Chunk *align_func_param(Chunk *start)
    while ((pc = pc->GetNext())->IsNotNullChunk())
    {
       chunk_count++;
-      LOG_FMT(LFLPAREN, "%s(%d): orig line is %zu, orig_col is %zu, Text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(),
+      LOG_FMT(LFLPAREN, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(),
               get_token_name(pc->GetType()));
 
       if (pc->Is(CT_FUNC_VAR))                    // Issue #2278
@@ -169,8 +169,8 @@ void align_func_params()
 
    while ((pc = pc->GetNext())->IsNotNullChunk())
    {
-      LOG_FMT(LFLPAREN, "%s(%d): orig line is %zu, orig_col is %zu, Text() is '%s', type is %s, parent type is %s\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(),
+      LOG_FMT(LFLPAREN, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s, parent type is %s\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(),
               get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       if (  pc->IsNot(CT_FPAREN_OPEN)
