@@ -23,38 +23,38 @@ Chunk *search_for_colon(Chunk *pc_local)
 {
    Chunk *pc2;
 
-   LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig_col is %zu, level is %zu, Text() is '%s'\n",
-           __func__, __LINE__, pc_local->GetOrigLine(), pc_local->orig_col, pc_local->level, pc_local->Text());
+   LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+           __func__, __LINE__, pc_local->GetOrigLine(), pc_local->GetOrigCol(), pc_local->level, pc_local->Text());
    Chunk *colon = pc_local->GetNextType(CT_COLON, pc_local->level);
 
    if (colon != nullptr)
    {
-      LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig_col is %zu, level is %zu, Text() is '%s'\n",
-              __func__, __LINE__, colon->GetOrigLine(), colon->orig_col, colon->level, colon->Text());
+      LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+              __func__, __LINE__, colon->GetOrigLine(), colon->GetOrigCol(), colon->level, colon->Text());
       colon->SetType(CT_COND_COLON);
       flag_series(pc_local, colon, PCF_IN_CONDITIONAL);
 
       // examine the next tokens, search for a next CT_QUESTION
       for (pc2 = colon->GetNext(); pc2->IsNotNullChunk(); pc2 = pc2->GetNextNcNnl())
       {
-         LOG_FMT(LCOMBINE, "%s(%d): THE NEXT: orig line is %zu, orig_col is %zu, level is %zu, Text() is '%s'\n",
-                 __func__, __LINE__, pc2->GetOrigLine(), pc2->orig_col, pc2->level, pc2->Text());
+         LOG_FMT(LCOMBINE, "%s(%d): THE NEXT: orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+                 __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->level, pc2->Text());
          pc2->SetFlagBits(PCF_IN_CONDITIONAL);
          log_pcf_flags(LCOMBINE, pc2->GetFlags());
 
          if (pc2->Is(CT_SEMICOLON))
          {
-            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig_col is %zu, level is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, pc2->GetOrigLine(), pc2->orig_col, pc2->level, pc2->Text());
+            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->level, pc2->Text());
             return(pc2);
          }
          else if (pc2->Is(CT_QUESTION))
          {
-            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig_col is %zu, level is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, pc2->GetOrigLine(), pc2->orig_col, pc2->level, pc2->Text());
+            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->level, pc2->Text());
             pc2 = search_for_colon(pc2);
-            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig_col is %zu, level is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, pc2->GetOrigLine(), pc2->orig_col, pc2->level, pc2->Text());
+            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->level, pc2->Text());
             return(pc2);
          }
       }
@@ -66,8 +66,8 @@ Chunk *search_for_colon(Chunk *pc_local)
       cpd.error_count++;
       return(nullptr);
    }
-   LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig_col is %zu, level is %zu, Text() is '?'\n",
-           __func__, __LINE__, pc2->GetOrigLine(), pc2->orig_col, pc2->level);
+   LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '?'\n",
+           __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->level);
    return(pc2);
 } // search_for_colon
 
@@ -80,8 +80,8 @@ void mark_question_colon()
    // Issue #3558
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-      LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig_col is %zu, level is %zu, Text() '%s'\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->level, pc->Text());
+      LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() '%s'\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->level, pc->Text());
       log_pcf_flags(LCOMBINE, pc->GetFlags());
 
       if (pc->Is(CT_QUESTION))
@@ -90,15 +90,15 @@ void mark_question_colon()
 
          if (colon != nullptr)
          {
-            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig_col is %zu, level is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, colon->GetOrigLine(), colon->orig_col, colon->level, colon->Text());
+            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+                    __func__, __LINE__, colon->GetOrigLine(), colon->GetOrigCol(), colon->level, colon->Text());
 
             if (colon->Is(CT_SEMICOLON))
             {
                // set at the end of the question statement ...
                pc = colon;
-               LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig_col is %zu, level is %zu, Text() is '%s'\n",
-                       __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->level, pc->Text());
+               LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+                       __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->level, pc->Text());
                // ... and go on
             }
          }

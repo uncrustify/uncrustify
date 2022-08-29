@@ -157,13 +157,13 @@ void reindent_line(Chunk *pc, int column)
       {
       if (pc->IsComment())
         {
-        pc->column = pc->orig_col;
+        pc->column = pc->GetOrigCol();
 
         if (pc->column < min_col)
           pc->column = min_col + 1;
 
         LOG_FMT(LINDLINE, "%s: set comment on line %d to col %d (orig %d)\n",
-                __func__, pc->GetOrigLine(), pc->column, pc->orig_col);
+                __func__, pc->GetOrigLine(), pc->column, pc->GetOrigCol());
         }
       else
         {
@@ -852,10 +852,10 @@ static void indent_comment(Chunk *pc, int col)
   Chunk *prev;
 
   LOG_FMT(LCMTIND, "%s: line %d, col %d, level %d: ", __func__,
-          pc->GetOrigLine(), pc->orig_col, pc->level);
+          pc->GetOrigLine(), pc->GetOrigCol(), pc->level);
 
     /* force column 1 comment to column 1 if not changing them */
-  if ((pc->orig_col == 1) && !cpd.settings[UO_indent_col1_comment].b)
+  if ((pc->GetOrigCol() == 1) && !cpd.settings[UO_indent_col1_comment].b)
     {
     LOG_FMT(LCMTIND, "rule 1 - keep in col 1\n");
     pc->column = 1;
@@ -879,7 +879,7 @@ static void indent_comment(Chunk *pc, int col)
 
   if (prev->IsComment() && (nl->nl_count == 1))
     {
-    int coldiff = prev->orig_col - pc->orig_col;
+    int coldiff = prev->GetOrigCol() - pc->GetOrigCol();
 
     if ((coldiff <= 3) && (coldiff >= -3))
       {
@@ -1004,7 +1004,7 @@ void indent_preproc(void)
       }
     else if (cpd.settings[UO_pp_indent].a == AV_IGNORE)
       {
-      tmp      = (pc->orig_col <= 16) ? pc->orig_col - 1 : 16;
+      tmp      = (pc->GetOrigCol() <= 16) ? pc->GetOrigCol() - 1 : 16;
       pc->str -= tmp;
       pc->len += tmp;
       }

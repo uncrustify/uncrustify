@@ -149,7 +149,7 @@ void align_oc_msg_colon(Chunk *so)
       chunk.SetType(CT_SPACE);
       chunk.SetParentType(CT_NONE);
       chunk.SetOrigLine(longest->GetOrigLine());
-      chunk.orig_col    = longest->orig_col;
+      chunk.SetOrigCol(longest->GetOrigCol());
       chunk.level       = longest->level;
       chunk.brace_level = longest->brace_level;
       chunk.SetFlags(longest->GetFlags() & PCF_COPY_FLAGS);

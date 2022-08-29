@@ -145,8 +145,8 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
 
          if (var_def_cnt != 0)
          {
-            LOG_FMT(LALASS, "%s(%d)OK: vdas.Add on '%s' on orig line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
+            LOG_FMT(LALASS, "%s(%d)OK: vdas.Add on '%s' on orig line %zu, orig col is %zu\n",
+                    __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
             vdas.Add(pc);
          }
       }

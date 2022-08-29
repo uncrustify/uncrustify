@@ -66,7 +66,7 @@ void enum_cleanup()
                      Chunk comma;
                      comma.SetType(CT_COMMA);
                      comma.SetOrigLine(prev->GetOrigLine());
-                     comma.orig_col = prev->orig_col + 1;
+                     comma.SetOrigCol(prev->GetOrigCol() + 1);
                      comma.nl_count = 0;
                      comma.pp_level = 0;
                      comma.SetFlags(PCF_NONE);

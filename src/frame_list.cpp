@@ -197,7 +197,7 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
          if (out_pp_level == 0)
          {
             fprintf(stderr, "%s(%d): pp_level is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
             log_flush(true);
             exit(EX_SOFTWARE);
          }
@@ -260,7 +260,7 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
          {
             // cpd.pp_level is ZERO, cannot be decremented.
             fprintf(stderr, "%s(%d): #endif found, at line %zu, column %zu, without corresponding #if\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
             log_flush(true);
             exit(EX_SOFTWARE);
          }
@@ -269,7 +269,7 @@ int fl_check(std::vector<ParseFrame> &frames, ParseFrame &frm, int &pp_level, Ch
          if (out_pp_level == 0)
          {
             fprintf(stderr, "%s(%d): pp_level is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
             log_flush(true);
             exit(EX_SOFTWARE);
          }

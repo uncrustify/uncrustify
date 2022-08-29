@@ -96,7 +96,7 @@ static Chunk *handle_double_angle_close(Chunk *pc)
       if (  pc->Is(CT_ANGLE_CLOSE)
          && next->Is(CT_ANGLE_CLOSE)
          && pc->GetParentType() == CT_NONE
-         && (pc->orig_col_end + 1) == next->orig_col
+         && (pc->orig_col_end + 1) == next->GetOrigCol()
          && next->GetParentType() == CT_NONE)
       {
          pc->str.append('>');
@@ -128,12 +128,12 @@ void split_off_angle_close(Chunk *pc)
    Chunk nc = *pc;
 
    pc->str.resize(1);
-   pc->orig_col_end = pc->orig_col + 1;
+   pc->orig_col_end = pc->GetOrigCol() + 1;
    pc->SetType(CT_ANGLE_CLOSE);
 
    nc.SetType(ct->type);
    nc.str.pop_front();
-   nc.orig_col++;
+   nc.SetOrigCol(nc.GetOrigCol() + 1);
    nc.column++;
    nc.CopyAndAddAfter(pc);
 }
@@ -166,8 +166,8 @@ void tokenize_trailing_return_types()
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
       char copy[1000];
-      LOG_FMT(LNOTE, "%s(%d): orig line is %zu, orig_col is %zu, Text() is '%s'\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->ElidedText(copy));
+      LOG_FMT(LNOTE, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s'\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy));
 
       if (  pc->Is(CT_MEMBER)
          && (strcmp(pc->Text(), "->") == 0))
@@ -584,7 +584,7 @@ void tokenize_cleanup()
             // delete PREV and merge with IF
             pc->str.insert(0, ' ');
             pc->str.insert(0, prev->str);
-            pc->orig_col = prev->orig_col;
+            pc->SetOrigCol(prev->GetOrigCol());
             pc->SetOrigLine(prev->GetOrigLine());
             Chunk *to_be_deleted = prev;
             prev = prev->GetPrevNcNnl();
@@ -714,7 +714,7 @@ void tokenize_cleanup()
          }
          else if (  next->Is(CT_ANGLE_CLOSE)
                  && tmp2->Is(CT_ANGLE_CLOSE)
-                 && tmp2->orig_col == next->orig_col_end)
+                 && tmp2->GetOrigCol() == next->orig_col_end)
          {
             next->str.append('>');
             next->orig_col_end++;
@@ -766,12 +766,12 @@ void tokenize_cleanup()
             }
             next->SetType(CT_OPERATOR_VAL);
 
-            next->orig_col_end = next->orig_col + next->Len();
+            next->orig_col_end = next->GetOrigCol() + next->Len();
          }
          next->SetParentType(CT_OPERATOR);
 
          LOG_FMT(LOPERATOR, "%s(%d): %zu:%zu operator '%s'\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, next->Text());
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), next->Text());
       }
 
       // Change private, public, protected into either a qualifier or label
@@ -833,11 +833,11 @@ void tokenize_cleanup()
 
                   nc = *pc;
                   pc->str.resize(1);
-                  pc->orig_col_end = pc->orig_col + 1;
+                  pc->orig_col_end = pc->GetOrigCol() + 1;
 
                   nc.SetType(CT_SQL_WORD);
                   nc.str.pop_front();
-                  nc.orig_col++;
+                  nc.SetOrigCol(nc.GetOrigCol() + 1);
                   nc.column++;
                   nc.CopyAndAddAfter(pc);
 
@@ -1007,7 +1007,7 @@ void tokenize_cleanup()
             if (get_token_pattern_class(tmp->GetType()) != pattern_class_e::NONE)
             {
                LOG_FMT(LOBJCWORD, "%s(%d): @interface %zu:%zu change '%s' (%s) to CT_WORD\n",
-                       __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, tmp->Text(),
+                       __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), tmp->Text(),
                        get_token_name(tmp->GetType()));
                tmp->SetType(CT_WORD);
             }
@@ -1213,8 +1213,8 @@ bool invalid_open_angle_template(Chunk *prev)
 
 static void check_template(Chunk *start, bool in_type_cast)
 {
-   LOG_FMT(LTEMPL, "%s(%d): orig line %zu, orig_col %zu:\n",
-           __func__, __LINE__, start->GetOrigLine(), start->orig_col);
+   LOG_FMT(LTEMPL, "%s(%d): orig line %zu, orig col %zu:\n",
+           __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol());
 
    Chunk *prev = start->GetPrevNcNnl(E_Scope::PREPROC);
 
@@ -1245,13 +1245,13 @@ static void check_template(Chunk *start, bool in_type_cast)
          {
             if (pc->str[1] == '=')                         // Issue #1462 and #2565
             {
-               LOG_FMT(LTEMPL, "%s(%d): do not split '%s' at orig line %zu, orig_col %zu\n",
-                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
+               LOG_FMT(LTEMPL, "%s(%d): do not split '%s' at orig line %zu, orig col %zu\n",
+                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
             }
             else
             {
-               LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig line %zu, orig_col %zu}\n",
-                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
+               LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig line %zu, orig col %zu}\n",
+                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
                split_off_angle_close(pc);
             }
          }
@@ -1280,7 +1280,7 @@ static void check_template(Chunk *start, bool in_type_cast)
                if (level == 0)
                {
                   fprintf(stderr, "%s(%d): level is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                          __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
+                          __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
                   log_flush(true);
                   exit(EX_SOFTWARE);
                }
@@ -1400,8 +1400,8 @@ static void check_template(Chunk *start, bool in_type_cast)
       {
          constexpr static auto LCURRENT = LTEMPL;
 
-         LOG_FMT(LTEMPL, "%s(%d): pc orig line is %zu, orig_col is %zu, type is %s, num_tokens is %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()), num_tokens);
+         LOG_FMT(LTEMPL, "%s(%d): pc orig line is %zu, orig col is %zu, type is %s, num_tokens is %zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), num_tokens);
 
          log_rule_B("tok_split_gte");
 
@@ -1409,8 +1409,8 @@ static void check_template(Chunk *start, bool in_type_cast)
          {
             // look for the closing brace
             Chunk *A = pc->SkipToMatch();
-            LOG_FMT(LTEMPL, "%s(%d): A orig line is %zu, orig_col is %zu, type is %s\n",
-                    __func__, __LINE__, A->GetOrigLine(), A->orig_col, get_token_name(A->GetType()));
+            LOG_FMT(LTEMPL, "%s(%d): A orig line is %zu, orig col is %zu, type is %s\n",
+                    __func__, __LINE__, A->GetOrigLine(), A->GetOrigCol(), get_token_name(A->GetType()));
             pc = A->GetNext();
          }
 
@@ -1424,8 +1424,8 @@ static void check_template(Chunk *start, bool in_type_cast)
                      || (  num_tokens >= 1
                         && in_type_cast)))))
          {
-            LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig line %zu, orig_col %zu}\n",
-                    __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
+            LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig line %zu, orig col %zu}\n",
+                    __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
 
             split_off_angle_close(pc);
          }
@@ -1506,7 +1506,7 @@ static void check_template(Chunk *start, bool in_type_cast)
             if (num_tokens == 0)
             {
                fprintf(stderr, "%s(%d): num_tokens is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                       __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
+                       __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
                log_flush(true);
                exit(EX_SOFTWARE);
             }
@@ -1530,10 +1530,10 @@ static void check_template(Chunk *start, bool in_type_cast)
          || pc->IsNot(CT_NUMBER))
       {
          LOG_FMT(LTEMPL, "%s(%d): Template detected\n", __func__, __LINE__);
-         LOG_FMT(LTEMPL, "%s(%d):     from orig line %zu, orig_col %zu\n",
-                 __func__, __LINE__, start->GetOrigLine(), start->orig_col);
-         LOG_FMT(LTEMPL, "%s(%d):     to   orig line %zu, orig_col %zu\n",
-                 __func__, __LINE__, end->GetOrigLine(), end->orig_col);
+         LOG_FMT(LTEMPL, "%s(%d):     from orig line %zu, orig col %zu\n",
+                 __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol());
+         LOG_FMT(LTEMPL, "%s(%d):     to   orig line %zu, orig col %zu\n",
+                 __func__, __LINE__, end->GetOrigLine(), end->GetOrigCol());
          start->SetParentType(CT_TEMPLATE);
 
          check_template_args(start, end);
@@ -1552,10 +1552,10 @@ static void check_template(Chunk *start, bool in_type_cast)
 static void check_template_arg(Chunk *start, Chunk *end)
 {
    LOG_FMT(LTEMPL, "%s(%d): Template argument detected\n", __func__, __LINE__);
-   LOG_FMT(LTEMPL, "%s(%d):     from orig line %zu, orig_col %zu\n",
-           __func__, __LINE__, start->GetOrigLine(), start->orig_col);
-   LOG_FMT(LTEMPL, "%s(%d):     to   orig line %zu, orig_col %zu\n",
-           __func__, __LINE__, end->GetOrigLine(), end->orig_col);
+   LOG_FMT(LTEMPL, "%s(%d):     from orig line %zu, orig col %zu\n",
+           __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol());
+   LOG_FMT(LTEMPL, "%s(%d):     to   orig line %zu, orig col %zu\n",
+           __func__, __LINE__, end->GetOrigLine(), end->GetOrigCol());
 
    // Issue #1127
    // MyFoo<mySize * 2> foo1;

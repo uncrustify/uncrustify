@@ -35,7 +35,7 @@ void Chunk::CopyFrom(const Chunk &o)
    m_parentType = o.m_parentType;
 
    m_origLine    = o.m_origLine;
-   orig_col      = o.orig_col;
+   m_origCol     = o.m_origCol;
    orig_col_end  = o.orig_col_end;
    orig_prev_sp  = o.orig_prev_sp;
    m_flags       = o.m_flags;
@@ -65,7 +65,7 @@ void Chunk::Reset()
    m_type        = CT_NONE;
    m_parentType  = CT_NONE;
    m_origLine    = 0;
-   orig_col      = 0;
+   m_origCol     = 0;
    orig_col_end  = 0;
    orig_prev_sp  = 0;
    m_flags       = PCF_NONE;
@@ -305,8 +305,8 @@ Chunk *Chunk::SearchPpa(const T_CheckFnPtr checkFn, const bool cond) const
 
 static void chunk_log_msg(Chunk *chunk, const log_sev_t log, const char *str)
 {
-   LOG_FMT(log, "%s orig line is %zu, orig_col is %zu, ",
-           str, chunk->GetOrigLine(), chunk->orig_col);
+   LOG_FMT(log, "%s orig line is %zu, orig col is %zu, ",
+           str, chunk->GetOrigLine(), chunk->GetOrigCol());
 
    if (chunk->Is(CT_NEWLINE))
    {
@@ -382,8 +382,8 @@ void Chunk::MoveAfter(Chunk *ref)
 
    // Adjust the original column
    column       = ref->column + space_col_align(ref, this);
-   orig_col     = column;
-   orig_col_end = orig_col + Len();
+   m_origCol    = column;
+   orig_col_end = m_origCol + Len();
 }
 
 
@@ -534,12 +534,12 @@ void Chunk::SetResetFlags(T_PcfFlags resetBits, T_PcfFlags setBits)
       {
          LOG_FMT(LSETFLG,
                  "%s(%d): %016llx^%016llx=%016llx\n"
-                 "%s(%d): orig line is %zu, orig_col is %zu, Text() is '%s', type is %s,",
+                 "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s,",
                  __func__, __LINE__,
                  static_cast<T_PcfFlags::int_t>(m_flags),
                  static_cast<T_PcfFlags::int_t>(m_flags ^ newFlags),
                  static_cast<T_PcfFlags::int_t>(newFlags),
-                 __func__, __LINE__, m_origLine, orig_col, Text(), get_token_name(m_type));
+                 __func__, __LINE__, m_origLine, m_origCol, Text(), get_token_name(m_type));
          LOG_FMT(LSETFLG, " parent type is %s,\n",
                  get_token_name(m_parentType));
          log_func_stack_inline(LSETFLG);
@@ -558,8 +558,8 @@ void Chunk::SetTypeReal(const E_Token token, const char *func, const int line)
    {
       return;
    }
-   LOG_FMT(LSETTYP, "%s(%d): orig line is %zu, orig_col is %zu, Text() is ",
-           func, line, m_origLine, orig_col);
+   LOG_FMT(LSETTYP, "%s(%d): orig line is %zu, orig col is %zu, Text() is ",
+           func, line, m_origLine, m_origCol);
 
    if (token == CT_NEWLINE)
    {
@@ -584,8 +584,8 @@ void Chunk::SetParentTypeReal(const E_Token token, const char *func, const int l
    {
       return;
    }
-   LOG_FMT(LSETPAR, "%s(%d): orig line is %zu, orig_col is %zu, Text() is ",
-           func, line, m_origLine, orig_col);
+   LOG_FMT(LSETPAR, "%s(%d): orig line is %zu, orig col is %zu, Text() is ",
+           func, line, m_origLine, m_origCol);
 
    if (token == CT_NEWLINE)
    {
@@ -621,7 +621,7 @@ Chunk *Chunk::CopyAndAdd(Chunk *pos, const E_Direction dir) const
       exit(EX_SOFTWARE);
    }
 
-   if (orig_col == 0)
+   if (m_origCol == 0)
    {
       fprintf(stderr, "%s(%d): no column number\n", __func__, __LINE__);
       log_func_stack_inline(LSETFLG);
@@ -725,11 +725,11 @@ int Chunk::ComparePosition(const Chunk *other) const
    }
    else if (m_origLine == other->GetOrigLine())
    {
-      if (orig_col < other->orig_col)
+      if (m_origCol < other->m_origCol)
       {
          return(-1);
       }
-      else if (orig_col == other->orig_col)
+      else if (m_origCol == other->m_origCol)
       {
          return(0);
       }

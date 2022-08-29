@@ -96,8 +96,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig_col is %zu, first Text() '%s', type is %s\n",
-           __func__, __LINE__, first->GetOrigLine(), first->orig_col, first->Text(), get_token_name(first->GetType()));
+   LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig col is %zu, first Text() '%s', type is %s\n",
+           __func__, __LINE__, first->GetOrigLine(), first->GetOrigCol(), first->Text(), get_token_name(first->GetType()));
 
    min_sp = 1;
 
@@ -3238,10 +3238,10 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    // these lines are only useful for debugging uncrustify itself
    LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize do_space:\n",
            __func__, __LINE__);
-   LOG_FMT(LSPACE, "   first orig line  is %zu, orig_col  is %zu, Text()  '%s', GetType() is  %s\n",
-           first->GetOrigLine(), first->orig_col, first->Text(), get_token_name(first->GetType()));
-   LOG_FMT(LSPACE, "   second orig line is %zu, orig_col is %zu, Text() '%s', GetType() is %s\n",
-           second->GetOrigLine(), second->orig_col, second->Text(), get_token_name(second->GetType()));
+   LOG_FMT(LSPACE, "   first orig line  is %zu, orig col  is %zu, Text()  '%s', GetType() is  %s\n",
+           first->GetOrigLine(), first->GetOrigCol(), first->Text(), get_token_name(first->GetType()));
+   LOG_FMT(LSPACE, "   second orig line is %zu, orig col is %zu, Text() '%s', GetType() is %s\n",
+           second->GetOrigLine(), second->GetOrigCol(), second->Text(), get_token_name(second->GetType()));
    LOG_FMT(LSPACE, "   Please make a call at https://github.com/uncrustify/uncrustify/issues/new\n");
    LOG_FMT(LSPACE, "   or merge the line:\n");
    LOG_FMT(LSPACE, "   { CT_%s,    CT_%s},\n",
@@ -3286,21 +3286,21 @@ void space_text()
    {
       if (pc->Is(CT_NEWLINE))
       {
-         LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig_col is %zu, <Newline>, nl is %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->nl_count);
+         LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig col is %zu, <Newline>, nl is %zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->nl_count);
       }
       else
       {
          char copy[1000];
-         LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig_col is %zu, '%s' type is %s\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->ElidedText(copy), get_token_name(pc->GetType()));
+         LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig col is %zu, '%s' type is %s\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy), get_token_name(pc->GetType()));
       }
 
       if (  (options::use_options_overriding_for_qt_macros())
          && (  (strcmp(pc->Text(), "SIGNAL") == 0)
             || (strcmp(pc->Text(), "SLOT") == 0)))
       {
-         LOG_FMT(LSPACE, "%s(%d): orig_col is %zu, type is %s SIGNAL/SLOT found\n",
+         LOG_FMT(LSPACE, "%s(%d): orig col is %zu, type is %s SIGNAL/SLOT found\n",
                  __func__, __LINE__, pc->GetOrigLine(), get_token_name(pc->GetType()));
          pc->SetFlagBits(PCF_IN_QT_MACRO); // flag the chunk for a second processing
 
@@ -3318,8 +3318,8 @@ void space_text()
                && !next->IsNewline()
                && next->IsVBrace())
          {
-            LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig_col is %zu, Skip %s (%zu+%zu)\n",
-                    __func__, __LINE__, next->GetOrigLine(), next->orig_col, get_token_name(next->GetType()),
+            LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig col is %zu, Skip %s (%zu+%zu)\n",
+                    __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()),
                     pc->column, pc->str.size());
             next->column = pc->column + pc->str.size();
             next         = next->GetNext();
@@ -3460,8 +3460,8 @@ void space_text()
             }
          }
          int min_sp;
-         LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig_col is %zu, pc-Text() '%s', type is %s\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
+         LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig col is %zu, pc-Text() '%s', type is %s\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
          iarf_e av = do_space_ensured(pc, next, min_sp);
          min_sp = max(1, min_sp);
 
@@ -3475,11 +3475,11 @@ void space_text()
          {
             int delta = min_sp;
 
-            if (  next->orig_col >= pc->orig_col_end
+            if (  next->GetOrigCol() >= pc->orig_col_end
                && pc->orig_col_end != 0)
             {
                // Keep the same relative spacing, minimum 1
-               delta = next->orig_col - pc->orig_col_end;
+               delta = next->GetOrigCol() - pc->orig_col_end;
 
                if (delta < min_sp)
                {
@@ -3497,10 +3497,10 @@ void space_text()
          case IARF_IGNORE:
 
             // Keep the same relative spacing, if possible
-            if (  next->orig_col >= pc->orig_col_end
+            if (  next->GetOrigCol() >= pc->orig_col_end
                && pc->orig_col_end != 0)
             {
-               column += next->orig_col - pc->orig_col_end;
+               column += next->GetOrigCol() - pc->orig_col_end;
             }
             else
             {
@@ -3508,7 +3508,7 @@ void space_text()
                // Issue #1854
                if (pc->Is(CT_VBRACE_OPEN))
                {
-                  column = next->orig_col;
+                  column = next->GetOrigCol();
                }
             }
             break;
@@ -3520,7 +3520,7 @@ void space_text()
 
          if (  next->IsComment()
             && next->GetNext()->IsNewline()
-            && column < next->orig_col)
+            && column < next->GetOrigCol())
          {
             /*
              * do some comment adjustments if sp_before_tr_cmt and sp_endif_cmt
@@ -3537,10 +3537,10 @@ void space_text()
                {
                   // Try to keep relative spacing between tokens
                   LOG_FMT(LSPACE, "%s(%d): <relative adj>", __func__, __LINE__);
-                  LOG_FMT(LSPACE, "%s(%d): pc is '%s', pc->orig_col is %zu, next->orig_col is %zu, pc->orig_col_end is %zu\n",
+                  LOG_FMT(LSPACE, "%s(%d): pc is '%s', orig col is %zu, next orig col is %zu, pc orig col end is %zu\n",
                           __func__, __LINE__, pc->Text(),
-                          pc->orig_col, next->orig_col, pc->orig_col_end);
-                  column = pc->column + (next->orig_col - pc->orig_col_end);
+                          pc->GetOrigCol(), next->GetOrigCol(), pc->orig_col_end);
+                  column = pc->column + (next->GetOrigCol() - pc->orig_col_end);
                }
                else
                {
@@ -3549,7 +3549,7 @@ void space_text()
                    * try to keep the comment in the same column.
                    */
                   size_t col_min = pc->column + pc->Len() + ((next->orig_prev_sp > 0) ? 1 : 0);
-                  column = next->orig_col;
+                  column = next->GetOrigCol();
 
                   if (column < col_min)
                   {
@@ -3561,8 +3561,8 @@ void space_text()
          }
          next->column = column;
 
-         LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig_col is %zu, pc-Text() '%s', type is %s\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text(), get_token_name(pc->GetType()));
+         LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig col is %zu, pc-Text() '%s', type is %s\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
          LOG_FMT(LSPACE, "%s(%d): ",
                  __func__, __LINE__);
          LOG_FMT(LSPACE, "   rule = %s @ %zu => %zu\n",
@@ -3612,7 +3612,7 @@ void space_text_balance_nested_parens()
          // test after the closing parens   Issue #1703
          Chunk *closing = first->GetNextType((E_Token)(first->GetType() + 1), first->level);
 
-         if (closing->orig_col == closing->GetPrev()->orig_col_end)
+         if (closing->GetOrigCol() == closing->GetPrev()->orig_col_end)
          {
             space_add_after(closing->GetPrev(), 1);
          }
@@ -3626,7 +3626,7 @@ void space_text_balance_nested_parens()
          // test after the opening parens   Issue #1703
          Chunk *opening = next->GetPrevType((E_Token)(next->GetType() - 1), next->level);
 
-         if (opening->orig_col_end == opening->GetNext()->orig_col)
+         if (opening->orig_col_end == opening->GetNext()->GetOrigCol())
          {
             space_add_after(opening, 1);
          }
@@ -3654,7 +3654,7 @@ size_t space_needed(Chunk *first, Chunk *second)
 
    case IARF_IGNORE:
    default:
-      return(second->orig_col > (first->orig_col + first->Len()));
+      return(second->GetOrigCol() > (first->GetOrigCol() + first->Len()));
    }
 }
 
@@ -3663,12 +3663,12 @@ size_t space_col_align(Chunk *first, Chunk *second)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LSPACE, "%s(%d): first orig line is %zu, orig_col is %zu, [%s/%s], Text() '%s' <==>\n",
-           __func__, __LINE__, first->GetOrigLine(), first->orig_col,
+   LOG_FMT(LSPACE, "%s(%d): first orig line is %zu, orig col is %zu, [%s/%s], Text() '%s' <==>\n",
+           __func__, __LINE__, first->GetOrigLine(), first->GetOrigCol(),
            get_token_name(first->GetType()), get_token_name(first->GetParentType()),
            first->Text());
-   LOG_FMT(LSPACE, "%s(%d): second orig line is %zu, orig_col is %zu [%s/%s], Text() '%s',",
-           __func__, __LINE__, second->GetOrigLine(), second->orig_col,
+   LOG_FMT(LSPACE, "%s(%d): second orig line is %zu, orig col is %zu [%s/%s], Text() '%s',",
+           __func__, __LINE__, second->GetOrigLine(), second->GetOrigCol(),
            get_token_name(second->GetType()), get_token_name(second->GetParentType()),
            second->Text());
    log_func_stack_inline(LSPACE);
@@ -3711,12 +3711,12 @@ size_t space_col_align(Chunk *first, Chunk *second)
       LOG_FMT(LSPACE, "%s(%d):    => second orig line is %zu\n", __func__, __LINE__, second->GetOrigLine());
       LOG_FMT(LSPACE, "%s(%d):    => first Text()     is '%s'\n", __func__, __LINE__, first->Text());
       LOG_FMT(LSPACE, "%s(%d):    => second Text()    is '%s'\n", __func__, __LINE__, second->Text());
-      LOG_FMT(LSPACE, "%s(%d):    => first orig_col   is %zu\n", __func__, __LINE__, first->orig_col);
-      LOG_FMT(LSPACE, "%s(%d):    => second orig_col  is %zu\n", __func__, __LINE__, second->orig_col);
+      LOG_FMT(LSPACE, "%s(%d):    => first orig col   is %zu\n", __func__, __LINE__, first->GetOrigCol());
+      LOG_FMT(LSPACE, "%s(%d):    => second orig col  is %zu\n", __func__, __LINE__, second->GetOrigCol());
       LOG_FMT(LSPACE, "%s(%d):    => first Len()      is %zu\n", __func__, __LINE__, first->Len());
 
       if (  first->GetOrigLine() == second->GetOrigLine()
-         && second->orig_col > (first->orig_col + first->Len()))
+         && second->GetOrigCol() > (first->GetOrigCol() + first->Len()))
       {
          coldiff++;
       }
@@ -3773,7 +3773,7 @@ void space_add_after(Chunk *pc, size_t count)
    sp.pp_level    = pc->pp_level;
    sp.column      = pc->column + pc->Len();
    sp.SetOrigLine(pc->GetOrigLine());
-   sp.orig_col = pc->orig_col;
+   sp.SetOrigCol(pc->GetOrigCol());
 
    sp.CopyAndAddAfter(pc);
 } // space_add_after

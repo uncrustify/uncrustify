@@ -212,9 +212,9 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LSORT, "%s(%d): @begin pc1->len is %zu, line is %zu, column is %zu\n",
-           __func__, __LINE__, pc1->Len(), pc1->GetOrigLine(), pc1->orig_col);
+           __func__, __LINE__, pc1->Len(), pc1->GetOrigLine(), pc1->GetOrigCol());
    LOG_FMT(LSORT, "%s(%d): @begin pc2->len is %zu, line is %zu, column is %zu\n",
-           __func__, __LINE__, pc2->Len(), pc2->GetOrigLine(), pc2->orig_col);
+           __func__, __LINE__, pc2->Len(), pc2->GetOrigLine(), pc2->GetOrigCol());
 
    if (pc1 == pc2) // same chunk is always identical thus return 0 differences
    {
@@ -290,9 +290,9 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
          return(ppc1 - ppc2);
       }
       LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->GetOrigLine(), pc1->orig_col);
+              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->GetOrigLine(), pc1->GetOrigCol());
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->orig_col);
+              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->GetOrigCol());
 
       int ret_val = unc_text::compare(s1, s2, std::min(s1.size(), s2.size()), tcare);
       LOG_FMT(LSORT, "%s(%d): ret_val is %d\n",
@@ -310,28 +310,28 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
       // Same word, same length. Step to the next chunk.
       pc1 = pc1->GetNext();
       LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->GetOrigLine(), pc1->orig_col);
+              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->GetOrigLine(), pc1->GetOrigCol());
 
       if (pc1->Is(CT_MEMBER))
       {
          pc1 = pc1->GetNext();
          LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-                 __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->GetOrigLine(), pc1->orig_col);
+                 __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->GetOrigLine(), pc1->GetOrigCol());
       }
       pc2 = pc2->GetNext();
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->orig_col);
+              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->GetOrigCol());
 
       if (pc2->Is(CT_MEMBER))
       {
          pc2 = pc2->GetNext();
          LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-                 __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->orig_col);
+                 __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->GetOrigCol());
       }
       LOG_FMT(LSORT, "%s(%d): >>>text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->GetOrigLine(), pc1->orig_col);
+              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->GetOrigLine(), pc1->GetOrigCol());
       LOG_FMT(LSORT, "%s(%d): >>>text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->orig_col);
+              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->GetOrigCol());
 
       // If we hit a newline or nullptr, we are done
       if (  pc1->IsNullChunk()

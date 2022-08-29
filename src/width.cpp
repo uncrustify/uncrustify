@@ -129,8 +129,8 @@ static void split_for_stmt(Chunk *start);
 static inline bool is_past_width(Chunk *pc)
 {
    // allow char to sit at last column by subtracting 1
-   LOG_FMT(LSPLIT, "%s(%d): orig line is %zu, orig_col is %zu, for %s\n",
-           __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
+   LOG_FMT(LSPLIT, "%s(%d): orig line is %zu, orig col is %zu, for %s\n",
+           __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
    log_rule_B("code_width");
    return((pc->column + pc->Len() - 1) > options::code_width());
 }
@@ -175,13 +175,13 @@ void do_code_width()
 
          if (split_OK)
          {
-            LOG_FMT(LSPLIT, "%s(%d): orig line is %zu, orig_col is %zu, Text() '%s'\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
+            LOG_FMT(LSPLIT, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s'\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
          }
          else
          {
-            LOG_FMT(LSPLIT, "%s(%d): Bailed! orig line is %zu, orig_col is %zu, Text() '%s'\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->orig_col, pc->Text());
+            LOG_FMT(LSPLIT, "%s(%d): Bailed! orig line is %zu, orig col is %zu, Text() '%s'\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
             break;
          }
       }
@@ -233,7 +233,7 @@ static void try_split_here(cw_entry &ent, Chunk *pc)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LSPLIT, "%s(%d): at %s, orig_col=%zu\n", __func__, __LINE__, pc->Text(), pc->orig_col);
+   LOG_FMT(LSPLIT, "%s(%d): at %s, orig col=%zu\n", __func__, __LINE__, pc->Text(), pc->GetOrigCol());
    size_t pc_pri = get_split_pri(pc->GetType());
 
    LOG_FMT(LSPLIT, "%s(%d): pc_pri is %zu\n", __func__, __LINE__, pc_pri);
@@ -341,8 +341,8 @@ static void try_split_here(cw_entry &ent, Chunk *pc)
 static bool split_line(Chunk *start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "%s(%d): start->Text() '%s', orig line is %zu, orig_col is %zu, type is %s\n",
-           __func__, __LINE__, start->Text(), start->GetOrigLine(), start->orig_col, get_token_name(start->GetType()));
+   LOG_FMT(LSPLIT, "%s(%d): start->Text() '%s', orig line is %zu, orig col is %zu, type is %s\n",
+           __func__, __LINE__, start->Text(), start->GetOrigLine(), start->GetOrigCol(), get_token_name(start->GetType()));
    LOG_FMT(LSPLIT, "   start->GetFlags() ");
    log_pcf_flags(LSPLIT, start->GetFlags());
    LOG_FMT(LSPLIT, "   start->GetParentType() %s, (PCF_IN_FCN_DEF is %s), (PCF_IN_FCN_CALL is %s)\n",
@@ -428,8 +428,8 @@ static bool split_line(Chunk *start)
          && pc->IsNotNullChunk()
          && !pc->IsNewline())
    {
-      LOG_FMT(LSPLIT, "%s(%d): at %s, orig line is %zu, orig_col is %zu\n",
-              __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
+      LOG_FMT(LSPLIT, "%s(%d): at %s, orig line is %zu, orig col is %zu\n",
+              __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
 
       if (pc->IsNot(CT_SPACE))
       {
@@ -455,8 +455,8 @@ static bool split_line(Chunk *start)
    {
       LOG_FMT(LSPLIT, "%s(%d):    TRY_SPLIT yielded '%s' [%s] on orig line %zu\n",
               __func__, __LINE__, ent.pc->Text(), get_token_name(ent.pc->GetType()), ent.pc->GetOrigLine());
-      LOG_FMT(LSPLIT, "%s(%d): ent at '%s', orig_col is %zu\n",
-              __func__, __LINE__, ent.pc->Text(), ent.pc->orig_col);
+      LOG_FMT(LSPLIT, "%s(%d): ent at '%s', orig col is %zu\n",
+              __func__, __LINE__, ent.pc->Text(), ent.pc->GetOrigCol());
    }
 
    // Break before the token instead of after it according to the pos_xxx rules
@@ -494,8 +494,8 @@ static bool split_line(Chunk *start)
       {
          pc = ent.pc->GetNext();
       }
-      LOG_FMT(LSPLIT, "%s(%d): at '%s', orig_col is %zu\n",
-              __func__, __LINE__, pc->Text(), pc->orig_col);
+      LOG_FMT(LSPLIT, "%s(%d): at '%s', orig col is %zu\n",
+              __func__, __LINE__, pc->Text(), pc->GetOrigCol());
    }
 
    if (  pc == nullptr
@@ -684,8 +684,8 @@ static void split_fcn_params_full(Chunk *start)
 
    while ((fpo = fpo->GetPrev())->IsNotNullChunk())
    {
-      LOG_FMT(LSPLIT, "%s(%d): %s, orig_col is %zu, level is %zu\n",
-              __func__, __LINE__, fpo->Text(), fpo->orig_col, fpo->level);
+      LOG_FMT(LSPLIT, "%s(%d): %s, orig col is %zu, level is %zu\n",
+              __func__, __LINE__, fpo->Text(), fpo->GetOrigCol(), fpo->level);
 
       if (  fpo->Is(CT_FPAREN_OPEN)
          && (fpo->level == start->level - 1))
@@ -716,8 +716,8 @@ static void split_fcn_params_full(Chunk *start)
 static void split_fcn_params(Chunk *start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "%s(%d): start->Text() is '%s', orig line is %zu, orig_col is %zu\n",
-           __func__, __LINE__, start->Text(), start->GetOrigLine(), start->orig_col);
+   LOG_FMT(LSPLIT, "%s(%d): start->Text() is '%s', orig line is %zu, orig col is %zu\n",
+           __func__, __LINE__, start->Text(), start->GetOrigLine(), start->GetOrigCol());
    Chunk *fpo = start;
 
    if (!start->Is(CT_FPAREN_OPEN))
@@ -730,8 +730,8 @@ static void split_fcn_params(Chunk *start)
             && fpo->IsNot(CT_FPAREN_OPEN))
       {
          // do nothing
-         LOG_FMT(LSPLIT, "%s(%d): '%s', orig_col is %zu, level is %zu\n",
-                 __func__, __LINE__, fpo->Text(), fpo->orig_col, fpo->level);
+         LOG_FMT(LSPLIT, "%s(%d): '%s', orig col is %zu, level is %zu\n",
+                 __func__, __LINE__, fpo->Text(), fpo->GetOrigCol(), fpo->level);
       }
    }
    Chunk  *pc     = fpo->GetNextNcNnl();
@@ -776,7 +776,7 @@ static void split_fcn_params(Chunk *start)
             if (cur_width == 0)
             {
                fprintf(stderr, "%s(%d): cur_width is ZERO, cannot be decremented, at line %zu, column %zu\n",
-                       __func__, __LINE__, pc->GetOrigLine(), pc->orig_col);
+                       __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
                log_flush(true);
                exit(EX_SOFTWARE);
             }
@@ -803,8 +803,8 @@ static void split_fcn_params(Chunk *start)
 
    while ((prev = prev->GetPrev())->IsNotNullChunk())
    {
-      LOG_FMT(LSPLIT, "%s(%d): prev->Text() is '%s', orig line is %zu, orig_col is %zu\n",
-              __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->orig_col);
+      LOG_FMT(LSPLIT, "%s(%d): prev->Text() is '%s', orig line is %zu, orig col is %zu\n",
+              __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->GetOrigCol());
       LOG_FMT(LSPLIT, "%s(%d): prev->level is %zu, prev '%s', prev->GetType() is %s\n",
               __func__, __LINE__, prev->level, prev->Text(), get_token_name(prev->GetType()));
 
@@ -812,7 +812,7 @@ static void split_fcn_params(Chunk *start)
          || prev->Is(CT_COMMA))
       {
          LOG_FMT(LSPLIT, "%s(%d): found at %zu\n",
-                 __func__, __LINE__, prev->orig_col);
+                 __func__, __LINE__, prev->GetOrigCol());
          break;
       }
       LOG_FMT(LSPLIT, "%s(%d): last_col is %d, prev->Len() is %zu\n",

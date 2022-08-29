@@ -108,9 +108,9 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigne
             {
                LOG_FMT(LGUY, "Text() '%s', ", pc->Text());
             }
-            LOG_FMT(LGUY, " column is %zu, pp_level is %zu, type is %s, parent type is %s, orig_col is %zu,",
+            LOG_FMT(LGUY, " column is %zu, pp_level is %zu, type is %s, parent type is %s, orig col is %zu,",
                     pc->column, pc->pp_level, get_token_name(pc->GetType()),
-                    get_token_name(pc->GetParentType()), pc->orig_col);
+                    get_token_name(pc->GetParentType()), pc->GetOrigCol());
 
             if (pc->Is(CT_IGNORED))
             {
@@ -223,7 +223,7 @@ void examine_Data(const char *func_name, int theLine, int what)
          {
             LOG_FMT(LGUY, "\n");
             LOG_FMT(LGUY, "1:(%d),", theLine);
-            LOG_FMT(LGUY, "%s, orig_col=%zu, orig_col_end=%zu\n", pc->Text(), pc->orig_col, pc->orig_col_end);
+            LOG_FMT(LGUY, "%s, orig col=%zu, orig col end=%zu\n", pc->Text(), pc->GetOrigCol(), pc->orig_col_end);
          }
       }
 
@@ -238,11 +238,11 @@ void examine_Data(const char *func_name, int theLine, int what)
          {
             if (pc->Is(CT_NEWLINE))
             {
-               LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->GetOrigLine(), pc->orig_col);
+               LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->GetOrigLine(), pc->GetOrigCol());
             }
             else
             {
-               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->orig_col, pc->column);
+               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->column);
             }
          }
       }
@@ -256,11 +256,11 @@ void examine_Data(const char *func_name, int theLine, int what)
       {
          if (pc->Is(CT_NEWLINE))
          {
-            LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->GetOrigLine(), pc->orig_col);
+            LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->GetOrigLine(), pc->GetOrigCol());
          }
          else
          {
-            LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->orig_col, pc->column);
+            LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->column);
          }
       }
 
@@ -275,11 +275,11 @@ void examine_Data(const char *func_name, int theLine, int what)
          {
             if (pc->Is(CT_NEWLINE))
             {
-               LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->GetOrigLine(), pc->orig_col);
+               LOG_FMT(LGUY, "(%zu)<NL> col=%zu\n\n", pc->GetOrigLine(), pc->GetOrigCol());
             }
             else
             {
-               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->orig_col, pc->column);
+               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->column);
             }
          }
       }
@@ -313,7 +313,7 @@ void dump_out(unsigned int type)
          fprintf(D_file, "[%p]\n", pc);
          fprintf(D_file, "  type %s\n", get_token_name(pc->GetType()));
          fprintf(D_file, "  orig line %zu\n", pc->GetOrigLine());
-         fprintf(D_file, "  orig_col %zu\n", pc->orig_col);
+         fprintf(D_file, "  orig col %zu\n", pc->GetOrigCol());
          fprintf(D_file, "  orig_col_end %zu\n", pc->orig_col_end);
 
          if (pc->orig_prev_sp != 0)
@@ -427,9 +427,9 @@ void dump_in(unsigned int type)
             {
                chunk.SetOrigLine(strtol(parts[1], nullptr, 0));
             }
-            else if (strcasecmp(parts[0], "orig_col") == 0)
+            else if (strcasecmp(parts[0], "orig col") == 0)
             {
-               chunk.orig_col = strtol(parts[1], nullptr, 0);
+               chunk.SetOrigCol(strtol(parts[1], nullptr, 0));
             }
             else if (strcasecmp(parts[0], "orig_col_end") == 0)
             {

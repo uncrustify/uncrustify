@@ -340,9 +340,9 @@ static bool chunk_is_after(Chunk *pc, Chunk *after, bool test_equal = true)
       }
       else if (after != nullptr)
       {
-         auto pc_column    = pc->orig_col;
+         auto pc_column    = pc->GetOrigCol();
          auto pc_line      = pc->GetOrigLine();
-         auto after_column = after->orig_col;
+         auto after_column = after->GetOrigCol();
          auto after_line   = after->GetOrigLine();
 
          return(  pc_line > after_line
@@ -375,9 +375,9 @@ static bool chunk_is_before(Chunk *pc, Chunk *before, bool test_equal = true)
       }
       else if (before != nullptr)
       {
-         auto pc_column     = pc->orig_col;
+         auto pc_column     = pc->GetOrigCol();
          auto pc_line       = pc->GetOrigLine();
-         auto before_column = before->orig_col;
+         auto before_column = before->GetOrigCol();
          auto before_line   = before->GetOrigLine();
 
          return(  pc_line < before_line
@@ -1289,9 +1289,9 @@ void EnumStructUnionParser::initialize(Chunk *pc)
 bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig_col is %zu, type is %s\n",
+   LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
            __unqualified_func__, __LINE__,
-           pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()));
+           pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
 
    /**
     * test for a semicolon or closing brace at the level of the starting chunk
@@ -1302,9 +1302,9 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
             || pc->Is(CT_BRACE_CLOSE))
          && pc->level == m_start->level))
    {
-      LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig_col is %zu, type is %s\n",
+      LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()));
+              pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
       return(true);
    }
    /**
@@ -1328,9 +1328,9 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
       || (start_in_funcdef ^ pc_in_funcdef).test_any()
       || (start_in_preproc ^ pc_in_preproc).test_any())
    {
-      LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig_col is %zu, type is %s\n",
+      LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()));
+              pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
       return(true);
    }
    /**
@@ -1343,9 +1343,9 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
 
    if (start_template_nest > pc_template_nest)
    {
-      LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig_col is %zu, type is %s\n",
+      LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()));
+              pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
       return(true);
    }
    /**
@@ -1368,14 +1368,14 @@ bool EnumStructUnionParser::is_potential_end_chunk(Chunk *pc) const
                   || pc->Is(CT_COMMA))
                && pc->level == m_start->level))))
    {
-      LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig_col is %zu, type is %s\n",
+      LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()));
+              pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
       return(true);
    }
-   LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig_col is %zu, type is %s\n",
+   LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
            __unqualified_func__, __LINE__,
-           pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()));
+           pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
    return(false);
 } // EnumStructUnionParser::is_potential_end_chunk
 
@@ -1582,11 +1582,11 @@ void EnumStructUnionParser::mark_class_colon(Chunk *colon)
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LFTOR,
-           "%s(%d): Class colon detected: orig line is %zu, orig_col is %zu\n",
+           "%s(%d): Class colon detected: orig line is %zu, orig col is %zu\n",
            __unqualified_func__,
            __LINE__,
            colon->GetOrigLine(),
-           colon->orig_col);
+           colon->GetOrigCol());
 
    colon->SetType(CT_CLASS_COLON);
    colon->SetParentType(m_start->GetType());
@@ -1612,11 +1612,11 @@ void EnumStructUnionParser::mark_constructors()
       && m_start->IsClassOrStruct())
    {
       LOG_FMT(LFTOR,
-              "%s(%d): orig line is %zu, orig_col is %zu, start is '%s', parent type is %s\n",
+              "%s(%d): orig line is %zu, orig col is %zu, start is '%s', parent type is %s\n",
               __unqualified_func__,
               __LINE__,
               m_start->GetOrigLine(),
-              m_start->orig_col,
+              m_start->GetOrigCol(),
               m_start->Text(),
               get_token_name(m_start->GetParentType()));
 
@@ -1656,12 +1656,12 @@ void EnumStructUnionParser::mark_constructors()
             prev->SetType(CT_FUNC_CLASS_DEF);
 
             LOG_FMT(LFTOR,
-                    "%s(%d): Constructor/destructor detected: '%s' at orig line is %zu, orig_col is %zu, type is %s\n",
+                    "%s(%d): Constructor/destructor detected: '%s' at orig line is %zu, orig col is %zu, type is %s\n",
                     __unqualified_func__,
                     __LINE__,
                     name,
                     prev->GetOrigLine(),
-                    prev->orig_col,
+                    prev->GetOrigCol(),
                     get_token_name(prev->GetType()));
 
             mark_cpp_constructor(prev);
@@ -1797,11 +1797,11 @@ void EnumStructUnionParser::mark_nested_name_specifiers(Chunk *pc)
 
                // TODO: should this be just a warning or an error (with exit condition?)
                LOG_FMT(LWARN,
-                       "%s(%d): Unmatched '<' at orig line is %zu, orig_col is %zu\n",
+                       "%s(%d): Unmatched '<' at orig line is %zu, orig col is %zu\n",
                        __unqualified_func__,
                        __LINE__,
                        angle_open->GetOrigLine(),
-                       angle_open->orig_col);
+                       angle_open->GetOrigCol());
 
                break;
             }
@@ -1848,12 +1848,12 @@ void EnumStructUnionParser::mark_template(Chunk *start) const
    if (start != nullptr)
    {
       LOG_FMT(LTEMPL,
-              "%s(%d): Template detected: '%s' at orig line %zu, orig_col %zu\n",
+              "%s(%d): Template detected: '%s' at orig line %zu, orig col %zu\n",
               __unqualified_func__,
               __LINE__,
               start->Text(),
               start->GetOrigLine(),
-              start->orig_col);
+              start->GetOrigCol());
    }
    start->SetParentType(CT_TEMPLATE);
 
@@ -1876,12 +1876,12 @@ void EnumStructUnionParser::mark_template_args(Chunk *start, Chunk *end) const
       && start != nullptr)
    {
       LOG_FMT(LTEMPL,
-              "%s(%d): Start of template detected: '%s' at orig line %zu, orig_col %zu\n",
+              "%s(%d): Start of template detected: '%s' at orig line %zu, orig col %zu\n",
               __unqualified_func__,
               __LINE__,
               start->Text(),
               start->GetOrigLine(),
-              start->orig_col);
+              start->GetOrigCol());
 
       T_PcfFlags flags = PCF_IN_TEMPLATE;
       Chunk      *next = start;
@@ -1903,12 +1903,12 @@ void EnumStructUnionParser::mark_template_args(Chunk *start, Chunk *end) const
          next->SetFlagBits(flags);
       }
       LOG_FMT(LTEMPL,
-              "%s(%d): End of template detected: '%s' at orig line %zu, orig_col %zu\n",
+              "%s(%d): End of template detected: '%s' at orig line %zu, orig col %zu\n",
               __unqualified_func__,
               __LINE__,
               end->Text(),
               end->GetOrigLine(),
-              end->orig_col);
+              end->GetOrigCol());
    }
 } // EnumStructUnionParser::mark_template_args
 
@@ -1938,12 +1938,12 @@ void EnumStructUnionParser::mark_variable(Chunk *variable, T_PcfFlags flags)
    if (variable != nullptr)
    {
       LOG_FMT(LVARDEF,
-              "%s(%d): Variable definition detected: '%s' at orig line is %zu, orig_col is %zu, set %s\n",
+              "%s(%d): Variable definition detected: '%s' at orig line is %zu, orig col is %zu, set %s\n",
               __unqualified_func__,
               __LINE__,
               variable->Text(),
               variable->GetOrigLine(),
-              variable->orig_col,
+              variable->GetOrigCol(),
               flags & PCF_VAR_1ST_DEF ? "PCF_VAR_1ST_DEF" : "PCF_VAR_1ST");
 
       variable->SetFlagBits(flags);
@@ -1960,11 +1960,11 @@ void EnumStructUnionParser::mark_where_clause(Chunk *where)
    if (where != nullptr)
    {
       LOG_FMT(LFTOR,
-              "%s(%d): Where clause detected: orig line is %zu, orig_col is %zu\n",
+              "%s(%d): Where clause detected: orig line is %zu, orig col is %zu\n",
               __unqualified_func__,
               __LINE__,
               where->GetOrigLine(),
-              where->orig_col);
+              where->GetOrigCol());
    }
    set_where_start(where);
 
@@ -1989,11 +1989,11 @@ void EnumStructUnionParser::mark_where_colon(Chunk *colon)
    if (colon != nullptr)
    {
       LOG_FMT(LFTOR,
-              "%s(%d): Where colon detected: orig line is %zu, orig_col is %zu\n",
+              "%s(%d): Where colon detected: orig line is %zu, orig col is %zu\n",
               __unqualified_func__,
               __LINE__,
               colon->GetOrigLine(),
-              colon->orig_col);
+              colon->GetOrigCol());
    }
    colon->SetType(CT_WHERE_COLON);
    colon->SetParentType(m_start->GetType());
@@ -2168,11 +2168,11 @@ Chunk *EnumStructUnionParser::parse_angles(Chunk *angle_open)
 
          // TODO: should this be just a warning or an error (with exit condition?)
          LOG_FMT(LWARN,
-                 "%s(%d): Unmatched '<' at orig line is %zu, orig_col is %zu\n",
+                 "%s(%d): Unmatched '<' at orig line is %zu, orig col is %zu\n",
                  __unqualified_func__,
                  __LINE__,
                  angle_open->GetOrigLine(),
-                 angle_open->orig_col);
+                 angle_open->GetOrigCol());
       }
       else
       {
@@ -2200,11 +2200,11 @@ Chunk *EnumStructUnionParser::parse_angles(Chunk *angle_open)
 
                // TODO: should this be just a warning or an error (with exit condition?)
                LOG_FMT(LWARN,
-                       "%s(%d): Identifier missing before '<' at orig line is %zu, orig_col is %zu\n",
+                       "%s(%d): Identifier missing before '<' at orig line is %zu, orig col is %zu\n",
                        __unqualified_func__,
                        __LINE__,
                        angle_open->GetOrigLine(),
-                       angle_open->orig_col);
+                       angle_open->GetOrigCol());
             }
             else
             {
@@ -2322,11 +2322,11 @@ Chunk *EnumStructUnionParser::parse_braces(Chunk *brace_open)
       {
          // TODO: should this be just a warning or an error (with exit condition?)
          LOG_FMT(LWARN,
-                 "%s(%d): Parsing error precedes start of body '{' at orig line is %zu, orig_col is %zu\n",
+                 "%s(%d): Parsing error precedes start of body '{' at orig line is %zu, orig col is %zu\n",
                  __unqualified_func__,
                  __LINE__,
                  brace_open->GetOrigLine(),
-                 brace_open->orig_col);
+                 brace_open->GetOrigCol());
 
          // parse error
          parse_error_detected(true);
@@ -2348,11 +2348,11 @@ void EnumStructUnionParser::parse_colon(Chunk *colon)
 
       // TODO: should this be just a warning or an error (with exit condition?)
       LOG_FMT(LWARN,
-              "%s(%d): Colon follows union declaration at orig line is %zu, orig_col is %zu\n",
+              "%s(%d): Colon follows union declaration at orig line is %zu, orig col is %zu\n",
               __unqualified_func__,
               __LINE__,
               colon->GetOrigLine(),
-              colon->orig_col);
+              colon->GetOrigCol());
 
       // parse error
       parse_error_detected(true);
@@ -2616,15 +2616,15 @@ bool EnumStructUnionParser::template_detected() const
 Chunk *EnumStructUnionParser::try_find_end_chunk(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig_col is %zu, type is %s\n",
+   LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
            __unqualified_func__, __LINE__,
-           pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()));
+           pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
 
    do
    {
-      LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig_col is %zu, type is %s\n",
+      LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()));
+              pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
 
       /**
        * clear some previously marked token types, some of which have likely
@@ -2638,16 +2638,16 @@ Chunk *EnumStructUnionParser::try_find_end_chunk(Chunk *pc)
          pc->SetType(CT_WORD);
          pc->SetParentType(CT_NONE);
       }
-      LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig_col is %zu, type is %s\n",
+      LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
               __unqualified_func__, __LINE__,
-              pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()));
+              pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
 
       do
       {
          pc = pc->GetNextNcNnl(E_Scope::PREPROC);
-         LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig_col is %zu, type is %s\n",
+         LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
                  __unqualified_func__, __LINE__,
-                 pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()));
+                 pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
       } while (  pc->IsNotNullChunk()
               && pc->level > m_start->level);
 
@@ -2661,9 +2661,9 @@ Chunk *EnumStructUnionParser::try_find_end_chunk(Chunk *pc)
       }
       else
       {
-         LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig_col is %zu, type is %s\n",
+         LOG_FMT(LFTOR, "%s(%d): orig line is %zu, orig col is %zu, type is %s\n",
                  __unqualified_func__, __LINE__,
-                 pc->GetOrigLine(), pc->orig_col, get_token_name(pc->GetType()));
+                 pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()));
       }
    } while (!is_potential_end_chunk(pc));
 
@@ -2805,11 +2805,11 @@ bool EnumStructUnionParser::try_pre_identify_type()
 
          // TODO: should this be just a warning or an error (with exit condition?)
          LOG_FMT(LWARN,
-                 "%s(%d): Bad union declaration detected at orig line is %zu, orig_col is %zu\n",
+                 "%s(%d): Bad union declaration detected at orig line is %zu, orig col is %zu\n",
                  __unqualified_func__,
                  __LINE__,
                  m_start->GetOrigLine(),
-                 m_start->orig_col);
+                 m_start->GetOrigCol());
 
          parse_error_detected(true);
 

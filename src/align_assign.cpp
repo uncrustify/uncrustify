@@ -74,8 +74,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
       {
          if (vdas_pc != nullptr)
          {
-            LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, vdas_pc->Text(), vdas_pc->GetOrigLine(), vdas_pc->orig_col);
+            LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig line %zu, orig col is %zu\n",
+                    __func__, __LINE__, vdas_pc->Text(), vdas_pc->GetOrigLine(), vdas_pc->GetOrigCol());
             vdas.Add(vdas_pc);
             vdas_pc = nullptr;
          }
@@ -196,8 +196,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
             && (  pc->Is(CT_ASSIGN_DEFAULT_ARG)       // Foo( int bar = 777 );
                || pc->Is(CT_ASSIGN_FUNC_PROTO)))      // Foo( const Foo & ) = delete;
          {
-            LOG_FMT(LALASS, "%s(%d): fcnDefault[%zu].Add on '%s' on orig line %zu, orig_col is %zu\n",
-                    __func__, __LINE__, fcn_idx, pc->Text(), pc->GetOrigLine(), pc->orig_col);
+            LOG_FMT(LALASS, "%s(%d): fcnDefault[%zu].Add on '%s' on orig line %zu, orig col is %zu\n",
+                    __func__, __LINE__, fcn_idx, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
 
             if (++fcn_idx == fcnDefault.size())
             {
@@ -213,8 +213,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
             if (pc->Is(CT_ASSIGN_DEFAULT_ARG))  // Foo( int bar = 777 );
             {
-               LOG_FMT(LALASS, "%s(%d): default: fcnDefault[%zu].Add on '%s' on orig line %zu, orig_col is %zu\n",
-                       __func__, __LINE__, fcn_idx, pc->Text(), pc->GetOrigLine(), pc->orig_col);
+               LOG_FMT(LALASS, "%s(%d): default: fcnDefault[%zu].Add on '%s' on orig line %zu, orig col is %zu\n",
+                       __func__, __LINE__, fcn_idx, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
 
                if (++fcn_idx == fcnDefault.size())
                {
@@ -226,8 +226,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
             }
             else if (pc->Is(CT_ASSIGN_FUNC_PROTO))  // Foo( const Foo & ) = delete;
             {
-               LOG_FMT(LALASS, "%s(%d): proto: fcnProto.Add on '%s' on orig line %zu, orig_col is %zu\n",
-                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
+               LOG_FMT(LALASS, "%s(%d): proto: fcnProto.Add on '%s' on orig line %zu, orig col is %zu\n",
+                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
                fcnProto.Add(pc);
             }
             else if (pc->Is(CT_ASSIGN)) // Issue #2197
@@ -251,8 +251,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
          {
             if (pc->Is(CT_ASSIGN))
             {
-               LOG_FMT(LALASS, "%s(%d): as.Add on '%s' on orig line %zu, orig_col is %zu\n",
-                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->orig_col);
+               LOG_FMT(LALASS, "%s(%d): as.Add on '%s' on orig line %zu, orig col is %zu\n",
+                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
                as.Add(pc);
             }
          }
@@ -262,8 +262,8 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
    if (vdas_pc != nullptr)
    {
-      LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig line %zu, orig_col is %zu\n",
-              __func__, __LINE__, vdas_pc->Text(), vdas_pc->GetOrigLine(), vdas_pc->orig_col);
+      LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig line %zu, orig col is %zu\n",
+              __func__, __LINE__, vdas_pc->Text(), vdas_pc->GetOrigLine(), vdas_pc->GetOrigCol());
       vdas.Add(vdas_pc);
       vdas_pc = nullptr;
    }
