@@ -183,6 +183,7 @@
 50913  oc/3813.cfg                              oc/3813.m
 50914  oc/3819.cfg                              oc/3819.m
 50915  common/empty.cfg                         oc/3822.h
+50916  oc/3823.cfg                              oc/3823.m
 
 # test the options sp_ with the value "ignore"
 51000  oc/sp_cond_ternary_short.cfg             oc/sp_cond_ternary_short.m
