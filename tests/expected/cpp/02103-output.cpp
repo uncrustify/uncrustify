@@ -113,7 +113,7 @@ void output_parsed(FILE *pfile)
     fprintf(pfile, "\n%3d> %13.13s[%13.13s][%2d/%2d/%2d][%d/%d/%d][%6x][%d-%d]",
             pc->GetOrigLine(), get_token_name(pc->GetType()),
             get_token_name(pc->GetParentType()),
-            pc->column, pc->GetOrigCol(), pc->orig_col_end,
+            pc->column, pc->GetOrigCol(), pc->GetOrigColEnd(),
             pc->brace_level, pc->level, pc->pp_level,
             pc->GetFlags(), pc->nl_count, pc->after_tab);
 

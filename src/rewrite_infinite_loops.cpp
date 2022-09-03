@@ -116,19 +116,19 @@ void rewrite_loop_keyword(Chunk *keyword, E_Token new_type)
    switch (new_type)
    {
    case CT_DO:
-      keyword->orig_col_end += strlen("do") - keyword->Len();
-      keyword->str           = "do";
+      keyword->SetOrigColEnd(keyword->GetOrigColEnd() + strlen("do") - keyword->Len());
+      keyword->str = "do";
       break;
 
    case CT_WHILE:
    case CT_WHILE_OF_DO:
-      keyword->orig_col_end += strlen("while") - keyword->Len();
-      keyword->str           = "while";
+      keyword->SetOrigColEnd(keyword->GetOrigColEnd() + strlen("while") - keyword->Len());
+      keyword->str = "while";
       break;
 
    case CT_FOR:
-      keyword->orig_col_end += strlen("for") - keyword->Len();
-      keyword->str           = "for";
+      keyword->SetOrigColEnd(keyword->GetOrigColEnd() + strlen("for") - keyword->Len());
+      keyword->str = "for";
       break;
 
    default:
@@ -147,7 +147,7 @@ static void move_one_token(Chunk * &source, Chunk * &destination, E_Token parent
    source->MoveAfter(destination);
    source->column = destination->column + destination->Len();
    source->SetOrigCol(destination->GetOrigCol() + destination->Len());
-   source->orig_col_end = source->orig_col_end + source->Len();
+   source->SetOrigColEnd(source->GetOrigColEnd() + source->Len());
    source->orig_prev_sp = 0;
    source->SetParentType(parent_type);
 

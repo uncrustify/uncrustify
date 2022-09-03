@@ -181,6 +181,17 @@ public:
     */
    void SetOrigCol(size_t col);
 
+   /**
+    * @brief returns the end column number of the chunk in the input file
+    */
+   size_t GetOrigColEnd() const;
+
+   /**
+    * @brief Sets the end column number of the chunk in the input file
+    * @param col the end column number of the chunk
+    */
+   void SetOrigColEnd(size_t col);
+
 
    // --------- Get* chunk functions
 
@@ -868,7 +879,6 @@ public:
    // --------- Data members
    align_ptr_t  align;
    indent_ptr_t indent;
-   size_t       orig_col_end;                //! column where chunk ended in the input file, is always > 1
    UINT32       orig_prev_sp;                //! whitespace before this token
    size_t       column;                      //! column of chunk
    size_t       column_indent;               /** if 1st on a line, set to the 'indent'
@@ -921,6 +931,7 @@ protected:
    Chunk      *m_parent;                    //! pointer to parent chunk (not always set)
    size_t     m_origLine;                   //! line number of chunk in input file
    size_t     m_origCol;                    //! column where chunk started in the input file, is always > 0
+   size_t     m_origColEnd;                 //! column where chunk ended in the input file, is always > 1
    E_Token    m_type;                       //! type of the chunk itself
    E_Token    m_parentType;                 //! type of the parent chunk usually CT_NONE
    T_PcfFlags m_flags;                      //! see PCF_xxx
@@ -1061,6 +1072,18 @@ inline size_t Chunk::GetOrigCol() const
 inline void Chunk::SetOrigCol(size_t col)
 {
    m_origCol = col;
+}
+
+
+inline size_t Chunk::GetOrigColEnd() const
+{
+   return(m_origColEnd);
+}
+
+
+inline void Chunk::SetOrigColEnd(size_t col)
+{
+   m_origColEnd = col;
 }
 
 

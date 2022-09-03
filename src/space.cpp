@@ -3367,7 +3367,7 @@ void space_text()
          }
          else
          {
-            column = pc->orig_col_end;
+            column = pc->GetOrigColEnd();
          }
          prev_column = column;
 
@@ -3475,11 +3475,11 @@ void space_text()
          {
             int delta = min_sp;
 
-            if (  next->GetOrigCol() >= pc->orig_col_end
-               && pc->orig_col_end != 0)
+            if (  next->GetOrigCol() >= pc->GetOrigColEnd()
+               && pc->GetOrigColEnd() != 0)
             {
                // Keep the same relative spacing, minimum 1
-               delta = next->GetOrigCol() - pc->orig_col_end;
+               delta = next->GetOrigCol() - pc->GetOrigColEnd();
 
                if (delta < min_sp)
                {
@@ -3497,10 +3497,10 @@ void space_text()
          case IARF_IGNORE:
 
             // Keep the same relative spacing, if possible
-            if (  next->GetOrigCol() >= pc->orig_col_end
-               && pc->orig_col_end != 0)
+            if (  next->GetOrigCol() >= pc->GetOrigColEnd()
+               && pc->GetOrigColEnd() != 0)
             {
-               column += next->GetOrigCol() - pc->orig_col_end;
+               column += next->GetOrigCol() - pc->GetOrigColEnd();
             }
             else
             {
@@ -3539,8 +3539,8 @@ void space_text()
                   LOG_FMT(LSPACE, "%s(%d): <relative adj>", __func__, __LINE__);
                   LOG_FMT(LSPACE, "%s(%d): pc is '%s', orig col is %zu, next orig col is %zu, pc orig col end is %zu\n",
                           __func__, __LINE__, pc->Text(),
-                          pc->GetOrigCol(), next->GetOrigCol(), pc->orig_col_end);
-                  column = pc->column + (next->GetOrigCol() - pc->orig_col_end);
+                          pc->GetOrigCol(), next->GetOrigCol(), pc->GetOrigColEnd());
+                  column = pc->column + (next->GetOrigCol() - pc->GetOrigColEnd());
                }
                else
                {
@@ -3612,7 +3612,7 @@ void space_text_balance_nested_parens()
          // test after the closing parens   Issue #1703
          Chunk *closing = first->GetNextType((E_Token)(first->GetType() + 1), first->level);
 
-         if (closing->GetOrigCol() == closing->GetPrev()->orig_col_end)
+         if (closing->GetOrigCol() == closing->GetPrev()->GetOrigColEnd())
          {
             space_add_after(closing->GetPrev(), 1);
          }
@@ -3626,7 +3626,7 @@ void space_text_balance_nested_parens()
          // test after the opening parens   Issue #1703
          Chunk *opening = next->GetPrevType((E_Token)(next->GetType() - 1), next->level);
 
-         if (opening->orig_col_end == opening->GetNext()->GetOrigCol())
+         if (opening->GetOrigColEnd() == opening->GetNext()->GetOrigCol())
          {
             space_add_after(opening, 1);
          }
@@ -3681,8 +3681,8 @@ size_t space_col_align(Chunk *first, Chunk *second)
 
    if (first->nl_count)
    {
-      LOG_FMT(LSPACE, "%s(%d):    nl_count is %zu, orig_col_end is %zu\n", __func__, __LINE__, first->nl_count, first->orig_col_end);
-      coldiff = first->orig_col_end - 1;
+      LOG_FMT(LSPACE, "%s(%d):    nl_count is %zu, orig col end is %zu\n", __func__, __LINE__, first->nl_count, first->GetOrigColEnd());
+      coldiff = first->GetOrigColEnd() - 1;
    }
    else
    {

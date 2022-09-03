@@ -478,7 +478,7 @@ static void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next)
    nl->pp_level    = prev->pp_level;
    nl->nl_count    = 1;
    nl->SetFlags((prev->GetFlags() & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC);
-   nl->SetOrigCol(prev->orig_col_end);
+   nl->SetOrigCol(prev->GetOrigColEnd());
    nl->column = prev->GetOrigCol();
 
    if (  prev->TestFlags(PCF_IN_PREPROC)

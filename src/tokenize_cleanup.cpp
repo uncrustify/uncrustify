@@ -96,12 +96,12 @@ static Chunk *handle_double_angle_close(Chunk *pc)
       if (  pc->Is(CT_ANGLE_CLOSE)
          && next->Is(CT_ANGLE_CLOSE)
          && pc->GetParentType() == CT_NONE
-         && (pc->orig_col_end + 1) == next->GetOrigCol()
+         && (pc->GetOrigColEnd() + 1) == next->GetOrigCol()
          && next->GetParentType() == CT_NONE)
       {
          pc->str.append('>');
          pc->SetType(CT_SHIFT);
-         pc->orig_col_end = next->orig_col_end;
+         pc->SetOrigColEnd(next->GetOrigColEnd());
 
          Chunk *tmp = next->GetNextNcNnl();
          Chunk::Delete(next);
@@ -128,7 +128,7 @@ void split_off_angle_close(Chunk *pc)
    Chunk nc = *pc;
 
    pc->str.resize(1);
-   pc->orig_col_end = pc->GetOrigCol() + 1;
+   pc->SetOrigColEnd(pc->GetOrigCol() + 1);
    pc->SetType(CT_ANGLE_CLOSE);
 
    nc.SetType(ct->type);
@@ -326,11 +326,11 @@ void tokenize_cleanup()
             pc->SetType(CT_TSQUARE);
             pc->str = "[]";
             /*
-             * bug #664: The original orig_col_end of CT_SQUARE_CLOSE is
-             * stored at orig_col_end of CT_TSQUARE.
-             * pc->orig_col_end += 1;
+             * bug #664: The original m_origColEnd of CT_SQUARE_CLOSE is
+             * stored at m_origColEnd of CT_TSQUARE.
+             * pc->SetOrigColEnd(pc->GetOrigColEnd() + 1);
              */
-            pc->orig_col_end = next->orig_col_end;
+            pc->SetOrigColEnd(next->GetOrigColEnd());
             Chunk::Delete(next);
          }
       }
@@ -355,8 +355,8 @@ void tokenize_cleanup()
          {
             // Change ':' + '=' into ':='
             pc->SetType(CT_SQL_ASSIGN);
-            pc->str          = ":=";
-            pc->orig_col_end = next->orig_col_end;
+            pc->str = ":=";
+            pc->SetOrigColEnd(next->GetOrigColEnd());
             Chunk::Delete(next);
          }
       }
@@ -709,15 +709,15 @@ void tokenize_cleanup()
                next->str = "()";
                next->SetType(CT_OPERATOR_VAL);
                Chunk::Delete(tmp);
-               next->orig_col_end += 1;
+               next->SetOrigColEnd(next->GetOrigColEnd() + 1);
             }
          }
          else if (  next->Is(CT_ANGLE_CLOSE)
                  && tmp2->Is(CT_ANGLE_CLOSE)
-                 && tmp2->GetOrigCol() == next->orig_col_end)
+                 && tmp2->GetOrigCol() == next->GetOrigColEnd())
          {
             next->str.append('>');
-            next->orig_col_end++;
+            next->SetOrigColEnd(next->GetOrigColEnd() + 1);
             next->SetType(CT_OPERATOR_VAL);
             Chunk::Delete(tmp2);
          }
@@ -766,7 +766,7 @@ void tokenize_cleanup()
             }
             next->SetType(CT_OPERATOR_VAL);
 
-            next->orig_col_end = next->GetOrigCol() + next->Len();
+            next->SetOrigColEnd(next->GetOrigCol() + next->Len());
          }
          next->SetParentType(CT_OPERATOR);
 
@@ -833,7 +833,7 @@ void tokenize_cleanup()
 
                   nc = *pc;
                   pc->str.resize(1);
-                  pc->orig_col_end = pc->GetOrigCol() + 1;
+                  pc->SetOrigColEnd(pc->GetOrigCol() + 1);
 
                   nc.SetType(CT_SQL_WORD);
                   nc.str.pop_front();
@@ -885,8 +885,8 @@ void tokenize_cleanup()
       {
          // merge the two with a space between
          pc->str.append(' ');
-         pc->str         += next->str;
-         pc->orig_col_end = next->orig_col_end;
+         pc->str += next->str;
+         pc->SetOrigColEnd(next->GetOrigColEnd());
          Chunk::Delete(next);
          next = pc->GetNextNcNnl();
 

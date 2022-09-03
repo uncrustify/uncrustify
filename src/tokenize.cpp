@@ -1688,7 +1688,7 @@ static bool parse_word(tok_ctx &ctx, Chunk &pc, bool skipcheck)
                cpd.did_newline = true;
             }
             // Store off the end column
-            pc.orig_col_end = ctx.c.col;
+            pc.SetOrigColEnd(ctx.c.col);
          }
       }
    }
@@ -2731,7 +2731,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
          }
       }
       // Store off the end column
-      chunk.orig_col_end = ctx.c.col - num_stripped; // Issue #1966 and #3565
+      chunk.SetOrigColEnd(ctx.c.col - num_stripped); // Issue #1966 and #3565
 
       // Make the whitespace we disposed of be attributed to the next chunk
       prev_sp = num_stripped;
@@ -2844,14 +2844,14 @@ void tokenize(const deque<int> &data, Chunk *ref)
       }
       else if (pc->Is(CT_VBRACE_OPEN))
       {
-         LOG_FMT(LGUY, "%s(%d): orig line is %zu, orig col is %zu, type is %s, orig_col_end is %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->orig_col_end);
+         LOG_FMT(LGUY, "%s(%d): orig line is %zu, orig col is %zu, type is %s, orig col end is %zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->GetOrigColEnd());
       }
       else
       {
          char copy[1000];
-         LOG_FMT(LGUY, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s, orig_col_end is %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy), get_token_name(pc->GetType()), pc->orig_col_end);
+         LOG_FMT(LGUY, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s, orig col end is %zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy), get_token_name(pc->GetType()), pc->GetOrigColEnd());
       }
    }
    // Set the cpd.newline string for this file
