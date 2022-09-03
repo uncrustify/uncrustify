@@ -223,7 +223,7 @@ void examine_Data(const char *func_name, int theLine, int what)
          {
             LOG_FMT(LGUY, "\n");
             LOG_FMT(LGUY, "1:(%d),", theLine);
-            LOG_FMT(LGUY, "%s, orig col=%zu, orig col end=%zu\n", pc->Text(), pc->GetOrigCol(), pc->orig_col_end);
+            LOG_FMT(LGUY, "%s, orig col=%zu, orig col end=%zu\n", pc->Text(), pc->GetOrigCol(), pc->GetOrigColEnd());
          }
       }
 
@@ -314,7 +314,7 @@ void dump_out(unsigned int type)
          fprintf(D_file, "  type %s\n", get_token_name(pc->GetType()));
          fprintf(D_file, "  orig line %zu\n", pc->GetOrigLine());
          fprintf(D_file, "  orig col %zu\n", pc->GetOrigCol());
-         fprintf(D_file, "  orig_col_end %zu\n", pc->orig_col_end);
+         fprintf(D_file, "  orig col end %zu\n", pc->GetOrigColEnd());
 
          if (pc->orig_prev_sp != 0)
          {
@@ -431,9 +431,9 @@ void dump_in(unsigned int type)
             {
                chunk.SetOrigCol(strtol(parts[1], nullptr, 0));
             }
-            else if (strcasecmp(parts[0], "orig_col_end") == 0)
+            else if (strcasecmp(parts[0], "orig col end") == 0)
             {
-               chunk.orig_col_end = strtol(parts[1], nullptr, 0);
+               chunk.SetOrigColEnd(strtol(parts[1], nullptr, 0));
             }
             else if (strcasecmp(parts[0], "orig_prev_sp") == 0)
             {

@@ -36,7 +36,7 @@ void Chunk::CopyFrom(const Chunk &o)
 
    m_origLine    = o.m_origLine;
    m_origCol     = o.m_origCol;
-   orig_col_end  = o.orig_col_end;
+   m_origColEnd  = o.m_origColEnd;
    orig_prev_sp  = o.orig_prev_sp;
    m_flags       = o.m_flags;
    column        = o.column;
@@ -66,7 +66,7 @@ void Chunk::Reset()
    m_parentType  = CT_NONE;
    m_origLine    = 0;
    m_origCol     = 0;
-   orig_col_end  = 0;
+   m_origColEnd  = 0;
    orig_prev_sp  = 0;
    m_flags       = PCF_NONE;
    column        = 0;
@@ -383,7 +383,7 @@ void Chunk::MoveAfter(Chunk *ref)
    // Adjust the original column
    column       = ref->column + space_col_align(ref, this);
    m_origCol    = column;
-   orig_col_end = m_origCol + Len();
+   m_origColEnd = m_origCol + Len();
 }
 
 
@@ -719,11 +719,11 @@ Chunk *Chunk::SkipDcMember() const
 
 int Chunk::ComparePosition(const Chunk *other) const
 {
-   if (m_origLine < other->GetOrigLine())
+   if (m_origLine < other->m_origLine)
    {
       return(-1);
    }
-   else if (m_origLine == other->GetOrigLine())
+   else if (m_origLine == other->m_origLine)
    {
       if (m_origCol < other->m_origCol)
       {

@@ -291,7 +291,7 @@ static void flag_asm(Chunk *pc)
             nc = *tmp;
 
             tmp->str.resize(1);
-            tmp->orig_col_end = tmp->GetOrigCol() + 1;
+            tmp->SetOrigColEnd(tmp->GetOrigCol() + 1);
             tmp->SetType(CT_ASM_COLON);
 
             nc.SetType(tmp->GetType());
@@ -1899,13 +1899,13 @@ static void check_double_brace_init(Chunk *bo1)
          {
             LOG_FMT(LJDBI, " - end, orig line is %zu, orig col is %zu\n", bc2->GetOrigLine(), bc2->GetOrigCol());
             // delete bo2 and bc1
-            bo1->str         += bo2->str;
-            bo1->orig_col_end = bo2->orig_col_end;
+            bo1->str += bo2->str;
+            bo1->SetOrigColEnd(bo2->GetOrigColEnd());
             Chunk::Delete(bo2);
             bo1->SetParentType(CT_DOUBLE_BRACE);
 
-            bc2->str         += bc1->str;
-            bc2->orig_col_end = bc1->orig_col_end;
+            bc2->str += bc1->str;
+            bc2->SetOrigColEnd(bc1->GetOrigColEnd());
             Chunk::Delete(bc1);
             bc2->SetParentType(CT_DOUBLE_BRACE);
             return;
@@ -2263,8 +2263,8 @@ static Chunk *process_return_or_throw(Chunk *pc)
             {
                temp->column = temp->column - 2;
                temp->SetOrigCol(temp->GetOrigCol() - 2);
-               temp->orig_col_end = temp->orig_col_end - 2;
-               temp               = temp->GetNext();
+               temp->SetOrigColEnd(temp->GetOrigColEnd() - 2);
+               temp = temp->GetNext();
             }
          }
          else
@@ -2615,14 +2615,14 @@ static void handle_cpp_lambda(Chunk *sq_o)
       /*
        * bug # 664
        *
-       * The original orig col of CT_SQUARE_CLOSE is stored at orig_col_end
-       * of CT_TSQUARE. CT_SQUARE_CLOSE m_origCol and orig_col_end values
-       * are calculate from orig_col_end of CT_TSQUARE.
+       * The original m_origCol of CT_SQUARE_CLOSE is stored at m_origColEnd
+       * of CT_TSQUARE. CT_SQUARE_CLOSE m_origCol and m_origColEnd values
+       * are calculate from m_origColEnd of CT_TSQUARE.
        */
-      nc.SetOrigCol(sq_o->orig_col_end - 1);
-      nc.column          = static_cast<int>(nc.GetOrigCol());
-      nc.orig_col_end    = sq_o->orig_col_end;
-      sq_o->orig_col_end = sq_o->GetOrigCol() + 1;
+      nc.SetOrigCol(sq_o->GetOrigColEnd() - 1);
+      nc.column = static_cast<int>(nc.GetOrigCol());
+      nc.SetOrigColEnd(sq_o->GetOrigColEnd());
+      sq_o->SetOrigColEnd(sq_o->GetOrigCol() + 1);
 
       nc.SetType(CT_SQUARE_CLOSE);
       nc.str.pop_front();
@@ -3779,7 +3779,7 @@ static void handle_oc_property_decl(Chunk *os)
                endchunk.brace_level = curr_chunk->brace_level;
                endchunk.SetOrigLine(curr_chunk->GetOrigLine());
                endchunk.SetOrigCol(curr_chunk->GetOrigCol());
-               endchunk.column = curr_chunk->orig_col_end + 1;
+               endchunk.column = curr_chunk->GetOrigColEnd() + 1;
                endchunk.SetFlags(curr_chunk->GetFlags() & PCF_COPY_FLAGS);
                endchunk.CopyAndAddAfter(curr_chunk);
                curr_chunk = curr_chunk->GetNext();
@@ -3968,7 +3968,7 @@ static void handle_wrap(Chunk *pc)
 
       pc->SetType(pc->Is(CT_FUNC_WRAP) ? CT_FUNCTION : CT_TYPE);
 
-      pc->orig_col_end = pc->GetOrigCol() + pc->Len();
+      pc->SetOrigColEnd(pc->GetOrigCol() + pc->Len());
 
       Chunk::Delete(opp);
       Chunk::Delete(name);

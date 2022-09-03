@@ -518,13 +518,13 @@ void output_parsed(FILE *pfile, bool withOptions)
       fprintf(pfile, "%s# %3d>%19.19s|%19.19s|%19.19s[%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
               eol_marker, (int)pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
-              (int)pc->column, (int)pc->GetOrigCol(), (int)pc->orig_col_end, (int)pc->orig_prev_sp,
+              (int)pc->column, (int)pc->GetOrigCol(), (int)pc->GetOrigColEnd(), (int)pc->orig_prev_sp,
               (int)pc->brace_level, (int)pc->level, (int)pc->pp_level, (int)pc->nl_count, pc->after_tab);
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu]",
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
-              pc->column, pc->GetOrigCol(), pc->orig_col_end, pc->orig_prev_sp,
+              pc->column, pc->GetOrigCol(), pc->GetOrigColEnd(), pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
       // Print pc flags in groups of 4 hex characters
       char flag_string[20];
@@ -572,7 +572,7 @@ void output_parsed_csv(FILE *pfile)
       fprintf(pfile, "%s%zu,%s,%s,%s,%zu,%zu,%zu,%d,%zu,%zu,%zu,",
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
-              pc->column, pc->GetOrigCol(), pc->orig_col_end, pc->orig_prev_sp,
+              pc->column, pc->GetOrigCol(), pc->GetOrigColEnd(), pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level);
 
       auto pcf_flag_str = pcf_flags_str(E_PcfFlag(pc->GetFlags()));
@@ -755,11 +755,11 @@ void output_text(FILE *pfile)
                      if ((int)(cpd.column + orig_sp) < 0)
                      {
 #ifdef WIN32
-                        fprintf(stderr, "FATAL: negative value.\n   pc->GetOrigCol() is %d, prev->orig_col_end is %d\n",
-                                (int)pc->GetOrigCol(), (int)prev->orig_col_end);
+                        fprintf(stderr, "FATAL: negative value.\n   pc->GetOrigCol() is %d, prev->GetOrigColEnd() is %d\n",
+                                (int)pc->GetOrigCol(), (int)prev->GetOrigColEnd());
 #else // not WIN32
-                        fprintf(stderr, "FATAL: negative value.\n   pc->GetOrigCol() is %zu, prev->orig_col_end is %zu\n",
-                                pc->GetOrigCol(), prev->orig_col_end);
+                        fprintf(stderr, "FATAL: negative value.\n   pc->GetOrigCol() is %zu, prev->GetOrigColEnd() is %zu\n",
+                                pc->GetOrigCol(), prev->GetOrigColEnd());
 #endif // ifdef WIN32
                         log_flush(true);
                         exit(EX_SOFTWARE);

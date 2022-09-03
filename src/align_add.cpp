@@ -34,7 +34,7 @@ void align_add(ChunkStack &cs, Chunk *pc, size_t &max_col)
    {
       if (prev->Is(CT_COMMENT_MULTI))
       {
-         min_col = prev->orig_col_end + 1;
+         min_col = prev->GetOrigColEnd() + 1;
       }
       else
       {
@@ -42,7 +42,7 @@ void align_add(ChunkStack &cs, Chunk *pc, size_t &max_col)
       }
       LOG_FMT(LALADD, "%s(%d): pc orig line=%zu, pc->col=%zu max_col=%zu min_col=%zu multi:%s prev->col=%zu prev->Len()=%zu %s\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->column, max_col, min_col, (prev->Is(CT_COMMENT_MULTI)) ? "Y" : "N",
-              (prev->Is(CT_COMMENT_MULTI)) ? prev->orig_col_end : (UINT32)prev->column, prev->Len(), get_token_name(prev->GetType()));
+              (prev->Is(CT_COMMENT_MULTI)) ? prev->GetOrigColEnd() : (UINT32)prev->column, prev->Len(), get_token_name(prev->GetType()));
    }
 
    if (cs.Empty())
