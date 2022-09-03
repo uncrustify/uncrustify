@@ -215,6 +215,7 @@ void ParseFrame::pop(const char *func, int line, Chunk *pc)
       || pc->GetType() == CT_FPAREN_CLOSE
       || pc->GetType() == CT_LPAREN_CLOSE
       || pc->GetType() == CT_SPAREN_CLOSE
+      || pc->GetType() == CT_TPAREN_CLOSE
       || pc->GetType() == CT_CLASS_COLON
       || pc->GetType() == CT_ANGLE_CLOSE
       || pc->GetType() == CT_SEMICOLON
