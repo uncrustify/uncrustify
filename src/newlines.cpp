@@ -3497,7 +3497,8 @@ static void newline_oc_msg(Chunk *start)
          break;
       }
 
-      if (pc->Is(CT_OC_COLON))
+      if (  pc->Is(CT_OC_COLON)
+         && pc->level - 1 == start->level) // Only consider params on the current level
       {
          parameter_count++;
       }
@@ -3518,7 +3519,8 @@ static void newline_oc_msg(Chunk *start)
          break;
       }
 
-      if (pc->Is(CT_OC_MSG_NAME))
+      if (  pc->Is(CT_OC_MSG_NAME)
+         && pc->level - 1 == start->level) // Only newline messages on the current level
       {
          newline_add_before(pc);
       }

@@ -13,4 +13,8 @@ static void function() {
 	[object param1:nil];
 
 	[object func];
+
+	[obj param1:nil
+	 param2:nil
+	 param3:[obj2 param1:nil param2:nil]];
 }
