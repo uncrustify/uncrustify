@@ -1815,22 +1815,22 @@ static bool parse_whitespace(tok_ctx &ctx, Chunk &pc)
             ++LE_COUNT(CR);
          }
          nl_count++;
-         pc.orig_prev_sp = 0;
+         pc.SetOrigPrevSp(0);
          break;
 
       case '\n':
          // LF ending
          ++LE_COUNT(LF);
          nl_count++;
-         pc.orig_prev_sp = 0;
+         pc.SetOrigPrevSp(0);
          break;
 
       case '\t':
-         pc.orig_prev_sp += ctx.c.col - lastcol;
+         pc.SetOrigPrevSp(pc.GetOrigPrevSp() + ctx.c.col - lastcol);
          break;
 
       case ' ':
-         pc.orig_prev_sp++;
+         pc.SetOrigPrevSp(pc.GetOrigPrevSp() + 1);
          break;
 
       default:
@@ -2686,11 +2686,11 @@ void tokenize(const deque<int> &data, Chunk *ref)
       if (chunk.GetType() == CT_WHITESPACE)
       {
          last_was_tab = chunk.after_tab;
-         prev_sp      = chunk.orig_prev_sp;
+         prev_sp      = chunk.GetOrigPrevSp();
          continue;
       }
-      chunk.orig_prev_sp = prev_sp;
-      prev_sp            = 0;
+      chunk.SetOrigPrevSp(prev_sp);
+      prev_sp = 0;
 
       if (chunk.GetType() == CT_NEWLINE)
       {

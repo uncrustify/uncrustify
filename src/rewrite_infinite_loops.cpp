@@ -148,7 +148,7 @@ static void move_one_token(Chunk * &source, Chunk * &destination, E_Token parent
    source->column = destination->column + destination->Len();
    source->SetOrigCol(destination->GetOrigCol() + destination->Len());
    source->SetOrigColEnd(source->GetOrigColEnd() + source->Len());
-   source->orig_prev_sp = 0;
+   source->SetOrigPrevSp(0);
    source->SetParentType(parent_type);
 
    destination = source;

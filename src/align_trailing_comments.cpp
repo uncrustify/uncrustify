@@ -187,10 +187,10 @@ void align_right_comments()
          {
             log_rule_B("align_right_cmt_gap");
 
-            if (pc->orig_prev_sp < options::align_right_cmt_gap())
+            if (pc->GetOrigPrevSp() < options::align_right_cmt_gap())
             {
-               LOG_FMT(LALTC, "NOT changing END comment on line %zu (%u < %u)\n",
-                       pc->GetOrigLine(), pc->orig_prev_sp,
+               LOG_FMT(LALTC, "NOT changing END comment on line %zu (%zu < %u)\n",
+                       pc->GetOrigLine(), pc->GetOrigPrevSp(),
                        options::align_right_cmt_gap());
             }
             else
