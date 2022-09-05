@@ -424,18 +424,18 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
 
    if (second->GetParentType() == CT_COMMENT_END)
    {
-      switch (second->orig_prev_sp)
+      switch (second->GetOrigPrevSp())
       {
       case 0:
-         log_rule("orig_prev_sp-REMOVE");
+         log_rule("orig prev sp - REMOVE");
          return(IARF_REMOVE);
 
       case 1:
-         log_rule("orig_prev_sp-FORCE");
+         log_rule("orig prev sp - FORCE");
          return(IARF_FORCE);
 
       default:
-         log_rule("orig_prev_sp-ADD");
+         log_rule("orig prev sp - ADD");
          return(IARF_ADD);
       }
    }
@@ -3548,7 +3548,7 @@ void space_text()
                    * If there was a space, we need to force one, otherwise
                    * try to keep the comment in the same column.
                    */
-                  size_t col_min = pc->column + pc->Len() + ((next->orig_prev_sp > 0) ? 1 : 0);
+                  size_t col_min = pc->column + pc->Len() + ((next->GetOrigPrevSp() > 0) ? 1 : 0);
                   column = next->GetOrigCol();
 
                   if (column < col_min)

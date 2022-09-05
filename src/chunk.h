@@ -94,7 +94,7 @@ public:
    void SetTypeReal(const E_Token token, const char *func, const int line);
 
    /**
-    * @brief returns the parent type of the chunk
+    * @brief Returns the parent type of the chunk
     */
    E_Token GetParentType() const;
 
@@ -107,7 +107,7 @@ public:
    void SetParentTypeReal(const E_Token token, const char *func, const int line);
 
    /**
-    * @brief returns the parent of the chunk
+    * @brief Returns the parent of the chunk
     */
    Chunk *GetParent() const;
 
@@ -118,12 +118,12 @@ public:
    void SetParent(Chunk *parent);
 
    /**
-    * @brief returns the type of the parent chunk
+    * @brief Returns the type of the parent chunk
     */
    E_Token GetTypeOfParent() const;
 
    /**
-    * @brief returns the chunk flags
+    * @brief Returns the chunk flags
     */
    T_PcfFlags GetFlags() const;
 
@@ -160,7 +160,7 @@ public:
    void UpdateFlagBits(T_PcfFlags resetBits, T_PcfFlags setBits);
 
    /**
-    * @brief returns the line number of the chunk in the input file
+    * @brief Returns the line number of the chunk in the input file
     */
    size_t GetOrigLine() const;
 
@@ -171,7 +171,7 @@ public:
    void SetOrigLine(size_t line);
 
    /**
-    * @brief returns the column number of the chunk in the input file
+    * @brief Returns the column number of the chunk in the input file
     */
    size_t GetOrigCol() const;
 
@@ -182,7 +182,7 @@ public:
    void SetOrigCol(size_t col);
 
    /**
-    * @brief returns the end column number of the chunk in the input file
+    * @brief Returns the end column number of the chunk in the input file
     */
    size_t GetOrigColEnd() const;
 
@@ -191,6 +191,17 @@ public:
     * @param col the end column number of the chunk
     */
    void SetOrigColEnd(size_t col);
+
+   /**
+    * @brief Returns the position of the whitespace before this chunk
+    */
+   size_t GetOrigPrevSp() const;
+
+   /**
+    * @brief Sets the position of the whitespace before this chunk
+    * @param col the end column number of the chunk in the input file
+    */
+   void SetOrigPrevSp(size_t col);
 
 
    // --------- Get* chunk functions
@@ -879,7 +890,6 @@ public:
    // --------- Data members
    align_ptr_t  align;
    indent_ptr_t indent;
-   UINT32       orig_prev_sp;                //! whitespace before this token
    size_t       column;                      //! column of chunk
    size_t       column_indent;               /** if 1st on a line, set to the 'indent'
                                               * column, which may be less than the real
@@ -932,6 +942,7 @@ protected:
    size_t     m_origLine;                   //! line number of chunk in input file
    size_t     m_origCol;                    //! column where chunk started in the input file, is always > 0
    size_t     m_origColEnd;                 //! column where chunk ended in the input file, is always > 1
+   size_t     m_origPrevSp;                 //! whitespace before this token
    E_Token    m_type;                       //! type of the chunk itself
    E_Token    m_parentType;                 //! type of the parent chunk usually CT_NONE
    T_PcfFlags m_flags;                      //! see PCF_xxx
@@ -1084,6 +1095,18 @@ inline size_t Chunk::GetOrigColEnd() const
 inline void Chunk::SetOrigColEnd(size_t col)
 {
    m_origColEnd = col;
+}
+
+
+inline size_t Chunk::GetOrigPrevSp() const
+{
+   return(m_origPrevSp);
+}
+
+
+inline void Chunk::SetOrigPrevSp(size_t col)
+{
+   m_origPrevSp = col;
 }
 
 

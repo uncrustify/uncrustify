@@ -518,13 +518,13 @@ void output_parsed(FILE *pfile, bool withOptions)
       fprintf(pfile, "%s# %3d>%19.19s|%19.19s|%19.19s[%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
               eol_marker, (int)pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
-              (int)pc->column, (int)pc->GetOrigCol(), (int)pc->GetOrigColEnd(), (int)pc->orig_prev_sp,
+              (int)pc->column, (int)pc->GetOrigCol(), (int)pc->GetOrigColEnd(), (int)pc->GetOrigPrevSp(),
               (int)pc->brace_level, (int)pc->level, (int)pc->pp_level, (int)pc->nl_count, pc->after_tab);
 #else // not WIN32
-      fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu]",
+      fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3zu][%zu/%zu/%zu]",
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
-              pc->column, pc->GetOrigCol(), pc->GetOrigColEnd(), pc->orig_prev_sp,
+              pc->column, pc->GetOrigCol(), pc->GetOrigColEnd(), pc->GetOrigPrevSp(),
               pc->brace_level, pc->level, pc->pp_level);
       // Print pc flags in groups of 4 hex characters
       char flag_string[20];
@@ -569,10 +569,10 @@ void output_parsed_csv(FILE *pfile)
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      fprintf(pfile, "%s%zu,%s,%s,%s,%zu,%zu,%zu,%d,%zu,%zu,%zu,",
+      fprintf(pfile, "%s%zu,%s,%s,%s,%zu,%zu,%zu,%zu,%zu,%zu,%zu,",
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
-              pc->column, pc->GetOrigCol(), pc->GetOrigColEnd(), pc->orig_prev_sp,
+              pc->column, pc->GetOrigCol(), pc->GetOrigColEnd(), pc->GetOrigPrevSp(),
               pc->brace_level, pc->level, pc->pp_level);
 
       auto pcf_flag_str = pcf_flags_str(E_PcfFlag(pc->GetFlags()));
@@ -750,7 +750,7 @@ void output_text(FILE *pfile)
                      && prev->IsNotNullChunk()
                      && prev->nl_count == 0)
                   {
-                     int orig_sp = pc->orig_prev_sp;
+                     int orig_sp = pc->GetOrigPrevSp();
 
                      if ((int)(cpd.column + orig_sp) < 0)
                      {

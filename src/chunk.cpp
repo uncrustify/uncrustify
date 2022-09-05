@@ -37,7 +37,7 @@ void Chunk::CopyFrom(const Chunk &o)
    m_origLine    = o.m_origLine;
    m_origCol     = o.m_origCol;
    m_origColEnd  = o.m_origColEnd;
-   orig_prev_sp  = o.orig_prev_sp;
+   m_origPrevSp  = o.m_origPrevSp;
    m_flags       = o.m_flags;
    column        = o.column;
    column_indent = o.column_indent;
@@ -67,7 +67,7 @@ void Chunk::Reset()
    m_origLine    = 0;
    m_origCol     = 0;
    m_origColEnd  = 0;
-   orig_prev_sp  = 0;
+   m_origPrevSp  = 0;
    m_flags       = PCF_NONE;
    column        = 0;
    column_indent = 0;

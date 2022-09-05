@@ -316,9 +316,9 @@ void dump_out(unsigned int type)
          fprintf(D_file, "  orig col %zu\n", pc->GetOrigCol());
          fprintf(D_file, "  orig col end %zu\n", pc->GetOrigColEnd());
 
-         if (pc->orig_prev_sp != 0)
+         if (pc->GetOrigPrevSp() != 0)
          {
-            fprintf(D_file, "  orig_prev_sp %u\n", pc->orig_prev_sp);
+            fprintf(D_file, "  orig prev sp %zu\n", pc->GetOrigPrevSp());
          }
 
          if (pc->column != 0)
@@ -435,9 +435,9 @@ void dump_in(unsigned int type)
             {
                chunk.SetOrigColEnd(strtol(parts[1], nullptr, 0));
             }
-            else if (strcasecmp(parts[0], "orig_prev_sp") == 0)
+            else if (strcasecmp(parts[0], "orig prev sp") == 0)
             {
-               chunk.orig_prev_sp = strtol(parts[1], nullptr, 0);
+               chunk.SetOrigPrevSp(strtol(parts[1], nullptr, 0));
             }
             else if (strcasecmp(parts[0], "column") == 0)
             {

@@ -3756,7 +3756,7 @@ static void handle_oc_property_decl(Chunk *os)
             {
                for (auto chunk : chunk_group)
                {
-                  chunk->orig_prev_sp = 0;
+                  chunk->SetOrigPrevSp(0);
 
                   if (chunk != curr_chunk)
                   {

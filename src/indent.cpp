@@ -274,7 +274,7 @@ void align_to_column(Chunk *pc, size_t column)
       else if (almod == align_mode_e::KEEP_REL)
       {
          // Keep same relative column
-         int orig_delta = static_cast<int>(pc->orig_prev_sp) + static_cast<int>(prev->Len());
+         int orig_delta = static_cast<int>(pc->GetOrigPrevSp()) + static_cast<int>(prev->Len());
          orig_delta = max<int>(orig_delta, min_delta);  // keeps orig_delta positive
 
          pc->column = prev->column + static_cast<size_t>(orig_delta);
