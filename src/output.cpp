@@ -334,7 +334,15 @@ static void add_char(UINT32 ch, bool is_literal)
       {
          log_rule_B("indent_with_tabs");
 
-         if (options::indent_with_tabs() == 0)
+         int indent_with_tabs = options::pp_indent_with_tabs();
+
+         if (  cpd.in_preproc != CT_PREPROC
+            || indent_with_tabs == -1)
+         {
+            indent_with_tabs = options::indent_with_tabs();
+         }
+
+         if (indent_with_tabs == 0)
          {
             size_t endcol = next_tab_column(cpd.column);
 
@@ -459,7 +467,6 @@ static void output_to_column(size_t column, bool allow_tabs)
 static void cmt_output_indent(size_t brace_col, size_t base_col, size_t column)
 {
    log_rule_B("indent_cmt_with_tabs");
-   log_rule_B("indent_with_tabs");
    size_t iwt = options::indent_cmt_with_tabs() ? 2 :
                 (options::indent_with_tabs() ? 1 : 0);
 
@@ -679,7 +686,13 @@ void output_text(FILE *pfile)
       set_line_number();
       print_numbering();
    }
-   bool write_in_tracking = false;
+   bool write_in_tracking   = false;
+   int  pp_indent_with_tabs = options::pp_indent_with_tabs();
+
+   if (pp_indent_with_tabs == -1)
+   {
+      pp_indent_with_tabs = options::indent_with_tabs();
+   }
 
    // loop over the whole chunk list
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
@@ -696,15 +709,22 @@ void output_text(FILE *pfile)
             if (  cnt > 0
                && pc->nl_column > 1)
             {
-               log_rule_B("indent_with_tabs");
-               output_to_column(pc->nl_column, (options::indent_with_tabs() == 2));
+               log_rule_B("indent_with_tabs - newline");
+
+               if (pc->IsPreproc())
+               {
+                  output_to_column(pc->nl_column, (pp_indent_with_tabs == 2));
+               }
+               else
+               {
+                  output_to_column(pc->nl_column, (options::indent_with_tabs() == 2));
+               }
             }
             add_char('\n');
          }
 
          cpd.did_newline = true;
          cpd.column      = 1;
-         LOG_FMT(LOUTIND, " xx\n");
       }
       else if (pc->Is(CT_NL_CONT))
       {
@@ -779,14 +799,21 @@ void output_text(FILE *pfile)
          }
          else
          {
-            log_rule_B("indent_with_tabs");
-            output_to_column(pc->column, (options::indent_with_tabs() == 2));
+            log_rule_B("indent_with_tabs - newline cont");
+
+            if (pc->IsPreproc())
+            {
+               output_to_column(pc->column, (pp_indent_with_tabs == 2));
+            }
+            else
+            {
+               output_to_column(pc->column, (options::indent_with_tabs() == 2));
+            }
          }
          add_char('\\');
          add_char('\n');
          cpd.did_newline = true;
          cpd.column      = 1;
-         LOG_FMT(LOUTIND, " \\xx\n");
       }
       else if (pc->Is(CT_COMMENT_MULTI))
       {
@@ -849,9 +876,10 @@ void output_text(FILE *pfile)
          // indent to the 'level' first
          if (cpd.did_newline)
          {
-            log_rule_B("indent_with_tabs");
-
-            if (options::indent_with_tabs() == 1)
+            if (  (  pc->IsPreproc()
+                  && pp_indent_with_tabs == 1)
+               || (  !pc->IsPreproc()
+                  && options::indent_with_tabs() == 1))
             {
                size_t lvlcol;
 
@@ -861,7 +889,7 @@ void output_text(FILE *pfile)
                 */
                if (  pc->Is(CT_BRACE_CLOSE)
                   || pc->Is(CT_CASE_COLON)
-                  || pc->Is(CT_PREPROC))
+                  || pc->IsPreproc())
                {
                   lvlcol = pc->column;
                }
@@ -877,11 +905,15 @@ void output_text(FILE *pfile)
 
                if (lvlcol > 1)
                {
+                  log_rule_B("indent_with_tabs - hack");
                   output_to_column(lvlcol, true);
                }
             }
             log_rule_B("indent_with_tabs");
-            allow_tabs = (options::indent_with_tabs() == 2)
+            allow_tabs = (  pc->IsPreproc()
+                         && pp_indent_with_tabs == 2)
+                         || (  !pc->IsPreproc()
+                            && options::indent_with_tabs() == 2)
                          || (  pc->IsComment()
                             && options::indent_with_tabs() != 0);
 

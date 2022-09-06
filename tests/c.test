@@ -387,6 +387,13 @@
 
 02510  c/ben_093.cfg                              c/asm.c
 
+02520  c/pp_indent_with_tabs_0.cfg                c/pp_indent_with_tabs.c
+02521  c/pp_indent_with_tabs_1.cfg                c/pp_indent_with_tabs.c
+02522  c/pp_indent_with_tabs_2.cfg                c/pp_indent_with_tabs.c
+02523  c/pp_indent_with_tabs_-1_0.cfg             c/pp_indent_with_tabs.c
+02524  c/pp_indent_with_tabs_-1_1.cfg             c/pp_indent_with_tabs.c
+02525  c/pp_indent_with_tabs_-1_2.cfg             c/pp_indent_with_tabs.c
+
 07630  c/indent-vbrace.cfg                        c/indent-vbrace.c
 
 08399  c/ben_095.cfg                              c/gh399.c
