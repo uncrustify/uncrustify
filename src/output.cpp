@@ -687,9 +687,7 @@ void output_text(FILE *pfile)
       char copy[1000];
       LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig line is %zu, column is %zu, nl is %zu\n",
               __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->column, pc->nl_count);
-      log_rule_B("cmt_convert_tab_to_spaces");
-      cpd.output_tab_as_space = (  options::cmt_convert_tab_to_spaces()
-                                && pc->IsComment());
+      cpd.output_tab_as_space = false;
 
       if (pc->Is(CT_NEWLINE))
       {
@@ -793,6 +791,8 @@ void output_text(FILE *pfile)
       else if (pc->Is(CT_COMMENT_MULTI))
       {
          log_rule_B("cmt_indent_multi");
+         log_rule_B("cmt_convert_tab_to_spaces - multi");
+         cpd.output_tab_as_space = options::cmt_convert_tab_to_spaces();
 
          if (options::cmt_indent_multi())
          {
@@ -805,6 +805,10 @@ void output_text(FILE *pfile)
       }
       else if (pc->Is(CT_COMMENT_CPP))
       {
+         log_rule_B("cmt_comment_cpp");
+         log_rule_B("cmt_convert_tab_to_spaces - comment_cpp");
+         cpd.output_tab_as_space = options::cmt_convert_tab_to_spaces();
+
          bool tmp = cpd.output_trailspace;
          /*
           * keep trailing spaces if they are still present in a chunk;
@@ -817,6 +821,10 @@ void output_text(FILE *pfile)
       }
       else if (pc->Is(CT_COMMENT))
       {
+         log_rule_B("cmt_comment");
+         log_rule_B("cmt_convert_tab_to_spaces - comment");
+         cpd.output_tab_as_space = options::cmt_convert_tab_to_spaces();
+
          pc = output_comment_c(pc);
       }
       else if (  pc->Is(CT_JUNK)
