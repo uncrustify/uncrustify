@@ -4023,6 +4023,15 @@ mod_sort_oc_property_nullability_weight;
 ///////////////////////////////////////////////////////////////////////////////
 //BEGIN Preprocessor options
 
+// How to use tabs when indenting preprocessor code.
+//
+// -1: Use 'indent_with_tabs' setting (default)
+//  0: Spaces only
+//  1: Indent with tabs to brace level, align with spaces
+//  2: Indent and align with tabs, using spaces when not on a tabstop
+extern BoundedOption<signed, -1, 2>
+pp_indent_with_tabs; // = -1
+
 // Add or remove indentation of preprocessor directives inside #if blocks
 // at brace level 0 (file-level).
 extern Option<iarf_e>
