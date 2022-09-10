@@ -205,13 +205,13 @@ void align_right_comments()
          if (pc->GetParentType() == CT_COMMENT_WHOLE)
          {
             log_rule_B("input_tab_size");
-            size_t max_col = pc->column_indent + options::input_tab_size();
+            size_t max_col = pc->GetColumnIndent() + options::input_tab_size();
 
             // If the comment is further right than the brace level...
             if (pc->column >= max_col)
             {
                LOG_FMT(LALTC, "Changing WHOLE comment on line %zu into a RIGHT-comment (col=%zu col_ind=%zu max_col=%zu)\n",
-                       pc->GetOrigLine(), pc->column, pc->column_indent, max_col);
+                       pc->GetOrigLine(), pc->column, pc->GetColumnIndent(), max_col);
 
                pc->SetFlagBits(PCF_RIGHT_COMMENT);
             }

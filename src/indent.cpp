@@ -2326,8 +2326,8 @@ void indent_text()
 
                if (t2->IsNewline())
                {
-                  pct->column        = frm.top().indent_tmp;
-                  pct->column_indent = pct->column;
+                  pct->column = frm.top().indent_tmp;
+                  pct->SetColumnIndent(pct->column);
                }
             }
          }
@@ -2418,8 +2418,8 @@ void indent_text()
 
                if (t2->IsNewline())
                {
-                  pct->column        = frm.top().indent_tmp;
-                  pct->column_indent = pct->column;
+                  pct->column = frm.top().indent_tmp;
+                  pct->SetColumnIndent(pct->column);
                }
             }
          }
@@ -3550,15 +3550,15 @@ void indent_text()
          && !pc->IsNewline()
          && (pc->Len() != 0))
       {
-         pc->column_indent = frm.top().indent_tab;
+         pc->SetColumnIndent(frm.top().indent_tab);
 
          if (frm.top().ip.ref)
          {
             pc->indent.ref   = frm.top().ip.ref;
             pc->indent.delta = frm.top().ip.delta;
          }
-         LOG_FMT(LINDENT2, "%s(%d): orig line is %zu, pc->column_indent is %zu, indent_column is %zu, for '%s'\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->column_indent, indent_column, pc->ElidedText(copy));
+         LOG_FMT(LINDENT2, "%s(%d): orig line is %zu, pc->column indent is %zu, indent_column is %zu, for '%s'\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetColumnIndent(), indent_column, pc->ElidedText(copy));
 
          /*
           * Check for special continuations.
@@ -3729,7 +3729,7 @@ void indent_text()
                      indent_column_set(frm.poped().indent_tmp);
                      LOG_FMT(LINDLINE, "%s(%d): [%zu:%zu] indent_column set to %zu\n",
                              __func__, __LINE__, ck2->GetOrigLine(), ck2->GetOrigCol(), indent_column);
-                     pc->column_indent = frm.poped().indent_tab;
+                     pc->SetColumnIndent(frm.poped().indent_tab);
                      log_rule_B("indent_paren_close");
 
                      if (options::indent_paren_close() == 1)
