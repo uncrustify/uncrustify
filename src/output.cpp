@@ -663,8 +663,8 @@ void output_text(FILE *pfile)
       // loop over the whole chunk list
       for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
-         pc->column        += indent;
-         pc->column_indent += indent;
+         pc->column += indent;
+         pc->SetColumnIndent(pc->GetColumnIndent() + indent);
       }
 
       cpd.frag_cols = 0;
@@ -884,7 +884,7 @@ void output_text(FILE *pfile)
                size_t lvlcol;
 
                /*
-                * FIXME: it would be better to properly set column_indent in
+                * FIXME: it would be better to properly set m_columnIndent in
                 * indent_text(), but this hack for '}' and '#' seems to work.
                 */
                if (  pc->Is(CT_BRACE_CLOSE)
@@ -895,7 +895,7 @@ void output_text(FILE *pfile)
                }
                else
                {
-                  lvlcol = pc->column_indent;
+                  lvlcol = pc->GetColumnIndent();
 
                   if (lvlcol > pc->column)
                   {
@@ -917,8 +917,8 @@ void output_text(FILE *pfile)
                          || (  pc->IsComment()
                             && options::indent_with_tabs() != 0);
 
-            LOG_FMT(LOUTIND, "%s(%d): orig line is %zu, column is %zu, column_indent is %zu, cpd.column is %zu\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->column, pc->column_indent, cpd.column);
+            LOG_FMT(LOUTIND, "%s(%d): orig line is %zu, column is %zu, column indent is %zu, cpd.column is %zu\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->column, pc->GetColumnIndent(), cpd.column);
          }
          else
          {
@@ -1771,8 +1771,8 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
 {
    cmt.pc          = pc;
    cmt.column      = pc->column;
-   cmt.brace_col   = pc->column_indent;
-   cmt.base_col    = pc->column_indent;
+   cmt.brace_col   = pc->GetColumnIndent();
+   cmt.base_col    = pc->GetColumnIndent();
    cmt.word_count  = 0;
    cmt.xtra_indent = 0;
    cmt.cont_text.clear();

@@ -34,13 +34,13 @@ void Chunk::CopyFrom(const Chunk &o)
    m_type       = o.m_type;
    m_parentType = o.m_parentType;
 
-   m_origLine    = o.m_origLine;
-   m_origCol     = o.m_origCol;
-   m_origColEnd  = o.m_origColEnd;
-   m_origPrevSp  = o.m_origPrevSp;
-   m_flags       = o.m_flags;
-   column        = o.column;
-   column_indent = o.column_indent;
+   m_origLine     = o.m_origLine;
+   m_origCol      = o.m_origCol;
+   m_origColEnd   = o.m_origColEnd;
+   m_origPrevSp   = o.m_origPrevSp;
+   m_flags        = o.m_flags;
+   column         = o.column;
+   m_columnIndent = o.m_columnIndent;
 
    nl_count  = o.nl_count;
    nl_column = o.nl_column;
@@ -59,24 +59,24 @@ void Chunk::Reset()
 {
    memset(&align, 0, sizeof(align));
    memset(&indent, 0, sizeof(indent));
-   m_next        = Chunk::NullChunkPtr;
-   m_prev        = Chunk::NullChunkPtr;
-   m_parent      = Chunk::NullChunkPtr;
-   m_type        = CT_NONE;
-   m_parentType  = CT_NONE;
-   m_origLine    = 0;
-   m_origCol     = 0;
-   m_origColEnd  = 0;
-   m_origPrevSp  = 0;
-   m_flags       = PCF_NONE;
-   column        = 0;
-   column_indent = 0;
-   nl_count      = 0;
-   nl_column     = 0;
-   level         = 0;
-   brace_level   = 0;
-   pp_level      = 999;                                // use a big value to find some errors
-   after_tab     = false;
+   m_next         = Chunk::NullChunkPtr;
+   m_prev         = Chunk::NullChunkPtr;
+   m_parent       = Chunk::NullChunkPtr;
+   m_type         = CT_NONE;
+   m_parentType   = CT_NONE;
+   m_origLine     = 0;
+   m_origCol      = 0;
+   m_origColEnd   = 0;
+   m_origPrevSp   = 0;
+   m_flags        = PCF_NONE;
+   column         = 0;
+   m_columnIndent = 0;
+   nl_count       = 0;
+   nl_column      = 0;
+   level          = 0;
+   brace_level    = 0;
+   pp_level       = 999;                                // use a big value to find some errors
+   after_tab      = false;
    // for debugging purpose only
    tracking = nullptr;
    str.clear();

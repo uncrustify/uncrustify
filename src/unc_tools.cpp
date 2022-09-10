@@ -326,9 +326,9 @@ void dump_out(unsigned int type)
             fprintf(D_file, "  column %zu\n", pc->column);
          }
 
-         if (pc->column_indent != 0)
+         if (pc->GetColumnIndent() != 0)
          {
-            fprintf(D_file, "  column_indent %zu\n", pc->column_indent);
+            fprintf(D_file, "  column indent %zu\n", pc->GetColumnIndent());
          }
 
          if (pc->nl_count != 0)
