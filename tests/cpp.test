@@ -598,7 +598,7 @@
 32004  common/empty.cfg                                     cpp/issue_624_angle.cpp
 32005  cpp/align_var_class_span-1.cfg                       cpp/issue_633_typename.cpp
 32006  common/space_indent_columns-4.cfg                    cpp/bug_i_687.cpp
-32007  cpp/Issue_3052.cfg                                   cpp/Issue_3052.cpp
+32007  common/Issue_3052.cfg                                cpp/Issue_3052.cpp
 32008  cpp/Issue_3034.cfg                                   cpp/Issue_3034.cpp
 32009  cpp/Issue_3422-1.cfg                                 cpp/Issue_3422.cpp
 32010  cpp/Issue_3422-2.cfg                                 cpp/Issue_3422.cpp

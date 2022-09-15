@@ -2807,7 +2807,6 @@ void tokenize(const deque<int> &data, Chunk *ref)
          }
          else if (cpd.in_preproc == CT_PP_IGNORE)
          {
-            // ASSERT(options::pp_ignore_define_body());
             if (  !pc->Is(CT_NL_CONT)
                && !pc->IsComment())        // Issue #1966
             {

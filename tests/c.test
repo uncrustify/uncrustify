@@ -394,6 +394,19 @@
 02524  c/pp_indent_with_tabs_-1_1.cfg             c/pp_indent_with_tabs.c
 02525  c/pp_indent_with_tabs_-1_2.cfg             c/pp_indent_with_tabs.c
 
+02530  common/empty.cfg                           c/pp_multiline_define.c
+02531  common/Issue_3052.cfg                      c/pp_multiline_define.c
+02532  c/pp_multiline_define_ignore_body.cfg      c/pp_multiline_define.c
+02533  c/pp_multiline_define_with_spaces.cfg      c/pp_multiline_define.c
+02534  c/pp_multiline_define_align_nl.cfg         c/pp_multiline_define.c
+02535  c/pp_multiline_define_align_pp_col1.cfg    c/pp_multiline_define.c
+02536  c/pp_multiline_define_align_pp_cnt3.cfg    c/pp_multiline_define.c
+02537  c/pp_multiline_define_align_pp_ml4.cfg     c/pp_multiline_define.c
+02538  c/pp_multiline_define_align_pp_ml2.cfg     c/pp_multiline_define.c
+02539  c/pp_multiline_define_align_pp_ml0.cfg     c/pp_multiline_define.c
+02540  c/pp_multiline_define_align_pp_ml-1.cfg    c/pp_multiline_define.c
+02541  c/pp_multiline_define_align_pp_ml-5.cfg    c/pp_multiline_define.c
+
 07630  c/indent-vbrace.cfg                        c/indent-vbrace.c
 
 08399  c/ben_095.cfg                              c/gh399.c

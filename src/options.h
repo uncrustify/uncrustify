@@ -4100,6 +4100,17 @@ pp_include_at_level;
 extern Option<bool>
 pp_ignore_define_body;
 
+// An offset value that controls the indentation of the body of a multiline #define.
+// 'body' refers to all the lines of a multiline #define except the first line.
+// Requires 'pp_ignore_define_body = false'.
+//
+//  <0: Absolute column: the body indentation starts off at the specified column
+//      (ex. -3 ==> the body is indented starting from column 3)
+// >=0: Relative to the column of the '#' of '#define'
+//      (ex.  3 ==> the body is indented starting 3 columns at the right of '#')
+extern BoundedOption<signed, -32, 32>
+pp_multiline_define_body_indent; // = 8
+
 // TODO The following descriptions are confusing and suffer from sub-optimal
 // grammar, and should be revised; from here...
 
