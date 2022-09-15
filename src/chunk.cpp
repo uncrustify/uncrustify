@@ -540,9 +540,14 @@ void Chunk::SetResetFlags(T_PcfFlags resetBits, T_PcfFlags setBits)
                  static_cast<T_PcfFlags::int_t>(m_flags ^ newFlags),
                  static_cast<T_PcfFlags::int_t>(newFlags),
                  __func__, __LINE__, m_origLine, m_origCol, Text(), get_token_name(m_type));
-         LOG_FMT(LSETFLG, " parent type is %s,\n",
+         LOG_FMT(LSETFLG, "  parent type is %s,\n",
                  get_token_name(m_parentType));
          log_func_stack_inline(LSETFLG);
+
+         LOG_FMT(LSETFLG, "  before: ");
+         log_pcf_flags(LSETFLG, m_flags);
+         LOG_FMT(LSETFLG, "  after:  ");
+         log_pcf_flags(LSETFLG, newFlags);
          m_flags = newFlags;
       }
    }
