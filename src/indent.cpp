@@ -11,6 +11,7 @@
 
 #include "align.h"
 #include "frame_list.h"
+#include "options.h"
 #include "options_for_QT.h"
 #include "prototypes.h"
 #include "quick_align_again.h"
@@ -990,7 +991,17 @@ void indent_text()
             log_rule_B("pp_define_at_level");
             frm.top().indent_tmp = options::pp_define_at_level()
                                    ? frm.prev().indent_tmp : 1;
-            frm.top().indent = frm.top().indent_tmp + indent_size;
+
+            log_rule_B("pp_multiline_define_body_indent");
+
+            if (options::pp_multiline_define_body_indent() < 0)
+            {
+               frm.top().indent = -options::pp_multiline_define_body_indent();
+            }
+            else
+            {
+               frm.top().indent = pc->column + options::pp_multiline_define_body_indent();
+            }
             log_indent();
 
             frm.top().indent_tab = frm.top().indent;
@@ -1501,7 +1512,7 @@ void indent_text()
                                 && (  !options::indent_braces_no_struct()
                                    || pc->GetParentType() != CT_STRUCT));
       LOG_FMT(LINDENT, "%s(%d): brace_indent is %s\n",
-              __func__, __LINE__, brace_indent ? "TRue" : "FAlse");
+              __func__, __LINE__, brace_indent ? "true" : "false");
 
       if (pc->Is(CT_BRACE_CLOSE))
       {
@@ -3566,11 +3577,11 @@ void indent_text()
           * everything else
           */
 
-         auto prev  = pc->GetPrevNcNnl();
-         auto prevv = prev->GetPrevNcNnl();
-         auto next  = pc->GetNextNcNnl();
+         Chunk *prev  = pc->GetPrevNcNnl();
+         Chunk *prevv = prev->GetPrevNcNnl();
+         Chunk *next  = pc->GetNextNcNnl();
 
-         bool do_vardefcol = false;
+         bool  do_vardefcol = false;
 
          if (  vardefcol > 0
             && pc->level == pc->brace_level
@@ -4253,7 +4264,8 @@ void indent_text()
           * first line (indent_tmp will be 1 or 0)
           */
          if (  pc->Is(CT_NL_CONT)
-            && (frm.top().indent_tmp <= indent_size))
+            && frm.top().indent_tmp <= indent_size
+            && frm.top().type != CT_PP_DEFINE)
          {
             frm.top().indent_tmp = indent_size + 1;
             log_indent_tmp();
