@@ -125,13 +125,13 @@ void output_parsed(FILE *pfile)
       fprintf(pfile, "\n%3d> %13.13s[%13.13s][%2d/%2d/%2d][%d/%d/%d][%6x][%d-%d]",
               pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()),
-              pc->column, pc->GetOrigCol(), pc->GetOrigColEnd(),
+              pc->GetColumn(), pc->GetOrigCol(), pc->GetOrigColEnd(),
               pc->brace_level, pc->level, pc->pp_level,
               pc->GetFlags(), pc->nl_count, pc->after_tab);
 
       if ((pc->GetType() != CT_NEWLINE) && (pc->len != 0))
       {
-         for (cnt = 0; cnt < pc->column; cnt++)
+         for (cnt = 0; cnt < pc->GetColumn(); cnt++)
          {
             fprintf(pfile, " ");
          }
@@ -221,7 +221,7 @@ void output_text(FILE *pfile)
       else if (pc->len == 0)
       {
          /* don't do anything for non-visible stuff */
-         LOG_FMT(LOUTIND, " <%d> -", pc->column);
+         LOG_FMT(LOUTIND, " <%d> -", pc->GetColumn());
       }
       else
       {
@@ -231,7 +231,7 @@ void output_text(FILE *pfile)
             if (cpd.settings[UO_indent_with_tabs].n == 1)
             {
                lvlcol = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
-               if ((pc->column >= lvlcol) && (lvlcol > 1))
+               if ((pc->GetColumn() >= lvlcol) && (lvlcol > 1))
                {
                   output_to_column(lvlcol, true);
                }
@@ -240,7 +240,7 @@ void output_text(FILE *pfile)
                          (pc->IsComment() &&
                           (cpd.settings[UO_indent_with_tabs].n != 0));
 
-            LOG_FMT(LOUTIND, "  %d> col %d/%d - ", pc->GetOrigLine(), pc->column, cpd.column);
+            LOG_FMT(LOUTIND, "  %d> col %d/%d - ", pc->GetOrigLine(), pc->GetColumn(), cpd.column);
          }
          else
          {
@@ -254,13 +254,13 @@ void output_text(FILE *pfile)
                prev       = pc->GetPrev();
                allow_tabs = (cpd.settings[UO_align_with_tabs].b &&
                              ((pc->GetFlags() & PCF_WAS_ALIGNED) != 0) &&
-                             (((pc->column - 1) % cpd.settings[UO_output_tab_size].n) == 0) &&
-                             ((prev->column + prev->len + 1) != pc->column));
+                             (((pc->GetColumn() - 1) % cpd.settings[UO_output_tab_size].n) == 0) &&
+                             ((prev->GetColumn() + prev->len + 1) != pc->GetColumn()));
             }
-            LOG_FMT(LOUTIND, " %d -", pc->column);
+            LOG_FMT(LOUTIND, " %d -", pc->GetColumn());
          }
 
-         output_to_column(pc->column, allow_tabs);
+         output_to_column(pc->GetColumn(), allow_tabs);
          add_text_len(pc->str, pc->len);
          cpd.did_newline = pc->IsNewline();
       }
@@ -387,7 +387,7 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
  */
 Chunk *output_comment_cpp(Chunk *first)
 {
-   int col    = first->column;
+   int col    = first->GetColumn();
    int col_br = 1 + (first->brace_level * cpd.settings[UO_indent_columns].n);
 
    /* Make sure we have at least one space past the last token */
@@ -396,7 +396,7 @@ Chunk *output_comment_cpp(Chunk *first)
       Chunk *prev = first->GetPrev();
       if (prev != NULL)
       {
-         int col_min = prev->column + prev->len + 1;
+         int col_min = prev->GetColumn() + prev->len + 1;
          if (col < col_min)
          {
             col = col_min;
@@ -432,9 +432,9 @@ Chunk *output_comment_cpp(Chunk *first)
           */
          if ((next != NULL) &&
              (next->GetType() == CT_COMMENT_CPP) &&
-             (((next->column == 1) && (first->column == 1)) ||
-              ((next->column == col_br) && (first->column == col_br)) ||
-              ((next->column > col_br) && (first->GetParentType() == CT_COMMENT_END))))
+             (((next->GetColumn() == 1) && (first->GetColumn() == 1)) ||
+              ((next->GetColumn() == col_br) && (first->GetColumn() == col_br)) ||
+              ((next->GetColumn() > col_br) && (first->GetParentType() == CT_COMMENT_END))))
          {
             combined = true;
          }
@@ -479,9 +479,9 @@ Chunk *output_comment_cpp(Chunk *first)
       {
          break;
       }
-      if (((pc->column == 1) && (first->column == 1)) ||
-          ((pc->column == col_br) && (first->column == col_br)) ||
-          ((pc->column > col_br) && (first->GetParentType() == CT_COMMENT_END)))
+      if (((pc->GetColumn() == 1) && (first->GetColumn() == 1)) ||
+          ((pc->GetColumn() == col_br) && (first->GetColumn() == col_br)) ||
+          ((pc->GetColumn() > col_br) && (first->GetParentType() == CT_COMMENT_END)))
       {
          last = pc;
 cpp_newline:
@@ -509,7 +509,7 @@ cpp_addline:
 
 void output_comment_multi(Chunk *pc)
 {
-   int        cmt_col = pc->column;
+   int        cmt_col = pc->GetColumn();
    const char *cmt_str;
    int        remaining;
    char       ch;
@@ -528,13 +528,13 @@ void output_comment_multi(Chunk *pc)
    }
    else
    {
-      col_diff = pc->GetOrigCol() - pc->column;
+      col_diff = pc->GetOrigCol() - pc->GetColumn();
    }
 
    //   fprintf(stderr, "Indenting1 line %d to col %d (orig=%d) col_diff=%d\n",
    //           pc->GetOrigLine(), cmt_col, pc->GetOrigCol(), col_diff);
 
-   xtra = calculate_comment_body_indent(pc->str, pc->len, pc->column);
+   xtra = calculate_comment_body_indent(pc->str, pc->len, pc->GetColumn());
 
    ccol      = 1;
    remaining = pc->len;

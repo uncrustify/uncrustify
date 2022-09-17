@@ -109,7 +109,7 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigne
                LOG_FMT(LGUY, "Text() '%s', ", pc->Text());
             }
             LOG_FMT(LGUY, " column is %zu, pp_level is %zu, type is %s, parent type is %s, orig col is %zu,",
-                    pc->column, pc->pp_level, get_token_name(pc->GetType()),
+                    pc->GetColumn(), pc->pp_level, get_token_name(pc->GetType()),
                     get_token_name(pc->GetParentType()), pc->GetOrigCol());
 
             if (pc->Is(CT_IGNORED))
@@ -191,7 +191,7 @@ void prot_all_lines(const char *func_name, int theLine)
          LOG_FMT(LGUY, "Text() '%s', ", pc->Text());
       }
       LOG_FMT(LGUY, " column is %zu, type is %s\n",
-              pc->column, get_token_name(pc->GetType()));
+              pc->GetColumn(), get_token_name(pc->GetType()));
    }
 } // prot_all_lines
 
@@ -242,7 +242,7 @@ void examine_Data(const char *func_name, int theLine, int what)
             }
             else
             {
-               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->column);
+               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->GetColumn());
             }
          }
       }
@@ -260,7 +260,7 @@ void examine_Data(const char *func_name, int theLine, int what)
          }
          else
          {
-            LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->column);
+            LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->GetColumn());
          }
       }
 
@@ -279,7 +279,7 @@ void examine_Data(const char *func_name, int theLine, int what)
             }
             else
             {
-               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->column);
+               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->GetColumn());
             }
          }
       }
@@ -321,9 +321,9 @@ void dump_out(unsigned int type)
             fprintf(D_file, "  orig prev sp %zu\n", pc->GetOrigPrevSp());
          }
 
-         if (pc->column != 0)
+         if (pc->GetColumn() != 0)
          {
-            fprintf(D_file, "  column %zu\n", pc->column);
+            fprintf(D_file, "  column %zu\n", pc->GetColumn());
          }
 
          if (pc->GetColumnIndent() != 0)
@@ -441,7 +441,7 @@ void dump_in(unsigned int type)
             }
             else if (strcasecmp(parts[0], "column") == 0)
             {
-               chunk.column = strtol(parts[1], nullptr, 0);
+               chunk.SetColumn(strtol(parts[1], nullptr, 0));
             }
             else if (strcasecmp(parts[0], "nl_count") == 0)
             {

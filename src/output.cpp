@@ -525,13 +525,13 @@ void output_parsed(FILE *pfile, bool withOptions)
       fprintf(pfile, "%s# %3d>%19.19s|%19.19s|%19.19s[%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
               eol_marker, (int)pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
-              (int)pc->column, (int)pc->GetOrigCol(), (int)pc->GetOrigColEnd(), (int)pc->GetOrigPrevSp(),
+              (int)pc->GetColumn(), (int)pc->GetOrigCol(), (int)pc->GetOrigColEnd(), (int)pc->GetOrigPrevSp(),
               (int)pc->brace_level, (int)pc->level, (int)pc->pp_level, (int)pc->nl_count, pc->after_tab);
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3zu][%zu/%zu/%zu]",
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
-              pc->column, pc->GetOrigCol(), pc->GetOrigColEnd(), pc->GetOrigPrevSp(),
+              pc->GetColumn(), pc->GetOrigCol(), pc->GetOrigColEnd(), pc->GetOrigPrevSp(),
               pc->brace_level, pc->level, pc->pp_level);
       // Print pc flags in groups of 4 hex characters
       char flag_string[20];
@@ -544,7 +544,7 @@ void output_parsed(FILE *pfile, bool withOptions)
       if (  pc->IsNot(CT_NEWLINE)
          && (pc->Len() != 0))
       {
-         for (size_t cnt = 0; cnt < pc->column; cnt++)
+         for (size_t cnt = 0; cnt < pc->GetColumn(); cnt++)
          {
             fprintf(pfile, " ");
          }
@@ -579,7 +579,7 @@ void output_parsed_csv(FILE *pfile)
       fprintf(pfile, "%s%zu,%s,%s,%s,%zu,%zu,%zu,%zu,%zu,%zu,%zu,",
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
-              pc->column, pc->GetOrigCol(), pc->GetOrigColEnd(), pc->GetOrigPrevSp(),
+              pc->GetColumn(), pc->GetOrigCol(), pc->GetOrigColEnd(), pc->GetOrigPrevSp(),
               pc->brace_level, pc->level, pc->pp_level);
 
       auto pcf_flag_str = pcf_flags_str(E_PcfFlag(pc->GetFlags()));
@@ -600,7 +600,7 @@ void output_parsed_csv(FILE *pfile)
       {
          fprintf(pfile, "\"");
 
-         for (size_t cnt = 0; cnt < pc->column; cnt++)
+         for (size_t cnt = 0; cnt < pc->GetColumn(); cnt++)
          {
             fprintf(pfile, " ");
          }
@@ -663,7 +663,7 @@ void output_text(FILE *pfile)
       // loop over the whole chunk list
       for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
       {
-         pc->column += indent;
+         pc->SetColumn(pc->GetColumn() + indent);
          pc->SetColumnIndent(pc->GetColumnIndent() + indent);
       }
 
@@ -699,7 +699,7 @@ void output_text(FILE *pfile)
    {
       char copy[1000];
       LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig line is %zu, column is %zu, nl is %zu\n",
-              __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->column, pc->nl_count);
+              __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetColumn(), pc->nl_count);
       cpd.output_tab_as_space = false;
 
       if (pc->Is(CT_NEWLINE))
@@ -737,7 +737,7 @@ void output_text(FILE *pfile)
             if (options::sp_before_nl_cont() & IARF_REMOVE)
             {
                log_rule_B("sp_before_nl_cont");
-               pc->column = cpd.column + (options::sp_before_nl_cont() == IARF_FORCE);
+               pc->SetColumn(cpd.column + (options::sp_before_nl_cont() == IARF_FORCE));
             }
             else
             {
@@ -751,7 +751,7 @@ void output_text(FILE *pfile)
                    * they likely have special column aligned newline
                    * continuations (common in multiline macros)
                    */
-                  pc->column = pc->GetOrigCol();
+                  pc->SetColumn(pc->GetOrigCol());
                }
                else
                {
@@ -782,20 +782,20 @@ void output_text(FILE *pfile)
                         log_flush(true);
                         exit(EX_SOFTWARE);
                      }
-                     pc->column = cpd.column + orig_sp;
+                     pc->SetColumn(cpd.column + orig_sp);
 
                      // Add or remove space before a backslash-newline at the end of a line.
                      log_rule_B("sp_before_nl_cont");
 
                      if (  (options::sp_before_nl_cont() != IARF_IGNORE)
-                        && (pc->column < (cpd.column + 1)))
+                        && (pc->GetColumn() < (cpd.column + 1)))
                      {
-                        pc->column = cpd.column + 1;
+                        pc->SetColumn(cpd.column + 1);
                      }
                   }
                }
             }
-            output_to_column(pc->column, false);
+            output_to_column(pc->GetColumn(), false);
          }
          else
          {
@@ -803,11 +803,11 @@ void output_text(FILE *pfile)
 
             if (pc->IsPreproc())
             {
-               output_to_column(pc->column, (pp_indent_with_tabs == 2));
+               output_to_column(pc->GetColumn(), (pp_indent_with_tabs == 2));
             }
             else
             {
-               output_to_column(pc->column, (options::indent_with_tabs() == 2));
+               output_to_column(pc->GetColumn(), (options::indent_with_tabs() == 2));
             }
          }
          add_char('\\');
@@ -866,7 +866,7 @@ void output_text(FILE *pfile)
       {
          // don't do anything for non-visible stuff
          LOG_FMT(LOUTIND, "%s(%d): orig line is %zu, column is %zu, non-visible stuff: type is %s\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->column, get_token_name(pc->GetType()));
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetColumn(), get_token_name(pc->GetType()));
       }
       else
       {
@@ -891,15 +891,15 @@ void output_text(FILE *pfile)
                   || pc->Is(CT_CASE_COLON)
                   || pc->IsPreproc())
                {
-                  lvlcol = pc->column;
+                  lvlcol = pc->GetColumn();
                }
                else
                {
                   lvlcol = pc->GetColumnIndent();
 
-                  if (lvlcol > pc->column)
+                  if (lvlcol > pc->GetColumn())
                   {
-                     lvlcol = pc->column;
+                     lvlcol = pc->GetColumn();
                   }
                }
 
@@ -918,7 +918,7 @@ void output_text(FILE *pfile)
                             && options::indent_with_tabs() != 0);
 
             LOG_FMT(LOUTIND, "%s(%d): orig line is %zu, column is %zu, column indent is %zu, cpd.column is %zu\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->column, pc->GetColumnIndent(), cpd.column);
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetColumn(), pc->GetColumnIndent(), cpd.column);
          }
          else
          {
@@ -928,7 +928,7 @@ void output_text(FILE *pfile)
              * This has to be done here because comments are not formatted
              * until the output phase.
              */
-            if (pc->column < cpd.column)
+            if (pc->GetColumn() < cpd.column)
             {
                reindent_line(pc, cpd.column);
             }
@@ -937,7 +937,7 @@ void output_text(FILE *pfile)
             log_rule_B("align_with_tabs");
             allow_tabs = (  options::align_with_tabs()
                          && pc->TestFlags(PCF_WAS_ALIGNED)
-                         && ((prev->column + prev->Len() + 1) != pc->column));
+                         && ((prev->GetColumn() + prev->Len() + 1) != pc->GetColumn()));
 
             log_rule_B("align_keep_tabs");
 
@@ -946,9 +946,9 @@ void output_text(FILE *pfile)
                allow_tabs |= pc->after_tab;
             }
             LOG_FMT(LOUTIND, "%s(%d): at column %zu(%s)\n",
-                    __func__, __LINE__, pc->column, (allow_tabs ? "true" : "FALSE"));
+                    __func__, __LINE__, pc->GetColumn(), (allow_tabs ? "true" : "FALSE"));
          }
-         output_to_column(pc->column, allow_tabs);
+         output_to_column(pc->GetColumn(), allow_tabs);
 
          if (write_in_tracking)
          {
@@ -1770,7 +1770,7 @@ static void add_comment_text(const unc_text &text,
 static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
 {
    cmt.pc          = pc;
-   cmt.column      = pc->column;
+   cmt.column      = pc->GetColumn();
    cmt.brace_col   = pc->GetColumnIndent();
    cmt.base_col    = pc->GetColumnIndent();
    cmt.word_count  = 0;
@@ -1831,8 +1831,8 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
    {
       cmt.column = align_tab_column(cmt.column - 1);
       // LOG_FMT(LSYS, "%s: line %d, orig:%d new:%d\n",
-      //        __func__, pc->GetOrigLine(), pc->column, cmt.column);
-      pc->column = cmt.column;
+      //        __func__, pc->GetOrigLine(), pc->GetColumn(), cmt.column);
+      pc->SetColumn(cmt.column);
    }
    cmt.base_col = cmt.column;
 
@@ -1866,11 +1866,11 @@ static bool can_combine_comment(Chunk *pc, cmt_reflow &cmt)
       next = next->GetNext();
 
       if (  next->Is(pc->GetType())
-         && (  (  next->column == 1
-               && pc->column == 1)
-            || (  next->column == cmt.base_col
-               && pc->column == cmt.base_col)
-            || (  next->column > cmt.base_col
+         && (  (  next->GetColumn() == 1
+               && pc->GetColumn() == 1)
+            || (  next->GetColumn() == cmt.base_col
+               && pc->GetColumn() == cmt.base_col)
+            || (  next->GetColumn() > cmt.base_col
                && pc->GetParentType() == CT_COMMENT_END)))
       {
          return(true);
@@ -2305,7 +2305,7 @@ static void output_comment_multi(Chunk *pc)
    char       copy[1000];
 
    LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig col is %zu, column is %zu\n",
-           __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->column);
+           __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->GetColumn());
 
    output_cmt_start(cmt, pc);
    log_rule_B("cmt_reflow_mode");
@@ -2334,7 +2334,7 @@ static void output_comment_multi(Chunk *pc)
                                               doxygen_javadoc_continuation_indent);
 
    size_t   line_count                   = 0;
-   size_t   ccol                         = pc->column; // the col of subsequent comment lines
+   size_t   ccol                         = pc->GetColumn(); // the col of subsequent comment lines
    size_t   cmt_idx                      = 0;
    bool     nl_end                       = false;
    bool     doxygen_javadoc_indent_align = false;
@@ -3292,7 +3292,7 @@ static void output_comment_multi_simple(Chunk *pc)
    cmt_reflow cmt;
 
    LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig col is %zu, column is %zu\n",
-           __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->column);
+           __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->GetColumn());
 
    output_cmt_start(cmt, pc);
 
@@ -3307,7 +3307,7 @@ static void output_comment_multi_simple(Chunk *pc)
       if (pc->GetPrev()->IsNewline())
       {
          // The comment should be indented correctly
-         diff = pc->column - pc->GetOrigCol();
+         diff = pc->GetColumn() - pc->GetOrigCol();
       }
       return(diff);
    }();
@@ -3321,7 +3321,7 @@ static void output_comment_multi_simple(Chunk *pc)
 
    unc_text line;
    size_t   line_count  = 0;
-   size_t   line_column = pc->column;
+   size_t   line_column = pc->GetColumn();
    size_t   cmt_idx     = 0;
 
    while (cmt_idx < pc->Len())
@@ -3448,7 +3448,7 @@ static void generate_if_conditional_as_text(unc_text &dst, Chunk *ifdef)
    {
       if (column == -1)
       {
-         column = pc->column;
+         column = pc->GetColumn();
       }
 
       if (  pc->Is(CT_NEWLINE)
@@ -3468,7 +3468,7 @@ static void generate_if_conditional_as_text(unc_text &dst, Chunk *ifdef)
       }
       else // if (pc->Is(CT_JUNK)) || else
       {
-         for (int spacing = pc->column - column; spacing > 0; spacing--)
+         for (int spacing = pc->GetColumn() - column; spacing > 0; spacing--)
          {
             dst += ' ';
             column++;

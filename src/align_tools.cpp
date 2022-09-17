@@ -48,7 +48,7 @@ Chunk *scan_ib_line(Chunk *start)
    if (pc != nullptr)
    {
       LOG_FMT(LSIB, "%s(%d): start: orig line is %zu, orig col is %zu, column is %zu, type is %s\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->column, get_token_name(pc->GetType()));
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetColumn(), get_token_name(pc->GetType()));
    }
    else
    {
@@ -60,7 +60,7 @@ Chunk *scan_ib_line(Chunk *start)
          && pc->level >= start->level)
    {
       //LOG_FMT(LSIB, "%s:     '%s'   col %d/%d line %zu\n", __func__,
-      //        pc->Text(), pc->column, pc->GetOrigCol(), pc->GetOrigLine());
+      //        pc->Text(), pc->GetColumn(), pc->GetOrigCol(), pc->GetOrigLine());
 
       Chunk *next = pc->GetNext();
 
@@ -85,10 +85,10 @@ Chunk *scan_ib_line(Chunk *start)
             {
                LOG_FMT(LSIB, "%s(%d): Prepare the 'idx's\n", __func__, __LINE__);
             }
-            LOG_FMT(LSIB, "%s(%d):   New idx is %2.1zu, pc->column is %2.1zu, Text() '%s', token_width is %zu, type is %s\n",
-                    __func__, __LINE__, idx, pc->column, pc->Text(), token_width, get_token_name(pc->GetType()));
+            LOG_FMT(LSIB, "%s(%d):   New idx is %2.1zu, pc->GetColumn() is %2.1zu, Text() '%s', token_width is %zu, type is %s\n",
+                    __func__, __LINE__, idx, pc->GetColumn(), pc->Text(), token_width, get_token_name(pc->GetType()));
             cpd.al[cpd.al_cnt].type = pc->GetType();
-            cpd.al[cpd.al_cnt].col  = pc->column;
+            cpd.al[cpd.al_cnt].col  = pc->GetColumn();
             cpd.al[cpd.al_cnt].len  = token_width;
             cpd.al[cpd.al_cnt].ref  = pc;                  // Issue #3786
             cpd.al_cnt++;
@@ -111,25 +111,25 @@ Chunk *scan_ib_line(Chunk *start)
             if (cpd.al[idx].type == pc->GetType())
             {
                LOG_FMT(LSIB, "%s(%d):   Match? idx is %2.1zu, orig line is %2.1zu, column is %2.1zu, token_width is %zu, type is %s\n",
-                       __func__, __LINE__, idx, pc->GetOrigLine(), pc->column, token_width, get_token_name(pc->GetType()));
+                       __func__, __LINE__, idx, pc->GetOrigLine(), pc->GetColumn(), token_width, get_token_name(pc->GetType()));
 
                // Shift out based on column
                if (prev_match == nullptr)
                {
-                  if (pc->column > cpd.al[idx].col)
+                  if (pc->GetColumn() > cpd.al[idx].col)
                   {
-                     LOG_FMT(LSIB, "%s(%d): [ pc->column (%zu) > cpd.al[%zu].col(%zu) ] \n",
-                             __func__, __LINE__, pc->column, idx, cpd.al[idx].col);
+                     LOG_FMT(LSIB, "%s(%d): [ pc column (%zu) > cpd.al[%zu].col(%zu) ] \n",
+                             __func__, __LINE__, pc->GetColumn(), idx, cpd.al[idx].col);
 
-                     ib_shift_out(idx, pc->column - cpd.al[idx].col);
-                     cpd.al[idx].col = pc->column;
+                     ib_shift_out(idx, pc->GetColumn() - cpd.al[idx].col);
+                     cpd.al[idx].col = pc->GetColumn();
                   }
                }
                else if (idx > 0)
                {
                   LOG_FMT(LSIB, "%s(%d): prev_match '%s', orig line is %zu, orig col is %zu\n",
                           __func__, __LINE__, prev_match->Text(), prev_match->GetOrigLine(), prev_match->GetOrigCol());
-                  int min_col_diff = pc->column - prev_match->column;
+                  int min_col_diff = pc->GetColumn() - prev_match->GetColumn();
                   int cur_col_diff = cpd.al[idx].col - cpd.al[idx - 1].col;
 
                   if (cur_col_diff < min_col_diff)

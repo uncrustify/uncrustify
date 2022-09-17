@@ -204,13 +204,24 @@ public:
    void SetOrigPrevSp(size_t col);
 
    /**
-    * @brief Returns the column indent of the chunk
+    * @brief Returns the column of the chunk
+    */
+   size_t GetColumn() const;
+
+   /**
+    * @brief Sets the column of the chunk
+    * @param col the column of the chunk
+    */
+   void SetColumn(size_t col);
+
+   /**
+    * @brief Returns the column indentation of the chunk
     */
    size_t GetColumnIndent() const;
 
    /**
-    * @brief Sets the column indent of the chunk
-    * @param col the column indent of the chunk
+    * @brief Sets the column indentation of the chunk
+    * @param col the column indentation of the chunk
     */
    void SetColumnIndent(size_t col);
 
@@ -901,7 +912,6 @@ public:
    // --------- Data members
    align_ptr_t  align;
    indent_ptr_t indent;
-   size_t       column;                      //! column of chunk
    size_t       nl_count;                    //! number of newlines in CT_NEWLINE
    size_t       nl_column;                   //! column of the subsequent newline entries(all of them should have the same column)
    size_t       level;                       /** nest level in {, (, or [
@@ -951,6 +961,7 @@ protected:
    size_t     m_origCol;                    //! column where chunk started in the input file, is always > 0
    size_t     m_origColEnd;                 //! column where chunk ended in the input file, is always > 1
    size_t     m_origPrevSp;                 //! whitespace before this token
+   size_t     m_column;                     //! column of the chunk
    size_t     m_columnIndent;               //! if 1st chunk on a line, set to the 'indent' column, which may
                                             //! be less than the real column used to indent with tabs
    E_Token    m_type;                       //! type of the chunk itself
@@ -1117,6 +1128,18 @@ inline size_t Chunk::GetOrigPrevSp() const
 inline void Chunk::SetOrigPrevSp(size_t col)
 {
    m_origPrevSp = col;
+}
+
+
+inline size_t Chunk::GetColumn() const
+{
+   return(m_column);
+}
+
+
+inline void Chunk::SetColumn(size_t col)
+{
+   m_column = col;
 }
 
 

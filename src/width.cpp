@@ -132,7 +132,7 @@ static inline bool is_past_width(Chunk *pc)
    LOG_FMT(LSPLIT, "%s(%d): orig line is %zu, orig col is %zu, for %s\n",
            __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
    log_rule_B("code_width");
-   return((pc->column + pc->Len() - 1) > options::code_width());
+   return((pc->GetColumn() + pc->Len() - 1) > options::code_width());
 }
 
 
@@ -735,7 +735,7 @@ static void split_fcn_params(Chunk *start)
       }
    }
    Chunk  *pc     = fpo->GetNextNcNnl();
-   size_t min_col = pc->column;
+   size_t min_col = pc->GetColumn();
 
    log_rule_B("code_width");
    LOG_FMT(LSPLIT, "    mincol is %zu, max_width is %zu\n",
@@ -760,12 +760,12 @@ static void split_fcn_params(Chunk *start)
       {
          if (last_col < 0)
          {
-            last_col = pc->column;
+            last_col = pc->GetColumn();
             LOG_FMT(LSPLIT, "%s(%d): last_col is %d\n",
                     __func__, __LINE__, last_col);
          }
-         cur_width += (pc->column - last_col) + pc->Len();
-         last_col   = pc->column + pc->Len();
+         cur_width += (pc->GetColumn() - last_col) + pc->Len();
+         last_col   = pc->GetColumn() + pc->Len();
 
          LOG_FMT(LSPLIT, "%s(%d): last_col is %d\n",
                  __func__, __LINE__, last_col);

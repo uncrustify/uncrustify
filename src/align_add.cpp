@@ -28,7 +28,7 @@ void align_add(ChunkStack &cs, Chunk *pc, size_t &max_col)
    {
       min_col = 1;
       LOG_FMT(LALADD, "%s(%d): pc orig line=%zu, pc->col=%zu max_col=%zu min_col=%zu\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->column, max_col, min_col);
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetColumn(), max_col, min_col);
    }
    else
    {
@@ -38,11 +38,11 @@ void align_add(ChunkStack &cs, Chunk *pc, size_t &max_col)
       }
       else
       {
-         min_col = prev->column + prev->Len() + 1;
+         min_col = prev->GetColumn() + prev->Len() + 1;
       }
       LOG_FMT(LALADD, "%s(%d): pc orig line=%zu, pc->col=%zu max_col=%zu min_col=%zu multi:%s prev->col=%zu prev->Len()=%zu %s\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->column, max_col, min_col, (prev->Is(CT_COMMENT_MULTI)) ? "Y" : "N",
-              (prev->Is(CT_COMMENT_MULTI)) ? prev->GetOrigColEnd() : (UINT32)prev->column, prev->Len(), get_token_name(prev->GetType()));
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetColumn(), max_col, min_col, (prev->Is(CT_COMMENT_MULTI)) ? "Y" : "N",
+              (prev->Is(CT_COMMENT_MULTI)) ? prev->GetOrigColEnd() : (UINT32)prev->GetColumn(), prev->Len(), get_token_name(prev->GetType()));
    }
 
    if (cs.Empty())

@@ -3280,7 +3280,7 @@ void space_text()
    Chunk  *pc = Chunk::GetHead();
    Chunk  *next;
    size_t prev_column;
-   size_t column = pc->column;
+   size_t column = pc->GetColumn();
 
    while (pc->IsNotNullChunk())
    {
@@ -3320,9 +3320,9 @@ void space_text()
          {
             LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig col is %zu, Skip %s (%zu+%zu)\n",
                     __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()),
-                    pc->column, pc->str.size());
-            next->column = pc->column + pc->str.size();
-            next         = next->GetNext();
+                    pc->GetColumn(), pc->str.size());
+            next->SetColumn(pc->GetColumn() + pc->str.size());
+            next = next->GetNext();
          }
       }
       else
@@ -3356,7 +3356,7 @@ void space_text()
       if (  pc->IsNewline()
          || pc->Is(CT_COMMENT_MULTI))
       {
-         column = next->column;
+         column = next->GetColumn();
       }
       else
       {
@@ -3540,7 +3540,7 @@ void space_text()
                   LOG_FMT(LSPACE, "%s(%d): pc is '%s', orig col is %zu, next orig col is %zu, pc orig col end is %zu\n",
                           __func__, __LINE__, pc->Text(),
                           pc->GetOrigCol(), next->GetOrigCol(), pc->GetOrigColEnd());
-                  column = pc->column + (next->GetOrigCol() - pc->GetOrigColEnd());
+                  column = pc->GetColumn() + (next->GetOrigCol() - pc->GetOrigColEnd());
                }
                else
                {
@@ -3548,7 +3548,7 @@ void space_text()
                    * If there was a space, we need to force one, otherwise
                    * try to keep the comment in the same column.
                    */
-                  size_t col_min = pc->column + pc->Len() + ((next->GetOrigPrevSp() > 0) ? 1 : 0);
+                  size_t col_min = pc->GetColumn() + pc->Len() + ((next->GetOrigPrevSp() > 0) ? 1 : 0);
                   column = next->GetOrigCol();
 
                   if (column < col_min)
@@ -3559,7 +3559,7 @@ void space_text()
                }
             }
          }
-         next->column = column;
+         next->SetColumn(column);
 
          LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig col is %zu, pc-Text() '%s', type is %s\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
@@ -3569,7 +3569,7 @@ void space_text()
                  (av == IARF_IGNORE) ? "IGNORE" :
                  (av == IARF_ADD) ? "ADD" :
                  (av == IARF_REMOVE) ? "REMOVE" : "FORCE",
-                 column - prev_column, next->column);
+                 column - prev_column, next->GetColumn());
 
          if (restoreValues)    // guy 2015-09-22
          {
@@ -3771,7 +3771,7 @@ void space_add_after(Chunk *pc, size_t count)
    sp.level       = pc->level;
    sp.brace_level = pc->brace_level;
    sp.pp_level    = pc->pp_level;
-   sp.column      = pc->column + pc->Len();
+   sp.SetColumn(pc->GetColumn() + pc->Len());
    sp.SetOrigLine(pc->GetOrigLine());
    sp.SetOrigCol(pc->GetOrigCol());
 
