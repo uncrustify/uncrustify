@@ -136,10 +136,10 @@ void align_oc_msg_colon(Chunk *so)
    if (  longest != nullptr
       && options::indent_oc_msg_prioritize_first_colon()
       && len_diff > 0
-      && (  (longest->column >= len_diff)
-         && (longest->column - len_diff) > (longest->brace_level * indent_size)))
+      && (  (longest->GetColumn() >= len_diff)
+         && (longest->GetColumn() - len_diff) > (longest->brace_level * indent_size)))
    {
-      longest->column -= len_diff;
+      longest->SetColumn(longest->GetColumn() - len_diff);
    }
    else if (  longest != nullptr
            && len > 0)

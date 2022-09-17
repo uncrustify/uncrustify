@@ -90,7 +90,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LAS, "AlignStack::%s(%d): Candidate is '%s': orig line is %zu, column is %zu, type is %s, level is %zu\n",
-           __func__, __LINE__, start->Text(), start->GetOrigLine(), start->column, get_token_name(start->GetType()), start->level);
+           __func__, __LINE__, start->Text(), start->GetOrigLine(), start->GetColumn(), get_token_name(start->GetType()), start->level);
    LOG_FMT(LAS, "AlignStack::%s(%d): seqnum is %zu\n", __func__, __LINE__, seqnum);
 
    // Assign a seqnum if needed
@@ -235,7 +235,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
    // Tighten down the spacing between ref and start
    if (!options::align_keep_extra_space())
    {
-      size_t tmp_col = ref->column;
+      size_t tmp_col = ref->GetColumn();
       Chunk  *tmp    = ref;
       LOG_FMT(LAS, "AlignStack::%s(%d): tmp_col is %zu\n",
               __func__, __LINE__, tmp_col);
@@ -250,10 +250,10 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
             LOG_FMT(LAS, "AlignStack::%s(%d): next orig line is %zu, orig col is %zu, Text() '%s', level is %zu, type is %s\n",
                     __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->Text(), next->level, get_token_name(next->GetType()));
             tmp_col += space_col_align(tmp, next);
-            LOG_FMT(LAS, "AlignStack::%s(%d): next->column is %zu, level is %zu, tmp_col is %zu\n",
-                    __func__, __LINE__, next->column, next->level, tmp_col);
+            LOG_FMT(LAS, "AlignStack::%s(%d): next column is %zu, level is %zu, tmp_col is %zu\n",
+                    __func__, __LINE__, next->GetColumn(), next->level, tmp_col);
 
-            if (next->column != tmp_col)
+            if (next->GetColumn() != tmp_col)
             {
                LOG_FMT(LAS, "AlignStack::%s(%d): Call align_to_column\n", __func__, __LINE__);
                align_to_column(next, tmp_col);
@@ -266,9 +266,9 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
    // Check threshold limits
    if (  m_max_col == 0
       || m_thresh == 0
-      || (  ((start->column + m_gap) <= (m_thresh + (m_absolute_thresh ? m_min_col : m_max_col))) // don't use subtraction here to prevent underflow
-         && (  (start->column + m_gap + m_thresh) >= m_max_col                                    // change the expression to mind negative expression
-            || start->column >= m_min_col)))
+      || (  ((start->GetColumn() + m_gap) <= (m_thresh + (m_absolute_thresh ? m_min_col : m_max_col))) // don't use subtraction here to prevent underflow
+         && (  (start->GetColumn() + m_gap + m_thresh) >= m_max_col                                    // change the expression to mind negative expression
+            || start->GetColumn() >= m_min_col)))
    {
       // we are adding it, so update the newline seqnum
       if (seqnum > m_nl_seqnum)
@@ -281,7 +281,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
 
       if (ref != ali)
       {
-         gap = ali->column - (ref->column + ref->Len());
+         gap = ali->GetColumn() - (ref->GetColumn() + ref->Len());
       }
       Chunk *tmp = ali;
 
@@ -299,11 +299,11 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
          || (  tmp->IsMsRef()
             && m_star_style == SS_DANGLE))     // TODO: add m_msref_style
       {
-         col_adj = start->column - ali->column;
-         gap     = start->column - (ref->column + ref->Len());
+         col_adj = start->GetColumn() - ali->GetColumn();
+         gap     = start->GetColumn() - (ref->GetColumn() + ref->Len());
       }
       // See if this pushes out the max_col
-      const size_t endcol = ali->column + col_adj
+      const size_t endcol = ali->GetColumn() + col_adj
                             + (gap < m_gap ? m_gap - gap : 0);
 
       ali->align.col_adj = col_adj;
@@ -316,12 +316,12 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       if (ali->Is(CT_PTR_TYPE))
       {
          LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s][%s]: ali orig line is %zu, column is %zu, type is %s, level is %zu\n",
-                 __func__, __LINE__, ali->Text(), start->Text(), ali->GetOrigLine(), ali->column, get_token_name(ali->GetType()), ali->level);
+                 __func__, __LINE__, ali->Text(), start->Text(), ali->GetOrigLine(), ali->GetColumn(), get_token_name(ali->GetType()), ali->level);
       }
       else
       {
          LOG_FMT(LAS, "AlignStack::%s(%d): Add-[%s]: ali orig line is %zu, column is %zu, type is %s, level is %zu\n",
-                 __func__, __LINE__, ali->Text(), ali->GetOrigLine(), ali->column, get_token_name(ali->GetType()), ali->level);
+                 __func__, __LINE__, ali->Text(), ali->GetOrigLine(), ali->GetColumn(), get_token_name(ali->GetType()), ali->level);
       }
       LOG_FMT(LAS, "AlignStack::%s(%d):    ali->align.col_adj is %d, ref '%s', endcol is %zu\n",
               __func__, __LINE__, ali->align.col_adj, ref->Text(), endcol);
@@ -336,7 +336,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
          LOG_FMT(LAS, "AlignStack::%s(%d): Add-aligned: seqnum is %zu, m_nl_seqnum is %zu, m_seqnum is %zu\n",
                  __func__, __LINE__, seqnum, m_nl_seqnum, m_seqnum);
          LOG_FMT(LAS, "AlignStack::%s(%d):    ali orig line is %zu, column is %zu, max_col old is %zu, new is %zu, m_min_col is %zu\n",
-                 __func__, __LINE__, ali->GetOrigLine(), ali->column, m_max_col, endcol, m_min_col);
+                 __func__, __LINE__, ali->GetOrigLine(), ali->GetColumn(), m_max_col, endcol, m_min_col);
          m_max_col = endcol;
 
          /*
@@ -353,7 +353,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
          LOG_FMT(LAS, "AlignStack::%s(%d): Add-aligned: seqnum is %zu, m_nl_seqnum is %zu, m_seqnum is %zu\n",
                  __func__, __LINE__, seqnum, m_nl_seqnum, m_seqnum);
          LOG_FMT(LAS, "AlignStack::%s(%d):    ali orig line is %zu, column is %zu, max_col old is %zu, new is %zu, m_min_col is %zu\n",
-                 __func__, __LINE__, ali->GetOrigLine(), ali->column, m_max_col, endcol, m_min_col);
+                 __func__, __LINE__, ali->GetOrigLine(), ali->GetColumn(), m_max_col, endcol, m_min_col);
       }
    }
    else
@@ -364,7 +364,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
 
       LOG_FMT(LAS, "AlignStack::Add-skipped [%zu/%zu/%zu]: line %zu, col %zu <= %zu + %zu\n",
               seqnum, m_nl_seqnum, m_seqnum,
-              start->GetOrigLine(), start->column, m_max_col, m_thresh);
+              start->GetOrigLine(), start->GetColumn(), m_max_col, m_thresh);
    }
    // produces much more log output. Use it only debugging purpose
    //WITH_STACKID_DEBUG;
@@ -449,7 +449,7 @@ void AlignStack::Flush()
 
       if (pc != pc->align.ref)
       {
-         gap = pc->column - (pc->align.ref->column + pc->align.ref->Len());
+         gap = pc->GetColumn() - (pc->align.ref->GetColumn() + pc->align.ref->Len());
       }
 
       if (m_star_style == SS_DANGLE)
@@ -458,8 +458,8 @@ void AlignStack::Flush()
 
          if (tmp->IsPointerOperator())
          {
-            col_adj = pc->align.start->column - pc->column;
-            gap     = pc->align.start->column - (pc->align.ref->column + pc->align.ref->Len());
+            col_adj = pc->align.start->GetColumn() - pc->GetColumn();
+            gap     = pc->align.start->GetColumn() - (pc->align.ref->GetColumn() + pc->align.ref->Len());
          }
       }
 
@@ -485,7 +485,7 @@ void AlignStack::Flush()
       pc->align.col_adj = col_adj;
 
       // See if this pushes out the max_col
-      const size_t endcol = pc->column + col_adj
+      const size_t endcol = pc->GetColumn() + col_adj
                             + (gap < m_gap ? m_gap - gap : 0);
 
       if (endcol > m_max_col)
@@ -523,7 +523,7 @@ void AlignStack::Flush()
       if (idx == 0)
       {
          if (  m_skip_first
-            && pc->column != tmp_col)
+            && pc->GetColumn() != tmp_col)
          {
             LOG_FMT(LAS, "AlignStack::%s(%d): orig line is %zu, orig col is %zu, dropping first item due to skip_first\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());

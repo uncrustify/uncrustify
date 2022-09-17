@@ -479,7 +479,7 @@ static void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next)
    nl->nl_count    = 1;
    nl->SetFlags((prev->GetFlags() & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC);
    nl->SetOrigCol(prev->GetOrigColEnd());
-   nl->column = prev->GetOrigCol();
+   nl->SetColumn(prev->GetOrigCol());
 
    if (  prev->TestFlags(PCF_IN_PREPROC)
       && next->TestFlags(PCF_IN_PREPROC))
@@ -554,15 +554,15 @@ Chunk *newline_add_before(Chunk *pc)
       // Already has a newline before this chunk
       return(prev);
    }
-   LOG_FMT(LNEWLINE, "%s(%d): Text() '%s', on orig line is %zu, orig col is %zu, pc->column is %zu",
-           __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->column);
+   LOG_FMT(LNEWLINE, "%s(%d): Text() '%s', on orig line is %zu, orig col is %zu, pc column is %zu",
+           __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetColumn());
    log_func_stack_inline(LNEWLINE);
 
    setup_newline_add(prev, &nl, pc);
    nl.SetOrigCol(pc->GetOrigCol());
    nl.pp_level = pc->pp_level;
-   LOG_FMT(LNEWLINE, "%s(%d): nl.column is %zu\n",
-           __func__, __LINE__, nl.column);
+   LOG_FMT(LNEWLINE, "%s(%d): nl column is %zu\n",
+           __func__, __LINE__, nl.GetColumn());
 
    MARK_CHANGE();
    return(nl.CopyAndAddBefore(pc));
@@ -857,7 +857,7 @@ void newline_del_between(Chunk *start, Chunk *end)
 
                if (prev->IsNotNullChunk())
                {
-                  align_to_column(next, prev->column + space_col_align(prev, next));
+                  align_to_column(next, prev->GetColumn() + space_col_align(prev, next));
                }
             }
          }
@@ -2427,7 +2427,7 @@ static void newlines_brace_pair(Chunk *br_open)
             log_rule_B("code_width");
 
             if (  options::code_width() > 0
-               && br_close->column > options::code_width())
+               && br_close->GetColumn() > options::code_width())
             {
                // the created line is too long
                // it is not possible to make an one_liner

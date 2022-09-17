@@ -43,7 +43,7 @@ void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev)
          pc->SetFlagBits(PCF_WAS_ALIGNED);
 
          LOG_FMT(sev, "%s(%d): indented [%s] on line %zu to %zu\n",
-                 __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->column);
+                 __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetColumn());
       }
    }
    cs.Reset();
@@ -79,7 +79,7 @@ Chunk *align_trailing_comments(Chunk *start)
          && (nl_count < options::align_right_cmt_span()))
    {
       if (  pc->TestFlags(PCF_RIGHT_COMMENT)
-         && pc->column > 1)
+         && pc->GetColumn() > 1)
       {
          if (  same_level
             && pc->brace_level != lvl)
@@ -92,13 +92,13 @@ Chunk *align_trailing_comments(Chunk *start)
          if (cmt_type_cur == cmt_type_start)
          {
             LOG_FMT(LALADD, "%s(%d): line=%zu min_col=%zu pc->col=%zu pc->len=%zu %s\n",
-                    __func__, __LINE__, pc->GetOrigLine(), min_col, pc->column, pc->Len(),
+                    __func__, __LINE__, pc->GetOrigLine(), min_col, pc->GetColumn(), pc->Len(),
                     get_token_name(pc->GetType()));
 
             if (  min_orig == 0
-               || min_orig > pc->column)
+               || min_orig > pc->GetColumn())
             {
-               min_orig = pc->column;
+               min_orig = pc->GetColumn();
             }
             align_add(cs, pc, min_col); // (intended_col < col));
             nl_count = 0;
@@ -163,7 +163,7 @@ comment_align_e get_comment_align_type(Chunk *cmt)
          || prev->Is(CT_BRACE_CLOSE))
       {
          // TODO: make the magic 3 configurable
-         if ((cmt->column - (prev->column + prev->Len())) < 3)
+         if ((cmt->GetColumn() - (prev->GetColumn() + prev->Len())) < 3)
          {
             cmt_type = (prev->Is(CT_PP_ENDIF)) ? comment_align_e::ENDIF : comment_align_e::BRACE;
          }
@@ -208,10 +208,10 @@ void align_right_comments()
             size_t max_col = pc->GetColumnIndent() + options::input_tab_size();
 
             // If the comment is further right than the brace level...
-            if (pc->column >= max_col)
+            if (pc->GetColumn() >= max_col)
             {
                LOG_FMT(LALTC, "Changing WHOLE comment on line %zu into a RIGHT-comment (col=%zu col_ind=%zu max_col=%zu)\n",
-                       pc->GetOrigLine(), pc->column, pc->GetColumnIndent(), max_col);
+                       pc->GetOrigLine(), pc->GetColumn(), pc->GetColumnIndent(), max_col);
 
                pc->SetFlagBits(PCF_RIGHT_COMMENT);
             }

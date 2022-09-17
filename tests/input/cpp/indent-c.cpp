@@ -120,9 +120,9 @@ static void indent_comment(Chunk *pc, int col);
 
 void indent_to_column(Chunk *pc, int column)
 {
-   if (column < pc->column)
+   if (column < pc->GetColumn())
    {
-      column = pc->column;
+      column = pc->GetColumn();
    }
    reindent_line(pc, column);
 }
@@ -139,16 +139,16 @@ void reindent_line(Chunk *pc, int column)
    int min_col;
 
    LOG_FMT(LINDLINE, "%s: %d] col %d on %.*s [%s] => %d\n",
-           __func__, pc->GetOrigLine(), pc->column, pc->len, pc->str,
+           __func__, pc->GetOrigLine(), pc->GetColumn(), pc->len, pc->str,
            get_token_name(pc->GetType()), column);
 
-   if (column == pc->column)
+   if (column == pc->GetColumn())
    {
       return;
    }
-   col_delta  = column - pc->column;
-   pc->column = column;
-   min_col    = pc->column;
+   col_delta  = column - pc->GetColumn();
+   pc->SetColumn(column);
+   min_col    = pc->GetColumn();
 
    do
    {
@@ -158,20 +158,20 @@ void reindent_line(Chunk *pc, int column)
       {
          if (pc->IsComment())
          {
-            pc->column = pc->GetOrigCol();
-            if (pc->column < min_col)
+            pc->SetColumn(pc->GetOrigCol());
+            if (pc->GetColumn() < min_col)
             {
-               pc->column = min_col + 1;
+               pc->SetColumn(min_col + 1);
             }
             LOG_FMT(LINDLINE, "%s: set comment on line %d to col %d (orig %d)\n",
-                    __func__, pc->GetOrigLine(), pc->column, pc->GetOrigCol());
+                    __func__, pc->GetOrigLine(), pc->GetColumn(), pc->GetOrigCol());
          }
          else
          {
-            pc->column += col_delta;
-            if (pc->column < min_col)
+            pc->SetColumn(pc->GetColumn() + col_delta);
+            if (pc->GetColumn() < min_col)
             {
-               pc->column = min_col;
+               pc->SetColumn(min_col);
             }
          }
       }
@@ -534,8 +534,8 @@ void indent_text(void)
 
          if ((pc->GetFlags() & PCF_DONT_INDENT) != 0)
          {
-            frm.pse[frm.pse_tos].indent = pc->column;
-            indent_column = pc->column;
+            frm.pse[frm.pse_tos].indent = pc->GetColumn();
+            indent_column = pc->GetColumn();
          }
          else
          {
@@ -549,7 +549,7 @@ void indent_text(void)
             next = pc->GetNextNcNnl();
             if (!pc->IsNewlineBetween(next))
             {
-               frm.pse[frm.pse_tos].indent = next->column;
+               frm.pse[frm.pse_tos].indent = next->GetColumn();
             }
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
             frm.pse[frm.pse_tos].open_line  = pc->GetOrigLine();
@@ -615,7 +615,7 @@ void indent_text(void)
       {
          /* Open parens and squares - never update indent_column */
          indent_pse_push(frm, pc);
-         frm.pse[frm.pse_tos].indent = pc->column + pc->len;
+         frm.pse[frm.pse_tos].indent = pc->GetColumn() + pc->len;
 
          if (cpd.settings[UO_indent_func_call_param].b &&
              (pc->GetType() == CT_FPAREN_OPEN) &&
@@ -658,7 +658,7 @@ void indent_text(void)
             }
             else
             {
-               frm.pse[frm.pse_tos].indent = pc->column + pc->len + 1;
+               frm.pse[frm.pse_tos].indent = pc->GetColumn() + pc->len + 1;
             }
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          }
@@ -677,7 +677,7 @@ void indent_text(void)
       {
          if (cout_col == 0)
          {
-            cout_col   = pc->column;
+            cout_col   = pc->GetColumn();
             cout_level = pc->level;
          }
       }
@@ -729,8 +729,8 @@ void indent_text(void)
                   cpd.settings[UO_indent_align_string].b)
          {
             LOG_FMT(LINDENT, "%s: %d] String => %d\n",
-                    __func__, pc->GetOrigLine(), prev->column);
-            reindent_line(pc, prev->column);
+                    __func__, pc->GetOrigLine(), prev->GetColumn());
+            reindent_line(pc, prev->GetColumn());
          }
          else if (pc->IsComment())
          {
@@ -741,14 +741,14 @@ void indent_text(void)
          else if (pc->GetType() == CT_PREPROC)
          {
             /* Preprocs are always in column 1. See indent_preproc() */
-            if (pc->column != 1)
+            if (pc->GetColumn() != 1)
             {
                reindent_line(pc, 1);
             }
          }
          else
          {
-            if (pc->column != indent_column)
+            if (pc->GetColumn() != indent_column)
             {
                LOG_FMT(LINDENT, "%s: %d] indent => %d [%.*s]\n",
                        __func__, pc->GetOrigLine(), indent_column, pc->len, pc->str);
@@ -765,7 +765,7 @@ void indent_text(void)
           ((pc->GetFlags() & PCF_IN_FCN_DEF) == 0) &&
           ((pc->GetFlags() & PCF_VAR_1ST_DEF) == PCF_VAR_1ST_DEF))
       {
-         vardefcol = pc->column;
+         vardefcol = pc->GetColumn();
       }
       if (pc->IsSemicolon() ||
           ((pc->GetType() == CT_BRACE_OPEN) && (pc->GetParentType() == CT_FUNCTION)))
@@ -904,7 +904,7 @@ static void indent_comment(Chunk *pc, int col)
    if ((pc->GetOrigCol() == 1) && !cpd.settings[UO_indent_col1_comment].b)
    {
       LOG_FMT(LCMTIND, "rule 1 - keep in col 1\n");
-      pc->column = 1;
+      pc->SetColumn(1);
       return;
    }
 
@@ -916,7 +916,7 @@ static void indent_comment(Chunk *pc, int col)
       if ((nl != NULL) && (nl->nl_count > 1))
       {
          LOG_FMT(LCMTIND, "rule 2 - level 0, nl before\n");
-         pc->column = 1;
+         pc->SetColumn(1);
          return;
       }
    }
@@ -928,22 +928,22 @@ static void indent_comment(Chunk *pc, int col)
 
       if ((coldiff <= 3) && (coldiff >= -3))
       {
-         pc->column = prev->column;
+         pc->SetColumn(prev->GetColumn());
          LOG_FMT(LCMTIND, "rule 3 - prev comment, coldiff = %d, now in %d\n",
-                 coldiff, pc->column);
+                 coldiff, pc->GetColumn());
          return;
       }
    }
    /* check if special single line comment rule applies */
    if (cpd.settings[UO_indent_sing_line_comments].n > 0 && single_line_comment_indent_rule_applies(pc))
    {
-      pc->column = col + cpd.settings[UO_indent_sing_line_comments].n;
-      LOG_FMT(LCMTIND, "rule 4 - single line comment indent, now in %d\n", pc->column);
+      pc->SetColumn(col + cpd.settings[UO_indent_sing_line_comments].n);
+      LOG_FMT(LCMTIND, "rule 4 - single line comment indent, now in %d\n", pc->GetColumn());
       return;
    }
    LOG_FMT(LCMTIND, "rule 5 - fall-through, stay in %d\n", col);
 
-   pc->column = col;
+   pc->SetColumn(col);
 }
 
 
@@ -1023,11 +1023,11 @@ void indent_preproc(void)
          continue;
       }
 
-      if (pc->column != 1)
+      if (pc->GetColumn() != 1)
       {
          /* Don't handle preprocessors that aren't in column 1 */
          LOG_FMT(LINFO, "%s: Line %d doesn't start in column 1 (%d)\n",
-                 __func__, pc->GetOrigLine(), pc->column);
+                 __func__, pc->GetOrigLine(), pc->GetColumn());
          continue;
       }
 
@@ -1079,6 +1079,6 @@ void indent_preproc(void)
       }
 
       LOG_FMT(LPPIS, "%s: Indent line %d to %d (len %d, next->col %d)\n",
-              __func__, pc->GetOrigLine(), pp_level, pc->len, next->column);
+              __func__, pc->GetOrigLine(), pp_level, pc->len, next->GetColumn());
    }
 }

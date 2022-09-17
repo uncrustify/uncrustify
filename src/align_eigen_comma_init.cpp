@@ -95,7 +95,7 @@ void align_eigen_comma_init()
             {
                log_rule_B("indent_columns");
                indent_to_column(pc, pc->GetColumnIndent() + options::indent_columns());
-               pc->SetColumnIndent(pc->column);
+               pc->SetColumnIndent(pc->GetColumn());
                pc->SetFlagBits(PCF_DONT_INDENT);
             }
             // Restart alignment

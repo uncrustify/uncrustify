@@ -39,7 +39,7 @@ void Chunk::CopyFrom(const Chunk &o)
    m_origColEnd   = o.m_origColEnd;
    m_origPrevSp   = o.m_origPrevSp;
    m_flags        = o.m_flags;
-   column         = o.column;
+   m_column       = o.m_column;
    m_columnIndent = o.m_columnIndent;
 
    nl_count  = o.nl_count;
@@ -69,7 +69,7 @@ void Chunk::Reset()
    m_origColEnd   = 0;
    m_origPrevSp   = 0;
    m_flags        = PCF_NONE;
-   column         = 0;
+   m_column       = 0;
    m_columnIndent = 0;
    nl_count       = 0;
    nl_column      = 0;
@@ -381,8 +381,8 @@ void Chunk::MoveAfter(Chunk *ref)
    gChunkList.AddAfter(this, ref);
 
    // Adjust the original column
-   column       = ref->column + space_col_align(ref, this);
-   m_origCol    = column;
+   m_column     = ref->m_column + space_col_align(ref, this);
+   m_origCol    = m_column;
    m_origColEnd = m_origCol + Len();
 }
 

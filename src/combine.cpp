@@ -297,7 +297,7 @@ static void flag_asm(Chunk *pc)
             nc.SetType(tmp->GetType());
             nc.str.pop_front();
             nc.SetOrigCol(nc.GetOrigCol() + 1);
-            nc.column++;
+            nc.SetColumn(nc.GetColumn() + 1);
             nc.CopyAndAddAfter(tmp);
          }
       }
@@ -2261,7 +2261,7 @@ static Chunk *process_return_or_throw(Chunk *pc)
             while (  temp->IsNotNullChunk()
                   && temp->IsNot(CT_NEWLINE))
             {
-               temp->column = temp->column - 2;
+               temp->SetColumn(temp->GetColumn() - 2);
                temp->SetOrigCol(temp->GetOrigCol() - 2);
                temp->SetOrigColEnd(temp->GetOrigColEnd() - 2);
                temp = temp->GetNext();
@@ -2620,7 +2620,7 @@ static void handle_cpp_lambda(Chunk *sq_o)
        * are calculate from m_origColEnd of CT_TSQUARE.
        */
       nc.SetOrigCol(sq_o->GetOrigColEnd() - 1);
-      nc.column = static_cast<int>(nc.GetOrigCol());
+      nc.SetColumn(nc.GetOrigCol());
       nc.SetOrigColEnd(sq_o->GetOrigColEnd());
       sq_o->SetOrigColEnd(sq_o->GetOrigCol() + 1);
 
@@ -3779,7 +3779,7 @@ static void handle_oc_property_decl(Chunk *os)
                endchunk.brace_level = curr_chunk->brace_level;
                endchunk.SetOrigLine(curr_chunk->GetOrigLine());
                endchunk.SetOrigCol(curr_chunk->GetOrigCol());
-               endchunk.column = curr_chunk->GetOrigColEnd() + 1;
+               endchunk.SetColumn(curr_chunk->GetOrigColEnd() + 1);
                endchunk.SetFlags(curr_chunk->GetFlags() & PCF_COPY_FLAGS);
                endchunk.CopyAndAddAfter(curr_chunk);
                curr_chunk = curr_chunk->GetNext();

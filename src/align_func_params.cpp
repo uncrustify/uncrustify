@@ -24,7 +24,7 @@ Chunk *align_func_param(Chunk *start)
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LAS, "AlignStack::%s(%d): Candidate is '%s': orig line is %zu, column is %zu, type is %s, level is %zu\n",
-           __func__, __LINE__, start->Text(), start->GetOrigLine(), start->column,
+           __func__, __LINE__, start->Text(), start->GetOrigLine(), start->GetColumn(),
            get_token_name(start->GetType()), start->level);
    // Defaults, if the align_func_params = true
    size_t myspan   = 2;

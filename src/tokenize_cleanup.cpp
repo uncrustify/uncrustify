@@ -134,7 +134,7 @@ void split_off_angle_close(Chunk *pc)
    nc.SetType(ct->type);
    nc.str.pop_front();
    nc.SetOrigCol(nc.GetOrigCol() + 1);
-   nc.column++;
+   nc.SetColumn(nc.GetColumn() + 1);
    nc.CopyAndAddAfter(pc);
 }
 
@@ -838,7 +838,7 @@ void tokenize_cleanup()
                   nc.SetType(CT_SQL_WORD);
                   nc.str.pop_front();
                   nc.SetOrigCol(nc.GetOrigCol() + 1);
-                  nc.column++;
+                  nc.SetColumn(nc.GetColumn() + 1);
                   nc.CopyAndAddAfter(pc);
 
                   next = pc->GetNext();

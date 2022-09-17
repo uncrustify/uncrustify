@@ -116,7 +116,7 @@ void align_init_brace(Chunk *start)
 
             if (num_token != nullptr)
             {
-               int col_diff = pc->column - num_token->column;
+               int col_diff = pc->GetColumn() - num_token->GetColumn();
 
                reindent_line(num_token, cpd.al[idx].col - col_diff);
                //LOG_FMT(LSYS, "-= %zu =- NUM indent [%s] col=%d diff=%d\n",

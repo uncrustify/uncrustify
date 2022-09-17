@@ -2108,7 +2108,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
    // Save off the current column
    pc.SetType(CT_NONE);
    pc.SetOrigLine(ctx.c.row);
-   pc.column = ctx.c.col;
+   pc.SetColumn(ctx.c.col);
    pc.SetOrigCol(ctx.c.col);
    pc.nl_count = 0;
    pc.SetFlags(PCF_NONE);
