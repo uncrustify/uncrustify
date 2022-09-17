@@ -3421,8 +3421,8 @@ static void output_comment_multi_simple(Chunk *pc)
                if (line_count > 1)
                {
                   // apply comment column shift without underflowing
-                  line_column = (  col_diff < 0
-                                && (cast_abs(line_column, col_diff) > line_column))
+                  line_column = (col_diff<0
+                                          && (size_t)(abs(col_diff))> line_column)
                                 ? 0 : line_column + col_diff;
                }
                cmt.column = line_column;

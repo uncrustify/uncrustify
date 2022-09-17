@@ -237,8 +237,8 @@ void align_to_column(Chunk *pc, size_t column)
            __func__, __LINE__, pc->GetOrigLine(), pc->GetColumn(), pc->Text(),
            get_token_name(pc->GetType()), column);
 
-   const auto col_delta = static_cast<int>(column) - static_cast<int>(pc->GetColumn());
-   size_t     min_col   = column;
+   const int col_delta = column - pc->GetColumn();
+   size_t    min_col   = column;
 
    pc->SetColumn(column);
 
@@ -275,16 +275,16 @@ void align_to_column(Chunk *pc, size_t column)
       else if (almod == align_mode_e::KEEP_REL)
       {
          // Keep same relative column
-         int orig_delta = static_cast<int>(pc->GetOrigPrevSp()) + static_cast<int>(prev->Len());
-         orig_delta = max<int>(orig_delta, min_delta);  // keeps orig_delta positive
+         size_t orig_delta = pc->GetOrigPrevSp() + prev->Len();
+         orig_delta = max<size_t>(orig_delta, min_delta);  // keeps orig_delta positive
 
-         pc->SetColumn(prev->GetColumn() + static_cast<size_t>(orig_delta));
+         pc->SetColumn(prev->GetColumn() + orig_delta);
       }
       else // SHIFT
       {
          // Shift by the same amount, keep above negative values
          pc->SetColumn((  col_delta >= 0
-                       || cast_abs(pc->GetColumn(), col_delta) < pc->GetColumn())
+                       || (size_t)(abs(col_delta)) < pc->GetColumn())
                       ? pc->GetColumn() + col_delta : 0);
          pc->SetColumn(max(pc->GetColumn(), min_col));
       }
@@ -313,8 +313,8 @@ void reindent_line(Chunk *pc, size_t column)
    {
       return;
    }
-   auto col_delta = static_cast<int>(column) - static_cast<int>(pc->GetColumn());
-   auto min_col   = column;
+   int    col_delta = column - pc->GetColumn();
+   size_t min_col   = column;
 
    pc->SetColumn(column);
 
@@ -371,8 +371,7 @@ void reindent_line(Chunk *pc, size_t column)
       }
       else
       {
-         const auto tmp_col = static_cast<int>(pc->GetColumn()) + col_delta;
-         pc->SetColumn(max(tmp_col, static_cast<int>(min_col)));
+         pc->SetColumn(max(pc->GetColumn() + col_delta, min_col));
 
          LOG_FMT(LINDLINED, "%s(%d): set column of ", __func__, __LINE__);
 
@@ -1047,7 +1046,7 @@ void indent_text()
             log_indent();
 
 
-            auto val = 0;
+            int val = 0;
 
             if (  pc->GetParentType() == CT_PP_REGION
                || pc->GetParentType() == CT_PP_ENDREGION)
@@ -1067,10 +1066,10 @@ void indent_text()
 
             if (val != 0)
             {
-               auto &indent = frm.top().indent;
+               size_t &indent = frm.top().indent;
 
                indent = (val > 0) ? val                     // reassign if positive val,
-                        : (cast_abs(indent, val) < indent)  // else if no underflow
+                        : ((size_t)(abs(val)) < indent)     // else if no underflow
                         ? (indent + val) : 0;               // reduce, else 0
             }
             frm.top().indent_tmp = frm.top().indent;
@@ -2370,8 +2369,8 @@ void indent_text()
          else
          {
             log_rule_B("indent_label");
-            const auto val        = options::indent_label();
-            const auto pse_indent = frm.top().indent;
+            const int val        = options::indent_label();
+            size_t    pse_indent = frm.top().indent;
 
             // Labels get sent to the left or backed up
             if (val > 0)
@@ -2383,15 +2382,15 @@ void indent_text()
                if (  next->IsNotNullChunk()
                   && !next->IsNewline()
                      // label (+ 2, because there is colon and space after it) must fit into indent
-                  && (val + static_cast<int>(pc->Len()) + 2 <= static_cast<int>(pse_indent)))
+                  && (val + pc->Len() + 2 <= pse_indent))
                {
                   reindent_line(next, pse_indent);
                }
             }
             else
             {
-               const auto no_underflow = cast_abs(pse_indent, val) < pse_indent;
-               indent_column_set(((no_underflow) ? (pse_indent + val) : 0));
+               bool no_underflow = (size_t)(abs(val)) < pse_indent;
+               indent_column_set((no_underflow ? (pse_indent + val) : 0));
             }
          }
       }
@@ -2438,7 +2437,7 @@ void indent_text()
          {
             // Access spec labels get sent to the left or backed up
             log_rule_B("indent_access_spec");
-            const auto val = options::indent_access_spec();
+            int val = options::indent_access_spec();
 
             if (val > 0)
             {
@@ -2446,8 +2445,8 @@ void indent_text()
             }
             else
             {
-               const auto pse_indent   = frm.top().indent;
-               const auto no_underflow = cast_abs(pse_indent, val) < pse_indent;
+               size_t pse_indent   = frm.top().indent;
+               bool   no_underflow = (size_t)(abs(val)) < pse_indent;
 
                indent_column_set(no_underflow ? (pse_indent + val) : 0);
             }
@@ -2751,7 +2750,7 @@ void indent_text()
                  && !pc->TestFlags(PCF_IN_SPAREN))
          {
             log_rule_B("indent_align_paren");
-            int idx = static_cast<int>(frm.size()) - 2;
+            size_t idx = frm.size() - 2;
 
             while (  idx > 0
                   && frm.at(idx).pc->IsOnSameLine(frm.top().pc))
@@ -2796,13 +2795,13 @@ void indent_text()
                {
                   sub = 3;
                }
-               sub = static_cast<int>(frm.size()) - sub;
+               sub = frm.size() - sub;
 
                log_rule_B("indent_align_paren");
 
                if (!options::indent_align_paren())
                {
-                  sub = static_cast<int>(frm.size()) - 2;
+                  sub = frm.size() - 2;
 
                   while (  sub > 0
                         && frm.at(sub).pc->IsOnSameLine(frm.top().pc))
@@ -3861,27 +3860,27 @@ void indent_text()
          }
          else if (pc->Is(CT_COMMA))
          {
-            bool align  = false;
-            bool ignore = false;
+            bool indent_align  = false;
+            bool indent_ignore = false;
 
             if (frm.top().pc->IsParenOpen())
             {
                log_rule_B("indent_comma_paren");
-               align  = options::indent_comma_paren() == (int)indent_mode_e::ALIGN;
-               ignore = options::indent_comma_paren() == (int)indent_mode_e::IGNORE;
+               indent_align  = options::indent_comma_paren() == (int)indent_mode_e::ALIGN;
+               indent_ignore = options::indent_comma_paren() == (int)indent_mode_e::IGNORE;
             }
             else if (frm.top().pc->IsBraceOpen())
             {
                log_rule_B("indent_comma_brace");
-               align  = options::indent_comma_brace() == (int)indent_mode_e::ALIGN;
-               ignore = options::indent_comma_brace() == (int)indent_mode_e::IGNORE;
+               indent_align  = options::indent_comma_brace() == (int)indent_mode_e::ALIGN;
+               indent_ignore = options::indent_comma_brace() == (int)indent_mode_e::IGNORE;
             }
 
-            if (ignore)
+            if (indent_ignore)
             {
                indent_column_set(pc->GetOrigCol());
             }
-            else if (align)
+            else if (indent_align)
             {
                indent_column_set(frm.top().pc->GetColumn());
             }
@@ -4229,14 +4228,14 @@ void indent_text()
                && (frm.top().type == CT_BRACE_OPEN))
             {
                log_rule_B("indent_var_def_blk");
-               const auto val = options::indent_var_def_blk();
+               int val = options::indent_var_def_blk();
 
                if (val != 0)
                {
-                  auto indent = indent_column;
-                  indent = (val > 0) ? val                     // reassign if positive val,
-                           : (cast_abs(indent, val) < indent)  // else if no underflow
-                           ? (indent + val) : 0;               // reduce, else 0
+                  size_t indent = indent_column;
+                  indent = (val > 0) ? val                  // reassign if positive val,
+                           : ((size_t)(abs(val)) < indent)  // else if no underflow
+                           ? (indent + val) : 0;            // reduce, else 0
 
                   LOG_FMT(LINDENT, "%s(%d): %zu] var_type indent => %zu [%s]\n",
                           __func__, __LINE__, pc->GetOrigLine(), indent, pc->Text());
