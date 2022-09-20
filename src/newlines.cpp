@@ -3487,6 +3487,8 @@ static void newline_oc_msg(Chunk *start)
    {
       return;
    }
+   bool should_nl_msg = false;
+
    // Get count of parameters
    size_t parameter_count = 0;
 
@@ -3497,7 +3499,7 @@ static void newline_oc_msg(Chunk *start)
          break;
       }
 
-      if (pc->Is(CT_OC_COLON))
+      if (pc->Is(CT_OC_COLON) && pc->level - 1 == start->level)
       {
          parameter_count++;
       }
@@ -3505,8 +3507,44 @@ static void newline_oc_msg(Chunk *start)
 
    size_t min_params = options::nl_oc_msg_args_min_params();
 
-   if (  parameter_count < min_params
+   if (  parameter_count >= min_params
       && min_params != 0)
+   {
+      should_nl_msg = true;
+   }
+   // Get length of longest line
+   size_t longest_line = 0;
+
+   for (Chunk *pc = start->GetNextNcNnl(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
+   {
+      if (pc->level <= start->level)
+      {
+         break;
+      }
+
+      if (pc->GetOrigColEnd() > longest_line)
+      {
+         longest_line = pc->GetOrigColEnd();
+      }
+   }
+
+   size_t max_code_width = options::nl_oc_msg_args_max_code_width();
+
+   if (  longest_line > max_code_width
+      && max_code_width != 0)
+   {
+      should_nl_msg = true;
+   }
+
+   // If both nl_oc_msg_args_min_params and nl_oc_msg_args_max_code_width are disabled
+   // we should newline all messages.
+   if (  max_code_width == 0
+      && min_params == 0)
+   {
+      should_nl_msg = true;
+   }
+
+   if (!should_nl_msg)
    {
       return;
    }
@@ -3518,7 +3556,7 @@ static void newline_oc_msg(Chunk *start)
          break;
       }
 
-      if (pc->Is(CT_OC_MSG_NAME))
+      if (pc->Is(CT_OC_MSG_NAME) && pc->level - 1 == start->level)
       {
          newline_add_before(pc);
       }
