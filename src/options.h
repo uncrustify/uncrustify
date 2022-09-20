@@ -2480,6 +2480,10 @@ nl_oc_msg_args;
 extern BoundedOption<unsigned, 0, 16>
 nl_oc_msg_args_min_params;
 
+// (OC) Max code width of Objective-C message before applying nl_oc_msg_args.
+extern BoundedOption<unsigned, 0, 10000>
+nl_oc_msg_args_max_code_width;
+
 // Add or remove newline between function signature and '{'.
 extern Option<iarf_e>
 nl_fdef_brace;
