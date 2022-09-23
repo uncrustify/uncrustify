@@ -319,7 +319,7 @@ void pawn_add_virtual_semicolons()
          if (  !prev->TestFlags(PCF_IN_PREPROC)
             && !prev->GetFlags().test_any(PCF_IN_ENUM | PCF_IN_STRUCT)
             && !prev->IsSemicolon()
-            && !pawn_continued(prev, prev->brace_level))
+            && !pawn_continued(prev, prev->GetBraceLevel()))
          {
             pawn_add_vsemi_after(prev);
             prev = Chunk::NullChunkPtr;
@@ -467,7 +467,7 @@ static Chunk *pawn_process_func_def(Chunk *pc)
             }
          }
          prev->level++;
-         prev->brace_level++;
+         prev->SetBraceLevel(prev->GetBraceLevel() + 1);
          last = prev;
       } while ((prev = prev->GetNext())->IsNotNullChunk());
 
@@ -482,9 +482,9 @@ static Chunk *pawn_process_func_def(Chunk *pc)
       chunk.SetType(CT_VBRACE_CLOSE);
       chunk.SetParentType(CT_FUNC_DEF);
       chunk.SetColumn(chunk.GetColumn() + last->Len());
-      chunk.level       = 0;
-      chunk.brace_level = 0;
-      last              = chunk.CopyAndAddAfter(last);
+      chunk.level = 0;
+      chunk.SetBraceLevel(0);
+      last = chunk.CopyAndAddAfter(last);
    }
    return(last);
 } // pawn_process_func_def

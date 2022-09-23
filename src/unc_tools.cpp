@@ -341,9 +341,9 @@ void dump_out(unsigned int type)
             fprintf(D_file, "  level %zu\n", pc->level);
          }
 
-         if (pc->brace_level != 0)
+         if (pc->GetBraceLevel() != 0)
          {
-            fprintf(D_file, "  brace_level %zu\n", pc->brace_level);
+            fprintf(D_file, "  brace level %zu\n", pc->GetBraceLevel());
          }
 
          if (pc->pp_level != 0)

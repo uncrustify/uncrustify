@@ -225,6 +225,17 @@ public:
     */
    void SetColumnIndent(size_t col);
 
+   /**
+    * @brief Returns the brace level of the chunk
+    */
+   size_t GetBraceLevel() const;
+
+   /**
+    * @brief Sets the brace level of the chunk
+    * @param level the brace level of the chunk
+    */
+   void SetBraceLevel(size_t lvl);
+
 
    // --------- Get* chunk functions
 
@@ -914,9 +925,7 @@ public:
    indent_ptr_t indent;
    size_t       nl_count;                    //! number of newlines in CT_NEWLINE
    size_t       nl_column;                   //! column of the subsequent newline entries(all of them should have the same column)
-   size_t       level;                       /** nest level in {, (, or [
-                                              * only to help vim command } */
-   size_t       brace_level;                 //! nest level in braces only
+   size_t       level;                       /** nest level in {, (, or [. Only to help vim command } */
    size_t       pp_level;                    //! nest level in preprocessor
    bool         after_tab;                   //! whether this token was after a tab
    unc_text     str;                         //! the token text
@@ -964,6 +973,7 @@ protected:
    size_t     m_column;                     //! column of the chunk
    size_t     m_columnIndent;               //! if 1st chunk on a line, set to the 'indent' column, which may
                                             //! be less than the real column used to indent with tabs
+   size_t     m_braceLevel;                 //! nest level in braces only
    E_Token    m_type;                       //! type of the chunk itself
    E_Token    m_parentType;                 //! type of the parent chunk usually CT_NONE
    T_PcfFlags m_flags;                      //! see PCF_xxx
@@ -1152,6 +1162,18 @@ inline size_t Chunk::GetColumnIndent() const
 inline void Chunk::SetColumnIndent(size_t col)
 {
    m_columnIndent = col;
+}
+
+
+inline size_t Chunk::GetBraceLevel() const
+{
+   return(m_braceLevel);
+}
+
+
+inline void Chunk::SetBraceLevel(size_t lvl)
+{
+   m_braceLevel = lvl;
 }
 
 

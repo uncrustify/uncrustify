@@ -1275,8 +1275,8 @@ void mark_function(Chunk *pc)
    LOG_FMT(LFCN, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s, type is %s, parent type is %s\n",
            __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(),
            get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
-   LOG_FMT(LFCN, "   level is %zu, brace_level is %zu, next->Text() '%s', next->GetType() is %s, next->level is %zu\n",
-           pc->level, pc->brace_level,
+   LOG_FMT(LFCN, "   level is %zu, brace level is %zu, next->Text() '%s', next->GetType() is %s, next->level is %zu\n",
+           pc->level, pc->GetBraceLevel(),
            next->Text(), get_token_name(next->GetType()), next->level);
 
    if (pc->TestFlags(PCF_IN_CONST_ARGS))
@@ -1516,7 +1516,7 @@ void mark_function(Chunk *pc)
     * wrapped in a macro: "MACRO(void foo(void));"
     */
    if (  pc->Is(CT_FUNC_CALL)
-      && (  pc->level == pc->brace_level
+      && (  pc->level == pc->GetBraceLevel()
          || pc->level == 1)
       && !pc->TestFlags(PCF_IN_ARRAY_ASSIGN))
    {
@@ -1975,9 +1975,9 @@ void mark_function(Chunk *pc)
          LOG_FMT(LFCN, "%s(%d):   3) Marked Text() '%s' as FUNC_CTOR_VAR on orig line %zu, orig col %zu\n",
                  __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
       }
-      else if (pc->brace_level > 0)
+      else if (pc->GetBraceLevel() > 0)
       {
-         Chunk *br_open = pc->GetPrevType(CT_BRACE_OPEN, pc->brace_level - 1);
+         Chunk *br_open = pc->GetPrevType(CT_BRACE_OPEN, pc->GetBraceLevel() - 1);
 
          if (  br_open->IsNotNullChunk()
             && br_open->GetParentType() != CT_EXTERN
@@ -1989,7 +1989,7 @@ void mark_function(Chunk *pc)
             if (  !prev->IsString("*")
                && !prev->IsString("&"))
             {
-               Chunk *p_op = pc->GetPrevType(CT_BRACE_OPEN, pc->brace_level - 1);
+               Chunk *p_op = pc->GetPrevType(CT_BRACE_OPEN, pc->GetBraceLevel() - 1);
 
                if (  p_op->IsNotNullChunk()
                   && p_op->GetParentType() != CT_CLASS

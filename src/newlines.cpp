@@ -472,11 +472,11 @@ static void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next)
    undo_one_liner(prev);
 
    nl->SetOrigLine(prev->GetOrigLine());
-   nl->level       = prev->level;
-   nl->pp_level    = prev->pp_level;
-   nl->brace_level = prev->brace_level;
-   nl->pp_level    = prev->pp_level;
-   nl->nl_count    = 1;
+   nl->level    = prev->level;
+   nl->pp_level = prev->pp_level;
+   nl->SetBraceLevel(prev->GetBraceLevel());
+   nl->pp_level = prev->pp_level;
+   nl->nl_count = 1;
    nl->SetFlags((prev->GetFlags() & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC);
    nl->SetOrigCol(prev->GetOrigColEnd());
    nl->SetColumn(prev->GetOrigCol());
@@ -2087,7 +2087,7 @@ static Chunk *newline_var_def_blk(Chunk *start)
       }
 
       // Ignore stuff inside parenthesis/squares/angles
-      if (pc->level > pc->brace_level)
+      if (pc->level > pc->GetBraceLevel())
       {
          pc = pc->GetNext();
          continue;
@@ -4143,7 +4143,7 @@ void newlines_cleanup_braces(bool first)
 
          case CT_CLASS:
          {
-            if (pc->level == pc->brace_level)
+            if (pc->level == pc->GetBraceLevel())
             {
                log_rule_B("nl_class_brace");
                log_ruleNL("nl_class_brace", pc->GetPrevNnl());
@@ -4154,7 +4154,7 @@ void newlines_cleanup_braces(bool first)
 
          case CT_OC_CLASS:
          {
-            if (pc->level == pc->brace_level)
+            if (pc->level == pc->GetBraceLevel())
             {
                // Request #126
                // introduce two new options
@@ -4282,7 +4282,7 @@ void newlines_cleanup_braces(bool first)
             }
             // Handle nl_after_brace_open
             else if (  (  pc->GetParentType() == CT_CPP_LAMBDA
-                       || pc->level == pc->brace_level)
+                       || pc->level == pc->GetBraceLevel())
                     && options::nl_after_brace_open())
             {
                log_rule_B("nl_after_brace_open");
@@ -4336,7 +4336,7 @@ void newlines_cleanup_braces(bool first)
 
          // Handle nl_before_brace_open
          if (  pc->Is(CT_BRACE_OPEN)
-            && pc->level == pc->brace_level
+            && pc->level == pc->GetBraceLevel()
             && options::nl_before_brace_open())
          {
             log_rule_B("nl_before_brace_open");
@@ -4906,7 +4906,7 @@ void newlines_cleanup_braces(bool first)
             Chunk *next = pc->GetNextNcNnl();
 
             if (  next->IsNotNullChunk()
-               && next->level == next->brace_level)
+               && next->level == next->GetBraceLevel())
             {
                Chunk *tmp = pc->GetPrevType(CT_ANGLE_OPEN, pc->level)->GetPrevNcNnlNi();   // Issue #2279
 

@@ -1450,7 +1450,7 @@ void indent_text()
 
          for (size_t ttidx = frm.size() - 1; ttidx > 0; ttidx--)
          {
-            LOG_FMT(LINDPC, "     [%zu %zu:%zu '%s' %s/%s tmp=%zu indent=%zu brace_indent=%zu indent_tab=%zu indent_cont=%d level=%zu pc->brace_level=%zu]\n",
+            LOG_FMT(LINDPC, "     [%zu %zu:%zu '%s' %s/%s tmp=%zu indent=%zu brace_indent=%zu indent_tab=%zu indent_cont=%d level=%zu pc brace level=%zu]\n",
                     ttidx,
                     frm.at(ttidx).pc->GetOrigLine(),
                     frm.at(ttidx).pc->GetOrigCol(),
@@ -1463,7 +1463,7 @@ void indent_text()
                     frm.at(ttidx).indent_tab,
                     frm.at(ttidx).indent_cont,
                     frm.at(ttidx).level,
-                    frm.at(ttidx).pc->brace_level);
+                    frm.at(ttidx).pc->GetBraceLevel());
          }
       }
       char copy[1000];
@@ -1775,7 +1775,7 @@ void indent_text()
                }
             }
             // Issue # 1296
-            frm.top().brace_indent = 1 + ((pc->brace_level - namespace_indent_to_ignore) * indent_size);
+            frm.top().brace_indent = 1 + ((pc->GetBraceLevel() - namespace_indent_to_ignore) * indent_size);
             indent_column_set(frm.top().brace_indent);
             frm.top().indent = indent_column + indent_size;
             log_indent();
@@ -1792,7 +1792,7 @@ void indent_text()
                     || pc->GetParentType() == CT_DELEGATE))
          {
             log_rule_B("indent_cs_delegate_brace");
-            frm.top().brace_indent = 1 + ((pc->brace_level + 1) * indent_size);
+            frm.top().brace_indent = 1 + ((pc->GetBraceLevel() + 1) * indent_size);
             indent_column_set(frm.top().brace_indent);
             frm.top().indent = indent_column + indent_size;
             log_indent();
@@ -1836,9 +1836,9 @@ void indent_text()
          {
             log_rule_B("indent_paren_open_brace");
             // Issue #1165
-            LOG_FMT(LINDENT2, "%s(%d): orig line is %zu, pc->brace_level is %zu, for '%s', pc->level is %zu, pc(-1)->level is %zu\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->brace_level, pc->Text(), pc->level, frm.prev().pc->level);
-            frm.top().brace_indent = 1 + ((pc->brace_level + 1) * indent_size);
+            LOG_FMT(LINDENT2, "%s(%d): orig line is %zu, brace level is %zu, for '%s', pc->level is %zu, pc(-1)->level is %zu\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetBraceLevel(), pc->Text(), pc->level, frm.prev().pc->level);
+            frm.top().brace_indent = 1 + ((pc->GetBraceLevel() + 1) * indent_size);
             indent_column_set(frm.top().brace_indent);
             frm.top().indent = frm.prev().indent_tmp;
             log_indent();
@@ -1853,10 +1853,10 @@ void indent_text()
                  && pc->GetNextNc()->IsNewline())
          {
             log_rule_B("indent_paren_open_brace");
-            LOG_FMT(LINDENT2, "%s(%d): orig line is %zu, pc->brace_level is %zu, for '%s', pc->level is %zu, pc(-1)->level is %zu\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->brace_level, pc->Text(), pc->level, frm.prev().pc->level);
+            LOG_FMT(LINDENT2, "%s(%d): orig line is %zu, brace level is %zu, for '%s', pc->level is %zu, pc(-1)->level is %zu\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetBraceLevel(), pc->Text(), pc->level, frm.prev().pc->level);
             // FIXME: I don't know how much of this is necessary, but it seems to work
-            frm.top().brace_indent = 1 + (pc->brace_level * indent_size);
+            frm.top().brace_indent = 1 + (pc->GetBraceLevel() * indent_size);
             indent_column_set(frm.top().brace_indent);
             frm.top().indent = indent_column + indent_size;
             log_indent();
@@ -1949,7 +1949,7 @@ void indent_text()
                   }
                   else
                   {
-                     frm.top().indent = 1 + ((pc->brace_level + 1) * indent_size);
+                     frm.top().indent = 1 + ((pc->GetBraceLevel() + 1) * indent_size);
                   }
                   log_indent();
                   indent_column_set(frm.top().indent - indent_size);
@@ -2895,7 +2895,7 @@ void indent_text()
             }
             log_indent();
 
-            if (  pc->level == pc->brace_level
+            if (  pc->level == pc->GetBraceLevel()
                && !options::indent_ignore_first_continue()
                && (  pc->Is(CT_FPAREN_OPEN)
                   || pc->Is(CT_SPAREN_OPEN)
@@ -3103,7 +3103,7 @@ void indent_text()
                frm.top().indent = frm.prev().indent;
                log_indent();
 
-               if (  pc->level == pc->brace_level
+               if (  pc->level == pc->GetBraceLevel()
                   && (  pc->IsNot(CT_ASSIGN)
                      || (  pc->GetParentType() != CT_FUNC_PROTO
                         && pc->GetParentType() != CT_FUNC_DEF)))
@@ -3165,7 +3165,7 @@ void indent_text()
                  && pc->GetParentType() == CT_NONE))
       {
          // don't count returns inside a () or []
-         if (  pc->level == pc->brace_level
+         if (  pc->level == pc->GetBraceLevel()
             || pc->TestFlags(PCF_IN_LAMBDA))
          {
             Chunk *next = pc->GetNext();
@@ -3583,7 +3583,7 @@ void indent_text()
          bool  do_vardefcol = false;
 
          if (  vardefcol > 0
-            && pc->level == pc->brace_level
+            && pc->level == pc->GetBraceLevel()
             && (  prev->Is(CT_COMMA)
                || prev->Is(CT_TYPE)
                || prev->Is(CT_PTR_TYPE)
@@ -4720,7 +4720,7 @@ void indent_preproc()
       // Mark as already handled if not region stuff or in column 1
       log_rule_B("pp_indent_at_level");
 
-      bool at_file_level = pc->brace_level <= ((pc->GetParentType() == CT_PP_DEFINE) ? 1 : 0);
+      bool at_file_level = pc->GetBraceLevel() <= ((pc->GetParentType() == CT_PP_DEFINE) ? 1 : 0);
 
       if (  (  (  at_file_level
                && !options::pp_indent_at_level0())

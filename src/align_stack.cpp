@@ -631,13 +631,13 @@ void AlignStack::Debug()
 
          if (pc->Is(CT_PTR_TYPE))
          {
-            LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s][%s]: orig line is %zu, orig col is %zu, type is %s, level is %zu, brace_level is %zu\n",
-                    __func__, __LINE__, idx, pc->Text(), pc->GetNext()->Text(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->level, pc->brace_level);
+            LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s][%s]: orig line is %zu, orig col is %zu, type is %s, level is %zu, brace level is %zu\n",
+                    __func__, __LINE__, idx, pc->Text(), pc->GetNext()->Text(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->level, pc->GetBraceLevel());
          }
          else
          {
-            LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s]: orig line is %zu, orig col is %zu, type is %s, level is %zu, brace_level is %zu\n",
-                    __func__, __LINE__, idx, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->level, pc->brace_level);
+            LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s]: orig line is %zu, orig col is %zu, type is %s, level is %zu, brace level is %zu\n",
+                    __func__, __LINE__, idx, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->level, pc->GetBraceLevel());
          }
       }
    }

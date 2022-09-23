@@ -46,10 +46,10 @@ void Chunk::CopyFrom(const Chunk &o)
    nl_column = o.nl_column;
    level     = o.level;
 
-   brace_level = o.brace_level;
-   pp_level    = o.pp_level;
-   after_tab   = o.after_tab;
-   str         = o.str;
+   m_braceLevel = o.m_braceLevel;
+   pp_level     = o.pp_level;
+   after_tab    = o.after_tab;
+   str          = o.str;
 
    tracking = o.tracking;
 }
@@ -74,7 +74,7 @@ void Chunk::Reset()
    nl_count       = 0;
    nl_column      = 0;
    level          = 0;
-   brace_level    = 0;
+   m_braceLevel   = 0;
    pp_level       = 999;                                // use a big value to find some errors
    after_tab      = false;
    // for debugging purpose only

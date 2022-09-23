@@ -244,9 +244,9 @@ void brace_cleanup()
          mark_namespace(pc);
       }
       // Assume the level won't change
-      pc->level       = frm.level;
-      pc->brace_level = frm.brace_level;
-      pc->pp_level    = pp_level;
+      pc->level = frm.level;
+      pc->SetBraceLevel(frm.brace_level);
+      pc->pp_level = pp_level;
 
       /*
        * #define bodies get the full formatting treatment
@@ -563,8 +563,8 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
                     __func__, __LINE__, frm.brace_level);
             log_pcf_flags(LBCSPOP, pc->GetFlags());
          }
-         pc->level       = frm.level;
-         pc->brace_level = frm.brace_level;
+         pc->level = frm.level;
+         pc->SetBraceLevel(frm.brace_level);
 
          // Pop the entry
          LOG_FMT(LBCSPOP, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
@@ -1128,8 +1128,8 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
          frm.top().parent = parentType;
 
          // update the level of pc
-         pc->level       = frm.level;
-         pc->brace_level = frm.brace_level;
+         pc->level = frm.level;
+         pc->SetBraceLevel(frm.brace_level);
 
          // Mark as a start of a statement
          frm.stmt_count = 0;
@@ -1345,9 +1345,9 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
 
    chunk.SetParentType(frm.top().type);
    chunk.SetOrigLine(pc->GetOrigLine());
-   chunk.level       = frm.level;
-   chunk.pp_level    = frm.pp_level;
-   chunk.brace_level = frm.brace_level;
+   chunk.level    = frm.level;
+   chunk.pp_level = frm.pp_level;
+   chunk.SetBraceLevel(frm.brace_level);
    chunk.SetFlags(pc->GetFlags() & PCF_COPY_FLAGS);
    chunk.str = "";
 
@@ -1373,7 +1373,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    while (ref->IsCommentOrNewline())
    {
       ref->level++;
-      ref->brace_level++;
+      ref->SetBraceLevel(ref->GetBraceLevel() + 1);
       ref = ref->GetPrev();
    }
 
@@ -1478,8 +1478,8 @@ bool close_statement(ParseFrame &frm, Chunk *pc, const BraceState &braceState)
          frm.pop(__func__, __LINE__, pc);
 
          // Update the token level
-         pc->level       = frm.level;
-         pc->brace_level = frm.brace_level;
+         pc->level = frm.level;
+         pc->SetBraceLevel(frm.brace_level);
 
          print_stack(LBCSPOP, "-CS VB  ", frm);
 

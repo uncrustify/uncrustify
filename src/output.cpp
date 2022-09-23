@@ -526,13 +526,13 @@ void output_parsed(FILE *pfile, bool withOptions)
               eol_marker, (int)pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               (int)pc->GetColumn(), (int)pc->GetOrigCol(), (int)pc->GetOrigColEnd(), (int)pc->GetOrigPrevSp(),
-              (int)pc->brace_level, (int)pc->level, (int)pc->pp_level, (int)pc->nl_count, pc->after_tab);
+              (int)pc->GetBraceLevel(), (int)pc->level, (int)pc->pp_level, (int)pc->nl_count, pc->after_tab);
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3zu][%zu/%zu/%zu]",
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               pc->GetColumn(), pc->GetOrigCol(), pc->GetOrigColEnd(), pc->GetOrigPrevSp(),
-              pc->brace_level, pc->level, pc->pp_level);
+              pc->GetBraceLevel(), pc->level, pc->pp_level);
       // Print pc flags in groups of 4 hex characters
       char flag_string[20];
       sprintf(flag_string, "%12llx", static_cast<T_PcfFlags::int_t>(pc->GetFlags()));
@@ -580,7 +580,7 @@ void output_parsed_csv(FILE *pfile)
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               pc->GetColumn(), pc->GetOrigCol(), pc->GetOrigColEnd(), pc->GetOrigPrevSp(),
-              pc->brace_level, pc->level, pc->pp_level);
+              pc->GetBraceLevel(), pc->level, pc->pp_level);
 
       auto pcf_flag_str = pcf_flags_str(E_PcfFlag(pc->GetFlags()));
 #ifdef WIN32
@@ -1802,7 +1802,7 @@ static void output_cmt_start(cmt_reflow &cmt, Chunk *pc)
    if (cmt.brace_col == 0)
    {
       log_rule_B("output_tab_size");
-      cmt.brace_col = 1 + (pc->brace_level * options::output_tab_size());
+      cmt.brace_col = 1 + (pc->GetBraceLevel() * options::output_tab_size());
    }
    // LOG_FMT(LSYS, "%s: line %zd, brace=%zd base=%zd col=%zd orig=%zd aligned=%x\n",
    //        __func__, pc->GetOrigLine(), cmt.brace_col, cmt.base_col, cmt.column, pc->GetOrigCol(),

@@ -945,7 +945,7 @@ static void convert_vbrace_to_brace()
                break;
             }
 
-            if (  pc->brace_level == tmp->brace_level
+            if (  pc->GetBraceLevel() == tmp->GetBraceLevel()
                && tmp->Is(CT_VBRACE_CLOSE)
                && pc->GetParentType() == tmp->GetParentType()
                && ((tmp->GetFlags() & PCF_IN_PREPROC) == (pc->GetFlags() & PCF_IN_PREPROC)))
@@ -1344,14 +1344,14 @@ static Chunk *mod_case_brace_remove(Chunk *br_open)
         tmp_pc != br_close;
         tmp_pc = tmp_pc->GetNextNcNnl(E_Scope::PREPROC))
    {
-      if (tmp_pc->brace_level == 0)
+      if (tmp_pc->GetBraceLevel() == 0)
       {
-         fprintf(stderr, "%s(%d): tmp_pc->brace_level is ZERO, cannot be decremented, at line %zu, column %zu\n",
+         fprintf(stderr, "%s(%d): brace level is ZERO, cannot be decremented, at line %zu, column %zu\n",
                  __func__, __LINE__, tmp_pc->GetOrigLine(), tmp_pc->GetOrigCol());
          log_flush(true);
          exit(EX_SOFTWARE);
       }
-      tmp_pc->brace_level--;
+      tmp_pc->SetBraceLevel(tmp_pc->GetBraceLevel() - 1);
 
       if (tmp_pc->level == 0)
       {
@@ -1440,9 +1440,9 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    chunk.SetParentType(CT_CASE);
    chunk.SetOrigLine(cl_colon->GetOrigLine());
    chunk.SetOrigCol(cl_colon->GetOrigCol());
-   chunk.level       = cl_colon->level;
-   chunk.pp_level    = cl_colon->pp_level;
-   chunk.brace_level = cl_colon->brace_level;
+   chunk.level    = cl_colon->level;
+   chunk.pp_level = cl_colon->pp_level;
+   chunk.SetBraceLevel(cl_colon->GetBraceLevel());
    chunk.SetFlags(pc->GetFlags() & PCF_COPY_FLAGS);
    chunk.str = "{";
    Chunk *br_open = chunk.CopyAndAddAfter(cl_colon);
@@ -1458,7 +1458,7 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
         pc = pc->GetNext(E_Scope::PREPROC))
    {
       pc->level++;
-      pc->brace_level++;
+      pc->SetBraceLevel(pc->GetBraceLevel() + 1);
    }
 
    return(br_open);

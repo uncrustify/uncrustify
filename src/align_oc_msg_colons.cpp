@@ -137,7 +137,7 @@ void align_oc_msg_colon(Chunk *so)
       && options::indent_oc_msg_prioritize_first_colon()
       && len_diff > 0
       && (  (longest->GetColumn() >= len_diff)
-         && (longest->GetColumn() - len_diff) > (longest->brace_level * indent_size)))
+         && (longest->GetColumn() - len_diff) > (longest->GetBraceLevel() * indent_size)))
    {
       longest->SetColumn(longest->GetColumn() - len_diff);
    }
@@ -150,8 +150,8 @@ void align_oc_msg_colon(Chunk *so)
       chunk.SetParentType(CT_NONE);
       chunk.SetOrigLine(longest->GetOrigLine());
       chunk.SetOrigCol(longest->GetOrigCol());
-      chunk.level       = longest->level;
-      chunk.brace_level = longest->brace_level;
+      chunk.level = longest->level;
+      chunk.SetBraceLevel(longest->GetBraceLevel());
       chunk.SetFlags(longest->GetFlags() & PCF_COPY_FLAGS);
 
       // start at one since we already indent for the '['

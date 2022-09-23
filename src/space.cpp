@@ -3768,9 +3768,9 @@ void space_add_after(Chunk *pc, size_t count)
    sp.SetFlags(pc->GetFlags() & PCF_COPY_FLAGS);
    sp.str = "                ";         // 16 spaces
    sp.str.resize(count);
-   sp.level       = pc->level;
-   sp.brace_level = pc->brace_level;
-   sp.pp_level    = pc->pp_level;
+   sp.level = pc->level;
+   sp.SetBraceLevel(pc->GetBraceLevel());
+   sp.pp_level = pc->pp_level;
    sp.SetColumn(pc->GetColumn() + pc->Len());
    sp.SetOrigLine(pc->GetOrigLine());
    sp.SetOrigCol(pc->GetOrigCol());

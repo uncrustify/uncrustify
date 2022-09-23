@@ -632,7 +632,7 @@ void indent_text(void)
     else if (pc->GetType() == CT_RETURN)
       {
         /* don't count returns inside a () or [] */
-      if (pc->level == pc->brace_level)
+      if (pc->level == pc->GetBraceLevel())
         {
         indent_pse_push(frm, pc);
         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + pc->len + 1;

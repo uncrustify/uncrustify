@@ -251,13 +251,13 @@ bool can_be_full_param(Chunk *start, Chunk *end)
 
    if (  word_count < 2
       && type_count < 1
-      && start->brace_level > 0)
+      && start->GetBraceLevel() > 0)
    {
       LOG_FMT(LFPARAM, "%s(%d): !MVP!\n",
               __func__, __LINE__);
       // Oh, joy, we are in Most Vexing Parse territory
       Chunk *brace =
-         start->GetPrevType(CT_BRACE_OPEN, start->brace_level - 1);
+         start->GetPrevType(CT_BRACE_OPEN, start->GetBraceLevel() - 1);
 
       if (brace->IsNotNullChunk())
       {

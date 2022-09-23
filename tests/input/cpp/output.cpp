@@ -126,7 +126,7 @@ void output_parsed(FILE *pfile)
               pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()),
               pc->GetColumn(), pc->GetOrigCol(), pc->GetOrigColEnd(),
-              pc->brace_level, pc->level, pc->pp_level,
+              pc->GetBraceLevel(), pc->level, pc->pp_level,
               pc->GetFlags(), pc->nl_count, pc->after_tab);
 
       if ((pc->GetType() != CT_NEWLINE) && (pc->len != 0))
@@ -230,7 +230,7 @@ void output_text(FILE *pfile)
          {
             if (cpd.settings[UO_indent_with_tabs].n == 1)
             {
-               lvlcol = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
+               lvlcol = 1 + (pc->GetBraceLevel() * cpd.settings[UO_indent_columns].n);
                if ((pc->GetColumn() >= lvlcol) && (lvlcol > 1))
                {
                   output_to_column(lvlcol, true);
@@ -388,7 +388,7 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
 Chunk *output_comment_cpp(Chunk *first)
 {
    int col    = first->GetColumn();
-   int col_br = 1 + (first->brace_level * cpd.settings[UO_indent_columns].n);
+   int col_br = 1 + (first->GetBraceLevel() * cpd.settings[UO_indent_columns].n);
 
    /* Make sure we have at least one space past the last token */
    if (first->GetParentType() == CT_COMMENT_END)

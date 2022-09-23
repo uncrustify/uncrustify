@@ -76,7 +76,7 @@ void align_same_func_call_params()
          {
             // if we drop below the brace level that started it, we are done
             if (  align_root->IsNotNullChunk()
-               && align_root->brace_level > pc->brace_level)
+               && align_root->GetBraceLevel() > pc->GetBraceLevel())
             {
                LOG_FMT(LASFCP, "  ++ (drop) Ended with %zu fcns\n", align_len);
 
@@ -138,7 +138,7 @@ void align_same_func_call_params()
          // and on the same level
          LOG_FMT(LASFCP, "%s(%d):align_root is not nullptr\n", __func__, __LINE__);
 
-         if (  align_root->brace_level == pc->brace_level
+         if (  align_root->GetBraceLevel() == pc->GetBraceLevel()
             && align_root->level == pc->level
             && align_fcn_name.equals(align_root_name))
          {
