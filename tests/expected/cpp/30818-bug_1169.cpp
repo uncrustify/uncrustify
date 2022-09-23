@@ -4,21 +4,21 @@ public:
    virtual void f1ooooooooooooooo(const int bar);
    virtual void f2oooooooooooooooo(const int bar);
    virtual void f3ooooooooooooooooo(
-      const int bar);
+         const int bar);
    virtual void f4oooooooooooooooooo(
-      const int bar);
+         const int bar);
    virtual void f5ooooooooooooooooooo(
-      const int bar);
+         const int bar);
 };
 
 virtual void f1oooooooooooooooooo(const int bar);
 virtual void f2ooooooooooooooooooo(const int bar);
 virtual void f3oooooooooooooooooooo(
-   const int bar);
+      const int bar);
 virtual void f4ooooooooooooooooooooo(
-   const int bar);
+      const int bar);
 virtual void f5oooooooooooooooooooooo(
-   const int bar);
+      const int bar);
 
 void foo()
 {

@@ -2807,7 +2807,6 @@ void indent_text()
                         && frm.at(sub).pc->IsOnSameLine(frm.top().pc))
                   {
                      sub--;
-                     skipped = true;
                   }
 
                   if (  (  frm.at(sub + 1).type == CT_CLASS_COLON
@@ -2821,7 +2820,6 @@ void indent_text()
                log_indent();
 
                frm.top().indent_tab = frm.top().indent;
-               skipped = true;
             }
             else
             {
@@ -2895,7 +2893,9 @@ void indent_text()
             }
             log_indent();
 
-            if (  pc->level == pc->brace_level
+            if (  (  pc->level == pc->brace_level // Issue #3752
+                  || (  pc->level > pc->brace_level
+                     && !language_is_set(LANG_OC)))
                && !options::indent_ignore_first_continue()
                && (  pc->Is(CT_FPAREN_OPEN)
                   || pc->Is(CT_SPAREN_OPEN)

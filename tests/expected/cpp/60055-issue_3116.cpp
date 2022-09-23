@@ -112,9 +112,9 @@ Func([] {
 
 A(
     B([] (const std::string &s) -> bool {
-        s = "hello";
-        return true;
-    }), 1
+            s = "hello";
+            return true;
+        }), 1
 );
 
 A(
@@ -149,24 +149,24 @@ A(
 }
 
 Func(std::count_if(v.begin(), v.end(), [&](const auto &a) {
-        return a == 3;
-    }));
+            return a == 3;
+        }));
 
 Func(
     std::count_if(v.begin(), v.end(), [&](const auto &a)
-    {
-        return a == 3;
-    }));
+        {
+            return a == 3;
+        }));
 
 Func(
     std::count_if(v.begin(), v.end(), [&](const auto &a) {
-        return a == 3;
-    }));
+            return a == 3;
+        }));
 
 Func(
     std::count_if(v.begin(), v.end(), [&](const auto &a) {
-        return a == 3;
-    })
+            return a == 3;
+        })
 );
 
 // Test case from issue #3116
@@ -227,7 +227,7 @@ obj->Func([]
 
 obj->Func(
     Func([]
-    {
-        return b;
-    })
+        {
+            return b;
+        })
 );
