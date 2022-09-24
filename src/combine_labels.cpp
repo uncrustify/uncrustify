@@ -370,7 +370,7 @@ void combine_labels()
                   next->SetType(CT_CLASS_COLON);
                }
             }
-            else if (next->level > next->brace_level)
+            else if (next->level > next->GetBraceLevel())
             {
                // ignore it, as it is inside a paren
             }
@@ -432,7 +432,7 @@ void combine_labels()
                              cpd.filename.c_str(), next->GetOrigLine(), next->GetOrigCol(),
                              get_token_name(next->GetParentType()),
                              get_token_name(cur->GetParentType()),
-                             next->level, next->brace_level);
+                             next->level, next->GetBraceLevel());
                      cpd.error_count++;
                   }
                }

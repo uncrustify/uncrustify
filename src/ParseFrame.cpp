@@ -184,15 +184,15 @@ void ParseFrame::push(Chunk *pc, const char *func, int line, brace_stage_e stage
 // #define DEBUG_PUSH_POP
 #ifdef DEBUG_PUSH_POP
    LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d) Add is %4zu: orig line is %4zu, orig col is %4zu, type is %12s, "
-           "brace_level is %2zu, level is %2zu, pse_tos: %2zu -> %2zu\n",
+           "brace level is %2zu, level is %2zu, pse_tos: %2zu -> %2zu\n",
            func, line, (size_t)this, pc->GetOrigLine(), pc->GetOrigCol(),
-           get_token_name(pc->GetType()), pc->brace_level, pc->level,
+           get_token_name(pc->GetType()), pc->GetBraceLevel(), pc->level,
            (pse.size() - 2), (pse.size() - 1));
 #else /* DEBUG_PUSH_POP */
    LOG_FMT(LINDPSE, "ParseFrame::push(%s:%d): orig line is %4zu, orig col is %4zu, type is %12s, "
-           "brace_level is %2zu, level is %2zu, pse_tos: %2zu -> %2zu\n",
+           "brace level is %2zu, level is %2zu, pse_tos: %2zu -> %2zu\n",
            func, line, pc->GetOrigLine(), pc->GetOrigCol(),
-           get_token_name(pc->GetType()), pc->brace_level, pc->level,
+           get_token_name(pc->GetType()), pc->GetBraceLevel(), pc->level,
            (pse.size() - 2), (pse.size() - 1));
 #endif /* DEBUG_PUSH_POP */
 }

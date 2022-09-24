@@ -439,7 +439,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          {
             tmp->SetParentType(CT_DELEGATE);
 
-            if (tmp->level == tmp->brace_level)
+            if (tmp->level == tmp->GetBraceLevel())
             {
                tmp->SetFlagBits(PCF_VAR_1ST_DEF);
             }
@@ -1017,7 +1017,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    if (language_is_set(LANG_PAWN))
    {
       if (  pc->Is(CT_FUNCTION)
-         && pc->brace_level > 0)
+         && pc->GetBraceLevel() > 0)
       {
          LOG_FMT(LFCN, "%s(%d): (2) SET TO CT_FUNC_CALL: orig line is %zu, orig col is %zu, Text() '%s'\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
@@ -2346,10 +2346,10 @@ static Chunk *process_return_or_throw(Chunk *pc)
       // add the parenthesis
       chunk.SetType(CT_PAREN_OPEN);
       chunk.SetParentType(pc->GetType());
-      chunk.str         = "(";
-      chunk.level       = pc->level;
-      chunk.pp_level    = pc->pp_level;
-      chunk.brace_level = pc->brace_level;
+      chunk.str      = "(";
+      chunk.level    = pc->level;
+      chunk.pp_level = pc->pp_level;
+      chunk.SetBraceLevel(pc->GetBraceLevel());
       chunk.SetOrigLine(pc->GetOrigLine());
       chunk.SetOrigCol(next->GetOrigCol() - 1);
       chunk.SetFlags(pc->GetFlags() & PCF_COPY_FLAGS);
@@ -3773,10 +3773,10 @@ static void handle_oc_property_decl(Chunk *os)
                Chunk endchunk;
                endchunk.SetType(CT_COMMA);
                endchunk.SetParentType(curr_chunk->GetParentType());
-               endchunk.str         = ",";
-               endchunk.level       = curr_chunk->level;
-               endchunk.pp_level    = curr_chunk->pp_level;
-               endchunk.brace_level = curr_chunk->brace_level;
+               endchunk.str      = ",";
+               endchunk.level    = curr_chunk->level;
+               endchunk.pp_level = curr_chunk->pp_level;
+               endchunk.SetBraceLevel(curr_chunk->GetBraceLevel());
                endchunk.SetOrigLine(curr_chunk->GetOrigLine());
                endchunk.SetOrigCol(curr_chunk->GetOrigCol());
                endchunk.SetColumn(curr_chunk->GetOrigColEnd() + 1);

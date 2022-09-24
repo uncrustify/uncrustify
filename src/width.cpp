@@ -82,7 +82,7 @@ static bool split_line(Chunk *pc);
  * Figures out where to split a function def/proto/call
  *
  * For function prototypes and definition. Also function calls where
- * level == brace_level:
+ * level == m_braceLevel:
  *   - find the open function parenthesis
  *     + if it doesn't have a newline right after it
  *       * see if all parameters will fit individually after the paren
@@ -148,7 +148,7 @@ static void split_before_chunk(Chunk *pc)
       // reindent needs to include the indent_continue value and was off by one
       log_rule_B("indent_columns");
       log_rule_B("indent_continue");
-      reindent_line(pc, pc->brace_level * options::indent_columns() +
+      reindent_line(pc, pc->GetBraceLevel() * options::indent_columns() +
                     abs(options::indent_continue()) + 1);
       cpd.changes++;
    }
@@ -387,7 +387,7 @@ static bool split_line(Chunk *start)
     */
    else if (  start->TestFlags(PCF_IN_FCN_DEF)
            || start->GetParentType() == CT_FUNC_PROTO            // Issue #1169
-           || (  (start->level == (start->brace_level + 1))
+           || (  (start->level == (start->GetBraceLevel() + 1))
               && start->TestFlags(PCF_IN_FCN_CALL)))
    {
       LOG_FMT(LSPLIT, " ** FUNC SPLIT **\n");
@@ -830,7 +830,7 @@ static void split_fcn_params(Chunk *start)
          if (!options::indent_paren_nl())
          {
             log_rule_B("indent_columns");
-            min_col = pc->brace_level * options::indent_columns() + 1;
+            min_col = pc->GetBraceLevel() * options::indent_columns() + 1;
             LOG_FMT(LSPLIT, "%s(%d): min_col is %zu\n",
                     __func__, __LINE__, min_col);
 

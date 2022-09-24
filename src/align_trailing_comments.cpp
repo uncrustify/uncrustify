@@ -56,7 +56,7 @@ Chunk *align_trailing_comments(Chunk *start)
    size_t       min_col  = 0;
    size_t       min_orig = 0;
    Chunk        *pc      = start;
-   const size_t lvl      = start->brace_level;
+   const size_t lvl      = start->GetBraceLevel();
    size_t       nl_count = 0;
    ChunkStack   cs;
    size_t       col;
@@ -82,7 +82,7 @@ Chunk *align_trailing_comments(Chunk *start)
          && pc->GetColumn() > 1)
       {
          if (  same_level
-            && pc->brace_level != lvl)
+            && pc->GetBraceLevel() != lvl)
          {
             pc = pc->GetPrev();
             break;

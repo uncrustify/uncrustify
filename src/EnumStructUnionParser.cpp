@@ -1637,7 +1637,7 @@ void EnumStructUnionParser::mark_constructors()
       log_pcf_flags(LFTOR, m_type->GetFlags());
 
       Chunk       *next = Chunk::NullChunkPtr;
-      std::size_t level = m_type->brace_level + 1;
+      std::size_t level = m_type->GetBraceLevel() + 1;
 
       for (auto *prev = body_start; next != body_end; prev = next)
       {
