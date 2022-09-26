@@ -407,6 +407,8 @@
 02540  c/pp_multiline_define_align_pp_ml-1.cfg    c/pp_multiline_define.c
 02541  c/pp_multiline_define_align_pp_ml-5.cfg    c/pp_multiline_define.c
 
+02550  c/Issue_3852.cfg                           c/func_var_multi_paren.c
+
 07630  c/indent-vbrace.cfg                        c/indent-vbrace.c
 
 08399  c/ben_095.cfg                              c/gh399.c

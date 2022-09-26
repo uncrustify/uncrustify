@@ -1513,7 +1513,9 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       || first->Is(CT_CNG_HASINCN)
       || (  first->Is(CT_BRACE_CLOSE)
          && first->GetParentType() == CT_BRACED_INIT_LIST
-         && second->Is(CT_FPAREN_OPEN)))
+         && second->Is(CT_FPAREN_OPEN))
+      || (  first->Is(CT_FUNC_VAR)                     // Issue #3852
+         && second->Is(CT_PAREN_OPEN)))
    {
       if (  (options::sp_func_call_paren_empty() != IARF_IGNORE)
          && second->Is(CT_FPAREN_OPEN))

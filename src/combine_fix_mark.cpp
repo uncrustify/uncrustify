@@ -1320,10 +1320,12 @@ void mark_function(Chunk *pc)
    /*
     * This part detects either chained function calls or a function ptr definition.
     * MYTYPE (*func)(void);
+    * MYTYPE (*func(param))(void);
+    * MYTYPE (*func(param_call1)(param_call2))(void);
     * mWriter( "class Clst_"c )( somestr.getText() )( " : Cluster {"c ).newline;
     *
     * For it to be a function variable def, there must be a '*' followed by a
-    * single word.
+    * single word or by a sequence of one or more expressions each within brackets.
     *
     * Otherwise, it must be chained function calls.
     */
@@ -1362,6 +1364,13 @@ void mark_function(Chunk *pc)
          tmp3 = tmp2->GetNextNcNnl();
       }
       tmp3 = tmp3->GetNextNbsb();
+
+      // Issue #3852
+      while (tmp3->IsString("("))
+      {
+         tmp3 = tmp3->SkipToMatch();
+         tmp3 = tmp3->GetNextNcNnl();
+      }
 
       if (  tmp3->IsString(")")
          && (  tmp1->IsStar()
