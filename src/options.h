@@ -4119,26 +4119,26 @@ pp_multiline_define_body_indent; // = 8
 // grammar, and should be revised; from here...
 
 // Whether to indent case statements between #if, #else, and #endif.
-// Only applies to the indent of the preprocesser that the case statements
+// Only applies to the indent of the preprocessor that the case statements
 // directly inside of.
 extern Option<bool>
 pp_indent_case; // = true
 
 // Whether to indent whole function definitions between #if, #else, and #endif.
-// Only applies to the indent of the preprocesser that the function definition
+// Only applies to the indent of the preprocessor that the function definition
 // is directly inside of.
 extern Option<bool>
 pp_indent_func_def; // = true
 
 // Whether to indent extern C blocks between #if, #else, and #endif.
-// Only applies to the indent of the preprocesser that the extern block is
+// Only applies to the indent of the preprocessor that the extern block is
 // directly inside of.
 extern Option<bool>
 pp_indent_extern; // = true
 
 // How to indent braces directly inside #if, #else, and #endif.
 // Requires pp_if_indent_code=true and only applies to the indent of the
-// preprocesser that the braces are directly inside of.
+// preprocessor that the braces are directly inside of.
 //  0: No extra indent
 //  1: Indent by one level
 // -1: Preserve original indentation
