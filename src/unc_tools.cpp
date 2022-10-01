@@ -108,8 +108,8 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigne
             {
                LOG_FMT(LGUY, "Text() '%s', ", pc->Text());
             }
-            LOG_FMT(LGUY, " column is %zu, pp_level is %zu, type is %s, parent type is %s, orig col is %zu,",
-                    pc->GetColumn(), pc->pp_level, get_token_name(pc->GetType()),
+            LOG_FMT(LGUY, " column is %zu, pp level is %zu, type is %s, parent type is %s, orig col is %zu,",
+                    pc->GetColumn(), pc->GetPpLevel(), get_token_name(pc->GetType()),
                     get_token_name(pc->GetParentType()), pc->GetOrigCol());
 
             if (pc->Is(CT_IGNORED))
@@ -158,7 +158,7 @@ void prot_all_lines(const char *func_name, int theLine)
    {
       tokenCounter++;
 
-      LOG_FMT(LGUY, " orig line is %zu,%zu, pp_level is %zu, ", lineNumber, tokenCounter, pc->pp_level);
+      LOG_FMT(LGUY, " orig line is %zu,%zu, pp level is %zu, ", lineNumber, tokenCounter, pc->GetPpLevel());
 
       if (pc->Is(CT_VBRACE_OPEN))
       {
@@ -346,9 +346,9 @@ void dump_out(unsigned int type)
             fprintf(D_file, "  brace level %zu\n", pc->GetBraceLevel());
          }
 
-         if (pc->pp_level != 0)
+         if (pc->GetPpLevel() != 0)
          {
-            fprintf(D_file, "  pp_level %zu\n", pc->pp_level);
+            fprintf(D_file, "  pp level %zu\n", pc->GetPpLevel());
          }
 
          if (pc->after_tab != 0)

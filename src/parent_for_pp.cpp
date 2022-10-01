@@ -35,7 +35,7 @@ void do_parent_for_pp()
          LOG_FMT(LMCB, "%s(%d): ELSE: orig line %zu, orig col is %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
          log_pcf_flags(LMCB, pc->GetFlags());
-         size_t level = pc->pp_level;
+         size_t level = pc->GetPpLevel();
          Chunk  *a    = viz.at(level - 1);
          pc->SetParent(a);
       }
@@ -44,7 +44,7 @@ void do_parent_for_pp()
          LOG_FMT(LMCB, "%s(%d): ENDIF: orig line %zu, orig col is %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
          log_pcf_flags(LMCB, pc->GetFlags());
-         size_t level = pc->pp_level;
+         size_t level = pc->GetPpLevel();
          Chunk  *a    = viz.at(level);
          pc->SetParent(a);
          viz.pop_back();

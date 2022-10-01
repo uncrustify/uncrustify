@@ -17,7 +17,6 @@
 
 using std::string;
 using std::to_string;
-using std::logic_error;
 using std::invalid_argument;
 
 using ContainerType = paren_stack_entry_t;

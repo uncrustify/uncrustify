@@ -2346,9 +2346,9 @@ static Chunk *process_return_or_throw(Chunk *pc)
       // add the parenthesis
       chunk.SetType(CT_PAREN_OPEN);
       chunk.SetParentType(pc->GetType());
-      chunk.str      = "(";
-      chunk.level    = pc->level;
-      chunk.pp_level = pc->pp_level;
+      chunk.str   = "(";
+      chunk.level = pc->level;
+      chunk.SetPpLevel(pc->GetPpLevel());
       chunk.SetBraceLevel(pc->GetBraceLevel());
       chunk.SetOrigLine(pc->GetOrigLine());
       chunk.SetOrigCol(next->GetOrigCol() - 1);
@@ -3773,9 +3773,9 @@ static void handle_oc_property_decl(Chunk *os)
                Chunk endchunk;
                endchunk.SetType(CT_COMMA);
                endchunk.SetParentType(curr_chunk->GetParentType());
-               endchunk.str      = ",";
-               endchunk.level    = curr_chunk->level;
-               endchunk.pp_level = curr_chunk->pp_level;
+               endchunk.str   = ",";
+               endchunk.level = curr_chunk->level;
+               endchunk.SetPpLevel(curr_chunk->GetPpLevel());
                endchunk.SetBraceLevel(curr_chunk->GetBraceLevel());
                endchunk.SetOrigLine(curr_chunk->GetOrigLine());
                endchunk.SetOrigCol(curr_chunk->GetOrigCol());

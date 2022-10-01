@@ -348,7 +348,7 @@ static bool can_increase_nl(Chunk *nl)
          log_rule_B("nl_squeeze_ifdef_top_level");
          bool rv = ifdef_over_whole_file() && pp_start->TestFlags(PCF_WF_IF);
          LOG_FMT(LBLANKD, "%s(%d): nl_squeeze_ifdef %zu (prev) pp_lvl=%zu rv=%d\n",
-                 __func__, __LINE__, nl->GetOrigLine(), nl->pp_level, rv);
+                 __func__, __LINE__, nl->GetOrigLine(), nl->GetPpLevel(), rv);
          return(rv);
       }
 
@@ -361,7 +361,7 @@ static bool can_increase_nl(Chunk *nl)
          log_rule_B("nl_squeeze_ifdef_top_level");
          bool rv = ifdef_over_whole_file() && next->TestFlags(PCF_WF_ENDIF);
          LOG_FMT(LBLANKD, "%s(%d): nl_squeeze_ifdef %zu (next) pp_lvl=%zu rv=%d\n",
-                 __func__, __LINE__, nl->GetOrigLine(), nl->pp_level, rv);
+                 __func__, __LINE__, nl->GetOrigLine(), nl->GetPpLevel(), rv);
          return(rv);
       }
    }
@@ -472,10 +472,10 @@ static void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next)
    undo_one_liner(prev);
 
    nl->SetOrigLine(prev->GetOrigLine());
-   nl->level    = prev->level;
-   nl->pp_level = prev->pp_level;
+   nl->level = prev->level;
+   nl->SetPpLevel(prev->GetPpLevel());
    nl->SetBraceLevel(prev->GetBraceLevel());
-   nl->pp_level = prev->pp_level;
+   nl->SetPpLevel(prev->GetPpLevel());
    nl->nl_count = 1;
    nl->SetFlags((prev->GetFlags() & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC);
    nl->SetOrigCol(prev->GetOrigColEnd());
@@ -560,7 +560,7 @@ Chunk *newline_add_before(Chunk *pc)
 
    setup_newline_add(prev, &nl, pc);
    nl.SetOrigCol(pc->GetOrigCol());
-   nl.pp_level = pc->pp_level;
+   nl.SetPpLevel(pc->GetPpLevel());
    LOG_FMT(LNEWLINE, "%s(%d): nl column is %zu\n",
            __func__, __LINE__, nl.GetColumn());
 
@@ -613,7 +613,7 @@ Chunk *newline_add_after(Chunk *pc)
    MARK_CHANGE();
    // TO DO: check why the next statement is necessary
    nl.SetOrigCol(pc->GetOrigCol());
-   nl.pp_level = pc->pp_level;
+   nl.SetPpLevel(pc->GetPpLevel());
    return(nl.CopyAndAddAfter(pc));
 } // newline_add_after
 
@@ -646,7 +646,7 @@ static void newline_end_newline(Chunk *br_close)
       nl.SetOrigLine(br_close->GetOrigLine());
       nl.SetOrigCol(br_close->GetOrigCol());
       nl.nl_count = 1;
-      nl.pp_level = 0;
+      nl.SetPpLevel(0);
       nl.SetFlags((br_close->GetFlags() & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC);
 
       if (  br_close->TestFlags(PCF_IN_PREPROC)
@@ -2449,7 +2449,7 @@ static void newlines_brace_pair(Chunk *br_open)
                      chunk.SetType(CT_NEWLINE);
                      chunk.SetOrigLine(current->GetOrigLine());
                      chunk.SetOrigCol(current->GetOrigCol());
-                     chunk.pp_level = current->pp_level;
+                     chunk.SetPpLevel(current->GetPpLevel());
                      chunk.nl_count = 1;
                      chunk.CopyAndAddBefore(current);
                      LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline before '%s'\n",
@@ -5523,7 +5523,7 @@ void newlines_eat_start_end()
             chunk.SetType(CT_NEWLINE);
             chunk.SetOrigLine(pc->GetOrigLine());
             chunk.SetOrigCol(pc->GetOrigCol());
-            chunk.pp_level = pc->pp_level;
+            chunk.SetPpLevel(pc->GetPpLevel());
             chunk.nl_count = options::nl_start_of_file_min();
             log_rule_B("nl_start_of_file_min");
             chunk.CopyAndAddBefore(pc);
@@ -5582,7 +5582,7 @@ void newlines_eat_start_end()
             chunk.SetType(CT_NEWLINE);
             chunk.SetOrigLine(pc->GetOrigLine());
             chunk.SetOrigCol(pc->GetOrigCol());
-            chunk.pp_level = pc->pp_level;
+            chunk.SetPpLevel(pc->GetPpLevel());
             chunk.nl_count = options::nl_end_of_file_min();
             log_rule_B("nl_end_of_file_min");
             chunk.CopyAndAddBefore(Chunk::NullChunkPtr);

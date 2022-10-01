@@ -4058,7 +4058,7 @@ pp_indent_at_level0;
 extern BoundedOption<unsigned, 0, 16>
 pp_indent_count; // = 1
 
-// Add or remove space after # based on pp_level of #if blocks.
+// Add or remove space after # based on pp level of #if blocks.
 extern Option<iarf_e>
 pp_space_after;
 

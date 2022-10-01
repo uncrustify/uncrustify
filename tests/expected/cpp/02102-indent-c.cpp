@@ -945,7 +945,7 @@ void indent_preproc(void)
       {
         /* Scan until a PP at level 0 is found - the close to the #if */
       if ((pc->GetType() == CT_PREPROC) &&
-          (pc->pp_level == 0))
+          (pc->GetPpLevel() == 0))
         stage = 2;
 
       continue;
@@ -988,7 +988,7 @@ void indent_preproc(void)
     else
       pc->str = &pp_str[16];
 
-    pp_level = pc->pp_level - pp_level_sub;
+    pp_level = pc->GetPpLevel() - pp_level_sub;
 
     if (pp_level < 0)
       pp_level = 0;
@@ -1019,6 +1019,6 @@ void indent_preproc(void)
       reindent_line(next, pc->len + 1);
 
     LOG_FMT(LPPIS, "%s: Indent line %d to %d (len %d, next->col %d)\n",
-            __func__, pc->GetOrigLine(), pp_level, pc->len, next->GetColumn());
+            __func__, pc->GetOrigLine(), GetPpLevel(), pc->len, next->GetColumn());
     }
   }

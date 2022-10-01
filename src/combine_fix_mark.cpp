@@ -1753,7 +1753,7 @@ void mark_function(Chunk *pc)
 
          if (preproc->Is(CT_PREPROC))
          {
-            size_t pp_level = preproc->pp_level;
+            size_t pp_level = preproc->GetPpLevel();
 
             if (preproc->GetNextNcNnl()->Is(CT_PP_ELSE))
             {
@@ -1765,7 +1765,7 @@ void mark_function(Chunk *pc)
                   {
                      preproc = preproc->GetPrevNcNnlNi();   // Issue #2279
 
-                     if (preproc->pp_level == pp_level)
+                     if (preproc->GetPpLevel() == pp_level)
                      {
                         prev = preproc->GetPrevNcNnlNpp();
                         break;

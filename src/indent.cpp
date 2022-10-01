@@ -911,7 +911,7 @@ void indent_text()
                else
                {
                   // Indent one level except if the #if is a #include guard
-                  size_t extra = (  pc->pp_level == 0
+                  size_t extra = (  pc->GetPpLevel() == 0
                                  && ifdef_over_whole_file())
                                  ? 0 : indent_size;
 
@@ -4600,8 +4600,8 @@ bool ifdef_over_whole_file()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      LOG_FMT(LNOTE, "%s(%d): pc->pp_level is %zu, pc orig line is %zu, orig col is %zu, pc->Text() is '%s'\n",
-              __func__, __LINE__, pc->pp_level, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
+      LOG_FMT(LNOTE, "%s(%d): pc->pp level is %zu, pc orig line is %zu, orig col is %zu, pc->Text() is '%s'\n",
+              __func__, __LINE__, pc->GetPpLevel(), pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
 
       if (pc->IsCommentOrNewline())
       {
@@ -4630,7 +4630,7 @@ bool ifdef_over_whole_file()
          // Scan until a preprocessor at level 0 is found - the close to the #if
          if (pc->Is(CT_PREPROC))
          {
-            if (pc->pp_level == 0)
+            if (pc->GetPpLevel() == 0)
             {
                IFstage = 2;
                end_pp  = pc;
@@ -4685,8 +4685,8 @@ void indent_preproc()
       {
          break;
       }
-      const size_t pp_level = (pc->pp_level > pp_level_sub)
-                              ? pc->pp_level - pp_level_sub : 0;
+      const size_t pp_level = (pc->GetPpLevel() > pp_level_sub)
+                              ? pc->GetPpLevel() - pp_level_sub : 0;
 
       // Adjust the indent of the '#'
       if (options::pp_indent() & IARF_ADD)

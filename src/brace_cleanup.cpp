@@ -222,7 +222,7 @@ void brace_cleanup()
       {
          pp_level = braceState.pp_level;
       }
-      LOG_FMT(LTOK, "%s(%d): pp_level is %zu\n",
+      LOG_FMT(LTOK, "%s(%d): pp level is %zu\n",
               __func__, __LINE__, pp_level);
 
       // Do before assigning stuff from the frame
@@ -246,7 +246,7 @@ void brace_cleanup()
       // Assume the level won't change
       pc->level = frm.level;
       pc->SetBraceLevel(frm.brace_level);
-      pc->pp_level = pp_level;
+      pc->SetPpLevel(pp_level);
 
       /*
        * #define bodies get the full formatting treatment
@@ -1345,8 +1345,8 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
 
    chunk.SetParentType(frm.top().type);
    chunk.SetOrigLine(pc->GetOrigLine());
-   chunk.level    = frm.level;
-   chunk.pp_level = frm.pp_level;
+   chunk.level = frm.level;
+   chunk.SetPpLevel(frm.pp_level);
    chunk.SetBraceLevel(frm.brace_level);
    chunk.SetFlags(pc->GetFlags() & PCF_COPY_FLAGS);
    chunk.str = "";
@@ -1417,7 +1417,7 @@ static Chunk *insert_vbrace(Chunk *pc, bool after, const ParseFrame &frm)
    chunk.SetOrigLine(ref->GetOrigLine());
    chunk.SetOrigCol(ref->GetOrigCol());
    chunk.SetColumn(ref->GetColumn() + ref->Len() + 1);
-   chunk.pp_level = ref->pp_level;                          // Issue #3055
+   chunk.SetPpLevel(ref->GetPpLevel());                         // Issue #3055
    chunk.SetType(CT_VBRACE_OPEN);
 
    return(chunk.CopyAndAddAfter(ref));

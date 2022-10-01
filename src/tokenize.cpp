@@ -2665,7 +2665,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
    while (ctx.more())
    {
       chunk.Reset();
-      chunk.pp_level = 0;
+      chunk.SetPpLevel(0);
 
       if (!parse_next(ctx, chunk, pc))
       {
