@@ -68,7 +68,7 @@ void enum_cleanup()
                      comma.SetOrigLine(prev->GetOrigLine());
                      comma.SetOrigCol(prev->GetOrigCol() + 1);
                      comma.nl_count = 0;
-                     comma.pp_level = 0;
+                     comma.SetPpLevel(0);
                      comma.SetFlags(PCF_NONE);
                      comma.str = ",";
 

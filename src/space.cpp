@@ -3772,7 +3772,7 @@ void space_add_after(Chunk *pc, size_t count)
    sp.str.resize(count);
    sp.level = pc->level;
    sp.SetBraceLevel(pc->GetBraceLevel());
-   sp.pp_level = pc->pp_level;
+   sp.SetPpLevel(pc->GetPpLevel());
    sp.SetColumn(pc->GetColumn() + pc->Len());
    sp.SetOrigLine(pc->GetOrigLine());
    sp.SetOrigCol(pc->GetOrigCol());

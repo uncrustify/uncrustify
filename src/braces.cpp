@@ -334,7 +334,7 @@ static bool should_add_braces(Chunk *vbopen)
 
    if (  pc->IsNotNullChunk()
       && nl_count > nl_max
-      && vbopen->pp_level == pc->pp_level)
+      && vbopen->GetPpLevel() == pc->GetPpLevel())
    {
       LOG_FMT(LBRDEL, "%s(%d): exceeded %zu newlines\n",
               __func__, __LINE__, nl_max);
@@ -504,7 +504,7 @@ static bool can_remove_braces(Chunk *bopen)
            __func__, __LINE__, get_token_name(pc->GetType()), pc->GetOrigLine(), if_count, semi_count);
 
    return(  pc->Is(CT_BRACE_CLOSE)
-         && pc->pp_level == bopen->pp_level);
+         && pc->GetPpLevel() == bopen->GetPpLevel());
 } // can_remove_braces
 
 
@@ -1394,8 +1394,8 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig col is %zu, pp_level is %zu\n",
-              __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->pp_level);
+      LOG_FMT(LMCB, "%s(%d): Text() is '%s', orig line %zu, orig col is %zu, pp level is %zu\n",
+              __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetPpLevel());
 
       if (pc->level == cl_colon->level)
       {
@@ -1440,8 +1440,8 @@ static Chunk *mod_case_brace_add(Chunk *cl_colon)
    chunk.SetParentType(CT_CASE);
    chunk.SetOrigLine(cl_colon->GetOrigLine());
    chunk.SetOrigCol(cl_colon->GetOrigCol());
-   chunk.level    = cl_colon->level;
-   chunk.pp_level = cl_colon->pp_level;
+   chunk.level = cl_colon->level;
+   chunk.SetPpLevel(cl_colon->GetPpLevel());
    chunk.SetBraceLevel(cl_colon->GetBraceLevel());
    chunk.SetFlags(pc->GetFlags() & PCF_COPY_FLAGS);
    chunk.str = "{";

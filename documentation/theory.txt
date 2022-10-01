@@ -57,7 +57,7 @@ Brace parent types are set.
 Statement start and expression starts are labeled.
 And #ifdef constructs are handled.
 
-This step determines the levels (m_braceLevel, level, & pp_level).
+This step determines the levels (m_braceLevel, level and m_ppLevel).
 
 REVISIT:
   The code in brace_cleanup.cpp needs to be reworked to take advantage of being

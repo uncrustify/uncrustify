@@ -526,13 +526,13 @@ void output_parsed(FILE *pfile, bool withOptions)
               eol_marker, (int)pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               (int)pc->GetColumn(), (int)pc->GetOrigCol(), (int)pc->GetOrigColEnd(), (int)pc->GetOrigPrevSp(),
-              (int)pc->GetBraceLevel(), (int)pc->level, (int)pc->pp_level, (int)pc->nl_count, pc->after_tab);
+              (int)pc->GetBraceLevel(), (int)pc->level, (int)pc->GetPpLevel(), (int)pc->nl_count, pc->after_tab);
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3zu][%zu/%zu/%zu]",
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               pc->GetColumn(), pc->GetOrigCol(), pc->GetOrigColEnd(), pc->GetOrigPrevSp(),
-              pc->GetBraceLevel(), pc->level, pc->pp_level);
+              pc->GetBraceLevel(), pc->level, pc->GetPpLevel());
       // Print pc flags in groups of 4 hex characters
       char flag_string[20];
       sprintf(flag_string, "%12llx", static_cast<T_PcfFlags::int_t>(pc->GetFlags()));
@@ -580,7 +580,7 @@ void output_parsed_csv(FILE *pfile)
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               pc->GetColumn(), pc->GetOrigCol(), pc->GetOrigColEnd(), pc->GetOrigPrevSp(),
-              pc->GetBraceLevel(), pc->level, pc->pp_level);
+              pc->GetBraceLevel(), pc->level, pc->GetPpLevel());
 
       auto pcf_flag_str = pcf_flags_str(E_PcfFlag(pc->GetFlags()));
 #ifdef WIN32
@@ -3524,7 +3524,7 @@ void add_long_preprocessor_conditional_block_comment()
          {
             nl_count += tmp->nl_count;
          }
-         else if (  pp_end->pp_level == pp_start->pp_level
+         else if (  pp_end->GetPpLevel() == pp_start->GetPpLevel()
                  && (  tmp->Is(CT_PP_ENDIF)
                     || ((br_open->Is(CT_PP_IF)) ? (tmp->Is(CT_PP_ELSE)) : 0)))
          {

@@ -36,7 +36,7 @@ void dump_step(const char *filename, const char *description);
  * in braces.cpp
  *
  * Note: since this concerns itself with the preprocessor -- which is line-oriented --
- * it turns out that just looking at pc->pp_level is NOT the right thing to do.
+ * it turns out that just looking at pc->GetPpLevel() is NOT the right thing to do.
  * See a --parsed dump if you don't believe this: an '#endif' will be one level
  * UP from the corresponding #ifdef when you look at the tokens 'ifdef' versus 'endif',
  * but it's a whole another story when you look at their CT_PREPROC ('#') tokens!

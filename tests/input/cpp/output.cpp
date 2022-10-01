@@ -126,7 +126,7 @@ void output_parsed(FILE *pfile)
               pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()),
               pc->GetColumn(), pc->GetOrigCol(), pc->GetOrigColEnd(),
-              pc->GetBraceLevel(), pc->level, pc->pp_level,
+              pc->GetBraceLevel(), pc->level, pc->GetPpLevel(),
               pc->GetFlags(), pc->nl_count, pc->after_tab);
 
       if ((pc->GetType() != CT_NEWLINE) && (pc->len != 0))

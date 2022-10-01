@@ -238,8 +238,8 @@ static void add_parens_between(Chunk *first, Chunk *last)
    pc.SetOrigCol(first_n->GetOrigCol());
    pc.str = "(";
    pc.SetFlags(first_n->GetFlags() & PCF_COPY_FLAGS);
-   pc.level    = first_n->level;
-   pc.pp_level = first_n->pp_level;
+   pc.level = first_n->level;
+   pc.SetPpLevel(first_n->GetPpLevel());
    pc.SetBraceLevel(first_n->GetBraceLevel());
 
    pc.CopyAndAddBefore(first_n);
@@ -251,8 +251,8 @@ static void add_parens_between(Chunk *first, Chunk *last)
    pc.SetOrigCol(last_p->GetOrigCol());
    pc.str = ")";
    pc.SetFlags(last_p->GetFlags() & PCF_COPY_FLAGS);
-   pc.level    = last_p->level;
-   pc.pp_level = last_p->pp_level;
+   pc.level = last_p->level;
+   pc.SetPpLevel(last_p->GetPpLevel());
    pc.SetBraceLevel(last_p->GetBraceLevel());
 
    pc.CopyAndAddAfter(last_p);

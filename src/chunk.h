@@ -236,6 +236,17 @@ public:
     */
    void SetBraceLevel(size_t lvl);
 
+   /**
+    * @brief Returns the preprocessor level of the chunk
+    */
+   size_t GetPpLevel() const;
+
+   /**
+    * @brief Sets the preprocessor level of the chunk
+    * @param level the preprocessor level of the chunk
+    */
+   void SetPpLevel(size_t lvl);
+
 
    // --------- Get* chunk functions
 
@@ -926,7 +937,6 @@ public:
    size_t       nl_count;                    //! number of newlines in CT_NEWLINE
    size_t       nl_column;                   //! column of the subsequent newline entries(all of them should have the same column)
    size_t       level;                       /** nest level in {, (, or [. Only to help vim command } */
-   size_t       pp_level;                    //! nest level in preprocessor
    bool         after_tab;                   //! whether this token was after a tab
    unc_text     str;                         //! the token text
 
@@ -974,6 +984,7 @@ protected:
    size_t     m_columnIndent;               //! if 1st chunk on a line, set to the 'indent' column, which may
                                             //! be less than the real column used to indent with tabs
    size_t     m_braceLevel;                 //! nest level in braces only
+   size_t     m_ppLevel;                    //! nest level in preprocessor
    E_Token    m_type;                       //! type of the chunk itself
    E_Token    m_parentType;                 //! type of the parent chunk usually CT_NONE
    T_PcfFlags m_flags;                      //! see PCF_xxx
@@ -1174,6 +1185,18 @@ inline size_t Chunk::GetBraceLevel() const
 inline void Chunk::SetBraceLevel(size_t lvl)
 {
    m_braceLevel = lvl;
+}
+
+
+inline size_t Chunk::GetPpLevel() const
+{
+   return(m_ppLevel);
+}
+
+
+inline void Chunk::SetPpLevel(size_t lvl)
+{
+   m_ppLevel = lvl;
 }
 
 

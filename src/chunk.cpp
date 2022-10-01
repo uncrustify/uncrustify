@@ -47,7 +47,7 @@ void Chunk::CopyFrom(const Chunk &o)
    level     = o.level;
 
    m_braceLevel = o.m_braceLevel;
-   pp_level     = o.pp_level;
+   m_ppLevel    = o.m_ppLevel;
    after_tab    = o.after_tab;
    str          = o.str;
 
@@ -75,7 +75,7 @@ void Chunk::Reset()
    nl_column      = 0;
    level          = 0;
    m_braceLevel   = 0;
-   pp_level       = 999;                                // use a big value to find some errors
+   m_ppLevel      = 999;                                // use a big value to find some errors
    after_tab      = false;
    // for debugging purpose only
    tracking = nullptr;
@@ -610,9 +610,9 @@ Chunk *Chunk::CopyAndAdd(Chunk *pos, const E_Direction dir) const
 {
 #ifdef DEBUG
    // test if this chunk is properly set
-   if (pp_level == 999)
+   if (m_ppLevel == 999)
    {
-      fprintf(stderr, "%s(%d): pp_level is not set\n", __func__, __LINE__);
+      fprintf(stderr, "%s(%d): pp level is not set\n", __func__, __LINE__);
       log_func_stack_inline(LSETFLG);
       log_flush(true);
       exit(EX_SOFTWARE);
