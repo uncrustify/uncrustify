@@ -1079,7 +1079,7 @@ void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type)
 
       while (pc->IsNotNullChunk())
       {
-         LOG_FMT(LFCNR, " Text() '%s', type is %s", pc->Text(), get_token_name(pc->GetType()));
+         LOG_CURRENT_PC(LFCNR, pc);
 
          if (parent_type != CT_NONE)
          {

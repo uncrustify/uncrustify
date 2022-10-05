@@ -1530,8 +1530,7 @@ static void process_if_chain(Chunk *br_start)
    while (  pc != nullptr
          && pc->IsNotNullChunk())
    {
-      LOG_FMT(LBRCH, "%s(%d): pc->Text() is '%s', orig line is %zu, orig col is %zu.\n",
-              __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
+      LOG_CURRENT_PC(LBRCH, pc);
 
       if (pc->Is(CT_BRACE_OPEN))
       {

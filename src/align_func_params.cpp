@@ -65,9 +65,7 @@ Chunk *align_func_param(Chunk *start)
    while ((pc = pc->GetNext())->IsNotNullChunk())
    {
       chunk_count++;
-      LOG_FMT(LFLPAREN, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(),
-              get_token_name(pc->GetType()));
+      LOG_CURRENT_PC(LFLPAREN, pc);
 
       if (pc->Is(CT_FUNC_VAR))                    // Issue #2278
       {

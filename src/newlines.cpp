@@ -2037,8 +2037,7 @@ static Chunk *newline_var_def_blk(Chunk *start)
          && (  pc->level >= start->level
             || pc->level == 0))
    {
-      LOG_FMT(LVARDFBLK, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s'\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
+      LOG_CURRENT_PC(LVARDFBLK, pc);
       //prot_the_line(__func__, __LINE__, 15, 4);
 
       Chunk *next_pc = pc->GetNext();

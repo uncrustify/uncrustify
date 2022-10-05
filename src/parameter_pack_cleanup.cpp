@@ -19,8 +19,7 @@ void parameter_pack_cleanup()
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LTOK, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
+      LOG_CURRENT_PC(LTOK, pc);
 
       // look for template
       if (pc->Is(CT_TEMPLATE))                 // Issue #3309
@@ -30,8 +29,7 @@ void parameter_pack_cleanup()
          // look for a parameter pack
          while (pc->IsNotNullChunk())
          {
-            LOG_FMT(LTOK, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
+            LOG_CURRENT_PC(LTOK, pc);
 
             if (pc->Is(CT_PARAMETER_PACK))
             {
@@ -40,8 +38,7 @@ void parameter_pack_cleanup()
                // look for a token with the same text
                while (pc->IsNotNullChunk())
                {
-                  LOG_FMT(LTOK, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s'\n",
-                          __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
+                  LOG_CURRENT_PC(LTOK, pc);
 
                   if (pc == template_end)
                   {
