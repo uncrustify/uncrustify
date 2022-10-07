@@ -189,8 +189,7 @@ void brace_cleanup()
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LTOK, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s'\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
+      LOG_CURRENT_PC(LTOK, pc);
 
       // Check for leaving a #define body
       if (  braceState.in_preproc != CT_NONE
@@ -264,56 +263,6 @@ void brace_cleanup()
       }
       pc = pc->GetNext();
    }
-//   pc = Chunk::GetHead();
-//
-//   while (pc->IsNotNullChunk())
-//   {
-//      LOG_FMT(LTOK, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s'\n",
-//              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
-//
-//      // look for template
-//      if (pc->Is(T_TEMPLATE))                 // Issue #3309
-//      {
-//         Chunk *template_end = pc->GetNextType(CT_SEMICOLON, pc->level);
-//
-//         // look for a parameter pack
-//         while (pc->IsNotNullChunk())
-//         {
-//            LOG_FMT(LTOK, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s'\n",
-//                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
-//
-//            if (pc->Is(T_PARAMETER_PACK))
-//            {
-//               Chunk *parameter_pack = pc;
-//
-//               // look for a token with the same text
-//               while (pc->IsNotNullChunk())
-//               {
-//                  LOG_FMT(LTOK, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s'\n",
-//                          __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
-//                  pc = pc->GetNext();
-//
-//                  if (pc == template_end)
-//                  {
-//                     break;
-//                  }
-//
-//                  if (strcmp(pc->Text(), parameter_pack->Text()) == 0)
-//                  {
-//                     pc->SetType(CT_PARAMETER_PACK);
-//                  }
-//               }
-//            }
-//            pc = pc->GetNext();
-//
-//            if (pc == template_end)
-//            {
-//               break;
-//            }
-//         }
-//      }
-//      pc = pc->GetNext();
-//   }
 } // brace_cleanup
 
 

@@ -23,8 +23,7 @@ void pragma_cleanup()
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LMCB, "%s(%d): orig line is %zu, orig col is %zu, Text is '%s'\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
+      LOG_CURRENT_PC(LTOK, pc);
 
       if (!preproc_found)
       {
