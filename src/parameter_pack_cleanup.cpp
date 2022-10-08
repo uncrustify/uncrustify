@@ -19,7 +19,7 @@ void parameter_pack_cleanup()
 
    while (pc->IsNotNullChunk())
    {
-      LOG_CURRENT_PC(LTOK, pc);
+      LOG_CHUNK(LTOK, pc);
 
       // look for template
       if (pc->Is(CT_TEMPLATE))                 // Issue #3309
@@ -29,7 +29,7 @@ void parameter_pack_cleanup()
          // look for a parameter pack
          while (pc->IsNotNullChunk())
          {
-            LOG_CURRENT_PC(LTOK, pc);
+            LOG_CHUNK(LTOK, pc);
 
             if (pc->Is(CT_PARAMETER_PACK))
             {
@@ -38,7 +38,7 @@ void parameter_pack_cleanup()
                // look for a token with the same text
                while (pc->IsNotNullChunk())
                {
-                  LOG_CURRENT_PC(LTOK, pc);
+                  LOG_CHUNK(LTOK, pc);
 
                   if (pc == template_end)
                   {

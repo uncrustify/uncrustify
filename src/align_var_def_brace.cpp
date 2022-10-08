@@ -118,7 +118,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
    while (pc->IsNotNullChunk())
    {
-      LOG_CURRENT_PC(LAVDB, pc);
+      LOG_CHUNK(LAVDB, pc);
 
       if (  pc->level < start->level
          && pc->level != 0

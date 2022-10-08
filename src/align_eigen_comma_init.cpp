@@ -32,7 +32,7 @@ void align_eigen_comma_init()
 
    while (pc->IsNotNullChunk())
    {
-      LOG_CURRENT_PC(LTOK, pc);
+      LOG_CHUNK(LTOK, pc);
 
       if (  start->IsNotNullChunk()
          && ((pc->GetFlags() & PCF_IN_PREPROC) != (start->GetFlags() & PCF_IN_PREPROC)))

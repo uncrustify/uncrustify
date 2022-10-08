@@ -23,7 +23,7 @@ void pragma_cleanup()
 
    while (pc->IsNotNullChunk())
    {
-      LOG_CURRENT_PC(LTOK, pc);
+      LOG_CHUNK(LTOK, pc);
 
       if (!preproc_found)
       {

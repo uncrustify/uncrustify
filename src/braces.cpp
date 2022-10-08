@@ -1530,7 +1530,7 @@ static void process_if_chain(Chunk *br_start)
    while (  pc != nullptr
          && pc->IsNotNullChunk())
    {
-      LOG_CURRENT_PC(LTOK, pc);
+      LOG_CHUNK(LTOK, pc);
 
       if (pc->Is(CT_BRACE_OPEN))
       {

@@ -120,7 +120,7 @@ void log_flush(bool force_nl);
 #define __unqualified_func__    get_unqualified_func_name(__func__)
 
 
-#define LOG_CURRENT_PC(sev, pc_current)                                                                                                                                                        \
+#define LOG_CHUNK(sev, pc_current)                                                                                                                                                             \
    if (pc_current->Is(CT_NEWLINE))                                                                                                                                                             \
    {                                                                                                                                                                                           \
       LOG_FMT(sev, "%s(%d): orig line is %zu, orig col is %zu, <Newline>, PRE is %s\n",                                                                                                        \

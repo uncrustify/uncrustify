@@ -1079,7 +1079,7 @@ void mark_function_return_type(Chunk *fname, Chunk *start, E_Token parent_type)
 
       while (pc->IsNotNullChunk())
       {
-         LOG_CURRENT_PC(LTOK, pc);
+         LOG_CHUNK(LTOK, pc);
 
          if (parent_type != CT_NONE)
          {

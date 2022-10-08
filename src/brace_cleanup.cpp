@@ -189,7 +189,7 @@ void brace_cleanup()
 
    while (pc->IsNotNullChunk())
    {
-      LOG_CURRENT_PC(LTOK, pc);
+      LOG_CHUNK(LTOK, pc);
 
       // Check for leaving a #define body
       if (  braceState.in_preproc != CT_NONE

@@ -748,7 +748,7 @@ static void split_fcn_params(Chunk *start)
 
    while (pc->IsNotNullChunk())
    {
-      LOG_CURRENT_PC(LTOK, pc);
+      LOG_CHUNK(LTOK, pc);
 
       if (pc->IsNewline())
       {

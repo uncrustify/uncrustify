@@ -670,7 +670,7 @@ void indent_text()
    while (  pc != nullptr
          && pc->IsNotNullChunk())
    {
-      LOG_CURRENT_PC(LINDLINE, pc);
+      LOG_CHUNK(LINDLINE, pc);
       //  forces string literal to column-1 [Fix for 1246]
       log_rule_B("indent_col1_multi_string_literal");
 
@@ -1547,7 +1547,7 @@ void indent_text()
 
                   while (count-- > 0)
                   {
-                     LOG_CURRENT_PC(LINDLINE, pc);
+                     LOG_CHUNK(LINDLINE, pc);
                      frm.pop(__func__, __LINE__, pc);
                   }
 
@@ -1556,7 +1556,7 @@ void indent_text()
                      // End any assign operations with a semicolon on the same level
                      if (is_end_of_assignment(next, frm))
                      {
-                        LOG_CURRENT_PC(LINDLINE, pc);
+                        LOG_CHUNK(LINDLINE, pc);
                         frm.pop(__func__, __LINE__, pc);
                      }
                   }

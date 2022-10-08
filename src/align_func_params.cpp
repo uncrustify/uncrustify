@@ -65,7 +65,7 @@ Chunk *align_func_param(Chunk *start)
    while ((pc = pc->GetNext())->IsNotNullChunk())
    {
       chunk_count++;
-      LOG_CURRENT_PC(LTOK, pc);
+      LOG_CHUNK(LTOK, pc);
 
       if (pc->Is(CT_FUNC_VAR))                    // Issue #2278
       {

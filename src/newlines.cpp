@@ -2037,7 +2037,7 @@ static Chunk *newline_var_def_blk(Chunk *start)
          && (  pc->level >= start->level
             || pc->level == 0))
    {
-      LOG_CURRENT_PC(LTOK, pc);
+      LOG_CHUNK(LTOK, pc);
 
       Chunk *next_pc = pc->GetNext();
       LOG_FMT(LVARDFBLK, "%s(%d): next_pc orig line is %zu, orig col is %zu, type is %s, Text() is '%s'\n",
