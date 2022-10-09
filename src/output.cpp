@@ -558,6 +558,14 @@ void output_parsed(FILE *pfile, bool withOptions)
             fprintf(pfile, "\\");
          }
       }
+
+      if (options::debug_decode_the_flags())
+      {
+         // such as:
+         // The flags are: [0xc0400:IN_CLASS,STMT_START,EXPR_START]
+         fprintf(pfile, "%s         The flags are: ", eol_marker);
+         fprintf(pfile, "%s", pcf_flags_str(pc->GetFlags()).c_str());
+      }
    }
 
    fprintf(pfile, "%s# -=====-%s", eol_marker, eol_marker);

@@ -3530,6 +3530,10 @@ debug_truncate                  = 0        # unsigned number
 # Default: true
 debug_sort_the_tracks           = true     # true/false
 
+# decode (or not) the flags as a new line.
+# only if the -p option is set.
+debug_decode_the_flags          = false    # true/false
+
 # insert the number of the line at the beginning of each line
 set_numbering_for_html_output   = false    # true/false
 
