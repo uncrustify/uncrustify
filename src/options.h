@@ -4285,6 +4285,11 @@ debug_truncate;
 extern Option<bool>
 debug_sort_the_tracks;  // = true
 
+// decode (or not) the flags as a new line.
+// only if the -p option is set.
+extern Option<bool>
+debug_decode_the_flags;
+
 // insert the number of the line at the beginning of each line
 extern Option<bool>
 set_numbering_for_html_output;
