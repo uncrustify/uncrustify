@@ -127,7 +127,7 @@ void output_parsed(FILE *pfile)
               get_token_name(pc->GetParentType()),
               pc->GetColumn(), pc->GetOrigCol(), pc->GetOrigColEnd(),
               pc->GetBraceLevel(), pc->level, pc->GetPpLevel(),
-              pc->GetFlags(), pc->nl_count, pc->after_tab);
+              pc->GetFlags(), pc->nl_count, pc->GetAfterTab());
 
       if ((pc->GetType() != CT_NEWLINE) && (pc->len != 0))
       {
@@ -247,7 +247,7 @@ void output_text(FILE *pfile)
             /* not the first item on a line */
             if (cpd.settings[UO_align_keep_tabs].b)
             {
-               allow_tabs = pc->after_tab;
+               allow_tabs = pc->GetAfterTab();
             }
             else
             {

@@ -526,7 +526,7 @@ void output_parsed(FILE *pfile, bool withOptions)
               eol_marker, (int)pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               (int)pc->GetColumn(), (int)pc->GetOrigCol(), (int)pc->GetOrigColEnd(), (int)pc->GetOrigPrevSp(),
-              (int)pc->GetBraceLevel(), (int)pc->level, (int)pc->GetPpLevel(), (int)pc->nl_count, pc->after_tab);
+              (int)pc->GetBraceLevel(), (int)pc->level, (int)pc->GetPpLevel(), (int)pc->nl_count, pc->GetAfterTab());
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3zu][%zu/%zu/%zu]",
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
@@ -538,7 +538,7 @@ void output_parsed(FILE *pfile, bool withOptions)
       sprintf(flag_string, "%12llx", static_cast<T_PcfFlags::int_t>(pc->GetFlags()));
       fprintf(pfile, "[%.4s %.4s %.4s]", flag_string, flag_string + 4, flag_string + 8);
       fprintf(pfile, "[%zu-%d]",
-              pc->nl_count, pc->after_tab);
+              pc->nl_count, pc->GetAfterTab());
 #endif // ifdef WIN32
 
       if (  pc->IsNot(CT_NEWLINE)
@@ -601,7 +601,7 @@ void output_parsed_csv(FILE *pfile)
                                                   pcf_flag_str_end - pcf_flag_str_start);
       fprintf(pfile, "\"%s\",", pcf_names.c_str());
       fprintf(pfile, "%zu,%d,",
-              pc->nl_count, pc->after_tab);
+              pc->nl_count, pc->GetAfterTab());
 
       if (  pc->IsNot(CT_NEWLINE)
          && (pc->Len() != 0))
@@ -951,7 +951,7 @@ void output_text(FILE *pfile)
 
             if (options::align_keep_tabs())
             {
-               allow_tabs |= pc->after_tab;
+               allow_tabs |= pc->GetAfterTab();
             }
             LOG_FMT(LOUTIND, "%s(%d): at column %zu(%s)\n",
                     __func__, __LINE__, pc->GetColumn(), (allow_tabs ? "true" : "FALSE"));

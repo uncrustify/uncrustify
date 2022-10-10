@@ -48,7 +48,7 @@ void Chunk::CopyFrom(const Chunk &o)
 
    m_braceLevel = o.m_braceLevel;
    m_ppLevel    = o.m_ppLevel;
-   after_tab    = o.after_tab;
+   m_afterTab   = o.m_afterTab;
    str          = o.str;
 
    tracking = o.tracking;
@@ -76,7 +76,7 @@ void Chunk::Reset()
    level          = 0;
    m_braceLevel   = 0;
    m_ppLevel      = 999;                                // use a big value to find some errors
-   after_tab      = false;
+   m_afterTab     = false;
    // for debugging purpose only
    tracking = nullptr;
    str.clear();

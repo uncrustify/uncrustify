@@ -351,9 +351,9 @@ void dump_out(unsigned int type)
             fprintf(D_file, "  pp level %zu\n", pc->GetPpLevel());
          }
 
-         if (pc->after_tab != 0)
+         if (pc->GetAfterTab() != 0)
          {
-            fprintf(D_file, "  after_tab %d\n", pc->after_tab);
+            fprintf(D_file, "  after tab %d\n", pc->GetAfterTab());
          }
 
          if (pc->IsNot(CT_NEWLINE))

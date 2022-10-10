@@ -1842,8 +1842,8 @@ static bool parse_whitespace(tok_ctx &ctx, Chunk &pc)
    {
       pc.str.clear();
       pc.SetType(nl_count ? CT_NEWLINE : CT_WHITESPACE);
-      pc.nl_count  = nl_count;
-      pc.after_tab = (ctx.c.last_ch == '\t');
+      pc.nl_count = nl_count;
+      pc.SetAfterTab((ctx.c.last_ch == '\t'));
       return(true);
    }
    return(false);
@@ -2685,7 +2685,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
       // Don't create an entry for whitespace
       if (chunk.GetType() == CT_WHITESPACE)
       {
-         last_was_tab = chunk.after_tab;
+         last_was_tab = chunk.GetAfterTab();
          prev_sp      = chunk.GetOrigPrevSp();
          continue;
       }
@@ -2694,20 +2694,20 @@ void tokenize(const deque<int> &data, Chunk *ref)
 
       if (chunk.GetType() == CT_NEWLINE)
       {
-         last_was_tab    = chunk.after_tab;
-         chunk.after_tab = false;
+         last_was_tab = chunk.GetAfterTab();
+         chunk.SetAfterTab(false);
          chunk.str.clear();
       }
       else if (chunk.GetType() == CT_NL_CONT)
       {
-         last_was_tab    = chunk.after_tab;
-         chunk.after_tab = false;
-         chunk.str       = "\\\n";
+         last_was_tab = chunk.GetAfterTab();
+         chunk.SetAfterTab(false);
+         chunk.str = "\\\n";
       }
       else
       {
-         chunk.after_tab = last_was_tab;
-         last_was_tab    = false;
+         chunk.SetAfterTab(last_was_tab);
+         last_was_tab = false;
       }
       num_stripped = 0; // Issue #1966 and #3565
 
