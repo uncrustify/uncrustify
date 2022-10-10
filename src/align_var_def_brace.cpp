@@ -118,21 +118,7 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
    while (pc->IsNotNullChunk())
    {
-      if (pc->Is(CT_NEWLINE))
-      {
-         LOG_FMT(LAVDB, "%s(%d): orig line is %zu, orig col is %zu, <Newline>, PRE is %s\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->IsPreproc() ? "true" : "false");
-      }
-      else if (pc->Is(CT_NL_CONT))
-      {
-         LOG_FMT(LAVDB, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s, PRE is %s\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()), pc->IsPreproc() ? "true" : "false");
-      }
-      else
-      {
-         LOG_FMT(LAVDB, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s, PRE is %s\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()), pc->IsPreproc() ? "true" : "false");
-      }
+      LOG_CHUNK(LAVDB, pc);
 
       if (  pc->level < start->level
          && pc->level != 0

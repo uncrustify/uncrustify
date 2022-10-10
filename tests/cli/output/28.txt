@@ -68,361 +68,363 @@ log_rule(parse_next : rule is 'disable_processing_nl_cont'
 log_rule(parse_next : rule is 'disable_processing_nl_cont'
 log_rule(parse_next : rule is 'disable_processing_nl_cont'
 log_rule(tokenize : rule is 'newlines'
-brace_cleanup : orig line is 1, orig col is 1, Text() is 'struct'
+brace_cleanup : orig line is 1, orig col is 1, Text() 'struct', type is STRUCT, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 1, orig col is 1, type is STRUCT, tos is 0, TOS.type is EOF, TOS.stage is NONE, []
 parse_cleanup : orig line is 1, type is STRUCT, Text() is 'struct'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
-brace_cleanup : orig line is 1, orig col is 8, Text() is 'TelegramIndex'
+brace_cleanup : orig line is 1, orig col is 8, Text() 'TelegramIndex', type is TYPE, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 1, orig col is 8, type is TYPE, tos is 0, TOS.type is EOF, TOS.stage is NONE, []
 parse_cleanup : orig line is 1, type is TYPE, Text() is 'TelegramIndex'
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 2
-brace_cleanup : orig line is 1, orig col is 21, Text() is ''
+brace_cleanup : orig line is 1, orig col is 21, <Newline>, PRE is false
 brace_cleanup : pp level is 0
-brace_cleanup : orig line is 2, orig col is 1, Text() is '{'
+brace_cleanup : orig line is 2, orig col is 1, Text() '{', type is BRACE_OPEN, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 2, orig col is 1, type is BRACE_OPEN, tos is 0, TOS.type is EOF, TOS.stage is NONE, []
 parse_cleanup : orig line is 2, type is BRACE_OPEN, Text() is '{'
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 2
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 3
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-brace_cleanup : orig line is 2, orig col is 2, Text() is ''
+brace_cleanup : orig line is 2, orig col is 2, <Newline>, PRE is false
 brace_cleanup : pp level is 0
-brace_cleanup : orig line is 3, orig col is 1, Text() is 'TelegramIndex'
+brace_cleanup : orig line is 3, orig col is 1, Text() 'TelegramIndex', type is WORD, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 3, orig col is 1, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 3, type is WORD, Text() is 'TelegramIndex'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
-brace_cleanup : orig line is 3, orig col is 14, Text() is '('
+brace_cleanup : orig line is 3, orig col is 14, Text() '(', type is PAREN_OPEN, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 3, orig col is 14, type is PAREN_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 3, type is PAREN_OPEN, Text() is '('
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 2
-brace_cleanup : orig line is 3, orig col is 15, Text() is 'const'
+brace_cleanup : orig line is 3, orig col is 15, Text() 'const', type is QUALIFIER, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 3, orig col is 15, type is QUALIFIER, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 3, type is QUALIFIER, Text() is 'const'
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 1
-brace_cleanup : orig line is 3, orig col is 21, Text() is 'char'
+brace_cleanup : orig line is 3, orig col is 21, Text() 'char', type is TYPE, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 3, orig col is 21, type is TYPE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 3, type is TYPE, Text() is 'char'
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 2
-brace_cleanup : orig line is 3, orig col is 25, Text() is '*'
+brace_cleanup : orig line is 3, orig col is 25, Text() '*', type is PTR_TYPE, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 3, orig col is 25, type is PTR_TYPE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 3, type is PTR_TYPE, Text() is '*'
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 2
 parse_cleanup : frm.stmt_count is 5, frm.expr_count is 3
-brace_cleanup : orig line is 3, orig col is 27, Text() is 'pN'
+brace_cleanup : orig line is 3, orig col is 27, Text() 'pN', type is WORD, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 3, orig col is 27, type is WORD, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 3, type is WORD, Text() is 'pN'
 parse_cleanup : frm.stmt_count is 5, frm.expr_count is 3
 parse_cleanup : frm.stmt_count is 6, frm.expr_count is 4
-brace_cleanup : orig line is 3, orig col is 29, Text() is ','
+brace_cleanup : orig line is 3, orig col is 29, Text() ',', type is COMMA, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 3, orig col is 29, type is COMMA, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 3, type is COMMA, Text() is ','
 parse_cleanup : frm.stmt_count is 6, frm.expr_count is 4
 parse_cleanup : frm.stmt_count is 7, frm.expr_count is 5
-brace_cleanup : orig line is 3, orig col is 31, Text() is 'unsigned'
+brace_cleanup : orig line is 3, orig col is 31, Text() 'unsigned', type is TYPE, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 3, orig col is 31, type is TYPE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 3, type is TYPE, Text() is 'unsigned'
 parse_cleanup : frm.stmt_count is 7, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 8, frm.expr_count is 1
-brace_cleanup : orig line is 3, orig col is 40, Text() is 'long'
+brace_cleanup : orig line is 3, orig col is 40, Text() 'long', type is TYPE, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 3, orig col is 40, type is TYPE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 3, type is TYPE, Text() is 'long'
 parse_cleanup : frm.stmt_count is 8, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 9, frm.expr_count is 2
-brace_cleanup : orig line is 3, orig col is 45, Text() is 'nI'
+brace_cleanup : orig line is 3, orig col is 45, Text() 'nI', type is WORD, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 3, orig col is 45, type is WORD, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 3, type is WORD, Text() is 'nI'
 parse_cleanup : frm.stmt_count is 9, frm.expr_count is 2
 parse_cleanup : frm.stmt_count is 10, frm.expr_count is 3
-brace_cleanup : orig line is 3, orig col is 47, Text() is ')'
+brace_cleanup : orig line is 3, orig col is 47, Text() ')', type is PAREN_CLOSE, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 3, orig col is 47, type is PAREN_CLOSE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 3, type is PAREN_CLOSE, Text() is ')'
 parse_cleanup : frm.stmt_count is 10, frm.expr_count is 3
 parse_cleanup : frm.stmt_count is 11, frm.expr_count is 4
-brace_cleanup : orig line is 3, orig col is 49, Text() is ':'
+brace_cleanup : orig line is 3, orig col is 49, Text() ':', type is COLON, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 3, orig col is 49, type is COLON, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 3, type is COLON, Text() is ':'
 parse_cleanup : frm.stmt_count is 11, frm.expr_count is 4
 parse_cleanup : frm.stmt_count is 12, frm.expr_count is 5
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-brace_cleanup : orig line is 3, orig col is 50, Text() is ''
+brace_cleanup : orig line is 3, orig col is 50, <Newline>, PRE is false
 brace_cleanup : pp level is 0
-brace_cleanup : orig line is 4, orig col is 1, Text() is 'pTelName'
+brace_cleanup : orig line is 4, orig col is 1, Text() 'pTelName', type is WORD, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 4, orig col is 1, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 4, type is WORD, Text() is 'pTelName'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
-brace_cleanup : orig line is 4, orig col is 9, Text() is '('
+brace_cleanup : orig line is 4, orig col is 9, Text() '(', type is PAREN_OPEN, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 4, orig col is 9, type is PAREN_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 4, type is PAREN_OPEN, Text() is '('
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 2
-brace_cleanup : orig line is 4, orig col is 10, Text() is 'pN'
+brace_cleanup : orig line is 4, orig col is 10, Text() 'pN', type is WORD, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 4, orig col is 10, type is WORD, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 4, type is WORD, Text() is 'pN'
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 1
-brace_cleanup : orig line is 4, orig col is 12, Text() is ')'
+brace_cleanup : orig line is 4, orig col is 12, Text() ')', type is PAREN_CLOSE, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 4, orig col is 12, type is PAREN_CLOSE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 4, type is PAREN_CLOSE, Text() is ')'
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 2
-brace_cleanup : orig line is 4, orig col is 13, Text() is ','
+brace_cleanup : orig line is 4, orig col is 13, Text() ',', type is COMMA, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 4, orig col is 13, type is COMMA, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 4, type is COMMA, Text() is ','
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 2
 parse_cleanup : frm.stmt_count is 5, frm.expr_count is 3
-brace_cleanup : orig line is 4, orig col is 14, Text() is ''
+brace_cleanup : orig line is 4, orig col is 14, <Newline>, PRE is false
 brace_cleanup : pp level is 0
-brace_cleanup : orig line is 5, orig col is 1, Text() is 'nTelIndex'
+brace_cleanup : orig line is 5, orig col is 1, Text() 'nTelIndex', type is WORD, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 5, orig col is 1, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 5, type is WORD, Text() is 'nTelIndex'
 parse_cleanup : frm.stmt_count is 5, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 6, frm.expr_count is 1
-brace_cleanup : orig line is 5, orig col is 10, Text() is '('
+brace_cleanup : orig line is 5, orig col is 10, Text() '(', type is PAREN_OPEN, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 5, orig col is 10, type is PAREN_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 5, type is PAREN_OPEN, Text() is '('
 parse_cleanup : frm.stmt_count is 6, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 7, frm.expr_count is 2
-brace_cleanup : orig line is 5, orig col is 11, Text() is 'n'
+brace_cleanup : orig line is 5, orig col is 11, Text() 'n', type is WORD, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 5, orig col is 11, type is WORD, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 5, type is WORD, Text() is 'n'
 parse_cleanup : frm.stmt_count is 7, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 8, frm.expr_count is 1
-brace_cleanup : orig line is 5, orig col is 12, Text() is ')'
+brace_cleanup : orig line is 5, orig col is 12, Text() ')', type is PAREN_CLOSE, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 5, orig col is 12, type is PAREN_CLOSE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 5, type is PAREN_CLOSE, Text() is ')'
 parse_cleanup : frm.stmt_count is 8, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 9, frm.expr_count is 2
-brace_cleanup : orig line is 5, orig col is 13, Text() is ''
+brace_cleanup : orig line is 5, orig col is 13, <Newline>, PRE is false
 brace_cleanup : pp level is 0
-brace_cleanup : orig line is 6, orig col is 1, Text() is '{'
+brace_cleanup : orig line is 6, orig col is 1, Text() '{', type is BRACE_OPEN, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 6, orig col is 1, type is BRACE_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 6, type is BRACE_OPEN, Text() is '{'
 parse_cleanup : frm.stmt_count is 9, frm.expr_count is 2
 parse_cleanup : frm.stmt_count is 10, frm.expr_count is 3
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-brace_cleanup : orig line is 6, orig col is 2, Text() is ''
+brace_cleanup : orig line is 6, orig col is 2, <Newline>, PRE is false
 brace_cleanup : pp level is 0
-brace_cleanup : orig line is 7, orig col is 1, Text() is '}'
+brace_cleanup : orig line is 7, orig col is 1, Text() '}', type is BRACE_CLOSE, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 7, orig col is 1, type is BRACE_CLOSE, tos is 2, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 7, type is BRACE_CLOSE, Text() is '}'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-brace_cleanup : orig line is 7, orig col is 2, Text() is ''
+brace_cleanup : orig line is 7, orig col is 2, <Newline>, PRE is false
 brace_cleanup : pp level is 0
-brace_cleanup : orig line is 9, orig col is 1, Text() is '~'
+brace_cleanup : orig line is 9, orig col is 1, Text() '~', type is INV, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 9, orig col is 1, type is INV, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 9, type is INV, Text() is '~'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
-brace_cleanup : orig line is 9, orig col is 2, Text() is 'TelegramIndex'
+brace_cleanup : orig line is 9, orig col is 2, Text() 'TelegramIndex', type is WORD, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 9, orig col is 2, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 9, type is WORD, Text() is 'TelegramIndex'
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 1
-brace_cleanup : orig line is 9, orig col is 15, Text() is '('
+brace_cleanup : orig line is 9, orig col is 15, Text() '(', type is PAREN_OPEN, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 9, orig col is 15, type is PAREN_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 9, type is PAREN_OPEN, Text() is '('
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 2
-brace_cleanup : orig line is 9, orig col is 16, Text() is ')'
+brace_cleanup : orig line is 9, orig col is 16, Text() ')', type is PAREN_CLOSE, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 9, orig col is 16, type is PAREN_CLOSE, tos is 2, TOS.type is PAREN_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 9, type is PAREN_CLOSE, Text() is ')'
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 1
-brace_cleanup : orig line is 9, orig col is 17, Text() is ''
+brace_cleanup : orig line is 9, orig col is 17, <Newline>, PRE is false
 brace_cleanup : pp level is 0
-brace_cleanup : orig line is 10, orig col is 1, Text() is '{'
+brace_cleanup : orig line is 10, orig col is 1, Text() '{', type is BRACE_OPEN, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 10, orig col is 1, type is BRACE_OPEN, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 10, type is BRACE_OPEN, Text() is '{'
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 5, frm.expr_count is 2
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-brace_cleanup : orig line is 10, orig col is 2, Text() is ''
+brace_cleanup : orig line is 10, orig col is 2, <Newline>, PRE is false
 brace_cleanup : pp level is 0
-brace_cleanup : orig line is 11, orig col is 1, Text() is '}'
+brace_cleanup : orig line is 11, orig col is 1, Text() '}', type is BRACE_CLOSE, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 11, orig col is 1, type is BRACE_CLOSE, tos is 2, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 11, type is BRACE_CLOSE, Text() is '}'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-brace_cleanup : orig line is 11, orig col is 2, Text() is ''
+brace_cleanup : orig line is 11, orig col is 2, <Newline>, PRE is false
 brace_cleanup : pp level is 0
-brace_cleanup : orig line is 13, orig col is 1, Text() is 'const'
+brace_cleanup : orig line is 13, orig col is 1, Text() 'const', type is QUALIFIER, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 13, orig col is 1, type is QUALIFIER, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 13, type is QUALIFIER, Text() is 'const'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
-brace_cleanup : orig line is 13, orig col is 7, Text() is 'char'
+brace_cleanup : orig line is 13, orig col is 7, Text() 'char', type is TYPE, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 13, orig col is 7, type is TYPE, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 13, type is TYPE, Text() is 'char'
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 2
-brace_cleanup : orig line is 13, orig col is 11, Text() is '*'
+brace_cleanup : orig line is 13, orig col is 11, Text() '*', type is PTR_TYPE, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 13, orig col is 11, type is PTR_TYPE, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 13, type is PTR_TYPE, Text() is '*'
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 2
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 3
-brace_cleanup : orig line is 13, orig col is 13, Text() is 'const'
+brace_cleanup : orig line is 13, orig col is 13, Text() 'const', type is QUALIFIER, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 13, orig col is 13, type is QUALIFIER, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 13, type is QUALIFIER, Text() is 'const'
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 3
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 4
-brace_cleanup : orig line is 13, orig col is 19, Text() is 'pTelName'
+brace_cleanup : orig line is 13, orig col is 19, Text() 'pTelName', type is WORD, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 13, orig col is 19, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 13, type is WORD, Text() is 'pTelName'
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 4
 parse_cleanup : frm.stmt_count is 5, frm.expr_count is 5
-brace_cleanup : orig line is 13, orig col is 27, Text() is ';'
+brace_cleanup : orig line is 13, orig col is 27, Text() ';', type is SEMICOLON, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 13, orig col is 27, type is SEMICOLON, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 13, type is SEMICOLON, Text() is ';'
 parse_cleanup : frm.stmt_count is 5, frm.expr_count is 5
 parse_cleanup : frm.stmt_count is 6, frm.expr_count is 6
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-brace_cleanup : orig line is 13, orig col is 28, Text() is ''
+brace_cleanup : orig line is 13, orig col is 28, <Newline>, PRE is false
 brace_cleanup : pp level is 0
-brace_cleanup : orig line is 14, orig col is 1, Text() is 'unsigned'
+brace_cleanup : orig line is 14, orig col is 1, Text() 'unsigned', type is TYPE, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 14, orig col is 1, type is TYPE, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 14, type is TYPE, Text() is 'unsigned'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
-brace_cleanup : orig line is 14, orig col is 10, Text() is 'long'
+brace_cleanup : orig line is 14, orig col is 10, Text() 'long', type is TYPE, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 14, orig col is 10, type is TYPE, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 14, type is TYPE, Text() is 'long'
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 2
-brace_cleanup : orig line is 14, orig col is 15, Text() is 'nTelIndex'
+brace_cleanup : orig line is 14, orig col is 15, Text() 'nTelIndex', type is WORD, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 14, orig col is 15, type is WORD, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 14, type is WORD, Text() is 'nTelIndex'
 parse_cleanup : frm.stmt_count is 2, frm.expr_count is 2
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 3
-brace_cleanup : orig line is 14, orig col is 24, Text() is ';'
+brace_cleanup : orig line is 14, orig col is 24, Text() ';', type is SEMICOLON, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 14, orig col is 24, type is SEMICOLON, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 14, type is SEMICOLON, Text() is ';'
 parse_cleanup : frm.stmt_count is 3, frm.expr_count is 3
 parse_cleanup : frm.stmt_count is 4, frm.expr_count is 4
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-brace_cleanup : orig line is 14, orig col is 25, Text() is ''
+brace_cleanup : orig line is 14, orig col is 25, <Newline>, PRE is false
 brace_cleanup : pp level is 0
-brace_cleanup : orig line is 15, orig col is 1, Text() is '}'
+brace_cleanup : orig line is 15, orig col is 1, Text() '}', type is BRACE_CLOSE, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 15, orig col is 1, type is BRACE_CLOSE, tos is 1, TOS.type is BRACE_OPEN, TOS.stage is NONE, []
 parse_cleanup : orig line is 15, type is BRACE_CLOSE, Text() is '}'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-brace_cleanup : orig line is 15, orig col is 2, Text() is ';'
+brace_cleanup : orig line is 15, orig col is 2, Text() ';', type is SEMICOLON, PRE is false
 brace_cleanup : pp level is 0
 parse_cleanup : orig line is 15, orig col is 2, type is SEMICOLON, tos is 0, TOS.type is EOF, TOS.stage is NONE, []
 parse_cleanup : orig line is 15, type is SEMICOLON, Text() is ';'
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
 parse_cleanup : frm.stmt_count is 1, frm.expr_count is 1
 parse_cleanup : frm.stmt_count is 0, frm.expr_count is 0
-brace_cleanup : orig line is 15, orig col is 3, Text() is ''
+brace_cleanup : orig line is 15, orig col is 3, <Newline>, PRE is false
 brace_cleanup : pp level is 0
-parameter_pack_cleanup : orig line is 1, orig col is 1, Text() is 'struct', type is STRUCT
-parameter_pack_cleanup : orig line is 1, orig col is 8, Text() is 'TelegramIndex', type is TYPE
-parameter_pack_cleanup : orig line is 1, orig col is 21, Text() is '', type is NEWLINE
-parameter_pack_cleanup : orig line is 2, orig col is 1, Text() is '{', type is BRACE_OPEN
-parameter_pack_cleanup : orig line is 2, orig col is 2, Text() is '', type is NEWLINE
-parameter_pack_cleanup : orig line is 3, orig col is 1, Text() is 'TelegramIndex', type is WORD
-parameter_pack_cleanup : orig line is 3, orig col is 14, Text() is '(', type is PAREN_OPEN
-parameter_pack_cleanup : orig line is 3, orig col is 15, Text() is 'const', type is QUALIFIER
-parameter_pack_cleanup : orig line is 3, orig col is 21, Text() is 'char', type is TYPE
-parameter_pack_cleanup : orig line is 3, orig col is 25, Text() is '*', type is PTR_TYPE
-parameter_pack_cleanup : orig line is 3, orig col is 27, Text() is 'pN', type is WORD
-parameter_pack_cleanup : orig line is 3, orig col is 29, Text() is ',', type is COMMA
-parameter_pack_cleanup : orig line is 3, orig col is 31, Text() is 'unsigned', type is TYPE
-parameter_pack_cleanup : orig line is 3, orig col is 40, Text() is 'long', type is TYPE
-parameter_pack_cleanup : orig line is 3, orig col is 45, Text() is 'nI', type is WORD
-parameter_pack_cleanup : orig line is 3, orig col is 47, Text() is ')', type is PAREN_CLOSE
-parameter_pack_cleanup : orig line is 3, orig col is 49, Text() is ':', type is COLON
-parameter_pack_cleanup : orig line is 3, orig col is 50, Text() is '', type is NEWLINE
-parameter_pack_cleanup : orig line is 4, orig col is 1, Text() is 'pTelName', type is WORD
-parameter_pack_cleanup : orig line is 4, orig col is 9, Text() is '(', type is PAREN_OPEN
-parameter_pack_cleanup : orig line is 4, orig col is 10, Text() is 'pN', type is WORD
-parameter_pack_cleanup : orig line is 4, orig col is 12, Text() is ')', type is PAREN_CLOSE
-parameter_pack_cleanup : orig line is 4, orig col is 13, Text() is ',', type is COMMA
-parameter_pack_cleanup : orig line is 4, orig col is 14, Text() is '', type is NEWLINE
-parameter_pack_cleanup : orig line is 5, orig col is 1, Text() is 'nTelIndex', type is WORD
-parameter_pack_cleanup : orig line is 5, orig col is 10, Text() is '(', type is PAREN_OPEN
-parameter_pack_cleanup : orig line is 5, orig col is 11, Text() is 'n', type is WORD
-parameter_pack_cleanup : orig line is 5, orig col is 12, Text() is ')', type is PAREN_CLOSE
-parameter_pack_cleanup : orig line is 5, orig col is 13, Text() is '', type is NEWLINE
-parameter_pack_cleanup : orig line is 6, orig col is 1, Text() is '{', type is BRACE_OPEN
-parameter_pack_cleanup : orig line is 6, orig col is 2, Text() is '', type is NEWLINE
-parameter_pack_cleanup : orig line is 7, orig col is 1, Text() is '}', type is BRACE_CLOSE
-parameter_pack_cleanup : orig line is 7, orig col is 2, Text() is '', type is NEWLINE
-parameter_pack_cleanup : orig line is 9, orig col is 1, Text() is '~', type is INV
-parameter_pack_cleanup : orig line is 9, orig col is 2, Text() is 'TelegramIndex', type is WORD
-parameter_pack_cleanup : orig line is 9, orig col is 15, Text() is '(', type is PAREN_OPEN
-parameter_pack_cleanup : orig line is 9, orig col is 16, Text() is ')', type is PAREN_CLOSE
-parameter_pack_cleanup : orig line is 9, orig col is 17, Text() is '', type is NEWLINE
-parameter_pack_cleanup : orig line is 10, orig col is 1, Text() is '{', type is BRACE_OPEN
-parameter_pack_cleanup : orig line is 10, orig col is 2, Text() is '', type is NEWLINE
-parameter_pack_cleanup : orig line is 11, orig col is 1, Text() is '}', type is BRACE_CLOSE
-parameter_pack_cleanup : orig line is 11, orig col is 2, Text() is '', type is NEWLINE
-parameter_pack_cleanup : orig line is 13, orig col is 1, Text() is 'const', type is QUALIFIER
-parameter_pack_cleanup : orig line is 13, orig col is 7, Text() is 'char', type is TYPE
-parameter_pack_cleanup : orig line is 13, orig col is 11, Text() is '*', type is PTR_TYPE
-parameter_pack_cleanup : orig line is 13, orig col is 13, Text() is 'const', type is QUALIFIER
-parameter_pack_cleanup : orig line is 13, orig col is 19, Text() is 'pTelName', type is WORD
-parameter_pack_cleanup : orig line is 13, orig col is 27, Text() is ';', type is SEMICOLON
-parameter_pack_cleanup : orig line is 13, orig col is 28, Text() is '', type is NEWLINE
-parameter_pack_cleanup : orig line is 14, orig col is 1, Text() is 'unsigned', type is TYPE
-parameter_pack_cleanup : orig line is 14, orig col is 10, Text() is 'long', type is TYPE
-parameter_pack_cleanup : orig line is 14, orig col is 15, Text() is 'nTelIndex', type is WORD
-parameter_pack_cleanup : orig line is 14, orig col is 24, Text() is ';', type is SEMICOLON
-parameter_pack_cleanup : orig line is 14, orig col is 25, Text() is '', type is NEWLINE
-parameter_pack_cleanup : orig line is 15, orig col is 1, Text() is '}', type is BRACE_CLOSE
-parameter_pack_cleanup : orig line is 15, orig col is 2, Text() is ';', type is SEMICOLON
-parameter_pack_cleanup : orig line is 15, orig col is 3, Text() is '', type is NEWLINE
+parameter_pack_cleanup : orig line is 1, orig col is 1, Text() 'struct', type is STRUCT, PRE is false
+parameter_pack_cleanup : orig line is 1, orig col is 8, Text() 'TelegramIndex', type is TYPE, PRE is false
+parameter_pack_cleanup : orig line is 1, orig col is 21, <Newline>, PRE is false
+parameter_pack_cleanup : orig line is 2, orig col is 1, Text() '{', type is BRACE_OPEN, PRE is false
+parameter_pack_cleanup : orig line is 2, orig col is 2, <Newline>, PRE is false
+parameter_pack_cleanup : orig line is 3, orig col is 1, Text() 'TelegramIndex', type is WORD, PRE is false
+parameter_pack_cleanup : orig line is 3, orig col is 14, Text() '(', type is PAREN_OPEN, PRE is false
+parameter_pack_cleanup : orig line is 3, orig col is 15, Text() 'const', type is QUALIFIER, PRE is false
+parameter_pack_cleanup : orig line is 3, orig col is 21, Text() 'char', type is TYPE, PRE is false
+parameter_pack_cleanup : orig line is 3, orig col is 25, Text() '*', type is PTR_TYPE, PRE is false
+parameter_pack_cleanup : orig line is 3, orig col is 27, Text() 'pN', type is WORD, PRE is false
+parameter_pack_cleanup : orig line is 3, orig col is 29, Text() ',', type is COMMA, PRE is false
+parameter_pack_cleanup : orig line is 3, orig col is 31, Text() 'unsigned', type is TYPE, PRE is false
+parameter_pack_cleanup : orig line is 3, orig col is 40, Text() 'long', type is TYPE, PRE is false
+parameter_pack_cleanup : orig line is 3, orig col is 45, Text() 'nI', type is WORD, PRE is false
+parameter_pack_cleanup : orig line is 3, orig col is 47, Text() ')', type is PAREN_CLOSE, PRE is false
+parameter_pack_cleanup : orig line is 3, orig col is 49, Text() ':', type is COLON, PRE is false
+parameter_pack_cleanup : orig line is 3, orig col is 50, <Newline>, PRE is false
+parameter_pack_cleanup : orig line is 4, orig col is 1, Text() 'pTelName', type is WORD, PRE is false
+parameter_pack_cleanup : orig line is 4, orig col is 9, Text() '(', type is PAREN_OPEN, PRE is false
+parameter_pack_cleanup : orig line is 4, orig col is 10, Text() 'pN', type is WORD, PRE is false
+parameter_pack_cleanup : orig line is 4, orig col is 12, Text() ')', type is PAREN_CLOSE, PRE is false
+parameter_pack_cleanup : orig line is 4, orig col is 13, Text() ',', type is COMMA, PRE is false
+parameter_pack_cleanup : orig line is 4, orig col is 14, <Newline>, PRE is false
+parameter_pack_cleanup : orig line is 5, orig col is 1, Text() 'nTelIndex', type is WORD, PRE is false
+parameter_pack_cleanup : orig line is 5, orig col is 10, Text() '(', type is PAREN_OPEN, PRE is false
+parameter_pack_cleanup : orig line is 5, orig col is 11, Text() 'n', type is WORD, PRE is false
+parameter_pack_cleanup : orig line is 5, orig col is 12, Text() ')', type is PAREN_CLOSE, PRE is false
+parameter_pack_cleanup : orig line is 5, orig col is 13, <Newline>, PRE is false
+parameter_pack_cleanup : orig line is 6, orig col is 1, Text() '{', type is BRACE_OPEN, PRE is false
+parameter_pack_cleanup : orig line is 6, orig col is 2, <Newline>, PRE is false
+parameter_pack_cleanup : orig line is 7, orig col is 1, Text() '}', type is BRACE_CLOSE, PRE is false
+parameter_pack_cleanup : orig line is 7, orig col is 2, <Newline>, PRE is false
+parameter_pack_cleanup : orig line is 9, orig col is 1, Text() '~', type is INV, PRE is false
+parameter_pack_cleanup : orig line is 9, orig col is 2, Text() 'TelegramIndex', type is WORD, PRE is false
+parameter_pack_cleanup : orig line is 9, orig col is 15, Text() '(', type is PAREN_OPEN, PRE is false
+parameter_pack_cleanup : orig line is 9, orig col is 16, Text() ')', type is PAREN_CLOSE, PRE is false
+parameter_pack_cleanup : orig line is 9, orig col is 17, <Newline>, PRE is false
+parameter_pack_cleanup : orig line is 10, orig col is 1, Text() '{', type is BRACE_OPEN, PRE is false
+parameter_pack_cleanup : orig line is 10, orig col is 2, <Newline>, PRE is false
+parameter_pack_cleanup : orig line is 11, orig col is 1, Text() '}', type is BRACE_CLOSE, PRE is false
+parameter_pack_cleanup : orig line is 11, orig col is 2, <Newline>, PRE is false
+parameter_pack_cleanup : orig line is 13, orig col is 1, Text() 'const', type is QUALIFIER, PRE is false
+parameter_pack_cleanup : orig line is 13, orig col is 7, Text() 'char', type is TYPE, PRE is false
+parameter_pack_cleanup : orig line is 13, orig col is 11, Text() '*', type is PTR_TYPE, PRE is false
+parameter_pack_cleanup : orig line is 13, orig col is 13, Text() 'const', type is QUALIFIER, PRE is false
+parameter_pack_cleanup : orig line is 13, orig col is 19, Text() 'pTelName', type is WORD, PRE is false
+parameter_pack_cleanup : orig line is 13, orig col is 27, Text() ';', type is SEMICOLON, PRE is false
+parameter_pack_cleanup : orig line is 13, orig col is 28, <Newline>, PRE is false
+parameter_pack_cleanup : orig line is 14, orig col is 1, Text() 'unsigned', type is TYPE, PRE is false
+parameter_pack_cleanup : orig line is 14, orig col is 10, Text() 'long', type is TYPE, PRE is false
+parameter_pack_cleanup : orig line is 14, orig col is 15, Text() 'nTelIndex', type is WORD, PRE is false
+parameter_pack_cleanup : orig line is 14, orig col is 24, Text() ';', type is SEMICOLON, PRE is false
+parameter_pack_cleanup : orig line is 14, orig col is 25, <Newline>, PRE is false
+parameter_pack_cleanup : orig line is 15, orig col is 1, Text() '}', type is BRACE_CLOSE, PRE is false
+parameter_pack_cleanup : orig line is 15, orig col is 2, Text() ';', type is SEMICOLON, PRE is false
+parameter_pack_cleanup : orig line is 15, orig col is 3, <Newline>, PRE is false
 log_rule(enum_cleanup : rule is 'mod_enum_last_comma'
+newline_var_def_blk : orig line is 1, orig col is 1, Text() 'struct', type is STRUCT, PRE is false
+newline_var_def_blk : orig line is 15, orig col is 3, <Newline>, PRE is false

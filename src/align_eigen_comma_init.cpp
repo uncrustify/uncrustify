@@ -32,15 +32,7 @@ void align_eigen_comma_init()
 
    while (pc->IsNotNullChunk())
    {
-      if (pc->IsNewline())
-      {
-         LOG_FMT(LALIGN, "%s(%d): orig line is %zu, <Newline>\n", __func__, __LINE__, pc->GetOrigLine());
-      }
-      else
-      {
-         LOG_FMT(LALIGN, "%s(%d): orig line is %zu, orig col is %zu, pc->Text() '%s'\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
-      }
+      LOG_CHUNK(LTOK, pc);
 
       if (  start->IsNotNullChunk()
          && ((pc->GetFlags() & PCF_IN_PREPROC) != (start->GetFlags() & PCF_IN_PREPROC)))

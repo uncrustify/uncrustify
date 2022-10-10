@@ -748,8 +748,7 @@ static void split_fcn_params(Chunk *start)
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LSPLIT, "%s(%d): pc->Text() '%s', type is %s\n",
-              __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()));
+      LOG_CHUNK(LTOK, pc);
 
       if (pc->IsNewline())
       {
