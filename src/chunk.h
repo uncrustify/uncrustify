@@ -247,6 +247,17 @@ public:
     */
    void SetPpLevel(size_t lvl);
 
+   /**
+    * @brief Returns the after tab property of the chunk
+    */
+   bool GetAfterTab() const;
+
+   /**
+    * @brief Sets the after tab property of the chunk
+    * @param afterTab the after tab property of the chunk
+    */
+   void SetAfterTab(bool afterTab);
+
 
    // --------- Get* chunk functions
 
@@ -937,7 +948,6 @@ public:
    size_t       nl_count;                    //! number of newlines in CT_NEWLINE
    size_t       nl_column;                   //! column of the subsequent newline entries(all of them should have the same column)
    size_t       level;                       /** nest level in {, (, or [. Only to help vim command } */
-   bool         after_tab;                   //! whether this token was after a tab
    unc_text     str;                         //! the token text
 
    // for debugging purpose only
@@ -985,6 +995,7 @@ protected:
                                             //! be less than the real column used to indent with tabs
    size_t     m_braceLevel;                 //! nest level in braces only
    size_t     m_ppLevel;                    //! nest level in preprocessor
+   bool       m_afterTab;                   //! whether this token was after a tab
    E_Token    m_type;                       //! type of the chunk itself
    E_Token    m_parentType;                 //! type of the parent chunk usually CT_NONE
    T_PcfFlags m_flags;                      //! see PCF_xxx
@@ -1197,6 +1208,18 @@ inline size_t Chunk::GetPpLevel() const
 inline void Chunk::SetPpLevel(size_t lvl)
 {
    m_ppLevel = lvl;
+}
+
+
+inline bool Chunk::GetAfterTab() const
+{
+   return(m_afterTab);
+}
+
+
+inline void Chunk::SetAfterTab(bool afterTab)
+{
+   m_afterTab = afterTab;
 }
 
 
