@@ -4514,7 +4514,8 @@ void newlines_cleanup_braces(bool first)
                   || !next->TestFlags(PCF_ONE_LINER)) // #1258
                && !pc->TestFlags(PCF_IN_ARRAY_ASSIGN)
                && !pc->TestFlags(PCF_IN_TYPEDEF)
-               && !next->IsCommentOrNewline())
+               && !next->IsCommentOrNewline()
+               && next->IsNotNullChunk())
             {
                // #1258
                // dont add newline between two consecutive braces closes, if the second is a part of one liner.
