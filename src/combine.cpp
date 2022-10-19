@@ -2001,7 +2001,7 @@ void fix_symbols()
       if (prev->IsNullChunk())
       {
          prev = &dummy;
-         LOG_FMT(LFCNR, "%s(%d): WARNING: next is NOT defined\n", __func__, __LINE__);
+         LOG_FMT(LFCNR, "%s(%d): WARNING: prev is NOT defined\n", __func__, __LINE__);
       }
       else
       {
