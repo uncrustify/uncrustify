@@ -107,7 +107,7 @@ Chunk *align_trailing_comments(Chunk *start)
 
       if (pc->IsNewline())
       {
-         nl_count += pc->nl_count;
+         nl_count += pc->GetNlCount();
       }
       pc = pc->GetNext();
    }

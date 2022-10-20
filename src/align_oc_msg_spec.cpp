@@ -25,7 +25,7 @@ void align_oc_msg_spec(size_t span)
    {
       if (pc->IsNewline())
       {
-         as.NewLines(pc->nl_count);
+         as.NewLines(pc->GetNlCount());
       }
       else if (pc->Is(CT_OC_MSG_SPEC))
       {

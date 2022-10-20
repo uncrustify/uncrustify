@@ -67,10 +67,10 @@ void align_same_func_call_params()
          {
             for (auto &as_v : array_of_AlignStack)
             {
-               as_v.NewLines(pc->nl_count);
+               as_v.NewLines(pc->GetNlCount());
             }
 
-            fcn_as.NewLines(pc->nl_count);
+            fcn_as.NewLines(pc->GetNlCount());
          }
          else
          {

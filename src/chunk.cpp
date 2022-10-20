@@ -42,7 +42,7 @@ void Chunk::CopyFrom(const Chunk &o)
    m_column       = o.m_column;
    m_columnIndent = o.m_columnIndent;
 
-   nl_count  = o.nl_count;
+   m_nlCount = o.m_nlCount;
    nl_column = o.nl_column;
    level     = o.level;
 
@@ -71,7 +71,7 @@ void Chunk::Reset()
    m_flags        = PCF_NONE;
    m_column       = 0;
    m_columnIndent = 0;
-   nl_count       = 0;
+   m_nlCount      = 0;
    nl_column      = 0;
    level          = 0;
    m_braceLevel   = 0;
@@ -508,15 +508,15 @@ void Chunk::SwapLines(Chunk *other)
 
    /*
     * pc1 and pc2 should be the newlines for their lines.
-    * swap the chunks and the nl_count so that the spacing remains the same.
+    * swap the chunks and the new line count so that the spacing remains the same.
     */
    if (  pc1->IsNotNullChunk()
       && pc2->IsNotNullChunk())
    {
-      size_t nlCount = pc1->nl_count;
+      size_t nlCount = pc1->GetNlCount();
 
-      pc1->nl_count = pc2->nl_count;
-      pc2->nl_count = nlCount;
+      pc1->SetNlCount(pc2->GetNlCount());
+      pc2->SetNlCount(nlCount);
 
       pc1->Swap(pc2);
    }

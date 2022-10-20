@@ -87,7 +87,7 @@ void combine_labels()
       if (next->Is(CT_NEWLINE))
       {
          LOG_FMT(LFCN, "%s(%d): next orig line is %zu, orig col is %zu, <Newline>, nl is %zu\n",
-                 __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->nl_count);
+                 __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->GetNlCount());
       }
       else if (next->Is(CT_VBRACE_OPEN))
       {

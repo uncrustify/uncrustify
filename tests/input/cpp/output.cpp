@@ -127,7 +127,7 @@ void output_parsed(FILE *pfile)
               get_token_name(pc->GetParentType()),
               pc->GetColumn(), pc->GetOrigCol(), pc->GetOrigColEnd(),
               pc->GetBraceLevel(), pc->level, pc->GetPpLevel(),
-              pc->GetFlags(), pc->nl_count, pc->GetAfterTab());
+              pc->GetFlags(), pc->GetNlCount(), pc->GetAfterTab());
 
       if ((pc->GetType() != CT_NEWLINE) && (pc->len != 0))
       {
@@ -202,7 +202,7 @@ void output_text(FILE *pfile)
    {
       if (pc->GetType() == CT_NEWLINE)
       {
-         for (cnt = 0; cnt < pc->nl_count; cnt++)
+         for (cnt = 0; cnt < pc->GetNlCount(); cnt++)
          {
             add_char('\n');
          }
@@ -419,7 +419,7 @@ Chunk *output_comment_cpp(Chunk *first)
    {
       /* next is a newline by definition */
       Chunk *next = first->GetNext();
-      if ((next != NULL) && (next->nl_count == 1))
+      if ((next != NULL) && (next->GetNlCount() == 1))
       {
          next = next->GetNext();
 
@@ -471,7 +471,7 @@ Chunk *output_comment_cpp(Chunk *first)
    /* Output combined lines */
    while ((pc = pc->GetNext()) != NULL)
    {
-      if ((pc->GetType() == CT_NEWLINE) && (pc->nl_count == 1))
+      if ((pc->GetType() == CT_NEWLINE) && (pc->GetNlCount() == 1))
       {
          continue;
       }

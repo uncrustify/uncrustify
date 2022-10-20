@@ -42,7 +42,7 @@ void align_asm_colon()
       {
          if (pc->IsNewline())
          {
-            cas.NewLines(pc->nl_count);
+            cas.NewLines(pc->GetNlCount());
             did_nl = true;
          }
          else if (pc->Is(CT_ASM_COLON))

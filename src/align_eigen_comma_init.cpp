@@ -43,7 +43,7 @@ void align_eigen_comma_init()
       }
       else if (pc->IsNewline())
       {
-         as.NewLines(pc->nl_count);
+         as.NewLines(pc->GetNlCount());
       }
       else if (  start->IsNotNullChunk()
               && pc->level < start->level)

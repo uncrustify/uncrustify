@@ -120,7 +120,7 @@ void align_func_proto(size_t span)
 
                if (stack_at_l_bl != nullptr)
                {
-                  stack_at_l_bl->NewLines(pc->nl_count);
+                  stack_at_l_bl->NewLines(pc->GetNlCount());
                }
             }
          }
@@ -138,7 +138,7 @@ void align_func_proto(size_t span)
             many_as_brace.at(pc->level).at(pc->GetBraceLevel()) = stack_at_l_bl_brace;
          }
          stack_at_l_bl_brace->Debug();
-         stack_at_l_bl_brace->NewLines(pc->nl_count);
+         stack_at_l_bl_brace->NewLines(pc->GetNlCount());
       }
       else if (  pc->Is(CT_FUNC_PROTO)
               || (  pc->Is(CT_FUNC_DEF)

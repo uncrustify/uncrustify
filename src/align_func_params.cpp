@@ -97,7 +97,7 @@ Chunk *align_func_param(Chunk *start)
       {
          comma_count = 0;
          chunk_count = 0;
-         many_as[pc->level].NewLines(pc->nl_count);
+         many_as[pc->level].NewLines(pc->GetNlCount());
       }
       else if (pc->level <= start->level)
       {

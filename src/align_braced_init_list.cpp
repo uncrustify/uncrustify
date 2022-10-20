@@ -106,11 +106,11 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
 
       if (pc->IsNewline())
       {
-         vdas.NewLines(pc->nl_count);
+         vdas.NewLines(pc->GetNlCount());
 
          if (p_nl_count != nullptr)
          {
-            *p_nl_count += pc->nl_count;
+            *p_nl_count += pc->GetNlCount();
          }
          var_def_cnt = 0;
          equ_count   = 0;

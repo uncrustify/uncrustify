@@ -57,8 +57,8 @@ void align_oc_decl_colon()
 
          if (pc->IsNewline())
          {
-            nas.NewLines(pc->nl_count);
-            cas.NewLines(pc->nl_count);
+            nas.NewLines(pc->GetNlCount());
+            cas.NewLines(pc->GetNlCount());
             did_line = false;
          }
          else if (  !did_line
