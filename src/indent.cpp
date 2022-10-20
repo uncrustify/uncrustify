@@ -294,7 +294,7 @@ void align_to_column(Chunk *pc, size_t column)
               (almod == align_mode_e::KEEP_REL) ? "rel" : "sft",
               pc->Text(), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetColumn(), pc->GetOrigCol());
    } while (  pc->IsNotNullChunk()
-           && pc->nl_count == 0);
+           && pc->GetNlCount() == 0);
 } // align_to_column
 
 
@@ -347,7 +347,7 @@ void reindent_line(Chunk *pc, size_t column)
          break;
       }
 
-      if (pc->nl_count)
+      if (pc->GetNlCount())
       {
          min_col   = 0;
          col_delta = 0;
@@ -386,7 +386,7 @@ void reindent_line(Chunk *pc, size_t column)
          LOG_FMT(LINDLINED, " to %zu (orig %zu)\n", pc->GetColumn(), pc->GetOrigCol());
       }
    } while (  pc->IsNotNullChunk()
-           && pc->nl_count == 0);
+           && pc->GetNlCount() == 0);
 } // reindent_line
 
 
@@ -4373,7 +4373,7 @@ static bool single_line_comment_indent_rule_applies(Chunk *start, bool forward)
       if (pc->IsNewline())
       {
          if (  nl_count > 0
-            || pc->nl_count > 1)
+            || pc->GetNlCount() > 1)
          {
             return(false);
          }
@@ -4434,7 +4434,7 @@ static size_t calc_comment_next_col_diff(Chunk *pc)
               __func__, __LINE__, newline_token->Text(), newline_token->GetOrigLine(), newline_token->GetOrigCol());
 
       if (  newline_token->IsNullChunk()
-         || newline_token->nl_count > 1)
+         || newline_token->GetNlCount() > 1)
       {
          return(5000);  // FIXME: Max thresh magic number 5000
       }
@@ -4499,7 +4499,7 @@ static void indent_comment(Chunk *pc, size_t col)
       }
 
       if (  prev->IsComment()
-         && nl->nl_count == 1)
+         && nl->GetNlCount() == 1)
       {
          const size_t prev_col_diff = (prev->GetOrigCol() > pc->GetOrigCol())
                                       ? prev->GetOrigCol() - pc->GetOrigCol()

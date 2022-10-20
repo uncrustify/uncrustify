@@ -3289,7 +3289,7 @@ void space_text()
       if (pc->Is(CT_NEWLINE))
       {
          LOG_FMT(LSPACE, "%s(%d): orig line is %zu, orig col is %zu, <Newline>, nl is %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->nl_count);
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetNlCount());
       }
       else
       {
@@ -3363,7 +3363,7 @@ void space_text()
       else
       {
          // Set to the minimum allowed column
-         if (pc->nl_count == 0)
+         if (pc->GetNlCount() == 0)
          {
             column += pc->Len();
          }
@@ -3681,9 +3681,9 @@ size_t space_col_align(Chunk *first, Chunk *second)
    LOG_FMT(LSPACE, "%s(%d): av is %s\n", __func__, __LINE__, to_string(av));
    size_t coldiff;
 
-   if (first->nl_count)
+   if (first->GetNlCount())
    {
-      LOG_FMT(LSPACE, "%s(%d):    nl_count is %zu, orig col end is %zu\n", __func__, __LINE__, first->nl_count, first->GetOrigColEnd());
+      LOG_FMT(LSPACE, "%s(%d):    new line count is %zu, orig col end is %zu\n", __func__, __LINE__, first->GetNlCount(), first->GetOrigColEnd());
       coldiff = first->GetOrigColEnd() - 1;
    }
    else

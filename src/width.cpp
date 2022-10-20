@@ -575,9 +575,9 @@ static void split_for_stmt(Chunk *start)
          break;
       }
 
-      if (pc->nl_count > 0)
+      if (pc->GetNlCount() > 0)
       {
-         nl_cnt += pc->nl_count;
+         nl_cnt += pc->GetNlCount();
       }
    }
 

@@ -131,12 +131,12 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
 
       if (pc->IsComment())
       {
-         if (pc->nl_count > 0)
+         if (pc->GetNlCount() > 0)
          {
-            as.NewLines(pc->nl_count);
-            as_bc.NewLines(pc->nl_count);
-            as_at.NewLines(pc->nl_count);
-            as_br.NewLines(pc->nl_count);
+            as.NewLines(pc->GetNlCount());
+            as_bc.NewLines(pc->GetNlCount());
+            as_at.NewLines(pc->GetNlCount());
+            as_br.NewLines(pc->GetNlCount());
          }
          pc = pc->GetNext();
          LOG_FMT(LAVDB, "%s(%d): pc->Text() is '%s', level is %zu, brace level is %zu\n",
@@ -221,14 +221,14 @@ Chunk *align_var_def_brace(Chunk *start, size_t span, size_t *p_nl_count)
       {
          fp_look_bro   = false;
          did_this_line = false;
-         as.NewLines(pc->nl_count);
-         as_bc.NewLines(pc->nl_count);
-         as_at.NewLines(pc->nl_count);
-         as_br.NewLines(pc->nl_count);
+         as.NewLines(pc->GetNlCount());
+         as_bc.NewLines(pc->GetNlCount());
+         as_at.NewLines(pc->GetNlCount());
+         as_br.NewLines(pc->GetNlCount());
 
          if (p_nl_count != nullptr)
          {
-            *p_nl_count += pc->nl_count;
+            *p_nl_count += pc->GetNlCount();
          }
       }
       LOG_FMT(LAVDB, "%s(%d): pc->Text() is '%s', level is %zu, brace level is %zu\n",

@@ -328,7 +328,7 @@ static bool should_add_braces(Chunk *vbopen)
    {
       if (pc->IsNewline())
       {
-         nl_count += pc->nl_count;
+         nl_count += pc->GetNlCount();
       }
    }
 
@@ -392,7 +392,7 @@ static bool can_remove_braces(Chunk *bopen)
 
       if (pc->IsNewline())
       {
-         nl_count += pc->nl_count;
+         nl_count += pc->GetNlCount();
 
          if (  nl_max > 0
             && nl_count > nl_max)
@@ -551,7 +551,7 @@ static void examine_brace(Chunk *bopen)
 
       if (pc->IsNewline())
       {
-         nl_count += pc->nl_count;
+         nl_count += pc->GetNlCount();
 
          if (  nl_max > 0
             && nl_count > nl_max)
@@ -797,13 +797,13 @@ static void convert_brace(Chunk *br)
 
    if (tmp->IsNewline())
    {
-      if (tmp->nl_count > 1)
+      if (tmp->GetNlCount() > 1)
       {
          if (!br->TestFlags(PCF_ONE_LINER)) // Issue #2232
          {
-            tmp->nl_count--;
-            LOG_FMT(LBRDEL, "%s(%d): tmp->nl_count is %zu\n",
-                    __func__, __LINE__, tmp->nl_count);
+            tmp->SetNlCount(tmp->GetNlCount() - 1);
+            LOG_FMT(LBRDEL, "%s(%d): tmp new line count is %zu\n",
+                    __func__, __LINE__, tmp->GetNlCount());
          }
       }
       else
@@ -1099,7 +1099,7 @@ void add_long_closebrace_comment()
       {
          if (tmp->IsNewline())
          {
-            nl_count += tmp->nl_count;
+            nl_count += tmp->GetNlCount();
             continue;
          }
 

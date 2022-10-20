@@ -476,7 +476,7 @@ static void setup_newline_add(Chunk *prev, Chunk *nl, Chunk *next)
    nl->SetPpLevel(prev->GetPpLevel());
    nl->SetBraceLevel(prev->GetBraceLevel());
    nl->SetPpLevel(prev->GetPpLevel());
-   nl->nl_count = 1;
+   nl->SetNlCount(1);
    nl->SetFlags((prev->GetFlags() & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC);
    nl->SetOrigCol(prev->GetOrigColEnd());
    nl->SetColumn(prev->GetOrigCol());
@@ -534,9 +534,9 @@ void double_newline(Chunk *nl)
    }
    LOG_FMT(LNEWLINE, " - done\n");
 
-   if (nl->nl_count != 2)
+   if (nl->GetNlCount() != 2)
    {
-      nl->nl_count = 2;
+      nl->SetNlCount(2);
       MARK_CHANGE();
    }
 } // double_newline
@@ -576,9 +576,9 @@ Chunk *newline_force_before(Chunk *pc)
    Chunk *nl = newline_add_before(pc);
 
    if (  nl->IsNotNullChunk()
-      && nl->nl_count > 1)
+      && nl->GetNlCount() > 1)
    {
-      nl->nl_count = 1;
+      nl->SetNlCount(1);
       MARK_CHANGE();
    }
    return(nl);
@@ -625,9 +625,9 @@ Chunk *newline_force_after(Chunk *pc)
    Chunk *nl = newline_add_after(pc);   // add a newline
 
    if (  nl->IsNotNullChunk()
-      && nl->nl_count > 1) // check if there are more than 1 newline
+      && nl->GetNlCount() > 1) // check if there are more than 1 newline
    {
-      nl->nl_count = 1;                   // if so change the newline count back to 1
+      nl->SetNlCount(1);                   // if so change the newline count back to 1
       MARK_CHANGE();
    }
    return(nl);
@@ -645,7 +645,7 @@ static void newline_end_newline(Chunk *br_close)
    {
       nl.SetOrigLine(br_close->GetOrigLine());
       nl.SetOrigCol(br_close->GetOrigCol());
-      nl.nl_count = 1;
+      nl.SetNlCount(1);
       nl.SetPpLevel(0);
       nl.SetFlags((br_close->GetFlags() & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC);
 
@@ -704,7 +704,7 @@ static void newline_min_after(Chunk *ref, size_t count, E_PcfFlag flag)
    }
 
    if (  next->IsComment()
-      && next->nl_count == 1
+      && next->GetNlCount() == 1
       && pc->GetPrev()->IsComment())
    {
       newline_min_after(next, count, flag);
@@ -715,9 +715,9 @@ static void newline_min_after(Chunk *ref, size_t count, E_PcfFlag flag)
    if (  pc->IsNewline()
       && can_increase_nl(pc))
    {
-      if (pc->nl_count < count)
+      if (pc->GetNlCount() < count)
       {
-         pc->nl_count = count;
+         pc->SetNlCount(count);
          MARK_CHANGE();
       }
    }
@@ -863,9 +863,9 @@ void newline_del_between(Chunk *start, Chunk *end)
          }
          else
          {
-            if (pc->nl_count > 1)
+            if (pc->GetNlCount() > 1)
             {
-               pc->nl_count = 1;
+               pc->SetNlCount(1);
                MARK_CHANGE();
             }
          }
@@ -1045,7 +1045,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
          last_nl = pc;
 
          // if we found 2 or more in a row
-         if (  pc->nl_count > 1
+         if (  pc->GetNlCount() > 1
             || pc->GetPrevNvb()->IsNewline())
          {
             // need to remove
@@ -1055,9 +1055,9 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
                // if we're also adding, take care of that here
                size_t nl_count = do_add ? 2 : 1;
 
-               if (nl_count != pc->nl_count)
+               if (nl_count != pc->GetNlCount())
                {
-                  pc->nl_count = nl_count;
+                  pc->SetNlCount(nl_count);
                   MARK_CHANGE();
                }
                Chunk *prev;
@@ -1102,7 +1102,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, iarf_e nl
             if (  last_nl != nullptr
                && last_nl->IsNotNullChunk())
             {
-               if (last_nl->nl_count < 2)
+               if (last_nl->GetNlCount() < 2)
                {
                   double_newline(last_nl);
                }
@@ -1141,11 +1141,11 @@ static void blank_line_set(Chunk *pc, Option<unsigned> &opt)
    const unsigned optval = opt();
 
    if (  (optval > 0)
-      && (pc->nl_count != optval))
+      && (pc->GetNlCount() != optval))
    {
       LOG_FMT(LBLANKD, "%s(%d): do_blank_lines: %s set line %zu to %u\n",
               __func__, __LINE__, opt.name(), pc->GetOrigLine(), optval);
-      pc->nl_count = optval;
+      pc->SetNlCount(optval);
       MARK_CHANGE();
    }
 } // blank_line_set
@@ -1168,13 +1168,13 @@ bool do_it_newlines_func_pre_blank_lines(Chunk *last_nl, E_Token start_type)
    case CT_FUNC_CLASS_DEF:
    {
       log_rule_B("nl_before_func_class_def");
-      bool diff = options::nl_before_func_class_def() <= last_nl->nl_count;
+      bool diff = options::nl_before_func_class_def() <= last_nl->GetNlCount();
       LOG_FMT(LNLFUNCT, "%s(%d): is %s\n",
               __func__, __LINE__, diff ? "TRUE" : "FALSE");
 
       log_rule_B("nl_before_func_class_def");
 
-      if (options::nl_before_func_class_def() != last_nl->nl_count)
+      if (options::nl_before_func_class_def() != last_nl->GetNlCount())
       {
          LOG_FMT(LNLFUNCT, "%s(%d):   set blank line(s) to %u\n",
                  __func__, __LINE__, options::nl_before_func_class_def());
@@ -1186,13 +1186,13 @@ bool do_it_newlines_func_pre_blank_lines(Chunk *last_nl, E_Token start_type)
    case CT_FUNC_CLASS_PROTO:
    {
       log_rule_B("nl_before_func_class_proto");
-      bool diff = options::nl_before_func_class_proto() <= last_nl->nl_count;
+      bool diff = options::nl_before_func_class_proto() <= last_nl->GetNlCount();
       LOG_FMT(LNLFUNCT, "%s(%d): is %s\n",
               __func__, __LINE__, diff ? "TRUE" : "FALSE");
 
       log_rule_B("nl_before_func_class_proto");
 
-      if (options::nl_before_func_class_proto() != last_nl->nl_count)
+      if (options::nl_before_func_class_proto() != last_nl->GetNlCount())
       {
          LOG_FMT(LNLFUNCT, "%s(%d):   set blank line(s) to %u\n",
                  __func__, __LINE__, options::nl_before_func_class_proto());
@@ -1203,37 +1203,37 @@ bool do_it_newlines_func_pre_blank_lines(Chunk *last_nl, E_Token start_type)
 
    case CT_FUNC_DEF:
    {
-      LOG_FMT(LNLFUNCT, "%s(%d): nl_before_func_body_def() is %u, last_nl->nl_count is %zu\n",
-              __func__, __LINE__, options::nl_before_func_body_def(), last_nl->nl_count);
+      LOG_FMT(LNLFUNCT, "%s(%d): nl_before_func_body_def() is %u, last_nl new line count is %zu\n",
+              __func__, __LINE__, options::nl_before_func_body_def(), last_nl->GetNlCount());
       log_rule_B("nl_before_func_body_def");
-      bool diff = options::nl_before_func_body_def() <= last_nl->nl_count;
+      bool diff = options::nl_before_func_body_def() <= last_nl->GetNlCount();
       LOG_FMT(LNLFUNCT, "%s(%d): is %s\n",
               __func__, __LINE__, diff ? "TRUE" : "FALSE");
 
       log_rule_B("nl_before_func_body_def");
 
-      if (options::nl_before_func_body_def() != last_nl->nl_count)
+      if (options::nl_before_func_body_def() != last_nl->GetNlCount())
       {
          LOG_FMT(LNLFUNCT, "%s(%d):    set blank line(s) to %u\n",
                  __func__, __LINE__, options::nl_before_func_body_def());
          log_rule_B("nl_before_func_body_def");
          blank_line_set(last_nl, options::nl_before_func_body_def);
       }
-      LOG_FMT(LNLFUNCT, "%s(%d): nl_before_func_body_def() is %u, last_nl->nl_count is %zu\n",
-              __func__, __LINE__, options::nl_before_func_body_def(), last_nl->nl_count);
+      LOG_FMT(LNLFUNCT, "%s(%d): nl_before_func_body_def() is %u, last_nl new line count is %zu\n",
+              __func__, __LINE__, options::nl_before_func_body_def(), last_nl->GetNlCount());
       return(diff);
    }
 
    case CT_FUNC_PROTO:
    {
       log_rule_B("nl_before_func_body_proto");
-      bool diff = options::nl_before_func_body_proto() <= last_nl->nl_count;
+      bool diff = options::nl_before_func_body_proto() <= last_nl->GetNlCount();
       LOG_FMT(LNLFUNCT, "%s(%d): is %s\n",
               __func__, __LINE__, diff ? "TRUE" : "FALSE");
 
       log_rule_B("nl_before_func_body_proto");
 
-      if (options::nl_before_func_body_proto() != last_nl->nl_count)
+      if (options::nl_before_func_body_proto() != last_nl->GetNlCount())
       {
          LOG_FMT(LNLFUNCT, "%s(%d):   set blank line(s) to %u\n",
                  __func__, __LINE__, options::nl_before_func_body_proto());
@@ -1292,19 +1292,19 @@ static void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type)
 
    for (pc = start->GetPrev(); pc->IsNotNullChunk(); pc = pc->GetPrev())
    {
-      LOG_FMT(LNLFUNCT, "%s(%d): orig line is %zu, orig col is %zu, type is %s, Text() is '%s', nl_count is %zu\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->Text(), pc->nl_count);
+      LOG_FMT(LNLFUNCT, "%s(%d): orig line is %zu, orig col is %zu, type is %s, Text() is '%s', new line count is %zu\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->Text(), pc->GetNlCount());
 
       if (pc->IsNewline())
       {
          last_nl = pc;
-         LOG_FMT(LNLFUNCT, "%s(%d):    <Chunk::IsNewline> found at line %zu, column %zu, nl_count is %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->nl_count);
+         LOG_FMT(LNLFUNCT, "%s(%d):    <Chunk::IsNewline> found at line %zu, column %zu, new line count is %zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetNlCount());
          LOG_FMT(LNLFUNCT, "%s(%d):    last_nl set to %zu\n",
                  __func__, __LINE__, last_nl->GetOrigLine());
          bool break_now = false;
 
-         if (pc->nl_count > 1)
+         if (pc->GetNlCount() > 1)
          {
             break_now = do_it_newlines_func_pre_blank_lines(last_nl, start_type);
             LOG_FMT(LNLFUNCT, "%s(%d): break_now is %s\n",
@@ -1327,7 +1327,7 @@ static void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type)
 
          if (  (  pc->GetOrigLine() < first_line
                && ((first_line - pc->GetOrigLine()
-                    - (pc->Is(CT_COMMENT_MULTI) ? pc->nl_count : 0))) < 2)
+                    - (pc->Is(CT_COMMENT_MULTI) ? pc->GetNlCount() : 0))) < 2)
             || (  last_comment != nullptr
                && pc->Is(CT_COMMENT_CPP)          // combine only cpp comments
                && last_comment->Is(pc->GetType()) // don't mix comment types
@@ -1542,9 +1542,9 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
       // if chunk before is a vbrace, remove any newlines after it
       if (have_pre_vbrace_nl)
       {
-         if (prev->nl_count != 1)
+         if (prev->GetNlCount() != 1)
          {
-            prev->nl_count = 1;
+            prev->SetNlCount(1);
             MARK_CHANGE();
          }
          remove_next_newlines(pc);
@@ -1553,9 +1553,9 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
               && !next->TestFlags(PCF_VAR_DEF))
       {
          // otherwise just deal with newlines after brace
-         if (next->nl_count != 1)
+         if (next->GetNlCount() != 1)
          {
-            next->nl_count = 1;
+            next->SetNlCount(1);
             MARK_CHANGE();
          }
          remove_next_newlines(next);
@@ -1589,21 +1589,21 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
       {
          // if vbrace, have to check before and after
          // if chunk before vbrace, check its count
-         size_t nl_count = have_pre_vbrace_nl ? prev->nl_count : 0;
-         LOG_FMT(LNEWLINE, "%s(%d): nl_count %zu\n", __func__, __LINE__, nl_count);
+         size_t nl_count = have_pre_vbrace_nl ? prev->GetNlCount() : 0;
+         LOG_FMT(LNEWLINE, "%s(%d): new line count %zu\n", __func__, __LINE__, nl_count);
 
          if ((next = pc->GetNextNvb())->IsNewline())
          {
             LOG_FMT(LNEWLINE, "%s(%d): next->Text() is '%s', type %s, orig line %zu, orig col %zu\n",
                     __func__, __LINE__, next->Text(), get_token_name(next->GetType()), next->GetOrigLine(), next->GetOrigCol());
-            nl_count += next->nl_count;
-            LOG_FMT(LNEWLINE, "%s(%d): nl_count is %zu\n", __func__, __LINE__, nl_count);
+            nl_count += next->GetNlCount();
+            LOG_FMT(LNEWLINE, "%s(%d): new line count is %zu\n", __func__, __LINE__, nl_count);
          }
 
          // if we have no newlines, add one and make it double
          if (nl_count == 0)
          {
-            LOG_FMT(LNEWLINE, "%s(%d): nl_count is 0\n", __func__, __LINE__);
+            LOG_FMT(LNEWLINE, "%s(%d): new line count is 0\n", __func__, __LINE__);
 
             if (  ((next = pc->GetNext())->IsNotNullChunk())
                && next->IsComment())
@@ -1625,7 +1625,7 @@ static void newlines_if_for_while_switch_post_blank_lines(Chunk *start, iarf_e n
          }
          else if (nl_count == 1) // if we don't have enough newlines
          {
-            LOG_FMT(LNEWLINE, "%s(%d): nl_count is 1\n", __func__, __LINE__);
+            LOG_FMT(LNEWLINE, "%s(%d): new line count is 1\n", __func__, __LINE__);
 
             // if we have a preceding vbrace, add one after it
             if (have_pre_vbrace_nl)
@@ -2202,9 +2202,9 @@ static Chunk *newline_var_def_blk(Chunk *start)
 
                if (prev->IsNewline())
                {
-                  if (prev->nl_count > options::nl_var_def_blk_in())
+                  if (prev->GetNlCount() > options::nl_var_def_blk_in())
                   {
-                     prev->nl_count = options::nl_var_def_blk_in();
+                     prev->SetNlCount(options::nl_var_def_blk_in());
                      MARK_CHANGE();
                   }
                }
@@ -2448,7 +2448,7 @@ static void newlines_brace_pair(Chunk *br_open)
                      chunk.SetOrigLine(current->GetOrigLine());
                      chunk.SetOrigCol(current->GetOrigCol());
                      chunk.SetPpLevel(current->GetPpLevel());
-                     chunk.nl_count = 1;
+                     chunk.SetNlCount(1);
                      chunk.CopyAndAddBefore(current);
                      LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline before '%s'\n",
                              __func__, __LINE__, current->GetOrigLine(), current->GetOrigCol(), current->Text());
@@ -2626,9 +2626,9 @@ static void newlines_brace_pair(Chunk *br_open)
          {
             blank_line_set(next, options::nl_inside_namespace);
          }
-         else if (next->nl_count > 1)
+         else if (next->GetNlCount() > 1)
          {
-            next->nl_count = 1;
+            next->SetNlCount(1);
             LOG_FMT(LBLANKD, "%s(%d): eat_blanks_after_open_brace %zu\n",
                     __func__, __LINE__, next->GetOrigLine());
             MARK_CHANGE();
@@ -2706,7 +2706,7 @@ static void newline_case(Chunk *start)
 
       if (  prev->IsNotNullChunk()
          && prev->IsNewline()
-         && prev->nl_count > 1)
+         && prev->GetNlCount() > 1)
       {
          return;
       }
@@ -2731,7 +2731,7 @@ static void newline_case(Chunk *start)
       || prev->Is(CT_BRACE_CLOSE))
    {
       if (  pc->IsNewline()
-         && pc->nl_count < 2)
+         && pc->GetNlCount() < 2)
       {
          double_newline(pc);
       }
@@ -2775,7 +2775,7 @@ static void newline_before_return(Chunk *start)
    if (pc->IsNewline())
    {
       // Do we already have a blank line?
-      if (nl->nl_count > 1)
+      if (nl->GetNlCount() > 1)
       {
          return;
       }
@@ -2817,12 +2817,12 @@ static void newline_before_return(Chunk *start)
    }
 
    if (  nl->IsNewline()
-      && nl->nl_count < 2)
+      && nl->GetNlCount() < 2)
    {
-      nl->nl_count++;
+      nl->SetNlCount(nl->GetNlCount() + 1);
       MARK_CHANGE();
-      LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', ++ nl_count is now %zu\n",
-              __func__, __LINE__, nl->GetOrigLine(), nl->GetOrigCol(), nl->Text(), nl->nl_count);
+      LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', new line count is now %zu\n",
+              __func__, __LINE__, nl->GetOrigLine(), nl->GetOrigCol(), nl->Text(), nl->GetNlCount());
    }
 } // newline_before_return
 
@@ -2847,7 +2847,7 @@ static void newline_after_return(Chunk *start)
    {
       if (pc->Is(CT_NEWLINE))
       {
-         if (pc->nl_count < 2)
+         if (pc->GetNlCount() < 2)
          {
             double_newline(pc);
          }
@@ -2888,9 +2888,9 @@ static void newline_iarf_pair(Chunk *before, Chunk *after, iarf_e av, bool check
 
       if (  nl != nullptr
          && av == IARF_FORCE
-         && nl->nl_count > 1)
+         && nl->GetNlCount() > 1)
       {
-         nl->nl_count = 1;
+         nl->SetNlCount(1);
       }
    }
    else if (av & IARF_REMOVE)
@@ -3790,7 +3790,7 @@ static void nl_create_one_liner(Chunk *vbrace_open)
    {
       if (tmp->IsNewline())
       {
-         nl_total += tmp->nl_count;
+         nl_total += tmp->GetNlCount();
 
          if (nl_total > 1)
          {
@@ -3882,7 +3882,7 @@ void newlines_remove_disallowed()
    while ((pc = pc->GetNextNl())->IsNotNullChunk())
    {
       LOG_FMT(LBLANKD, "%s(%d): orig line is %zu, orig col is %zu, <Newline>, nl is %zu\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->nl_count);
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetNlCount());
 
       next = pc->GetNext();
 
@@ -3893,9 +3893,9 @@ void newlines_remove_disallowed()
          LOG_FMT(LBLANKD, "%s(%d): force to 1 orig line is %zu, orig col is %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
 
-         if (pc->nl_count != 1)
+         if (pc->GetNlCount() != 1)
          {
-            pc->nl_count = 1;
+            pc->SetNlCount(1);
             MARK_CHANGE();
          }
       }
@@ -4443,9 +4443,9 @@ void newlines_cleanup_braces(bool first)
                {
                   blank_line_set(prev, options::nl_inside_namespace);
                }
-               else if (prev->nl_count != 1)
+               else if (prev->GetNlCount() != 1)
                {
-                  prev->nl_count = 1;
+                  prev->SetNlCount(1);
                   LOG_FMT(LBLANKD, "%s(%d): eat_blanks_before_close_brace %zu\n",
                           __func__, __LINE__, prev->GetOrigLine());
                   MARK_CHANGE();
@@ -4469,7 +4469,7 @@ void newlines_cleanup_braces(bool first)
                   prev = newline_add_before(pc);
                }
 
-               if (prev->nl_count < 2)
+               if (prev->GetNlCount() < 2)
                {
                   double_newline(prev);
                }
@@ -5329,11 +5329,11 @@ void newlines_functions_remove_extra_blank_lines()
 
          // delete newlines
          if (  !pc->Is(CT_COMMENT_MULTI)   // Issue #2195
-            && pc->nl_count > nl_max_blank_in_func)
+            && pc->GetNlCount() > nl_max_blank_in_func)
          {
             LOG_FMT(LNEWLINE, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
-            pc->nl_count = nl_max_blank_in_func;
+            pc->SetNlCount(nl_max_blank_in_func);
             MARK_CHANGE();
             remove_next_newlines(pc);
          }
@@ -5380,9 +5380,9 @@ void newlines_squeeze_ifdef()
             {
                if (pnl->IsNotNullChunk())
                {
-                  if (pnl->nl_count > 1)
+                  if (pnl->GetNlCount() > 1)
                   {
-                     pnl->nl_count = 1;
+                     pnl->SetNlCount(1);
                      MARK_CHANGE();
 
                      tmp1 = pnl->GetPrevNnl();
@@ -5396,12 +5396,12 @@ void newlines_squeeze_ifdef()
                if (  ppr->Is(CT_PP_IF)
                   || ppr->Is(CT_PP_ELSE))
                {
-                  if (nnl->nl_count > 1)
+                  if (nnl->GetNlCount() > 1)
                   {
                      tmp1 = nnl->GetPrevNnl();
                      LOG_FMT(LNEWLINE, "%s(%d): trimmed newlines after line %zu from %zu\n",
-                             __func__, __LINE__, tmp1->GetOrigLine(), nnl->nl_count);
-                     nnl->nl_count = 1;
+                             __func__, __LINE__, tmp1->GetOrigLine(), nnl->GetNlCount());
+                     nnl->SetNlCount(1);
                      MARK_CHANGE();
                   }
                }
@@ -5503,12 +5503,12 @@ void newlines_eat_start_end()
                MARK_CHANGE();
             }
             else if (  options::nl_start_of_file() == IARF_FORCE
-                    || (pc->nl_count < options::nl_start_of_file_min()))
+                    || (pc->GetNlCount() < options::nl_start_of_file_min()))
             {
                log_rule_B("nl_start_of_file");
                LOG_FMT(LBLANKD, "%s(%d): set_blanks_start_of_file %zu\n",
                        __func__, __LINE__, pc->GetOrigLine());
-               pc->nl_count = options::nl_start_of_file_min();
+               pc->SetNlCount(options::nl_start_of_file_min());
                log_rule_B("nl_start_of_file_min");
                MARK_CHANGE();
             }
@@ -5523,7 +5523,7 @@ void newlines_eat_start_end()
             chunk.SetOrigLine(pc->GetOrigLine());
             chunk.SetOrigCol(pc->GetOrigCol());
             chunk.SetPpLevel(pc->GetPpLevel());
-            chunk.nl_count = options::nl_start_of_file_min();
+            chunk.SetNlCount(options::nl_start_of_file_min());
             log_rule_B("nl_start_of_file_min");
             chunk.CopyAndAddBefore(pc);
             LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline before '%s'\n",
@@ -5556,17 +5556,17 @@ void newlines_eat_start_end()
                MARK_CHANGE();
             }
             else if (  options::nl_end_of_file() == IARF_FORCE
-                    || (pc->nl_count < options::nl_end_of_file_min()))
+                    || (pc->GetNlCount() < options::nl_end_of_file_min()))
             {
                log_rule_B("nl_end_of_file");
                log_rule_B("nl_end_of_file_min");
 
-               if (pc->nl_count != options::nl_end_of_file_min())
+               if (pc->GetNlCount() != options::nl_end_of_file_min())
                {
                   log_rule_B("nl_end_of_file_min");
                   LOG_FMT(LBLANKD, "%s(%d): set_blanks_end_of_file %zu\n",
                           __func__, __LINE__, pc->GetOrigLine());
-                  pc->nl_count = options::nl_end_of_file_min();
+                  pc->SetNlCount(options::nl_end_of_file_min());
                   log_rule_B("nl_end_of_file_min");
                   MARK_CHANGE();
                }
@@ -5582,7 +5582,7 @@ void newlines_eat_start_end()
             chunk.SetOrigLine(pc->GetOrigLine());
             chunk.SetOrigCol(pc->GetOrigCol());
             chunk.SetPpLevel(pc->GetPpLevel());
-            chunk.nl_count = options::nl_end_of_file_min();
+            chunk.SetNlCount(options::nl_end_of_file_min());
             log_rule_B("nl_end_of_file_min");
             chunk.CopyAndAddBefore(Chunk::NullChunkPtr);
             LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline after '%s'\n",
@@ -5761,7 +5761,7 @@ void newlines_chunk_pos(E_Token chunk_type, token_pos_e mode)
                continue;
             }
 
-            if (next->nl_count == 1)
+            if (next->GetNlCount() == 1)
             {
                if (  prev != nullptr
                   && !prev->TestFlags(PCF_IN_PREPROC))
@@ -5773,10 +5773,10 @@ void newlines_chunk_pos(E_Token chunk_type, token_pos_e mode)
          }
          else
          {
-            LOG_FMT(LNEWLINE, "%s(%d): prev orig line is %zu, orig col is %zu, Text() is '%s', nl_count is %zu\n",
-                    __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), prev->Text(), prev->nl_count);
+            LOG_FMT(LNEWLINE, "%s(%d): prev orig line is %zu, orig col is %zu, Text() is '%s', new line count is %zu\n",
+                    __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), prev->Text(), prev->GetNlCount());
 
-            if (prev->nl_count == 1)
+            if (prev->GetNlCount() == 1)
             {
                // Back up to the next non-comment item
                prev = prev->GetPrevNc();
@@ -5877,7 +5877,7 @@ void newlines_class_colon_pos(E_Token tok)
                LOG_FMT(LBLANKD, "%s(%d): paren_vor_value orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
                        __func__, __LINE__, paren_vor_value->GetOrigLine(), paren_vor_value->GetOrigCol(),
                        paren_vor_value->Text(), get_token_name(paren_vor_value->GetType()));
-               constructorValue.NewLines(paren_vor_value->nl_count);
+               constructorValue.NewLines(paren_vor_value->GetNlCount());
                constructorValue.Add(paren_vor_value);
             }
          }
@@ -5914,7 +5914,7 @@ void newlines_class_colon_pos(E_Token tok)
          if (tpc & TP_TRAIL)                       // pos_class_colon, pos_constr_colon: 4
          {
             if (  prev->IsNewline()
-               && prev->nl_count == 1
+               && prev->GetNlCount() == 1
                && prev->SafeToDeleteNl())
             {
                pc->Swap(prev);
@@ -5923,7 +5923,7 @@ void newlines_class_colon_pos(E_Token tok)
          else if (tpc & TP_LEAD)                   // pos_class_colon, pos_constr_colon: 3
          {
             if (  next->IsNewline()
-               && next->nl_count == 1
+               && next->GetNlCount() == 1
                && next->SafeToDeleteNl())
             {
                pc->Swap(next);
@@ -5958,7 +5958,7 @@ void newlines_class_colon_pos(E_Token tok)
                LOG_FMT(LBLANKD, "%s(%d): paren_vor_value orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
                        __func__, __LINE__, paren_vor_value->GetOrigLine(), paren_vor_value->GetOrigCol(),
                        paren_vor_value->Text(), get_token_name(paren_vor_value->GetType()));
-               constructorValue.NewLines(paren_vor_value->nl_count);
+               constructorValue.NewLines(paren_vor_value->GetNlCount());
                constructorValue.Add(paren_vor_value);
             }
 
@@ -6051,11 +6051,11 @@ static void blank_line_max(Chunk *pc, Option<unsigned> &opt)
    const auto optval = opt();
 
    if (  (optval > 0)
-      && (pc->nl_count > optval))
+      && (pc->GetNlCount() > optval))
    {
       LOG_FMT(LBLANKD, "%s(%d): do_blank_lines: %s max line %zu\n",
               __func__, __LINE__, opt.name(), pc->GetOrigLine());
-      pc->nl_count = optval;
+      pc->SetNlCount(optval);
       MARK_CHANGE();
    }
 } // blank_line_max
@@ -6116,7 +6116,7 @@ void do_blank_lines()
       if (pc->Is(CT_NEWLINE))
       {
          LOG_FMT(LBLANKD, "%s(%d): orig line is %zu, orig col is %zu, <Newline>, nl is %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->nl_count);
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetNlCount());
       }
       else
       {
@@ -6124,8 +6124,8 @@ void do_blank_lines()
          LOG_FMT(LBLANKD, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy), get_token_name(pc->GetType()));
       }
-      LOG_FMT(LBLANK, "%s(%d): nl_count is %zu\n",
-              __func__, __LINE__, pc->nl_count);
+      LOG_FMT(LBLANK, "%s(%d): new line count is %zu\n",
+              __func__, __LINE__, pc->GetNlCount());
 
       if (pc->IsNot(CT_NEWLINE))
       {
@@ -6157,14 +6157,14 @@ void do_blank_lines()
          || next->IsNullChunk())
       {
          line_added = true;
-         ++pc->nl_count;
-         LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', ++ nl_count is now %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->nl_count);
+         pc->SetNlCount(pc->GetNlCount() + 1);
+         LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', new line count is now %zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->GetNlCount());
       }
 
       // Limit consecutive newlines
       if (  (options::nl_max() > 0)
-         && (pc->nl_count > options::nl_max()))
+         && (pc->GetNlCount() > options::nl_max()))
       {
          log_rule_B("nl_max");
          blank_line_max(pc, options::nl_max);
@@ -6175,16 +6175,16 @@ void do_blank_lines()
          LOG_FMT(LBLANKD, "%s(%d): force to 1 orig line is %zu, orig col is %zu\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
 
-         if (pc->nl_count != 1)
+         if (pc->GetNlCount() != 1)
          {
-            pc->nl_count = 1;
+            pc->SetNlCount(1);
             MARK_CHANGE();
          }
          continue;
       }
 
       // Control blanks before multi-line comments
-      if (  (options::nl_before_block_comment() > pc->nl_count)
+      if (  (options::nl_before_block_comment() > pc->GetNlCount())
          && next->Is(CT_COMMENT_MULTI))
       {
          log_rule_B("nl_before_block_comment");
@@ -6202,7 +6202,7 @@ void do_blank_lines()
       }
 
       // Control blanks before single line C comments
-      if (  (options::nl_before_c_comment() > pc->nl_count)
+      if (  (options::nl_before_c_comment() > pc->GetNlCount())
          && next->Is(CT_COMMENT))
       {
          log_rule_B("nl_before_c_comment");
@@ -6220,7 +6220,7 @@ void do_blank_lines()
       }
 
       // Control blanks before CPP comments
-      if (  (options::nl_before_cpp_comment() > pc->nl_count)
+      if (  (options::nl_before_cpp_comment() > pc->GetNlCount())
          && next->Is(CT_COMMENT_CPP))
       {
          log_rule_B("nl_before_cpp_comment");
@@ -6279,12 +6279,12 @@ void do_blank_lines()
          if (  tmp->IsNotNullChunk()
             && !start->TestFlags(PCF_INCOMPLETE))
          {
-            if (parent_type == CT_CLASS && options::nl_before_class() > tmp->nl_count)
+            if (parent_type == CT_CLASS && options::nl_before_class() > tmp->GetNlCount())
             {
                log_rule_B("nl_before_class");
                blank_line_set(tmp, options::nl_before_class);
             }
-            else if (parent_type == CT_STRUCT && options::nl_before_struct() > tmp->nl_count)
+            else if (parent_type == CT_STRUCT && options::nl_before_struct() > tmp->GetNlCount())
             {
                log_rule_B("nl_before_struct");
                blank_line_set(tmp, options::nl_before_struct);
@@ -6306,14 +6306,14 @@ void do_blank_lines()
          }
 
          if (  tmp->IsNotNullChunk()
-            && options::nl_before_namespace() > tmp->nl_count)
+            && options::nl_before_namespace() > tmp->GetNlCount())
          {
             log_rule_B("nl_before_namespace");
             blank_line_set(tmp, options::nl_before_namespace);
          }
 
          // Add blanks after namespace
-         if (options::nl_after_namespace() > pc->nl_count)
+         if (options::nl_after_namespace() > pc->GetNlCount())
          {
             log_rule_B("nl_after_namespace");
             blank_line_set(pc, options::nl_after_namespace);
@@ -6325,7 +6325,7 @@ void do_blank_lines()
          && next->Is(CT_BRACE_CLOSE)
          && (  prev->GetParentType() == CT_FUNC_DEF
             || prev->GetParentType() == CT_FUNC_CLASS_DEF)
-         && options::nl_inside_empty_func() > pc->nl_count
+         && options::nl_inside_empty_func() > pc->GetNlCount()
          && prev->TestFlags(PCF_EMPTY_BODY))
       {
          blank_line_set(pc, options::nl_inside_empty_func);
@@ -6334,7 +6334,7 @@ void do_blank_lines()
 
       // Control blanks after an access spec
       if (  (options::nl_after_access_spec() > 0)
-         && (options::nl_after_access_spec() != pc->nl_count)
+         && (options::nl_after_access_spec() != pc->GetNlCount())
          && prev->Is(CT_ACCESS_COLON))
       {
          log_rule_B("nl_after_access_spec");
@@ -6357,7 +6357,7 @@ void do_blank_lines()
       {
          if (prev->TestFlags(PCF_ONE_LINER))
          {
-            if (options::nl_after_func_body_one_liner() > pc->nl_count)
+            if (options::nl_after_func_body_one_liner() > pc->GetNlCount())
             {
                log_rule_B("nl_after_func_body_one_liner");
                blank_line_set(pc, options::nl_after_func_body_one_liner);
@@ -6370,7 +6370,7 @@ void do_blank_lines()
             {
                log_rule_B("nl_after_func_body_class");
 
-               if (options::nl_after_func_body_class() != pc->nl_count)
+               if (options::nl_after_func_body_class() != pc->GetNlCount())
                {
                   log_rule_B("nl_after_func_body_class");
                   blank_line_set(pc, options::nl_after_func_body_class);
@@ -6383,7 +6383,7 @@ void do_blank_lines()
                // Issue #1734
                if (!(pc->GetPrev()->TestFlags(PCF_IN_TRY_BLOCK)))
                {
-                  if (options::nl_after_func_body() != pc->nl_count)
+                  if (options::nl_after_func_body() != pc->GetNlCount())
                   {
                      log_rule_B("nl_after_func_body");
                      blank_line_set(pc, options::nl_after_func_body);
@@ -6398,14 +6398,14 @@ void do_blank_lines()
             && prev->GetParentType() == CT_FUNC_PROTO)
          || is_func_proto_group(prev, CT_FUNC_DEF))
       {
-         if (options::nl_after_func_proto() > pc->nl_count)
+         if (options::nl_after_func_proto() > pc->GetNlCount())
          {
             log_rule_B("nl_after_func_proto");
-            pc->nl_count = options::nl_after_func_proto();
+            pc->SetNlCount(options::nl_after_func_proto());
             MARK_CHANGE();
          }
 
-         if (  (options::nl_after_func_proto_group() > pc->nl_count)
+         if (  (options::nl_after_func_proto_group() > pc->GetNlCount())
             && next->IsNotNullChunk()
             && next->GetParentType() != CT_FUNC_PROTO
             && !is_func_proto_group(next, CT_FUNC_DEF))
@@ -6420,14 +6420,14 @@ void do_blank_lines()
             && prev->GetParentType() == CT_FUNC_CLASS_PROTO)
          || is_func_proto_group(prev, CT_FUNC_CLASS_DEF))
       {
-         if (options::nl_after_func_class_proto() > pc->nl_count)
+         if (options::nl_after_func_class_proto() > pc->GetNlCount())
          {
             log_rule_B("nl_after_func_class_proto");
-            pc->nl_count = options::nl_after_func_class_proto();
+            pc->SetNlCount(options::nl_after_func_class_proto());
             MARK_CHANGE();
          }
 
-         if (  (options::nl_after_func_class_proto_group() > pc->nl_count)
+         if (  (options::nl_after_func_class_proto_group() > pc->GetNlCount())
             && next->IsNot(CT_FUNC_CLASS_PROTO)
             && next->GetParentType() != CT_FUNC_CLASS_PROTO
             && !is_func_proto_group(next, CT_FUNC_CLASS_DEF))
@@ -6451,7 +6451,7 @@ void do_blank_lines()
          log_rule_B("nl_after_class");
          log_rule_B("nl_after_struct");
 
-         if (opt() > pc->nl_count)
+         if (opt() > pc->GetNlCount())
          {
             // Issue #1702
             // look back if we have a variable
@@ -6503,7 +6503,7 @@ void do_blank_lines()
       {
          log_rule_B("nl_comment_func_def");
 
-         if (options::nl_comment_func_def() != pc->nl_count)
+         if (options::nl_comment_func_def() != pc->GetNlCount())
          {
             log_rule_B("nl_comment_func_def");
             blank_line_set(pc, options::nl_comment_func_def);
@@ -6512,7 +6512,7 @@ void do_blank_lines()
 
       // Change blanks after a try-catch-finally block
       if (  (options::nl_after_try_catch_finally() != 0)
-         && (options::nl_after_try_catch_finally() != pc->nl_count)
+         && (options::nl_after_try_catch_finally() != pc->GetNlCount())
          && prev->IsNotNullChunk()
          && next->IsNotNullChunk())
       {
@@ -6534,7 +6534,7 @@ void do_blank_lines()
 
       // Change blanks after a try-catch-finally block
       if (  (options::nl_between_get_set() != 0)
-         && (options::nl_between_get_set() != pc->nl_count)
+         && (options::nl_between_get_set() != pc->GetNlCount())
          && prev->IsNotNullChunk()
          && next->IsNotNullChunk())
       {
@@ -6552,7 +6552,7 @@ void do_blank_lines()
 
       // Change blanks after a try-catch-finally block
       if (  (options::nl_around_cs_property() != 0)
-         && (options::nl_around_cs_property() != pc->nl_count)
+         && (options::nl_around_cs_property() != pc->GetNlCount())
          && prev->IsNotNullChunk()
          && next->IsNotNullChunk())
       {
@@ -6575,7 +6575,7 @@ void do_blank_lines()
 
       // Control blanks before an access spec
       if (  (options::nl_before_access_spec() > 0)
-         && (options::nl_before_access_spec() != pc->nl_count)
+         && (options::nl_before_access_spec() != pc->GetNlCount())
          && next->Is(CT_ACCESS))
       {
          log_rule_B("nl_before_access_spec");
@@ -6592,7 +6592,7 @@ void do_blank_lines()
 
       // Change blanks inside namespace braces
       if (  (options::nl_inside_namespace() != 0)
-         && (options::nl_inside_namespace() != pc->nl_count)
+         && (options::nl_inside_namespace() != pc->GetNlCount())
          && (  (  prev->Is(CT_BRACE_OPEN)
                && prev->GetParentType() == CT_NAMESPACE)
             || (  next->Is(CT_BRACE_CLOSE)
@@ -6604,7 +6604,7 @@ void do_blank_lines()
 
       // Control blanks before a whole-file #ifdef
       if (  options::nl_before_whole_file_ifdef() != 0
-         && options::nl_before_whole_file_ifdef() != pc->nl_count
+         && options::nl_before_whole_file_ifdef() != pc->GetNlCount()
          && next->Is(CT_PREPROC)
          && next->GetParentType() == CT_PP_IF
          && ifdef_over_whole_file()
@@ -6616,7 +6616,7 @@ void do_blank_lines()
 
       // Control blanks after a whole-file #ifdef
       if (  options::nl_after_whole_file_ifdef() != 0
-         && options::nl_after_whole_file_ifdef() != pc->nl_count)
+         && options::nl_after_whole_file_ifdef() != pc->GetNlCount())
       {
          Chunk *pp_start = prev->GetPpStart();
 
@@ -6632,7 +6632,7 @@ void do_blank_lines()
 
       // Control blanks before a whole-file #endif
       if (  options::nl_before_whole_file_endif() != 0
-         && options::nl_before_whole_file_endif() != pc->nl_count
+         && options::nl_before_whole_file_endif() != pc->GetNlCount()
          && next->Is(CT_PREPROC)
          && next->GetParentType() == CT_PP_ENDIF
          && ifdef_over_whole_file()
@@ -6644,7 +6644,7 @@ void do_blank_lines()
 
       // Control blanks after a whole-file #endif
       if (  options::nl_after_whole_file_endif() != 0
-         && options::nl_after_whole_file_endif() != pc->nl_count)
+         && options::nl_after_whole_file_endif() != pc->GetNlCount())
       {
          Chunk *pp_start = prev->GetPpStart();
 
@@ -6659,14 +6659,14 @@ void do_blank_lines()
       }
 
       if (  line_added
-         && pc->nl_count > 1)
+         && pc->GetNlCount() > 1)
       {
-         --pc->nl_count;
-         LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', -- nl_count is now %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->nl_count);
+         pc->SetNlCount(pc->GetNlCount() - 1);
+         LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', new line count is now %zu\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->GetNlCount());
       }
-      LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', end nl_count is now %zu\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->nl_count);
+      LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', end new line count is now %zu\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->GetNlCount());
    }
 } // do_blank_lines
 
@@ -6685,7 +6685,7 @@ void newlines_cleanup_dup()
       if (  pc->Is(CT_NEWLINE)
          && next->Is(CT_NEWLINE))
       {
-         next->nl_count = max(pc->nl_count, next->nl_count);
+         next->SetNlCount(max(pc->GetNlCount(), next->GetNlCount()));
          Chunk::Delete(pc);
          MARK_CHANGE();
       }
@@ -6753,7 +6753,7 @@ static void newlines_double_space_struct_enum_union(Chunk *open_brace)
          && prev->IsNot(CT_BRACE_OPEN)
          && pc->GetNext()->IsComment())
       {
-         if (pc->nl_count < 2)
+         if (pc->GetNlCount() < 2)
          {
             double_newline(pc);
          }
@@ -6833,7 +6833,7 @@ bool newlines_between(Chunk *pc_start, Chunk *pc_end, size_t &newlines, E_Scope 
 
    for ( ; it->IsNotNullChunk() && it != pc_end; it = it->GetNext(scope))
    {
-      newlines += it->nl_count;
+      newlines += it->GetNlCount();
    }
 
    // newline count is valid if search stopped on expected chunk

@@ -427,7 +427,7 @@ static void remove_blank_lines_between_imports(Chunk **chunks, size_t num_chunks
    for (size_t idx = 0; idx < (num_chunks - 1); idx++)
    {
       Chunk *chunk1 = chunks[idx]->GetNextNl();
-      chunk1->nl_count = 1;
+      chunk1->SetNlCount(1);
       MARK_CHANGE();
    }
 }
@@ -497,7 +497,7 @@ static void blankline_add_before(Chunk *pc)
 {
    Chunk *newline = newline_add_before(pc->GetFirstChunkOnLine());
 
-   if (newline->nl_count < 2)
+   if (newline->GetNlCount() < 2)
    {
       double_newline(newline);
    }
@@ -646,7 +646,7 @@ void sort_imports()
 
          if (  !did_import
             || (  !options::mod_sort_incl_import_grouping_enabled()
-               && pc->nl_count > 1)
+               && pc->GetNlCount() > 1)
             || (  options::mod_sort_incl_import_grouping_enabled()
                && p_imp_last != nullptr
                && (pc->GetOrigLine() - p_imp_last->GetOrigLine()) > max_gap_threshold_between_include_to_sort)

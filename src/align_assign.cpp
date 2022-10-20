@@ -154,7 +154,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, size_t *p_nl_count
 
       if (pc->IsNewline())
       {
-         nl_count = pc->nl_count;
+         nl_count = pc->GetNlCount();
       }
       else if (  pc->TestFlags(PCF_VAR_DEF)
               && !pc->TestFlags(PCF_IN_CONST_ARGS) // Issue #1717

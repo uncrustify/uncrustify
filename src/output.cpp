@@ -526,7 +526,7 @@ void output_parsed(FILE *pfile, bool withOptions)
               eol_marker, (int)pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               (int)pc->GetColumn(), (int)pc->GetOrigCol(), (int)pc->GetOrigColEnd(), (int)pc->GetOrigPrevSp(),
-              (int)pc->GetBraceLevel(), (int)pc->level, (int)pc->GetPpLevel(), (int)pc->nl_count, pc->GetAfterTab());
+              (int)pc->GetBraceLevel(), (int)pc->level, (int)pc->GetPpLevel(), (int)pc->GetNlCount(), pc->GetAfterTab());
 #else // not WIN32
       fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3zu][%zu/%zu/%zu]",
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
@@ -538,7 +538,7 @@ void output_parsed(FILE *pfile, bool withOptions)
       sprintf(flag_string, "%12llx", static_cast<T_PcfFlags::int_t>(pc->GetFlags()));
       fprintf(pfile, "[%.4s %.4s %.4s]", flag_string, flag_string + 4, flag_string + 8);
       fprintf(pfile, "[%zu-%d]",
-              pc->nl_count, pc->GetAfterTab());
+              pc->GetNlCount(), pc->GetAfterTab());
 #endif // ifdef WIN32
 
       if (  pc->IsNot(CT_NEWLINE)
@@ -601,7 +601,7 @@ void output_parsed_csv(FILE *pfile)
                                                   pcf_flag_str_end - pcf_flag_str_start);
       fprintf(pfile, "\"%s\",", pcf_names.c_str());
       fprintf(pfile, "%zu,%d,",
-              pc->nl_count, pc->GetAfterTab());
+              pc->GetNlCount(), pc->GetAfterTab());
 
       if (  pc->IsNot(CT_NEWLINE)
          && (pc->Len() != 0))
@@ -707,12 +707,12 @@ void output_text(FILE *pfile)
    {
       char copy[1000];
       LOG_FMT(LCONTTEXT, "%s(%d): Text() is '%s', type is %s, orig line is %zu, column is %zu, nl is %zu\n",
-              __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetColumn(), pc->nl_count);
+              __func__, __LINE__, pc->ElidedText(copy), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetColumn(), pc->GetNlCount());
       cpd.output_tab_as_space = false;
 
       if (pc->Is(CT_NEWLINE))
       {
-         for (size_t cnt = 0; cnt < pc->nl_count; cnt++)
+         for (size_t cnt = 0; cnt < pc->GetNlCount(); cnt++)
          {
             if (  cnt > 0
                && pc->nl_column > 1)
@@ -767,14 +767,14 @@ void output_text(FILE *pfile)
                   while (  prev != nullptr
                         && prev->IsNotNullChunk()
                         && prev->GetOrigCol() == 0
-                        && prev->nl_count == 0)
+                        && prev->GetNlCount() == 0)
                   {
                      prev = prev->GetPrev();
                   }
 
                   if (  prev != nullptr
                      && prev->IsNotNullChunk()
-                     && prev->nl_count == 0)
+                     && prev->GetNlCount() == 0)
                   {
                      int orig_sp = pc->GetOrigPrevSp();
 
@@ -1868,7 +1868,7 @@ static bool can_combine_comment(Chunk *pc, cmt_reflow &cmt)
    Chunk *next = pc->GetNext();
 
    if (  next->IsNotNullChunk()
-      && next->nl_count == 1)
+      && next->GetNlCount() == 1)
    {
       // Make sure the comment is the same type at the same column
       next = next->GetNext();
@@ -3530,7 +3530,7 @@ void add_long_preprocessor_conditional_block_comment()
 
          if (tmp->IsNewline())
          {
-            nl_count += tmp->nl_count;
+            nl_count += tmp->GetNlCount();
          }
          else if (  pp_end->GetPpLevel() == pp_start->GetPpLevel()
                  && (  tmp->Is(CT_PP_ENDIF)
@@ -3538,7 +3538,7 @@ void add_long_preprocessor_conditional_block_comment()
          {
             br_close = tmp;
 
-            LOG_FMT(LPPIF, "found #if / %s section on lines %zu and %zu, nl_count=%zu\n",
+            LOG_FMT(LPPIF, "found #if / %s section on lines %zu and %zu, new line count=%zu\n",
                     (tmp->Is(CT_PP_ENDIF) ? "#endif" : "#else"),
                     br_open->GetOrigLine(), br_close->GetOrigLine(), nl_count);
 
@@ -3565,7 +3565,7 @@ void add_long_preprocessor_conditional_block_comment()
                   nl_min = options::mod_add_long_ifdef_else_comment();
                }
                const char *txt = !tmp ? "EOF" : ((tmp->Is(CT_PP_ENDIF)) ? "#endif" : "#else");
-               LOG_FMT(LPPIF, "#if / %s section candidate for augmenting when over NL threshold %zu != 0 (nl_count=%zu)\n",
+               LOG_FMT(LPPIF, "#if / %s section candidate for augmenting when over NL threshold %zu != 0 (new line count=%zu)\n",
                        txt, nl_min, nl_count);
 
                if (  nl_min > 0
@@ -3578,7 +3578,7 @@ void add_long_preprocessor_conditional_block_comment()
                   unc_text str;
                   generate_if_conditional_as_text(str, br_open);
 
-                  LOG_FMT(LPPIF, "#if / %s section over threshold %zu (nl_count=%zu) --> insert comment after the %s: %s\n",
+                  LOG_FMT(LPPIF, "#if / %s section over threshold %zu (new line count=%zu) --> insert comment after the %s: %s\n",
                           txt, nl_min, nl_count, txt, str.c_str());
 
                   // Add a comment after the close brace

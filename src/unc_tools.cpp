@@ -86,7 +86,7 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine, unsigne
             }
             else if (pc->Is(CT_NEWLINE))
             {
-               LOG_FMT(LGUY, "<NL>(nl_count is %zu), ", pc->nl_count);
+               LOG_FMT(LGUY, "<NL>(new line count is %zu), ", pc->GetNlCount());
             }
             else if (pc->Is(CT_VBRACE_CLOSE))
             {
@@ -166,9 +166,9 @@ void prot_all_lines(const char *func_name, int theLine)
       }
       else if (pc->Is(CT_NEWLINE))
       {
-         LOG_FMT(LGUY, "<NL>(nl_count is %zu), ", pc->nl_count);
+         LOG_FMT(LGUY, "<NL>(new line count is %zu), ", pc->GetNlCount());
          tokenCounter = 0;
-         lineNumber   = lineNumber + pc->nl_count;
+         lineNumber   = lineNumber + pc->GetNlCount();
       }
       else if (pc->Is(CT_VBRACE_CLOSE))
       {
@@ -331,9 +331,9 @@ void dump_out(unsigned int type)
             fprintf(D_file, "  column indent %zu\n", pc->GetColumnIndent());
          }
 
-         if (pc->nl_count != 0)
+         if (pc->GetNlCount() != 0)
          {
-            fprintf(D_file, "  nl_count %zu\n", pc->nl_count);
+            fprintf(D_file, "  nl_count %zu\n", pc->GetNlCount());
          }
 
          if (pc->level != 0)
@@ -445,7 +445,7 @@ void dump_in(unsigned int type)
             }
             else if (strcasecmp(parts[0], "nl_count") == 0)
             {
-               chunk.nl_count = strtol(parts[1], nullptr, 0);
+               chunk.SetNlCount(strtol(parts[1], nullptr, 0));
             }
             else if (strcasecmp(parts[0], "text") == 0)
             {

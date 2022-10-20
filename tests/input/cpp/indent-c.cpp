@@ -175,7 +175,7 @@ void reindent_line(Chunk *pc, int column)
             }
          }
       }
-   } while ((pc != NULL) && (pc->nl_count == 0));
+   } while ((pc != NULL) && (pc->GetNlCount() == 0));
 }
 
 
@@ -836,7 +836,7 @@ static bool single_line_comment_indent_rule_applies(Chunk *start)
    {
       if (pc->IsNewline())
       {
-         if (nl_count > 0 || pc->nl_count > 1)
+         if (nl_count > 0 || pc->GetNlCount() > 1)
          {
             return(false);
          }
@@ -913,7 +913,7 @@ static void indent_comment(Chunk *pc, int col)
    /* outside of any expression or statement? */
    if (pc->level == 0)
    {
-      if ((nl != NULL) && (nl->nl_count > 1))
+      if ((nl != NULL) && (nl->GetNlCount() > 1))
       {
          LOG_FMT(LCMTIND, "rule 2 - level 0, nl before\n");
          pc->SetColumn(1);
@@ -922,7 +922,7 @@ static void indent_comment(Chunk *pc, int col)
    }
 
    prev = nl->GetPrev();
-   if (prev->IsComment() && (nl->nl_count == 1))
+   if (prev->IsComment() && (nl->GetNlCount() == 1))
    {
       int coldiff = prev->GetOrigCol() - pc->GetOrigCol();
 

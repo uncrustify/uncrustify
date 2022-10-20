@@ -43,8 +43,8 @@ void align_preprocessor()
       // Note: not counting back-slash newline combos
       if (pc->Is(CT_NEWLINE))   // mind the gap: pc->IsNewline() is NOT the same!
       {
-         as.NewLines(pc->nl_count);
-         asf.NewLines(pc->nl_count);
+         as.NewLines(pc->GetNlCount());
+         asf.NewLines(pc->GetNlCount());
       }
 
       // If we aren't on a 'define', then skip to the next non-comment

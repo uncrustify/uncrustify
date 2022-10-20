@@ -226,6 +226,17 @@ public:
    void SetColumnIndent(size_t col);
 
    /**
+    * @brief Returns the number of newlines in a CT_NEWLINE chunk
+    */
+   size_t GetNlCount() const;
+
+   /**
+    * @brief Sets the number of newlines in a CT_NEWLINE chunk
+    * @param cnt the number of newlines
+    */
+   void SetNlCount(size_t cnt);
+
+   /**
     * @brief Returns the brace level of the chunk
     */
    size_t GetBraceLevel() const;
@@ -945,7 +956,6 @@ public:
    // --------- Data members
    align_ptr_t  align;
    indent_ptr_t indent;
-   size_t       nl_count;                    //! number of newlines in CT_NEWLINE
    size_t       nl_column;                   //! column of the subsequent newline entries(all of them should have the same column)
    size_t       level;                       /** nest level in {, (, or [. Only to help vim command } */
    unc_text     str;                         //! the token text
@@ -993,6 +1003,7 @@ protected:
    size_t     m_column;                     //! column of the chunk
    size_t     m_columnIndent;               //! if 1st chunk on a line, set to the 'indent' column, which may
                                             //! be less than the real column used to indent with tabs
+   size_t     m_nlCount;                    //! number of newlines in CT_NEWLINE
    size_t     m_braceLevel;                 //! nest level in braces only
    size_t     m_ppLevel;                    //! nest level in preprocessor
    bool       m_afterTab;                   //! whether this token was after a tab
@@ -1184,6 +1195,18 @@ inline size_t Chunk::GetColumnIndent() const
 inline void Chunk::SetColumnIndent(size_t col)
 {
    m_columnIndent = col;
+}
+
+
+inline size_t Chunk::GetNlCount() const
+{
+   return(m_nlCount);
+}
+
+
+inline void Chunk::SetNlCount(size_t cnt)
+{
+   m_nlCount = cnt;
 }
 
 
