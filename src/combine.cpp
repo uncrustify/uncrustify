@@ -1616,7 +1616,23 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
                   }
                   else if (tmp->Is(CT_DC_MEMBER))
                   {
-                     prev->SetType(CT_TYPE);
+                     // Issue #2103 & Issue #3865: partial fix
+                     // No easy way to tell between an enum and a type with
+                     // a namespace qualifier. Compromise: if we're in a
+                     // function def or call, assume it's a ref.
+                     Chunk *nextNext = next->GetNext();
+
+                     if (  nextNext->IsNot(CT_DC_MEMBER)
+                        && (  pc->TestFlags(PCF_IN_FCN_CALL)
+                           || pc->TestFlags(PCF_IN_FCN_CTOR)
+                           || pc->TestFlags(PCF_IN_FCN_DEF)))
+                     {
+                        pc->SetType(CT_BYREF);
+                     }
+                     else
+                     {
+                        prev->SetType(CT_TYPE);
+                     }
                   }
                }
             }
