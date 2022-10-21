@@ -1920,7 +1920,6 @@ void fix_symbols()
 {
    LOG_FUNC_ENTRY();
    Chunk *pc;
-   Chunk dummy;
 
    cpd.unc_stage = unc_stage_e::FIX_SYMBOLS;
 
@@ -2000,7 +1999,6 @@ void fix_symbols()
 
       if (prev->IsNullChunk())
       {
-         prev = &dummy;
          LOG_FMT(LFCNR, "%s(%d): WARNING: prev is NOT defined\n", __func__, __LINE__);
       }
       else
@@ -2013,7 +2011,6 @@ void fix_symbols()
 
       if (next->IsNullChunk())
       {
-         next = &dummy;
          LOG_FMT(LFCNR, "%s(%d): WARNING: next is NOT defined\n", __func__, __LINE__);
       }
       else
