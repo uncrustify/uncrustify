@@ -695,6 +695,10 @@ sp_ellipsis_parameter_pack;
 extern Option<iarf_e>
 sp_parameter_pack_ellipsis;
 
+// Add or remove space between a parameter pack and '}'.
+extern Option<iarf_e>
+sp_pack_brace;
+
 // Add or remove space between 'decltype' and '('.
 extern Option<iarf_e>
 sp_decltype_paren;

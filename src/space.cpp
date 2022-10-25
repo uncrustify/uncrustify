@@ -765,6 +765,15 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
    }
 
+   if (first->Is(CT_PARAMETER_PACK))
+   {
+      if (second->Is(CT_BRACE_OPEN))                // Issue #3838
+      {
+         log_rule("sp_pack_brace");
+         return(options::sp_pack_brace());
+      }
+   }
+
    if (  language_is_set(LANG_PAWN)
       && first->Is(CT_TAG_COLON))
    {
