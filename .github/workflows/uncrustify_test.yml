@@ -1,5 +1,3 @@
----
-
 name: uncrustify_test
 on: [push, pull_request]
 
@@ -9,30 +7,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  check-uncrustify:
+  uncrustify:
+    name: ${{ matrix.build_type }} - ${{ matrix.generator }}
+    strategy:
+      matrix:
+        include:
+          - build_type: Debug
+            generator: Ninja
+          - build_type: Release
+            generator: Unix Makefiles
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: cmake-part-and-tests
-        env:
-          BADGE: linux
-        run: mkdir build;
-          cd build;
-          cmake -DCMAKE_BUILD_TYPE=Release ..;
-          make;
-          ../scripts/run_ctest.py
-
-
-  debug-ninja-uncrustify:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: seanmiddleditch/gha-setup-ninja@master
       - name: cmake-part-and-tests
         env:
           BADGE: linux
-        run: mkdir build;
-          cd build;
-          cmake -GNinja -DCMAKE_BUILD_TYPE=Debug ..;
-          ninja;
+        run: |
+          cmake -B build -G "${{ matrix.generator }}" -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          cmake --build build
+          cd build
           ../scripts/run_ctest.py
