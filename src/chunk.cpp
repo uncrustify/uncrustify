@@ -42,9 +42,9 @@ void Chunk::CopyFrom(const Chunk &o)
    m_column       = o.m_column;
    m_columnIndent = o.m_columnIndent;
 
-   m_nlCount = o.m_nlCount;
-   nl_column = o.nl_column;
-   level     = o.level;
+   m_nlCount  = o.m_nlCount;
+   m_nlColumn = o.m_nlColumn;
+   level      = o.level;
 
    m_braceLevel = o.m_braceLevel;
    m_ppLevel    = o.m_ppLevel;
@@ -72,7 +72,7 @@ void Chunk::Reset()
    m_column       = 0;
    m_columnIndent = 0;
    m_nlCount      = 0;
-   nl_column      = 0;
+   m_nlColumn     = 0;
    level          = 0;
    m_braceLevel   = 0;
    m_ppLevel      = 999;                                // use a big value to find some errors
