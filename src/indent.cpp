@@ -1437,7 +1437,7 @@ void indent_text()
       if (  pc->Is(CT_NEWLINE)
          && options::indent_single_newlines())
       {
-         pc->nl_column = indent_column;
+         pc->SetNlColumn(indent_column);
       }
 
       if (  !pc->IsCommentOrNewline()

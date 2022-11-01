@@ -715,17 +715,17 @@ void output_text(FILE *pfile)
          for (size_t cnt = 0; cnt < pc->GetNlCount(); cnt++)
          {
             if (  cnt > 0
-               && pc->nl_column > 1)
+               && pc->GetNlColumn() > 1)
             {
                log_rule_B("indent_with_tabs - newline");
 
                if (pc->IsPreproc())
                {
-                  output_to_column(pc->nl_column, (pp_indent_with_tabs == 2));
+                  output_to_column(pc->GetNlColumn(), (pp_indent_with_tabs == 2));
                }
                else
                {
-                  output_to_column(pc->nl_column, (options::indent_with_tabs() == 2));
+                  output_to_column(pc->GetNlColumn(), (options::indent_with_tabs() == 2));
                }
             }
             add_char('\n');
