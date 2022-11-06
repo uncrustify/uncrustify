@@ -143,8 +143,8 @@ void align_same_func_call_params()
             && align_fcn_name.equals(align_root_name))
          {
             fcn_as.Add(pc);
-            align_cur->align.next = pc;
-            align_cur             = pc;
+            align_cur->AlignmentData().next = pc;
+            align_cur = pc;
             align_len++;
             add_str = "  Add";
          }
