@@ -4,6 +4,9 @@
 # PyCharm help directory
 venv/
 
+# PyCharm .run directory
+.run/
+
 # Compiled Python code
 *.pyc
 
