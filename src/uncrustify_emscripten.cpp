@@ -487,9 +487,8 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    // Problem: uncrustify originally is not a lib and uses global vars such as
    // cpd.error_count for the whole program execution
    // to know if errors occurred during the formatting step we reset this var here
-   cpd.error_count = 0;
-   cpd.filename    = "stdin";
-   cpd.frag        = frag;
+   cpd.filename = "stdin";
+   cpd.frag     = frag;
 
    if (langIDX == 0)   // 0 == undefined
    {
@@ -562,11 +561,6 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
 
    fflush(stream);
    fclose(stream);
-
-   if (cpd.error_count != 0)
-   {
-      LOG_FMT(LWARN, "%d errors occurred during formatting\n", cpd.error_count);
-   }
 
    if (len == 0)
    {

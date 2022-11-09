@@ -433,7 +433,7 @@ void combine_labels()
                              get_token_name(next->GetParentType()),
                              get_token_name(cur->GetParentType()),
                              next->level, next->GetBraceLevel());
-                     cpd.error_count++;
+                     exit(EX_SOFTWARE);
                   }
                }
             }

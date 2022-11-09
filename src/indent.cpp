@@ -4347,7 +4347,7 @@ null_pc:
               __func__, __LINE__, cpd.filename.c_str(), frm.at(idx_temp).open_line,
               get_token_name(frm.at(idx_temp).parent),
               get_token_name(frm.at(idx_temp).type));
-      cpd.error_count++;
+      exit(EX_IOERR);
    }
 
    LOG_FMT(LINDLINE, "%s(%d): before quick_align_again\n", __func__, __LINE__);

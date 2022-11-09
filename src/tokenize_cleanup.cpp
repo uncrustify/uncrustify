@@ -394,7 +394,7 @@ void tokenize_cleanup()
             {
                LOG_FMT(LERR, "%s(%d): %s:%zu: version: Unexpected token %s\n",
                        __func__, __LINE__, cpd.filename.c_str(), pc->GetOrigLine(), get_token_name(next->GetType()));
-               cpd.error_count++;
+               exit(EX_SOFTWARE);
             }
             pc->SetType(CT_WORD);
          }

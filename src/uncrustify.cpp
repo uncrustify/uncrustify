@@ -346,9 +346,8 @@ NODISCARD static int redir_stdout(const char *output_file)
       {
          LOG_FMT(LERR, "Unable to open %s for write: %s (%d)\n",
                  output_file, strerror(errno), errno);
-         cpd.error_count++;
          usage_error();
-         return(EX_IOERR);
+         exit(EX_IOERR);
       }
       LOG_FMT(LNOTE, "Redirecting output to %s\n", output_file);
    }
@@ -888,8 +887,7 @@ int main(int argc, char *argv[])
       if (load_mem_file(source_file, fm) < 0)
       {
          LOG_FMT(LERR, "Failed to load (%s)\n", source_file);
-         cpd.error_count++;
-         return(EXIT_FAILURE);
+         exit(EX_IOERR);
       }
       uncrustify_start(fm.data);
       detect_options();
@@ -995,8 +993,7 @@ int main(int argc, char *argv[])
       if (!read_stdin(fm))
       {
          LOG_FMT(LERR, "Failed to read stdin\n");
-         cpd.error_count++;
-         return(100);
+         exit(EX_IOERR);
       }
       cpd.filename = "stdin";
 
@@ -1058,11 +1055,6 @@ int main(int argc, char *argv[])
    }
    clear_keyword_file();
 
-   if (cpd.error_count != 0)
-   {
-      return(EXIT_FAILURE);
-   }
-
    if (  cpd.do_check
       && cpd.check_fail_cnt != 0)
    {
@@ -1083,8 +1075,7 @@ static void process_source_list(const char *source_list,
    {
       LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
               __func__, source_list, strerror(errno), errno);
-      cpd.error_count++;
-      return;
+      exit(EX_IOERR);
    }
    char linebuf[256];
    int  line = 0;
@@ -1200,8 +1191,7 @@ static void make_folders(const string &filename)
             {
                LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
                        __func__, outname, strerror(errno), errno);
-               cpd.error_count++;
-               return;
+               exit(EX_IOERR);
             }
          }
          outname[idx] = PATH_SEP; // reconstruct full path to search for next subpath
@@ -1258,12 +1248,12 @@ static int load_mem_file(const char *filename, file_mem &fm)
       {
          LOG_FMT(LERR, "%s: fread(%s) failed: %s (%d)\n",
                  __func__, filename, strerror(errno), errno);
-         cpd.error_count++;
+         exit(EX_IOERR);
       }
       else if (!decode_unicode(fm.raw, fm.data, fm.enc, fm.bom))
       {
          LOG_FMT(LERR, "%s: failed to decode the file '%s'\n", __func__, filename);
-         cpd.error_count++;
+         exit(EX_IOERR);
       }
       else
       {
@@ -1299,7 +1289,7 @@ static int load_mem_file_config(const std::string &filename, file_mem &fm)
       if (retval < 0)
       {
          LOG_FMT(LERR, "Failed to load (%s) or (%s)\n", buf, filename.c_str());
-         cpd.error_count++;
+         exit(EX_IOERR);
       }
    }
    return(retval);
@@ -1528,8 +1518,7 @@ static void do_source_file(const char *filename_in,
    if (load_mem_file(filename_in, fm) < 0)
    {
       LOG_FMT(LERR, "Failed to load (%s)\n", filename_in);
-      cpd.error_count++;
-      return;
+      exit(EX_IOERR);
    }
    LOG_FMT(LSYS, "%s(%d): Parsing: %s as language %s\n",
            __func__, __LINE__, filename_in, language_name_from_flags(cpd.lang_flags));
@@ -1587,8 +1576,7 @@ static void do_source_file(const char *filename_in,
                {
                   LOG_FMT(LERR, "%s: Failed to create backup file for %s\n",
                           __func__, filename_in);
-                  cpd.error_count++;
-                  return;
+                  exit(EX_IOERR);
                }
                need_backup = true;
             }
@@ -1601,8 +1589,7 @@ static void do_source_file(const char *filename_in,
          {
             LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
                     __func__, filename_tmp.c_str(), strerror(errno), errno);
-            cpd.error_count++;
-            return;
+            exit(EX_IOERR);
          }
          did_open = true;
          //LOG_FMT(LSYS, "Output file %s\n", filename_out);
@@ -1657,7 +1644,7 @@ static void do_source_file(const char *filename_in,
             {
                LOG_FMT(LERR, "%s: Unable to rename '%s' to '%s'\n",
                        __func__, filename_tmp.c_str(), filename_out);
-               cpd.error_count++;
+               exit(EX_IOERR);
             }
          }
       }
@@ -2083,8 +2070,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
                  cpd.filename.c_str(), count_line, count_column);
          LOG_FMT(LERR, "The file may be encoded in an unsupported Unicode format.\n");
          LOG_FMT(LERR, "Aborting.\n");
-         cpd.error_count++;
-         return;
+         exit(EX_IOERR);
       }
       count_column++;
 
@@ -2476,7 +2462,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file,
       {
          LOG_FMT(LERR, "%s: Failed to open '%s' for write: %s (%d)\n",
                  __func__, parsed_file, strerror(errno), errno);
-         cpd.error_count++;
+         exit(EX_IOERR);
       }
    }
 

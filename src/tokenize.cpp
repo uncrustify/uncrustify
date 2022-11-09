@@ -1362,7 +1362,7 @@ static bool parse_cs_string(tok_ctx &ctx, Chunk &pc)
 
                if (warnlevel < LWARN)
                {
-                  cpd.error_count++;
+                  // TODO: replace the code ?? cpd.error_count++;
                }
             }
          }
@@ -2536,8 +2536,7 @@ static bool parse_next(tok_ctx &ctx, Chunk &pc, const Chunk *prev_pc)
 
    LOG_FMT(LWARN, "%s:%zu Garbage in col %zu: %x\n",
            cpd.filename.c_str(), pc.GetOrigLine(), ctx.c.col, pc.str[0]);
-   cpd.error_count++;
-   return(true);
+   exit(EX_SOFTWARE);
 } // parse_next
 
 
@@ -2671,8 +2670,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
       {
          LOG_FMT(LERR, "%s:%zu Bailed before the end?\n",
                  cpd.filename.c_str(), ctx.c.row);
-         cpd.error_count++;
-         break;
+         exit(EX_SOFTWARE);
       }
 
       if (  language_is_set(LANG_JAVA)
