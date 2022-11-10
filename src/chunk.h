@@ -128,6 +128,16 @@ public:
    align_ptr_t &AlignmentData();
 
    /**
+    * @brief Returns the indentation data of the chunk as a const reference
+    */
+   const indent_ptr_t &GetIndentData() const;
+
+   /**
+    * @brief Returns the indentation data of the chunk as a modifiable reference
+    */
+   indent_ptr_t &IndentData();
+
+   /**
     * @brief Returns the type of the parent chunk
     */
    E_Token GetTypeOfParent() const;
@@ -975,9 +985,8 @@ public:
 
 
    // --------- Data members
-   indent_ptr_t indent;
-   size_t       level;                       /** nest level in {, (, or [. Only to help vim command } */
-   unc_text     str;                         //! the token text
+   size_t   level;                           /** nest level in {, (, or [. Only to help vim command } */
+   unc_text str;                             //! the token text
 
    // for debugging purpose only
    track_list *tracking;
@@ -1012,25 +1021,26 @@ protected:
 
 
    // --------- Data members
-   Chunk       *m_next;                      //! pointer to next chunk in list
-   Chunk       *m_prev;                      //! pointer to previous chunk in list
-   Chunk       *m_parent;                    //! pointer to parent chunk (not always set)
-   align_ptr_t m_alignmentData;              //! alignment data of the chunk
-   size_t      m_origLine;                   //! line number of chunk in input file
-   size_t      m_origCol;                    //! column where chunk started in the input file, is always > 0
-   size_t      m_origColEnd;                 //! column where chunk ended in the input file, is always > 1
-   size_t      m_origPrevSp;                 //! whitespace before this token
-   size_t      m_column;                     //! column of the chunk
-   size_t      m_columnIndent;               //! if 1st chunk on a line, set to the 'indent' column, which may
-                                             //! be less than the real column used to indent with tabs
-   size_t      m_nlCount;                    //! number of newlines in CT_NEWLINE
-   size_t      m_nlColumn;                   //! column of the subsequent newline entries(all of them should have the same column)
-   size_t      m_braceLevel;                 //! nest level in braces only
-   size_t      m_ppLevel;                    //! nest level in preprocessor
-   bool        m_afterTab;                   //! whether this token was after a tab
-   E_Token     m_type;                       //! type of the chunk itself
-   E_Token     m_parentType;                 //! type of the parent chunk usually CT_NONE
-   T_PcfFlags  m_flags;                      //! see PCF_xxx
+   Chunk        *m_next;                      //! pointer to next chunk in list
+   Chunk        *m_prev;                      //! pointer to previous chunk in list
+   Chunk        *m_parent;                    //! pointer to parent chunk (not always set)
+   align_ptr_t  m_alignmentData;              //! alignment data of the chunk
+   indent_ptr_t m_indentData;                 //! indentation data of the chunk
+   size_t       m_origLine;                   //! line number of chunk in input file
+   size_t       m_origCol;                    //! column where chunk started in the input file, is always > 0
+   size_t       m_origColEnd;                 //! column where chunk ended in the input file, is always > 1
+   size_t       m_origPrevSp;                 //! whitespace before this token
+   size_t       m_column;                     //! column of the chunk
+   size_t       m_columnIndent;               //! if 1st chunk on a line, set to the 'indent' column, which may
+                                              //! be less than the real column used to indent with tabs
+   size_t       m_nlCount;                    //! number of newlines in CT_NEWLINE
+   size_t       m_nlColumn;                   //! column of the subsequent newline entries(all of them should have the same column)
+   size_t       m_braceLevel;                 //! nest level in braces only
+   size_t       m_ppLevel;                    //! nest level in preprocessor
+   bool         m_afterTab;                   //! whether this token was after a tab
+   E_Token      m_type;                       //! type of the chunk itself
+   E_Token      m_parentType;                 //! type of the parent chunk usually CT_NONE
+   T_PcfFlags   m_flags;                      //! see PCF_xxx
 
 
 private:
@@ -1098,6 +1108,18 @@ inline const align_ptr_t &Chunk::GetAlignmentData() const
 inline align_ptr_t &Chunk::AlignmentData()
 {
    return(m_alignmentData);
+}
+
+
+inline const indent_ptr_t &Chunk::GetIndentData() const
+{
+   return(m_indentData);
+}
+
+
+inline indent_ptr_t &Chunk::IndentData()
+{
+   return(m_indentData);
 }
 
 

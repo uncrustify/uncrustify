@@ -624,7 +624,7 @@ static void quick_indent_again()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      if (pc->indent.ref == nullptr)
+      if (pc->GetIndentData().ref == nullptr)
       {
          continue;
       }
@@ -634,13 +634,13 @@ static void quick_indent_again()
       {
          continue;
       }
-      const size_t col = pc->indent.ref->GetColumn() + pc->indent.delta;
+      const size_t col = pc->GetIndentData().ref->GetColumn() + pc->GetIndentData().delta;
       indent_to_column(pc, col);
 
       LOG_FMT(LINDENTAG, "%s(%d): [%zu] indent [%s] to %zu based on [%s] @ %zu:%zu\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->Text(), col,
-              pc->indent.ref->Text(), pc->indent.ref->GetOrigLine(),
-              pc->indent.ref->GetColumn());
+              pc->GetIndentData().ref->Text(), pc->GetIndentData().ref->GetOrigLine(),
+              pc->GetIndentData().ref->GetColumn());
    }
 }
 
@@ -1541,8 +1541,8 @@ void indent_text()
                {
                   if (frm.top().ip.ref)
                   {
-                     pc->indent.ref   = frm.top().ip.ref;
-                     pc->indent.delta = 0;
+                     pc->IndentData().ref   = frm.top().ip.ref;
+                     pc->IndentData().delta = 0;
                   }
 
                   while (count-- > 0)
@@ -1578,8 +1578,8 @@ void indent_text()
 
                   if (frm.top().ip.ref)
                   {
-                     pc->indent.ref   = frm.top().ip.ref;
-                     pc->indent.delta = 0;
+                     pc->IndentData().ref   = frm.top().ip.ref;
+                     pc->IndentData().delta = 0;
                   }
                   LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
                           __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
@@ -1594,8 +1594,8 @@ void indent_text()
 
             if (frm.top().ip.ref)
             {
-               pc->indent.ref   = frm.top().ip.ref;
-               pc->indent.delta = 0;
+               pc->IndentData().ref   = frm.top().ip.ref;
+               pc->IndentData().delta = 0;
             }
             LOG_FMT(LINDLINE, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
                     __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
@@ -3561,8 +3561,8 @@ void indent_text()
 
          if (frm.top().ip.ref)
          {
-            pc->indent.ref   = frm.top().ip.ref;
-            pc->indent.delta = frm.top().ip.delta;
+            pc->IndentData().ref   = frm.top().ip.ref;
+            pc->IndentData().delta = frm.top().ip.delta;
          }
          LOG_FMT(LINDENT2, "%s(%d): orig line is %zu, pc->GetColumn() indent is %zu, indent_column is %zu, for '%s'\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetColumnIndent(), indent_column, pc->ElidedText(copy));
