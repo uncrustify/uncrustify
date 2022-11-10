@@ -30,7 +30,7 @@ void Chunk::CopyFrom(const Chunk &o)
    m_prev          = Chunk::NullChunkPtr;
    m_parent        = Chunk::NullChunkPtr;
    m_alignmentData = o.m_alignmentData;
-   indent          = o.indent;
+   m_indentData    = o.m_indentData;
    m_type          = o.m_type;
    m_parentType    = o.m_parentType;
 
@@ -58,7 +58,7 @@ void Chunk::CopyFrom(const Chunk &o)
 void Chunk::Reset()
 {
    memset(&m_alignmentData, 0, sizeof(m_alignmentData));
-   memset(&indent, 0, sizeof(indent));
+   memset(&m_indentData, 0, sizeof(m_indentData));
    m_next         = Chunk::NullChunkPtr;
    m_prev         = Chunk::NullChunkPtr;
    m_parent       = Chunk::NullChunkPtr;
