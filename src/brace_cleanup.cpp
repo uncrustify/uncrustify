@@ -490,7 +490,6 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
                        pc->Text(), get_token_name(frm.top().pc->GetType()),
                        frm.top().pc->GetOrigLine());
                print_stack(LBCSPOP, "=Error  ", frm);
-               cpd.error_count++;
                exit(EXIT_FAILURE);
             }
          }
@@ -579,7 +578,7 @@ static void parse_cleanup(BraceState &braceState, ParseFrame &frm, Chunk *pc)
             LOG_FMT(LWARN, "%s: %s(%d): %zu: Error: Expected a semicolon for WHILE_OF_DO, but got '%s'\n",
                     cpd.filename.c_str(), __func__, __LINE__, pc->GetOrigLine(),
                     get_token_name(pc->GetType()));
-            cpd.error_count++;
+            exit(EX_SOFTWARE);
          }
          handle_complex_close(frm, pc, braceState);
       }
@@ -1039,7 +1038,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
       frm.pop(__func__, __LINE__, pc);
       print_stack(LBCSPOP, "-Error  ", frm);
-      cpd.error_count++;
+      exit(EX_SOFTWARE);
    }
    // Insert a CT_VBRACE_OPEN, if needed
    // but not in a preprocessor
@@ -1116,7 +1115,7 @@ static bool check_complex_statements(ParseFrame &frm, Chunk *pc, const BraceStat
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
       frm.pop(__func__, __LINE__, pc);
       print_stack(LBCSPOP, "-Error  ", frm);
-      cpd.error_count++;
+      exit(EX_SOFTWARE);
    }
    return(false);
 } // check_complex_statements
@@ -1220,7 +1219,7 @@ static bool handle_complex_close(ParseFrame &frm, Chunk *pc, const BraceState &b
               __func__, __LINE__, cpd.filename.c_str(), pc->GetOrigLine(),
               get_token_name(frm.top().type),
               (unsigned int)frm.top().stage);
-      cpd.error_count++;
+      exit(EX_SOFTWARE);
    }
    return(false);
 } // handle_complex_close

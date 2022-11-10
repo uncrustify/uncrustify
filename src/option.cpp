@@ -440,10 +440,7 @@ bool process_option_line_compat_0_76(const std::string &cmd, const std::vector<s
 //-----------------------------------------------------------------------------
 OptionWarning::OptionWarning(const char *filename, Severity severity)
 {
-   if (severity != MINOR)
-   {
-      ++cpd.error_count;
-   }
+   UNUSED(severity);
 
    if (cpd.line_number != 0)
    {
@@ -459,10 +456,8 @@ OptionWarning::OptionWarning(const char *filename, Severity severity)
 //-----------------------------------------------------------------------------
 OptionWarning::OptionWarning(const GenericOption *opt, Severity severity)
 {
-   if (severity != MINOR)
-   {
-      ++cpd.error_count;
-   }
+   UNUSED(severity);
+
    fprintf(stderr, "Option<%s>: at %s:%d: ", to_string(opt->type()),
            cpd.filename.c_str(), cpd.line_number);
 }
@@ -1179,7 +1174,7 @@ bool load_option_file(const char *filename, int compat_level)
       OptionWarning w{ filename };
       w("file could not be opened: %s (%d)\n",
         strerror(errno), errno);
-      return(false);
+      exit(EX_SOFTWARE);
    }
    // Read in the file line by line
    std::string line;
@@ -1207,7 +1202,7 @@ bool load_option_file(const char *filename, int compat_level)
             // error
             // related to PR #3298
             fprintf(stderr, "%s: line %u: Character at position %zu, is not printable.\n", filename, cpd.line_number + 1, n + 1);
-            return(false);
+            exit(EX_SOFTWARE);
          }
       }
 
