@@ -3505,6 +3505,7 @@ static void handle_oc_message_send(Chunk *os)
    }
 
    if (  tmp->Is(CT_WORD)
+      || tmp->Is(CT_ACCESS)
       || tmp->Is(CT_TYPE))
    {
       tmp->SetType(CT_OC_MSG_FUNC);
@@ -3517,11 +3518,13 @@ static void handle_oc_message_send(Chunk *os)
 
       if (tmp->level == cs->level + 1)
       {
-         if (tmp->Is(CT_COLON))
+         if (  tmp->Is(CT_COLON)
+            || tmp->Is(CT_ACCESS_COLON))
          {
             tmp->SetType(CT_OC_COLON);
 
             if (  prev->Is(CT_WORD)
+               || prev->Is(CT_ACCESS)
                || prev->Is(CT_TYPE))
             {
                // Might be a named param, check previous block
